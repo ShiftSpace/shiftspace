@@ -1,0 +1,122 @@
+/* Space Styles */
+
+.TableContainer {
+    position: fixed;
+    zIndex: 300001;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 20px;
+    background: transparent url(bg.png);
+    padding: 5px 3px 3px 3px;
+    border: 0;
+    float: left;
+}
+
+.HighlightsSummary {   
+    background: transparent url(icon.png) no-repeat 3px 0px;
+    padding: 3px 9px 0 20px;
+    height: 20px;
+    float: left;
+}
+
+.HighlightsInput {
+    background: #220;
+    color: #FFF;
+    border: 1px solid #585800;
+    font: 10px verdana, sans-serif;
+    padding: 2px;
+    width: 250px;
+    float: left;
+}
+
+.HighlightsColors {
+    borderLeft: 2px solid #220;
+    float: left;
+    margin-left: 3px;
+}
+
+.GenericHighlightsColor{
+    cursor: pointer;
+    width: 11px;
+    height: 20px;
+    float: left;
+    padding: 0 2px;
+    margin: -2px 1px 0 1px;
+}
+
+.GenericHighlightsColor:hover {
+	border-bottom-style: dotted;
+}
+
+.SelectedHighlightsColor {
+	border-bottom-style: solid;
+}
+
+.HighlightsColor1 {
+    background: transparent url(yellow.gif) no-repeat 2px;
+    /* border-bottom color represents the actual color for this highlight */
+	border-bottom: 2px none #FF0;
+}
+
+.HighlightsColor2 {
+    background: transparent url(green.gif) no-repeat 2px;
+	border-bottom: 2px none #0F0;
+}
+
+.HighlightsColor3 {
+    background: transparent url(blue.gif) no-repeat 2px;
+    border-bottom: 2px none #6DCFF6;
+}
+
+.HighlightsColor4 {
+    background: transparent url(orange.gif) no-repeat 2px;
+	border-bottom: 2px none #FEA600;
+}
+
+.HighlightsColor5 {
+    background: transparent url(magenta.gif) no-repeat 2px;
+	border-bottom: 2px none #FF43BF;
+}
+
+.HighlightsColor6 {
+    background: transparent url(purple.gif) no-repeat 2px;
+	border-bottom: 2px none #C443FF;
+}
+
+.HighlightsGenericButton {
+    background: #2F2F0F;
+    border: 1px outset #2F2F0F;
+    color: #E7E4A4;
+    float: right;
+    margin: 0 3px;
+}
+
+.HighlightsSaveButton {
+    font: bold 11px verdana, sans-serif;
+}
+
+.HighlightsCancelButton {
+    font: 11px verdana, sans-serif;
+}
+
+.HighlightsClose {
+    margin:1px 10px 0pt 3px;
+    vertical-align: bottom;
+    cursor: pointer;
+    background: url(close.gif) no-repeat;
+    width: 16px;
+    height: 16px;
+    float: right;
+}
+
+.HighlightsCursor {
+    background: transparent url(cursor.png) no-repeat;
+    width: 21px;
+    height: 20px;
+    display: block;
+    left: -100px;
+    top: 0;
+    position: absolute;
+    z-index: 300000;
+}

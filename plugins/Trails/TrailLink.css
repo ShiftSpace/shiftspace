@@ -1,0 +1,8 @@
+.TrailLink
+{
+  position: absolute;
+  background: transparent;
+  z-index: 0;
+  
+  /* border: 1px solid #fcc; */
+}

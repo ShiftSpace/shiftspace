@@ -1,0 +1,85 @@
+.TrailNavPage
+{
+  display: inline;
+  margin-left: 5px;
+}
+
+.TrailNavPageView
+{
+  border: 3px solid #220;
+}
+
+.TrailNavClone
+{
+  position: absolute;
+  border: 3px solid #220;
+  width: 160px;
+  height: 100px;
+  bottom: 10px;
+}
+
+.TrailNavPageDescription
+{
+  position: absolute;
+  display: none;
+  color: #E7E4A4;
+}
+
+.TrailNavPageDescription .TrailPageDescriptionLink
+{
+  line-height: 11px;
+}
+
+.TrailSpaceThumbNav
+{
+  position : absolute;
+  
+  width : 22px;
+  height : 22px;
+  
+  z-index : 51;
+}
+
+.TrailSpaceThumbExpanded
+{
+  position: absolute;
+  
+  left: 118px;
+  top: 60px;
+  
+  z-index: 51;
+
+  width: 44px;
+  height: 44px;
+}
+
+.TrailNavScrollLeft
+{
+  position: fixed;
+
+  left: 0px;
+  bottom: 0px;
+
+  width: 10px;
+  height: 75px;
+
+  border: 1px solid red;
+}
+
+.TrailNavScrollRight
+{
+  position: fixed;
+
+  right: 0px;
+  bottom: 0px;
+
+  width: 10px;
+  height: 75px;
+
+  border: 1px solid red;
+}
+
+.hidden
+{
+  display : none;
+}

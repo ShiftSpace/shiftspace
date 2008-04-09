@@ -1,0 +1,35 @@
+#SS_ShiftMenu {
+    position: absolute;
+    display: none;
+    background: transparent url(../images/ShiftMenu/menu.png) no-repeat;
+    height: 19px;
+    width: 19px;
+    z-index: 999999;
+}
+
+#SS_ShiftMenu .container {
+    display: none;
+    background: transparent url(../images/ShiftMenu/hover-bg-left.png) no-repeat;
+    padding: 0 0 0 22px;
+}
+
+#SS_ShiftMenu .button {
+    padding: 4px 1px 4px 0;
+    float: left;
+}
+
+#SS_ShiftMenu.hover {
+    background: transparent url(../images/ShiftMenu/hover-bg-right.png) no-repeat top right;
+    width: auto;
+    height: 26px;
+    padding: 0 7px 0 0;
+    margin: -3px -3px 0 0;
+}
+
+#SS_ShiftMenu.hover .container {
+    display: block;
+}
+
+#SS_ShiftMenu .hover {
+    background: transparent url(../images/ShiftMenu/shift-hover-bg.png) no-repeat 0 4px;
+}

@@ -1,0 +1,9 @@
+.noTrails
+{
+  background-image: url(images/trails-off.png);
+}
+
+.hasTrails
+{
+  background-image: url(images/trails-on.png);
+}

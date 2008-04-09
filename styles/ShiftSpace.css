@@ -1,0 +1,445 @@
+/* Some of these should be removed since they prevent CSS cascading */
+.ShiftSpaceElement {
+    /*font-family: sans-serif;*/
+    /*font-size: 12px;*/
+    font-weight: normal;
+    font-style: normal;
+    /*color: #000;*/
+    text-transform: none;
+    text-decoration: none;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-align: start;
+    vertical-align: baseline;
+    direction: ltr;
+    background-color: transparent;
+    background-image: none;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    opacity: 1;
+    width: auto;
+    height: auto;
+    top: auto;
+    right: auto;
+    left: auto;
+    bottom: auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    position: static;
+    display: block;
+    visibility: visible;
+    z-index: auto;
+    overflow: visible;
+    white-space: normal;
+    /*clip: auto;*/
+    float: none;
+    clear: none;
+    cursor: auto;
+    list-style-image: none;
+    list-style:position: outside;
+    list-style-type: disc;
+    marker-offset: none;
+}
+
+.SSUserSelectNone
+{
+  cursor: default;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.SSDisplayNone
+{
+  display: none;
+}
+
+/*
+  Iframe Cover stuff
+*/
+
+.SSIframeCover
+{
+  position: absolute;
+  background-color: #f00;
+  opacity: 0.0;
+  z-index: 999;
+}
+
+/*
+  This should probably eventually be in it's own file
+*/
+
+.SSPinSelect
+{
+  position: absolute;
+  border: dotted 1px #F63B02;
+}
+
+.SSPinSelectInset
+{
+  position: absolute;
+  border: dotted 1px #F63B02;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  top: 0px;
+}
+
+.SSPinWidget
+{
+  width: 19px;
+  height: 19px;
+}
+
+.SSPinWidget img.normal
+{
+  background-image: url(../images/ShiftMenu/pin_icon.png);  
+}
+
+.SSPinWidgetMenuOpen
+{
+  background-image: url(../images/ShiftMenu/menu-bg.png);
+  background-repeat: no-repeat;  
+}
+
+.SSPinWidget img
+{
+  width: 19px;
+  height: 19px;
+}
+
+.SSPinWidget img.select
+{
+  background-image: url(../images/ShiftMenu/pin_icon-element.png);
+}
+
+.SSPinWidget img.pinned
+{
+  background-image: url(../images/ShiftMenu/pin_icon-pinned.png);
+}
+
+.SSPinMenu
+{
+  z-index:1000;
+  color: black;
+  width: 150px;
+  position: absolute;
+}
+
+.SSPinMenu div .left
+{
+  width: 122px;
+}
+
+.SSPinMenu div .radio
+{
+  width: 20px;
+  height: 20px;
+  background-position: 5px 2px;
+}
+
+.SSPinMenu div .on
+{
+  background-image: url(../images/ShiftMenu/radio_button-on.png);
+  background-repeat: no-repeat;
+}
+
+.SSPinMenu div .off
+{
+  background-image: url(../images/ShiftMenu/radio_button-off.png);
+  background-repeat: no-repeat;
+}
+
+.SSPinMenu div .right
+{
+  width: 8px;
+}
+
+.SSPinMenuItem
+{
+  clear: both;
+  font-size: 11px;
+}
+
+.SSPinMenuItem div
+{
+  float: left;
+}
+
+.SSPinMenu div div span
+{
+  padding-left: 4px;
+  line-height: 190%;
+}
+
+.SSPinMenuItem .left
+{
+  background-image: url(../images/ShiftMenu/middle-left.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+div.SSPinMenuItem:hover .left
+{
+  background-image: url(../images/ShiftMenu/middle-left-hover.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.SSPinMenuItem .right
+{
+  background-image: url(../images/ShiftMenu/middle-right.png);
+  background-repeat: no-repeat;
+  height: 20px;
+}
+
+div.SSPinMenuItem:hover .right
+{
+  background-image: url(../images/ShiftMenu/middle-right-hover.png);
+  background-repeat: no-repeat;
+  height: 20px;
+}
+
+.SSPinMenuBottomItem
+{
+  clear: both;
+  font-size: 11px;
+}
+
+.SSPinMenuBottomItem div
+{
+  float: left;
+}
+
+.SSPinMenuBottomItem .left
+{
+  background-image: url(../images/ShiftMenu/bottom-left.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+div.SSPinMenuBottomItem:hover .left
+{
+  background-image: url(../images/ShiftMenu/bottom-left-hover.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.SSPinMenuBottomItem .right
+{
+  background-image: url(../images/ShiftMenu/bottom-right.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+div.SSPinMenuBottomItem:hover .right
+{
+  background-image: url(../images/ShiftMenu/bottom-right-hover.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.SSPinMenuTopItem
+{
+  clear: both;
+  font-size: 11px;
+}
+
+.SSPinMenuTopItem div
+{
+  float: left;
+}
+
+.SSPinMenuTopItem .left
+{
+  background-image: url(../images/ShiftMenu/top-left.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+div.SSPinMenuTopItem:hover .left
+{
+  background-image: url(../images/ShiftMenu/top-left-hover.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.SSPinMenuTopItem .right
+{
+  background-image: url(../images/ShiftMenu/top-right.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+div.SSPinMenuTopItem:hover .right
+{
+  background-image: url(../images/ShiftMenu/top-right-hover.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+/* Global ShiftSpace Menu Styles */
+
+.SSMenu
+{
+  z-index:1000;
+  color: black;
+  width: 150px;
+  overflow: visible;
+  position: absolute;
+}
+
+.SSMenu li .left
+{
+  width: 122px;
+}
+
+.SSMenu li .right
+{
+  width: 8px;
+}
+
+.SSMenuItem
+{
+  clear: both;
+  font-size: 11px;
+}
+
+.SSMenuItem div
+{
+  float: left;
+}
+
+.SSMenu li div span
+{
+  padding-left: 10px;  
+}
+
+.SSMenuItem div span
+{
+  line-height: 220%;
+}
+
+.SSMenuTopItem div span
+{
+  line-height: 220%;
+}
+
+.SSMenuBottomItem div span
+{
+  line-height: 200%;
+}
+
+.SSMenuItem .left
+{
+  background-image: url(../images/ShiftMenu/middle-left.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+li.SSMenuItem:hover .left
+{
+  background-image: url(../images/ShiftMenu/middle-left-hover.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.SSMenuItem .right
+{
+  background-image: url(../images/ShiftMenu/middle-right.png);
+  background-repeat: no-repeat;
+  height: 20px;
+}
+
+li.SSMenuItem:hover .right
+{
+  background-image: url(../images/ShiftMenu/middle-right-hover.png);
+  background-repeat: no-repeat;
+  height: 20px;
+}
+
+.SSMenuBottomItem
+{
+  clear: both;
+  font-size: 11px;
+}
+
+.SSMenuBottomItem div
+{
+  float: left;
+}
+
+.SSMenuBottomItem .left
+{
+  background-image: url(../images/ShiftMenu/bottom-left.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+li.SSMenuBottomItem:hover .left
+{
+  background-image: url(../images/ShiftMenu/bottom-left-hover.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.SSMenuBottomItem .right
+{
+  background-image: url(../images/ShiftMenu/bottom-right.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+li.SSMenuBottomItem:hover .right
+{
+  background-image: url(../images/ShiftMenu/bottom-right-hover.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.SSMenuTopItem
+{
+  clear: both;
+  font-size: 11px;
+}
+
+.SSMenuTopItem div
+{
+  float: left;
+}
+
+.SSMenuTopItem .left
+{
+  background-image: url(../images/ShiftMenu/top-left.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+li.SSMenuTopItem:hover .left
+{
+  background-image: url(../images/ShiftMenu/top-left-hover.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.SSMenuTopItem .right
+{
+  background-image: url(../images/ShiftMenu/top-right.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+li.SSMenuTopItem:hover .right
+{
+  background-image: url(../images/ShiftMenu/top-right-hover.png);
+  background-repeat: repeat-x;
+  height: 20px;
+}
+
+.SSPinWidgetButton
+{
+  width: 19px;
+  height: 19px;
+}

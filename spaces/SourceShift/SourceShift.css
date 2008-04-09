@@ -1,0 +1,402 @@
+/* Space Styles */
+
+.SSSourceShiftEditWindow
+{
+  width: 350px;
+  height: 300px;
+  
+  min-width: 325px;
+  min-height: 150px;
+  
+  font-family: georgia;
+  color: #F63B02;
+  background-image: url(images/bg_transparent.png);
+}
+
+.SSSourceShiftHidden
+{
+  display: none;
+}
+
+.SSSourceShiftEditorTop
+{
+  float: left;
+}
+
+.SSSourceShiftEditorHandleArea
+{
+  padding-left: 4px;
+  padding-top: 4px;
+  width: 100%;
+  height: 14px;
+}
+
+.SSSourceShiftEditorHandle
+{
+  float: left;
+  width: 200px;
+  height: 14px;
+  background-image: url(images/drag_texture.png);
+  background-repeat: repeat-x;
+  background-position: 0px 2px;
+}
+
+.SSSourceShiftEditorWindowButtons
+{
+  float: left;
+  width: 32px;
+}
+
+.SSSourceShiftEditorWindowButtons div
+{
+  float: left;
+  width: 13px;
+  height: 13px;
+  margin-right: 3px;
+}
+
+.SSSourceShiftEditorWindowButtons .closeButton
+{
+  background-image: url(images/close.png);
+}
+
+.SSSourceShiftEditorWindowButtons .minimizeButton
+{
+  background-image: url(images/minimize.png);
+}
+
+div.SSSourceShiftEditorTopTitle
+{
+  float: left;
+  color: #F63B02;
+  font-size: 40px;  
+  margin-left: 4px;
+}
+
+.SSSourceShiftEditorIcon
+{
+  float: left;
+  width: 28px;
+  height: 32px;
+  margin-left: 4px;
+  margin-top: 8px;
+  background-image: url(images/sourceshift_logo_big.png);
+  background-repeat: no-repeat;
+}
+
+.SSSourceShiftEditorTextArea
+{
+  float:left;
+  background-color: #220;
+  font-family: courier;
+  font-size: 12px;
+  color: #e7e4a4;
+  margin-left: 4px;
+  margin-top: -1px;
+  padding: 4px;
+  border: 1px solid #F63B02;
+}
+
+.SSSourceShiftEditorTitle
+{
+  font-family: verdana;
+}
+
+.SSSourceShiftEditorControlsArea
+{
+  float: left;
+  margin-bottom: 4px;
+}
+
+.SSSourceShiftEditorTabArea
+{
+  float: left;
+  height: 20px;
+  width: 100%;
+  padding-left: 4px;
+  overflow: visible;
+}
+
+.SSSourceShiftEditorTabButton
+{
+  position: relative;
+  float: left;
+  font-size: 12px;
+  color: #F63B02;
+  margin-right: 2px;
+}
+
+.SSSourceShiftEditorTabButton div
+{
+  float: left;
+  height: 100%;
+}
+
+.SSSourceShiftEditorTabButton .left
+{
+  width: 9px;
+  height: 20px;
+  background-image: url(images/tab_on-left.png);
+  background-repeat: no-repeat;
+}
+
+div.SSSourceShiftEditorTabButton .middle
+{
+  font-family: verdana;
+  color: #F63B02;
+  font-weight: bold;
+  font-size: 11px;
+  padding-top: 3px;
+  background-image: url(images/tab_on-body.png);
+  background-repeat: repeat-x;
+  height: 17px;
+}
+
+.SSSourceShiftEditorTabButton .right
+{
+  width: 9px;
+  height: 20px;
+  background-image: url(images/tab_on-right.png);
+  background-repeat: no-repeat;
+}
+
+.SSSourceShiftEditorBottom
+{
+  float:right;
+  padding-right: 4px;
+  height: 16px;
+}
+
+.SSSourceShiftEditorResizeControl
+{
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  background-image: url(images/sourceshift_resize_edit.png);
+  background-repeat: no-repeat;
+  width: 11px;
+  height: 11px;
+}
+
+input.SSSourceShiftTitleInputField
+{  
+  float: left;
+  margin-left: 4px;
+  margin-top: 7px;
+  border: 1px solid #F63B02;
+  background: #220;
+  padding: 2px;
+  color: #e7e4a4;
+}
+
+.SSSourceShiftEditorControlsArea .SSSourceShiftButton
+{
+  float: right;
+}
+  
+.SSSourceShiftButton
+{
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  height: 28px;
+  margin-right: 4px;
+  margin-top: 4px;
+  
+  -moz-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+.SSSourceShiftButton div
+{
+  margin-top: 1px;
+  float: left;
+  height: 26px;
+}
+
+.SSSourceShiftButton .left
+{
+  width: 9px;
+  background-image: url(images/btn_1px-left.png);
+  /*background-position: 0px -1px;*/
+  background-repeat: no-repeat;
+}
+
+div.SSSourceShiftButton:active .left
+{
+  background-image: url(images/btn_2px-left.png);  
+}
+
+div.SSSourceShiftButton .middle
+{
+  font-size: 14px;
+  font-family: verdana;
+  line-height: 150%;
+  color: #F63B02;
+  margin-top: 2px;
+  border-top: 1px solid #F63B02;
+  border-bottom: 1px solid #F63B02;
+  -moz-box-sizing: border-box;
+  background-color: #220;
+  height: 24px;
+}
+
+div.SSSourceShiftButton:active .middle
+{
+  margin-top: 1px;
+  height: 26px;
+  border-width: 2px;
+}
+
+.SSSourceShiftButton .right
+{
+  width: 9px;
+  background-image: url(images/btn_1px-right.png);
+  /*background-position: 0px -1px;*/
+  background-repeat: no-repeat;
+}
+
+div.SSSourceShiftButton:active .right
+{
+  background-image: url(images/btn_2px-right.png);
+}
+
+.SSSourceShiftButton:active {
+  border: 1px inset #aaa;
+}
+
+/* Shift styles */
+
+.SSSourceShift
+{
+  position: absolute;
+  border: 2px solid #f00;
+  width: 200px;
+  height: 200px;
+  min-width: 115px;
+  min-height: 45px;
+}
+
+.SSSourceShiftBorderBlur
+{
+  border-color: #763006;
+}
+
+.SSSourceShiftTopBlur
+{
+  background-color: #763006;
+}
+
+.SSSourceShiftTop
+{
+  float: left;
+  height: 26px;
+  background-color: #220;
+  opacity: 0.9;
+  width: 100%;
+  overflow: hidden;
+}
+
+.SSSourceShiftTitle
+{
+  font-family: georgia;
+  font-size: 14px;
+  float: left;
+  color: #F63B02;
+  padding-left: 8px;
+  padding-top: 4px;
+  overflow: hidden;
+}
+
+.SSSourceShiftTitleText
+{
+}
+
+.SSSourceShiftTitleIcon
+{
+  float: left;
+  margin-top: 4px;
+  margin-left: 4px;
+  width: 18px;
+  height: 18px;
+}
+
+.SSSourceShiftHandle
+{
+  position:absolute;
+  top: 0px;
+  height: 100%;
+  right: 22px;
+  background-image: url(images/drag_texture.png);
+  background-repeat: repeat-x;
+  background-position: 0px 7px;
+}
+
+.SSSourceShiftTop .SSSourceShiftCloseButton
+{
+  position: absolute;
+  right: 2px;
+  top: 5px;
+  width: 13px;
+  height: 13px;
+  margin-right: 3px;
+  background-image: url(images/close.png);
+}
+
+.SSSourceShiftFrame
+{
+  width: 100%;
+  float: left;
+}
+
+.SSSourceShiftSource
+{
+  overflow: visible;
+}
+
+.SSSourceShiftResizeControl
+{
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 15px;
+  height: 15px;
+  background-image: url(images/sourceshift_resize_handle.png);
+  background-repeat: no-repeat;
+}
+
+.SSSourceShiftCover
+{
+  position: absolute;
+  top: 26px;
+  left: 0px;
+  right: 0px;
+  /*
+  background-color: red;
+  opacity: 0.5;
+  */
+}
+
+#SSSourceShiftFrameBody
+{
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  overflow: hidden;
+}
+
+.SSSourceShiftEditorPinWidget
+{
+  float: right;
+  margin-right: 4px;
+}
+
+.SSSourceShiftEditorPinPrompt
+{
+  font-family: verdana;
+  font-size: 11px;
+  float: right;
+  color: #f63b01;
+  margin-top: 2px;
+  margin-right: 10px;
+}

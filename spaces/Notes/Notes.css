@@ -1,0 +1,171 @@
+/* Main style for the Note Shift ---------------------------- */
+.SSNoteShift
+{
+  position : absolute;
+  background-color: #F5FB9B;
+  min-width : 120px;
+  min-height: 120px;
+  overflow-x: visible;
+  overflow-y: visible;
+  z-index: 1;
+}
+
+.SSHidden
+{
+  display : none;
+}
+
+.SSNoteShiftDragCover
+{
+  position: absolute;
+  top: 14px;
+  left: 0px;
+  right: 0px;
+  background-color: red;
+  opacity: 0.5;
+}
+
+/* Styles for the top of the Note Shift --------------------- */
+.SSNoteShiftTop
+{
+  height : 14px;
+}
+
+.SSNoteShiftGrabber
+{
+  position: absolute;
+  left: 5px;
+  right: 15px;
+  height: 14px;
+  background-image: url(images/grabber.png);
+}
+
+.SSNoteShiftCloseButton
+{
+  position: absolute;
+
+  right: 0px;
+
+  width: 15px;
+  height: 14px;
+
+  background-image: url(images/close-off.png);
+  background-repeat: no-repeat;
+}
+
+div.SSNoteShiftCloseButton:hover
+{
+  background-image: url(images/close-hover.png);
+}
+
+div.SSNoteShiftCloseButton:active
+{
+  background-image: url(images/close-active.png);
+}
+
+.SSNoteShiftFrame
+{
+  background : transparent;
+  border : none;
+}
+
+body#SSNoteShiftFrameBody
+{
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  bottom: 0px;
+  right: 0px;
+  margin: 0;
+}
+
+.SSNoteShiftTextArea
+{
+  font: 12px verdana, sans-serif;
+ 
+  background : transparent;
+  position: absolute;
+  border : none;
+  padding : 0 4px 4px 4px;
+
+  left: 4px;
+  right: 4px;
+  top: 0;
+  bottom: 0;
+
+  overflow: hidden;
+  resize: none;
+}
+
+/* Styles for the bottom of the Note Shift ------------------ */
+
+.SSNoteShiftButton
+{
+  font: 11px verdana, sans-serif;
+  cursor: pointer;
+  display: inline;
+  
+  margin-left: 7px;
+  margin-bottom: 7px;
+  
+  padding: 2px;
+  
+  background-color: #ccc;
+  
+  border: 1px outset #aaa;
+}
+
+.SSNoteShiftButton:active {
+  border: 1px inset #aaa;
+}
+
+.SSNoteShiftResize
+{
+  position : absolute;
+
+  right : 0px;
+  bottom : 0px;
+
+  background-image : url(images/resize.png);
+
+  width: 13px;
+  height: 13px;
+}
+
+/* Styles for the edges */
+
+.SSNoteShiftRightEdge
+{
+  position: absolute;
+  width: 2px;
+  top: 0px;
+  right: -2px;
+  height: 100%;
+  background-image : url(images/right.png);
+  background-repeat : repeat-y;
+  z-index:1;
+}
+
+.SSNoteShiftBottomEdge
+{
+  position: absolute;
+  height: 2px;
+  bottom: -2px;
+  width: 100%;
+  background-image: url(images/bottom.png);
+  background-repeat: repeat-x;
+  z-index:1;
+}
+
+.SSNoteShiftCorner
+{
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  bottom: -2px;
+  right: -2px;
+  background-image: url(images/corner.png);
+  background-repeat: no-repeat;
+  z-index:1;
+}

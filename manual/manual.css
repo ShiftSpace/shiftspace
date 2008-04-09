@@ -1,0 +1,281 @@
+body {
+    margin: 0px;
+    text-align: center;
+    background: #F8F5F2 url(images/top_bg-tile.png) repeat-x;
+}
+
+a {
+    color: #E86230;
+}
+
+a:hover {
+    color: #000;
+}
+
+.noborder {
+	border: none;
+}
+
+#container {
+    width: 950px;
+    margin: 0 auto;
+    padding-bottom: 50px;
+    text-align: left;
+}
+
+#top {
+	height: 113px;
+	width: 950px;
+	background-image: url(images/shooting-spaces.png);
+	background-repeat: no-repeat;
+	background-position: 617px 100%;
+	margin-bottom:10px
+}
+
+#logo {
+	float: left;
+	margin: 14px 0 0 55px;
+}
+
+#tagline {
+	margin-top: 76px;
+	font: 18px Georgia, "Times New Roman", Times, serif;
+	color: #c7b29a;
+	float: left;
+}
+
+#nav {
+    float: left;
+    width: 230px;
+    margin: 0 10px 0 0;
+    padding: 0;
+}
+
+#nav li {
+    list-style: none;
+    font: 14px georgia, serif;
+    margin: 0;
+    border-bottom: 1px solid #FFF;
+}
+
+#nav li.selected {
+    border-bottom: none;
+}
+
+#nav li a {
+    display: block;
+    padding: 5px 7px;
+    color: #FFF;
+    background: #C7B29A;
+    text-decoration: none;
+}
+
+#nav li a:hover {
+    background: #998675;
+}
+
+#nav ul {
+    margin: 0;
+    padding: 0;
+}
+
+#nav ul li {
+    font: 12px verdana, sans-serif;
+    border-bottom: 1px solid #C7B29A;
+}
+
+#nav ul li a {
+    color: #736357;
+    background: #FFF;
+    padding: 5px 10px;
+}
+
+#nav ul li a:hover {
+    color: #534741;
+    background: #FFEAD8;
+}
+
+#main {
+    float: left;
+    width: 710px;
+}
+
+.content {
+    float: right;
+    width: 585px;
+    font: 12px/18px verdana, serif;
+    color: #736357;
+}
+
+tt {
+    line-height: 18px;
+}
+
+div.section {
+    border-top: 1px solid #C7B29A;
+    margin-top: 10px;
+    padding: 7px 0;
+}
+
+.section .content {
+    margin-top: 4px;
+}
+
+.properties {
+    background: #FFF;
+    padding: 3px;
+}
+
+h1 {
+    font: 20px georgia, serif;
+    color: #FFF;
+    background: #E86230;
+    margin: 0;
+    padding: 5px 10px;
+}
+
+h1 a {
+    color: #FFF;
+}
+
+h2 {
+    font: 18px georgia, serif;
+    margin: 10px 0;
+    padding: 5px 4px;
+    border-top: 1px solid #E86230;
+    color: #EA6C3E;
+    background: #FFF;
+}
+
+h2.method {
+    border-color: #C7B29A;
+    color: #534741;
+}
+
+h2 div {
+    float: left;
+}
+
+h2 a {
+    float: right;
+    font: 10px/20px verdana, sans-serif;
+    color: #C7B29A;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+h2 a:hover {
+    text-decoration: underline;
+}
+
+h3 {
+    float: left;
+    width: 115px;
+    margin: 0;
+    font: 18px georgia, serif;
+    color: #998675;
+}
+
+.properties h3 {
+    float: none;
+}
+
+p {
+    margin: 0 0 7px 0;
+}
+
+ul, ol {
+    padding: 0 0 0 25px;
+    margin: 0 0 7px 0;
+}
+
+dl {
+    margin: 0 0 7px 0;
+}
+
+dt {
+    font: 12px/18px courier, courier new, monospaced;
+    margin: 0 0 7px 0;
+}
+
+dd {
+    font: 12px/18px verdana, sans-serif;
+    margin: 0 0 7px 0;
+}
+
+.alt {
+    background: #FFF6EE;
+}
+
+.properties dl {
+    margin: 5px 0 0 0 !important;
+}
+
+.properties dt {
+    float: left;
+    text-align: right;
+    width: 224px;
+    padding-right: 20px;
+    color: #534741;
+    line-height: 24px;
+    margin: 0;
+}
+
+.properties dd {
+    float: left;
+    width: 460px;
+    color: #998675;
+    line-height: 24px;
+    margin: 0;
+}
+
+.arguments dl {
+    margin: 0;
+    color: #736357;
+}
+
+.arguments dt {
+    width: 110px;
+    margin-right: 10px;
+    float: left;
+}
+
+.arguments dd {
+    float: left;
+    width: 465px;
+}
+
+br {
+    clear: both;
+}
+
+pre {
+    display: block;
+    white-space: pre;
+    background: #FCFBFA;
+    margin: 10px 0;
+    padding: 7px 10px;
+    border: 1px solid #DFD3C6;
+    overflow: auto;
+}
+
+img.figure {
+    display: block;
+    padding: 10px;
+    background: #FCFBFA;
+    border: 1px solid #DFD3C6;
+    margin: 10px 0;
+}
+
+.footer {
+    margin-top: 20px;
+}
+
+.footer a {
+    padding-right: 15px;
+    background: transparent url(images/next-section.gif) no-repeat right top;
+}
+
+.footer a:hover {
+    background: transparent url(images/next-section-hover.gif) no-repeat right top;
+}

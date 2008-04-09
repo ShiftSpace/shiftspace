@@ -1,0 +1,329 @@
+body {
+  margin: 0;
+  font: 12px helvetica, sans-serif;
+}
+
+a {
+  color: #F63B02;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: #000;
+}
+
+#console {
+  font: 11px verdana, sans-serif;
+  background: transparent url(../images/Console/left-corner.png) no-repeat top left;
+  height: 100px;
+  margin: 0 20px;
+}
+
+#console .outer {
+  position: relative;
+  background: transparent url(../images/Console/right-corner.png) no-repeat top right;
+  margin: 0 0 0 10px;
+}
+
+#console .inner {
+  background: transparent url(../images/Console/top-edge.png) repeat-x;
+  margin: 0 10px 0 0;
+  padding: 4px 0 0 0;
+}
+
+#console #top {
+  background: #220;
+  color: #E7E4A4;
+  border-bottom: 1px dotted #333;
+}
+
+#console .left {
+  background: transparent url(../images/Console/left-edge.png) repeat-y;
+  padding: 0 0 0 4px;
+}
+
+#console .right {
+  background: transparent url(../images/Console/right-edge.png) repeat-y top right;
+  padding: 0 4px 0 0;
+}
+
+#console #tabs {
+  padding-top: 2px;
+  height: 20px;
+  background: transparent url(../images/Console/tabs-bg.gif) repeat-x bottom left;
+}
+
+#console #controls {
+  float: right;
+}
+
+#console #tabs .tab {
+  float: left;
+  color: #F33A02;
+  padding-left: 10px;
+  margin-right: 2px;
+  background: transparent url(../images/Console/tab-inactive-left.gif) no-repeat top left;
+  cursor: pointer;
+}
+
+#console #tabs .tab-inner {
+  padding-right: 10px;
+  height: 20px;
+  line-height: 20px;
+  background: transparent url(../images/Console/tab-inactive-right.gif) no-repeat top right;
+}
+
+#console #tabs .active {
+  color: #E7DD84;
+  font-weight: bold;
+  background: transparent url(../images/Console/tab-active-left.gif) no-repeat top left;
+}
+
+#console #tabs .active .tab-inner {
+  background: transparent url(../images/Console/tab-active-right.gif) no-repeat top right;
+}
+
+#console #tabs #tab-trails img {
+  margin-top: 4px;
+  vertical-align: top;
+}
+
+#console #tabs #tab-settings {
+  float: left;
+}
+
+#console #tabs #tab-settings img {
+  margin-top: 2px;
+  vertical-align: top;
+}
+
+#console #bottom {
+  background: #f2efac;
+  border-left: 1px solid #2F2D01;
+  border-right: 1px solid #2F2D01;
+}
+
+#console #scroller {
+  overflow-y : auto;
+  height: 100%;
+  width: 100%;
+}
+
+.entry {
+  line-height: 20px;
+  border-bottom: 1px dotted #303030;
+  cursor: pointer;
+}
+
+#shifts .hover {
+  background: transparent url(../images/Console/hover-bg.gif) repeat-x;
+}
+
+#shifts .active {
+  background: transparent url(../images/Console/active-bg.gif) repeat-x;
+}
+
+.column {
+  float: left;
+  height: 20px;
+  overflow: hidden;
+}
+
+.expander {
+  width: 15px;
+  height: 20px;
+}
+
+.expander img {
+  margin: 5px 0 0 5px;
+}
+
+.space {
+  width: 20%;
+}
+
+.summary {
+  width: 45%;
+}
+
+.user {
+  width: 20%;
+}
+
+.spaceTitle {
+  float: left;
+  padding-left: 25px;
+}
+
+.trails {
+  float: right;
+}
+
+.controls {
+  padding-left: 10px;
+  background: transparent url(../images/Console/controls-bg.gif) repeat-x;
+}
+
+.clear {
+  clear: both;
+}
+
+#scroller .content {
+  display: none;
+}
+
+#scroller .active {
+  display: block;
+}
+
+.pluginIcons {
+  float: right;
+  overflow: visible;
+}
+
+.plugin {
+  width: 12px;
+  height: 12px;
+  margin-right: 2px;
+  margin-top: 4px;
+}
+
+/* Console Plugin Menu */
+
+#SSConsolePluginMenu
+{
+}
+
+#SSConsolePluginMenuTab
+{
+  position: absolute;
+  width: 19px;
+  height: 19px;
+  background: transparent url(../images/ShiftMenu/menu-bg.png);
+}
+
+.subtabs {
+  float: left;
+  width: 139px;
+  height: 100%;
+  background: transparent url(../images/Console/subtabs-bg.gif) repeat-y;
+}
+
+.subtabs-inner {
+  width: 139px;
+  height: 100%;
+  background: transparent url(../images/Console/subtabs-bottom.gif) no-repeat bottom;
+}
+
+.subsections {
+  float: left;
+}
+
+.subsection {
+  display: none;
+}
+
+.subsection-active {
+  display: block;
+}
+
+.subtab {
+  font: 16px georgia, serif;
+  text-align: center;
+  height: 31px;
+  line-height: 31px;
+  color: #531400;
+  background: transparent url(../images/Console/subtab-bg.gif) no-repeat;
+  cursor: pointer;
+}
+
+.subtab-active {
+  color: #f63b02;
+  background: transparent url(../images/Console/subtab-active-bg.gif) no-repeat;
+}
+
+.subtab-above {
+  background: transparent url(../images/Console/subtab-above-bg.gif) no-repeat;
+}
+
+form {
+  padding: 15px 0 0 0;
+  margin: 0;
+}
+
+.form-column {
+  float: left;
+  margin: 0 0 0 30px;
+}
+
+input.text {
+  display: block;
+  font: 11px lucida grande, tahoma, verdana, sans-serif;
+  border: 1px solid #f3b173;
+  background: #fefcd1;
+  padding: 3px;
+  margin-bottom: 10px;
+}
+
+input.button {
+  padding: 3px;
+  font: 11px lucida grande, tahoma, verdana, sans-serif;
+}
+
+#password, #password_again {
+  margin-right: 15px;
+}
+
+#login input.button {
+  margin-top: -2px;
+}
+
+.float-left {
+  float: left;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font: 11px lucida grande, tahoma, verdana, sans-serif;
+  color: #f63b02;
+}
+
+.response {
+  font: bold 11px lucida grande, tahoma, verdana, sans-serif;
+  margin: 5px 30px;
+}
+
+#controls .button {
+  float: left;
+  width: 19px;
+  height: 19px;
+  margin-left: 3px;
+  cursor: pointer;
+}
+
+#controls .hover {
+  background: transparent url(../images/ShiftMenu/menu-bg.png) no-repeat;
+}
+
+#controls .image {
+  margin: 2px;
+  width: 14px;
+  height: 14px;
+}
+
+#controls .login .image {
+  background: transparent url(../images/Console/login.png) no-repeat;
+}
+
+#controls .logout .image {
+  background: transparent url(../images/Console/logout.png) no-repeat;
+}
+
+#controls .hide .image {
+  background: transparent url(../images/Console/minimize.png) no-repeat;
+}
+
+#controls .bugs .image {
+  background: transparent url(../images/Console/bug.png) no-repeat;
+}

@@ -1,0 +1,100 @@
+.SSImageSwapFocusDiv
+{
+  position: absolute;
+  background-image: url(images/bg.png);
+}
+
+.SSImageSwapButton
+{
+  position: absolute;
+  left: -16px;
+  top: 1px;
+  height: 17px;
+  width: 52px;
+  background-image: url(images/menu.gif);
+  background-repeat: no-repeat;
+}
+
+.SSImageSwapFocusDiv .middle
+{
+  background-position: 0px -17px;
+}
+
+.SSImageSwapFocusDiv .swap
+{
+  background-position: 0px -34px;
+}
+
+.SSImageSwapFocusDiv .grab
+{
+  background-position: 0px -51px;
+}
+
+.SSImageSwapButton div
+{
+  float: left;
+  height: 17px;
+}
+
+.SSImageSwapButtonLeft
+{
+  width: 20px;
+}
+
+.SSImageSwapButtonMiddle
+{
+  width: 5px;
+}
+
+.SSImageSwapButtonRight
+{
+  width: 20px;
+}
+
+.SSImageSwapShift
+{
+  overflow: hidden;
+  position: relative;
+}
+
+.SSImageSwapShiftImage
+{
+  /*
+  position: absolute;
+  left: 0px;
+  height: 0px;
+  */
+  cursor: move;
+}
+
+.SSImageSwapShiftZoom
+{
+  z-index: 999;
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 15px;
+  height: 15px;
+  background-image: url(images/is_zoomin.png);
+}
+
+div.SSImageSwapShiftZoom:hover
+{
+  background-image: url(images/is_zoomin_hover.png);
+}
+
+.SSImageSwapShiftUnzoom
+{
+  z-index: 999;
+  position: absolute;
+  top: 15px;
+  right: 1px;
+  width: 15px;
+  height: 15px;
+  background-image: url(images/is_zoomout.png);
+}
+
+div.SSImageSwapShiftUnzoom:hover
+{
+  background-image: url(images/is_zoomout_hover.png);
+}
