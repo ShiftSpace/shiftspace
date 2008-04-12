@@ -29,6 +29,9 @@ var User = new Class({
       username = false;
       GM_setValue('username', '');
       serverCall('user.logout');
+      ShiftSpace.Console.showResponse('login_response', 'You have been logged out.');
+      ShiftSpace.Console.addTab('login', 'Login');
+      ShiftSpace.Console.showTab('login');
     },
     
     join: function(userInfo, callback) {

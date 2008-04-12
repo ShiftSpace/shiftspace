@@ -10,13 +10,16 @@ if (empty($username)) {
     $response = "The passwords you entered didn\\'t match. Please try again.";
 } else if (empty($email)) {
     $response = "Oops, you didn\\'t enter an email address.";
+} else if (strlen($password) < 6) {
+    $response = "Oops, please enter a password at least 6 characters long.";
+} else if (!preg_match('#^[a-zA-Z0-9_.]+$#', $username)) {
+    $response = "Oops, please enter a username composed letters, numbers, dots or underscores.";
 } else {
     $exists = $db->value("
         SELECT COUNT(username)
         FROM user
         WHERE username = '$username'
     ");
-    
     if ($exists) {
         $response = 'Sorry, that username has already been taken. Please choose again.';
     }
@@ -45,19 +48,13 @@ if (empty($response)) {
         FROM user
         WHERE id = $user_id
     ");
-    $session = session_id();
     
     // This response doesn't actually get used
-    $response = 'Glad to have you with us!';
-    
-    //copy('images/default-user.gif', "images/user/$username.gif");
-    
-    echo "{ status: 1, session: '$session', response: '$response' }";
+    $response = "Welcome, $display_name!";
+    response(1, $response);
     
 } else {
-
-    echo "{ status: 0, response: '$response' }";
-    
+    response(0, $response);
 }
     
 ?>

@@ -345,7 +345,6 @@ var Console = new Class({
     auth.addEvent('click', function() {
       if (ShiftSpace.user.getUsername()) {
         ShiftSpace.user.logout();
-        this.addTab('login', 'Login');
       } else {
         this.showTab('login');
       }
@@ -435,16 +434,15 @@ var Console = new Class({
   },
   
   addTab: function(id, label, icon) {
-    var doc = this.frame.contentDocument;
-    var br = doc.getElementById('tabs').getElementsByTagName('br')[1];
-    var tab = $(doc.createElement('div'));
+    var br = this.doc.getElementById('tabs').getElementsByTagName('br')[1];
+    var tab = $(this.doc.createElement('div'));
     tab.setAttribute('id', 'tab-' + id);
     tab.className = 'tab';
-    var inner = $(doc.createElement('div'));
+    var inner = $(this.doc.createElement('div'));
     inner.className = 'tab-inner';
     
     if (typeof icon != 'undefined') {
-      var labelNode = $(doc.createElement('div'));
+      var labelNode = $(this.doc.createElement('div'));
       labelNode.setHTML(label);
       labelNode.setStyles({
         background: 'transparent url(' + server + 'images/Console/' + icon + ') no-repeat 0 3px',
@@ -459,21 +457,21 @@ var Console = new Class({
     tab.injectBefore(br);
     tab.addEvent('click', this.clickTab.bind(this));
     
-    this.addPane(id);
+    return this.addPane(id);
   },
   
   addPane: function(id) {
-    var doc = this.frame.contentDocument;
-    if (!doc.getElementById(id)) {
-      var content = $(doc.createElement('div'));
+    if (!this.doc.getElementById(id)) {
+      var content = $(this.doc.createElement('div'));
       content.setAttribute('id', id);
       content.className = 'content';
-      content.injectInside(doc.getElementById('scroller'));
+      content.injectInside(this.doc.getElementById('scroller'));
+      return content;
     }
+    return $(this.doc.getElementById(id));
   },
   
-  getTab: function(tabname)
-  {
+  getTab: function(tabname) {
     return $(this.doc.getElementById(tabname));
   },
   
@@ -552,46 +550,13 @@ var Console = new Class({
         password: this.doc.getElementById('join_password').value,
         password_again: this.doc.getElementById('password_again').value
       };
-      var join_response = this.validateJoin(joinInput)
-      if (join_response) {
-        if (this.frame.getSize().size.y < 175) {
-          this.frame.setStyle('height', 175);
-          this.refresh();
-        }
-        $(this.doc.getElementById('join_response')).setHTML(join_response);
-        return;
-      }
       ShiftSpace.user.join(joinInput, this.handleJoin.bind(this));
     }.bind(this));
   },
   
-  validateJoin: function(info) {
-    //console.log(info);
-    if (info.username == '') {
-      return "Oops, you left your username empty.";
-    }
-    if (info.email == '') {
-      return "Oops, you left your e-mail address empty.";
-    }
-    if (info.password == '') {
-      return "Oops, you didn't enter a password.";
-    }
-    if (info.password != info.password_again) {
-      return "Sorry, your passwords didn't match.";  
-    }
-    if (!info.email.match(/^.+?@.+?\..+?/)) {
-      return "Oops, that email address looks invalid.";
-    }
-    if (info.username.length < 3) {
-      return "Please enter a username at least 3 characters long.";
-    }
-    if (info.password.length < 6) {
-      return "Please enter a password at least 6 characters long.";
-    }
-    if (!info.username.match(/[a-zA-Z0-9_]/)) {
-      return "Please choose a username using only letters, numbers, underscore or dash.";
-    }
-    return false;
+  buildWelcome: function() {
+    var pane = this.addPane('welcome');
+    pane.setHTML('Welcome!');
   },
   
   handleLogin: function(json) {
@@ -599,17 +564,44 @@ var Console = new Class({
       this.showTab('shifts');
       this.removeTab('login');
       this.setupAuthControl();
+      this.resetLogin();
     } else {
-      if (this.frame.getSize().size.y < 175) {
-        this.frame.setStyle('height', 175);
-        this.refresh();
-      }
-      $(this.doc.getElementById('login_response')).setHTML(json.message);
+      this.showResponse('login_response', json.message);
     }
   },
   
   handleJoin: function(json) {
-    //console.log(json);
+    if (json.status) {
+      this.buildWelcome();
+      this.showTab('welcome');
+      this.removeTab('login');
+      this.setupAuthControl();
+      this.resetJoin();
+    } else {
+      this.showResponse('join_response', json.message);
+    }
+  },
+  
+  resetLogin: function() {
+    $(this.doc.getElementById('username')).value = '';
+    $(this.doc.getElementById('password')).value = '';
+    $(this.doc.getElementById('login_response')).setHTML('');
+  },
+  
+  resetJoin: function() {
+    $(this.doc.getElementById('join_username')).value = '';
+    $(this.doc.getElementById('email')).value = '';
+    $(this.doc.getElementById('join_password')).value = '';
+    $(this.doc.getElementById('password_again')).value = '';
+    $(this.doc.getElementById('join_response')).setHTML('');
+  },
+  
+  showResponse: function(target, message) {
+    if (this.frame.getSize().size.y < 175) {
+      this.frame.setStyle('height', 175);
+      this.refresh();
+    }
+    $(this.doc.getElementById(target)).setHTML(message);
   },
   
   createSubSections: function(target, sections) {
@@ -663,14 +655,12 @@ var Console = new Class({
   
   */
   refresh: function() {
-    var doc = this.frame.contentDocument;
-    if (!doc || !doc.getElementById('top')) {
+    if (!this.doc || !this.doc.getElementById('top')) {
       // Need to wait a moment longer while things are being built
       setTimeout(this.resize.bind(this), 50);
     } else {
-      var doc = this.frame.contentDocument;
-      var top = $( doc.getElementById('top').parentNode);
-      var bottom = $(doc.getElementById('bottom'));
+      var top = $(this.doc.getElementById('top').parentNode);
+      var bottom = $(this.doc.getElementById('bottom'));
       bottom.setStyle('height', this.frame.getSize().size.y -
                                 top.getSize().size.y);
     }
@@ -821,17 +811,6 @@ var Console = new Class({
       }
     });
     
-    // add it
-    if (isActive) 
-    {
-      newEntry.injectTop($(this.doc.getElementById('shifts')));
-      newEntry.addClass('active');
-    } 
-    else 
-    {
-      newEntry.injectInside($(this.doc.getElementById('shifts')));
-    }
-    
     // check for the plugin type
     for(plugin in installedPlugins)
     {
@@ -850,13 +829,24 @@ var Console = new Class({
           this.showPluginMenu(target);
         }.bind(this));
         
-        pluginDiv.injectInside(newEntry.getElement('.pluginIcons'));
+        pluginDiv.inject(newEntry.getElement('.pluginIcons'));
       }
       else
       {
         // defer loading this item
         //console.log('========================================== Deferred load for ' + aShift.id);
       }
+    }
+    
+    // add it
+    if (isActive) 
+    {
+      newEntry.injectTop($(this.doc.getElementById('shifts')));
+      newEntry.addClass('active');
+    } 
+    else 
+    {
+      newEntry.injectInside($(this.doc.getElementById('shifts')));
     }
     
     this.shiftCount++;

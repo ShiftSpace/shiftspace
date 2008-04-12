@@ -1,9 +1,13 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] != 'POST' ||
-    empty($_POST['username']) ||
-    empty($_POST['password'])) {
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
   response(0, 'Invalid request.');
+  exit;
+} else if (empty($_POST['username'])) {
+  response(0, 'Oops, you forgot to enter a username.');
+  exit;
+} else if (empty($_POST['password'])) {
+  response(0, 'Oops, you forgot to enter a password.');
   exit;
 }
     

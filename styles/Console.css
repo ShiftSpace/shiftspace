@@ -209,12 +209,6 @@ a:hover {
   background: transparent url(../images/Console/subtabs-bg.gif) repeat-y;
 }
 
-.subtabs-inner {
-  width: 139px;
-  height: 100%;
-  background: transparent url(../images/Console/subtabs-bottom.gif) no-repeat bottom;
-}
-
 .subsections {
   float: left;
 }
