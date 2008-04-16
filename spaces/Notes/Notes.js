@@ -175,7 +175,46 @@ var NotesShift = ShiftSpace.Shift.extend({
       height : size.y - topSize.y - bottomSize.y
     });
   },
-
+  
+  show: function()
+  {
+    this.parent();
+    this.hideEditInterface();
+  },
+  
+  edit: function()
+  {
+    this.parent();
+    this.showEditInterface()
+  },
+  
+  hide: function()
+  {
+    this.parent();
+    this.hideEditInterface();
+  },
+  
+  blur: function()
+  {
+    console.log('BLUR');
+    this.parent();
+    this.hideEditInterface();
+  },
+  
+  showEditInterface: function()
+  {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> show edit interface');
+    this.saveButton.setStyle('display', '');
+    this.cancelButton.setStyle('display', '');
+  },
+  
+  hideEditInterface: function()
+  {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> hide edit interface');
+    this.saveButton.setStyle('display', 'none');
+    this.cancelButton.setStyle('display', 'none');
+  },
+  
   /*
     Function : build
       Builds the top handle area, the text area and the two buttons.

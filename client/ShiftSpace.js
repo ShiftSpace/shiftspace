@@ -50,6 +50,7 @@ Class: ShiftSpace
 */
 
 var ShiftSpace = new (function() {
+
     // The server variable determines where to look for ShiftSpace content
     var server = 'http://api.shiftspace.org/';
     
@@ -338,7 +339,6 @@ var ShiftSpace = new (function() {
             username: ShiftSpace.user.getUsername(),
             position: { x: options.position.x, y: options.position.y }
         };
-        //console.log('NEW SHIFT');
         //console.log(shiftJson);
         
         shifts[tempId] = shiftJson;
@@ -361,6 +361,7 @@ var ShiftSpace = new (function() {
         if(!options.deferred)
         {
           spaces[spaceName].showShift(shiftJson);
+          spaces[spaceName].editShift(tempId);
           // call onShiftShow
           spaces[spaceName].onShiftShow(tempId);
           focusShift(tempId);

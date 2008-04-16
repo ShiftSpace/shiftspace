@@ -105,10 +105,7 @@ ShiftSpace.Shift = new Class({
     Function: edit
       The shift should present it's editing interface.
   */
-  edit: function()
-  {
-    
-  },
+  edit: function() {},
 
   /*
     Function : save
@@ -128,9 +125,7 @@ ShiftSpace.Shift = new Class({
       so that your shift can correct itself for resize operations,
       window size changs, showing, hiding, etc.
   */
-  refresh : function()
-  {
-  },
+  refresh : function() {},
   
   /*
     Function : encode
@@ -184,6 +179,9 @@ ShiftSpace.Shift = new Class({
   */
   show : function(el)
   {
+    // make sure the editing interface is hidden
+    
+
     var mainView = this.getMainView();
     if( mainView )
     {
@@ -193,6 +191,7 @@ ShiftSpace.Shift = new Class({
     }
     this.refresh();
   },
+  
   
   /*
     Function : hide

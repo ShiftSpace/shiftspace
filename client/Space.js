@@ -181,6 +181,7 @@ ShiftSpace.Space = new Class({
   */
   editShift : function( shiftId )
   {
+    console.log('edit shift');
     this.shifts[shiftId].edit();
   },
 
@@ -225,10 +226,12 @@ ShiftSpace.Space = new Class({
     if( cShift.canShow() )
     {
       // blur the old shift
-      if(this.getCurrentShift())
+      if(this.getCurrentShift() &&
+         cShift != this.getCurrentShift())
       {
         this.getCurrentShift().blur();
       }
+      
       this.setCurrentShift(cShift);
       
       // show the new shift and focus it
@@ -365,7 +368,8 @@ ShiftSpace.Space = new Class({
   
   focusShift : function(shiftId)
   {
-    if(this.getCurrentShift())
+    if(this.getCurrentShift() &&
+       this.getCurrentShift() != this.shifts[shiftId])
     {
       this.getCurrentShift().blur();
     }
