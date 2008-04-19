@@ -613,6 +613,18 @@ var ShiftSpace = new (function() {
         });
     }
     
+    /*
+    editShift (private)
+    Edit a shift.
+    */
+    function editShift(shiftId) {
+      var space = shifts[shiftId].space;
+      
+      // first show the shift
+      ShiftSpace.showShift(shiftId);
+      // then edit it
+      spaces[space].editShift(shiftId);
+    }
     
     /*
     

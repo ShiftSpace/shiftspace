@@ -824,6 +824,11 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.css.injectInside(document.head);
   },
   
+  edit: function()
+  {
+    
+  },
+  
   build : function()
   {
     this.buildStyleSheet();

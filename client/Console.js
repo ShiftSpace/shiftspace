@@ -811,6 +811,12 @@ var Console = new Class({
       }
     });
     
+    newEntry.getElement('.controls a.edit').addEvent('click', function(e) {
+      var event = new Event(e);
+      event.preventDefault();
+      editShift(aShift.id);
+    });
+    
     // check for the plugin type
     for(plugin in installedPlugins)
     {
@@ -911,7 +917,8 @@ var Console = new Class({
     // ------------------- Controls ------------------------ //
     var controls = $(this.doc.createElement('div'));
     controls.className = 'controls';
-    controls.innerHTML = 'Currently, all you can do is <a href="#delete" class="delete">delete this shift</a>.';
+    // check to see if the the user matches
+    controls.innerHTML = 'Currently, all you can do is <a href="#delete" class="delete">delete this shift</a> or <a href="#edit" class="edit">edit this shift</a>.';
     
     // -------------------- Build the entry ---------------- //
     expanderDiv.injectInside(shiftEntry);
