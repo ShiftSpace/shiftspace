@@ -185,7 +185,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   edit: function()
   {
     this.parent();
-    this.showEditInterface()
+    this.showEditInterface();
   },
   
   hide: function()
@@ -196,23 +196,22 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   blur: function()
   {
-    console.log('BLUR');
     this.parent();
     this.hideEditInterface();
   },
   
   showEditInterface: function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> show edit interface');
     this.saveButton.setStyle('display', '');
     this.cancelButton.setStyle('display', '');
+    this.refresh();
   },
   
   hideEditInterface: function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> hide edit interface');
     this.saveButton.setStyle('display', 'none');
     this.cancelButton.setStyle('display', 'none');
+    this.refresh();
   },
   
   /*
@@ -278,6 +277,8 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   buildFrame : function()
   {
+    var _css = this.getParentSpace().attributes.css;
+    
     // create an iframe with the css already loaded
     this.frame = new ShiftSpace.Iframe({
       'class' : 'SSNoteShiftFrame',
@@ -286,7 +287,7 @@ var NotesShift = ShiftSpace.Shift.extend({
       rows : 1000,
       cols : 25,
       wrap : 'hard',
-      css : this.getParentSpace().attributes.css,
+      css : _css,
       onload : this.finishFrame.bind(this)
     });
 

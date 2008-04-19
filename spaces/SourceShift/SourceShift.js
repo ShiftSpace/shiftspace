@@ -63,7 +63,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   hideInterface : function()
   {
     this.parent();
-    this.editSourceShift.setStyle('display', 'none');
+    if(this.isVisible()) this.editSourceShift.setStyle('display', 'none');
   },
   
   setMode : function(newMode)
@@ -108,21 +108,24 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     var currentShift = this.getCurrentShift();
 
     // set the mode to xhtml and set to the html of the current shift
-    this.setMode('xhtml');
-    this.editSource.setProperty('value', currentShift.getMarkup());
-    this.titleField.setProperty('value', currentShift.getTitle());
-    
-    // update the pin widget
-    if(currentShift.getPinTarget())
+    if(this.isVisible())
     {
-      this.pinWidget.setPinnedElement(currentShift.getPinTarget());
+      this.setMode('xhtml');
+      this.editSource.setProperty('value', currentShift.getMarkup());
+      this.titleField.setProperty('value', currentShift.getTitle());
+
+      // update the pin widget
+      if(currentShift.getPinTarget())
+      {
+        this.pinWidget.setPinnedElement(currentShift.getPinTarget());
+      }
+      else
+      {
+        this.pinWidget.setPinnedElement(null);
+      }
+
+      this.pinWidget.refresh();
     }
-    else
-    {
-      this.pinWidget.setPinnedElement(null);
-    }
-    
-    this.pinWidget.refresh();
   },
   
   attachEvents : function()
@@ -364,10 +367,14 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   */
   selectTabButton: function(button)
   {
-    // set the font-color of the middle
-    button.getElement('.left').setStyle('backgroundImage', '');
-    button.getElement('.middle').setStyle('backgroundImage', '');
-    button.getElement('.right').setStyle('backgroundImage', '');
+    console.log(this.isVisible());
+    if(this.isVisible())
+    {
+      // set the font-color of the middle
+      button.getElement('.left').setStyle('backgroundImage', '');
+      button.getElement('.middle').setStyle('backgroundImage', '');
+      button.getElement('.right').setStyle('backgroundImage', '');
+    }
   },
   
   /*
@@ -379,9 +386,12 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   */
   deselectTabButton: function(button)
   {
-    button.getElement('.left').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-left.png)');
-    button.getElement('.middle').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server +'spaces/SourceShift/images/tab_off-body.png)');
-    button.getElement('.right').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-right.png)');
+    if(this.isVisible())
+    {
+      button.getElement('.left').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-left.png)');
+      button.getElement('.middle').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server +'spaces/SourceShift/images/tab_off-body.png)');
+      button.getElement('.right').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-right.png)');
+    }
   },
   
   /*
@@ -701,48 +711,38 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }.bind(this));
   },
   
-  preview : function()
+  show : function()
   {
-    if(!this.previewMode)
-    {
-      this.previewMode = true;
-      this.top.setStyle('visibility', 'hidden');
-      this.top.getChildren().setStyle('visibility', 'hidden');
-      this.resizeControl.setStyle('visibility', 'hidden');
-      this.element.setStyle('borderWidth', 0);
+    this.parent();
 
-      // add 2px to adjust for border
-      var pos = this.element.getPosition();
-      this.element.setStyles({
-        left: pos.x + 2,
-        top: pos.y + 2
-      });
-      
-      // add the cover
-      this.addCover();
-    }
+    this.previewMode = true;
+    this.top.setStyle('visibility', 'hidden');
+    this.top.getElements('*').setStyle('visibility', 'hidden');
+    this.resizeControl.setStyle('visibility', 'hidden');
+    this.element.setStyle('borderWidth', 0);
+
+    // add 2px to adjust for border
+    var pos = this.element.getPosition();
+    this.element.setStyles({
+      left: pos.x + 2,
+      top: pos.y + 2
+    });
   },
   
-  leavePreview : function()
+  edit : function()
   {
-    if(this.previewMode)
-    {
-      this.previewMode = false;
-      this.top.setStyle('visibility', 'visible');
-      this.top.getChildren().setStyle('visibility', 'visible');
-      this.resizeControl.setStyle('visibility', 'visible');
-      this.element.setStyle('borderWidth', 2);
-    
-      // add 2px to adjust for border
-      var pos = this.element.getPosition();
-      this.element.setStyles({
-        left: pos.x - 2,
-        top: pos.y - 2
-      });
-      
-      // remove the cover
-      this.removeCover();
-    }
+    this.previewMode = false;
+    this.top.setStyle('visibility', 'visible');
+    this.top.getElements('*').setStyle('visibility', 'visible');
+    this.resizeControl.setStyle('visibility', 'visible');
+    this.element.setStyle('borderWidth', 2);
+
+    // add 2px to adjust for border
+    var pos = this.element.getPosition();
+    this.element.setStyles({
+      left: pos.x - 2,
+      top: pos.y - 2
+    });
   },
   
   /*
@@ -798,22 +798,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
   },
   
-  addCover : function()
-  {
-    // add the drag cover to catch events
-    this.cover.injectInside(this.element);
-    this.refresh();
-  },
-  
-  removeCover: function()
-  {
-    //console.log('removing cover');
-    if(this.cover)
-    {
-      this.cover.remove();
-    }
-  },
-  
   buildStyleSheet: function()
   {    
     this.cssId = "SourceShiftStyle" + this.getId();
@@ -822,11 +806,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       type: 'text/css' 
     });
     this.css.injectInside(document.head);
-  },
-  
-  edit: function()
-  {
-    
   },
   
   build : function()
@@ -959,9 +938,11 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   blur : function()
   {
     // update the interface
+    /*
     this.element.addClass('SSSourceShiftBorderBlur');
     this.top.addClass('SSSourceShiftTopBlur');
     this.element.setOpacity(0.5);
+    */
   }
 });
 

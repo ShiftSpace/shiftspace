@@ -20,7 +20,7 @@ ShiftSpace.Space = new Class({
     this.shifts = {};
 
     // is visible flag
-    this.isVisible = false;
+    this.setIsVisible(false);
 
     var valid = true;
 
@@ -82,6 +82,16 @@ ShiftSpace.Space = new Class({
   {
     this.hideInterface();
     this.shifts.each(function(aShift){aShift.hide()});
+  },
+  
+  setIsVisible: function(val)
+  {
+    this._isVisible = val;
+  },
+  
+  isVisible: function()
+  {
+    return this._isVisible;
   },
   
   showInterface : function() 
@@ -181,7 +191,6 @@ ShiftSpace.Space = new Class({
   */
   editShift : function( shiftId )
   {
-    console.log('edit shift');
     this.shifts[shiftId].edit();
   },
 
@@ -198,7 +207,6 @@ ShiftSpace.Space = new Class({
     shiftJson.id = aShift.getId();
     shiftJson.space = this.attributes.name;
     shiftJson.username = ShiftSpace.user.getUsername();
-    //console.log(shiftJson);
     this.fireEvent('onShiftUpdate', shiftJson);
   },
   
@@ -213,6 +221,12 @@ ShiftSpace.Space = new Class({
   */
   showShift : function( aShift ) 
   {
+    if($type(aShift) != 'object')
+    {
+      console.error("showShift called with non-object. Perhaps you passed a shift id accidentally");
+      return;
+    }
+
     // get the shift
     var cShift = this.shifts[aShift.id];
     
@@ -392,6 +406,11 @@ ShiftSpace.Space = new Class({
   getValue : function(key)
   {
     return getValue(this.attributes.name + "." + key);
+  },
+  
+  mainViewForShift: function(shiftId)
+  {
+    return this.shifts[shiftId].getMainView();
   }
 });
 

@@ -219,6 +219,15 @@ var ShiftSpace = new (function() {
         };
     };
     
+    function spaceForShift(shiftId)
+    {
+      return spaces[shifts[shiftId].space];
+    }
+    
+    function isNewShift(shiftId)
+    {
+      return (shiftId.search('newShift') != -1);
+    }
     
     /*
     
@@ -379,40 +388,50 @@ var ShiftSpace = new (function() {
     
     */
     function focusShift(shiftId) {
-        var shift = shifts[shiftId];
-        if (focusedShiftId) {
-            var focusedShift = shifts[focusedShiftId];
-            spaces[focusedShift.space].orderBack(focusedShiftId);
-        }
-        focusedShiftId = shift.id;
-        spaces[shift.space].orderFront(shift.id);
-        focusSpace(spaces[shift.space]);
-        
-        // call onShiftFocus
-        spaces[shift.space].focusShift(shiftId);
-        spaces[shift.space].onShiftFocus(shiftId);
-        
-        // scroll the window if necessary
-        var mainView = spaces[shift.space].shifts[shiftId].getMainView();
-        if(mainView)
-        {
-          var pos = mainView.getPosition();
-          var vsize = mainView.getSize().size;
-          var windowScroll = window.getSize().scroll;
-          var windowSize = window.getSize().size;
-          
-          if(pos.x > windowSize.x+windowScroll.x ||
-             pos.y > windowSize.y+windowScroll.y)
+      var shift = shifts[shiftId];
+      var space = spaceForShift(shiftId);
+      
+      // unfocus the last shift
+      if (focusedShiftId) {
+        // hmmm, note, we maybe should have loadShift to avoid confusion about show - David
+        spaceForShift(focusedShiftId).orderBack(focusedShiftId);
+      }
+      focusedShiftId = shift.id;
+      space.orderFront(shift.id);
+
+      // call onShiftFocus
+      space.onShiftFocus(shiftId);
+      
+      // if new shift present the editing interface
+      if(isNewShift(shiftId))
+      {
+        space.editShift(shiftId);
+      }
+
+      space.hideInterface();
+
+      // scroll the window if necessary
+      var mainView = space.mainViewForShift(shiftId);
+      
+      if(mainView)
+      {
+        var pos = mainView.getPosition();
+        var vsize = mainView.getSize().size;
+        var windowScroll = window.getSize().scroll;
+        var windowSize = window.getSize().size;
+
+        if(pos.x > windowSize.x+windowScroll.x ||
+          pos.y > windowSize.y+windowScroll.y)
           {
             var scrollFx = new Fx.Scroll(window, {
               duration: 1000,
               transition: Fx.Transitions.Cubic.easeIn
             });
-            
+
             scrollFx.toElement(mainView);
           }
         }
-    }
+      }
     
     /*
     focusSpace (private)
@@ -422,13 +441,18 @@ var ShiftSpace = new (function() {
       space - a ShiftSpace.Space instance
     */
     function focusSpace(space) {
+      console.log('focusSpace >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      
       if(focusedSpace && focusedSpace != space)
       {
+        console.log('hiding interface!');
         // check to see if focused space
+        focusedSpace.setIsVisible(false);
         focusedSpace.hideInterface();
       }
 
       focusedSpace = space;
+      focusedSpace.setIsVisible(true);
       focusedSpace.showInterface();
     }
     
@@ -442,22 +466,32 @@ var ShiftSpace = new (function() {
     
     */
     this.showShift = function(shiftId) {
-        var shift = shifts[shiftId];
-        shift.content = shift.content.replace('\n', '\\n');
-        shift.content = shift.content.replace('\r', '\\r');
-        var shiftJson = Json.evaluate(shift.content);
-        shiftJson.id = shiftId;
-        if (this.info(shift.space).unknown) {
-            if (confirm('Would you like to install the space ' + shift.space + '?')) {
-                this.installSpace(shift.space, shiftId);
-            }
-        } else {
-            spaces[shift.space].showShift(shiftJson);
-            focusShift(shift.id);
+      var shift = shifts[shiftId];
+      shift.content = shift.content.replace('\n', '\\n');
+      shift.content = shift.content.replace('\r', '\\r');
+      var shiftJson = Json.evaluate(shift.content);
+      shiftJson.id = shiftId;
+      
+      if (this.info(shift.space).unknown) {
+        if (confirm('Would you like to install the space ' + shift.space + '?')) {
+          this.installSpace(shift.space, shiftId);
         }
-        
-        // call onShiftShow
-        spaces[shift.space].onShiftShow(shiftId);
+      } else {
+        // if not a new shift just show the shift
+        if(shiftId.search('newShift') == -1)
+        {
+          spaces[shift.space].showShift(shiftJson);
+          focusShift(shift.id);
+        }
+        else
+        {
+          // if it's new it's always in edit mode
+          editShift(shiftId);
+        }
+      }
+
+      // call onShiftShow
+      spaces[shift.space].onShiftShow(shiftId);
     },
     
     
@@ -618,12 +652,14 @@ var ShiftSpace = new (function() {
     Edit a shift.
     */
     function editShift(shiftId) {
-      var space = shifts[shiftId].space;
+      var space = spaceForShift(shiftId);
       
-      // first show the shift
-      ShiftSpace.showShift(shiftId);
+      // show the space interface
+      focusShift(shiftId);
+      focusSpace(space);
+
       // then edit it
-      spaces[space].editShift(shiftId);
+      space.editShift(shiftId);
     }
     
     /*

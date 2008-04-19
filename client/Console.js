@@ -814,6 +814,7 @@ var Console = new Class({
     newEntry.getElement('.controls a.edit').addEvent('click', function(e) {
       var event = new Event(e);
       event.preventDefault();
+      ShiftSpace.showShift(aShift.id);
       editShift(aShift.id);
     });
     
