@@ -370,9 +370,9 @@ var ShiftSpace = new (function() {
         if(!options.deferred)
         {
           spaces[spaceName].showShift(shiftJson);
-          spaces[spaceName].editShift(tempId);
           // call onShiftShow
           spaces[spaceName].onShiftShow(tempId);
+          spaces[spaceName].editShift(tempId);
           focusShift(tempId);
         }
     }
@@ -408,7 +408,7 @@ var ShiftSpace = new (function() {
         space.editShift(shiftId);
       }
 
-      space.hideInterface();
+      //space.hideInterface();
 
       // scroll the window if necessary
       var mainView = space.mainViewForShift(shiftId);
@@ -441,8 +441,6 @@ var ShiftSpace = new (function() {
       space - a ShiftSpace.Space instance
     */
     function focusSpace(space) {
-      console.log('focusSpace >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      
       if(focusedSpace && focusedSpace != space)
       {
         console.log('hiding interface!');
@@ -454,6 +452,7 @@ var ShiftSpace = new (function() {
       focusedSpace = space;
       focusedSpace.setIsVisible(true);
       focusedSpace.showInterface();
+      console.log('focusSpace >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> show interface');
     }
     
     /*
