@@ -659,6 +659,7 @@ var ShiftSpace = new (function() {
       focusSpace(space);
 
       // then edit it
+      space.onShiftEdit(shiftId);
       space.editShift(shiftId);
     }
     

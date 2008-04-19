@@ -392,6 +392,7 @@ ShiftSpace.Space = new Class({
   },
   
   onShiftCreate : function(shiftId) {},
+  onShiftEdit: function(shiftId) {},
   onShiftSave : function(shiftId) {},
   onShiftDelete : function(shiftId) {},
   onShiftShow : function(shiftId) {},

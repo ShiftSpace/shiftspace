@@ -103,13 +103,13 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.shifts[shiftId].setTitle('untitled-'+untitledCount);
   },
   
-  onShiftFocus : function(shiftId)
+  onShiftEdit: function(shiftId)
   {
-    var currentShift = this.getCurrentShift();
-
     // set the mode to xhtml and set to the html of the current shift
     if(this.isVisible())
     {
+      var currentShift = this.getCurrentShift();
+      
       this.setMode('xhtml');
       this.editSource.setProperty('value', currentShift.getMarkup());
       this.titleField.setProperty('value', currentShift.getTitle());
@@ -133,7 +133,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     // update xhtml/css of shift as user types
     this.editSource.addEvent('keyup', function( _evt ) {
       var currentShift = this.getCurrentShift();
-      currentShift.leavePreview();
       
       if(this.mode == 'xhtml')
       {
@@ -704,7 +703,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   attachEvents: function()
   {
     this.cover.addEvent('mouseover', function(_evt) {
-      this.leavePreview();
+      //this.leavePreview();
     }.bind(this));
     this.cover.addEvent('click', function(_evt) {
       this.preview();
