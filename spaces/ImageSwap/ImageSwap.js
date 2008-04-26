@@ -249,10 +249,23 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
   show : function()
   {
+    // detach the dragging
+    if(this.dragRef) this.dragRef.detach();
+    
     if(this.getPinRef() && this.getSrc())
     {
       this.swap(this.getPinRef(), this.getSrc());
     }
+  },
+  
+  edit: function()
+  {
+    // show the interface and make draggable
+    if(this.dragRef) this.dragRef.attach();
+    
+    // show the zoom buttons
+    this.zoomButton.removeClass('SSDisplayNone');
+    this.unzoomButton.removeClass('SSDisplayNone');
   },
 
   hide : function()
@@ -335,10 +348,10 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
     // add the zoom buttons
     this.zoomButton = new ShiftSpace.Element('div', {
-      'class': "SSImageSwapShiftZoom"
+      'class': "SSImageSwapShiftZoom SSDisplayNone"
     });
     this.unzoomButton = new ShiftSpace.Element('div', {
-      'class': "SSImageSwapShiftUnzoom"
+      'class': "SSImageSwapShiftUnzoom SSDisplayNone"
     });
     
     // add them to the shift element
@@ -347,7 +360,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     
     // show the zooming interface
     this.image.injectInside(this.element);
-    this.image.makeDraggable({
+    this.dragRef = this.image.makeDraggable({
       onComplete : function()
       {
         this.save();
