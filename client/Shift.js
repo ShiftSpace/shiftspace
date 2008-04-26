@@ -303,8 +303,6 @@ ShiftSpace.Shift = new Class({
   */
   pin : function(element, _pinRef)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pin');
-    
     // we should probably copy this
     var pinRef = _pinRef;
     this.setPinRef(_pinRef);
@@ -414,8 +412,6 @@ ShiftSpace.Shift = new Class({
   */
   setPinTarget: function(pinTarget)
   {
-    console.log('setPinTarget: ');
-    console.log(pinTarget);
     this.pinTarget = pinTarget;
   },
   
