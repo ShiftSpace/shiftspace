@@ -227,6 +227,8 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   swap : function(pinRef, src)
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> swap');
+    
     // set the image to that property
     this.setSrc(src);
     this.pin(this.element, pinRef);
@@ -252,9 +254,10 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     // detach the dragging
     if(this.dragRef) this.dragRef.detach();
     
-    if(this.getPinRef() && this.getSrc())
+    if(!this.isSwapped && this.getPinRef() && this.getSrc())
     {
       this.swap(this.getPinRef(), this.getSrc());
+      this.isSwapped = true;
     }
   },
   
@@ -270,9 +273,11 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
   hide : function()
   {
-    if(this.getPinRef() && this.getSrc())
+    if(this.isSwapped && this.getPinRef() && this.getSrc())
     {
+      console.log('unpin!');
       this.unpin();
+      this.isSwapped = false;
     }
   },
   
