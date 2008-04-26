@@ -254,6 +254,10 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     // detach the dragging
     if(this.dragRef) this.dragRef.detach();
     
+    // remove the 
+    this.zoomButton.addClass('SSDisplayNone');
+    this.unzoomButton.addClass('SSDisplayNone');
+    
     if(!this.isSwapped && this.getPinRef() && this.getSrc())
     {
       this.swap(this.getPinRef(), this.getSrc());
@@ -370,12 +374,13 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     
     // show the zooming interface
     this.image.injectInside(this.element);
-    this.dragRef = this.image.makeDraggable({
+    this.dragRef = new Drag.Move(this.image, {
       onComplete : function()
       {
         this.save();
       }.bind(this)
-    });
+    })
+    this.dragRef.detach();
     this.image.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       evt.stop();
