@@ -1,0 +1,1158 @@
+// Our Space class - refs to our code, icon, and css
+var FisheyeSpace = ShiftSpace.Space.extend({
+	attributes: {
+		name: 'Fisheye',
+		icon: 'Fisheye.png',
+		css : 'Fisheye.css'
+	}
+});
+
+// Some convenience funcs
+var makeNoteBox = function (container) {
+    var nb = new ShiftSpace.Element('div');
+    nb.setStyles({
+	'background-color' : '#F5FB9B',
+	'padding':  '0px 10px 2px 10px',
+    });
+    if (container)
+	nb.injectInside(container);
+    return nb;
+}
+
+var makeButton = function(label, target, callbackFunc) {
+    var ab = new ShiftSpace.Element( 'input', {
+	type : 'button', 'class' : 'SSNoteShiftButton',
+	value : label,
+    });
+    ab.injectInside(target);
+    if (callbackFunc)
+	ab.addEvent('click', callbackFunc);
+    return ab;
+}
+
+var makeDisplayItem = function(target) {
+    var ad = new ShiftSpace.Element('div', { 'class' : 'SSDisplayItem' });
+    if (target)
+	ad.injectInside(target);
+    return ad;
+}
+
+/* Define a render class. This allows it to be extended, so that special
+ * types (eg NewsTrust) can extend this and override some funcs to
+ * customize rendering and interface.  Render funcs all take 'that'
+ * as first argument, this is a FisheyeShift object equivalent to
+ * 'this' in the main class code */
+var FisheyeCriticismRenderClass = new Class({
+
+    appendMode: function(that, target, txt) {
+	if (!that.haveSaved)
+	  txt += " (draft)";
+	else
+	  txt += that.modes[that.mode].iconNote;
+	target.appendText(txt); // TODO: only if not empty?
+    },
+
+    // Render the icon, the only thing visible until user mouses over
+    renderIcon: function(that, target) {
+	this.appendMode(that, target, that.iconText);
+    },
+
+    renderCategory: function(that, isEdit, injectTarget) {
+	var someBox = new ShiftSpace.Element('div');
+	someBox.setStyles({
+	    'font': '16px verdana, sans-serif',
+	    'font-weight': 'bold',
+	    'text-align': 'center',
+	    'padding':  '5px 0px 5px 0px',
+	});
+
+	var categoryText = that.criticismCategoryGetName (that.categoryType);
+
+	if (isEdit) {
+	    someBox.appendText("[ " + categoryText + " ]");
+	    someBox.addEvent('click', that.changeCategory.bind(that));
+	}
+	else {
+	    someBox.appendText(categoryText);
+	}
+
+	someBox.injectInside(injectTarget);
+    },
+
+    // Render the summary, the main text body of popup
+    // in edit mode, render an entry box
+    renderSummary: function(that) {
+	if (that.mode == that.MODE_EDIT) {
+	    // create an iframe with the css already loaded
+	    that.summaryFrame = new ShiftSpace.Iframe({
+	      'class' : 'SSNoteShiftFrame',
+	      scroll : 'no',
+	      rows : 4,
+	      cols : 25,
+	      wrap : 'hard',
+	      css : that.getParentSpace().attributes.css,
+	      border : 'medium double #C4C87C' ,
+	      onload : that.finishFrame.bind(that)
+	    });
+	    that.summaryFrame.injectInside(that.editBox);
+	} else {
+	    var summaryBox = new ShiftSpace.Element ('div');
+	    summaryBox.setStyles({
+		 border : 'medium double #C4C87C' ,
+		'padding':  '5px 5px 5px 5px',
+		'max-width' : 300,
+	    });
+	    summaryBox.appendText(that.summaryText);
+	    summaryBox.injectInside (that.detailsBox);
+	}
+    },
+
+    renderLinkBox: function(that, isEdit, injectTarget) {
+	var criticismLinkBox = new ShiftSpace.Element('div', {
+		'padding':  '0px 5px 10px 5px',
+	});
+	criticismLinkBox.injectInside(injectTarget);
+	aBox = new ShiftSpace.Element('div', {'class':'SSDisplayItem'});
+	aBox.setStyles({ 'font-weight': 'bold', });
+	if (isEdit) {
+	    aBox.appendText("  [" + that.criticismLink + "]");
+	    aBox.addEvent('click', that.changeCriticismLink.bind(that));
+	} else {
+	    aLink = this.createLink (that.criticismLink, "[Read]");
+	    aLink.injectInside(aBox);
+	}
+	aBox.injectInside(criticismLinkBox);
+    },
+
+    renderSource: function(that, target) {
+	var sb = makeDisplayItem();
+	name = that.criticismSourceGetName (that.sourceCode);
+	sb.appendText("source: " + name + " [ignore]");
+	sb.addEvent('click', function(){
+	    this.settings.hiddenSources[this.sourceCode] = true;
+	    this.saveSettings();
+	    this.rebuild();
+	}.bind (that));
+	sb.injectInside(target);
+    },
+
+    getDisplaySummary: function(that) {
+	return that.summaryText;
+    },
+
+    changeLinkPrompt : "Link to criticism:",
+
+    createLink: function(aHref, text) {
+	var aLink = new ShiftSpace.Element('a', {
+	    'class' : 'SSLinkItem',
+	    'styles': {
+		    'background-color' : '#F5FB9B',
+		    'color': '#00F',
+		    'font-weight': 'bold',
+		    'display' : 'inline',
+	    },
+	    'href' : aHref
+	});
+	aLink.appendText(text);
+	return aLink;
+    },
+
+
+});
+var FisheyeDefaultRenderClass = new FisheyeCriticismRenderClass();
+
+var FisheyeCriticismNewsNoteRenderClass = FisheyeCriticismRenderClass.extend({
+
+    renderIcon: function(that, target) {
+
+	// Box to hold icon
+	that.iconBox = new ShiftSpace.Element('div');
+	that.iconBox.setStyles({
+	    'background-color' : '#F5FB9B',
+	    'padding':  '0px 0px 0px 0px',
+	    'width':  that.newsTrustIconLink ? '92px' : '16px',
+	    'height':  '16px',
+	    'max-width' : '92px',
+	    'float':  'left',
+	});
+	that.iconBox.injectInside(target);
+
+	// NT icon or rating as stars
+	that.iconImageBox = new ShiftSpace.Element('div');
+	var img = "http://www.newstrust.net/Images/newstrust.gif";
+	if (that.newsTrustIconLink)
+	    img = that.newsTrustIconLink;
+	that.iconImageBox.setHTML('<img src="' + img + '" />');
+	that.iconImageBox.injectInside(that.iconBox);
+
+	// Get NT data if necessary
+	if (!that.haveQueriedNewsTrust) {
+	      that.haveQueriedNewsTrust = true;
+	      this.queryNewsTrust(that);
+	}
+
+	this.appendMode(that, target, "");
+    },
+
+    renderCategory: function(that, isEdit, injectTarget) {
+
+	if (isEdit) {
+	    FisheyeDefaultRenderClass.renderCategory(that, isEdit, injectTarget);
+	    return;
+	}
+
+	var someBox = new ShiftSpace.Element('div');
+	someBox.setStyles({
+	    'padding':  '10px 0px 10px 0px',
+	});
+
+	    // TODO: createImg func
+	var imgBox = new ShiftSpace.Element('div');
+	imgBox.setStyles({
+	    'height':  '24px',
+	    'width':  '161px',
+	    'margin-left' : '40px',
+	    'float':  'center',
+	});
+	var img = "http://www.newstrust.net/Images/ui/newstrust-logo_24px.gif";
+	var someHtml = '<a href="http://www.newstrust.net/">';
+	someHtml += '<img src="' + img + '" width="161" height="24"/></a>';
+	imgBox.setHTML(someHtml);
+	imgBox.injectInside(someBox);
+
+	someBox.injectInside(injectTarget);
+    },
+
+
+    renderSummary: function(that) {
+	var summaryBox = new ShiftSpace.Element ('div');
+	summaryBox.setStyles({
+	     border : 'medium double #C4C87C' ,
+	    'padding':  '5px 5px 5px 5px',
+	    'max-width' : 300, // XXX: unquoted, no units...
+	});
+
+	if (that.newsTrustResponseStatus == 200) {
+	    var sumHtml = "Newstrust users have rated this story on a 5.0 scale and given it a ";
+	    sumHtml += "<b>" + that.newsTrustRating + "</b> avg. based on <b>";
+	    sumHtml += that.newsTrustNumReviews + "</b> reviews";
+	    summaryBox.setHTML(sumHtml);
+	}
+	else if (that.newsTrustResponseStatus)
+	    summaryBox.appendText("NewsTrust server failed with " + that.newsTrustResponseStatus);
+	else
+	    summaryBox.appendText("looking for NewsTrust rating...");
+
+	summaryBox.setStyles({
+	    'max-width' : 230,
+	});
+
+	var aBox = new ShiftSpace.Element ('div', {
+	    'class' : 'SSDisplayItem',
+	    'display' : 'block',
+	});
+
+	var aHref = "http://www.newstrust.net/webx?14@@" + that.criticismLink;
+	var aLink = this.createLink(aHref, "[Read Reviews]");
+	aLink.injectInside(aBox);
+
+	aHref = "http://www.newstrust.net/Stories/review-rate.htm!storyid=";
+	aHref += that.criticismLink;
+
+	var bLink = this.createLink(aHref, "[Write a Review]");
+	bLink.injectInside(aBox);
+	aBox.injectInside(summaryBox);
+	
+	summaryBox.injectInside (that.detailsBox);
+    },
+
+    // Don't render link, in display case, it is inside summary
+    // In edit case, let it be rendered as normal because the input
+    // method is used for NewsTrust storyID
+    renderLinkBox: function(that, isEdit, injectTarget) {
+	if (isEdit) {
+	    // XXX: OO stuff isn't quite working out
+	    //this.parent.renderLinkBox(that, isEdit, injectTarget);
+	    injectTarget.appendText("NT story ID: ");
+	    FisheyeDefaultRenderClass.renderLinkBox(that, isEdit, injectTarget);
+	}
+    },
+
+    // Grab a story page from NT
+    queryNewsTrust: function(that) {
+	var realThis = this;
+	that.log("queryNewsTrust");
+	  // XXX: hardcoded ID length is poor way to avoid querying before ID set
+	if (!that.criticismLink || that.criticismLink.length != 8) {
+	    that.log("NewsTrust storyID seems invalid");
+	    return;
+	}
+	var url = "http://www.newstrust.net/webx?14@@";
+	url += that.criticismLink; // ".f708fe5";
+
+	that.getWebPage(url,
+	    function(response) {
+		this.log("got response");
+		this.newsTrustResponseStatus = response.status;
+		if (response.status == 200)
+		    realThis.parseNewsTrustStoryPage(this, response.responseText);
+	}.bind(that))
+    },
+
+    parseNewsTrustStoryPage: function(that, body) {
+
+	// Find relevant part of document
+	var strIdx = body.indexOf("Our Rating");
+	strIdx = body.indexOf('<div class="rating">', strIdx);
+
+	// Parse out image
+	var imgIdx = body.indexOf('<img src="', strIdx) + 10;
+	var imgEnd = body.indexOf('"', imgIdx);
+	var imgText = body.substr(imgIdx, imgEnd-imgIdx);
+	// EG "/Images/newstrust/stars/stars-large/stars-4-0.gif";
+	that.newsTrustIconLink = "http://www.newstrust.net" + imgText;
+
+	  // Parse out summary text
+	strIdx = body.indexOf('<span class=', strIdx);
+	strIdx = body.indexOf('>', strIdx);
+	var strEnd = body.indexOf('</span>', strIdx);
+	that.newsTrustRateText = body.substr(strIdx+1, strEnd-strIdx-1);
+
+	// Parse out rating and number of reviews
+	// XXX: breaks if there is only 1 rating (different text)
+	strIdx = that.newsTrustRateText.indexOf(' avg');
+	that.newsTrustRating = that.newsTrustRateText.substr(0, strIdx);
+	var endIdx = that.newsTrustRateText.indexOf(' reviews');
+	that.log("got endIdx '" + endIdx + "' (strIdx '" + strIdx + "')");
+	that.newsTrustNumReviews = 
+	    that.newsTrustRateText.substr(strIdx+11, endIdx-strIdx-11);
+
+	that.rebuild();
+    },
+
+    // Source is already obvious
+    renderSource: function() {},
+
+    getDisplaySummary: function(that) {
+	return"NewsTrust";
+    },
+
+    changeLinkPrompt : "Enter the NewsTrust story ID.  If the story page is http://www.newstrust.net/webx?14@@.f708fe5 then the ID is .f708fe5 (note the dot is part of the ID in this example)",
+
+});
+var FisheyeNewsNoteRenderClass = new FisheyeCriticismNewsNoteRenderClass();
+
+
+var FisheyeCriticismSourceWatchRenderClass = FisheyeCriticismNewsNoteRenderClass.extend({
+
+    renderIcon: function(that, target) {
+
+	// Box to hold icon
+	that.iconBox = new ShiftSpace.Element('div');
+	that.iconBox.setStyles({
+	    'background-color' : '#F5FB9B',
+	    'padding':  '0px 0px 0px 0px',
+	    'width':  '16px',
+	    'height':  '16px',
+	    'float':  'left',
+	});
+	that.iconBox.injectInside(target);
+
+	// NT icon or rating as stars
+	that.iconImageBox = new ShiftSpace.Element('div');
+	var img = "http://sourcewatch.org/favicon.ico";
+	that.iconImageBox.setHTML('<img src="' + img + '" />');
+	that.iconImageBox.injectInside(that.iconBox);
+
+	this.appendMode(that, target, "");
+    },
+
+    renderCategory: function(that, isEdit, injectTarget) {
+
+	if (isEdit) {
+	    FisheyeDefaultRenderClass.renderCategory(that, isEdit, injectTarget);
+	    return;
+	}
+
+	var someBox = new ShiftSpace.Element('div');
+	someBox.setStyles({ 'padding':  '10px 0px 10px 0px', });
+
+	    // TODO: createImg func
+	var imgBox = new ShiftSpace.Element('div');
+	imgBox.setStyles({ 
+		'height':  '66px', 
+		'width':  '250px',
+		'display':  'block',
+		'background-image':  'url("http://www.sourcewatch.org/skins/monobook/sw_logo_right2.jpg")',
+	});
+	// XXX: needs to be a link
+
+/*
+	someBox.setStyles({ 'height':  '166px', 'width':  '250px' });
+	var img = "http://www.sourcewatch.org/skins/monobook/sw_logo_right2.jpg";
+	var someHtml = '<a href="http://www.sourcewatch.org/">';
+	someHtml += '<img src="' + img + '"/></a>';
+	imgBox.setHTML(someHtml);
+*/
+	imgBox.injectInside(someBox);
+
+	someBox.injectInside(injectTarget);
+    },
+
+
+    renderSummary: function(that) {
+	var summaryBox = new ShiftSpace.Element ('div');
+	summaryBox.setStyles({
+	     border : 'medium double #C4C87C' ,
+	    'padding':  '5px 5px 5px 5px',
+	    'max-width' : 300,
+	});
+
+	var sumHtml = "SourceWatch has an open wiki page on ";
+	sumHtml +=  that.criticismLink;
+	summaryBox.setHTML(sumHtml);
+
+	summaryBox.setStyles({ 'max-width' : 230, });
+
+	var aBox = new ShiftSpace.Element ('div', {
+	    'class' : 'SSDisplayItem',
+	    'display' : 'block',
+	});
+
+	var aHref = "http://www.sourcewatch.org/index.php?title=" + that.criticismLink;
+	var aLink = this.createLink(aHref, "[Read]");
+	aLink.injectInside(aBox);
+	aBox.injectInside(summaryBox);
+	summaryBox.injectInside (that.detailsBox);
+    },
+
+    // Don't render link, in display case, it is inside summary
+    // In edit case, let it be rendered as normal because the input
+    // method is used for NewsTrust storyID
+    renderLinkBox: function(that, isEdit, injectTarget) {
+	if (isEdit) {
+	    injectTarget.appendText("SW page title: ");
+	    FisheyeDefaultRenderClass.renderLinkBox(that, isEdit, injectTarget);
+	}
+    },
+
+    getDisplaySummary: function(that) {
+	return "SourceWatch: " + that.criticismLink;
+    },
+
+    changeLinkPrompt : "Enter the SourceWatch page title.  If the page is http://www.sourcewatch.org/index.php?title=Jonah_Goldberg then the title is Jonah_Goldberg",
+
+});
+var FisheyeSourceWatchRenderClass = new FisheyeCriticismSourceWatchRenderClass();
+
+
+var FisheyeShift = ShiftSpace.Shift.extend({
+
+    /*
+	 Categories Static Data
+    */
+
+    criticismCategories: {
+    			// Hard Failure - red
+		0: {'name':'Factual Error', 'color':'#F00'},
+		1: {'name':'Logical Fallacy', 'color':'#F33'},
+		2: {'name':'Misleading', 'color':'#F66'},
+			// Soft Failure - Orange / Yellow
+		3: {'name':'Unchallenged Quote', 'color':'#F90'},
+		4: {'name':'Unexplained Contradiction', 'color':'#EE0'},
+		5: {'name':'Bias In Presentation', 'color':'#F0F'},
+		6: {'name':'Projecting Motive', 'color':'#939'},
+			// Neutral - blue
+		7: {'name':'Context', 'color':'#33F'},
+		8: {'name':'Differing Viewpoint', 'color':'#55F'},
+			// Positive - green
+		9: {'name':'Supplementary Information', 'color':'#5F5'},
+			// Embedded systems
+		10: {'name':'NewsTrust', 'color':'#AAA', 
+		     'renderClass':FisheyeNewsNoteRenderClass},
+		11: {'name':'SourceWatch', 'color':'#AAA',
+		     'renderClass':FisheyeSourceWatchRenderClass},
+    //num_categories: 4
+    },
+
+    criticismCategoryGetName: function(idx) {
+    	return this.criticismCategories[idx].name;
+    },
+
+    criticismCategoryGetColor: function(idx) {
+    	return this.criticismCategories[idx].color;
+    },
+
+
+    /*
+	 Sources Static Data
+    */
+
+    criticismSources: {
+		0: {'name' : 'Unknown'},
+		1: {'name' : 'Media Matters',
+		    'homepage' : 'http://mediamatters.org/'},
+		2: {'name' : 'FAIR',
+		    'homepage' : 'http://fair.org/'},
+		3: {'name' : 'ThinkProgress',
+		    'homepage' : 'http://thinkprogress.org/'},
+		4: {'name' : 'NewsTrust',
+		    'homepage' : 'http://newstrust.net/'},
+    },
+
+    criticismSourceGetName: function(idx) {
+    	return this.criticismSources[idx].name;
+    },
+
+    criticismSourceFromLink: function(uri) {
+	this.log("criticismSourceFromLink called");
+	for (var key in this.criticismSources) {
+	    if (uri.match(this.criticismSources[key].homepage)) {
+		this.log("criticismSourceFromLink matched " + key);
+		return key;
+	    }
+	}
+	this.log("criticismSourceFromLink didn't match '" + uri + "'");
+    	return 0;
+    },
+
+
+
+    // Define different modes that the shift might be in: display, edit, config..
+    modes: {
+	0: {'name' 	: 'Display',
+	    'iconNote' 	: ''},
+	1: {'name' 	: 'Edit',
+	    'iconNote' 	: ' (edit)',
+	    onSave 	: function() {
+		this.haveSaved = 1;
+		this.save();
+		this.setMode (this.MODE_DISPLAY);
+	    },
+	    onCancel 	: function() {
+		if (this.haveSaved) {
+		    this.loadStoredData(this.json);
+		    this.setMode (this.MODE_DISPLAY);
+		} else
+		    this.hide(); // Cancel an unsaved new note
+	    },
+	    makeButtons : function(that) {
+		var di = makeDisplayItem(that.editBox);
+		makeButton('Save', di, this.onSave.bind(that));
+		makeButton('Cancel', di, this.onCancel.bind(that));
+	    },
+	  },
+	2: {'name'	: 'Settings',
+	    'iconNote'	: ' (config)',
+	    onSave 	: function() {
+		this.saveSettings();
+		this.setMode (this.MODE_DISPLAY);
+	    },
+	    onCancel 	: function() {
+		this.loadSettings();
+		this.setMode (this.MODE_DISPLAY);
+	    },
+	    makeButtons : function(that) {
+		var di = makeDisplayItem(that.settingsBox);
+		makeButton('Save', di, this.onSave.bind(that));
+		makeButton('Cancel', di, this.onCancel.bind(that));
+	    },
+	    fillBody	: function(that, injectTarget) {
+		that.settingsBox = makeNoteBox(injectTarget);
+		that.renderSettings(that.settingsBox);
+	    },
+	  },
+	3: {'name'	: 'Help',
+	    'iconNote'	: ' (help)',
+	    onDone 	: function() { this.setMode (this.MODE_DISPLAY); },
+	    testRange 	: function() { 
+		if (window.getSelection) {
+		    this.log("browser supports getSelection()");
+		    var mySel = window.getSelection();
+		    if (mySel.rangeCount > 0) {
+			this.log("user selected '" + mySel + "'");
+			this.log("Selection has '"+ mySel.rangeCount +"' ranges");
+			var myRange = mySel.getRangeAt(0);
+			myRange.collapse(false); // flatten to endpoint
+			// Insert a test red F... works
+			//var oSpan = document.createElement("span");
+			var oSpan = new ShiftSpace.Element('span');
+			oSpan.style.color = "red";
+			oSpan.style.display = "inline";
+			oSpan.appendChild(document.createTextNode("F"));
+		        myRange.insertNode(oSpan);
+			var pos = oSpan.getPosition();
+			this.log("got position of inserted icon as (" + pos.x + "," + pos.y + ")");
+			this.posRange = myRange;
+			// Attempt to insert our Shift at this position... no effect
+		        //myRange.insertNode(this.element);
+		    } else {
+			this.log("no user selection");
+		    }
+		} else {
+		    this.log("no getSelection()...");
+		}
+	    },
+	    makeButtons : function(that) {
+		var di = makeDisplayItem(that.helpBox);
+		makeButton('Done', di, this.onDone.bind(that));
+		makeButton('Range', di, this.testRange.bind(that));
+	    },
+	    fillBody	: function(that, injectTarget) {
+		that.helpBox = makeNoteBox(injectTarget);
+		that.helpBox.appendText("This is some help text");
+	    },
+	  },
+    },
+
+
+
+
+    loadStoredData: function(json) {
+
+	// Load shift data from JSON
+	this.haveSaved = json.haveSaved || 0;  // TODO: only on initial load?
+	this.criticismLink = json.criticismLink || "http://a.org/some.html";
+	this.summaryText = json.summaryText || "This claim is false because...";
+	this.categoryType = json.categoryType || 0;
+	this.sourceCode = json.sourceCode || 0;
+
+	// Initialize based on loaded data
+	this.renderClass = this.refreshRenderClass();
+	    // XXX: does "shown" still make sense?
+	this.shown = this.haveSaved ? false : true;
+    },
+
+
+
+    /*
+	 Initialize - when a particular annotation is created or loaded
+    */
+
+    initialize: function(json) {
+        this.parent(json);
+
+	// Store initialize data in case we want to reload
+	this.json = json;
+
+	this.loadSettings();
+
+	// Static data
+	this.iconText = "F";
+
+	this.loadStoredData(json);
+
+	// The we sometimes need to access these modes directly in code
+	this.MODE_DISPLAY = 0;
+	this.MODE_EDIT = 1;
+	this.mode = this.MODE_DISPLAY;
+
+        this.build(json);
+
+	if (!this.haveSaved)
+	    this.setMode (this.MODE_EDIT);
+
+	// XXX: do we need to do this on rebuild?
+	this.manageElement(this.element);
+    },
+
+
+
+    /*
+	 Functions to fill and refresh parts of GUI
+    */
+
+
+    fillSubmitter: function() {
+	// Submitter
+	this.submitterBox = new ShiftSpace.Element('div', {
+		'class' : 'SSDisplayItem',
+	});
+	this.submitterIgnore= new ShiftSpace.Element('div', {
+		'class' : 'SSInlineActiveText',
+	});
+        this.submitterIgnore.appendText("[ignore]");
+        this.submitterBox.appendText("submitter: Geoff");
+	this.submitterIgnore.injectInside(this.submitterBox);
+        this.submitterBox.injectInside(this.detailsBox);
+    },
+
+    refreshStyle: function() {
+        this.element.setStyles({
+            'font': '16px verdana, sans-serif',
+	    'font-weight': 'bold',
+            'padding':  '2px 2px 2px 2px',
+            'color': '#FFF',
+	    'background-color': this.criticismCategoryGetColor(this.categoryType),
+        });
+    },
+
+    // Call this after setting category to update render func
+    refreshRenderClass: function() {
+	if (this.criticismCategories[this.categoryType].renderClass)
+	  return this.criticismCategories[this.categoryType].renderClass;
+	return FisheyeDefaultRenderClass;
+    },
+
+    // Fills the main element with all the GUI content
+    fillElement: function(injectTarget) {
+
+	// XXX: replace with hide/show so it doesn't leave dots
+	// TODO: filter author
+	if (this.settings.hiddenCategories[this.categoryType] ||
+	    this.settings.hiddenSources[this.sourceCode])
+	    return;
+
+	this.refreshStyle();
+
+	// Render icon into top of element
+	this.renderClass.renderIcon(this, injectTarget);
+
+	// Display and edit modes are rendered in parallel,
+	// relying on renderClass so that plugins (eg NewsTrust)
+	// can accept and display special data
+	if (this.mode == this.MODE_DISPLAY || this.mode == this.MODE_EDIT) {
+	    var isEdit = (this.mode == this.MODE_EDIT) ? true : false;
+
+	    if (isEdit) {
+		this.editBox = makeNoteBox(injectTarget);
+	    } else {
+		this.detailsBox = makeNoteBox(injectTarget);
+		if (this.mode != this.MODE_DISPLAY || !this.shown)
+		    this.detailsBox.addClass('SSHidden');
+	    }
+
+	    var de = isEdit ? this.editBox : this.detailsBox;
+	    this.renderClass.renderCategory(this, isEdit, de);
+	    this.renderClass.renderSummary(this);
+	    this.renderClass.renderLinkBox(this, isEdit, de);
+	    this.fillSubmitter();
+	    if (!isEdit) {
+		this.renderClass.renderSource(this, de);
+	    }
+	}
+
+	// Other modes don't depend on renderClass, handle generic
+	else {
+	    this.modes[this.mode].fillBody(this, injectTarget);
+	}
+
+	// Button Box: DISPLAY mode gets buttons for each other mode,
+	// other modes make their own buttons as needed
+	if (this.mode == this.MODE_DISPLAY) {
+	    this.buttonBox = makeDisplayItem();
+	    for (var key in this.modes) {
+		if (key != this.MODE_DISPLAY) {
+		    var eb = makeButton(this.modes[key].name, this.buttonBox);
+		    eb.addEvent('click', this.setMode.bind(this, key));
+		}
+	    }
+	    this.buttonBox.injectInside( this.detailsBox );
+	} else {
+	    this.modes[this.mode].makeButtons(this);
+	}
+    },
+
+    toggleHiddencategory: function(key) {
+	this.log("toggleHiddencategory key '" + key + "'");
+	if (this.settings.hiddenCategories[key])
+	  this.settings.hiddenCategories[key] = false;
+	else
+	  this.settings.hiddenCategories[key] = true;
+
+	this.rebuild();
+    },
+
+    renderSettings: function(settingsBox) {
+	var user = ShiftSpace.getUser();
+	var uName = user.getUsername();
+	var name = user.getName();
+
+	var makeTextBox = function(target, text) {
+	    var usrBox = new ShiftSpace.Element('div');
+	    usrBox.appendText(text);
+	    usrBox.injectInside(target);
+	    return usrBox;
+	}
+
+	var makeHeader = function(target, text) {
+	    var sb = makeTextBox(target, text);
+	    sb.setStyles({ 'font-weight': 'bold', 'padding': '10px 0px 0px 0px'});
+	    return sb;
+	}
+
+	var makeSubBox = function(target) {
+	    var subBox = new ShiftSpace.Element('div');
+	    subBox.setStyles({
+		'background-color' : '#F5DB7B',
+		'padding':  '5px 15px 5px 15px',
+	    });
+	    subBox.injectInside(target);
+	    return subBox;
+	}
+
+	var sb = makeHeader (settingsBox, "settings for "+name+" ("+uName+")");
+	sb.setStyles({ 'text-align': 'center', });
+
+	makeHeader (settingsBox, "uncheck categories you don't want to see");
+	var subBox = makeSubBox (settingsBox);
+
+	for (var key in this.criticismCategories) {
+	    var label = this.settings.hiddenCategories[key] ?  " [_] " : " [X] ";
+	    label += this.criticismCategoryGetName(key);
+	    var someBox = makeTextBox(subBox, label);
+	    someBox.addEvent('click', function(e, key){
+		this.toggleHiddencategory(key);
+	    }.bindWithEvent(this, key));
+	}
+
+	makeHeader (settingsBox, "Ignored sources (click to restore)");
+	subBox = makeSubBox (settingsBox);
+
+	var hadIgnoredSource = false;
+	for (var key in this.settings.hiddenSources) {
+	    if (this.settings.hiddenSources[key]) {
+		var label = this.criticismSourceGetName(key);
+		var someBox = makeTextBox(subBox, label);
+		someBox.addEvent('click', function(key){
+		    this.settings.hiddenSources[key] = false;  // show source
+		    this.rebuild();
+		}.bind (this, key));
+		hadIgnoredSource = true;
+	    }
+	}
+
+	if (!hadIgnoredSource)
+	    makeTextBox (subBox, "  [no Sources are ignored]  ");
+
+	makeHeader (settingsBox, "Ignored authors (click to restore)");
+	subBox = makeSubBox(settingsBox);
+
+	var hadIgnoredUser = false;
+	for (var key in this.settings.hiddenAuthors) {
+	    if (this.settings.hiddenAuthors[key]) {
+		var someBox = makeTextBox (subBox, key);
+		someBox.addEvent('click', function(key){
+		    this.settings.hiddenAuthors[key] = false;  // show source
+		    this.rebuild();
+		}.bind (this, key));
+		hadIgnoredUser = true;
+	    }
+	}
+
+	if (!hadIgnoredUser)
+	    makeTextBox (subBox, "  [no Users are ignored]  ");
+    },
+
+
+    /*
+	 Build the interface
+    */
+    
+    build: function(json) {
+
+	// Our toplevel container
+        this.element = new ShiftSpace.Element('div');
+
+	// initialize height
+	this.element.style.zIndex=1;
+
+	this.element.setStyles({
+	  'position': 'absolute',
+	  left : json.position.x,
+	  top : json.position.y
+	});
+
+/*
+	if (json.posRange) {
+	    //this.log("loaded posRange '" + json.posRange + "'");
+	    this.log("loaded posRange of some sort...");
+	}
+*/
+
+	this.fillElement(this.element);
+
+	// Add our shift to page
+        this.element.injectInside(document.body);
+
+	// set up the mouse enter/leave events for hiding and reveal details
+	this.element.addEvent('mouseover', this.onMouseIn.bind(this));
+	this.element.addEvent('mouseout', this.onMouseOut.bind(this));
+    },
+
+    rebuild: function() {
+	this.element.setHTML("");
+	this.fillElement(this.element);
+    },
+
+    log: function(msg) {
+	if (typeof console == 'object' && console.log) {
+		console.log(msg);
+	} else if (typeof GM_log != 'undefined') {
+		GM_log(msg);
+	}
+    },
+
+    encode: function() {
+	var pos = this.element.getPosition();
+
+	if (this.inputArea) {
+	    this.summaryText = this.inputArea.value;
+	}
+
+	this.json = {
+	    summaryText : this.summaryText,
+	    haveSaved : this.haveSaved,
+	    categoryType : this.categoryType,
+	    sourceCode : this.sourceCode,
+	    criticismLink : this.criticismLink,
+	    position : pos,
+	    posRange : this.posRange,
+	       // What gets displayed in shift list
+	    summary : this.renderClass.getDisplaySummary(this),
+	};
+
+	return this.json;
+    },
+
+
+    saveSettings: function() {
+	user = ShiftSpace.getUser(); // returns User object
+	user.setPref('settings', this.settings);
+    },
+
+    loadSettings: function() {
+	var user = ShiftSpace.getUser();
+		// XXX: what is namespace?  do i need to prepend with my 
+		// shift name to tokens?
+        this.settings = user.getPref('settings');
+	if (!this.settings)
+	    this.settings = {};
+	if (!this.settings.hiddenCategories)
+	    this.settings.hiddenCategories = {};
+	if (!this.settings.hiddenSources)
+	    this.settings.hiddenSources = {};
+	if (!this.settings.hiddenAuthors)
+	    this.settings.hiddenAuthors = {};
+    },
+
+    setCategory: function(idx) {
+	this.categoryType = idx;
+	this.renderClass = this.refreshRenderClass();
+	this.rebuild();
+    },
+
+    changeCategory: function() {
+    	var txt = "Enter category code:\n";
+	for (var i in this.criticismCategories)
+	    txt += "  " + i + "=" + this.criticismCategoryGetName(i) + ",\n";
+
+	var msg = prompt(txt, this.categoryType);
+	if (msg)
+	    this.setCategory(msg);
+    },
+
+    changeCriticismLink: function() {
+	var msg = prompt(this.renderClass.changeLinkPrompt, this.criticismLink);
+	if (msg) {
+	    this.log("changeCriticismLink: prompt returned with data");
+	    this.criticismLink = msg;
+	    this.sourceCode = this.criticismSourceFromLink(msg);
+	    this.rebuild();
+	}
+    },
+
+    setMode : function(newMode) {
+    	this.log("setMode to " + newMode + " cur " + this.mode);
+	if (this.mode == newMode) return;
+
+	this.mode = newMode;
+	this.rebuild();
+	if (this.mode == this.MODE_EDIT)
+	    this.element.makeDraggable();
+    },
+
+
+	// TODO: mootools has an event which doesn't fire on subelements...
+	// we could use that, although we'd likely keep the timer logic
+    onMouseIn : function( e )
+    {
+	// we don't want the event to continue
+	var evt = new Event(e);
+	evt.stopPropagation();
+
+	// Raise this Shift a little bit so it draws over the minimized icons
+	this.element.style.zIndex=2;
+	this.shown = true;
+
+	// Cancel any pending hide, then show
+	this.hidePending = 0;
+
+	// DISPLAY is the only mode that minimizes...
+	if (this.mode == this.MODE_DISPLAY) {
+	    this.detailsBox.removeClass('SSHidden');
+	    this.buttonBox.removeClass ('SSHidden');
+	}
+    },
+    
+    onMouseOut : function( e )
+    {
+      // we don't want the even to continue
+      var evt = new Event(e);
+      evt.stopPropagation();
+
+      this.hidePending = 1;
+
+      (function(){ 
+	  if (this.hidePending) {    // Unless hide was cancelled...
+	      this.hidePending = 0;
+	      if (this.mode != this.MODE_DISPLAY)  // Only minimize display mode
+		  return;
+	      this.detailsBox.addClass('SSHidden');
+	      this.buttonBox.addClass('SSHidden');
+	      this.element.style.zIndex=1;  // Lower to default height
+	      this.shown = false;
+	  } 
+      }.bind(this) ).delay(500);
+    },
+
+    /*
+      Function : finishFrame
+	Finishing building the iframe by including the textarea inside.
+	TODO: this was taken from NOTES, unclear why this is not done inline...
+	assume because it needs to be linked into document for below to work
+    */
+    finishFrame : function()
+    {
+	// Get document reference and MooToolize the body
+	var doc = this.summaryFrame.contentDocument;
+	this.frameBody = $(doc.body);
+	this.frameBody.setProperty('id', 'SSNoteShiftFrameBody');
+
+	// create the text area
+	this.inputArea = $(doc.createElement('textarea'));
+	this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
+	this.inputArea.injectInside( this.frameBody );
+	this.inputArea.setProperty('value', this.summaryText);
+	this.inputArea.focus();
+	
+	this.inputArea.addEvent('mousedown', function() {
+	   this.fireEvent('onFocus', this);
+	}.bind(this));
+    },
+
+
+
+    getWebPage: function(url, callback) {
+        //this.log('Loading ' + url + ' from network');
+        ShiftSpace.xmlhttpRequest({
+            'method': 'GET',
+            'url': url,
+            'onload': callback
+        });
+    },
+});
+
+// ?? Register our Space class, passing the Shift class definition
+// platform will need to instantiatiate and hook into us
+var Fisheye = new FisheyeSpace(FisheyeShift);
+
+
+
+// REFERENCE BELOW
+
+
+/*
+	     var xmlobject = http_request.responseXML;
+	     var root = xmlobject.getElementsByTagName('rss')[0];
+	     var channels = root.getElementsByTagName("channel");
+	     var items = channels[0].getElementsByTagName("item");
+	     var descriptions = items[0].getElementsByTagName("description");
+	     var date = items[0].getElementsByTagName("pubDate");
+*/
+
+	/* some GET formatting code that might come in handy
+        var url = server + 'shiftspace.php?method=' + method;
+        for (var key in parameters) {
+            url += '&' + key + '=' + encodeURIComponent(parameters[key]);
+        }
+        url += '&v=' + version;
+        loadFile(url, callback);    
+	*/
+
+/*  Example NewsTrust page we'll be parsing content of
+
+<div class="ratingLabel">
+Our Rating
+<!-- <a href="#" onClick="openPopup('/Help/faq_report.htm#story_ratings', 'Help'); return false;" style="font-size: 10px; color: #8c8c8c; font-weight: normal; text-decoration: underline">What does this mean?</a> -->
+<a href="#" onClick="openPopup('/Help/faq_report.htm#story_ratings', 'Help'); return false;" class="help"><img src="/Images/newstrust/spacer.gif" width="9" height="9"/></a>
+</div>
+<div class="rating">
+<img src="/Images/newstrust/stars/stars-large/stars-4-0.gif"
+alt="average rating is 3.92" title="average rating is 3.92"
+width="92" height="15"><br/>
+<span class="editorial_gray">
+3.9 avg.
+from 5 reviews</span>
+</div>
+
+ */
+
+/*this.element.makeDraggable({
+    'onComplete': function() {
+	this.log("drag complete");
+	//this.autoSave();
+    }.bind(this)
+});*/
+
+/*
+	var rightclick = false;
+	if (!e) var e = window.event;
+	if (e.which) rightclick = (e.which == 3);
+	else if (e.button) rightclick = (e.button == 2);
+	this.log('Rightclick: ' + rightclick); // true or false
+*/
+
+
+/*
+
+TODO:
+
+edit button?
+TODO: allow edit ONLY IF YOU OWN IT
+
+rename variables
+
+replace members variables with local vars in fill/build funcs
+
+disable save button until fields have been set
+decorate URI field red until it has been set
+
+httprequest is in thread?  loads seems slow with it
+firefox keeps showing load indicator even after we'ver parsed data
+
+initialize zIndex (done but doesn't seem to work)
+
+don't overload criticismLink for newsTrust?
+
+make undraggable when exiting edit mode
+
+cancel should undo any unsaved position change
+
+ref by range as well as position, plus text.  allow for smart decision later
+
+finish cleanup of render funcs: isEdit, target
+
+printobj func for scanning platform objects
+
+make [ignore] user work
+
+signup/login placeholder logic?
+
+plugin settings gui hooks?
+
+generic per-shift and per-user data storage hooks for plugins?
+
+edit/setup icons in header? buttonbar?
+
+*/
