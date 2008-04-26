@@ -280,6 +280,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   {
     // increment the zoom level, increase the image size by ten percent
     this.setZoom(this.getZoom()+1);
+    this.updateImageDimensions();
     this.update();
   },
   
@@ -287,23 +288,27 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   {
     // decrement the zoom level, decrease the image size by ten percent
     this.setZoom(this.getZoom()-1);
+    this.updateImageDimensions();
     this.update();
   },
   
-  refresh: function()
+  updateImageDimensions: function()
   {
     var incrx = this.imageSize.x * 0.1;
     var incry = this.imageSize.y * 0.1;
     
-    var nx = (this.imageSize.x + incrx * this.getZoom()).round();
-    var ny = (this.imageSize.y + incry * this.getZoom()).round();
-    
+    this.imageSize.x = (this.imageSize.x + incrx * this.getZoom()).round();
+    this.imageSize.y = (this.imageSize.y + incry * this.getZoom()).round();
+  },
+  
+  refresh: function()
+  {    
     // increment by percentage
-    this.image.setProperty('width', nx);
-    this.image.setProperty('height', ny);
+    this.image.setProperty('width', this.imageSize.x);
+    this.image.setProperty('height', this.imageSize.y);
     this.image.setStyles({
-      width: nx,
-      height: ny
+      width: this.imageSize.x,
+      height: this.imageSize.y
     });
   },
   
