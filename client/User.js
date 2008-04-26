@@ -3,6 +3,7 @@ var username;
 var User = new Class({
   
     initialize: function() {
+      // we need a user id, not just a user name
       username = GM_getValue('username', '');
       if (username == '') {
         username = false;

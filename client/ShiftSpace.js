@@ -224,6 +224,11 @@ var ShiftSpace = new (function() {
       return spaces[shifts[shiftId].space];
     }
     
+    function userForShift(shiftId)
+    {
+      return shifts[shiftId].username;
+    }
+    
     function isNewShift(shiftId)
     {
       return (shiftId.search('newShift') != -1);
@@ -652,14 +657,22 @@ var ShiftSpace = new (function() {
     */
     function editShift(shiftId) {
       var space = spaceForShift(shiftId);
-      
-      // show the space interface
-      focusShift(shiftId);
-      focusSpace(space);
+      var user = userForShift(shiftId);
 
-      // then edit it
-      space.onShiftEdit(shiftId);
-      space.editShift(shiftId);
+      if(ShiftSpace.user.getUsername() == user)
+      {
+        // show the space interface
+        focusShift(shiftId);
+        focusSpace(space);
+
+        // then edit it
+        space.onShiftEdit(shiftId);
+        space.editShift(shiftId);
+      }
+      else
+      {
+        alert("You do not have permission to edit this shift.");
+      }
     }
     
     /*
