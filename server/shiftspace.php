@@ -9,7 +9,7 @@ if (!empty($_SERVER['HTTP_REFERER'])) {
 }
 
 if (empty($href)) {
-    echo '{status: 0}';
+    echo "{status: 0, message:'Empty url'}";
     exit;
 }
 

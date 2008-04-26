@@ -1,7 +1,7 @@
 <?php
 
 if (empty($user) || empty($user->id)) {
-    echo "{status: 0}";
+    echo "{status: 0, message:'User not logged in'}";
     exit;
 }
 
@@ -49,7 +49,7 @@ while ($exists) {
     $length++;
     if ($length == 32) {
         // An exact duplicate shift exists
-        echo "{status: 0}";
+        echo "{status: 0, message:'Duplicate shift'}";
         exit;
     }
     $url_slug = substr(md5($values . time()), 0, $length);

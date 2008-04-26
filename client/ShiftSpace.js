@@ -585,6 +585,8 @@ var ShiftSpace = new (function() {
     
     */
     function saveShift(shiftJson) {
+        console.log('saveShift');
+        console.log(shiftJson);
         
         if (shiftJson.id.substr(0, 8) == 'newShift') {
             return saveNewShift(shiftJson);
@@ -655,7 +657,8 @@ var ShiftSpace = new (function() {
     editShift (private)
     Edit a shift.
     */
-    function editShift(shiftId) {
+    function editShift(shiftId) 
+    {
       var space = spaceForShift(shiftId);
       var user = userForShift(shiftId);
 
@@ -1227,7 +1230,14 @@ var ShiftSpace = new (function() {
         onload: function(rx) {
           if (typeof callback == 'function') {
             var json = Json.evaluate(rx.responseText);
-            callback(json);
+            if(json.status == 0)
+            {
+              console.error(method + ' failed' + ((json.message && (', error: ' + json.message)) || '') + '.');
+            }
+            else
+            {
+              callback(json);
+            }
           }
         },
         onerror: function(err) {
@@ -1244,6 +1254,7 @@ var ShiftSpace = new (function() {
         };
       }
 
+      // we need to have error handling right here
       GM_xmlhttpRequest(req);
     }
     

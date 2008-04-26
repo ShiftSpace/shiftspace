@@ -1,7 +1,7 @@
 <?php
 
 if (empty($user) || empty($user->id)) {
-    echo "{status: 0, message: 'Not logged in.'}";
+    echo "{status: 0, message: 'User not logged in.'}";
     exit;
 }
 
@@ -13,7 +13,7 @@ $shift = $db->row("
 ");
 
 if ($shift->user_id != $user->id) {
-    echo "{status: 0}";
+    echo "{status: 0, message:'User does not have permission'}";
     exit;
 }
 

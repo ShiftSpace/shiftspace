@@ -205,6 +205,8 @@ ShiftSpace.Space = new Class({
     // notify other object such as the console
     var shiftJson = aShift.encode();
     shiftJson.id = aShift.getId();
+    console.log(aShift);
+    console.log('updateShift ' + shiftJson.id);
     shiftJson.space = this.attributes.name;
     shiftJson.username = ShiftSpace.user.getUsername();
     this.fireEvent('onShiftUpdate', shiftJson);
