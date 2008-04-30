@@ -213,7 +213,6 @@ var PinWidget = new Class({
   
   userSelectedPinAction: function(_evt)
   {
-    console.log('userSelectedPinAction');
     var evt = new Event(_evt);
     var target = $(evt.target);
     
@@ -221,8 +220,6 @@ var PinWidget = new Class({
     {
       target = target.getParent();
     }
-    
-    console.log(target);
     
     var action = null;
     
@@ -280,8 +277,6 @@ var PinWidget = new Class({
   
   hideMenu: function(_evt)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> hide menu');
-    
     this.element.removeClass('SSPinWidgetActive');
     this.element.removeClass('SSPinWidgetMenuOpen');
     this.menu.setStyle('display', 'none');

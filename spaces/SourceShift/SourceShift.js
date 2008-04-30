@@ -160,7 +160,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }.bind(this));
     
     this.previewButton.addEvent('click', function( _evt ) {
-      this.getCurrentShift().preview();
+      this.getCurrentShift().show();
     }.bind(this));
     
     // setup the resizing behavior
@@ -607,7 +607,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       {
       }
       
-      this.resizeToContent();
+      //this.resizeToContent();
       this.refresh();
     }
   },
@@ -638,7 +638,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.iframeCss.appendText(css);
     }
     
-    this.resizeToContent();
+    //this.resizeToContent();
     this.refresh();
   },
   
@@ -691,7 +691,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
 
     // if not pinned
-    if(!this.pinRef)
+    if(!this.getPinRef())
     {
       // set the frame dimensions
       this.frame.setStyle('height', fsizey-4);
@@ -719,7 +719,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       //this.leavePreview();
     }.bind(this));
     this.cover.addEvent('click', function(_evt) {
-      this.preview();
+      this.show();
     }.bind(this));
   },
   
@@ -908,6 +908,10 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   pin : function(pinRef)
   {
+    // grab the current location of the shift
+    this.prePinLocation = this.element.getPosition();
+
+    // call the parent pin method
     this.parent(this.frame, pinRef);
 
     // update the frame styles
@@ -933,6 +937,15 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.frame.setStyles({
       float : '',
       width : ''
+    });
+    
+    // put it back
+    this.frame.injectAfter(this.top);
+    
+    // go back to the original locatino
+    this.element.setStyles({
+      left: this.prePinLocation.x, 
+      top: this.prePinLocation.y 
     });
     
     // refresh

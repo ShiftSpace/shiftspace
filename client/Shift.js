@@ -310,7 +310,7 @@ ShiftSpace.Shift = new Class({
     // get the target
     var pinTarget = ShiftSpace.Pin.toNode(pinRef);
     
-    // store some styles
+    // store some styles from the pin target
     if(pinTarget && pinRef.action == 'replace') 
     {
       this.setPinTargetStyles(pinTarget.getStyles('width', 'height', 'float'));
@@ -341,11 +341,12 @@ ShiftSpace.Shift = new Class({
     if(this.getPinElement())
     {
       // restore the old node
-      this.pinElement.replaceWith(this.getPinTarget());
+      this.getPinElement().replaceWith(this.getPinTarget());
       
       // clear out these vars
       this.setPinTarget(null);
       this.setPinElement(null);
+      this.setPinRef(null);
     }
   },
   
