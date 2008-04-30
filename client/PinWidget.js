@@ -36,6 +36,8 @@ var PinWidget = new Class({
     }
     */
     
+    this.isPinned = false;
+    
     // inser the pin widget into the element
     this.element.addClass('SSPinWidget');
     this.menuIsVisible = false;
@@ -147,21 +149,20 @@ var PinWidget = new Class({
       // check to see if we are in selecting mode
       if(!this.isSelecting)
       {
-        if(this.iconImg.hasClass('pinned')) this.iconImg.removeClass('pinned');
-      
+        this.isSelecting = true;
+        
+        // start selecting
         this.iconImg.addClass('select');
         startPinSelection(this);
       }
       else
       {
-        // we are pinned
-        if(this.pinnedElement) this.iconImg.addClass('pinned');
-      
+        this.isSelecting = false;
+        
+        // stop selecting
         this.iconImg.removeClass('select');
         stopPinSelection();
       }
-    
-      this.isSelecting = !this.isSelecting;
     } 
   },
 
@@ -182,6 +183,29 @@ var PinWidget = new Class({
       top: this.element.offsetTop + size.y - 3,
       display: 'block'
     });
+    
+    if(this.isPinned)
+    {
+      this.menu.getElement('.'+this.pinAction).getElement('.radio').removeClass('off');
+      this.menu.getElement('.'+this.pinAction).getElement('.radio').addClass('on');
+    }
+    else
+    {
+      this.menu.getElements('.radio').removeClass('on');
+      this.menu.getElements('.radio').addClass('off');
+    }
+  },
+  
+  hideMenu: function(_evt)
+  {
+    this.element.removeClass('SSPinWidgetActive');
+    this.element.removeClass('SSPinWidgetMenuOpen');
+    this.menu.setStyle('display', 'none');
+
+    // remove styles 
+    this.iconImg.removeClass('select');
+    this.element.removeClass('SSPinWidgetMenuOpen');
+    this.setPinnedElement(null);
   },
   
   userPinnedElement: function(element)
@@ -195,15 +219,6 @@ var PinWidget = new Class({
     // user selected node
     this.isSelecting = false;
     this.pinnedElement = element;
-    
-    if(!element)
-    {
-      this.isPinned = false;
-    }
-    else
-    {
-      this.isPinned = true;
-    }
   },
 
   getPinnedElement: function(element)
@@ -240,6 +255,9 @@ var PinWidget = new Class({
       action = 'relative';
     }
     
+    // store this for menu display
+    this.pinAction = action;
+    
     // check to see if the pinned element has changed since last time
     var elementChanged = (this.lastPinned != this.pinnedElement);
     this.lastPinned = this.pinnedElement;
@@ -251,8 +269,10 @@ var PinWidget = new Class({
     // this could probably be a little cleaner
     if(target.hasClass('unpin'))
     {
-
       this.delegate.onPin({action: 'unpin'});
+      
+      this.iconImg.removeClass('pinned');
+      this.isPinned = false;
     }
     else
     {
@@ -272,19 +292,10 @@ var PinWidget = new Class({
 
       // store the shift element that is pinned
       this.delegate.onPin(this.pinRef);
-    }
-  },
-  
-  hideMenu: function(_evt)
-  {
-    this.element.removeClass('SSPinWidgetActive');
-    this.element.removeClass('SSPinWidgetMenuOpen');
-    this.menu.setStyle('display', 'none');
 
-    // remove styles 
-    this.iconImg.removeClass('select');
-    this.element.removeClass('SSPinWidgetMenuOpen');
-    this.setPinnedElement(null);
+      this.iconImg.addClass('pinned');
+      this.isPinned = true;
+    }
   },
   
   refresh: function()
