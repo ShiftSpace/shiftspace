@@ -355,7 +355,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   onPin: function(pinRef)
   {
     var currentShift = this.getCurrentShift();
-    
+
     // set the pin location of the current shift
     if(currentShift)
     {

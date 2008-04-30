@@ -152,7 +152,7 @@ var ShiftSpace = new (function() {
       window.addEvent('keypress',  keyPressHandler.bind(this) );
       window.addEvent('mousemove', mouseMoveHandler.bind(this) );
       // hide all pinWidget menus on window click
-      window.addEvent('mousedown', function() {
+      window.addEvent('click', function() {
         ShiftSpace.Console.hidePluginMenu.bind(ShiftSpace.Console);
         pinWidgets.each(function(x){
           if(!x.isSelecting) x.hideMenu();
