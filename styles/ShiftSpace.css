@@ -8,7 +8,6 @@
     text-transform: none;
     text-decoration: none;
     letter-spacing: normal;
-    word-spacing: normal;
     line-height: normal;
     text-align: start;
     vertical-align: baseline;
@@ -24,9 +23,9 @@
     right: auto;
     left: auto;
     bottom: auto;
-    margin: 0;
-    padding: 0;
-    border: 0;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    border: none;
     position: static;
     display: block;
     visibility: visible;
@@ -41,6 +40,7 @@
     list-style:position: outside;
     list-style-type: disc;
     marker-offset: none;
+    word-spacing: normal;
 }
 
 .SSUserSelectNone
@@ -128,7 +128,7 @@
   position: absolute;
 }
 
-.SSPinMenu div .left
+.SSPinMenu div .SSLeft
 {
   width: 122px;
 }
@@ -152,7 +152,7 @@
   background-repeat: no-repeat;
 }
 
-.SSPinMenu div .right
+.SSPinMenu div .SSRight
 {
   width: 8px;
 }
@@ -174,28 +174,28 @@
   line-height: 190%;
 }
 
-.SSPinMenuItem .left
+.SSPinMenuItem .SSLeft
 {
   background-image: url(../images/ShiftMenu/middle-left.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-div.SSPinMenuItem:hover .left
+div.SSPinMenuItem:hover .SSLeft
 {
   background-image: url(../images/ShiftMenu/middle-left-hover.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-.SSPinMenuItem .right
+.SSPinMenuItem .SSRight
 {
   background-image: url(../images/ShiftMenu/middle-right.png);
   background-repeat: no-repeat;
   height: 20px;
 }
 
-div.SSPinMenuItem:hover .right
+div.SSPinMenuItem:hover .SSRight
 {
   background-image: url(../images/ShiftMenu/middle-right-hover.png);
   background-repeat: no-repeat;
@@ -213,28 +213,28 @@ div.SSPinMenuItem:hover .right
   float: left;
 }
 
-.SSPinMenuBottomItem .left
+.SSPinMenuBottomItem .SSLeft
 {
   background-image: url(../images/ShiftMenu/bottom-left.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-div.SSPinMenuBottomItem:hover .left
+div.SSPinMenuBottomItem:hover .SSLeft
 {
   background-image: url(../images/ShiftMenu/bottom-left-hover.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-.SSPinMenuBottomItem .right
+.SSPinMenuBottomItem .SSRight
 {
   background-image: url(../images/ShiftMenu/bottom-right.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-div.SSPinMenuBottomItem:hover .right
+div.SSPinMenuBottomItem:hover .SSRight
 {
   background-image: url(../images/ShiftMenu/bottom-right-hover.png);
   background-repeat: repeat-x;
@@ -252,28 +252,28 @@ div.SSPinMenuBottomItem:hover .right
   float: left;
 }
 
-.SSPinMenuTopItem .left
+.SSPinMenuTopItem .SSLeft
 {
   background-image: url(../images/ShiftMenu/top-left.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-div.SSPinMenuTopItem:hover .left
+div.SSPinMenuTopItem:hover .SSLeft
 {
   background-image: url(../images/ShiftMenu/top-left-hover.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-.SSPinMenuTopItem .right
+.SSPinMenuTopItem .SSRight
 {
   background-image: url(../images/ShiftMenu/top-right.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-div.SSPinMenuTopItem:hover .right
+div.SSPinMenuTopItem:hover .SSRight
 {
   background-image: url(../images/ShiftMenu/top-right-hover.png);
   background-repeat: repeat-x;
@@ -291,12 +291,12 @@ div.SSPinMenuTopItem:hover .right
   position: absolute;
 }
 
-.SSMenu li .left
+.SSMenu li .SSLeft
 {
   width: 122px;
 }
 
-.SSMenu li .right
+.SSMenu li .SSRight
 {
   width: 8px;
 }
@@ -332,28 +332,28 @@ div.SSPinMenuTopItem:hover .right
   line-height: 200%;
 }
 
-.SSMenuItem .left
+.SSMenuItem .SSLeft
 {
   background-image: url(../images/ShiftMenu/middle-left.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-li.SSMenuItem:hover .left
+li.SSMenuItem:hover .SSLeft
 {
   background-image: url(../images/ShiftMenu/middle-left-hover.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-.SSMenuItem .right
+.SSMenuItem .SSRight
 {
   background-image: url(../images/ShiftMenu/middle-right.png);
   background-repeat: no-repeat;
   height: 20px;
 }
 
-li.SSMenuItem:hover .right
+li.SSMenuItem:hover .SSRight
 {
   background-image: url(../images/ShiftMenu/middle-right-hover.png);
   background-repeat: no-repeat;
@@ -371,28 +371,28 @@ li.SSMenuItem:hover .right
   float: left;
 }
 
-.SSMenuBottomItem .left
+.SSMenuBottomItem .SSLeft
 {
   background-image: url(../images/ShiftMenu/bottom-left.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-li.SSMenuBottomItem:hover .left
+li.SSMenuBottomItem:hover .SSLeft
 {
   background-image: url(../images/ShiftMenu/bottom-left-hover.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-.SSMenuBottomItem .right
+.SSMenuBottomItem .SSRight
 {
   background-image: url(../images/ShiftMenu/bottom-right.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-li.SSMenuBottomItem:hover .right
+li.SSMenuBottomItem:hover .SSRight
 {
   background-image: url(../images/ShiftMenu/bottom-right-hover.png);
   background-repeat: repeat-x;
@@ -410,28 +410,28 @@ li.SSMenuBottomItem:hover .right
   float: left;
 }
 
-.SSMenuTopItem .left
+.SSMenuTopItem .SSLeft
 {
   background-image: url(../images/ShiftMenu/top-left.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-li.SSMenuTopItem:hover .left
+li.SSMenuTopItem:hover .SSLeft
 {
   background-image: url(../images/ShiftMenu/top-left-hover.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-.SSMenuTopItem .right
+.SSMenuTopItem .SSRight
 {
   background-image: url(../images/ShiftMenu/top-right.png);
   background-repeat: repeat-x;
   height: 20px;
 }
 
-li.SSMenuTopItem:hover .right
+li.SSMenuTopItem:hover .SSRight
 {
   background-image: url(../images/ShiftMenu/top-right-hover.png);
   background-repeat: repeat-x;

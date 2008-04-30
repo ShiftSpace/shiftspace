@@ -135,7 +135,7 @@ div.SSSourceShiftEditorTopTitle
   height: 100%;
 }
 
-.SSSourceShiftEditorTabButton .left
+.SSSourceShiftEditorTabButton .SSLeft
 {
   width: 9px;
   height: 20px;
@@ -155,7 +155,7 @@ div.SSSourceShiftEditorTabButton .middle
   height: 17px;
 }
 
-.SSSourceShiftEditorTabButton .right
+.SSSourceShiftEditorTabButton .SSRight
 {
   width: 9px;
   height: 20px;
@@ -217,7 +217,7 @@ input.SSSourceShiftTitleInputField
   height: 26px;
 }
 
-.SSSourceShiftButton .left
+.SSSourceShiftButton .SSLeft
 {
   width: 9px;
   background-image: url(images/btn_1px-left.png);
@@ -225,7 +225,7 @@ input.SSSourceShiftTitleInputField
   background-repeat: no-repeat;
 }
 
-div.SSSourceShiftButton:active .left
+div.SSSourceShiftButton:active .SSLeft
 {
   background-image: url(images/btn_2px-left.png);  
 }
@@ -251,7 +251,7 @@ div.SSSourceShiftButton:active .middle
   border-width: 2px;
 }
 
-.SSSourceShiftButton .right
+.SSSourceShiftButton .SSRight
 {
   width: 9px;
   background-image: url(images/btn_1px-right.png);
@@ -259,7 +259,7 @@ div.SSSourceShiftButton:active .middle
   background-repeat: no-repeat;
 }
 
-div.SSSourceShiftButton:active .right
+div.SSSourceShiftButton:active .SSRight
 {
   background-image: url(images/btn_2px-right.png);
 }

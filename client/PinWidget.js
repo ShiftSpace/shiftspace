@@ -72,20 +72,20 @@ var PinWidget = new Class({
     this.menuTopItem = new ShiftSpace.Element('div', {
       'class': "SSPinMenuTopItem item"
     });
-    this.menuTopItem.setHTML("<div class='left'><div class='radio off'></div><span></span></div><div class='right'></div>");
+    this.menuTopItem.setHTML("<div class='SSLeft'><div class='radio off'></div><span></span></div><div class='SSRight'></div>");
     this.menuTopItem.injectInside(this.menu);
     
     // don't add this one, we'll clone it
     this.menuItem = new ShiftSpace.Element('div', {
       'class': "SSPinMenuItem item"
     });
-    this.menuItem.setHTML("<div class='left'><div class='radio off'></div><span></span></div><div class='right'></div>");
+    this.menuItem.setHTML("<div class='SSLeft'><div class='radio off'></div><span></span></div><div class='SSRight'></div>");
     
     // add the bottom items, always unpin
     this.menuBottomItem = new ShiftSpace.Element('div', {
       'class': "SSPinMenuBottomItem item"
     });
-    this.menuBottomItem.setHTML("<div class='left'><div class='radio off'></div><span>Unpin</span></div><div class='right'></div>");
+    this.menuBottomItem.setHTML("<div class='SSLeft'><div class='radio off'></div><span>Unpin</span></div><div class='SSRight'></div>");
     this.menuBottomItem.injectInside(this.menu);    
     
     // hide the menu

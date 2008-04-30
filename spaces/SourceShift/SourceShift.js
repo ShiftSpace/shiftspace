@@ -283,7 +283,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       type: "text"
     });
     
-    var buttonMarkup = "<div class='left'></div><div class='middle'></div><div class='right'></div>";
+    var buttonMarkup = "<div class='SSLeft ShiftSpaceElement'></div><div class='middle'></div><div class='SSRight'></div>";
     this.previewButton = new ShiftSpace.Element('div', {
       value: "Preview", 
       'class': "SSSourceShiftButton", 
@@ -383,9 +383,9 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     if(this.isVisible())
     {
       // set the font-color of the middle
-      button.getElement('.left').setStyle('backgroundImage', '');
+      button.getElement('.SSLeft').setStyle('backgroundImage', '');
       button.getElement('.middle').setStyle('backgroundImage', '');
-      button.getElement('.right').setStyle('backgroundImage', '');
+      button.getElement('.SSRight').setStyle('backgroundImage', '');
     }
   },
   
@@ -400,9 +400,9 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   {
     if(this.isVisible())
     {
-      button.getElement('.left').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-left.png)');
+      button.getElement('.SSLeft').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-left.png)');
       button.getElement('.middle').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server +'spaces/SourceShift/images/tab_off-body.png)');
-      button.getElement('.right').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-right.png)');
+      button.getElement('.SSRight').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-right.png)');
     }
   },
   
@@ -417,13 +417,13 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     });
     
     var left = new ShiftSpace.Element('div', {
-      'class': "left SSSourceShiftEditorTabButtonLeft"
+      'class': "SSLeft SSSourceShiftEditorTabButtonLeft"
     });
     var middle = new ShiftSpace.Element('div', {
       'class': "middle SSSourceShiftEditorTabButtonMiddle SSUserSelectNone"
     });
     var right = new ShiftSpace.Element('div', {
-      'class': "right SSSourceShiftEditorTabButtonRight"
+      'class': "SSRight SSSourceShiftEditorTabButtonRight"
     });
     
     left.injectInside(tabButton);
