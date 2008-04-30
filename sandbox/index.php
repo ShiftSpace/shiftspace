@@ -10,6 +10,7 @@
     <script src="../shiftspace.php?method=shiftspace.user.js&sandbox=1" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
-    <img style='-webkit-transform: rotate(45deg) scale(1.5);' src='logo.gif'></img>
+    <img src='logo.gif'></img>
+    <img src='logos.png'></img>
   </body>
 </html>

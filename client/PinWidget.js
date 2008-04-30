@@ -19,16 +19,14 @@ var PinWidget = new Class({
       19px x 19px.
       
     Arguments:
-      element - a DOM node.
-      pinCallBack - a function.
-      actions - an array of actions.  Valid values in this array are 'before', 'replace',
-      'relative'.
+      
   */
-  initialize: function(element, pinCallBack, delegate)
+  initialize: function(delegate)
   {
-    this.element = element;
-    this.callback = pinCallBack;
+    this.delegate = delegate;
     
+    this.element = delegate.getPinWidgetButton();
+
     // check to see if the delegate has the required properties
     /*
     if(!followsProtocol(delegate, protocol))
@@ -50,9 +48,16 @@ var PinWidget = new Class({
     this.iconImg.injectInside(this.element);
 
     this.createMenu();
+    this.setMenuItems();
+    
     this.element.addEvent('click', this.toggleSelection.bind(this));
     
     pinWidgets.push(this);
+  },
+  
+  capitalize: function(str)
+  {
+    return str.charAt(0).toUpperCase()+str.substr(1, str.length-1);
   },
   
   createMenu: function()
@@ -60,41 +65,64 @@ var PinWidget = new Class({
     this.menu = new ShiftSpace.Element('div', {
       'class': "SSPinMenu"
     });
+
+    // build the menu
     
-    this.before = new ShiftSpace.Element('div', {
-      'class': "SSPinMenuTopItem before item"
+    // the top item
+    this.menuTopItem = new ShiftSpace.Element('div', {
+      'class': "SSPinMenuTopItem item"
     });
-    this.before.setHTML("<div class='left'><div class='radio off'></div><span>Pin Before Element</span></div><div class='right'></div>");
-    this.before.injectInside(this.menu);
+    this.menuTopItem.setHTML("<div class='left'><div class='radio off'></div><span></span></div><div class='right'></div>");
+    this.menuTopItem.injectInside(this.menu);
     
-    this.replace = new ShiftSpace.Element('div', {
-      'class': "SSPinMenuItem replace item"
+    // don't add this one, we'll clone it
+    this.menuItem = new ShiftSpace.Element('div', {
+      'class': "SSPinMenuItem item"
     });
-    this.replace.setHTML("<div class='left'><div class='radio off'></div><span>Replace Element</span></div><div class='right'></div>");
-    this.replace.injectInside(this.menu);
+    this.menuItem.setHTML("<div class='left'><div class='radio off'></div><span></span></div><div class='right'></div>");
     
-    this.after = new ShiftSpace.Element('div', {
-      'class': "SSPinMenuItem after item"
+    // add the bottom items, always unpin
+    this.menuBottomItem = new ShiftSpace.Element('div', {
+      'class': "SSPinMenuBottomItem item"
     });
-    this.after.setHTML("<div class='left'><div class='radio off'></div><span>After Element</span></div><div class='right'></div>");
-    this.after.injectInside(this.menu);
-        
-    this.relative = new ShiftSpace.Element('div', {
-      'class': "SSPinMenuItem relative item"
-    });
-    this.relative.setHTML("<div class='left'><div class='radio off'></div><span>Relative To Element</span></div><div class='right'></div>");
-    this.relative.injectInside(this.menu);
+    this.menuBottomItem.setHTML("<div class='left'><div class='radio off'></div><span>Unpin</span></div><div class='right'></div>");
+    this.menuBottomItem.injectInside(this.menu);    
     
-    this.unpin = new ShiftSpace.Element('div', {
-      'class': "SSPinMenuBottomItem unpin item"
-    });
-    this.unpin.setHTML("<div class='left'><div class='radio off'></div><span>Unpin</span></div><div class='right'></div>");
-    this.unpin.injectInside(this.menu);    
-    
+    // hide the menu
     this.menu.setStyle('display', 'none');
+
+    // add menu to the parent note of the delegate's pin widget button
     this.menu.injectInside(this.element.getParent());
     
     this.menu.addEvent('click', this.userSelectedPinAction.bind(this));
+  },
+  
+  setMenuItems: function()
+  {
+    var actions = this.delegate.getPinWidgetAllowedActions();
+    
+    // first make sure the menu is big enough
+    var menuItemsToAdd = actions.length - 1;
+    for(var i = 0; i < menuItemsToAdd; i++)
+    {
+      this.menuItem.clone(true).injectBefore(this.menuBottomItem);
+    }
+    
+    // set the first menu item
+    this.menuTopItem.addClass(actions[0]);
+    this.menuTopItem.getElement('span').setText(actions[0].capitalize());
+    
+    // add the rest
+    for(var i = 0; i < this.menu.getElements('.SSPinMenuItem').length; i++)
+    {
+      var item = this.menu.getElements('.SSPinMenuItem')[i];
+      item.addClass(actions[i+1]);
+      item.getElement('span').setText(actions[i+1].capitalize());
+    }
+    
+    // set the last item
+    this.menuBottomItem.addClass('unpin');
+    this.menuBottomItem.getElement('span').setText('Unpin');
   },
   
   toggleSelection: function(_evt)
@@ -144,7 +172,6 @@ var PinWidget = new Class({
   
   showMenu: function(_evt)
   { 
-    
     var position = this.element.getPosition();
     var size = this.element.getSize().size;
     
@@ -155,7 +182,6 @@ var PinWidget = new Class({
       top: this.element.offsetTop + size.y - 3,
       display: 'block'
     });
-
   },
   
   userPinnedElement: function(element)

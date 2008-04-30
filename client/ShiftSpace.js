@@ -151,6 +151,7 @@ var ShiftSpace = new (function() {
       window.addEvent('keyup',     keyUpHandler.bind(this) );
       window.addEvent('keypress',  keyPressHandler.bind(this) );
       window.addEvent('mousemove', mouseMoveHandler.bind(this) );
+      // hide all pinWidget menus on window click
       window.addEvent('mousedown', function() {
         ShiftSpace.Console.hidePluginMenu.bind(ShiftSpace.Console);
         pinWidgets.each(function(x){
@@ -232,6 +233,29 @@ var ShiftSpace = new (function() {
     function isNewShift(shiftId)
     {
       return (shiftId.search('newShift') != -1);
+    }
+    
+    function isSSElement(node)
+    {
+      if(node.hasClass('ShiftSpaceElement'))
+      {
+        return true;
+      }
+      
+      var hasSSParent = false;
+      var curNode = node;
+
+      while(curNode.getParent() && $(curNode.getParent()).hasClass && !hasSSParent)
+      {
+        if($(curNode.getParent()).hasClass('ShiftSpaceElement'))
+        {
+          hasSSParent = true;
+          continue;
+        }
+        curNode = curNode.getParent();
+      }
+      
+      return hasSSParent;
     }
     
     /*
@@ -882,7 +906,8 @@ var ShiftSpace = new (function() {
     function pinMouseOverHandler (_evt) {
       var evt = new Event(_evt);
       var target = $(evt.target);
-      if(!target.hasClass('ShiftSpaceElement') &&
+
+      if(!isSSElement(target) &&
          !target.hasClass('SSPinSelect'))
       {
         currentPinSelection = target;

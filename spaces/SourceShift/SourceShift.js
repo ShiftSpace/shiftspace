@@ -329,7 +329,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       'class': 'SSSourceShiftEditorPinWidget'
     });
     this.pinWidgetDiv.injectInside(this.tabArea);
-    this.pinWidget = new ShiftSpace.PinWidget(this.pinWidgetDiv, this.handlePin.bind(this));
+    this.pinWidget = new ShiftSpace.PinWidget(this);
 
     // build the entire top
     this.topIcon.injectInside(this.top);
@@ -339,7 +339,20 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.top.injectInside(this.editSourceShift);
   },
   
-  handlePin: function(pinRef)
+  // part of the PinWidget protocol
+  getPinWidgetButton: function()
+  {
+    return this.pinWidgetDiv;
+  },
+  
+  // part of the PinWidget protocol
+  getPinWidgetAllowedActions: function()
+  {
+    return ['before', 'replace', 'after', 'relative'];
+  },
+  
+  // part of the PinWidget protocol
+  onPin: function(pinRef)
   {
     var currentShift = this.getCurrentShift();
     
