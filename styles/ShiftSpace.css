@@ -55,6 +55,11 @@
   display: none;
 }
 
+.SSPositionRelative
+{
+  position: relative;
+}
+
 /*
   Iframe Cover stuff
 */

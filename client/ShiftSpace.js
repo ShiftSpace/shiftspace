@@ -969,16 +969,49 @@ var ShiftSpace = new (function() {
         {
           var elpos = element.getPosition();
           var tpos = targetNode.getPosition();
-          pinRef.offset = {x: elPos.x - tpos.x, y: elPos.y - tpos.y};
+          console.log(elpos);
+          console.log(tpos);
+          pinRef.offset = {x: elpos.x - tpos.x, y: elpos.y - tpos.y};
         }
         
+        // wrap the target node
+        var wrapper = new ShiftSpace.Element('div', {
+          'class': 'SSImageWrapper SSPositionRelative'
+        });
+        targetNode.replaceWith(wrapper);
+        targetNode.injectInside(wrapper);
+        
+        console.log('------------------------------------- pinRef.offset');
+        console.log(pinRef.offset);
+
+        if(targetNode.getTag() == 'img')
+        {
+          wrapper.setStyle('display', 'inline');
+        }
+        var styles = targetNode.getStyles('width', 'height');
+        
+        wrapper.setStyles({
+          width: styles.width, 
+          height: styles.height, 
+        });
+        
+        wrapper.addEvent('click', function(_evt) {
+          var evt = new Event(_evt);
+          evt.stop();
+        });
+
+        targetNode = wrapper;
+        
         // inject it inside the parent of the target node
-        element.injectInside(targetNode.getParent());
+        element.injectInside(targetNode);
+        
+        // position absolute now
+        element.setStyle('position', 'absolute');
 
         // set the position
         element.setStyles({
-          left: tgPos.x + pinRef.offset.x,
-          top: tgPos.y + pinRef.offset.y
+          left: pinRef.offset.x,
+          top: pinRef.offset.y
         });
       }
     }

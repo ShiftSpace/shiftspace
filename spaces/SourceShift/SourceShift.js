@@ -607,7 +607,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       {
       }
       
-      //this.resizeToContent();
+      if(this.isPinned()) this.resizeToContent();
+      
       this.refresh();
     }
   },
@@ -617,8 +618,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.cssText = css;
     
     // Safari doesn't support empty on CSS elements
-    //this.css.empty();
-    
     for(var i = 0; i < this.css.childNodes.length; i++)
     {
       this.css.removeChild(this.css.childNodes[i]);
@@ -633,12 +632,12 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       {
         this.iframeCss.removeChild(this.iframeCss.childNodes[i]);
       }
-      //this.iframeCss.empty();
       
       this.iframeCss.appendText(css);
     }
     
-    //this.resizeToContent();
+    if(this.isPinned()) this.resizeToContent();
+    
     this.refresh();
   },
   
@@ -734,6 +733,11 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.top.getElements('*').setStyle('visibility', 'hidden');
     this.resizeControl.setStyle('visibility', 'hidden');
     this.element.setStyle('borderWidth', 0);
+    
+    if(this.getPinRef)
+    {
+      this.frame.removeClass('SSFrameBorder');
+    }
 
     // add 2px to adjust for border
     var pos = this.element.getPosition();
@@ -750,6 +754,11 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.top.getElements('*').setStyle('visibility', 'visible');
     this.resizeControl.setStyle('visibility', 'visible');
     this.element.setStyle('borderWidth', 2);
+    
+    if(this.getPinRef())
+    {
+      this.frame.addClass('SSFrameBorder');
+    }
 
     // add 2px to adjust for border
     var pos = this.element.getPosition();
@@ -910,21 +919,28 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   pin : function(pinRef)
   {
-    // grab the current location of the shift
-    this.prePinLocation = this.element.getPosition();
-    this.element.addClass('SSDisplayNone');
-    
     // call the parent pin method
     this.parent(this.frame, pinRef);
 
-    // update the frame styles
-    var target = this.getPinTarget();
+    // update the frame styles, if there are any to be set
+    // especially for the 'replace' action
     var styles = this.getPinTargetStyles();
     
-    this.frame.setStyles({
-      width: styles.width,
-      height: 'auto'
-    });
+    if(styles)
+    {
+      this.frame.setStyles({
+        width: styles.width,
+        height: 'auto'
+      });
+    }
+    else if(pinRef.action == 'relative')
+    {
+      this.frame.setStyle('width', this.getPinElementDimensions().x);
+    }
+
+    // hide the element now
+    this.element.addClass('SSDisplayNone');
+    // red border when pinned
     this.frame.addClass('SSFrameBorder');
     
     // refresh
@@ -936,11 +952,18 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     // restore
     this.parent();
 
-    // restore frame styles
-    this.frame.setStyles({
-      float : '',
-      width : ''
-    });
+    // restore frame styles if there was a replace action
+    if(this.getPinTargetStyles())
+    {
+      this.frame.setStyles({
+        float : '',
+        width : ''
+      });
+      this.setPinTargetStyles(null)
+    }
+    
+    // clear out width style if there is one
+    this.frame.setStyle('width', '');
     
     // put it back
     this.element.removeClass('SSDisplayNone');

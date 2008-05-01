@@ -311,6 +311,9 @@ ShiftSpace.Shift = new Class({
     {
       this.setPinTargetStyles(pinTarget.getStyles('width', 'height', 'float'));
     }
+    
+    // store the size before pinning
+    this.setPinElementDimensions(element.getSize().size);
 
     // this is already pinned need to unpin first
     if(this.getPinElement())
@@ -445,13 +448,23 @@ ShiftSpace.Shift = new Class({
     return this.targetStyles;
   },
   
+  setPinElementDimensions: function(size)
+  {
+    this.pinElementDimensions = size;
+  },
+  
+  getPinElementDimensions: function(size)
+  {
+    return this.pinElementDimensions;
+  },
+  
   /*
     Function: isPinned
       Returns true if this shift is currently pinned.
   */
   isPinned : function()
   {
-    return (this.pinTarget != null);
+    return (this.getPinTarget() != null);
   },
   
   /*

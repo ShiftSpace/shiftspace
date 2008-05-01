@@ -349,22 +349,35 @@ var NotesShift = ShiftSpace.Shift.extend({
       'class': "SSNoteShiftResize SSHidden"
     });
 
-    /*
     this.pinWidgetDiv = new ShiftSpace.Element('div', {
       'class': "SSPinWidgetButton"
     });
-    */
 
     // build the bottom
     this.saveButton.injectInside(this.bottom);
     this.cancelButton.injectInside(this.bottom);
     this.resizeControl.injectInside(this.bottom);
-    //this.pinWidgetDiv.injectInside(this.bottom);
+    this.pinWidgetDiv.injectInside(this.bottom);
 
-    //this.pinWidget = new ShiftSpace.PinWidget(this.pinWidgetDiv, this.handlePin.bind(this));
+    this.pinWidget = new ShiftSpace.PinWidget(this);
 
     // add it to the note element
     this.bottom.injectInside(this.element);
+  },
+  
+  getPinWidgetButton: function()
+  {
+    return this.pinWidgetDiv;
+  },
+  
+  getPinWidgetAllowedActions: function()
+  {
+    return ['relative'];
+  },
+
+  onPin: function(pinRef)
+  {
+    this.pin(this.element, pinRef);
   },
   
   /*
@@ -388,11 +401,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     rightEdge.injectInside(this.element);
     bottomEdge.injectInside(this.element);
     corner.injectInside(this.element);
-  },
-  
-  handlePin: function()
-  {
-    
   }
   
 });
