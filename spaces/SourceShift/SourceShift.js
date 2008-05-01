@@ -696,6 +696,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       // set the frame dimensions
       this.frame.setStyle('height', fsizey-4);
     }
+    /*
     else
     {
       var framePos = this.frame.getPosition();
@@ -707,6 +708,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
         height: topSize.y + this.source.getSize().size.y
       });
     }
+    */
     
     this.cover.setStyles({
       bottom: 0
@@ -910,7 +912,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   {
     // grab the current location of the shift
     this.prePinLocation = this.element.getPosition();
-
+    this.element.addClass('SSDisplayNone');
+    
     // call the parent pin method
     this.parent(this.frame, pinRef);
 
@@ -922,7 +925,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       width: styles.width,
       height: 'auto'
     });
-    this.frame.setStyle('float', 'none');
+    this.frame.addClass('SSFrameBorder');
     
     // refresh
     this.refresh();
@@ -940,6 +943,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
     
     // put it back
+    this.element.removeClass('SSDisplayNone');
+    this.frame.removeClass('SSFrameBorder');
     this.frame.injectAfter(this.top);
     
     // go back to the original locatino

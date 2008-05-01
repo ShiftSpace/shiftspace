@@ -403,3 +403,8 @@ div.SSSourceShiftButton:active .SSRight
   margin-top: 2px;
   margin-right: 10px;
 }
+
+.SSFrameBorder
+{
+  border: 2px solid red;
+}

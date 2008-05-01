@@ -185,9 +185,7 @@ ShiftSpace.Shift = new Class({
     var mainView = this.getMainView();
     if( mainView )
     {
-      mainView.setStyles({
-        display : 'block'
-      });
+      mainView.removeClass('SSDisplayNone');
     }
     this.refresh();
   },
@@ -202,9 +200,7 @@ ShiftSpace.Shift = new Class({
     var mainView = this.getMainView();
     if( mainView )
     {
-      mainView.setStyles({
-        display : 'none'
-      });
+      mainView.addClass('SSDisplayNone');
     }
   },
   
