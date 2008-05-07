@@ -257,7 +257,7 @@ var ShiftSpace = new (function() {
       
       return hasSSParent;
     }
-    ShiftSpace.isSSElement = isSSElement;
+    this.isSSElement = isSSElement;
     
     /*
     
