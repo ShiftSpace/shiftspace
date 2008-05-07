@@ -297,37 +297,47 @@ ShiftSpace.Shift = new Class({
     See Also:
       ShiftSpace.Pin
   */
-  pin : function(element, _pinRef)
+  pin : function(element, pinRef)
   {
-    // we should probably copy this
-    var pinRef = _pinRef;
-    this.setPinRef(_pinRef);
-
     // get the target
     var pinTarget = ShiftSpace.Pin.toNode(pinRef);
-    
-    // store some styles from the pin target
-    if(pinTarget && pinRef.action == 'replace') 
-    {
-      this.setPinTargetStyles(pinTarget.getStyles('width', 'height', 'float'));
-    }
-    
-    // store the size before pinning
-    this.setPinElementDimensions(element.getSize().size);
 
-    // this is already pinned need to unpin first
-    if(this.getPinElement())
+    if(pinTarget)
     {
-      // clears everything
-      this.unpin();
+      // store some styles from the pin target, if action is replace
+      switch(pinRef.action)
+      {
+        case 'replace':
+          // we want the width, height and flow of the original if replace
+          var targetStyles = pinTarget.getStyles('width', 'height', 'float');
+          this.setPinTargetStyles(targetStyles);
+          element.setStyles(targetStyles);
+        break;
+        
+        case 'relative':
+        break;
+        
+        default:
+        break;
+      }
+    
+      // store the size before pinning
+      this.setPinElementDimensions(element.getSize().size);
+
+      // this is already pinned need to unpin first
+      if(this.getPinElement())
+      {
+        // clears everything
+        this.unpin();
+      }
+    
+      // save stuff
+      this.setPinTarget(pinTarget);
+      this.setPinElement(element);
+    
+      // call ShiftSpace Pin API to pin this element
+      pinElement(element, pinRef);
     }
-    
-    // save stuff
-    this.setPinTarget(pinTarget);
-    this.setPinElement(element);
-    
-    // call ShiftSpace Pin API to pin this element
-    pinElement(element, pinRef);
   },
   
   /*
@@ -341,6 +351,18 @@ ShiftSpace.Shift = new Class({
     {
       // restore the old node
       this.getPinElement().replaceWith(this.getPinTarget());
+      
+      switch(this.getPinRef().action)
+      {
+        case 'replace':
+        break;
+        
+        case 'relative':
+        break;
+        
+        default:
+        break;
+      }
       
       // clear out these vars
       this.setPinTarget(null);
@@ -446,6 +468,16 @@ ShiftSpace.Shift = new Class({
   getPinTargetStyles : function()
   {
     return this.targetStyles;
+  },
+  
+  setPinElementStyles : function(newStyles)
+  {
+    this.pinElementStyles = newStyles;
+  },
+  
+  getPinElementStyles: function()
+  {
+    return this.pinElementStyles;
   },
   
   setPinElementDimensions: function(size)

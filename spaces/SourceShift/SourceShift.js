@@ -922,22 +922,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     // call the parent pin method
     this.parent(this.frame, pinRef);
 
-    // update the frame styles, if there are any to be set
-    // especially for the 'replace' action
-    var styles = this.getPinTargetStyles();
-    
-    if(styles)
-    {
-      this.frame.setStyles({
-        width: styles.width,
-        height: 'auto'
-      });
-    }
-    else if(pinRef.action == 'relative')
-    {
-      this.frame.setStyle('width', this.getPinElementDimensions().x);
-    }
-
     // hide the element now
     this.element.addClass('SSDisplayNone');
     // red border when pinned
@@ -951,30 +935,11 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   {
     // restore
     this.parent();
-
-    // restore frame styles if there was a replace action
-    if(this.getPinTargetStyles())
-    {
-      this.frame.setStyles({
-        float : '',
-        width : ''
-      });
-      this.setPinTargetStyles(null)
-    }
-    
-    // clear out width style if there is one
-    this.frame.setStyle('width', '');
     
     // put it back
     this.element.removeClass('SSDisplayNone');
     this.frame.removeClass('SSFrameBorder');
     this.frame.injectAfter(this.top);
-    
-    // go back to the original locatino
-    this.element.setStyles({
-      left: this.prePinLocation.x, 
-      top: this.prePinLocation.y 
-    });
     
     // refresh
     this.refresh();
