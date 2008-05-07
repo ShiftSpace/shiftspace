@@ -114,7 +114,7 @@ body#SSNoteShiftFrameBody
 	padding-bottom: 10px;
 }
 
-.SSNoteShiftButton
+.SSNoteShiftBottom input[type="button"]
 {
   font: 11px verdana, sans-serif;
   color: #b19c3d;
@@ -127,16 +127,16 @@ body#SSNoteShiftFrameBody
   border: 1px solid #E5EB8B;
 }
 
-.SSNoteShiftButton:hover{
+.SSNoteShiftBottom input[type="button"]:hover{
   color: #706357;
   border: 1px solid #776929;
 }
 
-.SSNoteShiftButton:active {
+.SSNoteShiftBottom input[type="button"]:active {
   border: 1px solid #776929;
 }
 
-input[value="save"]{
+.SSNoteShiftBottom input[value="save"]{
   font-weight: bold;
 }
 
