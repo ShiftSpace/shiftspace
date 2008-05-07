@@ -100,24 +100,44 @@ body#SSNoteShiftFrameBody
 
 /* Styles for the bottom of the Note Shift ------------------ */
 
+.SSPinWidget{
+	margin-left: 10px;
+}
+
+.SSNoteShiftButtonDiv{
+	text-align: right;
+	padding: 0 8px 0px 25px;
+	float: right;
+}
+
+.SSNoteShiftBottom {
+	padding-bottom: 10px;
+}
+
 .SSNoteShiftButton
 {
   font: 11px verdana, sans-serif;
+  color: #b19c3d;
   cursor: pointer;
   display: inline;
-  
   margin-left: 7px;
   margin-bottom: 7px;
-  
-  padding: 2px;
-  
-  background-color: #ccc;
-  
-  border: 1px outset #aaa;
+  padding: 2px 2px 3px;
+  background-color: #F5FB9B;
+  border: 1px solid #E5EB8B;
+}
+
+.SSNoteShiftButton:hover{
+  color: #706357;
+  border: 1px solid #776929;
 }
 
 .SSNoteShiftButton:active {
-  border: 1px inset #aaa;
+  border: 1px solid #776929;
+}
+
+input[value="save"]{
+  font-weight: bold;
 }
 
 .SSNoteShiftResize
