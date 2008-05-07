@@ -992,6 +992,8 @@ var ShiftSpace = new (function() {
           console.log('------------------------------------- pinRef.offset');
           console.log(pinRef.offset);
 
+          // if the target node is an image we
+          // want the wrapper node to display inline
           if(targetNode.getTag() == 'img')
           {
             wrapper.setStyle('display', 'inline');
@@ -1003,10 +1005,13 @@ var ShiftSpace = new (function() {
             height: styles.height, 
           });
         
+          // override clicks in case the wrapper is inside of a link
           wrapper.addEvent('click', function(_evt) {
             var evt = new Event(_evt);
             evt.stop();
           });
+          // store a reference to the wrapper
+          pinRef.wrapper = wrapper;
 
           targetNode = wrapper;
         
@@ -1029,9 +1034,12 @@ var ShiftSpace = new (function() {
     }
     
     function unpinElement(pinRef) {
+      console.log('>>>>>>>>>>>>>>>>>>>>>>> unpinElement');
       switch(pinRef.action) 
       {
         case 'relative':
+         console.log('relative -----------------------------------');
+         
          // get the parentElement
          var parentElement = pinRef.element.getParent();
          // take out the original node

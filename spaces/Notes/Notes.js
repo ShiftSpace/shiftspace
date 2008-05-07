@@ -352,10 +352,16 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.pinWidgetDiv = new ShiftSpace.Element('div', {
       'class': "SSPinWidgetButton"
     });
+    
+    this.buttonDiv = new ShiftSpace.Element('div', {
+      'class': "SSNoteShiftButtonDiv"
+    });
 
     // build the bottom
-    this.saveButton.injectInside(this.bottom);
-    this.cancelButton.injectInside(this.bottom);
+    this.saveButton.injectInside(this.buttonDiv);
+    this.cancelButton.injectInside(this.buttonDiv);
+    this.buttonDiv.injectInside(this.bottom);
+
     this.resizeControl.injectInside(this.bottom);
     this.pinWidgetDiv.injectInside(this.bottom);
 

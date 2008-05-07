@@ -349,7 +349,7 @@ ShiftSpace.Shift = new Class({
     // check to make sure there is an pinned element to restore
     if(this.getPinElement())
     {
-      unpinElement();
+      unpinElement(this.getPinRef());
       
       // clear out these vars
       this.setPinTarget(null);
@@ -418,7 +418,9 @@ ShiftSpace.Shift = new Class({
     
     for(key in pinRef)
     {
-      if(key != 'element' && key != 'targetElement')
+      if(key != 'element' && 
+         key != 'targetElement' &&
+         key != 'wrapper')
       {
         temp[key] = pinRef[key];
       }
