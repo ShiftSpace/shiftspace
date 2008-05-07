@@ -256,6 +256,9 @@ var notesInfo = ShiftSpace.info('Notes');</pre>
                     <dt><a href="#Space.onShiftCreate()">onShiftCreate()</a></dt>
                     <dd>(optional) Called when a shift is created.</dd>
                     <br />
+                    <dt class="alt"><a href="#Space.onShiftEdit()">onShiftEdit()</a></dt>
+                    <dd class="alt">(optional) Called when a shift is edited.</dd>
+                    <br />
                     <dt class="alt"><a href="#Space.onShiftSave()">onShiftSave()</a></dt>
                     <dd class="alt">(optional) Called when a shift is saved.</dd>
                     <br />
@@ -333,6 +336,22 @@ var notesInfo = ShiftSpace.info('Notes');</pre>
                 </div>
                 <br />
             </div>
+            <h2 class="method" id="Space.onShiftEdit()">Space.onShiftEdit()</h2>
+            <div class="content">
+                <p>If you want a custom behavior to occur when the user edits a shift implement this method.</p> 
+            </div>
+            <br />
+            <div class="arguments section">
+                <h3>Arguments</h3>
+                <div class="content">
+                    <dl>
+                        <dt>shiftId</dt>
+                        <dd>The id of the shift to be edited. You can access it from <tt>this.shifts[shiftId]</tt>.</dd>
+                        <br />
+                    </dl>
+                </div>
+                <br />
+            </div>
             <h2 class="method" id="Space.onShiftSave()">Space.onShiftSave()</h2>
             <div class="content">
                 <p>Define this method in your space's class in order to perform tasks whenever a shift is saved with your space. This will execute after ShiftSpace makes its call to the server.</p> 
@@ -405,7 +424,7 @@ var notesInfo = ShiftSpace.info('Notes');</pre>
             <div class="properties">
                 <h3>Methods</h3>
                 <dl>
-                    <dt class="alt"><a href="#Shift.initialize()">initialize()</a></dt>
+                    <dt class="alt"><a href="#Shift.setup()">setup()</a></dt>
                     <dd class="alt">(abstract) The Shift class constructor.</dd>
                     <br />
                     <dt><a href="#Shift.encode()">encode()</a></dt>
@@ -419,6 +438,9 @@ var notesInfo = ShiftSpace.info('Notes');</pre>
                     <br />
                     <dt class="alt"><a href="#Shift.getParentSpace()">getParentSpace()</a></dt>
                     <dd class="alt">Returns the instance of the parent space.</dd>
+                    <br />
+                    <dt><a href="#Shift.edit()">edit()</a></dt>
+                    <dd>Put the shift in edit mode. You don't need to implement this if your the editing interaction occurs on the Space interface and not on the Shift interface.</dd>
                     <br />
                     <dt><a href="#Shift.save()">save()</a></dt>
                     <dd>Updates the shift. Implicitly calls <tt><a href="#Shift.encode()">encode()</a></tt>.</dd>
@@ -434,7 +456,7 @@ var notesInfo = ShiftSpace.info('Notes');</pre>
                     <br />
                 </dl>
             </div>
-            <h2 class="method" id="Shift.initialize()">Shift.initialize()</h2>
+            <h2 class="method" id="Shift.setup()">Shift.setup()</h2>
             <div class="content">
                 <p>The shift's constructor. This is called when a new shift instance object is created.</p>
                 <p>This is an abstract method that must be defined for your shift class to work properly. You must also call the super-class's constructor upon initialization so that certain management tasks can be handled behind the scenes. Do this by calling <tt>this.parent(json);</tt> on the first line of your constructor.</p>
@@ -475,7 +497,7 @@ var notesInfo = ShiftSpace.info('Notes');</pre>
                 <h3>Example</h3>
                 <div class="content">
                     <pre>var FooShift = ShiftSpace.Shift.extend({
-    initialize: function(json) {
+    setup: function(json) {
         this.parent(json);
         // More code goes here
     }
@@ -549,6 +571,18 @@ var notesInfo = ShiftSpace.info('Notes');</pre>
                 <h3>Example</h3>
                 <div class="content">
                     <pre>var parentSpace = this.getParentSpace();</pre>
+                </div>
+                <br />
+            </div>
+            <h2 class="method" id="Shift.edit()">Shift.edit()</h2>
+            <div class="content">
+                <p>Put the shift into edit mode. This is an optional method, you only need to implement this if you wish to put an editing interface directly on the shift itself.  You do not call this method directly.</p>
+            </div>
+            <br />
+            <div class="section">
+                <h3>Example</h3>
+                <div class="content">
+                    <pre>this.edit();</pre>
                 </div>
                 <br />
             </div>
