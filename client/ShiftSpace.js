@@ -947,73 +947,109 @@ var ShiftSpace = new (function() {
     {
       ShiftSpace.pinRef = pinRef;
       var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
+      
+      // pinRef has become active set targetElement and element properties
+      $merge(pinRef, {
+        'element': element,
+        'targetElement': targetNode
+      });
 
-      if(pinRef.action == 'before')
+      switch(pinRef.action)
       {
-        element.injectBefore(targetNode);
+        case 'before':
+          element.injectBefore(targetNode);
+        break;
+        
+        case 'replace':
+          targetNode.replaceWith(element);
+        break;
+        
+        case 'after':
+          element.injectAfter(targetNode);
+        break;
+        
+        case 'relative':
+          var elPos = element.getPosition();
+          var tgPos = targetNode.getPosition();
+        
+          // if no offset set it now
+          if(!pinRef.offset)
+          {
+            var elpos = element.getPosition();
+            var tpos = targetNode.getPosition();
+            console.log(elpos);
+            console.log(tpos);
+            pinRef.offset = {x: elpos.x - tpos.x, y: elpos.y - tpos.y};
+          }
+        
+          // wrap the target node
+          var wrapper = new ShiftSpace.Element('div', {
+            'class': 'SSImageWrapper SSPositionRelative'
+          });
+          targetNode.replaceWith(wrapper);
+          targetNode.injectInside(wrapper);
+        
+          console.log('------------------------------------- pinRef.offset');
+          console.log(pinRef.offset);
+
+          if(targetNode.getTag() == 'img')
+          {
+            wrapper.setStyle('display', 'inline');
+          }
+          var styles = targetNode.getStyles('width', 'height');
+        
+          wrapper.setStyles({
+            width: styles.width, 
+            height: styles.height, 
+          });
+        
+          wrapper.addEvent('click', function(_evt) {
+            var evt = new Event(_evt);
+            evt.stop();
+          });
+
+          targetNode = wrapper;
+        
+          // inject it inside the parent of the target node
+          element.injectInside(targetNode);
+        
+          // position absolute now
+          element.setStyle('position', 'absolute');
+
+          // set the position
+          element.setStyles({
+            left: pinRef.offset.x,
+            top: pinRef.offset.y
+          });
+        break;
+
+        default:
+        break;
       }
-      else if(pinRef.action == 'replace')
+    }
+    
+    function unpinElement(pinRef) {
+      switch(pinRef.action) 
       {
-        targetNode.replaceWith(element);
-      }
-      else if(pinRef.action == 'after')
-      {
-        element.injectAfter(targetNode);
-      }
-      else if(pinRef.action == 'relative')
-      {
-        var elPos = element.getPosition();
-        var tgPos = targetNode.getPosition();
+        case 'relative':
+         // get the parentElement
+         var parentElement = pinRef.element.getParent();
+         // take out the original node
+         var targetNode = pinRef.targetElement.remove();
+         // remove the pinned element
+         pinRef.element.remove();
+         // replace the wrapper with the parget
+         parentElement.replaceWith(targetNode);
+        break;
         
-        // if no offset set it now
-        if(!pinRef.offset)
-        {
-          var elpos = element.getPosition();
-          var tpos = targetNode.getPosition();
-          console.log(elpos);
-          console.log(tpos);
-          pinRef.offset = {x: elpos.x - tpos.x, y: elpos.y - tpos.y};
-        }
+        case 'replace':
+        case 'before':
+        case 'after':
+          pinRef.element.replaceWith(pinRef.targetElement);
+        break;
         
-        // wrap the target node
-        var wrapper = new ShiftSpace.Element('div', {
-          'class': 'SSImageWrapper SSPositionRelative'
-        });
-        targetNode.replaceWith(wrapper);
-        targetNode.injectInside(wrapper);
-        
-        console.log('------------------------------------- pinRef.offset');
-        console.log(pinRef.offset);
-
-        if(targetNode.getTag() == 'img')
-        {
-          wrapper.setStyle('display', 'inline');
-        }
-        var styles = targetNode.getStyles('width', 'height');
-        
-        wrapper.setStyles({
-          width: styles.width, 
-          height: styles.height, 
-        });
-        
-        wrapper.addEvent('click', function(_evt) {
-          var evt = new Event(_evt);
-          evt.stop();
-        });
-
-        targetNode = wrapper;
-        
-        // inject it inside the parent of the target node
-        element.injectInside(targetNode);
-        
-        // position absolute now
-        element.setStyle('position', 'absolute');
-
-        // set the position
-        element.setStyles({
-          left: pinRef.offset.x,
-          top: pinRef.offset.y
-        });
+        default:
+        break;
       }
     }
     

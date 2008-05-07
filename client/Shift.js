@@ -349,20 +349,7 @@ ShiftSpace.Shift = new Class({
     // check to make sure there is an pinned element to restore
     if(this.getPinElement())
     {
-      // restore the old node
-      this.getPinElement().replaceWith(this.getPinTarget());
-      
-      switch(this.getPinRef().action)
-      {
-        case 'replace':
-        break;
-        
-        case 'relative':
-        break;
-        
-        default:
-        break;
-      }
+      unpinElement();
       
       // clear out these vars
       this.setPinTarget(null);
@@ -422,6 +409,22 @@ ShiftSpace.Shift = new Class({
     }
     
     return this.pinRef
+  },
+  
+  getEncodablePinRef: function()
+  {
+    var pinRef = this.getPinRef();
+    var temp = {};
+    
+    for(key in pinRef)
+    {
+      if(key != 'element' && key != 'targetElement')
+      {
+        temp[key] = pinRef[key];
+      }
+    }
+    
+    return temp;
   },
   
   /*
