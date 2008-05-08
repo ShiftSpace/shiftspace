@@ -339,6 +339,7 @@ ShiftSpace.Shift = new Class({
       this.setPinElement(element);
     
       // call ShiftSpace Pin API to pin this element
+      pinRef.shift = this;
       pinElement(element, pinRef);
     }
     else
@@ -443,7 +444,8 @@ ShiftSpace.Shift = new Class({
     {
       if(key != 'element' && 
          key != 'targetElement' &&
-         key != 'wrapper')
+         key != 'wrapper' &&
+         key != 'shift')
       {
         temp[key] = pinRef[key];
       }

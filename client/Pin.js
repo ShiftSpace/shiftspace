@@ -82,10 +82,10 @@ var Pin = new Class({
     {
       var ancestor = (pinRef.ancestorId && $(pinRef.ancestorId)) || document;
       return $(document.evaluate( pinRef.relativeXPath, 
-                                ancestor, 
-                                null,
-                                XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, 
-                                null).snapshotItem(0));
+                                  ancestor, 
+                                  null,
+                                  XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, 
+                                  null).snapshotItem(0));
     }
   }
 });

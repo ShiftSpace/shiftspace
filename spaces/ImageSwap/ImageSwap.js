@@ -203,7 +203,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     // and the scroll offset
     return {
       scroll : {x: this.image.offsetLeft, y: this.image.offsetTop},
-      pinRef : this.getPinRef(),
+      pinRef : this.getEncodablePinRef(),
       src : this.image.getProperty('src'),
       summary : "Image Swap", // use page or alt text
       zoom : this.getZoom()

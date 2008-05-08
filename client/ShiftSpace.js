@@ -959,18 +959,34 @@ var ShiftSpace = new (function() {
       }
     }
     
-    function checkPinReferences()
+    function checkPinReferences(pinRef)
     {
-      
+      var otherShifts = allPinnedShifts.copy().remove(pinRef.shift);
+      var matchingShifts = otherShifts.filter(function(x) {
+        return (x.getPinRef().relativeXPath == pinRef.relativeXPath);
+      });
+
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      console.log(allPinnedShifts);
+      console.log(otherShifts);
+      console.log(matchingShifts);
+      /*
+      matchingShifts.each(function(x) {
+        x.unpin();
+        x.hide();
+      });
+      */
     }
     
-    var allPinReferences = [];
+    var allPinnedShifts = [];
     function pinElement(element, pinRef)
     {
       ShiftSpace.pinRef = pinRef;
       var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
       
       // store this pinRef to ensure the same node doesn't get pinned
+      if(!allPinnedShifts.contains(pinRef.shift)) allPinnedShifts.push(pinRef.shift);
+      checkPinReferences(pinRef);
       
       // pinRef has become active set targetElement and element properties
       $extend(pinRef, {
