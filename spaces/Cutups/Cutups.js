@@ -1,209 +1,162 @@
 var CutupsSpace = ShiftSpace.Space.extend({
   attributes: {
     name: 'Cutups',
-    title: 'Cutups',
     icon: 'HelloWorld.png', 
     version: 0.1,
     css: 'Cutups.css'
   },
-  buildInterface: function(){
-    this.buildFrame();
-    this.SSCutupWidgetFrame.makeDraggable();
+  setup: function() {
+    this.mouseup = function(e){
+          if (!window.getSelection().getRangeAt(0).collapsed) {
+             var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
+             //save scrambled text as array
+              newRangeRef.cutUpArray = this.cutUpArray;
+              if (!this.getCurrentShift().ranges){
+                  this.getCurrentShift().ranges = [];
+              }
+              this.getCurrentShift().ranges.push(newRangeRef);
+              this.turnOnRangeRef(newRangeRef);
+          }
+          return false;
+    }.bind(this);
+  },  
+  surround_text_node: function(oNode, objRange, surroundingNode){
+      var tempRange;
+      //console.log(surroundingNode);
+  
+      //if this selection starts and ends in the same node
+      if((oNode==objRange.startContainer)&&(oNode==objRange.endContainer)) {
+          objRange.surroundContents(surroundingNode);
+      }
+      else
+      {
+          if(objRange.isPointInRange(oNode,1) || oNode==objRange.startContainer)
+          {
+              //check if the node is in the middle of the selection 
+              if((oNode!=objRange.startContainer)&&(oNode!=objRange.endContainer))//surround the whole node
+              {
+                  surroundingNode.textContent = oNode.textContent;
+                  oNode.parentNode.replaceChild(surroundingNode, oNode);
+              }
+              else //if start at suppply surround text from start point to end
+              if(oNode==objRange.startContainer)//surround the node from the start point
+              {
+                  tempRange = document.createRange();
+                  tempRange.setStart(oNode, objRange.startOffset);
+                  tempRange.setEnd(oNode, oNode.textContent.length);
+                  tempRange.surroundContents(surroundingNode);
+              }
+              else      //if endAt supply surround text node from 0 to End location 
+              if(oNode==objRange.endContainer)//surround the node from the start point
+              {
+                  tempRange = document.createRange();
+                  tempRange.setStart(oNode, 0);
+                  tempRange.setEnd(oNode, objRange.endOffset);
+                  tempRange.surroundContents(surroundingNode);
+              }
+          }
+      }        
+  },  
+  turnOnRangeRef: function(ref) {
+    var range = ShiftSpace.RangeCoder.toRange(ref);
+    var objAncestor = range.commonAncestorContainer;
+    
+    if (objAncestor.nodeType == 3) // text node
+        objAncestor = objAncestor.parentNode;
+      
+    var xPathResult = document.evaluate(".//text()", objAncestor, null,
+        XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);        
+    
+    // iteratate on all the text nodes in the document and mark if they are in the selection range
+    for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
+        // we need clean styles so we don't use ShiftSpace.Element
+        var enclosingSpan = document.createElement("span");
+        enclosingSpan.id = this.getCurrentShift().getId();
+        enclosingSpan.setAttribute("_shiftspace_cutups", "on");
+        this.surround_text_node(xPathResult.snapshotItem(i), range, enclosingSpan);
+    }
+    //call cutupRange on xPathResult of cutups span
+    var xPathQuery = "//*[@id='"  + this.getCurrentShift().getId() + "']";
+    var xPathResult2 = document.evaluate(xPathQuery, objAncestor, null,
+        XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+    //iterate through snapshot & rewrite textnodes
+    this.cutupRange(xPathResult2);
   },
-  //build iframe and set styles for frame
-  buildFrame: function(){
-    this.SSCutupWidgetFrame = new ShiftSpace.Element('iframe',{
-        id:'SSCutupWidgetFrame',
-        name:'SSCutupWidgetFrame',
-        styles: {
-          position: 'fixed',
-          top: '0px',
-          right: '0px',
-          border: 'none',
-          borderTop: '15px #444 solid',
-          backgroundColor: '#EEE',
-          width: '160px',
-          height: '136px',
-          opacity: 0.4,
-        },
-        events: {
-          load: function(){
-            this.buildWidgetContent();
-            this.buildWidgetCSS();
-          }.bind(this)
+  cutupRange: function(xPathResult){
+    var multiLineArray = Array();//2 dim array contains text for each node
+    var joinedArray = Array();//contains all text split into single array
+    var pattern = /(\s)?S+/g;
+    //break up snapshot into arrays of words
+    for ( var i=0 ; i < xPathResult.snapshotLength; i++ ){
+        var pattern = /(\s)?\S+/g;
+        var text = xPathResult.snapshotItem(i).textContent;
+        var lineArray = text.match(pattern);
+        joinedArray = joinedArray.concat(lineArray);
+        //do not add empty nodes to array
+        if(lineArray != null){
+          multiLineArray.push(lineArray);
         }
-    });
-    this.SSCutupWidgetFrame.injectInside(document.body);
-  },
-  //build inner html of widget iframe
-  buildWidgetContent: function(){
-    this.widgetContent = new Element('div', {
-        id:'widgetContent'
-    });
-    this.widgetContent.setHTML('<h1>CUTUPS</h1>' + 
-    '<table>' +
-      '<tr>' +
-        '<td><input type="checkbox" name="onCut" id="onCut" checked="true" /></td>' +
-        '<td><label for="onCut">on</label></td>' +
-      '</tr>' +
-      '<tr>' +
-      '<th colspan="2">sort type</th>' +
-      '</tr>' +
-      '<tr>' +
-        '<td><input type="radio" name="sortType" id="random" value="random" checked="true" /></td>' +
-        '<td><label for="random">random</label></td>' +
-      '</tr>' +
-      '<tr>' + 
-        '<td><input type="radio" name="sortType" id="alpha" value="alpha" /></td>' +
-        '<td><label for="alpha" />alphabetize</td>' + 
-      '</tr>' +
-      '<tr>' +
-        '<td><input type="radio" name="sortType" id="ralpha" value="ralpha" /></td>' +
-        '<td><label for="ralpha">reverse alphabetize</label></td>' +
-      '</tr>' +
-    '</table>');
-    var doc = this.SSCutupWidgetFrame.contentDocument;
-    this.widgetContent.injectInside(doc.body);
-  },
-  //stick CSS in head of iframe if head exists if not create head element
-  buildWidgetCSS: function(){
-    var doc = $('SSCutupWidgetFrame').contentDocument;
-     if( doc.getElementsByTagName('head').length != 0 )
-    {
-       var head = doc.getElementsByTagName('head')[0];
     }
-    else
-    {
-      // In Safari iframes don't get the head element by default - David
-      // Mootools-ize body
-      $(doc.body);
-      var head = new Element( 'head' );
-      head.injectBefore( doc.body );
-    }
-    this.widgetCSS = new Element('style', {
-    'type':'text/css'
+    //filter out null values
+    joinedArray = joinedArray.filter(function(item,index){
+        return item != null;
     });
-    this.widgetCSS.setHTML('*{' +
-      'margin:0px;' +
-      'padding:0px;' +
-      'font-size: 12px;' +
-      'line-height:1.5em;'+
-      'text-align: left;'+
-    '}'+
-    '#widgetContent{'+
-      'font-family:helvetica,sans-serif;'+
-      'color:#444;'+
-      'background-color:#EEE;'+
-      'padding: 5px;'+
-      'width: 150px'+
-    '}'+
-    '#widgetContent h1{'+
-      'font-size:14px;'+
-      'height:14px;'+
-      'color:#444;'+
-      'line-height:14px;'+
-      'padding:5px 0;'+
-    '}'+
-    '#widgetContent th{'+
-      'text-align: left;'+
-      'font-weight: normal;'+
-    '}'+
-    '#widgetContent td{'+
-      'padding-right:5px;'+
-    '}');
-    var doc = this.SSCutupWidgetFrame.contentDocument;
-    var head = doc.getElementsByTagName("head")[0];
-    this.widgetCSS.injectInside(head);
-  }  
+    //randomly sort joined arrays
+    joinedArray.sort(function(a,b){
+        return Math.random() - 0.5;
+    });
+    //break up reinsert sorted item into multiline array
+    //this keeps the same number of words in each node
+    //while the actual words change
+    var i = 0;
+    for(var x=0;x<multiLineArray.length;x++){
+        for(var y=0;y<multiLineArray[x].length;y++){
+            multiLineArray[x][y] = joinedArray[i];
+            i++;
+        }
+    }
+    //reinsert sorted array as string back into document
+    for ( var i=0,l=0; i < xPathResult.snapshotLength; i++ ){
+      //if node is not empty
+      if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
+        xPathResult.snapshotItem(i).textContent = multiLineArray[l].join("");
+        l++
+      }
+    }
+  },
+  showInterface: function(){
+    //create widget here
+    document.addEventListener('mouseup',this.mouseup,false);
+  },
+  save: function() {
+    this.getCurrentShift().summary = this.summary.value;
+    this.getCurrentShift().save();
+  }
 });
 
 var CutupsShift = ShiftSpace.Shift.extend({
-  initialize: function(json){
-    this.parent(json);
-    window.addEvent('mouseup', function(){
-        this.getSortType();
-        if(this.getOnState() == true){
-          this.cutUpSelection();
+    setup: function(json) {
+        this.ranges = json.ranges;
+        this.summary = json.summary;
+    },
+    encode: function() {
+        return {
+            ranges: this.ranges,
+            summary: this.summary
+        };
+    },
+    show: function() {
+        var space = this.getParentSpace();
+        space.showInterface();
+        if (this.ranges) {
+            space.summary.value = this.summary;
+        
+            for (var i = 0; i < this.ranges.length; i++) {
+                space.turnOnRangeRef(this.ranges[i]);
+            }
         }
-    }.bind(this));
-  },
-  SSCutupWidgetFrame: $("SSCutupWidgetFrame"),
-  getOnState: function(){
-    var doc = $("SSCutupWidgetFrame").contentDocument;
-    var isOn = doc.getElementById("onCut").checked;
-    if(isOn == true){
-      return true;
-    }else{
-      return false;
+        window.location.hash = this.getId();
     }
-  },
-  sortType: null,
-  setSortType: function(sortType){
-    this.sortType = sortType;
-  },
-  getSortType: function(){
-    var doc = $("SSCutupWidgetFrame").contentDocument;
-    var sort = doc.getElementsByName("sortType");
-    for(var i=0;i<sort.length;i++){
-      if(sort[i].checked == true){
-        this.setSortType(i);
-      }
-    }
-  },
-  sortTextNodes: function(node){
-    //if node is text node and node has something in it and not just whitespace
-    if(node.nodeType === 3 && node.nodeValue.match(/(\s)?\S+/g) && !node.nodeValue.match(/^\S+$/)){
-      var str = node.nodeValue;
-      str = str.replace(/\n/g,"");
-      var pattern = /(\s)?\S+/g;
-      var strArray = str.match(pattern);
-      var len = strArray.length - 1;
-      strArray[len] = strArray[len].match(/(?!\S$)/)? strArray[len] + " " : strArray[len];
-      //strArray[0] = strArray[0].match(/(?!^\s)/)? " " + strArray[0] : strArray[0];
-      switch(this.sortType){      
-      case 1:
-        var sortedArray = strArray.sort();
-        break;
-      case 2:
-        var sortedArray = strArray.sort().reverse();
-        break;        
-      default:
-        var sortedArray = strArray.sort(function(a,b){
-            return Math.random() - 0.5;
-        });
-        break;  
-      }
-      //if beginning or ending item in array isn't padded pad it
-      //not doing so ends up concatenating multiple strings into one
-      //sortedArray[len] = sortedArray[len].match(/(?!\s$)/)? sortedArray[len] + " " : sortedArray[len];
-      //sortedArray[0] = sortedArray[0].match(/(?!^\s)/)? " " + sortedArray[0] : sortedArray[0];
-      var cutUpString = "";
-      for(var i=0;i<sortedArray.length;i++){
-        cutUpString += sortedArray[i];
-      }
-      node.nodeValue = cutUpString;
-      str = null;
-      strArray = null;
-      sortedArray = null;
-      cutUpString = null;
-    }
-    if(node.hasChildNodes() === true){
-      for(var i=0;i<node.childNodes.length;i++){
-        this.sortTextNodes(node.childNodes[i]);
-      }
-    }
-  },
-  cutUpSelection: function(){
-    var userSelection = window.getSelection();
-    var myRange = userSelection.getRangeAt(0);
-    var rangeString = myRange.toString();
-    if(rangeString == ""){return false;}
-    var docFrag = myRange.extractContents();
-    this.sortTextNodes(docFrag);
-    myRange.insertNode(docFrag);
-    document.normalizeDocument();
-    docFrag,userSelection,myRange = null;
-  }     
 });
 
-var Cutups = new CutupsSpace(CutupsShift);
+var Cut = new CutupsSpace(CutupsShift);
