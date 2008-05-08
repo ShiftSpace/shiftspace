@@ -202,6 +202,8 @@ ShiftSpace.Shift = new Class({
     {
       mainView.addClass('SSDisplayNone');
     }
+    
+    this.fireEvent('onShiftHide', this.getId());
   },
   
   /*
