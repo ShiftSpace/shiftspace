@@ -9,7 +9,7 @@
 */
 var PinWidget = new Class({
   
-  protocol: ['getPinWidgetButton', 'getPinWidgetAllowedActions', 'onPin'],
+  protocol: ['getPinRef', 'getPinWidgetButton', 'getPinWidgetAllowedActions', 'onPin'],
   
   /*
     Property:
@@ -212,7 +212,11 @@ var PinWidget = new Class({
       display: 'block'
     });
     
-    this.updateMenu(this.delegate.getPinRef().action);
+    // check for pin reference
+    if(this.delegate.getPinRef())
+    {
+      this.updateMenu(this.delegate.getPinRef().action);
+    }
   },
   
   hideMenu: function(_evt)

@@ -339,6 +339,11 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.top.injectInside(this.editSourceShift);
   },
   
+  getPinRef: function()
+  {
+    return this.getCurrentShift().getPinRef();
+  },
+  
   // part of the PinWidget protocol
   getPinWidgetButton: function()
   {
