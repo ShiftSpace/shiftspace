@@ -191,6 +191,12 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     this.parent();
     this.hideEditInterface();
+    
+    // have to remember to unpin
+    if(this.getPinRef() && !this.isPinned())
+    {
+      this.pin();
+    }
   },
   
   edit: function()
@@ -203,6 +209,12 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     this.parent();
     this.hideEditInterface();
+    
+    // have to remember to pin
+    if(this.isPinned())
+    {
+      this.unpin();
+    }
   },
   
   blur: function()

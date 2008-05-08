@@ -127,7 +127,8 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     var pinRef = ShiftSpace.Pin.toRef(this.currentImage, 'replace');
     
     // tell the current shift to swap
-    this.currentShift.swap(pinRef, grabbedImage);
+    this.currentShift.setSrc(grabbedImage);
+    this.currentShift.swap(pinRef);
     
     // clear out the selection interface
     this.blurImage();
@@ -226,12 +227,10 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     return src;
   },
   
-  swap : function(pinRef, src)
+  swap : function(pinRef)
   {
     // set the image to that property
-    this.setSrc(src);
     this.pin(this.element, pinRef);
-    
     // save
     this.save();
   },
@@ -259,7 +258,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     
     if(!this.isSwapped && this.getPinRef() && this.getSrc())
     {
-      this.swap(this.getPinRef(), this.getSrc());
+      this.swap(this.getPinRef());
       this.isSwapped = true;
     }
   },
@@ -301,15 +300,15 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   updateImageDimensions: function()
   {
-    var incrx = this.imageSize.x * 0.1;
-    var incry = this.imageSize.y * 0.1;
+    var incrx = this.actualImageSize.x * 0.1;
+    var incry = this.actualImageSize.y * 0.1;
     
-    this.imageSize.x = (this.imageSize.x + incrx * this.getZoom()).round();
-    this.imageSize.y = (this.imageSize.y + incry * this.getZoom()).round();
+    this.imageSize.x = (this.actualImageSize.x + incrx * this.getZoom()).round();
+    this.imageSize.y = (this.actualImageSize.y + incry * this.getZoom()).round();
   },
   
   refresh: function()
-  {    
+  {
     // increment by percentage
     this.image.setProperty('width', this.imageSize.x);
     this.image.setProperty('height', this.imageSize.y);
@@ -325,11 +324,13 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.save();
   },
   
-  imageLoaded: function()
+  imageLoaded: function(evt)
   {
+    console.log(evt);
     // get the actual dimensions of the image
-    this.image.removeClass('SSDisplayNone');
+    /*this.image.removeClass('SSDisplayNone');*/
     this.imageSize = this.image.getSize().size;
+    this.actualImageSize = this.image.getSize().size;
     this.updateImageDimensions();
     this.refresh();
   },
@@ -357,7 +358,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
       'class': "SSImageSwapShift"
     });
     this.image = new ShiftSpace.Element('img', {
-      'class': "SSImageSwapShiftImage SSDisplayNone"
+      'class': "SSImageSwapShiftImage"
     });
 
     // add the zoom buttons
