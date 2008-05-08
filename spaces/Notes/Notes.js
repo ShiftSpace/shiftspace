@@ -381,10 +381,23 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     return ['relative'];
   },
-
+  
   onPin: function(pinRef)
   {
-    this.pin(this.element, pinRef);
+    if(pinRef.action == 'unpin')
+    {
+      this.unpin();
+    }
+    else
+    {
+      this.pin(this.element, pinRef);
+    }
+  },
+  
+  unpin: function()
+  {
+    this.parent();
+    this.element.injectInside(document.body);
   },
   
   /*

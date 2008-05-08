@@ -304,6 +304,9 @@ ShiftSpace.Shift = new Class({
 
     if(pinTarget)
     {
+      // valid pin ref
+      this.setPinRef(pinRef);
+
       // store some styles from the pin target, if action is replace
       switch(pinRef.action)
       {
@@ -331,12 +334,15 @@ ShiftSpace.Shift = new Class({
         this.unpin();
       }
     
-      // save stuff
       this.setPinTarget(pinTarget);
       this.setPinElement(element);
     
       // call ShiftSpace Pin API to pin this element
       pinElement(element, pinRef);
+    }
+    else
+    {
+      // Should throw an Exception ? - David
     }
   },
   
@@ -349,6 +355,7 @@ ShiftSpace.Shift = new Class({
     // check to make sure there is an pinned element to restore
     if(this.getPinElement())
     {
+      console.log(this.pinRef);
       unpinElement(this.getPinRef());
       
       // clear out these vars

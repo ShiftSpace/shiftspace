@@ -949,7 +949,7 @@ var ShiftSpace = new (function() {
       var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
       
       // pinRef has become active set targetElement and element properties
-      $merge(pinRef, {
+      $extend(pinRef, {
         'element': element,
         'targetElement': targetNode
       });
@@ -1044,9 +1044,9 @@ var ShiftSpace = new (function() {
          var parentElement = pinRef.element.getParent();
          // take out the original node
          var targetNode = pinRef.targetElement.remove();
-         // remove the pinned element
+         // remove the pinned element from the page
          pinRef.element.remove();
-         // replace the wrapper with the parget
+         // replace the wrapper with the target
          parentElement.replaceWith(targetNode);
         break;
         
