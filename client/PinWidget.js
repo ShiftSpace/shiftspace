@@ -25,6 +25,12 @@ var PinWidget = new Class({
   {
     this.delegate = delegate;
     
+    var message = implementsProtocol(this.protocol, delegate);
+    if(!message.result)
+    {
+      console.error('Error: delegate does not implement PinWidget protocol. Missing ' + message.missing.join(', ') + '.');
+    }
+    
     this.element = delegate.getPinWidgetButton();
 
     // check to see if the delegate has the required properties

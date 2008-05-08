@@ -235,6 +235,22 @@ var ShiftSpace = new (function() {
       return (shiftId.search('newShift') != -1);
     }
     
+    function implementsProtocol(protocol, object)
+    {
+      var result = true;
+      var missing = [];
+      for(var i = 0; i < protocol.length; i++)
+      {
+        var prop = protocol[i];
+        if(!object[prop])
+        {
+           result = false;
+           missing.push(prop);
+        }
+      }
+      return {'result': result, 'missing': missing};
+    }
+    
     function isSSElement(node)
     {
       if(node.hasClass('ShiftSpaceElement'))
