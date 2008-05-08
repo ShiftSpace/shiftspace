@@ -181,6 +181,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
         top: json.scroll.y
       });
     }
+    
     this.setPinRef(json.pinRef);
     this.setZoom(json.zoom || 0);
     this.setSrc(json.src);
@@ -328,6 +329,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   {
     // get the actual dimensions of the image
     this.imageSize = this.image.getSize().size;
+    this.updateImageDimensions();
     this.refresh();
   },
 
