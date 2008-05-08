@@ -289,6 +289,10 @@ var PinWidget = new Class({
     {
       action = 'relative';
     }
+    if(target.hasClass('unpin'))
+    {
+      action = 'unpin';
+    }
     
     // store this for menu display
     this.pinAction = action;

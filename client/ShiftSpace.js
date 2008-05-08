@@ -966,10 +966,12 @@ var ShiftSpace = new (function() {
         return (x.getPinRef().relativeXPath == pinRef.relativeXPath);
       });
 
+      /*
       console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       console.log(allPinnedShifts);
       console.log(otherShifts);
       console.log(matchingShifts);
+      */
 
       // hide any shifts with matching paths
       matchingShifts.each(function(x) {
@@ -1104,7 +1106,7 @@ var ShiftSpace = new (function() {
       switch(pinRef.action) 
       {
         case 'relative':
-          pinRef.element.addClass('SSDisplayNone');
+          var pos = pinRef.element.getPosition();
 
           // get the parentElement
           var parentElement = pinRef.element.getParent();
@@ -1114,6 +1116,8 @@ var ShiftSpace = new (function() {
           pinRef.element.remove();
           // replace the wrapper with the target
           parentElement.replaceWith(targetNode);
+          
+          var tpos = parentElement.getPosition();
 
           // restore the position of the element
           pinRef.element.setStyle('position', pinRef.cssPosition);
@@ -1125,20 +1129,15 @@ var ShiftSpace = new (function() {
           }
           else
           {
-            var pos = pinRef.element.getPosition();
             var nx = pos.x;
             var ny = pos.y;
           }
-
-          console.log(nx);
-          console.log(ny);
 
           pinRef.element.setStyles({
             left: nx,
             top: ny
           });
-          
-          pinRef.element.removeClass('SSDisplayNone');
+
         break;
 
         case 'replace':

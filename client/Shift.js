@@ -302,6 +302,9 @@ ShiftSpace.Shift = new Class({
   {
     // get the target
     var pinTarget = ShiftSpace.Pin.toNode(pinRef);
+    
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PIN');
+    console.log(pinRef);
 
     if(pinTarget)
     {
@@ -366,7 +369,6 @@ ShiftSpace.Shift = new Class({
       // clear out these vars
       this.setPinTarget(null);
       this.setPinElement(null);
-      /*this.setPinRef(null);*/
     }
     
     this.fireEvent('unpin', this);
@@ -413,15 +415,6 @@ ShiftSpace.Shift = new Class({
   */
   getPinRef : function()
   {
-    // update the offset
-    if(this.pinRef && this.pinRef.action == 'relative')
-    {
-      var elpos = this.getPinElement();
-      var tpos = this.getPinTarget();
-      
-      this.pinRef.offset = {x: elpos.x - tpos.x, y: elpos.y - tpos.y};
-    }
-    
     return this.pinRef
   },
   
