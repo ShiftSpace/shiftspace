@@ -216,8 +216,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.unpin();
     }
-    
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> HIDE');
   },
   
   blur: function()
@@ -226,11 +224,23 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.hideEditInterface();
   },
   
+  preventEdit: function(_evt)
+  {
+    console.log('prevent');
+    var evt = new Event(_evt);
+    evt.preventDefault();
+  },
+  
   showEditInterface: function()
   {
     this.saveButton.setStyle('display', '');
     this.cancelButton.setStyle('display', '');
     this.resizeControl.setStyle('display', '');
+    this.pinWidgetDiv.setStyle('display', '');
+    if(this.inputArea)
+    {
+      this.inputArea.setProperty('readonly', 1);
+    }
     this.dragRef.attach();
     this.refresh();
   },
@@ -240,6 +250,11 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.saveButton.setStyle('display', 'none');
     this.cancelButton.setStyle('display', 'none');
     this.resizeControl.setStyle('display', 'none');
+    this.pinWidgetDiv.setStyle('display', 'none');
+    if(this.inputArea)
+    {
+      this.inputArea.removeProperty('readonly');
+    }
     this.dragRef.detach();
     this.refresh();
   },
@@ -345,6 +360,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.inputArea.addEvent('mousedown', function() {
      this.fireEvent('onFocus', this);
     }.bind(this));
+    this.inputArea.setProperty('readonly', 1);
   },
   
   /*
