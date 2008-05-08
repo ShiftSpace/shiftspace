@@ -249,6 +249,8 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
   show : function()
   {
+    this.parent();
+    
     // detach the dragging
     if(this.dragRef) this.dragRef.detach();
     
@@ -275,6 +277,8 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
   hide : function()
   {
+    this.parent();
+    
     if(this.isSwapped && this.getPinRef() && this.getSrc())
     {
       this.unpin();
@@ -310,12 +314,15 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   refresh: function()
   {
     // increment by percentage
-    this.image.setProperty('width', this.imageSize.x);
-    this.image.setProperty('height', this.imageSize.y);
-    this.image.setStyles({
-      width: this.imageSize.x,
-      height: this.imageSize.y
-    });
+    if(this.imageSize)
+    {
+      this.image.setProperty('width', this.imageSize.x);
+      this.image.setProperty('height', this.imageSize.y);
+      this.image.setStyles({
+        width: this.imageSize.x,
+        height: this.imageSize.y
+      });
+    }
   },
   
   update: function()

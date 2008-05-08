@@ -189,15 +189,13 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   show: function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SHOW');
-
     this.parent();
     this.hideEditInterface();
     
     // have to remember to unpin
     if(this.getPinRef() && !this.isPinned())
     {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> ABOUT TO PIN');
+      // TODO: Instead of setting this over over again, should just methods to set these up once - David
       this.pin(this.element, this.getPinRef());
     }
   },

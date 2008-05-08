@@ -986,17 +986,20 @@ var ShiftSpace = new (function() {
     function pinElement(element, pinRef)
     {
       ShiftSpace.pinRef = pinRef;
-      var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
-      
+
       // store this pinRef to ensure the same node doesn't get pinned
       if(!allPinnedShifts.contains(pinRef.shift)) allPinnedShifts.push(pinRef.shift);
       checkPinReferences(pinRef);
       
+      var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
+
       // pinRef has become active set targetElement and element properties
       $extend(pinRef, {
         'element': element,
         'targetElement': targetNode
       });
+      
+      console.log(targetNode);
 
       switch(pinRef.action)
       {
@@ -1145,6 +1148,7 @@ var ShiftSpace = new (function() {
         default:
         break;
       }
+      console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DONE');
     }
     
     /*

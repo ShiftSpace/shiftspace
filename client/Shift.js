@@ -302,9 +302,6 @@ ShiftSpace.Shift = new Class({
   {
     // get the target
     var pinTarget = ShiftSpace.Pin.toNode(pinRef);
-    
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PIN');
-    console.log(pinRef);
 
     if(pinTarget)
     {
