@@ -1306,6 +1306,7 @@ var ShiftSpace = new (function() {
       {
         var space = spaces[spaceName];
         space.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
+        space.addEvent('onShiftShow', ShiftSpace.Console.showShift.bind(ShiftSpace.Console));
       }
     }
     

@@ -715,6 +715,10 @@ var Console = new Class({
     }
   },
   
+  showShift: function(id) {
+    $(this.doc.getElementById('shifts')).getElement('#' + id).addClass('active');    
+  },
+
   hideShift: function(id) {
     $(this.doc.getElementById('shifts')).getElement('#' + id).removeClass('active');
   },

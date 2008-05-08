@@ -179,15 +179,14 @@ ShiftSpace.Shift = new Class({
   */
   show : function(el)
   {
-    // make sure the editing interface is hidden
-    
-
     var mainView = this.getMainView();
     if( mainView )
     {
       mainView.removeClass('SSDisplayNone');
     }
     this.refresh();
+    
+    this.fireEvent('onShiftShow', this.getId());
   },
   
   
