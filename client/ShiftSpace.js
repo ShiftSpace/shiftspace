@@ -959,10 +959,18 @@ var ShiftSpace = new (function() {
       }
     }
     
+    function checkPinReferences()
+    {
+      
+    }
+    
+    var allPinReferences = [];
     function pinElement(element, pinRef)
     {
       ShiftSpace.pinRef = pinRef;
       var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
+      
+      // store this pinRef to ensure the same node doesn't get pinned
       
       // pinRef has become active set targetElement and element properties
       $extend(pinRef, {

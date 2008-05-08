@@ -78,7 +78,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.closeButton.addEvent('click', this.cancel.bind(this));
     
     // make the note draggable
-    this.element.makeDraggable({ 
+    this.dragRef = new Drag.Move(this.element, { 
       handle : this.top,
       onStart : function() {
         this.fireEvent('onDragStart');
@@ -87,6 +87,7 @@ var NotesShift = ShiftSpace.Shift.extend({
         this.fireEvent('onDragStop');
       }.bind(this)
     });
+    this.dragRef.detach();
     
     // set up the save event
     this.saveButton.addEvent( 'click', this.save.bind( this ) );
@@ -214,6 +215,8 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     this.saveButton.setStyle('display', '');
     this.cancelButton.setStyle('display', '');
+    this.resizeControl.setStyle('display', '');
+    this.dragRef.attach();
     this.refresh();
   },
   
@@ -221,6 +224,8 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     this.saveButton.setStyle('display', 'none');
     this.cancelButton.setStyle('display', 'none');
+    this.resizeControl.setStyle('display', 'none');
+    this.dragRef.detach();
     this.refresh();
   },
   

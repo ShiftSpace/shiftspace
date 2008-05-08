@@ -376,7 +376,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
       {
         this.save();
       }.bind(this)
-    })
+    });
     this.dragRef.detach();
     this.image.addEvent('click', function(_evt) {
       var evt = new Event(_evt);

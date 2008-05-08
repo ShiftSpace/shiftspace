@@ -62,6 +62,7 @@ var PinWidget = new Class({
     
     // check to see if the delegate is already pinned
     this.delegate.addEvent('pin', this.delegateWasPinned.bind(this));
+    this.delegate.addEvent('unpin', this.delegateWasUnpinned.bind(this));
     
     pinWidgets.push(this);
   },
@@ -76,6 +77,11 @@ var PinWidget = new Class({
       this.updateMenu(this.delegate.getPinRef().action)
       this.refresh();
     }
+  },
+  
+  delegateWasUnpinned: function()
+  {
+    
   },
   
   capitalize: function(str)

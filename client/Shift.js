@@ -366,6 +366,8 @@ ShiftSpace.Shift = new Class({
       this.setPinElement(null);
       this.setPinRef(null);
     }
+    
+    this.fireEvent('unpin', this);
   },
   
   /*
