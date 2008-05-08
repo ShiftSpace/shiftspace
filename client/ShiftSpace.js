@@ -1024,7 +1024,6 @@ var ShiftSpace = new (function() {
             pinRef.offset = {x: elpos.x - tpos.x, y: elpos.y - tpos.y};
             pinRef.originalOffset = {x: elpos.x, y: elpos.y};
           }
-          console.log(pinRef.offset);
           
           // hide the element while we do some node magic
           element.addClass('SSDisplayNone');
@@ -1036,9 +1035,6 @@ var ShiftSpace = new (function() {
           targetNode.replaceWith(wrapper);
           targetNode.injectInside(wrapper);
           
-          console.log('------------------------------------- pinRef.offset');
-          console.log(pinRef.offset);
-
           // if the target node is an image we
           // want the wrapper node to display inline
           if(targetNode.getTag() == 'img')

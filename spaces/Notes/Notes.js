@@ -189,13 +189,16 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   show: function()
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SHOW');
+
     this.parent();
     this.hideEditInterface();
     
     // have to remember to unpin
     if(this.getPinRef() && !this.isPinned())
     {
-      this.pin();
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> ABOUT TO PIN');
+      this.pin(this.element, this.getPinRef());
     }
   },
   
