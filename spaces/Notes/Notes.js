@@ -30,12 +30,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     // attach events
     this.attachEvents();
     
-    // set the position of the note to the mouse
-    this.element.setStyles({
-      left : json.position.x,
-      top : json.position.y
-    });
-
     // set the size to the defaults size declared above
     this.element.setStyles({
       width : this.defaults.size.x,
@@ -57,6 +51,21 @@ var NotesShift = ShiftSpace.Shift.extend({
     
     // refresh - generally a good idea
     this.refresh();
+    
+    // check to see if this note is pinned
+    if(json.pinRef)
+    {
+      this.pin(this.element, json.pinRef);
+    }
+    else
+    {
+      // otherwise set the position of the note to the mouse
+      // or the last saved absolute position
+      this.element.setStyles({
+        left : json.position.x,
+        top : json.position.y
+      });
+    }
   },
   
   /*
@@ -156,7 +165,8 @@ var NotesShift = ShiftSpace.Shift.extend({
     return {
       position : pos,
       size : size,
-      summary : this.inputArea.value
+      summary : this.inputArea.value,
+      pinRef: this.getEncodablePinRef()
     };
   },
   

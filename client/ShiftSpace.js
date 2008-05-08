@@ -980,15 +980,19 @@ var ShiftSpace = new (function() {
             console.log(elpos);
             console.log(tpos);
             pinRef.offset = {x: elpos.x - tpos.x, y: elpos.y - tpos.y};
+            pinRef.originalOffset = elpos;
           }
+          
+          // hide the element while we do some node magic
+          element.addClass('SSDisplayNone');
         
           // wrap the target node
-          var wrapper = new ShiftSpace.Element('div', {
+          var wrapper = new Element('div', {
             'class': 'SSImageWrapper SSPositionRelative'
           });
           targetNode.replaceWith(wrapper);
           targetNode.injectInside(wrapper);
-        
+          
           console.log('------------------------------------- pinRef.offset');
           console.log(pinRef.offset);
 
@@ -1000,10 +1004,24 @@ var ShiftSpace = new (function() {
           }
           var styles = targetNode.getStyles('width', 'height');
         
-          wrapper.setStyles({
-            width: styles.width, 
-            height: styles.height, 
-          });
+          // set the dimensions of the wrapper
+          if( styles.width && styles.height != 'auto' )
+          {
+            wrapper.setStyle('width', styles.width);
+          }
+          else
+          {
+            wrapper.setStyle('width', targetNode.getSize().size.x);
+          }
+          
+          if( styles.height && styles.height != 'auto' )
+          {
+            wrapper.setStyle('height', styles.height);
+          }
+          else
+          {
+            wrapper.setStyle('height', targetNode.getSize().size.y);
+          }
         
           // override clicks in case the wrapper is inside of a link
           wrapper.addEvent('click', function(_evt) {
@@ -1019,13 +1037,20 @@ var ShiftSpace = new (function() {
           element.injectInside(targetNode);
         
           // position absolute now
-          element.setStyle('position', 'absolute');
+          if(element.getStyle('position') != 'absolute')
+          {
+            pinRef.cssPosition = element.getStyle('position');
+            element.setStyle('position', 'absolute');
+          }
 
           // set the position
           element.setStyles({
             left: pinRef.offset.x,
             top: pinRef.offset.y
           });
+          
+          // we're done show the element
+          element.removeClass('SSDisplayNone');
         break;
 
         default:
@@ -1038,24 +1063,36 @@ var ShiftSpace = new (function() {
       switch(pinRef.action) 
       {
         case 'relative':
-         console.log('relative -----------------------------------');
-         
-         // get the parentElement
-         var parentElement = pinRef.element.getParent();
-         // take out the original node
-         var targetNode = pinRef.targetElement.remove();
-         // remove the pinned element from the page
-         pinRef.element.remove();
-         // replace the wrapper with the target
-         parentElement.replaceWith(targetNode);
+          pinRef.element.addClass('SSDisplayNone');
+
+          // get the parentElement
+          var parentElement = pinRef.element.getParent();
+          // take out the original node
+          var targetNode = pinRef.targetElement.remove();
+          // remove the pinned element from the page
+          pinRef.element.remove();
+          // replace the wrapper with the target
+          parentElement.replaceWith(targetNode);
+
+          console.log(pinRef.cssPosition);
+          console.log(pinRef.originalOffset);
+
+          // restore the position of the element
+          pinRef.element.setStyle('position', pinRef.cssPosition);
+          pinRef.element.setStyles({
+            left: pinRef.originalOffset.x,
+            top: pinRef.originalOffset.y
+          });
+          
+          pinRef.element.removeClass('SSDisplayNone');
         break;
-        
+
         case 'replace':
         case 'before':
         case 'after':
           pinRef.element.replaceWith(pinRef.targetElement);
         break;
-        
+
         default:
         break;
       }
