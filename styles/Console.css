@@ -115,6 +115,12 @@ a:hover {
   cursor: pointer;
 }
 
+#shifts
+{
+  user-select: none;
+  -moz-user-select: none;
+}
+
 #shifts .hover {
   background: transparent url(../images/Console/hover-bg.gif) repeat-x;
 }
