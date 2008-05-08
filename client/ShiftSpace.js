@@ -970,14 +970,16 @@ var ShiftSpace = new (function() {
       console.log(allPinnedShifts);
       console.log(otherShifts);
       console.log(matchingShifts);
-      /*
+
+      // hide any shifts with matching paths
       matchingShifts.each(function(x) {
-        x.unpin();
         x.hide();
       });
-      */
+      
+      return (matchingShifts.length > 0);
     }
     
+    // stores direct references to the shift objects
     var allPinnedShifts = [];
     function pinElement(element, pinRef)
     {
@@ -1018,8 +1020,9 @@ var ShiftSpace = new (function() {
             var elpos = element.getPosition();
             var tpos = targetNode.getPosition();
             pinRef.offset = {x: elpos.x - tpos.x, y: elpos.y - tpos.y};
-            pinRef.originalOffset = elpos;
+            pinRef.originalOffset = {x: elpos.x, y: elpos.y};
           }
+          console.log(pinRef.offset);
           
           // hide the element while we do some node magic
           element.addClass('SSDisplayNone');
@@ -1112,14 +1115,27 @@ var ShiftSpace = new (function() {
           // replace the wrapper with the target
           parentElement.replaceWith(targetNode);
 
-          console.log(pinRef.cssPosition);
-          console.log(pinRef.originalOffset);
-
           // restore the position of the element
           pinRef.element.setStyle('position', pinRef.cssPosition);
+          
+          if(pinRef.originalOffset)
+          {
+            var nx = pinRef.originalOffset.x;
+            var ny = pinRef.originalOffset.y;
+          }
+          else
+          {
+            var pos = pinRef.element.getPosition();
+            var nx = pos.x;
+            var ny = pos.y;
+          }
+
+          console.log(nx);
+          console.log(ny);
+
           pinRef.element.setStyles({
-            left: pinRef.originalOffset.x,
-            top: pinRef.originalOffset.y
+            left: nx,
+            top: ny
           });
           
           pinRef.element.removeClass('SSDisplayNone');

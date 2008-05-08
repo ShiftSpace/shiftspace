@@ -716,11 +716,13 @@ var Console = new Class({
   },
   
   showShift: function(id) {
-    $(this.doc.getElementById('shifts')).getElement('#' + id).addClass('active');    
+    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    if(el) el.addClass('active');    
   },
 
   hideShift: function(id) {
-    $(this.doc.getElementById('shifts')).getElement('#' + id).removeClass('active');
+    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    if(el) el.removeClass('active');
   },
   
   updateShift: function(shiftJson) {

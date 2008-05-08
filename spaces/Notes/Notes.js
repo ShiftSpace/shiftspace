@@ -215,6 +215,8 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.unpin();
     }
+    
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> HIDE');
   },
   
   blur: function()
