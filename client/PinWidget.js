@@ -262,6 +262,10 @@ var PinWidget = new Class({
     var elementChanged = (this.lastPinned != this.pinnedElement);
     this.lastPinned = this.pinnedElement;
     
+    // turn off any of the other ones
+    target.getParent().getElements('.radio').removeClass('on');
+    target.getParent().getElements('.radio').addClass('off');
+    
     // turn on the toggle
     target.getElement('.radio').removeClass('off');
     target.getElement('.radio').addClass('on');
@@ -296,6 +300,9 @@ var PinWidget = new Class({
       this.iconImg.addClass('pinned');
       this.isPinned = true;
     }
+    
+    // hide the menu
+    this.hideMenu();
   },
   
   refresh: function()

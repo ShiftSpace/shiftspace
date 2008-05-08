@@ -418,11 +418,21 @@ ShiftSpace.Shift = new Class({
     return this.pinRef
   },
   
+  /*
+    Function: getEncodablePinRef
+      This returns a version of the pin reference object that is encodable.  This is necessary
+      because we store dom node references in the pin reference and these should not
+      get encoded on Shift save.
+      
+    Returns:
+      And encodable JSON representation of the pin reference object.
+  */
   getEncodablePinRef: function()
   {
     var pinRef = this.getPinRef();
     var temp = {};
     
+    // don't attempt to encode element, targetElement, or wrapper properties
     for(key in pinRef)
     {
       if(key != 'element' && 
@@ -430,6 +440,12 @@ ShiftSpace.Shift = new Class({
          key != 'wrapper')
       {
         temp[key] = pinRef[key];
+      }
+      
+      if(key == 'offset' && pinRef.action == 'relative')
+      {
+        // we need to get the latest offset
+        temp['offset'] = {x: pinRef.element.offsetLeft, y: pinRef.element.offsetTop};
       }
     }
     

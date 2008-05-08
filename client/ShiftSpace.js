@@ -977,8 +977,6 @@ var ShiftSpace = new (function() {
           {
             var elpos = element.getPosition();
             var tpos = targetNode.getPosition();
-            console.log(elpos);
-            console.log(tpos);
             pinRef.offset = {x: elpos.x - tpos.x, y: elpos.y - tpos.y};
             pinRef.originalOffset = elpos;
           }
