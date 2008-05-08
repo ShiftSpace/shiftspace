@@ -344,6 +344,9 @@ ShiftSpace.Shift = new Class({
     {
       // Should throw an Exception ? - David
     }
+    
+    // fire a pin event
+    this.fireEvent('pin', this);
   },
   
   /*

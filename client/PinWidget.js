@@ -54,7 +54,22 @@ var PinWidget = new Class({
     
     this.element.addEvent('click', this.toggleSelection.bind(this));
     
+    // check to see if the delegate is already pinned
+    this.delegate.addEvent('pin', this.delegateWasPinned.bind(this));
+    
     pinWidgets.push(this);
+  },
+  
+  delegateWasPinned: function()
+  {
+    console.log('======================================== DELEGATE WAS PINNED');
+    if(this.delegate.getPinTarget() != this.getPinnedElement())
+    {
+      this.setPinnedElement(this.delegate.getPinTarget());
+      this.isPinned = true;
+      this.updateMenu(this.delegate.getPinRef().action)
+      this.refresh();
+    }
   },
   
   capitalize: function(str)
@@ -127,6 +142,19 @@ var PinWidget = new Class({
     this.menuBottomItem.getElement('span').setText('Unpin');
   },
   
+  updateMenu: function(action)
+  {
+    var target = this.menu.getElement('.'+action);
+    
+    // turn off any of the other ones
+    target.getParent().getElements('.radio').removeClass('on');
+    target.getParent().getElements('.radio').addClass('off');
+    
+    // turn on the toggle
+    target.getElement('.radio').removeClass('off');
+    target.getElement('.radio').addClass('on');
+  },
+  
   toggleSelection: function(_evt)
   {
     var evt = new Event(_evt);
@@ -184,16 +212,7 @@ var PinWidget = new Class({
       display: 'block'
     });
     
-    if(this.isPinned)
-    {
-      this.menu.getElement('.'+this.pinAction).getElement('.radio').removeClass('off');
-      this.menu.getElement('.'+this.pinAction).getElement('.radio').addClass('on');
-    }
-    else
-    {
-      this.menu.getElements('.radio').removeClass('on');
-      this.menu.getElements('.radio').addClass('off');
-    }
+    this.updateMenu(this.delegate.getPinRef().action);
   },
   
   hideMenu: function(_evt)
@@ -262,13 +281,8 @@ var PinWidget = new Class({
     var elementChanged = (this.lastPinned != this.pinnedElement);
     this.lastPinned = this.pinnedElement;
     
-    // turn off any of the other ones
-    target.getParent().getElements('.radio').removeClass('on');
-    target.getParent().getElements('.radio').addClass('off');
-    
-    // turn on the toggle
-    target.getElement('.radio').removeClass('off');
-    target.getElement('.radio').addClass('on');
+    // update the menu
+    this.updateMenu(action);
     
     // this could probably be a little cleaner
     if(target.hasClass('unpin'))
