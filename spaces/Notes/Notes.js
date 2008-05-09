@@ -162,14 +162,16 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     var pos = this.element.getPosition();
     var size = this.element.getSize().size;
+    var text = this.inputArea.value.replace(/\n/g, "<br/>");
+    var titleText = this.inputArea.value.replace(/\n/g, '');
     
     console.log(this.getTitle());
     
     return {
       position : pos,
       size: size,
-      noteText: this.inputArea.value,
-      summary : this.getTitle() || this.inputArea.value,
+      noteText: text,
+      summary : this.getTitle() || titleText,
       pinRef: this.getEncodablePinRef()
     };
   },
@@ -341,6 +343,12 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   finishFrame : function()
   {
+    var text = "Leave a note";
+    if(this.defaults.noteText)
+    {
+      text = this.defaults.noteText.replace(/<br\/>/g, "\n");
+    }
+    
     // Get document reference and MooToolize the body
     var doc = this.frame.contentDocument;
     this.frameBody = $(doc.body);
@@ -350,7 +358,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.inputArea = $(doc.createElement('textarea'));
     this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
     this.inputArea.injectInside( this.frameBody );
-    this.inputArea.setProperty('value', this.defaults.noteText || 'Leave a note');
+    this.inputArea.setProperty('value', text);
     this.inputArea.focus();
     
     this.inputArea.addEvent('mousedown', function() {
