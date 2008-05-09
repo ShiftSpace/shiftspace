@@ -989,10 +989,11 @@ var ShiftSpace = new (function() {
 
       // store this pinRef to ensure the same node doesn't get pinned
       if(!allPinnedShifts.contains(pinRef.shift)) allPinnedShifts.push(pinRef.shift);
+      // make sure nobody else is targeting the same node
       checkPinReferences(pinRef);
       
       var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
-
+      
       // pinRef has become active set targetElement and element properties
       $extend(pinRef, {
         'element': element,
@@ -1009,6 +1010,8 @@ var ShiftSpace = new (function() {
         
         case 'replace':
           targetNode.replaceWith(element);
+          pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
+          element.setStyles(pinRef.targetStyles);
         break;
         
         case 'after':
@@ -1140,6 +1143,14 @@ var ShiftSpace = new (function() {
         break;
 
         case 'replace':
+          // restore the original styles
+          pinRef.element.setStyles({
+            position: '',
+            float: '',
+            display: '',
+            width: '',
+            height: ''
+          });
         case 'before':
         case 'after':
           pinRef.element.replaceWith(pinRef.targetElement);

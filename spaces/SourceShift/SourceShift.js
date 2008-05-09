@@ -739,7 +739,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.resizeControl.setStyle('visibility', 'hidden');
     this.element.setStyle('borderWidth', 0);
     
-    if(this.getPinRef)
+    if(this.isPinned())
     {
       this.frame.removeClass('SSFrameBorder');
     }
@@ -760,7 +760,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.resizeControl.setStyle('visibility', 'visible');
     this.element.setStyle('borderWidth', 2);
     
-    if(this.getPinRef())
+    if(this.isPinned())
     {
       this.frame.addClass('SSFrameBorder');
     }
