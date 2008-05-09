@@ -481,6 +481,12 @@ var ShiftSpace = new (function() {
           var scrollFx = new Fx.Scroll(window, {
             duration: 1000,
             transition: Fx.Transitions.Cubic.easeIn,
+            onComplete: function()
+            {
+              var winScroll = window.getSize().scroll;
+              if(windowScroll.x < pos.x-25) window.scrollTo(pos.x-25, 0);
+              if(windowScroll.y < pos.y-25) window.scrollTo(0, pos.y-25);
+            }
           });
 
           scrollFx.scrollTo(pos.x-25, pos.y-25);
