@@ -103,7 +103,23 @@ ShiftSpace.Space = new Class({
     }
   },
   
-  hideInterface : function() {},
+  hideInterface : function() 
+  {
+    // remove any unsaved shifts
+    var unsavedShifts = [];
+    for(shift in this.shifts)
+    {
+      if(shift.search('newShift') != -1)
+      {
+        unsavedShifts.push(this.shifts[shift]);
+        delete this.shifts[shift];
+      }
+    }
+    unsavedShifts.each(function(x) {
+      x.destroy();
+    });
+  },
+  
   buildInterface : function() {},
   
   /*

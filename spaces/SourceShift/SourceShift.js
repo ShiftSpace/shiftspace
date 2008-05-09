@@ -68,13 +68,13 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   showInterface : function()
   {
     this.parent();
-    this.editSourceShift.setStyle('display', '');
+    this.editSourceShift.removeClass('SSDisplayNone');
   },
   
   hideInterface : function()
   {
     this.parent();
-    if(this.isVisible()) this.editSourceShift.setStyle('display', 'none');
+    this.editSourceShift.addClass('SSDisplayNone');
   },
   
   setMode : function(newMode)

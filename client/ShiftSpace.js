@@ -442,7 +442,9 @@ var ShiftSpace = new (function() {
       var space = spaceForShift(shiftId);
       
       // unfocus the last shift
-      if (focusedShiftId) {
+      if (focusedShiftId && shifts[focusedShiftId]) 
+      {
+        console.log('focusedShiftId: ' + focusedShiftId);
         // hmmm, note, we maybe should have loadShift to avoid confusion about show - David
         spaceForShift(focusedShiftId).orderBack(focusedShiftId);
       }
@@ -463,9 +465,6 @@ var ShiftSpace = new (function() {
       // scroll the window if necessary
       var mainView = space.mainViewForShift(shiftId);
       
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> focus shift');
-      console.log(mainView);
-
       if(mainView)
       {
         var pos = mainView.getPosition();
@@ -501,7 +500,10 @@ var ShiftSpace = new (function() {
     Parameter:
       space - a ShiftSpace.Space instance
     */
-    function focusSpace(space) {
+    function focusSpace(space) 
+    {
+      console.log(focusedSpace);
+      console.log(space);
       if(focusedSpace && focusedSpace != space)
       {
         console.log('hiding interface!');
@@ -1120,7 +1122,6 @@ var ShiftSpace = new (function() {
     }
     
     function unpinElement(pinRef) {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>> unpinElement');
       switch(pinRef.action) 
       {
         case 'relative':
@@ -1277,7 +1278,6 @@ var ShiftSpace = new (function() {
     */
     function loadSpace(space, pendingShift) 
     {
-      //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Space: '  + space);
       if(space)
       {
         if (typeof ShiftSpaceSandBoxMode != 'undefined') 
@@ -1367,7 +1367,14 @@ var ShiftSpace = new (function() {
         var space = spaces[spaceName];
         space.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
         space.addEvent('onShiftShow', ShiftSpace.Console.showShift.bind(ShiftSpace.Console));
+        space.addEvent('onShiftDestroy', removeShift);
       }
+    }
+    
+    function removeShift(shiftId)
+    {
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> REMOVE SHIFT, ' + shiftId);
+      delete shifts[shiftId];
     }
     
     /*
@@ -1376,7 +1383,6 @@ var ShiftSpace = new (function() {
     */
     function loadPlugin(plugin) 
     {
-      //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PlugIn: '  + plugin);
       if (typeof ShiftSpaceSandBoxMode != 'undefined') 
       {
         var url = installedPlugins[plugin] + '?' + new Date().getTime();

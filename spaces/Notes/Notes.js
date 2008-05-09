@@ -350,7 +350,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.inputArea = $(doc.createElement('textarea'));
     this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
     this.inputArea.injectInside( this.frameBody );
-    this.inputArea.setProperty('value', this.defaults.noteText);
+    this.inputArea.setProperty('value', this.defaults.noteText || 'Leave a note');
     this.inputArea.focus();
     
     this.inputArea.addEvent('mousedown', function() {
