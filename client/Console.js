@@ -848,7 +848,7 @@ var Console = new Class({
       if(evt.key == 'enter')
       {
         console.log('Update shift!');
-        newEntry.getElement('.summaryView').setHTML(evt.target.getProperty('value'));
+        newEntry.getElement('.summaryView').setHTML($(evt.target).getProperty('value'));
         this.showShift(aShift.id);
         // defined in Core - David
         updateTitleOfShift(aShift.id, evt.target.getProperty('value'));

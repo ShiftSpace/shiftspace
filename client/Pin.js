@@ -97,7 +97,7 @@ var Pin = new Class({
   isValidRef: function(pinRef)
   {
     if(!pinRef || (!pinRef.ancestorId && !pinRef.relativeXPath)) return false;
-    var node = Pin.toNode(pinRef)
+    var node = ShiftSpace.Pin.toNode(pinRef)
     return (node != null);
   }
 });
