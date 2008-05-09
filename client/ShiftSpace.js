@@ -967,7 +967,9 @@ var ShiftSpace = new (function() {
     {
       var otherShifts = allPinnedShifts.copy().remove(pinRef.shift);
       var matchingShifts = otherShifts.filter(function(x) {
-        return (x.getPinRef().relativeXPath == pinRef.relativeXPath);
+        var aPinRef = x.getPinRef();
+        return ((aPinRef.relativeXPath == pinRef.relativeXPath) && 
+                (aPinRef.ancestorId == pinRef.ancestorId));
       });
 
       /*
@@ -976,6 +978,8 @@ var ShiftSpace = new (function() {
       console.log(otherShifts);
       console.log(matchingShifts);
       */
+      
+      console.log(matchingShifts);
 
       // hide any shifts with matching paths
       matchingShifts.each(function(x) {
