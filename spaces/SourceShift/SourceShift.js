@@ -119,23 +119,30 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> onShiftEdit');
 
     // set the mode to xhtml and set to the html of the current shift
+    var currentShift = this.shifts[shiftId];
+    
+    this.setMode('xhtml');
+    this.editSource.setProperty('value', currentShift.getMarkup());
+    this.titleField.setProperty('value', currentShift.getTitle());
+    
+    // update pin widget
+    if(currentShift.isPinned())
+    {
+      this.fireEvent('pin');
+    }
+    else
+    {
+      this.fireEvent('unpin');
+    }
+  },
+  
+  onShiftFocus: function(shiftId)
+  {
+    // we are in edit mode
     if(this.isVisible())
     {
-      var currentShift = this.getCurrentShift();
-      
-      this.setMode('xhtml');
-      this.editSource.setProperty('value', currentShift.getMarkup());
-      this.titleField.setProperty('value', currentShift.getTitle());
-      
-      // update pin widget
-      if(currentShift.isPinned())
-      {
-        this.fireEvent('pin');
-      }
-      else
-      {
-        this.fireEvent('unpin');
-      }
+      this.editShift(shiftId);
+      this.onShiftEdit(shiftId);
     }
   },
   
