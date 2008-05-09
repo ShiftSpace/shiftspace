@@ -44,7 +44,7 @@ ShiftSpace.Space = new Class({
 
     if( valid )
     {
-      registerSpace( this, this.attributes );
+      if(typeof registerSpace != 'undefined') registerSpace( this, this.attributes );
     }
     else
     {
@@ -168,7 +168,7 @@ ShiftSpace.Space = new Class({
   
   allocateNewShift: function()
   {
-    initShift(this.getName(), {});
+    if(typeof initShift != 'undefined') initShift(this.getName(), {});
   },
   
   /*

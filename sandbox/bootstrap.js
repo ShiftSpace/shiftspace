@@ -1,5 +1,3 @@
-var __server__ = 'http://localhost/~davidnolen/shiftspace-0.11/';
-
 function focusShift() {};
 
 function registerSpace(instance) {

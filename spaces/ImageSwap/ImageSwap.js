@@ -405,7 +405,9 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
         this.save();
       }.bind(this)
     });
+    // prevent dragging until the user is in edit mode
     this.dragRef.detach();
+    
     this.image.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       evt.stop();

@@ -11,25 +11,28 @@ ShiftSpace.Element = new Class({
     var dragFunc = el.makeDraggable;
     
     // override the default behavior
-    el.makeDraggable = function(options)
+    if(ShiftSpace.addIframeCovers)
     {
-      var dragObj = dragFunc.bind(el, options)();
-      dragObj.addEvent('onStart', ShiftSpace.addIframeCovers.bind(ShiftSpace));
-      dragObj.addEvent('onDrag', ShiftSpace.updateIframeCovers.bind(ShiftSpace));
-      dragObj.addEvent('onComplete', ShiftSpace.removeIframeCovers.bind(ShiftSpace));
+      el.makeDraggable = function(options)
+      {
+        var dragObj = dragFunc.bind(el, options)();
+        dragObj.addEvent('onStart', ShiftSpace.addIframeCovers.bind(ShiftSpace));
+        dragObj.addEvent('onDrag', ShiftSpace.updateIframeCovers.bind(ShiftSpace));
+        dragObj.addEvent('onComplete', ShiftSpace.removeIframeCovers.bind(ShiftSpace));
       
-      return dragObj;
-    }
+        return dragObj;
+      }
     
-    // override the default behavior
-    el.makeResizable = function(options)
-    {
-      var resizeObj = resizeFunc.bind(el, options)();
-      resizeObj.addEvent('onStart', ShiftSpace.addIframeCovers.bind(ShiftSpace));
-      resizeObj.addEvent('onDrag', ShiftSpace.updateIframeCovers.bind(ShiftSpace));
-      resizeObj.addEvent('onComplete', ShiftSpace.removeIframeCovers.bind(ShiftSpace));
+      // override the default behavior
+      el.makeResizable = function(options)
+      {
+        var resizeObj = resizeFunc.bind(el, options)();
+        resizeObj.addEvent('onStart', ShiftSpace.addIframeCovers.bind(ShiftSpace));
+        resizeObj.addEvent('onDrag', ShiftSpace.updateIframeCovers.bind(ShiftSpace));
+        resizeObj.addEvent('onComplete', ShiftSpace.removeIframeCovers.bind(ShiftSpace));
       
-      return resizeObj;
+        return resizeObj;
+      }
     }
     
     return el;
@@ -67,16 +70,19 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
     // store a ref for tricking
     this.frame = this.parent('iframe', finalprops);
     
-    // add a cover for this object
-    var cover = new ShiftSpace.Element('div', {
-      'class': "SSIframeCover"
-    });
-    cover.setStyle('display', 'none');
-    // add it to the page
-    cover.injectInside(document.body);
+    if(ShiftSpace.addCover)
+    {
+      // add a cover for this object
+      var cover = new ShiftSpace.Element('div', {
+        'class': "SSIframeCover"
+      });
+      cover.setStyle('display', 'none');
+      // add it to the page
+      cover.injectInside(document.body);
 
-    // let ShiftSpace know about it
-    ShiftSpace.addCover({cover:cover, frame:this.frame});
+      // let ShiftSpace know about it
+      ShiftSpace.addCover({cover:cover, frame:this.frame});
+    }
     
     // return
     return this.frame;

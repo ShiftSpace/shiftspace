@@ -412,7 +412,14 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.buttonDiv.injectInside(this.bottom);
     
     this.pinWidgetDiv.injectInside(this.bottom);
-    this.pinWidget = new ShiftSpace.PinWidget(this);
+    
+    try
+    {
+      this.pinWidget = new ShiftSpace.PinWidget(this);
+    }
+    catch(err)
+    {
+    }
 
     this.resizeControl.injectInside(this.bottom);
 
