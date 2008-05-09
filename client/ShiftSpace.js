@@ -470,21 +470,21 @@ var ShiftSpace = new (function() {
       {
         var pos = mainView.getPosition();
         var vsize = mainView.getSize().size;
+        var viewPort = window.getSize().viewPort;
         var windowScroll = window.getSize().scroll;
-        var windowSize = window.getSize().size;
 
-        if(pos.x > windowSize.x+windowScroll.x ||
-          pos.y > windowSize.y+windowScroll.y)
-          {
-            var scrollFx = new Fx.Scroll(window, {
-              duration: 1000,
-              transition: Fx.Transitions.Cubic.easeIn
-            });
+        if(pos.x > viewPort.x+windowScroll.x ||
+           pos.y > viewPort.y+windowScroll.y)
+        {
+          var scrollFx = new Fx.Scroll(window, {
+            duration: 1000,
+            transition: Fx.Transitions.Cubic.easeIn,
+          });
 
-            scrollFx.toElement(mainView);
-          }
+          scrollFx.scrollTo(pos.x-25, pos.y-25);
         }
       }
+    }
     
     /*
     focusSpace (private)

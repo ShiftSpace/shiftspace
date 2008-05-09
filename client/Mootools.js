@@ -1575,7 +1575,8 @@ window.extend({
 		return {
 			'size': {'x': this.getWidth(), 'y': this.getHeight()},
 			'scrollSize': {'x': this.getScrollWidth(), 'y': this.getScrollHeight()},
-			'scroll': {'x': this.getScrollLeft(), 'y': this.getScrollTop()}
+			'scroll': {'x': this.getScrollLeft(), 'y': this.getScrollTop()},
+			'viewPort': {'x': this.innerWidth, 'y': this.innerHeight}
 		};
 	},
 	getPosition: function(){return {'x': 0, 'y': 0};}
@@ -1610,6 +1611,7 @@ Fx.Base = new Class({
 		if (time < this.time + this.options.duration){
 			this.delta = this.options.transition((time - this.time) / this.options.duration);
 			this.setNow();
+			this.fireEvent('onStep', this.now);
 			this.increase();
 		} else {
 			this.stop(true);
@@ -1916,6 +1918,8 @@ Fx.Scroll = Fx.Base.extend({
 	scrollTo: function(x, y){
 		if (this.timer && this.options.wait) return this;
 		var el = this.element.getSize();
+		el.size.x = Math.min(el.size.x, el.viewPort.x);
+		el.size.y = Math.min(el.size.y, el.viewPort.y);
 		var values = {'x': x, 'y': y};
 		for (var z in el.size){
 			var max = el.scrollSize[z] - el.size[z];
