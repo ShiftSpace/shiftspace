@@ -59,16 +59,16 @@ function get_page($myurl)
   // load styles
   $ShiftSpace = '<link type="text/css" rel="stylesheet"" href="../styles/ShiftSpace.css"></link>';
 
-  // load support scripts
+  // Bootstrap
   $ShiftSpace .= '<script type="text/javascript">var ShiftSpace = {};</script>';
   $ShiftSpace .= '<script type="text/javascript" src="../client/MooTools.js"></script>';
   $ShiftSpace .= '<script type="text/javascript" src="greasemonkey-api.js"></script>';
   $ShiftSpace .= '<script type="text/javascript" src="bootstrap.js"></script>';
   $ShiftSpace .= '<script type="text/javascript" src="../client/Pin.js"></script>';
   $ShiftSpace .= '<script type="text/javascript" src="../client/Element.js"></script>';
-  $ShiftSpace .= "<script type='text/javascript' src='../client/Space.js' charset='utf-8'></script>\n";
-  $ShiftSpace .= "<script type='text/javascript' src='../client/Shift.js' charset='utf-8'></script>\n";
-  $ShiftSpace .= "<script type='text/javascript' src='../spaces/Notes/Notes.js' charset='utf-8'></script>\n";
+  $ShiftSpace .= '<script type="text/javascript" src="../client/Space.js" charset="utf-8"></script>';
+  $ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset="utf-8"></script>';
+  $ShiftSpace .= '<script type="text/javascript" src="../spaces/Notes/Notes.js" charset="utf-8"></script>';
   
   // show a shift
   $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
