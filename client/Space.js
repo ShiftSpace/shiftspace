@@ -150,6 +150,11 @@ ShiftSpace.Space = new Class({
     return newShift;
   },
   
+  allocateNewShift: function()
+  {
+    initShift(this.getName(), {});
+  },
+  
   /*
     Function : createShift
       Create a new shift.

@@ -392,7 +392,7 @@ var ShiftSpace = new (function() {
             id: tempId,
             space: spaceName,
             username: ShiftSpace.user.getUsername(),
-            position: { x: options.position.x, y: options.position.y }
+            position: (options && options.position && { x: options.position.x, y: options.position.y }) || null
         };
         //console.log(shiftJson);
         

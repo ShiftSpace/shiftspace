@@ -2,6 +2,7 @@
 {
   position: absolute;
   background-image: url(images/bg.png);
+  z-index: 9999;
 }
 
 .SSImageSwapButton

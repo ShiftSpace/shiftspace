@@ -113,8 +113,16 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   
   grabImage : function()
   {
+    var currentShift = this.getCurrentShift();
+    
     // store this across windows
     this.setValue('grabbedImage', this.currentImage.src);
+
+    if(currentShift.getSrc() && currentShift.isPinned())
+    {
+      // we need a new shift
+      this.allocateNewShift();
+    }
   },
   
   swapImage : function(targetImage)
