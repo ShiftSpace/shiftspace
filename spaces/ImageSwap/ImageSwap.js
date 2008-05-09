@@ -226,7 +226,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
       scroll : {x: this.image.offsetLeft, y: this.image.offsetTop},
       pinRef : this.getEncodablePinRef(),
       src : this.image.getProperty('src'),
-      summary : "Image Swap", // use page or alt text
+      summary : this.getTitle() || "Image Swap",
       zoom : this.getZoom()
     };
   },

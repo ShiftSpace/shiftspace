@@ -72,6 +72,11 @@ ShiftSpace.Shift = new Class({
       this.setParentSpace( this.options.parentSpace );
     }
     
+    if( _json.summary )
+    {
+      this.setTitle(_json.summary);
+    }
+    
     // listen for focus events on this shift
     this.addEvent( 'onFocus', this.userFocused.bind( this ) );
     
@@ -539,9 +544,23 @@ ShiftSpace.Shift = new Class({
     return (this.getPinTarget() != null);
   },
   
-  updateTitle : function(newTitle)
+  updateTitle: function(newTitle)
   {
-    this.title = newTitle;
+    if(newTitle && newTitle != this.getTitle())
+    {
+      this.setTitle(newTitle);
+      this.save();
+    }
+  },
+  
+  setTitle : function(newTitle)
+  {
+    this.__title__ = newTitle;
+  },
+  
+  getTitle: function()
+  {
+    return this.__title__;
   },
   
   /*

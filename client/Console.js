@@ -741,7 +741,7 @@ var Console = new Class({
     //console.log('updateshift');
     //console.log(shiftJson);
     var entry = $(this.doc.getElementById('shifts')).getElement('#' + shiftJson.id);
-    entry.getElement('.summary').setHTML(shiftJson.summary);
+    entry.getElement('.summary').getElement('.summaryView').setHTML(shiftJson.summary);
     entry.getElement('.user').setHTML(shiftJson.username);
   },
   
@@ -830,6 +830,7 @@ var Console = new Class({
       }
     });
     
+    // Shift Editing from console
     newEntry.getElement('.controls a.edit').addEvent('click', function(e) {
       var event = new Event(e);
       event.preventDefault();
@@ -841,6 +842,7 @@ var Console = new Class({
       newEntry.getElement('.summaryEdit').removeClass('SSDisplayNone');
     });
     
+    // Event for the title edit input field
     newEntry.getElement('.summaryEdit').addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
       if(evt.key == 'enter')

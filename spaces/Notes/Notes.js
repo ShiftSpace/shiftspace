@@ -81,11 +81,9 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.dragRef = this.element.makeDraggable({ 
       handle : this.top,
       onStart : function() {
-        console.log('start');
         this.fireEvent('onDragStart');
       }.bind(this),
       onComplete : function() {
-        console.log('complete');
         this.fireEvent('onDragStop');
       }.bind(this)
     });
@@ -165,10 +163,13 @@ var NotesShift = ShiftSpace.Shift.extend({
     var pos = this.element.getPosition();
     var size = this.element.getSize().size;
     
+    console.log(this.getTitle());
+    
     return {
       position : pos,
-      size : size,
-      summary : this.title || this.inputArea.value,
+      size: size,
+      noteText: this.inputArea.value,
+      summary : this.getTitle() || this.inputArea.value,
       pinRef: this.getEncodablePinRef()
     };
   },
@@ -349,7 +350,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.inputArea = $(doc.createElement('textarea'));
     this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
     this.inputArea.injectInside( this.frameBody );
-    this.inputArea.setProperty('value', this.defaults.summary);
+    this.inputArea.setProperty('value', this.defaults.noteText);
     this.inputArea.focus();
     
     this.inputArea.addEvent('mousedown', function() {
