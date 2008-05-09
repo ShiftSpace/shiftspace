@@ -60,6 +60,13 @@ function get_page($myurl)
   $ShiftSpace = '<link type="text/css" rel="stylesheet"" href="../styles/ShiftSpace.css"></link>';
 
   // Bootstrap
+  $server = $_SERVER['HTTP_HOST'];
+  $ssdir = $_SERVER['PHP_SELF'];
+  $ShiftSpace .= '<script type="text/javascript">
+    var ssdir = "'.$ssdir.'".split("/").slice(0,3).join("/");
+    var __server__ = "http://'.$server.'" + ssdir + "/";
+  </script>';
+  
   $ShiftSpace .= '<script type="text/javascript">var ShiftSpace = {};</script>';
   $ShiftSpace .= '<script type="text/javascript" src="../client/MooTools.js"></script>';
   $ShiftSpace .= '<script type="text/javascript" src="greasemonkey-api.js"></script>';
