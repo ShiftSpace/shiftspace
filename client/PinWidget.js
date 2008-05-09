@@ -69,8 +69,6 @@ var PinWidget = new Class({
   
   delegateWasPinned: function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> delegateWasPinned');
-
     var pinRef = this.delegate.getPinRef();
     var targetNode = ShiftSpace.Pin.toNode(pinRef);
 
@@ -85,7 +83,6 @@ var PinWidget = new Class({
   
   delegateWasUnpinned: function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> delegateWasUnpinned');
     this.setPinnedElement(null);
     this.isPinned = false;
     this.refresh();

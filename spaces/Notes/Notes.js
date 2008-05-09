@@ -165,8 +165,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     var text = this.inputArea.value.replace(/\n/g, "<br/>");
     var titleText = this.inputArea.value.replace(/\n/g, '');
     
-    console.log(this.getTitle());
-    
     return {
       position : pos,
       size: size,

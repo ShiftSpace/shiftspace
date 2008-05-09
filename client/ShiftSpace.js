@@ -444,7 +444,6 @@ var ShiftSpace = new (function() {
       // unfocus the last shift
       if (focusedShiftId && shifts[focusedShiftId]) 
       {
-        console.log('focusedShiftId: ' + focusedShiftId);
         // hmmm, note, we maybe should have loadShift to avoid confusion about show - David
         spaceForShift(focusedShiftId).orderBack(focusedShiftId);
       }
@@ -472,8 +471,6 @@ var ShiftSpace = new (function() {
         var viewPort = window.getSize().viewPort;
         var windowScroll = window.getSize().scroll;
         
-        console.log(Json.toString(window.getSize()));
-
         if(pos.x > viewPort.x+windowScroll.x ||
            pos.y > viewPort.y+windowScroll.y)
         {
@@ -502,11 +499,8 @@ var ShiftSpace = new (function() {
     */
     function focusSpace(space) 
     {
-      console.log(focusedSpace);
-      console.log(space);
       if(focusedSpace && focusedSpace != space)
       {
-        console.log('hiding interface!');
         // check to see if focused space
         focusedSpace.setIsVisible(false);
         focusedSpace.hideInterface();
@@ -515,7 +509,6 @@ var ShiftSpace = new (function() {
       focusedSpace = space;
       focusedSpace.setIsVisible(true);
       focusedSpace.showInterface();
-      console.log('focusSpace >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> show interface, ' + space.getName());
     }
     
     function updateTitleOfShift(shiftId, title)
@@ -1018,8 +1011,6 @@ var ShiftSpace = new (function() {
         'targetElement': targetNode
       });
       
-      console.log(targetNode);
-
       switch(pinRef.action)
       {
         case 'before':
@@ -1178,7 +1169,6 @@ var ShiftSpace = new (function() {
         default:
         break;
       }
-      console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< DONE');
     }
     
     /*
@@ -1373,7 +1363,6 @@ var ShiftSpace = new (function() {
     
     function removeShift(shiftId)
     {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> REMOVE SHIFT, ' + shiftId);
       delete shifts[shiftId];
     }
     

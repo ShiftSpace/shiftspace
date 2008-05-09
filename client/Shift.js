@@ -383,7 +383,6 @@ ShiftSpace.Shift = new Class({
     // check to make sure there is an pinned element to restore
     if(this.getPinElement())
     {
-      console.log(this.pinRef);
       unpinElement(this.getPinRef());
       
       // clear out these vars
