@@ -17,6 +17,9 @@ a:hover {
   background: transparent url(../images/Console/left-corner.png) no-repeat top left;
   height: 100px;
   margin: 0 20px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
 }
 
 #console .outer {
@@ -113,12 +116,6 @@ a:hover {
   line-height: 20px;
   border-bottom: 1px dotted #303030;
   cursor: pointer;
-}
-
-#shifts
-{
-  user-select: none;
-  -moz-user-select: none;
 }
 
 #shifts .hover {

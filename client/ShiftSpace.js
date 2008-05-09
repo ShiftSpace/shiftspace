@@ -472,6 +472,8 @@ var ShiftSpace = new (function() {
         var vsize = mainView.getSize().size;
         var viewPort = window.getSize().viewPort;
         var windowScroll = window.getSize().scroll;
+        
+        console.log(Json.toString(window.getSize()));
 
         if(pos.x > viewPort.x+windowScroll.x ||
            pos.y > viewPort.y+windowScroll.y)
