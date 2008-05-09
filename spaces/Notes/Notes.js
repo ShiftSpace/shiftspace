@@ -78,12 +78,14 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.closeButton.addEvent('click', this.cancel.bind(this));
     
     // make the note draggable
-    this.dragRef = new Drag.Move(this.element, { 
+    this.dragRef = this.element.makeDraggable({ 
       handle : this.top,
       onStart : function() {
+        console.log('start');
         this.fireEvent('onDragStart');
       }.bind(this),
       onComplete : function() {
+        console.log('complete');
         this.fireEvent('onDragStop');
       }.bind(this)
     });

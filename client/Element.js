@@ -17,6 +17,8 @@ ShiftSpace.Element = new Class({
       dragObj.addEvent('onStart', ShiftSpace.addIframeCovers.bind(ShiftSpace));
       dragObj.addEvent('onDrag', ShiftSpace.updateIframeCovers.bind(ShiftSpace));
       dragObj.addEvent('onComplete', ShiftSpace.removeIframeCovers.bind(ShiftSpace));
+      
+      return dragObj;
     }
     
     // override the default behavior
@@ -26,6 +28,8 @@ ShiftSpace.Element = new Class({
       resizeObj.addEvent('onStart', ShiftSpace.addIframeCovers.bind(ShiftSpace));
       resizeObj.addEvent('onDrag', ShiftSpace.updateIframeCovers.bind(ShiftSpace));
       resizeObj.addEvent('onComplete', ShiftSpace.removeIframeCovers.bind(ShiftSpace));
+      
+      return resizeObj;
     }
     
     return el;
