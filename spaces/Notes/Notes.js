@@ -166,7 +166,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     return {
       position : pos,
       size : size,
-      summary : this.inputArea.value,
+      summary : this.title || this.inputArea.value,
       pinRef: this.getEncodablePinRef()
     };
   },

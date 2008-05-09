@@ -516,6 +516,12 @@ var ShiftSpace = new (function() {
       console.log('focusSpace >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> show interface, ' + space.getName());
     }
     
+    function updateTitleOfShift(shiftId, title)
+    {
+      spaceForShift(shiftId).updateTitleOfShift(shiftId, title);
+      ShiftSpace.showShift(shiftId);
+    }
+    
     /*
     
     Function: showShift
@@ -572,7 +578,7 @@ var ShiftSpace = new (function() {
         spaces[shift.space].onShiftHide(shiftId);
     };
     
-    
+
     /*
     
     checkForContent (private)

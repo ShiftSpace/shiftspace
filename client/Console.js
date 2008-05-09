@@ -717,12 +717,24 @@ var Console = new Class({
   
   showShift: function(id) {
     var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
-    if(el) el.addClass('active');    
+    if(el) 
+    {
+      el.addClass('active');
+      el.addClass('SSUserSelectNone');
+      el.getElement('.summaryEdit').addClass('SSDisplayNone');
+      el.getElement('.summaryView').removeClass('SSDisplayNone');
+    }
   },
 
   hideShift: function(id) {
     var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
-    if(el) el.removeClass('active');
+    if(el)
+    {
+      el.removeClass('active');
+      el.addClass('SSUserSelectNone');
+      el.getElement('.summaryEdit').addClass('SSDisplayNone');
+      el.getElement('.summaryView').removeClass('SSDisplayNone');
+    }
   },
   
   updateShift: function(shiftJson) {
@@ -752,7 +764,8 @@ var Console = new Class({
     newEntry.setProperty('id', aShift.id);
     newEntry.getElement('.spaceTitle').setHTML(aShift.space);
     newEntry.getElement('.spaceTitle').setStyle('background', 'transparent url(' + icon + ') no-repeat 3px 1px');
-    newEntry.getElement('.summary').setHTML(aShift.summary);
+    newEntry.getElement('.summary').getElement('.summaryView').setHTML(aShift.summary);
+    newEntry.getElement('.summary').getElement('.summaryEdit').setProperty('value', aShift.summary);
     newEntry.getElement('.user').setHTML(aShift.username);
     
     newEntry.addEvent('mouseover', function() {
@@ -822,6 +835,26 @@ var Console = new Class({
       event.preventDefault();
       ShiftSpace.showShift(aShift.id);
       editShift(aShift.id);
+      
+      newEntry.removeClass('SSUserSelectNone');
+      newEntry.getElement('.summaryView').addClass('SSDisplayNone');
+      newEntry.getElement('.summaryEdit').removeClass('SSDisplayNone');
+    });
+    
+    newEntry.getElement('.summaryEdit').addEvent('keyup', function(_evt) {
+      var evt = new Event(_evt);
+      if(evt.key == 'enter')
+      {
+        console.log('Update shift!');
+        newEntry.getElement('.summaryView').setHTML(evt.target.getProperty('value'));
+        this.showShift(aShift.id);
+        // defined in Core - David
+        updateTitleOfShift(aShift.id, evt.target.getProperty('value'));
+      }
+    }.bind(this));
+    newEntry.getElement('.summaryEdit').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      evt.stop();
     });
     
     // check for the plugin type
@@ -881,7 +914,7 @@ var Console = new Class({
   
   createShiftEntryModel: function() {
     var shiftEntry = $(this.doc.createElement('div'));
-    shiftEntry.className = 'entry';
+    shiftEntry.className = 'entry SSUserSelectNone';
     
     // ---------------- Expander ----------------------- //
     var expanderDiv = $(this.doc.createElement('div'));
@@ -907,6 +940,17 @@ var Console = new Class({
     // ------------------- Summary ------------------------- //
     var summaryDiv = $(this.doc.createElement('div'));
     summaryDiv.className = 'summary column';
+
+    var summaryView = $(this.doc.createElement('span'));
+    summaryView.setProperty('type', 'text');
+    summaryView.setProperty('class', 'summaryView');
+    summaryView.injectInside(summaryDiv);
+
+    var summaryEdit = $(this.doc.createElement('input'));
+    summaryEdit.setProperty('type', 'text');
+    summaryEdit.addClass('summaryEdit');
+    summaryEdit.addClass('SSDisplayNone');
+    summaryEdit.injectInside(summaryDiv);
     
     // ------------------- User ---------------------------- //
     var userDiv = $(this.doc.createElement('div'));

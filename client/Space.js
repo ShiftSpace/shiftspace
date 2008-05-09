@@ -430,6 +430,11 @@ ShiftSpace.Space = new Class({
     return getValue(this.attributes.name + "." + key);
   },
   
+  updateTitleOfShift: function(shiftId, title)
+  {
+    this.shifts[shiftId].updateTitle(title);
+  },
+  
   mainViewForShift: function(shiftId)
   {
     return this.shifts[shiftId].getMainView();

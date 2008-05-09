@@ -539,6 +539,11 @@ ShiftSpace.Shift = new Class({
     return (this.getPinTarget() != null);
   },
   
+  updateTitle : function(newTitle)
+  {
+    this.title = newTitle;
+  },
+  
   /*
     Function : build
       Build the DOM for the shift.
