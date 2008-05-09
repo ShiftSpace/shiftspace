@@ -116,8 +116,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   
   onShiftEdit: function(shiftId)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> onShiftEdit');
-
     // set the mode to xhtml and set to the html of the current shift
     var currentShift = this.shifts[shiftId];
     
@@ -239,7 +237,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     
     // setup close
     this.closeButton.addEvent('click', function(_evt) {
-      //console.log('close!');
       this.isMinimized = false;
       this.refresh();
       this.hideInterface();
@@ -402,7 +399,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   */
   selectTabButton: function(button)
   {
-    console.log(this.isVisible());
     if(this.isVisible())
     {
       // set the font-color of the middle

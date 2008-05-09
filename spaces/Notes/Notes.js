@@ -224,13 +224,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.hideEditInterface();
   },
   
-  preventEdit: function(_evt)
-  {
-    console.log('prevent');
-    var evt = new Event(_evt);
-    evt.preventDefault();
-  },
-  
   showEditInterface: function()
   {
     this.saveButton.setStyle('display', '');
@@ -239,7 +232,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.pinWidgetDiv.setStyle('display', '');
     if(this.inputArea)
     {
-      this.inputArea.setProperty('readonly', 1);
+      this.inputArea.removeProperty('readonly');
     }
     this.dragRef.attach();
     this.refresh();
@@ -253,7 +246,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.pinWidgetDiv.setStyle('display', 'none');
     if(this.inputArea)
     {
-      this.inputArea.removeProperty('readonly');
+      this.inputArea.setProperty('readonly', 1);
     }
     this.dragRef.detach();
     this.refresh();
