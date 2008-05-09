@@ -555,16 +555,13 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   setTitle: function(newTitle)
   {
-    this.titleText = newTitle;
-    
-    // update the interface
-    this.titleTextDiv.setText(newTitle);
-    this.refresh();
-  },
-  
-  getTitle: function()
-  {
-    return this.titleText;
+    this.parent(newTitle);
+
+    if(this.titleTextDiv)
+    {
+      this.titleTextDiv.setText(newTitle);
+      this.refresh();
+    }
   },
   
   encode : function(markup)
@@ -577,7 +574,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       position: pos,
       css: cssText,
       markup: markup,
-      summary: this.titleText,
+      summary: this.getTitle(),
       title: this.titleText,
       pinRef: this.getEncodablePinRef()
     };
