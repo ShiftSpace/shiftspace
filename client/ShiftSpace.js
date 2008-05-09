@@ -1010,8 +1010,8 @@ var ShiftSpace = new (function() {
         
         case 'replace':
           targetNode.replaceWith(element);
-          pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
-          element.setStyles(pinRef.targetStyles);
+          //pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
+          //element.setStyles(pinRef.targetStyles);
         break;
         
         case 'after':
@@ -1144,6 +1144,7 @@ var ShiftSpace = new (function() {
 
         case 'replace':
           // restore the original styles
+          /*
           pinRef.element.setStyles({
             position: '',
             float: '',
@@ -1151,6 +1152,7 @@ var ShiftSpace = new (function() {
             width: '',
             height: ''
           });
+          */
         case 'before':
         case 'after':
           pinRef.element.replaceWith(pinRef.targetElement);

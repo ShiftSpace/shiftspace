@@ -119,6 +119,11 @@ ShiftSpace.Shift = new Class({
     this.getParentSpace().updateShift( this );
   },
   
+  markDirty: function()
+  {
+    this.dirty = true;
+  },
+  
   /*
     Function: refresh
       You should always provide some kind of refresh function

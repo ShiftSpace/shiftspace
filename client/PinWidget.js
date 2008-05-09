@@ -69,12 +69,16 @@ var PinWidget = new Class({
   
   delegateWasPinned: function()
   {
-    console.log('======================================== DELEGATE WAS PINNED');
-    if(this.delegate.getPinTarget() != this.getPinnedElement())
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> delegateWasPinned');
+
+    var pinRef = this.delegate.getPinRef();
+    var targetNode = ShiftSpace.Pin.toNode(pinRef);
+
+    if(targetNode != this.getPinnedElement())
     {
-      this.setPinnedElement(this.delegate.getPinTarget());
+      this.setPinnedElement(targetNode);
       this.isPinned = true;
-      this.updateMenu(this.delegate.getPinRef().action)
+      this.updateMenu(pinRef.action)
       this.refresh();
     }
   },

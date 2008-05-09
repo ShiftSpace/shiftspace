@@ -13,6 +13,19 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.mode = 'xhtml';
   },
   
+  addShift: function(shift)
+  {
+    var newShift = this.parent(shift);
+    newShift.addEvent('pin', function() {
+      console.log('================================= pin event');
+      this.fireEvent('pin');
+    }.bind(this));
+    newShift.addEvent('unpin', function() {
+      console.log('================================= unpin event');
+      this.fireEvent('unpin');
+    }.bind(this));
+  },
+  
   refresh : function()
   {
     var handleSize = this.handleArea.getSize().size;
@@ -565,7 +578,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       markup: markup,
       summary: this.titleText,
       title: this.titleText,
-      pinRef: this.pinRef
+      pinRef: this.getEncodablePinRef()
     };
   },
   
@@ -739,17 +752,36 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.resizeControl.setStyle('visibility', 'hidden');
     this.element.setStyle('borderWidth', 0);
     
-    if(this.isPinned())
+    if(this.getPinRef())
     {
-      this.frame.removeClass('SSFrameBorder');
+      if(this.isPinned())
+      {
+        this.frame.removeClass('SSFrameBorder');
+      }
+      else
+      {
+        this.pin(this.getPinRef());
+      }
     }
-
+    
     // add 2px to adjust for border
     var pos = this.element.getPosition();
     this.element.setStyles({
       left: pos.x + 2,
       top: pos.y + 2
     });
+  },
+  
+  hide: function()
+  {
+    this.parent();
+    
+    this.element.addClass('SSDisplayNone');
+    
+    if(this.isPinned())
+    {
+      this.unpin();
+    }
   },
   
   edit : function()
@@ -763,6 +795,10 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     if(this.isPinned())
     {
       this.frame.addClass('SSFrameBorder');
+    }
+    else
+    {
+      this.frame.removeClass('SSFrameBorder');
     }
 
     // add 2px to adjust for border
@@ -926,12 +962,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   {
     // call the parent pin method
     this.parent(this.frame, pinRef);
-
     // hide the element now
     this.element.addClass('SSDisplayNone');
-    // red border when pinned
-    this.frame.addClass('SSFrameBorder');
-    
     // refresh
     this.refresh();
   },
@@ -940,12 +972,9 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   {
     // restore
     this.parent();
-    
     // put it back
     this.element.removeClass('SSDisplayNone');
-    this.frame.removeClass('SSFrameBorder');
     this.frame.injectAfter(this.top);
-    
     // refresh
     this.refresh();
   },
