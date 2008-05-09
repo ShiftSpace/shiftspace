@@ -4,13 +4,15 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     name : 'ImageSwap',
     icon : 'ImageSwap.png',
     version : 0.1,
-    css : 'ImageSwap.css'
+    css : 'ImageSwap.css',
   },
   
   setup : function()
   {
     this.focusRef = this.focusImage.bind(this);
     this.blurRef = this.blurImage.bind(this);
+    this.imageEventsAttached = false;
+    this.allImages = $$('img').filter(function(anImage) { return !ShiftSpace.isSSElement(anImage);});
   },
   
   buildInterface : function()
@@ -88,27 +90,32 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   showInterface : function()
   {
     this.parent();
-    this.attachImageEvents();
+    if(!this.imageEventsAttached)
+    {
+      this.imageEventsAttached = true;
+      this.attachImageEvents();
+    }
   },
   
   hideInterface : function()
   {
     this.parent();
-    this.removeImageEvents();
+    if(this.imageEventsAttached)
+    {
+      this.imageEventsAttached = false;
+      this.removeImageEvents();
+    }
   },
   
   attachImageEvents : function()
   {
     // listen for mouse events when the interface is shown
-    var allImages = $$('img').filter(function(x) { return !$(x).hasClass('ShiftSpaceElement');});
-    allImages.each(function(x){ $(x).addEvent('mouseover', this.focusRef) }.bind(this));
+    this.allImages.each(function(anImage){ anImage.addEvent('mouseover', this.focusRef) }.bind(this));
   },
   
   removeImageEvents : function()
   {
-    // remove image mouse events
-    var allImages = $$('img').filter(function(x) { return !$(x).hasClass('ShiftSpaceElement');});
-    allImages.each(function(x){ $(x).removeEvent('mouseout', this.focusRef) }.bind(this));
+    this.allImages.each(function(anImage){ anImage.removeEvent('mouseover', this.focusRef) }.bind(this));
   },
   
   grabImage : function()
@@ -140,6 +147,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     
     // clear out the selection interface
     this.blurImage();
+
     // remove the image handlers
     this.removeImageEvents();
   },
@@ -181,6 +189,9 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   {
     // build the interface
     this.buildInterface();
+    
+    // manage the main view
+    this.manageElement(this.element);
     
     // get the scroll
     if(json.scroll)
@@ -341,9 +352,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   imageLoaded: function(evt)
   {
-    console.log(evt);
     // get the actual dimensions of the image
-    /*this.image.removeClass('SSDisplayNone');*/
     this.imageSize = this.image.getSize().size;
     this.actualImageSize = this.image.getSize().size;
     this.updateImageDimensions();
@@ -370,7 +379,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   buildInterface : function()
   {
     this.element = new ShiftSpace.Element('div', {
-      'class': "SSImageSwapShift"
+      'class': "SSImageSwapShift SSUnordered"
     });
     this.image = new ShiftSpace.Element('img', {
       'class': "SSImageSwapShiftImage"

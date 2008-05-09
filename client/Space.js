@@ -301,7 +301,6 @@ ShiftSpace.Space = new Class({
     return setValue(this.getName() + '.' + key, value);
   },
   
-  
   /*
     Function: getValue
       Retrieve a value with GM_setValue
@@ -323,7 +322,11 @@ ShiftSpace.Space = new Class({
   */
   orderFront : function( shiftId, layer )
   {
-    if(this.shifts[shiftId].getMainView()) this.shifts[shiftId].getMainView().setStyle('zIndex', 99);
+    var mv = this.shifts[shiftId].getMainView();
+    if(mv && !mv.hasClass('SSUnordered')) 
+    {
+      mv.setStyle('zIndex', 99);
+    }
   },
   
   /*
@@ -335,12 +338,20 @@ ShiftSpace.Space = new Class({
   */
   orderBack : function( shiftId, layer )
   {
-    if(this.shifts[shiftId].getMainView()) this.shifts[shiftId].getMainView().setStyle('zIndex', 1);
+    var mv = this.shifts[shiftId].getMainView();
+    if(mv && !mv.hasClass('SSUnordered'))
+    {
+      mv.setStyle('zIndex', 1);
+    }
   },
   
   setDepth: function( shiftId, depth )
   {
-    if(this.shifts[shiftId].getMainView()) this.shifts[shiftId].getMainView().setStyle('zIndex', depth);
+    var mv = this.shifts[shiftId].getMainView();
+    if(mv && !mv.hasClass('SSUnordered'))
+    {
+      mv.setStyle('zIndex', depth);
+    }
   },
   
   /*

@@ -463,6 +463,9 @@ var ShiftSpace = new (function() {
       // scroll the window if necessary
       var mainView = space.mainViewForShift(shiftId);
       
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> focus shift');
+      console.log(mainView);
+
       if(mainView)
       {
         var pos = mainView.getPosition();
@@ -502,7 +505,7 @@ var ShiftSpace = new (function() {
       focusedSpace = space;
       focusedSpace.setIsVisible(true);
       focusedSpace.showInterface();
-      console.log('focusSpace >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> show interface');
+      console.log('focusSpace >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> show interface, ' + space.getName());
     }
     
     /*
@@ -971,15 +974,6 @@ var ShiftSpace = new (function() {
         return ((aPinRef.relativeXPath == pinRef.relativeXPath) && 
                 (aPinRef.ancestorId == pinRef.ancestorId));
       });
-
-      /*
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      console.log(allPinnedShifts);
-      console.log(otherShifts);
-      console.log(matchingShifts);
-      */
-      
-      console.log(matchingShifts);
 
       // hide any shifts with matching paths
       matchingShifts.each(function(x) {

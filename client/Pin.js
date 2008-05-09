@@ -74,6 +74,11 @@ var Pin = new Class({
   */
   toNode : function(pinRef)
   {
+    if(!pinRef || (pinRef.ancestorId && !pinRef.relativeXPath))
+    {
+      return null;
+    }
+    
     if(!pinRef.relativeXPath)
     {
       return $(pinRef.ancestorId);
@@ -87,6 +92,13 @@ var Pin = new Class({
                                   XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, 
                                   null).snapshotItem(0));
     }
+  },
+  
+  isValidRef: function(pinRef)
+  {
+    if(!pinRef || (!pinRef.ancestorId && !pinRef.relativeXPath)) return false;
+    var node = Pin.toNode(pinRef)
+    return (node != null);
   }
 });
 ShiftSpace.Pin = new Pin();

@@ -53,7 +53,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.refresh();
     
     // check to see if this note is pinned
-    if(json.pinRef)
+    if(ShiftSpace.Pin.isValidRef(json.pinRef))
     {
       this.pin(this.element, json.pinRef);
     }
