@@ -40,7 +40,7 @@ function get_page($myurl)
   $result = preg_replace("/href=\"\//i","href=\"$myurl" ,$result);
   $result = preg_replace("/href=\"\.\./i","href=\"$myurl.." ,$result);
   //proxy links
-  $result = preg_replace("/a href=\"/i","a href=\"prox.php?url=", $result);
+  $result = preg_replace("/a href=\"/i","a href=\"simple_proxy.php?url=", $result);
   //fix css imports
   $result = preg_replace("/@import\s+\"\//","@import \"http://$baseurl/", $result);
   //fix css for for href=\"/css/essay.css
