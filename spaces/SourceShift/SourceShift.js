@@ -774,12 +774,27 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   {
     this.parent();
     
-    this.element.addClass('SSDisplayNone');
-    
     if(this.isPinned())
     {
       this.unpin();
     }
+    this.element.addClass('SSDisplayNone');
+  },
+  
+  showFrame: function()
+  {
+    this.top.setStyle('visibility', 'visible');
+    this.top.getElements('*').setStyle('visibility', 'visible');
+    this.resizeControl.setStyle('visibility', 'visible');
+    this.element.setStyle('borderWidth', 2);
+  },
+  
+  hideFrame: function()
+  {
+    this.top.setStyle('visibility', '');
+    this.top.getElements('*').setStyle('visibility', '');
+    this.resizeControl.setStyle('visibility', '');
+    this.element.setStyle('borderWidth', 0);
   },
   
   edit : function()
@@ -792,10 +807,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
     else
     {
-      this.top.setStyle('visibility', 'visible');
-      this.top.getElements('*').setStyle('visibility', 'visible');
-      this.resizeControl.setStyle('visibility', 'visible');
-      this.element.setStyle('borderWidth', 2);
+      this.showFrame();
       this.frame.removeClass('SSFrameBorder');
     }
 

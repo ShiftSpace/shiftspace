@@ -443,6 +443,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   unpin: function()
   {
     this.parent();
+    // put the note back on the page
     this.element.injectInside(document.body);
   },
   
