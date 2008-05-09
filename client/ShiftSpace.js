@@ -418,7 +418,11 @@ var ShiftSpace = new (function() {
           spaces[spaceName].showShift(shiftJson);
           // call onShiftShow
           spaces[spaceName].onShiftShow(tempId);
+          /*
           spaces[spaceName].editShift(tempId);
+          spaces[spaceName].onShiftEdit(temp);
+          */
+          editShift(tempId);
           focusShift(tempId);
         }
     }

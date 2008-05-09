@@ -178,6 +178,11 @@ ShiftSpace.Shift = new Class({
     this.element.remove();
   },
 
+  _show: function()
+  {
+    
+  },
+
   /*
     Function : show
       Make the shift visible.
@@ -194,6 +199,10 @@ ShiftSpace.Shift = new Class({
     this.fireEvent('onShiftShow', this.getId());
   },
   
+  _hide : function()
+  {
+    
+  },
   
   /*
     Function : hide

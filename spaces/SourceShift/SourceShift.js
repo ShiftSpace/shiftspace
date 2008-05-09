@@ -17,11 +17,9 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   {
     var newShift = this.parent(shift);
     newShift.addEvent('pin', function() {
-      console.log('================================= pin event');
       this.fireEvent('pin');
     }.bind(this));
     newShift.addEvent('unpin', function() {
-      console.log('================================= unpin event');
       this.fireEvent('unpin');
     }.bind(this));
   },
@@ -118,6 +116,8 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   
   onShiftEdit: function(shiftId)
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> onShiftEdit');
+
     // set the mode to xhtml and set to the html of the current shift
     if(this.isVisible())
     {
@@ -126,18 +126,16 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       this.setMode('xhtml');
       this.editSource.setProperty('value', currentShift.getMarkup());
       this.titleField.setProperty('value', currentShift.getTitle());
-
-      // update the pin widget
-      if(currentShift.getPinTarget())
+      
+      // update pin widget
+      if(currentShift.isPinned())
       {
-        this.pinWidget.setPinnedElement(currentShift.getPinTarget());
+        this.fireEvent('pin');
       }
       else
       {
-        this.pinWidget.setPinnedElement(null);
+        this.fireEvent('unpin');
       }
-
-      this.pinWidget.refresh();
     }
   },
   
@@ -787,17 +785,17 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   edit : function()
   {
     this.previewMode = false;
-    this.top.setStyle('visibility', 'visible');
-    this.top.getElements('*').setStyle('visibility', 'visible');
-    this.resizeControl.setStyle('visibility', 'visible');
-    this.element.setStyle('borderWidth', 2);
-    
+
     if(this.isPinned())
     {
       this.frame.addClass('SSFrameBorder');
     }
     else
     {
+      this.top.setStyle('visibility', 'visible');
+      this.top.getElements('*').setStyle('visibility', 'visible');
+      this.resizeControl.setStyle('visibility', 'visible');
+      this.element.setStyle('borderWidth', 2);
       this.frame.removeClass('SSFrameBorder');
     }
 

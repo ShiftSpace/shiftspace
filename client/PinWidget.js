@@ -85,7 +85,10 @@ var PinWidget = new Class({
   
   delegateWasUnpinned: function()
   {
-    
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> delegateWasUnpinned');
+    this.setPinnedElement(null);
+    this.isPinned = false;
+    this.refresh();
   },
   
   capitalize: function(str)
