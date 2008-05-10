@@ -89,7 +89,7 @@ $ShiftSpace .= '<script type="text/javascript" src="../client/Element.js"></scri
 $ShiftSpace .= '<script type="text/javascript" src="../client/Space.js" charset="utf-8"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset="utf-8"></script>';
 // check the database for the shift's space load
-$ShiftSpace .= '<script type="text/javascript" src="../spaces/Notes/Notes.js" charset="utf-8"></script>';
+$ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$shift->space.'/'.$shift->space.'.js" charset="utf-8"></script>';
 
 // get the shift out of the database
 $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>

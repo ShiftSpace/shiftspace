@@ -786,15 +786,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
         this.pin(this.getPinRef());
       }
     }
-    
-    // add 2px to adjust for border
-    /*
-    var pos = this.element.getPosition();
-    this.element.setStyles({
-      left: pos.x + 2,
-      top: pos.y + 2
-    });
-    */
   },
   
   hide: function()
@@ -814,6 +805,15 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.top.getElements('*').setStyle('visibility', 'visible');
     this.resizeControl.setStyle('visibility', 'visible');
     this.element.setStyle('borderWidth', 2);
+    
+    if(!this.__frameAdjusted__)
+    {
+      var pos = this.element.getPosition();
+      this.element.setStyles({
+        left: pos.x - 2,
+        top: pos.y - 2
+      });
+    }
   },
   
   hideFrame: function()
@@ -822,6 +822,12 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.top.getElements('*').setStyle('visibility', '');
     this.resizeControl.setStyle('visibility', '');
     this.element.setStyle('borderWidth', 0);
+
+    var pos = this.element.getPosition();
+    this.element.setStyles({
+      left: pos.x + 2,
+      top: pos.y + 2
+    });
   },
   
   edit : function()
@@ -837,15 +843,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.showFrame();
       this.frame.removeClass('SSFrameBorder');
     }
-
-    // add 2px to adjust for border
-    /*
-    var pos = this.element.getPosition();
-    this.element.setStyles({
-      left: pos.x - 2,
-      top: pos.y - 2
-    });
-    */
   },
   
   /*

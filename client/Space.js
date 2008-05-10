@@ -270,9 +270,13 @@ ShiftSpace.Space = new Class({
       this.setCurrentShift(cShift);
       
       // show the new shift and focus it
-      cShift._show();
-      cShift.show();
-      cShift.setIsVisible(true);
+      if(!cShift.isVisible())
+      {
+        cShift._show();
+        cShift.show();
+        cShift.setIsVisible(true);
+      }
+      
       // focus the shift
       cShift.focus();
     }
@@ -293,7 +297,7 @@ ShiftSpace.Space = new Class({
     
     if( cShift )
     {
-      if( cShift.canHide() ) 
+      if( cShift.canHide() && cShift.isVisible() ) 
       {
         cShift._hide();
         cShift.hide();
