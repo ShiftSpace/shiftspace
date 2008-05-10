@@ -310,6 +310,16 @@ ShiftSpace.Shift = new Class({
     return  this.__isVisible__;
   },
   
+  setIsBeingEdited: function(val)
+  {
+    this.__isBeingEdited__ = val;
+  },
+  
+  isBeingEdited: function(val)
+  {
+    return this.__isBeingEdited__;
+  },
+  
   getRegion : function()
   {
     var pos = this.getMainView().getPos();

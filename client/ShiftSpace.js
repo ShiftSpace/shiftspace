@@ -442,10 +442,16 @@ var ShiftSpace = new (function() {
       var space = spaceForShift(shiftId);
       
       // unfocus the last shift
-      if (focusedShiftId && shifts[focusedShiftId]) 
+      if (focusedShiftId && 
+          shifts[focusedShiftId] &&
+          focusedShiftId != shiftId) 
       {
+        var lastSpace = spaceForShift(focusedShiftId);
+        
         // hmmm, note, we maybe should have loadShift to avoid confusion about show - David
-        spaceForShift(focusedShiftId).orderBack(focusedShiftId);
+        lastSpace.blurShift(focusedShiftId);
+        lastSpace.onShiftBlur(focusedShiftId);
+        lastSpace.orderBack(focusedShiftId);
       }
       focusedShiftId = shift.id;
       space.orderFront(shift.id);

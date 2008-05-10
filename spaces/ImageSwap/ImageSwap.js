@@ -142,8 +142,8 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     var pinRef = ShiftSpace.Pin.toRef(this.currentImage, 'replace');
     
     // tell the current shift to swap
-    this.currentShift.setSrc(grabbedImage);
-    this.currentShift.swap(pinRef);
+    currentShift.setSrc(grabbedImage);
+    currentShift.swap(pinRef);
     
     // clear out the selection interface
     this.blurImage();

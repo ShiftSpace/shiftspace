@@ -198,7 +198,8 @@ ShiftSpace.Space = new Class({
   deleteShift : function( shiftId )
   {
     // destroy the shift
-    if (this.shifts[shiftId]) {
+    if (this.shifts[shiftId]) 
+    {
         this.shifts[shiftId].destroy();
         delete this.shifts[shiftId];
     }
@@ -212,7 +213,13 @@ ShiftSpace.Space = new Class({
   */
   editShift : function( shiftId )
   {
-    this.shifts[shiftId].edit();
+    var theShift = this.shifts[shiftId];
+    
+    if(!theShift.isBeingEdited())
+    {
+      theShift.setIsBeingEdited(true);
+      theShift.edit();
+    }
   },
 
   /*
@@ -423,7 +430,7 @@ ShiftSpace.Space = new Class({
   */
   setCurrentShift : function(newShift)
   {
-    this.currentShift = newShift;
+    this.__currentShift__ = newShift;
   },
   
   /*
@@ -432,18 +439,21 @@ ShiftSpace.Space = new Class({
   */
   getCurrentShift : function()
   {
-    return this.currentShift;
+    return this.__currentShift__;
   },
   
   focusShift : function(shiftId)
   {
-    if(this.getCurrentShift() &&
-       this.getCurrentShift() != this.shifts[shiftId])
-    {
-      this.getCurrentShift().blur();
-    }
     this.setCurrentShift(this.shifts[shiftId]);
     this.getCurrentShift().focus();
+  },
+  
+  blurShift: function(shiftId)
+  {
+    var theShift = this.shifts[shiftId];
+    
+    theShift.blur();
+    theShift.setIsBeingEdited(false);
   },
   
   onShiftCreate : function(shiftId) {},
@@ -453,6 +463,7 @@ ShiftSpace.Space = new Class({
   onShiftShow : function(shiftId) {},
   onShiftHide : function(shiftId) {},
   onShiftFocus : function(shiftId) {},
+  onShiftBlur: function(shiftId) {},
   
   setValue : function(key, value)
   {

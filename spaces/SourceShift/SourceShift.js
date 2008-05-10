@@ -768,7 +768,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   show : function()
   {
     this.parent();
-
+    
     this.previewMode = true;
     this.top.setStyle('visibility', 'hidden');
     this.top.getElements('*').setStyle('visibility', 'hidden');
