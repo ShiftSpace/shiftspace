@@ -176,7 +176,18 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }.bind(this));
     
     this.previewButton.addEvent('click', function( _evt ) {
-      this.getCurrentShift().show();
+      if(!this.__previewMode__)
+      {
+        this.__previewMode__ = true;
+        this.getCurrentShift().show();   
+        this.highlightButton(this.previewButton);
+      }
+      else
+      {
+        this.__previewMode__ = false;
+        this.getCurrentShift().edit()
+        this.unhighlightButton(this.previewButton);
+      }
     }.bind(this));
     
     // setup the resizing behavior
@@ -241,6 +252,20 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       this.refresh();
       this.hideInterface();
     }.bind(this));
+  },
+  
+  highlightButton: function(button)
+  {
+    button.getElement('.SSLeft').addClass('SSLeftActive');
+    button.getElement('.middle').addClass('middleActive');
+    button.getElement('.SSRight').addClass('SSRightActive');
+  },
+  
+  unhighlightButton: function(button)
+  {
+    button.getElement('.SSLeft').removeClass('SSLeftActive');
+    button.getElement('.middle').removeClass('middleActive');
+    button.getElement('.SSRight').removeClass('SSRightActive');
   },
   
   buildHandle : function()
@@ -763,11 +788,13 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
     
     // add 2px to adjust for border
+    /*
     var pos = this.element.getPosition();
     this.element.setStyles({
       left: pos.x + 2,
       top: pos.y + 2
     });
+    */
   },
   
   hide: function()
@@ -812,11 +839,13 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
 
     // add 2px to adjust for border
+    /*
     var pos = this.element.getPosition();
     this.element.setStyles({
       left: pos.x - 2,
       top: pos.y - 2
     });
+    */
   },
   
   /*

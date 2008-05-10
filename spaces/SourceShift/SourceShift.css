@@ -230,6 +230,11 @@ div.SSSourceShiftButton:active .SSLeft
   background-image: url(images/btn_2px-left.png);  
 }
 
+div.SSSourceShiftButton .SSLeftActive
+{
+  background-image: url(images/btn_2px-left.png);  
+}
+
 div.SSSourceShiftButton .middle
 {
   font-size: 14px;
@@ -251,6 +256,13 @@ div.SSSourceShiftButton:active .middle
   border-width: 2px;
 }
 
+div.SSSourceShiftButton .middleActive
+{
+  margin-top: 1px;
+  height: 26px;
+  border-width: 2px;
+}
+
 .SSSourceShiftButton .SSRight
 {
   width: 9px;
@@ -260,6 +272,11 @@ div.SSSourceShiftButton:active .middle
 }
 
 div.SSSourceShiftButton:active .SSRight
+{
+  background-image: url(images/btn_2px-right.png);
+}
+
+div.SSSourceShiftButton .SSRightActive
 {
   background-image: url(images/btn_2px-right.png);
 }
