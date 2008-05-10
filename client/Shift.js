@@ -298,6 +298,16 @@ ShiftSpace.Shift = new Class({
     return ( this.mainView.getStyle('display') != 'none' );
   },
   
+  setIsVisible: function(val)
+  {
+    this.__isVisible__ = val;
+  },
+  
+  isVisible: function()
+  {
+    return  this.__isVisible__;
+  },
+  
   getRegion : function()
   {
     var pos = this.getMainView().getPos();

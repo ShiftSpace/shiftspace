@@ -272,6 +272,7 @@ ShiftSpace.Space = new Class({
       // show the new shift and focus it
       cShift._show();
       cShift.show();
+      cShift.setIsVisible(true);
       // focus the shift
       cShift.focus();
     }
@@ -296,12 +297,25 @@ ShiftSpace.Space = new Class({
       {
         cShift._hide();
         cShift.hide();
+        cShift.setIsVisible(false);
       }
     }
     else
     {
       console.error( "Shift " + shiftId + " does not exist in this the " + this.getName() + " space." );
     }
+    
+    // check to see if there are no visible shifts, if not, hide the space interface
+    var visibleShifts = false;
+    for(shift in this.shifts)
+    {
+      if(this.shifts[shift].isVisible())
+      {
+        visibleShifts = true;
+        continue;
+      }
+    }
+    if(!visibleShifts) this.hideInterface();
   },
   
   
