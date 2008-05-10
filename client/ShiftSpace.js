@@ -472,7 +472,9 @@ var ShiftSpace = new (function() {
         var windowScroll = window.getSize().scroll;
         
         if(pos.x > viewPort.x+windowScroll.x ||
-           pos.y > viewPort.y+windowScroll.y)
+           pos.y > viewPort.y+windowScroll.y ||
+           pos.x < windowScroll.x ||
+           pos.y < windowScroll.y)
         {
           var scrollFx = new Fx.Scroll(window, {
             duration: 1000,

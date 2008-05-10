@@ -82,6 +82,8 @@ ShiftSpace.Shift = new Class({
     
     // call setup
     this.setup(_json);
+    
+    // TODO: should pin if it's possible to pin - David
 
     return this;
   },
@@ -583,6 +585,13 @@ ShiftSpace.Shift = new Class({
   */
   build : function()
   {
+  },
+  
+  /*
+  */
+  failedView: function()
+  {
+    // TODO: Show the failed view, if this shift can't be shown
   }
 });
 

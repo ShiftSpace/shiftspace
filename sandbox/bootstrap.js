@@ -103,3 +103,115 @@ function loadStyle(url, callback, frame) {
 
   });
 }
+
+// stores direct references to the shift objects
+function pinElement(element, pinRef)
+{
+  var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
+  
+  // pinRef has become active set targetElement and element properties
+  $extend(pinRef, {
+    'element': element,
+    'targetElement': targetNode
+  });
+  
+  switch(pinRef.action)
+  {
+    case 'before':
+      element.injectBefore(targetNode);
+    break;
+    
+    case 'replace':
+      targetNode.replaceWith(element);
+      //pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
+      //element.setStyles(pinRef.targetStyles);
+    break;
+    
+    case 'after':
+      element.injectAfter(targetNode);
+    break;
+    
+    case 'relative':
+      var elPos = element.getPosition();
+      var tgPos = targetNode.getPosition();
+    
+      // if no offset set it now
+      if(!pinRef.offset)
+      {
+        var elpos = element.getPosition();
+        var tpos = targetNode.getPosition();
+        pinRef.offset = {x: elpos.x - tpos.x, y: elpos.y - tpos.y};
+        pinRef.originalOffset = {x: elpos.x, y: elpos.y};
+      }
+      
+      // hide the element while we do some node magic
+      element.addClass('SSDisplayNone');
+    
+      // wrap the target node
+      var wrapper = new Element('div', {
+        'class': 'SSImageWrapper SSPositionRelative'
+      });
+      targetNode.replaceWith(wrapper);
+      targetNode.injectInside(wrapper);
+      
+      // if the target node is an image we
+      // want the wrapper node to display inline
+      if(targetNode.getTag() == 'img')
+      {
+        wrapper.setStyle('display', 'inline');
+      }
+      var styles = targetNode.getStyles('width', 'height');
+    
+      // set the dimensions of the wrapper
+      if( styles.width && styles.height != 'auto' )
+      {
+        wrapper.setStyle('width', styles.width);
+      }
+      else
+      {
+        wrapper.setStyle('width', targetNode.getSize().size.x);
+      }
+      
+      if( styles.height && styles.height != 'auto' )
+      {
+        wrapper.setStyle('height', styles.height);
+      }
+      else
+      {
+        wrapper.setStyle('height', targetNode.getSize().size.y);
+      }
+    
+      // override clicks in case the wrapper is inside of a link
+      wrapper.addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+        evt.stop();
+      });
+      // store a reference to the wrapper
+      pinRef.wrapper = wrapper;
+
+      targetNode = wrapper;
+    
+      // inject it inside the parent of the target node
+      element.injectInside(targetNode);
+    
+      // position absolute now
+      if(element.getStyle('position') != 'absolute')
+      {
+        pinRef.cssPosition = element.getStyle('position');
+        element.setStyle('position', 'absolute');
+      }
+
+      // set the position
+      element.setStyles({
+        left: pinRef.offset.x,
+        top: pinRef.offset.y
+      });
+      
+      // we're done show the element
+      element.removeClass('SSDisplayNone');
+    break;
+
+    default:
+    break;
+  }
+}
