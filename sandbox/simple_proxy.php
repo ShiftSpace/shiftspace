@@ -61,10 +61,10 @@ function get_page($myurl)
 
   // Bootstrap
   $server = $_SERVER['HTTP_HOST'];
-  $ssdir = $_SERVER['PHP_SELF'];
+  $ssdir = dirname($_SERVER['PHP_SELF']);
   $ShiftSpace .= '<script type="text/javascript">
-    var ssdir = "'.$ssdir.'".split("/").slice(0,3).join("/");
-    var __server__ = "http://'.$server.'" + ssdir + "/";
+    var __ssdir__ = "'.$ssdir.'".split("/");
+    var __server__ = "http://'.$server.'"+__ssdir__.slice(0, __ssdir__.length-1).join("/")+"/";
   </script>';
   
   $ShiftSpace .= '<script type="text/javascript">var ShiftSpace = {};</script>';
@@ -75,9 +75,10 @@ function get_page($myurl)
   $ShiftSpace .= '<script type="text/javascript" src="../client/Element.js"></script>';
   $ShiftSpace .= '<script type="text/javascript" src="../client/Space.js" charset="utf-8"></script>';
   $ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset="utf-8"></script>';
+  // check the database for the shift's space load
   $ShiftSpace .= '<script type="text/javascript" src="../spaces/Notes/Notes.js" charset="utf-8"></script>';
   
-  // show a shift
+  // get the shift out of the database
   $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
     window.addEvent('domready', function() {
       Notes.showShift({
