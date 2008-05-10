@@ -220,6 +220,20 @@ var ShiftSpace = new (function() {
         };
     };
     
+    function getShiftContent(shiftId)
+    {
+      var shift = shifts[shiftId];
+      var content = shift.content;
+      
+      if(content)
+      {
+        content = content.replace('\n', '\\n');
+        content = content.replace('\r', '\\r');
+      }
+      
+      return (content && Json.evaluate(content)) || null;
+    }
+    
     function spaceForShift(shiftId)
     {
       return spaces[shifts[shiftId].space];
@@ -388,18 +402,19 @@ var ShiftSpace = new (function() {
             tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
         }
         
+        var _position = (options && options.position && { x: options.position.x, y: options.position.y }) || null;
         var shiftJson = {
             id: tempId,
             space: spaceName,
             username: ShiftSpace.user.getUsername(),
-            position: (options && options.position && { x: options.position.x, y: options.position.y }) || null
+            position: _position
         };
         //console.log(shiftJson);
         
         shifts[tempId] = shiftJson;
         
         // check to see if focused space
-        focusSpace(spaces[spaceName]);
+        focusSpace(spaces[spaceName], _position);
         
         try
         {
@@ -505,7 +520,7 @@ var ShiftSpace = new (function() {
     Parameter:
       space - a ShiftSpace.Space instance
     */
-    function focusSpace(space) 
+    function focusSpace(space, position) 
     {
       if(focusedSpace && focusedSpace != space)
       {
@@ -513,10 +528,12 @@ var ShiftSpace = new (function() {
         focusedSpace.setIsVisible(false);
         focusedSpace.hideInterface();
       }
-
+      
       focusedSpace = space;
       focusedSpace.setIsVisible(true);
       focusedSpace.showInterface();
+      
+      if(position) focusedSpace.setPosition(position);
     }
     
     function updateTitleOfShift(shiftId, title)
@@ -536,9 +553,7 @@ var ShiftSpace = new (function() {
     */
     this.showShift = function(shiftId) {
       var shift = shifts[shiftId];
-      shift.content = shift.content.replace('\n', '\\n');
-      shift.content = shift.content.replace('\r', '\\r');
-      var shiftJson = Json.evaluate(shift.content);
+      var shiftJson = getShiftContent(shiftId);
       shiftJson.id = shiftId;
       
       if (this.info(shift.space).unknown) {
@@ -727,11 +742,13 @@ var ShiftSpace = new (function() {
       var space = spaceForShift(shiftId);
       var user = userForShift(shiftId);
 
+
       if(ShiftSpace.user.getUsername() == user)
       {
+        var shiftJson = getShiftContent(shiftId);
         // show the space interface
         focusShift(shiftId);
-        focusSpace(space);
+        focusSpace(space, (shiftJson && shiftJson.position) || null);
 
         // then edit it
         space.onShiftEdit(shiftId);

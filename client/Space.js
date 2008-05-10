@@ -94,14 +94,21 @@ ShiftSpace.Space = new Class({
     return this._isVisible;
   },
   
-  showInterface : function() 
+  showInterface : function(position) 
   {
     if(!this.interfaceIsBuilt())
     {
       this.buildInterface();
       this.setInterfaceIsBuilt(true);
+      
+      if(position)
+      {
+        this.setPosition(position);
+      }
     }
   },
+  
+  setPosition : function(position) {},
   
   hideInterface : function() 
   {
