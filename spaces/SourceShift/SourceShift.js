@@ -770,10 +770,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.parent();
     
     this.previewMode = true;
-    this.top.setStyle('visibility', 'hidden');
-    this.top.getElements('*').setStyle('visibility', 'hidden');
-    this.resizeControl.setStyle('visibility', 'hidden');
-    this.element.setStyle('borderWidth', 0);
+    this.hideFrame();
     
     if(this.getPinRef())
     {
@@ -801,38 +798,55 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   showFrame: function()
   {
-    this.top.setStyle('visibility', 'visible');
-    this.top.getElements('*').setStyle('visibility', 'visible');
-    this.resizeControl.setStyle('visibility', 'visible');
-    this.element.setStyle('borderWidth', 2);
-    
-    if(!this.__frameAdjusted__)
+    if(!this.frameIsVisible())
     {
-      var pos = this.element.getPosition();
-      this.element.setStyles({
-        left: pos.x - 2,
-        top: pos.y - 2
-      });
+      this.top.setStyle('visibility', 'visible');
+      this.top.getElements('*').setStyle('visibility', 'visible');
+      this.resizeControl.setStyle('visibility', 'visible');
+      this.element.setStyle('borderWidth', 2);
+    
+      if(this.__hiddenFrame__)
+      {
+        this.__hiddenFrame__ = false;
+        var pos = this.element.getPosition();
+        this.element.setStyles({
+          left: pos.x - 2,
+          top: pos.y - 2
+        });
+      }
     }
   },
   
   hideFrame: function()
   {
-    this.top.setStyle('visibility', '');
-    this.top.getElements('*').setStyle('visibility', '');
-    this.resizeControl.setStyle('visibility', '');
-    this.element.setStyle('borderWidth', 0);
+    if(this.frameIsVisible())
+    {
+      this.__hiddenFrame__ = true;
 
-    var pos = this.element.getPosition();
-    this.element.setStyles({
-      left: pos.x + 2,
-      top: pos.y + 2
-    });
+      this.top.setStyle('visibility', 'hidden');
+      this.top.getElements('*').setStyle('visibility', 'hidden');
+      this.resizeControl.setStyle('visibility', 'hidden');
+      this.element.setStyle('borderWidth', 0);
+
+      var pos = this.element.getPosition();
+
+      this.element.setStyles({
+        left: pos.x + 2,
+        top: pos.y + 2
+      });
+    }
+  },
+  
+  frameIsVisible: function()
+  {
+    return this.top.getStyle('visibility') == 'visible';
   },
   
   edit : function()
   {
     this.previewMode = false;
+
+    console.log('edit');
 
     if(this.isPinned())
     {

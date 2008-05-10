@@ -112,7 +112,7 @@ window.khtml = window.webkit;
 
 Object.extend = $extend;
 
-// Our fix for Safari and Greasekit
+// Our fix for Safari and Greasekit - CHANGE
 if ( window.webkit && window.HTMLElement )
 {
   var HTMLElement = function(){};
