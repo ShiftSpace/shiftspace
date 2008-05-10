@@ -2,10 +2,9 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   attributes : 
   {
     name : 'SourceShift',
-    title : 'SourceShift',
-    icon : ShiftSpace.info().server + 'spaces/SourceShift/SourceShift.png',
+    icon : 'SourceShift.png',
     version : 0.1,
-    css : 'spaces/SourceShift/SourceShift.css'
+    css : 'SourceShift.css'
   },
 
   setup: function(options) 
