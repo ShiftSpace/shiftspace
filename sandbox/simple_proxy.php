@@ -92,6 +92,7 @@ $ShiftSpace .= '<script type="text/javascript" src="../client/MooTools.js"></scr
 $ShiftSpace .= '<script type="text/javascript" src="greasemonkey-api.js"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="bootstrap.js"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="../client/Pin.js"></script>';
+$ShiftSpace .= '<script type="text/javascript" src="../client/RangeCoder.js"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="../client/Element.js"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="../client/Space.js" charset="utf-8"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset="utf-8"></script>';
