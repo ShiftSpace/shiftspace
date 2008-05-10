@@ -180,11 +180,12 @@ ShiftSpace.Shift = new Class({
   */
   destroy : function()
   {
-    if(this.getMainView())
+    if(this.getMainView() && this.getMainView().getParent())
     {
       this.getMainView().remove();
-      this.fireEvent('onShiftDestroy', this.getId());
     }
+
+    this.fireEvent('onShiftDestroy', this.getId());
   },
 
   _show: function()
