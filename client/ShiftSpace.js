@@ -289,6 +289,16 @@ var ShiftSpace = new (function() {
     }
     this.isSSElement = isSSElement;
     
+    function ShiftSpaceHide()
+    {
+      
+    }
+    
+    function ShiftSpaceShow()
+    {
+      
+    }
+    
     /*
     
     Function: installSpace

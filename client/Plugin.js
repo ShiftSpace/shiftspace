@@ -41,6 +41,7 @@ ShiftSpace.Plugin = new Class({
   menuIcon: function() {},
   menuIconForShift: function(shiftId) {},
   menuForShift: function(shiftId) {},
+  
   closeMenu: function() 
   {
     ShiftSpace.Console.hidePluginMenu();
@@ -98,6 +99,7 @@ ShiftSpace.Plugin = new Class({
     if(SSCanGoFullScreen())
     {
       // hide ShiftSpace
+      ShiftSpaceHide();
       return true;
     }
     else
@@ -111,6 +113,7 @@ ShiftSpace.Plugin = new Class({
     if(SSCanExitFullScreen())
     {
       // show ShiftSpaace
+      ShiftSpaceShow();
       return true;
     }
     else

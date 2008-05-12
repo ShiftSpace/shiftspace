@@ -78,12 +78,18 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   showInterface: function()
   {
-    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Show Interface');
+    if(this.enterFullScreen())
+    {
+      console.log('success!');
+    }
   },
   
   hideInterface: function()
   {
-    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Hide Interface');
+    if(this.exitFullScreen())
+    {
+      
+    }
   },
   
   /*
