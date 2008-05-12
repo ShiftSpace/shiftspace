@@ -341,7 +341,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 			else if (el.hasAttribute('fisheyeFunc'))
 			    that[el.getAttribute("fisheyeFunc")](el);
 			else if (el.hasAttribute('fisheyeUserName'))
-			    el.firstChild.nodeValue = ShiftSpace.getUser().getUsername();
+			    el.firstChild.nodeValue = this.getUsername();
 		    }
 		}
 	    },
@@ -526,17 +526,24 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	 Functions to fill and refresh parts of GUI
     */
 
-    fillSubmitter: function() {
+    fillSubmitter: function(that) {
 	// Submitter
 	this.submitterBox = new ShiftSpace.Element('div', {
 		'class' : 'SSDisplayItem',
 	});
-	this.submitterIgnore= new ShiftSpace.Element('div', {
-		'class' : 'SSInlineActiveText',
-	});
-        this.submitterIgnore.appendText("[" + this.getText('ignore') + "]");
-        this.submitterBox.appendText(this.getText('submitter') + ": Geoff");
-	this.submitterIgnore.injectInside(this.submitterBox);
+	if (this.shiftAuthor() != this.getUsername()) {
+	  this.submitterIgnore= new ShiftSpace.Element('div', {
+		  'class' : 'SSInlineActiveText',
+	  });
+	  this.submitterIgnore.appendText("[" + this.getText('ignore') + "]");
+	  this.submitterIgnore.addEvent('click', function(){
+	      this.settings.hiddenAuthors[this.shiftAuthor()] = true;
+	      this.saveSettings();
+	      this.rebuild();
+	  }.bind (that));
+	  this.submitterIgnore.injectInside(this.submitterBox);
+	}
+        this.submitterBox.appendText(this.getText('submitter') + ": " + this.shiftAuthor());
         this.submitterBox.injectInside(this.detailsBox);
     },
 
@@ -567,12 +574,13 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	// XXX: replace with hide/show so it doesn't leave dots
 	// XXX: don't filter 'unknown' ???
 	// XXX: be careful to allow creation of new shifts (don't filter before save)
-	// TODO: filter author
 /* 
 	if ((this.settings.hiddenCategories[this.categoryType] && this.mode == this.MODE_DISPLAY))
 	    || this.settings.hiddenSources[this.sourceCode]) 
 	    return;
 */
+	if (this.settings.hiddenAuthors[this.shiftAuthor()]) 
+	    return;
 
 	this.refreshStyle();
 
@@ -598,7 +606,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	    this.renderClass.renderCategory(this, isEdit, de);
 	    this.renderClass.renderSummary(this);
 	    this.renderClass.renderLinkBox(this, isEdit, de);
-	    this.fillSubmitter();
+	    this.fillSubmitter(this);
 	    if (!isEdit) {
 		this.renderClass.renderSource(this, de);
 	    }
@@ -821,16 +829,27 @@ var FisheyeShift = ShiftSpace.Shift.extend({
       return ShiftSpace.user.getUsername();
     },
 
+    getUsername : function() {
+      return ShiftSpace.user.getUsername();
+    },
+
+    shiftAuthor : function() {
+      return this.json.username;
+    },
+
+
     setMode : function(newMode) {
 	if (this.mode == newMode) return;
 
 	if (newMode == this.MODE_EDIT && !this.loggedIn()) {
+          ShiftSpace.Console.show();
+          ShiftSpace.Console.showTab('login');
           alert('Sorry, you must be signed in to edit shifts.');
 	  return;
         }
 
-	if (newMode == this.MODE_EDIT && this.loggedIn() != this.json.username) {
-          alert('Sorry, you cannot edit shift created by user ' + this.json.username);
+	if (newMode == this.MODE_EDIT && this.loggedIn() != this.shiftAuthor()) {
+          alert('Sorry, you cannot edit shift created by user ' + this.shiftAuthor());
 	  return;
         }
 
