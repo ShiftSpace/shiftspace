@@ -8,7 +8,8 @@ var FisheyeSpace = ShiftSpace.Space.extend({
 	}
 });
 
-var feRoot="http://herbie.ddv.com/~geoff/shiftspace/Fisheye/a7/";
+// Get the latest plugins, languages, and layout from SVN
+var feRoot="http://metatron.shiftspace.org/code/trunk/spaces/Fisheye/";
 
 var makeTextBox = function(target, text) {
     var usrBox = new ShiftSpace.Element('div');
