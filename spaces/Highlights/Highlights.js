@@ -57,18 +57,10 @@ var HighlightsSpace = ShiftSpace.Space.extend({
             this.selectColor(colorElement);
     },
 
-    showInterface: function() {
-        try {
-            throw new Exception();
-        }
-        catch (e) {
-            console.log(e.stack);
-        }
-        
-        if (!this.interfaceBuilt) {
-            this.buildInterface();
-            this.interfaceBuilt = true;
-        }
+    showInterface: function() 
+    {
+        this.parent();
+        this.container.removeClass('SSDisplayNone');
     },
     
     buildInterface: function() {
@@ -193,8 +185,8 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         this.hideInterface();        
     },
 
-    hideInterface: function() {    
-        document.body.removeChild(this.container);
+    hideInterface: function() {
+        this.container.addClass('SSDisplayNone');
         
         this.cursor.style.display = 'none';
         
@@ -247,10 +239,10 @@ var HighlightsShift = ShiftSpace.Shift.extend({
     show: function() {
         var space = this.getParentSpace();
         space.hideHighlights();
-        space.showInterface();
+        //space.showInterface();
     
         if (this.ranges) {
-            space.summary.value = this.summary;
+            //space.summary.value = this.summary;
         
             for (var i = 0; i < this.ranges.length; i++) {
                 space.turnOnRangeRef(this.ranges[i]);

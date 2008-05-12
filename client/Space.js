@@ -14,7 +14,7 @@ ShiftSpace.Space = new Class({
     this.shiftClass = shiftClass;
     
     // set the interface built flag
-    this.interfaceBuilt = false;
+    this.__interfaceBuilt__ = false;
     
     // the shifts array
     this.shifts = {};
@@ -61,12 +61,12 @@ ShiftSpace.Space = new Class({
   
   interfaceIsBuilt : function()
   {
-    return this.interfaceBuilt;
+    return this.__interfaceBuilt__;
   },
   
   setInterfaceIsBuilt : function(val)
   {
-    return this.interfaceBuilt = val;
+    return this.__interfaceBuilt__ = val;
   },
   
   onCssLoad : function()

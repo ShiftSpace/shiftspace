@@ -328,11 +328,7 @@ var CanvasSpace = ShiftSpace.Space.extend({
   
   showInterface : function()
   {
-    if(!this.interfaceBuilt)
-    {
-      this.buildInterface();
-      this.interfaceBuilt = true;
-    }
+    this.parent();
     
     this.toolBar.removeClass('CSHidden');
     this.objectInspector.removeClass('CSHidden');
