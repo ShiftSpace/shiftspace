@@ -46,10 +46,10 @@ var TheirViewShift = ShiftSpace.Shift.extend({
 		tCloseButton.inject(d);
 		
 		// easier using setHTML than doing multiple adds and injects
-		// TODO - digg attribution with imagery/badges etc
 		new Element('div',{id:'tv-google'}).setHTML('<h1>Google</h1><div id="tgoogle-data" class="req-google"></div><div id="tgoogle-page" class="req-google"></div><div id="google-attribution">enhanced by <a href="http://www.google.com/"><img src="http://www.google.com/uds/css/small-logo.png" /></a></div>').inject(d);
 		new Element('div',{id:'tv-yahoo'}).setHTML('<h1>Yahoo</h1><div id="tyahoo-data" class="req-yahoo"></div><div id="tyahoo-page" class="req-yahoo"></div><div id="yahoo-attribution"><a href="http://developer.yahoo.com/"><img src="http://l.yimg.com/us.yimg.com/i/us/nt/bdg/websrv_120_1.gif"></a></div>').inject(d);
 		new Element('div',{id:'tv-digg'}).setHTML('<h1>Digg</h1><div id="tdigg-data" class="req-digg"></div><div id="digg-attribution">enhanced by <a href="http://digg.com/"><img src="http://digg.com/img/badges/16x16-digg-guy.gif"></a> Digg!</div>').inject(d);
+		new Element('div',{id:'tv-wikipedia'}).setHTML('<h1>Wikipedia</h1><div id="twikipedia-data" class="req-wikipedia"></div><div id="wikipedia-attribution">Sourced from <a href="http://www.theirview.org/download#wikipedia">snapshot</a> of <a href="http://www.wikipedia.org/">WikiPedia</a>. Licensed under GFDL.</div>').inject(d);
 		return d;
 	},
 	
@@ -60,11 +60,13 @@ var TheirViewShift = ShiftSpace.Shift.extend({
 		this.google(0);
 		this.yahoo(0);
 		this.digg();
+		this.wikipedia();
 	},
 	
-	google: function(offset) { this.wrapCall('google', offset, [this.renderGoogle.bind(this),this.pageGoogle.bind(this)]); },
-	yahoo:  function(offset) { this.wrapCall('yahoo',  offset, [this.renderYahoo.bind(this),this.pageYahoo.bind(this)]);   },
-	digg:   function()       { this.wrapCall('digg',   0,      [this.renderDigg.bind(this)]); },
+	google:    function(offset) { this.wrapCall('google', offset, [this.renderGoogle.bind(this),this.pageGoogle.bind(this)]); },
+	yahoo:     function(offset) { this.wrapCall('yahoo',  offset, [this.renderYahoo.bind(this),this.pageYahoo.bind(this)]);   },
+	digg:      function()       { this.wrapCall('digg',        0, [this.renderDigg.bind(this)]); },
+	wikipedia: function()       { this.wrapCall('wikipedia',   0, [this.renderWikipedia.bind(this)]); },
 
 	wrapCall: function(name,offset,funcArray) {
 		var url = 'http://www.theirview.org/webservice.php';
@@ -144,6 +146,19 @@ var TheirViewShift = ShiftSpace.Shift.extend({
 					+ '<br clear="both" />'
 				).inject($('tdigg-data'));
 			});
+		}
+	},
+	renderWikipedia: function(json) {
+		if(json.count == 0) {
+			// TODO - better wording about prompting user to submit to digg
+			new Element('p',{class: 'tmp-wikipedia'}).appendText("no links found.").inject($('twikipedia-data'));
+		}
+		else {
+			var ul = new Element('ul',{class:'tmp-wikipedia'});
+			json.rows.each(function(item,index){
+				new Element('li').setHTML('<a href="http://en.wikipedia.org/wiki/' + item.title + '">' + item.title + '</a>').inject(ul);
+			});
+			ul.inject($('twikipedia-data'));
 		}
 	},
 	
