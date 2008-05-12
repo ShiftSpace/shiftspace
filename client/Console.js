@@ -153,22 +153,22 @@ var Console = new Class({
     this.pluginMenu.setProperty('id', 'SSConsolePluginMenu');
     this.pluginMenu.addClass('SSMenu');
     
-    this.topItem = $(this.doc.createElement('li'));
+    this.topItem = $(this.doc.createElement('div'));
     this.topItem.addClass('SSMenuTopItem');
     this.topItem.addClass('item');
-    this.topItem.setHTML("<div class='left'><span>Top Item</span></div><div class='right'></div>");
+    this.topItem.setHTML("<div class='SSLeft'><span>Top Item</span></div><div class='SSRight'></div>");
     
-    this.middleItem = $(this.doc.createElement('li'));
+    this.middleItem = $(this.doc.createElement('div'));
     this.middleItem.addClass('SSMenuItem');
     this.middleItem.addClass('item');
-    this.middleItem.setHTML("<div class='left'><span>Middle Item</span></div><div class='right'></div>");
+    this.middleItem.setHTML("<div class='SSLeft'><span>Middle Item</span></div><div class='SSRight'></div>");
     
     this.menuItemModel = this.middleItem.clone(true);
     
-    this.bottomItem = $(this.doc.createElement('li'));
+    this.bottomItem = $(this.doc.createElement('div'));
     this.bottomItem.addClass('SSMenuBottomItem');
     this.bottomItem.addClass('item');
-    this.bottomItem.setHTML("<div class='left'><span>Bottom Item</span></div><div class='right'></div>");
+    this.bottomItem.setHTML("<div class='SSLeft'><span>Bottom Item</span></div><div class='SSRight'></div>");
     
     this.topItem.injectInside(this.pluginMenu);
     this.middleItem.injectInside(this.pluginMenu);

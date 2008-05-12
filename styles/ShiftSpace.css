@@ -297,12 +297,13 @@ div.SSPinMenuTopItem:hover .SSRight
   position: absolute;
 }
 
-.SSMenu li .SSLeft
+.SSMenu div .SSLeft
 {
   width: 122px;
+  padding-left: 8px;
 }
 
-.SSMenu li .SSRight
+.SSMenu div .SSRight
 {
   width: 8px;
 }
