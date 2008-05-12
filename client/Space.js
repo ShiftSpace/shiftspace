@@ -84,6 +84,16 @@ ShiftSpace.Space = new Class({
     this.shifts.each(function(aShift){aShift.hide()});
   },
   
+  sleep: function()
+  {
+    // keep track of all the visible shifts
+  },
+  
+  wake: function()
+  {
+    // restore the previously visible shifts
+  },
+  
   setIsVisible: function(val)
   {
     this._isVisible = val;

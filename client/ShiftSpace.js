@@ -289,14 +289,15 @@ var ShiftSpace = new (function() {
     }
     this.isSSElement = isSSElement;
     
+    var openSpaces = [];
     function ShiftSpaceHide()
     {
-      
+      // go through each space and close it down, and sleep it
     }
     
     function ShiftSpaceShow()
     {
-      
+      // restore the spaces
     }
     
     /*
