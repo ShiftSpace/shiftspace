@@ -816,8 +816,22 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	}
     },
 
+    loggedIn : function() {
+      return ShiftSpace.user.getUsername();
+    },
+
     setMode : function(newMode) {
 	if (this.mode == newMode) return;
+
+	if (newMode == this.MODE_EDIT && !this.loggedIn()) {
+          alert('Sorry, you must be signed in to edit shifts.');
+	  return;
+        }
+
+	if (newMode == this.MODE_EDIT && this.loggedIn() != this.json.username) {
+          alert('Sorry, you cannot edit shift created by user ' + this.json.username);
+	  return;
+        }
 
 	this.mode = newMode;
 	this.rebuild();
