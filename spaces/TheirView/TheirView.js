@@ -136,7 +136,7 @@ var TheirViewShift = ShiftSpace.Shift.extend({
 			json.stories.each(function(item,index){
 				new Element('div',{class:'tmp-digg'}).setHTML(
 					  '<span class="digg-count"><strong>' + item.diggs + '</strong>diggs</span>'
-					+ '<a class="digg-title" href="' + item.link + '">' + item.title + '</a><br />'
+					+ '<a class="digg-title" href="' + item.href + '">' + item.title + '</a><br />'
 					+ '<p class="digg-content">' + item.description
 					+ '<a class="digg-more" href="' + item.href + '">more...</a>'
 					+ '<span class="digg-topic">(' + item.topic.name + ')</span>'
