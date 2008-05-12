@@ -1,9 +1,14 @@
-.noTrails
+.SSTrailsPluginIcon
 {
   background-image: url(images/trails-off.png);
 }
 
-.hasTrails
+.SSTrailsNoTrailsIcon
+{
+  background-image: url(images/trails-off.png);
+}
+
+.SSTrailsHasTrailsIcon
 {
   background-image: url(images/trails-on.png);
 }

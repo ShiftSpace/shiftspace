@@ -32,12 +32,17 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     if(this.data[shiftId])
     {
-      return "hasTrails";
+      return "SSTrailsHasTrailsIcon";
     }
     else
     {
-      return "noTrails";
+      return "SSTrailsNoTrailsIcon";
     }
+  },
+  
+  menuIcon: function(shiftId)
+  {
+    return "SSTrailsPluginIcon";
   },
   
   menuForShift: function(shiftId)

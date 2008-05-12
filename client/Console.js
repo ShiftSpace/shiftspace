@@ -144,14 +144,16 @@ var Console = new Class({
   */
   buildPluginMenu: function()
   {
-    //console.log('-----------------------> build plugin menu');
     // the tab connecting the icon to the menu
     this.pluginMenuTab = $(this.doc.createElement('div'));
     this.pluginMenuTab.setProperty('id', "SSConsolePluginMenuTab");
+    this.pluginMenuTabIcon = $(this.doc.createElement('div'));
+    this.pluginMenuTabIcon.addClass('SSPluginMenuTabIcon SSUserSelectNone');
+    this.pluginMenuTabIcon.injectInside(this.pluginMenuTab);
     
     this.pluginMenu = $(this.doc.createElement('div'));
     this.pluginMenu.setProperty('id', 'SSConsolePluginMenu');
-    this.pluginMenu.addClass('SSMenu');
+    this.pluginMenu.addClass('SSMenu SSUserSelectNone');
     
     this.topItem = $(this.doc.createElement('div'));
     this.topItem.addClass('SSMenuTopItem');
@@ -237,24 +239,28 @@ var Console = new Class({
     Function: showPluginMenu
       Show the plugin menu.
   */
-  showPluginMenu: function(anchor)
+  showPluginMenu: function(plugin, anchor)
   {
     var pos = $(anchor).getPosition();
     var size = $(anchor).getSize().size;
     
-    this.pluginMenu = $(this.pluginMenu);
-    this.pluginMenuTab = $(this.pluginMenuTab);
+    var pluginMenu = $(this.pluginMenu);
+    var pluginMenuTab = $(this.pluginMenuTab);
+    var pluginMenuTabIcon = $(this.pluginMenuTabIcon)
+    
+    pluginMenuTabIcon.addClass(plugin.menuIcon());
 
-    this.pluginMenuTab.setStyles({
-      left: pos.x,
-      top: pos.y
+    pluginMenuTab.setStyles({
+      left: pos.x-3,
+      top: pos.y-3
     });
-    this.pluginMenu.setStyles({
-      left: pos.x-8, 
+    pluginMenu.setStyles({
+      left: pos.x-13, 
       top: pos.y + size.y
     });
     
-    this.pluginMenu.removeClass('SSDisplayNone');
+    pluginMenu.removeClass('SSDisplayNone');
+    pluginMenuTab.removeClass('SSDisplayNone');
   },
   
   /*
@@ -264,6 +270,7 @@ var Console = new Class({
   hidePluginMenu: function()
   {
     this.pluginMenu.addClass('SSDisplayNone');
+    this.pluginMenuTab.addClass('SSDisplayNone');
   },
   
   showNotifier: function() {
@@ -860,6 +867,7 @@ var Console = new Class({
     });
     
     // check for the plugin type
+    // TODO: remove this closure - David
     for(plugin in installedPlugins)
     {
       if(plugins[plugin])
@@ -874,7 +882,7 @@ var Console = new Class({
 
           //this.fireEvent('selectTrails', aShift.id);
           this.setMenuItems(plugins[plugin].menuForShift(aShift.id));
-          this.showPluginMenu(target);
+          this.showPluginMenu(plugins[plugin], target);
         }.bind(this));
         
         pluginDiv.inject(newEntry.getElement('.pluginIcons'));

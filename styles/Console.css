@@ -153,6 +153,11 @@ a:hover {
   font-size: 12px;
 }
 
+.summary .summaryView
+{
+  margin-left: 5px;
+}
+
 .user {
   width: 20%;
 }
@@ -199,6 +204,7 @@ a:hover {
 
 #SSConsolePluginMenu
 {
+  z-index:9;
 }
 
 #SSConsolePluginMenuTab
@@ -207,6 +213,16 @@ a:hover {
   width: 19px;
   height: 19px;
   background: transparent url(../images/ShiftMenu/menu-bg.png);
+  z-index:10;
+}
+
+.SSPluginMenuTabIcon
+{
+ width: 100%;
+ height: 100%;
+ background: transparent;
+ background-repeat: no-repeat;
+ background-position: 3px 3px;
 }
 
 .subtabs {

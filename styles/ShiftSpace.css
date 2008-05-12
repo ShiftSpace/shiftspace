@@ -346,7 +346,7 @@ div.SSPinMenuTopItem:hover .SSRight
   height: 20px;
 }
 
-li.SSMenuItem:hover .SSLeft
+div.SSMenuItem:hover .SSLeft
 {
   background-image: url(../images/ShiftMenu/middle-left-hover.png);
   background-repeat: repeat-x;
@@ -360,7 +360,7 @@ li.SSMenuItem:hover .SSLeft
   height: 20px;
 }
 
-li.SSMenuItem:hover .SSRight
+div.SSMenuItem:hover .SSRight
 {
   background-image: url(../images/ShiftMenu/middle-right-hover.png);
   background-repeat: no-repeat;
@@ -385,7 +385,7 @@ li.SSMenuItem:hover .SSRight
   height: 20px;
 }
 
-li.SSMenuBottomItem:hover .SSLeft
+div.SSMenuBottomItem:hover .SSLeft
 {
   background-image: url(../images/ShiftMenu/bottom-left-hover.png);
   background-repeat: repeat-x;
@@ -399,7 +399,7 @@ li.SSMenuBottomItem:hover .SSLeft
   height: 20px;
 }
 
-li.SSMenuBottomItem:hover .SSRight
+div.SSMenuBottomItem:hover .SSRight
 {
   background-image: url(../images/ShiftMenu/bottom-right-hover.png);
   background-repeat: repeat-x;
@@ -424,7 +424,7 @@ li.SSMenuBottomItem:hover .SSRight
   height: 20px;
 }
 
-li.SSMenuTopItem:hover .SSLeft
+div.SSMenuTopItem:hover .SSLeft
 {
   background-image: url(../images/ShiftMenu/top-left-hover.png);
   background-repeat: repeat-x;
@@ -438,7 +438,7 @@ li.SSMenuTopItem:hover .SSLeft
   height: 20px;
 }
 
-li.SSMenuTopItem:hover .SSRight
+div.SSMenuTopItem:hover .SSRight
 {
   background-image: url(../images/ShiftMenu/top-right-hover.png);
   background-repeat: repeat-x;

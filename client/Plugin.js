@@ -38,6 +38,7 @@ ShiftSpace.Plugin = new Class({
   
   showInterface: function() {},
   buildInterface: function() {},
+  menuIcon: function() {},
   menuIconForShift: function(shiftId) {},
   menuForShift: function(shiftId) {},
   closeMenu: function() 
