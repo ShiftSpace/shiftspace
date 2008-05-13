@@ -15,12 +15,15 @@
 
 #SSTrailsPlugInIframe
 {
+  position: absolute;
+  left: 0px;
+  top: 0px;
   width: 100%;
   height: 100%;
   border: none;
 }
 
-.SSTrailsPlugInScrollBackground
+#SSTrailsPlugInScrollBackground
 {
   position: absolute;
   left: -250000px;
@@ -28,5 +31,5 @@
   width: 500000px;
   height: 500000px;
   z-index: 100;
-  background-image:(images/Trails/bg.png);
+  background-image:url(images/Trails/bg.png);
 }
