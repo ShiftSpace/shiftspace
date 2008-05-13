@@ -106,12 +106,20 @@ div.SSDrag
 }
 
 #trail-close {
+  float: left;
   border: none !important;
   padding: 0 5px;
+  margin-top: 2px;
+  margin-left: 3px;
+  background-image: url(images/close.gif);
+  background-repeat: no-repeat;
+  width: 14px;
+  height: 14px;
 }
 
-#trail-close input {
-  margin-top: 2px;
+div#trail-close:hover
+{
+  background-image: url(images/close-hover.gif);
 }
 
 #trail_menu {

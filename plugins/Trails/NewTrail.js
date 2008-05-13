@@ -89,10 +89,9 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.controls.setHTML('                                                    \
     <div id="trailPermaLink" class="trailPermaLink" style="border:none"></div> \
     <input type="text" id="trail-title" />                                     \
-    permalink                                                                  \
+    <div style="float:right;">permalink</div>                                  \
     <div id="trail-title-limited"></div>                                       \
     <div id="trail-close">                                                     \
-      <input type="image" src="images/close.gif"/>                             \
     </div>                                                                     \
     <div>                                                                      \
       <input type="button" value="Cancel" id="trail-cancel" />                 \
@@ -144,6 +143,10 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   attachEvents: function()
   {
     this.controls.getElement('#trail-cancel').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      this.hideInterface();
+    }.bind(this));
+    this.controls.getElement('#trail-close').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       this.hideInterface();
     }.bind(this));
