@@ -1,7 +1,7 @@
 ShiftSpace.Element = new Class({
   initialize: function(_el, props) 
   {
-    var el = new Element( _el, props );
+    var el = new Element(_el, props);
     
     // ShiftSpaceElement style needs to be first, otherwise it overrides passed in CSS classes - David
     el.setProperty( 'class', 'ShiftSpaceElement ' + el.getProperty('class') );
@@ -61,7 +61,10 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
       {
         load : function() {
           // load the css
-          loadStyle(this.css, null, this.frame);
+          if(this.css) 
+          {
+            loadStyle(this.css, null, this.frame);
+          }
           loadCallBack();
         }.bind(this)
       }

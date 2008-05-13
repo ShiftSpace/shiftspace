@@ -36,6 +36,16 @@ ShiftSpace.Plugin = new Class({
     this.loadData();
   },
   
+  setup: function(options) {},
+  setInterfaceIsBuilt: function(val)
+  {
+    this.__interfaceIsBuilt__ = val;
+  },
+  interfaceIsBuilt: function()
+  {
+    return this.__interfaceIsBuilt__;
+  },
+  
   showInterface: function() {},
   buildInterface: function() {},
   menuIcon: function() {},

@@ -1346,6 +1346,8 @@ var ShiftSpace = new (function() {
       instance.addEvent('onShiftUpdate', saveShift.bind(this));
 
       var spaceDir = installed[spaceName].match(/(.+\/)[^\/]+\.js/)[1];
+      
+      instance.attributes.dir = spaceDir;
 
       if (!instance.attributes.icon) {
         var icon = installed[spaceName].replace('.js', '.png');
@@ -1444,6 +1446,7 @@ var ShiftSpace = new (function() {
         }
         loadStyle(plugin.attributes.css, plugin.onCssLoad.bind(plugin));
       }
+      plugin.attributes.dir = pluginDir;
 
       // This exposes each space instance to the console
       if (debug) 

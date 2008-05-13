@@ -14,7 +14,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     // set the trails plugin to be of the menu type
     this.parent(json);
-    
     this.buildInterface();
   },
   
@@ -71,16 +70,29 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   buildInterface: function()
   {
-    this.backDrop = new ShiftSpace.Element('div', {
-      
-    });
+    if(!$('SSTrailsPlugInIframe'))
+    {
+      this.frame = new ShiftSpace.Iframe({
+        'id': 'SSTrailsPlugInIframe',
+        src: this.attributes.dir + 'Trails.html',
+        css: this.attributes.css,
+        onload: this.finishFrame.bind(this)
+      });
+      this.frame.injectInside(document.body);
+    }
+  },
+  
+  finishFrame: function()
+  {
   },
   
   showInterface: function()
   {
-    if(this.enterFullScreen())
+    if(this.interfaceIsBuilt() && this.enterFullScreen())
     {
       console.log('success!');
+      // add everything to the DOM
+      this.backDrop.injectInside(document.body);
     }
   },
   
@@ -88,7 +100,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     if(this.exitFullScreen())
     {
-      
+      // remove everything from the DOM
     }
   },
   
