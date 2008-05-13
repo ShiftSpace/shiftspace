@@ -81,7 +81,14 @@ ShiftSpace.Space = new Class({
   hide : function()
   {
     this.hideInterface();
-    this.shifts.each(function(aShift){aShift.hide()});
+    
+    for(shift in this.shifts)
+    {
+      if(this.shifts[shift].isVisible())
+      {
+        this.shifts[shift].hide();
+      }
+    }
   },
   
   sleep: function()
@@ -96,12 +103,21 @@ ShiftSpace.Space = new Class({
   
   setIsVisible: function(val)
   {
-    this._isVisible = val;
+    this.__isVisible__ = val;
   },
   
   isVisible: function()
   {
-    return this._isVisible;
+    var visibleShifts = false;
+    for(shift in this.shifts)
+    {
+      if(this.shifts[shift].isVisible())
+      {
+        visibleShifts = true;
+        continue;
+      }
+    }
+    return this.__isVisible__ || visibleShifts;
   },
   
   showInterface : function(position) 

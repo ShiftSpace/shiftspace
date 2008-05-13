@@ -125,8 +125,12 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     var currentShift = this.shifts[shiftId];
     
     this.setMode('xhtml');
-    this.editSource.setProperty('value', currentShift.getMarkup());
-    this.titleField.setProperty('value', currentShift.getTitle());
+    
+    if(this.interfaceIsBuilt() && this.isVisible())
+    {
+      this.editSource.setProperty('value', currentShift.getMarkup());
+      this.titleField.setProperty('value', currentShift.getTitle());
+    }
     
     // update pin widget
     if(currentShift.isPinned())
@@ -429,7 +433,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   */
   selectTabButton: function(button)
   {
-    if(this.isVisible())
+    if(this.interfaceIsBuilt())
     {
       // set the font-color of the middle
       button.getElement('.SSLeft').setStyle('backgroundImage', '');
@@ -447,7 +451,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   */
   deselectTabButton: function(button)
   {
-    if(this.isVisible())
+    if(this.interfaceIsBuilt())
     {
       button.getElement('.SSLeft').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-left.png)');
       button.getElement('.middle').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server +'spaces/SourceShift/images/tab_off-body.png)');

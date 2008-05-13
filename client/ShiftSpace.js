@@ -293,6 +293,16 @@ var ShiftSpace = new (function() {
     function ShiftSpaceHide()
     {
       // go through each space and close it down, and sleep it
+      ShiftSpace.Console.hide();
+      
+      // hide the spaces
+      for(space in spaces)
+      {
+        if(spaces[space].isVisible())
+        {
+          spaces[space].hide();
+        }
+      }
     }
     
     function ShiftSpaceShow()
@@ -1447,6 +1457,16 @@ var ShiftSpace = new (function() {
         loadStyle(plugin.attributes.css, plugin.onCssLoad.bind(plugin));
       }
       plugin.attributes.dir = pluginDir;
+      
+      // Load any includes
+      if(plugin.attributes.includes)
+      {
+        plugin.attributes.includes.each(function(include) {
+          loadFile(plugin.attributes.dir+include, function(rx) {
+            Json.evaluate(rx);
+          });
+        });
+      }
 
       // This exposes each space instance to the console
       if (debug) 
@@ -1479,7 +1499,6 @@ var ShiftSpace = new (function() {
       url += '&cache=' + now.getTime();
 
       //GM_openInTab(url);
-
       var req = {
         method: 'POST',
         url: url,

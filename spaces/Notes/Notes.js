@@ -161,7 +161,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   encode : function()
   {
     var pos = this.element.getPosition();
-    var size = this.element.getSize().size;
+    var size = this.element.getSize();
     var text = this.inputArea.value.replace(/\n/g, "<br/>");
     var titleText = this.inputArea.value.replace(/\n/g, '');
     
@@ -180,9 +180,18 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   refresh : function()
   {
-    var size = this.element.getSize().size;
-    var topSize = this.top.getSize().size;
-    var bottomSize = this.bottom.getSize().size;
+    if(this.element.getSize().size)
+    {
+      var size = this.element.getSize().size;
+      var topSize = this.top.getSize().size;
+      var bottomSize = this.bottom.getSize().size;
+    }
+    else
+    {
+      var size = this.element.getSize();
+      var topSize = this.top.getSize();
+      var bottomSize = this.bottom.getSize();
+    }
     
     this.frame.setStyles({
       width : size.x,

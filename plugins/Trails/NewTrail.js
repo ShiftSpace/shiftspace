@@ -7,7 +7,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     name: 'Trails',
     title: null,
     icon: null,
-    css: 'Trails.css'
+    css: 'Trails.css',
+    includes: ['Trail.js', 'TrailLink.js', 'TrailPage.js', 'TrailNavPage.js', 'TrailNav.js']
   },
   
   initialize : function(json)
@@ -69,27 +70,34 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   buildInterface: function()
   {
-    if(!$('SSTrailsPlugInIframe'))
-    {
-      this.frame = new ShiftSpace.Iframe({
-        'id': 'SSTrailsPlugInIframe',
-        src: this.attributes.dir + 'Trails.html',
-        css: this.attributes.css,
-        onload: this.finishFrame.bind(this)
-      });
-      this.frame.injectInside(document.body);
-    }
-  },
-  
-  finishFrame: function()
-  {
+    // this clips the scrolling area to the browser window viewport
+    this.clippingArea = new ShiftSpace.Element('div', {
+      'id': 'SSTrailsPlugInClippingArea'
+    });
+    this.clippingArea.injectInside(document.body);
+    
+    // where trails actually live
+    this.scrollArea = new ShiftSpace.Element('div', {
+      'id': 'SSTrailsPlugInScrollArea'
+    });
+    
+    // the control bar at the top
+    this.controls = new ShiftSpace.Element('div', {
+      'id': "trails-controls"
+    });
+    
+    this.controls.injectInside(document.body);
+    this.scrollArea.injectInside(this.clippingArea);
+    
+    // store a drag reference just in case we want to stop the dragging behavior
+    this.scrollDragRef = this.scrollArea.makeDraggable();
   },
   
   showInterface: function()
   {
     if(this.interfaceIsBuilt() && this.enterFullScreen())
     {
-      this.frame.injectInside(document.body);
+      this.clippingArea.injectInside(document.body);
     }
     else
     {
