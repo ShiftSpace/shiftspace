@@ -1,3 +1,4 @@
+
 // off set of the little dot
 var gox = 10;
 var goy = 10;
@@ -18,7 +19,7 @@ var TrailLink = new Class({
     this.context = this.element.getContext( '2d' );
     
     // store the pages
-    this.startPage = pageA;
+    this.startPage = pageA; 
     this.endPage = pageB;
     
     // TODO : overly simplified
@@ -225,3 +226,6 @@ function SSCalcLowerRight( element )
   
   return new Vector( loc.x + size.x, loc.y + size.y );
 }
+
+// Link to plugin
+TrailsPlugin.TrailLink = TrailLink;

@@ -6,7 +6,7 @@ var TrailNav = new Class({
    // add the loading icon
    this.showLoader();
    
-   this.shifts = this.options.shifts;
+   //this.shifts = this.options.shifts;
    
    this.element = $('trail-navitems');
    // clear out any previous items
@@ -236,3 +236,5 @@ TrailNav.parse = function( json )
 
   return { pages : pages, dict : dict };
 }
+
+TrailsPlugin.TrailNav = TrailNav;

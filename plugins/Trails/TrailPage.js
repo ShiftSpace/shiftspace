@@ -897,3 +897,6 @@ function ElementContainsPoint( el, v )
            v.y >= pos.y &&
            v.y <= pos.y + size.y )
 }
+
+// Link to the master script
+TrailsPlugin.TrailPage = TrailPage;

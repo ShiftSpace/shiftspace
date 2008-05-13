@@ -78,7 +78,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
     // where trails actually live
     this.scrollArea = new ShiftSpace.Element('div', {
-      'id': 'SSTrailsPlugInScrollArea'
+      'id': 'SSTrailsPlugInScrollArea',
+      class: "SSNormal" 
     });
     
     // the control bar at the top
@@ -101,13 +102,41 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       <input type="button" value="Delete" id="trail-delete" />                 \
     </div>                                                                     \
     <div id="trail-save-feedback"></div>                                       \
-    <br class="clear" />');                                                    
+    <br class="clear" />');
+    
+    // build the navigation interface
+    this.nav = new ShiftSpace.Element('div', {
+      'id': "trail-nav"
+    });
+    this.navItems = new ShiftSpace.Element('div', {
+      'id': "trail-navitems"
+    });
+    this.navItems.injectInside(this.nav);
+    this.navBg = new ShiftSpace.Element('div', {
+      id: "trail-nav-bg"
+    });                          
     
     this.controls.injectInside(document.body);
     this.scrollArea.injectInside(this.clippingArea);
+    this.navBg.injectInside(document.body);
+    this.nav.injectInside(document.body);
+    
+    // Create a new nav object
+    this.navObject = new TrailsPlugin.TrailNav();
     
     // store a drag reference just in case we want to stop the dragging behavior
-    this.scrollDragRef = this.scrollArea.makeDraggable();
+    this.scrollDragRef = this.scrollArea.makeDraggable({
+      onStart: function()
+      {
+        this.scrollArea.removeClass('SSNormal');
+        this.scrollArea.addClass('SSDrag');
+      }.bind(this),
+      onComplete: function()
+      {
+        this.scrollArea.removeClass('SSDrag');
+        this.scrollArea.addClass('SSNormal');
+      }.bind(this)
+    });
     
     this.attachEvents();
   },
@@ -140,6 +169,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       this.clippingArea.empty();
       this.clippingArea.remove();
       this.controls.remove();
+      this.navBg.remove();
+      this.nav.remove();
     }
   },
   

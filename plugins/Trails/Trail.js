@@ -1,3 +1,4 @@
+
 // for check if window clicks occur during deletion
 var gDeleteFocusNode = null;
 var gFocusedNode = null;
@@ -179,11 +180,22 @@ Trail.parse = function( json )
   var nodes = [];
   var links = [];
   
+  if(json.target)
+  {
+    var target = json.target;
+    delete json.target;
+  }
+  else
+  {
+    var target = null;
+  }
+  
   for( node in json )
   {
     var options = json[node];
     
     options.id = node;
+    options.target = target;
     
     // create a new page store in the hash
     var newNode = new TrailPage( kNULL, options );
@@ -219,3 +231,5 @@ Trail.parse = function( json )
 function log(msg) {
     setTimeout(function() { throw(msg); }, 0);
 }
+
+TrailsPlugin.Trail = Trail;

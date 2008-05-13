@@ -32,12 +32,16 @@ div#SSTrailsPlugInScrollArea
   width: 1000000px;
   height: 1000000px;
   z-index: 100;
-  background-image:url(images/bg.png);
 }
 
-div#SSTrailsPlugInScrollBackground:active
+div.SSNormal
 {
-  background-image:url(images/bg.png);
+  background-image:url(images/trails_tile_256.png);  
+}
+
+div.SSDrag
+{
+  background-image:url(images/trails_tile_256-press.png);
 }
 
 #trail-controls {
@@ -74,14 +78,14 @@ div#SSTrailsPlugInScrollBackground:active
   display: block;
   width: 23px;
   height: 20px;
-  background: transparent url(data:image/gif;base64,R0lGODlhEgAHAOZBAIuHTVFOLa6pbVRRLzUzHr25icvIosG9jw8PCVZTMDk3ILy4hhIRCjIwHA0NCHVxQYaCS1VSMBwbECAfEqmkZExKK83KpcrHoMzJo46KT0NBJqynajY0HsfEmz07Im1qPZmUVSwrGbCscU1LKxMSCygnFxgXDq2oa3x4RWdkOoF9SAoKBl1aNG9sPoiETCkoF6eiYBsaD315RpiTVQEBAb66in97Ry4tGlpXMnBsPoqGTWtoPHRwQSUkFScmFr+7jAAAAP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEEALAAAAAASAAcAAAdxgEFBOgA8hoKCKjYsOBGILhYdBwc1FYIpFz+aFD5BABg5PiU9LTo7OwkBCA4rAwI0EAYTQCg5PwYFBSIzMkAjDydAHz87OjkaEjEmJAwIIQkDARtAQR6amiAcgjcwAgsLGT2ICgoEBA2IQS8+Pj3iQYEAOzwvREFUQT48L0JJTkFSWT4=) no-repeat 5px 6px;
+  background: transparent url(images/trails_permalink.gif) no-repeat 5px 6px;
   background-repeat: no-repeat;
 }
 
 #trailPermaLink:hover
 {
   border: none;
-  background: transparent url(data:image/gif;base64,R0lGODlhEgAHAOZBADEWCVU4IGpOLW5TMFI0HrmpbcW5icm9j9HIosW4hpuHTWxRLzkcDlM1Hsa6imZLKzAUCLenarSkZJeCS5iETDQXCp2KT9PKpU8yHM7Em0AjEpF7R5J9SFk7IohxQY54RUwvGrqscaeUVSYKAWVKK7OiYDwfDzwgEIFqPTUYC3xkOqaTVdHHoNLJo21SMLioa0grF15BJoNsPo95RkotGXFXMnRaNC0RBkcqF5qGTYBoPIRsPodwQUQnFUYpFiUJAMe7jP///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAEEALAAAAAASAAcAAAdxgEFBOQo8hoKCHBs2NS6IFBcZBwcOJIIqLECaEj5BCi07Pjg9Mjk6OgMCABA3CwUjEwgaPx87QAgGBiErMz8PHi8/KEA6OTsxJyYMKRUANAMLAhE/QR2amiINgiAlBQkJFj2IAQEEBBiIQTA+Pj3iQYEAOzwvREFUQT48L0JJTkFSWT4=) no-repeat 5px 6px;
+  background: transparent url(images/trails_permalink-hover.gif) no-repeat 5px 6px;
   background-repeat: no-repeat;
 }
 
@@ -131,7 +135,9 @@ div#SSTrailsPlugInScrollBackground:active
 
 #trail-nav-bg {
   position: absolute;
-  bottom: 0;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
   background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAD5JREFUeNrszjENADAIADBAzEzMvyVubEDSKmj2rxeLVSwnKCgoKCgoKCgoKCgoKCgoKCgoKCgoKHg1OAIMAO5xAamuf25lAAAAAElFTkSuQmCC);
   height: 90px;
   width: 100%;
@@ -141,9 +147,10 @@ div#SSTrailsPlugInScrollBackground:active
 #trail-nav 
 {
   position: absolute;
-  bottom: 4px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
   vertical-align: bottom;
-
   overflow-x: scroll;
   min-width: 100%;
 }

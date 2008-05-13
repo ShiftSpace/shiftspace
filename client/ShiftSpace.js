@@ -1506,7 +1506,8 @@ var ShiftSpace = new (function() {
       {
         plugin.attributes.includes.each(function(include) {
           loadFile(plugin.attributes.dir+include, function(rx) {
-            Json.evaluate(rx);
+            console.log(plugin.attributes.dir+include);
+            eval(rx.responseText);
           });
         });
       }
@@ -1666,7 +1667,11 @@ var ShiftSpace = new (function() {
 
       loadFile(url, function(rx) {
         var css = rx.responseText;
+        
+        // this needs to be smarter, only works on directory specific urls
         css = css.replace(/url\(([^)]+)\)/g, 'url(' + dir + '/$1)');
+        
+        //console.log(css.match(/url\(([^)]+)\)/g));
         
         // if it's a frame load it into the frame
         if(frame)
