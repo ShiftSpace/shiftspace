@@ -1504,6 +1504,8 @@ var ShiftSpace = new (function() {
       // Load any includes
       if(plugin.attributes.includes)
       {
+        // trick to allow linking of classes to an object - David
+        var LinkInclude = plugin;
         plugin.attributes.includes.each(function(include) {
           loadFile(plugin.attributes.dir+include, function(rx) {
             console.log(plugin.attributes.dir+include);

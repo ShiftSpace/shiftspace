@@ -128,7 +128,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.nav.injectInside(document.body);
     
     // Create a new nav object
-    this.navObject = new TrailsPlugin.TrailNav();
+    this.navObject = new this.TrailNav();
     
     // store a drag reference just in case we want to stop the dragging behavior
     this.scrollDragRef = this.scrollArea.makeDraggable({
@@ -146,7 +146,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
     // Create a test trail
     console.log('Build interface >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    var test = new TrailsPlugin.TrailPage(null, {loc:{x:500000, y:500000}});
+    var test = new this.TrailPage(null, {loc:{x:500000, y:500000}});
     
     this.attachEvents();
   },

@@ -905,4 +905,4 @@ function ElementContainsPoint( el, v )
 }
 
 // Link to the master script
-TrailsPlugin.TrailPage = TrailPage;
+LinkInclude.TrailPage = TrailPage;

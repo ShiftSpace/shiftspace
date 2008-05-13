@@ -232,4 +232,4 @@ function log(msg) {
     setTimeout(function() { throw(msg); }, 0);
 }
 
-TrailsPlugin.Trail = Trail;
+LinkInclude.Trail = Trail;

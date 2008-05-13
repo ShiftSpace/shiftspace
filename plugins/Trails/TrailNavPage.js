@@ -266,4 +266,4 @@ var TrailNavPage = new Class({
 
 TrailNavPage.implement( new Options );
 
-TrailsPlugin.TrailNavPage = TrailNavPage;
+LinkInclude.TrailNavPage = TrailNavPage;

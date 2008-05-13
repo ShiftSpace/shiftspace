@@ -237,4 +237,4 @@ TrailNav.parse = function( json )
   return { pages : pages, dict : dict };
 }
 
-TrailsPlugin.TrailNav = TrailNav;
+LinkInclude.TrailNav = TrailNav;

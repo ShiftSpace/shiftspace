@@ -228,4 +228,4 @@ function SSCalcLowerRight( element )
 }
 
 // Link to plugin
-TrailsPlugin.TrailLink = TrailLink;
+LinkInclude.TrailLink = TrailLink;
