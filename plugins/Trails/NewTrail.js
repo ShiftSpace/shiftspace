@@ -14,7 +14,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     // set the trails plugin to be of the menu type
     this.parent(json);
-    this.buildInterface();
   },
   
   loadData : function()
@@ -90,9 +89,11 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     if(this.interfaceIsBuilt() && this.enterFullScreen())
     {
-      console.log('success!');
-      // add everything to the DOM
-      this.backDrop.injectInside(document.body);
+      this.frame.injectInside(document.body);
+    }
+    else
+    {
+      this.buildInterface();
     }
   },
   

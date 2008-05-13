@@ -23,13 +23,24 @@
   border: none;
 }
 
-#SSTrailsPlugInScrollBackground
+div#SSTrailsPlugInScrollBackground
 {
   position: absolute;
-  left: -250000px;
-  top: -250000px;
+  left: -100000px;
+  top: -100000px;
   width: 500000px;
   height: 500000px;
   z-index: 100;
-  background-image:url(images/Trails/bg.png);
+  background-image:url(images/bg.png);
+}
+
+div#SSTrailsPlugInScrollBackground:active
+{
+  position: absolute;
+  left: -100000px;
+  top: -100000px;
+  width: 500000px;
+  height: 500000px;
+  z-index: 100;
+  background-image:url(images/bg.png);
 }
