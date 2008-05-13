@@ -219,14 +219,3 @@ Trail.parse = function( json )
 function log(msg) {
     setTimeout(function() { throw(msg); }, 0);
 }
-
-var dragRef;
-function TrailInit()
-{
-  var dragRef = $('SSTrailsPlugInScrollBackground').makeDraggable();
-  
-  $('SSTrailsPlugInScrollBackground').setStyles({
-    left: -250000,
-    top: -250000
-  });
-}

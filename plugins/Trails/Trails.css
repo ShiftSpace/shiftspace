@@ -41,7 +41,7 @@ div#SSTrailsPlugInScrollBackground:active
 }
 
 #trail-controls {
-  z-index: 5;
+  z-index: 101;
   position: absolute;
   left: 0px;
   top: 0px;

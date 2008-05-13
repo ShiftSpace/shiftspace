@@ -314,8 +314,6 @@ var ShiftSpace = new (function() {
       __shiftSpaceState__.set('consoleVisible', ShiftSpace.Console.isVisible());
       __shiftSpaceState__.set('focusedShiftId', focusedShiftId);
       
-      console.log(Json.toString(__shiftSpaceState__.obj));
-
       // go through each space and close it down, and sleep it
       ShiftSpace.Console.hide();
       
@@ -336,8 +334,6 @@ var ShiftSpace = new (function() {
       // set the private hidden var
       // used to control the appearance of the ShiftMenu
       setHidden(false);
-      
-      console.log(Json.toString(__shiftSpaceState__.obj));
       
       // restore ShiftSpace
       if(__shiftSpaceState__.get('consoleVisible'))

@@ -106,7 +106,6 @@ ShiftSpace.Plugin = new Class({
   updateObject : function() {},
   
   enterFullScreen: function() {
-    console.log('enterFullScreen');
     if(SSCanGoFullScreen() && !ShiftSpaceIsHidden())
     {
       ShiftSpaceHide();
