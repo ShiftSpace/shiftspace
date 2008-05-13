@@ -33,12 +33,14 @@ var TrailPage = new Class({
     this.user = this.options.user;
     this.space = this.options.space;
     this.icon = this.options.icon;
+    
+    console.log('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!');
 
     // make sure we have an element if not create one
     // and add it to the page
-    if( el == kNULL || el == undefined )
+    if( el == kNULL || el == undefined || el == null )
     {
-      el = new Element( 'div' );
+      el = new ShiftSpace.Element( 'div' );
 
       // add the thumb
       if( this.thumb )
@@ -57,7 +59,7 @@ var TrailPage = new Class({
       }
       
       // add this to the apge
-      el.injectInside( document.body );
+      el.injectInside( $('SSTrailsPlugInScrollArea') );
       
       // set the initial width and height
       el.setStyle( 'width', kPageMinSize.width );
@@ -68,6 +70,8 @@ var TrailPage = new Class({
         this.zoom();
       }.bind( this ) );
       el.addEvent( 'mouseleave', this.unzoom.bind( this ) );
+      
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     }
 
     this.element = el;
@@ -341,7 +345,7 @@ var TrailPage = new Class({
     // create the drag link point
     this.dragLinkPoint = new Element( 'div' );
     this.dragLinkPoint.addClass( 'TrailPageDragLinkPoint' );
-    this.dragLinkPoint.injectInside( document.body );
+    this.dragLinkPoint.injectInside( $('SSTrailsPlugInScrollArea') );
     
     this.dragLinkPoint.setStyles({
       top : -5,
@@ -431,8 +435,10 @@ var TrailPage = new Class({
   */
   setPosition : function( newPos )
   {
-    this.element.style.left = newPos.x + "px";
-    this.element.style.top = newPos.y + "px";
+    this.element.setStyles({
+      left: newPos.x,
+      top: newPos.y
+    });
   },
   
   /*

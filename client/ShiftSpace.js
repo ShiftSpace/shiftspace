@@ -291,13 +291,13 @@ var ShiftSpace = new (function() {
     
     var openSpaces = [];
     
-    var __isHidden__
+    var __isHidden__ = false;
     var __shiftSpaceState__ = new Hash();
     function setHidden(val)
     {
       __isHidden__ = val;
     }
-    function ShiftSpaceIsHidden(val)
+    function ShiftSpaceIsHidden()
     {
       return __isHidden__;
     }

@@ -17,6 +17,11 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.parent(json);
   },
   
+  loadTrail: function(trailJson)
+  {
+    
+  },
+  
   loadData : function()
   {
     // fetch the data
@@ -51,25 +56,27 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         text: "Create a Trail",
         callback: function()
         {
-          if(this.enterFullScreen())
-          {
-            this.showInterface()
-          }
+          this.showInterface();
+        }.bind(this)
+      },
+      {
+        text: "A Trail",
+        callback: function()
+        {
+          this.showInterface();
         }.bind(this)
       },
       {
         text: "Cancel",
         callback: this.closeMenu.bind(this)
-      },
-      {
-        text: "Hey Avital",
-        callback: function() {}
       }
     ];
   },
   
   buildInterface: function()
   {
+    this.setInterfaceIsBuilt(true); 
+
     // this clips the scrolling area to the browser window viewport
     this.clippingArea = new ShiftSpace.Element('div', {
       'id': 'SSTrailsPlugInClippingArea'
@@ -137,6 +144,10 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       }.bind(this)
     });
     
+    // Create a test trail
+    console.log('Build interface >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    var test = new TrailsPlugin.TrailPage(null, {loc:{x:500000, y:500000}});
+    
     this.attachEvents();
   },
   
@@ -154,13 +165,18 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   showInterface: function()
   {
-    if(this.interfaceIsBuilt() && this.enterFullScreen())
-    {
-      this.clippingArea.injectInside(document.body);
-    }
-    else
+    if(!this.interfaceIsBuilt())
     {
       this.buildInterface();
+    }
+    
+    if(this.enterFullScreen())
+    {
+      this.clippingArea.injectInside(document.body);
+      this.scrollArea.injectInside(document.body);
+      this.controls.injectInside(document.body);
+      this.navBg.injectInside(document.body);
+      this.nav.injectInside(document.body);
     }
   },
   
@@ -169,8 +185,9 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     if(this.exitFullScreen())
     {
       // remove everything from the DOM
-      this.clippingArea.empty();
       this.clippingArea.remove();
+      this.scrollArea.empty();
+      this.scrollArea.remove();
       this.controls.remove();
       this.navBg.remove();
       this.nav.remove();
