@@ -65,10 +65,12 @@ var ShiftMenu = new Class({
   },
   
   show: function(x, y) {
-    if (!this.element) {
+    if (!this.element) 
+    {
       return;
     }
-    if (!this.menuVisible) {
+    if (!this.menuVisible && !ShiftSpaceIsHidden()) 
+    {
       this.menuVisible = true;
       this.element.setStyles({
         left: (x + 10) + 'px',

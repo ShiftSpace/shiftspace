@@ -83,14 +83,41 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
     // the control bar at the top
     this.controls = new ShiftSpace.Element('div', {
-      'id': "trails-controls"
+      'id': "trail-controls"
     });
+    this.controls.setHTML('                                                    \
+    <div id="trailPermaLink" class="trailPermaLink" style="border:none"></div> \
+    <input type="text" id="trail-title" />                                     \
+    permalink                                                                  \
+    <div id="trail-title-limited"></div>                                       \
+    <div id="trail-close">                                                     \
+      <input type="image" src="images/close.gif"/>                             \
+    </div>                                                                     \
+    <div>                                                                      \
+      <input type="button" value="Cancel" id="trail-cancel" />                 \
+      <input type="button" value="Save" id="trail-save" />                     \
+    </div>                                                                     \
+    <div>                                                                      \
+      <input type="button" value="Delete" id="trail-delete" />                 \
+    </div>                                                                     \
+    <div id="trail-save-feedback"></div>                                       \
+    <br class="clear" />');                                                    
     
     this.controls.injectInside(document.body);
     this.scrollArea.injectInside(this.clippingArea);
     
     // store a drag reference just in case we want to stop the dragging behavior
     this.scrollDragRef = this.scrollArea.makeDraggable();
+    
+    this.attachEvents();
+  },
+  
+  attachEvents: function()
+  {
+    this.controls.getElement('#trail-cancel').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      this.hideInterface();
+    }.bind(this));
   },
   
   showInterface: function()
@@ -110,6 +137,9 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     if(this.exitFullScreen())
     {
       // remove everything from the DOM
+      this.clippingArea.empty();
+      this.clippingArea.remove();
+      this.controls.remove();
     }
   },
   

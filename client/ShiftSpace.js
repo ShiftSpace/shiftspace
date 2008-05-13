@@ -290,14 +290,40 @@ var ShiftSpace = new (function() {
     this.isSSElement = isSSElement;
     
     var openSpaces = [];
+    
+    var __isHidden__
+    var __shiftSpaceState__ = new Hash();
+    function setHidden(val)
+    {
+      __isHidden__ = val;
+    }
+    function ShiftSpaceIsHidden(val)
+    {
+      return __isHidden__;
+    }
+    
     function ShiftSpaceHide()
     {
+      // set the private hidden var
+      // used to control the appearance of the ShiftMenu 
+      setHidden(true);
+      
+      // remove all the previous state vars
+      __shiftSpaceState__.empty();
+      
+      __shiftSpaceState__.set('consoleVisible', ShiftSpace.Console.isVisible());
+      __shiftSpaceState__.set('focusedShiftId', focusedShiftId);
+      
+      console.log(Json.toString(__shiftSpaceState__.obj));
+
       // go through each space and close it down, and sleep it
       ShiftSpace.Console.hide();
       
       // hide the spaces
       for(space in spaces)
       {
+        spaces[space].saveState();
+        
         if(spaces[space].isVisible())
         {
           spaces[space].hide();
@@ -307,7 +333,27 @@ var ShiftSpace = new (function() {
     
     function ShiftSpaceShow()
     {
+      // set the private hidden var
+      // used to control the appearance of the ShiftMenu
+      setHidden(false);
+      
+      console.log(Json.toString(__shiftSpaceState__.obj));
+      
+      // restore ShiftSpace
+      if(__shiftSpaceState__.get('consoleVisible'))
+      {
+        ShiftSpace.Console.show();
+      }
+      if(__shiftSpaceState__.get('focusedShiftId'))
+      {
+        focusShift(__shiftSpaceState__.get('focusedShiftId'));
+      }
+
       // restore the spaces
+      for(space in spaces)
+      {
+        spaces[space].restoreState();
+      }
     }
     
     /*
@@ -836,7 +882,8 @@ var ShiftSpace = new (function() {
             // Remember that shift is down
             keyState.shiftPressed = true;
             // Show the menu if the user is signed in
-            if (ShiftSpace.ShiftMenu ) {
+            if (ShiftSpace.ShiftMenu) 
+            {
                 keyState.shiftMenuShown = true;
                 ShiftSpace.ShiftMenu.show(keyState.x, keyState.y);
             }

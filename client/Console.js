@@ -703,6 +703,13 @@ var Console = new Class({
   hide: function() {
     this.frame.setStyle('display', 'none');
     this.notifierFx.set(-32);
+    
+    this.hidePluginMenu();
+  },
+  
+  isVisible: function() 
+  {
+    return (this.frame.getStyle('display') == 'block');
   },
   
   
@@ -879,6 +886,8 @@ var Console = new Class({
         pluginDiv.addEvent('click', function(_evt) {
           var evt = new Event(_evt);
           var target = evt.target;
+          // prevent the click from triggering item selection in console
+          evt.stop();
 
           //this.fireEvent('selectTrails', aShift.id);
           this.setMenuItems(plugins[plugin].menuForShift(aShift.id));

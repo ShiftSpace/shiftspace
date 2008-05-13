@@ -13,7 +13,7 @@
   background-image: url(images/trails-on.png);
 }
 
-#SSTrailsPlugInClipppingArea
+#SSTrailsPlugInClippingArea
 {
   position: absolute;
   left: 0px;
@@ -41,27 +41,30 @@ div#SSTrailsPlugInScrollBackground:active
 }
 
 #trail-controls {
-    z-index: 5;
-    position: relative;
-    padding: 8px 2px 5px 38px;
-    background: #222200 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAACBSURBVHjaYnxiwfWfgQTAYv+KEUNQhYWBoZX/P8OF3wwM878yMrz4i6QBXTEPI0QxSOGOH1hsOCiG6SKQQpjiXJ7/DCFceNwI9NN9dzXu/8pK3P8n6HH9B/LnA7EATJ4Jix6FO38gDA9OMFUoc+LbB3waUPyDrJigBmxgOGgACDAA+dQoRLrZm7QAAAAASUVORK5CYII=) no-repeat 15px 11px;
+  z-index: 5;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  padding: 8px 2px 5px 38px;
+  background: #222200 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAACBSURBVHjaYnxiwfWfgQTAYv+KEUNQhYWBoZX/P8OF3wwM878yMrz4i6QBXTEPI0QxSOGOH1hsOCiG6SKQQpjiXJ7/DCFceNwI9NN9dzXu/8pK3P8n6HH9B/LnA7EATJ4Jix6FO38gDA9OMFUoc+LbB3waUPyDrJigBmxgOGgACDAA+dQoRLrZm7QAAAAASUVORK5CYII=) no-repeat 15px 11px;
 }
 
 #trail-title {
-    /* display: block; */
-    float: left;
-    font: 11px verdana, sans-serif;
-    border: 1px solid #585800;
-    color: #E7E4A4;
-    background: transparent;
-    padding: 2px;
-    width: 275px;
+  /* display: block; */
+  float: left;
+  font: 11px verdana, sans-serif;
+  border: 1px solid #585800;
+  color: #E7E4A4;
+  background: transparent;
+  padding: 2px;
+  width: 275px;
 }
 
 #trail-controls div {
-    float: right;
-    border-right: 2px solid #000;
-    padding: 0 6px;
+  float: right;
+  border-right: 2px solid #000;
+  padding: 0 6px;
 }
 
 #trailPermaLink
@@ -84,65 +87,65 @@ div#SSTrailsPlugInScrollBackground:active
 
 
 #trail-delete, #trail-cancel, #trail-save {
-    font: 11px verdana, sans-serif;
-    color: #E7E4A4;
-    background: #2F2F0F;
-    border: 1px outset #2F2F0F;
+  font: 11px verdana, sans-serif;
+  color: #E7E4A4;
+  background: #2F2F0F;
+  border: 1px outset #2F2F0F;
 }
 
 #trail-cancel {
-    margin-right: 4px;
+  margin-right: 4px;
 }
 
 #trail-delete:active, #trail-cancel:active, #trail-save:active {
-    border: 1px inset #2F2F0F;
+  border: 1px inset #2F2F0F;
 }
 
 #trail-close {
-    border: none !important;
-    padding: 0 5px;
+  border: none !important;
+  padding: 0 5px;
 }
 
 #trail-close input {
-    margin-top: 2px;
+  margin-top: 2px;
 }
 
 #trail_menu {
-    position: absolute;
-    display: none;
+  position: absolute;
+  display: none;
 }
 
 #trail-controls.limited div {
-    display: none;
+  display: none;
 }
 
 #trail-controls.limited #trail-close,
 #trail-controls.limited #trail-save-feedback
 {
-    display: block;
+  display: block;
 }
 
 #trail-controls.limited #trail-title {
-    border: 1px solid transparent;
+  border: 1px solid transparent;
 }
 
 #trail-nav-bg {
-    position: absolute;
-    bottom: 0;
-    background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAD5JREFUeNrszjENADAIADBAzEzMvyVubEDSKmj2rxeLVSwnKCgoKCgoKCgoKCgoKCgoKCgoKCgoKHg1OAIMAO5xAamuf25lAAAAAElFTkSuQmCC);
-    height: 90px;
-    width: 100%;
-    border-top: 1px solid #000;
+  position: absolute;
+  bottom: 0;
+  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAD5JREFUeNrszjENADAIADBAzEzMvyVubEDSKmj2rxeLVSwnKCgoKCgoKCgoKCgoKCgoKCgoKCgoKHg1OAIMAO5xAamuf25lAAAAAElFTkSuQmCC);
+  height: 90px;
+  width: 100%;
+  border-top: 1px solid #000;
 }
 
 #trail-nav 
 {
-    position: absolute;
-    bottom: 4px;
-    vertical-align: bottom;
-    
-    overflow-x: scroll;
-    min-width: 100%;
+  position: absolute;
+  bottom: 4px;
+  vertical-align: bottom;
+
+  overflow-x: scroll;
+  min-width: 100%;
 }
 
 #trail-navitems
@@ -155,34 +158,34 @@ div#SSTrailsPlugInScrollBackground:active
   position: absolute;
   left: 50%;
   margin-left: -16px;
-  
+
   width: 32px;
   height: 32px; 
-  
+
   z-index: 1000;
 
   background: transparent url(data:image/gif;base64,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);
 }
 
 #trail-save-feedback {
-    color: #F63B02;
+  color: #F63B02;
 }
 
 #trail-title-limited {
-    float: left !important;
-    font: 14px/14px verdana, sans-serif;
-    color: #E7E4A4;
-    border: none !important;
-    margin: 0 !important;
+  float: left !important;
+  font: 14px/14px verdana, sans-serif;
+  color: #E7E4A4;
+  border: none !important;
+  margin: 0 !important;
 }
 
 #trail-title-limited span {
-    font: 11px/14px verdana, sans-serif;
+  font: 11px/14px verdana, sans-serif;
 }
 
 #trail-title-limited .red {
-    color: #F63B02;
-    margin: 0 3px;
+  color: #F63B02;
+  margin: 0 3px;
 }
 
 #trailPermalink.hidden {

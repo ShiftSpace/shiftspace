@@ -15,6 +15,7 @@ ShiftSpace.Space = new Class({
     
     // set the interface built flag
     this.__interfaceBuilt__ = false;
+    this.__state__ = new Hash();
     
     // the shifts array
     this.shifts = {};
@@ -516,6 +517,27 @@ ShiftSpace.Space = new Class({
   mainViewForShift: function(shiftId)
   {
     return this.shifts[shiftId].getMainView();
+  },
+  
+  saveState: function()
+  { 
+    // empty the state
+    this.__state__.empty();
+    
+    var visibleShifts = [];
+    for(shift in this.shifts)
+    {
+      if(this.shifts[shift].isVisible())
+      {
+        visibleShifts.push(this.shifts[shift]);
+      }
+    }
+    this.__state__.set('visibleShifts', visibleShifts);
+  },
+  
+  restoreState: function()
+  {
+    this.__state__.get('visibleShifts').each(function(x) { x.show(); });
   }
 });
 

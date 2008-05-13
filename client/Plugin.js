@@ -106,9 +106,9 @@ ShiftSpace.Plugin = new Class({
   updateObject : function() {},
   
   enterFullScreen: function() {
-    if(SSCanGoFullScreen())
+    console.log('enterFullScreen');
+    if(SSCanGoFullScreen() && !ShiftSpaceIsHidden())
     {
-      // hide ShiftSpace
       ShiftSpaceHide();
       return true;
     }
@@ -120,9 +120,8 @@ ShiftSpace.Plugin = new Class({
   },
   
   exitFullScreen: function() {
-    if(SSCanExitFullScreen())
+    if(SSCanExitFullScreen() && ShiftSpaceIsHidden())
     {
-      // show ShiftSpaace
       ShiftSpaceShow();
       return true;
     }
