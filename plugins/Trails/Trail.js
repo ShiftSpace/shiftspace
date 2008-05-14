@@ -6,8 +6,49 @@ var gHoveredNode = null;
 var gNodeNumber = 0;
 
 var Trail = new Class({
-  initialize : function( json )
+  initialize : function( _focusedShift, json )
   {
+    var focusedShift = _focusedShift;
+    
+    // scroll to offset
+    if(json.offset)
+    {
+      this.offset = {x: json.offset.x, y: json.offset.y};
+      delete json.offset;
+
+      // scroll to the scroll offset if there is one
+      if(!focusedShift)
+      {
+        $('trail-scroll').setStyles({
+          left: -500000 - this.offset.x,
+          top: -500000 - this.offset.y
+        });
+      }
+      else
+      {
+        var winSize = { x: self.innerWidth,
+                        y: self.innerHeight };
+        var winCenter = { x: 500000 + winSize.x/2,
+                          y: 500000 + winSize.y/2 };
+        var shiftLoc = json[_focusedShift].loc;
+        var offsetLoc = { x: 500000 + shiftLoc.x,
+                          y: 500000 + shiftLoc.y };
+        
+        var v = { x: offsetLoc.x - winCenter.x,
+                  y: offsetLoc.y - winCenter.y };
+        
+        // center the shift
+        $('trail-scroll').setStyles({
+          left: -500000 - v.x - 40,
+          top: -500000 - v.y - 30
+        });
+      }
+    }
+    else
+    {
+      this.offset = {x: 0, y:0};
+    }
+    
     // convert the json object into a trail
     var temp = Trail.parse( json );
     
@@ -16,6 +57,9 @@ var Trail = new Class({
     this.links = temp.links;
     this.dict = temp.dict;
     this.linkTable = temp.linkTable;
+    
+    // zoom the focused shift
+    this.dict[focusedShift].zoom();
     
     function setParent( x ) { x.parentTrail = this; };
 

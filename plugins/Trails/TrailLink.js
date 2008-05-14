@@ -12,8 +12,16 @@ var TrailLink = new Class({
     this.element = new Element( 'canvas' );
     this.element.addClass( 'TrailLink' );
     
-    // add this to the page
-    this.element.injectInside( document.body );
+    // if pageA and pageB both instaces of TrailPage, add to trail scroll, and do different calculations
+    // serious spaghetti code hack!
+    if( pageA instanceof TrailPage && pageB instanceof TrailPage )
+    {
+      this.element.injectInside( $('SSTrailsPlugInScrollArea') );
+    }
+    else
+    {
+      this.element.injectInside( document.body );
+    }
     
     // store the rendering context
     this.context = this.element.getContext( '2d' );
@@ -52,7 +60,7 @@ var TrailLink = new Class({
     // calculate the start and end of the link
     if( this.startPage instanceof TrailPage )
     {
-      this.startPos = SSCalcCenter( this.startPage.getLinkPoint() );
+      this.startPos = SSCalcCenter( this.startPage.getLinkPoint(), true );
     }
     else
     {
@@ -61,7 +69,7 @@ var TrailLink = new Class({
 
     if( this.endPage instanceof TrailPage )
     {
-      this.endPos = SSCalcCenter( this.endPage.getLinkPoint() )
+      this.endPos = SSCalcCenter( this.endPage.getLinkPoint(), true )
     }
     else
     {
@@ -211,12 +219,24 @@ var TrailLink = new Class({
   }
 });
 
-function SSCalcCenter( element )
+function SSCalcCenter( element, superBadHackForTrailScrollArea )
 {
   var size = element.getSize().size;
   var loc = element.getPosition();
   
-  return new Vector( loc.x + size.x/2, loc.y + size.y/2 );
+  if(superBadHackForTrailScrollArea)
+  {
+    // get the linkPoint position and calc it offset and the parent offset
+    var linkPointOffset = element.getStyles('left', 'top');
+    var trailPageOffset = element.getParent().getStyles('left', 'top');
+    return new Vector( parseInt(linkPointOffset.left)+parseInt(trailPageOffset.left),
+                       parseInt(linkPointOffset.top)+parseInt(trailPageOffset.top) );
+  }
+  else
+  {
+    // calculate top left for page, and top left for link point, add
+    return new Vector( loc.x + size.x/2, loc.y + size.y/2 );
+  }
 }
 
 function SSCalcLowerRight( element ) 

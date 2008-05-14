@@ -1508,11 +1508,23 @@ var ShiftSpace = new (function() {
       // Load any includes
       if(plugin.attributes.includes)
       {
-        plugin.attributes.includes.each(function(include) {
-          loadFile(plugin.attributes.dir+include, function(rx) {
-            eval(rx.responseText, plugin);
+        if (typeof ShiftSpaceSandBoxMode != 'undefined') 
+        {
+          plugin.attributes.includes.each(function(include) {
+            var url = plugin.attributes.dir + include + '?' + new Date().getTime();
+            var newSpace = new Asset.javascript(url, {
+              id: include
+            });
           });
-        });
+        }
+        else
+        {
+          plugin.attributes.includes.each(function(include) {
+            loadFile(plugin.attributes.dir+include, function(rx) {
+              eval(rx.responseText, plugin);
+            });
+          });
+        }
       }
 
       // This exposes each space instance to the console

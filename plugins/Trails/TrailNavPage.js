@@ -85,8 +85,8 @@ var TrailNavPage = new Class({
         
         // set the position of the description
         this.descriptionEl.setStyles({
-          left : (this.element.getPosition().x + 170 - scroll.x),
-          top : this.element.getPosition().y - 100,
+          left : (this.element.getPosition().x + 250 - scroll.x),
+          top : this.element.getPosition().y - 150,
           display : 'block'
         });
         

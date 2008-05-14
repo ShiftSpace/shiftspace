@@ -1,14 +1,29 @@
 var kNULL = 'null';
 var kPageMinSize = { width: 80, height: 50 };
-var kPageMaxSize = { width: 160, height: 100 };
+var kPageMaxSize = { width: 240, height: 150 };
+
+/*
+  Possible spaces are:
+    notes
+    highlight
+    sourceshift
+    imageswap
+*/
+var kNotesSpace = 'notes';
+var kHighlightSpace = 'highlight';
+var kSourceShiftSpace = 'sourceshift';
+var kImageSwapSpace = 'imageswap';
 
 var TrailPage = new Class({
+  
   // let's have some default options
   getOptions : function()
   {
     return {
       title : 'default',
       loc : { x : 0, y : 0 },
+      offset : { x: 500000, y: 500000 },
+      scroll : { x: 0, y: 0 },
       url : 'http://www.shiftspace.org',
       thumb : null,
       user : 'shiftspace',
@@ -161,6 +176,14 @@ var TrailPage = new Class({
     this.description.addClass( 'TrailPageDescription' );
     this.description.addClass( 'hidden' );
     
+    // hover effect
+    this.description.addEvent( 'mouseover', function() {
+      this.element.setOpacity( 1.0 );
+    }.bind(this));
+    this.description.addEvent( 'mouseout', function() {
+      this.element.setOpacity( 0.8 );
+    }.bind(this));
+    
     // create title
     var descTextArea = new Element( 'div' );
     descTextArea.addClass( 'TrailPageDescriptionTextArea' );
@@ -248,6 +271,10 @@ var TrailPage = new Class({
     // change the style of the link point and check
     // for the start of dragging
     this.linkPoint.addEvent( 'mousedown', function( e ) {
+      var evt = new Event(e);
+      // stop this event so it doesn't get to scrolling
+      evt.stopPropagation();
+      
       if( this == gFocusedNode )
       {
         this.linkClicked = true;
@@ -434,10 +461,13 @@ var TrailPage = new Class({
   */
   setPosition : function( newPos )
   {
+    // include scroll offset
     this.element.setStyles({
-      left: newPos.x,
-      top: newPos.y
+      left : this.options.offset.x + newPos.x,
+      top : this.options.offset.y + newPos.y
     });
+    
+    this.getPosition();
   },
   
   /*
@@ -445,7 +475,20 @@ var TrailPage = new Class({
   */
   getPosition : function()
   {
-    return this.element.getPosition();
+    var temp = {
+      x : parseInt(this.element.getStyle('left')),
+      y : parseInt(this.element.getStyle('top'))
+    };
+    
+    return temp;
+  },
+  
+  getRealPosition : function()
+  {
+    var pos = this.getPosition();
+    var fpos = { x : pos.x - this.options.offset.x, 
+                 y : pos.y - this.options.offset.y };
+    return fpos;
   },
   
   /*
@@ -494,14 +537,17 @@ var TrailPage = new Class({
       gFocusedNode = this;
       
       // change the border to red
-      this.thumbEl.addClass( 'TrailPageZoomBorder' );
+      if (this.thumbEl) 
+      {
+        this.thumbEl.addClass( 'TrailPageZoomBorder' );
+      }
       
       this.element.setStyle( 'zIndex', 99 );
       this.element.setOpacity( 0.8 );
 
       this.isZooming = true;
       // store our old position
-      this.oldPosition = this.element.getPosition();
+      this.oldPosition = this.getPosition();
     
       var dx = ( kPageMaxSize.width - kPageMinSize.width ) / 2;
       var dy = ( kPageMaxSize.height - kPageMinSize.height ) / 2;
@@ -538,8 +584,8 @@ var TrailPage = new Class({
         transition : Fx.Transitions.Cubic.easeOut
       })
       thumbFX.start({
-        left: [60, 118],
-        top: [32, 60],
+        left: [60, 198],
+        top: [32, 110],
         width: [22, 44],
         height: [22, 44]
       });
@@ -629,7 +675,7 @@ var TrailPage = new Class({
       this.isZooming = true;
 
       // get the old position
-      var curPos = this.element.getPosition();
+      var curPos = this.getPosition();
 
       // set up animation for the size
       var sizeFX = this.element.effects({
@@ -641,7 +687,9 @@ var TrailPage = new Class({
       sizeFX.start({
         width : [ kPageMaxSize.width, kPageMinSize.width  ],
         height : [ kPageMaxSize.height, kPageMinSize.height  ]
-      });
+      }).chain(function() {
+        this.element.setStyle( 'zIndex', 2 );
+      }.bind(this));
 
       // set up animation for the top left
       var posFX = this.element.effects({
@@ -730,7 +778,7 @@ var TrailPage = new Class({
     if( this.isDragging )
     {
       // get the position
-      var curPos = this.element.getPosition();
+      var curPos = this.getPosition();
       
       var dx = ( kPageMaxSize.width - kPageMinSize.width ) / 2;
       var dy = ( kPageMaxSize.height - kPageMinSize.height ) / 2;
@@ -873,10 +921,14 @@ var TrailPage = new Class({
   */
   encode : function()
   {
+    var pos = this.getPosition();
+    var fpos = { x : pos.x - this.options.offset.x, 
+                 y : pos.y - this.options.offset.y };
+                 
     return {
       id : this.id,
       title : this.title,
-      loc : this.loc,
+      loc : fpos,
       url : this.url,
       nodes : this.nodes.copy(),
       thumb : this.thumb,

@@ -75,10 +75,14 @@ $ShiftSpace = '<link type="text/css" rel="stylesheet"" href="../styles/ShiftSpac
 // Bootstrap
 $server = $_SERVER['HTTP_HOST'];
 $ssdir = dirname($_SERVER['PHP_SELF']);
+
 $ShiftSpace .= '<script type="text/javascript">
   var __ssdir__ = "'.$ssdir.'".split("/");
   var __server__ = "http://'.$server.'"+__ssdir__.slice(0, __ssdir__.length-1).join("/")+"/";
 </script>';
+
+$ShiftSpace .= '<script type="text/javascript" src="../client/MooTools.js"></script>';
+$ShiftSpace .= '<script type="text/javascript" src="greasemonkey-api.js"></script>';
 
 $ShiftSpace .= '<script type="text/javascript">var ShiftSpace = {
   info: function()
@@ -86,10 +90,10 @@ $ShiftSpace .= '<script type="text/javascript">var ShiftSpace = {
     return {
       server: __server__
     };
-  }
+  },
+  xmlhttpRequest: GM_xmlhttpRequest
 };</script>';
-$ShiftSpace .= '<script type="text/javascript" src="../client/MooTools.js"></script>';
-$ShiftSpace .= '<script type="text/javascript" src="greasemonkey-api.js"></script>';
+
 $ShiftSpace .= '<script type="text/javascript" src="bootstrap.js"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="../client/Pin.js"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="../client/RangeCoder.js"></script>';

@@ -19,9 +19,24 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.parent(json);
   },
   
-  loadTrail: function(trailJson)
+  newTrail: function(shiftId)
   {
-    
+    // var loadData
+    var aTrail = new Trail(shiftId, {
+      node1:
+      {
+        title : 'shiftspace',
+        url : 'http://www.shiftspace.org',
+        thumb : this.attributes.dir+'images/highlight_thumb.png',
+        loc : { x: 200, y: 200 },
+        space : 'highlight'
+      }
+    });    
+  },
+  
+  loadTrail: function(shiftId)
+  {
+    // get the trail
   },
   
   loadData : function()
@@ -56,21 +71,24 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     return [
       {
         text: "Create a Trail",
-        callback: function()
+        callback: function(shiftId)
         {
-          this.showInterface();
+          this.showInterface(shiftId);
         }.bind(this)
       },
       {
         text: "A Trail",
-        callback: function()
+        callback: function(trailId)
         {
-          this.showInterface();
+          this.showInterface(trailId);
         }.bind(this)
       },
       {
         text: "Cancel",
-        callback: this.closeMenu.bind(this)
+        callback: function(shiftId)
+        {
+          this.closeMenu.bind(this);
+        }
       }
     ];
   },
@@ -149,14 +167,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     // Create a test trail
     console.log('Build interface >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     
-    var test = new TrailPage(kNULL, {
-      title : 'shiftspace',
-      url : 'http://www.shiftspace.org',
-      thumb : 'highlight_thumb.png',
-      loc : { x : 500200, y : 500200 },
-      space : 'highlight'
-    });
-    
     //test.intialize()
     
     this.attachEvents();
@@ -174,7 +184,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     }.bind(this));
   },
   
-  showInterface: function()
+  showInterface: function(shiftId)
   {
     if(!this.interfaceIsBuilt())
     {
@@ -187,6 +197,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       this.controls.injectInside(document.body);
       this.navBg.injectInside(document.body);
       this.nav.injectInside(document.body);
+      
+      this.newTrail(shiftId);
     }
   },
   

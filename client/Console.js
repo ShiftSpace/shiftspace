@@ -198,10 +198,10 @@ var Console = new Class({
   },
   
   /*
-    Function: setMenuItems
+    Function: setPluginMenuItems
       Set the items for the plugin menu.
   */
-  setMenuItems: function(itemsAndActions)
+  setPluginMenuItems: function(shiftId, itemsAndActions)
   {
     // remove all the menu items
     $(this.pluginMenu).getElements('.SSMenuItem').each(function(x) {x.remove();});
@@ -216,19 +216,19 @@ var Console = new Class({
       if(i == 0)
       {
         this.pluginMenu.getElement('.SSMenuTopItem span').setText(txt);
-        this.pluginMenu.getElement('.SSMenuTopItem').addEvent('click', cb);
+        this.pluginMenu.getElement('.SSMenuTopItem').addEvent('click', cb.bind(null, shiftId));
       }
       else if(i == itemsAndActions.length-1)
       {
         this.pluginMenu.getElement('.SSMenuBottomItem span').setText(txt);
-        this.pluginMenu.getElement('.SSMenuBottomItem').addEvent('click', cb);
+        this.pluginMenu.getElement('.SSMenuBottomItem').addEvent('click', cb.bind(null, shiftId));
       }
       else
       {
         var newItem = this.menuItemModel.clone(true);
         
         newItem.getElement('span').setText(txt);
-        newItem.addEvent('click', cb);
+        newItem.addEvent('click', cb.bind(null, shiftId));
 
         newItem.injectBefore(this.pluginMenu.getElement('.SSMenuBottomItem'));
       }
@@ -269,7 +269,6 @@ var Console = new Class({
   */
   hidePluginMenu: function()
   {
-    console.log('hidePluginMenu');
     this.pluginMenu.addClass('SSDisplayNone');
     this.pluginMenuTab.addClass('SSDisplayNone');
   },
@@ -783,6 +782,8 @@ var Console = new Class({
     newEntry.getElement('.summary').getElement('.summaryEdit').setProperty('value', aShift.summary);
     newEntry.getElement('.user').setHTML(aShift.username);
     
+    newEntry.getElement('.SSPermaLink').setProperty('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
+    
     newEntry.addEvent('mouseover', function() {
       if (!newEntry.hasClass('active') && !newEntry.hasClass('expanded')) 
       {
@@ -891,7 +892,7 @@ var Console = new Class({
           evt.stop();
 
           //this.fireEvent('selectTrails', aShift.id);
-          this.setMenuItems(plugins[plugin].menuForShift(aShift.id));
+          this.setPluginMenuItems(aShift.id, plugins[plugin].menuForShift(aShift.id));
           this.showPluginMenu(plugins[plugin], target);
         }.bind(this));
         
@@ -989,7 +990,8 @@ var Console = new Class({
     var controls = $(this.doc.createElement('div'));
     controls.className = 'controls';
     // check to see if the the user matches
-    controls.innerHTML = 'Currently, all you can do is <a href="#delete" class="delete">delete this shift</a> or <a href="#edit" class="edit">edit this shift</a>.';
+    var controlOptions = 'Currently, all you can do is <a href="#delete" class="delete">delete this shift</a> or <a href="#edit" class="edit">edit this shift</a>, <a target="new" class="SSPermaLink">permalink</a>';
+    controls.innerHTML = controlOptions;
     
     // -------------------- Build the entry ---------------- //
     expanderDiv.injectInside(shiftEntry);
