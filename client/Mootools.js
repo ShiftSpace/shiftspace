@@ -1821,7 +1821,8 @@ Fx.Styles = Fx.Base.extend({
 		return this.parent(from, to);
 	},
 
-	increase: function(){
+	increase: function() {
+		this.fireEvent( 'onChange', this.element ); // -David
 		for (var p in this.now) this.element.setStyle(p, this.css[p].getValue(this.now[p], this.options.unit, p));
 	}
 

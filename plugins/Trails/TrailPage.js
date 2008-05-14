@@ -35,7 +35,6 @@ var TrailPage = new Class({
   // intialize this puppy
   initialize : function( el, options )
   {
-    console.log('Initialize trail page!');
     // set our options
     this.setOptions( this.getOptions(), options );
 
@@ -84,8 +83,6 @@ var TrailPage = new Class({
         this.zoom();
       }.bind( this ) );
       el.addEvent( 'mouseleave', this.unzoom.bind( this ) );
-      
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     }
 
     this.element = el;
@@ -559,9 +556,9 @@ var TrailPage = new Class({
       // set up animation for the size
       var sizeFX = this.element.effects({
         duration : 300,
-        transition : Fx.Transitions.Cubic.easeOut,
+        transition : Fx.Transitions.Cubic.easeOut
       });
-    
+      
       sizeFX.start({
         width : [ kPageMinSize.width, kPageMaxSize.width ],
         height : [ kPageMinSize.height, kPageMaxSize.height ]
@@ -754,6 +751,7 @@ var TrailPage = new Class({
     if( this.thumbEl )
     {
       this.thumbEl.setProperty( 'width', size.x - 2 );
+      this.thumbEl.setProperty( 'height', size.y - 2 );
     }
     
     // keep the space thumb proportional

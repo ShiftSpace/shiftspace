@@ -36,6 +36,11 @@ ShiftSpace.Plugin = new Class({
     this.loadData();
   },
   
+  serverCall: function(method, params, callback)
+  {
+    serverCall('plugins.'+this.attributes.name.toLowerCase()+'.'+method, params, callback);
+  },
+  
   setup: function(options) {},
   setInterfaceIsBuilt: function(val)
   {

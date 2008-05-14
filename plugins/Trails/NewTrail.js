@@ -10,7 +10,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     title: null,
     icon: null,
     css: 'Trails.css',
-    includes: ['Trail.js', 'TrailLink.js', 'TrailPage.js', 'TrailNavPage.js', 'TrailNav.js']
+    includes: ['Trail.js', 'TrailLink.js', 'TrailPage.js', 'TrailNavPage.js', 'TrailNav.js', 'Vector.js']
   },
   
   initialize : function(json)
@@ -21,28 +21,68 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   newTrail: function(shiftId)
   {
+    var trailJson = {};
+    trailJson[shiftId] = {
+      title : 'shiftspace',
+      url : 'http://www.shiftspace.org',
+      thumb : this.attributes.dir+'images/highlight_thumb.png',
+      loc : { x: 200, y: 200 },
+      space : 'highlight'
+    };
+    
     // var loadData
-    var aTrail = new Trail(shiftId, {
+    var aTrail = new Trail(shiftId, trailJson);
+  },
+  
+  loadTrail: function()
+  {
+    // get the trail
+    /*
+    this.serverCall('load', {
+      id: trailId
+    }, this.onTrailLoad.bind(this));
+    */
+    this.onTrailLoad('node1', {
       node1:
       {
         title : 'shiftspace',
         url : 'http://www.shiftspace.org',
         thumb : this.attributes.dir+'images/highlight_thumb.png',
         loc : { x: 200, y: 200 },
-        space : 'highlight'
+        space : 'highlight',
+        nodes : ['node2']
+      },
+      node2:
+      {
+        title : 'shiftspace',
+        url : 'http://www.shiftspace.org',
+        thumb : this.attributes.dir+'images/notes_thumb.png',
+        loc : { x: 500, y: 500 },
+        space : 'notes',
+        nodes : ['node1']
       }
-    });    
+    });
   },
   
-  loadTrail: function(shiftId)
+  onTrailLoad: function(focusedShift, trailJson)
+  {
+    // load the interface first
+    this.showInterface();
+    var newTrail = new Trail(focusedShift, trailJson);
+  },
+  
+  saveTrail: function(trail)
   {
     // get the trail
+    this.serverCall('save', {
+      id: trail.id,
+      content: Json.toString(trail)
+    }, this.onTrailSave.bind(this));
   },
   
-  loadData : function()
+  onTrailSave: function(msg)
   {
-    // fetch the data
-    this.parent();
+    
   },
   
   /*
@@ -68,6 +108,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   menuForShift: function(shiftId)
   {
+    // this will be created dynamically
     return [
       {
         text: "Create a Trail",
@@ -78,9 +119,9 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       },
       {
         text: "A Trail",
-        callback: function(trailId)
+        callback: function(shiftId)
         {
-          this.showInterface(trailId);
+          this.loadTrail();
         }.bind(this)
       },
       {
@@ -197,8 +238,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       this.controls.injectInside(document.body);
       this.navBg.injectInside(document.body);
       this.nav.injectInside(document.body);
-      
-      this.newTrail(shiftId);
     }
   },
   
