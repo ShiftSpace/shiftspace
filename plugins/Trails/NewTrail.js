@@ -1,3 +1,5 @@
+var kNULL = 'null';
+
 var TrailsPlugin = ShiftSpace.Plugin.extend({
 
   pluginType: ShiftSpace.Plugin.types.get('kMenuTypePlugin'),
@@ -88,7 +90,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       'id': 'SSTrailsPlugInScrollArea',
       class: "SSNormal" 
     });
-    
+    this.scrollArea.injectInside(this.clippingArea);
+        
     // the control bar at the top
     this.controls = new ShiftSpace.Element('div', {
       'id': "trail-controls"
@@ -123,7 +126,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     });                          
     
     this.controls.injectInside(document.body);
-    this.scrollArea.injectInside(this.clippingArea);
     this.navBg.injectInside(document.body);
     this.nav.injectInside(document.body);
     
@@ -146,7 +148,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
     // Create a test trail
     console.log('Build interface >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    var test = new this.TrailPage(null, {loc:{x:500000, y:500000}});
+    var test = new this.TrailPage(kNULL, {loc:{x:500000, y:500000}});
+    //test.intialize()
     
     this.attachEvents();
   },
@@ -173,7 +176,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     if(this.enterFullScreen())
     {
       this.clippingArea.injectInside(document.body);
-      this.scrollArea.injectInside(document.body);
       this.controls.injectInside(document.body);
       this.navBg.injectInside(document.body);
       this.nav.injectInside(document.body);
@@ -187,7 +189,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       // remove everything from the DOM
       this.clippingArea.remove();
       this.scrollArea.empty();
-      this.scrollArea.remove();
       this.controls.remove();
       this.navBg.remove();
       this.nav.remove();

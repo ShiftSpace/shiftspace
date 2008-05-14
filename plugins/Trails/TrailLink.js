@@ -227,5 +227,4 @@ function SSCalcLowerRight( element )
   return new Vector( loc.x + size.x, loc.y + size.y );
 }
 
-// Link to plugin
 LinkInclude.TrailLink = TrailLink;

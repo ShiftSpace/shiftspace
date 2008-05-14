@@ -20,6 +20,7 @@ var TrailPage = new Class({
   // intialize this puppy
   initialize : function( el, options )
   {
+    console.log('Initialize trail page!');
     // set our options
     this.setOptions( this.getOptions(), options );
 
@@ -34,8 +35,6 @@ var TrailPage = new Class({
     this.space = this.options.space;
     this.icon = this.options.icon;
     
-    console.log('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!');
-
     // make sure we have an element if not create one
     // and add it to the page
     if( el == kNULL || el == undefined || el == null )
@@ -904,5 +903,4 @@ function ElementContainsPoint( el, v )
            v.y <= pos.y + size.y )
 }
 
-// Link to the master script
 LinkInclude.TrailPage = TrailPage;
