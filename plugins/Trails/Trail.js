@@ -231,5 +231,3 @@ Trail.parse = function( json )
 function log(msg) {
     setTimeout(function() { throw(msg); }, 0);
 }
-
-LinkInclude.Trail = Trail;

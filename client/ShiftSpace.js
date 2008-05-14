@@ -1372,9 +1372,11 @@ var ShiftSpace = new (function() {
         } 
         else 
         {
+          // TODO: This should be moved outside of ShiftSpace core, evaluated spaces have access to
+          // all internal private variables - David
           loadFile(installed[space], function(rx) {
             log('loading '+ space);
-            eval(rx.responseText);
+            eval(rx.responseText, ShiftSpace);
             if (typeof pendingShift != 'undefined') 
             {
               ShiftSpace.showShift(pendingShift);
@@ -1472,9 +1474,11 @@ var ShiftSpace = new (function() {
       } 
       else 
       {
+        // TODO: This should be moved outside of ShiftSpace Core as well
+        // access to all private variables
         loadFile(installedPlugins[plugin], function(rx) {
           log('loading '+ plugin);
-          eval(rx.responseText);
+          eval(rx.responseText, ShiftSpace);
         });
       }
     }
@@ -1504,10 +1508,9 @@ var ShiftSpace = new (function() {
       // Load any includes
       if(plugin.attributes.includes)
       {
-        var LinkInclude = plugin;
         plugin.attributes.includes.each(function(include) {
           loadFile(plugin.attributes.dir+include, function(rx) {
-            eval(rx.responseText);
+            eval(rx.responseText, plugin);
           });
         });
       }
@@ -1638,7 +1641,7 @@ var ShiftSpace = new (function() {
     */
     function includeScript(url, callback) {
       loadFile(url, function(rx) {
-        eval(rx.responseText);
+        eval(rx.responseText, ShiftSpace);
         if (typeof callback == 'function') {
           callback(rx);
         }
@@ -1758,6 +1761,9 @@ var ShiftSpace = new (function() {
     
     return this;
 })();
+
+// Where other people's code lives
+//var __ShiftSpaceExternal__ = {};
 
 // Only run in the top-most frame
 // This doesn't work in Safari for some reason

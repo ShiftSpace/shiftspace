@@ -902,5 +902,3 @@ function ElementContainsPoint( el, v )
            v.y >= pos.y &&
            v.y <= pos.y + size.y )
 }
-
-LinkInclude.TrailPage = TrailPage;

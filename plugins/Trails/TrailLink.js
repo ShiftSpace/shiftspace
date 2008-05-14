@@ -226,5 +226,3 @@ function SSCalcLowerRight( element )
   
   return new Vector( loc.x + size.x, loc.y + size.y );
 }
-
-LinkInclude.TrailLink = TrailLink;
