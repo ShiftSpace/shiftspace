@@ -19,10 +19,8 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         this.highlight_end = function(e) {
             if (!window.getSelection().getRangeAt(0).collapsed) {
                 this.cursor.style.display = 'block';
-
                 var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
                 newRangeRef.color = this.color; 
-                
                 if (!this.getCurrentShift().ranges)
                     this.getCurrentShift().ranges = [];
                 
@@ -170,6 +168,9 @@ var HighlightsSpace = ShiftSpace.Space.extend({
 
         // iteratate on all the text nodes in the document and mark if they are in the selection range
         for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
+          String.clean(xPathResult.snapshotItem(i).textContent);
+        }
+        for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
             // we need clean styles so we don't use ShiftSpace.Element
             var enclosingSpan = document.createElement("span");
             enclosingSpan.id = this.getCurrentShift().getId();
@@ -225,17 +226,27 @@ var HighlightsSpace = ShiftSpace.Space.extend({
 
 var HighlightsShift = ShiftSpace.Shift.extend({
     setup: function(json) {
+        if(json.ranges){
+          //replace __newline__ token with \n
+          for(var i=0; i<json.ranges.length; i++){
+            json.ranges[i].origText = json.ranges[i].origText.replace(new RegExp("__newline__","g"),"\n");
+            json.ranges[i].ancestorOrigTextContent = json.ranges[i].ancestorOrigTextContent.replace(new RegExp("__newline__","g"),"\n");
+          }
+        }
         this.ranges = json.ranges;
         this.summary = json.summary;
     },
-    
     encode: function() {
+        //tokenize newline char with __newline__
+        for(var i=0; i<this.ranges.length; i++){
+          this.ranges[i].origText = this.ranges[i].origText.replace(new RegExp("\\n","g"),"__newline__");
+          this.ranges[i].ancestorOrigTextContent = this.ranges[i].ancestorOrigTextContent.replace(new RegExp("\\n","g"),"__newline__");
+        }
         return {
             ranges: this.ranges,
             summary: this.summary
         };
     },
-    
     show: function() {
         var space = this.getParentSpace();
         space.hideHighlights();
@@ -243,7 +254,6 @@ var HighlightsShift = ShiftSpace.Shift.extend({
     
         if (this.ranges) {
             //space.summary.value = this.summary;
-        
             for (var i = 0; i < this.ranges.length; i++) {
                 space.turnOnRangeRef(this.ranges[i]);
             }
@@ -256,6 +266,5 @@ var HighlightsShift = ShiftSpace.Shift.extend({
         this.getParentSpace().hideHighlights();
     }
 });
-
 var Highlights = new HighlightsSpace(HighlightsShift);
 
