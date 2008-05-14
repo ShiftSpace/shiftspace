@@ -269,6 +269,7 @@ var Console = new Class({
   */
   hidePluginMenu: function()
   {
+    console.log('hidePluginMenu');
     this.pluginMenu.addClass('SSDisplayNone');
     this.pluginMenuTab.addClass('SSDisplayNone');
   },
