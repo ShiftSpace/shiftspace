@@ -7,9 +7,9 @@ var TrailNavPage = new Class({
     this.element.addClass( 'TrailNavPage' );
     
     this.id = this.options.id;
-    this.title = this.options.title;
-    this.user = this.options.user;
-    this.url = this.options.url;
+    this.title = this.options.summary;
+    this.user = this.options.username;
+    this.href = this.options.href;
     this.descr = this.options.descr;
     this.space = this.options.space;
     this.icon = Trails.attributes.dir+'images/'+this.space+'_trailsicon.png';
@@ -45,7 +45,7 @@ var TrailNavPage = new Class({
                                '<br class="clear"/>' +
                                '</div>' +
                                '<div class="TrailPageDescriptionLink">' +
-                               this.url +
+                               this.href +
                                '</div>');
     this.descriptionEl.setStyles({
       visibility: 'hidden',

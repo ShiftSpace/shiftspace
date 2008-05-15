@@ -24,7 +24,7 @@ var TrailPage = new Class({
       loc : { x : 0, y : 0 },
       offset : { x: 500000, y: 500000 },
       scroll : { x: 0, y: 0 },
-      url : 'http://www.shiftspace.org',
+      href : 'http://www.shiftspace.org',
       thumb : null,
       user : 'shiftspace',
       nodes : [],
@@ -42,9 +42,9 @@ var TrailPage = new Class({
     this.id = this.options.id;
     this.title = this.options.summary;
     this.loc = this.options.loc;
-    this.url = this.options.url
+    this.href = this.options.href
     this.nodes = this.options.nodes;
-    this.user = this.options.user;
+    this.user = this.options.username;
     this.space = this.options.space;
     this.icon = Trails.attributes.dir+'images/'+this.space+'_trailsicon.png';
     this.thumb = Trails.attributes.dir+'images/'+this.space+'_thumb.png';
@@ -169,7 +169,7 @@ var TrailPage = new Class({
   createDescription : function()
   {
     this.description = new Element( 'a' );
-    this.description.setAttribute( 'href', this.url );
+    this.description.setAttribute( 'href', this.href );
     this.description.addClass( 'TrailPageDescription' );
     this.description.addClass( 'hidden' );
     
@@ -209,8 +209,8 @@ var TrailPage = new Class({
     
     var url = new Element( 'a' );
     url.addClass( 'TrailPageDescriptionLink' );
-    url.setProperty( 'href', this.url );
-    url.setText( this.url );
+    url.setProperty( 'href', this.href );
+    url.setText( this.href );
 
     // add the description string and the user
     descTitleUserText.injectInside( descTextArea );
@@ -494,7 +494,7 @@ var TrailPage = new Class({
   */
   loadURL : function( e )
   {
-    window.open( this.url );
+    window.open( this.href );
   },
 
   /*
@@ -929,7 +929,7 @@ var TrailPage = new Class({
       id : this.id,
       title : this.title,
       loc : fpos,
-      url : this.url,
+      href : this.href,
       nodes : this.nodes.copy(),
       thumb : this.thumb,
       user : this.user,

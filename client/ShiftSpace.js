@@ -235,6 +235,12 @@ var ShiftSpace = new (function() {
       return (content && Json.evaluate(content)) || null;
     }
     
+    function getUrlForShift(shiftId)
+    {
+      console.log(shifts[shiftId]);
+      return shifts[shiftId].href;
+    }
+    
     function getRecentlyViewedShifts()
     {
       var copy = {};
@@ -639,6 +645,7 @@ var ShiftSpace = new (function() {
         if(shiftId.search('newShift') == -1)
         {
           // store a reference to this
+          // TODO: only add these if the user is logged in
           __recentlyViewedShifts__[shift.id] = shiftJson;
           
           spaces[shift.space].showShift(shiftJson);
@@ -817,7 +824,6 @@ var ShiftSpace = new (function() {
     {
       var space = spaceForShift(shiftId);
       var user = userForShift(shiftId);
-
 
       if(ShiftSpace.user.getUsername() == user)
       {

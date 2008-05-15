@@ -144,12 +144,14 @@ ShiftSpace.Plugin = new Class({
     {
       copy[prop] = temp[prop];
     }
+    copy.href = getUrlForShift(shiftId);
     
     return copy;
   },
   
   recentlyViewedShifts: function()
   {
+    console.log(getRecentlyViewedShifts());
     return getRecentlyViewedShifts();
   }
   
