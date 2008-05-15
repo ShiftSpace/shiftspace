@@ -238,13 +238,23 @@ var Console = new Class({
     }
   },
   
+  pluginLoaded: function(plugin)
+  {
+    // better
+  },
+  
+  plugInActionForItem: function(item)
+  {
+    // better
+  },
+  
   /*
     Function: showPluginMenu
       Show the plugin menu.
   */
   showPluginMenu: function(plugin, anchor)
   {
-    var pos = $(anchor).getPosition();
+    var pos = $(anchor).getPosition([$(this.doc.getElementById('scroller'))]);
     var size = $(anchor).getSize().size;
     
     var pluginMenu = $(this.pluginMenu);
