@@ -146,7 +146,8 @@ div#trail-close:hover
   bottom: 0px;
   left: 0px;
   right: 0px;
-  background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAD5JREFUeNrszjENADAIADBAzEzMvyVubEDSKmj2rxeLVSwnKCgoKCgoKCgoKCgoKCgoKCgoKCgoKHg1OAIMAO5xAamuf25lAAAAAElFTkSuQmCC);
+  background-color: #f63b02;
+  opacity: 0.15;
   height: 90px;
   width: 100%;
   border-top: 1px solid #000;
@@ -243,8 +244,8 @@ div#trail-close:hover
   width: 320px;
   height: 40px;
   
-  left: -159px;
-  top: 62px;
+  right: -2px;
+  bottom: -2px;
   
   font-family: verdana;
   font-size: 11px;
@@ -255,7 +256,7 @@ div#trail-close:hover
   z-index: 40;
   text-align: left;
 
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAYAAADhAJiYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADhJREFUeNrszjEBADAIA7AyKfj3gDUc7OZIFKS6Mznk5RghISEhISEhISEhISEhISEhISGhnxVgAJGXAUsiO749AAAAAElFTkSuQmCC);
+  background-image:url(images/trail_hoverinfo_bg.png);
   border-bottom: none;
 }
 
