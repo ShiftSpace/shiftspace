@@ -23,6 +23,7 @@
   background-color: #ccc;
   border: solid 1px #999;
   padding-bottom: 2px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.498039) 5px 5px 5px;
 }
 
 .CSColor
@@ -77,6 +78,7 @@
   height: 100px;
   background-color: #ccc;
   border: 1px solid #777;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.498039) 5px 5px 5px;
 }
 
 .CSPropertySliderLabel

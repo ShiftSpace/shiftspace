@@ -340,7 +340,7 @@ var Console = new Class({
     var content = $(this.doc.createElement('div'));
     content.setAttribute('id', 'console');
     content.setHTML('<div class="outer"><div class="inner">' +
-                    '<div id="top"><div id="tabs">' +
+                    '<div id="top"><div id="tabs" class="SSUserSelectNone">' +
                     '<div id="controls">' +
                     '<div class="button auth"><div class="image"></div></div>' +
                     '<div class="button bugs"><div class="image"></div></div>' +
