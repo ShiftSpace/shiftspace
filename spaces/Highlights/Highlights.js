@@ -187,9 +187,11 @@ var HighlightsSpace = ShiftSpace.Space.extend({
     },
 
     hideInterface: function() {
-        this.container.addClass('SSDisplayNone');
-        
-        this.cursor.style.display = 'none';
+        if(this.container)
+        {
+          this.container.addClass('SSDisplayNone');
+          this.cursor.style.display = 'none';
+        }
         
         document.removeEventListener('mousemove', this.mousemove, false);
         document.removeEventListener('mousedown', this.mousedown, false);

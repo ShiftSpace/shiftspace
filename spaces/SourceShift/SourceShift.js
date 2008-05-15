@@ -67,13 +67,13 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   showInterface : function(position)
   {
     this.parent(position);
-    this.editSourceShift.removeClass('SSDisplayNone');
+    if(this.editSourceShift) this.editSourceShift.removeClass('SSDisplayNone');
   },
   
   hideInterface : function()
   {
     this.parent();
-    this.editSourceShift.addClass('SSDisplayNone');
+    if(this.editSourceShift) this.editSourceShift.addClass('SSDisplayNone');
   },
   
   setPosition: function(position)
@@ -148,8 +148,10 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     // we are in edit mode
     if(this.isVisible())
     {
+      /*
       this.editShift(shiftId);
       this.onShiftEdit(shiftId);
+      */
     }
   },
   
@@ -787,6 +789,10 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       {
         this.pin(this.getPinRef());
         this.frame.removeClass('SSFrameBorder');
+      }
+      else
+      {
+        this.frame.removeClass('SSFrameBorder');        
       }
     }
   },

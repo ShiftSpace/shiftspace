@@ -235,6 +235,16 @@ var ShiftSpace = new (function() {
       return (content && Json.evaluate(content)) || null;
     }
     
+    function getAllShiftContent()
+    {
+      var allContent = {};
+      for(shift in shifts)
+      {
+        allContent[shift] = getShiftContent(shift);
+      }
+      return allContent;
+    }
+    
     function getUrlForShift(shiftId)
     {
       console.log(shifts[shiftId]);

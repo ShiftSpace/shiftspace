@@ -46,8 +46,8 @@ var TrailPage = new Class({
     this.nodes = this.options.nodes;
     this.user = this.options.username;
     this.space = this.options.space;
-    this.icon = Trails.attributes.dir+'images/'+this.space+'_trailsicon.png';
-    this.thumb = Trails.attributes.dir+'images/'+this.space+'_thumb.png';
+    this.icon = Trails.attributes.dir+'images/'+this.space.toLowerCase()+'_trailsicon.png';
+    this.thumb = Trails.attributes.dir+'images/'+this.space.toLowerCase()+'_thumb.png';
 
     // make sure we have an element if not create one
     // and add it to the page

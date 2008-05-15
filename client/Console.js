@@ -216,14 +216,14 @@ var Console = new Class({
       if(i == 0)
       {
         this.pluginMenu.getElement('.SSMenuTopItem span').setText(txt);
-        this.pluginMenu.getElement('.SSMenuTopItem').removeEvents();
-        this.pluginMenu.getElement('.SSMenuTopItem').addEvent('click', cb.bind(null, shiftId));
+        this.topItem.removeEvents();
+        this.topItem.addEvent('click', cb.bind(null, shiftId));
       }
       else if(i == itemsAndActions.length-1)
       {
         this.pluginMenu.getElement('.SSMenuBottomItem span').setText(txt);
-        this.pluginMenu.getElement('.SSMenuBottomItem').removeEvents();
-        this.pluginMenu.getElement('.SSMenuBottomItem').addEvent('click', cb.bind(null, shiftId));
+        this.bottomItem.removeEvents();
+        this.bottomItem.addEvent('click', cb.bind(null, shiftId));
       }
       else
       {

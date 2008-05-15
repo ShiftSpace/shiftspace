@@ -12,8 +12,8 @@ var TrailNavPage = new Class({
     this.href = this.options.href;
     this.descr = this.options.descr;
     this.space = this.options.space;
-    this.icon = Trails.attributes.dir+'images/'+this.space+'_trailsicon.png';
-    this.thumb = Trails.attributes.dir+'images/'+this.space+'_thumb.png';
+    this.icon = Trails.attributes.dir+'images/'+this.space.toLowerCase()+'_trailsicon.png';
+    this.thumb = Trails.attributes.dir+'images/'+this.space.toLowerCase()+'_thumb.png';
     
     this.thumbEl = new Element('img');
     this.thumbEl.addClass('TrailNavPageView');
