@@ -10,15 +10,15 @@ var TrailNavPage = new Class({
     this.title = this.options.title;
     this.user = this.options.user;
     this.url = this.options.url;
-    this.icon = this.options.icon;
-    this.thumb = this.options.thumb;
     this.descr = this.options.descr;
     this.space = this.options.space;
+    this.icon = Trails.attributes.dir+'images/'+this.space+'_trailsicon.png';
+    this.thumb = Trails.attributes.dir+'images/'+this.space+'_thumb.png';
     
     this.thumbEl = new Element('img');
     this.thumbEl.addClass('TrailNavPageView');
     this.thumbEl.setProperty( 'width', 80 );
-    this.thumbEl.setProperty( 'src', Trails.attributes.dir+'images/'+this.space+'_thumb.png' );
+    this.thumbEl.setProperty( 'src', this.thumb );
     
     this.thumbEl.injectInside( this.element );
     
@@ -201,7 +201,9 @@ var TrailNavPage = new Class({
     
     // add a loction property
     this.options.loc = this.clone.getPosition();
-    trail.addShift( this.options );
+    
+    // add this to the current trail
+    Trails.currentTrail().addShift( this.options );
     
     this.clone.remove();
 

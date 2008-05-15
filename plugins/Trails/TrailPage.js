@@ -570,7 +570,7 @@ var TrailPage = new Class({
         duration : 300,
         transition : Fx.Transitions.Cubic.easeOut
       });
-    
+      
       posFX.start({
         left : [ this.oldPosition.x, newPos.x ],
         top : [ this.oldPosition.y, newPos.y ]
