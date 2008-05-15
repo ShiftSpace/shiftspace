@@ -104,15 +104,16 @@ var TrailLink = new Class({
     var miny = Math.min( this.startPos.y, this.endPos.y );
     var maxy = Math.max( this.startPos.y, this.endPos.y );
     
-    // set dimensions taking consideration offset
-    this.element.style.left = ( minx-gox ) + "px";
-    this.element.style.top = ( miny-goy ) + "px";
-    this.element.style.width = ( maxx-minx+gox*2 ) + "px";
-    this.element.style.height = ( maxy-miny+goy*2 ) + "px";
+    this.element.setStyles({
+      left: minx-gox,
+      top: miny-goy,
+      width: maxx-minx+gox*2,
+      height: maxy-miny+goy*2
+    });
     
     // set the width and height attributes to prevent distortion
-    this.element.width = ( maxx-minx ) + gox*2;
-    this.element.height = ( maxy-miny ) + goy*2;
+    this.element.setProperty('width', ( maxx-minx ) + gox*2);
+    this.element.setProperty('height', ( maxy-miny ) + goy*2);
   },
   
   // render from point a to point b

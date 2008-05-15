@@ -85,6 +85,11 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
   },
   
+  loadRecentlyViewShifts: function(trail)
+  {
+    
+  },
+  
   /*
     Function: menuIconForShift
       Return the CSS class for the shift.

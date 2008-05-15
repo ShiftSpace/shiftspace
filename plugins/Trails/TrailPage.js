@@ -368,7 +368,8 @@ var TrailPage = new Class({
     // create the drag link point
     this.dragLinkPoint = new Element( 'div' );
     this.dragLinkPoint.addClass( 'TrailPageDragLinkPoint' );
-    this.dragLinkPoint.injectInside( $('SSTrailsPlugInScrollArea') );
+    this.dragLinkPoint.injectInside(document.body);
+    //this.dragLinkPoint.injectInside( $('SSTrailsPlugInScrollArea') );
     
     this.dragLinkPoint.setStyles({
       top : -5,

@@ -425,7 +425,8 @@ div#trail-close:hover
   top : 4px;
   right : 0px;
 
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAd5JREFUeNqkU89LG1EQ/kbXH9loo9FIYrXQSr2JkSr2IojVk4JYpD1Ie63/gDfrpceCeBK8iZKLaKHQQw9FBS+NRGzrQUEFQe0KSWMVsxoT85xZXLpd48mBb+e9mfnezJs3C6UU/gPQw5hkRBlZRowxxeh1x5J8LCEK8Hfqp44Xyw/o74YOc53RbMLTdA6941RVtKawyDHvmBm3KBaZ6CGvY5FqqI8h+o07ZMRQtUMJEC9b+ICjghv7p+kAcpuP6LxNgzcfUezin6lGjreTYivgrAPfy9A4ESTjIIf0mIeetGsocxPFLv7xEBkr5ehk3mvJPPjNR8cS9OMK5ntT7Y566LF9gGghil38YvtSSX9YvSG+8fbgU7rYKUXazhQuhP5Bp4a5S3X0qpiCTqJIMIOir1uqRjIH4kXIOsuUwEhaGcMlVC/aSRRJala8X8jxQAaa0ymlDpVQaPxC7Yl298CfteKTQl4Nm/86LIFyZyl14RJJdw9E+O11VmtCnu8+UZVuol1qvib2HasqVrP2kET5nevW6yh1opB139Fuoo+gPdtX3rcJRHlIXt5rwm7NdsyLrgU/JX7pSB0WIyPP0pKCt59LfX6GJedsI89f1cv4zDhQ4gaMm/2AO/ZagAEAduEXW6TIw94AAAAASUVORK5CYII=);
+  background-image: url(images/cut_trail.png);
+  background-repeat: no-repeat;
 }
 
 .TrailPageRemoveHover
@@ -438,7 +439,8 @@ div#trail-close:hover
   
   top : 4px;
   right : 0px;
-          background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAZlJREFUeNqkU7tKQ0EQPRufETUkqAnqB0QIBBHSCSJYKcIVwSpVCrG0sxVS+AESCZjKVg2ChSLY2BjRRsRHLz4SMCSCb13P7E3QmxsrB87e3Zk5O7O750JrDQeAMSJF5IgP4phIE+O1uUoGY0p1c0wftsPa71Q498Ig/AIMPAMjZY3hR2SZM0tmwVAMWak+zo/TPQitBBX+srl7jdk87jgd5AZ3nop/czmoQlf9CpGG+kTxS5ybh7hMic/DqmwTsdUe4OYLSHoVog1uovglzu6w64NF3oxUnt7z2a1efgILzxqLvzaIVojil7jYtt/kxxs5xM7afqpUN1giYe1NI97sJIpdeM1nSCp3F2valMQMifOtCplXJ1GsZOcHhFzw1wSl1QQrJlkx0eK+A5+d/yDko8iTk7hYOePOu/sOxOTdaSdCXh8raRex2mq9S5womvy1qkhyfOfYaS9AIbnOKBYmkcLD4I0RS5YimfqXwlzaPuiAtRGwtZ1vAro+KBLeySRbHS07tY06f9U4sUVcawkDt5W1VZv7LcAANr3qj6ueDI0AAAAASUVORK5CYII=);
+  background-image:url(images/cut_trail_hover.png);
+  background-repeat: no-repeat;
 }
 
 .TrailNavPage
