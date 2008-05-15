@@ -24,7 +24,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CREATE TRAIL ' + shiftId);
     // load the interface first
     this.showInterface();
-    
+    // empty out any old stuff
     var json = {};
     json[shiftId] = this.getShift(shiftId);
     json[shiftId].loc = {x:0, y:0};
@@ -268,6 +268,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     {
       // put the interface back onto the DOM
       this.clippingArea.injectInside(document.body);
+      this.scrollArea.empty();
       this.controls.injectInside(document.body);
       this.navBg.injectInside(document.body);
       this.nav.injectInside(document.body);

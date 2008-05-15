@@ -40,7 +40,7 @@ var TrailPage = new Class({
 
     // set up our data
     this.id = this.options.id;
-    this.title = this.options.title;
+    this.title = this.options.summary;
     this.loc = this.options.loc;
     this.url = this.options.url
     this.nodes = this.options.nodes;

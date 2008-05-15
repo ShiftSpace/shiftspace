@@ -211,6 +211,7 @@ div#trail-close:hover
 .TrailPage
 {
   z-index: 2;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.498039) 5px 5px 5px;
 }
 
 .TrailPageHeading

@@ -216,11 +216,13 @@ var Console = new Class({
       if(i == 0)
       {
         this.pluginMenu.getElement('.SSMenuTopItem span').setText(txt);
+        this.pluginMenu.getElement('.SSMenuTopItem').removeEvents();
         this.pluginMenu.getElement('.SSMenuTopItem').addEvent('click', cb.bind(null, shiftId));
       }
       else if(i == itemsAndActions.length-1)
       {
         this.pluginMenu.getElement('.SSMenuBottomItem span').setText(txt);
+        this.pluginMenu.getElement('.SSMenuBottomItem').removeEvents();
         this.pluginMenu.getElement('.SSMenuBottomItem').addEvent('click', cb.bind(null, shiftId));
       }
       else
@@ -228,6 +230,7 @@ var Console = new Class({
         var newItem = this.menuItemModel.clone(true);
         
         newItem.getElement('span').setText(txt);
+        newItem.removeEvents();
         newItem.addEvent('click', cb.bind(null, shiftId));
 
         newItem.injectBefore(this.pluginMenu.getElement('.SSMenuBottomItem'));
@@ -883,7 +886,8 @@ var Console = new Class({
       {
         var pluginDiv = $(this.doc.createElement('div'));
         pluginDiv.addClass('plugin');
-        
+        pluginDiv.addClass('pg'+plugin); // tag with plugin name
+
         pluginDiv.addClass(plugins[plugin].menuIconForShift(aShift.id));
         pluginDiv.addEvent('click', function(_evt) {
           var evt = new Event(_evt);
@@ -891,7 +895,8 @@ var Console = new Class({
           // prevent the click from triggering item selection in console
           evt.stop();
 
-          //this.fireEvent('selectTrails', aShift.id);
+          console.log('addEvent!');
+
           this.setPluginMenuItems(aShift.id, plugins[plugin].menuForShift(aShift.id));
           this.showPluginMenu(plugins[plugin], target);
         }.bind(this));

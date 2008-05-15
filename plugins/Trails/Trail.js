@@ -1,4 +1,3 @@
-
 // for check if window clicks occur during deletion
 var gDeleteFocusNode = null;
 var gFocusedNode = null;
@@ -8,6 +7,10 @@ var gNodeNumber = 0;
 var Trail = new Class({
   initialize : function( _focusedShift, json )
   {
+    // clear these globals
+    gFocusedNode = null;
+    gHoveredNode = null;
+    
     var focusedShift = _focusedShift;
     
     // scroll to offset
