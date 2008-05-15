@@ -619,6 +619,7 @@ var TrailPage = new Class({
       // show the link creation button
       this.linkPoint.removeClass( 'TrailPageLinkPoint' );
       this.linkPoint.addClass( 'TrailPageLinkPointLarge' );
+      
       // reveal the minus link point
       this.minusLinkPoint.removeClass( 'hidden' );
       // show the remove button
