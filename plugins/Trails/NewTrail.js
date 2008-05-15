@@ -68,7 +68,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     // load the interface first
     this.showInterface();
-    var newTrail = new Trail(focusedShift, trailJson);
+    this.setCurrentTrail(new Trail(focusedShift, trailJson));
     var newPage = new TrailPage( kNULL, {
       id: 'node3',
       title : 'shiftspace',
@@ -96,6 +96,16 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   loadRecentlyViewShifts: function(trail)
   {
     
+  },
+  
+  setCurrentTrail: function(newTrail)
+  {
+    this.__currentTrail__ = newTrail;
+  },
+  
+  currentTrail: function()
+  {
+    return this.__currentTrail__;
   },
   
   /*

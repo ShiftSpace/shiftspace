@@ -91,3 +91,11 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
     return this.frame;
   }
 });
+
+ShiftSpace.Input = ShiftSpace.Element.extend({
+  // Create an iframe
+  // Apply the styles
+  // Create the requested input field
+  // set the input field / textarea to be position absolute, left top right bottom all 0
+  // set up event handlers so they get pass up to the developer
+});
