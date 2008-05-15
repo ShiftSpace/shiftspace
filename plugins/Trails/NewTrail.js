@@ -13,10 +13,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     includes: ['Trail.js', 'TrailLink.js', 'TrailPage.js', 'TrailNavPage.js', 'TrailNav.js', 'Vector.js']
   },
   
-  initialize : function(json)
+  setup : function(json)
   {
-    // set the trails plugin to be of the menu type
-    this.parent(json);
   },
   
   createTrail: function(shiftId)
@@ -30,7 +28,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     json[shiftId].loc = {x:0, y:0};
     
     // load the shift with the trail focused
-    var aTrail = new Trail(shiftId, json);
+    this.setCurrentTrail(new Trail(shiftId, json));
   },
   
   loadTrail: function(trailId)
@@ -120,7 +118,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   */
   menuIconForShift: function(shiftId)
   {
-    if(this.data[shiftId])
+    if(false)
     {
       return "SSTrailsHasTrailsIcon";
     }

@@ -32,8 +32,8 @@ ShiftSpace.Plugin = new Class({
     ShiftSpace.Console.addEvent('select' + this.attributes.name, this.menuForShift.bind(this));
     ShiftSpace.Console.addEvent('closeMenu', this.closeMenu.bind(this));
 
-    // load data & register
-    this.loadData();
+    registerPlugin(this);
+    this.setup();
   },
   
   serverCall: function(method, params, callback)
@@ -71,7 +71,7 @@ ShiftSpace.Plugin = new Class({
     this.data = {};
     
     // register ourselves after our data is loaded
-    registerPlugin(this);
+
   },
   
   onDataLoad: function(data)
@@ -82,33 +82,6 @@ ShiftSpace.Plugin = new Class({
   onCssLoad: function()
   {
   },
-  
-  /*
-    Function : getMenuItems
-      Return the items you want to appear in the console plugin menu when the user
-      clicks your plugin icon.  You should return a hash with two properties, actions
-      and items.  The actions should be another hash of the menu item and it's associated action.
-      The items should be any plugin items which are attached to the shift with the id.
-    
-    Parameter: shiftId
-      The id of the shift that the plugin was selected on.
-  */
-  getMenuItems : function(shiftId) {},
-  
-  /*
-    Save a row
-  */
-  saveObject : function() {},
-  
-  /*
-    Delete a row
-  */
-  deleteObject : function() {},
-  
-  /*
-    Update a row
-  */
-  updateObject : function() {},
   
   enterFullScreen: function() {
     if(SSCanGoFullScreen() && !ShiftSpaceIsHidden())
