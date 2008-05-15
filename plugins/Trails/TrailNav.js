@@ -3,10 +3,11 @@ var TrailNav = new Class({
  {
    this.setOptions( options );
    
+   console.log('================================================');
+   console.log(Trails);
+   
    // add the loading icon
    this.showLoader();
-   
-   this.shifts = this.options.shifts;
    
    this.element = $('trail-navitems');
    // clear out any previous items
@@ -14,6 +15,10 @@ var TrailNav = new Class({
 
    // create the nav pages and list them
    var temp = TrailNav.parse( json );
+   
+   console.log('----------------------------------------------------------------');
+   console.log(json);
+   console.log(temp);
    
    // store the pages array
    this.pages = temp.pages;

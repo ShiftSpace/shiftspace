@@ -133,6 +133,11 @@ ShiftSpace.Plugin = new Class({
     {
       return false;
     }
+  },
+  
+  recentlyViewedShifts: function()
+  {
+    return getRecentlyViewedShifts();
   }
   
 });

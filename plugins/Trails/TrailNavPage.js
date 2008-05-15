@@ -13,11 +13,12 @@ var TrailNavPage = new Class({
     this.icon = this.options.icon;
     this.thumb = this.options.thumb;
     this.descr = this.options.descr;
+    this.space = this.options.space;
     
     this.thumbEl = new Element('img');
     this.thumbEl.addClass('TrailNavPageView');
     this.thumbEl.setProperty( 'width', 80 );
-    this.thumbEl.setProperty( 'src', this.thumb );
+    this.thumbEl.setProperty( 'src', Trails.attributes.dir+'images/'+this.space+'_thumb.png' );
     
     this.thumbEl.injectInside( this.element );
     
@@ -79,7 +80,7 @@ var TrailNavPage = new Class({
         var others = this.parentNav.pages.filter( function( x ) { return x != this }.bind( this ) );
         others.each( function( x ) { if( x.isZoomed ) x.unzoom(); } );
         
-        nav.pages.each( function( p ) {
+        this.parentNav.pages.each( function( p ) {
           p.descriptionEl.setStyle( 'display', 'none' );
         });
         
@@ -119,7 +120,7 @@ var TrailNavPage = new Class({
       {
         this.isZoomed = false;
 
-        nav.pages.each( function( p ) {
+        this.parentNav.pages.each( function( p ) {
           p.descriptionEl.setStyle( 'display', 'none' );
         });
 
@@ -159,10 +160,12 @@ var TrailNavPage = new Class({
     var clone = new Element('div');
     clone.injectInside( document.body );
     clone.addClass( 'TrailNavClone' );
+    
     clone.setStyles( {
       left : this.element.getPosition().x - scroll.x,
       background : 'transparent url(' + this.thumb + ') no-repeat'
     });
+    
     var shiftIcon = new Element('img');
     shiftIcon.addClass( 'TrailSpaceThumbExpanded' );
     shiftIcon.setProperty( 'src', this.icon );

@@ -608,7 +608,7 @@ var TrailPage = new Class({
   /*
     Handle zoom completion.
   */
-   zoomComplete : function()
+  zoomComplete : function()
   {
     // set the vars
     this.isZooming = false;

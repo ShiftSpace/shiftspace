@@ -69,6 +69,14 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     // load the interface first
     this.showInterface();
     var newTrail = new Trail(focusedShift, trailJson);
+    var newPage = new TrailPage( kNULL, {
+      id: 'node3',
+      title : 'shiftspace',
+      url : 'http://www.shiftspace.org',
+      thumb : this.attributes.dir+'images/notes_thumb.png',
+      loc : { x: 500, y: 100 },
+      space : 'notes',
+    });
   },
   
   saveTrail: function(trail)
@@ -193,9 +201,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.navBg.injectInside(document.body);
     this.nav.injectInside(document.body);
     
-    // Create a new nav object
-    this.navObject = new TrailNav();
-    
     // store a drag reference just in case we want to stop the dragging behavior
     this.scrollDragRef = this.scrollArea.makeDraggable({
       onStart: function()
@@ -230,6 +235,12 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     }.bind(this));
   },
   
+  loadNav: function()
+  {
+    delete this.navObj;
+    this.navObj = new TrailNav(this.recentlyViewedShifts());
+  },
+  
   showInterface: function(shiftId)
   {
     if(!this.interfaceIsBuilt())
@@ -239,10 +250,14 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
     if(this.enterFullScreen())
     {
+      // put the interface back onto the DOM
       this.clippingArea.injectInside(document.body);
       this.controls.injectInside(document.body);
       this.navBg.injectInside(document.body);
       this.nav.injectInside(document.body);
+      
+      // load the name
+      this.loadNav();
     }
   },
   

@@ -80,6 +80,7 @@ var ShiftSpace = new (function() {
     var plugins = {};
     var displayList = [];
     var pinWidgets = [];
+    var __recentlyViewedShifts__ = {};
     
     // Holds the id of the currently focused shift
     var focusedShiftId = null;
@@ -232,6 +233,11 @@ var ShiftSpace = new (function() {
       }
       
       return (content && Json.evaluate(content)) || null;
+    }
+    
+    function getRecentlyViewedShifts()
+    {
+      return __recentlyViewedShifts__;
     }
     
     function spaceForShift(shiftId)
@@ -627,6 +633,9 @@ var ShiftSpace = new (function() {
         // if not a new shift just show the shift
         if(shiftId.search('newShift') == -1)
         {
+          // store a reference to this
+          __recentlyViewedShifts__[shift.id] = shiftJson;
+          
           spaces[shift.space].showShift(shiftJson);
           focusShift(shift.id);
         }
@@ -640,7 +649,6 @@ var ShiftSpace = new (function() {
       // call onShiftShow
       spaces[shift.space].onShiftShow(shiftId);
     },
-    
     
     /*
     
