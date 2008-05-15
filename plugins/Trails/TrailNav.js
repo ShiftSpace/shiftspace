@@ -2,10 +2,7 @@ var TrailNav = new Class({
  initialize : function( json, options )
  {
    this.setOptions( options );
-   
-   console.log('================================================');
-   console.log(Trails);
-   
+
    // add the loading icon
    this.showLoader();
    
@@ -15,10 +12,6 @@ var TrailNav = new Class({
 
    // create the nav pages and list them
    var temp = TrailNav.parse( json );
-   
-   console.log('----------------------------------------------------------------');
-   console.log(json);
-   console.log(temp);
    
    // store the pages array
    this.pages = temp.pages;

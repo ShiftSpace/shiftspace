@@ -44,11 +44,11 @@ var TrailPage = new Class({
     this.loc = this.options.loc;
     this.url = this.options.url
     this.nodes = this.options.nodes;
-    this.thumb = this.options.thumb;
     this.user = this.options.user;
     this.space = this.options.space;
-    this.icon = this.options.icon;
-    
+    this.icon = Trails.attributes.dir+'images/'+this.space+'_trailsicon.png';
+    this.thumb = Trails.attributes.dir+'images/'+this.space+'_thumb.png';
+
     // make sure we have an element if not create one
     // and add it to the page
     if( el == kNULL || el == undefined || el == null )

@@ -19,22 +19,21 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.parent(json);
   },
   
-  newTrail: function(shiftId)
+  createTrail: function(shiftId)
   {
-    var trailJson = {};
-    trailJson[shiftId] = {
-      title : 'shiftspace',
-      url : 'http://www.shiftspace.org',
-      thumb : this.attributes.dir+'images/highlight_thumb.png',
-      loc : { x: 200, y: 200 },
-      space : 'highlight'
-    };
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CREATE TRAIL ' + shiftId);
+    // load the interface first
+    this.showInterface();
     
-    // var loadData
-    var aTrail = new Trail(shiftId, trailJson);
+    var json = {};
+    json[shiftId] = this.getShift(shiftId);
+    json[shiftId].loc = {x:0, y:0};
+    
+    // load the shift with the trail focused
+    var aTrail = new Trail(shiftId, json);
   },
   
-  loadTrail: function()
+  loadTrail: function(trailId)
   {
     // get the trail
     /*
@@ -88,12 +87,19 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     }, this.onTrailSave.bind(this));
   },
   
-  onTrailSave: function(msg)
+  onTrailSave: function(json)
   {
     
   },
   
-  loadRecentlyViewShifts: function(trail)
+  trailsWithShift: function(shiftId)
+  {
+    this.serverCall('trailsWithShift', {
+      id: shiftId
+    }, this.onTrailsWithShiftLoad.bind(this));
+  },
+  
+  onTrailsWithShiftLoad: function(json)
   {
     
   },
@@ -131,13 +137,15 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   menuForShift: function(shiftId)
   {
+    //this.trailsWithShift
+    
     // this will be created dynamically
     return [
       {
         text: "Create a Trail",
         callback: function(shiftId)
         {
-          this.showInterface(shiftId);
+          this.createTrail(shiftId);
         }.bind(this)
       },
       {
@@ -224,12 +232,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         this.scrollArea.addClass('SSNormal');
       }.bind(this)
     });
-    
-    // Create a test trail
-    console.log('Build interface >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    
-    //test.intialize()
-    
+
     this.attachEvents();
   },
   
@@ -248,6 +251,9 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   loadNav: function()
   {
     delete this.navObj;
+    
+    // get the recently view shifts that aren't already on the page
+
     this.navObj = new TrailNav(this.recentlyViewedShifts());
   },
   

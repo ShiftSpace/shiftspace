@@ -783,13 +783,10 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     
     if(this.getPinRef())
     {
-      if(this.isPinned())
-      {
-        this.frame.removeClass('SSFrameBorder');
-      }
-      else
+      if(!this.isPinned())
       {
         this.pin(this.getPinRef());
+        this.frame.removeClass('SSFrameBorder');
       }
     }
   },

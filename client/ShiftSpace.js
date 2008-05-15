@@ -237,7 +237,12 @@ var ShiftSpace = new (function() {
     
     function getRecentlyViewedShifts()
     {
-      return __recentlyViewedShifts__;
+      var copy = {};
+      for(shiftId in __recentlyViewedShifts__)
+      {
+        copy[shiftId] = __recentlyViewedShifts__[shiftId];
+      }
+      return copy;
     }
     
     function spaceForShift(shiftId)

@@ -135,6 +135,19 @@ ShiftSpace.Plugin = new Class({
     }
   },
   
+  getShift: function(shiftId)
+  {
+    var temp = getShiftContent(shiftId);
+    var copy = {};
+    
+    for(prop in temp)
+    {
+      copy[prop] = temp[prop];
+    }
+    
+    return copy;
+  },
+  
   recentlyViewedShifts: function()
   {
     return getRecentlyViewedShifts();
