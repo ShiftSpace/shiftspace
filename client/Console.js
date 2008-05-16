@@ -42,12 +42,14 @@ var Console = new Class({
     this.frame.injectInside(document.body);
     
     this.resizer = new ShiftSpace.Element('div', {
-      'styles': {
+      'id': 'SSShiftConsoleResizer',
+      'styles': 
+      {
         position: 'fixed',
         bottom: 142,
         left: 25,
-        height: 8,
-        cursor: 'n-resize',
+        height: 11,
+        cursor: 'ns-resize',
         'z-index': 1000000
       }
     });
@@ -68,7 +70,7 @@ var Console = new Class({
             width: window.getWidth(),
             height: window.getHeight(),
             'z-index': 1000001,
-            cursor: 'n-resize'
+            cursor: 'ns-resize'
           }
         });
         this.resizeMask.injectInside(document.body);
@@ -85,7 +87,7 @@ var Console = new Class({
   },
     
   buildNotifier: function() {
-        
+
     this.notifier = new ShiftSpace.Element('div', {
       styles: {
         position: 'fixed',
@@ -95,6 +97,12 @@ var Console = new Class({
         width: 30,
         height: 32
       }
+    });
+    
+    // make the console resizable
+    this.frame.makeResizable({
+      handle: this.notifier,
+      modifiers: {x: null, y:'top'}
     });
         
     var img = new ShiftSpace.Element('img', {
