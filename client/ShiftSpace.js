@@ -580,23 +580,40 @@ var ShiftSpace = new (function() {
         var viewPort = window.getSize().viewPort;
         var windowScroll = window.getSize().scroll;
         
+        var leftScroll = (windowScroll.x > pos.x-25);
+        var rightScroll = (windowScroll.x < pos.x-25);
+        var downScroll = (windowScroll.y < pos.y-25);
+        var upScroll = (windowScroll.y > pos.y-25);
+
         if(pos.x > viewPort.x+windowScroll.x ||
            pos.y > viewPort.y+windowScroll.y ||
            pos.x < windowScroll.x ||
            pos.y < windowScroll.y)
         {
-          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> scroll, ' + pos.x + ', ' + pos.y);
           var scrollFx = new Fx.Scroll(window, {
             duration: 1000,
             transition: Fx.Transitions.Cubic.easeIn,
             onComplete: function()
             {
-              var winScroll = window.getSize().scroll;
-              if(windowScroll.x < pos.x-25) window.scrollTo(pos.x-25, 0);
-              if(windowScroll.y < pos.y-25) window.scrollTo(0, pos.y-25);
+              // correct for safari
+              if(window.webkit)
+              {
+                var winScroll = window.getSize().scroll;
+                if((rightScroll && windowScroll.x < pos.x-25) ||
+                   (leftScroll && windowScroll.x > pos.x-25)) 
+                {
+                  window.scrollTo(pos.x-25, 0);
+                }
+                if((downScroll && windowScroll.y < pos.y-25) ||
+                   (upScroll && windowScroll.y > pos.y-25))
+                {
+                  window.scrollTo(0, pos.y-25);
+                }
+              }
             }
           });
 
+          console.log('scrolling to ' + (pos.x-25) + ", " + (pos.y-25));
           scrollFx.scrollTo(pos.x-25, pos.y-25);
         }
       }

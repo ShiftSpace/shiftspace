@@ -125,19 +125,23 @@ body#SSNoteShiftFrameBody
   padding: 2px 2px 3px;
   background-color: #F5FB9B;
   border: 1px solid #E5EB8B;
+  text-decoration: none;
 }
 
 .SSNoteShiftBottom input[type="button"]:hover{
   color: #706357;
   border: 1px solid #776929;
+  text-decoration: none;
 }
 
 .SSNoteShiftBottom input[type="button"]:active {
   border: 1px solid #776929;
+  text-decoration: none;
 }
 
 .SSNoteShiftBottom input[value="save"]{
   font-weight: bold;
+  text-decoration: none;
 }
 
 .SSNoteShiftResize
