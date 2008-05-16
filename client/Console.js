@@ -62,6 +62,7 @@ var Console = new Class({
       onStart: function() {
         this.startDrag = this.resizer.getPosition().y;
         this.startHeight = this.frame.getSize().size.y;
+        // to prevent things from dropping into the iframe.
         this.resizeMask = new ShiftSpace.Element('div', {
           styles: {
             position: 'fixed',

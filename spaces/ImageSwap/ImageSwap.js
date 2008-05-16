@@ -250,8 +250,12 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   {
     // set the image to that property
     this.pin(this.element, pinRef);
-    // save
-    this.save();
+
+    if(this.isBeingEdited())
+    {
+      // save
+      this.save();
+    }
   },
   
   pin : function(element, pinRef)
@@ -414,7 +418,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     });
     
     this.attachEvents();
-  }/*,
+  },
   
   getMainView: function()
   {
@@ -423,7 +427,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     {
       return this.parent();
     }
-  }*/
+  }
   
 });
 

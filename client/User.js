@@ -45,6 +45,11 @@ var User = new Class({
           callback(json);
         }
       }.bind(this));
+    },
+    
+    isLoggedIn: function()
+    {
+      return (username != false);
     }
   
 });
