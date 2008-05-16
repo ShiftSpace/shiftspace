@@ -247,7 +247,7 @@ var ShiftSpace = new (function() {
     
     function getUrlForShift(shiftId)
     {
-      console.log(shifts[shiftId]);
+      //console.log(shifts[shiftId]);
       return shifts[shiftId].href;
     }
     
@@ -599,6 +599,10 @@ var ShiftSpace = new (function() {
 
           scrollFx.scrollTo(pos.x-25, pos.y-25);
         }
+      }
+      else
+      {
+        console.log('+++++++++++++++++++++++++++++++++++++++ NO MAIN VIEW');
       }
     }
     

@@ -414,7 +414,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     });
     
     this.attachEvents();
-  },
+  }/*,
   
   getMainView: function()
   {
@@ -423,7 +423,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     {
       return this.parent();
     }
-  }
+  }*/
   
 });
 

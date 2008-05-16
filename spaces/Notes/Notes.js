@@ -244,6 +244,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.pinWidgetDiv.setStyle('display', '');
     if(this.inputArea)
     {
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> remove readonly');
       this.inputArea.removeProperty('readonly');
     }
     this.dragRef.attach();
@@ -372,6 +373,11 @@ var NotesShift = ShiftSpace.Shift.extend({
      this.fireEvent('onFocus', this);
     }.bind(this));
     this.inputArea.setProperty('readonly', 1);
+    
+    if(this.isBeingEdited())
+    {
+      this.edit();
+    }
   },
   
   /*

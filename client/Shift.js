@@ -514,7 +514,7 @@ ShiftSpace.Shift = new Class({
   */
   getPinTarget: function()
   {
-    console.log(this.pinTarget);
+    //console.log(this.pinTarget);
     return this.pinTarget;
   },
   

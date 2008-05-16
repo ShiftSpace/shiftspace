@@ -78,8 +78,10 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   
   setPosition: function(position)
   {
+    /*
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     console.log(position);
+    */
   },
   
   setMode : function(newMode)
