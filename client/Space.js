@@ -316,6 +316,7 @@ ShiftSpace.Space = new Class({
         cShift._show();
         cShift.show();
         cShift.setIsVisible(true);
+        cShift.setIsBeingEdited(false);
       }
       
       // focus the shift
@@ -342,6 +343,7 @@ ShiftSpace.Space = new Class({
       {
         cShift._hide();
         cShift.hide();
+        cShift.setIsBeingEdited(false);
         cShift.setIsVisible(false);
       }
     }

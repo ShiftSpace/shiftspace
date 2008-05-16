@@ -66,6 +66,9 @@ var NotesShift = ShiftSpace.Shift.extend({
         top : json.position.y
       });
     }
+    
+    // store a noteText ref
+    this.noteText = json.noteText;
   },
   
   /*
@@ -162,8 +165,11 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     var pos = this.element.getPosition();
     var size = this.element.getSize();
-    var text = this.inputArea.value.replace(/\n/g, "<br/>");
-    var titleText = this.inputArea.value.replace(/\n/g, '');
+    var text = this.inputArea.getProperty('value').replace(/\n/g, "<br/>");
+    var titleText = this.inputArea.getProperty('value').replace(/\n/g, '');
+    
+    // NOTE: We need to store this for relative pinned notes - David
+    this.noteText = text;
     
     return {
       position : pos,
@@ -214,6 +220,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   edit: function()
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> edit');
     this.parent();
     this.showEditInterface();
   },
@@ -352,11 +359,11 @@ var NotesShift = ShiftSpace.Shift.extend({
   finishFrame : function()
   {
     var text = "Leave a note";
-    if(this.defaults.noteText)
+    if(this.noteText)
     {
-      text = this.defaults.noteText.replace(/<br\/>/g, "\n");
+      text = this.noteText.replace(/<br\/>/g, "\n");
     }
-    
+  
     // Get document reference and MooToolize the body
     var doc = this.frame.contentDocument;
     this.frameBody = $(doc.body);
@@ -368,12 +375,12 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.inputArea.injectInside( this.frameBody );
     this.inputArea.setProperty('value', text);
     this.inputArea.focus();
-    
+  
     this.inputArea.addEvent('mousedown', function() {
      this.fireEvent('onFocus', this);
     }.bind(this));
     this.inputArea.setProperty('readonly', 1);
-    
+  
     if(this.isBeingEdited())
     {
       this.edit();
