@@ -792,6 +792,9 @@ var TrailPage = new Class({
   */
   deleteLinkMode : function()
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> deleteLinkMode');
+    
+    // not a good idea
     this.parentTrail.deleteMode = true;
 
     // get all the other nodes which need to be deleted

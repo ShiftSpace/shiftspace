@@ -414,6 +414,15 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     });
     
     this.attachEvents();
+  },
+  
+  getMainView: function()
+  {
+    // only return the main view if we are pinned
+    if(this.isPinned())
+    {
+      return this.parent();
+    }
   }
   
 });

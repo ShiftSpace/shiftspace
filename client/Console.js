@@ -783,7 +783,7 @@ var Console = new Class({
     // clone a model shift
     var newEntry = $(this.modelShiftEntry.clone(true));
     
-    var controls = newEntry.getElement('.controls')
+    var controls = newEntry.getElement('.controls');
     
     var icon = ShiftSpace.info(aShift.space).icon;
     var img = newEntry.getElement('.expander img');
@@ -829,19 +829,19 @@ var Console = new Class({
     
     newEntry.getElement('.expander').addEvent('click', function(e) {
       var event = new Event(e);
-      event.stopPropagation();
+      event.stop();
       slideFx.toggle();
       if (!newEntry.hasClass('expanded')) 
       {
         newEntry.addClass('expanded');
         newEntry.removeClass('hover');
-        img.src = server + 'images/Console/arrow-open.gif';
+        newEntry.getElement('.expander img').setProperty('src', server + 'images/Console/arrow-open.gif');
       } 
       else 
       {
         newEntry.removeClass('expanded');
         newEntry.addClass('hover');
-        img.src = server + 'images/Console/arrow-close.gif';
+        newEntry.getElement('.expander img').setProperty('src', server + 'images/Console/arrow-close.gif')
       }
     });
     

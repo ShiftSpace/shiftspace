@@ -570,8 +570,6 @@ var ShiftSpace = new (function() {
         space.editShift(shiftId);
       }
 
-      //space.hideInterface();
-
       // scroll the window if necessary
       var mainView = space.mainViewForShift(shiftId);
       
@@ -587,6 +585,7 @@ var ShiftSpace = new (function() {
            pos.x < windowScroll.x ||
            pos.y < windowScroll.y)
         {
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> scroll, ' + pos.x + ', ' + pos.y);
           var scrollFx = new Fx.Scroll(window, {
             duration: 1000,
             transition: Fx.Transitions.Cubic.easeIn,
