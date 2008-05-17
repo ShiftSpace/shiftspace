@@ -24,9 +24,21 @@ var TrailNavPage = new Class({
     
     this.createDescription();
 
-    // set up even handlers
+    // handle mouseenter
     this.element.addEvent( 'mouseenter', this.zoom.bind( this ) );
+    this.element.addEvent('mouseover', function(_evt) {
+      var evt = new Event(_evt);
+      this.zoom();
+    }.bind(this));
+
+    // handle mouseleave
     this.element.addEvent( 'mouseleave', this.unzoom.bind( this ) );
+    this.element.addEvent('mouseout', function(_evt) {
+      var evt = new Event(_evt);
+      this.unzoom();
+    }.bind(this));
+
+    // handle dragging a shift onto the stage
     this.element.addEvent( 'mousedown', this.startDrag.bind( this ) );
   },
     
@@ -66,6 +78,8 @@ var TrailNavPage = new Class({
   
   zoom : function()
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> mouse enter');
+    
     // set up animation for the size
     var sizeFX = this.thumbEl.effects({
       duration : 300,
