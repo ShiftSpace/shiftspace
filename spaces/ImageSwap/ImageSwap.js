@@ -193,6 +193,14 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     // manage the main view
     this.manageElement(this.element);
     
+    // handle legacy content
+    if(json.legacy)
+    {
+      var target = $$('img[src='+json.swapped+']');
+      json.pinRef = ShiftSpace.Pin.toRef(target);
+      json.src = json.swapped;
+    }
+
     // get the scroll
     if(json.scroll)
     {
@@ -201,7 +209,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
         top: json.scroll.y
       });
     }
-    
+  
     this.setPinRef(json.pinRef);
     this.setZoom(json.zoom || 0);
     this.setSrc(json.src);

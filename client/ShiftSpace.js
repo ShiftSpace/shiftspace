@@ -238,7 +238,18 @@ var ShiftSpace = new (function() {
         //content = content.replace(/"/g,);
       }
       
-      return (content && Json.evaluate(content)) || null;
+      var obj = null;
+      try
+      {
+        obj = Json.evaluate(content);
+      }
+      catch(err)
+      {
+        console.log(content);
+        //throw __SSCouldNotEvalShiftContentException__
+      }
+      
+      return obj;
     }
     
     function getAllShiftContent()
