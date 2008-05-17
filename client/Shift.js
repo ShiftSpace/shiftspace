@@ -606,6 +606,11 @@ ShiftSpace.Shift = new Class({
   failedView: function()
   {
     // TODO: Show the failed view, if this shift can't be shown
+  },
+  
+  errorView: function(err)
+  {
+    
   }
 });
 

@@ -465,6 +465,7 @@ div#trail-close:hover
   width: 160px;
   height: 100px;
   bottom: 10px;
+  z-index: 1000002;
 }
 
 .TrailNavPageDescription

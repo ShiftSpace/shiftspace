@@ -82,6 +82,9 @@ var ShiftSpace = new (function() {
     var pinWidgets = [];
     var __recentlyViewedShifts__ = {};
     
+    // Exceptions
+    var __SSPinOpException__ = "__SSPinOpException__";
+    
     // Holds the id of the currently focused shift
     var focusedShiftId = null;
     var focusedSpace = null;
@@ -679,7 +682,15 @@ var ShiftSpace = new (function() {
           __recentlyViewedShifts__[shift.id] = shiftJson;
           
           // wrap this in a try catch
-          spaces[shift.space].showShift(shiftJson);
+          try
+          {
+            spaces[shift.space].showShift(shiftJson);
+          }
+          catch(err)
+          {
+            console.log('Exception: ' + Json.toString(err));
+          }
+          
           focusShift(shift.id);
         }
         else
@@ -1144,17 +1155,17 @@ var ShiftSpace = new (function() {
       
       var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
       
-      if(!targetNode)
-      {
-        // throw an exception
-        
-      }
-      
       // pinRef has become active set targetElement and element properties
       $extend(pinRef, {
         'element': element,
         'targetElement': targetNode
       });
+      
+      if(!targetNode)
+      {
+        // throw an exception
+        throw {type:__SSPinOpException__, data:pinRef};
+      }
       
       switch(pinRef.action)
       {
