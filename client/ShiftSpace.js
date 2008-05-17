@@ -676,12 +676,7 @@ var ShiftSpace = new (function() {
       shiftJson.id = shiftId;
       
       // fix legacy content
-      if(shift.space == 'notes')
-      {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> LEGACY');
-        shift.space = shift.space.capitalize();
-        shiftJson.legacy = true;
-      }
+      shiftJson.legacy = shift.legacy;
       
       if (this.info(shift.space).unknown) {
         if (confirm('Would you like to install the space ' + shift.space + '?')) {
@@ -794,6 +789,7 @@ var ShiftSpace = new (function() {
                 if(['notes', 'highlight', 'sourceshift', 'imageswap'].contains(shift.space))
                 {
                   shift.space = shift.space.capitalize();
+                  shift.legacy = true;
                 }
                 if(shift.space == 'Highlight')
                 {
