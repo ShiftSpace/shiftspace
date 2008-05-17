@@ -799,6 +799,14 @@ var ShiftSpace = new (function() {
                 {
                   shift.space += 's';
                 }
+                if(shift.space == 'Sourceshift')
+                {
+                  shift.space == 'SourceShift';
+                }
+                if(shift.space == 'Imageswap')
+                {
+                  shift.space = 'ImageSwap';
+                }
             });
             //console.log('(loadshifts)-----------------------------------------------------');
             //console.log(json);
