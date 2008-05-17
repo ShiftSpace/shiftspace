@@ -18,6 +18,7 @@ ShiftSpace.Shift = new Class({
   */
   initialize: function(_json)
   {
+    console.log('++++++++++++++++++++++++++++++++++ INITIALIZE');
     this.setOptions(this.getDefaults(), _json);
     
     // private id var
@@ -81,6 +82,7 @@ ShiftSpace.Shift = new Class({
     this.addEvent( 'onFocus', this.userFocused.bind( this ) );
     
     // call setup
+    console.log('================================================ calling setup');
     this.setup(_json);
     
     // TODO: should pin if it's possible to pin - David
@@ -88,7 +90,10 @@ ShiftSpace.Shift = new Class({
     return this;
   },
   
-  setup: function(json) {},
+  setup: function(json) 
+  {
+    console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SETUP');
+  },
   
   /*
     Function: setFocusRegions

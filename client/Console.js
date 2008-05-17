@@ -686,7 +686,7 @@ var Console = new Class({
   refresh: function() {
     if (!this.doc || !this.doc.getElementById('top')) {
       // Need to wait a moment longer while things are being built
-      setTimeout(this.resize.bind(this), 50);
+      if(this.resize) setTimeout(this.resize.bind(this), 50);
     } else {
       var top = $(this.doc.getElementById('top').parentNode);
       var bottom = $(this.doc.getElementById('bottom'));

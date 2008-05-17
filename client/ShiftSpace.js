@@ -58,6 +58,8 @@ var ShiftSpace = new (function() {
     if (getValue('server', false)) {
       server = getValue('server', 'http://api.shiftspace.org/');
     }
+    server = "http://metatron.shiftspace.org/~dan/shiftspace/";
+    
     // get Dan's input on how to set this
     if(typeof ShiftSpaceSandBoxMode != 'undefined')
     {
@@ -231,8 +233,9 @@ var ShiftSpace = new (function() {
       
       if(content)
       {
-        content = content.replace('\n', '\\n');
-        content = content.replace('\r', '\\r');
+        content = content.replace(/\n/g, '\\n');
+        content = content.replace(/\r/g, '\\r');
+        //content = content.replace(/"/g,);
       }
       
       return (content && Json.evaluate(content)) || null;
@@ -515,14 +518,17 @@ var ShiftSpace = new (function() {
         }
         catch(err)
         {
-          console.error(err);
+          switch(err)
+          {
+            
+          }
         }
         
         // call onShiftCreate
         spaces[spaceName].onShiftCreate(tempId);
 
         if(!options.deferred)
-        {
+        {          
           spaces[spaceName].showShift(shiftJson);
           // call onShiftShow
           spaces[spaceName].onShiftShow(tempId);
@@ -669,6 +675,14 @@ var ShiftSpace = new (function() {
       var shiftJson = getShiftContent(shiftId);
       shiftJson.id = shiftId;
       
+      // fix legacy content
+      if(shift.space == 'notes')
+      {
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> LEGACY');
+        shift.space = shift.space.capitalize();
+        shiftJson.legacy = true;
+      }
+      
       if (this.info(shift.space).unknown) {
         if (confirm('Would you like to install the space ' + shift.space + '?')) {
           this.installSpace(shift.space, shiftId);
@@ -682,14 +696,15 @@ var ShiftSpace = new (function() {
           __recentlyViewedShifts__[shift.id] = shiftJson;
           
           // wrap this in a try catch
-          try
-          {
+          //try
+          //{
+            console.log('showshift');
             spaces[shift.space].showShift(shiftJson);
-          }
-          catch(err)
-          {
-            console.log('Exception: ' + Json.toString(err));
-          }
+          //}
+          //catch(err)
+          //{
+            //console.log('Exception: ' + Json.toString(err));
+          //}
           
           focusShift(shift.id);
         }
@@ -1161,11 +1176,11 @@ var ShiftSpace = new (function() {
         'targetElement': targetNode
       });
       
-      if(!targetNode)
-      {
+      //if(!targetNode)
+      //{
         // throw an exception
-        throw {type:__SSPinOpException__, data:pinRef};
-      }
+        throw(__SSPinOpException__);
+      //}
       
       switch(pinRef.action)
       {

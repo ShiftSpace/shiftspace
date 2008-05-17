@@ -283,6 +283,9 @@ ShiftSpace.Space = new Class({
   */
   showShift : function( aShift ) 
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> showShift');
+    console.log(aShift);
+    
     if($type(aShift) != 'object')
     {
       console.error("showShift called with non-object. Perhaps you passed a shift id accidentally");

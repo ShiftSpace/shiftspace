@@ -24,6 +24,13 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   setup : function(json)
   {
+    console.log('+++++++++++++++++++++++++++++ setup NOTES');
+    console.log(json);
+    if(json.legacy)
+    {
+      json.position = {x: json.x, y: json.y};
+    }
+    
     // build the DOM
     this.build();
     
@@ -61,10 +68,13 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       // otherwise set the position of the note to the mouse
       // or the last saved absolute position
-      this.element.setStyles({
-        left : json.position.x,
-        top : json.position.y
-      });
+      if(json.position)
+      {
+        this.element.setStyles({
+          left : json.position.x,
+          top : json.position.y
+        });
+      }
     }
     
     // store a noteText ref
