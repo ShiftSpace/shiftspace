@@ -38,7 +38,7 @@ ShiftSpace.Plugin = new Class({
   
   serverCall: function(method, params, callback)
   {
-    serverCall('plugins.'+this.attributes.name.toLowerCase()+'.'+method, params, callback);
+    serverCall('plugins.'+this.attributes.name+'.'+method, params, callback);
   },
   
   setup: function(options) {},
