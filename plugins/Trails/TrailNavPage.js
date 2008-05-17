@@ -211,10 +211,23 @@ var TrailNavPage = new Class({
   */
   userDrop : function()
   {
-    if( gFocusedNode ) gFocusedNode.unzoom();
+    console.log('userDrop');
+    if( gFocusedNode )
+    {
+      gFocusedNode.unzoom();
+      /*
+      gFocusedNode = null;
+      gHoveredNode = null;
+      */
+    }
     
+    // get the scroll offset of the background
+    var scrollOffset = $('SSTrailsPlugInScrollArea').getPosition();
+    var diff = {x: -500000-scrollOffset.x, y: -500000-scrollOffset.y};
+    var pos = this.clone.getPosition();
+
     // add a loction property
-    this.options.loc = this.clone.getPosition();
+    this.options.loc = {x: pos.x+diff.x, y: pos.y+diff.y};
     
     // add this to the current trail
     Trails.currentTrail().addShift( this.options );

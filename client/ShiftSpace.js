@@ -1742,8 +1742,6 @@ var ShiftSpace = new (function() {
         // this needs to be smarter, only works on directory specific urls
         css = css.replace(/url\(([^)]+)\)/g, 'url(' + dir + '/$1)');
         
-        //console.log(css.match(/url\(([^)]+)\)/g));
-        
         // if it's a frame load it into the frame
         if(frame)
         {
@@ -1829,9 +1827,6 @@ var ShiftSpace = new (function() {
     
     return this;
 })();
-
-// Where other people's code lives
-//var __ShiftSpaceExternal__ = {};
 
 // Only run in the top-most frame
 // This doesn't work in Safari for some reason

@@ -79,10 +79,29 @@ var TrailPage = new Class({
       el.setStyle( 'height', kPageMinSize.height );
       
       // add the zoom event
-      el.addEvent( 'mouseenter', function( e ) {
-        this.zoom();
-      }.bind( this ) );
-      el.addEvent( 'mouseleave', this.unzoom.bind( this ) );
+      el.addEvent('mouseenter', this.zoom.bind(this));
+      el.addEvent('mouseover', this.zoom.bind(this));
+      el.addEvent('mouseleave', this.unzoom.bind(this));
+      el.addEvent('mouseout', function(_evt) {
+        var evt = new Event(_evt);
+
+        var contains = false;
+        var children = el.getElements('*');
+        var len = children.length;
+        for(var i = 0; i < len; i++)
+        {
+          if(children[i] == evt.target)
+          {
+            contains = true;
+            continue;
+          }
+        }
+
+        if(!contains || evt.relatedTarget == $('SSTrailsPlugInScrollArea'))
+        {
+          this.unzoom();
+        }
+      }.bind(this));
     }
 
     this.element = el;
@@ -527,6 +546,7 @@ var TrailPage = new Class({
   */
   zoom : function()
   {
+    console.log('zoom');
     if( !this.isZooming && 
         !this.isZoomed &&
         !gFocusedNode &&
