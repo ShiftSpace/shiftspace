@@ -22,6 +22,7 @@
   height: 100%;
   border: none;
   overflow: hidden;
+  z-index: 999999;
 }
 
 div#SSTrailsPlugInScrollArea
@@ -46,7 +47,7 @@ div.SSDrag
 
 #trail-controls 
 {
-  z-index: 101;
+  z-index: 1000000;
   position: absolute;
   left: 0px;
   top: 0px;
@@ -151,6 +152,7 @@ div#trail-close:hover
   height: 90px;
   width: 100%;
   border-top: 1px solid #000;
+  z-index: 1000000;
 }
 
 #trail-nav 
@@ -162,6 +164,7 @@ div#trail-close:hover
   vertical-align: bottom;
   overflow-x: scroll;
   min-width: 100%;
+  z-index: 1000000;
 }
 
 #trail-navitems
@@ -234,7 +237,7 @@ div#trail-close:hover
   
   left: 32px;
   top: 17px;
-
+  
   background-image: url(images/ring_minus_delete.png);
 }
 
