@@ -29,6 +29,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     if(json.legacy)
     {
       json.position = {x: json.x, y: json.y};
+      json.noteText = json.content;
     }
     
     // build the DOM
