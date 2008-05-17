@@ -801,7 +801,7 @@ var ShiftSpace = new (function() {
                 }
                 if(shift.space == 'Sourceshift')
                 {
-                  shift.space == 'SourceShift';
+                  shift.space = 'SourceShift';
                 }
                 if(shift.space == 'Imageswap')
                 {
