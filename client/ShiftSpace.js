@@ -790,6 +790,15 @@ var ShiftSpace = new (function() {
         serverCall('shift.query', params, function(json) {
             json.each(function(shift) {
                 shifts[shift.id] = shift;
+                
+                if(['notes', 'highlight', 'sourceshift', 'imageswap'].contains(shift.space))
+                {
+                  shift.space = shift.space.capitalize();
+                }
+                if(shift.space == 'Highlight')
+                {
+                  shift.space += 's';
+                }
             });
             //console.log('(loadshifts)-----------------------------------------------------');
             //console.log(json);
