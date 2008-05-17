@@ -678,6 +678,7 @@ var ShiftSpace = new (function() {
           // TODO: only add these if the user is logged in
           __recentlyViewedShifts__[shift.id] = shiftJson;
           
+          // wrap this in a try catch
           spaces[shift.space].showShift(shiftJson);
           focusShift(shift.id);
         }
@@ -1142,6 +1143,12 @@ var ShiftSpace = new (function() {
       checkPinReferences(pinRef);
       
       var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
+      
+      if(!targetNode)
+      {
+        // throw an exception
+        
+      }
       
       // pinRef has become active set targetElement and element properties
       $extend(pinRef, {

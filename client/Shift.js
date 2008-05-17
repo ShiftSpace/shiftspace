@@ -202,10 +202,12 @@ ShiftSpace.Shift = new Class({
   show : function(el)
   {
     var mainView = this.getMainView();
+    
     if( mainView )
     {
       mainView.removeClass('SSDisplayNone');
     }
+    
     this.refresh();
     
     this.fireEvent('onShiftShow', this.getId());
@@ -223,6 +225,7 @@ ShiftSpace.Shift = new Class({
   hide : function(el)
   {
     var mainView = this.getMainView();
+
     if( mainView )
     {
       mainView.addClass('SSDisplayNone');

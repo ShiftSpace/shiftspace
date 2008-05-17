@@ -273,6 +273,8 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   show : function()
   {
     this.parent();
+
+    this.element.removeClass('SSDisplayNone');
     
     // detach the dragging
     if(this.dragRef) this.dragRef.detach();
@@ -301,6 +303,8 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   hide : function()
   {
     this.parent();
+    
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HIDE');
     
     if(this.isSwapped && this.getPinRef() && this.getSrc())
     {
