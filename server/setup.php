@@ -6,7 +6,7 @@ require_once "$dir/server/database/database.php";
 // Load the database
 
 $db_filename = '';
-if (preg_match('#sqlite://(.+)#', $db_path, $matches) {
+if (preg_match('#sqlite://(.+)#', $db_path, $matches)) {
     list(, $db_filename) = $matches;
 }
 $db = new Database($db_path);
