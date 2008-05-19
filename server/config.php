@@ -1,5 +1,5 @@
 <?php
 
-$db_filename = 'shiftspace.sqlite3';
+$db_path = "sqlite://$dir/shiftspace.sqlite3";
 
 ?>

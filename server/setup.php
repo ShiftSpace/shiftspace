@@ -4,7 +4,13 @@ require_once "$dir/server/config.php";
 require_once "$dir/server/database/database.php";
 
 // Load the database
-$db = new Database("sqlite://$dir/$db_filename");
+
+$db_filename = '';
+if (preg_match('#sqlite://(.+)#', $db_path, $matches) {
+    list(, $db_filename) = $matches;
+}
+$db = new Database($db_path);
+
 if ($db->tables() == array()) {
     // Setup the initial database configuration
     $db->setup("$dir/server/init.sql");

@@ -31,4 +31,8 @@ function response($status, $payload) {
   }
 }
 
+if ($db->handler->conn) {
+  mysql_close($db->handler->conn);
+}
+
 ?>

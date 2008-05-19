@@ -7,15 +7,15 @@ $readme = '<p>If you want more detailed instructions, take a look at the enclose
 if (!file_exists("$dir/server/config.php")) {
     $status = "Uh oh!";
     $details = "<p class=\"error\">Looks like you're missing your config.php file! You may want to reinstall ShiftSpace.</p>$readme";
-} else if (!file_exists("$dir/$db_filename") &&
-           !is_writable(dirname("$dir/$db_filename"))) {
-    $db_dir = realpath(dirname("$dir/$db_filename"));
+} else if (!empty($db_filename) && !file_exists($db_filename) &&
+           !is_writable(dirname($db_filename))) {
+    $db_dir = realpath(dirname($db_filename));
     $status = "You're almost done installing!";
     $details = "<div class=\"error\"><p>You just need to loosen the file permissions on your ShiftSpace directory so that PHP can create the SQLite database file. Here is the terminal command to use in Mac OS X or other Unix-like systems:</p>
 <pre>cd $db_dir
 chmod 777 .</pre>
    <p>Once you do that, reload this page and your database file will automatically be created and initialized.</p></div><p class=\"info\">Placing your database file in a world-writable directory may be a bad idea for security reasons, especially when it's being shared through a web server. You may want to consider moving the file to a non-public directory and tightening up the file permissions. The only constraint is that the directory be writable by web server's user. Just edit the file config.php to change where the database lives.</p>$readme";
-} else if (!file_exists("$dir/$db_filename")) {
+} else if (!empty($db_filename) && !file_exists($db_filename)) {
     require_once 'setup.php';
     if (empty($db) || $db->tables() == array()) {
         $status = "Hmm ... that's odd.";

@@ -59,13 +59,13 @@ $shifts[] = $announcement;*/
 
 echo '[';
 foreach ($shifts as $n => $shift) {
-    $shift->trails = $db->assoc("
+    /*$shift->trails = $db->assoc("
         SELECT t.url_slug, t.title
         FROM trail AS t,
              trail_shift AS ts
-        WHERE ts.shift_id = $shift->id
+        WHERE ts.shift_id = '$shift->id'
         AND t.id = ts.trail_id
-    ");
+    ");*/
     if ($n > 0) {
         echo ', ';
     }
