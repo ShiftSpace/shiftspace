@@ -45,7 +45,19 @@ var TrailPage = new Class({
     this.href = this.options.href
     this.nodes = this.options.nodes;
     this.user = this.options.username;
-    this.space = this.options.space;
+    
+    if(this.options.space)
+    {
+      this.space = this.options.space;
+    }
+    else
+    {
+      // legacy trail
+      var space = this.icon.split('/').getLast().split('_');
+      if(space == 'highlight') space += 's';
+      this.space = space;
+    }
+    
     this.icon = Trails.attributes.dir+'images/'+this.space.toLowerCase()+'_trailsicon.png';
     this.thumb = Trails.attributes.dir+'images/'+this.space.toLowerCase()+'_thumb.png';
 
