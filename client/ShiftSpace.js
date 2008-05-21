@@ -58,6 +58,7 @@ var ShiftSpace = new (function() {
     if (getValue('server', false)) {
       server = getValue('server', 'http://api.shiftspace.org/');
     }
+    //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     
     // get Dan's input on how to set this
     if(typeof ShiftSpaceSandBoxMode != 'undefined')
@@ -331,8 +332,6 @@ var ShiftSpace = new (function() {
       return hasSSParent;
     }
     this.isSSElement = isSSElement;
-    
-    var openSpaces = [];
     
     var __isHidden__ = false;
     var __shiftSpaceState__ = new Hash();
@@ -1864,8 +1863,9 @@ var ShiftSpace = new (function() {
       return true;
     }
     
-    // In debug mode expose more to the non-sandboxed JavaScript environment 
-    if (debug) {
+    // In sandbox mode, expose something for easier debugging.
+    if (typeof ShiftSpaceSandBoxMode != 'undefined') 
+    {
       this.spaces = spaces;
       this.shifts = shifts;
       this.trails = trails;
