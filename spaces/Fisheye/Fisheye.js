@@ -531,6 +531,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	this.submitterBox = new ShiftSpace.Element('div', {
 		'class' : 'SSDisplayItem',
 	});
+        this.submitterBox.appendText(this.getText('submitter') + ": " + this.shiftAuthor());
 	if (this.shiftAuthor() != this.getUsername()) {
 	  this.submitterIgnore= new ShiftSpace.Element('div', {
 		  'class' : 'SSInlineActiveText',
@@ -543,7 +544,6 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	  }.bind (that));
 	  this.submitterIgnore.injectInside(this.submitterBox);
 	}
-        this.submitterBox.appendText(this.getText('submitter') + ": " + this.shiftAuthor());
         this.submitterBox.injectInside(this.detailsBox);
     },
 
