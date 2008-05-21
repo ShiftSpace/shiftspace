@@ -341,7 +341,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 			else if (el.hasAttribute('fisheyeFunc'))
 			    that[el.getAttribute("fisheyeFunc")](el);
 			else if (el.hasAttribute('fisheyeUserName'))
-			    el.firstChild.nodeValue = this.getUsername();
+			    el.firstChild.nodeValue = that.getUsername();
 		    }
 		}
 	    },
