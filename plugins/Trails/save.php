@@ -34,7 +34,34 @@ if($trailId)
 }
 else
 {
+  // generate a url_slug
   $created = date('Y-m-d H:i:s');
+  
+  // Generate initial URL slug
+  $values = serialize($_POST);
+  $length = 4;
+  $url_slug = substr(md5($values . time()), 0, $length);
+  $exists = $db->value("
+      SELECT id
+      FROM trail
+      WHERE url_slug = '$url_slug'
+  ");
+
+  // Make sure we're not choosing an existing URL slug
+  while ($exists) {
+      $length++;
+      if ($length == 32) {
+          // An exact duplicate shift exists
+          echo "{status: 0, message:'Duplicate trail'}";
+          exit;
+      }
+      $url_slug = substr(md5($values . time()), 0, $length);
+      $exists = $db->value("
+          SELECT id
+          FROM trail
+          WHERE url_slug = '$url_slug'
+      ");
+  }
   
   // insert it
   // Record a general accounting of shift
@@ -43,8 +70,10 @@ else
       (user_id, title, content, url_slug, created, modified, status, version, thumb_status)
       VALUES ($user->id, '$content', '$url_slug', '$created', '$modified', '$status', '$version', '$thumb_status')
   ");
+  
+  $trailId = $url_slug;
 }
 
-echo "{'success':true}";
+echo "{'success':true, 'trailId':$trailId}";
 
 ?>
