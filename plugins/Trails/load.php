@@ -17,7 +17,7 @@ $modified = $created;
 
 // Check to see if it exists in the db, if it doesn't insert it
 // If it does update it
-$trail = $db->value("
+$trail = $db->row("
     SELECT *
     FROM trail
     WHERE url_slug='$trailId'
