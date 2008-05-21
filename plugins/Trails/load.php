@@ -20,7 +20,7 @@ $modified = $created;
 $trail = $db->value("
     SELECT *
     FROM trail
-    WHERE url_slug = '$trailId'
+    WHERE url_slug='$trailId'
     ");
 
 echo json_encode($trail->content);
