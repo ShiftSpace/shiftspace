@@ -15,7 +15,7 @@ $version = $db->escape($_POST['version']);
 // we nee the actual id
 $rshiftId = $db->value("
   SELECT id from shift where url_slug='$shiftId'
-")
+");
 
 $trails = $db->assoc("
     SELECT t.id, t.title

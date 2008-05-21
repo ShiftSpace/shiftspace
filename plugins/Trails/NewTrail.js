@@ -92,7 +92,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   trailsWithShift: function(shiftId)
   {
     this.serverCall('trailsWithShift', {
-      id: shiftId
+      'shiftId': shiftId
     }, this.onTrailsWithShiftLoad.bind(this));
   },
   
