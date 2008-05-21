@@ -81,14 +81,14 @@ var CutupsSpace = ShiftSpace.Space.extend({
         XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
     //iterate through snapshot & rewrite textnodes
     this.cutupRange(xPathResult2);
+    this.save();
   },
   cutupRange: function(xPathResult){
     var multiLineArray = Array();//2 dim array contains text for each node
     var joinedArray = Array();//contains all text split into single array
-    var pattern = /(\s)?S+/g;
+    var pattern = /(\s)?\S+/g;
     //break up snapshot into arrays of words
     for ( var i=0 ; i < xPathResult.snapshotLength; i++ ){
-        var pattern = /(\s)?\S+/g;
         var text = xPathResult.snapshotItem(i).textContent;
         var lineArray = text.match(pattern);
         joinedArray = joinedArray.concat(lineArray);
@@ -129,33 +129,40 @@ var CutupsSpace = ShiftSpace.Space.extend({
     document.addEventListener('mouseup',this.mouseup,false);
   },
   save: function() {
-    this.getCurrentShift().summary = this.summary.value;
     this.getCurrentShift().save();
   }
 });
 
 var CutupsShift = ShiftSpace.Shift.extend({
-    setup: function(json) {
+    setup: function(json){
+      if(json.ranges){
+          //replace __newline__ token with \n
+          for(var i=0; i<json.ranges.length; i++){
+            json.ranges[i].origText = json.ranges[i].origText.replace(new RegExp("__newline__","g"),"\n");
+            json.ranges[i].ancestorOrigTextContent = json.ranges[i].ancestorOrigTextContent.replace(new RegExp("__newline__","g"),"\n");
+          }
+        }
         this.ranges = json.ranges;
-        this.summary = json.summary;
     },
     encode: function() {
-        return {
-            ranges: this.ranges,
-            summary: this.summary
-        };
+      //tokenize newline with __newline__
+      for(var i=0; i<this.ranges.length; i++){
+        this.ranges[i].origText = this.ranges[i].origText.replace(new RegExp("\\n","g"),"__newline__");
+        this.ranges[i].ancestorOrigTextContent = this.ranges[i].ancestorOrigTextContent.replace(new RegExp("\\n","g"),"__newline__");
+      }        
+      return {
+          ranges: this.ranges,
+      };
     },
     show: function() {
-        var space = this.getParentSpace();
-        space.showInterface();
-        if (this.ranges) {
-            space.summary.value = this.summary;
-        
-            for (var i = 0; i < this.ranges.length; i++) {
-                space.turnOnRangeRef(this.ranges[i]);
-            }
+      var space = this.getParentSpace();
+      space.showInterface();
+      if (this.ranges) {
+        for (var i = 0; i < this.ranges.length; i++) {
+          space.turnOnRangeRef(this.ranges[i]);
         }
-        window.location.hash = this.getId();
+      }
+      window.location.hash = this.getId();
     }
 });
 
