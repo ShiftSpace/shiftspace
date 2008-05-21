@@ -89,16 +89,39 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
   },
   
-  trailsWithShift: function(shiftId)
+  trailsWithShift: function(shiftId, cb)
   {
     this.serverCall('trailsWithShift', {
       'shiftId': shiftId
-    }, this.onTrailsWithShiftLoad.bind(this));
-  },
-  
-  onTrailsWithShiftLoad: function(json)
-  {
-    console.log(json);
+    }, function(json) {
+      console.log('>>>>>>>>>>>>>>>>> YES!');
+      // this will be created dynamically
+      var menuItems = [];
+      menuItems.push({
+        text: "Create a Trail",
+        callback: function(shiftId)
+        {
+          this.createTrail(shiftId);
+        }.bind(this)
+      });
+      for(trailId in json)
+      {
+        menuItems.push({
+          text: json[trailId],
+          callback: function(shiftId) {
+            this.loadTrail(trailId, shiftId);
+          }
+        })
+      }
+      menuItems.push({
+        text: "Cancel",
+        callback: function(shiftId)
+        {
+          this.closeMenu.bind(this);
+        }
+      });
+      cb(menuItems);
+    });
   },
   
   setCurrentTrail: function(newTrail)
@@ -132,35 +155,10 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     return "SSTrailsPluginIcon";
   },
   
-  menuForShift: function(shiftId)
+  menuForShift: function(shiftId, cb)
   {
     console.log('>>>>>>>>>>>>>>>>>>>>>> menuForShift');
-    this.trailsWithShift(shiftId);
-    
-    // this will be created dynamically
-    return [
-      {
-        text: "Create a Trail",
-        callback: function(shiftId)
-        {
-          this.createTrail(shiftId);
-        }.bind(this)
-      },
-      {
-        text: "A Trail",
-        callback: function(shiftId)
-        {
-          this.loadTrail();
-        }.bind(this)
-      },
-      {
-        text: "Cancel",
-        callback: function(shiftId)
-        {
-          this.closeMenu.bind(this);
-        }
-      }
-    ];
+    this.trailsWithShift(shiftId, cb);
   },
   
   buildInterface: function()

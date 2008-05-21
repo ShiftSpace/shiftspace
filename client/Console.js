@@ -916,7 +916,9 @@ var Console = new Class({
 
           console.log('addEvent!');
 
-          this.setPluginMenuItems(aShift.id, plugins[plugin].menuForShift(aShift.id));
+          // in case it's delayed
+          var cb = this.setPluginMenuItems.bind(this);
+          this.setPluginMenuItems(aShift.id, plugins[plugin].menuForShift(aShift.id, cb));
           this.showPluginMenu(plugins[plugin], target);
         }.bind(this));
         
