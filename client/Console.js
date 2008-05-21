@@ -668,9 +668,9 @@ var Console = new Class({
         if (subsection) {
           subsection.removeClass('subsection-active');
         }
-        e.currentTarget.addClass('subtab-active');
+        $(e.currentTarget).addClass('subtab-active');
         if (e.currentTarget.previousSibling) {
-          e.currentTarget.previousSibling.addClass('subtab-above');
+          $(e.currentTarget.previousSibling).addClass('subtab-above');
         }
         var id = e.currentTarget.getAttribute('id').substr(7);
         holder.getElement('#subsection-' + id).addClass('subsection-active'); 
