@@ -343,6 +343,12 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 			else if (el.hasAttribute('fisheyeUserName'))
 			    el.firstChild.nodeValue = that.getUsername();
 		    }
+		} else {
+		    that.settingsBox = makeNoteBox(container);
+		    if (that.isProxy())
+		        that.settingsBox.setHTML("Settings disabled in proxy mode");
+		    else
+		        that.settingsBox.setHTML("MISSING LAYOUT");
 		}
 	    },
 	  },
@@ -362,6 +368,8 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 
 
     loadJavascripts	: function(path, dir, callback) {
+	if (ShiftSpace.xmlhttpRequest === undefined)
+	  return false;
 	url=feRoot + dir + "/" + path;
 	this.rebuildLock();
 	//this.log('Loading ' + url + ' from network');
@@ -532,7 +540,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 		'class' : 'SSDisplayItem',
 	});
         this.submitterBox.appendText(this.getText('submitter') + ": " + this.shiftAuthor());
-	if (this.shiftAuthor() != this.getUsername()) {
+	if (this.canIgnore()) {
 	  this.submitterIgnore= new ShiftSpace.Element('div', {
 		  'class' : 'SSInlineActiveText',
 	  });
@@ -622,9 +630,11 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	if (this.mode == this.MODE_DISPLAY) {
 	    this.buttonBox = makeDisplayItem();
 	    for (var key in this.modes) {
-		if (key != this.MODE_DISPLAY) {
-		    var eb = makeButton(this.modeGetName(key), this.buttonBox);
-		    eb.addEvent('click', this.setMode.bind(this, key));
+		if (key == this.MODE_DISPLAY) {}
+		else if (key == this.MODE_EDIT && !this.canEdit()) {} 
+		else {
+		  var eb = makeButton(this.modeGetName(key), this.buttonBox);
+		  eb.addEvent('click', this.setMode.bind(this, key));
 		}
 	    }
 	    this.buttonBox.injectInside( this.detailsBox );
@@ -632,6 +642,44 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	    this.modes[this.mode].makeButtons(this);
 	}
     },
+
+    canEdit: function() {
+	return this.loggedIn() && (this.getUsername() == this.shiftAuthor());
+    },
+
+    // Don't allow the user to ignore themself
+    canIgnore: function() {
+	return (this.shiftAuthor() != this.getUsername());
+    },
+
+    loggedIn : function() {
+	return this.getUsername();
+    },
+
+    shiftAuthor : function() {
+      return this.json.username;
+    },
+
+    // currently this is just used to hide settings as it seems
+    // settings aren't saved in proxy mode XXX: true
+    isProxy : function() {
+        if (ShiftSpace.user === undefined) {
+	  return true;
+        }
+	return false;
+    },
+
+    getUsername : function() {
+        if (ShiftSpace.user === undefined) {
+	  return null; // XXX ???
+        }
+	if (!ShiftSpace.user.getUsername()) {
+	  return null; // XXX ???
+	} else {
+	  return ShiftSpace.user.getUsername();
+	}
+    },
+
 
     toggleHiddencategory: function(key) {
 	if (this.settings.hiddenCategories[key])
@@ -718,7 +766,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	if (json.posRef) {
 	    this.posRef = json.posRef;
 	    this.log("loaded posRef:");
-	    this.dumpObj (this.posRef);
+	    //this.dumpObj (this.posRef);
 	    this.posRange = ShiftSpace.RangeCoder.toRange (json.posRef);
 	    if (this.posRange) {
 		this.renderRange(this.posRange);
@@ -781,15 +829,18 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 
 
     saveSettings: function() {
+	if (ShiftSpace.getUser === undefined) return;
 	user = ShiftSpace.getUser(); // returns User object
 	user.setPref('settings', this.settings);
     },
 
     loadSettings: function() {
-	var user = ShiftSpace.getUser();
+	if (!(ShiftSpace.getUser === undefined)) {
+	  var user = ShiftSpace.getUser();
 		// XXX: what is namespace?  do i need to prepend with my 
 		// shift name to tokens?
-        this.settings = user.getPref('settings');
+          this.settings = user.getPref('settings');
+	}
 	if (!this.settings)
 	    this.settings = {};
 	if (!this.settings.hiddenCategories)
@@ -825,19 +876,6 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	}
     },
 
-    loggedIn : function() {
-      return ShiftSpace.user.getUsername();
-    },
-
-    getUsername : function() {
-      return ShiftSpace.user.getUsername();
-    },
-
-    shiftAuthor : function() {
-      return this.json.username;
-    },
-
-
     setMode : function(newMode) {
 	if (this.mode == newMode) return;
 
@@ -848,7 +886,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	  return;
         }
 
-	if (newMode == this.MODE_EDIT && this.loggedIn() != this.shiftAuthor()) {
+	if (newMode == this.MODE_EDIT && !this.canEdit()) {
           alert('Sorry, you cannot edit shift created by user ' + this.shiftAuthor());
 	  return;
         }
