@@ -268,20 +268,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     }
   },
   
-  /*
-    Function : saveTrail
-  */
-  saveTrail : function()
-  {
-    this.saveObject(this.currentTrail);
-  },
-  
-  /*
-    deleteTrail : deleteTrail
-  */
   deleteTrail : function()
   {
-    this.deleteObject(this.currentTrails);
   }
   
 });
