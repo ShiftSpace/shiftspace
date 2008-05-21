@@ -7,8 +7,6 @@ var gNodeNumber = 0;
 var Trail = new Class({
   initialize : function( _focusedShift, json )
   {
-    console.log(json);
-
     // clear these globals
     gFocusedNode = null;
     gHoveredNode = null;
@@ -58,6 +56,8 @@ var Trail = new Class({
     
     // convert the json object into a trail
     var temp = Trail.parse( json );
+    
+    console.log('++++++++++++++++++++++++++++++++++ trail parsed');
     
     // store the important references
     this.nodes = temp.nodes;
