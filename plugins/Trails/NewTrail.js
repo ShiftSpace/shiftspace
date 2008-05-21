@@ -34,7 +34,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     // get the trail
     this.serverCall('load', {
-      id: trailId
+      'trailId': trailId
     }, function(json) {
       this.onTrailLoad(focusedShift, json);
     }.bind(this));
@@ -81,7 +81,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         menuItems.push({
           text: json[trailId],
           callback: function(shiftId) {
-            console.log('loadTrail');
+            console.log('loadTrail, shiftId:' + shiftId + ', trailId:' + trailId);
             this.loadTrail(shiftId, trailId);
           }.bind(this)
         })
