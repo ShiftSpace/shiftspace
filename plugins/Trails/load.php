@@ -16,18 +16,13 @@ $created = date('Y-m-d H:i:s');
 $modified = $created;
 
 // Check to see if it exists in the db, if it doesn't insert it
-if($trailId)
-{
-  // If it does update it
-  $exists = $db->value("
+// If it does update it
+$trail = $db->value("
     SELECT *
     FROM trail
     WHERE id = '$trailId'
     ");
-}
-else
-{
 
-}
+echo json_encode($trail->content);
 
 ?>
