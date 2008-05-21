@@ -61,20 +61,20 @@ var TrailLink = new Class({
     // calculate the start and end of the link
     if( this.startPage instanceof TrailPage )
     {
-      this.startPos = SSCalcCenter( this.startPage.getLinkPoint(), true );
+      this.startPos = TrailLink.SSCalcCenter( this.startPage.getLinkPoint(), true );
     }
     else
     {
-      this.startPos = SSCalcCenter( this.startPage );
+      this.startPos = TrailLink.SSCalcCenter( this.startPage );
     }
 
     if( this.endPage instanceof TrailPage )
     {
-      this.endPos = SSCalcCenter( this.endPage.getLinkPoint(), true )
+      this.endPos = TrailLink.SSCalcCenter( this.endPage.getLinkPoint(), true )
     }
     else
     {
-      this.endPos = SSCalcCenter( this.endPage );
+      this.endPos = TrailLink.SSCalcCenter( this.endPage );
     }
   },
   
@@ -221,7 +221,7 @@ var TrailLink = new Class({
   }
 });
 
-function SSCalcCenter( element, superBadHackForTrailScrollArea )
+TrailLink.SSCalcCenter( element, superBadHackForTrailScrollArea )
 {
   var size = element.getSize().size;
   var loc = element.getPosition();
@@ -241,7 +241,7 @@ function SSCalcCenter( element, superBadHackForTrailScrollArea )
   }
 }
 
-function SSCalcLowerRight( element ) 
+TrailLink.SSCalcLowerRight( element ) 
 {
   var size = element.getSize().size;
   var loc = element.getPosition();
