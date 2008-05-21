@@ -7,6 +7,7 @@ var gNodeNumber = 0;
 var Trail = new Class({
   initialize : function( _focusedShift, json )
   {
+    console.log('++++++++++++++++++++++++++++++++ initialize');
     console.log(json);
     
     // clear these globals
@@ -36,8 +37,6 @@ var Trail = new Class({
     }
     else
     {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOCUSED SHIFT');
-      
       var winSize = { x: self.innerWidth,
                       y: self.innerHeight };
       var winCenter = { x: 500000 + winSize.x/2,
