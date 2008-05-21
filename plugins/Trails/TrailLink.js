@@ -221,7 +221,7 @@ var TrailLink = new Class({
   }
 });
 
-TrailLink.SSCalcCenter( element, superBadHackForTrailScrollArea )
+TrailLink.SSCalcCenter = function( element, superBadHackForTrailScrollArea )
 {
   var size = element.getSize().size;
   var loc = element.getPosition();
@@ -241,7 +241,7 @@ TrailLink.SSCalcCenter( element, superBadHackForTrailScrollArea )
   }
 }
 
-TrailLink.SSCalcLowerRight( element ) 
+TrailLink.SSCalcLowerRight = function( element ) 
 {
   var size = element.getSize().size;
   var loc = element.getPosition();
