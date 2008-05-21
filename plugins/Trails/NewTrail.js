@@ -30,34 +30,14 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.setCurrentTrail(new Trail(shiftId, json));
   },
   
-  loadTrail: function(trailId)
+  loadTrail: function(focusedShift, trailId)
   {
     // get the trail
-    /*
     this.serverCall('load', {
       id: trailId
-    }, this.onTrailLoad.bind(this));
-    */
-    this.onTrailLoad('node1', {
-      node1:
-      {
-        title : 'shiftspace',
-        url : 'http://www.shiftspace.org',
-        thumb : this.attributes.dir+'images/highlight_thumb.png',
-        loc : { x: 200, y: 200 },
-        space : 'highlight',
-        nodes : ['node2']
-      },
-      node2:
-      {
-        title : 'shiftspace',
-        url : 'http://www.shiftspace.org',
-        thumb : this.attributes.dir+'images/notes_thumb.png',
-        loc : { x: 500, y: 500 },
-        space : 'notes',
-        nodes : ['node1']
-      }
-    });
+    }, function(json) {
+      this.onTrailLoad(focusedShift, json);
+    }.bind(this));
   },
   
   onTrailLoad: function(focusedShift, trailJson)
@@ -65,14 +45,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     // load the interface first
     this.showInterface();
     this.setCurrentTrail(new Trail(focusedShift, trailJson));
-    var newPage = new TrailPage( kNULL, {
-      id: 'node3',
-      title : 'shiftspace',
-      url : 'http://www.shiftspace.org',
-      thumb : this.attributes.dir+'images/notes_thumb.png',
-      loc : { x: 500, y: 100 },
-      space : 'notes',
-    });
   },
   
   saveTrail: function(trail)
@@ -109,7 +81,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         menuItems.push({
           text: json[trailId],
           callback: function(shiftId) {
-            this.loadTrail(trailId, shiftId);
+            this.loadTrail(shiftId, trailId);
           }.bind(this)
         })
       }
