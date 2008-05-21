@@ -18,7 +18,7 @@ $rshiftId = $db->value("
 ");
 
 $trails = $db->assoc("
-    SELECT t.id, t.title
+    SELECT t.url_slug, t.title
     FROM trail t, trail_shift x
     WHERE x.trail_id = t.id
     AND x.shift_id = $rshiftId
