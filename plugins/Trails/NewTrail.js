@@ -44,7 +44,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     // load the interface first
     this.showInterface();
-    this.setCurrentTrail(new Trail(focusedShift, Json.evaluate(trailJson.replace(/"/g, '\"'))));
+    this.setCurrentTrail(new Trail(focusedShift, eval(trailJson.replace(/"/g, '\"'))));
   },
   
   saveTrail: function(trail)
