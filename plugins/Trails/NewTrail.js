@@ -110,7 +110,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           text: json[trailId],
           callback: function(shiftId) {
             this.loadTrail(trailId, shiftId);
-          }
+          }.bind(this)
         })
       }
       menuItems.push({
