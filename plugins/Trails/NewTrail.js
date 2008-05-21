@@ -98,7 +98,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   onTrailsWithShiftLoad: function(json)
   {
-    
+    console.log(json);
   },
   
   setCurrentTrail: function(newTrail)
@@ -134,7 +134,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   menuForShift: function(shiftId)
   {
-    //this.trailsWithShift
+    console.log('>>>>>>>>>>>>>>>>>>>>>> menuForShift');
+    this.trailsWithShift(shiftId);
     
     // this will be created dynamically
     return [
