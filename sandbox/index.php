@@ -20,8 +20,8 @@ if (!empty($_GET['id'])) {
   </head>
   
   <body>
-    <img src='logo.gif'></img>
-    <img src='logos.png'></img>
+    <img src="logo.gif" alt="logo"></img>
+    <img src="logos.png" alt="logos"></img>
   </body>
   
 </html>

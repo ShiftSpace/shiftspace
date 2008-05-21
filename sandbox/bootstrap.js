@@ -1,6 +1,7 @@
 function focusShift() {};
 
-function registerSpace(instance) {
+function registerSpace(instance) 
+{
   var spaceName = instance.attributes.name;
   var spaceDir = 'spaces/' + spaceName + '/';
 
@@ -8,7 +9,8 @@ function registerSpace(instance) {
   {
     var icon = installed[spaceName].replace('.js', '.png');
     instance.attributes.icon = icon;
-  } else if (instance.attributes.icon.indexOf('/') == -1) 
+  } 
+  else if (instance.attributes.icon.indexOf('/') == -1) 
   {
     var icon = spaceDir + instance.attributes.icon;
     instance.attributes.icon = icon;
@@ -29,7 +31,8 @@ function registerSpace(instance) {
   ShiftSpace[instance.attributes.name + 'Space'] = instance;
 }
 
-function loadFile(url, callback) {
+function loadFile(url, callback) 
+{
   // If the URL doesn't start with "http://", assume it's on our server
   if (url.substr(0, 7) != 'http://' &&
       url.substr(0, 8) != 'https://') 
@@ -53,12 +56,14 @@ function loadFile(url, callback) {
   return true;
 }
 
-function loadStyle(url, callback, frame) {
+function loadStyle(url, callback, frame) 
+{
   // TODO: check to see if the domain is different, if so don't mess with the url - David
   var dir = url.split('/');
   dir.pop();
   dir = dir.join('/');
-  if (dir.substr(0, 7) != 'http://') {
+  if (dir.substr(0, 7) != 'http://') 
+{
     dir = __server__ + dir;
   }
 

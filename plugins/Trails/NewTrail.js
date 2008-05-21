@@ -26,7 +26,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     var json = {};
     json[shiftId] = this.getShift(shiftId);
     json[shiftId].loc = {x:0, y:0};
-    
     // load the shift with the trail focused
     this.setCurrentTrail(new Trail(shiftId, json));
   },
