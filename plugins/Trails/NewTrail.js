@@ -17,17 +17,12 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
   },
   
-  createTrail: function(shiftId)
+  createTrail: function(focusedShift, trail)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CREATE TRAIL ' + shiftId);
     // load the interface first
     this.showInterface();
-    // empty out any old stuff
-    var json = {};
-    json[shiftId] = this.getShift(shiftId);
-    json[shiftId].loc = {x:0, y:0};
     // load the shift with the trail focused
-    this.setCurrentTrail(new Trail(shiftId, json));
+    this.setCurrentTrail(new Trail(shiftId, trail));
   },
   
   loadTrail: function(focusedShift, trailId)
@@ -47,18 +42,30 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.setCurrentTrail(new Trail(focusedShift, Json.evaluate(trailJson)));
   },
   
-  saveTrail: function(trail)
+  saveTrail: function(trail, cb)
   {
     // get the trail
     this.serverCall('save', {
-      id: trail.id,
+      trailId: (trail && trail.id) || null, 
       content: Json.toString(trail)
-    }, this.onTrailSave.bind(this));
+    }, function(json) {
+      this.onTrailSave(json);
+      cb(json);
+    }.bind(this));
   },
   
   onTrailSave: function(json)
   {
-    
+    // do some stuff
+    console.log('>>>>>>>>>>>>>>>>>>>>> trail saved');
+    console.log(json);
+  },
+  
+  newTrail: function(shiftId)
+  {
+    this.saveTrail(null, function(json) {
+      this.createTrail(shiftId, Json.evaluate(json));
+    });
   },
   
   trailsWithShift: function(shiftId, cb)
@@ -73,7 +80,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         text: "Create a Trail",
         callback: function(shiftId)
         {
-          this.createTrail(shiftId);
+          this.newTrail(shiftId);
         }.bind(this)
       });
       for(trailId in json)
