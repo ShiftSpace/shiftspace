@@ -91,10 +91,10 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         callback: function(shiftId)
         {
           this.closeMenu.bind(this);
-        }
+        }.bind(this)
       });
       cb(menuItems);
-    });
+    }.bind(this));
   },
   
   setCurrentTrail: function(newTrail)
