@@ -15,21 +15,6 @@ $trailId = $db->escape($_POST['trailId']);
 $content = $db->escape($_POST['content']);
 $version = $db->escape($_POST['version']);
 
-if (!empty($_POST['summary'])) {
-    $summary = $db->escape(strip_tags($_POST['summary']));
-} else if (!empty($_POST['_summary'])) {
-    $var = $_POST['_summary'];
-    $summary = $db->escape(strip_tags($_POST[$var]));
-}
-
-if (empty($summary)) {
-    $summary = '<i>No summary provided</i>';
-}
-
-$created = date('Y-m-d H:i:s');
-$modified = $created;
-
-// Check to see if it exists in the db, if it doesn't insert it
 if($trailId)
 {
   // If it does update it
@@ -38,10 +23,28 @@ if($trailId)
       FROM trail
       WHERE id = '$trailId'
   ");
+
+  $db->query("
+      UPDATE trail
+      SET content = '$content',
+          title = '$title',
+          modified = '$now'
+      WHERE url_slug='$trailId'
+  ");
 }
 else
 {
+  $created = date('Y-m-d H:i:s');
   
+  // insert it
+  // Record a general accounting of shift
+  $db->query("
+      INSERT INTO trail
+      (user_id, title, content, url_slug, created, modified, status, version, thumb_status)
+      VALUES ($user->id, '$content', '$url_slug', '$created', '$modified', '$status', '$version', '$thumb_status')
+  ");
 }
+
+echo "{'success':true}";
 
 ?>
