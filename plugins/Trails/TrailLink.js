@@ -1,4 +1,3 @@
-
 // off set of the little dot
 var gox = 10;
 var goy = 10;
@@ -57,6 +56,8 @@ var TrailLink = new Class({
   */
   setEndPoints : function()
   {
+    console.log('+++++++++++++++++++++++ CALC END POINTS');
+    
     // calculate the start and end of the link
     if( this.startPage instanceof TrailPage )
     {
