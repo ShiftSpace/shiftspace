@@ -212,37 +212,40 @@ var Console = new Class({
   */
   setPluginMenuItems: function(shiftId, itemsAndActions)
   {
-    // remove all the menu items
-    $(this.pluginMenu).getElements('.SSMenuItem').each(function(x) {x.remove();});
-
-    for(var i = 0; i < itemsAndActions.length; i++)
+    if(!itemsAndActions.delayed)
     {
-      var txt = itemsAndActions[i].text;
-      var cb = itemsAndActions[i].callback;
-      
-      //console.log(cb);
-      
-      if(i == 0)
-      {
-        this.pluginMenu.getElement('.SSMenuTopItem span').setText(txt);
-        this.topItem.removeEvents();
-        this.topItem.addEvent('click', cb.bind(null, shiftId));
-      }
-      else if(i == itemsAndActions.length-1)
-      {
-        this.pluginMenu.getElement('.SSMenuBottomItem span').setText(txt);
-        this.bottomItem.removeEvents();
-        this.bottomItem.addEvent('click', cb.bind(null, shiftId));
-      }
-      else
-      {
-        var newItem = this.menuItemModel.clone(true);
-        
-        newItem.getElement('span').setText(txt);
-        newItem.removeEvents();
-        newItem.addEvent('click', cb.bind(null, shiftId));
+      // remove all the menu items
+      $(this.pluginMenu).getElements('.SSMenuItem').each(function(x) {x.remove();});
 
-        newItem.injectBefore(this.pluginMenu.getElement('.SSMenuBottomItem'));
+      for(var i = 0; i < itemsAndActions.length; i++)
+      {
+        var txt = itemsAndActions[i].text;
+        var cb = itemsAndActions[i].callback;
+      
+        //console.log(cb);
+      
+        if(i == 0)
+        {
+          this.pluginMenu.getElement('.SSMenuTopItem span').setText(txt);
+          this.topItem.removeEvents();
+          this.topItem.addEvent('click', cb.bind(null, shiftId));
+        }
+        else if(i == itemsAndActions.length-1)
+        {
+          this.pluginMenu.getElement('.SSMenuBottomItem span').setText(txt);
+          this.bottomItem.removeEvents();
+          this.bottomItem.addEvent('click', cb.bind(null, shiftId));
+        }
+        else
+        {
+          var newItem = this.menuItemModel.clone(true);
+        
+          newItem.getElement('span').setText(txt);
+          newItem.removeEvents();
+          newItem.addEvent('click', cb.bind(null, shiftId));
+
+          newItem.injectBefore(this.pluginMenu.getElement('.SSMenuBottomItem'));
+        }
       }
     }
   },

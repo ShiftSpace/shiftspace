@@ -130,6 +130,11 @@ ShiftSpace.Plugin = new Class({
   {
     console.log(getRecentlyViewedShifts());
     return getRecentlyViewedShifts();
+  },
+  
+  delayedMenu: function()
+  {
+    return {'delayed': true};
   }
   
 });
