@@ -103,7 +103,7 @@ for($i = 0; $i < count($shiftArray); $i++)
   
   // make sure it doesn't already exist
   $exists = $db->value("
-    SELECT * FROM trail_shift
+    SELECT trail_id FROM trail_shift
     WHERE trail_id='$rTrailId' AND shift_id='$rShiftId'
   ");
 

@@ -11,6 +11,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     icon: null,
     css: 'Trails.css',
     includes: ['Trail.js', 'TrailLink.js', 'TrailPage.js', 'TrailNavPage.js', 'TrailNav.js', 'Vector.js']
+    version: 0.2
   },
   
   setup : function(json)
@@ -67,13 +68,11 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     var data = {};
     
-    // send the user name
-    data.username = trail.username;
-    
     if(trail) 
     {
       data.trailId = trail.trailId;
       data.content = Json.toString(trail.content);
+      data.shifts = Json.toString(trail.shifts.join(','));
     }
     
     // get the trail
@@ -295,7 +294,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       }
       
       // should merge this with a new trail json
-      console.log(trailJson);
       this.saveTrail(trailJson, this.trailSaved.bind(this));
     }.bind(this));
   },
