@@ -515,6 +515,3 @@ var NotesShift = ShiftSpace.Shift.extend({
 });
 
 var Notes = new NotesSpace(NotesShift);
-
-console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> whoa');
-console.log(Trails);
