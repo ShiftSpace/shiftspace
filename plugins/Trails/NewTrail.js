@@ -229,9 +229,11 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       id: "trail-nav-bg"
     });                          
     
+    /*
     this.controls.injectInside(document.body);
     this.navBg.injectInside(document.body);
     this.nav.injectInside(document.body);
+    */
     
     // store a drag reference just in case we want to stop the dragging behavior
     this.scrollDragRef = this.scrollArea.makeDraggable({
