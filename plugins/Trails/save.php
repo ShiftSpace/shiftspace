@@ -82,6 +82,8 @@ else
   $trailId = $url_slug;
 }
 
+echo 'UPDATING TRAIL_SHIFT';
+
 // update the trail_shift table
 // get the real trail id
 $rTrailId = $db->value("
