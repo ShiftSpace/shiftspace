@@ -88,6 +88,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   onTrailSave: function(json)
   {
     // do some stuff
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SAVE');
+    console.log(json);
   },
   
   newTrail: function(shiftId)
