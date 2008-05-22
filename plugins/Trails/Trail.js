@@ -76,13 +76,6 @@ var Trail = new Class({
     //  set references back to the parent trail
     this.nodes.each( setParent.bind( this ) );
     this.links.each( setParent.bind( this ) );
-    
-    // should change this so that we use the MooTools event model
-    // for listening to changes such as zoom and what not
-    // also use events for addtion and deletion of pages as well
-
-    // is this trail editable by the user
-    this.isEditable = !( $('trail-controls').hasClass( 'limited' ) );
   },
   
   normalize: function(aTrail)
