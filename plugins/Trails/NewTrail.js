@@ -27,7 +27,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
     // store some trail info
     this.currentTrailInfo = {
-      id: trailId,
+      'trailId': trailId,
       username: ShiftSpace.user.getUsername(),
       title: "Untitled"
     }
@@ -54,7 +54,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.showInterface();
     
     this.currentTrailInfo = {
-      id: trailJson.id,
+      trailId: trailJson.id,
       username: trailJson.username,
       title: trailJson.title
     };
@@ -70,7 +70,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
     if(trail) 
     {
-      data.trailId = trail.id;
+      data.trailId = trail.trailId;
       data.username = trail.username;
       data.content = trail.content;
     }
