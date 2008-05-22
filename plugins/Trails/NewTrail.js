@@ -49,6 +49,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       trailId: (trail && trail.id) || null, 
       content: Json.toString(trail)
     }, function(json) {
+      console.log('>>>>>>>>>>>>>>>>>>>>> saved trail is ');
+      console.log(json);
       this.onTrailSave(json);
       cb(json);
     }.bind(this));
@@ -64,6 +66,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   newTrail: function(shiftId)
   {
     this.saveTrail(null, function(json) {
+      console.log('>>>>>>>>>>>>>>>>>>>>> createTrail');
       this.createTrail(shiftId, Json.evaluate(json));
     }.bind(this));
   },
