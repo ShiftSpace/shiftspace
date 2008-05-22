@@ -154,6 +154,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         }.bind(this)
       });
       
+      console.log(menuItems);
+      
       // send it to the callback function
       cb(menuItems);
     }.bind(this));
