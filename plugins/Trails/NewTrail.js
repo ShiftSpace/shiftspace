@@ -315,11 +315,11 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     if(this.exitFullScreen())
     {
       // remove everything from the DOM
-      this.clippingArea.remove();
+      if(this.clippingArea.getParent()) this.clippingArea.remove();
       this.scrollArea.empty();
-      this.controls.remove();
-      this.navBg.remove();
-      this.nav.remove();
+      if(this.controls.getParent()) this.controls.remove();
+      if(this.navBg.getParent()) this.navBg.remove();
+      if(this.nav.getParent()) this.nav.remove();
     }
   },
   
