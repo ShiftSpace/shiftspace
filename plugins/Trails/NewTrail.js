@@ -301,7 +301,9 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       }
       else
       {
+        this.controls.addClass('SSDisplayNone');
         this.controls.getElements('.SSTrailControl').addClass('SSDisplayNone');
+        this.controls.removeClass('SSDisplayNone');
         $('trail-title-limited').removeClass('SSDisplayNone');
         $('trail-title-limited').setText(this.currentTrailInfo.title);
       }
