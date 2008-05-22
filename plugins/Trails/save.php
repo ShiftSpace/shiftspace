@@ -93,8 +93,6 @@ $rTrailId = $db->value("
 // we need to insert fields for each shift in the
 $shiftArray = explode(',', $shifts);
 
-echo print_r($shiftArray);
-
 for($i = 0; $i < count($shiftArray); $i++)
 {
   $shiftId = $shiftArray[$i];
@@ -104,6 +102,8 @@ for($i = 0; $i < count($shiftArray); $i++)
     SELECT id FROM shift
     WHERE url_slug='$shiftId'
     ");
+    
+  echo $rTrailId . ", " . $rShiftId;
   
   // make sure it doesn't already exist
   $exists = $db->value("
