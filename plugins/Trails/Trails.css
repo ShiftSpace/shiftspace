@@ -545,4 +545,5 @@ div#trail-close:hover
 
 .TrailDragLink
 {
+  z-index: 1000001;
 }
