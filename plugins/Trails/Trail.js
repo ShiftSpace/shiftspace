@@ -5,10 +5,12 @@ var gHoveredNode = null;
 var gNodeNumber = 0;
 
 var Trail = new Class({
-  initialize : function( _focusedShift, json )
+  initialize : function( _focusedShift, json, _id)
   {
     console.log('++++++++++++++++++++++++++++++++ initialize');
     console.log(json);
+    
+    this.id = _id;
     
     // clear these globals
     gFocusedNode = null;

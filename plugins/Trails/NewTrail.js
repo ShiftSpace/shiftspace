@@ -17,12 +17,14 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
   },
   
-  createTrail: function(focusedShift, trail)
+  createTrail: function(focusedShift, trailId)
   {
     // load the interface first
     this.showInterface();
     // load the shift with the trail focused
-    this.setCurrentTrail(new Trail(focusedShift, trail));
+    var trailJson = {};
+    trailJson[focusedShift] = this.getShift(focusedShift);
+    this.setCurrentTrail(new Trail(focusedShift, trailJson, trail));
   },
   
   loadTrail: function(focusedShift, trailId)
