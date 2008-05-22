@@ -53,7 +53,7 @@ var TrailPage = new Class({
     else
     {
       // legacy trail
-      var space = this.options.icon.split('/').getLast().split('_')[1];
+      var space = this.options.icon.split('/').getLast().split('_')[0];
       if(space == 'highlight') space += 's';
       this.space = space;
     }
