@@ -90,10 +90,11 @@ $rTrailId = $db->value("
   WHERE url_slug='$trailId'
   ");
   
-echo 'UPDATING TRAIL_SHIFT';
-  
 // we need to insert fields for each shift in the
 $shiftArray = explode(',', $shifts);
+
+echo print_r($shiftArray);
+
 for($i = 0; $i < count($shiftArray); $i++)
 {
   $shiftId = $shiftArray[$i];
