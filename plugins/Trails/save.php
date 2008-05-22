@@ -74,6 +74,6 @@ else
   $trailId = $url_slug;
 }
 
-echo "{'success':true, 'trailId':$trailId}";
+echo "{'success':true, 'trailId':'$trailId'}";
 
 ?>
