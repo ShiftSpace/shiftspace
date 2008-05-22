@@ -558,7 +558,6 @@ var TrailPage = new Class({
   */
   zoom : function()
   {
-    console.log('zoom');
     if( !this.isZooming && 
         !this.isZoomed &&
         !gFocusedNode &&
@@ -824,8 +823,6 @@ var TrailPage = new Class({
   */
   deleteLinkMode : function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> deleteLinkMode');
-    
     // not a good idea
     this.parentTrail.deleteMode = true;
 
