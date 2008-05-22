@@ -105,8 +105,6 @@ for($i = 0; $i < count($shiftArray); $i++)
       WHERE url_slug='$shiftId'
       ");
     
-    echo $rTrailId . ", " . $rShiftId;
-  
     // make sure it doesn't already exist
     $exists = $db->value("
       SELECT trail_id FROM trail_shift
