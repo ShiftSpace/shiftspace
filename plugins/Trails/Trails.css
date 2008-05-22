@@ -433,18 +433,9 @@ div.TrailPageMinusLinkPoint:hover
   background-repeat: no-repeat;
 }
 
-.TrailPageRemoveHover
+div.TrailPageRemove:hover
 {
-  position: absolute;
-  z-index: 40;
-  
-  width: 15px;
-  height: 15px;
-  
-  top : 4px;
-  right : 0px;
   background-image:url(images/cut_trail_hover.png);
-  background-repeat: no-repeat;
 }
 
 .TrailNavPage
