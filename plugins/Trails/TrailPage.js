@@ -438,7 +438,7 @@ var TrailPage = new Class({
         
         if( gHoveredNode )
         {
-          if( ElementContainsPoint( gHoveredNode.element, new Vector( evt.page.x, evt.page.y ) ) )
+          if( TrailPage.ElementContainsPoint( gHoveredNode.element, new Vector( evt.page.x, evt.page.y ) ) )
           {
             // create a real link between the two nodes
             var final = new TrailLink( this, gHoveredNode );
@@ -987,7 +987,7 @@ TrailPage.implement( new Options );
 /*
   Utility function to check to see if a point is inside an element.
 */
-function ElementContainsPoint( el, v )
+TrailPage.ElementContainsPoint = function( el, v )
 {
   var pos = el.getPosition();
   var size = el.getSize().size;
