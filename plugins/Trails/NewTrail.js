@@ -291,6 +291,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     if(this.currentTrail() && this.currentTrailInfo)
     {
       console.log(this.currentTrailInfo.username + ', ' + ShiftSpace.user.getUsername());
+      console.log(this.currentTrailInfo.username == ShiftSpace.user.getUsername());
       
       // if user is allowed to edit
       if(this.currentTrailInfo.username == ShiftSpace.user.getUsername())
