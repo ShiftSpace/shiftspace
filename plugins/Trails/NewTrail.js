@@ -22,7 +22,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     // load the interface first
     this.showInterface();
     // load the shift with the trail focused
-    this.setCurrentTrail(new Trail(shiftId, trail));
+    this.setCurrentTrail(new Trail(focusedShift, trail));
   },
   
   loadTrail: function(focusedShift, trailId)
