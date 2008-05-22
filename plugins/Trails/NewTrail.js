@@ -289,7 +289,11 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       this.scrollArea.empty();
       this.controls.injectInside(document.body);
       this.navBg.injectInside(document.body);
-      this.nav.injectInside(document.body);
+      
+      if(this.currentTrailInfo.username == ShiftSpace.user.getUsername())
+      {
+        this.nav.injectInside(document.body);
+      }
       
       // load the name
       this.loadNav();
