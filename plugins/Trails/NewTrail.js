@@ -49,16 +49,14 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     // load the interface first
     this.showInterface();
     
-    // eval the trail
-    var theTrail = Json.evaluate(trailJson);
     // store some data
     this.currentTrailInfo = {
-      id: theTrail.id,
-      username: theTrail.username,
-      title: theTrail.title
+      id: trailJson.id,
+      username: trailJson.username,
+      title: trailJson.title
     };
     
-    this.setCurrentTrail(new Trail(focusedShift, theTrail.content));
+    this.setCurrentTrail(new Trail(focusedShift, trailJson.content));
   },
   
   saveTrail: function(trail, cb)
