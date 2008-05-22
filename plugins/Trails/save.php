@@ -18,6 +18,7 @@ else if (!empty($_SERVER['HTTP_REFERER']))
 $trailId = $db->escape($_POST['trailId']);
 $content = $db->escape($_POST['content']);
 $version = $db->escape($_POST['version']);
+$shifts = $db->escape($_POST['shifts']);
 
 $error = false;
 if($trailId)
@@ -77,6 +78,31 @@ else
     (user_id, content, title, url_slug, created, modified, status, thumb_status)
     VALUES ($user->id, '$content', 'title', '$url_slug', '$created', '$modified', '$status', '$thumb_status')
     ");
+
+  // get the real trail id
+  $rTrailId = $db->value("
+    SELECT id FROM trail
+    WHERE url_slug='$url_slug'
+    ");
+    
+  // we need to insert fields for each shift in the
+  $shiftArray = explode(',', $shifts);
+  for($i = 0; $i < count($shiftArray); $i++)
+  {
+    $shiftId = $shiftArray[$i];
+    
+    // get the real shift id
+    $rShiftId = $db->value("
+      SELECT id FROM shift
+      WHERE url_slug='$shiftId'
+      ");
+
+    $db->query("
+      INSERT INTO trail_shift
+      (trail_id, shift_id)
+      VALUES ($rTrailId, $rShiftId)
+      ");
+  }
 
   $trailId = $url_slug;
 }

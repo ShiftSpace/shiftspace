@@ -66,13 +66,14 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   saveTrail: function(trail, cb)
   {
     var data = {};
-    data.content = Json.toString(trail);
+    
+    // send the user name
+    data.username = trail.username;
     
     if(trail) 
     {
       data.trailId = trail.trailId;
-      data.username = trail.username;
-      data.content = trail.content;
+      data.content = Json.toString(trail.content);
     }
     
     // get the trail
@@ -94,10 +95,29 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     console.log(json);
   },
   
+  deleteTrail: function(trailId, cb)
+  {
+    var data = {'trailId':trailId};
+    
+    this.serverCall(
+      'delete',
+       data,
+       function(json)
+       {
+         this.onTrailDelete(json);
+         cb(json);
+       }.bind(this)
+    )
+  },
+  
+  onTrailDelete: function(json)
+  {
+  },
+  
   newTrail: function(shiftId)
   {
     this.saveTrail(null, function(json) {
-      this.createTrail(shiftId, json.trailId);
+      this.createTrail(shiftId, Json.evaluate(json).trailId);
     }.bind(this));
   },
   
@@ -266,11 +286,14 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       var evt = new Event(_evt);
       // encode the current trail
       var encodedTrailContent = this.currentTrail().encode();
+      
       var trailJson = {
         trailId: this.currentTrailInfo.trailId,
         username: this.currentTrailInfo.username,
-        content: encodedTrailContent
+        content: encodedTrailContent.structure,
+        shifts: encodedTrailContent.nodes
       }
+      
       // should merge this with a new trail json
       console.log(trailJson);
       this.saveTrail(trailJson, this.trailSaved.bind(this));

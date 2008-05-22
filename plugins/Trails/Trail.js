@@ -206,8 +206,9 @@ var Trail = new Class({
         nodes : curNode.nodes
       };
     }
+    var ids = this.nodes.map(function(x) { return x.id});
 
-    return Json.toString( jsonobj );
+    return { structure: Json.toString( jsonobj ), nodes: ids };
   },
   
   setDelegate: function(newDelegate)
