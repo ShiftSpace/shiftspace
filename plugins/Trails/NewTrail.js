@@ -295,13 +295,13 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         this.nav.injectInside(document.body);
         this.loadNav();
         // reveal the controls
-        this.controls.getElement('.SSTrailControl').removeClass('SSDisplayNone');
+        this.controls.getElements('.SSTrailControl').removeClass('SSDisplayNone');
         $('trail-title-limited').addClass('SSDisplayNone');
         $('trail-title').setProperty('value', this.currentTrailInfo.title);
       }
       else
       {
-        this.controls.getElement('.SSTrailControl').addClass('SSDisplayNone');
+        this.controls.getElements('.SSTrailControl').addClass('SSDisplayNone');
         $('trail-title-limited').removeClass('SSDisplayNone');
         $('trail-title-limited').setText(this.currentTrailInfo.title);
       }
