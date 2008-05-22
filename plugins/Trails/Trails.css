@@ -355,7 +355,7 @@ div#trail-close:hover
   background-image: url(images/ring_plus.png);
 }
 
-.TrailPageLinkPointLargeHover
+div.TrailPageLinkPointLarge:hover
 {
   background-image: url(images/ring_plus_hover.png)
 }
