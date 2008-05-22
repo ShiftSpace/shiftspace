@@ -340,7 +340,7 @@ div#trail-close:hover
   width: 8px;
   height: 8px;
   background-image: url(images/ring_sml.png);
-  z-index : 50;
+  z-index : 1000002;
 }
 
 .TrailPageLinkPointLarge
