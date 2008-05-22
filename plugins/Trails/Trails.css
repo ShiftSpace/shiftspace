@@ -375,7 +375,7 @@ div.TrailPageLinkPointLarge:hover
   background-image: url(images/ring_minus.png);
 }
 
-.TrailPageMinusLinkPointHover
+div.TrailPageMinusLinkPoint:hover
 {
   background-image: url(images/ring_minus_hover.png);  
 }
