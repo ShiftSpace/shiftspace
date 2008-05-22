@@ -235,20 +235,11 @@ var ShiftSpace = new (function() {
       {
         content = content.replace(/\n/g, '\\n');
         content = content.replace(/\r/g, '\\r');
-        //content = content.replace(/"/g,);
       }
       
       var obj = null;
-      try
-      {
-        obj = Json.evaluate(content);
-      }
-      catch(err)
-      {
-        console.log(content);
-        //throw __SSCouldNotEvalShiftContentException__
-      }
-      
+      obj = Json.evaluate(content);
+
       return obj;
     }
     
@@ -1783,7 +1774,7 @@ var ShiftSpace = new (function() {
       if (dir.substr(0, 7) != 'http://') {
         dir = server + dir;
       }
-
+      
       loadFile(url, function(rx) {
         var css = rx.responseText;
         
@@ -1817,6 +1808,7 @@ var ShiftSpace = new (function() {
         }
         else
         {
+          console.log("addStyle: url- " + url);
           GM_addStyle(css);
         }
         
