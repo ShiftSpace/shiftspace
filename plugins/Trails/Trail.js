@@ -203,13 +203,9 @@ var Trail = new Class({
       var loc = curNode.getPosition();
       var id = curNode.id;
 
-      // hmm url or href
+      // just store location and nodes
       jsonobj[id] = {
-        title : curNode.title,
-        url : curNode.url,
         loc : { x : loc.x, y : loc.y },
-        thumb : curNode.thumb,
-        icon : curNode.icon,
         nodes : curNode.nodes
       };
     }
