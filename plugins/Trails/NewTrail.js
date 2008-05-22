@@ -52,13 +52,20 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.showInterface();
     
     this.currentTrailInfo = {
-      trailId: trailJson.id,
+      trailId: trailJson.trailId,
       username: trailJson.username,
       title: trailJson.title
     };
 
     // check to see if this is a legacy trail
-    this.setCurrentTrail(new Trail(focusedShift, Json.evaluate(trailJson.content)));
+    if(!trailJson.version)
+    {
+      this.setCurrentTrail(new Trail(focusedShift, Json.evaluate(trailJson.content)));
+    }
+    else
+    {
+      alert("new trail!");
+    }
     this.updateInterface();
   },
   
