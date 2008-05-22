@@ -258,6 +258,24 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       var evt = new Event(_evt);
       this.hideInterface();
     }.bind(this));
+    this.controls.getElement('#trail-save').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      // encode the current trail
+      var encodedTrailContent = this.currentTrail().encode();
+      var trailJson = {
+        trailId: this.currentTrailInfo.id,
+        username: this.currentTrailInfo.username,
+        content: encodedTrailContent
+      }
+      // should merge this with a new trail json
+      console.log('trailJson');
+      //this.saveTrail(trailJson, this.trailSaved.bind(this));
+    });
+  },
+  
+  trailSaved: function(json)
+  {
+    // do some confirmation stuff
   },
   
   loadNav: function()
