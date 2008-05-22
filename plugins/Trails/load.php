@@ -13,7 +13,7 @@ $trailId = $db->escape($_POST['trailId']);
 $version = $db->escape($_POST['version']);
 
 $trail = $db->row("
-  SELECT t.title, t.content, t.created, t.modified, t.url_slug, t.status, t.thumb_status, u.username
+  SELECT t.title, t.content, t.created, t.modified, t.url_slug, t.thumb_status, u.username
   FROM trail t, user u
   WHERE u.id = t.user_id
   AND t.url_slug = '$trailId'
