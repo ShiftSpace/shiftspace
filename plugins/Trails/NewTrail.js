@@ -71,8 +71,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     if(trail) 
     {
       data.trailId = trail.trailId;
-      data.content = Json.toString(trail.content);
-      data.shifts = Json.toString(trail.shifts.join(','));
+      data.content = trail.content;
+      data.shifts = trail.shifts.join(',');
     }
     
     console.log('================================= DATA');
