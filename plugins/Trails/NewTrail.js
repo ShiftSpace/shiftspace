@@ -58,6 +58,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     };
     
     console.log(this.currentTrailInfo);
+    console.log(ShiftSpace.User.getUsername());
     
     this.setCurrentTrail(new Trail(focusedShift, Json.evaluate(trailJson.content)));
     this.updateInterface();
