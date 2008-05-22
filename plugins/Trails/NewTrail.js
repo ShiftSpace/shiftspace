@@ -268,7 +268,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         content: encodedTrailContent
       }
       // should merge this with a new trail json
-      console.log('trailJson');
+      console.log(trailJson);
       //this.saveTrail(trailJson, this.trailSaved.bind(this));
     });
   },
