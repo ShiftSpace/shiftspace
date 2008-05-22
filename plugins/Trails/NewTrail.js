@@ -145,6 +145,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   setCurrentTrail: function(newTrail)
   {
+    console.log('setCurrentTrail');
+    console.log(newTrail);
     this.__currentTrail__ = newTrail;
     newTrail.setDelegate(this);
   },
