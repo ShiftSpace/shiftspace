@@ -48,6 +48,9 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   onTrailLoad: function(focusedShift, trailJson)
   {
+    // load the interface first
+    this.showInterface();
+    
     this.currentTrailInfo = {
       id: trailJson.id,
       username: trailJson.username,
@@ -56,9 +59,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
     this.setCurrentTrail(new Trail(focusedShift, Json.evaluate(trailJson.content)));
     this.updateInterface();
-
-    // load the interface first
-    this.showInterface();
   },
   
   saveTrail: function(trail, cb)
@@ -148,6 +148,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   setCurrentTrail: function(newTrail)
   {
     this.__currentTrail__ = newTrail;
+    newTrail.setDelegate(this);
   },
   
   currentTrail: function()
@@ -286,16 +287,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       // put the interface back onto the DOM
       this.clippingArea.injectInside(document.body);
       this.scrollArea.empty();
-      this.controls.injectInside(document.body);
-      this.navBg.injectInside(document.body);
-      
-      if(this.currentTrailInfo.username == ShiftSpace.user.getUsername())
-      {
-        this.nav.injectInside(document.body);
-      }
-      
-      // load the name
-      this.loadNav();
     }
   },
   
@@ -303,7 +294,19 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     if(this.currentTrail() && this.currentTrailInfo)
     {
-      $('trail-title').setProperty('value', this.currentTrailInfo.title);
+      // if user is allowed to edit
+      if(this.currentTrailInfo.username == ShiftSpace.user.getUsername())
+      {
+        this.navBg.injectInside(document.body);
+        this.nav.injectInside(document.body);
+        this.loadNav();
+        this.controls.injectInside(document.body);
+        $('trail-title').setProperty('value', this.currentTrailInfo.title);
+      }
+      else
+      {
+        // just show the title
+      }
     }
   },
   
