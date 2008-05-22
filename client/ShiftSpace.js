@@ -235,11 +235,21 @@ var ShiftSpace = new (function() {
       {
         content = content.replace(/\n/g, '\\n');
         content = content.replace(/\r/g, '\\r');
+        //content = content.replace(/"/g,);
       }
       
       var obj = null;
-      obj = Json.evaluate(content);
-
+      try
+      {
+        obj = Json.evaluate(content);
+      }
+      catch(err)
+      {
+        console.log('content failed to load');
+        console.log(content);
+        //throw __SSCouldNotEvalShiftContentException__
+      }
+      
       return obj;
     }
     
