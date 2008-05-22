@@ -278,7 +278,7 @@ Trail.parse = function( json )
     // parse the nodes
     newNode.nodes.each( function( x ) {
       if( !linksHash[node+':'+x] &&
-      !linksHash[x+':'+node] )
+          !linksHash[x+':'+node] )
       {
         linksHash[node+':'+x] = 1;
         linksHash[x+':'+node] = 1;
