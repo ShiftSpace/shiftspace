@@ -29,9 +29,11 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.currentTrailInfo = {
       id: trailId,
       username: ShiftSpace.User.getUsername,
+      title: "Untitled"
     }
 
     this.setCurrentTrail(new Trail(focusedShift, trailJson, trailId));
+    this.updateInterface();
   },
   
   loadTrail: function(focusedShift, trailId)
@@ -57,6 +59,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     };
     
     this.setCurrentTrail(new Trail(focusedShift, Json.evaluate(trailJson.content)));
+    this.updateInterface();
   },
   
   saveTrail: function(trail, cb)
@@ -290,6 +293,14 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       
       // load the name
       this.loadNav();
+    }
+  },
+  
+  updateInterface: function()
+  {
+    if(this.currentTrail() && this.currentTrailInfo)
+    {
+      $('trail_title').setProperty('value', this.currentTrailInfo.title);
     }
   },
   
