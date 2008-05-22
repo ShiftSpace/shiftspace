@@ -28,7 +28,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     // store some trail info
     this.currentTrailInfo = {
       id: trailId,
-      username: ShiftSpace.User.getUsername,
+      username: ShiftSpace.User.getUsername(),
       title: "Untitled"
     }
 
