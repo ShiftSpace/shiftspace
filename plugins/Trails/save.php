@@ -112,7 +112,7 @@ for($i = 0; $i < count($shiftArray); $i++)
     $db->query("
       INSERT INTO trail_shift
       (trail_id, shift_id)
-      VALUES ($rTrailId, $rShiftId)
+      VALUES ('$rTrailId', '$rShiftId')
       ");
   }
 }
