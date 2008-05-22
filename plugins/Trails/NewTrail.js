@@ -143,7 +143,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   menuForShift: function(shiftId, cb)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>> menuForShift');
     this.trailsWithShift(shiftId, cb);
     return this.delayedMenu();
   },
