@@ -82,17 +82,18 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           this.newTrail(shiftId);
         }.bind(this)
       });
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      console.log(json);
-      for(trailId in json)
+      if($type(json) == 'object')
       {
-        menuItems.push({
-          text: json[trailId],
-          callback: function(shiftId) {
-            console.log('loadTrail, shiftId:' + shiftId + ', trailId:' + trailId);
-            this.loadTrail(shiftId, trailId);
-          }.bind(this)
-        })
+        for(trailId in json)
+        {
+          menuItems.push({
+            text: json[trailId],
+            callback: function(shiftId) {
+              console.log('loadTrail, shiftId:' + shiftId + ', trailId:' + trailId);
+              this.loadTrail(shiftId, trailId);
+            }.bind(this)
+          })
+        }
       }
       menuItems.push({
         text: "Cancel",
