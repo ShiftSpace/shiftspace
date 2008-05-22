@@ -69,8 +69,8 @@ else
   // Record a general accounting of shift
   $db->query("
       INSERT INTO trail
-      (user_id, title, content, url_slug, created, modified, status, version, thumb_status)
-      VALUES ($user->id, '$content', '$url_slug', '$created', '$modified', '$status', '$version', '$thumb_status')
+      (user_id, content, title, url_slug, created, modified, status, version, thumb_status)
+      VALUES ($user->id, '$content', 'title', '$url_slug', '$created', '$modified', '$status', '$version', '$thumb_status')
   ");
   
   $trailId = $url_slug;
