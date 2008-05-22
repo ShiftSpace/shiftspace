@@ -56,10 +56,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       username: trailJson.username,
       title: trailJson.title
     };
-    
-    console.log(this.currentTrailInfo);
-    console.log(ShiftSpace.user.getUsername());
-    
+
     this.setCurrentTrail(new Trail(focusedShift, Json.evaluate(trailJson.content)));
     this.updateInterface();
   },
@@ -82,8 +79,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       data, 
       function(json) 
       {
-        console.log('>>>>>>>>>>>>>>>>>>>>> saved trail is ');
-        console.log(json);
         this.onTrailSave(json);
         cb(json);
       }.bind(this)
@@ -98,7 +93,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   newTrail: function(shiftId)
   {
     this.saveTrail(null, function(json) {
-      console.log('>>>>>>>>>>>>>>>>>>>>> createTrail');
       this.createTrail(shiftId, Json.evaluate(json));
     }.bind(this));
   },
@@ -127,7 +121,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           menuItems.push({
             text: json[trailId],
             callback: function(shiftId) {
-              console.log('loadTrail, shiftId:' + shiftId + ', trailId:' + trailId);
               this.loadTrail(shiftId, trailId);
             }.bind(this)
           })
@@ -297,6 +290,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     if(this.currentTrail() && this.currentTrailInfo)
     {
+      console.log(this.currentTrailInfo.username + ', ' + ShiftSpace.user.getUsername());
+      
       // if user is allowed to edit
       if(this.currentTrailInfo.username == ShiftSpace.user.getUsername())
       {
