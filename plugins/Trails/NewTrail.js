@@ -68,6 +68,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     if(trailId.trailId) data.trailId = trail.trailId;
     data.content = trail.content;
     data.shifts = trail.shifts.join(',');
+    data.title = trail.title;
     
     console.log('================================= DATA');
     console.log(data);
@@ -281,6 +282,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       var encodedTrailContent = this.currentTrail().encode();
       
       var trailJson = {
+        title: $('trail-title').getProperty('value'),
         trailId: this.currentTrailInfo.trailId,
         username: this.currentTrailInfo.username,
         content: encodedTrailContent.structure,

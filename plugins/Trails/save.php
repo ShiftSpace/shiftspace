@@ -18,6 +18,7 @@ else if (!empty($_SERVER['HTTP_REFERER']))
 $trailId = $db->escape($_POST['trailId']);
 $content = $db->escape($_POST['content']);
 $version = $db->escape($_POST['version']);
+$title = $db->escape($_POST['title']);
 $shifts = $db->escape($_POST['shifts']);
 
 $error = false;
@@ -76,7 +77,7 @@ else
   $db->query("
     INSERT INTO trail
     (user_id, content, title, url_slug, created, modified, status, thumb_status)
-    VALUES ($user->id, '$content', 'title', '$url_slug', '$created', '$modified', '$status', '$thumb_status')
+    VALUES ($user->id, '$content', '$title', '$url_slug', '$created', '$modified', '$status', '$thumb_status')
     ");
     
   $trailId = $url_slug;
