@@ -73,7 +73,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.serverCall('trailsWithShift', {
       'shiftId': shiftId
     }, function(json) {
-      console.log('>>>>>>>>>>>>>>>>> YES!');
       // this will be created dynamically
       var menuItems = [];
       menuItems.push({
@@ -83,6 +82,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           this.newTrail(shiftId);
         }.bind(this)
       });
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      console.log(json);
       for(trailId in json)
       {
         menuItems.push({
