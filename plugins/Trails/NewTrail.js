@@ -16,7 +16,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   setup : function(json)
   {
   },
-  
+
   createTrail: function(focusedShift, trailId)
   {
     // load the interface first
@@ -24,6 +24,12 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     // load the shift with the trail focused
     var trailJson = {};
     trailJson[focusedShift] = this.getShift(focusedShift);
+    
+    // store some trail info
+    this.currentTrailInfo = {
+      id: trailId,
+      username: ShiftSpace.User.getUsername,
+    }
 
     this.setCurrentTrail(new Trail(focusedShift, trailJson, trailId));
   },
@@ -42,14 +48,30 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     // load the interface first
     this.showInterface();
-    this.setCurrentTrail(new Trail(focusedShift, Json.evaluate(trailJson)));
+    
+    // eval the trail
+    var theTrail = Json.evaluate(trailJson);
+    // store some data
+    this.currentTrailInfo = {
+      id: theTrail.id,
+      username: theTrail.username,
+      title: theTrail.title
+    };
+    
+    this.setCurrentTrail(new Trail(focusedShift, theTrail.content));
   },
   
   saveTrail: function(trail, cb)
   {
     var data = {};
     data.content = Json.toString(trail);
-    if(trail) data.trailId = trail.id;
+    
+    if(trail) 
+    {
+      data.trailId = trail.id;
+      data.username = trail.username;
+      data.content = trail.content;
+    }
     
     // get the trail
     this.serverCall(
@@ -68,8 +90,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   onTrailSave: function(json)
   {
     // do some stuff
-    console.log('>>>>>>>>>>>>>>>>>>>>> trail saved');
-    console.log(json);
   },
   
   newTrail: function(shiftId)
@@ -87,6 +107,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     }, function(json) {
       // this will be created dynamically
       var menuItems = [];
+      // Add the first item
       menuItems.push({
         text: "Create a Trail",
         callback: function(shiftId)
@@ -94,6 +115,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           this.newTrail(shiftId);
         }.bind(this)
       });
+      
+      // Add the trails list
       if($type(json) == 'object')
       {
         for(trailId in json)
@@ -107,6 +130,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           })
         }
       }
+      
+      // Add the cancel button
       menuItems.push({
         text: "Cancel",
         callback: function(shiftId)
@@ -114,7 +139,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           this.closeMenu.bind(this);
         }.bind(this)
       });
-      console.log(menuItems);
+      
+      // send it to the callback function
       cb(menuItems);
     }.bind(this));
   },
