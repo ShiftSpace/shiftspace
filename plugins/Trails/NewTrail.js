@@ -289,7 +289,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       this.controls.injectInside(document.body);
 
       // if user is allowed to edit
-      if(this.currentTrailInfo.username == ShiftSpace.user.getUsername())
+      if(this.userCanEdit())
       {
         this.navBg.injectInside(document.body);
         this.nav.injectInside(document.body);
@@ -321,8 +321,13 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     }
   },
   
-  deleteTrail : function()
+  deleteTrail: function()
   {
+  },
+  
+  userCanEdit: function()
+  {
+    return (this.currentTrailInfo.username == ShiftSpace.user.getUsername());
   }
   
 });

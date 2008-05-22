@@ -325,7 +325,7 @@ var TrailPage = new Class({
     
     // update the focused nodes hovered link point just in case of drop
     this.linkPoint.addEvent( 'mouseenter', function( e ) {
-      if( this.parentTrail.isEditable ) this.linkPoint.addClass( 'TrailPageLinkPointLargeHover' );
+      if( this.parentTrail.isEditable() ) this.linkPoint.addClass( 'TrailPageLinkPointLargeHover' );
 
       if( gFocusedNode && gFocusedNode.linkPoint != this.linkPoint )
       {
@@ -346,7 +346,7 @@ var TrailPage = new Class({
         window.addEvent( 'mouseup', this.cancelCreateLink.bind( this ) );
         
         // only if the trail is editable, this should probably be moved into Trails
-        if( this.parentTrail.isEditable )
+        if( this.parentTrail.isEditable() )
         {
           this.createLink( e );
         }
@@ -657,7 +657,7 @@ var TrailPage = new Class({
     this.isZoomed = true;
     
     // need to switch the image to the other style
-    if( this.parentTrail.isEditable )
+    if( this.parentTrail.isEditable() )
     {
       // show the link creation button
       this.linkPoint.removeClass( 'TrailPageLinkPoint' );

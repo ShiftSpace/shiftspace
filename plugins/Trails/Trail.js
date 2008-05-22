@@ -225,6 +225,11 @@ var Trail = new Class({
   delegate: function()
   {
     return this.__delegate__;
+  },
+  
+  isEditable: function()
+  {
+    return this.delegate().userCanEdit();
   }
 });
 
