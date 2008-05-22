@@ -78,33 +78,43 @@ else
     (user_id, content, title, url_slug, created, modified, status, thumb_status)
     VALUES ($user->id, '$content', 'title', '$url_slug', '$created', '$modified', '$status', '$thumb_status')
     ");
+    
+  $trailId = $url_slug;
+}
 
-  // get the real trail id
-  $rTrailId = $db->value("
-    SELECT id FROM trail
-    WHERE url_slug='$url_slug'
+// update the trail_shift table
+// get the real trail id
+$rTrailId = $db->value("
+  SELECT id FROM trail
+  WHERE url_slug='$url_slug'
+  ");
+  
+// we need to insert fields for each shift in the
+$shiftArray = explode(',', $shifts);
+for($i = 0; $i < count($shiftArray); $i++)
+{
+  $shiftId = $shiftArray[$i];
+  
+  // get the real shift id
+  $rShiftId = $db->value("
+    SELECT id FROM shift
+    WHERE url_slug='$shiftId'
     ");
-    
-  // we need to insert fields for each shift in the
-  $shiftArray = explode(',', $shifts);
-  for($i = 0; $i < count($shiftArray); $i++)
-  {
-    $shiftId = $shiftArray[$i];
-    
-    // get the real shift id
-    $rShiftId = $db->value("
-      SELECT id FROM shift
-      WHERE url_slug='$shiftId'
-      ");
+  
+  // make sure it doesn't already exist
+  $exists = $db->value("
+    SELECT * FROM trail_shift
+    WHERE trail_id='$rTrailId' AND shift_id='$rShiftId'
+  ");
 
+  if(!$exists)
+  {
     $db->query("
       INSERT INTO trail_shift
       (trail_id, shift_id)
       VALUES ($rTrailId, $rShiftId)
       ");
   }
-
-  $trailId = $url_slug;
 }
 
 if(!$error)
