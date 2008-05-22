@@ -7,9 +7,6 @@ var gNodeNumber = 0;
 var Trail = new Class({
   initialize : function( _focusedShift, json)
   {
-    console.log('++++++++++++++++++++++++++++++++ initialize');
-    console.log(json);
-
     json = this.normalize(json);
     
     // clear these globals
