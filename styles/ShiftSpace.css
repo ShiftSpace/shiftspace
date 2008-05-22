@@ -48,7 +48,7 @@
   cursor: default;
   user-select: none;
   -moz-user-select: none;
-  -webkit-user-select: normal;
+  -webkit-user-select: none;
 }
 
 .SSDisplayNone
