@@ -7,7 +7,8 @@
 */
 
 require_once '../server/database/database.php';
-$db = new Database('sqlite://../shiftspace.sqlite3');
+require_once '../server/config.php';
+$db = new Database($db_path);
 $id = $db->escape($_GET['id']);
 
 $shift = $db->row("
