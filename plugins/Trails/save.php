@@ -86,7 +86,7 @@ else
 // get the real trail id
 $rTrailId = $db->value("
   SELECT id FROM trail
-  WHERE url_slug='$url_slug'
+  WHERE url_slug='$trailId'
   ");
   
 // we need to insert fields for each shift in the
