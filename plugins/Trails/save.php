@@ -104,7 +104,7 @@ for($i = 0; $i < count($shiftArray); $i++)
   // make sure it doesn't already exist
   $exists = $db->value("
     SELECT trail_id FROM trail_shift
-    WHERE trail_id='$rTrailId' AND shift_id='$rShiftId'
+    WHERE trail_id=$rTrailId AND shift_id=$rShiftId
   ");
 
   if(!$exists)
@@ -112,7 +112,7 @@ for($i = 0; $i < count($shiftArray); $i++)
     $db->query("
       INSERT INTO trail_shift
       (trail_id, shift_id)
-      VALUES ('$rTrailId', '$rShiftId')
+      VALUES ($rTrailId, $rShiftId)
       ");
   }
 }
