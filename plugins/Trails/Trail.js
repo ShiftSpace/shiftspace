@@ -11,6 +11,8 @@ var Trail = new Class({
     console.log(json);
     
     this.id = _id;
+
+    json = this.normalize(json);
     
     // clear these globals
     gFocusedNode = null;
@@ -83,6 +85,19 @@ var Trail = new Class({
 
     // is this trail editable by the user
     this.isEditable = !( $('trail-controls').hasClass( 'limited' ) );
+  },
+  
+  normalize: function(aTrail)
+  {
+    for(trailId in aTrail)
+    {
+      var aShift = aTrail[trailId];
+      if(!aShift.loc)
+      {
+        aShift.loc = {x:0, y:0};
+      }
+    }
+    return aTrail;
   },
   
   /*
