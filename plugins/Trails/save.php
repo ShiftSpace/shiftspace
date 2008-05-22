@@ -96,28 +96,31 @@ $shiftArray = explode(',', $shifts);
 for($i = 0; $i < count($shiftArray); $i++)
 {
   $shiftId = $shiftArray[$i];
-  
-  // get the real shift id
-  $rShiftId = $db->value("
-    SELECT id FROM shift
-    WHERE url_slug='$shiftId'
-    ");
-    
-  echo $rTrailId . ", " . $rShiftId;
-  
-  // make sure it doesn't already exist
-  $exists = $db->value("
-    SELECT trail_id FROM trail_shift
-    WHERE trail_id=$rTrailId AND shift_id=$rShiftId
-  ");
 
-  if(!$exists)
+  if($shiftId)
   {
-    $db->query("
-      INSERT INTO trail_shift
-      (trail_id, shift_id)
-      VALUES ($rTrailId, $rShiftId)
+    // get the real shift id
+    $rShiftId = $db->value("
+      SELECT id FROM shift
+      WHERE url_slug='$shiftId'
       ");
+    
+    echo $rTrailId . ", " . $rShiftId;
+  
+    // make sure it doesn't already exist
+    $exists = $db->value("
+      SELECT trail_id FROM trail_shift
+      WHERE trail_id=$rTrailId AND shift_id=$rShiftId
+    ");
+
+    if(!$exists)
+    {
+      $db->query("
+        INSERT INTO trail_shift
+        (trail_id, shift_id)
+        VALUES ($rTrailId, $rShiftId)
+        ");
+    }
   }
 }
 
