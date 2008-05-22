@@ -82,7 +82,6 @@ else
   $trailId = $url_slug;
 }
 
-echo 'UPDATING TRAIL_SHIFT';
 
 // update the trail_shift table
 // get the real trail id
@@ -90,6 +89,8 @@ $rTrailId = $db->value("
   SELECT id FROM trail
   WHERE url_slug='$trailId'
   ");
+  
+echo 'UPDATING TRAIL_SHIFT';
   
 // we need to insert fields for each shift in the
 $shiftArray = explode(',', $shifts);
