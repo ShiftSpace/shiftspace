@@ -19,6 +19,7 @@ $trailId = $db->escape($_POST['trailId']);
 $content = $db->escape($_POST['content']);
 $version = $db->escape($_POST['version']);
 
+$error = false;
 if($trailId)
 {
   // If it does update it
@@ -35,8 +36,6 @@ if($trailId)
     modified = '$now'
     WHERE url_slug='$trailId'
     ");
-
-  $trailId = "junk";
 }
 else
 {
@@ -82,6 +81,13 @@ else
   $trailId = $url_slug;
 }
 
-echo "{'success':true, 'trailId':'$trailId'}";
+if(!$error)
+{
+  echo "{'success':true, 'trailId':'$trailId'}";  
+}
+else
+{
+  echo "{'success':false, 'message':'save operation failed'}";
+}
 
 ?>
