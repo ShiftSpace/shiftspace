@@ -10,7 +10,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     title: null,
     icon: null,
     css: 'Trails.css',
-    includes: ['Trail.js', 'TrailLink.js', 'TrailPage.js', 'TrailNavPage.js', 'TrailNav.js', 'Vector.js']
+    includes: ['Trail.js', 'TrailLink.js', 'TrailPage.js', 'TrailNavPage.js', 'TrailNav.js', 'Vector.js'],
     version: 0.2
   },
   
