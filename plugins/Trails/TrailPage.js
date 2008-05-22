@@ -419,13 +419,8 @@ var TrailPage = new Class({
     });
     
     this.dragLinkPoint.addEvent( 'mouseup', function( e ) { 
-      console.log('>>>>>>>>>>>>>>>>>>>> LINK POINT RELEASE');
       this.releaseEvent = e;
     }.bind( this ) );
-    window.addEvent('mouseup', function(_evt) {
-      var evt = new Event(_evt);
-      console.log('>>>>>>>>>>>>>>>>>>>> WINDOW RELEASE');
-    });
 
     var newLink = new TrailLink( this.linkPoint, this.dragLinkPoint );
 
@@ -439,7 +434,6 @@ var TrailPage = new Class({
       
       onComplete : function( e )
       {
-        console.log('>>>>>>>>>>>>>>>>>>>>> COMPLETE');
         var evt = new Event( this.releaseEvent );
         
         if( gHoveredNode )
