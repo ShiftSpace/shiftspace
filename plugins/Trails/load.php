@@ -23,6 +23,6 @@ $trail = $db->row("
     WHERE url_slug='$trailId'
     ");
 
-echo json_encode($trail->content);
+echo json_encode($trail);
 
 ?>
