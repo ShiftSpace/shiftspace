@@ -31,6 +31,8 @@ if($trailId)
           modified = '$now'
       WHERE url_slug='$trailId'
   ");
+  
+  $trailId = "junk";
 }
 else
 {
