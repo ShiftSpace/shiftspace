@@ -274,7 +274,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       // should merge this with a new trail json
       console.log(trailJson);
       //this.saveTrail(trailJson, this.trailSaved.bind(this));
-    });
+    }.bind(this));
   },
   
   trailSaved: function(json)
