@@ -222,6 +222,16 @@ var Trail = new Class({
     }
 
     return Json.toString( jsonobj );
+  },
+  
+  setDelegate: function(newDelegate)
+  {
+    this.__delegate__ = newDelegate;
+  },
+  
+  delegate: function()
+  {
+    return this.__delegate__;
   }
 });
 

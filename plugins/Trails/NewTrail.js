@@ -300,7 +300,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     if(this.currentTrail() && this.currentTrailInfo)
     {
-      $('trail_title').setProperty('value', this.currentTrailInfo.title);
+      $('trail-title').setProperty('value', this.currentTrailInfo.title);
     }
   },
   
