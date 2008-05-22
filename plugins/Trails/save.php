@@ -20,6 +20,7 @@ $content = $db->escape($_POST['content']);
 $version = $db->escape($_POST['version']);
 $title = $db->escape($_POST['title']);
 $shifts = $db->escape($_POST['shifts']);
+$version = $db->escape($_POST['version']);
 
 $error = false;
 if($trailId)
@@ -35,7 +36,8 @@ if($trailId)
     UPDATE trail
     SET content = '$content',
     title = '$title',
-    modified = '$now'
+    modified = '$now',
+    version = '$version',
     WHERE url_slug='$trailId'
     ");
 }
@@ -76,8 +78,8 @@ else
   // Record a general accounting of shift
   $db->query("
     INSERT INTO trail
-    (user_id, content, title, url_slug, created, modified, status, thumb_status)
-    VALUES ($user->id, '$content', '$title', '$url_slug', '$created', '$modified', '$status', '$thumb_status')
+    (user_id, content, title, url_slug, created, modified, status, thumb_status, version)
+    VALUES ($user->id, '$content', '$title', '$url_slug', '$created', '$modified', '$status', '$thumb_status', '$version')
     ");
     
   $trailId = $url_slug;
