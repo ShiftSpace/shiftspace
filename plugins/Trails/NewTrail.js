@@ -77,7 +77,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     data.content = trail.content;
     data.shifts = trail.shifts.join(',');
     data.title = trail.title;
-    data.versino = this.attributes.version;
+    data.version = this.attributes.version;
     
     console.log('================================= DATA');
     console.log(data);
