@@ -202,16 +202,16 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     });
     this.controls.setHTML('                                                    \
     <div id="trailPermaLink" class="trailPermaLink" style="border:none"></div> \
-    <input type="text" id="trail-title" />                                     \
+    <input type="text" id="trail-title" class="SSTrailControl"/>               \
     <div style="float:right;">permalink</div>                                  \
     <div id="trail-title-limited"></div>                                       \
     <div id="trail-close">                                                     \
     </div>                                                                     \
-    <div>                                                                      \
+    <div class="SSTrailControl">                                               \
       <input type="button" value="Cancel" id="trail-cancel" />                 \
       <input type="button" value="Save" id="trail-save" />                     \
     </div>                                                                     \
-    <div>                                                                      \
+    <div class="SSTrailControl">                                               \
       <input type="button" value="Delete" id="trail-delete" />                 \
     </div>                                                                     \
     <div id="trail-save-feedback"></div>                                       \
@@ -228,12 +228,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.navBg = new ShiftSpace.Element('div', {
       id: "trail-nav-bg"
     });                          
-    
-    /*
-    this.controls.injectInside(document.body);
-    this.navBg.injectInside(document.body);
-    this.nav.injectInside(document.body);
-    */
     
     // store a drag reference just in case we want to stop the dragging behavior
     this.scrollDragRef = this.scrollArea.makeDraggable({
@@ -292,21 +286,24 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     if(this.currentTrail() && this.currentTrailInfo)
     {
-      console.log(this.currentTrailInfo.username + ', ' + ShiftSpace.user.getUsername());
-      console.log(this.currentTrailInfo.username == ShiftSpace.user.getUsername());
-      
+      this.controls.injectInside(document.body);
+
       // if user is allowed to edit
       if(this.currentTrailInfo.username == ShiftSpace.user.getUsername())
       {
         this.navBg.injectInside(document.body);
         this.nav.injectInside(document.body);
         this.loadNav();
-        this.controls.injectInside(document.body);
+        // reveal the controls
+        this.controls.getElement('.SSTrailControl').removeClass('SSDisplayNone');
+        $('trail-title-limited').addClass('SSDisplayNone');
         $('trail-title').setProperty('value', this.currentTrailInfo.title);
       }
       else
       {
-        // just show the title
+        this.controls.getElement('.SSTrailControl').addClass('SSDisplayNone');
+        $('trail-title-limited').removeClass('SSDisplayNone');
+        $('trail-title-limited').setText(this.currentTrailInfo.title);
       }
     }
   },
