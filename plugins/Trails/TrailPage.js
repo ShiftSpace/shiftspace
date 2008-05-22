@@ -49,6 +49,7 @@ var TrailPage = new Class({
     if(this.options.space)
     {
       this.space = this.options.space;
+
     }
     else
     {
@@ -58,8 +59,18 @@ var TrailPage = new Class({
       this.space = space;
     }
     
+    // get the space icon
     this.icon = Trails.attributes.dir+'images/'+this.space.toLowerCase()+'_trailsicon.png';
-    this.thumb = Trails.attributes.dir+'images/'+this.space.toLowerCase()+'_thumb.png';
+    
+    // use the thumb if there is one
+    if(this.options.thumb)
+    {
+      this.thumb = this.options.thumb;
+    }
+    else
+    {
+      this.thumb = Trails.attributes.dir+'images/'+this.space.toLowerCase()+'_thumb.png';
+    }
 
     // make sure we have an element if not create one
     // and add it to the page
