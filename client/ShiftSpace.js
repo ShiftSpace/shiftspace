@@ -1198,11 +1198,11 @@ var ShiftSpace = new (function() {
         'targetElement': targetNode
       });
       
-      //if(!targetNode)
-      //{
+      if(!targetNode)
+      {
         // throw an exception
         throw(__SSPinOpException__);
-      //}
+      }
       
       switch(pinRef.action)
       {
