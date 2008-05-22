@@ -101,6 +101,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           this.closeMenu.bind(this);
         }.bind(this)
       });
+      console.log(menuItems);
       cb(menuItems);
     }.bind(this));
   },
