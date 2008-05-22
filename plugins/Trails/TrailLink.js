@@ -20,6 +20,7 @@ var TrailLink = new Class({
     else
     {
       this.element.injectInside( document.body );
+      this.element.addClass('TrailDragLink');
     }
     
     // store the rendering context
