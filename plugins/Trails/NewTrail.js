@@ -267,13 +267,13 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       // encode the current trail
       var encodedTrailContent = this.currentTrail().encode();
       var trailJson = {
-        trailId: this.currentTrailInfo.id,
+        trailId: this.currentTrailInfo.trailId,
         username: this.currentTrailInfo.username,
         content: encodedTrailContent
       }
       // should merge this with a new trail json
       console.log(trailJson);
-      //this.saveTrail(trailJson, this.trailSaved.bind(this));
+      this.saveTrail(trailJson, this.trailSaved.bind(this));
     }.bind(this));
   },
   
