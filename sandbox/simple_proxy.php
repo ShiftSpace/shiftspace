@@ -126,7 +126,7 @@ if($spaceName == 'sourceshift')
   $legacy = true;
 }
 
-$shiftContent = $shiftContent->content;
+$shiftContent = $shift->content;
 
 if($legacy)
 {
