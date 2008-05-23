@@ -5,7 +5,8 @@ $trailId = $db->escape($_POST['trailId']);
 $ownerId = $db->value("
   SELECT u.id
   FROM trail t, user u
-  WHERE t.user_id = u.id
+  WHERE t.user_id = u.id AND
+  t.url_slug='$trailId'
 ");
 
 // not logged in
