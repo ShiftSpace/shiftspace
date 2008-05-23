@@ -104,10 +104,35 @@ $ShiftSpace .= '<script type="text/javascript" src="../client/Space.js" charset=
 $ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset="utf-8"></script>';
 
 $spaceName = $shift->space;
-if($spaceName == 'notes') $spaceName = 'Notes';
-if($spaceName == 'highlight') $spaceName = 'Highlights';
-if($spaceName == 'imageswap') $spaceName = 'ImageSwap';
-if($spaceName == 'sourceshift') $spaceName = 'SourceShift';
+$legacy = false;
+if($spaceName == 'notes') 
+{
+  $spaceName = 'Notes';
+  $legacy = true;
+}
+if($spaceName == 'highlight') 
+{
+  $spaceName = 'Highlights';
+  $legacy = true;
+}
+if($spaceName == 'imageswap')
+{
+  $spaceName = 'ImageSwap';
+  $legacy = true;
+}
+if($spaceName == 'sourceshift')
+{
+  $spaceName = 'SourceShift';
+  $legacy = true;
+}
+
+$shiftContent = $shiftContent->content;
+
+if($legacy)
+{
+  // remove the curly braces
+  $shiftContent = substr($shiftContent, 1, strlen($shiftContent)-1);
+}
 
 // check the database for the shift's space load
 $ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$spaceName.'/'.$spaceName.'.js" charset="utf-8"></script>';
@@ -115,7 +140,7 @@ $ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$spaceName.'/'.$
 // get the shift out of the database
 $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
   window.addEvent('domready', function() {
-    $spaceName.showShift($shift->content);
+    $spaceName.showShift($shiftContent);
   });
 </script>";
 
