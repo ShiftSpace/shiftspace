@@ -291,14 +291,19 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   attachEvents: function()
   {
+    // cancel create trail
     this.controls.getElement('#trail-cancel').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       this.hideInterface();
     }.bind(this));
+
+    // close the trail
     this.controls.getElement('#trail-close').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       this.hideInterface();
     }.bind(this));
+
+    // save the damn thing
     this.controls.getElement('#trail-save').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       // encode the current trail
@@ -314,6 +319,12 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       
       // should merge this with a new trail json
       this.saveTrail(trailJson, this.trailSaved.bind(this));
+    }.bind(this));
+
+    // delete it! woohoo
+    this.controls.getElement('#trail-delete').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      this.deleteTrail();
     }.bind(this));
   },
   
@@ -389,6 +400,18 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   deleteTrail: function()
   {
+    var data = {trailId: this.currentTrailInfo.trailId};
+    
+    this.serverCall(
+      'delete',
+      data,
+      this.onTrailDelete.bind(this)
+    );
+  },
+  
+  onTrailDelete: function(json)
+  {
+    console.log('Trail deleted! ' + Json.toString(json));
   },
   
   userCanEdit: function()
