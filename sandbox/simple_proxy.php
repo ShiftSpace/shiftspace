@@ -6,6 +6,7 @@
 
 */
 
+$dir = dirname(__FILE__) . '/..';
 require_once '../server/database/database.php';
 require_once '../server/config.php';
 $db = new Database($db_path);
