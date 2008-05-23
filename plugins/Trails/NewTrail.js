@@ -61,6 +61,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     if(!trailJson.version)
     {
       this.setCurrentTrail(new Trail(focusedShift, Json.evaluate(trailJson.content)));
+      this.updateInterface();
     }
     else
     {
@@ -72,7 +73,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       for(shiftId in this.trailData) { trailShifts.push(shiftId) };
       this.getShifts(trailShifts, this.trailShiftsLoaded.bind(this));
     }
-    this.updateInterface();
   },
   
   trailShiftsLoaded : function(shifts)
@@ -85,6 +85,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       this.trailData[a]= $merge(this.trailData[a], shifts[a]);
     }
     this.setCurrentTrail(new Trail(this.focusedShift, this.trailData));
+
+    this.updateInterface();
   },
   
   saveTrail: function(trail, cb)
