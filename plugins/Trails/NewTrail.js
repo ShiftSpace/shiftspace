@@ -69,7 +69,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       this.focusedShift = focusedShift;
       
       var trailShifts = [];
-      for(shiftId in trailData) { trailShifts.push(shiftId) };
+      for(shiftId in this.trailData) { trailShifts.push(shiftId) };
       this.getShifts(trailShifts, this.trailShiftsLoaded.bind(this));
     }
     this.updateInterface();
