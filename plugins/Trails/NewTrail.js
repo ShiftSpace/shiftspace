@@ -75,7 +75,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.updateInterface();
   },
   
-  this.trailShiftsLoaded = function(shifts)
+  trailShiftsLoaded : function(shifts)
   {
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> trailShiftsLoaded');
     console.log(shifts);
