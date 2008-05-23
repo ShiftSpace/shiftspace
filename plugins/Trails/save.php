@@ -47,6 +47,8 @@ if($trailId)
 }
 else
 {
+  echo "NOT EXISTING!";
+  
   // generate a url_slug
   $created = $now;
 
