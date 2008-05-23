@@ -102,15 +102,17 @@ $ShiftSpace .= '<script type="text/javascript" src="../client/RangeCoder.js"></s
 $ShiftSpace .= '<script type="text/javascript" src="../client/Element.js"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="../client/Space.js" charset="utf-8"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset="utf-8"></script>';
-// check the database for the shift's space load
-$ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$shift->space.'/'.$shift->space.'.js" charset="utf-8"></script>';
 
 $spaceName = $shift->space;
-
 if($spaceName == 'notes') $spaceName = 'Notes';
 if($spaceName == 'highlight') $spaceName = 'Highlights';
 if($spaceName == 'imageswap') $spaceName = 'ImageSwap';
 if($spaceName == 'sourceshift') $spaceName = 'SourceShift';
+
+$ShiftSpace .="<script>var test='$spaceName';</script>";
+
+// check the database for the shift's space load
+$ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$spaceName.'/'.$spaceName.'.js" charset="utf-8"></script>';
 
 // get the shift out of the database
 $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
