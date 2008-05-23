@@ -39,7 +39,7 @@ $db->query("
   DELETE
   FROM trail
   WHERE url_slug = '$trailId'
-  ")
+  ");
   
 echo "{type:'message', value:'success'}";
 
