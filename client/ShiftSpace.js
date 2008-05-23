@@ -851,7 +851,7 @@ var ShiftSpace = new (function() {
         
         //cleanShiftData(json);
         
-        if(callback) callback(finalJson);
+        if(callBack) callBack(finalJson);
       });
     }
     
