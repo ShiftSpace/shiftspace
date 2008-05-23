@@ -827,6 +827,7 @@ var ShiftSpace = new (function() {
       var finalJson = {};
       
       // figure out what the actual new shift ids are
+      /*
       shiftIds.each(function(id) {
         if(!shifts[id]) 
         {
@@ -837,6 +838,9 @@ var ShiftSpace = new (function() {
           finalJson[id] = shifts[id];
         }
       });
+      */
+      
+      newShiftIds = shiftIds;
 
       // put these together
       var params = { shiftIds: newShiftIds.join(',') };
