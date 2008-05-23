@@ -140,7 +140,14 @@ $ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$spaceName.'/'.$
 // get the shift out of the database
 $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
   window.addEvent('domready', function() {
-    $spaceName.showShift($shiftContent);
+    var theShift = $shiftContent;
+    
+    if($legacy)
+    {
+      \$merge(theShift, {legacy:true});
+    }
+    
+    $spaceName.showShift(theShift);
   });
 </script>";
 
