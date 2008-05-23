@@ -83,7 +83,7 @@ $ShiftSpace .= '<script type="text/javascript">
   if(!window.console)
   {
     window.console = {
-      log: function() {}
+      log: function() {},
       error: function() {}
     };
   }
