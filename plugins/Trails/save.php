@@ -36,14 +36,17 @@ if($trailId)
     WHERE id = '$trailId'
     ");
 
-  $db->query("
-    UPDATE trail
-    SET content = '$content',
-    title = '$title',
-    modified = '$now',
-    version = '$version',
-    WHERE url_slug='$trailId'
-    ");
+  if($exists)
+  {
+    $db->query("
+      UPDATE trail
+      SET content = '$content',
+      title = '$title',
+      modified = '$now',
+      version = '$version'
+      WHERE url_slug='$trailId'
+      ");
+  }
 }
 else
 {
