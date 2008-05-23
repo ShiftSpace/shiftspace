@@ -104,26 +104,26 @@ $ShiftSpace .= '<script type="text/javascript" src="../client/Space.js" charset=
 $ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset="utf-8"></script>';
 
 $spaceName = $shift->space;
-$legacy = false;
+$legacy = true;
 if($spaceName == 'notes') 
 {
   $spaceName = 'Notes';
-  $legacy = true;
 }
-if($spaceName == 'highlight') 
+else if($spaceName == 'highlight') 
 {
   $spaceName = 'Highlights';
-  $legacy = true;
 }
-if($spaceName == 'imageswap')
+else if($spaceName == 'imageswap')
 {
   $spaceName = 'ImageSwap';
-  $legacy = true;
 }
-if($spaceName == 'sourceshift')
+else if($spaceName == 'sourceshift')
 {
   $spaceName = 'SourceShift';
-  $legacy = true;
+}
+else
+{
+  $legacy = false;
 }
 
 $shiftContent = $shift->content;
