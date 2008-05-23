@@ -9,6 +9,9 @@ var Trail = new Class({
   {
     json = this.normalize(json);
     
+    console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++ INITIALIZING TRAIL');
+    console.log(json);
+    
     // clear these globals
     gFocusedNode = null;
     gHoveredNode = null;
