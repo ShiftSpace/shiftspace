@@ -1704,7 +1704,7 @@ var ShiftSpace = new (function() {
         onload: function(rx) {
           if (typeof callback == 'function') {
             var json = Json.evaluate(rx.responseText);
-            //console.log(rx.responseText);
+            console.log(rx.responseText);
             if(json.status == 0)
             {
               console.error(method + ' failed' + ((json.message && (', error: ' + json.message)) || '') + '.');
