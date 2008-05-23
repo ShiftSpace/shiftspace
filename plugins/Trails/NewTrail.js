@@ -56,6 +56,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       username: trailJson.username,
       title: trailJson.title
     };
+    
+    console.log(trailJson.title);
 
     // check to see if this is a legacy trail
     if(!trailJson.version)
@@ -82,7 +84,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       this.trailData[a]= $merge(this.trailData[a], theShifts[a]);
     }
     this.setCurrentTrail(new Trail(this.focusedShift, this.trailData));
-
     this.updateInterface();
   },
   
