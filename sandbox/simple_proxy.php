@@ -109,8 +109,6 @@ if($spaceName == 'highlight') $spaceName = 'Highlights';
 if($spaceName == 'imageswap') $spaceName = 'ImageSwap';
 if($spaceName == 'sourceshift') $spaceName = 'SourceShift';
 
-$ShiftSpace .="<script>var test='$spaceName';</script>";
-
 // check the database for the shift's space load
 $ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$spaceName.'/'.$spaceName.'.js" charset="utf-8"></script>';
 
