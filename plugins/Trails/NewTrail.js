@@ -325,6 +325,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.controls.getElement('#trail-delete').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       this.deleteTrail();
+      this.hideInterface();
     }.bind(this));
   },
   
