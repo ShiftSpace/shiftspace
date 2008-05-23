@@ -27,8 +27,6 @@ $now = date('Y-m-d H:i:s');
 $error = false;
 if($trailId)
 {
-  echo "EXISTING";
-  
   // If it does update it
   $exists = $db->value("
     SELECT id
@@ -50,8 +48,6 @@ if($trailId)
 }
 else
 {
-  echo "NOT EXISTING!";
-  
   // generate a url_slug
   $created = $now;
 
