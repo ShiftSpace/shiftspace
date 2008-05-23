@@ -128,11 +128,14 @@ else
 
 $shiftContent = $shift->content;
 
+// TODO: this should be replaced by versioning - David
 if($legacy)
 {
   // remove the curly braces
   $shiftContent = substr($shiftContent, 1, strlen($shiftContent)-2);
 }
+
+$legacyValue = ($legacy) ? 'true' : 'false';
 
 // check the database for the shift's space load
 $ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$spaceName.'/'.$spaceName.'.js" charset="utf-8"></script>';
@@ -142,7 +145,7 @@ $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
   window.addEvent('domready', function() {
     var theShift = $shiftContent;
     
-    if($legacy)
+    if($legacyValue)
     {
       \$merge(theShift, {legacy:true});
     }
