@@ -202,7 +202,7 @@ var Trail = new Class({
     for( var i = 0; i < len; i++ )
     {
       var curNode = this.nodes[i];
-      var loc = curNode.getPosition();
+      var loc = curNode.getRealPosition();
       var id = curNode.id;
 
       // just store location and nodes
