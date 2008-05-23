@@ -12,8 +12,10 @@ for($i = 0; $i < count($shiftIds); $i++)
   if($shiftId)
   {
     $aShift = $db->row("
-    SELECT * FROM shift
-    WHERE url_slug='$shiftId'
+    SELECT s.space, s.href, s.summary, s.content, s.url_slug as id, s.created, s.modified, s.version, u.username
+    FROM shift s, user u
+    WHERE s.rl_slug = '$shiftId' AND
+    s.user_id = u.id
     ");
     $theShifts[] = $aShift;
   }

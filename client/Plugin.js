@@ -111,6 +111,7 @@ ShiftSpace.Plugin = new Class({
     }
   },
   
+  // this isn't good needs to be generalized
   getShift: function(shiftId)
   {
     var temp = getShiftContent(shiftId);
@@ -123,6 +124,11 @@ ShiftSpace.Plugin = new Class({
     copy.href = getUrlForShift(shiftId);
     
     return copy;
+  },
+  
+  getShifts: function(shiftIds, callBack)
+  {
+    getShifts(shiftIds, callBack);
   },
   
   recentlyViewedShifts: function()
