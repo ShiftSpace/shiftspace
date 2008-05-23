@@ -99,9 +99,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     data.title = trail.title;
     data.version = this.attributes.version;
     
-    console.log('================================= DATA');
-    console.log(data);
-    
     // get the trail
     this.serverCall(
       'save',
@@ -168,7 +165,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           menuItems.push({
             text: json[trailId],
             callback: function(shiftId) {
-              console.log('+++++++++++++++++++++++ loadTrail: ' + shiftId + ', ' + trailId);
               this.loadTrail(shiftId, trailId);
             }.bind(this)
           })
@@ -183,9 +179,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           this.closeMenu.bind(this);
         }.bind(this)
       });
-      
-      console.log(menuItems);
-      
       // send it to the callback function
       cb(menuItems);
     }.bind(this));
@@ -193,8 +186,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   setCurrentTrail: function(newTrail)
   {
-    console.log('setCurrentTrail');
-    console.log(newTrail);
     this.__currentTrail__ = newTrail;
     newTrail.setDelegate(this);
   },
