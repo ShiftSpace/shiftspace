@@ -22,6 +22,8 @@ $title = $db->escape($_POST['title']);
 $shifts = $db->escape($_POST['shifts']);
 $version = $db->escape($_POST['version']);
 
+$now = date('Y-m-d H:i:s');
+
 $error = false;
 if($trailId)
 {
@@ -44,7 +46,7 @@ if($trailId)
 else
 {
   // generate a url_slug
-  $created = date('Y-m-d H:i:s');
+  $created = $now;
 
   // Generate initial URL slug
   $values = serialize($_POST);
