@@ -878,9 +878,12 @@ var Console = new Class({
       ShiftSpace.showShift(aShift.id);
       editShift(aShift.id);
       
-      newEntry.removeClass('SSUserSelectNone');
-      newEntry.getElement('.summaryView').addClass('SSDisplayNone');
-      newEntry.getElement('.summaryEdit').removeClass('SSDisplayNone');
+      if(SSUserCanEditShift(aShift.id))
+      {
+        newEntry.removeClass('SSUserSelectNone');
+        newEntry.getElement('.summaryView').addClass('SSDisplayNone');
+        newEntry.getElement('.summaryEdit').removeClass('SSDisplayNone');
+      }
     });
     
     // Event for the title edit input field

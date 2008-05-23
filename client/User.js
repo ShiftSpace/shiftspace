@@ -14,6 +14,10 @@ var User = new Class({
       return username;
     },
     
+    isLoggedIn: function() {
+      return (username != false);
+    },
+    
     login: function(credentials, callback) {
       serverCall('user.login', credentials, function(json) {
         if (json.status) {

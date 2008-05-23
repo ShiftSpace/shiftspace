@@ -289,6 +289,12 @@ var ShiftSpace = new (function() {
       return shifts[shiftId].username;
     }
     
+    function SSUserCanEditShift(shiftId)
+    {
+      return (ShiftSpace.user.isLoggedIn() &&
+              shifts[shiftId].username == ShiftSpace.user.getUsername());
+    }
+    
     function isNewShift(shiftId)
     {
       return (shiftId.search('newShift') != -1);
