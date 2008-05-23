@@ -15,7 +15,7 @@ for($i = 0; $i < count($shiftIds); $i++)
     $aShift = $db->row("
     SELECT s.space, s.href, s.summary, s.content, s.url_slug as id, s.created, s.modified, s.version, u.username
     FROM shift s, user u
-    WHERE s.rl_slug = '$shiftId' AND
+    WHERE s.url_slug = '$shiftId' AND
     s.user_id = u.id
     ");
     
