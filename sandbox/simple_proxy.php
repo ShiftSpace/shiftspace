@@ -105,10 +105,17 @@ $ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset=
 // check the database for the shift's space load
 $ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$shift->space.'/'.$shift->space.'.js" charset="utf-8"></script>';
 
+$spaceName = $shift->space;
+
+if($spaceName == 'notes') $spaceName = 'Notes';
+if($spaceName == 'highlight') $spaceName = 'Highlights';
+if($spaceName == 'imageswap') $spaceName = 'ImageSwap';
+if($spaceName == 'sourceshift') $spaceName = 'SourceShift';
+
 // get the shift out of the database
 $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
   window.addEvent('domready', function() {
-    $shift->space.showShift($shift->content);
+    $spaceName.showShift($shift->content);
   });
 </script>";
 
