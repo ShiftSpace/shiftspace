@@ -79,13 +79,12 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> trailShiftsLoaded');
     console.log(shifts);
-    /*
+
     for(a in this.trailData)
     {
       this.trailData[a]= $merge(this.trailData[a], shifts[a]);
     }
     this.setCurrentTrail(new Trail(this.focusedShift, this.trailData));
-    */
   },
   
   saveTrail: function(trail, cb)
