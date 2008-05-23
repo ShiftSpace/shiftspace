@@ -127,6 +127,7 @@ else
 }
 
 $shiftContent = $shift->content;
+$shiftId = $shift->url_slug;
 
 // TODO: this should be replaced by versioning - David
 if($legacy)
@@ -149,8 +150,10 @@ $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
     {
       theShift = \$merge(theShift, {legacy:true});
     }
+    theShift = \$merge(theShift, {id:'$shiftId'});
 
     $spaceName.showShift(theShift);
+    $spaceName.orderFront('$shiftId');
   });
 </script>";
 
