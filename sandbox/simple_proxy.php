@@ -78,6 +78,17 @@ $ShiftSpace = '<link type="text/css" rel="stylesheet"" href="../styles/ShiftSpac
 $server = $_SERVER['HTTP_HOST'];
 $ssdir = dirname($_SERVER['PHP_SELF']);
 
+// prevent console.logs from breaking proxy
+$ShiftSpace .= '<script type="text/javascript">
+  if(!window.console)
+  {
+    window.console = {
+      log: function() {}
+      error: function() {}
+    };
+  }
+</script>';
+
 $ShiftSpace .= '<script type="text/javascript">
   var __ssdir__ = "'.$ssdir.'".split("/");
   var __server__ = "http://'.$server.'"+__ssdir__.slice(0, __ssdir__.length-1).join("/")+"/";
