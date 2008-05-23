@@ -22,6 +22,8 @@ var Trail = new Class({
     if(json.offset)
     {
       this.offset = {x: json.offset.x, y: json.offset.y};
+      console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWHOA');
+      console.log(this.offset);
       delete json.offset;
     }
     else
