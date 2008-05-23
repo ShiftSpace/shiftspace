@@ -77,16 +77,10 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   trailShiftsLoaded : function(theShifts)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> trailShiftsLoaded');
-    console.log(theShifts);
-    console.log(this.trailData);
-
     for(a in this.trailData)
     {
       this.trailData[a]= $merge(this.trailData[a], theShifts[a]);
     }
-    console.log('+++++++++++++++++++++++++++++++++ merged');
-    console.log(this.trailData);
     this.setCurrentTrail(new Trail(this.focusedShift, this.trailData));
 
     this.updateInterface();
@@ -101,6 +95,9 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     data.shifts = trail.shifts.join(',');
     data.title = trail.title;
     data.version = this.attributes.version;
+    
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SAVE TRAILS');
+    console.log(data);
     
     // get the trail
     this.serverCall(
