@@ -83,7 +83,7 @@ $ShiftSpace .= '<script type="text/javascript">
   var __server__ = "http://'.$server.'"+__ssdir__.slice(0, __ssdir__.length-1).join("/")+"/";
 </script>';
 
-$ShiftSpace .= '<script type="text/javascript" src="mootools.js"></script>';
+$ShiftSpace .= '<script type="text/javascript" src="../client/Mootools.js"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="greasemonkey-api.js"></script>';
 
 $ShiftSpace .= '<script type="text/javascript">var ShiftSpace = {
