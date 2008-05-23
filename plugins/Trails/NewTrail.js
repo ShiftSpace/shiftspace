@@ -85,6 +85,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     {
       this.trailData[a]= $merge(theShifts[a], this.trailData[a]);
     }
+    console.log('+++++++++++++++++++++++++++++++++ merged');
+    console.log(this.trailData);
     this.setCurrentTrail(new Trail(this.focusedShift, this.trailData));
 
     this.updateInterface();
