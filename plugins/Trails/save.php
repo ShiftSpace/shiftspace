@@ -31,18 +31,18 @@ if($trailId)
   $exists = $db->value("
     SELECT id
     FROM trail
-    WHERE id = '$trailId'
+    WHERE url_slug = '$trailId'
     ");
 
   if($exists)
   {
     $db->query("
       UPDATE trail
-      SET content = '$content',
-      title = '$title',
-      modified = '$now',
-      version = '$version'
-      WHERE url_slug='$trailId'
+        SET content = '$content',
+        title = '$title',
+        modified = '$now',
+        version = '$version'
+        WHERE url_slug = '$trailId'
       ");
   }
 }
