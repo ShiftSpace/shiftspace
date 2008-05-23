@@ -820,6 +820,40 @@ var ShiftSpace = new (function() {
         });
     }
     
+    // call to get just the shifts that are needed
+    function getShifts(shiftIds, callBack)
+    {
+      var newShiftIds = [];
+      var finalJson = {};
+      
+      // figure out what the actual new shift ids are
+      shiftIds.each(function(id) {
+        if(!shifts[id]) 
+        {
+          newShiftIds.push(id)
+        }
+        else
+        {
+          finalJson[id] = shifts[id];
+        }
+      });
+
+      // put these together
+      var params = { shiftIds: newShiftIds.join(',') };
+      
+      serverCall('shift.get', params, function(json) {
+        console.log(json);
+        
+        // should probably filter out any uncessary data
+        json.each(function(x) {
+          finalJson[x.id] = x;
+        });
+        
+        //cleanShiftData(json);
+        
+        if(callback) callback(finalJson);
+      });
+    }
     
     /*
     
@@ -1670,6 +1704,7 @@ var ShiftSpace = new (function() {
         onload: function(rx) {
           if (typeof callback == 'function') {
             var json = Json.evaluate(rx.responseText);
+            //console.log(rx.responseText);
             if(json.status == 0)
             {
               console.error(method + ' failed' + ((json.message && (', error: ' + json.message)) || '') + '.');
