@@ -516,8 +516,8 @@ var TrailPage = new Class({
   getPosition : function()
   {
     var temp = {
-      x : parseInt(this.element.getStyle('left')),
-      y : parseInt(this.element.getStyle('top'))
+      x : parseInt(this.element.getStyle('left')) - 500000,
+      y : parseInt(this.element.getStyle('top')) - 500000
     };
     
     return temp;

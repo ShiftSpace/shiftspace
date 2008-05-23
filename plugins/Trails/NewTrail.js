@@ -83,7 +83,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
 
     for(a in this.trailData)
     {
-      this.trailData[a]= $merge(theShifts[a], this.trailData[a]);
+      this.trailData[a]= $merge(this.trailData[a], theShifts[a]);
     }
     console.log('+++++++++++++++++++++++++++++++++ merged');
     console.log(this.trailData);
