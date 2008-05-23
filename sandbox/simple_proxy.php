@@ -131,7 +131,7 @@ $shiftContent = $shift->content;
 if($legacy)
 {
   // remove the curly braces
-  $shiftContent = substr($shiftContent, 1, strlen($shiftContent)-1);
+  $shiftContent = substr($shiftContent, 1, strlen($shiftContent)-2);
 }
 
 // check the database for the shift's space load
