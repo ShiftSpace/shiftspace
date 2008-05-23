@@ -18,7 +18,8 @@ if (empty($user) || empty($user->id))
 // not trail owner
 if ($user->id != $ownerId)
 {
-  echo "{status: 0, message:'User does not have permissions to delete this trail'}";
+  echo "{status: 0, message:'User does not have permissions to delete this trail, ".$user->id.",".$ownerId."'}";
+  exit;
 }
 
 // get the real trail id
