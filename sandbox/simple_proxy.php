@@ -12,6 +12,13 @@ require_once '../server/config.php';
 $db = new Database($db_path);
 $id = $db->escape($_GET['id']);
 
+// If more than one id was passed, parse them out
+$shift_ids = array ();
+if(preg_match("/,/",$id)){
+  $shift_ids = split(',', $id);
+  $id = $shift_ids[0];
+}
+
 $shift = $db->row("
   SELECT *
   FROM shift
@@ -114,59 +121,88 @@ $ShiftSpace .= '<script type="text/javascript" src="../client/Element.js"></scri
 $ShiftSpace .= '<script type="text/javascript" src="../client/Space.js" charset="utf-8"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset="utf-8"></script>';
 
-$spaceName = $shift->space;
-$legacy = true;
-if($spaceName == 'notes') 
-{
-  $spaceName = 'Notes';
-}
-else if($spaceName == 'highlight') 
-{
-  $spaceName = 'Highlights';
-}
-else if($spaceName == 'imageswap')
-{
-  $spaceName = 'ImageSwap';
-}
-else if($spaceName == 'sourceshift')
-{
-  $spaceName = 'SourceShift';
-}
-else
-{
-  $legacy = false;
-}
-
-$shiftContent = $shift->content;
-$shiftId = $shift->url_slug;
-
-// TODO: this should be replaced by versioning - David
-if($legacy)
-{
-  // remove the curly braces
-  $shiftContent = substr($shiftContent, 1, strlen($shiftContent)-2);
-}
-
-$legacyValue = ($legacy) ? 'true' : 'false';
-
-// check the database for the shift's space load
-$ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$spaceName.'/'.$spaceName.'.js" charset="utf-8"></script>';
-
-// get the shift out of the database
-$ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
-  window.addEvent('domready', function() {
-    var theShift = $shiftContent;
-    
-    if($legacyValue)
-    {
-      theShift = \$merge(theShift, {legacy:true});
+// Build shift_ids array if it wasn't already parsed from id param
+if (!count($shift_ids)) {
+    $all = $db->escape($_GET['all_shifts']);
+    if ($all) {
+	$shifts = $db->rows("
+	    SELECT url_slug
+	    FROM shift
+	    WHERE status = 1
+	    AND href = '$shift->href'
+	");
+	foreach ($shifts as $n => $ashift) {
+	foreach ($ashift as $key => $val) {
+	    $shift_ids[] = $val;
+	}}
+    } else {
+      $shift_ids[] = $id;
     }
-    theShift = \$merge(theShift, {id:'$shiftId'});
+}
 
-    $spaceName.showShift(theShift);
-    $spaceName.orderFront('$shiftId');
-  });
-</script>";
+// Load each requested shift
+foreach ($shift_ids as $an_id)
+{
+    $shift = $db->row("
+      SELECT *
+      FROM shift
+      WHERE url_slug = '$an_id'
+    ");
+
+    $spaceName = $shift->space;
+    $legacy = true;
+    if($spaceName == 'notes') 
+    {
+      $spaceName = 'Notes';
+    }
+    else if($spaceName == 'highlight') 
+    {
+      $spaceName = 'Highlights';
+    }
+    else if($spaceName == 'imageswap')
+    {
+      $spaceName = 'ImageSwap';
+    }
+    else if($spaceName == 'sourceshift')
+    {
+      $spaceName = 'SourceShift';
+    }
+    else
+    {
+      $legacy = false;
+    }
+
+    $shiftContent = $shift->content;
+    $shiftId = $shift->url_slug;
+
+    // TODO: this should be replaced by versioning - David
+    if($legacy)
+    {
+      // remove the curly braces
+      $shiftContent = substr($shiftContent, 1, strlen($shiftContent)-2);
+    }
+
+    $legacyValue = ($legacy) ? 'true' : 'false';
+
+    // check the database for the shift's space load
+    $ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$spaceName.'/'.$spaceName.'.js" charset="utf-8"></script>';
+
+    // get the shift out of the database
+    $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
+      window.addEvent('domready', function() {
+	var theShift = $shiftContent;
+	
+	if($legacyValue)
+	{
+	  theShift = \$merge(theShift, {legacy:true});
+	}
+	theShift = \$merge(theShift, {id:'$shiftId'});
+
+	$spaceName.showShift(theShift);
+	$spaceName.orderFront('$shiftId');
+      });
+    </script>";
+}
 
 echo preg_replace("/<\/head>/",$ShiftSpace . "</head>", $result);
 
