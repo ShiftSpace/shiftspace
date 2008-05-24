@@ -1261,11 +1261,10 @@ var ShiftSpace = new (function() {
         
         case 'replace':
           element.setStyle('display', targetNode.getStyle('display'));
-          targetNode.replaceWith(element);
           pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display');
           pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
-          
-          if(targetNode.getStyle('display') == 'inline' || targetNode.getTag() == 'a')
+
+          if(targetNode.getStyle('display') == 'inline')
           {
             console.log('BLAH');
             var size = targetNode.getSize().size;
@@ -1276,6 +1275,7 @@ var ShiftSpace = new (function() {
           {
             console.log('ARGH ' + targetNode.getStyle('display'));
           }
+          targetNode.replaceWith(element);          
 
           console.log(pinRef.targetStyles);
           element.setStyles(pinRef.targetStyles);
