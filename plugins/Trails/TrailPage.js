@@ -306,7 +306,7 @@ var TrailPage = new Class({
       // stop this event so it doesn't get to scrolling
       evt.stopPropagation();
       
-      if( this == gFocusedNode )
+      if( this == Trail.gFocusedNode )
       {
         this.linkClicked = true;
         this.startDragEvent = e;
@@ -319,9 +319,9 @@ var TrailPage = new Class({
     this.linkPoint.addEvent( 'mouseenter', function( e ) {
       if( this.parentTrail.isEditable() ) this.linkPoint.addClass( 'TrailPageLinkPointLargeHover' );
 
-      if( gFocusedNode && gFocusedNode.linkPoint != this.linkPoint )
+      if( Trail.gFocusedNode && Trail.gFocusedNode.linkPoint != this.linkPoint )
       {
-        gFocusedNode.lastHoveredLinkPoint = this.linkPoint
+        Trail.gFocusedNode.lastHoveredLinkPoint = this.linkPoint
       }
     }.bind( this ));
     
@@ -428,12 +428,12 @@ var TrailPage = new Class({
       {
         var evt = new Event( this.releaseEvent );
         
-        if( gHoveredNode )
+        if( Trail.gHoveredNode )
         {
-          if( TrailPage.ElementContainsPoint( gHoveredNode.element, new Vector( evt.page.x, evt.page.y ) ) )
+          if( TrailPage.ElementContainsPoint( Trail.gHoveredNode.element, new Vector( evt.page.x, evt.page.y ) ) )
           {
             // create a real link between the two nodes
-            var final = new TrailLink( this, gHoveredNode );
+            var final = new TrailLink( this, Trail.gHoveredNode );
             this.update();
             
             var success = true;
@@ -563,10 +563,10 @@ var TrailPage = new Class({
   {
     if( !this.isZooming && 
         !this.isZoomed &&
-        !gFocusedNode &&
+        !Trail.gFocusedNode &&
         !this.isClosing )
     {
-      gFocusedNode = this;
+      Trail.gFocusedNode = this;
       
       // change the border to red
       if (this.thumbEl) 
@@ -633,9 +633,9 @@ var TrailPage = new Class({
       completeGroup.addEvent( 'onComplete', this.zoomComplete.bind( this ) );
     }
     
-    if( gFocusedNode && gFocusedNode != this )
+    if( Trail.gFocusedNode && Trail.gFocusedNode != this )
     {
-      gHoveredNode = this;
+      Trail.gHoveredNode = this;
     }
   },
   
@@ -683,7 +683,7 @@ var TrailPage = new Class({
         !this.isCreatingLink &&
         !this.parentTrail.deleteMode )
     {
-      gFocusedNode = null;
+      Trail.gFocusedNode = null;
 
       // hide the remove button
       this.removeButton.addClass( 'hidden' );
@@ -908,8 +908,8 @@ var TrailPage = new Class({
   {
     this.isClosing = true;
 
-    gFocusedNode = null;
-    gHoveredNode = null;
+    Trail.gFocusedNode = null;
+    Trail.gHoveredNode = null;
     
     // if this already in the nav reveal it
     if( window.nav )

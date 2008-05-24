@@ -8,8 +8,8 @@ var Trail = new Class({
     console.log(json);
     
     // clear these globals
-    gFocusedNode = null;
-    gHoveredNode = null;
+    Trail.gFocusedNode = null;
+    Trail.gHoveredNode = null;
     
     var focusedShift = _focusedShift;
     
@@ -128,8 +128,8 @@ var Trail = new Class({
       linkRef.destroy();
       
       // reset flags
-      gFocusedNode = null;
-      gHoveredNode = null;
+      Trail.gFocusedNode = null;
+      Trail.gHoveredNode = null;
       
     }.bind( this ));
     
@@ -170,8 +170,8 @@ var Trail = new Class({
     }
     
     // clear globals
-    gFocusedNode = null;
-    gHoveredNode = null;
+    Trail.gFocusedNode = null;
+    Trail.gHoveredNode = null;
   },
   
   // returns all the linked nodes
@@ -302,6 +302,5 @@ Trail.kNULL = 'null';
 Trail.gDeleteFocusNode = null;
 Trail.gFocusedNode = null;
 Trail.gHoveredNode = null;
-Trail.gNodeNumber = 0;
 
 ShiftSpace.__externals__.Trail = Trail; // For Safari

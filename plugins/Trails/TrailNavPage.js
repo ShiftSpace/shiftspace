@@ -212,13 +212,9 @@ var TrailNavPage = new Class({
   userDrop : function()
   {
     console.log('userDrop');
-    if( gFocusedNode )
+    if( Trail.gFocusedNode )
     {
-      gFocusedNode.unzoom();
-      /*
-      gFocusedNode = null;
-      gHoveredNode = null;
-      */
+      Trail.gFocusedNode.unzoom();
     }
     
     // get the scroll offset of the background

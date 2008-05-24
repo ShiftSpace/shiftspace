@@ -29,7 +29,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.currentTrailInfo = {
       username: ShiftSpace.user.getUsername(),
       title: "Untitled"
-    }
+    };
     
     this.setCurrentTrail(new Trail(focusedShift, trailJson));
     this.updateInterface();
@@ -226,27 +226,29 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
 
     // this clips the scrolling area to the browser window viewport
     this.clippingArea = new ShiftSpace.Element('div', {
-      'id': 'SSTrailsPlugInClippingArea'
+      'id': 'SSTrailsPlugInClippingArea',
+      'class': 'SSUserSelectNone'
     });
     this.clippingArea.injectInside(document.body);
     
     // where trails actually live
     this.scrollArea = new ShiftSpace.Element('div', {
       'id': 'SSTrailsPlugInScrollArea',
-      'class': "SSNormal" 
+      'class': "SSNormal SSUserSelectNone" 
     });
     this.scrollArea.injectInside(this.clippingArea);
         
     // the control bar at the top
     this.controls = new ShiftSpace.Element('div', {
-      'id': "trail-controls"
+      'id': "trail-controls",
+      'class': "SSUserSelectNone"
     });
     this.controls.setHTML('                                                    \
     <div id="trailPermaLink" class="trailPermaLink" style="border:none"></div> \
     <input type="text" id="trail-title" class="SSTrailControl"/>               \
     <div style="float:right;">permalink</div>                                  \
-    <div id="trail-title-limited"></div>                                       \
-    <div id="trail-close">                                                     \
+    <div id="trail-title-limited" class="SSUserSelectNone"></div>              \
+    <div id="trail-close" class="SSUserSelectNone">                            \
     </div>                                                                     \
     <div class="SSTrailControl">                                               \
       <input type="button" value="Cancel" id="trail-cancel" />                 \
@@ -260,14 +262,17 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
     // build the navigation interface
     this.nav = new ShiftSpace.Element('div', {
-      'id': "trail-nav"
+      'id': "trail-nav",
+      'class': 'SSUserSelectNone'
     });
     this.navItems = new ShiftSpace.Element('div', {
-      'id': "trail-navitems"
+      'id': "trail-navitems",
+      'class': 'SSUserSelectNone'
     });
     this.navItems.injectInside(this.nav);
     this.navBg = new ShiftSpace.Element('div', {
-      id: "trail-nav-bg"
+      id: "trail-nav-bg",
+      'class': 'SSUserSelectNone'
     });                          
     
     // store a drag reference just in case we want to stop the dragging behavior
