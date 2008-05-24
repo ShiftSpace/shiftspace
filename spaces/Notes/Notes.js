@@ -354,6 +354,8 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     var _css = this.getParentSpace().attributes.css;
     
+    console.log('build frame');
+
     // create an iframe with the css already loaded
     this.frame = new ShiftSpace.Iframe({
       'class' : 'SSNoteShiftFrame',

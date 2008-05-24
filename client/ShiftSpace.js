@@ -104,8 +104,6 @@ var ShiftSpace = new (function() {
       /*'Canvas' : server + 'spaces/Canvas/Canvas.js'*/
     });
     
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> server ' + server);
-    
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
       'Trails' : server + 'plugins/Trails/NewTrail.js'
@@ -1573,8 +1571,6 @@ var ShiftSpace = new (function() {
 
       var spaceDir = installed[spaceName].match(/(.+\/)[^\/]+\.js/)[1];
       
-      console.log('REGISTER ' + spaceDir);
-      
       instance.attributes.dir = spaceDir;
 
       if (!instance.attributes.icon) {
@@ -1675,7 +1671,6 @@ var ShiftSpace = new (function() {
     */
     function registerPlugin(plugin)
     {
-      console.log('registerPlugin: ' + plugin.attributes.name);
       plugins[plugin.attributes.name] = plugin;
       
       var pluginDir = installedPlugins[plugin.attributes.name].match(/(.+\/)[^\/]+\.js/)[1];
@@ -1748,7 +1743,6 @@ var ShiftSpace = new (function() {
     */
     function serverCall(method, parameters, callback) {
       var url = server + 'shiftspace.php?method=' + method;
-      console.log(url);
       var data = '';
       for (var key in parameters) {
         if (data != '') {
@@ -1886,7 +1880,6 @@ var ShiftSpace = new (function() {
       
       loadFile(url, function(rx) {
         var css = rx.responseText;
-        console.log('load Style, ' + url);
         // this needs to be smarter, only works on directory specific urls
         css = css.replace(/url\(([^)]+)\)/g, 'url(' + dir + '/$1)');
         
