@@ -401,6 +401,11 @@ var NotesShift = ShiftSpace.Shift.extend({
   
     this.inputArea.addEvent('mousedown', function() {
      this.fireEvent('onFocus', this);
+     // clear out Leave a note
+     if(this.inputArea.getProperty('value') == "Leave a note")
+     {
+       this.inputArea.setProperty('value', '');
+     }
     }.bind(this));
     this.inputArea.setProperty('readonly', 1);
   
