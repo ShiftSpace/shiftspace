@@ -1884,7 +1884,7 @@ var ShiftSpace = new (function() {
       
       loadFile(url, function(rx) {
         var css = rx.responseText;
-        
+        console.log('load Style, ' + url);
         // this needs to be smarter, only works on directory specific urls
         css = css.replace(/url\(([^)]+)\)/g, 'url(' + dir + '/$1)');
         
