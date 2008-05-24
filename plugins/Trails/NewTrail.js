@@ -421,12 +421,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   userCanEdit: function()
   {
     return (this.currentTrailInfo.username == ShiftSpace.user.getUsername());
-  },
-  
-  evaluate: function(include)
-  {
-    console.log('evaluating');
-    eval(include);
   }
   
 });

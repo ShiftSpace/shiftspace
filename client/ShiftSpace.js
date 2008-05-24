@@ -1708,14 +1708,7 @@ var ShiftSpace = new (function() {
               {
                 if(window.webkit)
                 {
-                  if(plugin.evaluate)
-                  {
-                    plugin.evaluate(rx.responseText);
-                  }
-                  else
-                  {
-                    console.log('Please implement evaluate in the ' + plugin.attributes.name + ' plugin.');
-                  }
+                  ShiftSpace.__externals__.evaluate(rx.responseText);
                 }
                 else
                 {

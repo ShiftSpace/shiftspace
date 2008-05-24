@@ -4,9 +4,6 @@ var Trail = new Class({
   {
     json = this.normalize(json);
     
-    console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++ INITIALIZING TRAIL');
-    console.log(json);
-    
     // clear these globals
     Trail.gFocusedNode = null;
     Trail.gHoveredNode = null;
@@ -17,8 +14,6 @@ var Trail = new Class({
     if(json.offset)
     {
       this.offset = {x: json.offset.x, y: json.offset.y};
-      console.log('WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWHOA');
-      console.log(this.offset);
       delete json.offset;
     }
     else
@@ -56,8 +51,6 @@ var Trail = new Class({
     
     // convert the json object into a trail
     var temp = Trail.parse( json );
-    
-    console.log('++++++++++++++++++++++++++++++++++ trail parsed');
     
     // store the important references
     this.nodes = temp.nodes;

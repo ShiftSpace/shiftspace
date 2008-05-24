@@ -948,7 +948,7 @@ var Console = new Class({
       else
       {
         // defer loading this item
-        console.log('========================================== Deferred load for ' + plugin);
+        //console.log('========================================== Deferred load for ' + plugin);
       }
     }
     

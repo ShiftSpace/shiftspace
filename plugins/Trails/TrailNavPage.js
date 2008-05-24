@@ -78,8 +78,6 @@ var TrailNavPage = new Class({
   
   zoom : function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> mouse enter');
-    
     // set up animation for the size
     var sizeFX = this.thumbEl.effects({
       duration : 300,
@@ -211,7 +209,6 @@ var TrailNavPage = new Class({
   */
   userDrop : function()
   {
-    console.log('userDrop');
     if( Trail.gFocusedNode )
     {
       Trail.gFocusedNode.unzoom();

@@ -407,8 +407,6 @@ var TrailPage = new Class({
     this.dragLinkPoint.injectInside(document.body);
     //this.dragLinkPoint.injectInside( $('SSTrailsPlugInScrollArea') );
     
-    console.log(evt.client.x + ', ' + evt.client.y);
-
     this.dragLinkPoint.setStyles({
       left : evt.page.x,
       top : evt.page.y
