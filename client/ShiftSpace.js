@@ -1267,9 +1267,14 @@ var ShiftSpace = new (function() {
           
           if(targetNode.getStyle('display') == 'inline')
           {
+            console.log('BLAH');
             var size = targetNode.getSize().size;
             pinRef.targetStyles.width = size.x;
             pinRef.targetStyles.height = size.y;
+          }
+          else
+          {
+            console.log('ARGH');
           }
 
           console.log(pinRef.targetStyles);
