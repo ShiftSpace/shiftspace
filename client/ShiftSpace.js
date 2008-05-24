@@ -1765,7 +1765,7 @@ var ShiftSpace = new (function() {
       }
       var now = new Date();
       url += '&cache=' + now.getTime();
-
+      
       //GM_openInTab(url);
       var req = {
         method: 'POST',
@@ -1774,23 +1774,14 @@ var ShiftSpace = new (function() {
         onload: function(rx) {
           if (typeof callback == 'function') {
             var json = Json.evaluate(rx.responseText);
-            if(json.status == 0)
-            {
-              var message = method + ' failed' + ((json.message && (', error: ' + json.message)) || '') + '.';
-              console.error(message);
-              alert(message);
-            }
-            else
-            {
-              callback(json);
-            }
+            callback(json);
           }
         },
         onerror: function(err) {
           console.log(err);
         }
       };
-
+      
       // Firefox doesn't work without this
       // and the existence of this breaks Safari
       if(!window.webkit)

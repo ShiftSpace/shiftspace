@@ -37,6 +37,8 @@ class Database {
             return false;
         }
         
+        $this->type = $handler_type;
+        
         // Create handler and pass it the rest of the DSN
         require_once $handler_filename;
         $handler_config = substr($dsn, strpos($dsn, ':') + 3);

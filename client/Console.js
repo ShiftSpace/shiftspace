@@ -603,7 +603,7 @@ var Console = new Class({
   },
   
   buildWelcome: function() {
-    var pane = this.addPane('welcome');
+    var pane = this.addTab('welcome', 'Welcome');
     pane.setHTML('Welcome!');
   },
   
