@@ -50,16 +50,16 @@ Class: ShiftSpace
 */
 
 var ShiftSpace = new (function() {
-
     // The server variable determines where to look for ShiftSpace content
-    var server = 'http://api.shiftspace.org/';
-    
     // Check to see if the server URL is already stored
+    /*
     if (getValue('server', false)) {
       server = getValue('server', 'http://api.shiftspace.org/');
     }
+    */
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
-    
+    server = "http://metatron.shiftspace.org/api/";
+
     // get Dan's input on how to set this
     if(typeof ShiftSpaceSandBoxMode != 'undefined')
     {
@@ -101,8 +101,10 @@ var ShiftSpace = new (function() {
       'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
       'Highlights': server + 'spaces/Highlights/Highlights.js',
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
-      'Canvas' : server + 'spaces/Canvas/Canvas.js'
+      /*'Canvas' : server + 'spaces/Canvas/Canvas.js'*/
     });
+    
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> server ' + server);
     
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
@@ -1744,6 +1746,7 @@ var ShiftSpace = new (function() {
     */
     function serverCall(method, parameters, callback) {
       var url = server + 'shiftspace.php?method=' + method;
+      console.log(url);
       var data = '';
       for (var key in parameters) {
         if (data != '') {
@@ -1764,7 +1767,9 @@ var ShiftSpace = new (function() {
             var json = Json.evaluate(rx.responseText);
             if(json.status == 0)
             {
-              console.error(method + ' failed' + ((json.message && (', error: ' + json.message)) || '') + '.');
+              var message = method + ' failed' + ((json.message && (', error: ' + json.message)) || '') + '.';
+              console.error(message);
+              alert(message);
             }
             else
             {
