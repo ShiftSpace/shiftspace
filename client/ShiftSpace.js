@@ -1274,7 +1274,7 @@ var ShiftSpace = new (function() {
           }
           else
           {
-            console.log('ARGH ' + targetStyles.getStyle('display'));
+            console.log('ARGH ' + targetNode.getStyle('display'));
           }
 
           console.log(pinRef.targetStyles);
