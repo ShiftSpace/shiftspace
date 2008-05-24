@@ -24,7 +24,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   setup : function(json)
   {
-    console.log('+++++++++++++++++++++++++++++ setup NOTES');
+    console.log('+++++++++++++++++++++++++++++ setup NOTES blahblahblahblah');
     console.log('the note text is' + json.noteText);
 
     if(json.legacy)
