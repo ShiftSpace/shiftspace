@@ -759,6 +759,8 @@ var Console = new Class({
   
   */
   addShifts: function(shifts) {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>> ADDING SHIFTS TO CONSOLE');
+    console.log(installedPlugins['Trails']);
     for (var shiftId in shifts) {
       var shift = shifts[shiftId];
       this.addShift(shift);
@@ -920,6 +922,7 @@ var Console = new Class({
     {
       if(plugins[plugin])
       {
+        //console.log('Loading ' + plugin);
         var pluginDiv = $(this.doc.createElement('div'));
         pluginDiv.addClass('plugin');
         pluginDiv.addClass('pg'+plugin); // tag with plugin name
@@ -945,7 +948,7 @@ var Console = new Class({
       else
       {
         // defer loading this item
-        //console.log('========================================== Deferred load for ' + aShift.id);
+        console.log('========================================== Deferred load for ' + plugin);
       }
     }
     

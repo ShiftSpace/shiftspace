@@ -22,3 +22,5 @@ Vector.distance = function( v1, v2 )
 {
   return Math.sqrt( (v1.x-v2.x)*(v1.x-v2.x) + (v1.y-v2.y)*(v1.y-v2.y) );
 }
+
+ShiftSpace.__externals__.Vector = Vector; // For Safari

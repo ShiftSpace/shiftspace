@@ -10,6 +10,7 @@ ShiftSpace.Plugin = new Class({
   
   initialize: function(json)
   {
+    console.log('initialize Plugin');
     if(ShiftSpace.Plugin.types.hasKey(this.pluginType))
     {
       switch(this.pluginType)
@@ -140,7 +141,7 @@ ShiftSpace.Plugin = new Class({
   delayedMenu: function()
   {
     return {'delayed': true};
-  }
+  }  
   
 });
 

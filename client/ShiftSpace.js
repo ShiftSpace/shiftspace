@@ -142,13 +142,13 @@ var ShiftSpace = new (function() {
       // Load each installed space - this asynchronous, we need to wait till
       // they are all done
       for (var space in installed) {
-        console.log("Loading " + space);
+        //console.log("Loading Space: " + space);
         loadSpace(space);
       }
 
       // need to think about plugin loading architecture! - this is going to involve a reworking of file loading
       for(var plugin in installedPlugins) {
-        console.log("Loading " + plugin)
+        //console.log("Loading Plugin: " + plugin)
         loadPlugin(plugin);
       }
       
@@ -251,6 +251,16 @@ var ShiftSpace = new (function() {
       }
       
       return obj;
+    }
+    
+    function describeException(_exception)
+    {
+      var temp = [];
+      for(prop in _exception)
+      {
+        temp.push(prop + ':' + _exception[prop]);
+      }
+      return "Exception:{ " + temp.join(', ') +" }";
     }
     
     function getAllShiftContent()
@@ -1516,11 +1526,26 @@ var ShiftSpace = new (function() {
         } 
         else 
         {
-          // TODO: This should be moved outside of ShiftSpace core, evaluated spaces have access to
-          // all internal private variables - David
           loadFile(installed[space], function(rx) {
-            log('loading '+ space);
-            eval(rx.responseText, ShiftSpace);
+            //console.log(space + ' Space loaded');
+            // TODO: for Safari the following does not work, we need a function in Space
+            // that evals the actual space. - David
+            try
+            {
+              if(window.webkit)
+              {
+                ShiftSpace.__externals__.evaluate(rx.responseText);
+              }
+              else
+              {
+                eval(rx.responseText, ShiftSpace);                
+              }
+            }
+            catch(exc)
+            {
+              console.log('Error loading ' + space + ' Space - ' + describeException(exc));
+            }
+            
             if (typeof pendingShift != 'undefined') 
             {
               ShiftSpace.showShift(pendingShift);
@@ -1618,11 +1643,24 @@ var ShiftSpace = new (function() {
       } 
       else 
       {
-        // TODO: This should be moved outside of ShiftSpace Core as well
-        // access to all private variables
         loadFile(installedPlugins[plugin], function(rx) {
-          log('loading '+ plugin);
-          eval(rx.responseText, ShiftSpace);
+          //console.log(plugin + " Plugin loaded");
+          // TODO: The following does not work we need to use the plugin eval
+          try
+          {
+            if(window.webkit)
+            {
+              ShiftSpace.__externals__.evaluate(rx.responseText);
+            }
+            else
+            {
+              eval(rx.responseText, ShiftSpace);
+            }
+          }
+          catch(exc) 
+          {
+            console.log('Error loading ' + plugin + ' Plugin - ' + describeException(exc));
+          }
         });
       }
     }
@@ -1633,6 +1671,7 @@ var ShiftSpace = new (function() {
     */
     function registerPlugin(plugin)
     {
+      console.log('registerPlugin: ' + plugin.attributes.name);
       plugins[plugin.attributes.name] = plugin;
       
       var pluginDir = installedPlugins[plugin.attributes.name].match(/(.+\/)[^\/]+\.js/)[1];
@@ -1665,7 +1704,28 @@ var ShiftSpace = new (function() {
         {
           plugin.attributes.includes.each(function(include) {
             loadFile(plugin.attributes.dir+include, function(rx) {
-              eval(rx.responseText, plugin);
+              try
+              {
+                if(window.webkit)
+                {
+                  if(plugin.evaluate)
+                  {
+                    plugin.evaluate(rx.responseText);
+                  }
+                  else
+                  {
+                    console.log('Please implement evaluate in the ' + plugin.attributes.name + ' plugin.');
+                  }
+                }
+                else
+                {
+                  eval(rx.responseText, plugin);
+                }
+              }
+              catch(exc)
+              {
+                console.log('Error loading ' + include + ' include for ' + plugin.attributes.name + ' Plugin - ' + describeException(exc));
+              }
             });
           });
         }
@@ -1916,6 +1976,17 @@ var ShiftSpace = new (function() {
     
     return this;
 })();
+
+// For Safari too keep extensions out of private scope
+ShiftSpace.__externals__ = {
+  evaluate: function(external, object)
+  {
+    with(ShiftSpace.__externals__)
+    {
+      eval(external);
+    }
+  }
+}
 
 // Only run in the top-most frame
 // This doesn't work in Safari for some reason

@@ -111,8 +111,8 @@ var TrailNavPage = new Class({
     });
     
     sizeFX.start({
-      width : [ kPageMinSize.width,  kPageMaxSize.width ],
-      height : [ kPageMinSize.height, kPageMaxSize.height ]
+      width : [ TrailPage.kPageMinSize.width,  TrailPage.kPageMaxSize.width ],
+      height : [ TrailPage.kPageMinSize.height, TrailPage.kPageMaxSize.height ]
     });
   },
   
@@ -143,8 +143,8 @@ var TrailNavPage = new Class({
 
     // shrink!
     sizeFX.start({
-      width : [ kPageMaxSize.width, kPageMinSize.width ],
-      height : [ kPageMaxSize.height, kPageMinSize.height  ],
+      width : [ TrailPage.kPageMaxSize.width, TrailPage.kPageMinSize.width ],
+      height : [ TrailPage.kPageMaxSize.height, TrailPage.kPageMinSize.height  ],
     });
 
   },
@@ -297,3 +297,5 @@ var TrailNavPage = new Class({
 });
 
 TrailNavPage.implement( new Options );
+
+ShiftSpace.__externals__.TrailNavPage = TrailNavPage; // For Safari

@@ -1,9 +1,4 @@
 // for check if window clicks occur during deletion
-var gDeleteFocusNode = null;
-var gFocusedNode = null;
-var gHoveredNode = null;
-var gNodeNumber = 0;
-
 var Trail = new Class({
   initialize : function( _focusedShift, json)
   {
@@ -98,7 +93,7 @@ var Trail = new Class({
   */
   addShift : function( newShift )
   {
-    var newNode = new TrailPage( kNULL, newShift );
+    var newNode = new TrailPage( Trail.kNULL, newShift );
     
     // add to the nodes list
     this.nodes.push( newNode );
@@ -273,7 +268,7 @@ Trail.parse = function( json )
     options.target = target;
     
     // create a new page store in the hash
-    var newNode = new TrailPage( kNULL, options );
+    var newNode = new TrailPage( Trail.kNULL, options );
     nodes.push( newNode );
 
     nodesHash[node] = newNode;
@@ -303,6 +298,10 @@ Trail.parse = function( json )
   return { nodes : nodes, links : links, dict : nodesHash, linkTable : linkTable };
 }
 
-function log(msg) {
-    setTimeout(function() { throw(msg); }, 0);
-}
+Trail.kNULL = 'null';
+Trail.gDeleteFocusNode = null;
+Trail.gFocusedNode = null;
+Trail.gHoveredNode = null;
+Trail.gNodeNumber = 0;
+
+ShiftSpace.__externals__.Trail = Trail; // For Safari

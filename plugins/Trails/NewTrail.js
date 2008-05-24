@@ -1,5 +1,3 @@
-var kNULL = 'null';
-
 var TrailsPlugin = ShiftSpace.Plugin.extend({
 
   pluginType: ShiftSpace.Plugin.types.get('kMenuTypePlugin'),
@@ -16,6 +14,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   setup : function(json)
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INITIALIZING TRAILS');
   },
 
   createTrail: function(focusedShift)
@@ -234,7 +233,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     // where trails actually live
     this.scrollArea = new ShiftSpace.Element('div', {
       'id': 'SSTrailsPlugInScrollArea',
-      class: "SSNormal" 
+      'class': "SSNormal" 
     });
     this.scrollArea.injectInside(this.clippingArea);
         
@@ -417,8 +416,15 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   userCanEdit: function()
   {
     return (this.currentTrailInfo.username == ShiftSpace.user.getUsername());
+  },
+  
+  evaluate: function(include)
+  {
+    console.log('evaluating');
+    eval(include);
   }
   
 });
 
 var Trails = new TrailsPlugin();
+ShiftSpace.__externals__.Trails = Trails; // For Safari

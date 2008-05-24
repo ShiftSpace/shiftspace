@@ -1,7 +1,3 @@
-var kNULL = 'null';
-var kPageMinSize = { width: 80, height: 50 };
-var kPageMaxSize = { width: 240, height: 150 };
-
 /*
   Possible spaces are:
     notes
@@ -9,10 +5,6 @@ var kPageMaxSize = { width: 240, height: 150 };
     sourceshift
     imageswap
 */
-var kNotesSpace = 'notes';
-var kHighlightSpace = 'highlight';
-var kSourceShiftSpace = 'sourceshift';
-var kImageSwapSpace = 'imageswap';
 
 var TrailPage = new Class({
   
@@ -74,7 +66,7 @@ var TrailPage = new Class({
 
     // make sure we have an element if not create one
     // and add it to the page
-    if( el == kNULL || el == undefined || el == null )
+    if( el == Trail.kNULL || el == undefined || el == null )
     {
       el = new ShiftSpace.Element( 'div' );
 
@@ -86,7 +78,7 @@ var TrailPage = new Class({
         this.thumbEl.setProperty( 'src', this.thumb );
 
         this.thumbEl.injectInside( el );
-        this.thumbEl.setProperty( 'width', kPageMinSize.x );
+        this.thumbEl.setProperty( 'width', TrailPage.kPageMinSize.x );
         
         // add an event on click on the image
         this.thumbEl.addEvent( 'click', function( e ) {
@@ -98,8 +90,8 @@ var TrailPage = new Class({
       el.injectInside( $('SSTrailsPlugInScrollArea') );
       
       // set the initial width and height
-      el.setStyle( 'width', kPageMinSize.width );
-      el.setStyle( 'height', kPageMinSize.height );
+      el.setStyle( 'width', TrailPage.kPageMinSize.width );
+      el.setStyle( 'height', TrailPage.kPageMinSize.height );
       
       // add the zoom event
       el.addEvent('mouseenter', this.zoom.bind(this));
@@ -589,8 +581,8 @@ var TrailPage = new Class({
       // store our old position
       this.oldPosition = this.getPosition();
     
-      var dx = ( kPageMaxSize.width - kPageMinSize.width ) / 2;
-      var dy = ( kPageMaxSize.height - kPageMinSize.height ) / 2;
+      var dx = ( TrailPage.kPageMaxSize.width - TrailPage.kPageMinSize.width ) / 2;
+      var dy = ( TrailPage.kPageMaxSize.height - TrailPage.kPageMinSize.height ) / 2;
       
       // get the new top left
       var newPos = { x : this.oldPosition.x - Math.round( dx ),
@@ -603,8 +595,8 @@ var TrailPage = new Class({
       });
       
       sizeFX.start({
-        width : [ kPageMinSize.width, kPageMaxSize.width ],
-        height : [ kPageMinSize.height, kPageMaxSize.height ]
+        width : [ TrailPage.kPageMinSize.width, TrailPage.kPageMaxSize.width ],
+        height : [ TrailPage.kPageMinSize.height, TrailPage.kPageMaxSize.height ]
       });
 
       // set up animation for the top left
@@ -726,8 +718,8 @@ var TrailPage = new Class({
   
       // shrink!
       sizeFX.start({
-        width : [ kPageMaxSize.width, kPageMinSize.width  ],
-        height : [ kPageMaxSize.height, kPageMinSize.height  ]
+        width : [ TrailPage.kPageMaxSize.width, TrailPage.kPageMinSize.width  ],
+        height : [ TrailPage.kPageMaxSize.height, TrailPage.kPageMinSize.height  ]
       }).chain(function() {
         this.element.setStyle( 'zIndex', 2 );
       }.bind(this));
@@ -822,8 +814,8 @@ var TrailPage = new Class({
       // get the position
       var curPos = this.getPosition();
       
-      var dx = ( kPageMaxSize.width - kPageMinSize.width ) / 2;
-      var dy = ( kPageMaxSize.height - kPageMinSize.height ) / 2;
+      var dx = ( TrailPage.kPageMaxSize.width - TrailPage.kPageMinSize.width ) / 2;
+      var dy = ( TrailPage.kPageMaxSize.height - TrailPage.kPageMinSize.height ) / 2;
       
       this.oldPosition = { x : curPos.x + Math.round( dx ), y : curPos.y + Math.round( dy ) };
     }
@@ -842,7 +834,7 @@ var TrailPage = new Class({
 
     // add window click listener for checking for cancel deletion
     window.addEvent( 'click', function( e ) { 
-      if( !gDeleteFocusNode )
+      if( !Trail.gDeleteFocusNode )
       {
         // clear deletions
         connectedNodes.each( function( x ) {
@@ -865,7 +857,7 @@ var TrailPage = new Class({
 
       // make the delete button work
       x.deleteButton.addEvent( 'click', function( e ) { 
-        gDeleteFocusNode = x;
+        Trail.gDeleteFocusNode = x;
 
         x.parentTrail.deleteLink( x, this );
 
@@ -982,6 +974,9 @@ var TrailPage = new Class({
   }
 });
 
+TrailPage.kPageMinSize = { width: 80, height: 50 };
+TrailPage.kPageMaxSize = { width: 240, height: 150 };
+
 TrailPage.implement( new Options );
 
 /*
@@ -997,3 +992,5 @@ TrailPage.ElementContainsPoint = function( el, v )
            v.y >= pos.y &&
            v.y <= pos.y + size.y )
 }
+
+ShiftSpace.__externals__.TrailPage = TrailPage; // For Safari

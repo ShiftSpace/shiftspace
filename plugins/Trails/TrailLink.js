@@ -1,7 +1,3 @@
-// off set of the little dot
-var gox = 10;
-var goy = 10;
-
 var TrailLink = new Class({
   
   // take two pages and link them together
@@ -105,15 +101,15 @@ var TrailLink = new Class({
     var maxy = Math.max( this.startPos.y, this.endPos.y );
     
     this.element.setStyles({
-      left: minx-gox,
-      top: miny-goy,
-      width: maxx-minx+gox*2,
-      height: maxy-miny+goy*2
+      left: minx-TrailLink.gox,
+      top: miny-TrailLink.goy,
+      width: maxx-minx+TrailLink.gox*2,
+      height: maxy-miny+TrailLink.goy*2
     });
     
     // set the width and height attributes to prevent distortion
-    this.element.setProperty('width', ( maxx-minx ) + gox*2);
-    this.element.setProperty('height', ( maxy-miny ) + goy*2);
+    this.element.setProperty('width', ( maxx-minx ) + TrailLink.gox*2);
+    this.element.setProperty('height', ( maxy-miny ) + TrailLink.goy*2);
   },
   
   // render from point a to point b
@@ -122,8 +118,8 @@ var TrailLink = new Class({
     var curSize = this.element.getSize().size;
     
     // correct for offset
-    curSize.x -= gox*2;
-    curSize.y -= goy*2;
+    curSize.x -= TrailLink.gox*2;
+    curSize.y -= TrailLink.goy*2;
     
     // get the context
     var ctxt = this.context;
@@ -163,7 +159,7 @@ var TrailLink = new Class({
     
     // translate
     ctxt.save();
-    ctxt.translate( gox, goy );
+    ctxt.translate( TrailLink.gox, TrailLink.goy );
     
     // render a bezier curve from start to end
     ctxt.beginPath();
@@ -240,6 +236,10 @@ TrailLink.SSCalcCenter = function( element, superBadHackForTrailScrollArea )
   }
 }
 
+// off set of the little dot
+TrailLink.gox = 10;
+TrailLink.goy = 10;
+
 TrailLink.SSCalcLowerRight = function( element ) 
 {
   var size = element.getSize().size;
@@ -247,3 +247,5 @@ TrailLink.SSCalcLowerRight = function( element )
   
   return new Vector( loc.x + size.x, loc.y + size.y );
 }
+
+ShiftSpace.__externals__.TrailLink = TrailLink; // For Safari
