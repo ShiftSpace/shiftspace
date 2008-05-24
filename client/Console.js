@@ -425,60 +425,28 @@ var Console = new Class({
   },
   
   buildSettings: function() {
-    var settingsDiv = this.getTab('settings');
+    var sections = this.createSubSections('settings', ['General', 'Spaces', 'Account']);
+    sections[0].setHTML('<div class="form-column">' +
+                        '<div class="input"><div id="default_privacy" class="checkbox"></div>' +
+                        '<div class="label">Set my shifts public by default</div>' +
+                        '<br class="clear" /></div>' +
+                        '<div class="input"><label for="server-input">Server address:</label>' +
+                        '<input type="text" name="server" value="' + server + '" id="server-input" size="25" class="text" />' +
+                        '</div><br class="clear" />');
     
-    /* Install a Space */
-    var installSpace = new Element('input', {
-      type: "text"
-    });
-    installSpace.injectInside(settingsDiv);
-    
-    var installSpaceButton = new Element('input', {
-      type: "button"
-    });
-    
-    installSpaceButton.addEvent('click', function() {
-      ShiftSpace.installSpace(installSpace.getProperty('value'));
-    });
-    
-    installSpaceButton.setProperty('value', 'Install Space');
-    installSpaceButton.injectInside(settingsDiv);
-    
-    /* Uninstall a Space */
-    var uninstallSpace = new Element('input', {
-      type: "text"
-    });
-    uninstallSpace.injectInside(settingsDiv);
-    
-    var uninstallSpaceButton = new Element('input', {
-      type: "button"
-    });
-    
-    uninstallSpaceButton.addEvent('click', function() {
-      ShiftSpace.uninstallSpace(uninstallSpace.getProperty('value'));
-    });
-    
-    uninstallSpaceButton.setProperty('value', 'Uninstall Space');
-    uninstallSpaceButton.injectInside(settingsDiv);
-    
-    var spaceListLabel = new Element('h');
-    spaceListLabel.setText('Installed Spaces');
-    spaceListLabel.injectInside(settingsDiv);
-
-    var spaceList = new Element('ul', {
-      'class': "ConsoleSettingsSpaceList"
-    });
-
-    // make the installed space list
-    for(space in installed)
-    {
-      var listItem = new Element('li', {
-        'class': "ConsoleSettingsSpaceListItem"
+    var checkboxes = $(this.doc.body).getElements('.checkbox');
+    checkboxes.each(function(checkbox) {
+      checkbox.addEvent('click', function() {
+        if (checkbox.hasClass('checked')) {
+          checkbox.removeClass('checked');
+        } else {
+          checkbox.addClass('checked');
+        }
       });
-      listItem.setText(space);
-      listItem.injectInside(spaceList);
-    }
-    spaceList.injectInside(settingsDiv);
+      $(checkbox.nextSibling).addEvent('click', function() {
+        checkbox.fireEvent('click');
+      });
+    });
   },
   
   addTab: function(id, label, icon) {

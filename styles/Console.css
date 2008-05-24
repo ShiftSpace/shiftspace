@@ -299,7 +299,7 @@ input.button {
   float: left;
 }
 
-label {
+label, .label {
   display: block;
   margin-bottom: 5px;
   font: 11px lucida grande, tahoma, verdana, sans-serif;
@@ -343,4 +343,26 @@ label {
 
 #controls .bugs .image {
   background: transparent url(../images/Console/bug.png) no-repeat;
+}
+
+.checkbox {
+  float: left;
+  width: 13px;
+  height: 13px;
+  margin-right: 5px;
+  background: #999 url(../images/Console/checkbox.gif) no-repeat;
+}
+
+.label {
+  float: left;
+  cursor: default;
+}
+
+.checked {
+  background-position: 0 -13px;
+}
+
+.input {
+  margin-top: 5px;
+  cursor: none;
 }
