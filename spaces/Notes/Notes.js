@@ -80,6 +80,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     
     // store a noteText ref
     this.noteText = json.noteText;
+    console.log('================================ ' + this.noteText);
   },
   
   /*
