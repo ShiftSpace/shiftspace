@@ -57,8 +57,8 @@ var ShiftSpace = new (function() {
       server = getValue('server', 'http://api.shiftspace.org/');
     }
     */
-    //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
-    server = "http://metatron.shiftspace.org/api/";
+    server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
+    //server = "http://metatron.shiftspace.org/api/";
 
     // get Dan's input on how to set this
     if(typeof ShiftSpaceSandBoxMode != 'undefined')
@@ -101,7 +101,6 @@ var ShiftSpace = new (function() {
       'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
       'Highlights': server + 'spaces/Highlights/Highlights.js',
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
-      /*'Canvas' : server + 'spaces/Canvas/Canvas.js'*/
     });
     
     // Each plugin and a corresponding URL of its origin
@@ -1261,8 +1260,10 @@ var ShiftSpace = new (function() {
         break;
         
         case 'replace':
+          element.setStyle('display', targetNode.getStyle('display'));
           targetNode.replaceWith(element);
-          //pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
+          pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display');
+          pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
           //element.setStyles(pinRef.targetStyles);
         break;
         
@@ -1295,10 +1296,8 @@ var ShiftSpace = new (function() {
           
           // if the target node is an image we
           // want the wrapper node to display inline
-          if(targetNode.getTag() == 'img')
-          {
-            wrapper.setStyle('display', 'inline');
-          }
+          wrapper.setStyle('display', targetNode.getStyle('display'));
+
           var styles = targetNode.getStyles('width', 'height');
         
           // set the dimensions of the wrapper
@@ -1471,7 +1470,7 @@ var ShiftSpace = new (function() {
         // ... or use getValue to retrieve the file's contents
         var cached = getValue('cache.' + url, false);
         if (cached) {
-          log('Loading ' + url + ' from cache');
+          console.log('Loading ' + url + ' from cache');
           callback({
             responseText: cached
           });
