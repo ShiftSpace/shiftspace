@@ -637,9 +637,6 @@ var ShiftSpace = new (function() {
               }
             }
           });
-
-          console.log('scrolling to ' + (pos.x-25) + ", " + (pos.y-25));
-          scrollFx.scrollTo(pos.x-25, pos.y-25);
         }
       }
       else
@@ -852,8 +849,6 @@ var ShiftSpace = new (function() {
       var params = { shiftIds: newShiftIds.join(',') };
       
       serverCall('shift.get', params, function(json) {
-        console.log(json);
-        
         // should probably filter out any uncessary data
         json.each(function(x) {
           finalJson[x.id] = x;
@@ -1714,7 +1709,6 @@ var ShiftSpace = new (function() {
         onload: function(rx) {
           if (typeof callback == 'function') {
             var json = Json.evaluate(rx.responseText);
-            console.log(rx.responseText);
             if(json.status == 0)
             {
               console.error(method + ' failed' + ((json.message && (', error: ' + json.message)) || '') + '.');
@@ -1863,7 +1857,6 @@ var ShiftSpace = new (function() {
         }
         else
         {
-          console.log("addStyle: url- " + url);
           GM_addStyle(css);
         }
         
