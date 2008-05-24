@@ -369,12 +369,14 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   finishFrame : function()
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> finish frame');
+    
     var text = "Leave a note";
     if(this.noteText)
     {
       text = this.noteText.replace(/<br\/>/g, "\n");
     }
-  
+    
     // Get document reference and MooToolize the body
     var doc = this.frame.contentDocument;
     this.frameBody = $(doc.body);
