@@ -80,6 +80,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     
     // store a noteText ref
     this.noteText = json.noteText;
+    this.refresh();
     console.log('================================ ' + this.noteText);
   },
   
@@ -198,6 +199,8 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   refresh : function()
   {
+    if(this.inputArea) this.inputArea.setText(this.noteText);
+    
     if(this.element.getSize().size)
     {
       var size = this.element.getSize().size;
