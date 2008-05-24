@@ -1268,7 +1268,7 @@ var ShiftSpace = new (function() {
           {
             console.log('BLAH');
             var size = targetNode.getSize().size;
-            pinRef.targetStyles.width = size.x;
+            /*pinRef.targetStyles.width = size.x;*/
             pinRef.targetStyles.height = size.y;
           }
           else
