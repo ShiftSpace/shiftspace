@@ -366,7 +366,7 @@ var Console = new Class({
                     '<div id="top"><div id="tabs" class="SSUserSelectNone">' +
                     '<div id="controls">' +
                     '<div class="button auth"><div class="image"></div></div>' +
-                    '<div class="button bugs"><div class="image"></div></div>' +
+                    '<div id="SSReportTrac" class="button bugs"><div class="image"></div></div>' +
                     '<div class="button hide"><div class="image"></div></div>' +
                     '<br class="clear" />' +
                     '</div>' +
@@ -376,6 +376,11 @@ var Console = new Class({
                     '<div id="bottom"><div id="scroller"></div></div>' +
                     '</div></div>');
     content.injectInside(this.doc.body);
+    
+    $(this.doc.getElementById('SSReportTrac')).addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      window.open('http://metatron.shiftspace.org/trac/newticket');
+    });
     
     var controls = $(this.doc.getElementById('controls'));
     var auth = controls.getElement('.auth');
