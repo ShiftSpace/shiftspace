@@ -248,6 +248,17 @@ var Console = new Class({
         }
       }
     }
+    else
+    {
+      // remove all the menu items
+      $(this.pluginMenu).getElements('.SSMenuItem').each(function(x) {x.remove();});
+      
+      // show a loading menu
+      this.pluginMenu.getElement('.SSMenuTopItem span').setText("One moment");
+      this.topItem.removeEvents();
+      this.pluginMenu.getElement('.SSMenuBottomItem span').setText("loading...");
+      this.bottomItem.removeEvents();
+    }
   },
   
   pluginLoaded: function(plugin)
