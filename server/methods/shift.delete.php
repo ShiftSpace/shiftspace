@@ -1,7 +1,7 @@
 <?php
 
 if (empty($user) || empty($user->id)) {
-    echo "{status: 0, message: 'User not logged in.'}";
+    echo "{status: 0, message: 'User not logged in'}";
     exit;
 }
 
