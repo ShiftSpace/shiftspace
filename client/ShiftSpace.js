@@ -1264,7 +1264,7 @@ var ShiftSpace = new (function() {
           targetNode.replaceWith(element);
           pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display');
           pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
-          //element.setStyles(pinRef.targetStyles);
+          element.setStyles(pinRef.targetStyles);
         break;
         
         case 'after':
