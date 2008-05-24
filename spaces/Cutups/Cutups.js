@@ -3,21 +3,21 @@ var CutupsSpace = ShiftSpace.Space.extend({
     name: 'Cutups',
     icon: 'HelloWorld.png', 
     version: 0.1,
-    css: 'Cutups.css'
+    css: 'spaces/Cutups/Cutups.css'
   },
   setup: function() {
-    this.mouseup = function(e){
-          if (!window.getSelection().getRangeAt(0).collapsed) {
-             var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
-             //save scrambled text as array
-              newRangeRef.cutUpArray = this.cutUpArray;
-              if (!this.getCurrentShift().ranges){
-                  this.getCurrentShift().ranges = [];
-              }
-              this.getCurrentShift().ranges.push(newRangeRef);
-              this.turnOnRangeRef(newRangeRef);
-          }
-          return false;
+    this.fireCutup = function(e){
+      console.log("fired event");
+            if (!window.getSelection().getRangeAt(0).collapsed) {
+               var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
+                if (!this.getCurrentShift().ranges){
+                    this.getCurrentShift().ranges = [];
+                }
+                this.getCurrentShift().ranges.push(newRangeRef);
+                this.turnOnRangeRef(newRangeRef);
+                newRangeRef.cutupsArray = this.multiLineArray;
+            }
+            return false;
     }.bind(this);
   },  
   surround_text_node: function(oNode, objRange, surroundingNode){
@@ -58,6 +58,11 @@ var CutupsSpace = ShiftSpace.Space.extend({
       }        
   },  
   turnOnRangeRef: function(ref) {
+    if(ref.cutupsArray){
+      console.log("array exists");
+    }else{
+      console.log("no array");
+    }
     var range = ShiftSpace.RangeCoder.toRange(ref);
     var objAncestor = range.commonAncestorContainer;
     
@@ -75,13 +80,24 @@ var CutupsSpace = ShiftSpace.Space.extend({
         enclosingSpan.setAttribute("_shiftspace_cutups", "on");
         this.surround_text_node(xPathResult.snapshotItem(i), range, enclosingSpan);
     }
+    //if cutUpArray does not exist
     //call cutupRange on xPathResult of cutups span
-    var xPathQuery = "//*[@id='"  + this.getCurrentShift().getId() + "']";
-    var xPathResult2 = document.evaluate(xPathQuery, objAncestor, null,
-        XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-    //iterate through snapshot & rewrite textnodes
-    this.cutupRange(xPathResult2);
-    this.save();
+    if(!ref.cutupsArray){
+      var xPathQuery = "//*[@id='"  + this.getCurrentShift().getId() + "']";
+      var xPathResult2 = document.evaluate(xPathQuery, objAncestor, null,
+          XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      //iterate through snapshot & rewrite textnodes
+      //need to move this otherwise randomizaton operation will be applied every
+      //time the shift is shown
+      this.cutupRange(xPathResult2);
+    }else{
+      var xPathQuery = "//*[@id='"  + this.getCurrentShift().getId() + "']";
+      var xPathResult2 = document.evaluate(xPathQuery, objAncestor, null,
+          XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      for(var i=0; i<xPathResult2.snapshotLength; i++){
+        xPathResult2.snapshotItem(i).textContent = ref.cutupsArray[i].join("");
+      }
+    }
   },
   cutupRange: function(xPathResult){
     var multiLineArray = Array();//2 dim array contains text for each node
@@ -123,11 +139,110 @@ var CutupsSpace = ShiftSpace.Space.extend({
         l++
       }
     }
+    //this is a bad idea.
+    this.multiLineArray = multiLineArray;
   },
   showInterface: function(){
-    //create widget here
-    document.addEventListener('mouseup',this.mouseup,false);
+    this.parent();
+    this.widget.removeClass('SSDisplayNone');
   },
+  buildInterface: function(){
+    var widget = new ShiftSpace.Element('div',{
+      'id':'SSCutupWidget'});
+    var widgetButtonCut = new ShiftSpace.Element('span',{
+      'id':'SSCutupButton'});
+    var widgetButtonSave = new ShiftSpace.Element('span',{
+      'id':'SSCutupButtonSave'});
+    var widgetButtonClose = new ShiftSpace.Element('span',{
+      'id':'SSCutupButtonClose'});
+    widgetButtonCut.appendText('cutup selection');
+    widgetButtonSave.appendText('save');
+    widgetButtonClose.appendText('close');
+    widget.appendChild(widgetButtonCut);
+    widget.appendChild(widgetButtonSave);
+    widget.appendChild(widgetButtonClose);
+    document.body.appendChild(widget);
+    widget.makeDraggable();
+    widget.addEvents({
+        'mouseenter':function(){
+          this.setStyle('opacity',1.0);
+        },
+        'mouseleave':function(){
+          this.setStyle('opacity',0.98);
+        }
+    });
+    widgetButtonCut.addEvents({
+        'mouseenter':function(){
+          this.setStyle('backgroundColor','#AAAAAA');
+        },
+        'mouseleave':function(){
+          this.setStyle('backgroundColor','#999999');
+        },
+        'mousedown':function(){
+          this.setStyle('backgroundColor','#BBBBBB');
+        },
+        'mouseup':function(){
+          this.setStyle('backgroundColor','#999999');
+        }
+    });
+    widgetButtonSave.addEvents({
+        'mouseenter':function(){
+          this.setStyle('backgroundColor','#AAAAAA');
+        },
+        'mouseleave':function(){
+          this.setStyle('backgroundColor','#999999');
+        },
+        'mousedown':function(){
+          this.setStyle('backgroundColor','#BBBBBB');
+        },
+        'mouseup':function(){
+          this.setStyle('backgroundColor','#999999');
+        }
+    });
+    widgetButtonClose.addEvents({
+        'mouseenter':function(){
+          this.setStyle('backgroundColor','#AAAAAA');
+        },
+        'mouseleave':function(){
+          this.setStyle('backgroundColor','#999999');
+        },
+        'mousedown':function(){
+          this.setStyle('backgroundColor','#BBBBBB');
+        },
+        'mouseup':function(){
+          this.setStyle('backgroundColor','#999999');
+        }
+    });
+    this.widget = widget;
+    widgetButtonCut.addEvent('mouseup',this.fireCutup.bind(this));
+    widgetButtonSave.addEvent('mouseup',this.save.bind(this));
+  },
+  hideInterface: function(){
+    if(this.widget){
+      this.widget.addClass('SSDisplayNone');
+    }
+    document.removeEventListener('mouseup',this.fireCutup,false);
+    this.interfaceBuilt = false;
+  },
+  hideCutups: function() {
+      // ignores the specific shift since only one highlight can be on at a given moment 
+      // search for all span elements with _shiftspace_highlight attribute and open them
+      var xPathResult = document.evaluate(".//span[attribute::_shiftspace_cutups='on']", document, null,
+          XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);        
+
+      var parentNodes = [];
+
+      for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
+          var spanElement = xPathResult.snapshotItem(i);
+          var newTextNode = document.createTextNode(spanElement.textContent);
+          parentNodes[i] = spanElement.parentNode;
+          spanElement.parentNode.replaceChild(newTextNode, spanElement);
+      } 
+
+      for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
+          parentNodes[i].normalize();
+      } 
+  },  
   save: function() {
     this.getCurrentShift().save();
   }
@@ -156,13 +271,16 @@ var CutupsShift = ShiftSpace.Shift.extend({
     },
     show: function() {
       var space = this.getParentSpace();
-      space.showInterface();
+      space.hideCutups();
       if (this.ranges) {
         for (var i = 0; i < this.ranges.length; i++) {
           space.turnOnRangeRef(this.ranges[i]);
         }
       }
       window.location.hash = this.getId();
+    },
+    hide: function(){
+      this.getParentSpace().hideCutups();
     }
 });
 
