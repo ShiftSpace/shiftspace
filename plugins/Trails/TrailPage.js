@@ -397,6 +397,8 @@ var TrailPage = new Class({
   */
   createDragLinkPoint : function( e )
   {
+    var evt = new Event(e);
+
     window.addEvent( 'mousemove', this.handleLinkDrag.bind( this ) );
 
     // create the drag link point
@@ -405,9 +407,11 @@ var TrailPage = new Class({
     this.dragLinkPoint.injectInside(document.body);
     //this.dragLinkPoint.injectInside( $('SSTrailsPlugInScrollArea') );
     
+    console.log(evt.client.x + ', ' + evt.client.y);
+
     this.dragLinkPoint.setStyles({
-      top : -5,
-      left : -5
+      left : evt.page.x,
+      top : evt.page.y
     });
     
     this.dragLinkPoint.addEvent( 'mouseup', function( e ) { 
