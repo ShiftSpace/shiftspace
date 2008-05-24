@@ -119,7 +119,7 @@ var ShiftSpace = new (function() {
     
     */
     this.initialize = function() {
-      log("Initializing ShiftSpace (debug enabled)");
+      console.log("Initializing ShiftSpace (debug enabled)");
 
       debug = 0;
 
@@ -142,13 +142,13 @@ var ShiftSpace = new (function() {
       // Load each installed space - this asynchronous, we need to wait till
       // they are all done
       for (var space in installed) {
-        log("Loading " + space);
+        console.log("Loading " + space);
         loadSpace(space);
       }
 
       // need to think about plugin loading architecture! - this is going to involve a reworking of file loading
       for(var plugin in installedPlugins) {
-        log("Loading " + plugin)
+        console.log("Loading " + plugin)
         loadPlugin(plugin);
       }
       

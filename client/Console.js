@@ -931,8 +931,6 @@ var Console = new Class({
           // prevent the click from triggering item selection in console
           evt.stop();
 
-          console.log('addEvent!');
-
           // in case it's delayed
           var cb = function(menuItems) {
             this.setPluginMenuItems(aShift.id, menuItems);
@@ -947,7 +945,7 @@ var Console = new Class({
       else
       {
         // defer loading this item
-        console.log('========================================== Deferred load for ' + aShift.id);
+        //console.log('========================================== Deferred load for ' + aShift.id);
       }
     }
     
