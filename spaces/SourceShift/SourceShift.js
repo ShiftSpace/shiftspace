@@ -883,6 +883,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
 
     // MooTools-ize the body of the document
     $(doc.body).setProperty('id', 'SSSourceShiftFrameBody');
+    this.frameBody = $(doc.body);
 
     // add the div that will be the source shift
     this.source = $(this.frame.contentDocument.createElement('div'));
@@ -1024,8 +1025,13 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   {
     // call the parent pin method
     this.parent(this.frame, pinRef);
+
     // hide the element now
     this.element.addClass('SSDisplayNone');
+    
+    var width = $(this.frameBody).getSize().size.x
+    this.frame.setStyle('width', width);
+
     // refresh
     this.refresh();
   },
