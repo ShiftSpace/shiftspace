@@ -25,12 +25,15 @@ var NotesShift = ShiftSpace.Shift.extend({
   setup : function(json)
   {
     console.log('+++++++++++++++++++++++++++++ setup NOTES');
-    console.log(json);
+
     if(json.legacy)
     {
       json.position = {x: json.x, y: json.y};
       json.noteText = json.content;
     }
+    
+    // store a noteText ref
+    this.noteText = json.noteText;
     
     // build the DOM
     this.build();
@@ -77,9 +80,7 @@ var NotesShift = ShiftSpace.Shift.extend({
         });
       }
     }
-    
-    // store a noteText ref
-    this.noteText = json.noteText;
+
     this.refresh();
     console.log('================================ ' + this.noteText);
   },
