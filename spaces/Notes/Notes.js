@@ -372,6 +372,8 @@ var NotesShift = ShiftSpace.Shift.extend({
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> finish frame');
     
     var text = "Leave a note";
+    
+    console.log(this.noteText);
     if(this.noteText)
     {
       text = this.noteText.replace(/<br\/>/g, "\n");
