@@ -1573,6 +1573,8 @@ var ShiftSpace = new (function() {
 
       var spaceDir = installed[spaceName].match(/(.+\/)[^\/]+\.js/)[1];
       
+      console.log('REGISTER ' + spaceDir);
+      
       instance.attributes.dir = spaceDir;
 
       if (!instance.attributes.icon) {
