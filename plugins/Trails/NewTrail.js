@@ -14,7 +14,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   setup : function(json)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>> INITIALIZING TRAILS');
   },
 
   createTrail: function(focusedShift)
@@ -56,8 +55,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       title: trailJson.title
     };
     
-    console.log(trailJson.title);
-
     // check to see if this is a legacy trail
     if(!trailJson.version)
     {
@@ -95,9 +92,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     data.shifts = trail.shifts.join(',');
     data.title = trail.title;
     data.version = this.attributes.version;
-    
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SAVE TRAILS');
-    console.log(data);
     
     // get the trail
     this.serverCall(
@@ -415,7 +409,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   onTrailDelete: function(json)
   {
-    console.log('Trail deleted! ' + Json.toString(json));
   },
   
   userCanEdit: function()
