@@ -186,6 +186,7 @@ ShiftSpace.Space = new Class({
       this.fireEvent( 'onShiftShow', shiftId );
     }.bind( this ) );
     newShift.addEvent( 'onShiftHide', function( shiftId ) { 
+      this.onShiftHide(shiftId);
       this.fireEvent( 'onShiftHide', shiftId );
     }.bind( this ) );
     newShift.addEvent( 'onShiftDestroy', function( shiftId ) { 

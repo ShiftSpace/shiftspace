@@ -206,6 +206,7 @@ ShiftSpace.Shift = new Class({
   */
   show : function(el)
   {
+    this.setIsVisible(true);
     var mainView = this.getMainView();
     
     if( mainView )
@@ -229,6 +230,7 @@ ShiftSpace.Shift = new Class({
   */
   hide : function(el)
   {
+    this.setIsVisible(false);
     var mainView = this.getMainView();
 
     if( mainView )

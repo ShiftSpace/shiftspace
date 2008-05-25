@@ -78,10 +78,12 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   
   setPosition: function(position)
   {
-    /*
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    console.log(position);
-    */
+    var size = this.editSourceShift.getSize().size;
+
+    this.editSourceShift.setStyles({
+      left: position.x - size.x - 10,
+      top: position.y
+    });
   },
   
   setMode : function(newMode)
@@ -132,6 +134,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     {
       this.editSource.setProperty('value', currentShift.getMarkup());
       this.titleField.setProperty('value', currentShift.getTitle());
+      this.autoResize.setProperty('checked', currentShift.isAutoresized());
     }
     
     // update pin widget
@@ -155,6 +158,20 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       this.onShiftEdit(shiftId);
       */
     }
+  },
+  
+  onShiftHide: function(shiftId)
+  {
+    console.log('shift hide ' + shiftId);
+    
+    for(shift in this.shifts)
+    {
+      if(this.shifts[shift].isVisible())
+      {
+        return;
+      }
+    }
+    this.hideInterface();
   },
   
   attachEvents : function()
@@ -200,6 +217,16 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
         this.__previewMode__ = false;
         this.getCurrentShift().edit()
         this.unhighlightButton(this.previewButton);
+      }
+    }.bind(this));
+    
+    this.autoResize.addEvent('change', function(_evt) {
+      var evt = new Event(_evt);
+      var target = $(evt.target);
+      
+      if(this.getCurrentShift()) 
+      {
+        this.getCurrentShift().setAutoresize(target.getProperty('checked'));
       }
     }.bind(this));
     
@@ -336,22 +363,24 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       type: "text"
     });
     
-    var buttonMarkup = "<div class='SSLeft ShiftSpaceElement'></div><div class='middle'></div><div class='SSRight'></div>";
+    var buttonMarkup = "<div class='SSLeft ShiftSpaceElement SSUserSelectNone'></div><div class='middle'></div><div class='SSRight'></div>";
     this.previewButton = new ShiftSpace.Element('div', {
       value: "Preview", 
-      'class': "SSSourceShiftButton", 
+      'class': "SSSourceShiftButton SSUserSelectNone", 
       type: "button"
     });
     this.previewButton.setHTML(buttonMarkup);
     this.previewButton.getElement('.middle').setText('Preview');
+    if(window.webkit) this.previewButton.addClass('SSSourceShiftButtonWebKit');
     
     this.saveButton = new ShiftSpace.Element('div', {
       value: "Save", 
-      'class': "SSSourceShiftButton",
+      'class': "SSSourceShiftButton SSUserSelectNone",
       type: "button"
     });
     this.saveButton.setHTML(buttonMarkup);
     this.saveButton.getElement('.middle').setText('Save');
+    if(window.webkit) this.saveButton.addClass('SSSourceShiftButtonWebKit');
     
     // setup hover events for the two buttons
     
@@ -372,9 +401,23 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.cssButton.getElement('.middle').setText('CSS');
     this.cssButton.injectInside(this.tabArea);
     
+    // add the autoresize button
+    this.autoResize = new ShiftSpace.Element('input', {
+      id: "SSAutoResize",
+      type: "checkbox",
+      'class': "SSUserSelectNone"
+    });
+    this.autoResizeLabel = new ShiftSpace.Element('label', {
+      id: "SSAutoResizeLabel",
+      'class': "SSUserSelectNone"
+    });
+    this.autoResizeLabel.setText('Autoresize');
+    this.autoResize.injectInside(this.tabArea);
+    this.autoResizeLabel.injectInside(this.tabArea);
+    
     // add the pin widget
     this.pinWidgetPrompt = new ShiftSpace.Element('div', {
-      'class': "SSSourceShiftEditorPinPrompt"
+      'class': "SSSourceShiftEditorPinPrompt SSUserSelectNone"
     });
     this.pinWidgetPrompt.setText('Pin to element');
     this.pinWidgetPrompt.injectInside(this.tabArea);
@@ -564,6 +607,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.build();
     
     this.setTitle( json.title || '' );
+    this.setAutoresize( json.autoResized || false );
+    
     this.attachEvents();
     
     this.manageElement(this.element);
@@ -614,7 +659,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       markup: markup,
       summary: this.getTitle(),
       title: this.titleText,
-      pinRef: this.getEncodablePinRef()
+      pinRef: this.getEncodablePinRef(),
+      autoResized: this.isAutoresized()
     };
   },
   
@@ -661,7 +707,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       {
       }
       
-      if(this.isPinned()) this.resizeToContent();
+      if(this.isPinned() && this.isAutoresized()) this.resizeToContent();
       
       this.refresh();
     }
@@ -690,7 +736,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.iframeCss.appendText(css);
     }
     
-    if(this.isPinned()) this.resizeToContent();
+    if(this.isPinned() && this.isAutoresized()) this.resizeToContent();
     
     this.refresh();
   },
@@ -707,7 +753,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       var h = this.source.getSize().size.y;
 
       // set the size of the element
-      this.element.setStyles({
+      this.frame.setStyles({
         width: w+5,
         height: h+5
       });
@@ -749,6 +795,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       // set the frame dimensions
       this.frame.setStyle('height', fsizey-4);
     }
+    
     /*
     else
     {
@@ -1023,14 +1070,18 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   pin : function(pinRef)
   {
+    /*
+    this.frame.setStyle('width', width);
+    var width = $(this.frameBody).getSize().size.x;
+    this.frame.setStyle('width', width);
+    console.log('------------------------------------------- width ' + width);
+    */
+    
     // call the parent pin method
     this.parent(this.frame, pinRef);
 
     // hide the element now
     this.element.addClass('SSDisplayNone');
-    
-    var width = $(this.frameBody).getSize().size.x
-    this.frame.setStyle('width', width);
 
     // refresh
     this.refresh();
@@ -1063,6 +1114,18 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.top.addClass('SSSourceShiftTopBlur');
     this.element.setOpacity(0.5);
     */
+  },
+  
+  setAutoresize: function(newVal)
+  {
+    console.log(newVal);
+    this.__autosize__ = newVal;
+    // probably need to do some work here
+  },
+  
+  isAutoresized: function()
+  {
+    return this.__autosize__;
   }
 });
 
