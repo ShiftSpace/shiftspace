@@ -1,63 +1,66 @@
 #SSCutupWidget{
-  /* height:37px; */
+  padding:6px;
+  position:fixed;
   z-index:99;
-  background-color:#333;
-  opacity:0.98;
-  filter:alpha(opacity=98);
+  background-color:#373719;
+  padding:3px;
+  font-family:Verdana, sans-serif !important;
+  font-size:10px;
+  line-height:15px;
+  color:#EEE;
+  opacity:0.80;
+  filter:alpha(opacity=80);
+}
+#SSCutupControls,#SSCutupWidget label{
+  float:left; 
+}
+#SSCutupWidget label{
+  padding:0 3px;
+  display:block;
+  line-height:15px;
+}
+#SSCutupButton,
+#SSCutupButtonSave,
+#SSCutupButtonCancel{
+  float:left;
+  cursor:pointer;
+  background-color:#999;
+  color:#333;
+  text-align:center;
+  line-height:15px;
+  display:block;
+  border:1px solid #777;
+  border-top:none;
+  border-right:none;
 }
 #SSCutupButton{
-  cursor: pointer;
-  display: block;
-  margin-top:15px;
   margin-bottom:3px;
   margin-left:8px;
-  background-color:#999;
-  border:1px solid #777;
-  border-top:none;
-  border-right:none;
-  text-align:center;
-  font-family: Verdana, sans-serif !important;
-  font-size:10px !important;
-  float:left;
-  line-height:15px;
-  color:#333;
   padding:0 3px;
 }
-  
 #SSCutupButtonSave{
-  cursor:pointer;
-  display:block;
-  margin-top:15px;
   margin-left:4px;
   margin-bottom:3px;
-  background-color:#999;
-  border:1px solid #777;
-  border-top:none;
-  border-right:none;
-  text-align:center;
-  font-family: Verdana, sans-serif !important;
-  font-size:10px !important;
-  float:left;
-  line-height:15px;
-  color:#333;
   padding:0 3px;
 }
-#SSCutupButtonClose{
-  cursor:pointer;
-  display:block;
+#SSCutupButtonCancel{
   margin-bottom:3px;
-  margin-top:15px;
   margin-left:4px;
   margin-right:3px;
-  background-color:#999;
-  border:1px solid #777;
-  border-top:none;
-  border-right:none;
-  text-align:center;
-  font-family: Verdana, sans-serif !important;
-  font-size:10px !important;
+  padding:0 3px;
+}
+#SSCutupLabel{
   float:left;
   line-height:15px;
-  color:#333;
-  padding:0 3px;
+  display:block;
+}
+#SSCutupTitle{
+  float:left;
+  background-color:#DDD;
+}
+#SSCutupHandle{
+  display:block;
+  width:10px;
+  height:10px;
+  background-color:#888;
 }
