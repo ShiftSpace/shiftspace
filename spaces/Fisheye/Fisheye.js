@@ -372,34 +372,28 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	  return false;
 	url=feRoot + dir + "/" + path;
 	this.rebuildLock();
-	//this.log('Loading ' + url + ' from network');
-	ShiftSpace.xmlhttpRequest({
-	    'method': 'GET',
-	    'url': url,
-	    'onerror': function(response) { this.rebuildUnlock(); },
-	    'onload': function(response) {
-		objList = eval (response.responseText);
-		for (key in objList) {
-		    url = feRoot + dir + "/" + objList[key] + ".js";
-		    //this.log('Loading ' + url + ' from network');
-		    this.rebuildLock();
-		    ShiftSpace.xmlhttpRequest({
-			'method': 'GET',
-			'url': url,
-			'onerror': function(response) { this.rebuildUnlock(); },
-			'onload': function(response) {
-			    thisObj = eval (response.responseText);
-			    if (thisObj && (typeof callback == 'function'))
-				callback(thisObj, key);
-			    if (!thisObj)
-				this.log("failed to create object from '" + url + "' !!!");
-			    this.rebuildUnlock();
-			}.bind(this),
-		    });
-		}
-		this.rebuildUnlock();
-	    }.bind(this),
-	});
+
+	this.getWebPage(url,
+	  function(response) {
+	    objList = eval (response.responseText);
+	    for (key in objList) {
+	      url = feRoot + dir + "/" + objList[key] + ".js";
+	      this.rebuildLock();
+	      this.getWebPage(url,
+		function(response) {
+		  thisObj = eval (response.responseText);
+		  if (thisObj && (typeof callback == 'function'))
+		    callback(thisObj, key);
+		  if (!thisObj)
+		    this.log("failed to create object from '" + url + "'");
+		  this.rebuildUnlock();
+		}.bind(this),
+		function(response) { this.rebuildUnlock(); }.bind(this) );
+	    }
+	    this.rebuildUnlock();
+	  }.bind(this),
+	  function(response) { this.rebuildUnlock(); }.bind(this)
+	);
     },
 
     modeGetName : function(key) {
@@ -966,12 +960,14 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	}.bind(this));
     },
 
-    getWebPage: function(url, callback) {
-        //this.log('Loading ' + url + ' from network');
+    getWebPage: function(url, callback, onerror) {
+	if (!onerror)
+	  onerror = function() {};
         ShiftSpace.xmlhttpRequest({
             'method': 'GET',
             'url': url,
-            'onload': callback
+            'onload': callback,
+	    'onerror': onerror
         });
     },
 });
