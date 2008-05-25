@@ -57,7 +57,7 @@ var ShiftSpace = new (function() {
       server = getValue('server', 'http://api.shiftspace.org/');
     }
     */
-    server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
+    //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //server = "http://metatron.shiftspace.org/api/";
 
     // get Dan's input on how to set this
@@ -102,11 +102,25 @@ var ShiftSpace = new (function() {
       'Highlights': server + 'spaces/Highlights/Highlights.js',
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
     });
+    /*
+    var installed = {
+      'Notes' : server + 'spaces/Notes/Notes.js',
+      'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
+      'Highlights': server + 'spaces/Highlights/Highlights.js',
+      'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
+    };
+    */
     
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
       'Trails' : server + 'plugins/Trails/NewTrail.js'
     });
+
+    /*
+    var installedPlugins = {
+      'Trails' : server + 'plugins/Trails/NewTrail.js'
+    };
+    */
     
     // An index of cached files, used to clear the cache when necessary
     var cache = getValue('cache', []);
@@ -304,7 +318,7 @@ var ShiftSpace = new (function() {
               shifts[shiftId].username == ShiftSpace.user.getUsername());
     }
     
-    function isNewShift(shiftId)
+    function SSIsNewShift(shiftId)
     {
       return (shiftId.search('newShift') != -1);
     }
@@ -599,7 +613,7 @@ var ShiftSpace = new (function() {
       space.onShiftFocus(shiftId);
       
       // if new shift present the editing interface
-      if(isNewShift(shiftId))
+      if(SSIsNewShift(shiftId))
       {
         space.editShift(shiftId);
       }
@@ -839,6 +853,7 @@ var ShiftSpace = new (function() {
       var finalJson = {};
       
       // figure out what the actual new shift ids are
+      // NOTE: actually not a good idea, as this might not be up to date - David
       /*
       shiftIds.each(function(id) {
         if(!shifts[id]) 
@@ -1256,28 +1271,34 @@ var ShiftSpace = new (function() {
       switch(pinRef.action)
       {
         case 'before':
-          element.injectBefore(targetNode);
-        break;
-        
-        case 'replace':
-          element.setStyle('display', targetNode.getStyle('display'));
           pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display');
           pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
 
           if(targetNode.getStyle('display') == 'inline')
           {
-            console.log('BLAH');
             var size = targetNode.getSize().size;
-            /*pinRef.targetStyles.width = size.x;*/
+            pinRef.targetStyles.width = size.x;
             pinRef.targetStyles.height = size.y;
           }
-          else
+          
+          element.injectBefore(targetNode);
+        break;
+        
+        case 'replace':
+          element.setStyle('display', targetNode.getStyle('display'));
+          
+          pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display');
+          pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
+
+          if(targetNode.getStyle('display') == 'inline')
           {
-            console.log('ARGH ' + targetNode.getStyle('display'));
+            var size = targetNode.getSize().size;
+            pinRef.targetStyles.width = size.x;
+            pinRef.targetStyles.height = size.y;
           }
+
           targetNode.replaceWith(element);          
 
-          console.log(pinRef.targetStyles);
           element.setStyles(pinRef.targetStyles);
         break;
         
@@ -1556,7 +1577,7 @@ var ShiftSpace = new (function() {
             }
             catch(exc)
             {
-              console.log('Error loading ' + space + ' Space - ' + describeException(exc));
+              console.error('Error loading ' + space + ' Space - ' + describeException(exc));
             }
             
             if (typeof pendingShift != 'undefined') 
@@ -1672,7 +1693,7 @@ var ShiftSpace = new (function() {
           }
           catch(exc) 
           {
-            console.log('Error loading ' + plugin + ' Plugin - ' + describeException(exc));
+            console.error('Error loading ' + plugin + ' Plugin - ' + describeException(exc));
           }
         });
       }
@@ -1729,7 +1750,7 @@ var ShiftSpace = new (function() {
               }
               catch(exc)
               {
-                console.log('Error loading ' + include + ' include for ' + plugin.attributes.name + ' Plugin - ' + describeException(exc));
+                console.error('Error loading ' + include + ' include for ' + plugin.attributes.name + ' Plugin - ' + describeException(exc));
               }
             });
           });
@@ -1974,7 +1995,7 @@ var ShiftSpace = new (function() {
     return this;
 })();
 
-// For Safari too keep extensions out of private scope
+// NOTE: For Safari to keep SS extensions out of private scope - David
 ShiftSpace.__externals__ = {
   evaluate: function(external, object)
   {
