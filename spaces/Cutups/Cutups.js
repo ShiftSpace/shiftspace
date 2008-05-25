@@ -10,6 +10,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
       console.log("fired event");
             if (!window.getSelection().getRangeAt(0).collapsed) {
                var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
+               console.log(window.getSelection().getRangeAt(0));
+               console.log('range is: ',newRangeRef);
                 if (!this.getCurrentShift().ranges){
                     this.getCurrentShift().ranges = [];
                 }
@@ -58,11 +60,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
       }        
   },  
   turnOnRangeRef: function(ref) {
-    if(ref.cutupsArray){
-      console.log("array exists");
-    }else{
-      console.log("no array");
-    }
     var range = ShiftSpace.RangeCoder.toRange(ref);
     var objAncestor = range.commonAncestorContainer;
     
@@ -94,8 +91,13 @@ var CutupsSpace = ShiftSpace.Space.extend({
       var xPathQuery = "//*[@id='"  + this.getCurrentShift().getId() + "']";
       var xPathResult2 = document.evaluate(xPathQuery, objAncestor, null,
           XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-      for(var i=0; i<xPathResult2.snapshotLength; i++){
-        xPathResult2.snapshotItem(i).textContent = ref.cutupsArray[i].join("");
+    //reinsert sorted array as string back into document
+      for ( var i=0,l=0; i < xPathResult2.snapshotLength; i++ ){
+        //if node is not empty
+        if(!xPathResult2.snapshotItem(i).textContent.match(/^\s+$/)){
+          xPathResult2.snapshotItem(i).textContent = ref.cutupsArray[l].join("");
+          l++
+        }
       }
     }
   },
@@ -149,79 +151,83 @@ var CutupsSpace = ShiftSpace.Space.extend({
   buildInterface: function(){
     var widget = new ShiftSpace.Element('div',{
       'id':'SSCutupWidget'});
+    
+    var widgetHandle = new ShiftSpace.Element('span',{
+      'id':'SSCutupHandle'});
+    
+    var widgetInputLabel = new ShiftSpace.Element('label',{
+      'for':'SSCutupTitle'}).appendText('title');
+    
+    var widgetInputTitle = new ShiftSpace.Element('input',{
+      'id':'SSCutupTitle',
+      'type':'text'
+    });
+    
+    var widgetControls = new ShiftSpace.Element('div',{
+      'id':'SSCutupControls'});
+    
     var widgetButtonCut = new ShiftSpace.Element('span',{
       'id':'SSCutupButton'});
+    
     var widgetButtonSave = new ShiftSpace.Element('span',{
       'id':'SSCutupButtonSave'});
+    
     var widgetButtonClose = new ShiftSpace.Element('span',{
-      'id':'SSCutupButtonClose'});
+      'id':'SSCutupButtonCancel'});
+    
     widgetButtonCut.appendText('cutup selection');
     widgetButtonSave.appendText('save');
     widgetButtonClose.appendText('close');
-    widget.appendChild(widgetButtonCut);
-    widget.appendChild(widgetButtonSave);
-    widget.appendChild(widgetButtonClose);
+    
+    widgetControls.appendChild(widgetButtonCut);
+    widgetControls.appendChild(widgetButtonSave);
+    widgetControls.appendChild(widgetButtonClose);
+    
+    widget.appendChild(widgetHandle);
+    widget.appendChild(widgetInputLabel);
+    widget.appendChild(widgetInputTitle);
+    widget.appendChild(widgetControls);
+    
     document.body.appendChild(widget);
-    widget.makeDraggable();
-    widget.addEvents({
-        'mouseenter':function(){
+    
+    widget.makeDraggable({'handle':widgetHandle}); 
+     widget.addEvents({
+         'mouseenter':function(){
           this.setStyle('opacity',1.0);
         },
         'mouseleave':function(){
-          this.setStyle('opacity',0.98);
-        }
+          this.setStyle('opacity',0.80);
+        } 
     });
-    widgetButtonCut.addEvents({
+    var buttonStyleEvents = {
         'mouseenter':function(){
-          this.setStyle('backgroundColor','#AAAAAA');
+          this.setStyle('backgroundColor','#858585');
         },
         'mouseleave':function(){
           this.setStyle('backgroundColor','#999999');
         },
         'mousedown':function(){
-          this.setStyle('backgroundColor','#BBBBBB');
+          this.setStyle('backgroundColor','#777777');
         },
         'mouseup':function(){
           this.setStyle('backgroundColor','#999999');
         }
-    });
-    widgetButtonSave.addEvents({
-        'mouseenter':function(){
-          this.setStyle('backgroundColor','#AAAAAA');
-        },
-        'mouseleave':function(){
-          this.setStyle('backgroundColor','#999999');
-        },
-        'mousedown':function(){
-          this.setStyle('backgroundColor','#BBBBBB');
-        },
-        'mouseup':function(){
-          this.setStyle('backgroundColor','#999999');
-        }
-    });
-    widgetButtonClose.addEvents({
-        'mouseenter':function(){
-          this.setStyle('backgroundColor','#AAAAAA');
-        },
-        'mouseleave':function(){
-          this.setStyle('backgroundColor','#999999');
-        },
-        'mousedown':function(){
-          this.setStyle('backgroundColor','#BBBBBB');
-        },
-        'mouseup':function(){
-          this.setStyle('backgroundColor','#999999');
-        }
-    });
+    }
+    
+    widgetButtonCut.addEvents(buttonStyleEvents);
+    widgetButtonSave.addEvents(buttonStyleEvents);
+    widgetButtonClose.addEvents(buttonStyleEvents);
+    
     this.widget = widget;
-    widgetButtonCut.addEvent('mouseup',this.fireCutup.bind(this));
+    this.summary = widgetInputTitle;
+    widgetButtonCut.addEvent('mousedown',this.fireCutup.bind(this));
     widgetButtonSave.addEvent('mouseup',this.save.bind(this));
   },
   hideInterface: function(){
     if(this.widget){
       this.widget.addClass('SSDisplayNone');
     }
-    document.removeEventListener('mouseup',this.fireCutup,false);
+    document.removeEventListener('mousedown',this.fireCutup,false);
     this.interfaceBuilt = false;
   },
   hideCutups: function() {
@@ -244,6 +250,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
       } 
   },  
   save: function() {
+    console.log(this.summary);
+    this.getCurrentShift().summary = this.summary.value;
     this.getCurrentShift().save();
   }
 });
@@ -251,22 +259,32 @@ var CutupsSpace = ShiftSpace.Space.extend({
 var CutupsShift = ShiftSpace.Shift.extend({
     setup: function(json){
       if(json.ranges){
+          console.log(json);
           //replace __newline__ token with \n
           for(var i=0; i<json.ranges.length; i++){
             json.ranges[i].origText = json.ranges[i].origText.replace(new RegExp("__newline__","g"),"\n");
-            json.ranges[i].ancestorOrigTextContent = json.ranges[i].ancestorOrigTextContent.replace(new RegExp("__newline__","g"),"\n");
+            //probably a range coder problem for some reason ancestorOrigTextContent null
+            if(json.ranges[i].ancestorOrigTextContent){ 
+              json.ranges[i].ancestorOrigTextContent = json.ranges[i].ancestorOrigTextContent.replace(new RegExp("__newline__","g"),"\n");
+            }
           }
         }
         this.ranges = json.ranges;
+        this.summary = json.summary;
     },
     encode: function() {
       //tokenize newline with __newline__
+      console.log(this.ranges);
       for(var i=0; i<this.ranges.length; i++){
         this.ranges[i].origText = this.ranges[i].origText.replace(new RegExp("\\n","g"),"__newline__");
-        this.ranges[i].ancestorOrigTextContent = this.ranges[i].ancestorOrigTextContent.replace(new RegExp("\\n","g"),"__newline__");
+        //probably a range coder problem for some reason ancestorOrigTextContent null
+        if(this.ranges[i].ancestorOrigTextContent){
+          this.ranges[i].ancestorOrigTextContent = this.ranges[i].ancestorOrigTextContent.replace(new RegExp("\\n","g"),"__newline__");
+        } 
       }        
       return {
           ranges: this.ranges,
+          summary: this.summary
       };
     },
     show: function() {
