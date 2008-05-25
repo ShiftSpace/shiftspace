@@ -653,6 +653,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     var cssText = this.cssText.replace(/\n/g, '<br/>');
     var markup = this.markup.replace(/\n/g, '<br/>');
     
+    // remove any javascript
+    
     return {
       position: pos,
       css: cssText,
@@ -662,6 +664,12 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       pinRef: this.getEncodablePinRef(),
       autoResized: this.isAutoresized()
     };
+  },
+  
+  cleanMarkup: function(markup)
+  {
+    // TODO: strip any js out - David
+    return markup;
   },
   
   setCSS : function(css)
@@ -1120,7 +1128,11 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   {
     console.log(newVal);
     this.__autosize__ = newVal;
-    // probably need to do some work here
+    
+    // if true
+    // TODO: set iframe body to infinite with, source in frame float left - David
+    // if false
+    // TODO: set iframe body back to normal
   },
   
   isAutoresized: function()
