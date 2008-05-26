@@ -82,7 +82,7 @@ ShiftSpace.Space = new Class({
       console.log(this.__deferredShifts__);
       this.__deferredShifts__.each(this.showShift.bind(this));
       this.__deferredNewShifts__.each(function(aShift) {
-        SSShowNewShift(aShift);
+        SSShowNewShift(aShift.id);
       });
     }
   },
