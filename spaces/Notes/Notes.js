@@ -228,7 +228,6 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   show: function()
   {
-    console.log('_________________ notes show');
     this.parent();
     this.hideEditInterface();
     

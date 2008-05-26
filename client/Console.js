@@ -738,7 +738,7 @@ var Console = new Class({
   
   showShift: function(id) {
     var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
-    if(el) 
+    if(el)
     {
       el.addClass('active');
       el.addClass('SSUserSelectNone');
@@ -751,8 +751,7 @@ var Console = new Class({
     var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
     if(el)
     {
-      el.addClass('active');
-      el.addClass('SSUserSelectNone');
+      // hide the edit stuff
       el.getElement('.summaryEdit').addClass('SSDisplayNone');
       el.getElement('.summaryView').removeClass('SSDisplayNone');
     }

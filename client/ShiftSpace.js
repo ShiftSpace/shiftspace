@@ -603,9 +603,7 @@ var ShiftSpace = new (function() {
       {
         var lastSpace = spaceForShift(focusedShiftId);
         
-        // hmmm, note, we maybe should have loadShift to avoid confusion about show - David
-        lastSpace.blurShift(focusedShiftId);
-        lastSpace.onShiftBlur(focusedShiftId);
+        lastSpace.getShift(focusedShiftId).blur();
         lastSpace.orderBack(focusedShiftId);
       }
       focusedShiftId = shift.id;
@@ -667,12 +665,14 @@ var ShiftSpace = new (function() {
     
     function blurShift(shiftId)
     {
-      
+      // create a blur event so console gets updated
+      var space = spaceForShift(shiftId);
+      space.blurShift(shiftId);
+      space.onShiftBlur(shiftId);
     }
     
     function scrollToShift(shiftId)
     {
-      
     }
 
     /*
@@ -1288,21 +1288,22 @@ var ShiftSpace = new (function() {
         break;
         
         case 'replace':
-          element.setStyle('display', targetNode.getStyle('display'));
-          
           pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display');
+          //pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
           pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
 
+          /*
           if(targetNode.getStyle('display') == 'inline')
           {
             var size = targetNode.getSize().size;
             pinRef.targetStyles.width = size.x;
             pinRef.targetStyles.height = size.y;
           }
+          */
 
           targetNode.replaceWith(element);          
 
-          element.setStyles(pinRef.targetStyles);
+          //element.setStyles(pinRef.targetStyles);
         break;
         
         case 'after':
@@ -1655,7 +1656,9 @@ var ShiftSpace = new (function() {
       {
         var space = spaces[spaceName];
         space.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
-        space.addEvent('onShiftShow', ShiftSpace.Console.showShift.bind(ShiftSpace.Console));
+        space.addEvent('onShiftShow', function(shiftId) {
+          ShiftSpace.Console.showShift(shiftId);
+        });
         space.addEvent('onShiftBlur', function(shiftId) {
           blurShift(shiftId);
           ShiftSpace.Console.blurShift(shiftId);
