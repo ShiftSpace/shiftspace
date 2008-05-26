@@ -58,7 +58,7 @@ var ShiftSpace = new (function() {
     }
     */
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
-    //server = "http://metatron.shiftspace.org/api/";
+    server = "http://metatron.shiftspace.org/api/";
 
     // get Dan's input on how to set this
     if(typeof ShiftSpaceSandBoxMode != 'undefined')

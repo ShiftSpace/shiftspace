@@ -1214,7 +1214,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.pinnedHandle.setStyles({
       position: 'absolute',
       left: framePos.x,
-      top: framePos.y - 6,
+      top: framePos.y - 5,
       width: frameSize.x
     });
     
