@@ -143,11 +143,13 @@ ShiftSpace.Space = new Class({
     {
       if(this.cssIsLoaded())
       {
+        console.log('---------------------------- css loaded ------------------------');
         this.buildInterface();
         this.setInterfaceIsBuilt(true);
       }
       else
       {
+        console.log('---------------------------- build later ------------------------');
         this.__showInterfaceOnCssLoad__ = true;
       }
     }
