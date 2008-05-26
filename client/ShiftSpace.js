@@ -103,21 +103,25 @@ var ShiftSpace = new (function() {
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
     });
 
+    /*
     installed = {
       'Notes' : server + 'spaces/Notes/Notes.js',
       'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
       'Highlights': server + 'spaces/Highlights/Highlights.js',
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
     };
+    */
     
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
       'Trails' : server + 'plugins/Trails/NewTrail.js'
     });
 
+    /*
     installedPlugins = {
       'Trails' : server + 'plugins/Trails/NewTrail.js'
     };
+    */
     
     // An index of cached files, used to clear the cache when necessary
     var cache = getValue('cache', []);

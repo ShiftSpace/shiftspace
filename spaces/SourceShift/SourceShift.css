@@ -484,7 +484,7 @@ div.SSSourceShiftButton .SSRightActive
 .SSSourceShiftPinnedHandle
 {
   position: absolute;
-  height: 4px;
+  height: 6px;
   background-color: #000;
   z-index: 100;
 }

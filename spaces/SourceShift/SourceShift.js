@@ -687,7 +687,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   encode : function(markup)
   {
-    var pos = this.element.getPosition();
+    var pos = (!this.isPinned()) ? this.element.getPosition() :  this.frame.getPosition();
     var cssText = this.cssText.replace(/\n/g, '<br/>');
     var markup = this.markup.replace(/\n/g, '<br/>');
     
@@ -887,7 +887,9 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       }
       else
       {
-        this.frame.removeClass('SSFrameBorder');        
+        this.hidePinnedResizer();
+        this.hidePinnedHandle();
+        this.frame.removeClass('SSFrameBorder');
       }
     }
   },
@@ -959,6 +961,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     {
       this.frame.addClass('SSFrameBorder');
       this.showPinnedResizer();
+      this.showPinnedHandle();
     }
     else
     {
@@ -1114,7 +1117,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       'class': "SSSourceShiftPinnedHandle SSDisplayNone"
     });
     this.pinnedHandleDragRef = this.frame.makeDraggable({
-      handle: this.pinnedHandle
+      handle: this.pinnedHandle,
+      onDrag: this.refreshPinnedHandle.bind(this)
     });
     this.pinnedHandleDragRef.detach();
     
@@ -1172,6 +1176,13 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       left: framePos.x + frameSize.x,
       top: framePos.y + frameSize.y
     });
+    
+    this.pinnedHandle.setStyles({
+      position: 'absolute',
+      left: framePos.x,
+      top: framePos.y - 6,
+      width: frameSize.x
+    });
   },
   
   hidePinnedResizer: function()
@@ -1180,6 +1191,46 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.pinnedResizer.addClass('SSDisplayNone');
     if(this.pinnedResizer.getParent()) this.pinnedResizer.remove();
     this.pinnedResizerDragRef.detach();
+  },
+  
+  showPinnedHandle: function()
+  {
+    // show handy resizer for when source shift is pinned as it's difficult to guess dimensions
+    this.pinnedHandle.injectInside(document.body);
+    
+    // get the frame location
+    this.refreshPinnedHandle();
+    this.pinnedHandle.removeClass('SSDisplayNone');
+    
+    this.pinnedHandleDragRef.attach();
+  },
+  
+  refreshPinnedHandle: function()
+  {
+    // get the frame location
+    var framePos = this.frame.getPosition();
+    var frameSize = this.frame.getSize().size;
+    
+    this.pinnedHandle.setStyles({
+      position: 'absolute',
+      left: framePos.x,
+      top: framePos.y - 6,
+      width: frameSize.x
+    });
+    
+    this.pinnedResizer.setStyles({
+      position: 'absolute',
+      left: framePos.x + frameSize.x,
+      top: framePos.y + frameSize.y
+    });
+  },
+  
+  hidePinnedHandle: function()
+  {
+    // hide handy resizer
+    this.pinnedHandle.addClass('SSDisplayNone');
+    if(this.pinnedHandle.getParent()) this.pinnedHandle.remove();
+    this.pinnedHandleDragRef.detach();
   },
   
   pin : function(pinRef)
@@ -1213,6 +1264,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     {
       this.frame.addClass('SSFrameBorder');
       this.showPinnedResizer();
+      this.showPinnedHandle();
     }
     else
     {
@@ -1237,6 +1289,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   unpin : function()
   {
     this.hidePinnedResizer();
+    this.hidePinnedHandle();
     
     // restore
     this.parent();
