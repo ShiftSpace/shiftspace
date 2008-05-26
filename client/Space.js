@@ -16,6 +16,7 @@ ShiftSpace.Space = new Class({
     // set the interface built flag
     this.__interfaceBuilt__ = false;
     this.__state__ = new Hash();
+    this.__deferredShifts__ = [];
     
     // the shifts array
     this.shifts = {};
@@ -77,7 +78,8 @@ ShiftSpace.Space = new Class({
     {
       console.log('__showInterfaceOnCssLoad__');
       this.showInterface();
-      // TODO: check to see if currentshift as is being loaded
+      console.log(this.__deferredShifts__);
+      this.__deferredShifts__.each(this.showShift.bind(this));
     }
   },
   
@@ -314,50 +316,58 @@ ShiftSpace.Space = new Class({
   */
   showShift : function( aShift ) 
   {
-    var cShift;
-    if($type(aShift) != 'object')
+    console.log('showShift ' + aShift);
+    if(!this.cssIsLoaded())
     {
-      cShift = this.shifts[aShift];
+      this.__deferredShifts__.push(aShift);
     }
     else
     {
-      cShift = this.shifts[aShift.id];
-    }
-    
-    if( !cShift )
-    {
-      // add the shift if we don't have it already
-      cShift = this.addShift( aShift );
-      var cShift = this.shifts[aShift.id];
-    }
-    
-    if( cShift.canShow() )
-    {
-      // blur the old shift
-      if(this.getCurrentShift() &&
-         cShift != this.getCurrentShift())
+      var cShift;
+      if($type(aShift) != 'object')
       {
-        this.getCurrentShift().onBlur();
+        cShift = this.shifts[aShift];
       }
-      
-      this.setCurrentShift(cShift);
-      
-      // show the new shift and focus it
-      if(!cShift.isVisible())
+      else
       {
-        cShift._show();
-        cShift.show();
-        cShift.setIsVisible(true);
-        cShift.setIsBeingEdited(false);
+        cShift = this.shifts[aShift.id];
       }
+    
+      if( !cShift )
+      {
+        // add the shift if we don't have it already
+        cShift = this.addShift( aShift );
+        var cShift = this.shifts[aShift.id];
+      }
+    
+      if( cShift.canShow() )
+      {
+        // blur the old shift
+        if(this.getCurrentShift() &&
+           cShift != this.getCurrentShift())
+        {
+          this.getCurrentShift().onBlur();
+        }
       
-      // focus the shift
-      cShift.onFocus();
+        this.setCurrentShift(cShift);
+      
+        // show the new shift and focus it
+        if(!cShift.isVisible())
+        {
+          cShift._show();
+          cShift.show();
+          cShift.setIsVisible(true);
+          cShift.setIsBeingEdited(false);
+        }
+      
+        // focus the shift
+        cShift.onFocus();
+      }
+    
+      // set the currentShift
+    
+      return cShift;
     }
-    
-    // set the currentShift
-    
-    return cShift;
   },
   
   /*
