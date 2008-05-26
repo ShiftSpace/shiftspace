@@ -160,7 +160,6 @@ var PinWidget = new Class({
   
   updateMenu: function(action)
   {
-    console.log('updateMenu ' + action);
     var target = this.menu.getElement('.'+action);
     
     // turn off any of the other ones

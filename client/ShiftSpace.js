@@ -103,25 +103,21 @@ var ShiftSpace = new (function() {
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
     });
 
-    /*
     installed = {
       'Notes' : server + 'spaces/Notes/Notes.js',
       'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
       'Highlights': server + 'spaces/Highlights/Highlights.js',
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
     };
-    */
     
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
       'Trails' : server + 'plugins/Trails/NewTrail.js'
     });
 
-    /*
     installedPlugins = {
       'Trails' : server + 'plugins/Trails/NewTrail.js'
     };
-    */
     
     // An index of cached files, used to clear the cache when necessary
     var cache = getValue('cache', []);
@@ -615,8 +611,6 @@ var ShiftSpace = new (function() {
       // scroll the window if necessary
       var mainView = space.mainViewForShift(shiftId);
       
-      console.log(mainView);
-      
       if(mainView)
       {
         var pos = mainView.getPosition();
@@ -629,8 +623,6 @@ var ShiftSpace = new (function() {
         var downScroll = (windowScroll.y < pos.y-25);
         var upScroll = (windowScroll.y > pos.y-25);
         
-        console.log(viewPort);
-
         if(pos.x > viewPort.x+windowScroll.x ||
            pos.y > viewPort.y+windowScroll.y ||
            pos.x < windowScroll.x ||
@@ -660,10 +652,6 @@ var ShiftSpace = new (function() {
           });
           
           scrollFx.scrollTo(pos.x-25, pos.y-25);
-        }
-        else
-        {
-          console.log('n++++++++++++++++++++++++++++++++++++++ NO SCROLL');
         }
       }
       else
@@ -724,11 +712,7 @@ var ShiftSpace = new (function() {
     {
       var shift = shifts[shiftId];
       var shiftJson = getShiftContent(shiftId);
-      console.log(shiftJson);
       shiftJson.id = shiftId;
-      
-      console.log('showshift ++++++++++++++++++++++++++++++++++++ ' + shiftId);
-      console.log(shiftJson);
       
       // fix legacy content
       shiftJson.legacy = shift.legacy;
@@ -957,8 +941,6 @@ var ShiftSpace = new (function() {
             if (focusedShiftId == shiftJson.id) {
                 focusedShiftId = responseJson.url_slug;
             }
-            console.log('SHIFT CREATE');
-            console.log(responseJson);
             shiftJson.id = responseJson.url_slug;
             shiftJson.content = Json.toString(shiftJson);
             shifts[shiftJson.id] = shiftJson;

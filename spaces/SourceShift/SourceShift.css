@@ -471,3 +471,20 @@ div.SSSourceShiftButton .SSRightActive
   margin-top: 2px;
   margin-left: 4px;
 }
+
+.SSSourceShiftPinnedResizer
+{
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background-color: #000;
+  z-index: 100;
+}
+
+.SSSourceShiftPinnedHandle
+{
+  position: absolute;
+  height: 4px;
+  background-color: #000;
+  z-index: 100;
+}

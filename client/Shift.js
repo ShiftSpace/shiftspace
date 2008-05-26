@@ -111,7 +111,9 @@ ShiftSpace.Shift = new Class({
     Function: edit
       The shift should present it's editing interface.
   */
-  edit: function() {},
+  edit: function() {
+    this.setIsBeingEdited(true);
+  },
 
   /*
     Function : save
@@ -278,6 +280,7 @@ ShiftSpace.Shift = new Class({
       Tell ShiftSpace we want to blur this shift.
   */
   blur : function() {
+    this.setIsBeingEdited(false);
     this.fireEvent('onShiftBlur', this.getId() );
   },
   
@@ -523,7 +526,6 @@ ShiftSpace.Shift = new Class({
   */
   getPinTarget: function()
   {
-    //console.log(this.pinTarget);
     return this.pinTarget;
   },
   

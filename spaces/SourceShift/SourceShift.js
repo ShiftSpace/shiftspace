@@ -129,7 +129,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     if(this.interfaceIsBuilt() && this.isVisible())
     {
       this.editSource.setProperty('value', currentShift.getMarkup());
-      console.log('------------------------------- SET TITLE ' + currentShift.getTitle());
       this.titleField.setProperty('value', currentShift.getTitle());
       if(this.autoResize) this.autoResize.setProperty('checked', currentShift.isAutoresized());
     }
@@ -168,8 +167,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   
   onShiftHide: function(shiftId)
   {
-    console.log('shift hide ' + shiftId);
-    
     for(shift in this.shifts)
     {
       if(this.shifts[shift].isVisible())
@@ -625,9 +622,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.frameLoaded = false;
     this.build();
     
-    console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]');
-    console.log(json);
-    
     this.setTitle( json.title || json.summary || '' );
     this.setAutoresize( json.autoResized || false );
     
@@ -639,6 +633,11 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       left: json.position.x,
       top: json.position.y
     });
+    
+    if(json.size)
+    {
+      this.setSize(json.size);
+    }
     
     // pin the shift if necessary
     if(json.pinRef) this.pin(json.pinRef);
@@ -669,6 +668,23 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
   },
   
+  setSize: function(size)
+  {
+    this.__size__ = size;
+    console.log('-------------------------------------- setSize');
+    console.log(size);
+    this.frame.setStyles({
+      width: size.x,
+      height: size.y
+    });
+    this.refresh();
+  },
+  
+  getSize: function()
+  {
+    return this.__size__;
+  },
+  
   encode : function(markup)
   {
     var pos = this.element.getPosition();
@@ -684,7 +700,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       summary: this.getTitle(),
       title: this.getTitle(),
       pinRef: this.getEncodablePinRef(),
-      autoResized: this.isAutoresized()
+      autoResized: this.isAutoresized(),
+      size: this.frame.getSize().size
     };
   },
   
@@ -818,31 +835,30 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.handle.setStyles({
       left: iconSize.x + titleSize.x + 8
     });
-
-    // if not pinned
-    if(!this.getPinRef())
-    {
-      // set the frame dimensions
-      this.frame.setStyle('height', fsizey-4);
-    }
     
-    /*
-    else
-    {
-      var framePos = this.frame.getPosition();
-      
-      // if pinned move the element to where we've been pinned
-      this.element.setStyles({
-        left: framePos.x,
-        top: framePos.y - topSize.y,
-        height: topSize.y + this.source.getSize().size.y
-      });
-    }
-    */
+    var frameSize = this.frame.getSize().size;
+    this.element.setStyles({
+      width: frameSize.x,
+      height: frameSize.y+topSize.y
+    });
     
     this.cover.setStyles({
       bottom: 0
     });
+  },
+  
+  dragRefresh: function()
+  {
+    if(!this.getPinRef())
+    {
+      var size = this.element.getSize().size;
+      var fsizey = size.y-this.top.getSize().size.y;
+      // set the frame dimensions
+      this.frame.setStyles({
+        width: size.x,
+        height: fsizey-4
+      });
+    }
   },
 
   attachEvents: function()
@@ -935,11 +951,14 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   edit : function()
   {
+    this.parent();
+    
     this.previewMode = false;
 
     if(this.isPinned())
     {
       this.frame.addClass('SSFrameBorder');
+      this.showPinnedResizer();
     }
     else
     {
@@ -1085,7 +1104,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       'class': "SSSourceShiftPinnedResizer SSDisplayNone"
     });
     this.pinnedResizerDragRef = this.frame.makeResizable({
-      handle: this.pinnedResize
+      handle: this.pinnedResizer,
+      onDrag: this.refreshPinnedDragResizer.bind(this)
     });
     this.pinnedResizerDragRef.detach();
     
@@ -1107,7 +1127,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     
     this.element.makeResizable({
       handle: this.resizeControl,
-      onDrag : this.refresh.bind(this)
+      onDrag : this.dragRefresh.bind(this)
     });
     
     // build the cover
@@ -1130,20 +1150,40 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   showPinnedResizer: function()
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     // show handy resizer for when source shift is pinned as it's difficult to guess dimensions
-    this.pinnedResizer.removeClass('SSDisplayNone');
+    this.pinnedResizer.injectInside(document.body);
+    
     // get the frame location
+    this.refreshPinnedDragResizer();
+    this.pinnedResizer.removeClass('SSDisplayNone');
+    
+    this.pinnedResizerDragRef.attach();
+  },
+  
+  refreshPinnedDragResizer: function()
+  {
+    // get the frame location
+    var framePos = this.frame.getPosition();
+    var frameSize = this.frame.getSize().size;
+    
+    this.pinnedResizer.setStyles({
+      position: 'absolute',
+      left: framePos.x + frameSize.x,
+      top: framePos.y + frameSize.y
+    });
   },
   
   hidePinnedResizer: function()
   {
     // hide handy resizer
+    this.pinnedResizer.addClass('SSDisplayNone');
+    if(this.pinnedResizer.getParent()) this.pinnedResizer.remove();
+    this.pinnedResizerDragRef.detach();
   },
   
   pin : function(pinRef)
   {
-    this.showPinnedResizer();
-
     // call the parent pin method
     this.parent(this.frame, pinRef);
 
@@ -1172,10 +1212,23 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     if(this.isBeingEdited())
     {
       this.frame.addClass('SSFrameBorder');
+      this.showPinnedResizer();
+    }
+    else
+    {
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> not being edited!');
     }
 
     // hide the element now
     this.element.addClass('SSDisplayNone');
+    
+    if(this.getSize())
+    {
+      this.frame.setStyles({
+        width: this.getSize().x,
+        height: this.getSize().y
+      });
+    }
 
     // refresh
     this.refresh();
