@@ -16,6 +16,7 @@ ShiftSpace.Space = new Class({
     // set the interface built flag
     this.__interfaceBuilt__ = false;
     this.__state__ = new Hash();
+    this.__deferredNewShifts__= [];
     this.__deferredShifts__ = [];
     
     // the shifts array
@@ -80,6 +81,7 @@ ShiftSpace.Space = new Class({
       this.showInterface();
       console.log(this.__deferredShifts__);
       this.__deferredShifts__.each(this.showShift.bind(this));
+      this.__deferredNewShifts__.each(SSShowNewShift);
     }
   },
   
@@ -233,6 +235,11 @@ ShiftSpace.Space = new Class({
     return newShift;
   },
   
+  /*
+    Function: allocateNewShift
+      Used when it necessary to kick off shift allocation from with in a Space
+      and not from the ShiftMenu.  ImageSwap uses this.
+  */
   allocateNewShift: function()
   {
     if(typeof initShift != 'undefined') initShift(this.getName(), {});
@@ -250,9 +257,16 @@ ShiftSpace.Space = new Class({
   */
   createShift : function( newShiftJson )
   {
-    var newShift = this.addShift( newShiftJson );
-    this.fireEvent( 'onCreateShift', { space : this, shift : newShift } );
-    return newShift;
+    if(this.cssIsLoaded())
+    {
+      var newShift = this.addShift( newShiftJson );
+      this.fireEvent( 'onCreateShift', { space : this, shift : newShift } );
+      return newShift;
+    else
+    {
+      // we need to load these when the css is done
+      this.__deferredNewShifts__.push( newShiftJson );
+    }
   },
   
   /*
