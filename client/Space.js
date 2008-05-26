@@ -77,6 +77,7 @@ ShiftSpace.Space = new Class({
     {
       console.log('__showInterfaceOnCssLoad__');
       this.showInterface();
+      // TODO: check to see if currentshift as is being loaded
     }
   },
   
