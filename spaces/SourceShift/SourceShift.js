@@ -133,16 +133,16 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       this.editSource.setProperty('value', currentShift.getMarkup());
       this.titleField.setProperty('value', currentShift.getTitle());
       if(this.autoResize) this.autoResize.setProperty('checked', currentShift.isAutoresized());
+      
+      // update the location of the editing window
+      var position = currentShift.getPosition();
+      var size = this.editSourceShift.getSize().size;
+
+      this.editSourceShift.setStyles({
+        left: position.x - size.x - 10,
+        top: position.y
+      });
     }
-    
-    // update the location of the editing window
-    var position = currentShift.getPosition();
-    var size = this.editSourceShift.getSize().size;
-    
-    this.editSourceShift.setStyles({
-      left: position.x - size.x - 10,
-      top: position.y
-    });
 
     // update pin widget
     if(currentShift.isPinned())
