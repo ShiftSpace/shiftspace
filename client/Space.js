@@ -73,14 +73,9 @@ ShiftSpace.Space = new Class({
   onCssLoad : function()
   {
     this.setCssLoaded(true);
-    if(!this.interfaceIsBuilt())
+    if(this.__showInterfaceOnCssLoad__)
     {
-      this.buildInterface();
-      
-      if(this.__showInterfaceOnCssLoad__)
-      {
-        this.showInterface();
-      }
+      this.showInterface();
     }
   },
   
