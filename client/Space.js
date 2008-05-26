@@ -200,6 +200,10 @@ ShiftSpace.Space = new Class({
       this.onShiftBlur(shiftId);
       this.fireEvent( 'onShiftBlur', shiftId );
     }.bind( this ));
+    newShift.addEvent( 'onShiftSave', function( shiftId ) {
+      this.onShiftSave(shiftId);
+      this.fireEvent( 'onShiftSave', shiftId );
+    }.bind( this ));
     
     this.shifts[newShift.getId()] = newShift;
     

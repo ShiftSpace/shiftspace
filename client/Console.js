@@ -771,6 +771,14 @@ var Console = new Class({
     }
   },
   
+  setTitleForShift: function(id, title) {
+    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    if(el)
+    {
+      el.getElement('.summaryView').setText(title);
+    }
+  },
+  
   updateShift: function(shiftJson) {
     var entry = $(this.doc.getElementById('shifts')).getElement('#' + shiftJson.id);
     entry.getElement('.summary').getElement('.summaryView').setHTML(shiftJson.summary);

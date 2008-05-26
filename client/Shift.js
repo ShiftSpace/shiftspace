@@ -123,6 +123,7 @@ ShiftSpace.Shift = new Class({
     // We can use events here because if we do
     // a Shift cannot save in their initialize method
     this.getParentSpace().updateShift( this );
+    this.fireEvent('onShiftSave', this.getId());
   },
   
   markDirty: function()

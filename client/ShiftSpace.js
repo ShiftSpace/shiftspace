@@ -989,7 +989,6 @@ var ShiftSpace = new (function() {
 
         // then edit it
         space.editShift(shiftId);
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
         space.onShiftEdit(shiftId);
       }
       else
@@ -1282,8 +1281,8 @@ var ShiftSpace = new (function() {
       }
       
       // store the styles
-      pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display');
-      pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
+      pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display', 'top', 'left');
+      pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display', 'top', 'left');
       
       if(targetNode.getStyle('display') == 'inline')
       {
@@ -1662,6 +1661,10 @@ var ShiftSpace = new (function() {
         space.addEvent('onShiftFocus', function(shiftId) {
           focusShift(shiftId);
           ShiftSpace.Console.focusShift(shiftId);
+        });
+        space.addEvent('onShiftSave', function(shiftId) {
+          ShiftSpace.Console.blurShift(shiftId);
+          ShiftSpace.Console.setTitleForShift(shifts[shiftId].summary);
         });
         space.addEvent('onShiftDestroy', removeShift);
       }

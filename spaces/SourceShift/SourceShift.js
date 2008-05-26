@@ -23,6 +23,12 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }.bind(this));
   },
   
+  updateTitleOfShift: function(shiftId, title)
+  {
+    this.parent(shiftId, title);
+    this.titleField.setProperty('value', title);
+  },
+  
   refresh : function()
   {
     var handleSize = this.handleArea.getSize().size;
@@ -123,6 +129,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     if(this.interfaceIsBuilt() && this.isVisible())
     {
       this.editSource.setProperty('value', currentShift.getMarkup());
+      console.log('------------------------------- SET TITLE ' + currentShift.getTitle());
       this.titleField.setProperty('value', currentShift.getTitle());
       if(this.autoResize) this.autoResize.setProperty('checked', currentShift.isAutoresized());
     }
@@ -618,7 +625,10 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.frameLoaded = false;
     this.build();
     
-    this.setTitle( json.title || '' );
+    console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]');
+    console.log(json);
+    
+    this.setTitle( json.title || json.summary || '' );
     this.setAutoresize( json.autoResized || false );
     
     this.attachEvents();
@@ -672,7 +682,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       css: cssText,
       markup: markup,
       summary: this.getTitle(),
-      title: this.titleText,
+      title: this.getTitle(),
       pinRef: this.getEncodablePinRef(),
       autoResized: this.isAutoresized()
     };
