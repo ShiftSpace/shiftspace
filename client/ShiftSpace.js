@@ -104,7 +104,7 @@ var ShiftSpace = new (function() {
     });
 
     /*
-    var installed = {
+    installed = {
       'Notes' : server + 'spaces/Notes/Notes.js',
       'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
       'Highlights': server + 'spaces/Highlights/Highlights.js',
@@ -118,7 +118,7 @@ var ShiftSpace = new (function() {
     });
 
     /*
-    var installedPlugins = {
+    installedPlugins = {
       'Trails' : server + 'plugins/Trails/NewTrail.js'
     };
     */
@@ -573,7 +573,6 @@ var ShiftSpace = new (function() {
 
       // call onShiftCreate
       spaces[spaceName].onShiftCreate(tempId);
-
       if(!options.deferred)
       {          
         showShift(tempId);
@@ -616,6 +615,8 @@ var ShiftSpace = new (function() {
       // scroll the window if necessary
       var mainView = space.mainViewForShift(shiftId);
       
+      console.log(mainView);
+      
       if(mainView)
       {
         var pos = mainView.getPosition();
@@ -627,6 +628,8 @@ var ShiftSpace = new (function() {
         var rightScroll = (windowScroll.x < pos.x-25);
         var downScroll = (windowScroll.y < pos.y-25);
         var upScroll = (windowScroll.y > pos.y-25);
+        
+        console.log(viewPort);
 
         if(pos.x > viewPort.x+windowScroll.x ||
            pos.y > viewPort.y+windowScroll.y ||
@@ -655,6 +658,12 @@ var ShiftSpace = new (function() {
               }
             }
           });
+          
+          scrollFx.scrollTo(pos.x-25, pos.y-25);
+        }
+        else
+        {
+          console.log('n++++++++++++++++++++++++++++++++++++++ NO SCROLL');
         }
       }
       else
@@ -980,6 +989,7 @@ var ShiftSpace = new (function() {
 
         // then edit it
         space.editShift(shiftId);
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
         space.onShiftEdit(shiftId);
       }
       else
@@ -1271,39 +1281,25 @@ var ShiftSpace = new (function() {
         throw(__SSPinOpException__);
       }
       
+      // store the styles
+      pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display');
+      pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
+      
+      if(targetNode.getStyle('display') == 'inline')
+      {
+        var size = targetNode.getSize().size;
+        pinRef.targetStyles.width = size.x;
+        pinRef.targetStyles.height = size.y;
+      }
+      
       switch(pinRef.action)
       {
         case 'before':
-          pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display');
-          pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
-
-          if(targetNode.getStyle('display') == 'inline')
-          {
-            var size = targetNode.getSize().size;
-            pinRef.targetStyles.width = size.x;
-            pinRef.targetStyles.height = size.y;
-          }
-          
           element.injectBefore(targetNode);
         break;
         
         case 'replace':
-          pinRef.originalStyles = element.getStyles('float', 'width', 'height', 'position', 'display');
-          //pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
-          pinRef.targetStyles = targetNode.getStyles('float', 'width', 'height', 'position', 'display');
-
-          /*
-          if(targetNode.getStyle('display') == 'inline')
-          {
-            var size = targetNode.getSize().size;
-            pinRef.targetStyles.width = size.x;
-            pinRef.targetStyles.height = size.y;
-          }
-          */
-
           targetNode.replaceWith(element);          
-
-          //element.setStyles(pinRef.targetStyles);
         break;
         
         case 'after':

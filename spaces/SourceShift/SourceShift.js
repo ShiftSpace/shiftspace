@@ -1075,17 +1075,33 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
   },
   
+  showPinnedResizer: function()
+  {
+    
+  },
+  
+  hidePinnedResizer: function()
+  {
+    
+  },
+  
   pin : function(pinRef)
   {
-    /*
-    this.frame.setStyle('width', width);
-    var width = $(this.frameBody).getSize().size.x;
-    this.frame.setStyle('width', width);
-    console.log('------------------------------------------- width ' + width);
-    */
-    
     // call the parent pin method
     this.parent(this.frame, pinRef);
+
+    if(pinRef.targetStyles.display == 'inline')
+    {
+      var action = pinRef.action;
+      if(action == 'replace' || action == 'before' || action == 'after')
+      {
+        this.frame.setStyles({
+          display: pinRef.targetStyles.display,
+          width: pinRef.targetStyles.width,
+          height: pinRef.targetStyles.height
+        });
+      }
+    }
 
     // hide the element now
     this.element.addClass('SSDisplayNone');
@@ -1101,6 +1117,16 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     // put it back
     this.element.removeClass('SSDisplayNone');
     this.frame.injectAfter(this.top);
+    
+    // restore the styles
+    this.frame.setStyles({
+      float: '',
+      width: '',
+      height: '',
+      position: '',
+      display: ''
+    });
+
     // refresh
     this.refresh();
   },
@@ -1148,6 +1174,18 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     else
     {
       return this.element.getPosition();
+    }
+  },
+  
+  getMainView: function()
+  {
+    if(this.isPinned())
+    {
+      return this.frame;
+    }
+    else
+    {
+      return this.element;
     }
   }
 });
