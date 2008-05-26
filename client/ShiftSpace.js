@@ -155,16 +155,21 @@ var ShiftSpace = new (function() {
 
       // Load each installed space - this asynchronous, we need to wait till
       // they are all done
-      for (var space in installed) {
-        //console.log("Loading Space: " + space);
-        loadSpace(space);
+      if (typeof ShiftSpaceSandBoxMode != 'undefined') {
+        for (var space in installed) {
+          loadSpace(space);
+        }
       }
 
       // need to think about plugin loading architecture! - this is going to involve a reworking of file loading
-      for(var plugin in installedPlugins) {
-        //console.log("Loading Plugin: " + plugin)
-        loadPlugin(plugin);
+      if (typeof ShiftSpaceSandBoxMode != 'undefined') {
+        for(var plugin in installedPlugins) {
+          loadPlugin(plugin);
+        }
       }
+      
+      // If all spaces have been loaded, build the shift menu and the console
+      ShiftSpace.ShiftMenu.buildMenu();
       
       // Set up event handlers
       window.addEvent('keydown',   keyDownHandler.bind(this) );
@@ -220,11 +225,14 @@ var ShiftSpace = new (function() {
                 icon: server + 'images/unknown-space.png',
                 version: '1.0'
             };
-            if (!spaces[spaceName]) {
+            if (!installed[spaceName]) {
                 defaults.unknown = true;
                 return defaults;
             }
-            var spaceInfo = $merge(defaults, spaces[spaceName].attributes);
+            // TODO - this must be fixed, we need to cache space attributes - David
+            defaults.icon = server + 'spaces/' + spaceName + '/' + spaceName + '.png';
+            //var spaceInfo = $merge(defaults, spaces[spaceName].attributes);
+            var spaceInfo = $merge(defaults, {});
             delete spaceInfo.name; // No need to send this back
             spaceInfo.url = installed[spaceName];
             return spaceInfo;
@@ -535,8 +543,8 @@ var ShiftSpace = new (function() {
     
     */
     function initShift(spaceName, options) {
-      if (!spaces[spaceName]) {
-        log('Error: Space ' + spaceName + ' does not exist.', true);
+      if (!installed[spaceName]) {
+        console.log('Error: Space ' + spaceName + ' does not exist.', true);
         return;
       }
 
@@ -716,7 +724,15 @@ var ShiftSpace = new (function() {
     {
       var shift = shifts[shiftId];
       var shiftJson = getShiftContent(shiftId);
+      var space = spaceForShift(shiftId);
       shiftJson.id = shiftId;
+      
+      // load the space first
+      if(!space)
+      {
+        loadSpace(shift.space, shiftId);
+        return;
+      }
       
       // fix legacy content
       shiftJson.legacy = shift.legacy;
@@ -1534,7 +1550,7 @@ var ShiftSpace = new (function() {
         space - the Space name to load
     
     */
-    function loadSpace(space, pendingShift) 
+    function loadSpace(space, pendingShift, callback) 
     {
       if(space)
       {
@@ -1544,11 +1560,12 @@ var ShiftSpace = new (function() {
           var newSpace = new Asset.javascript(url, {
             id: space
           });
-          if (typeof pendingShift != 'undefined') 
+          if (pendingShift) 
           {
             showShift(pendingShift);
           }
-        } 
+          if(callback) callback();
+        }
         else 
         {
           loadFile(installed[space], function(rx) {
@@ -1571,10 +1588,12 @@ var ShiftSpace = new (function() {
               console.error('Error loading ' + space + ' Space - ' + describeException(exc));
             }
             
-            if (typeof pendingShift != 'undefined') 
+            if (pendingShift)
             {
               showShift(pendingShift);
             }
+            
+            if(callback) callback();
           });
         }
       }
@@ -1634,9 +1653,6 @@ var ShiftSpace = new (function() {
           return;
         }
       }
-
-      // If all spaces have been loaded, build the shift menu and the console
-      ShiftSpace.ShiftMenu.buildMenu();
 
       // Attach hide events to each space, so the console will be in sync
       for (var spaceName in spaces)
@@ -1791,7 +1807,7 @@ var ShiftSpace = new (function() {
       }
       var now = new Date();
       url += '&cache=' + now.getTime();
-      
+      console.log("serverCall:" + url);
       //GM_openInTab(url);
       var req = {
         method: 'POST',

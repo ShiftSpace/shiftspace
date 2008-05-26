@@ -23,7 +23,8 @@ var ShiftMenu = new Class({
     }).injectInside(this.element);
     this.element.injectInside(document.body);
     
-    for (var spaceName in spaces) {
+    console.log(installed);
+    for (var spaceName in installed) {
       this.setupSpace(spaceName);
     }
     
@@ -35,23 +36,28 @@ var ShiftMenu = new Class({
   },
   
   setupSpace: function(spaceName) {
+    // TODO: we need the icon to not be separate from the space so that we can do incremental loading.
     var spaceAttrs = ShiftSpace.info(spaceName);
     var container = this.element.firstChild;
     var button = new ShiftSpace.Element('div', {
       'class': 'button',
       'title': spaceAttrs.title
     });
+    
     var icon = new ShiftSpace.Element('img', {
       src: spaceAttrs.icon
     });
     icon.injectInside(button);
     button.injectInside(container);
+    
     icon.addEvent('mouseover', function() {
       button.addClass('hover');
     });
+    
     icon.addEvent('mouseout', function() {
       button.removeClass('hover');
     });
+    
     icon.addEvent('click', function(e) {
       if (!ShiftSpace.user.isLoggedIn()) {
         alert('Sorry, you must be signed in to create new shifts.');
@@ -59,7 +65,19 @@ var ShiftMenu = new Class({
         return;
       }
       var event = new Event(e);
-      initShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
+      if(!spaces[spaceName])
+      {
+        // we need to load the space first
+        loadSpace(spaceName, null, function() {
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>> space loaded');
+          initShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
+        });
+      }
+      else
+      {
+        // just show it
+        initShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
+      }
       this.hide(true);
     }.bind(this));
   },
