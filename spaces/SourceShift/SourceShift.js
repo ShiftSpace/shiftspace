@@ -63,11 +63,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     {
       this.editSource.setStyle('width', size.x-18);      
     }
-    
-    // refresh the title bar
-    this.handle.setStyles({
-      width: size.x - this.windowButtons.getSize().size.x - 6
-    });
   },
   
   showInterface : function(position)

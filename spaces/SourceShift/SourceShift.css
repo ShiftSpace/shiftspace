@@ -41,9 +41,10 @@
 
 .SSSourceShiftEditorHandle
 {
-  float: left;
-  width: 200px;
-  height: 14px;
+  position: absolute;
+  left: 0px;
+  right: 34px;
+  height: 16px;
   background-image: url(images/drag_texture.png);
   background-repeat: repeat-x;
   background-position: 0px 2px;
