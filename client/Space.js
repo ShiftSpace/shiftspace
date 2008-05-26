@@ -135,8 +135,6 @@ ShiftSpace.Space = new Class({
     }
   },
   
-  setPosition : function(position) {},
-  
   hideInterface : function() 
   {
     // remove any unsaved shifts
@@ -183,6 +181,7 @@ ShiftSpace.Space = new Class({
     newShift.addEvent( 'onUpdate', this.updateShift.bind( this ) );
     // Set up events that console will listen to
     newShift.addEvent( 'onShiftShow', function( shiftId ) {
+      this.onShiftShow(shiftId);
       this.fireEvent( 'onShiftShow', shiftId );
     }.bind( this ) );
     newShift.addEvent( 'onShiftHide', function( shiftId ) { 

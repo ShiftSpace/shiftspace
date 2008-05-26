@@ -53,7 +53,7 @@ var ShiftMenu = new Class({
       button.removeClass('hover');
     });
     icon.addEvent('click', function(e) {
-      if (!ShiftSpace.user.getUsername()) {
+      if (!ShiftSpace.user.isLoggedIn()) {
         alert('Sorry, you must be signed in to create new shifts.');
         this.hide(true);
         return;

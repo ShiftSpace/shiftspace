@@ -222,8 +222,6 @@ var Console = new Class({
         var txt = itemsAndActions[i].text;
         var cb = itemsAndActions[i].callback;
       
-        //console.log(cb);
-      
         if(i == 0)
         {
           this.pluginMenu.getElement('.SSMenuTopItem span').setText(txt);
@@ -732,8 +730,6 @@ var Console = new Class({
   
   */
   addShifts: function(shifts) {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>> ADDING SHIFTS TO CONSOLE');
-    console.log(installedPlugins['Trails']);
     for (var shiftId in shifts) {
       var shift = shifts[shiftId];
       this.addShift(shift);
@@ -763,8 +759,6 @@ var Console = new Class({
   },
   
   updateShift: function(shiftJson) {
-    //console.log('updateshift');
-    //console.log(shiftJson);
     var entry = $(this.doc.getElementById('shifts')).getElement('#' + shiftJson.id);
     entry.getElement('.summary').getElement('.summaryView').setHTML(shiftJson.summary);
     entry.getElement('.user').setHTML(shiftJson.username);
@@ -877,7 +871,6 @@ var Console = new Class({
       var evt = new Event(_evt);
       if(evt.key == 'enter')
       {
-        console.log('Update shift!');
         newEntry.getElement('.summaryView').setHTML($(evt.target).getProperty('value'));
         this.showShift(aShift.id);
         // defined in Core - David
@@ -895,7 +888,6 @@ var Console = new Class({
     {
       if(plugins[plugin])
       {
-        //console.log('Loading ' + plugin);
         var pluginDiv = $(this.doc.createElement('div'));
         pluginDiv.addClass('plugin');
         pluginDiv.addClass('pg'+plugin); // tag with plugin name
@@ -917,11 +909,6 @@ var Console = new Class({
         }.bind(this));
         
         pluginDiv.inject(newEntry.getElement('.pluginIcons'));
-      }
-      else
-      {
-        // defer loading this item
-        //console.log('========================================== Deferred load for ' + plugin);
       }
     }
     

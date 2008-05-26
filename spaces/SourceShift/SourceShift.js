@@ -72,18 +72,9 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   
   hideInterface : function()
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HIDE INTERFACE');
     this.parent();
     if(this.editSourceShift) this.editSourceShift.addClass('SSDisplayNone');
-  },
-  
-  setPosition: function(position)
-  {
-    var size = this.editSourceShift.getSize().size;
-
-    this.editSourceShift.setStyles({
-      left: position.x - size.x - 10,
-      top: position.y
-    });
   },
   
   setMode : function(newMode)
@@ -128,6 +119,8 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     // set the mode to xhtml and set to the html of the current shift
     var currentShift = this.shifts[shiftId];
     
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> EDIT SHIFT');
+    
     this.setMode('xhtml');
     
     if(this.interfaceIsBuilt() && this.isVisible())
@@ -137,6 +130,15 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       this.autoResize.setProperty('checked', currentShift.isAutoresized());
     }
     
+    // update the location of the editing window
+    var position = currentShift.getPosition();
+    var size = this.editSourceShift.getSize().size;
+    
+    this.editSourceShift.setStyles({
+      left: position.x - size.x - 10,
+      top: position.y
+    });
+
     // update pin widget
     if(currentShift.isPinned())
     {
@@ -1138,6 +1140,18 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   isAutoresized: function()
   {
     return this.__autosize__;
+  },
+  
+  getPosition: function()
+  {
+    if(this.isPinned())
+    {
+      return this.frame.getPosition();
+    }
+    else
+    {
+      return this.element.getPosition();
+    }
   }
 });
 
