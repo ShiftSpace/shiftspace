@@ -127,7 +127,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     {
       this.editSource.setProperty('value', currentShift.getMarkup());
       this.titleField.setProperty('value', currentShift.getTitle());
-      if(this.autoResize) this.autoResize.setProperty('checked', currentShift.isAutoresized());
       
       // update the location of the editing window
       var position = currentShift.getPosition();
@@ -219,18 +218,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
         this.unhighlightButton(this.previewButton);
       }
     }.bind(this));
-    
-    /*
-    this.autoResize.addEvent('change', function(_evt) {
-      var evt = new Event(_evt);
-      var target = $(evt.target);
-      
-      if(this.getCurrentShift()) 
-      {
-        this.getCurrentShift().setAutoresize(target.getProperty('checked'));
-      }
-    }.bind(this));
-    */
     
     // setup the resizing behavior
     this.editSourceShift.makeResizable({
@@ -402,22 +389,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.cssButton = this.createTabButton();
     this.cssButton.getElement('.middle').setText('CSS');
     this.cssButton.injectInside(this.tabArea);
-    
-    // add the autoresize button
-    /*
-    this.autoResize = new ShiftSpace.Element('input', {
-      id: "SSAutoResize",
-      type: "checkbox",
-      'class': "SSUserSelectNone"
-    });
-    this.autoResizeLabel = new ShiftSpace.Element('label', {
-      id: "SSAutoResizeLabel",
-      'class': "SSUserSelectNone"
-    });
-    this.autoResizeLabel.setText('Autoresize');
-    this.autoResize.injectInside(this.tabArea);
-    this.autoResizeLabel.injectInside(this.tabArea);
-    */
     
     // add the pin widget
     this.pinWidgetPrompt = new ShiftSpace.Element('div', {
@@ -612,8 +583,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   {
     this.mode = 'edit';
     
-    console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwhat');
-    
     // set the markup and css and title
     this.markup = (json.markup && json.markup.replace(/<br\/>/g, '\n')) || '';
     this.cssText = (json.css && json.css.replace(/<br\/>/g, '\n')) || '';
@@ -622,7 +591,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.build();
     
     this.setTitle( json.title || json.summary || '' );
-    this.setAutoresize( json.autoResized || false );
     
     this.attachEvents();
     
@@ -670,8 +638,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   setSize: function(size)
   {
     this.__size__ = size;
-    console.log('-------------------------------------- setSize');
-    console.log(size);
+
     this.frame.setStyles({
       width: size.x,
       height: size.y
@@ -699,7 +666,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       summary: this.getTitle(),
       title: this.getTitle(),
       pinRef: this.getEncodablePinRef(),
-      autoResized: this.isAutoresized(),
       size: this.frame.getSize().size
     };
   },
@@ -752,9 +718,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       catch(err)
       {
       }
-      
-      if(this.isPinned() && this.isAutoresized()) this.resizeToContent();
-      
+
       this.refresh();
     }
   },
@@ -781,8 +745,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       
       this.iframeCss.appendText(css);
     }
-    
-    if(this.isPinned() && this.isAutoresized()) this.resizeToContent();
     
     this.refresh();
   },
@@ -1153,7 +1115,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   showPinnedResizer: function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     // show handy resizer for when source shift is pinned as it's difficult to guess dimensions
     this.pinnedResizer.injectInside(document.body);
     
@@ -1334,22 +1295,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.top.addClass('SSSourceShiftTopBlur');
     this.element.setOpacity(0.5);
     */
-  },
-  
-  setAutoresize: function(newVal)
-  {
-    console.log(newVal);
-    this.__autosize__ = newVal;
-    
-    // if true
-    // TODO: set iframe body to infinite with, source in frame float left - David
-    // if false
-    // TODO: set iframe body back to normal
-  },
-  
-  isAutoresized: function()
-  {
-    return this.__autosize__;
   },
   
   getPosition: function()
