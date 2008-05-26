@@ -118,6 +118,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   
   onShiftEdit: function(shiftId)
   {
+    console.log('SourceShift edit shift ' + shiftId);
     // set the mode to xhtml and set to the html of the current shift
     var currentShift = this.shifts[shiftId];
     
