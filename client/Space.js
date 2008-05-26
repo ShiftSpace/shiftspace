@@ -235,6 +235,9 @@ ShiftSpace.Space = new Class({
     
     this.shifts[newShift.getId()] = newShift;
     
+    console.log('addShift');
+    console.log(newShift);
+    
     return newShift;
   },
   
@@ -262,9 +265,11 @@ ShiftSpace.Space = new Class({
   {
     if(this.cssIsLoaded())
     {
-      var newShift = this.addShift( newShiftJson );
-      this.fireEvent( 'onCreateShift', { space : this, shift : newShift } );
-      return newShift;
+      var aNewShift = this.addShift(newShiftJson);
+      console.log('newShift');
+      console.log(aNewShift);
+      this.fireEvent( 'onCreateShift', { 'space' : this, 'shift' : aNewShift } );
+      return aNewShift;
     }
     else
     {
