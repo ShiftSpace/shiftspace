@@ -462,6 +462,65 @@ var Console = new Class({
         checkbox.fireEvent('click');
       });
     });
+    
+    sections[1].setHTML('<form action="' + server + 'shiftspace.php">' +
+                        '<label for="install-space">Install a space</label>' +
+                        '<input type="text" name="space" id="install-space" class="text" size="40" />' +
+                        '<input type="submit" value="Install" class="submit" />' +
+                        '</form>');
+    sections[1].setStyles({
+      padding: '10px 20px'
+    });
+    var form = sections[1].getElement('form');
+    
+    for (var space in installed) {
+      var newSpace = this.installedSpace(space);
+      newSpace.injectBefore(form);
+    }
+    
+    form.addEvent('submit', function(e) {
+      new Event(e).preventDefault();
+      var space = form.space.value;
+      if (space == '') {
+        return;
+      }
+      var spaceURL = server + 'spaces/' + space + '/' + space + '.js';
+      loadFile(spaceURL, function(r) {
+        var source = r.responseText.replace(/\s/g, ' ');
+        var matches = source.match(/attributes.+?(\{.+?\})/);
+        if (!matches) {
+          alert('Error, could not load space "' + space + '". Space names are case-sensitive, so check that you\'ve capitalized the space name correctly.');
+          return;
+        } else {
+          newSpace = this.installedSpace(space);
+          newSpace.injectBefore(form);
+          form.space.value = '';
+          installed[space] = spaceURL;
+          setValue('installed', installed);
+        }
+      }.bind(this));
+    }.bind(this));
+  },
+  
+  installedSpace: function(id) {
+    var div = new Element('div', {
+      'id': 'installed' + id,
+      'class': 'installedSpace'
+    });
+    div.setHTML('<img src="' + server + 'spaces/' + id + '/' + id + '.png" width="32" height="32" /> ' +
+                '<div class="info"><a href="http://metatron.shiftspace.org/spaces/' + id.toLowerCase() + '">' + id + '</a>' +
+                '</div>' +
+                '<input type="button" value="Uninstall" class="submit uninstall" id="uninstall' + id + '" />' +
+                '<br class="clear" /></div>');
+    var uninstallButton = div.getElement('input')
+    uninstallButton.addEvent('click', function() {
+      if (confirm('Are you sure you want to uninstall ' + id + '?')) {
+        delete installed[id];
+        setValue('installed', installed);
+        $(div).remove();
+      }
+    });
+    return div;
   },
   
   addTab: function(id, label, icon) {
@@ -547,6 +606,7 @@ var Console = new Class({
                         '<br class="clear" />' +
                         '<div id="login_response" class="response"></div>' +
                         '</form>');
+    sections[0].setStyle('padding-top', 15);
     sections[0].getElement('form').addEvent('submit', function(e) {
       new Event(e).preventDefault();
       var credentials = {
@@ -572,6 +632,7 @@ var Console = new Class({
                         '<br class="clear" />' +
                         '<div id="join_response" class="response"></div>' +
                         '</form>');
+    sections[1].setStyle('padding-top', 15);
     sections[1].getElement('form').addEvent('submit', function(e) {
       //console.log('submit');
       new Event(e).preventDefault();
@@ -653,6 +714,7 @@ var Console = new Class({
                    '</div>' +
                    '<div class="subsections">' + content + '</div>' +
                    '<br class="clear" />');
+    
     holder.getElements('.subtab').each(function(subtab) {
       subtab.addEvent('click', function(e) {
         var active = holder.getElement('.subtab-active');

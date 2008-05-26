@@ -226,14 +226,16 @@ a:hover {
 }
 
 .subtabs {
-  float: left;
+  position: fixed;
+  top: 27px;
+  left: 25px;
   width: 139px;
   height: 100%;
   background: transparent url(../images/Console/subtabs-bg.gif) repeat-y;
 }
 
 .subsections {
-  float: left;
+  padding-left: 139px;
 }
 
 .subsection {
@@ -264,7 +266,7 @@ a:hover {
 }
 
 form {
-  padding: 15px 0 0 0;
+  padding: 0;
   margin: 0;
 }
 
@@ -363,6 +365,46 @@ label, .label {
 }
 
 .input {
-  margin-top: 5px;
+  margin-top: 10px;
   cursor: none;
+}
+
+.installedSpace {
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 1px dotted #303030;
+}
+
+.installedSpace img, .installedSpace .info {
+  display: block;
+  float: left;
+}
+
+.installedSpace .info {
+  margin-left: 10px;
+}
+
+input.submit {
+  font: 11px verdana, sans-serif;
+  color: #F63B02;
+  cursor: pointer;
+  padding: 2px 2px 3px;
+  border: 1px solid #f3b173;
+  background: #F2EFAC;
+}
+
+input.submit:hover{
+  color: #531400;
+  border: 1px solid #8E8D5A;
+  background: #FCFACF;
+}
+
+input.submit:active {
+  color: #FCFACF;
+  background: #F63B02;
+  border-color: #F63B02;
+}
+
+.uninstall {
+  float: right;
 }

@@ -97,6 +97,10 @@ function GM_xmlhttpRequest(details) {
     options.onFailure = function() {
       details.onerror(this.transport);
     }
+  } else if (details.onload) {
+    options.onFailure = function() {
+      details.onload(this.transport);
+    }
   }
   
   if (location.hostname == details.url.match(/http:\/\/([^\/]+)/)[1]) {

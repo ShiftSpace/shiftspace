@@ -100,7 +100,7 @@ var ShiftSpace = new (function() {
       'Notes' : server + 'spaces/Notes/Notes.js',
       'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
       'Highlights': server + 'spaces/Highlights/Highlights.js',
-      'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
+      'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
     });
 
     /*
