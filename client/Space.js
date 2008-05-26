@@ -16,8 +16,10 @@ ShiftSpace.Space = new Class({
     // set the interface built flag
     this.__interfaceBuilt__ = false;
     this.__state__ = new Hash();
+    
     this.__deferredNewShifts__= [];
     this.__deferredShifts__ = [];
+    this.__deferredEdits__ = [];
     
     // the shifts array
     this.shifts = {};
@@ -93,6 +95,11 @@ ShiftSpace.Space = new Class({
           showShift(aShift);
         }
       }.bind(this));
+      
+      // edit any deferred shifts
+      this.__deferredEdits__.each(function(aShift) {
+        editShift(aShift);
+      }.bind(this));
 
       // load any deferred just created shifts
       this.__deferredNewShifts__.each(function(aShift) {
@@ -105,6 +112,12 @@ ShiftSpace.Space = new Class({
   addDeferredShift: function(shiftId)
   {
     this.__deferredShifts__.push(shiftId);
+    this.__deferredContent__ = true;
+  },
+  
+  addDeferredEdit: function(shiftId)
+  {
+    this.__deferredEdits__.push(shiftId);
     this.__deferredContent__ = true;
   },
   
