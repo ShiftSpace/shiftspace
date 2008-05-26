@@ -330,7 +330,7 @@ label, .label {
 }
 
 #controls .login .image {
-  background: transparent url(../images/Console/login.png) no-repeat;
+  background: transparent url(../images/Console/logout.png) no-repeat;
 }
 
 #controls .logout .image {

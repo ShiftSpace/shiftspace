@@ -50,7 +50,7 @@ var Console = new Class({
         left: 25,
         height: 11,
         cursor: 'ns-resize',
-        'z-index': 1000000
+        'z-index': 1000002
       }
     });
     this.resizer.injectInside(document.body);
@@ -108,39 +108,30 @@ var Console = new Class({
         
     var img = new ShiftSpace.Element('img', {
       src: server + 'images/Console/notifier-icon.png',
-      alt: 'ShiftSpace'
+      alt: 'ShiftSpace',
+      styles: {
+        cursor: 'pointer'
+      }
     });
     img.injectInside(this.notifier);
     this.notifier.injectInside(document.body);
+    
+    img.addEvent('click', function() {
+      if (!this.isVisible()) {
+        this.show();
+      } else if (parseInt(this.frame.getStyle('height')) == 0) {
+        this.frame.setStyle('height', 150);
+        this.refresh();
+      } else {
+        this.minimize();
+      }
+    }.bind(this));
     
     this.notifierFx = new Fx.Style(this.notifier, 'bottom', {
       duration: 800,
       transition: Fx.Transitions.Quad.easeOut
     });
-
-    this.notifier = new ShiftSpace.Element('div', {
-      styles: {
-        position: 'fixed',
-        bottom: -32,
-        left: 31,
-        background: 'transparent url(' + server + 'images/Console/notifier-bg.png) no-repeat',
-        width: 30,
-        height: 32
-      }
-    });
-
-    var img = new ShiftSpace.Element('img', {
-      src: server + 'images/Console/notifier-icon.png',
-      alt: 'ShiftSpace'
-    });
-    img.injectInside(this.notifier);
-    this.notifier.injectInside(document.body);
-
-    this.notifierFx = new Fx.Style(this.notifier, 'bottom', {
-      duration: 800,
-      transition: Fx.Transitions.Quad.easeOut
-    });
-
+    
     // Call private console is ready function
     consoleIsReady();
   },
@@ -364,8 +355,8 @@ var Console = new Class({
                     '<div id="top"><div id="tabs" class="SSUserSelectNone">' +
                     '<div id="controls">' +
                     '<div class="button auth"><div class="image"></div></div>' +
-                    '<div id="SSReportTrac" class="button bugs"><div class="image"></div></div>' +
-                    '<div class="button hide"><div class="image"></div></div>' +
+                    '<div class="button bugs"><div class="image" title="File a bug report"></div></div>' +
+                    '<div class="button hide"><div class="image" title="Minimize console"></div></div>' +
                     '<br class="clear" />' +
                     '</div>' +
                     '<br class="clear" />' +
@@ -374,11 +365,6 @@ var Console = new Class({
                     '<div id="bottom"><div id="scroller"></div></div>' +
                     '</div></div>');
     content.injectInside(this.doc.body);
-    
-    $(this.doc.getElementById('SSReportTrac')).addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      window.open('http://metatron.shiftspace.org/trac/newticket');
-    });
     
     var controls = $(this.doc.getElementById('controls'));
     var auth = controls.getElement('.auth');
@@ -397,6 +383,29 @@ var Console = new Class({
       this.setupAuthControl();
     }.bind(this));
     this.setupAuthControl();
+    
+    var bugReport = controls.getElement('.bugs');
+    bugReport.addEvent('mouseover', function() {
+      bugReport.addClass('hover');
+    });
+    bugReport.addEvent('mouseout', function() {
+      bugReport.removeClass('hover');
+    });
+    bugReport.addEvent('click', function() {
+      window.open('http://metatron.shiftspace.org/trac/newticket');
+    });
+    
+    var hide = controls.getElement('.hide');
+    hide.addEvent('mouseover', function() {
+      hide.addClass('hover');
+    });
+    hide.addEvent('mouseout', function() {
+      hide.removeClass('hover');
+    });
+    hide.addEvent('click', function() {
+      hide.removeClass('hover');
+      this.minimize();
+    }.bind(this));
     
     this.addTab('shifts', '0 shifts');
     this.addTab('settings', 'Settings', 'icon-settings.gif');
@@ -432,6 +441,7 @@ var Console = new Class({
                         '<input type="text" name="server" value="' + server + '" id="server-input" size="25" class="text" />' +
                         '</div><br class="clear" />');
     
+    sections[0].getElement('.form-column').setStyle('padding-top', 20);
     var checkboxes = $(this.doc.body).getElements('.checkbox');
     checkboxes.each(function(checkbox) {
       checkbox.addEvent('click', function() {
@@ -680,7 +690,7 @@ var Console = new Class({
     }
     this.resizer.setStyle('width', window.getWidth() - 50);
     this.notifierFx.stop();
-    this.notifierFx.set(this.frame.getSize().size.y - 4);
+    this.notifierFx.set(Math.max(0, this.frame.getSize().size.y - 4));
   },
   
   
@@ -714,6 +724,11 @@ var Console = new Class({
     this.hidePluginMenu();
   },
   
+  minimize: function() {
+    this.frame.setStyle('height', 0);
+    this.refresh();
+    this.hidePluginMenu();
+  },
   
   isVisible: function() 
   {
