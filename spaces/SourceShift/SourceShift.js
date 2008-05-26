@@ -72,9 +72,9 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }
   },
   
-  showInterface : function(position)
+  showInterface : function()
   {
-    this.parent(position);
+    this.parent();
     if(this.editSourceShift) this.editSourceShift.removeClass('SSDisplayNone');
   },
   

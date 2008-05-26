@@ -72,6 +72,26 @@ ShiftSpace.Space = new Class({
   
   onCssLoad : function()
   {
+    this.setCssLoaded(true);
+    if(!this.interfaceIsBuilt())
+    {
+      this.buildInterface();
+      
+      if(this.__showInterfaceOnCssLoad__)
+      {
+        this.showInterface();
+      }
+    }
+  },
+  
+  setCssLoaded: function(val)
+  {
+    this.__cssLoaded__ = true;    
+  },
+  
+  cssIsLoaded: functino()
+  {
+    return this.__cssLoaded__;
   },
   
   show : function()
@@ -121,20 +141,22 @@ ShiftSpace.Space = new Class({
     return this.__isVisible__ || visibleShifts;
   },
   
-  showInterface : function(position) 
+  showInterface : function(position)
   {
-    if(!this.interfaceIsBuilt())
+    if(!this.interfaceIsBuilt() )
     {
-      this.buildInterface();
-      this.setInterfaceIsBuilt(true);
-      
-      if(position)
+      if(this.cssIsLoaded())
       {
-        this.setPosition(position);
+        this.buildInterface();
+        this.setInterfaceIsBuilt(true);
+      }
+      else
+      {
+        this.__showInterfaceOnCssLoad__ = true;
       }
     }
   },
-  
+
   hideInterface : function() 
   {
     // remove any unsaved shifts
