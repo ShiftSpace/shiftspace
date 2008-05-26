@@ -124,7 +124,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     {
       this.editSource.setProperty('value', currentShift.getMarkup());
       this.titleField.setProperty('value', currentShift.getTitle());
-      this.autoResize.setProperty('checked', currentShift.isAutoresized());
+      if(this.autoResize) this.autoResize.setProperty('checked', currentShift.isAutoresized());
     }
     
     // update the location of the editing window
@@ -219,6 +219,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       }
     }.bind(this));
     
+    /*
     this.autoResize.addEvent('change', function(_evt) {
       var evt = new Event(_evt);
       var target = $(evt.target);
@@ -228,6 +229,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
         this.getCurrentShift().setAutoresize(target.getProperty('checked'));
       }
     }.bind(this));
+    */
     
     // setup the resizing behavior
     this.editSourceShift.makeResizable({
@@ -401,6 +403,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.cssButton.injectInside(this.tabArea);
     
     // add the autoresize button
+    /*
     this.autoResize = new ShiftSpace.Element('input', {
       id: "SSAutoResize",
       type: "checkbox",
@@ -413,6 +416,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.autoResizeLabel.setText('Autoresize');
     this.autoResize.injectInside(this.tabArea);
     this.autoResizeLabel.injectInside(this.tabArea);
+    */
     
     // add the pin widget
     this.pinWidgetPrompt = new ShiftSpace.Element('div', {
@@ -938,6 +942,11 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     // MooTools-ize the body of the document
     $(doc.body).setProperty('id', 'SSSourceShiftFrameBody');
     this.frameBody = $(doc.body);
+    
+    if(this.isPinned()) this.frameBody.setStyles({
+      left: -8,
+      top: -8
+    });
 
     // add the div that will be the source shift
     this.source = $(this.frame.contentDocument.createElement('div'));
@@ -1052,6 +1061,24 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
     this.resizeControl.injectInside(this.element);
     
+    // pinned resize control
+    this.pinnedResizer = new ShiftSpace.Element('div', {
+      'class': "SSSourceShiftPinnedResizer SSDisplayNone"
+    });
+    this.pinnedResizerDragRef = this.frame.makeResizable({
+      handle: this.pinnedResize
+    });
+    this.pinnedResizerDragRef.detach();
+    
+    // pinned handle
+    this.pinnedHandle = new ShiftSpace.Element('div', {
+      'class': "SSSourceShiftPinnedHandle SSDisplayNone"
+    });
+    this.pinnedHandleDragRef = this.frame.makeDraggable({
+      handle: this.pinnedHandle
+    });
+    this.pinnedHandleDragRef.detach();
+    
     this.element.makeResizable({
       handle: this.resizeControl,
       onDrag : this.refresh.bind(this)
@@ -1077,19 +1104,24 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   showPinnedResizer: function()
   {
-    
+    // show handy resizer for when source shift is pinned as it's difficult to guess dimensions
+    this.pinnedResizer.removeClass('SSDisplayNone');
+    // get the frame location
   },
   
   hidePinnedResizer: function()
   {
-    
+    // hide handy resizer
   },
   
   pin : function(pinRef)
   {
+    this.showPinnedResizer();
+
     // call the parent pin method
     this.parent(this.frame, pinRef);
 
+    // fix some styles
     if(pinRef.targetStyles.display == 'inline')
     {
       var action = pinRef.action;
@@ -1098,7 +1130,15 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
         this.frame.setStyles({
           display: pinRef.targetStyles.display,
           width: pinRef.targetStyles.width,
-          height: pinRef.targetStyles.height
+          height: pinRef.targetStyles.height,
+          position: pinRef.targetStyles.position
+        });
+      }
+      if(action != 'relative')
+      {
+        if(this.frameBody) this.frameBody.setStyles({
+          left: -8,
+          top: -8
         });
       }
     }
@@ -1112,6 +1152,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   
   unpin : function()
   {
+    this.hidePinnedResizer();
+    
     // restore
     this.parent();
     // put it back
@@ -1126,6 +1168,14 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       position: '',
       display: ''
     });
+    
+    this.frameBody.setStyles({
+      left: '', 
+      top: ''
+    });
+    
+    this.showFrame();
+    this.frame.removeClass('SSFrameBorder');
 
     // refresh
     this.refresh();
