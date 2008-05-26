@@ -37,6 +37,11 @@ var Console = new Class({
           this.loadStyle();
           
           this.buildNotifier();
+          
+          this.doc.addEventListener('keydown',  keyDownHandler.bind(ShiftSpace), false);
+          this.doc.addEventListener('keyup',    keyUpHandler.bind(ShiftSpace), false);
+          this.doc.addEventListener('keypress', keyPressHandler.bind(ShiftSpace), false);
+          
         }.bind(this)
       }
     });
