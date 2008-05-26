@@ -906,33 +906,19 @@ var Console = new Class({
     
     // check for the plugin type
     // TODO: remove this closure - David
+    /*
     for(plugin in installedPlugins)
     {
       if(plugins[plugin])
       {
-        var pluginDiv = $(this.doc.createElement('div'));
-        pluginDiv.addClass('plugin');
-        pluginDiv.addClass('pg'+plugin); // tag with plugin name
-
-        pluginDiv.addClass(plugins[plugin].menuIconForShift(aShift.id));
-        pluginDiv.addEvent('click', function(_evt) {
-          var evt = new Event(_evt);
-          var target = evt.target;
-          // prevent the click from triggering item selection in console
-          evt.stop();
-
-          // in case it's delayed
-          var cb = function(menuItems) {
-            this.setPluginMenuItems(aShift.id, menuItems);
-          }.bind(this);
-          this.setPluginMenuItems(aShift.id, plugins[plugin].menuForShift(aShift.id, cb));
-
-          this.showPluginMenu(plugins[plugin], target);
-        }.bind(this));
-        
-        pluginDiv.inject(newEntry.getElement('.pluginIcons'));
+        this.addPluginIconForShift(plugin, aShift.id);
+      }
+      else
+      {
+        loadPlugin(plugin);
       }
     }
+    */
     
     // add it
     if (isActive) 
@@ -947,6 +933,37 @@ var Console = new Class({
     
     this.shiftCount++;
     this.updateCount();
+  },
+  
+  pluginLoaded: function(plugin)
+  {
+    
+  },
+  
+  addPluginIconForShift: function(plugin, shiftId)
+  {
+    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    var pluginDiv = $(this.doc.createElement('div'));
+    pluginDiv.addClass('plugin');
+    pluginDiv.addClass('pg'+plugin); // tag with plugin name
+
+    pluginDiv.addClass(plugins[plugin].menuIconForShift(shiftId));
+    pluginDiv.addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      var target = evt.target;
+      // prevent the click from triggering item selection in console
+      evt.stop();
+
+      // in case it's delayed
+      var cb = function(menuItems) {
+        this.setPluginMenuItems(shiftId, menuItems);
+      }.bind(this);
+      this.setPluginMenuItems(shiftId, plugins[plugin].menuForShift(shiftId, cb));
+
+      this.showPluginMenu(plugins[plugin], target);
+    }.bind(this));
+
+    pluginDiv.inject(el.getElement('.pluginIcons'));
   },
   
   updateCount : function()

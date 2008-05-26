@@ -609,9 +609,11 @@ var ShiftSpace = new (function() {
           focusedShiftId != shiftId) 
       {
         var lastSpace = spaceForShift(focusedShiftId);
-        
-        lastSpace.getShift(focusedShiftId).blur();
-        lastSpace.orderBack(focusedShiftId);
+        if(lastSpace.getShift(focusedShiftId))
+        {
+          lastSpace.getShift(focusedShiftId).blur();
+          lastSpace.orderBack(focusedShiftId);
+        }
       }
       focusedShiftId = shift.id;
       space.orderFront(shift.id);
@@ -1687,8 +1689,14 @@ var ShiftSpace = new (function() {
       Function: loadPlugin (private)
         Loads a plugin
     */
-    function loadPlugin(plugin) 
+    function loadPlugin(plugin, callback) 
     {
+      if(plugins[plugins])
+      {
+        if(callback) callback();
+        return;
+      }
+      
       if (typeof ShiftSpaceSandBoxMode != 'undefined') 
       {
         var url = installedPlugins[plugin] + '?' + new Date().getTime();
@@ -1716,6 +1724,8 @@ var ShiftSpace = new (function() {
           {
             console.error('Error loading ' + plugin + ' Plugin - ' + describeException(exc));
           }
+          
+          if(callback) callback();
         });
       }
     }
