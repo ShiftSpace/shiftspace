@@ -53,10 +53,12 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     var bottomSize = this.bottom.getSize().size;
     
     // refresh the edit area
+    /*
     this.editSource.setStyles({
       width : size.x - 8,
       height : size.y - handleSize.y - topSize.y - bottomSize.y
     });
+    */
     
     // weird browser bug that I can't track
     if(this.editSource.getSize().size.x > size.x)

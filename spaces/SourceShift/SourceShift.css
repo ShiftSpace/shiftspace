@@ -52,8 +52,9 @@
 
 .SSSourceShiftEditorWindowButtons
 {
-  float: left;
+  float: right;
   width: 32px;
+  margin-right: 4px;
 }
 
 .SSSourceShiftEditorWindowButtons div
@@ -95,7 +96,11 @@ div.SSSourceShiftEditorTopTitle
 
 .SSSourceShiftEditorTextArea
 {
-  float:left;
+  position: absolute;
+  left: 0px;
+  bottom: 10px;
+  right: 4px;
+  top: 120px;
   background-color: #220;
   font-family: courier;
   font-size: 12px;
