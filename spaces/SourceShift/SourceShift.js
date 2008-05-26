@@ -1168,6 +1168,11 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
         });
       }
     }
+    
+    if(this.isBeingEdited())
+    {
+      this.frame.addClass('SSFrameBorder');
+    }
 
     // hide the element now
     this.element.addClass('SSDisplayNone');
