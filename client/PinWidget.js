@@ -9,7 +9,7 @@
 */
 var PinWidget = new Class({
   
-  protocol: ['getPinRef', 'getPinWidgetButton', 'getPinWidgetAllowedActions', 'onPin'],
+  protocol: ['getPinRef', 'getPinWidgetButton', 'getPinWidgetAllowedActions', 'onPin', 'isPinned'],
   
   /*
     Property:
@@ -160,6 +160,7 @@ var PinWidget = new Class({
   
   updateMenu: function(action)
   {
+    console.log('updateMenu ' + action);
     var target = this.menu.getElement('.'+action);
     
     // turn off any of the other ones
@@ -167,8 +168,11 @@ var PinWidget = new Class({
     target.getParent().getElements('.radio').addClass('off');
     
     // turn on the toggle
-    target.getElement('.radio').removeClass('off');
-    target.getElement('.radio').addClass('on');
+    if(action != 'unpin')
+    {
+      target.getElement('.radio').removeClass('off');
+      target.getElement('.radio').addClass('on');
+    }
   },
   
   toggleSelection: function(_evt)
@@ -207,7 +211,7 @@ var PinWidget = new Class({
         this.iconImg.removeClass('select');
         stopPinSelection();
       }
-    } 
+    }
   },
 
   cancelPin: function()
@@ -229,7 +233,7 @@ var PinWidget = new Class({
     });
     
     // check for pin reference
-    if(this.delegate.getPinRef())
+    if(this.delegate.getPinRef() && this.delegate.isPinned())
     {
       this.updateMenu(this.delegate.getPinRef().action);
     }

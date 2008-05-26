@@ -474,6 +474,15 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }
   },
   
+  isPinned: function()
+  {
+    var currentShift = this.getCurrentShift();
+    if(currentShift)
+    {
+      return currentShift.isPinned();
+    }
+  },
+  
   /*
     Function: selectButton
       Takes a tab button and sets the image styles so it looks focused.
@@ -1079,6 +1088,13 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
     this.pinnedHandleDragRef.detach();
     
+    // clear out dragging stuff
+    this.frame.setStyles({
+      position: '',
+      left: '',
+      top: ''
+    });
+    
     this.element.makeResizable({
       handle: this.resizeControl,
       onDrag : this.refresh.bind(this)
@@ -1122,7 +1138,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.parent(this.frame, pinRef);
 
     // fix some styles
-    if(pinRef.targetStyles.display == 'inline')
+    if(pinRef.targetStyles && pinRef.targetStyles.display == 'inline')
     {
       var action = pinRef.action;
       if(action == 'replace' || action == 'before' || action == 'after')
@@ -1169,13 +1185,14 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       display: ''
     });
     
-    this.frameBody.setStyles({
+    if(this.frameBody) this.frameBody.setStyles({
       left: '', 
       top: ''
     });
     
     this.showFrame();
     this.frame.removeClass('SSFrameBorder');
+    this.frame.removeClass('SSDisplayNone');
 
     // refresh
     this.refresh();
