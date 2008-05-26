@@ -612,6 +612,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   {
     this.mode = 'edit';
     
+    console.log('wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwhat');
+    
     // set the markup and css and title
     this.markup = (json.markup && json.markup.replace(/<br\/>/g, '\n')) || '';
     this.cssText = (json.css && json.css.replace(/<br\/>/g, '\n')) || '';
