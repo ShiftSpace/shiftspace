@@ -991,17 +991,33 @@ var ShiftSpace = new (function() {
     {
       var space = spaceForShift(shiftId);
       var user = userForShift(shiftId);
+      var shift = shifts[shiftId];
 
+      // load the space first
+      if(!space)
+      {
+        loadSpace(shift.space, shiftId, function() {
+          editShift(shiftId);
+        });
+        return;
+      }
+      if(space && !space.cssIsLoaded())
+      {
+        space.addDeferredEdit(shiftId);
+        return;
+      }
+      
       if(ShiftSpace.user.getUsername() == user)
       {
         var shiftJson = getShiftContent(shiftId);
-        // show the space interface
-        focusShift(shiftId);
-        focusSpace(space, (shiftJson && shiftJson.position) || null);
 
         // then edit it
         space.editShift(shiftId);
         space.onShiftEdit(shiftId);
+        
+        // show the space interface
+        focusShift(shiftId);
+        focusSpace(space, (shiftJson && shiftJson.position) || null);
       }
       else
       {
