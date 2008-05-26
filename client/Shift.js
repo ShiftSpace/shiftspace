@@ -18,7 +18,6 @@ ShiftSpace.Shift = new Class({
   */
   initialize: function(_json)
   {
-    console.log('++++++++++++++++++++++++++++++++++ INITIALIZE');
     this.setOptions(this.getDefaults(), _json);
     
     // private id var
@@ -78,11 +77,7 @@ ShiftSpace.Shift = new Class({
       this.setTitle(_json.summary);
     }
     
-    // listen for focus events on this shift
-    this.addEvent( 'onFocus', this.userFocused.bind( this ) );
-    
     // call setup
-    console.log('================================================ calling setup');
     this.setup(_json);
     
     // TODO: should pin if it's possible to pin - David
@@ -92,7 +87,6 @@ ShiftSpace.Shift = new Class({
   
   setup: function(json) 
   {
-    console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< SETUP');
   },
   
   /*
@@ -108,7 +102,7 @@ ShiftSpace.Shift = new Class({
     {
       var aRegion = arguments[i];
       aRegion.addEvent('mousedown', function() {
-       this.fireEvent('onFocus', this);
+        this.focus();
       }.bind(this));
     }
   },
@@ -255,7 +249,7 @@ ShiftSpace.Shift = new Class({
     {
       this.mainView = el;
       this.mainView.addEvent('mousedown', function() {
-        this.fireEvent('onFocus', el);
+        this.focus();
       }.bind(this));
     }
     else
@@ -265,25 +259,32 @@ ShiftSpace.Shift = new Class({
   },
   
   /*
-    Function : userFocused
-      Fires the focus event to notify the Space a shift was focused.
+    Function : focus
+      Tell ShiftSpace we want to focus this shift.
   */
-  userFocused : function()
-  {
-    this.fireEvent('onShiftFocus', this );
+  focus : function() {
+    this.fireEvent('onShiftFocus', this.getId() );
   },
   
   /*
-    Function : focus
-      This gets called when this shift gets focused.
+    Function: onFocus
+      Do any updating of the shift's interface here.
   */
-  focus : function() {},
+  onFocus: function() {},
   
   /*
     Function: unfocus
-      This gets 
+      Tell ShiftSpace we want to blur this shift.
   */
-  blur : function() {},
+  blur : function() {
+    this.fireEvent('onShiftBlur', this.getId() );
+  },
+  
+  /*
+    Function: onBlur
+      Do any updating of the shift's interface here.
+  */
+  onBlur: function() {},
   
   /*
     Function: getMainView

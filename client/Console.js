@@ -746,6 +746,20 @@ var Console = new Class({
       el.getElement('.summaryView').removeClass('SSDisplayNone');
     }
   },
+  
+  blurShift: function(id) {
+    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    if(el)
+    {
+      el.addClass('active');
+      el.addClass('SSUserSelectNone');
+      el.getElement('.summaryEdit').addClass('SSDisplayNone');
+      el.getElement('.summaryView').removeClass('SSDisplayNone');
+    }
+  },
+  
+  focusShift: function(id) {
+  },
 
   hideShift: function(id) {
     var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
@@ -804,12 +818,12 @@ var Console = new Class({
     newEntry.addEvent('click', function() {
       if (!newEntry.hasClass('active')) 
       {
-        ShiftSpace.showShift(aShift.id);
+        showShift(aShift.id);
         newEntry.addClass('active');
       } 
       else 
       {
-        ShiftSpace.hideShift(aShift.id);
+        hideShift(aShift.id);
         newEntry.removeClass('active');
       }
     });
@@ -855,7 +869,7 @@ var Console = new Class({
     newEntry.getElement('.controls a.edit').addEvent('click', function(e) {
       var event = new Event(e);
       event.preventDefault();
-      ShiftSpace.showShift(aShift.id);
+      showShift(aShift.id);
       editShift(aShift.id);
       
       if(SSUserCanEditShift(aShift.id))

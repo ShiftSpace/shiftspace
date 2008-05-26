@@ -72,7 +72,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   
   hideInterface : function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HIDE INTERFACE');
     this.parent();
     if(this.editSourceShift) this.editSourceShift.addClass('SSDisplayNone');
   },
@@ -118,8 +117,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   {
     // set the mode to xhtml and set to the html of the current shift
     var currentShift = this.shifts[shiftId];
-    
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> EDIT SHIFT');
     
     this.setMode('xhtml');
     
@@ -1108,7 +1105,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.refresh();
   },
   
-  focus : function()
+  onFocus : function()
   {
     // update the interface
     this.element.removeClass('SSSourceShiftBorderBlur');
@@ -1116,7 +1113,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.element.setOpacity(1.0);
   },
   
-  blur : function()
+  onBlur : function()
   {
     // update the interface
     /*

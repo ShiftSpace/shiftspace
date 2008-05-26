@@ -181,18 +181,21 @@ ShiftSpace.Space = new Class({
     newShift.addEvent( 'onUpdate', this.updateShift.bind( this ) );
     // Set up events that console will listen to
     newShift.addEvent( 'onShiftShow', function( shiftId ) {
-      this.onShiftShow(shiftId);
       this.fireEvent( 'onShiftShow', shiftId );
     }.bind( this ) );
     newShift.addEvent( 'onShiftHide', function( shiftId ) { 
-      this.onShiftHide(shiftId);
       this.fireEvent( 'onShiftHide', shiftId );
     }.bind( this ) );
     newShift.addEvent( 'onShiftDestroy', function( shiftId ) { 
       this.fireEvent( 'onShiftDestroy', shiftId );
     }.bind( this ) );
-    newShift.addEvent( 'onShiftFocus', function( aShift ) {
-      focusShift( aShift.getId() );
+    newShift.addEvent( 'onShiftFocus', function( shiftId ) {
+      this.onShiftFocus(shiftId);
+      this.fireEvent( 'onShiftFocus', shiftId )
+    }.bind( this ));
+    newShift.addEvent( 'onShiftBlur', function( shiftId ) {
+      this.onShiftBlur(shiftId);
+      this.fireEvent( 'onShiftBlur', shiftId );
     }.bind( this ));
     
     this.shifts[newShift.getId()] = newShift;
@@ -283,17 +286,15 @@ ShiftSpace.Space = new Class({
   */
   showShift : function( aShift ) 
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> showShift');
-    console.log(aShift);
-    
+    var cShift;
     if($type(aShift) != 'object')
     {
-      console.error("showShift called with non-object. Perhaps you passed a shift id accidentally");
-      return;
+      cShift = this.shifts[aShift];
     }
-
-    // get the shift
-    var cShift = this.shifts[aShift.id];
+    else
+    {
+      cShift = this.shifts[aShift.id];
+    }
     
     if( !cShift )
     {
@@ -308,7 +309,7 @@ ShiftSpace.Space = new Class({
       if(this.getCurrentShift() &&
          cShift != this.getCurrentShift())
       {
-        this.getCurrentShift().blur();
+        this.getCurrentShift().onBlur();
       }
       
       this.setCurrentShift(cShift);
@@ -323,7 +324,7 @@ ShiftSpace.Space = new Class({
       }
       
       // focus the shift
-      cShift.focus();
+      cShift.onFocus();
     }
     
     // set the currentShift
@@ -481,17 +482,21 @@ ShiftSpace.Space = new Class({
     return this.__currentShift__;
   },
   
+  getShift: function(shiftId)
+  {
+    return this.shifts[shiftId];
+  },
+  
   focusShift : function(shiftId)
   {
     this.setCurrentShift(this.shifts[shiftId]);
-    this.getCurrentShift().focus();
+    this.getCurrentShift().onFocus();
   },
   
   blurShift: function(shiftId)
   {
     var theShift = this.shifts[shiftId];
-    
-    theShift.blur();
+    theShift.onBlur();
     theShift.setIsBeingEdited(false);
   },
   
@@ -543,6 +548,11 @@ ShiftSpace.Space = new Class({
   restoreState: function()
   {
     this.__state__.get('visibleShifts').each(function(x) { x.show(); });
+  },
+  
+  isNewShift: function(shiftId)
+  {
+    return SSIsNewShift(shiftId);
   }
 });
 

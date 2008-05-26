@@ -6,6 +6,14 @@ var NotesSpace = ShiftSpace.Space.extend({
     version : 0.1, 
     icon : 'Notes.png',
     css : 'Notes.css'
+  },
+  
+  onShiftFocus: function(shiftId)
+  {
+    if(this.isNewShift(shiftId))
+    {
+      this.editShift(shiftId);
+    }
   }
 });
 
@@ -24,9 +32,6 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   setup : function(json)
   {
-    console.log('+++++++++++++++++++++++++++++ setup NOTES blahblahblahblah');
-    console.log('the note text is' + json.noteText);
-
     if(json.legacy)
     {
       json.position = {x: json.x, y: json.y};
@@ -83,7 +88,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     }
 
     this.refresh();
-    console.log('================================ ' + this.noteText);
   },
   
   /*
@@ -224,6 +228,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   show: function()
   {
+    console.log('_________________ notes show');
     this.parent();
     this.hideEditInterface();
     
@@ -237,7 +242,6 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   edit: function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> edit');
     this.parent();
     this.showEditInterface();
   },
@@ -254,7 +258,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     }
   },
   
-  blur: function()
+  onBlur: function()
   {
     this.parent();
     this.hideEditInterface();
@@ -268,7 +272,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.pinWidgetDiv.setStyle('display', '');
     if(this.inputArea)
     {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> remove readonly');
       this.inputArea.removeProperty('readonly');
     }
     this.dragRef.attach();
@@ -354,8 +357,6 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     var _css = this.getParentSpace().attributes.css;
     
-    console.log('build frame');
-
     // create an iframe with the css already loaded
     this.frame = new ShiftSpace.Iframe({
       'class' : 'SSNoteShiftFrame',
@@ -377,11 +378,8 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   finishFrame : function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> finish frame');
-    
     var text = "Leave a note";
     
-    console.log(this.noteText);
     if(this.noteText)
     {
       text = this.noteText.replace(/<br\/>/g, "\n");
@@ -400,7 +398,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.inputArea.focus();
   
     this.inputArea.addEvent('mousedown', function() {
-     this.fireEvent('onFocus', this);
+     this.focus();
      // clear out Leave a note
      if(this.inputArea.getProperty('value') == "Leave a note")
      {

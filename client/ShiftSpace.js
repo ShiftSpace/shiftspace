@@ -102,6 +102,7 @@ var ShiftSpace = new (function() {
       'Highlights': server + 'spaces/Highlights/Highlights.js',
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
     });
+
     /*
     var installed = {
       'Notes' : server + 'spaces/Notes/Notes.js',
@@ -241,29 +242,36 @@ var ShiftSpace = new (function() {
     
     function getShiftContent(shiftId)
     {
-      var shift = shifts[shiftId];
-      var content = shift.content;
-      
-      if(content)
+      if(!SSIsNewShift(shiftId))
       {
-        content = content.replace(/\n/g, '\\n');
-        content = content.replace(/\r/g, '\\r');
-        //content = content.replace(/"/g,);
-      }
+        var shift = shifts[shiftId];
+        var content = shift.content;
       
-      var obj = null;
-      try
-      {
-        obj = Json.evaluate(content);
-      }
-      catch(err)
-      {
-        console.log('content failed to load');
-        console.log(content);
-        //throw __SSCouldNotEvalShiftContentException__
-      }
+        if(content)
+        {
+          content = content.replace(/\n/g, '\\n');
+          content = content.replace(/\r/g, '\\r');
+          //content = content.replace(/"/g,);
+        }
       
-      return obj;
+        var obj = null;
+        try
+        {
+          obj = Json.evaluate(content);
+        }
+        catch(err)
+        {
+          console.log('content failed to load');
+          console.log(content);
+          //throw __SSCouldNotEvalShiftContentException__
+        }
+      
+        return obj;
+      }
+      else
+      {
+        return {};
+      }
     }
     
     function describeException(_exception)
@@ -527,57 +535,51 @@ var ShiftSpace = new (function() {
     
     */
     function initShift(spaceName, options) {
-        if (!spaces[spaceName]) {
-            log('Error: Space ' + spaceName + ' does not exist.', true);
-            return;
-        }
-        
-        var tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
-        while (shifts[tempId]) {
-            tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
-        }
-        
-        var _position = (options && options.position && { x: options.position.x, y: options.position.y }) || null;
-        var shiftJson = {
-            id: tempId,
-            space: spaceName,
-            username: ShiftSpace.user.getUsername(),
-            position: _position
-        };
-        //console.log(shiftJson);
-        
-        shifts[tempId] = shiftJson;
-        
-        // check to see if focused space
-        focusSpace(spaces[spaceName], _position);
-        
-        try
-        {
-          spaces[spaceName].createShift(shiftJson);
-        }
-        catch(err)
-        {
-          switch(err)
-          {
-            
-          }
-        }
-        
-        // call onShiftCreate
-        spaces[spaceName].onShiftCreate(tempId);
+      if (!spaces[spaceName]) {
+        log('Error: Space ' + spaceName + ' does not exist.', true);
+        return;
+      }
 
-        if(!options.deferred)
-        {          
-          spaces[spaceName].showShift(shiftJson);
-          // call onShiftShow
-          spaces[spaceName].onShiftShow(tempId);
-          /*
-          spaces[spaceName].editShift(tempId);
-          spaces[spaceName].onShiftEdit(temp);
-          */
-          editShift(tempId);
-          focusShift(tempId);
+      var tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
+      while (shifts[tempId]) {
+        tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
+      }
+
+      var _position = (options && options.position && { x: options.position.x, y: options.position.y }) || null;
+      var shiftJson = {
+        id: tempId,
+        space: spaceName,
+        username: ShiftSpace.user.getUsername(),
+        position: _position
+      };
+      //console.log(shiftJson);
+
+      shifts[tempId] = shiftJson;
+
+      // check to see if focused space
+      focusSpace(spaces[spaceName], _position);
+
+      try
+      {
+        spaces[spaceName].createShift(shiftJson);
+      }
+      catch(err)
+      {
+        switch(err)
+        {
+
         }
+      }
+
+      // call onShiftCreate
+      spaces[spaceName].onShiftCreate(tempId);
+
+      if(!options.deferred)
+      {          
+        showShift(tempId);
+        editShift(tempId);
+        focusShift(tempId);
+      }
     }
     
     
@@ -610,13 +612,8 @@ var ShiftSpace = new (function() {
       space.orderFront(shift.id);
 
       // call onShiftFocus
+      space.focusShift(shiftId);
       space.onShiftFocus(shiftId);
-      
-      // if new shift present the editing interface
-      if(SSIsNewShift(shiftId))
-      {
-        space.editShift(shiftId);
-      }
 
       // scroll the window if necessary
       var mainView = space.mainViewForShift(shiftId);
@@ -668,6 +665,16 @@ var ShiftSpace = new (function() {
       }
     }
     
+    function blurShift(shiftId)
+    {
+      
+    }
+    
+    function scrollToShift(shiftId)
+    {
+      
+    }
+
     /*
     focusSpace (private)
     Focuses a space.
@@ -687,14 +694,12 @@ var ShiftSpace = new (function() {
       focusedSpace = space;
       focusedSpace.setIsVisible(true);
       focusedSpace.showInterface();
-      
-      if(position) focusedSpace.setPosition(position);
     }
     
     function updateTitleOfShift(shiftId, title)
     {
       spaceForShift(shiftId).updateTitleOfShift(shiftId, title);
-      ShiftSpace.showShift(shiftId);
+      showShift(shiftId);
     }
     
     /*
@@ -706,49 +711,44 @@ var ShiftSpace = new (function() {
         shiftId - The ID of the shift to display.
     
     */
-    this.showShift = function(shiftId) {
+    function showShift(shiftId) 
+    {
       var shift = shifts[shiftId];
       var shiftJson = getShiftContent(shiftId);
+      console.log(shiftJson);
       shiftJson.id = shiftId;
+      
+      console.log('showshift ++++++++++++++++++++++++++++++++++++ ' + shiftId);
+      console.log(shiftJson);
       
       // fix legacy content
       shiftJson.legacy = shift.legacy;
       
-      if (this.info(shift.space).unknown) {
+      if (ShiftSpace.info(shift.space).unknown) {
         if (confirm('Would you like to install the space ' + shift.space + '?')) {
-          this.installSpace(shift.space, shiftId);
+          ShiftSpace.installSpace(shift.space, shiftId);
         }
       } else {
-        // if not a new shift just show the shift
-        if(shiftId.search('newShift') == -1)
-        {
-          // store a reference to this
-          // TODO: only add these if the user is logged in
-          __recentlyViewedShifts__[shift.id] = shiftJson;
-          
-          // wrap this in a try catch
-          //try
-          //{
-            console.log('showshift');
-            spaces[shift.space].showShift(shiftJson);
-          //}
-          //catch(err)
-          //{
-            //console.log('Exception: ' + Json.toString(err));
-          //}
-          
-          focusShift(shift.id);
-        }
-        else
-        {
-          // if it's new it's always in edit mode
-          editShift(shiftId);
-        }
+        // store a reference to this
+        // TODO: only add these if the user is logged in
+        __recentlyViewedShifts__[shift.id] = shiftJson;
+        
+        // wrap this in a try catch
+        //try
+        //{
+          spaces[shift.space].showShift(shiftJson);
+        //}
+        //catch(err)
+        //{
+          //console.log('Exception: ' + Json.toString(err));
+        //}
+        
+        focusShift(shift.id);
       }
 
       // call onShiftShow
       spaces[shift.space].onShiftShow(shiftId);
-    },
+    }
     
     /*
     
@@ -759,7 +759,8 @@ var ShiftSpace = new (function() {
         shiftId - The ID of the shift to hide.
     
     */
-    this.hideShift = function(shiftId) {
+    function hideShift(shiftId) 
+    {
         var shift = shifts[shiftId];
         spaces[shift.space].hideShift(shiftId);
         
@@ -947,6 +948,8 @@ var ShiftSpace = new (function() {
             if (focusedShiftId == shiftJson.id) {
                 focusedShiftId = responseJson.url_slug;
             }
+            console.log('SHIFT CREATE');
+            console.log(responseJson);
             shiftJson.id = responseJson.url_slug;
             shiftJson.content = Json.toString(shiftJson);
             shifts[shiftJson.id] = shiftJson;
@@ -976,8 +979,8 @@ var ShiftSpace = new (function() {
         focusSpace(space, (shiftJson && shiftJson.position) || null);
 
         // then edit it
-        space.onShiftEdit(shiftId);
         space.editShift(shiftId);
+        space.onShiftEdit(shiftId);
       }
       else
       {
@@ -1555,7 +1558,7 @@ var ShiftSpace = new (function() {
           });
           if (typeof pendingShift != 'undefined') 
           {
-            ShiftSpace.showShift(pendingShift);
+            showShift(pendingShift);
           }
         } 
         else 
@@ -1582,7 +1585,7 @@ var ShiftSpace = new (function() {
             
             if (typeof pendingShift != 'undefined') 
             {
-              ShiftSpace.showShift(pendingShift);
+              showShift(pendingShift);
             }
           });
         }
@@ -1648,11 +1651,19 @@ var ShiftSpace = new (function() {
       ShiftSpace.ShiftMenu.buildMenu();
 
       // Attach hide events to each space, so the console will be in sync
-      for (var spaceName in spaces) 
+      for (var spaceName in spaces)
       {
         var space = spaces[spaceName];
         space.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
         space.addEvent('onShiftShow', ShiftSpace.Console.showShift.bind(ShiftSpace.Console));
+        space.addEvent('onShiftBlur', function(shiftId) {
+          blurShift(shiftId);
+          ShiftSpace.Console.blurShift(shiftId);
+        });
+        space.addEvent('onShiftFocus', function(shiftId) {
+          focusShift(shiftId);
+          ShiftSpace.Console.focusShift(shiftId);
+        });
         space.addEvent('onShiftDestroy', removeShift);
       }
     }
@@ -1795,7 +1806,16 @@ var ShiftSpace = new (function() {
         onload: function(rx) {
           if (typeof callback == 'function') {
             var json = Json.evaluate(rx.responseText);
-            callback(json);
+            // NOTE: this needs to be changed but until there is something complete to replace it, do not replace
+            // because if errors are not caught some things work that should immediately fail - David
+            if(json.status == '0')
+            {
+              console.error('Error: ' + method + " failed, " + json.message);
+            }
+            else
+            {
+              callback(json);
+            }
           }
         },
         onerror: function(err) {

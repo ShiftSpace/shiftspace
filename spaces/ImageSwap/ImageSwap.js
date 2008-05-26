@@ -312,8 +312,6 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   {
     this.parent();
     
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HIDE');
-    
     if(this.isSwapped && this.getPinRef() && this.getSrc())
     {
       this.unpin();
