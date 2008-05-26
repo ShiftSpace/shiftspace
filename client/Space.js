@@ -335,6 +335,7 @@ ShiftSpace.Space = new Class({
     
       if( !cShift )
       {
+        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaddddddddddddddddd shift');
         // add the shift if we don't have it already
         cShift = this.addShift( aShift );
         var cShift = this.shifts[aShift.id];
