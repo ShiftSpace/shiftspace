@@ -543,6 +543,7 @@ var ShiftSpace = new (function() {
     
     */
     function initShift(spaceName, options) {
+      console.log('initShift');
       if (!installed[spaceName]) {
         console.log('Error: Space ' + spaceName + ' does not exist.', true);
         return;
@@ -567,26 +568,23 @@ var ShiftSpace = new (function() {
       // check to see if focused space
       focusSpace(spaces[spaceName], _position);
 
-      try
+      var noError = spaces[spaceName].createShift(shiftJson);
+      if(noError)
       {
-        spaces[spaceName].createShift(shiftJson);
+        SSShowNewShift(tempId);
       }
-      catch(err)
-      {
-        switch(err)
-        {
-
-        }
-      }
+    }
+    
+    
+    function SSShowNewShift(shiftId)
+    {
+      var space = spaceForShift(shiftId);
 
       // call onShiftCreate
-      spaces[spaceName].onShiftCreate(tempId);
-      if(!options.deferred)
-      {          
-        showShift(tempId);
-        editShift(tempId);
-        focusShift(tempId);
-      }
+      showShift(shiftId);
+      space.onShiftCreate(shiftId);
+      editShift(shiftId);
+      focusShift(shiftId);
     }
     
     
@@ -735,6 +733,11 @@ var ShiftSpace = new (function() {
         loadSpace(shift.space, shiftId);
         return;
       }
+      if(!space.cssIsLoaded())
+      {
+        space.addDeferredShift(shiftJson);
+        return;
+      }
       
       // fix legacy content
       shiftJson.legacy = shift.legacy;
@@ -751,13 +754,12 @@ var ShiftSpace = new (function() {
         // wrap this in a try catch
         //try
         //{
-          spaces[shift.space].showShift(shiftJson);
+        spaces[shift.space].showShift(shiftJson);
         //}
         //catch(err)
         //{
           //console.log('Exception: ' + Json.toString(err));
         //}
-        
         focusShift(shift.id);
       }
 

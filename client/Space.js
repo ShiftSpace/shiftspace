@@ -75,17 +75,37 @@ ShiftSpace.Space = new Class({
   onCssLoad : function()
   {
     this.setCssLoaded(true);
-    if(this.__showInterfaceOnCssLoad__)
+
+    if(this.__deferredContent__)
     {
-      console.log('__showInterfaceOnCssLoad__');
+      console.log('__deferredContent__');
       this.showInterface();
       console.log(this.__deferredShifts__);
-      this.__deferredShifts__.each(this.showShift.bind(this));
+
+      // load any deferred shifts
+      this.__deferredShifts__.each(function(aShift) {
+        if(aShift.id)
+        {
+          showShift(aShift.id);
+        }
+        else
+        {
+          showShift(aShift);
+        }
+      }.bind(this));
+
+      // load any deferred just created shifts
       this.__deferredNewShifts__.each(function(aShift) {
         this.createShift(aShift);
         SSShowNewShift(aShift.id);
       }.bind(this));
     }
+  },
+  
+  addDeferredShift: function(shiftId)
+  {
+    this.__deferredShifts__.push(shiftId);
+    this.__deferredContent__ = true;
   },
   
   setCssLoaded: function(val)
@@ -151,14 +171,12 @@ ShiftSpace.Space = new Class({
     {
       if(this.cssIsLoaded())
       {
-        console.log('---------------------------- css loaded ------------------------');
         this.buildInterface();
         this.setInterfaceIsBuilt(true);
       }
       else
       {
-        console.log('---------------------------- build later ------------------------');
-        this.__showInterfaceOnCssLoad__ = true;
+        this.__deferredContent__ = true;
       }
     }
   },
@@ -235,10 +253,7 @@ ShiftSpace.Space = new Class({
     
     this.shifts[newShift.getId()] = newShift;
     
-    console.log('addShift');
-    console.log(newShift);
-    
-    return newShift;
+    return this.shifts[newShift.getId()];
   },
   
   /*
@@ -265,11 +280,10 @@ ShiftSpace.Space = new Class({
   {
     if(this.cssIsLoaded())
     {
-      var aNewShift = this.addShift(newShiftJson);
-      console.log('newShift');
-      console.log(aNewShift);
-      this.fireEvent( 'onCreateShift', { 'space' : this, 'shift' : aNewShift } );
-      return aNewShift;
+      this.addShift(newShiftJson);
+      var _newShift = this.shifts[newShiftJson.id];
+      this.fireEvent( 'onCreateShift', { 'space' : this, 'shift' : _newShift } );
+      return _newShift;
     }
     else
     {
@@ -339,9 +353,9 @@ ShiftSpace.Space = new Class({
   */
   showShift : function( aShift ) 
   {
-    console.log('showShift ' + aShift);
     if(!this.cssIsLoaded())
     {
+      console.log('css not loaded');
       this.__deferredShifts__.push(aShift);
     }
     else
@@ -355,12 +369,11 @@ ShiftSpace.Space = new Class({
       {
         cShift = this.shifts[aShift.id];
       }
-    
+      
       if( !cShift )
       {
-        console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaddddddddddddddddd shift');
         // add the shift if we don't have it already
-        cShift = this.addShift( aShift );
+        this.addShift( aShift );
         var cShift = this.shifts[aShift.id];
       }
     
