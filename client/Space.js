@@ -262,6 +262,7 @@ ShiftSpace.Space = new Class({
       var newShift = this.addShift( newShiftJson );
       this.fireEvent( 'onCreateShift', { space : this, shift : newShift } );
       return newShift;
+    }
     else
     {
       // we need to load these when the css is done
