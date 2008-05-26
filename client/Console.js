@@ -13,6 +13,7 @@ var Console = new Class({
   */
   buildFrame: function() {
     
+    var consoleHeight = getValue('console.height', 150);
     this.frame = new ShiftSpace.Element('iframe', {
       id: 'ShiftSpaceConsole',
       styles: {
@@ -21,7 +22,7 @@ var Console = new Class({
         bottom: 0,
         left: 0,
         width: '100%',
-        height: 150,
+        height: consoleHeight,
         overflow: 'hidden',
         'z-index': 1000001
       },
@@ -46,7 +47,7 @@ var Console = new Class({
       'styles': 
       {
         position: 'fixed',
-        bottom: 142,
+        bottom: getValue('console.height', 150) - 8,
         left: 25,
         height: 11,
         cursor: 'ns-resize',
@@ -83,6 +84,7 @@ var Console = new Class({
       }.bind(this),
       onComplete: function() {
         this.resizeMask.remove();
+        setValue('console.height', parseInt(this.frame.getStyle('height')));
       }.bind(this)
     });
   },
@@ -120,7 +122,7 @@ var Console = new Class({
       if (!this.isVisible()) {
         this.show();
       } else if (parseInt(this.frame.getStyle('height')) == 0) {
-        this.frame.setStyle('height', 150);
+        this.frame.setStyle('height', getValue('console.height', 150));
         this.refresh();
       } else {
         this.minimize();
