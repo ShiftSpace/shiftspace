@@ -89,7 +89,7 @@ ShiftSpace.Space = new Class({
     this.__cssLoaded__ = true;    
   },
   
-  cssIsLoaded: functino()
+  cssIsLoaded: function()
   {
     return this.__cssLoaded__;
   },
