@@ -58,7 +58,7 @@ var ShiftSpace = new (function() {
     }
     */
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
-    server = "http://metatron.shiftspace.org/api/";
+    //server = "http://metatron.shiftspace.org/api/";
 
     // get Dan's input on how to set this
     if(typeof ShiftSpaceSandBoxMode != 'undefined')
@@ -954,6 +954,12 @@ var ShiftSpace = new (function() {
             
             // call onShiftSave
             space.onShiftSave(shiftJson.id);
+            
+            // open the console if it isn't already open
+            if(!ShiftSpace.Console.isVisible())
+            {
+              ShiftSpace.Console.show();
+            }
         });
     }
     
@@ -1911,6 +1917,7 @@ var ShiftSpace = new (function() {
         dir = server + dir;
       }
       
+      console.log('loadStyle: ' + url);
       loadFile(url, function(rx) {
         var css = rx.responseText;
         // this needs to be smarter, only works on directory specific urls

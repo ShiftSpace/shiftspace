@@ -714,6 +714,7 @@ var Console = new Class({
     this.hidePluginMenu();
   },
   
+  
   isVisible: function() 
   {
     return (this.frame.getStyle('display') == 'block');
