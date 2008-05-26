@@ -12,6 +12,11 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.mode = 'xhtml';
   },
   
+  onCssLoad: function()
+  {
+    console.log('+++++++++++++++++++++++++++++++++++++++++++ CSS Load');
+  },
+  
   addShift: function(shift)
   {
     var newShift = this.parent(shift);
