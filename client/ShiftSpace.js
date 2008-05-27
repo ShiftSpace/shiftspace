@@ -565,9 +565,6 @@ var ShiftSpace = new (function() {
 
       shifts[tempId] = shiftJson;
 
-      // check to see if focused space
-      focusSpace(spaces[spaceName], _position);
-
       var noError = spaces[spaceName].createShift(shiftJson);
       if(noError)
       {
@@ -730,14 +727,17 @@ var ShiftSpace = new (function() {
       // load the space first
       if(!space)
       {
+        console.log('space not loaded');
         loadSpace(shift.space, shiftId);
         return;
       }
       if(!space.cssIsLoaded())
       {
+        console.log('css not loaded');
         space.addDeferredShift(shiftJson);
         return;
       }
+      console.log('showing');
       
       // fix legacy content
       shiftJson.legacy = shift.legacy;
@@ -1658,44 +1658,24 @@ var ShiftSpace = new (function() {
       if (debug) {
         ShiftSpace[instance.attributes.name + 'Space'] = instance;
       }
-      
-      // remove weird null spaces
-      for(var space in installed) {
-        if(space == '')
-        {
-          delete installed[space];
-        }
-      }
 
-      // Check to see if we're still waiting for a space to load
-      for (var space in installed) {
-        if (!spaces[space]) {
-          return;
-        }
-      }
-
-      // Attach hide events to each space, so the console will be in sync
-      for (var spaceName in spaces)
-      {
-        var space = spaces[spaceName];
-        space.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
-        space.addEvent('onShiftShow', function(shiftId) {
-          ShiftSpace.Console.showShift(shiftId);
-        });
-        space.addEvent('onShiftBlur', function(shiftId) {
-          blurShift(shiftId);
-          ShiftSpace.Console.blurShift(shiftId);
-        });
-        space.addEvent('onShiftFocus', function(shiftId) {
-          focusShift(shiftId);
-          ShiftSpace.Console.focusShift(shiftId);
-        });
-        space.addEvent('onShiftSave', function(shiftId) {
-          ShiftSpace.Console.blurShift(shiftId);
-          ShiftSpace.Console.setTitleForShift(shifts[shiftId].summary);
-        });
-        space.addEvent('onShiftDestroy', removeShift);
-      }
+      instance.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
+      instance.addEvent('onShiftShow', function(shiftId) {
+        ShiftSpace.Console.showShift(shiftId);
+      });
+      instance.addEvent('onShiftBlur', function(shiftId) {
+        blurShift(shiftId);
+        ShiftSpace.Console.blurShift(shiftId);
+      });
+      instance.addEvent('onShiftFocus', function(shiftId) {
+        focusShift(shiftId);
+        ShiftSpace.Console.focusShift(shiftId);
+      });
+      instance.addEvent('onShiftSave', function(shiftId) {
+        ShiftSpace.Console.blurShift(shiftId);
+        ShiftSpace.Console.setTitleForShift(shifts[shiftId].summary);
+      });
+      instance.addEvent('onShiftDestroy', removeShift);
     }
     
     function removeShift(shiftId)

@@ -18,6 +18,7 @@ ShiftSpace.Shift = new Class({
   */
   initialize: function(_json)
   {
+    console.log('+++++++++++++++++++++++++++++ initialize');
     this.setOptions(this.getDefaults(), _json);
     
     // private id var

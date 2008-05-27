@@ -827,19 +827,12 @@ var Console = new Class({
     {
       el.addClass('active');
       el.addClass('SSUserSelectNone');
-      el.getElement('.summaryEdit').addClass('SSDisplayNone');
-      el.getElement('.summaryView').removeClass('SSDisplayNone');
+      this.hideEditTitleField(id);
     }
   },
   
   blurShift: function(id) {
-    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
-    if(el)
-    {
-      // hide the edit stuff
-      el.getElement('.summaryEdit').addClass('SSDisplayNone');
-      el.getElement('.summaryView').removeClass('SSDisplayNone');
-    }
+    this.hideEditTitleField(id);
   },
   
   focusShift: function(id) {
@@ -851,6 +844,23 @@ var Console = new Class({
     {
       el.removeClass('active');
       el.addClass('SSUserSelectNone');
+      this.hideEditTitleField(id);
+    }
+  },
+  
+  showEditTitleField: function(id) {
+    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    if(el)
+    {
+      el.getElement('.summaryEdit').removeClass('SSDisplayNone');
+      el.getElement('.summaryView').addClass('SSDisplayNone');
+    }
+  },
+  
+  hideEditTitleField: function(id) {
+    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    if(el)
+    {
       el.getElement('.summaryEdit').addClass('SSDisplayNone');
       el.getElement('.summaryView').removeClass('SSDisplayNone');
     }
@@ -910,15 +920,18 @@ var Console = new Class({
     newEntry.addEvent('click', function() {
       if (!newEntry.hasClass('active')) 
       {
+        // tell ShiftSpace to show the shift
         showShift(aShift.id);
         newEntry.addClass('active');
       } 
       else 
       {
+        // tell ShiftSpace to hide the shift
         hideShift(aShift.id);
         newEntry.removeClass('active');
+        this.hideEditTitleField(aShift.id);
       }
-    });
+    }.bind(this));
     
     var slideFx = new Fx.Slide($(controls), {
         duration: 250
@@ -939,9 +952,11 @@ var Console = new Class({
       {
         newEntry.removeClass('expanded');
         newEntry.addClass('hover');
-        newEntry.getElement('.expander img').setProperty('src', server + 'images/Console/arrow-close.gif')
+        newEntry.getElement('.expander img').setProperty('src', server + 'images/Console/arrow-close.gif');
+        // hide the edit field as well
+        this.hideEditTitleField(aShift.id);
       }
-    });
+    }.bind(this));
     
     controls.addEvent('click', function(e) {
       var event = new Event(e);
@@ -966,11 +981,12 @@ var Console = new Class({
       
       if(SSUserCanEditShift(aShift.id))
       {
+        // show this shift  
+        this.showShift(aShift.id);
         newEntry.removeClass('SSUserSelectNone');
-        newEntry.getElement('.summaryView').addClass('SSDisplayNone');
-        newEntry.getElement('.summaryEdit').removeClass('SSDisplayNone');
+        this.showEditTitleField(aShift.id);
       }
-    });
+    }.bind(this));
     
     // Event for the title edit input field
     newEntry.getElement('.summaryEdit').addEvent('keyup', function(_evt) {
@@ -987,22 +1003,6 @@ var Console = new Class({
       var evt = new Event(_evt);
       evt.stop();
     });
-    
-    // check for the plugin type
-    // TODO: remove this closure - David
-    /*
-    for(plugin in installedPlugins)
-    {
-      if(plugins[plugin])
-      {
-        this.addPluginIconForShift(plugin, aShift.id);
-      }
-      else
-      {
-        loadPlugin(plugin);
-      }
-    }
-    */
     
     // add it
     if (isActive) 

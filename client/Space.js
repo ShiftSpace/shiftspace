@@ -81,8 +81,9 @@ ShiftSpace.Space = new Class({
     if(this.__deferredContent__)
     {
       console.log('__deferredContent__');
+
       this.showInterface();
-      console.log(this.__deferredShifts__);
+      this.hideInterface();
 
       // load any deferred shifts
       this.__deferredShifts__.each(function(aShift) {
@@ -107,6 +108,12 @@ ShiftSpace.Space = new Class({
         SSShowNewShift(aShift.id);
       }.bind(this));
     }
+  },
+  
+  addDeferredNew: function(shift)
+  {
+    this.__deferredNewShifts__.push(shift);
+    this.__deferredContent__ = true;
   },
   
   addDeferredShift: function(shiftId)
@@ -301,7 +308,7 @@ ShiftSpace.Space = new Class({
     else
     {
       // we need to load these when the css is done
-      this.__deferredNewShifts__.push( newShiftJson );
+      this.addDeferredNew( newShiftJson );
     }
   },
   
@@ -368,7 +375,6 @@ ShiftSpace.Space = new Class({
   {
     if(!this.cssIsLoaded())
     {
-      console.log('css not loaded');
       this.__deferredShifts__.push(aShift);
     }
     else
@@ -386,10 +392,17 @@ ShiftSpace.Space = new Class({
       if( !cShift )
       {
         // add the shift if we don't have it already
-        this.addShift( aShift );
-        var cShift = this.shifts[aShift.id];
+        try
+        {
+          this.addShift( aShift );
+        }
+        catch(exc)
+        {
+          console.log(describeException(exc));
+        }
+        cShift = this.shifts[aShift.id];
       }
-    
+      
       if( cShift.canShow() )
       {
         // blur the old shift
@@ -400,7 +413,7 @@ ShiftSpace.Space = new Class({
         }
       
         this.setCurrentShift(cShift);
-      
+        
         // show the new shift and focus it
         if(!cShift.isVisible())
         {
