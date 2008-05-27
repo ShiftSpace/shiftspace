@@ -102,7 +102,7 @@ var ShiftSpace = new (function() {
       'Highlights': server + 'spaces/Highlights/Highlights.js',
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
     });
-
+    
     /*
     installed = {
       'Notes' : server + 'spaces/Notes/Notes.js',
@@ -320,6 +320,8 @@ var ShiftSpace = new (function() {
     
     function spaceForShift(shiftId)
     {
+      console.log(shifts[shiftId]);
+      console.log(spaces);
       return spaces[shifts[shiftId].space];
     }
     
@@ -1032,23 +1034,26 @@ var ShiftSpace = new (function() {
     
     */
     function deleteShift(shiftId) {
-        
-        var space = shifts[shiftId].space;
-        spaces[space].deleteShift(shiftId);
-        
-        if (focusedShiftId == shiftId) {
-            focusedShiftId = null;
-        }
-        
-        var params = {
-            id: shiftId
-        };
-        
-        serverCall('shift.delete', params, function() {
-            ShiftSpace.Console.removeShift(shiftId);
-            spaces[space].onShiftDelete(shiftId);
-            delete shifts[shiftId];
-        });
+      var space = spaceForShift(shiftId);
+      
+      // don't assume the space is loaded
+      if(space) space.deleteShift(shiftId);
+
+      if (focusedShiftId == shiftId) 
+      {
+        focusedShiftId = null;
+      }
+
+      var params = {
+        id: shiftId
+      };
+
+      serverCall('shift.delete', params, function() {
+        ShiftSpace.Console.removeShift(shiftId);
+        // don't assume the space is loaded
+        if(space) space.onShiftDelete(shiftId);
+        delete shifts[shiftId];
+      });
     }
     
     
@@ -2059,9 +2064,8 @@ if(InstallShiftSpace)
   }
   else
   {
+    // NOTE: Temporary fix for Safari, this would allow anyone to prevent SS from running.
+    window.__ShiftSpaceEnabled__ = true;
     ShiftSpace.initialize();
   }
 }
-
-// NOTE: Temporary fix for Safari, this would allow anyone to prevent SS from running.
-window.__ShiftSpaceEnabled__ = true;
