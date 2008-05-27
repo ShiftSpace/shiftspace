@@ -15,7 +15,16 @@ ShiftSpace.Element = new Class({
     {
       el.makeDraggable = function(options)
       {
-        var dragObj = dragFunc.bind(el, options)();
+        var dragObj;
+        if(!dragFunc)
+        {
+          dragObj = new Drag.Move(el, options);
+        }
+        else
+        {
+          dragObj = (dragFunc.bind(el, options))();
+        }
+
         dragObj.addEvent('onStart', ShiftSpace.addIframeCovers.bind(ShiftSpace));
         dragObj.addEvent('onDrag', ShiftSpace.updateIframeCovers.bind(ShiftSpace));
         dragObj.addEvent('onComplete', ShiftSpace.removeIframeCovers.bind(ShiftSpace));
@@ -26,7 +35,16 @@ ShiftSpace.Element = new Class({
       // override the default behavior
       el.makeResizable = function(options)
       {
-        var resizeObj = resizeFunc.bind(el, options)();
+        var resizeObj;
+        if(!resizeFunc)
+        {
+          resizeObj = new Drag.Base(el, $merge({modifiers: {x: 'width', y: 'height'}}, options));
+        }
+        else
+        {
+          resizeObj = (resizeFunc.bind(el, options))();
+        }
+        
         resizeObj.addEvent('onStart', ShiftSpace.addIframeCovers.bind(ShiftSpace));
         resizeObj.addEvent('onDrag', ShiftSpace.updateIframeCovers.bind(ShiftSpace));
         resizeObj.addEvent('onComplete', ShiftSpace.removeIframeCovers.bind(ShiftSpace));
@@ -34,7 +52,7 @@ ShiftSpace.Element = new Class({
         return resizeObj;
       }
     }
-    
+
     return el;
   }
 });
@@ -80,8 +98,10 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
         'class': "SSIframeCover"
       });
       cover.setStyle('display', 'none');
+
       // add it to the page
-      cover.injectInside(document.body);
+      cover.injectInside(window.document.body);
+      console.log('cover added');
 
       // let ShiftSpace know about it
       ShiftSpace.addCover({cover:cover, frame:this.frame});
