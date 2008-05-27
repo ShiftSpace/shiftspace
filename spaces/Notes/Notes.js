@@ -420,7 +420,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   buildBottom : function()
   {
     // create the bottom portion of the note
-    this.bottom = new Element('div', {
+    this.bottom = new ShiftSpace.Element('div', {
       'class': "SSNoteShiftBottom"
     });
     
