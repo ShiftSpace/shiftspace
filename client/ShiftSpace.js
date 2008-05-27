@@ -1815,7 +1815,7 @@ var ShiftSpace = new (function() {
       }
       var now = new Date();
       url += '&cache=' + now.getTime();
-      console.log("serverCall:" + url);
+      //console.log("serverCall:" + url);
       //GM_openInTab(url);
       var req = {
         method: 'POST',
@@ -1941,7 +1941,7 @@ var ShiftSpace = new (function() {
         dir = server + dir;
       }
       
-      console.log('loadStyle: ' + url);
+      //console.log('loadStyle: ' + url);
       loadFile(url, function(rx) {
         var css = rx.responseText;
         // this needs to be smarter, only works on directory specific urls
@@ -2045,11 +2045,10 @@ ShiftSpace.__externals__ = {
   }
 }
 
-// Only run in the top-most frame
+var InstallShiftSpace = (!window.webkit) ? (self == top) : (typeof window.parent.__ShiftSpaceEnabled__ == 'undefined');
+
 // This doesn't work in Safari for some reason
-if (self == top ||
-    (window.webkit &&
-     window.parent == window)) 
+if(InstallShiftSpace) 
 {
   // if in sandbox mode need to wait until the window is ready to open
   if(typeof ShiftSpaceSandBoxMode != 'undefined')
@@ -2063,3 +2062,6 @@ if (self == top ||
     ShiftSpace.initialize();
   }
 }
+
+// NOTE: Temporary fix for Safari, this would allow anyone to prevent SS from running.
+window.__ShiftSpaceEnabled__ = true;

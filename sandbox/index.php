@@ -22,6 +22,7 @@ if (!empty($_GET['id'])) {
   <body>
     <img src="logo.gif" alt="logo"></img>
     <img src="logos.png" alt="logos"></img>
+    <iframe width='300' height='300'></iframe>
   </body>
   
 </html>
