@@ -382,7 +382,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     // Get document reference and MooToolize the body
     var __notedoc__ = this.frame.contentDocument;
     this.frameBody = $(__notedoc__.body);
-    this.frameBody.setProperty('id', 'SSNoteShiftFrameBody');
+    this.frameBody.setAttribute('id', 'SSNoteShiftFrameBody');
 
     // create the text area
     this.inputArea = $(__notedoc__.createElement('textarea'));
