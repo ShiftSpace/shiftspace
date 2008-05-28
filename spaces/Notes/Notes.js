@@ -144,7 +144,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   revealControls : function( e )
   {
     // we don't want the event to continue
-    var evt = new Event(e);
+    var evt = new ShiftSpace.Event(e);
     evt.stopPropagation();
 
     this.closeButton.removeClass('SSHidden');
@@ -159,7 +159,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   hideControls : function( e )
   {
     // we don't want the even to continue
-    var evt = new Event(e);
+    var evt = new ShiftSpace.Event(e);
     evt.stopPropagation();
 
     this.closeButton.addClass('SSHidden');

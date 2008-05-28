@@ -122,3 +122,5 @@ ShiftSpace.Input = ShiftSpace.Element.extend({
   // set the input field / textarea to be position absolute, left top right bottom all 0
   // set up event handlers so they get pass up to the developer
 });
+
+ShiftSpace.Event = Event;
