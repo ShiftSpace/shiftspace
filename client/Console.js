@@ -831,7 +831,7 @@ var Console = new Class({
       }
       catch(exc)
       {
-        console.error('Exception adding shift to console: ' + SSDescribeException(exc));
+        console.error('Exception adding shift ' + shiftId + ' to console: ' + SSDescribeException(exc));
       }
     }
   },
@@ -953,10 +953,14 @@ var Console = new Class({
       }
     }.bind(this));
     
+    //console.log('mouse behaviors set');
+    
     var slideFx = new Fx.Slide($(controls), {
         duration: 250
     });
     slideFx.hide();
+    
+    //console.log('slide fx');
     
     newEntry.getElement('.expander').addEvent('click', function(e) {
       var event = new Event(e);
@@ -978,12 +982,14 @@ var Console = new Class({
       }
     }.bind(this));
     
+    //console.log('expando set');
+    
     controls.addEvent('click', function(e) {
       var event = new Event(e);
       event.stopPropagation();
     });
     
-    //console.log('basic click behaviors set');
+    //console.log('override click behavior');
     
     newEntry.getElement('.controls a.delete').addEvent('click', function(e) {
       var event = new Event(e);

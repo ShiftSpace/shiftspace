@@ -374,22 +374,18 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   finishFrame : function()
   {
-    var text = "Leave a note";
-    
     if(this.noteText)
     {
       text = this.noteText.replace(/<br\/>/g, "\n");
     }
-    console.log('>>>>>>>>>>>>>>>>>>> NOTE TEXT');
-    console.log(this.noteText);
     
     // Get document reference and MooToolize the body
-    var doc = this.frame.contentDocument;
-    this.frameBody = $(doc.body);
+    var __notedoc__ = this.frame.contentDocument;
+    this.frameBody = $(__notedoc___.body);
     this.frameBody.setProperty('id', 'SSNoteShiftFrameBody');
 
     // create the text area
-    this.inputArea = $(doc.createElement('textarea'));
+    this.inputArea = $(__notedoc___.createElement('textarea'));
     this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
     this.inputArea.injectInside( this.frameBody );
     this.inputArea.setProperty('value', text);

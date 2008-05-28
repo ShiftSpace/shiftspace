@@ -1967,14 +1967,14 @@ Fx.Slide = Fx.Base.extend({
 
 	initialize: function(el, options){
 		this.element = $(el);
-		/*
+    /*
 		this.wrapper = new Element('div', {'styles': $extend(this.element.getStyles('margin'), {'overflow': 'hidden'})}).injectAfter(this.element).adopt(this.element);
 		*/
-		
 		// start mod
-		this.wrapper = new Element('div', {'styles': $extend(this.element.getStyles('margin'), {'overflow': 'hidden'})}).injectAfter(this.element);
+		this.wrapper = new Element('div', {'styles': $extend({'margin':this.element.getStyle('margin')}, {'overflow': 'hidden'})}).injectAfter(this.element);
 		this.wrapper = $(this.wrapper);
-		this.wrapper.adopt(this.element);
+		//this.wrapper.adopt(this.element);
+		this.element.injectInside(this.wrapper);
 		// end mod
 		
 		this.element.setStyle('margin', 0);
@@ -1985,6 +1985,7 @@ Fx.Slide = Fx.Base.extend({
 		this.addEvent('onComplete', function(){
 			this.open = (this.now[0] === 0);
 		});
+		console.log('almost there');
 		if (window.webkit419) this.addEvent('onComplete', function(){
 			if (this.open) this.element.remove().inject(this.wrapper);
 		});
