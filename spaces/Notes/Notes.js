@@ -78,7 +78,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       // otherwise set the position of the note to the mouse
       // or the last saved absolute position
-      /*
       if(json.position)
       {
         this.element.setStyles({
@@ -86,7 +85,6 @@ var NotesShift = ShiftSpace.Shift.extend({
           top : json.position.y
         });
       }
-      */
     }
 
     //this.refresh();
