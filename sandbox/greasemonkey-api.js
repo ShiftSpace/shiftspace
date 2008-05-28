@@ -13,36 +13,18 @@ function GM_addStyle(css) {
 }
 
 function GM_getValue(key, defaultValue) {
-  //console.log('GM_getValue, ' + key);
   var xhr = new XHR({
-    'async': false,
-    onSuccess: function(r)
-    {
-      //console.log(r);
-    },
-    onFailure: function(r)
-    {
-      //console.log(r);
-    }
+    'async': false
   });
   xhr.send('../shiftspace.php?method=sandbox.getvalue',
            'key=' + encodeURIComponent(key) + '&' +
            'default=' + encodeURIComponent(defaultValue));
-  //if(key == 'server') console.log('==================================== ' + xhr.response.text);
   return xhr.response.text;
 }
 
 function GM_setValue(key, value) {
   var xhr = new XHR({
-    'async': false,
-    onSuccess: function(r)
-    {
-      //console.log(r);
-    },
-    onFailure: function(r)
-    {
-      //console.log(r);
-    }
+    'async': false
   });
   xhr.send('../shiftspace.php?method=sandbox.setvalue',
            'key=' + encodeURIComponent(key) + '&' +

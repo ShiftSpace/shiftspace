@@ -3,10 +3,7 @@ var username;
 var User = new Class({
   
     initialize: function() {
-      username = getValue('username', '');
-      if (username == '') {
-        username = false;
-      }
+      username = getValue('username', false);
     },
     
     getUsername: function() {
@@ -42,7 +39,7 @@ var User = new Class({
       serverCall('user.join', userInfo, function(json) {
         if (json.status) {
           username = userInfo.username;
-          GM_setValue('username', userInfo.username);
+          setValue('username', userInfo.username);
           callback(json);
         } else {
           callback(json);

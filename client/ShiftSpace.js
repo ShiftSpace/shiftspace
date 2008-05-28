@@ -1898,17 +1898,10 @@ var ShiftSpace = new (function() {
     */
     function getValue(key, defaultValue) {
       var result = GM_getValue(key, Json.toString(defaultValue));
-      if (key == 'username') {
-        console.log(result);
-        console.log(typeof result);
-      }
       // Fix for GreaseKit, which doesn't support default values
-      if (result == null) 
-      {
+      if (result == null) {
         return defaultValue;
-      } 
-      else 
-      {
+      } else {
         return Json.evaluate(result);
       }
     }
