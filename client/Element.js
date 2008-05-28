@@ -104,7 +104,7 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
 
       // add it to the page
       cover.injectInside(window.document.body);
-      console.log('cover added');
+      //console.log('cover added');
 
       // let ShiftSpace know about it
       ShiftSpace.addCover({cover:cover, frame:this.frame});

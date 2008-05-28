@@ -655,6 +655,9 @@ var ShiftSpace = new (function() {
             }
           });
           
+          var size = window.getSize();
+
+          if(window.webkit) window.scrollTo(ShiftSpace.__windowScroll__.x, ShiftSpace.__windowScroll__.y);
           scrollFx.scrollTo(pos.x-25, pos.y-25);
         }
       }
@@ -749,12 +752,16 @@ var ShiftSpace = new (function() {
         // wrap this in a try catch
         //try
         //{
+        // store the scroll
+        if(window.webkit) ShiftSpace.__windowScroll__ = window.getSize().scroll;
+        
         spaces[shift.space].showShift(shiftJson);
         //}
         //catch(err)
         //{
           //console.log('Exception: ' + Json.toString(err));
         //}
+        
         focusShift(shift.id);
       }
 
