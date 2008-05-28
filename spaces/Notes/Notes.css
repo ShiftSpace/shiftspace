@@ -1,10 +1,13 @@
 /* Main style for the Note Shift ---------------------------- */
 .SSNoteShift
 {
-  position : absolute;
+  position: absolute;
+  top: 0px;
+  left: 0px;
   background-color: #F5FB9B;
   min-width : 120px;
   min-height: 120px;
+  /* The following 2 are for Safari - David */
   overflow-x: visible;
   overflow-y: visible;
   z-index: 1;
