@@ -378,6 +378,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     if(this.noteText)
     {
       text = this.noteText.replace(/<br\/>/g, "\n");
+      console.log('replaced ' + text);
     }
     
     // Get document reference and MooToolize the body
