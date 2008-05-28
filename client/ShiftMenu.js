@@ -21,7 +21,7 @@ var ShiftMenu = new Class({
         width: (26 * spaces.length)
       }
     }).injectInside(this.element);
-    this.element.injectInside(document.body);
+    this.element.injectInside(window.document.body);
     
     console.log(installed);
     for (var spaceName in installed) {

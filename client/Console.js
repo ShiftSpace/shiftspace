@@ -12,11 +12,11 @@ var Console = new Class({
   
   */
   buildFrame: function() {
-    
     var consoleHeight = getValue('console.height', 150);
-    this.frame = new ShiftSpace.Element('iframe', {
+    this.frame = new ShiftSpace.Iframe({
       id: 'ShiftSpaceConsole',
-      styles: {
+      styles: 
+      {
         display: 'none',
         position: 'fixed',
         bottom: 0,
@@ -26,26 +26,25 @@ var Console = new Class({
         overflow: 'hidden',
         'z-index': 1000001
       },
-      events: {
-        load: function() {
-          // store a ref for convenience
-          this.doc = this.frame.contentDocument;
-          // create the model shift
-          this.createShiftEntryModel();
-          
-          // load the style for document
-          this.loadStyle();
-          
-          this.buildNotifier();
-          
-          this.doc.addEventListener('keydown',  keyDownHandler.bind(ShiftSpace), false);
-          this.doc.addEventListener('keyup',    keyUpHandler.bind(ShiftSpace), false);
-          this.doc.addEventListener('keypress', keyPressHandler.bind(ShiftSpace), false);
-          
-        }.bind(this)
-      }
+      onload: function() 
+      {
+        // store a ref for convenience
+        this.doc = this.frame.contentDocument;
+        // create the model shift
+        this.createShiftEntryModel();
+
+        // load the style for document
+        this.loadStyle();
+
+        this.buildNotifier();
+
+        this.doc.addEventListener('keydown',  keyDownHandler.bind(ShiftSpace), false);
+        this.doc.addEventListener('keyup',    keyUpHandler.bind(ShiftSpace), false);
+        this.doc.addEventListener('keypress', keyPressHandler.bind(ShiftSpace), false);
+
+      }.bind(this)
     });
-    this.frame.injectInside(document.body);
+    this.frame.injectInside(window.document.body);
     
     this.resizer = new ShiftSpace.Element('div', {
       'id': 'SSShiftConsoleResizer',
@@ -59,13 +58,16 @@ var Console = new Class({
         'z-index': 1000002
       }
     });
-    this.resizer.injectInside(document.body);
+    this.resizer.injectInside(window.document.body);
     
+    //console.log(this.resizer.makeDraggable);
     this.resizer.makeDraggable({
-      limit: {
+      limit: 
+      {
         x: [25, 25]
       },
-      onStart: function() {
+      onStart: function() 
+      {
         this.startDrag = this.resizer.getPosition().y;
         this.startHeight = this.frame.getSize().size.y;
         // to prevent things from dropping into the iframe.
@@ -80,18 +82,23 @@ var Console = new Class({
             cursor: 'ns-resize'
           }
         });
-        this.resizeMask.injectInside(document.body);
+        this.resizeMask.injectInside(window.document.body);
       }.bind(this),
-      onDrag: function() {
+      
+      onDrag: function() 
+      {
         var dy = this.resizer.getPosition().y - this.startDrag;
         this.frame.setStyle('height', this.startHeight - dy);
         this.refresh();
       }.bind(this),
+      
       onComplete: function() {
         this.resizeMask.remove();
         setValue('console.height', parseInt(this.frame.getStyle('height')));
       }.bind(this)
+      
     });
+    
   },
     
   buildNotifier: function() {
@@ -121,7 +128,7 @@ var Console = new Class({
       }
     });
     img.injectInside(this.notifier);
-    this.notifier.injectInside(document.body);
+    this.notifier.injectInside(window.document.body);
     
     img.addEvent('click', function() {
       if (!this.isVisible()) {
@@ -817,7 +824,14 @@ var Console = new Class({
   addShifts: function(shifts) {
     for (var shiftId in shifts) {
       var shift = shifts[shiftId];
-      this.addShift(shift);
+      try
+      {
+        this.addShift(shift);
+      }
+      catch(exc)
+      {
+        console.error('Exception adding shift to console: ' + SSDescribeException(exc));
+      }
     }
   },
   
@@ -888,8 +902,11 @@ var Console = new Class({
   
   */
   addShift: function(aShift, isActive) {
+    //console.log('adding - ' + aShift.id);
     // clone a model shift
     var newEntry = $(this.modelShiftEntry.clone(true));
+    
+    //console.log(newEntry);
     
     var controls = newEntry.getElement('.controls');
     
@@ -904,6 +921,8 @@ var Console = new Class({
     newEntry.getElement('.user').setHTML(aShift.username);
     
     newEntry.getElement('.SSPermaLink').setProperty('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
+    
+    //console.log('main props set');
     
     newEntry.addEvent('mouseover', function() {
       if (!newEntry.hasClass('active') && !newEntry.hasClass('expanded')) 
@@ -963,6 +982,8 @@ var Console = new Class({
       event.stopPropagation();
     });
     
+    //console.log('basic click behaviors set');
+    
     newEntry.getElement('.controls a.delete').addEvent('click', function(e) {
       var event = new Event(e);
       event.preventDefault();
@@ -1004,6 +1025,9 @@ var Console = new Class({
       evt.stop();
     });
     
+    //console.log('--------------------------------- about to inject');
+    //console.log(this.doc);
+    
     // add it
     if (isActive) 
     {
@@ -1012,8 +1036,11 @@ var Console = new Class({
     } 
     else 
     {
+      //console.log($(this.doc.getElementById('shifts')));
       newEntry.injectInside($(this.doc.getElementById('shifts')));
     }
+    
+    //console.log('------------------------------ added');
     
     this.shiftCount++;
     this.updateCount();

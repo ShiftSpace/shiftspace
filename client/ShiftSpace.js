@@ -83,6 +83,8 @@ var ShiftSpace = new (function() {
     var displayList = [];
     var pinWidgets = [];
     var __recentlyViewedShifts__ = {};
+    // TODO: make private
+    this.covers = [];
     
     // Exceptions
     var __SSPinOpException__ = "__SSPinOpException__";
@@ -133,7 +135,7 @@ var ShiftSpace = new (function() {
     
     */
     this.initialize = function() {
-      console.log("Initializing ShiftSpace (debug enabled)");
+      console.log("Initializing ShiftSpace");
 
       debug = 0;
 
@@ -142,12 +144,14 @@ var ShiftSpace = new (function() {
       // INCLUDE Element.js
       // INCLUDE Space.js
       // INCLUDE Shift.js
-      // INCLUDE Console.js
-      // INCLUDE ShiftMenu.js
       // INCLUDE RangeCoder.js
       // INCLUDE Pin.js
       // INCLUDE PinWidget.js
       // INCLUDE Plugin.js
+      // INCLUDE ShiftMenu.js
+      // INCLUDE Console.js  
+          
+      console.log('ShiftSpace Core loaded');
 
       // Load CSS styles
       loadStyle('styles/ShiftSpace.css');
@@ -184,11 +188,10 @@ var ShiftSpace = new (function() {
         });
       });
 
-      // iframe covers
-      this.covers = [];
-
       // create the pin selection bounding box
       createPinSelect();
+
+      console.log('Grabbing content');
 
       // See if there's anything on the current page
       checkForContent();
@@ -269,7 +272,7 @@ var ShiftSpace = new (function() {
         }
         catch(err)
         {
-          console.log('content failed to load');
+          console.error('Error: content for shift ' + shiftId +' failed to load');
           console.log(content);
           //throw __SSCouldNotEvalShiftContentException__
         }
@@ -280,16 +283,6 @@ var ShiftSpace = new (function() {
       {
         return {};
       }
-    }
-    
-    function describeException(_exception)
-    {
-      var temp = [];
-      for(prop in _exception)
-      {
-        temp.push(prop + ':' + _exception[prop]);
-      }
-      return "Exception:{ " + temp.join(', ') +" }";
     }
     
     function getAllShiftContent()
@@ -320,8 +313,8 @@ var ShiftSpace = new (function() {
     
     function spaceForShift(shiftId)
     {
-      console.log(shifts[shiftId]);
-      console.log(spaces);
+      //console.log(shifts[shiftId]);
+      //console.log(spaces);
       return spaces[shifts[shiftId].space];
     }
     
@@ -729,17 +722,17 @@ var ShiftSpace = new (function() {
       // load the space first
       if(!space)
       {
-        console.log('space not loaded');
+        //console.log('space not loaded');
         loadSpace(shift.space, shiftId);
         return;
       }
       if(!space.cssIsLoaded())
       {
-        console.log('css not loaded');
+        //console.log('css not loaded');
         space.addDeferredShift(shiftJson);
         return;
       }
-      console.log('showing');
+      //console.log('showing');
       
       // fix legacy content
       shiftJson.legacy = shift.legacy;
@@ -839,6 +832,7 @@ var ShiftSpace = new (function() {
             href: window.location.href
         };
         serverCall('shift.query', params, function(json) {
+            //console.log('got the content');
             json.each(function(shift) {
                 shifts[shift.id] = shift;
                 
@@ -911,8 +905,8 @@ var ShiftSpace = new (function() {
     
     */
     function saveShift(shiftJson) {
-        console.log('saveShift');
-        console.log(shiftJson);
+        //console.log('saveShift');
+        //console.log(shiftJson);
         
         if (shiftJson.id.substr(0, 8) == 'newShift') {
             return saveNewShift(shiftJson);
@@ -1526,6 +1520,8 @@ var ShiftSpace = new (function() {
       url.substr(0, 8) != 'https://') {
         url = server + url;
       }
+      
+      //console.log('loadFile:' + url);
 
       // Caching is implemented as a rather blunt instrument ...
       if (!cacheFiles) {
@@ -1537,7 +1533,7 @@ var ShiftSpace = new (function() {
         // ... or use getValue to retrieve the file's contents
         var cached = getValue('cache.' + url, false);
         if (cached) {
-          console.log('Loading ' + url + ' from cache');
+          //console.log('Loading ' + url + ' from cache');
           callback({
             responseText: cached
           });
@@ -1546,7 +1542,7 @@ var ShiftSpace = new (function() {
       }
 
       // Load the URL then execute the callback
-      //log('Loading ' + url + ' from network');
+      //console.log('Loading ' + url + ' from network');
       GM_xmlhttpRequest({
         'method': 'GET',
         'url': url,
@@ -1560,8 +1556,12 @@ var ShiftSpace = new (function() {
           if (typeof callback == 'function') {
             callback(response);
           }
+        },
+        'onerror': function(response) {
+          console.error("Error: failed GM_xmlhttpRequest, " + response);
         }
       });
+
       return true;
     }
     
@@ -1610,7 +1610,7 @@ var ShiftSpace = new (function() {
             }
             catch(exc)
             {
-              console.error('Error loading ' + space + ' Space - ' + describeException(exc));
+              console.error('Error loading ' + space + ' Space - ' + SSDescribeException(exc));
             }
             
             if (pendingShift)
@@ -1725,7 +1725,7 @@ var ShiftSpace = new (function() {
           }
           catch(exc) 
           {
-            console.error('Error loading ' + plugin + ' Plugin - ' + describeException(exc));
+            console.error('Error loading ' + plugin + ' Plugin - ' + SSDescribeException(exc));
           }
           
           if(callback) callback();
@@ -1784,7 +1784,7 @@ var ShiftSpace = new (function() {
               }
               catch(exc)
               {
-                console.error('Error loading ' + include + ' include for ' + plugin.attributes.name + ' Plugin - ' + describeException(exc));
+                console.error('Error loading ' + include + ' include for ' + plugin.attributes.name + ' Plugin - ' + SSDescribeException(exc));
               }
             });
           });
@@ -1820,7 +1820,7 @@ var ShiftSpace = new (function() {
       }
       var now = new Date();
       url += '&cache=' + now.getTime();
-      //console.log("serverCall:" + url);
+      console.log("serverCall:" + url);
       //GM_openInTab(url);
       var req = {
         method: 'POST',
@@ -1946,7 +1946,7 @@ var ShiftSpace = new (function() {
         dir = server + dir;
       }
       
-      //console.log('loadStyle: ' + url);
+      console.log('loadStyle: ' + url);
       loadFile(url, function(rx) {
         var css = rx.responseText;
         // this needs to be smarter, only works on directory specific urls
@@ -2050,10 +2050,18 @@ ShiftSpace.__externals__ = {
   }
 }
 
-var InstallShiftSpace = (!window.webkit) ? (self == top) : (typeof window.parent.__ShiftSpaceEnabled__ == 'undefined');
+// For errors in Safari because many errors are silent in GreaseKit
+function SSDescribeException(_exception)
+{
+  var temp = [];
+  for(prop in _exception)
+  {
+    temp.push(prop + ':' + _exception[prop]);
+  }
+  return "Exception:{ " + temp.join(', ') +" }";
+}
 
-// This doesn't work in Safari for some reason
-if(InstallShiftSpace) 
+if(self == top) 
 {
   // if in sandbox mode need to wait until the window is ready to open
   if(typeof ShiftSpaceSandBoxMode != 'undefined')
@@ -2064,8 +2072,13 @@ if(InstallShiftSpace)
   }
   else
   {
-    // NOTE: Temporary fix for Safari, this would allow anyone to prevent SS from running.
-    window.__ShiftSpaceEnabled__ = true;
-    ShiftSpace.initialize();
+    try
+    {
+      ShiftSpace.initialize();
+    }
+    catch(exc)
+    {
+      console.error("Unable to install ShiftSpace :(, " + SSDescribeException(exc));
+    }
   }
 }
