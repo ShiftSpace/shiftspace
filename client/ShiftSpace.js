@@ -113,7 +113,7 @@ var ShiftSpace = new (function() {
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
     };
     */
-    
+
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
       'Trails' : server + 'plugins/Trails/NewTrail.js'
@@ -147,7 +147,9 @@ var ShiftSpace = new (function() {
       // INCLUDE PinWidget.js
       // INCLUDE Plugin.js
       // INCLUDE ShiftMenu.js
+      console.log('ShiftMenu loaded');
       // INCLUDE Console.js  
+      console.log('Console loaded');
           
       console.log('ShiftSpace Core loaded');
 
@@ -972,16 +974,12 @@ var ShiftSpace = new (function() {
             shifts[shiftJson.id] = shiftJson;
             space.shifts[shiftJson.id] = shiftObj;
             
+            // add and show the shift
             ShiftSpace.Console.addShift(shiftJson, true);
+            ShiftSpace.Console.showShift(shiftJson.id);
             
             // call onShiftSave
             space.onShiftSave(shiftJson.id);
-            
-            // open the console if it isn't already open
-            if(!ShiftSpace.Console.isVisible())
-            {
-              ShiftSpace.Console.show();
-            }
         });
     }
     
@@ -1269,6 +1267,7 @@ var ShiftSpace = new (function() {
     
     function pinMouseClickHandler(_evt) {
       var evt = new Event(_evt);
+      evt.stop();
       if(currentPinWidget)
       {
         if(ShiftSpace.PinSelect.getParent()) ShiftSpace.PinSelect.remove();
