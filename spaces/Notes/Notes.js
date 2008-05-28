@@ -388,7 +388,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     // create the text area
     this.inputArea = $(__notedoc__.createElement('textarea'));
     this.inputArea.setAttribute('class', 'SSNoteShiftTextArea');
-    this.inputArea.injectInside( this.frameBody );
+    $(this.inputArea).injectInside( this.frameBody );
     this.inputArea.setAttribute('value', text);
     this.inputArea.focus();
   
