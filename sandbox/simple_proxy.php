@@ -198,6 +198,7 @@ foreach ($shift_ids as $an_id)
 	}
 	theShift = \$merge(theShift, {id:'$shiftId'});
 
+  $spaceName.setCssLoaded(true);
 	$spaceName.showShift(theShift);
 	$spaceName.orderFront('$shiftId');
       });
