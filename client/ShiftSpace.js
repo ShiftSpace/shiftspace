@@ -576,7 +576,7 @@ var ShiftSpace = new (function() {
       showShift(shiftId);
       space.onShiftCreate(shiftId);
       editShift(shiftId);
-      focusShift(shiftId);
+      focusShift(shiftId, false);
     }
     
     
@@ -615,7 +615,7 @@ var ShiftSpace = new (function() {
       // scroll the window if necessary
       var mainView = space.mainViewForShift(shiftId);
       
-      if(mainView)
+      if(mainView && !SSIsNewShift(shiftId))
       {
         var pos = mainView.getPosition();
         var vsize = mainView.getSize().size;
@@ -634,36 +634,24 @@ var ShiftSpace = new (function() {
         {
           var scrollFx = new Fx.Scroll(window, {
             duration: 1000,
-            transition: Fx.Transitions.Cubic.easeIn,
-            onComplete: function()
-            {
-              // correct for safari
-              if(window.webkit)
-              {
-                var winScroll = window.getSize().scroll;
-                if((rightScroll && windowScroll.x < pos.x-25) ||
-                   (leftScroll && windowScroll.x > pos.x-25)) 
-                {
-                  window.scrollTo(pos.x-25, 0);
-                }
-                if((downScroll && windowScroll.y < pos.y-25) ||
-                   (upScroll && windowScroll.y > pos.y-25))
-                {
-                  window.scrollTo(0, pos.y-25);
-                }
-              }
-            }
+            transition: Fx.Transitions.Cubic.easeIn
           });
           
           var size = window.getSize();
 
-          if(window.webkit) window.scrollTo(ShiftSpace.__windowScroll__.x, ShiftSpace.__windowScroll__.y);
-          scrollFx.scrollTo(pos.x-25, pos.y-25);
+          if(!window.webkit)
+          {
+            scrollFx.scrollTo(pos.x-25, pos.y-25);
+          }
+          else
+          {
+            window.scrollTo(pos.x-25, pos.y-25);
+          }
         }
       }
       else
       {
-        console.log('+++++++++++++++++++++++++++++++++++++++ NO MAIN VIEW');
+        //console.log('+++++++++++++++++++++++++++++++++++++++ NO MAIN VIEW');
       }
     }
     
@@ -752,9 +740,6 @@ var ShiftSpace = new (function() {
         // wrap this in a try catch
         //try
         //{
-        // store the scroll
-        if(window.webkit) ShiftSpace.__windowScroll__ = window.getSize().scroll;
-        
         spaces[shift.space].showShift(shiftJson);
         //}
         //catch(err)
@@ -1014,13 +999,15 @@ var ShiftSpace = new (function() {
       {
         var shiftJson = getShiftContent(shiftId);
 
+        // show the interface
+        focusSpace(space, (shiftJson && shiftJson.position) || null);
+
         // then edit it
         space.editShift(shiftId);
         space.onShiftEdit(shiftId);
         
-        // show the space interface
+        // focus the shift
         focusShift(shiftId);
-        focusSpace(space, (shiftJson && shiftJson.position) || null);
       }
       else
       {
