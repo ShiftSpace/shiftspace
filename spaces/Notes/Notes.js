@@ -39,7 +39,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     }
     
     // store a noteText ref
-    this.noteText = json.noteText || null;
+    this.noteText = (json.noteText && json.noteText.replace(/<br\/>/g, "\n")) || null;
     
     // build the DOM
     this.build();
@@ -225,6 +225,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     });
   },
   
+  
   show: function()
   {
     this.parent();
@@ -377,8 +378,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     var text = 'Leave a note';
     if(this.noteText)
     {
-      text = this.noteText.replace(/<br\/>/g, "\n");
-      console.log('replaced ' + text);
+      text = this.noteText;
     }
     
     // Get document reference and MooToolize the body
@@ -394,12 +394,12 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.inputArea.focus();
   
     this.inputArea.addEvent('mousedown', function() {
-     this.focus();
-     // clear out Leave a note
-     if(this.inputArea.getProperty('value') == "Leave a note")
-     {
-       this.inputArea.setProperty('value', '');
-     }
+      this.focus();
+      // clear out Leave a note
+      if(this.inputArea.getProperty('value') == "Leave a note")
+      {
+        this.inputArea.setProperty('value', '');
+      }
     }.bind(this));
     this.inputArea.setProperty('readonly', 1);
   
