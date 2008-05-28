@@ -29,10 +29,10 @@ License:
     - Mozilla Public License
 
 Credits:
-    - Created by Mushon Zer-Aviv, Dan Phiffer, Avital Oliver, David Buchbut and
-      David Nolen
-    - Thanks to Clay Shirky, Joe Moore, Johan Sundström, Eric Heitzman, 
-      Jakob Hilden, _why, Aaron Boodman and Nancy Hechinger
+    - Created by Mushon Zer-Aviv, Dan Phiffer, Avital Oliver, David Buchbut,
+      David Nolen and Joe Moore
+    - Thanks to Clay Shirky, Johan Sundstrom, Eric Heitzman, Jakob Hilden,
+      _why, Aaron Boodman and Nancy Hechinger
 
 */
 
@@ -135,8 +135,6 @@ var ShiftSpace = new (function() {
     
     */
     this.initialize = function() {
-      console.log("Initializing ShiftSpace");
-
       debug = 0;
 
       // Load external scripts (pre-processing required)
@@ -785,6 +783,7 @@ var ShiftSpace = new (function() {
       };
       serverCall('query', params, function(json) {
         if (!json.status) {
+          console.error('Error checking for content: ' + json.message);
           return;
         }
         if (json.user) {
@@ -820,36 +819,38 @@ var ShiftSpace = new (function() {
     
     */
     function loadShifts() {
-        var params = {
-            href: window.location.href
-        };
-        serverCall('shift.query', params, function(json) {
-            //console.log('got the content');
-            json.each(function(shift) {
-                shifts[shift.id] = shift;
-                
-                if(['notes', 'highlight', 'sourceshift', 'imageswap'].contains(shift.space))
-                {
-                  shift.space = shift.space.capitalize();
-                  shift.legacy = true;
-                }
-                if(shift.space == 'Highlight')
-                {
-                  shift.space += 's';
-                }
-                if(shift.space == 'Sourceshift')
-                {
-                  shift.space = 'SourceShift';
-                }
-                if(shift.space == 'Imageswap')
-                {
-                  shift.space = 'ImageSwap';
-                }
-            });
-            //console.log('(loadshifts)-----------------------------------------------------');
-            //console.log(json);
-            ShiftSpace.Console.addShifts(shifts);
-        });
+      
+      var params = {
+          href: window.location.href
+      };
+      serverCall('shift.query', params, function(json) {
+          if (!json.status) {
+            console.error('Error loading shifts: ' + json.message);
+            return;
+          }
+          json.shifts.each(function(shift) {
+            shifts[shift.id] = shift;
+            
+            if(['notes', 'highlight', 'sourceshift', 'imageswap'].contains(shift.space))
+            {
+              shift.space = shift.space.capitalize();
+              shift.legacy = true;
+            }
+            if(shift.space == 'Highlight')
+            {
+              shift.space += 's';
+            }
+            if(shift.space == 'Sourceshift')
+            {
+              shift.space = 'SourceShift';
+            }
+            if(shift.space == 'Imageswap')
+            {
+              shift.space = 'ImageSwap';
+            }
+          });
+          ShiftSpace.Console.addShifts(shifts);
+      });
     }
     
     // call to get just the shifts that are needed
@@ -876,11 +877,15 @@ var ShiftSpace = new (function() {
       newShiftIds = shiftIds;
 
       // put these together
-      var params = { shiftIds: newShiftIds.join(',') };
+      var params = { id: newShiftIds.join(',') };
       
-      serverCall('shift.get', params, function(json) {
+      serverCall('shift.query', params, function(json) {
+        if (!json.status) {
+          console.error('Error getting shifts: ' + json.message);
+          return;
+        }
         // should probably filter out any uncessary data
-        json.each(function(x) {
+        json.shifts.each(function(x) {
           finalJson[x.id] = x;
         });
         
@@ -897,28 +902,32 @@ var ShiftSpace = new (function() {
     
     */
     function saveShift(shiftJson) {
-        //console.log('saveShift');
-        //console.log(shiftJson);
-        
-        if (shiftJson.id.substr(0, 8) == 'newShift') {
-            return saveNewShift(shiftJson);
+      //console.log('saveShift');
+      //console.log(shiftJson);
+      
+      if (shiftJson.id.substr(0, 8) == 'newShift') {
+        return saveNewShift(shiftJson);
+      }
+      
+      var space = spaces[shiftJson.space];
+      var params = {
+        id: shiftJson.id, // TODO: handle this in a more secure way
+        summary: shiftJson.summary,
+        content: Json.toString(shiftJson),
+        version: space.attributes.version,
+        username: ShiftSpace.user.getUsername()
+      };
+      
+      serverCall('shift.update', params, function(json) {
+        if (!json.status) {
+          console.error(json.message);
+          return;
         }
-        
-        var space = spaces[shiftJson.space];
-        var params = {
-            id: shiftJson.id, // TODO: handle this in a more secure way
-            summary: shiftJson.summary,
-            content: Json.toString(shiftJson),
-            version: space.attributes.version,
-            username: ShiftSpace.user.getUsername()
-        };
-        
-        serverCall('shift.update', params, function() {
-            ShiftSpace.Console.updateShift(shiftJson);
-            // call onShiftSave
-            spaces[shiftJson.space].onShiftSave(shiftJson.id);
-        });
-        
+        ShiftSpace.Console.updateShift(shiftJson);
+        // call onShiftSave
+        spaces[shiftJson.space].onShiftSave(shiftJson.id);
+      });
+      
     }
     
     /*
@@ -938,22 +947,27 @@ var ShiftSpace = new (function() {
             version: space.attributes.version
         };
         
-        serverCall('shift.create', params, function(responseJson) {
+        serverCall('shift.create', params, function(json) {
+            
+            if (!json.status) {
+              console.error(json.message);
+              return;
+            }
             
             shiftJson.username = ShiftSpace.user.getUsername();
             
             // with the real value
             var shiftObj = space.shifts[shiftJson.id];
-            shiftObj.setId(responseJson.url_slug);
+            shiftObj.setId(json.id);
             
             // delete the temporary stuff
             delete shifts[shiftJson.id];
             delete space.shifts[shiftJson.id];
             
             if (focusedShiftId == shiftJson.id) {
-                focusedShiftId = responseJson.url_slug;
+                focusedShiftId = json.id;
             }
-            shiftJson.id = responseJson.url_slug;
+            shiftJson.id = json.id;
             shiftJson.content = Json.toString(shiftJson);
             shifts[shiftJson.id] = shiftJson;
             space.shifts[shiftJson.id] = shiftObj;
@@ -1036,7 +1050,11 @@ var ShiftSpace = new (function() {
         id: shiftId
       };
 
-      serverCall('shift.delete', params, function() {
+      serverCall('shift.delete', params, function(json) {
+        if (!json.status) {
+          console.error(json.message);
+          return;
+        }
         ShiftSpace.Console.removeShift(shiftId);
         // don't assume the space is loaded
         if(space) space.onShiftDelete(shiftId);
@@ -1814,7 +1832,7 @@ var ShiftSpace = new (function() {
       }
       var now = new Date();
       url += '&cache=' + now.getTime();
-      console.log("serverCall:" + url);
+      
       //GM_openInTab(url);
       var req = {
         method: 'POST',
@@ -1823,16 +1841,7 @@ var ShiftSpace = new (function() {
         onload: function(rx) {
           if (typeof callback == 'function') {
             var json = Json.evaluate(rx.responseText);
-            // NOTE: this needs to be changed but until there is something complete to replace it, do not replace
-            // because if errors are not caught some things work that should immediately fail - David
-            if(json.status == '0')
-            {
-              console.error('Error: ' + method + " failed, " + json.message);
-            }
-            else
-            {
-              callback(json);
-            }
+            callback(json);
           }
         },
         onerror: function(err) {
@@ -1889,6 +1898,10 @@ var ShiftSpace = new (function() {
     */
     function getValue(key, defaultValue) {
       var result = GM_getValue(key, Json.toString(defaultValue));
+      if (key == 'username') {
+        console.log(result);
+        console.log(typeof result);
+      }
       // Fix for GreaseKit, which doesn't support default values
       if (result == null) 
       {

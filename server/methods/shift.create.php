@@ -1,8 +1,11 @@
 <?php
 
 if (empty($user) || empty($user->id)) {
-    echo "{status: 0, message:'User not logged in'}";
-    exit;
+  $options = array(
+    'authenticate' => true
+  );
+  response(0, 'Oops your session expired, please need to login and try again.', $options);
+  exit;
 }
 
 if (!empty($_POST['href'])) {
@@ -67,10 +70,6 @@ $db->query("
     VALUES ($user->id, '$space', '$href', '$summary', '$content', '$url_slug', '$created', '$modified', '$version')
 ");
 
-/*
-[dphiffer]
-TODO: This should be contingent on the success of the post
-*/
-echo "{status: 1, url_slug: '$url_slug'}";
+echo "{\"status\":1,\"id\":\"$url_slug\"}";
 
 ?>

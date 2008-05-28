@@ -1,77 +1,66 @@
 <?php
 
-if (!empty($_SERVER['HTTP_REFERER'])) {
-    $href = $db->escape($_SERVER['HTTP_REFERER']);
-} else {
-    $href = $db->escape(@$_POST['href']);
+if (!empty($_REQUEST['href'])) {
+  $href = normalize_url($_REQUEST['href']);
+  $href = $db->escape($href);
+  $shift_clause = "s.href = '$href'";
+} else if (!empty($_REQUEST['id'])) {
+  $id = $db->escape($_REQUEST['id']);
+  if (strpos($id, ',') === false) {
+    $shift_clause = "s.url_slug = '$id'";
+  } else {
+    $id = explode(',', $id);
+    $id = "'" . implode("','", $id) . "'";
+    $shift_clause = "s.url_slug IN ($id)";
+  }
+} else if (!empty($_SERVER['HTTP_REFERER'])) {
+  $href = normalize_url($_SERVER['HTTP_REFERER']);
+  $href = $db->escape($href);
+  $shift_clause = "s.href = '$href'";
 }
 
-if (empty($href)) {
-    echo '[]';
-    exit;
-}
-
-$anchor_pos = strpos($href, '#');
-if ($anchor_pos !== false) {
-    $href = substr($href, 0, $anchor_pos); 
+if (empty($href) && empty($id)) {
+  response(0, "Please specify either an 'href' or 'id' parameter.");
+  exit;
 }
 
 if (!empty($user)) {
-  $shifts = $db->rows("
-      SELECT s.url_slug AS id,
-             s.space,
-             s.summary,
-             s.content,
-             s.modified,
-             u.username
-      FROM shift AS s, user AS u
-      WHERE (
-          s.status = 1
-          OR (
-              s.status = 2
-              AND s.user_id = $user->id
-          )
-      )
-      AND s.user_id = u.id
-      AND s.href = '$href'
-      ORDER BY s.created DESC
-  ");
+  $user_clause = "
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = $user->id
+    ))
+  ";
 } else {
-  $shifts = $db->rows("
-      SELECT s.url_slug AS id,
-             s.space,
-             s.summary,
-             s.content,
-             s.modified,
-             u.username
-      FROM shift AS s, user AS u
-      WHERE s.status = 1
-      AND s.user_id = u.id
-      AND s.href = '$href'
-      ORDER BY s.created DESC
-  ");
+  $user_clause = "s.status = 1";
 }
 
-/*$announcement = new stdClass;
-$announcement->type = 'shiftspace.announcement';
-$announcement->summary = "alert('hi!');";
-$shifts[] = $announcement;*/
+$shifts = $db->rows("
+  SELECT s.url_slug AS id,
+         s.space,
+         s.summary,
+         s.content,
+         s.modified,
+         u.username
+  FROM shift AS s, user AS u
+  WHERE $user_clause
+  AND $shift_clause
+  AND s.user_id = u.id
+  ORDER BY s.created DESC
+");
 
-echo '[';
-foreach ($shifts as $n => $shift) {
-    /*$shift->trails = $db->assoc("
-        SELECT t.url_slug, t.title
-        FROM trail AS t,
-             trail_shift AS ts
-        WHERE ts.shift_id = '$shift->id'
-        AND t.id = ts.trail_id
-    ");*/
-    if ($n > 0) {
-        echo ', ';
-    }
-    //$shift->content = $shift->content;
-    echo json_encode($shift);
+echo '{"status":1,"count":' . count($shifts) . ',"shifts":[';
+$shifts = array_map('json_encode', $shifts);
+echo implode(',', $shifts);
+echo ']}';
+
+function normalize_url($href) {
+  $anchor_pos = strpos($href, '#');
+  if ($anchor_pos !== false) {
+    $href = substr($href, 0, $anchor_pos); 
+  }
+  return $href;
 }
-echo ']';
 
 ?>

@@ -1,8 +1,10 @@
 <?php
 
 if (empty($user) || empty($user->id)) {
-    echo "{status: 0, message: 'User not logged in'}";
-    exit;
+  $options = array(
+    'authenticate' => true
+  );
+  response(0, 'Oops your session expired, please need to login and try again.', $options);
 }
 
 $url_slug = $db->escape($_POST['id']);

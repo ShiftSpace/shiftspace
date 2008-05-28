@@ -3,8 +3,7 @@ var username;
 var User = new Class({
   
     initialize: function() {
-      // we need a user id, not just a user name
-      username = GM_getValue('username', '');
+      username = getValue('username', '');
       if (username == '') {
         username = false;
       }
@@ -22,7 +21,7 @@ var User = new Class({
       serverCall('user.login', credentials, function(json) {
         if (json.status) {
           username = credentials.username;
-          GM_setValue('username', credentials.username);
+          setValue('username', credentials.username);
           callback(json);
         } else {
           callback(json);
@@ -32,7 +31,7 @@ var User = new Class({
     
     logout: function() {
       username = false;
-      GM_setValue('username', '');
+      setValue('username', '');
       serverCall('user.logout');
       ShiftSpace.Console.showResponse('login_response', 'You have been logged out.');
       ShiftSpace.Console.addTab('login', 'Login');
