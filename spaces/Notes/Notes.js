@@ -387,20 +387,20 @@ var NotesShift = ShiftSpace.Shift.extend({
 
     // create the text area
     this.inputArea = $(__notedoc__.createElement('textarea'));
-    this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
+    this.inputArea.setAttribute('class', 'SSNoteShiftTextArea');
     this.inputArea.injectInside( this.frameBody );
-    this.inputArea.setProperty('value', text);
+    this.inputArea.setAttribute('value', text);
     this.inputArea.focus();
   
     this.inputArea.addEvent('mousedown', function() {
      this.focus();
      // clear out Leave a note
-     if(this.inputArea.getProperty('value') == "Leave a note")
+     if(this.inputArea.getAttribute('value') == "Leave a note")
      {
-       this.inputArea.setProperty('value', '');
+       this.inputArea.setAttribute('value', '');
      }
     }.bind(this));
-    this.inputArea.setProperty('readonly', 1);
+    this.inputArea.setAttribute('readonly', 1);
   
     if(this.isBeingEdited())
     {

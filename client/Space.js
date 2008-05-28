@@ -398,7 +398,7 @@ ShiftSpace.Space = new Class({
         }
         catch(exc)
         {
-          console.log(describeException(exc));
+          console.log(SSDescribeException(exc));
         }
         cShift = this.shifts[aShift.id];
       }
