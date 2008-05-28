@@ -39,7 +39,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     }
     
     // store a noteText ref
-    this.noteText = json.noteText;
+    this.noteText = json.noteText || null;
     
     // build the DOM
     this.build();
@@ -379,7 +379,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     var text = "Leave a note";
     
-    if($type(this.noteText) != 'undefined')
+    if(this.noteText))
     {
       text = this.noteText.replace(/<br\/>/g, "\n");
     }
