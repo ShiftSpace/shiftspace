@@ -379,7 +379,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     var text = "Leave a note";
     
-    if(this.noteText))
+    if(this.noteText)
     {
       text = this.noteText.replace(/<br\/>/g, "\n");
     }
