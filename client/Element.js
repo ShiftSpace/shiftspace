@@ -77,14 +77,14 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
     var finalprops = $merge(props, {
       events: 
       {
-        load : function() {
+        load : function(_cb) {
           // load the css
           if(this.css) 
           {
             loadStyle(this.css, null, this.frame);
           }
-          loadCallBack();
-        }.bind(this)
+          _cb();
+        }.bind(this, loadCallBack)
       }
     });
     
@@ -123,4 +123,7 @@ ShiftSpace.Input = ShiftSpace.Element.extend({
   // set up event handlers so they get pass up to the developer
 });
 
+// Name spacing
 ShiftSpace.Event = Event;
+ShiftSpace.$ = $;
+ShiftSpace.$$ = $$;
