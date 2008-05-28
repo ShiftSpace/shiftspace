@@ -529,8 +529,28 @@ var Element = new Class({
 			}
 			el = document.createElement(el);
 		}
+
 		el = $(el);
-		return (!props || !el) ? el : el.set(props);
+		
+		if(window.webkit)
+		{
+  		return (!props || !el) ? el : (function(p){
+    		for (var prop in p){
+    			var val = p[prop];
+    			switch(prop){
+    				case 'styles': this.setStyles(val); break;
+    				case 'events': if (this.addEvents) this.addEvents(val); break;
+    				case 'properties': this.setProperties(val); break;
+    				default: this.setProperty(prop, val);
+    			}
+    		}
+    		return this;
+    	}).bind(el, [props])()
+    }
+  	else
+  	{
+  	  return (!props || !el) ? el : el.set(props);
+  	}
 	}
 
 });
