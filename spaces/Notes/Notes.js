@@ -87,7 +87,7 @@ var NotesShift = ShiftSpace.Shift.extend({
       }
     }
 
-    //this.refresh();
+    this.refresh();
   },
   
   /*
