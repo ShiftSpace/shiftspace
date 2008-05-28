@@ -15,6 +15,7 @@ var Console = new Class({
     var consoleHeight = getValue('console.height', 150);
     this.frame = new ShiftSpace.Iframe({
       id: 'ShiftSpaceConsole',
+      addCover: false,
       styles: 
       {
         display: 'none',

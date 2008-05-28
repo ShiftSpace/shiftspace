@@ -91,7 +91,10 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
     // store a ref for tricking
     this.frame = this.parent('iframe', finalprops);
     
-    if(ShiftSpace.addCover)
+    var addCover = true;
+    if($type(props.addCover) != 'undefined' && props.addCover == false) addCover = false;
+
+    if(addCover && ShiftSpace.addCover)
     {
       // add a cover for this object
       var cover = new ShiftSpace.Element('div', {
