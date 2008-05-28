@@ -132,6 +132,9 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       // update the location of the editing window
       var position = currentShift.getPosition();
       var size = this.editSourceShift.getSize().size;
+      
+      console.log(position.x + ', ' + position.y);
+      console.log(size.x + ', ' + size.y);
 
       this.editSourceShift.setStyles({
         left: position.x - size.x - 10,
