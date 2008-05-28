@@ -118,7 +118,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   
   onShiftEdit: function(shiftId)
   {
-    console.log('SourceShift edit shift ' + shiftId);
     // set the mode to xhtml and set to the html of the current shift
     var currentShift = this.shifts[shiftId];
     
@@ -133,9 +132,6 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       var position = currentShift.getPosition();
       var size = this.editSourceShift.getSize().size;
       
-      console.log(position.x + ', ' + position.y);
-      console.log(size.x + ', ' + size.y);
-
       this.editSourceShift.setStyles({
         left: position.x - size.x - 10,
         top: position.y
@@ -975,13 +971,9 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       // In Safari iframes don't get the head element by default - David
       // Mootools-ize body
       $(doc.body);
-      var head = new Element( 'head' );
+      var head = $(doc.createElement( 'head' ));
       head.injectBefore( doc.body );
     }
-    
-    var style = new Element('style', {
-        type: 'text/css'
-    });
     
     this.iframeCss = $(doc.createElement('style'));
     this.iframeCss.setProperty('type', 'text/css');
