@@ -374,7 +374,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   finishFrame : function()
   {
-    var text = "Leave a Note";
+    var text = 'Leave a note';
     if(this.noteText)
     {
       text = this.noteText.replace(/<br\/>/g, "\n");
@@ -383,24 +383,24 @@ var NotesShift = ShiftSpace.Shift.extend({
     // Get document reference and MooToolize the body
     var __notedoc__ = this.frame.contentDocument;
     this.frameBody = $(__notedoc__.body);
-    this.frameBody.setAttribute('id', 'SSNoteShiftFrameBody');
+    this.frameBody.setProperty('id', 'SSNoteShiftFrameBody');
 
     // create the text area
     this.inputArea = $(__notedoc__.createElement('textarea'));
-    this.inputArea.setAttribute('class', 'SSNoteShiftTextArea');
-    $(this.inputArea).injectInside( this.frameBody );
-    this.inputArea.setAttribute('value', text);
+    this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
+    this.inputArea.injectInside( this.frameBody );
+    this.inputArea.setProperty('value', text);
     this.inputArea.focus();
   
     this.inputArea.addEvent('mousedown', function() {
      this.focus();
      // clear out Leave a note
-     if(this.inputArea.getAttribute('value') == "Leave a note")
+     if(this.inputArea.getProperty('value') == "Leave a note")
      {
-       this.inputArea.setAttribute('value', '');
+       this.inputArea.setProperty('value', '');
      }
     }.bind(this));
-    this.inputArea.setAttribute('readonly', 1);
+    this.inputArea.setProperty('readonly', 1);
   
     if(this.isBeingEdited())
     {
