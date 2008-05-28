@@ -109,7 +109,6 @@ var NotesShift = ShiftSpace.Shift.extend({
         this.fireEvent('onDragStop');
       }.bind(this)
     });
-    this.dragRef.detach();
     
     // set up the save event
     this.saveButton.addEvent( 'click', this.save.bind( this ) );
@@ -273,7 +272,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.inputArea.removeProperty('readonly');
     }
-    this.dragRef.attach();
     this.refresh();
   },
   
@@ -287,7 +285,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.inputArea.setProperty('readonly', 1);
     }
-    this.dragRef.detach();
     this.refresh();
   },
   
