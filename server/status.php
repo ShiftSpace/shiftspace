@@ -4,9 +4,13 @@ $readme = '<p>If you want more detailed instructions, take a look at the enclose
 
 @include "$dir/server/config.php";
 
+if (substr($db_path, 0, 9) == 'sqlite://') {
+  $db_filename = substr($db_path, 9);
+}
+
 if (!file_exists("$dir/server/config.php")) {
-    $status = "Uh oh!";
-    $details = "<p class=\"error\">Looks like you're missing your config.php file! You may want to reinstall ShiftSpace.</p>$readme";
+  $status = "Uh oh!";
+  $details = "<p class=\"error\">Looks like you're missing your config.php file! You may want to reinstall ShiftSpace.</p>$readme";
 } else if (!empty($db_filename) && !file_exists($db_filename) &&
            !is_writable(dirname($db_filename))) {
     $db_dir = realpath(dirname($db_filename));

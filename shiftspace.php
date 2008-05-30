@@ -14,11 +14,11 @@ $version = '0.11';
 $dir = dirname(__FILE__);
 
 if (!empty($_GET['method'])) {
-    // ShiftSpace on the line, talk in JSON
-    require_once "$dir/server/main.php";
+  // ShiftSpace on the line, talk in JSON
+  require_once "$dir/server/main.php";
 } else {
-    // A human on the line, talk in HTML
-    require_once "$dir/server/status.php";
+  // A human on the line, talk in HTML
+  require_once "$dir/server/status.php";
 }
 
 ?>
