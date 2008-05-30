@@ -63,10 +63,10 @@ var TheirViewShift = ShiftSpace.Shift.extend({
 		this.wikipedia();
 	},
 	
-	google:    function(offset) { this.wrapCall('google', offset, [this.renderGoogle.bind(this),this.pageGoogle.bind(this)]); },
-	yahoo:     function(offset) { this.wrapCall('yahoo',  offset, [this.renderYahoo.bind(this),this.pageYahoo.bind(this)]);   },
-	digg:      function()       { this.wrapCall('digg',        0, [this.renderDigg.bind(this)]); },
-	wikipedia: function()       { this.wrapCall('wikipedia',   0, [this.renderWikipedia.bind(this)]); },
+	google:    function(offset) { this.wrapCall('inlink.google', offset, [this.renderGoogle.bind(this),this.pageGoogle.bind(this)]); },
+	yahoo:     function(offset) { this.wrapCall('inlink.yahoo',  offset, [this.renderYahoo.bind(this),this.pageYahoo.bind(this)]);   },
+	digg:      function()       { this.wrapCall('inlink.digg',        0, [this.renderDigg.bind(this)]); },
+	wikipedia: function()       { this.wrapCall('inlink.wikipedia',   0, [this.renderWikipedia.bind(this)]); },
 
 	wrapCall: function(name,offset,funcArray) {
 		var url = 'http://www.theirview.org/webservice.php';
