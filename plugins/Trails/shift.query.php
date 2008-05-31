@@ -21,14 +21,16 @@ for($i = 0; $i < count($shifts); $i++)
   
   if($trailed)
   {
-    $trailsData[$url_slug]['icon'] = 'trails-on.png';
+    $trailsData[$url_slug]['icon'] = 'SSTrailsHasTrailsIcon';
   }
   else
   {
-    $trailsData[$url_slug]['icon'] = 'trails-off.png';
+    $trailsData[$url_slug]['icon'] = 'SSTrailsNoTrailsIcon';
   }
 }
 
-$response['Trails'] = $trailsData;
+$response['Trails'] = array();
+$response['Trails']['type'] = 'menu';
+$response['Trails']['data'] = $trailsData;
 
 ?>
