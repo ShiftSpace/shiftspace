@@ -85,6 +85,7 @@ ShiftSpace.Plugin = new Class({
   
   onCssLoad: function()
   {
+    this.fireEvent('load');
   },
   
   enterFullScreen: function() {

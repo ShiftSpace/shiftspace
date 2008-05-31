@@ -303,6 +303,17 @@ var Console = new Class({
     pluginMenuTab.removeClass('SSDisplayNone');
   },
   
+  showPluginMenuForShift: function(plugin, shiftId)
+  {
+    var target = $(this.doc.getElementById('shifts')).getElement('#' + shiftId).getElement('.pg' + plugin);
+    // in case it's delayed
+    var cb = function(menuItems) {
+      this.setPluginMenuItems(shiftId, menuItems);
+    }.bind(this);
+    this.setPluginMenuItems(shiftId, plugins[plugin].menuForShift(shiftId, cb));
+    this.showPluginMenu(plugins[plugin], target);
+  },
+  
   /*
     Function: hidePluginMenu
       Hide the plugin menu.
@@ -902,7 +913,7 @@ var Console = new Class({
   Adds a shift to the console.
   
   */
-  addShift: function(aShift, isActive) {
+  addShift: function(aShift, options) {
     //console.log('adding - ' + aShift.id);
     // clone a model shift
     var newEntry = $(this.modelShiftEntry.clone(true));
@@ -1037,7 +1048,7 @@ var Console = new Class({
     //console.log(this.doc);
     
     // add it
-    if (isActive) 
+    if (options && options.isActive) 
     {
       newEntry.injectTop($(this.doc.getElementById('shifts')));
       newEntry.addClass('active');
@@ -1049,40 +1060,42 @@ var Console = new Class({
     }
     
     //console.log('------------------------------ added');
+    this.addPluginIconForShift(aShift.id);
     
     this.shiftCount++;
     this.updateCount();
   },
   
-  pluginLoaded: function(plugin)
+  addPluginIconForShift: function(shiftId)
   {
-    
-  },
-  
-  addPluginIconForShift: function(plugin, shiftId)
-  {
-    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    var el = $(this.doc.getElementById('shifts')).getElement('#' + shiftId);
     var pluginDiv = $(this.doc.createElement('div'));
-    pluginDiv.addClass('plugin');
-    pluginDiv.addClass('pg'+plugin); // tag with plugin name
+    
+    for(plugin in installedPlugins)
+    {
+      if(SSGetPluginType(plugin) == 'menu')
+      {
+        pluginDiv.addClass('plugin');
+        pluginDiv.addClass('pg'+plugin); // tag with plugin name
+        
+        pluginDiv.addClass(SSPlugInMenuIconForShift(plugin, shiftId));
+        
+        pluginDiv.addEvent('click', function(_evt) {
+          var evt = new Event(_evt);
+          evt.stop();
 
-    pluginDiv.addClass(plugins[plugin].menuIconForShift(shiftId));
-    pluginDiv.addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      var target = evt.target;
-      // prevent the click from triggering item selection in console
-      evt.stop();
+          // wacky stuff
+          this.showPluginMenuForShift.bindResource(this, {
+            type: 'plugin',
+            name: plugin, 
+            args: [plugin, shiftId] 
+          })();
+        }.bind(this));
 
-      // in case it's delayed
-      var cb = function(menuItems) {
-        this.setPluginMenuItems(shiftId, menuItems);
-      }.bind(this);
-      this.setPluginMenuItems(shiftId, plugins[plugin].menuForShift(shiftId, cb));
+        pluginDiv.inject(el.getElement('.pluginIcons'));
+      }
+    }
 
-      this.showPluginMenu(plugins[plugin], target);
-    }.bind(this));
-
-    pluginDiv.inject(el.getElement('.pluginIcons'));
   },
   
   updateCount : function()

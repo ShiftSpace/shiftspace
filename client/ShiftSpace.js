@@ -96,6 +96,7 @@ var ShiftSpace = new (function() {
     // These are for the race condition between shifts loading and console setup
     var pendingShifts = -1;
     var consoleIsWaiting = false;
+    var __pluginsData__ = {};
     
     // Each space and a corresponding URL of its origin
     var installed = getValue('installed', {
@@ -145,11 +146,17 @@ var ShiftSpace = new (function() {
       
       // Load external scripts (pre-processing required)
       // INCLUDE User.js
+      console.log('User.js loaded');
       // INCLUDE Element.js
+      console.log('Element.js loaded');
       // INCLUDE Space.js
+      console.log('Space.js loaded');
       // INCLUDE Shift.js
+      console.log('Shift.js loaded');
       // INCLUDE RangeCoder.js
+      console.log('RangeCoder.js loaded');
       // INCLUDE Pin.js
+      console.log('Pin.js loaded');
       // INCLUDE PinWidget.js
       // INCLUDE Plugin.js
       // INCLUDE ShiftMenu.js
@@ -198,6 +205,43 @@ var ShiftSpace = new (function() {
       // See if there's anything on the current page
       checkForContent();
     };
+    
+    // bindResource
+    Function.prototype.bindResource = function(obj, options)
+    {
+      console.log('bindResource');
+      var fn = this;
+      
+      return function() {
+        console.log('run bindResource');
+        if(options.type == 'space')
+        {
+          if(!spaces[options.name])
+          {
+            loadSpace(options.name, function() {
+              fn.apply(obj, args);
+            });
+          }
+        }
+        if(options.type == 'plugin')
+        {
+          if(!plugins[options.name])
+          {
+            loadPlugin(options.name, function() {
+              fn.apply(obj, options.args);
+              
+              console.log('Plugin loaded!');
+
+              if(options.method)
+              {
+                plugins[options.name][options.method].apply(plugins[options.name], options.args);
+              }
+            });
+          }
+        }
+      }
+      
+    }
     
     /*
     
@@ -334,6 +378,16 @@ var ShiftSpace = new (function() {
     function SSIsNewShift(shiftId)
     {
       return (shiftId.search('newShift') != -1);
+    }
+    
+    function SSGetPluginType(plugin)
+    {
+      return __pluginsData__[plugin]['type'];
+    }
+    
+    function SSPlugInMenuIconForShift(plugin, shiftId)
+    {
+      return __pluginsData__[plugin]['data'][shiftId]['icon'];
     }
     
     function implementsProtocol(protocol, object)
@@ -831,6 +885,17 @@ var ShiftSpace = new (function() {
             console.error('Error loading shifts: ' + json.message);
             return;
           }
+          
+          console.log(json);
+
+          // save the pluginsData
+          for(plugin in installedPlugins)
+          {
+            if(json[plugin]) __pluginsData__[plugin] = json[plugin];
+          }
+          
+          console.log(__pluginsData__);
+          
           json.shifts.each(function(shift) {
             shifts[shift.id] = shift;
             
@@ -983,6 +1048,7 @@ var ShiftSpace = new (function() {
         // call onShiftSave
         space.onShiftSave(shiftJson.id);
       });
+
     }
     
     /*
@@ -1707,6 +1773,7 @@ var ShiftSpace = new (function() {
     */
     function loadPlugin(plugin, callback) 
     {
+      console.log('loadPlugin ' + plugin);
       if(plugins[plugins])
       {
         if(callback) callback();
@@ -1723,7 +1790,7 @@ var ShiftSpace = new (function() {
       else 
       {
         loadFile(installedPlugins[plugin], function(rx) {
-          //console.log(plugin + " Plugin loaded");
+          console.log(plugin + " Plugin loaded");
           // TODO: The following does not work we need to use the plugin eval
           try
           {
@@ -2079,6 +2146,7 @@ if(self == top)
   {
     try
     {
+      console.log('starting up');
       ShiftSpace.initialize();
     }
     catch(exc)
