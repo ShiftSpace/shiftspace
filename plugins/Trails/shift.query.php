@@ -30,6 +30,7 @@ for($i = 0; $i < count($shifts); $i++)
 }
 
 $response['Trails'] = array();
+$response['Trails']['defaultIcon'] = 'SSTrailsNoTrailsIcon';
 $response['Trails']['type'] = 'menu';
 $response['Trails']['data'] = $trailsData;
 
