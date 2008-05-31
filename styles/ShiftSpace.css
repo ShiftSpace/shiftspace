@@ -307,6 +307,7 @@ div.SSPinMenuTopItem:hover .SSRight
 .SSMenu div .SSRight
 {
   width: 8px;
+  font-family: verdana;
 }
 
 .SSMenuItem
