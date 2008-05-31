@@ -1826,8 +1826,11 @@ var ShiftSpace = new (function() {
         }
         data += key + '=' + encodeURIComponent(parameters[key]);
       }
+      
+      var plugins = new Hash(installedPlugins);
+      url += '&plugins=' + plugins.keys().join(',');
+      
       var now = new Date();
-      url += '&plugins=' + installedPlugins.join(',');
       url += '&cache=' + now.getTime();
       
       //GM_openInTab(url);
