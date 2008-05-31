@@ -788,11 +788,8 @@ var ShiftSpace = new (function() {
           console.error('Error checking for content: ' + json.message);
           return;
         }
-        if (json.user) {
-          // TODO: activate the menu
-        }
-        pendingShifts = json.shifts;
-        if (json.shifts > 0 && consoleIsWaiting) {
+        pendingShifts = json.count;
+        if (json.count > 0 && consoleIsWaiting) {
           ShiftSpace.Console.showNotifier();
         }
       });

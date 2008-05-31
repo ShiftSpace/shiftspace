@@ -1,43 +1,43 @@
 <?php
 
-$href = $db->escape(@$_POST['href']);
+// Check for content based on URL
+$href = $db->escape(normalize_url(@$_POST['href']));
+
+// Sanity check
 if (empty($href)) {
-    response(0, "No URL specified.");
-    exit;
+  respond(0, "Please specify an 'href' argument.");
 }
 
-$anchor_pos = strpos($href, '#');
-if ($anchor_pos !== false) {
-    $href = substr($href, 0, $anchor_pos); 
-}
+$response = array();
 
 if (empty($user)) {
-    $shift_count = $db->value("
-        SELECT COUNT(id)
-        FROM shift
-        WHERE status = 1
-        AND href = '$href'
-    ");
-    $user = '';
+  // Only check for public content
+  $response['count'] = $db->value("
+    SELECT COUNT(id)
+    FROM shift
+    WHERE status = 1
+    AND href = '$href'
+  ");
 } else {
-    $shift_count = $db->value("
-        SELECT COUNT(s.id)
-        FROM shift AS s, user AS u
-        WHERE (
-            s.status = 1
-            OR (
-                s.status = 2
-                AND s.user_id = $user->id
-            )
-        )
-        AND s.user_id = u.id
-        AND s.href = '$href'
-    ");
-    $user = "\n    user: '$user->username',";
+  // Check for both public and private content
+  $response['count'] = $db->value("
+    SELECT COUNT(s.id)
+    FROM shift s,
+         user u
+    WHERE (
+      s.status = 1
+      OR (
+        s.status = 2
+        AND s.user_id = $user->id
+      )
+    )
+    AND s.user_id = u.id
+    AND s.href = '$href'
+  ");
+  $response['user'] = $user->username;
 }
 
-response(1, array(
-    'shifts' => $shift_count
-));
+// Done
+respond(1, $response);
 
 ?>
