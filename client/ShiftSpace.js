@@ -52,11 +52,11 @@ Class: ShiftSpace
 var ShiftSpace = new (function() {
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
-    /*
+    
     if (getValue('server', false)) {
-      server = getValue('server', 'http://api.shiftspace.org/');
+      server = getValue('server', 'http://metatron.shiftspace.org/api/');
     }
-    */
+    
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //server = "http://metatron.shiftspace.org/api/";
 
