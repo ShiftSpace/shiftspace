@@ -936,6 +936,7 @@ var Console = new Class({
     newEntry.getElement('.summary').getElement('.summaryView').setHTML(aShift.summary);
     newEntry.getElement('.summary').getElement('.summaryEdit').setProperty('value', aShift.summary);
     newEntry.getElement('.user').setHTML(aShift.username);
+    newEntry.getElement('.posted').setHTML(aShift.created); 
     
     newEntry.getElement('.SSPermaLink').setProperty('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
     
