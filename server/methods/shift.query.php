@@ -44,7 +44,7 @@ $shifts = $db->rows("
          s.space,
          s.summary,
          s.content,
-         s.modified,
+         s.created,
          u.username
   FROM shift AS s, user AS u
   WHERE $user_clause
@@ -52,6 +52,13 @@ $shifts = $db->rows("
     AND s.user_id = u.id
   ORDER BY s.created DESC
 ");
+
+function set_elapsed_time(&$shift) {
+  $shift->created = ucfirst(elapsed_time($shift->created));
+}
+
+// Make created property more human-friendly
+array_map('set_elapsed_time', $shifts);
 
 // The response data
 $response = array(

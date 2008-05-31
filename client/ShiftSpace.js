@@ -540,7 +540,6 @@ var ShiftSpace = new (function() {
     
     */
     function initShift(spaceName, options) {
-      console.log('initShift');
       if (!installed[spaceName]) {
         console.log('Error: Space ' + spaceName + ' does not exist.', true);
         return;
@@ -942,47 +941,48 @@ var ShiftSpace = new (function() {
     */
     function saveNewShift(shiftJson) {
         
-        var space = spaces[shiftJson.space];
-        var params = {
-            href: window.location.href,
-            space: shiftJson.space,
-            summary: shiftJson.summary,
-            content: Json.toString(shiftJson),
-            version: space.attributes.version
-        };
+      var space = spaces[shiftJson.space];
+      var params = {
+        href: window.location.href,
+        space: shiftJson.space,
+        summary: shiftJson.summary,
+        content: Json.toString(shiftJson),
+        version: space.attributes.version
+      };
+      
+      serverCall('shift.create', params, function(json) {
+          
+        if (!json.status) {
+          console.error(json.message);
+          return;
+        }
         
-        serverCall('shift.create', params, function(json) {
-            
-            if (!json.status) {
-              console.error(json.message);
-              return;
-            }
-            
-            shiftJson.username = ShiftSpace.user.getUsername();
-            
-            // with the real value
-            var shiftObj = space.shifts[shiftJson.id];
-            shiftObj.setId(json.id);
-            
-            // delete the temporary stuff
-            delete shifts[shiftJson.id];
-            delete space.shifts[shiftJson.id];
-            
-            if (focusedShiftId == shiftJson.id) {
-                focusedShiftId = json.id;
-            }
-            shiftJson.id = json.id;
-            shiftJson.content = Json.toString(shiftJson);
-            shifts[shiftJson.id] = shiftJson;
-            space.shifts[shiftJson.id] = shiftObj;
-            
-            // add and show the shift
-            ShiftSpace.Console.addShift(shiftJson, true);
-            ShiftSpace.Console.showShift(shiftJson.id);
-            
-            // call onShiftSave
-            space.onShiftSave(shiftJson.id);
-        });
+        shiftJson.username = ShiftSpace.user.getUsername();
+        shiftJson.created = 'Just posted';
+        
+        // with the real value
+        var shiftObj = space.shifts[shiftJson.id];
+        shiftObj.setId(json.id);
+        
+        // delete the temporary stuff
+        delete shifts[shiftJson.id];
+        delete space.shifts[shiftJson.id];
+        
+        if (focusedShiftId == shiftJson.id) {
+          focusedShiftId = json.id;
+        }
+        shiftJson.id = json.id;
+        shiftJson.content = Json.toString(shiftJson);
+        shifts[shiftJson.id] = shiftJson;
+        space.shifts[shiftJson.id] = shiftObj;
+        
+        // add and show the shift
+        ShiftSpace.Console.addShift(shiftJson, true);
+        ShiftSpace.Console.showShift(shiftJson.id);
+        
+        // call onShiftSave
+        space.onShiftSave(shiftJson.id);
+      });
     }
     
     /*
