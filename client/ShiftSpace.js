@@ -206,14 +206,19 @@ var ShiftSpace = new (function() {
       checkForContent();
     };
     
-    // bindResource
+    // bindResource - for atomic operations
     Function.prototype.bindResource = function(obj, options)
     {
-      console.log('bindResource');
       var fn = this;
       
+      // check to make sure it's not already there
+      if(spaces[options.name] || plugins[options.name])
+      {
+        var args = options.args || []
+        return fn.bind(obj, args);
+      }
+      
       return function() {
-        console.log('run bindResource');
         if(options.type == 'space')
         {
           if(!spaces[options.name])
@@ -230,8 +235,6 @@ var ShiftSpace = new (function() {
             loadPlugin(options.name, function() {
               fn.apply(obj, options.args);
               
-              console.log('Plugin loaded!');
-
               if(options.method)
               {
                 plugins[options.name][options.method].apply(plugins[options.name], options.args);
