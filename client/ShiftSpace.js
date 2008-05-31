@@ -53,9 +53,7 @@ var ShiftSpace = new (function() {
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
     
-    if (getValue('server', false)) {
-      server = getValue('server', 'http://metatron.shiftspace.org/api/');
-    }
+    var server = getValue('server', 'http://metatron.shiftspace.org/api/');
     
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //server = "http://metatron.shiftspace.org/api/";
@@ -73,7 +71,7 @@ var ShiftSpace = new (function() {
     var debug = 0;
     
     // Cache loadFile data
-    var cacheFiles = 0;
+    var cacheFiles = 1;
     
     // The basic building blocks of ShiftSpace (private objects)
     var spaces = {};
@@ -1636,6 +1634,7 @@ var ShiftSpace = new (function() {
         url += (url.indexOf('?') == -1) ? '?' : '&';
         url += now.getTime();
       } else {
+        console.log('load from cache');
         // ... or use getValue to retrieve the file's contents
         var cached = getValue('cache.' + url, false, true);
         
