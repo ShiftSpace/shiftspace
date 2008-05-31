@@ -383,14 +383,27 @@ var ShiftSpace = new (function() {
       return (shiftId.search('newShift') != -1);
     }
     
+    function SSGetPlugin(pluginName)
+    {
+      return plugins[pluginName];
+    }
+    
     function SSGetPluginType(plugin)
     {
       return __pluginsData__[plugin]['type'];
     }
     
-    function SSPlugInMenuIconForShift(plugin, shiftId)
+    function SSPlugInMenuIconForShift(pluginName, shiftId)
     {
-      return __pluginsData__[plugin]['data'][shiftId]['icon'];
+      var plugin = SSGetPlugin(pluginName);
+      if(!plugin)
+      {
+        return __pluginsData__[pluginName]['data'][shiftId]['icon'];
+      }
+      else
+      {
+        return plugin.menuIconForShift(shiftId);
+      }
     }
     
     function implementsProtocol(protocol, object)
