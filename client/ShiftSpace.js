@@ -861,6 +861,10 @@ var ShiftSpace = new (function() {
         
         if (json.username) {
           setUsername(json.username);
+          if (consoleIsWaiting) {
+            ShiftSpace.Console.removeTab('login');
+            ShiftSpace.Console.setupAuthControl();
+          }
         }
         pendingShifts = json.count;
         if (json.count > 0 && consoleIsWaiting) {
@@ -877,11 +881,11 @@ var ShiftSpace = new (function() {
     
     */
     function consoleIsReady() {
-        if (pendingShifts == -1) {
-            consoleIsWaiting = true;
-        } else if (pendingShifts > 0) {
-            ShiftSpace.Console.showNotifier();
-        }
+      if (pendingShifts == -1) {
+        consoleIsWaiting = true;
+      } else if (pendingShifts > 0) {
+        ShiftSpace.Console.showNotifier();
+      }
     }
     
     

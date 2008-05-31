@@ -6,9 +6,13 @@ var ShiftMenu = new Class({
   
   buildMenu: function() {
     this.element = new ShiftSpace.Element('div', {
-      id: 'SS_ShiftMenu'
+      id: 'SS_ShiftMenu',
+      styles: {
+        display: 'none'
+      }
     });
     this.element.addEvent('mouseover', function() {
+      this.element.style.display = 'block';
       this.element.addClass('hover');
     }.bind(this));
     this.element.addEvent('mouseout', function() {
