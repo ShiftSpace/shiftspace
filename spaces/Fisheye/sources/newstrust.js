@@ -10,7 +10,7 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
     renderIcon: function(that, target) {
 
 	// Box to hold icon
-	that.iconBox = new ShiftSpace.Element('div', {'class':'SSIconBox'});
+	that.iconBox = new ShiftSpace.Element('div', {'class':'FisheyeIconBox'});
 	that.iconBox.setStyles({
 	    'width':  that.newsTrustIconLink ? '92px' : '16px',
 	    'height':  '16px',
@@ -65,7 +65,7 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 
 
     renderSummary: function(that) {
-	var summaryBox = new ShiftSpace.Element ('div', {'class':'SSSummary'});
+	var summaryBox = new ShiftSpace.Element ('div', {'class':'FisheyeSummary'});
 	summaryBox.setStyles({ 'width' : '250px', });
 
 	// XXX: i18n for plugins?
@@ -81,7 +81,7 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 	    summaryBox.appendText("looking for NewsTrust rating...");
 
 	var aBox = new ShiftSpace.Element ('div', {
-	    'class' : 'SSDisplayItem',
+	    'class' : 'FisheyeDisplayItem',
 	    'display' : 'block',
 	});
 

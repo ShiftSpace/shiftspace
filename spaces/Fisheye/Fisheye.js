@@ -20,7 +20,7 @@ var makeTextBox = function(target, text) {
 
 // Some convenience funcs
 var makeNoteBox = function (container) {
-    var nb = new ShiftSpace.Element('div', {'class' : 'SSNoteBox'});
+    var nb = new ShiftSpace.Element('div', {'class' : 'FisheyeNoteBox'});
     if (container)
 	nb.injectInside(container);
     return nb;
@@ -28,7 +28,7 @@ var makeNoteBox = function (container) {
 
 var makeButton = function(label, container, callbackFunc) {
     var ab = new ShiftSpace.Element( 'input', {
-	type : 'button', 'class' : 'SSNoteShiftButton',
+	type : 'button', 'class' : 'FisheyeNoteShiftButton',
 	value : label,
     });
     if (container)
@@ -39,7 +39,7 @@ var makeButton = function(label, container, callbackFunc) {
 }
 
 var makeDisplayItem = function(target) {
-    var ad = new ShiftSpace.Element('div', { 'class' : 'SSDisplayItem' });
+    var ad = new ShiftSpace.Element('div', { 'class' : 'FisheyeDisplayItem' });
     if (target)
 	ad.injectInside(target);
     return ad;
@@ -73,7 +73,7 @@ var FisheyeCriticismRenderClass = new Class({
     },
 
     renderCategory: function(that, isEdit, container) {
-	var someBox = new ShiftSpace.Element('div', {'class':'SSCategory'});
+	var someBox = new ShiftSpace.Element('div', {'class':'FisheyeCategory'});
 	var categoryText = that.criticismCategoryGetName (that.categoryType);
 
 	if (isEdit) {
@@ -92,7 +92,7 @@ var FisheyeCriticismRenderClass = new Class({
 	if (that.mode == that.MODE_EDIT) {
 	    // create an iframe with the css already loaded
 	    that.summaryFrame = new ShiftSpace.Iframe({
-	      'class' : 'SSNoteShiftFrame',
+	      'class' : 'FisheyeNoteShiftFrame',
 	      scroll : 'no',
 	      rows : 4,
 	      cols : 25,
@@ -103,7 +103,7 @@ var FisheyeCriticismRenderClass = new Class({
 	    });
 	    that.summaryFrame.injectInside(that.editBox);
 	} else {
-	    var sBox = new ShiftSpace.Element ('div', {'class':'SSSummary'});
+	    var sBox = new ShiftSpace.Element ('div', {'class':'FisheyeSummary'});
 	    sBox.appendText(that.summaryText);
 	    sBox.injectInside (that.detailsBox);
 	}
@@ -114,7 +114,7 @@ var FisheyeCriticismRenderClass = new Class({
 		'padding':  '0px 5px 10px 5px',
 	});
 	criticismLinkBox.injectInside(container);
-	aBox = new ShiftSpace.Element('div', {'class':'SSDisplayItem'});
+	aBox = new ShiftSpace.Element('div', {'class':'FisheyeDisplayItem'});
 	aBox.setStyles({ 'font-weight': 'bold', });
 	if (isEdit) {
 	    aBox.appendText("  [" + that.criticismLink + "]");
@@ -146,7 +146,7 @@ var FisheyeCriticismRenderClass = new Class({
 	// XXX: styles should come from class but empirically fails...
     createLink: function(aHref, text, container) {
 	var aLink = new ShiftSpace.Element('a', {
-	    'class' : 'SSLinkItem',
+	    'class' : 'FisheyeLinkItem',
 	    'styles': {
 		    'background-color' : '#F5FB9B',
 		    'color': '#00F',
@@ -531,12 +531,12 @@ var FisheyeShift = ShiftSpace.Shift.extend({
     fillSubmitter: function(that) {
 	// Submitter
 	this.submitterBox = new ShiftSpace.Element('div', {
-		'class' : 'SSDisplayItem',
+		'class' : 'FisheyeDisplayItem',
 	});
         this.submitterBox.appendText(this.getText('submitter') + ": " + this.shiftAuthor());
 	if (this.canIgnore()) {
 	  this.submitterIgnore= new ShiftSpace.Element('div', {
-		  'class' : 'SSInlineActiveText',
+		  'class' : 'FisheyeInlineActiveText',
 	  });
 	  this.submitterIgnore.appendText("[" + this.getText('ignore') + "]");
 	  this.submitterIgnore.addEvent('click', function(){
@@ -600,7 +600,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	    } else {
 		this.detailsBox = makeNoteBox();
 		if (this.mode != this.MODE_DISPLAY || !this.shown)
-		    this.detailsBox.addClass('SSHidden');
+		    this.detailsBox.addClass('FisheyeHidden');
 		this.detailsBox.injectInside(container);
 	    }
 
@@ -909,8 +909,8 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 
 	// DISPLAY is the only mode that minimizes...
 	if (this.mode == this.MODE_DISPLAY) {
-	    this.detailsBox.removeClass('SSHidden');
-	    this.buttonBox.removeClass ('SSHidden');
+	    this.detailsBox.removeClass('FisheyeHidden');
+	    this.buttonBox.removeClass ('FisheyeHidden');
 	}
     },
     
@@ -927,8 +927,8 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	      this.hidePending = 0;
 	      if (this.mode != this.MODE_DISPLAY)  // Only minimize display mode
 		  return;
-	      this.detailsBox.addClass('SSHidden');
-	      this.buttonBox.addClass('SSHidden');
+	      this.detailsBox.addClass('FisheyeHidden');
+	      this.buttonBox.addClass('FisheyeHidden');
 	      this.element.style.zIndex=1;  // Lower to default height
 	      this.shown = false;
 	  } 
@@ -946,11 +946,11 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	// Get document reference and MooToolize the body
 	var doc = this.summaryFrame.contentDocument;
 	this.frameBody = $(doc.body);
-	this.frameBody.setProperty('id', 'SSNoteShiftFrameBody');
+	this.frameBody.setProperty('id', 'FisheyeNoteShiftFrameBody');
 
 	// create the text area
 	this.inputArea = $(doc.createElement('textarea'));
-	this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
+	this.inputArea.setProperty('class', 'FisheyeNoteShiftTextArea');
 	this.inputArea.injectInside( this.frameBody );
 	this.inputArea.setProperty('value', this.summaryText);
 	this.inputArea.focus();

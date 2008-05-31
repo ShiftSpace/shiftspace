@@ -5,7 +5,7 @@ var FisheyeCriticismSourceWatchRenderClass = FisheyeCriticismRenderClass.extend(
     renderIcon: function(that, target) {
 
 	// Box to hold icon
-	that.iconBox = new ShiftSpace.Element('div', {'class':'SSIconBox'});
+	that.iconBox = new ShiftSpace.Element('div', {'class':'FisheyeIconBox'});
 	that.iconBox.setStyles({
 	    'width':  '16px', 'height':  '16px',
 	});
@@ -43,14 +43,14 @@ var FisheyeCriticismSourceWatchRenderClass = FisheyeCriticismRenderClass.extend(
 
 
     renderSummary: function(that) {
-	var summaryBox = new ShiftSpace.Element ('div', {'class':'SSSummary'});
+	var summaryBox = new ShiftSpace.Element ('div', {'class':'FisheyeSummary'});
 	summaryBox.setStyles({ 'max-width' : '230px', });
 
 	var sumHtml = "SourceWatch has an open wiki page on ";
 	sumHtml +=  that.criticismLink;
 	summaryBox.setHTML(sumHtml);
 
-	var aBox = new ShiftSpace.Element ('div', {'class':'SSDisplayItem'});
+	var aBox = new ShiftSpace.Element ('div', {'class':'FisheyeDisplayItem'});
 	var aHref = "http://www.sourcewatch.org/index.php?title=" + that.criticismLink;
 	var aLink = this.createLink(aHref, "[" + that.getText('read') + "]", aBox);
 	aBox.injectInside(summaryBox);
