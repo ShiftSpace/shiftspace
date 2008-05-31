@@ -29,6 +29,6 @@ for($i = 0; $i < count($shifts); $i++)
   }
 }
 
-$response['trails'] = $trailsData;
+$response['Trails'] = $trailsData;
 
 ?>
