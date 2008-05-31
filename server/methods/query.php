@@ -34,7 +34,7 @@ if (empty($user)) {
     AND s.user_id = u.id
     AND s.href = '$href'
   ");
-  $response['user'] = $user->username;
+  $response['username'] = $user->username;
 }
 
 // Done

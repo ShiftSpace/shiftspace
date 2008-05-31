@@ -128,6 +128,12 @@ var ShiftSpace = new (function() {
     // An index of cached files, used to clear the cache when necessary
     var cache = getValue('cache', []);
     
+    // Private variable and function for controlling user authentication
+    var username = false;
+    function setUsername(_username) {
+      username = _username;
+    }
+    
     /*
     
     Function: initialize
@@ -136,7 +142,7 @@ var ShiftSpace = new (function() {
     */
     this.initialize = function() {
       debug = 0;
-
+      
       // Load external scripts (pre-processing required)
       // INCLUDE User.js
       // INCLUDE Element.js
@@ -147,11 +153,7 @@ var ShiftSpace = new (function() {
       // INCLUDE PinWidget.js
       // INCLUDE Plugin.js
       // INCLUDE ShiftMenu.js
-      console.log('ShiftMenu loaded');
-      // INCLUDE Console.js  
-      console.log('Console loaded');
-          
-      console.log('ShiftSpace Core loaded');
+      // INCLUDE Console.js
 
       // Load CSS styles
       loadStyle('styles/ShiftSpace.css');
@@ -763,14 +765,13 @@ var ShiftSpace = new (function() {
         shiftId - The ID of the shift to hide.
     
     */
-    function hideShift(shiftId) 
-    {
-        var shift = shifts[shiftId];
-        spaces[shift.space].hideShift(shiftId);
-        
-        // call onShiftHide
-        spaces[shift.space].onShiftHide(shiftId);
-    };
+    function hideShift(shiftId) {
+      var shift = shifts[shiftId];
+      spaces[shift.space].hideShift(shiftId);
+      
+      // call onShiftHide
+      spaces[shift.space].onShiftHide(shiftId);
+    }
     
 
     /*
@@ -787,6 +788,10 @@ var ShiftSpace = new (function() {
         if (!json.status) {
           console.error('Error checking for content: ' + json.message);
           return;
+        }
+        
+        if (json.username) {
+          setUsername(json.username);
         }
         pendingShifts = json.count;
         if (json.count > 0 && consoleIsWaiting) {

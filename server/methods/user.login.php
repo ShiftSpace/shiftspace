@@ -1,14 +1,11 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-  response(0, 'Invalid request.');
-  exit;
+  respond(0, 'Invalid request.');
 } else if (empty($_POST['username'])) {
-  response(0, 'Oops, you forgot to enter a username.');
-  exit;
+  respond(0, 'Oops, you forgot to enter a username.');
 } else if (empty($_POST['password'])) {
-  response(0, 'Oops, you forgot to enter a password.');
-  exit;
+  respond(0, 'Oops, you forgot to enter a password.');
 }
     
 $username = $db->escape($_POST['username']);
@@ -22,13 +19,10 @@ $user = $db->row("
 ");
 
 if (empty($user)) {
-  response(0, 'Oops! Please try again.');
+  respond(0, 'Oops! Please try again.');
 } else {
   $_SESSION['user'] = $user;
-  $expires = time() + 60 * 60 * 24 * 365 * 10;
-  $token = md5(time() . $password);
-  setcookie('auth', "$username:$token", $expires, '/');
-  response(1, "Hi, $user->display_name!");
+  respond(1, "Hi, $user->display_name!");
 }
 
 ?>
