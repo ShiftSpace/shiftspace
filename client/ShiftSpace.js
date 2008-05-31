@@ -73,7 +73,7 @@ var ShiftSpace = new (function() {
     var debug = 0;
     
     // Cache loadFile data
-    var cacheFiles = 1;
+    var cacheFiles = 0;
     
     // The basic building blocks of ShiftSpace (private objects)
     var spaces = {};
@@ -105,7 +105,7 @@ var ShiftSpace = new (function() {
       'Highlights': server + 'spaces/Highlights/Highlights.js',
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
     });
-    
+   
     /*
     installed = {
       'Notes' : server + 'spaces/Notes/Notes.js',
@@ -398,7 +398,15 @@ var ShiftSpace = new (function() {
       var plugin = SSGetPlugin(pluginName);
       if(!plugin)
       {
-        return __pluginsData__[pluginName]['data'][shiftId]['icon'];
+        var shiftData = __pluginsData__[pluginName]['data'][shiftId];
+        if(__pluginsData__[pluginName]['data'][shiftId])
+        {
+          return shiftData['icon'];
+        }
+        else
+        {
+          return __pluginsData__[pluginName]['defaultIcon'];
+        }
       }
       else
       {
@@ -1036,7 +1044,6 @@ var ShiftSpace = new (function() {
       };
       
       serverCall('shift.create', params, function(json) {
-        
         if (!json.status) {
           console.error(json.message);
           return;
@@ -1062,7 +1069,7 @@ var ShiftSpace = new (function() {
         space.shifts[shiftJson.id] = shiftObj;
         
         // add and show the shift
-        ShiftSpace.Console.addShift(shiftJson, true);
+        ShiftSpace.Console.addShift(shiftJson, {isActive:true});
         ShiftSpace.Console.showShift(shiftJson.id);
         
         // call onShiftSave

@@ -1064,7 +1064,6 @@ var Console = new Class({
       newEntry.injectInside($(this.doc.getElementById('shifts')));
     }
     
-    //console.log('------------------------------ added');
     this.addPluginIconForShift(aShift.id);
     
     this.shiftCount++;
