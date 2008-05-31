@@ -160,29 +160,29 @@ var Console = new Class({
   buildPluginMenu: function()
   {
     // the tab connecting the icon to the menu
-    this.pluginMenuTab = $(this.doc.createElement('div'));
+    this.pluginMenuTab = new ShiftSpace.Element('div');
     this.pluginMenuTab.setProperty('id', "SSConsolePluginMenuTab");
-    this.pluginMenuTabIcon = $(this.doc.createElement('div'));
+    this.pluginMenuTabIcon = new ShiftSpace.Element('div');
     this.pluginMenuTabIcon.addClass('SSPluginMenuTabIcon SSUserSelectNone');
     this.pluginMenuTabIcon.injectInside(this.pluginMenuTab);
     
-    this.pluginMenu = $(this.doc.createElement('div'));
+    this.pluginMenu = new ShiftSpace.Element('div');
     this.pluginMenu.setProperty('id', 'SSConsolePluginMenu');
     this.pluginMenu.addClass('SSMenu SSUserSelectNone');
     
-    this.topItem = $(this.doc.createElement('div'));
+    this.topItem = new ShiftSpace.Element('div');
     this.topItem.addClass('SSMenuTopItem');
     this.topItem.addClass('item');
     this.topItem.setHTML("<div class='SSLeft'><span>Top Item</span></div><div class='SSRight'></div>");
     
-    this.middleItem = $(this.doc.createElement('div'));
+    this.middleItem = new ShiftSpace.Element('div');
     this.middleItem.addClass('SSMenuItem');
     this.middleItem.addClass('item');
     this.middleItem.setHTML("<div class='SSLeft'><span>Middle Item</span></div><div class='SSRight'></div>");
     
     this.menuItemModel = this.middleItem.clone(true);
     
-    this.bottomItem = $(this.doc.createElement('div'));
+    this.bottomItem = new ShiftSpace.Element('div');
     this.bottomItem.addClass('SSMenuBottomItem');
     this.bottomItem.addClass('item');
     this.bottomItem.setHTML("<div class='SSLeft'><span>Bottom Item</span></div><div class='SSRight'></div>");
@@ -194,8 +194,8 @@ var Console = new Class({
     this.pluginMenuTab.addClass('SSDisplayNone');
     this.pluginMenu.addClass('SSDisplayNone');
 
-    this.pluginMenuTab.injectInside(this.doc.body);
-    this.pluginMenu.injectInside(this.doc.body);
+    this.pluginMenuTab.injectInside(document.body);
+    this.pluginMenu.injectInside(document.body);
     
     // handle closing the plugin menu if anything else gets clicked
     $(this.doc.body).addEvent('click', function(_evt) {
@@ -282,6 +282,7 @@ var Console = new Class({
   showPluginMenu: function(plugin, anchor)
   {
     var pos = $(anchor).getPosition([$(this.doc.getElementById('scroller'))]);
+    var framePos = this.frame.getPosition();
     var size = $(anchor).getSize().size;
     
     var pluginMenu = $(this.pluginMenu);
@@ -290,17 +291,20 @@ var Console = new Class({
     
     pluginMenuTabIcon.addClass(plugin.menuIcon());
 
+    pluginMenu.removeClass('SSDisplayNone');
+    var menuSize = pluginMenu.getSize().size;
+    
+    pluginMenuTab.removeClass('SSDisplayNone');
+    
     pluginMenuTab.setStyles({
       left: pos.x-3,
-      top: pos.y-3
+      top: pos.y-3+framePos.y
     });
+    console.log(pos.y + ', ' + framePos.y);
     pluginMenu.setStyles({
       left: pos.x-13, 
-      top: pos.y + size.y
+      top: pos.y+framePos.y-menuSize.y
     });
-    
-    pluginMenu.removeClass('SSDisplayNone');
-    pluginMenuTab.removeClass('SSDisplayNone');
   },
   
   showPluginMenuForShift: function(plugin, shiftId)
@@ -931,7 +935,6 @@ var Console = new Class({
     newEntry.getElement('.summary').getElement('.summaryView').setHTML(aShift.summary);
     newEntry.getElement('.summary').getElement('.summaryEdit').setProperty('value', aShift.summary);
     newEntry.getElement('.user').setHTML(aShift.username);
-    newEntry.getElement('.posted').setHTML(aShift.created);
     
     newEntry.getElement('.SSPermaLink').setProperty('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
     
