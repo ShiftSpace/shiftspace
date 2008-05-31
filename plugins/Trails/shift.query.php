@@ -7,7 +7,7 @@ for($i = 0; $i < count($shifts); $i++)
   $url_slug = $aShift->id;
   $shiftId = $db->value("
     SELECT id FROM shift
-    WHERE url_slug=$url_slug
+    WHERE url_slug='$url_slug'
   ");
   
   $trailsData[$url_slug] = array();
