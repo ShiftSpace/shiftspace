@@ -73,7 +73,7 @@ var ShiftSpace = new (function() {
     var debug = 0;
     
     // Cache loadFile data
-    var cacheFiles = 0;
+    var cacheFiles = 1;
     
     // The basic building blocks of ShiftSpace (private objects)
     var spaces = {};
@@ -1019,7 +1019,7 @@ var ShiftSpace = new (function() {
       };
       
       serverCall('shift.create', params, function(json) {
-          
+        
         if (!json.status) {
           console.error(json.message);
           return;
@@ -1599,7 +1599,7 @@ var ShiftSpace = new (function() {
     function loadFile(url, callback) {
       // If the URL doesn't start with "http://", assume it's on our server
       if (url.substr(0, 7) != 'http://' &&
-      url.substr(0, 8) != 'https://') {
+          url.substr(0, 8) != 'https://') {
         url = server + url;
       }
       
@@ -1613,12 +1613,13 @@ var ShiftSpace = new (function() {
         url += now.getTime();
       } else {
         // ... or use getValue to retrieve the file's contents
-        var cached = getValue('cache.' + url, false);
+        var cached = getValue('cache.' + url, false, true);
+        
         if (cached) {
           //console.log('Loading ' + url + ' from cache');
-          callback({
-            responseText: cached
-          });
+          if (typeof callback == 'function') {
+            callback({ responseText: cached });
+          }
           return true;
         }
       }
@@ -1633,7 +1634,7 @@ var ShiftSpace = new (function() {
           if (cacheFiles) {
             cache.push(url);
             setValue('cache', cache);
-            setValue('cache.' + url, response.responseText);
+            setValue('cache.' + url, response.responseText, true);
           }
           if (typeof callback == 'function') {
             callback(response);
@@ -1952,8 +1953,12 @@ var ShiftSpace = new (function() {
         The value passed in.
     
     */
-    function setValue(key, value) {
-      GM_setValue(key, Json.toString(value));
+    function setValue(key, value, rawValue) {
+      if (rawValue) {
+        GM_setValue(key, value);
+      } else {
+        GM_setValue(key, Json.toString(value));
+      }
       return value;
     }
     
@@ -1971,11 +1976,16 @@ var ShiftSpace = new (function() {
         Either the stored value, or defaultValue if none is found.
     
     */
-    function getValue(key, defaultValue) {
-      var result = GM_getValue(key, Json.toString(defaultValue));
+    function getValue(key, defaultValue, rawValue) {
+      if (!rawValue) {
+        defaultValue = Json.toString(defaultValue);
+      }
+      var result = GM_getValue(key, defaultValue);
       // Fix for GreaseKit, which doesn't support default values
       if (result == null) {
         return defaultValue;
+      } else if (rawValue) {
+        return result;
       } else {
         return Json.evaluate(result);
       }
