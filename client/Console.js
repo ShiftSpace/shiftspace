@@ -283,6 +283,7 @@ var Console = new Class({
   {
     var pos = $(anchor).getPosition([$(this.doc.getElementById('scroller'))]);
     var framePos = this.frame.getPosition();
+    var frameSize = this.frame.getSize().size;
     var size = $(anchor).getSize().size;
     
     var pluginMenu = $(this.pluginMenu);
@@ -293,6 +294,7 @@ var Console = new Class({
 
     pluginMenu.removeClass('SSDisplayNone');
     var menuSize = pluginMenu.getSize().size;
+    var windowSize = window.getSize().size;
     
     pluginMenuTab.removeClass('SSDisplayNone');
     
@@ -300,10 +302,9 @@ var Console = new Class({
       left: pos.x-3,
       top: pos.y-3+framePos.y
     });
-    console.log(pos.y + ', ' + framePos.y);
     pluginMenu.setStyles({
-      left: pos.x-13, 
-      top: pos.y+framePos.y-menuSize.y
+      left: pos.x-60, 
+      bottom: frameSize.y-pos.y+2
     });
   },
   

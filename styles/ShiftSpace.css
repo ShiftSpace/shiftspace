@@ -464,7 +464,7 @@ div.SSMenuTopItem:hover .SSRight
   position: absolute;
   width: 19px;
   height: 19px;
-  background: transparent url(../images/ShiftMenu/menu-bg.png);
+  background: transparent url(../images/ShiftMenu/menu-bg-reverse.png);
   z-index:1000002;
 }
 
