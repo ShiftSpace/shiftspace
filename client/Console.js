@@ -292,12 +292,6 @@ var Console = new Class({
     
     pluginMenuTabIcon.addClass(plugin.menuIcon());
 
-    pluginMenu.removeClass('SSDisplayNone');
-    var menuSize = pluginMenu.getSize().size;
-    var windowSize = window.getSize().size;
-    
-    pluginMenuTab.removeClass('SSDisplayNone');
-    
     pluginMenuTab.setStyles({
       left: pos.x-3,
       top: pos.y-3+framePos.y
@@ -306,6 +300,9 @@ var Console = new Class({
       left: pos.x-60, 
       bottom: frameSize.y-pos.y+2
     });
+    
+    pluginMenu.removeClass('SSDisplayNone');
+    pluginMenuTab.removeClass('SSDisplayNone');
   },
   
   showPluginMenuForShift: function(plugin, shiftId)
