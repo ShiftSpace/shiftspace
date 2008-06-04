@@ -173,6 +173,11 @@ foreach ($shift_ids as $an_id)
     }
 
     $shiftContent = $shift->content;
+
+    // Escape \n (common in ranges) so they don't break parsing when
+    // embedded in javascript (empirically, replacing \r caused problems)
+    $shiftContent = str_replace("\n", "\\n", $shift->content);
+
     $shiftId = $shift->url_slug;
 
     // TODO: this should be replaced by versioning - David
