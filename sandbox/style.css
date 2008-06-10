@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  background: #c45e0c url(bg.jpg) repeat-x;
+  font: 12px/18px lucida grande, tahoma, verdana, sans-serif;
+}
+
+#lipsum {
+  position: absolute;
+  top: 125px;
+  left: 370px;
+  width: 300px;
+}
+
+a {
+  color: #1f0b0c;
+}

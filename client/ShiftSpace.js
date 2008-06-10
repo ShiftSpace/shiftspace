@@ -58,12 +58,6 @@ var ShiftSpace = new (function() {
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //server = "http://metatron.shiftspace.org/api/";
 
-    // get Dan's input on how to set this
-    if(typeof ShiftSpaceSandBoxMode != 'undefined')
-    {
-      server = window.location.href.substr(0, window.location.href.indexOf('sandbox'));
-    }
-    
     // Current ShiftSpace version
     var version = '0.11';
     
@@ -72,6 +66,12 @@ var ShiftSpace = new (function() {
     
     // Cache loadFile data
     var cacheFiles = 1;
+    
+    // get Dan's input on how to set this
+    if(typeof ShiftSpaceSandBoxMode != 'undefined') {
+      server = window.location.href.substr(0, window.location.href.indexOf('sandbox'));
+      cacheFiles = 0;
+    }
     
     // The basic building blocks of ShiftSpace (private objects)
     var spaces = {};

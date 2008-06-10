@@ -122,22 +122,20 @@ $ShiftSpace .= '<script type="text/javascript" src="../client/Space.js" charset=
 $ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset="utf-8"></script>';
 
 // Build shift_ids array if it wasn't already parsed from id param
-if (!count($shift_ids)) {
-    $all = $db->escape($_GET['all_shifts']);
-    if ($all) {
-	$shifts = $db->rows("
-	    SELECT url_slug
-	    FROM shift
-	    WHERE status = 1
-	    AND href = '$shift->href'
-	");
-	foreach ($shifts as $n => $ashift) {
-	foreach ($ashift as $key => $val) {
-	    $shift_ids[] = $val;
-	}}
-    } else {
-      $shift_ids[] = $id;
+if (!count($shift_ids) && !empty($_GET['all_shifts'])) {
+  $shifts = $db->rows("
+      SELECT url_slug
+      FROM shift
+      WHERE status = 1
+      AND href = '$shift->href'
+  ");
+  foreach ($shifts as $n => $ashift) {
+    foreach ($ashift as $key => $val) {
+      $shift_ids[] = $val;
     }
+  }
+} else {
+  $shift_ids[] = $id;
 }
 
 // Load each requested shift
