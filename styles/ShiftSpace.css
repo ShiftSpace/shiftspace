@@ -458,6 +458,7 @@ div.SSMenuTopItem:hover .SSRight
 #SSConsolePluginMenu
 {
   z-index:1000002;
+  position: fixed;
 }
 
 #SSConsolePluginMenuTab
