@@ -45,6 +45,7 @@ console.log("Loading Mootools");
 console.log('Loading ShiftSpace');
 
 // we need this for FF2
+// Dustin Diaz's getElementsByClass
 if(!HTMLElement.prototype.getElementsByClassName)
 {
   function getElementsByClass(searchClass) 
