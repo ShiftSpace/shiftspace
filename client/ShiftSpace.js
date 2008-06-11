@@ -42,33 +42,33 @@ console.log("Loading Mootools");
 
 // INCLUDE Mootools.js
 
-console.log('Loading ShiftSpace');
-
-// we need this for FF2
-// Dustin Diaz's getElementsByClass
-if(!HTMLElement.prototype.getElementsByClassName)
+// we need this as we transition away from FF2
+// Safari 3 and FF3 support this natively
+function SSGetElementsByClass(searchClass) 
 {
-  function getElementsByClass(searchClass) 
+  var classElements = new Array();
+  var els = this.getElementsByTagName('*');
+  var elsLen = els.length;
+  var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+  for (i = 0, j = 0; i < elsLen; i++) 
   {
-    var classElements = new Array();
-    if ( tag == null )
-    tag = '*';
-    var els = this.getElementsByTagName(tag);
-    var elsLen = els.length;
-    var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
-    for (i = 0, j = 0; i < elsLen; i++) 
+    if ( pattern.test(els[i].className) ) 
     {
-      if ( pattern.test(els[i].className) ) 
-      {
-        classElements[j] = els[i];
-        j++;
-      }
+      classElements[j] = els[i];
+      j++;
     }
-    return classElements;
   }
-  HTMLElement.prototype.getElementsByClassName = getElementsByClass;
-  document.getElementsByClassName = getElementsByClass;
+  return classElements;
 }
+
+// our special wrapper
+function _$(el)
+{
+  el.getElementsByClassName = SSGetElementsByClass;
+  return el;
+}
+
+console.log('Loading ShiftSpace');
 
 /*
 
@@ -172,6 +172,7 @@ var ShiftSpace = new (function() {
     
     */
     this.initialize = function() {
+      
       debug = 0;
       
       // Load external scripts (pre-processing required)
