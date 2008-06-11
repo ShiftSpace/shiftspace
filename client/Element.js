@@ -103,7 +103,7 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
       cover.setStyle('display', 'none');
 
       // add it to the page
-      cover.injectInside(window.document.body);
+      cover.injectInside(document.body);
       //console.log('cover added');
 
       // let ShiftSpace know about it

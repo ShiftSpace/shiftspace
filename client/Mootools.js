@@ -672,7 +672,10 @@ Element.extend({
 					el.insertBefore(this, first);
 					break;
 				}
-			default: el.appendChild(this);
+			default:
+			{
+			  el.appendChild(this);
+		  }
 		}
 		return this;
 	},
@@ -812,7 +815,15 @@ Element.extend({
 					}, this).join(' ');
 				}
 			}
-			if (document.defaultView) result = document.defaultView.getComputedStyle(this, null).getPropertyValue(property.hyphenate());
+			if (document.defaultView && !window.webkit) result = document.defaultView.getComputedStyle(this, null).getPropertyValue(property.hyphenate());
+			else if(window.webkit) // CHANGE: for Greasekit - David
+			{
+			  var styles = window.getComputedStyle(this, 0);
+			  if(styles)
+			  {
+			    result = styles.getPropertyValue(property.hyphenate());
+		    }
+		  }
 			else if (this.currentStyle) result = this.currentStyle[property];
 		}
 		if (window.ie) result = Element.fixStyle(property, result, this);

@@ -31,7 +31,7 @@ var RangeCoder = new Class({
     {
       return this.generateRange(objAncestor, refObj);
     }
-    alert ('Warning: An in-page reference was not recreateable because the webpage has changed. The original referenced text was: ' + refObj.origText);
+    window.alert ('Warning: An in-page reference was not recreateable because the webpage has changed. The original referenced text was: ' + refObj.origText);
     return null;
   },
 

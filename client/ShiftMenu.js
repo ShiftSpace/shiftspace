@@ -25,7 +25,7 @@ var ShiftMenu = new Class({
         width: (26 * spaces.length)
       }
     }).injectInside(this.element);
-    this.element.injectInside(window.document.body);
+    this.element.injectInside(document.body);
     
     console.log(installed);
     for (var spaceName in installed) {
@@ -64,7 +64,7 @@ var ShiftMenu = new Class({
     
     icon.addEvent('click', function(e) {
       if (!ShiftSpace.user.isLoggedIn()) {
-        alert('Sorry, you must be signed in to create new shifts.');
+        window.alert('Sorry, you must be signed in to create new shifts.');
         this.hide(true);
         return;
       }

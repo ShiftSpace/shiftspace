@@ -38,7 +38,11 @@ Credits:
 
 // ShiftSpace is built on the Mootools framework (pre-processing required)
 
+console.log("Loading Mootools");
+
 // INCLUDE Mootools.js
+
+console.log('Loading ShiftSpace');
 
 /*
 
@@ -53,8 +57,10 @@ var ShiftSpace = new (function() {
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
     
-    var server = getValue('server', 'http://metatron.shiftspace.org/api/');
+    // permissions problem here?
+    if($type(server) == 'undefined') var server = getValue('server', 'http://metatron.shiftspace.org/api/');
     
+    server = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //server = "http://metatron.shiftspace.org/api/";
 
@@ -65,7 +71,7 @@ var ShiftSpace = new (function() {
     var debug = 0;
     
     // Cache loadFile data
-    var cacheFiles = 1;
+    var cacheFiles = 0;
     
     // get Dan's input on how to set this
     if(typeof ShiftSpaceSandBoxMode != 'undefined') {
@@ -156,9 +162,13 @@ var ShiftSpace = new (function() {
       // INCLUDE Pin.js
       console.log('Pin.js loaded');
       // INCLUDE PinWidget.js
+      console.log('PinWidget.js loaded');
       // INCLUDE Plugin.js
+      console.log('Plugin.js loaded');
       // INCLUDE ShiftMenu.js
+      console.log('ShiftMenu.js loaded');
       // INCLUDE Console.js
+      console.log('Console.js loaded');
 
       // Load CSS styles
       loadStyle('styles/ShiftSpace.css');
@@ -183,9 +193,9 @@ var ShiftSpace = new (function() {
       ShiftSpace.ShiftMenu.buildMenu();
       
       // Set up event handlers
-      window.addEvent('keydown',   keyDownHandler.bind(this) );
-      window.addEvent('keyup',     keyUpHandler.bind(this) );
-      window.addEvent('keypress',  keyPressHandler.bind(this) );
+      window.addEvent('keydown', keyDownHandler.bind(this) );
+      window.addEvent('keyup', keyUpHandler.bind(this) );
+      window.addEvent('keypress', keyPressHandler.bind(this) );
       window.addEvent('mousemove', mouseMoveHandler.bind(this) );
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -202,6 +212,8 @@ var ShiftSpace = new (function() {
 
       // See if there's anything on the current page
       checkForContent();
+      
+      console.log('ShiftSpace initialize complete');
     };
     
     // bindResource - for atomic operations
@@ -860,6 +872,7 @@ var ShiftSpace = new (function() {
         href: window.location.href
       };
       serverCall('query', params, function(json) {
+        console.log('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
         if (!json.status) {
           console.error('Error checking for content: ' + json.message);
           return;
@@ -873,6 +886,7 @@ var ShiftSpace = new (function() {
           }
         }
         pendingShifts = json.count;
+        console.log('pendingShifts ' + pendingShifts);
         if (json.count > 0 && consoleIsWaiting) {
           ShiftSpace.Console.showNotifier();
         }
@@ -1116,7 +1130,7 @@ var ShiftSpace = new (function() {
       }
       else
       {
-        alert("You do not have permission to edit this shift.");
+        window.alert("You do not have permission to edit this shift.");
       }
     }
     
@@ -1163,9 +1177,11 @@ var ShiftSpace = new (function() {
     Handles keydown events.
     
     */
-    function keyDownHandler(event) {
+    var keyDownHandler = function(_event) {
+        var event = new Event(_event);
         var now = new Date();
-        event = new Event(event);
+        
+        console.log('keyDownHandler');
         
         // Try to prevent accidental shift+space activation by requiring a 500ms
         //   lull since the last keypress
@@ -1207,6 +1223,7 @@ var ShiftSpace = new (function() {
         if (!keyState.ignoreSubsequentSpaces &&
             event.key == 'space' &&
             event.shift) {
+            console.log('space pressed');
             // Make sure a keypress event doesn't fire
             keyState.cancelKeyPress = true;
             
@@ -1222,15 +1239,17 @@ var ShiftSpace = new (function() {
             
             // Toggle the console on and off
             if (keyState.consoleShown) {
-                keyState.consoleShown = false;
-                ShiftSpace.Console.hide();
+              keyState.consoleShown = false;
+              console.log('hide console!');
+              ShiftSpace.Console.hide();
             } else {
-                keyState.consoleShown = true;
-                ShiftSpace.Console.show();
+              console.log('show console!');
+              keyState.consoleShown = true;
+              ShiftSpace.Console.show();
             }
-            
+
         }
-    }
+    }.bind(this);
     
     
     /*
@@ -1239,8 +1258,8 @@ var ShiftSpace = new (function() {
     Handles keyup events.
     
     */
-    function keyUpHandler(event) {
-        event = new Event(event);
+    function keyUpHandler(_event) {
+        var event = new Event(_event);
         // If the user is letting go of the shift key, hide the menu and reset
         if (event.code == 16) {
             keyState.shiftPressed = false;
@@ -2077,13 +2096,11 @@ var ShiftSpace = new (function() {
             var head = new Element( 'head' );
             head.injectBefore( doc.body );
           }
-
-          var style = new Element('style', {
-            type: 'text/css'
-          });
-
-          style.appendText(css); // You can not use setHTML on style elements in Safari - David
-          style.injectInside(head);
+          
+          var style = doc.createElement('style');
+          style.setAttribute('type', 'text/css');
+          style.appendChild(doc.createTextNode(css)); // You can not use setHTML on style elements in Safari - David
+          head.appendChild(style);
         }
         else
         {
