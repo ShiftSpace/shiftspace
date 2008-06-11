@@ -44,6 +44,31 @@ console.log("Loading Mootools");
 
 console.log('Loading ShiftSpace');
 
+// we need this for FF2
+if(!HTMLElement.prototype.getElementsByClassName)
+{
+  function getElementsByClass(searchClass) 
+  {
+    var classElements = new Array();
+    if ( tag == null )
+    tag = '*';
+    var els = this.getElementsByTagName(tag);
+    var elsLen = els.length;
+    var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+    for (i = 0, j = 0; i < elsLen; i++) 
+    {
+      if ( pattern.test(els[i].className) ) 
+      {
+        classElements[j] = els[i];
+        j++;
+      }
+    }
+    return classElements;
+  }
+  HTMLElement.prototype.getElementsByClassName = getElementsByClass;
+  document.getElementsByClassName = getElementsByClass;
+}
+
 /*
 
 Class: ShiftSpace
@@ -60,7 +85,7 @@ var ShiftSpace = new (function() {
     // permissions problem here?
     if($type(server) == 'undefined') var server = getValue('server', 'http://metatron.shiftspace.org/api/');
     
-    server = "http://localhost/~davidnolen/shiftspace-0.11/";
+    //server = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //server = "http://metatron.shiftspace.org/api/";
 
