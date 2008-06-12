@@ -376,7 +376,7 @@ var Console = new Class({
     loadStyle('styles/Console.css', function() {
       this.buildContents();
       /* Load all plugin styles */
-      for(plugin in installedPlugins)
+      for(var plugin in installedPlugins)
       {
         loadStyle('plugins/'+plugin+'/'+plugin+'.css', null, this.frame );
       }
@@ -926,7 +926,7 @@ var Console = new Class({
   },
   
   showShift: function(id) {
-    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    var el = $(this.doc.getElementById(id));
     if(el)
     {
       el.addClass('active');
@@ -943,7 +943,7 @@ var Console = new Class({
   },
 
   hideShift: function(id) {
-    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    var el = $(this.doc.getElementById(id));
     if(el)
     {
       el.removeClass('active');
@@ -953,7 +953,7 @@ var Console = new Class({
   },
   
   showEditTitleField: function(id) {
-    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    var el = $(this.doc.getElementById(id));
     if(el)
     {
       el.getElement('.summaryEdit').removeClass('SSDisplayNone');
@@ -962,7 +962,7 @@ var Console = new Class({
   },
   
   hideEditTitleField: function(id) {
-    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    var el = $(this.doc.getElementById(id));
     if(el)
     {
       el.getElement('.summaryEdit').addClass('SSDisplayNone');
@@ -971,7 +971,7 @@ var Console = new Class({
   },
   
   setTitleForShift: function(id, title) {
-    var el = $(this.doc.getElementById('shifts')).getElement('#' + id);
+    var el = $(this.doc.getElementById(id));
     if(el)
     {
       el.getElement('.summaryView').setText(title);
@@ -979,7 +979,7 @@ var Console = new Class({
   },
   
   updateShift: function(shiftJson) {
-    var entry = $(this.doc.getElementById('shifts')).getElement('#' + shiftJson.id);
+    var entry = $(this.doc.getElementById(shiftJson.id));
     entry.getElement('.summary').getElement('.summaryView').setHTML(shiftJson.summary);
     entry.getElement('.user').setHTML(shiftJson.username);
   },
@@ -994,27 +994,40 @@ var Console = new Class({
   addShift: function(aShift, options) {
     console.log('adding - ' + aShift.id);
     // clone a model shift
-    var newEntry = $(this.modelShiftEntry.clone(true));
+    var newEntry = _$(this.modelShiftEntry.clone(true));
     
     console.log(newEntry);
     
-    var controls = newEntry.getElement('.controls');
+    var controls = newEntry.getElementByClassName('controls');
     
     var icon = ShiftSpace.info(aShift.space).icon;
-    var img = newEntry.getElement('.expander img');
+    var img = newEntry.getElementByClassName('expander').getElementsByTagName('img')[0];
     
-    newEntry.setProperty('id', aShift.id);
-    newEntry.getElement('.spaceTitle').setHTML(aShift.space);
-    newEntry.getElement('.spaceTitle').setStyle('background', 'transparent url(' + icon + ') no-repeat 3px 1px');
-    newEntry.getElement('.summary').getElement('.summaryView').setHTML(aShift.summary);
-    newEntry.getElement('.summary').getElement('.summaryEdit').setProperty('value', aShift.summary);
-    newEntry.getElement('.user').setHTML(aShift.username);
-    newEntry.getElement('.posted').setHTML(aShift.created); 
+    console.log('image and icon grabbed');
     
-    newEntry.getElement('.SSPermaLink').setProperty('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
+    newEntry.setAttribute('id', aShift.id);
+    
+    console.log('set id');
+
+    newEntry.getElementByClassName('spaceTitle').innerHTML = aShift.space;
+    $(newEntry.getElementByClassName('spaceTitle')).setStyle('background', 'transparent url(' + icon + ') no-repeat 3px 1px');
+    
+    var summary = newEntry.getElementByClassName('summary');
+    
+    var summaryView = summary.getElementByClassName('summaryView');
+    summaryView.innerHTML = aShift.summary;
+    
+    var summaryEdit = summary.getElementByClassName('summaryEdit');
+    summaryEdit.setAttribute('value', aShift.summary);
+    
+    newEntry.getElementByClassName('user').innerHTML = aShift.username;
+    newEntry.getElementByClassName('posted').innerHTML = aShift.created; 
+    
+    newEntry.getElementByClassName('SSPermaLink').setAttribute('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
     
     console.log('main props set');
     
+    // Add hover behavior, this can probably be handle via css - David
     newEntry.addEvent('mouseover', function() {
       if (!newEntry.hasClass('active') && !newEntry.hasClass('expanded')) 
       {
@@ -1052,11 +1065,11 @@ var Console = new Class({
     
     console.log('slide fx');
     
-    newEntry.getElement('.expander').addEvent('click', function(e) {
+    $(newEntry.getElementByClassName('expander')).addEvent('click', function(e) {
       var event = new Event(e);
       event.stop();
       slideFx.toggle();
-      if (!newEntry.hasClass('expanded')) 
+      if (!newEntry.hasClass('expanded'))
       {
         newEntry.addClass('expanded');
         newEntry.removeClass('hover');
@@ -1079,9 +1092,10 @@ var Console = new Class({
       event.stopPropagation();
     });
     
-    console.log('override click behavior');
+    console.log('override click behavior, delete node below');
     
-    newEntry.getElement('.controls a.delete').addEvent('click', function(e) {
+    // we need to use SSGetElementByClass because controls was already MooTools wrapped
+    $(SSGetElementByClass('delete', controls)).addEvent('click', function(e) {
       var event = new Event(e);
       event.preventDefault();
       if (confirm('Are you sure you want to delete that? There is no undo.')) 
@@ -1090,8 +1104,10 @@ var Console = new Class({
       }
     });
     
+    console.log('add edit link behavior');
+    
     // Shift Editing from console
-    newEntry.getElement('.controls a.edit').addEvent('click', function(e) {
+    $(SSGetElementByClass('edit', controls)).addEvent('click', function(e) {
       var event = new Event(e);
       event.preventDefault();
       showShift(aShift.id);
@@ -1106,8 +1122,10 @@ var Console = new Class({
       }
     }.bind(this));
     
+    console.log('summary edit key events');
+    
     // Event for the title edit input field
-    newEntry.getElement('.summaryEdit').addEvent('keyup', function(_evt) {
+    $(summaryEdit).addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
       if(evt.key == 'enter')
       {
@@ -1117,7 +1135,10 @@ var Console = new Class({
         updateTitleOfShift(aShift.id, evt.target.getProperty('value'));
       }
     }.bind(this));
-    newEntry.getElement('.summaryEdit').addEvent('click', function(_evt) {
+    
+    console.log('add summary field click event');
+    
+    $(summaryEdit).addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       evt.stop();
     });
@@ -1128,16 +1149,18 @@ var Console = new Class({
     // add it
     if (options && options.isActive) 
     {
-      newEntry.injectTop($(this.doc.getElementById('shifts')));
-      newEntry.addClass('active');
+      $(newEntry).injectTop($(this.doc.getElementById('shifts')));
+      $(newEntry).addClass('active');
     } 
     else 
     {
       //console.log($(this.doc.getElementById('shifts')));
-      newEntry.injectInside($(this.doc.getElementById('shifts')));
+      $(newEntry).injectInside($(this.doc.getElementById('shifts')));
     }
     
+    console.log('--------------------------------- adding plugin icons');
     this.addPluginIconForShift(aShift.id);
+    console.log('--------------------------------- done adding plugin icons');
     
     this.shiftCount++;
     this.updateCount();
@@ -1147,18 +1170,25 @@ var Console = new Class({
   
   addPluginIconForShift: function(shiftId)
   {
-    var el = $(this.doc.getElementById('shifts')).getElement('#' + shiftId);
+    var el = this.doc.getElementById(shiftId);
+    console.log(shiftId);
+    console.log(el);
+    el = _$(el);
+    console.log('wrapped');
     var pluginDiv = $(this.doc.createElement('div'));
-    
-    for(plugin in installedPlugins)
+    console.log('plugin div created');
+    for(var plugin in installedPlugins)
     {
+      console.log('plugin ' + plugin);
       if(SSGetPluginType(plugin) == 'menu')
       {
+        console.log('adding plugin style');
         pluginDiv.addClass('plugin');
         pluginDiv.addClass('pg'+plugin); // tag with plugin name
         
         pluginDiv.addClass(SSPlugInMenuIconForShift(plugin, shiftId));
         
+        console.log('adding plugin event');
         pluginDiv.addEvent('click', function(_evt) {
           var evt = new Event(_evt);
           evt.stop();
@@ -1171,7 +1201,8 @@ var Console = new Class({
           })();
         }.bind(this));
 
-        pluginDiv.inject(el.getElement('.pluginIcons'));
+        console.log('adding plugin div');
+        pluginDiv.inject(el.getElementByClassName('pluginIcons'));
       }
     }
 
@@ -1180,12 +1211,12 @@ var Console = new Class({
   updateCount : function()
   {
     var doc = this.frame.contentDocument;
-    var shiftTab = $(doc.getElementById('tab-shifts')).getElement('.tab-inner');
-    shiftTab.setHTML(this.shiftCount + " shifts");
+    var shiftTab = _$(doc.getElementById('tab-shifts')).getElementByClassName('tab-inner');
+    shiftTab.innerHTML = this.shiftCount + " shifts";
   },
   
   removeShift: function(shiftId) {
-    $(this.doc.getElementById('shifts')).getElement('#' + shiftId).remove();
+    $(this.doc.getElementById(shiftId)).remove();
     this.shiftCount--;
     this.updateCount();
   },

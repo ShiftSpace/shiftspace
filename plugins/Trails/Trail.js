@@ -70,7 +70,7 @@ var Trail = new Class({
   
   normalize: function(aTrail)
   {
-    for(trailId in aTrail)
+    for(var trailId in aTrail)
     {
       var aShift = aTrail[trailId];
       if(!aShift.loc)
@@ -253,7 +253,7 @@ Trail.parse = function( json )
     var target = null;
   }
   
-  for( node in json )
+  for( var node in json )
   {
     var options = json[node];
     

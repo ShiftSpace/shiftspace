@@ -494,7 +494,7 @@ ShiftSpace.Shift = new Class({
     var temp = {};
     
     // don't attempt to encode element, targetElement, or wrapper properties
-    for(key in pinRef)
+    for(var key in pinRef)
     {
       if(!['element','targetElement', 'wrapper', 'shift', 'originalStyles', 'targetStyles'].contains(key))
       {

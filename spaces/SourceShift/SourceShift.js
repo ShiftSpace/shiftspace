@@ -104,7 +104,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     // if a brand new shift set the title to untitled-#
     var untitledCount = 0;
     
-    for(shift in this.shifts)
+    for(var shift in this.shifts)
     {
       var title = this.shifts[shift].getTitle();
       if(title.search('untitled') != -1)
@@ -163,7 +163,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
   
   onShiftHide: function(shiftId)
   {
-    for(shift in this.shifts)
+    for(var shift in this.shifts)
     {
       if(this.shifts[shift].isVisible())
       {

@@ -119,7 +119,7 @@ ShiftSpace.Plugin = new Class({
     var temp = getShiftContent(shiftId);
     var copy = {};
     
-    for(prop in temp)
+    for(var prop in temp)
     {
       copy[prop] = temp[prop];
     }

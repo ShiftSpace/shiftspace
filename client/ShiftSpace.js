@@ -42,35 +42,6 @@ console.log("Loading Mootools");
 
 // INCLUDE Mootools.js
 
-// we need this as we transition away from FF2
-// Safari 3 and FF3 support this natively
-function SSGetElementsByClass(searchClass) 
-{
-  var classElements = new Array();
-  var els = this.getElementsByTagName('*');
-  var elsLen = els.length;
-
-  var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
-  for (var i = 0; i < elsLen; i++) 
-  {
-    if ( pattern.test(els[i].className) ) 
-    {
-      classElements.push(els[i]);
-    }
-  }
-  return classElements.map(function(node) {return _$(node);});
-}
-
-// our special wrapper
-function _$(el)
-{
-  el.getElementsByClassName = SSGetElementsByClass;
-  el.getElementByClassName = function(className) {
-    return this.getElementsByClassName(className)[0];
-  }
-  return el;
-}
-
 console.log('Loading ShiftSpace');
 
 /*
@@ -340,6 +311,41 @@ var ShiftSpace = new (function() {
         };
     };
     
+    // we need this as we transition away from FF2
+    function SSGetElementByClass(searchClass, _node)
+    {
+      return SSGetElementsByClass(searchClass, _node)[0];
+    }
+
+    // Safari 3 and FF3 support this natively
+    function SSGetElementsByClass(searchClass, _node) 
+    {
+      var classElements = new Array();
+      var node = _node || this;
+      var els = node.getElementsByTagName('*');
+      var elsLen = els.length;
+
+      var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+      for (var i = 0; i < elsLen; i++) 
+      {
+        if ( pattern.test(els[i].className) ) 
+        {
+          classElements.push(els[i]);
+        }
+      }
+      return classElements.map(function(node) {return _$(node);});
+    }
+
+    // our special wrapper
+    function _$(el)
+    {
+      el.getElementsByClassName = SSGetElementsByClass;
+      el.getElementByClassName = function(className) {
+        return this.getElementsByClassName(className)[0];
+      }
+      return el;
+    }
+    
     function getShiftContent(shiftId)
     {
       if(!SSIsNewShift(shiftId))
@@ -377,7 +383,7 @@ var ShiftSpace = new (function() {
     function getAllShiftContent()
     {
       var allContent = {};
-      for(shift in shifts)
+      for(var shift in shifts)
       {
         allContent[shift] = getShiftContent(shift);
       }
@@ -393,7 +399,7 @@ var ShiftSpace = new (function() {
     function getRecentlyViewedShifts()
     {
       var copy = {};
-      for(shiftId in __recentlyViewedShifts__)
+      for(var shiftId in __recentlyViewedShifts__)
       {
         copy[shiftId] = __recentlyViewedShifts__[shiftId];
       }
@@ -430,6 +436,7 @@ var ShiftSpace = new (function() {
     
     function SSGetPluginType(plugin)
     {
+      console.log('SSGetPluginType');
       return __pluginsData__[plugin]['type'];
     }
     
@@ -521,7 +528,7 @@ var ShiftSpace = new (function() {
       ShiftSpace.Console.hide();
       
       // hide the spaces
-      for(space in spaces)
+      for(var space in spaces)
       {
         spaces[space].saveState();
         
@@ -549,7 +556,7 @@ var ShiftSpace = new (function() {
       }
 
       // restore the spaces
-      for(space in spaces)
+      for(var space in spaces)
       {
         spaces[space].restoreState();
       }
@@ -957,12 +964,22 @@ var ShiftSpace = new (function() {
             return;
           }
           
+          console.log('====================================================================');
+          console.log('SHIFT QUERY RETURN');
+          console.log('====================================================================');
           console.log(json);
 
           // save the pluginsData
-          for(plugin in installedPlugins)
+          for(var plugin in installedPlugins)
           {
-            if(json[plugin]) __pluginsData__[plugin] = json[plugin];
+            console.log('++++++++++++++++++++++++++++++++++++++ CHECKING FOR ' + plugin);
+            if(json[plugin]) 
+            {
+              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+              console.log('LOADING INITIAL DATA FOR ' + plugin);
+              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+              __pluginsData__[plugin] = json[plugin];
+            }
           }
           
           console.log(__pluginsData__);
@@ -2235,7 +2252,7 @@ ShiftSpace.__externals__ = {
 function SSDescribeException(_exception)
 {
   var temp = [];
-  for(prop in _exception)
+  for(var prop in _exception)
   {
     temp.push(prop + ':' + _exception[prop]);
   }

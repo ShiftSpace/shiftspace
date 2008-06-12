@@ -222,7 +222,7 @@ TrailNav.parse = function( json )
 
   var navPagePos = 5;
   
-  for( id in json )
+  for( var id in json )
   {
     json[id].id = id;
     var newNavPage = new TrailNavPage( json[id] );

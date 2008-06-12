@@ -150,7 +150,7 @@ ShiftSpace.Space = new Class({
   {
     this.hideInterface();
     
-    for(shift in this.shifts)
+    for(var shift in this.shifts)
     {
       if(this.shifts[shift].isVisible())
       {
@@ -177,7 +177,7 @@ ShiftSpace.Space = new Class({
   isVisible: function()
   {
     var visibleShifts = false;
-    for(shift in this.shifts)
+    for(var shift in this.shifts)
     {
       if(this.shifts[shift].isVisible())
       {
@@ -208,7 +208,7 @@ ShiftSpace.Space = new Class({
   {
     // remove any unsaved shifts
     var unsavedShifts = [];
-    for(shift in this.shifts)
+    for(var shift in this.shifts)
     {
       if(shift.search('newShift') != -1)
       {
@@ -484,7 +484,7 @@ ShiftSpace.Space = new Class({
     
     // check to see if there are no visible shifts, if not, hide the space interface
     var visibleShifts = false;
-    for(shift in this.shifts)
+    for(var shift in this.shifts)
     {
       if(this.shifts[shift].isVisible())
       {
@@ -662,7 +662,7 @@ ShiftSpace.Space = new Class({
     this.__state__.empty();
     
     var visibleShifts = [];
-    for(shift in this.shifts)
+    for(var shift in this.shifts)
     {
       if(this.shifts[shift].isVisible())
       {
