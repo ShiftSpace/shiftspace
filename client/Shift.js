@@ -18,6 +18,7 @@ ShiftSpace.Shift = new Class({
   */
   initialize: function(_json)
   {
+    console.log('====================================================== STARTING UP');
     this.setOptions(this.getDefaults(), _json);
     
     // private id var
@@ -77,6 +78,8 @@ ShiftSpace.Shift = new Class({
       this.setTitle(_json.summary);
     }
     
+    console.log('======================================== CALLING SETUP ' + this.getParentSpace().attributes.name);
+    
     // call setup
     this.setup(_json);
     
@@ -87,6 +90,7 @@ ShiftSpace.Shift = new Class({
   
   setup: function(json) 
   {
+    console.log('HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM');
   },
   
   /*

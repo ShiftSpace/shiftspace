@@ -21,6 +21,8 @@ ShiftSpace.Space = new Class({
     this.__deferredShifts__ = [];
     this.__deferredEdits__ = [];
     
+    this.setCssLoaded(false);
+    
     // the shifts array
     this.shifts = {};
 
@@ -104,6 +106,7 @@ ShiftSpace.Space = new Class({
 
       // load any deferred just created shifts
       this.__deferredNewShifts__.each(function(aShift) {
+        console.log('show deferred new shift');
         this.createShift(aShift);
         SSShowNewShift(aShift.id);
       }.bind(this));
@@ -130,7 +133,7 @@ ShiftSpace.Space = new Class({
   
   setCssLoaded: function(val)
   {
-    this.__cssLoaded__ = true;    
+    this.__cssLoaded__ = true;
   },
   
   cssIsLoaded: function()
@@ -239,9 +242,22 @@ ShiftSpace.Space = new Class({
   {
     // add a backreference
     aShift.parentSpace = this;
+    
+    console.log('constructing');
+    console.log(this.shiftClass);
 
     // create the new shift
-    var newShift = new this.shiftClass( aShift );
+    try
+    {
+      var newShift = new this.shiftClass( aShift );
+    }
+    catch(exc)
+    {
+      console.log(SSDescribeException(exc));
+    }
+    
+    console.log('a new shift');
+    console.log(newShift);
     
     // listen for shift updates
     newShift.addEvent( 'onUpdate', this.updateShift.bind( this ) );
@@ -271,7 +287,11 @@ ShiftSpace.Space = new Class({
       this.fireEvent( 'onShiftSave', shiftId );
     }.bind( this ));
     
+    console.log('events added');
+    
     this.shifts[newShift.getId()] = newShift;
+    
+    console.log('exiting');
     
     return this.shifts[newShift.getId()];
   },
@@ -298,11 +318,16 @@ ShiftSpace.Space = new Class({
   */
   createShift : function( newShiftJson )
   {
+    console.log('createShift, cssIsLoaded:' + this.cssIsLoaded());
     if(this.cssIsLoaded())
     {
+      console.log('add a shift');
       this.addShift(newShiftJson);
+      console.log('added shift');
       var _newShift = this.shifts[newShiftJson.id];
+      console.log('fire event');
       this.fireEvent( 'onCreateShift', { 'space' : this, 'shift' : _newShift } );
+      console.log('return new baby');
       return _newShift;
     }
     else

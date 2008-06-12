@@ -49,13 +49,13 @@ function SSGetElementsByClass(searchClass)
   var classElements = new Array();
   var els = this.getElementsByTagName('*');
   var elsLen = els.length;
+
   var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
-  for (i = 0, j = 0; i < elsLen; i++) 
+  for (var i = 0; i < elsLen; i++) 
   {
     if ( pattern.test(els[i].className) ) 
     {
-      classElements[j] = els[i];
-      j++;
+      classElements.push(els[i]);
     }
   }
   return classElements;
@@ -359,7 +359,7 @@ var ShiftSpace = new (function() {
         catch(err)
         {
           console.error('Error: content for shift ' + shiftId +' failed to load');
-          console.log(content);
+          //console.log(content);
           //throw __SSCouldNotEvalShiftContentException__
         }
       
@@ -686,8 +686,9 @@ var ShiftSpace = new (function() {
     
     function SSShowNewShift(shiftId)
     {
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SSShowNewShift ' + shiftId);
       var space = spaceForShift(shiftId);
-
+      
       // call onShiftCreate
       showShift(shiftId);
       space.onShiftCreate(shiftId);
@@ -1208,7 +1209,7 @@ var ShiftSpace = new (function() {
         var event = new Event(_event);
         var now = new Date();
         
-        console.log('keyDownHandler');
+        //console.log('keyDownHandler');
         
         // Try to prevent accidental shift+space activation by requiring a 500ms
         //   lull since the last keypress
@@ -1250,7 +1251,7 @@ var ShiftSpace = new (function() {
         if (!keyState.ignoreSubsequentSpaces &&
             event.key == 'space' &&
             event.shift) {
-            console.log('space pressed');
+            //console.log('space pressed');
             // Make sure a keypress event doesn't fire
             keyState.cancelKeyPress = true;
             
@@ -1267,10 +1268,10 @@ var ShiftSpace = new (function() {
             // Toggle the console on and off
             if (keyState.consoleShown) {
               keyState.consoleShown = false;
-              console.log('hide console!');
+              //console.log('hide console!');
               ShiftSpace.Console.hide();
             } else {
-              console.log('show console!');
+              //console.log('show console!');
               keyState.consoleShown = true;
               ShiftSpace.Console.show();
             }
@@ -1962,8 +1963,10 @@ var ShiftSpace = new (function() {
         callback - (optional) A function to execute upon completion
     
     */
-    function serverCall(method, parameters, callback) {
+    function serverCall(method, parameters, _callback) {
+      var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
+      console.log('serverCall: ' + url);
       var data = '';
       for (var key in parameters) {
         if (data != '') {
@@ -1983,10 +1986,33 @@ var ShiftSpace = new (function() {
         method: 'POST',
         url: url,
         data: data,
-        onload: function(rx) {
+        onload: function(_rx) {
+          var rx = _rx;
+          /*
+          console.log('servercall returned');
+          console.log(rx.responseText);
+          console.log(typeof callback == 'function');
+          */
           if (typeof callback == 'function') {
-            var json = Json.evaluate(rx.responseText);
-            callback(json);
+            //console.log('evaluate ' + rx.responseText);
+            try
+            {
+              /*
+              console.log('trying');
+              console.log(eval('(' + rx.responseText + ')'));
+              console.log('tried');
+              */
+              var theJson = Json.evaluate(rx.responseText);
+            }
+            catch(exc)
+            {
+              console.log(SSDescribeException(exc));
+            }
+            /*
+            console.log('done evaluating');
+            console.log(callback);
+            */
+            callback(theJson);
           }
         },
         onerror: function(err) {

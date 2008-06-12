@@ -2,6 +2,7 @@ var Console = new Class({
   
   initialize: function(options) {
     this.shiftCount = 0;
+    //console.log('Console buildFrame');
     this.buildFrame();
   },
     
@@ -29,14 +30,20 @@ var Console = new Class({
       },
       onload: function() 
       {
+        //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> frame loaded');
         // store a ref for convenience
         this.doc = this.frame.contentDocument;
+        
+        //console.log('createShiftEntryModel');
         // create the model shift
         this.createShiftEntryModel();
+        //console.log('done createShiftEntryModel');
 
         // load the style for document
+        //console.log('load console frame style');
         this.loadStyle();
 
+        //console.log('build notifier');
         this.buildNotifier();
 
         this.doc.addEventListener('keydown',  keyDownHandler.bind(ShiftSpace), false);
@@ -45,8 +52,11 @@ var Console = new Class({
 
       }.bind(this)
     });
-    this.frame.injectInside(window.document.body);
+    //console.log('frame injecting');
+    this.frame.injectInside(document.body);
+    //console.log('finished frame injecting');
     
+    //console.log('creating resizer');
     this.resizer = new ShiftSpace.Element('div', {
       'id': 'SSShiftConsoleResizer',
       'styles': 
@@ -59,9 +69,13 @@ var Console = new Class({
         'z-index': 1000002
       }
     });
-    this.resizer.injectInside(window.document.body);
+    //console.log('injecting resizer');
+    this.resizer.injectInside(document.body);
+    //console.log('done injecting resizer');
     
-    //console.log(this.resizer.makeDraggable);
+    //console.log('test resizer getStyle top: ' + this.resizer.getStyle('top'));
+
+    //console.log('making resizer draggable');
     this.resizer.makeDraggable({
       limit: 
       {
@@ -83,7 +97,7 @@ var Console = new Class({
             cursor: 'ns-resize'
           }
         });
-        this.resizeMask.injectInside(window.document.body);
+        this.resizeMask.injectInside(document.body);
       }.bind(this),
       
       onDrag: function() 
@@ -99,7 +113,7 @@ var Console = new Class({
       }.bind(this)
       
     });
-    
+    //console.log('frame built');
   },
     
   buildNotifier: function() {
@@ -129,7 +143,7 @@ var Console = new Class({
       }
     });
     img.injectInside(this.notifier);
-    this.notifier.injectInside(window.document.body);
+    this.notifier.injectInside(document.body);
     
     img.addEvent('click', function() {
       if (!this.isVisible()) {
@@ -322,8 +336,8 @@ var Console = new Class({
   */
   hidePluginMenu: function()
   {
-    this.pluginMenu.addClass('SSDisplayNone');
-    this.pluginMenuTab.addClass('SSDisplayNone');
+    if(this.pluginMenu) this.pluginMenu.addClass('SSDisplayNone');
+    if(this.pluginMenuTab) this.pluginMenuTab.addClass('SSDisplayNone');
   },
   
   showNotifier: function() {
@@ -377,14 +391,16 @@ var Console = new Class({
   
   */
   buildContents: function() {
+    //console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< LOADED BUILD CONTENTS');
+
     var content = $(this.doc.createElement('div'));
     content.setAttribute('id', 'console');
     content.setHTML('<div class="outer"><div class="inner">' +
                     '<div id="top"><div id="tabs" class="SSUserSelectNone">' +
                     '<div id="controls">' +
-                    '<div class="button auth"><div class="image"></div></div>' +
-                    '<div class="button bugs"><div class="image" title="File a bug report"></div></div>' +
-                    '<div class="button hide"><div class="image" title="Minimize console"></div></div>' +
+                    '<div id="auth" class="button auth"><div class="image"></div></div>' +
+                    '<div id="bugs" class="button bugs"><div class="image" title="File a bug report"></div></div>' +
+                    '<div id="hide" class="button hide"><div class="image" title="Minimize console"></div></div>' +
                     '<br class="clear" />' +
                     '</div>' +
                     '<br class="clear" />' +
@@ -394,25 +410,33 @@ var Console = new Class({
                     '</div></div>');
     content.injectInside(this.doc.body);
     
+    //console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< BASICS DONE');
+    
     var controls = $(this.doc.getElementById('controls'));
-    var auth = controls.getElement('.auth');
+    //console.log('got controls');
+    
+    var auth = $(this.doc.getElementById('auth'));
     auth.addEvent('mouseover', function() {
       auth.addClass('hover');
     });
     auth.addEvent('mouseout', function() {
       auth.removeClass('hover');
     });
-    auth.addEvent('click', function() {
+    auth.addEvent('click', function(_evt) {
       if (ShiftSpace.user.getUsername()) {
         ShiftSpace.user.logout();
       } else {
+        //console.log('SHOW TAB');
         this.showTab('login');
       }
+      //console.log('setup auth control');
       this.setupAuthControl();
     }.bind(this));
+    //console.log("auth init'ed");
     this.setupAuthControl();
+    //console.log('auth setup');
     
-    var bugReport = controls.getElement('.bugs');
+    var bugReport = $(this.doc.getElementById('bugs'));
     bugReport.addEvent('mouseover', function() {
       bugReport.addClass('hover');
     });
@@ -423,7 +447,7 @@ var Console = new Class({
       window.open('http://metatron.shiftspace.org/trac/newticket');
     });
     
-    var hide = controls.getElement('.hide');
+    var hide = $(this.doc.getElementById('hide'));
     hide.addEvent('mouseover', function() {
       hide.addClass('hover');
     });
@@ -435,19 +459,25 @@ var Console = new Class({
       this.minimize();
     }.bind(this));
     
+    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABS');
     this.addTab('shifts', '0 shifts');
     this.addTab('settings', 'Settings', 'icon-settings.gif');
     if (!ShiftSpace.user.getUsername()) {
       this.addTab('login', 'Login');
     }
+    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LOGIN');
     this.buildLogin();
+    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SETTINGS');
     this.buildSettings();
     this.showTab('shifts');
+    
+    //console.log('contents built');
   },
   
   setupAuthControl: function() {
     var controls = $(this.doc.getElementById('controls'));
-    var auth = controls.getElement('.auth');
+    var auth = $(this.doc.getElementById('auth'));
+    //console.log('auth about to setup');
     if (ShiftSpace.user.getUsername()) {
       auth.removeClass('login');
       auth.addClass('logout');
@@ -457,11 +487,12 @@ var Console = new Class({
       auth.addClass('login');
       auth.setAttribute('title', 'Login');
     }
+    //console.log('auth setup done');
   },
   
   buildSettings: function() {
     var sections = this.createSubSections('settings', ['General', 'Spaces', 'Account']);
-    sections[0].setHTML('<div class="form-column">' +
+    $(sections[0]).setHTML('<div class="form-column">' +
                         '<div class="input"><div id="default_privacy" class="checkbox"></div>' +
                         '<div class="label">Set my shifts public by default</div>' +
                         '<br class="clear" /></div>' +
@@ -469,7 +500,7 @@ var Console = new Class({
                         '<input type="text" name="server" value="' + server + '" id="server-input" size="25" class="text" />' +
                         '</div><br class="clear" />');
     
-    sections[0].getElement('.form-column').setStyle('padding-top', 20);
+    $(sections[0]).getElement('.form-column').setStyle('padding-top', 20);
     var checkboxes = $(this.doc.body).getElements('.checkbox');
     checkboxes.each(function(checkbox) {
       checkbox.addEvent('click', function() {
@@ -484,12 +515,12 @@ var Console = new Class({
       });
     });
     
-    sections[1].setHTML('<form action="' + server + 'shiftspace.php">' +
+    $(sections[1]).setHTML('<form action="' + server + 'shiftspace.php">' +
                         '<label for="install-space">Install a space</label>' +
                         '<input type="text" name="space" id="install-space" class="text" size="40" />' +
                         '<input type="submit" value="Install" class="submit" />' +
                         '</form>');
-    sections[1].setStyles({
+    $(sections[1]).setStyles({
       padding: '10px 20px'
     });
     var form = sections[1].getElement('form');
@@ -510,7 +541,7 @@ var Console = new Class({
         var source = r.responseText.replace(/\s/g, ' ');
         var matches = source.match(/attributes.+?(\{.+?\})/);
         if (!matches) {
-          alert('Error, could not load space "' + space + '". Space names are case-sensitive, so check that you\'ve capitalized the space name correctly.');
+          window.alert('Error, could not load space "' + space + '". Space names are case-sensitive, so check that you\'ve capitalized the space name correctly.');
           return;
         } else {
           newSpace = this.installedSpace(space);
@@ -592,16 +623,15 @@ var Console = new Class({
   },
   
   showTab: function(id) {
-    var body = $(this.doc.body);
-    var tab = body.getElement('#tabs .active');
+    var tab = _$(this.doc.getElementById('tabs')).getElementsByClassName('active')[0];
     // close the plugin menu if open
     if(this.pluginMenu && !$(this.pluginMenu).hasClass('SSDisplayNone')) this.pluginMenu.addClass('SSDisplayNone');
     if (tab) {
-      tab.removeClass('active');
+      $(tab).removeClass('active');
     }
-    var content = body.getElement('#scroller .active');
+    var content = _$(this.doc.getElementById('scroller')).getElementsByClassName('active')[0];
     if (content) {
-      content.removeClass('active');
+      $(content).removeClass('active');
     }
     $(this.doc.getElementById('tab-' + id)).addClass('active');
     $(this.doc.getElementById(id)).addClass('active');
@@ -614,8 +644,12 @@ var Console = new Class({
   
   buildLogin: function() {
     this.addPane('login');
+    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CREATE SUBSECTIONS');
     var sections = this.createSubSections('login', ['Login', 'Sign up']);
-    sections[0].setHTML('<form action="http://shiftspace.org/login" method="post">' +
+    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DONE CREATING SUBSECTIONS');
+    //console.log('build sections');
+    //console.log('sections: ' + sections);
+    $(sections[0]).setHTML('<form id="loginForm" action="http://shiftspace.org/login" method="post">' +
                         '<div class="form-column">' +
                         '<label for="username">Username</label>' +
                         '<input type="text" name="username" id="username" class="text" />' +
@@ -627,8 +661,9 @@ var Console = new Class({
                         '<br class="clear" />' +
                         '<div id="login_response" class="response"></div>' +
                         '</form>');
-    sections[0].setStyle('padding-top', 15);
-    sections[0].getElement('form').addEvent('submit', function(e) {
+    //console.log('built sections[0]');
+    $(sections[0]).setStyle('padding-top', 15);
+    $(this.doc.getElementById('loginForm')).addEvent('submit', function(e) {
       new Event(e).preventDefault();
       var credentials = {
         username: this.doc.getElementById('username').value,
@@ -636,7 +671,7 @@ var Console = new Class({
       };
       ShiftSpace.user.login(credentials, this.handleLogin.bind(this));
     }.bind(this));
-    sections[1].setHTML('<form action="http://shiftspace.org/join" method="post">' +
+    $(sections[1]).setHTML('<form id="registerForm" action="http://shiftspace.org/join" method="post">' +
                         '<div class="form-column">' +
                         '<label for="join_username">Username</label>' +
                         '<input type="text" name="username" id="join_username" class="text" />' +
@@ -653,8 +688,8 @@ var Console = new Class({
                         '<br class="clear" />' +
                         '<div id="join_response" class="response"></div>' +
                         '</form>');
-    sections[1].setStyle('padding-top', 15);
-    sections[1].getElement('form').addEvent('submit', function(e) {
+    $(sections[1]).setStyle('padding-top', 15);
+    $(this.doc.getElementById('registerForm')).addEvent('submit', function(e) {
       //console.log('submit');
       new Event(e).preventDefault();
       var joinInput = {
@@ -722,6 +757,7 @@ var Console = new Class({
     var content = '';
     var nodes = [];
     
+    //console.log('sections length ' + sections.length);
     for (var i = 0; i < sections.length; i++) {
       var activeTab = (i == 0) ? ' subtab-active' : '';
       var activeSection = (i == 0) ? ' subsection-active' : '';
@@ -729,36 +765,59 @@ var Console = new Class({
       content += '<div id="subsection-' + target + i + '" class="subsection' + activeSection + '"></div>';
     }
     
-    var holder = $(this.doc.getElementById(target));
-    holder.setHTML('<div class="subtabs">' +
-                   '<div class="subtabs-inner">' + tabs + '</div>' +
-                   '</div>' +
-                   '<div class="subsections">' + content + '</div>' +
-                   '<br class="clear" />');
+    var holder = _$(this.doc.getElementById(target));
+    holder.innerHTML = '<div class="subtabs">' +
+                       '<div class="subtabs-inner">' + tabs + '</div>' +
+                       '</div>' +
+                       '<div class="subsections">' + content + '</div>' +
+                       '<br class="clear" />';
+                       
+    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> grabbing subtabs');
+    //console.log(holder.innerHTML)
+    //console.log(holder.getElementsByClassName('subsection').length);;
     
-    holder.getElements('.subtab').each(function(subtab) {
-      subtab.addEvent('click', function(e) {
-        var active = holder.getElement('.subtab-active');
+    /*
+    console.log(holder);
+    console.log(holder.getElementsByClassName.toString());
+    console.log('trying');
+    */
+    //console.log(holder.getElementsByClassName('subtab').length);
+    
+    holder.getElementsByClassName('subtab').each(function(subtab) {
+      $(subtab).addEvent('click', function(e) {
+        //console.log('SELECT SUB TAB');
+        var active = holder.getElementsByClassName('subtab-active')[0];
         if (active) {
-          active.removeClass('subtab-active');
+          $(active).removeClass('subtab-active');
         }
-        var above = holder.getElement('.subtab-above');
+        //console.log('1');
+        var above = holder.getElementsByClassName('subtab-above')[0];
         if (above) {
-          above.removeClass('subtab-above');
+          $(above).removeClass('subtab-above');
         }
-        var subsection = holder.getElement('.subsection-active');
+        //console.log('2');
+        var subsection = holder.getElementsByClassName('subsection-active')[0];
         if (subsection) {
-          subsection.removeClass('subsection-active');
+          $(subsection).removeClass('subsection-active');
         }
+        //console.log('3');
         $(e.currentTarget).addClass('subtab-active');
         if (e.currentTarget.previousSibling) {
           $(e.currentTarget.previousSibling).addClass('subtab-above');
         }
+        //console.log('4');
         var id = e.currentTarget.getAttribute('id').substr(7);
-        holder.getElement('#subsection-' + id).addClass('subsection-active'); 
-      });
-    });
-    return holder.getElements('.subsection');
+        //console.log('5');
+        //console.log(id);
+        //console.log(this.doc.getElementById('subsection-' + id));
+        $(this.doc.getElementById('subsection-' + id)).addClass('subsection-active'); 
+        //console.log('6');
+      }.bind(this));
+    }.bind(this));
+    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> fixed subtabs! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+    //console.log(holder.getElementsByClassName('subsections').length);
+    //console.log('=====================================================================================');
+    return holder.getElementsByClassName('subsection');
   },
   
   
@@ -769,18 +828,29 @@ var Console = new Class({
   
   */
   refresh: function() {
-    if (!this.doc || !this.doc.getElementById('top')) {
+    if (!this.doc || !this.doc.getElementById('top')) 
+    {
       // Need to wait a moment longer while things are being built
       if(this.resize) setTimeout(this.resize.bind(this), 50);
-    } else {
-      var top = $(this.doc.getElementById('top').parentNode);
+    } 
+    else 
+    {
+      var top = $(this.doc.getElementById('top')).getParent();
       var bottom = $(this.doc.getElementById('bottom'));
       bottom.setStyle('height', this.frame.getSize().size.y -
-                                top.getSize().size.y);
+      top.getSize().size.y);
     }
+    //console.log('cleaning up');
     this.resizer.setStyle('width', window.getWidth() - 50);
-    this.notifierFx.stop();
-    this.notifierFx.set(Math.max(0, this.frame.getSize().size.y - 4));
+    //console.log('cleaned');
+    if(this.notifierFx)
+    {
+      //console.log('stop notifier');
+      this.notifierFx.stop();
+      //console.log('set');
+      this.notifierFx.set(Math.max(0, this.frame.getSize().size.y - 4));
+    }
+    //console.log('exiting refresh');
   },
   
   
@@ -792,8 +862,11 @@ var Console = new Class({
   */
   show: function() {
       this.cancelNotifier = true;
+      //console.log('make visible');
       this.frame.setStyle('display', 'block');
+      //console.log('refresh');
       this.refresh();
+      //console.log('checking pending');
       if (pendingShifts > 0) {
           pendingShifts = 0;
           loadShifts();
@@ -809,9 +882,11 @@ var Console = new Class({
   */
   hide: function() {
     this.frame.setStyle('display', 'none');
+    //console.log('again set');
     this.notifierFx.set(-32);
-    
+    //console.log('hide plugin menu');
     this.hidePluginMenu();
+    //console.log('plugin menu hidden');
   },
   
   minimize: function() {
@@ -836,6 +911,7 @@ var Console = new Class({
   
   */
   addShifts: function(shifts) {
+    console.log('++++++++++++++++++++++++++++++++++++++++++ ADD SHIFTS');
     for (var shiftId in shifts) {
       var shift = shifts[shiftId];
       try
@@ -916,11 +992,11 @@ var Console = new Class({
   
   */
   addShift: function(aShift, options) {
-    //console.log('adding - ' + aShift.id);
+    console.log('adding - ' + aShift.id);
     // clone a model shift
     var newEntry = $(this.modelShiftEntry.clone(true));
     
-    //console.log(newEntry);
+    console.log(newEntry);
     
     var controls = newEntry.getElement('.controls');
     
@@ -937,7 +1013,7 @@ var Console = new Class({
     
     newEntry.getElement('.SSPermaLink').setProperty('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
     
-    //console.log('main props set');
+    console.log('main props set');
     
     newEntry.addEvent('mouseover', function() {
       if (!newEntry.hasClass('active') && !newEntry.hasClass('expanded')) 
@@ -967,14 +1043,14 @@ var Console = new Class({
       }
     }.bind(this));
     
-    //console.log('mouse behaviors set');
+    console.log('mouse behaviors set');
     
     var slideFx = new Fx.Slide($(controls), {
         duration: 250
     });
     slideFx.hide();
     
-    //console.log('slide fx');
+    console.log('slide fx');
     
     newEntry.getElement('.expander').addEvent('click', function(e) {
       var event = new Event(e);
@@ -996,14 +1072,14 @@ var Console = new Class({
       }
     }.bind(this));
     
-    //console.log('expando set');
+    console.log('expando set');
     
     controls.addEvent('click', function(e) {
       var event = new Event(e);
       event.stopPropagation();
     });
     
-    //console.log('override click behavior');
+    console.log('override click behavior');
     
     newEntry.getElement('.controls a.delete').addEvent('click', function(e) {
       var event = new Event(e);
@@ -1046,8 +1122,8 @@ var Console = new Class({
       evt.stop();
     });
     
-    //console.log('--------------------------------- about to inject');
-    //console.log(this.doc);
+    console.log('--------------------------------- about to inject');
+    console.log(this.doc);
     
     // add it
     if (options && options.isActive) 
@@ -1065,6 +1141,8 @@ var Console = new Class({
     
     this.shiftCount++;
     this.updateCount();
+    
+    console.log('------------------------------------ ADDED');
   },
   
   addPluginIconForShift: function(shiftId)
@@ -1113,29 +1191,41 @@ var Console = new Class({
   },
   
   createShiftEntryModel: function() {
+    console.log('create entry div');
     var shiftEntry = $(this.doc.createElement('div'));
+    console.log('done create entry div');
     shiftEntry.className = 'entry SSUserSelectNone';
+    console.log('set class name');
     
     // ---------------- Expander ----------------------- //
     var expanderDiv = $(this.doc.createElement('div'));
     expanderDiv.className = 'expander column';
+    console.log('expander made');
     
     var expanderImg = $(this.doc.createElement('img'));
     expanderImg.setProperty('src', server + 'images/Console/arrow.gif');
+    console.log('expanderImg made');
     expanderImg.injectInside(expanderDiv);
+    console.log('expanderImg injected');
     
     // ------------------ Space ------------------------- //
+    console.log('create space div');
     var spaceDiv = $(this.doc.createElement('div'));
     spaceDiv.className = 'space column';
     
-    spaceTitle = $(this.doc.createElement('div'));
+    console.log('create spacetitle');
+    var spaceTitle = $(this.doc.createElement('div'));
     spaceTitle.className = 'spaceTitle';
     spaceTitle.injectInside(spaceDiv);
+    
+    console.log('space added');
     
     // ------------------- Plugins ------------------------- //
     var plugins = $(this.doc.createElement('div'));
     plugins.addClass('pluginIcons');
     plugins.injectInside(spaceDiv);
+    
+    console.log('plugins added');
     
     // ------------------- Summary ------------------------- //
     var summaryDiv = $(this.doc.createElement('div'));
@@ -1152,18 +1242,26 @@ var Console = new Class({
     summaryEdit.addClass('SSDisplayNone');
     summaryEdit.injectInside(summaryDiv);
     
+    console.log('summary added');
+    
     // ------------------- User ---------------------------- //
     var userDiv = $(this.doc.createElement('div'));
     userDiv.className = 'user column';
     
+    console.log('user div added');
+    
     // ------------------- Posted -------------------------- //
     var postedDiv = $(this.doc.createElement('div'));
     postedDiv.className = 'posted cell';
+    console.log('setHTML');
     postedDiv.setHTML('Just posted');
+    console.log('posted div added');
     
     // ------------------- Clear --------------------------- //
     var clear = $(this.doc.createElement('div'));
     clear.className = 'clear';
+    
+    console.log('clear added');
     
     // ------------------- Controls ------------------------ //
     var controls = $(this.doc.createElement('div'));
@@ -1172,7 +1270,10 @@ var Console = new Class({
     var controlOptions = 'Currently, all you can do is <a href="#delete" class="delete">delete this shift</a> or <a href="#edit" class="edit">edit this shift</a>, <a target="new" class="SSPermaLink">permalink</a>';
     controls.innerHTML = controlOptions;
     
+    console.log('controls added');
+    
     // -------------------- Build the entry ---------------- //
+    console.log('injecting');
     expanderDiv.injectInside(shiftEntry);
     spaceDiv.injectInside(shiftEntry);
     summaryDiv.injectInside(shiftEntry);

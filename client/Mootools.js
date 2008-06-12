@@ -88,8 +88,8 @@ function $time(){
 };
 
 function $clear(timer){
-	clearTimeout(timer);
-	clearInterval(timer);
+	window.clearTimeout(timer); // CHANGE: David
+	window.clearInterval(timer); // CHANGE: David
 	return null;
 };
 
@@ -104,9 +104,11 @@ var Document = new Abstract(document);
 document.head = document.getElementsByTagName('head')[0];
 
 window.xpath = !!(document.evaluate);
-if (window.ActiveXObject) window.ie = window[window.XMLHttpRequest ? 'ie7' : 'ie6'] = true;
+if (window.ActiveXObject != null) window.ie = window[window.XMLHttpRequest ? 'ie7' : 'ie6'] = true;
 else if (document.childNodes && !document.all && !navigator.taintEnabled) window.webkit = window[window.xpath ? 'webkit420' : 'webkit419'] = true;
 else if (document.getBoxObjectFor != null) window.gecko = true;
+
+if(typeof window.ie == 'function') window.ie = window.ie7 = window.ie6 = false; // CHANGE: David
 
 window.khtml = window.webkit;
 
@@ -125,7 +127,7 @@ else if (typeof HTMLElement == 'undefined'){
 }
 HTMLElement.prototype.htmlElement = function(){};
 
-if (window.ie6) try {document.execCommand("BackgroundImageCache", false, true);} catch(e){};
+if (window.ie6 == true) try {document.execCommand("BackgroundImageCache", false, true);} catch(e){};
 
 var Class = function(properties){
 	var klass = function(){
@@ -458,8 +460,8 @@ Function.extend({
 			var returns = function(){
 				return fn.apply($pick(options.bind, fn), args);
 			};
-			if (options.delay) return setTimeout(returns, options.delay);
-			if (options.periodical) return setInterval(returns, options.periodical);
+			if (options.delay) return window.setTimeout(returns, options.delay); // CHANGE: David
+			if (options.periodical) return window.setInterval(returns, options.periodical); // CHANGE: David
 			if (options.attempt) try {return returns();} catch(err){return false;};
 			return returns();
 		};
@@ -518,9 +520,10 @@ Number.extend({
 
 var Element = new Class({
 
-	initialize: function(el, props){
+	initialize: function(el, props) {
 		if ($type(el) == 'string'){
-			if (window.ie && props && (props.name || props.type)){
+		  //console.log('FUCK ' + (typeof window.ie));
+			if (window.ie == true && props && (props.name || props.type)) { // CHANGE: David
 				var name = (props.name) ? ' name="' + props.name + '"' : '';
 				var type = (props.type) ? ' type="' + props.type + '"' : '';
 				delete props.name;
@@ -752,7 +755,7 @@ Element.extend({
 	setStyle: function(property, value){
 		switch(property){
 			case 'opacity': return this.setOpacity(parseFloat(value));
-			case 'float': property = (window.ie) ? 'styleFloat' : 'cssFloat';
+			case 'float': property = (window.ie == true) ? 'styleFloat' : 'cssFloat';
 		}
 		property = property.camelCase();
 		switch($type(value)){
@@ -778,7 +781,7 @@ Element.extend({
 			if (this.style.visibility != "visible") this.style.visibility = "visible";
 		}
 		if (!this.currentStyle || !this.currentStyle.hasLayout) this.style.zoom = 1;
-		if (window.ie) this.style.filter = (opacity == 1) ? '' : "alpha(opacity=" + opacity * 100 + ")";
+		if (window.ie == true) this.style.filter = (opacity == 1) ? '' : "alpha(opacity=" + opacity * 100 + ")";
 		this.style.opacity = this.$tmp.opacity = opacity;
 		return this;
 	},
@@ -826,7 +829,7 @@ Element.extend({
 		  }
 			else if (this.currentStyle) result = this.currentStyle[property];
 		}
-		if (window.ie) result = Element.fixStyle(property, result, this);
+		if (window.ie == true) result = Element.fixStyle(property, result, this);
 		if (result && property.test(/color/i) && result.contains('rgb')){
 			return result.split('rgb').splice(1,4).map(function(color){
 				return color.rgbToHex();
@@ -878,7 +881,7 @@ Element.extend({
 		var index = Element.Properties[property];
 		if (index) return this[index];
 		var flag = Element.PropertiesIFlag[property] || 0;
-		if (!window.ie || flag) return this.getAttribute(property, flag);
+		if ((window.ie == false) || flag) return this.getAttribute(property, flag);
 		var node = this.attributes[property];
 		return (node) ? node.nodeValue : null;
 	},
@@ -913,7 +916,7 @@ Element.extend({
 	setText: function(text){
 		var tag = this.getTag();
 		if (['style', 'script'].contains(tag)){
-			if (window.ie){
+			if (window.ie == true){
 				if (tag == 'style') this.styleSheet.cssText = text;
 				else if (tag ==  'script') this.setProperty('text', text);
 				return this;
@@ -929,7 +932,7 @@ Element.extend({
 	getText: function(){
 		var tag = this.getTag();
 		if (['style', 'script'].contains(tag)){
-			if (window.ie){
+			if (window.ie == true){
 				if (tag == 'style') return this.styleSheet.cssText;
 				else if (tag ==  'script') return this.getProperty('text');
 			} else {
@@ -1049,7 +1052,7 @@ var Garbage = {
 
 window.addListener('beforeunload', function(){
 	window.addListener('unload', Garbage.empty);
-	if (window.ie) window.addListener('unload', CollectGarbage);
+	if (window.ie == true) window.addListener('unload', CollectGarbage);
 });
 
 var Event = new Class({
@@ -1548,7 +1551,7 @@ Element.Events.domready = {
 			window.timer = function(){
 				if (['loaded','complete'].contains(document.readyState)) domReady();
 			}.periodical(50);
-		} else if (document.readyState && window.ie){
+		} else if (document.readyState && window.ie == true){
 			if (!$('ie_ready')){
 				var src = (window.location.protocol == 'https:') ? '://0' : 'javascript:void(0)';
 				document.write('<script id="ie_ready" defer src="' + src + '"><\/script>');
@@ -1853,7 +1856,7 @@ Fx.Styles = Fx.Base.extend({
 	},
 
 	increase: function() {
-		this.fireEvent( 'onChange', this.element ); // -David
+		this.fireEvent( 'onChange', this.element ); // CHANGE: David
 		for (var p in this.now) this.element.setStyle(p, this.css[p].getValue(this.now[p], this.options.unit, p));
 	}
 
@@ -2370,7 +2373,7 @@ var XHR = new Class({
 	},
 
 	setTransport: function(){
-		this.transport = (window.XMLHttpRequest) ? new XMLHttpRequest() : (window.ie ? new ActiveXObject('Microsoft.XMLHTTP') : false);
+		this.transport = (window.XMLHttpRequest) ? new XMLHttpRequest() : ((window.ie == true) ? new ActiveXObject('Microsoft.XMLHTTP') : false);
 		return this;
 	},
 

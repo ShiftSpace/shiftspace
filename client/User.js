@@ -8,9 +8,13 @@ var User = new Class({
     return (username != false);
   },
   
-  login: function(credentials, callback) {
+  login: function(credentials, _callback) {
+    console.log('logging in the user!');
+    var callback = _callback;
     serverCall('user.login', credentials, function(json) {
+      console.log(json.status);
       if (json.status) {
+        console.log(credentials.username);
         username = credentials.username;
         callback(json);
       } else {
