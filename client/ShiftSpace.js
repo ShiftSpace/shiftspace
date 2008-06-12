@@ -58,13 +58,16 @@ function SSGetElementsByClass(searchClass)
       classElements.push(els[i]);
     }
   }
-  return classElements;
+  return classElements.map(function(node) {return _$(node);});
 }
 
 // our special wrapper
 function _$(el)
 {
   el.getElementsByClassName = SSGetElementsByClass;
+  el.getElementByClassName = function(className) {
+    return this.getElementsByClassName(className)[0];
+  }
   return el;
 }
 
