@@ -8,6 +8,7 @@ header('Content-Type: text/plain');
 // @namespace      http://shiftspace.org/
 // @description    An open source layer above any website
 // @include        *
+// @require        http://metatron.shiftspace.org/code/trunk/client/Mootools.js
 // ==/UserScript==
 /*
 
@@ -50,7 +51,7 @@ if (typeof GM_registerMenuCommand != 'undefined') {
 
 function bootstrap(rx)
 {
-  safeWindow.eval(rx.responseText);
+  eval(rx.responseText);
 }
 
 GM_xmlhttpRequest({

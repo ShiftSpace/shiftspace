@@ -3,6 +3,7 @@
 // @namespace      http://shiftspace.org/
 // @description    An open source layer above any website
 // @include        *
+// @require        http://metatron.shiftspace.org/code/trunk/client/Mootools.js
 // ==/UserScript==
 
 /*
@@ -38,10 +39,6 @@ Credits:
 
 // ShiftSpace is built on the Mootools framework (pre-processing required)
 
-console.log("Loading Mootools");
-
-// INCLUDE Mootools.js
-
 console.log('Loading ShiftSpace');
 
 /*
@@ -56,14 +53,11 @@ Class: ShiftSpace
 var ShiftSpace = new (function() {
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
-    
     // permissions problem here?
-    if($type(server) == 'undefined') var server = getValue('server', 'http://metatron.shiftspace.org/api/');
+    if (typeof server == 'undefined') {
+      var server = getValue('server', 'http://metatron.shiftspace.org/api/');
+    }
     
-    //var server = "http://localhost/~davidnolen/shiftspace-0.11/";
-    //var server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
-    //var server = "http://metatron.shiftspace.org/api/";
-
     // Current ShiftSpace version
     var version = '0.11';
     
@@ -2092,6 +2086,7 @@ var ShiftSpace = new (function() {
     Parameters:
         key - A unique string identifier
         defaultValue - This value will be returned if nothing is found.
+        rawValue - Doesn't use Json encoding on stored values
     
     Returns:
         Either the stored value, or defaultValue if none is found.
@@ -2104,10 +2099,13 @@ var ShiftSpace = new (function() {
       var result = GM_getValue(key, defaultValue);
       // Fix for GreaseKit, which doesn't support default values
       if (result == null) {
-        return defaultValue;
+        console.log('getValue("' + key + '") = ' + Json.evaluate(defaultValue));
+        return Json.evaluate(defaultValue);
       } else if (rawValue) {
+        console.log('getValue("' + key + '") = ' + result);
         return result;
       } else {
+        console.log('getValue("' + key + '") = ...' + Json.evaluate(result));
         return Json.evaluate(result);
       }
     }

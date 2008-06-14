@@ -534,7 +534,31 @@ var Console = new Class({
       });
     });
     
-    //console.log('buildSettings - done with check boxes');
+    var serverInput = $(this.doc.getElementById('server-input'));
+    serverInput.addEvent('change', function() {
+      var newServer = serverInput.value;
+      if (newServer.substr(newServer.length - 2, 1) != '/') {
+        newServer = newServer + '/';
+      }
+      if (newServer.substr(0, 7) != 'http://' &&
+          newServer.substr(0, 8) != 'https://') {
+        newServer = 'http://' + newServer;
+      }
+      serverInput.value = newServer;
+      GM_xmlhttpRequest({
+        method: 'GET',
+        url: serverInput.value + 'shiftspace.php?method=version',
+        onload: function(rx) {
+          if (rx.responseText == version) {
+            setValue('server', serverInput.value);
+          } else {
+            alert('Sorry, that server address returned an invalid response.');
+            serverInput.value = server;
+            console.log(rx.responseText);
+          }
+        }
+      });
+    });
     
     $(sections[1]).setHTML('<form action="' + server + 'shiftspace.php">' +
                         '<label for="install-space">Install a space</label>' +
