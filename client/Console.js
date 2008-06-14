@@ -559,8 +559,8 @@ var Console = new Class({
     
     form.addEvent('submit', function(e) {
       new Event(e).preventDefault();
-
-      var space = form.space.value;
+      var spaceInput = this.doc.getElementById('install-space');
+      var space = spaceInput.value;
       if (space == '') return;
 
       var spaceURL = server + 'spaces/' + space + '/' + space + '.js';
@@ -571,9 +571,9 @@ var Console = new Class({
           window.alert('Error, could not load space "' + space + '". Space names are case-sensitive, so check that you\'ve capitalized the space name correctly.');
           return;
         } else {
-          newSpace = this.installedSpace(space);
+          newSpace = $(this.installedSpace(space));
           newSpace.injectBefore(form);
-          form.space.value = '';
+          spaceInput.value = '';
           installed[space] = spaceURL;
           setValue('installed', installed);
         }
