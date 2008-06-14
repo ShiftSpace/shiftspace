@@ -114,8 +114,8 @@ window.khtml = window.webkit;
 
 Object.extend = $extend;
 
-// Our fix for Safari and Greasekit - CHANGE
-if ( window.webkit && window.HTMLElement )
+// Our fix for Safari and Greasekit and FF3 - CHANGE
+if ( (window.webkit && window.HTMLElement) || !HTMLElement.prototype )
 {
   var HTMLElement = function(){};
   HTMLElement.prototype = window.HTMLElement;

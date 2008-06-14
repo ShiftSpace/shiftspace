@@ -60,9 +60,9 @@ var ShiftSpace = new (function() {
     // permissions problem here?
     if($type(server) == 'undefined') var server = getValue('server', 'http://metatron.shiftspace.org/api/');
     
-    //server = "http://localhost/~davidnolen/shiftspace-0.11/";
-    //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
-    //server = "http://metatron.shiftspace.org/api/";
+    //var server = "http://localhost/~davidnolen/shiftspace-0.11/";
+    //var server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
+    //var server = "http://metatron.shiftspace.org/api/";
 
     // Current ShiftSpace version
     var version = '0.11';
@@ -916,16 +916,21 @@ var ShiftSpace = new (function() {
           return;
         }
         
-        if (json.username) {
+        if (json.username) 
+        {
           setUsername(json.username);
-          if (consoleIsWaiting) {
+          if (consoleIsWaiting) 
+          {
+            console.log('remote login tab set up auth control');
             ShiftSpace.Console.removeTab('login');
             ShiftSpace.Console.setupAuthControl();
           }
         }
         pendingShifts = json.count;
-        console.log('pendingShifts ' + pendingShifts);
-        if (json.count > 0 && consoleIsWaiting) {
+        console.log('- pendingShifts ' + pendingShifts);
+        if (json.count > 0 && consoleIsWaiting) 
+        {
+          console.log('about to show notifier');
           ShiftSpace.Console.showNotifier();
         }
       });
@@ -1808,6 +1813,7 @@ var ShiftSpace = new (function() {
     */
     function registerSpace(instance) {
       var spaceName = instance.attributes.name;
+      console.log('Register Space ===================================== ' + spaceName);
       spaces[spaceName] = instance;
       instance.addEvent('onShiftUpdate', saveShift.bind(this));
 
@@ -1829,7 +1835,7 @@ var ShiftSpace = new (function() {
           var css = spaceDir + instance.attributes.css;
           instance.attributes.css = css;
         }
-        loadStyle(instance.attributes.css, instance.onCssLoad.bind(instance));
+        setTimeout(loadStyle.bind(ShiftSpace, [instance.attributes.css, instance.onCssLoad.bind(instance)]), 0);
       }
 
       // This exposes each space instance to the console

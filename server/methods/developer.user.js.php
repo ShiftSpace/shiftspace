@@ -48,10 +48,13 @@ if (typeof GM_registerMenuCommand != 'undefined') {
     });
 }
 
+function bootstrap(rx)
+{
+  safeWindow.eval(rx.responseText);
+}
+
 GM_xmlhttpRequest({
     method: 'GET',
     url: server + 'shiftspace.php?debug=' + debug + '&cacheFiles=0&method=shiftspace.user.js&' + new Date().getTime(),
-    onload: function(rx) {
-        eval(rx.responseText);
-    }
+    onload: bootstrap
 });
