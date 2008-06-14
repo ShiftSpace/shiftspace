@@ -487,6 +487,9 @@ var Console = new Class({
   setupAuthControl: function() {
     var controls = $(this.doc.getElementById('controls'));
     var auth = $(this.doc.getElementById('auth'));
+    if (!auth) {
+      return;
+    }
     //console.log('auth about to setup');
     if (ShiftSpace.user.getUsername()) {
       auth.removeClass('login');
@@ -507,7 +510,7 @@ var Console = new Class({
                         '<div class="label">Set my shifts public by default</div>' +
                         '<br class="clear" /></div>' +
                         '<div class="input"><label for="server-input">Server address:</label>' +
-                        '<input type="text" name="server" value="' + server + '" id="server-input" size="25" class="text" />' +
+                        '<input type="text" name="server" value="' + server + '" id="server-input" size="40" class="text" />' +
                         '</div><br class="clear" />');
                         
     //console.log('buildSettings - done setting html');
@@ -600,6 +603,7 @@ var Console = new Class({
           spaceInput.value = '';
           installed[space] = spaceURL;
           setValue('installed', installed);
+          ShiftSpace.ShiftMenu.addSpace(space);
         }
       }.bind(this));
     }.bind(this));
@@ -626,6 +630,7 @@ var Console = new Class({
         delete installed[id];
         setValue('installed', installed);
         $(div).remove();
+        ShiftSpace.ShiftMenu.removeSpace(id);
       }
     });
     
@@ -696,7 +701,9 @@ var Console = new Class({
   
   removeTab: function(id) {
     var tab = $(this.doc.getElementById('tab-' + id));
-    tab.remove();
+    if (tab) {
+      tab.remove();
+    }
   },
   
   buildLogin: function() {

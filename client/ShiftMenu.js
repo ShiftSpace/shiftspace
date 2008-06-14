@@ -2,6 +2,7 @@ var ShiftMenu = new Class({
   
   initialize: function(options) {
     this.menuVisible = false;
+    this.spaces = {};
   },
   
   buildMenu: function() {
@@ -27,22 +28,24 @@ var ShiftMenu = new Class({
     }).injectInside(this.element);
     this.element.injectInside(document.body);
     
-    console.log(installed);
-    for (var spaceName in installed) {
-      this.setupSpace(spaceName);
-    }
-    
     new ShiftSpace.Element('br', {
       styles: {
         clear: 'both'
       }
     }).injectInside(container);
+    
+    for (var spaceName in installed) {
+      this.addSpace(spaceName);
+    }
+    
   },
   
-  setupSpace: function(spaceName) {
+  addSpace: function(spaceName) {
     // TODO: we need the icon to not be separate from the space so that we can do incremental loading.
+    console.log('adding space ' + spaceName);
     var spaceAttrs = ShiftSpace.info(spaceName);
     var container = this.element.firstChild;
+    var clear = container.getElementsByTagName('br')[0];
     var button = new ShiftSpace.Element('div', {
       'class': 'button',
       'title': spaceAttrs.title
@@ -52,7 +55,8 @@ var ShiftMenu = new Class({
       src: spaceAttrs.icon
     });
     icon.injectInside(button);
-    button.injectInside(container);
+    button.injectBefore(clear);
+    this.spaces[spaceName] = button;
     
     icon.addEvent('mouseover', function() {
       button.addClass('hover');
@@ -84,6 +88,10 @@ var ShiftMenu = new Class({
       }
       this.hide(true);
     }.bind(this));
+  },
+  
+  removeSpace: function(spaceName) {
+    this.spaces[spaceName].remove();
   },
   
   show: function(x, y) {
