@@ -9,7 +9,6 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   
   setup : function()
   {
-    this.focusRef = this.focusImage.bind(this);
     this.blurRef = this.blurImage.bind(this);
     this.imageEventsAttached = false;
     this.allImages = $$('img').filter(function(anImage) { return !ShiftSpace.isSSElement(anImage);});
@@ -21,7 +20,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     this.focusDiv = new ShiftSpace.Element('div', {
       'class': "SSImageSwapFocusDiv"
     });
-
+    
     this.grabSwapButton = new ShiftSpace.Element('div', {
       'class': "SSImageSwapButton"
     });
@@ -39,7 +38,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
       'class': "SSImageSwapButtonRight" 
     });
     this.rightTarget.injectInside(this.grabSwapButton);
-
+    
     this.attachEvents();
   },
 
@@ -79,12 +78,25 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     this.rightTarget.addEvent('mouseout', function(_evt) {
       this.grabSwapButton.removeClass('grab');
     }.bind(this));
+    
+    var self = this;
+    console.log('!!!');
+    self.setValue('testing', '1 2 3');
     this.rightTarget.addEvent('click', function(_evt) {
-      if(this.grabSwapButton.hasClass('grab'))
+      if(self.grabSwapButton.hasClass('grab'))
       {
-        this.grabImage();
+        var currentShift = self.getCurrentShift();
+    
+        // store this across windows
+        self.setValue('grabbedImage', self.currentImage.src);
+    
+        if(currentShift.getSrc() && currentShift.isPinned())
+        {
+          // we need a new shift
+          self.allocateNewShift();
+        }
       }
-    }.bind(this));
+    });
   },
 
   showInterface : function()
@@ -110,7 +122,27 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   attachImageEvents : function()
   {
     // listen for mouse events when the interface is shown
-    this.allImages.each(function(anImage){ anImage.addEvent('mouseover', this.focusRef) }.bind(this));
+    var self = this;
+    this.allImages.each(function(anImage) {
+      anImage.addEvent('mouseover', function(_evt) {
+        console.log('mouseover');
+        var image = $((new Event(_evt)).target);
+        var pos = image.getPosition();
+        var size = image.getSize().size;
+        
+        // store the url to this image
+        self.currentImage = image;
+        
+        self.focusDiv.setStyles({
+          left: pos.x,
+          top: pos.y,
+          width: size.x,
+          height: size.y
+        });
+        
+        self.focusDiv.injectInside(document.body);
+      });
+    });
   },
   
   removeImageEvents : function()
@@ -150,25 +182,6 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
 
     // remove the image handlers
     this.removeImageEvents();
-  },
-  
-  focusImage : function(_evt)
-  {
-    var image = $((new Event(_evt)).target);
-    var pos = image.getPosition();
-    var size = image.getSize().size;
-    
-    // store the url to this image
-    this.currentImage = image;
-    
-    this.focusDiv.setStyles({
-      left: pos.x,
-      top: pos.y,
-      width: size.x,
-      height: size.y
-    });
-    
-    this.focusDiv.injectInside(document.body);
   },
   
   blurImage : function()

@@ -58,7 +58,7 @@ ShiftSpace.Space = new Class({
       var name = this.attributes.name || '';
       console.error( 'Error: The  ' + name + ' is not valid and will not be instantiated.' );
     }
-    
+    console.log('/ / / / SETTING UP');
     this.setup();
     
     return this;
@@ -505,7 +505,10 @@ ShiftSpace.Space = new Class({
       value - the value itself.
   */
   setValue : function( key, value ) {
-    return setValue(this.getName() + '.' + key, value);
+    var self = this;
+    setTimeout(function() {
+      setValue(self.getName() + '.' + key, value);
+    }, 0);
   },
   
   /*
