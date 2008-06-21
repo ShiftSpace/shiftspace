@@ -1806,6 +1806,7 @@ var ShiftSpace = new (function() {
     
     */
     function registerSpace(instance) {
+      console.log("registerSpace");
       var spaceName = instance.attributes.name;
       console.log('Register Space ===================================== ' + spaceName);
       spaces[spaceName] = instance;
@@ -1822,6 +1823,8 @@ var ShiftSpace = new (function() {
         var icon = spaceDir + instance.attributes.icon;
         instance.attributes.icon = icon;
       }
+
+      //console.log("Space icon: " + instance.attribution.icon);
 
       // if a css file is defined in the attributes load the style
       if (instance.attributes.css) {
