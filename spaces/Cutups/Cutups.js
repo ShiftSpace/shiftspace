@@ -1,23 +1,21 @@
 var CutupsSpace = ShiftSpace.Space.extend({
   attributes: {
     name: 'Cutups',
-    icon: 'HelloWorld.png', 
+    icon: 'Cutups.png', 
     version: 0.1,
     css: 'spaces/Cutups/Cutups.css'
   },
   setup: function() {
     this.fireCutup = function(e){
-      console.log("fired event");
             if (!window.getSelection().getRangeAt(0).collapsed) {
                var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
-               console.log(window.getSelection().getRangeAt(0));
-               console.log('range is: ',newRangeRef);
                 if (!this.getCurrentShift().ranges){
                     this.getCurrentShift().ranges = [];
                 }
                 this.getCurrentShift().ranges.push(newRangeRef);
                 this.turnOnRangeRef(newRangeRef);
-                newRangeRef.cutupsArray = this.multiLineArray;
+                newRangeRef.cutupsArray = this.multiLineArray['cutup'];
+                newRangeRef.origArray = this.multiLineArray['orig'];
             }
             return false;
     }.bind(this);
@@ -74,6 +72,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
         // we need clean styles so we don't use ShiftSpace.Element
         var enclosingSpan = document.createElement("span");
         enclosingSpan.id = this.getCurrentShift().getId();
+        enclosingSpan.setAttribute("class","SSCutup");
         enclosingSpan.setAttribute("_shiftspace_cutups", "on");
         this.surround_text_node(xPathResult.snapshotItem(i), range, enclosingSpan);
     }
@@ -103,6 +102,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   cutupRange: function(xPathResult){
     var multiLineArray = Array();//2 dim array contains text for each node
+    multiLineArray['cutup'] = Array();
+    multiLineArray['orig'] = Array();
     var joinedArray = Array();//contains all text split into single array
     var pattern = /(\s)?\S+/g;
     //break up snapshot into arrays of words
@@ -112,7 +113,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
         joinedArray = joinedArray.concat(lineArray);
         //do not add empty nodes to array
         if(lineArray != null){
-          multiLineArray.push(lineArray);
+          multiLineArray['cutup'].push(lineArray);
+          multiLineArray['orig'].push(text);
         }
     }
     //filter out null values
@@ -127,9 +129,9 @@ var CutupsSpace = ShiftSpace.Space.extend({
     //this keeps the same number of words in each node
     //while the actual words change
     var i = 0;
-    for(var x=0;x<multiLineArray.length;x++){
-        for(var y=0;y<multiLineArray[x].length;y++){
-            multiLineArray[x][y] = joinedArray[i];
+    for(var x=0;x<multiLineArray['cutup'].length;x++){
+        for(var y=0;y<multiLineArray['cutup'][x].length;y++){
+            multiLineArray['cutup'][x][y] = joinedArray[i];
             i++;
         }
     }
@@ -137,7 +139,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
     for ( var i=0,l=0; i < xPathResult.snapshotLength; i++ ){
       //if node is not empty
       if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
-        xPathResult.snapshotItem(i).textContent = multiLineArray[l].join("");
+        xPathResult.snapshotItem(i).textContent = multiLineArray['cutup'][l].join("");
         l++
       }
     }
@@ -156,7 +158,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
       'id':'SSCutupHandle'});
     
     var widgetInputLabel = new ShiftSpace.Element('label',{
-      'for':'SSCutupTitle'}).appendText('title');
+      'for':'SSCutupTitle'}).appendText('title:');
     
     var widgetInputTitle = new ShiftSpace.Element('input',{
       'id':'SSCutupTitle',
@@ -208,9 +210,11 @@ var CutupsSpace = ShiftSpace.Space.extend({
         },
         'mousedown':function(){
           this.setStyle('backgroundColor','#777777');
+          this.setStyle('color','#222222');
         },
         'mouseup':function(){
           this.setStyle('backgroundColor','#999999');
+          this.setStyle('color','#333333');
         }
     }
     
@@ -230,19 +234,26 @@ var CutupsSpace = ShiftSpace.Space.extend({
     document.removeEventListener('mousedown',this.fireCutup,false);
     this.interfaceBuilt = false;
   },
-  hideCutups: function() {
+  hideCutups: function(json) {
       // ignores the specific shift since only one highlight can be on at a given moment 
       // search for all span elements with _shiftspace_highlight attribute and open them
       var xPathResult = document.evaluate(".//span[attribute::_shiftspace_cutups='on']", document, null,
-          XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);        
-
+          XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      
       var parentNodes = [];
-
-      for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
+      for (var i=0,l=0; i < xPathResult.snapshotLength; i++) {
+        if(!xPathResult.snapshotItem(i).textContent.match(/^s+$/)){//HERE
           var spanElement = xPathResult.snapshotItem(i);
-          var newTextNode = document.createTextNode(spanElement.textContent);
+          //if is not an empty node grab content from json
+          if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
+            var newTextNode = document.createTextNode(json[0]['origArray'][l]);
+            l++;
+          }else{
+            var newTextNode = document.createTextNode(spanElement.textContent);
+          }
           parentNodes[i] = spanElement.parentNode;
           spanElement.parentNode.replaceChild(newTextNode, spanElement);
+        }
       } 
 
       for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
@@ -250,7 +261,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
       } 
   },  
   save: function() {
-    console.log(this.summary);
     this.getCurrentShift().summary = this.summary.value;
     this.getCurrentShift().save();
   }
@@ -258,8 +268,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
 
 var CutupsShift = ShiftSpace.Shift.extend({
     setup: function(json){
+      console.log('in shift: ',json);
       if(json.ranges){
-          console.log(json);
           //replace __newline__ token with \n
           for(var i=0; i<json.ranges.length; i++){
             json.ranges[i].origText = json.ranges[i].origText.replace(new RegExp("__newline__","g"),"\n");
@@ -274,7 +284,6 @@ var CutupsShift = ShiftSpace.Shift.extend({
     },
     encode: function() {
       //tokenize newline with __newline__
-      console.log(this.ranges);
       for(var i=0; i<this.ranges.length; i++){
         this.ranges[i].origText = this.ranges[i].origText.replace(new RegExp("\\n","g"),"__newline__");
         //probably a range coder problem for some reason ancestorOrigTextContent null
@@ -298,7 +307,8 @@ var CutupsShift = ShiftSpace.Shift.extend({
       window.location.hash = this.getId();
     },
     hide: function(){
-      this.getParentSpace().hideCutups();
+      window.json = this.ranges;
+      this.getParentSpace().hideCutups(this.ranges);
     }
 });
 
