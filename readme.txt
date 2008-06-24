@@ -98,7 +98,7 @@ doing! Maybe some day we'll have instructions for Linux too.
     
     Currently we only have documentation for Windows XP, with service pack 2
     installed. We'd love to hear if somebody gets ShiftSpace running on Windows
-    Vista or another version of Windows, but unfortunately we currently only
+    Vista or another version of Windows, but (un)fortunately we currently only
     have access to an XP machine.
 
     First, go to the Apache website and click on the link "from a mirror" that
