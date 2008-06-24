@@ -14,8 +14,20 @@ var CutupsSpace = ShiftSpace.Space.extend({
                 }
                 this.getCurrentShift().ranges.push(newRangeRef);
                 this.turnOnRangeRef(newRangeRef);
+                //multiLineArray contains textnodes as they appear in their original
+                //form and broken into a randomized array of words
                 newRangeRef.cutupsArray = this.multiLineArray['cutup'];
                 newRangeRef.origArray = this.multiLineArray['orig'];
+            }else{
+            /*
+            Changed code so that user can press cutup multiple times to 
+            change text until desired result. Need to add functionality so that
+            multiple ranges can be created.
+            */                
+                var xPathQuery = "//*[@id='"  + this.getCurrentShift().getId() + "']";
+                var xPathResult2 = document.evaluate(xPathQuery, document.body, null,
+                    XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                this.cutupRange(xPathResult2);               
             }
             return false;
     }.bind(this);
