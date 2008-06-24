@@ -25,9 +25,9 @@ var CutupsSpace = ShiftSpace.Space.extend({
             multiple ranges can be created.
             */                
                 var xPathQuery = "//*[@id='"  + this.getCurrentShift().getId() + "']";
-                var xPathResult2 = document.evaluate(xPathQuery, document.body, null,
+                var xPathResult = document.evaluate(xPathQuery, document.body, null,
                     XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                this.cutupRange(xPathResult2);               
+                this.cutupRange(xPathResult);               
             }
             return false;
     }.bind(this);
@@ -113,37 +113,47 @@ var CutupsSpace = ShiftSpace.Space.extend({
     }
   },
   cutupRange: function(xPathResult){
-    var multiLineArray = Array();//2 dim array contains text for each node
-    multiLineArray['cutup'] = Array();
-    multiLineArray['orig'] = Array();
-    var joinedArray = Array();//contains all text split into single array
-    var pattern = /(\s)?\S+/g;
-    //break up snapshot into arrays of words
-    for ( var i=0 ; i < xPathResult.snapshotLength; i++ ){
-        var text = xPathResult.snapshotItem(i).textContent;
-        var lineArray = text.match(pattern);
-        joinedArray = joinedArray.concat(lineArray);
-        //do not add empty nodes to array
-        if(lineArray != null){
-          multiLineArray['cutup'].push(lineArray);
-          multiLineArray['orig'].push(text);
-        }
+    /*
+    change method so that multiLineArray is not recreated when the user invokes
+    cutupRange multiple times by pressing button.
+    */
+    
+    if(!this.multiLineArray){
+      console.log("multiLineArray exits");
+      this.multiLineArray = Array();//2 dim array contains text for each node
+      this.multiLineArray['cutup'] = Array();
+      this.multiLineArray['orig'] = Array();
+      this.joinedArray = Array();//contains all text split into single array
+      var pattern = /(\s)?\S+/g;
+      //break up snapshot into arrays of words
+      for ( var i=0 ; i < xPathResult.snapshotLength; i++ ){
+          var text = xPathResult.snapshotItem(i).textContent;
+          var lineArray = text.match(pattern);
+          //joinedArray contains all arrays of words from text nodes in a single
+          //array.
+          this.joinedArray = this.joinedArray.concat(lineArray);
+          //do not add empty nodes to array
+          if(lineArray != null){
+            this.multiLineArray['cutup'].push(lineArray);
+            this.multiLineArray['orig'].push(text);
+          }
+      }
+      //filter out null values
+      this.joinedArray = this.joinedArray.filter(function(item,index){
+          return item != null;
+      });
     }
-    //filter out null values
-    joinedArray = joinedArray.filter(function(item,index){
-        return item != null;
-    });
     //randomly sort joined arrays
-    joinedArray.sort(function(a,b){
+    this.joinedArray.sort(function(a,b){
         return Math.random() - 0.5;
     });
     //break up reinsert sorted item into multiline array
     //this keeps the same number of words in each node
     //while the actual words change
     var i = 0;
-    for(var x=0;x<multiLineArray['cutup'].length;x++){
-        for(var y=0;y<multiLineArray['cutup'][x].length;y++){
-            multiLineArray['cutup'][x][y] = joinedArray[i];
+    for(var x=0;x<this.multiLineArray['cutup'].length;x++){
+        for(var y=0;y<this.multiLineArray['cutup'][x].length;y++){
+            this.multiLineArray['cutup'][x][y] = this.joinedArray[i];
             i++;
         }
     }
@@ -151,12 +161,12 @@ var CutupsSpace = ShiftSpace.Space.extend({
     for ( var i=0,l=0; i < xPathResult.snapshotLength; i++ ){
       //if node is not empty
       if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
-        xPathResult.snapshotItem(i).textContent = multiLineArray['cutup'][l].join("");
+        xPathResult.snapshotItem(i).textContent = this.multiLineArray['cutup'][l].join("");
         l++
       }
     }
     //this is a bad idea.
-    this.multiLineArray = multiLineArray;
+    //this.multiLineArray = multiLineArray;
   },
   showInterface: function(){
     this.parent();
@@ -280,7 +290,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
 
 var CutupsShift = ShiftSpace.Shift.extend({
     setup: function(json){
-      console.log('in shift: ',json);
       if(json.ranges){
           //replace __newline__ token with \n
           for(var i=0; i<json.ranges.length; i++){
