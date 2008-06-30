@@ -58,6 +58,11 @@ var ShiftSpace = new (function() {
       var server = getValue('server', 'http://metatron.shiftspace.org/api/');
     }
     
+    //server = "http://localhost/~davidnolen/shiftspace-0.11/";
+    //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
+    var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
+    //server = "http://metatron.shiftspace.org/api/";
+
     // Current ShiftSpace version
     var version = '0.11';
     
@@ -106,10 +111,10 @@ var ShiftSpace = new (function() {
    
     /*
     installed = {
-      'Notes' : server + 'spaces/Notes/Notes.js',
-      'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
-      'Highlights': server + 'spaces/Highlights/Highlights.js',
-      'SourceShift': server + 'spaces/SourceShift/SourceShift.js',
+      'Notes' : myFiles + 'spaces/Notes/Notes.js',
+      'ImageSwap': myFiles + 'spaces/ImageSwap/ImageSwap.js',
+      'Highlights': myFiles + 'spaces/Highlights/Highlights.js',
+      'SourceShift': myFiles + 'spaces/SourceShift/SourceShift.js',
     };
     */
 
@@ -120,7 +125,7 @@ var ShiftSpace = new (function() {
 
     /*
     installedPlugins = {
-      'Trails' : server + 'plugins/Trails/NewTrail.js'
+      'Trails' : myFiles + 'plugins/Trails/NewTrail.js'
     };
     */
     
@@ -249,6 +254,13 @@ var ShiftSpace = new (function() {
         }
       }
       
+    }
+    
+    Function.prototype.safeCall = function()
+    {
+      var args = $A(arguments);
+      console.log('safe call');
+      setTimeout(this.bind(ShiftSpace, args), 0);
     }
     
     /*
@@ -430,7 +442,6 @@ var ShiftSpace = new (function() {
     
     function SSGetPluginType(plugin)
     {
-      console.log('SSGetPluginType');
       return __pluginsData__[plugin]['type'];
     }
     
@@ -690,7 +701,7 @@ var ShiftSpace = new (function() {
     
     function SSShowNewShift(shiftId)
     {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SSShowNewShift ' + shiftId);
+      //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SSShowNewShift ' + shiftId);
       var space = spaceForShift(shiftId);
       
       // call onShiftCreate
@@ -971,17 +982,17 @@ var ShiftSpace = new (function() {
           // save the pluginsData
           for(var plugin in installedPlugins)
           {
-            console.log('++++++++++++++++++++++++++++++++++++++ CHECKING FOR ' + plugin);
+            //console.log('++++++++++++++++++++++++++++++++++++++ CHECKING FOR ' + plugin);
             if(json[plugin]) 
             {
-              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-              console.log('LOADING INITIAL DATA FOR ' + plugin);
-              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+              //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+              //console.log('LOADING INITIAL DATA FOR ' + plugin);
+              //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
               __pluginsData__[plugin] = json[plugin];
             }
           }
           
-          console.log(__pluginsData__);
+          //console.log(__pluginsData__);
           
           json.shifts.each(function(shift) {
             shifts[shift.id] = shift;
@@ -1060,6 +1071,7 @@ var ShiftSpace = new (function() {
       //console.log('saveShift');
       //console.log(shiftJson);
       
+      // if new skip to saveNewShift
       if (shiftJson.id.substr(0, 8) == 'newShift') {
         return saveNewShift(shiftJson);
       }
@@ -1073,7 +1085,9 @@ var ShiftSpace = new (function() {
         username: ShiftSpace.user.getUsername()
       };
       
-      serverCall('shift.update', params, function(json) {
+      console.log('using safe call!');
+      serverCall.safeCall('shift.update', params, function(json) {
+        console.log('returned shift.update!');
         if (!json.status) {
           console.error(json.message);
           return;
@@ -1082,7 +1096,6 @@ var ShiftSpace = new (function() {
         // call onShiftSave
         spaces[shiftJson.space].onShiftSave(shiftJson.id);
       });
-      
     }
     
     /*
@@ -1842,6 +1855,7 @@ var ShiftSpace = new (function() {
 
       instance.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
       instance.addEvent('onShiftShow', function(shiftId) {
+        console.log('show shift event!');
         ShiftSpace.Console.showShift(shiftId);
       });
       instance.addEvent('onShiftBlur', function(shiftId) {
@@ -2011,13 +2025,13 @@ var ShiftSpace = new (function() {
         data: data,
         onload: function(_rx) {
           var rx = _rx;
-          /*
           console.log('servercall returned');
+          /*
           console.log(rx.responseText);
           console.log(typeof callback == 'function');
           */
           if (typeof callback == 'function') {
-            //console.log('evaluate ' + rx.responseText);
+            console.log('evaluate ' + rx.responseText);
             try
             {
               /*
@@ -2036,6 +2050,10 @@ var ShiftSpace = new (function() {
             console.log(callback);
             */
             callback(theJson);
+          }
+          else
+          {
+            console.log('callback is not a function');
           }
         },
         onerror: function(err) {
