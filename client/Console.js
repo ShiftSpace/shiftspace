@@ -1028,11 +1028,11 @@ var Console = new Class({
   },
   
   showEditTitleField: function(id) {
-    var el = $(this.doc.getElementById(id));
+    var el = _$(this.doc.getElementById(id));
     if(el)
     {
-      el.getElement('.summaryEdit').removeClass('SSDisplayNone');
-      el.getElement('.summaryView').addClass('SSDisplayNone');
+      $(el.getElementByClassName('summaryEdit')).removeClass('SSDisplayNone');
+      $(el.getElementByClassName('summaryView')).addClass('SSDisplayNone');
     }
   },
   
@@ -1046,17 +1046,18 @@ var Console = new Class({
   },
   
   setTitleForShift: function(id, title) {
-    var el = $(this.doc.getElementById(id));
+    var el = _$(this.doc.getElementById(id));
     if(el)
     {
-      el.getElement('.summaryView').setText(title);
+      $(el.getElementByClassName('summaryView')).setText(title);
     }
   },
   
   updateShift: function(shiftJson) {
-    var entry = $(this.doc.getElementById(shiftJson.id));
-    entry.getElement('.summary').getElement('.summaryView').setHTML(shiftJson.summary);
-    entry.getElement('.user').setHTML(shiftJson.username);
+    var entry = _$(this.doc.getElementById(shiftJson.id));
+    
+    $(entry.getElementByClassName('summary').getElementByClassName('summaryView')).setHTML(shiftJson.summary);
+    $(entry.getElementByClassName('user')).setHTML(shiftJson.username);
   },
   
   
