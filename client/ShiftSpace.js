@@ -60,7 +60,7 @@ var ShiftSpace = new (function() {
     
     //server = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
-    var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
+    //var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/api/";
 
     // Current ShiftSpace version
@@ -256,11 +256,12 @@ var ShiftSpace = new (function() {
       
     }
     
-    Function.prototype.safeCall = function()
-    {
-      var args = $A(arguments);
-      console.log('safe call');
-      setTimeout(this.bind(ShiftSpace, args), 0);
+    Function.prototype.safeCall = function() {
+      var self = this, args = [], len = arguments.length;
+      for(var i = 0; i < arguments.length; i++) args.push(arguments[i]);
+      setTimeout(function() {
+        return self.apply(null, args);
+      }, 0);
     }
     
     /*
