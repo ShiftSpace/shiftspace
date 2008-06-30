@@ -365,6 +365,7 @@ var Console = new Class({
       }.bind(this));
     }
     this.hideNotifier.delay(3000, this);
+    console.log('----------------------------------- exit show notifier');
   },
   
   hideNotifier: function() {
@@ -485,6 +486,7 @@ var Console = new Class({
   },
   
   setupAuthControl: function() {
+    console.log('setupAuthControl');
     var controls = $(this.doc.getElementById('controls'));
     var auth = $(this.doc.getElementById('auth'));
     if (!auth) {
@@ -997,11 +999,13 @@ var Console = new Class({
   },
   
   showShift: function(id) {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>> SHOW SHIFT');
     var el = $(this.doc.getElementById(id));
     if(el)
     {
       el.addClass('active');
       el.addClass('SSUserSelectNone');
+      console.log('about to hide edit title field');
       this.hideEditTitleField(id);
     }
   },
@@ -1033,11 +1037,11 @@ var Console = new Class({
   },
   
   hideEditTitleField: function(id) {
-    var el = $(this.doc.getElementById(id));
+    var el = _$(this.doc.getElementById(id));
     if(el)
     {
-      el.getElement('.summaryEdit').addClass('SSDisplayNone');
-      el.getElement('.summaryView').removeClass('SSDisplayNone');
+      $(el.getElementByClassName('summaryEdit')).addClass('SSDisplayNone');
+      $(el.getElementByClassName('summaryView')).removeClass('SSDisplayNone');
     }
   },
   
