@@ -1149,13 +1149,13 @@ var Console = new Class({
       {
         newEntry.addClass('expanded');
         newEntry.removeClass('hover');
-        newEntry.getElement('.expander img').setProperty('src', server + 'images/Console/arrow-open.gif');
+        $(SSGetElementByClass('expander', newEntry).getElementsByTagName('img')[0]).setProperty('src', server + 'images/Console/arrow-open.gif');
       } 
       else 
       {
         newEntry.removeClass('expanded');
         newEntry.addClass('hover');
-        newEntry.getElement('.expander img').setProperty('src', server + 'images/Console/arrow-close.gif');
+        $(SSGetElementByClass('expander', newEntry).getElementsByTagName('img')[0]).setProperty('src', server + 'images/Console/arrow-close.gif');
         // hide the edit field as well
         this.hideEditTitleField(aShift.id);
       }
