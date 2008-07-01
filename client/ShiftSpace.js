@@ -255,12 +255,24 @@ var ShiftSpace = new (function() {
       }
       
     }
-    
+     
+    // This won't work for GM_getValue of course
     Function.prototype.safeCall = function() {
       var self = this, args = [], len = arguments.length;
-      for(var i = 0; i < arguments.length; i++) args.push(arguments[i]);
+      for(var i = 0; i < len; i++) args.push(arguments[i]);
       setTimeout(function() {
         return self.apply(null, args);
+      }, 0);
+    }
+    
+    // Work around for GM_getValue
+    Function.prototype.safeCallWithResult = function() {
+      var self = this, args = [], len = arguments.length;
+      for(var i = 0; i < len-1; i++) args.push(arguments[i]);
+      // the last argument is the callback
+      var callback = arguments[len-1];
+      setTimeout(function() {
+        callback(self.apply(null, args));
       }, 0);
     }
     
@@ -1116,7 +1128,7 @@ var ShiftSpace = new (function() {
         version: space.attributes.version
       };
       
-      serverCall('shift.create', params, function(json) {
+      serverCall.safeCall('shift.create', params, function(json) {
         if (!json.status) {
           console.error(json.message);
           return;

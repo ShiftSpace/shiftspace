@@ -80,8 +80,6 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     }.bind(this));
     
     var self = this;
-    console.log('!!!');
-    self.setValue('testing', '1 2 3');
     this.rightTarget.addEvent('click', function(_evt) {
       if(self.grabSwapButton.hasClass('grab'))
       {
@@ -166,22 +164,28 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   
   swapImage : function(targetImage)
   {
+    console.log('swapImage');
+    
     // get the current shift
     var currentShift = this.getCurrentShift();
-    // set up the shift!
-    var grabbedImage = this.getValue('grabbedImage');
-    // we want a reference to the image node with the replace action
-    var pinRef = ShiftSpace.Pin.toRef(this.currentImage, 'replace');
-    
-    // tell the current shift to swap
-    currentShift.setSrc(grabbedImage);
-    currentShift.swap(pinRef);
-    
-    // clear out the selection interface
-    this.blurImage();
 
-    // remove the image handlers
-    this.removeImageEvents();
+    // set up the shift!
+    this.getValue('grabbedImage', function(grabbedImage) {
+      
+      // we want a reference to the image node with the replace action
+      var pinRef = ShiftSpace.Pin.toRef(this.currentImage, 'replace');
+
+      // tell the current shift to swap
+      currentShift.setSrc(grabbedImage);
+      currentShift.swap(pinRef);
+    
+      // clear out the selection interface
+      this.blurImage();
+
+      // remove the image handlers
+      this.removeImageEvents();
+    }.bind(this));
+
   },
   
   blurImage : function()
@@ -200,8 +204,10 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
 var ImageSwapShift = ShiftSpace.Shift.extend({
   setup : function(json)
   {
+    console.log('setting up image swap shift');
     // build the interface
     this.buildInterface();
+    console.log('interface built');
     
     // manage the main view
     this.manageElement(this.element);
@@ -269,11 +275,16 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   swap : function(pinRef)
   {
+    console.log('================ swapping images');
+    
     // set the image to that property
     this.pin(this.element, pinRef);
 
+    console.log('pinned');
+
     if(this.isBeingEdited())
     {
+      console.log('saving');
       // save
       this.save();
     }
@@ -281,6 +292,8 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   pin : function(element, pinRef)
   {
+    console.log('pinning');
+    
     // we want the exact dimensions of the old image
     var targetNode = ShiftSpace.Pin.toNode(pinRef);
     // take the dimensions from the target
@@ -304,6 +317,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.zoomButton.addClass('SSDisplayNone');
     this.unzoomButton.addClass('SSDisplayNone');
     
+    console.log('pinning image swap');
     if(!this.isSwapped && this.getPinRef() && this.getSrc())
     {
       this.swap(this.getPinRef());
@@ -405,12 +419,15 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
   buildInterface : function()
   {
+    console.log('buildInterface');
     this.element = new ShiftSpace.Element('div', {
       'class': "SSImageSwapShift SSUnordered"
     });
+    console.log('element created');
     this.image = new ShiftSpace.Element('img', {
       'class': "SSImageSwapShiftImage"
     });
+    console.log('image div created');
 
     // add the zoom buttons
     this.zoomButton = new ShiftSpace.Element('div', {
@@ -423,6 +440,8 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     // add them to the shift element
     this.zoomButton.injectInside(this.element);
     this.unzoomButton.injectInside(this.element);
+    
+    console.log('ImageSwap elements created');
     
     // show the zooming interface
     this.image.injectInside(this.element);

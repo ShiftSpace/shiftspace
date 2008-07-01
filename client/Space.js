@@ -641,12 +641,12 @@ ShiftSpace.Space = new Class({
   
   setValue : function(key, value)
   {
-    setValue(this.attributes.name + "." + key, value);
+    setValue.safeCall(this.attributes.name + "." + key, value);
   },
   
-  getValue : function(key)
+  getValue : function(key, callback)
   {
-    return getValue(this.attributes.name + "." + key);
+    getValue.safeCallWithResult(this.attributes.name + '.' + key, callback);
   },
   
   updateTitleOfShift: function(shiftId, title)

@@ -130,6 +130,8 @@ ShiftSpace.Shift = new Class({
     // a Shift cannot save in their initialize method
     this.getParentSpace().updateShift( this );
     this.fireEvent('onShiftSave', this.getId());
+    
+    console.log('shift saved!');
   },
   
   markDirty: function()
@@ -217,6 +219,7 @@ ShiftSpace.Shift = new Class({
     
     this.refresh();
     
+    console.log('shift shown');
     this.fireEvent('onShiftShow', this.getId());
   },
   
