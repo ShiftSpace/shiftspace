@@ -5,6 +5,7 @@
   top: 50px;
   left: 50px;
   
+  position: absolute;
   width: 350px;
   height: 300px;
   
@@ -101,18 +102,19 @@ div.SSSourceShiftEditorTopTitle
   bottom: 10px;
   right: 4px;
   top: 120px;
-  background-color: #220;
-  font-family: courier;
-  font-size: 12px;
-  color: #e7e4a4;
   margin-left: 4px;
   margin-top: -1px;
   padding: 4px;
   border: 1px solid #F63B02;
+  background-color: #220;
 }
 
 .SSSourceShiftEditorTextArea
 {
+  background-color: #220;
+  font-family: courier;
+  font-size: 12px;
+  color: #e7e4a4;
   width: 100%;
   height: 100%;
 }

@@ -101,6 +101,7 @@ ShiftSpace.Space = new Class({
       
       // edit any deferred shifts
       this.__deferredEdits__.each(function(aShift) {
+        console.log('deferred edit');
         editShift(aShift);
       }.bind(this));
 
@@ -110,6 +111,10 @@ ShiftSpace.Space = new Class({
         this.createShift(aShift);
         SSShowNewShift(aShift.id);
       }.bind(this));
+    }
+    else
+    {
+      console.log('no deferred content');
     }
   },
   
@@ -133,7 +138,7 @@ ShiftSpace.Space = new Class({
   
   setCssLoaded: function(val)
   {
-    this.__cssLoaded__ = true;
+    this.__cssLoaded__ = val;
   },
   
   cssIsLoaded: function()
@@ -243,8 +248,8 @@ ShiftSpace.Space = new Class({
     // add a backreference
     aShift.parentSpace = this;
     
-    console.log('constructing');
-    console.log(this.shiftClass);
+    //console.log('constructing');
+    //console.log(this.shiftClass);
 
     // create the new shift
     try
@@ -256,8 +261,8 @@ ShiftSpace.Space = new Class({
       console.log(SSDescribeException(exc));
     }
     
-    console.log('a new shift');
-    console.log(newShift);
+    //console.log('a new shift');
+    //console.log(newShift);
     
     // listen for shift updates
     newShift.addEvent( 'onUpdate', this.updateShift.bind( this ) );
@@ -287,11 +292,11 @@ ShiftSpace.Space = new Class({
       this.fireEvent( 'onShiftSave', shiftId );
     }.bind( this ));
     
-    console.log('events added');
+    //console.log('events added');
     
     this.shifts[newShift.getId()] = newShift;
     
-    console.log('exiting');
+    //console.log('exiting');
     
     return this.shifts[newShift.getId()];
   },
@@ -318,10 +323,8 @@ ShiftSpace.Space = new Class({
   */
   createShift : function( newShiftJson )
   {
-    console.log('createShift, cssIsLoaded:' + this.cssIsLoaded());
     if(this.cssIsLoaded())
     {
-      console.log('add a shift');
       this.addShift(newShiftJson);
       console.log('added shift');
       var _newShift = this.shifts[newShiftJson.id];

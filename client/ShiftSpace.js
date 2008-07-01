@@ -358,10 +358,13 @@ var ShiftSpace = new (function() {
     // our special wrapper
     function _$(el)
     {
+      if(!el) return null;
+      
       el.getElementsByClassName = SSGetElementsByClass;
       el.getElementByClassName = function(className) {
         return this.getElementsByClassName(className)[0];
       }
+
       return el;
     }
     
@@ -756,7 +759,7 @@ var ShiftSpace = new (function() {
       // call onShiftFocus
       space.focusShift(shiftId);
       space.onShiftFocus(shiftId);
-
+      
       // scroll the window if necessary
       var mainView = space.mainViewForShift(shiftId);
       

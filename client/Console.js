@@ -999,8 +999,9 @@ var Console = new Class({
   },
   
   showShift: function(id) {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>> SHOW SHIFT');
+    console.log('>>>>>>>>>>>>>>>>>>>>>>> SHOW SHIFT ' + id);
     var el = $(this.doc.getElementById(id));
+    console.log(el);
     if(el)
     {
       el.addClass('active');
@@ -1008,10 +1009,13 @@ var Console = new Class({
       console.log('about to hide edit title field');
       this.hideEditTitleField(id);
     }
+    console.log('exit SHOW SHIFT');
   },
   
   blurShift: function(id) {
+    console.log('CONSOLE BLLLLLLLLLLLLLLLLLLLLLLUR ' + id);
     this.hideEditTitleField(id);
+    console.log('EXIT');
   },
   
   focusShift: function(id) {
@@ -1037,6 +1041,7 @@ var Console = new Class({
   },
   
   hideEditTitleField: function(id) {
+    console.log('hideEditTitleField');
     var el = _$(this.doc.getElementById(id));
     if(el)
     {

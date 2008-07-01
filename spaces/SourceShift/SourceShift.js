@@ -61,12 +61,15 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     */
     
     // weird browser bug that I can't track
-    /*
     if(this.editSource.getSize().size.x > size.x)
     {
       this.editSource.setStyle('width', size.x-18);      
     }
-    */
+  },
+  
+  onCssLoad: function()
+  {
+    this.parent();
   },
   
   showInterface : function()
@@ -129,6 +132,9 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     {
       this.editSource.setProperty('value', currentShift.getMarkup());
       this.titleField.setProperty('value', currentShift.getTitle());
+      
+      // refresh the interface first
+      this.refresh();
       
       // update the location of the editing window
       var position = currentShift.getPosition();
@@ -581,6 +587,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     // attach events and refresh
     this.attachEvents();
     this.refresh();
+    
   }
 });
 
@@ -1239,10 +1246,6 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.frame.addClass('SSFrameBorder');
       this.showPinnedResizer();
       this.showPinnedHandle();
-    }
-    else
-    {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> not being edited!');
     }
 
     // hide the element now
