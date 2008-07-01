@@ -19,10 +19,14 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         this.highlight_end = function(e) {
             if (!window.getSelection().getRangeAt(0).collapsed) {
                 this.cursor.style.display = 'block';
-                var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
+		var range = window.getSelection().getRangeAt(0);
+                var newRangeRef = ShiftSpace.RangeCoder.toRef(range);
                 newRangeRef.color = this.color; 
                 if (!this.getCurrentShift().ranges)
                     this.getCurrentShift().ranges = [];
+
+		if (this.summary.value == '')
+			this.summary.value = range.toString();
                 
                 this.getCurrentShift().ranges.push(newRangeRef);
                 this.turnOnRangeRef(newRangeRef);
@@ -33,8 +37,11 @@ var HighlightsSpace = ShiftSpace.Space.extend({
     },
 
     selectColor: function(colorElement) {
+	alert(colorElement.style.toSource());
         this.color = document.defaultView.getComputedStyle(colorElement, "").borderBottomColor;
     
+	alert(this.color);
+
         if (this.colorElement) { 
             this.colorElement.style.borderBottomStyle = 'none';
         }
@@ -74,7 +81,7 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         
         this.colorsSpan = new ShiftSpace.Element('span', {
             'class': 'HighlightsColors'});
-
+        
         {
             this.addColor('HighlightsColor1', true);
             this.addColor('HighlightsColor2');
@@ -83,7 +90,7 @@ var HighlightsSpace = ShiftSpace.Space.extend({
             this.addColor('HighlightsColor5');
             this.addColor('HighlightsColor6');
         }
-        
+
         tableContainer.appendChild(this.colorsSpan);
 
         var closeButton = new ShiftSpace.Element('span', {
