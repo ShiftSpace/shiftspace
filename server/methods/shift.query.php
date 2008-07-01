@@ -4,7 +4,6 @@ if (!empty($_REQUEST['href'])) {
   // Load shifts by URL
   $href = normalize_url($_REQUEST['href']);
   $href = $db->escape($href);
-  $href = strtok($href, '#');
   $shift_clause = "s.href = '$href'";
 } else if (!empty($_REQUEST['id'])) {
   // Load shifts by ID
