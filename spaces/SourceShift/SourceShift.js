@@ -61,10 +61,12 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     */
     
     // weird browser bug that I can't track
+    /*
     if(this.editSource.getSize().size.x > size.x)
     {
       this.editSource.setStyle('width', size.x-18);      
     }
+    */
   },
   
   showInterface : function()
@@ -551,6 +553,10 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.buildHandle();
     this.buildTop();
     
+    this.editSourceWrapper = new ShiftSpace.Element('div', {
+      'class': "SSSourceShiftEditorTextAreaDiv" 
+    });
+    
     this.editSource = new ShiftSpace.Element('textarea', {
       'class': "SSSourceShiftEditorTextArea",
       cols : 1000,
@@ -558,7 +564,8 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     });
 
     // add the edit source and the bottom
-    this.editSource.injectInside(this.editSourceShift);
+    this.editSource.injectInside(this.editSourceWrapper);
+    this.editSourceWrapper.injectInside(this.editSourceShift);
     
     this.buildBottom();
 
@@ -791,12 +798,9 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.title.setStyle('width', size.x - 80);
       this.titleTextDiv.setStyle('width', 10000);
     }
-        
-    // update the handle
-    this.handle.setStyles({
-      left: iconSize.x + titleSize.x + 8
-    });
     
+    this.updateHandle();
+
     var frameSize = this.frame.getSize().size;
     this.element.setStyles({
       width: frameSize.x,
@@ -814,12 +818,26 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     {
       var size = this.element.getSize().size;
       var fsizey = size.y-this.top.getSize().size.y;
+      
+      this.updateHandle();
+
       // set the frame dimensions
       this.frame.setStyles({
         width: size.x,
         height: fsizey-4
       });
     }
+  },
+  
+  updateHandle: function()
+  {
+    var iconSize = this.titleIcon.getSize().size;
+    var titleSize = this.title.getSize().size;
+    
+    // update the handle
+    this.handle.setStyles({
+      left: iconSize.x + titleSize.x + 8
+    });
   },
 
   attachEvents: function()

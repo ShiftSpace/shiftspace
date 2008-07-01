@@ -42,7 +42,7 @@
 .SSSourceShiftEditorHandle
 {
   position: absolute;
-  left: 0px;
+  left: 4px;
   right: 34px;
   height: 16px;
   background-image: url(images/drag_texture.png);
@@ -94,7 +94,7 @@ div.SSSourceShiftEditorTopTitle
   background-repeat: no-repeat;
 }
 
-.SSSourceShiftEditorTextArea
+.SSSourceShiftEditorTextAreaDiv
 {
   position: absolute;
   left: 0px;
@@ -109,6 +109,12 @@ div.SSSourceShiftEditorTopTitle
   margin-top: -1px;
   padding: 4px;
   border: 1px solid #F63B02;
+}
+
+.SSSourceShiftEditorTextArea
+{
+  width: 100%;
+  height: 100%;
 }
 
 .SSSourceShiftEditorTitle
@@ -383,7 +389,7 @@ div.SSSourceShiftButton .SSRightActive
 
 .SSSourceShiftHandle
 {
-  position:absolute;
+  position: absolute;
   top: 0px;
   height: 100%;
   right: 22px;
