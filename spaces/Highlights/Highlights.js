@@ -36,11 +36,11 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         }.bind(this);
     },
 
-    selectColor: function(colorElement) {
-	alert(colorElement.style.toSource());
-        this.color = document.defaultView.getComputedStyle(colorElement, "").borderBottomColor;
-    
-	alert(this.color);
+    selectColor: function(colorElement, color) {
+        if (!color)
+            this.color = document.defaultView.getComputedStyle(colorElement, "").borderBottomColor;
+        else
+            this.color = color;
 
         if (this.colorElement) { 
             this.colorElement.style.borderBottomStyle = 'none';
@@ -50,7 +50,7 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         colorElement.style.borderBottomStyle = 'solid';
     },
 
-    addColor: function(style, selected) {
+    addColor: function(style, selectedColor) {
         var colorElement = this.colorsSpan.appendChild(new ShiftSpace.Element('span', {
             'class': 'GenericHighlightsColor ' + style}));
             
@@ -58,8 +58,8 @@ var HighlightsSpace = ShiftSpace.Space.extend({
             this.selectColor(e.target);
         }.bind(this), false);
   
-        if (selected)
-            this.selectColor(colorElement);
+        if (selectedColor)
+            this.selectColor(colorElement, selectedColor);
     },
 
     showInterface: function() 
@@ -82,8 +82,14 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         this.colorsSpan = new ShiftSpace.Element('span', {
             'class': 'HighlightsColors'});
         
+        document.body.appendChild(tableContainer);
+        tableContainer.appendChild(this.colorsSpan);
+
         {
-            this.addColor('HighlightsColor1', true);
+            this.addColor('HighlightsColor1', '#FF0'); // hack!
+            // try to see why getComputedStyle in selectColor doesn't work
+            // the first time!
+
             this.addColor('HighlightsColor2');
             this.addColor('HighlightsColor3');
             this.addColor('HighlightsColor4');
@@ -91,7 +97,6 @@ var HighlightsSpace = ShiftSpace.Space.extend({
             this.addColor('HighlightsColor6');
         }
 
-        tableContainer.appendChild(this.colorsSpan);
 
         var closeButton = new ShiftSpace.Element('span', {
             'class': 'HighlightsClose'});
@@ -113,7 +118,6 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         cancelButton.addEventListener('click', this.cancel.bind(this), false);
         tableContainer.appendChild(cancelButton);
         
-        document.body.appendChild(tableContainer);
         this.container = tableContainer;
 
         this.cursor = document.body.appendChild(new ShiftSpace.Element('span', {
