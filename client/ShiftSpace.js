@@ -1060,7 +1060,7 @@ var ShiftSpace = new (function() {
       // put these together
       var params = { id: newShiftIds.join(',') };
       
-      serverCall('shift.query', params, function(json) {
+      serverCall.safeCall('shift.query', params, function(json) {
         if (!json.status) {
           console.error('Error getting shifts: ' + json.message);
           return;
@@ -2016,7 +2016,7 @@ var ShiftSpace = new (function() {
     function serverCall(method, parameters, _callback) {
       var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
-      //console.log('serverCall: ' + url);
+      console.log('serverCall: ' + url);
       var data = '';
       for (var key in parameters) {
         if (data != '') {
