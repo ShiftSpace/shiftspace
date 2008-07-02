@@ -644,12 +644,6 @@ var ShiftSpace = new (function() {
         };
     };
     
-    
-    // TODO: write documentation
-    this.xmlhttpRequest = function(config) {
-        GM_xmlhttpRequest(config);
-    };
-    
     function SSXmlHttpRequest(config) {
       GM_xmlhttpRequest(config);
     }
