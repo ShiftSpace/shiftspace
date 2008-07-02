@@ -7,7 +7,9 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   setup: function() {
     this.fireCutup = function(e){
-            if (!window.getSelection().getRangeAt(0).collapsed) {
+            //added check for multLineArray if exists there is a change that part
+            //of the cutup is still selected
+            if (!window.getSelection().getRangeAt(0).collapsed && !this.multiLineArray) {
                var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
                 if (!this.getCurrentShift().ranges){
                     this.getCurrentShift().ranges = [];
@@ -34,8 +36,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },  
   surround_text_node: function(oNode, objRange, surroundingNode){
       var tempRange;
-      //console.log(surroundingNode);
-  
       //if this selection starts and ends in the same node
       if((oNode==objRange.startContainer)&&(oNode==objRange.endContainer)) {
           objRange.surroundContents(surroundingNode);
@@ -113,11 +113,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
     }
   },
   cutupRange: function(xPathResult){
-    /*
-    change method so that multiLineArray is not recreated when the user invokes
-    cutupRange multiple times by pressing button.
-    */
-    
     if(!this.multiLineArray){
       console.log("multiLineArray exits");
       this.multiLineArray = Array();//2 dim array contains text for each node
@@ -160,13 +155,12 @@ var CutupsSpace = ShiftSpace.Space.extend({
     //reinsert sorted array as string back into document
     for ( var i=0,l=0; i < xPathResult.snapshotLength; i++ ){
       //if node is not empty
+      console.log(this.multiLineArray['cutup'][l]);
       if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
         xPathResult.snapshotItem(i).textContent = this.multiLineArray['cutup'][l].join("");
         l++
       }
     }
-    //this is a bad idea.
-    //this.multiLineArray = multiLineArray;
   },
   showInterface: function(){
     this.parent();
@@ -193,17 +187,17 @@ var CutupsSpace = ShiftSpace.Space.extend({
     var widgetButtonCut = new ShiftSpace.Element('span',{
       'id':'SSCutupButton'});
     
+    var widgetButtonCancel = new ShiftSpace.Element('span',{
+      'id':'SSCutupButtonCancel'});
+    
     var widgetButtonSave = new ShiftSpace.Element('span',{
       'id':'SSCutupButtonSave'});
     
     var widgetButtonClose = new ShiftSpace.Element('span',{
-      'id':'SSCutupButtonCancel'});
-    
-    widgetButtonCut.appendText('cutup selection');
-    widgetButtonSave.appendText('save');
-    widgetButtonClose.appendText('close');
+      'id':'SSCutupButtonClose'});
     
     widgetControls.appendChild(widgetButtonCut);
+    widgetControls.appendChild(widgetButtonCancel);
     widgetControls.appendChild(widgetButtonSave);
     widgetControls.appendChild(widgetButtonClose);
     
@@ -215,35 +209,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
     document.body.appendChild(widget);
     
     widget.makeDraggable({'handle':widgetHandle}); 
-     widget.addEvents({
-         'mouseenter':function(){
-          this.setStyle('opacity',1.0);
-        },
-        'mouseleave':function(){
-          this.setStyle('opacity',0.80);
-        } 
-    });
-    var buttonStyleEvents = {
-        'mouseenter':function(){
-          this.setStyle('backgroundColor','#858585');
-        },
-        'mouseleave':function(){
-          this.setStyle('backgroundColor','#999999');
-        },
-        'mousedown':function(){
-          this.setStyle('backgroundColor','#777777');
-          this.setStyle('color','#222222');
-        },
-        'mouseup':function(){
-          this.setStyle('backgroundColor','#999999');
-          this.setStyle('color','#333333');
-        }
-    }
-    
-    widgetButtonCut.addEvents(buttonStyleEvents);
-    widgetButtonSave.addEvents(buttonStyleEvents);
-    widgetButtonClose.addEvents(buttonStyleEvents);
-    
     this.widget = widget;
     this.summary = widgetInputTitle;
     widgetButtonCut.addEvent('mousedown',this.fireCutup.bind(this));

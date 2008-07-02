@@ -8,20 +8,29 @@
   font-size:10px;
   line-height:15px;
   color:#EEE;
-  opacity:0.80;
-  filter:alpha(opacity=80);
+  height:44px;
+  /* opacity:0.95;
+  filter:alpha(opacity=95); */
 }
 #SSCutupControls,#SSCutupWidget label{
   float:left; 
 }
 #SSCutupWidget label{
-  padding:0 3px;
+  color:#B7B799;
   display:block;
   line-height:15px;
+  width:30px;
+  background-image: url(button_sprite);
+  background-position: center -75px;
+  background-repeat:no-repeat;
+  text-indent: -99999px;
+  -moz-user-select: none;
+  -webkit-user-select:none;
 }
 #SSCutupButton,
+#SSCutupButtonCancel,
 #SSCutupButtonSave,
-#SSCutupButtonCancel{
+#SSCutupButtonClose{
   float:left;
   cursor:pointer;
   background-color:#999;
@@ -33,21 +42,71 @@
   border-top:none;
   border-right:none;
 }
+#SSCutupButton:hover,
+#SSCutupButtonCancel:hover,
+#SSCutupButtonSave:hover{
+  background-color:#AAAAAA;
+}
+#SSCutupButton:active,
+#SSCutupButtonCancel:active,
+#SSCutupButtonSave:active{
+  background-color:#BBBBBB;
+}
+#SSCutupButtonClose:hover{
+  background-color:#F03E22;
+}
+#SSCutupButtonClose:active{
+  background-color:#FF5E42;
+}  
 #SSCutupButton{
   margin-bottom:3px;
   margin-left:8px;
   padding:0 3px;
+  width:35px;
+  height:15px;
+  background-repeat:no-repeat;
+  background-image: url(button_sprite.png);
+  background-position:center 0px;
+}
+#SSCutupButtonCancel{
+  margin-bottom:3px;
+  margin-left:4px;
+  padding:0 3px;
+  width:35px;
+  height:15px;
+  background-repeat:no-repeat;
+  background-image: url(button_sprite.png);
+  background-position:center -15px;
 }
 #SSCutupButtonSave{
   margin-left:4px;
   margin-bottom:3px;
   padding:0 3px;
+  width:30px;
+  height:15px;
+  background-repeat:no-repeat;
+  background-image: url(button_sprite.png);
+  background-position:center -30px;  
 }
-#SSCutupButtonCancel{
+#SSCutupButtonClose{
   margin-bottom:3px;
   margin-left:4px;
   margin-right:3px;
   padding:0 3px;
+  background-color:#E02E12;
+  color:#FFFFFF; 
+  border: 1px solid #AF0F0F;
+  border-right: none;
+  border-top:none;
+  width:10px;
+  height:15px;
+  background-repeat:no-repeat;
+  background-image: url(button_sprite.png);
+  background-position: center -45px;
+  
+}
+#SSCutupButtonClose:hover{
+  background-color:#EF2F1F;
 }
 #SSCutupLabel{
   float:left;
@@ -56,11 +115,28 @@
 }
 #SSCutupTitle{
   float:left;
+  display:block;
+  width:128px;
+  padding-left:2px;
+  line-height:15px;
+  height:15px;
   background-color:#DDD;
+  font-size:10px;
+  -moz-user-select:none;
+  -webkit-user-select:none;
 }
 #SSCutupHandle{
   display:block;
-  width:10px;
-  height:10px;
-  background-color:#888;
+  width:100%;
+  height:12px;
+  margin-bottom:4px;
+  background-color:#575739;
+  /* background-image: url(button_sprite.png);
+  background-position: 0 -60px;
+  background-repeat: repeat-x;  */
+}
+.SSCutup{
+  background-color:#E02E12;
+  -moz-user-select:none;
+  -webkit-user-select:none;
 }
