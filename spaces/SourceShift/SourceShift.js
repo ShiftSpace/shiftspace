@@ -729,6 +729,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
 
       try
       {
+        
         this.source.setHTML(markup);
       }
       catch(err)

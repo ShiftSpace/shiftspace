@@ -541,10 +541,21 @@ var ShiftSpace = new (function() {
     }
     
     // Tokenize Json strings for DB
-    function SSClean(jsonStr)
+    function SSTokenize(str)
     {
-      
+      var cleanStr;
+      // convert new lines and carriage returns
+      return cleanStr;
     }
+    this.Tokenize = SSTokenize;
+    
+    function SSSanitize(str)
+    {
+      var cleanStr;
+      // strip out anyform of script tag
+      return cleanStr;
+    }
+    this.Sanitize = SSSanitize;
     
     function SSPendingShifts()
     {
