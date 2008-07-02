@@ -478,6 +478,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       button.getElement('.SSLeft').setStyle('backgroundImage', '');
       button.getElement('.middle').setStyle('backgroundImage', '');
       button.getElement('.SSRight').setStyle('backgroundImage', '');
+      button.setStyle('z-index', 1);
     }
   },
   
@@ -495,6 +496,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       button.getElement('.SSLeft').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-left.png)');
       button.getElement('.middle').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server +'spaces/SourceShift/images/tab_off-body.png)');
       button.getElement('.SSRight').setStyle('backgroundImage', 'url(' + ShiftSpace.info().server + 'spaces/SourceShift/images/tab_off-right.png)');
+      button.setStyle('z-index', 0);
     }
   },
   
