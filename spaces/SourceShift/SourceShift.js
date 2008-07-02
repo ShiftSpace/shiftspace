@@ -1045,7 +1045,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       'class': "SSSourceShiftTitle SSUserSelectNone"
     });
     this.titleTextDiv = new ShiftSpace.Element('div', {
-      'class': "SSSourceShiftTitleText"
+      'class': "SSSourceShiftTitleText SSUserSelectNone"
     });
     this.titleTextDiv.injectInside(this.title);
     this.titleTextDiv.appendText('SourceShift');
@@ -1056,8 +1056,13 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.title.injectInside(this.top);
     this.handle.injectInside(this.top);
     
+    // make the SourceShift draggable
     this.element.makeDraggable({
       handle: this.handle
+    });
+    
+    this.element.makeDraggable({
+      handle: this.titleTextDiv
     });
     
     this.closeButton = new ShiftSpace.Element('div', {
