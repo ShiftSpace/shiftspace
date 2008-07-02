@@ -321,7 +321,7 @@ var Console = new Class({
   
   showPluginMenuForShift: function(plugin, shiftId)
   {
-    var target = $(this.doc.getElementById('shifts')).getElement('#' + shiftId).getElement('.pg' + plugin);
+    var target = _$(this.doc.getElementById(shiftId)).getElementByClassName('pg' + plugin);
     // in case it's delayed
     var cb = function(menuItems) {
       this.setPluginMenuItems(shiftId, menuItems);

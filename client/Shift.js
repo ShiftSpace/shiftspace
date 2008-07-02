@@ -623,6 +623,11 @@ ShiftSpace.Shift = new Class({
   errorView: function(err)
   {
     
+  },
+  
+  xmlHttpRequest: function(config)
+  {
+    SSXmlHttpRequest.safeCall(config);
   }
 });
 

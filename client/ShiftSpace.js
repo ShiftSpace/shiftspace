@@ -650,6 +650,9 @@ var ShiftSpace = new (function() {
         GM_xmlhttpRequest(config);
     };
     
+    function SSXmlHttpRequest(config) {
+      GM_xmlhttpRequest(config);
+    }
     
     /*
     
@@ -1743,7 +1746,7 @@ var ShiftSpace = new (function() {
       }
 
       // Load the URL then execute the callback
-      //console.log('Loading ' + url + ' from network');
+      console.log('Loading ' + url + ' from network');
       GM_xmlhttpRequest({
         'method': 'GET',
         'url': url,
@@ -1958,7 +1961,7 @@ var ShiftSpace = new (function() {
           var css = pluginDir + plugin.attributes.css;
           plugin.attributes.css = css;
         }
-        loadStyle(plugin.attributes.css, plugin.onCssLoad.bind(plugin));
+        loadStyle.safeCall(plugin.attributes.css, plugin.onCssLoad.bind(plugin));
       }
       plugin.attributes.dir = pluginDir;
       
@@ -1977,7 +1980,7 @@ var ShiftSpace = new (function() {
         else
         {
           plugin.attributes.includes.each(function(include) {
-            loadFile(plugin.attributes.dir+include, function(rx) {
+            loadFile.safeCall(plugin.attributes.dir+include, function(rx) {
               try
               {
                 if(window.webkit)

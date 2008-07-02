@@ -686,6 +686,11 @@ ShiftSpace.Space = new Class({
   isNewShift: function(shiftId)
   {
     return SSIsNewShift(shiftId);
+  },
+  
+  xmlHttpRequest: function(config)
+  {
+    SSXmlHttpRequest.safeCall(config);
   }
 });
 
