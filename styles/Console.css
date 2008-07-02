@@ -383,14 +383,3 @@ input.submit:active {
 .uninstall {
   float: right;
 }
-
-.SSConsoleNotifier
-{
-  zIndex: 1000000;
-  position: fixed;
-  bottom: -32px;
-  left: 31px;
-  background: transparent url(../images/Console/notifier-bg.png) no-repeat;
-  width: 30px;
-  height: 32px;
-}

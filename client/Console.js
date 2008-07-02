@@ -43,9 +43,6 @@ var Console = new Class({
         //console.log('load console frame style');
         this.loadStyle();
 
-        //console.log('build notifier');
-        this.buildNotifier();
-
         this.doc.addEventListener('keydown',  keyDownHandler.bind(ShiftSpace), false);
         this.doc.addEventListener('keyup',    keyUpHandler.bind(ShiftSpace), false);
         this.doc.addEventListener('keypress', keyPressHandler.bind(ShiftSpace), false);
@@ -88,11 +85,11 @@ var Console = new Class({
         // to prevent things from dropping into the iframe.
         this.resizeMask = new ShiftSpace.Element('div', {
           styles: {
-            position: 'fixed',
+            position: 'absolute',
             top: 0,
             left: 0,
-            width: window.getWidth(),
-            height: window.getHeight(),
+            width: '100%',
+            height: '100%',
             'z-index': 1000001,
             cursor: 'ns-resize'
           }
@@ -119,14 +116,7 @@ var Console = new Class({
   buildNotifier: function() {
 
     this.notifier = new ShiftSpace.Element('div', {
-      styles: {
-        position: 'fixed',
-        bottom: -32,
-        left: 31,
-        background: 'transparent url(' + server + 'images/Console/notifier-bg.png) no-repeat',
-        width: 30,
-        height: 32
-      }
+      'class': 'SSConsoleNotifier'
     });
     
     // make the console resizable
@@ -384,6 +374,7 @@ var Console = new Class({
     // TODO - Fix loadStyle to accept target frame to do this crap
     /* Load console styles */
     loadStyle('styles/Console.css', function() {
+      this.buildNotifier();
       this.buildContents();
       /* Load all plugin styles */
       for(var plugin in installedPlugins)
