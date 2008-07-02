@@ -192,11 +192,12 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   close: function(){
     this.cancelCutup();
-    $("SSCutupWidget").remove();
+    $("SSCutupWidget").addClass('SSHidden');
   },
   showInterface: function(){
     this.parent();
     this.widget.removeClass('SSDisplayNone');
+    this.widget.removeClass('SSHidden');
   },
   buildInterface: function(){
     var widget = new ShiftSpace.Element('div',{
