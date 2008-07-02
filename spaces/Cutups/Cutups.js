@@ -162,6 +162,38 @@ var CutupsSpace = ShiftSpace.Space.extend({
       }
     }
   },
+  cancelCutup: function(){
+      // ignores the specific shift since only one highlight can be on at a given moment 
+      // search for all span elements with _shiftspace_highlight attribute and open them
+      var xPathResult = document.evaluate(".//span[attribute::_shiftspace_cutups='on']", document, null,
+          XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      
+      var parentNodes = [];
+      for (var i=0,l=0; i < xPathResult.snapshotLength; i++) {
+        if(!xPathResult.snapshotItem(i).textContent.match(/^s+$/)){//HERE
+          var spanElement = xPathResult.snapshotItem(i);
+          //if is not an empty node grab content from json
+          if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
+            var newTextNode = document.createTextNode(this.multiLineArray['orig'][l]);
+            l++;
+          }else{
+            var newTextNode = document.createTextNode(spanElement.textContent);
+          }
+          parentNodes[i] = spanElement.parentNode;
+          spanElement.parentNode.replaceChild(newTextNode, spanElement);
+        }
+      } 
+
+      for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
+          parentNodes[i].normalize();
+      } 
+      this.multiLineArray = null;
+      
+  },
+  close: function(){
+    this.cancelCutup();
+    $("SSCutupWidget").remove();
+  },
   showInterface: function(){
     this.parent();
     this.widget.removeClass('SSDisplayNone');
@@ -212,7 +244,9 @@ var CutupsSpace = ShiftSpace.Space.extend({
     this.widget = widget;
     this.summary = widgetInputTitle;
     widgetButtonCut.addEvent('mousedown',this.fireCutup.bind(this));
+    widgetButtonCancel.addEvent('mouseup',this.cancelCutup.bind(this));
     widgetButtonSave.addEvent('mouseup',this.save.bind(this));
+    widgetButtonClose.addEvent('mouseup',this.close.bind(this));
   },
   hideInterface: function(){
     if(this.widget){
