@@ -62,6 +62,21 @@
 }
 
 /*
+  Console Notifier that sits outside the console
+*/
+
+.SSConsoleNotifier
+{
+  zIndex: 1000000;
+  position: fixed;
+  bottom: -32px;
+  left: 31px;
+  background: transparent url(../images/Console/notifier-bg.png) no-repeat;
+  width: 30px;
+  height: 32px;
+}
+
+/*
   Iframe Cover stuff
 */
 
@@ -69,8 +84,8 @@
 {
   position: absolute;
   background-color: #f00;
-  opacity: 0.0;
-  z-index: 999;
+  opacity: 0.5;
+  z-index: 2000000;
 }
 
 /*
