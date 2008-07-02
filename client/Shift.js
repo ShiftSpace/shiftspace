@@ -625,7 +625,7 @@ ShiftSpace.Shift = new Class({
     
   },
   
-  xmlHttpRequest: function(config)
+  xmlhttpRequest: function(config)
   {
     SSXmlHttpRequest.safeCall(config);
   }

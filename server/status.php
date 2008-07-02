@@ -35,7 +35,7 @@ if (empty($status)) {
       <param name=\"wmode\" value=\"transparent\" />
       <embed src=\"images/status/awesome.swf\" quality=\"high\" pluginspage=\"http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash\" type=\"application/x-shockwave-flash\" width=\"600\" height=\"299\" wmode=\"transparent\"></embed>
     </object>
-	<div class=\"info\">Install <a href=\"https://addons.mozilla.org/firefox/748/\">Greasemonkey</a> and then either the <a href=\"?method=developer.user.js\">developer userscript</a> or <a href=\"?method=shiftspace.user.js\">release userscript</a>.</div>";
+	<div class=\"info\">To begin, install <a href=\"https://addons.mozilla.org/firefox/748/\">Greasemonkey</a> and then the <a href=\"?method=shiftspace.user.js\">userscript</a>.</div>";
 }
 
 ?>
