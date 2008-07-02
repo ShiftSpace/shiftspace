@@ -11,7 +11,7 @@ ShiftSpace.Element = new Class({
     var dragFunc = el.makeDraggable;
     
     // override the default behavior
-    if(ShiftSpace.addIframeCovers)
+    if(SSAddIframeCovers)
     {
       el.makeDraggable = function(options)
       {
@@ -25,9 +25,12 @@ ShiftSpace.Element = new Class({
           dragObj = (dragFunc.bind(el, options))();
         }
 
-        dragObj.addEvent('onStart', ShiftSpace.addIframeCovers.bind(ShiftSpace));
-        dragObj.addEvent('onDrag', ShiftSpace.updateIframeCovers.bind(ShiftSpace));
-        dragObj.addEvent('onComplete', ShiftSpace.removeIframeCovers.bind(ShiftSpace));
+        dragObj.addEvent('onStart', function() {
+          console.log('WTF');
+          SSAddIframeCovers();
+        });
+        dragObj.addEvent('onDrag', SSUpdateIframeCovers);
+        dragObj.addEvent('onComplete', SSRemoveIframeCovers);
       
         return dragObj;
       }
@@ -45,9 +48,9 @@ ShiftSpace.Element = new Class({
           resizeObj = (resizeFunc.bind(el, options))();
         }
         
-        resizeObj.addEvent('onStart', ShiftSpace.addIframeCovers.bind(ShiftSpace));
-        resizeObj.addEvent('onDrag', ShiftSpace.updateIframeCovers.bind(ShiftSpace));
-        resizeObj.addEvent('onComplete', ShiftSpace.removeIframeCovers.bind(ShiftSpace));
+        resizeObj.addEvent('onStart', SSAddIframeCovers);
+        resizeObj.addEvent('onDrag', SSUpdateIframeCovers);
+        resizeObj.addEvent('onComplete', SSRemoveIframeCovers);
       
         return resizeObj;
       }
@@ -94,7 +97,7 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
     var addCover = true;
     if($type(props.addCover) != 'undefined' && props.addCover == false) addCover = false;
 
-    if(addCover && ShiftSpace.addCover)
+    if(addCover && SSAddCover)
     {
       // add a cover for this object
       var cover = new ShiftSpace.Element('div', {
@@ -107,7 +110,11 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
       //console.log('cover added');
 
       // let ShiftSpace know about it
-      ShiftSpace.addCover({cover:cover, frame:this.frame});
+      SSAddCover({cover:cover, frame:this.frame});
+    }
+    else
+    {
+      console.log('=========================== No cover to add!');
     }
     
     // return
@@ -122,8 +129,3 @@ ShiftSpace.Input = ShiftSpace.Element.extend({
   // set the input field / textarea to be position absolute, left top right bottom all 0
   // set up event handlers so they get pass up to the developer
 });
-
-// Name spacing
-ShiftSpace.Event = Event;
-ShiftSpace.$ = $;
-ShiftSpace.$$ = $$;

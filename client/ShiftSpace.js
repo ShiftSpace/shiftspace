@@ -87,7 +87,7 @@ var ShiftSpace = new (function() {
     var pinWidgets = [];
     var __recentlyViewedShifts__ = {};
     // TODO: make private
-    this.covers = [];
+    var __iframeCovers__ = [];
     
     // Exceptions
     var __SSPinOpException__ = "__SSPinOpException__";
@@ -206,7 +206,7 @@ var ShiftSpace = new (function() {
       });
 
       // create the pin selection bounding box
-      createPinSelect();
+      SSCreatePinSelect();
 
       console.log('Grabbing content');
 
@@ -215,6 +215,10 @@ var ShiftSpace = new (function() {
       
       console.log('ShiftSpace initialize complete');
     };
+    
+    // ===============================
+    // = Function Prototype Helpers  =
+    // ===============================
     
     // bindResource - for atomic operations
     Function.prototype.bindResource = function(obj, options)
@@ -1333,13 +1337,13 @@ var ShiftSpace = new (function() {
     
     */
     function keyUpHandler(_event) {
-        var event = new Event(_event);
-        // If the user is letting go of the shift key, hide the menu and reset
-        if (event.code == 16) {
-            keyState.shiftPressed = false;
-            keyState.ignoreSubsequentSpaces = false;
-            ShiftSpace.ShiftMenu.hide();
-        }
+      var event = new Event(_event);
+      // If the user is letting go of the shift key, hide the menu and reset
+      if (event.code == 16) {
+        keyState.shiftPressed = false;
+        keyState.ignoreSubsequentSpaces = false;
+        ShiftSpace.ShiftMenu.hide();
+      }
     }
     
     
@@ -1350,41 +1354,47 @@ var ShiftSpace = new (function() {
     
     */
     function keyPressHandler(event) {
-        // Cancel if a keydown already picked up the shift + space
-        if (keyState.cancelKeyPress) {
-            keyState.cancelKeyPress = false;
-            event = new Event(event);
-            event.stopPropagation();
-            event.preventDefault();
-        }
+      // Cancel if a keydown already picked up the shift + space
+      if (keyState.cancelKeyPress) {
+        keyState.cancelKeyPress = false;
+        event = new Event(event);
+        event.stopPropagation();
+        event.preventDefault();
+      }
     }
     
     function mouseMoveHandler(e) {
-        var event = new Event(e);
-        keyState.x = event.page.x;
-        keyState.y = event.page.y;
-        
-        if (event.shift) {
-            ShiftSpace.ShiftMenu.show(keyState.x, keyState.y);
-        } else if (ShiftSpace.ShiftMenu) {
-            ShiftSpace.ShiftMenu.hide();
-        }
+      var event = new Event(e);
+      keyState.x = event.page.x;
+      keyState.y = event.page.y;
+
+      if (event.shift) {
+        ShiftSpace.ShiftMenu.show(keyState.x, keyState.y);
+      } else if (ShiftSpace.ShiftMenu) {
+        ShiftSpace.ShiftMenu.hide();
+      }
     }
     
-    this.addCover = function(newCover)
+    // ==========================
+    // = Iframe Cover Functions =
+    // ==========================
+    
+    SSAddCover = function(newCover)
     {
+      console.log('SSAddCover');
       // create covers if we haven't already
-      this.covers.push(newCover);
+      __iframeCovers__.push(newCover);
     }
 
-    this.addIframeCovers = function() {
-      this.covers.each(function(aCover) {
+    SSAddIframeCovers = function() {
+      console.log('SSAddIframeCovers');
+      __iframeCovers__.each(function(aCover) {
         aCover.cover.setStyle('display', 'block');
       });
     }
     
-    this.updateIframeCovers = function() {
-      this.covers.each(function(aCover) {
+    SSUpdateIframeCovers = function() {
+      __iframeCovers__.each(function(aCover) {
         var pos = aCover.frame.getPosition();
         var size = aCover.frame.getSize().size;
         aCover.cover.setStyles({
@@ -1396,16 +1406,21 @@ var ShiftSpace = new (function() {
       });
     }
     
-    this.removeIframeCovers = function() {
-      this.covers.each(function(aCover) {
+    SSRemoveIframeCovers = function() {
+      __iframeCovers__.each(function(aCover) {
         aCover.cover.setStyle('display', 'none');
       });
     }
     
+    // ===================
+    // = Pin API Support =
+    // ===================
+    
     // for holding the current pin selection
-    var currentPinSelection = null;
+    var __currentPinSelection__ = null;
+    
     // create the pin selection frame
-    function createPinSelect() {
+    function SSCreatePinSelect() {
       var targetBorder = new ShiftSpace.Element('div', {
         'class': "SSPinSelect SSPinSelectInset"
       });
@@ -1422,14 +1437,14 @@ var ShiftSpace = new (function() {
       ShiftSpace.PinSelect = targetBorder;
     }
     
-    function pinMouseOverHandler (_evt) {
+    function SSPinMouseOverHandler (_evt) {
       var evt = new Event(_evt);
       var target = $(evt.target);
 
       if(!isSSElement(target) &&
          !target.hasClass('SSPinSelect'))
       {
-        currentPinSelection = target;
+        __currentPinSelection__ = target;
         var pos = target.getPosition();
         var size = target.getSize().size;
       
@@ -1444,27 +1459,27 @@ var ShiftSpace = new (function() {
       }
     }
     
-    function pinMouseMoveHandler(_evt) {
+    function SSPinMouseMoveHandler(_evt) {
       if(ShiftSpace.PinSelect.getParent())
       {
         ShiftSpace.PinSelect.remove();
       }
     }
     
-    function pinMouseClickHandler(_evt) {
+    function SSPinMouseClickHandler(_evt) {
       var evt = new Event(_evt);
       evt.stop();
       if(currentPinWidget)
       {
         if(ShiftSpace.PinSelect.getParent()) ShiftSpace.PinSelect.remove();
         removePinEvents();
-        currentPinWidget.userPinnedElement(currentPinSelection);
+        currentPinWidget.userPinnedElement(__currentPinSelection__);
       }
     }
     
-    function checkPinReferences(pinRef)
+    function SSCheckPinReferences(pinRef)
     {
-      var otherShifts = allPinnedShifts.copy().remove(pinRef.shift);
+      var otherShifts = __allPinnedShifts__.copy().remove(pinRef.shift);
       var matchingShifts = otherShifts.filter(function(x) {
         var aPinRef = x.getPinRef();
         return ((aPinRef.relativeXPath == pinRef.relativeXPath) && 
@@ -1480,15 +1495,15 @@ var ShiftSpace = new (function() {
     }
     
     // stores direct references to the shift objects
-    var allPinnedShifts = [];
-    function pinElement(element, pinRef)
+    var __allPinnedShifts__ = [];
+    function SSPinElement(element, pinRef)
     {
       ShiftSpace.pinRef = pinRef;
 
       // store this pinRef to ensure the same node doesn't get pinned
-      if(!allPinnedShifts.contains(pinRef.shift)) allPinnedShifts.push(pinRef.shift);
+      if(!__allPinnedShifts__.contains(pinRef.shift)) __allPinnedShifts__.push(pinRef.shift);
       // make sure nobody else is targeting the same node
-      checkPinReferences(pinRef);
+      SSCheckPinReferences(pinRef);
       
       var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
       
@@ -1612,7 +1627,7 @@ var ShiftSpace = new (function() {
       }
     }
     
-    function unpinElement(pinRef) {
+    function SSUnpinElement(pinRef) {
       switch(pinRef.action) 
       {
         case 'relative':
@@ -1676,15 +1691,15 @@ var ShiftSpace = new (function() {
         Attaches the mouse events to handle Pin selection.
     */
     function attachPinEvents() {
-      window.addEvent('mouseover', pinMouseOverHandler);
-      window.addEvent('click', pinMouseClickHandler);
-      ShiftSpace.PinSelect.addEvent('mousemove', pinMouseMoveHandler);
+      window.addEvent('mouseover', SSPinMouseOverHandler);
+      window.addEvent('click', SSPinMouseClickHandler);
+      ShiftSpace.PinSelect.addEvent('mousemove', SSPinMouseMoveHandler);
     }
     
     function removePinEvents() {
-      window.removeEvent('mouseover', pinMouseOverHandler);
-      window.removeEvent('click', pinMouseClickHandler);
-      ShiftSpace.PinSelect.removeEvent('mousemove', pinMouseMoveHandler);
+      window.removeEvent('mouseover', SSPinMouseOverHandler);
+      window.removeEvent('click', SSPinMouseClickHandler);
+      ShiftSpace.PinSelect.removeEvent('mousemove', SSPinMouseMoveHandler);
     }
     
     // hold the current active pin widget

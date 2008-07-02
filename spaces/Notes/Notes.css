@@ -5,8 +5,8 @@
   top: 0px;
   left: 0px;
   background-color: #F5FB9B;
-  min-width : 120px;
-  min-height: 120px;
+  min-width : 150px;
+  min-height: 150px;
   /* The following 2 are for Safari - David */
   overflow-x: visible;
   overflow-y: visible;
@@ -114,7 +114,7 @@ body#SSNoteShiftFrameBody
 }
 
 .SSNoteShiftBottom {
-	padding-bottom: 10px;
+	padding-bottom: 20px;
 }
 
 .SSNoteShiftBottom input[type="button"]

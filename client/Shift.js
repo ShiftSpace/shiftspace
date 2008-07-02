@@ -405,7 +405,7 @@ ShiftSpace.Shift = new Class({
     
       // call ShiftSpace Pin API to pin this element
       pinRef.shift = this;
-      pinElement(element, pinRef);
+      SSPinElement(element, pinRef);
     }
     else
     {
@@ -425,7 +425,7 @@ ShiftSpace.Shift = new Class({
     // check to make sure there is an pinned element to restore
     if(this.getPinElement())
     {
-      unpinElement(this.getPinRef());
+      SSUnpinElement(this.getPinRef());
       
       // clear out these vars
       this.setPinTarget(null);

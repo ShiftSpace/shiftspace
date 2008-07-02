@@ -110,7 +110,7 @@ function loadStyle(url, callback, frame)
 }
 
 // stores direct references to the shift objects
-function pinElement(element, pinRef)
+function SSPinElement(element, pinRef)
 {
   var targetNode = $(ShiftSpace.Pin.toNode(pinRef));
   
