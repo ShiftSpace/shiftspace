@@ -987,10 +987,12 @@ var ShiftSpace = new (function() {
             return;
           }
           
+          /*
           console.log('====================================================================');
           console.log('SHIFT QUERY RETURN');
           console.log('====================================================================');
           console.log(json);
+          */
 
           // save the pluginsData
           for(var plugin in installedPlugins)
@@ -1098,7 +1100,6 @@ var ShiftSpace = new (function() {
         username: ShiftSpace.user.getUsername()
       };
       
-      console.log('using safe call!');
       serverCall.safeCall('shift.update', params, function(json) {
         console.log('returned shift.update!');
         if (!json.status) {
@@ -1740,7 +1741,7 @@ var ShiftSpace = new (function() {
       }
 
       // Load the URL then execute the callback
-      console.log('Loading ' + url + ' from network');
+      //console.log('Loading ' + url + ' from network');
       GM_xmlhttpRequest({
         'method': 'GET',
         'url': url,
@@ -1832,9 +1833,9 @@ var ShiftSpace = new (function() {
     
     */
     function registerSpace(instance) {
-      console.log("registerSpace");
+      //console.log("registerSpace");
       var spaceName = instance.attributes.name;
-      console.log('Register Space ===================================== ' + spaceName);
+      //console.log('Register Space ===================================== ' + spaceName);
       spaces[spaceName] = instance;
       instance.addEvent('onShiftUpdate', saveShift.bind(this));
 
@@ -1868,7 +1869,6 @@ var ShiftSpace = new (function() {
 
       instance.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
       instance.addEvent('onShiftShow', function(shiftId) {
-        console.log('show shift event!');
         ShiftSpace.Console.showShift(shiftId);
       });
       instance.addEvent('onShiftBlur', function(shiftId) {
@@ -2016,7 +2016,7 @@ var ShiftSpace = new (function() {
     function serverCall(method, parameters, _callback) {
       var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
-      console.log('serverCall: ' + url);
+      //console.log('serverCall: ' + url);
       var data = '';
       for (var key in parameters) {
         if (data != '') {
@@ -2038,13 +2038,13 @@ var ShiftSpace = new (function() {
         data: data,
         onload: function(_rx) {
           var rx = _rx;
-          console.log('servercall returned');
+          //console.log('servercall returned');
           /*
           console.log(rx.responseText);
           console.log(typeof callback == 'function');
           */
           if (typeof callback == 'function') {
-            console.log('evaluate ' + rx.responseText);
+            //console.log('evaluate ' + rx.responseText);
             try
             {
               /*
