@@ -84,7 +84,7 @@ var ShiftSpace = new (function() {
     var trails = {};
     var plugins = {};
     var displayList = [];
-    var pinWidgets = [];
+    var __pinWidgets__ = [];
     var __recentlyViewedShifts__ = {};
     var __iframeCovers__ = [];
     
@@ -92,12 +92,12 @@ var ShiftSpace = new (function() {
     var __SSPinOpException__ = "__SSPinOpException__";
     
     // Holds the id of the currently focused shift
-    var focusedShiftId = null;
-    var focusedSpace = null;
+    var __focusedShiftId__ = null;
+    var __focusedSpace__ = null;
     
     // These are for the race condition between shifts loading and console setup
-    var pendingShifts = -1;
-    var consoleIsWaiting = false;
+    var __pendingShifts__ = -1;
+    var __consoleIsWaiting__ = false;
     var __pluginsData__ = {};
     
     // Each space and a corresponding URL of its origin
@@ -199,7 +199,7 @@ var ShiftSpace = new (function() {
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
         ShiftSpace.Console.hidePluginMenu.bind(ShiftSpace.Console)();
-        pinWidgets.each(function(x){
+        __pinWidgets__.each(function(x){
           if(!x.isSelecting) x.hideMenu();
         });
       });
@@ -306,33 +306,33 @@ var ShiftSpace = new (function() {
     
     */
     this.info = function(spaceName) {
-        if (typeof spaceName != 'undefined') {
-            var defaults = {
-                title: spaceName,
-                icon: server + 'images/unknown-space.png',
-                version: '1.0'
-            };
-            if (!installed[spaceName]) {
-                defaults.unknown = true;
-                return defaults;
-            }
-            // TODO - this must be fixed, we need to cache space attributes - David
-            defaults.icon = server + 'spaces/' + spaceName + '/' + spaceName + '.png';
-            //var spaceInfo = $merge(defaults, spaces[spaceName].attributes);
-            var spaceInfo = $merge(defaults, {});
-            delete spaceInfo.name; // No need to send this back
-            spaceInfo.url = installed[spaceName];
-            return spaceInfo;
-        }
-        var spaceIndex = [];
-        for (var spaceName in installed) {
-            spaceIndex.push(spaceName);
-        }
-        return {
-            server: server,
-            spaces: spaceIndex.join(', '),
-            version: version
+      if (typeof spaceName != 'undefined') {
+        var defaults = {
+          title: spaceName,
+          icon: server + 'images/unknown-space.png',
+          version: '1.0'
         };
+        if (!installed[spaceName]) {
+          defaults.unknown = true;
+          return defaults;
+        }
+        // TODO - this must be fixed, we need to cache space attributes - David
+        defaults.icon = server + 'spaces/' + spaceName + '/' + spaceName + '.png';
+        //var spaceInfo = $merge(defaults, spaces[spaceName].attributes);
+        var spaceInfo = $merge(defaults, {});
+        delete spaceInfo.name; // No need to send this back
+        spaceInfo.url = installed[spaceName];
+        return spaceInfo;
+      }
+      var spaceIndex = [];
+      for (var spaceName in installed) {
+        spaceIndex.push(spaceName);
+      }
+      return {
+        server: server,
+        spaces: spaceIndex.join(', '),
+        version: version
+      };
     };
     
     // we need this as we transition away from FF2
@@ -507,6 +507,10 @@ var ShiftSpace = new (function() {
       return {'result': result, 'missing': missing};
     }
     
+    // =============
+    // = Utilities =
+    // =============
+    
     function SSIsSSElement(node)
     {
       if(node.hasClass('ShiftSpaceElement'))
@@ -535,6 +539,42 @@ var ShiftSpace = new (function() {
     {
       return !SSIsSSElement(element);
     }
+    
+    // Tokenize Json strings for DB
+    function SSClean(jsonStr)
+    {
+      
+    }
+    
+    function SSPendingShifts()
+    {
+      return __pendingShifts__;
+    }
+    
+    function SSSetPendingShifts(val)
+    {
+      __pendingShifts__ = val;
+    }
+    
+    function SSFocusedShiftId()
+    {
+      return __focusedShiftId__;
+    }
+    
+    function SSSetFocusedShiftId(newId)
+    {
+      __focusedShiftId__ = newId;
+    }
+    
+    function SSFocusedSpace()
+    {
+      return __focusedSpace__;
+    }
+    
+    function SSSetFocusedSpace(newSpace)
+    {
+      __focusedSpace__ = newSpace;
+    }
 
     // ======================
     // = FullScreen Support =
@@ -561,7 +601,7 @@ var ShiftSpace = new (function() {
       __shiftSpaceState__.empty();
       
       __shiftSpaceState__.set('consoleVisible', ShiftSpace.Console.isVisible());
-      __shiftSpaceState__.set('focusedShiftId', focusedShiftId);
+      __shiftSpaceState__.set('focusedShiftId', SSFocusedShiftId());
       
       // go through each space and close it down, and sleep it
       ShiftSpace.Console.hide();
@@ -613,10 +653,10 @@ var ShiftSpace = new (function() {
         
     */
     this.installSpace = function(space, pendingShift) {
-        var url = server + 'spaces/' + space + '/' + space + '.js';
-        installed[space] = url;
-        setValue('installed', installed);
-        loadSpace(space, pendingShift);
+      var url = server + 'spaces/' + space + '/' + space + '.js';
+      installed[space] = url;
+      setValue('installed', installed);
+      loadSpace(space, pendingShift);
     };
     
     /*
@@ -629,37 +669,37 @@ var ShiftSpace = new (function() {
     
     */
     this.uninstallSpace = function(spaceName) {
-        var url = installed[spaceName];
-        delete spaces[spaceName];
-        delete installed[spaceName];
-        setValue('installed', installed);
-        this.clearCache(url);
+      var url = installed[spaceName];
+      delete spaces[spaceName];
+      delete installed[spaceName];
+      setValue('installed', installed);
+      this.clearCache(url);
     };
-    
+
     
     // TODO: move this stuff to class User
     // TODO: write actual method calls
     // TODO: write documentation
     this.getUser = function() {
-        return {
-            getUsername: function() {
-                return 'shiftspace';
-            },
-            getName: function() {
-                return 'ShiftSpace';
-            },
-            setPref: function(prefKey, prefValue) {
-                var key = this.getUsername() + '.pref.' + prefKey;
-                return setValue(key, prefValue);
-            },
-            getPref: function(prefKey, defaultValue) {
-                var key = this.getUsername() + '.pref.' + prefKey;
-                return getValue(key, defaultValue);
-            },
-            sendMessage: function(subject, message) {
-                return;
-            }
-        };
+      return {
+        getUsername: function() {
+          return 'shiftspace';
+        },
+        getName: function() {
+          return 'ShiftSpace';
+        },
+        setPref: function(prefKey, prefValue) {
+          var key = this.getUsername() + '.pref.' + prefKey;
+          return setValue(key, prefValue);
+        },
+        getPref: function(prefKey, defaultValue) {
+          var key = this.getUsername() + '.pref.' + prefKey;
+          return getValue(key, defaultValue);
+        },
+        sendMessage: function(subject, message) {
+          return;
+        }
+      };
     };
     
     function SSXmlHttpRequest(config) {
@@ -677,17 +717,17 @@ var ShiftSpace = new (function() {
     
     */
     this.clearCache = function(url) {
-        if (typeof url == 'string') {
-            // Clear a specific file from the cache
-            log('Clearing ' + url + ' from cache');
-            setValue('cache.' + url, 0);
-        } else {
-            // Clear all the files from the cache
-            cache.each(function(url) {
-                log('Clearing ' + url + ' from cache');
-                setValue('cache.' + url, 0);
-            });
-        }
+      if (typeof url == 'string') {
+        // Clear a specific file from the cache
+        log('Clearing ' + url + ' from cache');
+        setValue('cache.' + url, 0);
+      } else {
+        // Clear all the files from the cache
+        cache.each(function(url) {
+          log('Clearing ' + url + ' from cache');
+          setValue('cache.' + url, 0);
+        });
+      }
     };
     
     
@@ -755,20 +795,21 @@ var ShiftSpace = new (function() {
     function focusShift(shiftId) {
       var shift = shifts[shiftId];
       var space = spaceForShift(shiftId);
+      var lastFocusedShift = SSFocusedShiftId();
       
       // unfocus the last shift
-      if (focusedShiftId && 
-          shifts[focusedShiftId] &&
-          focusedShiftId != shiftId) 
+      if (lastFocusedShift && 
+          shifts[lastFocusedShift] &&
+          lastFocusedShift != shiftId) 
       {
-        var lastSpace = spaceForShift(focusedShiftId);
-        if(lastSpace.getShift(focusedShiftId))
+        var lastSpace = spaceForShift(lastFocusedShift);
+        if(lastSpace.getShift(lastFocusedShift))
         {
-          lastSpace.getShift(focusedShiftId).blur();
-          lastSpace.orderBack(focusedShiftId);
+          lastSpace.getShift(lastFocusedShift).blur();
+          lastSpace.orderBack(lastFocusedShift);
         }
       }
-      focusedShiftId = shift.id;
+      SSSetFocusedShiftId(shift.id);
       space.orderFront(shift.id);
 
       // call onShiftFocus
@@ -839,6 +880,8 @@ var ShiftSpace = new (function() {
     */
     function focusSpace(space, position) 
     {
+      var focusedSpace = SSFocusedSpace();
+      
       if(focusedSpace && focusedSpace != space)
       {
         // check to see if focused space
@@ -955,16 +998,17 @@ var ShiftSpace = new (function() {
         if (json.username) 
         {
           setUsername(json.username);
-          if (consoleIsWaiting) 
+          if (__consoleIsWaiting__) 
           {
             console.log('remote login tab set up auth control');
             ShiftSpace.Console.removeTab('login');
             ShiftSpace.Console.setupAuthControl();
           }
         }
-        pendingShifts = json.count;
-        console.log('- pendingShifts ' + pendingShifts);
-        if (json.count > 0 && consoleIsWaiting) 
+        
+        SSSetPendingShifts(json.count);
+        
+        if (json.count > 0 && __consoleIsWaiting__) 
         {
           console.log('about to show notifier');
           ShiftSpace.Console.showNotifier();
@@ -980,9 +1024,9 @@ var ShiftSpace = new (function() {
     
     */
     function consoleIsReady() {
-      if (pendingShifts == -1) {
-        consoleIsWaiting = true;
-      } else if (pendingShifts > 0) {
+      if (SSPendingShifts() == -1) {
+        __consoleIsWaiting__ = true;
+      } else if (SSPendingShifts() > 0) {
         ShiftSpace.Console.showNotifier();
       }
     }
@@ -1164,8 +1208,8 @@ var ShiftSpace = new (function() {
         delete shifts[shiftJson.id];
         delete space.shifts[shiftJson.id];
         
-        if (focusedShiftId == shiftJson.id) {
-          focusedShiftId = json.id;
+        if (SSFocusedShiftId() == shiftJson.id) {
+          SSSetFocusedShiftId(json.id);
         }
         shiftJson.id = json.id;
         shiftJson.content = Json.toString(shiftJson);
@@ -1238,9 +1282,9 @@ var ShiftSpace = new (function() {
       // don't assume the space is loaded
       if(space) space.deleteShift(shiftId);
 
-      if (focusedShiftId == shiftId) 
+      if(SSFocusedShiftId() == shiftId) 
       {
-        focusedShiftId = null;
+        SSSetFocusedShiftId(null);
       }
 
       var params = {

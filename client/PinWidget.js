@@ -64,7 +64,7 @@ var PinWidget = new Class({
     this.delegate.addEvent('pin', this.delegateWasPinned.bind(this));
     this.delegate.addEvent('unpin', this.delegateWasUnpinned.bind(this));
     
-    pinWidgets.push(this);
+    __pinWidgets__.push(this);
   },
   
   delegateWasPinned: function()

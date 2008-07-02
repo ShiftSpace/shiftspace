@@ -335,10 +335,10 @@ var Console = new Class({
     //console.log('-------------------------------- showNotifier');
     if (this.cancelNotifier) 
     {
-      if (pendingShifts) 
+      if (SSPendingShifts()) 
       {
         //console.log('time to load shifts');
-        pendingShifts = 0;
+        SSSetPendingShifts(0);
         loadShifts();
       }
     } 
@@ -346,9 +346,9 @@ var Console = new Class({
     {
       //console.log('start animation for notifier');
       this.notifierFx.start(-32, 0).chain(function() {
-        if (pendingShifts) 
+        if (SSPendingShifts()) 
         {
-          pendingShifts = 0;
+          SSSetPendingShifts(0);
           loadShifts();
         }
         this.hideNotifier.delay(3000, this);
@@ -930,9 +930,9 @@ var Console = new Class({
     //console.log('refresh');
     this.refresh();
     //console.log('checking pending');
-    if (pendingShifts > 0) 
+    if (SSPendingShifts() > 0) 
     {
-      pendingShifts = 0;
+      SSSetPendingShifts(0);
       loadShifts();
     }
   },
