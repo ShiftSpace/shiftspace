@@ -86,7 +86,6 @@ var ShiftSpace = new (function() {
     var displayList = [];
     var pinWidgets = [];
     var __recentlyViewedShifts__ = {};
-    // TODO: make private
     var __iframeCovers__ = [];
     
     // Exceptions
@@ -108,7 +107,7 @@ var ShiftSpace = new (function() {
       'Highlights': server + 'spaces/Highlights/Highlights.js',
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
     });
-   
+  
     /*
     installed = {
       'Notes' : myFiles + 'spaces/Notes/Notes.js',
@@ -207,7 +206,9 @@ var ShiftSpace = new (function() {
 
       // create the pin selection bounding box
       SSCreatePinSelect();
-
+      // check for page iframes
+      SSCheckForPageIframes();
+      
       console.log('Grabbing content');
 
       // See if there's anything on the current page
@@ -455,6 +456,10 @@ var ShiftSpace = new (function() {
       return (shiftId.search('newShift') != -1);
     }
     
+    // ==================
+    // = Plugin Support =
+    // ==================
+    
     function SSGetPlugin(pluginName)
     {
       return plugins[pluginName];
@@ -502,7 +507,7 @@ var ShiftSpace = new (function() {
       return {'result': result, 'missing': missing};
     }
     
-    function isSSElement(node)
+    function SSIsSSElement(node)
     {
       if(node.hasClass('ShiftSpaceElement'))
       {
@@ -524,7 +529,16 @@ var ShiftSpace = new (function() {
       
       return hasSSParent;
     }
-    this.isSSElement = isSSElement;
+    this.isSSElement = SSIsSSElement;
+    
+    function SSIsNotSSElement(element)
+    {
+      return !SSIsSSElement(element);
+    }
+
+    // ======================
+    // = FullScreen Support =
+    // ======================
     
     var __isHidden__ = false;
     var __shiftSpaceState__ = new Hash();
@@ -1379,6 +1393,23 @@ var ShiftSpace = new (function() {
     // = Iframe Cover Functions =
     // ==========================
     
+    SSCheckForPageIframes = function()
+    {
+      $$('iframe').filter(SSIsNotSSElement).each(function(aFrame) {
+        SSAddCover({cover:SSCreateCover(), frame:aFrame});
+      });
+    }
+    
+    SSCreateCover = function()
+    {
+      var cover = new ShiftSpace.Element('div', {
+        'class': "SSIframeCover"
+      });
+      cover.setStyle('display', 'none');
+      cover.injectInside(document.body);
+      return cover;
+    }
+    
     SSAddCover = function(newCover)
     {
       console.log('SSAddCover');
@@ -1441,7 +1472,7 @@ var ShiftSpace = new (function() {
       var evt = new Event(_evt);
       var target = $(evt.target);
 
-      if(!isSSElement(target) &&
+      if(!SSIsSSElement(target) &&
          !target.hasClass('SSPinSelect'))
       {
         __currentPinSelection__ = target;

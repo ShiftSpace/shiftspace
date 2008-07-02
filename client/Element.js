@@ -99,18 +99,8 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
 
     if(addCover && SSAddCover)
     {
-      // add a cover for this object
-      var cover = new ShiftSpace.Element('div', {
-        'class': "SSIframeCover"
-      });
-      cover.setStyle('display', 'none');
-
-      // add it to the page
-      cover.injectInside(document.body);
-      //console.log('cover added');
-
       // let ShiftSpace know about it
-      SSAddCover({cover:cover, frame:this.frame});
+      SSAddCover({cover:SSCreateCover(), frame:this.frame});
     }
     else
     {
