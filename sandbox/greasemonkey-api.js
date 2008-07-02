@@ -19,7 +19,8 @@ function GM_getValue(key, defaultValue) {
   xhr.send('../shiftspace.php?method=sandbox.getvalue',
            'key=' + encodeURIComponent(key) + '&' +
            'default=' + encodeURIComponent(defaultValue));
-  return xhr.response.text;
+  console.log(xhr);
+  return xhr.transport.responseText;
 }
 
 function GM_setValue(key, value) {
@@ -29,7 +30,7 @@ function GM_setValue(key, value) {
   xhr.send('../shiftspace.php?method=sandbox.setvalue',
            'key=' + encodeURIComponent(key) + '&' +
            'value=' + encodeURIComponent(value));
-  return xhr.response.text;
+  return xhr.transport.responseText;
 }
 
 function GM_log(msg) {
