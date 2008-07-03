@@ -4,7 +4,7 @@ var User = new Class({
     return username;
   },
   
-  isLoggedIn: function() {
+  isLoggedIn: function(showErrorAlert) {
     return (username != false);
   },
   

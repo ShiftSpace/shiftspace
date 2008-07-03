@@ -231,16 +231,19 @@ var Console = new Class({
       {
         var txt = itemsAndActions[i].text;
         var cb = itemsAndActions[i].callback;
+        var enabled = itemsAndActions[i].enabled;
       
         if(i == 0)
         {
           this.pluginMenu.getElement('.SSMenuTopItem span').setText(txt);
+          if(!enabled) this.pluginMenu.getElement('.SSMenuTopItem span').addClass('SSDisabledMenuItem');
           this.topItem.removeEvents();
           this.topItem.addEvent('click', cb.bind(null, shiftId));
         }
         else if(i == itemsAndActions.length-1)
         {
           this.pluginMenu.getElement('.SSMenuBottomItem span').setText(txt);
+          if(!enabled) this.pluginMenu.getElement('.SSMenuBottomItem span').addClass('SSDisabledMenuItem');
           this.bottomItem.removeEvents();
           this.bottomItem.addEvent('click', cb.bind(null, shiftId));
         }
@@ -249,6 +252,8 @@ var Console = new Class({
           var newItem = this.menuItemModel.clone(true);
         
           newItem.getElement('span').setText(txt);
+          if(!enabled) newItem.getElement('span').addClass('SSDisabledMenuItem');
+
           newItem.removeEvents();
           newItem.addEvent('click', cb.bind(null, shiftId));
 
@@ -1271,6 +1276,7 @@ var Console = new Class({
             name: plugin, 
             args: [plugin, shiftId] 
           })();
+
         }.bind(this));
 
         //console.log('adding plugin div');

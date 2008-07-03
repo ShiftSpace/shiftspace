@@ -462,6 +462,11 @@ div.SSMenuTopItem:hover .SSRight
   height: 20px;
 }
 
+.SSDisabledMenuItem
+{
+  opacity: 0.5;
+}
+
 .SSPinWidgetButton
 {
   width: 19px;

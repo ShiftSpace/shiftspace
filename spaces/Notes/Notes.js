@@ -218,7 +218,16 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   refresh : function()
   {
-    if(this.inputArea) this.inputArea.setText(this.noteText);
+    // if inputArea and inputArea visible
+    if(this.inputArea)
+    {
+      this.inputArea.setText(this.noteText);
+    }
+    // if viewArea and viewArea visible
+    if(this.viewArea && !this.viewArea.hasClass('SSDisplayNone'))
+    {
+      this.viewArea.setHTML(this.noteText);
+    }
     
     if(this.element.getSize().size)
     {
@@ -283,10 +292,19 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.cancelButton.setStyle('display', '');
     this.resizeControl.setStyle('display', '');
     this.pinWidgetDiv.setStyle('display', '');
+    
     if(this.inputArea)
     {
       this.inputArea.removeProperty('readonly');
+      // show the input area
     }
+
+    if(this.viewArea)
+    {
+      // hide the viewing area
+      this.viewArea.addClass('SSDisplayNone');
+    }
+
     this.refresh();
   },
   
@@ -296,10 +314,19 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.cancelButton.setStyle('display', 'none');
     this.resizeControl.setStyle('display', 'none');
     this.pinWidgetDiv.setStyle('display', 'none');
+    
     if(this.inputArea)
     {
       this.inputArea.setProperty('readonly', 1);
+      // hide the input area
     }
+
+    if(this.viewArea)
+    {
+      // show the viewing area
+      this.viewArea.removeClass('SSDisplayNone');
+    }
+    
     this.refresh();
   },
   
@@ -411,6 +438,14 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.inputArea.injectInside( this.frameBody );
     this.inputArea.setProperty('value', text);
     this.inputArea.focus();
+    
+    // create the view text area
+    this.viewArea = $(notedoc.createElement('div'));
+    this.viewArea.setProperty('class', 'SSNoteShiftViewArea');
+    /*
+    this.viewArea.injectInside(this.frameBody);
+    this.viewArea.setHTML(text);
+    */
   
     this.inputArea.addEvent('mousedown', function() {
       this.focus();

@@ -99,6 +99,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       data, 
       function(json) 
       {
+        console.log('>>>>>>>>>>>>>>>>> trail saved! ' + Json.toString(json));
         this.onTrailSave(json);
         cb(json);
       }.bind(this)
@@ -145,9 +146,17 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       // Add the first item
       menuItems.push({
         text: "Create a Trail",
+        enabled: ShiftSpace.user.isLoggedIn(),
         callback: function(shiftId)
         {
-          this.newTrail(shiftId);
+          if(ShiftSpace.user.isLoggedIn())
+          {
+            this.newTrail(shiftId);
+          }
+          else
+          {
+            alert("You must be logged in to create a new trail.");
+          }
         }.bind(this)
       });
       
@@ -171,6 +180,9 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
           this.closeMenu.bind(this);
         }.bind(this)
       });
+      
+      console.log(Json.toString(menuItems));
+      
       // send it to the callback function
       cb(menuItems);
     }.bind(this));
