@@ -246,7 +246,9 @@ var TrailPage = new Class({
     var url = new Element( 'a' );
     url.addClass( 'TrailPageDescriptionLink' );
     url.setProperty( 'href', this.href );
-    url.setText( this.href );
+    
+    var shortHref = (this.href.length > 40) ? (this.href.substr(0, 40) + '...') : this.href;
+    url.setText( shortHref );
 
     // add the description string and the user
     descTitleUserText.injectInside( descTextArea );

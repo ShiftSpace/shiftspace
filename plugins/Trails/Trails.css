@@ -317,6 +317,7 @@ div#trail-close:hover
   color: #f63b01;
   text-decoration: none;
   border: none;
+  float: left;
 }
 
 .TrailPageZoomBorder
