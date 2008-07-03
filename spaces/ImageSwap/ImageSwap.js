@@ -170,7 +170,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     var currentShift = this.getCurrentShift();
 
     // set up the shift!
-    this.getValue('grabbedImage', function(grabbedImage) {
+    this.getValue('grabbedImage', null, function(grabbedImage) {
       
       // we want a reference to the image node with the replace action
       var pinRef = ShiftSpace.Pin.toRef(this.currentImage, 'replace');

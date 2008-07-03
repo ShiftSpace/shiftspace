@@ -34,7 +34,7 @@ var TrailPage = new Class({
     this.id = this.options.id;
     this.title = this.options.summary;
     this.loc = this.options.loc;
-    this.href = this.options.href
+    this.href = this.options.url || this.options.href;
     this.nodes = this.options.nodes;
     this.user = this.options.username;
     
