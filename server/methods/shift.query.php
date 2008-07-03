@@ -41,6 +41,7 @@ if (!empty($user)) {
 // Load shifts from storage
 $shifts = $db->rows("
   SELECT s.url_slug AS id,
+         s.href,
          s.space,
          s.summary,
          s.content,
