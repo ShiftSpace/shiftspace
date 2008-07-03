@@ -220,8 +220,13 @@ var Console = new Class({
     Function: setPluginMenuItems
       Set the items for the plugin menu.
   */
-  setPluginMenuItems: function(shiftId, itemsAndActions)
+  setPluginMenuItems: function(shiftId, _itemsAndActions)
   {
+    var itemsAndActions = _itemsAndActions;
+    
+    console.log('itemsAndActions');
+    console.log(itemsAndActions);
+    
     if(!itemsAndActions.delayed)
     {
       // remove all the menu items
@@ -229,21 +234,25 @@ var Console = new Class({
 
       for(var i = 0; i < itemsAndActions.length; i++)
       {
-        var txt = itemsAndActions[i].text;
-        var cb = itemsAndActions[i].callback;
-        var enabled = itemsAndActions[i].enabled;
+        // default enabled to true
+        var cia = $merge({enabled:true}, itemsAndActions[i]);
+        
+        var txt = cia.text;
+        var cb = cia.callback;
+        var enabled = cia.enabled;
       
+        var span;
         if(i == 0)
         {
-          this.pluginMenu.getElement('.SSMenuTopItem span').setText(txt);
-          if(!enabled) this.pluginMenu.getElement('.SSMenuTopItem span').addClass('SSDisabledMenuItem');
+          span = this.pluginMenu.getElement('.SSMenuTopItem span');
+          
           this.topItem.removeEvents();
           this.topItem.addEvent('click', cb.bind(null, shiftId));
         }
         else if(i == itemsAndActions.length-1)
         {
-          this.pluginMenu.getElement('.SSMenuBottomItem span').setText(txt);
-          if(!enabled) this.pluginMenu.getElement('.SSMenuBottomItem span').addClass('SSDisabledMenuItem');
+          span = this.pluginMenu.getElement('.SSMenuBottomItem span');
+
           this.bottomItem.removeEvents();
           this.bottomItem.addEvent('click', cb.bind(null, shiftId));
         }
@@ -251,13 +260,21 @@ var Console = new Class({
         {
           var newItem = this.menuItemModel.clone(true);
         
-          newItem.getElement('span').setText(txt);
-          if(!enabled) newItem.getElement('span').addClass('SSDisabledMenuItem');
+          span = newItem.getElement('span');
 
           newItem.removeEvents();
           newItem.addEvent('click', cb.bind(null, shiftId));
-
           newItem.injectBefore(this.pluginMenu.getElement('.SSMenuBottomItem'));
+        }
+        
+        span.setText(txt);
+        if(!enabled) 
+        {
+          span.addClass('SSDisabledMenuItem');
+        }
+        else
+        {
+          span.removeClass('SSDisabledMenuItem');
         }
       }
     }
