@@ -319,8 +319,14 @@ var CutupsShift = ShiftSpace.Shift.extend({
     },
     show: function() {
       var space = this.getParentSpace();
-      space.hideCutups();
       if (this.ranges) {
+        for(var i=0; i<this.ranges.length; i++){
+          this.ranges[i].origText = this.ranges[i].origText.replace(new RegExp("__newline__","g"),"\n");
+          //probably a range coder problem for some reason ancestorOrigTextContent null
+          if(this.ranges[i].ancestorOrigTextContent){ 
+            this.ranges[i].ancestorOrigTextContent = this.ranges[i].ancestorOrigTextContent.replace(new RegExp("__newline__","g"),"\n");
+          }
+        }
         for (var i = 0; i < this.ranges.length; i++) {
           space.turnOnRangeRef(this.ranges[i]);
         }
@@ -328,7 +334,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
       window.location.hash = this.getId();
     },
     hide: function(){
-      window.json = this.ranges;
+      console.log("hiiiiiide");
       this.getParentSpace().hideCutups(this.ranges);
     }
 });
