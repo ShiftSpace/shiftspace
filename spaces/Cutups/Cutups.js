@@ -167,7 +167,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
       function fade(){
         if(trans > 0){       
           trans = trans - 0.01;
-          $$('.SSCutup').setStyle('background-color','rgba(254,16,18,' + trans + ')')
+          $$('.SSCutup').setStyle('background-color','rgba(167,8,4,' + trans + ')')
           setTimeout(fade,100);
         }
       }
@@ -351,7 +351,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
         function fade(){
           if(trans > 0){       
             trans = trans - 0.01;
-            $$('.SSCutup').setStyle('background-color','rgba(254,16,18,' + trans + ')')
+            $$('.SSCutup').setStyle('background-color','rgba(167,8,4,' + trans + ')')
             setTimeout(fade,100);
           }
         }
