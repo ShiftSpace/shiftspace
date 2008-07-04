@@ -161,6 +161,19 @@ var CutupsSpace = ShiftSpace.Space.extend({
         l++
       }
     }
+    //FX for fading Cutup background-color to transparent
+    function fadeToTrans(){
+      trans = 1;
+      function fade(){
+        if(trans > 0){       
+          trans = trans - 0.01;
+          $$('.SSCutup').setStyle('background-color','rgba(254,16,18,' + trans + ')')
+          setTimeout(fade,100);
+        }
+      }
+      return fade();
+    }
+    fadeToTrans();
   },
   cancelCutup: function(){
       // ignores the specific shift since only one highlight can be on at a given moment 
@@ -332,6 +345,19 @@ var CutupsShift = ShiftSpace.Shift.extend({
         }
       }
       window.location.hash = this.getId();
+      //FX for fading Cutup background-color to transparent
+      function fadeToTrans(){
+        trans = 1;
+        function fade(){
+          if(trans > 0){       
+            trans = trans - 0.01;
+            $$('.SSCutup').setStyle('background-color','rgba(254,16,18,' + trans + ')')
+            setTimeout(fade,100);
+          }
+        }
+        return fade();
+      }
+      fadeToTrans();
     },
     hide: function(){
       console.log("hiiiiiide");

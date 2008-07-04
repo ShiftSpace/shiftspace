@@ -136,7 +136,8 @@
   background-repeat: repeat-x;  */
 }
 .SSCutup{
-  background-color:#E02E12;
+  /* background-color:#E02E12; */
+  /* background-color: rgba(244,46,18,0.3); */
   -moz-user-select:none;
   -webkit-user-select:none;
 }
