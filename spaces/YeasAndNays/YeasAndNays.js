@@ -31,7 +31,8 @@ var YeasAndNaysVars = new Class({
 var YeasAndNaysShift = ShiftSpace.Shift.extend({
 	
 	 setup: function(json) {
-        
+     console.log('setting up the shift');    
+     
 		 this.callserver = 'http://localhost/~xn/shiftspace_external/';
 		 this.zipcode = 0;
         
@@ -100,7 +101,7 @@ var YeasAndNaysShift = ShiftSpace.Shift.extend({
  
  	urlLoad: function( url, data, fn ){
  	
- 		var gm_ajax = xmlhttpRequest({
+ 		var gm_ajax = this.xmlhttpRequest({
     	
 			method: 'POST',
 			url: this.callserver + url, 
@@ -119,7 +120,7 @@ var YeasAndNaysShift = ShiftSpace.Shift.extend({
     	
     	this.zipcode = this.zipInput.value;
     	var data = "zipcode=" + this.zipInput.value + "&shift=" + this.getId();
-    	this.urlLoad( 'step1_zip.php', data, this.loadRepChooser ).bind(this);
+    	this.urlLoad( 'step1_zip.php', data, this.loadRepChooser );
     
     },
     
@@ -200,7 +201,7 @@ var YeasAndNaysShift = ShiftSpace.Shift.extend({
     				+ "&repId=" + this.repToCall
     				+ "&shift=" + this.getId();
     			
-    	this.urlLoad( 'step2_phoneAndRep.php', ph_data, this.verifyRepChoiceAndPhone ).bind(this);
+    	this.urlLoad( 'step2_phoneAndRep.php', ph_data, this.verifyRepChoiceAndPhone );
     	
     },
     
