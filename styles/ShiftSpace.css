@@ -483,7 +483,7 @@ div.SSMenuTopItem:hover .SSRight
 
 #SSConsolePluginMenuTab
 {
-  position: absolute;
+  position: fixed;
   width: 19px;
   height: 19px;
   background: transparent url(../images/ShiftMenu/menu-bg-reverse.png);
