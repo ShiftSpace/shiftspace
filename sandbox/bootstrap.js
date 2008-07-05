@@ -1,7 +1,7 @@
 function focusShift() {};
 
 var User = new Class({
-  getUsername: function() { return false },
+  getUsername: function() { return false; },
   isLoggedIn: function(showErrorAlert) { return false; },
   login: function(credentials, _callback) {},
   logout: function() {},
