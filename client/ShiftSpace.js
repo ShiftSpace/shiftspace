@@ -84,8 +84,14 @@ var ShiftSpace = new (function() {
     var trails = {};
     var plugins = {};
     var displayList = [];
+    
+    // An array of allocated Pin Widgets
     var __pinWidgets__ = [];
+    
+    // An array of recently viewed shifts
     var __recentlyViewedShifts__ = {};
+    
+    // Used to cover iframes so that resize and drag operations don't get borked
     var __iframeCovers__ = [];
     
     // Exceptions
@@ -98,6 +104,9 @@ var ShiftSpace = new (function() {
     // These are for the race condition between shifts loading and console setup
     var __pendingShifts__ = -1;
     var __consoleIsWaiting__ = false;
+    
+    // Stores initial data for plugins that are needed for the console at startup
+    // since the plugins won't actually be loaded until they are needed
     var __pluginsData__ = {};
     
     // Each space and a corresponding URL of its origin
@@ -114,6 +123,7 @@ var ShiftSpace = new (function() {
       'ImageSwap': myFiles + 'spaces/ImageSwap/ImageSwap.js',
       'Highlights': myFiles + 'spaces/Highlights/Highlights.js',
       'SourceShift': myFiles + 'spaces/SourceShift/SourceShift.js',
+      'YeasAndNays': myFiles + 'spaces/YeasAndNays/YeasAndNays.js'
     };
     */
 
@@ -373,7 +383,7 @@ var ShiftSpace = new (function() {
       return el;
     }
     
-    function getShiftContent(shiftId)
+    function SSGetShiftContent(shiftId)
     {
       if(!SSIsNewShift(shiftId))
       {
@@ -386,7 +396,23 @@ var ShiftSpace = new (function() {
           content = content.replace(/\r/g, '\\r');
           //content = content.replace(/"/g,);
         }
-      
+        
+        /*
+        console.log('the content');
+        console.log(content);
+        */
+        
+        // legacy content, strip surrounding parens
+        if(content[0] == "(")
+        {
+          content = content.substr(1, content.length-2);
+        }
+        
+        /*
+        console.log('now');
+        console.log(content);
+        */
+        
         var obj = null;
         try
         {
@@ -398,6 +424,11 @@ var ShiftSpace = new (function() {
           //console.log(content);
           //throw __SSCouldNotEvalShiftContentException__
         }
+        
+        /*
+        console.log('the obj');
+        console.log(obj);
+        */
       
         return obj;
       }
@@ -412,7 +443,7 @@ var ShiftSpace = new (function() {
       var allContent = {};
       for(var shift in shifts)
       {
-        allContent[shift] = getShiftContent(shift);
+        allContent[shift] = SSGetShiftContent(shift);
       }
       return allContent;
     }
@@ -752,6 +783,7 @@ var ShiftSpace = new (function() {
     
     */
     function initShift(spaceName, options) {
+      console.log('spaceName: ' + spaceName);
       if (!installed[spaceName]) {
         console.log('Error: Space ' + spaceName + ' does not exist.', true);
         return;
@@ -776,7 +808,12 @@ var ShiftSpace = new (function() {
       var noError = spaces[spaceName].createShift(shiftJson);
       if(noError)
       {
+        console.log('tempId:' + tempId);
         SSShowNewShift(tempId);
+      }
+      else
+      {
+        console.error("There was an error creating the shift");
       }
     }
     
@@ -922,25 +959,31 @@ var ShiftSpace = new (function() {
     */
     function showShift(shiftId) 
     {
+      console.log('showShift')
+      //console.log(Json.toString(shifts[shiftId]));
       var shift = shifts[shiftId];
-      var shiftJson = getShiftContent(shiftId);
+      var shiftJson = SSGetShiftContent(shiftId);
+      console.log(shiftJson);
       var space = spaceForShift(shiftId);
       shiftJson.id = shiftId;
+      
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      //console.log(Json.toString(shift));
       
       // load the space first
       if(!space)
       {
-        //console.log('space not loaded');
+        console.log('space not loaded');
         loadSpace(shift.space, shiftId);
         return;
       }
       if(!space.cssIsLoaded())
       {
-        //console.log('css not loaded');
+        console.log('css not loaded');
         space.addDeferredShift(shiftJson);
         return;
       }
-      //console.log('showing');
+      console.log('showing');
       
       // fix legacy content
       shiftJson.legacy = shift.legacy;
@@ -1000,7 +1043,7 @@ var ShiftSpace = new (function() {
         href: window.location.href
       };
       serverCall('query', params, function(json) {
-        console.log('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
+        //console.log('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
         if (!json.status) {
           console.error('Error checking for content: ' + json.message);
           return;
@@ -1011,7 +1054,7 @@ var ShiftSpace = new (function() {
           setUsername(json.username);
           if (__consoleIsWaiting__) 
           {
-            console.log('remote login tab set up auth control');
+            //console.log('remote login tab set up auth control');
             ShiftSpace.Console.removeTab('login');
             ShiftSpace.Console.setupAuthControl();
           }
@@ -1021,7 +1064,7 @@ var ShiftSpace = new (function() {
         
         if (json.count > 0 && __consoleIsWaiting__) 
         {
-          console.log('about to show notifier');
+          //console.log('about to show notifier');
           ShiftSpace.Console.showNotifier();
         }
       });
@@ -1059,6 +1102,8 @@ var ShiftSpace = new (function() {
             console.error('Error loading shifts: ' + json.message);
             return;
           }
+          
+          //console.log(Json.toString(json));
           
           /*
           console.log('====================================================================');
@@ -1138,6 +1183,7 @@ var ShiftSpace = new (function() {
           console.error('Error getting shifts: ' + json.message);
           return;
         }
+        
         // should probably filter out any uncessary data
         json.shifts.each(function(x) {
           finalJson[x.id] = x;
@@ -1164,13 +1210,17 @@ var ShiftSpace = new (function() {
         return saveNewShift(shiftJson);
       }
       
+      var filters = shiftJson.filters;
+      delete shiftJson.filters;
+      
       var space = spaces[shiftJson.space];
       var params = {
         id: shiftJson.id, // TODO: handle this in a more secure way
         summary: shiftJson.summary,
         content: Json.toString(shiftJson),
         version: space.attributes.version,
-        username: ShiftSpace.user.getUsername()
+        username: ShiftSpace.user.getUsername(),
+        filters: Json.toString(filters)
       };
       
       serverCall.safeCall('shift.update', params, function(json) {
@@ -1194,12 +1244,17 @@ var ShiftSpace = new (function() {
     function saveNewShift(shiftJson) {
         
       var space = spaces[shiftJson.space];
+      
+      var filters = shiftJson.filters;
+      delete shiftJson.filters;
+      
       var params = {
         href: window.location.href,
         space: shiftJson.space,
         summary: shiftJson.summary,
         content: Json.toString(shiftJson),
-        version: space.attributes.version
+        version: space.attributes.version,
+        filters: Json.toString(filters)
       };
       
       serverCall.safeCall('shift.create', params, function(json) {
@@ -1263,7 +1318,7 @@ var ShiftSpace = new (function() {
       
       if(ShiftSpace.user.getUsername() == user)
       {
-        var shiftJson = getShiftContent(shiftId);
+        var shiftJson = SSGetShiftContent(shiftId);
 
         // show the interface
         focusSpace(space, (shiftJson && shiftJson.position) || null);
@@ -1467,13 +1522,11 @@ var ShiftSpace = new (function() {
     
     SSAddCover = function(newCover)
     {
-      console.log('SSAddCover');
       // create covers if we haven't already
       __iframeCovers__.push(newCover);
     }
 
     SSAddIframeCovers = function() {
-      console.log('SSAddIframeCovers');
       __iframeCovers__.each(function(aCover) {
         aCover.cover.setStyle('display', 'block');
       });
@@ -1998,7 +2051,7 @@ var ShiftSpace = new (function() {
     */
     function loadPlugin(plugin, callback) 
     {
-      console.log('loadPlugin ' + plugin);
+      //console.log('loadPlugin ' + plugin);
       if(plugins[plugins])
       {
         if(callback) callback();
@@ -2015,7 +2068,7 @@ var ShiftSpace = new (function() {
       else 
       {
         loadFile(installedPlugins[plugin], function(rx) {
-          console.log(plugin + " Plugin loaded");
+          //console.log(plugin + " Plugin loaded");
           // TODO: The following does not work we need to use the plugin eval
           try
           {
@@ -2117,7 +2170,7 @@ var ShiftSpace = new (function() {
     function serverCall(method, parameters, _callback) {
       var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
-      console.log('serverCall: ' + url);
+      //console.log('serverCall: ' + url);
       var data = '';
       for (var key in parameters) {
         if (data != '') {
@@ -2360,6 +2413,11 @@ var ShiftSpace = new (function() {
     function SSCanExitFullScreen()
     {
       return true;
+    }
+    
+    function SSShowErrorWindow()
+    {
+      __errorWindow__ =
     }
     
     // In sandbox mode, expose something for easier debugging.

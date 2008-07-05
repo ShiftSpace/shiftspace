@@ -683,7 +683,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       title: this.getTitle(),
       pinRef: this.getEncodablePinRef(),
       size: this.frame.getSize().size,
-      types: 
+      filters: 
       {
         markup: 'html',
         css: 'css'

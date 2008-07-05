@@ -498,3 +498,19 @@ div.SSMenuTopItem:hover .SSRight
  background-repeat: no-repeat;
  background-position: 3px 3px;
 }
+
+/* Error Window */
+
+.SSErrorWindow
+{
+  position: fixed;
+
+  top: 10px;
+  right: 10px;
+  
+  width: 200px;
+  height: 200px;
+  
+  background: red;
+  z-index: 1000003;
+}

@@ -215,7 +215,7 @@ var NotesShift = ShiftSpace.Shift.extend({
       noteText: text,
       summary : this.getTitle() || titleText,
       pinRef: this.getEncodablePinRef(),
-      types: 
+      filters: 
       {
         noteText: 'html'
       }
