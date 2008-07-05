@@ -1,5 +1,15 @@
 function focusShift() {};
 
+var User = new Class({
+  getUsername: function() { return false },
+  isLoggedIn: function(showErrorAlert) { return false; },
+  login: function(credentials, _callback) {},
+  logout: function() {},
+  join: function(userInfo, callback) {}
+});
+
+ShiftSpace.user = new User();
+
 function registerSpace(instance) 
 {
   var spaceName = instance.attributes.name;
