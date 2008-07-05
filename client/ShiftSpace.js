@@ -2417,7 +2417,6 @@ var ShiftSpace = new (function() {
     
     function SSShowErrorWindow()
     {
-      __errorWindow__ =
     }
     
     // In sandbox mode, expose something for easier debugging.
