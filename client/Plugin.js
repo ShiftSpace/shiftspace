@@ -117,7 +117,7 @@ ShiftSpace.Plugin = new Class({
   // this isn't good needs to be generalized
   getShift: function(shiftId)
   {
-    var temp = getShiftContent(shiftId);
+    var temp = SSGetShiftContent(shiftId);
     var copy = {};
     
     for(var prop in temp)
