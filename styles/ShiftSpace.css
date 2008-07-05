@@ -508,14 +508,91 @@ div.SSMenuTopItem:hover .SSRight
   top: 10px;
   right: 10px;
   
-  width: 200px;
-  height: 200px;
+  padding: 10px;
+
+  width: 280px;
+  height: 76px;
   
   background-color: #e6e4a3;
+  opacity: 0.95;
   
-  border: 2px solid #f63b01;
+  border: 3px solid #f63b01;
   border-radius: 10px;
   -moz-border-radius: 10px;
   
   z-index: 1000003;
+}
+
+.SSErrorWindowTitle
+{
+  width: 100%;
+  color: #f63b01;
+}
+
+.SSErrorWindowMessage
+{
+  color: #000;
+  width: 100%;
+  height: 30px;
+  margin-top: 5px;
+}
+
+.SSErrorWindowBottom
+{
+  margin-top: 5px;
+}
+
+.SSErrorWindowExpand
+{
+  float: left;
+  width: 7px;
+  height: 7px;
+  background-image: url(../images/ShiftSpace/shiftspace_error-arr-closed.gif);
+  margin-top: 4px;
+}
+
+.SSErrorWindowExpandOpen
+{
+  background-image: url(../images/ShiftSpace/shiftspace_error-arr-opened.gif);
+}
+
+.SSErrorWindowDisclosure
+{
+  position: absolute;
+
+  right: 40px;
+  left: 10px;
+
+  padding-top: 6px;
+  border-top: dotted 1px #f63b01;
+  user-select: none;
+  -moz-user-select: none;
+}
+
+.SSErrorWindowExpandLabel
+{
+  margin-left: 10px;
+}
+
+.SSErrorWindowOk
+{
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 2px 4px 2px 4px;
+  border: 1px solid #f63b01;
+}
+
+.SSErrorWindowShiftStatus
+{
+}
+
+.SSErrorWindowShiftStatusScroll
+{
+  margin-top: 4px;
+  width: 300px;
+  height: 217px;
+  border: 1px solid #f63b01;
+  background-color: #f2f2da;
+  overflow-y: auto;
 }
