@@ -91,6 +91,46 @@ function elapsed_time($date) {
   }
 }
 
+function summarize($summary) {
+  $summary = strip_tags($summary);
+  $summary = preg_replace("#\s+#", ' ', $summary);
+  if (strlen($summary) > 140) {
+    $summary = substr($summary, 0, 140) . '...';
+  }
+  return $summary;
+}
+
+function filter_content($content) {
+  global $purify_content;
+  $dir = dirname(__FILE__);
+  if (!empty($_POST['filters'])) {
+    
+    if (!empty($purify_content)) {
+      require_once "$dir/htmlpurifier/library/HTMLPurifier.auto.php";
+      $purifier_config = HTMLPurifier_Config::createDefault();
+      $purifier = new HTMLPurifier($purifier_config);
+    }
+    
+    $filters = json_decode($_POST['filters']);
+    $decoded = json_decode($_POST['content']);
+    
+    foreach ($filters as $var => $filter) {
+      switch ($filter) {
+        case 'text':
+          $decoded->$var = strip_tags($decoded->$var);
+          break;
+        case 'html':
+          if (!empty($purify_content)) {
+            $decoded->$var = $purifier->purify($decoded->$var);
+          }
+          break;
+      }
+    }
+    $content = json_encode($decoded);
+  }
+  return $content;
+}
+
 if ($db->type == 'mysql' && $db->handler->conn) {
   mysql_close($db->handler->conn);
 }

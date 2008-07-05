@@ -19,17 +19,14 @@ if ($shift->user_id != $user->id) {
   respond(0, "You don't have permission to update that shift.");
 }
 
-// No markup allowed
-$summary = strip_tags($_POST['summary']);
+// Strip tags, normalize whitespace, shorten if necessary
+$summary = summarize($_POST['summary']);
 
-// No line breaks, tabs, etc. -- only spaces
-$summary = preg_replace("#\s+#", ' ', $summary);
-if (strlen($summary) > 140) {
-  $summary = substr($summary, 0, 140) . '...';
-}
+// Filter content to prevent against XSS attacks
+$content = filter_content($_POST['content']);
 
-// Escape quotes for the database
-$content = $db->escape($_POST['content']);
+// Escape content for the database to prevent SQL injection
+$content = $db->escape($content);
 $summary = $db->escape($summary);
 $version = $db->escape($_POST['version']);
 

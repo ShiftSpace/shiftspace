@@ -3,12 +3,21 @@
 // Make sure user is logged in
 require_login();
 
-// Collect data for shift creation
-$href = $db->escape(normalize_url(@$_POST['href']));
+// Normalize the URL
+$href = normalize_url(@$_POST['href']);
+
+// Strip tags, normalize whitespace, shorten if necessary
+$summary = summarize($_POST['summary']);
+
+// Filter content to prevent against XSS attacks
+$content = filter_content($_POST['content']);
+
+// Escape content for the database to prevent SQL injection
+$href = $db->escape($href);
+$summary = $db->escape($summary);
 $space = $db->escape($_POST['space']);
-$content = $db->escape($_POST['content']);
+$content = $db->escape($content);
 $version = $db->escape($_POST['version']);
-$summary = $db->escape(substr(strip_tags($_POST['summary']), 0, 140));
 
 // Check to make sure we have everything
 if (empty($href)) {
