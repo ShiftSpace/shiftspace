@@ -28,6 +28,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     });
   },
   
+  
   /*
   */
   setup : function(json)
@@ -104,6 +105,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.refresh();
   },
   
+  
   /*
     Function : attachEvents
       Attach all the needed events to the Notes interface.
@@ -150,6 +152,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.element.addEvent('mouseout', this.hideControls.bind(this));
   },
   
+  
   /*
     Function : handleMouseEnter
       Reveal the Note controls.
@@ -164,6 +167,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.grabber.removeClass('SSHidden');
     this.resizeControl.removeClass('SSHidden');
   },
+  
   
   /*
     Function : handleMouseLeave
@@ -180,6 +184,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.resizeControl.addClass('SSHidden');
   },
 
+  
   /*
     Function : cancel
       Handle user cancel operation.
@@ -188,6 +193,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     this.hide();
   },
+  
   
   /*
     Function : encode
@@ -208,9 +214,14 @@ var NotesShift = ShiftSpace.Shift.extend({
       size: size,
       noteText: text,
       summary : this.getTitle() || titleText,
-      pinRef: this.getEncodablePinRef()
+      pinRef: this.getEncodablePinRef(),
+      types: 
+      {
+        noteText: 'html'
+      }
     };
   },
+  
   
   /*
     Function : refresh
@@ -262,11 +273,13 @@ var NotesShift = ShiftSpace.Shift.extend({
     }
   },
   
+  
   edit: function()
   {
     this.parent();
     this.showEditInterface();
   },
+  
   
   hide: function()
   {
@@ -280,11 +293,13 @@ var NotesShift = ShiftSpace.Shift.extend({
     }
   },
   
+  
   onBlur: function()
   {
     this.parent();
     this.hideEditInterface();
   },
+  
   
   showEditInterface: function()
   {
@@ -297,6 +312,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.inputArea.removeProperty('readonly');
       // show the input area
+      this.inputArea.removeClass('SSDisplayNone');
     }
 
     if(this.viewArea)
@@ -307,6 +323,7 @@ var NotesShift = ShiftSpace.Shift.extend({
 
     this.refresh();
   },
+  
   
   hideEditInterface: function()
   {
@@ -319,6 +336,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.inputArea.setProperty('readonly', 1);
       // hide the input area
+      this.inputArea.addClass('SSDisplayNone');
     }
 
     if(this.viewArea)
@@ -329,6 +347,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     
     this.refresh();
   },
+  
   
   /*
     Function : build
@@ -362,6 +381,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.element.injectInside( document.body );
   },
   
+  
   /*
     Function : buildTop
       Builds the draggle top plus the close button to the note.
@@ -391,6 +411,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.top.injectInside(this.element);
   },
   
+  
   /*
     Function : buildFrame
       Builds the frame portion of the notes shift.  We need this to allow
@@ -414,6 +435,7 @@ var NotesShift = ShiftSpace.Shift.extend({
 
     this.frame.injectInside(this.element);
   },
+  
   
   /*
     Function : finishFrame
@@ -462,6 +484,7 @@ var NotesShift = ShiftSpace.Shift.extend({
       this.edit();
     }
   },
+  
   
   /*
     Function : buildBottom
@@ -539,15 +562,18 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.bottom.injectInside(this.element);
   },
   
+  
   getPinWidgetButton: function()
   {
     return this.pinWidgetDiv;
   },
   
+  
   getPinWidgetAllowedActions: function()
   {
     return ['relative'];
   },
+  
   
   onPin: function(pinRef)
   {
@@ -560,6 +586,7 @@ var NotesShift = ShiftSpace.Shift.extend({
       this.pin(this.element, pinRef);
     }
   },
+  
   
   unpin: function()
   {

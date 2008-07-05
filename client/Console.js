@@ -323,7 +323,8 @@ var Console = new Class({
 
     pluginMenuTab.setStyles({
       left: pos.x-3,
-      top: pos.y-3+framePos.y
+      /*top: pos.y-3+framePos.y*/
+      bottom: frameSize.y-pos.y+2-19
     });
     pluginMenu.setStyles({
       left: pos.x-60, 
