@@ -21,7 +21,9 @@ ShiftSpace.Space = new Class({
     this.__deferredShifts__ = [];
     this.__deferredEdits__ = [];
     
-    this.setCssLoaded(false);
+    // if no css file, we don't need to wait for it to load
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + $type(this.attributes.css));
+    this.setCssLoaded(!this.attributes.css);
     
     // the shifts array
     this.shifts = {};
@@ -335,6 +337,7 @@ ShiftSpace.Space = new Class({
     }
     else
     {
+      console.log('++++++++++++++++++++++++++++ css not loaded');
       // we need to load these when the css is done
       this.addDeferredNew( newShiftJson );
     }
