@@ -636,7 +636,7 @@ var Console = new Class({
     div.setAttribute('class', 'installedSpace');
 
     div.innerHTML = '<img src="' + server + 'spaces/' + id + '/' + id + '.png" width="32" height="32" /> ' +
-                '<div class="info"><a href="http://metatron.shiftspace.org/spaces/' + id.toLowerCase() + '">' + id + '</a>' +
+                '<div class="info"><a href="http://metatron.shiftspace.org/spaces/' + id.toLowerCase() + '" target="_blank">' + id + '</a>' +
                 '</div>' +
                 '<input type="button" value="Uninstall" class="submit uninstall" id="uninstall' + id + '" />' +
                 '<br class="clear" /></div>';
