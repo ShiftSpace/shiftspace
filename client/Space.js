@@ -694,7 +694,18 @@ ShiftSpace.Space = new Class({
   xmlhttpRequest: function(config)
   {
     SSXmlHttpRequest.safeCall(config);
+  },
+  
+  setPref: function(key, value)
+  {
+    this.setValue(this.attributes.name+'.prefs.'+key, value);
+  },
+  
+  getPref: function(key, defaultValue, callback)
+  {
+    this.getValue(this.attributes.name+'.prefs.'+key, value, callback);
   }
+  
 });
 
 ShiftSpace.Space.implement( new Options );
