@@ -424,7 +424,7 @@ var ShiftSpace = new (function() {
         catch(err)
         {
           console.log('Error: content for shift ' + shiftId +' failed to load');
-          if(throwError) throw err;
+          throw err;
         }
         
         /*
