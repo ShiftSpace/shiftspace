@@ -220,6 +220,10 @@ var ShiftSpace = new (function() {
       SSCheckForPageIframes();
       
       console.log('Grabbing content');
+      
+      // create the error window
+      SSCreateErrorWindow();
+      //SSShowErrorWindow();
 
       // See if there's anything on the current page
       checkForContent();
@@ -420,9 +424,8 @@ var ShiftSpace = new (function() {
         }
         catch(err)
         {
-          console.error('Error: content for shift ' + shiftId +' failed to load');
-          //console.log(content);
-          //throw __SSCouldNotEvalShiftContentException__
+          console.log('Error: content for shift ' + shiftId +' failed to load');
+          if(throwError) throw err;
         }
         
         /*
@@ -959,59 +962,71 @@ var ShiftSpace = new (function() {
     */
     function showShift(shiftId) 
     {
-      console.log('showShift')
-      //console.log(Json.toString(shifts[shiftId]));
-      var shift = shifts[shiftId];
-      var shiftJson = SSGetShiftContent(shiftId);
-      console.log(shiftJson);
-      var space = spaceForShift(shiftId);
-      shiftJson.id = shiftId;
-      
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      //console.log(Json.toString(shift));
-      
-      // load the space first
-      if(!space)
+      try
       {
-        console.log('space not loaded');
-        loadSpace(shift.space, shiftId);
-        return;
-      }
-      if(!space.cssIsLoaded())
-      {
-        console.log('css not loaded');
-        space.addDeferredShift(shiftJson);
-        return;
-      }
-      console.log('showing');
+        //console.log('showShift')
+        //console.log(Json.toString(shifts[shiftId]));
+        var shift = shifts[shiftId];
+        var shiftJson = SSGetShiftContent(shiftId);
+        //console.log(shiftJson);
+        var space = spaceForShift(shiftId);
+        shiftJson.id = shiftId;
       
-      // fix legacy content
-      shiftJson.legacy = shift.legacy;
+        //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+        //console.log(Json.toString(shift));
       
-      if (ShiftSpace.info(shift.space).unknown) {
-        if (confirm('Would you like to install the space ' + shift.space + '?')) {
-          ShiftSpace.installSpace(shift.space, shiftId);
+        // load the space first
+        if(!space)
+        {
+          //console.log('space not loaded');
+          loadSpace(shift.space, shiftId);
+          return;
         }
-      } else {
-        // store a reference to this
-        // TODO: only add these if the user is logged in
-        __recentlyViewedShifts__[shift.id] = shiftJson;
+        if(!space.cssIsLoaded())
+        {
+          //console.log('css not loaded');
+          space.addDeferredShift(shiftJson);
+          return;
+        }
+        //console.log('showing');
+      
+        // fix legacy content
+        shiftJson.legacy = shift.legacy;
+      
+        if (ShiftSpace.info(shift.space).unknown) 
+        {
+          if (confirm('Would you like to install the space ' + shift.space + '?')) 
+          {
+            ShiftSpace.installSpace(shift.space, shiftId);
+          }
+        } 
+        else 
+        {
+          // store a reference to this
+          // TODO: only add these if the user is logged in
+          __recentlyViewedShifts__[shift.id] = shiftJson;
         
-        // wrap this in a try catch
-        //try
-        //{
-        spaces[shift.space].showShift(shiftJson);
-        //}
-        //catch(err)
-        //{
-          //console.log('Exception: ' + Json.toString(err));
-        //}
+          // wrap this in a try catch
+          try
+          {
+            spaces[shift.space].showShift(shiftJson);
+          }
+          catch(err)
+          {
+            console.log('Exception: ' + Json.toString(err));
+          }
         
-        focusShift(shift.id);
-      }
+          focusShift(shift.id);
+        }
 
-      // call onShiftShow
-      spaces[shift.space].onShiftShow(shiftId);
+        // call onShiftShow
+        spaces[shift.space].onShiftShow(shiftId);
+      }
+      catch(err)
+      {
+        console.log('Error: Could not show shift, ' + err);
+        SSShowErrorWindow(shiftId);
+      }
     }
     
     /*
@@ -1152,6 +1167,11 @@ var ShiftSpace = new (function() {
       });
     }
     
+    function SSGetShift(shiftId)
+    {
+      return shifts[shiftId];
+    }
+
     // call to get just the shifts that are needed
     function getShifts(shiftIds, callBack)
     {
@@ -2415,8 +2435,203 @@ var ShiftSpace = new (function() {
       return true;
     }
     
-    function SSShowErrorWindow()
+    var __errorWindowShiftPropertyModel__;
+    var __errorWindowMinimized__ = true;
+    function SSCreateErrorWindow()
     {
+      // Create the model for the table
+      __errorWindowShiftPropertyModel__ = new ShiftSpace.Element('tr');
+      var propertyName = new ShiftSpace.Element('td');
+      var propertyValue = new ShiftSpace.Element('td');
+      propertyName.injectInside(__errorWindowShiftPropertyModel__);
+      propertyValue.injectInside(__errorWindowShiftPropertyModel__);
+      
+      __errorWindow__ = new ShiftSpace.Element('div', {
+        'class': "SSErrorWindow SSDisplayNone"
+      });
+      
+      var errorWindowTitle = new ShiftSpace.Element('div', {
+        'class': "SSErrorWindowTitle"
+      });
+      errorWindowTitle.injectInside(__errorWindow__);
+      errorWindowTitle.setText('Oops ... it seems this shift is broken');
+      
+      var errorWindowMessage = new ShiftSpace.Element('div', {
+        'class': "SSErrorWindowMessage"
+      });
+      errorWindowMessage.injectInside(__errorWindow__);
+      errorWindowMessage.setText('It might be incompatible with this version of ShiftSpace.');
+
+      var br = new ShiftSpace.Element('br');
+      br.setStyle('clear', 'both');
+      br.injectInside(__errorWindow__);
+      
+      var errorWindowBottom = new ShiftSpace.Element('div', {
+        'class': "SSErrorWindowBottom"
+      });
+      errorWindowBottom.injectInside(__errorWindow__);
+      
+      var errorWindowDisclosure = new ShiftSpace.Element('div', {
+        'class': "SSErrorWindowDisclosure"
+      });
+      var errorWindowExpand = new ShiftSpace.Element('div', {
+        'class': "SSErrorWindowExpand"
+      });
+      errorWindowExpand.injectInside(errorWindowDisclosure);
+      var errorWindowExpandLabel = new ShiftSpace.Element('div', {
+        'class': "SSErrorWindowExpandLabel"
+      });
+      errorWindowExpandLabel.setText('view shift details');
+      errorWindowExpandLabel.injectInside(errorWindowDisclosure);
+      errorWindowDisclosure.injectInside(errorWindowBottom);
+      
+      var errorWindowShiftStatusScroll = new ShiftSpace.Element('div', {
+        'class': 'SSErrorWindowShiftStatusScroll SSDisplayNone'
+      });
+      var errorWindowShiftStatus = new ShiftSpace.Element('table', {
+        'class': "SSErrorWindowShiftStatus",
+        'col' : 2
+      });
+      errorWindowShiftStatus.injectInside(errorWindowShiftStatusScroll);
+      errorWindowShiftStatusScroll.injectInside(errorWindowDisclosure);
+      
+      var errorWindowOk = new ShiftSpace.Element('div', {
+        'class': "SSErrorWindowOk SSUserSelectNone"
+      });
+      errorWindowOk.setText('OK');
+      errorWindowOk.injectInside(errorWindowBottom);
+      
+      errorWindowOk.addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+        
+        var fadeFx = __errorWindow__.effects({
+          duration: 300,
+          transition: Fx.Transitions.Cubic.easeOut,
+          onComplete: function()
+          {
+            // reset the error window
+            __errorWindow__.setStyles({
+              width: 280, 
+              height: 76
+            });
+            errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
+            errorWindowShiftStatusScroll.addClass('SSDisplayNone');
+          }
+        });
+        
+        fadeFx.start({
+          opacity: [0.95, 0]
+        });
+      });
+      
+      // add expand action
+      errorWindowDisclosure.addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+        
+        if(!__errorWindowMinimized__)
+        {
+          errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
+          errorWindowExpandLabel.setText('view shift details');
+          errorWindowShiftStatusScroll.addClass('SSDisplayNone');
+        }
+        else
+        {
+          errorWindowExpand.addClass('SSErrorWindowExpandOpen');
+          errorWindowExpandLabel.setText('hide shift details');
+        }
+        
+        var resizeFx = __errorWindow__.effects({
+          duration: 500,
+          transition: Fx.Transitions.Cubic.easeOut,
+          onComplete: function()
+          {
+            if(!__errorWindowMinimized__)
+            {
+              errorWindowShiftStatusScroll.removeClass('SSDisplayNone');
+            }
+          }
+        });
+
+        if(__errorWindowMinimized__)
+        {
+          resizeFx.start({
+            width: [280, 340],
+            height: [76, 300],
+          });
+        }
+        else
+        {
+          resizeFx.start({
+            width: [340, 280],
+            height: [300, 76],
+          });
+        }
+        
+        __errorWindowMinimized__ = !__errorWindowMinimized__;
+      });
+
+      __errorWindow__.injectInside(document.body);
+    }
+    
+    function SSShowErrorWindow(shiftId)
+    {
+      console.log('======================================================================== ' + shiftId);
+      /*
+      __errorWindow__.getElement('.SSErrorWindowTitle').setText(title);
+      __errorWindow__.getElement('.SSErrorWindowMessage').setText(message);
+      */
+      
+      if(shiftId) SSErrorWindowUpdateTableForShift(shiftId)
+
+      __errorWindow__.setOpacity(0);
+      __errorWindow__.removeClass('SSDisplayNone');
+      
+      var fadeFx = __errorWindow__.effects({
+        duration: 300,
+        transition: Fx.Transitions.Cubic.easeOut
+      });
+      
+      fadeFx.start({
+        opacity: [0, 0.95]
+      });
+    }
+    
+    function SSHideErrorWindow()
+    {
+      __errorWindow__.addClass('SSDisplayNone');
+    }
+    
+    function SSErrorWindowUpdateTableForShift(shiftId)
+    {
+      var statusTable = __errorWindow__.getElement('.SSErrorWindowShiftStatus');
+      // clear out the table of it's contents
+      statusTable.empty();
+      
+      var theShift = SSGetShift(shiftId);
+      var shiftContent;
+      
+      try
+      {
+        shiftContent = SSGetShiftContent(shiftId);
+      }
+      catch(err)
+      {
+        shiftContent = {
+          id: theShift.id,
+          content: theShift.content
+        };
+      }
+      
+      for(var prop in shiftContent)
+      {
+        var newPair = __errorWindowShiftPropertyModel__.clone(true);
+        var tds = newPair.getElements('td');
+
+        tds[0].setText(prop);
+        tds[1].setText(shiftContent[prop]);
+
+        newPair.injectInside(statusTable);
+      }
     }
     
     // In sandbox mode, expose something for easier debugging.
