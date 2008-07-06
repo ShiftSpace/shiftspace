@@ -2522,7 +2522,9 @@ var ShiftSpace = new (function() {
               height: 76
             });
             errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
+            errorWindowExpandLabel.setText('view shift details');
             errorWindowShiftStatusScroll.addClass('SSDisplayNone');
+            __errorWindowMinimized__ = true;
           }
         });
         
