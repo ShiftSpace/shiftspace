@@ -2442,6 +2442,7 @@ var ShiftSpace = new (function() {
       // Create the model for the table
       __errorWindowShiftPropertyModel__ = new ShiftSpace.Element('tr');
       var propertyName = new ShiftSpace.Element('td');
+      propertyName.addClass('SSErrorWindowShiftProperty');
       var propertyValue = new ShiftSpace.Element('td');
       propertyName.injectInside(__errorWindowShiftPropertyModel__);
       propertyValue.injectInside(__errorWindowShiftPropertyModel__);
