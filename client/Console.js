@@ -1040,6 +1040,8 @@ var Console = new Class({
 
   hideShift: function(id) {
     var el = $(this.doc.getElementById(id));
+    console.log('console hide shiftId: ' + id);
+    console.log(el);
     if(el)
     {
       el.removeClass('active');
@@ -1141,9 +1143,9 @@ var Console = new Class({
     newEntry.addEvent('click', function() {
       if (!newEntry.hasClass('active')) 
       {
+        newEntry.addClass('active');
         // tell ShiftSpace to show the shift
         showShift(aShift.id);
-        newEntry.addClass('active');
       } 
       else 
       {

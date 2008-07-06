@@ -962,6 +962,7 @@ var ShiftSpace = new (function() {
     */
     function showShift(shiftId) 
     {
+      console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       try
       {
         //console.log('showShift')
@@ -1026,6 +1027,9 @@ var ShiftSpace = new (function() {
       {
         console.log('Error: Could not show shift, ' + err);
         SSShowErrorWindow(shiftId);
+        
+        // probably need to do some kind of cleanup
+        ShiftSpace.Console.hideShift(shiftId);
       }
     }
     
@@ -1039,6 +1043,7 @@ var ShiftSpace = new (function() {
     
     */
     function hideShift(shiftId) {
+      console.log('hideShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       var shift = shifts[shiftId];
       spaces[shift.space].hideShift(shiftId);
       
