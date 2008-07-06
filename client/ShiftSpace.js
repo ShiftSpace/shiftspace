@@ -180,7 +180,10 @@ var ShiftSpace = new (function() {
       console.log('Console.js loaded');
 
       // Load CSS styles
-      loadStyle('styles/ShiftSpace.css');
+      loadStyle('styles/ShiftSpace.css', function() {
+        // create the error window
+        SSCreateErrorWindow();
+      });
       loadStyle('styles/ShiftMenu.css');
 
       // Load each installed space - this asynchronous, we need to wait till
@@ -221,10 +224,6 @@ var ShiftSpace = new (function() {
       
       console.log('Grabbing content');
       
-      // create the error window
-      SSCreateErrorWindow();
-      //SSShowErrorWindow();
-
       // See if there's anything on the current page
       checkForContent();
       
