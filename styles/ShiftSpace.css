@@ -585,9 +585,9 @@ div.SSMenuTopItem:hover .SSRight
   border: 1px solid #f63b01;
 }
 
-.SSErrorWindowShiftStatus td
+.SSErrorWindowShiftStatus tr
 {
-  display: inline;
+  display: none;
 }
 
 .SSErrorWindowShiftProperty
