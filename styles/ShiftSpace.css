@@ -587,7 +587,11 @@ div.SSMenuTopItem:hover .SSRight
 
 .SSErrorWindowShiftStatus tr
 {
-  display: none;
+}
+
+.SSErrorWindowShiftStatus tr
+{
+  display: inline;
 }
 
 .SSErrorWindowShiftProperty
