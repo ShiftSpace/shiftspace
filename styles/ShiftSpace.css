@@ -56,6 +56,11 @@
   display: none;
 }
 
+.SSDefaultCursor
+{
+  cursor: default;
+}
+
 .SSPositionRelative
 {
   position: relative;

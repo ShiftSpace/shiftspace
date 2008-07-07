@@ -2203,8 +2203,9 @@ var ShiftSpace = new (function() {
     function serverCall(method, parameters, _callback) {
       var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
-      //console.log('serverCall: ' + url);
+      console.log('serverCall: ' + url);
       var data = '';
+      
       for (var key in parameters) {
         if (data != '') {
           data += '&';
@@ -2217,6 +2218,8 @@ var ShiftSpace = new (function() {
       
       var now = new Date();
       url += '&cache=' + now.getTime();
+      
+      console.log(data);
       
       //GM_openInTab(url);
       var req = {
@@ -2495,7 +2498,7 @@ var ShiftSpace = new (function() {
         'class': "SSErrorWindowDisclosure"
       });
       var errorWindowExpandWrapper = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowExpandWrapper"
+        'class': "SSErrorWindowExpandWrapper SSUserSelectNone SSDefaultCursor"
       });
       var errorWindowExpand = new ShiftSpace.Element('div', {
         'class': "SSErrorWindowExpand"
