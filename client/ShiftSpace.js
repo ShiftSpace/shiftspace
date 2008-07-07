@@ -60,7 +60,7 @@ var ShiftSpace = new (function() {
     
     //server = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
-    var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
+    //var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/api/";
 
     // Current ShiftSpace version
@@ -1240,8 +1240,15 @@ var ShiftSpace = new (function() {
         content: Json.toString(shiftJson),
         version: space.attributes.version,
         username: ShiftSpace.user.getUsername(),
-        filters: Json.toString(filters)
+        filters: Json.toString(filters),
       };
+      
+      // if a legacy shift is getting updated, we should update the space name
+      var shift = SSGetShift(shiftJson.id);
+      if(shift.legacy)
+      {
+        params.space = space.attributes.name;
+      }
       
       serverCall.safeCall('shift.update', params, function(json) {
         console.log('returned shift.update! ' + Json.toString(json));

@@ -256,21 +256,14 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   setup : function(json)
   {
     console.log('setting up image swap shift');
+    //console.log(Json.toString(json));
+
     // build the interface
     this.buildInterface();
-    console.log('interface built');
     
     // manage the main view
     this.manageElement(this.element);
     
-    // handle legacy content
-    if(json.legacy)
-    {
-      var target = $$('img[src='+json.swapped+']');
-      json.pinRef = ShiftSpace.Pin.toRef(target);
-      json.src = json.swapped;
-    }
-
     // get the scroll
     if(json.scroll)
     {
@@ -311,6 +304,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   setSrc : function(src)
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> set src: ' + src);
     if(src) this.image.setProperty('src', src);
   },
   
@@ -371,10 +365,22 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.unzoomButton.addClass('SSDisplayNone');
     
     console.log('pinning image swap');
+    
     if(!this.isSwapped && this.getPinRef() && this.getSrc())
     {
       this.swap(this.getPinRef());
       this.isSwapped = true;
+    }
+    else
+    {
+      console.log('something went wrong');
+      console.log('src:');
+      console.log(this.getSrc());
+      console.log(this.image);
+      console.log('pinRef:');
+      console.log(this.getPinRef());
+      console.log('isSwapped:');
+      console.log(this.isSwapped);
     }
   },
   
