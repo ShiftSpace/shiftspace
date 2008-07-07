@@ -6,7 +6,7 @@ require_login();
 // Load shift from storage
 $url_slug = $db->escape($_POST['id']);
 $shift = $db->row("
-  SELECT id, user_id
+  SELECT id, user_id, space
   FROM shift
   WHERE url_slug = '$url_slug'
 ");
@@ -24,6 +24,9 @@ $summary = summarize($_POST['summary']);
 
 // Filter content to prevent against XSS attacks
 $content = filter_content($_POST['content']);
+
+// Update the space, this happens when shifts get migrated from legacy (a user manually fixes a broken shift)
+$space = (isset($_POST['space'])) ? $_POST['space'] : $shift->space;
 
 // Escape content for the database to prevent SQL injection
 $content = $db->escape($content);
@@ -46,7 +49,8 @@ $db->query("
   SET content = '$content',
       summary = '$summary',
       version = '$version',
-      modified = '$now'
+      modified = '$now',
+      space = '$space'
   WHERE id = $shift->id
 ");
 
