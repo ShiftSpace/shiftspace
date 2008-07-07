@@ -99,6 +99,18 @@ var NotesShift = ShiftSpace.Shift.extend({
           top : json.position.y
         });
       }
+      // oops fix borked note sizes
+      if(json.size && json.size.scroll)
+      {
+        json.size = json.size.size;
+      }
+      if(json.size)
+      {
+        this.element.setStyles({
+          width: json.size.x,
+          height: json.size.y
+        });
+      }
     }
 
     //console.log('refresh again');
@@ -127,7 +139,9 @@ var NotesShift = ShiftSpace.Shift.extend({
     });
     
     // set up the save event
-    this.saveButton.addEvent( 'click', this.save.bind( this ) );
+    this.saveButton.addEvent( 'click', function() {
+      this.save();
+    }.bind(this));
     
     // set up the cancel event
     this.cancelButton.addEvent( 'click', this.cancel.bind( this ) );
@@ -202,7 +216,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   encode : function()
   {
     var pos = this.element.getPosition();
-    var size = this.element.getSize();
+    var size = this.element.getSize().size;
     var text = this.inputArea.getProperty('value').replace(/\n/g, "<br/>");
     var titleText = this.inputArea.getProperty('value').replace(/\n/g, '');
     
@@ -217,7 +231,8 @@ var NotesShift = ShiftSpace.Shift.extend({
       pinRef: this.getEncodablePinRef(),
       filters: 
       {
-        noteText: 'html'
+        noteText: 'html',
+        summary: 'html'
       }
     };
   },
@@ -312,13 +327,13 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.inputArea.removeProperty('readonly');
       // show the input area
-      this.inputArea.removeClass('SSDisplayNone');
+      this.inputArea.setStyle('display', 'block');
     }
 
     if(this.viewArea)
     {
       // hide the viewing area
-      this.viewArea.addClass('SSDisplayNone');
+      this.viewArea.setStyle('display', 'none');
     }
 
     this.refresh();
@@ -336,13 +351,13 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.inputArea.setProperty('readonly', 1);
       // hide the input area
-      this.inputArea.addClass('SSDisplayNone');
+      this.inputArea.setStyle('display', 'none');
     }
 
     if(this.viewArea)
     {
       // show the viewing area
-      this.viewArea.removeClass('SSDisplayNone');
+      this.viewArea.setStyle('display', 'block');
     }
     
     this.refresh();
@@ -457,17 +472,16 @@ var NotesShift = ShiftSpace.Shift.extend({
     // create the text area
     this.inputArea = $(notedoc.createElement('textarea'));
     this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
+    this.inputArea.setStyle('display', 'none');
     this.inputArea.injectInside( this.frameBody );
     this.inputArea.setProperty('value', text);
     this.inputArea.focus();
     
     // create the view text area
     this.viewArea = $(notedoc.createElement('div'));
-    this.viewArea.setProperty('class', 'SSNoteShiftViewArea');
-    /*
+    this.viewArea.setProperty('class', 'SSNoteShiftViewArea SSDisplayNone');
     this.viewArea.injectInside(this.frameBody);
     this.viewArea.setHTML(text);
-    */
   
     this.inputArea.addEvent('mousedown', function() {
       this.focus();
@@ -477,11 +491,16 @@ var NotesShift = ShiftSpace.Shift.extend({
         this.inputArea.setProperty('value', '');
       }
     }.bind(this));
+    
     this.inputArea.setProperty('readonly', 1);
   
     if(this.isBeingEdited())
     {
       this.edit();
+    }
+    else
+    {
+      this.show();
     }
   },
   

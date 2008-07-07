@@ -1115,7 +1115,7 @@ var Console = new Class({
     var summary = newEntry.getElementByClassName('summary');
     
     var summaryView = summary.getElementByClassName('summaryView');
-    summaryView.innerHTML = aShift.summary;
+    $(summaryView).setText(aShift.summary);
     
     var summaryEdit = summary.getElementByClassName('summaryEdit');
     summaryEdit.setAttribute('value', aShift.summary);
