@@ -513,7 +513,7 @@ div.SSMenuTopItem:hover .SSRight
   padding: 10px;
 
   width: 280px;
-  height: 76px;
+  height: 100px;
   
   background-color: #e6e4a3;
   opacity: 0.95;
@@ -562,7 +562,7 @@ div.SSMenuTopItem:hover .SSRight
 {
   position: absolute;
 
-  right: 40px;
+  right: 10px;
   left: 10px;
 
   padding-top: 6px;
@@ -577,6 +577,15 @@ div.SSMenuTopItem:hover .SSRight
 }
 
 .SSErrorWindowOk
+{
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  padding: 2px 4px 2px 4px;
+  border: 1px solid #f63b01;
+}
+
+.SSErrorWindowButton
 {
   position: absolute;
   right: 10px;
