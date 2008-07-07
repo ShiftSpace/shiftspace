@@ -610,20 +610,23 @@ var Console = new Class({
       if (space == '') return;
 
       var spaceURL = server + 'spaces/' + space + '/' + space + '.js';
-      loadFile(spaceURL, function(r) {
+      installed[space] = spaceURL;
+      setValue('installed', installed);
+      
+      loadSpace(space, null, function(r) {
+        /*
         var source = r.responseText.replace(/\s/g, ' ');
         var matches = source.match(/attributes.+?(\{.+?\})/);
         if (!matches) {
           window.alert('Error, could not load space "' + space + '". Space names are case-sensitive, so check that you\'ve capitalized the space name correctly.');
           return;
         } else {
+        */
           newSpace = $(this.installedSpace(space));
           newSpace.injectBefore(form);
           spaceInput.value = '';
-          installed[space] = spaceURL;
-          setValue('installed', installed);
           ShiftSpace.ShiftMenu.addSpace(space);
-        }
+        //}
       }.bind(this));
     }.bind(this));
     

@@ -1974,8 +1974,11 @@ var ShiftSpace = new (function() {
         }
         else 
         {
+          console.log('loading file!');
           loadFile(installed[space], function(rx) {
-            //console.log(space + ' Space loaded');
+            var err;
+            console.log(space + ' Space loaded, rx.responseText:' + rx.responseText);
+            
             // TODO: for Safari the following does not work, we need a function in Space
             // that evals the actual space. - David
             try
@@ -1992,6 +1995,7 @@ var ShiftSpace = new (function() {
             catch(exc)
             {
               console.error('Error loading ' + space + ' Space - ' + SSDescribeException(exc));
+              //throw exc;
             }
             
             if (pendingShift)
