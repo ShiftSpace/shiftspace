@@ -32,10 +32,10 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     
     // check to see that both images are still valid
     console.log('targetSrc:' + targetSrc + ', swappedSrc:' + swappedSrc);
-    var targetNode = $$('img[src=' + targetSrc + ']')[0];
+    var targetImage = $$('img[src=' + targetSrc + ']')[0];
     
     // we could get the target node
-    if(!targetNode)
+    if(!targetImage)
     {
       console.log('could not resolve target image');
       var fixStr = "We could not locate the original target image. We have loaded the grabbed image.  Would you like to update this shift?";
@@ -50,6 +50,10 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
       {
         // delete the current shift
       }
+    }
+    else
+    {
+      this.swapImage(targetImage);
     }
     
   },
