@@ -9,7 +9,7 @@ var CanvasSpace = ShiftSpace.Space.extend({
     title : 'Canvas',
     icon : ShiftSpace.info().server + 'spaces/Canvas/Canvas.png',
     version : 0.1,
-    css : 'spaces/Canvas/Canvas.css'
+    css : 'Canvas.css'
   },
   
   buildInterface: function() 
