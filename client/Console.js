@@ -1030,9 +1030,9 @@ var Console = new Class({
   },
   
   blurShift: function(id) {
-    console.log('CONSOLE BLLLLLLLLLLLLLLLLLLLLLLUR ' + id);
+    //console.log('CONSOLE BLLLLLLLLLLLLLLLLLLLLLLUR ' + id);
     this.hideEditTitleField(id);
-    console.log('EXIT');
+    //console.log('EXIT');
   },
   
   focusShift: function(id) {

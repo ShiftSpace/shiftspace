@@ -7,6 +7,53 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     css : 'ImageSwap.css',
   },
   
+  fix: function(brokenShiftJson)
+  {
+    console.log('Image Swap fix! ' + Json.toString(brokenShiftJson));
+    var content = brokenShiftJson.content;
+    
+    // extract the target
+    var targetSrcMatches = content.match(/img\[@src=".+?"\]/);
+    var targetSrc;
+
+    if(targetSrcMatches && targetSrcMatches[0])
+    {
+      targetSrc = targetSrcMatches[0].substr(10, targetSrcMatches[0].length-12);
+    }
+
+    // extract the swapped image
+    var swappedSrcMatches = content.match(/"swapped":".+?"/);
+    var swappedSrc;
+    
+    if(swappedSrcMatches && swappedSrcMatches[0])
+    {
+      swappedSrc = swappedSrcMatches[0].substr(11, swappedSrcMatches[0].length-12);
+    }
+    
+    // check to see that both images are still valid
+    console.log('targetSrc:' + targetSrc + ', swappedSrc:' + swappedSrc);
+    var targetNode = $$('img[src=' + targetSrc + ']')[0];
+    
+    // we could get the target node
+    if(!targetNode)
+    {
+      console.log('could not resolve target image');
+      var fixStr = "We could not locate the original target image. We have loaded the grabbed image.  Would you like to update this shift?";
+      
+      if(confirm(fixStr))
+      {
+        // load this image
+        this.setValue('grabbedImage', swappedSrc);
+        this.showInterface();        
+      }
+      else
+      {
+        // delete the current shift
+      }
+    }
+    
+  },
+  
   setup : function()
   {
     this.blurRef = this.blurImage.bind(this);
@@ -285,8 +332,10 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     if(this.isBeingEdited())
     {
       console.log('saving');
-      // save
+      // save the shift!
       this.save();
+      // show the edit interface if not already visible
+      this.edit();
     }
   },
   
@@ -327,12 +376,16 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   edit: function()
   {
-    // show the interface and make draggable
-    if(this.dragRef) this.dragRef.attach();
+    // only show the interface if we are actually swapped on the page
+    if(this.isSwapped)
+    {
+      // show the interface and make draggable
+      if(this.dragRef) this.dragRef.attach();
     
-    // show the zoom buttons
-    this.zoomButton.removeClass('SSDisplayNone');
-    this.unzoomButton.removeClass('SSDisplayNone');
+      // show the zoom buttons
+      this.zoomButton.removeClass('SSDisplayNone');
+      this.unzoomButton.removeClass('SSDisplayNone');
+    }
   },
 
   hide : function()

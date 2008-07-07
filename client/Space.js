@@ -215,6 +215,7 @@ ShiftSpace.Space = new Class({
   {
     // remove any unsaved shifts
     var unsavedShifts = [];
+
     for(var shift in this.shifts)
     {
       if(shift.search('newShift') != -1)
@@ -223,6 +224,7 @@ ShiftSpace.Space = new Class({
         delete this.shifts[shift];
       }
     }
+
     unsavedShifts.each(function(x) {
       x.destroy();
     });
@@ -400,10 +402,11 @@ ShiftSpace.Space = new Class({
       shiftId - The JSON representing the shift to show.
       
     Returns :
-      An actual Shift object.
+      An _ACTUAL_ Shift object, _NOT_ an id.
   */
   showShift : function( aShift ) 
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SPACE SHOW SHIFT ');
     if(!this.cssIsLoaded())
     {
       this.__deferredShifts__.push(aShift);
@@ -621,7 +624,7 @@ ShiftSpace.Space = new Class({
   {
     return this.shifts[shiftId];
   },
-  
+
   focusShift : function(shiftId)
   {
     this.setCurrentShift(this.shifts[shiftId]);
