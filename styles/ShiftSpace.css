@@ -618,8 +618,8 @@ table.SSErrorWindowShiftStatus
 .SSErrorWindowShiftStatusScroll
 {
   margin-top: 4px;
-  width: 300px;
-  height: 217px;
+  /*width: 300px;*/
+  height: 190px;
   border: 1px solid #f63b01;
   background-color: #f2f2da;
   overflow-y: auto;
