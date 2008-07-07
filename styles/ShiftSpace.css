@@ -567,8 +567,6 @@ div.SSMenuTopItem:hover .SSRight
 
   padding-top: 6px;
   border-top: dotted 1px #f63b01;
-  user-select: none;
-  -moz-user-select: none;
 }
 
 .SSErrorWindowExpandLabel
