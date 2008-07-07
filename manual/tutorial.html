@@ -63,6 +63,7 @@
             <div class="content">
                 <p>This tutorial will guide you through building what is perhaps the simplest Space that you can make: HelloWorld. The HelloWorld space, when completed, will allow you to add the words 'Hello World!' as a Shift to any page on the web. Potentially, anyone else who has ShiftSpace installed will be able to see your message if they happen to discover it on a page.</p>
                 <p>But before we begin, make sure you're running <a href="http://mozilla.com/">Firefox</a>, that you've <a href="install.html">installed the ShiftSpace development environment</a>, that you have <a href="http://greasespot.net/">Greasemonkey enabled</a> and that you've installed the development userscript (this is available from the ShiftSpace status page, which might have a URL something like this: <tt>http://localhost/shiftspace/shiftspace.php</tt>). You also need to install the <a href="http://addons.mozilla.org/firefox/1843">Firebug extension</a> for Firefox. You currently need it for installing and uninstalling spaces (until we build a proper user interface) and it will also prove invaluable for debugging.</p>
+                <p>Finally, point your browser at the ShiftSpace Developer Sandbox.  This will probably be something like http://localhost/ShiftSpaceInstallDir/sandbox/index.php.</p>
             </div>
             <br />
             <div class="section">
@@ -111,9 +112,9 @@
                     <pre>var HelloWorldShift = ShiftSpace.Shift.extend({
     // Your code will go here
 });</pre>
-                    <p>All MooTools-derived objects automatically have their <tt>initialize</tt> methods called upon instantiation. Normally you won't need to create Shift instances yourself&mdash;ShiftSpace already has user interfaces and code that handle new shift instances automatically. But you do still need the <tt>initialize</tt> method:</p>
+                    <p>Normally you won't need to create Shift instances yourself.  ShiftSpace already has user interfaces and code that handle new shift instances automatically. The first thing you want to implement is the <tt>setup</tt> method.  You should initialize your Shift instances based on the properties of the passed in json object. </p>
                     <pre>var HelloWorldShift = ShiftSpace.Shift.extend({
-    initialize: function() {
+    setup: function(json) {
         // More code here
     }
 });</pre>
@@ -132,16 +133,8 @@
 }</pre>
                         </li>
                         <li>The <tt>createShift</tt> method of ShiftSpace.Space is called, passing it the JSON object</li>
-                        <li>A new Shift object instance is created, and the <tt>initialize</tt> method is passed the JSON object</li>
+                        <li>A new Shift object instance is created, and the <tt>setup</tt> method is passed the JSON object</li>
                     </ol>
-                    <p>In order to make use of the ShiftSpace.Shift class's helpers, you will need to call <em>its</em> <tt>initialize</tt> method (accessed through the special <tt>parent</tt> keyword) and pass it your newly minted JSON object:</p>
-                    <pre>var HelloWorldShift = ShiftSpace.Shift.extend({
-    initialize: function(json) {
-        this.parent(json); // Pass to the parent constructor
-        // More code here
-    }
-});</pre>
-                    <p>So before you do any of your own initialization, you need to call <tt>this.parent()</tt>, passing the JSON parameter up to the super class for processing.  <tt>this.parent()</tt> is a special function.  Whereever you call this, MooTools will look for a method of the same name in the super class.  So this.parent() when called in the HelloWorldShift <tt>initialize</tt> method will call the ShiftSpace.Shift <tt>initialize</tt> method.  This is important because ShiftSpace.Shift needs to do some of it's own initialization so that your Shift can work in the ShiftSpace environment.</p>
                 </div>
                 <br />
             </div>
@@ -160,19 +153,9 @@
                 <br />
             </div>
             <div class="section">
-                <h3>Installing from Firebug</h3>
+                <h3>Installing</h3>
                 <div class="content">
-                    <p>Until we have a proper user interface for managing which Spaces are installed, you'll need to use the Firebug console to install your Space. Note that this is only available if you're running the developer version of ShiftSpace. If you're not sure, ctrl-click on your Greasemonkey icon and you should see "ShiftSpace (developer)" enabled.</p>
-                    <p>To invoke Firebug, either click on its icon from the status bar (you may need to enable it), click on the menu  Tools &rarr; Firebug &rarr; Command Line, or use the keyboard shortcut cmd-shift-L.</p>
-                    <p>If things are running smoothly, you should see the following messages in the Firebug console: "<tt>Initializing ShiftSpace</tt>", "<tt>Loading Notes</tt>". If you don't see these messages, double check that you have ShiftSpace installed correctly by typing the following command into the Firebug command line (marked with >>>):</p>
-                    <pre>ShiftSpace.info()</pre>
-                    <p>(then press enter). You should see a green link appear that says "Object" followed by some properties. Clicking on that link will reveal some basic information about ShiftSpace. If instead you get an error message, then you probably need to <a href="install.html">go over the installation process again</a>.</p>
-                    <p>To install your new Space, first make sure you're back on the 'Console' tab of Firebug, then issue the following command:</p>
-                    <pre>ShiftSpace.installSpace('HelloWorld')</pre>
-                    <p>The argument here can be a full URL or just the name of a folder inside the ShiftSpace 'spaces' directory.</p>
-                    <img src="images/firebug-install.png" alt="Firebug installation" class="figure" />
-                    <p>To test that all this is working so far, reload the page and invoke the Shift Menu by holding down the shift key and hovering over the [+] icon. You should see a new icon appear as shown below. Unfortunately it doesn't do anything when you click on it except throw an error, but we'll get to that shortly.</p>
-                    <img src="images/shift-menu.png" alt="Shift Menu" class="figure" />
+                    <p>To install your space simply click on the Setting tab of the ShiftSpace Console.  From there click on the Spaces subtab.  You should see a list including the pre-installed spaces.  Scroll down to the input field.  Type in 'HelloWorld' and click the Install button. Careful, Space names are case sensitive.  You should see your Space icon appear along with the name underneath the default installed Spaces.</p>
                 </div>
                 <br />
             </div>
@@ -186,8 +169,7 @@
                 <div class="content">
                     <p>Let's jump back to the code to put some content on the page. Let's add a some more code into the HelloWorldShift:</p>
                     <pre>var HelloWorldShift = ShiftSpace.Shift.extend({
-    initialize: function(json) {
-        this.parent(json);
+    setup: function(json) {
         this.build(json);
     }, // Note the comma that separates the two methods
     
@@ -216,8 +198,7 @@
                 <div class="content">
                     <p>Now making little Hello World messages for yourself is fine, but if you will want to share them with the rest of the... hmmm... world, you'll need to add a bit more code. Let's start by adding a call in to <tt>this.save()</tt>. This is a pre-defined method your class has inherited from ShiftSpace.Shift.</p>
                     <pre>var HelloWorldShift = ShiftSpace.Shift.extend({
-    initialize: function(json) {
-        this.parent(json);
+    setup: function(json) {
         this.build(json);
         this.save();
     },
@@ -230,9 +211,9 @@
         position : pos
     };
 }</pre>
-                    <p>Now when <tt>this.save()</tt> is called on an instance of the Shift (such as in its <tt>initialize</tt> method), the ShiftSpace controller will be able to encode the Shift into a JSON string which gets stored in the database.</p>
+                    <p>Now when <tt>this.save()</tt> is called on an instance of the Shift (such as in its <tt>setup</tt> method), the ShiftSpace controller will be able to encode the Shift into a JSON string which gets stored in the database.</p>
                     <p>Try reloading the page again and creating another HelloWorld shift. You should see the same message applied to the screen, but now if you invoke the Console by pressing [shift] + [space], you will see a new entry for your Shift.</p>
-                    <p>The Console allows you to enable and disable each shift on the page, but you may notice that when attempting to show or hide HelloWorld shifts, you receive an error message in the Firebug console. There's still one last method you need to completely assimilate your space into the ShiftSpace framework. Add this line to the bottom of your Shift class's <tt>initialize</tt> method:</p>
+                    <p>The Console allows you to enable and disable each shift on the page, but you may notice that when attempting to show or hide HelloWorld shifts, nothing happens. This is because ShiftSpace doesn't know which DOM element is the main view of your shift.  So there's still one last method you need to completely assimilate your space into the ShiftSpace framework. Add this line to the bottom of your Shift class's <tt>setup</tt> method:</p>
                     <pre>this.manageElement(this.element);</pre>
                     <p>This makes it explicit which DOM element represents the shift on the page. When you enable and disable a shift from the Console, the argument you pass to <tt>manageElement</tt> is the one that will be hidden and shown. Also, when a user clicks on this shift element, it will automatically get displayed in front of the other shifts on the page.</p>
                     <p>On the topic of clutter, if you want to remove a shift from the page, click on the right disclosure triangle to gain access to shift actions like deletion.</p>
@@ -324,8 +305,7 @@
 });
 
 var HelloWorldShift = ShiftSpace.Shift.extend({
-    initialize: function(json) {
-        this.parent(json);
+    setup: function(json) {
         this.message = json.message || "Hello World!";
         this.build(json);
         this.save();
