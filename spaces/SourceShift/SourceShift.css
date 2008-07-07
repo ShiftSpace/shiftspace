@@ -15,6 +15,9 @@
   font-family: georgia;
   color: #F63B02;
   background-image: url(images/bg_transparent.png);
+
+  border-radius: 4px;
+  -moz-border-radius: 4px;
   
   z-index: 1000;
 }
