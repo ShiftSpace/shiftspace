@@ -114,16 +114,19 @@ function filter_content($content) {
     $filters = json_decode($_POST['filters']);
     $decoded = json_decode($_POST['content']);
     
-    foreach ($filters as $var => $filter) {
-      switch ($filter) {
-        case 'text':
-          $decoded->$var = strip_tags($decoded->$var);
-          break;
-        case 'html':
-          if (!empty($purify_content)) {
-            $decoded->$var = $purifier->purify($decoded->$var);
-          }
-          break;
+    if($filters)
+    {
+      foreach ($filters as $var => $filter) {
+        switch ($filter) {
+          case 'text':
+            $decoded->$var = strip_tags($decoded->$var);
+            break;
+          case 'html':
+            if (!empty($purify_content)) {
+              $decoded->$var = $purifier->purify($decoded->$var);
+            }
+            break;
+        }
       }
     }
     $content = json_encode($decoded);
