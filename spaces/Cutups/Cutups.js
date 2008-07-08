@@ -78,7 +78,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
       
     var xPathResult = document.evaluate(".//text()", objAncestor, null,
         XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);        
-    
+    console.log("in turnOnRangeRef: ");
     // iteratate on all the text nodes in the document and mark if they are in the selection range
     for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
         // we need clean styles so we don't use ShiftSpace.Element
@@ -114,7 +114,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   cutupRange: function(xPathResult){
     if(!this.multiLineArray){
-      console.log("multiLineArray exits");
+      console.log("multiLineArray does not exit");
       this.multiLineArray = Array();//2 dim array contains text for each node
       this.multiLineArray['cutup'] = Array();
       this.multiLineArray['orig'] = Array();
@@ -138,6 +138,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
           return item != null;
       });
     }
+    console.log("multiLineArray exists");
+    console.log("joined array: ",this.joinedArray);
     //randomly sort joined arrays
     this.joinedArray.sort(function(a,b){
         return Math.random() - 0.5;
@@ -272,23 +274,23 @@ var CutupsSpace = ShiftSpace.Space.extend({
   hideCutups: function(json) {
       // ignores the specific shift since only one highlight can be on at a given moment 
       // search for all span elements with _shiftspace_highlight attribute and open them
+      
+      //change to look for specific shift id
       var xPathResult = document.evaluate(".//span[attribute::_shiftspace_cutups='on']", document, null,
           XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
       
       var parentNodes = [];
       for (var i=0,l=0; i < xPathResult.snapshotLength; i++) {
-        if(!xPathResult.snapshotItem(i).textContent.match(/^s+$/)){//HERE
-          var spanElement = xPathResult.snapshotItem(i);
-          //if is not an empty node grab content from json
-          if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
-            var newTextNode = document.createTextNode(json[0]['origArray'][l]);
-            l++;
-          }else{
-            var newTextNode = document.createTextNode(spanElement.textContent);
-          }
-          parentNodes[i] = spanElement.parentNode;
-          spanElement.parentNode.replaceChild(newTextNode, spanElement);
+        //if is not an empty node grab content from json
+        var spanElement = xPathResult.snapshotItem(i);
+        if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
+          var newTextNode = document.createTextNode(json[0]['origArray'][l]);
+          l++;
+        }else{
+          var newTextNode = document.createTextNode(spanElement.textContent);
         }
+        parentNodes[i] = spanElement.parentNode;
+        spanElement.parentNode.replaceChild(newTextNode, spanElement);
       } 
 
       for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
@@ -298,6 +300,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
   save: function() {
     this.getCurrentShift().summary = this.summary.value;
     this.getCurrentShift().save();
+    //remove title value
+    $('SSCutupTitle').value = "";
   }
 });
 
@@ -307,7 +311,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
           //replace __newline__ token with \n
           for(var i=0; i<json.ranges.length; i++){
             json.ranges[i].origText = json.ranges[i].origText.replace(new RegExp("__newline__","g"),"\n");
-            //probably a range coder problem for some reason ancestorOrigTextContent null
+            //fix ancestorOrigTextContent null
             if(json.ranges[i].ancestorOrigTextContent){ 
               json.ranges[i].ancestorOrigTextContent = json.ranges[i].ancestorOrigTextContent.replace(new RegExp("__newline__","g"),"\n");
             }
@@ -320,7 +324,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
       //tokenize newline with __newline__
       for(var i=0; i<this.ranges.length; i++){
         this.ranges[i].origText = this.ranges[i].origText.replace(new RegExp("\\n","g"),"__newline__");
-        //probably a range coder problem for some reason ancestorOrigTextContent null
+        //fix ancestorOrigTextContent null
         if(this.ranges[i].ancestorOrigTextContent){
           this.ranges[i].ancestorOrigTextContent = this.ranges[i].ancestorOrigTextContent.replace(new RegExp("\\n","g"),"__newline__");
         } 
@@ -345,6 +349,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
         }
       }
       window.location.hash = this.getId();
+      console.log(this.getId());
       //FX for fading Cutup background-color to transparent
       function fadeToTrans(){
         trans = 1;

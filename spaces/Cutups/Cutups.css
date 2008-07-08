@@ -9,8 +9,10 @@
   line-height:15px;
   color:#EEE;
   height:34px;
-  /* opacity:0.95;
-  filter:alpha(opacity=95); */
+  width:321px;
+  border: 0px solid #333;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
 }
 #SSCutupControls,#SSCutupWidget label{
   float:left; 
@@ -103,7 +105,6 @@
   background-repeat:no-repeat;
   background-image: url(button_sprite.gif);
   background-position: center -45px;
-  
 }
 #SSCutupButtonClose:hover{
   background-color:#EF2F1F;
@@ -131,9 +132,6 @@
   height:12px;
   margin-bottom:4px;
   background-color:#575739;
-  /* background-image: url(button_sprite.png);
-  background-position: 0 -60px;
-  background-repeat: repeat-x;  */
 }
 .SSCutup{
   /* background-color:#E02E12; */
