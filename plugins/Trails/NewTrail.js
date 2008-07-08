@@ -26,7 +26,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     
     // store some trail info
     this.currentTrailInfo = {
-      username: ShiftSpace.user.getUsername(),
+      username: ShiftSpace.User.getUsername(),
       title: "Untitled"
     };
     
@@ -147,10 +147,10 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       // Add the first item
       menuItems.push({
         text: "Create a Trail",
-        enabled: ShiftSpace.user.isLoggedIn(),
+        enabled: ShiftSpace.User.isLoggedIn(),
         callback: function(shiftId)
         {
-          if(ShiftSpace.user.isLoggedIn())
+          if(ShiftSpace.User.isLoggedIn())
           {
             this.newTrail(shiftId);
           }
@@ -424,7 +424,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   userCanEdit: function()
   {
-    return (this.currentTrailInfo.username == ShiftSpace.user.getUsername());
+    return (this.currentTrailInfo.username == ShiftSpace.User.getUsername());
   }
   
 });

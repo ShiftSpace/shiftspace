@@ -479,8 +479,8 @@ var ShiftSpace = new (function() {
     
     function SSUserCanEditShift(shiftId)
     {
-      return (ShiftSpace.user.isLoggedIn() &&
-              shifts[shiftId].username == ShiftSpace.user.getUsername());
+      return (ShiftSpace.User.isLoggedIn() &&
+              shifts[shiftId].username == ShiftSpace.User.getUsername());
     }
     
     function SSIsNewShift(shiftId)
@@ -799,7 +799,7 @@ var ShiftSpace = new (function() {
       var shiftJson = {
         id: tempId,
         space: spaceName,
-        username: ShiftSpace.user.getUsername(),
+        username: ShiftSpace.User.getUsername(),
         position: _position
       };
       //console.log(shiftJson);
@@ -1242,7 +1242,7 @@ var ShiftSpace = new (function() {
         summary: shiftJson.summary,
         content: Json.toString(shiftJson),
         version: space.attributes.version,
-        username: ShiftSpace.user.getUsername(),
+        username: ShiftSpace.User.getUsername(),
         filters: Json.toString(filters),
       };
       
@@ -1294,7 +1294,7 @@ var ShiftSpace = new (function() {
           return;
         }
         
-        shiftJson.username = ShiftSpace.user.getUsername();
+        shiftJson.username = ShiftSpace.User.getUsername();
         shiftJson.created = 'Just posted';
         
         // with the real value
@@ -1347,7 +1347,7 @@ var ShiftSpace = new (function() {
         return;
       }
       
-      if(ShiftSpace.user.getUsername() == user)
+      if(ShiftSpace.User.getUsername() == user)
       {
         var shiftJson = SSGetShiftContent(shiftId);
 

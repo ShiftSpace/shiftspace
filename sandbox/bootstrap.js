@@ -8,7 +8,7 @@ var User = new Class({
   join: function(userInfo, callback) {}
 });
 
-ShiftSpace.user = new User();
+ShiftSpace.User = new User();
 
 function registerSpace(instance) 
 {

@@ -46,4 +46,4 @@ var User = new Class({
 
 });
 
-ShiftSpace.user = new User();
+ShiftSpace.User = new User();

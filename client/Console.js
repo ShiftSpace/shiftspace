@@ -450,8 +450,8 @@ var Console = new Class({
       auth.removeClass('hover');
     });
     auth.addEvent('click', function(_evt) {
-      if (ShiftSpace.user.getUsername()) {
-        ShiftSpace.user.logout();
+      if (ShiftSpace.User.getUsername()) {
+        ShiftSpace.User.logout();
       } else {
         //console.log('SHOW TAB');
         this.showTab('login');
@@ -489,7 +489,7 @@ var Console = new Class({
     //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABS');
     this.addTab('shifts', '0 shifts');
     this.addTab('settings', 'Settings', 'icon-settings.gif');
-    if (!ShiftSpace.user.getUsername()) {
+    if (!ShiftSpace.User.getUsername()) {
       this.addTab('login', 'Login');
     }
     //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LOGIN');
@@ -510,7 +510,7 @@ var Console = new Class({
       return;
     }
     //console.log('auth about to setup');
-    if (ShiftSpace.user.getUsername()) {
+    if (ShiftSpace.User.getUsername()) {
       auth.removeClass('login');
       auth.addClass('logout');
       auth.setAttribute('title', 'Logout');
@@ -757,7 +757,7 @@ var Console = new Class({
         username: this.doc.getElementById('username').value,
         password: this.doc.getElementById('password').value
       };
-      ShiftSpace.user.login(credentials, this.handleLogin.bind(this));
+      ShiftSpace.User.login(credentials, this.handleLogin.bind(this));
     }.bind(this));
     $(sections[1]).setHTML('<form id="registerForm" action="http://shiftspace.org/join" method="post">' +
                         '<div class="form-column">' +
@@ -786,7 +786,7 @@ var Console = new Class({
         password: this.doc.getElementById('join_password').value,
         password_again: this.doc.getElementById('password_again').value
       };
-      ShiftSpace.user.join(joinInput, this.handleJoin.bind(this));
+      ShiftSpace.User.join(joinInput, this.handleJoin.bind(this));
     }.bind(this));
   },
   

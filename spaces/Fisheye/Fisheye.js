@@ -657,20 +657,20 @@ var FisheyeShift = ShiftSpace.Shift.extend({
     // currently this is just used to hide settings as it seems
     // settings aren't saved in proxy mode XXX: true
     isProxy : function() {
-        if (ShiftSpace.user === undefined) {
+        if (ShiftSpace.User === undefined) {
 	  return true;
         }
 	return false;
     },
 
     getUsername : function() {
-        if (ShiftSpace.user === undefined) {
+        if (ShiftSpace.User === undefined) {
 	  return null; // XXX ???
         }
-	if (!ShiftSpace.user.getUsername()) {
+	if (!ShiftSpace.User.getUsername()) {
 	  return null; // XXX ???
 	} else {
-	  return ShiftSpace.user.getUsername();
+	  return ShiftSpace.User.getUsername();
 	}
     },
 

@@ -67,7 +67,7 @@ var ShiftMenu = new Class({
     });
     
     icon.addEvent('click', function(e) {
-      if (!ShiftSpace.user.isLoggedIn()) {
+      if (!ShiftSpace.User.isLoggedIn()) {
         window.alert('Sorry, you must be signed in to create new shifts.');
         this.hide(true);
         return;

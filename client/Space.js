@@ -391,7 +391,7 @@ ShiftSpace.Space = new Class({
     var shiftJson = aShift.encode();
     shiftJson.id = aShift.getId();
     shiftJson.space = this.attributes.name;
-    shiftJson.username = ShiftSpace.user.getUsername();
+    shiftJson.username = ShiftSpace.User.getUsername();
     this.fireEvent('onShiftUpdate', shiftJson);
   },
   
