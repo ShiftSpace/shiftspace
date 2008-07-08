@@ -170,7 +170,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
         if(trans > 0){       
           trans = trans - 0.01;
           $$('.SSCutup').setStyle('background-color','rgba(167,8,4,' + trans + ')')
-          setTimeout(fade,100);
+          setTimeout(fade,50);
         }
       }
       return fade();
@@ -208,6 +208,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
   close: function(){
     this.cancelCutup();
     $("SSCutupWidget").addClass('SSHidden');
+    $("SSCutupWidget").addClass('SSDisplayNone');
   },
   showInterface: function(){
     this.parent();
@@ -357,7 +358,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
           if(trans > 0){       
             trans = trans - 0.01;
             $$('.SSCutup').setStyle('background-color','rgba(167,8,4,' + trans + ')')
-            setTimeout(fade,100);
+            setTimeout(fade,50);
           }
         }
         return fade();
