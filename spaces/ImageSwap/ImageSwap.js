@@ -9,6 +9,26 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   
   setup : function()
   {
+    // need to use a closure to prevent FF3 security problem
+    var self = this;
+    this.focusRef = function(_evt) {
+      var image = $((new Event(_evt)).target);
+      var pos = image.getPosition();
+      var size = image.getSize().size;
+      
+      // store the url to this image
+      self.currentImage = image;
+      
+      self.focusDiv.setStyles({
+        left: pos.x,
+        top: pos.y,
+        width: size.x,
+        height: size.y
+      });
+      
+      self.focusDiv.injectInside(document.body);
+    };
+    
     this.blurRef = this.blurImage.bind(this);
     
     this.imageEventsAttached = false;
@@ -19,7 +39,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   
   fix: function(brokenShiftJson)
   {
-    console.log('Image Swap fix! ' + Json.toString(brokenShiftJson));
+    //console.log('Image Swap fix! ' + Json.toString(brokenShiftJson));
     var content = brokenShiftJson.content;
     
     // extract the target
@@ -58,7 +78,9 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
       }
       else
       {
-        // delete the current shift
+        // delete the current shift and return
+        this.deleteShift(brokenShiftJson.id);
+        return;
       }
     }
     else
@@ -155,7 +177,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   showInterface : function()
   {
     this.parent();
-    console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] SHOW INTERFACE');
+    //console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] SHOW INTERFACE');
     if(!this.imageEventsAttached)
     {
       this.imageEventsAttached = true;
@@ -166,7 +188,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   hideInterface : function()
   {
     this.parent();
-    console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] HIDE INTERFACE');
+    //console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] HIDE INTERFACE');
     if(this.imageEventsAttached)
     {
       this.imageEventsAttached = false;
@@ -177,54 +199,12 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   attachImageEvents : function()
   {
     // listen for mouse events when the interface is shown
-    this.allImages.each(function(anImage) {
-
-      var self = this;      
-      function mouseOverHandler(_evt) {
-        console.log('mouseover');
-        var image = $((new Event(_evt)).target);
-        var pos = image.getPosition();
-        var size = image.getSize().size;
-        
-        // store the url to this image
-        self.currentImage = image;
-        
-        self.focusDiv.setStyles({
-          left: pos.x,
-          top: pos.y,
-          width: size.x,
-          height: size.y
-        });
-        
-        self.focusDiv.injectInside(document.body);
-      };
-      this.allEventHandlers.push(mouseOverHandler);
-
-      // TODO: keep an array of each image event handler
-      anImage.addEvent('mouseover', mouseOverHandler);
-      
-    }.bind(this));
-
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> attachImageEvents ' + this.allEventHandlers.length);
+    this.allImages.each(function(anImage) { anImage.addEvent('mouseover', this.focusRef); }.bind(this));
   },
   
   removeImageEvents : function()
   {
-    //this.allImages.each(function(anImage) { anImage.removeEvent('mouseover', this.focusRef) }.bind(this));
-
-    var len = this.allImages.length;
-    for(var i = 0; i < len; i++)
-    {
-      var anImage = this.allImages[i];
-      var eventHandler = this.allEventHandlers[i];
-      
-      anImage.removeEvent('mouseover', eventHandler);
-    }
-    
-    // empty out the event handlers
-    this.allEventHandlers = [];
-
-    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ removeImageEvents ' + this.allEventHandlers.length);
+    this.allImages.each(function(anImage) { anImage.removeEvent('mouseover', this.focusRef) }.bind(this));
   },
   
   grabImage : function()
