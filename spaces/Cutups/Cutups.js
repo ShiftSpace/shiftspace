@@ -206,6 +206,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
       
   },
   close: function(){
+    console.log("i'm called");
     this.cancelCutup();
     $("SSCutupWidget").addClass('SSHidden');
     $("SSCutupWidget").addClass('SSDisplayNone');
