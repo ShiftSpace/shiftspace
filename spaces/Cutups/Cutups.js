@@ -162,7 +162,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
         xPathResult.snapshotItem(i).textContent = this.multiLineArray['cutup'][l].join("");
         l++
       }
-    }
+    } 
     //FX for fading Cutup background-color to transparent
     function fadeToTrans(){
       trans = 0.6;
