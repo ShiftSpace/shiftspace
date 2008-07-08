@@ -7,33 +7,36 @@ var HighlightsSpace = ShiftSpace.Space.extend({
     },
     
     setup: function() {
-        this.mousemove = function(e) {
-            this.cursor.style.left = (e.pageX + 6) + 'px';
-            this.cursor.style.top = (e.pageY - 8) + 'px';
-        }.bind(this);
-        
-        this.mousedown = function(e) {
-            this.cursor.style.display = 'none';
-        }.bind(this);
-    
-        this.highlight_end = function(e) {
-            if (!window.getSelection().getRangeAt(0).collapsed) {
-                this.cursor.style.display = 'block';
-		var range = window.getSelection().getRangeAt(0);
-                var newRangeRef = ShiftSpace.RangeCoder.toRef(range);
-                newRangeRef.color = this.color; 
-                if (!this.getCurrentShift().ranges)
-                    this.getCurrentShift().ranges = [];
+      var self = this;
+      
+      this.mousemove = function(e) {
+        self.cursor.style.left = (e.pageX + 6) + 'px';
+        self.cursor.style.top = (e.pageY - 8) + 'px';
+      }.bind(this);
 
-		if (this.summary.value == '')
-			this.summary.value = range.toString();
-                
-                this.getCurrentShift().ranges.push(newRangeRef);
-                this.turnOnRangeRef(newRangeRef);
-            }
-            
-            return false;
-        }.bind(this);
+      this.mousedown = function(e) {
+        self.cursor.style.display = 'none';
+      }.bind(this);
+
+      this.highlight_end = function(e) {
+        
+        if (!window.getSelection().getRangeAt(0).collapsed) {
+          self.cursor.style.display = 'block';
+          var range = window.getSelection().getRangeAt(0);
+          var newRangeRef = ShiftSpace.RangeCoder.toRef(range);
+          newRangeRef.color = self.color; 
+          if (!self.getCurrentShift().ranges)
+          self.getCurrentShift().ranges = [];
+
+          if (self.summary.value == '')
+          self.summary.value = range.toString();
+
+          self.getCurrentShift().ranges.push(newRangeRef);
+          self.turnOnRangeRef(newRangeRef);
+        }
+
+        return false;
+      };
     },
 
     selectColor: function(colorElement, color) {
