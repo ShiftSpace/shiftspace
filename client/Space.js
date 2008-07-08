@@ -643,6 +643,7 @@ ShiftSpace.Space = new Class({
     theShift.setIsBeingEdited(false);
   },
   
+  onShiftPrepare : function(shiftId) {},
   onShiftCreate : function(shiftId) {},
   onShiftEdit: function(shiftId) {},
   onShiftSave : function(shiftId) {},

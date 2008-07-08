@@ -20,6 +20,7 @@ For more info about Greasemonkey, go to www.greasespot.net
 - - - -
 
 Avital says: "I will only grow vegetables if I love to grow vegetables."
+Mushon says: "Make it a Dorongle!"
 
 Script: shiftspace.user.js
     ShiftSpace: An Open Source layer above any webpage
@@ -116,7 +117,7 @@ var ShiftSpace = new (function() {
       'Highlights': server + 'spaces/Highlights/Highlights.js',
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
     });
-  
+    
     /*
     installed = {
       'Notes' : myFiles + 'spaces/Notes/Notes.js',
@@ -467,7 +468,7 @@ var ShiftSpace = new (function() {
     
     function SSSpaceForShift(shiftId)
     {
-      console.log('SSSpaceForShift');
+      //console.log('SSSpaceForShift');
       return spaces[shifts[shiftId].space];
     }
     
@@ -783,7 +784,7 @@ var ShiftSpace = new (function() {
     
     */
     function initShift(spaceName, options) {
-      console.log('spaceName: ' + spaceName);
+      //console.log('spaceName: ' + spaceName);
       if (!installed[spaceName]) {
         console.log('Error: Space ' + spaceName + ' does not exist.', true);
         return;
@@ -808,7 +809,7 @@ var ShiftSpace = new (function() {
       var noError = spaces[spaceName].createShift(shiftJson);
       if(noError)
       {
-        console.log('tempId:' + tempId);
+        //console.log('tempId:' + tempId);
         SSShowNewShift(tempId);
       }
       else
@@ -860,7 +861,7 @@ var ShiftSpace = new (function() {
       SSSetFocusedShiftId(shift.id);
       space.orderFront(shift.id);
 
-      // call onShiftFocus
+      // call
       space.focusShift(shiftId);
       space.onShiftFocus(shiftId);
       
@@ -909,6 +910,7 @@ var ShiftSpace = new (function() {
     
     function blurShift(shiftId)
     {
+      console.log('BLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLUUUUUUUUUUUUUUUUUUUUUUUUUURRRRRRRRRRRRRRRRR');
       // create a blur event so console gets updated
       var space = SSSpaceForShift(shiftId);
       space.blurShift(shiftId);
@@ -928,18 +930,19 @@ var ShiftSpace = new (function() {
     */
     function focusSpace(space, position) 
     {
-      var focusedSpace = SSFocusedSpace();
+      var lastFocusedSpace = SSFocusedSpace();
       
-      if(focusedSpace && focusedSpace != space)
+      if(lastFocusedSpace && lastFocusedSpace != space)
       {
         // check to see if focused space
-        focusedSpace.setIsVisible(false);
-        focusedSpace.hideInterface();
+        lastFocusedSpace.setIsVisible(false);
+        lastFocusedSpace.hideInterface();
       }
       
-      focusedSpace = space;
-      focusedSpace.setIsVisible(true);
-      focusedSpace.showInterface();
+      // set the focused space private var
+      SSSetFocusedSpace(space);
+      space.setIsVisible(true);
+      space.showInterface();
     }
     
     function updateTitleOfShift(shiftId, title)
@@ -959,7 +962,7 @@ var ShiftSpace = new (function() {
     */
     function showShift(shiftId) 
     {
-      console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      //console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       try
       {
         // get the space and the shift
@@ -969,7 +972,7 @@ var ShiftSpace = new (function() {
         // load the space first
         if(!space)
         {
-          console.log('space not loaded');
+          //console.log('space not loaded');
           loadSpace(shift.space, shiftId);
           return;
         }
@@ -981,7 +984,7 @@ var ShiftSpace = new (function() {
         // check to make sure the css is loaded first
         if(!space.cssIsLoaded())
         {
-          console.log('css not loaded');
+          //console.log('css not loaded');
           space.addDeferredShift(shiftJson);
           return;
         }
@@ -1038,7 +1041,7 @@ var ShiftSpace = new (function() {
     
     */
     function hideShift(shiftId) {
-      console.log('hideShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      //console.log('hideShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       var shift = shifts[shiftId];
       spaces[shift.space].hideShift(shiftId);
       
@@ -1974,10 +1977,10 @@ var ShiftSpace = new (function() {
         }
         else 
         {
-          console.log('loading file!');
+          //console.log('loading file!');
           loadFile(installed[space], function(rx) {
             var err;
-            console.log(space + ' Space loaded, rx.responseText:' + rx.responseText);
+            //console.log(space + ' Space loaded, rx.responseText:' + rx.responseText);
             
             // TODO: for Safari the following does not work, we need a function in Space
             // that evals the actual space. - David
@@ -2203,7 +2206,7 @@ var ShiftSpace = new (function() {
     function serverCall(method, parameters, _callback) {
       var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
-      console.log('serverCall: ' + url);
+      //console.log('serverCall: ' + url);
       var data = '';
       
       for (var key in parameters) {
@@ -2219,7 +2222,7 @@ var ShiftSpace = new (function() {
       var now = new Date();
       url += '&cache=' + now.getTime();
       
-      console.log(data);
+      //console.log(data);
       
       //GM_openInTab(url);
       var req = {

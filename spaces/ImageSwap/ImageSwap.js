@@ -10,8 +10,11 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   setup : function()
   {
     this.blurRef = this.blurImage.bind(this);
+    
     this.imageEventsAttached = false;
+    
     this.allImages = $$('img').filter(function(anImage) { return !ShiftSpace.isSSElement(anImage);});
+    this.allEventHandlers = [];
   },
   
   fix: function(brokenShiftJson)
@@ -96,6 +99,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   attachEvents : function()
   {
     this.focusDiv.addEvent('mouseout', this.blurRef);
+    
     this.grabSwapButton.addEvent('click', function(_evt) {
     });
     
@@ -151,6 +155,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   showInterface : function()
   {
     this.parent();
+    console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] SHOW INTERFACE');
     if(!this.imageEventsAttached)
     {
       this.imageEventsAttached = true;
@@ -161,6 +166,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   hideInterface : function()
   {
     this.parent();
+    console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] HIDE INTERFACE');
     if(this.imageEventsAttached)
     {
       this.imageEventsAttached = false;
@@ -171,10 +177,10 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   attachImageEvents : function()
   {
     // listen for mouse events when the interface is shown
-    var self = this;
     this.allImages.each(function(anImage) {
-      // TODO: keep an array of each image event handler
-      anImage.addEvent('mouseover', function(_evt) {
+
+      var self = this;      
+      function mouseOverHandler(_evt) {
         console.log('mouseover');
         var image = $((new Event(_evt)).target);
         var pos = image.getPosition();
@@ -191,13 +197,34 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
         });
         
         self.focusDiv.injectInside(document.body);
-      });
-    });
+      };
+      this.allEventHandlers.push(mouseOverHandler);
+
+      // TODO: keep an array of each image event handler
+      anImage.addEvent('mouseover', mouseOverHandler);
+      
+    }.bind(this));
+
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> attachImageEvents ' + this.allEventHandlers.length);
   },
   
   removeImageEvents : function()
   {
-    this.allImages.each(function(anImage){ anImage.removeEvent('mouseover', this.focusRef) }.bind(this));
+    //this.allImages.each(function(anImage) { anImage.removeEvent('mouseover', this.focusRef) }.bind(this));
+
+    var len = this.allImages.length;
+    for(var i = 0; i < len; i++)
+    {
+      var anImage = this.allImages[i];
+      var eventHandler = this.allEventHandlers[i];
+      
+      anImage.removeEvent('mouseover', eventHandler);
+    }
+    
+    // empty out the event handlers
+    this.allEventHandlers = [];
+
+    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ removeImageEvents ' + this.allEventHandlers.length);
   },
   
   grabImage : function()
@@ -216,7 +243,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   
   swapImage : function(targetImage)
   {
-    console.log('swapImage');
+    //console.log('swapImage');
     
     // get the current shift
     var currentShift = this.getCurrentShift();
@@ -256,7 +283,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
 var ImageSwapShift = ShiftSpace.Shift.extend({
   setup : function(json)
   {
-    console.log('setting up image swap shift');
+    //console.log('setting up image swap shift');
     //console.log(Json.toString(json));
 
     // build the interface
@@ -305,7 +332,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   setSrc : function(src)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> set src: ' + src);
+    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> set src: ' + src);
     if(src) this.image.setProperty('src', src);
   },
   
@@ -321,16 +348,17 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   swap : function(pinRef)
   {
-    console.log('================ swapping images');
+    //console.log('================ swapping images');
     
     // set the image to that property
     this.pin(this.element, pinRef);
 
-    console.log('pinned');
+    //console.log('pinned');
 
     if(this.isBeingEdited())
     {
-      console.log('saving');
+      console.log('is being edited saving');
+      
       // save the shift!
       this.save();
       // show the edit interface if not already visible
@@ -340,7 +368,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   pin : function(element, pinRef)
   {
-    console.log('pinning');
+    //console.log('pinning');
     
     // we want the exact dimensions of the old image
     var targetNode = ShiftSpace.Pin.toNode(pinRef);
@@ -374,6 +402,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     }
     else
     {
+      /*
       console.log('something went wrong');
       console.log('src:');
       console.log(this.getSrc());
@@ -382,6 +411,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
       console.log(this.getPinRef());
       console.log('isSwapped:');
       console.log(this.isSwapped);
+      */
     }
   },
   
@@ -483,15 +513,15 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
   buildInterface : function()
   {
-    console.log('buildInterface');
+    //console.log('buildInterface');
     this.element = new ShiftSpace.Element('div', {
       'class': "SSImageSwapShift SSUnordered"
     });
-    console.log('element created');
+    //console.log('element created');
     this.image = new ShiftSpace.Element('img', {
       'class': "SSImageSwapShiftImage"
     });
-    console.log('image div created');
+    //console.log('image div created');
 
     // add the zoom buttons
     this.zoomButton = new ShiftSpace.Element('div', {
@@ -505,7 +535,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.zoomButton.injectInside(this.element);
     this.unzoomButton.injectInside(this.element);
     
-    console.log('ImageSwap elements created');
+    //console.log('ImageSwap elements created');
     
     // show the zooming interface
     this.image.injectInside(this.element);
