@@ -18,29 +18,37 @@ var NotesSpace = ShiftSpace.Space.extend({
   
   fix: function(brokenShiftJson)
   {
-    console.log('fix ' + Json.toString(brokenShiftJson));
+    console.log('fix: ' + Json.toString(brokenShiftJson));
     var fixedShift = brokenShiftJson;
     var content = brokenShiftJson.content
-    console.log(content);
-    var noteText = content.match(/content:.+?, x:/);
+    console.log('content: ' + content);
+    var noteText = content.match(/content:"[\s|\S]+?", x:/m);
     var fixedJson;
+    
+    console.log('noteText: ' + noteText);
     
     // extract the note text
     if(noteText && noteText.length > 0)
     {
       function unescapeHTML(html) {
-         var htmlNode = document.createElement("DIV");
-         htmlNode.innerHTML = html;
-         if(htmlNode.innerText)
-            return htmlNode.innerText; // IE
-         return htmlNode.textContent; // FF
+        var htmlNode = new ShiftSpace.Element('div');
+        htmlNode.innerHTML = html;
+        if(htmlNode.innerText)
+        return htmlNode.innerText; // IE
+        return htmlNode.textContent; // FF
       }
       
       var noteTextFinal = unescapeHTML(noteText[0].substr(9, noteText[0].length-14));
+      
+      console.log('noteTextFinal: ' + noteTextFinal);
 
       fixedJson = content.replace(noteText[0].substr(0, noteText[0].length-2), "");
-      // remove summary might include HTML markup
-      fixedJson = fixedJson.replace(/summary:".+"/, "");
+      // replace new lines
+      //fixedJson = fixedJson.replace(/\n/g, '');
+      // remove the summary might include HTML markup
+      fixedJson = fixedJson.replace(/, summary:"[\s|\S]+?"\}\)/, "})");
+      
+      console.log('fixedJson: ' + fixedJson);
 
       // grab the other props
       var otherProps = Json.evaluate(fixedJson);
