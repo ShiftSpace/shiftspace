@@ -60,7 +60,7 @@ var ShiftSpace = new (function() {
     
     //server = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
-    var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
+    //var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/api/";
 
     // Current ShiftSpace version
@@ -117,12 +117,14 @@ var ShiftSpace = new (function() {
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
     });
   
+    /*
     installed = {
       'Notes' : myFiles + 'spaces/Notes/Notes.js',
       'ImageSwap': myFiles + 'spaces/ImageSwap/ImageSwap.js',
       'Highlights': myFiles + 'spaces/Highlights/Highlights.js',
       'SourceShift': myFiles + 'spaces/SourceShift/SourceShift.js',
     };
+    */
 
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
