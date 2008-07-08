@@ -7,6 +7,13 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     css : 'ImageSwap.css',
   },
   
+  setup : function()
+  {
+    this.blurRef = this.blurImage.bind(this);
+    this.imageEventsAttached = false;
+    this.allImages = $$('img').filter(function(anImage) { return !ShiftSpace.isSSElement(anImage);});
+  },
+  
   fix: function(brokenShiftJson)
   {
     console.log('Image Swap fix! ' + Json.toString(brokenShiftJson));
@@ -56,13 +63,6 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
       this.swapImage(targetImage);
     }
     
-  },
-  
-  setup : function()
-  {
-    this.blurRef = this.blurImage.bind(this);
-    this.imageEventsAttached = false;
-    this.allImages = $$('img').filter(function(anImage) { return !ShiftSpace.isSSElement(anImage);});
   },
   
   buildInterface : function()
@@ -173,6 +173,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     // listen for mouse events when the interface is shown
     var self = this;
     this.allImages.each(function(anImage) {
+      // TODO: keep an array of each image event handler
       anImage.addEvent('mouseover', function(_evt) {
         console.log('mouseover');
         var image = $((new Event(_evt)).target);

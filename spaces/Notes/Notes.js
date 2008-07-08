@@ -14,6 +14,23 @@ var NotesSpace = ShiftSpace.Space.extend({
     {
       this.editShift(shiftId);
     }
+  },
+  
+  fix: function(brokenShiftJson)
+  {
+    console.log('fix ' + Json.toString(brokenShiftJson));
+    var fixedShift = brokenShiftJson;
+    var content = brokenShiftJson.content
+    console.log(content);
+    var noteText = content.match(/content:.+?, x:/);
+    
+    if(noteText && noteText.length > 0)
+    {
+      var noteTextFinal = noteText[0].substr(9, noteText[0].length-14);
+      console.log(noteTextFinalf);
+    }
+
+    //this.addShift(fixedShift)
   }
 });
 
