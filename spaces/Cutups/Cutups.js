@@ -1,3 +1,8 @@
+/*
+TODO:Check for script tags and ignore content
+  add onShiftEdit
+*/
+
 var CutupsSpace = ShiftSpace.Space.extend({
   attributes: {
     name: 'Cutups',
@@ -78,7 +83,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
       
     var xPathResult = document.evaluate(".//text()", objAncestor, null,
         XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);        
-    console.log("in turnOnRangeRef: ");
     // iteratate on all the text nodes in the document and mark if they are in the selection range
     for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
         // we need clean styles so we don't use ShiftSpace.Element
@@ -114,7 +118,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   cutupRange: function(xPathResult){
     if(!this.multiLineArray){
-      console.log("multiLineArray does not exit");
       this.multiLineArray = Array();//2 dim array contains text for each node
       this.multiLineArray['cutup'] = Array();
       this.multiLineArray['orig'] = Array();
@@ -138,8 +141,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
           return item != null;
       });
     }
-    console.log("multiLineArray exists");
-    console.log("joined array: ",this.joinedArray);
     //randomly sort joined arrays
     this.joinedArray.sort(function(a,b){
         return Math.random() - 0.5;
@@ -157,7 +158,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
     //reinsert sorted array as string back into document
     for ( var i=0,l=0; i < xPathResult.snapshotLength; i++ ){
       //if node is not empty
-      console.log(this.multiLineArray['cutup'][l]);
       if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
         xPathResult.snapshotItem(i).textContent = this.multiLineArray['cutup'][l].join("");
         l++
@@ -165,7 +165,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
     }
     //FX for fading Cutup background-color to transparent
     function fadeToTrans(){
-      trans = 1;
+      trans = 0.6;
       function fade(){
         if(trans > 0){       
           trans = trans - 0.01;
@@ -206,7 +206,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
       
   },
   close: function(){
-    console.log("i'm called");
     this.cancelCutup();
     $("SSCutupWidget").addClass('SSHidden');
     $("SSCutupWidget").addClass('SSDisplayNone');
@@ -351,10 +350,10 @@ var CutupsShift = ShiftSpace.Shift.extend({
         }
       }
       window.location.hash = this.getId();
-      console.log(this.getId());
+      /* console.log(this.getId()); */
       //FX for fading Cutup background-color to transparent
       function fadeToTrans(){
-        trans = 1;
+        trans = 0.6;
         function fade(){
           if(trans > 0){       
             trans = trans - 0.01;
@@ -367,7 +366,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
       fadeToTrans();
     },
     hide: function(){
-      console.log("hiiiiiide");
+      /* console.log("hiiiiiide"); */
       this.getParentSpace().hideCutups(this.ranges);
     }
 });

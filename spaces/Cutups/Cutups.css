@@ -1,7 +1,9 @@
 #SSCutupWidget{
   padding:6px;
+  top:100px;
+  left:0;
+  z-index: 500000;
   position:fixed;
-  z-index:99;
   background-color:#373719;
   padding:3px;
   font-family:Verdana, sans-serif !important;
@@ -13,7 +15,6 @@
   border: 0px solid #333;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
-  z-index: 500000;
 }
 #SSCutupControls,#SSCutupWidget label{
   float:left; 
