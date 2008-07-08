@@ -1,0 +1,124 @@
+/* Space styles for YeasAndNays */
+
+#YAN_allContainer{
+	width: 275px;
+	overflow:hidden;
+    background-color: #faf8f2;
+	background-image: url(images/flag_bg.png);
+	background-position: right;
+	background-repeat: no-repeat;
+}
+
+#YAN_main{
+    font-family: Helvetica, Verdana, Arial, sans-serif;
+    font: 16px;
+	padding: 5px 10px 5px 10px;
+	margin: 15px 0px 5px 0px;
+    color: #FFF;
+}
+
+/* form field style */
+.SSYeasAndNaysShiftInput{
+	font-family: Helvetica, Verdana, Arial, sans-serif;
+	margin-left: 0px;
+	margin-bottom: 3px;
+	margin-right: 5px;
+	margin-top: 3px;
+	background: #fff;
+	border: 1px solid #333;
+	padding: 3px 3px 3px 3px;
+	font-size: 16px;
+	font-weight: bold;
+	color: #551e00;
+	display: inline;
+}
+
+.SSYeasAndNaysShiftButton{
+	background: #555;
+	border: 2px solid #333;
+	padding: 3px 3px 3px 3px;
+	font-size: 14px;
+	font-weight: bold;
+	color: #fff;
+}
+
+.SSYeasAndNaysShiftButton:hover{
+	background: #333;
+	border: 2px solid #333;
+	padding: 3px 3px 3px 3px;
+	font-size: 14px;
+}
+
+#YAN_Select{
+	
+	font-family: Helvetica, Verdana, Arial, sans-serif;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 3px;
+	margin: 0px;
+	border-color: #ff8e02;
+	border-style: solid;
+	border-width: 1px;
+	background-color: #ffedc9;
+	color: #551e00;
+	
+}
+
+.SSYeasAndNaysOption{
+	font-weight: bold;
+	font-size: 14px;
+	font-family: Helvetica, Verdana, Arial, sans-serif;
+	padding: 3px 0px 3px 0px;
+}
+
+#YAN_swiff{
+
+}
+
+#SSYeasAndNaysHandleArea
+{
+  padding-left: 3px;
+  cursor:move;
+}
+
+#SSYeasAndNaysHandleArea:hover{
+	cursor:move;
+}
+
+#SSYeasAndNaysHandle
+{
+  position: absolute;
+  left: 3px;
+  right: 15px;
+  height: 16px;
+  background-image: url(images/drag_texture_red_blue.png);
+  background-repeat: repeat-x;
+  background-position: 0px 4px;
+  padding: 2px; 
+  font-size: 9px;
+  cursor:move;
+}
+
+.SSYeasAndNaysWindowButtons
+{
+  float: right;
+  margin: 3px 3px 0px 2px;
+}
+
+.SSYeasAndNaysWindowButtons div
+{
+  float: left;
+  width: 13px;
+  height: 13px;
+  
+}
+
+.SSYeasAndNaysWindowButtons .YN_closeButton
+{
+  background-image: url(images/close.png);
+}
+
+.SSYeasAndNaysHidden
+{
+  display : none;
+}
