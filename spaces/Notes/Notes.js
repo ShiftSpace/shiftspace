@@ -23,14 +23,33 @@ var NotesSpace = ShiftSpace.Space.extend({
     var content = brokenShiftJson.content
     console.log(content);
     var noteText = content.match(/content:.+?, x:/);
+    var fixedJson;
     
+    // extract the note text
     if(noteText && noteText.length > 0)
     {
-      var noteTextFinal = noteText[0].substr(9, noteText[0].length-14);
-      console.log(noteTextFinalf);
-    }
+      function unescapeHTML(html) {
+         var htmlNode = document.createElement("DIV");
+         htmlNode.innerHTML = html;
+         if(htmlNode.innerText)
+            return htmlNode.innerText; // IE
+         return htmlNode.textContent; // FF
+      }
+      
+      var noteTextFinal = unescapeHTML(noteText[0].substr(9, noteText[0].length-14));
 
-    //this.addShift(fixedShift)
+      fixedJson = content.replace(noteText[0].substr(0, noteText[0].length-2), "");
+      // remove summary might include HTML markup
+      fixedJson = fixedJson.replace(/summary:".+"/, "");
+
+      // grab the other props
+      var otherProps = Json.evaluate(fixedJson);
+    }
+    
+    var currentShift = this.getCurrentShift();
+    currentShift.setProperties($merge(otherProps, {noteText: noteTextFinal}));
+    
+    this.showShift(brokenShiftJson.id);
   }
 });
 
@@ -132,6 +151,18 @@ var NotesShift = ShiftSpace.Shift.extend({
 
     //console.log('refresh again');
     this.refresh();
+  },
+  
+  // only called on broken shifts
+  setProperties: function(json)
+  {
+    this.__properties__ = json;
+  },
+  
+  
+  getProperties: function()
+  {
+    return this.__properties__;
   },
   
   
@@ -476,6 +507,14 @@ var NotesShift = ShiftSpace.Shift.extend({
   finishFrame : function()
   {
     var text = 'Leave a note';
+    var props = this.getProperties();
+    
+    // if properties from borked json grab them
+    if(props)
+    {
+      this.noteText = props.noteText;
+    }
+    
     if(this.noteText)
     {
       text = this.noteText;
@@ -510,7 +549,22 @@ var NotesShift = ShiftSpace.Shift.extend({
     }.bind(this));
     
     this.inputArea.setProperty('readonly', 1);
-  
+        
+    if(props)
+    {
+      this.element.setStyles({
+        left: props.x, 
+        top: props.y,
+        width: props.width, 
+        height: props.height
+      });
+    }
+    
+    // rewrite all links to target parent
+    $A(notedoc.getElementsByTagName('a')).each(function(link) {
+      $(link).setProperty('target', 'parent');
+    });
+
     if(this.isBeingEdited())
     {
       this.edit();
@@ -519,6 +573,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.show();
     }
+    
   },
   
   

@@ -2639,11 +2639,14 @@ var ShiftSpace = new (function() {
           
           // hmm add the shift, not show it
           // load the shift
-          space.showShift({
+          space.addShift({
             id: shiftId,
             username: shift.username,
             summary: shift.summary
           });
+          // set the current shift
+          space.setCurrentShiftById(shiftId);
+          // edit the shift
           space.editShift(shiftId);
 
           // attempt to fix it

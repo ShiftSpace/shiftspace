@@ -611,6 +611,11 @@ ShiftSpace.Space = new Class({
     this.__currentShift__ = newShift;
   },
   
+  setCurrentShiftById: function(shiftId)
+  {
+    this.setCurrentShift(this.shifts[shiftId]);
+  },
+  
   /*
     Function: getCurrentShift
       Set the current shift.

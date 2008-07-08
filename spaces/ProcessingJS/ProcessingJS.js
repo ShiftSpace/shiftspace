@@ -21,7 +21,7 @@ var ProcessingJSSpaceShift = ShiftSpace.Shift.extend({
     
     this.xmlhttpRequest({
       'method': 'GET',
-      'url': 'http://localhost/~davidnolen/shiftspace-0.11/spaces/ProcessingJS/code2.txt',
+      'url': 'http://localhost/~davidnolen/shiftspace-0.11/spaces/ProcessingJS/code.txt',
       'onload': function(response) {
         Processing(this.element, response.responseText);
       }.bind(this),
