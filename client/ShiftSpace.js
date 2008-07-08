@@ -2498,14 +2498,14 @@ var ShiftSpace = new (function() {
         'class': "SSErrorWindowDisclosure"
       });
       var errorWindowExpandWrapper = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowExpandWrapper SSUserSelectNone SSDefaultCursor"
+        'class': "SSErrorWindowExpandWrapper SSUserSelectNone"
       });
       var errorWindowExpand = new ShiftSpace.Element('div', {
         'class': "SSErrorWindowExpand"
       });
       errorWindowExpand.injectInside(errorWindowExpandWrapper);
       var errorWindowExpandLabel = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowExpandLabel"
+        'class': "SSErrorWindowExpandLabel SSDefaultCursor"
       });
       errorWindowExpandLabel.setText('view shift details');
       errorWindowExpandLabel.injectInside(errorWindowExpandWrapper);
