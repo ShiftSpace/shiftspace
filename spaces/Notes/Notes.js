@@ -529,7 +529,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     }
     
     // Get document reference and MooToolize the body
-    var notedoc = this.frame.contentDocument;
+    var notedoc = this.frame.contentDocument || this.frame.document;
     this.frameBody = $(notedoc.body);
     this.frameBody.setProperty('id', 'SSNoteShiftFrameBody');
 
