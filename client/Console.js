@@ -632,25 +632,19 @@ var Console = new Class({
       var space = spaceInput.value;
       if (space == '') return;
 
+      // FIXME: seems redundant - David
+      
       var spaceURL = server + 'spaces/' + space + '/' + space + '.js';
       installed[space] = spaceURL;
       setValue('installed', installed);
       
       loadSpace(space, null, function(r) {
-        /*
-        var source = r.responseText.replace(/\s/g, ' ');
-        var matches = source.match(/attributes.+?(\{.+?\})/);
-        if (!matches) {
-          window.alert('Error, could not load space "' + space + '". Space names are case-sensitive, so check that you\'ve capitalized the space name correctly.');
-          return;
-        } else {
-        */
-          newSpace = $(this.installedSpace(space));
-          newSpace.injectBefore(form);
-          spaceInput.value = '';
-          ShiftSpace.ShiftMenu.addSpace(space);
-        //}
+        newSpace = $(this.installedSpace(space));
+        newSpace.injectBefore(form);
+        spaceInput.value = '';
+        ShiftSpace.ShiftMenu.addSpace(space);
       }.bind(this));
+      
     }.bind(this));
     
     //console.log('buildSettings - added form action');
@@ -730,8 +724,6 @@ var Console = new Class({
   },
   
   showTab: function(id) {
-    console.log('>>>>>>>>>>>>>>>>>>>> SHOW TAB ' + id);
-
     // close the plugin menu if open
     if(this.pluginMenu && !$(this.pluginMenu).hasClass('SSDisplayNone')) this.pluginMenu.addClass('SSDisplayNone');
 
@@ -741,7 +733,7 @@ var Console = new Class({
     // if previous active tab deselect the tab and hide the tab content
     if(lastTab)
     {
-      var lastTabContentId = lastTab.getProperty('id').split('-').getLast();
+      var lastTabContentId = lastTab.id.split('-').getLast();
 
       // deselect
       if (lastTab) 
