@@ -246,6 +246,25 @@
     }.bind(this)
 });</pre>
                     <p>What this does is changes how the keyword <tt>this</tt> works inside the function. For more discussion about <tt>bind</tt>, see the <a href="developer.html#mootools-events">MooTools events</a> section of the Developer Manual or the <a href="http://docs.mootools.net/Native/Function.js#Function.bind">MooTools documentation on <tt>bind</tt></a>.</p>
+                    <p><b>IMPORTANT:</b> Since the release of Firefox 3 it no longer possible to use the binding mechanism on 'mousemove', 'mouseover', 'mouseout', 'mouseenter', or 'mouseleave' events.  This is because of a heightened security model.  You will have to manually create a closure like the following: </p>
+                    <pre>
+attachEvents: function()
+{
+    var self = this;
+    this.mouseHandler = function() {
+        // ... code ...
+        self.doSomeMethod();
+        // ... code ...
+    };
+  
+    this.element = new ShiftSpace.Element('div', {
+        'class': 'MyClass'
+    });
+    this.element.injectInside(document.body);
+  
+    this.element.addEvent('mousemove', this.mouseHandler);
+}
+                    </pre>
                 </div>
                 <br />
             </div>
