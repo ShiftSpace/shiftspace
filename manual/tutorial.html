@@ -63,7 +63,7 @@
             <div class="content">
                 <p>This tutorial will guide you through building what is perhaps the simplest Space that you can make: HelloWorld. The HelloWorld space, when completed, will allow you to add the words 'Hello World!' as a Shift to any page on the web. Potentially, anyone else who has ShiftSpace installed will be able to see your message if they happen to discover it on a page.</p>
                 <p>But before we begin, make sure you're running <a href="http://mozilla.com/">Firefox</a>, that you've <a href="install.html">installed the ShiftSpace development environment</a>, that you have <a href="http://greasespot.net/">Greasemonkey enabled</a> and that you've installed the development userscript (this is available from the ShiftSpace status page, which might have a URL something like this: <tt>http://localhost/shiftspace/shiftspace.php</tt>). You also need to install the <a href="http://addons.mozilla.org/firefox/1843">Firebug extension</a> for Firefox. You currently need it for installing and uninstalling spaces (until we build a proper user interface) and it will also prove invaluable for debugging.</p>
-                <p>Finally, point your browser at the ShiftSpace Developer Sandbox.  This will probably be something like http://localhost/ShiftSpaceInstallDir/sandbox/index.php.</p>
+                <p>Finally, point your browser at the ShiftSpace Developer Sandbox.  This will probably be something like http://localhost/~yourusername/ShiftSpaceInstallDir/sandbox/index.php.</p>
             </div>
             <br />
             <div class="section">
@@ -216,7 +216,6 @@
                     <p>The Console allows you to enable and disable each shift on the page, but you may notice that when attempting to show or hide HelloWorld shifts, nothing happens. This is because ShiftSpace doesn't know which DOM element is the main view of your shift.  So there's still one last method you need to completely assimilate your space into the ShiftSpace framework. Add this line to the bottom of your Shift class's <tt>setup</tt> method:</p>
                     <pre>this.manageElement(this.element);</pre>
                     <p>This makes it explicit which DOM element represents the shift on the page. When you enable and disable a shift from the Console, the argument you pass to <tt>manageElement</tt> is the one that will be hidden and shown. Also, when a user clicks on this shift element, it will automatically get displayed in front of the other shifts on the page.</p>
-                    <p>On the topic of clutter, if you want to remove a shift from the page, click on the right disclosure triangle to gain access to shift actions like deletion.</p>
                 </div>
                 <br />
             </div>
@@ -256,7 +255,7 @@
                     <p>While we hesitate deviating from the venerable <em>Hello World</em> message of countless tutorials, changing the shift's message turns out to be a fairly straightforward process.</p>
                     <ol>
                         <li>
-                            <p>Add this default value to the top of your <tt>initialize</tt> method, after the call to <tt>this.parent</tt>:</p>
+                            <p>Add this default value to the top of your <tt>setup</tt> method, before the line <tt>this.build(json)</tt>, add this line just after the line where the Shift div is created:</p>
                             <pre>this.message = json.message || "Hello World!";</pre>
                         </li>
                         <li>
@@ -264,7 +263,7 @@
                             <pre>this.element.appendText(this.message);</pre>
                         </li>
                         <li>
-                            <p>Then add the following <tt>changeMessage</tt> method to your class:</p>
+                            <p>Then add the following <tt>changeMessage</tt> method to your class.  Be careful to separate your Shift object properties with commas, this a requirement of Javascript Object Notation (JSON).  Remember everything in a Javascript object is a property, it does not matter if it is a string, function, number, etc.:</p>
                             <pre>changeMessage: function() {
     var msg = prompt("Please enter a new message:", this.message);
     this.message = msg;
