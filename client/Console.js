@@ -1232,7 +1232,7 @@ var Console = new Class({
       var evt = new Event(_evt);
       if(evt.key == 'enter')
       {
-        newEntry.getElement('.summaryView').setHTML($(evt.target).getProperty('value'));
+        $(SSGetElementByClass('summaryView', newEntry)).setHTML($(evt.target).getProperty('value'));
         this.showShift(aShift.id);
         // defined in Core - David
         updateTitleOfShift(aShift.id, evt.target.getProperty('value'));
