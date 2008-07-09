@@ -74,28 +74,30 @@ var Console = new Class({
     
     //console.log('test resizer getStyle top: ' + this.resizer.getStyle('top'));
 
+    // to prevent things from dropping into the iframe.
+    this.resizeMask = new ShiftSpace.Element('div', {
+      styles: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        'z-index': 1000001,
+        cursor: 'ns-resize'
+      }
+    });
+
     //console.log('making resizer draggable');
     this.resizer.makeDraggable({
       limit: 
       {
         x: [25, 25]
       },
+      
       onStart: function() 
       {
         this.startDrag = this.resizer.getPosition().y;
         this.startHeight = this.frame.getSize().size.y;
-        // to prevent things from dropping into the iframe.
-        this.resizeMask = new ShiftSpace.Element('div', {
-          styles: {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            'z-index': 1000001,
-            cursor: 'ns-resize'
-          }
-        });
         this.resizeMask.injectInside(document.body);
       }.bind(this),
       
@@ -122,10 +124,29 @@ var Console = new Class({
     });
     
     // make the console resizable
-    this.frame.makeResizable({
-      handle: this.notifier,
-      modifiers: {x: null, y:'top'}
+    /*
+    this.notifier.makeDraggable({
+      modifiers: {x:null, y:'top'},
+      onStart: function() 
+      {
+        this.startDrag = this.notifier.getPosition().y;
+        this.startHeight = this.frame.getSize().size.y;
+        this.resizeMask.injectInside(document.body);
+      }.bind(this),
+      
+      onDrag: function() 
+      {
+        var dy = this.notifier.getPosition().y - this.startDrag;
+        this.frame.setStyle('height', this.startHeight - dy);
+        this.refresh();
+      }.bind(this),
+      
+      onComplete: function() {
+        this.resizeMask.remove();
+        //setValue('console.height', parseInt(this.frame.getStyle('height')));
+      }.bind(this)
     });
+    */
         
     var img = new ShiftSpace.Element('img', {
       src: server + 'images/Console/notifier-icon.png',
@@ -813,8 +834,14 @@ var Console = new Class({
   },
   
   buildWelcome: function() {
+    // add temporary welcome tab
     var pane = this.addTab('welcome', 'Welcome');
-    pane.setHTML('Welcome!');
+    // resize console
+    this.frame.setStyle('height', 480);
+    this.refresh();
+    // show the video
+    pane.setHTML('<embed src="http://blip.tv/play/tHyWlyMA" type="application/x-shockwave-flash" width="100%" height="100%" allowscriptaccess="always" allowfullscreen="true"></embed>');
+    // create close welcome tab button
   },
   
   handleLogin: function(json) {
@@ -960,6 +987,8 @@ var Console = new Class({
     }
     //console.log('cleaning up');
     this.resizer.setStyle('width', window.getWidth() - 50);
+    this.resizer.setStyle('top', this.frame.getStyle('top'));
+
     //console.log('cleaned');
     if(this.notifierFx)
     {

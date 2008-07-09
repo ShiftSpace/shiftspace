@@ -229,6 +229,8 @@ a:hover {
   color: #531400;
   background: transparent url(../images/Console/subtab-bg.gif) no-repeat;
   cursor: pointer;
+  -moz-user-select: none;
+  user-select: none;
 }
 
 .subtab-active {
@@ -381,4 +383,9 @@ input.submit:active {
 
 .uninstall {
   float: right;
+}
+
+#welcome *
+{
+  text-align: center;
 }
