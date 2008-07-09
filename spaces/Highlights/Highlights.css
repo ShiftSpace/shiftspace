@@ -111,7 +111,7 @@
     float: right;
 }
 
-.HighlightsCursor {
+#HighlightsCursor {
     background: transparent url(cursor.png) no-repeat;
     width: 21px;
     height: 20px;
