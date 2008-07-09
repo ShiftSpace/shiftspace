@@ -450,10 +450,13 @@ var Console = new Class({
       auth.removeClass('hover');
     });
     auth.addEvent('click', function(_evt) {
-      if (ShiftSpace.User.getUsername()) {
+      if (ShiftSpace.User.getUsername()) 
+      {
         ShiftSpace.User.logout();
-      } else {
-        //console.log('SHOW TAB');
+      } 
+      else 
+      {
+        console.log('SHOW TAB LOGIN');
         this.showTab('login');
       }
       //console.log('setup auth control');
@@ -504,7 +507,6 @@ var Console = new Class({
   
   setupAuthControl: function() {
     console.log('setupAuthControl');
-    var controls = $(this.doc.getElementById('controls'));
     var auth = $(this.doc.getElementById('auth'));
     if (!auth) {
       return;
@@ -707,21 +709,41 @@ var Console = new Class({
   },
   
   showTab: function(id) {
-    var tab = _$(this.doc.getElementById('tabs')).getElementsByClassName('active')[0];
+    console.log('>>>>>>>>>>>>>>>>>>>> SHOW TAB ' + id);
+
     // close the plugin menu if open
     if(this.pluginMenu && !$(this.pluginMenu).hasClass('SSDisplayNone')) this.pluginMenu.addClass('SSDisplayNone');
-    if (tab) {
-      $(tab).removeClass('active');
+
+    // get the current selected tab
+    var lastTab = _$(this.doc.getElementById('tabs')).getElementsByClassName('active')[0];
+
+    // if previous active tab deselect the tab and hide the tab content
+    if(lastTab)
+    {
+      var lastTabContentId = lastTab.getProperty('id').split('-').getLast();
+
+      // deselect
+      if (lastTab) 
+      {
+        $(lastTab).removeClass('active');
+      }
+
+      // hide the content pane
+      var lastTabContent = _$(this.doc.getElementById(lastTabContentId));
+      if (lastTabContent) 
+      {
+        $(lastTabContent).removeClass('active');
+      }
     }
-    var content = _$(this.doc.getElementById('scroller')).getElementsByClassName('active')[0];
-    if (content) {
-      $(content).removeClass('active');
-    }
+    
+    // make the new tab and tab content active
     $(this.doc.getElementById('tab-' + id)).addClass('active');
     $(this.doc.getElementById(id)).addClass('active');
   },
   
   removeTab: function(id) {
+    console.log('>>>>>>>>>>>>>>>>>>>>> REMOVE TAB ' + id);
+
     var tab = $(this.doc.getElementById('tab-' + id));
     if (tab) {
       tab.remove();
@@ -796,11 +818,15 @@ var Console = new Class({
   },
   
   handleLogin: function(json) {
+    console.log('>>>>>>>>>>>>>>>>> handle login');
+    console.log(json);
     if (json.status) {
-      this.showTab('shifts');
-      this.removeTab('login');
+      console.log('removing login tab');
       this.setupAuthControl();
+      console.log('showing shifts');
+      this.showTab('shifts');
       this.resetLogin();
+      this.removeTab('login');
     } else {
       this.showResponse('login_response', json.message);
     }
