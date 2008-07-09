@@ -7,16 +7,20 @@ var HighlightsSpace = ShiftSpace.Space.extend({
     },
     
     setup: function() {
+      // we can longer use bound functions as event handlder in FF3
+      // bound functions will throw a security error. Instead we just
+      // manually create a closure.
+      
       var self = this;
       
       this.mousemove = function(e) {
         self.cursor.style.left = (e.pageX + 6) + 'px';
         self.cursor.style.top = (e.pageY - 8) + 'px';
-      }.bind(this);
+      };
 
       this.mousedown = function(e) {
         self.cursor.style.display = 'none';
-      }.bind(this);
+      };
 
       this.highlight_end = function(e) {
         
@@ -67,8 +71,43 @@ var HighlightsSpace = ShiftSpace.Space.extend({
 
     showInterface: function() 
     {
-        this.parent();
-        this.container.removeClass('SSDisplayNone');
+      // need to call the parent first
+      this.parent();
+
+      this.container.removeClass('SSDisplayNone');
+      this.addHighlightEvents();
+    },
+
+    hideInterface: function() {
+      // call the parent first
+      this.parent();
+
+      if(this.container)
+      {
+        this.container.addClass('SSDisplayNone');
+        this.cursor.style.display = 'none';
+      }
+
+      this.removeHighlightEvents();
+    },
+    
+    addHighlightEvents: function()
+    {
+      console.log('addHighlightEvents >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      // we need to add mouse listening events here
+      window.addEvent('mousemove', this.mousemove);
+      window.addEvent('mousedown', this.mousedown);
+      window.addEvent('mouseup', this.highlight_end);
+      console.log('done adding events!');
+    },
+    
+    removeHighlightEvents: function()
+    {
+      console.log('removeHighlightEvents >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      // remove the mouse events
+      window.removeEvent('mousemove', this.mousemove);
+      window.removeEvent('mousedown', this.mousedown);
+      window.removeEvent('mouseup', this.highlight_end);      
     },
     
     buildInterface: function() {
@@ -125,10 +164,6 @@ var HighlightsSpace = ShiftSpace.Space.extend({
 
         this.cursor = document.body.appendChild(new ShiftSpace.Element('span', {
             'class': 'HighlightsCursor'}));
-        
-        document.addEventListener('mousemove', this.mousemove, false);
-        document.addEventListener('mousedown', this.mousedown, false);
-        document.addEventListener('mouseup', this.highlight_end, false);
     },
     
     surround_text_node: function(oNode, objRange, surroundingNode)
@@ -199,20 +234,6 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         this.hideHighlights();
         this.hideInterface();        
     },
-
-    hideInterface: function() {
-        if(this.container)
-        {
-          this.container.addClass('SSDisplayNone');
-          this.cursor.style.display = 'none';
-        }
-        
-        document.removeEventListener('mousemove', this.mousemove, false);
-        document.removeEventListener('mousedown', this.mousedown, false);
-        document.removeEventListener('mouseup', this.highlight_end, false);
-        
-        this.interfaceBuilt = false;
-    },
     
     hideHighlights: function() {
         // ignores the specific shift since only one highlight can be on at a given moment 
@@ -241,6 +262,7 @@ var HighlightsSpace = ShiftSpace.Space.extend({
 });
 
 var HighlightsShift = ShiftSpace.Shift.extend({
+  
     setup: function(json) {
         if(json.ranges){
           //replace __newline__ token with \n
@@ -252,6 +274,7 @@ var HighlightsShift = ShiftSpace.Shift.extend({
         this.ranges = json.ranges;
         this.summary = json.summary;
     },
+    
     encode: function() {
         //tokenize newline char with __newline__
         for(var i=0; i<this.ranges.length; i++){
@@ -263,6 +286,7 @@ var HighlightsShift = ShiftSpace.Shift.extend({
             summary: this.summary
         };
     },
+    
     show: function() {
         var space = this.getParentSpace();
         space.hideHighlights();
@@ -282,5 +306,6 @@ var HighlightsShift = ShiftSpace.Shift.extend({
         this.getParentSpace().hideHighlights();
     }
 });
+
 var Highlights = new HighlightsSpace(HighlightsShift);
 
