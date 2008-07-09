@@ -466,7 +466,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     
     // create the grabber guide
     this.grabber = new ShiftSpace.Element('div', {
-      'class': "SSNoteShiftGrabber SSHidden", 
+      'class': "SSNoteShiftGrabber SSHidden"
     });
     
     // create the close button
