@@ -78,7 +78,12 @@ var HighlightsSpace = ShiftSpace.Space.extend({
       // need to call the parent first
       this.parent();
 
-      this.container.removeClass('SSDisplayNone');
+      if(this.container)
+      {
+        this.container.removeClass('SSDisplayNone');
+        this.cursor.setStyle('display', 'block');
+      }
+
       this.addHighlightEvents();
     },
 
@@ -89,7 +94,7 @@ var HighlightsSpace = ShiftSpace.Space.extend({
       if(this.container)
       {
         this.container.addClass('SSDisplayNone');
-        this.cursor.style.display = 'none';
+        this.cursor.setStyle('display', 'none');
       }
 
       this.removeHighlightEvents();
@@ -166,8 +171,10 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         
         this.container = tableContainer;
 
-        this.cursor = document.body.appendChild(new ShiftSpace.Element('span', {
-            'id': 'HighlightsCursor'}));
+        this.cursor = new ShiftSpace.Element('span', {
+            'id': 'HighlightsCursor'
+        });
+        this.cursor.injectInside(document.body);
     },
     
     surround_text_node: function(oNode, objRange, surroundingNode)
