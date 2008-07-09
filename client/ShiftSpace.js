@@ -87,6 +87,12 @@ var ShiftSpace = new (function() {
     var plugins = {};
     var displayList = [];
     
+    // event proxy object since, ShiftSpace is not a MooTools class
+    var __eventProxyClass__ = new Class({});
+    __eventProxyClass__.implement(new Events);
+    var __eventProxy__ = new __eventProxyClass__();
+    console.log(__eventProxy__);
+    
     // An array of allocated Pin Widgets
     var __pinWidgets__ = [];
     
@@ -219,7 +225,7 @@ var ShiftSpace = new (function() {
           if(!x.isSelecting) x.hideMenu();
         });
       });
-
+      
       // create the pin selection bounding box
       SSCreatePinSelect();
       // check for page iframes
@@ -231,6 +237,15 @@ var ShiftSpace = new (function() {
       checkForContent();
       
       console.log('ShiftSpace initialize complete');
+    };
+    
+    // Add event behaviors
+    this.addEvent = function(eventType, callback) {
+      __eventProxy__.addEvent(eventType, callback);
+    };
+    
+    this.fireEvent = function(eventType, data) {
+      __eventProxy__.fireEvent(eventType, data);
     };
     
     // ===============================
@@ -689,7 +704,11 @@ var ShiftSpace = new (function() {
       console.log(installed);
       setValue('installed', installed);
       console.log('loading ' + space);
-      loadSpace(space, pendingShift);
+      
+      // let everyone else know
+      loadSpace(space, pendingShift, function() {
+        this.fireEvent('onSpaceInstall', space);
+      }.bind(this));
     };
     
     /*
@@ -707,6 +726,9 @@ var ShiftSpace = new (function() {
       delete installed[spaceName];
       setValue('installed', installed);
       this.clearCache(url);
+      
+      // let everyone else know
+      this.fireEvent('onSpaceUninstall', spaceName);
     };
 
     

@@ -3,6 +3,10 @@ var ShiftMenu = new Class({
   initialize: function(options) {
     this.menuVisible = false;
     this.spaces = {};
+    
+    // we want to know about install and uninstall events
+    ShiftSpace.addEvent('onSpaceInstall', this.addSpace.bind(this));
+    ShiftSpace.addEvent('onSpaceUninstall', this.removeSpace.bind(this));
   },
   
   buildMenu: function() {
@@ -91,6 +95,8 @@ var ShiftMenu = new Class({
   },
   
   removeSpace: function(spaceName) {
+    console.log(spaceName);
+    console.log(this.spaces[spaceName]);
     this.spaces[spaceName].remove();
   },
   

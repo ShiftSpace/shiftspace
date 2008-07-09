@@ -2,8 +2,13 @@ var Console = new Class({
   
   initialize: function(options) {
     this.shiftCount = 0;
+    
     //console.log('Console buildFrame');
     this.buildFrame();
+    
+    // we want to know about install and uninstall events
+    ShiftSpace.addEvent('onSpaceInstall', this.onSpaceInstall.bind(this));
+    ShiftSpace.addEvent('onSpaceUninstall', this.onSpaceUninstall.bind(this));
   },
     
   /*
@@ -614,6 +619,7 @@ var Console = new Class({
       padding: '10px 20px'
     });
     var form = sections[1].getElementsByTagName('form')[0];
+    form.id = 'installedSpacesForm';
     
     //console.log('buildSettings - done with form ' + form);
     
@@ -632,22 +638,44 @@ var Console = new Class({
       var space = spaceInput.value;
       if (space == '') return;
 
-      // FIXME: seems redundant - David
-      
-      var spaceURL = server + 'spaces/' + space + '/' + space + '.js';
-      installed[space] = spaceURL;
-      setValue('installed', installed);
-      
-      loadSpace(space, null, function(r) {
-        newSpace = $(this.installedSpace(space));
-        newSpace.injectBefore(form);
-        spaceInput.value = '';
-        ShiftSpace.ShiftMenu.addSpace(space);
-      }.bind(this));
+      // TODO: make a private method - David
+      ShiftSpace.installSpace(space);
       
     }.bind(this));
     
     //console.log('buildSettings - added form action');
+  },
+  
+  onSpaceInstall: function(spaceName)
+  {
+    console.log('onSpaceInstall');
+
+    var newSpace = $(this.installedSpace(spaceName));
+    newSpace.injectBefore(this.doc.getElementById('installedSpacesForm'));
+    var spaceInput = this.doc.getElementById('install-space');
+    spaceInput.value = '';
+    
+    this.updateIconsForSpace(spaceName);
+  },
+  
+  onSpaceUninstall: function(spaceName)
+  {
+    console.log('onSpaceUninstall');
+    
+    var spaceDiv = $(this.doc.getElementById('installed' + spaceName));
+    spaceDiv.remove();
+
+    this.updateIconsForSpace(spaceName);
+  },
+  
+  updateIconsForSpace: function(spaceName)
+  {
+    // update any unknown shift
+    var spaceShifts = $A(_$(this.doc).getElementsByClassName(spaceName));
+    spaceShifts.each(function(entry) {
+      var icon = ShiftSpace.info(spaceName).icon;
+      $(_$(entry).getElementByClassName('spaceTitle')).setStyle('background', 'transparent url(' + icon + ') no-repeat 3px 1px');
+    });    
   },
   
   installedSpace: function(id) {
@@ -666,10 +694,7 @@ var Console = new Class({
     
     $(uninstallButton).addEvent('click', function() {
       if (confirm('Are you sure you want to uninstall ' + id + '?')) {
-        delete installed[id];
-        setValue('installed', installed);
-        $(div).remove();
-        ShiftSpace.ShiftMenu.removeSpace(id);
+        ShiftSpace.uninstallSpace(id);
       }
     });
     
@@ -1145,6 +1170,8 @@ var Console = new Class({
     //console.log('adding - ' + aShift.id);
     // clone a model shift
     var newEntry = _$(this.modelShiftEntry.clone(true));
+    
+    newEntry.className += ' ' + aShift.space;
     
     //console.log(newEntry);
     
