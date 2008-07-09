@@ -10,6 +10,58 @@ var User = new Class({
 
 ShiftSpace.User = new User();
 
+// ==========================
+// = Iframe Cover Functions =
+// ==========================
+
+SSCheckForPageIframes = function()
+{
+  $$('iframe').filter(SSIsNotSSElement).each(function(aFrame) {
+    SSAddCover({cover:SSCreateCover(), frame:aFrame});
+  });
+}
+
+SSCreateCover = function()
+{
+  var cover = new ShiftSpace.Element('div', {
+    'class': "SSIframeCover"
+  });
+  cover.setStyle('display', 'none');
+  cover.injectInside(document.body);
+  return cover;
+}
+
+SSAddCover = function(newCover)
+{
+  // create covers if we haven't already
+  __iframeCovers__.push(newCover);
+}
+
+SSAddIframeCovers = function() {
+  __iframeCovers__.each(function(aCover) {
+    aCover.cover.setStyle('display', 'block');
+  });
+}
+
+SSUpdateIframeCovers = function() {
+  __iframeCovers__.each(function(aCover) {
+    var pos = aCover.frame.getPosition();
+    var size = aCover.frame.getSize().size;
+    aCover.cover.setStyles({
+      left: pos.x,
+      top: pos.y,
+      width: size.x+3,
+      height: size.y+3
+    });
+  });
+}
+
+SSRemoveIframeCovers = function() {
+  __iframeCovers__.each(function(aCover) {
+    aCover.cover.setStyle('display', 'none');
+  });
+}
+
 // NOTE: For Safari to keep SS extensions out of private scope - David
 ShiftSpace.__externals__ = {
   evaluate: function(external, object)
