@@ -10,6 +10,11 @@ var User = new Class({
 
 ShiftSpace.User = new User();
 
+function SSIsNewShift(shiftId)
+{
+  return (shiftId.search('newShift') != -1);
+}
+
 var __pendingShift__ = null;
 function SSSetPendingShift(shiftId)
 {
