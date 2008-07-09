@@ -14,6 +14,7 @@ ShiftSpace.User = new User();
 // = Iframe Cover Functions =
 // ==========================
 
+var __iframeCovers__ = [];
 SSCheckForPageIframes = function()
 {
   $$('iframe').filter(SSIsNotSSElement).each(function(aFrame) {
