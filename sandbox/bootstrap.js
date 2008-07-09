@@ -85,7 +85,7 @@ function SSDescribeException(_exception)
   return "Exception:{ " + temp.join(', ') +" }";
 }
 
-function registerSpace(instance) 
+function SSRegisterSpace(instance) 
 {
   var spaceName = instance.attributes.name;
   var spaceDir = 'spaces/' + spaceName + '/';

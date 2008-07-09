@@ -53,7 +53,7 @@ ShiftSpace.Space = new Class({
 
     if( valid )
     {
-      if(typeof registerSpace != 'undefined') registerSpace( this, this.attributes );
+      if(typeof SSRegisterSpace != 'undefined') SSRegisterSpace( this, this.attributes );
     }
     else
     {
@@ -62,6 +62,16 @@ ShiftSpace.Space = new Class({
     }
     console.log('/ / / / SETTING UP');
     this.setup();
+    
+    // check for a pending shift
+    var pendingShift = SSPendingShift();
+    if(pendingShift)
+    {
+      // clear it out
+      SSSetPendingShift(null);
+      // show the pending shift
+      showShift(pendingShift);
+    }
     
     return this;
   },

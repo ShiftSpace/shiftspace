@@ -3,6 +3,7 @@
 // @namespace      http://shiftspace.org/
 // @description    An open source layer above any website
 // @include        *
+// @exclude        http://metatron.shiftspace.org/api/sandbox/*
 // @require        http://metatron.shiftspace.org/code/trunk/client/Mootools.js
 // ==/UserScript==
 
@@ -104,6 +105,8 @@ var ShiftSpace = new (function() {
     
     // These are for the race condition between shifts loading and console setup
     var __pendingShifts__ = -1;
+    // A shift pending space load
+    var __pendingShift__ = null;
     var __consoleIsWaiting__ = false;
     
     // Stores initial data for plugins that are needed for the console at startup
@@ -251,7 +254,7 @@ var ShiftSpace = new (function() {
         {
           if(!spaces[options.name])
           {
-            loadSpace(options.name, function() {
+            loadSpace(options.name, null, function() {
               fn.apply(obj, args);
             });
           }
@@ -469,7 +472,8 @@ var ShiftSpace = new (function() {
     function SSSpaceForShift(shiftId)
     {
       //console.log('SSSpaceForShift');
-      return spaces[shifts[shiftId].space];
+      var shift = SSGetShift(shiftId);
+      return spaces[shift.space];
     }
     
     function userForShift(shiftId)
@@ -571,23 +575,6 @@ var ShiftSpace = new (function() {
     {
       return !SSIsSSElement(element);
     }
-    
-    // Tokenize Json strings for DB
-    function SSTokenize(str)
-    {
-      var cleanStr;
-      // convert new lines and carriage returns
-      return cleanStr;
-    }
-    this.Tokenize = SSTokenize;
-    
-    function SSSanitize(str)
-    {
-      var cleanStr;
-      // strip out anyform of script tag
-      return cleanStr;
-    }
-    this.Sanitize = SSSanitize;
     
     function SSPendingShifts()
     {
@@ -697,8 +684,11 @@ var ShiftSpace = new (function() {
     */
     this.installSpace = function(space, pendingShift) {
       var url = server + 'spaces/' + space + '/' + space + '.js';
+      console.log(url);
       installed[space] = url;
+      console.log(installed);
       setValue('installed', installed);
+      console.log('loading ' + space);
       loadSpace(space, pendingShift);
     };
     
@@ -962,17 +952,28 @@ var ShiftSpace = new (function() {
     */
     function showShift(shiftId) 
     {
-      //console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       try
       {
         // get the space and the shift
         var shift = SSGetShift(shiftId);
+        
+        // check to see if this is a known space
+        if (ShiftSpace.info(shift.space).unknown) 
+        {
+          if (confirm('Would you like to install the space ' + shift.space + '?')) 
+          {
+            ShiftSpace.installSpace(shift.space, shiftId);
+            return;
+          }
+        }
+        
         var space = SSSpaceForShift(shiftId);
       
         // load the space first
         if(!space)
         {
-          //console.log('space not loaded');
+          console.log('space not loaded ' + shift.space + ', ' + shiftId);
           loadSpace(shift.space, shiftId);
           return;
         }
@@ -992,31 +993,21 @@ var ShiftSpace = new (function() {
         // fix legacy content
         shiftJson.legacy = shift.legacy;
       
-        if (ShiftSpace.info(shift.space).unknown) 
+        // store a reference to this
+        // TODO: only add these if the user is logged in
+        __recentlyViewedShifts__[shift.id] = shiftJson;
+      
+        // wrap this in a try catch
+        try
         {
-          if (confirm('Would you like to install the space ' + shift.space + '?')) 
-          {
-            ShiftSpace.installSpace(shift.space, shiftId);
-          }
-        } 
-        else 
-        {
-          // store a reference to this
-          // TODO: only add these if the user is logged in
-          __recentlyViewedShifts__[shift.id] = shiftJson;
-        
-          // wrap this in a try catch
-          try
-          {
-            spaces[shift.space].showShift(shiftJson);
-          }
-          catch(err)
-          {
-            console.log('Exception: ' + Json.toString(err));
-          }
-        
-          focusShift(shift.id);
+          spaces[shift.space].showShift(shiftJson);
         }
+        catch(err)
+        {
+          console.log('Exception: ' + Json.toString(err));
+        }
+      
+        focusShift(shift.id);
 
         // call onShiftShow
         spaces[shift.space].onShiftShow(shiftId);
@@ -1173,6 +1164,16 @@ var ShiftSpace = new (function() {
     function SSGetShift(shiftId)
     {
       return shifts[shiftId];
+    }
+    
+    function SSSetPendingShift(shiftId)
+    {
+      __pendingShift__ = shiftId;
+    }
+    
+    function SSPendingShift()
+    {
+      return __pendingShift__;
     }
 
     // call to get just the shifts that are needed
@@ -1961,6 +1962,9 @@ var ShiftSpace = new (function() {
     */
     function loadSpace(space, pendingShift, callback) 
     {
+      // set the pending shift if there is one
+      SSSetPendingShift(pendingShift);
+      
       if(space)
       {
         if (typeof ShiftSpaceSandBoxMode != 'undefined') 
@@ -1969,18 +1973,15 @@ var ShiftSpace = new (function() {
           var newSpace = new Asset.javascript(url, {
             id: space
           });
-          if (pendingShift) 
-          {
-            showShift(pendingShift);
-          }
+
           if(callback) callback();
         }
         else 
         {
-          //console.log('loading file!');
+          console.log('loading space: ' + space);
           loadFile(installed[space], function(rx) {
             var err;
-            //console.log(space + ' Space loaded, rx.responseText:' + rx.responseText);
+            console.log(space + ' Space loaded, rx.responseText:' + rx.responseText);
             
             // TODO: for Safari the following does not work, we need a function in Space
             // that evals the actual space. - David
@@ -2001,12 +2002,6 @@ var ShiftSpace = new (function() {
               //throw exc;
             }
             
-            if (pendingShift)
-            {
-              console.log('Show a pending shift');
-              showShift(pendingShift);
-            }
-            
             if(callback) callback();
           });
         }
@@ -2015,17 +2010,17 @@ var ShiftSpace = new (function() {
     
     /*
     
-    registerSpace (private)
+    SSRegisterSpace (private)
     Called by the Space class to register with ShiftSpace.
     
     Parameters:
         instance - An instance object of the space.
     
     */
-    function registerSpace(instance) {
-      //console.log("registerSpace");
+    function SSRegisterSpace(instance) {
+      //console.log("SSRegisterSpace");
       var spaceName = instance.attributes.name;
-      //console.log('Register Space ===================================== ' + spaceName);
+      console.log('Register Space ===================================== ' + spaceName);
       spaces[spaceName] = instance;
       instance.addEvent('onShiftUpdate', saveShift.bind(this));
 
