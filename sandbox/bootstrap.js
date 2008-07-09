@@ -175,7 +175,7 @@ function loadStyle(url, callback, frame)
     // if it's a frame load it into the frame
     if(frame)
     {
-      var doc = frame.contentDocument;
+      var doc = frame.contentDocument || frame.document;
 
       if( doc.getElementsByTagName('head').length != 0 )
       {
