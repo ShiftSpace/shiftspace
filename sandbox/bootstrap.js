@@ -10,6 +10,16 @@ var User = new Class({
 
 ShiftSpace.User = new User();
 
+function SSSetPendingShift(shiftId)
+{
+  __pendingShift__ = shiftId;
+}
+
+function SSPendingShift()
+{
+  return __pendingShift__;
+}
+
 // ==========================
 // = Iframe Cover Functions =
 // ==========================
