@@ -1170,6 +1170,13 @@ var Console = new Class({
     newEntry.getElementByClassName('spaceTitle').innerHTML = aShift.space;
     $(newEntry.getElementByClassName('spaceTitle')).setStyle('background', 'transparent url(' + icon + ') no-repeat 3px 1px');
     
+    // remove the delete link if necessary
+    if(ShiftSpace.User.getUsername() != aShift.username)
+    {
+      var deleteSpan = $(newEntry.getElementByClassName('deleteSpan'));
+      if(deleteSpan) deleteSpan.remove();
+    }
+    
     var summary = newEntry.getElementByClassName('summary');
     
     var summaryView = summary.getElementByClassName('summaryView');
@@ -1253,7 +1260,8 @@ var Console = new Class({
     //console.log('override click behavior, delete node below');
     
     // we need to use SSGetElementByClass because controls was already MooTools wrapped
-    $(SSGetElementByClass('delete', controls)).addEvent('click', function(e) {
+    var deleteControl = $(SSGetElementByClass('delete', controls));
+    if(deleteControl) deleteControl.addEvent('click', function(e) {
       var event = new Event(e);
       event.preventDefault();
       if (confirm('Are you sure you want to delete that? There is no undo.')) 
@@ -1457,7 +1465,7 @@ var Console = new Class({
     var controls = $(this.doc.createElement('div'));
     controls.className = 'controls';
     // check to see if the the user matches
-    var controlOptions = 'Currently, all you can do is <a href="#delete" class="delete">delete this shift</a> or <a href="#edit" class="edit">edit this shift</a>, <a target="new" class="SSPermaLink">permalink</a>';
+    var controlOptions = 'Currently, all you can do is <span class="deleteSpan"><a href="#delete" class="delete">delete this shift</a>,</span> <a href="#edit" class="edit">edit this shift</a> or <a target="new" class="SSPermaLink">permalink</a>';
     controls.innerHTML = controlOptions;
     
     //console.log('controls added');
