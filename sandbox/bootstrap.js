@@ -10,6 +10,28 @@ var User = new Class({
 
 ShiftSpace.User = new User();
 
+// NOTE: For Safari to keep SS extensions out of private scope - David
+ShiftSpace.__externals__ = {
+  evaluate: function(external, object)
+  {
+    with(ShiftSpace.__externals__)
+    {
+      eval(external);
+    }
+  }
+}
+
+// For errors in Safari because many errors are silent in GreaseKit
+function SSDescribeException(_exception)
+{
+  var temp = [];
+  for(var prop in _exception)
+  {
+    temp.push(prop + ':' + _exception[prop]);
+  }
+  return "Exception:{ " + temp.join(', ') +" }";
+}
+
 function registerSpace(instance) 
 {
   var spaceName = instance.attributes.name;
