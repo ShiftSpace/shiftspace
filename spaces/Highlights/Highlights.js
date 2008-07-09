@@ -58,12 +58,16 @@ var HighlightsSpace = ShiftSpace.Space.extend({
     },
 
     addColor: function(style, selectedColor) {
-        var colorElement = this.colorsSpan.appendChild(new ShiftSpace.Element('span', {
-            'class': 'GenericHighlightsColor ' + style}));
+        var self = this;
+        
+        var colorElement = new ShiftSpace.Element('span', {
+            'class': 'GenericHighlightsColor ' + style
+        });
+        colorElement.injectInside(this.colorsSpan);
             
-        colorElement.addEventListener('click', function(e) {
-            this.selectColor(e.target);
-        }.bind(this), false);
+        colorElement.addEvent('click', function(e) {
+            self.selectColor(e.target);
+        });
   
         if (selectedColor)
             this.selectColor(colorElement, selectedColor);
@@ -163,7 +167,7 @@ var HighlightsSpace = ShiftSpace.Space.extend({
         this.container = tableContainer;
 
         this.cursor = document.body.appendChild(new ShiftSpace.Element('span', {
-            'class': 'HighlightsCursor'}));
+            'id': 'HighlightsCursor'}));
     },
     
     surround_text_node: function(oNode, objRange, surroundingNode)
