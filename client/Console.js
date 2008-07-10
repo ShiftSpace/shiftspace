@@ -181,7 +181,7 @@ var Console = new Class({
     });
     
     // Call private console is ready function
-    consoleIsReady();
+    SSConsoleIsReady();
   },
     
   /*

@@ -234,7 +234,7 @@ var ShiftSpace = new (function() {
       console.log('Grabbing content');
       
       // See if there's anything on the current page
-      checkForContent();
+      SSCheckForContent();
       
       console.log('ShiftSpace initialize complete');
     };
@@ -576,35 +576,42 @@ var ShiftSpace = new (function() {
     }
     this.isSSElement = SSIsSSElement;
     
+    
     function SSIsNotSSElement(element)
     {
       return !SSIsSSElement(element);
     }
+    
     
     function SSPendingShifts()
     {
       return __pendingShifts__;
     }
     
+    
     function SSSetPendingShifts(val)
     {
       __pendingShifts__ = val;
     }
+    
     
     function SSFocusedShiftId()
     {
       return __focusedShiftId__;
     }
     
+    
     function SSSetFocusedShiftId(newId)
     {
       __focusedShiftId__ = newId;
     }
     
+    
     function SSFocusedSpace()
     {
       return __focusedSpace__;
     }
+    
     
     function SSSetFocusedSpace(newSpace)
     {
@@ -687,13 +694,10 @@ var ShiftSpace = new (function() {
         pendingShift - A shift to show upon installation
         
     */
-    SSInstallSpace = function(space, pendingShift) {
+    function SSInstallSpace(space, pendingShift) {
       var url = server + 'spaces/' + space + '/' + space + '.js';
-      console.log(url);
       installed[space] = url;
-      console.log(installed);
       setValue('installed', installed);
-      console.log('loading ' + space);
       
       // let everyone else know
       loadSpace(space, pendingShift, function() {
@@ -710,7 +714,7 @@ var ShiftSpace = new (function() {
         space - the Space name to remove
     
     */
-    SSUninstallSpace = function(spaceName) {
+    function SSUninstallSpace(spaceName) {
       var url = installed[spaceName];
       delete spaces[spaceName];
       delete installed[spaceName];
@@ -888,15 +892,10 @@ var ShiftSpace = new (function() {
     
     function blurShift(shiftId)
     {
-      console.log('BLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLUUUUUUUUUUUUUUUUUUUUUUUUUURRRRRRRRRRRRRRRRR');
       // create a blur event so console gets updated
       var space = SSSpaceForShift(shiftId);
       space.blurShift(shiftId);
       space.onShiftBlur(shiftId);
-    }
-    
-    function scrollToShift(shiftId)
-    {
     }
 
     /*
@@ -1031,11 +1030,11 @@ var ShiftSpace = new (function() {
 
     /*
     
-    checkForContent (private)
+    SSCheckForContent (private)
     Sends a request to the server about the current page's ShiftSpace content.
     
     */
-    function checkForContent() {
+    function SSCheckForContent() {
       var params = {
         href: window.location.href
       };
@@ -1070,11 +1069,11 @@ var ShiftSpace = new (function() {
     
     /*
     
-    consoleIsReady (private)
+    SSConsoleIsReady (private)
     Called by the Console object when it finishes initializing.
     
     */
-    function consoleIsReady() {
+    function SSConsoleIsReady() {
       if (SSPendingShifts() == -1) {
         __consoleIsWaiting__ = true;
       } else if (SSPendingShifts() > 0) {
@@ -2063,10 +2062,10 @@ var ShiftSpace = new (function() {
         ShiftSpace.Console.blurShift(shiftId);
         ShiftSpace.Console.setTitleForShift(shifts[shiftId].summary);
       });
-      instance.addEvent('onShiftDestroy', removeShift);
+      instance.addEvent('onShiftDestroy', SSRemoveShift);
     }
     
-    function removeShift(shiftId)
+    function SSRemoveShift(shiftId)
     {
       delete shifts[shiftId];
     }
@@ -2327,25 +2326,6 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
-    /*
-    
-    includeScript (private)
-    A helper function used to execute dynamically-loaded JS. Loads and eval's
-    the contents of a Javascript file.
-    
-    Parameters:
-        url - The URL of the JS file to load
-    
-    */
-    function includeScript(url, callback) {
-      loadFile(url, function(rx) {
-        eval(rx.responseText, ShiftSpace);
-        if (typeof callback == 'function') {
-          callback(rx);
-        }
-      });
-    }
     
     /*
     
