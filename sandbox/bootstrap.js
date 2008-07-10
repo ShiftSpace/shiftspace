@@ -194,13 +194,14 @@ function loadStyle(url, callback, frame)
         type: 'text/css'
       });
 
-      try
+      
+      if(!document.all)
       {
         style.appendText(css); // You can not use setHTML on style elements in Safari - David
       }
-      catch(err)
+      else
       {
-        style.setText(css);
+        style.innerHTML = css;
       }
       
       style.injectInside(head);
