@@ -206,7 +206,7 @@ var ShiftSpace = new (function() {
       // need to think about plugin loading architecture! - this is going to involve a reworking of file loading
       if (typeof ShiftSpaceSandBoxMode != 'undefined') {
         for(var plugin in installedPlugins) {
-          loadPlugin(plugin);
+          SSLoadPlugin(plugin);
         }
       }
       
@@ -278,7 +278,7 @@ var ShiftSpace = new (function() {
         {
           if(!plugins[options.name])
           {
-            loadPlugin(options.name, function() {
+            SSLoadPlugin(options.name, function() {
               fn.apply(obj, options.args);
               
               if(options.method)
@@ -2072,12 +2072,12 @@ var ShiftSpace = new (function() {
     }
     
     /*
-      Function: loadPlugin (private)
+      Function: SSLoadPlugin (private)
         Loads a plugin
     */
-    function loadPlugin(plugin, callback) 
+    function SSLoadPlugin(plugin, callback) 
     {
-      //console.log('loadPlugin ' + plugin);
+      //console.log('SSLoadPlugin ' + plugin);
       if(plugins[plugins])
       {
         if(callback) callback();
@@ -2118,10 +2118,10 @@ var ShiftSpace = new (function() {
     }
     
     /*
-      Function: registerPlugin (private)
+      Function: SSRegisterPlugin (private)
         Register a plugin.
     */
-    function registerPlugin(plugin)
+    function SSRegisterPlugin(plugin)
     {
       plugins[plugin.attributes.name] = plugin;
       
