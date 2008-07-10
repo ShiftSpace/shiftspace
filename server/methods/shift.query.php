@@ -44,7 +44,6 @@ $shifts = $db->rows("
          s.href,
          s.space,
          s.summary,
-         s.content,
          s.created,
          u.username
   FROM shift AS s, user AS u
