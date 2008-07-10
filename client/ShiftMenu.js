@@ -5,8 +5,8 @@ var ShiftMenu = new Class({
     this.spaces = {};
     
     // we want to know about install and uninstall events
-    ShiftSpace.addEvent('onSpaceInstall', this.addSpace.bind(this));
-    ShiftSpace.addEvent('onSpaceUninstall', this.removeSpace.bind(this));
+    SSAddEvent('onSpaceInstall', this.addSpace.bind(this));
+    SSAddEvent('onSpaceUninstall', this.removeSpace.bind(this));
   },
   
   buildMenu: function() {

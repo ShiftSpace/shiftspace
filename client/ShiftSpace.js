@@ -240,11 +240,11 @@ var ShiftSpace = new (function() {
     };
     
     // Add event behaviors
-    this.addEvent = function(eventType, callback) {
+    function SSAddEvent(eventType, callback) {
       __eventProxy__.addEvent(eventType, callback);
     };
     
-    this.fireEvent = function(eventType, data) {
+    function SSFireEvent(eventType, data) {
       __eventProxy__.fireEvent(eventType, data);
     };
     
@@ -697,7 +697,7 @@ var ShiftSpace = new (function() {
       
       // let everyone else know
       loadSpace(space, pendingShift, function() {
-        this.fireEvent('onSpaceInstall', space);
+        SSFireEvent('onSpaceInstall', space);
       }.bind(this));
     };
     
@@ -719,7 +719,7 @@ var ShiftSpace = new (function() {
       SSClearCache(url);
       
       // let everyone else know
-      this.fireEvent('onSpaceUninstall', spaceName);
+      SSFireEvent('onSpaceUninstall', spaceName);
     };
 
     

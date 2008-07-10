@@ -7,8 +7,8 @@ var Console = new Class({
     this.buildFrame();
     
     // we want to know about install and uninstall events
-    ShiftSpace.addEvent('onSpaceInstall', this.onSpaceInstall.bind(this));
-    ShiftSpace.addEvent('onSpaceUninstall', this.onSpaceUninstall.bind(this));
+    SSAddEvent('onSpaceInstall', this.onSpaceInstall.bind(this));
+    SSAddEvent('onSpaceUninstall', this.onSpaceUninstall.bind(this));
   },
     
   /*
