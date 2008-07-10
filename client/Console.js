@@ -1234,8 +1234,8 @@ var Console = new Class({
       else 
       {
         // tell ShiftSpace to hide the shift
-        hideShift(aShift.id);
         newEntry.removeClass('active');
+        hideShift(aShift.id);
         this.hideEditTitleField(aShift.id);
       }
     }.bind(this));
