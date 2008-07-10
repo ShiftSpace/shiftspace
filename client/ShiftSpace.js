@@ -1177,7 +1177,7 @@ var ShiftSpace = new (function() {
     {
       shifts[shiftId] = $merge(shifts[shiftId], {
         content: shiftData.content
-      };
+      });
     }
     
     
