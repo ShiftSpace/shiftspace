@@ -639,7 +639,7 @@ var Console = new Class({
       if (space == '') return;
 
       // TODO: make a private method - David
-      ShiftSpace.installSpace(space);
+      SSInstallSpace(space);
       
     }.bind(this));
     
@@ -694,7 +694,7 @@ var Console = new Class({
     
     $(uninstallButton).addEvent('click', function() {
       if (confirm('Are you sure you want to uninstall ' + id + '?')) {
-        ShiftSpace.uninstallSpace(id);
+        SSUninstallSpace(id);
       }
     });
     

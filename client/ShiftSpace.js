@@ -687,7 +687,7 @@ var ShiftSpace = new (function() {
         pendingShift - A shift to show upon installation
         
     */
-    this.installSpace = function(space, pendingShift) {
+    SSInstallSpace = function(space, pendingShift) {
       var url = server + 'spaces/' + space + '/' + space + '.js';
       console.log(url);
       installed[space] = url;
@@ -710,7 +710,7 @@ var ShiftSpace = new (function() {
         space - the Space name to remove
     
     */
-    this.uninstallSpace = function(spaceName) {
+    SSUninstallSpace = function(spaceName) {
       var url = installed[spaceName];
       delete spaces[spaceName];
       delete installed[spaceName];
@@ -951,7 +951,7 @@ var ShiftSpace = new (function() {
         {
           if (confirm('Would you like to install the space ' + shift.space + '?')) 
           {
-            ShiftSpace.installSpace(shift.space, shiftId);
+            SSInstallSpace(shift.space, shiftId);
             return;
           }
         }
