@@ -730,7 +730,8 @@ Element.extend({
 	},
 
 	appendText: function(text){
-		this.appendChild(document.createTextNode(text));
+	  var tn = document.createTextNode(text);
+		this.appendChild(tn);
 		return this;
 	},
 
