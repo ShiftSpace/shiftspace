@@ -1151,7 +1151,21 @@ var ShiftSpace = new (function() {
     
     function SSGetShift(shiftId)
     {
-      return shifts[shiftId];
+      var theShift = shifts[shiftId];
+      
+      if(theShift)
+      {
+        return shifts[shiftId];
+      }
+      else
+      {
+        // get the shift throw an exception
+      }
+    }
+    
+    function SSLoadShift(shiftId)
+    {
+      // fetch a content from the network
     }
     
     function SSSetPendingShift(shiftId)
@@ -1165,25 +1179,10 @@ var ShiftSpace = new (function() {
     }
 
     // call to get just the shifts that are needed
-    function getShifts(shiftIds, callBack)
+    function SSGetShifts(shiftIds, callBack)
     {
       var newShiftIds = [];
       var finalJson = {};
-      
-      // figure out what the actual new shift ids are
-      // NOTE: actually not a good idea, as this might not be up to date - David
-      /*
-      shiftIds.each(function(id) {
-        if(!shifts[id]) 
-        {
-          newShiftIds.push(id)
-        }
-        else
-        {
-          finalJson[id] = shifts[id];
-        }
-      });
-      */
       
       newShiftIds = shiftIds;
 
@@ -1200,8 +1199,6 @@ var ShiftSpace = new (function() {
         json.shifts.each(function(x) {
           finalJson[x.id] = x;
         });
-        
-        //cleanShiftData(json);
         
         if(callBack) callBack(finalJson);
       });
@@ -1399,79 +1396,89 @@ var ShiftSpace = new (function() {
     Handles keydown events.
     
     */
-    var keyDownHandler = function(_event) {
-        var event = new Event(_event);
-        var now = new Date();
-        
-        //console.log('keyDownHandler');
-        
-        // Try to prevent accidental shift+space activation by requiring a 500ms
-        //   lull since the last keypress
-        if (keyState.keyDownTime &&
-            now.getTime() - keyState.keyDownTime < 500) {
-            keyState.keyDownTime = now.getTime();
-            return false;
+    function keyDownHandler(_event) {
+      var event = new Event(_event);
+      var now = new Date();
+
+      //console.log('keyDownHandler');
+
+      // Try to prevent accidental shift+space activation by requiring a 500ms
+      //   lull since the last keypress
+      if (keyState.keyDownTime &&
+          now.getTime() - keyState.keyDownTime < 500) 
+      {
+        keyState.keyDownTime = now.getTime();
+        return false;
+      }
+
+      if (event.code != 16) 
+      {
+        // Remember when last non-shift keypress occurred
+        keyState.keyDownTime = now.getTime();
+      } 
+      else if (!keyState.shiftPressed) 
+      {
+        // Remember that shift is down
+        keyState.shiftPressed = true;
+        // Show the menu if the user is signed in
+        if (ShiftSpace.ShiftMenu) 
+        {
+          keyState.shiftMenuShown = true;
+          ShiftSpace.ShiftMenu.show(keyState.x, keyState.y);
         }
-        
-        if (event.code != 16) {
-            // Remember when last non-shift keypress occurred
-            keyState.keyDownTime = now.getTime();
-        } else if (!keyState.shiftPressed) {
-            // Remember that shift is down
-            keyState.shiftPressed = true;
-            // Show the menu if the user is signed in
-            if (ShiftSpace.ShiftMenu) 
-            {
-                keyState.shiftMenuShown = true;
-                ShiftSpace.ShiftMenu.show(keyState.x, keyState.y);
-            }
+      }
+
+      // If shift is down and any key other than space is pressed,
+      // then definately shiftspace should not be invocated
+      // unless shift is let go and pressed again
+      if (keyState.shiftPressed &&
+        event.key != 'space' &&
+        event.code != 16) 
+      {
+        keyState.ignoreSubsequentSpaces = true;
+
+        if (keyState.shiftMenuShown) 
+        {
+          keyState.shiftMenuShown = false;
+          ShiftSpace.ShiftMenu.hide();
         }
-        
-        // If shift is down and any key other than space is pressed,
-        // then definately shiftspace should not be invocated
-        // unless shift is let go and pressed again
-        if (keyState.shiftPressed &&
-            event.key != 'space' &&
-            event.code != 16) {
-            keyState.ignoreSubsequentSpaces = true;
-            
-            if (keyState.shiftMenuShown) {
-                keyState.shiftMenuShown = false;
-                ShiftSpace.ShiftMenu.hide();
-            }
+      }
+
+      // Check for shift + space keyboard press
+      if (!keyState.ignoreSubsequentSpaces &&
+        event.key == 'space' &&
+        event.shift) 
+      {
+        //console.log('space pressed');
+        // Make sure a keypress event doesn't fire
+        keyState.cancelKeyPress = true;
+
+        /*
+        // Blur any focused inputs
+        var inputs = document.getElementsByTagName('input');
+        .merge(document.getElementsByTagName('textarea'))
+        .merge(document.getElementsByTagName('select'));
+        inputs.each(function(input) {
+          input.blur();
+        });
+        */
+
+        // Toggle the console on and off
+        if (keyState.consoleShown) 
+        {
+          keyState.consoleShown = false;
+          //console.log('hide console!');
+          ShiftSpace.Console.hide();
+        }
+        else 
+        {
+          //console.log('show console!');
+          keyState.consoleShown = true;
+          ShiftSpace.Console.show();
         }
 
-        // Check for shift + space keyboard press
-        if (!keyState.ignoreSubsequentSpaces &&
-            event.key == 'space' &&
-            event.shift) {
-            //console.log('space pressed');
-            // Make sure a keypress event doesn't fire
-            keyState.cancelKeyPress = true;
-            
-            /*
-            // Blur any focused inputs
-            var inputs = document.getElementsByTagName('input');
-                         .merge(document.getElementsByTagName('textarea'))
-                         .merge(document.getElementsByTagName('select'));
-            inputs.each(function(input) {
-                input.blur();
-            });
-            */
-            
-            // Toggle the console on and off
-            if (keyState.consoleShown) {
-              keyState.consoleShown = false;
-              //console.log('hide console!');
-              ShiftSpace.Console.hide();
-            } else {
-              //console.log('show console!');
-              keyState.consoleShown = true;
-              ShiftSpace.Console.show();
-            }
-
-        }
-    }.bind(this);
+      }
+    }
     
     
     /*
@@ -1628,11 +1635,11 @@ var ShiftSpace = new (function() {
     function SSPinMouseClickHandler(_evt) {
       var evt = new Event(_evt);
       evt.stop();
-      if(currentPinWidget)
+      if(__currentPinWidget__)
       {
         if(ShiftSpace.PinSelect.getParent()) ShiftSpace.PinSelect.remove();
-        removePinEvents();
-        currentPinWidget.userPinnedElement(__currentPinSelection__);
+        SSRemovePinEvents();
+        __currentPinWidget__.userPinnedElement(__currentPinSelection__);
       }
     }
     
@@ -1846,33 +1853,33 @@ var ShiftSpace = new (function() {
     }
     
     /*
-      Function: attachPinEvents
+      Function: SSAttachPinEvents
         Attaches the mouse events to handle Pin selection.
     */
-    function attachPinEvents() {
+    function SSAttachPinEvents() {
       window.addEvent('mouseover', SSPinMouseOverHandler);
       window.addEvent('click', SSPinMouseClickHandler);
       ShiftSpace.PinSelect.addEvent('mousemove', SSPinMouseMoveHandler);
     }
     
-    function removePinEvents() {
+    function SSRemovePinEvents() {
       window.removeEvent('mouseover', SSPinMouseOverHandler);
       window.removeEvent('click', SSPinMouseClickHandler);
       ShiftSpace.PinSelect.removeEvent('mousemove', SSPinMouseMoveHandler);
     }
     
     // hold the current active pin widget
-    var currentPinWidget = null;
-    function startPinSelection(widget) {
-      currentPinWidget = widget;
+    var __currentPinWidget__ = null;
+    function SSStartPinSelection(widget) {
+      __currentPinWidget__ = widget;
       // show the selection interface
-      attachPinEvents();
+      SSAttachPinEvents();
     }
     
-    function stopPinSelection() {
-      currentPinWidget = null;
+    function SSStopPinSelection() {
+      __currentPinWidget__ = null;
       if(ShiftSpace.PinSelect.getParent()) ShiftSpace.PinSelect.remove();
-      removePinEvents();
+      SSRemovePinEvents();
     }
     
     /*

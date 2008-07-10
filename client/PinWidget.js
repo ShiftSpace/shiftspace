@@ -200,7 +200,7 @@ var PinWidget = new Class({
         
         // start selecting
         this.iconImg.addClass('select');
-        startPinSelection(this);
+        SSStartPinSelection(this);
       }
       else
       {
@@ -208,7 +208,7 @@ var PinWidget = new Class({
         
         // stop selecting
         this.iconImg.removeClass('select');
-        stopPinSelection();
+        SSStopPinSelection();
       }
     }
   },

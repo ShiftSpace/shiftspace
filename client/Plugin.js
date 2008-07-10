@@ -131,7 +131,7 @@ ShiftSpace.Plugin = new Class({
   
   getShifts: function(shiftIds, callBack)
   {
-    getShifts(shiftIds, callBack);
+    SSGetShifts(shiftIds, callBack);
   },
   
   recentlyViewedShifts: function()
