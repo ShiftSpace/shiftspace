@@ -1175,7 +1175,9 @@ var ShiftSpace = new (function() {
     
     function SSSetShift(shiftId, shiftData)
     {
-      shifts[shiftId] = shiftData;
+      shifts[shiftId] = $merge(shifts[shiftId], {
+        content: shiftData.content
+      };
     }
     
     
@@ -1385,7 +1387,7 @@ var ShiftSpace = new (function() {
           space.addDeferredEdit(shiftId);
           return;
         }
-      
+        
         if(ShiftSpace.User.getUsername() == user)
         {
           var shiftJson = SSGetShiftContent(shiftId);
