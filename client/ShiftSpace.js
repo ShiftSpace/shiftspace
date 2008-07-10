@@ -167,6 +167,8 @@ var ShiftSpace = new (function() {
       debug = 0;
       
       // Load external scripts (pre-processing required)
+      // INCLUDE Exception.js
+      console.log('Exception.js loaded');
       // INCLUDE User.js
       console.log('User.js loaded');
       // INCLUDE Element.js
@@ -1148,6 +1150,7 @@ var ShiftSpace = new (function() {
       });
     }
     
+    
     function SSGetShift(shiftId)
     {
       var theShift = shifts[shiftId];
@@ -1159,18 +1162,36 @@ var ShiftSpace = new (function() {
       else
       {
         // get the shift throw an exception
+        SSLoadShift(shiftId);
+        
+        //throw new SSShiftContentNotLoadedException(new Error());
       }
     }
+    
     
     function SSLoadShift(shiftId)
     {
       // fetch a content from the network
     }
     
+    
+    function SSShiftIsLoaded(shiftId)
+    {
+      return SSHasProperty(SSGetShift(shiftId), ('content'));
+    }
+    
+    
+    function SSHasProperty(obj, prop)
+    {
+      return (typeof obj[prop] != 'undefined');
+    }
+    
+    
     function SSSetPendingShift(shiftId)
     {
       __pendingShift__ = shiftId;
     }
+    
     
     function SSPendingShift()
     {
