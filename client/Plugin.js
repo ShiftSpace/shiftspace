@@ -124,7 +124,7 @@ ShiftSpace.Plugin = new Class({
     {
       copy[prop] = temp[prop];
     }
-    copy.href = getUrlForShift(shiftId);
+    copy.href = SSGetUrlForShift(shiftId);
     
     return copy;
   },
@@ -136,8 +136,8 @@ ShiftSpace.Plugin = new Class({
   
   recentlyViewedShifts: function()
   {
-    console.log(getRecentlyViewedShifts());
-    return getRecentlyViewedShifts();
+    console.log(SSGetRecentlyViewedShifts());
+    return SSGetRecentlyViewedShifts();
   },
   
   delayedMenu: function()

@@ -408,7 +408,7 @@ var ShiftSpace = new (function() {
     {
       if(!SSIsNewShift(shiftId))
       {
-        var shift = shifts[shiftId];
+        var shift = SSGetShift(shiftId);
         var content = shift.content;
       
         if(content)
@@ -458,23 +458,13 @@ var ShiftSpace = new (function() {
       }
     }
     
-    function getAllShiftContent()
-    {
-      var allContent = {};
-      for(var shift in shifts)
-      {
-        allContent[shift] = SSGetShiftContent(shift);
-      }
-      return allContent;
-    }
-    
-    function getUrlForShift(shiftId)
+    function SSGetUrlForShift(shiftId)
     {
       //console.log(shifts[shiftId]);
-      return shifts[shiftId].href;
+      return SSGetShift(shiftId).href;
     }
     
-    function getRecentlyViewedShifts()
+    function SSGetRecentlyViewedShifts()
     {
       var copy = {};
       for(var shiftId in __recentlyViewedShifts__)
@@ -491,7 +481,7 @@ var ShiftSpace = new (function() {
       return spaces[shift.space];
     }
     
-    function userForShift(shiftId)
+    function SSUserForShift(shiftId)    
     {
       return shifts[shiftId].username;
     }
@@ -542,7 +532,7 @@ var ShiftSpace = new (function() {
       }
     }
     
-    function implementsProtocol(protocol, object)
+    function SSImplementsProtocol(protocol, object)
     {
       var result = true;
       var missing = [];
@@ -725,37 +715,13 @@ var ShiftSpace = new (function() {
       delete spaces[spaceName];
       delete installed[spaceName];
       setValue('installed', installed);
-      this.clearCache(url);
+      
+      SSClearCache(url);
       
       // let everyone else know
       this.fireEvent('onSpaceUninstall', spaceName);
     };
 
-    
-    // TODO: move this stuff to class User
-    // TODO: write actual method calls
-    // TODO: write documentation
-    this.getUser = function() {
-      return {
-        getUsername: function() {
-          return 'shiftspace';
-        },
-        getName: function() {
-          return 'ShiftSpace';
-        },
-        setPref: function(prefKey, prefValue) {
-          var key = this.getUsername() + '.pref.' + prefKey;
-          return setValue(key, prefValue);
-        },
-        getPref: function(prefKey, defaultValue) {
-          var key = this.getUsername() + '.pref.' + prefKey;
-          return getValue(key, defaultValue);
-        },
-        sendMessage: function(subject, message) {
-          return;
-        }
-      };
-    };
     
     function SSXmlHttpRequest(config) {
       GM_xmlhttpRequest(config);
@@ -763,7 +729,7 @@ var ShiftSpace = new (function() {
     
     /*
     
-    Function: clearCache
+    Function: SSClearCache
     Expunge previously stored files.
     
     Parameters:
@@ -771,7 +737,7 @@ var ShiftSpace = new (function() {
               files in the cache will be deleted.
     
     */
-    this.clearCache = function(url) {
+    function SSClearCache(url) {
       if (typeof url == 'string') {
         // Clear a specific file from the cache
         log('Clearing ' + url + ' from cache');
@@ -1134,7 +1100,7 @@ var ShiftSpace = new (function() {
             return;
           }
           
-          //console.log(Json.toString(json));
+          console.log(Json.toString(json));
           
           /*
           console.log('====================================================================');
@@ -1353,7 +1319,7 @@ var ShiftSpace = new (function() {
     function editShift(shiftId) 
     {
       var space = SSSpaceForShift(shiftId);
-      var user = userForShift(shiftId);
+      var user = SSUserForShift(shiftId);
       var shift = shifts[shiftId];
 
       // load the space first

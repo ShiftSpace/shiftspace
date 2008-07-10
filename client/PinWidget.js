@@ -25,7 +25,7 @@ var PinWidget = new Class({
   {
     this.delegate = delegate;
     
-    var message = implementsProtocol(this.protocol, delegate);
+    var message = SSImplementsProtocol(this.protocol, delegate);
     if(!message.result)
     {
       console.error('Error: delegate does not implement PinWidget protocol. Missing ' + message.missing.join(', ') + '.');
