@@ -164,7 +164,7 @@ function loadStyle(url, callback, frame)
   dir.pop();
   dir = dir.join('/');
   if (dir.substr(0, 7) != 'http://') 
-{
+  {
     dir = __server__ + dir;
   }
 
@@ -194,15 +194,7 @@ function loadStyle(url, callback, frame)
         type: 'text/css'
       });
 
-      
-      if(!document.all)
-      {
-        style.appendText(css); // You can not use setHTML on style elements in Safari - David
-      }
-      else
-      {
-        style.innerHTML = css;
-      }
+      style.appendText(css); // You can not use setHTML on style elements in Safari - David
       
       style.injectInside(head);
     }
