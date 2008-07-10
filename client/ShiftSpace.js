@@ -944,72 +944,81 @@ var ShiftSpace = new (function() {
     function showShift(shiftId) 
     {
       console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      try
+      if(!SSShiftIsLoaded(shiftId))
       {
-        // get the space and the shift
-        var shift = SSGetShift(shiftId);
-        
-        // check to see if this is a known space
-        if (ShiftSpace.info(shift.space).unknown) 
-        {
-          if (confirm('Would you like to install the space ' + shift.space + '?')) 
-          {
-            SSInstallSpace(shift.space, shiftId);
-            return;
-          }
-        }
-        
-        var space = SSSpaceForShift(shiftId);
-      
-        // load the space first
-        if(!space)
-        {
-          console.log('space not loaded ' + shift.space + ', ' + shiftId);
-          loadSpace(shift.space, shiftId);
-          return;
-        }
-
-        // extract the shift content
-        var shiftJson = SSGetShiftContent(shiftId);
-        shiftJson.id = shiftId;
-
-        // check to make sure the css is loaded first
-        if(!space.cssIsLoaded())
-        {
-          //console.log('css not loaded');
-          space.addDeferredShift(shiftJson);
-          return;
-        }
-      
-        // fix legacy content
-        shiftJson.legacy = shift.legacy;
-      
-        // store a reference to this
-        // TODO: only add these if the user is logged in
-        __recentlyViewedShifts__[shift.id] = shiftJson;
-      
-        // wrap this in a try catch
+        // first make sure that is loaded
+        SSLoadShift(shiftId, showShift.bind(ShiftSpace));
+        return;
+      }
+      else
+      {
         try
         {
-          spaces[shift.space].showShift(shiftJson);
+          // get the space and the shift
+          var shift = SSGetShift(shiftId);
+
+          // check to see if this is a known space
+          if (ShiftSpace.info(shift.space).unknown) 
+          {
+            if (confirm('Would you like to install the space ' + shift.space + '?')) 
+            {
+              SSInstallSpace(shift.space, shiftId);
+              return;
+            }
+          }
+
+          var space = SSSpaceForShift(shiftId);
+
+          // load the space first
+          if(!space)
+          {
+            console.log('space not loaded ' + shift.space + ', ' + shiftId);
+            loadSpace(shift.space, shiftId);
+            return;
+          }
+
+          // extract the shift content
+          var shiftJson = SSGetShiftContent(shiftId);
+          shiftJson.id = shiftId;
+
+          // check to make sure the css is loaded first
+          if(!space.cssIsLoaded())
+          {
+            //console.log('css not loaded');
+            space.addDeferredShift(shiftJson);
+            return;
+          }
+
+          // fix legacy content
+          shiftJson.legacy = shift.legacy;
+
+          // store a reference to this
+          // TODO: only add these if the user is logged in
+          __recentlyViewedShifts__[shift.id] = shiftJson;
+
+          // wrap this in a try catch
+          try
+          {
+            spaces[shift.space].showShift(shiftJson);
+          }
+          catch(err)
+          {
+            console.log('Exception: ' + SSDescribeException(err));
+          }
+
+          focusShift(shift.id);
+
+          // call onShiftShow
+          spaces[shift.space].onShiftShow(shiftId);
         }
         catch(err)
         {
-          console.log('Exception: ' + Json.toString(err));
-        }
-      
-        focusShift(shift.id);
+          console.log('Error: Could not show shift, ' + err);
+          SSShowErrorWindow(shiftId);
 
-        // call onShiftShow
-        spaces[shift.space].onShiftShow(shiftId);
-      }
-      catch(err)
-      {
-        console.log('Error: Could not show shift, ' + err);
-        SSShowErrorWindow(shiftId);
-        
-        // probably need to do some kind of cleanup
-        ShiftSpace.Console.hideShift(shiftId);
+          // probably need to do some kind of cleanup
+          ShiftSpace.Console.hideShift(shiftId);
+        }
       }
     }
     
@@ -1161,19 +1170,31 @@ var ShiftSpace = new (function() {
       {
         return shifts[shiftId];
       }
-      else
-      {
-        // get the shift throw an exception
-        SSLoadShift(shiftId);
-        
-        //throw new SSShiftContentNotLoadedException(new Error());
-      }
     }
     
     
-    function SSLoadShift(shiftId)
+    function SSSetShift(shiftId, shiftData)
+    {
+      shifts[shiftId] = shiftData;
+    }
+    
+    
+    function SSLoadShift(shiftId, callback)
     {
       // fetch a content from the network
+      var params = { shiftIds: shiftId };
+      serverCall.safeCall('shift.get', params, function(returnArray) {
+        if(returnArray && returnArray[0])
+        {
+          var shiftObj = returnArray[0];
+          SSSetShift(shiftObj.id, shiftObj);
+          
+          if(callback && $type(callback) == 'function')
+          {
+            callback(shiftObj.id);
+          }
+        }
+      });
     }
     
     
@@ -1209,16 +1230,18 @@ var ShiftSpace = new (function() {
       newShiftIds = shiftIds;
 
       // put these together
-      var params = { id: newShiftIds.join(',') };
+      var params = { shiftIds: newShiftIds.join(',') };
       
-      serverCall.safeCall('shift.query', params, function(json) {
+      serverCall.safeCall('shift.get', params, function(json) {
+        /*
         if (!json.status) {
           console.error('Error getting shifts: ' + json.message);
           return;
         }
+        */
         
         // should probably filter out any uncessary data
-        json.shifts.each(function(x) {
+        json.each(function(x) {
           finalJson[x.id] = x;
         });
         
@@ -1262,7 +1285,7 @@ var ShiftSpace = new (function() {
       }
       
       serverCall.safeCall('shift.update', params, function(json) {
-        console.log('returned shift.update! ' + Json.toString(json));
+        //console.log('returned shift.update! ' + Json.toString(json));
         if (!json.status) {
           console.error(json.message);
           return;
@@ -1337,41 +1360,55 @@ var ShiftSpace = new (function() {
     */
     function editShift(shiftId) 
     {
-      var space = SSSpaceForShift(shiftId);
-      var user = SSUserForShift(shiftId);
-      var shift = shifts[shiftId];
-
-      // load the space first
-      if(!space)
+      if(!SSShiftIsLoaded(shiftId))
       {
-        loadSpace(shift.space, shiftId, function() {
-          editShift(shiftId);
-        });
+        // first make sure that is loaded
+        SSLoadShift(shiftId, editShift.bind(ShiftSpace));
         return;
-      }
-      if(space && !space.cssIsLoaded())
-      {
-        space.addDeferredEdit(shiftId);
-        return;
-      }
-      
-      if(ShiftSpace.User.getUsername() == user)
-      {
-        var shiftJson = SSGetShiftContent(shiftId);
-
-        // show the interface
-        focusSpace(space, (shiftJson && shiftJson.position) || null);
-
-        // then edit it
-        space.editShift(shiftId);
-        space.onShiftEdit(shiftId);
-        
-        // focus the shift
-        focusShift(shiftId);
       }
       else
       {
-        window.alert("You do not have permission to edit this shift.");
+        var space = SSSpaceForShift(shiftId);
+        var user = SSUserForShift(shiftId);
+        var shift = shifts[shiftId];
+
+        // load the space first
+        if(!space)
+        {
+          loadSpace(shift.space, shiftId, function() {
+            editShift(shiftId);
+          });
+          return;
+        }
+        if(space && !space.cssIsLoaded())
+        {
+          space.addDeferredEdit(shiftId);
+          return;
+        }
+      
+        if(ShiftSpace.User.getUsername() == user)
+        {
+          var shiftJson = SSGetShiftContent(shiftId);
+
+          // show the interface
+          focusSpace(space, (shiftJson && shiftJson.position) || null);
+        
+          // show the shift first, this way edit and show are both atomic - David
+          showShift(shiftId);
+
+          // then edit it
+          space.editShift(shiftId);
+          space.onShiftEdit(shiftId);
+        
+          // focus the shift
+          focusShift(shiftId);
+          
+          SSFireEvent('onShiftEdit', shiftId);
+        }
+        else
+        {
+          window.alert("You do not have permission to edit this shift.");
+        }
       }
     }
     
@@ -1998,7 +2035,7 @@ var ShiftSpace = new (function() {
           console.log('loading space: ' + space);
           loadFile(installed[space], function(rx) {
             var err;
-            console.log(space + ' Space loaded, rx.responseText:' + rx.responseText);
+            //console.log(space + ' Space loaded, rx.responseText:' + rx.responseText);
             
             // TODO: for Safari the following does not work, we need a function in Space
             // that evals the actual space. - David

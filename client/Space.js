@@ -461,8 +461,12 @@ ShiftSpace.Space = new Class({
         // show the new shift and focus it
         if(!cShift.isVisible())
         {
+          // do some private show setup here, this way subclass don't have to call this.parent() in show
           cShift._show();
+          // call the actual show method
           cShift.show();
+          
+          // set some state flags
           cShift.setIsVisible(true);
           cShift.setIsBeingEdited(false);
         }

@@ -9,6 +9,7 @@ var Console = new Class({
     // we want to know about install and uninstall events
     SSAddEvent('onSpaceInstall', this.onSpaceInstall.bind(this));
     SSAddEvent('onSpaceUninstall', this.onSpaceUninstall.bind(this));
+    SSAddEvent('onShiftEdit', this.editShift.bind(this));
   },
     
   /*
@@ -23,7 +24,7 @@ var Console = new Class({
     this.frame = new ShiftSpace.Iframe({
       id: 'ShiftSpaceConsole',
       addCover: false,
-      styles: 
+      styles:
       {
         display: 'none',
         position: 'fixed',
@@ -1104,6 +1105,16 @@ var Console = new Class({
     console.log('exit SHOW SHIFT');
   },
   
+  editShift: function(id) {
+    var el = $(this.doc.getElementById(id));
+    if(el)
+    {
+      this.showShift(id);
+      el.removeClass('SSUserSelectNone');
+      this.showEditTitleField(id);
+    }
+  },
+  
   blurShift: function(id) {
     //console.log('CONSOLE BLLLLLLLLLLLLLLLLLLLLLLUR ' + id);
     this.hideEditTitleField(id);
@@ -1228,6 +1239,7 @@ var Console = new Class({
       if (!newEntry.hasClass('active')) 
       {
         newEntry.addClass('active');
+        
         // tell ShiftSpace to show the shift
         showShift(aShift.id);
       } 
@@ -1295,16 +1307,7 @@ var Console = new Class({
     $(SSGetElementByClass('edit', controls)).addEvent('click', function(e) {
       var event = new Event(e);
       event.preventDefault();
-      showShift(aShift.id);
       editShift(aShift.id);
-      
-      if(SSUserCanEditShift(aShift.id))
-      {
-        // show this shift  
-        this.showShift(aShift.id);
-        newEntry.removeClass('SSUserSelectNone');
-        this.showEditTitleField(aShift.id);
-      }
     }.bind(this));
     
     //console.log('summary edit key events');
