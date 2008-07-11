@@ -552,7 +552,7 @@ var Console = new Class({
       auth.removeClass('login');
       auth.addClass('logout');
       auth.setAttribute('title', 'Logout');
-      loginStatus.setText('Logged in as <b>' + ShiftSpace.User.getUsername() + '</b>');
+      loginStatus.setHTML('Logged in as <b>' + ShiftSpace.User.getUsername() + '</b>');
     } 
     else 
     {
