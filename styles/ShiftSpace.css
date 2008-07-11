@@ -70,6 +70,17 @@
   Console Notifier that sits outside the console
 */
 
+#ShiftSpaceConsole
+{
+  display: none;
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  overflow: hidden;
+  z-index: 1000001;
+}
+
 .SSConsoleNotifier
 {
   z-index: 1000003;

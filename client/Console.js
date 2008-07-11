@@ -30,14 +30,7 @@ var Console = new Class({
       addCover: false,
       styles:
       {
-        display: 'none',
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        width: '100%',
-        height: consoleHeight,
-        overflow: 'hidden',
-        'z-index': 1000001
+        height: consoleHeight
       },
       onload: function() 
       {
