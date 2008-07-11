@@ -82,6 +82,16 @@
   opacity: 0.9;
 }
 
+#SSConsoleResizer
+{
+  position: fixed;
+  bottom: 142px;
+  left: 25px;
+  height: 11px;
+  cursor: ns-resize;
+  z-index: 1000002;
+}
+
 #SSConsoleResizeMask
 {
   position: absolute;

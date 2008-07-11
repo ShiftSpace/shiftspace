@@ -59,18 +59,9 @@ var Console = new Class({
     
     //console.log('creating resizer');
     this.resizer = new ShiftSpace.Element('div', {
-      'id': 'SSShiftConsoleResizer',
-      'styles': 
-      {
-        position: 'fixed',
-        /*bottom: getValue('console.height', 150) - 8,*/
-        bottom: 142,
-        left: 25,
-        height: 11,
-        cursor: 'ns-resize',
-        'z-index': 1000002
-      }
+      'id': 'SSConsoleResizer'
     });
+    
     //console.log('injecting resizer');
     this.resizer.injectInside(document.body);
     //console.log('done injecting resizer');
