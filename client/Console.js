@@ -452,6 +452,7 @@ var Console = new Class({
     content.setHTML('<div class="outer"><div class="inner">' +
                     '<div id="top"><div id="tabs" class="SSUserSelectNone">' +
                     '<div id="controls">' +
+                    '<div id="loginStatus">You are not logged in</div>' +
                     '<div id="auth" class="button auth"><div class="image"></div></div>' +
                     '<div id="bugs" class="button bugs"><div class="image" title="File a bug report"></div></div>' +
                     '<div id="hide" class="button hide"><div class="image" title="Minimize console"></div></div>' +
@@ -519,9 +520,11 @@ var Console = new Class({
     //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABS');
     this.addTab('shifts', '0 shifts');
     this.addTab('settings', 'Settings', 'icon-settings.gif');
-    if (!ShiftSpace.User.getUsername()) {
+    
+    if (!ShiftSpace.User.isLoggedIn()) {
       this.addTab('login', 'Login');
     }
+    
     //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LOGIN');
     this.buildLogin();
     //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SETTINGS');
@@ -539,14 +542,20 @@ var Console = new Class({
       return;
     }
     //console.log('auth about to setup');
-    if (ShiftSpace.User.getUsername()) {
+    var loginStatus = $(this.doc.getElementById('loginStatus'));
+    if (ShiftSpace.User.isLoggedIn()) 
+    {
       auth.removeClass('login');
       auth.addClass('logout');
       auth.setAttribute('title', 'Logout');
-    } else {
+      loginStatus.setText('Logged in as ' + ShiftSpace.User.getUsername());
+    } 
+    else 
+    {
       auth.removeClass('logout');
       auth.addClass('login');
       auth.setAttribute('title', 'Login');
+      loginStatus.setText('You are not logged in');
     }
     //console.log('auth setup done');
   },
@@ -1205,6 +1214,8 @@ var Console = new Class({
     {
       var deleteSpan = $(newEntry.getElementByClassName('deleteSpan'));
       if(deleteSpan) deleteSpan.remove();
+      var editSpan = $(newEntry.getElementByClassName('editSpan'));
+      if(editSpan) editSpan.remove();
     }
     
     var summary = newEntry.getElementByClassName('summary');
@@ -1304,7 +1315,8 @@ var Console = new Class({
     //console.log('add edit link behavior');
     
     // Shift Editing from console
-    $(SSGetElementByClass('edit', controls)).addEvent('click', function(e) {
+    var editControl = $(SSGetElementByClass('edit', controls));
+    if(editControl) editControl.addEvent('click', function(e) {
       var event = new Event(e);
       event.preventDefault();
       editShift(aShift.id);
@@ -1487,7 +1499,7 @@ var Console = new Class({
     var controls = $(this.doc.createElement('div'));
     controls.className = 'controls';
     // check to see if the the user matches
-    var controlOptions = 'Currently, all you can do is <span class="deleteSpan"><a href="#delete" class="delete">delete this shift</a>,</span> <a href="#edit" class="edit">edit this shift</a> or <a target="new" class="SSPermaLink">permalink</a>';
+    var controlOptions = 'Currently, all you can do is <span class="deleteSpan"><a href="#delete" class="delete">delete this shift</a>,</span> <span class="editSpan"><a href="#edit" class="edit">edit this shift</a> or</span> <a target="new" class="SSPermaLink">permalink</a>';
     controls.innerHTML = controlOptions;
     
     //console.log('controls added');

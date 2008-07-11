@@ -389,3 +389,9 @@ input.submit:active {
 {
   text-align: center;
 }
+
+#loginStatus
+{
+  float: left;
+  margin-right: 5px;
+}
