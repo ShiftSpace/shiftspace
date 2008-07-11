@@ -82,6 +82,17 @@
   opacity: 0.9;
 }
 
+#SSConsoleResizeMask
+{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 1000001;
+  cursor: ns-resize;
+}
+
 .SSConsoleNotifier
 {
   z-index: 1000003;

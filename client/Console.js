@@ -79,15 +79,7 @@ var Console = new Class({
 
     // to prevent things from dropping into the iframe.
     this.resizeMask = new ShiftSpace.Element('div', {
-      styles: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        'z-index': 1000001,
-        cursor: 'ns-resize'
-      }
+      id: 'SSConsoleResizeMask'
     });
 
     //console.log('making resizer draggable');
