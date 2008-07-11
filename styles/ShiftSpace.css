@@ -79,6 +79,7 @@
   width: 100%;
   overflow: hidden;
   z-index: 1000001;
+  opacity: 0.9;
 }
 
 .SSConsoleNotifier
