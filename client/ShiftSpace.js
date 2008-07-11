@@ -230,6 +230,11 @@ var ShiftSpace = new (function() {
         });
       });
       
+      // Set up user event handlers
+      ShiftSpace.User.addEvent('onUserLogout', function() {
+        SSFireEvent('onUserLogout');
+      });
+      
       // create the pin selection bounding box
       SSCreatePinSelect();
       // check for page iframes
@@ -1250,6 +1255,28 @@ var ShiftSpace = new (function() {
         if(callBack) callBack(finalJson);
       });
     }
+    
+    
+    function SSGetPageShiftIdsForUser()
+    {
+      var shiftIds = [];
+      
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        var username = ShiftSpace.User.getUsername();
+        
+        for(shiftId in shifts)
+        {
+          if(shifts[shiftId].username == username)
+          {
+            shiftIds.push(shiftId);
+          }
+        }
+      }
+      
+      return shiftIds;
+    }
+    
     
     /*
     

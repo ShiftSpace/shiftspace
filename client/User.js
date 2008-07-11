@@ -1,44 +1,60 @@
 var User = new Class({
 
-  getUsername: function() {
+  getUsername: function() 
+  {
     return username;
   },
   
-  isLoggedIn: function(showErrorAlert) {
+  
+  isLoggedIn: function(showErrorAlert) 
+  {
     return (username != false);
   },
   
-  login: function(credentials, _callback) {
-    console.log('logging in the user!');
+  
+  login: function(credentials, _callback) 
+  {
     var callback = _callback;
     serverCall('user.login', credentials, function(json) {
-      console.log(json.status);
-      if (json.status) {
-        console.log(credentials.username);
+      if (json.status) 
+      {
         username = credentials.username;
         callback(json);
-      } else {
+      } 
+      else 
+      {
         callback(json);
       }
     }.bind(this));
   },
   
-  logout: function() {
+  
+  logout: function() 
+  {
     username = false;
     setValue('username', '');
     serverCall('user.logout');
+    
+    // TODO: User Object should not refer to Console - David
     ShiftSpace.Console.showResponse('login_response', 'You have been logged out.');
     ShiftSpace.Console.addTab('login', 'Login');
     ShiftSpace.Console.showTab('login');
+    
+    this.fireEvent('onUserLogout');
   },
   
-  join: function(userInfo, callback) {
+  
+  join: function(userInfo, callback) 
+  {
     serverCall('user.join', userInfo, function(json) {
-      if (json.status) {
+      if (json.status) 
+      {
         username = userInfo.username;
         setValue('username', userInfo.username);
         callback(json);
-      } else {
+      } 
+      else 
+      {
         callback(json);
       }
     }.bind(this));
@@ -46,4 +62,5 @@ var User = new Class({
 
 });
 
+User.implement(new Events);
 ShiftSpace.User = new User();

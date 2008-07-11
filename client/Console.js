@@ -6,10 +6,14 @@ var Console = new Class({
     //console.log('Console buildFrame');
     this.buildFrame();
     
-    // we want to know about install and uninstall events
+    // Attach some events that we care about
     SSAddEvent('onSpaceInstall', this.onSpaceInstall.bind(this));
     SSAddEvent('onSpaceUninstall', this.onSpaceUninstall.bind(this));
+    
     SSAddEvent('onShiftEdit', this.editShift.bind(this));
+    
+    SSAddEvent('onUserLogin', this.handleLogin.bind(this));
+    SSAddEvent('onUserLogout', this.handleLogout.bind(this));
   },
     
   /*
@@ -871,38 +875,53 @@ var Console = new Class({
     // create close welcome tab button
   },
   
+  
   handleLogin: function(json) {
-    console.log('>>>>>>>>>>>>>>>>> handle login');
-    console.log(json);
-    if (json.status) {
-      console.log('removing login tab');
+    if (json.status) 
+    {
       this.setupAuthControl();
-      console.log('showing shifts');
       this.showTab('shifts');
       this.resetLogin();
       this.removeTab('login');
-    } else {
+      
+      // update the controls
+      this.updateControlsForUsersShifts();
+    } 
+    else 
+    {
       this.showResponse('login_response', json.message);
     }
   },
   
+  
+  handleLogout: function()
+  {
+    this.updateControlsForUsersShifts();
+  },
+  
+  
   handleJoin: function(json) {
-    if (json.status) {
+    if (json.status) 
+    {
       this.buildWelcome();
       this.showTab('welcome');
       this.removeTab('login');
       this.setupAuthControl();
       this.resetJoin();
-    } else {
+    } 
+    else 
+    {
       this.showResponse('join_response', json.message);
     }
   },
+  
   
   resetLogin: function() {
     $(this.doc.getElementById('username')).value = '';
     $(this.doc.getElementById('password')).value = '';
     $(this.doc.getElementById('login_response')).setHTML('');
   },
+  
   
   resetJoin: function() {
     $(this.doc.getElementById('join_username')).value = '';
@@ -912,6 +931,7 @@ var Console = new Class({
     $(this.doc.getElementById('join_response')).setHTML('');
   },
   
+  
   showResponse: function(target, message) {
     if (this.frame.getSize().size.y < 175) {
       this.frame.setStyle('height', 175);
@@ -919,6 +939,7 @@ var Console = new Class({
     }
     $(this.doc.getElementById(target)).setHTML(message);
   },
+  
   
   createSubSections: function(target, sections) {
     var tabs = '';
@@ -1164,6 +1185,7 @@ var Console = new Class({
     }
   },
   
+
   setTitleForShift: function(id, title) {
     var el = _$(this.doc.getElementById(id));
     if(el)
@@ -1172,11 +1194,61 @@ var Console = new Class({
     }
   },
   
+  
   updateShift: function(shiftJson) {
     var entry = _$(this.doc.getElementById(shiftJson.id));
     
     $(entry.getElementByClassName('summary').getElementByClassName('summaryView')).setHTML(shiftJson.summary);
     $(entry.getElementByClassName('user')).setHTML(shiftJson.username);
+  },
+  
+  
+  updateShiftControl: function(shiftId, userOwnsShift)
+  {
+    var entry = _$(this.doc.getElementById(shiftId));
+    
+    if(entry)
+    {
+      var editSpan = $(entry.getElementByClassName('editSpan'));
+      var deleteSpan = $(entry.getElementByClassName('deleteSpan'));
+      
+      if(userOwnsShift)
+      {
+        editSpan.removeClass('SSDisplayNone');
+        deleteSpan.removeClass('SSDisplayNone');
+      }
+      else
+      {
+        editSpan.addClass('SSDisplayNone');
+        deleteSpan.addClass('SSDisplayNone');
+      }
+    }
+  },
+  
+  
+  updateControlsForUsersShifts: function()
+  {
+    var shiftIds = SSGetPageShiftIdsForUser();
+    
+    console.log('updateControlsForUsersShifts');
+    console.log(shiftIds);
+    
+    // user is logged out hide all controls
+    if(shiftIds.length == 0)
+    {
+      $A(_$(this.doc).getElementsByClassName('editSpan')).each(function(editSpan) {
+        $(editSpan).addClass('SSDisplayNone');
+      });
+      $A(_$(this.doc).getElementsByClassName('deleteSpan')).each(function(deleteSpan) {
+        $(deleteSpan).addClass('SSDisplayNone');
+      });
+      return;
+    }
+    
+    // user has just logged in update the controls of the user's shifts
+    shiftIds.each(function(shiftId) {
+      this.updateShiftControl(shiftId, true);
+    }.bind(this));
   },
   
   
@@ -1209,26 +1281,31 @@ var Console = new Class({
     newEntry.getElementByClassName('spaceTitle').innerHTML = aShift.space;
     $(newEntry.getElementByClassName('spaceTitle')).setStyle('background', 'transparent url(' + icon + ') no-repeat 3px 1px');
     
-    // remove the delete link if necessary
+    // remove the delete and hide the edit link if necessary
     if(ShiftSpace.User.getUsername() != aShift.username)
     {
       var deleteSpan = $(newEntry.getElementByClassName('deleteSpan'));
-      if(deleteSpan) deleteSpan.remove();
+      if(deleteSpan) deleteSpan.addClass('SSDisplayNone');
       var editSpan = $(newEntry.getElementByClassName('editSpan'));
-      if(editSpan) editSpan.remove();
+      if(editSpan) editSpan.addClass('SSDisplayNone');
     }
     
+    // grab the summary div
     var summary = newEntry.getElementByClassName('summary');
     
+    // udpate the summary view
     var summaryView = summary.getElementByClassName('summaryView');
     $(summaryView).setText(aShift.summary);
     
+    // update the summary input fiedl
     var summaryEdit = summary.getElementByClassName('summaryEdit');
     summaryEdit.setAttribute('value', aShift.summary);
     
+    // upate user name and created date
     newEntry.getElementByClassName('user').innerHTML = aShift.username;
     newEntry.getElementByClassName('posted').innerHTML = aShift.created; 
     
+    // set the permalink
     newEntry.getElementByClassName('SSPermaLink').setAttribute('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
     
     //console.log('main props set');
