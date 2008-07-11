@@ -1282,7 +1282,7 @@ var Console = new Class({
     $(newEntry.getElementByClassName('spaceTitle')).setStyle('background', 'transparent url(' + icon + ') no-repeat 3px 1px');
     
     // remove the delete and hide the edit link if necessary
-    if(ShiftSpace.User.getUsername() != aShift.username)
+    if(!SSUserCanEditShift(aShift.id))
     {
       var deleteSpan = $(newEntry.getElementByClassName('deleteSpan'));
       if(deleteSpan) deleteSpan.addClass('SSDisplayNone');

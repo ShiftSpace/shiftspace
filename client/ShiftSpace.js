@@ -473,6 +473,7 @@ var ShiftSpace = new (function() {
       return SSGetShift(shiftId).href;
     }
     
+    
     function SSGetRecentlyViewedShifts()
     {
       var copy = {};
@@ -483,6 +484,7 @@ var ShiftSpace = new (function() {
       return copy;
     }
     
+    
     function SSSpaceForShift(shiftId)
     {
       //console.log('SSSpaceForShift');
@@ -490,16 +492,25 @@ var ShiftSpace = new (function() {
       return spaces[shift.space];
     }
     
+    
     function SSUserForShift(shiftId)    
     {
       return shifts[shiftId].username;
     }
     
+    
+    function SSUserOwnsShift(shiftId)
+    {
+      return (SSUserForShift(shiftId) == ShiftSpace.User.getUsername());
+    }
+
+    
     function SSUserCanEditShift(shiftId)
     {
       return (ShiftSpace.User.isLoggedIn() &&
-              shifts[shiftId].username == ShiftSpace.User.getUsername());
+              SSUserOwnsShift(shiftId));
     }
+    
     
     function SSIsNewShift(shiftId)
     {
@@ -1415,7 +1426,7 @@ var ShiftSpace = new (function() {
           return;
         }
         
-        if(ShiftSpace.User.getUsername() == user)
+        if(SSUserCanEditShift(shiftId))
         {
           var shiftJson = SSGetShiftContent(shiftId);
 
@@ -2688,7 +2699,8 @@ var ShiftSpace = new (function() {
       // is this shift fixable, if so show the fix button
       var space = SSSpaceForShift(shiftId);
       var fixButton = __errorWindow__.getElement('.SSErrorWindowFix');
-      if(space && space.fix)
+
+      if(space && space.fix && SSUserCanEditShift(shiftId))
       {
         fixButton.removeClass('SSDisplayNone');
         fixButton.removeEvents();
