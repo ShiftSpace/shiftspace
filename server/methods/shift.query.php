@@ -45,7 +45,8 @@ $shifts = $db->rows("
          s.space,
          s.summary,
          s.created,
-         u.username
+         u.username,
+         s.status
   FROM shift AS s, user AS u
   WHERE $user_clause
     AND $shift_clause

@@ -531,6 +531,17 @@ var ShiftSpace = new (function() {
       return (shiftId.search('newShift') != -1);
     }
     
+    function SSSetShiftStatus(shiftId, newStatus) {
+      SSGetShift(shiftId).status = newStatus;
+      var params = {
+        id: shiftId,
+        status: newStatus
+      };
+      serverCall('shift.update', params, function() {
+        SSFireEvent('onShiftUpdate', shiftId);
+      });
+    }
+    
     // ==================
     // = Plugin Support =
     // ==================
@@ -973,7 +984,7 @@ var ShiftSpace = new (function() {
     */
     function showShift(shiftId) 
     {
-      console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      // console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       if(!SSShiftIsLoaded(shiftId))
       {
         // first make sure that is loaded
@@ -1010,7 +1021,9 @@ var ShiftSpace = new (function() {
           // extract the shift content
           var shiftJson = SSGetShiftContent(shiftId);
           shiftJson.id = shiftId;
-
+          
+          // console.log('foo -- - - -- - - --- - - -- - -- -- - -');
+          // console.log(shiftJson);
           // check to make sure the css is loaded first
           if(!space.cssIsLoaded())
           {
@@ -1390,7 +1403,7 @@ var ShiftSpace = new (function() {
     
     */
     function saveNewShift(shiftJson) {
-        
+      
       var space = spaces[shiftJson.space];
       
       var filters = shiftJson.filters;
@@ -1402,7 +1415,8 @@ var ShiftSpace = new (function() {
         summary: shiftJson.summary,
         content: Json.toString(shiftJson),
         version: space.attributes.version,
-        filters: Json.toString(filters)
+        filters: Json.toString(filters),
+        status: getValue('default_shift_status', 1)
       };
       
       serverCall.safeCall('shift.create', params, function(json) {
@@ -1414,6 +1428,7 @@ var ShiftSpace = new (function() {
         
         shiftJson.username = ShiftSpace.User.getUsername();
         shiftJson.created = 'Just posted';
+        shiftJson.status = getValue('default_shift_status', 1);
         
         // with the real value
         var shiftObj = space.shifts[shiftJson.id];

@@ -176,6 +176,10 @@ a:hover {
   background: transparent url(../images/Console/controls-bg.gif) repeat-x;
 }
 
+.controls a {
+  cursor: pointer;
+}
+
 .clear {
   clear: both;
 }

@@ -19,6 +19,12 @@ $space = $db->escape($_POST['space']);
 $content = $db->escape($content);
 $version = $db->escape($_POST['version']);
 
+if (isset($_POST['status']) && is_numeric($_POST['status'])) {
+  $status = $db->escape($_POST['status']);
+} else {
+  $status = 1;
+}
+
 // Check to make sure we have everything
 if (empty($href)) {
   respond(0, "Please specify an 'href' argument.");
@@ -47,9 +53,9 @@ $url_slug = generate_slug();
 $db->query("
   INSERT INTO shift
   (user_id, space, href, summary, content,
-   url_slug, created, modified, version)
+   url_slug, created, modified, version, status)
   VALUES ($user->id, '$space', '$href', '$summary', '$content',
-          '$url_slug', '$created', '$modified', '$version')
+          '$url_slug', '$created', '$modified', '$version', '$status')
 ");
 
 // Done

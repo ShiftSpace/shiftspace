@@ -14,6 +14,8 @@ var Console = new Class({
     
     SSAddEvent('onUserLogin', this.handleLogin.bind(this));
     SSAddEvent('onUserLogout', this.handleLogout.bind(this));
+    
+    SSAddEvent('onShiftUpdate', this.updateShiftPrivacy.bind(this));
   },
     
   /*
@@ -554,8 +556,14 @@ var Console = new Class({
   
   buildSettings: function() {
     var sections = this.createSubSections('settings', ['General', 'Spaces', 'Account']);
+    var default_shift_status = getValue('default_shift_status', 1);
+    if (default_shift_status == 1) {
+      default_shift_status = ' checked';
+    } else {
+      default_shift_status = '';
+    }
     $(sections[0]).setHTML('<div class="form-column">' +
-                        '<div class="input"><div id="default_privacy" class="checkbox"></div>' +
+                        '<div class="input"><div id="default_privacy" class="checkbox' + default_shift_status + '"></div>' +
                         '<div class="label">Set my shifts public by default</div>' +
                         '<br class="clear" /></div>' +
                         '<div class="input"><label for="server-input">Server address:</label>' +
@@ -565,6 +573,14 @@ var Console = new Class({
     //console.log('buildSettings - done setting html');
     
     $(SSGetElementByClass('form-column', sections[0])).setStyle('padding-top', 20);
+    
+    $(this.doc.getElementById('default_privacy')).addEvent('onChange', function() {
+      if (this.hasClass('checked')) {
+        setValue('default_shift_status', 1);
+      } else {
+        setValue('default_shift_status', 2);
+      }
+    });
     
     //console.log('form style set');
     
@@ -579,6 +595,7 @@ var Console = new Class({
         {
           checkbox.addClass('checked');
         }
+        checkbox.fireEvent('onChange');
       });
       
       $(checkbox.nextSibling).addEvent('click', function() {
@@ -1213,9 +1230,24 @@ var Console = new Class({
         editSpan.addClass('SSDisplayNone');
         deleteSpan.addClass('SSDisplayNone');
       }
+      this.updateShiftPrivacy(shiftId);
     }
   },
   
+  updateShiftPrivacy: function(shiftId) {
+    var entry = _$(this.doc.getElementById(shiftId));
+    var shiftId = entry.getAttribute('id');
+    var shiftStatus = parseInt(SSGetShift(shiftId).status);
+    var privacyStatus = $(entry.getElementByClassName('privacyStatus'));
+    var privacyControl = $(entry.getElementByClassName('privacyControl'));
+    if (shiftStatus == 1) {
+      privacyStatus.setHTML('This shift is public');
+      privacyControl.setHTML('Turn private');
+    } else {
+      privacyStatus.setHTML('This shift is private');
+      privacyControl.setHTML('Turn public');
+    }
+  },
   
   updateControlsForUsersShifts: function()
   {
@@ -1385,6 +1417,17 @@ var Console = new Class({
       }
     });
     
+    var privacyControl = $(SSGetElementByClass('privacyControl', controls));
+    if(privacyControl) privacyControl.addEvent('click', function(e) {
+      var event = new Event(e);
+      event.preventDefault();
+      if (privacyControl.innerHTML.indexOf('private') != -1) {
+        SSSetShiftStatus(aShift.id, 2);
+      } else {
+        SSSetShiftStatus(aShift.id, 1);
+      }
+    });
+    
     //console.log('add edit link behavior');
     
     // Shift Editing from console
@@ -1430,6 +1473,8 @@ var Console = new Class({
       //console.log($(this.doc.getElementById('shifts')));
       $(newEntry).injectInside($(this.doc.getElementById('shifts')));
     }
+    
+    this.updateShiftPrivacy(aShift.id);
     
     //console.log('--------------------------------- adding plugin icons');
     this.addPluginIconForShift(aShift.id);
@@ -1572,7 +1617,7 @@ var Console = new Class({
     var controls = $(this.doc.createElement('div'));
     controls.className = 'controls';
     // check to see if the the user matches
-    var controlOptions = '<span class="privacySpan"><strong class="privacyStatus">This shift is public</strong>. <a href="#privacy" class="privacy">Turn private</a>. </span>' +
+    var controlOptions = '<span class="privacySpan"><strong class="privacyStatus">This shift is public</strong>. <a href="#privacy" class="privacyControl">Turn private</a>. </span>' +
                          'Shift actions: <a target="new" class="SSPermaLink">link to shift</a>' +
                          '<span class="editSpan">, <a href="#edit" class="edit">edit shift</a></span>' +
                          '<span class="deleteSpan">, <a href="#delete" class="delete">delete shift</a>.</span>';
