@@ -2,6 +2,11 @@ var TrailNav = new Class({
  initialize : function( json, options )
  {
    this.setOptions( options );
+   
+   console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+   console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+   console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+   console.log(Json.toString(json));
 
    // add the loading icon
    this.showLoader();
