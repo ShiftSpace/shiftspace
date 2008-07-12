@@ -610,7 +610,7 @@ ShiftSpace.Shift = new Class({
   
   getAuthor: function()
   {
-    SSGetAuthorForShift(this.getId());
+    return SSGetAuthorForShift(this.getId());
   },
   
   /*
