@@ -256,11 +256,11 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       'class': "SSUserSelectNone"
     });
     this.controls.setHTML('                                                    \
-    <div id="trailPermaLink" class="trailPermaLink" style="border:none"></div> \
     <input type="text" id="trail-title" class="SSTrailControl"/>               \
-    <div style="float:right;">permalink</div>                                  \
+    <span style="float:left; margin-left: 5px; color: #f63b01;">permalink</span> \
+    <div id="trailPermaLink" class="trailPermaLink" style="float:left; border:none"></div> \
     <div id="trail-title-limited" class="SSUserSelectNone"></div>              \
-    <div id="trail-close" class="SSUserSelectNone">                            \
+    <div id="trail-close" style="margin-left: 10px;" class="SSUserSelectNone"> \
     </div>                                                                     \
     <div class="SSTrailControl">                                               \
       <input type="button" value="Cancel" id="trail-cancel" />                 \
