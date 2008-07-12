@@ -952,6 +952,8 @@ var ShiftSpace = new (function() {
     */
     function focusSpace(space, position) 
     {
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOCUS SPACE');
+
       var lastFocusedSpace = SSFocusedSpace();
       
       if(lastFocusedSpace && lastFocusedSpace != space)
@@ -985,7 +987,7 @@ var ShiftSpace = new (function() {
     function showShift(shiftId) 
     {
       // console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      if(!SSShiftIsLoaded(shiftId))
+      if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
       {
         // first make sure that is loaded
         SSLoadShift(shiftId, showShift.bind(ShiftSpace));
@@ -1462,7 +1464,7 @@ var ShiftSpace = new (function() {
     */
     function editShift(shiftId) 
     {
-      if(!SSShiftIsLoaded(shiftId))
+      if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
       {
         // first make sure that is loaded
         SSLoadShift(shiftId, editShift.bind(ShiftSpace));
