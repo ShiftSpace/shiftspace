@@ -102,8 +102,11 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       data, 
       function(json) 
       {
+        $('trail-save-feedback').setText('saved at ' + (new Date()).toString().split('GMT')[0]);
+        
         this.onTrailSave(json);
         cb(json);
+        // notify of focused shift change
       }.bind(this)
     );
   },
@@ -252,8 +255,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         
     // the control bar at the top
     this.controls = new ShiftSpace.Element('div', {
-      'id': "trail-controls",
-      'class': "SSUserSelectNone"
+      'id': "trail-controls"
     });
     this.controls.setHTML('                                                    \
     <span id="SSTrailsIcon" style="float: left"></span>                        \
