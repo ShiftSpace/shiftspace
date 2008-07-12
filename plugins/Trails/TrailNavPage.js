@@ -59,17 +59,22 @@ var TrailNavPage = new Class({
                                '<div class="TrailPageDescriptionLink">' +
                                this.href +
                                '</div>');
+                               
     this.descriptionEl.setStyles({
       visibility: 'hidden',
       display: 'block'
     });
+    
     this.descriptionEl.inject( document.body );
+    
     var divs = this.descriptionEl.getElementsByTagName('div');
     var title = divs[1];
     var user = divs[3];
+    
     if (title.offsetWidth > 255 - user.offsetWidth) {
       title.style.width = (255 - user.offsetWidth) + 'px';
     }
+    
     this.descriptionEl.setStyles({
       visibility: 'visible',
       display: 'none'
