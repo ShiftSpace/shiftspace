@@ -22,6 +22,7 @@ For more info about Greasemonkey, go to www.greasespot.net
 
 Avital says: "I will only grow vegetables if I love to grow vegetables."
 Mushon says: "Make it a Dorongle!"
+David says: "I am against smart!"
 
 Script: shiftspace.user.js
     ShiftSpace: An Open Source layer above any webpage
