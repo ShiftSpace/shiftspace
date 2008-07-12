@@ -23,8 +23,7 @@ var Console = new Class({
   
   */
   buildFrame: function() {
-    //var consoleHeight = getValue('console.height', 150);
-    var consoleHeight = 150;
+    var consoleHeight = Math.min(getValue('console.height', 150), 150);
     this.frame = new ShiftSpace.Iframe({
       id: 'ShiftSpaceConsole',
       addCover: false,
@@ -59,7 +58,10 @@ var Console = new Class({
     
     //console.log('creating resizer');
     this.resizer = new ShiftSpace.Element('div', {
-      'id': 'SSConsoleResizer'
+      'id': 'SSConsoleResizer',
+      'style': {
+        'bottom': consoleHeight - 5
+      }
     });
     
     //console.log('injecting resizer');
@@ -96,7 +98,7 @@ var Console = new Class({
       
       onComplete: function() {
         this.resizeMask.remove();
-        //setValue('console.height', parseInt(this.frame.getStyle('height')));
+        setValue('console.height', parseInt(this.frame.getStyle('height')));
       }.bind(this)
       
     });
@@ -1185,16 +1187,19 @@ var Console = new Class({
     
     if(entry)
     {
+      var privacySpan = $(entry.getElementByClassName('privacySpan'));
       var editSpan = $(entry.getElementByClassName('editSpan'));
       var deleteSpan = $(entry.getElementByClassName('deleteSpan'));
       
       if(userOwnsShift)
       {
+        privacySpan.removeClass('SSDisplayNone');
         editSpan.removeClass('SSDisplayNone');
         deleteSpan.removeClass('SSDisplayNone');
       }
       else
       {
+        privacySpan.addClass('SSDisplayNone');
         editSpan.addClass('SSDisplayNone');
         deleteSpan.addClass('SSDisplayNone');
       }
@@ -1217,6 +1222,9 @@ var Console = new Class({
       });
       $A(_$(this.doc).getElementsByClassName('deleteSpan')).each(function(deleteSpan) {
         $(deleteSpan).addClass('SSDisplayNone');
+      });
+      $A(_$(this.doc).getElementsByClassName('privacySpan')).each(function(privacySpan) {
+        $(privacySpan).addClass('SSDisplayNone');
       });
       return;
     }
@@ -1260,10 +1268,12 @@ var Console = new Class({
     // remove the delete and hide the edit link if necessary
     if(!SSUserCanEditShift(aShift.id))
     {
-      var deleteSpan = $(newEntry.getElementByClassName('deleteSpan'));
-      if(deleteSpan) deleteSpan.addClass('SSDisplayNone');
+      var privacySpan = $(newEntry.getElementByClassName('privacySpan'));
+      if(privacySpan) privacySpan.addClass('SSDisplayNone');
       var editSpan = $(newEntry.getElementByClassName('editSpan'));
       if(editSpan) editSpan.addClass('SSDisplayNone');
+      var deleteSpan = $(newEntry.getElementByClassName('deleteSpan'));
+      if(deleteSpan) deleteSpan.addClass('SSDisplayNone');
     }
     
     // grab the summary div
@@ -1552,7 +1562,11 @@ var Console = new Class({
     var controls = $(this.doc.createElement('div'));
     controls.className = 'controls';
     // check to see if the the user matches
-    var controlOptions = 'Currently, all you can do is <span class="deleteSpan"><a href="#delete" class="delete">delete this shift</a>,</span> <span class="editSpan"><a href="#edit" class="edit">edit this shift</a> or</span> <a target="new" class="SSPermaLink">permalink</a>';
+    var controlOptions = '<span class="privacySpan"><strong class="privacyStatus">This shift is public</strong>. <a href="#privacy" class="privacy">Turn private</a>. </span>' +
+                         'Shift actions: <a target="new" class="SSPermaLink">link to shift</a>' +
+                         '<span class="editSpan">, <a href="#edit" class="edit">edit shift</a></span>' +
+                         '<span class="deleteSpan">, <a href="#delete" class="delete">delete shift</a>.</span>';
+                         
     controls.innerHTML = controlOptions;
     
     //console.log('controls added');
