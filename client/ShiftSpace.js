@@ -1026,7 +1026,9 @@ var ShiftSpace = new (function() {
           // TODO: only add these if the user is logged in
           if(ShiftSpace.User.isLoggedIn())
           {
-            __recentlyViewedShifts__[shift.id] = shiftJson;
+            __recentlyViewedShifts__[shift.id] = SSGetShiftData(shiftId);
+            console.log('__recentlyViewedShifts__');
+            console.log(__recentlyViewedShifts__);
             // store the recently viewed shifts
             setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', __recentlyViewedShifts__);
           }
@@ -1048,7 +1050,7 @@ var ShiftSpace = new (function() {
         }
         catch(err)
         {
-          console.log('Error: Could not show shift, ' + err);
+          console.log('Error: Could not show shift, ' + SSDescribeException(err));
           SSShowErrorWindow(shiftId);
 
           // probably need to do some kind of cleanup
@@ -1100,7 +1102,6 @@ var ShiftSpace = new (function() {
           
           // load the recently viewed shifts
           __recentlyViewedShifts__ = getValue(json.username+'.recentlyViewedShifts', {});
-          console.log(Json.toString(__recentlyViewedShifts__));
           
           if (__consoleIsWaiting__) 
           {
@@ -1221,6 +1222,7 @@ var ShiftSpace = new (function() {
       return {
         id : shift.id,
         title : shift.summary,
+        summary: shift.summary,
         space: shift.space,
         href : shift.href,
         user : shift.username
