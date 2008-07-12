@@ -256,7 +256,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       'class': "SSUserSelectNone"
     });
     this.controls.setHTML('                                                    \
-    <div id="SSTrailsIcon"></div>                                              \
+    <span id="SSTrailsIcon" style="float: left"></span>                        \
     <input type="text" id="trail-title" class="SSTrailControl"/>               \
     <span style="float:left; margin-left: 5px; color: #f63b01; margin-top: 4px;">link to trail</span> \
     <div id="trailPermaLink" class="trailPermaLink" style="float:left; border:none; margin-top: 2px;"></div> \
