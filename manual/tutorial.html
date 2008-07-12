@@ -275,17 +275,17 @@ attachEvents: function()
                     <ol>
                         <li>
                             <p>Add this default value to the top of your <tt>setup</tt> method, before the line <tt>this.build(json)</tt>, add this line just after the line where the Shift div is created:</p>
-                            <pre>this.message = json.message || "Hello World!";</pre>
+                            <pre>this.messageValue = json.messageValue || "Hello World!";</pre>
                         </li>
                         <li>
-                            <p>Next, change <tt>build</tt> to reflect this new <tt>message</tt> property:</p>
-                            <pre>this.element.appendText(this.message);</pre>
+                            <p>Next, change <tt>build</tt> to reflect this new <tt>messageValue</tt> property:</p>
+                            <pre>this.element.appendText(this.messageValue);</pre>
                         </li>
                         <li>
                             <p>Then add the following <tt>changeMessage</tt> method to your class.  Be careful to separate your Shift object properties with commas, this a requirement of Javascript Object Notation (JSON).  Remember everything in a Javascript object is a property, it does not matter if it is a string, function, number, etc.:</p>
                             <pre>changeMessage: function() {
-    var msg = prompt("Please enter a new message:", this.message);
-    this.message = msg;
+    var msg = prompt("Please enter a new message:", this.messageValue);
+    this.messageValue = msg;
     this.element.setHTML(msg);
     this.save();
 }</pre>
@@ -299,8 +299,8 @@ attachEvents: function()
                             <pre>encode: function() {
     var pos = this.element.getPosition();
     return {
-        summary: this.message,
-        message: this.message,
+        summary: this.messageValue,
+        message: this.messageValue,
         position: pos
     };
 }</pre>
@@ -324,7 +324,7 @@ attachEvents: function()
 
 var HelloWorldShift = ShiftSpace.Shift.extend({
     setup: function(json) {
-        this.message = json.message || "Hello World!";
+        this.messageValue = json.messageValue || "Hello World!";
         this.build(json);
         this.save();
         this.manageElement(this.element);
@@ -332,7 +332,7 @@ var HelloWorldShift = ShiftSpace.Shift.extend({
     
     build: function(json) {
         this.element = new ShiftSpace.Element('div');
-        this.element.appendText(this.message);
+        this.element.appendText(this.messageValue);
         this.element.setStyles({
             'font': '12px verdana, sans-serif',
             'position': 'absolute',
@@ -352,8 +352,8 @@ var HelloWorldShift = ShiftSpace.Shift.extend({
     },
     
     changeMessage: function() {
-        var msg = prompt("Please enter a new message:", this.message);
-        this.message = msg;
+        var msg = prompt("Please enter a new message:", this.messageValue);
+        this.messageValue = msg;
         this.element.setHTML(msg);
         this.save();
     },
@@ -361,8 +361,8 @@ var HelloWorldShift = ShiftSpace.Shift.extend({
     encode: function() {
         var pos = this.element.getPosition();
         return {
-            summary: this.message,
-            message: this.message,
+            summary: this.messageValue,
+            message: this.messageValue,
             position: pos
         };
     }
