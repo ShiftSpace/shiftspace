@@ -1215,6 +1215,12 @@ var ShiftSpace = new (function() {
     }
     
     
+    function SSGetAuthorForShift(shiftId)
+    {
+      return SSGetShift(shiftId).username;
+    }
+    
+    
     // returns a copy of the shift data
     function SSGetShiftData(shiftId)
     {

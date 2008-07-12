@@ -595,14 +595,22 @@ ShiftSpace.Shift = new Class({
     }
   },
   
+  
   setTitle : function(newTitle)
   {
     this.__title__ = newTitle;
   },
   
+  
   getTitle: function()
   {
     return this.__title__;
+  },
+  
+  
+  getAuthor: function()
+  {
+    SSGetAuthorForShift(this.getId());
   },
   
   /*
