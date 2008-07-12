@@ -1044,7 +1044,7 @@ var ShiftSpace = new (function() {
           focusShift(shift.id);
 
           // call onShiftShow
-          spaces[shift.space].onShiftShow(shiftId);
+          space.onShiftShow(shiftId);
         }
         catch(err)
         {
@@ -1066,13 +1066,13 @@ var ShiftSpace = new (function() {
         shiftId - The ID of the shift to hide.
     
     */
-    function hideShift(shiftId) {
-      //console.log('hideShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      var shift = shifts[shiftId];
-      spaces[shift.space].hideShift(shiftId);
-      
-      // call onShiftHide
-      spaces[shift.space].onShiftHide(shiftId);
+    function hideShift(shiftId) 
+    {
+      var shift = SSGetShift(shiftId);
+      var space = SSSpaceForShift(shiftId);
+
+      space.hideShift(shiftId);
+      space.onShiftHide(shiftId);
     }
     
 
