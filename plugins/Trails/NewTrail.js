@@ -20,6 +20,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     // load the interface first
     this.showInterface();
+    
     // load the shift with the trail focused
     var trailJson = {};
     trailJson[focusedShift] = this.getShift(focusedShift);
@@ -74,6 +75,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     }
   },
   
+  
   trailShiftsLoaded : function(theShifts)
   {
     for(var a in this.trailData)
@@ -83,6 +85,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.setCurrentTrail(new Trail(this.focusedShift, this.trailData));
     this.updateInterface();
   },
+  
   
   saveTrail: function(trail, cb)
   {
@@ -107,11 +110,13 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     );
   },
   
+  
   onTrailSave: function(json)
   {
     // do some stuff
     this.currentTrailInfo.trailId = json.trailId;
   },
+  
   
   deleteTrail: function(trailId, cb)
   {
@@ -128,14 +133,17 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     )
   },
   
+  
   onTrailDelete: function(json)
   {
   },
+  
   
   newTrail: function(shiftId)
   {
     this.createTrail(shiftId);
   },
+  
   
   trailsWithShift: function(shiftId, cb)
   {
@@ -186,6 +194,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       cb(menuItems);
     }.bind(this));
   },
+  
   
   setCurrentTrail: function(newTrail)
   {

@@ -27,9 +27,19 @@ var Console = new Class({
     this.frame = new ShiftSpace.Iframe({
       id: 'ShiftSpaceConsole',
       addCover: false,
+      /* set the styles here so that users doesn't see the console because of css load delay */
       styles:
       {
-        height: consoleHeight
+        height: 150,
+        display: 'none',
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        overflow: 'hidden',
+        'z-index': '1000001',
+        opacity: 0.9,
+        height: '150px'
       },
       onload: function() 
       {

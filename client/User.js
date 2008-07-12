@@ -20,6 +20,7 @@ var User = new Class({
       {
         username = credentials.username;
         callback(json);
+        this.fireEvent('onUserLogin');
       } 
       else 
       {

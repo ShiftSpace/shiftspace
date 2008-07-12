@@ -232,9 +232,21 @@ var ShiftSpace = new (function() {
       });
       
       // Set up user event handlers
+      ShiftSpace.User.addEvent('onUserLogin', function() {
+        // clear out recently viewed shifts on login
+        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', {});
+      });
       ShiftSpace.User.addEvent('onUserLogout', function() {
         SSFireEvent('onUserLogout');
       });
+      
+      // grab the recently viewed shifts
+      /*
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        getValue('recentlyViewedShifts')        
+      }
+      */
       
       // create the pin selection bounding box
       SSCreatePinSelect();
@@ -413,6 +425,7 @@ var ShiftSpace = new (function() {
 
       return el;
     }
+    
     
     function SSGetShiftContent(shiftId)
     {
@@ -1011,7 +1024,12 @@ var ShiftSpace = new (function() {
 
           // store a reference to this
           // TODO: only add these if the user is logged in
-          __recentlyViewedShifts__[shift.id] = shiftJson;
+          if(ShiftSpace.User.isLoggedIn())
+          {
+            __recentlyViewedShifts__[shift.id] = shiftJson;
+            // store the recently viewed shifts
+            setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', __recentlyViewedShifts__);
+          }
 
           // wrap this in a try catch
           try
@@ -1077,7 +1095,13 @@ var ShiftSpace = new (function() {
         
         if (json.username) 
         {
+          // Set private user variable
           setUsername(json.username);
+          
+          // load the recently viewed shifts
+          __recentlyViewedShifts__ = getValue(json.username+'.recentlyViewedShifts', {});
+          console.log(Json.toString(__recentlyViewedShifts__));
+          
           if (__consoleIsWaiting__) 
           {
             //console.log('remote login tab set up auth control');
@@ -1129,7 +1153,7 @@ var ShiftSpace = new (function() {
             return;
           }
           
-          console.log(Json.toString(json));
+          //console.log(Json.toString(json));
           
           /*
           console.log('====================================================================');
@@ -1187,6 +1211,20 @@ var ShiftSpace = new (function() {
       {
         return shifts[shiftId];
       }
+    }
+    
+    
+    // returns a copy of the shift data
+    function SSGetShiftData(shiftId)
+    {
+      var shift = SSGetShift(shiftId);
+      return {
+        id : shift.id,
+        title : shift.summary,
+        space: shift.space,
+        href : shift.href,
+        user : shift.username
+      };
     }
     
     

@@ -102,6 +102,7 @@ ShiftSpace.Plugin = new Class({
     }
   },
   
+  
   exitFullScreen: function() {
     if(SSCanExitFullScreen() && ShiftSpaceIsHidden())
     {
@@ -117,7 +118,8 @@ ShiftSpace.Plugin = new Class({
   // this isn't good needs to be generalized
   getShift: function(shiftId)
   {
-    var temp = SSGetShiftContent(shiftId);
+    // heh, no reason to copy now SSGetShiftData returns a copy
+    var temp = SSGetShiftData(shiftId);
     var copy = {};
     
     for(var prop in temp)
@@ -129,16 +131,19 @@ ShiftSpace.Plugin = new Class({
     return copy;
   },
   
+  
   getShifts: function(shiftIds, callBack)
   {
     SSGetShifts(shiftIds, callBack);
   },
+  
   
   recentlyViewedShifts: function()
   {
     console.log(SSGetRecentlyViewedShifts());
     return SSGetRecentlyViewedShifts();
   },
+  
   
   delayedMenu: function()
   {

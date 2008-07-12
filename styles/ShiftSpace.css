@@ -72,15 +72,6 @@
 
 #ShiftSpaceConsole
 {
-  display: none;
-  position: fixed;
-  bottom: 0px;
-  left: 0px;
-  width: 100%;
-  overflow: hidden;
-  z-index: 1000001;
-  opacity: 0.9;
-  height: 150px;
 }
 
 #SSConsoleResizer
