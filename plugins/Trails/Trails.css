@@ -465,7 +465,10 @@ div.TrailPageRemove:hover
   position: absolute;
   display: none;
   color: #E7E4A4;
-  z-index: 1000002;
+  z-index: 1000002
+  font-family: verdana;
+  font-size: 11px;
+  line-height: 16px;
 }
 
 .TrailNavPageDescription .TrailPageDescriptionLink
