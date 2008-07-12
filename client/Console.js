@@ -555,7 +555,7 @@ var Console = new Class({
   },
   
   buildSettings: function() {
-    var sections = this.createSubSections('settings', ['General', 'Spaces', 'Account']);
+    var sections = this.createSubSections('settings', ['General', 'Spaces']);
     var default_shift_status = getValue('default_shift_status', 1);
     if (default_shift_status == 1) {
       default_shift_status = ' checked';
