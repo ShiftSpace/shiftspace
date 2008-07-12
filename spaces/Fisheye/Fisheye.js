@@ -368,7 +368,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 
 
     loadJavascripts	: function(path, dir, callback) {
-	if (ShiftSpace.xmlhttpRequest === undefined)
+	if (this.xmlhttpRequest === undefined)
 	  return false;
 	url=feRoot + dir + "/" + path;
 	this.rebuildLock();
@@ -427,22 +427,38 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	}
     },
 
-    renderRange: function(reRange) {
-	var oSpan = new ShiftSpace.Element('span');
-	oSpan.style.color = "red";
-	oSpan.style.display = "inline";
-	oSpan.appendChild(document.createTextNode("F"));
-	if (reRange.insertNode) {
-	    reRange.insertNode(oSpan);
-	    var pos = oSpan.getPosition();
+
+    updatePosition: function() {
+	    var pos = this.anchoredIcon.getPosition();
 	    this.element.setStyles({
 	      'position': 'absolute',
 	      left : pos.x,
 	      top : pos.y,
 	    });
+    },
+
+    renderRange: function(reRange) {
+	var oSpan = new ShiftSpace.Element('div');
+	this.anchoredIcon = oSpan;
+	this.refreshStyle(oSpan);
+	this.renderClass.renderIcon(this, oSpan);
+	oSpan.addEvent('mouseover', this.onMouseIn.bind(this));
+	if (this.posRange) {
+	  if (this.posRange.insertNode) {
+	      oSpan.style.display = "inline";
+	      this.posRange.insertNode(oSpan);
+	      this.updatePosition();
+	  } else {
+	      this.log("tried to render invalid range");
+	  }
 	} else {
-	    this.log("tried to render invalid range");
-	}
+	    oSpan.setStyles({
+	      'position': 'absolute',
+	      left : this.json.position.x,
+	      top : this.json.position.y
+	    });
+            oSpan.injectInside(document.body);
+        }
     },
 
 
@@ -474,6 +490,9 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	this.json = json;
 
 	this.loadSettings();
+    },
+
+    continueInitialize: function() {
 
 	// XXX: how to handle default language?
 	if (!this.settings.language)
@@ -482,14 +501,14 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	// Static data
 	this.iconText = "F";
 
-	this.loadStoredData(json);
+	this.loadStoredData(this.json);
 
 	// The we sometimes need to access these modes directly in code
 	this.MODE_DISPLAY = 0;
 	this.MODE_EDIT = 1;
 	this.mode = this.MODE_DISPLAY;
 
-        this.build(json);
+        this.build(this.json);
 
 	this.rebuildLock();
 	
@@ -512,7 +531,6 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	this.rebuildUnlock();
 
 	this.getWebPage(feRoot + "layout/settings.html", function(response) {
-		this.log("GOT SETTINGS LAYOUT '" + response.responseText + "'");
 		this.settingsLayout = response.responseText;
 	}.bind(this));
 
@@ -520,6 +538,10 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	    this.setMode (this.MODE_EDIT);
 
 	this.manageElement(this.element);
+
+	// Hidden until mouseover XXX: take edit/havesaved into account?  seems to work as is....
+	if (this.posRange)
+          this.element.addClass('FisheyeHidden');
     },
 
 
@@ -549,8 +571,8 @@ var FisheyeShift = ShiftSpace.Shift.extend({
         this.submitterBox.injectInside(this.detailsBox);
     },
 
-    refreshStyle: function() {
-        this.element.setStyles({
+    refreshStyle: function(target) {
+        target.setStyles({
             'font': '16px verdana, sans-serif',
 	    'font-weight': 'bold',
             'padding':  '2px 2px 2px 2px',
@@ -584,7 +606,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	if (this.settings.hiddenAuthors[this.shiftAuthor()]) 
 	    return;
 
-	this.refreshStyle();
+	this.refreshStyle(this.element);
 
 	// Render icon into top of element
 	this.renderClass.renderIcon(this, container);
@@ -647,7 +669,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
     },
 
     loggedIn : function() {
-	return this.getUsername();
+	return ShiftSpace.User.isLoggedIn();
     },
 
     shiftAuthor : function() {
@@ -656,22 +678,13 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 
     // currently this is just used to hide settings as it seems
     // settings aren't saved in proxy mode XXX: true
+    // XXX: isProxy will no longer work
     isProxy : function() {
-        if (ShiftSpace.User === undefined) {
-	  return true;
-        }
 	return false;
     },
 
     getUsername : function() {
-        if (ShiftSpace.User === undefined) {
-	  return null; // XXX ???
-        }
-	if (!ShiftSpace.User.getUsername()) {
-	  return null; // XXX ???
-	} else {
-	  return ShiftSpace.User.getUsername();
-	}
+        return ShiftSpace.User.getUsername();
     },
 
 
@@ -762,10 +775,9 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	    this.log("loaded posRef:");
 	    //this.dumpObj (this.posRef);
 	    this.posRange = ShiftSpace.RangeCoder.toRange (json.posRef);
-	    if (this.posRange) {
-		this.renderRange(this.posRange);
-	    }
 	}
+
+	this.renderRange(this.posRange);
 
 	this.fillElement(this.element);
 
@@ -795,6 +807,8 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	    return;
 	this.element.setHTML("");
 	this.fillElement(this.element);
+	this.anchoredIcon.setHTML("");
+	this.renderClass.renderIcon(this, this.anchoredIcon);
     },
 
     // After calling save(), ShiftSpace engine will call back our encode()
@@ -823,26 +837,22 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 
 
     saveSettings: function() {
-	if (ShiftSpace.getUser === undefined) return;
-	user = ShiftSpace.getUser(); // returns User object
-	user.setPref('settings', this.settings);
+	this.getParentSpace().setPref('settings', this.settings);
     },
 
-    loadSettings: function() {
-	if (!(ShiftSpace.getUser === undefined)) {
-	  var user = ShiftSpace.getUser();
-		// XXX: what is namespace?  do i need to prepend with my 
-		// shift name to tokens?
-          this.settings = user.getPref('settings');
-	}
-	if (!this.settings)
-	    this.settings = {};
+    gotSettings: function(settings) {
+	this.settings = settings;
 	if (!this.settings.hiddenCategories)
 	    this.settings.hiddenCategories = {};
 	if (!this.settings.hiddenSources)
 	    this.settings.hiddenSources = {};
 	if (!this.settings.hiddenAuthors)
 	    this.settings.hiddenAuthors = {};
+	this.continueInitialize();
+    },
+
+    loadSettings: function() {
+          this.getParentSpace().getPref('settings', {}, this.gotSettings.bind(this)); 
     },
 
     setCategory: function(idx) {
@@ -874,8 +884,8 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	if (this.mode == newMode) return;
 
 	if (newMode == this.MODE_EDIT && !this.loggedIn()) {
-          ShiftSpace.Console.show();
-          ShiftSpace.Console.showTab('login');
+          //ShiftSpace.Console.show();
+          //ShiftSpace.Console.showTab('login');
           alert('Sorry, you must be signed in to edit shifts.');
 	  return;
         }
@@ -900,17 +910,28 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	var evt = new Event(e);
 	evt.stopPropagation();
 
+	// Cancel any pending hide, then show
+	this.hidePending = 0;
+
+	if (this.shown)
+	  return;
+
+	// If user is mousing over placeholder (which might have changed
+	// since shift creation, eg if user changes font size) then
+        // make sure position matches embedded icon
+        this.updatePosition();
+
 	// Raise this Shift a little bit so it draws over the minimized icons
 	this.element.style.zIndex=2;
 	this.shown = true;
-
-	// Cancel any pending hide, then show
-	this.hidePending = 0;
 
 	// DISPLAY is the only mode that minimizes...
 	if (this.mode == this.MODE_DISPLAY) {
 	    this.detailsBox.removeClass('FisheyeHidden');
 	    this.buttonBox.removeClass ('FisheyeHidden');
+		// XXX: havesaved etc?
+	    if (this.posRange)
+	        this.element.removeClass ('FisheyeHidden');
 	}
     },
     
@@ -929,11 +950,16 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 		  return;
 	      this.detailsBox.addClass('FisheyeHidden');
 	      this.buttonBox.addClass('FisheyeHidden');
+	      if (this.posRange)
+	          this.element.addClass('FisheyeHidden');
 	      this.element.style.zIndex=1;  // Lower to default height
 	      this.shown = false;
 	  } 
       }.bind(this) ).delay(500);
     },
+
+    // XXX - might want to implement show (must call this.parent())
+    // to better handle multiple toplevel elements
 
     /*
       Function : finishFrame
@@ -963,7 +989,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
     getWebPage: function(url, callback, onerror) {
 	if (!onerror)
 	  onerror = function() {};
-        ShiftSpace.xmlhttpRequest({
+        this.xmlhttpRequest({
             'method': 'GET',
             'url': url,
             'onload': callback,
@@ -1026,5 +1052,13 @@ plugin settings gui hooks?
 generic per-shift and per-user data storage hooks for plugins?
 edit/setup icons in header? buttonbar?
 gui layout in separate HTML file
+
+summary box resets when entering type and link on new shift - atleast put it last
+
+in general, having both embedded icon and full flying interface is wierd
+  - after relocting a shift not tied to text, placeholder still at old pos
+  - embedded icon doesn't change color or style after changing type
+
+manageElement on two elements?
 
 */

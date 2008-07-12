@@ -9,21 +9,11 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 
     renderIcon: function(that, target) {
 
-	// Box to hold icon
-	that.iconBox = new ShiftSpace.Element('div', {'class':'FisheyeIconBox'});
-	that.iconBox.setStyles({
-	    'width':  that.newsTrustIconLink ? '92px' : '16px',
-	    'height':  '16px',
-	});
-	that.iconBox.injectInside(target);
-
-	// NT icon or rating as stars
-	that.iconImageBox = new ShiftSpace.Element('div');
 	var img = "http://www.newstrust.net/Images/newstrust.gif";
 	if (that.newsTrustIconLink)
 	    img = that.newsTrustIconLink;
-	that.iconImageBox.setHTML('<img src="' + img + '" />');
-	that.iconImageBox.injectInside(that.iconBox);
+
+	target.setHTML('<img src="' + img + '" />');
 
 	// Get NT data if necessary
 	if (!that.haveQueriedNewsTrust) {
@@ -114,8 +104,8 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 	var realThis = this;
 	that.log("queryNewsTrust");
 	  // XXX: hardcoded ID length is poor way to avoid querying before ID set
-	if (!that.criticismLink || that.criticismLink.length != 8) {
-	    that.log("NewsTrust storyID seems invalid");
+	if (!that.criticismLink || that.criticismLink.length >= 12 || that.criticismLink.length < 5) {
+	    that.log("NewsTrust storyID '" + that.criticismLink + "' seems invalid");
 	    return;
 	}
 	var url = "http://www.newstrust.net/webx?14@@";
