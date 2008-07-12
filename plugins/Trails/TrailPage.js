@@ -118,6 +118,7 @@ var TrailPage = new Class({
           this.unzoom();
         }
       }.bind(this));
+      
     }
 
     this.element = el;
@@ -411,8 +412,8 @@ var TrailPage = new Class({
     //this.dragLinkPoint.injectInside( $('SSTrailsPlugInScrollArea') );
     
     this.dragLinkPoint.setStyles({
-      left : evt.page.x,
-      top : evt.page.y
+      left : evt.page.x-5,
+      top : evt.page.y-5
     });
     
     this.dragLinkPoint.addEvent( 'mouseup', function( e ) { 
@@ -431,7 +432,7 @@ var TrailPage = new Class({
       
       onComplete : function( e )
       {
-        var evt = new Event( this.releaseEvent );
+        var evt = new Event( this.releaseEvent || window.event );
         
         if( Trail.gHoveredNode )
         {

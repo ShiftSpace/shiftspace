@@ -354,8 +354,12 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     delete this.navObj;
     
     // get the recently view shifts that aren't already on the page
-
-    this.navObj = new TrailNav(this.recentlyViewedShifts());
+    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    var recentlyViewedShifts = this.recentlyViewedShifts();
+    console.log(recentlyViewedShifts);    
+    this.navObj = new TrailNav(recentlyViewedShifts);
   },
   
   showInterface: function(shiftId)
