@@ -726,7 +726,7 @@ ShiftSpace.Space = new Class({
   
   getPref: function(key, defaultValue, callback)
   {
-    this.getValue(this.attributes.name+'.prefs.'+key, value, callback);
+    this.getValue(this.attributes.name+'.prefs.'+key, defaultValue, callback);
   }
   
 });
