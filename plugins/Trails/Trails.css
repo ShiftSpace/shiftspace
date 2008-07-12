@@ -163,6 +163,7 @@ div#trail-close:hover
   right: 0px;
   vertical-align: bottom;
   overflow-x: scroll;
+  overflow-y: hidden;
   min-width: 100%;
   z-index: 1000000;
 }
