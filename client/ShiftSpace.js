@@ -234,7 +234,8 @@ var ShiftSpace = new (function() {
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
         // clear out recently viewed shifts on login
-        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', {});
+        __recentlyViewedShifts__ = {};
+        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', __recentlyViewedShifts__);
       });
       ShiftSpace.User.addEvent('onUserLogout', function() {
         SSFireEvent('onUserLogout');
