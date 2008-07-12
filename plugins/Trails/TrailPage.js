@@ -38,7 +38,7 @@ var TrailPage = new Class({
     this.nodes = this.options.nodes;
     this.user = this.options.user || this.options.username;
     
-    console.log(Json.toString(options));
+    console.log(options);
     
     if(this.options.space)
     {
