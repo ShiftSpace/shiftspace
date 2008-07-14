@@ -9,7 +9,8 @@ var FisheyeSpace = ShiftSpace.Space.extend({
 });
 
 // Get the latest plugins, languages, and layout from SVN
-var feRoot="http://metatron.shiftspace.org/code/trunk/spaces/Fisheye/";
+//var feRoot="http://metatron.shiftspace.org/code/trunk/spaces/Fisheye/";
+var feRoot="http://fisheye.ffem.org/shiftspace_0.5/spaces/Fisheye/";
 
 var makeTextBox = function(target, text) {
     var usrBox = new ShiftSpace.Element('div');
@@ -673,7 +674,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
     },
 
     shiftAuthor : function() {
-      return this.json.username;
+      return this.getAuthor();
     },
 
     // currently this is just used to hide settings as it seems
