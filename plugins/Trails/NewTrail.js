@@ -141,10 +141,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     if(this.__trailCountForCurrentShift__ == 0)
     {
       console.log('remove trail icon!');
-      /*
       console.log('--------------------- onPluginStatusChange delete');
       this.fireEvent('onPluginStatusChange', { plugin: this, shiftId: this.__currentFocusedShift__ });
-      */
     }
   },
   
@@ -231,6 +229,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> menu icon for shift!');
     var data = {'shiftId': shiftId};
     this.serverCall('iconForShift', data, function(json) {
+      console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] ' + json.icon);
       cb(json.icon);
     });
   },
