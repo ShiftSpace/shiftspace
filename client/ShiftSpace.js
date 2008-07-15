@@ -1156,9 +1156,14 @@ var ShiftSpace = new (function() {
           
           if (__consoleIsWaiting__) 
           {
+            // this should probably call login user
             //console.log('remote login tab set up auth control');
+            /*
             ShiftSpace.Console.removeTab('login');
             ShiftSpace.Console.setupAuthControl();
+            */
+            SSFireEvent('onUserLogin', {status:1});
+            SSCheckForAutolaunch();
           }
         }
         
@@ -1180,6 +1185,7 @@ var ShiftSpace = new (function() {
         if(SSGetPrefForSpace(space, 'autolaunch'))
         {
           var ids = SSAllShiftIdsForSpace(space);
+          console.log('ids.lenghth ' + ids.length);
           if(ids.length > 0)
           {
             ids.each(showShift);
@@ -1283,7 +1289,8 @@ var ShiftSpace = new (function() {
           
           ShiftSpace.Console.addShifts(shifts);
           
-          // check for autolaunched content
+          // check for autolaunched content, better for sandbox
+          // TODO: refactor
           if(ShiftSpace.User.isLoggedIn())
           {
             SSCheckForAutolaunch();
