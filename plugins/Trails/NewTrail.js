@@ -130,14 +130,18 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   onTrailDelete: function(json)
   {
+    console.log('====================== onTrailDelete!');
+
     // fire an event if the trail status has changed
     this.__trailCountForCurrentShift__--;
     
     // we need to remove the icon
     if(this.__trailCountForCurrentShift__ == 0)
     {
+      /*
       console.log('--------------------- onPluginStatusChange delete');
       this.fireEvent('onPluginStatusChange', { plugin: this, shiftId: this.__currentFocusedShift__ });
+      */
     }
   },
   
