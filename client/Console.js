@@ -1510,10 +1510,11 @@ var Console = new Class({
         pluginDiv.addClass('plugin');
         pluginDiv.addClass('pg'+plugin); // tag with plugin name
         
-        SSPlugInMenuIconForShift(plugin, shiftId, function(icon) {
-          console.log('============ set the icon to ' + icon);
+        // if the icon isn't immediately available need to use a callback
+        var icon = SSPlugInMenuIconForShift(plugin, shiftId, function(icon) {
           pluginDiv.addClass(icon);
         });
+        if(icon) pluginDiv.addClass(icon);
         
         pluginDiv.addEvent('click', function(_evt) {
           var evt = new Event(_evt);
