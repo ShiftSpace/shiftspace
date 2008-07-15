@@ -141,11 +141,11 @@ var HighlightsSpace = ShiftSpace.Space.extend({
             // try to see why getComputedStyle in selectColor doesn't work
             // the first time!
 
-            this.addColor('HighlightsColor2');
-            this.addColor('HighlightsColor3');
-            this.addColor('HighlightsColor4');
-            this.addColor('HighlightsColor5');
-            this.addColor('HighlightsColor6');
+            this.addColor('HighlightsColor2', '#0F0');
+            this.addColor('HighlightsColor3', '#6DCFF6');
+            this.addColor('HighlightsColor4', '#FEA600');
+            this.addColor('HighlightsColor5', '#FF43BF');
+            this.addColor('HighlightsColor6', '#C443FF');
         }
 
 
