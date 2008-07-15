@@ -24,6 +24,9 @@ var HighlightsSpace = ShiftSpace.Space.extend({
 
       this.highlight_end = function(e) {
         
+        if ($(e.target).hasClass('ShiftSpaceElement')) {
+          return;
+        }
         if (!window.getSelection().getRangeAt(0).collapsed) {
           self.cursor.style.display = 'block';
           var range = window.getSelection().getRangeAt(0);
@@ -45,14 +48,14 @@ var HighlightsSpace = ShiftSpace.Space.extend({
 
     selectColor: function(colorElement, color) {
         if (!color)
-            this.color = document.defaultView.getComputedStyle(colorElement, "").borderBottomColor;
+            this.color = $(colorElement).getStyle('border-bottom-color');
         else
             this.color = color;
 
         if (this.colorElement) { 
             this.colorElement.style.borderBottomStyle = 'none';
         }
-                
+        
         this.colorElement = colorElement;
         colorElement.style.borderBottomStyle = 'solid';
     },
@@ -141,11 +144,11 @@ var HighlightsSpace = ShiftSpace.Space.extend({
             // try to see why getComputedStyle in selectColor doesn't work
             // the first time!
 
-            this.addColor('HighlightsColor2', '#0F0');
-            this.addColor('HighlightsColor3', '#6DCFF6');
-            this.addColor('HighlightsColor4', '#FEA600');
-            this.addColor('HighlightsColor5', '#FF43BF');
-            this.addColor('HighlightsColor6', '#C443FF');
+            this.addColor('HighlightsColor2');
+            this.addColor('HighlightsColor3');
+            this.addColor('HighlightsColor4');
+            this.addColor('HighlightsColor5');
+            this.addColor('HighlightsColor6');
         }
 
 
