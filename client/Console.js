@@ -345,12 +345,12 @@ var Console = new Class({
     pluginMenuTabIcon.addClass(plugin.menuIcon());
 
     pluginMenuTab.setStyles({
-      left: pos.x-3,
+      left: pos.x-6,
       /*top: pos.y-3+framePos.y*/
-      bottom: frameSize.y-pos.y+2-19
+      bottom: frameSize.y-pos.y-19
     });
     pluginMenu.setStyles({
-      left: pos.x-60, 
+      left: pos.x-15, 
       bottom: frameSize.y-pos.y+2
     });
     

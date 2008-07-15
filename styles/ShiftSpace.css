@@ -514,16 +514,17 @@ div.SSMenuTopItem:hover .SSRight
 #SSConsolePluginMenuTab
 {
   position: fixed;
-  width: 19px;
-  height: 19px;
-  background: transparent url(../images/ShiftMenu/menu-bg-reverse.png);
-  z-index:1000002;
+  width: 25px;
+  height: 22px;
+  background: transparent url(../images/ShiftMenu/menu-bg-reverse-shadowed.png);
+  z-index:1000003;
 }
 
 .SSPluginMenuTabIcon
 {
  width: 100%;
  height: 100%;
+ margin-left: 3px;
  background: transparent;
  background-repeat: no-repeat;
  background-position: 3px 3px;
