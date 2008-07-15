@@ -552,14 +552,17 @@ var ShiftSpace = new (function() {
       return plugins[pluginName];
     }
     
+
     function SSGetPluginType(plugin)
     {
       return __pluginsData__[plugin]['type'];
     }
     
-    function SSPlugInMenuIconForShift(pluginName, shiftId)
+
+    function SSPlugInMenuIconForShift(pluginName, shiftId, cb)
     {
       var plugin = SSGetPlugin(pluginName);
+      // if the plugin isn't loaded yet, use the initial plugins data
       if(!plugin)
       {
         var shiftData = __pluginsData__[pluginName]['data'][shiftId];
@@ -574,10 +577,11 @@ var ShiftSpace = new (function() {
       }
       else
       {
-        return plugin.menuIconForShift(shiftId);
+        plugin.menuIconForShift(shiftId, cb);
       }
     }
     
+
     function SSImplementsProtocol(protocol, object)
     {
       var result = true;
@@ -2338,6 +2342,11 @@ var ShiftSpace = new (function() {
           });
         }
       }
+      
+      // listen for plugin status changes and pass them on
+      plugin.addEvent('onPluginStatusChange', function(evt) {
+        SSFireEvent('onPluginStatusChange', evt);
+      });
 
       // This exposes each space instance to the console
       if (debug) 

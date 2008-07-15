@@ -16,6 +16,8 @@ var Console = new Class({
     SSAddEvent('onUserLogout', this.handleLogout.bind(this));
     
     SSAddEvent('onShiftUpdate', this.updateShiftPrivacy.bind(this));
+    
+    SSAddEvent('onPluginStatusChange', this.updatePluginIconForShift.bind(this));
   },
     
   /*
@@ -1200,11 +1202,21 @@ var Console = new Class({
   },
   
   
-  updateShift: function(shiftJson) {
+  updateShift: function(shiftJson) 
+  {
     var entry = _$(this.doc.getElementById(shiftJson.id));
     
     $(entry.getElementByClassName('summary').getElementByClassName('summaryView')).setHTML(shiftJson.summary);
     $(entry.getElementByClassName('user')).setHTML(shiftJson.username);
+  },
+  
+  
+  updatePluginIconForShift: function(data)
+  {
+    data.plugin.menuIconForShift(data.shiftId, function(icon) {
+      var entry = _$(this.doc.getElementById(data.shiftId));
+      $(entry.getElementByClassName('pg'+data.plugin.attributes.name)).addClass(icon);
+    }.bind(this));
   },
   
   
@@ -1489,24 +1501,20 @@ var Console = new Class({
   addPluginIconForShift: function(shiftId)
   {
     var el = this.doc.getElementById(shiftId);
-    //console.log(shiftId);
-    //console.log(el);
     el = _$(el);
-    //console.log('wrapped');
     var pluginDiv = $(this.doc.createElement('div'));
-    //console.log('plugin div created');
     for(var plugin in installedPlugins)
     {
-      //console.log('plugin ' + plugin);
       if(SSGetPluginType(plugin) == 'menu')
       {
-        //console.log('adding plugin style');
         pluginDiv.addClass('plugin');
         pluginDiv.addClass('pg'+plugin); // tag with plugin name
         
-        pluginDiv.addClass(SSPlugInMenuIconForShift(plugin, shiftId));
+        SSPlugInMenuIconForShift(plugin, shiftId, function(icon) {
+          console.log('============ set the icon to ' + icon);
+          pluginDiv.addClass(icon);
+        });
         
-        //console.log('adding plugin event');
         pluginDiv.addEvent('click', function(_evt) {
           var evt = new Event(_evt);
           evt.stop();
@@ -1520,11 +1528,9 @@ var Console = new Class({
 
         }.bind(this));
 
-        //console.log('adding plugin div');
         pluginDiv.inject(el.getElementByClassName('pluginIcons'));
       }
     }
-
   },
   
   updateCount : function()

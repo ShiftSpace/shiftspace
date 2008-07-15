@@ -2,6 +2,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
 
   pluginType: ShiftSpace.Plugin.types.get('kMenuTypePlugin'),
   
+  
   attributes :
   {
     name: 'Trails',
@@ -12,10 +13,12 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     version: 0.2
   },
   
+  
   setup : function(json)
   {
   },
 
+  
   createTrail: function(focusedShift)
   {
     // load the interface first
@@ -35,6 +38,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.updateInterface();
   },
   
+  
   loadTrail: function(focusedShift, trailId)
   {
     // get the trail
@@ -44,6 +48,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       this.onTrailLoad(focusedShift, json);
     }.bind(this));
   },
+  
   
   onTrailLoad: function(focusedShift, trailJson)
   {
@@ -116,27 +121,24 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   {
     // do some stuff
     this.currentTrailInfo.trailId = json.trailId;
-  },
-  
-  
-  deleteTrail: function(trailId, cb)
-  {
-    var data = {'trailId':trailId};
-    
-    this.serverCall(
-      'delete',
-       data,
-       function(json)
-       {
-         this.onTrailDelete(json);
-         cb(json);
-       }.bind(this)
-    )
+
+    // fire event status change
+    console.log('---------------------- onPluginStatusChange save');
+    this.fireEvent('onPluginStatusChange', { plugin: this, shiftId: this.__currentFocusedShift__ });
   },
   
   
   onTrailDelete: function(json)
   {
+    // fire an event if the trail status has changed
+    this.__trailCountForCurrentShift__--;
+    
+    // we need to remove the icon
+    if(this.__trailCountForCurrentShift__ == 0)
+    {
+      console.log('--------------------- onPluginStatusChange delete');
+      this.fireEvent('onPluginStatusChange', { plugin: this, shiftId: this.__currentFocusedShift__ });
+    }
   },
   
   
@@ -173,12 +175,16 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       // Add the trails list
       if($type(json) == 'object')
       {
+        // keep track of how many trails there are for this particular shift
+        this.__trailCountForCurrentShift__ = 0;
         for(var trailId in json)
         {
           menuItems.push({
             text: json[trailId],
             callback: this.loadTrail.bind(this, [shiftId, trailId])
           });
+          // increment the count
+          this.__trailCountForCurrentShift__++;
         }
       }
       
@@ -203,6 +209,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     newTrail.setDelegate(this);
   },
   
+  
   currentTrail: function()
   {
     return this.__currentTrail__;
@@ -212,28 +219,31 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     Function: menuIconForShift
       Return the CSS class for the shift.
   */
-  menuIconForShift: function(shiftId)
+  menuIconForShift: function(shiftId, cb)
   {
-    if(false)
-    {
-      return "SSTrailsHasTrailsIcon";
-    }
-    else
-    {
-      return "SSTrailsNoTrailsIcon";
-    }
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> menu icon for shift!');
+    var data = {'shiftId': shiftId};
+    this.serverCall('iconForShift', data, function(json) {
+      cb(json.icon);
+    });
   },
+  
   
   menuIcon: function(shiftId)
   {
     return "SSTrailsPluginIcon";
   },
   
+  
   menuForShift: function(shiftId, cb)
   {
+    // we need to store the current focused shift
+    this.__currentFocusedShift__ = shiftId;
+    
     this.trailsWithShift(shiftId, cb);
     return this.delayedMenu();
   },
+  
   
   buildInterface: function()
   {
@@ -307,6 +317,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.attachEvents();
   },
   
+  
   attachEvents: function()
   {
     // cancel create trail
@@ -347,23 +358,21 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     }.bind(this));
   },
   
+  
   trailSaved: function(json)
   {
     // do some confirmation stuff
   },
   
+  
   loadNav: function()
   {
     delete this.navObj;
-    
     // get the recently view shifts that aren't already on the page
-    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-    console.log('++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
     var recentlyViewedShifts = this.recentlyViewedShifts();
-    console.log(recentlyViewedShifts);    
     this.navObj = new TrailNav(recentlyViewedShifts);
   },
+  
   
   showInterface: function(shiftId)
   {
@@ -379,6 +388,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       this.scrollArea.empty();
     }
   },
+  
   
   updateInterface: function()
   {
@@ -408,6 +418,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     }
   },
   
+  
   hideInterface: function()
   {
     if(this.exitFullScreen())
@@ -421,9 +432,10 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     }
   },
   
+  
   deleteTrail: function()
   {
-    var data = {trailId: this.currentTrailInfo.trailId};
+    var data = { trailId: this.currentTrailInfo.trailId };
     
     this.serverCall(
       'delete',
@@ -432,9 +444,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     );
   },
   
-  onTrailDelete: function(json)
-  {
-  },
   
   userCanEdit: function()
   {
