@@ -400,3 +400,15 @@ input.submit:active {
   margin-right: 5px;
   color: #f63b01;
 }
+
+.installedTitleCol
+{
+  width: 180px;
+  overflow-x: hidden;
+  float: left;
+}
+
+.autolaunchCol
+{
+  float: left;
+}

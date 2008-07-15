@@ -128,6 +128,8 @@ var ShiftSpace = new (function() {
       'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
     });
     
+    var spacePrefs = getValue('spacePrefs', {});
+    
     /*
     installed = {
       'Notes' : myFiles + 'spaces/Notes/Notes.js',
@@ -335,6 +337,29 @@ var ShiftSpace = new (function() {
       }, 0);
     }
     
+    
+    function SSSetPrefForSpace(spaceName, pref, value)
+    {
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
+        console.log('SSSetPrefForSpace ' + key + ' : ' + value);
+        setValue(key, value);
+      }
+    }
+    
+    
+    function SSGetPrefForSpace(spaceName, pref)
+    {
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
+        var value = getValue(key, null);
+        console.log('SSGetPrefForSpace ' + key + " : " + value);
+        return value;
+      }
+    }
+    
     /*
     
     Function: info
@@ -388,6 +413,12 @@ var ShiftSpace = new (function() {
         version: version
       };
     };
+    
+    
+    function SSGetInfoForInstalledSpace(spaceName, callback)
+    {
+      // fetch data for the space
+    }
     
     // we need this as we transition away from FF2
     function SSGetElementByClass(searchClass, _node)
@@ -1142,6 +1173,36 @@ var ShiftSpace = new (function() {
     }
     
     
+    function SSCheckForAutolaunch()
+    {
+      for(space in spaces)
+      {
+        if(SSGetPrefForSpace(space, 'autolaunch'))
+        {
+          var ids = SSAllShiftIdsForSpace(space);
+          if(ids.length > 0)
+          {
+            ids.each(showShift);
+          }
+        }
+      }
+    }
+    
+    
+    function SSAllShiftIdsForSpace(spaceName)
+    {
+      var shiftsForSpace = [];
+      for(shiftId in shifts)
+      {
+        if(shifts[shiftId].space == spaceName)
+        {
+          shiftsForSpace.push(shiftId);
+        }
+      }
+      return shiftsForSpace;
+    }
+    
+    
     /*
     
     SSConsoleIsReady (private)
@@ -1219,7 +1280,14 @@ var ShiftSpace = new (function() {
               shift.space = 'ImageSwap';
             }
           });
+          
           ShiftSpace.Console.addShifts(shifts);
+          
+          // check for autolaunched content
+          if(ShiftSpace.User.isLoggedIn())
+          {
+            SSCheckForAutolaunch();
+          }
       });
     }
     
@@ -1266,7 +1334,8 @@ var ShiftSpace = new (function() {
     
     function SSLoadShift(shiftId, callback)
     {
-      // fetch a content from the network
+      // fetch a content from the network;
+      
       var params = { shiftIds: shiftId };
       serverCall.safeCall('shift.get', params, function(returnArray) {
         if(returnArray && returnArray[0])

@@ -556,7 +556,9 @@ var Console = new Class({
     //console.log('auth setup done');
   },
   
-  buildSettings: function() {
+  
+  buildSettings: function() 
+  {
     var sections = this.createSubSections('settings', ['General', 'Spaces']);
     var default_shift_status = getValue('default_shift_status', 1);
     if (default_shift_status == 1) {
@@ -667,6 +669,7 @@ var Console = new Class({
     //console.log('buildSettings - added form action');
   },
   
+  
   onSpaceInstall: function(spaceName)
   {
     console.log('onSpaceInstall');
@@ -679,6 +682,7 @@ var Console = new Class({
     this.updateIconsForSpace(spaceName);
   },
   
+  
   onSpaceUninstall: function(spaceName)
   {
     console.log('onSpaceUninstall');
@@ -688,6 +692,7 @@ var Console = new Class({
 
     this.updateIconsForSpace(spaceName);
   },
+  
   
   updateIconsForSpace: function(spaceName)
   {
@@ -699,17 +704,22 @@ var Console = new Class({
     });    
   },
   
-  installedSpace: function(id) {
+  
+  installedSpace: function(id) 
+  {
     var div = this.doc.createElement('div');
     div.setAttribute('id', 'installed' + id);
     div.setAttribute('class', 'installedSpace');
 
-    div.innerHTML = '<img src="' + server + 'spaces/' + id + '/' + id + '.png" width="32" height="32" /> ' +
+    var isChecked = (SSGetPrefForSpace(id, 'autolaunch')) ? 'checked' : '';
+    div.innerHTML = '<div class="installedTitleCol"><img src="' + server + 'spaces/' + id + '/' + id + '.png" width="32" height="32" /> ' +
                 '<div class="info"><a href="http://metatron.shiftspace.org/spaces/' + id.toLowerCase() + '" target="_blank">' + id + '</a>' +
-                '</div>' +
+                '</div></div>' +
+                '<div class="autolaunchCol"><div class="autolaunchToggle checkbox '+ isChecked + '"></div>' +
+                '<div class="label">Automatically show shifts</div></div>' +
                 '<input type="button" value="Uninstall" class="submit uninstall" id="uninstall' + id + '" />' +
                 '<br class="clear" /></div>';
-    
+                
     //console.log('func installedSpace - uninstall ' + _$(div).getElementByClassName('uninstall'));            
     var uninstallButton = _$(div).getElementByClassName('uninstall');
     
@@ -718,9 +728,36 @@ var Console = new Class({
         SSUninstallSpace(id);
       }
     });
+
+    if(!ShiftSpace.User.isLoggedIn())
+    {
+      $(_$(div).getElementByClassName('autolaunchCol')).addClass('SSDisplayNone');
+    }
+
+    // add events to the autolaunch feature
+    var autolaunchToggle = _$(div).getElementByClassName('autolaunchToggle');
+    $(autolaunchToggle).addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      var value = this.value;
+      
+      var spaceName = $(this).getParent().getParent().getProperty('id');
+      
+      if($(this).hasClass('checked'))
+      {
+        $(this).removeClass('checked');
+        SSSetPrefForSpace(id, 'autolaunch', false);
+      }
+      else
+      {
+        $(this).addClass('checked');
+        SSSetPrefForSpace(id, 'autolaunch', true);
+      }
+      console.log('autolaunch toggle for ' + spaceName);
+    });
     
     return div;
   },
+  
   
   addTab: function(id, label, icon) {
     var br = this.doc.getElementById('tabs').getElementsByTagName('br')[1];
@@ -749,6 +786,7 @@ var Console = new Class({
     return this.addPane(id);
   },
   
+  
   addPane: function(id) {
     if (!this.doc.getElementById(id)) {
       var content = $(this.doc.createElement('div'));
@@ -760,14 +798,17 @@ var Console = new Class({
     return $(this.doc.getElementById(id));
   },
   
+  
   getTab: function(tabname) {
     return $(this.doc.getElementById(tabname));
   },
+  
   
   clickTab: function(e) {
     var id = e.currentTarget.getAttribute('id').substr(4);
     this.showTab(id);
   },
+  
   
   showTab: function(id) {
     // close the plugin menu if open
@@ -893,6 +934,11 @@ var Console = new Class({
       
       // update the controls
       this.updateControlsForUsersShifts();
+      
+      // show the autolaunch checkboxes
+      $A(_$(this.doc.getElementsByClassName('autolaunchCol'))).each(function(x) {
+        $(x).removeClass('SSDisplayNone');
+      });
     } 
     else 
     {
@@ -904,6 +950,11 @@ var Console = new Class({
   handleLogout: function()
   {
     this.updateControlsForUsersShifts();
+    
+    // remove the autolaunch checkboxes
+    $A(_$(this.doc.getElementsByClassName('autolaunchCol'))).each(function(x) {
+      $(x).addClass('SSDisplayNone');
+    });
   },
   
   
@@ -1215,7 +1266,17 @@ var Console = new Class({
   {
     data.plugin.menuIconForShift(data.shiftId, function(icon) {
       var entry = _$(this.doc.getElementById(data.shiftId));
-      $(entry.getElementByClassName('pg'+data.plugin.attributes.name)).addClass(icon);
+      var pluginName = data.plugin.attributes.name;
+      var pluginIcon = $(entry.getElementByClassName('pg'+pluginName));
+      var classNames = pluginIcon.getProperty('class').split(' ');
+      
+      // remove all other status icons
+      classNames = classNames.filter(function(className) {
+        return (className.search('SS'+pluginName) != -1);
+      });
+      classNames.each(function(x) {pluginIcon.removeClass(x);});
+      
+      pluginIcon.addClass(icon);
     }.bind(this));
   },
   
