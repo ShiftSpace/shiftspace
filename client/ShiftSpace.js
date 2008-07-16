@@ -1492,6 +1492,7 @@ var ShiftSpace = new (function() {
       
       var space = spaces[shiftJson.space];
       
+      // remove the filters from the json object
       var filters = shiftJson.filters;
       delete shiftJson.filters;
       
@@ -1504,7 +1505,7 @@ var ShiftSpace = new (function() {
         filters: Json.toString(filters),
         status: getValue('default_shift_status', 1)
       };
-      
+
       serverCall.safeCall('shift.create', params, function(json) {
         console.log('>>>>>>>>>>>>>>>>> SAVED new shift');
         if (!json.status) {
@@ -1515,6 +1516,7 @@ var ShiftSpace = new (function() {
         shiftJson.username = ShiftSpace.User.getUsername();
         shiftJson.created = 'Just posted';
         shiftJson.status = getValue('default_shift_status', 1);
+        shiftJson.href = window.location.href;
         
         // with the real value
         var shiftObj = space.shifts[shiftJson.id];
