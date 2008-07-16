@@ -126,6 +126,7 @@
 {
   position: absolute;
   border: dotted 1px #F63B02;
+  z-index: 1000003;
 }
 
 .SSPinSelectInset
@@ -136,6 +137,7 @@
   right: 0px;
   bottom: 0px;
   top: 0px;
+  z-index: 1000003;
 }
 
 .SSPinWidget

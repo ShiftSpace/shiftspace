@@ -1447,7 +1447,8 @@ var ShiftSpace = new (function() {
       
       // if new skip to saveNewShift
       if (shiftJson.id.substr(0, 8) == 'newShift') {
-        return saveNewShift.safeCall(shiftJson);
+        saveNewShift.safeCall(shiftJson);
+        return;
       }
       
       var filters = shiftJson.filters;
