@@ -177,7 +177,6 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   showInterface : function()
   {
     this.parent();
-    //console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] SHOW INTERFACE');
     if(!this.imageEventsAttached)
     {
       this.imageEventsAttached = true;
@@ -188,7 +187,6 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   hideInterface : function()
   {
     this.parent();
-    //console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] HIDE INTERFACE');
     if(this.imageEventsAttached)
     {
       this.imageEventsAttached = false;
@@ -261,6 +259,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
 
 
 var ImageSwapShift = ShiftSpace.Shift.extend({
+
   setup : function(json)
   {
     //console.log('setting up image swap shift');
@@ -286,15 +285,18 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.setSrc(json.src);
   },
 
+
   setZoom : function(newZoom)
   {
     this.zoomVal = newZoom;
   },
   
+
   getZoom : function()
   {
     return this.zoomVal;
   },
+
 
   encode : function()
   {
@@ -310,12 +312,14 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     };
   },
   
+
   setSrc : function(src)
   {
     //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> set src: ' + src);
     if(src) this.image.setProperty('src', src);
   },
   
+
   getSrc : function()
   {
     var src;
@@ -326,14 +330,12 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     return src;
   },
   
+
   swap : function(pinRef)
   {
-    //console.log('================ swapping images');
-    
     // set the image to that property
     this.pin(this.element, pinRef);
-
-    //console.log('pinned');
+    this.isSwapped = true;
 
     if(this.isBeingEdited())
     {
@@ -346,6 +348,14 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     }
   },
   
+  
+  unswap: function()
+  {
+    this.unpin();
+    this.isSwapped = false;
+  },
+  
+
   pin : function(element, pinRef)
   {
     //console.log('pinning');
@@ -360,6 +370,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.parent(element, pinRef);
   },
 
+
   show : function()
   {
     this.parent();
@@ -373,28 +384,13 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.zoomButton.addClass('SSDisplayNone');
     this.unzoomButton.addClass('SSDisplayNone');
     
-    console.log('pinning image swap');
-    
     if(!this.isSwapped && this.getPinRef() && this.getSrc())
     {
       this.swap(this.getPinRef());
-      this.isSwapped = true;
-    }
-    else
-    {
-      /*
-      console.log('something went wrong');
-      console.log('src:');
-      console.log(this.getSrc());
-      console.log(this.image);
-      console.log('pinRef:');
-      console.log(this.getPinRef());
-      console.log('isSwapped:');
-      console.log(this.isSwapped);
-      */
     }
   },
   
+
   edit: function()
   {
     // only show the interface if we are actually swapped on the page
@@ -409,17 +405,18 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     }
   },
 
+
   hide : function()
   {
     this.parent();
     
     if(this.isSwapped && this.getPinRef() && this.getSrc())
     {
-      this.unpin();
-      this.isSwapped = false;
+      this.unswap();
     }
   },
   
+
   zoom: function()
   {
     // increment the zoom level, increase the image size by ten percent
@@ -428,6 +425,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.update();
   },
   
+
   unzoom: function()
   {
     // decrement the zoom level, decrease the image size by ten percent
@@ -436,6 +434,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.update();
   },
   
+
   updateImageDimensions: function()
   {
     var incrx = this.actualImageSize.x * 0.1;
@@ -445,6 +444,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.imageSize.y = (this.actualImageSize.y + incry * this.getZoom()).round();
   },
   
+
   refresh: function()
   {
     // increment by percentage
@@ -459,12 +459,14 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     }
   },
   
+
   update: function()
   {
     this.refresh();
     this.save();
   },
   
+
   imageLoaded: function(evt)
   {
     // get the actual dimensions of the image
@@ -473,6 +475,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.updateImageDimensions();
     this.refresh();
   },
+
 
   attachEvents: function()
   {
@@ -490,6 +493,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     }.bind(this));
     this.image.addEvent('load', this.imageLoaded.bind(this));
   },
+
 
   buildInterface : function()
   {
@@ -536,6 +540,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.attachEvents();
   },
   
+
   getMainView: function()
   {
     // only return the main view if we are pinned
