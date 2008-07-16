@@ -343,7 +343,6 @@ var ShiftSpace = new (function() {
       if(ShiftSpace.User.isLoggedIn())
       {
         var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
-        console.log('SSSetPrefForSpace ' + key + ' : ' + value);
         setValue(key, value);
       }
     }
@@ -355,7 +354,6 @@ var ShiftSpace = new (function() {
       {
         var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
         var value = getValue(key, null);
-        console.log('SSGetPrefForSpace ' + key + " : " + value);
         return value;
       }
     }
@@ -1299,13 +1297,6 @@ var ShiftSpace = new (function() {
           if(ShiftSpace.User.isLoggedIn())
           {
             SSCheckForAutolaunch();
-          }
-          else
-          {
-            console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-            console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-            console.log('NOT LOGGED IN');
           }
       });
     }
