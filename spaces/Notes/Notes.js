@@ -49,7 +49,10 @@ var NotesSpace = ShiftSpace.Space.extend({
     var currentShift = this.getCurrentShift();
     currentShift.setProperties($merge(otherProps, {noteText: noteTextFinal}));
     
+    // show the broken shift
     this.showShift(brokenShiftJson.id);
+    // save the fixed shift
+    currentShift.save();
   }
 });
 
