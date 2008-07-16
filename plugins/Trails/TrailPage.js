@@ -204,7 +204,7 @@ var TrailPage = new Class({
   */
   createDescription : function()
   {
-    this.description = new Element( 'a' );
+    this.description = new Element( 'div' );
     this.description.setAttribute( 'href', this.href );
     this.description.addClass( 'TrailPageDescription' );
     this.description.addClass( 'hidden' );
