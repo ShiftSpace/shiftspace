@@ -887,7 +887,7 @@ var ShiftSpace = new (function() {
       var space = SSSpaceForShift(shiftId);
       
       // call onShiftCreate
-      showShift(shiftId);
+      showShift(shiftId); // TODO: remove - David
       space.onShiftCreate(shiftId);
       editShift(shiftId);
       focusShift(shiftId, false);
@@ -2727,7 +2727,7 @@ var ShiftSpace = new (function() {
         'class': "SSErrorWindowMessage"
       });
       errorWindowMessage.injectInside(__errorWindow__);
-      errorWindowMessage.setText('It might be incompatible with this version of ShiftSpace.');
+      errorWindowMessage.setHTML('Help us improve our experimental fix feature, copy and paste the shift details and <a target="new" href="http://metatron.shiftspace.org/trac/">file a bug report</a>.');
 
       var br = new ShiftSpace.Element('br');
       br.setStyle('clear', 'both');
@@ -2862,7 +2862,6 @@ var ShiftSpace = new (function() {
     
     function SSShowErrorWindow(shiftId)
     {
-      console.log('======================================================================== ' + shiftId);
       /*
       __errorWindow__.getElement('.SSErrorWindowTitle').setText(title);
       __errorWindow__.getElement('.SSErrorWindowMessage').setText(message);
