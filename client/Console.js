@@ -6,6 +6,9 @@ var Console = new Class({
     //console.log('Console buildFrame');
     this.buildFrame();
     
+    // add a window resize event, so the resizer is in the right place
+    window.addEvent('resize', this.refresh.bind(this));
+    
     // Attach some events that we care about
     SSAddEvent('onSpaceInstall', this.onSpaceInstall.bind(this));
     SSAddEvent('onSpaceUninstall', this.onSpaceUninstall.bind(this));
