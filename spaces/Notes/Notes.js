@@ -296,7 +296,14 @@ var NotesShift = ShiftSpace.Shift.extend({
   update: function()
   {
     // make the view area is up to date
-    if(this.viewArea) this.viewArea.setHTML(this.getText());
+    if(this.viewArea)
+    {
+      this.viewArea.setHTML(this.getText());
+      // rewrite all links to target parent
+      $A(this.notedoc.getElementsByTagName('a')).each(function(link) {
+        $(link).setProperty('target', 'parent');
+      });
+    }
   },
   
   
@@ -548,6 +555,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     
     // Get document reference and MooToolize the body
     var notedoc = this.frame.contentDocument || this.frame.document;
+    this.notedoc = notedoc;
     this.frameBody = $(notedoc.body);
     this.frameBody.setProperty('id', 'SSNoteShiftFrameBody');
 
@@ -585,11 +593,6 @@ var NotesShift = ShiftSpace.Shift.extend({
         height: props.height
       });
     }
-    
-    // rewrite all links to target parent
-    $A(notedoc.getElementsByTagName('a')).each(function(link) {
-      $(link).setProperty('target', 'parent');
-    });
 
     // update the view
     this.update();
