@@ -69,7 +69,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   setup : function(json)
   {
-    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HERE WE ARE!');
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HERE WE ARE!');
     
     if(json.legacy)
     {
@@ -342,6 +342,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   show: function()
   {
+    console.log('SHHHHHHHHHHHHHHHHHHHOOOOOOOOOOOOOOOOOOOOOOW');
     this.parent();
     
     this.update();
@@ -373,6 +374,8 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.unpin();
     }
+    
+    console.log('HIDDEN');
   },
   
   
@@ -588,10 +591,13 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.edit();
     }
-    else
+    
+    /*
+    if(this.isVisible())
     {
       this.show();
     }
+    */
     
   },
   
@@ -687,6 +693,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   onPin: function(pinRef)
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ONPIN ' + pinRef.action);
     if(pinRef.action == 'unpin')
     {
       this.unpin();
@@ -700,6 +707,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   unpin: function()
   {
+    console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] UNPIN');
     this.parent();
     // put the note back on the page
     this.element.injectInside(document.body);

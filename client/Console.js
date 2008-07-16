@@ -543,7 +543,7 @@ var Console = new Class({
     if (!auth) {
       return;
     }
-    //console.log('auth about to setup');
+    //console.log('auth setup');
     var loginStatus = $(this.doc.getElementById('loginStatus'));
     if (ShiftSpace.User.isLoggedIn()) 
     {
@@ -1044,15 +1044,13 @@ var Console = new Class({
     }
     
     var holder = _$(this.doc.getElementById(target));
-    holder.setHTML(
-      '<div class="subtabs">' +
+    holder.innerHTML = '<div class="subtabs">' +
         '<div class="subtabs-inner">' + tabs + '</div>' +
-      '</div>' +
-      '<div class="subsections">' + content + '</div>' +
-      '<br class="clear" />'
-    );
+        '</div>' +
+        '<div class="subsections">' + content + '</div>' +
+        '<br class="clear" />';
     
-    holder.getElementsByClassName('subtab').each(function(subtab) {
+    $A(holder.getElementsByClassName('subtab')).each(function(subtab) {
       $(subtab).addEvent('click', function(e) {
         var id = e.target.getAttribute('id');
         var num = id.substr(7 + target.length);
@@ -1199,18 +1197,17 @@ var Console = new Class({
   showShift: function(id) {
     console.log('>>>>>>>>>>>>>>>>>>>>>>> SHOW SHIFT ' + id);
     var el = $(this.doc.getElementById(id));
-    console.log(el);
     if(el)
     {
       el.addClass('active');
       el.addClass('SSUserSelectNone');
-      console.log('about to hide edit title field');
       this.hideEditTitleField(id);
     }
     console.log('exit SHOW SHIFT');
   },
   
   editShift: function(id) {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>> EDIT SHIFT ' + id);
     var el = $(this.doc.getElementById(id));
     if(el)
     {
@@ -1231,8 +1228,6 @@ var Console = new Class({
 
   hideShift: function(id) {
     var el = $(this.doc.getElementById(id));
-    console.log('console hide shiftId: ' + id);
-    console.log(el);
     if(el)
     {
       el.removeClass('active');
@@ -1251,7 +1246,6 @@ var Console = new Class({
   },
   
   hideEditTitleField: function(id) {
-    console.log('hideEditTitleField');
     var el = _$(this.doc.getElementById(id));
     if(el)
     {
