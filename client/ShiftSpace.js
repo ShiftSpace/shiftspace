@@ -235,6 +235,7 @@ var ShiftSpace = new (function() {
       
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RECENTLY VIEWED SHIFTS');
         // clear out recently viewed shifts on login
         __recentlyViewedShifts__ = {};
         setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', __recentlyViewedShifts__);
@@ -340,6 +341,7 @@ var ShiftSpace = new (function() {
     
     function SSSetPrefForSpace(spaceName, pref, value)
     {
+      console.log('SSSetPrefForSpace');
       if(ShiftSpace.User.isLoggedIn())
       {
         var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
@@ -350,6 +352,7 @@ var ShiftSpace = new (function() {
     
     function SSGetPrefForSpace(spaceName, pref)
     {
+      console.log('SSGetPrefForSpace');
       if(ShiftSpace.User.isLoggedIn())
       {
         var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
@@ -523,7 +526,7 @@ var ShiftSpace = new (function() {
       var copy = {};
       for(var shiftId in __recentlyViewedShifts__)
       {
-        copy[shiftId] = __recentlyViewedShifts__[shiftId];
+        copy[shiftId] = SSGetShiftData(shiftId);
       }
       return copy;
     }
@@ -1075,9 +1078,8 @@ var ShiftSpace = new (function() {
           // TODO: only add these if the user is logged in
           if(ShiftSpace.User.isLoggedIn())
           {
-            __recentlyViewedShifts__[shift.id] = SSGetShiftData(shiftId);
-            console.log('__recentlyViewedShifts__');
-            console.log(__recentlyViewedShifts__);
+            // simply mark the ids
+            __recentlyViewedShifts__[shift.id] = 1;
             // store the recently viewed shifts
             setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', __recentlyViewedShifts__);
           }
@@ -2377,7 +2379,7 @@ var ShiftSpace = new (function() {
       var pluginDir = installedPlugins[plugin.attributes.name].match(/(.+\/)[^\/]+\.js/)[1];
       
       // if a css file is defined in the attributes load the style
-      if (plugin.attributes.css) 
+      if (plugin.attributes.css)
       {
         if (plugin.attributes.css.indexOf('/') == -1) 
         {
