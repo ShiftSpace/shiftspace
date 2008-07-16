@@ -1329,7 +1329,7 @@ var ShiftSpace = new (function() {
         summary: shift.summary,
         space: shift.space,
         href : shift.href,
-        user : shift.username
+        username : shift.username
       };
     }
     
