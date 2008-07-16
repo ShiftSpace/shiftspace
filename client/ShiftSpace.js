@@ -1153,17 +1153,10 @@ var ShiftSpace = new (function() {
           
           // load the recently viewed shifts
           __recentlyViewedShifts__ = getValue(json.username+'.recentlyViewedShifts', {});
-          
-          if (__consoleIsWaiting__) 
+           
+          if (__consoleIsWaiting__)
           {
-            // this should probably call login user
-            //console.log('remote login tab set up auth control');
-            /*
-            ShiftSpace.Console.removeTab('login');
-            ShiftSpace.Console.setupAuthControl();
-            */
             SSFireEvent('onUserLogin', {status:1});
-            SSCheckForAutolaunch();
           }
         }
         
@@ -1180,14 +1173,26 @@ var ShiftSpace = new (function() {
     
     function SSCheckForAutolaunch()
     {
-      for(space in spaces)
+      for(space in installed)
       {
         if(SSGetPrefForSpace(space, 'autolaunch'))
         {
           var ids = SSAllShiftIdsForSpace(space);
-          console.log('ids.lenghth ' + ids.length);
-          if(ids.length > 0)
+
+          var spaceObject = spaces[space]
+          
+          // in the case of the web
+          if(!spaceObject)
           {
+            // load the space first
+            loadSpace(space, null, function() {
+              ids.each(showShift);
+            });
+            return;
+          }
+          else
+          {
+            // otherwise just show the puppies, this works in the sandbox
             ids.each(showShift);
           }
         }
@@ -1294,6 +1299,13 @@ var ShiftSpace = new (function() {
           if(ShiftSpace.User.isLoggedIn())
           {
             SSCheckForAutolaunch();
+          }
+          else
+          {
+            console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+            console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+            console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+            console.log('NOT LOGGED IN');
           }
       });
     }

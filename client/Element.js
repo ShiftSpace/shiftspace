@@ -26,7 +26,6 @@ ShiftSpace.Element = new Class({
         }
 
         dragObj.addEvent('onStart', function() {
-          console.log('WTF');
           SSAddIframeCovers();
         });
         dragObj.addEvent('onDrag', SSUpdateIframeCovers);
