@@ -341,7 +341,6 @@ var ShiftSpace = new (function() {
     
     function SSSetPrefForSpace(spaceName, pref, value)
     {
-      console.log('SSSetPrefForSpace');
       if(ShiftSpace.User.isLoggedIn())
       {
         var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
@@ -352,7 +351,6 @@ var ShiftSpace = new (function() {
     
     function SSGetPrefForSpace(spaceName, pref)
     {
-      console.log('SSGetPrefForSpace');
       if(ShiftSpace.User.isLoggedIn())
       {
         var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
@@ -2266,7 +2264,7 @@ var ShiftSpace = new (function() {
     function SSRegisterSpace(instance) {
       //console.log("SSRegisterSpace");
       var spaceName = instance.attributes.name;
-      console.log('Register Space ===================================== ' + spaceName);
+      //console.log('Register Space ===================================== ' + spaceName);
       spaces[spaceName] = instance;
       instance.addEvent('onShiftUpdate', saveShift.bind(this));
 

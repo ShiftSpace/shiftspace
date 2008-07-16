@@ -22,7 +22,6 @@ ShiftSpace.Space = new Class({
     this.__deferredEdits__ = [];
     
     // if no css file, we don't need to wait for it to load
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + $type(this.attributes.css));
     this.setCssLoaded(!this.attributes.css);
     
     // the shifts array
@@ -60,7 +59,7 @@ ShiftSpace.Space = new Class({
       var name = this.attributes.name || '';
       console.error( 'Error: The  ' + name + ' is not valid and will not be instantiated.' );
     }
-    console.log('/ / / / SETTING UP');
+    //console.log('/ / / / SETTING UP');
     this.setup();
     
     // check for a pending shift
@@ -123,10 +122,6 @@ ShiftSpace.Space = new Class({
         this.createShift(aShift);
         SSShowNewShift(aShift.id);
       }.bind(this));
-    }
-    else
-    {
-      console.log('no deferred content');
     }
   },
   
