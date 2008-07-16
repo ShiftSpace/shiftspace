@@ -109,6 +109,11 @@ div.SSDrag
   border: 1px outset #2F2F0F;
 }
 
+#trail-delete
+{
+  margin-top: 1px;
+}
+
 #trail-cancel {
   margin-right: 4px;
 }
