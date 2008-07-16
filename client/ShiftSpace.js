@@ -1179,7 +1179,7 @@ var ShiftSpace = new (function() {
 
           var spaceObject = spaces[space]
           
-          // in the case of the web
+          // in the case of the web we need to load the space first
           if(!spaceObject)
           {
             // load the space first
@@ -1764,6 +1764,7 @@ var ShiftSpace = new (function() {
       }
     }
     
+    
     function mouseMoveHandler(e) {
       var event = new Event(e);
       keyState.x = event.page.x;
@@ -1787,6 +1788,7 @@ var ShiftSpace = new (function() {
       });
     }
     
+    
     SSCreateCover = function()
     {
       var cover = new ShiftSpace.Element('div', {
@@ -1797,17 +1799,20 @@ var ShiftSpace = new (function() {
       return cover;
     }
     
+    
     SSAddCover = function(newCover)
     {
       // create covers if we haven't already
       __iframeCovers__.push(newCover);
     }
 
+    
     SSAddIframeCovers = function() {
       __iframeCovers__.each(function(aCover) {
         aCover.cover.setStyle('display', 'block');
       });
     }
+    
     
     SSUpdateIframeCovers = function() {
       __iframeCovers__.each(function(aCover) {
@@ -1821,6 +1826,7 @@ var ShiftSpace = new (function() {
         });
       });
     }
+    
     
     SSRemoveIframeCovers = function() {
       __iframeCovers__.each(function(aCover) {
@@ -1853,6 +1859,7 @@ var ShiftSpace = new (function() {
       ShiftSpace.PinSelect = targetBorder;
     }
     
+    
     function SSPinMouseOverHandler (_evt) {
       var evt = new Event(_evt);
       var target = $(evt.target);
@@ -1875,12 +1882,14 @@ var ShiftSpace = new (function() {
       }
     }
     
+    
     function SSPinMouseMoveHandler(_evt) {
       if(ShiftSpace.PinSelect.getParent())
       {
         ShiftSpace.PinSelect.remove();
       }
     }
+    
     
     function SSPinMouseClickHandler(_evt) {
       var evt = new Event(_evt);
@@ -1892,6 +1901,7 @@ var ShiftSpace = new (function() {
         __currentPinWidget__.userPinnedElement(__currentPinSelection__);
       }
     }
+    
     
     function SSCheckPinReferences(pinRef)
     {
@@ -2043,6 +2053,7 @@ var ShiftSpace = new (function() {
       }
     }
     
+    
     function SSUnpinElement(pinRef) {
       switch(pinRef.action) 
       {
@@ -2112,6 +2123,7 @@ var ShiftSpace = new (function() {
       ShiftSpace.PinSelect.addEvent('mousemove', SSPinMouseMoveHandler);
     }
     
+    
     function SSRemovePinEvents() {
       window.removeEvent('mouseover', SSPinMouseOverHandler);
       window.removeEvent('click', SSPinMouseClickHandler);
@@ -2125,6 +2137,7 @@ var ShiftSpace = new (function() {
       // show the selection interface
       SSAttachPinEvents();
     }
+    
     
     function SSStopPinSelection() {
       __currentPinWidget__ = null;
@@ -2315,6 +2328,7 @@ var ShiftSpace = new (function() {
       });
       instance.addEvent('onShiftDestroy', SSRemoveShift);
     }
+    
     
     function SSRemoveShift(shiftId)
     {
@@ -2670,15 +2684,18 @@ var ShiftSpace = new (function() {
       }
     }
     
+    
     function SSCanGoFullScreen()
     {
       return true;
     }
     
+    
     function SSCanExitFullScreen()
     {
       return true;
     }
+    
     
     var __errorWindowShiftPropertyModel__;
     var __errorWindowMinimized__ = true;
@@ -2842,6 +2859,7 @@ var ShiftSpace = new (function() {
       __errorWindow__.injectInside(document.body);
     }
     
+    
     function SSShowErrorWindow(shiftId)
     {
       console.log('======================================================================== ' + shiftId);
@@ -2909,10 +2927,12 @@ var ShiftSpace = new (function() {
       });
     }
     
+    
     function SSHideErrorWindow()
     {
       __errorWindow__.addClass('SSDisplayNone');
     }
+    
     
     function SSErrorWindowUpdateTableForShift(shiftId)
     {
