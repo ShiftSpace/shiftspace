@@ -818,6 +818,9 @@ var Console = new Class({
   
   
   showTab: function(id) {
+    
+    this.currTab = id;
+    
     // close the plugin menu if open
     if(this.pluginMenu && !$(this.pluginMenu).hasClass('SSDisplayNone')) this.pluginMenu.addClass('SSDisplayNone');
 
@@ -860,24 +863,24 @@ var Console = new Class({
   buildLogin: function() {
     this.addPane('login');
     //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CREATE SUBSECTIONS');
-    var sections = this.createSubSections('login', ['Login', 'Sign up']);
+    var sections = this.createSubSections('login', ['Login', 'Sign up', 'Password']);
     /*
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DONE CREATING SUBSECTIONS');
     console.log('build sections');
     console.log('sections: ' + sections);
     */
-    $(sections[0]).setHTML('<form id="loginForm" action="http://shiftspace.org/login" method="post">' +
-                        '<div class="form-column">' +
-                        '<label for="username">Username</label>' +
-                        '<input type="text" name="username" id="username" class="text" />' +
-                        '<label for="password">Password</label>' +
-                        '<input type="password" name="password" id="password" class="text float-left" />' +
-                        '<input type="submit" value="Login" class="button float-left" />' +
-                        '<br class="clear" />' +
-                        '</div>' +
-                        '<br class="clear" />' +
-                        '<div id="login_response" class="response"></div>' +
-                        '</form>');
+    $(sections[0]).setHTML(
+      '<form id="loginForm" action="http://shiftspace.org/login" method="post" class="form-column">' +
+        '<label for="username">Username</label>' +
+        '<input type="text" name="username" id="username" class="text" />' +
+        '<label for="password">Password</label>' +
+        '<input type="password" name="password" id="password" class="text float-left" />' +
+        '<input type="submit" value="Login" class="button float-left" />' +
+        '<a href="#password" id="passwordResetLink" class="float-left">Forget your password?</a>' +
+        '<br class="clear" />' +
+        '<div id="login_response" class="response"></div>' +
+      '</form>'
+    );
     //console.log('built sections[0]');
     $(sections[0]).setStyle('padding-top', 15);
     $(this.doc.getElementById('loginForm')).addEvent('submit', function(e) {
@@ -887,6 +890,10 @@ var Console = new Class({
         password: this.doc.getElementById('password').value
       };
       ShiftSpace.User.login(credentials, this.handleLogin.bind(this));
+    }.bind(this));
+    $(this.doc.getElementById('passwordResetLink')).addEvent('click', function(e) {
+      new Event(e).preventDefault();
+      this.showSubTab('login', 2);
     }.bind(this));
     $(sections[1]).setHTML('<form id="registerForm" action="http://shiftspace.org/join" method="post">' +
                         '<div class="form-column">' +
@@ -916,6 +923,21 @@ var Console = new Class({
         password_again: this.doc.getElementById('password_again').value
       };
       ShiftSpace.User.join(joinInput, this.handleJoin.bind(this));
+    }.bind(this));
+    
+    $(sections[2]).setHTML(
+      '<form id="passwordForm" action="http://shiftspace.org/password" method="post" class="form-column">' +
+        '<h2>Reset your password</h2>' +
+        '<label for="login">Username or email address</label>' +
+        '<input type="text" name="login" id="login" class="text" size="25" />' +
+        '<input type="submit" value="Submit" class="button" />' +
+        '<div id="password_response" class="response"></div>' +
+      '</form>'
+    );
+    $(this.doc.getElementById('passwordForm')).addEvent('submit', function(e) {
+      new Event(e).preventDefault();
+      var login = this.doc.getElementById('login').value;
+      ShiftSpace.User.retrievePassword(login, this.handlePasswordReset.bind(this));
     }.bind(this));
   },
   
@@ -980,6 +1002,9 @@ var Console = new Class({
     }
   },
   
+  handlePasswordReset: function(json) {
+    
+  },
   
   resetLogin: function() {
     $(this.doc.getElementById('username')).value = '';
@@ -1009,7 +1034,6 @@ var Console = new Class({
   createSubSections: function(target, sections) {
     var tabs = '';
     var content = '';
-    var nodes = [];
     
     //console.log('sections length ' + sections.length);
     for (var i = 0; i < sections.length; i++) {
@@ -1020,62 +1044,48 @@ var Console = new Class({
     }
     
     var holder = _$(this.doc.getElementById(target));
-    holder.innerHTML = '<div class="subtabs">' +
-                       '<div class="subtabs-inner">' + tabs + '</div>' +
-                       '</div>' +
-                       '<div class="subsections">' + content + '</div>' +
-                       '<br class="clear" />';
-    
-    /*                   
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> grabbing subtabs');
-    console.log(holder.innerHTML)
-    console.log(holder.getElementsByClassName('subsection').length);;
-    */
-    
-    /*
-    console.log(holder);
-    console.log(holder.getElementsByClassName.toString());
-    console.log('trying');
-    */
-    //console.log(holder.getElementsByClassName('subtab').length);
+    holder.setHTML(
+      '<div class="subtabs">' +
+        '<div class="subtabs-inner">' + tabs + '</div>' +
+      '</div>' +
+      '<div class="subsections">' + content + '</div>' +
+      '<br class="clear" />'
+    );
     
     holder.getElementsByClassName('subtab').each(function(subtab) {
       $(subtab).addEvent('click', function(e) {
-        //console.log('SELECT SUB TAB');
-        var active = holder.getElementsByClassName('subtab-active')[0];
-        if (active) {
-          $(active).removeClass('subtab-active');
-        }
-        //console.log('1');
-        var above = holder.getElementsByClassName('subtab-above')[0];
-        if (above) {
-          $(above).removeClass('subtab-above');
-        }
-        //console.log('2');
-        var subsection = holder.getElementsByClassName('subsection-active')[0];
-        if (subsection) {
-          $(subsection).removeClass('subsection-active');
-        }
-        //console.log('3');
-        $(e.currentTarget).addClass('subtab-active');
-        if (e.currentTarget.previousSibling) {
-          $(e.currentTarget.previousSibling).addClass('subtab-above');
-        }
-        //console.log('4');
-        var id = e.currentTarget.getAttribute('id').substr(7);
-        //console.log('5');
-        //console.log(id);
-        //console.log(this.doc.getElementById('subsection-' + id));
-        $(this.doc.getElementById('subsection-' + id)).addClass('subsection-active'); 
-        //console.log('6');
+        var id = e.target.getAttribute('id');
+        var num = id.substr(7 + target.length);
+        this.showSubTab(target, num);
       }.bind(this));
     }.bind(this));
-    /*
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> fixed subtabs! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
-    console.log(holder.getElementsByClassName('subsections').length);
-    console.log('=====================================================================================');
-    */
-    return holder.getElementsByClassName('subsection');
+    
+    return holder.getElementsByClassName('subsection')
+  },
+  
+  showSubTab: function(target, num) {
+    var holder = _$(this.doc.getElementById(target));
+    var active = holder.getElementByClassName('subtab-active');
+    if (active) {
+      $(active).removeClass('subtab-active');
+    }
+    var above = holder.getElementByClassName('subtab-above');
+    if (above) {
+      $(above).removeClass('subtab-above');
+    }
+    var subsection = holder.getElementByClassName('subsection-active');
+    if (subsection) {
+      $(subsection).removeClass('subsection-active');
+    }
+    
+    var subtab = $(this.doc.getElementById('subtab-' + target + num));
+    var subsection = $(this.doc.getElementById('subsection-' + target + num));
+    subtab.addClass('subtab-active');
+    if (subtab.previousSibling) {
+      subtab.previousSibling.addClass('subtab-above');
+    }
+    subsection.addClass('subsection-active'); 
+    
   },
   
   

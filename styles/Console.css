@@ -294,6 +294,15 @@ label, .label {
   margin: 5px 30px;
 }
 
+#passwordResetLink {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+#login_response {
+  margin-left: 0;
+}
+
 #controls .button {
   float: left;
   width: 19px;
@@ -399,6 +408,11 @@ input.submit:active {
   float: left;
   margin-right: 5px;
   color: #f63b01;
+}
+
+#passwordForm h2 {
+  font-size: 11px;
+  margin: 13px 0 10px 0;
 }
 
 .installedTitleCol
