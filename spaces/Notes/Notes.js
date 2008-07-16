@@ -385,7 +385,6 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     this.saveButton.setStyle('display', '');
     this.cancelButton.setStyle('display', '');
-    this.resizeControl.setStyle('display', '');
     this.pinWidgetDiv.setStyle('display', '');
     
     if(this.inputArea)
@@ -409,7 +408,6 @@ var NotesShift = ShiftSpace.Shift.extend({
   {
     this.saveButton.setStyle('display', 'none');
     this.cancelButton.setStyle('display', 'none');
-    this.resizeControl.setStyle('display', 'none');
     this.pinWidgetDiv.setStyle('display', 'none');
     
     if(this.inputArea)
