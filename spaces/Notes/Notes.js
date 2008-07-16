@@ -51,9 +51,10 @@ var NotesSpace = ShiftSpace.Space.extend({
     
     // show the broken shift
     this.showShift(brokenShiftJson.id);
+    this.editShift(brokenShiftJson.id);
     
     // save the fixed shift
-    currentShift.save();
+    //currentShift.save();
   }
 });
 
