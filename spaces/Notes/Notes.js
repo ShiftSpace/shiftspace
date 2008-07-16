@@ -263,10 +263,14 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   encode : function()
   {
+    // position and size
     var pos = this.element.getPosition();
     var size = this.element.getSize().size;
-    var text = this.inputArea.getProperty('value').replace(/\n/g, "<br/>");
-    var titleText = this.inputArea.getProperty('value').replace(/\n/g, '');
+    
+    // tokenize newlines for transport
+    var text = this.getText();
+    // replace new lines in the input area with spaces for the summary
+    var titleText = this.inputArea.getProperty('value').replace(/\n/g, ' ');
     
     // NOTE: We need to store this for relative pinned notes - David
     this.noteText = text;
@@ -283,6 +287,19 @@ var NotesShift = ShiftSpace.Shift.extend({
         summary: 'html'
       }
     };
+  },
+  
+  
+  update: function()
+  {
+    // make the view area is up to date
+    if(this.viewArea) this.viewArea.setHTML(this.getText());
+  },
+  
+  
+  getText: function()
+  {
+    return this.inputArea.getProperty('value').replace(/\n/g, "<br/>");
   },
   
   
@@ -326,6 +343,8 @@ var NotesShift = ShiftSpace.Shift.extend({
   show: function()
   {
     this.parent();
+    
+    this.update();
     this.hideEditInterface();
     
     // have to remember to unpin
