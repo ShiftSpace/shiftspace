@@ -2727,7 +2727,7 @@ var ShiftSpace = new (function() {
         'class': "SSErrorWindowMessage"
       });
       errorWindowMessage.injectInside(__errorWindow__);
-      errorWindowMessage.setHTML('Help us improve our experimental fix feature, copy and paste the shift details and <a target="new" href="http://metatron.shiftspace.org/trac/">file a bug report</a>.');
+      errorWindowMessage.setHTML('Help us improve our experimental fix feature, copy and paste the shift details and <a target="new" href="http://metatron.shiftspace.org/trac/newticket">file a bug report</a>.');
 
       var br = new ShiftSpace.Element('br');
       br.setStyle('clear', 'both');
