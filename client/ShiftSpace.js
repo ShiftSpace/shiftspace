@@ -1447,7 +1447,7 @@ var ShiftSpace = new (function() {
       
       // if new skip to saveNewShift
       if (shiftJson.id.substr(0, 8) == 'newShift') {
-        return saveNewShift(shiftJson);
+        return saveNewShift.safeCall(shiftJson);
       }
       
       var filters = shiftJson.filters;
@@ -1503,7 +1503,7 @@ var ShiftSpace = new (function() {
         content: Json.toString(shiftJson),
         version: space.attributes.version,
         filters: Json.toString(filters),
-        status: getValue('default_shift_status', 1)
+        status: getValue('default_shift_status', 1) // TODO: this call is in the space ecosystem
       };
 
       serverCall.safeCall('shift.create', params, function(json) {

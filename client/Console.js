@@ -564,6 +564,7 @@ var Console = new Class({
   {
     var sections = this.createSubSections('settings', ['General', 'Spaces']);
     var default_shift_status = getValue('default_shift_status', 1);
+    
     if (default_shift_status == 1) {
       default_shift_status = ' checked';
     } else {
