@@ -51,6 +51,7 @@ var NotesSpace = ShiftSpace.Space.extend({
     
     // show the broken shift
     this.showShift(brokenShiftJson.id);
+    
     // save the fixed shift
     currentShift.save();
   }
@@ -270,17 +271,18 @@ var NotesShift = ShiftSpace.Shift.extend({
     
     // tokenize newlines for transport
     var text = this.getText();
-    // replace new lines in the input area with spaces for the summary
-    var titleText = this.inputArea.getProperty('value').replace(/\n/g, ' ');
     
-    // NOTE: We need to store this for relative pinned notes - David
-    this.noteText = this.inputArea.getProperty('value');
+    // NOTE: We need to store the actual noteText for relative pinned notes because iframe refresh issues - David
+    if(this.inputArea)
+    {
+      this.noteText = this.inputArea.getProperty('value');
+    }
     
     return {
       position : pos,
       size: size,
       noteText: text,
-      summary : this.getTitle() || titleText,
+      summary : this.getTitle(),
       pinRef: this.getEncodablePinRef(),
       filters: 
       {
@@ -300,7 +302,13 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   getText: function()
   {
-    return this.inputArea.getProperty('value').replace(/\n/g, "<br/>");
+    return (this.inputArea) ? this.inputArea.getProperty('value').replace(/\n/g, "<br/>") : this.noteText;
+  },
+  
+  
+  getTitle: function()
+  {
+    return (this.inputArea) ? this.inputArea.getProperty('value').replace(/\n/g, ' ') : this.parent();
   },
   
   
