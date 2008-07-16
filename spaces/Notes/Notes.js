@@ -69,8 +69,6 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   setup : function(json)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> HERE WE ARE!');
-    
     if(json.legacy)
     {
       json.position = {x: json.x, y: json.y};
@@ -273,7 +271,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     var titleText = this.inputArea.getProperty('value').replace(/\n/g, ' ');
     
     // NOTE: We need to store this for relative pinned notes - David
-    this.noteText = text;
+    this.noteText = this.inputArea.getProperty('value');
     
     return {
       position : pos,
@@ -342,7 +340,6 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   show: function()
   {
-    console.log('SHHHHHHHHHHHHHHHHHHHOOOOOOOOOOOOOOOOOOOOOOW');
     this.parent();
     
     this.update();
@@ -374,8 +371,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.unpin();
     }
-    
-    console.log('HIDDEN');
   },
   
   
@@ -587,6 +582,9 @@ var NotesShift = ShiftSpace.Shift.extend({
       $(link).setProperty('target', 'parent');
     });
 
+    // update the view
+    this.update();
+
     if(this.isBeingEdited())
     {
       this.edit();
@@ -693,7 +691,6 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   onPin: function(pinRef)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ONPIN ' + pinRef.action);
     if(pinRef.action == 'unpin')
     {
       this.unpin();
@@ -707,7 +704,6 @@ var NotesShift = ShiftSpace.Shift.extend({
   
   unpin: function()
   {
-    console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] UNPIN');
     this.parent();
     // put the note back on the page
     this.element.injectInside(document.body);
