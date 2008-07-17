@@ -573,7 +573,7 @@ var TrailPage = new Class({
         !this.isClosing )
     {
       // unzoom the last one
-      Trail.gFocusedNode.unzoom();
+      if(Trail.gFocusedNode) Trail.gFocusedNode.unzoom();
       
       // this is now the focused node
       Trail.gFocusedNode = this;
