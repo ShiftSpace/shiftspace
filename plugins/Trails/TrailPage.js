@@ -569,7 +569,7 @@ var TrailPage = new Class({
   {
     if( !this.isZooming && 
         !this.isZoomed &&
-        Trail.gFocusedNode != this &&
+        (!Trail.gFocusedNode || Trail.gFocusedNode != this) &&
         !this.isClosing )
     {
       // unzoom the last one
