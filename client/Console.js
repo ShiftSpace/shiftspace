@@ -1111,7 +1111,7 @@ var Console = new Class({
     this.resizer.setStyle('top', this.frame.getStyle('top'));
 
     //console.log('cleaned');
-    if(this.notifierFx)
+    if(this.notifierFx && this.isVisible())
     {
       //console.log('stop notifier');
       this.notifierFx.stop();
