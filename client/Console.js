@@ -1061,7 +1061,8 @@ var Console = new Class({
     return holder.getElementsByClassName('subsection')
   },
   
-  showSubTab: function(target, num) {
+  showSubTab: function(target, num) 
+  {
     var holder = _$(this.doc.getElementById(target));
     var active = holder.getElementByClassName('subtab-active');
     if (active) {
@@ -1080,7 +1081,7 @@ var Console = new Class({
     var subsection = $(this.doc.getElementById('subsection-' + target + num));
     subtab.addClass('subtab-active');
     if (subtab.previousSibling) {
-      subtab.previousSibling.addClass('subtab-above');
+      $(subtab.previousSibling).addClass('subtab-above');
     }
     subsection.addClass('subsection-active'); 
     
