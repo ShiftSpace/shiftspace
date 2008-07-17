@@ -1093,12 +1093,13 @@ var Console = new Class({
   Resize the content area.
   
   */
-  refresh: function() {
+  refresh: function() 
+  {
     if (!this.doc || !this.doc.getElementById('top')) 
     {
       // Need to wait a moment longer while things are being built
       if(this.resize) setTimeout(this.resize.bind(this), 50);
-    } 
+    }
     else 
     {
       var top = $(this.doc.getElementById('top')).getParent();

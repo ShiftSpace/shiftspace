@@ -569,9 +569,13 @@ var TrailPage = new Class({
   {
     if( !this.isZooming && 
         !this.isZoomed &&
-        !Trail.gFocusedNode &&
+        Trail.gFocusedNode != this &&
         !this.isClosing )
     {
+      // unzoom the last one
+      Trail.gFocusedNode.unzoom();
+      
+      // this is now the focused node
       Trail.gFocusedNode = this;
       
       // change the border to red
