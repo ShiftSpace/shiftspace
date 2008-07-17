@@ -125,36 +125,11 @@ var Console = new Class({
     //console.log('frame built');
   },
     
-  buildNotifier: function() {
-
+  buildNotifier: function() 
+  {
     this.notifier = new ShiftSpace.Element('div', {
       'class': 'SSConsoleNotifier'
     });
-    
-    // make the console resizable
-    /*
-    this.notifier.makeDraggable({
-      modifiers: {x:null, y:'top'},
-      onStart: function() 
-      {
-        this.startDrag = this.notifier.getPosition().y;
-        this.startHeight = this.frame.getSize().size.y;
-        this.resizeMask.injectInside(document.body);
-      }.bind(this),
-      
-      onDrag: function() 
-      {
-        var dy = this.notifier.getPosition().y - this.startDrag;
-        this.frame.setStyle('height', this.startHeight - dy);
-        this.refresh();
-      }.bind(this),
-      
-      onComplete: function() {
-        this.resizeMask.remove();
-        //setValue('console.height', parseInt(this.frame.getStyle('height')));
-      }.bind(this)
-    });
-    */
         
     var img = new ShiftSpace.Element('img', {
       src: server + 'images/Console/notifier-icon.png',
@@ -186,7 +161,8 @@ var Console = new Class({
     // Call private console is ready function
     SSConsoleIsReady();
   },
-    
+  
+  
   /*
   
   Function: buildPluginMenu
@@ -642,8 +618,8 @@ var Console = new Class({
     
     $(sections[1]).setHTML('<form action="' + server + 'shiftspace.php">' +
                         '<label for="install-space">Install a space</label>' +
-                        '<input type="text" name="space" id="install-space" class="text" size="40" />' +
-                        '<input type="submit" value="Install" class="submit" />' +
+                        '<input style="float:left" type="text" name="space" id="install-space" class="text" size="40" />' +
+                        '<input style="float:right" type="submit" value="Install" class="submit" />' +
                         '</form>');
     $(sections[1]).setStyles({
       padding: '10px 20px'
@@ -657,7 +633,7 @@ var Console = new Class({
     {
       var newSpace = this.installedSpace(space);
       //console.log('newSpace ' + newSpace);
-      $(newSpace).injectBefore(form);
+      $(newSpace).injectAfter(form);
     }
     
     //console.log('buildSettings - added spaces');
@@ -679,24 +655,18 @@ var Console = new Class({
   
   onSpaceInstall: function(spaceName)
   {
-    console.log('onSpaceInstall');
-
     var newSpace = $(this.installedSpace(spaceName));
-    newSpace.injectBefore(this.doc.getElementById('installedSpacesForm'));
+    newSpace.injectAfter(this.doc.getElementById('installedSpacesForm'));
     var spaceInput = this.doc.getElementById('install-space');
     spaceInput.value = '';
-    
     this.updateIconsForSpace(spaceName);
   },
   
   
   onSpaceUninstall: function(spaceName)
   {
-    console.log('onSpaceUninstall');
-    
     var spaceDiv = $(this.doc.getElementById('installed' + spaceName));
     spaceDiv.remove();
-
     this.updateIconsForSpace(spaceName);
   },
   
@@ -851,7 +821,9 @@ var Console = new Class({
     $(this.doc.getElementById(id)).addClass('active');
   },
   
-  removeTab: function(id) {
+  
+  removeTab: function(id) 
+  {
     console.log('>>>>>>>>>>>>>>>>>>>>> REMOVE TAB ' + id);
 
     var tab = $(this.doc.getElementById('tab-' + id));
@@ -860,7 +832,9 @@ var Console = new Class({
     }
   },
   
-  buildLogin: function() {
+  
+  buildLogin: function() 
+  {
     this.addPane('login');
     //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CREATE SUBSECTIONS');
     var sections = this.createSubSections('login', ['Login', 'Sign up', 'Password']);
@@ -941,7 +915,9 @@ var Console = new Class({
     }.bind(this));
   },
   
-  buildWelcome: function() {
+  
+  buildWelcome: function() 
+  {
     // add temporary welcome tab
     var pane = this.addTab('welcome', 'Welcome');
     // resize console
@@ -953,7 +929,8 @@ var Console = new Class({
   },
   
   
-  handleLogin: function(json) {
+  handleLogin: function(json) 
+  {
     if (json.status) 
     {
       this.setupAuthControl();

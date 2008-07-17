@@ -358,10 +358,18 @@ label, .label {
   margin-top: 10px;
 }
 
+#installedSpaceForm
+{
+  height: 60px;
+  margin-bottom: 10px;
+  border-bottom: 1px dotted #000;
+}
+
 .installedSpace {
   padding-bottom: 10px;
   margin-bottom: 10px;
   border-bottom: 1px dotted #303030;
+  clear: both;
 }
 
 .installedSpace img, .installedSpace .info {
