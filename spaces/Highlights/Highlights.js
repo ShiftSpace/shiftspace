@@ -348,9 +348,11 @@ var HighlightsShift = ShiftSpace.Shift.extend({
   
   show: function() 
   {
+    // call to parent
+    this.parent();
+    
     var space = this.getParentSpace();
     space.hideHighlights();
-    //space.showInterface();
     
     if (this.ranges) 
     {
@@ -367,6 +369,9 @@ var HighlightsShift = ShiftSpace.Shift.extend({
   
   hide: function()  
   {
+    // call to parent
+    this.parent();
+    
     this.getParentSpace().hideHighlights();
   }
 });
