@@ -48,6 +48,15 @@ var HighlightsSpace = ShiftSpace.Space.extend({
       return false;
     };
   },
+  
+  
+  showShift: function(aShift)
+  {
+    var currentShift = this.getCurrentShift();
+    if(currentShift) currentShift.hide();
+    
+    this.parent(aShift);
+  },
     
 
   selectColor: function(colorElement, color) 
