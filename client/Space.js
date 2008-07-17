@@ -414,7 +414,6 @@ ShiftSpace.Space = new Class({
   */
   showShift : function( aShift ) 
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SPACE SHOW SHIFT ');
     if(!this.cssIsLoaded())
     {
       this.__deferredShifts__.push(aShift);
