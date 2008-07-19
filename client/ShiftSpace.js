@@ -97,9 +97,6 @@ var ShiftSpace = new (function() {
     // An array of allocated Pin Widgets
     var __pinWidgets__ = [];
     
-    // An array of recently viewed shifts
-    var __recentlyViewedShifts__ = {};
-    
     // Used to cover iframes so that resize and drag operations don't get borked
     var __iframeCovers__ = [];
     
@@ -235,10 +232,8 @@ var ShiftSpace = new (function() {
       
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RECENTLY VIEWED SHIFTS');
         // clear out recently viewed shifts on login
-        __recentlyViewedShifts__ = {};
-        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', __recentlyViewedShifts__);
+        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', {});
       });
       ShiftSpace.User.addEvent('onUserLogout', function() {
         SSFireEvent('onUserLogout');
@@ -512,6 +507,7 @@ var ShiftSpace = new (function() {
       }
     }
     
+    
     function SSGetUrlForShift(shiftId)
     {
       //console.log(shifts[shiftId]);
@@ -519,14 +515,51 @@ var ShiftSpace = new (function() {
     }
     
     
-    function SSGetRecentlyViewedShifts()
+    function SSGetRecentlyViewedShifts(callback)
     {
-      var copy = {};
-      for(var shiftId in __recentlyViewedShifts__)
-      {
-        copy[shiftId] = SSGetShiftData(shiftId);
-      }
-      return copy;
+      console.log('=======================================================');
+      console.log('SSGetRecentlyViewedShifts');
+      
+      // array of shifts on the currently viewed url
+      var localShifts = {};
+      // array of shifts living on other urls
+      var remoteShifts = [];
+
+      // grab the local shifs and generate an array of remote shifts
+      getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
+        console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+        console.log(recentlyViewedShifts);
+        console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+        
+        for(var shiftId in recentlyViewedShifts)
+        {
+          if(SSGetShift(shiftId))
+          {
+            localShifts[shiftId] = SSGetShiftData(shiftId);
+          }
+          else
+          {
+            remoteShifts.push(shiftId);
+          }
+        }
+      
+        if(remoteShifts.length > 0)
+        {
+          SSLoadShifts(remoteShifts, function(remoteShiftsArray) {
+            // convert array into hash
+            var theRemoteShifts = {};
+            remoteShiftsArray.each(function(shift) {
+              theRemoteShifts[shift.id] = shift;
+            });
+            // merge local and remote
+            callback($merge(localShifts, theRemoteShifts));
+          });
+        }
+        else
+        {
+          callback(localShifts);
+        };
+      });
     }
     
     
@@ -562,6 +595,7 @@ var ShiftSpace = new (function() {
       return (shiftId.search('newShift') != -1);
     }
     
+
     function SSSetShiftStatus(shiftId, newStatus) {
       SSGetShift(shiftId).status = newStatus;
       var params = {
@@ -585,6 +619,8 @@ var ShiftSpace = new (function() {
 
     function SSGetPluginType(plugin)
     {
+      console.log('++++++++++++++++++++++++++++++++++++++');
+      console.log(plugin);
       return __pluginsData__[plugin]['type'];
     }
     
@@ -1108,10 +1144,12 @@ var ShiftSpace = new (function() {
       // TODO: only add these if the user is logged in
       if(ShiftSpace.User.isLoggedIn() && !SSIsNewShift(shiftId))
       {
-        // simply mark the ids
-        __recentlyViewedShifts__[shiftId] = 1;
-        // store the recently viewed shifts
-        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', __recentlyViewedShifts__);
+        getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
+          // simply mark the ids
+          recentlyViewedShifts[shiftId] = 1;
+          // store the recently viewed shifts
+          setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', recentlyViewedShifts);
+        });
       }
     }
     
@@ -1155,10 +1193,7 @@ var ShiftSpace = new (function() {
         {
           // Set private user variable
           setUsername(json.username);
-          
-          // load the recently viewed shifts
-          __recentlyViewedShifts__ = getValue(json.username+'.recentlyViewedShifts', {});
-           
+
           if (__consoleIsWaiting__)
           {
             SSFireEvent('onUserLogin', {status:1});
@@ -1253,22 +1288,22 @@ var ShiftSpace = new (function() {
           
           //console.log(Json.toString(json));
           
-          /*
+
           console.log('====================================================================');
           console.log('SHIFT QUERY RETURN');
           console.log('====================================================================');
           console.log(json);
-          */
+
 
           // save the pluginsData
           for(var plugin in installedPlugins)
           {
-            //console.log('++++++++++++++++++++++++++++++++++++++ CHECKING FOR ' + plugin);
+            console.log('++++++++++++++++++++++++++++++++++++++ CHECKING FOR ' + plugin);
             if(json[plugin]) 
             {
-              //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-              //console.log('LOADING INITIAL DATA FOR ' + plugin);
-              //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+              console.log('LOADING INITIAL DATA FOR ' + plugin);
+              console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
               __pluginsData__[plugin] = json[plugin];
             }
           }
@@ -1352,6 +1387,7 @@ var ShiftSpace = new (function() {
     }
     
     
+    // TODO: rewrite as a special case of SSLoadShifts
     function SSLoadShift(shiftId, callback)
     {
       // fetch a content from the network;
@@ -1366,6 +1402,26 @@ var ShiftSpace = new (function() {
           if(callback && $type(callback) == 'function')
           {
             callback(shiftObj.id);
+          }
+        }
+      });
+    }
+    
+    
+    function SSLoadShifts(shiftIds, callback)
+    {
+      // fetch a content from the network;
+      var params = { shiftIds: shiftIds.join(',') };
+      serverCall.safeCall('shift.get', params, function(returnArray) {
+        if(returnArray && returnArray.length > 0)
+        {
+          returnArray.each(function (shiftObj) {
+            SSSetShift(shiftObj.id, shiftObj);
+          });
+          
+          if(callback && $type(callback) == 'function')
+          {
+            callback(returnArray);
           }
         }
       });

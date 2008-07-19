@@ -376,12 +376,7 @@ var Console = new Class({
   {
     if (this.cancelNotifier) 
     {
-      if (SSPendingShifts()) 
-      {
-        //console.log('time to load shifts');
-        SSSetPendingShifts(0);
-        loadShifts();
-      }
+      this.loadShifts();
     } 
     else 
     {
@@ -390,11 +385,7 @@ var Console = new Class({
 
       //console.log('start animation for notifier');
       this.notifierFx.start(-32, 0).chain(function() {
-        if (SSPendingShifts()) 
-        {
-          SSSetPendingShifts(0);
-          loadShifts();
-        }
+        this.loadShifts();
         this.hideNotifier.delay(3000, this);
       }.bind(this));
     }
@@ -1196,11 +1187,7 @@ var Console = new Class({
 
     this.refresh();
 
-    if (SSPendingShifts() > 0) 
-    {
-      SSSetPendingShifts(0);
-      loadShifts();
-    }
+    this.loadShifts();
   },
   
   
@@ -1781,9 +1768,20 @@ var Console = new Class({
     this.modelShiftEntry = shiftEntry;
   },
   
+
   createLogInForm : function()
   {
     
+  },
+  
+
+  loadShifts: function()
+  {
+    if(!this.__shiftsLoaded__)
+    {
+      this.__shiftsLoaded__ = true;
+      loadShifts();
+    }
   }
   
 });
