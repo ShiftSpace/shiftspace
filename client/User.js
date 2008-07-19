@@ -57,6 +57,10 @@ var User = new Class({
   
   update: function(info, callback) {
     serverCall('user.update', info, callback);
+  },
+  
+  resetPassword: function(info, callback) {
+    serverCall('user.resetPassword', info, callback);
   }
 
 });
