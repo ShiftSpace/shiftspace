@@ -128,7 +128,11 @@ var Console = new Class({
   buildNotifier: function() 
   {
     this.notifier = new ShiftSpace.Element('div', {
-      'class': 'SSConsoleNotifier'
+      'class': 'SSConsoleNotifier',
+      styles : 
+      {
+        display: 'none'
+      }
     });
         
     var img = new ShiftSpace.Element('img', {
@@ -173,15 +177,18 @@ var Console = new Class({
   {
     // the tab connecting the icon to the menu
     this.pluginMenuTab = new ShiftSpace.Element('div');
+    this.pluginMenuTab.setStyle('display', 'none');
     this.pluginMenuTab.setProperty('id', "SSConsolePluginMenuTab");
+
     this.pluginMenuTabIcon = new ShiftSpace.Element('div');
     this.pluginMenuTabIcon.addClass('SSPluginMenuTabIcon SSUserSelectNone');
     this.pluginMenuTabIcon.injectInside(this.pluginMenuTab);
     
     this.pluginMenu = new ShiftSpace.Element('div');
+    this.pluginMenu.setStyle('display', 'none');
     this.pluginMenu.setProperty('id', 'SSConsolePluginMenu');
     this.pluginMenu.addClass('SSMenu SSUserSelectNone');
-    
+
     this.topItem = new ShiftSpace.Element('div');
     this.topItem.addClass('SSMenuTopItem');
     this.topItem.addClass('item');
@@ -324,6 +331,10 @@ var Console = new Class({
     var pluginMenuTab = $(this.pluginMenuTab);
     var pluginMenuTabIcon = $(this.pluginMenuTabIcon)
     
+    // clear out the display none styles
+    pluginMenu.setStyle('display', '');
+    pluginMenuTab.setStyle('display', '');
+    
     pluginMenuTabIcon.addClass(plugin.menuIcon());
 
     pluginMenuTab.setStyles({
@@ -363,7 +374,6 @@ var Console = new Class({
   
   showNotifier: function() 
   {
-    //console.log('-------------------------------- showNotifier');
     if (this.cancelNotifier) 
     {
       if (SSPendingShifts()) 
@@ -375,6 +385,9 @@ var Console = new Class({
     } 
     else 
     {
+      this.notifier.setStyle('display', '');
+      this.notifier.removeClass('SSDisplayNone');
+
       //console.log('start animation for notifier');
       this.notifierFx.start(-32, 0).chain(function() {
         if (SSPendingShifts()) 
@@ -386,7 +399,6 @@ var Console = new Class({
       }.bind(this));
     }
     this.hideNotifier.delay(3000, this);
-    console.log('----------------------------------- exit show notifier');
   },
   
   hideNotifier: function() {
@@ -1109,11 +1121,13 @@ var Console = new Class({
   */
   show: function() {
     this.cancelNotifier = true;
-    //console.log('make visible');
+
+    this.notifier.setStyle('display', '');
+    this.notifier.removeClass('SSDisplayNone');
     this.frame.setStyle('display', 'block');
-    //console.log('refresh');
+
     this.refresh();
-    //console.log('checking pending');
+
     if (SSPendingShifts() > 0) 
     {
       SSSetPendingShifts(0);
@@ -1128,21 +1142,22 @@ var Console = new Class({
   Hide the console.
   
   */
-  hide: function() {
+  hide: function() 
+  {
+    this.notifier.addClass('SSDisplayNone');
     this.frame.setStyle('display', 'none');
-    //console.log('again set');
     this.notifierFx.set(-32);
-    //console.log('hide plugin menu');
     this.hidePluginMenu();
-    //console.log('plugin menu hidden');
   },
   
+
   minimize: function() {
     this.frame.setStyle('height', 0);
     this.refresh();
     this.hidePluginMenu();
   },
   
+
   isVisible: function() 
   {
     return (this.frame.getStyle('display') == 'block');
