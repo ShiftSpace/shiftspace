@@ -401,8 +401,11 @@ var Console = new Class({
     this.hideNotifier.delay(3000, this);
   },
   
-  hideNotifier: function() {
-    if (!this.cancelNotifier) {
+  
+  hideNotifier: function() 
+  {
+    if (!this.cancelNotifier) 
+    {
       this.cancelNotifier = true;
       this.notifierFx.start(0, -32);
     }
@@ -524,6 +527,7 @@ var Console = new Class({
     
     //console.log('contents built');
   },
+  
   
   setupAuthControl: function() {
     console.log('setupAuthControl');

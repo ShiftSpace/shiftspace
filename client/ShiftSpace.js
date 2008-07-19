@@ -1072,15 +1072,8 @@ var ShiftSpace = new (function() {
           // fix legacy content
           shiftJson.legacy = shift.legacy;
 
-          // store a reference to this
-          // TODO: only add these if the user is logged in
-          if(ShiftSpace.User.isLoggedIn())
-          {
-            // simply mark the ids
-            __recentlyViewedShifts__[shift.id] = 1;
-            // store the recently viewed shifts
-            setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', __recentlyViewedShifts__);
-          }
+          // add to recently viewed list
+          SSAddRecentlyViewedShift(shiftId);
 
           // wrap this in a try catch
           try
@@ -1105,6 +1098,20 @@ var ShiftSpace = new (function() {
           // probably need to do some kind of cleanup
           ShiftSpace.Console.hideShift(shiftId);
         }
+      }
+    }
+    
+    
+    function SSAddRecentlyViewedShift(shiftId)
+    {
+      // store a reference to this
+      // TODO: only add these if the user is logged in
+      if(ShiftSpace.User.isLoggedIn() && !SSIsNewShift(shiftId))
+      {
+        // simply mark the ids
+        __recentlyViewedShifts__[shiftId] = 1;
+        // store the recently viewed shifts
+        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', __recentlyViewedShifts__);
       }
     }
     
@@ -1322,7 +1329,10 @@ var ShiftSpace = new (function() {
     // returns a copy of the shift data
     function SSGetShiftData(shiftId)
     {
+      console.log(shiftId);
       var shift = SSGetShift(shiftId);
+      console.log('++++++++++++++++++++++++++++++++++++++++++++++++++');
+      console.log(shift);
       return {
         id : shift.id,
         title : shift.summary,

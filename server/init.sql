@@ -33,6 +33,8 @@ CREATE TABLE trail (
   created DATETIME,
   modified DATETIME,
   url_slug VARCHAR(255),
+  thumb_status INTEGER DEFAULT 0,
+  version VARCHAR(255),
   status INTEGER DEFAULT 1
 );
 
