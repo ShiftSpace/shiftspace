@@ -1412,9 +1412,15 @@ var ShiftSpace = new (function() {
     {
       // fetch a content from the network;
       var params = { shiftIds: shiftIds.join(',') };
-      serverCall.safeCall('shift.get', params, function(returnArray) {
+      serverCall.safeCall('shift.get', params, function(_returnArray) {
+        var returnArray = _returnArray;
+        
         if(returnArray && returnArray.length > 0)
         {
+          // filter out null shifts
+          returnArray = returnArray.filter(function(x) { return x != null; });
+
+          // update internal array
           returnArray.each(function (shiftObj) {
             SSSetShift(shiftObj.id, shiftObj);
           });
