@@ -557,7 +557,11 @@ var Console = new Class({
   
   buildSettings: function() 
   {
-    var sections = this.createSubSections('settings', ['General', 'Spaces']);
+    var sections = this.createSubSections('settings', ['General', 'Spaces', 'Account']);
+    if (!ShiftSpace.User.isLoggedIn()) {
+      this.hideSubTab('settings', 2);
+    }
+    
     var default_shift_status = getValue('default_shift_status', 1);
     
     if (default_shift_status == 1) {
@@ -665,9 +669,42 @@ var Console = new Class({
       
     }.bind(this));
     
-    //console.log('buildSettings - added form action');
+    $(sections[2]).setHTML(
+      '<form action="' + server + 'shiftspace.php" style="padding-top: 15px;" id="settings-account">' +
+        '<div class="form-column">' +
+          '<label for="account-password">Change your password</label>' +
+          '<input type="password" name="account-password" id="account-password" class="text" />' +
+          '<label for="account-password">Type your new password again</label>' +
+          '<input type="password" name="account-passwordagain" id="account-passwordagain" class="text float-left" />' +
+          '<input type="submit" value="Save" class="float-left" />' +
+          '<br class="clear" />' +
+        '</div>' +
+        '<br class="clear" />' +
+        '<div id="account-response" class="response"></div>' +
+      '</form>'
+    );
+    
+    $(this.doc.getElementById('settings-account')).addEvent('submit', function(e) {
+      new Event(e).preventDefault();
+      var info = {
+        password: this.doc.getElementById('account-password').value,
+        password_again: this.doc.getElementById('account-passwordagain').value
+      };
+      ShiftSpace.User.update(info, this.handleAccountUpdate.bind(this));
+    }.bind(this));
   },
   
+  showSubTab: function(section, num) {
+    console.log('show ' + 'subtab-' + section + num);
+    var subtab = $(this.doc.getElementById('subtab-' + section + num));
+    subtab.setStyle('display', 'block');
+  },
+  
+  hideSubTab: function(section, num) {
+    console.log('hide ' + 'subtab-' + section + num);
+    var subtab = $(this.doc.getElementById('subtab-' + section + num));
+    subtab.setStyle('display', 'none');
+  },
   
   onSpaceInstall: function(spaceName)
   {
@@ -881,9 +918,10 @@ var Console = new Class({
       };
       ShiftSpace.User.login(credentials, this.handleLogin.bind(this));
     }.bind(this));
+    
     $(this.doc.getElementById('passwordResetLink')).addEvent('click', function(e) {
       new Event(e).preventDefault();
-      this.showSubTab('login', 2);
+      this.showSubSection('login', 2);
     }.bind(this));
     $(sections[1]).setHTML('<form id="registerForm" action="http://shiftspace.org/join" method="post">' +
                         '<div class="form-column">' +
@@ -921,7 +959,7 @@ var Console = new Class({
         '<label for="login">Username or email address</label>' +
         '<input type="text" name="login" id="login" class="text" size="25" />' +
         '<input type="submit" value="Submit" class="button" />' +
-        '<div id="password_response" class="response"></div>' +
+        '<div id="password-response" class="response"></div>' +
       '</form>'
     );
     $(this.doc.getElementById('passwordForm')).addEvent('submit', function(e) {
@@ -954,6 +992,9 @@ var Console = new Class({
       this.resetLogin();
       this.removeTab('login');
       
+      // Hide the Account subtab
+      this.showSubTab('settings', 2);
+      
       // update the controls
       this.updateControlsForUsersShifts();
       
@@ -973,6 +1014,12 @@ var Console = new Class({
   {
     this.updateControlsForUsersShifts();
     
+    this.showResponse('login_response', 'You have been logged out.');
+    this.addTab('login', 'Login');
+    this.showTab('login');
+    this.hideSubTab('settings', 2);
+    this.showSubSection('settings', 0);
+    
     // remove the autolaunch checkboxes
     $A(_$(this.doc.getElementsByClassName('autolaunchCol'))).each(function(x) {
       $(x).addClass('SSDisplayNone');
@@ -988,6 +1035,11 @@ var Console = new Class({
       this.removeTab('login');
       this.setupAuthControl();
       this.resetJoin();
+      
+      // Hide the Account subtab
+      this.showSubTab('settings', 2);
+      this.showSubSection('settings', 0);
+      
     } 
     else 
     {
@@ -995,8 +1047,16 @@ var Console = new Class({
     }
   },
   
+  handleAccountUpdate: function(json) {
+    this.showResponse('account-response', json.message);
+    if (json.status) {
+      $(this.doc.getElementById('account-password')).value = '';
+      $(this.doc.getElementById('account-passwordagain')).value = '';
+    }
+  },
+  
   handlePasswordReset: function(json) {
-    
+    this.showResponse('password-response', json.message);
   },
   
   resetLogin: function() {
@@ -1047,14 +1107,14 @@ var Console = new Class({
       $(subtab).addEvent('click', function(e) {
         var id = e.target.getAttribute('id');
         var num = id.substr(7 + target.length);
-        this.showSubTab(target, num);
+        this.showSubSection(target, num);
       }.bind(this));
     }.bind(this));
     
     return holder.getElementsByClassName('subsection')
   },
   
-  showSubTab: function(target, num) 
+  showSubSection: function(target, num) 
   {
     var holder = _$(this.doc.getElementById(target));
     var active = holder.getElementByClassName('subtab-active');

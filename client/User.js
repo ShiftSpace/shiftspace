@@ -35,12 +35,6 @@ var User = new Class({
     username = false;
     setValue('username', '');
     serverCall('user.logout');
-    
-    // TODO: User Object should not refer to Console - David
-    ShiftSpace.Console.showResponse('login_response', 'You have been logged out.');
-    ShiftSpace.Console.addTab('login', 'Login');
-    ShiftSpace.Console.showTab('login');
-    
     this.fireEvent('onUserLogout');
   },
   
@@ -59,6 +53,10 @@ var User = new Class({
         callback(json);
       }
     }.bind(this));
+  },
+  
+  update: function(info, callback) {
+    serverCall('user.update', info, callback);
   }
 
 });
