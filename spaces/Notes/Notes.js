@@ -396,6 +396,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   onBlur: function()
   {
     this.parent();
+    this.update();
     this.hideEditInterface();
   },
   
