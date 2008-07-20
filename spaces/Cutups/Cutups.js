@@ -14,17 +14,17 @@ var CutupsSpace = ShiftSpace.Space.extend({
     this.fireCutup = function(e){
             //added check for multLineArray if exists there is a change that part
             //of the cutup is still selected
-            if (!window.getSelection().getRangeAt(0).collapsed && !this.multiLineArray) {
+            if (!window.getSelection().getRangeAt(0).collapsed && !this.origTextArray) {
                var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
                 if (!this.getCurrentShift().ranges){
                     this.getCurrentShift().ranges = [];
                 }
                 this.getCurrentShift().ranges.push(newRangeRef);
                 this.turnOnRangeRef(newRangeRef);
-                //multiLineArray contains textnodes as they appear in their original
-                //form and broken into a randomized array of words
-                newRangeRef.cutupsArray = this.multiLineArray['cutup'];
-                newRangeRef.origArray = this.multiLineArray['orig'];
+                //cutupTextArray contains text in selected range 'cutup'
+                newRangeRef.cutupsArray = this.cutupTextArray;
+                //origTextArray contains original text selected
+                newRangeRef.origArray = this.origTextArray;
             }else{
             /*
             Changed code so that user can press cutup multiple times to 
@@ -39,6 +39,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
             return false;
     }.bind(this);
   },  
+  
+  //-Thanks Avital-
   surround_text_node: function(oNode, objRange, surroundingNode){
       var tempRange;
       //if this selection starts and ends in the same node
@@ -75,6 +77,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
       }        
   },  
   turnOnRangeRef: function(ref) {
+    console.log("in turnOnRangeRef");
     var range = ShiftSpace.RangeCoder.toRange(ref);
     var objAncestor = range.commonAncestorContainer;
     
@@ -92,74 +95,79 @@ var CutupsSpace = ShiftSpace.Space.extend({
         enclosingSpan.setAttribute("_shiftspace_cutups", "on");
         this.surround_text_node(xPathResult.snapshotItem(i), range, enclosingSpan);
     }
-    //if cutUpArray does not exist
-    //call cutupRange on xPathResult of cutups span
+    //if cutUpArray does not exist call cutupRange on xPathResult of cutups span
     if(!ref.cutupsArray){
       var xPathQuery = "//*[@id='"  + this.getCurrentShift().getId() + "']";
       var xPathResult2 = document.evaluate(xPathQuery, objAncestor, null,
           XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
       //iterate through snapshot & rewrite textnodes
-      //need to move this otherwise randomizaton operation will be applied every
-      //time the shift is shown
       this.cutupRange(xPathResult2);
     }else{
       var xPathQuery = "//*[@id='"  + this.getCurrentShift().getId() + "']";
       var xPathResult2 = document.evaluate(xPathQuery, objAncestor, null,
           XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-    //reinsert sorted array as string back into document
+      //reinsert sorted array as string back into document
       for ( var i=0,l=0; i < xPathResult2.snapshotLength; i++ ){
         //if node is not empty
-        if(!xPathResult2.snapshotItem(i).textContent.match(/^\s+$/)){
+        if(!xPathResult2.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult2.snapshotItem(i))){
           xPathResult2.snapshotItem(i).textContent = ref.cutupsArray[l].join("");
           l++
         }
       }
     }
   },
+  
+  isValidCutupTextNode: function(node){
+   return (node != null && node.getParent().nodeName != "SCRIPT"); 
+  },
+  
   cutupRange: function(xPathResult){
-    if(!this.multiLineArray){
-      this.multiLineArray = Array();//2 dim array contains text for each node
-      this.multiLineArray['cutup'] = Array();
-      this.multiLineArray['orig'] = Array();
-      this.joinedArray = Array();//contains all text split into single array
+    //need to add: ignore script tag content
+    if(!this.origTextArray){
+      this.cutupTextArray = Array();
+      this.origTextArray = Array();
+      this.joinedTextArray = Array();//contains all text split into single array
       var pattern = /(\s)?\S+/g;
       //break up snapshot into arrays of words
       for ( var i=0 ; i < xPathResult.snapshotLength; i++ ){
-          var text = xPathResult.snapshotItem(i).textContent;
-          var lineArray = text.match(pattern);
-          //joinedArray contains all arrays of words from text nodes in a single
-          //array.
-          this.joinedArray = this.joinedArray.concat(lineArray);
-          //do not add empty nodes to array
-          if(lineArray != null){
-            this.multiLineArray['cutup'].push(lineArray);
-            this.multiLineArray['orig'].push(text);
+          if(this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
+            var text = xPathResult.snapshotItem(i).textContent;
+            var lineArray = text.match(pattern);
+            //joinedTextArray contains all arrays of words from text nodes in a single
+            //array.
+            this.joinedTextArray = this.joinedTextArray.concat(lineArray);
+            //do not add empty nodes to array or is content is javascript
+            if(lineArray != null){ 
+              this.cutupTextArray.push(lineArray);
+              this.origTextArray.push(text);
+            }
           }
       }
-      //filter out null values
-      this.joinedArray = this.joinedArray.filter(function(item,index){
+      //filter out null values and SCRIPT content
+      console.log(this.joinedTextArray);
+      this.joinedTextArray = this.joinedTextArray.filter(function(item,index){
           return item != null;
       });
     }
     //randomly sort joined arrays
-    this.joinedArray.sort(function(a,b){
+    this.joinedTextArray.sort(function(a,b){
         return Math.random() - 0.5;
     });
     //break up reinsert sorted item into multiline array
     //this keeps the same number of words in each node
     //while the actual words change
     var i = 0;
-    for(var x=0;x<this.multiLineArray['cutup'].length;x++){
-        for(var y=0;y<this.multiLineArray['cutup'][x].length;y++){
-            this.multiLineArray['cutup'][x][y] = this.joinedArray[i];
+    for(var x=0;x<this.cutupTextArray.length;x++){
+        for(var y=0;y<this.cutupTextArray[x].length;y++){
+            this.cutupTextArray[x][y] = this.joinedTextArray[i];
             i++;
         }
     }
     //reinsert sorted array as string back into document
     for ( var i=0,l=0; i < xPathResult.snapshotLength; i++ ){
       //if node is not empty
-      if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
-        xPathResult.snapshotItem(i).textContent = this.multiLineArray['cutup'][l].join("");
+      if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
+        xPathResult.snapshotItem(i).textContent = this.cutupTextArray[l].join("");
         l++
       }
     } 
@@ -185,24 +193,23 @@ var CutupsSpace = ShiftSpace.Space.extend({
       
       var parentNodes = [];
       for (var i=0,l=0; i < xPathResult.snapshotLength; i++) {
-        if(!xPathResult.snapshotItem(i).textContent.match(/^s+$/)){//HERE
           var spanElement = xPathResult.snapshotItem(i);
           //if is not an empty node grab content from json
-          if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
-            var newTextNode = document.createTextNode(this.multiLineArray['orig'][l]);
+          if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
+            var newTextNode = document.createTextNode(this.origTextArray[l]);
             l++;
           }else{
             var newTextNode = document.createTextNode(spanElement.textContent);
           }
           parentNodes[i] = spanElement.parentNode;
           spanElement.parentNode.replaceChild(newTextNode, spanElement);
-        }
       } 
 
       for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
           parentNodes[i].normalize();
       } 
-      this.multiLineArray = null;
+      this.cutupTextArray = null;
+      this.origTextArray = null;
       
   },
   close: function(){
@@ -284,7 +291,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
       for (var i=0,l=0; i < xPathResult.snapshotLength; i++) {
         //if is not an empty node grab content from json
         var spanElement = xPathResult.snapshotItem(i);
-        if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/)){
+        if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
           var newTextNode = document.createTextNode(json[0]['origArray'][l]);
           l++;
         }else{
@@ -297,6 +304,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
       for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
           parentNodes[i].normalize();
       } 
+      this.origTextArray = null;
+      this.cutupTextArray = null;
   },  
   save: function() {
     this.getCurrentShift().summary = this.summary.value;
@@ -336,6 +345,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
       };
     },
     show: function() {
+      console.log("In CutupsShift show");
       var space = this.getParentSpace();
       if (this.ranges) {
         for(var i=0; i<this.ranges.length; i++){
