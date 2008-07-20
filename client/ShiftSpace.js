@@ -200,16 +200,11 @@ var ShiftSpace = new (function() {
       });
       loadStyle('styles/ShiftMenu.css');
 
-      // Load each installed space - this asynchronous, we need to wait till
-      // they are all done
+      // Load all spaces and plugins immediately if in the sanbox
       if (typeof ShiftSpaceSandBoxMode != 'undefined') {
         for (var space in installed) {
           loadSpace(space);
         }
-      }
-
-      // need to think about plugin loading architecture! - this is going to involve a reworking of file loading
-      if (typeof ShiftSpaceSandBoxMode != 'undefined') {
         for(var plugin in installedPlugins) {
           SSLoadPlugin(plugin);
         }
@@ -223,6 +218,7 @@ var ShiftSpace = new (function() {
       window.addEvent('keyup', keyUpHandler.bind(this) );
       window.addEvent('keypress', keyPressHandler.bind(this) );
       window.addEvent('mousemove', mouseMoveHandler.bind(this) );
+      
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
         ShiftSpace.Console.hidePluginMenu.bind(ShiftSpace.Console)();
@@ -236,20 +232,14 @@ var ShiftSpace = new (function() {
         // clear out recently viewed shifts on login
         setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', {});
       });
+      
       ShiftSpace.User.addEvent('onUserLogout', function() {
         SSFireEvent('onUserLogout');
       });
       
-      // grab the recently viewed shifts
-      /*
-      if(ShiftSpace.User.isLoggedIn())
-      {
-        getValue('recentlyViewedShifts')        
-      }
-      */
-      
       // create the pin selection bounding box
       SSCreatePinSelect();
+      
       // check for page iframes
       SSCheckForPageIframes();
       
@@ -261,11 +251,29 @@ var ShiftSpace = new (function() {
       console.log('ShiftSpace initialize complete');
     };
     
-    // Add event behaviors
+    /*
+      Function: SSAddEvent
+        Adds a Mootools style custom event to the ShiftSpace object.
+        
+      Parameters:
+        eventType - a event type as string.
+        callback - a function.
+    
+      See also:
+        SSFireEvent
+    */
     function SSAddEvent(eventType, callback) {
       __eventProxy__.addEvent(eventType, callback);
     };
     
+    /*
+      Function: SSFireEvent
+        A function to fire events.
+        
+      Parameters:
+        eventType - event type as string.
+        data - any extra event data that should be passed to the event listener.
+    */
     function SSFireEvent(eventType, data) {
       __eventProxy__.fireEvent(eventType, data);
     };
@@ -334,7 +342,17 @@ var ShiftSpace = new (function() {
       }, 0);
     }
     
-    
+
+    /*
+      Function: SSSetPrefForSpace
+        Set user preference for a space.  Calls setValue.  The preference
+        key will be converted to username.spaceName.preferenceKey.
+      
+      Parameters:
+        spaceName - space name as string.
+        pref - string representing the preference name.
+        value - the value to be set.
+    */
     function SSSetPrefForSpace(spaceName, pref, value)
     {
       if(ShiftSpace.User.isLoggedIn())
@@ -345,6 +363,14 @@ var ShiftSpace = new (function() {
     }
     
     
+    /*
+      Function: SSGetPrefForSpace
+        Retrieve a preference for a space.
+        
+      Parameters:
+        spaceName - spaceName as string.
+        pref - the preference key.
+    */
     function SSGetPrefForSpace(spaceName, pref)
     {
       if(ShiftSpace.User.isLoggedIn())
@@ -415,7 +441,6 @@ var ShiftSpace = new (function() {
       // fetch data for the space
     }
     
-    // we need this as we transition away from FF2
     function SSGetElementByClass(searchClass, _node)
     {
       return SSGetElementsByClass(searchClass, _node)[0];
@@ -454,6 +479,18 @@ var ShiftSpace = new (function() {
     }
     
     
+    /*
+      Function: SSGetShiftContent
+        Returns the actual content of shift.  The content is the actual
+        representation of the shift as defined by the encode method of the
+        originating Shift class.
+        
+      Parameters:
+        shiftId - a shift id.
+        
+      Returns:
+        A Javascript object with the shifts's properties.
+    */
     function SSGetShiftContent(shiftId)
     {
       if(!SSIsNewShift(shiftId))
@@ -465,24 +502,13 @@ var ShiftSpace = new (function() {
         {
           content = content.replace(/\n/g, '\\n');
           content = content.replace(/\r/g, '\\r');
-          //content = content.replace(/"/g,);
         }
-        
-        /*
-        console.log('the content');
-        console.log(content);
-        */
         
         // legacy content, strip surrounding parens
         if(content[0] == "(")
         {
           content = content.substr(1, content.length-2);
         }
-        
-        /*
-        console.log('now');
-        console.log(content);
-        */
         
         var obj = null;
         try
@@ -495,11 +521,6 @@ var ShiftSpace = new (function() {
           throw err;
         }
         
-        /*
-        console.log('the obj');
-        console.log(obj);
-        */
-      
         return obj;
       }
       else
@@ -508,19 +529,33 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
+    /*
+      Function: SSGetUrlForShift
+        Returns the url of a shift.
+        
+      Parameters:
+        shiftId - a shift id.
+        
+      Returns:
+        A url as a string.
+    */
     function SSGetUrlForShift(shiftId)
     {
       //console.log(shifts[shiftId]);
       return SSGetShift(shiftId).href;
     }
     
-    
+    /*
+      Function: SSGetRecentlyViewedShifts
+        Returns a hash of recently viewed shifts.  The shifts are hashed by
+        their id.  Each id points to a Javascript object that has the metadata
+        for that particular shift.
+        
+      Parameters:
+        callback - a function to be called when the operation is complete.  A callback is necessary since plugins have access.
+    */
     function SSGetRecentlyViewedShifts(callback)
     {
-      console.log('=======================================================');
-      console.log('SSGetRecentlyViewedShifts');
-      
       // array of shifts on the currently viewed url
       var localShifts = {};
       // array of shifts living on other urls
@@ -528,10 +563,7 @@ var ShiftSpace = new (function() {
 
       // grab the local shifs and generate an array of remote shifts
       getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
-        console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-        console.log(recentlyViewedShifts);
-        console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-        
+
         for(var shiftId in recentlyViewedShifts)
         {
           if(SSGetShift(shiftId))
@@ -563,7 +595,16 @@ var ShiftSpace = new (function() {
       });
     }
     
-    
+    /*
+      Function: SSSpaceForShift
+        Returns the space singleton for a shift.
+        
+      Parameters:
+        shiftId - a shift id.
+        
+      Returns:
+        The space singleton.
+    */
     function SSSpaceForShift(shiftId)
     {
       //console.log('SSSpaceForShift');
@@ -571,32 +612,72 @@ var ShiftSpace = new (function() {
       return spaces[shift.space];
     }
     
-    
+    /*
+      Function: SSUserForShift
+        Returns the username for a shift.
+        
+      Parameters:
+        shiftId - a shift id.
+        
+      Returns:
+        The shift author's username as a string.
+    */
     function SSUserForShift(shiftId)    
     {
       return shifts[shiftId].username;
     }
     
-    
+    /*
+      Function: SSUserOwnsShift
+        Used to check whether the currently logged in user authored a shift.
+        
+      Parameters:
+        shiftId - a shift id.
+        
+      Returns:
+        true or false.
+    */
     function SSUserOwnsShift(shiftId)
     {
       return (SSUserForShift(shiftId) == ShiftSpace.User.getUsername());
     }
 
-    
+    /*
+      Function: SSUserCanEditShift
+        Used to check whether a user has permission to edit a shift.
+        
+      Parameters:
+        shiftId - a shift id.
+        
+      Returns:
+        true or false.
+    */
     function SSUserCanEditShift(shiftId)
     {
       return (ShiftSpace.User.isLoggedIn() &&
               SSUserOwnsShift(shiftId));
     }
     
-    
+    /*
+      Function: SSIsNewShift
+        Used to check whether a shift is newly created and unsaved.
+        
+      Parameters:
+        shiftId - a shift id.
+    */
     function SSIsNewShift(shiftId)
     {
       return (shiftId.search('newShift') != -1);
     }
     
-
+    /*
+      Function: SSSetShiftStatus
+        Sets the shift public private status.
+      
+      Parameters:
+        shiftId - a shift id.
+        newStatus - the status.
+    */
     function SSSetShiftStatus(shiftId, newStatus) {
       SSGetShift(shiftId).status = newStatus;
       var params = {
@@ -612,21 +693,49 @@ var ShiftSpace = new (function() {
     // = Plugin Support =
     // ==================
     
+    /*
+      Function: SSGetPlugin
+        Returns a plugin object.
+        
+      Parameters:
+        pluginName - a name representing a plugin.
+        
+      Returns:
+        A plugin object.
+    */
     function SSGetPlugin(pluginName)
     {
       return plugins[pluginName];
     }
     
-
-    function SSGetPluginType(plugin)
+    /*
+      Function: SSGetPluginType
+        Returns the plugin type.
+        
+      Parameters:
+        pluginName - the plugin name as a string.
+        
+      See Also:
+        Plugin.js
+    */
+    function SSGetPluginType(pluginName)
     {
-      console.log('++++++++++++++++++++++++++++++++++++++');
-      console.log(plugin);
-      return __pluginsData__[plugin]['type'];
+      return __pluginsData__[pluginName]['type'];
     }
     
-
-    function SSPlugInMenuIconForShift(pluginName, shiftId, cb)
+    /*
+      Function: SSPlugInMenuIconForShift
+        Returns the icon for a particular shift if the plugin is menu based.
+        
+      Parameters:
+        pluginName - plugin name as string.
+        shiftId - a shift id.
+        callback - a function callback because the plugin may not be loaded yet.
+        
+      Returns:
+        A CSS style with a background image style that will point to the icon image.
+    */
+    function SSPlugInMenuIconForShift(pluginName, shiftId, callback)
     {
       var plugin = SSGetPlugin(pluginName);
       // if the plugin isn't loaded yet, use the initial plugins data
@@ -644,11 +753,21 @@ var ShiftSpace = new (function() {
       }
       else
       {
-        plugin.menuIconForShift(shiftId, cb);
+        plugin.menuIconForShift(shiftId, callback);
       }
     }
     
-
+    /*
+      Function: SSImplementsProtocol
+        A method to check if an object implements the required properties.
+        
+      Parameters:
+        protocol - an array of required properties
+        object - the javascript object in need of verification.
+        
+      Returns:
+        A javascript object that contains two properties, 'result' which is a boolean and 'missing', an array of missing properties.
+    */
     function SSImplementsProtocol(protocol, object)
     {
       var result = true;
@@ -669,6 +788,16 @@ var ShiftSpace = new (function() {
     // = Utilities =
     // =============
     
+    /*
+      Function: SSIsSSElement
+        Check wheter a node is a ShiftSpace Element or has a parent node that is.
+        
+      Parameters:
+        node - a DOM node.
+        
+      Returns:
+        true or false.
+    */
     function SSIsSSElement(node)
     {
       if(node.hasClass('ShiftSpaceElement'))
@@ -693,10 +822,19 @@ var ShiftSpace = new (function() {
     }
     this.isSSElement = SSIsSSElement;
     
-    
-    function SSIsNotSSElement(element)
+    /*
+      Function: SSIsNotSSElement
+        Conveniece function that returns the opposite of SSIsSSElement.  Useful for node filtering.
+        
+      Parameters:
+        node - a DOM node.
+        
+      Returns:
+        true or false.
+    */
+    function SSIsNotSSElement(node)
     {
-      return !SSIsSSElement(element);
+      return !SSIsSSElement(node);
     }
     
     
@@ -711,25 +849,49 @@ var ShiftSpace = new (function() {
       __pendingShifts__ = val;
     }
     
-    
+    /*
+      Function: SSFocusedShiftId
+        Returns the current focused shift's id.
+      
+      Returns:
+        a shift id.
+    */
     function SSFocusedShiftId()
     {
       return __focusedShiftId__;
     }
     
-    
+    /*
+      Function: SSSetFocusedShiftId
+        Should never be called.
+        
+      Parameters:
+        newId - a shift id.
+    */
     function SSSetFocusedShiftId(newId)
     {
       __focusedShiftId__ = newId;
     }
     
-    
+    /*
+      Function: SSFocusedSpace
+        Returns the currently focused space object.
+        
+      Returns:
+        A space object.
+    */
     function SSFocusedSpace()
     {
       return __focusedSpace__;
     }
     
-    
+    /*
+      Function: SSSetFocusedSpace
+        Should never be called
+        
+      Parameters:
+        newSpace - a space object.
+    */
     function SSSetFocusedSpace(newSpace)
     {
       __focusedSpace__ = newSpace;
@@ -741,7 +903,7 @@ var ShiftSpace = new (function() {
     
     var __isHidden__ = false;
     var __shiftSpaceState__ = new Hash();
-    function setHidden(val)
+    function SSSetHidden(val)
     {
       __isHidden__ = val;
     }
@@ -754,7 +916,7 @@ var ShiftSpace = new (function() {
     {
       // set the private hidden var
       // used to control the appearance of the ShiftMenu 
-      setHidden(true);
+      SSSetHidden(true);
       
       // remove all the previous state vars
       __shiftSpaceState__.empty();
@@ -781,7 +943,7 @@ var ShiftSpace = new (function() {
     {
       // set the private hidden var
       // used to control the appearance of the ShiftMenu
-      setHidden(false);
+      SSSetHidden(false);
       
       // restore ShiftSpace
       if(__shiftSpaceState__.get('consoleVisible'))
@@ -802,7 +964,7 @@ var ShiftSpace = new (function() {
     
     /*
     
-    Function: installSpace
+    Function: SSInstallSpace
     Loads the JavaScript source of a Space, then loads the space into memory.
     The source URL is saved in the 'installed' object for future reference.
     
@@ -824,7 +986,7 @@ var ShiftSpace = new (function() {
     
     /*
     
-    Function: uninstallSpace
+    Function: SSUninstallSpace
     Removes a space from memory and from stored caches.
     
     Parameters:
@@ -920,7 +1082,6 @@ var ShiftSpace = new (function() {
     
     function SSShowNewShift(shiftId)
     {
-      //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SSShowNewShift ' + shiftId);
       var space = SSSpaceForShift(shiftId);
       
       // call onShiftCreate
@@ -1289,22 +1450,25 @@ var ShiftSpace = new (function() {
           
           //console.log(Json.toString(json));
           
-
+          /*
           console.log('====================================================================');
           console.log('SHIFT QUERY RETURN');
           console.log('====================================================================');
           console.log(json);
+          */
 
 
           // save the pluginsData
           for(var plugin in installedPlugins)
           {
-            console.log('++++++++++++++++++++++++++++++++++++++ CHECKING FOR ' + plugin);
+            //console.log('++++++++++++++++++++++++++++++++++++++ CHECKING FOR ' + plugin);
             if(json[plugin]) 
             {
+              /*
               console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
               console.log('LOADING INITIAL DATA FOR ' + plugin);
               console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+              */
               __pluginsData__[plugin] = json[plugin];
             }
           }
@@ -1365,10 +1529,7 @@ var ShiftSpace = new (function() {
     // returns a copy of the shift data
     function SSGetShiftData(shiftId)
     {
-      console.log(shiftId);
       var shift = SSGetShift(shiftId);
-      console.log('++++++++++++++++++++++++++++++++++++++++++++++++++');
-      console.log(shift);
       return {
         id : shift.id,
         title : shift.summary,
