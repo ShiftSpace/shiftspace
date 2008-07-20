@@ -294,6 +294,15 @@ var NotesShift = ShiftSpace.Shift.extend({
   },
   
   
+  updateText: function(_evt)
+  {
+    if(this.inputArea)
+    {
+      this.noteText = $(this.inputArea).getProperty('value');
+    }
+  },
+  
+  
   update: function()
   {
     // make the view area is up to date
@@ -541,6 +550,7 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   finishFrame : function()
   {
+    // default
     var text = 'Leave a note';
     var props = this.getProperties();
     
@@ -568,6 +578,8 @@ var NotesShift = ShiftSpace.Shift.extend({
     this.inputArea.injectInside( this.frameBody );
     this.inputArea.setProperty('value', text);
     this.inputArea.focus();
+    
+    this.inputArea.addEvent('keyup', this.updateText.bind(this));
     
     // create the view text area
     this.viewArea = $(notedoc.createElement('div'));
@@ -603,13 +615,6 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       this.edit();
     }
-    
-    /*
-    if(this.isVisible())
-    {
-      this.show();
-    }
-    */
     
   },
   
