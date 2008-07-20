@@ -8,18 +8,16 @@ ShiftSpace.Plugin = new Class({
     css : null
   },
   
+
   initialize: function(json)
   {
-    console.log('initialize Plugin');
     if(ShiftSpace.Plugin.types.hasKey(this.pluginType))
     {
       switch(this.pluginType)
       {
         case 'kMenuTypePlugin':
-          //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> kMenuTypePlugin');
         break;
         case 'kInterfaceTypePlugin':
-          //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> kInterfaceTypePlugin');
         break;
       }
     }
@@ -37,29 +35,32 @@ ShiftSpace.Plugin = new Class({
     this.setup();
   },
   
+
   serverCall: function(method, params, callback)
   {
     serverCall.safeCall('plugins.'+this.attributes.name+'.'+method, params, callback);
   },
   
-  setup: function(options) {},
+
   setInterfaceIsBuilt: function(val)
   {
     this.__interfaceIsBuilt__ = val;
   },
+
+
   interfaceIsBuilt: function()
   {
     return this.__interfaceIsBuilt__;
   },
   
+
+  setup: function(options) {},  
   showInterface: function() {},
   buildInterface: function() {},
   menuIcon: function() {},
   menuIconForShift: function(shiftId) {},
-  menuForShift: function(shiftId) 
-  {
-    
-  },
+  menuForShift: function(shiftId) {},
+  
   
   closeMenu: function() 
   {
@@ -78,15 +79,18 @@ ShiftSpace.Plugin = new Class({
 
   },
   
+  
   onDataLoad: function(data)
   {
     this.data = data;
   },
   
+  
   onCssLoad: function()
   {
     this.fireEvent('load');
   },
+  
   
   enterFullScreen: function() {
     if(SSCanGoFullScreen() && !ShiftSpaceIsHidden())
@@ -131,9 +135,15 @@ ShiftSpace.Plugin = new Class({
   },
   
   
-  getShifts: function(shiftIds, callBack)
+  getShifts: function(shiftIds, callBack, errorHandler)
   {
-    SSGetShifts(shiftIds, callBack);
+    SSGetShifts(shiftIds, callBack, (errorHandler || this.errorHandler.bind(this)));
+  },
+  
+  
+  errorHandler: function(error)
+  {
+    console.error("Error: Plugin call to getShifts failed, " + error.message);
   },
   
   

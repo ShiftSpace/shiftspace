@@ -75,8 +75,17 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
       
       var trailShifts = [];
       for(var shiftId in this.trailData) { trailShifts.push(shiftId) };
-      this.getShifts(trailShifts, this.trailShiftsLoaded.bind(this));
+      
+      this.getShifts(trailShifts, this.trailShiftsLoaded.bind(this), this.bail.bind(this));
     }
+  },
+  
+  
+  bail: function(error)
+  {
+    console.error("Error: Could not load Trail bailing, " + error.message);
+    // something went wrong, bail
+    this.hideInterface()
   },
   
   

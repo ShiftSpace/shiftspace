@@ -102,6 +102,7 @@ var ShiftSpace = new (function() {
     
     // Exceptions
     var __SSPinOpException__ = "__SSPinOpException__";
+    var __SSInvalidShiftIdError__ = "__SSInvalidShiftIdError__";
     
     // Holds the id of the currently focused shift
     var __focusedShiftId__ = null;
@@ -1458,7 +1459,7 @@ var ShiftSpace = new (function() {
     }
 
     // call to get just the shifts that are needed
-    function SSGetShifts(shiftIds, callBack)
+    function SSGetShifts(shiftIds, callBack, errorHandler)
     {
       var newShiftIds = [];
       var finalJson = {};
@@ -1469,19 +1470,25 @@ var ShiftSpace = new (function() {
       var params = { shiftIds: newShiftIds.join(',') };
       
       serverCall.safeCall('shift.get', params, function(json) {
-        /*
-        if (!json.status) {
-          console.error('Error getting shifts: ' + json.message);
-          return;
+        if(json.contains(null))
+        {
+          if(errorHandler && $type(errorHandler) == 'function')
+          {
+            errorHandler({
+              type: __SSInvalidShiftIdError__, 
+              message: "one or more invalid shift ids to SSGetShift"
+            });
+          }
         }
-        */
-        
-        // should probably filter out any uncessary data
-        json.each(function(x) {
-          finalJson[x.id] = x;
-        });
-        
-        if(callBack) callBack(finalJson);
+        else
+        {
+          // should probably filter out any uncessary data
+          json.each(function(x) {
+            finalJson[x.id] = x;
+          });
+
+          if(callBack) callBack(finalJson);
+        }
       });
     }
     
