@@ -46,6 +46,9 @@ var RangeCoder = new Class({
       range - a W3C Range.
       
   */
+  cleanWhitespace: function(node){
+    node.innerHTML = node.innerHTML.replace(new RegExp("\\n","g"));
+  },
   toRef: function(range)
   {    
     //get the common ancestor
@@ -58,9 +61,9 @@ var RangeCoder = new Class({
       origCommonAncestor = objCommonAncestor;
       objCommonAncestor = objCommonAncestor.parentNode
     }
-
+    
     var colAncestorPosition = this.getAncestorPosition(objCommonAncestor);
-
+    
     // Create new object for this highlight
     var newRef = 
     {
@@ -73,7 +76,8 @@ var RangeCoder = new Class({
       endContainerOffset: range.endOffset,   
       origText: range.toString()
     };
-
+    /* newRef.ancestorOrigTextContent = String.clean(newRef.ancestorOrigTextContent); */  
+    /* newRef.origText = String.clean(newRef.origText); */
     // Save some extra info which might be useful for recovering if load fails
     // TODO: extra data to save that might be helpful:
     //   xpath from root to common ancestor?  find it even if textcontent changes

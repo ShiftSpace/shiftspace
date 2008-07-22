@@ -1,6 +1,12 @@
 /*
-TODO:Check for script tags and ignore content
   add onShiftEdit
+  
+  refactor widget button names to reflect CSS names instead
+  
+  Currently it is not possible to change word chunk amount after performing a 
+  cut. Should this change or should I just keep the user from changing the amount
+  after a cutup has been performed.
+  
   regex for multiple words: /(\S+(\s?)+){1,5}/
 */
 
@@ -78,7 +84,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },  
   
   turnOnRangeRef: function(ref) {
-    console.log("in turnOnRangeRef");
     var range = ShiftSpace.RangeCoder.toRange(ref);
     var objAncestor = range.commonAncestorContainer;
     
@@ -127,7 +132,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
   setWordChunkSize: function(numOfWords){
     var pattern = "(\\S+(\\s?)+){1," + numOfWords + "}";
     this.wordPattern = new RegExp(pattern,"g");
-    console.log(this.wordPattern);
   },
   
   cutupRange: function(xPathResult){
@@ -152,7 +156,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
           }
       }
       //filter out null values and SCRIPT content
-      console.log(this.joinedTextArray);
       this.joinedTextArray = this.joinedTextArray.filter(function(item,index){
           return item != null;
       });
@@ -165,7 +168,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
     //this keeps the same number of words in each node
     //while the actual words change (if 1 word chunks are selected)
     var i = 0;
-    console.log(this.cutupTextArray);
     for(var x=0;x<this.cutupTextArray.length;x++){
         for(var y=0;y<this.cutupTextArray[x].length;y++){
             this.cutupTextArray[x][y] = this.joinedTextArray[i];
@@ -263,21 +265,21 @@ var CutupsSpace = ShiftSpace.Space.extend({
     var widget = new ShiftSpace.Element('div',{
       'id':'SSCutupWidget'});
     
-    var widgetHandle = new ShiftSpace.Element('span',{
+    var SSCutupHandle = new ShiftSpace.Element('span',{
       'id':'SSCutupHandle'});
     
-    var widgetInputLabel = new ShiftSpace.Element('label',{
+    var SSCutupTitleLabel = new ShiftSpace.Element('label',{
       'for':'SSCutupTitle'}).appendText('title:');
     
-    var widgetInputTitle = new ShiftSpace.Element('input',{
+    var SSCutupTitle = new ShiftSpace.Element('input',{
       'id':'SSCutupTitle'
     });
     
-    var widgetControls = new ShiftSpace.Element('div',{
+    var SSCutupControls = new ShiftSpace.Element('div',{
       'id':'SSCutupControls'});
     
-    var SSCutupChunkTitle = new ShiftSpace.Element('span',{
-    'id':'SSCutupChunkTitle'});
+    var SSCutupChunkLabel = new ShiftSpace.Element('span',{
+    'id':'SSCutupChunkLabel'});
     
     var SSCutupButtonSmaller = new ShiftSpace.Element('span',{
       'id':'SSCutupButtonSmaller'});
@@ -289,45 +291,45 @@ var CutupsSpace = ShiftSpace.Space.extend({
     var SSCutupButtonLarger = new ShiftSpace.Element('span',{
       'id':'SSCutupButtonLarger'});
     
-    var widgetButtonCut = new ShiftSpace.Element('span',{
-      'id':'SSCutupButton'});
+    var SSCutupButtonCutup = new ShiftSpace.Element('span',{
+      'id':'SSCutupButtonCutup'});
     
-    var widgetButtonCancel = new ShiftSpace.Element('span',{
+    var SSCutupButtonCancel = new ShiftSpace.Element('span',{
       'id':'SSCutupButtonCancel'});
     
-    var widgetButtonSave = new ShiftSpace.Element('span',{
+    var SSCutupButtonSave = new ShiftSpace.Element('span',{
       'id':'SSCutupButtonSave'});
     
-    var widgetButtonClose = new ShiftSpace.Element('span',{
+    var SSCutupButtonClose = new ShiftSpace.Element('span',{
       'id':'SSCutupButtonClose'});
     
-    widgetControls.appendChild(SSCutupChunkTitle);
-    widgetControls.appendChild(SSCutupButtonSmaller);
-    widgetControls.appendChild(SSCutupChunkAmount);
-    widgetControls.appendChild(SSCutupButtonLarger);
-    widgetControls.appendChild(widgetButtonCut);
-    widgetControls.appendChild(widgetButtonCancel);
-    widgetControls.appendChild(widgetButtonSave);
-    widgetControls.appendChild(widgetButtonClose);
+    SSCutupControls.appendChild(SSCutupChunkLabel);
+    SSCutupControls.appendChild(SSCutupButtonSmaller);
+    SSCutupControls.appendChild(SSCutupChunkAmount);
+    SSCutupControls.appendChild(SSCutupButtonLarger);
+    SSCutupControls.appendChild(SSCutupButtonCutup);
+    SSCutupControls.appendChild(SSCutupButtonCancel);
+    SSCutupControls.appendChild(SSCutupButtonSave);
+    SSCutupControls.appendChild(SSCutupButtonClose);
     
-    widget.appendChild(widgetHandle);
-    widget.appendChild(widgetInputLabel);
-    widget.appendChild(widgetInputTitle);
-    widget.appendChild(widgetControls);
+    widget.appendChild(SSCutupHandle);
+    widget.appendChild(SSCutupTitleLabel);
+    widget.appendChild(SSCutupTitle);
+    widget.appendChild(SSCutupControls);
     
     document.body.appendChild(widget);
     
-    widget.makeDraggable({'handle':widgetHandle}); 
+    widget.makeDraggable({'handle':SSCutupHandle}); 
     
     this.widget = widget;
-    this.summary = widgetInputTitle;
+    this.summary = SSCutupTitle;
     
     SSCutupButtonSmaller.addEvent('mouseup',this.decrementChunkAmount.bind(this));
     SSCutupButtonLarger.addEvent('mouseup',this.incrementChunkAmount.bind(this));
-    widgetButtonCut.addEvent('mousedown',this.fireCutup.bind(this));
-    widgetButtonCancel.addEvent('mouseup',this.cancelCutup.bind(this));
-    widgetButtonSave.addEvent('mouseup',this.save.bind(this));
-    widgetButtonClose.addEvent('mouseup',this.close.bind(this));
+    SSCutupButtonCutup.addEvent('mousedown',this.fireCutup.bind(this));
+    SSCutupButtonCancel.addEvent('mouseup',this.cancelCutup.bind(this));
+    SSCutupButtonSave.addEvent('mouseup',this.save.bind(this));
+    SSCutupButtonClose.addEvent('mouseup',this.close.bind(this));
   },
   
   hideInterface: function(){
@@ -370,7 +372,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
   save: function() {
     this.getCurrentShift().summary = this.summary.value;
     this.getCurrentShift().save();
-    //remove title value
+    //remove title value after save
     $('SSCutupTitle').value = "";
   }
 });
@@ -408,7 +410,6 @@ var CutupsShift = ShiftSpace.Shift.extend({
     },
     
     show: function() {
-      console.log("In CutupsShift show");
       var space = this.getParentSpace();
       if (this.ranges) {
         for(var i=0; i<this.ranges.length; i++){

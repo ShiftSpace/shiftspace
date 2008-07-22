@@ -11,7 +11,7 @@
   line-height:15px;
   color:#EEE;
   height:34px;
-  width:427px;
+  width:430px;
   border: 0px solid #333;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -31,7 +31,7 @@
   -moz-user-select: none;
   -webkit-user-select:none;
 }
-#SSCutupButton,
+#SSCutupButtonCutup,
 #SSCutupButtonCancel,
 #SSCutupButtonSave,
 #SSCutupButtonClose{
@@ -46,14 +46,14 @@
   border-top:none;
   border-right:none;
 }
-#SSCutupButton:hover,
+#SSCutupButtonCutup:hover,
 #SSCutupButtonCancel:hover,
 #SSCutupButtonSave:hover,
 #SSCutupButtonLarger:hover,
 #SSCutupButtonSmaller:hover{
   background-color:#AAAAAA;
 }
-#SSCutupButton:active,
+#SSCutupButtonCutup:active,
 #SSCutupButtonCancel:active,
 #SSCutupButtonSave:active,
 #SSCutupButtonLarger:active,
@@ -66,7 +66,7 @@
 #SSCutupButtonClose:active{
   background-color:#FF5E42;
 }  
-#SSCutupButton{
+#SSCutupButtonCutup{
   margin-bottom:3px;
   margin-left:8px;
   padding:0 3px;
@@ -115,7 +115,7 @@
 #SSCutupButtonClose:hover{
   background-color:#EF2F1F;
 }
-#SSCutupLabel{
+#SSCutupTitleLabel{
   float:left;
   line-height:15px;
   display:block;
@@ -139,12 +139,12 @@
   margin-bottom:4px;
   background-color:#575739;
 }
-#SSCutupChunkTitle{
+#SSCutupChunkLabel{
   display:block;
   float:left;
   width:65px;
   height:15px;
-  margin-left:5px;
+  margin-left:7px;
   /* background-color:green; */
   background-image: url(button_sprite.png);
   background-repeat:no-repeat;
