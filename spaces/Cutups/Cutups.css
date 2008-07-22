@@ -11,7 +11,7 @@
   line-height:15px;
   color:#EEE;
   height:34px;
-  width:321px;
+  width:427px;
   border: 0px solid #333;
   -moz-border-radius: 2px;
   -webkit-border-radius: 2px;
@@ -24,7 +24,7 @@
   display:block;
   line-height:15px;
   width:30px;
-  background-image: url(button_sprite.gif);
+  background-image: url(button_sprite.png);
   background-position: center -75px;
   background-repeat:no-repeat;
   text-indent: -99999px;
@@ -48,13 +48,17 @@
 }
 #SSCutupButton:hover,
 #SSCutupButtonCancel:hover,
-#SSCutupButtonSave:hover{
+#SSCutupButtonSave:hover,
+#SSCutupButtonLarger:hover,
+#SSCutupButtonSmaller:hover{
   background-color:#AAAAAA;
 }
 #SSCutupButton:active,
 #SSCutupButtonCancel:active,
-#SSCutupButtonSave:active{
-  background-color:#BBBBBB;
+#SSCutupButtonSave:active,
+#SSCutupButtonLarger:active,
+#SSCutupButtonSmaller:active{
+  background-color:#CCCCCC;
 }
 #SSCutupButtonClose:hover{
   background-color:#F03E22;
@@ -69,7 +73,7 @@
   width:35px;
   height:15px;
   background-repeat:no-repeat;
-  background-image: url(button_sprite.gif);
+  background-image: url(button_sprite.png);
   background-position:center 0px;
 }
 #SSCutupButtonCancel{
@@ -79,7 +83,7 @@
   width:35px;
   height:15px;
   background-repeat:no-repeat;
-  background-image: url(button_sprite.gif);
+  background-image: url(button_sprite.png);
   background-position:center -15px;
 }
 #SSCutupButtonSave{
@@ -89,7 +93,7 @@
   width:30px;
   height:15px;
   background-repeat:no-repeat;
-  background-image: url(button_sprite.gif);
+  background-image: url(button_sprite.png);
   background-position:center -30px;  
 }
 #SSCutupButtonClose{
@@ -105,7 +109,7 @@
   width:10px;
   height:15px;
   background-repeat:no-repeat;
-  background-image: url(button_sprite.gif);
+  background-image: url(button_sprite.png);
   background-position: center -45px;
 }
 #SSCutupButtonClose:hover{
@@ -135,9 +139,53 @@
   margin-bottom:4px;
   background-color:#575739;
 }
+#SSCutupChunkTitle{
+  display:block;
+  float:left;
+  width:65px;
+  height:15px;
+  margin-left:5px;
+  /* background-color:green; */
+  background-image: url(button_sprite.png);
+  background-repeat:no-repeat;
+  background-position: center -90px;
+}
+#SSCutupButtonSmaller{
+  display:block;
+  float:left;
+  width:12px;
+  height:15px;
+  background-image: url(button_sprite.png);
+  background-repeat:no-repeat;
+  background-position: 0px -105px;
+  background-color:#999;
+  cursor:pointer;
+}
+#SSCutupButtonLarger{
+  display:block;
+  float:left;
+  width:12px;
+  height:15px;
+  background-image: url(button_sprite.png);
+  background-repeat:no-repeat;
+  background-position: -12px -105px;
+  background-color:#999;
+  cursor:pointer;  
+}
+#SSCutupChunkAmount{
+  display:block;
+  float:left;
+  font-size:8px;
+  font-family:Verdana;
+  height:15px;
+  line-height:15px;
+  width:12px;
+  text-align:center;
+  cursor:default;
+  -moz-user-select:none;
+  -webkit-user-select:none;
+}
 .SSCutup{
-  /* background-color:#E02E12; */
-  /* background-color: rgba(244,46,18,0.3); */
   -moz-user-select:none;
   -webkit-user-select:none;
 }
