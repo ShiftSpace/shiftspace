@@ -1808,6 +1808,12 @@ var ShiftSpace = new (function() {
     /*
       Function: saveShift (private)
         Saves a shift's JSON object to the server.
+        
+      Parameters:
+        shiftJson - a shiftJson object, delivered from Shift.encode.
+        
+      See Also:
+        Shift.encode
     */
     function saveShift(shiftJson) {
       //console.log('saveShift');
@@ -1852,13 +1858,17 @@ var ShiftSpace = new (function() {
     }
     
     /*
+    Function: saveNewShift (private)
+      Creates a new entry for the shift on the server.
     
-    saveNewShift (private)
-    Creates a new entry for the shift on the server.
-    
-    */
-    function saveNewShift(shiftJson) {
+    Parameters:
+      shiftJson - a shift json object, delivered from Shift.encode
       
+    See Also:
+      Shift.encode
+    */
+    function saveNewShift(shiftJson) 
+    {
       var space = spaces[shiftJson.space];
       
       // remove the filters from the json object
@@ -1914,8 +1924,11 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    editShift (private)
-    Edit a shift.
+    Function: editShift (private)
+      Edit a shift.
+      
+    Parameters:
+      shiftId - a shift id.
     */
     function editShift(shiftId) 
     {
@@ -1976,10 +1989,11 @@ var ShiftSpace = new (function() {
     }
     
     /*
+    Function: deleteShift (private)
+      Deletes a shift from the server.
     
-    deleteShift (private)
-    Deletes a shift from the server.
-    
+    Parameters:
+      shiftId - a shift id.
     */
     function deleteShift(shiftId) {
       var space = SSSpaceForShift(shiftId);
@@ -2153,15 +2167,25 @@ var ShiftSpace = new (function() {
     // = Iframe Cover Functions =
     // ==========================
     
-    SSCheckForPageIframes = function()
+    /*
+      Function: SSCheckForPageIframes
+        Check for already existing iframes on the page and add covers to them.
+    */
+    function SSCheckForPageIframes()
     {
       $$('iframe').filter(SSIsNotSSElement).each(function(aFrame) {
         SSAddCover({cover:SSCreateCover(), frame:aFrame});
       });
     }
     
-    
-    SSCreateCover = function()
+    /*
+      Function: SSCreateCover
+        Create a cover.  Should probably be refactored.
+        
+      Returns:
+        a DOM node.
+    */
+    function SSCreateCover()
     {
       var cover = new ShiftSpace.Element('div', {
         'class': "SSIframeCover"
@@ -2171,22 +2195,33 @@ var ShiftSpace = new (function() {
       return cover;
     }
     
-    
-    SSAddCover = function(newCover)
+    /*
+      Function: SSAddCover
+        Add a iframe cover object to an internal array.
+    */
+    function SSAddCover(newCover)
     {
       // create covers if we haven't already
       __iframeCovers__.push(newCover);
     }
 
-    
-    SSAddIframeCovers = function() {
+    /*
+      Function: SSAddIframeCovers
+        Add the iframe covers to the page.
+    */
+    function SSAddIframeCovers() 
+    {
       __iframeCovers__.each(function(aCover) {
         aCover.cover.setStyle('display', 'block');
       });
     }
     
-    
-    SSUpdateIframeCovers = function() {
+    /*
+      Function: SSUpdateIframeCovers
+        Update the position of the iframe covers.
+    */
+    function SSUpdateIframeCovers() 
+    {
       __iframeCovers__.each(function(aCover) {
         var pos = aCover.frame.getPosition();
         var size = aCover.frame.getSize().size;
@@ -2199,8 +2234,12 @@ var ShiftSpace = new (function() {
       });
     }
     
-    
-    SSRemoveIframeCovers = function() {
+    /*
+      Function: SSRemoveIframeCovers
+        Remove the covers for the iframe.
+    */
+    function SSRemoveIframeCovers() 
+    {
       __iframeCovers__.each(function(aCover) {
         aCover.cover.setStyle('display', 'none');
       });
@@ -2213,8 +2252,12 @@ var ShiftSpace = new (function() {
     // for holding the current pin selection
     var __currentPinSelection__ = null;
     
-    // create the pin selection frame
-    function SSCreatePinSelect() {
+    /*
+      Function: SSCreatePinSelect
+        Create the visible pin selection interface bits.
+    */
+    function SSCreatePinSelect() 
+    {
       var targetBorder = new ShiftSpace.Element('div', {
         'class': "SSPinSelect SSPinSelectInset"
       });
@@ -2231,8 +2274,15 @@ var ShiftSpace = new (function() {
       ShiftSpace.PinSelect = targetBorder;
     }
     
-    
-    function SSPinMouseOverHandler (_evt) {
+    /*
+      Function: SSPinMouseOverHandler
+        A mouse over handler for pin events.
+        
+      Parameters:
+        _evt - a DOM event.
+    */
+    function SSPinMouseOverHandler (_evt) 
+    {
       var evt = new Event(_evt);
       var target = $(evt.target);
 
@@ -2254,16 +2304,30 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
-    function SSPinMouseMoveHandler(_evt) {
+    /*
+      Function: SSPinMouseMoveHandler
+        The pin handler that checks for mouse movement.
+        
+      Parameters:
+        _evt - a window DOM event.
+    */
+    function SSPinMouseMoveHandler(_evt) 
+    {
       if(ShiftSpace.PinSelect.getParent())
       {
         ShiftSpace.PinSelect.remove();
       }
     }
     
-    
-    function SSPinMouseClickHandler(_evt) {
+    /*
+      Function: SSPinMouseClickHandler
+        A pin handler.
+        
+      Parameters:
+        _evt - a window event page.
+    */
+    function SSPinMouseClickHandler(_evt) 
+    {
       var evt = new Event(_evt);
       evt.stop();
       if(__currentPinWidget__)
@@ -2274,7 +2338,13 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
+    /*
+      Function: SSCheckPinReferences
+        Check to see if there is a conflicting pin reference on the page already.
+        
+      Parameters:
+        pinRef - a pin reference object.
+    */
     function SSCheckPinReferences(pinRef)
     {
       var otherShifts = __allPinnedShifts__.copy().remove(pinRef.shift);
@@ -2294,6 +2364,14 @@ var ShiftSpace = new (function() {
     
     // stores direct references to the shift objects
     var __allPinnedShifts__ = [];
+    /*
+      Function: SSPinElement
+        Pin an element to the page.
+        
+      Parameters:
+        element - a DOM node.
+        pinRef - a pin reference object.
+    */
     function SSPinElement(element, pinRef)
     {
       ShiftSpace.pinRef = pinRef;
@@ -2425,8 +2503,15 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
-    function SSUnpinElement(pinRef) {
+    /*
+      Function: SSUnpinElement
+        Unpin an element from the page.
+        
+      Parameters:
+        pinRef - a pin reference object.
+    */
+    function SSUnpinElement(pinRef) 
+    {
       switch(pinRef.action) 
       {
         case 'relative':
@@ -2487,16 +2572,21 @@ var ShiftSpace = new (function() {
     
     /*
       Function: SSAttachPinEvents
-        Attaches the mouse events to handle Pin selection.
+        Attaches the mouse events to the window to handle Pin selection.
     */
-    function SSAttachPinEvents() {
+    function SSAttachPinEvents() 
+    {
       window.addEvent('mouseover', SSPinMouseOverHandler);
       window.addEvent('click', SSPinMouseClickHandler);
       ShiftSpace.PinSelect.addEvent('mousemove', SSPinMouseMoveHandler);
     }
     
-    
-    function SSRemovePinEvents() {
+    /*
+      Function: SSRemovePinEvents
+        Remove all pin selection listening events from the window.
+    */
+    function SSRemovePinEvents() 
+    {
       window.removeEvent('mouseover', SSPinMouseOverHandler);
       window.removeEvent('click', SSPinMouseClickHandler);
       ShiftSpace.PinSelect.removeEvent('mousemove', SSPinMouseMoveHandler);
@@ -2504,7 +2594,15 @@ var ShiftSpace = new (function() {
     
     // hold the current active pin widget
     var __currentPinWidget__ = null;
-    function SSStartPinSelection(widget) {
+    /*
+      Function: SSStartPinSelection
+        Start pin selection mode.
+        
+      Parameters:
+        widget - the PinWidget object that started the pin selection operation.
+    */
+    function SSStartPinSelection(widget) 
+    {
       __currentPinWidget__ = widget;
       // show the selection interface
       SSAttachPinEvents();
@@ -2529,7 +2627,8 @@ var ShiftSpace = new (function() {
       url - The URL of the target file
       callback - A function to process the file once it's loaded
     */
-    function loadFile(url, callback) {
+    function loadFile(url, callback) 
+    {
       // If the URL doesn't start with "http://", assume it's on our server
       if (url.substr(0, 7) != 'http://' &&
           url.substr(0, 8) != 'https://') {
