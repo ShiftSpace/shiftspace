@@ -904,15 +904,35 @@ var ShiftSpace = new (function() {
     
     var __isHidden__ = false;
     var __shiftSpaceState__ = new Hash();
+
+    /*
+      Function: SSSetHidden
+        Sets the private hidden variable.
+        
+      Parameters:
+        val - sets a boolean value.
+    */
     function SSSetHidden(val)
     {
       __isHidden__ = val;
     }
+    
+    /*
+      Function: ShiftSpaceIsHidden
+        Returns whether ShiftSpace is hidden, that is in full screen mode.
+
+      Parameters:
+        return a boolean.
+    */
     function ShiftSpaceIsHidden()
     {
       return __isHidden__;
     }
     
+    /*
+      Function: ShiftSpaceHide
+        Hide ShiftSpace for fullscreen mode.
+    */
     function ShiftSpaceHide()
     {
       // set the private hidden var
@@ -940,6 +960,10 @@ var ShiftSpace = new (function() {
       }
     }
     
+    /*
+      Function: ShiftSpaceShow
+        Show ShiftSpace, normally used when exiting fullscreen mode.
+    */
     function ShiftSpaceShow()
     {
       // set the private hidden var
@@ -966,12 +990,12 @@ var ShiftSpace = new (function() {
     /*
     
     Function: SSInstallSpace
-    Loads the JavaScript source of a Space, then loads the space into memory.
-    The source URL is saved in the 'installed' object for future reference.
+      Loads the JavaScript source of a Space, then loads the space into memory.
+      The source URL is saved in the 'installed' object for future reference.
     
     Parameters:
-        space - The Space name to install
-        pendingShift - A shift to show upon installation
+      space - The Space name to install
+      pendingShift - A shift to show upon installation
         
     */
     function SSInstallSpace(space, pendingShift) {
@@ -986,13 +1010,11 @@ var ShiftSpace = new (function() {
     };
     
     /*
-    
     Function: SSUninstallSpace
-    Removes a space from memory and from stored caches.
+      Removes a space from memory and from stored caches.
     
     Parameters:
         space - the Space name to remove
-    
     */
     function SSUninstallSpace(spaceName) {
       var url = installed[spaceName];
@@ -1006,20 +1028,24 @@ var ShiftSpace = new (function() {
       SSFireEvent('onSpaceUninstall', spaceName);
     };
 
-    
+    /*
+      Function: SSXmlHttpRequest
+        Private version of GM_xmlHttpRequest. Implemented for public use via Space/Shift.xmlhttpRequest.
+      
+      Parameters:
+        config - same JSON object as used by GM_xmlhttpRequest.
+    */
     function SSXmlHttpRequest(config) {
       GM_xmlhttpRequest(config);
     }
     
     /*
-    
     Function: SSClearCache
-    Expunge previously stored files.
+      Expunge previously stored files.
     
     Parameters:
         url - (Optional) The URL of the file to remove. If not specified, all
               files in the cache will be deleted.
-    
     */
     function SSClearCache(url) {
       if (typeof url == 'string') {
@@ -1037,13 +1063,11 @@ var ShiftSpace = new (function() {
     
     
     /*
-    
-    initShift (private)
-    Creates a new shift on the page.
+    Function: initShift (private)
+      Creates a new shift on the page.
     
     Parameters:
-        space - The name of the Space the Shift belongs to.
-    
+      space - The name of the Space the Shift belongs to.
     */
     function initShift(spaceName, options) {
       //console.log('spaceName: ' + spaceName);
@@ -1080,7 +1104,13 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
+    /*
+      Function: SSShowNewShift
+        Shows a new shift, different from showShift in that it immediately puts the shift in edit mode.
+        
+      Parameters:
+        shiftId - a shift id.
+    */
     function SSShowNewShift(shiftId)
     {
       var space = SSSpaceForShift(shiftId);
@@ -1094,15 +1124,14 @@ var ShiftSpace = new (function() {
     
     
     /*
-    
-    focusShift (private)
-    Focuses a shift.
+    Function: focusShift (private)
+      Focuses a shift.
       
     Parameter:
-        shiftId - the id of the shift.
-    
+      shiftId - the id of the shift.
     */
-    function focusShift(shiftId) {
+    function focusShift(shiftId)
+    {
       var shift = shifts[shiftId];
       var space = SSSpaceForShift(shiftId);
       var lastFocusedShift = SSFocusedShiftId();
@@ -1169,6 +1198,13 @@ var ShiftSpace = new (function() {
       }
     }
     
+    /*
+      Function: blurShift
+        Blurs a shift.
+        
+      Parameters:
+        shiftId - a shift id.
+    */
     function blurShift(shiftId)
     {
       // create a blur event so console gets updated
@@ -1792,6 +1828,7 @@ var ShiftSpace = new (function() {
     */
     function editShift(shiftId) 
     {
+      // make sure shift content is either loaded or that it is a newly created shift (thus no content)
       if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
       {
         // first make sure that is loaded
@@ -1812,12 +1849,15 @@ var ShiftSpace = new (function() {
           });
           return;
         }
+        
+        // add a deferred shift edit if the css is not yet loaded
         if(space && !space.cssIsLoaded())
         {
           space.addDeferredEdit(shiftId);
           return;
         }
         
+        // if the user has permissions, edit the shift
         if(SSUserCanEditShift(shiftId))
         {
           var shiftJson = SSGetShiftContent(shiftId);
