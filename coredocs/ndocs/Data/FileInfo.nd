@@ -2,15 +2,15 @@ Development Release 01-12-2008 (1.35 base)
 JavaScript
 /Users/davidnolen/Sites/shiftspace-0.11/client/Exception.js	1215715819	0	/Users/davidnolen/Sites/shiftspace-0.11/client/Exception.js
 /Users/davidnolen/Sites/shiftspace-0.11/client/Shift.js	1216228446	1	Shift
-/Users/davidnolen/Sites/shiftspace-0.11/client/User.js	1216503176	0	/Users/davidnolen/Sites/shiftspace-0.11/client/User.js
+/Users/davidnolen/Sites/shiftspace-0.11/client/User.js	1216848895	1	User
 /Users/davidnolen/Sites/shiftspace-0.11/client/PinWidget.js	1216228529	1	PinWidget
 /Users/davidnolen/Sites/shiftspace-0.11/client/Console.js	1216503176	1	/Users/davidnolen/Sites/shiftspace-0.11/client/Console.js
 /Users/davidnolen/Sites/shiftspace-0.11/client/Mootools.js	1215905019	0	/Users/davidnolen/Sites/shiftspace-0.11/client/Mootools.js
 /Users/davidnolen/Sites/shiftspace-0.11/client/ConsoleExtensions.js	1215804486	0	/Users/davidnolen/Sites/shiftspace-0.11/client/ConsoleExtensions.js
-/Users/davidnolen/Sites/shiftspace-0.11/client/ShiftMenu.js	1215713006	0	/Users/davidnolen/Sites/shiftspace-0.11/client/ShiftMenu.js
-/Users/davidnolen/Sites/shiftspace-0.11/client/Plugin.js	1216565593	0	/Users/davidnolen/Sites/shiftspace-0.11/client/Plugin.js
+/Users/davidnolen/Sites/shiftspace-0.11/client/ShiftMenu.js	1216849321	1	ShiftMenu
+/Users/davidnolen/Sites/shiftspace-0.11/client/Plugin.js	1216851946	1	ShiftSpace.Plugin
 /Users/davidnolen/Sites/shiftspace-0.11/client/Element.js	1216165622	0	/Users/davidnolen/Sites/shiftspace-0.11/client/Element.js
-/Users/davidnolen/Sites/shiftspace-0.11/client/RangeCoder.js	1216843211	1	RangeCoder
+/Users/davidnolen/Sites/shiftspace-0.11/client/RangeCoder.js	1216851743	1	RangeCoder
 /Users/davidnolen/Sites/shiftspace-0.11/client/ShiftSpace.js	1216847709	1	ShiftSpace
 /Users/davidnolen/Sites/shiftspace-0.11/client/Pin.js	1210316764	1	Pin
-/Users/davidnolen/Sites/shiftspace-0.11/client/Space.js	1216317908	1	Space
+/Users/davidnolen/Sites/shiftspace-0.11/client/Space.js	1216851704	1	Space
