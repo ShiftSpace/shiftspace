@@ -2,7 +2,6 @@
   Class: ShiftSpace.Plugin
     Abstract class interface for plugin.  Currently only used Trails.
 */
-
 ShiftSpace.Plugin = new Class({
   
   attributes :
