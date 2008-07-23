@@ -20,7 +20,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
     this.fireCutup = function(e){
             //if selection exists and origTextArray does not
             if (!window.getSelection().getRangeAt(0).collapsed && !this.origTextArray) {
-              console.log("here");
                var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
                 if (!this.getCurrentShift().ranges){
                     this.getCurrentShift().ranges = [];
@@ -172,7 +171,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
         }
     }
     //reinsert sorted array as string back into document
-    for ( var i=0,l=0; i < xPathResult.snapshotLength; i++ ){
+    for(var i=0,l=0; i < xPathResult.snapshotLength; i++){
       //if node is not empty
       if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
         xPathResult.snapshotItem(i).textContent = this.cutupTextArray[l].join("");
@@ -195,27 +194,35 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   
   incrementChunkAmount: function(){
-    var amount = parseInt($("SSCutupChunkAmount").getText());
-    if(amount < 20){
-      amount = amount + 1;
-      $("SSCutupChunkAmount").setText(amount);
+    if(!this.cutupTextArray){
+      var amount = parseInt($("SSCutupChunkAmount").getText());
+      if(amount < 20){
+        amount = amount + 1;
+        $("SSCutupChunkAmount").setText(amount);
+      }else{
+        amount = 1;
+        $("SSCutupChunkAmount").setText(amount);
+      }
+      this.setWordChunkSize(amount);
     }else{
-      amount = 1;
-      $("SSCutupChunkAmount").setText(amount);
+      alert("You cannot change chunk size while a cutup exists on page. Cancel or hide current cutup to change.");
     }
-    this.setWordChunkSize(amount);
   },
   
   decrementChunkAmount: function(){
-    var amount = parseInt($("SSCutupChunkAmount").getText());
-    if(amount > 1){
-      amount = amount - 1;
-      $("SSCutupChunkAmount").setText(amount);
+    if(!this.cutupTextArray){
+      var amount = parseInt($("SSCutupChunkAmount").getText());
+      if(amount > 1){
+        amount = amount - 1;
+        $("SSCutupChunkAmount").setText(amount);
+      }else{
+        amount = 20;
+        $("SSCutupChunkAmount").setText(amount);
+      }
+      this.setWordChunkSize(amount);
     }else{
-      amount = 20;
-      $("SSCutupChunkAmount").setText(amount);
+      alert("You cannot change chunk size while a cutup exists on the page. Cancel or hide current cutup to change.");
     }
-    this.setWordChunkSize(amount);
   },
   
   cancelCutup: function(){
