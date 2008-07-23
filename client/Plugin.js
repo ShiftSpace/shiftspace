@@ -1,3 +1,8 @@
+/*
+  Class: ShiftSpace.Plugin
+    Abstract class interface for plugin.  Currently only used Trails.
+*/
+
 ShiftSpace.Plugin = new Class({
   
   attributes :
@@ -8,7 +13,7 @@ ShiftSpace.Plugin = new Class({
     css : null
   },
   
-
+  
   initialize: function(json)
   {
     if(ShiftSpace.Plugin.types.hasKey(this.pluginType))
@@ -35,7 +40,9 @@ ShiftSpace.Plugin = new Class({
     this.setup();
   },
   
-
+  /*
+    Function: 
+  */
   serverCall: function(method, params, callback)
   {
     serverCall.safeCall('plugins.'+this.attributes.name+'.'+method, params, callback);

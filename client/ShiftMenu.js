@@ -1,6 +1,15 @@
+/*
+  Class: ShiftMenu
+    A singleton Class that represents the ShiftMenu. It is used to create new shifts.
+*/
 var ShiftMenu = new Class({
   
-  initialize: function(options) {
+  /*
+    Function: initialize
+      Initializes the shift menu.
+  */
+  initialize: function(options) 
+  {
     this.menuVisible = false;
     this.spaces = {};
     
@@ -9,7 +18,12 @@ var ShiftMenu = new Class({
     SSAddEvent('onSpaceUninstall', this.removeSpace.bind(this));
   },
   
-  buildMenu: function() {
+  /*
+    Function: buildMenu
+      Construct the shift menu interface.
+  */
+  buildMenu: function() 
+  {
     this.element = new ShiftSpace.Element('div', {
       id: 'SS_ShiftMenu',
       styles: {
@@ -41,10 +55,17 @@ var ShiftMenu = new Class({
     for (var spaceName in installed) {
       this.addSpace(spaceName);
     }
-    
   },
   
-  addSpace: function(spaceName) {
+  /*
+    Function: addSpace
+      Add a new space icon to the menu.
+      
+    Parameters:
+      spaceName - the name of Space as a string.
+  */
+  addSpace: function(spaceName) 
+  {
     // TODO: we need the icon to not be separate from the space so that we can do incremental loading.
     console.log('adding space ' + spaceName);
     var spaceAttrs = ShiftSpace.info(spaceName);
@@ -94,13 +115,30 @@ var ShiftMenu = new Class({
     }.bind(this));
   },
   
-  removeSpace: function(spaceName) {
+  /*
+    Function: removeSpace
+      Remove a space icon from the menu.
+      
+    Parameters:
+      spaceName - a space name as a string.
+  */
+  removeSpace: function(spaceName) 
+  {
     console.log(spaceName);
     console.log(this.spaces[spaceName]);
     this.spaces[spaceName].remove();
   },
   
-  show: function(x, y) {
+  /*
+    Function: show
+      Show the menu.
+      
+    Parameters:
+      x - the current x mouse location.
+      y - the current y mouse location.
+  */
+  show: function(x, y) 
+  {
     if (!this.element) 
     {
       return;
@@ -116,6 +154,13 @@ var ShiftMenu = new Class({
     }
   },
   
+  /*
+    Function: hide
+      hide the menu.
+      
+    Parameters:
+      forceHide - a boolean to force hide the menu.
+  */
   hide: function(forceHide) {
     if (!this.element) {
       return;

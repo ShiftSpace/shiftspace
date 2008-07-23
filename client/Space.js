@@ -6,8 +6,9 @@ ShiftSpace.Space = new Class({
   attributes : {},
   
   /*
-    Function : initialize
-      The you can set the default shift constructor
+    Function : initialize (private)
+      Initialize the space.  Sets internala state variables as well as calls SSRegisterSpace.  Also call the subclass
+      setup method.
   */
   initialize: function( shiftClass ) 
   {
@@ -75,18 +76,38 @@ ShiftSpace.Space = new Class({
     return this;
   },
   
+  /*
+    Function: setup (abstract)
+      To be implemented by subclasses.
+  */
   setup: function() {},
   
+  /*
+    Function: interfaceIsBuilt
+      Returns whether the interface of the space has been built yet.
+  */
   interfaceIsBuilt : function()
   {
     return this.__interfaceBuilt__;
   },
   
+  /*
+    Function: setInterfaceIsBuilt (private)
+      Set the private interface built flag.
+      
+    Parameters:
+      val - a boolean.
+  */
   setInterfaceIsBuilt : function(val)
   {
     return this.__interfaceBuilt__ = val;
   },
   
+  /*
+    Function: onCssLoad (private)
+      Callback handler when the space's css file has loaded.  The interface is not built until after this
+      function has been called.  Also any shifts that were set to creaetd/shown/edited.
+  */
   onCssLoad : function()
   {
     this.setCssLoaded(true);
@@ -124,40 +145,85 @@ ShiftSpace.Space = new Class({
       }.bind(this));
     }
   },
-  
+
+  /*
+    Function: addDeferredNew (private)
+      Adds a deferred shift was just created.  This happens when a user create a shift
+      using the Menu for a space that hasn't loaded yet.
+      
+    Parameters:
+      shift - shift content Javascript object.
+  */
   addDeferredNew: function(shift)
   {
     this.__deferredNewShifts__.push(shift);
     this.__deferredContent__ = true;
   },
   
+  /*
+    Function: addDeferredShift (private)
+      Adds a deferred shift to be show.  This happens a user attempt to view a shift
+      from Console for a space that hasn't loaded yet.
+    
+    Parameters:
+      shiftId - a shift id.
+  */
   addDeferredShift: function(shiftId)
   {
     this.__deferredShifts__.push(shiftId);
     this.__deferredContent__ = true;
   },
   
+  /*
+    Function: addDeferredEdit (private)
+      Adds a deferred shift to be edited.  This happens when a user attempts to edit
+      an existing shift from the Console.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   addDeferredEdit: function(shiftId)
   {
     this.__deferredEdits__.push(shiftId);
     this.__deferredContent__ = true;
   },
   
+  /*
+    Function: setCssLoaded (private)
+      A setter for the internal flag tracking whether the css for this space has loaded yet.
+  */
   setCssLoaded: function(val)
   {
     this.__cssLoaded__ = val;
   },
   
+  /*
+    Function: cssIsLoaded (private)
+  */
   cssIsLoaded: function()
   {
     return this.__cssLoaded__;
   },
   
+  /*
+    Function: show (private)
+      Show the space. Simple calls Space.showInterface
+      
+    See Also:
+      Space.showInterface
+  */
   show : function()
   {
     this.showInterface();
   },
   
+  /*
+    Function: hide
+      Hide the space's interface is there is one.
+      
+    See Also:
+      Space.hideInterface
+  */
   hide : function()
   {
     this.hideInterface();
@@ -171,21 +237,39 @@ ShiftSpace.Space = new Class({
     }
   },
   
+  
   sleep: function()
   {
     // keep track of all the visible shifts
   },
   
+
   wake: function()
   {
     // restore the previously visible shifts
   },
   
+
+  /*
+    Function: setIsVisible
+      Setter for internal flag about whether the Space and/or it's shifts are visible.
+      
+    Parameters:
+      val - a boolean.
+  */
   setIsVisible: function(val)
   {
     this.__isVisible__ = val;
   },
   
+
+  /*
+    Function: isVisible
+      Returns value of internal flag about wheter the Space's interface or any of its shifts are visible.
+      
+    Returns:
+      A boolean.
+  */
   isVisible: function()
   {
     var visibleShifts = false;
@@ -200,6 +284,14 @@ ShiftSpace.Space = new Class({
     return this.__isVisible__ || visibleShifts;
   },
   
+  /*
+    Function: showInterface
+      Show the space interface.  This can be overriden if necessary but you must remember to call this.parent()
+      from your overriding method.
+      
+    Parameters:
+      position (optional) - the x/y position of the mouse.
+  */
   showInterface : function(position)
   {
     if(!this.interfaceIsBuilt() )
@@ -216,6 +308,11 @@ ShiftSpace.Space = new Class({
     }
   },
 
+  /*
+    Function: hideInterface
+      Hide the interface of the space.  If there are any unsaved shifts they will be destroyed. Can be overriden, remember to call
+      this.parent() from your overriding method.
+  */
   hideInterface : function() 
   {
     // remove any unsaved shifts
@@ -235,11 +332,18 @@ ShiftSpace.Space = new Class({
     });
   },
   
+  /*
+    Function: buildInterface (abstract)
+      subclass should implement this if they want to present a custom interface.
+  */
   buildInterface : function() {},
   
   /*
     Function: getName
       Returns the name of the shift.
+      
+    Returns:
+      The name of the space as a string.
   */
   getName : function()
   {
@@ -247,10 +351,15 @@ ShiftSpace.Space = new Class({
   },
   
   /*
-    Function : addShift
+    Function: addShift (private)
+      Adds a shift to an internal array.  Implicity creates a new instance of a shift based on the
+      contents of the passed in Object.
     
-    Parameters :
+    Parameters:
       Takes a shift JSON object and creates and attaches event handlers.
+      
+    Returns:
+      The internal shift instance.
   */
   addShift : function( aShift )
   {
@@ -321,7 +430,7 @@ ShiftSpace.Space = new Class({
   },
   
   /*
-    Function : createShift
+    Function : createShift (private)
       Create a new shift.
       
     Parameters :
@@ -352,7 +461,8 @@ ShiftSpace.Space = new Class({
   
   /*
     Function : deleteShift
-      Delete a shift.
+      Delete a shift from the internal array.  Implicity calls SSDeleteShift which will remove this
+      shift from the ShiftSpace DB.
       
     Parameters :
       shiftId - The id of the shift.
@@ -372,6 +482,9 @@ ShiftSpace.Space = new Class({
   /*
     Function: editShift
       Tell the shift to go into edit mode.
+      
+    Parameters:
+      shiftId - a shift id.
   */
   editShift : function( shiftId )
   {
@@ -385,9 +498,10 @@ ShiftSpace.Space = new Class({
   },
 
   /*
-    Function : updateShift
+    Function: updateShift
+      Update a shift.  Implicity calls the SSUpdateShift in Core to update the ShiftSpace DB.
     
-    Parameters :
+    Parameters:
       aShift - The shift instance to update.
   */
   updateShift : function( aShift ) 
@@ -405,7 +519,8 @@ ShiftSpace.Space = new Class({
   
   /*
     Function : showShift
-    
+      Show a shift.  If a corresponding internal instance does not exist it will be created.
+
     Parameters :
       shiftId - The JSON representing the shift to show.
       
@@ -479,9 +594,11 @@ ShiftSpace.Space = new Class({
   },
   
   /*
-    Function : hideShift
+    Function: hideShift
+      Hides a shift.
     
-    Parameters
+    Parameters:
+      shiftId - a shift id.
   */
   hideShift : function( shiftId ) 
   {
@@ -515,40 +632,13 @@ ShiftSpace.Space = new Class({
     if(!visibleShifts) this.hideInterface();
   },
   
-  
-  /*
-    Function: setValue
-      Set a value with GM_setValue
-    
-    Parameters:
-      key - the key of the value to set.
-      value - the value itself.
-  */
-  setValue : function( key, value ) {
-    var self = this;
-    setTimeout(function() {
-      setValue(self.getName() + '.' + key, value);
-    }, 0);
-  },
-  
-  /*
-    Function: getValue
-      Retrieve a value with GM_setValue
-    
-    Parameters:
-      key - the key of the value to retrieve.
-      defaultValue - returned if the key hasn't been set before.
-  */
-  getValue : function( key, defaultValue ) {
-    return getValue(this.getName() + '.' + key, defaultValue);
-  },
-  
   /*
     Function: orderFront
       Move a shift back in the display order.  This is generally called by ShiftSpace.
-      +
+    
     Parameters:
       shiftId - the id of the Shift.
+      layer - not yet implemented.
   */
   orderFront : function( shiftId, layer )
   {
@@ -565,6 +655,7 @@ ShiftSpace.Space = new Class({
       
     Parameters:
       shiftId - the id of the Shift.
+      layer - not yet implemented.
   */
   orderBack : function( shiftId, layer )
   {
@@ -575,6 +666,10 @@ ShiftSpace.Space = new Class({
     }
   },
   
+  /*
+    Function: setDepth
+      Not yet implemented.
+  */
   setDepth: function( shiftId, depth )
   {
     var mv = this.shifts[shiftId].getMainView();
@@ -586,7 +681,7 @@ ShiftSpace.Space = new Class({
   
   /*
     Function: regionIsObscured
-      Checks to see if any of the visible shifts are obscuring the region.
+      Not yet implemented.
   */
   regionIsObscured : function( region )
   {
@@ -614,14 +709,24 @@ ShiftSpace.Space = new Class({
   },
   
   /*
-    Function: setCurrentShift
-      Set the current shift.
+    Function: setCurrentShift (private)
+      Set the current shift object.
+    
+    Parameters:
+      newShift - an internal shift instance.
   */
   setCurrentShift : function(newShift)
   {
     this.__currentShift__ = newShift;
   },
   
+  /*
+    Function: setCurrentShiftById
+      Same as Space.setCurrentShift but can use an id instead.
+    
+    Parameters:
+      shiftId - a shift id.
+  */
   setCurrentShiftById: function(shiftId)
   {
     this.setCurrentShift(this.shifts[shiftId]);
@@ -629,24 +734,48 @@ ShiftSpace.Space = new Class({
   
   /*
     Function: getCurrentShift
-      Set the current shift.
+      Get the current shift.
+    
+    Returns:
+      The current focused shift instance.
   */
   getCurrentShift : function()
   {
     return this.__currentShift__;
   },
   
+  /*
+    Fuction: getShift
+      Returns a shift instance from the internal hash.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   getShift: function(shiftId)
   {
     return this.shifts[shiftId];
   },
 
+  /*
+    Function: focusShift
+      Focus a shift.  Implicitly calls Space.setCurrentShift.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   focusShift : function(shiftId)
   {
     this.setCurrentShift(this.shifts[shiftId]);
     this.getCurrentShift().onFocus();
   },
   
+  /*
+    Function: blurShift
+      Blur a shift. If the shift is being edited it will be taken out of editing mode.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   blurShift: function(shiftId)
   {
     var theShift = this.shifts[shiftId];
@@ -654,37 +783,156 @@ ShiftSpace.Space = new Class({
     theShift.setIsBeingEdited(false);
   },
   
+  /*
+    Function: onShiftPrepare (abstract)
+      Called before a shift will be shown.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   onShiftPrepare : function(shiftId) {},
+  
+  /*
+    Function: onShiftCreate (abstract)
+      Called after a shift has been created.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   onShiftCreate : function(shiftId) {},
+  
+  /*
+    Function: onShiftEdit (abstract)
+      Called after a shift has been edited.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   onShiftEdit: function(shiftId) {},
+  
+  /*
+    Function: onShiftSave (abstract)
+      Called after a shift has been saved.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   onShiftSave : function(shiftId) {},
+  
+  /*
+    Function: onShiftDelete (abstract)
+      Called after a shift has been deleted.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   onShiftDelete : function(shiftId) {},
+  
+  /*
+    Function: onShiftDestroy (abstract)
+      Called after a shift has been destroyed.
+    
+    Parameters: 
+      shiftId - a shift id.
+  */
   onShiftDestroy : function(shiftId) {},
+  
+  /*
+    Function: onShiftShow (abstract)
+      Called after shift has been shown.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   onShiftShow : function(shiftId) {},
+  
+  /*
+    Function: onShiftHide (abstract)
+      Called after a shift has been hidden.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   onShiftHide : function(shiftId) {},
+  
+  /*
+    Function: onShiftFocus (abstract)
+      Called after a shift has been focused.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   onShiftFocus : function(shiftId) {},
+  
+  /*
+    Function: onShiftBlur (abstract)
+      Called after a shift has been blurred.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   onShiftBlur: function(shiftId) {},
   
+  /*
+    Function: setValue
+      Safe wrapper around GM_setValue for spaces.
+      
+    Parameters:
+      key - a string. The actual key is "spaceName.key"
+      value - a value to be set.
+  */
   setValue : function(key, value)
   {
     setValue.safeCall(this.attributes.name + "." + key, value);
   },
   
+  /*
+    Function: getValue
+      Safe wrapper around GM_getValue
+      
+    Parameters:
+      key - returns a key. The real key is "spaceName.key".
+      defaultValue - a default value is the key doesn't exist.
+      callback - a callback function.
+  */
   getValue : function(key, defaultValue, callback)
   {
     getValue.safeCallWithResult(this.attributes.name + '.' + key, defaultValue, callback);
   },
   
+  /*
+    Function: updateTitleOfShift (private)
+      Update the title of a shift, if appropriate.
+      
+    Parameters:
+      shiftId - a shift id.
+      title - a new title <string>.
+  */
   updateTitleOfShift: function(shiftId, title)
   {
     this.shifts[shiftId].updateTitle(title);
   },
   
+  /*
+    Function: mainViewForShift (private)
+      Returns the main view DOM node of the shift.
+      
+    Parameters:
+      shiftId - a shift id.
+      
+    Returns:
+      A DOM node.
+  */
   mainViewForShift: function(shiftId)
   {
     return this.shifts[shiftId].getMainView();
   },
   
+  /*
+    Function: saveState (private)
+      Saves the state of the space. For the moment just saves the currently visible shifts.
+      Normally used when a plugin takes over the entire current browser viewport.
+  */
   saveState: function()
   { 
     // empty the state
@@ -701,26 +949,62 @@ ShiftSpace.Space = new Class({
     this.__state__.set('visibleShifts', visibleShifts);
   },
   
+  /*
+    Function: restoreState (private)
+      Restores the state of the space. Normally used when a plugin has relinquished the
+      browser's current viewport.
+  */
   restoreState: function()
   {
     this.__state__.get('visibleShifts').each(function(x) { x.show(); });
   },
   
+  /*
+    Function: isNewShift
+      Used to check whether a shift is unsaved.
+      
+    Parameters:
+      shiftId - a shift id.
+  */
   isNewShift: function(shiftId)
   {
     return SSIsNewShift(shiftId);
   },
   
+  /*
+    Function: xmlhttpRequest
+      A safe wrapper around GM_xmlhttpRequest.
+      
+    Parameters:
+      config - object with properties as defined by GM_xmlhttpRequest.
+  */
   xmlhttpRequest: function(config)
   {
     SSXmlHttpRequest.safeCall(config);
   },
   
+  /*  
+    Function: setPref
+      Set a space pref.
+      
+    Parameters:
+      key - a key.
+      value - a value to be set. If value is an Object make sure there aren't circular references.
+  */
   setPref: function(key, value)
   {
     this.setValue(this.attributes.name+'.prefs.'+key, value);
   },
   
+  /*
+    Function: getPref
+      Returns a space pref.
+      
+    Parameters:
+      key - a key.
+      defaultValue - a default value.
+      callback - a function to be called when the value has been retrieved.
+  */
   getPref: function(key, defaultValue, callback)
   {
     this.getValue(this.attributes.name+'.prefs.'+key, defaultValue, callback);
