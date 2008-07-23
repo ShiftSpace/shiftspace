@@ -441,7 +441,7 @@ var ShiftSpace = new (function() {
       // fetch data for the space
     }
     
-   
+
     function SSGetElementByClass(searchClass, _node)
     {
       return SSGetElementsByClass(searchClass, _node)[0];
