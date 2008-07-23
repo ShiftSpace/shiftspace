@@ -2510,22 +2510,24 @@ var ShiftSpace = new (function() {
       SSAttachPinEvents();
     }
     
-    
-    function SSStopPinSelection() {
+    /*
+      Function: SSStopPinSelection
+        Stop handling pin selection.
+    */
+    function SSStopPinSelection() 
+    {
       __currentPinWidget__ = null;
       if(ShiftSpace.PinSelect.getParent()) ShiftSpace.PinSelect.remove();
       SSRemovePinEvents();
     }
     
     /*
-    
-    loadFile (private)
-    Loads a URL and executes a callback with the response
+    Function: loadFile (private)
+      Loads a URL and executes a callback with the response
     
     Parameters:
-        url - The URL of the target file
-        callback - A function to process the file once it's loaded
-    
+      url - The URL of the target file
+      callback - A function to process the file once it's loaded
     */
     function loadFile(url, callback) {
       // If the URL doesn't start with "http://", assume it's on our server
@@ -2581,14 +2583,14 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    
-    loadSpace (private)
-    Loads the space's source code, executes it and stores an instance of the
-    space class in the 'spaces' object
+    Function: loadSpace (private)
+      Loads the space's source code, executes it and stores an instance of the
+      space class in the 'spaces' object
     
     Parameters:
-        space - the Space name to load
-    
+      space - the Space name to load
+      pendingShift - a pending shift id, will probably become deprecaed.
+      callback - a callback function to run when the space is loaded.
     */
     function loadSpace(space, pendingShift, callback) 
     {
@@ -2639,13 +2641,11 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    
-    SSRegisterSpace (private)
-    Called by the Space class to register with ShiftSpace.
+    Function: SSRegisterSpace (private)
+      Called by the Space class to register with ShiftSpace.
     
     Parameters:
-        instance - An instance object of the space.
-    
+      instance - A space object.
     */
     function SSRegisterSpace(instance) {
       //console.log("SSRegisterSpace");
@@ -2701,7 +2701,13 @@ var ShiftSpace = new (function() {
       instance.addEvent('onShiftDestroy', SSRemoveShift);
     }
     
-    
+    /*
+      Function: SSRemoveShift
+        Remove a shift from the internal array.
+        
+      Parameters:
+        shiftId - a shift id.
+    */
     function SSRemoveShift(shiftId)
     {
       delete shifts[shiftId];
@@ -2710,11 +2716,15 @@ var ShiftSpace = new (function() {
     /*
       Function: SSLoadPlugin (private)
         Loads a plugin
+        
+      Parameters:
+        plugin - a plugin name as a string.
+        callback - a callback function.
     */
     function SSLoadPlugin(plugin, callback) 
     {
       //console.log('SSLoadPlugin ' + plugin);
-      if(plugins[plugins])
+      if(plugins[plugin])
       {
         if(callback) callback();
         return;
@@ -2756,6 +2766,9 @@ var ShiftSpace = new (function() {
     /*
       Function: SSRegisterPlugin (private)
         Register a plugin.
+        
+      Parameters:
+        plugin - a plugin object.
     */
     function SSRegisterPlugin(plugin)
     {
@@ -2824,15 +2837,13 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    
-    serverCall (private)
-    Sends a request to the server.
+    Function: serverCall (private)
+      Sends a request to the server.
     
     Parameters:
-        method - Which method to call on the server (string)
-        parameters - Values passed with the call (object)
-        callback - (optional) A function to execute upon completion
-    
+      method - Which method to call on the server (string)
+      parameters - Values passed with the call (object)
+      callback - (optional) A function to execute upon completion
     */
     function serverCall(method, parameters, _callback) {
       var callback = _callback;
@@ -2913,18 +2924,16 @@ var ShiftSpace = new (function() {
     
     
     /*
-    
-    setValue (private, except in debug mode)
-    A wrapper function for GM_setValue that handles non-string data better.
+    Function: setValue (private)
+      A wrapper function for GM_setValue that handles non-string data better.
     
     Parameters:
-        key - A unique string identifier
-        value - The value to store. This will be serialized by uneval() before
-                it gets passed to GM_setValue.
+      key - A unique string identifier
+      value - The value to store. This will be serialized by uneval() before
+              it gets passed to GM_setValue.
     
     Returns:
         The value passed in.
-    
     */
     function setValue(key, value, rawValue) {
       if (rawValue) {
@@ -2937,18 +2946,16 @@ var ShiftSpace = new (function() {
     
     
     /*
-    
-    getValue (private, except in debug mode)
-    A wrapper function for GM_getValue that handles non-string data better.
+    Function: getValue (private, except in debug mode)
+      A wrapper function for GM_getValue that handles non-string data better.
     
     Parameters:
-        key - A unique string identifier
-        defaultValue - This value will be returned if nothing is found.
-        rawValue - Doesn't use Json encoding on stored values
+      key - A unique string identifier
+      defaultValue - This value will be returned if nothing is found.
+      rawValue - Doesn't use Json encoding on stored values
     
     Returns:
-        Either the stored value, or defaultValue if none is found.
-    
+      Either the stored value, or defaultValue if none is found.
     */
     function getValue(key, defaultValue, rawValue) {
       if (!rawValue) {
@@ -2970,15 +2977,14 @@ var ShiftSpace = new (function() {
     
     
     /*
-    
-    loadStyle (private)
-    Loads a CSS file, processes it to make URLs absolute, then appends it as a
-    STYLE element in the page HEAD.
+    Function: loadStyle (private)
+      Loads a CSS file, processes it to make URLs absolute, then appends it as a
+      STYLE element in the page HEAD.
     
     Parameters:
-        url - The URL of the CSS file to load
-        callback - A custom function to handle css text if you don't want to use GM_addStyle
-        spaceCallback - A callback function for spaces that want to use GM_addStyle but need to be notified of CSS load.
+      url - The URL of the CSS file to load
+      callback - A custom function to handle css text if you don't want to use GM_addStyle
+      spaceCallback - A callback function for spaces that want to use GM_addStyle but need to be notified of CSS load.
     */
     function loadStyle(url, callback, frame) {
       // TODO: check to see if the domain is different, if so don't mess with the url - David
@@ -3032,15 +3038,13 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    
-    log (private)
-    Logs a message to the console, but only in debug mode or when reporting
-    errors.
+    Function: log (private)
+      Logs a message to the console, but only in debug mode or when reporting
+      errors.
     
     Parameters:
-        msg - The message to be logged in the JavaScript console.
-        verbose - Force the message to be logged when not in debug mode. 
-    
+      msg - The message to be logged in the JavaScript console.
+      verbose - Force the message to be logged when not in debug mode. 
     */
     function log(msg, verbose) {
       if (typeof verbose != 'undefined' || debug) {
@@ -3056,21 +3060,37 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
+    /*
+      Function: SSCanGoFullScreen
+        Returns wether ShiftSpace can lose the fullscreen mode.
+        
+      Parameters:
+        Returns a boolean.
+    */
     function SSCanGoFullScreen()
     {
       return true;
     }
     
-    
+    /*
+      Function: SSCanExitFullScreen
+        Return whther ShiftSpace is ready to return to full screen mode.
+        
+      Returns:
+        A boolean.
+    */
     function SSCanExitFullScreen()
     {
       return true;
     }
     
-    
     var __errorWindowShiftPropertyModel__;
     var __errorWindowMinimized__ = true;
+    
+    /*
+      Function: SSCreateErrorWindow
+        Create the error window.
+    */
     function SSCreateErrorWindow()
     {
       // Create the model for the table
@@ -3231,7 +3251,13 @@ var ShiftSpace = new (function() {
       __errorWindow__.injectInside(document.body);
     }
     
-    
+    /*
+      Function: SSShowErrorWindow
+        Show the error window.
+        
+      Parameters:
+        shiftId - a shift id.
+    */
     function SSShowErrorWindow(shiftId)
     {
       /*
@@ -3298,13 +3324,22 @@ var ShiftSpace = new (function() {
       });
     }
     
-    
+    /*
+      Function: SSHideErrorWindow
+        Hide the error window.
+    */
     function SSHideErrorWindow()
     {
       __errorWindow__.addClass('SSDisplayNone');
     }
     
-    
+    /*
+      Function: SSErrorWindowUpdateTableForShift
+        Update object description table for a shift.
+        
+      Parameters:
+        shiftId - a shift id.
+    */
     function SSErrorWindowUpdateTableForShift(shiftId)
     {
       var statusTable = __errorWindow__.getElement('.SSErrorWindowShiftStatus');
