@@ -1239,6 +1239,14 @@ var ShiftSpace = new (function() {
       space.showInterface();
     }
     
+    /*
+      Function: updateTitleOfShift
+        Tell the space to the update the title of the shift if necessary.
+      
+      Parameters:
+        shiftId - a shift id.
+        title - the new title.
+    */
     function updateTitleOfShift(shiftId, title)
     {
       SSSpaceForShift(shiftId).updateTitleOfShift(shiftId, title);
@@ -1246,13 +1254,11 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    
     Function: showShift
-    Displays a shift on the page.
+      Displays a shift on the page.
     
     Parameters:
-        shiftId - The ID of the shift to display.
-    
+      shiftId - The ID of the shift to display.
     */
     function showShift(shiftId) 
     {
@@ -1336,7 +1342,13 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
+    /*
+      Function: SSAddRecentlyViewedShift
+        Add a recently viewed shift.
+        
+      Parameters:
+        shiftId - a shift id
+    */
     function SSAddRecentlyViewedShift(shiftId)
     {
       // store a reference to this
@@ -1355,7 +1367,7 @@ var ShiftSpace = new (function() {
     /*
     
     Function: hideShift
-    Hides a shift from the page.
+      Hides a shift from the page.
         
     Parameters:
         shiftId - The ID of the shift to hide.
@@ -1372,10 +1384,8 @@ var ShiftSpace = new (function() {
     
 
     /*
-    
-    SSCheckForContent (private)
-    Sends a request to the server about the current page's ShiftSpace content.
-    
+    Function: SSCheckForContent (private)
+      Sends a request to the server about the current page's ShiftSpace content.
     */
     function SSCheckForContent() {
       var params = {
@@ -1409,7 +1419,10 @@ var ShiftSpace = new (function() {
       });
     }
     
-    
+    /*
+      Function: SSCheckForAutolaunch
+        Check for Spaces which need to be auto-launched.
+    */
     function SSCheckForAutolaunch()
     {
       for(space in installed)
@@ -1438,7 +1451,13 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
+    /*
+    Function: SSAllShiftIdsForSpace
+      Returns all shift ids on the current url for a particular Space.
+      
+    Parameters:
+      spaceName - the name of the Space as a string.
+    */
     function SSAllShiftIdsForSpace(spaceName)
     {
       var shiftsForSpace = [];
@@ -1454,10 +1473,11 @@ var ShiftSpace = new (function() {
     
     
     /*
-    
-    SSConsoleIsReady (private)
-    Called by the Console object when it finishes initializing.
-    
+    Function: SSConsoleIsReady (private)
+      Called by the Console object when it finishes initializing.
+      
+    Returns:
+      A boolean value.
     */
     function SSConsoleIsReady() {
       if (SSPendingShifts() == -1) {
@@ -1469,10 +1489,8 @@ var ShiftSpace = new (function() {
     
     
     /*
-    
-    loadShifts (private)
-    Loads the actual shift data for the current page.
-    
+    Function: loadShifts (private)
+      Loads the actual shift data for the current page.
     */
     function loadShifts() {
       
@@ -1545,7 +1563,13 @@ var ShiftSpace = new (function() {
       });
     }
     
-    
+    /*
+      Function: SSGetShift
+        Returns a shift by shift id.
+        
+      Parameters:
+        shiftId - a shift id.
+    */
     function SSGetShift(shiftId)
     {
       var theShift = shifts[shiftId];
@@ -1556,14 +1580,31 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
+    /*
+      Function: SSGetAuthorForShift
+        Returns the username of the Shift owner as a string.
+        
+      Parameters:
+        shiftId - a shift id.
+        
+      Returns:
+        A user name as a string.
+    */
     function SSGetAuthorForShift(shiftId)
     {
       return SSGetShift(shiftId).username;
     }
     
-    
-    // returns a copy of the shift data
+    /*
+    Function: SSGetShiftData
+      Returns a copy of the shift data.
+      
+    Parameters:
+      shiftId - a shift id.
+      
+    Returns:
+      An copy of the shift's properties.
+    */
     function SSGetShiftData(shiftId)
     {
       var shift = SSGetShift(shiftId);
@@ -1577,7 +1618,13 @@ var ShiftSpace = new (function() {
       };
     }
     
-    
+    /*
+      Function: SSSetShift
+        Update the shift properties of a shift.
+        
+      Parameters:
+        shiftId - a shift id.
+    */
     function SSSetShift(shiftId, shiftData)
     {
       shifts[shiftId] = $merge(shifts[shiftId], {
@@ -1585,8 +1632,14 @@ var ShiftSpace = new (function() {
       });
     }
     
-    
-    // TODO: rewrite as a special case of SSLoadShifts
+    /*
+      Function: SSLoadShift
+        Load a single shift from the network.
+        
+      Parameters:
+        shiftId - a shift id.
+        callback - a callback handler.
+    */
     function SSLoadShift(shiftId, callback)
     {
       // fetch a content from the network;
@@ -1606,7 +1659,14 @@ var ShiftSpace = new (function() {
       });
     }
     
-    
+    /*
+      Function: SSLoadShifts
+        Same as SSLoadShift except handles an array of shift id.
+        
+      Parameters:
+        shiftIds - an array of shift ids.
+        callback - a callback handler.
+    */
     function SSLoadShifts(shiftIds, callback)
     {
       // fetch a content from the network;
@@ -1632,19 +1692,38 @@ var ShiftSpace = new (function() {
       });
     }
     
-    
+    /*
+      Function: SSShiftIsLoaded
+        Check to see if the shift has it's content loaded yet.
+        
+      Parameters:
+        shiftId - a shift id.
+        
+      Returns:
+        a boolean value.
+    */
     function SSShiftIsLoaded(shiftId)
     {
       return SSHasProperty(SSGetShift(shiftId), ('content'));
     }
     
-    
+    /*
+      Function: SSHasProperty
+        Convenience function to check whether an object has a property.
+        
+      Parameters:
+        obj - an Object.
+        prop - the property name as a string.
+        
+      Returns:
+        a boolean.
+    */
     function SSHasProperty(obj, prop)
     {
       return (typeof obj[prop] != 'undefined');
     }
     
-    
+
     function SSSetPendingShift(shiftId)
     {
       __pendingShift__ = shiftId;
@@ -1656,7 +1735,15 @@ var ShiftSpace = new (function() {
       return __pendingShift__;
     }
 
-    // call to get just the shifts that are needed
+    /*
+      Function: SSGetShifts
+        Similar to SSLoadShifts, probably should be merged.  Only used by plugins.
+        
+      Parameters:
+        shiftIds - an array of shift ids.
+        callBack - a callback function.
+        errorHandler - a error handling function.
+    */
     function SSGetShifts(shiftIds, callBack, errorHandler)
     {
       var newShiftIds = [];
@@ -1690,7 +1777,13 @@ var ShiftSpace = new (function() {
       });
     }
     
-    
+    /*
+      Function: SSGetPageShiftIdsForUser
+        Gets all the shifts ids on the current page for the logged in user.
+        
+      Returns:
+        An array of shift ids.
+    */
     function SSGetPageShiftIdsForUser()
     {
       var shiftIds = [];
@@ -1713,10 +1806,8 @@ var ShiftSpace = new (function() {
     
     
     /*
-    
-    saveShift (private)
-    Saves a shift's JSON object to the server.
-    
+      Function: saveShift (private)
+        Saves a shift's JSON object to the server.
     */
     function saveShift(shiftJson) {
       //console.log('saveShift');
