@@ -1,8 +1,6 @@
 /*
   add onShiftEdit
   
-  refactor widget button names to reflect CSS names instead
-  
   Currently it is not possible to change word chunk amount after performing a 
   cut. Should this change or should I just keep the user from changing the amount
   after a cutup has been performed.
@@ -20,9 +18,9 @@ var CutupsSpace = ShiftSpace.Space.extend({
   
   setup: function() {
     this.fireCutup = function(e){
-            //added check for multLineArray if exists there is a change that part
-            //of the cutup is still selected
+            //if selection exists and origTextArray does not
             if (!window.getSelection().getRangeAt(0).collapsed && !this.origTextArray) {
+              console.log("here");
                var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
                 if (!this.getCurrentShift().ranges){
                     this.getCurrentShift().ranges = [];
@@ -34,6 +32,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
                 //origTextArray contains original text selected
                 newRangeRef.origArray = this.origTextArray;
             }else{
+              //origTextArray exists so just re cutup current cutup
             /*
             Need to add functionality so that multiple ranges can be created.
             */                
@@ -136,22 +135,20 @@ var CutupsSpace = ShiftSpace.Space.extend({
   
   cutupRange: function(xPathResult){
     if(!this.origTextArray){
-      this.cutupTextArray = Array();
-      this.origTextArray = Array();
-      this.joinedTextArray = Array();//contains all text split into single array
-      /* var pattern = /(\s)?\S+/g; */ 
+      this.cutupTextArray = Array();  //contains cutup text nodes
+      this.origTextArray = Array();   //contains precutup orig text nodes
+      this.joinedTextArray = Array();   //contains text from all text nodes split into single array
       //break up snapshot into arrays of words
       for ( var i=0 ; i < xPathResult.snapshotLength; i++ ){
           if(this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
             var text = xPathResult.snapshotItem(i).textContent;
             var lineArray = text.match(this.wordPattern);
-            //joinedTextArray contains all arrays of words from text nodes in a single
-            //array.
+            //joinedTextArray contains all arrays of words from text nodes in a single array.
             this.joinedTextArray = this.joinedTextArray.concat(lineArray);
             //do not add empty nodes to array or is content is javascript
             if(lineArray != null){ 
-              this.cutupTextArray.push(lineArray);
-              this.origTextArray.push(text);
+              this.cutupTextArray.push(lineArray); //push array of words into cutupTextArray
+              this.origTextArray.push(text);  //push original text into origTextArray
             }
           }
       }
@@ -160,7 +157,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
           return item != null;
       });
     }
-    //randomly sort joined arrays
+    //randomly sort joined arrays 
     this.joinedTextArray.sort(function(a,b){
         return Math.random() - 0.5;
     });
@@ -168,9 +165,9 @@ var CutupsSpace = ShiftSpace.Space.extend({
     //this keeps the same number of words in each node
     //while the actual words change (if 1 word chunks are selected)
     var i = 0;
-    for(var x=0;x<this.cutupTextArray.length;x++){
-        for(var y=0;y<this.cutupTextArray[x].length;y++){
-            this.cutupTextArray[x][y] = this.joinedTextArray[i];
+    for(var arr=0; arr<this.cutupTextArray.length; arr++){
+        for(var arrItem=0; arrItem<this.cutupTextArray[arr].length; arrItem++){
+            this.cutupTextArray[arr][arrItem] = this.joinedTextArray[i];
             i++;
         }
     }
@@ -222,8 +219,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   
   cancelCutup: function(){
-      // ignores the specific shift since only one highlight can be on at a given moment 
-      // search for all span elements with _shiftspace_highlight attribute and open them
+      // ignores the specific shift since only one cutup can be on at a given moment 
+      // search for all span elements with _shiftspace_cutup attribute and open them
       var xPathResult = document.evaluate(".//span[attribute::_shiftspace_cutups='on']", document, null,
           XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
       
