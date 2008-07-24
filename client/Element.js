@@ -1,4 +1,23 @@
+/*
+  Class: ShiftSpace.Element
+    A wrapper around the MooTools Element class that marks each DOM node with the ShiftSpaceElement CSS
+    class.  This is required for identifying which elements on the page belong to ShiftSpace.  In the case
+    of iFrames this is also used to make sure that iFrame covers get generated so that drag and resize
+    operations don't break.
+*/
 ShiftSpace.Element = new Class({
+  
+  /*
+    Function: initialize (private)
+      Initialize the element and if necessary add appropiate event handlers.
+    
+    Parameters:
+      _el - a raw DOM node or a string representing a HTML tag type.
+      props - the same list of options that would be passed to the MooTools Element class.
+
+    Returns:
+      An ShiftSpace initialized and MooTools wrapped DOM node.
+  */
   initialize: function(_el, props) 
   {
     var el = new Element(_el, props);
@@ -63,9 +82,21 @@ ShiftSpace.Element = new Class({
   Class : ShiftSpace.Iframe
     This class allows the creation of iframes with CSS preloaded.  This will eventually
     be deprecated by the the forthcoming MooTools Iframe element which actually loads
-    MooTools into the iframe.
+    MooTools into the Iframe.  Inherits from <ShiftSpace.Element>.  You shouldn't instantiate
+    this class directly, just use <ShiftSpace.Element>.
 */
 ShiftSpace.Iframe = ShiftSpace.Element.extend({
+  
+  /*
+    Function: initialize (private)
+      Initializes the iframe.
+      
+    Parameters:
+      props - the same properties that would be passed to a MooTools element.
+      
+    Returns:
+      A ShiftSpace initialized and MooTools wrapped Iframe.
+  */
   initialize: function(props)
   {
     // check for the css property

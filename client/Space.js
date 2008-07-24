@@ -163,7 +163,7 @@ ShiftSpace.Space = new Class({
   /*
     Function: addDeferredShift (private)
       Adds a deferred shift to be show.  This happens a user attempt to view a shift
-      from Console for a space that hasn't loaded yet.
+      from <Console> for a space that hasn't loaded yet.
     
     Parameters:
       shiftId - a shift id.
@@ -177,7 +177,7 @@ ShiftSpace.Space = new Class({
   /*
     Function: addDeferredEdit (private)
       Adds a deferred shift to be edited.  This happens when a user attempts to edit
-      an existing shift from the Console.
+      an existing shift from the <Console>.
       
     Parameters:
       shiftId - a shift id.

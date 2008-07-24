@@ -12,14 +12,14 @@ var PinWidget = new Class({
   protocol: ['getPinRef', 'getPinWidgetButton', 'getPinWidgetAllowedActions', 'onPin', 'isPinned'],
   
   /*
-    Property:
+    Function: initialize
       Takes an element that will represents the pin widget button and a callback
       function.  The callback will be made when the user has pinned a node on the
       page.  The element should be an appropriate tag with the the dimensions
       19px x 19px.
       
-    Arguments:
-      
+    Parameters:
+      delegate - the delegate of this PinWidget.  Normally this either a <ShiftSpace.Space> instance or a <ShiftSpace.Shift> instance.  In either case the delegate should implement all of the methods defined in the PinWidget delegate protocol defined above.
   */
   initialize: function(delegate)
   {
@@ -67,6 +67,10 @@ var PinWidget = new Class({
     __pinWidgets__.push(this);
   },
   
+  /*
+    Function: delegateWasPinned (private)
+      Called when the delegate fires a pin event.
+  */
   delegateWasPinned: function()
   {
     var pinRef = this.delegate.getPinRef();
@@ -81,6 +85,10 @@ var PinWidget = new Class({
     }
   },
   
+  /*
+    Function: delegateWasUnpinned (private)
+      Called when the delegate fires a unpin event.
+  */
   delegateWasUnpinned: function()
   {
     this.setPinnedElement(null);
@@ -93,6 +101,10 @@ var PinWidget = new Class({
     return str.charAt(0).toUpperCase()+str.substr(1, str.length-1);
   },
   
+  /*
+    Function: createMenu (private)
+      Creates the pinning selection menu.
+  */
   createMenu: function()
   {
     this.menu = new ShiftSpace.Element('div', {
@@ -130,6 +142,10 @@ var PinWidget = new Class({
     this.menu.addEvent('click', this.userSelectedPinAction.bind(this));
   },
   
+  /*
+    Function: setMenuItems (private)
+      Sets the pin widgets menu items based on the allowed actions specified by the delegate.
+  */
   setMenuItems: function()
   {
     var actions = this.delegate.getPinWidgetAllowedActions();
@@ -158,6 +174,10 @@ var PinWidget = new Class({
     this.menuBottomItem.getElement('span').setText('Unpin');
   },
   
+  /*
+    Function: updateMenu (private)
+      Refresh the pin selection menu.
+  */
   updateMenu: function(action)
   {
     var target = this.menu.getElement('.'+action);
@@ -174,6 +194,13 @@ var PinWidget = new Class({
     }
   },
   
+  /*
+    Function: toggleSelection (private)
+      Toggles the pin selection mode. There are three, a) node selection mode, b) menu selection mode, c) pinned mode.
+      
+    Parameters:
+      _evt - a DOM event.
+  */
   toggleSelection: function(_evt)
   {
     var evt = new Event(_evt);
@@ -212,12 +239,14 @@ var PinWidget = new Class({
       }
     }
   },
-
-  cancelPin: function()
-  {
-    
-  },
   
+  /*
+    Function: showMenu (private)
+      Shows the pin selection options menu.
+      
+    Parameters:
+      _evt - a DOM event.
+  */
   showMenu: function(_evt)
   { 
     var position = this.element.getPosition();
@@ -238,6 +267,13 @@ var PinWidget = new Class({
     }
   },
   
+  /*
+    Function: hideMenu (private)
+      Hides the pin selectin option menu.
+      
+    Parameters:
+      _evt - a DOM event.
+  */
   hideMenu: function(_evt)
   {
     this.element.removeClass('SSPinWidgetActive');
@@ -250,12 +286,26 @@ var PinWidget = new Class({
     this.setPinnedElement(null);
   },
   
+  /*
+    Function: userPinnedElement (private)
+      User pinned the element.  This should never be called directly, ShiftSpace Core handles this.  Implicity show the pin selection option menu.
+      
+    Parameters:
+      element - a DOM node.
+  */
   userPinnedElement: function(element)
   {
     this.setPinnedElement(element)
     this.showMenu();
   },
   
+  /*
+    Function: setPinnedElement (private)
+      Sets an internal reference to a pinned element.
+      
+    Parameters:
+      element - a DOM node.
+  */
   setPinnedElement: function(element)
   {
     // user selected node
@@ -263,11 +313,25 @@ var PinWidget = new Class({
     this.pinnedElement = element;
   },
 
+  /*
+    Function: getPinnedElement (private)
+      Returns the pinned element. You should not call this directly.
+      
+    Parameters:
+      element - a DOM node.
+  */
   getPinnedElement: function(element)
   {
     return this.pinnedElement;
   },
   
+  /*
+    Function: userSelectedPinAction (private)
+      Event handler that called when the user selects an option from the pin selection option menu.
+      
+    Parameters:
+      _evt - a DOM event.
+  */
   userSelectedPinAction: function(_evt)
   {
     var evt = new Event(_evt);
@@ -346,6 +410,10 @@ var PinWidget = new Class({
     this.hideMenu();
   },
   
+  /*
+    Function: refresh (private)
+      Called the refresh the appearance of the pin widget.
+  */
   refresh: function()
   {
     if(!this.getPinnedElement())

@@ -11,6 +11,9 @@ var Pin = new Class({
     Arguments:
       aNode - A DOM reference.
       action - a string, valid values are 'before', 'after,' 'replace', and 'relative'.
+      
+    Returns:
+      A pin reference object.
   */
   toRef : function(aNode, action)
   {
@@ -94,6 +97,13 @@ var Pin = new Class({
     }
   },
   
+  /*
+    Property: isValidRef
+      Checks to see if the pinRef object actually points to a real node.
+      
+    Returns:
+      a boolean.
+  */
   isValidRef: function(pinRef)
   {
     if(!pinRef || (!pinRef.ancestorId && !pinRef.relativeXPath)) return false;
