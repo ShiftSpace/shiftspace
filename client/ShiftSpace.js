@@ -1063,7 +1063,7 @@ var ShiftSpace = new (function() {
     
     
     /*
-    Function: initShift (private)
+    Function: initShift
       Creates a new shift on the page.
     
     Parameters:
@@ -1124,7 +1124,7 @@ var ShiftSpace = new (function() {
     
     
     /*
-    Function: focusShift (private)
+    Function: focusShift
       Focuses a shift.
       
     Parameter:
@@ -1214,7 +1214,7 @@ var ShiftSpace = new (function() {
     }
 
     /*
-    focusSpace (private)
+    focusSpace
     Focuses a space.
     
     Parameter:
@@ -1384,7 +1384,7 @@ var ShiftSpace = new (function() {
     
 
     /*
-    Function: SSCheckForContent (private)
+    Function: SSCheckForContent
       Sends a request to the server about the current page's ShiftSpace content.
     */
     function SSCheckForContent() {
@@ -1473,7 +1473,7 @@ var ShiftSpace = new (function() {
     
     
     /*
-    Function: SSConsoleIsReady (private)
+    Function: SSConsoleIsReady
       Called by the Console object when it finishes initializing.
       
     Returns:
@@ -1489,7 +1489,7 @@ var ShiftSpace = new (function() {
     
     
     /*
-    Function: loadShifts (private)
+    Function: loadShifts
       Loads the actual shift data for the current page.
     */
     function loadShifts() {
@@ -1806,7 +1806,7 @@ var ShiftSpace = new (function() {
     
     
     /*
-      Function: saveShift (private)
+      Function: saveShift
         Saves a shift's JSON object to the server.
         
       Parameters:
@@ -1858,7 +1858,7 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    Function: saveNewShift (private)
+    Function: saveNewShift
       Creates a new entry for the shift on the server.
     
     Parameters:
@@ -1924,7 +1924,7 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    Function: editShift (private)
+    Function: editShift
       Edit a shift.
       
     Parameters:
@@ -1989,7 +1989,7 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    Function: deleteShift (private)
+    Function: deleteShift
       Deletes a shift from the server.
     
     Parameters:
@@ -2028,7 +2028,7 @@ var ShiftSpace = new (function() {
     
     /*
     
-    keyDownHandler (private)
+    keyDownHandler
     Handles keydown events.
     
     */
@@ -2119,7 +2119,7 @@ var ShiftSpace = new (function() {
     
     /*
     
-    keyDownHandler (private)
+    keyDownHandler
     Handles keyup events.
     
     */
@@ -2136,7 +2136,7 @@ var ShiftSpace = new (function() {
     
     /*
     
-    keyPressHandler (private)
+    keyPressHandler
     Handles keypress events.
     
     */
@@ -2620,7 +2620,7 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    Function: loadFile (private)
+    Function: loadFile
       Loads a URL and executes a callback with the response
     
     Parameters:
@@ -2682,7 +2682,7 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    Function: loadSpace (private)
+    Function: loadSpace
       Loads the space's source code, executes it and stores an instance of the
       space class in the 'spaces' object
     
@@ -2740,7 +2740,7 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    Function: SSRegisterSpace (private)
+    Function: SSRegisterSpace
       Called by the Space class to register with ShiftSpace.
     
     Parameters:
@@ -2813,7 +2813,7 @@ var ShiftSpace = new (function() {
     }
     
     /*
-      Function: SSLoadPlugin (private)
+      Function: SSLoadPlugin
         Loads a plugin
         
       Parameters:
@@ -2863,7 +2863,7 @@ var ShiftSpace = new (function() {
     }
     
     /*
-      Function: SSRegisterPlugin (private)
+      Function: SSRegisterPlugin
         Register a plugin.
         
       Parameters:
@@ -2936,7 +2936,7 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    Function: serverCall (private)
+    Function: serverCall
       Sends a request to the server.
     
     Parameters:
@@ -3023,7 +3023,7 @@ var ShiftSpace = new (function() {
     
     
     /*
-    Function: setValue (private)
+    Function: setValue
       A wrapper function for GM_setValue that handles non-string data better.
     
     Parameters:
@@ -3076,7 +3076,7 @@ var ShiftSpace = new (function() {
     
     
     /*
-    Function: loadStyle (private)
+    Function: loadStyle 
       Loads a CSS file, processes it to make URLs absolute, then appends it as a
       STYLE element in the page HEAD.
     
@@ -3137,7 +3137,7 @@ var ShiftSpace = new (function() {
     }
     
     /*
-    Function: log (private)
+    Function: log
       Logs a message to the console, but only in debug mode or when reporting
       errors.
     
