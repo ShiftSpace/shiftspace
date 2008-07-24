@@ -122,7 +122,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   
   isValidCutupTextNode: function(node){
-   return (node != null && node.getParent().nodeName != "SCRIPT"); 
+   return (node != null && $(node).getParent().nodeName != "SCRIPT"); 
   },
   
   wordPattern: new RegExp("(\\S+(\\s?)+){1,1}","g"), //default chunk is one 'word'
