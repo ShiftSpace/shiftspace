@@ -1,3 +1,7 @@
+/*
+  Class: Console
+    Singleton object representing the ShiftSpace Console.  The single can be access via ShiftSpace.Console.
+*/
 var Console = new Class({
   
   initialize: function(options) {
