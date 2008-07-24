@@ -55,7 +55,7 @@ File: ShiftSpace  (ShiftSpace.js)
 File: ShiftSpace.Element  (Element.js)
 File: ShiftSpace.Plugin  (Plugin.js)
 File: ShiftSpace.Shift  (Shift.js)
-File: Space  (Space.js)
+File: ShiftSpace.Space  (Space.js)
 File: User  (User.js)
 
 Group: Index  {

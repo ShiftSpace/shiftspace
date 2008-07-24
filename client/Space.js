@@ -1,5 +1,5 @@
 /*
-  Class: Space
+  Class: ShiftSpace.Space
     The base class for spaces.
 */
 ShiftSpace.Space = new Class({
