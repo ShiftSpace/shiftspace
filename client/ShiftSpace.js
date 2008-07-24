@@ -47,10 +47,10 @@ console.log('Loading ShiftSpace');
 /*
 
 Class: ShiftSpace
-  A singleton controller object designed to keep some data and methods private.
-  The Space class has access to all private data, while other components, such as
-  User, Console and each space class, must rely on publicly exposed interfaces.
-
+  A singleton controller object that represents ShiftSpace Core. All methods
+  functions and variables are private.  Please refer to the documention on <User>,
+  <ShiftSpace.Space>, <ShiftSpace.Shift>, <ShiftSpace.Plugin> to see public
+  interfaces.
 */
 
 var ShiftSpace = new (function() {

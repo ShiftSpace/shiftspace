@@ -3,9 +3,11 @@
     A widget class that you can include on shift or space to allow for pinning functionality.
     The PinWidget class assumes that your delegate object has the following properties as methods.
     
-    getPinWidgetButton() - returns a DOM node
-    getPinWidgetAllowedActions() - returns an array of desired actions
-    onPin() - a pinEvent handler
+    getPinRef - returns the pin reference object associated with the delegate.
+    getPinWidgetButton() - returns a DOM node.
+    getPinWidgetAllowedActions() - returns an array of desired actions: before, after, replace, relative.
+    onPin() - a pinEvent handler.
+    isPinned - whether the delegate is pinned or not.
 */
 var PinWidget = new Class({
   
