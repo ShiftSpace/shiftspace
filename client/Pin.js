@@ -4,9 +4,9 @@
     the singleton instance ShiftSpace.Pin.  It is often desirable for a shift to target a specifc node on a page
     rather than being absolute positioned.  In the case of Notes a user might want to attach that note to a specific
     node.  This is because the layout of a page is dependant on the width of the user's browser window.  In the case
-    of center aligned content note will not be in proper relation to what the shift author intended.  Pinning solves this
-    issue.  In the case of ImageSwap pinning provides an highlevel mechanism for targeting images.  SourceShift presents
-    the most complete use of the pinning api.  SourceShift users can place arbitrary html before, relative to, or replace
+    of center aligned content a note will not be in proper relation to what the shift author intended.  Pinning solves this
+    issue.  In the case of ImageSwap pinning provides an high level mechanism for targeting images.  SourceShift presents
+    the most complete use of the Pinning API.  SourceShift users can place arbitrary HTML before, after, relative to, or replace
     entirely any HTML element on the page.
     
     If you space requires such complex targeting it is recommended that you include a PinWidget in your interface rather than
