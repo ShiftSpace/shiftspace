@@ -109,6 +109,29 @@ ShiftSpace.Shift = new Class({
       
     Parameters:
       json - an Object whose properties should be loaded by the instance.  This object contains a "location" property which is the mouse location.
+      
+    Example:
+      (start code)
+      setup: function(json)
+      {
+        this.build();
+        this.attachEvents();
+        
+        var mainView = this.getMainView();
+        if(json.position)
+        {
+          mainView.setStyles({
+            left: json.position.x,
+            top: json.position.y
+          });
+        }
+        
+        if(json.title)
+        {
+          this.setTitle(json.title);
+        }
+      }
+      (end)
   */
   setup: function(json) 
   {
@@ -168,13 +191,24 @@ ShiftSpace.Shift = new Class({
   refresh : function() {},
   
   /*
-    Function : encode (abstract)
+    Function: encode (abstract)
       To be implemented by the subclass. This method should return an object whose the properties
       accurately represent the state of this shift.  When shift is instantiated this same object
       will be passed to the new instance so that you may restore the state of the shift.
       
-    Returns :
+    Returns:
       A object whose properties represent the current state of the shift instance.
+      
+    Example:
+      (start code)
+      encode: function()
+      {
+        return {
+          name: "John Smith",
+          address: "1 Park Ave"
+        };
+      }
+      (end)
   */
   encode : function()
   {
@@ -414,6 +448,11 @@ ShiftSpace.Shift = new Class({
     See Also:
       <ShiftSpace.Pin>
       <PinWidget>
+      
+    Example:
+      (start code)
+      this.pin($('cssId), ShiftSpace.Pin.toRef($('someOtherCSSId')));
+      (end)
   */
   pin : function(element, pinRef)
   {
@@ -545,7 +584,20 @@ ShiftSpace.Shift = new Class({
       get encoded on Shift save. Used to remove circular references that will break Json.toString().
       
     Returns:
-      And encodable Object representation of the pin reference object.  
+      And encodable Object representation of the pin reference object.
+      
+    Example:
+      (start code)
+      encode: function()
+      {
+        return {
+          title: this.getTitle(),
+          color: this.getColor(),
+          position: this.element.getPosition(),
+          pinRef: this.getEncodablePinRef(this.getPinRef())
+        };
+      }
+      (end)
   */
   getEncodablePinRef: function()
   {

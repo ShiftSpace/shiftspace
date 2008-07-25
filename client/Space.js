@@ -335,6 +335,23 @@ ShiftSpace.Space = new Class({
   /*
     Function: buildInterface (abstract)
       subclass should implement this if they want to present a custom interface.
+      
+    Example:
+      (start code)
+      build: function()
+      {
+        var this.element = new ShiftSpace.Element('div', {
+          'class':'MyCSSClass'
+        });
+        var this.title = new ShiftSpace.Element('span', {
+          'class':'MyCSSSpanClass'
+        });
+        this.title.setText('MyTitle');
+        this.title.injectInside(this.element);
+        
+        this.setMainView(this.element);
+      }
+      (end)
   */
   buildInterface : function() {},
   

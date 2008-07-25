@@ -45,7 +45,19 @@ if (browserType) {document.write("<div class=" + browserType + ">");if (browserV
 
 <div class="CFunction"><div class=CTopic><h3 class=CTitle><a name="ShiftSpace.Space.hideInterface"></a>hideInterface</h3><div class=CBody><blockquote><table border=0 cellspacing=0 cellpadding=0 class=Prototype><tr><td>hideInterface : function()</td></tr></table></blockquote><p>Hide the interface of the space.&nbsp;  If there are any unsaved shifts they will be destroyed.&nbsp; Can be overriden, remember to call this.parent() from your overriding method.</p></div></div></div>
 
-<div class="CFunction"><div class=CTopic><h3 class=CTitle><a name="ShiftSpace.Space.buildInterface(abstract)"></a>buildInterface (abstract)</h3><div class=CBody><blockquote><table border=0 cellspacing=0 cellpadding=0 class=Prototype><tr><td>buildInterface : function()</td></tr></table></blockquote><p>subclass should implement this if they want to present a custom interface.</p></div></div></div>
+<div class="CFunction"><div class=CTopic><h3 class=CTitle><a name="ShiftSpace.Space.buildInterface(abstract)"></a>buildInterface (abstract)</h3><div class=CBody><blockquote><table border=0 cellspacing=0 cellpadding=0 class=Prototype><tr><td>buildInterface : function()</td></tr></table></blockquote><p>subclass should implement this if they want to present a custom interface.</p><h4 class=CHeading>Example</h4><blockquote><pre>build: function()
+{
+  var this.element = new ShiftSpace.Element('div', {
+    'class':'MyCSSClass'
+  });
+  var this.title = new ShiftSpace.Element('span', {
+    'class':'MyCSSSpanClass'
+  });
+  this.title.setText('MyTitle');
+  this.title.injectInside(this.element);
+
+  this.setMainView(this.element);
+}</pre></blockquote></div></div></div>
 
 <div class="CFunction"><div class=CTopic><h3 class=CTitle><a name="ShiftSpace.Space.getName"></a>getName</h3><div class=CBody><blockquote><table border=0 cellspacing=0 cellpadding=0 class=Prototype><tr><td>getName : function()</td></tr></table></blockquote><p>Returns the name of the shift.</p><h4 class=CHeading>Returns</h4><p>The name of the space as a string.</p></div></div></div>
 
