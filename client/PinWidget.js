@@ -7,7 +7,6 @@
     getPinWidgetButton() - returns a DOM node. This should be the DOM node where you want the PinWidget button to live.  For an example, examine the source for the Notes space.
     getPinWidgetAllowedActions() - returns an array of desired actions: before, after, replace, relative.
     onPin() - a pinEvent handler.
-    isPinned - whether the delegate is pinned or not.
     
   Example:
     (start code)
