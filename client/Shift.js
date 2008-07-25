@@ -446,7 +446,7 @@ ShiftSpace.Shift = new Class({
       pinRef - A pinRef JSON object created by <Pin>
       
     See Also:
-      <Pin>
+      <Pin>,
       <PinWidget>
       
     Example:
@@ -512,7 +512,7 @@ ShiftSpace.Shift = new Class({
       Unpins an element of this shift from a element on the page.
       
     See Also:
-      <Pin>
+      <Pin>,
       <PinWidget>
   */
   unpin : function()
