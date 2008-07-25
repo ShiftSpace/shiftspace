@@ -443,10 +443,10 @@ ShiftSpace.Shift = new Class({
     
     Parameters:
       element - the Element to be pinned.
-      pinRef - A pinRef JSON object created by <ShiftSpace.Pin>
+      pinRef - A pinRef JSON object created by <Pin>
       
     See Also:
-      <ShiftSpace.Pin>
+      <Pin>
       <PinWidget>
       
     Example:
@@ -512,7 +512,7 @@ ShiftSpace.Shift = new Class({
       Unpins an element of this shift from a element on the page.
       
     See Also:
-      <ShiftSpace.Pin>
+      <Pin>
       <PinWidget>
   */
   unpin : function()
@@ -570,7 +570,7 @@ ShiftSpace.Shift = new Class({
   
   /*
     Function: getPinRef
-      Returns the set pinRef object (created by <ShiftSpace.Pin>) if this shift has one.
+      Returns the set pinRef object (created by <Pin>) if this shift has one.
   */
   getPinRef : function()
   {

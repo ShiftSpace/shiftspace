@@ -1,6 +1,7 @@
 /*
   Class: Pin
-    Convenience class for targeting nodes on a page.
+    Convenience class for targeting nodes on a page. You can access the functionality via
+    the singleton instance ShiftSpace.Pin
 */
 var Pin = new Class({
   /*
