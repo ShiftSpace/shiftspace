@@ -1,13 +1,49 @@
 /*
   Class: PinWidget
-    A widget class that you can include on shift or space to allow for pinning functionality.
+    A widget class that you can include on shift or space to allow for pinning functionality.  You should make use of this class if your shifts require complex targeting of HTML elements on the page.  If you space requires being embedded the HTML document or replacing an element HTML element in the document, PinWidget is designed for you.  You do not interact with the PinWidget directly.  You simply implement the delegate protocol defined by this class and everything happens automatically.
     The PinWidget class assumes that your delegate object has the following properties as methods.
     
     getPinRef - returns the pin reference object associated with the delegate.
-    getPinWidgetButton() - returns a DOM node.
+    getPinWidgetButton() - returns a DOM node. This should be the DOM node where you want the PinWidget button to live.  For an example, examine the source for the Notes space.
     getPinWidgetAllowedActions() - returns an array of desired actions: before, after, replace, relative.
     onPin() - a pinEvent handler.
     isPinned - whether the delegate is pinned or not.
+    
+  Example:
+    (start code)
+    build: function()
+    {
+      // ... some interface building code ..
+      
+      var pinWidgetDiv = new ShiftSpace.Element('div', {
+        'class':'MyShiftPinWidgetDiv'
+      });
+      
+      this.pinWidget = new PinWidget(this);
+    },
+    
+    getPinWidgetButton: function()
+    {
+      return this.pinWidgetDiv;
+    },
+    
+    getPinWidgetButtonAllowedActions: function()
+    {
+      return ['before', 'after', 'replace];
+    },
+    
+    onPin: function(pinRef)
+    {
+      if(pinRef.action == 'unpin')
+      {
+        this.unpin();
+      }
+      else
+      {
+        this.pin(this.element, pinRef);
+      }
+    }
+    (end)
 */
 var PinWidget = new Class({
   
