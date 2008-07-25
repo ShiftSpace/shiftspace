@@ -2,8 +2,8 @@
   Class: ShiftSpace.Shift
     The base class for shifts.  Shifts can essentially be thought of as documents.  If you consider things from the MVC perspective
     the Shift is the View, the Space is the Controller.  When the model is modified via the interface you present in your shift
-    (or space), in order for these changes to take place, you will need to call the save method at key points.  This will synch
-    the state of a shift to the ShiftSpace database.  The design of the the Shift class is meant to be as declarative as possible.
+    (or space), in order for these changes to take, you will need to call the save method at key points.  This will sync
+    the state of the shift with to the ShiftSpace database.  The design of the the Shift class is meant to be as declarative as possible.
     The key functions such as show, edit, hide, save, setup should not be called directly by you.  You simply implement the behavior
     you want when ShiftSpace calls these methods based on user interaction with the shift menu and the shift console.
 */
