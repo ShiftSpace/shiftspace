@@ -1,6 +1,14 @@
 /*
   Class: ShiftSpace.Space
-    The base class for spaces.
+    The base class for spaces.  A Space is essentially an extension to the ShiftSpace architecture.  You can think of ShiftSpace
+    as a kind of simple operating system and windowing interface.  ShiftSpace doesn't actually know much about individual spaces.
+    A Space is a kind of document controller, the documents being the shifts it manages. Some spaces need a cross document interface, 
+    such as SourceShift, while others, such as Notes, present only the interface provided by the document itself.  The API for
+    spaces can handle both types.  Refer to the source code of Notes and SourceShift to see their differences.
+    
+    Most of the methods here get called automatically.  For example, you should rarely if ever, call the showShift method directly.
+    Users should be in control of whether a shift is visible or not.  In general the user of ShiftSpace is in control of the experience
+    not the developer.  To get a better understanding of this please refer to the ShiftSpace tutorial.
 */
 ShiftSpace.Space = new Class({
   attributes : {},
