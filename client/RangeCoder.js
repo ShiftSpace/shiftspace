@@ -177,6 +177,7 @@ var RangeCoder = new Class({
 
   getRangeAncestorNode: function(refObj)
   {
+    console.log('getRangeAncestorNode');
     var returnAncestor;
     var colAncestorPosition   = refObj.ancestorPosition;
     
@@ -186,6 +187,7 @@ var RangeCoder = new Class({
     var iOccuranceLength      = 0;
     var targetTextContent     = refObj.ancestorOrigTextContent;
 
+    console.log('blar');
     //check if the tag Name is the body then compare differently
     if (colAncestorPosition.tagName.toLowerCase()=="body")
     {
