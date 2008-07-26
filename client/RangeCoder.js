@@ -195,6 +195,7 @@ var RangeCoder = new Class({
     else
     {
       //check the number of occurances of the similar nodes
+      console.log('checking similar nodes ' + nl.length);
       for (var i=0;i<nl.length;i++)
       {
         if(nl.item(i).textContent==targetTextContent)
