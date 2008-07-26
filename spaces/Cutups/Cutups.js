@@ -1,10 +1,6 @@
 /*
   add onShiftEdit
   
-  Currently it is not possible to change word chunk amount after performing a 
-  cut. Should this change or should I just keep the user from changing the amount
-  after a cutup has been performed.
-  
   regex for multiple words: /(\S+(\s?)+){1,5}/
 */
 
@@ -122,7 +118,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   
   isValidCutupTextNode: function(node){
-   return (node != null && $(node).getParent().nodeName != "SCRIPT"); 
+   return ($(node) != null && $(node) != undefined && $(node).getParent().nodeName != "SCRIPT"); 
   },
   
   wordPattern: new RegExp("(\\S+(\\s?)+){1,1}","g"), //default chunk is one 'word'
@@ -384,6 +380,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
 var CutupsShift = ShiftSpace.Shift.extend({
     
     setup: function(json){
+      console.log("####JSON####");
+      console.log(json);
       if(json.ranges){
           //replace __newline__ token with \n
           for(var i=0; i<json.ranges.length; i++){
@@ -406,7 +404,11 @@ var CutupsShift = ShiftSpace.Shift.extend({
         if(this.ranges[i].ancestorOrigTextContent){
           this.ranges[i].ancestorOrigTextContent = this.ranges[i].ancestorOrigTextContent.replace(new RegExp("\\n","g"),"__newline__");
         } 
-      }        
+      } 
+      console.log("####RANGES ARE####");
+      console.log(this.ranges);
+      console.log("####ANCESTOR ORIG TEXTCONTENT####");
+      console.log(this.ranges.ancestorOrigTextContent);
       return {
           ranges: this.ranges,
           summary: this.summary
