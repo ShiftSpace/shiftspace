@@ -1,0 +1,40 @@
+.SSTabView
+{
+  background-color:#e6e4a3;
+  width: 400px;
+  height: 400px;
+}
+
+.SSTabView .SSControlView
+{
+  
+}
+
+.SSTabView .SSControlView .SSButton
+{
+  
+}
+
+.SSTabView .SSControlView div.SSActive
+{
+  color: red;
+}
+
+.SSTabView .SSContentView div.SSActive
+{
+  
+}
+
+.SSTabView .SSContentView:first-of-type
+{
+}
+
+.SSTabView .SSContentView div
+{
+  display:none;
+}
+
+.SSTabView .SSContentView .SSActive
+{
+  display:block;
+}

@@ -32,7 +32,6 @@ var Sandalphon = new Class({
 
     // load the js and the CSS file
     new Asset.css(viewPath+'.css');
-    new Asset.javascript(codePath);
     
     // load the interface file
     new Request({
@@ -41,8 +40,27 @@ var Sandalphon = new Class({
       onSuccess: function(responseText, responseXML)
       {
         $('SSSandalphonContainer').set('html', responseText);
+        // load the class now
+        this.loadClass(className, codePath);
+      }.bind(this),
+      onFailure: function()
+      {
+        console.error('Oops could not load that file');
+      }
+    }).send();
+  },
+  
+  
+  loadClass: function(className, url)
+  {
+    new Request({
+      url:  url,
+      method: 'get',
+      onSuccess: function(responseText, responseXML)
+      {
+        eval(responseText);
         // instantiate the UI class
-        new ShiftSpace.UI[className]($('SSSandalphonContainer').getFirst());
+        Sandalphon.currentInstance = new ShiftSpace.UI[className]($('SSSandalphonContainer').getFirst());
       },
       onFailure: function()
       {
