@@ -381,7 +381,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
     
     setup: function(json){
       console.log("####JSON####");
-      console.log(json);
+      console.log(json.toString());
       if(json.ranges){
           //replace __newline__ token with \n
           for(var i=0; i<json.ranges.length; i++){
