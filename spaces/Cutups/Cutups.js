@@ -78,14 +78,19 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },  
   
   turnOnRangeRef: function(ref) {
+    console.log('getting range');
     var range = ShiftSpace.RangeCoder.toRange(ref);
+    console.log('range acquired');
     var objAncestor = range.commonAncestorContainer;
     
     if (objAncestor.nodeType == 3) // text node
         objAncestor = objAncestor.parentNode;
       
     var xPathResult = document.evaluate(".//text()", objAncestor, null,
-        XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);        
+        XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+    
+    console.log('snapshotLength ' + xPathResult.snapshotLength);
+    
     // iteratate on all the text nodes in the document and mark if they are in the selection range
     for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
         // we need clean styles so we don't use ShiftSpace.Element
