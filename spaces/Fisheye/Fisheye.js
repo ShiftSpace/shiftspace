@@ -288,6 +288,9 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 		    this.loadStoredData(this.json);
 		    this.setMode (this.MODE_DISPLAY);
 		} else
+		    if (this.anchoredIcon) {
+		      this.anchoredIcon.addClass('FisheyeHidden');
+		    }
 		    this.hide(); // Cancel an unsaved new note
 	    },
 	    onRange 	: function() { 
@@ -859,6 +862,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
     setCategory: function(idx) {
 	this.categoryType = idx;
 	this.renderClass = this.refreshRenderClass();
+	this.summaryText = this.inputArea.value;
 	this.rebuild();
     },
 
@@ -877,6 +881,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	if (msg) {
 	    this.criticismLink = msg;
 	    this.sourceCode = this.criticismSourceFromLink(msg);
+	    this.summaryText = this.inputArea.value;
 	    this.rebuild();
 	}
     },
