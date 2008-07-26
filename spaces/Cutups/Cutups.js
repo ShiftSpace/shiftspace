@@ -420,6 +420,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
       console.log('Cutups show');
       var space = this.getParentSpace();
       if (this.ranges) {
+        console.log('moving through ranges');
         for(var i=0; i<this.ranges.length; i++){
           this.ranges[i].origText = this.ranges[i].origText.replace(new RegExp("__newline__","g"),"\n");
           //probably a range coder problem for some reason ancestorOrigTextContent null
@@ -427,9 +428,12 @@ var CutupsShift = ShiftSpace.Shift.extend({
             this.ranges[i].ancestorOrigTextContent = this.ranges[i].ancestorOrigTextContent.replace(new RegExp("__newline__","g"),"\n");
           }
         }
+        console.log('exit first loop');
+        console.log('next loop');
         for (var i = 0; i < this.ranges.length; i++) {
           space.turnOnRangeRef(this.ranges[i]);
         }
+        console.log('end next loop');
       }
       window.location.hash = this.getId();
       //FX for fading Cutup background-color to transparent
