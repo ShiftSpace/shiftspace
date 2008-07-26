@@ -406,11 +406,6 @@ input.submit:active {
   float: right;
 }
 
-#welcome *
-{
-  text-align: center;
-}
-
 #loginStatus
 {
   float: left;
@@ -433,4 +428,25 @@ input.submit:active {
 .autolaunchCol
 {
   float: left;
+}
+
+.welcome-intro {
+  float: left;
+  padding: 15px;
+  width: 250px;
+}
+
+.welcome-screencast {
+  float: left;
+  padding: 9px;
+}
+
+.welcome-intro h2 {
+  font: 16px georgia, serif;
+  color: #F63B02;
+  margin: 0 0 10px 0;
+}
+
+#screencast-link {
+  cursor: pointer;
 }

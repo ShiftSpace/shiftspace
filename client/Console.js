@@ -28,8 +28,9 @@ var Console = new Class({
     SSAddEvent('onShiftUpdate', this.updateShiftPrivacy.bind(this));
     
     SSAddEvent('onPluginStatusChange', this.updatePluginIconForShift.bind(this));
+
   },
-    
+  
   /*
   
   Function: buildFrame
@@ -564,6 +565,7 @@ var Console = new Class({
     } else {
       default_shift_status = '';
     }
+    
     $(sections[0]).setHTML('<div class="form-column">' +
                         '<div class="input"><div id="default_privacy" class="checkbox' + default_shift_status + '"></div>' +
                         '<div class="label">Set my shifts public by default</div>' +
@@ -576,34 +578,25 @@ var Console = new Class({
     
     $(SSGetElementByClass('form-column', sections[0])).setStyle('padding-top', 20);
     
-    $(this.doc.getElementById('default_privacy')).addEvent('onChange', function() {
-      if (this.hasClass('checked')) {
+    var default_privacy = $(this.doc.getElementById('default_privacy'))
+    default_privacy.addEvent('onChange', function() {
+      var init_privacy = $(this.doc.getElementById('init_privacy'));
+      if (default_privacy.hasClass('checked')) {
         setValue('default_shift_status', 1);
+        if (init_privacy) {
+          init_privacy.addClass('checked');
+        }
       } else {
         setValue('default_shift_status', 2);
+        if (init_privacy) {
+          init_privacy.removeClass('checked');
+        }
       }
-    });
+    }.bind(this));
     
     //console.log('form style set');
     
-    var checkboxes = SSGetElementsByClass('checkbox', this.doc.body);
-    checkboxes.each(function(checkbox) {
-      $(checkbox).addEvent('click', function() {
-        if (checkbox.hasClass('checked')) 
-        {
-          checkbox.removeClass('checked');
-        } 
-        else 
-        {
-          checkbox.addClass('checked');
-        }
-        checkbox.fireEvent('onChange');
-      });
-      
-      $(checkbox.nextSibling).addEvent('click', function() {
-        checkbox.fireEvent('click');
-      });
-    });
+    this.setupCheckboxes(sections[0]);
     
     var serverInput = $(this.doc.getElementById('server-input'));
     serverInput.addEvent('change', function() {
@@ -973,14 +966,75 @@ var Console = new Class({
   {
     // add temporary welcome tab
     var pane = this.addTab('welcome', 'Welcome');
-    // resize console
-    this.frame.setStyle('height', 480);
+    this.frame.setStyle('height', 200);
     this.refresh();
-    // show the video
-    pane.setHTML('<embed src="http://blip.tv/play/tHyWlyMA" type="application/x-shockwave-flash" width="100%" height="100%" allowscriptaccess="always" allowfullscreen="true"></embed>');
-    // create close welcome tab button
+    
+    pane.setHTML(
+      '<div class="welcome-intro">' +
+        '<h2>Welcome to ShiftSpace!</h2>' +
+        '<p>Please take a moment to watch a short introductory screencast and set your default privacy setting.</p>' +
+        '<div class="input"><div id="init_privacy" class="checkbox checked"></div>' +
+        '<div class="label">Set my shifts public by default</div>' +
+        '<br class="clear" /></div>' +
+        '<p><a href="http://metatron.shiftspace.org/about/user-manual/#managing" target="_top">Read more about content privacy</a></p>' +
+      '</div>' +
+      '<div class="welcome-screencast">' +
+        '<a href="#screencast" id="screencast-link"><img src="' + server + 'images/Console/intro-screencast-thumb.gif" alt="Intro screencast" />' +
+      '</div>' +
+      '<br class="clear" />'
+    );
+    
+    
+    var init_privacy = $(this.doc.getElementById('init_privacy'));
+    if (getValue('default_shift_status', 1) == 2) {
+      init_privacy.removeClass('checked');
+    }
+    
+    var default_privacy = $(this.doc.getElementById('default_privacy'));
+    init_privacy.addEvent('onChange', function() {
+      if (init_privacy.hasClass('checked')) {
+        setValue('default_shift_status', 1);
+        default_privacy.addClass('checked');
+      } else {
+        setValue('default_shift_status', 2);
+        default_privacy.removeClass('checked');
+      }
+    }.bind(this));
+    
+    this.setupCheckboxes(pane);
+    
+    loadStyle('styles/Videobox.css', function() {
+      $(this.doc.getElementById('screencast-link')).addEvent('click', function(e) {
+        new Event(e).preventDefault();
+        ShiftSpaceHide();
+        var vb = new Videobox();
+        vb.addEvent('onClose', ShiftSpaceShow);
+        vb.open("http://blip.tv/play/23eWlyOElCw","your caption","vidbox 624 498");
+      }.bind(this));
+    }.bind(this));
+    
   },
   
+  setupCheckboxes: function(target) {
+    var checkboxes = SSGetElementsByClass('checkbox', target);
+    checkboxes.each(function(checkbox) {
+      $(checkbox).addEvent('click', function() {
+        if (checkbox.hasClass('checked')) 
+        {
+          checkbox.removeClass('checked');
+        } 
+        else 
+        {
+          checkbox.addClass('checked');
+        }
+        checkbox.fireEvent('onChange');
+      });
+      
+      $(checkbox.nextSibling).addEvent('click', function() {
+        checkbox.fireEvent('click');
+      });
+    });
+  },
   
   handleLogin: function(json) 
   {
@@ -1018,6 +1072,8 @@ var Console = new Class({
     this.showTab('login');
     this.hideSubTab('settings', 2);
     this.showSubSection('settings', 0);
+    
+    this.removeTab('welcome');
     
     // remove the autolaunch checkboxes
     $A(_$(this.doc.getElementsByClassName('autolaunchCol'))).each(function(x) {
