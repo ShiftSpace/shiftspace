@@ -1294,6 +1294,7 @@ var ShiftSpace = new (function() {
 
           // extract the shift content
           var shiftJson = SSGetShiftContent(shiftId);
+          console.log('extracted shift json');
           shiftJson.id = shiftId;
           
           // console.log('foo -- - - -- - - --- - - -- - -- -- - -');
@@ -1315,6 +1316,7 @@ var ShiftSpace = new (function() {
           // wrap this in a try catch
           try
           {
+            console.log('showing the shift =======================================');
             spaces[shift.space].showShift(shiftJson);
           }
           catch(err)

@@ -417,6 +417,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
     },
     
     show: function() {
+      console.log('Cutups show');
       var space = this.getParentSpace();
       if (this.ranges) {
         for(var i=0; i<this.ranges.length; i++){
