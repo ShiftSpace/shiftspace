@@ -445,6 +445,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
         return fade();
       }
       fadeToTrans();
+      console.log('exit Cutups show');
     },
     
     hide: function(){
