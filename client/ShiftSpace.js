@@ -1844,7 +1844,7 @@ var ShiftSpace = new (function() {
       }
       
       serverCall.safeCall('shift.update', params, function(json) {
-        //console.log('returned shift.update! ' + Json.toString(json));
+        console.log('returned shift.update! ' + Json.toString(json));
         if (!json.status) {
           console.error(json.message);
           return;
@@ -1882,6 +1882,10 @@ var ShiftSpace = new (function() {
         filters: Json.toString(filters),
         status: getValue('default_shift_status', 1) // TODO: this call is in the space ecosystem
       };
+      
+      console.log('//////////////////////////////////////////////////////////////////');
+      console.log(Json.toString(params));
+      console.log('//////////////////////////////////////////////////////////////////');
 
       serverCall.safeCall('shift.create', params, function(json) {
         console.log('>>>>>>>>>>>>>>>>> SAVED new shift');
