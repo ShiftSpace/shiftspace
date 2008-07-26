@@ -394,6 +394,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
         }
         this.ranges = json.ranges;
         this.summary = json.summary;
+      console.log('exit setup');
     },
     
     encode: function() {
