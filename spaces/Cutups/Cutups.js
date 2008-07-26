@@ -429,7 +429,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
           }
         }
         console.log('exit first loop');
-        console.log('next loop');
+        console.log('next loop turnOnRangeRef');
         for (var i = 0; i < this.ranges.length; i++) {
           space.turnOnRangeRef(this.ranges[i]);
         }
