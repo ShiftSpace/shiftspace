@@ -26,6 +26,7 @@ var RangeCoder = new Class({
   toRange: function(refObj)
   {
     //turn on highlight
+    console.log('toRange');
     var objAncestor = this.getRangeAncestorNode(refObj);
     console.log(objAncestor);
     if (objAncestor)
