@@ -3,16 +3,20 @@
   <head>
     <script src="../mootools/mootools-1.2-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="../mootools/mootools-1.2-more.js" type="text/javascript" charset="utf-8"></script>
-    <script src="main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../client/View.js" type="text/javascript" charset="utf-8"></script>
+    <script src="sandalphon.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" href="sandalphon.css" type="text/css" media="screen" title="no title" charset="utf-8">
   </head>
   
   <body>
     
-    <input id="interfaceFile" type="text"></input>
-    <input type="button" name="Load" value="Load"></input>
-    <input type="button" name="Compile" value="Compile"></input>
+    <div id="SSSandalphonControls">
+      <input id="loadFileInput" type="text"></input>
+      <input id="loadFile" type="button" name="Load" value="Load"></input>
+      <input id="compileFile" type="button" name="Compile" value="Compile"></input>
+    </div>
     
-    <div id="SSInterfaceDisplay">
+    <div id="SSSandalphonDisplay">
     </div>
     
   </body>  
