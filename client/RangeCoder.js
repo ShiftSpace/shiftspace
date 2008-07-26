@@ -27,8 +27,10 @@ var RangeCoder = new Class({
   {
     //turn on highlight
     var objAncestor = this.getRangeAncestorNode(refObj);
+    console.log(objAncestor);
     if (objAncestor)
     {
+      console.log('generating range');
       return this.generateRange(objAncestor, refObj);
     }
     var recovered = this.recoverBrokenRange(refObj);
