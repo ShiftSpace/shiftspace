@@ -25,19 +25,24 @@ var Sandalphon = new Class({
   },
 
 
-  loadFile: function(fileName)
+  loadFile: function(className)
   {
-    var path = '../' + fileName;
+    var viewPath = '../client/views/' + className;
+    var codePath = '../client/' + className + '.js';
 
+    // load the js and the CSS file
+    new Asset.css(viewPath+'.css');
+    new Asset.javascript(codePath);
+    
     // load the interface file
     new Request({
-      url: path + '.html',
+      url:  viewPath + '.html',
       method: 'get',
       onSuccess: function(responseText, responseXML)
       {
-        // load the CSS file
-        new Asset.css(path+'.css');
-        console.log(responseText);
+        $('SSSandalphonContainer').set('html', responseText);
+        // instantiate the UI class
+        new ShiftSpace.UI[className]($('SSSandalphonContainer').getFirst());
       },
       onFailure: function()
       {
@@ -47,7 +52,7 @@ var Sandalphon = new Class({
   },
 
 
-  compile: function(fileName)
+  compile: function(className)
   {
     // ask the server to compile the file
     // they will be generated and added to a folder called views

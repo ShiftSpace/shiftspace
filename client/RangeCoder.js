@@ -201,6 +201,7 @@ var RangeCoder = new Class({
       console.log('checking similar nodes ' + nl.length);
       for (var i=0;i<nl.length;i++)
       {
+        console.log(i);
         if(nl.item(i).textContent==targetTextContent)
         {
           iOccuranceLength++;
@@ -209,6 +210,7 @@ var RangeCoder = new Class({
           returnAncestor = nl.item(i);
         }
       }
+      console.log('exit loop');
     }        
     //validate that the page has the same number of occurances to make sure we highlight the right one
     if (iOccuranceLength==colAncestorPosition.length)
