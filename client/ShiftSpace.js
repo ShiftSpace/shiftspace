@@ -5,7 +5,7 @@
 // @include        *
 // @exclude        http://metatron.shiftspace.org/api/sandbox/*
 // @require        http://metatron.shiftspace.org/code/trunk/client/Mootools.js
-// @require        http://localhost/shiftspace/client/Videobox.js
+// @require        http://metatron.shiftspace.org/code/trunk/client/Videobox.js
 // ==/UserScript==
 
 /*
