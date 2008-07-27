@@ -44,3 +44,8 @@ body
   height: 100%;
   background-color: #efefef;
 }
+
+#loadFileInput
+{
+  width: 400px;
+}

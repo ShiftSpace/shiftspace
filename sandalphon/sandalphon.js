@@ -5,9 +5,9 @@ window.addEvent('domready', function() {
 
 var SandalphonClass = new Class({
   
-  UIClassPaths: 
+  UIClassPaths:
   {
-    'SSTabView' : '/client/SSTabView'
+    'SSTabView' : '/client/views/SSTabView/'
   },
 
 
@@ -30,19 +30,34 @@ var SandalphonClass = new Class({
     // initialize the UIClassPaths var
     this.storage().get('UIClassPaths', function(ok, value) {
       if(ok)
-      { 
+      {
+        /*
         if(!value)
         {
+        */
           console.log('Initializing class paths.');
           this.storage().set('UIClassPaths', JSON.encode(this.UIClassPaths))
-        }
+        /*}
         else
         {
           console.log('Loading class paths.');
           this.UIClassPaths = JSON.decode('('+value+')');
-        }
+        }*/
+        this.loadClassFiles();
       }
     }.bind(this));
+  },
+  
+  
+  loadClassFiles: function()
+  {
+    for(class in this.UIClassPaths)
+    {
+      var path = '../' + this.UIClassPaths[class] + class;
+      new Asset.css(path+'.css');
+      new Asset.javascript(path+'.js');
+    }
+    console.log('Class files loaded.');
   },
   
   
@@ -88,45 +103,24 @@ var SandalphonClass = new Class({
   },
 
 
-  loadFile: function(className)
+  loadFile: function(path)
   {
-    var viewPath = '../client/views/' + className;
-    var codePath = '../client/' + className + '.js';
-
-    // load the js and the CSS file
-    new Asset.css(viewPath+'.css');
-    
     // load the interface file
     new Request({
-      url:  viewPath + '.html',
+      url:  '../'+path,
       method: 'get',
       onSuccess: function(responseText, responseXML)
       {
-        var instantiationGraph = this.analyze(responseText);
-        
-        $('SSSandalphonContainer').set('html', responseText);
-        // load the class now
-        this.loadClass(className, codePath);
+        if(this.analyze(responseText))
+        {
+          $('SSSandalphonContainer').set('html', responseText);
+          this.instantiateControllers();
+        }
+        else
+        {
+          console.error('Error loading interface.');
+        }
       }.bind(this),
-      onFailure: function()
-      {
-        console.error('Oops could not load that file');
-      }
-    }).send();
-  },
-  
-  
-  loadClass: function(className, url)
-  {
-    new Request({
-      url:  url,
-      method: 'get',
-      onSuccess: function(responseText, responseXML)
-      {
-        eval(responseText);
-        // instantiate the UI class
-        this.currentInstance = new ShiftSpace.UI[className]($('SSSandalphonContainer').getFirst());
-      },
       onFailure: function()
       {
         console.error('Oops could not load that file');
@@ -155,9 +149,13 @@ var SandalphonClass = new Class({
   },
   
   
-  instantiateObjects: function()
+  instantiateControllers: function()
   {
-    
+    console.log('Instantiating controllers for views.');
+    var views = $('SSSandalphonContainer').getElements('*[uiclass]');
+    views.each(function(aView) {
+      new ShiftSpace.UI[aView.getProperty('uiclass')](aView);
+    });
   },
   
   
@@ -180,11 +178,11 @@ var SandalphonClass = new Class({
     
     if(missingClasses)
     {
-      console.log('missing classes');
+      return false;
     }
     else
     {
-      console.log('no missing classes');
+      return true;
     }
   }
   

@@ -5,9 +5,18 @@ var SSTabView = new Class({
   initialize: function(el)
   {
     this.parent(el);
-
-    this.__selectedTab__ = this.indexOfTab(this.element.getElement('.SSControlView .SSActive').getProperty('id'));
     
+    this.__selectedTab__ = -1;
+
+    // check for default tab
+    var defaultActiveTab = this.element._getElement('> .SSControlView .SSButton.SSActive');
+    
+    if(defaultActiveTab)
+    {
+      this.__selectedTab__ = this.indexOfTabByNode(defaultActiveTab);
+    }
+    
+    // if none select the first
     if(this.__selectedTab__ == -1)
     {
       this.selectTab(0);
@@ -24,8 +33,8 @@ var SSTabView = new Class({
     
     switch(true)
     {
-      case (this.hitTest(theTarget, '.SSControlView') != null):
-        this.selectTabByName(this.hitTest(theTarget, '.SSControlView .SSButton').getProperty('id'));
+      case (this.hitTest(theTarget, '> .SSControlView') != null):
+        this.selectTabByName(this.hitTest(theTarget, '> .SSControlView .SSButton').getProperty('id'));
       break;
       
       default:
@@ -36,10 +45,10 @@ var SSTabView = new Class({
   
   indexOfTab: function(name)
   {
-    var tab = this.element.getElement('.SSControlView #'+name);
+    var tab = this.element._getElement('> .SSControlView #'+name);
     if(tab) 
     {
-      return this.element.getElements('.SSButton').indexOf(tab);
+      return this.element._getElements('> .SSControlView > .SSButton').indexOf(tab);
     }
     else
     {
@@ -50,25 +59,25 @@ var SSTabView = new Class({
   
   indexOfTabByNode: function(tabButton)
   {
-    return this.element.getElements('.SSControlView .SSButton').indexOf(tabButton);
+    return this.element._getElements('> .SSControlView > .SSButton').indexOf(tabButton);
   },
   
   
   tabButtonForIndex: function(idx)
   {
-    return $(this.element.getElements('.SSControlView .SSButton')[idx]);
+    return this.element._getElements('> .SSControlView > .SSButton')[idx];
   },
   
   
   tabButtonForName: function(name)
   {
-    return $(this.element.getElement('.SSControlView #'+name));
+    return this.element._getElement('> .SSControlView #'+name);
   },
   
   
   contentViewForIndex: function(idx)
   {
-    return $(this.element.getElements('.SSContentView div')[idx]);
+    return this.element._getElements('> .SSContentView div')[idx];
   },
   
 
@@ -82,8 +91,24 @@ var SSTabView = new Class({
   {
     if(this.__selectedTab__ != idx)
     {
-      // hide the old ones
-      this.element.getElements('.SSControlView .SSActive').removeClass('SSActive');
+      // hide the last tab button and tab pane only if there was a last selected tab
+      if(this.__selectedTab__ != -1)
+      {
+        this.tabButtonForIndex(this.__selectedTab__).removeClass('SSActive');
+
+        // hide the last tab pane
+        var lastTabPane = this.contentViewForIndex(this.__selectedTab__);
+        var lastTabPaneController = this.controllerForNode(lastTabPane);
+
+        if(lastTabPaneController)
+        {
+          lastTabPaneController.hide();
+        }
+        else
+        {
+          lastTabPane.removeClass('SSActive');
+        }
+      }
 
       // check to see if there is a view controller for the content view
       var controller = this.contentViewControllerForIndex(idx);
@@ -94,11 +119,11 @@ var SSTabView = new Class({
       }
       else
       {
-        this.element.getElements('.SSContentView .SSActive').removeClass('SSActive');
+        this.contentViewForIndex(idx).addClass('SSActive');
       }
       
-      this.element.getElements('.SSControlView .SSButton')[idx].addClass('SSActive');
-      this.element.getElements('.SSContentView div')[idx].addClass('SSActive');
+      // hide the tab button
+      this.tabButtonForIndex(idx).addClass('SSActive');
       
       this.__selectedTab__ = idx;
     }
@@ -114,8 +139,8 @@ var SSTabView = new Class({
     tabButton.set('text', name);
     var tabContent = new Element('div');
     
-    tabButton.injectInside(this.element.getElement('.SSControlView'));
-    tabContent.injectInside(this.element.getElement('.SSContentView'));
+    tabButton.injectInside(this.element._getElement('> .SSControlView'));
+    tabContent.injectInside(this.element._getElement('> .SSContentView'));
   },
   
   
@@ -127,7 +152,7 @@ var SSTabView = new Class({
   
   activeTab: function()
   {
-    return this.indexOfTabByNode(this.element.getElement('.SSControlView .SSActive'));
+    return this.indexOfTabByNode(this.element._getElement('> .SSControlView > .SSActive'));
   },
   
 

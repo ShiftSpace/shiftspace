@@ -5,39 +5,39 @@
   height: 400px;
 }
 
-.SSTabView .SSControlView
+.SSTabView > .SSControlView
 {
   
 }
 
-.SSTabView .SSControlView .SSButton
+.SSTabView > .SSControlView > .SSButton
 {
   user-select: none;
   -moz-user-select: none;
   cursor: default;
 }
 
-.SSTabView .SSControlView div.SSActive
+.SSTabView > .SSControlView > div.SSActive
 {
   color: red;
 }
 
-.SSTabView .SSContentView div.SSActive
+.SSTabView > .SSContentView > div.SSActive
 {
   
 }
 
-.SSTabView .SSContentView:first-of-type
+.SSTabView > .SSContentView:first-of-type
 {
   
 }
 
-.SSTabView .SSContentView div
+.SSTabView > .SSContentView > div
 {
   display:none;
 }
 
-.SSTabView .SSContentView .SSActive
+.SSTabView > .SSContentView > .SSActive
 {
   display:block;
 }
@@ -46,7 +46,7 @@
   Event styles
 */
 
-.SSTabView .SSControlView div.SSButton:hover
+.SSTabView > .SSControlView > div.SSButton:hover
 {
   background-color: #fff;
 }
@@ -54,19 +54,20 @@
 /*
   Console normal tab styles
 */
+
 .SSTabViewConsoleStyle
 {
   
 }
 
-.SSTabViewConsoleStyle .SSControlView
+.SSTabViewConsoleStyle > .SSControlView
 {
   width: 100%;
   height: 30px;
   border-bottom: solid 1px #000;
 }
 
-.SSTabViewConsoleStyle .SSControlView .SSButton
+.SSTabViewConsoleStyle > .SSControlView > .SSButton
 {
   float: left;
   margin-right: 2px;
@@ -80,12 +81,12 @@
   -moz-border-radius-topright: 6px;
 }
 
-.SSTabViewConsoleStyle .SSControlView .SSActive
+.SSTabViewConsoleStyle > .SSControlView > .SSActive
 {
   background-color: #E6E4A3;
 }
 
-.SSTabViewConsoleStyle .SSContentView
+.SSTabViewConsoleStyle > .SSContentView
 {
   clear: both;
 }
@@ -94,7 +95,7 @@
   Console sub tab styles
 */
 
-.SSTabViewSubTabStyle .SSControlView
+.SSTabViewSubTabStyle > .SSControlView
 {
   float: left;
   height: 100%;
@@ -102,13 +103,13 @@
   border-right: solid 1px #000;
 }
 
-.SSTabViewSubTabStyle .SSControlView .SSButton
+.SSTabViewSubTabStyle > .SSControlView > .SSButton
 {
   height: 20px;
   padding: 4px;
 }
 
-.SSTabViewSubTabStyle .SSContentView
+.SSTabViewSubTabStyle > .SSContentView
 {
   float: left;
 }
