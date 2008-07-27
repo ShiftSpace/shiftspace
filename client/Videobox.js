@@ -28,13 +28,20 @@ var Videobox = new Class({
 
 		this.overlay = new Element('div').setProperty('id', 'lbOverlay').injectInside(document.body);
 		this.center = new Element('div').setProperty('id', 'lbCenter').setStyles({width: this.options.initialWidth+'px', height: this.options.initialHeight+'px', marginLeft: '-'+(this.options.initialWidth/2)+'px', display: 'none'}).injectInside(document.body);
+		
+		console.log('cleared initial stuff');
 
 		this.bottomContainer = new Element('div').setProperty('id', 'lbBottomContainer').setStyle('display', 'none').injectInside(document.body);
 		this.bottom = new Element('div').setProperty('id', 'lbBottom').injectInside(this.bottomContainer);
+		
+		console.log('cleared some more');
+		
 		new Element('a').setProperties({id: 'lbCloseLink', href: '#'}).injectInside(this.bottom).onclick = this.overlay.onclick = this.close.bind(this);
 		this.caption = new Element('div').setProperty('id', 'lbCaption').injectInside(this.bottom);
 		this.number = new Element('div').setProperty('id', 'lbNumber').injectInside(this.bottom);
 		new Element('div').setStyle('clear', 'both').injectInside(this.bottom);
+		
+		console.log('cleared most');
 
 		var nextEffect = this.nextEffect.bind(this);
 		this.fx = {
