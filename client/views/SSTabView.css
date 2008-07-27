@@ -27,6 +27,7 @@
 
 .SSTabView .SSContentView:first-of-type
 {
+  
 }
 
 .SSTabView .SSContentView div
@@ -37,4 +38,54 @@
 .SSTabView .SSContentView .SSActive
 {
   display:block;
+}
+
+/*
+  Console tab styles
+*/
+.SSTabViewConsoleStyle
+{
+  
+}
+
+.SSTabViewConsoleStyle .SSControlView
+{
+  width: 100%;
+  height: 20px;
+  border-bottom: solid 1px #000;
+}
+
+.SSTabViewConsoleStyle .SSControlView .SSButton
+{
+  float: left;
+  padding: 4px;
+}
+
+.SSTabViewConsoleStyle .SSContentView
+{
+  clear: both;
+}
+
+/*
+  Sub tab styles
+*/
+
+.SSTabViewSubTabStyle .SSControlView
+{
+  float: left;
+  height: 100%;
+  width: 100px;
+  border-right: solid 1px #000;
+}
+
+.SSTabViewSubTabStyle .SSControlView .SSButton
+{
+  height: 20px;
+  padding: 4px;
+  width: 100%;
+}
+
+.SSTabViewSubTabStyle .SSContentView
+{
+  float: left;
 }

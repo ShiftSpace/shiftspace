@@ -87,6 +87,10 @@ var SSTabView = new Class({
   {
     if(this.__selectedTab__ != idx)
     {
+      // check to see if there is a view controller for the content view
+      var controller = this.contentViewControllerForIndex(idx);
+      
+      // hide the old ones
       this.element.getElements('.SSControlView .SSActive').removeClass('SSActive');
       this.element.getElements('.SSContentView .SSActive').removeClass('SSActive');
       
@@ -94,6 +98,11 @@ var SSTabView = new Class({
       this.element.getElements('.SSContentView div')[idx].addClass('SSActive');
       
       this.__selectedTab__ = idx;
+
+      if(controller)
+      {
+        controller.refresh();
+      }
     }
   },
   
@@ -114,7 +123,15 @@ var SSTabView = new Class({
   
   addControllerForContentView: function(name, controllerClass)
   {
-    this.__contentViewControllers__[name] = new controllerClass();
+    var idx = this.indexOfTab(name);
+    // instantiate a controller
+    this.__contentViewControllers__[name] = new controllerClass(this.contentViewForIndex(idx));
+  },
+  
+  
+  contentViewControllerForIndex: function(idx)
+  {
+    this.__contentViewControllers__[this.element.getElements('.SSControlView .SSButton')[idx].getProperty('id')];
   },
   
   

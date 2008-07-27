@@ -61,6 +61,12 @@ var SSView = new Class({
   },
   
   
+  refresh: function()
+  {
+    
+  },
+  
+  
   build: function()
   {
     
