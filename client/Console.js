@@ -1006,9 +1006,12 @@ var Console = new Class({
     loadStyle('styles/Videobox.css', function() {
       $(this.doc.getElementById('screencast-link')).addEvent('click', function(e) {
         new Event(e).preventDefault();
+        console.log('hide shiftspace');
         ShiftSpaceHide();
+        console.log('new videobox');
         var vb = new Videobox();
         vb.addEvent('onClose', ShiftSpaceShow);
+        console.log('open video box');
         vb.open("http://blip.tv/play/23eWlyOElCw","your caption","vidbox 624 498");
       }.bind(this));
     }.bind(this));

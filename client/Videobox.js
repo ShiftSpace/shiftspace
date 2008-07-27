@@ -26,23 +26,20 @@ var Videobox = new Class({
 			}
     }, this);*/
 
-		this.overlay = new Element('div').setProperty('id', 'lbOverlay').injectInside(document.body);
-		this.center = new Element('div').setProperty('id', 'lbCenter').setStyles({width: this.options.initialWidth+'px', height: this.options.initialHeight+'px', marginLeft: '-'+(this.options.initialWidth/2)+'px', display: 'none'}).injectInside(document.body);
+		this.overlay = new ShiftSpace.Element('div').setProperty('id', 'lbOverlay').injectInside(document.body);
+		this.center = new ShiftSpace.Element('div').setProperty('id', 'lbCenter').setStyles({width: this.options.initialWidth+'px', height: this.options.initialHeight+'px', marginLeft: '-'+(this.options.initialWidth/2)+'px', display: 'none'}).injectInside(document.body);
 		
-		console.log('cleared initial stuff');
-
-		this.bottomContainer = new Element('div').setProperty('id', 'lbBottomContainer').setStyle('display', 'none').injectInside(document.body);
-		this.bottom = new Element('div').setProperty('id', 'lbBottom').injectInside(this.bottomContainer);
+		this.bottomContainer = new ShiftSpace.Element('div').setProperty('id', 'lbBottomContainer').setStyle('display', 'none').injectInside(document.body);
+		this.bottom = new ShiftSpace.Element('div').setProperty('id', 'lbBottom').injectInside(this.bottomContainer);
 		
-		console.log('cleared some more');
+		var aLink = new ShiftSpace.Element('a').setProperties({id: 'lbCloseLink', href: '#'}).injectInside(this.bottom);
+		aLink.addEvent('click', this.close.bind(this));
+		this.overlay.addEvent('click', this.close.bind(this));
 		
-		new Element('a').setProperties({id: 'lbCloseLink', href: '#'}).injectInside(this.bottom).onclick = this.overlay.onclick = this.close.bind(this);
-		this.caption = new Element('div').setProperty('id', 'lbCaption').injectInside(this.bottom);
-		this.number = new Element('div').setProperty('id', 'lbNumber').injectInside(this.bottom);
-		new Element('div').setStyle('clear', 'both').injectInside(this.bottom);
+		this.caption = new ShiftSpace.Element('div').setProperty('id', 'lbCaption').injectInside(this.bottom);
+		this.number = new ShiftSpace.Element('div').setProperty('id', 'lbNumber').injectInside(this.bottom);
+		new ShiftSpace.Element('div').setStyle('clear', 'both').injectInside(this.bottom);
 		
-		console.log('cleared most');
-
 		var nextEffect = this.nextEffect.bind(this);
 		this.fx = {
 			overlay: this.overlay.effect('opacity', {duration: 500}).hide(),
@@ -81,7 +78,7 @@ var Videobox = new Class({
 	},
 
 	position: function(){
-    this.overlay.setStyles({'top': window.getScrollTop()+'px', 'height': window.getHeight()+'px'});
+    this.overlay.setStyles({'top': window.getScrollTop()+'px', 'height': '100%'});
 	},
 
 	video: function(sLinkHref){
