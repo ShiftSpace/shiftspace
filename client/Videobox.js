@@ -74,7 +74,6 @@ var Videobox = new Class({
 		var aDim = this.rel.match(/[0-9]+/g);
 		this.options.contentsWidth = (aDim && (aDim[0] > 0)) ? aDim[0] : this.options.defaultWidth;
 		this.options.contentsHeight = (aDim && (aDim[1] > 0)) ? aDim[1] : this.options.defaultHeight;
-
 	},
 
 	position: function(){

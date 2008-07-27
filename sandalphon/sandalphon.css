@@ -12,8 +12,17 @@ body
   top: 0px;
   right: 0px;
   height: 20px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #752f05;
   padding: 10px;
+  background-color: #e6e4a3;
+}
+
+#SSSandalphonControls span
+{
+  float: right;
+  font-family: helvetica;
+  color: #752f05;
+  font-size: 24px;
 }
 
 #SSSandalphonDisplay

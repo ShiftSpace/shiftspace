@@ -12,7 +12,9 @@
 
 .SSTabView .SSControlView .SSButton
 {
-  
+  user-select: none;
+  -moz-user-select: none;
+  cursor: default;
 }
 
 .SSTabView .SSControlView div.SSActive
@@ -41,7 +43,16 @@
 }
 
 /*
-  Console tab styles
+  Event styles
+*/
+
+.SSTabView .SSControlView div.SSButton:hover
+{
+  background-color: #fff;
+}
+
+/*
+  Console normal tab styles
 */
 .SSTabViewConsoleStyle
 {
@@ -51,14 +62,27 @@
 .SSTabViewConsoleStyle .SSControlView
 {
   width: 100%;
-  height: 20px;
+  height: 30px;
   border-bottom: solid 1px #000;
 }
 
 .SSTabViewConsoleStyle .SSControlView .SSButton
 {
   float: left;
-  padding: 4px;
+  margin-right: 2px;
+  background-color: inherit;
+  height: 20px;
+  padding: 5px;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  -moz-border-radius-topleft: 6px;
+  -moz-border-radius-topright: 6px;
+}
+
+.SSTabViewConsoleStyle .SSControlView .SSActive
+{
+  background-color: #E6E4A3;
 }
 
 .SSTabViewConsoleStyle .SSContentView
@@ -67,7 +91,7 @@
 }
 
 /*
-  Sub tab styles
+  Console sub tab styles
 */
 
 .SSTabViewSubTabStyle .SSControlView
@@ -82,7 +106,6 @@
 {
   height: 20px;
   padding: 4px;
-  width: 100%;
 }
 
 .SSTabViewSubTabStyle .SSContentView

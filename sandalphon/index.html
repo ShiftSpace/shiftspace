@@ -14,6 +14,9 @@
 
     <script src="../client/SSView.js" type="text/javascript" charset="utf-8"></script>
     <script src="sandalphon.js" type="text/javascript" charset="utf-8"></script>
+    <script src="persist.js" type="text/javascript" charset="utf-8"></script>
+    
+    <title>Sandalphon Interface Tool</title>
     
     <!-- Load the relevant style files -->
     <link rel="stylesheet" href="../styles/ShiftSpace.css" type="text/css" media="screen" title="no title" charset="utf-8">
@@ -23,9 +26,12 @@
   <body>
     
     <div id="SSSandalphonControls">
-      <input id="loadFileInput" type="text"></input>
-      <input id="loadFile" type="button" name="Load" value="Load"></input>
-      <input id="compileFile" type="button" name="Compile" value="Compile"></input>
+      <div style="float: left;">
+        <input id="loadFileInput" type="text"></input>
+        <input id="loadFile" type="button" name="Load" value="Load"></input>
+        <input id="compileFile" type="button" name="Compile" value="Compile"></input>
+      </div>
+      <span>Sandalphon v0.1</span>
     </div>
     
     <div id="SSSandalphonDisplay">

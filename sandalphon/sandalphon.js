@@ -1,13 +1,65 @@
 window.addEvent('domready', function() {
-  new Sandalphon();
+  // load the local store
+  var Sandalphon = new SandalphonClass(new Persist.Store('Sandalphon'));
 });
 
-var Sandalphon = new Class({
-
-  initialize: function()
+var SandalphonClass = new Class({
+  
+  UIClassPaths: 
   {
-    console.log('Sandalphon, sister of Metatron, starting up.');
+    'SSTabView' : '/client/SSTabView'
+  },
 
+
+  initialize: function(storage)
+  { 
+    console.log('Sandalphon, sister of Metatron, starting up.');
+    this.setStorage(storage);
+    
+    this.setupClassPaths();
+
+    // for analyzing fragments
+    this.setFragment(new Element('div'));
+
+    this.attachEvents();
+  },
+  
+  
+  setupClassPaths: function()
+  {
+    // initialize the UIClassPaths var
+    this.storage().get('UIClassPaths', function(ok, value) {
+      if(ok)
+      { 
+        if(!value)
+        {
+          console.log('Initializing class paths.');
+          this.storage().set('UIClassPaths', JSON.encode(this.UIClassPaths))
+        }
+        else
+        {
+          console.log('Loading class paths.');
+          this.UIClassPaths = JSON.decode('('+value+')');
+        }
+      }
+    }.bind(this));
+  },
+  
+  
+  storage: function()
+  {
+    return this.__storage__;
+  },
+  
+  
+  setStorage: function(storage)
+  {
+    this.__storage__ = storage;
+  },
+  
+  
+  attachEvents: function()
+  {
     // attach file loading events
     $('loadFileInput').addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
@@ -21,7 +73,18 @@ var Sandalphon = new Class({
       var evt = new Event(_evt);
       this.loadFile($('loadFileInput').getProperty('value'));
     }.bind(this));
-    
+  },
+  
+  
+  fragment: function()
+  {
+    return this.__fragment__;
+  },
+  
+  
+  setFragment: function(frag)
+  {
+    this.__fragment__ = frag;
   },
 
 
@@ -39,6 +102,8 @@ var Sandalphon = new Class({
       method: 'get',
       onSuccess: function(responseText, responseXML)
       {
+        var instantiationGraph = this.analyze(responseText);
+        
         $('SSSandalphonContainer').set('html', responseText);
         // load the class now
         this.loadClass(className, codePath);
@@ -60,7 +125,7 @@ var Sandalphon = new Class({
       {
         eval(responseText);
         // instantiate the UI class
-        Sandalphon.currentInstance = new ShiftSpace.UI[className]($('SSSandalphonContainer').getFirst());
+        this.currentInstance = new ShiftSpace.UI[className]($('SSSandalphonContainer').getFirst());
       },
       onFailure: function()
       {
@@ -81,5 +146,47 @@ var Sandalphon = new Class({
   toggledCompiled: function()
   {
     
+  },
+  
+  
+  searchForClass: function()
+  {
+    
+  },
+  
+  
+  instantiateObjects: function()
+  {
+    
+  },
+  
+  
+  analyze: function(html)
+  {
+    this.fragment().set('html', html);
+    
+    var allNodes = this.fragment().getElements('*[uiclass]');
+    
+    console.log('////////////////////////////// SANDALPHON ANALYZE');
+    
+    var classes = allNodes.map(function(x){return x.getProperty('uiclass')});
+    
+    // First verify that we have a real path for each class
+    console.log(classes);
+    var missingClasses = false;
+    classes.each(function(x) {
+      missingClasses = (this.UIClassPaths[x] == null);
+    }.bind(this));
+    
+    if(missingClasses)
+    {
+      console.log('missing classes');
+    }
+    else
+    {
+      console.log('no missing classes');
+    }
   }
+  
+  
 });

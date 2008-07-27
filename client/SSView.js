@@ -4,11 +4,17 @@ var SSView = new Class({
   
   initialize: function(el)
   {
+    // check if we are prebuilt
     this.__prebuilt__ = (el && true) || false;
+    this.__ssviewcontrollers__ = [];
     
     this.element = (el && $(el)) || (new Element('div'));
     this.element.addClass('ShiftSpaceElement');
     
+    // store a back reference to this class
+    this.element.store('__ssviewcontroller__', this);
+    
+    // We need to build this class via code
     if(!this.__prebuilt__)
     {
       this.build();
@@ -31,7 +37,7 @@ var SSView = new Class({
     
     while(node && node != this.element)
     {
-      if($A(matches).contains(node))
+      if(matches.contains(node))
       {
         return node;
       }
@@ -42,10 +48,35 @@ var SSView = new Class({
   },
   
   
-  controllerForSubView: function(node)
+  controllerForNode: function(node)
   {
-    var nodesForSubViews = this.__subviews__.map(function(x) { return x.element; });
-    return this.__subviews__[nodesForSubViews.indexOf(node)];
+    // return the storage property
+    return node.retrieve('__ssviewcontroller__');
+  },
+  
+
+  addControllerForNode: function(node, controllerClass)
+  {
+    // instantiate and store
+    this.__ssviewcontrollers__.push(new controllerClass(node));
+  },
+  
+  
+  removeControllerForNode: function(node)
+  {
+    // get the controller
+    var controller = node.retrieve('__ssviewcontroller__');
+    if(controller)
+    {
+      // clear out the storage
+      node.store('__ssviewcontroller__', null);
+
+      if(this.__ssviewcontroller__.contains(controller))
+      {
+        // remove from internal array
+        this.__ssviewcontrollers__.remove(controller);
+      }
+    }
   },
   
   
@@ -58,6 +89,14 @@ var SSView = new Class({
   hide: function()
   {
     this.element.addClass('SSDisplayNone');
+  },
+  
+  
+  destroy: function()
+  {
+    this.removeControllerForNode(this.element);
+    this.element.dispose();
+    delete this;
   },
   
   
