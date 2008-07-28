@@ -114,6 +114,9 @@ var SandalphonClass = new Class({
       {
         if(this.analyze(responseText))
         {
+          // empty it out first
+          $('SSSandalphonContainer').empty();
+          // load the new file
           $('SSSandalphonContainer').set('html', responseText);
           this.instantiateControllers();
         }

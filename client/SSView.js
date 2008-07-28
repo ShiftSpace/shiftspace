@@ -151,7 +151,7 @@ var SSView = new Class({
   destroy: function()
   {
     this.removeControllerForNode(this.element);
-    this.element.dispose();
+    this.element.destroy();
     delete this;
   },
   
