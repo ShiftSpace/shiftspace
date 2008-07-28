@@ -7,7 +7,8 @@ var SandalphonClass = new Class({
   
   UIClassPaths:
   {
-    'SSTabView' : '/client/views/SSTabView/'
+    'SSTabView' : '/client/views/SSTabView/',
+    'SSTableView' : '/client/views/SSTableView/'
   },
 
 
@@ -53,7 +54,7 @@ var SandalphonClass = new Class({
   {
     for(class in this.UIClassPaths)
     {
-      var path = '../' + this.UIClassPaths[class] + class;
+      var path = '..' + this.UIClassPaths[class] + class;
       new Asset.css(path+'.css');
       new Asset.javascript(path+'.js');
     }
@@ -107,7 +108,7 @@ var SandalphonClass = new Class({
   {
     // load the interface file
     new Request({
-      url:  '../'+path,
+      url:  '..'+path,
       method: 'get',
       onSuccess: function(responseText, responseXML)
       {

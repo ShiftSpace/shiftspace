@@ -4,7 +4,7 @@ var SSView = new Class({
   
   genId: function()
   {
-    return Math.round(random()*100000+(new Date()).getMilliseconds());
+    return Math.round(Math.random()*100000+(new Date()).getMilliseconds());
   },
   
   initialize: function(el)
@@ -12,6 +12,7 @@ var SSView = new Class({
     // check if we are prebuilt
     this.__prebuilt__ = (el && true) || false;
     this.__ssviewcontrollers__ = [];
+    this.__delegate__ = null;
     
     this.element = (el && $(el)) || (new Element('div'));
     this.element.addClass('ShiftSpaceElement');
@@ -45,6 +46,18 @@ var SSView = new Class({
   },
   
   
+  setDelegate: function(delegate)
+  {
+    this.__delegate__ = delegate
+  },
+  
+  
+  delegate: function()
+  {
+    return this.__delegate__;
+  },
+  
+  
   eventDispatch: function(evt)
   {
     
@@ -60,12 +73,25 @@ var SSView = new Class({
     {
       if(matches.contains(node))
       {
+        this.setCachedHit(node);
         return node;
       }
       node = node.getParent();
     }
     
     return null;
+  },
+  
+  
+  setCachedHit: function(node)
+  {
+    this.__cachedHit__ = node;
+  },
+  
+  
+  cachedHit: function()
+  {
+    return this.__cachedHit__;
   },
   
   
