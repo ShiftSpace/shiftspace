@@ -8,7 +8,7 @@
 }
 
 #SSProxyMessageLeft {
-	background: url(/images/SSProxyMessage_bg.png);
+	background: url(/images/Proxy/SSProxyMessage_bg.png);
 	padding: 25px 0 25px 25px ;
 	float: left;
 }
@@ -44,7 +44,7 @@ a#SSProxyMessageSpace img {
 }
 
 a#SSProxyMessageVisit {
-	background: url(/images/SSProxyMessage_arrow.png);
+	background: url(/images/Proxy/SSProxyMessage_arrow.png);
 	padding: 25px 50px 25px 14px;
 	width: 53px;
 	height: 44px;
@@ -56,5 +56,5 @@ a#SSProxyMessageVisit {
 }
 
 a#SSProxyMessageVisit:hover {
-	background: url(/images/SSProxyMessage_arrow.png) 0 94px;
+	background: url(/images/Proxy/SSProxyMessage_arrow.png) 0 94px;
 }
