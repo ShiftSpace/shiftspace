@@ -28,15 +28,26 @@
     <div id="SSSandalphonControls">
       <div style="float: left;">
         <form>
-          <fieldset>
-            <label>Load Interface File:</label>
-            <input id="loadFileInput" type="text"></input>
-            <input id="loadFile" type="button" name="Load" value="Load"></input>
-            <input id="compileFile" type="button" name="Compile" value="Compile"></input>
-          </fieldset>
+          <table>
+            <tr>
+              <th>Load Interface File:</th>
+              <td>
+                <input id="loadFileInput" type="text"></input>
+                <input id="loadFile" type="button" name="LoadInterface" value="Load"></input>
+                <input id="compileFile" type="button" name="Compile" value="Compile"></input>
+              </td>
+            </tr>
+            <tr>
+              <th>Load Test File:</th>
+              <td>
+                <input id="loadTestInput" type="text"></input>
+                <input id="loadTestFile" type="button" name="LoadTest" value="Load"></input>
+              </td>
+            </tr>
+          </table>
         </form>
       </div>
-      <span>Sandalphon v0.1</span>
+      <span id='title'>Sandalphon v0.1</span>
     </div>
     
     <div id="SSSandalphonDisplay">

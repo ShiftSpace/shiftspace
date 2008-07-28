@@ -80,6 +80,7 @@ $ShiftSpace = '<script type="text/javascript" charset="utf-8">
 
 // load styles
 $ShiftSpace = '<link type="text/css" rel="stylesheet"" href="../styles/ShiftSpace.css"></link>';
+$ShiftSpace .= '<link type="text/css" rel="stylesheet"" href="../styles/SSProxyMessage.css"></link>';
 
 // Bootstrap
 $server = $_SERVER['HTTP_HOST'];

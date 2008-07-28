@@ -1,6 +1,8 @@
+var Sandalphon;
+
 window.addEvent('domready', function() {
   // load the local store
-  var Sandalphon = new SandalphonClass(new Persist.Store('Sandalphon'));
+  Sandalphon = new SandalphonClass(new Persist.Store('Sandalphon'));
 });
 
 var SandalphonClass = new Class({
@@ -89,6 +91,20 @@ var SandalphonClass = new Class({
       var evt = new Event(_evt);
       this.loadFile($('loadFileInput').getProperty('value'));
     }.bind(this));
+    
+    // attach test events
+    $('loadTestInput').addEvent('keyup', function(_evt) {
+      var evt = new Event(_evt);
+      if(evt.key == 'enter')
+      {
+        this.loadFile($('loadTestInput').getProperty('value'));
+      }
+    }.bind(this));
+    
+    $('loadTestFile').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      this.loadTest($('loadTestInput').getProperty('value'));
+    }.bind(this));
   },
   
   
@@ -127,7 +143,33 @@ var SandalphonClass = new Class({
       }.bind(this),
       onFailure: function()
       {
-        console.error('Oops could not load that file');
+        console.error('Oops could not load that interface file');
+      }
+    }).send();
+  },
+  
+  
+  loadTest: function(path)
+  {
+    // load the interface file
+    new Request({
+      url:  '..'+path,
+      method: 'get',
+      onSuccess: function(responseText, responseXML)
+      {
+        try
+        {
+          eval(responseText);            
+          this.runTest()  
+        }
+        catch(exc)
+        {
+          console.log(exc);
+        }
+      }.bind(this),
+      onFailure: function()
+      {
+        console.error('Oops could not load that test file.');
       }
     }).send();
   },
