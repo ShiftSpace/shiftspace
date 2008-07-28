@@ -215,7 +215,7 @@ $proxymessage = '<div id="SSProxyMessage">
 	<div id="SSProxyMessageLeft">
 		<a href="http://www.ShiftSpace.org/" id="SSProxyMessageLogo" title="visit ShiftSpace.org"></a>
 		<a href="http://www.ShiftSpace.org/spaces/notes/" id="SSProxyMessageSpace" title="more about this ShiftSpace feature">
-			<img src="../images/Spaces/Notes/images/Notes.png" alt="notes icon"/>
+			<img src="../spaces/Notes/images/Notes.png" alt="notes icon"/>
 		</a>
 		<div id="SSProxyMessagedescription">
 			This is a representation of a page shifted <span class="SSProxyMessageDate">3 days ago</a> by ShiftSpace user, <strong>Username</strong>, using the <strong>Spacename</strong> feature
