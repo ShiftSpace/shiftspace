@@ -11,28 +11,51 @@
 	z-index: 2000000;
 }
 
-#SSProxyMessage a{
+#SSProxyMessage a,
+#SSProxyMessage a:hover,
+#SSProxyMessage a:visited,
+#SSProxyMessage a:active {
 	color: #D36538;
+	background: none;
+	border: 0;
+	margin: 0;
+	padding: 0;
 }
 
 #SSProxyMessageLeft {
 	background: url(../images/Proxy/SSProxyMessage_bg.png);
-	padding: 25px 0 25px 25px ;
+	padding: 25px 0 25px 25px;
 	float: left;
 }
 
-a#SSProxyMessageLogo {
+a#SSProxyMessageLogo,
+a#SSProxyMessageLogo:hover,
+a#SSProxyMessageLogo:visited,
+a#SSProxyMessageLogo:active {
 	width: 81px;
 	height: 44px;
 	display: block;
 	float: left;
+	background: none;
 }
 
-a#SSProxyMessageSpace {
+a#SSProxyMessageLogo:hover{
+	background: #fff; 
+}
+
+a#SSProxyMessageSpace,
+a#SSProxyMessageSpace:hover,
+a#SSProxyMessageSpace:visited,
+a#SSProxyMessageSpace:active {
 	width: 59px;
 	height: 44px;
 	display: block;
 	float: left;
+	background: none;
+}
+
+a#SSProxyMessageSpace:hover {
+	background: #fff;
 }
 
 a#SSProxyMessageSpace img {
