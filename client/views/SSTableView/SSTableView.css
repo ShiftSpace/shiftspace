@@ -6,11 +6,29 @@ table.SSTableView
 {
   background-color: #e6e4a3;
   border-collapse: collapse;
+  
+  font-family: helvetica;
+  font-size: 12px;
 }
 
 .SSTableView > .SSControlView
 {
   border-bottom: solid #000 1px;
+}
+
+.SSTableView > .SSControlView .SSColumnHeading
+{
+  border-right: solid #000 1px;
+  padding: 4px;
+}
+
+.SSTableView > .SSControlView .SSColumnHeading .SSResize
+{
+  position: absolute;
+  right: 0px;
+  height: 100%;
+  width: 2px;
+  background-color: #aaa;
 }
 
 .SSTableView > .SSControlView > tr > th > .SSColumnHeadingTitle
@@ -40,6 +58,16 @@ table.SSTableView
 .SSTableView > .SSDefinition col.SSActive
 {
   background-color: #ccc;
+}
+
+.SSTableView > .SSControlView .SSColumnHeading .SSColumnOrder
+{
+  visibility: hidden;
+}
+
+.SSTableView > .SSControlView .SSColumnHeading.SSActive .SSColumnOrder
+{
+  visibility: visible;
 }
 
 .SSTableView > .SSContentView .SSRow.SSActive

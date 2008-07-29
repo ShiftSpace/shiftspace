@@ -3,9 +3,10 @@
   
   <!-- start the table definition-->
   <colgroup class='SSDefinition'>
+    <col name="selected"></col>
     <col name="space"></col>
-    <col name="username"></col>
     <col name="summary"></col>
+    <col name="username"></col>
     <col name="created" order="descending"></col>
   </colgroup>
   <!-- end the control view -->
@@ -13,10 +14,31 @@
   <!-- start the control view -->
   <thead class="SSControlView SSUserSelectNone">
     <tr>
-      <th class="SSColumnHeading SSDefaultCursor"><span class="SSColumnHeadingTitle">Space</span><div class="SSColumnOrder SSAscendingOrder"></div></th>
-      <th class="SSColumnHeading SSDefaultCursor"><span class="SSColumnHeadingTitle">User</span><div class="SSColumnOrder SSAscendingOrder"></div></th>
-      <th class="SSColumnHeading SSDefaultCursor"><span class="SSColumnHeadingTitle">Summary</span><div class="SSColumnOrder SSAscendingOrder"></div></th>
-      <th class="SSColumnHeading SSDefaultCursor"><span class="SSColumnHeadingTitle">Date</span><div class="SSColumnOrder SSAscendingOrder"></div></th>
+      <th class="SSColumnHeading SSDefaultCursor">
+        <span class="SSColumnHeadingTitle">Select</span>
+        <div class="SSColumnOrder SSAscendingOrder"></div>
+        <div class="SSResize"/>
+      </th>
+      <th class="SSColumnHeading SSDefaultCursor">
+        <span class="SSColumnHeadingTitle">Space</span>
+        <div class="SSColumnOrder SSAscendingOrder"></div>
+        <div class="SSResize"/>
+      </th>
+      <th class="SSColumnHeading SSDefaultCursor">
+        <span class="SSColumnHeadingTitle">Summary</span>
+        <div class="SSColumnOrder SSAscendingOrder"></div>
+        <div class="SSResize"/>
+      </th>
+      <th class="SSColumnHeading SSDefaultCursor">
+        <span class="SSColumnHeadingTitle">User</span>
+        <div class="SSColumnOrder SSAscendingOrder"></div>
+        <div class="SSResize"/>
+      </th>
+      <th class="SSColumnHeading SSDefaultCursor">
+        <span class="SSColumnHeadingTitle">Date</span>
+        <div class="SSColumnOrder SSAscendingOrder"></div>
+        <div class="SSResize"/>
+      </th>
     </tr>
   </thead>
   <!-- end the control view -->
@@ -24,9 +46,10 @@
   <!-- define the model -->
   <tbody class="SSContentView">
     <tr class="SSRow SSModel" uiclass='SSCustomTableRow'>
+      <td name="selected"><input class="SSActionCell" type="checkbox"></input></td>
       <td name="space"><img/><span/></td>
-      <td name="username">dnolen</td>
       <td name="summary">summary</td>
+      <td name="username">dnolen</td>
       <td name="created">Just created.</td>
     </tr>
   </tbody>

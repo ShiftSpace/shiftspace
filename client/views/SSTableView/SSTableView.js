@@ -28,14 +28,21 @@ var SSTableView = new Class({
     switch(true)
     {
       case (this.hitTest(target, '> .SSControlView .SSColumnOrder') != null):
+        // check first for column reordering
         this.handleColumnOrderHit(this.cachedHit());
       break;
       
       case (this.hitTest(target, '> .SSControlView .SSColumnHeading') != null):
+        // check next for column select
         this.handleColumnSelect(this.cachedHit());
       break;
       
+      case (this.hitTest(target, '> .SSContentView .SSRow .SSActionCell') != null):
+        // if the click is an row action let them handle it
+      break;
+      
       case (this.hitTest(target, '> .SSContentView .SSRow') != null):
+        // finally check for general row click
         this.handleRowClick(this.cachedHit(), target);
       break;
       
@@ -91,9 +98,17 @@ var SSTableView = new Class({
   },
   
   
-  deselect: function(node)
+  deselectRow: function(row)
   {
-    node.removeClass('SSActive');
+    row.removeClass('SSActive');
+  },
+  
+  
+  deselectColumn: function(col)
+  {
+    var idx = this.selectedColumnIndex();
+    col.removeClass('SSActive');
+    this.columnHeadingForIndex(idx).removeClass('SSActive');
   },
   
   
@@ -108,13 +123,20 @@ var SSTableView = new Class({
   {
     this.deselectAll();
     this.element._getElements("> .SSDefinition col")[idx].addClass('SSActive');
+    this.columnHeadingForIndex(idx).addClass('SSActive');
   },
   
   
   deselectAll: function()
   {
-    if(this.selectedRow()) this.deselect(this.selectedRow());
-    if(this.selectedColumn()) this.deselect(this.selectedColumn());
+    if(this.selectedRow()) this.deselectRow(this.selectedRow());
+    if(this.selectedColumn()) this.deselectColumn(this.selectedColumn());
+  },
+  
+  
+  columnHeadingForIndex: function(idx)
+  {
+    return this.element._getElements('> .SSControlView .SSColumnHeading')[idx];
   },
   
   
