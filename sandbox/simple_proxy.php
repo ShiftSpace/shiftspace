@@ -144,6 +144,7 @@ if (!count($shift_ids) && !empty($_GET['all_shifts'])) {
 $cshift;
 $spaceName;
 $userName;
+$shifthref;
 // Load each requested shift
 foreach ($shift_ids as $an_id)
 {
@@ -157,6 +158,7 @@ foreach ($shift_ids as $an_id)
     $cshift = $shift;
 
     $spaceName = $shift->space;
+    $shifthref = $shift->href;
     
     // grab the user name
     $user_id = $shift->user_id;
@@ -239,7 +241,7 @@ $proxymessage = "<div id='SSProxyMessage'>
 			<a href ='http://www.ShiftSpace.org/'>learn more</a>
 		</div>
 	</div>
-	<a href='#' title='View the original page' id='SSProxyMessageVisit'>
+	<a href='$shifthref' title='View the original page' id='SSProxyMessageVisit'>
 		view original page
 	</a>";
 	
