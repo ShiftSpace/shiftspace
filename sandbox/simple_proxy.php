@@ -230,8 +230,8 @@ $result = preg_replace("/<\/head>/",$ShiftSpace . "</head>", $result);
 $proxymessage = "<div id='SSProxyMessage'>
 	<div id='SSProxyMessageLeft'>
 		<a href='http://www.ShiftSpace.org/' id='SSProxyMessageLogo' title='visit ShiftSpace.org'></a>
-		<a href='http://www.ShiftSpace.org/spaces/notes/' id='SSProxyMessageSpace' title='more about this ShiftSpace feature'>
-			<img src='../spaces/$spaceName/$spaceName.png' alt='notes icon'/>
+		<a href='http://www.ShiftSpace.org/spaces/$spaceName/' id='SSProxyMessageSpace' title='more about this ShiftSpace feature'>
+			<img src='../spaces/$spaceName/$spaceName.png' alt='$spaceName icon'/>
 		</a>
 		<div id='SSProxyMessagedescription'>
 			This is a representation of a page shifted <span class='SSProxyMessageDate'>3 days ago</a> by ShiftSpace user, <strong>$userName</strong>, using the <strong>$spaceName</strong> feature
