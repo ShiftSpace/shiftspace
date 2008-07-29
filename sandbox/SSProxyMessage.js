@@ -22,6 +22,16 @@ function SSProxyMessageInit()
       SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
     }
   });
+  
+  $('SSProxyMessage').addEvent('mousemove', function(_evt) {
+    var evt = new Event(_evt);
+    if(SSProxyMessageIsVisible && !SSProxyMessageIsAnimating)
+    {
+      // prepare the next hide
+      if(SSProxyMessageTimeout) clearTimeout(SSProxyMessageTimeout);
+      SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
+    }
+  });
 }
 
 function SSProxyMessageShow()
