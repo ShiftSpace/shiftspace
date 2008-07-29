@@ -8,7 +8,7 @@ window.addEvent('domready', function() {
 
 function SSProxyMessageInit()
 {
-  SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
+  SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 5000);
   
   $('SSProxyMessage').addEvent('mouseenter', function(_evt) {
     if(!SSProxyMessageIsVisible && !SSProxyMessageIsAnimating)
@@ -19,7 +19,7 @@ function SSProxyMessageInit()
       
       // prepare the next hide
       if(SSProxyMessageTimeout) clearTimeout(SSProxyMessageTimeout);
-      SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
+      SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 5000);
     }
   });
   
@@ -29,7 +29,7 @@ function SSProxyMessageInit()
     {
       // prepare the next hide
       if(SSProxyMessageTimeout) clearTimeout(SSProxyMessageTimeout);
-      SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
+      SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 5000);
     }
   });
 }
