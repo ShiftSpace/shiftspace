@@ -15,6 +15,10 @@ var SSTableRow = new Class({
     {
       this[propMethod](value);
     }
+    else
+    {
+      el._getElement('> td[name='+columnName+']').set('text', value);
+    }
   },
   
   getProperty: function(el, prop)
@@ -23,6 +27,10 @@ var SSTableRow = new Class({
     if(this[propMethod])
     {
       return this[propMethod]();
+    }
+    else
+    {
+      return el._getElement('> td[name='+columnName+']').get('text');
     }
   }
   
