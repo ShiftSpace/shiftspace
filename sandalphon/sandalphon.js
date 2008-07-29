@@ -78,22 +78,22 @@ var SandalphonClass = new Class({
   
   loadClassFiles: function()
   {
-    for(var class in this.ClassPaths)
+    for(var className in this.ClassPaths)
     {
-      var path = '..' + this.ClassPaths[class] + class;
+      var path = '..' + this.ClassPaths[className] + className;
       new Asset.javascript(path+'.js');
     }
 
-    for(var class in this.UIClassPaths)
+    for(var className in this.UIClassPaths)
     {
-      var path = '..' + this.UIClassPaths[class] + class;
+      var path = '..' + this.UIClassPaths[className] + className;
       new Asset.css(path+'.css');
       new Asset.javascript(path+'.js');
     }
     
-    for(var class in this.UserClassPaths)
+    for(var className in this.UserClassPaths)
     {
-      var path = '..' + this.UserClassPaths[class] + class;
+      var path = '..' + this.UserClassPaths[className] + className;
       new Asset.css(path+'.css');
       new Asset.javascript(path+'.js');
     }

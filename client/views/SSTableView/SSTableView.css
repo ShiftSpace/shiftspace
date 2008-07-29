@@ -17,9 +17,10 @@
   width: 8px;
   height: 8px;
   background-color: #f00;
-  float: left;
+  float: right;
   margin-top: 4px;
   margin-left: 4px;
+  margin-right: 4px;
 }
 
 .SSTableView > .SSControlView > tr > th > .SSDescendingOrder
@@ -28,5 +29,15 @@
   height: 8px;
   background-color: #f00;
   float: left;
+}
+
+.SSTableView > .SSDefinition col.SSActive
+{
+  background-color: #ccc;
+}
+
+.SSTableView > .SSContentView .SSRow.SSActive
+{
+  background-color: #ccc;
 }
 

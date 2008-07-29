@@ -56,6 +56,65 @@ var SSTableView = new Class({
   {
     var index = this.columnIndexForNode(column);
     console.log('column select ' + this.columnNames()[index]);
+    if(index == this.selectedColumnIndex())
+    {
+      this.deselectAll();
+    }
+    else
+    {
+      this.selectColumn(index);      
+    }
+  },
+  
+  
+  selectedColumn: function()
+  {
+    return this.element._getElement('> .SSDefinition col.SSActive');
+  },
+  
+  
+  selectedColumnIndex: function()
+  {
+    return this.element._getElements('> .SSDefinition col').indexOf(this.selectedColumn());
+  },
+  
+  
+  selectedRow: function()
+  {
+    return this.element._getElement('> .SSContentView .SSRow.SSActive')
+  },
+  
+  
+  selectedRowIndex: function()
+  {
+    return this.element._getElements('> SSContentView .SSRow').indexOf(this.selectedRow());
+  },
+  
+  
+  deselect: function(node)
+  {
+    node.removeClass('SSActive');
+  },
+  
+  
+  selectRow: function(idx)
+  {
+    this.deselectAll();
+    this.element._getElements("> .SSContentView .SSRow")[idx].addClass('SSActive');
+  },
+  
+  
+  selectColumn: function(idx)
+  {
+    this.deselectAll();
+    this.element._getElements("> .SSDefinition col")[idx].addClass('SSActive');
+  },
+  
+  
+  deselectAll: function()
+  {
+    if(this.selectedRow()) this.deselect(this.selectedRow());
+    if(this.selectedColumn()) this.deselect(this.selectedColumn());
   },
   
   
@@ -65,11 +124,21 @@ var SSTableView = new Class({
     return this.element._getElements('> .SSControlView > tr > th').indexOf(node);
   },
   
-
+  
   handleRowClick: function(row, target)
   {
-    var rowIndex = this.contentView.getElements('.SSRow').indexOf(row);
+    var rowIndex = this.indexOfRow(row);
     console.log('Row click ' + rowIndex);
+
+    if(row == this.selectedRow())
+    {
+      this.deselectAll();
+    }
+    else
+    {
+      this.selectRow(rowIndex);      
+    }
+
     if(this.delegate())
     {
       this.delegate().userClickedRow({tableView:this, rowIndex:rowIndex, target:target});
@@ -79,7 +148,7 @@ var SSTableView = new Class({
   
   indexOfRow: function(row)
   {
-    this.element._getElements('> .SSContentView .SSRow').indexOf(row);
+    return this.element._getElements('> .SSContentView .SSRow').indexOf(row);
   },
   
 
