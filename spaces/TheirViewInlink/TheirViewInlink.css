@@ -1,0 +1,193 @@
+/*
+	TheirView CSS file
+	- proxy block display
+	- general block properties
+	- individual styles
+*/
+
+/* === top RHS block display === */
+#theirview-block {
+	position: absolute;
+	height:   22px;
+	z-index:  999;
+	background-color: #fff;
+	border: 1px solid #aaa;
+	opacity: .90;
+	/* top and left co-ordinates calculated on loading */
+}
+
+#theirview-block-lhl {
+	left: 2px;
+	top: 3px;
+	cursor: move;
+}
+
+#theirview-block-lht {
+	top: 7px;
+	left: 20px;
+	font-size: 11px;
+	font-family: Helvetica, Arial;
+}
+
+.theirview-block-item {
+	position: absolute;
+	cursor: pointer;
+	top: 2px;
+	z-index:  1999;
+}
+
+#theirview-block-inlink, #theirview-block-images, #theirview-block-validate {
+	width: 18px;
+	height: 18px;
+}
+
+#theirview-block-inlink { left: 76px; }
+#theirview-block-images { left: 96px; }
+#theirview-block-validate { left: 116px; }
+
+
+/* === general block properties === */
+
+/* reset default style for all elements */
+.theirview, .theirview h1, .theirview p, .theirview ul, .theirview li, .theirview a, .theirview img, .theirview table, .theirview th, .theirview td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 0.95em;
+	color: #000;
+	vertical-align: baseline;
+	background: transparent;
+	text-decoration: none;
+	font-size-adjust: none;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	line-height: 1em;
+	text-align: left;
+}
+
+div.theirview {
+	position: absolute;
+	top: -99999px;
+	left: -99999px;
+	background-color: #fff;
+	z-index: 999;
+	opacity: .95;
+	border: 1px solid #aaa;
+	padding: 0px 11px 12px 11px;
+}
+
+.theirview h1 {
+	font-size: 1.35em;
+	font-weight: bold;
+	border-bottom: 1px dashed #666;
+	margin-top: 9px;
+	margin-bottom: 12px;
+	padding-bottom: 4px;
+}
+
+.theirview ul {
+	padding-left: 1em;
+	list-style-type: disc;
+}
+.theirview li { margin-bottom: 5px; }
+.theirview table { border-collapse: collapse; }
+
+.theirview table tr th, .theirview table tr td {
+	font-size: 0.8em;
+	padding: 2px 10px 2px 10px;
+	border: 1px solid #eee;
+}
+
+.theirview table tr th { font-weight: bold; }
+
+.theirview a { color: #00f; text-decoration: underline; }
+.theirview a:hover { background-color: #ffa; }
+
+ul.theirview-listing {}
+ul.theirview-listing li {
+	float: left;
+	margin-right: 25px;
+}
+
+/* === individual blocks === */
+
+.attribution {
+	font-size: 0.8em;
+	margin-top: 7px;
+}
+
+#yahoo-attribution img { margin: 15px 0px; }
+
+p.paginate {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 8pt;
+	margin: 4px;
+}
+
+span.p-disabled { color: #ccc; }
+span.p-divider {
+	font-weight: bold;
+	margin: 0 7px;
+}
+
+/* Close button */
+.SSTheirViewShiftCloseButton {
+  position: absolute;
+  right: 0px;
+  width: 15px;
+  height: 14px;
+  background-repeat: no-repeat;
+}
+
+.SSTheirViewShiftCloseButton        { background-image: url('images/close-off.png'); }
+.SSTheirViewShiftCloseButton:hover  { background-image: url('images/close-hover.png'); }
+.SSTheirViewShiftCloseButton:active { background-image: url('images/close-active.png'); }
+
+
+/* Digg! styles */
+span.digg-count {
+	float: left;
+	background-image: url('http://www.theirview.org/images/digg-news.gif');
+	background-repeat: no-repeat;
+	background-position: top left;
+	color:#93883F;
+	display:block;
+	min-height:52px;
+	padding: 15px 0;
+	margin: 0 10px;
+	text-align:center;
+	width:51px;
+}
+
+span.digg-count strong {
+	display:block;
+	letter-spacing:-1px;
+	line-height:1;
+}
+
+a.digg-title {}
+p.digg-content {}
+a.digg-more {
+	margin: 0 7px;
+	color: #333;
+}
+span.digg-topic {
+	color: #666;
+}
+
+
+
+
+Oops ... it seems this shift is broken
+<div><div>Help us improve our experimental fix feature, copy and paste the shift details and <a target="new" href="http://metatron.shiftspace.org/trac/newticket">file a bug report</a>.
+
+view shift details
+OK
+Fix
+ShiftSpace
+<div><div class='SSLeft'><span>Top Item</span></div><div class='SSRight'></div>
+<div><div class='SSLeft'><span>Middle Item</span></div><div class='SSRight'></div>
+<div><div class='SSLeft'><span>Bottom Item</span></div><div class='SSRight'></div>
