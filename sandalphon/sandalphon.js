@@ -211,16 +211,15 @@ var SandalphonClass = new Class({
     
     var allNodes = this.fragment().getElements('*[uiclass]');
     
-    console.log('////////////////////////////// SANDALPHON ANALYZE');
-    
     var classes = allNodes.map(function(x){return x.getProperty('uiclass')});
     
     // First verify that we have a real path for each class
-    console.log(classes);
     var missingClasses = false;
     classes.each(function(x) {
       missingClasses = (this.UIClassPaths[x] == null);
     }.bind(this));
+    
+    if(missingClasses) console.error('Error missing uiclasses.');
     
     if(missingClasses)
     {

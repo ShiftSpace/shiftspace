@@ -20,7 +20,9 @@ if (!empty($_REQUEST['href'])) {
 }
 
 // Sanity check
+// TODO: the href and the id should both be optional, shift.query is a general data provider - David
 if (empty($href) && empty($id)) {
+  // run general query limit to 50 shifts per page?
   respond(0, "Please specify either an 'href' or 'id' parameter.");
 }
 

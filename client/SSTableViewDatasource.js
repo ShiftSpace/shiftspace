@@ -85,8 +85,20 @@ var SSTableViewDatasource = new Class({
   
   fetch: function(properties)
   {
-    // make a call
-    this.fireEvent('dataLoaded');
+    var testhref = {href:'http://google.com'};
+    new Request({
+      url: this.dataProviderURL(),
+      data: testhref,
+      onComplete: function(responseText, responseXML)
+      {
+        this.setData(Json.decode(responseText));
+        this.fireEvent('onload');
+      },
+      onFailure: function(response)
+      {
+        console.error('Oops: ' + response);
+      }
+    }).send()
   }
 
 });
