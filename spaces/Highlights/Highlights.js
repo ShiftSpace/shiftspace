@@ -316,10 +316,6 @@ var HighlightsShift = ShiftSpace.Shift.extend({
   
   setup: function(json) 
   {
-    console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-    console.log(jsonerm);
-    console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-
     if(json.ranges)
     {
       //replace __newline__ token with \n
