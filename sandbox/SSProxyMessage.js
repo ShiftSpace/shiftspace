@@ -40,7 +40,7 @@ function SSProxyMessageShow()
   });
   
   showFx.start({
-    right: [0, -503]
+    right: [-503, 0]
   });
 }
 
