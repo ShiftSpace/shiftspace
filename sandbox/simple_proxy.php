@@ -146,6 +146,7 @@ $userName;
 // Load each requested shift
 foreach ($shift_ids as $an_id)
 {
+    // grab the shift
     $shift = $db->row("
       SELECT *
       FROM shift
@@ -155,7 +156,14 @@ foreach ($shift_ids as $an_id)
     $cshift = $shift;
 
     $spaceName = $shift->space;
-    $userName = $shift->username;
+    
+    // grab the user name
+    $user_id = $shift->user_id;
+    $userName = $db->value("
+      SELECT username
+      FROM user
+      where id=$user_id
+    ");
     
     $legacy = true;
     if($spaceName == 'notes') 
