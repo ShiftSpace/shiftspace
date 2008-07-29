@@ -5,6 +5,7 @@
 .SSTableView
 {
   background-color: #e6e4a3;
+  display:;
 }
 
 .SSTableView > .SSControlView > tr > th > .SSColumnHeadingTitle
