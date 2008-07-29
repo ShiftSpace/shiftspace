@@ -11,11 +11,12 @@ function SSProxyMessageInit()
   SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
   
   $('SSProxyMessage').addEvent('mouseenter', function(_evt) {
-    if(!SSProxyMessageIsVisible)
+    if(!SSProxyMessageIsVisible && !SSProxyMessageIsAnimating)
     {
       SSProxyMessageShow();
     }
-    else
+
+    if(SSProxyMessageIsVisible && !SSProxyMessageIsAnimating)
     {
       if(SSProxyMessageTimeout) clearTimeout(SSProxyMessageTimeout);
       SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
