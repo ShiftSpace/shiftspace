@@ -7,10 +7,15 @@ window.addEvent('domready', function() {
 
 var SandalphonClass = new Class({
   
-  UIClassPaths:
+  ClassPaths:
   {
-    'SSTabView' : '/client/views/SSTabView/',
-    'SSTableView' : '/client/views/SSTableView/'
+    'SSTableViewDatasource': '/client/'
+  },
+  
+  UIClassPaths:
+  { 
+    'SSTabView': '/client/views/SSTabView/',
+    'SSTableView': '/client/views/SSTableView/'
   },
 
 
@@ -39,7 +44,8 @@ var SandalphonClass = new Class({
         {
         */
           console.log('Initializing class paths.');
-          this.storage().set('UIClassPaths', JSON.encode(this.UIClassPaths))
+          this.storage().set('UIClassPaths', JSON.encode(this.UIClassPaths));
+          this.storage().set('ClassPaths', JSON.encode(this.UIClassPaths));
         /*}
         else
         {
@@ -54,10 +60,15 @@ var SandalphonClass = new Class({
   
   loadClassFiles: function()
   {
-    for(class in this.UIClassPaths)
+    for(var class in this.UIClassPaths)
     {
       var path = '..' + this.UIClassPaths[class] + class;
       new Asset.css(path+'.css');
+      new Asset.javascript(path+'.js');
+    }
+    for(var class in this.ClassPaths)
+    {
+      var path = '..' + this.ClassPaths[class] + class;
       new Asset.javascript(path+'.js');
     }
     console.log('Class files loaded.');
