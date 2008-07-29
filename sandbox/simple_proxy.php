@@ -139,6 +139,10 @@ if (!count($shift_ids) && !empty($_GET['all_shifts'])) {
   $shift_ids[] = $id;
 }
 
+// for single shifts on the proxy
+$cshift;
+$spaceName;
+$userName;
 // Load each requested shift
 foreach ($shift_ids as $an_id)
 {
@@ -147,8 +151,12 @@ foreach ($shift_ids as $an_id)
       FROM shift
       WHERE url_slug = '$an_id'
     ");
+    
+    $cshift = $shift;
 
     $spaceName = $shift->space;
+    $userName = $shift->username;
+    
     $legacy = true;
     if($spaceName == 'notes') 
     {
@@ -215,10 +223,10 @@ $proxymessage = '<div id="SSProxyMessage">
 	<div id="SSProxyMessageLeft">
 		<a href="http://www.ShiftSpace.org/" id="SSProxyMessageLogo" title="visit ShiftSpace.org"></a>
 		<a href="http://www.ShiftSpace.org/spaces/notes/" id="SSProxyMessageSpace" title="more about this ShiftSpace feature">
-			<img src="../spaces/Notes/Notes.png" alt="notes icon"/>
+			<img src="../spaces/$spaceName/$spaceName.png" alt="notes icon"/>
 		</a>
 		<div id="SSProxyMessagedescription">
-			This is a representation of a page shifted <span class="SSProxyMessageDate">3 days ago</a> by ShiftSpace user, <strong>Username</strong>, using the <strong>Spacename</strong> feature
+			This is a representation of a page shifted <span class="SSProxyMessageDate">3 days ago</a> by ShiftSpace user, <strong>$userName</strong>, using the <strong>$spaceName</strong> feature
 			<a href ="http://www.ShiftSpace.org/">learn more</a>
 		</div>
 	</div>
