@@ -103,6 +103,7 @@ $ShiftSpace .= '<script type="text/javascript">
 </script>';
 
 $ShiftSpace .= '<script type="text/javascript" src="../client/Mootools.js"></script>';
+$ShiftSpace .= '<script type="text/javascript" src="SSProxyMessage.js"></script>';
 $ShiftSpace .= '<script type="text/javascript" src="greasemonkey-api.js"></script>';
 
 $ShiftSpace .= '<script type="text/javascript">var ShiftSpace = {
