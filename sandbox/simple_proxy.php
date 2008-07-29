@@ -219,20 +219,20 @@ foreach ($shift_ids as $an_id)
 
 $result = preg_replace("/<\/head>/",$ShiftSpace . "</head>", $result);
 
-$proxymessage = '<div id="SSProxyMessage">
-	<div id="SSProxyMessageLeft">
-		<a href="http://www.ShiftSpace.org/" id="SSProxyMessageLogo" title="visit ShiftSpace.org"></a>
-		<a href="http://www.ShiftSpace.org/spaces/notes/" id="SSProxyMessageSpace" title="more about this ShiftSpace feature">
-			<img src="../spaces/$spaceName/$spaceName.png" alt="notes icon"/>
+$proxymessage = "<div id='SSProxyMessage'>
+	<div id='SSProxyMessageLeft'>
+		<a href='http://www.ShiftSpace.org/' id='SSProxyMessageLogo' title='visit ShiftSpace.org'></a>
+		<a href='http://www.ShiftSpace.org/spaces/notes/' id='SSProxyMessageSpace' title='more about this ShiftSpace feature'>
+			<img src='../spaces/$spaceName/$spaceName.png' alt='notes icon'/>
 		</a>
-		<div id="SSProxyMessagedescription">
-			This is a representation of a page shifted <span class="SSProxyMessageDate">3 days ago</a> by ShiftSpace user, <strong>$userName</strong>, using the <strong>$spaceName</strong> feature
-			<a href ="http://www.ShiftSpace.org/">learn more</a>
+		<div id='SSProxyMessagedescription'>
+			This is a representation of a page shifted <span class='SSProxyMessageDate'>3 days ago</a> by ShiftSpace user, <strong>$userName</strong>, using the <strong>$spaceName</strong> feature
+			<a href ='http://www.ShiftSpace.org/'>learn more</a>
 		</div>
 	</div>
-	<a href="#" title="View the original page" id="SSProxyMessageVisit">
+	<a href='#' title='View the original page' id='SSProxyMessageVisit'>
 		view original page
-	</a>';
+	</a>";
 	
 $result = preg_replace("/<\/html>/", $proxymessage."</html>", $result);
 
