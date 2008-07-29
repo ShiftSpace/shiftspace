@@ -10,7 +10,7 @@ function SSProxyMessageInit()
 {
   SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
   
-  $('SSProxyMessage').addEvent('mouseover', function(_evt) {
+  $('SSProxyMessage').addEvent('mouseenter', function(_evt) {
     if(!SSProxyMessageIsVisible)
     {
       SSProxyMessageShow();
