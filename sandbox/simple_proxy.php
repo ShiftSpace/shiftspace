@@ -237,7 +237,7 @@ $proxymessage = "<div id='SSProxyMessage' class='ShiftSpaceElement'>
 			<img src='../spaces/$spaceName/$spaceName.png' alt='$spaceName icon'/>
 		</a>
 		<div id='SSProxyMessagedescription'>
-			This is a representation of a page shifted <span class='SSProxyMessageDate'>3 days ago</a> by ShiftSpace user, <strong>$userName</strong>, using the <strong>$spaceName</strong> feature
+			This is a representation of a page shifted <span class='SSProxyMessageDate'>3 days ago</a> by ShiftSpace user, <b>$userName</b>, using the <b>$spaceName</b> feature
 			<a href ='http://www.ShiftSpace.org/'>learn more</a>
 		</div>
 	</div>
