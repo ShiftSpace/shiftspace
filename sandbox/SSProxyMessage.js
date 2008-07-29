@@ -11,13 +11,13 @@ function SSProxyMessageInit()
   SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
   
   $('SSProxyMessage').addEvent('mouseenter', function(_evt) {
-    if(!SSProxyMessageIsVisible)
+    if(!SSProxyMessageIsVisible && !SSProxyMessageIsAnimating)
     {
+      // show it
+      SSProxyMessageIsVisible = true;
       SSProxyMessageShow();
-    }
-
-    if(SSProxyMessageIsVisible)
-    {
+      
+      // prepare the next hide
       if(SSProxyMessageTimeout) clearTimeout(SSProxyMessageTimeout);
       SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
     }
@@ -36,7 +36,6 @@ function SSProxyMessageShow()
     onComplete: function()
     {
       SSProxyMessageIsAnimating = false;
-      SSProxyMessageIsVisible = true;
     }
   });
   
@@ -56,7 +55,6 @@ function SSProxyMessageHide()
     },
     onComplete: function()
     {
-      console.log('hidden');
       SSProxyMessageIsAnimating = false;
       SSProxyMessageIsVisible = false;
     }
