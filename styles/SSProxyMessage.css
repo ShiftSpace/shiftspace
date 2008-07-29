@@ -70,7 +70,10 @@ a#SSProxyMessageSpace img {
 	float: left;
 }
 
-a#SSProxyMessageVisit {
+a#SSProxyMessageVisit,
+a#SSProxyMessageVisit:hover,
+a#SSProxyMessageVisit:active,
+a#SSProxyMessageVisit:visited, {
 	background: url(../images/Proxy/SSProxyMessage_arrow.png);
 	padding: 25px 50px 25px 14px;
 	width: 53px;
