@@ -29,7 +29,7 @@ function SSProxyMessageShow()
 {
   var showFx = $('SSProxyMessage').effects({
     duration: 500, 
-    transition: Fx.Transitions.Cubic.easeOut
+    transition: Fx.Transitions.Cubic.easeOut,
     onStart: function()
     {
       SSProxyMessageIsAnimating = true;
