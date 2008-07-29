@@ -58,6 +58,7 @@ var SSTableView = new Class({
 
   setDatasource: function(datasource)
   {
+    console.log('SSTableView datasource set.');
     this.__datasource__ = datasource;
   },
   
