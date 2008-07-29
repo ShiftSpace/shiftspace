@@ -3,16 +3,20 @@
   
   <!-- start the table definition-->
   <colgroup class='SSDefinition'>
-    <col name="fullname"></col>
-    <col name="address"></col>
+    <col name="space"></col>
+    <col name="username"></col>
+    <col name="summary"></col>
+    <col name="created" order="descending"></col>
   </colgroup>
   <!-- end the control view -->
   
   <!-- start the control view -->
   <thead class="SSControlView">
     <tr>
-      <th><span class="SSColumnHeading">Full Name</span><div class="SSColumnOrder SSAscendingOrder"></div></th>
-      <th><span class="SSColumnHeading">Address</span><div class="SSColumnOrder SSAscendingOrder"></div></th>
+      <th><span class="SSColumnHeading">Space</span><div class="SSColumnOrder SSAscendingOrder"></div></th>
+      <th><span class="SSColumnHeading">User</span><div class="SSColumnOrder SSAscendingOrder"></div></th>
+      <th><span class="SSColumnHeading">Summary</span><div class="SSColumnOrder SSAscendingOrder"></div></th>
+      <th><span class="SSColumnHeading">Date</span><div class="SSColumnOrder SSAscendingOrder"></div></th>
     </tr>
   </thead>
   <!-- end the control view -->
@@ -20,8 +24,10 @@
   <!-- define the model -->
   <tbody class="SSContentView">
     <tr class="SSRow SSModel">
-      <td name="fullname">David</td>
-      <td name="address">Nolen</td>
+      <td name="space">notes</td>
+      <td name="username">dnolen</td>
+      <td name="summary">summary</td>
+      <td name="created">Just created.</td>
     </tr>
   </tbody>
   <!-- end the model -->

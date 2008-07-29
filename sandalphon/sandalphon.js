@@ -23,13 +23,25 @@ var SandalphonClass = new Class({
   { 
     console.log('Sandalphon, sister of Metatron, starting up.');
     this.setStorage(storage);
-    
     this.setupClassPaths();
-
     // for analyzing fragments
     this.setFragment(new Element('div'));
-
-    this.attachEvents();
+    this.initInterface();
+  },
+  
+  
+  initInterface: function()
+  {
+    console.log('Initializing interface');
+    
+    this.storage().get('lastInterfaceFile', function(ok, value) {
+      if(ok && value) $('loadFileInput').setProperty('value', value);
+    });
+    this.storage().get('lastTestFile', function(ok, value) {
+      if(ok && value) $('loadTestInput').setProperty('value', value);
+    });
+    
+    this.attachEvents();    
   },
   
   
@@ -133,6 +145,9 @@ var SandalphonClass = new Class({
 
   loadFile: function(path)
   {
+    // save for later
+    this.storage().set('lastInterfaceFile', path);
+    
     // load the interface file
     new Request({
       url:  '..'+path,
@@ -162,6 +177,9 @@ var SandalphonClass = new Class({
   
   loadTest: function(path)
   {
+    // save for later
+    this.storage().set('lastTestFile', path);
+    
     // load the interface file
     new Request({
       url:  '..'+path,

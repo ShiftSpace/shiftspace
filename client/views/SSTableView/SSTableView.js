@@ -1,5 +1,6 @@
 var SSTableView = new Class({
   
+  Implements: Events,
   Extends: SSView,
   
   protocol: ['userClickedRow, userSelectedRow, itemForRowColumn, rowCount'],
@@ -7,6 +8,11 @@ var SSTableView = new Class({
   initialize: function(el, options)
   {
     this.parent(el);
+    
+    // set the model row
+    this.setModelRow(this.element._getElement('> .SSContentView > .SSRow').clone(true));
+    // set the column names
+    this.setColumnNames(this.element._getElements('> .SSDefinition col').map(function(x) {return x.getProperty('name')}));
     
     this.element.addEvent('click', this.eventDispatch.bind(this));
   },
@@ -59,7 +65,14 @@ var SSTableView = new Class({
   setDatasource: function(datasource)
   {
     console.log('SSTableView datasource set.');
+    // remove the previous onload from the last datasource
+    if(this.__datasource__)
+    {
+      this.__datasource__.removeEvent('onload');
+    }
     this.__datasource__ = datasource;
+    // listen for onload events on the new datasource
+    datasource.addEvent('onload', this.refresh.bind(this));
   },
   
 
@@ -69,9 +82,58 @@ var SSTableView = new Class({
   },
   
   
+  reload: function()
+  {
+    // reload from the server
+    this.datasource().fetch();
+  },
+
+  
+  setColumnNames: function(columnNames)
+  {
+    console.log('setColumnNames');
+    console.log(columnNames);
+    this.__columnNames__ = columnNames;
+  },
+  
+  
+  columnNames: function()
+  {
+    return this.__columnNames__;
+  },
+  
+  
+  addRow: function(data)
+  {
+    var columnNames = this.columnNames();
+  },
+  
+  
+  setModelRow: function(modelRow)
+  {
+    console.log('setModelRow');
+    console.log(modelRow);
+    this.__modelRow__ = modelRow;
+  },
+  
+  
+  modelRow: function()
+  {
+    this.__modelRow__;
+  },
+  
+  
   refresh: function()
   {
-    // update from the datasource
+    // empty the content view
+    this.element._getElement('> .SSContentView').empty();
+
+    // update the presentation
+    var datasource = this.datasource();
+    
+    datasource.rowCount().times(function(n) {
+      this.addRow(datasource.rowItemForIndex(n));
+    }.bind(this));
   }
 
 });

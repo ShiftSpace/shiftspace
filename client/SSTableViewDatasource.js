@@ -15,7 +15,6 @@
 var SSTableViewDatasource = new Class({
   
   Implements: Events,
-  
 
   initialize: function()
   {
