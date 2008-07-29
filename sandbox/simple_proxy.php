@@ -230,7 +230,7 @@ foreach ($shift_ids as $an_id)
 
 $result = preg_replace("/<\/head>/",$ShiftSpace . "</head>", $result);
 
-$proxymessage = "<div id='SSProxyMessage'>
+$proxymessage = "<div id='SSProxyMessage ShiftSpaceElement'>
 	<div id='SSProxyMessageLeft'>
 		<a href='http://www.ShiftSpace.org/' id='SSProxyMessageLogo' title='visit ShiftSpace.org'></a>
 		<a href='http://www.ShiftSpace.org/spaces/$spaceName/' id='SSProxyMessageSpace' title='more about this ShiftSpace feature'>
