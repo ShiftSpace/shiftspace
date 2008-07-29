@@ -1,5 +1,7 @@
 var SSTableRow = new Class({
   
+  Extends: SSView,
+  
   initialize: function(model)
   {
     this.parent(model);

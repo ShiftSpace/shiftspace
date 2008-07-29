@@ -9,7 +9,8 @@ var SandalphonClass = new Class({
   
   ClassPaths:
   {
-    'SSTableViewDatasource': '/client/'
+    'SSTableViewDatasource': '/client/',
+    'SSTableRow': '/client'
   },
   
   UIClassPaths:
