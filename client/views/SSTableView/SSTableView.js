@@ -12,7 +12,7 @@ var SSTableView = new Class({
     // for speed
     this.contentView = this.element._getElement('> .SSContentView');
     // set the model row
-    this.setModelRow(this.element._getElement('> .SSContentView > .SSRow').clone(true));
+    this.setModelRow(this.element._getElement('> .SSContentView > .SSModel').dispose());
     // set the column names
     this.setColumnNames(this.element._getElements('> .SSDefinition col').map(function(x) {return x.getProperty('name')}));
     
@@ -128,6 +128,7 @@ var SSTableView = new Class({
   {
     var columnNames = this.columnNames();
     var newRow = this.modelRowClone();
+    var controller = this.modelRowController();
     
     // Weird the node needs to be in the DOM for this shit to work
     // if after the following, it fails completely
@@ -136,15 +137,21 @@ var SSTableView = new Class({
     for(var i=0; i < columnNames.length; i++)
     {
       var columnName = columnNames[i];
-      newRow._getElement('> td[name='+columnName+']').set('text', data[columnName]);
+      
+      if(!controller)
+      {
+        newRow._getElement('> td[name='+columnName+']').set('text', data[columnName]);
+      }
+      else
+      {
+        controller.setProperty(newRow, columnName, data[columnName]);
+      }
     }
   },
   
   
   setModelRow: function(modelRow)
   {
-    console.log('setModelRow');
-    console.log(modelRow);
     this.__modelRow__ = modelRow;
   },
   
@@ -152,6 +159,12 @@ var SSTableView = new Class({
   modelRow: function()
   {
     return this.__modelRow__;
+  },
+
+
+  modelRowController: function()
+  {
+    return this.controllerForNode(this.modelRow());
   },
   
   

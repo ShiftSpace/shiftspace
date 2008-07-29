@@ -9,14 +9,19 @@ var SandalphonClass = new Class({
   
   ClassPaths:
   {
-    'SSTableViewDatasource': '/client/',
-    'SSTableRow': '/client'
+    'SSTableViewDatasource': '/client/'
   },
   
   UIClassPaths:
   { 
     'SSTabView': '/client/views/SSTabView/',
-    'SSTableView': '/client/views/SSTableView/'
+    'SSTableView': '/client/views/SSTableView/',
+    'SSTableRow': '/client/views/SSTableRow/'
+  },
+  
+  UserClassPaths:
+  {
+    'SSCustomTableRow': '/client/'
   },
 
 
@@ -73,17 +78,26 @@ var SandalphonClass = new Class({
   
   loadClassFiles: function()
   {
+    for(var class in this.ClassPaths)
+    {
+      var path = '..' + this.ClassPaths[class] + class;
+      new Asset.javascript(path+'.js');
+    }
+
     for(var class in this.UIClassPaths)
     {
       var path = '..' + this.UIClassPaths[class] + class;
       new Asset.css(path+'.css');
       new Asset.javascript(path+'.js');
     }
-    for(var class in this.ClassPaths)
+    
+    for(var class in this.UserClassPaths)
     {
-      var path = '..' + this.ClassPaths[class] + class;
+      var path = '..' + this.UserClassPaths[class] + class;
+      new Asset.css(path+'.css');
       new Asset.javascript(path+'.js');
     }
+    
     console.log('Class files loaded.');
   },
   
@@ -246,7 +260,7 @@ var SandalphonClass = new Class({
     // First verify that we have a real path for each class
     var missingClasses = false;
     classes.each(function(x) {
-      missingClasses = (this.UIClassPaths[x] == null);
+      missingClasses = (this.ClassPaths[x] == null && this.UIClassPaths[x] == null && this.UserClassPaths[x] == null);
     }.bind(this));
     
     if(missingClasses) console.error('Error missing uiclasses.');

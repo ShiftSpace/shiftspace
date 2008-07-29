@@ -4,33 +4,37 @@ var SSTableRow = new Class({
   
   initialize: function(model)
   {
+    console.log('++++++++++++++++ initialize SSTableRow');
+    console.log(model);
     this.parent(model);
   },
   
   
-  setProperty: function(el, prop, value)
+  setProperty: function(row, prop, value)
   {
     var propMethod = 'set'+prop.capitalize();
+    var cell = row._getElement('> td[name='+prop+']');
     if(this[propMethod])
     {
-      this[propMethod](value);
+      this[propMethod](cell, value);
     }
     else
     {
-      el._getElement('> td[name='+columnName+']').set('text', value);
+      cell.set('text', value);
     }
   },
   
-  getProperty: function(el, prop)
+  getProperty: function(row, prop)
   {
     var propMethod = 'get'+prop.capitalize();
+    var cell = row._getElement('> td[name='+prop+']');
     if(this[propMethod])
     {
-      return this[propMethod]();
+      return this[propMethod](cell, prop);
     }
     else
     {
-      return el._getElement('> td[name='+columnName+']').get('text');
+      return cell.get('text');
     }
   }
   

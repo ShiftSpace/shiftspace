@@ -13,6 +13,7 @@ var SSView = new Class({
     this.element.addClass('ShiftSpaceElement');
     
     // store a back reference to this class
+    console.log('Adding __ssviewcontroller__ to ' + this.element);
     this.element.store('__ssviewcontroller__', this);
     
     // We need to build this class via code
