@@ -2,10 +2,15 @@
   Base SSTableView styles
 */
 
-.SSTableView
+table.SSTableView
 {
   background-color: #e6e4a3;
-  display:;
+  border-collapse: collapse;
+}
+
+.SSTableView > .SSControlView
+{
+  border-bottom: solid #000 1px;
 }
 
 .SSTableView > .SSControlView > tr > th > .SSColumnHeadingTitle
