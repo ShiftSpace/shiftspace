@@ -32,7 +32,7 @@ var SSTableViewDatasource = new Class({
   
   data: function()
   {
-    return this.__data;
+    return this.__data__;
   },
   
   
@@ -65,7 +65,13 @@ var SSTableViewDatasource = new Class({
     return this.data().length;
   },
   
+  
+  rowForIndex: function(rowIndex)
+  {
+    return this.data()[rowIndex];
+  },
 
+  
   itemForRowIndexColumn: function(rowIndex, column)
   {
     this.data()[rowIndex][column];

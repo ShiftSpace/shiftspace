@@ -9,6 +9,8 @@ var SSTableView = new Class({
   {
     this.parent(el);
     
+    // for speed
+    this.contentView = this.element._getElement('> .SSContentView');
     // set the model row
     this.setModelRow(this.element._getElement('> .SSContentView > .SSRow').clone(true));
     // set the column names
@@ -29,6 +31,10 @@ var SSTableView = new Class({
         this.handleColumnOrderHit(this.cachedHit());
       break;
       
+      case (this.hitTest(target, '> .SSControlView .SSColumnHeading') != null):
+        this.handleColumnSelect(this.cachedHit());
+      break;
+      
       case (this.hitTest(target, '> .SSContentView .SSRow') != null):
         this.handleRowClick(this.cachedHit(), target);
       break;
@@ -41,17 +47,32 @@ var SSTableView = new Class({
 
   handleColumnOrderHit: function(orderButton)
   {
-    console.log('column order ');
+    var index = this.columnIndexForNode(orderButton);
+    console.log('column order change for ' + this.columnNames()[index]);
+  },
+  
+  
+  handleColumnSelect: function(column)
+  {
+    var index = this.columnIndexForNode(column);
+    console.log('column select ' + this.columnNames()[index]);
+  },
+  
+  
+  columnIndexForNode: function(_node)
+  {
+    var node = (_node.hasClass('SSColumnHeading')) ? _node : _node.getParent('.SSColumnHeading');
+    return this.element._getElements('> .SSControlView > tr > th').indexOf(node);
   },
   
 
   handleRowClick: function(row, target)
   {
-    console.log('Row click ' + row);
-    
+    var rowIndex = this.contentView.getElements('.SSRow').indexOf(row);
+    console.log('Row click ' + rowIndex);
     if(this.delegate())
     {
-      this.delegate().userClickedRow({table:this, rowIndex:this.indexOf(row), target:target});
+      this.delegate().userClickedRow({tableView:this, rowIndex:rowIndex, target:target});
     }
   },
   
@@ -106,6 +127,17 @@ var SSTableView = new Class({
   addRow: function(data)
   {
     var columnNames = this.columnNames();
+    var newRow = this.modelRowClone();
+    
+    // Weird the node needs to be in the DOM for this shit to work
+    // if after the following, it fails completely
+    this.contentView.grab(newRow);
+
+    for(var i=0; i < columnNames.length; i++)
+    {
+      var columnName = columnNames[i];
+      newRow._getElement('> td[name='+columnName+']').set('text', data[columnName]);
+    }
   },
   
   
@@ -119,7 +151,13 @@ var SSTableView = new Class({
   
   modelRow: function()
   {
-    this.__modelRow__;
+    return this.__modelRow__;
+  },
+  
+  
+  modelRowClone: function()
+  {
+    return $(this.modelRow().clone(true));
   },
   
   
@@ -132,7 +170,7 @@ var SSTableView = new Class({
     var datasource = this.datasource();
     
     datasource.rowCount().times(function(n) {
-      this.addRow(datasource.rowItemForIndex(n));
+      this.addRow(datasource.rowForIndex(n));
     }.bind(this));
   }
 

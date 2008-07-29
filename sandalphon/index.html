@@ -10,6 +10,28 @@
     <script type="text/javascript" charset="utf-8">
       if(!ShiftSpace) var ShiftSpace = {};
       if(!ShiftSpace.UI) ShiftSpace.UI = {};
+      
+      // Element extensions
+      Element.implement({
+        _ssgenId: function()
+        {
+          if(!this.getProperty('id'))
+          {
+            var randId = Math.round(Math.random()*100000+(new Date()).getMilliseconds());
+            this.setProperty('id', 'generatedId_'+randId);
+          } 
+        },
+        _getElement: function(sel)
+        {
+          this._ssgenId();
+          return $$('#' + this.getProperty('id') + ' ' + sel)[0];
+        },
+        _getElements: function(sel)
+        {
+          this._ssgenId();
+          return $$('#' + this.getProperty('id') + ' ' + sel);
+        }
+      });
     </script>
 
     <script src="../client/SSView.js" type="text/javascript" charset="utf-8"></script>

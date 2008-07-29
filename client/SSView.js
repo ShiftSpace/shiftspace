@@ -2,11 +2,6 @@ var SSView = new Class({
   
   Implements: Events,
   
-  genId: function()
-  {
-    return Math.round(Math.random()*100000+(new Date()).getMilliseconds());
-  },
-  
   initialize: function(el)
   {
     // check if we are prebuilt
@@ -16,22 +11,6 @@ var SSView = new Class({
     
     this.element = (el && $(el)) || (new Element('div'));
     this.element.addClass('ShiftSpaceElement');
-    
-    if(!this.element.getProperty('id'))
-    {
-      this.element.setProperty('id', 'generatedId_'+this.genId());
-    }
-    
-    // Erg need MooTools to fix this bug, > child selector does not work with getElements - David
-    this.element._getElement = function(sel)
-    {
-      return $$('#' + this.getProperty('id') + ' ' + sel)[0];
-    }
-    
-    this.element._getElements = function(sel)
-    {
-      return $$('#' + this.getProperty('id') + ' ' + sel);
-    }
     
     // store a back reference to this class
     this.element.store('__ssviewcontroller__', this);

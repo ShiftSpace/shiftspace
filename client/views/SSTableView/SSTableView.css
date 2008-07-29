@@ -7,7 +7,7 @@
   background-color: #e6e4a3;
 }
 
-.SSTableView > .SSControlView > tr > th > .SSColumnHeading
+.SSTableView > .SSControlView > tr > th > .SSColumnHeadingTitle
 {
   float: left;
 }
