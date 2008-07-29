@@ -8,20 +8,18 @@ window.addEvent('domready', function() {
 
 function SSProxyMessageInit()
 {
-  SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 10000);
+  SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
   
   $('SSProxyMessage').addEvent('mouseover', function(_evt) {
     if(!SSProxyMessageIsVisible)
     {
       SSProxyMessageShow();
     }
-    
-    if(SSProxyMessageTimeout)
+    else
     {
-      clearTimeout(SSProxyMessageTimeout);
+      if(SSProxyMessageTimeout) clearTimeout(SSProxyMessageTimeout);
+      SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 3000);
     }
-    
-    SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 10000);
   });
 }
 
@@ -57,6 +55,7 @@ function SSProxyMessageHide()
     },
     onComplete: function()
     {
+      console.log('hidden');
       SSProxyMessageIsAnimating = false;
       SSProxyMessageIsVisible = false;
     }
