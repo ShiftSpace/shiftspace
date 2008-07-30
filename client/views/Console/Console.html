@@ -1,0 +1,97 @@
+<div id="mainTabView" class="SSTabView SSTabViewConsoleStyle" uiclass="SSTabView">
+  
+  <div id="mainTabControl" class="SSControlView">
+    <div id="select1" class="SSButton SSActive">Shifts</div>
+    <div id="select2" class="SSButton">Settings</div>
+    <div id="select3" class="SSButton">Login</div>
+  </div>
+  
+  <div id="mainTabContentView" class="SSContentView">
+
+    <!-- Start SSTableView interface definition -->
+    <div class="SSScrollArea SSActive">
+      <table class='SSTableView' uiclass='SSTableView'>
+
+        <!-- start the table definition-->
+        <colgroup class='SSDefinition'>
+          <col name="selected" width="75"></col>
+          <col name="space" width="150"></col>
+          <col name="summary" width="250"></col>
+          <col name="username" width="150"></col>
+          <col name="created" width="150" order="descending"></col>
+        </colgroup>
+        <!-- end the control view -->
+
+        <!-- start the control view -->
+        <thead class="SSControlView SSUserSelectNone">
+          <tr>
+            <th class="SSSelectColumn SSColumnHeading SSDefaultCursor">
+              <span class="SSColumnHeadingTitle">Select</span>
+              <div class="SSColumnOrder SSAscendingOrder"></div>
+            </th>
+            <th class="SSColumnHeading SSDefaultCursor">
+              <span class="SSColumnHeadingTitle">Space</span>
+              <div class="SSResize"></div>
+              <div class="SSColumnOrder SSAscendingOrder"></div>
+            </th>
+            <th class="SSColumnHeading SSDefaultCursor">
+              <span class="SSColumnHeadingTitle">Summary</span>
+              <div class="SSResize"></div>
+              <div class="SSColumnOrder SSAscendingOrder"></div>
+            </th>
+            <th class="SSColumnHeading SSDefaultCursor">
+              <span class="SSColumnHeadingTitle">User</span>
+              <div class="SSResize"></div>
+              <div class="SSColumnOrder SSAscendingOrder"></div>
+            </th>
+            <th class="SSColumnHeading SSDefaultCursor">
+              <span class="SSColumnHeadingTitle">Date</span>
+              <div class="SSResize"></div>
+              <div class="SSColumnOrder SSAscendingOrder"></div>
+            </th>
+          </tr>
+        </thead>
+        <!-- end the control view -->
+
+        <!-- define the model -->
+        <tbody class="SSContentView">
+          <tr class="SSRow SSModel" uiclass='SSCustomTableRow'>
+            <td name="selected"><input class="SSActionCell" type="checkbox"></input></td>
+            <td name="space"><img/><span/></td>
+            <td name="summary"><div class="SSTextCell">summary</div></td>
+            <td name="username">dnolen</td>
+            <td name="created">Just created.</td>
+          </tr>
+        </tbody>
+        <!-- end the model -->
+
+      </table>
+      <!-- End SSTableView interface definition -->
+    </div>
+    <!-- End Wrapping ScrollArea for table view>
+
+    <!-- Start Settings subtab view -->
+    <div id="settingsTabView" class="SSTabView SSTabViewSubTabStyle" uiclass="SSTabView">
+
+      <div id="settingsTabControl" class="SSControlView">
+        <div id="spaces" class="SSButton">Spaces</div>
+        <div id="plugins" class="SSButton">Plugins</div>
+        <div id="misc" class="SSButton">Misc</div>
+      </div>
+
+      <div id="settingTabContentView" class="SSContentView">
+        <div>Pane 1</div>
+        <div>Pane 2</div>
+        <div>Pane 3</div>
+      </div>
+
+    </div>
+    <!-- end setting subtab view -->
+
+    <!-- Start User Pane -->
+    <div>Pane 3</div>
+    <!-- End User Pane -->
+
+  </div>
+  
+</div>

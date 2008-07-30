@@ -1,60 +1,61 @@
 <!-- Start SSTableView interface definition -->
 <div class="SSScrollArea">
-<table class='SSTableView' uiclass='SSTableView'>
+  <table class='SSTableView' uiclass='SSTableView'>
   
-  <!-- start the table definition-->
-  <colgroup class='SSDefinition'>
-    <col name="selected" width="75"></col>
-    <col name="space" width="150"></col>
-    <col name="summary" width="250"></col>
-    <col name="username" width="150"></col>
-    <col name="created" width="150" order="descending"></col>
-  </colgroup>
-  <!-- end the control view -->
+    <!-- start the table definition-->
+    <colgroup class='SSDefinition'>
+      <col name="selected" width="75"></col>
+      <col name="space" width="150"></col>
+      <col name="summary" width="250"></col>
+      <col name="username" width="150"></col>
+      <col name="created" width="150" order="descending"></col>
+    </colgroup>
+    <!-- end the control view -->
   
-  <!-- start the control view -->
-  <thead class="SSControlView SSUserSelectNone">
-    <tr>
-      <th class="SSSelectColumn SSColumnHeading SSDefaultCursor">
-        <span class="SSColumnHeadingTitle">Select</span>
-        <div class="SSColumnOrder SSAscendingOrder"></div>
-      </th>
-      <th class="SSColumnHeading SSDefaultCursor">
-        <span class="SSColumnHeadingTitle">Space</span>
-        <div class="SSResize"></div>
-        <div class="SSColumnOrder SSAscendingOrder"></div>
-      </th>
-      <th class="SSColumnHeading SSDefaultCursor">
-        <span class="SSColumnHeadingTitle">Summary</span>
-        <div class="SSResize"></div>
-        <div class="SSColumnOrder SSAscendingOrder"></div>
-      </th>
-      <th class="SSColumnHeading SSDefaultCursor">
-        <span class="SSColumnHeadingTitle">User</span>
-        <div class="SSResize"></div>
-        <div class="SSColumnOrder SSAscendingOrder"></div>
-      </th>
-      <th class="SSColumnHeading SSDefaultCursor">
-        <span class="SSColumnHeadingTitle">Date</span>
-        <div class="SSResize"></div>
-        <div class="SSColumnOrder SSAscendingOrder"></div>
-      </th>
-    </tr>
-  </thead>
-  <!-- end the control view -->
+    <!-- start the control view -->
+    <thead class="SSControlView SSUserSelectNone">
+      <tr>
+        <th class="SSSelectColumn SSColumnHeading SSDefaultCursor">
+          <span class="SSColumnHeadingTitle">Select</span>
+          <div class="SSColumnOrder SSAscendingOrder"></div>
+        </th>
+        <th class="SSColumnHeading SSDefaultCursor">
+          <span class="SSColumnHeadingTitle">Space</span>
+          <div class="SSResize"></div>
+          <div class="SSColumnOrder SSAscendingOrder"></div>
+        </th>
+        <th class="SSColumnHeading SSDefaultCursor">
+          <span class="SSColumnHeadingTitle">Summary</span>
+          <div class="SSResize"></div>
+          <div class="SSColumnOrder SSAscendingOrder"></div>
+        </th>
+        <th class="SSColumnHeading SSDefaultCursor">
+          <span class="SSColumnHeadingTitle">User</span>
+          <div class="SSResize"></div>
+          <div class="SSColumnOrder SSAscendingOrder"></div>
+        </th>
+        <th class="SSColumnHeading SSDefaultCursor">
+          <span class="SSColumnHeadingTitle">Date</span>
+          <div class="SSResize"></div>
+          <div class="SSColumnOrder SSAscendingOrder"></div>
+        </th>
+      </tr>
+    </thead>
+    <!-- end the control view -->
   
-  <!-- define the model -->
-  <tbody class="SSContentView">
-    <tr class="SSRow SSModel" uiclass='SSCustomTableRow'>
-      <td name="selected"><input class="SSActionCell" type="checkbox"></input></td>
-      <td name="space"><img/><span/></td>
-      <td name="summary"><div class="SSTextCell">summary</div></td>
-      <td name="username">dnolen</td>
-      <td name="created">Just created.</td>
-    </tr>
-  </tbody>
-  <!-- end the model -->
+    <!-- define the model -->
+    <tbody class="SSContentView">
+      <tr class="SSRow SSModel" uiclass='SSCustomTableRow'>
+        <td name="selected"><input class="SSActionCell" type="checkbox"></input></td>
+        <td name="space"><img/><span/></td>
+        <td name="summary"><div class="SSTextCell">summary</div></td>
+        <td name="username">dnolen</td>
+        <td name="created">Just created.</td>
+      </tr>
+    </tbody>
+    <!-- end the model -->
   
+  </table>
+  <!-- End SSTableView interface definition -->
 </div>
-<!-- End SSTableView interface definition -->
-</div>
+<!-- End Wrapping ScrollArea for table view>

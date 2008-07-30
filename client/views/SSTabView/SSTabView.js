@@ -77,7 +77,7 @@ var SSTabView = new Class({
   
   contentViewForIndex: function(idx)
   {
-    return this.element._getElements('> .SSContentView div')[idx];
+    return this.element._getElements('> .SSContentView > div')[idx];
   },
   
 
@@ -114,11 +114,14 @@ var SSTabView = new Class({
       var controller = this.contentViewControllerForIndex(idx);
       if(controller)
       {
+        console.log('content view has controller');
         controller.show();
         controller.refresh();
       }
       else
       {
+        console.log('showing content view');
+        console.log(this.contentViewForIndex(idx));
         this.contentViewForIndex(idx).addClass('SSActive');
       }
       
