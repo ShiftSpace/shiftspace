@@ -163,9 +163,11 @@ var SandalphonClass = new Class({
     // save for later
     this.storage().set('lastInterfaceFile', path);
     
+    new Asset.css('..'+path+'.css');
+
     // load the interface file
     new Request({
-      url:  '..'+path,
+      url:  '..'+path+'.html',
       method: 'get',
       onSuccess: function(responseText, responseXML)
       {
