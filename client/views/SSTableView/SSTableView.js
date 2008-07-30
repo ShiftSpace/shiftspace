@@ -15,8 +15,19 @@ var SSTableView = new Class({
     this.setModelRow(this.element._getElement('> .SSContentView > .SSModel').dispose());
     // set the column names
     this.setColumnNames(this.element._getElements('> .SSDefinition col').map(function(x) {return x.getProperty('name')}));
+    // create resize masks
+    this.createColumnResizers();
     
     this.element.addEvent('click', this.eventDispatch.bind(this));
+  },
+  
+  
+  createColumnResizers: function()
+  {
+    var resizers = this.element._getElements('> .SSControlView .SSResize');
+    resizers.each(function(resizer) {
+      resizer.getParent().makeResizable({handle:resizer, modifiers:{x:'width', y:''}});
+    });
   },
   
   

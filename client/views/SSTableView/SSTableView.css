@@ -24,11 +24,10 @@ table.SSTableView
 
 .SSTableView > .SSControlView .SSColumnHeading .SSResize
 {
-  position: absolute;
-  right: 0px;
-  height: 100%;
-  width: 2px;
-  background-color: #aaa;
+  float: right;
+  height: 15px;
+  width: 4px;
+  background-color: #f55;
 }
 
 .SSTableView > .SSControlView > tr > th > .SSColumnHeadingTitle
@@ -73,5 +72,11 @@ table.SSTableView
 .SSTableView > .SSContentView .SSRow.SSActive
 {
   background-color: #ccc;
+}
+
+.SSTableView > .SSContentView .SSRow > *
+{
+  overflow-x: hidden;
+  width: 100px;
 }
 
