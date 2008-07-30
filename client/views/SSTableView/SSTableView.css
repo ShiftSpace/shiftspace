@@ -80,3 +80,8 @@ table.SSTableView
   width: 100px;
 }
 
+.SSTextCell
+{
+  height: 12px;
+  overflow: hidden;
+}
