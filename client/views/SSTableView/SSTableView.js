@@ -16,16 +16,17 @@ var SSTableView = new Class({
     // set the column names
     this.setColumnNames(this.element._getElements('> .SSDefinition col').map(function(x) {return x.getProperty('name')}));
     // create resize masks
-    this.createColumnResizers();
+    this.initColumnResizers();
     
     this.element.addEvent('click', this.eventDispatch.bind(this));
   },
   
   
-  createColumnResizers: function()
+  initColumnResizers: function()
   {
     var resizers = this.element._getElements('> .SSControlView .SSResize');
     var table = this.element;
+    // setup the column resizers
     resizers.each(function(resizer) {
       resizer.getParent().makeResizable({
         handle:resizer, 
@@ -44,6 +45,13 @@ var SSTableView = new Class({
         }
       });
     });
+    // make the columns resizer adjust the table as well
+    resizers.each(function(resizer) {
+      table.makeResizable({
+        handle: resizer,
+        modifiers:{x:'width', y:''}
+      });
+    });
   },
   
   
@@ -55,6 +63,7 @@ var SSTableView = new Class({
     switch(true)
     {
       case (this.hitTest(target, '> .SSControlView .SSResize') != null):
+        // don't do anything for columing resizing
       break;
       
       case (this.hitTest(target, '> .SSControlView .SSColumnOrder') != null):

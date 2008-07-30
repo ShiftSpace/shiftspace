@@ -2,6 +2,14 @@
   Base SSTableView styles
 */
 
+.SSScrollArea
+{
+  width: 800px;
+  height: 400px;
+  overflow: auto;
+  border: 1px solid red;
+}
+
 table.SSTableView
 {
   background-color: #e6e4a3;
@@ -11,6 +19,14 @@ table.SSTableView
   font-size: 12px;
 }
 
+/*
+  Table Column Styles
+*/
+
+/*
+  Table Control Styles
+*/
+
 .SSTableView > .SSControlView
 {
   border-bottom: solid #000 1px;
@@ -19,6 +35,13 @@ table.SSTableView
 .SSTableView > .SSControlView .SSColumnHeading
 {
   border-right: solid #000 1px;
+  max-width: 400px;
+  min-width: 150px;
+}
+
+.SSTableView > .SSControlView .SSColumnHeading.SSSelectColumn
+{
+  min-width: 75px;
 }
 
 .SSTableView > .SSControlView .SSColumnHeading .SSResize
@@ -79,15 +102,18 @@ table.SSTableView
   visibility: visible;
 }
 
+/*
+  Table Content View Styles
+*/
+
 .SSTableView > .SSContentView .SSRow.SSActive
 {
   background-color: #ccc;
 }
 
-.SSTableView > .SSContentView .SSRow > *
+.SSTableView > .SSContentView .SSRow td[name=selected]
 {
-  overflow-x: hidden;
-  width: 100px;
+  text-align:center;
 }
 
 .SSTextCell
