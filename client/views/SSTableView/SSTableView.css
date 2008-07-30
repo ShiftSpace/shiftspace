@@ -19,20 +19,30 @@ table.SSTableView
 .SSTableView > .SSControlView .SSColumnHeading
 {
   border-right: solid #000 1px;
-  padding: 4px;
 }
 
 .SSTableView > .SSControlView .SSColumnHeading .SSResize
 {
   float: right;
-  height: 15px;
+  height: 22px;
   width: 4px;
+  cursor: e-resize;
+}
+
+.SSTableView > .SSControlView .SSColumnHeading div.SSResize:hover
+{
+  background-color: #f55;
+}
+
+.SSTableView > .SSControlView .SSColumnHeading div.SSResize.SSActive
+{
   background-color: #f55;
 }
 
 .SSTableView > .SSControlView > tr > th > .SSColumnHeadingTitle
 {
   float: left;
+  padding: 4px;
 }
 
 .SSTableView > .SSControlView > tr > th > .SSAscendingOrder

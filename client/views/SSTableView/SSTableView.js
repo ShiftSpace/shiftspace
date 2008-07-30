@@ -26,7 +26,18 @@ var SSTableView = new Class({
   {
     var resizers = this.element._getElements('> .SSControlView .SSResize');
     resizers.each(function(resizer) {
-      resizer.getParent().makeResizable({handle:resizer, modifiers:{x:'width', y:''}});
+      resizer.getParent().makeResizable({
+        handle:resizer, 
+        modifiers:{x:'width', y:''},
+        onStart: function()
+        {
+          resizer.addClass('SSActive');
+        },
+        onComplete: function()
+        {
+          resizer.removeClass('SSActive');
+        }
+      });
     });
   },
   
@@ -38,6 +49,9 @@ var SSTableView = new Class({
     
     switch(true)
     {
+      case (this.hitTest(target, '> .SSControlView .SSResize') != null):
+      break;
+      
       case (this.hitTest(target, '> .SSControlView .SSColumnOrder') != null):
         // check first for column reordering
         this.handleColumnOrderHit(this.cachedHit());
