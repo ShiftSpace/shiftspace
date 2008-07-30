@@ -12,11 +12,13 @@ var SSTableView = new Class({
     this.parent(el);
     
     // for speed
-    this.contentView = this.element._getElement('> .SSContentView');
+    this.contentView = this.element._getElement('> .SSScrollView .SSContentView');
     // set the model row
-    this.setModelRow(this.element._getElement('> .SSContentView > .SSModel').dispose());
+    this.setModelRow(this.contentView._getElement('.SSModel').dispose());
     // set the column names
-    this.setColumnNames(this.element._getElements('> .SSDefinition col').map(function(x) {return x.getProperty('name')}));
+    this.setColumnNames(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name')}));
+    // initialize the table header
+    this.initTableHead();
     // create resize masks
     this.initColumnResizers();
     
@@ -35,21 +37,45 @@ var SSTableView = new Class({
   
   initTableHead: function()
   {
-    if(!this._getElement('> thead.SSControlView'))
+    var tableHead = this.element._getElement('> .SSControlView');
+    if(!tableHead)
     {
-      var thead = new Element('thead', {
+      tableHead = new Element('div', {
         "class": "SSControlView"
       });
-      var tr = new Element('tr');
-      thead.grab(tr);
-      thead.injectAfter(this.element)
-      
+      tableHead.injectTop(this.element);
+    }
+    this.initColumnHeadings();
+  },
+  
+
+  initColumnHeadings: function()
+  {
+    var model = this.element._getElement('> .SSControlView .SSModel');
+    this.__columnHeadingModel__ = model.dispose();
+    
+    if(model)
+    {
+      var tableHead = this.element._getElement('> .SSControlView');
+    
       // get the column names
-      this.columnNames().each(function(x) {
-        var th = new Element('th', {
-          "class": "SSColumnHeading"
-        })
-      });
+      this.columnNames().length.times(function(idx) {
+        // grab the column name
+        var columnName = this.columnNames()[idx];
+        // clone the heading
+        var columnHeading = model.clone(true);
+        // grab the column definition and set the heading width to it's dimensions
+        var columnDefinition = this.columnDefinitionForIndex(idx);
+        columnHeading.setStyle('width', columnDefinition.getProperty('width'));
+        // put the proper column heading title in there
+        columnHeading.getElement('span.SSColumnHeadingTitle').set('text', columnName.capitalize());
+        // add it
+        tableHead.grab(columnHeading);
+      }.bind(this));
+    }
+    else
+    {
+      // hmm we really need a table head cell controller
     }
   },
   
@@ -57,7 +83,7 @@ var SSTableView = new Class({
   initColumnResizers: function()
   {
     var resizers = this.element._getElements('> .SSControlView .SSResize');
-    var table = this.element;
+    var table = this.contentView;
     
     // setup the column resizers
     resizers.each(function(resizer) {
@@ -80,12 +106,17 @@ var SSTableView = new Class({
     });
     
     // make the columns resizer adjust the table as well
-    resizers.each(function(resizer) {
+    resizers.length.times(function(idx) {
+      resizer = resizers[idx];
+      this.columnDefinitionForIndex(idx).makeResizable({
+        handle: resizer,
+        modifiers:{x:'width', y:''}
+      });
       table.makeResizable({
         handle: resizer,
         modifiers:{x:'width', y:''}
       });
-    });
+    }.bind(this));
   },
   
   
@@ -110,11 +141,11 @@ var SSTableView = new Class({
         this.handleColumnSelect(this.cachedHit());
       break;
       
-      case (this.hitTest(target, '> .SSContentView .SSRow .SSActionCell') != null):
+      case (this.hitTest(target, '> .SSScrollView .SSContentView .SSRow .SSActionCell') != null):
         // if the click is an row action let them handle it
       break;
       
-      case (this.hitTest(target, '> .SSContentView .SSRow') != null):
+      case (this.hitTest(target, '> .SSScrollView .SSContentView .SSRow') != null):
         // finally check for general row click
         this.handleRowClick(this.cachedHit(), target);
       break;
@@ -161,13 +192,13 @@ var SSTableView = new Class({
   
   selectedRow: function()
   {
-    return this.element._getElement('> .SSContentView .SSRow.SSActive')
+    return this.contentView._getElement('.SSRow.SSActive')
   },
   
   
   selectedRowIndex: function()
   {
-    return this.element._getElements('> SSContentView .SSRow').indexOf(this.selectedRow());
+    return this.contentView._getElements('.SSRow').indexOf(this.selectedRow());
   },
   
   
@@ -188,7 +219,7 @@ var SSTableView = new Class({
   selectRow: function(idx)
   {
     this.deselectAll();
-    this.element._getElements("> .SSContentView .SSRow")[idx].addClass('SSActive');
+    this.contentView._getElements(".SSRow")[idx].addClass('SSActive');
   },
   
   
@@ -210,6 +241,12 @@ var SSTableView = new Class({
   columnHeadingForIndex: function(idx)
   {
     return this.element._getElements('> .SSControlView .SSColumnHeading')[idx];
+  },
+  
+  
+  columnDefinitionForIndex: function(idx)
+  {
+    return this.contentView._getElements('> .SSDefinition col')[idx];
   },
   
   
@@ -243,7 +280,7 @@ var SSTableView = new Class({
   
   indexOfRow: function(row)
   {
-    return this.element._getElements('> .SSContentView .SSRow').indexOf(row);
+    return this.contentView._getElements('.SSRow').indexOf(row);
   },
   
 
@@ -341,7 +378,7 @@ var SSTableView = new Class({
   refresh: function()
   {
     // empty the content view
-    this.element._getElement('> .SSContentView').empty();
+    this.contentView.getElement('tbody').empty();
 
     // update the presentation
     var datasource = this.datasource();

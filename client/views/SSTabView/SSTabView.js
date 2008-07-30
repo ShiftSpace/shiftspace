@@ -16,6 +16,7 @@ var SSTabView = new Class({
     if(defaultActiveTab)
     {
       this.__selectedTab__ = this.indexOfTab(defaultActiveTab);
+      this.selectTab(this.__selectedTab__);
     }
     
     // if none select the first

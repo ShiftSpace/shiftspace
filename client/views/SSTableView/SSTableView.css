@@ -2,18 +2,30 @@
   Base SSTableView styles
 */
 
-.SSScrollArea
+.SSTableView
 {
   width: 800px;
   height: 400px;
+  background-color: #e6e4a3;
+  font-family: helvetica;
+  font-size: 12px;
+}
+
+.SSTableView > .SSControlView
+{
+  height: 16px;
+}
+
+.SSTableView > .SSScrollView
+{
+  width: 800px;
+  height: 384px;
   overflow: auto;
 }
 
-table.SSTableView
+.SSTableView > .SSScrollView table.SSContentView
 {
-  background-color: #e6e4a3;
   border-collapse: collapse;
-  
   font-family: helvetica;
   font-size: 12px;
 }
@@ -22,6 +34,11 @@ table.SSTableView
   Table Column Styles
 */
 
+.SSTableView > .SSScrollView > .SSContentView > .SSDefinition > col.SSActive
+{
+  background-color: #ccc;
+}
+
 /*
   Table Control Styles
 */
@@ -29,21 +46,25 @@ table.SSTableView
 .SSTableView > .SSControlView
 {
   border-bottom: solid #000 1px;
+  overflow: hidden;
 }
 
-.SSTableView > .SSControlView .SSColumnHeading
+.SSTableView > .SSControlView > .SSColumnHeading
 {
+  float: left;
   border-right: solid #000 1px;
-  max-width: 400px;
-  min-width: 150px;
+  /*max-width: 400px;
+  min-width: 150px;*/
+  overflow: hidden;
 }
 
-.SSTableView > .SSControlView .SSColumnHeading.SSSelectColumn
+.SSTableView > .SSControlView > .SSColumnHeading.SSSelectColumn
 {
-  min-width: 75px;
+  /*min-width: 75px;*/
 }
 
-.SSTableView > .SSControlView .SSColumnHeading .SSResize
+
+.SSTableView > .SSControlView > .SSColumnHeading .SSResize
 {
   float: right;
   height: 22px;
@@ -51,23 +72,23 @@ table.SSTableView
   cursor: col-resize;
 }
 
-.SSTableView > .SSControlView .SSColumnHeading div.SSResize:hover
+.SSTableView > .SSControlView > .SSColumnHeading div.SSResize:hover
 {
   background-color: #f55;
 }
 
-.SSTableView > .SSControlView .SSColumnHeading div.SSResize.SSActive
+.SSTableView > .SSControlView > .SSColumnHeading  div.SSResize.SSActive
 {
   background-color: #f55;
 }
 
-.SSTableView > .SSControlView > tr > th > .SSColumnHeadingTitle
+.SSTableView > .SSControlView > .SSColumnHeading > .SSColumnHeadingTitle
 {
   float: left;
   padding: 4px;
 }
 
-.SSTableView > .SSControlView > tr > th > .SSAscendingOrder
+.SSTableView > .SSControlView > .SSColumnHeading > .SSAscendingOrder
 {
   width: 8px;
   height: 8px;
@@ -78,7 +99,7 @@ table.SSTableView
   margin-right: 4px;
 }
 
-.SSTableView > .SSControlView > tr > th > .SSDescendingOrder
+.SSTableView > .SSControlView > .SSColumnHeading > .SSDescendingOrder
 {
   width: 8px;
   height: 8px;
@@ -86,17 +107,12 @@ table.SSTableView
   float: left;
 }
 
-.SSTableView > .SSDefinition col.SSActive
-{
-  background-color: #ccc;
-}
-
-.SSTableView > .SSControlView .SSColumnHeading .SSColumnOrder
+.SSTableView > .SSControlView > .SSColumnHeading > .SSColumnOrder
 {
   visibility: hidden;
 }
 
-.SSTableView > .SSControlView .SSColumnHeading.SSActive .SSColumnOrder
+.SSTableView > .SSControlView > .SSColumnHeading.SSActive > .SSColumnOrder
 {
   visibility: visible;
 }
@@ -105,12 +121,12 @@ table.SSTableView
   Table Content View Styles
 */
 
-.SSTableView > .SSContentView .SSRow.SSActive
+.SSTableView > .SSScrollView > .SSContentView .SSRow.SSActive
 {
   background-color: #ccc;
 }
 
-.SSTableView > .SSContentView .SSRow td[name=selected]
+.SSTableView > .SSScrollView > .SSContentView .SSRow td[name=selected]
 {
   text-align:center;
 }
