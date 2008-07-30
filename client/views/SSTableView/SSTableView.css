@@ -26,7 +26,7 @@ table.SSTableView
   float: right;
   height: 22px;
   width: 4px;
-  cursor: e-resize;
+  cursor: col-resize;
 }
 
 .SSTableView > .SSControlView .SSColumnHeading div.SSResize:hover

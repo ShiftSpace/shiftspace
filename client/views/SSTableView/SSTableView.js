@@ -25,6 +25,7 @@ var SSTableView = new Class({
   createColumnResizers: function()
   {
     var resizers = this.element._getElements('> .SSControlView .SSResize');
+    var table = this.element;
     resizers.each(function(resizer) {
       resizer.getParent().makeResizable({
         handle:resizer, 
@@ -32,10 +33,14 @@ var SSTableView = new Class({
         onStart: function()
         {
           resizer.addClass('SSActive');
+          resizer.getParent().setStyle('cursor', 'col-resize');
+          if(resizer.getParent().getNext()) resizer.getParent().getNext().setStyle('cursor', 'col-resize');
         },
         onComplete: function()
         {
           resizer.removeClass('SSActive');
+          resizer.getParent().setStyle('cursor', '');
+          if(resizer.getParent().getNext()) resizer.getParent().getNext().setStyle('cursor', '');
         }
       });
     });
