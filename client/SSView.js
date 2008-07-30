@@ -1,9 +1,22 @@
 var SSView = new Class({
   
+  name: 'SSView',
+
   Implements: Events,
+  
+  _genId: function()
+  {
+    return (this.name+(Math.round(Math.random()*1000000+(new Date()).getMilliseconds())));
+  },
   
   initialize: function(el)
   {
+    // generate an id
+    this.__id__ = this._genId();
+    
+    // add to global hash
+    if(ShiftSpace.Objects) ShiftSpace.Objects[this.__id__] = this;
+    
     // check if we are prebuilt
     this.__prebuilt__ = (el && true) || false;
     this.__ssviewcontrollers__ = [];
@@ -23,6 +36,12 @@ var SSView = new Class({
     }
     
     this.__subviews__ = [];
+  },
+  
+  
+  getId: function()
+  {
+    return this.__id__;
   },
   
   

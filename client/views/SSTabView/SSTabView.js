@@ -1,5 +1,7 @@
 var SSTabView = new Class({
   
+  name: 'SSTabView',
+  
   Extends: SSView,
 
   initialize: function(el)
@@ -13,7 +15,7 @@ var SSTabView = new Class({
     
     if(defaultActiveTab)
     {
-      this.__selectedTab__ = this.indexOfTabByNode(defaultActiveTab);
+      this.__selectedTab__ = this.indexOfTab(defaultActiveTab);
     }
     
     // if none select the first
@@ -34,7 +36,8 @@ var SSTabView = new Class({
     switch(true)
     {
       case (this.hitTest(theTarget, '> .SSControlView') != null):
-        this.selectTabByName(this.hitTest(theTarget, '> .SSControlView .SSButton').getProperty('id'));
+        var hit = this.hitTest(theTarget, '> .SSControlView .SSButton');
+        if(hit) this.selectTab(this.indexOfTab(hit));
       break;
       
       default:
@@ -43,7 +46,7 @@ var SSTabView = new Class({
   },
   
   
-  indexOfTab: function(name)
+  indexOfTabByName: function(name)
   {
     var tab = this.element._getElement('> .SSControlView #'+name);
     if(tab) 
@@ -57,7 +60,7 @@ var SSTabView = new Class({
   },
   
   
-  indexOfTabByNode: function(tabButton)
+  indexOfTab: function(tabButton)
   {
     return this.element._getElements('> .SSControlView > .SSButton').indexOf(tabButton);
   },
@@ -83,7 +86,7 @@ var SSTabView = new Class({
 
   selectTabByName: function(name)
   {
-    this.selectTab(this.indexOfTab(name));
+    this.selectTab(this.indexOfTabByName(name));
   },
   
 
@@ -114,14 +117,11 @@ var SSTabView = new Class({
       var controller = this.contentViewControllerForIndex(idx);
       if(controller)
       {
-        console.log('content view has controller');
         controller.show();
         controller.refresh();
       }
       else
       {
-        console.log('showing content view');
-        console.log(this.contentViewForIndex(idx));
         this.contentViewForIndex(idx).addClass('SSActive');
       }
       
@@ -155,14 +155,18 @@ var SSTabView = new Class({
   
   activeTab: function()
   {
-    return this.indexOfTabByNode(this.element._getElement('> .SSControlView > .SSActive'));
+    return this.indexOfTab(this.element._getElement('> .SSControlView > .SSActive'));
   },
   
-
-  removeTab: function(name)
+  
+  removeTabByName: function(name)
   {
-    var idx = this.indexOfTab(name);
-    
+    this.removeTab(this.indexOfTabByName(name));
+  },
+
+
+  removeTab: function(idx)
+  {
     // if removing selected tab, highlight a different tab
     if(this.activeTab() == idx)
     {

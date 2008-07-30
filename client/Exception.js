@@ -1,8 +1,10 @@
 var SSException = new Class({
   
-  initialize: function(_error)
+  name: 'SSException',
+  
+  initialize: function(_error, obj)
   {
-    var error = _error;
+    this.objectId = (obj && obj.getId()) || null;
     
     this.message = function()
     {
@@ -18,6 +20,11 @@ var SSException = new Class({
     {
       return error.lineNumber;
     }
+  },
+  
+  toString: function()
+  {
+    return ["[SSException] message:", this.message(), " fileName:", this.fileName(), " lineNumber:", this.lineNumber(), " objectId:", this.objectId].join(", ");
   }
   
 });

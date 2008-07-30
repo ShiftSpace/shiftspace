@@ -10,6 +10,7 @@
     <script type="text/javascript" charset="utf-8">
       if(!ShiftSpace) var ShiftSpace = {};
       if(!ShiftSpace.UI) ShiftSpace.UI = {};
+      if(!ShiftSpace.Objects) ShiftSpace.Objects = {};
       
       // Element extensions
       Element.implement({
@@ -17,7 +18,7 @@
         {
           if(!this.getProperty('id'))
           {
-            var randId = Math.round(Math.random()*100000+(new Date()).getMilliseconds());
+            var randId = Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
             this.setProperty('id', 'generatedId_'+randId);
           } 
         },
@@ -34,6 +35,7 @@
       });
     </script>
 
+    <script src="../client/Exception.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/SSView.js" type="text/javascript" charset="utf-8"></script>
     <script src="sandalphon.js" type="text/javascript" charset="utf-8"></script>
     <script src="persist.js" type="text/javascript" charset="utf-8"></script>

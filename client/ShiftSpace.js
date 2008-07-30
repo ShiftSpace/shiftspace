@@ -165,8 +165,6 @@ var ShiftSpace = new (function() {
       debug = 0;
       
       // Load external scripts (pre-processing required)
-      // INCLUDE Exception.js
-      console.log('Exception.js loaded');
       // INCLUDE User.js
       console.log('User.js loaded');
       // INCLUDE Element.js

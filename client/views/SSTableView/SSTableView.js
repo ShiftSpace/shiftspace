@@ -1,5 +1,7 @@
 var SSTableView = new Class({
   
+  name: 'SSTableView',
+  
   Implements: Events,
   Extends: SSView,
   
@@ -22,10 +24,41 @@ var SSTableView = new Class({
   },
   
   
+  validateTable: function()
+  {
+    if(!this.element._getElement('> .SSDefinition'))
+    {
+      throw new SSException(new Error("SSTableView missing table definition, refer to documentation."), this);
+    }
+  },
+  
+  
+  initTableHead: function()
+  {
+    if(!this._getElement('> thead.SSControlView'))
+    {
+      var thead = new Element('thead', {
+        "class": "SSControlView"
+      });
+      var tr = new Element('tr');
+      thead.grab(tr);
+      thead.injectAfter(this.element)
+      
+      // get the column names
+      this.columnNames().each(function(x) {
+        var th = new Element('th', {
+          "class": "SSColumnHeading"
+        })
+      });
+    }
+  },
+  
+  
   initColumnResizers: function()
   {
     var resizers = this.element._getElements('> .SSControlView .SSResize');
     var table = this.element;
+    
     // setup the column resizers
     resizers.each(function(resizer) {
       resizer.getParent().makeResizable({
@@ -45,6 +78,7 @@ var SSTableView = new Class({
         }
       });
     });
+    
     // make the columns resizer adjust the table as well
     resizers.each(function(resizer) {
       table.makeResizable({
