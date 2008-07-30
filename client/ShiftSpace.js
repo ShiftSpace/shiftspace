@@ -1292,6 +1292,15 @@ var ShiftSpace = new (function() {
             loadSpace(shift.space, shiftId);
             return;
           }
+          
+          // if the space is loaded check if this shift can be shown
+          if(space)
+          {
+            if(!space.canShowShift(SSGetShiftContent(shiftId)))
+            {
+              throw new Error();
+            }
+          }
 
           // extract the shift content
           var shiftJson = SSGetShiftContent(shiftId);
@@ -1955,6 +1964,16 @@ var ShiftSpace = new (function() {
             editShift(shiftId);
           });
           return;
+        }
+        
+        // if the space is loaded check if this shift can be shown
+        if(space)
+        {
+          if(!space.canShowShift(SSGetShiftContent(shiftId)))
+          {
+            // bail
+            return;
+          }
         }
         
         // add a deferred shift edit if the css is not yet loaded

@@ -542,6 +542,23 @@ ShiftSpace.Space = new Class({
     this.fireEvent('onShiftUpdate', shiftJson);
   },
   
+  
+  /*
+    Function: canShowShift (abstract)
+      Check if the shift json can be shown.  This method returns true unless you override it.
+      
+    Parameters:
+      shiftJson - a shift JSON object
+    
+    Returns:
+      A boolean.
+  */
+  canShowShift: function(shiftJson)
+  {
+    return true;
+  },
+  
+  
   /*
     Function : showShift
       Show a shift.  If a corresponding internal instance does not exist it will be created.
