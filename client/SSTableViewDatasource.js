@@ -95,7 +95,6 @@ var SSTableViewDatasource = new Class({
     new Request({
       url: this.dataProviderURL(),
       method: 'post',
-      data: testhref,
       onComplete: function(responseText, responseXML)
       {
         this.setData(JSON.decode(responseText).shifts);
@@ -105,7 +104,7 @@ var SSTableViewDatasource = new Class({
       {
         console.error('Oops: ' + response);
       }.bind(this)
-    }).send();
+    }).send(testhref);
   }
 
 });
