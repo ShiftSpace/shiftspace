@@ -114,6 +114,11 @@
   Table Content View Styles
 */
 
+.SSTableView > .SSScrollView > .SSContentView .SSRow
+{
+  border-collapse: separate;
+}
+
 .SSTableView > .SSScrollView > .SSContentView .SSRow.SSActive
 {
   background-color: #ccc;
