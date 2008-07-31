@@ -334,7 +334,7 @@ var SSTableView = new Class({
     
     // Weird the node needs to be in the DOM for this shit to work
     // if after the following, it fails completely
-    this.contentView.grab(newRow);
+    this.contentView.getElement('tbody').grab(newRow);
 
     for(var i=0; i < columnNames.length; i++)
     {
