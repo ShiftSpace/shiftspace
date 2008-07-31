@@ -14,7 +14,7 @@ var SSTableView = new Class({
     // for speed
     this.contentView = this.element._getElement('> .SSScrollView .SSContentView');
     // set the model row
-    this.setModelRow(this.contentView._getElement('.SSModel'));
+    this.setModelRow(this.contentView._getElement('.SSModel').dispose());
     // set the column names
     this.setColumnNames(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name')}));
     // initialize the table header
