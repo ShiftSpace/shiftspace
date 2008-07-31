@@ -91,7 +91,7 @@ var SSTableViewDatasource = new Class({
   
   fetch: function(properties)
   {
-    var testhref = {href:'http://google.com'};
+    var testhref = {href:'http://www.google.com'};
     new Request({
       url: this.dataProviderURL(),
       data: testhref,
