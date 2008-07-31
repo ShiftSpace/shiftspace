@@ -28,7 +28,7 @@ var SSTableView = new Class({
   
   validateTable: function()
   {
-    if(!this.element._getElement('> .SSDefinition'))
+    if(!this.contentView._getElement('> .SSDefinition'))
     {
       throw new SSException(new Error("SSTableView missing table definition, refer to documentation."), this);
     }
@@ -137,6 +137,7 @@ var SSTableView = new Class({
       break;
       
       case (this.hitTest(target, '> .SSControlView .SSColumnHeading') != null):
+        console.log('column hit test');
         // check next for column select
         this.handleColumnSelect(this.cachedHit());
       break;
@@ -180,13 +181,13 @@ var SSTableView = new Class({
   
   selectedColumn: function()
   {
-    return this.element._getElement('> .SSDefinition col.SSActive');
+    return this.contentView._getElement('> .SSDefinition col.SSActive');
   },
   
   
   selectedColumnIndex: function()
   {
-    return this.element._getElements('> .SSDefinition col').indexOf(this.selectedColumn());
+    return this.contentView._getElements('> .SSDefinition col').indexOf(this.selectedColumn());
   },
   
   
@@ -226,7 +227,7 @@ var SSTableView = new Class({
   selectColumn: function(idx)
   {
     this.deselectAll();
-    this.element._getElements("> .SSDefinition col")[idx].addClass('SSActive');
+    this.contentView._getElements("> .SSDefinition col")[idx].addClass('SSActive');
     this.columnHeadingForIndex(idx).addClass('SSActive');
   },
   
@@ -253,7 +254,7 @@ var SSTableView = new Class({
   columnIndexForNode: function(_node)
   {
     var node = (_node.hasClass('SSColumnHeading')) ? _node : _node.getParent('.SSColumnHeading');
-    return this.element._getElements('> .SSControlView > tr > th').indexOf(node);
+    return this.element._getElements('> .SSControlView .SSColumnHeading').indexOf(node);
   },
   
   
