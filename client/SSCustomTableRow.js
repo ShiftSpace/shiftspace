@@ -7,17 +7,23 @@ var SSCustomTableRow = new Class({
   
   setSpace: function(cell, space)
   {
-    var image = cell._getElement('> img');
-    var span = cell._getElement('> span');
+    if(cell)
+    {
+      var image = cell._getElement('> img');
+      var span = cell._getElement('> span');
     
-    image.setProperty('src', ['../spaces/', space, '/', space, '.png'].join(''));
-    span.set('text', space);
+      image.setProperty('src', ['../spaces/', space, '/', space, '.png'].join(''));
+      span.set('text', space);
+    } 
   },
   
   setSummary: function(cell, summary)
   {
-    var div = cell._getElement('div');
-    div.set('text', summary);
+    if(cell)
+    {
+      var div = cell._getElement('div');
+      div.set('text', summary);
+    }
   }
 });
 
