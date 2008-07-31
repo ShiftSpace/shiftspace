@@ -49,7 +49,7 @@ if(Sandalphon)
     ]);
 
     //datasource.fetch();
-    //datasource.fireEvent('onload');
+    datasource.fireEvent('onload');
   }
 }
 
