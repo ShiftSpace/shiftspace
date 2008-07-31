@@ -23,7 +23,7 @@ var SSView = new Class({
     this.__delegate__ = null;
     
     this.element = (el && $(el)) || (new Element('div'));
-    this.element.setProperty('class', 'ShiftSpaceElement '+this.element.getProperty('class'));
+    //this.element.setProperty('class', 'ShiftSpaceElement '+this.element.getProperty('class'));
     
     // store a back reference to this class
     console.log('Adding __ssviewcontroller__ to ' + this.element);
