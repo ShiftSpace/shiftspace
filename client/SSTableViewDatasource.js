@@ -138,12 +138,12 @@ var SSTableViewDatasource = new Class({
       {
         console.log(this.dataKey());
         var data = JSON.decode(responseText)[this.dataKey()];
-
+        console.log(data);
         if(this.dataNormalizer())
         {
           data = this.dataNormalizer().normalize(data);
         }
-
+        console.log(data);
         this.setData(data);
         this.fireEvent('onload');
 
