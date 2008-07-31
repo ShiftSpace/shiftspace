@@ -98,7 +98,7 @@ var SSTableViewDatasource = new Class({
       data: testhref,
       onComplete: function(responseText, responseXML)
       {
-        this.setData(JSON.decode(responseText));
+        this.setData(JSON.decode(responseText).shifts);
         this.fireEvent('onload');
       }.bind(this),
       onFailure: function(response)
