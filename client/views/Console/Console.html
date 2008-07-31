@@ -17,7 +17,7 @@
         <div id="following" class="SSButton">Following</div>
       </div>
 
-      <div class="SSContentView">
+      <div class="SSContentView" autoresize="1">
         <!-- Start SSTableView interface definition -->
         <div class='SSTableView SSActive' uiclass="SSTableView">
 
@@ -26,13 +26,16 @@
             <!-- we need a cell class for the following -->
             <div class="SSModel SSColumnHeading SSDefaultCursor">
               <span class="SSColumnHeadingTitle"></span>
-              <div class="SSColumnOrder"></div>
               <div class="SSResize"></div>
+              <div class="SSColumnOrder"></div>
             </div>
           </div>
           <!-- End TableView Header -->
 
+          <!-- Start wrapping Scroll View -->
           <div class="SSScrollView">
+
+            <!-- Start Content View -->
             <table class='SSContentView' sortColumns="1">
 
               <!-- start the table definition-->
@@ -58,7 +61,7 @@
               <!-- end the model -->
 
             </table>
-            <!-- End SSTableView interface definition -->
+            <!-- End Content View -->
 
           </div>
           <!-- End Wrapping ScrollArea for table view -->

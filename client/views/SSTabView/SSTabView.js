@@ -26,6 +26,9 @@ var SSTabView = new Class({
     }
 
     this.element.addEvent('click', this.eventDispatch.bind(this));
+    
+    // refresh the dimensions
+    this.refresh();
   },
   
   
@@ -190,6 +193,24 @@ var SSTabView = new Class({
     {
       // remove the DOM element
       contentView.dispose();
+    }
+  },
+  
+
+  refresh: function()
+  {
+    var theControlView = this.element._getElement('> .SSControlView');
+    var theContentView = this.element._getElement('> .SSContentView');
+    
+    // resize content view if it's supposed to autoresize
+    if(theContentView.getProperty('autoresize'))
+    {
+      var size = this.element.getSize();
+      var controlSize = theControlView.getSize();
+    
+      theContentView.setStyles({
+        width: size.x-controlSize.x
+      });
     }
   }
   

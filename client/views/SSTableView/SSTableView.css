@@ -19,8 +19,7 @@
 
 .SSTableView > .SSScrollView
 {
-  width: 800px;
-  height: 384px;
+  height: 100%;
   overflow: auto;
 }
 
@@ -86,23 +85,12 @@
   padding: 4px;
 }
 
-.SSTableView > .SSControlView > .SSColumnHeading > .SSAscendingOrder
+.SSTableView > .SSControlView > .SSColumnHeading > SSColumnOrder.SSAscendingOrder
 {
-  width: 8px;
-  height: 8px;
-  background-color: #f00;
-  float: right;
-  margin-top: 4px;
-  margin-left: 4px;
-  margin-right: 4px;
 }
 
-.SSTableView > .SSControlView > .SSColumnHeading > .SSDescendingOrder
+.SSTableView > .SSControlView > .SSColumnHeading > SSColumnOrder.SSDescendingOrder
 {
-  width: 8px;
-  height: 8px;
-  background-color: #f00;
-  float: left;
 }
 
 .SSTableView > .SSControlView > .SSColumnHeading > .SSColumnOrder
@@ -113,6 +101,13 @@
 .SSTableView > .SSControlView > .SSColumnHeading.SSActive > .SSColumnOrder
 {
   visibility: visible;
+  width: 8px;
+  height: 8px;
+  background-color: #f00;
+  float: right;
+  margin-top: 4px;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 /*
