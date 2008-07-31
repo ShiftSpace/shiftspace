@@ -29,9 +29,9 @@ var SSTableViewDatasource = new Class({
     this.setOptions(options);
     
     // set the options
-    this.setDataKey(options.dataKey)
-    this.setDataProviderURL(options.dataProviderURL);
-    this.setDataNormalizer(options.dataNormalizer);
+    this.setDataKey(this.options.dataKey)
+    this.setDataProviderURL(this.options.dataProviderURL);
+    this.setDataNormalizer(this.options.dataNormalizer);
   },
   
   
