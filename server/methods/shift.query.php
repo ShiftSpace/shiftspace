@@ -1,6 +1,7 @@
 <?php
 
 if (!empty($_REQUEST['href'])) {
+  echo $_REQUEST['href'];
   // Load shifts by URL
   $href = normalize_url($_REQUEST['href']);
   $href = $db->escape($href);
