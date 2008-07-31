@@ -14,13 +14,24 @@
 */
 var SSTableViewDatasource = new Class({
   
-  Implements: Events,
+  Implements: [Events, Options],
 
-  initialize: function()
+  options: 
+  {
+    dataKey: 'shifts',
+    dataProviderURL: 'http://metatron.shiftspace.org/api/shiftspace.php?method=shift.query',
+    dataNormalizer: null
+  },
+
+  initialize: function(options)
   {
     console.log('SSTableViewDatasource instantiated.');
-    // set the default data provider URL
-    this.setDataProviderURL('http://metatron.shiftspace.org/api/shiftspace.php?method=shift.query');
+    this.setOptions(options);
+    
+    // set the options
+    this.setDataKey(options.dataKey)
+    this.setDataProviderURL(options.dataProviderURL);
+    this.setDataNormalizer(options.dataNormalizer);
   },
   
   
@@ -33,6 +44,37 @@ var SSTableViewDatasource = new Class({
   data: function()
   {
     return this.__data__;
+  },
+  
+  
+  setDataKey: function(key)
+  {
+    this.__dataKey__ = key
+  },
+  
+  
+  dataKey: function()
+  {
+    return this.__dataKey__;
+  },
+  
+  
+  setDataNormalizer: function(normalizer)
+  {
+    if(normalizer.normalize)
+    {
+      this.__dataNormalizer__ = normalizer;      
+    }
+    else
+    {
+      console.error('SSTableViewDatasource Error: Data normalizer does not implement normalize');
+    }
+  },
+  
+  
+  dataNormalizer: function()
+  {
+    return this.__dataNormalizer__;
   },
   
   
@@ -98,8 +140,16 @@ var SSTableViewDatasource = new Class({
       data: testhref,
       onComplete: function(responseText, responseXML)
       {
-        this.setData(JSON.decode(responseText).shifts);
+        var data = JSON.decode(responseText)[this.dataKey()];
+
+        if(this.dataNormalizer())
+        {
+          data = this.dataNormalizer().normalize(data);
+        }
+
+        this.setData(data);
         this.fireEvent('onload');
+
       }.bind(this),
       onFailure: function(response)
       {
