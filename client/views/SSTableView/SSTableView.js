@@ -378,7 +378,7 @@ var SSTableView = new Class({
   
   modelRowClone: function()
   {
-    return $(this.modelRow().clone(true));
+    return this.modelRow().clone(true);
   },
   
   
