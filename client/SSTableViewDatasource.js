@@ -61,13 +61,9 @@ var SSTableViewDatasource = new Class({
   
   setDataNormalizer: function(normalizer)
   {
-    if(normalizer.normalize)
+    if(normalizer && normalizer.normalize)
     {
       this.__dataNormalizer__ = normalizer;      
-    }
-    else
-    {
-      console.error('SSTableViewDatasource Error: Data normalizer does not implement normalize');
     }
   },
   
