@@ -56,20 +56,6 @@ $shifts = $db->rows("
   ORDER BY s.created DESC
 ");
 
-echo "
-SELECT s.url_slug AS id,
-       s.href,
-       s.space,
-       s.summary,
-       s.created,
-       u.username,
-       s.status
-FROM shift AS s, user AS u
-WHERE $user_clause
-  AND $shift_clause
-  AND s.user_id = u.id
-ORDER BY s.created DESC";
-
 function set_elapsed_time(&$shift) {
   $shift->created = ucfirst(elapsed_time($shift->created));
 }
