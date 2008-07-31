@@ -91,7 +91,7 @@ var SSTableViewDatasource = new Class({
   
   fetch: function(properties)
   {
-    var testhref = {href:'http://www.google.com'};
+    var testhref = {href:'http://www.google.com', plugin:"Trails"};
     new Request({
       url: this.dataProviderURL(),
       method: 'post',
