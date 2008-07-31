@@ -1,10 +1,21 @@
 var SSCustomTableRow = new Class({
+
+  name: 'SSCustomTableRow',
+
   Extends: SSTableRow,
   
+  initialize: function(el)
+  {
+    this.parent(el);
+    console.log('initialize SSCustomTableRow');
+  },
+  
+
   setSelected: function(cell, space)
   {
   },
   
+
   setSpace: function(cell, space)
   {
     if(cell)
@@ -17,6 +28,7 @@ var SSCustomTableRow = new Class({
     } 
   },
   
+
   setSummary: function(cell, summary)
   {
     if(cell)
@@ -25,6 +37,7 @@ var SSCustomTableRow = new Class({
       div.set('text', summary);
     }
   }
+
 });
 
 // add it to the UI object if possible
