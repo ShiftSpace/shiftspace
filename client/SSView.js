@@ -23,6 +23,7 @@ var SSView = new Class({
     this.__delegate__ = null;
     
     this.element = (el && $(el)) || (new Element('div'));
+    // NOTE: the following breaks tables, so we should avoid it for now - David
     //this.element.setProperty('class', 'ShiftSpaceElement '+this.element.getProperty('class'));
     
     // store a back reference to this class
