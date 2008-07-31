@@ -8,47 +8,8 @@ if(Sandalphon)
     var datasource = new SSTableViewDatasource();
     controller.setDatasource(datasource);
     
-    // test adding new data
-    datasource.setData([
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'},
-      {space:'Highlights', username:'avital', summary:'A cooler shift.', created:'10 hours ago.'},
-      {space:'SourceShift', username:'mushon', summary:'A cool shift. A cool shift. A cool shift. A cool shift. A cool shift.', created:'2 hours ago.'}
-    ]);
-
-    //datasource.fetch();
+    // load real data
+    datasource.fetch();
     datasource.fireEvent('onload');
   }
 }
