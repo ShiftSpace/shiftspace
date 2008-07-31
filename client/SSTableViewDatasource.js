@@ -20,7 +20,7 @@ var SSTableViewDatasource = new Class({
   {
     console.log('SSTableViewDatasource instantiated.');
     // set the default data provider URL
-    this.setDataProviderURL('http://metatron.shiftspace.org/shiftspace.php?method=shift.query');
+    this.setDataProviderURL('http://metatron.shiftspace.org/api/shiftspace.php?method=shift.query');
   },
   
   
