@@ -94,7 +94,8 @@ var SSTableViewDatasource = new Class({
     var testhref = {href:'http://www.google.com'};
     new Request({
       url: this.dataProviderURL(),
-      method: 'get',
+      method: 'post',
+      data: testhref,
       onComplete: function(responseText, responseXML)
       {
         this.setData(JSON.decode(responseText));
@@ -104,7 +105,7 @@ var SSTableViewDatasource = new Class({
       {
         console.error('Oops: ' + response);
       }.bind(this)
-    }).send(testhref);
+    }).send();
   }
 
 });
