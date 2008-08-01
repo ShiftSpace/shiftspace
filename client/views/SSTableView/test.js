@@ -26,23 +26,38 @@ var legacyNormalizer = {
   }
 };
 
+var MyTableViewDelegate = new Class({
+  intialize: function()
+  {
+    // set the datasource for the tableview
+    thus.datasource = new SSTableViewDatasource({
+      dataNormalizer: legacyNormalizer
+    });
+  },
+  
+  setTableView: function(tableView)
+  {
+    tableView.setDelegate(this);
+    tableView.setDatasource(this.datasource);
+    this.datasource.fetch();
+  },
+  
+  userClickedRow: function(rowIndex)
+  {
+    console.log('MyTableViewDelegate, userClickedRow: ' + rowIndex);
+  }
+});
+
 if(Sandalphon)
 {
   Sandalphon.runTest = function()
   {
+    // get the table view controller
     var controller = $$('.SSTableView')[0].retrieve('__ssviewcontroller__');
-    console.log(controller);
-    
-    // set the datasource for the tableview
-    var datasource = new SSTableViewDatasource({
-      dataNormalizer: legacyNormalizer
-    });
-    
-    controller.setDatasource(datasource);
-    
-    // load real data
-    datasource.fetch();
-    datasource.fireEvent('onload');
+    // create table view delegate
+    var delegate = new MyTableViewDelegate();
+    // set up the delegate
+    delegate.setTableView(controller);
   }
 }
 
