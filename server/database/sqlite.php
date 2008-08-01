@@ -167,6 +167,34 @@ class Database_SQLite {
         }
     }
     
+    /**
+     * Database_SQLite::translate_query
+     *
+     * Performs some rudimentary conversions to the SQLite-specific SQL syntax.
+     */
+    function translate_query($sql) {
+        
+        // Add AUTO_INCREMENT to INTEGER PRIMARY KEY columns
+        $search = "
+            /
+                (
+                    CREATE\s+TABLE\s+       # CREATE TABLE command
+                    [\w_]+\s*               # Table name
+                    \(                      # Open parenthesis
+                    [^)]+?                  # Stop at close parenthesis
+                )
+                (
+                    [\w_]+                  # Column name
+                )
+                \s+INTEGER\s+PRIMARY\s+KEY  # Type INTEGER PRIMARY KEY
+            /misx
+        ";
+        $replace = '$1$2 INTEGER PRIMARY KEY AUTOINCREMENT';
+        $sql = preg_replace($search, $replace, $sql);
+        return $sql;
+        
+    }
+    
 }
 
 ?>

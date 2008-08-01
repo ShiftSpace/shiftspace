@@ -151,6 +151,8 @@ var ShiftSpace = new (function() {
       username = _username;
     }
     
+    var alreadyCheckedForUpdate = false;
+    
     // INCLUDE IframeHelpers.js
     // INCLUDE PinHelpers.js
     
@@ -980,6 +982,36 @@ var ShiftSpace = new (function() {
       {
         spaces[space].restoreState();
       }
+    }
+    
+    // TODO: write some documentation here
+    function SSCheckForUpdates() {
+      
+      // Only check once per page load
+      if (alreadyCheckedForUpdate) {
+        return;
+      }
+      alreadyCheckedForUpdate = true;
+      
+      var now = new Date();
+      var lastUpdate = getValue('lastCheckedForUpdate', now.getTime());
+      
+      // Only check every 24 hours
+      if (lastUpdate - now.getTime() > 86400) {
+        setValue('lastCheckedForUpdate', now.getTime());
+        GM_xmlhttpRequest({
+          method: 'POST',
+          url: server + 'shiftspace.php?method=version',
+          onload: function(rx) {
+            if (rx.responseText != version) {
+              if (confirm('There is a new version of ShiftSpace available. Would you like to update now?')) {
+                GM_openInTab('http://www.shiftspace.org/');
+              }
+            }
+          }
+        });
+      }
+      
     }
     
     /*
@@ -2128,6 +2160,9 @@ var ShiftSpace = new (function() {
         }
         else 
         {
+          // Check to see if there's a newer release available
+          // There's probably a better place to put this call.
+          SSCheckForUpdates();
           //console.log('show console!');
           keyState.consoleShown = true;
           ShiftSpace.Console.show();
