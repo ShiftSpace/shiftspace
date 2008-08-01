@@ -27,6 +27,7 @@ var legacyNormalizer = {
 };
 
 var MyTableViewDelegate = new Class({
+  
   intialize: function()
   {
     // set the datasource for the tableview
@@ -35,6 +36,7 @@ var MyTableViewDelegate = new Class({
     });
   },
   
+  
   setTableView: function(tableView)
   {
     tableView.setDelegate(this);
@@ -42,10 +44,24 @@ var MyTableViewDelegate = new Class({
     this.datasource.fetch();
   },
   
+  
   userClickedRow: function(rowIndex)
   {
     console.log('MyTableViewDelegate, userClickedRow: ' + rowIndex);
+  },
+  
+  
+  canSelectRow: function(rowIndex)
+  {
+    
+  },
+  
+  
+  canSelectColumn: function(columnIndex)
+  {
+    
   }
+  
 });
 
 if(Sandalphon)
@@ -60,15 +76,3 @@ if(Sandalphon)
     delegate.setTableView(controller);
   }
 }
-
-var MyTableViewDelegate = new Class({
-  canSelectColumn: function(column)
-  {
-    return true;
-  },
-  
-  canSelectRow: function(column)
-  {
-    return true;
-  }
-});
