@@ -4,8 +4,7 @@ var SSTableView = new Class({
   
   Implements: Events,
   Extends: SSView,
-  
-  protocol: ['userClickedRow, userSelectedRow, itemForRowColumn, rowCount'],
+  DelegateProtocol: ['userClickedRow, userSelectedRow, itemForRowColumn, rowCount'],
   
   initialize: function(el, options)
   {
@@ -289,14 +288,21 @@ var SSTableView = new Class({
   {
     console.log('SSTableView datasource set.');
     console.log(datasource);
-    // remove the previous onload from the last datasource
-    if(this.__datasource__)
+    if(datasource)
     {
-      this.__datasource__.removeEvent('onload');
+      // remove the previous onload from the last datasource
+      if(this.__datasource__)
+      {
+        this.__datasource__.removeEvent('onload');
+      }
+      this.__datasource__ = datasource;
+      // listen for onload events on the new datasource
+      this.__datasource__.addEvent('onload', this.refresh.bind(this));
     }
-    this.__datasource__ = datasource;
-    // listen for onload events on the new datasource
-    this.__datasource__.addEvent('onload', this.refresh.bind(this));
+    else
+    {
+      console.error('Error: SSTableView datasource is null.');
+    }
   },
   
 

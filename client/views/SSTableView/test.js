@@ -39,15 +39,20 @@ var MyTableViewDelegate = new Class({
   
   setTableView: function(tableView)
   {
+    this.tableView = tableView;
     tableView.setDelegate(this);
     tableView.setDatasource(this.datasource);
     this.datasource.fetch();
   },
   
   
-  userClickedRow: function(rowIndex)
+  userClickedRow: function(args)
   {
     console.log('MyTableViewDelegate, userClickedRow: ' + rowIndex);
+    if(args.tableView == this.tableView)
+    {
+      console.log('id of shift ' + this.datasource.data()[args.rowIndex].id);
+    }
   },
   
   
