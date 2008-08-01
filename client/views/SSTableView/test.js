@@ -1,3 +1,31 @@
+var legacyNormalizer = {
+  normalize: function(data)
+  {
+    data.length.times(function(idx) {
+      var row = data[idx];
+      var space = row.space;
+      switch(space)
+      {
+        case 'notes':
+          row.space = "Notes";
+        break;
+        case 'highlight':
+          row.space = 'Highlights';
+        break;
+        case 'sourceshift':
+          row.space = 'SourceShift';
+        break;
+        case 'imageswap':
+          row.space = "ImageSwap"
+        break;
+        default:
+        break;
+      }
+    });
+    return data;  
+  };
+};
+
 if(Sandalphon)
 {
   Sandalphon.runTest = function()
@@ -7,33 +35,7 @@ if(Sandalphon)
     
     // set the datasource for the tableview
     var datasource = new SSTableViewDatasource({
-      dataNormalizer: 
-      {
-        normalize: function(data)
-        {
-          data.length.times(function(idx) {
-            var row = data[idx];
-            var space = row.space;
-            switch(space)
-            {
-              case 'notes':
-                row.space = "Notes";
-              break;
-              case 'highlight':
-                row.space = 'Highlights';
-              break;
-              case 'sourceshift':
-                row.space = 'SourceShift';
-              break;
-              case 'imageswap':
-                row.space = "ImageSwap"
-              break;
-              default:
-              break;
-            }
-          });
-        }
-      }
+      dataNormalizer: legacyNormalizer
     });
     
     controller.setDatasource(datasource);
