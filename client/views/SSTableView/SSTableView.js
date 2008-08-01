@@ -288,6 +288,7 @@ var SSTableView = new Class({
   setDatasource: function(datasource)
   {
     console.log('SSTableView datasource set.');
+    console.log(datasource);
     // remove the previous onload from the last datasource
     if(this.__datasource__)
     {
@@ -295,7 +296,7 @@ var SSTableView = new Class({
     }
     this.__datasource__ = datasource;
     // listen for onload events on the new datasource
-    datasource.addEvent('onload', this.refresh.bind(this));
+    this.__datasource__.addEvent('onload', this.refresh.bind(this));
   },
   
 
