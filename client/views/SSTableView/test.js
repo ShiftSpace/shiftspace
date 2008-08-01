@@ -31,7 +31,7 @@ var MyTableViewDelegate = new Class({
   intialize: function()
   {
     // set the datasource for the tableview
-    thus.datasource = new SSTableViewDatasource({
+    this.datasource = new SSTableViewDatasource({
       dataNormalizer: legacyNormalizer
     });
   },
