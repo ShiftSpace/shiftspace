@@ -28,7 +28,7 @@ var legacyNormalizer = {
 
 var MyTableViewDelegate = new Class({
   
-  intialize: function()
+  initialize: function()
   {
     // set the datasource for the tableview
     this.datasource = new SSTableViewDatasource({
