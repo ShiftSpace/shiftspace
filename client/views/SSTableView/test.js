@@ -48,7 +48,7 @@ var MyTableViewDelegate = new Class({
   
   userClickedRow: function(args)
   {
-    console.log('MyTableViewDelegate, userClickedRow: ' + rowIndex);
+    console.log('MyTableViewDelegate, userClickedRow: ' + args.rowIndex);
     if(args.tableView == this.tableView)
     {
       console.log('id of shift ' + this.datasource.data()[args.rowIndex].id);
