@@ -23,7 +23,7 @@ var legacyNormalizer = {
       }
     });
     return data;  
-  };
+  }
 };
 
 if(Sandalphon)
