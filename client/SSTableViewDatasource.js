@@ -112,7 +112,7 @@ var SSTableViewDatasource = new Class({
   
   itemForRowIndexColumn: function(rowIndex, column)
   {
-    this.data()[rowIndex][column];
+    return this.data()[rowIndex][column];
   },
   
 
