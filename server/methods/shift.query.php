@@ -25,6 +25,32 @@ else if (!empty($_REQUEST['id']))
   }
 }
 
+if (!empty($_REQUEST['sortBy[column]']))
+{
+  $sortByColumn = $db->escape($_REQUEST['sortBy[column]']);
+}
+else
+{
+  $sortByColumn = 'summary';
+}
+
+if (!empty($_REQUEST['sortBy[direction]']))
+{
+  $sortValue = $db->escape($_REQUEST['sortBy[direction]']);
+  if($sortValue == 1)
+  {
+    $sortByDirection = "ASC";
+  }
+  else
+  {
+    $sortByDirection = "DESC";
+  }
+}
+else
+{
+  $sortByDirection = "DESC";
+}
+
 // Sanity check
 // TODO: the href and the id should both be optional, shift.query is a general data provider - David
 if (empty($href) && empty($id)) {
@@ -59,7 +85,7 @@ $shifts = $db->rows("
   WHERE $user_clause
     AND $shift_clause
     AND s.user_id = u.id
-  ORDER BY created DESC
+  ORDER BY $sortByColumn $sortByDirection
 ");
 
 function set_elapsed_time(&$shift) {
