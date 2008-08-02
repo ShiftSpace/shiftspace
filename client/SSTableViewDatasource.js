@@ -124,7 +124,8 @@ var SSTableViewDatasource = new Class({
     this.fetch($merge(
       this.properties(), 
       {
-        sortBy:{column:column, direction:direction}
+        sortByColumn: column,
+        sortByDirection: direction
       }
     ));
   },

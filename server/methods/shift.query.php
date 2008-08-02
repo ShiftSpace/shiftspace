@@ -25,21 +25,18 @@ else if (!empty($_REQUEST['id']))
   }
 }
 
-echo "test";
-echo $_REQUEST['sortBy[column]'];
-
-if (!empty($_REQUEST['sortBy[column]']))
+if (!empty($_REQUEST['sortByColumn']))
 {
-  $sortByColumn = $db->escape($_REQUEST['sortBy[column]']);
+  $sortByColumn = $db->escape($_REQUEST['sortByColumn']);
 }
 else
 {
   $sortByColumn = 'created';
 }
 
-if (!empty($_REQUEST['sortBy[direction]']))
+if (!empty($_REQUEST['sortByDirection']))
 {
-  $sortValue = $db->escape($_REQUEST['sortBy[direction]']);
+  $sortValue = $db->escape($_REQUEST['sortByDirection']);
   if($sortValue == 1)
   {
     $sortByDirection = "ASC";
