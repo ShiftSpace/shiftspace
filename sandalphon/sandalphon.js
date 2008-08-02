@@ -3,10 +3,10 @@ var Sandalphon;
 window.addEvent('domready', function() {
   if(!window.console)
   {
-    window.console = {
-      log: function() {},
-      error: function() {}
-    };
+    window.console = {};
+
+    if(!window.console.log) console.log = function(){};
+    if(!iwndow.console.error) console.error = function(){};
   }
   
   // load the local store
