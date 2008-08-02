@@ -16,6 +16,8 @@ var SSTableView = new Class({
     this.setModelRow(this.contentView._getElement('.SSModel').dispose());
     // set the column names
     this.setColumnNames(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name')}));
+    // set up the column orders
+    this.initColumnSort();
     // initialize the table header
     this.initTableHead();
     // create resize masks
@@ -158,8 +160,13 @@ var SSTableView = new Class({
 
   handleColumnOrderHit: function(orderButton)
   {
-    var index = this.columnIndexForNode(orderButton);
-    console.log('column order change for ' + this.columnNames()[index]);
+    var columnName = this.columnName(this.columnIndexForNode(orderButton));
+    console.log('column order change for ' + columnName);
+    if(this.datasource())
+    {
+      // flip the order
+      this.datasource().sortByColumn(columnName, SSTableViewDatasource.ASCENDING);
+    }
   },
   
   
@@ -324,6 +331,41 @@ var SSTableView = new Class({
     console.log('setColumnNames');
     console.log(columnNames);
     this.__columnNames__ = columnNames;
+  },
+  
+  
+  setColumnSortOrders: function(newOrders)
+  {
+    this.__columnSortOrders__ = newOrders;
+  },
+  
+  
+  columnSortOrders: function()
+  {
+    return this.__columnSortOrders__;
+  },
+  
+  
+  initColumnSort: function()
+  {
+    // initialize the private var
+    this.setColumnSortOrders({});
+    // intialize the contents
+    this.columnNames().each(function(columnName) {
+      this.columnSortOrders()[columnName] = SSTableViewDatasource.DESCENDING;
+    }.bind(this));
+  },
+  
+  
+  sortOrderForColumn: function(index)
+  {
+    return this.columnSortOrders()[this.columnNames()[index]];
+  },
+  
+  
+  setColumnSortOrder: function(index, order)
+  {
+    this.columnSortOrders()[this.columnNames()[index]] = order;
   },
   
   

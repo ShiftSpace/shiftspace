@@ -15,6 +15,7 @@
 var SSTableViewDatasource = new Class({
   
   Implements: [Events, Options],
+  
 
   options: 
   {
@@ -22,6 +23,7 @@ var SSTableViewDatasource = new Class({
     dataProviderURL: 'http://metatron.shiftspace.org/api/shiftspace.php?method=shift.query',
     dataNormalizer: null
   },
+  
 
   initialize: function(options)
   {
@@ -118,10 +120,11 @@ var SSTableViewDatasource = new Class({
 
   sortByColumn: function(column, direction)
   {
+    console.log('sort by column ' + column + ', direction ' + direction);
     this.fetch($merge(
       this.properties(), 
       {
-        sortBy:{column:column, direction:ascending}
+        sortBy:{column:column, direction:direction}
       }
     ));
   },
@@ -155,3 +158,6 @@ var SSTableViewDatasource = new Class({
   }
 
 });
+
+SSTableViewDatasource.DESCENDING = 0;
+SSTableViewDatasource.ASCENDING = 1;
