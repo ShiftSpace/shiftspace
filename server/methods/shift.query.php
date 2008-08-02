@@ -31,7 +31,7 @@ if (!empty($_REQUEST['sortBy[column]']))
 }
 else
 {
-  $sortByColumn = 'summary';
+  $sortByColumn = 'created';
 }
 
 if (!empty($_REQUEST['sortBy[direction]']))
