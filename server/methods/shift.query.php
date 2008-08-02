@@ -25,6 +25,9 @@ else if (!empty($_REQUEST['id']))
   }
 }
 
+echo "test";
+echo $_REQUEST['sortBy[column]'];
+
 if (!empty($_REQUEST['sortBy[column]']))
 {
   $sortByColumn = $db->escape($_REQUEST['sortBy[column]']);
