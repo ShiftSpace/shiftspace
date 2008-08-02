@@ -1,14 +1,6 @@
 var Sandalphon;
 
 window.addEvent('domready', function() {
-  if(!window.console)
-  {
-    window.console = {};
-
-    if(!window.console.log) console.log = function(){};
-    if(!iwndow.console.error) console.error = function(){};
-  }
-  
   // load the local store
   Sandalphon = new SandalphonClass(new Persist.Store('Sandalphon'));
 });
