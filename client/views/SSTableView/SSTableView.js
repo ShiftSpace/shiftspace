@@ -160,12 +160,17 @@ var SSTableView = new Class({
 
   handleColumnOrderHit: function(orderButton)
   {
-    var columnName = this.columnName(this.columnIndexForNode(orderButton));
-    console.log('column order change for ' + columnName);
+    var index = this.columnIndexForNode(orderButton);
+    var columnName = this.columnNames()[index];
+
     if(this.datasource())
     {
-      // flip the order
-      this.datasource().sortByColumn(columnName, SSTableViewDatasource.ASCENDING);
+      // udpate the sort order
+      if(this.sortOrderForColumn(index) == SSTableViewDatasource.DESCENDING) this.setSortOrderForColumn(index, SSTableViewDatasource.ASCENDING);
+      if(this.sortOrderForColumn(index) == SSTableViewDatasource.ASCENDING) this.setSortOrderForColumn(index, SSTableViewDatasource.DESCENDING);
+
+      // tell the datasource to sort
+      this.datasource().sortByColumn(columnName, this.sortOrderForColumn(index));
     }
   },
   
@@ -173,14 +178,16 @@ var SSTableView = new Class({
   handleColumnSelect: function(column)
   {
     var index = this.columnIndexForNode(column);
-    console.log('column select ' + this.columnNames()[index]);
     if(index == this.selectedColumnIndex())
     {
       this.deselectAll();
     }
     else
     {
-      this.selectColumn(index);      
+      this.selectColumn(index);
+      
+      // update the sort order
+      this.datasource().sortByColumn(this.sortOrderForColumn(index));
     }
   },
   
@@ -363,7 +370,7 @@ var SSTableView = new Class({
   },
   
   
-  setColumnSortOrder: function(index, order)
+  setSortOrderForColumn: function(index, order)
   {
     this.columnSortOrders()[this.columnNames()[index]] = order;
   },
