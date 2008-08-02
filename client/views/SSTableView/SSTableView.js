@@ -162,13 +162,13 @@ var SSTableView = new Class({
   {
     var index = this.columnIndexForNode(orderButton);
     var columnName = this.columnNames()[index];
-
+    
     if(this.datasource())
     {
       // udpate the sort order
       if(this.sortOrderForColumn(index) == SSTableViewDatasource.DESCENDING) this.setSortOrderForColumn(index, SSTableViewDatasource.ASCENDING);
       if(this.sortOrderForColumn(index) == SSTableViewDatasource.ASCENDING) this.setSortOrderForColumn(index, SSTableViewDatasource.DESCENDING);
-
+      
       // tell the datasource to sort
       this.datasource().sortByColumn(columnName, this.sortOrderForColumn(index));
     }
