@@ -4,6 +4,8 @@
 // @description    An open source layer above any website
 // @include        *
 // @exclude        http://metatron.shiftspace.org/api/sandbox/*
+// @exclude        http://shiftspace.org/api/sandbox/*
+// @exclude        http://www.shiftspace.org/api/sandbox/*
 // @require        http://metatron.shiftspace.org/code/trunk/client/Mootools.js
 // @require        http://metatron.shiftspace.org/code/trunk/client/Videobox.js
 // ==/UserScript==
