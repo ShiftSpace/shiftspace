@@ -62,7 +62,7 @@ var ShiftSpace = new (function() {
     // Check to see if the server URL is already stored
     // permissions problem here?
     if (typeof server == 'undefined') {
-      var server = getValue('server', 'http://metatron.shiftspace.org/api/');
+      var server = getValue('server', 'http://www.shiftspace.org/api/');
     }
     
     //server = "http://localhost/~davidnolen/shiftspace-0.11/";
@@ -124,25 +124,21 @@ var ShiftSpace = new (function() {
     
     var spacePrefs = getValue('spacePrefs', {});
     
-    /*
     installed = {
       'Notes' : myFiles + 'spaces/Notes/Notes.js',
       'ImageSwap': myFiles + 'spaces/ImageSwap/ImageSwap.js',
       'Highlights': myFiles + 'spaces/Highlights/Highlights.js',
       'SourceShift': myFiles + 'spaces/SourceShift/SourceShift.js',
     };
-    */
 
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
       'Trails' : server + 'plugins/Trails/NewTrail.js'
     });
 
-    /*
     installedPlugins = {
       'Trails' : myFiles + 'plugins/Trails/NewTrail.js'
     };
-    */
     
     // An index of cached files, used to clear the cache when necessary
     var cache = getValue('cache', []);

@@ -731,7 +731,7 @@ var Console = new Class({
 
     var isChecked = (SSGetPrefForSpace(id, 'autolaunch')) ? 'checked' : '';
     div.innerHTML = '<div class="installedTitleCol"><img src="' + server + 'spaces/' + id + '/' + id + '.png" width="32" height="32" /> ' +
-                '<div class="info"><a href="http://metatron.shiftspace.org/spaces/' + id.toLowerCase() + '" target="_blank">' + id + '</a>' +
+                '<div class="info"><a href="http://www.shiftspace.org/spaces/' + id.toLowerCase() + '" target="_blank">' + id + '</a>' +
                 '</div></div>' +
                 '<div class="autolaunchCol"><div class="autolaunchToggle checkbox '+ isChecked + '"></div>' +
                 '<div class="label">Automatically show shifts</div></div>' +
@@ -976,7 +976,7 @@ var Console = new Class({
         '<div class="input"><div id="init_privacy" class="checkbox checked"></div>' +
         '<div class="label">Set my shifts public by default</div>' +
         '<br class="clear" /></div>' +
-        '<p><a href="http://metatron.shiftspace.org/about/user-manual/#managing" target="_top">Read more about content privacy</a></p>' +
+        '<p><a href="http://www.shiftspace.org/about/user-manual/#managing" target="_top">Read more about content privacy</a></p>' +
       '</div>' +
       '<div class="welcome-screencast">' +
         '<a href="#screencast" id="screencast-link"><img src="' + server + 'images/Console/intro-screencast-thumb.gif" alt="Intro screencast" />' +
