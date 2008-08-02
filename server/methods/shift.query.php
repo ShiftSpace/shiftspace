@@ -49,17 +49,17 @@ if (!empty($user)) {
 // Load shifts from storage
 $shifts = $db->rows("
   SELECT s.url_slug AS id,
-         s.href,
-         s.space,
-         s.summary,
-         s.created,
-         u.username,
-         s.status
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
   FROM shift AS s, user AS u
   WHERE $user_clause
     AND $shift_clause
     AND s.user_id = u.id
-  ORDER BY s.created DESC
+  ORDER BY created DESC
 ");
 
 function set_elapsed_time(&$shift) {
