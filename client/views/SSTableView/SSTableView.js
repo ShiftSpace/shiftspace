@@ -166,8 +166,14 @@ var SSTableView = new Class({
     if(this.datasource())
     {
       // udpate the sort order
-      if(this.sortOrderForColumn(index) == SSTableViewDatasource.DESCENDING) this.setSortOrderForColumn(index, SSTableViewDatasource.ASCENDING);
-      if(this.sortOrderForColumn(index) == SSTableViewDatasource.ASCENDING) this.setSortOrderForColumn(index, SSTableViewDatasource.DESCENDING);
+      if(this.sortOrderForColumn(index) == SSTableViewDatasource.DESCENDING) 
+      {
+        this.setSortOrderForColumn(index, SSTableViewDatasource.ASCENDING);
+      }
+      else if(this.sortOrderForColumn(index) == SSTableViewDatasource.ASCENDING) 
+      {
+        this.setSortOrderForColumn(index, SSTableViewDatasource.DESCENDING);
+      }
       
       // tell the datasource to sort
       this.datasource().sortByColumn(columnName, this.sortOrderForColumn(index));
@@ -178,15 +184,17 @@ var SSTableView = new Class({
   handleColumnSelect: function(column)
   {
     var index = this.columnIndexForNode(column);
-    if(index == this.selectedColumnIndex())
+    var lastSelectedColumn = this.selectedColumnIndex();
+    if(index == lastSelectedColumn)
     {
+      // was the previously selected column, just deselect
       this.deselectAll();
     }
     else
     {
       this.selectColumn(index);
       
-      // update the sort order
+      // update the sort order if not already sorted
       this.datasource().sortByColumn(this.columnNames()[index], this.sortOrderForColumn(index));
     }
   },
