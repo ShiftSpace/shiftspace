@@ -187,7 +187,7 @@ var SSTableView = new Class({
       this.selectColumn(index);
       
       // update the sort order
-      this.datasource().sortByColumn(this.sortOrderForColumn(index));
+      this.datasource().sortByColumn(this.columnNames()[index], this.sortOrderForColumn(index));
     }
   },
   
