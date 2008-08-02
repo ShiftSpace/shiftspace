@@ -20,7 +20,7 @@ var SSTableViewDatasource = new Class({
   options: 
   {
     dataKey: 'shifts',
-    dataProviderURL: 'http://metatron.shiftspace.org/api/shiftspace.php?method=shift.query',
+    dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query',
     dataNormalizer: null
   },
   
