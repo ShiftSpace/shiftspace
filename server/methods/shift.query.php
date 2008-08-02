@@ -1,17 +1,23 @@
 <?php
 
-if (!empty($_REQUEST['href'])) {
+if (!empty($_REQUEST['href'])) 
+{
   // Load shifts by URL
   $href = normalize_url($_REQUEST['href']);
   $href = $db->escape($href);
   $shift_clause = "s.href = '$href'";
-} else if (!empty($_REQUEST['id'])) {
+} 
+else if (!empty($_REQUEST['id'])) 
+{
   // Load shifts by ID
   $id = $db->escape($_REQUEST['id']);
-  if (strpos($id, ',') === false) {
+  if (strpos($id, ',') === false) 
+  {
     // Only want one shift
     $shift_clause = "s.url_slug = '$id'";
-  } else {
+  } 
+  else 
+  {
     // Want multiple shifts
     $id = explode(',', $id);
     $id = "'" . implode("','", $id) . "'";

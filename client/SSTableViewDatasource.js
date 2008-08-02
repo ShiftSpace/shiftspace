@@ -136,7 +136,7 @@ var SSTableViewDatasource = new Class({
     new Request({
       url: this.dataProviderURL(),
       method: 'post',
-      data: testhref,
+      data: $merge(testhref, properties),
       onComplete: function(responseText, responseXML)
       {
         var data = JSON.decode(responseText)[this.dataKey()];
