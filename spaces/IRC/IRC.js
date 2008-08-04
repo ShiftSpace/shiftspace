@@ -19,10 +19,11 @@ var IRCClient = function()
   
 
   self.connect = function(hostname, port) {
-    conn = new TCPSocket(hostname, port)
-    conn.onopen = conn_opened
-    conn.onclose = conn_closed
-    conn.onread = conn_read
+    console.log(hostname + ':' + port);
+    conn = new TCPSocket(hostname, port);
+    conn.onopen = conn_opened;
+    conn.onclose = conn_closed;
+    conn.onread = conn_read;
   }
 
 
