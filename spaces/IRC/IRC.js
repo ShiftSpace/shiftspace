@@ -156,7 +156,7 @@ var IRCSpace = ShiftSpace.Space.extend({
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
 
-    window.ORBITED_DOMAIN = "http://metatron.shiftspace.org";
+    window.ORBITED_DOMAIN = "metatron.shiftspace.org";
     window.ORBITED_PORT = 8001;
 
     this.hostname = "irc.freenode.net";
