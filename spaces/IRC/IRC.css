@@ -1,0 +1,10 @@
+.IRCSpace
+{
+  position: absolute;
+  left: 50px;
+  top: 50px;
+  width: 200px;
+  height: 450px;
+  background-color: #ccc;
+  border: 1px solid black;
+}
