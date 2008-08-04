@@ -237,17 +237,19 @@ var IRCSpace = ShiftSpace.Space.extend({
     });
     this.input.injectInside(this.element);
     
-    this.button = new ShiftSpace.Element('button', {
-      id: "IRCSpaceButton"
+    this.button = new ShiftSpace.Element('input', {
+      id: "IRCSpaceButton",
+      type: "button",
+      value: "Send"
     });
-    this.button.setText('Send');
     this.button.addEvent('click', this.sendMessage.bind(this));
     this.button.injectInside(this.element);
 
-    this.connectButton = new ShiftSpace.Element('button', {
-      id: "IRCConnectButton"
+    this.connectButton = new ShiftSpace.Element('input', {
+      id: "IRCConnectButton",
+      type: "button",
+      value: "Connect"
     });
-    this.connectButton.setText('Connect');
     this.connectButton.addEvent('click', this.client.connect.bind(this, [this.hostname, this.port]));
     this.connectButton.injectInside(this.element);
     

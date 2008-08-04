@@ -1,10 +1,27 @@
 .IRCSpace
 {
+  padding: 4px;
   position: absolute;
   left: 50px;
   top: 50px;
   width: 200px;
-  height: 450px;
+  height: 250px;
   background-color: #ccc;
   border: 1px solid black;
+}
+
+#IRCSpaceInput
+{
+  background-color: white;
+  padding: 4px;
+  width: 192px;
+  margin-top: 4px;
+}
+
+#IRCSpaceOutput
+{
+  width: 200px;
+  height: 200px;
+  overflow-y: auto;
+  background-color: white;
 }
