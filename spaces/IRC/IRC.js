@@ -164,6 +164,8 @@ var IRCSpace = ShiftSpace.Space.extend({
     this.nickname = "";
 
     this.client = new IRCClient();
+    
+    console.log(this.client);
 
     this.client.onopen = function() {
       this.nickname = prompt("Please enter a user name");
@@ -1000,6 +1002,7 @@ var TCPSocket = function(domain, port) {
     connUrl.path = "/proxy"
     connUrl.qs = ""
 //    alert('connecting to: ' + connUrl.render())
+    console.log(connUrl.render());
     conn.connect(connUrl.render())
 }
 
