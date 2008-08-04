@@ -10,7 +10,7 @@ var IRCSpace = ShiftSpace.Space.extend({
   setup: function()
   {
     this.hostname = "irc.freenode.net";
-    this.channel = "#orbited.tutorial";
+    this.channel = "#shiftspace";
     this.port = 6667;
     this.nickname = "";
 
