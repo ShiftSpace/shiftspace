@@ -1,3 +1,145 @@
+/* This code is meant to accompany a tutorial explaining how to write
+ * network clients with Orbited 0.5
+ *
+ * Frank Salim (frank.salim@gmail.com)
+ * Â©2008 The Orbited Project
+ */
+
+var IRCClient = function() 
+{
+  var self = this;
+  var conn = null;
+  var buffer = "";
+  var ENDL = "\r\n";
+ 
+  self.onconnect = function() {/* Do nothing in default callbacks*/}
+  self.onnickInUse = function() {}
+  self.onmessage = function() {}
+  self.onclose = function() {}
+  
+
+  self.connect = function(hostname, port) {
+    conn = new TCPSocket(hostname, port)
+    conn.onopen = conn_opened
+    conn.onclose = conn_closed
+    conn.onread = conn_read
+  }
+
+
+  self.close = function() {
+    conn.close()
+    self.onclose()
+  }
+
+
+  self.ident = function(nickname, modes, real_name) {
+    send("USER", nickname + " " + modes + " :" + real_name) 
+  }
+     
+     
+  self.nick = function(nickname) {
+    send("NICK", nickname)
+  }
+
+
+  self.join = function(channel) {
+    send("JOIN", channel)
+  }
+  
+  
+  self.quit = function(reason) {
+    send("QUIT", ":" + reason)
+    conn.close()
+  }
+     
+
+  self.privmsg = function(destination, message) {
+    send('PRIVMSG', destination + ' :' + message)
+  }
+ 
+  // Socket Callbacks
+  var conn_opened = function() {
+    self.onopen()
+  }
+
+
+  var conn_closed = function() {
+    self.onclose()
+  }
+
+
+  var conn_read = function(data) {
+    buffer += data
+    parse_buffer()
+  }
+ 
+  // Internal Functions
+  var send = function(type, payload) {
+    conn.send(type + " " + payload + ENDL)
+  }
+ 
+ 
+  var parse_buffer= function() {
+    var msgs = buffer.split(ENDL)
+    buffer = msgs[msgs.length-1]
+    
+    for (var i=0; i<msgs.length-1; i++)
+      dispatch(msgs[i])
+  }
+
+  var parse_message = function(s) {       
+    var msg = {}
+    msg.prefix = ""
+    
+    if (s[0] == ":") 
+    {
+      var first_space = s.search(" ")
+      msg.prefix = s.slice(0, first_space).slice(1)
+      s = s.slice(first_space + 1)
+    }
+    
+    if (s.search(':') != -1) 
+    {
+      var i = s.search(":")
+      var payload = s.slice(i+1)
+      s = s.slice(0,i-1)
+      msg.args = s.split(' ')
+      msg.args.push(payload)
+    } 
+    else 
+    {
+      msg.args = s.split(' ')
+    }
+    
+    msg.type = msg.args.shift()
+    return msg
+  }
+  
+  
+  var dispatch = function(line) {
+    msg = parse_message(line)
+    switch(msg.type) 
+    {
+      case "PRIVMSG":
+        self.onmessage(msg.prefix, msg.args[0], msg.args.slice(1).join("[]"))
+      break
+
+      case "433":
+        //ERR_NICKNAMEINUSE
+        console.log("nick taken")
+        self.onnickInUse()
+      break
+
+      case "PING":
+        send("PONG", ":" + msg.args)
+      break
+
+      default:
+      break
+    }
+  }
+};
+
 var IRCSpace = ShiftSpace.Space.extend({
   attributes :
   {
@@ -9,6 +151,8 @@ var IRCSpace = ShiftSpace.Space.extend({
   
   setup: function()
   {
+    window.ORBITED_PORT = 8001;
+
     this.hostname = "irc.freenode.net";
     this.channel = "#shiftspace";
     this.port = 6667;
@@ -47,11 +191,9 @@ var IRCSpace = ShiftSpace.Space.extend({
     var output = document.getElementById("IRCSpaceOutput");
 
     // make output HTML safe
-    str = str.replace("&", "&amp;", "g");
-    .replace("<", "&lt;", "g");
-    .replace(" ", "&nbsp;", "g");
+    str = str.replace("&", "&amp;", "g").replace("<", "&lt;", "g").replace(" ", "&nbsp;", "g");
 
-    output.innerHTML += s + "<br>";
+    output.innerHTML += str + "<br>";
     output.scrollTop = output.scrollHeight;
   },
   
@@ -66,12 +208,14 @@ var IRCSpace = ShiftSpace.Space.extend({
   
   showInterface: function()
   {
+    this.parent();
     this.element.removeClass('SSDisplayNone');
   },
   
   
   hideInterface: function()
   {
+    this.parent();
     this.element.addClass('SSDisplayNone');
   },
   
@@ -97,7 +241,7 @@ var IRCSpace = ShiftSpace.Space.extend({
       id: "IRCSpaceButton"
     });
     this.button.setText('Send');
-    this.button.addEvent('click', this.sendMessage);
+    this.button.addEvent('click', this.sendMessage.bind(this));
     this.button.injectInside(this.element);
 
     this.connectButton = new ShiftSpace.Element('button', {
@@ -106,6 +250,8 @@ var IRCSpace = ShiftSpace.Space.extend({
     this.connectButton.setText('Connect');
     this.connectButton.addEvent('click', this.client.connect.bind(this, [this.hostname, this.port]));
     this.connectButton.injectInside(this.element);
+    
+    this.element.injectInside(document.body);
   }
 });
 
@@ -133,7 +279,7 @@ if (typeof(ActiveXObject) != "undefined") {
 
 
 // start @include(URL.js)
-URL = function(_url) {
+var URL = function(_url) {
     var self = this;
     var protocolIndex = _url.indexOf("://")
     if (protocolIndex != -1)
@@ -279,7 +425,7 @@ URL = function(_url) {
 
 
 // start @include(transports/TransportChooser.js)
-TransportChooser = {}
+var TransportChooser = {}
 TransportChooser.create = function() {
     // Browser detect by Frank Salim
     var browser = null;
@@ -311,7 +457,7 @@ switch(browser) {
 // Requires: URL.js
 // Requires: XSubdomainRequest.js
 
-XHRStream = function() {
+var XHRStream = function() {
     var ESCAPE = "_"
     var PACKET_DELIMITER = "_P"
     var ARG_DELIMITER = "_A"
@@ -407,7 +553,7 @@ XHRStream = function() {
     case 'ie':
         
 // start @include(transports/HTMLFile.js)
-HTMLFile = function() {
+var HTMLFile = function() {
     var self = this;
     id = ++HTMLFile.prototype.i;
     HTMLFile.prototype.instances[id] = self
@@ -463,7 +609,7 @@ HTMLFile.prototype.instances = {}
     case 'opera':
         
 // start @include(transports/SSEAppXDom.js)
-SSE = function() {
+var SSE = function() {
     var self = this;
     self.onread = function(packet) { }
     var source = null
@@ -513,7 +659,7 @@ SSE = function() {
 }
 
 // start @include(BaseTCPConnection.js)
-BaseTCPConnection = function() {
+var BaseTCPConnection = function() {
     var self = this;
     transport = null;
     var url = null;
@@ -667,7 +813,7 @@ BaseTCPConnection = function() {
 
 
 // start @include(XSubdomainRequest.js)
-XSubdomainRequest = function(bridgeDomain, bridgePort, bridgePath, markedHeaders) {
+var XSubdomainRequest = function(bridgeDomain, bridgePort, bridgePath, markedHeaders) {
     var self = this;
     if (!Boolean(bridgeDomain))
         throw new Error("Invalid bridge domain")
@@ -812,7 +958,7 @@ XSubdomainRequest.prototype._event = function(id, payload) {
 
 
 // start @include(TCPSocketImplementation.js)
-TCPSocket = function(domain, port) {
+var TCPSocket = function(domain, port) {
     var self = this;
     self.onopen = function() { }
     self.onclose = function() { }
@@ -853,144 +999,3 @@ TCPSocket = function(domain, port) {
 // end @include(TCPSocketImplementation.js)
 
 
-/* This code is meant to accompany a tutorial explaining how to write
- * network clients with Orbited 0.5
- *
- * Frank Salim (frank.salim@gmail.com)
- * Â©2008 The Orbited Project
- */
-
-IRCClient = function() 
-{
-  var self = this;
-  var conn = null;
-  var buffer = "";
-  var ENDL = "\r\n";
- 
-  self.onconnect = function() {/* Do nothing in default callbacks*/}
-  self.onnickInUse = function() {}
-  self.onmessage = function() {}
-  self.onclose = function() {}
-  
-
-  self.connect = function(hostname, port) {
-    conn = new TCPSocket(hostname, port)
-    conn.onopen = conn_opened
-    conn.onclose = conn_closed
-    conn.onread = conn_read
-  }
-
-
-  self.close = function() {
-    conn.close()
-    self.onclose()
-  }
-
-
-  self.ident = function(nickname, modes, real_name) {
-    send("USER", nickname + " " + modes + " :" + real_name) 
-  }
-     
-     
-  self.nick = function(nickname) {
-    send("NICK", nickname)
-  }
-
-
-  self.join = function(channel) {
-    send("JOIN", channel)
-  }
-  
-  
-  self.quit = function(reason) {
-    send("QUIT", ":" + reason)
-    conn.close()
-  }
-     
-
-  self.privmsg = function(destination, message) {
-    send('PRIVMSG', destination + ' :' + message)
-  }
- 
-  // Socket Callbacks
-  var conn_opened = function() {
-    self.onopen()
-  }
-
-
-  var conn_closed = function() {
-    self.onclose()
-  }
-
-
-  var conn_read = function(data) {
-    buffer += data
-    parse_buffer()
-  }
- 
-  // Internal Functions
-  var send = function(type, payload) {
-    conn.send(type + " " + payload + ENDL)
-  }
- 
- 
-  var parse_buffer= function() {
-    var msgs = buffer.split(ENDL)
-    buffer = msgs[msgs.length-1]
-    
-    for (var i=0; i<msgs.length-1; i++)
-      dispatch(msgs[i])
-  }
-
-  var parse_message = function(s) {       
-    var msg = {}
-    msg.prefix = ""
-    
-    if (s[0] == ":") 
-    {
-      var first_space = s.search(" ")
-      msg.prefix = s.slice(0, first_space).slice(1)
-      s = s.slice(first_space + 1)
-    }
-    
-    if (s.search(':') != -1) 
-    {
-      var i = s.search(":")
-      var payload = s.slice(i+1)
-      s = s.slice(0,i-1)
-      msg.args = s.split(' ')
-      msg.args.push(payload)
-    } 
-    else 
-    {
-      msg.args = s.split(' ')
-    }
-    
-    msg.type = msg.args.shift()
-    return msg
-  }
-  
-  
-  var dispatch = function(line) {
-    msg = parse_message(line)
-    switch(msg.type) 
-    {
-      case "PRIVMSG":
-        self.onmessage(msg.prefix, msg.args[0], msg.args.slice(1).join("[]"))
-      break
-
-      case "433":
-        //ERR_NICKNAMEINUSE
-        console.log("nick taken")
-        self.onnickInUse()
-      break
-
-      case "PING":
-        send("PONG", ":" + msg.args)
-      break
-
-      default:
-      break
-    }
-  }
-}
