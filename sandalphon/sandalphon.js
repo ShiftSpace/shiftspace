@@ -1,9 +1,21 @@
 var Sandalphon;
 
 window.addEvent('domready', function() {
-  // load the local store
-  Sandalphon = new SandalphonClass(new Persist.Store('Sandalphon'));
+  waitForConsole();
 });
+
+function waitForConsole()
+{
+  if(!window.console || !window.console.log)
+  {
+    setTimeout(waitForConsole, 1000);
+  }
+  else
+  {
+    // load the local store
+    Sandalphon = new SandalphonClass(new Persist.Store('Sandalphon'));
+  }
+}
 
 var SandalphonClass = new Class({
   
