@@ -1505,6 +1505,11 @@ var Console = new Class({
     var icon = ShiftSpace.info(aShift.space).icon;
     var img = newEntry.getElementByClassName('expander').getElementsByTagName('img')[0];
     
+    if(SSUserOwnsShift(aShift.id))
+    {
+      $(newEntry.getElementByClassName('user')).addClass('loggedIn');
+    }
+    
     //console.log('image and icon grabbed');
     
     newEntry.setAttribute('id', aShift.id);
