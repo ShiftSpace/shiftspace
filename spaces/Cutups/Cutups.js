@@ -1,7 +1,7 @@
 /*
+TODO:
 
 */
-
 var CutupsSpace = ShiftSpace.Space.extend({
   attributes: {
     name: 'Cutups',
@@ -562,6 +562,11 @@ var CutupsShift = ShiftSpace.Shift.extend({
        console.log("===================================================this",this);
       
       var space = this.getParentSpace();
+      
+      if(this.json.ranges == undefined){
+       this.json.ranges = this.ranges;
+      }
+      
       console.log("===================================================space",space);
       space.removeFromVisibleShifts(this.json.id);
       console.log("=======in hide=========",this.getId());
