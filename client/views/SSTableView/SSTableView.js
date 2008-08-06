@@ -79,7 +79,7 @@ var SSTableView = new Class({
         var columnHeading = model.clone(true);
         // grab the column definition and set the heading width to it's dimensions
         var columnDefinition = this.columnDefinitionForIndex(idx);
-        columnHeading.setStyle('width', columnDefinition.getProperty('width'));
+        columnHeading.setStyle('width', columnDefinition.getStyle('width'));
         // put the proper column heading title in there
         columnHeading.getElement('span.SSColumnHeadingTitle').set('text', columnName.capitalize());
         // add it
