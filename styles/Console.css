@@ -450,3 +450,36 @@ input.submit:active {
 #screencast-link {
   cursor: pointer;
 }
+
+.statusIcons
+{
+  width: 30px;
+}
+
+.statusIcons > *
+{
+  float: right;
+  margin-top: 2px;
+}
+
+.privacyIcon
+{
+  background-image:url(../images/Console/private_display.png);
+  background-repeat: no-repeat;
+  width: 15px;
+  height: 15px;
+}
+
+.brokenIcon
+{
+  background-image:url(../images/Console/bug.png);
+  background-repeat: no-repeat;
+  width: 15px;
+  height: 15px;
+}
+
+.broken
+{
+  font-weight: bold;
+  color: #f63b01;
+}

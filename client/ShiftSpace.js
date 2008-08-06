@@ -681,6 +681,7 @@ var ShiftSpace = new (function() {
         status: newStatus
       };
       serverCall('shift.update', params, function() {
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>> shiftId ' + shiftId);
         SSFireEvent('onShiftUpdate', shiftId);
       });
     }

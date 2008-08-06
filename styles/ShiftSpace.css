@@ -27,7 +27,7 @@
     padding: 0px 0px 0px 0px;
     border: none;
     position: static;
-    display: block;
+    /*display: block;*/
     visibility: visible;
     z-index: auto;
     overflow: visible;

@@ -1432,16 +1432,27 @@ var Console = new Class({
   
   updateShiftPrivacy: function(shiftId) {
     var entry = _$(this.doc.getElementById(shiftId));
-    var shiftId = entry.getAttribute('id');
-    var shiftStatus = parseInt(SSGetShift(shiftId).status);
-    var privacyStatus = $(entry.getElementByClassName('privacyStatus'));
-    var privacyControl = $(entry.getElementByClassName('privacyControl'));
-    if (shiftStatus == 1) {
-      privacyStatus.setHTML('This shift is public');
-      privacyControl.setHTML('Turn private');
-    } else {
-      privacyStatus.setHTML('This shift is private');
-      privacyControl.setHTML('Turn public');
+    if(entry)
+    {
+      var shiftId = entry.getAttribute('id');
+      var shiftStatus = parseInt(SSGetShift(shiftId).status);
+      var privacyStatus = $(entry.getElementByClassName('privacyStatus'));
+      var privacyControl = $(entry.getElementByClassName('privacyControl'));
+      var statusIconsDiv = $(entry.getElementByClassName('statusIcons'));
+      var privacyIcon = $(entry.getElementByClassName('privacyIcon'));
+    
+      if (shiftStatus == 1) 
+      {
+        privacyStatus.setHTML('This shift is public');
+        privacyControl.setHTML('Turn private');
+        if(privacyIcon) privacyIcon.addClass('SSDisplayNone');
+      } 
+      else 
+      {
+        privacyStatus.setHTML('This shift is private');
+        privacyControl.setHTML('Turn public');
+        if(privacyIcon) privacyIcon.removeClass('SSDisplayNone');
+      }
     }
   },
   
@@ -1502,6 +1513,11 @@ var Console = new Class({
 
     newEntry.getElementByClassName('spaceTitle').innerHTML = aShift.space;
     $(newEntry.getElementByClassName('spaceTitle')).setStyle('background', 'transparent url(' + icon + ') no-repeat 3px 1px');
+    
+    if(aShift.broken)
+    {
+      newEntry.getElementByClassName('brokenIcon').removeClass('SSDisplayNone');
+    }
     
     // remove the delete and hide the edit link if necessary
     if(!SSUserCanEditShift(aShift.id))
@@ -1784,6 +1800,17 @@ var Console = new Class({
     summaryEdit.injectInside(summaryDiv);
     
     //console.log('summary added');
+    // ------------------- Status Icons -------------------- //
+    var statusIconsDiv = $(this.doc.createElement('div'));
+    statusIconsDiv.className = 'statusIcons column';
+    
+    var privacyIcon = $(this.doc.createElement('div'));
+    privacyIcon.className = 'privacyIcon SSDisplayNone';
+    privacyIcon.injectInside(statusIconsDiv);
+    
+    var brokenIcon = $(this.doc.createElement('div'));
+    brokenIcon.className = 'brokenIcon SSDisplayNone';
+    brokenIcon.injectInside(statusIconsDiv);
     
     // ------------------- User ---------------------------- //
     var userDiv = $(this.doc.createElement('div'));
@@ -1822,6 +1849,7 @@ var Console = new Class({
     expanderDiv.injectInside(shiftEntry);
     spaceDiv.injectInside(shiftEntry);
     summaryDiv.injectInside(shiftEntry);
+    statusIconsDiv.injectInside(shiftEntry);
     userDiv.injectInside(shiftEntry);
     postedDiv.injectInside(shiftEntry);
     clear.injectInside(shiftEntry);
