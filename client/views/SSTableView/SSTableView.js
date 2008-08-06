@@ -1,3 +1,7 @@
+/*
+  Class: SSTableView
+    View controller for table views in the ShiftSpace environment
+*/
 var SSTableView = new Class({
   
   name: 'SSTableView',
@@ -8,6 +12,7 @@ var SSTableView = new Class({
   
   initialize: function(el, options)
   {
+    // need to pass this up to parent
     this.parent(el);
     
     // for speed
@@ -35,7 +40,11 @@ var SSTableView = new Class({
     }
   },
   
-  
+  /*
+    Function: initTableHead
+      Initialize the table head.  This needs lives outside of the scroll view.  It's contents are built based
+      on the table definition in the table's colgroup element.
+  */
   initTableHead: function()
   {
     var tableHead = this.element._getElement('> .SSControlView');
@@ -49,7 +58,10 @@ var SSTableView = new Class({
     this.initColumnHeadings();
   },
   
-
+  /*
+    Function: initColumnHeadings
+      Intializes the actual column headings.
+  */
   initColumnHeadings: function()
   {
     var model = this.element._getElement('> .SSControlView .SSModel');
@@ -80,7 +92,10 @@ var SSTableView = new Class({
     }
   },
   
-  
+  /*
+    Function: initColumnResizers
+      Intializes the column resizers.
+  */
   initColumnResizers: function()
   {
     var resizers = this.element._getElements('> .SSControlView .SSResize');
@@ -120,7 +135,13 @@ var SSTableView = new Class({
     }.bind(this));
   },
   
-  
+  /*
+    Function: eventDispatch
+      Used to dispatch events to appropiate handlers.
+      
+    Parameters:
+      theEvent - a raw DOM event.
+  */
   eventDispatch: function(theEvent)
   {
     var evt = new Event(theEvent);
@@ -138,7 +159,6 @@ var SSTableView = new Class({
       break;
       
       case (this.hitTest(target, '> .SSControlView .SSColumnHeading') != null):
-        console.log('column hit test');
         // check next for column select
         this.handleColumnSelect(this.cachedHit());
       break;
@@ -157,7 +177,13 @@ var SSTableView = new Class({
     }
   },
   
-
+  /*
+    Function: handleColumnOrderHit
+      Handles a column reordering event.
+      
+    Parameters:
+      orderButton - the column reodering button that was actually hit.
+  */
   handleColumnOrderHit: function(orderButton)
   {
     var index = this.columnIndexForNode(orderButton);
@@ -180,7 +206,13 @@ var SSTableView = new Class({
     }
   },
   
-  
+  /*
+    Function: handleColumnSelect
+      Handles column select events.
+    
+    Parameters:
+      column - the actual DOM element representing the clicked column.
+  */
   handleColumnSelect: function(column)
   {
     var index = this.columnIndexForNode(column);
@@ -199,37 +231,73 @@ var SSTableView = new Class({
     }
   },
   
-  
+  /*
+    Function: selectedColumn
+      Returns the DOM node representing the selected column.
+      
+    Returns:
+      An HTML element.
+  */
   selectedColumn: function()
   {
     return this.contentView._getElement('> .SSDefinition col.SSActive');
   },
   
-  
+  /*
+    Function: selectedColumnIndex
+      Returns the index of the current selected column.
+      
+    Returns:
+      An HTML element.
+  */
   selectedColumnIndex: function()
   {
     return this.contentView._getElements('> .SSDefinition col').indexOf(this.selectedColumn());
   },
   
-  
+  /*
+    Function: selectedRow
+      Returns the DOM node representing the select table row.
+      
+    Returns:
+      An HTML element.
+  */
   selectedRow: function()
   {
     return this.contentView._getElement('.SSRow.SSActive')
   },
   
-  
+  /*
+    Function: selectedRowIndex
+      Returns the index of the selected row.
+    
+    Returns:
+      An integer.
+  */
   selectedRowIndex: function()
   {
     return this.contentView._getElements('.SSRow').indexOf(this.selectedRow());
   },
   
-  
+  /*
+    Function: deselectRow
+      Deselects a row.
+      
+    Parameters:
+      row - an HTML element.
+  */
   deselectRow: function(row)
   {
     row.removeClass('SSActive');
   },
   
-  
+  /*
+    Function: deselectColumn
+      Deselects a column.
+      
+    Parameters:
+      col - an HTML element.
+  */
   deselectColumn: function(col)
   {
     var idx = this.selectedColumnIndex();
@@ -237,14 +305,26 @@ var SSTableView = new Class({
     this.columnHeadingForIndex(idx).removeClass('SSActive');
   },
   
-  
+  /*
+    Function: selectRow
+      Select a row by it's index.
+      
+    Parameters:
+      idx - an integer.
+  */
   selectRow: function(idx)
   {
     this.deselectAll();
     this.contentView._getElements(".SSRow")[idx].addClass('SSActive');
   },
   
-  
+  /*
+    Function: selectColumn
+      Select a column by it's index.
+    
+    Parameters:
+      idx - an integer.
+  */
   selectColumn: function(idx)
   {
     this.deselectAll();
@@ -252,33 +332,67 @@ var SSTableView = new Class({
     this.columnHeadingForIndex(idx).addClass('SSActive');
   },
   
-  
+  /*
+    Function: deselectAll
+      Deselect all columns and rows.
+  */
   deselectAll: function()
   {
     if(this.selectedRow()) this.deselectRow(this.selectedRow());
     if(this.selectedColumn()) this.deselectColumn(this.selectedColumn());
   },
   
-  
+  /*
+    Function: columnHeadingForIndex
+      Returns the column heading DOM element by index.
+      
+    Parameters:
+      idx - an integer.
+      
+    Returns:
+      an HTML Element.
+  */
   columnHeadingForIndex: function(idx)
   {
     return this.element._getElements('> .SSControlView .SSColumnHeading')[idx];
   },
   
-  
+  /*
+    Function: columnDefinitionForIndex
+      Returns the col DOM element by index.
+      
+    Parameters:
+      idx - an integer.
+  */
   columnDefinitionForIndex: function(idx)
   {
     return this.contentView._getElements('> .SSDefinition col')[idx];
   },
   
-  
+  /*
+    Function: columnIndexForNode
+      Returns the column index for a particular node.
+    
+    Parameters:
+      _node - a HTML Element.
+      
+    Returns:
+      an integer.
+  */
   columnIndexForNode: function(_node)
   {
     var node = (_node.hasClass('SSColumnHeading')) ? _node : _node.getParent('.SSColumnHeading');
     return this.element._getElements('> .SSControlView .SSColumnHeading').indexOf(node);
   },
   
-  
+  /*
+    Function: handleRowClick
+      Handles user click on a row.
+    
+    Parameters:
+      row - the DOM node representing the row.
+      target - the actual node that was clicked.
+  */
   handleRowClick: function(row, target)
   {
     var rowIndex = this.indexOfRow(row);
@@ -299,13 +413,25 @@ var SSTableView = new Class({
     }
   },
   
-  
+  /*
+    Function: indexOfRow
+      Returns the index for a table row HTML Element.
+      
+    Parameters:
+      row - the HTML element representing the row.
+  */
   indexOfRow: function(row)
   {
     return this.contentView._getElements('.SSRow').indexOf(row);
   },
   
-
+  /*
+    Function: setDatasource
+      Sets the data source for the table.  This should be an instance of <SSTableViewDatasource> or one of it's subclasses.
+    
+    Parameters:
+      datasource - an instance of <SSTableViewDatasource>.
+  */
   setDatasource: function(datasource)
   {
     console.log('SSTableView datasource set.');
@@ -327,20 +453,35 @@ var SSTableView = new Class({
     }
   },
   
-
+  /*
+    Function: datasource
+      Getter for the datasource of this table view.
+      
+    Returns:
+      An instance of <SSTableViewDatasource>.
+  */
   datasource: function()
   {
     return this.__datasource__;
   },
   
-  
+  /*
+    Function: reload
+      Tell the datasource to refetch it's data.
+  */
   reload: function()
   {
     // reload from the server
     this.datasource().fetch();
   },
 
-  
+  /*
+    Function: setColumnNames
+      Sets the column names.
+      
+    Parameters:
+      columnNames - an Array of string representing the column names in order.
+  */
   setColumnNames: function(columnNames)
   {
     console.log('setColumnNames');
@@ -348,19 +489,34 @@ var SSTableView = new Class({
     this.__columnNames__ = columnNames;
   },
   
-  
+  /*
+    Function: setColumnSortOrders
+      Set sort orders for each column in the table.
+      
+    Parameters:
+      newOrders - an Array representing the column sort orders.
+  */
   setColumnSortOrders: function(newOrders)
   {
     this.__columnSortOrders__ = newOrders;
   },
   
-  
+  /*
+    Function: columnSortOrders
+      Getter for the column sort orders.
+      
+    Returns:
+      An array.
+  */
   columnSortOrders: function()
   {
     return this.__columnSortOrders__;
   },
   
-  
+  /*
+    Function: initColumnSort
+      Initializes the column sort orders.
+  */
   initColumnSort: function()
   {
     // initialize the private var
@@ -371,25 +527,50 @@ var SSTableView = new Class({
     }.bind(this));
   },
   
-  
+  /*
+    Function: sortOrderForColumn  
+      Returns the sort order for a column by index.
+      
+    Parameters:
+      index - an integer.
+  */
   sortOrderForColumn: function(index)
   {
     return this.columnSortOrders()[this.columnNames()[index]];
   },
   
-  
+  /*
+    Function: setSortOrderForColumn
+      Sets the sort order for a column.
+      
+    Parameters:
+      index - an integer.
+      order - should be SSTableViewDatasource.ASCENDING or SSTableViewDatasource.DESCENDING.
+  */
   setSortOrderForColumn: function(index, order)
   {
     this.columnSortOrders()[this.columnNames()[index]] = order;
   },
   
-  
+  /*
+    Function: columnNames
+      Getters for the column names property.
+      
+    Returns:
+      An array of the column names in order.
+  */
   columnNames: function()
   {
     return this.__columnNames__;
   },
   
-  
+  /*
+    Function: addRow
+      Adds a row to the table view.
+      
+    Parameters:
+      data - data for each column of the row to be created.
+  */
   addRow: function(data)
   {
     var columnNames = this.columnNames();
@@ -416,31 +597,58 @@ var SSTableView = new Class({
     }
   },
   
-  
+  /*
+    Function: setModelRow
+      Sets the model row (an instance of <SSTableRow>) for the table.
+      
+    Parameters:
+      modelRow - the model row.
+  */
   setModelRow: function(modelRow)
   {
     this.__modelRow__ = modelRow;
   },
   
-  
+  /*
+    Function: modelRow
+      Getter for the model row (an instance of <SSTableRow>) used by this table view instance.
+      
+    Returns:
+      An HTML Element.
+  */
   modelRow: function()
   {
     return this.__modelRow__;
   },
 
-
+  /*
+    Function: modelRowController
+      Returns the actual view controller for the model row.
+      
+    Returns:
+      An <SSTableRow> instance.
+  */
   modelRowController: function()
   {
     return this.controllerForNode(this.modelRow());
   },
   
-  
+  /*
+    Function: modelRowClone
+      Deep clones the model row HTML Element.
+      
+    Returns;
+      An HTML Element.
+  */
   modelRowClone: function()
   {
     return this.modelRow().clone(true);
   },
   
-  
+  /*
+    Function: refresh
+      Empties out the table content and reloads from the data source.
+  */
   refresh: function()
   {
     // empty the content view

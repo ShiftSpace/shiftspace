@@ -4,8 +4,6 @@ var SSTableRow = new Class({
   
   initialize: function(model)
   {
-    console.log('++++++++++++++++ initialize SSTableRow');
-    console.log(model);
     this.parent(model);
   },
   
@@ -24,6 +22,7 @@ var SSTableRow = new Class({
     }
   },
   
+
   getProperty: function(row, prop)
   {
     var propMethod = 'get'+prop.capitalize();

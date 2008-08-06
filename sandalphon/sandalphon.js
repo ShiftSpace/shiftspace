@@ -7,11 +7,13 @@ window.addEvent('domready', function() {
 
 var SandalphonClass = new Class({
   
+  // paths to required ShiftSpace files
   ClassPaths:
   {
     'SSTableViewDatasource': '/client/'
   },
   
+  // paths to view controllers
   UIClassPaths:
   { 
     'SSTabView': '/client/views/SSTabView/',
@@ -19,6 +21,7 @@ var SandalphonClass = new Class({
     'SSTableRow': '/client/views/SSTableRow/'
   },
   
+  // path to user defined view controllers
   UserClassPaths:
   {
     'SSCustomTableRow': '/client/'
@@ -28,14 +31,20 @@ var SandalphonClass = new Class({
   initialize: function(storage)
   { 
     console.log('Sandalphon, sister of Metatron, starting up.');
+    // setup the persistent storage
     this.setStorage(storage);
+    // initialize the classpath
     this.setupClassPaths();
-    // for analyzing fragments
+    // for analyzing fragments of markup
     this.setFragment(new Element('div'));
+    // intialize the interface
     this.initInterface();
   },
   
-  
+  /*
+    Function: initInterface
+      Loads the last used input paths as a convenience.
+  */
   initInterface: function()
   {
     console.log('Initializing interface');
@@ -50,7 +59,10 @@ var SandalphonClass = new Class({
     this.attachEvents();    
   },
   
-  
+  /*
+    Function: setupClassPaths
+      Loads the class paths.  Doesn't really do all that much now.
+  */
   setupClassPaths: function()
   {
     // initialize the UIClassPaths var
@@ -75,7 +87,10 @@ var SandalphonClass = new Class({
     }.bind(this));
   },
   
-  
+  /*
+    Function: loadClassFiles
+      Loads all of the files pointed to in the class path dictionaries.
+  */
   loadClassFiles: function()
   {
     for(var className in this.ClassPaths)
@@ -101,19 +116,34 @@ var SandalphonClass = new Class({
     console.log('Class files loaded.');
   },
   
-  
+  /*
+    Function: storage
+      Accessor method.
+      
+    Returns:
+      The persistent storage object.
+  */
   storage: function()
   {
     return this.__storage__;
   },
   
-  
+  /*
+    Function: setStorage
+      Set the persistent storage object.
+      
+    Parameters:
+      storage - A persistent storage object, provided by persist.js
+  */
   setStorage: function(storage)
   {
     this.__storage__ = storage;
   },
   
-  
+  /*
+    Function: attachEvents
+      Attach the gui events for the interface.
+  */
   attachEvents: function()
   {
     // attach file loading events
@@ -145,19 +175,34 @@ var SandalphonClass = new Class({
     }.bind(this));
   },
   
-  
+  /*
+    Function: fragment
+      Returns the private fragment node.
+    
+    Returns:
+      The fragment node.
+  */
   fragment: function()
   {
     return this.__fragment__;
   },
   
-  
+  /*
+    Function:
+      Sets the private fragment node.
+  */
   setFragment: function(frag)
   {
     this.__fragment__ = frag;
   },
 
-
+  /*
+    Function: loadFile
+      Loads an interface file from the speficied path.
+    
+    Parameters:
+      path - a file path as string.  This path should be absolute from the root ShiftSpace directory.
+  */
   loadFile: function(path)
   {
     // save for later
@@ -191,7 +236,13 @@ var SandalphonClass = new Class({
     }).send();
   },
   
-  
+  /*
+    Function: loadTest
+      Loads a test file.
+    
+    Parameters:
+      path - the path to the test file as a string.  The path should be absolute from the root ShiftSpace directory.
+  */
   loadTest: function(path)
   {
     // save for later
@@ -220,7 +271,7 @@ var SandalphonClass = new Class({
     }).send();
   },
 
-
+  // Not implemented yet
   compile: function(className)
   {
     // ask the server to compile the file
@@ -228,19 +279,22 @@ var SandalphonClass = new Class({
     // the class will implement the interface as a new method
   },
   
-
+  // Not implemented yet.
   toggledCompiled: function()
   {
     
   },
   
-  
+  // Not implemented yet.
   searchForClass: function()
   {
     
   },
   
-  
+  /*
+    Function: instantiateControllers
+      Instantiate any backing JS view controllers for the interface.
+  */
   instantiateControllers: function()
   {
     console.log('Instantiating controllers for views.');
@@ -250,7 +304,13 @@ var SandalphonClass = new Class({
     });
   },
   
-  
+  /*
+    Function: analyze
+      Determine if all the required classes for the interface are available.
+    
+    Parameters:
+      html - the interface markup as a string.
+  */
   analyze: function(html)
   {
     this.fragment().set('html', html);

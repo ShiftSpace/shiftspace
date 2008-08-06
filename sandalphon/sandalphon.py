@@ -23,6 +23,9 @@ class SSCustomTableRowParser(ViewParser):
 
 
 def parserForView(view):
+    """
+    Return the view parser class object associated with the view element.
+    """
     theClass = view.get("uiclass") + "Parser"
     print "getParserForView: " + theClass
     module = sys.modules[ViewParser.__module__]
@@ -33,12 +36,16 @@ def parserForView(view):
 
 
 def hasAttribute(element, attrib, value=None):
-    """Check if an element has an attribute and matches a value"""
+    """
+    Check if an element has an attribute and matches a value
+    """
     return ((value != None) and (element.get(attrib) == value)) or (element.get(attrib) != None)
 
 
 def compile(path):
-    """Compile an interface file down to it's parts"""
+    """
+    Compile an interface file down to its parts
+    """
     # Parse the file at the path
     interfaceFile = ET.parse(path)
     # Grab the root element
