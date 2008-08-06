@@ -11,7 +11,8 @@ CREATE TABLE shift (
   version VARCHAR(255),
   revision INTEGER DEFAULT 1,
   parent_id INTEGER DEFAULT 0,
-  status INTEGER DEFAULT 1
+  status INTEGER DEFAULT 1,
+  broken INTEGER DEFAULT 0
 );
 
 CREATE TABLE user (
