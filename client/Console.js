@@ -1413,12 +1413,14 @@ var Console = new Class({
       var privacySpan = $(entry.getElementByClassName('privacySpan'));
       var editSpan = $(entry.getElementByClassName('editSpan'));
       var deleteSpan = $(entry.getElementByClassName('deleteSpan'));
+      var username = $(entry.getElementByClassName('user'));
       
       if(userOwnsShift)
       {
         privacySpan.removeClass('SSDisplayNone');
         editSpan.removeClass('SSDisplayNone');
         deleteSpan.removeClass('SSDisplayNone');
+        username.addClass('loggedIn');
       }
       else
       {
@@ -1460,9 +1462,6 @@ var Console = new Class({
   {
     var shiftIds = SSGetPageShiftIdsForUser();
     
-    console.log('updateControlsForUsersShifts');
-    console.log(shiftIds);
-    
     // user is logged out hide all controls
     if(shiftIds.length == 0)
     {
@@ -1474,6 +1473,9 @@ var Console = new Class({
       });
       $A(_$(this.doc).getElementsByClassName('privacySpan')).each(function(privacySpan) {
         $(privacySpan).addClass('SSDisplayNone');
+      });
+      $A(_$(this.doc).getElementsByClassName('loggedIn')).each(function(x) {
+        $(x).removeClass('loggedIn');
       });
       return;
     }
