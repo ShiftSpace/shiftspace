@@ -354,7 +354,7 @@ var SandalphonClass = new Class({
     // First verify that we have a real path for each class
     var missingClasses = false;
     classes.each(function(x) {
-      missingClasses = (this.ClassPaths[x] == null && this.UIClassPaths[x] == null && this.UserClassPaths[x] == null);
+      if(!missingClasses) missingClasses = (this.ClassPaths[x] == null && this.UIClassPaths[x] == null && this.UserClassPaths[x] == null);
     }.bind(this));
     
     if(missingClasses) console.error('Error missing uiclasses.');
