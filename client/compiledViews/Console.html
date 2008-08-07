@@ -1,0 +1,47 @@
+<div id="mainTabView" class="SSTabView SSTabViewConsoleStyle"
+uiclass="SSTabView">
+  <div id="mainTabControl" class="SSControlView">
+    <div id="select1" class="SSButton SSActive">Shifts</div>
+    <div id="select2" class="SSButton">Settings</div>
+    <div id="select3" class="SSButton">Login</div>
+  </div>
+  <div id="mainTabContentView" class="SSContentView">
+    <!-- start shifts view -->
+    <div id="shiftsTabView"
+    class="SSTabView SSTabViewSubTabStyle SSActive"
+    uiclass="SSTabView">
+      <div id="settingsTabControl" class="SSControlView">
+        <div id="shifts" class="SSButton SSActive">Shifts</div>
+        <div id="myshifts" class="SSButton">My Shifts</div>
+        <div id="following" class="SSButton">Following</div>
+      </div>
+      <div class="SSContentView" autoresize="1">
+        <div>All Shifts</div>
+        <div>My Shifts, I made a change for mushon 
+        <div style="background-color:blue; width:100px; height:100px">
+        </div></div>
+        <div>Tracked Shifts</div>
+      </div>
+      <!-- End shifts subtab content view -->
+    </div>
+    <!-- End Sub tab view -->
+    <!-- Start Settings subtab view -->
+    <div id="settingsTabView"
+    class="SSTabView SSTabViewSubTabStyle" uiclass="SSTabView">
+      <div id="settingsTabControl" class="SSControlView">
+        <div id="spaces" class="SSButton">Spaces</div>
+        <div id="plugins" class="SSButton">Plugins</div>
+        <div id="misc" class="SSButton">Misc</div>
+      </div>
+      <div id="settingTabContentView" class="SSContentView">
+        <div>Pane 1</div>
+        <div>Pane 2</div>
+        <div>Pane 3</div>
+      </div>
+    </div>
+    <!-- end setting subtab view -->
+    <!-- Start User Pane -->
+    <div>Pane 3</div>
+    <!-- End User Pane -->
+  </div>
+</div>
