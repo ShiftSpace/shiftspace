@@ -31,22 +31,42 @@ def elementHasAttribute(element, attrib, value=None):
 
 
 class SandalphonCompiler:
+
     def __init__(self):
         self.paths = {}
+        # regex for template pattern /<\?.+?\?>/g
+        self.templatePattern = re.compile('<\?.+?\?>')
         self.getPaths()
+
 
     def getPaths(self):
         """
         Looks into views and builds the paths to the interface files
         """
         viewsDirectory = "../client/views/"
-        # filter out .svn files
-        self.paths = [os.path.join(viewsDirectory, f) for f in os.listdir(viewsDirectory) if(f != ".svn")]
+        customViewsDirectory = "../client/customViews/"
+        # grab the base view classes and filter out .svn files
+        views = [f for f in os.listdir(viewsDirectory) if(f != ".svn")]
+        # grab the custom views and filter out the .svn files
+        customViews = [f for f in os.listdir(customViewsDirectory) if (f != ".svn")]
+
+        self.paths = {}
+
+        for f in views:
+            self.paths[os.path.splitext(f)[0]] = os.path.join(viewsDirectory, f)
+
+        for f in customViews:
+            self.paths[os.path.splitext(f)[0]] = os.path.join(customViewsDirectory, f)
+
+        print self.paths
         
-        print "%s files in path" % len(self.paths)
-        print ", ".join([("%s" % f) for f in self.paths])
-        
+
+    def validateMarkup(self, markup):
+        """
+        Make sure the passed in markup checks out.
+        """
         pass
+
 
     def parserForView(self, view):
         """
@@ -60,9 +80,39 @@ class SandalphonCompiler:
         else:
             return None
 
-    def loadView(self, fileName):
-        print ("loadView: " + fileName)
+
+    def loadView(self, view):
+        """
+        Load a views a view and returns it.
+        """
+        print ("loadView: " + view)
+        filePath = self.paths[view]
+        print filePath
+        if filePath != None:
+            fileRef = open(filePath)
+            # verify that this file is valid mark up
+            return fileRef.read()
+        else:
+            return None
+        
+
+    def getInstruction(self, str):
+        temp = str[2:len(str)-2]
+        temp = temp.split(':')
+        return (temp[0], temp[1])
+
     
+    def handleInstruction(self, instruction, file):
+        if instruction[0] == "customView":
+            # load this view, will need match that view as well
+            theView = self.loadView(instruction[1])
+            print theView
+            # replace the match
+            return self.templatePattern.sub(theView, file, 1)
+
+        return file
+    
+
     def compile(self, path):
         """
         Compile an interface file down to its parts
@@ -72,25 +122,32 @@ class SandalphonCompiler:
         fileRef = open(path)
         interfaceFile = fileRef.read()
         
-        # look for custom view pointers
-        # /<\?.+?\?>/g
-        p = re.compile('<\?.+?\?>')
-        matches = p.finditer(interfaceFile)
+        matches = self.templatePattern.finditer(interfaceFile)
         
         hasCustomViews = True
         while hasCustomViews:
-            match = p.search(interfaceFile)
+            match = self.templatePattern.search(interfaceFile)
             if match:
+                # get the span of the match in the file
                 span = match.span()
-                # load this view, will need match that view as well
-                self.loadView(interfaceFile[span[0]:span[1]])
-                # replace the match
-                interfaceFile = p.sub("<replaced>", interfaceFile, 1)
+                # grab the instruction
+                instruction = self.getInstruction(interfaceFile[span[0]:span[1]])
+                # mutate the file based on it
+                interfaceFile = self.handleInstruction(instruction, interfaceFile)
             else:
                 hasCustomViews = False
                 
+        interfaceFile = ET.fromstring(interfaceFile)
+ 
+        # get the actual file name
+        compiledViewsDirectory = "../client/compiledViews/"
+        fileName = os.path.basename(path)
+        fileHandle = open(os.path.join(compiledViewsDirectory, fileName), "w")
+        # write the compile file
+        fileHandle.write(ET.tostring(interfaceFile))
+        # close the file
+        
         """
-        interfaceFile = ET.parse(path)
         # Grab the root element
         root = interfaceFile.getroot()
         # Check if it has a backing uiclass
