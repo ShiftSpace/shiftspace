@@ -219,10 +219,7 @@ var SandalphonClass = new Class({
       path - a file path as string.  This path should be absolute from the root ShiftSpace directory.
   */
   loadFile: function(path)
-  {
-    // save for later
-    this.storage().set('lastInterfaceFile', path);
-    
+  {    
     // attempt to load css
     new Asset.css('..'+path+'.css');
 
@@ -293,7 +290,10 @@ var SandalphonClass = new Class({
    */
   compileFile: function()
   {
+    // grab the filepath
     var filepath = $('loadFileInput').getProperty('value');
+    // save for later
+    this.storage().set('lastInterfaceFile', filepath);
 
     new Request({
       url: "compile.php",

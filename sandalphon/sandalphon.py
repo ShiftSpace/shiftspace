@@ -6,20 +6,17 @@ from elementtidy import TidyHTMLTreeBuilder
 
 class ViewParser:
     def __init__(self, element):
-        print "Init ViewParser"
         self.element = element;
 
 
 class SSTableViewParser(ViewParser):
     def __init__(self, element):
-        print "Init SSTableViewParser"
         ViewParser.__init__(self, element)
         pass
 
 
 class SSCustomTableRowParser(ViewParser):
     def __init__(self, element):
-        print "Init SSCustomTableRowParser"
         ViewParser.__init__(self, element)
 
 
@@ -57,8 +54,6 @@ class SandalphonCompiler:
 
         for f in customViews:
             self.paths[os.path.splitext(f)[0]] = os.path.join(customViewsDirectory, f)
-
-        print self.paths
         
 
     def validateMarkup(self, markup):
@@ -77,7 +72,6 @@ class SandalphonCompiler:
         Return the view parser class object associated with the view element.
         """
         theClass = view.get("uiclass") + "Parser"
-        print "getParserForView: " + theClass
         module = sys.modules[ViewParser.__module__]
         if(hasattr(module, theClass)):
             return getattr(module, theClass)
@@ -91,7 +85,6 @@ class SandalphonCompiler:
         """
         print ("loadView: " + view)
         filePath = self.paths[view]
-        print filePath
         if filePath != None:
             fileHandle = open(filePath)
             # verify that this file is valid mark up
@@ -118,7 +111,6 @@ class SandalphonCompiler:
         if instruction[0] == "customView":
             # load this view, will need match that view as well
             theView = self.loadView(instruction[1])
-            print theView
             # replace the match
             return self.templatePattern.sub(theView, file, 1)
 
@@ -152,7 +144,8 @@ class SandalphonCompiler:
             else:
                 hasCustomViews = False
                 
-        interfaceFile = ElementTree.fromstring(interfaceFile)
+        # validate it
+        tree = ElementTree.fromstring(interfaceFile)
  
         # get the actual file name
         compiledViewsDirectory = "../client/compiledViews/"
@@ -162,7 +155,8 @@ class SandalphonCompiler:
         print "Writing compiled view file"
         fileHandle = open(fullPath, "w")
         # write the compiled file
-        fileHandle.write(ElementTree.tostring(interfaceFile))
+        print interfaceFile
+        fileHandle.write(interfaceFile)
         # close the file
         fileHandle.close()
 
