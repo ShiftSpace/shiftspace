@@ -1,6 +1,7 @@
 /*
 TODO:
-move most logic to shift out of space.
+move most logic out of space into shift.
+get rid of getCurrentShift 
 */
 var CutupsSpace = ShiftSpace.Space.extend({
   attributes: {
@@ -24,7 +25,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
                 if (!this.getCurrentShift().ranges){
                     this.getCurrentShift().ranges = [];
                 }
-                
+                newRangeRef.sscutupid = this.createCutupId();
                 this.getCurrentShift().ranges.push(newRangeRef);
                 
                 this.turnOnRangeRef(newRangeRef);
@@ -36,6 +37,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
                 this.unsavedCutupOnPage = true;
                 
                 this.visibleShifts.push(newRangeRef);//add to list of visible shifts
+                $("SSCutupButtonCutup").setStyle('background-position','center -60px');
             }else{
               //origTextArray exists so just re-cutup current cutup
                 var xPathQuery = "//*[@id='"  + this.getCurrentShift().getId() + "']";
@@ -47,13 +49,27 @@ var CutupsSpace = ShiftSpace.Space.extend({
     }.bind(this);
   },  
   
+  createCutupId: function(){
+    var now = new Date();
+    var month = now.getMonth() + 1;
+    var day = now.getDate();
+    var year = now.getFullYear();
+    var hour = now.getHours();
+    var min = now.getMinutes();
+    var sec = now.getSeconds();
+    var rand = $random(0,1000000);
+    return (month + "-" + day + "-" + year + "-" + hour + "-" + min + "-" + sec + "-" + rand);
+  },
+  
   unsavedCutupOnPage: false,
   
   visibleShifts: [],  //contains all shifts currently show on page
   
   removeFromVisibleShifts: function(shiftId){
+    //console.log("===================================Space removeFromVisibleShifts",this.visibleShifts);
     for(var shift=0;shift<this.visibleShifts.length;shift++){
-      if(this.visibleShifts[shift].id ==  shiftId){
+      //if this.visibleShifts[shift].id does not exist then it is the currently create shift.
+      if(this.visibleShifts[shift].id ==  shiftId || !this.visibleShifts[shift].id){
           delete this.visibleShifts[shift];
           var cleanedArray = [];
           //remove undefined values from array
@@ -63,46 +79,28 @@ var CutupsSpace = ShiftSpace.Space.extend({
           this.visibleShifts = cleanedArray;
       }
     }
-  },
-  
-  canShowShift: function(json){
-     try{
-      var tagName = json.ranges[0].ancestorPosition.tagName;
-      var ancIndex = json.ranges[0].ancestorPosition.ancIndex - 1;
-      var id = json.id;
-      var thisCommonAncestor = $$(tagName)[ancIndex];
-      
-      console.log("=================================canShowShift json",thisCommonAncestor);
-      
-      for(shift=0;shift<this.visibleShifts.length;shift++){
-        var thatTagName = this.visibleShifts[shift].ranges[0].ancestorPosition.tagName;
-        var thatAncIndex = this.visibleShifts[shift].ranges[0].ancestorPosition.ancIndex - 1;
-        var thatCommonAncestor = $$(thatTagName)[thatAncIndex];
-        if(thisCommonAncestor == thatCommonAncestor || thisCommonAncestor.hasChild(thatCommonAncestor) || thatCommonAncestor.hasChild(thisCommonAncestor)){
-          alert("You are attempting to display Shifts that conflict with each other." +
-            "Try hiding some of the currently displayed Shifts prior to viewing this one.");
-          return false;
-        }else{
-          return true;
-        }
-      }
-    }catch(e){} 
-    return true;
+    //console.log("===================================removeFromVisibleShifts2" ,this.visibleShifts);
   },
   
   canShowRange: function(range){
     /*check other shifts */
-    try{ 
+    /* try{  */
+      //console.log("===================================================canShowRange range",range);
       var tagName = range.ancestorPosition.tagName;
-      var ancIndex = range.ancestorPosition.ancIndex - 1;
-      console.log("===================================tagName ancindex range",tagName,ancIndex,range);
-      var thisCommonAncestor = $$(tagName)[ancIndex];
-      console.log("===================================canShowRange visibleShifts",this.visibleShifts);
+      var ancIndex = range.ancestorPosition.ancIndex;
+      var thisCommonAncestor = $$(tagName)[ancIndex - 1];
+      
       for(shift=0;shift<this.visibleShifts.length;shift++){
-        var thatTagName = this.visibleShifts[shift].ancestorPosition.tagName;
-        var thatAncIndex = this.visibleShifts[shift].ancestorPosition.ancIndex - 1;
-        var thatCommonAncestor = $$(thatTagName)[thatAncIndex];
-        console.log("===================================thisCommonAncestor thatCommonAncestor",thisCommonAncestor,thatCommonAncestor);
+        if(this.visibleShifts[shift].ranges){
+          var thatTagName = this.visibleShifts[shift].ranges[0].ancestorPosition.tagName;
+          var thatAncIndex = this.visibleShifts[shift].ranges[0].ancestorPosition.ancIndex;
+          var thatCommonAncestor = $$(thatTagName)[thatAncIndex - 1];
+        }else{
+          var thatTagName = this.visibleShifts[shift].ancestorPosition.tagName;
+          var thatAncIndex = this.visibleShifts[shift].ancestorPosition.ancIndex;
+          var thatCommonAncestor = $$(thatTagName)[thatAncIndex - 1];          
+        }
+        
         if(thisCommonAncestor == thatCommonAncestor || thisCommonAncestor.hasChild(thatCommonAncestor) || thatCommonAncestor.hasChild(thisCommonAncestor)){
           alert("You are attempting to create a new Cutup that confilicts with " +
             "one currently being viewed on the page. Try hiding some of the currently displayed Cutups.");
@@ -111,7 +109,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
           return true;
         }
       }
-    }catch(e){} 
+    /* }catch(e){}  */
     return true;
   },
   
@@ -328,9 +326,12 @@ var CutupsSpace = ShiftSpace.Space.extend({
       for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
           parentNodes[i].normalize();
       } 
-/*       this.cutupTextArray = null;
-      this.origTextArray = null; */
+
+      this.removeFromVisibleShifts(currentShiftId);
+      
       this.unsavedCutupOnPage = false;
+      
+      $("SSCutupButtonCutup").setStyle('background-position','center 0px');
       
   },
   
@@ -426,12 +427,10 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   
   hideCutups: function(json) {
-      //console.log("==================================================hideCutups");
-      //console.log("==================================================json.id",json.id);
-      //console.log("==================================================this.getCurrentShift().getId()",this.getCurrentShift().getId());
+      //console.log("==================================================Space hideCutups");
+
       // ignores the specific shift since only one highlight can be on at a given moment 
       // search for all span elements with _shiftspace_highlight attribute and open them
-      //var currentShiftId = (this.currentShiftId)? this.currentShiftId : this.getCurrentShift().getId();
       var currentShiftId = json.id;
       var xPathResult = document.evaluate(".//span[@id='" + currentShiftId + "']", document, null,
           XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
@@ -454,8 +453,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
       for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
           parentNodes[i].normalize();
       } 
-/*       this.origTextArray = null;
-      this.cutupTextArray = null; */
+
   },  
   
   tokenizeNewline: function(text){
@@ -476,8 +474,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
     //remove title value after save
     $('SSCutupTitle').value = "";
     this.unsavedCutupOnPage = false;
-    //console.log("================================Space save",this);
-    //console.log("================================Space save",this.shifts + "");
+    $("SSCutupButtonCutup").setStyle('background-position','center 0px');
   }
 });
 
@@ -509,8 +506,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
           this.ranges[i].ancestorOrigTextContent = this.ranges[i].ancestorOrigTextContent.replace(new RegExp("\\n","g"),"__newline__");
         } 
       }
-      //console.log("========================================Shift encode return this",this);
-      //console.log("========================================Shift encode return this.ranges",this.ranges);
+
       return {
           ranges: this.ranges,
           summary: this.summary
@@ -519,12 +515,11 @@ var CutupsShift = ShiftSpace.Shift.extend({
     
     show: function() {
       //console.log("===================================================Shift show");
-      //console.log("===================================================this.json.ranges",this.json.ranges);
-      //console.log("===================================================this.ranges",this.ranges);
-      //console.log("===================================================space",this.getParentSpace());
+
       var space = this.getParentSpace();
       //showing a just created shift or a previously created and saved shift
-      var ranges = (this.json.ranges)? this.json.ranges : this.ranges; 
+      var ranges = (this.json.ranges)? this.json.ranges : this.ranges;
+      
       if (ranges) {
         for(var i=0; i<ranges.length; i++){
           ranges[i].origText = ranges[i].origText.replace(new RegExp("__newline__","g"),"\n");
@@ -560,19 +555,13 @@ var CutupsShift = ShiftSpace.Shift.extend({
     
     hide: function(){
        //console.log("=================================================Shift hide");
-       //console.log("=================================================this.json",this.json);
-       //console.log("===================================================this.ranges",this.ranges);
-       //console.log("===================================================this",this);
-      
       var space = this.getParentSpace();
       
       if(this.json.ranges == undefined){
        this.json.ranges = this.ranges;
       }
       
-      //console.log("===================================================space",space);
       space.removeFromVisibleShifts(this.json.id);
-      //console.log("=======in hide=========",this.getId());
       space.hideCutups(this.json);
       this.json.id = this.getId();//updates the change in id after save
     }
