@@ -297,10 +297,11 @@ var SandalphonClass = new Class({
 
     new Request({
       url: "compile.php",
-      data: {"filepath":'..'+filepath},
+      data: {"filepath":'..'+filepath+'.html'},
       onComplete: function(responseText, responseXml)
       {
         var filename = filepath.split('/').getLast();
+        console.log('Compilation complete, loading ' + filename);
         this.loadFile('/client/compiledViews/'+filename);
       }.bind(this),
       onFailure: function(response)

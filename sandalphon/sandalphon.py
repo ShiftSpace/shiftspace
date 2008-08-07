@@ -131,9 +131,11 @@ class SandalphonCompiler:
         """
         # First regex any dependent files into a master view
         # Parse the file at the path
+        print "Loading file at path " + path
         fileHandle = open(path)
         interfaceFile = fileHandle.read()
         fileHandle.close()
+        print "File loaded"
         
         matches = self.templatePattern.finditer(interfaceFile)
         
