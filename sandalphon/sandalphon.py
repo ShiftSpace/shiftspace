@@ -1,8 +1,8 @@
 import os
 import sys
 import re
-import xml.etree.ElementTree as ET
-
+import xml.etree.ElementTree as ElementTree
+from elementtidy import TidyHTMLTreeBuilder
 
 class ViewParser:
     def __init__(self, element):
@@ -65,6 +65,10 @@ class SandalphonCompiler:
         """
         Make sure the passed in markup checks out.
         """
+        try:
+            element = ElementTree.fromstring(markup)
+        except xml.parsers.expat.ExpatError:
+            raise xml.parsers.expath.ExpatError
         pass
 
 
@@ -89,20 +93,28 @@ class SandalphonCompiler:
         filePath = self.paths[view]
         print filePath
         if filePath != None:
-            fileRef = open(filePath)
+            fileHandle = open(filePath)
             # verify that this file is valid mark up
-            return fileRef.read()
+            fileContents = fileHandle.read()
+            fileHandle.close()
+            return fileContents
         else:
             return None
         
 
     def getInstruction(self, str):
+        """
+        Takes a raw template instruction and returns a tuple holding the instruction name and it's parameter.
+        """
         temp = str[2:len(str)-2]
         temp = temp.split(':')
         return (temp[0], temp[1])
 
     
     def handleInstruction(self, instruction, file):
+        """
+        Takes an instruction tuple and the contents of the file as a string. Returns the file post instruction.
+        """
         if instruction[0] == "customView":
             # load this view, will need match that view as well
             theView = self.loadView(instruction[1])
@@ -119,8 +131,9 @@ class SandalphonCompiler:
         """
         # First regex any dependent files into a master view
         # Parse the file at the path
-        fileRef = open(path)
-        interfaceFile = fileRef.read()
+        fileHandle = open(path)
+        interfaceFile = fileHandle.read()
+        fileHandle.close()
         
         matches = self.templatePattern.finditer(interfaceFile)
         
@@ -137,15 +150,24 @@ class SandalphonCompiler:
             else:
                 hasCustomViews = False
                 
-        interfaceFile = ET.fromstring(interfaceFile)
+        interfaceFile = ElementTree.fromstring(interfaceFile)
  
         # get the actual file name
         compiledViewsDirectory = "../client/compiledViews/"
         fileName = os.path.basename(path)
-        fileHandle = open(os.path.join(compiledViewsDirectory, fileName), "w")
-        # write the compile file
-        fileHandle.write(ET.tostring(interfaceFile))
+        fullPath = os.path.join(compiledViewsDirectory, fileName)
+
+        print "Writing compiled view file"
+        fileHandle = open(fullPath, "w")
+        # write the compiled file
+        fileHandle.write(ElementTree.tostring(interfaceFile))
         # close the file
+        fileHandle.close()
+
+        print "Pretty printing"
+        # make it pretty
+        exitcode = os.system('tidy -i -xml -m %s' % (fullPath))
+        print exitcode
         
         """
         # Grab the root element
@@ -161,6 +183,6 @@ class SandalphonCompiler:
 
 
 if __name__ == "__main__":
-    print "Saldalphon interface compiler"
+    print ("sandalphon.py compiling " + sys.argv[1])
     compiler = SandalphonCompiler()
-    compiler.compile("../client/views/Console/Console.html")
+    compiler.compile(sys.argv[1])

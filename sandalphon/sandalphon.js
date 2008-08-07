@@ -172,6 +172,9 @@ var SandalphonClass = new Class({
       this.loadFile($('loadFileInput').getProperty('value'));
     }.bind(this));
     
+    // attach the compile events
+    $('compileFile').addEvent('click', this.compileFile.bind(this));
+    
     // attach test events
     $('loadTestInput').addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
@@ -220,6 +223,7 @@ var SandalphonClass = new Class({
     // save for later
     this.storage().set('lastInterfaceFile', path);
     
+    // attempt to load css
     new Asset.css('..'+path+'.css');
 
     // load the interface file
@@ -283,12 +287,27 @@ var SandalphonClass = new Class({
     }).send();
   },
 
-  // Not implemented yet
-  compile: function(className)
+  /*
+     Function: compileFile
+       Tell the server to compile the file
+   */
+  compileFile: function()
   {
-    // ask the server to compile the file
-    // they will be generated and added to a folder called views
-    // the class will implement the interface as a new method
+    var filepath = $('loadFileInput').getProperty('value');
+
+    new Request({
+      url: "compile.php",
+      data: {"filepath":'..'+filepath},
+      onComplete: function(responseText, responseXml)
+      {
+        var filename = filepath.split('/').getLast();
+        this.loadFile('/client/compiledViews/'+filename);
+      }.bind(this),
+      onFailure: function(response)
+      {
+        console.error(response);
+      }
+    }).send();
   },
   
   // Not implemented yet.
