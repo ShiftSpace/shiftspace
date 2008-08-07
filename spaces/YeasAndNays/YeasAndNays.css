@@ -11,10 +11,11 @@
 
 #YAN_main{
     font-family: Helvetica, Verdana, Arial, sans-serif;
+    font-weight: bold;
     font: 16px;
 	padding: 5px 10px 5px 10px;
 	margin: 15px 0px 5px 0px;
-    color: #FFF;
+    color: #33;
 }
 
 /* form field style */
