@@ -173,6 +173,7 @@
   cursor:pointer;  
 }
 #SSCutupChunkAmount{
+  color:#FFF;
   display:block;
   float:left;
   font-size:8px;
