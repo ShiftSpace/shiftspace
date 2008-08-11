@@ -15,6 +15,10 @@ var Console = new Class({
       // refresh if ShiftSpace isn't in fullscreen mode
       if(!ShiftSpaceIsHidden()) this.refresh();
     }.bind(this));
+    window.addEvent('scroll', function(_evt) {
+      var evt = new Event(_evt);
+      if(!ShiftSpaceIsHidden)) this.refresh();
+    });
     
     // Attach some events that we care about
     SSAddEvent('onSpaceInstall', this.onSpaceInstall.bind(this));
