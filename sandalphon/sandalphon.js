@@ -180,7 +180,7 @@ var SandalphonClass = new Class({
       var evt = new Event(_evt);
       if(evt.key == 'enter')
       {
-        this.loadFile($('loadTestInput').getProperty('value'));
+        this.loadTest($('loadTestInput').getProperty('value'));
       }
     }.bind(this));
     
