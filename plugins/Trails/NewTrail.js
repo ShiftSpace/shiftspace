@@ -403,6 +403,9 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     {
       this.controls.injectInside(document.body);
 
+      // update the permalink
+      $('SSTrailPermalink').setProperty('href', 'http://www.shiftspace.org/trails/'+this.currentTrailInfo.trailId);
+
       // if user is allowed to edit
       if(this.userCanEdit())
       {
@@ -413,8 +416,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         this.controls.getElements('.SSTrailControl').removeClass('SSDisplayNone');
         $('trail-title-limited').addClass('SSDisplayNone');
         $('trail-title').setProperty('value', this.currentTrailInfo.title);
-        // update the permalink
-        $('SSTrailPermalink').setProperty('href', 'http://www.shiftspace.org/trails/'+this.currentTrailInfo.trailId);
       }
       else
       {
@@ -423,8 +424,6 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         this.controls.removeClass('SSDisplayNone');
         $('trail-title-limited').removeClass('SSDisplayNone');
         $('trail-title-limited').setText(this.currentTrailInfo.title);
-        // remove permalink events
-        $('SSTrailPermalink').setProperty('href', '');
       }
     }
   },
