@@ -346,7 +346,7 @@ var HighlightsShift = ShiftSpace.Shift.extend({
     
     return {
       ranges: this.ranges,
-      summary: this.summary
+      summary: this.getTitle()
     };
   },
   
