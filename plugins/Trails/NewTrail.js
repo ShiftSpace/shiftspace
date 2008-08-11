@@ -274,7 +274,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.controls.setHTML('                                                    \
     <span id="SSTrailsIcon" style="float: left"></span>                        \
     <input type="text" id="trail-title" class="SSTrailControl"/>               \
-    <a id="SSTrailPermalink" target="new"> \
+    <a id="SSTrailPermalink" style="text-decoration:none;" target="new"> \
       <span style="float:left; margin-left: 5px; color: #f63b01; margin-top: 4px; font-size: 12px">link to trail</span> \
       <div id="trailPermaLink" class="trailPermaLink" style="float:left; border:none; margin-top: 2px;"></div> \
     </a> \
@@ -399,9 +399,14 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   updateInterface: function()
   {
+    console.log('///////////////////////////////////////////////////////');
+    console.log('Update trail interface');
     if(this.currentTrail() && this.currentTrailInfo)
     {
       this.controls.injectInside(document.body);
+
+      console.log('/////////////////////////////////////////////////////////');
+      console.log('setting Trail permalink');
 
       // update the permalink
       $('SSTrailPermalink').setProperty('href', 'http://www.shiftspace.org/trails/'+this.currentTrailInfo.trailId);
