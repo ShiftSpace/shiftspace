@@ -37,6 +37,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     this.allEventHandlers = [];
   },
   
+  
   fix: function(brokenShiftJson)
   {
     //console.log('Image Swap fix! ' + Json.toString(brokenShiftJson));

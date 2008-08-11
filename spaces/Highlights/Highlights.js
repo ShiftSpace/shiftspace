@@ -246,30 +246,35 @@ var HighlightsSpace = ShiftSpace.Space.extend({
   turnOnRangeRef: function(ref) 
   {
     var range = ShiftSpace.RangeCoder.toRange(ref);
-    var objAncestor = range.commonAncestorContainer;
-
-    if (objAncestor.nodeType == 3) // text node
-    objAncestor = objAncestor.parentNode;
-
-    var xPathResult = document.evaluate(".//text()", objAncestor, null,
-    XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);        
-
-    // iteratate on all the text nodes in the document and mark if they are in the selection range
-    for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) 
+    
+    // check to make sure the range is actually valid
+    if(range)
     {
-      String.clean(xPathResult.snapshotItem(i).textContent);
-    }
+      var objAncestor = range.commonAncestorContainer;
 
-    for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) 
-    {
-      // we need clean styles so we don't use ShiftSpace.Element
-      var enclosingSpan = document.createElement("span");
-      enclosingSpan.id = this.getCurrentShift().getId();
-      enclosingSpan.setAttribute("_shiftspace_highlight", "on");
-      enclosingSpan.style.backgroundColor = ref.color; 
+      if (objAncestor.nodeType == 3) // text node
+      objAncestor = objAncestor.parentNode;
 
-      this.surround_text_node(xPathResult.snapshotItem(i), range, enclosingSpan);
-    }
+      var xPathResult = document.evaluate(".//text()", objAncestor, null,
+      XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);        
+
+      // iteratate on all the text nodes in the document and mark if they are in the selection range
+      for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) 
+      {
+        String.clean(xPathResult.snapshotItem(i).textContent);
+      }
+
+      for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) 
+      {
+        // we need clean styles so we don't use ShiftSpace.Element
+        var enclosingSpan = document.createElement("span");
+        enclosingSpan.id = this.getCurrentShift().getId();
+        enclosingSpan.setAttribute("_shiftspace_highlight", "on");
+        enclosingSpan.style.backgroundColor = ref.color; 
+
+        this.surround_text_node(xPathResult.snapshotItem(i), range, enclosingSpan);
+      }
+    }  
   },
 
     

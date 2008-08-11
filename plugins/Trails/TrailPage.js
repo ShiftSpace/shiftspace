@@ -32,11 +32,11 @@ var TrailPage = new Class({
 
     // set up our data
     this.id = this.options.id;
-    this.title = this.options.title || this.options.summary;
+    this.title = this.options.summary || this.options.title;
     this.loc = this.options.loc;
     this.href = this.options.url || this.options.href || '';
     this.nodes = this.options.nodes;
-    this.user = this.options.user || this.options.username;
+    this.user = this.options.username || this.options.user;
     
     console.log(options);
     

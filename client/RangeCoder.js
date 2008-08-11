@@ -25,19 +25,28 @@ var RangeCoder = new Class({
   */
   toRange: function(refObj)
   {
-    //turn on highlight
     console.log('toRange');
     var objAncestor = this.getRangeAncestorNode(refObj);
     console.log(objAncestor);
+    
     if (objAncestor)
     {
       console.log('generating range');
       return this.generateRange(objAncestor, refObj);
     }
+    
     var recovered = this.recoverBrokenRange(refObj);
     if (recovered)
-	return recovered;
-    alert ('Warning: An in-page reference was not recreateable because the webpage has changed. The original referenced text was: ' + refObj.origText);
+    {
+      console.log('recovered the node');
+      return recovered;      
+    }
+
+    // post an alert if we failed
+    // TODO: point this at the error window
+    alert('Warning: An in-page reference was not recreateable because the webpage has changed. The original referenced text was: ' + refObj.origText);
+
+    // return null
     return null;
   },
 
@@ -49,9 +58,11 @@ var RangeCoder = new Class({
       range - a W3C Range.
       
   */
-  cleanWhitespace: function(node){
+  cleanWhitespace: function(node)
+  {
     node.innerHTML = node.innerHTML.replace(new RegExp("\\n","g"));
   },
+  
   toRef: function(range)
   {    
     //get the common ancestor
@@ -92,7 +103,9 @@ var RangeCoder = new Class({
 
     // save original ancestor text if stored ancestor is not original
     if (newRef.origCommonAncestor)
+    {
       newRef.origAncestorOrigTextContent =  (origCommonAncestor.tagName.toLowerCase()=="body")?ShiftSpace.orig_html:origCommonAncestor.textContent;   //to avoid adding the toolbarhtml
+    }
 
     return newRef;
   },
@@ -104,17 +117,22 @@ var RangeCoder = new Class({
     var iLength,iIndex;
     var nl = document.getElementsByTagName(oNode.tagName);
     var iOccurance=0;
+    
     for (var i=0;i<nl.length;i++)
-    if(nl.item(i).textContent==oNode.textContent)
     {
-      iOccurance++;
-      //check if this is the same Node than set the index
-      if(nl.item(i)==oNode)
-      iIndex = iOccurance;
+      if(nl.item(i).textContent==oNode.textContent)
+      {
+        iOccurance++;
+        //check if this is the same Node than set the index
+        if(nl.item(i)==oNode)
+        iIndex = iOccurance;
+      }
     }
-    return {tagName:oNode.tagName,
-      length:iOccurance,
-      ancIndex:iIndex
+    
+    return {
+      tagName: oNode.tagName,
+      length: iOccurance,
+      ancIndex: iIndex
     };
   },
 
@@ -139,7 +157,8 @@ var RangeCoder = new Class({
       var i;
       var saveTextNode = textNode;
 
-      for (i = 0; textNode; ) {
+      for (i = 0; textNode; ) 
+      {
         if (textNode.nodeType == 1)
         i++;
 
@@ -174,7 +193,8 @@ var RangeCoder = new Class({
     range.setEnd(endContainer, refObj.endContainerOffset);
 
     return range;
-   },
+  },
+
 
   getRangeAncestorNode: function(refObj)
   {
@@ -190,7 +210,7 @@ var RangeCoder = new Class({
 
     console.log('blar');
     //check if the tag Name is the body then compare differently
-    if (colAncestorPosition.tagName.toLowerCase()=="body")
+    if (colAncestorPosition.tagName.toLowerCase() == "body")
     {
       //return (targetTextContent==ShiftSpace.orig_text_content)?document.getElementsByTagName('body')[0]:null;
       return document.body;
@@ -211,9 +231,10 @@ var RangeCoder = new Class({
         }
       }
       console.log('exit loop');
-    }        
+    }
+    
     //validate that the page has the same number of occurances to make sure we highlight the right one
-    if (iOccuranceLength==colAncestorPosition.length)
+    if (iOccuranceLength == colAncestorPosition.length)
     {
       return returnAncestor;          
     }
@@ -229,7 +250,8 @@ var RangeCoder = new Class({
     var offset = 0;
     var count = 0;
     var idx = string.indexOf(substring, offset);
-    while (idx >= 0) {
+    while (idx >= 0) 
+    {
       count++;
       offset = idx + substring.length;
       idx = string.indexOf(substring, offset);
@@ -254,8 +276,8 @@ var RangeCoder = new Class({
       var element = nl.item(i);
       if (element.hasChildNodes() && 0 <= element.textContent.indexOf(text))
       {
-	for (var j = 0; j < element.childNodes.length; j++) 
-	   count += this.countSubStrings (text, element.childNodes[j].textContent);
+        for (var j = 0; j < element.childNodes.length; j++) 
+        count += this.countSubStrings (text, element.childNodes[j].textContent);
       }
     }
     return count;
@@ -268,7 +290,8 @@ var RangeCoder = new Class({
     // TODO: improve efficiency, split-the-difference rather than shrink-by-one
     var bestText = text;
     var textCount = this.countStringMatchesInNodeList(nl, bestText);
-    while (text.length > 4 && textCount <= 1) {
+    while (text.length > 4 && textCount <= 1) 
+    {
       bestText = text;
       text = shortenFromEnd ? text.substring(0,text.length-2) : text = text.substring(1);
       textCount = this.countStringMatchesInNodeList(nl, text);
@@ -282,81 +305,83 @@ var RangeCoder = new Class({
    * Strategy: first minimize pre/posttext to smallest possible unique string.
    * if unique pre or posttext, match pre-then-post.  Else give up.
    */
-  DOMPointerFromContext: function(nl, pretext, posttext)
-  {
-    // XXX don't use if empty/small
-    //if (pretext.length < 5)
-      //console.log("WARNING, pretext is too short");
+   DOMPointerFromContext: function(nl, pretext, posttext)
+   {
+     // XXX don't use if empty/small
+     //if (pretext.length < 5)
+     //console.log("WARNING, pretext is too short");
 
-    pretext = this.shortenUniqueString(nl, pretext, false);
-    var pretextCount = this.countStringMatchesInNodeList(nl, pretext);
-    var pretextUnique = (pretextCount == 1) ? true : false;
-    posttext = this.shortenUniqueString(nl, posttext, true);
-    var posttextCount = this.countStringMatchesInNodeList(nl, posttext);
+     pretext = this.shortenUniqueString(nl, pretext, false);
+     var pretextCount = this.countStringMatchesInNodeList(nl, pretext);
+     var pretextUnique = (pretextCount == 1) ? true : false;
+     posttext = this.shortenUniqueString(nl, posttext, true);
+     var posttextCount = this.countStringMatchesInNodeList(nl, posttext);
 
-    // TODO: could minimize even further, pre and post don't need to be unique as long as there is
-    // a unique pre-post match.  This yields an even greater chance of matching both within
-    // single children (eg not broken by other shifts)
-    // console.log("pretext '" + pretext + "' posttext '" + posttext + "'");
+     // TODO: could minimize even further, pre and post don't need to be unique as long as there is
+     // a unique pre-post match.  This yields an even greater chance of matching both within
+     // single children (eg not broken by other shifts)
+     // console.log("pretext '" + pretext + "' posttext '" + posttext + "'");
 
-    //check the number of occurances of the similar nodes
-    for (var i=0;i<nl.length;i++)
-    {
-      if(0 <= nl.item(i).textContent.indexOf(pretext))
-      {
-	if (nl.item(i).hasChildNodes()) 
-	{
-	  var children = nl.item(i).childNodes;
-	  for (var j = 0; j < children.length; j++) 
-	  {
-	    var idxOf =  children[j].textContent.indexOf(pretext);
-	    if (idxOf >= 0) 
-	    {
-		  // if unique or not unique but posttext matches, we've found it
-	       var postIdx = children[j].textContent.substring(idxOf + pretext.length).indexOf(posttext);
-	       if (pretextUnique || postIdx == 0)
-		 return { obj: children[j], offset: idxOf + pretext.length };
-	    }
-	  }
-	}
-      }
-    }
-    
-    // Check for posttext
-    // XXX: this isn't sorted out yet... should only run if pretext is missing, short, useless
-    // perhaps merged with above.  this might not even run currently.
-    for (var i=0;i<nl.length;i++)
-    {
-      if(0 <= nl.item(i).textContent.indexOf(posttext))
-      {
-	var element = nl.item(i);
-	if (element.hasChildNodes()) {
-	  var children = element.childNodes;
-	  for (var j = 0; j < children.length; j++) 
-	  {
-	     var idxOf =  children[j].textContent.indexOf(posttext);
-	     if (idxOf >= 0)
-		  return { obj: children[j], offset: idxOf};
-	  }
-	}
-      }
-    }
-    return null;
-  },
+     //check the number of occurances of the similar nodes
+     for (var i=0;i<nl.length;i++)
+     {
+       if(0 <= nl.item(i).textContent.indexOf(pretext))
+       {
+         if (nl.item(i).hasChildNodes()) 
+         {
+           var children = nl.item(i).childNodes;
+           for (var j = 0; j < children.length; j++) 
+           {
+             var idxOf =  children[j].textContent.indexOf(pretext);
+             if (idxOf >= 0) 
+             {
+               // if unique or not unique but posttext matches, we've found it
+               var postIdx = children[j].textContent.substring(idxOf + pretext.length).indexOf(posttext);
+               if (pretextUnique || postIdx == 0)
+               return { obj: children[j], offset: idxOf + pretext.length };
+             }
+           }
+         }
+       }
+     }
+
+     // Check for posttext
+     // XXX: this isn't sorted out yet... should only run if pretext is missing, short, useless
+     // perhaps merged with above.  this might not even run currently.
+     for (var i=0;i<nl.length;i++)
+     {
+       if(0 <= nl.item(i).textContent.indexOf(posttext))
+       {
+         var element = nl.item(i);
+         if (element.hasChildNodes()) 
+         {
+           var children = element.childNodes;
+           for (var j = 0; j < children.length; j++) 
+           {
+             var idxOf =  children[j].textContent.indexOf(posttext);
+             if (idxOf >= 0) return { obj: children[j], offset: idxOf};
+           }
+         }
+       }
+     }
+     return null;
+   },
 
   // Given some data, attempt to return reference to corresponding point in DOM
   DOMPointerFromData: function(nl, text, offset, containerXPath, orig)
   {
-      // Handling legacy shifts (without sufficient info to always match text)
-      // if the xpath is to the first text element, then we can treat parent text
-      // to calculate text contect.  Empirically this is [1].
-    if (text || containerXPath == "./text()[1]") {
+    // Handling legacy shifts (without sufficient info to always match text)
+    // if the xpath is to the first text element, then we can treat parent text
+    // to calculate text contect.  Empirically this is [1].
+    if (text || containerXPath == "./text()[1]") 
+    {
       var pretext = orig.substring(0,offset);
       var posttext = orig.substring(offset);
 
-      if (text) {
-	pretext = text.substring(0,offset);
-	posttext = text.substring(offset);
+      if (text) 
+      {
+        pretext = text.substring(0,offset);
+        posttext = text.substring(offset);
       }
 
       return this.DOMPointerFromContext(nl, pretext, posttext)
@@ -371,48 +396,58 @@ var RangeCoder = new Class({
     try
     {
       var colAncestorPosition   = refObj.ancestorPosition;
-      
       //get all the elements with the ancestor tagname
       var nl                    = document.getElementsByTagName(colAncestorPosition.tagName);
 
       // Get pointers to range start and end withing DOM
-      var startRv =  this.DOMPointerFromData (nl, refObj.startText, refObj.startContainerOffset, 
-			      refObj.startContainerXPath, refObj.ancestorOrigTextContent);
+      var startRv =  this.DOMPointerFromData (nl, refObj.startText, refObj.startContainerOffset, refObj.startContainerXPath, refObj.ancestorOrigTextContent);
       // TODO: optimize if end == start
-      var endRv =  this.DOMPointerFromData (nl, refObj.endText, refObj.endContainerOffset, 
-			      refObj.endContainerXPath, refObj.ancestorOrigTextContent);
+      var endRv =  this.DOMPointerFromData (nl, refObj.endText, refObj.endContainerOffset, refObj.endContainerXPath, refObj.ancestorOrigTextContent);
 
       var noPartialRange = true;
       if (noPartialRange)
       {
-	// Return range only if we matched both endpoints
-        if (startRv && endRv) {
-	  var range = document.createRange();
-	  range.setStart(startRv.obj, startRv.offset);
-	  range.setEnd(endRv.obj, endRv.offset);
-	  return range;
+        // Return range only if we matched both endpoints
+        if (startRv && endRv) 
+        {
+          var range = document.createRange();
+          range.setStart(startRv.obj, startRv.offset);
+          range.setEnd(endRv.obj, endRv.offset);
+          return range;
         }
-      } else
+      } 
+      else
       {
-	// Return range.  If we only matched one endpoint, 
-	// return an empty range at that point.
-	if (startRv || endRv) {
-	  var range = document.createRange();
+        // Return range.  If we only matched one endpoint, 
+        // return an empty range at that point.
+        if (startRv || endRv) 
+        {
+          var range = document.createRange();
 
-	  if (startRv)
-	    range.setStart(startRv.obj, startRv.offset);
-	  else
-	    range.setStart(endRv.obj, endRv.offset);
+          if (startRv)
+          {
+            range.setStart(startRv.obj, startRv.offset);
+          }
+          else
+          {
+            range.setStart(endRv.obj, endRv.offset);
+          }
 
-	  if (endRv)
-	    range.setEnd(endRv.obj, endRv.offset);
-	  else
-	    range.setEnd(startRv.obj, startRv.offset);
+          if (endRv)
+          {
+            range.setEnd(endRv.obj, endRv.offset);
+          }
+          else
+          {
+            range.setEnd(startRv.obj, startRv.offset);
+          }
 
-	  return range;
-	}
+          return range;
+        }
       }
-    } catch(err) {
+    } 
+    catch(err) 
+    {
       // Commonly caused by invalid offset when creating range
       //console.log ("ERROR recovering range");
     }
