@@ -88,7 +88,8 @@ var Console = new Class({
     //console.log('creating resizer');
     this.resizer = new ShiftSpace.Element('div', {
       'id': 'SSConsoleResizer',
-      'style': {
+      'style': 
+      {
         'bottom': consoleHeight - 5
       }
     });
@@ -131,6 +132,8 @@ var Console = new Class({
       }.bind(this)
       
     });
+    
+    this.resizer.setStyle('position', 'fixed');
     //console.log('frame built');
   },
     
