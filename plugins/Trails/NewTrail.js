@@ -274,8 +274,10 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
     this.controls.setHTML('                                                    \
     <span id="SSTrailsIcon" style="float: left"></span>                        \
     <input type="text" id="trail-title" class="SSTrailControl"/>               \
-    <span style="float:left; margin-left: 5px; color: #f63b01; margin-top: 4px; font-size: 12px">link to trail</span> \
-    <div id="trailPermaLink" class="trailPermaLink" style="float:left; border:none; margin-top: 2px;"></div> \
+    <a id="SSTrailPermalink" target="new"> \
+      <span style="float:left; margin-left: 5px; color: #f63b01; margin-top: 4px; font-size: 12px">link to trail</span> \
+      <div id="trailPermaLink" class="trailPermaLink" style="float:left; border:none; margin-top: 2px;"></div> \
+    </a> \
     <div id="trail-title-limited" class="SSUserSelectNone"></div>              \
     <div id="trail-close" style="margin-left: 10px;" class="SSUserSelectNone"> \
     </div>                                                                     \
@@ -411,6 +413,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         this.controls.getElements('.SSTrailControl').removeClass('SSDisplayNone');
         $('trail-title-limited').addClass('SSDisplayNone');
         $('trail-title').setProperty('value', this.currentTrailInfo.title);
+        // update the permalink
+        $('SSTrailPermalink').setProperty('href', 'http://www.shiftspace.org/trails/'+this.currentTrailInfo.trailId);
       }
       else
       {
@@ -419,6 +423,8 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
         this.controls.removeClass('SSDisplayNone');
         $('trail-title-limited').removeClass('SSDisplayNone');
         $('trail-title-limited').setText(this.currentTrailInfo.title);
+        // remove permalink events
+        $('SSTrailPermalink').setProperty('href', '');
       }
     }
   },
