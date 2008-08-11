@@ -17,7 +17,7 @@ var Console = new Class({
     }.bind(this));
     window.addEvent('scroll', function(_evt) {
       var evt = new Event(_evt);
-      if(!ShiftSpaceIsHidden)) this.refresh();
+      if(!ShiftSpaceIsHidden()) this.refresh();
     });
     
     // Attach some events that we care about
