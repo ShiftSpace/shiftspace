@@ -687,7 +687,7 @@ ShiftSpace.Space = new Class({
     var mv = this.shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered')) 
     {
-      mv.setStyle('zIndex', 99);
+      mv.setStyle('zIndex', 10000);
     }
   },
   
@@ -704,7 +704,7 @@ ShiftSpace.Space = new Class({
     var mv = this.shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered'))
     {
-      mv.setStyle('zIndex', 1);
+      mv.setStyle('zIndex', 9999);
     }
   },
   
