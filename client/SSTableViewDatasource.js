@@ -19,8 +19,9 @@ var SSTableViewDatasource = new Class({
 
   options: 
   {
-    dataKey: 'shifts',
-    dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query',
+    data: {},
+    dataKey: '',
+    dataProviderURL: '',
     dataNormalizer: null
   },
   
@@ -31,6 +32,7 @@ var SSTableViewDatasource = new Class({
     this.setOptions(options);
     
     // set the options
+    this.setData(options.data);
     this.setDataKey(this.options.dataKey)
     this.setDataProviderURL(this.options.dataProviderURL);
     this.setDataNormalizer(this.options.dataNormalizer);
@@ -134,28 +136,36 @@ var SSTableViewDatasource = new Class({
   fetch: function(properties)
   {
     var testhref = {href:'http://www.google.com/'};
-    new Request({
-      url: this.dataProviderURL(),
-      method: 'post',
-      data: $merge(testhref, properties),
-      onComplete: function(responseText, responseXML)
-      {
-        var data = JSON.decode(responseText)[this.dataKey()];
-
-        if(this.dataNormalizer())
+    
+    if(this.dataProviderURL())
+    {
+      new Request({
+        url: this.dataProviderURL(),
+        method: 'post',
+        data: $merge(testhref, properties),
+        onComplete: function(responseText, responseXML)
         {
-          data = this.dataNormalizer().normalize(data);
-        }
+          var data = JSON.decode(responseText)[this.dataKey()];
 
-        this.setData(data);
-        this.fireEvent('onload');
+          if(this.dataNormalizer())
+          {
+            data = this.dataNormalizer().normalize(data);
+          }
 
-      }.bind(this),
-      onFailure: function(response)
-      {
-        console.error('Oops: ' + response);
-      }.bind(this)
-    }).send();
+          this.setData(data);
+          this.fireEvent('onload');
+
+        }.bind(this),
+        onFailure: function(response)
+        {
+          console.error('Oops: ' + response);
+        }.bind(this)
+      }).send();
+    }
+    else
+    {
+      this.fireEvent('onload');
+    }
   }
 
 });

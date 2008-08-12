@@ -31,9 +31,34 @@ var MyTableViewDelegate = new Class({
   initialize: function()
   {
     // set the datasource for the tableview
-    this.datasource = new SSTableViewDatasource({
-      dataNormalizer: legacyNormalizer
-    });
+    if(window.location.hostname == "www.shiftspace.org" ||
+       window.location.hostname == "metatron.shiftspace.org")
+    {
+      // if we're on metatron load real data
+      this.datasource = new SSTableViewDatasource({
+        dataKey: 'shifts',
+        dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query',
+        dataNormalizer: legacyNormalizer
+      });
+    }
+    else
+    {
+      // otherwise just use dummy data
+      this.datasource = new SSTableViewDatasource({
+        data: [
+          {space: 'Notes', summary: 'Hello', username: 'dnolen', created: 'Yesterday'},
+          {space: 'Highlights', summary: 'Cool', username: 'mushon', created: 'Yesterday'},
+          {space: 'SourceShift', summary: 'ARGH', username: 'dnolen', created: 'Yesterday'},
+          {space: 'Notes', summary: 'Yup', username: 'dphiffer', created: 'Yesterday'},
+          {space: 'ImageSwap', summary: 'Wow', username: 'dphiffer', created: 'Yesterday'},
+          {space: 'Notes', summary: 'Amazing', username: 'doron', created: 'Yesterday'},
+          {space: 'Notes', summary: 'Monkeys and a bunch of other apes', username: 'doron', created: 'Yesterday'},
+          {space: 'Notes', summary: 'Junk', username: 'tester', created: 'Yesterday'},
+          {space: 'Highlights', summary: 'Space age', username: 'dnolen', created: 'Yesterday'},
+          {space: 'Notes', summary: 'Wowzer', username: 'dpuppy', created: 'Yesterday'}
+        ]
+      });
+    }
   },
   
   
@@ -73,6 +98,8 @@ if(Sandalphon)
 {
   Sandalphon.runTest = function()
   {
+    console.log('running test!');
+    
     // get the table view controller
     var controller = $$('.SSTableView')[0].retrieve('__ssviewcontroller__');
     // create table view delegate

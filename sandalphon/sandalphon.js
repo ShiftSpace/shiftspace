@@ -180,12 +180,14 @@ var SandalphonClass = new Class({
       var evt = new Event(_evt);
       if(evt.key == 'enter')
       {
+        console.log('Load test enter');
         this.loadTest($('loadTestInput').getProperty('value'));
       }
     }.bind(this));
     
     $('loadTestFile').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
+      console.log('Load test click');
       this.loadTest($('loadTestInput').getProperty('value'));
     }.bind(this));
   },
@@ -258,6 +260,7 @@ var SandalphonClass = new Class({
   */
   loadTest: function(path)
   {
+    console.log('Loading test file');
     // save for later
     this.storage().set('lastTestFile', path);
     
@@ -269,7 +272,9 @@ var SandalphonClass = new Class({
       {
         try
         {
-          eval(responseText);            
+          console.log('Evaluating test');
+          eval(responseText);         
+          console.log('Running test');   
           this.runTest()  
         }
         catch(exc)
