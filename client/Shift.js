@@ -93,10 +93,7 @@ ShiftSpace.Shift = new Class({
       this.setParentSpace( this.options.parentSpace );
     }
     
-    if( _json.summary )
-    {
-      this.setTitle(_json.summary);
-    }
+    this.setTitle(_json.summary || '');
     
     console.log('======================================== CALLING SETUP ' + this.getParentSpace().attributes.name);
     
@@ -745,7 +742,19 @@ ShiftSpace.Shift = new Class({
   */
   getTitle: function()
   {
-    return this.__title__;
+    return (this.__title__ || this.defaultTitle());
+  },
+  
+  /*
+    Function: defaultTitle (abstract)
+      To be implemented by subclasses.  Returns "Untitled" otherwise.
+      
+    Returns:
+      A String.
+  */
+  defaultTitle: function()
+  {
+    return "Untitled";
   },
   
   /*

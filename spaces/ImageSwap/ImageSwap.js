@@ -235,6 +235,8 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
 
       // tell the current shift to swap
       currentShift.setSrc(grabbedImage);
+      currentShift.setOriginalSource(this.currentImage.getProperty('src'));
+      
       currentShift.swap(pinRef);
     
       // clear out the selection interface
@@ -308,16 +310,34 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
       scroll : {x: this.image.offsetLeft, y: this.image.offsetTop},
       pinRef : this.getEncodablePinRef(),
       src : this.image.getProperty('src'),
-      summary : this.getTitle() || "Image Swap",
+      summary : this.getTitle(),
       zoom : this.getZoom()
     };
   },
   
-
+  
+  defaultTitle: function()
+  {
+    return this.originalSource().split("/").getLast() + " swapped to " + this.image.getProperty('src').split("/").getLast();
+  },
+  
+  
   setSrc : function(src)
   {
     //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> set src: ' + src);
     if(src) this.image.setProperty('src', src);
+  },
+  
+  
+  setOriginalSource: function(src)
+  {
+    this.__originalSource__ = src;
+  },
+  
+  
+  originalSource: function()
+  {
+    return this.__originalSource__;
   },
   
 

@@ -323,24 +323,17 @@ var NotesShift = ShiftSpace.Shift.extend({
   },
   
   
-  getTitle: function()
+  defaultTitle: function()
   {
-    var title = this.parent();
-    
-    if(!title)
+    // if no set user title, get it from the input area
+    if(this.inputArea)
     {
-      // if no set user title, get it from the input area
-      if(this.inputArea)
-      {
-        title = this.inputArea.getProperty('value').replace(/\n/g, ' ');
-      }
-      else
-      {
-        title = '';
-      }
+      return this.inputArea.getProperty('value').replace(/\n/g, ' ');
     }
-
-    return title;
+    else
+    {
+      return "Untitled";
+    }
   },
   
   

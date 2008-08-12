@@ -1,4 +1,5 @@
 var SourceShiftSpace = ShiftSpace.Space.extend({
+  
   attributes : 
   {
     name : 'SourceShift',
@@ -7,10 +8,12 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     css : 'SourceShift.css'
   },
 
+  
   setup: function(options) 
   {
     this.mode = 'xhtml';
   },
+  
   
   addShift: function(shift)
   {
@@ -23,11 +26,13 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }.bind(this));
   },
   
+  
   updateTitleOfShift: function(shiftId, title)
   {
     this.parent(shiftId, title);
     this.titleField.setProperty('value', title);
   },
+  
   
   refresh : function()
   {
@@ -67,10 +72,12 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }
   },
   
+  
   onCssLoad: function()
   {
     this.parent();
   },
+  
   
   showInterface : function()
   {
@@ -79,11 +86,13 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     if(this.editSourceShift) this.editSourceShift.removeClass('SSDisplayNone');
   },
   
+  
   hideInterface : function()
   {
     this.parent();
     if(this.editSourceShift) this.editSourceShift.addClass('SSDisplayNone');
   },
+  
   
   setMode : function(newMode)
   {
@@ -105,6 +114,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }
   },
   
+  
   onShiftCreate : function(shiftId)
   {
     // if a brand new shift set the title to untitled-#
@@ -121,6 +131,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     
     this.shifts[shiftId].setTitle('untitled-'+untitledCount);
   },
+  
   
   onShiftEdit: function(shiftId)
   {
@@ -158,6 +169,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }
   },
   
+  
   onShiftFocus: function(shiftId)
   {
     // we are in edit mode
@@ -170,6 +182,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }
   },
   
+  
   onShiftHide: function(shiftId)
   {
     for(var shift in this.shifts)
@@ -181,6 +194,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }
     this.hideInterface();
   },
+  
   
   attachEvents : function()
   {
@@ -292,6 +306,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }.bind(this));
   },
   
+  
   highlightButton: function(button)
   {
     button.getElement('.SSLeft').addClass('SSLeftActive');
@@ -299,12 +314,14 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     button.getElement('.SSRight').addClass('SSRightActive');
   },
   
+  
   unhighlightButton: function(button)
   {
     button.getElement('.SSLeft').removeClass('SSLeftActive');
     button.getElement('.middle').removeClass('middleActive');
     button.getElement('.SSRight').removeClass('SSRightActive');
   },
+  
   
   buildHandle : function()
   {
@@ -334,6 +351,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     
     this.handleArea.injectInside(this.editSourceShift);
   },
+  
   
   buildTop : function()
   {
@@ -419,24 +437,25 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.top.injectInside(this.editSourceShift);
   },
   
+  
   getPinRef: function()
   {
     return this.getCurrentShift().getPinRef();
   },
   
-  // part of the PinWidget protocol
+  
   getPinWidgetButton: function()
   {
     return this.pinWidgetDiv;
   },
   
-  // part of the PinWidget protocol
+  
   getPinWidgetAllowedActions: function()
   {
     return ['before', 'replace', 'after', 'relative'];
   },
   
-  // part of the PinWidget protocol
+  
   onPin: function(pinRef)
   {
     var currentShift = this.getCurrentShift();
@@ -454,6 +473,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       }
     }
   },
+  
   
   isPinned: function()
   {
@@ -553,6 +573,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.bottom.injectInside(this.editSourceShift);
   },
   
+  
   buildInterface : function()
   {
     this.editSourceShift = new ShiftSpace.Element('div', {
@@ -590,8 +611,8 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     // attach events and refresh
     this.attachEvents();
     this.refresh();
-    
   }
+  
 });
 
 var SourceShiftShift = ShiftSpace.Shift.extend({
@@ -641,6 +662,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.refresh();
   },
   
+  
   setTitle: function(newTitle)
   {
     this.parent(newTitle);
@@ -651,6 +673,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.refresh();
     }
   },
+  
   
   setSize: function(size)
   {
@@ -663,10 +686,12 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.refresh();
   },
   
+  
   getSize: function()
   {
     return this.__size__;
   },
+  
   
   encode : function(markup)
   {
@@ -692,26 +717,31 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     };
   },
   
+  
   cleanMarkup: function(markup)
   {
     // TODO: strip any js out - David
     return markup;
   },
   
+  
   setCSS : function(css)
   {
     this.cssText = css;
   },
+  
   
   getCSS : function()
   {
     return this.cssText;
   },
   
+  
   setMarkup : function(markup)
   {
     this.markup = markup;
   },
+  
   
   getMarkup : function()
   {
@@ -746,6 +776,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
   },
   
+  
   updateCSS : function(css)
   {
     this.cssText = css;
@@ -772,6 +803,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.refresh();
   },
   
+  
   resizeToContent : function()
   {
     // if the scroll has changed update the shift dimensions
@@ -790,6 +822,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       });
     }
   },
+  
   
   refresh: function()
   {
@@ -828,6 +861,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
   },
   
+  
   dragRefresh: function()
   {
     if(!this.getPinRef())
@@ -845,6 +879,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
   },
   
+  
   updateHandle: function()
   {
     var iconSize = this.titleIcon.getSize().size;
@@ -856,6 +891,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
   },
 
+  
   attachEvents: function()
   {
     this.cover.addEvent('mouseover', function(_evt) {
@@ -865,6 +901,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.show();
     }.bind(this));
   },
+  
   
   show : function()
   {
@@ -889,6 +926,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
   },
   
+  
   hide: function()
   {
     this.parent();
@@ -899,6 +937,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
     this.element.addClass('SSDisplayNone');
   },
+  
   
   showFrame: function()
   {
@@ -921,6 +960,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
   },
   
+  
   hideFrame: function()
   {
     if(this.frameIsVisible())
@@ -941,10 +981,12 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
   },
   
+  
   frameIsVisible: function()
   {
     return this.top.getStyle('visibility') == 'visible';
   },
+  
   
   edit : function()
   {
@@ -1020,6 +1062,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
   },
   
+  
   buildStyleSheet: function()
   {    
     this.cssId = "SourceShiftStyle" + this.getId();
@@ -1029,6 +1072,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
     this.css.injectInside(document.head);
   },
+  
   
   build : function()
   {
@@ -1148,6 +1192,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
   },
   
+  
   showPinnedResizer: function()
   {
     // show handy resizer for when source shift is pinned as it's difficult to guess dimensions
@@ -1159,6 +1204,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     
     this.pinnedResizerDragRef.attach();
   },
+  
   
   refreshPinnedDragResizer: function()
   {
@@ -1180,6 +1226,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
   },
   
+  
   hidePinnedResizer: function()
   {
     // hide handy resizer
@@ -1187,6 +1234,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     if(this.pinnedResizer.getParent()) this.pinnedResizer.remove();
     this.pinnedResizerDragRef.detach();
   },
+  
   
   showPinnedHandle: function()
   {
@@ -1199,6 +1247,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     
     this.pinnedHandleDragRef.attach();
   },
+  
   
   refreshPinnedHandle: function()
   {
@@ -1220,6 +1269,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
   },
   
+  
   hidePinnedHandle: function()
   {
     // hide handy resizer
@@ -1227,6 +1277,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     if(this.pinnedHandle.getParent()) this.pinnedHandle.remove();
     this.pinnedHandleDragRef.detach();
   },
+  
   
   pin : function(pinRef)
   {
@@ -1277,6 +1328,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.refresh();
   },
   
+  
   unpin : function()
   {
     this.hidePinnedResizer();
@@ -1310,6 +1362,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.refresh();
   },
   
+  
   onFocus : function()
   {
     // update the interface
@@ -1317,6 +1370,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.top.removeClass('SSSourceShiftTopBlur');
     this.element.setOpacity(1.0);
   },
+  
   
   onBlur : function()
   {
@@ -1327,6 +1381,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.element.setOpacity(0.5);
     */
   },
+  
   
   getPosition: function()
   {
@@ -1340,6 +1395,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
   },
   
+  
   getMainView: function()
   {
     if(this.isPinned())
@@ -1351,6 +1407,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       return this.element;
     }
   }
+  
 });
 
 var SourceShift = new SourceShiftSpace(SourceShiftShift);

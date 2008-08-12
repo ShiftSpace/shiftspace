@@ -57,6 +57,16 @@ var HighlightsSpace = ShiftSpace.Space.extend({
     
     this.parent(aShift);
   },
+  
+  
+  onShiftShow: function(shiftId)
+  {
+    if(this.interfaceIsBuilt())
+    {
+      var title = this.getShift(shiftId).getTitle();      
+      $$('.HighlightsInput')[0].setProperty('value', title);
+    }
+  },
     
 
   selectColor: function(colorElement, color) 
@@ -140,23 +150,30 @@ var HighlightsSpace = ShiftSpace.Space.extend({
     window.removeEvent('mouseup', this.highlight_end);      
   },
   
+  
+  getTitle: function()
+  {
+    return $$('.HighlightsInput')[0].getProperty('value');
+  },
+  
     
-  buildInterface: function() {
+  buildInterface: function() 
+  {
     // create a table to function as the highlight tool bar
     var tableContainer = new ShiftSpace.Element('span', {
-        'class': 'TableContainer'
+      'class': 'TableContainer'
     });
     
     tableContainer.appendChild(new ShiftSpace.Element('span', {
-        'class': 'HighlightsSummary'
+      'class': 'HighlightsSummary'
     }));        
         
     this.summary = tableContainer.appendChild(new ShiftSpace.Element('input', {
-        'class': 'HighlightsInput'
+      'class': 'HighlightsInput'
     }));
     
     this.colorsSpan = new ShiftSpace.Element('span', {
-        'class': 'HighlightsColors'
+      'class': 'HighlightsColors'
     });
         
     document.body.appendChild(tableContainer);
@@ -173,20 +190,23 @@ var HighlightsSpace = ShiftSpace.Space.extend({
     this.addColor('HighlightsColor6');
 
     var closeButton = new ShiftSpace.Element('span', {
-        'class': 'HighlightsClose'});
-  
+      'class': 'HighlightsClose'
+    });
+
     closeButton.addEventListener('click', this.cancel.bind(this), false);            
     tableContainer.appendChild(closeButton);
 
     var saveButton = new ShiftSpace.Element('button', {
-        'class': 'HighlightsGenericButton HighlightsSaveButton'});
+      'class': 'HighlightsGenericButton HighlightsSaveButton'
+    });
         
     saveButton.appendText('Save highlight');
     saveButton.addEventListener('click', this.save.bind(this), false);
     tableContainer.appendChild(saveButton);
     
     var cancelButton = new ShiftSpace.Element('button', {
-        'class': 'HighlightsGenericButton HighlightsCancelButton'});
+      'class': 'HighlightsGenericButton HighlightsCancelButton'
+    });
         
     cancelButton.appendText('Cancel');
     cancelButton.addEventListener('click', this.cancel.bind(this), false);
@@ -195,8 +215,9 @@ var HighlightsSpace = ShiftSpace.Space.extend({
     this.container = tableContainer;
 
     this.cursor = new ShiftSpace.Element('span', {
-        'id': 'HighlightsCursor'
+      'id': 'HighlightsCursor'
     });
+    
     this.cursor.injectInside(document.body);
   },
     
@@ -280,7 +301,7 @@ var HighlightsSpace = ShiftSpace.Space.extend({
     
   cancel: function() 
   {
-    this.hideHighlights();
+    this.getCurrentShift().hide();
     this.hideInterface();        
   },
 
@@ -311,9 +332,12 @@ var HighlightsSpace = ShiftSpace.Space.extend({
 
   save: function() 
   {
-    this.getCurrentShift().summary = this.summary.value;
+    // update the title
+    this.getCurrentShift().setTitle(this.summary.getProperty('value'));
+    // save the shift
     this.getCurrentShift().save();
   }
+  
 });
 
 
@@ -370,7 +394,7 @@ var HighlightsShift = ShiftSpace.Shift.extend({
     
     window.location.hash = this.getId();
   },
-    
+  
   
   hide: function()  
   {
@@ -378,7 +402,14 @@ var HighlightsShift = ShiftSpace.Shift.extend({
     this.parent();
     
     this.getParentSpace().hideHighlights();
+  },
+  
+  
+  defaultTitle: function()
+  {
+    return "Untitled";
   }
+
 });
 
 var Highlights = new HighlightsSpace(HighlightsShift);
