@@ -98,26 +98,39 @@ class SandalphonCompiler:
         """
         filePath = self.paths[view]
         print "loadView: (%s, %s)" % (view, filePath)
+
         if filePath != None:
             # load the file
             fileHandle = open(filePath)
             # verify that this file is valid mark up
             fileContents = fileHandle.read()
             fileHandle.close()
-
-            # if this file hasn't been loaded before add it's css to the master css file
-            if self.visitedViews == None:
-                # load the css file
-                pass
             
-            # mark as visited
-            self.visitedViews[view] = True;
+            # add this view's css if necessary
+            if self.visitedViews.has_key(view) != True:
+                self.addCSSForHTMLPath(filePath)
+                self.visitedViews[view] = True
 
             return fileContents
         else:
             return None
-        
 
+
+    def addCSSForHTMLPath(self, filePath):
+        print "addCSSForHTMLPath %s" % filePath
+        cssPath = os.path.splitext(filePath)[0]+".css"
+        # load the css file
+        try:
+            fileHandle = open(cssPath)
+
+            if fileHandle != None:
+                self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n" + fileHandle.read()
+
+            fileHandle.close()
+        except IOError:
+            print "Could not load css file at %s" % cssPath
+
+    
     def getInstruction(self, str):
         """
         Takes a raw template instruction and returns a tuple holding the instruction name and it's parameter.
@@ -151,6 +164,9 @@ class SandalphonCompiler:
         interfaceFile = fileHandle.read()
         fileHandle.close()
         print "File loaded"
+
+        # add the css for the file at this path
+        self.addCSSForHTMLPath(path)
         
         matches = self.templatePattern.finditer(interfaceFile)
         
@@ -172,21 +188,29 @@ class SandalphonCompiler:
  
         # get the actual file name
         compiledViewsDirectory = "../client/compiledViews/"
+
         fileName = os.path.basename(path)
         fullPath = os.path.join(compiledViewsDirectory, fileName)
 
         print "Writing compiled view file"
         fileHandle = open(fullPath, "w")
         # write the compiled file
-        print interfaceFile
+        #print interfaceFile
         fileHandle.write(interfaceFile)
         # close the file
+        fileHandle.close()
+
+        cssFileName = os.path.splitext(fileName)[0]
+        cssFilePath = os.path.join(compiledViewsDirectory, cssFileName)
+        fileHandle = open(cssFilePath, "w")
+        fileHandle.write(self.cssFile)
         fileHandle.close()
 
         print "Pretty printing"
         # make it pretty
         exitcode = os.system('tidy -i -xml -m %s' % (fullPath))
-        print exitcode
+
+        print self.cssFile
         
         """
         # Grab the root element
