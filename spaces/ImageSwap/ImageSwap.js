@@ -167,7 +167,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     
         // store this across windows
         self.setValue('grabbedImage', {
-          src: self.currentImage.getProperty('src'),
+          src: self.currentImage.src,
           alt: self.currentImage.getProperty('alt'),
           title: self.currentImage.getProperty('title')
         });
@@ -218,7 +218,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     
     // store this across windows
     this.setValue('grabbedImage', {
-      src: this.currentImage.getProperty('src'),
+      src: this.currentImage.src,
       alt: this.currentImage.getProperty('alt'),
       title: this.currentImage.getProperty('title')
     });
