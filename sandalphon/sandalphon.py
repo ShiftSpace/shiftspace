@@ -49,11 +49,19 @@ class SandalphonCompiler:
 
         self.paths = {}
 
+        # These are bundle directories
         for f in views:
-            self.paths[os.path.splitext(f)[0]] = os.path.join(viewsDirectory, f)
+            parts = os.path.splitext(f)
+            base = parts[0]
+            self.paths[base] = os.path.join(viewsDirectory, f)
 
+        # These are not, need to look only for the html file
         for f in customViews:
-            self.paths[os.path.splitext(f)[0]] = os.path.join(customViewsDirectory, f)
+            parts = os.path.splitext(f)
+            base = parts[0]
+            ext = parts[1]
+            if ext == ".html":
+                self.paths[base] = os.path.join(customViewsDirectory, f)
         
 
     def validateMarkup(self, markup):
@@ -83,8 +91,8 @@ class SandalphonCompiler:
         """
         Load a views a view and returns it.
         """
-        print ("loadView: " + view)
         filePath = self.paths[view]
+        print "loadView: (%s, %s)" % (view, filePath)
         if filePath != None:
             fileHandle = open(filePath)
             # verify that this file is valid mark up

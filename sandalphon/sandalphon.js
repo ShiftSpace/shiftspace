@@ -299,6 +299,9 @@ var SandalphonClass = new Class({
     var filepath = $('loadFileInput').getProperty('value');
     // save for later
     this.storage().set('lastInterfaceFile', filepath);
+    
+    // load the css file for this
+    new Asset.css('..'+filepath+'.css');
 
     new Request({
       url: "compile.php",
@@ -337,7 +340,9 @@ var SandalphonClass = new Class({
     console.log('Instantiating controllers for views.');
     var views = $('SSSandalphonContainer').getElements('*[uiclass]');
     views.each(function(aView) {
-      new ShiftSpace.UI[aView.getProperty('uiclass')](aView);
+      var theClass = aView.getProperty('uiclass');
+      console.log('Instantiating ' + theClass);
+      new ShiftSpace.UI[theClass](aView);
     });
   },
   
