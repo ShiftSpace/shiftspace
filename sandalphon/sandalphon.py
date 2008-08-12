@@ -30,9 +30,14 @@ def elementHasAttribute(element, attrib, value=None):
 class SandalphonCompiler:
 
     def __init__(self):
+        # store paths to interface files
         self.paths = {}
+        self.visitedViews = {}
+        # store concatenated CSS file
+        self.cssFile = ''
         # regex for template pattern /<\?.+?\?>/g
         self.templatePattern = re.compile('<\?.+?\?>')
+        # generate lookup paths
         self.getPaths()
 
 
@@ -49,7 +54,7 @@ class SandalphonCompiler:
 
         self.paths = {}
 
-        # These are bundle directories
+        # These are bundle directories, .js .css .html
         for f in views:
             parts = os.path.splitext(f)
             base = parts[0]
@@ -94,10 +99,20 @@ class SandalphonCompiler:
         filePath = self.paths[view]
         print "loadView: (%s, %s)" % (view, filePath)
         if filePath != None:
+            # load the file
             fileHandle = open(filePath)
             # verify that this file is valid mark up
             fileContents = fileHandle.read()
             fileHandle.close()
+
+            # if this file hasn't been loaded before add it's css to the master css file
+            if self.visitedViews == None:
+                # load the css file
+                pass
+            
+            # mark as visited
+            self.visitedViews[view] = True;
+
             return fileContents
         else:
             return None
