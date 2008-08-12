@@ -74,7 +74,9 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
       if(confirm(fixStr))
       {
         // load this image
-        this.setValue('grabbedImage', swappedSrc);
+        this.setValue('grabbedImage', {
+          src: swappedSrc
+        });
         this.showInterface();        
       }
       else
@@ -164,7 +166,11 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
         var currentShift = self.getCurrentShift();
     
         // store this across windows
-        self.setValue('grabbedImage', self.currentImage.src);
+        self.setValue('grabbedImage', {
+          src: self.currentImage.getProperty('src'),
+          alt: self.currentImage.getProperty('alt'),
+          title: self.currentImage.getProperty('title')
+        });
     
         if(currentShift.getSrc() && currentShift.isPinned())
         {
@@ -211,7 +217,11 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     var currentShift = this.getCurrentShift();
     
     // store this across windows
-    this.setValue('grabbedImage', this.currentImage.src);
+    this.setValue('grabbedImage', {
+      src: this.currentImage.getProperty('src'),
+      alt: this.currentImage.getProperty('alt'),
+      title: this.currentImage.getProperty('title')
+    });
 
     if(currentShift.getSrc() && currentShift.isPinned())
     {
@@ -228,14 +238,16 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     var currentShift = this.getCurrentShift();
 
     // set up the shift!
-    this.getValue('grabbedImage', null, function(grabbedImage) {
+    this.getValue('grabbedImage', null, function(grabbedImageRef) {
+      var grabbedImage = grabbedImageRef.src;
       
       // we want a reference to the image node with the replace action
       var pinRef = ShiftSpace.Pin.toRef(this.currentImage, 'replace');
 
       // tell the current shift to swap
       currentShift.setSrc(grabbedImage);
-      currentShift.setOriginalSource(this.currentImage.getProperty('src'));
+      currentShift.setSwappedSourceRef(grabbedImageRef);
+      currentShift.setOriginalSource(this.currentImage);
       
       currentShift.swap(pinRef);
     
@@ -318,7 +330,13 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   defaultTitle: function()
   {
-    return this.originalSource().split("/").getLast() + " swapped to " + this.image.getProperty('src').split("/").getLast();
+    var originalSource = this.originalSource();
+    var swappedSource = this.swappedSourceRef();
+    
+    var originalTitle = originalSource.getProperty('alt') || originalSource.getProperty('title') || originalSource.split("/").getLast();
+    var swappedTitle = swappedSource.alt || swappedSource.title || swappedSource.src.split("/").getLast();
+    
+    return (originalTitle + " swapped to " + swappedTitle);
   },
   
   
@@ -329,15 +347,31 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   },
   
   
-  setOriginalSource: function(src)
+  setOriginalSource: function(image)
   {
-    this.__originalSource__ = src;
+    this.__originalSource__ = image;
   },
   
   
   originalSource: function()
   {
     return this.__originalSource__;
+  },
+  
+  
+  setSwappedSourceRef: function(ref)
+  {
+    this.__swappedSource__ = {
+      src: ref.src,
+      alt: ref.alt,
+      title: ref.title
+    };
+  },
+  
+  
+  swappedSourceRef: function()
+  {
+    return this.__swappedSource__;
   },
   
 
