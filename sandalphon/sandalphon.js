@@ -36,7 +36,7 @@ var SandalphonClass = new Class({
   // path to user defined view controllers
   UserClassPaths:
   {
-    'SSCustomTableRow': '/client/'
+    'SSCustomTableRow': '/client/customViews/'
   },
 
 

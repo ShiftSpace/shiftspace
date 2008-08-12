@@ -1,0 +1,60 @@
+<!-- Start SSTableView interface definition -->
+<div class='SSTableView CustomTableView' uiclass="SSTableView">
+  
+  <!-- Start TableView Header -->
+  <div class="SSControlView">
+    <!-- we need a cell class for the following -->
+    <div class="SSModel SSColumnHeading SSDefaultCursor">
+      <span class="SSColumnHeadingTitle"></span>
+      <div class="SSResize"></div>
+      <div class="SSColumnOrder"></div>
+    </div>
+  </div>
+  <!-- End TableView Header -->
+  
+  <!-- Start wrapping Scroll View -->
+  <div class="SSScrollView">
+    
+    <!-- Start Content View -->
+    <table class='SSContentView' sortColumns="1">
+  
+      <!-- start the table definition-->
+      <colgroup class='SSDefinition'>
+        <col name="selected"></col>
+        <col name="space" resizeable="1"></col>
+        <col name="summary" resizeable="1"></col>
+        <col name="username" resizeable="1"></col>
+        <col name="created" order="descending" resizeable="1"></col>
+      </colgroup>
+      <!-- end the control view -->
+      
+      <!-- Table Body Starts Here  -->
+      <tbody>
+        <tr class="SSRow SSModel" uiclass='SSCustomTableRow'>
+          <td name="selected">
+            <input class="SSActionCell" type="checkbox"></input>
+          </td>
+          <td name="space">
+            <img></img>
+            <span></span>
+          </td>
+          <td name="summary">
+            <div class="SSTextCell">summary</div>
+          </td>
+          <td name="username">dnolen</td>
+          <td name="created">Just created.</td>
+        </tr>
+      </tbody>
+      <!-- Table Body Ends Here -->
+
+    </table>
+    <!-- End Content View -->
+    
+  </div>
+  <!-- End Wrapping ScrollArea for table view -->
+
+  <!-- Start Paging Area -->
+  <!-- End Paging Area -->
+  
+</div>
+<!-- End Actual Table View -->
