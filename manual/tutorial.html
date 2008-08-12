@@ -275,7 +275,7 @@ attachEvents: function()
                     <ol>
                         <li>
                             <p>Add this default value to the top of your <tt>setup</tt> method, before the line <tt>this.build(json)</tt>, add this line just after the line where the Shift div is created:</p>
-                            <pre>this.messageValue = json.messageValue || "Hello World!";</pre>
+                            <pre>this.messageValue = json.message || "Hello World!";</pre>
                         </li>
                         <li>
                             <p>Next, change <tt>build</tt> to reflect this new <tt>messageValue</tt> property:</p>
@@ -324,7 +324,7 @@ attachEvents: function()
 
 var HelloWorldShift = ShiftSpace.Shift.extend({
     setup: function(json) {
-        this.messageValue = json.messageValue || "Hello World!";
+        this.messageValue = json.message || "Hello World!";
         this.build(json);
         this.save();
         this.manageElement(this.element);
