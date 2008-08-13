@@ -4,8 +4,8 @@
 
 .SSTableView
 {
-  width: 800px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
   background-color: #e6e4a3;
   font-family: helvetica;
   font-size: 12px;

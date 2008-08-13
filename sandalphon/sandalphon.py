@@ -200,7 +200,8 @@ class SandalphonCompiler:
         # close the file
         fileHandle.close()
 
-        cssFileName = os.path.splitext(fileName)[0]
+        print "Writing CSS file"
+        cssFileName = os.path.splitext(fileName)[0]+".css"
         cssFilePath = os.path.join(compiledViewsDirectory, cssFileName)
         fileHandle = open(cssFilePath, "w")
         fileHandle.write(self.cssFile)

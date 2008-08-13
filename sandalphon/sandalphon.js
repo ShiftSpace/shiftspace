@@ -299,9 +299,6 @@ var SandalphonClass = new Class({
     var filepath = $('loadFileInput').getProperty('value');
     // save for later
     this.storage().set('lastInterfaceFile', filepath);
-    
-    // load the css file for this
-    new Asset.css('..'+filepath+'.css');
 
     new Request({
       url: "compile.php",

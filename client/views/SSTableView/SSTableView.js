@@ -217,6 +217,7 @@ var SSTableView = new Class({
   {
     var index = this.columnIndexForNode(column);
     var lastSelectedColumn = this.selectedColumnIndex();
+    
     if(index == lastSelectedColumn)
     {
       // was the previously selected column, just deselect
@@ -227,7 +228,7 @@ var SSTableView = new Class({
       this.selectColumn(index);
       
       // update the sort order if not already sorted
-      this.datasource().sortByColumn(this.columnNames()[index], this.sortOrderForColumn(index));
+      if(this.datasource()) this.datasource().sortByColumn(this.columnNames()[index], this.sortOrderForColumn(index));
     }
   },
   
@@ -473,7 +474,7 @@ var SSTableView = new Class({
   reload: function()
   {
     // reload from the server
-    this.datasource().fetch();
+    if(this.datasource()) this.datasource().fetch();
   },
 
   /*
@@ -658,9 +659,12 @@ var SSTableView = new Class({
     // update the presentation
     var datasource = this.datasource();
     
-    datasource.rowCount().times(function(n) {
-      this.addRow(datasource.rowForIndex(n));
-    }.bind(this));
+    if(datasource)
+    {
+      datasource.rowCount().times(function(n) {
+        this.addRow(datasource.rowForIndex(n));
+      }.bind(this));
+    }
   }
 
 });

@@ -1,8 +1,8 @@
 .SSTabView
 {
   background-color:#e6e4a3;
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
 }
 
 .SSTabView > .SSControlView
@@ -62,7 +62,10 @@
 
 .SSTabViewConsoleStyle > .SSControlView
 {
-  width: 100%;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: 0px;
   height: 30px;
   border-bottom: solid 1px #000;
 }
@@ -89,6 +92,11 @@
 .SSTabViewConsoleStyle > .SSContentView
 {
   clear: both;
+  position: absolute;
+  top: 31px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
 }
 
 /*

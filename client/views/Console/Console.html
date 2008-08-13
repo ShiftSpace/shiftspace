@@ -1,36 +1,17 @@
-<div id="mainTabView" class="SSTabView SSTabViewConsoleStyle" uiclass="SSTabView">
+<div id="SSConsole">
+  <div class="SSTabView SSTabViewConsoleStyle" uiclass="SSTabView">
   
-  <div id="mainTabControl" class="SSControlView">
-    <div id="select1" class="SSButton SSActive">Shifts</div>
-    <div id="select2" class="SSButton">Settings</div>
-    <div id="select3" class="SSButton">Login</div>
-  </div>
-  
-  <div id="mainTabContentView" class="SSContentView">
-
-    <!-- start shifts view -->
-    <div id="shiftsTabView" class="SSTabView SSTabViewSubTabStyle SSActive" uiclass="SSTabView">
-      <div id="settingsTabControl" class="SSControlView">
-        <div id="shifts" class="SSButton SSActive">Shifts</div>
-        <div id="myshifts" class="SSButton">My Shifts</div>
-        <div id="following" class="SSButton">Following</div>
-      </div>
-
-      <div class="SSContentView" autoresize="1">
-        <?customView:CustomTableView?>
-        <?customView:MyShifts?> 
-        <?customView:TrackedShifts?>
-      </div>
-       <!-- End shifts subtab content view -->
+    <div class="SSControlView">
+      <div class="SSButton SSActive">Shifts</div>
+      <div class="SSButton">Settings</div>
+      <div class="SSButton">Login</div>
     </div>
-    <!-- End Sub tab view -->
-
-    <?customView:SettingsTabView?>
-
-    <!-- Start User Pane -->
-    <div>Pane 3</div>
-    <!-- End User Pane -->
-
-  </div>
   
+    <div class="SSContentView">
+      <?customView:ShiftsTabView?>
+      <?customView:SettingsTabView?>
+      <div>Pane 3</div>
+    </div>
+  
+  </div>
 </div>
