@@ -53,14 +53,14 @@ preg_match("/^(http:\/\/)?([^\/]+)/i",$myurl, $matches);
 $baseurl = $matches[2];
 //replace relative links with absolute links
 //if beings with src="/
-$result = preg_replace("/src=\"\//i","src=\"$myurl" ,$result);
+$result = preg_replace("/src=\"\//i","src=\"http://$baseurl/" ,$result);
 //if begins with src="../
-$result = preg_replace("/src=\"\.\./i","src=\"$myurl.." ,$result);
+$result = preg_replace("/src=\"\.\./i","src=\"$myurl" ,$result);
 //if begins with src="word/ && word != http or www
 $result = preg_replace("/src=\"(?!http|www)/","src=\"$myurl",$result);
 //for href
-$result = preg_replace("/href=\"\//i","href=\"$myurl" ,$result);
-$result = preg_replace("/href=\"\.\./i","href=\"$myurl.." ,$result);
+$result = preg_replace("/href=\"\//i","href=\"http://$baseurl/" ,$result);
+$result = preg_replace("/href=\"\.\./i","href=\"$myurl" ,$result);
 //proxy links
 $result = preg_replace("/a href=\"/i","a href=\"simple_proxy.php?url=", $result);
 //fix css imports
