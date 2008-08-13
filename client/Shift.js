@@ -140,6 +140,18 @@ ShiftSpace.Shift = new Class({
   },
   
   /*
+    Function: isNewShift
+      Returns whether this shift is newly created or not.
+      
+    Returns:
+      A boolean.
+  */
+  isNewShift: function()
+  {
+    return SSIsNewShift(this.getId());
+  },
+  
+  /*
     Function: setFocusRegions
       Takes a variable list of DOM element that will trigger this
       shift to fire an onFocus event.
