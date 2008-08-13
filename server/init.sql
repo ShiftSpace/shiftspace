@@ -15,6 +15,23 @@ CREATE TABLE shift (
   broken INTEGER DEFAULT 0
 );
 
+CREATE TABLE broken (
+  id INTEGER PRIMARY KEY,
+  space VARCHAR(255),
+  href VARCHAR(255),
+  user_id INTEGER,
+  summary TEXT,
+  content TEXT,
+  url_slug VARCHAR(255),
+  created DATETIME,
+  modified DATETIME,
+  version VARCHAR(255),
+  revision INTEGER DEFAULT 1,
+  parent_id INTEGER DEFAULT 0,
+  status INTEGER DEFAULT 1,
+  broken INTEGER DEFAULT 0
+);
+
 CREATE TABLE user (
   id INTEGER PRIMARY KEY,
   username VARCHAR(255),
