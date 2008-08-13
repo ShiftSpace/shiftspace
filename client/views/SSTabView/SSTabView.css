@@ -105,8 +105,14 @@
 
 .SSTabViewSubTabStyle > .SSControlView
 {
+  /*
   float: left;
   height: 100%;
+  */
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
   width: 100px;
   border-right: solid 1px #000;
 }
@@ -119,5 +125,10 @@
 
 .SSTabViewSubTabStyle > .SSContentView
 {
-  float: left;
+  /*float: left;*/
+  position: absolute;
+  top: 0px;
+  left: 101px;
+  right: 0px;
+  bottom: 0px;
 }

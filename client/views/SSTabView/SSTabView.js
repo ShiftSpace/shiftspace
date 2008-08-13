@@ -208,9 +208,11 @@ var SSTabView = new Class({
       var size = this.element.getSize();
       var controlSize = theControlView.getSize();
     
+      /*
       theContentView.setStyles({
         width: size.x-controlSize.x
       });
+      */
     }
   }
   
