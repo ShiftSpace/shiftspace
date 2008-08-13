@@ -15,7 +15,7 @@ $shift = $db->row("
 if (empty($shift)) {
   respond(0, "Shift not found.");
 }
-if ($shift->user_id != $user->id) {
+if ($shift->user_id != $user->id && $user->status < 2) {
   respond(0, "You don't have permission to update that shift.");
 }
 
@@ -46,6 +46,13 @@ if (isset($_POST['version'])) {
 if (isset($_POST['status'])) {
   // Status: 0 = deleted, 1 = public, 2 = private
   $updates['status'] = $_POST['status'];
+}
+
+// Is this a broken shift?
+if (isset($_POST['broken']) &&
+    $_POST['broken'] == 1 ||
+    $_POST['broken'] == 0) {
+  $updates['broken'] = $_POST['broken'];
 }
 
 // Make sure we're actually updating something

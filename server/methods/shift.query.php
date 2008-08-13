@@ -84,6 +84,7 @@ $shifts = $db->rows("
   FROM shift AS s, user AS u
   WHERE $user_clause
     AND $shift_clause
+    AND s.broken = 0
     AND s.user_id = u.id
   ORDER BY $sortByColumn $sortByDirection
 ");
