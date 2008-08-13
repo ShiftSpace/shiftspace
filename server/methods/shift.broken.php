@@ -36,6 +36,7 @@ if($url_slug)
                '{$theShift['version']}', 
                '{$theShift['status']}')
     ");
+    respond(1, "Added broken shift");
   }
   else
   {
@@ -48,7 +49,12 @@ if($url_slug)
           status = {$theShift['status']}
       WHERE
     ");
+    respond(1, "Updated broken shift");
   }
+}
+else
+{
+  respond(0, "Oops that shift does not exist.");
 }
 
 ?>
