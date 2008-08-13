@@ -68,7 +68,7 @@ $result = preg_replace("/@import\s+\"\//","@import \"http://$baseurl/", $result)
 //fix css for for href=\"/css/essay.css
 $result = preg_replace("/href=\\\"\//","href=\\\"$myurl", $result);
 //remove 'most' javascript
-$result = preg_replace("/\<script.+\<\/script>/im","<!--removedjavascript-->",$result);
+$result = preg_replace("/<script.*?<\/script>/ims","<!--removedjavascript-->",$result);
 //insert ShiftSpace
 /*
 $ShiftSpace = '<script type="text/javascript" charset="utf-8">
