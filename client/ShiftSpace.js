@@ -109,6 +109,7 @@ var ShiftSpace = new (function() {
     // A shift pending space load
     var __pendingShift__ = null;
     var __consoleIsWaiting__ = false;
+    var __defaultShiftStatus__ = 1;
     
     // Stores initial data for plugins that are needed for the console at startup
     // since the plugins won't actually be loaded until they are needed
@@ -167,6 +168,19 @@ var ShiftSpace = new (function() {
       // Load external scripts (pre-processing required)
       // INCLUDE User.js
       console.log('User.js loaded');
+
+      // Set up user event handlers
+      ShiftSpace.User.addEvent('onUserLogin', function() {
+        console.log('ShiftSpace Login ======================================');
+        SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus'));
+        // clear out recently viewed shifts on login
+        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', {});
+      });
+      
+      ShiftSpace.User.addEvent('onUserLogout', function() {
+        SSFireEvent('onUserLogout');
+      });
+      
       // INCLUDE Element.js
       console.log('Element.js loaded');
       // INCLUDE Space.js
@@ -209,10 +223,10 @@ var ShiftSpace = new (function() {
       ShiftSpace.ShiftMenu.buildMenu();
       
       // Set up event handlers
-      window.addEvent('keydown', keyDownHandler.bind(this) );
-      window.addEvent('keyup', keyUpHandler.bind(this) );
-      window.addEvent('keypress', keyPressHandler.bind(this) );
-      window.addEvent('mousemove', mouseMoveHandler.bind(this) );
+      window.addEvent('keydown', keyDownHandler.bind(this));
+      window.addEvent('keyup', keyUpHandler.bind(this));
+      window.addEvent('keypress', keyPressHandler.bind(this));
+      window.addEvent('mousemove', mouseMoveHandler.bind(this));
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -220,16 +234,6 @@ var ShiftSpace = new (function() {
         __pinWidgets__.each(function(x){
           if(!x.isSelecting) x.hideMenu();
         });
-      });
-      
-      // Set up user event handlers
-      ShiftSpace.User.addEvent('onUserLogin', function() {
-        // clear out recently viewed shifts on login
-        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', {});
-      });
-      
-      ShiftSpace.User.addEvent('onUserLogout', function() {
-        SSFireEvent('onUserLogout');
       });
       
       // create the pin selection bounding box
@@ -337,7 +341,40 @@ var ShiftSpace = new (function() {
       }, 0);
     }
     
+    
+    function SSSetPref(pref, value)
+    {
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        var key = [ShiftSpace.User.getUsername(), pref].join('.');
+        setValue(key, value);
+      }
+    }
+    
+    
+    function SSGetPref(pref)
+    {
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        var key = [ShiftSpace.User.getUsername(), pref].join('.');
+        return getValue(key, null);
+      }
+    }
+    
+    
+    function SSSetDefaultShiftStatus(value)
+    {
+      __defaultShiftStatus__ = value;
+      SSSetPref('defaultShiftStatus', __defaultShiftStatus__);
+    }
 
+
+    function SSGetDefaultShiftStatus(checkPref)
+    {
+      return (checkPref && SSGetPref('defaultShiftStatus')) || __defaultShiftStatus__;
+    }
+    
+    
     /*
       Function: SSSetPrefForSpace
         Set user preference for a space.  Calls setValue.  The preference
@@ -1371,6 +1408,11 @@ var ShiftSpace = new (function() {
         catch(err)
         {
           console.log('Error: Could not show shift, ' + SSDescribeException(err));
+          var params = {id:shiftId};
+          serverCall.safeCall('shift.broken', params, function(result) {
+            console.log(result);
+          });
+
           SSShowErrorWindow(shiftId);
 
           // probably need to do some kind of cleanup
@@ -1440,10 +1482,14 @@ var ShiftSpace = new (function() {
           // Set private user variable
           setUsername(json.username);
 
+          // fire user login for the Console
           if (__consoleIsWaiting__)
           {
             SSFireEvent('onUserLogin', {status:1});
           }
+          
+          // make sure default shift status preference is set
+          SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus'));
         }
         
         SSSetPendingShifts(json.count);
@@ -1911,7 +1957,7 @@ var ShiftSpace = new (function() {
       // remove the filters from the json object
       var filters = shiftJson.filters;
       delete shiftJson.filters;
-      
+
       var params = {
         href: window.location.href,
         space: shiftJson.space,
@@ -1919,23 +1965,26 @@ var ShiftSpace = new (function() {
         content: Json.toString(shiftJson),
         version: space.attributes.version,
         filters: Json.toString(filters),
-        status: getValue('default_shift_status', 1) // TODO: this call is in the space ecosystem
+        status: SSGetDefaultShiftStatus() // TODO: this call is in the space ecosystem
       };
       
+      /*
       console.log('//////////////////////////////////////////////////////////////////');
       console.log(Json.toString(params));
       console.log('//////////////////////////////////////////////////////////////////');
+      */
 
       serverCall.safeCall('shift.create', params, function(json) {
-        console.log('>>>>>>>>>>>>>>>>> SAVED new shift');
-        if (!json.status) {
+        //console.log('>>>>>>>>>>>>>>>>> SAVED new shift');
+        if (!json.status) 
+        {
           console.error(json.message);
           return;
         }
         
         shiftJson.username = ShiftSpace.User.getUsername();
         shiftJson.created = 'Just posted';
-        shiftJson.status = getValue('default_shift_status', 1);
+        shiftJson.status = SSGetDefaultShiftStatus();
         shiftJson.href = window.location.href;
         
         // with the real value

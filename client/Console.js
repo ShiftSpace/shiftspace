@@ -542,6 +542,8 @@ var Console = new Class({
       auth.addClass('logout');
       auth.setAttribute('title', 'Logout');
       loginStatus.setHTML('Logged in as <b>' + ShiftSpace.User.getUsername() + '</b>');
+      // TODO: Bad place for this a hack - David
+      this.updateDefaultShiftStatus();
     } 
     else 
     {
@@ -561,7 +563,7 @@ var Console = new Class({
       this.hideSubTab('settings', 2);
     }
     
-    var default_shift_status = getValue('default_shift_status', 1);
+    var default_shift_status = SSGetDefaultShiftStatus(true);
     
     if (default_shift_status == 1) {
       default_shift_status = ' checked';
@@ -582,16 +584,27 @@ var Console = new Class({
     $(SSGetElementByClass('form-column', sections[0])).setStyle('padding-top', 20);
     
     var default_privacy = $(this.doc.getElementById('default_privacy'))
-    default_privacy.addEvent('onChange', function() {
+
+    default_privacy.addEvent('onChange', function(_evt) {
+      console.log('onChange');
       var init_privacy = $(this.doc.getElementById('init_privacy'));
-      if (default_privacy.hasClass('checked')) {
-        setValue('default_shift_status', 1);
-        if (init_privacy) {
+      if (default_privacy.hasClass('checked')) 
+      {
+        console.log('make public');
+        SSSetDefaultShiftStatus(1);
+        console.log('change made');
+        if (init_privacy) 
+        {
           init_privacy.addClass('checked');
         }
-      } else {
-        setValue('default_shift_status', 2);
-        if (init_privacy) {
+      } 
+      else 
+      {
+        console.log('make private');
+        SSSetDefaultShiftStatus(2);
+        console.log('change made');
+        if (init_privacy) 
+        {
           init_privacy.removeClass('checked');
         }
       }
@@ -987,19 +1000,23 @@ var Console = new Class({
       '<br class="clear" />'
     );
     
-    
     var init_privacy = $(this.doc.getElementById('init_privacy'));
-    if (getValue('default_shift_status', 1) == 2) {
-      init_privacy.removeClass('checked');
-    }
-    
     var default_privacy = $(this.doc.getElementById('default_privacy'));
+
+    SSSetDefaultShiftStatus(1);
+    
+    // set default to checked
+    default_privacy.addClass('checked');
+
     init_privacy.addEvent('onChange', function() {
-      if (init_privacy.hasClass('checked')) {
-        setValue('default_shift_status', 1);
+      if (init_privacy.hasClass('checked')) 
+      {
+        SSSetDefaultShiftStatus(1);
         default_privacy.addClass('checked');
-      } else {
-        setValue('default_shift_status', 2);
+      } 
+      else 
+      {
+        SSSetDefaultShiftStatus(2);
         default_privacy.removeClass('checked');
       }
     }.bind(this));
@@ -1050,6 +1067,7 @@ var Console = new Class({
       this.showTab('shifts');
       this.resetLogin();
       this.removeTab('login');
+      this.updateDefaultShiftStatus();
       
       // Hide the Account subtab
       this.showSubTab('settings', 2);
@@ -1065,6 +1083,24 @@ var Console = new Class({
     else 
     {
       this.showResponse('login_response', json.message);
+    }
+  },
+  
+  
+  updateDefaultShiftStatus: function()
+  {
+    var defaultPrivacy = $(this.doc.getElementById('default_privacy'));
+    console.log('Updated Default Shift Status +++++++++++++++++++++++++++++++++++++++++++++++ ' + SSGetDefaultShiftStatus(true));
+    if(defaultPrivacy)
+    {
+      if(SSGetDefaultShiftStatus(true) == 2)
+      {
+        defaultPrivacy.removeClass('checked');
+      }
+      else
+      {
+        defaultPrivacy.addClass('checked');
+      }
     }
   },
   
@@ -1088,7 +1124,8 @@ var Console = new Class({
   },
   
   
-  handleJoin: function(json) {
+  handleJoin: function(json) 
+  {
     if (json.status) 
     {
       this.buildWelcome();
@@ -1100,7 +1137,6 @@ var Console = new Class({
       // Hide the Account subtab
       this.showSubTab('settings', 2);
       this.showSubSection('settings', 0);
-      
     } 
     else 
     {
@@ -1108,7 +1144,9 @@ var Console = new Class({
     }
   },
   
-  handleAccountUpdate: function(json) {
+  
+  handleAccountUpdate: function(json) 
+  {
     this.showResponse('account-response', json.message);
     if (json.status) {
       $(this.doc.getElementById('account-password')).value = '';
@@ -1116,18 +1154,23 @@ var Console = new Class({
     }
   },
   
-  handlePasswordReset: function(json) {
+  
+  handlePasswordReset: function(json) 
+  {
     this.showResponse('password-response', json.message);
   },
   
-  resetLogin: function() {
+  
+  resetLogin: function() 
+  {
     $(this.doc.getElementById('username')).value = '';
     $(this.doc.getElementById('password')).value = '';
     $(this.doc.getElementById('login_response')).setHTML('');
   },
   
   
-  resetJoin: function() {
+  resetJoin: function() 
+  {
     $(this.doc.getElementById('join_username')).value = '';
     $(this.doc.getElementById('email')).value = '';
     $(this.doc.getElementById('join_password')).value = '';
@@ -1136,12 +1179,16 @@ var Console = new Class({
   },
   
   
-  showResponse: function(target, message) {
-    if (this.frame.getSize().size.y < 175) {
+  showResponse: function(target, message) 
+  {
+    if (this.frame.getSize().size.y < 175) 
+    {
       this.frame.setStyle('height', 175);
       this.refresh();
     }
-    $(this.doc.getElementById(target)).setHTML(message);
+    
+    var targetNode = $(this.doc.getElementById(target));
+    if(targetNode) targetNode.setHTML(message);
   },
   
   

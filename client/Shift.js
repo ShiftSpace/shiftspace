@@ -135,7 +135,7 @@ ShiftSpace.Shift = new Class({
       }
       (end)
   */
-  setup: function(json) 
+  setup: function(json)
   {
   },
   

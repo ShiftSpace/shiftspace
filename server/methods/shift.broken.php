@@ -32,8 +32,8 @@ if($url_slug)
                '{$theShift['content']}',
                '{$theShift['url_slug']}',
                '{$theShift['created']}',
-               '{$theShift['modified']}', 
-               '{$theShift['version']}', 
+               '{$theShift['modified']}',
+               '{$theShift['version']}',
                '{$theShift['status']}')
     ");
     respond(1, "Added broken shift");
