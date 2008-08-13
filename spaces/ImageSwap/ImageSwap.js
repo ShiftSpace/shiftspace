@@ -333,7 +333,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     var originalSource = this.originalSource();
     var swappedSource = this.swappedSourceRef();
     
-    var originalTitle = originalSource.getProperty('alt') || originalSource.getProperty('title') || originalSource.split("/").getLast();
+    var originalTitle = originalSource.getProperty('alt') || originalSource.getProperty('title') || originalSource.getProperty('src').split("/").getLast();
     var swappedTitle = swappedSource.alt || swappedSource.title || swappedSource.src.split("/").getLast();
     
     return (originalTitle + " swapped to " + swappedTitle);
