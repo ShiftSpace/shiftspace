@@ -25,7 +25,6 @@ if (!empty($_GET['id'])) {
       margin-top:100px;
     }
     </style>
-    <script src="../shiftspace.php?method=shiftspace.user.js&sandbox=1" type="text/javascript" charset="utf-8"></script>
   </head>
   <body>
     <div id="lipsum">
