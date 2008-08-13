@@ -48,13 +48,14 @@ if (empty($version)) {
 $created = date('Y-m-d H:i:s');
 $modified = $created;
 $url_slug = generate_slug();
+$domain = calculate_domain($href);
 
 // Save the shift to storage
 $db->query("
   INSERT INTO shift
-  (user_id, space, href, summary, content,
+  (user_id, space, href, summary, content, domain,
    url_slug, created, modified, version, status)
-  VALUES ($user->id, '$space', '$href', '$summary', '$content',
+  VALUES ($user->id, '$space', '$href', '$summary', '$content', '$domain',
           '$url_slug', '$created', '$modified', '$version', '$status')
 ");
 

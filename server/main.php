@@ -39,6 +39,18 @@ function normalize_url($url) {
   return $url;
 }
 
+function calculate_domain($url) {
+  $url = @parse_url($url);
+  if (empty($url) || empty($url['host'])) {
+    continue;
+  }
+  $domain = $url['host'];
+  if (substr($domain, 0, 4) == 'www.') {
+    $domain = substr($domain, 4);
+  }
+  return $domain;
+}
+
 function require_login() {
   global $user;
   if (empty($user) || empty($user->id)) {
