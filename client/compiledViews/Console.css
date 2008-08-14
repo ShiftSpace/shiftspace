@@ -77,7 +77,7 @@
 
 .MyShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=href]
 {
-  width: 150px;
+  width: 250px;
 }
 
 .MyShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=created]
