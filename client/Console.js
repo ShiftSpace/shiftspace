@@ -1041,6 +1041,7 @@ var Console = new Class({
   setupCheckboxes: function(target) {
     var checkboxes = SSGetElementsByClass('checkbox', target);
     checkboxes.each(function(checkbox) {
+      console.log('checkbox change');
       $(checkbox).addEvent('click', function() {
         if (checkbox.hasClass('checked')) 
         {
