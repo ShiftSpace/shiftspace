@@ -134,15 +134,13 @@ var SSTableViewDatasource = new Class({
 
   
   fetch: function(properties)
-  {
-    var testhref = {href:'http://www.google.com/'};
-    
+  {    
     if(this.dataProviderURL())
     {
       new Request({
         url: this.dataProviderURL(),
         method: 'post',
-        data: $merge(testhref, properties),
+        data: properties,
         onComplete: function(responseText, responseXML)
         {
           var data = JSON.decode(responseText)[this.dataKey()];

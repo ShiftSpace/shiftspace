@@ -88,7 +88,7 @@ var MyTableViewDelegate = new Class({
     this.allShiftsTableView = tableView;
     tableView.setDelegate(this);
     tableView.setDatasource(this.allShiftsDatasource);
-    this.allShiftsDatasource.fetch();
+    this.allShiftsDatasource.fetch({href:"http://www.google.com/"});
   },
   
   
