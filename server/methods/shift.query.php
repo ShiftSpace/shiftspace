@@ -25,6 +25,7 @@ else if (!empty($_REQUEST['id']))
   }
 }
 
+// For table view sorting
 if (!empty($_REQUEST['sortByColumn']))
 {
   $sortByColumn = $db->escape($_REQUEST['sortByColumn']);
@@ -34,6 +35,7 @@ else
   $sortByColumn = 'created';
 }
 
+// For table view sorting
 if (!empty($_REQUEST['sortByDirection']))
 {
   $sortValue = $db->escape($_REQUEST['sortByDirection']);
@@ -49,6 +51,17 @@ if (!empty($_REQUEST['sortByDirection']))
 else
 {
   $sortByDirection = "DESC";
+}
+
+// For selecting a specific user's public shifts
+if(!empty($_REQUEST['username']))
+{
+  $selectByUser = $db->escape($_REQUEST['username']);
+  $select_by_user_clause = "AND s.username = $selectByUser";
+}
+else
+{
+  $select_by_user_clause = "";
 }
 
 // Sanity check
@@ -84,6 +97,7 @@ $shifts = $db->rows("
   FROM shift AS s, user AS u
   WHERE $user_clause
     AND $shift_clause
+    $select_by_user_clause
     AND s.broken = 0
     AND s.user_id = u.id
   ORDER BY $sortByColumn $sortByDirection

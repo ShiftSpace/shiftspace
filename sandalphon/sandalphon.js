@@ -38,6 +38,9 @@ var SandalphonClass = new Class({
   {
     'SSCustomTableRow': '/client/customViews/'
   },
+  
+  
+  Language: 'en',
 
 
   initialize: function(storage)
@@ -51,7 +54,31 @@ var SandalphonClass = new Class({
     this.setFragment(new Element('div'));
     // intialize the interface
     this.initInterface();
+    // load localised strings
+    this.loadLocalizedStrings(this.Language);
   },
+  
+  
+  loadLocalizedStrings: function(lang)
+  {
+    console.log('load localized strings ' + lang);
+    new Request({
+      url: "../client/LocalizedStrings/"+lang+".js",
+      method: "get",
+      onComplete: function(responseText, responseXML)
+      {
+        for(var object in ShiftSpace.Objects)
+        {
+          object.localizationChange();
+        }
+      },
+      onFailure: function(response)
+      {
+        console.error('Error loading localized strings ' + response);
+      }
+    });
+  },
+
   
   /*
     Function: initInterface
@@ -189,6 +216,12 @@ var SandalphonClass = new Class({
       var evt = new Event(_evt);
       console.log('Load test click');
       this.loadTest($('loadTestInput').getProperty('value'));
+    }.bind(this));
+    
+    // attach events to localization switcher
+    $('localizedStrings').addEvent('change', function(_evt) {
+      var evt = new Event(_evt);
+      this.loadLocalizedStrings($('localizedStrings').getProperty('value'));
     }.bind(this));
   },
   
@@ -340,6 +373,8 @@ var SandalphonClass = new Class({
       var theClass = aView.getProperty('uiclass');
       console.log('Instantiating ' + theClass);
       new ShiftSpace.UI[theClass](aView);
+      // notify any instantiation listeners
+      SSNotifyInstantiationListeners(aView);
     });
   },
   

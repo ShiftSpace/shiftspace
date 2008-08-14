@@ -21,6 +21,8 @@ var SSTableView = new Class({
     this.setModelRow(this.contentView._getElement('.SSModel').dispose());
     // set the column names
     this.setColumnNames(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name')}));
+    // set the column display titles
+    this.setColumnTitles(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('title')}));
     // set up the column orders
     this.initColumnSort();
     // initialize the table header
@@ -72,16 +74,16 @@ var SSTableView = new Class({
       var tableHead = this.element._getElement('> .SSControlView');
     
       // get the column names
-      this.columnNames().length.times(function(idx) {
+      this.columnTitles().length.times(function(idx) {
         // grab the column name
-        var columnName = this.columnNames()[idx];
+        var columnTitle = this.columnTitles()[idx];
         // clone the heading
         var columnHeading = model.clone(true);
         // grab the column definition and set the heading width to it's dimensions
         var columnDefinition = this.columnDefinitionForIndex(idx);
         columnHeading.setStyle('width', columnDefinition.getStyle('width'));
         // put the proper column heading title in there
-        columnHeading.getElement('span.SSColumnHeadingTitle').set('text', columnName.capitalize());
+        columnHeading.getElement('span.SSColumnHeadingTitle').set('text', columnTitle);
         // add it
         tableHead.grab(columnHeading);
       }.bind(this));
@@ -435,9 +437,6 @@ var SSTableView = new Class({
   */
   setDatasource: function(datasource)
   {
-    console.log('SSTableView datasource set.');
-    console.log(datasource);
-    
     if(datasource)
     {
       // remove the previous onload from the last datasource
@@ -476,6 +475,19 @@ var SSTableView = new Class({
     // reload from the server
     if(this.datasource()) this.datasource().fetch();
   },
+  
+  
+  setColumnTitles: function(columnTitles)
+  {
+    console.log(columnTitles);
+    this.__columnTitles__ = columnTitles;
+  },
+  
+  
+  columnTitles: function()
+  {
+    return this.__columnTitles__;
+  },
 
   /*
     Function: setColumnNames
@@ -486,8 +498,6 @@ var SSTableView = new Class({
   */
   setColumnNames: function(columnNames)
   {
-    console.log('setColumnNames');
-    console.log(columnNames);
     this.__columnNames__ = columnNames;
   },
   
@@ -665,6 +675,12 @@ var SSTableView = new Class({
         this.addRow(datasource.rowForIndex(n));
       }.bind(this));
     }
+  },
+  
+  
+  localizationChanged: function()
+  {
+    
   }
 
 });

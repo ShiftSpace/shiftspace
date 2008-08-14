@@ -35,48 +35,83 @@ var MyTableViewDelegate = new Class({
        window.location.hostname == "metatron.shiftspace.org")
     {
       // if we're on metatron load real data
-      this.datasource = new SSTableViewDatasource({
+      this.allShiftsDatasource = new SSTableViewDatasource({
         dataKey: 'shifts',
         dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query',
+        dataNormalizer: legacyNormalizer
+      });
+      // if we're on metatron load real data
+      this.myShiftsDataSource = new SSTableViewDatasource({
+        dataKey: 'shifts',
+        dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query&username=dnolen',
         dataNormalizer: legacyNormalizer
       });
     }
     else
     {
       // otherwise just use dummy data
-      this.datasource = new SSTableViewDatasource({
+      this.allShiftsDatasource = new SSTableViewDatasource({
         data: [
-          {space: 'Notes', summary: 'Hello', username: 'dnolen', created: 'Yesterday'},
-          {space: 'Highlights', summary: 'Cool', username: 'mushon', created: 'Yesterday'},
-          {space: 'SourceShift', summary: 'ARGH', username: 'dnolen', created: 'Yesterday'},
-          {space: 'Notes', summary: 'Yup', username: 'dphiffer', created: 'Yesterday'},
-          {space: 'ImageSwap', summary: 'Wow', username: 'dphiffer', created: 'Yesterday'},
-          {space: 'Notes', summary: 'Amazing', username: 'doron', created: 'Yesterday'},
-          {space: 'Notes', summary: 'Monkeys and a bunch of other apes', username: 'doron', created: 'Yesterday'},
-          {space: 'Notes', summary: 'Junk', username: 'tester', created: 'Yesterday'},
-          {space: 'Highlights', summary: 'Space age', username: 'dnolen', created: 'Yesterday'},
-          {space: 'Notes', summary: 'Wowzer', username: 'dpuppy', created: 'Yesterday'}
+          {id: 'abca', space: 'Notes', summary: 'Hello', username: 'dnolen', created: 'Yesterday'},
+          {id: 'abcb', space: 'Highlights', summary: 'Cool', username: 'mushon', created: 'Yesterday'},
+          {id: 'abcc', space: 'SourceShift', summary: 'ARGH', username: 'dnolen', created: 'Yesterday'},
+          {id: 'abcd', space: 'Notes', summary: 'Yup', username: 'dphiffer', created: 'Yesterday'},
+          {id: 'abce', space: 'ImageSwap', summary: 'Wow', username: 'dphiffer', created: 'Yesterday'},
+          {id: 'abcf', space: 'Notes', summary: 'Amazing', username: 'doron', created: 'Yesterday'},
+          {id: 'abcg', space: 'Notes', summary: 'Monkeys and a bunch of other apes', username: 'doron', created: 'Yesterday'},
+          {id: 'abch', space: 'Notes', summary: 'Junk', username: 'tester', created: 'Yesterday'},
+          {id: 'abci', space: 'Highlights', summary: 'Space age', username: 'dnolen', created: 'Yesterday'},
+          {id: 'abcj', space: 'Notes', summary: 'Wowzer', username: 'dpuppy', created: 'Yesterday'}
+        ]
+      });
+      // otherwise just use dummy data
+      this.myShiftsDatasource = new SSTableViewDatasource({
+        data: [
+          {id: 'cbca', space: 'Cutups', summary: 'Hello', username: 'dnolen', created: 'Yesterday'},
+          {id: 'cbcb', space: 'Cutups', summary: 'Hello world', username: 'dnolen', created: 'Yesterday'},
+          {id: 'cbcc', space: 'SourceShift', summary: 'test', username: 'dnolen', created: 'Yesterday'},
+          {id: 'cbcd', space: 'Notes', summary: 'No!', username: 'dnolen', created: 'Yesterday'},
+          {id: 'cbce', space: 'ImageSwap', summary: 'test', username: 'dnolen', created: 'Yesterday'},
+          {id: 'cbcf', space: 'ImageSwap', summary: 'argh', username: 'dnolen', created: 'Yesterday'},
+          {id: 'cbcg', space: 'Highlights', summary: 'bugz', username: 'doron', created: 'Yesterday'},
+          {id: 'cbch', space: 'Fisheye', summary: 'test', username: 'dnolen', created: 'Yesterday'},
+          {id: 'cbci', space: 'Fisheye', summary: 'oh man', username: 'dnolen', created: 'Yesterday'},
+          {id: 'cbcj', space: 'SourceShift', summary: 'test', username: 'dnolen', created: 'Yesterday'}
         ]
       });
     }
   },
   
   
-  setTableView: function(tableView)
+  setAllShiftsTableView: function(tableView)
   {
-    this.tableView = tableView;
+    this.allShiftsTableView = tableView;
     tableView.setDelegate(this);
-    tableView.setDatasource(this.datasource);
-    this.datasource.fetch();
+    tableView.setDatasource(this.allShiftsDatasource);
+    this.allShiftsDatasource.fetch();
+  },
+  
+  
+  setMyShiftsTableView: function(tableView)
+  {
+    this.myShiftsTableView = tableView;
+    tableView.setDelegate(this);
+    tableView.setDatasource(this.myShiftsDatasource);
+    this.myShiftsDatasource.fetch();
   },
   
   
   userClickedRow: function(args)
   {
     console.log('MyTableViewDelegate, userClickedRow: ' + args.rowIndex);
-    if(args.tableView == this.tableView)
+    var datasource = args.tableView.datasource();
+    if(args.tableView == this.allShiftsTableView)
     {
-      console.log('id of shift ' + this.datasource.data()[args.rowIndex].id);
+      console.log('all shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
+    }
+    else if(args.tableView == this.myShiftsTableView)
+    {
+      console.log('my shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
     }
   },
   
@@ -101,10 +136,13 @@ if(Sandalphon)
     console.log('running test!');
     
     // get the table view controller
-    var controller = $$('.SSTableView')[0].retrieve('__ssviewcontroller__');
+    var allShiftsTableViewController = $$('.SSTableView')[0].retrieve('__ssviewcontroller__');
+    var myShiftsTableViewController = $$('.SSTableView')[1].retrieve('__ssviewcontroller__');
+
     // create table view delegate
     var delegate = new MyTableViewDelegate();
     // set up the delegate
-    delegate.setTableView(controller);
+    delegate.setAllShiftsTableView(allShiftsTableViewController);
+    delegate.setMyShiftsTableView(myShiftsTableViewController);
   }
 }

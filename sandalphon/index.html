@@ -15,16 +15,19 @@
       if(!ShiftSpace) var ShiftSpace = {};
       if(!ShiftSpace.UI) ShiftSpace.UI = {};
       if(!ShiftSpace.Objects) ShiftSpace.Objects = {};
+      if(!ShiftSpace.instantiationListeners) ShiftSpace.instantiationListeners = {};
       
       // Element extensions
       Element.implement({
         _ssgenId: function()
         {
-          if(!this.getProperty('id'))
+          var id = this.getProperty('id');
+          if(!id)
           {
-            var randId = Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
-            this.setProperty('id', 'generatedId_'+randId);
-          } 
+            id = Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
+            this.setProperty('id', 'generatedId_'+id);
+          }
+          return id;
         },
         _getElement: function(sel)
         {
@@ -41,6 +44,7 @@
 
     <script src="../client/Exception.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/SSView.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../client/SSViewProxy.js" type="text/javascript" charset="utf-8"></script>
     <script src="sandalphon.js" type="text/javascript" charset="utf-8"></script>
     <script src="persist.js" type="text/javascript" charset="utf-8"></script>
     
@@ -63,6 +67,10 @@
                 <input id="loadFileInput" type="text"></input>
                 <input id="loadFile" type="button" name="LoadInterface" value="Load"></input>
                 <input id="compileFile" type="button" name="Compile" value="Compile"></input>
+                <select id="localizedStrings">
+                  <option value="en">English</option>
+                  <option value="hb">Hebrew</option>
+                </select>
               </td>
             </tr>
             <tr>

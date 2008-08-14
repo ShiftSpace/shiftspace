@@ -39,7 +39,6 @@ var SSView = new Class({
     //this.element.setProperty('class', 'ShiftSpaceElement '+this.element.getProperty('class'));
     
     // store a back reference to this class
-    console.log('Adding __ssviewcontroller__ to ' + this.element);
     this.element.store('__ssviewcontroller__', this);
     
     // We need to build this class via code
@@ -150,7 +149,20 @@ var SSView = new Class({
     // return the storage property
     if(node)
     {
-      return node.retrieve('__ssviewcontroller__');
+      var hasController = node.getProperty('uiclass');
+      var controller = node.retrieve('__ssviewcontroller__');
+      
+      if(hasController && !controller)
+      {
+        return new SSViewProxy(node);
+      }
+
+      if(hasController && controller)
+      {
+        return controller;
+      }
+      
+      return null
     }
     else
     {
@@ -230,9 +242,41 @@ var SSView = new Class({
   build: function()
   {
     
+  },
+  
+  
+  localizationChanged: function(newLocalization)
+  {
+    console.log('localizationChanged');
   }
   
 });
+
+
+SSInstantiationListeners = {};
+function SSAddInstantiationListener(element, listener)
+{
+  var id = element._ssgenId();
+  if(!SSInstantiationListeners[id])
+  {
+    SSInstantiationListeners[id] = [];
+  }
+  SSInstantiationListeners[id].push(listener);
+}
+
+function SSNotifyInstantiationListeners(element)
+{
+  var listeners = SSInstantiationListeners[element.getProperty('id')];
+  if(listeners)
+  {
+    listeners.each(function(listener) {
+      if(listener.onInstantiate) 
+      {
+        listener.onInstantiate();
+      }
+    });
+  }
+}
 
 if($type(ShiftSpace.UI) != 'undefined')
 {

@@ -586,14 +586,11 @@ var Console = new Class({
     var default_privacy = $(this.doc.getElementById('default_privacy'))
 
     default_privacy.addEvent('click', function(_evt) {
-      console.log('onChange');
       var init_privacy = $(this.doc.getElementById('init_privacy'));
       if (!default_privacy.hasClass('checked')) 
       {
-        console.log('make public');
         default_privacy.addClass('checked');
         SSSetDefaultShiftStatus(1);
-        console.log('change made');
         if (init_privacy) 
         {
           init_privacy.addClass('checked');
@@ -601,10 +598,8 @@ var Console = new Class({
       } 
       else 
       {
-        console.log('make private');
         default_privacy.removeClass('checked');
         SSSetDefaultShiftStatus(2);
-        console.log('change made');
         if (init_privacy) 
         {
           init_privacy.removeClass('checked');
@@ -613,8 +608,6 @@ var Console = new Class({
     }.bind(this));
     
     //console.log('form style set');
-    
-    //this.setupCheckboxes(sections[0]);
     
     var serverInput = $(this.doc.getElementById('server-input'));
     serverInput.addEvent('change', function() {
@@ -1025,8 +1018,6 @@ var Console = new Class({
       }
     }.bind(this));
     
-    //this.setupCheckboxes(pane);
-    
     loadStyle('styles/Videobox.css', function() {
       $(this.doc.getElementById('screencast-link')).addEvent('click', function(e) {
         new Event(e).preventDefault();
@@ -1042,27 +1033,6 @@ var Console = new Class({
     
   },
   
-  setupCheckboxes: function(target) {
-    var checkboxes = SSGetElementsByClass('checkbox', target);
-    checkboxes.each(function(checkbox) {
-      $(checkbox).addEvent('click', function() {
-        console.log('checkbox change');
-        if (checkbox.hasClass('checked')) 
-        {
-          checkbox.removeClass('checked');
-        } 
-        else 
-        {
-          checkbox.addClass('checked');
-        }
-        checkbox.fireEvent('onChange');
-      });
-      
-      $(checkbox.nextSibling).addEvent('click', function() {
-        checkbox.fireEvent('click');
-      });
-    });
-  },
   
   handleLogin: function(json) 
   {
@@ -1095,7 +1065,6 @@ var Console = new Class({
   updateDefaultShiftStatus: function()
   {
     var defaultPrivacy = $(this.doc.getElementById('default_privacy'));
-    console.log('Updated Default Shift Status +++++++++++++++++++++++++++++++++++++++++++++++ ' + SSGetDefaultShiftStatus(true));
     if(defaultPrivacy)
     {
       if(SSGetDefaultShiftStatus(true) == 2)
