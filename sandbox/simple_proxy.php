@@ -61,8 +61,6 @@ $result = preg_replace("/src=\"(?!http|www)/","src=\"$myurl",$result);
 //for href
 $result = preg_replace("/href=\"\//i","href=\"http://$baseurl/" ,$result);
 $result = preg_replace("/href=\"\.\./i","href=\"$myurl" ,$result);
-//proxy links
-$result = preg_replace("/a href=\"/i","a href=\"simple_proxy.php?url=", $result);
 //fix css imports
 $result = preg_replace("/@import\s+\"\//","@import \"http://$baseurl/", $result);
 //fix css for for href=\"/css/essay.css
