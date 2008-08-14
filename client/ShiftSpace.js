@@ -359,6 +359,7 @@ var ShiftSpace = new (function() {
         var key = [ShiftSpace.User.getUsername(), pref].join('.');
         return getValue(key, defaultValue);
       }
+      return defaultValue;
     }
     
     
@@ -372,7 +373,7 @@ var ShiftSpace = new (function() {
 
     function SSGetDefaultShiftStatus(checkPref)
     {
-      return (checkPref && SSGetPref('defaultShiftStatus')) || __defaultShiftStatus__;
+      return (checkPref && SSGetPref('defaultShiftStatus', 1)) || __defaultShiftStatus__;
     }
     
     
