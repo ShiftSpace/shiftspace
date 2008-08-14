@@ -67,16 +67,16 @@ var MyTableViewDelegate = new Class({
       // otherwise just use dummy data
       this.myShiftsDatasource = new SSTableViewDatasource({
         data: [
-          {id: 'cbca', space: 'Cutups', summary: 'Hello', username: 'dnolen', created: 'Yesterday'},
-          {id: 'cbcb', space: 'Cutups', summary: 'Hello world', username: 'dnolen', created: 'Yesterday'},
-          {id: 'cbcc', space: 'SourceShift', summary: 'test', username: 'dnolen', created: 'Yesterday'},
-          {id: 'cbcd', space: 'Notes', summary: 'No!', username: 'dnolen', created: 'Yesterday'},
-          {id: 'cbce', space: 'ImageSwap', summary: 'test', username: 'dnolen', created: 'Yesterday'},
-          {id: 'cbcf', space: 'ImageSwap', summary: 'argh', username: 'dnolen', created: 'Yesterday'},
-          {id: 'cbcg', space: 'Highlights', summary: 'bugz', username: 'doron', created: 'Yesterday'},
-          {id: 'cbch', space: 'Fisheye', summary: 'test', username: 'dnolen', created: 'Yesterday'},
-          {id: 'cbci', space: 'Fisheye', summary: 'oh man', username: 'dnolen', created: 'Yesterday'},
-          {id: 'cbcj', space: 'SourceShift', summary: 'test', username: 'dnolen', created: 'Yesterday'}
+          {id: 'cbca', space: 'Cutups', summary: 'Hello', username: 'dnolen', href: 'www.blah.com', created: 'Yesterday'},
+          {id: 'cbcb', space: 'Cutups', summary: 'Hello world', username: 'dnolen', href: 'www.wah.com', created: 'Yesterday'},
+          {id: 'cbcc', space: 'SourceShift', summary: 'test', username: 'dnolen', href: 'www.vah.com', created: 'Yesterday'},
+          {id: 'cbcd', space: 'Notes', summary: 'No!', username: 'dnolen', href: 'www.nah.com', created: 'Yesterday'},
+          {id: 'cbce', space: 'ImageSwap', summary: 'test', username: 'dnolen', href: 'www.jah.com', created: 'Yesterday'},
+          {id: 'cbcf', space: 'ImageSwap', summary: 'argh', username: 'dnolen', href: 'www.gah.com', created: 'Yesterday'},
+          {id: 'cbcg', space: 'Highlights', summary: 'bugz', username: 'doron', href: 'www.lah.com', created: 'Yesterday'},
+          {id: 'cbch', space: 'Fisheye', summary: 'test', username: 'dnolen', href: 'www.tah.com', created: 'Yesterday'},
+          {id: 'cbci', space: 'Fisheye', summary: 'oh man', username: 'dnolen', href: 'www.fah.com', created: 'Yesterday'},
+          {id: 'cbcj', space: 'SourceShift', summary: 'test', username: 'dnolen', href: 'www.yah.com', created: 'Yesterday'}
         ]
       });
     }

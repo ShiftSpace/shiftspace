@@ -76,7 +76,7 @@
           </div>
           <!-- End Actual Table View -->
           <!-- Start SSTableView interface definition -->
-          <div class='SSTableView CustomTableView'
+          <div class='SSTableView MyShiftsTableView'
           uiclass="SSTableView">
             <!-- Start TableView Header -->
             <div class="SSControlView">
@@ -101,6 +101,8 @@
                   resizeable="1"></col>
                   <col name="username" title="User Name"
                   resizeable="1"></col>
+                  <col name="href" title="URL" resizeable="1">
+                  </col>
                   <col name="created" title="Created"
                   order="descending" resizeable="1"></col>
                 </colgroup>
@@ -121,6 +123,7 @@
                       <div class="SSTextCell">summary</div>
                     </td>
                     <td name="username">dnolen</td>
+                    <td name="href">http://google.com</td>
                     <td name="created">Just created.</td>
                   </tr>
                 </tbody>
