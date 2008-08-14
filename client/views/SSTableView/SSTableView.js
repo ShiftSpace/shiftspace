@@ -690,7 +690,7 @@ var SSTableView = new Class({
   isVisible: function()
   {
     return (this.element.getStyle('display') != "none");
-  }
+  },
   
   
   localizationChanged: function()
