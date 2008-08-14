@@ -690,13 +690,19 @@ var SSTableView = new Class({
   },
   
   
+  isVisible: function()
+  {
+    return (this.element.getStyle('display') != "none");
+  }
+  
+  
   localizationChanged: function()
   {
     var newTitles = this.columnTitles().map(SSLocalizedString);
     console.log('>>>>>>>>>>>>>>>>>>>>> ');
     console.log(newTitles);
     this.updateColumnTitles(newTitles);
-    this.refresh();
+    if(this.isVisible()) this.refresh();
   }
 
 });
