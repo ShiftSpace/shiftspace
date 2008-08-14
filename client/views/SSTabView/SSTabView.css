@@ -120,6 +120,7 @@
 .SSTabViewSubTabStyle > .SSControlView > .SSButton
 {
   padding: 4px;
+  border-bottom: 1px solid;
 }
 
 .SSTabViewSubTabStyle > .SSContentView
