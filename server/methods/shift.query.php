@@ -57,7 +57,7 @@ else
 if(!empty($_REQUEST['username']))
 {
   $selectByUser = $db->escape($_REQUEST['username']);
-  $select_by_user_clause = "AND s.username = $selectByUser";
+  $select_by_user_clause = "AND u.username = $selectByUser";
 }
 else
 {
