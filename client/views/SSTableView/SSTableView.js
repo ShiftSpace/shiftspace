@@ -95,11 +95,11 @@ var SSTableView = new Class({
   },
   
   
-  updateColumnTitles: function()
+  updateColumnTitles: function(columnTitles)
   {
     var tableHead = this.element._getElement('> .SSControlView');
-    this.columnTitles().length.times(function(idx) {
-      var columnTitle = this.columnTitles()[idx];
+    columnTitles.length.times(function(idx) {
+      var columnTitle = columnTitles[idx];
       this.columnHeadingForIndex(idx).getElement('span.SSColumnHeadingTitle').set('text', columnTitle);
     }.bind(this));
   },
@@ -690,8 +690,10 @@ var SSTableView = new Class({
   
   localizationChanged: function()
   {
-    this.setColumnTitles(this.columnTitles().map(SSLocalizedString));
-    this.updateColumnTitles();
+    var newTitles = this.columnTitles().map(SSLocalizedString);
+    console.log('>>>>>>>>>>>>>>>>>>>>> ');
+    console.log(newTitles);
+    this.updateColumnTitles(newTitles);
   }
 
 });
