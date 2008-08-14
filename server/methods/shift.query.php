@@ -5,7 +5,7 @@ if (!empty($_REQUEST['href']))
   // Load shifts by URL
   $href = normalize_url($_REQUEST['href']);
   $href = $db->escape($href);
-  $shift_clause = "s.href = '$href'";
+  $shift_clause = "AND s.href = '$href'";
 } 
 else if (!empty($_REQUEST['id'])) 
 {
@@ -14,15 +14,19 @@ else if (!empty($_REQUEST['id']))
   if (strpos($id, ',') === false) 
   {
     // Only want one shift
-    $shift_clause = "s.url_slug = '$id'";
+    $shift_clause = "AND s.url_slug = '$id'";
   } 
   else 
   {
     // Want multiple shifts
     $id = explode(',', $id);
     $id = "'" . implode("','", $id) . "'";
-    $shift_clause = "s.url_slug IN ($id)";
+    $shift_clause = "AND s.url_slug IN ($id)";
   }
+}
+else
+{
+  $shift_clause = "";
 }
 
 // For table view sorting
@@ -66,10 +70,12 @@ else
 
 // Sanity check
 // TODO: the href and the id should both be optional, shift.query is a general data provider - David
+/*
 if (empty($href) && empty($id)) {
   // run general query limit to 50 shifts per page?
   respond(0, "Please specify either an 'href' or 'id' parameter.");
 }
+*/
 
 if (!empty($user)) {
   // Include private shifts if logged in
@@ -96,7 +102,7 @@ $shifts = $db->rows("
          s.status AS status
   FROM shift AS s, user AS u
   WHERE $user_clause
-    AND $shift_clause
+    $shift_clause
     $select_by_user_clause
     AND s.broken = 0
     AND s.user_id = u.id
