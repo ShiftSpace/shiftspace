@@ -2668,6 +2668,7 @@ var ShiftSpace = new (function() {
             try
             {
               console.log('trying');
+              console.log(rx.responseText);
               console.log(eval('(' + rx.responseText + ')'));
               console.log('tried');
               var theJson = Json.evaluate(rx.responseText);
