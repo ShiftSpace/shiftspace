@@ -219,14 +219,12 @@ var SandalphonClass = new Class({
       var evt = new Event(_evt);
       if(evt.key == 'enter')
       {
-        console.log('Load test enter');
         this.loadTest($('loadTestInput').getProperty('value'));
       }
     }.bind(this));
     
     $('loadTestFile').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
-      console.log('Load test click');
       this.loadTest($('loadTestInput').getProperty('value'));
     }.bind(this));
     

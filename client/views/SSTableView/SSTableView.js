@@ -447,8 +447,6 @@ var SSTableView = new Class({
   */
   setDatasource: function(datasource)
   {
-    console.log('setDatasource');
-    console.log(datasource);
     if(datasource)
     {
       // remove the previous onload from the last datasource
@@ -491,7 +489,6 @@ var SSTableView = new Class({
   
   setColumnTitles: function(columnTitles)
   {
-    console.log(columnTitles);
     this.__columnTitles__ = columnTitles;
   },
   
@@ -699,10 +696,12 @@ var SSTableView = new Class({
   localizationChanged: function()
   {
     var newTitles = this.columnTitles().map(SSLocalizedString);
-    console.log('>>>>>>>>>>>>>>>>>>>>> ');
-    console.log(newTitles);
     this.updateColumnTitles(newTitles);
-    if(this.isVisible()) this.refresh();
+    if(this.isVisible())
+    {
+      console.log('Refreshing table');
+      this.refresh();
+    }
   }
 
 });
