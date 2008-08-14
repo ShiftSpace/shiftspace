@@ -23,7 +23,7 @@ var SSViewProxy = new Class({
   },
   
   
-  adoptClassMethods: function(class)
+  adoptClassMethods: function()
   {
     
   },
