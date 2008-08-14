@@ -67,16 +67,24 @@ var SandalphonClass = new Class({
       method: "get",
       onComplete: function(responseText, responseXML)
       {
-        for(var object in ShiftSpace.Objects)
+        if(lang != ShiftSpace.lang)
         {
-          object.localizationChange();
+          ShiftSpace.localizedStrings = JSON.decode(responseText);
+
+          for(var objectName in ShiftSpace.Objects)
+          {
+            var object = ShiftSpace.Objects[objectName];
+            if(object.localizationChanged) object.localizationChanged();
+          }
         }
+        
+        ShiftSpace.lang = lang;
       },
       onFailure: function(response)
       {
         console.error('Error loading localized strings ' + response);
       }
-    });
+    }).send();
   },
 
   

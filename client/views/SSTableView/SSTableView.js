@@ -94,6 +94,16 @@ var SSTableView = new Class({
     }
   },
   
+  
+  updateColumnTitles: function()
+  {
+    var tableHead = this.element._getElement('> .SSControlView');
+    this.columnTitles().length.times(function(idx) {
+      var columnTitle = this.columnTitles()[idx];
+      this.columnHeadingForIndex(idx).getElement('span.SSColumnHeadingTitle').set('text', columnTitle);
+    }.bind(this));
+  },
+  
   /*
     Function: initColumnResizers
       Intializes the column resizers.
@@ -680,7 +690,8 @@ var SSTableView = new Class({
   
   localizationChanged: function()
   {
-    
+    this.setColumnTitles(this.columnTitles().map(SSLocalizedString));
+    this.updateColumnTitles();
   }
 
 });

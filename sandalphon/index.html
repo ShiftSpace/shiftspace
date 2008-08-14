@@ -17,6 +17,13 @@
       if(!ShiftSpace.Objects) ShiftSpace.Objects = {};
       if(!ShiftSpace.instantiationListeners) ShiftSpace.instantiationListeners = {};
       
+      // Localized String Support
+      function SSLocalizedString(string)
+      {
+        if(ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
+        return string;
+      }
+
       // Element extensions
       Element.implement({
         _ssgenId: function()
@@ -69,7 +76,7 @@
                 <input id="compileFile" type="button" name="Compile" value="Compile"></input>
                 <select id="localizedStrings">
                   <option value="en">English</option>
-                  <option value="hb">Hebrew</option>
+                  <option value="fr">French</option>
                 </select>
               </td>
             </tr>

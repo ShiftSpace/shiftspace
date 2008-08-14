@@ -10,7 +10,7 @@
 
 .CustomTableView > .SSScrollView > .SSContentView > colgroup col[name=space]
 {
-  width: 100px;
+  width: 150px;
 }
 
 .CustomTableView > .SSScrollView > .SSContentView > colgroup col[name=summary]
@@ -20,11 +20,11 @@
 
 .CustomTableView > .SSScrollView > .SSContentView > colgroup col[name=username]
 {
-  width: 100px;
+  width: 150px;
 }
 
 .CustomTableView > .SSScrollView > .SSContentView > colgroup col[name=created]
 {
-  width: 100px;
+  width: 150px;
 }
 
