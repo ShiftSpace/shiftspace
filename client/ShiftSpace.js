@@ -1957,6 +1957,8 @@ var ShiftSpace = new (function() {
       // remove the filters from the json object
       var filters = shiftJson.filters;
       delete shiftJson.filters;
+      
+      console.log('======================== save new shift ' + SSGetDefaultShiftStatus());
 
       var params = {
         href: window.location.href,
