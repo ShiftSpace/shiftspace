@@ -24,7 +24,7 @@ var SSCustomTableRow = new Class({
       var span = cell._getElement('> span');
     
       image.setProperty('src', ['../spaces/', space, '/', space, '.png'].join(''));
-      span.set('text', space);
+      span.set('text', SSLocalizedString(space));
     } 
   },
   

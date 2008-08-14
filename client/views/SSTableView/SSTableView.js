@@ -696,6 +696,7 @@ var SSTableView = new Class({
     console.log('>>>>>>>>>>>>>>>>>>>>> ');
     console.log(newTitles);
     this.updateColumnTitles(newTitles);
+    this.refresh();
   }
 
 });

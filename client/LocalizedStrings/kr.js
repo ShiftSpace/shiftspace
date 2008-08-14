@@ -13,8 +13,8 @@
   "Plugins": "플러그인",
   "Installed": "설치",
   "Account": "계정",
-  "Highlights": "Highlights",
-  "ImageSwap": "ImageSwap",
-  "SourceShift": "SourceShift",
-  "Notes": "Notes"
+  "Highlights": "하이라이트",
+  "ImageSwap": "이미지를 스왑",
+  "SourceShift": "HTML 전환",
+  "Notes": "노트"
 }
