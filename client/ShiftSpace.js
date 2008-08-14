@@ -366,8 +366,11 @@ var ShiftSpace = new (function() {
     function SSSetDefaultShiftStatus(value)
     {
       console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] ' + value);
-      __defaultShiftStatus__ = value;
-      SSSetPref('defaultShiftStatus', __defaultShiftStatus__);
+      if(value)
+      {
+        __defaultShiftStatus__ = value;
+        SSSetPref('defaultShiftStatus', __defaultShiftStatus__);
+      }
     }
 
 
