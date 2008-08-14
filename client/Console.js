@@ -585,10 +585,10 @@ var Console = new Class({
     
     var default_privacy = $(this.doc.getElementById('default_privacy'))
 
-    default_privacy.addEvent('onChange', function(_evt) {
+    default_privacy.addEvent('click', function(_evt) {
       console.log('onChange');
       var init_privacy = $(this.doc.getElementById('init_privacy'));
-      if (default_privacy.hasClass('checked')) 
+      if (!default_privacy.hasClass('checked')) 
       {
         console.log('make public');
         SSSetDefaultShiftStatus(1);
@@ -612,7 +612,7 @@ var Console = new Class({
     
     //console.log('form style set');
     
-    this.setupCheckboxes(sections[0]);
+    //this.setupCheckboxes(sections[0]);
     
     var serverInput = $(this.doc.getElementById('server-input'));
     serverInput.addEvent('change', function() {
@@ -1008,8 +1008,8 @@ var Console = new Class({
     // set default to checked
     default_privacy.addClass('checked');
 
-    init_privacy.addEvent('onChange', function() {
-      if (init_privacy.hasClass('checked')) 
+    init_privacy.addEvent('click', function() {
+      if (!init_privacy.hasClass('checked')) 
       {
         SSSetDefaultShiftStatus(1);
         default_privacy.addClass('checked');
@@ -1021,7 +1021,7 @@ var Console = new Class({
       }
     }.bind(this));
     
-    this.setupCheckboxes(pane);
+    //this.setupCheckboxes(pane);
     
     loadStyle('styles/Videobox.css', function() {
       $(this.doc.getElementById('screencast-link')).addEvent('click', function(e) {
