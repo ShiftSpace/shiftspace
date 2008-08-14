@@ -96,7 +96,6 @@ var ShiftSpace = new (function() {
     var __eventProxyClass__ = new Class({});
     __eventProxyClass__.implement(new Events);
     var __eventProxy__ = new __eventProxyClass__();
-    console.log(__eventProxy__);
     
     var __SSInvalidShiftIdError__ = "__SSInvalidShiftIdError__";
     
@@ -341,7 +340,17 @@ var ShiftSpace = new (function() {
       }, 0);
     }
     
-    
+    /*
+      Function: SSSetPref
+        Set a user preference. Implicitly calls setValue which will JSON encode the value.
+        
+      Parameters:
+        pref - the preference name as string.
+        value - the value.
+        
+      See Also:
+        setValue
+    */
     function SSSetPref(pref, value)
     {
       if(ShiftSpace.User.isLoggedIn())
@@ -351,7 +360,17 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
+    /*
+      Function: SSGetPref
+        Return a user preference.  Implicity calls getValue which will JSON decode the value.
+      
+      Parameters:
+        pref - the preference key as a string.
+        defaultValue - the defaultValue if this preference does not exist.
+        
+      Returns:
+        A JSON object.
+    */
     function SSGetPref(pref, defaultValue)
     {
       if(ShiftSpace.User.isLoggedIn())
@@ -362,10 +381,15 @@ var ShiftSpace = new (function() {
       return defaultValue;
     }
     
-    
+    /*
+      Function: SSSetDefaultShiftStatus
+        Set the default shift status, the only valid values are 1 for public, 2 for private.
+      
+      Parameters:
+        value - the new shift status value.
+    */
     function SSSetDefaultShiftStatus(value)
     {
-      console.log(']]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] ' + value);
       if(value)
       {
         __defaultShiftStatus__ = value;
@@ -373,7 +397,16 @@ var ShiftSpace = new (function() {
       }
     }
 
+    /*
+      Function: SSGetDefaultShiftStatus
+        Returns the default shift status.
+      
+      Parameters:
+        checkPref - if the value should be grabbed directly via SSGetPref.
 
+      Returns:
+        Either 1 for public or 2 for private.
+    */
     function SSGetDefaultShiftStatus(checkPref)
     {
       return (checkPref && SSGetPref('defaultShiftStatus', 1)) || __defaultShiftStatus__;
@@ -1581,6 +1614,9 @@ var ShiftSpace = new (function() {
       Loads the actual shift data for the current page.
     */
     function loadShifts() {
+      console.log('====================================================================');
+      console.log('LOAD SHIFTS');
+      console.log('====================================================================');
       
       var params = {
           href: window.location.href
@@ -1593,12 +1629,10 @@ var ShiftSpace = new (function() {
           
           //console.log(Json.toString(json));
           
-          /*
           console.log('====================================================================');
           console.log('SHIFT QUERY RETURN');
           console.log('====================================================================');
           console.log(json);
-          */
 
 
           // save the pluginsData
@@ -1963,8 +1997,6 @@ var ShiftSpace = new (function() {
       var filters = shiftJson.filters;
       delete shiftJson.filters;
       
-      console.log('======================== save new shift ' + SSGetDefaultShiftStatus());
-
       var params = {
         href: window.location.href,
         space: shiftJson.space,
@@ -2635,11 +2667,9 @@ var ShiftSpace = new (function() {
             //console.log('evaluate ' + rx.responseText);
             try
             {
-              /*
               console.log('trying');
               console.log(eval('(' + rx.responseText + ')'));
               console.log('tried');
-              */
               var theJson = Json.evaluate(rx.responseText);
             }
             catch(exc)
