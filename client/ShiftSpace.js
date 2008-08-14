@@ -352,12 +352,12 @@ var ShiftSpace = new (function() {
     }
     
     
-    function SSGetPref(pref)
+    function SSGetPref(pref, defaultValue)
     {
       if(ShiftSpace.User.isLoggedIn())
       {
         var key = [ShiftSpace.User.getUsername(), pref].join('.');
-        return getValue(key, null);
+        return getValue(key, defaultValue);
       }
     }
     
@@ -1489,7 +1489,7 @@ var ShiftSpace = new (function() {
           }
           
           // make sure default shift status preference is set
-          SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus'));
+          SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         }
         
         SSSetPendingShifts(json.count);
