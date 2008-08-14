@@ -591,6 +591,7 @@ var Console = new Class({
       if (!default_privacy.hasClass('checked')) 
       {
         console.log('make public');
+        default_privacy.addClass('checked');
         SSSetDefaultShiftStatus(1);
         console.log('change made');
         if (init_privacy) 
@@ -601,6 +602,7 @@ var Console = new Class({
       else 
       {
         console.log('make private');
+        default_privacy.removeClass('checked');
         SSSetDefaultShiftStatus(2);
         console.log('change made');
         if (init_privacy) 
@@ -1012,11 +1014,13 @@ var Console = new Class({
       if (!init_privacy.hasClass('checked')) 
       {
         SSSetDefaultShiftStatus(1);
+        init_privacy.addClass('checked');
         default_privacy.addClass('checked');
       } 
       else 
       {
         SSSetDefaultShiftStatus(2);
+        init_privacy.removeClass('checked');
         default_privacy.removeClass('checked');
       }
     }.bind(this));
