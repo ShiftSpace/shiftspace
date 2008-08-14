@@ -211,11 +211,6 @@ var SandalphonClass = new Class({
       }
     }.bind(this));
     
-    $('loadFile').addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      this.loadFile($('loadFileInput').getProperty('value'));
-    }.bind(this));
-    
     // attach the compile events
     $('compileFile').addEvent('click', this.compileFile.bind(this));
     
