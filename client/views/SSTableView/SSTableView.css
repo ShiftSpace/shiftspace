@@ -47,6 +47,7 @@
 {
   border-bottom: solid #000 1px;
   overflow: hidden;
+  height: 20px;
 }
 
 .SSTableView > .SSControlView > .SSColumnHeading
