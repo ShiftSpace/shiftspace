@@ -32,6 +32,7 @@ var SSTableViewDatasource = new Class({
     this.setOptions(options);
     
     // set the options
+    this.setProperties({});
     this.setData(options.data);
     this.setDataKey(this.options.dataKey)
     this.setDataProviderURL(this.options.dataProviderURL);
@@ -140,7 +141,7 @@ var SSTableViewDatasource = new Class({
       new Request({
         url: this.dataProviderURL(),
         method: 'post',
-        data: properties,
+        data: $merge(this.properties(), properties),
         onComplete: function(responseText, responseXML)
         {
           var data = JSON.decode(responseText)[this.dataKey()];
