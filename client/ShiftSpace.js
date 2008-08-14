@@ -172,7 +172,7 @@ var ShiftSpace = new (function() {
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
         console.log('ShiftSpace Login ======================================');
-        SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus'));
+        SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         // clear out recently viewed shifts on login
         setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', {});
       });
