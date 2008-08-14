@@ -1,0 +1,154 @@
+<div id="SSConsole">
+  <div class="SSTabView SSTabViewConsoleStyle" uiclass="SSTabView">
+    <div class="SSControlView">
+      <div title="Shifts" class="SSButton SSActive SSLocalized">
+      Shifts</div>
+      <div title="Settings" class="SSButton SSLocalized">
+      Settings</div>
+      <div title="Login" class="SSButton SSLocalized">Login</div>
+      <div title="Welcome" class="SSButton SSLocalized">
+      Welcome</div>
+    </div>
+    <div class="SSContentView">
+      <div class="SSTabView SSTabViewSubTabStyle SSActive"
+      uiclass="SSTabView">
+        <div id="settingsTabControl" class="SSControlView">
+          <div title="Shifts"
+          class="SSButton SSActive SSLocalized">Shifts</div>
+          <div title="My Shifts" class="SSButton SSLocalized">My
+          Shifts</div>
+          <div title="Following" class="SSButton SSLocalized">
+          Following</div>
+        </div>
+        <div class="SSContentView" autoresize="1">
+          <!-- Start SSTableView interface definition -->
+          <div class='SSTableView CustomTableView'
+          uiclass="SSTableView">
+            <!-- Start TableView Header -->
+            <div class="SSControlView">
+              <!-- we need a cell class for the following -->
+              <div class="SSModel SSColumnHeading SSDefaultCursor">
+                <span class="SSColumnHeadingTitle"></span>
+                <div class="SSResize"></div>
+                <div class="SSColumnOrder"></div>
+              </div>
+            </div>
+            <!-- End TableView Header -->
+            <!-- Start wrapping Scroll View -->
+            <div class="SSScrollView">
+              <!-- Start Content View -->
+              <table class='SSContentView' sortColumns="1">
+                <!-- start the table definition-->
+                <colgroup class='SSDefinition'>
+                  <col name="selected" title="Selected"></col>
+                  <col name="space" title="Space" resizeable="1">
+                  </col>
+                  <col name="summary" title="Summary"
+                  resizeable="1"></col>
+                  <col name="username" title="User Name"
+                  resizeable="1"></col>
+                  <col name="created" title="Created"
+                  order="descending" resizeable="1"></col>
+                </colgroup>
+                <!-- end the control view -->
+                <!-- Table Body Starts Here  -->
+                <tbody>
+                  <tr class="SSRow SSModel"
+                  uiclass='SSCustomTableRow'>
+                    <td name="selected">
+                      <input class="SSActionCell" type="checkbox">
+                      </input>
+                    </td>
+                    <td name="space">
+                      <img></img>
+                      <span></span>
+                    </td>
+                    <td name="summary">
+                      <div class="SSTextCell">summary</div>
+                    </td>
+                    <td name="username">dnolen</td>
+                    <td name="created">Just created.</td>
+                  </tr>
+                </tbody>
+                <!-- Table Body Ends Here -->
+              </table>
+            </div>
+          </div>
+          <!-- End Actual Table View -->
+          <!-- Start SSTableView interface definition -->
+          <div class='SSTableView CustomTableView'
+          uiclass="SSTableView">
+            <!-- Start TableView Header -->
+            <div class="SSControlView">
+              <!-- we need a cell class for the following -->
+              <div class="SSModel SSColumnHeading SSDefaultCursor">
+                <span class="SSColumnHeadingTitle"></span>
+                <div class="SSResize"></div>
+                <div class="SSColumnOrder"></div>
+              </div>
+            </div>
+            <!-- End TableView Header -->
+            <!-- Start wrapping Scroll View -->
+            <div class="SSScrollView">
+              <!-- Start Content View -->
+              <table class='SSContentView' sortColumns="1">
+                <!-- start the table definition-->
+                <colgroup class='SSDefinition'>
+                  <col name="selected" title="Selected"></col>
+                  <col name="space" title="Space" resizeable="1">
+                  </col>
+                  <col name="summary" title="Summary"
+                  resizeable="1"></col>
+                  <col name="username" title="User Name"
+                  resizeable="1"></col>
+                  <col name="created" title="Created"
+                  order="descending" resizeable="1"></col>
+                </colgroup>
+                <!-- end the control view -->
+                <!-- Table Body Starts Here  -->
+                <tbody>
+                  <tr class="SSRow SSModel"
+                  uiclass='SSCustomTableRow'>
+                    <td name="selected">
+                      <input class="SSActionCell" type="checkbox">
+                      </input>
+                    </td>
+                    <td name="space">
+                      <img></img>
+                      <span></span>
+                    </td>
+                    <td name="summary">
+                      <div class="SSTextCell">summary</div>
+                    </td>
+                    <td name="username">dnolen</td>
+                    <td name="created">Just created.</td>
+                  </tr>
+                </tbody>
+                <!-- Table Body Ends Here -->
+              </table>
+            </div>
+          </div>
+          <!-- End Actual Table View -->
+          <div>Tracked Shifts</div>
+        </div>
+      </div>
+      <!-- Start Settings subtab view -->
+      <div id="settingsTabView"
+      class="SSTabView SSTabViewSubTabStyle" uiclass="SSTabView">
+        <div id="settingsTabControl" class="SSControlView">
+          <div id="spaces" class="SSButton">Spaces</div>
+          <div id="plugins" class="SSButton">Plugins</div>
+          <div id="misc" class="SSButton">Misc</div>
+        </div>
+        <div id="settingTabContentView" class="SSContentView">
+          <div>Pane 1</div>
+          <div>Pane 2</div>
+          <div>Pane 3</div>
+        </div>
+      </div>
+      <!-- end setting subtab view -->
+      <div>Pane 3</div>
+      <div>Welcome</div>
+    </div>
+  </div>
+</div>
