@@ -447,6 +447,8 @@ var SSTableView = new Class({
   */
   setDatasource: function(datasource)
   {
+    console.log('setDatasource');
+    console.log(datasource);
     if(datasource)
     {
       // remove the previous onload from the last datasource
