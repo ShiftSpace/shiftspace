@@ -9,5 +9,8 @@
   "Following": "Suivant",
   "Settings": "Paramètres",
   "Login": "Connexion",
-  "Welcome": "Bienvenue"
+  "Welcome": "Bienvenue",
+  "Plugins": "Plugins",
+  "Installed": "Installé",
+  "Account": "Compte"
 }
