@@ -2043,6 +2043,7 @@ var ShiftSpace = new (function() {
         space.shifts[shiftJson.id] = shiftObj;
         
         // add and show the shift
+        ShiftSpace.Console.show();
         ShiftSpace.Console.addShift(shiftJson, {isActive:true});
         ShiftSpace.Console.showShift(shiftJson.id);
         
