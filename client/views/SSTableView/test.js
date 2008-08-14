@@ -41,7 +41,7 @@ var MyTableViewDelegate = new Class({
         dataNormalizer: legacyNormalizer
       });
       // if we're on metatron load real data
-      this.myShiftsDataSource = new SSTableViewDatasource({
+      this.myShiftsDatasource = new SSTableViewDatasource({
         dataKey: 'shifts',
         dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query&username=dnolen',
         dataNormalizer: legacyNormalizer
