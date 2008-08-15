@@ -494,7 +494,7 @@ div.TrailPageRemove:hover
 
 .TrailNavPageDescription
 {
-  position: absolute;
+  position: fixed;
   display: none;
   color: #E7E4A4;
   z-index: 1000002;
@@ -564,6 +564,7 @@ div.TrailPageRemove:hover
 
 .TrailLink
 {
+  /*position: fixed;*/
   position: absolute;
   background: transparent;
   z-index: 1;

@@ -60,7 +60,7 @@ var TrailLink = new Class({
     }
     else
     {
-      this.startPos = TrailLink.SSCalcCenter( this.startPage );
+      this.startPos = TrailLink.SSCalcCenter( this.startPage, null, true );
     }
 
     if( this.endPage instanceof TrailPage )
@@ -216,10 +216,16 @@ var TrailLink = new Class({
   }
 });
 
-TrailLink.SSCalcCenter = function( element, superBadHackForTrailScrollArea )
+TrailLink.SSCalcCenter = function( element, superBadHackForTrailScrollArea, accountForWindowScroll )
 {
   var size = element.getSize().size;
   var loc = element.getPosition();
+  var windowScroll = new Vector(0, 0);
+
+  if(accountForWindowScroll)
+  {
+    windowScroll = window.getSize().scroll;
+  }
   
   if(superBadHackForTrailScrollArea)
   {
@@ -232,7 +238,7 @@ TrailLink.SSCalcCenter = function( element, superBadHackForTrailScrollArea )
   else
   {
     // calculate top left for page, and top left for link point, add
-    return new Vector( loc.x + size.x/2, loc.y + size.y );
+    return new Vector( loc.x + size.x/2 + windowScroll.x, loc.y + size.y + windowScroll.y);
   }
 }
 
@@ -244,8 +250,9 @@ TrailLink.SSCalcLowerRight = function( element )
 {
   var size = element.getSize().size;
   var loc = element.getPosition();
+  var windowScroll = window.getSize().scroll;
   
-  return new Vector( loc.x + size.x, loc.y + size.y );
+  return new Vector( loc.x + size.x + windowScroll.x, loc.y + size.y + windowScroll.y);
 }
 
 ShiftSpace.__externals__.TrailLink = TrailLink; // For Safari

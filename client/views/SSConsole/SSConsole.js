@@ -9,7 +9,11 @@ var SSConsole = new Class({
   
   awake: function()
   {
-    console.log('SSConsole awake, outlets:' + JSON.encode(this.outlets().getKeys()));
+    this.parent();
+    this.outlets().get('clickMeButton').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      console.log('Button clicked!');
+    });
   }
 });
 

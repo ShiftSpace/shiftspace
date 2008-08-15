@@ -377,8 +377,10 @@ var TrailPage = new Class({
   */
   createLink : function( e )
   {
+    console.log('CREATE LINK');
     // we're creating a link, prevent unzooming
     this.isCreatingLink = true;
+    console.log(this.isCreatingLink);
     
     // lock the position of the page
     this.lock();
@@ -421,6 +423,7 @@ var TrailPage = new Class({
     }.bind( this ) );
 
     var newLink = new TrailLink( this.linkPoint, this.dragLinkPoint );
+    //newLink.element.setStyle('position', 'fixed');
 
     // handle the dragging link behavior
     this.dragLinkPointRef = new Drag.Move( this.dragLinkPoint, {
@@ -444,6 +447,10 @@ var TrailPage = new Class({
             
             var success = true;
           }
+        }
+        else
+        {
+          console.log('No hovered node');
         }
 
         // clean up
@@ -572,11 +579,24 @@ var TrailPage = new Class({
         (Trail.gFocusedNode == null || Trail.gFocusedNode != this) &&
         !this.isClosing )
     {
+      var linkMode = (Trail.gFocusedNode && Trail.gFocusedNode.isCreatingLink);
+      
       // unzoom the last one
-      if(Trail.gFocusedNode) Trail.gFocusedNode.unzoom();
+      if(Trail.gFocusedNode && !linkMode)
+      {
+        Trail.gFocusedNode.unzoom();
+      }
       
       // this is now the focused node
-      Trail.gFocusedNode = this;
+      if(!linkMode)
+      {
+        console.log('SET FOCUSED NODE ' + this.isCreatingLink);
+        Trail.gFocusedNode = this;
+      }
+      else
+      {
+        console.log('IS CREATING LINK');
+      }
       
       // change the border to red
       if (this.thumbEl) 
@@ -643,10 +663,12 @@ var TrailPage = new Class({
       completeGroup.addEvent( 'onComplete', this.zoomComplete.bind( this ) );
     }
     
-    if( Trail.gFocusedNode && Trail.gFocusedNode != this )
+    if( linkMode )
     {
       Trail.gHoveredNode = this;
     }
+    
+    console.log(Trail.gFocusedNode + ", " + (Trail.gFocusedNode != this));
   },
   
   /*
@@ -995,12 +1017,16 @@ TrailPage.implement( new Options );
 TrailPage.ElementContainsPoint = function( el, v )
 {
   var pos = el.getPosition();
-  var size = el.getSize().size;
+  var windowScroll = window.getSize().scroll;
+  pos = new Vector(pos.x+windowScroll.x, pos.y+windowScroll.y);
   
-  return ( v.x >= pos.x &&
-           v.x <= pos.x + size.x &&
-           v.y >= pos.y &&
-           v.y <= pos.y + size.y )
+  var size = el.getSize().size;
+  var result = ( v.x >= pos.x &&
+                 v.x <= pos.x + size.x &&
+                 v.y >= pos.y &&
+                 v.y <= pos.y + size.y );
+  console.log("TrailPage.ElementContainsPoint " + result);
+  return result;
 }
 
 ShiftSpace.__externals__.TrailPage = TrailPage; // For Safari
