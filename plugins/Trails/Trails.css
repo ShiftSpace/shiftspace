@@ -484,7 +484,7 @@ div.TrailPageRemove:hover
 
 .TrailNavClone
 {
-  position: absolute;
+  position: fixed;
   border: 3px solid #220;
   width: 160px;
   height: 100px;
