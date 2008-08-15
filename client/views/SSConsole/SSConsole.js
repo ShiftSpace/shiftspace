@@ -4,7 +4,7 @@ var SSConsole = new Class({
   
   initialize: function(el, options)
   {
-    this.super(el, options);
+    this.parent(el, options);
   },
   
   awake: function()
