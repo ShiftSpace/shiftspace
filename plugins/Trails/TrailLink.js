@@ -223,7 +223,7 @@ TrailLink.SSCalcCenter = function( element, superBadHackForTrailScrollArea )
   
   if(superBadHackForTrailScrollArea)
   {
-    // get the linkPoint position and calc it offset and the parent offset
+    // get the linkPoint position and calc it's offset and the parent offset
     var linkPointOffset = element.getStyles('left', 'top');
     var trailPageOffset = element.getParent().getStyles('left', 'top');
     return new Vector( parseInt(linkPointOffset.left)+parseInt(trailPageOffset.left),
@@ -232,7 +232,7 @@ TrailLink.SSCalcCenter = function( element, superBadHackForTrailScrollArea )
   else
   {
     // calculate top left for page, and top left for link point, add
-    return new Vector( loc.x + size.x/2, loc.y + size.y/2 );
+    return new Vector( loc.x + size.x/2, loc.y + size.y );
   }
 }
 
