@@ -1,6 +1,6 @@
-<div id="SSConsole">
+<div id="SSConsole" uiclass="SSConsole">
   
-  <div class="SSTabView SSTabViewConsoleStyle" uiclass="SSTabView">
+  <div id="MainTabView" class="SSTabView SSTabViewConsoleStyle" uiclass="SSTabView">
   
     <div class="SSControlView">
       <div title="Shifts" class="SSButton SSActive SSLocalized">Shifts</div>
@@ -12,7 +12,9 @@
     <div class="SSContentView">
       <?customView:ShiftsTabView?>
       <?customView:SettingsTabView?>
-      <div>Pane 3</div>
+      <div>
+        <input id="clickMeButon" type="button" value="Click me!" outlet="SSConsole"></input>
+      </div>
       <div>Welcome</div>
     </div>
   

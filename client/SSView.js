@@ -27,12 +27,13 @@ var SSView = new Class({
     this.__id__ = this._genId();
     
     // add to global hash
-    if(ShiftSpace.Objects) ShiftSpace.Objects[this.__id__] = this;
+    if(ShiftSpace.Objects) ShiftSpace.Objects.set(this.__id__, this);
     
     // check if we are prebuilt
     this.__prebuilt__ = (el && true) || false;
     this.__ssviewcontrollers__ = [];
     this.__delegate__ = null;
+    this.__outlets__ = new Hash();
     
     this.element = (el && $(el)) || (new Element('div'));
     // NOTE: the following breaks tables, so we should avoid it for now - David
@@ -51,6 +52,15 @@ var SSView = new Class({
   },
   
   /*
+    Function: awake 
+      Called after the outlets have been attached.
+  */
+  awake: function()
+  {
+    console.log(this.getId() + " awake, outlets " + JSON.encode(this.outlets().getKeys()));
+  },
+  
+  /*
     Function: getId
       Returns the id for this instance.
       
@@ -61,6 +71,26 @@ var SSView = new Class({
   {
     return this.__id__;
   },
+  
+  
+  setOutlets: function(newOutlets)
+  {
+    this.__outlets__ = newOutlets;
+  },
+  
+  
+  outlets: function()
+  {
+    return this.__outlets__;
+  },
+  
+  
+  addOutlet: function(element)
+  {
+    var outletKey = element.getProperty('outlet');
+    this.outlets().set(element.getProperty('id'), element);
+  },
+  
   
   /*
     Function: setDelegate
@@ -278,6 +308,7 @@ function SSNotifyInstantiationListeners(element)
   }
 }
 
+// Add it the global UI class lookup
 if($type(ShiftSpace.UI) != 'undefined')
 {
   ShiftSpace.UI.SSView = SSView;

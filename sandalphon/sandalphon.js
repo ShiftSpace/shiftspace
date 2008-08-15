@@ -30,7 +30,8 @@ var SandalphonClass = new Class({
   { 
     'SSTabView': '/client/views/SSTabView/',
     'SSTableView': '/client/views/SSTableView/',
-    'SSTableRow': '/client/views/SSTableRow/'
+    'SSTableRow': '/client/views/SSTableRow/',
+    'SSConsole': '/clients/views/Console/'
   },
   
   // path to user defined view controllers
@@ -74,12 +75,10 @@ var SandalphonClass = new Class({
           console.log(ShiftSpace.localizedStrings);
 
           // update objects
-          for(var objectName in ShiftSpace.Objects)
-          {
-            var object = ShiftSpace.Objects[objectName];
+          ShiftSpace.Objects.each(function(object, objectId) {
             if(object.localizationChanged) object.localizationChanged();
-          }
-          
+          });
+
           // update markup
           $$(".SSLocalized").each(function(node) {
             var originalText = node.getProperty('title');
@@ -281,6 +280,7 @@ var SandalphonClass = new Class({
           // load the new file
           $('SSSandalphonContainer').set('html', responseText);
           this.instantiateControllers();
+          this.initializeOutlets();
         }
         else
         {
@@ -385,6 +385,27 @@ var SandalphonClass = new Class({
       new ShiftSpace.UI[theClass](aView);
       // notify any instantiation listeners
       SSNotifyInstantiationListeners(aView);
+    });
+  },
+  
+  
+  initializeOutlets: function()
+  {
+    console.log('initializing outlets');
+    var outlets = $$('*[outlet]');
+    outlets.each(function(anOutlet) {
+      // grab the outlet parent id
+      var outletParentObject = anOutlet.getProperty('outlet');
+      // grab the main view controller
+      if($(outletParentObject))
+      {
+        var controller = $(outletParentObject).retrieve('__ssviewcontroller__');
+        controller.addOutlet(anOutlet);
+      }
+    });
+    
+    ShiftSpace.Objects.each(function(object, objectId) {
+      if(object.awake) object.awake();
     });
   },
   
