@@ -86,7 +86,7 @@ var MyTableViewDelegate = new Class({
   setAllShiftsTableView: function(tableView)
   {
     this.allShiftsTableView = tableView;
-    tableView.setDelegate(this);
+    //tableView.setDelegate(this);
     tableView.setDatasource(this.allShiftsDatasource);
     this.allShiftsDatasource.setProperties({href:"http://www.google.com/"});
     this.allShiftsDatasource.fetch();
@@ -96,7 +96,7 @@ var MyTableViewDelegate = new Class({
   setMyShiftsTableView: function(tableView)
   {
     this.myShiftsTableView = tableView;
-    tableView.setDelegate(this);
+    //tableView.setDelegate(this);
     tableView.setDatasource(this.myShiftsDatasource);
     this.myShiftsDatasource.fetch();
   },

@@ -10,6 +10,23 @@ var SSCustomTableRow = new Class({
     console.log('initialize SSCustomTableRow');
   },
   
+  
+  editShiftTitle: function(row)
+  {
+    
+  },
+  
+  
+  setDelegate: function(delegate)
+  {
+    this.parent(delegate);
+    // add some events
+    delegate.addEvent('keyup', function(evt) {
+    });
+    delegate.addEvent('click', function(evt) {
+    });
+  },
+  
 
   setSelected: function(cell, space)
   {

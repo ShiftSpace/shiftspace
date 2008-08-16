@@ -6,8 +6,8 @@ var SSTableView = new Class({
   
   name: 'SSTableView',
   
-  Implements: Events,
   Extends: SSView,
+  
   DelegateProtocol: ['userClickedRow, userSelectedRow, itemForRowColumn, rowCount'],
   
   initialize: function(el, options)
@@ -19,6 +19,8 @@ var SSTableView = new Class({
     this.contentView = this.element._getElement('> .SSScrollView .SSContentView');
     // set the model row
     this.setModelRow(this.contentView._getElement('.SSModel').dispose());
+    // set the model row controller
+    this.setModelRowController(this.controllerForNode(this.modelRow()));
     // set the column names
     this.setColumnNames(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name')}));
     // set the column display titles
@@ -31,6 +33,7 @@ var SSTableView = new Class({
     this.initColumnResizers();
     
     this.element.addEvent('click', this.eventDispatch.bind(this));
+    window.addEvent('keyup', this.eventDispatch.bind(this));
   },
   
   
@@ -157,29 +160,30 @@ var SSTableView = new Class({
   eventDispatch: function(theEvent)
   {
     var evt = new Event(theEvent);
+    var type = evt.event.type;
     var target = evt.target;
-    
+
     switch(true)
     {
-      case (this.hitTest(target, '> .SSControlView .SSResize') != null):
+      case (type == 'click' && this.hitTest(target, '> .SSControlView .SSResize') != null):
         // don't do anything for columing resizing
       break;
       
-      case (this.hitTest(target, '> .SSControlView .SSColumnOrder') != null):
+      case (type == 'click' && this.hitTest(target, '> .SSControlView .SSColumnOrder') != null):
         // check first for column reordering
         this.handleColumnOrderHit(this.cachedHit());
       break;
       
-      case (this.hitTest(target, '> .SSControlView .SSColumnHeading') != null):
+      case (type == 'click' && this.hitTest(target, '> .SSControlView .SSColumnHeading') != null):
         // check next for column select
         this.handleColumnSelect(this.cachedHit());
       break;
       
-      case (this.hitTest(target, '> .SSScrollView .SSContentView .SSRow .SSActionCell') != null):
+      case (type == 'click' && this.hitTest(target, '> .SSScrollView .SSContentView .SSRow .SSActionCell') != null):
         // if the click is an row action let them handle it
       break;
       
-      case (this.hitTest(target, '> .SSScrollView .SSContentView .SSRow') != null):
+      case (type == 'click' && this.hitTest(target, '> .SSScrollView .SSContentView .SSRow') != null):
         // finally check for general row click
         this.handleRowClick(this.cachedHit(), target);
       break;
@@ -187,6 +191,9 @@ var SSTableView = new Class({
       default:
       break;
     }
+    
+    // pass it on
+    this.fireEvent(type, evt);
   },
   
   /*
@@ -640,6 +647,12 @@ var SSTableView = new Class({
   modelRow: function()
   {
     return this.__modelRow__;
+  },
+  
+
+  setModelRowController: function(modelRowController)
+  {
+    modelRowController.setDelegate(this);
   },
 
   /*

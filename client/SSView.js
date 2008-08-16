@@ -88,7 +88,9 @@ var SSView = new Class({
   addOutlet: function(element)
   {
     var outletKey = element.getProperty('outlet');
-    this.outlets().set(element.getProperty('id'), element);
+    // check if there is a controller
+    var controller = this.controllerForNode(element);
+    this.outlets().set(element.getProperty('id'), (controller || element));
   },
   
   
@@ -192,7 +194,7 @@ var SSView = new Class({
         return controller;
       }
       
-      return null
+      return null;
     }
     else
     {

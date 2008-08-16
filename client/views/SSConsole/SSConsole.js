@@ -4,11 +4,13 @@ var SSConsole = new Class({
   
   Extends: SSView,
   
+
   initialize: function(el, options)
   {
     this.parent(el, options);
   },
   
+
   awake: function()
   {
     this.parent();
@@ -17,7 +19,16 @@ var SSConsole = new Class({
       var evt = new Event(_evt);
       console.log('Button clicked!');
     });
+    
+    this.outlets().get('AllShiftsView').setDelegate(this);
   },
+  
+  
+  userClickedRow: function(data)
+  {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + data);
+  },
+  
   
   awakeDelayed: function()
   {

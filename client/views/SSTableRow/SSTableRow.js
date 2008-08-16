@@ -8,6 +8,12 @@ var SSTableRow = new Class({
   },
   
   
+  setDelegate: function(delegate)
+  {
+    this.parent(delegate);
+  },
+  
+  
   setProperty: function(row, prop, value)
   {
     var propMethod = 'set'+prop.capitalize();

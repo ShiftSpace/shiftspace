@@ -2,7 +2,7 @@ var SSViewProxy = new Class({
   
   name: "SSViewProxy",
   
-  Implements: Options,
+  Implements: [Options, Events],
 
   initialize: function(el, options)
   {
@@ -49,6 +49,12 @@ var SSViewProxy = new Class({
     });
   },
   
+  
+  setDelegate: function()
+  {
+    this.messages().push({name:'setDelegate', arguments:$A(arguments)});
+  },
+  
 
   show: function()
   {
@@ -68,6 +74,12 @@ var SSViewProxy = new Class({
   {
     // add a refresh message
     this.messages().push({name:'refresh', arguments:$A(arguments)});
+  },
+  
+  
+  addEvent: function(type, handler)
+  {
+    this.message().push({name:'addEvent', arguments:$A(arguments)});
   },
   
 
