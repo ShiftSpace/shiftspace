@@ -955,8 +955,8 @@ var Console = new Class({
     $(sections[2]).setHTML(
       '<form id="passwordForm" action="http://shiftspace.org/password" method="post" class="form-column">' +
         '<h2>Reset your password</h2>' +
-        '<label for="login">Username or email address</label>' +
-        '<input type="text" name="password-login" id="password-login" class="text" size="25" />' +
+        '<label for="password-email">Your email address</label>' +
+        '<input type="text" name="password-email" id="password-email" class="text" size="25" />' +
         '<input type="submit" value="Submit" class="button" />' +
       '</form>' +
       '<br class="clear" />' +
@@ -965,9 +965,8 @@ var Console = new Class({
     $(this.doc.getElementById('passwordForm')).addEvent('submit', function(e) {
       new Event(e).preventDefault();
       var info = {
-        login: $(this.doc.getElementById('password-login')).value
+        email: $(this.doc.getElementById('password-email')).value
       };
-      console.log(info);
       ShiftSpace.User.resetPassword(info, this.handlePasswordReset.bind(this));
     }.bind(this));
   },

@@ -13,15 +13,24 @@ if (empty($username)) {
 } else if (strlen($password) < 6) {
   $response = "Oops, please enter a password at least 6 characters long.";
 } else if (!preg_match('#^[a-zA-Z0-9_.]+$#', $username)) {
-  $response = "Oops, please enter a username composed letters, numbers, dots or underscores.";
+  $response = "Oops, please enter a username composed letters, numbers, periods or underscores.";
 } else {
   $exists = $db->value("
     SELECT COUNT(username)
     FROM user
     WHERE username = '$username'
   ");
-if ($exists) {
+  if ($exists) {
     $response = 'Sorry, that username has already been taken. Please choose again.';
+  } else {
+    $exists = $db->value("
+      SELECT COUNT(username)
+      FROM user
+      WHERE email = '$email'
+    ");
+    if ($exists) {
+      $response = 'Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.';
+    }
   }
 }
 

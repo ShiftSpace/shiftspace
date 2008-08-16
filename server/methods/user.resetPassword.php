@@ -2,22 +2,14 @@
 
 extract($db->escape($_POST));
 
-if (empty($login)) {
-  $response = "Oops, you didn't enter a username or email address.";
+if (empty($email)) {
+  $response = "Oops, you didn't enter an email address.";
 } else {
-  if (strpos($login, '@')) {
-    $u = $db->row("
-      SELECT *
-      FROM user
-      WHERE email = '$login'
-    ");
-  } else {
-    $u = $db->row("
-      SELECT *
-      FROM user
-      WHERE username = '$login'
-    ");
-  }
+  $u = $db->row("
+    SELECT *
+    FROM user
+    WHERE email = '$email'
+  ");
   if (empty($u)) {
     $response = "Sorry, we couldn't find a matching account.";
   }
@@ -36,7 +28,7 @@ if (empty($response)) {
     SET password = '$hashed'
     WHERE id = $u->id
   ");
-  $response = "Your password has been reset and emailed to you. ($password)";
+  $response = "Your password has been reset and emailed to you.";
   $subject = 'ShiftSpace password reset';
   $body = wordwrap("Hello $u->username,
 
@@ -45,10 +37,13 @@ Somebody (hopefully you) has requested that your account's password be reset. Pl
 Username: $u->username
 Password: $password
 
-Thanks,
+Tip:
+After loging in with this password, you may go to Settings > Account in the ShiftSpace console and change your password again to something you can more easily remember.
+
+Kisses,
 The ShiftSpace email robot
 ");
-  //mail($u->email, $subject, $body, "From: ShiftSpace <info@shiftspace.org>\n");
+  mail($u->email, $subject, $body, "From: ShiftSpace <info@shiftspace.org>\n");
   respond(1, $response);
 } else {
   respond(0, $response);
