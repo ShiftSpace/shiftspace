@@ -281,6 +281,7 @@ var SandalphonClass = new Class({
           $('SSSandalphonContainer').set('html', responseText);
           this.instantiateControllers();
           this.initializeOutlets();
+          this.awakeObjects();
         }
         else
         {
@@ -389,10 +390,12 @@ var SandalphonClass = new Class({
   },
   
   
-  initializeOutlets: function()
+  initializeOutlets: function(context)
   {
     console.log('initializing outlets');
-    var outlets = $$('*[outlet]');
+    if(!context) context = window;
+    
+    var outlets = context.$$('*[outlet]');
     outlets.each(function(anOutlet) {
       // grab the outlet parent id
       var outletParentObject = anOutlet.getProperty('outlet');
@@ -404,10 +407,29 @@ var SandalphonClass = new Class({
       }
     });
     
+    // if iframe context let all object know via their awakeDelayed method
+    if(context != window)
+    {
+      this.awakeObjectsDelayed();
+    }
+  },
+  
+  
+  awakeObjects: function()
+  {
     ShiftSpace.Objects.each(function(object, objectId) {
       if(object.awake) object.awake();
     });
   },
+  
+  
+  awakeObjectsDelayed: function()
+  {
+    ShiftSpace.Objects.each(function(object, objectId) {
+      if(object.awakeDelayed) object.awakeDelayed();
+    });
+  },
+  
   
   /*
     Function: analyze

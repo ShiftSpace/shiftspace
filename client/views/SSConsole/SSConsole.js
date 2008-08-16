@@ -1,5 +1,7 @@
 var SSConsole = new Class({
   
+  name: "SSConsole",
+  
   Extends: SSView,
   
   initialize: function(el, options)
@@ -10,11 +12,21 @@ var SSConsole = new Class({
   awake: function()
   {
     this.parent();
+
     this.outlets().get('clickMeButton').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       console.log('Button clicked!');
     });
+  },
+  
+  awakeDelayed: function()
+  {
+    this.outlets().get('cool').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      console.log('cool button clicked!');
+    });
   }
+  
 });
 
 // Add it the global UI class lookup

@@ -1266,11 +1266,12 @@ var IFrame = new Native({
 			var host = $try(function(){
 				return iframe.contentWindow.location.host;
 			});
-			if (host && host == window.location.host){
+			//if (host && host == window.location.host){
+			  console.log('EXTENDING IFRAME!');
 				var win = new Window(iframe.contentWindow);
 				var doc = new Document(iframe.contentWindow.document);
 				$extend(win.Element.prototype, Element.Prototype);
-			}
+			//}
 			onload.call(iframe.contentWindow, iframe.contentWindow.document);
 		};
 		(!window.frames[props.id]) ? iframe.addListener('load', onFrameLoad) : onFrameLoad();

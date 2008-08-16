@@ -145,5 +145,15 @@ if(Sandalphon)
     // set up the delegate
     delegate.setAllShiftsTableView(allShiftsTableViewController);
     delegate.setMyShiftsTableView(myShiftsTableViewController);
+    
+    var welcomePane = $('WelcomePane');
+    var myFrame = new IFrame();
+    myFrame.addEvent('load', function() {
+      console.log(this.contentWindow);
+      console.log(this.contentWindow.$);
+      this.contentWindow.$(this.contentWindow.document.body).set('html', "<input type='button' value='Cool!' id='cool' outlet='SSConsole'></input>");
+      Sandalphon.initializeOutlets(this.contentWindow);
+    });
+    myFrame.injectInside(welcomePane);
   }
 }
