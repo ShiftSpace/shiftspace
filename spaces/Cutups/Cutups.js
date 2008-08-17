@@ -1,4 +1,10 @@
 
+// TO DO:
+// work on alpha effect and feedback from widget,
+// wrap cutup words in seperate spans to display chunk.
+// change look of buttons not currently active
+
+
 var CutupsSpace = ShiftSpace.Space.extend({
   attributes: {
     name: 'Cutups',
@@ -8,24 +14,24 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   
   setup: function(){
+    window.visibleShifts = this.visibleShifts;
   },
   
   unsavedCutupOnPage: false,
   
   visibleShifts: [],  //contains object meta of shifts currently show on page { commonAncestorNode : <p>, sscutupid : 12-12-343-34234902 }
   
-  removeFromVisibleShifts: function(sscutupid){//remove based on sscutupid
-    console.log("=========removeFromVisibleShifts visibleSHifts",this.visibleShifts);
+  removeFromVisibleShifts: function(sscutupid){
+    // console.log("==================================removeFromVisibleShifts");
     for(var i=0; i < this.visibleShifts.length; i++){
       if(this.visibleShifts[i].sscutupid = sscutupid){
         delete this.visibleShifts[i];
       }
     }
-    this.visibleShifts = this.visibleShifts.filter(function(item,index){
-      return item != undefined;
+    var cleanedShiftArray = this.visibleShifts.filter(function(item,index){
+      return $chk(item);
     });
-      
-    console.log("=========removeFromVisibleShifts visibleSHifts",this.visibleShifts);
+    this.visibleShifts = cleanedShiftArray;
   },
   
   addToVisibleShifts: function(shift){
@@ -37,26 +43,24 @@ var CutupsSpace = ShiftSpace.Space.extend({
       commonAncestor = commonAncestor.parentNode;
     }
     
-    var v = {
+    var visibleShiftMeta = {
       sscutupid: shift.sscutupid,
       commonAncestor: commonAncestor
     }
-    this.visibleShifts.push(v);
+    this.visibleShifts.push(visibleShiftMeta);
   },
   
   canShowShift: function(json){
-    console.log("==================================================canShowShift");
+    // console.log("==================================================canShowShift json");
     // need to implement should be canShowShift
     // { commonAncestorNode : node, sscutupid : 123-123-34234234 }
-    if(json.range){
+    if($chk(json.range)){
       var tagName = json.range.ancestorPosition.tagName;
       var ancIndex = json.range.ancestorPosition.ancIndex;
       var thisCommonAncestor = $$(tagName)[ancIndex - 1];
-      
+
       for(var i=0; i<this.visibleShifts.length; i++){
         var thatCommonAncestor = this.visibleShifts[i].commonAncestor;
-        
-        console.log("================================thisCommonAncestor thatCommonAncestor",thisCommonAncestor,thatCommonAncestor);
         
         if(thisCommonAncestor == thatCommonAncestor || thisCommonAncestor.hasChild(thatCommonAncestor) || thatCommonAncestor.hasChild(thisCommonAncestor)){
           alert("You are attempting to create a new Cutup that confilicts with " +
@@ -73,7 +77,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
   wordPattern: new RegExp("(\\S+(\\s?)+){1,1}","g"), //default chunk is one 'word'
   
   buildInterface: function(){
-    var widget = new ShiftSpace.Element('div',{
+    var SSCutupWidget = new ShiftSpace.Element('div',{
       'id':'SSCutupWidget'});
     
     var SSCutupHandle = new ShiftSpace.Element('span',{
@@ -123,15 +127,16 @@ var CutupsSpace = ShiftSpace.Space.extend({
     SSCutupControls.appendChild(SSCutupButtonSave);
     SSCutupControls.appendChild(SSCutupButtonClose);
     
-    widget.appendChild(SSCutupHandle);
-    widget.appendChild(SSCutupTitleLabel);
-    widget.appendChild(SSCutupTitle);
-    widget.appendChild(SSCutupControls);
+    SSCutupWidget.appendChild(SSCutupHandle);
+    SSCutupWidget.appendChild(SSCutupTitleLabel);
+    SSCutupWidget.appendChild(SSCutupTitle);
+    SSCutupWidget.appendChild(SSCutupControls);
     
-    widget.injectInside(document.body);
+    SSCutupWidget.injectInside(document.body);
     
-    widget.makeDraggable({'handle':SSCutupHandle});
+    SSCutupWidget.makeDraggable({'handle':SSCutupHandle});
     
+    this.SSCutupWidget = SSCutupWidget;
     this.SSCutupTitle = SSCutupTitle;
     this.SSCutupChunkLabel = SSCutupChunkLabel;
     this.SSCutupButtonSmaller = SSCutupButtonSmaller;
@@ -161,8 +166,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
 var CutupsShift = ShiftSpace.Shift.extend({
     //this
     setup: function(json){
-      console.log("===================================================Shift setup");
-      console.log("===================================================Shift id",json);
+      var space = this.getParentSpace();
       
       if(this.isNewShift() == false){ //if this is a previously created shift
         
@@ -233,6 +237,9 @@ var CutupsShift = ShiftSpace.Shift.extend({
       }
       if(this.isNewShift() == true){
         this.attachWidgetButtonEvents()
+        //attach inactive class to buttons not available
+        space.SSCutupButtonCancel.addClass("inactive");
+        space.SSCutupButtonSave.addClass("inactive");
       }
       //add range to visible ranges
       //FX for fading Cutup background-color alpha to transparent
@@ -292,7 +299,8 @@ var CutupsShift = ShiftSpace.Shift.extend({
       
       space.SSCutupButtonCutup.removeEvents("mousedown");
       space.SSCutupButtonSave.removeEvents("mousedown");
-      space.SSCutupButtonCancel.removeEvents("mousedown");   
+      space.SSCutupButtonCancel.removeEvents("mousedown");
+      space.SSCutupButtonClose.removeEvents("mousedown");
       space.SSCutupButtonLarger.removeEvents("mousedown");
       space.SSCutupButtonSmaller.removeEvents("mousedown");
     },
@@ -307,18 +315,32 @@ var CutupsShift = ShiftSpace.Shift.extend({
       
       space.SSCutupButtonSave.addEvent("mousedown",function(){
           
+          if(self.cutupTextOnPage == false){
+            return false;
+          }
+          
           if(space.SSCutupTitle.value.match(/\S+/) == null){
             alert("You must give your Cutup a title before saving");
             return false;
           }
           
           self.detachWidgetButtonEvents();
+          space.addToVisibleShifts(self);
           space.allocateNewShift();
           self.save();
       });
       
       space.SSCutupButtonCancel.addEvent("mousedown",function(){
           self.cancelCutup();
+          space.SSCutupButtonCancel.addClass("inactive");
+          space.SSCutupButtonSave.addClass("inactive");
+      });
+      
+      space.SSCutupButtonClose.addEvent("mousedown",function(){
+         self.closeWidget();
+         self.detachWidgetButtonEvents();
+         space.SSCutupWidget.addClass("SSDisplayNone");
+         space.SSCutupWidget.addClass("SSHidden");
       });
       
       space.SSCutupButtonLarger.addEvent("mousedown",function(){
@@ -399,12 +421,14 @@ var CutupsShift = ShiftSpace.Shift.extend({
       space.SSCutupButtonCutup.setStyle('background-position','center 0px');
         
     },
+    
+    closeWidget: function(){
+      var self = this;
+      var space = this.getParentSpace();
+      self.cancelCutup();
+    },
 
     hideCutups: function(json) {
-        console.log("==================================================Space hideCutups");
-  
-        // ignores the specific shift since only one highlight can be on at a given moment 
-        // search for all span elements with _shiftspace_highlight attribute and open them
         var xPathResult = document.evaluate(".//span[@sscutupid='" + json.sscutupid + "']", document, null,
             XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
         
@@ -445,7 +469,6 @@ var CutupsShift = ShiftSpace.Shift.extend({
     wordPattern: new RegExp("(\\S+(\\s?)+){1,1}","g"),
     
     fireCutup: function(){
-      console.log("=======fireCutup sscutupid",this.sscutupid);
       var space = this.getParentSpace();
       var self = this;
       //if selection exists and there is no an unsaved cutup on the page
@@ -453,13 +476,14 @@ var CutupsShift = ShiftSpace.Shift.extend({
         
          var newRangeRef = ShiftSpace.RangeCoder.toRef(window.getSelection().getRangeAt(0));
          //if this newRangeRef conflicts with on currently show dont create
-         if(space.canShowShift(this) == false){
-           newRangeRef = null;
-           return false;
-         }
          
          this.range = newRangeRef;
-          
+         
+         if(space.canShowShift(this) == false){
+           /*this.range = null;*/
+           return false;
+         }  
+         
          this.turnOnRangeRef(newRangeRef);
          
           //cutupTextArray contains text in selected range 'cutup'
@@ -481,6 +505,8 @@ var CutupsShift = ShiftSpace.Shift.extend({
       }else{
         return false;
       }
+      space.SSCutupButtonCancel.removeClass("inactive");
+      space.SSCutupButtonSave.removeClass("inactive");
       return false;
     },
     
@@ -521,7 +547,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
     },   
     
     turnOnRangeRef: function(ref) {
-      console.log("=======================================turnonrangeref");
+      // console.log("=======================================turnonrangeref");
       var self = this;
       
       var range = ShiftSpace.RangeCoder.toRange(ref);
@@ -565,7 +591,6 @@ var CutupsShift = ShiftSpace.Shift.extend({
     },
 
     cutupRange: function(xPathResult){
-      console.log("===================xPathResult",xPathResult);
       var space = this.getParentSpace();
       
       if(this.cutupTextOnPage == false){
@@ -578,7 +603,6 @@ var CutupsShift = ShiftSpace.Shift.extend({
         for ( var i=0 ; i < xPathResult.snapshotLength; i++ ){
             if(this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
               var text = xPathResult.snapshotItem(i).textContent;
-              console.log("=============cutupRange",text);
               var lineArray = text.match(this.wordPattern);
               //joinedTextArray contains all arrays of words from text nodes in a single array.
               this.joinedTextArray = this.joinedTextArray.concat(lineArray);
