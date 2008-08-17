@@ -48,26 +48,34 @@ if(!preg_match("/^http:\/\//",$myurl)){
 if(!preg_match("/[a-zA-Z]+\/$/",$myurl)){
   $myurl = $myurl . "/";
 }
-//get the base url
+// get the base url
 preg_match("/^(http:\/\/)?([^\/]+)/i",$myurl, $matches);
 $baseurl = $matches[2];
-//replace relative links with absolute links
-//if beings with src="/
+// replace relative links with absolute links
+// if beings with src="/
 $result = preg_replace("/src=\"\//i","src=\"http://$baseurl/" ,$result);
-//if begins with src="../
+// if begins with src="../
 $result = preg_replace("/src=\"\.\./i","src=\"$myurl" ,$result);
-//if begins with src="word/ && word != http or www
+// if begins with src="word/ && word != http or www
 $result = preg_replace("/src=\"(?!http|www)/","src=\"$myurl",$result);
-//for href
+// href=/
 $result = preg_replace("/href=\"\//i","href=\"http://$baseurl/" ,$result);
+// href="folder/file
+$result = preg_replace("/href=\"(?=[^http|www|.+\..+\/])/","href=\"http://$baseurl/",$result);
+// href=".. will fix if .. is root
 $result = preg_replace("/href=\"\.\./i","href=\"$myurl" ,$result);
-//fix css imports
+// css imports
 $result = preg_replace("/@import\s+\"\//","@import \"http://$baseurl/", $result);
-//fix css for for href=\"/css/essay.css
-$result = preg_replace("/href=\\\"\//","href=\\\"$myurl", $result);
-//remove 'most' javascript
+// css for for href=\"/css/essay.css
+$result = preg_replace("/href=\"?\//","href=\"$myurl", $result);
+
+// remove 'most' javascript
 $result = preg_replace("/<script.*?<\/script>/ims","<!--removedjavascript-->",$result);
-//insert ShiftSpace
+$result = preg_replace("/onresize=\".+\"/","",$result);
+$result = preg_replace("/onload=\".+\"/","",$result);
+$result = preg_replace("/onresize=\'.+\'/","",$result);
+$result = preg_replace("/onload=\'.+\'/","",$result);
+// insert ShiftSpace
 /*
 $ShiftSpace = '<script type="text/javascript" charset="utf-8">
     var ShiftSpaceSandBoxMode = true;
