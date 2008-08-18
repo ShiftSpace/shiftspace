@@ -889,7 +889,7 @@ var TrailPage = new Class({
     // tell each one to prepare for delete
     console.log('adding delete link buttons');
     connectedNodes.each( function( x ) {
-      
+      console.log('showing delete button');
       // reveal delete button
       x.deleteButton.removeClass( 'hidden' );
 
