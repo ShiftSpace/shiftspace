@@ -12,9 +12,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
     window.visibleShifts = this.visibleShifts;
   },
   
-  unsavedCutupOnPage: false,
-  
-  visibleShifts: [],  //contains object meta of shifts currently show on page { commonAncestorNode : <p>, sscutupid : 12-12-343-34234902 }
+  visibleShifts: [],  //contains object meta of shifts currently show on page i.e. { commonAncestorNode : <p>, sscutupid : 12-12-343-34234902 }
   
   removeFromVisibleShifts: function(sscutupid){
     // console.log("==================================removeFromVisibleShifts");
@@ -47,8 +45,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
   
   canShowShift: function(json){
     // console.log("==================================================canShowShift json");
-    // need to implement should be canShowShift
-    // { commonAncestorNode : node, sscutupid : 123-123-34234234 }
     if($chk(json.range)){
       var tagName = json.range.ancestorPosition.tagName;
       var ancIndex = json.range.ancestorPosition.ancIndex;
@@ -142,7 +138,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
     this.SSCutupButtonSave = SSCutupButtonSave;
     this.SSCutupButtonClose = SSCutupButtonClose;
     
-    this.unsavedCutupOnPage = true; //widget is build new cutup shift created
   },
   
   showInterface: function(){
@@ -158,7 +153,6 @@ var CutupsSpace = ShiftSpace.Space.extend({
 });
 
 var CutupsShift = ShiftSpace.Shift.extend({
-    //this
     setup: function(json){
       var space = this.getParentSpace();
       
@@ -188,7 +182,9 @@ var CutupsShift = ShiftSpace.Shift.extend({
         //a new shift
         //attaches events to widget
         //creates a range from a valid selection
-        //on save detaches events from widget
+        //creates cutup from range
+        //inserts into document
+        //on save detaches events events from widget
       }
     },
     
@@ -233,9 +229,12 @@ var CutupsShift = ShiftSpace.Shift.extend({
       }
       if(this.isNewShift() == true){
         this.attachWidgetButtonEvents()
-        //attach inactive class to buttons not available
+        
+        //give UI feedback on active buttons
         space.SSCutupButtonCancel.addClass("inactive");
         space.SSCutupButtonSave.addClass("inactive");
+        space.SSCutupButtonSmaller.removeClass("inactive");
+        space.SSCutupButtonLarger.removeClass("inactive");
       }
       //add range to visible ranges
       //FX for fading Cutup background-color alpha to transparent
@@ -499,14 +498,15 @@ var CutupsShift = ShiftSpace.Shift.extend({
          
           //cutupTextArray contains text in selected range 'cutup'
           newRangeRef.cutupsArray = this.cutupTextArray;
+          
           //origTextArray contains original text selected
           newRangeRef.origArray = this.origTextArray;
           
-          // this.unsavedCutupOnPage = true;
-          
-          // this.visibleShifts.push(newRangeRef);//add to list of visible shifts
+          //give UI feedback for re-cut
           space.SSCutupButtonCutup.setStyle('background-position','center -60px');
+          
           this.cutupTextOnPage = true;
+          
       }else if(this.cutupTextOnPage == true){
         //origTextArray exists so just re-cutup current cutup
           var xPathQuery = "//*[@sscutupid='"  + this.sscutupid + "']";
@@ -516,10 +516,10 @@ var CutupsShift = ShiftSpace.Shift.extend({
       }else{
         return false;
       }
+      
       //give UI feedback
       space.SSCutupButtonCancel.removeClass("inactive");
       space.SSCutupButtonSave.removeClass("inactive");
-      
       space.SSCutupButtonLarger.addClass("inactive");
       space.SSCutupButtonSmaller.addClass("inactive");
       
@@ -654,16 +654,8 @@ var CutupsShift = ShiftSpace.Shift.extend({
       for(var i=0,l=0; i < xPathResult.snapshotLength; i++){
         //if node is not empty
         if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
-  /*        var wrappedText = "";
-          this.cutupTextArray[l].each(function(item,index){
-            var pattern = new RegExp("((\\s?\\S+)+)(\\s$)?");
-            //console.log("====item is=====",item);
-            //end (\s$)
-            wrappedText = wrappedText + item.replace(pattern," <span class=\"SSCut\">$1</span> ");
-            //wrappedText = wrappedText + '<span class=SSCut>' + item.match(pattern)[0] +' </span>'  + item.match(pattern)[1];  
-          });*/
+          //word chunk spans inserted with regex so must use setHTML
           xPathResult.snapshotItem(i).setHTML(this.cutupTextArray[l].join(""));
-          //xPathResult.snapshotItem(i).setHTML(wrappedText);
           l++
         }
       } 
