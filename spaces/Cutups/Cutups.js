@@ -9,7 +9,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   
   setup: function(){
-    window.visibleShifts = this.visibleShifts;
+    //window.visibleShifts = this.visibleShifts;
   },
   
   visibleShifts: [],  //contains object meta of shifts currently show on page i.e. { commonAncestorNode : <p>, sscutupid : 12-12-343-34234902 }
