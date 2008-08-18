@@ -267,8 +267,10 @@ div#trail-close:hover
   width: 24px;
   height: 24px;
   
-  left: 32px;
-  top: 17px;
+  margin-left: 12px;
+  
+  left: 50%;
+  top: 50%;
   
   background-image: url(images/ring_minus_delete.png);
 }
