@@ -350,15 +350,16 @@ var TrailPage = new Class({
     }.bind( this ) );
     
     // do the hover for the minus sign
+    var self = this;
     this.minusLinkPoint.addEvent( 'mouseenter', function( e ) { 
-      this.minusLinkPoint.addClass( 'TrailPageMinusLinkPointHover' );
-    }.bind( this ) );
+      self.minusLinkPoint.addClass( 'TrailPageMinusLinkPointHover' );
+    });
     this.minusLinkPoint.addEvent( 'mouseleave', function( e ) { 
-      this.minusLinkPoint.removeClass( 'TrailPageMinusLinkPointHover' );;
-    }.bind( this ) );
+      self.minusLinkPoint.removeClass( 'TrailPageMinusLinkPointHover' );;
+    });
     this.minusLinkPoint.addEvent( 'click', function( e ) { 
-      this.deleteLinkMode();
-    }.bind( this ) );
+      self.deleteLinkMode();
+    });
 
     // set the parentNode
     this.linkPoint.linkNode = this;
