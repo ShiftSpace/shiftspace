@@ -914,6 +914,8 @@ var TrailPage = new Class({
       } );
       
     } );
+    
+    console.log('done');
   },
   
   /*
