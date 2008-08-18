@@ -867,7 +867,8 @@ var TrailPage = new Class({
     var connectedNodes = this.parentTrail.getLinkedNodes( this.nodes );
 
     // add window click listener for checking for cancel deletion
-    $('SSTrailsPlugInScrollArea').method.addEvent( 'click', function( e ) { 
+    var self = this;
+    $('SSTrailsPlugInScrollArea').addEvent( 'click', function( e ) { 
       if( !Trail.gDeleteFocusNode )
       {
         // clear deletions
@@ -876,12 +877,12 @@ var TrailPage = new Class({
         });
        
         // unzoom
-        this.parentTrail.deleteMode = false;
-        this.unzoom();
+        self.parentTrail.deleteMode = false;
+        self.unzoom();
         
         $('SSTrailsPlugInScrollArea').method.removeEvent( 'click' );
       }
-    }.bind( this ) );
+    });
     
     // tell each one to prepare for delete
     connectedNodes.each( function( x ) {
