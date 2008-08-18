@@ -880,7 +880,7 @@ var TrailPage = new Class({
         self.parentTrail.deleteMode = false;
         self.unzoom();
         
-        $('SSTrailsPlugInScrollArea').method.removeEvent( 'click' );
+        $('SSTrailsPlugInScrollArea').removeEvent( 'click' );
       }
     });
     
