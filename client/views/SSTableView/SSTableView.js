@@ -32,8 +32,14 @@ var SSTableView = new Class({
     // create resize masks
     this.initColumnResizers();
     
-    this.element.addEvent('click', this.eventDispatch.bind(this));
-    window.addEvent('keyup', this.eventDispatch.bind(this));
+    // give time for double click
+    this.element.addEvent('click', function(_evt) {
+      this.eventDispatch.delay(300, this, _evt);
+    }.bind(this));
+    
+    // listen for double click
+    this.element.addEvent('dblclick', this.eventDispatch.bind(this));
+    /*window.addEvent('keyup', this.eventDispatch.bind(this));*/
   },
   
   
@@ -162,7 +168,18 @@ var SSTableView = new Class({
     var evt = new Event(theEvent);
     var type = evt.event.type;
     var target = evt.target;
-
+    
+    if(type == 'dblclick')
+    {
+      this.clickCount = 2;
+    }
+    else if(type == 'click' && this.clickCount > 0)
+    {
+      // a multi click event
+      this.clickCount--;
+      return;
+    }
+    
     switch(true)
     {
       case (type == 'click' && this.hitTest(target, '> .SSControlView .SSResize') != null):
@@ -188,6 +205,11 @@ var SSTableView = new Class({
         this.handleRowClick(this.cachedHit(), target);
       break;
       
+      case (type == 'dblclick' && this.hitTest(target, '> .SSScrollView .SSContentView .SSRow > *') != null):
+        if(this.modelRowController())
+        {
+          this.modelRowController().editCell(this.cachedHit());
+        }
       default:
       break;
     }

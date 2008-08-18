@@ -45,31 +45,15 @@ var SSEditableTextCell = new Class({
   },
   
   
-  addEvent: function()
-  {
-    if(this.element) return this.element.addEvent.bind(this.element, $A(arguments));
-  },
-  
-  
-  removeEvent: function()
-  {
-    if(this.element) return this.element.removeEvent.bind(this.element, $A(arguments));
-  },
-  
-  
-  removeEvents: function()
-  {
-    if(this.element) return this.element.removeEvents.bind(this.element, $A(arguments));
-  },
-  
-  
   observeEvents: function()
   {
     // add key events
-    this.addEvent('keyup', function(_evt) {
+    this.element.addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
       var value = this.value;
       
+      console.log('keyup');
+
       if(value != this.originalValue)
       {
         this.fireEvent("SSEditableTextCellChanged", {sender:this, originalValue:this.originalValue, newValue:value});
@@ -86,7 +70,7 @@ var SSEditableTextCell = new Class({
   
   unobserveEvents: function()
   {
-    this.removeEvents('keyup');
+    this.element.removeEvents('keyup');
   },
   
   
@@ -94,6 +78,8 @@ var SSEditableTextCell = new Class({
   {
     if(this.element)
     {
+      console.log('EDITING!');
+
       // store the original value
       this.originalValue = this.element.getProperty('value');
       this.observeEvents();

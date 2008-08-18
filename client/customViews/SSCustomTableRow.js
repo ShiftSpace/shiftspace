@@ -13,23 +13,21 @@ var SSCustomTableRow = new Class({
   },
   
   
-  eventDispatch: function(evt)
-  {
-    
-  },
-  
-  
   editCell: function(cell)
   {
+    console.log('EDIT CELL!');
+    console.log(cell);
     if(cell)
     {
       this.editCellControl.addEvent('SSEditableTextCellDidChange', function(data) {
         console.log('SSEditableTextCellDidChange ' + JSON.encode(data));
-      });
+      }.bind(this));
       this.editCellControl.addEvent('SSEditableTextCellDidFinish', function(data) {
         console.log('SSEditableTextCellDidFinish ' + JSON.encode(data));
-      });
-      this.editCellControl.lock(cell);
+        this.editCellControl.unlock();
+      }.bind(this));
+      this.editCellControl.lock(cell.getFirst());
+      this.editCellControl.edit();
     }
   },
   
