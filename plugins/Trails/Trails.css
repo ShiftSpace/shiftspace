@@ -446,11 +446,6 @@ div.TrailPageMinusLinkPoint:hover
   background-image: url(images/sourceshift_trailsicon.png);
 }
 
-.hidden
-{
-  display : none;
-}
-
 .TrailPageRemove
 {
   position : absolute;

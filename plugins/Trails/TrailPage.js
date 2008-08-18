@@ -870,7 +870,9 @@ var TrailPage = new Class({
     console.log('adding click evento scroll area');
     var self = this;
     $('SSTrailsPlugInScrollArea').addEvent( 'click', function( e ) {
-      if( !Trail.gDeleteFocusNode )
+      var evt = new Event(e);
+
+      if( !Trail.gDeleteFocusNode && !evt.target.hasClass('TrailPageMinusLinkPoint'))
       {
         console.log('SSTrailsPlugInScrollArea click!');
         // clear deletions
