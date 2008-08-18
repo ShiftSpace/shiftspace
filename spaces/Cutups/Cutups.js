@@ -27,32 +27,92 @@ var CutupsSpace = ShiftSpace.Space.extend({
     this.visibleShifts = cleanedShiftArray;
   },
   
-  addToVisibleShifts: function(shift){
-    var tagName = shift.range.ancestorPosition.tagName;
-    var ancIndex = shift.range.ancestorPosition.ancIndex;
-    var commonAncestor = $$(tagName)[ancIndex - 1];
+  
+  
+  getRangeAncestorNode: function(refObj)
+  {
+    console.log('getRangeAncestorNode');
+    var returnAncestor;
+    var colAncestorPosition   = refObj.ancestorPosition;
     
-    if(commonAncestor.nodeType == 3){
-      commonAncestor = commonAncestor.parentNode;
+    //get all the elements with the ancestor tagname
+    var nl                    = document.getElementsByTagName(colAncestorPosition.tagName);
+    var iIndex                = colAncestorPosition.ancIndex;
+    var iOccuranceLength      = 0;
+    var targetTextContent     = refObj.ancestorOrigTextContent;
+
+    console.log('blar');
+    //check if the tag Name is the body then compare differently
+    if (colAncestorPosition.tagName.toLowerCase() == "body")
+    {
+      //return (targetTextContent==ShiftSpace.orig_text_content)?document.getElementsByTagName('body')[0]:null;
+      return document.body;
     }
+    else
+    {
+      //check the number of occurances of the similar nodes
+      console.log('checking similar nodes ' + nl.length);
+      for (var i=0;i<nl.length;i++)
+      {
+        //console.log(i);
+        if(nl.item(i).textContent==targetTextContent)
+        {
+          iOccuranceLength++;
+          //if this is the occurance index mark the node as the ancestor node
+          if (iIndex==iOccuranceLength)
+          returnAncestor = nl.item(i);
+        }
+      }
+      console.log('exit loop');
+    }
+    
+    //validate that the page has the same number of occurances to make sure we highlight the right one
+    if (iOccuranceLength == colAncestorPosition.length)
+    {
+      return returnAncestor;          
+    }
+    else
+    {
+      return null;
+    }
+  },  
+  
+  
+  
+  
+  addToVisibleShifts: function(shift){
+    console.log("SHIFT",shift);
+    //var range = ShiftSpace.RangeCoder.toRange(shift.range);
+    var commonAncestor = this.getRangeAncestorNode(shift.range);
+    console.log("addin",commonAncestor);
+    /*var tagName = shift.range.ancestorPosition.tagName;
+    var ancIndex = shift.range.ancestorPosition.ancIndex;
+    var commonAncestor = $$(tagName)[ancIndex];*/
+    
+  /*  if(commonAncestor.nodeType == 3){
+      commonAncestor = commonAncestor.parentNode;
+    }*/
     
     var visibleShiftMeta = {
       sscutupid: shift.sscutupid,
       commonAncestor: commonAncestor
     }
     this.visibleShifts.push(visibleShiftMeta);
+    console.log("=====================addToVisibleShifts vis shit", this.visibleShifts);
   },
   
   canShowShift: function(json){
     // console.log("==================================================canShowShift json");
     if($chk(json.range)){
-      var tagName = json.range.ancestorPosition.tagName;
+       var thisCommonAncestor = this.getRangeAncestorNode(json.range);
+/*      var tagName = json.range.ancestorPosition.tagName;
       var ancIndex = json.range.ancestorPosition.ancIndex;
-      var thisCommonAncestor = $$(tagName)[ancIndex - 1];
-
+      var thisCommonAncestor = $$(tagName)[ancIndex];*/
+      
       for(var i=0; i<this.visibleShifts.length; i++){
+        console.log("vivisbleShifts",this.visibleShifts[i]);
         var thatCommonAncestor = this.visibleShifts[i].commonAncestor;
-        
+        console.log("canshowshift",thisCommonAncestor,thatCommonAncestor);
         if(thisCommonAncestor == thatCommonAncestor || thisCommonAncestor.hasChild(thatCommonAncestor) || thatCommonAncestor.hasChild(thisCommonAncestor)){
           alert("You are attempting to create a new Cutup that confilicts with " +
             "one currently being viewed on the page. Try hiding some of the currently displayed Cutups.");
@@ -189,13 +249,15 @@ var CutupsShift = ShiftSpace.Shift.extend({
     },
     
     tokenizeNewline: function(text){
-      text.replace(new RegExp("\\n","g"),"__newline__");  
-      return text;
+      var tokenizedText = text.replace(new RegExp("\\n","g"),"__newline__");  
+      console.log("tok",tokenizedText);
+      return tokenizedText;
     },
     
     deTokenizeNewline: function(text){
-      text.replace(new RegExp("__newline__","g"),"\n");
-      return text;
+      var deTokenizedText = text.replace(new RegExp("__newline__","g"),"\n");
+      console.log("deTok",deTokenizedText);
+      return deTokenizedText;
     },
     
     show: function() {
@@ -320,7 +382,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
           }
           
           self.detachWidgetButtonEvents();
-          space.addToVisibleShifts(self);
+          /*space.addToVisibleShifts(self);*/
           space.allocateNewShift();
           self.save();
       });
@@ -493,7 +555,8 @@ var CutupsShift = ShiftSpace.Shift.extend({
            /*this.range = null;*/
            return false;
          }  
-         
+         //this.tempCommonAncestor = space.getRangeAncestorNode(this)
+         space.addToVisibleShifts(this);
          this.turnOnRangeRef(newRangeRef);
          
           //cutupTextArray contains text in selected range 'cutup'
