@@ -867,6 +867,7 @@ var TrailPage = new Class({
     var connectedNodes = this.parentTrail.getLinkedNodes( this.nodes );
 
     // add window click listener for checking for cancel deletion
+    console.log('adding click evento scroll area');
     var self = this;
     $('SSTrailsPlugInScrollArea').addEvent( 'click', function( e ) { 
       if( !Trail.gDeleteFocusNode )
@@ -885,6 +886,7 @@ var TrailPage = new Class({
     });
     
     // tell each one to prepare for delete
+    console.log('adding delete link buttons');
     connectedNodes.each( function( x ) {
       
       // reveal delete button
