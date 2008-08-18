@@ -599,7 +599,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
         for ( var i=0,l=0; i < xPathResult2.snapshotLength; i++ ){
           //if node is not empty and nodes parent is not a script tag
           if(!xPathResult2.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult2.snapshotItem(i))){
-            xPathResult2.snapshotItem(i).setHTML(ref.cutupsArray[l].join(""));
+            $(xPathResult2.snapshotItem(i)).setHTML(ref.cutupsArray[l].join(""));
             l++
           }
         }
@@ -655,7 +655,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
         //if node is not empty
         if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
           //word chunk spans inserted with regex so must use setHTML
-          xPathResult.snapshotItem(i).setHTML(this.cutupTextArray[l].join(""));
+          $(xPathResult.snapshotItem(i)).setHTML(this.cutupTextArray[l].join(""));
           l++
         }
       } 
