@@ -869,9 +869,10 @@ var TrailPage = new Class({
     // add window click listener for checking for cancel deletion
     console.log('adding click evento scroll area');
     var self = this;
-    $('SSTrailsPlugInScrollArea').addEvent( 'click', function( e ) { 
+    $('SSTrailsPlugInScrollArea').addEvent( 'click', function( e ) {
       if( !Trail.gDeleteFocusNode )
       {
+        console.log('SSTrailsPlugInScrollArea click!');
         // clear deletions
         connectedNodes.each( function( x ) {
           x.cancelDelete();
