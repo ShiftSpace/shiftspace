@@ -4,16 +4,33 @@ var SSCustomTableRow = new Class({
 
   Extends: SSTableRow,
   
+  
   initialize: function(el)
   {
     this.parent(el);
     console.log('initialize SSCustomTableRow');
+    this.editCellControl = new SSEditableTextCell();
+  },
+  
+  
+  eventDispatch: function(evt)
+  {
+    
   },
   
   
   editCell: function(cell)
   {
-    
+    if(cell)
+    {
+      this.editCellControl.addEvent('SSEditableTextCellDidChange', function(data) {
+        console.log('SSEditableTextCellDidChange ' + JSON.encode(data));
+      });
+      this.editCellControl.addEvent('SSEditableTextCellDidFinish', function(data) {
+        console.log('SSEditableTextCellDidFinish ' + JSON.encode(data));
+      });
+      this.editCellControl.lock(cell);
+    }
   },
   
   
@@ -50,8 +67,19 @@ var SSCustomTableRow = new Class({
   {
     if(cell)
     {
-      var div = cell._getElement('div');
-      div.set('text', summary);
+      var el = cell.getFirst();
+      
+      switch(el.get('tag'))
+      {
+        case 'div':
+          el.set('text', summary);
+          break;
+        case 'input':
+          el.setProperty('value', summary)
+          break;
+        default:
+          break;
+      }
     }
   }
 

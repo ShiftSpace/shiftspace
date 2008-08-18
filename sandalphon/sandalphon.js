@@ -29,7 +29,7 @@ var SandalphonClass = new Class({
   UIClassPaths:
   { 
     'SSCell': '/client/views/SSCell/',
-    'SSEditableTextCell': '/client/views/SSEditableTextCell',
+    'SSEditableTextCell': '/client/views/SSEditableTextCell/',
     'SSTabView': '/client/views/SSTabView/',
     'SSTableView': '/client/views/SSTableView/',
     'SSTableRow': '/client/views/SSTableRow/',

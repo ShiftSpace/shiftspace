@@ -5,39 +5,61 @@ var SSEditableTextCell = new Class({
   Extends: SSCell,
 
 
-  set value(value)
+  initialize: function(options)
   {
-    this.element.setProperty('value', value);
+    this.parent(options);
   },
   
-  
-  set editable(value)
+
+  set value(value)
   {
-    this.element.setProperty('editable', value);
+    if(this.element) this.element.setProperty('value', value);
   },
   
   
   get value()
   {
-    return this.element.getProperty('value');
+    if(this.element) return this.element.getProperty('value');
+  },
+    
+
+  set editable(value)
+  {
+    if(this.element)
+    {
+      if(!value)
+      {
+        this.element.setProperty('readonly', 1)
+      }
+      else
+      {
+        this.element.removeProperty('readonly');
+      }
+    }
   },
   
   
-  get addEvent()
+  get editable()
   {
-    return this.element.addEvent.bind(this.element);
+    if(this.element) this.element.getProperty('enabled');
   },
   
   
-  get removeEvent()
+  addEvent: function()
   {
-    return this.element.removeEvent.bind(this.element);
+    if(this.element) return this.element.addEvent.bind(this.element, $A(arguments));
   },
   
   
-  get removeEvents()
+  removeEvent: function()
   {
-    return this.element.removeEvents.bind(this.element);
+    if(this.element) return this.element.removeEvent.bind(this.element, $A(arguments));
+  },
+  
+  
+  removeEvents: function()
+  {
+    if(this.element) return this.element.removeEvents.bind(this.element, $A(arguments));
   },
   
   
