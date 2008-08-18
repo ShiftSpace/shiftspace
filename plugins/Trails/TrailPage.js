@@ -358,6 +358,7 @@ var TrailPage = new Class({
       self.minusLinkPoint.removeClass( 'TrailPageMinusLinkPointHover' );;
     });
     this.minusLinkPoint.addEvent( 'click', function( e ) { 
+      console.log('click!');
       self.deleteLinkMode();
     });
 

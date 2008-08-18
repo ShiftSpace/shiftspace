@@ -24,18 +24,30 @@ var SSConsole = new Class({
   },
   
   
-  userClickedRow: function(data)
-  {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + data);
-  },
-  
-  
   awakeDelayed: function()
   {
     this.outlets().get('cool').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       console.log('cool button clicked!');
     });
+  },
+  
+  
+  userClickedRow: function(data)
+  {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + data);
+  },
+  
+  
+  canSelectRow: function(data)
+  {
+    
+  },
+  
+  
+  canSelectColumn: function(data)
+  {
+    
   }
   
 });

@@ -11,7 +11,7 @@ var SSCustomTableRow = new Class({
   },
   
   
-  editShiftTitle: function(row)
+  editCell: function(cell)
   {
     
   },
