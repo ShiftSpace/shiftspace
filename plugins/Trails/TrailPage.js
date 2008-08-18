@@ -894,11 +894,11 @@ var TrailPage = new Class({
       x.deleteButton.addEvent( 'click', function( e ) { 
         Trail.gDeleteFocusNode = x;
 
-        x.parentTrail.deleteLink( x, this );
+        x.parentTrail.deleteLink( x, self );
 
         // remove the node ref
-        x.nodes.remove( this.id );
-        this.nodes.remove( x.id );
+        x.nodes.remove( self.id );
+        self.nodes.remove( x.id );
 
         x.parentTrail.deleteMode = false;
         // cancel delete
@@ -907,11 +907,11 @@ var TrailPage = new Class({
         })
         
         // unzoom ourselves
-        this.unzoom();
+        self.unzoom();
 
-      }.bind( this ) );
+      } );
       
-    }.bind( this ) );
+    } );
   },
   
   /*
