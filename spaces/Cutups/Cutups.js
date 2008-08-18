@@ -1,9 +1,4 @@
 
-// TO DO:
-// work on alpha effect and feedback from widget,
-// wrap cutup words in seperate spans to display chunk.
-// change look of buttons not currently active
-
 
 var CutupsSpace = ShiftSpace.Space.extend({
   attributes: {
@@ -157,8 +152,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   
   hideInterface: function(){
-  /*  $("SSCutupWidget").addClass('SSDisplayNone');
-    $("SSCutupWidget").addClass('SSHidden');    */
+
   }
   
 });
@@ -225,9 +219,11 @@ var CutupsShift = ShiftSpace.Shift.extend({
           }else{
             space.addToVisibleShifts(this);
           }
+          //if origText exits clean it
           if(this.range.origText){
             this.range.origText = this.deTokenizeNewline(this.range.origText);
           }
+          //if ancestorOrigTextContent exists clean it
           if(this.range.ancestorOrigTextContent){
             this.range.ancestorOrigTextContent = this.deTokenizeNewline(this.range.ancestorOrigTextContent);
           }
@@ -334,6 +330,9 @@ var CutupsShift = ShiftSpace.Shift.extend({
           self.cancelCutup();
           space.SSCutupButtonCancel.addClass("inactive");
           space.SSCutupButtonSave.addClass("inactive");
+          
+          space.SSCutupButtonLarger.removeClass("inactive");
+          space.SSCutupButtonSmaller.removeClass("inactive");
       });
       
       space.SSCutupButtonClose.addEvent("mousedown",function(){
@@ -355,7 +354,13 @@ var CutupsShift = ShiftSpace.Shift.extend({
     
     incrementChunkAmount: function(){
       var space = this.getParentSpace();
+      var self = this;
       var amount = parseInt(space.SSCutupChunkAmount.getText());
+      
+      if(self.cutupTextOnPage == true){
+        alert("You cannot change the word chunk amount after a Cutup has been created.");
+        return false;
+      }
       
       if(amount < 20){
         amount = amount + 1;
@@ -369,7 +374,13 @@ var CutupsShift = ShiftSpace.Shift.extend({
     
     decrementChunkAmount: function(){
       var space = this.getParentSpace();
+      var self = this;
       var amount = parseInt(space.SSCutupChunkAmount.getText());
+      
+      if(self.cutupTextOnPage == true){
+        alert("You cannot change the word chunk amount after a Cutup has been created.");
+        return false;
+      }      
       
       if(amount > 1){
         amount = amount - 1;
@@ -505,8 +516,13 @@ var CutupsShift = ShiftSpace.Shift.extend({
       }else{
         return false;
       }
+      //give UI feedback
       space.SSCutupButtonCancel.removeClass("inactive");
       space.SSCutupButtonSave.removeClass("inactive");
+      
+      space.SSCutupButtonLarger.addClass("inactive");
+      space.SSCutupButtonSmaller.addClass("inactive");
+      
       return false;
     },
     

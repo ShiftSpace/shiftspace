@@ -192,7 +192,9 @@
 }
 
 #SSCutupButtonCancel.inactive,
-#SSCutupButtonSave.inactive{
+#SSCutupButtonSave.inactive,
+#SSCutupButtonSmaller.inactive,
+#SSCutupButtonLarger.inactive{
   background-color:#666666 !important;
   border-left-color: #555555;
   border-bottom-color: #555555;
