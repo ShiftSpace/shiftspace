@@ -170,7 +170,8 @@ var Trail = new Class({
   // returns all the linked nodes
   getLinkedNodes : function( nodesArray )
   {
-    return nodesArray.map( function( x ) { return this.dict[x]; }.bind( this ) );
+    var self = this;
+    return nodesArray.map( function( x ) { return self.dict[x]; } );
   },
   
   deleteLink : function( nodeA, nodeB )
