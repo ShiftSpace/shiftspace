@@ -20,6 +20,18 @@ var SSCell = new Class({
   unlock: function()
   {
     this.element = null;
+  },
+  
+  
+  isLocked: function()
+  {
+    return (this.element != null);
+  },
+  
+  
+  getParentRow: function()
+  {
+    if(this.element) return this.element.getParent('.SSRow');
   }
   
 });

@@ -15,20 +15,33 @@ var SSCustomTableRow = new Class({
   
   editCell: function(cell)
   {
-    console.log('EDIT CELL!');
-    console.log(cell);
     if(cell)
     {
+      // unlock the previous edited field
+      if(this.editCellControl.isLocked()) 
+      {
+        this.editCellControl.unlock();
+      }
+
+      // listen for value change events
       this.editCellControl.addEvent('SSEditableTextCellDidChange', function(data) {
-        console.log('SSEditableTextCellDidChange ' + JSON.encode(data));
       }.bind(this));
-      this.editCellControl.addEvent('SSEditableTextCellDidFinish', function(data) {
+
+      // listen for finish events
+      this.editCellControl.addEvent('SSEditableTextCellDidFinishEditing', function(data) {
         console.log('SSEditableTextCellDidFinish ' + JSON.encode(data));
         this.editCellControl.unlock();
       }.bind(this));
+
       this.editCellControl.lock(cell.getFirst());
       this.editCellControl.edit();
     }
+  },
+  
+  
+  deselect: function(row)
+  {
+    if(this.editCellControl.isLocked() && this.editCellControl.getParentRow() == row) this.editCellControl.unlock();
   },
   
   

@@ -52,11 +52,9 @@ var SSEditableTextCell = new Class({
       var evt = new Event(_evt);
       var value = this.value;
       
-      console.log('keyup');
-
       if(value != this.originalValue)
       {
-        this.fireEvent("SSEditableTextCellChanged", {sender:this, originalValue:this.originalValue, newValue:value});
+        this.fireEvent("SSEditableTextCellDidChange", {sender:this, originalValue:this.originalValue, newValue:value});
       }
 
       if(evt.key == 'enter')
@@ -78,8 +76,6 @@ var SSEditableTextCell = new Class({
   {
     if(this.element)
     {
-      console.log('EDITING!');
-
       // store the original value
       this.originalValue = this.element.getProperty('value');
       this.observeEvents();
@@ -92,13 +88,11 @@ var SSEditableTextCell = new Class({
   
   cancelEdit: function()
   {
-    if(this.element)
-    {
-      // restore original value
-      this.value = this.originalValue;
-      // leave edit mode
-      this.finishEdit();
-    }
+    // restore original value
+    this.value = this.originalValue;
+    // leave edit mode
+    this.finishEdit();
+    this.fireEvent("SSEditableTextCellDidCancelEdit", this);
   },
   
   
@@ -129,6 +123,15 @@ var SSEditableTextCell = new Class({
   {
     // style edit mode
     this.element.addClass('SSEdit');
+  },
+  
+  
+  unlock: function()
+  {
+    // clean up first
+    this.cancelEdit();
+    // then call parent to clear out element
+    this.parent();
   }
   
 });

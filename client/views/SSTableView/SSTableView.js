@@ -171,7 +171,7 @@ var SSTableView = new Class({
     
     if(type == 'dblclick')
     {
-      this.clickCount = 2;
+      this.clickCount = 1;
     }
     else if(type == 'click' && this.clickCount > 0)
     {
@@ -331,6 +331,7 @@ var SSTableView = new Class({
   deselectRow: function(row)
   {
     row.removeClass('SSActive');
+    if(this.modelRowController()) this.modelRowController().deselect(row);
   },
   
   /*
