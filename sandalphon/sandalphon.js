@@ -28,10 +28,12 @@ var SandalphonClass = new Class({
   // paths to view controllers
   UIClassPaths:
   { 
+    'SSCell': '/client/views/SSCell/',
+    'SSEditableTextCell': '/client/views/SSEditableTextCell',
     'SSTabView': '/client/views/SSTabView/',
     'SSTableView': '/client/views/SSTableView/',
     'SSTableRow': '/client/views/SSTableRow/',
-    'SSConsole': '/client/views/SSConsole/'
+    'SSConsole': '/client/views/SSConsole/',
   },
   
   // path to user defined view controllers

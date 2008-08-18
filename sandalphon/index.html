@@ -23,6 +23,33 @@
         if(ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
         return string;
       }
+      
+      // Returns a controller for a node
+      function $C(node)
+      {
+        // return the storage property
+        if(node)
+        {
+          var hasController = node.getProperty('uiclass');
+          var controller = node.retrieve('__ssviewcontroller__');
+
+          if(hasController && !controller)
+          {
+            return new SSViewProxy(node);
+          }
+
+          if(hasController && controller)
+          {
+            return controller;
+          }
+
+          return null;
+        }
+        else
+        {
+          return null;
+        }
+      }
 
       // Element extensions
       Element.implement({
