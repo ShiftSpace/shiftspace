@@ -111,6 +111,7 @@
   background-repeat:no-repeat;
   background-image: url(button_sprite.png);
   background-position: center -45px;
+  cursor:pointer;
 }
 #SSCutupButtonClose:hover{
   background-color:#EF2F1F;
