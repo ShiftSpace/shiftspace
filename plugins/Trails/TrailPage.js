@@ -648,8 +648,9 @@ var TrailPage = new Class({
         transition : Fx.Transitions.Cubic.easeOut
       })
       thumbFX.start({
+        /*
         left: [60, 198],
-        top: [32, 110],
+        top: [32, 110],*/
         width: [22, 44],
         height: [22, 44]
       });
@@ -775,8 +776,9 @@ var TrailPage = new Class({
         transition : Fx.Transitions.Cubic.easeOut
       })
       thumbFX.start({
+        /*
         left: [118, 60],
-        top: [60, 32],
+        top: [60, 32],*/
         width: [44, 22],
         height: [44, 22]
       });

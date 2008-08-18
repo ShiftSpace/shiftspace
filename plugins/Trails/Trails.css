@@ -267,7 +267,8 @@ div#trail-close:hover
   width: 24px;
   height: 24px;
   
-  margin-left: 12px;
+  margin-left: -9px;
+  margin-top: -9px;
   
   left: 50%;
   top: 50%;
@@ -419,8 +420,8 @@ div.TrailPageMinusLinkPoint:hover
 {
   position: absolute;
   
-  left: 60px;
-  top: 32px;
+  right: -2px;
+  bottom: -4px;
   
   z-index: 51;
 
@@ -512,6 +513,9 @@ div.TrailPageRemove:hover
   width : 22px;
   height : 22px;
   
+  right: -2px;
+  bottom: -4px;
+  
   z-index : 51;
 }
 
@@ -519,8 +523,12 @@ div.TrailPageRemove:hover
 {
   position: absolute;
   
+  /*
   left: 118px;
   top: 60px;
+  */
+  right: -2px;
+  bottom: -4px;
   
   z-index: 51;
 
