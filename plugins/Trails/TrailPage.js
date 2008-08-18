@@ -359,7 +359,7 @@ var TrailPage = new Class({
     });
     this.minusLinkPoint.addEvent( 'click', function( e ) { 
       console.log('click!');
-      self.deleteLinkMode();
+      self.deleteLinkMode().delay(0, self);
     });
 
     // set the parentNode
