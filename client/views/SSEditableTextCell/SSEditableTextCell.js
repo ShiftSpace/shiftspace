@@ -47,27 +47,35 @@ var SSEditableTextCell = new Class({
   
   observeEvents: function()
   {
+    console.log('OBSERVE');
     // add key events
     this.element.addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
       var value = this.value;
       
-      if(value != this.originalValue)
+      if(this.isEditing)
       {
-        this.fireEvent("SSEditableTextCellDidChange", {sender:this, originalValue:this.originalValue, newValue:value});
-      }
+        if(value != this.originalValue)
+        {
+          this.fireEvent("SSEditableTextCellDidChange", {sender:this, originalValue:this.originalValue, newValue:value});
+        }
 
-      if(evt.key == 'enter')
-      {
-        this.finishEdit();
-        this.fireEvent("SSEditableTextCellDidFinishEditing", this);
+        if(evt.key == 'enter')
+        {
+          console.log('USER EDIT');
+          this.finishEdit();
+          this.fireEvent("SSEditableTextCellDidFinishEditing", this);
+        }
       }
     }.bind(this));
+    console.log(this.element.retrieve('events'));
   },
   
   
   unobserveEvents: function()
-  {
+  { 
+    console.log('UNOBSERVE');
+    console.log(this.element.retrieve('events'));
     this.element.removeEvents('keyup');
   },
   
@@ -76,6 +84,8 @@ var SSEditableTextCell = new Class({
   {
     if(this.element)
     {
+      this.isEditing = true;
+      
       // store the original value
       this.originalValue = this.element.getProperty('value');
       this.observeEvents();
@@ -88,11 +98,16 @@ var SSEditableTextCell = new Class({
   
   cancelEdit: function()
   {
-    // restore original value
-    this.value = this.originalValue;
-    // leave edit mode
-    this.finishEdit();
-    this.fireEvent("SSEditableTextCellDidCancelEdit", this);
+    if(this.isEditing)
+    {
+      console.log('CANCEL EDIT');
+      this.isEditing = false;
+      // restore original value
+      this.value = this.originalValue;
+      // leave edit mode
+      this.finishEdit();
+      this.fireEvent("SSEditableTextCellDidCancelEdit", this);
+    }
   },
   
   
@@ -100,14 +115,14 @@ var SSEditableTextCell = new Class({
   {
     if(this.element)
     {
+      console.log('FINISH EDIT');
+      this.isEditing = false;
       // empty out original value
       this.originalValue = null;
       // make the field uneditable
       this.editable = false;
       this.unobserveEvents();
       this.normalStyle();
-      // clear out element
-      this.element = null;
     }
   },
   
@@ -129,7 +144,10 @@ var SSEditableTextCell = new Class({
   unlock: function()
   {
     // clean up first
-    this.cancelEdit();
+    if(this.isEditing)
+    {
+      this.cancelEdit();
+    }
     // then call parent to clear out element
     this.parent();
   }

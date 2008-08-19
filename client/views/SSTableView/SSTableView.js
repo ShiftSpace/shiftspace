@@ -702,12 +702,23 @@ var SSTableView = new Class({
     return this.modelRow().clone(true);
   },
   
+  
+  columnChangedForRow: function(row, columnIndex)
+  {
+    console.log('columnChangedForRow');
+    if(this.datasource())
+    {
+      this.datasource().updateRowColumn(this.indexOfRow(row), this.columnNames()[columnIndex]);
+    }
+  },
+  
   /*
     Function: refresh
       Empties out the table content and reloads from the data source.
   */
   refresh: function()
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
     // empty the content view
     this.contentView.getElement('tbody').empty();
 

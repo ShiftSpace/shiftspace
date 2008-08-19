@@ -10,6 +10,26 @@ var SSCustomTableRow = new Class({
     this.parent(el);
     console.log('initialize SSCustomTableRow');
     this.editCellControl = new SSEditableTextCell();
+    this.attachEvents();
+  },
+  
+  
+  attachEvents: function()
+  {
+    // listen for value change events
+    this.editCellControl.addEvent('SSEditableTextCellDidChange', function(data) {
+    }.bind(this));
+
+    // listen for finish events
+    this.editCellControl.addEvent('SSEditableTextCellDidFinishEditing', function(data) {
+      console.log('SSEditableTextCellDidFinishEditing ' + JSON.encode(data));
+      var delegate = this.delegate();
+      if(delegate && this.editCellControl.isLocked())
+      {
+        delegate.columnChangedForRow(this.rowForNode(this.editCellControl.element), this.columnIndexForNode(this.editCellControl.element));
+      }
+      this.editCellControl.unlock();
+    }.bind(this));
   },
   
   
@@ -23,24 +43,30 @@ var SSCustomTableRow = new Class({
         this.editCellControl.unlock();
       }
 
-      // listen for value change events
-      this.editCellControl.addEvent('SSEditableTextCellDidChange', function(data) {
-      }.bind(this));
-
-      // listen for finish events
-      this.editCellControl.addEvent('SSEditableTextCellDidFinishEditing', function(data) {
-        console.log('SSEditableTextCellDidFinish ' + JSON.encode(data));
-        this.editCellControl.unlock();
-      }.bind(this));
-
       this.editCellControl.lock(cell.getFirst());
       this.editCellControl.edit();
     }
   },
   
   
+  columnIndexForNode: function(node)
+  {
+    var rowForNode = this.rowForNode(node);
+    var parentCell = (node.get('tag') == 'td') || node.getParent('td');
+    
+    return rowForNode.getChildren('td').indexOf(parentCell);
+  },
+  
+  
+  rowForNode: function(node)
+  {
+    return node.getParent('.SSRow');
+  },
+  
+  
   deselect: function(row)
   {
+    console.log('DESELECT');
     if(this.editCellControl.isLocked() && this.editCellControl.getParentRow() == row) this.editCellControl.unlock();
   },
   

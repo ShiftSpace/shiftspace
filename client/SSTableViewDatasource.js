@@ -58,6 +58,13 @@ var SSTableViewDatasource = new Class({
   },
   
   
+  updateRowColumn: function(rowIndex, columnName)
+  {
+    // make an update call to the data source
+    console.log('updateRowColumn ' + rowIndex + ", " + columnName);
+  },
+  
+  
   dataKey: function()
   {
     return this.__dataKey__;
