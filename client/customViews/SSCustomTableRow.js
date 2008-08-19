@@ -26,7 +26,9 @@ var SSCustomTableRow = new Class({
       var delegate = this.delegate();
       if(delegate && this.editCellControl.isLocked())
       {
-        delegate.columnChangedForRow(this.rowForNode(this.editCellControl.element), this.columnIndexForNode(this.editCellControl.element));
+        delegate.columnChangedForRow(this.rowForNode(this.editCellControl.element), 
+                                     this.columnIndexForNode(this.editCellControl.element),
+                                     data);
       }
       this.editCellControl.unlock();
     }.bind(this));

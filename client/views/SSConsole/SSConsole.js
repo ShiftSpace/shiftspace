@@ -14,18 +14,42 @@ var SSConsole = new Class({
   awake: function()
   {
     this.parent();
-
-    this.outlets().get('clickMeButton').addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      console.log('Button clicked!');
-    });
     
-    this.outlets().get('AllShiftsView').setDelegate(this);
+    // test setting outlets to controllers
+    if(this.outlets().get('AllShiftsView'))
+    {
+      this.outlets().get('AllShiftsView').setDelegate(this);
+    }
+    
+    // test login form outlet
+    if(this.outlets().get('SSLoginFormSubmit'))
+    {
+      this.outlets().get('SSLoginFormSubmit').addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+        var username = this.outlets().get('SSLoginFormUsername').getProperty('value');
+        var password = this.outlets().get('SSLoginFormPassword').getProperty('value');
+        console.log('Login the user ' + username + ', ' + password);
+      }.bind(this));
+    }
+    
+    // test login form outlet
+    if(this.outlets().get('SSSignUpFormSubmit'))
+    {
+      this.outlets().get('SSSignUpFormSubmit').addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+        var username = this.outlets().get('SSSignUpFormUsername').getProperty('value');
+        var email = this.outlets().get('SSSignUpFormEmail').getProperty('value');
+        var password = this.outlets().get('SSSignUpFormPassword').getProperty('value');
+        var confirmPassword = this.outlets().get('SSSignUpFormPassword').getProperty('value');
+        console.log('Sing up the user ' + username + ', ' + email + ', ' + password + ', ' + confirmPassword);
+      }.bind(this));
+    }
   },
   
   
   awakeDelayed: function()
   {
+    // test outlets in iframes
     this.outlets().get('cool').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       console.log('cool button clicked!');
@@ -35,7 +59,7 @@ var SSConsole = new Class({
   
   userClickedRow: function(data)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + data);
+    console.log('SSConsole userClickedRow >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + data);
   },
   
   

@@ -22,6 +22,7 @@ var SSTableViewDatasource = new Class({
     data: {},
     dataKey: '',
     dataProviderURL: '',
+    dataUpdateURL: '',
     dataNormalizer: null
   },
   
@@ -33,9 +34,11 @@ var SSTableViewDatasource = new Class({
     
     // set the options
     this.setProperties({});
+    this.setUpdateProperties({});
     this.setData(options.data);
     this.setDataKey(this.options.dataKey)
     this.setDataProviderURL(this.options.dataProviderURL);
+    this.setDataUpdateURL(this.options.dataUpdateURL);
     this.setDataNormalizer(this.options.dataNormalizer);
   },
   
@@ -58,10 +61,27 @@ var SSTableViewDatasource = new Class({
   },
   
   
-  updateRowColumn: function(rowIndex, columnName)
+  updateRowColumn: function(rowIndex, columnName, value)
   {
     // make an update call to the data source
-    console.log('updateRowColumn ' + rowIndex + ", " + columnName);
+    console.log('updateRowColumn ' + rowIndex + ", " + columnName + " : " + value);
+    console.log(this.data()[rowIndex][columnName]);
+    if(this.dataUpdateURL())
+    {
+      // make an update request
+      new Request({
+        url: this.dataUpdateURL(),
+        method: 'post',
+        onComplete: function(responseText, responseXML)
+        {
+          this.fireEvent('SSTabViewDatasourceDataUpdate', this);
+        },
+        onFailure: function()
+        {
+          console.error('SSTableViewDatasource update attempt failed');
+        }
+      });
+    }
   },
   
   
@@ -98,6 +118,18 @@ var SSTableViewDatasource = new Class({
   },
   
   
+  setDataUpdateURL: function(url)
+  {
+    this.__dataUpdateURL__ = url;
+  },
+  
+  
+  dataUpdateURL: function()
+  {
+    return this.__dataUpdateURL__;
+  },
+  
+  
   setProperties: function(props)
   {
     this.__properties__ = props;
@@ -107,6 +139,18 @@ var SSTableViewDatasource = new Class({
   properties: function()
   {
     return this.__properties__;
+  },
+  
+  
+  setUpdateProperties: function(properties)
+  {
+    this.__updateProperties__ = properties;
+  },
+  
+  
+  updateProperties: function()
+  {
+    return this.__updateProperties__;
   },
 
 

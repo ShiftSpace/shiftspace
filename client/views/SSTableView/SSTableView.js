@@ -703,12 +703,12 @@ var SSTableView = new Class({
   },
   
   
-  columnChangedForRow: function(row, columnIndex)
+  columnChangedForRow: function(row, columnIndex, data)
   {
     console.log('columnChangedForRow');
     if(this.datasource())
     {
-      this.datasource().updateRowColumn(this.indexOfRow(row), this.columnNames()[columnIndex]);
+      this.datasource().updateRowColumn(this.indexOfRow(row), this.columnNames()[columnIndex], data);
     }
   },
   
@@ -718,7 +718,8 @@ var SSTableView = new Class({
   */
   refresh: function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    console.log('SSTableView refresh');
+    
     // empty the content view
     this.contentView.getElement('tbody').empty();
 

@@ -47,7 +47,6 @@ var SSEditableTextCell = new Class({
   
   observeEvents: function()
   {
-    console.log('OBSERVE');
     // add key events
     this.element.addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
@@ -62,21 +61,26 @@ var SSEditableTextCell = new Class({
 
         if(evt.key == 'enter')
         {
-          console.log('USER EDIT');
           this.finishEdit();
-          this.fireEvent("SSEditableTextCellDidFinishEditing", this);
+          this.fireEvent("SSEditableTextCellDidFinishEditing", value);
         }
       }
     }.bind(this));
-    console.log(this.element.retrieve('events'));
+    
+    this.element.addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if(this.isEditing)
+      {
+        evt.stopPropagation();
+      }
+    }.bind(this));
   },
   
   
   unobserveEvents: function()
   { 
-    console.log('UNOBSERVE');
-    console.log(this.element.retrieve('events'));
     this.element.removeEvents('keyup');
+    this.element.removeEvents('click');
   },
   
   
@@ -100,7 +104,6 @@ var SSEditableTextCell = new Class({
   {
     if(this.isEditing)
     {
-      console.log('CANCEL EDIT');
       this.isEditing = false;
       // restore original value
       this.value = this.originalValue;
@@ -115,7 +118,6 @@ var SSEditableTextCell = new Class({
   {
     if(this.element)
     {
-      console.log('FINISH EDIT');
       this.isEditing = false;
       // empty out original value
       this.originalValue = null;

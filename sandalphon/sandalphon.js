@@ -83,8 +83,18 @@ var SandalphonClass = new Class({
 
           // update markup
           $$(".SSLocalized").each(function(node) {
+            
             var originalText = node.getProperty('title');
-            node.set('text', SSLocalizedString(originalText));
+            
+            if(node.get('tag') == 'input' && node.getProperty('type') == 'button')
+            {
+              node.setProperty('value', SSLocalizedString(originalText));
+            }
+            else
+            {
+              node.set('text', SSLocalizedString(originalText));              
+            }
+
           }.bind(this));
         }
         
