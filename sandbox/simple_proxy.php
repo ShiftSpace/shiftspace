@@ -65,7 +65,8 @@ $result = preg_replace("/href=\"(?=[^http|www|.+\..+\/])/","href=\"http://$baseu
 // href=".. will fix if .. is root
 $result = preg_replace("/href=\"\.\./i","href=\"$myurl" ,$result);
 // css imports
-$result = preg_replace("/@import\s+\"\//","@import \"http://$baseurl/", $result);
+$result = preg_replace("/@import\s+url(\//","@import url(http://$baseurl/", $result);
+$result = preg_replace("/@import\s+url([^\/]/","@import url(http://$myurl/", $result);
 // css for for href=\"/css/essay.css
 $result = preg_replace("/href=\"?\//","href=\"$myurl", $result);
 
