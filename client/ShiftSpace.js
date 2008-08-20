@@ -71,7 +71,7 @@ var ShiftSpace = new (function() {
     //server = "http://metatron.shiftspace.org/api/";
 
     // Current ShiftSpace version
-    var version = '0.11';
+    var version = '0.12';
     
     // Logging verbosity and non-sandboxed JS visibility
     var debug = 0;
