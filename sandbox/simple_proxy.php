@@ -57,24 +57,24 @@ $result = preg_replace("/src=\"\//i","src=\"http://$baseurl/" ,$result);
 // if begins with src="../
 $result = preg_replace("/src=\"\.\./i","src=\"$myurl" ,$result);
 // if begins with src="word/ && word != http or www
-$result = preg_replace("/src=\"(?!http|www)/","src=\"$myurl",$result);
+$result = preg_replace("/src=\"(?!http|www)/i","src=\"$myurl",$result);
 // href=/
 $result = preg_replace("/href=\"\//i","href=\"http://$baseurl/" ,$result);
 // href="folder/file
-$result = preg_replace("/href=\"(?=[^http|www|.+\..+\/])/","href=\"http://$baseurl/",$result);
+$result = preg_replace("/href=\"(?=[^http|www|.+\..+\/])/i","href=\"http://$baseurl/",$result);
 // href=".. will fix if .. is root
 $result = preg_replace("/href=\"\.\./i","href=\"$myurl" ,$result);
 // css imports
-$result = preg_replace("/@import\s+url\(\//","@import url(http://$baseurl/", $result);
+$result = preg_replace("/@import\s+url\(\//i","@import url(http://$baseurl/", $result);
 // css for for href=\"/css/essay.css
-$result = preg_replace("/href=\"?\//","href=\"$myurl", $result);
+$result = preg_replace("/href=\"?\//i","href=\"$myurl", $result);
 
 // remove 'most' javascript
 $result = preg_replace("/<script.*?<\/script>/ims","<!--removedjavascript-->",$result);
-$result = preg_replace("/onresize=\".+\"/","",$result);
-$result = preg_replace("/onload=\".+\"/","",$result);
-$result = preg_replace("/onresize=\'.+\'/","",$result);
-$result = preg_replace("/onload=\'.+\'/","",$result);
+$result = preg_replace("/onresize=\".+\"/i","",$result);
+$result = preg_replace("/onload=\".+\"/i","",$result);
+$result = preg_replace("/onresize=\'.+\'/i","",$result);
+$result = preg_replace("/onload=\'.+\'/i","",$result);
 // insert ShiftSpace
 /*
 $ShiftSpace = '<script type="text/javascript" charset="utf-8">
