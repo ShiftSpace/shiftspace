@@ -75,7 +75,7 @@ var SSTableViewDatasource = new Class({
   
   setDataUpdateKey: function(key)
   {
-    return this.__dataUpdateKey__ = key
+    this.__dataUpdateKey__ = key
   },
   
   
