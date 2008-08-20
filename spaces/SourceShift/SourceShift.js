@@ -781,6 +781,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   {
     this.cssText = css;
     
+    /*
     // Safari doesn't support empty on CSS elements
     for(var i = 0; i < this.css.childNodes.length; i++)
     {
@@ -788,6 +789,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
     
     this.css.appendText(css);
+    */
     
     // update the iframe css tag
     if(this.iframeCss)
@@ -1062,7 +1064,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     }
   },
   
-  
+  /*
   buildStyleSheet: function()
   {    
     this.cssId = "SourceShiftStyle" + this.getId();
@@ -1072,11 +1074,12 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
     this.css.injectInside(document.head);
   },
+  */
   
   
   build : function()
   {
-    this.buildStyleSheet();
+    //this.buildStyleSheet();
     
     // the main frame
     this.element = new ShiftSpace.Element('div', {
