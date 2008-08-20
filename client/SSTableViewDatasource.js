@@ -21,6 +21,7 @@ var SSTableViewDatasource = new Class({
   {
     data: {},
     dataKey: '',
+    dataUpdateKey: '',
     dataProviderURL: '',
     dataUpdateURL: '',
     dataNormalizer: null
@@ -35,10 +36,15 @@ var SSTableViewDatasource = new Class({
     // set the options
     this.setProperties({});
     this.setUpdateProperties({});
+    
     this.setData(options.data);
+    
     this.setDataKey(this.options.dataKey)
+    this.setDataUpdateKey(this.options.dataUpdateKey);
+    
     this.setDataProviderURL(this.options.dataProviderURL);
     this.setDataUpdateURL(this.options.dataUpdateURL);
+    
     this.setDataNormalizer(this.options.dataNormalizer);
   },
   
@@ -60,17 +66,44 @@ var SSTableViewDatasource = new Class({
     this.__dataKey__ = key
   },
   
+
+  dataKey: function()
+  {
+    return this.__dataKey__;
+  },
+  
+  
+  setDataUpdateKey: function(key)
+  {
+    this.__dataUpdateKey__ = key
+  },
+  
+  
+  dataUpdateKey: function()
+  {
+    return this.__dataUpdateKey__;
+  },
+  
   
   updateRowColumn: function(rowIndex, columnName, value)
   {
     // make an update call to the data source
-    console.log('updateRowColumn ' + rowIndex + ", " + columnName + " : " + value);
-    console.log(this.data()[rowIndex][columnName]);
     if(this.dataUpdateURL())
     {
+      console.log('updateRowColumn ' + rowIndex + ", " + columnName + " : " + value);
+      
+      var params = {};
+      var updateKey = this.dataUpdateKey();
+      
+      params[updateKey] = this.data()[rowIndex][updateKey];
+      params[columnName] = value;
+      
+      console.log(params);
+      
       // make an update request
       new Request({
         url: this.dataUpdateURL(),
+        data: params,
         method: 'post',
         onComplete: function(responseText, responseXML)
         {
@@ -82,12 +115,6 @@ var SSTableViewDatasource = new Class({
         }
       });
     }
-  },
-  
-  
-  dataKey: function()
-  {
-    return this.__dataKey__;
   },
   
   

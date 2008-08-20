@@ -22,7 +22,6 @@ var SSCustomTableRow = new Class({
 
     // listen for finish events
     this.editCellControl.addEvent('SSEditableTextCellDidFinishEditing', function(data) {
-      console.log('SSEditableTextCellDidFinishEditing ' + JSON.encode(data));
       var delegate = this.delegate();
       if(delegate && this.editCellControl.isLocked())
       {
@@ -30,6 +29,7 @@ var SSCustomTableRow = new Class({
                                      this.columnIndexForNode(this.editCellControl.element),
                                      data);
       }
+      // unlock the edit control
       this.editCellControl.unlock();
     }.bind(this));
   },
