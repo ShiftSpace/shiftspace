@@ -95,7 +95,7 @@ var SSTableViewDatasource = new Class({
   {
     if(normalizer && normalizer.normalize)
     {
-      this.__dataNormalizer__ = normalizer;      
+      this.__dataNormalizer__ = normalizer;
     }
   },
   

@@ -173,7 +173,7 @@ var ShiftSpace = new (function() {
         console.log('ShiftSpace Login ======================================');
         SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         // clear out recently viewed shifts on login
-        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', {});
+        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
       });
       
       ShiftSpace.User.addEvent('onUserLogout', function() {
@@ -634,9 +634,10 @@ var ShiftSpace = new (function() {
 
       // grab the local shifs and generate an array of remote shifts
       getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
+        var len = recentlyViewedShifts.length;
 
-        for(var shiftId in recentlyViewedShifts)
-        {
+        len.times(function(i) {
+          var shiftId = recentlyViewedShifts[i];
           if(SSGetShift(shiftId))
           {
             localShifts[shiftId] = SSGetShiftData(shiftId);
@@ -645,7 +646,7 @@ var ShiftSpace = new (function() {
           {
             remoteShifts.push(shiftId);
           }
-        }
+        });
       
         if(remoteShifts.length > 0)
         {
@@ -1474,7 +1475,7 @@ var ShiftSpace = new (function() {
       {
         getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
           // simply mark the ids
-          recentlyViewedShifts[shiftId] = 1;
+          recentlyViewedShifts.unshift(shiftId);
           // store the recently viewed shifts
           setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', recentlyViewedShifts);
         });
