@@ -97,6 +97,9 @@ var ShiftMenu = new Class({
         this.hide(true);
         return;
       }
+      if (SSCheckForUpdates()) {
+        return;
+      }
       var event = new Event(e);
       if(!spaces[spaceName])
       {

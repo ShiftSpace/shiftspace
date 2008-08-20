@@ -1080,13 +1080,14 @@ var ShiftSpace = new (function() {
           onload: function(rx) {
             if (rx.responseText != version) {
               if (confirm('There is a new version of ShiftSpace available. Would you like to update now?')) {
-                GM_openInTab('http://www.shiftspace.org/');
+                window.location = 'http://www.shiftspace.org/api/shiftspace.php?method=shiftspace.user.js';
               }
             }
           }
         });
+        return true;
       }
-      
+      return false;
     }
     
     /*
@@ -2251,7 +2252,9 @@ var ShiftSpace = new (function() {
         {
           // Check to see if there's a newer release available
           // There's probably a better place to put this call.
-          SSCheckForUpdates();
+          if (SSCheckForUpdates()) {
+            return;
+          }
           //console.log('show console!');
           keyState.consoleShown = true;
           ShiftSpace.Console.show();
