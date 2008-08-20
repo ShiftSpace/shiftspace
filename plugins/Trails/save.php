@@ -84,7 +84,7 @@ else
   $db->query("
     INSERT INTO trail
     (user_id, content, title, url_slug, created, modified, status, thumb_status, version)
-    VALUES ($user->id, '$content', '$title', '$url_slug', '$created', '$modified', '$status', '$thumb_status', '$version')
+    VALUES ($user->id, '$content', '$title', '$url_slug', '$created', '$created', '$status', '$thumb_status', '$version')
     ");
     
   $trailId = $url_slug;
