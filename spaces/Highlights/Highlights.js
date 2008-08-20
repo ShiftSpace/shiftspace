@@ -333,7 +333,7 @@ var HighlightsSpace = ShiftSpace.Space.extend({
   save: function() 
   {
     // update the title
-    this.getCurrentShift().setTitle(this.summary.getProperty('value'));
+    this.getCurrentShift().setTitle($(this.summary).getProperty('value'));
     // save the shift
     this.getCurrentShift().save();
   }
