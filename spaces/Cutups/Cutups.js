@@ -27,11 +27,9 @@ var CutupsSpace = ShiftSpace.Space.extend({
     this.visibleShifts = cleanedShiftArray;
   },
   
-  
-  
   getRangeAncestorNode: function(refObj)
   {
-    console.log('getRangeAncestorNode');
+    // console.log('getRangeAncestorNode');
     var returnAncestor;
     var colAncestorPosition   = refObj.ancestorPosition;
     
@@ -41,7 +39,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
     var iOccuranceLength      = 0;
     var targetTextContent     = refObj.ancestorOrigTextContent;
 
-    console.log('blar');
+    // console.log('blar');
     //check if the tag Name is the body then compare differently
     if (colAncestorPosition.tagName.toLowerCase() == "body")
     {
@@ -51,7 +49,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
     else
     {
       //check the number of occurances of the similar nodes
-      console.log('checking similar nodes ' + nl.length);
+      // console.log('checking similar nodes ' + nl.length);
       for (var i=0;i<nl.length;i++)
       {
         //console.log(i);
@@ -63,7 +61,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
           returnAncestor = nl.item(i);
         }
       }
-      console.log('exit loop');
+      // console.log('exit loop');
     }
     
     //validate that the page has the same number of occurances to make sure we highlight the right one
@@ -77,42 +75,25 @@ var CutupsSpace = ShiftSpace.Space.extend({
     }
   },  
   
-  
-  
-  
   addToVisibleShifts: function(shift){
-    console.log("SHIFT",shift);
-    //var range = ShiftSpace.RangeCoder.toRange(shift.range);
+    // console.log("===================================================addToVisibleShifts");
     var commonAncestor = this.getRangeAncestorNode(shift.range);
-    console.log("addin",commonAncestor);
-    /*var tagName = shift.range.ancestorPosition.tagName;
-    var ancIndex = shift.range.ancestorPosition.ancIndex;
-    var commonAncestor = $$(tagName)[ancIndex];*/
-    
-  /*  if(commonAncestor.nodeType == 3){
-      commonAncestor = commonAncestor.parentNode;
-    }*/
     
     var visibleShiftMeta = {
       sscutupid: shift.sscutupid,
       commonAncestor: commonAncestor
     }
+    
     this.visibleShifts.push(visibleShiftMeta);
-    console.log("=====================addToVisibleShifts vis shit", this.visibleShifts);
   },
   
   canShowShift: function(json){
     // console.log("==================================================canShowShift json");
     if($chk(json.range)){
        var thisCommonAncestor = this.getRangeAncestorNode(json.range);
-/*      var tagName = json.range.ancestorPosition.tagName;
-      var ancIndex = json.range.ancestorPosition.ancIndex;
-      var thisCommonAncestor = $$(tagName)[ancIndex];*/
       
       for(var i=0; i<this.visibleShifts.length; i++){
-        console.log("vivisbleShifts",this.visibleShifts[i]);
         var thatCommonAncestor = this.visibleShifts[i].commonAncestor;
-        console.log("canshowshift",thisCommonAncestor,thatCommonAncestor);
         if(thisCommonAncestor == thatCommonAncestor || thisCommonAncestor.hasChild(thatCommonAncestor) || thatCommonAncestor.hasChild(thisCommonAncestor)){
           alert("You are attempting to create a new Cutup that confilicts with " +
             "one currently being viewed on the page. Try hiding some of the currently displayed Cutups.");
@@ -250,13 +231,11 @@ var CutupsShift = ShiftSpace.Shift.extend({
     
     tokenizeNewline: function(text){
       var tokenizedText = text.replace(new RegExp("\\n","g"),"__newline__");  
-      console.log("tok",tokenizedText);
       return tokenizedText;
     },
     
     deTokenizeNewline: function(text){
       var deTokenizedText = text.replace(new RegExp("__newline__","g"),"\n");
-      console.log("deTok",deTokenizedText);
       return deTokenizedText;
     },
     
@@ -298,15 +277,17 @@ var CutupsShift = ShiftSpace.Shift.extend({
         space.SSCutupButtonSmaller.removeClass("inactive");
         space.SSCutupButtonLarger.removeClass("inactive");
       }
-      //add range to visible ranges
       //FX for fading Cutup background-color alpha to transparent
+      
       function fadeToTrans(){
         trans = 0.6;
         function fade(){
           if(trans > 0){       
             trans = trans - 0.02;
-            $$('.SSCut').setStyle('background-color','rgba(167,8,4,' + trans + ')')
+            $$('.SSCut').setStyle('background-color','rgba(167,8,4,' + trans + ')');
             setTimeout(fade,50);
+          }else{
+            $$('.SSCut').setStyle('background-color','');
           }
         }
         return fade();
@@ -709,7 +690,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
       //wrap word 'chunks' in span tags
       for(var arr=0; arr<this.cutupTextArray.length; arr++){
           for(var arrItem=0; arrItem<this.cutupTextArray[arr].length; arrItem++){
-              this.cutupTextArray[arr][arrItem] = this.joinedTextArray[i].replace(chunkPattern," <span class=\"SSCut\">$1</span> ")
+              this.cutupTextArray[arr][arrItem] = this.joinedTextArray[i].replace(chunkPattern," <span class=\"SSCut\">$1</span> ");
               i++;
           }
       }
@@ -723,13 +704,21 @@ var CutupsShift = ShiftSpace.Shift.extend({
         }
       } 
       //FX for fading Cutup background-color to transparent
+      var sscutupid = this.sscutupid;
       function fadeToTrans(){
+        snapshotNodes = document.evaluate(".//span[@sscutupid='" + sscutupid + "']", document, null,
+          XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
         trans = 0.6;
         function fade(){
           if(trans > 0){       
             trans = trans - 0.02;
-            $$('.SSCut').setStyle('background-color','rgba(167,8,4,' + trans + ')')
+            $ES('span.SSCut',snapshotNodes.snapshotItem(i)).setStyle('background-color','rgba(167,8,4,' + trans + ')');
             setTimeout(fade,50);
+          }
+          else
+          {
+            // restore original element style
+            $$('.SSCut').setStyle('background-color','');
           }
         }
         return fade();
@@ -739,8 +728,8 @@ var CutupsShift = ShiftSpace.Shift.extend({
     
     isValidCutupTextNode: function(node){
      return ($(node) != null && $(node) != undefined && $(node).getParent().nodeName != "SCRIPT"); 
-    },
-    
+    }
+      
 });
 
 var Cut = new CutupsSpace(CutupsShift);
