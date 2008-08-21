@@ -350,22 +350,21 @@ var HighlightsShift = ShiftSpace.Shift.extend({
       //replace __newline__ token with \n
       for(var i=0; i<json.ranges.length; i++)
       {
-        json.ranges[i].origText = json.ranges[i].origText.replace(new RegExp("__newline__","g"),"\n");
-        json.ranges[i].ancestorOrigTextContent = json.ranges[i].ancestorOrigTextContent.replace(new RegExp("__newline__","g"),"\n");
+        json.ranges[i].origText = this.deTokenizeNewline(json.ranges[i].origText);
+        json.ranges[i].ancestorOrigTextContent = this.deTokenizeNewline(json.ranges[i].ancestorOrigTextContent);
       }
     }
     this.ranges = json.ranges;
     this.summary = json.summary;
   },
     
-    
   encode: function() 
   {
     //tokenize newline char with __newline__
     for(var i=0; i<this.ranges.length; i++)
     {
-      this.ranges[i].origText = this.ranges[i].origText.replace(new RegExp("\\n","g"),"__newline__");
-      this.ranges[i].ancestorOrigTextContent = this.ranges[i].ancestorOrigTextContent.replace(new RegExp("\\n","g"),"__newline__");
+      this.ranges[i].origText = this.tokenizeNewline(this.ranges[i].origText);
+      this.ranges[i].ancestorOrigTextContent = this.tokenizeNewline(this.ranges[i].ancestorOrigTextContent);
     }
     
     return {
@@ -388,6 +387,8 @@ var HighlightsShift = ShiftSpace.Shift.extend({
       //space.summary.value = this.summary;
       for (var i = 0; i < this.ranges.length; i++) 
       {
+        this.ranges[i].origText = this.deTokenizeNewline(this.ranges[i].origText);
+        this.ranges[i].ancestorOrigTextContent = this.deTokenizeNewline(this.ranges[i].ancestorOrigTextContent);        
         space.turnOnRangeRef(this.ranges[i]);
       }
     }
@@ -408,7 +409,17 @@ var HighlightsShift = ShiftSpace.Shift.extend({
   defaultTitle: function()
   {
     return "Untitled";
-  }
+  },
+  
+  tokenizeNewline: function(text){
+    var tokenizedText = text.replace(new RegExp("\\n","g"),"__newline__");  
+    return tokenizedText;
+  },
+  
+  deTokenizeNewline: function(text){
+    var deTokenizedText = text.replace(new RegExp("__newline__","g"),"\n");
+    return deTokenizedText;
+  }  
 
 });
 
