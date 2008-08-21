@@ -90,11 +90,11 @@ var CutupsSpace = ShiftSpace.Space.extend({
   canShowShift: function(json){
     // console.log("==================================================canShowShift json");
     if($chk(json.range)){
-       var thisCommonAncestor = this.getRangeAncestorNode(json.range);
-      
+      var thisCommonAncestor = this.getRangeAncestorNode(json.range);
       for(var i=0; i<this.visibleShifts.length; i++){
         var thatCommonAncestor = this.visibleShifts[i].commonAncestor;
-        if(thisCommonAncestor == thatCommonAncestor || thisCommonAncestor.hasChild(thatCommonAncestor) || thatCommonAncestor.hasChild(thisCommonAncestor)){
+        console.log(thisCommonAncestor,thatCommonAncestor);
+        if(thisCommonAncestor == thatCommonAncestor || $(thisCommonAncestor).hasChild(thatCommonAncestor) == true || $(thatCommonAncestor).hasChild(thisCommonAncestor)){
           alert("You are attempting to create a new Cutup that confilicts with " +
             "one currently being viewed on the page. Try hiding some of the currently displayed Cutups.");
           return false;
@@ -699,8 +699,12 @@ var CutupsShift = ShiftSpace.Shift.extend({
         //if node is not empty
         if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
           //word chunk spans inserted with regex so must use setHTML
-          $(xPathResult.snapshotItem(i)).setHTML(this.cutupTextArray[l].join(""));
-          l++
+          if($chk(this.cutupTextArray[l])){
+            $(xPathResult.snapshotItem(i)).setHTML(this.cutupTextArray[l].join(""));
+            l++
+          }else{
+            break;
+          }
         }
       } 
       //FX for fading Cutup background-color to transparent
