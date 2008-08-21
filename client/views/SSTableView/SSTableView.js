@@ -710,6 +710,10 @@ var SSTableView = new Class({
     {
       this.datasource().updateRowColumn(this.indexOfRow(row), this.columnNames()[columnIndex], data);
     }
+    else
+    {
+      console.log('no datasource');
+    }
   },
   
   /*

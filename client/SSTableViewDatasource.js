@@ -87,10 +87,11 @@ var SSTableViewDatasource = new Class({
   
   updateRowColumn: function(rowIndex, columnName, value)
   {
+    console.log('SSTableViewDatasource updateRowColumn');
     // make an update call to the data source
     if(this.dataUpdateURL())
     {
-      console.log('updateRowColumn ' + rowIndex + ", " + columnName + " : " + value);
+      console.log('we have an update url ' + rowIndex + ", " + columnName + " : " + value);
       
       var params = {};
       var updateKey = this.dataUpdateKey();
@@ -113,7 +114,7 @@ var SSTableViewDatasource = new Class({
         {
           console.error('SSTableViewDatasource update attempt failed');
         }
-      });
+      }).send();
     }
   },
   
