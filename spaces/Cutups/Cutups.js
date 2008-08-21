@@ -93,13 +93,33 @@ var CutupsSpace = ShiftSpace.Space.extend({
       var thisCommonAncestor = this.getRangeAncestorNode(json.range);
       for(var i=0; i<this.visibleShifts.length; i++){
         var thatCommonAncestor = this.visibleShifts[i].commonAncestor;
-        console.log(thisCommonAncestor,thatCommonAncestor);
-        if(thisCommonAncestor == thatCommonAncestor || $(thisCommonAncestor).hasChild(thatCommonAncestor) == true || $(thatCommonAncestor).hasChild(thisCommonAncestor)){
-          alert("You are attempting to create a new Cutup that confilicts with " +
-            "one currently being viewed on the page. Try hiding some of the currently displayed Cutups.");
-          return false;
-        }else{
-          return true;
+        
+        if($(thisCommonAncestor) == $(thatCommonAncestor)){
+            alert("You are attempting to create a new Cutup that confilicts with " +
+              "one currently being viewed on the page. Try hiding some of the currently displayed Cutups.");           
+            return false;
+        }
+        
+        var thisCommonAncestorElements =  $(thisCommonAncestor).getElements("*");
+        var thatCommonAncestorElements =  $(thisCommonAncestor).getElements("*");
+        
+        for (var i=0; i<thisCommonAncestorElements.length; i++){
+          for(var x=0; x<thatCommonAncestorElements.length; x++){
+            if(thatCommonAncestorElements[x] == thisCommonAncestorElements[i]){
+              alert("You are attempting to create a new Cutup that confilicts with " +
+                "one currently being viewed on the page. Try hiding some of the currently displayed Cutups.");            
+              return false;
+            }
+          }
+        }
+        for (var i=0; i<thatCommonAncestorElements.length; i++){
+          for(var x=0; x<thisCommonAncestorElements.length; x++){
+            if(thatCommonAncestorElements[i] == thisCommonAncestorElements[x]){
+              alert("You are attempting to create a new Cutup that confilicts with " +
+                "one currently being viewed on the page. Try hiding some of the currently displayed Cutups.");            
+              return false;
+            }
+          }
         }
       }
     }
