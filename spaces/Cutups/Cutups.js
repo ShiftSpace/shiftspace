@@ -88,13 +88,15 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   
   canShowShift: function(json){
-    // console.log("==================================================canShowShift json");
+    console.log("==================================================canShowShift json");
     if($chk(json.range)){
       var thisCommonAncestor = this.getRangeAncestorNode(json.range);
+      console.log(this.visibleShifts);
+      
       for(var i=0; i<this.visibleShifts.length; i++){
         var thatCommonAncestor = this.visibleShifts[i].commonAncestor;
         
-        if($(thisCommonAncestor) == $(thatCommonAncestor)){
+        if(thisCommonAncestor == thatCommonAncestor){
             alert("You are attempting to create a new Cutup that confilicts with " +
               "one currently being viewed on the page. Try hiding some of the currently displayed Cutups.");           
             return false;
@@ -128,7 +130,7 @@ var CutupsSpace = ShiftSpace.Space.extend({
   
   wordPattern: new RegExp("(\\S+(\\s?)+){1,1}","g"), //default chunk is one 'word'
   
-  buildInterface: function(){
+  buildUI: function(){
     var SSCutupWidget = new ShiftSpace.Element('div',{
       'id':'SSCutupWidget'});
     
@@ -199,12 +201,16 @@ var CutupsSpace = ShiftSpace.Space.extend({
     this.SSCutupButtonSave = SSCutupButtonSave;
     this.SSCutupButtonClose = SSCutupButtonClose;
     
+    this.UIBuilt = true;
+    
   },
   
   showInterface: function(){
     this.parent();
-    $("SSCutupWidget").removeClass('SSDisplayNone');
-    $("SSCutupWidget").removeClass('SSHidden');
+    if(this.UIBuilt == true){
+      $("SSCutupWidget").removeClass('SSDisplayNone');
+      $("SSCutupWidget").removeClass('SSHidden');
+    }
   },
   
   hideInterface: function(){
@@ -238,6 +244,9 @@ var CutupsShift = ShiftSpace.Shift.extend({
         }
 
       }else if(this.isNewShift() == true){ //if this shift has just been created
+        if(space.UIBuilt != true){
+          space.buildUI();
+        }
         this.sscutupid = this.create_sscutupid();
         this.cutupTextOnPage = false; //if shift has cut text
         //a new shift
@@ -303,7 +312,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
         trans = 0.6;
         function fade(){
           if(trans > 0){       
-            trans = trans - 0.02;
+            trans = trans - 0.05;
             $$('.SSCut').setStyle('background-color','rgba(167,8,4,' + trans + ')');
             setTimeout(fade,50);
           }else{
