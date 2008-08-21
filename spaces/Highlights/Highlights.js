@@ -387,8 +387,12 @@ var HighlightsShift = ShiftSpace.Shift.extend({
       //space.summary.value = this.summary;
       for (var i = 0; i < this.ranges.length; i++) 
       {
-        this.ranges[i].origText = this.deTokenizeNewline(this.ranges[i].origText);
-        this.ranges[i].ancestorOrigTextContent = this.deTokenizeNewline(this.ranges[i].ancestorOrigTextContent);        
+        if(this.ranges[i].origText){
+          this.ranges[i].origText = this.deTokenizeNewline(this.ranges[i].origText);
+        }
+        if(this.ranges[i].ancestorOrigTextContent){
+          this.ranges[i].ancestorOrigTextContent = this.deTokenizeNewline(this.ranges[i].ancestorOrigTextContent);
+        }
         space.turnOnRangeRef(this.ranges[i]);
       }
     }
