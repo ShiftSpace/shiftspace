@@ -63,6 +63,12 @@ var SSTableViewDatasource = new Class({
   },
   
   
+  hasData: function()
+  {
+    return (this.data() && this.data.length > 0);
+  },
+  
+  
   setDataKey: function(key)
   {
     this.__dataKey__ = key
@@ -199,7 +205,7 @@ var SSTableViewDatasource = new Class({
 
   rowCount: function()
   {
-    return this.data().length;
+    return (this.data() && this.data().length) || 0;
   },
   
   
@@ -268,7 +274,7 @@ var SSTableViewDatasource = new Class({
     }
     else
     {
-      this.fireEvent('onload');
+      if(this.hasData()) this.fireEvent('onload');
     }
   }
 
