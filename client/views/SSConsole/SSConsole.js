@@ -64,13 +64,6 @@ var SSConsole = new Class({
       // otherwise just use dummy data
       this.allShiftsDatasource = new SSTableViewDatasource({
         data: [
-          {id: 'abca', space: 'Notes', summary: 'Hello', username: 'dnolen', created: 'Yesterday'},
-          {id: 'abcb', space: 'Highlights', summary: 'Cool', username: 'mushon', created: 'Yesterday'},
-          {id: 'abcc', space: 'SourceShift', summary: 'ARGH', username: 'dnolen', created: 'Yesterday'},
-          {id: 'abcd', space: 'Notes', summary: 'Yup', username: 'dphiffer', created: 'Yesterday'},
-          {id: 'abce', space: 'ImageSwap', summary: 'Wow', username: 'dphiffer', created: 'Yesterday'},
-          {id: 'abcf', space: 'Notes', summary: 'Amazing', username: 'doron', created: 'Yesterday'},
-          {id: 'abcg', space: 'Notes', summary: 'Monkeys and a bunch of other apes', username: 'doron', created: 'Yesterday'},
           {id: 'abch', space: 'Notes', summary: 'Junk', username: 'tester', created: 'Yesterday'},
           {id: 'abci', space: 'Highlights', summary: 'Space age', username: 'dnolen', created: 'Yesterday'},
           {id: 'abcj', space: 'Notes', summary: 'Wowzer', username: 'dpuppy', created: 'Yesterday'}
@@ -79,13 +72,6 @@ var SSConsole = new Class({
       // otherwise just use dummy data
       this.myShiftsDatasource = new SSTableViewDatasource({
         data: [
-          {id: 'cbca', space: 'Cutups', summary: 'Hello', username: 'dnolen', href: 'www.blah.com', created: 'Yesterday'},
-          {id: 'cbcb', space: 'Cutups', summary: 'Hello world', username: 'dnolen', href: 'www.wah.com', created: 'Yesterday'},
-          {id: 'cbcc', space: 'SourceShift', summary: 'test', username: 'dnolen', href: 'www.vah.com', created: 'Yesterday'},
-          {id: 'cbcd', space: 'Notes', summary: 'No!', username: 'dnolen', href: 'www.nah.com', created: 'Yesterday'},
-          {id: 'cbce', space: 'ImageSwap', summary: 'test', username: 'dnolen', href: 'www.jah.com', created: 'Yesterday'},
-          {id: 'cbcf', space: 'ImageSwap', summary: 'argh', username: 'dnolen', href: 'www.gah.com', created: 'Yesterday'},
-          {id: 'cbcg', space: 'Highlights', summary: 'bugz', username: 'doron', href: 'www.lah.com', created: 'Yesterday'},
           {id: 'cbch', space: 'Fisheye', summary: 'test', username: 'dnolen', href: 'www.tah.com', created: 'Yesterday'},
           {id: 'cbci', space: 'Fisheye', summary: 'oh man', username: 'dnolen', href: 'www.fah.com', created: 'Yesterday'},
           {id: 'cbcj', space: 'SourceShift', summary: 'test', username: 'dnolen', href: 'www.yah.com', created: 'Yesterday'}
@@ -117,68 +103,63 @@ var SSConsole = new Class({
     this.myShiftsDatasource.fetch();
   },
   
+  
+  initLoginForm: function()
+  {
+    this.outlets().get('SSLoginFormSubmit').addEvent('click', function(_evt) {
+      
+      var evt = new Event(_evt);
+      var username = this.outlets().get('SSLoginFormUsername').getProperty('value');
+      var password = this.outlets().get('SSLoginFormPassword').getProperty('value');
+
+      console.log('Login the user ' + username + ', ' + password);
+
+      var credentials = {
+        username: username,
+        password: password
+      };
+
+      new Request({
+        type: 'post',
+        url: __ssserver__ + '/dev/shiftspace.php?method=user.login',
+        data: credentials,
+        onComplete: function(responseText, reponseXml)
+        {
+          console.log('Logged in!');
+          this.myShiftsDatasource.setProperty('username', username);
+        }.bind(this),
+        onFailure: function()
+        {
+          console.error('Oops login failed!');
+        }.bind(this)
+      }).send();
+      
+    }.bind(this));
+  },
+  
+  
+  initSignUpForm: function()
+  {
+    this.outlets().get('SSSignUpFormSubmit').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      var username = this.outlets().get('SSSignUpFormUsername').getProperty('value');
+      var email = this.outlets().get('SSSignUpFormEmail').getProperty('value');
+      var password = this.outlets().get('SSSignUpFormPassword').getProperty('value');
+      var confirmPassword = this.outlets().get('SSSignUpFormPassword').getProperty('value');
+      console.log('Sing up the user ' + username + ', ' + email + ', ' + password + ', ' + confirmPassword);
+    }.bind(this));
+  },
+  
 
   awake: function()
   {
     this.parent();
     
     // test setting outlets to controllers
-    if(this.outlets().get('AllShiftsTableView'))
-    {
-      this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
-    }
-    
-    if(this.outlets().get('MyShiftsTableView'))
-    {
-      this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
-    }
-    
-    // test login form outlet
-    if(this.outlets().get('SSLoginFormSubmit'))
-    {
-      this.outlets().get('SSLoginFormSubmit').addEvent('click', function(_evt) {
-        
-        var evt = new Event(_evt);
-        var username = this.outlets().get('SSLoginFormUsername').getProperty('value');
-        var password = this.outlets().get('SSLoginFormPassword').getProperty('value');
-
-        console.log('Login the user ' + username + ', ' + password);
-
-        var credentials = {
-          username: username,
-          password: password
-        };
-
-        new Request({
-          type: 'post',
-          url: __ssserver__ + '/dev/shiftspace.php?method=user.login',
-          data: credentials,
-          onComplete: function(responseText, reponseXml)
-          {
-            console.log('Logged in!');
-            this.myShiftsDatasource.setProperty('username', username);
-          }.bind(this),
-          onFailure: function()
-          {
-            console.error('Oops login failed!');
-          }.bind(this)
-        }).send();
-        
-      }.bind(this));
-    }
-    
-    // test login form outlet
-    if(this.outlets().get('SSSignUpFormSubmit'))
-    {
-      this.outlets().get('SSSignUpFormSubmit').addEvent('click', function(_evt) {
-        var evt = new Event(_evt);
-        var username = this.outlets().get('SSSignUpFormUsername').getProperty('value');
-        var email = this.outlets().get('SSSignUpFormEmail').getProperty('value');
-        var password = this.outlets().get('SSSignUpFormPassword').getProperty('value');
-        var confirmPassword = this.outlets().get('SSSignUpFormPassword').getProperty('value');
-        console.log('Sing up the user ' + username + ', ' + email + ', ' + password + ', ' + confirmPassword);
-      }.bind(this));
-    }
+    if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
+    if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
+    if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
+    if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
   },
   
   
