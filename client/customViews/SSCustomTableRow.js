@@ -101,6 +101,21 @@ var SSCustomTableRow = new Class({
     } 
   },
   
+  
+  setUsername: function(cell, username)
+  {
+    if(ShiftSpace.User.getUsername() == username)
+    {
+      cell.addClass('SSAuthor');
+    }
+    else
+    {
+      cell.removeClass('SSAuthor');
+    }
+    
+    cell.set('text', username);
+  },
+
 
   setSummary: function(cell, summary)
   {

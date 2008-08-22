@@ -18,6 +18,41 @@
       if(!ShiftSpace.UI) ShiftSpace.UI = {};
       if(!ShiftSpace.Objects) ShiftSpace.Objects = new Hash();
       if(!ShiftSpace.instantiationListeners) ShiftSpace.instantiationListeners = {};
+      if(!ShiftSpace.User)
+      {
+        ShiftSpace.User = new (new Class({
+          Implements: [Events],
+          
+          login: function(credentials)
+          {
+            new Request({
+              type: 'post',
+              url: __ssserver__ + '/dev/shiftspace.php?method=user.login',
+              data: credentials,
+              onComplete: function(responseText, reponseXml)
+              {
+                console.log('Logged in!');
+                this.__username__ = credentials.username;
+                this.fireEvent('login');
+              }.bind(this),
+              onFailure: function()
+              {
+                console.error('Oops login failed!');
+              }.bind(this)
+            }).send();
+          },
+          
+          logout: function()
+          {
+            this.fireEvent('logout');
+          },
+          
+          getUsername: function()
+          {
+            return this.__username__;
+          }
+        }));
+      }
       
       // Localized String Support
       function SSLocalizedString(string)

@@ -32,9 +32,16 @@ var SSConsole = new Class({
     }
   },
   
+  
   initialize: function(el, options)
   {
     this.parent(el, options);
+    
+    ShiftSpace.User.addEvent('login', this.handleLogin.bind(this));
+    
+    ShiftSpace.User.addEvent('logout', function() {
+      
+    });
     
     // set the datasource for the tableview
     if(window.location.hostname == "www.shiftspace.org" ||
@@ -81,6 +88,12 @@ var SSConsole = new Class({
   },
   
   
+  handleLogin: function()
+  {
+    this.myShiftsDatasource.setProperty('username', ShiftSpace.User.getUsername());
+  },
+  
+  
   setAllShiftsTableView: function(tableView)
   {
     console.log('Fetch all shifts');
@@ -107,32 +120,12 @@ var SSConsole = new Class({
     this.outlets().get('SSLoginFormSubmit').addEvent('click', function(_evt) {
       
       var evt = new Event(_evt);
-      var username = this.outlets().get('SSLoginFormUsername').getProperty('value');
-      var password = this.outlets().get('SSLoginFormPassword').getProperty('value');
 
-      console.log('Login the user ' + username + ', ' + password);
+      ShiftSpace.User.login({
+        username: this.outlets().get('SSLoginFormUsername').getProperty('value'),
+        password: this.outlets().get('SSLoginFormPassword').getProperty('value')
+      });
 
-      var credentials = {
-        username: username,
-        password: password
-      };
-
-      new Request({
-        type: 'post',
-        url: __ssserver__ + '/dev/shiftspace.php?method=user.login',
-        data: credentials,
-        onComplete: function(responseText, reponseXml)
-        {
-          console.log('Logged in!');
-          this.loggedInUser = username;
-          this.myShiftsDatasource.setProperty('username', username);
-        }.bind(this),
-        onFailure: function()
-        {
-          console.error('Oops login failed!');
-        }.bind(this)
-      }).send();
-      
     }.bind(this));
   },
   
