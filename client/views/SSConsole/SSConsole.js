@@ -25,10 +25,32 @@ var SSConsole = new Class({
     if(this.outlets().get('SSLoginFormSubmit'))
     {
       this.outlets().get('SSLoginFormSubmit').addEvent('click', function(_evt) {
+        
         var evt = new Event(_evt);
         var username = this.outlets().get('SSLoginFormUsername').getProperty('value');
         var password = this.outlets().get('SSLoginFormPassword').getProperty('value');
+
         console.log('Login the user ' + username + ', ' + password);
+
+        var credentials = {
+          username: username,
+          password: password
+        };
+
+        new Request({
+          type: 'post',
+          url: __ssserver__ + '/dev/shiftspace.php?method=user.login',
+          data: credentials,
+          onComplete: function(responseText, reponseXml)
+          {
+            console.log('Logged in!');
+          }.bind(this),
+          onFailure: function()
+          {
+            console.error('Oops login failed!');
+          }.bind(this)
+        }).send();
+        
       }.bind(this));
     }
     
