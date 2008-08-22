@@ -251,7 +251,7 @@ var SSTableViewDatasource = new Class({
       });
     }
     
-    return (missingProperties.length == 0);
+    return (missingProperties.length > 0);
   },
 
   
