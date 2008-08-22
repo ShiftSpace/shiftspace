@@ -198,7 +198,7 @@ var SSConsole = new Class({
     
     if(args.tableView == this.allShiftsTableView)
     {
-      return (this.loggedInUser == this.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));
+      return (ShiftSpace.User.getUsername() == this.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));
     }
     
     return true;
