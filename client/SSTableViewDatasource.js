@@ -117,7 +117,7 @@ var SSTableViewDatasource = new Class({
         onComplete: function(responseText, responseXML)
         {
           // update the local copy of the data
-          this.data()[rowIndex][updateKey] = value;
+          this.data()[rowIndex][columnName] = value;
           this.fireEvent('SSTabViewDatasourceDataUpdate', this);
         },
         onFailure: function()
