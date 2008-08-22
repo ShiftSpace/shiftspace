@@ -52,6 +52,8 @@ var SSConsole = new Class({
       // if we're on metatron load real data
       this.myShiftsDatasource = new SSTableViewDatasource({
         dataKey: 'shifts',
+        dataUpdateKey: 'id',
+        dataUpdateURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.update',
         dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query',
         dataNormalizer: this.legacyNormalizer,
         requiredProperties: ['username']
