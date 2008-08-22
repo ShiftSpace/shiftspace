@@ -255,6 +255,12 @@ var SSTableViewDatasource = new Class({
     
     return (missingProperties.length > 0);
   },
+  
+  
+  valueForRowColumn: function(rowIndex, columnName)
+  {
+    return this.data()[rowIndex][columnName];
+  },
 
   
   fetch: function(_properties)

@@ -85,10 +85,9 @@ var SSConsole = new Class({
   {
     console.log('Fetch all shifts');
     this.allShiftsTableView = tableView;
-    //tableView.setDelegate(this);
+    tableView.setDelegate(this);
     tableView.setDatasource(this.allShiftsDatasource);
     this.allShiftsDatasource.setProperties({href:"http://www.google.com/"});
-    console.log(this.allShiftsDatasource);
     this.allShiftsDatasource.fetch();
   },
   
@@ -97,9 +96,8 @@ var SSConsole = new Class({
   {
     console.log('Fetch my shifts');
     this.myShiftsTableView = tableView;
-    //tableView.setDelegate(this);
+    tableView.setDelegate(this);
     tableView.setDatasource(this.myShiftsDatasource);
-    console.log(this.myShiftsDatasource);
     this.myShiftsDatasource.fetch();
   },
   
@@ -126,6 +124,7 @@ var SSConsole = new Class({
         onComplete: function(responseText, reponseXml)
         {
           console.log('Logged in!');
+          this.loggedInUser = username;
           this.myShiftsDatasource.setProperty('username', username);
         }.bind(this),
         onFailure: function()
@@ -197,6 +196,19 @@ var SSConsole = new Class({
   canSelectColumn: function(data)
   {
     
+  },
+  
+  
+  canEditRow: function(args)
+  {
+    console.log('canEditRow');
+    
+    if(args.tableView == this.allShiftsTableView)
+    {
+      return (this.loggedInUser == args.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));
+    }
+    
+    return true;
   }
   
 });

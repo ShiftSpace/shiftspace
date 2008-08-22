@@ -208,7 +208,16 @@ var SSTableView = new Class({
       case (type == 'dblclick' && this.hitTest(target, '> .SSScrollView .SSContentView .SSRow > *') != null):
         if(this.modelRowController())
         {
-          this.modelRowController().editCell(this.cachedHit());
+          var row = this.cachedHit().getParent('.SSRow');
+          var rowIndex = this.indexOfRow(row);
+          var canEdit = true;
+          
+          if(this.delegate() && this.delegate().canEditRow)
+          {
+            canEdit = this.delegate().canEditRow({tableView:this, rowIndex:rowIndex});
+          }
+
+          if(canEdit) this.modelRowController().editCell(this.cachedHit());
         }
       default:
       break;
