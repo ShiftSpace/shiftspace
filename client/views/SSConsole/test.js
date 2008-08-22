@@ -46,8 +46,9 @@ var MyTableViewDelegate = new Class({
       // if we're on metatron load real data
       this.myShiftsDatasource = new SSTableViewDatasource({
         dataKey: 'shifts',
-        dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query&username=dnolen',
-        dataNormalizer: legacyNormalizer
+        dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query',
+        dataNormalizer: legacyNormalizer,
+        requiredProperties: ['username']
       });
     }
     else

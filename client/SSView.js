@@ -60,6 +60,13 @@ var SSView = new Class({
     console.log(this.getId() + " awake, outlets " + JSON.encode(this.outlets().getKeys()));
   },
   
+  
+  awakeDelayed: function()
+  {
+    
+  },
+  
+  
   /*
     Function: getId
       Returns the id for this instance.

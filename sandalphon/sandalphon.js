@@ -291,8 +291,11 @@ var SandalphonClass = new Class({
           $('SSSandalphonContainer').empty();
           // load the new file
           $('SSSandalphonContainer').set('html', responseText);
+          // First instantiate all controllers
           this.instantiateControllers();
+          // Initialize all outlets
           this.initializeOutlets();
+          // Awake all objects
           this.awakeObjects();
         }
         else
