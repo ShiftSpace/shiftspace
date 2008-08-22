@@ -238,7 +238,7 @@ var SSTableViewDatasource = new Class({
     {
       missingProperties = this.requiredProperties().filter(function(required) {
         return !this.properties().getKeys().contains(required);
-      });
+      }.bind(this));
     }
     
     if(missingProperties.length == 0 && this.dataProviderURL())
