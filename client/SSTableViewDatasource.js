@@ -19,12 +19,13 @@ var SSTableViewDatasource = new Class({
 
   options: 
   {
-    data: {},
-    dataKey: '',
-    dataUpdateKey: '',
-    dataProviderURL: '',
-    dataUpdateURL: '',
-    dataNormalizer: null
+    data: [],
+    dataKey: null,
+    dataUpdateKey: null,
+    dataProviderURL: null,
+    dataUpdateURL: null,
+    dataNormalizer: null,
+    requiredProperties: []
   },
   
 
@@ -34,7 +35,8 @@ var SSTableViewDatasource = new Class({
     this.setOptions(options);
     
     // set the options
-    this.setProperties({});
+    this.setProperties(new Hash());
+    this.setRequiredProperties(this.options.requiredProperties);
     this.setUpdateProperties({});
     
     this.setData(options.data);
@@ -158,8 +160,9 @@ var SSTableViewDatasource = new Class({
   },
   
   
-  setProperties: function(props)
+  setProperties: function(_props)
   {
+    var props = (_props instanceof Hash && _props) || new Hash(_props);
     this.__properties__ = props;
   },
   
@@ -167,6 +170,18 @@ var SSTableViewDatasource = new Class({
   properties: function()
   {
     return this.__properties__;
+  },
+  
+  
+  setRequiredProperties: function(properties)
+  {
+    this.__requiredProperties__ = properties;
+  },
+  
+  
+  requiredProperties: function()
+  {
+    return this.__requiredProperties__;
   },
   
   
@@ -203,24 +218,35 @@ var SSTableViewDatasource = new Class({
   sortByColumn: function(column, direction)
   {
     console.log('sort by column ' + column + ', direction ' + direction);
-    this.fetch($merge(
-      this.properties(), 
-      {
-        sortByColumn: column,
-        sortByDirection: direction
-      }
-    ));
+    this.fetch({
+      sortByColumn: column,
+      sortByDirection: direction
+    })  ;
   },
 
   
-  fetch: function(properties)
-  {    
-    if(this.dataProviderURL())
+  fetch: function(_properties)
+  {
+    // make sure the properties are a Hash
+    var properties = (_properties instanceof Hash && _properties) || new Hash(_properties);
+    // combine them with the existing properties
+    var allProperties = this.properties().combine(properties);
+
+    // check for missing properties
+    var missingProperties = [];
+    if(this.requiredProperties().length > 0)
+    {
+      missingProperties = this.requiredProperties().filter(function(required) {
+        return !this.properties().getKeys().contains(required);
+      });
+    }
+    
+    if(missingProperties.length == 0 && this.dataProviderURL())
     {
       new Request({
         url: this.dataProviderURL(),
         method: 'post',
-        data: $merge(this.properties(), properties),
+        data: allProperties.getClean(),
         onComplete: function(responseText, responseXML)
         {
           var data = JSON.decode(responseText)[this.dataKey()];
