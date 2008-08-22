@@ -228,7 +228,7 @@ var SSTableViewDatasource = new Class({
   fetch: function(_properties)
   {
     // make sure the properties are a Hash
-    var properties = (_properties instanceof Hash && _properties) || new Hash(_properties);
+    var properties = (!_properties && new Hash()) || (_properties instanceof Hash && _properties) || new Hash(_properties);
     // combine them with the existing properties
     var allProperties = this.properties().combine(properties);
 
