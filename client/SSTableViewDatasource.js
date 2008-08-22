@@ -233,6 +233,8 @@ var SSTableViewDatasource = new Class({
   
   fetch: function(_properties)
   {
+    console.log('data source fetch');
+    
     // make sure the properties are a Hash
     var properties = (!_properties && $H()) || (_properties instanceof Hash && _properties) || $H(_properties);
     // combine them with the existing properties
@@ -255,6 +257,8 @@ var SSTableViewDatasource = new Class({
         data: allProperties.getClean(),
         onComplete: function(responseText, responseXML)
         {
+          console.log('------------ table view data loaded');
+
           var data = JSON.decode(responseText)[this.dataKey()];
 
           if(this.dataNormalizer())
@@ -274,7 +278,7 @@ var SSTableViewDatasource = new Class({
     }
     else
     {
-      if(this.hasData()) this.fireEvent('onload');
+      this.fireEvent('onload');
     }
   }
 

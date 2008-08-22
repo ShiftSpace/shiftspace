@@ -57,7 +57,7 @@ var SSView = new Class({
   */
   awake: function()
   {
-    console.log(this.getId() + " awake, outlets " + JSON.encode(this.outlets().getKeys()));
+    //console.log(this.getId() + " awake, outlets " + JSON.encode(this.outlets().getKeys()));
   },
   
   
