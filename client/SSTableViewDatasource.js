@@ -119,7 +119,7 @@ var SSTableViewDatasource = new Class({
           // update the local copy of the data
           this.data()[rowIndex][columnName] = value;
           this.fireEvent('SSTabViewDatasourceDataUpdate', this);
-        },
+        }.bind(this),
         onFailure: function()
         {
           console.error('SSTableViewDatasource update attempt failed');
