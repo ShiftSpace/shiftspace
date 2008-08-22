@@ -89,6 +89,7 @@ var MyTableViewDelegate = new Class({
   
   setAllShiftsTableView: function(tableView)
   {
+    console.log('Fetch all shifts');
     this.allShiftsTableView = tableView;
     //tableView.setDelegate(this);
     tableView.setDatasource(this.allShiftsDatasource);
@@ -99,6 +100,7 @@ var MyTableViewDelegate = new Class({
   
   setMyShiftsTableView: function(tableView)
   {
+    console.log('Fetch my shifts');
     this.myShiftsTableView = tableView;
     //tableView.setDelegate(this);
     tableView.setDatasource(this.myShiftsDatasource);
