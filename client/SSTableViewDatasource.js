@@ -35,7 +35,7 @@ var SSTableViewDatasource = new Class({
     this.setOptions(options);
     
     // set the options
-    this.setProperties(new Hash());
+    this.setProperties($H());
     this.setRequiredProperties(this.options.requiredProperties);
     this.setUpdateProperties({});
     
@@ -162,7 +162,7 @@ var SSTableViewDatasource = new Class({
   
   setProperties: function(_props)
   {
-    var props = (_props instanceof Hash && _props) || new Hash(_props);
+    var props = (!_props && $H()) || (_props instanceof Hash && _props) || $H(_props);
     this.__properties__ = props;
   },
   
@@ -228,7 +228,7 @@ var SSTableViewDatasource = new Class({
   fetch: function(_properties)
   {
     // make sure the properties are a Hash
-    var properties = (!_properties && new Hash()) || (_properties instanceof Hash && _properties) || new Hash(_properties);
+    var properties = (!_properties && $H()) || (_properties instanceof Hash && _properties) || $H(_properties);
     // combine them with the existing properties
     var allProperties = this.properties().combine(properties);
 
