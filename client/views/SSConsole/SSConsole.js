@@ -154,6 +154,7 @@ var SSConsole = new Class({
           onComplete: function(responseText, reponseXml)
           {
             console.log('Logged in!');
+            this.myShiftsDatasource.setProperty('username', username);
           }.bind(this),
           onFailure: function()
           {
