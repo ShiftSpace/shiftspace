@@ -166,6 +166,15 @@ var SSTableViewDatasource = new Class({
   },
   
   
+  setProperty: function(key, value)
+  {
+    // set the property
+    this.properties().set(key, value);
+    // refetch data
+    this.fetch();
+  },
+  
+  
   setProperties: function(_props)
   {
     var props = (!_props && $H()) || (_props instanceof Hash && _props) || $H(_props);
@@ -229,6 +238,21 @@ var SSTableViewDatasource = new Class({
       sortByDirection: direction
     })  ;
   },
+  
+  
+  isMissingProperties: function(properties)
+  {
+    // check for missing properties
+    var missingProperties = [];
+    if(this.requiredProperties().length > 0)
+    {
+      missingProperties = this.requiredProperties().filter(function(required) {
+        return !properties().getKeys().contains(required);
+      });
+    }
+    
+    return (missingProperties.length == 0);
+  },
 
   
   fetch: function(_properties)
@@ -237,19 +261,11 @@ var SSTableViewDatasource = new Class({
     
     // make sure the properties are a Hash
     var properties = (!_properties && $H()) || (_properties instanceof Hash && _properties) || $H(_properties);
-    // combine them with the existing properties
-    var allProperties = this.properties().combine(properties);
+    // combine them with the existing properties, careful not to modify this.properties()
+    var allProperties = $H(this.properties().getClean()).combine(properties);
 
     // check for missing properties
-    var missingProperties = [];
-    if(this.requiredProperties().length > 0)
-    {
-      missingProperties = this.requiredProperties().filter(function(required) {
-        return !this.properties().getKeys().contains(required);
-      }.bind(this));
-    }
-    
-    if(missingProperties.length == 0 && this.dataProviderURL())
+    if(!this.isMissingProperties(allProperties) && this.dataProviderURL())
     {
       new Request({
         url: this.dataProviderURL(),
