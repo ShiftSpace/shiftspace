@@ -308,7 +308,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
       //FX for fading Cutup background-color alpha to transparent
       
       function fadeToTrans(){
-        var trans = 0.8;
+        var trans = 1.0;
         function fade(){
           if(trans > 0.2){       
             trans = trans - 0.1;
@@ -740,7 +740,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
       function fadeToTrans(){
         snapshotNodes = document.evaluate(".//span[@sscutupid='" + sscutupid + "']", document, null,
           XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-        var trans = 0.8;
+        var trans = 1.0;
         function fade(){
           if(trans > 0.2){       
             trans = trans - 0.1;
@@ -764,6 +764,5 @@ var CutupsShift = ShiftSpace.Shift.extend({
       
 });
 
+
 var Cut = new CutupsSpace(CutupsShift);
-
-
