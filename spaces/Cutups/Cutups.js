@@ -88,10 +88,9 @@ var CutupsSpace = ShiftSpace.Space.extend({
   },
   
   canShowShift: function(json){
-    console.log("==================================================canShowShift json");
+    /*console.log("==================================================canShowShift json");*/
     if($chk(json.range)){
       var thisCommonAncestor = this.getRangeAncestorNode(json.range);
-      console.log(this.visibleShifts);
       
       for(var i=0; i<this.visibleShifts.length; i++){
         var thatCommonAncestor = this.visibleShifts[i].commonAncestor;
@@ -309,14 +308,14 @@ var CutupsShift = ShiftSpace.Shift.extend({
       //FX for fading Cutup background-color alpha to transparent
       
       function fadeToTrans(){
-        trans = 0.6;
+        var trans = 0.8;
         function fade(){
-          if(trans > 0){       
-            trans = trans - 0.05;
-            $$('.SSCut').setStyle('background-color','rgba(167,8,4,' + trans + ')');
+          if(trans > 0.2){       
+            trans = trans - 0.1;
+            $$('span.SSCut').setStyle('outline','thin solid rgba(167,8,4,' + trans + ')');
             setTimeout(fade,50);
           }else{
-            $$('.SSCut').setStyle('background-color','');
+            $$('.SSCut').setStyle('outline','');
           }
         }
         return fade();
@@ -338,7 +337,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
       if(this.range.ancestorOrigTextContent){
         this.range.ancestorOrigTextContent = this.tokenizeNewline(this.range.ancestorOrigTextContent);
       }
-      
+      //this.range.ancestorOrigTextContent = "REMOVED ANCESTOR ORIGINAL TEXT";
       return {
         sscutupid: this.sscutupid,
         range: this.range,
@@ -741,17 +740,17 @@ var CutupsShift = ShiftSpace.Shift.extend({
       function fadeToTrans(){
         snapshotNodes = document.evaluate(".//span[@sscutupid='" + sscutupid + "']", document, null,
           XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-        trans = 0.6;
+        var trans = 0.8;
         function fade(){
-          if(trans > 0){       
-            trans = trans - 0.02;
-            $ES('span.SSCut',snapshotNodes.snapshotItem(i)).setStyle('background-color','rgba(167,8,4,' + trans + ')');
+          if(trans > 0.2){       
+            trans = trans - 0.1;
+            $ES('span.SSCut',snapshotNodes.snapshotItem(i)).setStyle('outline','thin solid rgba(167,8,4,' + trans + ')');
             setTimeout(fade,50);
           }
           else
           {
             // restore original element style
-            $$('.SSCut').setStyle('background-color','');
+            $$('.SSCut').setStyle('outline','');
           }
         }
         return fade();
