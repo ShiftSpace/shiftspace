@@ -1,5 +1,4 @@
 
-
 var CutupsSpace = ShiftSpace.Space.extend({
   attributes: {
     name: 'Cutups',
@@ -464,13 +463,12 @@ var CutupsShift = ShiftSpace.Shift.extend({
     },
     
     cancelCutup: function(){
-      // remove from visible shifts!! need to create!
       var space = this.getParentSpace();
       //cancel is to be used during the creation of a shift nowhere else as will
       //cause ConFrusions
       if(this.cutupTextOnPage == false) return false;
-      // ignores the specific shift since only one cutup can be on at a given moment 
-      // search for all span elements with _shiftspace_cutup attribute and open them
+      //ignores the specific shift since only one cutup can be on at a given moment 
+      //search for all span elements with _shiftspace_cutup attribute and open them
       var xPathResult = document.evaluate(".//span[@sscutupid='" + this.sscutupid + "']", document, null,
           XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
       
@@ -561,7 +559,6 @@ var CutupsShift = ShiftSpace.Shift.extend({
          this.range = newRangeRef;
          
          if(space.canShowShift(this) == false){
-           /*this.range = null;*/
            return false;
          }  
          //this.tempCommonAncestor = space.getRangeAncestorNode(this)
@@ -764,5 +761,8 @@ var CutupsShift = ShiftSpace.Shift.extend({
       
 });
 
+// One of the most striking signs of the decay of art is when we see its 
+// separate forms jumbled together.
+// -Geothe
 
 var Cut = new CutupsSpace(CutupsShift);
