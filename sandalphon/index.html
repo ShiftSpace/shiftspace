@@ -50,6 +50,11 @@
           getUsername: function()
           {
             return this.__username__;
+          },
+          
+          isLoggedIn: function()
+          {
+            return (this.__username__ != null)
           }
         }));
       }
@@ -62,8 +67,9 @@
       }
       
       // Returns a controller for a node
-      function $C(node)
+      function $C(_node)
       {
+        var node = $(_node);
         // return the storage property
         if(node)
         {

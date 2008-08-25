@@ -9,3 +9,19 @@
   width: 100%;
   height: 100%;
 }
+
+#SSConsoleControls
+{
+  float: right;
+  width: 68px;
+  margin-top: 5px;
+}
+
+.SSConsoleControlButton
+{
+  float: left;
+  margin-right: 2px;
+  width: 18px;
+  height: 18px;
+  border: 1px solid red;
+}

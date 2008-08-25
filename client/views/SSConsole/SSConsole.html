@@ -1,12 +1,22 @@
 <div id="SSConsole" uiclass="SSConsole">
   
-  <div id="MainTabView" class="SSTabView SSTabViewConsoleStyle" uiclass="SSTabView">
+  <div id="MainTabView" class="SSTabView SSTabViewConsoleStyle" uiclass="SSTabView" outlet="SSConsole">
   
     <div class="SSControlView">
+      <!-- The tab buttons -->
       <div title="Shifts" class="SSButton SSActive SSLocalized">Shifts</div>
       <div title="Settings" class="SSButton SSLocalized">Settings</div>
       <div title="Login" class="SSButton SSLocalized">Login</div>
       <div title="Welcome" class="SSButton SSLocalized">Welcome</div>
+      <!-- End tab buttons -->
+      
+      <!-- Console User Controls -->
+      <div id="SSConsoleControls">
+        <div id="SSConsoleLoginOutButton" title="Login/Logout" class="SSConsoleControlButton" outlet="SSConsole"></div>
+        <div id="SSConsoleBugReportButton" title="Report a bug" class="SSConsoleControlButton" outlet="SSConsole"></div>
+        <div id="SSConsoleCloseButton" title="Close" class="SSConsoleControlButton" outlet="SSConssole"></div>
+      </div>
+      <!-- End Console User Controls -->
     </div>
   
     <div class="SSContentView">

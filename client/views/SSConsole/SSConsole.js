@@ -38,10 +38,7 @@ var SSConsole = new Class({
     this.parent(el, options);
     
     ShiftSpace.User.addEvent('login', this.handleLogin.bind(this));
-    
-    ShiftSpace.User.addEvent('logout', function() {
-      
-    });
+    ShiftSpace.User.addEvent('logout', this.handleLogout.bind(this));
     
     // set the datasource for the tableview
     if(window.location.hostname == "www.shiftspace.org" ||
@@ -90,7 +87,15 @@ var SSConsole = new Class({
   
   handleLogin: function()
   {
+    // update the datasource
     this.myShiftsDatasource.setProperty('username', ShiftSpace.User.getUsername());
+  },
+  
+  
+  handleLogout: function()
+  {
+    console.log('Handle logout!');
+    //this.myShiftsDatasource.setProperty('username', null);
   },
   
   
@@ -142,6 +147,29 @@ var SSConsole = new Class({
     }.bind(this));
   },
   
+  
+  initConsoleControls: function()
+  {
+    // init login/logout button
+    this.outlets().get('SSConsoleLoginOutButton').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        // logout the user
+        ShiftSpace.User.logout();
+      }
+      else
+      {
+        // select the login tab view
+        this.outlets().get('MainTabView').selectTabByName('LoginTabView');
+      }
+    }.bind(this));
+    
+    // init bug report button
+    
+    // init close button
+  },
+  
 
   awake: function()
   {
@@ -152,6 +180,7 @@ var SSConsole = new Class({
     if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
     if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
     if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
+    if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
   },
   
   
@@ -162,6 +191,18 @@ var SSConsole = new Class({
       var evt = new Event(_evt);
       console.log('cool button clicked!');
     });
+  },
+  
+  
+  userSelectedRow: function(args)
+  {
+    
+  },
+  
+  
+  userDeselectedRow: function(args)
+  {
+    
   },
   
   
@@ -179,7 +220,7 @@ var SSConsole = new Class({
     }
   },
   
-  
+   
   canSelectRow: function(data)
   {
     
@@ -195,7 +236,7 @@ var SSConsole = new Class({
   canEditRow: function(args)
   {
     console.log('canEditRow');
-    
+    // in the all shifts table the user can edit only if she owns the shift
     if(args.tableView == this.allShiftsTableView)
     {
       return (ShiftSpace.User.getUsername() == this.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));

@@ -55,14 +55,23 @@ var SSTabView = new Class({
   indexOfTabByName: function(name)
   {
     var tab = this.element._getElement('> .SSControlView #'+name);
-    if(tab) 
+    
+    // return tab index if we have it
+    if(tab)
     {
-      return this.element._getElements('> .SSControlView > .SSButton').indexOf(tab);
+      return this.indexOfTab(tab);
     }
-    else
+    
+    tab = this.element._getElement('> .SSContentView #'+name);
+    
+    // return content view index if we have it
+    if(tab)
     {
-      return -1;
+      return this.indexOfContentView(tab);
     }
+    
+    // we couldn't find it
+    return -1;
   },
   
   
@@ -81,6 +90,12 @@ var SSTabView = new Class({
   tabButtonForName: function(name)
   {
     return this.element._getElement('> .SSControlView #'+name);
+  },
+  
+  
+  indexOfContentView: function(contentView)
+  {
+    return this.element._getElements('> .SSContentView > div').indexOf(contentView);
   },
   
   
