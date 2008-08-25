@@ -97,7 +97,10 @@ var SSConsole = new Class({
   handleLogout: function()
   {
     console.log('Handle logout!');
-    //this.myShiftsDatasource.setProperty('username', null);
+    // update data source
+    this.myShiftsDatasource.setProperty('username', null);
+    // refresh the main tab view
+    this.outlets().get('MainTabView').refresh();
   },
   
   
