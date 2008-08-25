@@ -127,16 +127,24 @@ var SSConsole = new Class({
   
   initLoginForm: function()
   {
-    this.outlets().get('SSLoginFormSubmit').addEvent('click', function(_evt) {
-      
+    // catch click
+    this.outlets().get('SSLoginFormSubmit').addEvent('click', this.handleLoginFormSubmit.bind(this));
+    
+    // catch enter
+    this.outlets().get('SSLoginForm').addEvent('submit', function(_evt) {
       var evt = new Event(_evt);
-
-      ShiftSpace.User.login({
-        username: this.outlets().get('SSLoginFormUsername').getProperty('value'),
-        password: this.outlets().get('SSLoginFormPassword').getProperty('value')
-      });
-
+      evt.preventDefault();
+      this.handleLoginFormSubmit();
     }.bind(this));
+  },
+  
+  
+  handleLoginFormSubmit: function()
+  {
+    ShiftSpace.User.login({
+      username: this.outlets().get('SSLoginFormUsername').getProperty('value'),
+      password: this.outlets().get('SSLoginFormPassword').getProperty('value')
+    });    
   },
   
   
