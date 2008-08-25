@@ -44,6 +44,8 @@
           
           logout: function()
           {
+            // empty out the user name
+            this.__username__ = null;
             this.fireEvent('logout');
           },
           

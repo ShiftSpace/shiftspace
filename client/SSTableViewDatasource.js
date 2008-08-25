@@ -249,7 +249,7 @@ var SSTableViewDatasource = new Class({
     if(this.requiredProperties().length > 0)
     {
       missingProperties = this.requiredProperties().filter(function(required) {
-        return !properties.getKeys().contains(required);
+        return (properties.get(required) == null);
       });
     }
     
