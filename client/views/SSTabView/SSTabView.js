@@ -136,6 +136,8 @@ var SSTabView = new Class({
 
       // check to see if there is a view controller for the content view
       var controller = this.contentViewControllerForIndex(idx);
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>> getting tab content view controller');
+      console.log(controller);
       if(controller)
       {
         controller.show();
