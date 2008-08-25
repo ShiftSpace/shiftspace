@@ -110,6 +110,16 @@ var SSTabView = new Class({
     this.selectTab(this.indexOfTabByName(name));
   },
   
+  
+  selectedContentView: function()
+  {
+    // grab the DOM node
+    var contentView = this.contentViewForIndex(this.__selectedTab__);
+    // check for a controller
+    var controller = this.controllerForNode(contentView);
+    return (controller || contentView);
+  },
+  
 
   selectTab: function(idx)
   {
@@ -233,6 +243,10 @@ var SSTabView = new Class({
       });
       */
     }
+    
+    // refresh the selected content view as well
+    var contentView = this.selectedContentView();
+    if(contentView.refresh) contentView.refresh();
   }
   
 });
