@@ -271,9 +271,9 @@ var SSTableViewDatasource = new Class({
     var properties = (!_properties && $H()) || (_properties instanceof Hash && _properties) || $H(_properties);
     // combine them with the existing properties, careful not to modify this.properties()
     var allProperties = $H(this.properties().getClean()).combine(properties);
-
+    var isMissingProperties = this.isMissingProperties(allProperties);
     // check for missing properties
-    if(!this.isMissingProperties(allProperties) && this.dataProviderURL())
+    if( !isMissingProperties && this.dataProviderURL())
     {
       new Request({
         url: this.dataProviderURL(),
@@ -302,6 +302,12 @@ var SSTableViewDatasource = new Class({
     }
     else
     {
+      // if we're missing properties empty out data
+      if(isMissingProperties)
+      {
+        this.setData([]);
+      }
+
       this.fireEvent('onload');
     }
   }
