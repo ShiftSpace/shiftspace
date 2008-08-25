@@ -6,7 +6,8 @@
 // @exclude        http://metatron.shiftspace.org/api/sandbox/*
 // @exclude        http://shiftspace.org/api/sandbox/*
 // @exclude        http://www.shiftspace.org/api/sandbox/*
-// @require        http://metatron.shiftspace.org/code/trunk/client/Mootools.js
+// @require        http://metatron.shiftspace.org/dev/mootools/mootools-1.2-core.js
+// @require        http://metatron.shiftspace.org/dev/mootools/mootools-1.2-more.js
 // @require        http://metatron.shiftspace.org/code/trunk/client/Videobox.js
 // ==/UserScript==
 
@@ -584,7 +585,7 @@ var ShiftSpace = new (function() {
         var obj = null;
         try
         {
-          obj = Json.evaluate(content);
+          obj = JSON.decode(content);
         }
         catch(err)
         {
@@ -1629,7 +1630,7 @@ var ShiftSpace = new (function() {
             return;
           }
           
-          //console.log(Json.toString(json));
+          //console.log(JSON.encode(json));
           
           console.log('====================================================================');
           console.log('SHIFT QUERY RETURN');
@@ -1956,10 +1957,10 @@ var ShiftSpace = new (function() {
       var params = {
         id: shiftJson.id, // TODO: handle this in a more secure way
         summary: shiftJson.summary,
-        content: Json.toString(shiftJson),
+        content: JSON.encode(shiftJson),
         version: space.attributes.version,
         username: ShiftSpace.User.getUsername(),
-        filters: Json.toString(filters),
+        filters: JSON.encode(filters),
       };
       
       // if a legacy shift is getting updated, we should update the space name
@@ -1970,7 +1971,7 @@ var ShiftSpace = new (function() {
       }
       
       serverCall.safeCall('shift.update', params, function(json) {
-        console.log('returned shift.update! ' + Json.toString(json));
+        console.log('returned shift.update! ' + JSON.encode(json));
         if (!json.status) {
           console.error(json.message);
           return;
@@ -2003,15 +2004,15 @@ var ShiftSpace = new (function() {
         href: window.location.href,
         space: shiftJson.space,
         summary: shiftJson.summary,
-        content: Json.toString(shiftJson),
+        content: JSON.encode(shiftJson),
         version: space.attributes.version,
-        filters: Json.toString(filters),
+        filters: JSON.encode(filters),
         status: SSGetDefaultShiftStatus() // TODO: this call is in the space ecosystem
       };
       
       /*
       console.log('//////////////////////////////////////////////////////////////////');
-      console.log(Json.toString(params));
+      console.log(JSON.encode(params));
       console.log('//////////////////////////////////////////////////////////////////');
       */
 
@@ -2040,7 +2041,7 @@ var ShiftSpace = new (function() {
           SSSetFocusedShiftId(json.id);
         }
         shiftJson.id = json.id;
-        shiftJson.content = Json.toString(shiftJson);
+        shiftJson.content = JSON.encode(shiftJson);
         shifts[shiftJson.id] = shiftJson;
         space.shifts[shiftJson.id] = shiftObj;
         
@@ -2676,7 +2677,7 @@ var ShiftSpace = new (function() {
               console.log(rx.responseText);
               console.log(eval('(' + rx.responseText + ')'));
               console.log('tried');
-              var theJson = Json.evaluate(rx.responseText);
+              var theJson = JSON.decode(rx.responseText);
             }
             catch(exc)
             {
@@ -2728,7 +2729,7 @@ var ShiftSpace = new (function() {
       if (rawValue) {
         GM_setValue(key, value);
       } else {
-        GM_setValue(key, Json.toString(value));
+        GM_setValue(key, JSON.encode(value));
       }
       return value;
     }
@@ -2748,19 +2749,19 @@ var ShiftSpace = new (function() {
     */
     function getValue(key, defaultValue, rawValue) {
       if (!rawValue) {
-        defaultValue = Json.toString(defaultValue);
+        defaultValue = JSON.encode(defaultValue);
       }
       var result = GM_getValue(key, defaultValue);
       // Fix for GreaseKit, which doesn't support default values
       if (result == null) {
-        console.log('getValue("' + key + '") = ' + Json.evaluate(defaultValue));
-        return Json.evaluate(defaultValue);
+        console.log('getValue("' + key + '") = ' + JSON.decode(defaultValue));
+        return JSON.decode(defaultValue);
       } else if (rawValue) {
         console.log('getValue("' + key + '") = ' + result);
         return result;
       } else {
-        console.log('getValue("' + key + '") = ...' + Json.evaluate(result));
-        return Json.evaluate(result);
+        console.log('getValue("' + key + '") = ...' + JSON.decode(result));
+        return JSON.decode(result);
       }
     }
     
