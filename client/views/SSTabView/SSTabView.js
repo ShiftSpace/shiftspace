@@ -162,6 +162,8 @@ var SSTabView = new Class({
       this.tabButtonForIndex(idx).addClass('SSActive');
       
       this.__selectedTab__ = idx;
+      
+      this.fireEvent('tabSelected', {tabView:this, tabIndex:this.__selectedTab__});
     }
   },
   
@@ -192,6 +194,32 @@ var SSTabView = new Class({
   },
   
   
+  hideTabByName: function(name)
+  {
+    this.hideTab(this.indexOfTabByName(name));
+  },
+  
+  
+  hideTab: function(index)
+  {
+    this.tabButtonForIndex(index).addClass('SSDisplayNone');
+    this.contentViewForIndex(index).addClass('SSDisplayNone');
+  },
+  
+  
+  revealTabByName: function(name)
+  {
+    this.revealTab(this.indexOfTabByName(name));
+  },
+  
+  
+  revealTab: function(index)
+  {
+    this.tabButtonForIndex(index).removeClass('SSDisplayNone');
+    this.contentViewForIndex(index).removeClass('SSDisplayNone');
+  },
+
+
   removeTabByName: function(name)
   {
     this.removeTab(this.indexOfTabByName(name));

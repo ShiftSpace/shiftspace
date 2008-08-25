@@ -91,6 +91,10 @@ var SSConsole = new Class({
     this.myShiftsDatasource.setProperty('username', ShiftSpace.User.getUsername());
     // switch to the tab view
     this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
+    // empty the login form
+    this.emptyLoginForm();
+    // hide the login tab
+    this.outlets().get('MainTabView').hideTabByName('LoginTabView');
   },
   
   
@@ -101,6 +105,10 @@ var SSConsole = new Class({
     this.myShiftsDatasource.setProperty('username', null);
     // refresh the main tab view
     this.outlets().get('MainTabView').refresh();
+    // empty the login form
+    this.emptyLoginForm();
+    // reveal the login tab
+    this.outlets().get('MainTabView').revealTabByName('LoginTabView');
   },
   
   
@@ -136,6 +144,25 @@ var SSConsole = new Class({
       evt.preventDefault();
       this.handleLoginFormSubmit();
     }.bind(this));
+    
+    // listen for tabShow events
+    this.outlets().get('LoginTabView').addEvent('tabSelected', this.handleTabSelect.bind(this));
+  },
+  
+  
+  handleTabSelect: function(args)
+  {
+    if(args.tabView == this.outlets().get('LoginTabView') && args.tabIndex == 0)
+    {
+      this.emptyLoginForm();
+    }
+  },
+  
+  
+  emptyLoginForm: function()
+  {
+    this.outlets().get('SSLoginFormUsername').setProperty('value', '');
+    this.outlets().get('SSLoginFormPassword').setProperty('value', '');    
   },
   
   
@@ -144,7 +171,7 @@ var SSConsole = new Class({
     ShiftSpace.User.login({
       username: this.outlets().get('SSLoginFormUsername').getProperty('value'),
       password: this.outlets().get('SSLoginFormPassword').getProperty('value')
-    });    
+    });
   },
   
   
