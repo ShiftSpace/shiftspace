@@ -37,7 +37,7 @@ var Native = function(options){
 	object.constructor = Native;
 	object.$family = {name: 'native'};
 	if (legacy && initialize) object.prototype = legacy.prototype;
-	if (!object.prototype) object.prototype = Object.prototype; // CHANGE: fix for GM - David
+	if (!object.prototype) object.prototype = {}; // CHANGE: fix for GM - David
 	object.prototype.constructor = object;
 
 	if (name){
