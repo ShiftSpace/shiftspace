@@ -87,28 +87,27 @@ var SSConsole = new Class({
   
   handleLogin: function()
   {
-    // update the datasource
-    this.myShiftsDatasource.setProperty('username', ShiftSpace.User.getUsername());
-    // switch to the tab view
-    this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
     // empty the login form
     this.emptyLoginForm();
     // hide the login tab
     this.outlets().get('MainTabView').hideTabByName('LoginTabView');
+    // update the datasource
+    this.myShiftsDatasource.setProperty('username', ShiftSpace.User.getUsername());
+    // switch to the tab view
+    this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
   },
   
   
   handleLogout: function()
   {
-    console.log('Handle logout!');
-    // update data source
-    this.myShiftsDatasource.setProperty('username', null);
-    // refresh the main tab view
-    this.outlets().get('MainTabView').refresh();
     // empty the login form
     this.emptyLoginForm();
     // reveal the login tab
     this.outlets().get('MainTabView').revealTabByName('LoginTabView');
+    // update data source
+    this.myShiftsDatasource.setProperty('username', null);
+    // refresh the main tab view
+    this.outlets().get('MainTabView').refresh();
   },
   
   
