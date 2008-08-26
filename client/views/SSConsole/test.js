@@ -1,6 +1,6 @@
-if(Sandalphon)
+if(SandalphonTool)
 {
-  Sandalphon.runTest = function()
+  SandalphonTool.runTest = function()
   {
     console.log('running test!');
     

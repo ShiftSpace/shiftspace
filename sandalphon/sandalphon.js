@@ -35,7 +35,7 @@ var SandalphonClass = new Class({
     Parameters:
       path - a file path as string.  This path should be absolute from the root ShiftSpace directory.
   */
-  load: function(path, target)
+  load: function(path, callback)
   {
     var ui = {};
         
@@ -43,23 +43,14 @@ var SandalphonClass = new Class({
     new Asset.css('..'+path+'.css');
 
     // load the interface file
-    new Request({
+    var interface = new Request({
       url:  '..'+path+'.html',
       method: 'get',
       onSuccess: function(responseText, responseXML)
       {
+        ui.interface = responseText
         if(this.analyze(responseText))
         {
-          // empty it out first
-          $('SSSandalphonContainer').empty();
-          // load the new file
-          $('SSSandalphonContainer').set('html', responseText);
-          // First instantiate all controllers
-          this.instantiateControllers();
-          // Initialize all outlets
-          this.initializeOutlets();
-          // Awake all objects
-          this.awakeObjects();
         }
         else
         {
@@ -70,9 +61,65 @@ var SandalphonClass = new Class({
       {
         console.error('Oops could not load that interface file');
       }
-    }).send();
+    });
+    
+    var styles = new Request({
+      url:  '..'+path+'.css',
+      method: 'get',
+      onSuccess: function(responseText, responseXML)
+      {
+        ui.styles = responseText;
+      }.bind(this),
+      onFailure: function()
+      {
+        console.error('Oops could not load that interface file');
+      }
+    });
     
     // Group HTMl and CSS calls
+    var loadGroup = new Group(interface, styles);
+    loadGroup.addEvent('complete', function() {
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> load group done');
+      console.log(ui);
+      if(callback) callback(ui);
+    });
+    
+    // fetch
+    interface.send();
+    styles.send();
+  },
+  
+  
+  addStyle: function(css, ctxt) 
+  {
+    var context = ctxt || document;
+    
+    if (context.getElementsByTagName('head').length != 0) 
+    {
+      var head = context.getElementsByTagName('head')[0];
+    } 
+    else 
+    {
+      var head = new Element('head');
+      head.injectBefore($(context.body));
+    }
+    var style = new Element('style', {
+      type: 'text/css'
+    });
+    
+    style.appendText(css);
+    style.injectInside(head);
+  },
+  
+  
+  activate: function(context)
+  {
+    // First instantiate all controllers
+    this.instantiateControllers();
+    // Initialize all outlets
+    this.initializeOutlets();
+    // Awake all objects
+    this.awakeObjects(); 
   },
   
   
@@ -396,6 +443,19 @@ var SandalphonToolClass = new Class({
      this.__storage__ = storage;
    },
 
+   
+   loadUI: function(ui)
+   {
+     // empty it out first
+     $('SSSandalphonContainer').empty();
+     // Add the style
+     Sandalphon.addStyle(ui.styles);
+     // load the new file
+     $('SSSandalphonContainer').set('html', ui.interface);
+     // activate the interface
+     Sandalphon.activate();
+   },
+
    /*
      Function: attachEvents
        Attach the gui events for the interface.
@@ -407,7 +467,7 @@ var SandalphonToolClass = new Class({
        var evt = new Event(_evt);
        if(evt.key == 'enter')
        {
-         Sandalphon.load($('loadFileInput').getProperty('value'));
+         Sandalphon.load($('loadFileInput').getProperty('value'), this.loadUI.bind(this));
        }
      }.bind(this));
 
@@ -452,7 +512,7 @@ var SandalphonToolClass = new Class({
        onComplete: function(responseText, responseXml)
        {
          var filename = filepath.split('/').getLast();
-         Sandalphon.load('/client/compiledViews/'+filename);
+         Sandalphon.load('/client/compiledViews/'+filename, this.loadUI.bind(this));
        }.bind(this),
        onFailure: function(response)
        {
