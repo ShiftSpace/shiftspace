@@ -119,6 +119,25 @@
           return $$('#' + this.getProperty('id') + ' ' + sel);
         }
       });
+      
+      var Sandalphon;
+
+      window.addEvent('domready', function() {
+        waitForConsole();
+      });
+
+      function waitForConsole()
+      {
+        if(!window.console || !window.console.log)
+        {
+          setTimeout(waitForConsole, 1000);
+        }
+        else
+        {
+          // load the local store
+          Sandalphon = new SandalphonClass(new Persist.Store('Sandalphon'));
+        }
+      }
     </script>
 
     <script src="../client/Exception.js" type="text/javascript" charset="utf-8"></script>

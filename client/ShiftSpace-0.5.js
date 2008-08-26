@@ -136,6 +136,10 @@ var ShiftSpace = new (function() {
     // An index of cached files, used to clear the cache when necessary
     var cache = getValue('cache', []);
     
+    // new additions for Sandalphon
+    this.UI = {};
+    this.Objects = new Hash();
+    
     // Private variable and function for controlling user authentication
     var username = false;
     function setUsername(_username) {
@@ -243,6 +247,65 @@ var ShiftSpace = new (function() {
       
       console.log('ShiftSpace initialize complete');
     };
+    
+    // Localized String Support
+    function SSLocalizedString(string)
+    {
+      if(ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
+      return string;
+    }
+    
+    // Returns a controller for a node
+    function $C(_node)
+    {
+      var node = $(_node);
+      // return the storage property
+      if(node)
+      {
+        var hasController = node.getProperty('uiclass');
+        var controller = node.retrieve('__ssviewcontroller__');
+
+        if(hasController && !controller)
+        {
+          return new SSViewProxy(node);
+        }
+
+        if(hasController && controller)
+        {
+          return controller;
+        }
+
+        return null;
+      }
+      else
+      {
+        return null;
+      }
+    }
+
+    // Element extensions
+    Element.implement({
+      _ssgenId: function()
+      {
+        var id = this.getProperty('id');
+        if(!id)
+        {
+          id = Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
+          this.setProperty('id', 'generatedId_'+id);
+        }
+        return id;
+      },
+      _getElement: function(sel)
+      {
+        this._ssgenId();
+        return $$('#' + this.getProperty('id') + ' ' + sel)[0];
+      },
+      _getElements: function(sel)
+      {
+        this._ssgenId();
+        return $$('#' + this.getProperty('id') + ' ' + sel);
+      }
+    });
     
     /*
       Function: SSAddEvent

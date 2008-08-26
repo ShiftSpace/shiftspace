@@ -1,22 +1,3 @@
-var Sandalphon;
-
-window.addEvent('domready', function() {
-  waitForConsole();
-});
-
-function waitForConsole()
-{
-  if(!window.console || !window.console.log)
-  {
-    setTimeout(waitForConsole, 1000);
-  }
-  else
-  {
-    // load the local store
-    Sandalphon = new SandalphonClass(new Persist.Store('Sandalphon'));
-  }
-}
-
 var SandalphonClass = new Class({
   
   // paths to required ShiftSpace files
@@ -274,7 +255,7 @@ var SandalphonClass = new Class({
     Parameters:
       path - a file path as string.  This path should be absolute from the root ShiftSpace directory.
   */
-  loadFile: function(path)
+  loadFile: function(path, target)
   {    
     // attempt to load css
     new Asset.css('..'+path+'.css');
