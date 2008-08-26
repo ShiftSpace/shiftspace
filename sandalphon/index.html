@@ -18,6 +18,27 @@
       if(!ShiftSpace.UI) ShiftSpace.UI = {};
       if(!ShiftSpace.Objects) ShiftSpace.Objects = new Hash();
       if(!ShiftSpace.instantiationListeners) ShiftSpace.instantiationListeners = {};
+
+      // paths to required ShiftSpace files
+      ShiftSpace.ClassPaths = {
+        'SSTableViewDatasource': '/client/'
+      };
+
+      // paths to view controllers
+      ShiftSpace.UIClassPaths = { 
+        'SSCell': '/client/views/SSCell/',
+        'SSEditableTextCell': '/client/views/SSEditableTextCell/',
+        'SSTabView': '/client/views/SSTabView/',
+        'SSTableView': '/client/views/SSTableView/',
+        'SSTableRow': '/client/views/SSTableRow/',
+        'SSConsole': '/client/views/SSConsole/'
+      };
+
+        // path to user defined view controllers
+      ShiftSpace.UserClassPaths = {
+        'SSCustomTableRow': '/client/customViews/'
+      };
+       
       if(!ShiftSpace.User)
       {
         ShiftSpace.User = new (new Class({
@@ -119,6 +140,7 @@
           return $$('#' + this.getProperty('id') + ' ' + sel);
         }
       });
+      
       
       // Actual Sandalphon
       var Sandalphon;

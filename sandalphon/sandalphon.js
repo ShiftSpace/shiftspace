@@ -7,6 +7,22 @@ var SandalphonClass = new Class({
   },
   
   
+  convertToFragment: function(markup, ctxt)
+  {
+    var context = ctxt || window;
+    
+    // generate the fragment in the context
+    var fragment = new context.Element('div');
+    fragment.set('html', markup);
+    
+    // TODO: generalize to return markup that doesn't have a root node
+    var markupFrag = fragment.getFirst().dispose();
+    // destroy the temporary fragment
+    fragment.destroy();
+    
+    return markupFrag;
+  },
+  
   /*
     Function: fragment
       Returns the private fragment node.
@@ -216,7 +232,7 @@ var SandalphonClass = new Class({
     // First verify that we have a real path for each class
     var missingClasses = false;
     classes.each(function(x) {
-      if(!missingClasses) missingClasses = (SandalphonTool.ClassPaths[x] == null && SandalphonTool.UIClassPaths[x] == null && SandalphonTool.UserClassPaths[x] == null);
+      if(!missingClasses) missingClasses = (ShiftSpace.ClassPaths[x] == null && ShiftSpace.UIClassPaths[x] == null && ShiftSpace.UserClassPaths[x] == null);
     }.bind(this));
     
     if(missingClasses) console.error('Error missing uiclasses.');
@@ -236,29 +252,6 @@ var Sandalphon = new SandalphonClass();
 
 
 var SandalphonToolClass = new Class({
-  // paths to required ShiftSpace files
-   ClassPaths:
-   {
-     'SSTableViewDatasource': '/client/'
-   },
-
-   // paths to view controllers
-   UIClassPaths:
-   { 
-     'SSCell': '/client/views/SSCell/',
-     'SSEditableTextCell': '/client/views/SSEditableTextCell/',
-     'SSTabView': '/client/views/SSTabView/',
-     'SSTableView': '/client/views/SSTableView/',
-     'SSTableRow': '/client/views/SSTableRow/',
-     'SSConsole': '/client/views/SSConsole/'
-   },
-
-   // path to user defined view controllers
-   UserClassPaths:
-   {
-     'SSCustomTableRow': '/client/customViews/'
-   },
-
    Language: 'en',
 
    initialize: function(storage)
@@ -354,8 +347,8 @@ var SandalphonToolClass = new Class({
          {
          */
            console.log('Initializing class paths.');
-           this.storage().set('UIClassPaths', JSON.encode(this.UIClassPaths));
-           this.storage().set('ClassPaths', JSON.encode(this.UIClassPaths));
+           this.storage().set('UIClassPaths', JSON.encode(ShiftSpace.UIClassPaths));
+           this.storage().set('ClassPaths', JSON.encode(ShiftSpace.ClassPaths));
          /*}
          else
          {
@@ -373,22 +366,22 @@ var SandalphonToolClass = new Class({
    */
    loadClassFiles: function()
    {
-     for(var className in this.ClassPaths)
+     for(var className in ShiftSpace.ClassPaths)
      {
-       var path = '..' + this.ClassPaths[className] + className;
+       var path = '..' + ShiftSpace.ClassPaths[className] + className;
        new Asset.javascript(path+'.js');
      }
 
-     for(var className in this.UIClassPaths)
+     for(var className in ShiftSpace.UIClassPaths)
      {
-       var path = '..' + this.UIClassPaths[className] + className;
+       var path = '..' + ShiftSpace.UIClassPaths[className] + className;
        new Asset.css(path+'.css');
        new Asset.javascript(path+'.js');
      }
 
-     for(var className in this.UserClassPaths)
+     for(var className in ShiftSpace.UserClassPaths)
      {
-       var path = '..' + this.UserClassPaths[className] + className;
+       var path = '..' + ShiftSpace.UserClassPaths[className] + className;
        new Asset.css(path+'.css');
        new Asset.javascript(path+'.js');
      }

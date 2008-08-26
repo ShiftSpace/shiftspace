@@ -194,6 +194,11 @@ var ShiftSpace = new (function() {
       console.log('SSTableRow.js loaded');
       // INCLUDE customViews/SSCustomTableRow.js
       console.log('SSCustomTableRow.js loaded');
+      // INCLUDE ../sandalphon/sandalphon.js
+      console.log('sandalphon.js loaded');
+      // bootstrap for now
+      // INCLUDE Console-0.5.js
+      console.log('Console-0.5.js loaded');
       
       // INCLUDE Space.js
       console.log('Space.js loaded');
@@ -218,7 +223,6 @@ var ShiftSpace = new (function() {
       loadStyle('styles/ShiftMenu.css');
 
       console.log('>>>>>>>>>>>>>>>>>>>>>>> Loading Spaces');
-
       // Load all spaces and plugins immediately if in the sanbox
       if (typeof ShiftSpaceSandBoxMode != 'undefined') {
         for (var space in installed) {
@@ -2523,9 +2527,9 @@ var ShiftSpace = new (function() {
       instance - A space object.
     */
     function SSRegisterSpace(instance) {
-      console.log("SSRegisterSpace");
+      //console.log("SSRegisterSpace");
       var spaceName = instance.attributes.name;
-      console.log('Register Space ===================================== ' + spaceName);
+      //console.log('Register Space ===================================== ' + spaceName);
       spaces[spaceName] = instance;
       instance.addEvent('onShiftUpdate', saveShift.bind(this));
 
@@ -2877,9 +2881,9 @@ var ShiftSpace = new (function() {
         dir = server + dir;
       }
       
-      console.log('loadStyle: ' + url);
+      //console.log('loadStyle: ' + url);
       loadFile(url, function(rx) {
-        console.log(')))))))))))))))))))))))))))))))))))))))))))))))))) ' + url);
+        //console.log(')))))))))))))))))))))))))))))))))))))))))))))))))) ' + url);
         var css = rx.responseText;
         // this needs to be smarter, only works on directory specific urls
         css = css.replace(/url\(([^)]+)\)/g, 'url(' + dir + '/$1)');
