@@ -92,7 +92,7 @@ var SandalphonClass = new Class({
   
   addStyle: function(css, ctxt) 
   {
-    var context = ctxt || document;
+    var context = (ctxt && ctxt.document) || document;
     
     if (context.getElementsByTagName('head').length != 0) 
     {
@@ -112,14 +112,16 @@ var SandalphonClass = new Class({
   },
   
   
-  activate: function(context)
+  activate: function(ctxt)
   {
+    var context = ctxt || window;
+    
     // First instantiate all controllers
-    this.instantiateControllers();
+    this.instantiateControllers(context);
     // Initialize all outlets
-    this.initializeOutlets();
+    this.initializeOutlets(context);
     // Awake all objects
-    this.awakeObjects(); 
+    this.awakeObjects(context); 
   },
   
   
@@ -127,10 +129,12 @@ var SandalphonClass = new Class({
     Function: instantiateControllers
       Instantiate any backing JS view controllers for the interface.
   */
-  instantiateControllers: function()
+  instantiateControllers: function(ctxt)
   {
-    console.log('Instantiating controllers for views.');
-    var views = $('SSSandalphonContainer').getElements('*[uiclass]');
+    var context = ctxt || window;
+    
+    var views = this.contextQuery(context, '*[uiclass]');
+
     views.each(function(aView) {
       var theClass = aView.getProperty('uiclass');
       console.log('Instantiating ' + theClass);
@@ -138,15 +142,25 @@ var SandalphonClass = new Class({
       // notify any instantiation listeners
       SSNotifyInstantiationListeners(aView);
     });
+    
   },
   
   
-  initializeOutlets: function(context)
+  contextQuery: function(context, sel)
+  {
+    return (context.$$ && context.$$(sel)) ||
+           (context.getElements && context.getElements(sel)) ||
+           [];
+  },
+  
+  
+  initializeOutlets: function(ctxt)
   {
     console.log('initializing outlets');
-    if(!context) context = window;
+    var context = ctxt || window;
     
-    var outlets = context.$$('*[outlet]');
+    var outlets = this.contextQuery(context, '*[outlet]');
+    
     outlets.each(function(anOutlet) {
       // grab the outlet parent id
       var outletParentObject = anOutlet.getProperty('outlet');
@@ -161,24 +175,24 @@ var SandalphonClass = new Class({
     // if iframe context let all object know via their awakeDelayed method
     if(context != window)
     {
-      this.awakeObjectsDelayed();
+      this.awakeObjectsDelayed(context);
     }
   },
   
   
-  awakeObjects: function()
+  awakeObjects: function(context)
   {
     console.log('>>>>>>>>>>>>>>>>>>>>>>>> awake objects');
     ShiftSpace.Objects.each(function(object, objectId) {
-      if(object.awake) object.awake();
+      if(object.awake) object.awake(context);
     });
   },
   
   
-  awakeObjectsDelayed: function()
+  awakeObjectsDelayed: function(context)
   {
     ShiftSpace.Objects.each(function(object, objectId) {
-      if(object.awakeDelayed) object.awakeDelayed();
+      if(object.awakeDelayed) object.awakeDelayed(context);
     });
   },
   
