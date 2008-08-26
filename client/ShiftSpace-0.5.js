@@ -66,7 +66,7 @@ var ShiftSpace = new (function() {
       var server = getValue('server', 'http://www.shiftspace.org/api/');
     }
     
-    //server = "http://localhost/~davidnolen/shiftspace-0.11/";
+    server = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/api/";
@@ -124,22 +124,14 @@ var ShiftSpace = new (function() {
     });
     
     var spacePrefs = getValue('spacePrefs', {});
-    
-    // installed = {
-    //   'Notes' : myFiles + 'spaces/Notes/Notes.js',
-    //   'ImageSwap': myFiles + 'spaces/ImageSwap/ImageSwap.js',
-    //   'Highlights': myFiles + 'spaces/Highlights/Highlights.js',
-    //   'SourceShift': myFiles + 'spaces/SourceShift/SourceShift.js',
-    // };
 
     // Each plugin and a corresponding URL of its origin
+    /*
     var installedPlugins = getValue('installedPlugins', {
       'Trails' : server + 'plugins/Trails/NewTrail.js'
     });
-
-    // installedPlugins = {
-    //   'Trails' : myFiles + 'plugins/Trails/NewTrail.js'
-    // };
+    */
+    var installedPlugins = getValue('installedPlugins', {});
     
     // An index of cached files, used to clear the cache when necessary
     var cache = getValue('cache', []);
@@ -197,10 +189,6 @@ var ShiftSpace = new (function() {
       console.log('Plugin.js loaded');
       // INCLUDE ShiftMenu.js
       console.log('ShiftMenu.js loaded');
-      // INCLUDE Console.js
-      console.log('Console.js loaded');
-      // INCLUDE ConsoleExtensions.js
-      console.log('ConsoleExtensions.js loaded');
 
       // Load CSS styles
       loadStyle('styles/ShiftSpace.css', function() {
@@ -209,9 +197,12 @@ var ShiftSpace = new (function() {
       });
       loadStyle('styles/ShiftMenu.css');
 
+      console.log('>>>>>>>>>>>>>>>>>>>>>>> Loading Spaces');
+
       // Load all spaces and plugins immediately if in the sanbox
       if (typeof ShiftSpaceSandBoxMode != 'undefined') {
         for (var space in installed) {
+          console.log('loading space ' + space);
           loadSpace(space);
         }
         for(var plugin in installedPlugins) {
@@ -230,10 +221,13 @@ var ShiftSpace = new (function() {
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
-        ShiftSpace.Console.hidePluginMenu.bind(ShiftSpace.Console)();
-        __pinWidgets__.each(function(x){
-          if(!x.isSelecting) x.hideMenu();
-        });
+        if(ShiftSpace.Console)
+        {
+          ShiftSpace.Console.hidePluginMenu.bind(ShiftSpace.Console)();
+          __pinWidgets__.each(function(x){
+            if(!x.isSelecting) x.hideMenu();
+          });
+        }
       });
       
       // create the pin selection bounding box
@@ -1015,11 +1009,14 @@ var ShiftSpace = new (function() {
       // remove all the previous state vars
       __shiftSpaceState__.empty();
       
-      __shiftSpaceState__.set('consoleVisible', ShiftSpace.Console.isVisible());
+      if(ShiftSpace.Console)
+      {
+        __shiftSpaceState__.set('consoleVisible', ShiftSpace.Console.isVisible());
+      }
       __shiftSpaceState__.set('focusedShiftId', SSFocusedShiftId());
       
       // go through each space and close it down, and sleep it
-      ShiftSpace.Console.hide();
+      if(ShiftSpace.Console) ShiftSpace.Console.hide();
       
       // hide the spaces
       for(var space in spaces)
@@ -1044,7 +1041,7 @@ var ShiftSpace = new (function() {
       SSSetHidden(false);
       
       // restore ShiftSpace
-      if(__shiftSpaceState__.get('consoleVisible'))
+      if(ShiftSpace.Console && __shiftSpaceState__.get('consoleVisible'))
       {
         ShiftSpace.Console.show();
       }
@@ -1457,7 +1454,7 @@ var ShiftSpace = new (function() {
           SSShowErrorWindow(shiftId);
 
           // probably need to do some kind of cleanup
-          ShiftSpace.Console.hideShift(shiftId);
+          if(ShiftSpace.Console) ShiftSpace.Console.hideShift(shiftId);
         }
       }
     }
@@ -1535,7 +1532,7 @@ var ShiftSpace = new (function() {
         
         SSSetPendingShifts(json.count);
         
-        if (json.count > 0 && __consoleIsWaiting__) 
+        if (ShiftSpace.Console && json.count > 0 && __consoleIsWaiting__) 
         {
           //console.log('about to show notifier');
           ShiftSpace.Console.showNotifier();
@@ -1603,10 +1600,14 @@ var ShiftSpace = new (function() {
     Returns:
       A boolean value.
     */
-    function SSConsoleIsReady() {
-      if (SSPendingShifts() == -1) {
+    function SSConsoleIsReady() 
+    {
+      if (SSPendingShifts() == -1) 
+      {
         __consoleIsWaiting__ = true;
-      } else if (SSPendingShifts() > 0) {
+      } 
+      else if (ShiftSpace.Console && SSPendingShifts() > 0) 
+      {
         ShiftSpace.Console.showNotifier();
       }
     }
@@ -1677,7 +1678,7 @@ var ShiftSpace = new (function() {
             }
           });
           
-          ShiftSpace.Console.addShifts(shifts);
+          if(ShiftSpace.Console) ShiftSpace.Console.addShifts(shifts);
           
           // check for autolaunched content, better for sandbox
           // TODO: refactor
@@ -1976,7 +1977,7 @@ var ShiftSpace = new (function() {
           console.error(json.message);
           return;
         }
-        ShiftSpace.Console.updateShift(shiftJson);
+        if(ShiftSpace.Console) ShiftSpace.Console.updateShift(shiftJson);
         // call onShiftSave
         spaces[shiftJson.space].onShiftSave(shiftJson.id);
       });
@@ -2046,9 +2047,12 @@ var ShiftSpace = new (function() {
         space.shifts[shiftJson.id] = shiftObj;
         
         // add and show the shift
-        ShiftSpace.Console.show();
-        ShiftSpace.Console.addShift(shiftJson, {isActive:true});
-        ShiftSpace.Console.showShift(shiftJson.id);
+        if(ShiftSpace.Console)
+        {
+          ShiftSpace.Console.show();
+          ShiftSpace.Console.addShift(shiftJson, {isActive:true});
+          ShiftSpace.Console.showShift(shiftJson.id);
+        }
         
         // call onShiftSave
         space.onShiftSave(shiftJson.id);
@@ -2158,7 +2162,7 @@ var ShiftSpace = new (function() {
           console.error(json.message);
           return;
         }
-        ShiftSpace.Console.removeShift(shiftId);
+        if(ShiftSpace.Console) ShiftSpace.Console.removeShift(shiftId);
         // don't assume the space is loaded
         if(space) space.onShiftDelete(shiftId);
         delete shifts[shiftId];
@@ -2247,7 +2251,7 @@ var ShiftSpace = new (function() {
         {
           keyState.consoleShown = false;
           //console.log('hide console!');
-          ShiftSpace.Console.hide();
+          if(ShiftSpace.Console) ShiftSpace.Console.hide();
         }
         else 
         {
@@ -2258,7 +2262,7 @@ var ShiftSpace = new (function() {
           }
           //console.log('show console!');
           keyState.consoleShown = true;
-          ShiftSpace.Console.show();
+          if(ShiftSpace.Console) ShiftSpace.Console.show();
         }
 
       }
@@ -2393,6 +2397,7 @@ var ShiftSpace = new (function() {
         if (typeof ShiftSpaceSandBoxMode != 'undefined') 
         {
           var url = installed[space] + '?' + new Date().getTime();
+          console.log('loading ' + url);
           var newSpace = new Asset.javascript(url, {
             id: space
           });
@@ -2439,9 +2444,9 @@ var ShiftSpace = new (function() {
       instance - A space object.
     */
     function SSRegisterSpace(instance) {
-      //console.log("SSRegisterSpace");
+      console.log("SSRegisterSpace");
       var spaceName = instance.attributes.name;
-      //console.log('Register Space ===================================== ' + spaceName);
+      console.log('Register Space ===================================== ' + spaceName);
       spaces[spaceName] = instance;
       instance.addEvent('onShiftUpdate', saveShift.bind(this));
 
@@ -2473,22 +2478,30 @@ var ShiftSpace = new (function() {
         ShiftSpace[instance.attributes.name + 'Space'] = instance;
       }
 
-      instance.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
+      if(ShiftSpace.Console)
+      {
+        instance.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
+      }
+      
       instance.addEvent('onShiftShow', function(shiftId) {
-        ShiftSpace.Console.showShift(shiftId);
+        if(ShiftSpace.Console) ShiftSpace.Console.showShift(shiftId);
       });
       instance.addEvent('onShiftBlur', function(shiftId) {
         blurShift(shiftId);
-        ShiftSpace.Console.blurShift(shiftId);
+        if(ShiftSpace.Console) ShiftSpace.Console.blurShift(shiftId);
       });
       instance.addEvent('onShiftFocus', function(shiftId) {
         focusShift(shiftId);
-        ShiftSpace.Console.focusShift(shiftId);
+        if(ShiftSpace.Console) ShiftSpace.Console.focusShift(shiftId);
       });
       instance.addEvent('onShiftSave', function(shiftId) {
-        ShiftSpace.Console.blurShift(shiftId);
-        ShiftSpace.Console.setTitleForShift(shifts[shiftId].summary);
+        if(ShiftSpace.Console)
+        {
+          ShiftSpace.Console.blurShift(shiftId);
+          ShiftSpace.Console.setTitleForShift(shifts[shiftId].summary);
+        }
       });
+      
       instance.addEvent('onShiftDestroy', SSRemoveShift);
     }
     
@@ -2650,7 +2663,7 @@ var ShiftSpace = new (function() {
       }
       
       var plugins = new Hash(installedPlugins);
-      url += '&plugins=' + plugins.keys().join(',');
+      url += '&plugins=' + plugins.getKeys().join(',');
       
       var now = new Date();
       url += '&cache=' + now.getTime();
@@ -2673,7 +2686,7 @@ var ShiftSpace = new (function() {
             //console.log('evaluate ' + rx.responseText);
             try
             {
-              console.log('trying');
+              console.log('trying ' + url);
               console.log(rx.responseText);
               console.log(eval('(' + rx.responseText + ')'));
               console.log('tried');
@@ -2787,6 +2800,7 @@ var ShiftSpace = new (function() {
       
       console.log('loadStyle: ' + url);
       loadFile(url, function(rx) {
+        console.log(')))))))))))))))))))))))))))))))))))))))))))))))))) ' + url);
         var css = rx.responseText;
         // this needs to be smarter, only works on directory specific urls
         css = css.replace(/url\(([^)]+)\)/g, 'url(' + dir + '/$1)');
@@ -2902,14 +2916,14 @@ var ShiftSpace = new (function() {
         'class': "SSErrorWindowTitle"
       });
       errorWindowTitle.injectInside(__errorWindow__);
-      errorWindowTitle.setText('Oops ... it seems this shift is broken');
+      errorWindowTitle.set('text', 'Oops ... it seems this shift is broken');
       
       // the errow message area
       var errorWindowMessage = new ShiftSpace.Element('div', {
         'class': "SSErrorWindowMessage"
       });
       errorWindowMessage.injectInside(__errorWindow__);
-      errorWindowMessage.setHTML('Help us improve our experimental fix feature, copy and paste the shift details and <a target="new" href="http://metatron.shiftspace.org/trac/newticket">file a bug report</a>.');
+      errorWindowMessage.set('html', 'Help us improve our experimental fix feature, copy and paste the shift details and <a target="new" href="http://metatron.shiftspace.org/trac/newticket">file a bug report</a>.');
 
       var br = new ShiftSpace.Element('br');
       br.setStyle('clear', 'both');
@@ -2935,7 +2949,7 @@ var ShiftSpace = new (function() {
       var errorWindowExpandLabel = new ShiftSpace.Element('div', {
         'class': "SSErrorWindowExpandLabel SSDefaultCursor"
       });
-      errorWindowExpandLabel.setText('view shift details');
+      errorWindowExpandLabel.set('text', 'view shift details');
       errorWindowExpandLabel.injectInside(errorWindowExpandWrapper);
       errorWindowExpandWrapper.injectInside(errorWindowDisclosure);
       
@@ -2957,14 +2971,14 @@ var ShiftSpace = new (function() {
       var errorWindowOk = new ShiftSpace.Element('div', {
         'class': "SSErrorWindowOk SSUserSelectNone"
       });
-      errorWindowOk.setText('OK');
+      errorWindowOk.set('text', 'OK');
       errorWindowOk.injectInside(errorWindowBottom);
       
       // build the fix button
       var errorWindowFix = new ShiftSpace.Element('div', {
         'class': "SSErrorWindowFix SSErrorWindowButton SSDisplayNone"
       });
-      errorWindowFix.setText('Fix');
+      errorWindowFix.set('text', 'Fix');
       errorWindowFix.injectInside(errorWindowBottom);
 
       errorWindowOk.addEvent('click', function(_evt) {
@@ -2981,7 +2995,7 @@ var ShiftSpace = new (function() {
               height: 100
             });
             errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
-            errorWindowExpandLabel.setText('view shift details');
+            errorWindowExpandLabel.set('text', 'view shift details');
             errorWindowShiftStatusScroll.addClass('SSDisplayNone');
             __errorWindowMinimized__ = true;
           }
@@ -2999,13 +3013,13 @@ var ShiftSpace = new (function() {
         if(!__errorWindowMinimized__)
         {
           errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
-          errorWindowExpandLabel.setText('view shift details');
+          errorWindowExpandLabel.set('text', 'view shift details');
           errorWindowShiftStatusScroll.addClass('SSDisplayNone');
         }
         else
         {
           errorWindowExpand.addClass('SSErrorWindowExpandOpen');
-          errorWindowExpandLabel.setText('hide shift details');
+          errorWindowExpandLabel.set('text', 'hide shift details');
         }
         
         var resizeFx = __errorWindow__.effects({
@@ -3051,8 +3065,8 @@ var ShiftSpace = new (function() {
     function SSShowErrorWindow(shiftId)
     {
       /*
-      __errorWindow__.getElement('.SSErrorWindowTitle').setText(title);
-      __errorWindow__.getElement('.SSErrorWindowMessage').setText(message);
+      __errorWindow__.getElement('.SSErrorWindowTitle').set('text', title);
+      __errorWindow__.getElement('.SSErrorWindowMessage').set('text', message);
       */
       
       if(shiftId) SSErrorWindowUpdateTableForShift(shiftId);
@@ -3156,8 +3170,8 @@ var ShiftSpace = new (function() {
         var newPair = __errorWindowShiftPropertyModel__.clone(true);
         var tds = newPair.getElements('td');
 
-        tds[0].setText(prop);
-        tds[1].setText(shiftContent[prop]);
+        tds[0].set('text', prop);
+        tds[1].set('text', shiftContent[prop]);
 
         newPair.injectInside(statusTable);
       }
