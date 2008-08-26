@@ -1457,7 +1457,7 @@ Element.implement({
 	},
 
 	getWindow: function(){
-		return this.ownerDocument.getWindow();
+		return this.ownerDocument.defaultView || this.ownerDocument.parentWindow; // CHANGE: For GM - David
 	},
 
 	getElementById: function(id, nocash){
