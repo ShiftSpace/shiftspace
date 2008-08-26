@@ -120,7 +120,10 @@
         }
       });
       
+      // Actual Sandalphon
       var Sandalphon;
+      // Just the interface tool
+      var SandalphonTool;
 
       window.addEvent('domready', function() {
         waitForConsole();
@@ -135,7 +138,7 @@
         else
         {
           // load the local store
-          Sandalphon = new SandalphonClass(new Persist.Store('Sandalphon'));
+          SandalphonTool = new SandalphonToolClass(new Persist.Store('Sandalphon'));
         }
       }
     </script>
