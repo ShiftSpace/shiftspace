@@ -179,6 +179,22 @@ var ShiftSpace = new (function() {
       
       // INCLUDE Element.js
       console.log('Element.js loaded');
+      
+      // INCLUDE SSView.js
+      console.log('SSView.js loaded');
+      // INCLUDE views/SSCell/SSCell.js
+      console.log('SSCell.js loaded');
+      // INCLUDE views/SSEditableTextCell/SSEditableTextCell.js
+      console.log('SSEditableTextCell.js loaded');
+      // INCLUDE views/SSTabView/SSTabView.js
+      console.log('SSTabView.js loaded');
+      // INCLUDE views/SSTableView/SSTableView.js
+      console.log('SSTableView.js loaded');
+      // INCLUDE views/SSTableRow/SSTableRow.js
+      console.log('SSTableRow.js loaded');
+      // INCLUDE customViews/SSCustomTableRow.js
+      console.log('SSCustomTableRow.js loaded');
+      
       // INCLUDE Space.js
       console.log('Space.js loaded');
       // INCLUDE Shift.js
