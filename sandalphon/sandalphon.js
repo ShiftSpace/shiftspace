@@ -92,18 +92,19 @@ var SandalphonClass = new Class({
   
   addStyle: function(css, ctxt) 
   {
-    var context = (ctxt && ctxt.document) || document;
+    var context = ctxt || window;
+    var contextDoc = context.document;
     
-    if (context.getElementsByTagName('head').length != 0) 
+    if (context.$$('head').length != 0) 
     {
-      var head = context.getElementsByTagName('head')[0];
+      var head = context.$$('head')[0];
     } 
     else 
     {
-      var head = new Element('head');
-      head.injectBefore($(context.body));
+      var head = new context.Element('head');
+      head.injectBefore($(contextDoc.body));
     }
-    var style = new Element('style', {
+    var style = new context.Element('style', {
       type: 'text/css'
     });
     
