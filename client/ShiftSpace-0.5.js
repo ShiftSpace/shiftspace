@@ -314,6 +314,7 @@ var ShiftSpace = new (function() {
           });
 
           // update markup
+          console.log('fix localized');
           context.$$(".SSLocalized").each(function(node) {
 
             var originalText = node.getProperty('title');
@@ -384,12 +385,12 @@ var ShiftSpace = new (function() {
       _getElement: function(sel)
       {
         this._ssgenId();
-        return this.ownerDocument.getWindow().$$('#' + this.getProperty('id') + ' ' + sel)[0];
+        return (new Document(this.ownerDocument)).getWindow().$$('#' + this.getProperty('id') + ' ' + sel)[0];
       },
       _getElements: function(sel)
       {
         this._ssgenId();
-        return this.ownerDocument.getWindow().$$('#' + this.getProperty('id') + ' ' + sel);
+        return (new Document(this.ownerDocument)).getWindow().$$('#' + this.getProperty('id') + ' ' + sel);
       }
     });
     

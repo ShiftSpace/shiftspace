@@ -16,7 +16,11 @@ var SandalphonClass = new Class({
     fragment.set('html', markup);
     
     // TODO: generalize to return markup that doesn't have a root node
-    var markupFrag = fragment.getFirst().dispose();
+    var markupFrag = $(fragment.getFirst().dispose());
+
+    console.log('convertToFragment');
+    console.log(markupFrag.getProperty('id'));
+    
     // destroy the temporary fragment
     fragment.destroy();
     
@@ -124,11 +128,8 @@ var SandalphonClass = new Class({
     var context = ctxt || window;
     var contextDoc = context.document;
     
-    console.log('))))))))))))))))))))))))))))))))))');
-    console.log(context);
-    console.log(context.$);
-    console.log(context.Element);
-    console.log(context.Element.constructor);
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> grabbing head');
+    console.log(contextDoc.getElements);
 
     if (context.$$('head').length != 0) 
     {
@@ -186,6 +187,7 @@ var SandalphonClass = new Class({
   
   contextQuery: function(context, sel)
   {
+    console.log('contextQuery');
     return (context.$$ && context.$$(sel)) ||
            (context.getElements && context.getElements(sel)) ||
            [];

@@ -5,6 +5,7 @@ var SSConsoleClass = new Class({
 
   initialize: function()
   {
+    console.log('+++++++++++++++++++++++++++ SSConsole starting up');
     this.parent();
     Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
     
@@ -207,22 +208,34 @@ var SSConsoleClass = new Class({
 
   buildInterface: function(ui)
   {
+    console.log('++++++++++++++++++++++++++++++++++++ SSConsole buildInterface');
     this.element = new IFrame({
       id: 'SSConsole'
     });
     this.element.store('__ssviewcontroller__', this);
     this.element.injectInside(document.body);
         
-    this.element.addEvent('load', function() {
+    this.element.addEvent('load', function(doc) {
+      console.log('++++++++++++++++++++++++++++++++++++ SSConsole iframe loaded');
       var context = this.element.contentWindow;
 
+      // under GM not wrapped, erg - David
+      if(!context.$)
+      {
+        context = new Window(context);
+        var doc = new Document(context.document);
+      }
+
       // add the style
+      console.log('+++++++++++++++++++++++++++++++++++ SSConsole add style');
       Sandalphon.addStyle(ui.styles, context);
       // grab the interface, strip the outer level
+      console.log('+++++++++++++++++++++++++++++++++++ SSConsole converting to frag');
       var fragment = Sandalphon.convertToFragment(ui.interface, context).getFirst();
       // place it in the frame
       $(context.document.body).grab(fragment);
       $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
+      console.log('+++++++++++++++++++++++++++++++++++ SSConsole iframe placed');
       // activate the iframe context
       Sandalphon.activate(context);
     }.bind(this));
