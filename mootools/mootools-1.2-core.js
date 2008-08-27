@@ -1215,7 +1215,7 @@ Document.implement({
 	},
 
 	getWindow: function(){
-		return this.defaultView || this.parentWindow;
+		return (new Window(this.defaultView || this.parentWindow)); // CHANGE: GM Fix - David
 	},
 
 	purge: function(){
