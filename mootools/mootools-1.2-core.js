@@ -1460,7 +1460,7 @@ Element.implement({
 	},
 
 	getWindow: function(){
-		return this.ownerDocument.defaultView || this.ownerDocument.parentWindow; // CHANGE: For GM - David
+		return (new Window(this.ownerDocument.defaultView || this.ownerDocument.parentWindow)); // CHANGE: For GM - David
 	},
 
 	getElementById: function(id, nocash){
