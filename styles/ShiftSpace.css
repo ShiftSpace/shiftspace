@@ -81,6 +81,7 @@ body > #SSConsole
   height: 180px;
   left: 50px;
   bottom: 0px;
+  border: 0px;
 }
 
 #SSConsoleResizer

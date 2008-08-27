@@ -49,7 +49,7 @@ var User = new Class({
       } 
       else 
       {
-        callback(json);
+        if(callback) callback(json);
       }
     }.bind(this));
   },

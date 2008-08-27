@@ -9,8 +9,8 @@ var SSConsoleClass = new Class({
     Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
     
     // login logout eventss
-    ShiftSpace.User.addEvent('login', this.handleLogin.bind(this));
-    ShiftSpace.User.addEvent('logout', this.handleLogout.bind(this));
+    ShiftSpace.User.addEvent('onUserLogin', this.handleLogin.bind(this));
+    ShiftSpace.User.addEvent('onUserLogout', this.handleLogout.bind(this));
     
     // if we're on metatron load real data
     this.allShiftsDatasource = new SSTableViewDatasource({
@@ -66,7 +66,7 @@ var SSConsoleClass = new Class({
     this.allShiftsTableView = tableView;
     tableView.setDelegate(this);
     tableView.setDatasource(this.allShiftsDatasource);
-    this.allShiftsDatasource.setProperties({href:"http://www.google.com/"});
+    this.allShiftsDatasource.setProperties({href:window.location});
     this.allShiftsDatasource.fetch();
   },
   
@@ -119,20 +119,40 @@ var SSConsoleClass = new Class({
     ShiftSpace.User.login({
       username: this.outlets().get('SSLoginFormUsername').getProperty('value'),
       password: this.outlets().get('SSLoginFormPassword').getProperty('value')
-    });
+    }, this.loginFormSubmitCallback.bind(this));
+  },
+  
+  
+  loginFormSubmitCallback: function(response)
+  {
+    console.log('Login call back!');
+    console.log(response);
   },
   
   
   initSignUpForm: function()
   {
-    this.outlets().get('SSSignUpFormSubmit').addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      var username = this.outlets().get('SSSignUpFormUsername').getProperty('value');
-      var email = this.outlets().get('SSSignUpFormEmail').getProperty('value');
-      var password = this.outlets().get('SSSignUpFormPassword').getProperty('value');
-      var confirmPassword = this.outlets().get('SSSignUpFormPassword').getProperty('value');
-      console.log('Sing up the user ' + username + ', ' + email + ', ' + password + ', ' + confirmPassword);
-    }.bind(this));
+    this.outlets().get('SSSignUpFormSubmit').addEvent('click', this.handleSignUpFormSubmit.bind(this));
+  },
+  
+  
+  handleSignUpFormSubmit: function()
+  {
+    var joinInput = {
+      username: this.outlets().get('SSSignUpFormUsername').getProperty('value'),
+      email: this.outlets().get('SSSignUpFormEmail').getProperty('value'),
+      password: this.outlets().get('SSSignUpFormPassword').getProperty('value'),
+      password_again: this.outlets().get('SSSignUpFormPassword').getProperty('value')
+    };
+    
+    ShiftSpace.User.join(joinInput, this.signUpFormSubmitCallback.bind(this))
+  },
+  
+  
+  signUpFormSubmitCallback: function(response)
+  {
+    console.log('Joined!');
+    console.log(response);
   },
   
   

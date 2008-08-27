@@ -185,6 +185,9 @@ var ShiftSpace = new (function() {
       // Load external scripts (pre-processing required)
       // INCLUDE User.js
       console.log('User.js loaded');
+      
+      console.log('load localized strings');
+      SSLoadLocalizedStrings("en");
 
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
@@ -291,6 +294,49 @@ var ShiftSpace = new (function() {
       
       console.log('ShiftSpace initialize complete');
     };
+    
+    var __sslang__;
+    function SSLoadLocalizedStrings(lang, ctxt)
+    {
+      var context = ctxt || window;
+      console.log('load localized strings ' + lang);
+      GM_xmlhttpRequest({
+        url: server + "client/LocalizedStrings/"+lang+".js",
+        method: "GET",
+        onload: function(rx)
+        {
+          console.log(lang + " - " + __sslang__);
+          if(lang != __sslang__)
+          {
+            ShiftSpace.localizedStrings = JSON.decode(rx.responseText);
+            console.log(ShiftSpace.localizedStrings);
+
+            // update objects
+            ShiftSpace.Objects.each(function(object, objectId) {
+              if(object.localizationChanged) object.localizationChanged();
+            });
+
+            // update markup
+            context.$$(".SSLocalized").each(function(node) {
+
+              var originalText = node.getProperty('title');
+
+              if(node.get('tag') == 'input' && node.getProperty('type') == 'button')
+              {
+                node.setProperty('value', SSLocalizedString(originalText));
+              }
+              else
+              {
+                node.set('text', SSLocalizedString(originalText));              
+              }
+
+            }.bind(this));
+          }
+
+          __sslang__ = lang;
+        }
+      });
+    }
     
     // Localized String Support
     function SSLocalizedString(string)

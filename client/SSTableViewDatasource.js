@@ -285,7 +285,7 @@ var SSTableViewDatasource = new Class({
     // check for missing properties
     if( !isMissingProperties && this.dataProviderURL())
     {
-      if(typeof ShiftSpaceSandBoxMode != 'undefined')
+      if(typeof SandalphonToolMode != 'undefined')
       {
         // if running in the tool
         new Request({
@@ -311,7 +311,7 @@ var SSTableViewDatasource = new Class({
       else
       {
         // if actually running in ShiftSpace
-        serverCall.safeCall(this.dataProviderURL(), allProperties.clean(), function(json) {
+        serverCall.safeCall(this.dataProviderURL(), allProperties.getClean(), function(json) {
           this.updateData(json[this.dataKey()]);
           this.fireEvent('onload');
         }.bind(this));

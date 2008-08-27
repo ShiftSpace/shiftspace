@@ -37,8 +37,8 @@ var SSConsole = new Class({
   {
     this.parent(el, options);
     
-    ShiftSpace.User.addEvent('login', this.handleLogin.bind(this));
-    ShiftSpace.User.addEvent('logout', this.handleLogout.bind(this));
+    ShiftSpace.User.addEvent('onUserLogin', this.handleLogin.bind(this));
+    ShiftSpace.User.addEvent('onUserLogout', this.handleLogout.bind(this));
     
     // set the datasource for the tableview
     if(window.location.hostname == "www.shiftspace.org" ||

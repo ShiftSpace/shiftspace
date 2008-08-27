@@ -13,7 +13,7 @@
     <!-- boot strap -->
     <script type="text/javascript" charset="utf-8">
       var __ssserver__ = "http://metatron.shiftspace.org";
-      var ShiftSpaceSandBoxMode = true;
+      var SandalphonToolMode = true;
       
       if(!ShiftSpace) var ShiftSpace = {};
       if(!ShiftSpace.UI) ShiftSpace.UI = {};
@@ -55,7 +55,7 @@
               {
                 console.log('Logged in!');
                 this.__username__ = credentials.username;
-                this.fireEvent('login');
+                this.fireEvent('onUserLogin');
               }.bind(this),
               onFailure: function()
               {
@@ -68,7 +68,7 @@
           {
             // empty out the user name
             this.__username__ = null;
-            this.fireEvent('logout');
+            this.fireEvent('onUserLogout');
           },
           
           getUsername: function()
