@@ -2,22 +2,35 @@ var SSConsoleClass = new Class({
   
   Extends: SSView,
   
+
   initialize: function()
   {
+    this.parent();
     console.log('>>>>>>>>>>>>>>>>>>>>> loading Console');
     Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
   },
   
+
+  awake: function()
+  {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>> SSConsole awake');
+  },
   
+  
+  awakeDelayed: function()
+  {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>> SSConsole awake delayed');
+  },
+  
+
   buildInterface: function(ui)
   {
-    this.frame = new Iframe({
+    this.frame = new IFrame({
       id: 'SSConsole'
     });
     this.frame.injectInside(document.body);
         
-    this.frame.addEvent('load', function(_evt) {
-      var evt = new Event(_evt);
+    this.frame.addEvent('load', function() {
       var context = this.frame.contentWindow;
 
       // add the style
@@ -25,9 +38,9 @@ var SSConsoleClass = new Class({
       // grab the interface, strip the outer level
       var fragment = Sandalphon.convertToFragment(ui.interface, context).getFirst();
       // place it in the frame
-      $(context.body).grab(fragment);
-      // activate the frament
-      Sandalphon.activate(fragment);
+      $(context.document.body).grab(fragment);
+      // activate the iframe context
+      Sandalphon.activate(context);
     }.bind(this));
   }
   

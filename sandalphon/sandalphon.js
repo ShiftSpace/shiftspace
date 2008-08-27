@@ -12,7 +12,7 @@ var SandalphonClass = new Class({
     var context = ctxt || window;
     
     // generate the fragment in the context
-    var fragment = new context.Element('div');
+    var fragment = context.$(context.document.createElement('div'));
     fragment.set('html', markup);
     
     // TODO: generalize to return markup that doesn't have a root node
@@ -111,18 +111,23 @@ var SandalphonClass = new Class({
     var context = ctxt || window;
     var contextDoc = context.document;
     
+    console.log('))))))))))))))))))))))))))))))))))');
+    console.log(context);
+    console.log(context.$);
+    console.log(context.Element);
+    console.log(context.Element.constructor);
+
     if (context.$$('head').length != 0) 
     {
       var head = context.$$('head')[0];
     } 
     else 
     {
-      var head = new context.Element('head');
+      var head = context.$(contextDoc.createElement('head'));
       head.injectBefore($(contextDoc.body));
     }
-    var style = new context.Element('style', {
-      type: 'text/css'
-    });
+    var style = context.$(contextDoc.createElement('style'));
+    style.setProperty('type', 'text/css');
     
     style.appendText(css);
     style.injectInside(head);
@@ -132,6 +137,9 @@ var SandalphonClass = new Class({
   activate: function(ctxt)
   {
     var context = ctxt || window;
+    
+    console.log('>>>>>>>>>>>>>>>>>> activate');
+    console.log(context);
     
     // First instantiate all controllers
     this.instantiateControllers(context);
@@ -177,14 +185,14 @@ var SandalphonClass = new Class({
     var context = ctxt || window;
     
     var outlets = this.contextQuery(context, '*[outlet]');
-    
+    console.log(context);
     outlets.each(function(anOutlet) {
       // grab the outlet parent id
       var outletParentObject = anOutlet.getProperty('outlet');
       // grab the main view controller
-      if($(outletParentObject))
+      if(context.$(outletParentObject))
       {
-        var controller = $(outletParentObject).retrieve('__ssviewcontroller__');
+        var controller = context.$(outletParentObject).retrieve('__ssviewcontroller__');
         controller.addOutlet(anOutlet);
       }
     });

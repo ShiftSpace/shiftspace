@@ -111,6 +111,27 @@ var ShiftSpace = new (function() {
     var __consoleIsWaiting__ = false;
     var __defaultShiftStatus__ = 1;
     
+    // paths to required ShiftSpace files
+    // TODO: remove this dependency - David
+    this.ClassPaths = {
+      'SSTableViewDatasource': '/client/'
+    };
+
+    // paths to view controllers
+    this.UIClassPaths = { 
+      'SSCell': '/client/views/SSCell/',
+      'SSEditableTextCell': '/client/views/SSEditableTextCell/',
+      'SSTabView': '/client/views/SSTabView/',
+      'SSTableView': '/client/views/SSTableView/',
+      'SSTableRow': '/client/views/SSTableRow/',
+      'SSConsole': '/client/views/SSConsole/'
+    };
+
+      // path to user defined view controllers
+    this.UserClassPaths = {
+      'SSCustomTableRow': '/client/customViews/'
+    };
+    
     // Stores initial data for plugins that are needed for the console at startup
     // since the plugins won't actually be loaded until they are needed
     var __pluginsData__ = {};
@@ -180,6 +201,8 @@ var ShiftSpace = new (function() {
       // INCLUDE Element.js
       console.log('Element.js loaded');
       
+      // INCLUDE SSViewProxy.js
+      console.log('SSViewProxy.js loaded');
       // INCLUDE SSView.js
       console.log('SSView.js loaded');
       // INCLUDE views/SSCell/SSCell.js
@@ -188,6 +211,8 @@ var ShiftSpace = new (function() {
       console.log('SSEditableTextCell.js loaded');
       // INCLUDE views/SSTabView/SSTabView.js
       console.log('SSTabView.js loaded');
+      // INCLUDE SSTableViewDataSource.js
+      console.log('SSTableViewDataSource.js loaded');
       // INCLUDE views/SSTableView/SSTableView.js
       console.log('SSTableView.js loaded');
       // INCLUDE views/SSTableRow/SSTableRow.js
@@ -196,7 +221,6 @@ var ShiftSpace = new (function() {
       console.log('SSCustomTableRow.js loaded');
       // INCLUDE ../sandalphon/sandalphon.js
       console.log('sandalphon.js loaded');
-      // bootstrap for now
       // INCLUDE Console-0.5.js
       console.log('Console-0.5.js loaded');
       
@@ -318,12 +342,12 @@ var ShiftSpace = new (function() {
       _getElement: function(sel)
       {
         this._ssgenId();
-        return $$('#' + this.getProperty('id') + ' ' + sel)[0];
+        return this.ownerDocument.getWindow().$$('#' + this.getProperty('id') + ' ' + sel)[0];
       },
       _getElements: function(sel)
       {
         this._ssgenId();
-        return $$('#' + this.getProperty('id') + ' ' + sel);
+        return this.ownerDocument.getWindow().$$('#' + this.getProperty('id') + ' ' + sel);
       }
     });
     
@@ -2772,7 +2796,7 @@ var ShiftSpace = new (function() {
               console.log('trying ' + url);
               console.log(rx.responseText);
               console.log(eval('(' + rx.responseText + ')'));
-              console.log('tried');
+              console.log('tried ' + url);
               var theJson = JSON.decode(rx.responseText);
             }
             catch(exc)
