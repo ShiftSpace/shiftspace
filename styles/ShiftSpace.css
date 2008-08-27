@@ -74,6 +74,15 @@
 {
 }
 
+#SSConsole
+{
+  width: 900px;
+  position: fixed;
+  height: 180px;
+  left: 50px;
+  bottom: 0px;
+}
+
 #SSConsoleResizer
 {
   position: fixed;

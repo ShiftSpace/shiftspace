@@ -102,6 +102,7 @@ class SandalphonCompiler:
         if filePath != None:
             # load the file
             fileHandle = open(filePath)
+
             # verify that this file is valid mark up
             fileContents = fileHandle.read()
             fileHandle.close()
@@ -129,6 +130,24 @@ class SandalphonCompiler:
             fileHandle.close()
         except IOError:
             print "Could not load css file at %s" % cssPath
+
+    
+    def addCSSForUIClasses(self, interfaceFile):
+        # parse this file
+        element = ElementTree.fromstring(interfaceFile)
+        uiclasses = [el.get('uiclass') for el in element.findall(".//*") if elementHasAttribute(el, "uiclass")]
+
+        print "Found some : %s" % uiclasses
+
+        seen = {}
+
+        for item in uiclasses:
+            seen[item] = True
+
+        viewDirectory = "../client/views/"
+
+        toLoad = seen.keys()
+        [self.addCSSForHTMLPath(os.path.join(os.path.join(viewDirectory, item), item+".css")) for item in toLoad]
 
     
     def getInstruction(self, str):
@@ -165,7 +184,7 @@ class SandalphonCompiler:
         fileHandle.close()
         print "File loaded"
 
-        # add the css for the file at this path
+        # add the css for the main file at this path
         self.addCSSForHTMLPath(path)
         
         matches = self.templatePattern.finditer(interfaceFile)
@@ -186,6 +205,9 @@ class SandalphonCompiler:
         # validate it
         tree = ElementTree.fromstring(interfaceFile)
  
+        # load any css for references found at this level
+        self.addCSSForUIClasses(interfaceFile)
+
         # get the actual file name
         compiledViewsDirectory = "../client/compiledViews/"
 

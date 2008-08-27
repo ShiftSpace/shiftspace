@@ -11,15 +11,17 @@ var SSConsoleClass = new Class({
   },
   
 
-  awake: function()
+  awake: function(context)
   {
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>> SSConsole awake');
+    console.log(this.outlets());
   },
   
   
-  awakeDelayed: function()
+  awakeDelayed: function(context)
   {
     console.log('>>>>>>>>>>>>>>>>>>>>>>>>> SSConsole awake delayed');
+    console.log(this.outlets());
   },
   
 
