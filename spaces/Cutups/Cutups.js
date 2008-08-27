@@ -765,4 +765,4 @@ var CutupsShift = ShiftSpace.Shift.extend({
 // separate forms jumbled together.
 // -Geothe
 
-var Cut = new CutupsSpace(CutupsShift);
+var Cutups = new CutupsSpace(CutupsShift);
