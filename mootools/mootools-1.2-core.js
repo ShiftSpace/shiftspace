@@ -1268,11 +1268,14 @@ var IFrame = new Native({
 				return iframe.contentWindow.location.host;
 			});
 			if ((host && host == window.location.host) || !host){ // CHANGE: so that frames with no host work - David
-			  console.log('EXTENDING IFRAME!');
+			  console.log('EXTENDING IFRAME WINDOW!');
 				var win = new Window(iframe.contentWindow);
+				console.log('EXTENDING IFRAME DOCUMENT!');
 				var doc = new Document(iframe.contentWindow.document);
+				if(!win.Element.prototype) win.Element.prototype = {}; // CHANGE: fix for GM and MT1.2 IFrames - David
 				$extend(win.Element.prototype, Element.Prototype);
 			}
+			console.log('DONE!');
 			onload.call(iframe.contentWindow, iframe.contentWindow.document);
 		};
 		(!window.frames[props.id]) ? iframe.addListener('load', onFrameLoad) : onFrameLoad();
