@@ -27,13 +27,14 @@ var SSConsoleClass = new Class({
 
   buildInterface: function(ui)
   {
-    this.frame = new IFrame({
+    this.element = new IFrame({
       id: 'SSConsole'
     });
-    this.frame.injectInside(document.body);
+    this.element.store('__ssviewcontroller__', this);
+    this.element.injectInside(document.body);
         
-    this.frame.addEvent('load', function() {
-      var context = this.frame.contentWindow;
+    this.element.addEvent('load', function() {
+      var context = this.element.contentWindow;
 
       // add the style
       Sandalphon.addStyle(ui.styles, context);

@@ -189,10 +189,16 @@ var SandalphonClass = new Class({
     outlets.each(function(anOutlet) {
       // grab the outlet parent id
       var outletParentObject = anOutlet.getProperty('outlet');
-      // grab the main view controller
+      // grab the main view controller from the matching context
       if(context.$(outletParentObject))
       {
         var controller = context.$(outletParentObject).retrieve('__ssviewcontroller__');
+        controller.addOutlet(anOutlet);
+      }
+      else if(context != window && $(outletParentObject))
+      {
+        // check if there's a match in the top window
+        var controller = $(outletParentObject).retrieve('__ssviewcontroller__');
         controller.addOutlet(anOutlet);
       }
     });
