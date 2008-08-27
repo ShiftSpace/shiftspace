@@ -1339,14 +1339,14 @@ Window.implement({
 	},
 
 	$$: function(selector){
-		if (arguments.length == 1 && typeof selector == 'string') return this.document.getElements(selector);
+		if (arguments.length == 1 && typeof selector == 'string') return (new Document(this.document)).getElements(selector); // CHANGE: For GM - David
 		var elements = [];
 		var args = Array.flatten(arguments);
 		for (var i = 0, l = args.length; i < l; i++){
 			var item = args[i];
 			switch ($type(item)){
 				case 'element': item = [item]; break;
-				case 'string': item = this.document.getElements(item, true); break;
+				case 'string': item = (new Document(this.document)).getElements(item, true); break; // CHANGE: For GM - David
 				default: item = false;
 			}
 			if (item) elements.extend(item);
@@ -1515,7 +1515,7 @@ Element.implement({
 	},
 
 	appendText: function(text, where){
-		return this.grab(this.getDocument().newTextNode(text), where);
+		return this.grab((new Document(this.getDocument())).newTextNode(text), where); // CHANGE: For GM - David
 	},
 
 	adopt: function(){
