@@ -54,55 +54,68 @@ var SandalphonClass = new Class({
   load: function(path, callback)
   {
     var ui = {};
-        
-    // attempt to load css
-    new Asset.css('..'+path+'.css');
-
+    
+    var server = (ShiftSpace && ShiftSpace.info && ShiftSpace.info().server) || '..';
+    console.log('load!');
     // load the interface file
-    var interface = new Request({
-      url:  '..'+path+'.html',
-      method: 'get',
-      onSuccess: function(responseText, responseXML)
-      {
-        ui.interface = responseText
-        if(this.analyze(responseText))
+    if(typeof SandalphonToolMode != 'undefined')
+    {
+      var interface = new Request({
+        url:  server+path+'.html',
+        method: 'get',
+        onSuccess: function(responseText, responseXML)
         {
-        }
-        else
+          ui.interface = responseText
+          if(this.analyze(responseText))
+          {
+          }
+          else
+          {
+            console.error('Error loading interface.');
+          }
+        }.bind(this),
+        onFailure: function()
         {
-          console.error('Error loading interface.');
+          console.error('Oops could not load that interface file');
         }
-      }.bind(this),
-      onFailure: function()
-      {
-        console.error('Oops could not load that interface file');
-      }
-    });
+      });
     
-    var styles = new Request({
-      url:  '..'+path+'.css',
-      method: 'get',
-      onSuccess: function(responseText, responseXML)
-      {
-        ui.styles = responseText;
-      }.bind(this),
-      onFailure: function()
-      {
-        console.error('Oops could not load that interface file');
-      }
-    });
-    
-    // Group HTMl and CSS calls
-    var loadGroup = new Group(interface, styles);
-    loadGroup.addEvent('complete', function() {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> load group done');
-      console.log(ui);
-      if(callback) callback(ui);
-    });
-    
-    // fetch
-    interface.send();
-    styles.send();
+      var styles = new Request({
+        url:  '..'+path+'.css',
+        method: 'get',
+        onSuccess: function(responseText, responseXML)
+        {
+          ui.styles = responseText;
+        }.bind(this),
+        onFailure: function()
+        {
+          console.error('Oops could not load that interface file');
+        }
+      });
+      
+      // Group HTMl and CSS calls
+      var loadGroup = new Group(interface, styles);
+      loadGroup.addEvent('complete', function() {
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> load group done');
+        console.log(ui);
+        if(callback) callback(ui);
+      });
+
+      // fetch
+      interface.send();
+      styles.send();
+    }
+    else
+    {
+      loadFile(path+'.html', function(rx) {
+        ui.interface = rx.responseText;
+        loadFile(path+'.css', function(rx) {
+          ui.styles = rx.responseText;
+          if(callback) callback(ui);
+        });
+      });
+    }
+
   },
   
   

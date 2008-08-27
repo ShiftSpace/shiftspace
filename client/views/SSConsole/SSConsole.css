@@ -4,6 +4,12 @@
   height: 100%;
 }
 
+#SSConsole, #SSConsoleFrameBody
+{
+  font-family: georgia;
+  font-size: 12px;
+}
+
 #MainTabView > .SSControlView > div:first-child
 {
   margin-left: 32px;

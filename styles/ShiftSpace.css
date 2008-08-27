@@ -76,11 +76,11 @@
 
 body > #SSConsole
 {
-  width: 900px;
   position: fixed;
   height: 180px;
-  left: 50px;
+  left: 0px;
   bottom: 0px;
+  width: 100%;
   border: 0px;
 }
 

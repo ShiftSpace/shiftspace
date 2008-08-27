@@ -300,41 +300,37 @@ var ShiftSpace = new (function() {
     {
       var context = ctxt || window;
       console.log('load localized strings ' + lang);
-      GM_xmlhttpRequest({
-        url: server + "client/LocalizedStrings/"+lang+".js",
-        method: "GET",
-        onload: function(rx)
+      loadFile("client/LocalizedStrings/"+lang+".js", function(rx) {
+        console.log(')))))))))))))))))))))))))))))))))))))))))))');
+        console.log(lang + " - " + __sslang__);
+        if(lang != __sslang__)
         {
-          console.log(lang + " - " + __sslang__);
-          if(lang != __sslang__)
-          {
-            ShiftSpace.localizedStrings = JSON.decode(rx.responseText);
-            console.log(ShiftSpace.localizedStrings);
+          ShiftSpace.localizedStrings = JSON.decode(rx.responseText);
+          console.log(ShiftSpace.localizedStrings);
 
-            // update objects
-            ShiftSpace.Objects.each(function(object, objectId) {
-              if(object.localizationChanged) object.localizationChanged();
-            });
+          // update objects
+          ShiftSpace.Objects.each(function(object, objectId) {
+            if(object.localizationChanged) object.localizationChanged();
+          });
 
-            // update markup
-            context.$$(".SSLocalized").each(function(node) {
+          // update markup
+          context.$$(".SSLocalized").each(function(node) {
 
-              var originalText = node.getProperty('title');
+            var originalText = node.getProperty('title');
 
-              if(node.get('tag') == 'input' && node.getProperty('type') == 'button')
-              {
-                node.setProperty('value', SSLocalizedString(originalText));
-              }
-              else
-              {
-                node.set('text', SSLocalizedString(originalText));              
-              }
+            if(node.get('tag') == 'input' && node.getProperty('type') == 'button')
+            {
+              node.setProperty('value', SSLocalizedString(originalText));
+            }
+            else
+            {
+              node.set('text', SSLocalizedString(originalText));              
+            }
 
-            }.bind(this));
-          }
-
-          __sslang__ = lang;
+          }.bind(this));
         }
+
+        __sslang__ = lang;
       });
     }
     
@@ -1324,7 +1320,7 @@ var ShiftSpace = new (function() {
       space - The name of the Space the Shift belongs to.
     */
     function initShift(spaceName, options) {
-      //console.log('spaceName: ' + spaceName);
+      console.log('spaceName: ' + spaceName);
       if (!installed[spaceName]) {
         console.log('Error: Space ' + spaceName + ' does not exist.', true);
         return;
@@ -2805,7 +2801,7 @@ var ShiftSpace = new (function() {
     function serverCall(method, parameters, _callback) {
       var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
-      //console.log('serverCall: ' + url);
+      console.log('serverCall: ' + url);
       var data = '';
       
       for (var key in parameters) {
@@ -2830,7 +2826,7 @@ var ShiftSpace = new (function() {
         data: data,
         onload: function(_rx) {
           var rx = _rx;
-          //console.log('servercall returned');
+          console.log('servercall returned');
           /*
           console.log(rx.responseText);
           console.log(typeof callback == 'function');

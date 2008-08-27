@@ -20,7 +20,7 @@
 .SSTableView > .SSScrollView
 {
   height: 100%;
-  overflow: auto;
+  overflow: scroll;
 }
 
 .SSTableView > .SSScrollView table.SSContentView

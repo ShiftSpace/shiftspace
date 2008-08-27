@@ -222,6 +222,7 @@ var SSConsoleClass = new Class({
       var fragment = Sandalphon.convertToFragment(ui.interface, context).getFirst();
       // place it in the frame
       $(context.document.body).grab(fragment);
+      $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
       // activate the iframe context
       Sandalphon.activate(context);
     }.bind(this));
