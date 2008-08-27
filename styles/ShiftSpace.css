@@ -74,7 +74,7 @@
 {
 }
 
-#SSConsole
+body > #SSConsole
 {
   width: 900px;
   position: fixed;

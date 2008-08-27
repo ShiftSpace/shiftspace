@@ -261,6 +261,16 @@ var SSTableViewDatasource = new Class({
   {
     return this.data()[rowIndex][columnName];
   },
+  
+  
+  updateData: function(data)
+  {
+    if(this.dataNormalizer())
+    {
+      data = this.dataNormalizer().normalize(data);
+    }
+    this.setData(data);
+  },
 
   
   fetch: function(_properties)
@@ -275,30 +285,37 @@ var SSTableViewDatasource = new Class({
     // check for missing properties
     if( !isMissingProperties && this.dataProviderURL())
     {
-      new Request({
-        url: this.dataProviderURL(),
-        method: 'post',
-        data: allProperties.getClean(),
-        onComplete: function(responseText, responseXML)
-        {
-          console.log('------------ table view data loaded');
-
-          var data = JSON.decode(responseText)[this.dataKey()];
-
-          if(this.dataNormalizer())
+      if(typeof ShiftSpaceSandBoxMode != 'undefined')
+      {
+        // if running in the tool
+        new Request({
+          url: this.dataProviderURL(),
+          method: 'post',
+          data: allProperties.getClean(),
+          onComplete: function(responseText, responseXML)
           {
-            data = this.dataNormalizer().normalize(data);
-          }
+            console.log('------------ table view data loaded');
 
-          this.setData(data);
+            var data = JSON.decode(responseText)[this.dataKey()];
+            this.updateData(data);
+
+            this.fireEvent('onload');
+
+          }.bind(this),
+          onFailure: function(response)
+          {
+            console.error('Oops: ' + response);
+          }.bind(this)
+        }).send();
+      }
+      else
+      {
+        // if actually running in ShiftSpace
+        serverCall.safeCall(this.dataProviderURL(), allProperties.clean(), function(json) {
+          this.updateData(json[this.dataKey()]);
           this.fireEvent('onload');
-
-        }.bind(this),
-        onFailure: function(response)
-        {
-          console.error('Oops: ' + response);
-        }.bind(this)
-      }).send();
+        }.bind(this));
+      }
     }
     else
     {
