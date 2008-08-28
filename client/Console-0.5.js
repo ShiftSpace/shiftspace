@@ -1,5 +1,7 @@
 var SSConsoleClass = new Class({
   
+  name: 'SSConsole',
+  
   Extends: SSView,
   
 
@@ -212,7 +214,7 @@ var SSConsoleClass = new Class({
     this.element = new IFrame({
       id: 'SSConsole'
     });
-    this.element.store('__ssviewcontroller__', this);
+    SSSetControllerForNode(this, this.element);
     this.element.injectInside(document.body);
         
     this.element.addEvent('load', function(doc) {

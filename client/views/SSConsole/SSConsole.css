@@ -10,6 +10,20 @@
   font-size: 12px;
 }
 
+#SSConsoleFrameBody #MainTabView.SSTabView
+{
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 0px;
+  bottom: 0px;
+  
+  /* override defaults in SSTabView */
+  width: auto;
+  height: auto;
+}
+
+
 #MainTabView > .SSControlView > div:first-child
 {
   margin-left: 32px;
