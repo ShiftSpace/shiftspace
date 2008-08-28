@@ -7,7 +7,8 @@ var SSViewProxy = new Class({
   initialize: function(el, options)
   {
     // store the element
-    this.element = el;
+    this.element = $(el);
+    
     // generate an id for the element
     el._ssgenId();
     // set messages
@@ -43,7 +44,9 @@ var SSViewProxy = new Class({
 
   deliverMessages: function()
   {
-    var controller = this.element.retrieve('__ssviewcontroller__');
+    var controller = SSControllerForNode(this.element);
+    console.log('deliverMessages ' + this.element);
+    console.log(controller);
     this.messages().each(function(message) {
       controller[message.name].apply(controller, message.arguments);
     });

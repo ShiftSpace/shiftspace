@@ -12,8 +12,11 @@ var SSTableView = new Class({
   
   initialize: function(el, options)
   {
+    console.log('SSTableView initialize');
     // need to pass this up to parent
     this.parent(el);
+    
+    console.log('SSTableView parent called');
     
     // for speed
     this.contentView = this.element._getElement('> .SSScrollView .SSContentView');
@@ -303,7 +306,7 @@ var SSTableView = new Class({
   */
   selectedColumnIndex: function()
   {
-    return this.contentView._getElements('> .SSDefinition col').indexOf(this.selectedColumn());
+    return this.indexOfNode(this.contentView._getElements('> .SSDefinition col'), this.selectedColumn());
   },
   
   /*
@@ -327,7 +330,7 @@ var SSTableView = new Class({
   */
   selectedRowIndex: function()
   {
-    return this.contentView._getElements('.SSRow').indexOf(this.selectedRow());
+    return this.indexOfNode(this.contentView._getElements('.SSRow'), this.selectedRow());
   },
   
   /*
@@ -434,7 +437,7 @@ var SSTableView = new Class({
   columnIndexForNode: function(_node)
   {
     var node = (_node.hasClass('SSColumnHeading')) ? _node : _node.getParent('.SSColumnHeading');
-    return this.element._getElements('> .SSControlView .SSColumnHeading').indexOf(node);
+    return this.indexOfNode(this.element._getElements('> .SSControlView .SSColumnHeading'), node);
   },
   
   /*
@@ -474,7 +477,7 @@ var SSTableView = new Class({
   */
   indexOfRow: function(row)
   {
-    return this.contentView._getElements('.SSRow').indexOf(row);
+    return this.indexOfNode(this.contentView._getElements('.SSRow'), row);
   },
   
   /*

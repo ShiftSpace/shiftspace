@@ -63,10 +63,10 @@ var ShiftSpace = new (function() {
     // Check to see if the server URL is already stored
     // permissions problem here?
     if (typeof server == 'undefined') {
-      var server = getValue('server', 'http://www.shiftspace.org/api/');
+      var server = getValue('server', 'http://www.shiftspace.org/dev/');
     }
     
-    server = "http://localhost/~davidnolen/shiftspace-0.11/";
+    //server = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/api/";
@@ -171,6 +171,7 @@ var ShiftSpace = new (function() {
     
     // INCLUDE IframeHelpers.js
     // INCLUDE PinHelpers.js
+    // INCLUDE SSViewProxy.js
     
     /*
     
@@ -204,8 +205,6 @@ var ShiftSpace = new (function() {
       // INCLUDE Element.js
       console.log('Element.js loaded');
       
-      // INCLUDE SSViewProxy.js
-      console.log('SSViewProxy.js loaded');
       // INCLUDE SSView.js
       console.log('SSView.js loaded');
       // INCLUDE views/SSCell/SSCell.js
@@ -295,18 +294,43 @@ var ShiftSpace = new (function() {
       console.log('ShiftSpace initialize complete');
     };
     
+    var SSInstantiationListeners = {};
+    function SSAddInstantiationListener(element, listener)
+    {
+      var id = element._ssgenId();
+      if(!SSInstantiationListeners[id])
+      {
+        SSInstantiationListeners[id] = [];
+      }
+      SSInstantiationListeners[id].push(listener);
+    }
+
+    function SSNotifyInstantiationListeners(element)
+    {
+      var listeners = SSInstantiationListeners[element.getProperty('id')];
+      if(listeners)
+      {
+        listeners.each(function(listener) {
+          if(listener.onInstantiate) 
+          {
+            listener.onInstantiate();
+          }
+        });
+      }
+    }
+    
     var __sslang__;
     function SSLoadLocalizedStrings(lang, ctxt)
     {
       var context = ctxt || window;
-      console.log('load localized strings ' + lang);
+      //console.log('load localized strings ' + lang);
       loadFile("client/LocalizedStrings/"+lang+".js", function(rx) {
-        console.log(')))))))))))))))))))))))))))))))))))))))))))');
-        console.log(lang + " - " + __sslang__);
+        //console.log(')))))))))))))))))))))))))))))))))))))))))))');
+        //console.log(lang + " - " + __sslang__);
         if(lang != __sslang__)
         {
           ShiftSpace.localizedStrings = JSON.decode(rx.responseText);
-          console.log(ShiftSpace.localizedStrings);
+          //console.log(ShiftSpace.localizedStrings);
 
           // update objects
           ShiftSpace.Objects.each(function(object, objectId) {
@@ -314,7 +338,7 @@ var ShiftSpace = new (function() {
           });
 
           // update markup
-          console.log('fix localized');
+          //console.log('fix localized');
           context.$$(".SSLocalized").each(function(node) {
 
             var originalText = node.getProperty('title');
@@ -342,32 +366,27 @@ var ShiftSpace = new (function() {
       return string;
     }
     
-    // Returns a controller for a node
-    function $C(_node)
+    var __controllers__ = $H();
+    // we generate ids and store controller refs ourselves this is because of weird garbage collection
+    // around iframes and wrappers around dom nodes when SS run under GM
+    function SSSetControllerForNode(controller, _node)
     {
       var node = $(_node);
-      // return the storage property
-      if(node)
-      {
-        var hasController = node.getProperty('uiclass');
-        var controller = node.retrieve('__ssviewcontroller__');
-
-        if(hasController && !controller)
-        {
-          return new SSViewProxy(node);
-        }
-
-        if(hasController && controller)
-        {
-          return controller;
-        }
-
-        return null;
-      }
-      else
-      {
-        return null;
-      }
+      
+      // generate our own id
+      node._ssgenId();
+      // keep back reference
+      __controllers__.set(node.getProperty('id'), controller);
+    }
+    
+    // return the controller for a node
+    function SSControllerForNode(_node)
+    {
+      var node = $(_node);
+      
+      return __controllers__.get(node.getProperty('id')) || 
+             (node.getProperty('uiclass') && new SSViewProxy(node)) ||
+             null;
     }
 
     // Element extensions

@@ -174,14 +174,18 @@ var SandalphonClass = new Class({
     
     var views = this.contextQuery(context, '*[uiclass]');
 
+    // instantiate all objects
     views.each(function(aView) {
       var theClass = aView.getProperty('uiclass');
-      console.log('Instantiating ' + theClass);
+      console.log('======================================= Instantiating ' + theClass + '========================================');
       new ShiftSpace.UI[theClass](aView);
       // notify any instantiation listeners
-      SSNotifyInstantiationListeners(aView);
+      console.log('notify listeners');
+      console.log('>>>>>>>>>>>>>> DONE');
     });
     
+    // notify all listeners
+    views.each(SSNotifyInstantiationListeners);
   },
   
   
@@ -201,19 +205,24 @@ var SandalphonClass = new Class({
     
     var outlets = this.contextQuery(context, '*[outlet]');
     console.log(context);
+    
     outlets.each(function(anOutlet) {
       // grab the outlet parent id
       var outletParentObject = anOutlet.getProperty('outlet');
       // grab the main view controller from the matching context
       if(context.$(outletParentObject))
       {
-        var controller = context.$(outletParentObject).retrieve('__ssviewcontroller__');
+        console.log('in context ' + context.$(outletParentObject).getProperty('id'));
+        var controller = SSControllerForNode(context.$(outletParentObject));
         controller.addOutlet(anOutlet);
       }
       else if(context != window && $(outletParentObject))
       {
+        console.log('other context ' + $(outletParentObject).getProperty('id'));
+        console.log($(outletParentObject).retrieve('__ssviewcontroller__'));
         // check if there's a match in the top window
-        var controller = $(outletParentObject).retrieve('__ssviewcontroller__');
+        var controller = SSControllerForNode($(outletParentObject));
+        console.log(controller);
         controller.addOutlet(anOutlet);
       }
     });

@@ -4,7 +4,6 @@ var SSCustomTableRow = new Class({
 
   Extends: SSTableRow,
   
-  
   initialize: function(el)
   {
     this.parent(el);
@@ -56,7 +55,7 @@ var SSCustomTableRow = new Class({
     var rowForNode = this.rowForNode(node);
     var parentCell = (node.get('tag') == 'td') || node.getParent('td');
     
-    return rowForNode.getChildren('td').indexOf(parentCell);
+    return this.indexOfNode(rowForNode.getChildren('td'), parentCell);
   },
   
   

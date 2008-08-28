@@ -29,13 +29,17 @@ var SSTabView = new Class({
 
     this.element.addEvent('click', this.eventDispatch.bind(this));
     
+    //console.log('refresh SSTabView');
     // refresh the dimensions
     this.refresh();
+    //console.log('SSTabView initialized');
   },
   
   
   eventDispatch: function(evt)
   {
+    //console.log('eventDispatch');
+
     var theEvent = new Event(evt);
     var theTarget = $(evt.target);
     
@@ -77,7 +81,7 @@ var SSTabView = new Class({
   
   indexOfTab: function(tabButton)
   {
-    return this.element._getElements('> .SSControlView > .SSButton').indexOf(tabButton);
+    return this.indexOfNode(this.element._getElements('> .SSControlView > .SSButton'), tabButton);
   },
   
   
@@ -95,7 +99,7 @@ var SSTabView = new Class({
   
   indexOfContentView: function(contentView)
   {
-    return this.element._getElements('> .SSContentView > div').indexOf(contentView);
+    return this.indexOfNode(this.element._getElements('> .SSContentView > div'), contentView);
   },
   
   
@@ -123,6 +127,7 @@ var SSTabView = new Class({
 
   selectTab: function(idx)
   {
+    //console.log(this.element.getProperty('id') + ' selectTab ' + idx);
     if(this.__selectedTab__ != idx)
     {
       // hide the last tab button and tab pane only if there was a last selected tab
@@ -132,7 +137,9 @@ var SSTabView = new Class({
 
         // hide the last tab pane
         var lastTabPane = this.contentViewForIndex(this.__selectedTab__);
+        //console.log('controller for last tab ' + lastTabPane + ' ' + $uid(lastTabPane));
         var lastTabPaneController = this.controllerForNode(lastTabPane);
+        //console.log('got controller');
 
         if(lastTabPaneController)
         {
@@ -146,11 +153,12 @@ var SSTabView = new Class({
 
       // check to see if there is a view controller for the content view
       var controller = this.contentViewControllerForIndex(idx);
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>> getting tab content view controller');
-      console.log(controller);
+      //console.log('>>>>>>>>>>>>>>>>>>>>>>>> getting tab content view controller');
       if(controller)
       {
+        //console.log('showing controller');
         controller.show();
+        //console.log('refreshing controller');
         controller.refresh();
       }
       else
@@ -158,12 +166,15 @@ var SSTabView = new Class({
         this.contentViewForIndex(idx).addClass('SSActive');
       }
       
+      //console.log('Activating tab button');
       // hide the tab button
       this.tabButtonForIndex(idx).addClass('SSActive');
       
       this.__selectedTab__ = idx;
       
+      //console.log('fire tabSelected');
       this.fireEvent('tabSelected', {tabView:this, tabIndex:this.__selectedTab__});
+      //console.log('exit tabSelected');
     }
   },
   
@@ -184,6 +195,7 @@ var SSTabView = new Class({
   
   contentViewControllerForIndex: function(idx)
   {
+    //console.log('contentViewControllerForIndex ' + idx + ' ' + this.contentViewForIndex(idx));
     return this.controllerForNode(this.contentViewForIndex(idx));
   },
   

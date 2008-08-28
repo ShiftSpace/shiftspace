@@ -90,32 +90,63 @@
         return string;
       }
       
-      // Returns a controller for a node
-      function $C(_node)
+      var __controlledNodes__ = $H();
+      // This is because node references get wrapped and look different to Mootools
+      function SSSetControllerForNode(controller, node)
+      {
+        // gen id
+        node._ssgenId();
+        // store the controller
+        node.store('__ssviewcontroller__', controller);
+        // keep back reference
+        __controlledNodes__.set(node.getProperty('id'), node);
+      }
+      
+      var SSInstantiationListeners = {};
+      function SSAddInstantiationListener(element, listener)
+      {
+        var id = element._ssgenId();
+        if(!SSInstantiationListeners[id])
+        {
+          SSInstantiationListeners[id] = [];
+        }
+        SSInstantiationListeners[id].push(listener);
+      }
+
+      function SSNotifyInstantiationListeners(element)
+      {
+        var listeners = SSInstantiationListeners[element.getProperty('id')];
+        if(listeners)
+        {
+          listeners.each(function(listener) {
+            if(listener.onInstantiate) 
+            {
+              listener.onInstantiate();
+            }
+          });
+        }
+      }
+
+      var __controllers__ = $H();
+      // This is because node references get wrapped and look different to Mootools
+      function SSSetControllerForNode(controller, _node)
       {
         var node = $(_node);
-        // return the storage property
-        if(node)
-        {
-          var hasController = node.getProperty('uiclass');
-          var controller = node.retrieve('__ssviewcontroller__');
 
-          if(hasController && !controller)
-          {
-            return new SSViewProxy(node);
-          }
+        // generate our own id
+        node._ssgenId();
+        // keep back reference
+        __controllers__.set(node.getProperty('id'), controller);
+      }
 
-          if(hasController && controller)
-          {
-            return controller;
-          }
+      // return the controller for a node
+      function SSControllerForNode(_node)
+      {
+        var node = $(_node);
 
-          return null;
-        }
-        else
-        {
-          return null;
-        }
+        return __controllers__.get(node.getProperty('id')) || 
+               (node.getProperty('uiclass') && new SSViewProxy(node)) ||
+               null;
       }
 
       // Element extensions

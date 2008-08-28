@@ -40,7 +40,7 @@ var SSView = new Class({
     //this.element.setProperty('class', 'ShiftSpaceElement '+this.element.getProperty('class'));
     
     // store a back reference to this class
-    this.element.store('__ssviewcontroller__', this);
+    SSSetControllerForNode(this, this.element);
     
     // We need to build this class via code
     if(!this.__prebuilt__)
@@ -128,6 +128,23 @@ var SSView = new Class({
     
   },
   
+
+  checkForMatch: function(_cands, node)
+  {
+    if(_cands.length == 0) return null;
+    
+    var cands = (_cands instanceof Array && _cands) || [_cands];
+    
+    var len = cands.length;
+    for(var i = 0; i < len; i++)
+    {
+      if(cands[i] == node) return true;
+    }
+    
+    return false;
+  },
+
+  
   /*
     Function: hitTest
       Matches a target to see if it occured in an element pointed to by the selector test.
@@ -143,7 +160,7 @@ var SSView = new Class({
     
     while(node && node != this.element)
     {
-      if(matches.contains(node))
+      if(this.checkForMatch(matches, node))
       {
         this.setCachedHit(node);
         return node;
@@ -179,34 +196,27 @@ var SSView = new Class({
     return this.__cachedHit__;
   },
   
+
+  indexOfNode: function(array, node)
+  {
+    var len = array.length
+    for(var i = 0; i < len; i++)
+    {
+      if(array[i] == node) return i;
+    }
+    return -1;
+  },
+
+  
   /*
     Function: controllerForNode
       Returns the view controller JS instance for an HTML Element.
   */
   controllerForNode: function(node)
   {
+    //console.log('controllerForNode ' + node);
     // return the storage property
-    if(node)
-    {
-      var hasController = node.getProperty('uiclass');
-      var controller = node.retrieve('__ssviewcontroller__');
-      
-      if(hasController && !controller)
-      {
-        return new SSViewProxy(node);
-      }
-
-      if(hasController && controller)
-      {
-        return controller;
-      }
-      
-      return null;
-    }
-    else
-    {
-      return null;
-    }
+    return SSControllerForNode(node);
   },
   
   // will probably be refactored
@@ -220,13 +230,13 @@ var SSView = new Class({
   removeControllerForNode: function(node)
   {
     // get the controller
-    var controller = node.retrieve('__ssviewcontroller__');
+    var controller = SSControllerForNode(node);
     if(controller)
     {
       // clear out the storage
-      node.store('__ssviewcontroller__', null);
+      SSSetControllerForNode(null, node);
 
-      if(this.__ssviewcontroller__.contains(controller))
+      if(this.__ssviewcontrollers__.contains(controller))
       {
         // remove from internal array
         this.__ssviewcontrollers__.remove(controller);
@@ -290,32 +300,6 @@ var SSView = new Class({
   }
   
 });
-
-
-SSInstantiationListeners = {};
-function SSAddInstantiationListener(element, listener)
-{
-  var id = element._ssgenId();
-  if(!SSInstantiationListeners[id])
-  {
-    SSInstantiationListeners[id] = [];
-  }
-  SSInstantiationListeners[id].push(listener);
-}
-
-function SSNotifyInstantiationListeners(element)
-{
-  var listeners = SSInstantiationListeners[element.getProperty('id')];
-  if(listeners)
-  {
-    listeners.each(function(listener) {
-      if(listener.onInstantiate) 
-      {
-        listener.onInstantiate();
-      }
-    });
-  }
-}
 
 // Add it the global UI class lookup
 if($type(ShiftSpace.UI) != 'undefined')
