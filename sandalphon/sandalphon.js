@@ -57,39 +57,20 @@ var SandalphonClass = new Class({
   */
   load: function(path, callback)
   {
-    var ui = {};
+    var interface;
+    var styles;
     
     var server = (ShiftSpace && ShiftSpace.info && ShiftSpace.info().server) || '..';
     console.log('load!');
     // load the interface file
     if(typeof SandalphonToolMode != 'undefined')
     {
-      var interface = new Request({
+      var interfaceCall = new Request({
         url:  server+path+'.html',
         method: 'get',
-        onSuccess: function(responseText, responseXML)
+        onComplete: function(responseText, responseXML)
         {
-          ui.interface = responseText
-          if(this.analyze(responseText))
-          {
-          }
-          else
-          {
-            console.error('Error loading interface.');
-          }
-        }.bind(this),
-        onFailure: function()
-        {
-          console.error('Oops could not load that interface file');
-        }
-      });
-    
-      var styles = new Request({
-        url:  '..'+path+'.css',
-        method: 'get',
-        onSuccess: function(responseText, responseXML)
-        {
-          ui.styles = responseText;
+          interface = responseText;
         }.bind(this),
         onFailure: function()
         {
@@ -97,25 +78,38 @@ var SandalphonClass = new Class({
         }
       });
       
+      var stylesCall = new Request({
+        url:  '..'+path+'.css',
+        method: 'get',
+        onComplete: function(responseText, responseXML)
+        {
+          styles = responseText;
+        }.bind(this),
+        onFailure: function()
+        {
+          console.error('Oops could not load that interface file');
+        }
+      });
+    
+      
       // Group HTMl and CSS calls
-      var loadGroup = new Group(interface, styles);
+      var loadGroup = new Group(interfaceCall, stylesCall);
       loadGroup.addEvent('complete', function() {
         console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> load group done');
-        console.log(ui);
-        if(callback) callback(ui);
+        if(callback) callback({interface:interface, styles:styles});
       });
 
       // fetch
-      interface.send();
-      styles.send();
+      interfaceCall.send();
+      stylesCall.send();
     }
     else
     {
       loadFile(path+'.html', function(rx) {
-        ui.interface = rx.responseText;
+        interface = rx.responseText;
         loadFile(path+'.css', function(rx) {
-          ui.styles = rx.responseText;
-          if(callback) callback(ui);
+          styles = rx.responseText;
+          if(callback) callback({interface:interface, styles:styles});
         });
       });
     }
@@ -125,6 +119,7 @@ var SandalphonClass = new Class({
   
   addStyle: function(css, ctxt) 
   {
+    console.log('addStyle ' + css);
     var context = ctxt || window;
     var contextDoc = context.document;
     
@@ -492,6 +487,7 @@ var SandalphonToolClass = new Class({
    
    loadUI: function(ui)
    {
+     console.log(ui);
      // empty it out first
      $('SSSandalphonContainer').empty();
      // Add the style
