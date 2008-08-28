@@ -95,7 +95,9 @@ var SSCustomTableRow = new Class({
       var image = cell._getElement('> img');
       var span = cell._getElement('> span');
     
-      image.setProperty('src', ['../spaces/', space, '/', space, '.png'].join(''));
+      var server = (ShiftSpace.info && ShiftSpace.info().server) || '..';
+      
+      image.setProperty('src', [server, '/spaces/', space, '/', space, '.png'].join(''));
       span.set('text', SSLocalizedString(space));
     } 
   },
