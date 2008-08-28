@@ -1,13 +1,11 @@
 var SSConsoleClass = new Class({
   
   name: 'SSConsole',
-  
   Extends: SSView,
   
 
   initialize: function()
   {
-    console.log('+++++++++++++++++++++++++++ SSConsole starting up');
     this.parent();
     Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
     
@@ -65,7 +63,6 @@ var SSConsoleClass = new Class({
   
   setAllShiftsTableView: function(tableView)
   {
-    console.log('Fetch all shifts');
     this.allShiftsTableView = tableView;
     tableView.setDelegate(this);
     tableView.setDatasource(this.allShiftsDatasource);
@@ -76,7 +73,6 @@ var SSConsoleClass = new Class({
   
   setMyShiftsTableView: function(tableView)
   {
-    console.log('Fetch my shifts');
     this.myShiftsTableView = tableView;
     tableView.setDelegate(this);
     tableView.setDatasource(this.myShiftsDatasource);
@@ -210,7 +206,6 @@ var SSConsoleClass = new Class({
 
   buildInterface: function(ui)
   {
-    console.log('++++++++++++++++++++++++++++++++++++ SSConsole buildInterface');
     this.element = new IFrame({
       id: 'SSConsole'
     });
@@ -218,7 +213,6 @@ var SSConsoleClass = new Class({
     this.element.injectInside(document.body);
         
     this.element.addEvent('load', function(doc) {
-      console.log('++++++++++++++++++++++++++++++++++++ SSConsole iframe loaded');
       var context = this.element.contentWindow;
 
       // under GM not wrapped, erg - David
@@ -229,15 +223,12 @@ var SSConsoleClass = new Class({
       }
 
       // add the style
-      console.log('+++++++++++++++++++++++++++++++++++ SSConsole add style');
       Sandalphon.addStyle(ui.styles, context);
       // grab the interface, strip the outer level
-      console.log('+++++++++++++++++++++++++++++++++++ SSConsole converting to frag');
       var fragment = Sandalphon.convertToFragment(ui.interface, context).getFirst();
       // place it in the frame
       $(context.document.body).grab(fragment);
       $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
-      console.log('+++++++++++++++++++++++++++++++++++ SSConsole iframe placed');
       // activate the iframe context
       Sandalphon.activate(context);
     }.bind(this));
