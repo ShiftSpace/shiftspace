@@ -360,8 +360,8 @@ var Drag = new Class({
 			}
 		}
 		if ($type(this.options.grid) == 'number') this.options.grid = {'x': this.options.grid, 'y': this.options.grid};
-		this.document.addEvents({mousemove: this.bound.check, mouseup: this.bound.cancel});
-		this.document.addEvent(this.selection, this.bound.eventStop);
+		(new Document(this.document)).addEvents({mousemove: this.bound.check, mouseup: this.bound.cancel}); // CHANGE: For GM - David
+		(new Document(this.document)).addEvent(this.selection, this.bound.eventStop); // CHANGE: For GM - David
 	},
 
 	check: function(event){
@@ -369,7 +369,7 @@ var Drag = new Class({
 		var distance = Math.round(Math.sqrt(Math.pow(event.page.x - this.mouse.start.x, 2) + Math.pow(event.page.y - this.mouse.start.y, 2)));
 		if (distance > this.options.snap){
 			this.cancel();
-			this.document.addEvents({
+			(new Document(this.document)).addEvents({
 				mousemove: this.bound.drag,
 				mouseup: this.bound.stop
 			});
@@ -399,18 +399,18 @@ var Drag = new Class({
 	},
 
 	cancel: function(event){
-		this.document.removeEvent('mousemove', this.bound.check);
-		this.document.removeEvent('mouseup', this.bound.cancel);
+		(new Document(this.document)).removeEvent('mousemove', this.bound.check); // CHANGE: GM - David
+		(new Document(this.document)).removeEvent('mouseup', this.bound.cancel); // CHANGE: GM - David
 		if (event){
-			this.document.removeEvent(this.selection, this.bound.eventStop);
+			(new Document(this.document)).removeEvent(this.selection, this.bound.eventStop); // CHANGE: GM - David
 			this.fireEvent('cancel', this.element);
 		}
 	},
 
 	stop: function(event){
-		this.document.removeEvent(this.selection, this.bound.eventStop);
-		this.document.removeEvent('mousemove', this.bound.drag);
-		this.document.removeEvent('mouseup', this.bound.stop);
+		(new Document(this.document)).removeEvent(this.selection, this.bound.eventStop); // CHANGE: GM - David
+		(new Document(this.document)).removeEvent('mousemove', this.bound.drag); // CHANGE: GM - David
+		(new Document(this.document)).removeEvent('mouseup', this.bound.stop); // CHANGE: GM - David
 		if (event) this.fireEvent('complete', this.element);
 	}
 
