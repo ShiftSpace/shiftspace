@@ -5,13 +5,13 @@ if(!empty($_REQUEST['id']))
   $url_slug = $db->escape($_REQUEST['id']);
 }
 
-if($url_slug)
+// grab the broken shift
+$theShift = $db->value("
+  SELECT * FROM shift WHERE url_slug='$url_slug'
+");
+
+if($url_slug && $theShift)
 {
-  // grab the broken shift
-  $theShift = $db->value("
-    SELECT * FROM shift WHERE url_slug='$url_slug'
-  ");
-  
   // check if it exists in the broken table
   $exists = $db->value("
     SELECT * FROM broken WHERE url_slug={$theShift['url_slug']}
