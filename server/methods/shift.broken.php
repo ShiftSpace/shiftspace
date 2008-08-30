@@ -6,7 +6,7 @@ if(!empty($_REQUEST['id']))
 }
 
 // grab the broken shift
-$theShift = $db->value("
+$theShift = $db->row("
   SELECT * FROM shift WHERE url_slug='$url_slug'
 ");
 
