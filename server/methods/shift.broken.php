@@ -20,8 +20,7 @@ if($url_slug)
   if(!$exists)
   {
     // insert it
-    // Save the shift to storage
-    $db->query("
+    $qry = "
       INSERT INTO broken
       (user_id, space, href, summary, content, url_slug, created, modified, version, status)
        VALUES ('{$theShift['user_id']}',
@@ -34,7 +33,10 @@ if($url_slug)
                '{$theShift['modified']}',
                '{$theShift['version']}',
                '{$theShift['status']}')
-    ");
+    ";
+    echo $qry;
+    // Save the shift to storage
+    $db->query($qry);
     respond(1, "Added broken shift");
   }
   else
