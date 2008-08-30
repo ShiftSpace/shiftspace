@@ -23,9 +23,8 @@ if($url_slug)
     // Save the shift to storage
     $db->query("
       INSERT INTO broken
-      (id, user_id, space, href, summary, content, url_slug, created, modified, version, status)
-       VALUES ('{$theShift['id']}',
-               '{$theShift['user_id']}',
+      (user_id, space, href, summary, content, url_slug, created, modified, version, status)
+       VALUES ('{$theShift['user_id']}',
                '{$theShift['space']}',
                '{$theShift['href']}',
                '{$theShift['summary']}',
