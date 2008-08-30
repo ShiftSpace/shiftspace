@@ -34,7 +34,7 @@ if($url_slug && $theShift)
                '{$theShift['version']}',
                '{$theShift['status']}')
     ";
-    echo $qry;
+    // echo $qry;
     // Save the shift to storage
     $db->query($qry);
     respond(1, "Added broken shift");
