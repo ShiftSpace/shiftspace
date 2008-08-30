@@ -14,7 +14,7 @@ if($url_slug)
   
   // check if it exists in the broken table
   $exists = $db->value("
-    SELECT * FROM broken WHERE id={$theShift['id']}
+    SELECT * FROM broken WHERE url_slug={$theShift['url_slug']}
   ");
   
   if(!$exists)
