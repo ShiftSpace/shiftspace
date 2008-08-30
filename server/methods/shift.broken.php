@@ -55,7 +55,7 @@ if($url_slug && $theShift)
 }
 else
 {
-  respond(0, "Oops shift $url_slug does not exist.");
+  respond(0, "Oops shift $url_slug ($theShift) does not exist.");
 }
 
 ?>
