@@ -18,8 +18,8 @@ var SandalphonClass = new Class({
     // TODO: generalize to return markup that doesn't have a root node
     var markupFrag = $(fragment.getFirst().dispose());
 
-    console.log('convertToFragment');
-    console.log(markupFrag.getProperty('id'));
+    //console.log('convertToFragment');
+    //console.log(markupFrag.getProperty('id'));
     
     // destroy the temporary fragment
     fragment.destroy();
@@ -61,7 +61,7 @@ var SandalphonClass = new Class({
     var styles;
     
     var server = (ShiftSpace && ShiftSpace.info && ShiftSpace.info().server) || '..';
-    console.log('load!');
+    //console.log('load!');
     // load the interface file
     if(typeof SandalphonToolMode != 'undefined')
     {
@@ -95,7 +95,7 @@ var SandalphonClass = new Class({
       // Group HTMl and CSS calls
       var loadGroup = new Group(interfaceCall, stylesCall);
       loadGroup.addEvent('complete', function() {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> load group done');
+        //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> load group done');
         if(callback) callback({interface:interface, styles:styles});
       });
 
@@ -119,13 +119,9 @@ var SandalphonClass = new Class({
   
   addStyle: function(css, ctxt) 
   {
-    console.log('addStyle ' + css);
     var context = ctxt || window;
     var contextDoc = context.document;
     
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> grabbing head');
-    console.log(contextDoc.getElements);
-
     if (context.$$('head').length != 0) 
     {
       var head = context.$$('head')[0];
@@ -148,7 +144,6 @@ var SandalphonClass = new Class({
     var context = ctxt || window;
     
     console.log('>>>>>>>>>>>>>>>>>> activate');
-    console.log(context);
     
     // First instantiate all controllers
     this.instantiateControllers(context);
@@ -172,11 +167,7 @@ var SandalphonClass = new Class({
     // instantiate all objects
     views.each(function(aView) {
       var theClass = aView.getProperty('uiclass');
-      console.log('======================================= Instantiating ' + theClass + '========================================');
       new ShiftSpace.UI[theClass](aView);
-      // notify any instantiation listeners
-      console.log('notify listeners');
-      console.log('>>>>>>>>>>>>>> DONE');
     });
     
     // notify all listeners
@@ -186,7 +177,6 @@ var SandalphonClass = new Class({
   
   contextQuery: function(context, sel)
   {
-    console.log('contextQuery');
     return (context.$$ && context.$$(sel)) ||
            (context.getElements && context.getElements(sel)) ||
            [];
@@ -195,11 +185,9 @@ var SandalphonClass = new Class({
   
   initializeOutlets: function(ctxt)
   {
-    console.log('initializing outlets');
     var context = ctxt || window;
     
     var outlets = this.contextQuery(context, '*[outlet]');
-    console.log(context);
     
     outlets.each(function(anOutlet) {
       // grab the outlet parent id
@@ -207,17 +195,13 @@ var SandalphonClass = new Class({
       // grab the main view controller from the matching context
       if(context.$(outletParentObject))
       {
-        console.log('in context ' + context.$(outletParentObject).getProperty('id'));
         var controller = SSControllerForNode(context.$(outletParentObject));
         controller.addOutlet(anOutlet);
       }
       else if(context != window && $(outletParentObject))
       {
-        console.log('other context ' + $(outletParentObject).getProperty('id'));
-        console.log($(outletParentObject).retrieve('__ssviewcontroller__'));
         // check if there's a match in the top window
         var controller = SSControllerForNode($(outletParentObject));
-        console.log(controller);
         controller.addOutlet(anOutlet);
       }
     });
@@ -232,7 +216,6 @@ var SandalphonClass = new Class({
   
   awakeObjects: function(context)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>> awake objects');
     ShiftSpace.Objects.each(function(object, objectId) {
       if(object.awake) object.awake(context);
     });
@@ -487,7 +470,7 @@ var SandalphonToolClass = new Class({
    
    loadUI: function(ui)
    {
-     console.log(ui);
+     //console.log(ui);
      // empty it out first
      $('SSSandalphonContainer').empty();
      // Add the style

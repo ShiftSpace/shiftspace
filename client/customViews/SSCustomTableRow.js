@@ -8,6 +8,8 @@ var SSCustomTableRow = new Class({
   {
     this.parent(el);
     console.log('initialize SSCustomTableRow');
+    
+    // this should be generated from the UI.
     this.editCellControl = new SSEditableTextCell();
     this.attachEvents();
   },

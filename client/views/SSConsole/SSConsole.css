@@ -6,8 +6,9 @@
 
 #SSConsole, #SSConsoleFrameBody
 {
-  font-family: georgia;
+  font-family: verdana;
   font-size: 12px;
+  color: green;
 }
 
 #SSConsoleFrameBody #MainTabView.SSTabView

@@ -1,15 +1,21 @@
-var SSConsoleClass = new Class({
+var SSConsole = new Class({
   
   name: 'SSConsole',
+  
   Extends: SSView,
   
-
-  initialize: function()
+  initialize: function(el, options)
   {
-    this.parent();
-    Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
+    // only really relevant under Sandalphon
+    this.parent(el, options);
     
-    // login logout eventss
+    // if not tool mode, we load the interface ourselves
+    if(typeof SandalphonToolMode == 'undefined')
+    {
+      Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
+    }
+    
+    // listen for login/logout eventss
     ShiftSpace.User.addEvent('onUserLogin', this.handleLogin.bind(this));
     ShiftSpace.User.addEvent('onUserLogout', this.handleLogout.bind(this));
     
@@ -31,7 +37,6 @@ var SSConsoleClass = new Class({
       dataNormalizer: this.legacyNormalizer,
       requiredProperties: ['username']
     });
-
   },
   
   
@@ -178,9 +183,30 @@ var SSConsoleClass = new Class({
   },
   
   
+  initSelectLanguage: function()
+  {
+    // attach events to localization switcher
+    this.outlets().get('SSSelectLanguage').addEvent('change', function(_evt) {
+      var evt = new Event(_evt);
+      console.log(this.getProperty('value'));
+    });
+  },
+  
+  
   awake: function(context)
   {
     this.parent();
+    
+    /*
+    if(context == window)
+    {
+      
+    }
+    else if(context == this.element.contentWindow)
+    {
+      
+    }
+    */
     
     // test setting outlets to controllers
     if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
@@ -188,6 +214,13 @@ var SSConsoleClass = new Class({
     if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
     if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
     if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
+    if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
+    if(this.outlets().get('DanButton')) this.outlets().get('DanButton').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      console.log('Hello from Dan!');
+    });
+    
+    console.log(this.outlets().get('DanButton'));
   },
   
   
@@ -242,11 +275,26 @@ var SSConsoleClass = new Class({
     if(args.tableView == this.allShiftsTableView)
     {
       console.log('all shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
+      // show the shift
+      showShift(datasource.data()[args.rowIndex].id);
     }
     else if(args.tableView == this.myShiftsTableView)
     {
       console.log('my shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
+      // set a variable for opening this shift on the next page if the url is different
     }
+  },
+  
+  
+  userSelectedRow: function(args)
+  {
+    
+  },
+  
+  
+  userDeselectedRow: function(args)
+  {
+    
   },
   
    
@@ -277,4 +325,11 @@ var SSConsoleClass = new Class({
   
 });
 
-new SSConsoleClass();
+// Create the object right away if we're not running under the Sandalphon tool
+if(typeof SandalphonToolMode == 'undefined') new SSConsole();
+
+// Add it the global UI class lookup
+if($type(ShiftSpace.UI) != 'undefined')
+{
+  ShiftSpace.UI.SSConsole = SSConsole;
+}

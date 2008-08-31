@@ -223,7 +223,7 @@ var ShiftSpace = new (function() {
       console.log('SSCustomTableRow.js loaded');
       // INCLUDE ../sandalphon/sandalphon.js
       console.log('sandalphon.js loaded');
-      // INCLUDE Console-0.5.js
+      // INCLUDE views/SSConsole/SSConsole.js
       console.log('Console-0.5.js loaded');
       
       // INCLUDE Space.js
@@ -1362,7 +1362,11 @@ var ShiftSpace = new (function() {
 
       shifts[tempId] = shiftJson;
 
+      console.log('+++++++++++++++++++++++++++++++++++++++++++++++');
+      console.log(spaces[spaceName]);
+      console.log('calling create shift');
       var noError = spaces[spaceName].createShift(shiftJson);
+      console.log('noError : ' + noError);
       if(noError)
       {
         //console.log('tempId:' + tempId);
@@ -1386,7 +1390,9 @@ var ShiftSpace = new (function() {
       var space = SSSpaceForShift(shiftId);
       
       // call onShiftCreate
+      console.log('SSShowNewShift');
       showShift(shiftId); // TODO: remove - David
+      console.log('calling onShiftCreate');
       space.onShiftCreate(shiftId);
       editShift(shiftId);
       focusShift(shiftId, false);
@@ -1532,9 +1538,10 @@ var ShiftSpace = new (function() {
     */
     function showShift(shiftId) 
     {
-      // console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      console.log('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + SSShiftIsLoaded(shiftId));
       if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
       {
+        console.log('SSLoadShift');
         // first make sure that is loaded
         SSLoadShift(shiftId, showShift.bind(ShiftSpace));
         return;
@@ -1561,6 +1568,7 @@ var ShiftSpace = new (function() {
           // load the space first
           if(!space)
           {
+            console.log(shift);
             console.log('space not loaded ' + shift.space + ', ' + shiftId);
             loadSpace(shift.space, shiftId);
             return;
@@ -1873,6 +1881,8 @@ var ShiftSpace = new (function() {
       {
         return shifts[shiftId];
       }
+      
+      return null;
     }
     
     /*
@@ -1922,9 +1932,7 @@ var ShiftSpace = new (function() {
     */
     function SSSetShift(shiftId, shiftData)
     {
-      shifts[shiftId] = $merge(shifts[shiftId], {
-        content: shiftData.content
-      });
+      shifts[shiftId] = $merge((SSGetShift(shiftId) || {}), shiftData);
     }
     
     /*
@@ -1944,6 +1952,8 @@ var ShiftSpace = new (function() {
         if(returnArray && returnArray[0])
         {
           var shiftObj = returnArray[0];
+          console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+          console.log(shiftObj);
           SSSetShift(shiftObj.id, shiftObj);
           
           if(callback && $type(callback) == 'function')
@@ -1999,7 +2009,7 @@ var ShiftSpace = new (function() {
     */
     function SSShiftIsLoaded(shiftId)
     {
-      return SSHasProperty(SSGetShift(shiftId), ('content'));
+      return (SSGetShift(shiftId) && SSHasProperty(SSGetShift(shiftId), ('content')));
     }
     
     /*

@@ -8,13 +8,15 @@
       <div title="Settings" class="SSButton SSLocalized">Settings</div>
       <div title="Login" class="SSButton SSLocalized">Login</div>
       <div title="Welcome" class="SSButton SSLocalized">Welcome</div>
+      <div title="Mushon" class="SSButton SSLocalized">Mushon</div>
+      <div title="Mushon" class="SSButton SSLocalized">Dan</div>
       <!-- End tab buttons -->
       
       <!-- Console User Controls -->
       <div id="SSConsoleControls">
         <div id="SSConsoleLoginOutButton" title="Login/Logout" class="SSConsoleControlButton" outlet="SSConsole"></div>
         <div id="SSConsoleBugReportButton" title="Report a bug" class="SSConsoleControlButton" outlet="SSConsole"></div>
-        <div id="SSConsoleCloseButton" title="Close" class="SSConsoleControlButton" outlet="SSConssole"></div>
+        <div id="SSConsoleCloseButton" title="Close" class="SSConsoleControlButton" outlet="SSConsole"></div>
       </div>
       <!-- End Console User Controls -->
     </div>
@@ -23,7 +25,16 @@
       <?customView:ShiftsTabView?>
       <?customView:SettingsTabView?>
       <?customView:LoginTabView?>
-      <div id="WelcomePane">Welcome</div>
+      <div id="WelcomePane">
+        Welcome
+      </div>
+      <div id="MushonPane">
+        Mushon
+      </div>
+      <div id="DanPanefoo">
+        Dan
+        <input id="DanButton" type="button" value="Click Me!" outlet="SSConsole"></input>
+      </div>
     </div>
   
   </div>

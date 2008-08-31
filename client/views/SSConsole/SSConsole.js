@@ -1,87 +1,42 @@
 var SSConsole = new Class({
   
-  name: "SSConsole",
+  name: 'SSConsole',
   
   Extends: SSView,
   
-  legacyNormalizer : {
-    normalize: function(data)
-    {
-      data.length.times(function(idx) {
-        var row = data[idx];
-        var space = row.space;
-        switch(space)
-        {
-          case 'notes':
-            row.space = "Notes";
-          break;
-          case 'highlight':
-            row.space = 'Highlights';
-          break;
-          case 'sourceshift':
-            row.space = 'SourceShift';
-          break;
-          case 'imageswap':
-            row.space = "ImageSwap"
-          break;
-          default:
-          break;
-        }
-      });
-      return data;  
-    }
-  },
-  
-  
   initialize: function(el, options)
   {
+    // only really relevant under Sandalphon
     this.parent(el, options);
     
+    // if not tool mode, we load the interface ourselves
+    if(typeof SandalphonToolMode == 'undefined')
+    {
+      Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
+    }
+    
+    // listen for login/logout eventss
     ShiftSpace.User.addEvent('onUserLogin', this.handleLogin.bind(this));
     ShiftSpace.User.addEvent('onUserLogout', this.handleLogout.bind(this));
     
-    // set the datasource for the tableview
-    if(window.location.hostname == "www.shiftspace.org" ||
-       window.location.hostname == "metatron.shiftspace.org")
-    {
-      // if we're on metatron load real data
-      this.allShiftsDatasource = new SSTableViewDatasource({
-        dataKey: 'shifts',
-        dataUpdateKey: 'id',
-        dataUpdateURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.update',
-        dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query',
-        dataNormalizer: this.legacyNormalizer
-      });
+    // if we're on metatron load real data
+    this.allShiftsDatasource = new SSTableViewDatasource({
+      dataKey: 'shifts',
+      dataUpdateKey: 'id',
+      dataUpdateURL: 'shift.update',
+      dataProviderURL: 'shift.query',
+      dataNormalizer: this.legacyNormalizer
+    });
 
-      // if we're on metatron load real data
-      this.myShiftsDatasource = new SSTableViewDatasource({
-        dataKey: 'shifts',
-        dataUpdateKey: 'id',
-        dataUpdateURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.update',
-        dataProviderURL: 'http://metatron.shiftspace.org/dev/shiftspace.php?method=shift.query',
-        dataNormalizer: this.legacyNormalizer,
-        requiredProperties: ['username']
-      });
-    }
-    else
-    {
-      // otherwise just use dummy data
-      this.allShiftsDatasource = new SSTableViewDatasource({
-        data: [
-          {id: 'abch', space: 'Notes', summary: 'Junk', username: 'tester', created: 'Yesterday'},
-          {id: 'abci', space: 'Highlights', summary: 'Space age', username: 'dnolen', created: 'Yesterday'},
-          {id: 'abcj', space: 'Notes', summary: 'Wowzer', username: 'dpuppy', created: 'Yesterday'}
-        ]
-      });
-      // otherwise just use dummy data
-      this.myShiftsDatasource = new SSTableViewDatasource({
-        data: [
-          {id: 'cbch', space: 'Fisheye', summary: 'test', username: 'dnolen', href: 'www.tah.com', created: 'Yesterday'},
-          {id: 'cbci', space: 'Fisheye', summary: 'oh man', username: 'dnolen', href: 'www.fah.com', created: 'Yesterday'},
-          {id: 'cbcj', space: 'SourceShift', summary: 'test', username: 'dnolen', href: 'www.yah.com', created: 'Yesterday'}
-        ]
-      });
-    }
+    // if we're on metatron load real data
+    this.myShiftsDatasource = new SSTableViewDatasource({
+      dataKey: 'shifts',
+      dataUpdateKey: 'id',
+      dataUpdateURL: 'shift.update',
+      dataProviderURL: 'shift.query',
+      dataNormalizer: this.legacyNormalizer,
+      requiredProperties: ['username']
+    });
   },
   
   
@@ -92,7 +47,7 @@ var SSConsole = new Class({
     // hide the login tab
     this.outlets().get('MainTabView').hideTabByName('LoginTabView');
     // update the datasource
-    this.myShiftsDatasource.setProperty('username', ShiftSpace.User.getUsername());
+    if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpace.User.getUsername());
     // switch to the tab view
     this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
   },
@@ -105,7 +60,7 @@ var SSConsole = new Class({
     // reveal the login tab
     this.outlets().get('MainTabView').revealTabByName('LoginTabView');
     // update data source
-    this.myShiftsDatasource.setProperty('username', null);
+    if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', null);
     // refresh the main tab view
     this.outlets().get('MainTabView').refresh();
   },
@@ -113,18 +68,16 @@ var SSConsole = new Class({
   
   setAllShiftsTableView: function(tableView)
   {
-    console.log('Fetch all shifts');
     this.allShiftsTableView = tableView;
     tableView.setDelegate(this);
     tableView.setDatasource(this.allShiftsDatasource);
-    this.allShiftsDatasource.setProperties({href:"http://www.google.com/"});
+    this.allShiftsDatasource.setProperties({href:window.location});
     this.allShiftsDatasource.fetch();
   },
   
   
   setMyShiftsTableView: function(tableView)
   {
-    console.log('Fetch my shifts');
     this.myShiftsTableView = tableView;
     tableView.setDelegate(this);
     tableView.setDatasource(this.myShiftsDatasource);
@@ -170,20 +123,40 @@ var SSConsole = new Class({
     ShiftSpace.User.login({
       username: this.outlets().get('SSLoginFormUsername').getProperty('value'),
       password: this.outlets().get('SSLoginFormPassword').getProperty('value')
-    });
+    }, this.loginFormSubmitCallback.bind(this));
+  },
+  
+  
+  loginFormSubmitCallback: function(response)
+  {
+    console.log('Login call back!');
+    console.log(response);
   },
   
   
   initSignUpForm: function()
   {
-    this.outlets().get('SSSignUpFormSubmit').addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      var username = this.outlets().get('SSSignUpFormUsername').getProperty('value');
-      var email = this.outlets().get('SSSignUpFormEmail').getProperty('value');
-      var password = this.outlets().get('SSSignUpFormPassword').getProperty('value');
-      var confirmPassword = this.outlets().get('SSSignUpFormPassword').getProperty('value');
-      console.log('Sing up the user ' + username + ', ' + email + ', ' + password + ', ' + confirmPassword);
-    }.bind(this));
+    this.outlets().get('SSSignUpFormSubmit').addEvent('click', this.handleSignUpFormSubmit.bind(this));
+  },
+  
+  
+  handleSignUpFormSubmit: function()
+  {
+    var joinInput = {
+      username: this.outlets().get('SSSignUpFormUsername').getProperty('value'),
+      email: this.outlets().get('SSSignUpFormEmail').getProperty('value'),
+      password: this.outlets().get('SSSignUpFormPassword').getProperty('value'),
+      password_again: this.outlets().get('SSSignUpFormPassword').getProperty('value')
+    };
+    
+    ShiftSpace.User.join(joinInput, this.signUpFormSubmitCallback.bind(this))
+  },
+  
+  
+  signUpFormSubmitCallback: function(response)
+  {
+    console.log('Joined!');
+    console.log(response);
   },
   
   
@@ -209,10 +182,31 @@ var SSConsole = new Class({
     // init close button
   },
   
-
-  awake: function()
+  
+  initSelectLanguage: function()
+  {
+    // attach events to localization switcher
+    this.outlets().get('SSSelectLanguage').addEvent('change', function(_evt) {
+      var evt = new Event(_evt);
+      console.log(this.getProperty('value'));
+    });
+  },
+  
+  
+  awake: function(context)
   {
     this.parent();
+    
+    /*
+    if(context == window)
+    {
+      
+    }
+    else if(context == this.element.contentWindow)
+    {
+      
+    }
+    */
     
     // test setting outlets to controllers
     if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
@@ -220,16 +214,75 @@ var SSConsole = new Class({
     if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
     if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
     if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
+    if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
+    if(this.outlets().get('DanButton')) this.outlets().get('DanButton').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      console.log('Hello from Dan!');
+    });
+    
+    console.log(this.outlets().get('DanButton'));
   },
   
   
-  awakeDelayed: function()
+  awakeDelayed: function(context)
   {
     // test outlets in iframes
-    this.outlets().get('cool').addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      console.log('cool button clicked!');
+    if(this.outlets().get('cool')) 
+    {
+      this.outlets().get('cool').addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+        console.log('cool button clicked!');
+      });
+    }
+  },
+  
+
+  buildInterface: function(ui)
+  {
+    this.element = new IFrame({
+      id: 'SSConsole'
     });
+    SSSetControllerForNode(this, this.element);
+    this.element.injectInside(document.body);
+        
+    this.element.addEvent('load', function(doc) {
+      var context = this.element.contentWindow;
+
+      // under GM not wrapped, erg - David
+      if(!context.$)
+      {
+        context = new Window(context);
+        var doc = new Document(context.document);
+      }
+
+      // add the style
+      Sandalphon.addStyle(ui.styles, context);
+      // grab the interface, strip the outer level
+      var fragment = Sandalphon.convertToFragment(ui.interface, context).getFirst();
+      // place it in the frame
+      $(context.document.body).grab(fragment);
+      $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
+      // activate the iframe context
+      Sandalphon.activate(context);
+    }.bind(this));
+  },
+  
+  
+  userClickedRow: function(args)
+  {
+    console.log('MyTableViewDelegate, userClickedRow: ' + args.rowIndex);
+    var datasource = args.tableView.datasource();
+    if(args.tableView == this.allShiftsTableView)
+    {
+      console.log('all shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
+      // show the shift
+      showShift(datasource.data()[args.rowIndex].id);
+    }
+    else if(args.tableView == this.myShiftsTableView)
+    {
+      console.log('my shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
+      // set a variable for opening this shift on the next page if the url is different
+    }
   },
   
   
@@ -242,21 +295,6 @@ var SSConsole = new Class({
   userDeselectedRow: function(args)
   {
     
-  },
-  
-  
-  userClickedRow: function(args)
-  {
-    console.log('MyTableViewDelegate, userClickedRow: ' + args.rowIndex);
-    var datasource = args.tableView.datasource();
-    if(args.tableView == this.allShiftsTableView)
-    {
-      console.log('all shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
-    }
-    else if(args.tableView == this.myShiftsTableView)
-    {
-      console.log('my shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
-    }
   },
   
    
@@ -284,10 +322,20 @@ var SSConsole = new Class({
     return true;
   }
   
+  
 });
 
-// Add it the global UI class lookup
-if($type(ShiftSpace.UI) != 'undefined')
+// Create the object right away if we're not running under the Sandalphon tool
+if(typeof SandalphonToolMode == 'undefined') 
 {
-  ShiftSpace.UI.SSConsole = SSConsole;
+  new SSConsole();
 }
+else
+{
+  // Add it the global UI class lookup
+  if($type(ShiftSpace.UI) != 'undefined')
+  {
+    ShiftSpace.UI.SSConsole = SSConsole;
+  }
+}
+
