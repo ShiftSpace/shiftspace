@@ -105,6 +105,7 @@ var SandalphonClass = new Class({
     }
     else
     {
+      // just use loadFile if we're running in ShiftSpace
       loadFile(path+'.html', function(rx) {
         interface = rx.responseText;
         loadFile(path+'.css', function(rx) {

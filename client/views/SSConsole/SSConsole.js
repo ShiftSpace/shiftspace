@@ -21,7 +21,6 @@ var SSConsole = new Class({
     
     // listen for global events as well
     
-    // if we're on metatron load real data
     this.allShiftsDatasource = new SSTableViewDatasource({
       dataKey: 'shifts',
       dataUpdateKey: 'id',
@@ -30,7 +29,6 @@ var SSConsole = new Class({
       dataNormalizer: this.legacyNormalizer
     });
 
-    // if we're on metatron load real data
     this.myShiftsDatasource = new SSTableViewDatasource({
       dataKey: 'shifts',
       dataUpdateKey: 'id',
@@ -192,8 +190,8 @@ var SSConsole = new Class({
     // attach events to localization switcher
     this.outlets().get('SSSelectLanguage').addEvent('change', function(_evt) {
       var evt = new Event(_evt);
-      console.log(this.getProperty('value'));
-    });
+      SSLoadLocalizedStrings(evt.target.getProperty('value'), this.element.contentWindow);
+    }.bind(this));
   },
   
   
@@ -261,7 +259,7 @@ var SSConsole = new Class({
 
       // add the style
       Sandalphon.addStyle(ui.styles, context);
-      // grab the interface, strip the outer level
+      // grab the interface, strip the outer level, we're putting the console into an iframe
       var fragment = Sandalphon.convertToFragment(ui.interface, context).getFirst();
       // place it in the frame
       $(context.document.body).grab(fragment);

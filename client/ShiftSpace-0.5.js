@@ -336,6 +336,12 @@ var ShiftSpace = new (function() {
           ShiftSpace.Objects.each(function(object, objectId) {
             if(object.localizationChanged) object.localizationChanged();
           });
+          
+          // in case we get a raw context from FF3
+          if(!context.$$)
+          {
+            context = new Window(context);
+          }
 
           // update markup
           //console.log('fix localized');
