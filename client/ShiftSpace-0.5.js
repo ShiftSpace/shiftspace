@@ -1605,14 +1605,23 @@ var ShiftSpace = new (function() {
           SSAddRecentlyViewedShift(shiftId);
 
           // wrap this in a try catch
-          try
+          if(typeof ShiftSpaceSandBoxMode == 'undefined')
           {
-            console.log('showing the shift =======================================');
-            spaces[shift.space].showShift(shiftJson);
+            try
+            {
+              console.log('showing the shift =======================================');
+              spaces[shift.space].showShift(shiftJson);
+            }
+            catch(err)
+            {
+              console.log('Exception: ' + SSDescribeException(err));
+              console.error(err);
+            }
           }
-          catch(err)
+          else
           {
-            console.log('Exception: ' + SSDescribeException(err));
+            // in the sandbox we just want to see the damn error
+            spaces[shift.space].showShift(shiftJson);
           }
 
           focusShift(shift.id);

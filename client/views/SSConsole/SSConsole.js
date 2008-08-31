@@ -19,6 +19,8 @@ var SSConsole = new Class({
     ShiftSpace.User.addEvent('onUserLogin', this.handleLogin.bind(this));
     ShiftSpace.User.addEvent('onUserLogout', this.handleLogout.bind(this));
     
+    // listen for global events as well
+    
     // if we're on metatron load real data
     this.allShiftsDatasource = new SSTableViewDatasource({
       dataKey: 'shifts',
@@ -278,7 +280,7 @@ var SSConsole = new Class({
     {
       console.log('all shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
       // show the shift
-      showShift(datasource.data()[args.rowIndex].id);
+      if(typeof showShift != 'undefined') showShift(datasource.data()[args.rowIndex].id);
     }
     else if(args.tableView == this.myShiftsTableView)
     {
