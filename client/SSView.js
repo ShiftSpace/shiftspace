@@ -49,7 +49,22 @@ var SSView = new Class({
     }
     
     this.__subviews__ = [];
+    
+    // Call setup or setupTest allowing classes to have two modes
+    // For example, SSConsole lives in a IFrame under ShiftSpace
+    // but not under the interface tool.
+    if(typeof SandalphonToolMode != 'undefined' && this.setupTest)
+    {
+      this.setupTest();
+    }
+    else
+    {
+      this.setup();
+    }
   },
+  
+  
+  setup: function() {},
   
   /*
     Function: awake 

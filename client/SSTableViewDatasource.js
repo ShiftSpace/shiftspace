@@ -285,38 +285,12 @@ var SSTableViewDatasource = new Class({
     // check for missing properties
     if( !isMissingProperties && this.dataProviderURL())
     {
-      if(typeof SandalphonToolMode != 'undefined')
-      {
-        // if running in the tool
-        new Request({
-          url: this.dataProviderURL(),
-          method: 'post',
-          data: allProperties.getClean(),
-          onComplete: function(responseText, responseXML)
-          {
-            console.log('------------ table view data loaded');
-
-            var data = JSON.decode(responseText)[this.dataKey()];
-            this.updateData(data);
-
-            this.fireEvent('onload');
-
-          }.bind(this),
-          onFailure: function(response)
-          {
-            console.error('Oops: ' + response);
-          }.bind(this)
-        }).send();
-      }
-      else
-      {
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> SSTableViewDatasource fetch');
-        // if actually running in ShiftSpace
-        serverCall(this.dataProviderURL(), allProperties.getClean(), function(json) {
-          this.updateData(json[this.dataKey()]);
-          this.fireEvent('onload');
-        }.bind(this));
-      }
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> SSTableViewDatasource fetch');
+      // if actually running in ShiftSpace
+      serverCall(this.dataProviderURL(), allProperties.getClean(), function(json) {
+        this.updateData(json[this.dataKey()]);
+        this.fireEvent('onload');
+      }.bind(this));
     }
     else
     {

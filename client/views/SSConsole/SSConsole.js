@@ -68,10 +68,12 @@ var SSConsole = new Class({
   
   setAllShiftsTableView: function(tableView)
   {
+    var properties = (typeof SandalphonToolMode == 'undefined' ) ? {href:window.location} : {href:server+'sandbox/index.php'};
+
     this.allShiftsTableView = tableView;
     tableView.setDelegate(this);
     tableView.setDatasource(this.allShiftsDatasource);
-    this.allShiftsDatasource.setProperties({href:window.location});
+    this.allShiftsDatasource.setProperties(properties);
     this.allShiftsDatasource.fetch();
   },
   
@@ -217,7 +219,7 @@ var SSConsole = new Class({
     if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
     if(this.outlets().get('DanButton')) this.outlets().get('DanButton').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
-      console.log('Hello from Dan!');
+      console.log('Hello from Dan again!');
     });
     
     console.log(this.outlets().get('DanButton'));

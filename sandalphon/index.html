@@ -12,7 +12,7 @@
 
     <!-- boot strap -->
     <script type="text/javascript" charset="utf-8">
-      var __ssserver__ = "http://metatron.shiftspace.org";
+      var server = "http://localhost/~davidnolen/shiftspace-0.11/";
       var SandalphonToolMode = true;
       
       if(!ShiftSpace) var ShiftSpace = {};
@@ -49,7 +49,7 @@
           {
             new Request({
               type: 'post',
-              url: __ssserver__ + '/dev/shiftspace.php?method=user.login',
+              url: server + '/dev/shiftspace.php?method=user.login',
               data: credentials,
               onComplete: function(responseText, reponseXml)
               {
@@ -173,6 +173,47 @@
         }
       });
       
+      function serverCall(method, _parameters, _callback) {
+        var callback = _callback;
+        var url = server + 'shiftspace.php?method=' + method;
+
+        var parameters = $merge({
+          now: new Date()
+        }, _parameters);
+
+        new Request({
+          method: 'post',
+          url: url,
+          data: parameters,
+          onComplete: function(responseText, responseXml) 
+          {
+            console.log('servercall returned');
+
+            if (typeof callback == 'function') 
+            {
+              try
+              {
+                console.log('trying ' + url);
+                var theJson = JSON.decode(responseText);
+              }
+              catch(exc)
+              {
+                console.log('Server call exception: ' + SSDescribeException(exc));
+              }
+
+              callback(theJson);
+            }
+            else
+            {
+              console.log('callback is not a function');
+            }
+          },
+          onFailure: function(err) 
+          {
+            console.log(err);
+          }
+        }).send();
+      }
       
       // Actual Sandalphon
       var Sandalphon;
