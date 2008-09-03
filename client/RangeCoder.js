@@ -35,6 +35,7 @@ var RangeCoder = new Class({
       return this.generateRange(objAncestor, refObj);
     }
 
+    console.log('attempting to recover broken range');
     var recovered = this.recoverBrokenRange(refObj);
     if (recovered)
     {
