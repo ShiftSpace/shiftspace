@@ -1,26 +1,27 @@
 var SSConsole = new Class({
-  
+
   name: 'SSConsole',
-  
+
   Extends: SSView,
-  
+
   initialize: function(el, options)
   {
     // only really relevant under Sandalphon
     this.parent(el, options);
-    
+
     // if not tool mode, we load the interface ourselves
     if(typeof SandalphonToolMode == 'undefined')
     {
       Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
     }
-    
+
     // listen for login/logout eventss
     ShiftSpace.User.addEvent('onUserLogin', this.handleLogin.bind(this));
     ShiftSpace.User.addEvent('onUserLogout', this.handleLogout.bind(this));
-    
+
     // listen for global events as well
-    
+
+    // allocate datasource for page shifts
     this.allShiftsDatasource = new SSTableViewDatasource({
       dataKey: 'shifts',
       dataUpdateKey: 'id',
@@ -29,6 +30,7 @@ var SSConsole = new Class({
       dataNormalizer: this.legacyNormalizer
     });
 
+    // allocate datasource for user shifts
     this.myShiftsDatasource = new SSTableViewDatasource({
       dataKey: 'shifts',
       dataUpdateKey: 'id',
@@ -38,8 +40,8 @@ var SSConsole = new Class({
       requiredProperties: ['username']
     });
   },
-  
-  
+
+
   handleLogin: function()
   {
     // empty the login form
@@ -51,8 +53,8 @@ var SSConsole = new Class({
     // switch to the tab view
     this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
   },
-  
-  
+
+
   handleLogout: function()
   {
     // empty the login form
@@ -64,8 +66,8 @@ var SSConsole = new Class({
     // refresh the main tab view
     this.outlets().get('MainTabView').refresh();
   },
-  
-  
+
+
   setAllShiftsTableView: function(tableView)
   {
     var properties = (typeof SandalphonToolMode == 'undefined' ) ? {href:window.location} : {href:server+'sandbox/index.php'};
@@ -76,8 +78,8 @@ var SSConsole = new Class({
     this.allShiftsDatasource.setProperties(properties);
     this.allShiftsDatasource.fetch();
   },
-  
-  
+
+
   setMyShiftsTableView: function(tableView)
   {
     this.myShiftsTableView = tableView;
@@ -85,25 +87,25 @@ var SSConsole = new Class({
     tableView.setDatasource(this.myShiftsDatasource);
     this.myShiftsDatasource.fetch();
   },
-  
-  
+
+
   initLoginForm: function()
   {
     // catch click
     this.outlets().get('SSLoginFormSubmit').addEvent('click', this.handleLoginFormSubmit.bind(this));
-    
+
     // catch enter
     this.outlets().get('SSLoginForm').addEvent('submit', function(_evt) {
       var evt = new Event(_evt);
       evt.preventDefault();
       this.handleLoginFormSubmit();
     }.bind(this));
-    
+
     // listen for tabShow events
     this.outlets().get('LoginTabView').addEvent('tabSelected', this.handleTabSelect.bind(this));
   },
-  
-  
+
+
   handleTabSelect: function(args)
   {
     if(args.tabView == this.outlets().get('LoginTabView') && args.tabIndex == 0)
@@ -111,15 +113,15 @@ var SSConsole = new Class({
       this.emptyLoginForm();
     }
   },
-  
-  
+
+
   emptyLoginForm: function()
   {
     this.outlets().get('SSLoginFormUsername').setProperty('value', '');
-    this.outlets().get('SSLoginFormPassword').setProperty('value', '');    
+    this.outlets().get('SSLoginFormPassword').setProperty('value', '');
   },
-  
-  
+
+
   handleLoginFormSubmit: function()
   {
     ShiftSpace.User.login({
@@ -127,21 +129,21 @@ var SSConsole = new Class({
       password: this.outlets().get('SSLoginFormPassword').getProperty('value')
     }, this.loginFormSubmitCallback.bind(this));
   },
-  
-  
+
+
   loginFormSubmitCallback: function(response)
   {
     console.log('Login call back!');
     console.log(response);
   },
-  
-  
+
+
   initSignUpForm: function()
   {
     this.outlets().get('SSSignUpFormSubmit').addEvent('click', this.handleSignUpFormSubmit.bind(this));
   },
-  
-  
+
+
   handleSignUpFormSubmit: function()
   {
     var joinInput = {
@@ -150,18 +152,18 @@ var SSConsole = new Class({
       password: this.outlets().get('SSSignUpFormPassword').getProperty('value'),
       password_again: this.outlets().get('SSSignUpFormPassword').getProperty('value')
     };
-    
-    ShiftSpace.User.join(joinInput, this.signUpFormSubmitCallback.bind(this))
+
+    ShiftSpace.User.join(joinInput, this.signUpFormSubmitCallback.bind(this));
   },
-  
-  
+
+
   signUpFormSubmitCallback: function(response)
   {
     console.log('Joined!');
     console.log(response);
   },
-  
-  
+
+
   initConsoleControls: function()
   {
     // init login/logout button
@@ -178,13 +180,13 @@ var SSConsole = new Class({
         this.outlets().get('MainTabView').selectTabByName('LoginTabView');
       }
     }.bind(this));
-    
+
     // init bug report button
-    
+
     // init close button
   },
-  
-  
+
+
   initSelectLanguage: function()
   {
     // attach events to localization switcher
@@ -193,23 +195,23 @@ var SSConsole = new Class({
       SSLoadLocalizedStrings(evt.target.getProperty('value'), this.element.contentWindow);
     }.bind(this));
   },
-  
-  
+
+
   awake: function(context)
   {
     this.parent();
-    
+
     /*
     if(context == window)
     {
-      
+
     }
     else if(context == this.element.contentWindow)
     {
-      
+
     }
     */
-    
+
     // test setting outlets to controllers
     if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
     if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
@@ -221,15 +223,15 @@ var SSConsole = new Class({
       var evt = new Event(_evt);
       console.log('Hello from Dan again!');
     });
-    
+
     console.log(this.outlets().get('DanButton'));
   },
-  
-  
+
+
   awakeDelayed: function(context)
   {
     // test outlets in iframes
-    if(this.outlets().get('cool')) 
+    if(this.outlets().get('cool'))
     {
       this.outlets().get('cool').addEvent('click', function(_evt) {
         var evt = new Event(_evt);
@@ -237,7 +239,7 @@ var SSConsole = new Class({
       });
     }
   },
-  
+
 
   buildInterface: function(ui)
   {
@@ -246,8 +248,8 @@ var SSConsole = new Class({
     });
     SSSetControllerForNode(this, this.element);
     this.element.injectInside(document.body);
-        
-    this.element.addEvent('load', function(doc) {
+
+    this.element.addEvent('load', function() {
       var context = this.element.contentWindow;
 
       // under GM not wrapped, erg - David
@@ -260,7 +262,7 @@ var SSConsole = new Class({
       // add the style
       Sandalphon.addStyle(ui.styles, context);
       // grab the interface, strip the outer level, we're putting the console into an iframe
-      var fragment = Sandalphon.convertToFragment(ui.interface, context).getFirst();
+      var fragment = Sandalphon.convertToFragment(ui['interface'], context).getFirst();
       // place it in the frame
       $(context.document.body).grab(fragment);
       $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
@@ -268,8 +270,8 @@ var SSConsole = new Class({
       Sandalphon.activate(context);
     }.bind(this));
   },
-  
-  
+
+
   userClickedRow: function(args)
   {
     console.log('MyTableViewDelegate, userClickedRow: ' + args.rowIndex);
@@ -286,32 +288,32 @@ var SSConsole = new Class({
       // set a variable for opening this shift on the next page if the url is different
     }
   },
-  
-  
+
+
   userSelectedRow: function(args)
   {
-    
+
   },
-  
-  
+
+
   userDeselectedRow: function(args)
   {
-    
+
   },
-  
-   
+
+
   canSelectRow: function(data)
   {
-    
+
   },
-  
-  
+
+
   canSelectColumn: function(data)
   {
-    
+
   },
-  
-  
+
+
   canEditRow: function(args)
   {
     console.log('canEditRow');
@@ -320,15 +322,15 @@ var SSConsole = new Class({
     {
       return (ShiftSpace.User.getUsername() == this.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));
     }
-    
+
     return true;
   }
-  
-  
+
+
 });
 
 // Create the object right away if we're not running under the Sandalphon tool
-if(typeof SandalphonToolMode == 'undefined') 
+if(typeof SandalphonToolMode == 'undefined')
 {
   new SSConsole();
 }

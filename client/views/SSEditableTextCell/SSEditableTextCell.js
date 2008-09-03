@@ -1,7 +1,7 @@
 var SSEditableTextCell = new Class({
-  
+
   name: 'SSEditableTextCell',
-  
+
   Extends: SSCell,
 
 
@@ -9,19 +9,20 @@ var SSEditableTextCell = new Class({
   {
     this.parent(options);
   },
-  
+
 
   set value(value)
   {
     if(this.element) this.element.setProperty('value', value);
   },
-  
-  
+
+
   get value()
   {
     if(this.element) return this.element.getProperty('value');
+    return null;
   },
-    
+
 
   set editable(value)
   {
@@ -29,7 +30,7 @@ var SSEditableTextCell = new Class({
     {
       if(!value)
       {
-        this.element.setProperty('readonly', 1)
+        this.element.setProperty('readonly', 1);
       }
       else
       {
@@ -37,21 +38,21 @@ var SSEditableTextCell = new Class({
       }
     }
   },
-  
-  
+
+
   get editable()
   {
     if(this.element) this.element.getProperty('enabled');
   },
-  
-  
+
+
   observeEvents: function()
   {
     // add key events
     this.element.addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
       var value = this.value;
-      
+
       if(this.isEditing)
       {
         if(value != this.originalValue)
@@ -66,7 +67,7 @@ var SSEditableTextCell = new Class({
         }
       }
     }.bind(this));
-    
+
     this.element.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       if(this.isEditing)
@@ -75,21 +76,21 @@ var SSEditableTextCell = new Class({
       }
     }.bind(this));
   },
-  
-  
+
+
   unobserveEvents: function()
-  { 
+  {
     this.element.removeEvents('keyup');
     this.element.removeEvents('click');
   },
-  
-  
+
+
   edit: function()
   {
     if(this.element)
     {
       this.isEditing = true;
-      
+
       // store the original value
       this.originalValue = this.element.getProperty('value');
       this.observeEvents();
@@ -98,8 +99,8 @@ var SSEditableTextCell = new Class({
       this.editStyle();
     }
   },
-  
-  
+
+
   cancelEdit: function()
   {
     if(this.isEditing)
@@ -112,8 +113,8 @@ var SSEditableTextCell = new Class({
       this.fireEvent("SSEditableTextCellDidCancelEdit", this);
     }
   },
-  
-  
+
+
   finishEdit: function()
   {
     if(this.element)
@@ -127,22 +128,22 @@ var SSEditableTextCell = new Class({
       this.normalStyle();
     }
   },
-  
-  
+
+
   normalStyle: function()
   {
     // exit edit style
     this.element.removeClass('SSEdit');
   },
-  
-  
+
+
   editStyle: function()
   {
     // style edit mode
     this.element.addClass('SSEdit');
   },
-  
-  
+
+
   unlock: function()
   {
     // clean up first
@@ -153,7 +154,7 @@ var SSEditableTextCell = new Class({
     // then call parent to clear out element
     this.parent();
   }
-  
+
 });
 
 // Add it the global UI class lookup

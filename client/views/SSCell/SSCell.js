@@ -1,7 +1,7 @@
 var SSCell = new Class({
-  
+
   name: 'SSCell',
-  
+
   Implements: [Events, Options],
 
 
@@ -9,31 +9,32 @@ var SSCell = new Class({
   {
     this.setOptions(options);
   },
-  
-  
+
+
   lock: function(element)
   {
     this.element = element;
   },
-  
-  
+
+
   unlock: function()
   {
     this.element = null;
   },
-  
-  
+
+
   isLocked: function()
   {
     return (this.element != null);
   },
-  
-  
+
+
   getParentRow: function()
   {
     if(this.element) return this.element.getParent('.SSRow');
+    return null;
   }
-  
+
 });
 
 // Add it the global UI class lookup

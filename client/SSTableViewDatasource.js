@@ -1,7 +1,7 @@
 /*
   Class: SSTableViewDatasource
     Properties passed to the data providing url should send a json object with the following structure
-    
+
     (start code)
     {
       ids: '*',
@@ -13,11 +13,11 @@
     (end)
 */
 var SSTableViewDatasource = new Class({
-  
-  Implements: [Events, Options],
-  
 
-  options: 
+  Implements: [Events, Options],
+
+
+  options:
   {
     data: [],
     dataKey: null,
@@ -27,72 +27,72 @@ var SSTableViewDatasource = new Class({
     dataNormalizer: null,
     requiredProperties: []
   },
-  
+
 
   initialize: function(options)
   {
     console.log('SSTableViewDatasource instantiated.');
     this.setOptions(options);
-    
+
     // set the options
     this.setProperties($H());
     this.setRequiredProperties(this.options.requiredProperties);
     this.setUpdateProperties({});
-    
+
     this.setData(options.data);
-    
-    this.setDataKey(this.options.dataKey)
+
+    this.setDataKey(this.options.dataKey);
     this.setDataUpdateKey(this.options.dataUpdateKey);
-    
+
     this.setDataProviderURL(this.options.dataProviderURL);
     this.setDataUpdateURL(this.options.dataUpdateURL);
-    
+
     this.setDataNormalizer(this.options.dataNormalizer);
   },
-  
-  
+
+
   setData: function(newData)
   {
     this.__data__ = newData;
   },
-  
-  
+
+
   data: function()
   {
     return this.__data__;
   },
-  
-  
+
+
   hasData: function()
   {
     return (this.data() && this.data.length > 0);
   },
-  
-  
+
+
   setDataKey: function(key)
   {
-    this.__dataKey__ = key
+    this.__dataKey__ = key;
   },
-  
+
 
   dataKey: function()
   {
     return this.__dataKey__;
   },
-  
-  
+
+
   setDataUpdateKey: function(key)
   {
-    this.__dataUpdateKey__ = key
+    this.__dataUpdateKey__ = key;
   },
-  
-  
+
+
   dataUpdateKey: function()
   {
     return this.__dataUpdateKey__;
   },
-  
-  
+
+
   updateRowColumn: function(rowIndex, columnName, value)
   {
     console.log('SSTableViewDatasource updateRowColumn');
@@ -100,15 +100,15 @@ var SSTableViewDatasource = new Class({
     if(this.dataUpdateURL())
     {
       console.log('we have an update url ' + rowIndex + ", " + columnName + " : " + value);
-      
+
       var params = {};
       var updateKey = this.dataUpdateKey();
-      
+
       params[updateKey] = this.data()[rowIndex][updateKey];
       params[columnName] = value;
-      
+
       console.log(params);
-      
+
       // make an update request
       new Request({
         url: this.dataUpdateURL(),
@@ -127,8 +127,8 @@ var SSTableViewDatasource = new Class({
       }).send();
     }
   },
-  
-  
+
+
   setDataNormalizer: function(normalizer)
   {
     if(normalizer && normalizer.normalize)
@@ -136,38 +136,38 @@ var SSTableViewDatasource = new Class({
       this.__dataNormalizer__ = normalizer;
     }
   },
-  
-  
+
+
   dataNormalizer: function()
   {
     return this.__dataNormalizer__;
   },
-  
-  
+
+
   setDataProviderURL: function(url)
   {
     this.__url__ = url;
   },
-  
-  
+
+
   dataProviderURL: function()
   {
     return this.__url__;
   },
-  
-  
+
+
   setDataUpdateURL: function(url)
   {
     this.__dataUpdateURL__ = url;
   },
-  
-  
+
+
   dataUpdateURL: function()
   {
     return this.__dataUpdateURL__;
   },
-  
-  
+
+
   setProperty: function(key, value)
   {
     // set the property
@@ -175,39 +175,39 @@ var SSTableViewDatasource = new Class({
     // refetch data
     this.fetch();
   },
-  
-  
+
+
   setProperties: function(_props)
   {
     var props = (!_props && $H()) || (_props instanceof Hash && _props) || $H(_props);
     this.__properties__ = props;
   },
-  
-  
+
+
   properties: function()
   {
     return this.__properties__;
   },
-  
-  
+
+
   setRequiredProperties: function(properties)
   {
     this.__requiredProperties__ = properties;
   },
-  
-  
+
+
   requiredProperties: function()
   {
     return this.__requiredProperties__;
   },
-  
-  
+
+
   setUpdateProperties: function(properties)
   {
     this.__updateProperties__ = properties;
   },
-  
-  
+
+
   updateProperties: function()
   {
     return this.__updateProperties__;
@@ -218,19 +218,19 @@ var SSTableViewDatasource = new Class({
   {
     return (this.data() && this.data().length) || 0;
   },
-  
-  
+
+
   rowForIndex: function(rowIndex)
   {
     return this.data()[rowIndex];
   },
 
-  
+
   itemForRowIndexColumn: function(rowIndex, column)
   {
     return this.data()[rowIndex][column];
   },
-  
+
 
   sortByColumn: function(column, direction)
   {
@@ -240,8 +240,8 @@ var SSTableViewDatasource = new Class({
       sortByDirection: direction
     })  ;
   },
-  
-  
+
+
   isMissingProperties: function(properties)
   {
     // check for missing properties
@@ -252,17 +252,17 @@ var SSTableViewDatasource = new Class({
         return (properties.get(required) == null);
       });
     }
-    
+
     return (missingProperties.length > 0);
   },
-  
-  
+
+
   valueForRowColumn: function(rowIndex, columnName)
   {
     return this.data()[rowIndex][columnName];
   },
-  
-  
+
+
   updateData: function(data)
   {
     if(this.dataNormalizer())
@@ -272,11 +272,11 @@ var SSTableViewDatasource = new Class({
     this.setData(data);
   },
 
-  
+
   fetch: function(_properties)
   {
     console.log('data source fetch');
-    
+
     // make sure the properties are a Hash
     var properties = (!_properties && $H()) || (_properties instanceof Hash && _properties) || $H(_properties);
     // combine them with the existing properties, careful not to modify this.properties()
