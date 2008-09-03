@@ -5,17 +5,17 @@
 var RangeCoder = new Class({
   /*
     Property: toRange
-      Takes a reference object and returns a W3C range.  The reference object is 
-      JavaScript object composed of the following properties ancestorOrigTextContent, 
-      ancestorPosition, startContainerXPath, startContainerOffset, endContainerXPath, 
+      Takes a reference object and returns a W3C range.  The reference object is
+      JavaScript object composed of the following properties ancestorOrigTextContent,
+      ancestorPosition, startContainerXPath, startContainerOffset, endContainerXPath,
       endContainerOffset, origText.
-      
+
     Arguments:
       refObj
-      
+
     Returns:
       W3C Range.
-      
+
     Example:
       (start code)
       var userSelection = window.getSelection();
@@ -28,18 +28,18 @@ var RangeCoder = new Class({
     console.log('toRange');
     var objAncestor = this.getRangeAncestorNode(refObj);
     console.log(objAncestor);
-    
+
     if (objAncestor)
     {
       console.log('generating range');
       return this.generateRange(objAncestor, refObj);
     }
-    
+
     var recovered = this.recoverBrokenRange(refObj);
     if (recovered)
     {
       console.log('recovered the node');
-      return recovered;      
+      return recovered;
     }
 
     // post an alert if we failed
@@ -53,18 +53,18 @@ var RangeCoder = new Class({
   /*
     Property: toRef
       Given a valid W3C Range, extract relevant info and store.
-    
+
     Arguments:
       range - a W3C Range.
-      
+
   */
   cleanWhitespace: function(node)
   {
     node.innerHTML = node.innerHTML.replace(new RegExp("\\n","g"));
   },
-  
+
   toRef: function(range)
-  {    
+  {
     //get the common ancestor
     var objCommonAncestor = range.commonAncestorContainer;
     var origCommonAncestor = false;
@@ -73,24 +73,24 @@ var RangeCoder = new Class({
     if(objCommonAncestor.nodeType == 3)
     {
       origCommonAncestor = objCommonAncestor;
-      objCommonAncestor = objCommonAncestor.parentNode
+      objCommonAncestor = objCommonAncestor.parentNode;
     }
-    
+
     var colAncestorPosition = this.getAncestorPosition(objCommonAncestor);
-    
+
     // Create new object for this highlight
-    var newRef = 
+    var newRef =
     {
       // XXX: is this orig_html hack still relevant >=0.11 ??
       ancestorOrigTextContent: (objCommonAncestor.tagName.toLowerCase()=="body")?ShiftSpace.orig_html:objCommonAncestor.textContent,   //to avoid adding the toolbarhtml
       ancestorPosition: colAncestorPosition,
       startContainerXPath: this.generateRelativeXPath(objCommonAncestor, range.startContainer),
-      startContainerOffset: range.startOffset,         
+      startContainerOffset: range.startOffset,
       endContainerXPath: this.generateRelativeXPath(objCommonAncestor, range.endContainer),
-      endContainerOffset: range.endOffset,   
+      endContainerOffset: range.endOffset,
       origText: range.toString()
     };
-    /* newRef.ancestorOrigTextContent = String.clean(newRef.ancestorOrigTextContent); */  
+    /* newRef.ancestorOrigTextContent = String.clean(newRef.ancestorOrigTextContent); */
     /* newRef.origText = String.clean(newRef.origText); */
     // Save some extra info which might be useful for recovering if load fails
     // TODO: extra data to save that might be helpful:
@@ -117,7 +117,7 @@ var RangeCoder = new Class({
     var iLength,iIndex;
     var nl = document.getElementsByTagName(oNode.tagName);
     var iOccurance=0;
-    
+
     for (var i=0;i<nl.length;i++)
     {
       if(nl.item(i).textContent==oNode.textContent)
@@ -128,7 +128,7 @@ var RangeCoder = new Class({
         iIndex = iOccurance;
       }
     }
-    
+
     return {
       tagName: oNode.tagName,
       length: iOccurance,
@@ -136,11 +136,11 @@ var RangeCoder = new Class({
     };
   },
 
-  generateRelativeXPath: function(contextNode, textNode) 
+  generateRelativeXPath: function(contextNode, textNode)
   {
     var saveTextNode = textNode;
 
-    for (i = 0; textNode; ) 
+    for (i = 0; textNode; )
     {
       if (textNode.nodeType == 3)
       i++;
@@ -151,13 +151,13 @@ var RangeCoder = new Class({
     var xpath = '/text()[' + i + ']';
     textNode = saveTextNode.parentNode;
 
-    while (textNode != contextNode && 
-           textNode != null) 
+    while (textNode != contextNode &&
+           textNode != null)
     {
       var i;
-      var saveTextNode = textNode;
+      saveTextNode = textNode;
 
-      for (i = 0; textNode; ) 
+      for (i = 0; textNode; )
       {
         if (textNode.nodeType == 1)
         i++;
@@ -174,20 +174,20 @@ var RangeCoder = new Class({
 
   // Generates a proper W3C range from some xpath elements and other
   // bits of data
-  generateRange: function(ancestor, refObj) 
+  generateRange: function(ancestor, refObj)
   {
-    var startContainer = document.evaluate( refObj.startContainerXPath, 
-                                            ancestor, 
+    var startContainer = document.evaluate( refObj.startContainerXPath,
+                                            ancestor,
                                             null,
-                                            XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, 
+                                            XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
                                             null).snapshotItem(0);
 
-    var endContainer = document.evaluate( refObj.endContainerXPath, 
-                                          ancestor, 
+    var endContainer = document.evaluate( refObj.endContainerXPath,
+                                          ancestor,
                                           null,
-                                          XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, 
+                                          XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
                                           null).snapshotItem(0);
-    
+
     var range = document.createRange();
     range.setStart(startContainer, refObj.startContainerOffset);
     range.setEnd(endContainer, refObj.endContainerOffset);
@@ -201,7 +201,7 @@ var RangeCoder = new Class({
     console.log('getRangeAncestorNode');
     var returnAncestor;
     var colAncestorPosition   = refObj.ancestorPosition;
-    
+
     //get all the elements with the ancestor tagname
     var nl                    = document.getElementsByTagName(colAncestorPosition.tagName);
     var iIndex                = colAncestorPosition.ancIndex;
@@ -232,14 +232,16 @@ var RangeCoder = new Class({
       }
       console.log('exit loop');
     }
-    
+
     //validate that the page has the same number of occurances to make sure we highlight the right one
     if (iOccuranceLength == colAncestorPosition.length)
     {
-      return returnAncestor;          
+      console.log('returning ancestor');
+      return returnAncestor;
     }
     else
     {
+      console.log('returning null');
       return null;
     }
   },
@@ -250,7 +252,7 @@ var RangeCoder = new Class({
     var offset = 0;
     var count = 0;
     var idx = string.indexOf(substring, offset);
-    while (idx >= 0) 
+    while (idx >= 0)
     {
       count++;
       offset = idx + substring.length;
@@ -271,12 +273,12 @@ var RangeCoder = new Class({
   {
     var count = 0;
 
-    for (var i = 0; i < nl.length; i++) 
+    for (var i = 0; i < nl.length; i++)
     {
       var element = nl.item(i);
       if (element.hasChildNodes() && 0 <= element.textContent.indexOf(text))
       {
-        for (var j = 0; j < element.childNodes.length; j++) 
+        for (var j = 0; j < element.childNodes.length; j++)
         count += this.countSubStrings (text, element.childNodes[j].textContent);
       }
     }
@@ -290,7 +292,7 @@ var RangeCoder = new Class({
     // TODO: improve efficiency, split-the-difference rather than shrink-by-one
     var bestText = text;
     var textCount = this.countStringMatchesInNodeList(nl, bestText);
-    while (text.length > 4 && textCount <= 1) 
+    while (text.length > 4 && textCount <= 1)
     {
       bestText = text;
       text = shortenFromEnd ? text.substring(0,text.length-2) : text = text.substring(1);
@@ -327,13 +329,13 @@ var RangeCoder = new Class({
      {
        if(0 <= nl.item(i).textContent.indexOf(pretext))
        {
-         if (nl.item(i).hasChildNodes()) 
+         if (nl.item(i).hasChildNodes())
          {
            var children = nl.item(i).childNodes;
-           for (var j = 0; j < children.length; j++) 
+           for (var j = 0; j < children.length; j++)
            {
              var idxOf =  children[j].textContent.indexOf(pretext);
-             if (idxOf >= 0) 
+             if (idxOf >= 0)
              {
                // if unique or not unique but posttext matches, we've found it
                var postIdx = children[j].textContent.substring(idxOf + pretext.length).indexOf(posttext);
@@ -353,10 +355,10 @@ var RangeCoder = new Class({
        if(0 <= nl.item(i).textContent.indexOf(posttext))
        {
          var element = nl.item(i);
-         if (element.hasChildNodes()) 
+         if (element.hasChildNodes())
          {
            var children = element.childNodes;
-           for (var j = 0; j < children.length; j++) 
+           for (var j = 0; j < children.length; j++)
            {
              var idxOf =  children[j].textContent.indexOf(posttext);
              if (idxOf >= 0) return { obj: children[j], offset: idxOf};
@@ -373,18 +375,18 @@ var RangeCoder = new Class({
     // Handling legacy shifts (without sufficient info to always match text)
     // if the xpath is to the first text element, then we can treat parent text
     // to calculate text contect.  Empirically this is [1].
-    if (text || containerXPath == "./text()[1]") 
+    if (text || containerXPath == "./text()[1]")
     {
       var pretext = orig.substring(0,offset);
       var posttext = orig.substring(offset);
 
-      if (text) 
+      if (text)
       {
         pretext = text.substring(0,offset);
         posttext = text.substring(offset);
       }
 
-      return this.DOMPointerFromContext(nl, pretext, posttext)
+      return this.DOMPointerFromContext(nl, pretext, posttext);
     }
     return null;
   },
@@ -408,19 +410,19 @@ var RangeCoder = new Class({
       if (noPartialRange)
       {
         // Return range only if we matched both endpoints
-        if (startRv && endRv) 
+        if (startRv && endRv)
         {
           var range = document.createRange();
           range.setStart(startRv.obj, startRv.offset);
           range.setEnd(endRv.obj, endRv.offset);
           return range;
         }
-      } 
+      }
       else
       {
-        // Return range.  If we only matched one endpoint, 
+        // Return range.  If we only matched one endpoint,
         // return an empty range at that point.
-        if (startRv || endRv) 
+        if (startRv || endRv)
         {
           var range = document.createRange();
 
@@ -445,8 +447,8 @@ var RangeCoder = new Class({
           return range;
         }
       }
-    } 
-    catch(err) 
+    }
+    catch(err)
     {
       // Commonly caused by invalid offset when creating range
       //console.log ("ERROR recovering range");
