@@ -581,10 +581,11 @@ var ShiftSpace = new (function() {
           content = content.substr(1, content.length-2);
         }
         
+        if(content[0] == '"') content = content.substr(1, content.length-2);
+        
         var dbgStr = '>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SSGetShiftContent';
         console.log(dbgStr);
         console.log(content);
-        if(content[0] == '"') content = content.substr(1, content.length-2);
         
         var obj = null;
         try
