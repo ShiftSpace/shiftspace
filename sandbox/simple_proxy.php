@@ -49,13 +49,20 @@ if(!preg_match("/[a-zA-Z]+\/$/",$myurl)){
   $myurl = $myurl . "/";
 }
 // get the base url
+
 preg_match("/^(http:\/\/)?([^\/]+)/i",$myurl, $matches);
 $baseurl = $matches[2];
+
+// for relative links i.e. ../images/myImage.jpg
+// part of url is trucated to allow path to be rewritten correctly
+preg_match('/.+\/(?=.+\/.+$)/',$myurl,$relativeUrlMatch);
+$relativeUrl = $relativeUrlMatch[0];
+
 // replace relative links with absolute links
 // if beings with src="/
 $result = preg_replace("/src=\"\//i","src=\"http://$baseurl/" ,$result);
 // if begins with src="../
-$result = preg_replace("/src=\"\.\./i","src=\"$myurl" ,$result);
+$result = preg_replace("/src=\"\.\./i","src=\"$relativeUrl" ,$result);
 // if begins with src="word/ && word != http or www
 $result = preg_replace("/src=\"(?!http|www)/i","src=\"$myurl",$result);
 // href=/
