@@ -1999,11 +1999,15 @@ var ShiftSpace = new (function() {
       var filters = shiftJson.filters;
       delete shiftJson.filters;
       
+      var jsonStr = Json.toString(shiftJson);
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> saveNewShift');
+      console.log('jsonStr: ' + jsonStr);
+      
       var params = {
         href: window.location.href,
         space: shiftJson.space,
         summary: shiftJson.summary,
-        content: Json.toString(shiftJson),
+        content: jsonStr,
         version: space.attributes.version,
         filters: Json.toString(filters),
         status: SSGetDefaultShiftStatus() // TODO: this call is in the space ecosystem
@@ -2032,7 +2036,9 @@ var ShiftSpace = new (function() {
         var shiftObj = space.shifts[shiftJson.id];
         shiftObj.setId(json.id);
         
-        // delete the temporary stuff
+        // delete the temporary stuff from the space
+        // TODO: The following is hacky, should be made cleaner
+        // --------- clean up area starts here -----------------
         delete shifts[shiftJson.id];
         delete space.shifts[shiftJson.id];
         
@@ -2043,8 +2049,9 @@ var ShiftSpace = new (function() {
         shiftJson.content = Json.toString(shiftJson);
         shifts[shiftJson.id] = shiftJson;
         space.shifts[shiftJson.id] = shiftObj;
+        // --------- clean up area of todo ends here --------------
         
-        // add and show the shift
+        // add and show the shift in the Console
         ShiftSpace.Console.show();
         ShiftSpace.Console.addShift(shiftJson, {isActive:true});
         ShiftSpace.Console.showShift(shiftJson.id);
