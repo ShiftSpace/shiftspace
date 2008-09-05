@@ -252,11 +252,15 @@ var RangeCoder = new Class({
   {
     var offset = 0;
     var count = 0;
+    
     var idx = string.indexOf(substring, offset);
+
+    console.log('countSubStrings idx ' + idx);
     while (idx >= 0)
     {
       count++;
       offset = idx + substring.length;
+      
       idx = string.indexOf(substring, offset);
     }
     return count;
@@ -280,9 +284,10 @@ var RangeCoder = new Class({
       if (element.hasChildNodes() && 0 <= element.textContent.indexOf(text))
       {
         for (var j = 0; j < element.childNodes.length; j++)
-        count += this.countSubStrings (text, element.childNodes[j].textContent);
+        count += this.countSubStrings(text, element.childNodes[j].textContent);
       }
     }
+    console.log('exit countStringMatchesInNodeList');
     return count;
   },
 
