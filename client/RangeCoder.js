@@ -285,7 +285,6 @@ var RangeCoder = new Class({
   countStringMatchesInNodeList: function(nl, text)
   {
     var count = 0;
-    console.log('countStringMatchesInNodeList nl.length ' + nl.length);
     for (var i = 0; i < nl.length; i++)
     {
       var element = nl.item(i);
@@ -299,7 +298,6 @@ var RangeCoder = new Class({
         }
       }
     }
-    console.log('exit countStringMatchesInNodeList');
     return count;
   },
 
@@ -332,14 +330,10 @@ var RangeCoder = new Class({
      //if (pretext.length < 5)
      //console.log("WARNING, pretext is too short");
 
-     console.log('shortenUniqueString');
      pretext = this.shortenUniqueString(nl, pretext, false);
-     console.log('countStringMatchesInNodeList');
      var pretextCount = this.countStringMatchesInNodeList(nl, pretext);
      var pretextUnique = (pretextCount == 1) ? true : false;
-     console.log('shortenUniqueString');
      posttext = this.shortenUniqueString(nl, posttext, true);
-     console.log('countStringMatchesInNodeList');
      var posttextCount = this.countStringMatchesInNodeList(nl, posttext);
 
      // TODO: could minimize even further, pre and post don't need to be unique as long as there is
