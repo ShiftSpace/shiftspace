@@ -263,7 +263,7 @@ var RangeCoder = new Class({
       offset = idx + substring.length;
       
       idx = string.indexOf(substring, offset);
-      console.log('idx ' + idx);
+      console.log('string:' + string + ' substring:' + substring + ' offset:' + offset + ' idx:' + idx);
     }
     
     console.log('exit countSubStrings');
