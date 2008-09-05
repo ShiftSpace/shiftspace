@@ -256,13 +256,18 @@ var RangeCoder = new Class({
     var idx = string.indexOf(substring, offset);
 
     console.log('countSubStrings idx ' + idx);
+    
     while (idx >= 0)
     {
       count++;
       offset = idx + substring.length;
       
       idx = string.indexOf(substring, offset);
+      console.log('idx ' + idx);
     }
+    
+    console.log('exit countSubStrings');
+    
     return count;
   },
 
