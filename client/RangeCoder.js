@@ -25,21 +25,21 @@ var RangeCoder = new Class({
   */
   toRange: function(refObj)
   {
-    console.log('toRange');
+    //console.log('toRange');
     var objAncestor = this.getRangeAncestorNode(refObj);
-    console.log(objAncestor);
+    //console.log(objAncestor);
 
     if (objAncestor)
     {
-      console.log('generating range');
+      //console.log('generating range');
       return this.generateRange(objAncestor, refObj);
     }
 
-    console.log('attempting to recover broken range');
+    //console.log('attempting to recover broken range');
     var recovered = this.recoverBrokenRange(refObj);
     if (recovered)
     {
-      console.log('recovered the node');
+      //console.log('recovered the node');
       return recovered;
     }
 
@@ -199,7 +199,7 @@ var RangeCoder = new Class({
 
   getRangeAncestorNode: function(refObj)
   {
-    console.log('getRangeAncestorNode');
+    //console.log('getRangeAncestorNode');
     var returnAncestor;
     var colAncestorPosition   = refObj.ancestorPosition;
 
@@ -209,7 +209,7 @@ var RangeCoder = new Class({
     var iOccuranceLength      = 0;
     var targetTextContent     = refObj.ancestorOrigTextContent;
 
-    console.log('blar');
+    //console.log('blar');
     //check if the tag Name is the body then compare differently
     if (colAncestorPosition.tagName.toLowerCase() == "body")
     {
@@ -219,10 +219,10 @@ var RangeCoder = new Class({
     else
     {
       //check the number of occurances of the similar nodes
-      console.log('checking similar nodes ' + nl.length);
+      //console.log('checking similar nodes ' + nl.length);
       for (var i=0;i<nl.length;i++)
       {
-        console.log(i);
+        //console.log(i);
         if(nl.item(i).textContent==targetTextContent)
         {
           iOccuranceLength++;
@@ -231,18 +231,18 @@ var RangeCoder = new Class({
           returnAncestor = nl.item(i);
         }
       }
-      console.log('exit loop');
+      //console.log('exit loop');
     }
 
     //validate that the page has the same number of occurances to make sure we highlight the right one
     if (iOccuranceLength == colAncestorPosition.length)
     {
-      console.log('returning ancestor');
+      //console.log('returning ancestor');
       return returnAncestor;
     }
     else
     {
-      console.log('returning null');
+      //console.log('returning null');
       return null;
     }
   },
@@ -255,7 +255,7 @@ var RangeCoder = new Class({
     
     var idx = string.indexOf(substring, offset);
 
-    console.log('countSubStrings idx ' + idx);
+    //console.log('countSubStrings idx ' + idx);
     // check for empty strings
     if(substring != '')
     {
@@ -265,11 +265,11 @@ var RangeCoder = new Class({
         offset = idx + substring.length;
 
         idx = string.indexOf(substring, offset);
-        console.log('string:' + string + ' substring:' + substring + ' offset:' + offset + ' idx:' + idx);
+        //console.log('string:' + string + ' substring:' + substring + ' offset:' + offset + ' idx:' + idx);
       }
     }
     
-    console.log('exit countSubStrings');
+    //console.log('exit countSubStrings');
     
     return count;
   },
@@ -325,7 +325,7 @@ var RangeCoder = new Class({
    */
    DOMPointerFromContext: function(nl, pretext, posttext)
    {
-     console.log('DOMPointerFromContext');
+     //console.log('DOMPointerFromContext');
      // XXX don't use if empty/small
      //if (pretext.length < 5)
      //console.log("WARNING, pretext is too short");
@@ -342,7 +342,7 @@ var RangeCoder = new Class({
      // console.log("pretext '" + pretext + "' posttext '" + posttext + "'");
 
      //check the number of occurances of the similar nodes
-     console.log('nl.length = ' + nl.length);
+     //console.log('nl.length = ' + nl.length);
      for (var i = 0; i < nl.length; i++)
      {
        if(0 <= nl.item(i).textContent.indexOf(pretext))
@@ -392,7 +392,7 @@ var RangeCoder = new Class({
   // Given some data, attempt to return reference to corresponding point in DOM
   DOMPointerFromData: function(nl, text, offset, containerXPath, orig)
   {
-    console.log('DOMPointerFromData');
+    //console.log('DOMPointerFromData');
     // Handling legacy shifts (without sufficient info to always match text)
     // if the xpath is to the first text element, then we can treat parent text
     // to calculate text contect.  Empirically this is [1].
@@ -416,7 +416,7 @@ var RangeCoder = new Class({
   // Given a range, attempt to reconstruct it by examining the original context
   recoverBrokenRange: function(refObj)
   {
-    console.log('Attempting to recover the broken range.');
+    //console.log('Attempting to recover the broken range.');
     try
     {
       var colAncestorPosition   = refObj.ancestorPosition;
