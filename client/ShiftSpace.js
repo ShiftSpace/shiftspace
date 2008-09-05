@@ -581,6 +581,8 @@ var ShiftSpace = new (function() {
           content = content.substr(1, content.length-2);
         }
         
+        console.log('SSGetShiftContent: ' + content);
+        
         var obj = null;
         try
         {
