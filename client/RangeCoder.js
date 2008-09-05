@@ -310,6 +310,7 @@ var RangeCoder = new Class({
    */
    DOMPointerFromContext: function(nl, pretext, posttext)
    {
+     console.log('DOMPointerFromContext');
      // XXX don't use if empty/small
      //if (pretext.length < 5)
      //console.log("WARNING, pretext is too short");
@@ -326,7 +327,8 @@ var RangeCoder = new Class({
      // console.log("pretext '" + pretext + "' posttext '" + posttext + "'");
 
      //check the number of occurances of the similar nodes
-     for (var i=0;i<nl.length;i++)
+     console.log('nl.length = ' + nl.length);
+     for (var i = 0; i < nl.length; i++)
      {
        if(0 <= nl.item(i).textContent.indexOf(pretext))
        {
