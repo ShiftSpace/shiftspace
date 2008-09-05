@@ -567,7 +567,7 @@ var ShiftSpace = new (function() {
       if(!SSIsNewShift(shiftId))
       {
         var shift = SSGetShift(shiftId);
-        var content = shift.content;
+        var content = unescape(shift.content); // MERGE: for 0.5 - David
       
         if(content)
         {
@@ -1956,7 +1956,7 @@ var ShiftSpace = new (function() {
       var params = {
         id: shiftJson.id, // TODO: handle this in a more secure way
         summary: shiftJson.summary,
-        content: Json.toString(shiftJson),
+        content: escape(Json.toString(shiftJson)), // MERGE: for 0.5 - David
         version: space.attributes.version,
         username: ShiftSpace.User.getUsername(),
         filters: Json.toString(filters),
@@ -1999,15 +1999,11 @@ var ShiftSpace = new (function() {
       var filters = shiftJson.filters;
       delete shiftJson.filters;
       
-      var jsonStr = Json.toString(shiftJson);
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>> saveNewShift');
-      console.log('jsonStr: ' + jsonStr);
-      
       var params = {
         href: window.location.href,
         space: shiftJson.space,
         summary: shiftJson.summary,
-        content: jsonStr,
+        content: escape(Json.toString(shiftJson)),  // MERGE: for 0.5 - David
         version: space.attributes.version,
         filters: Json.toString(filters),
         status: SSGetDefaultShiftStatus() // TODO: this call is in the space ecosystem
@@ -3097,7 +3093,7 @@ var ShiftSpace = new (function() {
             id: shiftId,
             username: shift.username,
             summary: shift.summary,
-            content: shift.content
+            content: unescape(shift.content) // MERGE: for 0.5 - David
           });
           
         });
@@ -3153,7 +3149,7 @@ var ShiftSpace = new (function() {
       {
         shiftContent = {
           id: theShift.id,
-          content: theShift.content
+          content: unescape(theShift.content) // MERGE: for 0.5 - David
         };
       }
       
