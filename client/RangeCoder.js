@@ -273,7 +273,7 @@ var RangeCoder = new Class({
   countStringMatchesInNodeList: function(nl, text)
   {
     var count = 0;
-
+    console.log('countStringMatchesInNodeList nl.length ' + nl.length);
     for (var i = 0; i < nl.length; i++)
     {
       var element = nl.item(i);
