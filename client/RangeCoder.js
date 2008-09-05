@@ -351,6 +351,7 @@ var RangeCoder = new Class({
      // Check for posttext
      // XXX: this isn't sorted out yet... should only run if pretext is missing, short, useless
      // perhaps merged with above.  this might not even run currently.
+     /*
      for (var i=0;i<nl.length;i++)
      {
        if(0 <= nl.item(i).textContent.indexOf(posttext))
@@ -367,12 +368,14 @@ var RangeCoder = new Class({
          }
        }
      }
+     */
      return null;
    },
 
   // Given some data, attempt to return reference to corresponding point in DOM
   DOMPointerFromData: function(nl, text, offset, containerXPath, orig)
   {
+    console.log('DOMPointerFromData');
     // Handling legacy shifts (without sufficient info to always match text)
     // if the xpath is to the first text element, then we can treat parent text
     // to calculate text contect.  Empirically this is [1].
@@ -396,6 +399,7 @@ var RangeCoder = new Class({
   // Given a range, attempt to reconstruct it by examining the original context
   recoverBrokenRange: function(refObj)
   {
+    console.log('Attempting to recover the broken range.');
     try
     {
       var colAncestorPosition   = refObj.ancestorPosition;
@@ -404,6 +408,7 @@ var RangeCoder = new Class({
 
       // Get pointers to range start and end withing DOM
       var startRv =  this.DOMPointerFromData (nl, refObj.startText, refObj.startContainerOffset, refObj.startContainerXPath, refObj.ancestorOrigTextContent);
+      
       // TODO: optimize if end == start
       var endRv =  this.DOMPointerFromData (nl, refObj.endText, refObj.endContainerOffset, refObj.endContainerXPath, refObj.ancestorOrigTextContent);
 
