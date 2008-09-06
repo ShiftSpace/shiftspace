@@ -138,6 +138,14 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   },
   
   
+  attachEvents: function()
+  {
+    console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    console.log('attachEvents ' + this.minimizer);
+    this.minimizer.addEvent('click', this.hideInterface.bind(this));
+  },
+  
+  
   buildInterface: function()
   {
     this.setInterfaceIsBuilt(true);
@@ -157,10 +165,18 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       'class': "InShiftSpace"
     });
     
+    this.comHeader.setHTML('<div id="com-count"><span>34</span> Comments</div>' +
+		                       '<a href="#" class="com-minimize" title="Minimize console"/></a>'); 
+		                       
     this.comHeader.injectInside(this.element);
     this.comBody.injectInside(this.element);
     
     this.element.injectInside(document.body);
+    
+    this.minimizer = $$('.com-minimize')[0];
+		console.log(this.minimizer);
+    
+    this.attachEvents();
   }
   
   
