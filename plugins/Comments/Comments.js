@@ -79,6 +79,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   removeComment: function()
   {
     this.serverCall('remove', {
+      id: 0,
       shiftId: this.currentShiftId()
     });
   },
@@ -87,7 +88,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   updateComment: function()
   {
     this.serverCall('update', {
-      shiftId: this.currentShiftId(),
+      id: 0,
       comment: 'Updated comment!'
     });
   },
