@@ -51,8 +51,8 @@ div#SSComments a img{
 
 div#com-header{
 	background: url(images/comments_head_bg.png) no-repeat;
-	height: 18px;
-	padding: 22px 22px 0 19px;
+	height: 20px;
+	padding: 20px 22px 0 19px;
 }
 
 div#com-count{
@@ -74,6 +74,7 @@ a.com-minimize{
 	width: 13px;
 	float: right;
 	display: block;
+	margin-top: 2px;
 }
 
 div#com-body{
@@ -161,4 +162,17 @@ ul#com-list li.shift div.com-content{
 a.com-shift-thumb img{
 	float: left;
 	width: 80px;
+}
+
+#respond{
+	font-size:12px;
+	margin:5px 15px;
+}
+
+textarea{
+	width: 279px;
+}
+
+input{
+	float: right;
 }
