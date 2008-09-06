@@ -149,7 +149,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
     this.element = new ShiftSpace.Element('div', {
       id: 'SSComments',
-      'class': 'SSDisplayNone',
+      'class': 'InShiftSpace SSDisplayNone',
       'height': 0
     });
     

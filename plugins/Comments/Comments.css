@@ -4,7 +4,10 @@ div#SSComments{
 	font-size: 11px;
 	color: #736357;
 	line-height: 1.4em;
-	
+}
+
+#SSComments.InShiftSpace
+{
 	position: fixed;
 	right: 30px;
 	bottom: 0px;
@@ -25,7 +28,7 @@ div#SSComments a img{
 }
 
 div#com-header{
-	background: url(../images/comments_head_bg.png) no-repeat;
+	background: url(images/comments_head_bg.png) no-repeat;
 	height: 18px;
 	padding: 22px 22px 0 19px;
 }
@@ -44,7 +47,7 @@ div#com-count span{
 }
 
 a.com-minimize{
-	background: url(../images/comments_minimize.png) no-repeat;
+	background: url(images/comments_minimize.png) no-repeat;
 	height: 13px;
 	width: 13px;
 	float: right;
@@ -52,7 +55,7 @@ a.com-minimize{
 }
 
 div#com-body{
-	background: url(../images/comments_bg.png) repeat-y;
+	background: url(images/comments_bg.png) repeat-y;
 }
 
 div#com-scroll{
@@ -64,7 +67,7 @@ div#com-scroll{
 }
 
 a.com-reply{
-	background: url(../images/reply_icon.png) no-repeat right center;
+	background: url(images/reply_icon.png) no-repeat right center;
 	display: block;
 	height: 14px;
 	padding: 4px 25px 0px 0px;
@@ -86,7 +89,7 @@ ul#com-list li{
 }
 
 ul#com-list li.comment div.com-meta{
-	background: url(../images/comments_meta_bg.png) no-repeat;
+	background: url(images/comments_meta_bg.png) no-repeat;
 	display: block;
 	height: 44px;
 	width: 309px;
@@ -94,7 +97,7 @@ ul#com-list li.comment div.com-meta{
 }
 
 ul#com-list li.shift div.com-meta{
-	background: url(../images/comments_shift-meta_bg.png) no-repeat;
+	background: url(images/comments_shift-meta_bg.png) no-repeat;
 }
 
 div.com-meta-text{
