@@ -1,4 +1,4 @@
-<?
+<?php
 
 if (empty($user) || empty($user->id)) 
 {
@@ -15,17 +15,24 @@ else if (!empty($_SERVER['HTTP_REFERER']))
   $href = $db->escape($_SERVER['HTTP_REFERER']);
 }
 
-$exists = $db->value("
-  SELECT id
+$comment = $db->row("
+  SELECT *
   FROM comment
   WHERE id = $id
 ");
 
-if(!$exists)
+if(!$comment)
 {
   // return success
-  echo "{status: 0, message:'Eror. Invalid comment id.'}";
+  echo "{status: 0, message:'Error. Invalid comment id.'}";
   exit;  
+}
+
+if($comment->user_id != $user->id)
+{
+  // return success
+  echo "{status: 0, message:'Error. User is not the author of this comments.'}";
+  exit;
 }
 
 $db->query("

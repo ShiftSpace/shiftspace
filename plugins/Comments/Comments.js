@@ -69,26 +69,26 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   {
     this.serverCall('add', {
       shiftId: this.currentShiftId(),
-      comment: 'Hello world!'
+      content: 'Hello world!'
     }, function(json) {
       console.log('comment added');
     });
   },
   
   
-  removeComment: function()
+  deleteComment: function(debugId)
   {
-    this.serverCall('remove', {
-      id: 0,
+    this.serverCall('delete', {
+      id: debugId,
       shiftId: this.currentShiftId()
     });
   },
   
   
-  updateComment: function()
+  updateComment: function(debugId)
   {
     this.serverCall('update', {
-      id: 0,
+      id: debugId,
       comment: 'Updated comment!'
     });
   },

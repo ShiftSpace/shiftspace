@@ -38,7 +38,7 @@ Username: $u->username
 Password: $password
 
 Tip:
-After loging in with this password, you may go to Settings > Account in the ShiftSpace console and change your password again to something you can more easily remember.
+After logging in with this password, you may go to Settings > Account in the ShiftSpace console and change your password again to something you can more easily remember.
 
 Kisses,
 The ShiftSpace email robot

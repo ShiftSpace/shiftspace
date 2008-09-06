@@ -18,7 +18,7 @@ $rShiftId = $db->value("
 
 // grab all comments for this shift
 $comments = $db->rows("
-  SELECT c.comment, u.username
+  SELECT c.content, u.username
   FROM comment c, user u
   WHERE u.id = c.user_id
   AND c.shift_id = $rShiftId
