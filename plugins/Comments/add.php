@@ -62,6 +62,7 @@ You have a new comment on your shift!
 Kisses,
 The ShiftSpace email robot
 ");
+echo "sending email";
 mail($owner->email, $subject, $body, "From: ShiftSpace <info@shiftspace.org>\n");
 
 // return success
