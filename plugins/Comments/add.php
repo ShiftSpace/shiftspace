@@ -26,6 +26,8 @@ $shift = $db->row("
   WHERE url_slug='$shiftId'
 ");
 
+echo "Grabbed shift.";
+
 if(!$shift)
 {
   echo "{status: 0, message:'The shift that you're trying to comment on does not exist.'}";
