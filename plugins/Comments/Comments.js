@@ -31,13 +31,28 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   showCommentsForShift: function(shiftId)
   {
     this.setCurrentShiftId(shiftId);
-    
+
+    this.loadCommentsForShift(shiftId, {
+      this.showInterface();
+    });
+  },
+  
+  
+  loadCommentsForShift: function(shiftId, callback)
+  {
     this.serverCall('load', {
       shiftId: shiftId
     }, function(json) {
       this.element.setHtML(json.html);
-      this.showInterface();
+      if(callback && typeof callback == 'function') callback();
+      if(callback && typeof callback != 'function') console.error("loadCommentsForShift: callback is not a function.");
     });
+  },
+  
+  
+  refresh: function()
+  {
+    this.loadCommentsForShift(this.currentShiftId());
   },
   
   
@@ -54,7 +69,8 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   {
     this.serverCall('add', {
       shiftId: this.currentShiftId(),
-      comment: {}
+      username: ShiftSpace.User.getUsername(),
+      comment: 'Hello world!'
     }, function(json) {
       console.log('comment added');
     });
@@ -63,17 +79,23 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   
   removeComment: function()
   {
-    
+    this.serverCall('remove', {
+      shiftId: this.currentShiftId(),
+      username: ShiftSpace.User.getUsername()
+    });
   },
-  
-  
-  editComment: function()
-  {
-    
-  },
-  
   
   updateComment: function()
+  {
+    this.serverCall('update', {
+      shiftId: this.currentShiftId(),
+      username: ShiftSpace.User.getUsername(),
+      comment: 'Updated comment!'
+    });
+  },
+  
+    
+  editComment: function()
   {
     
   },
@@ -103,7 +125,6 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   buildInterface: function()
   {
     this.setInterfaceIsBuilt(true);
-    
   }
   
   
