@@ -58,6 +58,14 @@ CREATE TABLE trail (
   status INTEGER DEFAULT 1
 );
 
+CREATE TABLE comment (
+  id INTEGER PRIMARY KEY,
+  user_id VARCHAR(255),
+  content TEXT,
+  created DATETIME,
+  modified DATETIME
+);
+
 CREATE TABLE trail_shift (
   trail_id INTEGER,
   shift_id INTEGER

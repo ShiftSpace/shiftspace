@@ -32,7 +32,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   {
     this.setCurrentShiftId(shiftId);
 
-    this.loadCommentsForShift(shiftId, {
+    this.loadCommentsForShift(shiftId, function() {
       this.showInterface();
     });
   },
@@ -85,6 +85,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     });
   },
   
+  
   updateComment: function()
   {
     this.serverCall('update', {
@@ -97,7 +98,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
   editComment: function()
   {
-    
+    // show the editing interface
   },
   
   
@@ -107,6 +108,8 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     {
       this.buildInterface();
     }
+    
+    this.element.removeClass('SSDisplayNone');
 
     // show ourselves
     // put the console to half width
@@ -117,6 +120,8 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   hideInterface: function()
   {
     // hide ourselves
+    this.element.addClass('SSDisplayNone');
+    
     // put the Console back to normal width
     ShiftSpace.Console.fullMode();
   },
@@ -125,11 +130,18 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   buildInterface: function()
   {
     this.setInterfaceIsBuilt(true);
+    
+    this.element = new ShiftSpace.Element('div', {
+      id: 'SSComments',
+      'class': 'SSDisplayNone'
+    });
+    
+    this.element.injectInside(document.body);
   }
   
   
 });
 
 
-var Trails = new CommentsPlugin();
+var Comments = new CommentsPlugin();
 ShiftSpace.__externals__.Comments = Comments; // For Safari & Firefox 3.1

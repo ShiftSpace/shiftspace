@@ -2,11 +2,15 @@
 {
   bottom:0px;
   height:300px;
-  left:0px;
+  right:30px;
   opacity:0.9;
   overflow-x:hidden;
   overflow-y:hidden;
   position:fixed;
-  width:50%;
+  width:48%;
   z-index:1000001;
+  
+  /* debug */
+  border: solid 2px red;
+  background-color: orange;
 }

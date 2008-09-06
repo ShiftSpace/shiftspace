@@ -133,7 +133,8 @@ var ShiftSpace = new (function() {
 
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
-      'Trails' : server + 'plugins/Trails/NewTrail.js'
+      'Trails': server + 'plugins/Trails/NewTrail.js',
+      'Comments': server + 'plugins/Comments/Comments.js'
     });
 
     // installedPlugins = {
