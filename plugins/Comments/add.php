@@ -61,7 +61,7 @@ $body = wordwrap("Hello $owner->username,
 You have a new comment on your shift!
 
 Original link: $shift->href
-Proxy link: http://metatron.shiftspace.org/sandbox/$shift->url_slug
+Proxy link: http://www.shiftspace.org/api/sandbox/?id=$shift->url_slug
 
 Kisses,
 The ShiftSpace email robot
