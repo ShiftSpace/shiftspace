@@ -102,42 +102,81 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   
   showInterface: function()
   {
-    if(!this.interfaceIsBuilt())
+    if(!this.isShowing())
     {
-      this.buildInterface();
+      this.setIsShowing(true);
+      
+      if(!this.interfaceIsBuilt())
+      {
+        this.buildInterface();
+      }
+    
+      this.element.removeClass('SSDisplayNone');
+    
+      var resizeFx = this.element.effects({
+        duration: 300,
+        transition: Fx.Transitions.Cubic.easeIn,
+        onComplete: function()
+        {
+          this.setIsShowing(false);
+        }.bind(this)
+      });
+    
+      resizeFx.start({
+        height: [0, 378]
+      });
     }
-    
-    this.element.removeClass('SSDisplayNone');
-    
-    var resizeFx = this.element.effects({
-      duration: 300,
-      transition: Fx.Transitions.Cubic.easeIn
-    });
-    
-    resizeFx.start({
-      height: [0, 378]
-    });
   },
   
-  
+
   hideInterface: function()
-  {    
-    // put the Console back to normal width
-    var resizeFx = this.element.effects({
-      duration: 300,
-      transition: Fx.Transitions.Cubic.easeIn,
-      onComplete: function() {
-        // hide ourselves
-        this.element.addClass('SSDisplayNone');
-      }.bind(this)
-    });
+  { 
+    if(!this.isHiding())
+    {
+      this.setIsHiding(true);
+      
+      // put the Console back to normal width
+      var resizeFx = this.element.effects({
+        duration: 300,
+        transition: Fx.Transitions.Cubic.easeIn,
+        onComplete: function() {
+          this.setIsHiding(false);
+          // hide ourselves
+          this.element.addClass('SSDisplayNone');
+        }.bind(this)
+      });
     
-    resizeFx.start({
-      height: [378, 0] 
-    });
+      resizeFx.start({
+        height: [378, 0] 
+      });
+    }
+  },
+  
+
+  setIsHiding: function(newValue)
+  {
+    this.__isHiding__ = newValue;
   },
   
   
+  isHiding: function()
+  {
+    return this.__isHiding__;
+  },
+  
+  
+  setIsShowing: function(newValue)
+  {
+    this.__isShowing__ = newValue;
+  },
+
+
+  isShowing: function()
+  {
+    return this.__isShowing__;
+  },
+  
+
   attachEvents: function()
   {
     console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
