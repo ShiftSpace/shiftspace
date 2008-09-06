@@ -6,17 +6,17 @@ if (empty($user) || empty($user->id))
   exit;
 }
 
-if (!empty($_POST['shiftId'])) 
+if (!empty($_REQUEST['shiftId'])) 
 {
-  $shiftId = $db->escape($_POST['shiftId']);
+  $shiftId = $db->escape($_REQUEST['shiftId']);
 } 
 else if (!empty($_SERVER['HTTP_REFERER'])) 
 {
   $href = $db->escape($_SERVER['HTTP_REFERER']);
 }
-if (!empty($_POST['content']))
+if (!empty($_REQUEST['content']))
 {
-  $content = $db->escape($_POST['content']);
+  $content = $db->escape($_REQUEST['content']);
 }
 
 // grab the real shift id
