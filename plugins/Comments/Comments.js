@@ -153,6 +153,16 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       'height': 0
     });
     
+    this.comHeader = new ShiftSpace.Element('div', {
+      id: "com-header"
+    });
+    this.comBody = new ShiftSpace.Element('div', {
+      id: "com-body"
+    });
+    
+    this.comHeader.injectInside(this.element);
+    this.comBody.injectInside(this.element);
+    
     this.element.injectInside(document.body);
   }
   
