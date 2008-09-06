@@ -1,0 +1,12 @@
+#SSComments
+{
+  bottom:0px;
+  height:300px;
+  left:0px;
+  opacity:0.9;
+  overflow-x:hidden;
+  overflow-y:hidden;
+  position:fixed;
+  width:50%;
+  z-index:1000001;
+}

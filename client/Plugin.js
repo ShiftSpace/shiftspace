@@ -4,12 +4,12 @@
 */
 ShiftSpace.Plugin = new Class({
   
-  attributes :
+  attributes:
   {
-    name : null,
-    title : null,
-    icon : null,
-    css : null
+    name: null,
+    title: null,
+    icon: null,
+    css: null
   },
   
   /*

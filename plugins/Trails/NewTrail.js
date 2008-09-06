@@ -468,4 +468,4 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
 });
 
 var Trails = new TrailsPlugin();
-ShiftSpace.__externals__.Trails = Trails; // For Safari
+ShiftSpace.__externals__.Trails = Trails; // For Safari & Firefox 3.1
