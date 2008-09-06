@@ -21,12 +21,12 @@ if (!empty($_REQUEST['content']))
 
 // grab the real shift id
 $shift = $db->row("
-  SELECT id 
+  SELECT *
   FROM shift
   WHERE url_slug='$shiftId'
 ");
 
-echo "Grabbed shift.";
+//echo "Grabbed shift.";
 
 if(!$shift)
 {
@@ -44,7 +44,7 @@ $db->query("
   VALUES ($user->id, '$content', $shift->id, '$created', '$created')
   ");
 
-echo "Added comment.";
+//echo "Added comment.";
   
 $owner = $db->row("
   SELECT *
@@ -52,7 +52,7 @@ $owner = $db->row("
   WHERE id = $shift->user_id
 ");
 
-echo "grabbed owner.";
+//echo "grabbed owner.";
   
 // email the owner
 $subject = "Shiftspace user $user->username has commented on your shift!";
@@ -66,7 +66,7 @@ You have a new comment on your shift!
 Kisses,
 The ShiftSpace email robot
 ");
-echo "sending email";
+//echo "sending email";
 mail($owner->email, $subject, $body, "From: ShiftSpace <info@shiftspace.org>\n");
 
 // return success
