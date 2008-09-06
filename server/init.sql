@@ -61,6 +61,7 @@ CREATE TABLE trail (
 CREATE TABLE comment (
   id INTEGER PRIMARY KEY,
   user_id VARCHAR(255),
+  shift_id INTEGER,
   content TEXT,
   created DATETIME,
   modified DATETIME
