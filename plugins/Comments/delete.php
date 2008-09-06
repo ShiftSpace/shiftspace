@@ -8,38 +8,33 @@ if (empty($user) || empty($user->id))
 
 if (!empty($_POST['id'])) 
 {
-  $shiftId = $db->escape($_POST['id']);
+  $id = $db->escape($_POST['id']);
 } 
 else if (!empty($_SERVER['HTTP_REFERER'])) 
 {
   $href = $db->escape($_SERVER['HTTP_REFERER']);
 }
 
-
-// grab the real shift id
-$rShiftId = $db->value("
-  SELECT id 
-  FROM shift
-  WHERE url_slug='$shiftId'
+$exists = $db->value("
+  SELECT id
+  FROM comment
+  WHERE id = $id
 ");
 
-if(!$rShiftId)
+if(!$exists)
 {
-  echo "{status: 0, message:'User does not exist.'}";
-  exit;
+  // return success
+  echo "{status: 0, message:'Eror. Invalid comment id.'}";
+  exit;  
 }
 
-$created = date('Y-m-d H:i:s');
-
-// insert it
-// Record a general accounting of shift
 $db->query("
-  INSERT INTO comment
-  (user_id, content, shift_id, created, modified)
-  VALUES ($user->id, '$content', $rShiftId, '$created', '$created')
+  DELETE
+  FROM comment
+  WHERE id = $id
   ");
-
+  
 // return success
-echo "{status: 1, message:'Success. Comment added.'}";
+echo "{status: 1, message:'Success. Comment deleted.'}";
 
 ?>
