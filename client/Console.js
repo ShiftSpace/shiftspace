@@ -1897,10 +1897,24 @@ var Console = new Class({
   },
   
   
-  halfMode: function()
+  halfMode: function(callback)
   {
-    // shrink the console to half width
-    this.frame.setStyle('width', '50%');
+    var resizeFx = this.frame.effects({
+      duration: 300,
+      Transition: Fx.Transitions.Cubic.easeIn,
+      onComplete: function()
+      {
+        this.frame.setStyle('width', '50%');
+        if(callback && typeof callback == 'function') callback();
+      }.bind(this)
+    });
+    
+    var startSize = window.getSize().size.x;
+    var endSize = startSize * 0.5;
+    resizeFx.start({
+      width: [startSize, endSize]
+    });
+
     var innerFrameConsoleDiv = _$(this.doc.getElementById('console'));
     innerFrameConsoleDiv.getElementsByClassName('summary').each(function(x) {
       $(x).setStyle('width', '35%');
@@ -1910,11 +1924,25 @@ var Console = new Class({
   
   fullMode: function()
   {
-    // up the console back at normal width
-    this.frame.setStyle('width', '100%');
-    var innerFrameConsoleDiv = _$(this.doc.getElementById('console'));
-    innerFrameConsoleDiv.getElementsByClassName('summary').each(function(x) {
-      $(x).setStyle('width', '45%');
+    var resizeFx = this.frame.effects({
+      duration: 300,
+      Transition: Fx.Transitions.Cubic.easeIn,
+      onComplete: function()
+      {
+        this.frame.setStyle('width', '100%');
+        
+        var innerFrameConsoleDiv = _$(this.doc.getElementById('console'));
+        innerFrameConsoleDiv.getElementsByClassName('summary').each(function(x) {
+          $(x).setStyle('width', '45%');
+        });
+        
+      }.bind(this)
+    });
+    
+    var startSize = window.getSize().size.x * 0.5;
+    var endSize = window.getSize().size.x;
+    resizeFx.start({
+      width: [startSize, endSize]
     });
   },
   

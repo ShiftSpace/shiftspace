@@ -1,7 +1,6 @@
 #SSComments
 {
   bottom:0px;
-  height:300px;
   right:30px;
   opacity:0.9;
   overflow-x:hidden;
@@ -11,6 +10,6 @@
   z-index:1000001;
   
   /* debug */
-  border: solid 2px red;
+  /*border: solid 2px red;*/
   background-color: orange;
 }

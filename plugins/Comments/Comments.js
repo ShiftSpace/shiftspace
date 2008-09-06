@@ -108,20 +108,38 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     }
     
     this.element.removeClass('SSDisplayNone');
-
+    
     // show ourselves
     // put the console to half width
-    ShiftSpace.Console.halfMode();
+    ShiftSpace.Console.halfMode(function() {
+      var resizeFx = this.element.effects({
+        duration: 300,
+        transition: Fx.Transitions.Cubic.easeIn
+      });
+      
+      resizeFx.start({
+        height: [0, 300]
+      });
+    }.bind(this));
   },
   
   
   hideInterface: function()
-  {
-    // hide ourselves
-    this.element.addClass('SSDisplayNone');
-    
+  {    
     // put the Console back to normal width
-    ShiftSpace.Console.fullMode();
+    var resizeFx = this.element.effects({
+      duration: 300,
+      transition: Fx.Transitions.Cubic.easeIn,
+      onComplete: function() {
+        // hide ourselves
+        this.element.addClass('SSDisplayNone');
+        ShiftSpace.Console.fullMode();
+      }.bind(this)
+    });
+    
+    resizeFx.start({
+      height: [300, 0] 
+    });
   },
   
   
@@ -131,7 +149,8 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
     this.element = new ShiftSpace.Element('div', {
       id: 'SSComments',
-      'class': 'SSDisplayNone'
+      'class': 'SSDisplayNone',
+      'height': 0
     });
     
     this.element.injectInside(document.body);
