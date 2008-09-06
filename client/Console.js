@@ -1896,6 +1896,28 @@ var Console = new Class({
     
   },
   
+  
+  halfMode: function()
+  {
+    // shrink the console to half width
+    this.frame.setStyle('width', '50%');
+    var innerFrameConsoleDiv = _$(this.doc.getElementById('console'));
+    innerFrameConsoleDiv.getElementsByClassName('summary').each(function(x) {
+      $(x).setStyle('width', '35%');
+    });
+  },
+  
+  
+  fullMode: function()
+  {
+    // up the console back at normal width
+    this.frame.setStyle('width', '100%');
+    var innerFrameConsoleDiv = _$(this.doc.getElementById('console'));
+    innerFrameConsoleDiv.getElementsByClassName('summary').each(function(x) {
+      $(x).setStyle('width', '45%');
+    });
+  },
+  
 
   loadShifts: function()
   {
