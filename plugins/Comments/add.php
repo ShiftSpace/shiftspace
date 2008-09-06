@@ -43,12 +43,16 @@ $db->query("
   (user_id, content, shift_id, created, modified)
   VALUES ($user->id, '$content', $shift->id, '$created', '$created')
   ");
+
+echo "Added comment.";
   
 $owner = $db->row("
   SELECT *
   FROM user
   WHERE id = $shift->user_id
 ");
+
+echo "grabbed owner.";
   
 // email the owner
 $subject = "Shiftspace user $user->username has commented on your shift!";
