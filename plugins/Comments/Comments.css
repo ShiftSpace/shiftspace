@@ -9,9 +9,26 @@ div#SSComments{
 #SSComments.InShiftSpace
 {
 	position: fixed;
-	right: 30px;
+	right: 45px;
 	bottom: 0px;
 	z-index: 1000003;
+}
+
+#SSComments.InShiftSpace #com-header
+{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+}
+
+#SSComments.InShiftSpace #com-body
+{
+  position: absolute;
+  left: 0px;
+  width: 100%;
+  bottom: 0px;
+  top: 40px;
 }
 
 div#SSComments a{

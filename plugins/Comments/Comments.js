@@ -109,18 +109,14 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
     this.element.removeClass('SSDisplayNone');
     
-    // show ourselves
-    // put the console to half width
-    ShiftSpace.Console.halfMode(function() {
-      var resizeFx = this.element.effects({
-        duration: 300,
-        transition: Fx.Transitions.Cubic.easeIn
-      });
-      
-      resizeFx.start({
-        height: [0, 300]
-      });
-    }.bind(this));
+    var resizeFx = this.element.effects({
+      duration: 300,
+      transition: Fx.Transitions.Cubic.easeIn
+    });
+    
+    resizeFx.start({
+      height: [0, 378]
+    });
   },
   
   
@@ -133,12 +129,11 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       onComplete: function() {
         // hide ourselves
         this.element.addClass('SSDisplayNone');
-        ShiftSpace.Console.fullMode();
       }.bind(this)
     });
     
     resizeFx.start({
-      height: [300, 0] 
+      height: [378, 0] 
     });
   },
   
@@ -154,10 +149,12 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     });
     
     this.comHeader = new ShiftSpace.Element('div', {
-      id: "com-header"
+      id: "com-header",
+      'class': "InShiftSpace"
     });
     this.comBody = new ShiftSpace.Element('div', {
-      id: "com-body"
+      id: "com-body",
+      'class': "InShiftSpace"
     });
     
     this.comHeader.injectInside(this.element);
