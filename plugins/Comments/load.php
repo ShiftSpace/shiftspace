@@ -21,7 +21,7 @@ $comments = $db->rows("
   SELECT c.comment, u.username
   FROM comment c, user u
   WHERE u.id = c.user_id
-  AND c.shift_id = '$rShiftId'
+  AND c.shift_id = $rShiftId
   ORDER BY c.created DESC
 ");
 

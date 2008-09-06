@@ -69,7 +69,6 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   {
     this.serverCall('add', {
       shiftId: this.currentShiftId(),
-      username: ShiftSpace.User.getUsername(),
       comment: 'Hello world!'
     }, function(json) {
       console.log('comment added');
@@ -80,8 +79,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   removeComment: function()
   {
     this.serverCall('remove', {
-      shiftId: this.currentShiftId(),
-      username: ShiftSpace.User.getUsername()
+      shiftId: this.currentShiftId()
     });
   },
   
@@ -90,7 +88,6 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   {
     this.serverCall('update', {
       shiftId: this.currentShiftId(),
-      username: ShiftSpace.User.getUsername(),
       comment: 'Updated comment!'
     });
   },
