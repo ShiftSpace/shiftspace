@@ -222,7 +222,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       var target = evt.target;
 
       // switch on target class
-      console.log('eventDispatch');
+      console.log('eventDispatch new');
 
       switch(true)
       {
