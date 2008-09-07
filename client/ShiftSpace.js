@@ -2343,7 +2343,7 @@ var ShiftSpace = new (function() {
         url = server + url;
       }
       
-      //console.log('loadFile:' + url);
+      console.log('loadFile:' + url);
 
       // Caching is implemented as a rather blunt instrument ...
       if (!cacheFiles) {
