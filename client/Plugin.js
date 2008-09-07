@@ -254,7 +254,7 @@ ShiftSpace.Plugin = new Class({
   loadStyle: function(filename, callback, frame)
   {
     // pass through
-    loadStyle(['plugins', this.attributes.name, filename].join('/'), callback, frame);
+    loadStyle.safeCall(['plugins', this.attributes.name, filename].join('/'), callback, frame);
   },
   
 });
