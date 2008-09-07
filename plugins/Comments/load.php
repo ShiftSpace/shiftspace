@@ -1,8 +1,8 @@
 <?php 
 
-if (!empty($_POST['shiftId'])) 
+if (!empty($_REQUEST['shiftId'])) 
 {
-  $shiftId = $db->escape($_POST['shiftId']);
+  $shiftId = $db->escape($_REQUEST['shiftId']);
 } 
 else if (!empty($_SERVER['HTTP_REFERER'])) 
 {
@@ -10,20 +10,48 @@ else if (!empty($_SERVER['HTTP_REFERER']))
 }
 
 // grab the real shift id
-$rShiftId = $db->value("
-  SELECT id 
-  FROM shift
-  WHERE url_slug='$shiftId'
-");
+$qry = "
+  SELECT s.space, s.summary, s.href, u.username, s.id
+  FROM shift s, user u
+  WHERE s.url_slug='$shiftId'
+  AND s.user_id = u.id
+";
+$shift = $db->row($qry);
 
 // grab all comments for this shift
-$comments = $db->rows("
-  SELECT c.content, u.username
+$qry = "
+  SELECT c.content, u.username, c.created, c.modified
   FROM comment c, user u
   WHERE u.id = c.user_id
-  AND c.shift_id = $rShiftId
+  AND c.shift_id = $shift->id
   ORDER BY c.created DESC
-");
+";
+$comments = $db->rows($qry);
+
+$allComments = '';
+for($i = 0; $i < count($comments); $i++)
+{
+  $currentComment = $comments[$i];
+  $num = $i + 1;
+  $date = ucfirst(elapsed_time($currentComment->created));
+  $newComment = "	
+    <li id='com-2' class='comment original'>
+  		<div class='com-meta'>
+  			<div class='com-meta-text'>
+  				<span class='com-num'>$num. </span><a class='com-author' href='#'>$currentComment->username</a> said <span class='time-ago'>($date)</span>:
+  			</div>
+  			<a href='' class='com-author'>
+  				<img src='http://www.gravatar.com/avatar.php?gravatar_id=67664b0311adf87957b7addb332f576e&size=33.jpg'/>
+  			</a>
+  		</div>
+  		<div class='com-content'>
+  			$currentComment->content
+  		</div>
+  	</li>";
+  
+  // append the markup of the new comment
+  $allComments .= $newComment;
+}
 
 $commentsHTML = "
 <div id='SSComments' style='width:auto;'>
@@ -32,35 +60,19 @@ $commentsHTML = "
 	<li id='com-1' class='comment shift original'>
 		<div class='com-meta'>
 			<div class='com-meta-text'>
-				<a class='com-author' href='#'>Dphiffer the conquerer</a>\'s <span class='space-name'>Highlights</span> on <span class='shifted-page'>flickr-international.com</span>:
+				<a class='com-author' href='#'>$shift->username</a>'s <span class='space-name'>$shift->space shift</span> on <span class='shifted-page'>$shift->href</span>:
 			</div>
 			<a href='' class='com-author'>
 				<img src='http://www.gravatar.com/avatar.php?gravatar_id=67664b0311adf87957b7addb332f576e&size=33.jpg'/>
 			</a>
 		</div>
-		<div class='com-content'>'On YouTube comments and the aesthetics of proper spelling/grammer'</div>
+		<div class='com-content'>'$shift->summary'</div>
 		<a href='#' class='com-shift-thumb' title='view the shift'>
 			<img src='http://api.shiftspace.org/images/thumbs/9ece4a8e8472aced21251137e6aef490?notes' alt='notes'/>
 		</a>
 	</li>
 					
-	<li id='com-2' class='comment original'>
-		<div class='com-meta'>
-			<div class='com-meta-text'>
-				<span class='com-num'>12. </span><a class='com-author' href='#'>Transorma</a> said <span class='time-ago'>(4 hours ago)</span>:
-			</div>
-			<a href='' class='com-author'>
-				<img src='http://www.gravatar.com/avatar.php?gravatar_id=67664b0311adf87957b7addb332f576e&size=33.jpg'/>
-			</a>
-		</div>
-		<div class='com-content'>
-			<p>I gather that the error here is by judging the platform only on its merits as a utility, as such,we have some way to go.
-However another perspective is to see ShiftSpace as a general use platform, that delivers an engine on which Spaces, some of which we didn’t even conceive will come to be.</p>
-			<p>Our aim is to add features and capability that will allow the tool’s experimental nature to become very easy to use. It will allow social commentary as well as original concepts to appear.</p>
-			<p>Some Spaces developed have incredible use potential, FishEye has great potential as a tool for media critic and public service. When i joined the project i didn’t think about some of the developments that came about.</p>
-			<p>Good ideas come to many, General use platforms have demonstrated time and time again that their strength lies in their evolution rather then the end product itself.</p>
-		</div>
-	</li>
+  $allComments
 </ul>
 
 <div id='respond'>
@@ -71,14 +83,9 @@ However another perspective is to see ShiftSpace as a general use platform, that
 
 </div>";
 
-
-for($i = 0; $i < count($comments); $i++)
-{
-  
-}
-
 $json = array();
 
+$json['count'] = count($comments);
 $json['data'] = $comments;
 $json['html'] = $commentsHTML;
 
