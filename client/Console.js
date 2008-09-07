@@ -451,9 +451,6 @@ var Console = new Class({
       {
         // FIXME: erg style bug - David
         //loadStyle('plugins/'+plugin+'/'+plugin+'.css', null, this.frame );
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
         loadStyle('plugins/'+plugin+'/Console.css', null, this.frame );
       }
       loadStyle('styles/ShiftSpace.css', this.buildPluginMenu.bind(this), this.frame );
@@ -1764,14 +1761,20 @@ var Console = new Class({
     this.addPluginIconForShift(aShift.id);
     //console.log('--------------------------------- done adding plugin icons');
     var comments = newEntry.getElementByClassName('SSCommentsIcon');
+    
     $(comments).addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       evt.stopPropagation();
-      if(SSGetPlugin('Comments')) SSGetPlugin('Comments').showCommentsForShift(aShift.id);
-    });
+      console.log('click!');
+      this.showCommentsForShift.bindResource(this, {
+        type: 'plugin',
+        name: 'Comments',
+        args: [aShift.id]
+      })();
+    }.bind(this));
     
     if(SSPluginDataForShift('Comments', aShift.id))
-    {sr
+    {
       var commentCount = SSPluginDataForShift('Comments', aShift.id).count;
       if(commentCount > 0)
       {
@@ -1787,41 +1790,56 @@ var Console = new Class({
     //console.log('------------------------------------ ADDED');
   },
   
+  
+  showCommentsForShift: function(shiftId)
+  {
+    SSGetPlugin('Comments').showCommentsForShift(shiftId);
+  },
+
+  
   addPluginIconForShift: function(shiftId)
+  {
+    for(var plugin in installedPlugins)
+    {
+      this.initPluginIconForShift(plugin, shiftId);
+    }
+  },
+  
+  
+  initPluginIconForShift: function(plugin, shiftId)
   {
     var el = this.doc.getElementById(shiftId);
     el = _$(el);
     var pluginDiv = $(this.doc.createElement('div'));
-    for(var plugin in installedPlugins)
+    
+    if(SSGetPluginType(plugin) == 'menu')
     {
-      if(SSGetPluginType(plugin) == 'menu')
-      {
-        pluginDiv.addClass('plugin');
-        pluginDiv.addClass('pg'+plugin); // tag with plugin name
-        
-        // if the icon isn't immediately available need to use a callback
-        var icon = SSPlugInMenuIconForShift(plugin, shiftId, function(icon) {
-          pluginDiv.addClass(icon);
-        });
-        if(icon) pluginDiv.addClass(icon);
-        
-        pluginDiv.addEvent('click', function(_evt) {
-          var evt = new Event(_evt);
-          evt.stop();
+      pluginDiv.addClass('plugin');
+      pluginDiv.addClass('pg'+plugin); // tag with plugin name
+      
+      // if the icon isn't immediately available need to use a callback
+      var icon = SSPlugInMenuIconForShift(plugin, shiftId, function(icon) {
+        pluginDiv.addClass(icon);
+      });
+      if(icon) pluginDiv.addClass(icon);
+      
+      pluginDiv.addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+        evt.stop();
 
-          // wacky stuff
-          this.showPluginMenuForShift.bindResource(this, {
-            type: 'plugin',
-            name: plugin, 
-            args: [plugin, shiftId] 
-          })();
+        // wacky stuff
+        this.showPluginMenuForShift.bindResource(this, {
+          type: 'plugin',
+          name: plugin, 
+          args: [plugin, shiftId] 
+        })();
 
-        }.bind(this));
+      }.bind(this));
 
-        pluginDiv.inject(el.getElementByClassName('pluginIcons'));
-      }
+      pluginDiv.inject(el.getElementByClassName('pluginIcons'));
     }
   },
+  
   
   updateCount : function()
   {
