@@ -450,7 +450,8 @@ var Console = new Class({
       for(var plugin in installedPlugins)
       {
         // FIXME: erg style bug - David
-        loadStyle('plugins/'+plugin+'/'+plugin+'.css', null, this.frame );
+        //loadStyle('plugins/'+plugin+'/'+plugin+'.css', null, this.frame );
+        loadStyle('plugins/'+plugin+'/Console.css', null, this.frame );
       }
       loadStyle('styles/ShiftSpace.css', this.buildPluginMenu.bind(this), this.frame );
     }.bind(this), this.frame );
