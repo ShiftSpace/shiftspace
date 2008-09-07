@@ -39,6 +39,11 @@ var Console = new Class({
   */
   buildFrame: function() {
     var consoleHeight = Math.min(getValue('console.height', 150), 150);
+    
+    this.frameWrapper = new ShiftSpace.Element('div', {
+      id: "SSConsoleFrameWrapper"
+    });
+    
     this.frame = new ShiftSpace.Iframe({
       id: 'ShiftSpaceConsole',
       addCover: false,
@@ -111,20 +116,20 @@ var Console = new Class({
       onStart: function() 
       {
         this.startDrag = this.resizer.getPosition().y;
-        this.startHeight = this.frame.getSize().size.y;
+        this.startHeight = this.getHeight();
         this.resizeMask.injectInside(document.body);
       }.bind(this),
       
       onDrag: function() 
       {
         var dy = this.resizer.getPosition().y - this.startDrag;
-        this.frame.setStyle('height', this.startHeight - dy);
+        this.setHeight(this.startHeight - dy);
         this.refresh();
       }.bind(this),
       
       onComplete: function() {
         this.resizeMask.remove();
-        setValue('console.height', parseInt(this.frame.getStyle('height')));
+        setValue('console.height', this.getHeight());
       }.bind(this)
       
     });
@@ -156,9 +161,9 @@ var Console = new Class({
     img.addEvent('click', function() {
       if (!this.isVisible()) {
         this.show();
-      } else if (parseInt(this.frame.getStyle('height')) == 0) {
+      } else if (this.getHeight() == 0) {
         //this.frame.setStyle('height', getValue('console.height', 150));
-        this.frame.setStyle('height', 150);
+        this.setHeight(150);
         this.refresh();
       } else {
         this.minimize();
@@ -332,7 +337,6 @@ var Console = new Class({
   {
     var pos = $(anchor).getPosition([$(this.doc.getElementById('scroller'))]);
     var framePos = this.frame.getPosition();
-    var frameSize = this.frame.getSize().size;
     var size = $(anchor).getSize().size;
     
     var pluginMenu = $(this.pluginMenu);
@@ -348,11 +352,11 @@ var Console = new Class({
     pluginMenuTab.setStyles({
       left: pos.x-6,
       /*top: pos.y-3+framePos.y*/
-      bottom: frameSize.y-pos.y-19
+      bottom: this.getHeight()-pos.y-19
     });
     pluginMenu.setStyles({
       left: pos.x-15, 
-      bottom: frameSize.y-pos.y+2
+      bottom: this.getHeight()-pos.y+2
     });
     
     pluginMenu.removeClass('SSDisplayNone');
@@ -977,7 +981,7 @@ var Console = new Class({
   {
     // add temporary welcome tab
     var pane = this.addTab('welcome', 'Welcome');
-    this.frame.setStyle('height', 200);
+    this.setHeight(200);
     this.refresh();
     
     pane.setHTML(
@@ -1155,9 +1159,9 @@ var Console = new Class({
   
   showResponse: function(target, message) 
   {
-    if (this.frame.getSize().size.y < 175) 
+    if (this.getHeight() < 175) 
     {
-      this.frame.setStyle('height', 175);
+      this.setHeight(175);
       this.refresh();
     }
     
@@ -1240,8 +1244,7 @@ var Console = new Class({
     {
       var top = $(this.doc.getElementById('top')).getParent();
       var bottom = $(this.doc.getElementById('bottom'));
-      bottom.setStyle('height', this.frame.getSize().size.y -
-      top.getSize().size.y);
+      bottom.setStyle('height', this.frame.getSize().size.y - top.getSize().size.y);
     }
     //console.log('cleaning up');
     this.resizer.setStyle('width', window.getWidth() - 50);
@@ -1294,7 +1297,7 @@ var Console = new Class({
   
 
   minimize: function() {
-    this.frame.setStyle('height', 0);
+    this.setHeight(0);
     this.refresh();
     this.hidePluginMenu();
   },
@@ -1905,6 +1908,18 @@ var Console = new Class({
       this.__shiftsLoaded__ = true;
       loadShifts();
     }
+  },
+  
+  
+  setHeight: function(newHeight)
+  {
+    this.frame.setStyle('height', newHeight);
+  },
+  
+  
+  getHeight: function()
+  {
+    return parseInt(this.frame.getStyle('height'));
   }
   
 });
