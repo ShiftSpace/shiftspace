@@ -7,13 +7,15 @@ div.SSCommentsIcon
   float: right;
   margin-right: 10px;
   margin-top: 1px;
+  text-align: center;
+  background-image: url(images/comments_icon.png);
+  background-repeat: no-repeat;
+  line-height: 150%;
 }
 
 div.SSCommentsIcon.Reply
 {
-  background-image: url(images/comments_icon.png);
   background-position: -46px;
-  background-repeat: no-repeat;
 }
 
 div.SSCommentsIcon.Reply:hover

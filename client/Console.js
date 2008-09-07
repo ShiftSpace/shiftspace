@@ -1764,8 +1764,19 @@ var Console = new Class({
     $(comments).addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       evt.stopPropagation();
-      if(installedPlugins['Comments']) plugins['Comments'].showCommentsForShift(aShift.id);
+      if(SSGetPlugin('Comments')) SSGetPlugin('Comments').showCommentsForShift(aShift.id);
     });
+    
+    if(SSPluginDataForShift('Comments', aShift.id))
+    {
+      var commentCount = SSPluginDataForShift('Comments', aShift.id).count;
+      if(commentCount > 0)
+      {
+        comments.removeClass('Reply');
+        comments.addClass('Basic');
+        comments.setText(commentCount);
+      }
+    }
     
     this.shiftCount++;
     this.updateCount();

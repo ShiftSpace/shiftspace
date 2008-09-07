@@ -837,6 +837,13 @@ var ShiftSpace = new (function() {
       }
     }
     
+    
+    function SSPluginDataForShift(pluginName, shiftId)
+    {
+      return __pluginsData__[pluginName]['data'][shiftId];
+    }
+    
+    
     /*
       Function: SSImplementsProtocol
         A method to check if an object implements the required properties.
@@ -1654,7 +1661,7 @@ var ShiftSpace = new (function() {
               console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
               console.log('LOADING INITIAL DATA FOR ' + plugin);
               console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-              */
+              */ 
               __pluginsData__[plugin] = json[plugin];
             }
           }
