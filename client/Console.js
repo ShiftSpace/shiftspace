@@ -1273,7 +1273,7 @@ var Console = new Class({
     //this.resizer.setStyle('top', this.frame.getStyle('top'));
     this.resizer.setStyle('top', this.frameWrapper.getStyle('top'));
     
-    if(this.getHeight() != 0)
+    if(this.getHeight() > 0)
     {
       this.notifier.setStyle('bottom', this.getHeight() - 4);      
     }
@@ -1760,6 +1760,12 @@ var Console = new Class({
     //console.log('--------------------------------- adding plugin icons');
     this.addPluginIconForShift(aShift.id);
     //console.log('--------------------------------- done adding plugin icons');
+    var comments = newEntry.getElementByClassName('SSCommentsIcon');
+    $(comments).addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      evt.stopPropagation();
+      if(installedPlugins['Comments']) plugins['Comments'].showCommentsForShift(aShift.id);
+    });
     
     this.shiftCount++;
     this.updateCount();
@@ -1889,7 +1895,7 @@ var Console = new Class({
     
     // ------------------- Posted -------------------------- //
     var postedDiv = $(this.doc.createElement('div'));
-    postedDiv.className = 'posted cell';
+    postedDiv.className = 'posted column';
     //console.log('setHTML');
     postedDiv.setHTML('Just posted');
     //console.log('posted div added');
@@ -1911,6 +1917,10 @@ var Console = new Class({
                          
     controls.innerHTML = controlOptions;
     
+    // -------------------- Comments ----------------------- //
+    var comments = $(this.doc.createElement('div'));
+    comments.className = 'SSCommentsIcon Reply';
+    
     //console.log('controls added');
     
     // -------------------- Build the entry ---------------- //
@@ -1921,6 +1931,7 @@ var Console = new Class({
     statusIconsDiv.injectInside(shiftEntry);
     userDiv.injectInside(shiftEntry);
     postedDiv.injectInside(shiftEntry);
+    comments.injectInside(shiftEntry);
     clear.injectInside(shiftEntry);
     controls.injectInside(shiftEntry);
     

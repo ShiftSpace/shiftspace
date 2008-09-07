@@ -142,20 +142,24 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
       this.element.removeClass('SSDisplayNone');
     
-      ShiftSpace.Console.halfMode(function() {
-        var resizeFx = this.element.effects({
-          duration: 300,
-          transition: Fx.Transitions.Cubic.easeIn,
-          onComplete: function()
-          {
-            this.setIsShowing(false);
-          }.bind(this)
-        });
+      if(!this.isVisible())
+      {
+        ShiftSpace.Console.halfMode(function() {
+          var resizeFx = this.element.effects({
+            duration: 300,
+            transition: Fx.Transitions.Cubic.easeIn,
+            onComplete: function()
+            {
+              this.setIsVisible(true);
+              this.setIsShowing(false);
+            }.bind(this)
+          });
     
-        resizeFx.start({
-          top: [window.getSize().size.y, window.getSize().size.y-300]
-        });
-      }.bind(this));
+          resizeFx.start({
+            top: [window.getSize().size.y, window.getSize().size.y-300]
+          });
+        }.bind(this));
+      }
     }
   },
   
@@ -174,6 +178,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
           this.setIsHiding(false);
           // hide ourselves
           this.element.addClass('SSDisplayNone');
+          this.setIsVisible(false);
           ShiftSpace.Console.fullMode();
         }.bind(this)
       });
@@ -206,6 +211,18 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   isShowing: function()
   {
     return this.__isShowing__;
+  },
+  
+  
+  setIsVisible: function(newValue)
+  {
+    this.__isVisible__ = newValue;
+  },
+  
+  
+  isVisible: function()
+  {
+    return this.__isVisible__;
   },
   
 

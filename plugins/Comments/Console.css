@@ -1,1 +1,32 @@
 /* Comments styles intended for the ShiftSpace Console */
+
+div.SSCommentsIcon
+{
+  width: 19px;
+  height: 19px;
+  float: right;
+  margin-right: 10px;
+  margin-top: 1px;
+}
+
+div.SSCommentsIcon.Reply
+{
+  background-image: url(images/comments_icon.png);
+  background-position: -46px;
+  background-repeat: no-repeat;
+}
+
+div.SSCommentsIcon.Reply:hover
+{
+  background-position: -69px;
+}
+
+div.SSCommentsIcon.Basic
+{
+  background-position: 0px;
+}
+
+div.SSCommentsIcon.Basic:hover
+{
+  background-position: -23px;
+}
