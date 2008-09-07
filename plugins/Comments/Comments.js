@@ -217,7 +217,9 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     console.log('frame loaded');
     this.loadStyle('Comments.css', this.frameCSSLoaded.bind(this), this.frame);
     var self = this;
-    $(this.frame.contentWindow.document.body).addEvent('click', function(_evt) {
+    
+    // can listen to window events?
+    $(this.frame.contentWindow).addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       var target = evt.target;
 
