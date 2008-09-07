@@ -156,7 +156,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
           });
     
           resizeFx.start({
-            top: [window.getSize().size.y, window.getSize().size.y-300]
+            top: [window.getSize().viewPort.y, window.getSize().viewPort.y-300]
           });
         }.bind(this));
       }
@@ -185,7 +185,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       });
     
       resizeFx.start({
-        top: [this.element.getStyle('top'), window.getSize().size.y]
+        top: [this.element.getStyle('top'), window.getSize().viewPort.y]
       });
     }
   },
