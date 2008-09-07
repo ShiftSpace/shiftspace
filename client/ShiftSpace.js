@@ -549,6 +549,7 @@ var ShiftSpace = new (function() {
 
       return el;
     }
+    this._$ = _$; // export
     
     
     /*

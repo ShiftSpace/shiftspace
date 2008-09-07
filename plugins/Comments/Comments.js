@@ -47,8 +47,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       }
       else
       {
-        this.frame.contentWindow.document.body.innerHTML = json.html;
-        $('com-count-span').setText(json.count);
+        this.update(json);
       }
       if(callback && typeof callback == 'function') callback();
       if(callback && typeof callback != 'function') console.error("loadCommentsForShift: callback is not a function.");
@@ -216,32 +215,6 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   {
     console.log('frame loaded');
     this.loadStyle('Comments.css', this.frameCSSLoaded.bind(this), this.frame);
-    var self = this;
-    
-    // can listen to window events?
-    $(this.frame.contentWindow).addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      var target = evt.target;
-
-      // switch on target class
-      console.log('eventDispatch new');
-
-      switch(true)
-      {
-        case $(target).hasClass('com-reply'):
-        console.log('scroll!');
-        self.frame.contentWindow.scrollTo(0, $(self.frame.contentWindow.document.body).getSize().size.y);
-        break;
-
-        case ($(target).getProperty('id') == 'submit'):
-        console.log('add comment!');
-        self.addComment();
-        break;
-
-        default:
-        break;
-      }
-    });
   },
   
   
@@ -252,10 +225,33 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
     if(this.delayedContent)
     {
-      this.frame.contentWindow.document.body.innerHTML = this.delayedContent.html;
-      $('com-count-span').setText(this.delayedContent.count);
+      this.update(this.delayedContent);
       delete this.delayedContent;
     }
+  },
+  
+  
+  update: function(json)
+  {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> update');
+    
+    this.frame.contentWindow.document.body.innerHTML = json.html;
+    $('com-count-span').setText(json.count);
+    
+    // attach events
+    // can listen to window events?
+    var self = this;
+    
+    $(ShiftSpace._$(this.frame.contentWindow.document.body).getElementByClassName('com-reply')).addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      console.log('scroll!');
+      self.frame.contentWindow.scrollTo(0, $(self.frame.contentWindow.document.body).getSize().size.y);
+    });
+    
+    $(this.frame.contentWindow.document.getElementById('submit')).addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      self.addComment();
+    });
   },
   
   
