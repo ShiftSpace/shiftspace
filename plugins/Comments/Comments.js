@@ -31,10 +31,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   showCommentsForShift: function(shiftId)
   {
     this.setCurrentShiftId(shiftId);
-
-    this.loadCommentsForShift(shiftId, function() {
-      this.showInterface();
-    });
+    this.loadCommentsForShift(shiftId, this.showInterface.bind(this));
   },
   
   
@@ -43,10 +40,18 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     this.serverCall('load', {
       shiftId: shiftId
     }, function(json) {
-      this.element.setHtML(json.html);
+      // load up the html
+      if(!this.frame) 
+      {
+        this.delayedContent = json.html;
+      }
+      else
+      {
+        this.frame.contentWindow.document.body.innerHTML = json.html;
+      }
       if(callback && typeof callback == 'function') callback();
       if(callback && typeof callback != 'function') console.error("loadCommentsForShift: callback is not a function.");
-    });
+    }.bind(this));
   },
   
   
@@ -62,6 +67,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     var target = evt.target;
     
     // switch on target class
+    console.log('eventDispatch');
   },
   
   
@@ -191,7 +197,22 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   
   frameLoaded: function()
   {
+    console.log('frame loaded');
+    this.loadStyle('Comments.css', this.frameCSSLoaded.bind(this), this.frame);
+    $(this.frame.contentWindow.document.body).addEvent('click', this.eventDispatch.bind(this));
+  },
+  
+  
+  frameCSSLoaded: function()
+  {
+    // now we can add the html stuff
+    console.log('frame CSS loaded');
     
+    if(this.delayedContent)
+    {
+      this.frame.contentWindow.document.body.innerHTML = this.delayedContent;
+      delete this.delayedContent;
+    }
   },
   
   
@@ -222,12 +243,19 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
     this.element.injectInside(document.body);
     
+    this.frameWrapper = new ShiftSpace.Element('div', {
+      id: "SSCommentsFrameWrapper"
+    });
+    
+    this.frameWrapper.injectInside(this.comBody);
+    
     // add the iframe after the main part is in the DOM
     this.frame = new ShiftSpace.Iframe({
+      id: "SSCommentsFrame", 
       onload: this.frameLoaded.bind(this)
     });
     
-    this.frame.injectInside(this.comBody);
+    this.frame.injectInside(this.frameWrapper);
     
     this.minimizer = $$('.com-minimize')[0];
 		console.log(this.minimizer);

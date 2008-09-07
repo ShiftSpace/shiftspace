@@ -248,7 +248,14 @@ ShiftSpace.Plugin = new Class({
   delayedMenu: function()
   {
     return {'delayed': true};
-  }  
+  },
+  
+  
+  loadStyle: function(filename, callback, frame)
+  {
+    // pass through
+    loadStyle(['plugins', this.attributes.name, filename].join('/'), callback, frame);
+  },
   
 });
 

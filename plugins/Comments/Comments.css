@@ -36,6 +36,21 @@ div#SSComments{
   top: 40px;
 }
 
+#SSCommentsFrameWrapper
+{
+  position: absolute;
+  left: 17px;
+  right: 20px;
+  bottom: 0px;
+  top: 0px;
+}
+
+#SSCommentsFrame
+{
+  width: 100%;
+  height: 100%;
+}
+
 div#SSComments a{
 	color: #f63b02;
 	text-decoration: none;
