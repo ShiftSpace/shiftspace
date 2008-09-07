@@ -142,18 +142,20 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
       this.element.removeClass('SSDisplayNone');
     
-      var resizeFx = this.element.effects({
-        duration: 300,
-        transition: Fx.Transitions.Cubic.easeIn,
-        onComplete: function()
-        {
-          this.setIsShowing(false);
-        }.bind(this)
-      });
+      ShiftSpace.Console.halfMode(function() {
+        var resizeFx = this.element.effects({
+          duration: 300,
+          transition: Fx.Transitions.Cubic.easeIn,
+          onComplete: function()
+          {
+            this.setIsShowing(false);
+          }.bind(this)
+        });
     
-      resizeFx.start({
-        top: [window.getSize().size.y, window.getSize().size.y-300]
-      });
+        resizeFx.start({
+          top: [window.getSize().size.y, window.getSize().size.y-300]
+        });
+      }.bind(this));
     }
   },
   
@@ -172,6 +174,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
           this.setIsHiding(false);
           // hide ourselves
           this.element.addClass('SSDisplayNone');
+          ShiftSpace.Console.fullMode();
         }.bind(this)
       });
     

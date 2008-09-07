@@ -41,7 +41,20 @@ var Console = new Class({
     var consoleHeight = Math.min(getValue('console.height', 150), 150);
     
     this.frameWrapper = new ShiftSpace.Element('div', {
-      id: "SSConsoleFrameWrapper"
+      id: "SSConsoleFrameWrapper",
+      styles:
+      {
+        height: 150,
+        display: 'none',
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        overflow: 'hidden',
+        'z-index': '1000001',
+        opacity: 0.9,
+        height: '150px'
+      }
     });
     
     this.frame = new ShiftSpace.Iframe({
@@ -50,6 +63,7 @@ var Console = new Class({
       /* set the styles here so that users doesn't see the console because of css load delay */
       styles:
       {
+        /*
         height: 150,
         display: 'none',
         position: 'fixed',
@@ -60,6 +74,9 @@ var Console = new Class({
         'z-index': '1000001',
         opacity: 0.9,
         height: '150px'
+        */
+        width: '100%',
+        height: '100%' 
       },
       onload: function() 
       {
@@ -83,7 +100,9 @@ var Console = new Class({
       }.bind(this)
     });
     //console.log('frame injecting');
-    this.frame.injectInside(document.body);
+    
+    this.frameWrapper.injectInside(document.body);
+    this.frame.injectInside(this.frameWrapper);
     //console.log('finished frame injecting');
     
     //console.log('creating resizer');
@@ -336,7 +355,8 @@ var Console = new Class({
   showPluginMenu: function(plugin, anchor)
   {
     var pos = $(anchor).getPosition([$(this.doc.getElementById('scroller'))]);
-    var framePos = this.frame.getPosition();
+    //var framePos = this.frame.getPosition();
+    var framePos = this.frameWrapper.getPosition();
     var size = $(anchor).getSize().size;
     
     var pluginMenu = $(this.pluginMenu);
@@ -384,6 +404,7 @@ var Console = new Class({
     if(this.pluginMenuTab) this.pluginMenuTab.addClass('SSDisplayNone');
   },
   
+
   showNotifier: function() 
   {
     if (this.cancelNotifier) 
@@ -1248,7 +1269,17 @@ var Console = new Class({
     }
     //console.log('cleaning up');
     this.resizer.setStyle('width', window.getWidth() - 50);
-    this.resizer.setStyle('top', this.frame.getStyle('top'));
+    //this.resizer.setStyle('top', this.frame.getStyle('top'));
+    this.resizer.setStyle('top', this.frameWrapper.getStyle('top'));
+    
+    if(this.getHeight() != 0)
+    {
+      this.notifier.setStyle('bottom', this.getHeight() - 4);      
+    }
+    else
+    {
+      this.notifier.setStyle('bottom', 150);
+    }
 
     //console.log('cleaned');
     if(this.notifierFx && this.isVisible())
@@ -1273,7 +1304,8 @@ var Console = new Class({
 
     this.notifier.setStyle('display', '');
     this.notifier.removeClass('SSDisplayNone');
-    this.frame.setStyle('display', 'block');
+    //this.frame.setStyle('display', 'block');
+    this.frameWrapper.setStyle('display', 'block');
 
     this.refresh();
 
@@ -1290,7 +1322,8 @@ var Console = new Class({
   hide: function() 
   {
     this.notifier.addClass('SSDisplayNone');
-    this.frame.setStyle('display', 'none');
+    //this.frame.setStyle('display', 'none');
+    this.frameWrapper.setStyle('display', 'none');
     this.notifierFx.set(-32);
     this.hidePluginMenu();
   },
@@ -1911,15 +1944,60 @@ var Console = new Class({
   },
   
   
+  halfMode: function(callback)
+  {
+    var resizeFx = this.frameWrapper.effects({
+      duration: 300,
+      Transition: Fx.Transitions.Cubic.easeIn,
+      onComplete: function()
+      {
+        if(callback && typeof callback == 'function') callback();
+      }.bind(this)
+    });
+
+    resizeFx.start({
+      right: [0, 365]
+    });
+
+    var innerFrameConsoleDiv = _$(this.doc.getElementById('console'));
+    innerFrameConsoleDiv.getElementsByClassName('summary').each(function(x) {
+      $(x).setStyle('width', '35%');
+    });
+  },
+
+
+  fullMode: function()
+  {
+    var resizeFx = this.frameWrapper.effects({
+      duration: 300,
+      Transition: Fx.Transitions.Cubic.easeIn,
+      onComplete: function()
+      {
+        var innerFrameConsoleDiv = _$(this.doc.getElementById('console'));
+        innerFrameConsoleDiv.getElementsByClassName('summary').each(function(x) {
+          $(x).setStyle('width', '45%');
+        });
+
+      }.bind(this)
+    });
+
+    resizeFx.start({
+      right: [365, 0]
+    });
+  },
+  
+  
   setHeight: function(newHeight)
   {
-    this.frame.setStyle('height', newHeight);
+    //this.frame.setStyle('height', newHeight);
+    this.frameWrapper.setStyle('height', newHeight);
   },
   
   
   getHeight: function()
   {
-    return parseInt(this.frame.getStyle('height'));
+    //return parseInt(this.frame.getStyle('height'));
+    return parseInt(this.frameWrapper.getStyle('height'));
   }
   
 });

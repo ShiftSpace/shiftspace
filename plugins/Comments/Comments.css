@@ -9,7 +9,7 @@ div#SSComments{
 #SSComments.InShiftSpace
 {
 	position: fixed;
-	right: 45px;
+	right: 10px;
 	bottom: 0px;
 	z-index: 1000003;
 }
