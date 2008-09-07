@@ -175,6 +175,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
         duration: 300,
         transition: Fx.Transitions.Cubic.easeIn,
         onComplete: function() {
+          this.setIsShowing(false);
           this.setIsHiding(false);
           // hide ourselves
           this.element.addClass('SSDisplayNone');
