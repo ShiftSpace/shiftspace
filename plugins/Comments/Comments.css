@@ -12,6 +12,8 @@ div#SSComments{
 	right: 10px;
 	bottom: 0px;
 	z-index: 1000003;
+	overflow-x: hidden;
+	overflow-y: hidden;
 }
 
 #SSComments.InShiftSpace #com-header
