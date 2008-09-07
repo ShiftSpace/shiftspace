@@ -65,20 +65,19 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   eventDispatch: function(_evt)
   {
     var evt = new Event(_evt);
-    var target = $(evt.target);
+    var target = evt.target;
     
     // switch on target class
     console.log('eventDispatch');
-    console.log(target);
     
     switch(true)
     {
-      case target.hasClass('com-reply'):
+      case $(target).hasClass('com-reply'):
         console.log('scroll!');
         this.frame.contentWindow.scrollTo(0, $(this.frame.contentWindow.document.body).getSize().size.y);
       break;
       
-      case (target.getProperty('id') == 'submit'):
+      case ($(target).getProperty('id') == 'submit'):
         console.log('add comment!');
         this.addComment();
       break;
