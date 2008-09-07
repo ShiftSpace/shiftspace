@@ -62,32 +62,6 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   },
   
   
-  eventDispatch: function(_evt)
-  {
-    var evt = new Event(_evt);
-    var target = evt.target;
-    
-    // switch on target class
-    console.log('eventDispatch');
-    
-    switch(true)
-    {
-      case $(target).hasClass('com-reply'):
-        console.log('scroll!');
-        this.frame.contentWindow.scrollTo(0, $(this.frame.contentWindow.document.body).getSize().size.y);
-      break;
-      
-      case ($(target).getProperty('id') == 'submit'):
-        console.log('add comment!');
-        this.addComment();
-      break;
-      
-      default:
-      break;
-    }
-  },
-  
-  
   addComment: function()
   {
     var newComment = $(this.frame.contentWindow.document.getElementById('comment-reply')).getProperty('value');
@@ -242,7 +216,30 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   {
     console.log('frame loaded');
     this.loadStyle('Comments.css', this.frameCSSLoaded.bind(this), this.frame);
-    $(this.frame.contentWindow.document.body).addEvent('click', this.eventDispatch.bind(this));
+    var self = this;
+    $(this.frame.contentWindow.document.body).addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      var target = evt.target;
+
+      // switch on target class
+      console.log('eventDispatch');
+
+      switch(true)
+      {
+        case $(target).hasClass('com-reply'):
+        console.log('scroll!');
+        self.frame.contentWindow.scrollTo(0, $(self.frame.contentWindow.document.body).getSize().size.y);
+        break;
+
+        case ($(target).getProperty('id') == 'submit'):
+        console.log('add comment!');
+        self.addComment();
+        break;
+
+        default:
+        break;
+      }
+    });
   },
   
   
