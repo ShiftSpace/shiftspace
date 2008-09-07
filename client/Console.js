@@ -1244,7 +1244,7 @@ var Console = new Class({
     {
       var top = $(this.doc.getElementById('top')).getParent();
       var bottom = $(this.doc.getElementById('bottom'));
-      bottom.setStyle('height', this.frame.getSize().size.y - top.getSize().size.y);
+      bottom.setStyle('height', this.getHeight() - top.getSize().size.y);
     }
     //console.log('cleaning up');
     this.resizer.setStyle('width', window.getWidth() - 50);
@@ -1256,7 +1256,7 @@ var Console = new Class({
       //console.log('stop notifier');
       this.notifierFx.stop();
       //console.log('set');
-      this.notifierFx.set(Math.max(0, this.frame.getSize().size.y - 4));
+      this.notifierFx.set(Math.max(0, this.getHeight() - 4));
     }
     //console.log('exiting refresh');
   },
