@@ -123,7 +123,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       });
     
       resizeFx.start({
-        height: [0, 378]
+        top: [window.getSize().size.y, window.getSize().size.y-300]
       });
     }
   },
@@ -147,7 +147,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       });
     
       resizeFx.start({
-        height: [378, 0] 
+        top: [this.element.getStyle('top'), window.getSize().size.y]
       });
     }
   },
@@ -182,6 +182,16 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
     console.log('attachEvents ' + this.minimizer);
     this.minimizer.addEvent('click', this.hideInterface.bind(this));
+    this.element.makeResizable({
+      modifiers: {x:'', y:'top'},
+      handle: this.comHeader
+    });
+  },
+  
+  
+  frameLoaded: function()
+  {
+    
   },
   
   
@@ -211,6 +221,13 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     this.comBody.injectInside(this.element);
     
     this.element.injectInside(document.body);
+    
+    // add the iframe after the main part is in the DOM
+    this.frame = new ShiftSpace.Iframe({
+      onload: this.frameLoaded.bind(this)
+    });
+    
+    this.frame.injectInside(this.comBody);
     
     this.minimizer = $$('.com-minimize')[0];
 		console.log(this.minimizer);
