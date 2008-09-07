@@ -79,6 +79,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       break;
       
       case (target.getProperty('id') == 'submit'):
+        console.log('add comment!');
         this.addComment();
       break;
       
@@ -90,12 +91,17 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   
   addComment: function()
   {
-    this.serverCall('add', {
-      shiftId: this.currentShiftId(),
-      content: 'Hello world!'
-    }, function(json) {
-      console.log('comment added');
-    });
+    var newComment = $(this.frame.contentWindow.document.getElementById('comment-reply')).getProperty('value');
+    console.log('addComment ' + newComment);
+    if(newComment != '')
+    {
+      this.serverCall('add', {
+        shiftId: this.currentShiftId(),
+        content: newComment
+      }, function(json) {
+        this.refresh();
+      }.bind(this));
+    }
   },
   
   

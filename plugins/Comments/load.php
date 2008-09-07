@@ -24,7 +24,7 @@ $qry = "
   FROM comment c, user u
   WHERE u.id = c.user_id
   AND c.shift_id = $shift->id
-  ORDER BY c.created DESC
+  ORDER BY c.created ASC
 ";
 $comments = $db->rows($qry);
 

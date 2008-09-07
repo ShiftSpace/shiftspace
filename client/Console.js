@@ -424,6 +424,7 @@ var Console = new Class({
       /* Load all plugin styles */
       for(var plugin in installedPlugins)
       {
+        // FIXME: erg style bug - David
         loadStyle('plugins/'+plugin+'/'+plugin+'.css', null, this.frame );
       }
       loadStyle('styles/ShiftSpace.css', this.buildPluginMenu.bind(this), this.frame );
