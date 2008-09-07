@@ -451,6 +451,9 @@ var Console = new Class({
       {
         // FIXME: erg style bug - David
         //loadStyle('plugins/'+plugin+'/'+plugin+'.css', null, this.frame );
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+        console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
         loadStyle('plugins/'+plugin+'/Console.css', null, this.frame );
       }
       loadStyle('styles/ShiftSpace.css', this.buildPluginMenu.bind(this), this.frame );
@@ -1768,7 +1771,7 @@ var Console = new Class({
     });
     
     if(SSPluginDataForShift('Comments', aShift.id))
-    {
+    {sr
       var commentCount = SSPluginDataForShift('Comments', aShift.id).count;
       if(commentCount > 0)
       {
