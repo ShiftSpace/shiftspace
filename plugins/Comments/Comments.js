@@ -43,11 +43,12 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       // load up the html
       if(!this.frame) 
       {
-        this.delayedContent = json.html;
+        this.delayedContent = json;
       }
       else
       {
         this.frame.contentWindow.document.body.innerHTML = json.html;
+        $('com-count-span').setText(json.count);
       }
       if(callback && typeof callback == 'function') callback();
       if(callback && typeof callback != 'function') console.error("loadCommentsForShift: callback is not a function.");
@@ -226,7 +227,8 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
     if(this.delayedContent)
     {
-      this.frame.contentWindow.document.body.innerHTML = this.delayedContent;
+      this.frame.contentWindow.document.body.innerHTML = this.delayedContent.html;
+      $('com-count-span').setText(this.delayedContent.count);
       delete this.delayedContent;
     }
   },
@@ -251,7 +253,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       'class': "InShiftSpace"
     });
     
-    this.comHeader.setHTML('<div id="com-count"><span>34</span> Comments</div>' +
+    this.comHeader.setHTML('<div id="com-count"><span id="com-count-span">34</span> Comments</div>' +
 		                       '<a href="#" class="com-minimize" title="Minimize console"/></a>'); 
 		                       
     this.comHeader.injectInside(this.element);
