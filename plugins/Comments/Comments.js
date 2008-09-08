@@ -205,19 +205,19 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     console.log('attachEvents ' + this.minimizer);
     this.minimizer.addEvent('click', this.hideInterface.bind(this));
 
-    var overflow = document.body.getStyle('overflow');
+    var overflow = $(document.body).getStyle('overflow');
     this.element.makeResizable({
       modifiers: {x:'', y:'top'},
       handle: this.comHeader,
       onStart: function()
       {
         // change 
-        document.body.setStyle('overflow', 'hidden');
+        $(document.body).setStyle('overflow', 'hidden');
       },
       onComplete: function()
       {
         // restore
-        document.body.setStyle('overflow', overflow);
+        $(document.body).setStyle('overflow', overflow);
       }
     });
     
