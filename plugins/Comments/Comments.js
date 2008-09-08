@@ -207,19 +207,30 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     this.minimizer.addEvent('click', this.hideInterface.bind(this));
 
     var overflow = $(document.body).getStyle('overflow');
-    var windowSize = window.getStyle().size;
-    var windowScrollSize = window.getSize().scroll;
-    var setOverflow = (windowSize.x == windowScrollSize.x && windowSize.y == windowScrollSize.y);
 
     this.element.makeResizable({
       modifiers: {x:'', y:'top'},
       handle: this.comCount,
       onStart: function()
       {
+        var windowSize = window.getSize().size;
+        var windowScrollSize = window.getSize().scrollSize;
+        var setOverflow = (windowSize.y == windowScrollSize.y);
+        
+        console.log(windowSize.y + ', ' + windowScrollSize.y);
+        console.log(window.getSize());
+        
         if(setOverflow) $(document.body).setStyle('overflow', 'hidden');
       },
       onComplete: function()
       {
+        var windowSize = window.getSize().size;
+        var windowScrollSize = window.getSize().scrollSize;
+        var setOverflow = (windowSize.y == windowScrollSize.y);
+        
+        console.log(setOverflow);
+        console.log(window.getSize());
+
         if(setOverflow) $(document.body).setStyle('overflow', overflow);
       }
     });
