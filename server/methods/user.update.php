@@ -50,8 +50,6 @@ $qry = "
   WHERE id = $user->id
 ";
 
-echo $qry;
-
 $db->query($qry);
 
 $response = "Your information has been updated.";
