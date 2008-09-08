@@ -208,7 +208,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
 
     this.element.makeResizable({
       modifiers: {x:'', y:'top'},
-      handle: this.comHeader,
+      handle: this.comCount,
       onStart: function()
       {
       },
@@ -306,6 +306,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     this.frame.injectInside(this.frameWrapper);
     
     this.minimizer = $$('.com-minimize')[0];
+    this.comCount = $$('.com-count')[0];
 		console.log(this.minimizer);
     
     this.attachEvents();

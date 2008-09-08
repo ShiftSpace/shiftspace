@@ -73,9 +73,11 @@ div#com-header{
 }
 
 div#com-count{
-	color: #fff;
-	float: left;
-	margin-top: 1px;
+  color:#fff;
+  float:left;
+  height:100%;
+  margin-top:1px;
+  width:320px;
 }
 
 div#com-count span{
