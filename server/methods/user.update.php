@@ -1,6 +1,6 @@
 <?php
 
-extract($db->escape($_POST));
+extract($db->escape($_REQUEST));
 
 // create an array to store updates
 $updates = array();
