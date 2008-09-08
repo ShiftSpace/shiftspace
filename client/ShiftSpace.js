@@ -109,6 +109,7 @@ var ShiftSpace = new (function() {
     var __pendingShift__ = null;
     var __consoleIsWaiting__ = false;
     var __defaultShiftStatus__ = 1;
+    var __defaultEmailComments__ = 1;
     
     // Stores initial data for plugins that are needed for the console at startup
     // since the plugins won't actually be loaded until they are needed
@@ -411,6 +412,22 @@ var ShiftSpace = new (function() {
     function SSGetDefaultShiftStatus(checkPref)
     {
       return (checkPref && SSGetPref('defaultShiftStatus', 1)) || __defaultShiftStatus__;
+    }
+    
+    
+    function SSSetDefaultEmailComemnts(value)
+    {
+      if(value)
+      {
+        __defaultEmailComments__ = value;
+        SSSetPref('defaultEmailComments', __defaultEmailComments__);
+      }
+    }
+    
+    
+    function SSGetDefaultEmailComments(checkPref)
+    {
+      return (checkPref && SSGetPref('emailComments', 1) || __defaultEmailComments__);
     }
     
     

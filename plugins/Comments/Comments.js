@@ -81,6 +81,10 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
         content: newComment
       }, function(json) {
         this.refresh();
+        // notify listeners
+        this.fireEvent('onCommentAdd', this.currentShiftId());
+        // TODO: fix this at some point - David
+        ShiftSpace.Console.addCommentToShift(this.currentShiftId());
       }.bind(this));
     }
   },
@@ -110,7 +114,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   },
   
   
-  showInterface: function()
+  showInterface: function(animate)
   {
     if(!this.isShowing())
     {
@@ -145,7 +149,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   },
   
 
-  hideInterface: function()
+  hideInterface: function(animate)
   { 
     if(!this.isHiding())
     {

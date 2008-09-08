@@ -600,16 +600,27 @@ var Console = new Class({
     }
     
     var default_shift_status = SSGetDefaultShiftStatus(true);
-    
+
     if (default_shift_status == 1) {
       default_shift_status = ' checked';
     } else {
       default_shift_status = '';
     }
     
+    var default_comment_status = 1;
+
+    if (default_comment_status == 1) {
+      default_comment_status = ' checked';
+    } else {
+      default_comment_status = '';
+    }
+    
     $(sections[0]).setHTML('<div class="form-column">' +
                         '<div class="input"><div id="default_privacy" class="checkbox' + default_shift_status + '"></div>' +
                         '<div class="label">Set my shifts public by default</div>' +
+                        '<br class="clear" /></div>' +
+                        '<div class="input"><div id="default_comment" class="checkbox' + default_comment_status + '"></div>' +
+                        '<div class="label">Email me when someone comments my shifts</div>' +
                         '<br class="clear" /></div>' +
                         '<div class="input"><label for="server-input">Server address:</label>' +
                         '<input type="text" name="server" value="' + server + '" id="server-input" size="40" class="text" />' +
@@ -2056,6 +2067,26 @@ var Console = new Class({
   {
     //return parseInt(this.frame.getStyle('height'));
     return parseInt(this.frameWrapper.getStyle('height'));
+  },
+  
+  // TODO: Total hack, fix this at some point - David
+  addCommentToShift: function(shiftId)
+  {
+    var el = _$(this.doc.getElementById(shiftId));
+    var comments = $(el.getElementByClassName('SSCommentsIcon'));
+    var count = 1;
+    
+    if(!comments.hasClass('Basic'))
+    {
+      comments.removeClass('Reply');
+      comments.addClass('Basic');
+    }
+    else
+    {
+      count = parseInt(comments.getText()) + 1;
+    }
+    
+    comments.setText(count);
   }
   
 });
