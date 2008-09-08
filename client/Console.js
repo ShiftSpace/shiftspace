@@ -615,9 +615,12 @@ var Console = new Class({
     var defaultEmailComments = ShiftSpace.User.getEmailCommentsDefault();
 
 
-    if (defaultEmailComments == 1) {
-      defaultEmailComment = ' checked';
-    } else {
+    if (defaultEmailComments == 1) 
+    {
+      defaultEmailComments = ' checked';
+    } 
+    else 
+    {
       defaultEmailComments = '';
     }
     
