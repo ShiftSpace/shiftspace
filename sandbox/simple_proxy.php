@@ -173,6 +173,8 @@ foreach ($shift_ids as $an_id)
     $spaceName = $shift->space;
     $shifthref = $shift->href;
     
+    $date = ucfirst(elapsed_time($shift->created));
+    
     // grab the user name
     $user_id = $shift->user_id;
     $userName = $db->value("
@@ -250,7 +252,7 @@ $proxymessage = "<div id='SSProxyMessage' class='ShiftSpaceElement'>
 			<img src='../spaces/$spaceName/$spaceName.png' alt='$spaceName icon'/>
 		</a>
 		<div id='SSProxyMessagedescription'>
-			This is a representation of a page shifted <span class='SSProxyMessageDate'>3 days ago</a> by ShiftSpace user, <b>$userName</b>, using the <b>$spaceName</b> feature
+			This is a representation of a page shifted <span class='SSProxyMessageDate'>$date</a> by ShiftSpace user, <b>$userName</b>, using the <b>$spaceName</b> feature
 			<a href ='http://www.shiftspace.org/'>learn more</a>
 		</div>
 	</div>
