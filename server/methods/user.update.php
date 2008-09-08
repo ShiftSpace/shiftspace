@@ -23,7 +23,7 @@ if(!empty($password))
   $updates['password'] = $password;
 }
 
-if(!empty($emailComments))
+if(!empty($email_comments))
 {
   $updates['email_comments'] = $emailComments;
 }
