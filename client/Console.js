@@ -1773,11 +1773,18 @@ var Console = new Class({
       var evt = new Event(_evt);
       evt.stopPropagation();
       console.log('click!');
-      this.showCommentsForShift.bindResource(this, {
-        type: 'plugin',
-        name: 'Comments',
-        args: [aShift.id]
-      })();
+      if($(comments).hasClass('Reply') && !ShiftSpace.User.isLoggedIn())
+      {
+        alert("You must be signed in to comment on a shift.");
+      }
+      else
+      {
+        this.showCommentsForShift.bindResource(this, {
+          type: 'plugin',
+          name: 'Comments',
+          args: [aShift.id]
+        })();
+      }
     }.bind(this));
     
     if(SSPluginDataForShift('Comments', aShift.id))
