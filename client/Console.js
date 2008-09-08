@@ -1312,6 +1312,7 @@ var Console = new Class({
     //this.frame.setStyle('display', 'block');
     this.frameWrapper.setStyle('display', 'block');
 
+    this.notifierFx.stop();
     this.refresh();
 
     this.loadShifts();
