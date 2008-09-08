@@ -43,11 +43,15 @@ foreach ($updates as $key => $value)
 }
 $sql_updates = implode(', ', $sql_updates);
 
-$db->query("
+$qry = "
   UPDATE user
   SET $sql_updates
   WHERE id = $user->id
-");
+";
+
+echo $qry;
+
+$db->query($qry);
 
 $response = "Your information has been updated.";
 
