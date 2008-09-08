@@ -6,6 +6,29 @@
 
 */
 
+// TODO: Redundant should import this from main.php - David
+function elapsed_time($date) {
+  $date = strtotime($date);
+  $now = time();
+  if ($now - $date < 60) {
+    return ($now - $date) . ' seconds ago';
+  } else if (($now - $date) < 120) {
+    return 'about a minute ago';
+  } else if (($now - $date) < 60 * 60) {
+    $mins = round(($now - $date) / 60);
+    return "$mins minutes ago";
+  } else if (($now - $date) < 60 * 60 * 2) {
+    return 'about an hour ago';
+  } else if (($now - $date) < 60 * 60 * 24) {
+    $hours = round(($now - $date) / 3600);
+    return "$hours hours ago";
+  } else if (($now - $date) < 60 * 60 * 24 * 2) {
+    return 'yesterday';
+  } else {
+    return date('M j, Y', $date);
+  }
+}
+
 $dir = dirname(__FILE__) . '/..';
 require_once '../server/database/database.php';
 require_once '../server/config.php';
