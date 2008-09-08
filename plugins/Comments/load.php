@@ -96,6 +96,7 @@ $commentsHTML = "
   		<a href='#' class='com-shift-thumb' title='view the shift'>
   			<img src='$spaceIcon' alt='$shift->space'/>
   		</a>
+  		<br style='clear:both;' />
   	</li>
 					
     $allComments
