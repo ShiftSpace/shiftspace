@@ -64,6 +64,8 @@ if($owner->email_comments == 1)
 
   Original link: $shift->href
   Proxy link: http://www.shiftspace.org/api/sandbox/?id=$shift->url_slug
+  
+  If you do not wish to receive emails when your shifts are commented on, you can change this default setting in the Settings tab in the ShiftSpace plugin.
 
   Kisses,
   The ShiftSpace email robot
