@@ -26,7 +26,7 @@ if(!empty($password))
 if(isset($email_comments) &&
    ($email_comments == 0 || $email_comments == 1))
 {
-  $updates['email_comments'] = $emailComments;
+  $updates['email_comments'] = $email_comments;
 }
 
 // Assemble SQL assignments
