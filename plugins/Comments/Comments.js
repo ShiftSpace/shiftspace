@@ -141,7 +141,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
           });
     
           resizeFx.start({
-            top: [window.getSize().viewPort.y, window.getSize().viewPort.y-300]
+            top: [window.getSize().viewPort.y, window.getSize().viewPort.y-370]
           });
         }.bind(this));
       }
