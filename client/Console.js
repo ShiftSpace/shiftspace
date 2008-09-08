@@ -1474,7 +1474,7 @@ var Console = new Class({
     if(atReference && atReference.length > 0)
     {
       atReference = atReference[0];
-      var refLink = "<a href='http://www.shiftspace.org/shifts/?filter=by&filterBy="+atReference.substr(1, atReference.length-1)+"'>"+atReference+"</a>";
+      var refLink = "<a target='new' href='http://www.shiftspace.org/shifts/?filter=by&filterBy="+atReference.substr(1, atReference.length-1)+"'>"+atReference+"</a>";
       $(summaryView).setHTML(summary.replace(atReference, refLink));
     }
     else
