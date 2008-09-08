@@ -11,7 +11,7 @@ else if (!empty($_SERVER['HTTP_REFERER']))
 
 // grab the real shift id
 $qry = "
-  SELECT s.space, s.summary, s.href, u.username, s.id
+  SELECT s.space, s.summary, s.href, u.username, u.email, s.id
   FROM shift s, user u
   WHERE s.url_slug='$shiftId'
   AND s.user_id = u.id
@@ -20,7 +20,7 @@ $shift = $db->row($qry);
 
 // grab all comments for this shift
 $qry = "
-  SELECT c.content, u.username, c.created, c.modified
+  SELECT c.content, u.username, u.email, c.created, c.modified
   FROM comment c, user u
   WHERE u.id = c.user_id
   AND c.shift_id = $shift->id
@@ -34,6 +34,7 @@ for($i = 0; $i < count($comments); $i++)
   $currentComment = $comments[$i];
   $num = $i + 1;
   $date = ucfirst(elapsed_time($currentComment->created));
+  $commentGravatar = md5($currentComment->email);
   $newComment = "	
     <li id='com-2' class='comment original'>
   		<div class='com-meta'>
@@ -41,7 +42,7 @@ for($i = 0; $i < count($comments); $i++)
   				<span class='com-num'>$num. </span><a class='com-author' href='#'>$currentComment->username</a> said <span class='time-ago'>($date)</span>:
   			</div>
   			<a href='' class='com-author'>
-  				<img src='http://www.gravatar.com/avatar.php?gravatar_id=67664b0311adf87957b7addb332f576e&size=33.jpg'/>
+  				<img src='http://www.gravatar.com/avatar.php?gravatar_id=$commentGravatar&size=33.jpg'/>
   			</a>
   		</div>
   		<div class='com-content'>
@@ -68,6 +69,8 @@ else
   $commentForm = "<div id='respond'><h3>You must be signed in to leave a comment.</h3></div>";
 }
 
+$ownerGravatar = md5($shift->email);
+
 $commentsHTML = "
 <div id='SSComments' style='width:auto;'>
   $replyButton
@@ -78,7 +81,7 @@ $commentsHTML = "
   				<a class='com-author' href='#'>$shift->username</a>'s <span class='space-name'>$shift->space shift</span> on <span class='shifted-page'>$shift->href</span>:
   			</div>
   			<a href='' class='com-author'>
-  				<img src='http://www.gravatar.com/avatar.php?gravatar_id=67664b0311adf87957b7addb332f576e&size=33.jpg'/>
+  				<img src='http://www.gravatar.com/avatar.php?gravatar_id=$ownerGravatar&size=33.jpg'/>
   			</a>
   		</div>
   		<div class='com-content'>'$shift->summary'</div>
