@@ -1459,8 +1459,28 @@ var Console = new Class({
   {
     var entry = _$(this.doc.getElementById(shiftJson.id));
     
-    $(entry.getElementByClassName('summary').getElementByClassName('summaryView')).setHTML(shiftJson.summary);
+    // update the summary
+    var summaryView = $(entry.getElementByClassName('summary').getElementByClassName('summaryView'));
+    this.updateSummary(summaryView, shiftJson.summary);
+    
+    // HUH: not sure why we need to update the username - David
     $(entry.getElementByClassName('user')).getFirst().setHTML(shiftJson.username);
+  },
+  
+  
+  updateSummary: function(summaryView, summary)
+  {
+    var atReference = summary.match(/@[A-Za-z0-9._]*\b/);
+    if(atReference && atReference.length > 0)
+    {
+      atReference = atReference[0];
+      var refLink = "<a href='http://www.shiftspace.org/shifts/?filter=by&filterBy="+atReference.substr(1, atReference.length-1)+"'>"+atReference+"</a>";
+      $(summaryView).setHTML(summary.replace(atReference, refLink));
+    }
+    else
+    {
+      $(summaryView).setText(summary);
+    }
   },
   
   
@@ -1621,7 +1641,7 @@ var Console = new Class({
     
     // udpate the summary view
     var summaryView = summary.getElementByClassName('summaryView');
-    $(summaryView).setText(aShift.summary);
+    this.updateSummary(summaryView, aShift.summary);
     
     // update the summary input fiedl
     var summaryEdit = summary.getElementByClassName('summaryEdit');

@@ -483,3 +483,8 @@ input.submit:active {
   font-weight: bold;
   color: #f63b01;
 }
+
+.SSAtLink
+{
+  color: #ccf;
+}
