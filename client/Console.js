@@ -1460,7 +1460,7 @@ var Console = new Class({
     var entry = _$(this.doc.getElementById(shiftJson.id));
     
     $(entry.getElementByClassName('summary').getElementByClassName('summaryView')).setHTML(shiftJson.summary);
-    $(entry.getElementByClassName('user')).setHTML(shiftJson.username);
+    $(entry.getElementByClassName('user')).getFirst().setHTML(shiftJson.username);
   },
   
   
@@ -1628,7 +1628,10 @@ var Console = new Class({
     summaryEdit.setAttribute('value', aShift.summary);
     
     // upate user name and created date
-    newEntry.getElementByClassName('user').innerHTML = aShift.username;
+    var userLink = $(newEntry.getElementByClassName('user')).getFirst();
+    userLink.setHTML(aShift.username);
+    userLink.setProperty('href', 'http://www.shiftspace.org/shifts/?filter=by&filterBy='+aShift.username);
+
     newEntry.getElementByClassName('posted').innerHTML = aShift.created; 
     
     // set the permalink
@@ -1945,8 +1948,12 @@ var Console = new Class({
     brokenIcon.injectInside(statusIconsDiv);
     
     // ------------------- User ---------------------------- //
+    var userLink = $(this.doc.createElement('a'));
+    userLink.setProperty('target', 'new');
     var userDiv = $(this.doc.createElement('div'));
+
     userDiv.className = 'user column';
+    userLink.injectInside(userDiv);
     
     //console.log('user div added');
     
