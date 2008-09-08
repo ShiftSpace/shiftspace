@@ -12,8 +12,16 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   
   setup: function()
   {
-    // intialize
+    // Listen to the relevant events
     ShiftSpace.Console.addEvent('onHide', this.hideInterface.bind(this));
+    
+    ShiftSpace.User.addEvent('onUserLogin', function() {
+      if(this.isVisible()) this.refresh();
+    }.bind(this));
+    
+    ShiftSpace.User.addEvent('onUserLogout', function() {
+      if(this.isVisible()) this.refresh();
+    }.bind(this));
   },
   
   

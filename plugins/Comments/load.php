@@ -53,33 +53,42 @@ for($i = 0; $i < count($comments); $i++)
   $allComments .= $newComment;
 }
 
+if($user)
+{
+  $commentForm = "<div id='respond'>
+  	<h3>Hey $user->username, post a comment!</h3>
+  	<textarea tabindex='6' rows='8' cols='35' name='comment' id='comment-reply'></textarea>
+  	<input type='submit' tabindex='7' value='Post Comment' class='button' name='submit' id='submit'/>
+  </div>";
+}
+else
+{
+  $commentForm = "<div id='respond'><h3>You must be signed in to leave a comment.</h3></div>";
+}
+
 $commentsHTML = "
 <div id='SSComments' style='width:auto;'>
-<a class='com-reply' href='#' title='Reply to this thread'>Reply</a>
-<ul id='com-list'>
-	<li id='com-1' class='comment shift original'>
-		<div class='com-meta'>
-			<div class='com-meta-text'>
-				<a class='com-author' href='#'>$shift->username</a>'s <span class='space-name'>$shift->space shift</span> on <span class='shifted-page'>$shift->href</span>:
-			</div>
-			<a href='' class='com-author'>
-				<img src='http://www.gravatar.com/avatar.php?gravatar_id=67664b0311adf87957b7addb332f576e&size=33.jpg'/>
-			</a>
-		</div>
-		<div class='com-content'>'$shift->summary'</div>
-		<a href='#' class='com-shift-thumb' title='view the shift'>
-			<img src='http://api.shiftspace.org/images/thumbs/9ece4a8e8472aced21251137e6aef490?notes' alt='notes'/>
-		</a>
-	</li>
+  <a class='com-reply' href='#' title='Reply to this thread'>Reply</a>
+  <ul id='com-list'>
+  	<li id='com-1' class='comment shift original'>
+  		<div class='com-meta'>
+  			<div class='com-meta-text'>
+  				<a class='com-author' href='#'>$shift->username</a>'s <span class='space-name'>$shift->space shift</span> on <span class='shifted-page'>$shift->href</span>:
+  			</div>
+  			<a href='' class='com-author'>
+  				<img src='http://www.gravatar.com/avatar.php?gravatar_id=67664b0311adf87957b7addb332f576e&size=33.jpg'/>
+  			</a>
+  		</div>
+  		<div class='com-content'>'$shift->summary'</div>
+  		<a href='#' class='com-shift-thumb' title='view the shift'>
+  			<img src='http://api.shiftspace.org/images/thumbs/9ece4a8e8472aced21251137e6aef490?notes' alt='notes'/>
+  		</a>
+  	</li>
 					
-  $allComments
-</ul>
+    $allComments
+  </ul>
 
-<div id='respond'>
-	<h3>Hey $user->username, post a comment!</h3>
-	<textarea tabindex='6' rows='8' cols='35' name='comment' id='comment-reply'></textarea>
-	<input type='submit' tabindex='7' value='Post Comment' class='button' name='submit' id='submit'/>
-</div>
+  $commentForm
 
 </div>";
 
