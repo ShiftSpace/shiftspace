@@ -190,9 +190,15 @@ a.com-shift-thumb img{
 }
 
 textarea{
-	width: 279px;
+	width: 290px;
 }
 
 input{
 	float: right;
+}
+
+#respond #submit
+{
+  margin-right: 5px;
+  margin-top: 5px;
 }
