@@ -76,7 +76,7 @@ $spaceIcon = "http://www.shiftspace.org/dev/images/" . strtolower($shift->space)
 $shiftHref = $shift->href;
 if(strlen($shiftHref) > 50)
 {
-  $shiftHref = substr($shiftHref, 0, 47) + '...';
+  $shiftHref = substr($shiftHref, 0, 47) . '...';
 }
 
 $commentsHTML = "
