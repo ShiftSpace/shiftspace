@@ -55,19 +55,22 @@ $owner = $db->row("
 //echo "grabbed owner.";
   
 // email the owner
-$subject = "Shiftspace user $user->username has commented on your shift!";
-$body = wordwrap("Hello $owner->username,
+if($owner->email_comments == 1)
+{
+  $subject = "Shiftspace user $user->username has commented on your shift!";
+  $body = wordwrap("Hello $owner->username,
 
-You have a new comment on your shift!
+  You have a new comment on your shift!
 
-Original link: $shift->href
-Proxy link: http://www.shiftspace.org/api/sandbox/?id=$shift->url_slug
+  Original link: $shift->href
+  Proxy link: http://www.shiftspace.org/api/sandbox/?id=$shift->url_slug
 
-Kisses,
-The ShiftSpace email robot
-");
-//echo "sending email";
-mail($owner->email, $subject, $body, "From: ShiftSpace <info@shiftspace.org>\n");
+  Kisses,
+  The ShiftSpace email robot
+  ");
+  //echo "sending email";
+  mail($owner->email, $subject, $body, "From: ShiftSpace <info@shiftspace.org>\n");
+}
 
 // return success
 echo "{status: 1, message:'Success. Comment added.'}";
