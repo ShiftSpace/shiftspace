@@ -73,6 +73,12 @@ $ownerGravatar = md5($shift->email);
 
 $spaceIcon = "http://www.shiftspace.org/dev/images/" . strtolower($shift->space) . "_thumb.png";
 
+$shiftHref = $shift->href;
+if(strlen($shiftHref) > 128)
+{
+  $shiftHref = substr($shiftHref, 0, 125) + '...';
+}
+
 $commentsHTML = "
 <div id='SSComments' style='width:auto;'>
   $replyButton
@@ -80,7 +86,7 @@ $commentsHTML = "
   	<li id='com-1' class='comment shift original'>
   		<div class='com-meta'>
   			<div class='com-meta-text'>
-  				<a class='com-author' href='#'>$shift->username</a>'s <span class='space-name'>$shift->space shift</span> on <span class='shifted-page'>$shift->href</span>:
+  				<a class='com-author' href='#'>$shift->username</a>'s <span class='space-name'>$shift->space shift</span> on <span class='shifted-page'>$shiftHref</span>:
   			</div>
   			<a href='' class='com-author'>
   				<img src='http://www.gravatar.com/avatar.php?gravatar_id=$ownerGravatar&size=33.jpg'/>
