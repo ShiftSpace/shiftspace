@@ -42,7 +42,8 @@ CREATE TABLE user (
   email VARCHAR(255),
   last_seen DATETIME,
   joined DATETIME,
-  status INTEGER DEFAULT 0
+  status INTEGER DEFAULT 0,
+  email_comments INTEGER DEFAULT 1
 );
 
 CREATE TABLE trail (
