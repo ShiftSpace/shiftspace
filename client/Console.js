@@ -1977,6 +1977,7 @@ var Console = new Class({
     // -------------------- Comments ----------------------- //
     var comments = $(this.doc.createElement('div'));
     comments.className = 'SSCommentsIcon Reply';
+    comments.setProperty('title', 'Leave a comment');
     
     //console.log('controls added');
     

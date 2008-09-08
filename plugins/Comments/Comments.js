@@ -83,7 +83,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
         this.refresh();
         // notify listeners
         this.fireEvent('onCommentAdd', this.currentShiftId());
-        // TODO: fix this at some point - David
+        // TODO: fix this at some point, we need a notification system - David
         ShiftSpace.Console.addCommentToShift(this.currentShiftId());
       }.bind(this));
     }
@@ -271,6 +271,8 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
     this.frame.contentWindow.document.body.innerHTML = json.html;
     $('com-count-span').setText(json.count);
+    
+    
     
     // attach events
     // can listen to window events?
