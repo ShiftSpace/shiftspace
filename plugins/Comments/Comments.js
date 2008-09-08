@@ -217,9 +217,6 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
         var windowScrollSize = window.getSize().scrollSize;
         var setOverflow = (windowSize.y == windowScrollSize.y);
         
-        console.log(windowSize.y + ', ' + windowScrollSize.y);
-        console.log(window.getSize());
-        
         if(setOverflow) $(document.body).setStyle('overflow', 'hidden');
       },
       onComplete: function()
@@ -227,9 +224,6 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
         var windowSize = window.getSize().size;
         var windowScrollSize = window.getSize().scrollSize;
         var setOverflow = (windowSize.y == windowScrollSize.y);
-        
-        console.log(setOverflow);
-        console.log(window.getSize());
 
         if(setOverflow) $(document.body).setStyle('overflow', overflow);
       }

@@ -408,22 +408,25 @@ var Console = new Class({
 
   showNotifier: function() 
   {
-    if (this.cancelNotifier) 
+    if(!this.isVisible())
     {
-      this.loadShifts();
-    } 
-    else 
-    {
-      this.notifier.setStyle('display', '');
-      this.notifier.removeClass('SSDisplayNone');
-
-      //console.log('start animation for notifier');
-      this.notifierFx.start(-32, 0).chain(function() {
+      if (this.cancelNotifier) 
+      {
         this.loadShifts();
-        this.hideNotifier.delay(3000, this);
-      }.bind(this));
+      } 
+      else 
+      {
+        this.notifier.setStyle('display', '');
+        this.notifier.removeClass('SSDisplayNone');
+
+        //console.log('start animation for notifier');
+        this.notifierFx.start(-32, 0).chain(function() {
+          this.loadShifts();
+          this.hideNotifier.delay(3000, this);
+        }.bind(this));
+      }
+      this.hideNotifier.delay(3000, this);
     }
-    this.hideNotifier.delay(3000, this);
   },
   
   
