@@ -272,13 +272,15 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     // can listen to window events?
     var self = this;
     
-    $(ShiftSpace._$(this.frame.contentWindow.document.body).getElementByClassName('com-reply')).addEvent('click', function(_evt) {
+    var replyButton =  $(ShiftSpace._$(this.frame.contentWindow.document.body).getElementByClassName('com-reply'));
+    if(replyButton) replyButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       console.log('scroll!');
       self.frame.contentWindow.scrollTo(0, $(self.frame.contentWindow.document.body).getSize().size.y);
     });
     
-    $(this.frame.contentWindow.document.getElementById('submit')).addEvent('click', function(_evt) {
+    var submitButton = $(this.frame.contentWindow.document.getElementById('submit'));
+    if(submitButton) submitButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       self.addComment();
     });

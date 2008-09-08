@@ -55,6 +55,7 @@ for($i = 0; $i < count($comments); $i++)
 
 if($user)
 {
+  $replyButton = "<a class='com-reply' href='#' title='Reply to this thread'>Reply</a>";
   $commentForm = "<div id='respond'>
   	<h3>Hey $user->username, post a comment!</h3>
   	<textarea tabindex='6' rows='8' cols='35' name='comment' id='comment-reply'></textarea>
@@ -63,12 +64,13 @@ if($user)
 }
 else
 {
+  $replyButton = "";
   $commentForm = "<div id='respond'><h3>You must be signed in to leave a comment.</h3></div>";
 }
 
 $commentsHTML = "
 <div id='SSComments' style='width:auto;'>
-  <a class='com-reply' href='#' title='Reply to this thread'>Reply</a>
+  $replyButton
   <ul id='com-list'>
   	<li id='com-1' class='comment shift original'>
   		<div class='com-meta'>
