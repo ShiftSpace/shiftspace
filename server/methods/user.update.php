@@ -2,25 +2,55 @@
 
 extract($db->escape($_POST));
 
-if (empty($password)) {
-  $response = "Oops, you didn't enter a password.";
-} else if ($password != $password_again) {
-  $response = "The passwords you entered didn't match. Please try again.";
-} else if (strlen($password) < 6) {
-  $response = "Oops, please enter a password at least 6 characters long.";
+// create an array to store updates
+$updates = array();
+
+if(!empty($password)) 
+{
+  if ($password != $password_again) 
+  {
+    $response = "The passwords you entered didn't match. Please try again.";
+    respond(0, $response);
+  } 
+  else if (strlen($password) < 6) 
+  {
+    $response = "Oops, please enter a password at least 6 characters long.";
+    respond(0, $response);
+  }
+  // encrypt
+  $password = md5($password);
+  // add the password
+  $updates['password'] = $password;
 }
 
-if (empty($response)) {
-  $password = md5($password);
-  $db->query("
-    UPDATE user
-    SET password = '$password'
-    WHERE id = $user->id
-  ");
-  $response = "Your new password has been saved.";
-  respond(1, $response);
-} else {
-  respond(0, $response);
+if(!empty($emailComments))
+{
+  $updates['email_comments'] = $emailComments;
 }
+
+// Assemble SQL assignments
+$sql_updates = array();
+foreach ($updates as $key => $value) 
+{
+  if(is_string($value))
+  {
+    $sql_updates[] = "$key = '$value'";
+  }
+  else
+  {
+    $sql_updates[] = "$key = $value";
+  }
+}
+$sql_updates = implode(', ', $sql_updates);
+
+$db->query("
+  UPDATE user
+  SET $sql_updates
+  WHERE id = $user->id
+");
+
+$response = "Your information has been updated.";
+
+respond(1, $response);
     
 ?>

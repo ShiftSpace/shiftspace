@@ -108,6 +108,40 @@ var User = new Class({
   */
   resetPassword: function(info, callback) {
     serverCall('user.resetPassword', info, callback);
+  },
+  
+  
+  setPublishDefault: function()
+  {
+    
+  },
+  
+  
+  setEmailCommentsDefault: function(newValue, callback)
+  {
+    console.log('setEmailCommentsDefault ' + newValue);
+    // setting the value, can't use zero because of PHP, GRRR - David
+    SSSetDefaultEmailComments(newValue+1);
+    
+    serverCall('user.update', {
+      email_comments: newValue
+    }, function(json) {
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>> Default changed!');
+      console.log(json);
+    });
+  },
+  
+  
+  getEmailCommentsDefault: function()
+  {
+    // setting the value, can't user zero because of PHP, GRRR - David
+    return (SSGetDefaultEmailComments(true)-1);
+  },
+  
+  
+  setDefault: function(aDefault, value)
+  {
+    
   }
 
 });

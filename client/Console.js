@@ -599,6 +599,11 @@ var Console = new Class({
       this.hideSubTab('settings', 2);
     }
     
+    /*
+      WARNING: THE USER MIGHT NOT HAVE BEEN LOGGED IN YET SO GRABBING PREFS WILL FAIL, APPROPIATE METHODS
+               MUST BE CALLED FROM handleLogin - DAVID
+    */
+    
     var default_shift_status = SSGetDefaultShiftStatus(true);
 
     if (default_shift_status == 1) {
@@ -607,19 +612,20 @@ var Console = new Class({
       default_shift_status = '';
     }
     
-    var default_comment_status = 1;
+    var defaultEmailComments = ShiftSpace.User.getEmailCommentsDefault();
 
-    if (default_comment_status == 1) {
-      default_comment_status = ' checked';
+
+    if (defaultEmailComments == 1) {
+      defaultEmailComment = ' checked';
     } else {
-      default_comment_status = '';
+      defaultEmailComments = '';
     }
     
     $(sections[0]).setHTML('<div class="form-column">' +
                         '<div class="input"><div id="default_privacy" class="checkbox' + default_shift_status + '"></div>' +
                         '<div class="label">Set my shifts public by default</div>' +
                         '<br class="clear" /></div>' +
-                        '<div class="input"><div id="default_comment" class="checkbox' + default_comment_status + '"></div>' +
+                        '<div class="input"><div id="default_comments" class="checkbox' + defaultEmailComments + '"></div>' +
                         '<div class="label">Email me when someone comments my shifts</div>' +
                         '<br class="clear" /></div>' +
                         '<div class="input"><label for="server-input">Server address:</label>' +
@@ -651,6 +657,20 @@ var Console = new Class({
         {
           init_privacy.removeClass('checked');
         }
+      }
+    }.bind(this));
+    
+    var defaultEmailCommentCheckBox = $(this.doc.getElementById('default_comments'));
+    defaultEmailCommentCheckBox.addEvent('click', function(_evt) {
+      if (!defaultEmailCommentCheckBox.hasClass('checked')) 
+      {
+        defaultEmailCommentCheckBox.addClass('checked');
+        ShiftSpace.User.setEmailCommentsDefault(1);
+      } 
+      else 
+      {
+        defaultEmailCommentCheckBox.removeClass('checked');
+        ShiftSpace.User.setEmailCommentsDefault(0);
       }
     }.bind(this));
     
@@ -1089,6 +1109,7 @@ var Console = new Class({
       this.resetLogin();
       this.removeTab('login');
       this.updateDefaultShiftStatus();
+      this.updateDefaultEmailComments();
       
       // Hide the Account subtab
       this.showSubTab('settings', 2);
@@ -1120,6 +1141,23 @@ var Console = new Class({
       else
       {
         defaultPrivacy.addClass('checked');
+      }
+    }
+  },
+  
+  
+  updateDefaultEmailComments: function()
+  {
+    var defaultComments = $(this.doc.getElementById('default_comments'));
+    if(defaultComments)
+    {
+      if(ShiftSpace.User.getEmailCommentsDefault() == 0)
+      {
+        defaultComments.removeClass('checked');
+      }
+      else
+      {
+        defaultComments.addClass('checked');
       }
     }
   },

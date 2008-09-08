@@ -415,7 +415,7 @@ var ShiftSpace = new (function() {
     }
     
     
-    function SSSetDefaultEmailComemnts(value)
+    function SSSetDefaultEmailComments(value)
     {
       if(value)
       {
@@ -424,10 +424,9 @@ var ShiftSpace = new (function() {
       }
     }
     
-    
     function SSGetDefaultEmailComments(checkPref)
     {
-      return (checkPref && SSGetPref('emailComments', 1) || __defaultEmailComments__);
+      return (checkPref && SSGetPref('defaultEmailComments', 1) || __defaultEmailComments__);
     }
     
     

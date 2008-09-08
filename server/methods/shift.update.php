@@ -84,7 +84,7 @@ foreach ($updates as $key => $value) {
 }
 $sql_updates = implode(', ', $sql_updates);
 
-$qry = ";
+$qry = "
   UPDATE shift
   SET $sql_updates
   WHERE id = $shift->id

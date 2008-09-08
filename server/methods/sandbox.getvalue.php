@@ -1,15 +1,19 @@
 <?php
 
-$key = $db->escape($_POST['key']);
+$key = $db->escape($_REQUEST['key']);
 $value = $db->value("
   SELECT value
   FROM sandbox
   WHERE id = '$key'
 ");
-if (!empty($value)) {
+
+if (!empty($value)) 
+{
   echo $value;
-} else {
-  echo $_POST['default'];
+}
+else 
+{
+  echo $_REQUEST['default'];
 }
 
 ?>
