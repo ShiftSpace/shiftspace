@@ -71,6 +71,8 @@ else
 
 $ownerGravatar = md5($shift->email);
 
+$spaceIcon = "http://www.shiftspace.org/dev/images/" . strtolower($shift->space) . "_thumb.png";
+
 $commentsHTML = "
 <div id='SSComments' style='width:auto;'>
   $replyButton
@@ -86,7 +88,7 @@ $commentsHTML = "
   		</div>
   		<div class='com-content'>'$shift->summary'</div>
   		<a href='#' class='com-shift-thumb' title='view the shift'>
-  			<img src='http://api.shiftspace.org/images/thumbs/9ece4a8e8472aced21251137e6aef490?notes' alt='notes'/>
+  			<img src='$spaceIcon' alt='$shift->space'/>
   		</a>
   	</li>
 					
