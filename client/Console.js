@@ -76,7 +76,8 @@ var Console = new Class({
         height: '150px'
         */
         width: '100%',
-        height: '100%' 
+        height: '100%',
+        overflow: 'hidden'
       },
       onload: function() 
       {
