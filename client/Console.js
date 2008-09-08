@@ -179,14 +179,19 @@ var Console = new Class({
     this.notifier.injectInside(document.body);
     
     img.addEvent('click', function() {
-      if (!this.isVisible()) {
+      if (!this.isVisible()) 
+      {
         this.show();
-      } else if (this.getHeight() == 0) {
+      } 
+      else if (this.getHeight() == 0) 
+      {
         //this.frame.setStyle('height', getValue('console.height', 150));
         this.setHeight(150);
         this.refresh();
-      } else {
-        this.minimize();
+      } 
+      else 
+      {
+        this.hide()
       }
     }.bind(this));
     
@@ -537,7 +542,7 @@ var Console = new Class({
     });
     hide.addEvent('click', function() {
       hide.removeClass('hover');
-      this.minimize();
+      this.hide();
     }.bind(this));
     
     //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABS');
@@ -1328,20 +1333,17 @@ var Console = new Class({
   hide: function() 
   {
     this.notifier.addClass('SSDisplayNone');
+    
     //this.frame.setStyle('display', 'none');
     this.frameWrapper.setStyle('display', 'none');
     this.notifierFx.set(-32);
     this.hidePluginMenu();
+    
+    // fire a hide event
+    this.fireEvent('onHide', this);
   },
   
-
-  minimize: function() {
-    this.setHeight(0);
-    this.refresh();
-    this.hidePluginMenu();
-  },
   
-
   isVisible: function() 
   {
     return (this.frame.getStyle('display') == 'block');

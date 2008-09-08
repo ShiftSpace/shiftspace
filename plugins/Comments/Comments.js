@@ -13,6 +13,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   setup: function()
   {
     // intialize
+    ShiftSpace.Console.addEvent('onHide', this.hideInterface.bind(this));
   },
   
   
