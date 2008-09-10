@@ -151,6 +151,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
 
   hideInterface: function(animate)
   { 
+    console.log('hideInterface');
     if(!this.isHiding())
     {
       this.setIsHiding(true);
