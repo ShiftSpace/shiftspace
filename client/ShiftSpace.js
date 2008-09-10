@@ -166,6 +166,9 @@ var ShiftSpace = new (function() {
       
       debug = 0;
       
+      // look for install links
+      SSCheckForInstallSpaceLinks();
+      
       // Load external scripts (pre-processing required)
       // INCLUDE User.js
       console.log('User.js loaded');
@@ -250,6 +253,28 @@ var ShiftSpace = new (function() {
       
       console.log('ShiftSpace initialize complete');
     };
+    
+    
+    function SSCheckForInstallSpaceLinks()
+    {
+      $$('.SSInstallSpaceLink').each(function(x) {
+       console.log('================================================== SSCheckForInstallSpaceLinks');
+       x.setStyle('display', 'block');
+       x.addEvent('click', SSHandleInstallSpaceLink);
+      });
+    }
+    
+    
+    function SSHandleInstallSpaceLink(_evt)
+    {
+      var evt = new Event(_evt);
+      var target = evt.target;
+      var spaceName = target.getProperty('title');
+      
+      // first check for the attributes file
+      // loadFile(server + 'spaces/' + spaceName + '/attributes.js', SSInstallSpaceLinkCallback, SSInstallSpaceLinkCallback);
+      SSInstallSpace(spaceName);
+    }
     
     /*
       Function: SSAddEvent
@@ -2353,7 +2378,7 @@ var ShiftSpace = new (function() {
       url - The URL of the target file
       callback - A function to process the file once it's loaded
     */
-    function loadFile(url, callback) 
+    function loadFile(url, callback, errCallback)
     {
       // If the URL doesn't start with "http://", assume it's on our server
       if (url.substr(0, 7) != 'http://' &&
@@ -2401,6 +2426,7 @@ var ShiftSpace = new (function() {
         },
         'onerror': function(response) {
           console.error("Error: failed GM_xmlhttpRequest, " + response);
+          if(errCallback && typeof errCallback == 'function') errCallback();
         }
       });
 
@@ -2644,7 +2670,7 @@ var ShiftSpace = new (function() {
               {
                 console.error('Error loading ' + include + ' include for ' + plugin.attributes.name + ' Plugin - ' + SSDescribeException(exc));
               }
-            });
+            }, null);
           });
         }
       }
