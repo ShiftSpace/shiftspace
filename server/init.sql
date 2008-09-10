@@ -77,3 +77,10 @@ CREATE TABLE sandbox (
   id TEXT,
   value TEXT
 );
+
+CREATE TABLE favorite (
+  id INTEGER PRIMARY KEY,
+  shift_id INTEGER,
+  user_id INTEGER,
+  date DATETIME
+);
