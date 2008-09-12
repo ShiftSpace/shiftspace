@@ -1,5 +1,4 @@
-var SourceShiftSpace = new Class({
-  Extends: ShiftSpace.Space,
+var SourceShiftSpace = ShiftSpace.Space.extend({
   
   attributes : 
   {
@@ -616,8 +615,7 @@ var SourceShiftSpace = new Class({
   
 });
 
-var SourceShiftShift = new Class({
-  Extends: ShiftSpace.Shift,
+var SourceShiftShift = ShiftSpace.Shift.extend({
 
   setup : function(json)
   {
