@@ -47,6 +47,7 @@ class SandalphonCompiler:
         """
         viewsDirectory = "../client/views/"
         customViewsDirectory = "../client/customViews/"
+        
         # grab the base view classes and filter out .svn files
         views = [f for f in os.listdir(viewsDirectory) if(f != ".svn")]
         # grab the custom views and filter out the .svn files
@@ -60,13 +61,11 @@ class SandalphonCompiler:
             base = parts[0]
             self.paths[base] = os.path.join(viewsDirectory, f)
 
-        # These are not, need to look only for the html file
+        # These are not, need to look only for the html file, about to change
         for f in customViews:
             parts = os.path.splitext(f)
             base = parts[0]
-            ext = parts[1]
-            if ext == ".html":
-                self.paths[base] = os.path.join(customViewsDirectory, f)
+            self.paths[base] = os.path.join(customViewsDirectory, base)
         
 
     def validateMarkup(self, markup):
@@ -100,8 +99,10 @@ class SandalphonCompiler:
         print "loadView: (%s, %s)" % (view, filePath)
 
         if filePath != None:
+            htmlPath = os.path.join(filePath, view+'.html')
+            print "htmlPath %s" % htmlPath
             # load the file
-            fileHandle = open(filePath)
+            fileHandle = open(htmlPath)
 
             # verify that this file is valid mark up
             fileContents = fileHandle.read()
@@ -109,7 +110,7 @@ class SandalphonCompiler:
             
             # add this view's css if necessary
             if self.visitedViews.has_key(view) != True:
-                self.addCSSForHTMLPath(filePath)
+                self.addCSSForHTMLPath(os.path.join(filePath, view+'.html'))
                 self.visitedViews[view] = True
 
             return fileContents
@@ -129,7 +130,7 @@ class SandalphonCompiler:
 
             fileHandle.close()
         except IOError:
-            print "Could not load css file at %s" % cssPath
+            print "***** Could not load css file at %s" % cssPath
 
     
     def addCSSForUIClasses(self, interfaceFile):
@@ -252,3 +253,6 @@ if __name__ == "__main__":
     print ("sandalphon.py compiling " + sys.argv[1])
     compiler = SandalphonCompiler()
     compiler.compile(sys.argv[1])
+
+# test
+# 
