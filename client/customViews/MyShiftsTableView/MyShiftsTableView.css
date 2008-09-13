@@ -1,0 +1,35 @@
+.MyShiftsTableView
+{
+  
+}
+
+.MyShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=selected]
+{
+  width: 75px;
+}
+
+.MyShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=space]
+{
+  width: 150px;
+}
+
+.MyShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=summary]
+{
+  width: 200px;
+}
+
+.MyShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=username]
+{
+  width: 150px;
+}
+
+.MyShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=href]
+{
+  width: 250px;
+}
+
+.MyShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=created]
+{
+  width: 150px;
+}
+

@@ -1,0 +1,30 @@
+.CustomTableView
+{
+  
+}
+
+.CustomTableView > .SSScrollView > .SSContentView > colgroup col[name=selected]
+{
+  width: 75px;
+}
+
+.CustomTableView > .SSScrollView > .SSContentView > colgroup col[name=space]
+{
+  width: 150px;
+}
+
+.CustomTableView > .SSScrollView > .SSContentView > colgroup col[name=summary]
+{
+  width: 200px;
+}
+
+.CustomTableView > .SSScrollView > .SSContentView > colgroup col[name=username]
+{
+  width: 150px;
+}
+
+.CustomTableView > .SSScrollView > .SSContentView > colgroup col[name=created]
+{
+  width: 150px;
+}
+
