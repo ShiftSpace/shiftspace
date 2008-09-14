@@ -7,13 +7,11 @@ var SSCustomTableRow = new Class({
   initialize: function(el)
   {
     this.parent(el);
-    console.log('============================================================= initialize SSCustomTableRow');
   },
   
   
   prepareModel: function(model)
   {
-    // NOTE: clone does not copy id or non-standard properties, sweet - David
     var clone = $(model.clone(true));
     // clean up the properties from the editable text cell, it's a singleton, we don't want these to be carried over
     clone.getElement('.SSEditableTextCell').removeProperty('uiclass');
@@ -58,8 +56,6 @@ var SSCustomTableRow = new Class({
   {
     if(cell)
     {
-      console.log(this.editCellControl);
-      
       // unlock the previous edited field
       if(this.editCellControl.isLocked()) 
       {
@@ -165,12 +161,6 @@ var SSCustomTableRow = new Class({
   {
     if(this.outlets().get('editTextCell'))
     {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');     
-      console.log(this.outlets().get('editTextCell'));
       this.initEditTextCell();
     }
   }
