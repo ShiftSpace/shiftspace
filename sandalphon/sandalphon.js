@@ -4,6 +4,7 @@ var SandalphonClass = new Class({
   {
     // for analyzing fragments of markup
     this.setFragment(new Element('div'));
+    this.outletBindings = [];
   },
   
   
@@ -146,12 +147,13 @@ var SandalphonClass = new Class({
     
     console.log('>>>>>>>>>>>>>>>>>> activate');
     
+    // First generate the outlet bindings
+    this.generateOutletBindings(context);
     // First instantiate all controllers
     this.instantiateControllers(context);
     // Initialize all outlets
-    this.initializeOutlets(context);
-    // Awake all objects
-    this.awakeObjects(context); 
+    this.bindOutlets(context);
+    this.awakeObjects(context);
   },
   
   
@@ -184,34 +186,85 @@ var SandalphonClass = new Class({
   },
   
   
-  initializeOutlets: function(ctxt)
+  generateOutletBindings: function(ctxt)
   {
+    // grab the right context, grab all outlets
     var context = ctxt || window;
-    
     var outlets = this.contextQuery(context, '*[outlet]');
-    
+
+    // TODO: need to figure out what the outlets are going to be BEFORE instantiating controllers
+
     outlets.each(function(anOutlet) {
+      var outletTarget, sourceName;
+      
       // grab the outlet parent id
-      var outletParentObject = anOutlet.getProperty('outlet');
-      // grab the main view controller from the matching context
-      if(context.$(outletParentObject))
+      var outlet = anOutlet.getProperty('outlet').trim();
+      
+      console.log('outlet: ' + outlet);
+      
+      // if not a JSON value it's just the id
+      if(outlet[0] != '{')
       {
-        var controller = SSControllerForNode(context.$(outletParentObject));
-        controller.addOutlet(anOutlet);
+        outletTarget = outlet;
+        sourceName = anOutlet.getProperty('id');
       }
-      else if(context != window && $(outletParentObject))
+      else
       {
-        // check if there's a match in the top window
-        var controller = SSControllerForNode($(outletParentObject));
-        controller.addOutlet(anOutlet);
+        // otherwise JSON decode it in safe mode
+        var outletBinding = JSON.decode(outlet);
+        outletTarget = outletBinding.target;
+        sourceName = outletBinding.name;
       }
-    });
+      
+      this.outletBindings.push({
+        sourceName: sourceName,
+        source: anOutlet,
+        targetName: outletTarget,
+        context: context
+      });
+
+    }.bind(this));
     
-    // if iframe context let all object know via their awakeDelayed method
-    if(context != window)
-    {
-      this.awakeObjectsDelayed(context);
-    }
+    console.log(this.outletBindings); 
+  },
+  
+  
+  bindOutlets: function()
+  {
+    // bind each outlet
+    this.outletBindings.each(function(binding) {
+      
+      var context = binding.context,
+          sourceName = binding.sourceName,
+          source = binding.source,
+          targetName = binding.targetName;
+      
+      // check the context, and the top level window    
+      var target = context.$(targetName) || (context != window && $(targetName));
+        
+      if(!target)
+      {
+        // check for parent with matching css selector
+        target = source.getParent(targetName);
+      }
+      
+      if(!target)
+      {
+        // throw an exception
+        console.error('Error: Sandalphon bindOutlets, binding target does not exist! ' + targetName);
+        console.error(source);
+      }
+      
+      // check for a controller on the source
+      if(SSControllerForNode(source))
+      {
+        source = SSControllerForNode(source);
+      }
+      
+      console.log('Binding');
+      console.log(target);
+      SSControllerForNode(target).addOutletWithName(sourceName, source);
+    }.bind(this));
   },
   
   
@@ -219,14 +272,6 @@ var SandalphonClass = new Class({
   {
     ShiftSpace.Objects.each(function(object, objectId) {
       if(object.awake) object.awake(context);
-    });
-  },
-  
-  
-  awakeObjectsDelayed: function(context)
-  {
-    ShiftSpace.Objects.each(function(object, objectId) {
-      if(object.awakeDelayed) object.awakeDelayed(context);
     });
   },
   

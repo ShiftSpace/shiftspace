@@ -117,7 +117,7 @@ var ShiftSpace = new (function() {
       'SSTableViewDatasource': '/client/'
     };
 
-    // paths to view controllers
+    // TODO: paths to view controllers, should probably just default unless defined in UserClassPaths - David
     this.UIClassPaths = {
       'SSCell': '/client/views/SSCell/',
       'SSEditableTextCell': '/client/views/SSEditableTextCell/',
@@ -129,7 +129,7 @@ var ShiftSpace = new (function() {
 
       // path to user defined view controllers
     this.UserClassPaths = {
-      'SSCustomTableRow': '/client/customViews/'
+      'SSCustomTableRow': '/client/customViews/SSCustomTableRow/' // TODO: change this to point to the real folder - David
     };
 
     // Stores initial data for plugins that are needed for the console at startup
@@ -219,7 +219,7 @@ var ShiftSpace = new (function() {
       console.log('SSTableView.js loaded');
       // INCLUDE views/SSTableRow/SSTableRow.js
       console.log('SSTableRow.js loaded');
-      // INCLUDE customViews/SSCustomTableRow.js
+      // INCLUDE customViews/SSCustomTableRow/SSCustomTableRow.js
       console.log('SSCustomTableRow.js loaded');
       // INCLUDE ../sandalphon/sandalphon.js
       console.log('sandalphon.js loaded');

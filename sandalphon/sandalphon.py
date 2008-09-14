@@ -130,7 +130,7 @@ class SandalphonCompiler:
 
             fileHandle.close()
         except IOError:
-            print "***** Could not load css file at %s" % cssPath
+            print "***** Could not load css file at %s *****" % cssPath
 
     
     def addCSSForUIClasses(self, interfaceFile):

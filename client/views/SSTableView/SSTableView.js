@@ -22,7 +22,7 @@ var SSTableView = new Class({
     this.contentView = this.element._getElement('> .SSScrollView .SSContentView');
     // set the model row
     this.setModelRow(this.contentView._getElement('.SSModel').dispose());
-    // set the model row controller
+    // set the model row controller if there is one
     this.setModelRowController(this.controllerForNode(this.modelRow()));
     // set the column names
     this.setColumnNames(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name');}));
@@ -637,9 +637,10 @@ var SSTableView = new Class({
   addRow: function(data)
   {
     var columnNames = this.columnNames();
-    var newRow = this.modelRowClone();
+    var newRow = this.modelRowClone(); // tell the controller to produce a clone
     var controller = this.modelRowController();
-
+    //var newRow = (controller && controller.modelRowClone()) || this.modelRow().clone(true);
+    
     // Weird the node needs to be in the DOM for this shit to work
     // if after the following, it fails completely
     this.contentView.getElement('tbody').grab(newRow);

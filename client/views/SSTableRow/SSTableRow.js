@@ -2,9 +2,42 @@ var SSTableRow = new Class({
   
   Extends: SSView,
   
-  initialize: function(model)
+  initialize: function(el)
   {
-    this.parent(model);
+    this.parent(el);
+    this.prepareAndSetModel(el);
+  },
+  
+  
+  setModel: function(model)
+  {
+    // prepareModel
+    this.__model__ = model;
+  },
+  
+  
+  model: function()
+  {
+    return this.__model__;
+  },
+  
+  
+  prepareAndSetModel: function(el)
+  {
+    this.setModel(this.prepareModel(el));
+  },
+  
+  
+  prepareModel: function(model)
+  {
+    // prepare the model
+    return model;
+  },
+  
+  
+  modelRowClone: function()
+  {
+    return this.model().clone(true);
   },
   
   

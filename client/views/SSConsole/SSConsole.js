@@ -201,42 +201,22 @@ var SSConsole = new Class({
   {
     this.parent();
 
-    /*
-    if(context == window)
+    // in Sandalphon tool mode we're not iframed, in ShiftSpace we are
+    if((context == window && typeof SandalphonToolMode != 'undefined') ||
+       (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
     {
-
-    }
-    else if(context == this.element.contentWindow)
-    {
-
-    }
-    */
-
-    // test setting outlets to controllers
-    if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
-    if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
-    if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
-    if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
-    if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
-    if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
-    if(this.outlets().get('DanButton')) this.outlets().get('DanButton').addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      console.log('Hello from Dan again!');
-    });
-
-    console.log(this.outlets().get('DanButton'));
-  },
-
-
-  awakeDelayed: function(context)
-  {
-    // test outlets in iframes
-    if(this.outlets().get('cool'))
-    {
-      this.outlets().get('cool').addEvent('click', function(_evt) {
+      if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
+      if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
+      if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
+      if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
+      if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
+      if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
+      if(this.outlets().get('DanButton')) this.outlets().get('DanButton').addEvent('click', function(_evt) {
         var evt = new Event(_evt);
-        console.log('cool button clicked!');
+        console.log('Hello from Dan again!');
       });
+
+      console.log(this.outlets().get('DanButton'));
     }
   },
 

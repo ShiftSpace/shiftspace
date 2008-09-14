@@ -76,12 +76,6 @@ var SSView = new Class({
   },
 
 
-  awakeDelayed: function()
-  {
-
-  },
-
-
   /*
     Function: getId
       Returns the id for this instance.
@@ -113,6 +107,13 @@ var SSView = new Class({
     // check if there is a controller
     var controller = this.controllerForNode(element);
     this.outlets().set(element.getProperty('id'), (controller || element));
+  },
+  
+  
+  addOutletWithName: function(name, outlet)
+  {
+    console.log('Setting name ' + name + ' for ' + outlet);
+    this.outlets().set(name, outlet);
   },
 
 

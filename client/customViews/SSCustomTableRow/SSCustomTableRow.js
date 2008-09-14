@@ -7,11 +7,19 @@ var SSCustomTableRow = new Class({
   initialize: function(el)
   {
     this.parent(el);
-    console.log('initialize SSCustomTableRow');
+    console.log('============================================================= initialize SSCustomTableRow');
     
     // this should be generated from the UI.
     this.editCellControl = new SSEditableTextCell();
     this.attachEvents();
+  },
+  
+  
+  prepareModel: function(model)
+  {
+    // NOTE: clone does not copy id or non-standard properties, sweet - David
+    var clone = model.clone(true);
+    return clone;
   },
   
   
@@ -138,6 +146,12 @@ var SSCustomTableRow = new Class({
           break;
       }
     }
+  },
+  
+  
+  awake: function(context)
+  {
+    
   }
 
 });
