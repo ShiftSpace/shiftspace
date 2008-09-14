@@ -8,23 +8,33 @@ var SSCustomTableRow = new Class({
   {
     this.parent(el);
     console.log('============================================================= initialize SSCustomTableRow');
-    
-    // this should be generated from the UI.
-    this.editCellControl = new SSEditableTextCell();
-    this.attachEvents();
   },
   
   
   prepareModel: function(model)
   {
     // NOTE: clone does not copy id or non-standard properties, sweet - David
-    var clone = model.clone(true);
+    var clone = $(model.clone(true));
+    // clean up the properties from the editable text cell, it's a singleton, we don't want these to be carried over
+    clone.getElement('.SSEditableTextCell').removeProperty('uiclass');
+    clone.getElement('.SSEditableTextCell').removeProperty('outlet');
     return clone;
   },
   
   
-  attachEvents: function()
+  modelRowClone: function()
   {
+    var clone = this.parent();
+    // readonly property gets lost in cloning for some reason, put it back
+    clone.getElement('.SSEditableTextCell').setProperty('readonly', '1');
+    return clone;
+  },
+  
+  
+  initEditTextCell: function()
+  {
+    this.editCellControl = this.outlets().get('editTextCell');
+    
     // listen for value change events
     this.editCellControl.addEvent('SSEditableTextCellDidChange', function(data) {
     }.bind(this));
@@ -48,6 +58,8 @@ var SSCustomTableRow = new Class({
   {
     if(cell)
     {
+      console.log(this.editCellControl);
+      
       // unlock the previous edited field
       if(this.editCellControl.isLocked()) 
       {
@@ -151,7 +163,16 @@ var SSCustomTableRow = new Class({
   
   awake: function(context)
   {
-    
+    if(this.outlets().get('editTextCell'))
+    {
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');     
+      console.log(this.outlets().get('editTextCell'));
+      this.initEditTextCell();
+    }
   }
 
 });

@@ -394,6 +394,7 @@ var ShiftSpace = new (function() {
              (node.getProperty('uiclass') && new SSViewProxy(node)) ||
              null;
     }
+    this.$C = SSControllerForNode;
 
     // Element extensions
     Element.implement({

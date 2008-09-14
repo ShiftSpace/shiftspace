@@ -1,13 +1,11 @@
 var SSCell = new Class({
 
   name: 'SSCell',
+  Extends: SSView,
 
-  Implements: [Events, Options],
-
-
-  initialize: function(options)
+  initialize: function(el, options)
   {
-    this.setOptions(options);
+    this.parent(el, options);
   },
 
 

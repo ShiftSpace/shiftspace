@@ -637,9 +637,8 @@ var SSTableView = new Class({
   addRow: function(data)
   {
     var columnNames = this.columnNames();
-    var newRow = this.modelRowClone(); // tell the controller to produce a clone
     var controller = this.modelRowController();
-    //var newRow = (controller && controller.modelRowClone()) || this.modelRow().clone(true);
+    var newRow = (controller && controller.modelRowClone()) || this.modelRow().clone(true);
     
     // Weird the node needs to be in the DOM for this shit to work
     // if after the following, it fails completely
@@ -701,18 +700,6 @@ var SSTableView = new Class({
   modelRowController: function()
   {
     return this.controllerForNode(this.modelRow());
-  },
-
-  /*
-    Function: modelRowClone
-      Deep clones the model row HTML Element.
-
-    Returns;
-      An HTML Element.
-  */
-  modelRowClone: function()
-  {
-    return this.modelRow().clone(true);
   },
 
 

@@ -2,7 +2,7 @@ var SSView = new Class({
 
   name: 'SSView',
 
-  Implements: Events,
+  Implements: [Events, Options],
 
   /*
     Function: _genId
@@ -21,7 +21,7 @@ var SSView = new Class({
     Parameters:
       el - a HTML Element.
   */
-  initialize: function(el)
+  initialize: function(el, options)
   {
     // generate an id
     this.__id__ = this._genId();

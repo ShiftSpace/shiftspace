@@ -200,8 +200,6 @@ var SandalphonClass = new Class({
       // grab the outlet parent id
       var outlet = anOutlet.getProperty('outlet').trim();
       
-      console.log('outlet: ' + outlet);
-      
       // if not a JSON value it's just the id
       if(outlet[0] != '{')
       {
@@ -224,8 +222,6 @@ var SandalphonClass = new Class({
       });
 
     }.bind(this));
-    
-    console.log(this.outletBindings); 
   },
   
   
@@ -261,10 +257,10 @@ var SandalphonClass = new Class({
         source = SSControllerForNode(source);
       }
       
-      console.log('Binding');
-      console.log(target);
       SSControllerForNode(target).addOutletWithName(sourceName, source);
     }.bind(this));
+    
+    console.log(this.outletBindings);
   },
   
   

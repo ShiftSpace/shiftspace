@@ -37,6 +37,7 @@ var SSTableRow = new Class({
   
   modelRowClone: function()
   {
+    console.log('))))))))))))))))))))))))))))))))))))))))))))))))))))))) modelRowClone');
     return this.model().clone(true);
   },
   

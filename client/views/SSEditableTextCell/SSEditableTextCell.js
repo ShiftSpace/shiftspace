@@ -1,13 +1,12 @@
 var SSEditableTextCell = new Class({
 
   name: 'SSEditableTextCell',
-
   Extends: SSCell,
 
 
-  initialize: function(options)
+  initialize: function(el, options)
   {
-    this.parent(options);
+    this.parent(el, options);
   },
 
 
