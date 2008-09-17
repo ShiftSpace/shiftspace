@@ -1586,21 +1586,15 @@ var Console = new Class({
     {
       var shiftId = entry.getAttribute('id');
       var shiftStatus = parseInt(SSGetShift(shiftId).status);
-      //var privacyStatus = $(entry.getElementByClassName('privacyStatus'));
-      //var privacyControl = $(entry.getElementByClassName('privacyControl'));
       var statusIconsDiv = $(entry.getElementByClassName('statusIcons'));
       var privacyIcon = $(entry.getElementByClassName('privacyIcon'));
     
       if (shiftStatus == 1) 
       {
-        //privacyStatus.setHTML('This shift is public');
-        //privacyControl.setHTML('Turn private');
         if(privacyIcon) privacyIcon.addClass('SSDisplayNone');
       } 
       else 
       {
-        //privacyStatus.setHTML('This shift is private');
-        //privacyControl.setHTML('Turn public');
         if(privacyIcon) privacyIcon.removeClass('SSDisplayNone');
       }
     }
@@ -1649,8 +1643,6 @@ var Console = new Class({
     newEntry.className += ' ' + aShift.space;
     
     //console.log(newEntry);
-    
-    //var controls = newEntry.getElementByClassName('controls');
     
     var icon = ShiftSpace.info(aShift.space).icon;
     var img = newEntry.getElementByClassName('expander').getElementsByTagName('img')[0];
@@ -1703,9 +1695,6 @@ var Console = new Class({
 
     newEntry.getElementByClassName('posted').innerHTML = aShift.created; 
     
-    // set the permalink
-    //newEntry.getElementByClassName('SSPermaLink').setAttribute('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
-    
     //console.log('main props set');
     
     // Add hover behavior, this can probably be handle via css - David
@@ -1740,32 +1729,10 @@ var Console = new Class({
     
     //console.log('mouse behaviors set');
     
-    //var slideFx = new Fx.Slide($(controls), {
-    //    duration: 250
-    //});
-    //slideFx.hide();
-    
     //console.log('slide fx');
     
     var toggle = newEntry.getElementByClassName('expander');
     var checkbox = $(toggle.getElementByClassName('checkbox'));
-    $(toggle).addEvent('click', function(e) {
-      /*slideFx.toggle();
-      if (!newEntry.hasClass('expanded'))
-      {
-        newEntry.addClass('expanded');
-        newEntry.removeClass('hover');
-        $(SSGetElementByClass('expander', newEntry).getElementsByTagName('img')[0]).setProperty('src', server + 'images/Console/arrow-open.gif');
-      } 
-      else 
-      {
-        newEntry.removeClass('expanded');
-        newEntry.addClass('hover');
-        $(SSGetElementByClass('expander', newEntry).getElementsByTagName('img')[0]).setProperty('src', server + 'images/Console/arrow-close.gif');
-        // hide the edit field as well
-        this.hideEditTitleField(aShift.id);
-      }*/
-    }.bind(this));
     
     checkbox.addEvent('click', function(e) {
       var event = new Event(e);
@@ -1797,44 +1764,7 @@ var Console = new Class({
     
     //console.log('expando set');
     
-    /*controls.addEvent('click', function(e) {
-      var event = new Event(e);
-      event.stopPropagation();
-    });*/
-    
     //console.log('override click behavior, delete node below');
-    
-    // we need to use SSGetElementByClass because controls was already MooTools wrapped
-    /*var deleteControl = $(SSGetElementByClass('delete', controls));
-    if(deleteControl) deleteControl.addEvent('click', function(e) {
-      var event = new Event(e);
-      event.preventDefault();
-      if (confirm('Are you sure you want to delete that? There is no undo.')) 
-      {
-        deleteShift(aShift.id);
-      }
-    });
-    
-    var privacyControl = $(SSGetElementByClass('privacyControl', controls));
-    if(privacyControl) privacyControl.addEvent('click', function(e) {
-      var event = new Event(e);
-      event.preventDefault();
-      if (privacyControl.innerHTML.indexOf('private') != -1) {
-        SSSetShiftStatus(aShift.id, 2);
-      } else {
-        SSSetShiftStatus(aShift.id, 1);
-      }
-    });
-    
-    //console.log('add edit link behavior');
-    
-    // Shift Editing from console
-    var editControl = $(SSGetElementByClass('edit', controls));
-    if(editControl) editControl.addEvent('click', function(e) {
-      var event = new Event(e);
-      event.preventDefault();
-      editShift(aShift.id);
-    }.bind(this));*/
     
     //console.log('summary edit key events');
     
@@ -1990,13 +1920,7 @@ var Console = new Class({
     var expanderDiv = $(this.doc.createElement('div'));
     expanderDiv.className = 'expander column';
     //console.log('expander made');
-    
-    //var expanderImg = $(this.doc.createElement('img'));
-    //expanderImg.setProperty('src', server + 'images/Console/arrow.gif');
-    //console.log('expanderImg made');
-    //expanderImg.injectInside(expanderDiv);
-    //console.log('expanderImg injected');
-    
+
     var selectCheckbox = $(this.doc.createElement('div'));
     selectCheckbox.className = 'checkbox';
     selectCheckbox.injectInside(expanderDiv);
@@ -2070,18 +1994,7 @@ var Console = new Class({
     clear.className = 'clear';
     
     //console.log('clear added');
-    
-    // ------------------- Controls ------------------------ //
-    /*var controls = $(this.doc.createElement('div'));
-    controls.className = 'controls';
-    // check to see if the the user matches
-    var controlOptions = '<span class="privacySpan"><strong class="privacyStatus">This shift is public</strong>. <a href="#privacy" class="privacyControl">Turn private</a>. </span>' +
-                         'Shift actions: <a target="new" class="SSPermaLink">link to shift</a>' +
-                         '<span class="editSpan">, <a href="#edit" class="edit">edit shift</a></span>' +
-                         '<span class="deleteSpan">, <a href="#delete" class="delete">delete shift</a>.</span>';
-                         
-    controls.innerHTML = controlOptions;
-    */
+
     // -------------------- Comments ----------------------- //
     var comments = $(this.doc.createElement('div'));
     comments.className = 'SSCommentsIcon Reply';
@@ -2099,7 +2012,6 @@ var Console = new Class({
     postedDiv.injectInside(shiftEntry);
     comments.injectInside(shiftEntry);
     clear.injectInside(shiftEntry);
-    //controls.injectInside(shiftEntry);
     
     // store the model
     this.modelShiftEntry = shiftEntry;

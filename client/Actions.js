@@ -145,7 +145,6 @@ var Actions = new Class({
     {
       // update the contents of the menu based on the current selections
       var selectedShifts = ShiftSpace.SSGetPageShifts(this.selected);
-      console.log('updateMenu');
       if(selectedShifts && selectedShifts.length > 0)
       {
         var notTheLoggedInUser = function(x) {
