@@ -42,6 +42,8 @@ var SSTableView = new Class({
 
     // listen for double click
     this.element.addEvent('dblclick', this.eventDispatch.bind(this));
+    // listen for window resize
+    window.addEvent('resize', this.refreshColumnHeadings.bind(this));
     /*window.addEvent('keyup', this.eventDispatch.bind(this));*/
   },
 
@@ -113,6 +115,19 @@ var SSTableView = new Class({
     columnTitles.length.times(function(idx) {
       var columnTitle = columnTitles[idx];
       this.columnHeadingForIndex(idx).getElement('span.SSColumnHeadingTitle').set('text', columnTitle);
+    }.bind(this));
+  },
+  
+  /*
+    Function: refreshColumnHeadings (private)
+      Called after a window resize event.
+  */
+  refreshColumnHeadings: function()
+  {
+    // make the column titles refres to the column definition width - David
+    this.columnHeadings().length.times(function(idx) {
+      var colWidth = this.columnDefinitionForIndex(idx).getSize().x;
+      this.columnHeadingForIndex(idx).setStyle('width', colWidth);
     }.bind(this));
   },
 
@@ -411,6 +426,13 @@ var SSTableView = new Class({
   {
     return this.element._getElements('> .SSControlView .SSColumnHeading')[idx];
   },
+  
+  
+  columnHeadings: function()
+  {
+    return $A(this.element._getElements('> .SSControlView .SSColumnHeading'));
+  },
+
 
   /*
     Function: columnDefinitionForIndex
