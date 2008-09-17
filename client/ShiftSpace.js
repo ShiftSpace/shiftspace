@@ -276,6 +276,7 @@ var ShiftSpace = new (function() {
       SSInstallSpace(spaceName);
     }
     
+    
     /*
       Function: SSAddEvent
         Adds a Mootools style custom event to the ShiftSpace object.
@@ -1760,6 +1761,7 @@ var ShiftSpace = new (function() {
         return shifts[shiftId];
       }
     }
+    this.SSGetShift = SSGetShift; // temporary - David
     
     /*
       Function: SSGetAuthorForShift
@@ -1957,6 +1959,23 @@ var ShiftSpace = new (function() {
         }
       });
     }
+    
+    function SSGetPageShifts(shiftIds)
+    {
+      var result = [];
+      for(var i = 0; i < shiftIds.length; i++)
+      {
+        var cshift = SSGetShift(shiftIds[i]);
+        var copy = {
+          username: cshift.username,
+          space: cshift.space,
+          status: cshift.status
+        };
+        result.push(copy);
+      }
+      return result;
+    }
+
     
     /*
       Function: SSGetPageShiftIdsForUser
@@ -2199,7 +2218,7 @@ var ShiftSpace = new (function() {
     */
     function deleteShift(shiftId) {
       var space = SSSpaceForShift(shiftId);
-      
+    
       // don't assume the space is loaded
       if(space) space.deleteShift(shiftId);
 
@@ -3232,6 +3251,13 @@ var ShiftSpace = new (function() {
       this.setValue = setValue;
       this.getValue = getValue;
       unsafeWindow.ShiftSpace = this;
+
+      // for Action Menu debugging
+      this.SSGetPageShifts = SSGetPageShifts;
+      this.SSHideShift = hideShift;
+      this.SSDeleteShift = deleteShift;
+      this.SSEditShift = editShift;
+      this.SSShowShift = showShift;
     }
     
     return this;

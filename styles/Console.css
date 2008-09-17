@@ -518,6 +518,11 @@ input.submit:active {
   background-position: 1px 1px;
 }
 
+#actions .button.disabled, #SSMakeShiftPublicButton.disabled, #SSMakeShiftPrivateButton.disabled
+{
+  opacity: 0.3;
+}
+
 #actions .favorite { background-image: url(../images/Actions/favorite.gif); }
 #actions .link     { background-image: url(../images/Actions/link.gif); }
 #actions .trails   { background-image: url(../images/Actions/trails.gif); }
