@@ -5,6 +5,12 @@ if (!empty($_GET['id'])) {
   exit;
 }
 
+$path = explode('/', $_SERVER['REQUEST_URI']);
+array_pop($path);
+array_pop($path);
+$path = implode('/', $path);
+$server = "http://{$_SERVER['HTTP_HOST']}$path/";
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -14,12 +20,13 @@ if (!empty($_GET['id'])) {
     <link rel="stylesheet" href="style.css" type="text/css" />
     <script type="text/javascript" charset="utf-8">
       var ShiftSpaceSandBoxMode = true;
-      var server = "http://localhost/~josephmoore/";
+      var server = "<?php echo $server; ?>";
     </script>
     <script src="../client/Mootools.js" type="text/javascript"></script>
     <script src="../client/Videobox.js" type="text/javascript"></script>
     <script src="greasemonkey-api.js" type="text/javascript"></script>
     <script src="../shiftspace.php?method=shiftspace.user.js&sandbox=1&nocache=<?php echo time();?>" type="text/javascript" charset="utf-8"></script>
+    <script src="../client/Actions.js" type="text/javascript"></script>
     <style type="text/css">
     .first{
       margin-top:100px;

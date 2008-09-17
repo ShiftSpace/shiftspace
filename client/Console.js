@@ -489,8 +489,10 @@ var Console = new Class({
                     '<br class="clear" />' +
                     '</div></div></div></div>' +
                     '<div class="left"><div class="right">' +
-                    '<div id="bottom"><div id="scroller"></div></div>' +
-                    '</div></div>');
+                    '<div id="bottom">' +
+                    '<div id="actions"></div>' +
+                    '<div id="scroller"></div>' +
+                    '</div></div></div>');
     content.injectInside(this.doc.body);
     
     //console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< BASICS DONE');
@@ -941,6 +943,12 @@ var Console = new Class({
     // make the new tab and tab content active
     $(this.doc.getElementById('tab-' + id)).addClass('active');
     $(this.doc.getElementById(id)).addClass('active');
+    
+    if (id == 'shifts' && _$(this.doc.getElementById('shifts')).getElementsByClassName('checked').length > 0) {
+      $(this.doc.getElementById('actions')).setStyle('display', 'block');
+    } else {
+      $(this.doc.getElementById('actions')).setStyle('display', 'none');
+    }
   },
   
   
@@ -1578,21 +1586,21 @@ var Console = new Class({
     {
       var shiftId = entry.getAttribute('id');
       var shiftStatus = parseInt(SSGetShift(shiftId).status);
-      var privacyStatus = $(entry.getElementByClassName('privacyStatus'));
-      var privacyControl = $(entry.getElementByClassName('privacyControl'));
+      //var privacyStatus = $(entry.getElementByClassName('privacyStatus'));
+      //var privacyControl = $(entry.getElementByClassName('privacyControl'));
       var statusIconsDiv = $(entry.getElementByClassName('statusIcons'));
       var privacyIcon = $(entry.getElementByClassName('privacyIcon'));
     
       if (shiftStatus == 1) 
       {
-        privacyStatus.setHTML('This shift is public');
-        privacyControl.setHTML('Turn private');
+        //privacyStatus.setHTML('This shift is public');
+        //privacyControl.setHTML('Turn private');
         if(privacyIcon) privacyIcon.addClass('SSDisplayNone');
       } 
       else 
       {
-        privacyStatus.setHTML('This shift is private');
-        privacyControl.setHTML('Turn public');
+        //privacyStatus.setHTML('This shift is private');
+        //privacyControl.setHTML('Turn public');
         if(privacyIcon) privacyIcon.removeClass('SSDisplayNone');
       }
     }
@@ -1621,9 +1629,9 @@ var Console = new Class({
     }
     
     // user has just logged in update the controls of the user's shifts
-    shiftIds.each(function(shiftId) {
+    /*shiftIds.each(function(shiftId) {
       this.updateShiftControl(shiftId, true);
-    }.bind(this));
+    }.bind(this));*/
   },
   
   
@@ -1642,7 +1650,7 @@ var Console = new Class({
     
     //console.log(newEntry);
     
-    var controls = newEntry.getElementByClassName('controls');
+    //var controls = newEntry.getElementByClassName('controls');
     
     var icon = ShiftSpace.info(aShift.space).icon;
     var img = newEntry.getElementByClassName('expander').getElementsByTagName('img')[0];
@@ -1696,7 +1704,7 @@ var Console = new Class({
     newEntry.getElementByClassName('posted').innerHTML = aShift.created; 
     
     // set the permalink
-    newEntry.getElementByClassName('SSPermaLink').setAttribute('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
+    //newEntry.getElementByClassName('SSPermaLink').setAttribute('href', ShiftSpace.info().server+'sandbox?id=' + aShift.id);
     
     //console.log('main props set');
     
@@ -1732,17 +1740,17 @@ var Console = new Class({
     
     //console.log('mouse behaviors set');
     
-    var slideFx = new Fx.Slide($(controls), {
-        duration: 250
-    });
-    slideFx.hide();
+    //var slideFx = new Fx.Slide($(controls), {
+    //    duration: 250
+    //});
+    //slideFx.hide();
     
     //console.log('slide fx');
     
-    $(newEntry.getElementByClassName('expander')).addEvent('click', function(e) {
-      var event = new Event(e);
-      event.stop();
-      slideFx.toggle();
+    var toggle = newEntry.getElementByClassName('expander');
+    var checkbox = $(toggle.getElementByClassName('checkbox'));
+    $(toggle).addEvent('click', function(e) {
+      /*slideFx.toggle();
       if (!newEntry.hasClass('expanded'))
       {
         newEntry.addClass('expanded');
@@ -1756,20 +1764,48 @@ var Console = new Class({
         $(SSGetElementByClass('expander', newEntry).getElementsByTagName('img')[0]).setProperty('src', server + 'images/Console/arrow-close.gif');
         // hide the edit field as well
         this.hideEditTitleField(aShift.id);
-      }
+      }*/
     }.bind(this));
+    
+    checkbox.addEvent('click', function(e) {
+      var event = new Event(e);
+      event.stopPropagation();
+      if (!checkbox.hasClass('checked')) {
+        checkbox.addClass('checked');
+        ShiftSpace.Actions.select(aShift.id);
+      } else {
+        checkbox.removeClass('checked');
+        ShiftSpace.Actions.deselect(aShift.id);
+      }
+    });
+    
+    checkbox.addEvent('mouseover', function(e) {
+      if (checkbox.hasClass('checked')) {
+        checkbox.addClass('checked-hover');
+      } else {
+        checkbox.addClass('checkbox-hover');
+      }
+    });
+    
+    checkbox.addEvent('mouseout', function(e) {
+      if (checkbox.hasClass('checked')) {
+        checkbox.removeClass('checked-hover');
+      } else {
+        checkbox.removeClass('checkbox-hover');
+      }
+    });
     
     //console.log('expando set');
     
-    controls.addEvent('click', function(e) {
+    /*controls.addEvent('click', function(e) {
       var event = new Event(e);
       event.stopPropagation();
-    });
+    });*/
     
     //console.log('override click behavior, delete node below');
     
     // we need to use SSGetElementByClass because controls was already MooTools wrapped
-    var deleteControl = $(SSGetElementByClass('delete', controls));
+    /*var deleteControl = $(SSGetElementByClass('delete', controls));
     if(deleteControl) deleteControl.addEvent('click', function(e) {
       var event = new Event(e);
       event.preventDefault();
@@ -1798,7 +1834,7 @@ var Console = new Class({
       var event = new Event(e);
       event.preventDefault();
       editShift(aShift.id);
-    }.bind(this));
+    }.bind(this));*/
     
     //console.log('summary edit key events');
     
@@ -1955,11 +1991,15 @@ var Console = new Class({
     expanderDiv.className = 'expander column';
     //console.log('expander made');
     
-    var expanderImg = $(this.doc.createElement('img'));
-    expanderImg.setProperty('src', server + 'images/Console/arrow.gif');
+    //var expanderImg = $(this.doc.createElement('img'));
+    //expanderImg.setProperty('src', server + 'images/Console/arrow.gif');
     //console.log('expanderImg made');
-    expanderImg.injectInside(expanderDiv);
+    //expanderImg.injectInside(expanderDiv);
     //console.log('expanderImg injected');
+    
+    var selectCheckbox = $(this.doc.createElement('div'));
+    selectCheckbox.className = 'checkbox';
+    selectCheckbox.injectInside(expanderDiv);
     
     // ------------------ Space ------------------------- //
     //console.log('create space div');
@@ -2032,7 +2072,7 @@ var Console = new Class({
     //console.log('clear added');
     
     // ------------------- Controls ------------------------ //
-    var controls = $(this.doc.createElement('div'));
+    /*var controls = $(this.doc.createElement('div'));
     controls.className = 'controls';
     // check to see if the the user matches
     var controlOptions = '<span class="privacySpan"><strong class="privacyStatus">This shift is public</strong>. <a href="#privacy" class="privacyControl">Turn private</a>. </span>' +
@@ -2041,7 +2081,7 @@ var Console = new Class({
                          '<span class="deleteSpan">, <a href="#delete" class="delete">delete shift</a>.</span>';
                          
     controls.innerHTML = controlOptions;
-    
+    */
     // -------------------- Comments ----------------------- //
     var comments = $(this.doc.createElement('div'));
     comments.className = 'SSCommentsIcon Reply';
@@ -2059,7 +2099,7 @@ var Console = new Class({
     postedDiv.injectInside(shiftEntry);
     comments.injectInside(shiftEntry);
     clear.injectInside(shiftEntry);
-    controls.injectInside(shiftEntry);
+    //controls.injectInside(shiftEntry);
     
     // store the model
     this.modelShiftEntry = shiftEntry;

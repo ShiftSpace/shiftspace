@@ -205,7 +205,7 @@ var ShiftSpace = new (function() {
       console.log('Console.js loaded');
       // INCLUDE ConsoleExtensions.js
       console.log('ConsoleExtensions.js loaded');
-
+      
       // Load CSS styles
       loadStyle('styles/ShiftSpace.css', function() {
         // create the error window
@@ -1704,7 +1704,7 @@ var ShiftSpace = new (function() {
               console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
               console.log('LOADING INITIAL DATA FOR ' + plugin);
               console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-              */ 
+              */
               __pluginsData__[plugin] = json[plugin];
             }
           }
@@ -2386,7 +2386,7 @@ var ShiftSpace = new (function() {
         url = server + url;
       }
       
-      console.log('loadFile:' + url);
+      //console.log('loadFile:' + url);
 
       // Caching is implemented as a rather blunt instrument ...
       if (!cacheFiles) {
