@@ -40,6 +40,24 @@ var SSConsole = new Class({
       requiredProperties: ['username']
     });
   },
+  
+  
+  awake: function(context)
+  {
+    this.parent();
+
+    // in Sandalphon tool mode we're not iframed, in ShiftSpace we are
+    if((context == window && typeof SandalphonToolMode != 'undefined') ||
+       (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
+    {
+      if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
+      if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
+      if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
+      if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
+      if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
+      if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
+    }
+  },
 
 
   handleLogin: function()
@@ -195,31 +213,7 @@ var SSConsole = new Class({
       SSLoadLocalizedStrings(evt.target.getProperty('value'), this.element.contentWindow);
     }.bind(this));
   },
-
-
-  awake: function(context)
-  {
-    this.parent();
-
-    // in Sandalphon tool mode we're not iframed, in ShiftSpace we are
-    if((context == window && typeof SandalphonToolMode != 'undefined') ||
-       (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
-    {
-      if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
-      if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
-      if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
-      if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
-      if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
-      if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
-      if(this.outlets().get('DanButton')) this.outlets().get('DanButton').addEvent('click', function(_evt) {
-        var evt = new Event(_evt);
-        console.log('Hello from Dan again!');
-      });
-
-      console.log(this.outlets().get('DanButton'));
-    }
-  },
-
+  
 
   buildInterface: function(ui)
   {

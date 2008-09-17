@@ -1,12 +1,21 @@
 var SSCustomTableRow = new Class({
 
   name: 'SSCustomTableRow',
-
   Extends: SSTableRow,
   
+
   initialize: function(el)
   {
     this.parent(el);
+  },
+  
+
+  awake: function(context)
+  {
+    if(this.outlets().get('editTextCell'))
+    {
+      this.initEditTextCell();
+    }
   },
   
   
@@ -132,7 +141,8 @@ var SSCustomTableRow = new Class({
       cell.removeClass('SSAuthor');
     }
     
-    cell.set('text', username);
+    cell.getElement('a').set('text', username);
+    cell.getElement('a').setProperty('href', 'http://www.shiftspace.org/shifts/?filter=by&filterBy='+username);
   },
 
 
@@ -153,15 +163,6 @@ var SSCustomTableRow = new Class({
         default:
           break;
       }
-    }
-  },
-  
-  
-  awake: function(context)
-  {
-    if(this.outlets().get('editTextCell'))
-    {
-      this.initEditTextCell();
     }
   }
 

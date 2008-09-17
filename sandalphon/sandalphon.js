@@ -242,7 +242,7 @@ var SandalphonClass = new Class({
       {
         // check for parent with matching css selector
         target = source.getParent(targetName);
-      }
+      } 
       
       if(!target)
       {
