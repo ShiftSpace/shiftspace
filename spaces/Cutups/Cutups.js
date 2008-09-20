@@ -304,8 +304,9 @@ var CutupsShift = ShiftSpace.Shift.extend({
         space.SSCutupButtonSmaller.removeClass("inactive");
         space.SSCutupButtonLarger.removeClass("inactive");
       }
+      //scroll to cutup
+      window.location.hash = this.getId();
       //FX for fading Cutup background-color alpha to transparent
-      
       function fadeToTrans(){
         var trans = 1.0;
         function fade(){
