@@ -23,6 +23,16 @@ if(!empty($password))
   $updates['password'] = $password;
 }
 
+if(!empty($username))
+{
+  $updates['username'] = $username;
+}
+
+if(!empty($email))
+{
+  $updates['email'] = $email;
+}
+
 if(isset($email_comments) &&
    ($email_comments == 0 || $email_comments == 1))
 {

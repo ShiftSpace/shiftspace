@@ -35,6 +35,7 @@ if (empty($user)) {
     AND s.href = '$href'
   ");
   $response['username'] = $user->username;
+  $response['email'] = $user->email;
 }
 
 // Done

@@ -25,7 +25,7 @@ if (empty($user)) {
     respond(0, "We're sorry, but your username is not compatible with the latest release of ShiftSpace. Please contact us at info@shiftspace.org so we can fix your account.");
   }
   $_SESSION['user'] = $user;
-  respond(1, "Hi, $user->display_name!");
+  respond(1, $user);
 }
 
 ?>
