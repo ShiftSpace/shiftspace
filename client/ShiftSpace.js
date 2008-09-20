@@ -300,6 +300,7 @@ var ShiftSpace = new (function() {
       var target = evt.target;
       var spaceName = $(target).getProperty('title');
       
+      console.log(target);
       console.log('installing ' + spaceName);
       
       // first check for the attributes file
