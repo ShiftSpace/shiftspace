@@ -286,7 +286,7 @@ var ShiftSpace = new (function() {
     
     function SSCheckForInstallSpaceLinks()
     {
-      $$('.SSInstallFirstLink').addClass('SSDisplayNone');
+      $$('.SSInstallFirstLink').setStyle('display', 'none');
 
       $$('.SSInstallSpaceLink').each(function(x) {
        console.log('================================================== SSCheckForInstallSpaceLinks');
