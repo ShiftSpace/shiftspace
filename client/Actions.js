@@ -45,7 +45,7 @@ var Actions = new Class({
     
     this.dropdown = ShiftSpace._$(this.el).getElementsByClassName('dropdown')[0];
     this.dropdown = $(this.dropdown);
-    this.dropdown.addEvent('click', this.clickPrivacy.bind(this));
+    this.dropdown.addEvent('click', this.updatePrivacy.bind(this));
     
     /*
     this.privacyOptions = this.dropdown.clone();
@@ -206,6 +206,11 @@ var Actions = new Class({
           if(ShiftSpace.SSUserOwnsShift(this.selected[0])) this.editButton.removeClass('disabled');
         }
         
+        if(selectedShifts.length >= 1 && 
+          (this.privacyButtons.hasClass('toggleMenu') ||
+           this.privacyButtons.hasClass('batchMenu'))) 
+           this.updatePrivacy();
+           
         this.updatePrivacyButtons(selectedShifts);
       }
     }
@@ -220,18 +225,37 @@ var Actions = new Class({
       if(selectedShifts[0].status == 1)
       {
         this.publicButton.addClass('selected');
+        this.publicButton.addClass('first');
         this.privateButton.removeClass('selected');
+        this.privateButton.removeClass('first');
         newTopLevelButton = this.publicButton;
       }
       else
       {
         this.publicButton.removeClass('selected');
+        this.publicButton.removeClass('first');
         this.privateButton.addClass('selected');
+        this.privateButton.addClass('first');
         newTopLevelButton = this.privateButton;
       }
       
+      this.batchPrivacy.removeClass('first');
+      this.batchPrivacy.removeClass('selected');
+      
       newTopLevelButton.remove();
       newTopLevelButton.injectTop(this.privacyButtons);
+    }
+    else if(selectedShifts.length > 1)
+    {
+      this.privateButton.removeClass('first');
+      this.privateButton.removeClass('selected');
+      this.publicButton.removeClass('first');
+      this.publicButton.removeClass('selected');
+      
+      this.batchPrivacy.remove();
+      this.batchPrivacy.injectTop(this.privacyButtons);
+      this.batchPrivacy.addClass('first');
+      this.batchPrivacy.addClass('selected');
     }
   },
   
@@ -271,17 +295,34 @@ var Actions = new Class({
   },
   
 
-  clickPrivacy: function() 
+  updatePrivacy: function() 
   {
+    console.log('updatePrivacy');
     if(!this.privacyButtons.hasClass('disabled'))
     {
       if(this.selected.length == 1)
       {
-        this.privacyButtons.toggleClass('toggleMenu')
+        if(!this.privacyButtons.hasClass('toggleMenu'))
+        {
+          this.privacyButtons.removeClass('batchMenu');
+          this.privacyButtons.addClass('toggleMenu')
+        }
+        else
+        {
+          this.privacyButtons.removeClass('toggleMenu');
+        }
       }
       else if(this.selected.length > 1)
       {
-        this.privacyButtons.toggleClass('batchMenu');
+        if(!this.privacyButtons.hasClass('batchMenu'))
+        {
+          this.privacyButtons.removeClass('toggleMenu');
+          this.privacyButtons.addClass('batchMenu');
+        }
+        else
+        {
+          this.privacyButtons.removeClass('batchMenu');
+        }
       }
     }
   }

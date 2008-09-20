@@ -529,6 +529,17 @@ input.submit:active {
   -moz-border-radius: 3px;
   background-repeat: no-repeat;
   background-position: 1px 1px;
+  opacity: 0.7;
+}
+
+#privacy
+{
+  opacity: 0.7;
+}
+
+#actions a.button:hover, #actions div#privacy:hover
+{
+  opacity: 1.0;
 }
 
 #actions .button.disabled, #actions #privacy.disabled, #SSMakeShiftPublicButton.disabled, #SSMakeShiftPrivateButton.disabled
@@ -561,10 +572,11 @@ input.submit:active {
   text-decoration: none;
   background-repeat: no-repeat;
   padding: 1px 12px 4px 18px;
-  /*border-top: 1px solid #fae6de;*/
+  border-top: 1px solid #fae6de;
 }
 
-#actions .dropdown .first {
+#actions .dropdown .first, #actions .dropdown .selected {
+  border-top: none;
   margin-top: 0;
   padding-top: 2px;
 }
@@ -597,11 +609,13 @@ input.submit:active {
 #privacy.toggleMenu .option
 {
   display: block;
+  opacity: 1.0;
 }
 
 #privacy.batchMenu
 {
   height: 60px;
+  opacity: 1.0;
 }
 
 #privacy.batchMenu #SSSetBatchPrivacy
