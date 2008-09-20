@@ -35,21 +35,20 @@ for($i = 0; $i < count($comments); $i++)
   $num = $i + 1;
   $date = ucfirst(elapsed_time($currentComment->created));
   $commentGravatar = md5($currentComment->email);
-  $newComment = <<<eof	
-    <li id="com-2" class="comment original">
-  		<div class="com-meta">
-  			<div class="com-meta-text">
-  				<span class="com-num">$num. </span><a target="new" class="com-author" title="Browse $currentComment->username's shifts on the ShiftSpace Public Square" href="http://www.shiftspace.org/shifts/?filter=by&filterBy=$currentComment->username">$currentComment->username</a> said <span class="time-ago">($date)</span>:
+  $newComment = "	
+    <li id='com-2' class='comment original'>
+  		<div class='com-meta'>
+  			<div class='com-meta-text'>
+  				<span class='com-num'>$num. </span><a target='new' class='com-author' title='Browse $currentComment->username&quot;s shifts on the ShiftSpace Public Square' href='http://www.shiftspace.org/shifts/?filter=by&filterBy=$currentComment->username'>$currentComment->username</a> said <span class='time-ago'>($date)</span>:
   			</div>
-  			<a href="" class="com-author">
-  				<img src="http://www.gravatar.com/avatar.php?gravatar_id=$commentGravatar&size=33.jpg"/>
+  			<a href='' class='com-author'>
+  				<img src='http://www.gravatar.com/avatar.php?gravatar_id=$commentGravatar&size=33.jpg'/>
   			</a>
   		</div>
-  		<div class="com-content">
+  		<div class='com-content'>
   			$currentComment->content
   		</div>
-  	</li>;
-  eof;
+  	</li>";
   
   // append the markup of the new comment
   $allComments .= $newComment;
@@ -87,7 +86,7 @@ $commentsHTML = "
   	<li id='com-1' class='comment shift original'>
   		<div class='com-meta'>
   			<div class='com-meta-text'>
-  				<a target='new' class='com-author' title='Browse $shift->username's shifts on the ShiftSpace Public Square' href='http://www.shiftspace.org/shifts/?filter=by&filterBy=$shift->username'>$shift->username</a>'s <span class='space-name'>$shift->space shift</span> on <span class='shifted-page'>$shiftHref</span>:
+  				<a target='new' class='com-author' title='Browse $shift->username&quot;s shifts on the ShiftSpace Public Square' href='http://www.shiftspace.org/shifts/?filter=by&filterBy=$shift->username'>$shift->username</a>'s <span class='space-name'>$shift->space shift</span> on <span class='shifted-page'>$shiftHref</span>:
   			</div>
   			<a href='' class='com-author'>
   				<img src='http://www.gravatar.com/avatar.php?gravatar_id=$ownerGravatar&size=33.jpg'/>
