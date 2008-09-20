@@ -66,7 +66,7 @@ var Actions = new Class({
       {
         window.open(ShiftSpace.info().server + 'sandbox?id=' + this.selected[0]);
       }
-    });
+    }.bind(this));
     
     // Edit
     this.editButton.addEvent('click', function(_evt) {

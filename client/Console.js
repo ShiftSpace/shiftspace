@@ -1570,7 +1570,8 @@ var Console = new Class({
     if(atReference && atReference.length > 0)
     {
       atReference = atReference[0];
-      var refLink = "<a title=\"Browse this user\'s shifts on the ShiftSpace Public Square\" target=\"new\" href=\"http://www.shiftspace.org/shifts/?filter=by&filterBy="+atReference.substr(1, atReference.length-1)+"\">"+atReference+"</a>";
+      var username = atReference.substr(1, atReference.length-1);
+      var refLink = "<a title=\"Browse "+username+"\'s shifts on the ShiftSpace Public Square\" target=\"new\" href=\"http://www.shiftspace.org/shifts/?filter=by&filterBy="+username+"\">"+atReference+"</a>";
       $(summaryView).setHTML(summary.replace(atReference, refLink));
     }
     else
@@ -1739,6 +1740,7 @@ var Console = new Class({
     var userLink = $(newEntry.getElementByClassName('user')).getFirst();
     userLink.setHTML(aShift.username);
     userLink.setProperty('href', 'http://www.shiftspace.org/shifts/?filter=by&filterBy='+aShift.username);
+    userLink.setProperty('title', "Browse "+aShift.username+"'s shifts on the ShiftSpace Public Square");
 
     newEntry.getElementByClassName('posted').innerHTML = aShift.created; 
     
@@ -2022,7 +2024,6 @@ var Console = new Class({
     // ------------------- User ---------------------------- //
     var userLink = $(this.doc.createElement('a'));
     userLink.setProperty('target', 'new');
-    userLink.setProperty('title', "Browse this user's shifts on the ShiftSpace Public Square");
     var userDiv = $(this.doc.createElement('div'));
 
     userDiv.className = 'user column';
