@@ -1206,7 +1206,7 @@ var ShiftSpace = new (function() {
         
         // let everyone else know
         loadSpace(space, pendingShift, function() {
-          alert(space " space installed.");
+          alert(space + " space installed.");
           SSFireEvent('onSpaceInstall', space);
         }.bind(this));
       }
