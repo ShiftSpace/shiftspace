@@ -103,10 +103,10 @@ $result = preg_replace("/href=\"?\//i","href=\"$myurl", $result);
 
 // remove 'most' javascript
 $result = preg_replace("/<script.*?<\/script>/ims","<!--removedjavascript-->",$result);
-$result = preg_replace("/onresize=\".+\"/i","",$result);
-$result = preg_replace("/onload=\".+\"/i","",$result);
-$result = preg_replace("/onresize=\'.+\'/i","",$result);
-$result = preg_replace("/onload=\'.+\'/i","",$result);
+$result = preg_replace("/onresize=\".*?\"/i","",$result);
+$result = preg_replace("/onload=\".*?\"/i","",$result);
+$result = preg_replace("/onresize=\'.*?\'/i","",$result);
+$result = preg_replace("/onload=\'.*?\'/i","",$result);
 // insert ShiftSpace
 /*
 $ShiftSpace = '<script type="text/javascript" charset="utf-8">
