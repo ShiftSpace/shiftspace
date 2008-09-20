@@ -86,7 +86,7 @@ $commentsHTML = "
   	<li id='com-1' class='comment shift original'>
   		<div class='com-meta'>
   			<div class='com-meta-text'>
-  				<a class='com-author' title='Browse $currentComment->username\'s shifts on the ShiftSpace Public Square' href='http://www.shiftspace.org/shifts/?filter=by&filterBy=$currentComment->username'>$shift->username</a>'s <span class='space-name'>$shift->space shift</span> on <span class='shifted-page'>$shiftHref</span>:
+  				<a class='com-author' title='Browse $shift->username\'s shifts on the ShiftSpace Public Square' href='http://www.shiftspace.org/shifts/?filter=by&filterBy=$shift->username'>$shift->username</a>'s <span class='space-name'>$shift->space shift</span> on <span class='shifted-page'>$shiftHref</span>:
   			</div>
   			<a href='' class='com-author'>
   				<img src='http://www.gravatar.com/avatar.php?gravatar_id=$ownerGravatar&size=33.jpg'/>
