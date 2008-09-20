@@ -35,20 +35,21 @@ for($i = 0; $i < count($comments); $i++)
   $num = $i + 1;
   $date = ucfirst(elapsed_time($currentComment->created));
   $commentGravatar = md5($currentComment->email);
-  $newComment = "	
-    <li id='com-2' class='comment original'>
-  		<div class='com-meta'>
-  			<div class='com-meta-text'>
-  				<span class='com-num'>$num. </span><a target='new' class='com-author' title='Browse $currentComment->username's shifts on the ShiftSpace Public Square' href='http://www.shiftspace.org/shifts/?filter=by&filterBy=$currentComment->username'>$currentComment->username</a> said <span class='time-ago'>($date)</span>:
+  $newComment = <<<eof	
+    <li id="com-2" class="comment original">
+  		<div class="com-meta">
+  			<div class="com-meta-text">
+  				<span class="com-num">$num. </span><a target="new" class="com-author" title="Browse $currentComment->username's shifts on the ShiftSpace Public Square" href="http://www.shiftspace.org/shifts/?filter=by&filterBy=$currentComment->username">$currentComment->username</a> said <span class="time-ago">($date)</span>:
   			</div>
-  			<a href='' class='com-author'>
-  				<img src='http://www.gravatar.com/avatar.php?gravatar_id=$commentGravatar&size=33.jpg'/>
+  			<a href="" class="com-author">
+  				<img src="http://www.gravatar.com/avatar.php?gravatar_id=$commentGravatar&size=33.jpg"/>
   			</a>
   		</div>
-  		<div class='com-content'>
+  		<div class="com-content">
   			$currentComment->content
   		</div>
-  	</li>";
+  	</li>;
+  eof;
   
   // append the markup of the new comment
   $allComments .= $newComment;
