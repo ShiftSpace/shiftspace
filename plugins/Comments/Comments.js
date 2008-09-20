@@ -141,7 +141,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
           });
     
           resizeFx.start({
-            top: [window.getSize().viewPort.y, window.getSize().viewPort.y-370]
+            height: [0, 370]
           });
         }.bind(this));
       }
@@ -171,7 +171,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
       });
     
       resizeFx.start({
-        top: [this.element.getStyle('top'), window.getSize().viewPort.y]
+        height: [this.element.getStyle('height'), 0]
       });
     }
   },
@@ -223,7 +223,8 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     var overflow = $(document.body).getStyle('overflow');
 
     this.element.makeResizable({
-      modifiers: {x:'', y:'top'},
+      modifiers: {x:'', y:'height'},
+      invert: true,
       handle: this.comCount,
       onStart: function()
       {
@@ -314,7 +315,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     });
     
     this.comHeader.setHTML('<div id="com-count"><span id="com-count-span">34</span> Comments</div>' +
-		                       '<a href="#" class="com-minimize" title="Minimize console"/></a>'); 
+		                       '<div class="com-minimize" title="Minimize console"/></div>'); 
 		                       
     this.comHeader.injectInside(this.element);
     this.comBody.injectInside(this.element);

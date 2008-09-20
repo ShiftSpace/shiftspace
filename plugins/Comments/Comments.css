@@ -26,7 +26,8 @@ div#SSComments{
 
 #SSComments.InShiftSpace #com-header .com-minimize
 {
-  margin-right: 26px;
+  position: absolute;
+  right: 50px;
 }
 
 #SSComments.InShiftSpace #com-body
@@ -88,7 +89,7 @@ div#com-count span{
 	line-height: 137%;
 }
 
-a.com-minimize{
+div.com-minimize{
 	background: url(images/comments_minimize.png) no-repeat;
 	height: 13px;
 	width: 13px;

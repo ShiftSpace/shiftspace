@@ -2174,13 +2174,15 @@ Drag.Base = new Class({
 		limit: false,
 		modifiers: {x: 'left', y: 'top'},
 		grid: false,
-		snap: 6
+		snap: 6,
+		invert: false // CHANGE: David
 	},
 
 	initialize: function(el, options){
 		this.setOptions(options);
 		this.element = $(el);
 		this.handle = $(this.options.handle) || this.element;
+		this.invert = this.options.invert; // CHANGE: David
 		this.mouse = {'now': {}, 'pos': {}};
 		this.value = {'start': {}, 'now': {}};
 		this.bound = {
@@ -2211,7 +2213,16 @@ Drag.Base = new Class({
 		for (var z in this.options.modifiers){
 			if (!this.options.modifiers[z]) continue;
 			this.value.now[z] = this.element.getStyle(this.options.modifiers[z]).toInt();
-			this.mouse.pos[z] = event.page[z] - this.value.now[z];
+			if(this.invert) // CHANGE: David
+			{
+			  // store starting value, mouse start is just start
+			  this.value.start[z] = this.value.now[z];
+			  this.mouse.pos[z] = this.mouse.start[z];
+			}
+			else
+			{
+			  this.mouse.pos[z] = event.page[z] - this.value.now[z];
+		  }
 			if (limit && limit[z]){
 				for (var i = 0; i < 2; i++){
 					if ($chk(limit[z][i])) this.limit[z][i] = ($type(limit[z][i]) == 'function') ? limit[z][i]() : limit[z][i];
@@ -2241,7 +2252,14 @@ Drag.Base = new Class({
 		this.mouse.now = event.page;
 		for (var z in this.options.modifiers){
 			if (!this.options.modifiers[z]) continue;
-			this.value.now[z] = this.mouse.now[z] - this.mouse.pos[z];
+			if(this.invert) // CHANGE: David
+			{
+			  this.value.now[z] = this.value.start[z] - (this.mouse.now[z] - this.mouse.pos[z]);
+		  }
+		  else
+		  {
+		    this.value.now[z] = this.mouse.now[z] - this.mouse.pos[z];
+		  }
 			if (this.limit[z]){
 				if ($chk(this.limit[z][1]) && (this.value.now[z] > this.limit[z][1])){
 					this.value.now[z] = this.limit[z][1];

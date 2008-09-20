@@ -1369,7 +1369,8 @@ var Console = new Class({
   Show the console.
   
   */
-  show: function() {
+  show: function() 
+  {
     this.__isVisible__ = true;
 
     this.cancelNotifier = true;
