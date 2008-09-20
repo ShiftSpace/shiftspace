@@ -55,6 +55,8 @@ curl_setopt($curl,CURLOPT_URL,$myurl);
 curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
 curl_setopt($curl,CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($curl,CURLOPT_COOKIE, 1);
+$useragent = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; en-US; rv:1.9.0.1) Gecko/2008070206 Firefox/3.0.1";
+curl_setopt($curl,CURLOPT_USERAGENT,$useragent);
 $result = curl_exec($curl);
 curl_close($curl);
 if(!$result){
