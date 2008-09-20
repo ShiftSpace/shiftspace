@@ -1198,14 +1198,17 @@ var ShiftSpace = new (function() {
         
     */
     function SSInstallSpace(space, pendingShift) {
-      var url = server + 'spaces/' + space + '/' + space + '.js';
-      installed[space] = url;
-      setValue('installed', installed);
-      
-      // let everyone else know
-      loadSpace(space, pendingShift, function() {
-        SSFireEvent('onSpaceInstall', space);
-      }.bind(this));
+      if(!installed[space])
+      {
+        var url = server + 'spaces/' + space + '/' + space + '.js';
+        installed[space] = url;
+        setValue('installed', installed);
+        
+        // let everyone else know
+        loadSpace(space, pendingShift, function() {
+          SSFireEvent('onSpaceInstall', space);
+        }.bind(this));
+      }
     };
     
     /*
