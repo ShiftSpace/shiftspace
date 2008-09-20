@@ -5,11 +5,11 @@ body {
 
 a {
   color: #F63B02;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 a:hover {
-  color: #000;
+  text-decoration: underline;
 }
 
 #console {
