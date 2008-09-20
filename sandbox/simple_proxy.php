@@ -94,8 +94,8 @@ $result = preg_replace("/src=\"(?!http|www)/i","src=\"$myurl",$result);
 $result = preg_replace("/href=\"\//i","href=\"http://$baseurl/" ,$result);
 // href="folder/file
 $result = preg_replace("/href=\"(?=[^http|\/|www|\.\.])/i","href=\"$myurl" ,$result);
-// href=".. will fix if .. is root
-$result = preg_replace("/href=\"\.\./i","href=\"$myurl" ,$result);
+// href="../
+$result = preg_replace("/href=\"\.\./i","href=\"$relativeUrl" ,$result);
 // css imports
 $result = preg_replace("/@import\s+url\(\//i","@import url(http://$baseurl/", $result);
 // css for for href=\"/css/essay.css
