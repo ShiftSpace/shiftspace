@@ -12,7 +12,8 @@ var Actions = new Class({
   
   buildMenu: function() {
     this.doc = ShiftSpace.Console.frame.contentWindow.document;
-    this.el = this.doc.getElementById('actions');
+    this.el = $(this.doc.getElementById('actions'));
+    this.el.addClass('SSUserSelectNone');
     //'<a id="SSMakeShiftPrivateButton" href="#" class="option private selected">Private</a>' +
     this.el.innerHTML = 
       '<div class="group">' +
@@ -22,9 +23,9 @@ var Actions = new Class({
       '</div>' +
       '<div class="group">' +
         '<div id="privacy" class="dropdown first">' +
-          '<a href="#" class="first option">Set privacy</a>' +
-          '<a href="#" class="option public selected">Public</a>' +
-          '<a href="#" class="option private">Private</a>' +
+          '<a id="SSSetBatchPrivacy" style="padding-left:4px" href="#" class="first option">Set privacy</a>' +
+          '<a id="SSSetShiftPublicButton" href="#" class="option public selected">Public</a>' +
+          '<a id="SSSetShiftPrivateButton" href="#" class="option private">Private</a>' +
         '</div>' +
         '<a id="SSEditShiftButton" href="#" class="button edit"></a>' +
         '<a id="SSDeleteShiftButton" href="#" class="button delete"></a>' +
@@ -37,16 +38,22 @@ var Actions = new Class({
     this.trailButton = $(this.doc.getElementById('SSTrailShiftButton'));
     this.editButton = $(this.doc.getElementById('SSEditShiftButton'));
     this.deleteButton = $(this.doc.getElementById('SSDeleteShiftButton'));
+    this.privacyButtons = $(this.doc.getElementById('privacy'));
+    this.batchPrivacy = $(this.doc.getElementById('SSSetBatchPrivacy'));
+    this.privateButton = $(this.doc.getElementById('SSSetShiftPrivateButton'));
+    this.publicButton = $(this.doc.getElementById('SSSetShiftPublicButton'));
     
     this.dropdown = ShiftSpace._$(this.el).getElementsByClassName('dropdown')[0];
     this.dropdown = $(this.dropdown);
     this.dropdown.addEvent('click', this.clickPrivacy.bind(this));
     
+    /*
     this.privacyOptions = this.dropdown.clone();
     this.privacyOptions.setAttribute('id', 'privacyOptions');
     this.privacyOptions.setStyle('left', this.dropdown.getSize().x);
     this.privacyOptions.setStyle('top', this.dropdown.getSize().y);
     this.privacyOptions.inject(this.dropdown.parentNode);
+    */
     
     this.attachEvents();
 
@@ -198,7 +205,33 @@ var Actions = new Class({
           this.trailButton.removeClass('disabled');
           if(ShiftSpace.SSUserOwnsShift(this.selected[0])) this.editButton.removeClass('disabled');
         }
+        
+        this.updatePrivacyButtons(selectedShifts);
       }
+    }
+  },
+  
+  
+  updatePrivacyButtons: function(selectedShifts)
+  {
+    if(selectedShifts.length == 1)
+    {
+      var newTopLevelButton;
+      if(selectedShifts[0].status == 1)
+      {
+        this.publicButton.addClass('selected');
+        this.privateButton.removeClass('selected');
+        newTopLevelButton = this.publicButton;
+      }
+      else
+      {
+        this.publicButton.removeClass('selected');
+        this.privateButton.addClass('selected');
+        newTopLevelButton = this.privateButton;
+      }
+      
+      newTopLevelButton.remove();
+      newTopLevelButton.injectTop(this.privacyButtons);
     }
   },
   
@@ -225,8 +258,10 @@ var Actions = new Class({
     this.editButton[method]('disabled');
     this.deleteButton[method]('disabled');
     this.privacyButtons[method]('disabled');
+    /*
     this.publicButton[method]('disabled');
     this.privateButton[method]('disabled');
+    */
   },
   
 
@@ -240,7 +275,14 @@ var Actions = new Class({
   {
     if(!this.privacyButtons.hasClass('disabled'))
     {
-      this.dropdown.toggleClass('dropdown-open');
+      if(this.selected.length == 1)
+      {
+        this.privacyButtons.toggleClass('toggleMenu')
+      }
+      else if(this.selected.length > 1)
+      {
+        this.privacyButtons.toggleClass('batchMenu');
+      }
     }
   }
   

@@ -506,6 +506,7 @@ input.submit:active {
   height: 22px;
   background: transparent url(../images/Actions/bg.png) repeat-x;
   padding: 1px 0 0 2px;
+  z-index: 1;
 }
 
 #actions .group {
@@ -530,15 +531,9 @@ input.submit:active {
   background-position: 1px 1px;
 }
 
-#actions .button.disabled, #SSMakeShiftPublicButton.disabled, #SSMakeShiftPrivateButton.disabled
+#actions .button.disabled, #actions #privacy.disabled, #SSMakeShiftPublicButton.disabled, #SSMakeShiftPrivateButton.disabled
 {
   opacity: 0.3;
-}
-
-#SSPrivacyButtons
-{
-  height: 18px;
-  /*border: 1px solid grey;*/
 }
 
 #actions .favorite { background-image: url(../images/Actions/favorite.gif); }
@@ -578,23 +573,49 @@ input.submit:active {
   color: #F63B02;
 }
 
+/*
 #actions .dropdown .first {
   padding-left: 5px;
   border-top: 0;
 }
+*/
 
 #actions .dropdown .selected {
   display: block;
 }
 
-#actions .dropdown-open
+#privacy.toggleMenu
 {
   height: 40px;
-  border: 1px solid grey;
+}
+
+#privacy.toggleMenu #SSSetBatchPrivacy
+{
+  display: none;
+}
+
+#privacy.toggleMenu .option
+{
+  display: block;
+}
+
+#privacy.batchMenu
+{
+  height: 60px;
+}
+
+#privacy.batchMenu #SSSetBatchPrivacy
+{
+  display: block;
+}
+
+#privacy.batchMenu .option
+{
+  display: block;
 }
 
 #actions .dropdown-open .option {
-  display: block;
+  /*display: block;*/
 }
 
 #actions .dropdown .public { background-image: url(../images/Actions/public.gif); }
