@@ -21,9 +21,10 @@ var Actions = new Class({
         '<br class="clear" />' +
       '</div>' +
       '<div class="group">' +
-        '<div id="SSPrivacyButtons" class="dropdown first">' +
-          '<a id="SSMakeShiftPublicButton" href="#" class="first option public">Public</a>' +
-          '<a id="SSMakeShiftPrivateButton" href="#" class="option private selected">Private</a>' +
+        '<div id="privacy" class="dropdown first">' +
+          '<a href="#" class="first option">Set privacy</a>' +
+          '<a href="#" class="option public selected">Public</a>' +
+          '<a href="#" class="option private">Private</a>' +
         '</div>' +
         '<a id="SSEditShiftButton" href="#" class="button edit"></a>' +
         '<a id="SSDeleteShiftButton" href="#" class="button delete"></a>' +
@@ -34,17 +35,20 @@ var Actions = new Class({
     this.favoriteButton = $(this.doc.getElementById('SSFavoriteShiftButton'));
     this.linkButton = $(this.doc.getElementById('SSLinkToShiftButton'));
     this.trailButton = $(this.doc.getElementById('SSTrailShiftButton'));
-    this.publicButton = $(this.doc.getElementById('SSMakeShiftPublicButton'));
-    this.privateButton = $(this.doc.getElementById('SSMakeShiftPrivateButton'));
-    this.privacyButtons = $(this.doc.getElementById('SSPrivacyButtons'));
     this.editButton = $(this.doc.getElementById('SSEditShiftButton'));
     this.deleteButton = $(this.doc.getElementById('SSDeleteShiftButton'));
     
     this.dropdown = ShiftSpace._$(this.el).getElementsByClassName('dropdown')[0];
     this.dropdown = $(this.dropdown);
     this.dropdown.addEvent('click', this.clickPrivacy.bind(this));
+    this.privacyOptions = this.dropdown.clone();
+    this.privacyOptions.setAttribute('id', 'privacyOptions');
+    this.privacyOptions.setStyle('left', this.dropdown.getSize().x);
+    this.privacyOptions.setStyle('top', this.dropdown.getSize().y);
+    this.privacyOptions.inject(this.dropdown.parentNode);
     
     this.attachEvents();
+
   },
   
   
@@ -228,7 +232,7 @@ var Actions = new Class({
   
 
   clickPrivacy: function() {
-    this.dropdown.toggleClass('dropdown-open');
+    this.privacyOptions.toggleClass('open');
   }
   
 });
