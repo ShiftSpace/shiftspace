@@ -45,7 +45,7 @@ var Actions = new Class({
     
     this.dropdown = ShiftSpace._$(this.el).getElementsByClassName('dropdown')[0];
     this.dropdown = $(this.dropdown);
-    this.dropdown.addEvent('click', this.updatePrivacy.bind(this));
+    this.dropdown.addEvent('click', this.updatePrivacy.bind(this, [true]));
     
     /*
     this.privacyOptions = this.dropdown.clone();
@@ -295,7 +295,7 @@ var Actions = new Class({
   },
   
 
-  updatePrivacy: function() 
+  updatePrivacy: function(click) 
   {
     console.log('updatePrivacy');
     if(!this.privacyButtons.hasClass('disabled'))
@@ -307,7 +307,7 @@ var Actions = new Class({
           this.privacyButtons.removeClass('batchMenu');
           this.privacyButtons.addClass('toggleMenu')
         }
-        else
+        else if(click)
         {
           this.privacyButtons.removeClass('toggleMenu');
         }
@@ -319,7 +319,7 @@ var Actions = new Class({
           this.privacyButtons.removeClass('toggleMenu');
           this.privacyButtons.addClass('batchMenu');
         }
-        else
+        else if(click)
         {
           this.privacyButtons.removeClass('batchMenu');
         }
