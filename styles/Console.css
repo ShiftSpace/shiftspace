@@ -503,6 +503,7 @@ input.submit:active {
   background-color: rgba(0, 0, 0, 0.2);
   -moz-border-radius: 3px;
   margin-right: 6px;
+  height: 18px;
 }
 
 #actions .button {
@@ -523,6 +524,12 @@ input.submit:active {
   opacity: 0.3;
 }
 
+#SSPrivacyButtons
+{
+  height: 18px;
+  /*border: 1px solid grey;*/
+}
+
 #actions .favorite { background-image: url(../images/Actions/favorite.gif); }
 #actions .link     { background-image: url(../images/Actions/link.gif); }
 #actions .trails   { background-image: url(../images/Actions/trails.gif); }
@@ -533,9 +540,9 @@ input.submit:active {
   float: left;
   background: #faf9f7 url(../images/Actions/arrow.gif) no-repeat right top;
   margin-left: 4px;
-  padding: 2px;
   cursor: pointer;
   -moz-border-radius: 3px;
+  height: 18px;
 }
 
 #actions .first {
@@ -543,11 +550,12 @@ input.submit:active {
 }
 
 #actions .dropdown .option {
+  background-position: 2px 2px;
   display: none;
-  line-height: 8px;
   text-decoration: none;
   background-repeat: no-repeat;
-  padding: 2px 12px 4px 18px;
+  padding: 4px 12px 4px 18px;
+  /*border-top: 1px solid #fae6de;*/
 }
 
 #actions .dropdown .first {
@@ -566,6 +574,12 @@ input.submit:active {
 
 #actions .dropdown .selected {
   display: block;
+}
+
+#actions .dropdown-open
+{
+  height: 40px;
+  border: 1px solid grey;
 }
 
 #actions .dropdown-open .option {

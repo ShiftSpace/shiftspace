@@ -13,10 +13,10 @@ var Actions = new Class({
   buildMenu: function() {
     this.doc = ShiftSpace.Console.frame.contentWindow.document;
     this.el = this.doc.getElementById('actions');
+    //'<a id="SSMakeShiftPrivateButton" href="#" class="option private selected">Private</a>' +
     this.el.innerHTML = 
       '<div class="group">' +
-        '<a id="SSFavoriteShiftButton" href="#" class="first button favorite"></a>' +
-        '<a id="SSLinkToShiftButton" href="#" class="button link"></a>' +
+        '<a id="SSLinkToShiftButton" href="#" class="first button link"></a>' +
         '<a id="SSTrailShiftButton" href="#" class="button trails"></a>' +
         '<br class="clear" />' +
       '</div>' +
@@ -32,7 +32,7 @@ var Actions = new Class({
       '</div>' +
       '<br class="clear" />';
 
-    this.favoriteButton = $(this.doc.getElementById('SSFavoriteShiftButton'));
+    //this.favoriteButton = $(this.doc.getElementById('SSFavoriteShiftButton'));
     this.linkButton = $(this.doc.getElementById('SSLinkToShiftButton'));
     this.trailButton = $(this.doc.getElementById('SSTrailShiftButton'));
     this.editButton = $(this.doc.getElementById('SSEditShiftButton'));
@@ -55,6 +55,7 @@ var Actions = new Class({
   attachEvents: function()
   {
     // Favorite
+    /*
     this.favoriteButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       if(!evt.target.hasClass('disabled'))
@@ -62,6 +63,7 @@ var Actions = new Class({
         //SSFavoriteShif(this.selected.getFirst());
       }
     }.bind(this));
+    */
     
     // Link
     this.linkButton.addEvent('click', function(_evt) {
@@ -192,7 +194,7 @@ var Actions = new Class({
         {
           this.linkButton.removeClass('disabled');
           this.trailButton.removeClass('disabled');
-          this.editButton.removeClass('disabled');
+          if(ShiftSpace.SSUserOwnsShift(this.selected[0])) this.editButton.removeClass('disabled');
         }
       }
     }
@@ -231,8 +233,12 @@ var Actions = new Class({
   },
   
 
-  clickPrivacy: function() {
-    this.privacyOptions.toggleClass('open');
+  clickPrivacy: function() 
+  {
+    if(!this.privacyButtons.hasClass('disabled'))
+    {
+      this.dropdown.toggleClass('dropdown-open');
+    }
   }
   
 });
