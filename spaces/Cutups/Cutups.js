@@ -373,7 +373,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
     attachWidgetButtonEvents: function(){
       var space = this.getParentSpace();
       var self = this;
-      
+      space.SSCutupChunkAmount.setText("1");//reset chunk amount gui display to 1
       space.SSCutupButtonCutup.addEvent("mousedown",function(){
           self.fireCutup(); 
       });
