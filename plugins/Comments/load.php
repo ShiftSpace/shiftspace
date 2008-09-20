@@ -39,7 +39,7 @@ for($i = 0; $i < count($comments); $i++)
     <li id='com-2' class='comment original'>
   		<div class='com-meta'>
   			<div class='com-meta-text'>
-  				<span class='com-num'>$num. </span><a class='com-author' href='#'>$currentComment->username</a> said <span class='time-ago'>($date)</span>:
+  				<span class='com-num'>$num. </span><a class='com-author' href='http://www.shiftspace.org/shifts/?filter=by&filterBy=$currentComment->username'>$currentComment->username</a> said <span class='time-ago'>($date)</span>:
   			</div>
   			<a href='' class='com-author'>
   				<img src='http://www.gravatar.com/avatar.php?gravatar_id=$commentGravatar&size=33.jpg'/>
