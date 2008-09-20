@@ -747,7 +747,12 @@ var Console = new Class({
           '<input type="password" name="account-password" id="account-password" class="text" />' +
           '<label for="account-password">Type your new password again</label>' +
           '<input type="password" name="account-passwordagain" id="account-passwordagain" class="text float-left" />' +
-          '<input type="submit" value="Save" class="float-left" />' +
+          '<label for="account-password">Change your email</label>' +
+          '<input type="text" name="account-email" id="account-email" class="text" />' +
+          '<label for="account-name">Change your display name</label>' +
+          '<input type="text" name="account-name" id="account-name" class="text float-left" />' +
+          '<br class="clear" />' +
+          '<input type="submit" value="Save" class="clear" />' +
           '<br class="clear" />' +
         '</div>' +
         '<br class="clear" />' +
@@ -757,11 +762,25 @@ var Console = new Class({
     
     $(this.doc.getElementById('settings-account')).addEvent('submit', function(e) {
       new Event(e).preventDefault();
-      var info = {
-        password: this.doc.getElementById('account-password').value,
-        password_again: this.doc.getElementById('account-passwordagain').value
-      };
+      
+      var info = {};
+      
+      var password = this.doc.getElementById('account-password').value;
+      var passwordAgain = this.doc.getElementById('account-passwordagain').value;
+      var email = this.doc.getElementById('account-email').value;
+      var username = this.doc.getElementById('account-name').value;
+      
+      if(password)
+      {
+        info.password = password;
+        info.password_again = passwordAgain;
+      }
+      
+      if(email) info.email = email;
+      if(username) info.username = username;
+      
       ShiftSpace.User.update(info, this.handleAccountUpdate.bind(this));
+      
     }.bind(this));
   },
   
@@ -912,6 +931,8 @@ var Console = new Class({
   
   
   showTab: function(id) {
+    console.log('showTab ' + id);
+    if(id != 'settings') this.clearAccountInfo();
     
     this.currTab = id;
     
@@ -1212,7 +1233,21 @@ var Console = new Class({
       this.showResponse('join_response', json.message);
     }
   },
+
   
+  showAccountInfo: function()
+  {
+    this.doc.getElementById('account-email').value = ShiftSpace.User.email() || '';
+    this.doc.getElementById('account-name').value = ShiftSpace.User.getUsername();
+  },
+  
+  
+  clearAccountInfo: function()
+  {
+    this.doc.getElementById('account-email').value = '';
+    this.doc.getElementById('account-name').value = '';
+  },
+
   
   handleAccountUpdate: function(json) 
   {
@@ -1291,8 +1326,11 @@ var Console = new Class({
     return holder.getElementsByClassName('subsection')
   },
   
+  
   showSubSection: function(target, num) 
   {
+    if(target != 'settings' && num != 2) this.clearAccountInfo();
+    
     var holder = _$(this.doc.getElementById(target));
     var active = holder.getElementByClassName('subtab-active');
     if (active) {
@@ -1315,6 +1353,10 @@ var Console = new Class({
     }
     subsection.addClass('subsection-active'); 
     
+    if(target == 'settings' && num == 2)
+    {
+      this.showAccountInfo();
+    }
   },
   
   
@@ -1528,7 +1570,7 @@ var Console = new Class({
     if(atReference && atReference.length > 0)
     {
       atReference = atReference[0];
-      var refLink = "<a target='new' href='http://www.shiftspace.org/shifts/?filter=by&filterBy="+atReference.substr(1, atReference.length-1)+"'>"+atReference+"</a>";
+      var refLink = "<a title=\"Browse this user\'s shifts on the ShiftSpace Public Square\" target=\"new\" href=\"http://www.shiftspace.org/shifts/?filter=by&filterBy="+atReference.substr(1, atReference.length-1)+"\">"+atReference+"</a>";
       $(summaryView).setHTML(summary.replace(atReference, refLink));
     }
     else
@@ -1980,6 +2022,7 @@ var Console = new Class({
     // ------------------- User ---------------------------- //
     var userLink = $(this.doc.createElement('a'));
     userLink.setProperty('target', 'new');
+    userLink.setProperty('title', "Browse this user's shifts on the ShiftSpace Public Square");
     var userDiv = $(this.doc.createElement('div'));
 
     userDiv.className = 'user column';

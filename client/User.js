@@ -4,6 +4,11 @@
     name as well as checking if the user is logged in or out.
 */
 var User = new Class({
+  
+  setUsername: function(_username)
+  {
+    username = _username;
+  },
 
   /*
     Function: getUsername
@@ -17,6 +22,19 @@ var User = new Class({
     return username;
   },
   
+  
+  setEmail: function(email)
+  {
+    this.__email__ = email;
+  },
+  
+  
+  email: function()
+  {
+    return this.__email__;
+  },
+  
+
   /*
     Function: isLoggedIn
       Checks whether there is a logged in user.
@@ -43,7 +61,12 @@ var User = new Class({
     serverCall('user.login', credentials, function(json) {
       if (json.status) 
       {
+        console.log('//////////////////////////////////////////////////////////');
+        console.log(json);
+        // set username
         username = credentials.username;
+        // set email
+        this.setEmail(json.email);
         callback(json);
         this.fireEvent('onUserLogin');
       } 

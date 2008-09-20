@@ -1612,8 +1612,13 @@ var ShiftSpace = new (function() {
         
         if (json.username) 
         {
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+          console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+          console.log(json);          
           // Set private user variable
-          setUsername(json.username);
+          ShiftSpace.User.setUsername(json.username);
+          ShiftSpace.User.setEmail(json.email);
 
           // fire user login for the Console
           if (__consoleIsWaiting__)
