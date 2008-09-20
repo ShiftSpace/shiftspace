@@ -41,6 +41,7 @@ var Actions = new Class({
     this.dropdown = ShiftSpace._$(this.el).getElementsByClassName('dropdown')[0];
     this.dropdown = $(this.dropdown);
     this.dropdown.addEvent('click', this.clickPrivacy.bind(this));
+    
     this.privacyOptions = this.dropdown.clone();
     this.privacyOptions.setAttribute('id', 'privacyOptions');
     this.privacyOptions.setStyle('left', this.dropdown.getSize().x);
@@ -160,6 +161,7 @@ var Actions = new Class({
       this.menuBuilt = true;
     }
     this.el.setStyle('display', 'block');
+    $(this.doc.getElementById('scroller')).addClass('withActions');
   },
 
   
@@ -230,6 +232,7 @@ var Actions = new Class({
 
   hideMenu: function() {
     this.el.setStyle('display', 'none');
+    $(this.doc.getElementById('scroller')).removeClass('withActions');
   },
   
 

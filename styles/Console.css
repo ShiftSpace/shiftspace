@@ -98,6 +98,7 @@ a:hover {
 }
 
 #console #bottom {
+  position: relative;
   background: #f2efac;
   border-left: 1px solid #2F2D01;
   border-right: 1px solid #2F2D01;
@@ -183,6 +184,12 @@ a:hover {
 
 .clear {
   clear: both;
+}
+
+#scroller.withActions
+{
+  position: absolute;
+  top: 23px;
 }
 
 #scroller .content {
@@ -492,6 +499,10 @@ input.submit:active {
 
 #actions {
   display: none;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
   height: 22px;
   background: transparent url(../images/Actions/bg.png) repeat-x;
   padding: 1px 0 0 2px;
@@ -554,7 +565,7 @@ input.submit:active {
   display: none;
   text-decoration: none;
   background-repeat: no-repeat;
-  padding: 4px 12px 4px 18px;
+  padding: 1px 12px 4px 18px;
   /*border-top: 1px solid #fae6de;*/
 }
 
