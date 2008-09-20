@@ -300,6 +300,8 @@ var ShiftSpace = new (function() {
       var target = evt.target;
       var spaceName = $(target).getProperty('title');
       
+      console.log('installing ' + spaceName);
+      
       // first check for the attributes file
       // loadFile(server + 'spaces/' + spaceName + '/attributes.js', SSInstallSpaceLinkCallback, SSInstallSpaceLinkCallback);
       SSInstallSpace(spaceName);
