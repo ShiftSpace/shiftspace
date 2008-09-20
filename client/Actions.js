@@ -50,6 +50,7 @@ var Actions = new Class({
   
   attachEvents: function()
   {
+    // Favorite
     this.favoriteButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       if(!evt.target.hasClass('disabled'))
@@ -58,6 +59,7 @@ var Actions = new Class({
       }
     }.bind(this));
     
+    // Link
     this.linkButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       if(!evt.target.hasClass('disabled'))
@@ -66,6 +68,7 @@ var Actions = new Class({
       }
     });
     
+    // Edit
     this.editButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       if(!evt.target.hasClass('disabled'))
@@ -74,6 +77,7 @@ var Actions = new Class({
       }
     }.bind(this));
     
+    // Delete
     this.deleteButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       if(!evt.target.hasClass('disabled'))
@@ -92,6 +96,19 @@ var Actions = new Class({
           this.hideMenu();
         }
       }
+    }.bind(this));
+    
+    // Trail
+    this.trailButton.addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      
+      ShiftSpace.plugins.attempt({
+        name: 'Trails', 
+        method: 'newTrail', 
+        args: this.selected[0],
+        callback: null
+      });
+      
     }.bind(this));
   },
 

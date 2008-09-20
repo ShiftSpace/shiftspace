@@ -149,6 +149,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   newTrail: function(shiftId)
   {
+    console.log('new trail! ' + shiftId);
     this.createTrail(shiftId);
   },
   

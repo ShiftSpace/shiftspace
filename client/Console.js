@@ -1370,6 +1370,8 @@ var Console = new Class({
   
   */
   show: function() {
+    this.__isVisible__ = true;
+
     this.cancelNotifier = true;
 
     this.notifier.setStyle('display', '');
@@ -1392,6 +1394,8 @@ var Console = new Class({
   */
   hide: function() 
   {
+    this.__isVisible__ = false;
+
     this.notifier.addClass('SSDisplayNone');
     
     //this.frame.setStyle('display', 'none');
@@ -1406,7 +1410,7 @@ var Console = new Class({
   
   isVisible: function() 
   {
-    return (this.frame.getStyle('display') == 'block');
+    return this.__isVisible__;
   },
   
   

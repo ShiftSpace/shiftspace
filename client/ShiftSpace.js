@@ -92,6 +92,33 @@ var ShiftSpace = new (function() {
     var plugins = {};
     var displayList = [];
     
+    // NOTE: will replace with ResourceManager in 0.5 - David
+    plugins.attempt = function(options)
+    {
+      console.log('attempting to call plugin');
+      var args = ($type(options.args) == 'array' && options.args) || [options.args];
+      
+      function execute()
+      {
+        if(options.method)
+        {
+          plugins[options.name][options.method].apply(plugins[options.name], args);
+          if(options.callback && $type(options.callback) == 'function') options.callback();
+        }
+      };
+
+      // load then call
+      if(!plugins[options.name])
+      {
+        console.log('loading plugin');
+        SSLoadPlugin(options.name, execute);
+      }
+      else
+      {
+        execute();
+      }
+    };
+    
     // event proxy object since, ShiftSpace is not a MooTools class
     var __eventProxyClass__ = new Class({});
     __eventProxyClass__.implement(new Events);
@@ -108,6 +135,8 @@ var ShiftSpace = new (function() {
     // A shift pending space load
     var __pendingShift__ = null;
     var __consoleIsWaiting__ = false;
+    
+    // User defaults
     var __defaultShiftStatus__ = 1;
     var __defaultEmailComments__ = 1;
     
@@ -685,36 +714,39 @@ var ShiftSpace = new (function() {
 
       // grab the local shifs and generate an array of remote shifts
       getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
-        var len = recentlyViewedShifts.length;
+        if(recentlyViewedShifts)
+        {
+          var len = recentlyViewedShifts.length;
 
-        len.times(function(i) {
-          var shiftId = recentlyViewedShifts[i];
-          if(SSGetShift(shiftId))
+          len.times(function(i) {
+            var shiftId = recentlyViewedShifts[i];
+            if(SSGetShift(shiftId))
+            {
+              localShifts[shiftId] = SSGetShiftData(shiftId);
+            }
+            else
+            {
+              remoteShifts.push(shiftId);
+            }
+          });
+      
+          if(remoteShifts.length > 0)
           {
-            localShifts[shiftId] = SSGetShiftData(shiftId);
+            SSLoadShifts(remoteShifts, function(remoteShiftsArray) {
+              // convert array into hash
+              var theRemoteShifts = {};
+              remoteShiftsArray.each(function(shift) {
+                theRemoteShifts[shift.id] = shift;
+              });
+              // merge local and remote
+              callback($merge(localShifts, theRemoteShifts));
+            });
           }
           else
           {
-            remoteShifts.push(shiftId);
-          }
-        });
-      
-        if(remoteShifts.length > 0)
-        {
-          SSLoadShifts(remoteShifts, function(remoteShiftsArray) {
-            // convert array into hash
-            var theRemoteShifts = {};
-            remoteShiftsArray.each(function(shift) {
-              theRemoteShifts[shift.id] = shift;
-            });
-            // merge local and remote
-            callback($merge(localShifts, theRemoteShifts));
-          });
+            callback(localShifts);
+          };
         }
-        else
-        {
-          callback(localShifts);
-        };
       });
     }
     
@@ -1100,9 +1132,12 @@ var ShiftSpace = new (function() {
       // used to control the appearance of the ShiftMenu
       SSSetHidden(false);
       
+      console.log(__shiftSpaceState__);
+      
       // restore ShiftSpace
       if(__shiftSpaceState__.get('consoleVisible'))
       {
+        console.log('Console show!');
         ShiftSpace.Console.show();
       }
       if(__shiftSpaceState__.get('focusedShiftId'))
@@ -2752,10 +2787,10 @@ var ShiftSpace = new (function() {
             //console.log('evaluate ' + rx.responseText);
             try
             {
-              console.log('trying');
-              console.log(rx.responseText);
-              console.log(eval('(' + rx.responseText + ')'));
-              console.log('tried');
+              //console.log('trying');
+              //console.log(rx.responseText);
+              //console.log(eval('(' + rx.responseText + ')'));
+              //console.log('tried');
               var theJson = Json.evaluate(rx.responseText);
             }
             catch(exc)
@@ -2864,7 +2899,7 @@ var ShiftSpace = new (function() {
         dir = server + dir;
       }
       
-      console.log('loadStyle: ' + url);
+      //console.log('loadStyle: ' + url);
       loadFile(url, function(rx) {
         var css = rx.responseText;
         // this needs to be smarter, only works on directory specific urls
@@ -3250,6 +3285,7 @@ var ShiftSpace = new (function() {
       this.trails = trails;
       this.setValue = setValue;
       this.getValue = getValue;
+      this.plugins = plugins;
       unsafeWindow.ShiftSpace = this;
 
       // for Action Menu debugging
