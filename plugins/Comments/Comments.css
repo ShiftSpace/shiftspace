@@ -26,8 +26,11 @@ div#SSComments{
 
 #SSComments.InShiftSpace #com-header .com-minimize
 {
-  position: absolute;
+  /*
+  position: fixed;
   right: 50px;
+  */
+  float: left;
 }
 
 #SSComments.InShiftSpace #com-body
