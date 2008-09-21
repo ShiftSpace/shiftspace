@@ -100,7 +100,8 @@ var ShiftSpace = new (function() {
       
       function execute()
       {
-        console.log('executing plugin call ' + options.method);
+        console.log('executing plugin ' + options.name + ' call ' + options.method);
+        console.log('plugin installed ' plugins[options.name]);
         if(options.method)
         {
           //console.log();
