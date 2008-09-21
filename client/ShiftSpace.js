@@ -2733,6 +2733,7 @@ var ShiftSpace = new (function() {
           plugin.attributes.includes.each(function(include) {
             loadFile.safeCall(plugin.attributes.dir+include, function(rx) {
               includeLoadCount++;
+              console.log('includeLoadCount ' + includeLoadCount);
               try
               {
                 if(window.webkit)
@@ -2749,7 +2750,11 @@ var ShiftSpace = new (function() {
                 console.error('Error loading ' + include + ' include for ' + plugin.attributes.name + ' Plugin - ' + SSDescribeException(exc));
               }
               // Notify listeners of plugin load
-              if(includeLoadCount == includesTotal) SSFireEvent('onPluginLoad', plugin);
+              if(includeLoadCount == includesTotal) 
+              {
+                console.log('onPluginLoad');
+                SSFireEvent('onPluginLoad', plugin);
+              }
             }, null);
           });
         }
