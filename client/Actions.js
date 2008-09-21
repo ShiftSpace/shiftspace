@@ -4,10 +4,8 @@ var Actions = new Class({
     this.selected = [];
     this.menuBuilt = false;
     
-    /*
     ShiftSpace.User.addEvent('onUserLogin', this.updateMenu.bind(this));
     ShiftSpace.User.addEvent('onUserLogout', this.updateMenu.bind(this));
-    */
   },
   
   buildMenu: function() {
@@ -206,9 +204,81 @@ var Actions = new Class({
         this.buildMenu();
         this.menuBuilt = true;
       }
-      this.el.setStyle('display', 'block');
-      $(this.doc.getElementById('scroller')).addClass('withActions');
+      
+      var showFx = this.el.effects({
+        duration: 300,
+        transition: Fx.Transitions.Cubic.easeInOut,
+        onStart: function()
+        {
+          this.el.setStyle('height', 0);
+          this.el.setStyle('overflow', 'hidden');
+          this.el.setStyle('display', 'block');
+        }.bind(this),
+        onComplete: function()
+        {
+          this.el.setStyle('overflow', 'visible');
+        }.bind(this)
+      });
+      
+      var consoleFx = $(this.doc.getElementById('scroller')).effects({
+        duration: 300,
+        transition: Fx.Transitions.Cubic.easeInOut,
+        onStart: function()
+        {
+          $(this.doc.getElementById('scroller')).setStyle('top', 0);
+          $(this.doc.getElementById('scroller')).setStyle('position', 'absolute');
+        }.bind(this),
+        onComplete: function()
+        {
+          $(this.doc.getElementById('scroller')).setStyle('position', '');
+          $(this.doc.getElementById('scroller')).addClass('withActions');
+        }.bind(this)
+      });
+      
+      showFx.start({
+        height: [0, 22]
+      });
+      consoleFx.start({
+        top: [0, 23]
+      });
     }
+  },
+  
+  
+  hideMenu: function() 
+  {
+    this.setIsVisible(false);
+    this.updatePrivacyMenu();
+    
+    var showFx = this.el.effects({
+      duration: 300,
+      transition: Fx.Transitions.Cubic.easeInOut,
+      onStart: function()
+      {
+        this.el.setStyle('overflow', 'hidden');
+      }.bind(this),
+      onComplete: function()
+      {
+        this.el.setStyle('overflow', '');
+        this.el.setStyle('display', 'none');
+      }.bind(this)
+    });
+    
+    var consoleFx = $(this.doc.getElementById('scroller')).effects({
+      duration: 300,
+      transition: Fx.Transitions.Cubic.easeInOut,
+      onComplete: function()
+      {
+        $(this.doc.getElementById('scroller')).removeClass('withActions');
+      }.bind(this)
+    });
+    
+    showFx.start({
+      height: [22, 0]
+    });
+    consoleFx.start({
+      top: [23, 0]
+    });
   },
 
   
@@ -334,15 +404,6 @@ var Actions = new Class({
     ShiftSpace.Console.clearSelections();
     this.selected = [];
     this.hideMenu();
-  },
-  
-
-  hideMenu: function() 
-  {
-    this.setIsVisible(false);
-    this.el.setStyle('display', 'none');
-    this.updatePrivacyMenu();
-    $(this.doc.getElementById('scroller')).removeClass('withActions');
   },
   
 
