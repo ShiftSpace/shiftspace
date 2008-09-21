@@ -2701,6 +2701,7 @@ var ShiftSpace = new (function() {
     */
     function SSRegisterPlugin(plugin)
     {
+      console.log('SSRegisterPlugin ' + plugin);
       plugins[plugin.attributes.name] = plugin;
       
       var pluginDir = installedPlugins[plugin.attributes.name].match(/(.+\/)[^\/]+\.js/)[1];
