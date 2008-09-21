@@ -80,6 +80,7 @@ var Actions = new Class({
       {
         window.open(ShiftSpace.info().server + 'sandbox?id=' + this.selected[0]);
       }
+      this.clearAndHide();
     }.bind(this));
     
     // Edit
@@ -89,6 +90,7 @@ var Actions = new Class({
       {
         ShiftSpace.SSEditShift(this.selected[0]);
       }
+      this.clearAndHide();
     }.bind(this));
     
     // Delete
@@ -110,6 +112,7 @@ var Actions = new Class({
           this.hideMenu();
         }
       }
+      this.clearAndHide();
     }.bind(this));
     
     // Trail
@@ -122,7 +125,7 @@ var Actions = new Class({
         args: this.selected[0],
         callback: null
       });
-      
+      this.clearAndHide();
     }.bind(this));
     
     // Privacy changes
@@ -141,6 +144,8 @@ var Actions = new Class({
       this.selected.each(function(shiftId) {
         ShiftSpace.SSSetShiftStatus(shiftId, 2);
       });
+      
+      this.clearAndHide();
     }
   },
   
@@ -156,6 +161,8 @@ var Actions = new Class({
       this.selected.each(function(shiftId) {
         ShiftSpace.SSSetShiftStatus(shiftId, 1);
       });
+      
+      this.clearAndHide();
     }
   },
 
@@ -172,11 +179,8 @@ var Actions = new Class({
 
   select: function(shiftId) {
     this.selected.push(shiftId);
-    if(!this.isVisible())
-    {
-      this.setIsVisible(true);
-      this.showMenu();
-    }
+    console.log('select');
+    this.showMenu();
     this.updateMenu();
   },
   
@@ -185,7 +189,6 @@ var Actions = new Class({
     this.selected.remove(shiftId);
     if (this.selected.length == 0) 
     {
-      this.setIsVisible(false);
       this.hideMenu();
     }
     else
@@ -196,12 +199,16 @@ var Actions = new Class({
   
 
   showMenu: function() {
-    if (!this.menuBuilt) {
-      this.buildMenu();
-      this.menuBuilt = true;
+    if(!this.isVisible())
+    {
+      this.setIsVisible(true);
+      if (!this.menuBuilt) {
+        this.buildMenu();
+        this.menuBuilt = true;
+      }
+      this.el.setStyle('display', 'block');
+      $(this.doc.getElementById('scroller')).addClass('withActions');
     }
-    this.el.setStyle('display', 'block');
-    $(this.doc.getElementById('scroller')).addClass('withActions');
   },
 
   
@@ -321,9 +328,20 @@ var Actions = new Class({
     */
   },
   
+  
+  clearAndHide: function()
+  {
+    ShiftSpace.Console.clearSelections();
+    this.selected = [];
+    this.hideMenu();
+  },
+  
 
-  hideMenu: function() {
+  hideMenu: function() 
+  {
+    this.setIsVisible(false);
     this.el.setStyle('display', 'none');
+    this.updatePrivacyMenu();
     $(this.doc.getElementById('scroller')).removeClass('withActions');
   },
   
@@ -331,11 +349,6 @@ var Actions = new Class({
   updatePrivacyMenu: function(click) 
   {
     console.log('updatePrivacyMenu');
-    
-    if(click)
-    {
-    }
-    
     if(!this.privacyButtons.hasClass('disabled'))
     {
       if(this.selected.length == 1)
@@ -361,6 +374,12 @@ var Actions = new Class({
         {
           this.privacyButtons.removeClass('batchMenu');
         }
+      }
+      else
+      {
+        // no selections
+        this.privacyButtons.removeClass('batchMenu');
+        this.privacyButtons.removeClass('toggleMenu');
       }
     }
   }

@@ -2157,6 +2157,15 @@ var Console = new Class({
     }
     
     comments.setText(count);
+  },
+  
+  
+  clearSelections: function()
+  {
+    $A(_$(this.doc.getElementById('shifts')).getElementsByClassName('checkbox')).each(function(checkbox) {
+      checkbox.removeClass('checked');
+      checkbox.removeClass('checkbox-hover');
+    });
   }
   
 });
