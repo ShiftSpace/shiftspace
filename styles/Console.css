@@ -529,12 +529,12 @@ input.submit:active {
   -moz-border-radius: 3px;
   background-repeat: no-repeat;
   background-position: 1px 1px;
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
 #privacy
 {
-  opacity: 0.7;
+  opacity: 0.85;
 }
 
 #actions a.button:hover, #actions div#privacy:hover
