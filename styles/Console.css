@@ -547,11 +547,11 @@ input.submit:active {
   opacity: 0.3;
 }
 
-#actions .favorite { background-image: url(../images/Actions/favorite.gif); }
-#actions .link     { background-image: url(../images/Actions/link.gif); }
-#actions .trails   { background-image: url(../images/Actions/trails.gif); }
-#actions .edit     { background-image: url(../images/Actions/edit.gif); }
-#actions .delete   { background-image: url(../images/Actions/delete.gif); }
+#actions .favorite { background-image: url(../images/Actions/unstarred.png); }
+#actions .link     { background-image: url(../images/Actions/link.png); }
+#actions .trails   { background-image: url(../images/Actions/trails.png); }
+#actions .edit     { background-image: url(../images/Actions/edit.png); }
+#actions .delete   { background-image: url(../images/Actions/delete.png); }
 
 #actions .dropdown {
   float: left;
@@ -636,8 +636,8 @@ input.submit:active {
   /*display: block;*/
 }
 
-#actions .dropdown .public { background-image: url(../images/Actions/public.gif); }
-#actions .dropdown .private { background-image: url(../images/Actions/private.gif); }
+#actions .dropdown .public { background-image: url(../images/Actions/public.png); }
+#actions .dropdown .private { background-image: url(../images/Actions/private.png); }
 
 #privacyOptions {
   position: absolute;
