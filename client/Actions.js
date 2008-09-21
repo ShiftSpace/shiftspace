@@ -86,7 +86,7 @@ var Actions = new Class({
     // Edit
     this.editButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
-      if(!evt.target.hasClass('disabled'))
+      if(!$(evt.target).hasClass('disabled'))
       {
         editShift(this.selected[0]);
       }
@@ -96,7 +96,7 @@ var Actions = new Class({
     // Delete
     this.deleteButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
-      if(!evt.target.hasClass('disabled'))
+      if(!$(evt.target).hasClass('disabled'))
       {
         var str = 'this shift';
         if(this.selected.length > 1)
