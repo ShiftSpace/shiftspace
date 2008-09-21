@@ -542,6 +542,11 @@ input.submit:active {
   opacity: 1.0;
 }
 
+#actions a.button.disabled:hover, #actions div#privacy.disabled:hover
+{
+  opacity: 0.3;
+}
+
 #actions .button.disabled, #actions #privacy.disabled, #SSMakeShiftPublicButton.disabled, #SSMakeShiftPrivateButton.disabled
 {
   opacity: 0.3;
