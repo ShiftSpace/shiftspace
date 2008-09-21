@@ -17,18 +17,18 @@ var Actions = new Class({
     //'<a id="SSMakeShiftPrivateButton" href="#" class="option private selected">Private</a>' +
     this.el.innerHTML = 
       '<div class="group">' +
-        '<a id="SSLinkToShiftButton" href="#" class="first button link"></a>' +
-        '<a id="SSTrailShiftButton" href="#" class="button trails"></a>' +
+        '<a title="Permalink for selected shift" id="SSLinkToShiftButton" href="#" class="first button link"></a>' +
+        '<a title="Trail selected shift" id="SSTrailShiftButton" href="#" class="button trails"></a>' +
         '<br class="clear" />' +
       '</div>' +
       '<div class="group">' +
-        '<div id="privacy" class="dropdown first">' +
+        '<div title="Set private/public status of selected shifts" id="privacy" class="dropdown first">' +
           '<a id="SSSetBatchPrivacy" style="padding-left:4px" href="#" class="first option">Set privacy</a>' +
           '<a id="SSSetShiftPublicButton" href="#" class="option public selected">Public</a>' +
           '<a id="SSSetShiftPrivateButton" href="#" class="option private">Private</a>' +
         '</div>' +
-        '<a id="SSEditShiftButton" href="#" class="button edit"></a>' +
-        '<a id="SSDeleteShiftButton" href="#" class="button delete"></a>' +
+        '<a title="Edit selected shift" id="SSEditShiftButton" href="#" class="button edit"></a>' +
+        '<a title="Delete selected shift" id="SSDeleteShiftButton" href="#" class="button delete"></a>' +
         '<br class="clear" />' +
       '</div>' +
       '<br class="clear" />';
