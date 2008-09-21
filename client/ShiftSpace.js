@@ -6,6 +6,9 @@
 // @exclude        http://metatron.shiftspace.org/api/sandbox/*
 // @exclude        http://shiftspace.org/api/sandbox/*
 // @exclude        http://www.shiftspace.org/api/sandbox/*
+// @exclude        http://metatron.shiftspace.org/dev/sandbox/*
+// @exclude        http://shiftspace.org/dev/sandbox/*
+// @exclude        http://www.shiftspace.org/dev/sandbox/*
 // @require        http://metatron.shiftspace.org/code/trunk/client/Mootools.js
 // @require        http://metatron.shiftspace.org/code/trunk/client/Videobox.js
 // ==/UserScript==
@@ -95,13 +98,13 @@ var ShiftSpace = new (function() {
     // NOTE: will replace with ResourceManager in 0.5 - David
     plugins.attempt = function(options)
     {
-      console.log('attempting to call plugin');
+      //console.log('attempting to call plugin');
       var args = ($type(options.args) == 'array' && options.args) || [options.args];
       
       function execute()
       {
-        console.log('executing plugin ' + options.name + ' call ' + options.method);
-        console.log('plugin installed ' + plugins[options.name]);
+        //console.log('executing plugin ' + options.name + ' call ' + options.method);
+        //console.log('plugin installed ' + plugins[options.name]);
         if(options.method)
         {
           //console.log();
@@ -113,7 +116,7 @@ var ShiftSpace = new (function() {
       // load then call
       if(!plugins[options.name])
       {
-        console.log('Load plugin');
+        //console.log('Load plugin');
         // Listen for the real load event
         SSAddEvent('onPluginLoad', function(plugin) {
           if(plugin.attributes.name == options.name) execute();
@@ -2651,7 +2654,7 @@ var ShiftSpace = new (function() {
     */
     function SSLoadPlugin(plugin, callback) 
     {
-      console.log('SSLoadPlugin ' + plugin);
+      //console.log('SSLoadPlugin ' + plugin);
       if(plugins[plugin])
       {
         console.log('plugin ' + plugin + ' already loaded.');
@@ -2701,7 +2704,7 @@ var ShiftSpace = new (function() {
     */
     function SSRegisterPlugin(plugin)
     {
-      console.log('SSRegisterPlugin ' + plugin);
+      //console.log('SSRegisterPlugin ' + plugin);
       plugins[plugin.attributes.name] = plugin;
       
       var pluginDir = installedPlugins[plugin.attributes.name].match(/(.+\/)[^\/]+\.js/)[1];
@@ -2734,12 +2737,12 @@ var ShiftSpace = new (function() {
         {
           var includesTotal = plugin.attributes.includes.length;
           var includeLoadCount = 0;
-          console.log('Loading includes ' + plugin.attributes.includes);
+          //console.log('Loading includes ' + plugin.attributes.includes);
           plugin.attributes.includes.each(function(include) {
-            console.log('Loading include ' + include);
+            //console.log('Loading include ' + include);
             loadFile.safeCall(plugin.attributes.dir+include, function(rx) {
               includeLoadCount++;
-              console.log('includeLoadCount ' + includeLoadCount);
+              //console.log('includeLoadCount ' + includeLoadCount);
               try
               {
                 if(window.webkit)
@@ -2758,7 +2761,7 @@ var ShiftSpace = new (function() {
               // Notify listeners of plugin load
               if(includeLoadCount == includesTotal) 
               {
-                console.log('onPluginLoad');
+                //console.log('onPluginLoad');
                 SSFireEvent('onPluginLoad', plugin);
               }
             }, null);
