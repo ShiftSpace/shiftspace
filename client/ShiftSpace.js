@@ -2654,6 +2654,7 @@ var ShiftSpace = new (function() {
       //console.log('SSLoadPlugin ' + plugin);
       if(plugins[plugin])
       {
+        console.log('plugin ' + plugin + ' already loaded.');
         if(callback) callback();
         return;
       }
