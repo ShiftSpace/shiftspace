@@ -43,7 +43,7 @@ var Actions = new Class({
     this.privateButton = $(this.doc.getElementById('SSSetShiftPrivateButton'));
     this.publicButton = $(this.doc.getElementById('SSSetShiftPublicButton'));
     
-    this.dropdown = ShiftSpace._$(this.el).getElementsByClassName('dropdown')[0];
+    this.dropdown = _$(this.el).getElementsByClassName('dropdown')[0];
     this.dropdown = $(this.dropdown);
     this.dropdown.addEvent('click', this.updatePrivacyMenu.bind(this, [true]));
     
@@ -88,7 +88,7 @@ var Actions = new Class({
       var evt = new Event(_evt);
       if(!evt.target.hasClass('disabled'))
       {
-        ShiftSpace.SSEditShift(this.selected[0]);
+        editShift(this.selected[0]);
       }
       this.clearAndHide();
     }.bind(this));
@@ -105,7 +105,7 @@ var Actions = new Class({
         }
         if(confirm('Are you sure want to delete ' + str + '? There is no undo'))
         {
-          this.selected.each(ShiftSpace.SSDeleteShift);
+          this.selected.each(deleteShift);
           this.selected = [];
           
           this.updateMenu();
@@ -119,7 +119,7 @@ var Actions = new Class({
     this.trailButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       
-      ShiftSpace.plugins.attempt({
+      plugins.attempt({
         name: 'Trails', 
         method: 'newTrail', 
         args: this.selected[0],
@@ -142,7 +142,7 @@ var Actions = new Class({
       console.log('makePrivate');
       // update the contents of the menu based on the current selections
       this.selected.each(function(shiftId) {
-        ShiftSpace.SSSetShiftStatus(shiftId, 2);
+        SSSetShiftStatus(shiftId, 2);
       });
       
       this.clearAndHide();
@@ -159,7 +159,7 @@ var Actions = new Class({
       console.log('makePublic');
       // update the contents of the menu based on the current selections
       this.selected.each(function(shiftId) {
-        ShiftSpace.SSSetShiftStatus(shiftId, 1);
+        SSSetShiftStatus(shiftId, 1);
       });
       
       this.clearAndHide();
@@ -216,7 +216,7 @@ var Actions = new Class({
     if(this.isVisible())
     {
       // update the contents of the menu based on the current selections
-      var selectedShifts = ShiftSpace.SSGetPageShifts(this.selected);
+      var selectedShifts = SSGetPageShifts(this.selected);
       if(selectedShifts && selectedShifts.length > 0)
       {
         var notTheLoggedInUser = function(x) {
@@ -243,7 +243,7 @@ var Actions = new Class({
         {
           this.linkButton.removeClass('disabled');
           this.trailButton.removeClass('disabled');
-          if(ShiftSpace.SSUserOwnsShift(this.selected[0])) this.editButton.removeClass('disabled');
+          if(SSUserOwnsShift(this.selected[0])) this.editButton.removeClass('disabled');
         }
         
         if(selectedShifts.length >= 1 && 

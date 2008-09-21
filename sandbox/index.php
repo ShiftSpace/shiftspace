@@ -26,7 +26,7 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     <script src="../client/Videobox.js" type="text/javascript"></script>
     <script src="greasemonkey-api.js" type="text/javascript"></script>
     <script src="../shiftspace.php?method=shiftspace.user.js&sandbox=1&nocache=<?php echo time();?>" type="text/javascript" charset="utf-8"></script>
-    <script src="../client/Actions.js" type="text/javascript"></script>
+    <!--<script src="../client/Actions.js" type="text/javascript"></script>-->
     <style type="text/css">
     .first{
       margin-top:100px;

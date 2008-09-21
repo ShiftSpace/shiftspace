@@ -232,6 +232,7 @@ var ShiftSpace = new (function() {
       console.log('ShiftMenu.js loaded');
       // INCLUDE Console.js
       console.log('Console.js loaded');
+      // INCLUDE Actions.js
       // INCLUDE ConsoleExtensions.js
       console.log('ConsoleExtensions.js loaded');
       
