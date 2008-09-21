@@ -2732,9 +2732,10 @@ var ShiftSpace = new (function() {
         }
         else
         {
-          var includesTotal = plugin.attributes.include.length;
+          var includesTotal = plugin.attributes.includes.length;
           var includeLoadCount = 0;
           plugin.attributes.includes.each(function(include) {
+            console.log('Loading include ' + include);
             loadFile.safeCall(plugin.attributes.dir+include, function(rx) {
               includeLoadCount++;
               console.log('includeLoadCount ' + includeLoadCount);
