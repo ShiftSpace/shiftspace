@@ -2651,7 +2651,7 @@ var ShiftSpace = new (function() {
     */
     function SSLoadPlugin(plugin, callback) 
     {
-      //console.log('SSLoadPlugin ' + plugin);
+      console.log('SSLoadPlugin ' + plugin);
       if(plugins[plugin])
       {
         console.log('plugin ' + plugin + ' already loaded.');
