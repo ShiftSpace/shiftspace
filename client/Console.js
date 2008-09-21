@@ -2163,8 +2163,8 @@ var Console = new Class({
   clearSelections: function()
   {
     $A(_$(this.doc.getElementById('shifts')).getElementsByClassName('checkbox')).each(function(checkbox) {
-      checkbox.removeClass('checked');
-      checkbox.removeClass('checkbox-hover');
+      $(checkbox).removeClass('checked');
+      $(checkbox).removeClass('checkbox-hover');
     });
   }
   
