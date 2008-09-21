@@ -116,7 +116,7 @@ var ShiftSpace = new (function() {
         console.log('Load plugin');
         // Listen for the real load event
         SSAddEvent('onPluginLoad', function(plugin) {
-          if(plugin.name == options.name) execute();
+          if(plugin.attributes.name == options.name) execute();
         });
         // Loading the plugin
         SSLoadPlugin(options.name, null);
