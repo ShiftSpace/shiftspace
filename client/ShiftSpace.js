@@ -3309,6 +3309,7 @@ var ShiftSpace = new (function() {
       this.SSEditShift = editShift;
       this.SSShowShift = showShift;
       this.SSUserOwnsShift = SSUserOwnsShift;
+      this.SSSetShiftStatus = SSSetShiftStatus;
     }
     
     return this;

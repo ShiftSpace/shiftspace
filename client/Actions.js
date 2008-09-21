@@ -45,7 +45,7 @@ var Actions = new Class({
     
     this.dropdown = ShiftSpace._$(this.el).getElementsByClassName('dropdown')[0];
     this.dropdown = $(this.dropdown);
-    this.dropdown.addEvent('click', this.updatePrivacy.bind(this, [true]));
+    this.dropdown.addEvent('click', this.updatePrivacyMenu.bind(this, [true]));
     
     /*
     this.privacyOptions = this.dropdown.clone();
@@ -124,6 +124,39 @@ var Actions = new Class({
       });
       
     }.bind(this));
+    
+    // Privacy changes
+    this.privateButton.addEvent('click', this.makePrivate.bind(this));
+    this.publicButton.addEvent('click', this.makePublic.bind(this));
+  },
+  
+  
+  makePrivate: function()
+  {
+    if(this.privacyButtons.hasClass('toggleMenu') ||
+       this.privacyButtons.hasClass('batchMenu'))
+    {
+      console.log('makePrivate');
+      // update the contents of the menu based on the current selections
+      this.selected.each(function(shiftId) {
+        ShiftSpace.SSSetShiftStatus(shiftId, 2);
+      });
+    }
+  },
+  
+  
+  makePublic: function()
+  {
+
+    if(this.privacyButtons.hasClass('toggleMenu') ||
+       this.privacyButtons.hasClass('batchMenu'))
+    {
+      console.log('makePublic');
+      // update the contents of the menu based on the current selections
+      this.selected.each(function(shiftId) {
+        ShiftSpace.SSSetShiftStatus(shiftId, 1);
+      });
+    }
   },
 
   
@@ -209,7 +242,7 @@ var Actions = new Class({
         if(selectedShifts.length >= 1 && 
           (this.privacyButtons.hasClass('toggleMenu') ||
            this.privacyButtons.hasClass('batchMenu'))) 
-           this.updatePrivacy();
+           this.updatePrivacyMenu();
            
         this.updatePrivacyButtons(selectedShifts);
       }
@@ -295,9 +328,14 @@ var Actions = new Class({
   },
   
 
-  updatePrivacy: function(click) 
+  updatePrivacyMenu: function(click) 
   {
-    console.log('updatePrivacy');
+    console.log('updatePrivacyMenu');
+    
+    if(click)
+    {
+    }
+    
     if(!this.privacyButtons.hasClass('disabled'))
     {
       if(this.selected.length == 1)
