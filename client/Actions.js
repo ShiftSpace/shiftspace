@@ -76,7 +76,7 @@ var Actions = new Class({
     // Link
     this.linkButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
-      if(!evt.target.hasClass('disabled'))
+      if(!$(evt.target).hasClass('disabled'))
       {
         window.open(ShiftSpace.info().server + 'sandbox?id=' + this.selected[0]);
       }
