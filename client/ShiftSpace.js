@@ -2669,7 +2669,7 @@ var ShiftSpace = new (function() {
       else 
       {
         loadFile(installedPlugins[plugin], function(rx) {
-          //console.log(plugin + " Plugin loaded");
+          console.log(plugin + " Plugin loaded");
           // TODO: The following does not work we need to use the plugin eval
           try
           {
