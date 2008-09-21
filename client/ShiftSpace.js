@@ -113,8 +113,11 @@ var ShiftSpace = new (function() {
       // load then call
       if(!plugins[options.name])
       {
-        console.log('loading plugin');
-        SSLoadPlugin(options.name, execute);
+        SSLoadPlugin(options.name, null);
+        // Listen for the real load event
+        SSAddEvent('onPluginLoad', function(plugin) {
+          if(plugin.name == options.name) execute();
+        });
       }
       else
       {
@@ -2725,8 +2728,11 @@ var ShiftSpace = new (function() {
         }
         else
         {
+          var includesTotal = plugin.attributes.include.length;
+          var includeLoadCount = 0;
           plugin.attributes.includes.each(function(include) {
             loadFile.safeCall(plugin.attributes.dir+include, function(rx) {
+              includeLoadCount++;
               try
               {
                 if(window.webkit)
@@ -2742,9 +2748,16 @@ var ShiftSpace = new (function() {
               {
                 console.error('Error loading ' + include + ' include for ' + plugin.attributes.name + ' Plugin - ' + SSDescribeException(exc));
               }
+              // Notify listeners of plugin load
+              if(includeLoadCount == includesTotal) SSFireEvent('onPluginLoad', plugin);
             }, null);
           });
         }
+      }
+      else
+      {
+        // Notify listeners of plugin load
+        SSFireEvent('onPluginLoad', plugin);
       }
       
       // listen for plugin status changes and pass them on
