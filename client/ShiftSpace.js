@@ -113,11 +113,13 @@ var ShiftSpace = new (function() {
       // load then call
       if(!plugins[options.name])
       {
-        SSLoadPlugin(options.name, null);
+        console.log('Load plugin');
         // Listen for the real load event
         SSAddEvent('onPluginLoad', function(plugin) {
           if(plugin.name == options.name) execute();
         });
+        // Loading the plugin
+        SSLoadPlugin(options.name, null);
       }
       else
       {
