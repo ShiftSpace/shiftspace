@@ -207,7 +207,7 @@ var Actions = new Class({
       
       var showFx = this.el.effects({
         duration: 300,
-        transition: Fx.Transitions.Cubic.easeInOut,
+        transition: Fx.Transitions.linear,
         onStart: function()
         {
           this.el.setStyle('height', 0);
@@ -222,7 +222,7 @@ var Actions = new Class({
       
       var consoleFx = $(this.doc.getElementById('scroller')).effects({
         duration: 300,
-        transition: Fx.Transitions.Cubic.easeInOut,
+        transition: Fx.Transitions.linear,
         onStart: function()
         {
           $(this.doc.getElementById('scroller')).setStyle('top', 0);
@@ -252,7 +252,7 @@ var Actions = new Class({
     
     var showFx = this.el.effects({
       duration: 300,
-      transition: Fx.Transitions.Cubic.easeInOut,
+      transition: Fx.Transitions.linear,
       onStart: function()
       {
         this.el.setStyle('overflow', 'hidden');
@@ -266,7 +266,7 @@ var Actions = new Class({
     
     var consoleFx = $(this.doc.getElementById('scroller')).effects({
       duration: 300,
-      transition: Fx.Transitions.Cubic.easeInOut,
+      transition: Fx.Transitions.linear,
       onComplete: function()
       {
         $(this.doc.getElementById('scroller')).removeClass('withActions');
