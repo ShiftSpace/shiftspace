@@ -65,7 +65,7 @@ var ShiftSpace = new (function() {
     // Check to see if the server URL is already stored
     // permissions problem here?
     if (typeof server == 'undefined') {
-      var server = getValue('server', 'http://www.shiftspace.org/dev/');
+      var server = getValue('server', 'http://www.shiftspace.org/api/');
     }
     
     //server = "http://localhost/~davidnolen/shiftspace-0.11/";
