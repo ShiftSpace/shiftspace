@@ -57,10 +57,10 @@ $owner = $db->row("
 // email the owner
 if($owner->email && $owner->email_comments == 1)
 {
-  $subject = "Shiftspace user $user->username has commented on your shift!";
+  $subject = "$user->username has commented on your shift!";
   $body = wordwrap("Hello $owner->username,
 
-  You have a new comment on your shift!
+  $user->username has just commented on your shift. Go check the original link or the proxy link below:
 
   Original link: $shift->href
   Proxy link: http://www.shiftspace.org/api/sandbox/?id=$shift->url_slug
