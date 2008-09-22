@@ -74,9 +74,9 @@ $ownerGravatar = md5($shift->email);
 $spaceIcon = "http://www.shiftspace.org/dev/images/" . strtolower($shift->space) . "_thumb.png";
 
 $shiftHref = $shift->href;
-if(strlen($shiftHref) > 30)
+if(strlen($shiftHref) > 48)
 {
-  $shiftHref = substr($shiftHref, 0, 27) . '...';
+  $shiftHref = substr($shiftHref, 0, 45) . '...';
 }
 
 $commentsHTML = "
