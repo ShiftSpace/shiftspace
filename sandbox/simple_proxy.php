@@ -253,7 +253,7 @@ foreach ($shift_ids as $an_id)
     // get the shift out of the database
     $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
       window.addEvent('domready', function() {
-	var theShift = unescape($shiftContent);
+	var theShift = Json.evaluate(unescape($shiftContent));
 	
 	if($legacyValue)
 	{
