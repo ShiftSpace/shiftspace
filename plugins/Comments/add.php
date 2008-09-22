@@ -55,7 +55,9 @@ $owner = $db->row("
 //echo "grabbed owner.";
   
 // email the owner
-if($owner->email && $owner->email_comments == 1)
+if($owner->email && 
+   $owner->email_comments == 1 &&
+   $owner->id != $user->id)
 {
   $subject = "$user->username has commented on your shift!";
   $body = wordwrap("Hello $owner->username,
