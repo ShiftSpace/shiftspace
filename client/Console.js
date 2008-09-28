@@ -1384,13 +1384,16 @@ var Console = new Class({
     //this.resizer.setStyle('top', this.frame.getStyle('top'));
     this.resizer.setStyle('top', this.frameWrapper.getStyle('top'));
     
-    if(this.getHeight() > 0)
+    if(this.isVisible())
     {
-      this.notifier.setStyle('bottom', this.getHeight() - 4);      
-    }
-    else
-    {
-      this.notifier.setStyle('bottom', 150);
+      if(this.getHeight() > 0)
+      {
+        this.notifier.setStyle('bottom', this.getHeight() - 4);      
+      }
+      else
+      {
+        this.notifier.setStyle('bottom', 150);
+      }
     }
 
     //console.log('cleaned');
