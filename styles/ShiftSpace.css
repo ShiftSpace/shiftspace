@@ -172,6 +172,7 @@ body > #SSConsole
 {
   width: 19px;
   height: 19px;
+  background-repeat: no-repeat;
 }
 
 .SSPinWidget img.select
