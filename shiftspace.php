@@ -10,7 +10,7 @@ server environment.
 
 */
 
-$version = '0.12';
+$version = '0.13';
 $dir = dirname(__FILE__);
 
 if (!empty($_GET['method'])) {
