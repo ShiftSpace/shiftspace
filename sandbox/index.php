@@ -20,6 +20,8 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     <link rel="stylesheet" href="style.css" type="text/css" />
     <script type="text/javascript" charset="utf-8">
       var server = "<?php echo $server; ?>";
+      var _server_ = "<?php echo $server; ?>";
+      var ShiftSpaceSandBoxMode = true;
     </script>
     <script src="../client/Mootools.js" type="text/javascript"></script>
     <script src="../client/Videobox.js" type="text/javascript"></script>

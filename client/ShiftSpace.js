@@ -64,7 +64,6 @@ var ShiftSpace = new (function() {
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
     // permissions problem here?
-    console.log('Initializing ShiftSpace, server: ' + server + ' sandbox: ' + ShiftSpaceSandBoxMode + ' _server_: ' + _server_);
     if (typeof server == 'undefined') {
       console.log('spitting out the server '+ server);
       var server = getValue('server', 'http://www.shiftspace.org/dev/');
