@@ -225,7 +225,7 @@ var HighlightsSpace = ShiftSpace.Space.extend({
   surround_text_node: function(oNode, objRange, surroundingNode)
   {
     var tempRange;
-    //console.log(surroundingNode);
+    //SSLog(surroundingNode);
 
     //if this selection starts and ends in teh same node
     if((oNode==objRange.startContainer) && 

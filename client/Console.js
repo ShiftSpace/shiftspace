@@ -7,7 +7,7 @@ var Console = new Class({
   initialize: function(options) {
     this.shiftCount = 0;
     
-    //console.log('Console buildFrame');
+    //SSLog('Console buildFrame');
     this.buildFrame();
     
     // add a window resize event, so the resizer is in the right place
@@ -81,17 +81,17 @@ var Console = new Class({
       },
       onload: function() 
       {
-        //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> frame loaded');
+        //SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>> frame loaded');
         // store a ref for convenience
         this.doc = this.frame.contentDocument;
         
-        //console.log('createShiftEntryModel');
+        //SSLog('createShiftEntryModel');
         // create the model shift
         this.createShiftEntryModel();
-        //console.log('done createShiftEntryModel');
+        //SSLog('done createShiftEntryModel');
 
         // load the style for document
-        //console.log('load console frame style');
+        //SSLog('load console frame style');
         this.loadStyle();
 
         this.doc.addEventListener('keydown',  keyDownHandler.bind(ShiftSpace), false);
@@ -100,13 +100,13 @@ var Console = new Class({
 
       }.bind(this)
     });
-    //console.log('frame injecting');
+    //SSLog('frame injecting');
     
     this.frameWrapper.injectInside(document.body);
     this.frame.injectInside(this.frameWrapper);
-    //console.log('finished frame injecting');
+    //SSLog('finished frame injecting');
     
-    //console.log('creating resizer');
+    //SSLog('creating resizer');
     this.resizer = new ShiftSpace.Element('div', {
       'id': 'SSConsoleResizer',
       'style': 
@@ -115,18 +115,18 @@ var Console = new Class({
       }
     });
     
-    //console.log('injecting resizer');
+    //SSLog('injecting resizer');
     this.resizer.injectInside(document.body);
-    //console.log('done injecting resizer');
+    //SSLog('done injecting resizer');
     
-    //console.log('test resizer getStyle top: ' + this.resizer.getStyle('top'));
+    //SSLog('test resizer getStyle top: ' + this.resizer.getStyle('top'));
 
     // to prevent things from dropping into the iframe.
     this.resizeMask = new ShiftSpace.Element('div', {
       id: 'SSConsoleResizeMask'
     });
 
-    //console.log('making resizer draggable');
+    //SSLog('making resizer draggable');
     this.resizer.makeDraggable({
       limit: 
       {
@@ -155,7 +155,7 @@ var Console = new Class({
     });
     
     this.resizer.setStyle('position', 'fixed');
-    //console.log('frame built');
+    //SSLog('frame built');
   },
     
   buildNotifier: function() 
@@ -277,8 +277,8 @@ var Console = new Class({
   {
     var itemsAndActions = _itemsAndActions;
     
-    console.log('itemsAndActions');
-    console.log(itemsAndActions);
+    SSLog('itemsAndActions');
+    SSLog(itemsAndActions);
     
     if(!itemsAndActions.delayed)
     {
@@ -424,7 +424,7 @@ var Console = new Class({
         this.notifier.setStyle('display', '');
         this.notifier.removeClass('SSDisplayNone');
 
-        //console.log('start animation for notifier');
+        //SSLog('start animation for notifier');
         this.notifierFx.start(-32, 0).chain(function() {
           this.loadShifts();
           this.hideNotifier.delay(3000, this);
@@ -472,7 +472,7 @@ var Console = new Class({
   
   */
   buildContents: function() {
-    //console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< LOADED BUILD CONTENTS');
+    //SSLog('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< LOADED BUILD CONTENTS');
 
     var content = $(this.doc.createElement('div'));
     content.setAttribute('id', 'console');
@@ -494,10 +494,10 @@ var Console = new Class({
                     '</div></div></div>');
     content.injectInside(this.doc.body);
     
-    //console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< BASICS DONE');
+    //SSLog('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< BASICS DONE');
     
     var controls = $(this.doc.getElementById('controls'));
-    //console.log('got controls');
+    //SSLog('got controls');
     
     var auth = $(this.doc.getElementById('auth'));
     auth.addEvent('mouseover', function() {
@@ -513,15 +513,15 @@ var Console = new Class({
       } 
       else 
       {
-        console.log('SHOW TAB LOGIN');
+        SSLog('SHOW TAB LOGIN');
         this.showTab('login');
       }
-      //console.log('setup auth control');
+      //SSLog('setup auth control');
       this.setupAuthControl();
     }.bind(this));
-    //console.log("auth init'ed");
+    //SSLog("auth init'ed");
     this.setupAuthControl();
-    //console.log('auth setup');
+    //SSLog('auth setup');
     
     var bugReport = $(this.doc.getElementById('bugs'));
     bugReport.addEvent('mouseover', function() {
@@ -546,7 +546,7 @@ var Console = new Class({
       this.hide();
     }.bind(this));
     
-    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABS');
+    //SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> TABS');
     this.addTab('shifts', '0 shifts');
     this.addTab('settings', 'Settings', 'icon-settings.gif');
     
@@ -554,24 +554,24 @@ var Console = new Class({
       this.addTab('login', 'Login');
     }
     
-    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LOGIN');
+    //SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LOGIN');
     this.buildLogin();
-    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SETTINGS');
+    //SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SETTINGS');
     this.buildSettings();
-    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SHOW TAB');
+    //SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SHOW TAB');
     this.showTab('shifts');
     
-    //console.log('contents built');
+    //SSLog('contents built');
   },
   
   
   setupAuthControl: function() {
-    console.log('setupAuthControl');
+    SSLog('setupAuthControl');
     var auth = $(this.doc.getElementById('auth'));
     if (!auth) {
       return;
     }
-    //console.log('auth setup');
+    //SSLog('auth setup');
     var loginStatus = $(this.doc.getElementById('loginStatus'));
     if (ShiftSpace.User.isLoggedIn()) 
     {
@@ -589,7 +589,7 @@ var Console = new Class({
       auth.setAttribute('title', 'Login');
       loginStatus.setText('You are not logged in');
     }
-    //console.log('auth setup done');
+    //SSLog('auth setup done');
   },
   
   
@@ -636,7 +636,7 @@ var Console = new Class({
                         '<input type="text" name="server" value="' + server + '" id="server-input" size="40" class="text" />' +
                         '</div><br class="clear" />');
                         
-    //console.log('buildSettings - done setting html');
+    //SSLog('buildSettings - done setting html');
     
     $(SSGetElementByClass('form-column', sections[0])).setStyle('padding-top', 20);
     
@@ -678,7 +678,7 @@ var Console = new Class({
       }
     }.bind(this));
     
-    //console.log('form style set');
+    //SSLog('form style set');
     
     var serverInput = $(this.doc.getElementById('server-input'));
     serverInput.addEvent('change', function() {
@@ -700,7 +700,7 @@ var Console = new Class({
           } else {
             alert('Sorry, that server address returned an invalid response.');
             serverInput.value = server;
-            console.log(rx.responseText);
+            SSLog(rx.responseText);
           }
         }
       });
@@ -717,16 +717,16 @@ var Console = new Class({
     var form = sections[1].getElementsByTagName('form')[0];
     form.id = 'installedSpacesForm';
     
-    //console.log('buildSettings - done with form ' + form);
+    //SSLog('buildSettings - done with form ' + form);
     
     for (var space in installed) 
     {
       var newSpace = this.installedSpace(space);
-      //console.log('newSpace ' + newSpace);
+      //SSLog('newSpace ' + newSpace);
       $(newSpace).injectAfter(form);
     }
     
-    //console.log('buildSettings - added spaces');
+    //SSLog('buildSettings - added spaces');
     
     form.addEvent('submit', function(e) {
       new Event(e).preventDefault();
@@ -783,13 +783,13 @@ var Console = new Class({
   },
   
   showSubTab: function(section, num) {
-    console.log('show ' + 'subtab-' + section + num);
+    SSLog('show ' + 'subtab-' + section + num);
     var subtab = $(this.doc.getElementById('subtab-' + section + num));
     subtab.setStyle('display', 'block');
   },
   
   hideSubTab: function(section, num) {
-    console.log('hide ' + 'subtab-' + section + num);
+    SSLog('hide ' + 'subtab-' + section + num);
     var subtab = $(this.doc.getElementById('subtab-' + section + num));
     subtab.setStyle('display', 'none');
   },
@@ -838,7 +838,7 @@ var Console = new Class({
                 '<input type="button" value="Uninstall" class="submit uninstall" id="uninstall' + id + '" />' +
                 '<br class="clear" /></div>';
                 
-    //console.log('func installedSpace - uninstall ' + _$(div).getElementByClassName('uninstall'));            
+    //SSLog('func installedSpace - uninstall ' + _$(div).getElementByClassName('uninstall'));            
     var uninstallButton = _$(div).getElementByClassName('uninstall');
     
     $(uninstallButton).addEvent('click', function() {
@@ -870,7 +870,7 @@ var Console = new Class({
         $(this).addClass('checked');
         SSSetPrefForSpace(id, 'autolaunch', true);
       }
-      console.log('autolaunch toggle for ' + spaceName);
+      SSLog('autolaunch toggle for ' + spaceName);
     });
     
     return div;
@@ -929,7 +929,7 @@ var Console = new Class({
   
   
   showTab: function(id) {
-    console.log('showTab ' + id);
+    SSLog('showTab ' + id);
     if(id != 'settings') this.clearAccountInfo();
     
     this.currTab = id;
@@ -973,7 +973,7 @@ var Console = new Class({
   
   removeTab: function(id) 
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>> REMOVE TAB ' + id);
+    SSLog('>>>>>>>>>>>>>>>>>>>>> REMOVE TAB ' + id);
 
     var tab = $(this.doc.getElementById('tab-' + id));
     if (tab) {
@@ -985,12 +985,12 @@ var Console = new Class({
   buildLogin: function() 
   {
     this.addPane('login');
-    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CREATE SUBSECTIONS');
+    //SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> CREATE SUBSECTIONS');
     var sections = this.createSubSections('login', ['Login', 'Sign up', 'Password']);
     /*
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DONE CREATING SUBSECTIONS');
-    console.log('build sections');
-    console.log('sections: ' + sections);
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> DONE CREATING SUBSECTIONS');
+    SSLog('build sections');
+    SSLog('sections: ' + sections);
     */
     $(sections[0]).setHTML(
       '<form id="loginForm" action="http://shiftspace.org/login" method="post" class="form-column">' +
@@ -1004,7 +1004,7 @@ var Console = new Class({
         '<div id="login_response" class="response"></div>' +
       '</form>'
     );
-    //console.log('built sections[0]');
+    //SSLog('built sections[0]');
     $(sections[0]).setStyle('padding-top', 15);
     $(this.doc.getElementById('loginForm')).addEvent('submit', function(e) {
       new Event(e).preventDefault();
@@ -1038,7 +1038,7 @@ var Console = new Class({
                         '</form>');
     $(sections[1]).setStyle('padding-top', 15);
     $(this.doc.getElementById('registerForm')).addEvent('submit', function(e) {
-      //console.log('submit');
+      //SSLog('submit');
       new Event(e).preventDefault();
       var joinInput = {
         username: this.doc.getElementById('join_username').value,
@@ -1117,12 +1117,12 @@ var Console = new Class({
     loadStyle('styles/Videobox.css', function() {
       $(this.doc.getElementById('screencast-link')).addEvent('click', function(e) {
         new Event(e).preventDefault();
-        console.log('hide shiftspace');
+        SSLog('hide shiftspace');
         ShiftSpaceHide();
-        console.log('new videobox');
+        SSLog('new videobox');
         var vb = new Videobox();
         vb.addEvent('onClose', ShiftSpaceShow);
-        console.log('open video box');
+        SSLog('open video box');
         vb.open("http://blip.tv/play/23eWlyOElCw","your caption","vidbox 624 498");
       }.bind(this));
     }.bind(this));
@@ -1298,7 +1298,7 @@ var Console = new Class({
     var tabs = '';
     var content = '';
     
-    //console.log('sections length ' + sections.length);
+    //SSLog('sections length ' + sections.length);
     for (var i = 0; i < sections.length; i++) {
       var activeTab = (i == 0) ? ' subtab-active' : '';
       var activeSection = (i == 0) ? ' subsection-active' : '';
@@ -1377,7 +1377,7 @@ var Console = new Class({
       var bottom = $(this.doc.getElementById('bottom'));
       bottom.setStyle('height', this.getHeight() - top.getSize().size.y);
     }
-    //console.log('cleaning up');
+    //SSLog('cleaning up');
     this.resizer.setStyle('width', window.getWidth() - 50);
     //this.resizer.setStyle('top', this.frame.getStyle('top'));
     this.resizer.setStyle('top', this.frameWrapper.getStyle('top'));
@@ -1394,15 +1394,15 @@ var Console = new Class({
       }
     }
 
-    //console.log('cleaned');
+    //SSLog('cleaned');
     if(this.notifierFx && this.isVisible())
     {
-      //console.log('stop notifier');
+      //SSLog('stop notifier');
       this.notifierFx.stop();
-      //console.log('set');
+      //SSLog('set');
       this.notifierFx.set(Math.max(0, this.getHeight() - 4));
     }
-    //console.log('exiting refresh');
+    //SSLog('exiting refresh');
   },
   
   
@@ -1468,7 +1468,7 @@ var Console = new Class({
   
   */
   addShifts: function(shifts) {
-    //console.log('++++++++++++++++++++++++++++++++++++++++++ ADD SHIFTS');
+    //SSLog('++++++++++++++++++++++++++++++++++++++++++ ADD SHIFTS');
     for (var shiftId in shifts) {
       var shift = shifts[shiftId];
       try
@@ -1483,7 +1483,7 @@ var Console = new Class({
   },
   
   showShift: function(id) {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>> SHOW SHIFT ' + id);
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>> SHOW SHIFT ' + id);
     var el = $(this.doc.getElementById(id));
     if(el)
     {
@@ -1491,11 +1491,11 @@ var Console = new Class({
       el.addClass('SSUserSelectNone');
       this.hideEditTitleField(id);
     }
-    console.log('exit SHOW SHIFT');
+    SSLog('exit SHOW SHIFT');
   },
   
   editShift: function(id) {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>> EDIT SHIFT ' + id);
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>> EDIT SHIFT ' + id);
     var el = $(this.doc.getElementById(id));
     if(el)
     {
@@ -1506,9 +1506,9 @@ var Console = new Class({
   },
   
   blurShift: function(id) {
-    //console.log('CONSOLE BLLLLLLLLLLLLLLLLLLLLLLUR ' + id);
+    //SSLog('CONSOLE BLLLLLLLLLLLLLLLLLLLLLLUR ' + id);
     this.hideEditTitleField(id);
-    //console.log('EXIT');
+    //SSLog('EXIT');
   },
   
   focusShift: function(id) {
@@ -1689,13 +1689,13 @@ var Console = new Class({
     var el = $(this.doc.getElementById(aShift.id));
     if(el) return;
 
-    //console.log('adding - ' + aShift.id);
+    //SSLog('adding - ' + aShift.id);
     // clone a model shift
     var newEntry = _$(this.modelShiftEntry.clone(true));
     
     newEntry.className += ' ' + aShift.space;
     
-    //console.log(newEntry);
+    //SSLog(newEntry);
     
     var icon = ShiftSpace.info(aShift.space).icon;
     var img = newEntry.getElementByClassName('expander').getElementsByTagName('img')[0];
@@ -1705,11 +1705,11 @@ var Console = new Class({
       $(newEntry.getElementByClassName('user')).addClass('loggedIn');
     }
     
-    //console.log('image and icon grabbed');
+    //SSLog('image and icon grabbed');
     
     newEntry.setAttribute('id', aShift.id);
     
-    //console.log('set id');
+    //SSLog('set id');
 
     newEntry.getElementByClassName('spaceTitle').innerHTML = aShift.space;
     $(newEntry.getElementByClassName('spaceTitle')).setStyle('background', 'transparent url(' + icon + ') no-repeat 3px 1px');
@@ -1749,7 +1749,7 @@ var Console = new Class({
 
     newEntry.getElementByClassName('posted').innerHTML = aShift.created; 
     
-    //console.log('main props set');
+    //SSLog('main props set');
     
     // Add hover behavior, this can probably be handle via css - David
     newEntry.addEvent('mouseover', function() {
@@ -1781,9 +1781,9 @@ var Console = new Class({
       }
     }.bind(this));
     
-    //console.log('mouse behaviors set');
+    //SSLog('mouse behaviors set');
     
-    //console.log('slide fx');
+    //SSLog('slide fx');
     
     var toggle = newEntry.getElementByClassName('expander');
     var checkbox = $(toggle.getElementByClassName('checkbox'));
@@ -1816,11 +1816,11 @@ var Console = new Class({
       }
     });
     
-    //console.log('expando set');
+    //SSLog('expando set');
     
-    //console.log('override click behavior, delete node below');
+    //SSLog('override click behavior, delete node below');
     
-    //console.log('summary edit key events');
+    //SSLog('summary edit key events');
     
     // Event for the title edit input field
     $(summaryEdit).addEvent('keyup', function(_evt) {
@@ -1835,15 +1835,15 @@ var Console = new Class({
       }
     }.bind(this));
     
-    //console.log('add summary field click event');
+    //SSLog('add summary field click event');
     
     $(summaryEdit).addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       evt.stop();
     });
     
-    //console.log('--------------------------------- about to inject');
-    //console.log(this.doc);
+    //SSLog('--------------------------------- about to inject');
+    //SSLog(this.doc);
     
     // add it
     if (options && options.isActive) 
@@ -1853,21 +1853,21 @@ var Console = new Class({
     } 
     else 
     {
-      //console.log($(this.doc.getElementById('shifts')));
+      //SSLog($(this.doc.getElementById('shifts')));
       $(newEntry).injectInside($(this.doc.getElementById('shifts')));
     }
     
     this.updateShiftPrivacy(aShift.id);
     
-    //console.log('--------------------------------- adding plugin icons');
+    //SSLog('--------------------------------- adding plugin icons');
     this.addPluginIconForShift(aShift.id);
-    //console.log('--------------------------------- done adding plugin icons');
+    //SSLog('--------------------------------- done adding plugin icons');
     var comments = newEntry.getElementByClassName('SSCommentsIcon');
     
     $(comments).addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       evt.stopPropagation();
-      console.log('click!');
+      SSLog('click!');
       if($(comments).hasClass('Reply') && !ShiftSpace.User.isLoggedIn())
       {
         alert("You must be signed in to comment on a shift.");
@@ -1896,7 +1896,7 @@ var Console = new Class({
     this.shiftCount++;
     this.updateCount();
     
-    //console.log('------------------------------------ ADDED');
+    //SSLog('------------------------------------ ADDED');
   },
   
   
@@ -1964,39 +1964,39 @@ var Console = new Class({
   },
   
   createShiftEntryModel: function() {
-    //console.log('create entry div');
+    //SSLog('create entry div');
     var shiftEntry = $(this.doc.createElement('div'));
-    //console.log('done create entry div');
+    //SSLog('done create entry div');
     shiftEntry.className = 'entry SSUserSelectNone';
-    //console.log('set class name');
+    //SSLog('set class name');
     
     // ---------------- Expander ----------------------- //
     var expanderDiv = $(this.doc.createElement('div'));
     expanderDiv.className = 'expander column';
-    //console.log('expander made');
+    //SSLog('expander made');
 
     var selectCheckbox = $(this.doc.createElement('div'));
     selectCheckbox.className = 'checkbox';
     selectCheckbox.injectInside(expanderDiv);
     
     // ------------------ Space ------------------------- //
-    //console.log('create space div');
+    //SSLog('create space div');
     var spaceDiv = $(this.doc.createElement('div'));
     spaceDiv.className = 'space column';
     
-    //console.log('create spacetitle');
+    //SSLog('create spacetitle');
     var spaceTitle = $(this.doc.createElement('div'));
     spaceTitle.className = 'spaceTitle';
     spaceTitle.injectInside(spaceDiv);
     
-    //console.log('space added');
+    //SSLog('space added');
     
     // ------------------- Plugins ------------------------- //
     var plugins = $(this.doc.createElement('div'));
     plugins.addClass('pluginIcons');
     plugins.injectInside(spaceDiv);
     
-    //console.log('plugins added');
+    //SSLog('plugins added');
     
     // ------------------- Summary ------------------------- //
     var summaryDiv = $(this.doc.createElement('div'));
@@ -2013,7 +2013,7 @@ var Console = new Class({
     summaryEdit.addClass('SSDisplayNone');
     summaryEdit.injectInside(summaryDiv);
     
-    //console.log('summary added');
+    //SSLog('summary added');
     // ------------------- Status Icons -------------------- //
     var statusIconsDiv = $(this.doc.createElement('div'));
     statusIconsDiv.className = 'statusIcons column';
@@ -2034,30 +2034,30 @@ var Console = new Class({
     userDiv.className = 'user column';
     userLink.injectInside(userDiv);
     
-    //console.log('user div added');
+    //SSLog('user div added');
     
     // ------------------- Posted -------------------------- //
     var postedDiv = $(this.doc.createElement('div'));
     postedDiv.className = 'posted column';
-    //console.log('setHTML');
+    //SSLog('setHTML');
     postedDiv.setHTML('Just posted');
-    //console.log('posted div added');
+    //SSLog('posted div added');
     
     // ------------------- Clear --------------------------- //
     var clear = $(this.doc.createElement('div'));
     clear.className = 'clear';
     
-    //console.log('clear added');
+    //SSLog('clear added');
 
     // -------------------- Comments ----------------------- //
     var comments = $(this.doc.createElement('div'));
     comments.className = 'SSCommentsIcon Reply';
     comments.setProperty('title', 'Leave a comment');
     
-    //console.log('controls added');
+    //SSLog('controls added');
     
     // -------------------- Build the entry ---------------- //
-    //console.log('injecting');
+    //SSLog('injecting');
     expanderDiv.injectInside(shiftEntry);
     spaceDiv.injectInside(shiftEntry);
     summaryDiv.injectInside(shiftEntry);

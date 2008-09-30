@@ -73,7 +73,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   addComment: function()
   {
     var newComment = $(this.frame.contentWindow.document.getElementById('comment-reply')).getProperty('value');
-    console.log('addComment ' + newComment);
+    SSLog('addComment ' + newComment);
     if(newComment != '')
     {
       this.serverCall('add', {
@@ -151,7 +151,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
 
   hideInterface: function(animate)
   { 
-    console.log('hideInterface');
+    SSLog('hideInterface');
     if(this.interfaceIsBuilt() && !this.isHiding())
     {
       this.setIsHiding(true);
@@ -215,8 +215,8 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
 
   attachEvents: function()
   {
-    console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-    console.log('attachEvents ' + this.minimizer);
+    SSLog('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+    SSLog('attachEvents ' + this.minimizer);
 
     this.minimizer.addEvent('click', this.hideInterface.bind(this));
 
@@ -249,7 +249,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   
   frameLoaded: function()
   {
-    console.log('frame loaded');
+    SSLog('frame loaded');
     this.loadStyle('Comments.css', this.frameCSSLoaded.bind(this), this.frame);
   },
   
@@ -257,7 +257,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   frameCSSLoaded: function()
   {
     // now we can add the html stuff
-    console.log('frame CSS loaded');
+    SSLog('frame CSS loaded');
     
     if(this.delayedContent)
     {
@@ -269,7 +269,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   
   update: function(json)
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> update');
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> update');
     
     this.frame.contentWindow.document.body.innerHTML = json.html;
     $('com-count-span').setText(json.count);
@@ -283,7 +283,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     var replyButton =  $(ShiftSpace._$(this.frame.contentWindow.document.body).getElementByClassName('com-reply'));
     if(replyButton) replyButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
-      console.log('scroll!');
+      SSLog('scroll!');
       self.frame.contentWindow.scrollTo(0, $(self.frame.contentWindow.document.body).getSize().size.y);
     });
     
@@ -338,7 +338,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
     this.minimizer = $$('.com-minimize')[0];
     this.comCount = $$('.com-count')[0];
-		console.log(this.minimizer);
+		SSLog(this.minimizer);
     
     this.attachEvents();
   }

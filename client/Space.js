@@ -20,7 +20,7 @@ ShiftSpace.Space = new Class({
   */
   initialize: function( shiftClass ) 
   {
-    console.log('INITIALIZE: ' + this.attributes.name);
+    SSLog('INITIALIZE: ' + this.attributes.name);
 
     this.shiftClass = shiftClass;
     
@@ -65,12 +65,12 @@ ShiftSpace.Space = new Class({
     {
       if(typeof SSRegisterSpace != 'undefined')
       {
-        console.log('REGISTER >');
+        SSLog('REGISTER >');
         SSRegisterSpace( this, this.attributes );
       }
       else
       {
-        console.log('SSRegisterSpace is NOT defined.');
+        SSLog('SSRegisterSpace is NOT defined.');
       }
     }
     else
@@ -78,7 +78,7 @@ ShiftSpace.Space = new Class({
       var name = this.attributes.name || '';
       console.error( 'Error: The  ' + name + ' is not valid and will not be instantiated.' );
     }
-    //console.log('/ / / / SETTING UP');
+    //SSLog('/ / / / SETTING UP');
     this.setup();
     
     // check for a pending shift
@@ -132,7 +132,7 @@ ShiftSpace.Space = new Class({
 
     if(this.__deferredContent__)
     {
-      console.log('__deferredContent__');
+      SSLog('__deferredContent__');
 
       this.showInterface();
       this.hideInterface();
@@ -151,13 +151,13 @@ ShiftSpace.Space = new Class({
       
       // edit any deferred shifts
       this.__deferredEdits__.each(function(aShift) {
-        console.log('deferred edit');
+        SSLog('deferred edit');
         editShift(aShift);
       }.bind(this));
 
       // load any deferred just created shifts
       this.__deferredNewShifts__.each(function(aShift) {
-        console.log('show deferred new shift');
+        SSLog('show deferred new shift');
         this.createShift(aShift);
         SSShowNewShift(aShift.id);
       }.bind(this));
@@ -401,8 +401,8 @@ ShiftSpace.Space = new Class({
     // add a backreference
     aShift.parentSpace = this;
     
-    //console.log('constructing');
-    //console.log(this.shiftClass);
+    //SSLog('constructing');
+    //SSLog(this.shiftClass);
 
     // create the new shift
     try
@@ -411,11 +411,11 @@ ShiftSpace.Space = new Class({
     }
     catch(exc)
     {
-      console.log(SSDescribeException(exc));
+      SSLog(SSDescribeException(exc));
     }
     
-    //console.log('a new shift');
-    //console.log(newShift);
+    //SSLog('a new shift');
+    //SSLog(newShift);
     
     // listen for shift updates
     newShift.addEvent( 'onUpdate', this.updateShift.bind( this ) );
@@ -445,11 +445,11 @@ ShiftSpace.Space = new Class({
       this.fireEvent( 'onShiftSave', shiftId );
     }.bind( this ));
     
-    //console.log('events added');
+    //SSLog('events added');
     
     this.shifts[newShift.getId()] = newShift;
     
-    //console.log('exiting');
+    //SSLog('exiting');
     
     return this.shifts[newShift.getId()];
   },
@@ -479,16 +479,16 @@ ShiftSpace.Space = new Class({
     if(this.cssIsLoaded())
     {
       this.addShift(newShiftJson);
-      console.log('added shift');
+      SSLog('added shift');
       var _newShift = this.shifts[newShiftJson.id];
-      console.log('fire event');
+      SSLog('fire event');
       this.fireEvent( 'onCreateShift', { 'space' : this, 'shift' : _newShift } );
-      console.log('return new baby');
+      SSLog('return new baby');
       return _newShift;
     }
     else
     {
-      console.log('++++++++++++++++++++++++++++ css not loaded');
+      SSLog('++++++++++++++++++++++++++++ css not loaded');
       // we need to load these when the css is done
       this.addDeferredNew( newShiftJson );
     }
@@ -606,7 +606,7 @@ ShiftSpace.Space = new Class({
         }
         catch(exc)
         {
-          console.log(SSDescribeException(exc));
+          SSLog(SSDescribeException(exc));
         }
         cShift = this.shifts[aShift.id];
       }

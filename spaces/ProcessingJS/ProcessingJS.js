@@ -69,7 +69,7 @@ function log()
 {
   try
   {
-    console.log.apply( console, arguments );
+    SSLog.apply( console, arguments );
   }
   catch(e)
   {

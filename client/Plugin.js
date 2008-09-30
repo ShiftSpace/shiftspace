@@ -166,7 +166,7 @@ ShiftSpace.Plugin = new Class({
   {
     if(SSCanExitFullScreen() && ShiftSpaceIsHidden())
     {
-      console.log('ShiftSpaceShow');
+      SSLog('ShiftSpaceShow');
       ShiftSpaceShow();
       return true;
     }

@@ -12,7 +12,7 @@ var TwitterPlugin = new Class({
 
   setup: function()
   {
-    console.log('Setting up Twitter plugin');
+    SSLog('Setting up Twitter plugin');
   }
 });
 

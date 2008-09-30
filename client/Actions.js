@@ -137,7 +137,7 @@ var Actions = new Class({
     if(this.privacyButtons.hasClass('toggleMenu') ||
        this.privacyButtons.hasClass('batchMenu'))
     {
-      console.log('makePrivate');
+      SSLog('makePrivate');
       // update the contents of the menu based on the current selections
       this.selected.each(function(shiftId) {
         SSSetShiftStatus(shiftId, 2);
@@ -154,7 +154,7 @@ var Actions = new Class({
     if(this.privacyButtons.hasClass('toggleMenu') ||
        this.privacyButtons.hasClass('batchMenu'))
     {
-      console.log('makePublic');
+      SSLog('makePublic');
       // update the contents of the menu based on the current selections
       this.selected.each(function(shiftId) {
         SSSetShiftStatus(shiftId, 1);
@@ -177,7 +177,7 @@ var Actions = new Class({
 
   select: function(shiftId) {
     this.selected.push(shiftId);
-    console.log('select');
+    SSLog('select');
     this.showMenu();
     this.updateMenu();
   },
@@ -409,7 +409,7 @@ var Actions = new Class({
 
   updatePrivacyMenu: function(click) 
   {
-    console.log('updatePrivacyMenu');
+    SSLog('updatePrivacyMenu');
     if(!this.privacyButtons.hasClass('disabled'))
     {
       if(this.selected.length == 1)

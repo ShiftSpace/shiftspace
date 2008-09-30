@@ -3053,18 +3053,35 @@ var ShiftSpace = new (function() {
       msg - The message to be logged in the JavaScript console.
       verbose - Force the message to be logged when not in debug mode.
     */
-    function log(msg, verbose) {
-      if (typeof verbose != 'undefined' || debug) {
-        if (typeof console == 'object' && console.log) {
+    var SSNoLogs = 0;
+    var SSLogErrType = 1;
+    var SSLogWarnType = 3;
+    function log(msg, verbose, type) 
+    {
+      if (typeof verbose != 'undefined' || debug) 
+      {
+        if (typeof console == 'object' && console.log) 
+        {
+          if()
           console.log(msg);
-        } else if (typeof GM_log != 'undefined') {
+        } 
+        else if (typeof GM_log != 'undefined') 
+        {
           GM_log(msg);
-        } else {
+        } 
+        else 
+        {
           setTimeout(function() {
             throw(msg);
           }, 0);
         }
       }
+    }
+    
+    var __ssloglevel__ = SSNoLog;
+    function SSSetLogLevel(logLevel)
+    {
+      __ssloglevel__ = logLevel;
     }
 
     /*

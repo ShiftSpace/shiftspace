@@ -40,7 +40,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   
   fix: function(brokenShiftJson)
   {
-    //console.log('Image Swap fix! ' + Json.toString(brokenShiftJson));
+    //SSLog('Image Swap fix! ' + Json.toString(brokenShiftJson));
     var content = brokenShiftJson.content;
     
     // extract the target
@@ -62,13 +62,13 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
     }
     
     // check to see that both images are still valid
-    console.log('targetSrc:' + targetSrc + ', swappedSrc:' + swappedSrc);
+    SSLog('targetSrc:' + targetSrc + ', swappedSrc:' + swappedSrc);
     var targetImage = $$('img[src=' + targetSrc + ']')[0];
     
     // we could get the target node
     if(!targetImage)
     {
-      console.log('could not resolve target image');
+      SSLog('could not resolve target image');
       var fixStr = "We could not locate the original target image. We have loaded the grabbed image.  Would you like to update this shift?";
       
       if(confirm(fixStr))
@@ -232,7 +232,7 @@ var ImageSwapSpace = ShiftSpace.Space.extend({
   
   swapImage : function(targetImage)
   {
-    //console.log('swapImage');
+    //SSLog('swapImage');
     
     // get the current shift
     var currentShift = this.getCurrentShift();
@@ -277,8 +277,8 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
   setup : function(json)
   {
-    //console.log('setting up image swap shift');
-    //console.log(Json.toString(json));
+    //SSLog('setting up image swap shift');
+    //SSLog(Json.toString(json));
 
     // build the interface
     this.buildInterface();
@@ -342,7 +342,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
   
   setSrc : function(src)
   {
-    //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> set src: ' + src);
+    //SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> set src: ' + src);
     if(src) this.image.setProperty('src', src);
   },
   
@@ -394,7 +394,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
     if(this.isBeingEdited())
     {
-      console.log('is being edited saving');
+      SSLog('is being edited saving');
       
       // save the shift!
       this.save();
@@ -413,7 +413,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
   pin : function(element, pinRef)
   {
-    //console.log('pinning');
+    //SSLog('pinning');
     
     // we want the exact dimensions of the old image
     var targetNode = ShiftSpace.Pin.toNode(pinRef);
@@ -552,15 +552,15 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
 
   buildInterface : function()
   {
-    //console.log('buildInterface');
+    //SSLog('buildInterface');
     this.element = new ShiftSpace.Element('div', {
       'class': "SSImageSwapShift SSUnordered"
     });
-    //console.log('element created');
+    //SSLog('element created');
     this.image = new ShiftSpace.Element('img', {
       'class': "SSImageSwapShiftImage"
     });
-    //console.log('image div created');
+    //SSLog('image div created');
 
     // add the zoom buttons
     this.zoomButton = new ShiftSpace.Element('div', {
@@ -574,7 +574,7 @@ var ImageSwapShift = ShiftSpace.Shift.extend({
     this.zoomButton.injectInside(this.element);
     this.unzoomButton.injectInside(this.element);
     
-    //console.log('ImageSwap elements created');
+    //SSLog('ImageSwap elements created');
     
     // show the zooming interface
     this.image.injectInside(this.element);

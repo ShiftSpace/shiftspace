@@ -134,7 +134,7 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
     }
     else
     {
-      console.log('=========================== No cover to add!');
+      SSLog('=========================== No cover to add!');
     }
     
     // return

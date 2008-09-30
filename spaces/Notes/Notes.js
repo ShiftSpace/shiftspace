@@ -83,14 +83,14 @@ var NotesShift = ShiftSpace.Shift.extend({
     // store a noteText ref
     this.noteText = (json.noteText && json.noteText.replace(/<br\/>/g, "\n")) || null;
     
-    //console.log('Notes shift about to build');
+    //SSLog('Notes shift about to build');
     // build the DOM
     this.build();
-    //console.log('Notes shift built');
+    //SSLog('Notes shift built');
     
     // attach events
     this.attachEvents();
-    //console.log('Note shift events attached');
+    //SSLog('Note shift events attached');
     
     // set the size to the defaults size declared above
     this.element.setStyles({
@@ -98,7 +98,7 @@ var NotesShift = ShiftSpace.Shift.extend({
       height : this.defaults.size.y
     });
     
-    //console.log('styles set');
+    //SSLog('styles set');
 
     // fade in
     var fadeFX = this.element.effects({
@@ -106,7 +106,7 @@ var NotesShift = ShiftSpace.Shift.extend({
       transition : Fx.Transitions.Cubic.easeIn
     });
     
-    //console.log('fx about to start');
+    //SSLog('fx about to start');
     
     fadeFX.start({
       opacity: [0, 1.0]
@@ -115,12 +115,12 @@ var NotesShift = ShiftSpace.Shift.extend({
     // set the main view
     this.manageElement(this.element);
     
-    //console.log('prepare refresh');
+    //SSLog('prepare refresh');
     // refresh - generally a good idea
     this.refresh();
-    //console.log('refresh');
+    //SSLog('refresh');
     
-    //console.log('check pin');
+    //SSLog('check pin');
     // check to see if this note is pinned
     if(ShiftSpace.Pin.isValidRef(json.pinRef))
     {
@@ -130,7 +130,7 @@ var NotesShift = ShiftSpace.Shift.extend({
     {
       // otherwise set the position of the note to the mouse
       // or the last saved absolute position
-      //console.log('set position');
+      //SSLog('set position');
       if(json.position)
       {
         this.element.setStyles({
@@ -152,7 +152,7 @@ var NotesShift = ShiftSpace.Shift.extend({
       }
     }
 
-    //console.log('refresh again');
+    //SSLog('refresh again');
     this.refresh();
   },
   
@@ -476,23 +476,23 @@ var NotesShift = ShiftSpace.Shift.extend({
     });
     this.element.setOpacity(0);
     
-    //console.log('built top');
+    //SSLog('built top');
     // build the top handle and close button
     this.buildTop();
     
-    //console.log('built frame');
+    //SSLog('built frame');
     // build the iframe to hold the text
     this.buildFrame();
     
-    //console.log('built bottom');
+    //SSLog('built bottom');
     // build the bottom portion of the note
     this.buildBottom();
     
-    //console.log('built edges');
+    //SSLog('built edges');
     // build the drop shadow edges
     this.buildEdges();
     
-    //console.log('injecting');
+    //SSLog('injecting');
     this.element.injectInside( document.body );
   },
   
@@ -634,13 +634,13 @@ var NotesShift = ShiftSpace.Shift.extend({
   */
   buildBottom : function()
   {
-    //console.log('YYYYYYYYYYYYYYYYYYYYAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRR');
+    //SSLog('YYYYYYYYYYYYYYYYYYYYAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRR');
     // create the bottom portion of the note
     this.bottom = new ShiftSpace.Element('div', {
       'class': "SSNoteShiftBottom"
     });
     
-    //console.log('1');
+    //SSLog('1');
     
     // create the save button
     this.saveButton = new ShiftSpace.Element('input', {
@@ -648,11 +648,11 @@ var NotesShift = ShiftSpace.Shift.extend({
       'value' : 'Save',
       'class' : 'SSNoteShiftButton'
     });
-    //console.log('1.5');
+    //SSLog('1.5');
     
     this.saveButton.injectInside( this.element );
     
-    //console.log('2');
+    //SSLog('2');
     
     // create the cancel button
     this.cancelButton = new ShiftSpace.Element('input', {
@@ -674,32 +674,32 @@ var NotesShift = ShiftSpace.Shift.extend({
       'class': "SSNoteShiftButtonDiv"
     });
     
-    //console.log('all the els created');
+    //SSLog('all the els created');
 
     // build the bottom
     
     this.cancelButton.injectInside(this.buttonDiv);
     this.saveButton.injectInside(this.buttonDiv);
     this.buttonDiv.injectInside(this.bottom);
-    //console.log('added basics');
+    //SSLog('added basics');
     
     this.pinWidgetDiv.injectInside(this.bottom);
-    //console.log('pin widget div');
+    //SSLog('pin widget div');
     
     try
     {
       this.pinWidget = new ShiftSpace.PinWidget(this);
-      //console.log('adding pin widget');
+      //SSLog('adding pin widget');
     }
     catch(err)
     {
     }
 
     this.resizeControl.injectInside(this.bottom);
-    //console.log('resizeControl');
+    //SSLog('resizeControl');
 
     // add it to the note element
-    //console.log('adding into the bottm');
+    //SSLog('adding into the bottm');
     this.bottom.injectInside(this.element);
   },
   

@@ -38,7 +38,7 @@ var TrailPage = new Class({
     this.nodes = this.options.nodes;
     this.user = this.options.username || this.options.user;
     
-    //console.log(options);
+    //SSLog(options);
     
     if(this.options.space)
     {
@@ -358,7 +358,7 @@ var TrailPage = new Class({
       self.minusLinkPoint.removeClass( 'TrailPageMinusLinkPointHover' );;
     });
     this.minusLinkPoint.addEvent( 'click', function( e ) { 
-      //console.log('click!');
+      //SSLog('click!');
       self.deleteLinkMode.delay(0, self);
     });
 
@@ -379,10 +379,10 @@ var TrailPage = new Class({
   */
   createLink : function( e )
   {
-    //console.log('CREATE LINK');
+    //SSLog('CREATE LINK');
     // we're creating a link, prevent unzooming
     this.isCreatingLink = true;
-    //console.log(this.isCreatingLink);
+    //SSLog(this.isCreatingLink);
     
     // lock the position of the page
     this.lock();
@@ -452,7 +452,7 @@ var TrailPage = new Class({
         }
         else
         {
-          //console.log('No hovered node');
+          //SSLog('No hovered node');
         }
 
         // clean up
@@ -481,7 +481,7 @@ var TrailPage = new Class({
     /*
     var mouse = e.page;
     
-    log( mouse );
+   SSLog( mouse );
     */
   },
   
@@ -592,12 +592,12 @@ var TrailPage = new Class({
       // this is now the focused node
       if(!linkMode)
       {
-        //console.log('SET FOCUSED NODE ' + this.isCreatingLink);
+        //SSLog('SET FOCUSED NODE ' + this.isCreatingLink);
         Trail.gFocusedNode = this;
       }
       else
       {
-        //console.log('IS CREATING LINK');
+        //SSLog('IS CREATING LINK');
       }
       
       // change the border to red
@@ -671,7 +671,7 @@ var TrailPage = new Class({
       Trail.gHoveredNode = this;
     }
     
-    //console.log(Trail.gFocusedNode + ", " + (Trail.gFocusedNode != this));
+    //SSLog(Trail.gFocusedNode + ", " + (Trail.gFocusedNode != this));
   },
   
   /*
@@ -869,14 +869,14 @@ var TrailPage = new Class({
     var connectedNodes = this.parentTrail.getLinkedNodes( this.nodes );
 
     // add window click listener for checking for cancel deletion
-    //console.log('adding click evento scroll area');
+    //SSLog('adding click evento scroll area');
     var self = this;
     $('SSTrailsPlugInScrollArea').addEvent( 'click', function( e ) {
       var evt = new Event(e);
 
       if(!$(evt.target).hasClass('TrailPageDelete') && !$(evt.target).hasClass('TrailPageMinusLinkPoint'))
       {
-        //console.log('SSTrailsPlugInScrollArea click!');
+        //SSLog('SSTrailsPlugInScrollArea click!');
         // clear deletions
         connectedNodes.each( function( x ) {
           x.cancelDelete();
@@ -891,9 +891,9 @@ var TrailPage = new Class({
     });
     
     // tell each one to prepare for delete
-    //console.log('adding delete link buttons');
+    //SSLog('adding delete link buttons');
     connectedNodes.each( function( x ) {
-      //console.log('showing delete button');
+      //SSLog('showing delete button');
       // reveal delete button
       x.deleteButton.removeClass( 'hidden' );
 
@@ -920,7 +920,7 @@ var TrailPage = new Class({
       
     } );
     
-    //console.log('done');
+    //SSLog('done');
   },
   
   /*
@@ -1037,7 +1037,7 @@ TrailPage.ElementContainsPoint = function( el, v )
                  v.x <= pos.x + size.x &&
                  v.y >= pos.y &&
                  v.y <= pos.y + size.y );
-  //console.log("TrailPage.ElementContainsPoint " + result);
+  //SSLog("TrailPage.ElementContainsPoint " + result);
   return result;
 }
 

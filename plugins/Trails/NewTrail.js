@@ -149,7 +149,7 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   newTrail: function(shiftId)
   {
-    console.log('new trail! ' + shiftId);
+    SSLog('new trail! ' + shiftId);
     this.createTrail(shiftId);
   },
   
@@ -400,14 +400,14 @@ var TrailsPlugin = ShiftSpace.Plugin.extend({
   
   updateInterface: function()
   {
-    console.log('///////////////////////////////////////////////////////');
-    console.log('Update trail interface');
+    SSLog('///////////////////////////////////////////////////////');
+    SSLog('Update trail interface');
     if(this.currentTrail() && this.currentTrailInfo)
     {
       this.controls.injectInside(document.body);
 
-      console.log('/////////////////////////////////////////////////////////');
-      console.log('setting Trail permalink');
+      SSLog('/////////////////////////////////////////////////////////');
+      SSLog('setting Trail permalink');
 
       // update the permalink
       $('SSTrailPermalink').setProperty('href', 'http://www.shiftspace.org/trails/'+this.currentTrailInfo.trailId);

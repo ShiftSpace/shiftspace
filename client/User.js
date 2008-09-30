@@ -61,8 +61,8 @@ var User = new Class({
     serverCall('user.login', credentials, function(json) {
       if (json.status) 
       {
-        console.log('//////////////////////////////////////////////////////////');
-        console.log(json);
+        SSLog('//////////////////////////////////////////////////////////');
+        SSLog(json);
         // set username
         username = credentials.username;
         // set email
@@ -142,15 +142,15 @@ var User = new Class({
   
   setEmailCommentsDefault: function(newValue, callback)
   {
-    console.log('setEmailCommentsDefault ' + newValue);
+    SSLog('setEmailCommentsDefault ' + newValue);
     // setting the value, can't use zero because of PHP, GRRR - David
     SSSetDefaultEmailComments(newValue+1);
     
     serverCall('user.update', {
       email_comments: newValue
     }, function(json) {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>> Default changed!');
-      console.log(json);
+      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>> Default changed!');
+      SSLog(json);
     });
   },
   
