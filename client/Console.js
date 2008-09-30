@@ -1687,6 +1687,10 @@ var Console = new Class({
   
   */
   addShift: function(aShift, options) {
+    // make sure this shift doesn't already exist in the DOM
+    var el = $(this.doc.getElementById(aShift.id));
+    if(el) return;
+
     //console.log('adding - ' + aShift.id);
     // clone a model shift
     var newEntry = _$(this.modelShiftEntry.clone(true));

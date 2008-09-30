@@ -65,7 +65,7 @@ var ShiftSpace = new (function() {
     // Check to see if the server URL is already stored
     // permissions problem here?
     if (typeof server == 'undefined') {
-      var server = getValue('server', 'http://www.shiftspace.org/api/');
+      var server = getValue('server', 'http://www.shiftspace.org/dev/');
     }
     
     //server = "http://localhost/~davidnolen/shiftspace-0.11/";
@@ -175,7 +175,8 @@ var ShiftSpace = new (function() {
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
       'Trails': server + 'plugins/Trails/NewTrail.js',
-      'Comments': server + 'plugins/Comments/Comments.js'
+      'Comments': server + 'plugins/Comments/Comments.js',
+      'Twitter': server + 'plugins/Twitter/Twitter.js'
     });
 
     // installedPlugins = {
