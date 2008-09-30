@@ -64,7 +64,10 @@ var ShiftSpace = new (function() {
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
     // permissions problem here?
-    if (typeof server == 'undefined') {
+    
+    if (typeof ShiftSpaceSandbox != 'undefined') {
+      var server = ShiftSpaceSandbox;
+    } else if (typeof server == 'undefined') {
       var server = getValue('server', 'http://www.shiftspace.org/dev/');
     }
     
@@ -81,12 +84,6 @@ var ShiftSpace = new (function() {
     
     // Cache loadFile data
     var cacheFiles = 0;
-    
-    // get Dan's input on how to set this
-    if(typeof ShiftSpaceSandBoxMode != 'undefined') {
-      server = window.location.href.substr(0, window.location.href.indexOf('sandbox'));
-      cacheFiles = 0;
-    }
     
     // The basic building blocks of ShiftSpace (private objects)
     var spaces = {};
@@ -174,6 +171,7 @@ var ShiftSpace = new (function() {
 
     // Each plugin and a corresponding URL of its origin
     var installedPlugins = getValue('installedPlugins', {
+      'Delicious': server + 'plugins/Delicious/Delicious.js',
       'Trails': server + 'plugins/Trails/NewTrail.js',
       'Comments': server + 'plugins/Comments/Comments.js',
       'Twitter': server + 'plugins/Twitter/Twitter.js'
