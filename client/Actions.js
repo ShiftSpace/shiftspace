@@ -17,7 +17,7 @@ var Actions = new Class({
       '<div class="group">' +
         '<a title="Permalink for selected shift" id="SSLinkToShiftButton" href="#" class="first button link"></a>' +
         '<a title="Trail selected shift" id="SSTrailShiftButton" href="#" class="button trails"></a>' +
-        '<a title="Post to Delicious" id="SSDeliciousToShiftButton" href="#" class="button delicious"></a>' +
+        '<a title="Post to Delicious" id="SSDeliciousButton" href="#" class="button delicious"></a>' +
         '<br class="clear" />' +
       '</div>' +
       '<div class="group">' +
@@ -35,6 +35,7 @@ var Actions = new Class({
     //this.favoriteButton = $(this.doc.getElementById('SSFavoriteShiftButton'));
     this.linkButton = $(this.doc.getElementById('SSLinkToShiftButton'));
     this.trailButton = $(this.doc.getElementById('SSTrailShiftButton'));
+    this.deliciousButton = $(this.doc.getElementById('SSDeliciousButton'));
     this.editButton = $(this.doc.getElementById('SSEditShiftButton'));
     this.deleteButton = $(this.doc.getElementById('SSDeleteShiftButton'));
     this.privacyButtons = $(this.doc.getElementById('privacy'));
