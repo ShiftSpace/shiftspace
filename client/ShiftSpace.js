@@ -71,7 +71,7 @@ var ShiftSpace = new (function() {
       var server = getValue('server', 'http://www.shiftspace.org/dev/');
     }
     
-    //server = "http://localhost/~davidnolen/shiftspace-0.11/";
+    server = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/api/";
@@ -892,7 +892,16 @@ var ShiftSpace = new (function() {
     */
     function SSGetPluginType(pluginName)
     {
-      return __pluginsData__[pluginName]['type'];
+      console.log('SSGetPluginType');
+      if(__pluginsData__[pluginName] && __pluginsData__[pluginName].type)
+      {
+        return __pluginsData__[pluginName].type;
+      }
+      else
+      {
+        console.error('Error: (1) If this is at ShiftSpace load time: if you wish to include plugin data included at shift query time for the ' + pluginName + ' plugin you must include a shift.query.php file in your plugin folder.  Please refer to the Comments version of this file for reference. (2) You need to define plugin type, refer to Plugin.js. kisses, The ShiftSpace Core Robot');
+        return null;
+      }
     }
     
     /*
@@ -932,6 +941,7 @@ var ShiftSpace = new (function() {
     
     function SSPluginDataForShift(pluginName, shiftId)
     {
+      console.log('SSPluginDataForShift');
       return __pluginsData__[pluginName]['data'][shiftId];
     }
     
