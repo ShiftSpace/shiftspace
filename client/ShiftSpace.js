@@ -62,13 +62,13 @@ Class: ShiftSpace
 var ShiftSpace = new (function() {
     // Internal Error Logging, trust me, you don't need this - kisses ShiftSpace Core Robot
     var SSNoLogging = 0;
-    var SSLogError = 1;
-    var SSLogWarning = 2;
-    var SSServerError = 4;
-    var SSLogAll = SSLogError | SSLogWarning;
+    var SSLogMessage = 1;
+    var SSLogError = 2;
+    var SSLogWarning = 4;
+    var SSLogAll = SSLogError | SSLogWarning | SSLogMessage;
     var __ssloglevel__ = SSNoLogging;
     
-    SSSetLogLevel(SSLogError);
+    SSSetLogLevel(SSLogMessage);
     
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored

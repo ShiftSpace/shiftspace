@@ -127,6 +127,17 @@ var Actions = new Class({
       this.clearAndHide();
     }.bind(this));
     
+    this.deliciousButton.addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      
+      plugins.attempt({
+        name: "Delicious", 
+        method: 'showDeliciousWindow',
+        args: this.selected[0],
+        callback: null
+      });
+    });
+    
     // Privacy changes
     this.privateButton.addEvent('click', this.makePrivate.bind(this));
     this.publicButton.addEvent('click', this.makePublic.bind(this));
