@@ -450,7 +450,6 @@ var Console = new Class({
       Load the style for console.
   */
   loadStyle: function() {
-    // TODO - Fix loadStyle to accept target frame to do this crap
     /* Load console styles */
     loadStyle('styles/Console.css', function() {
       this.buildNotifier();
@@ -460,7 +459,7 @@ var Console = new Class({
       {
         // FIXME: erg style bug - David
         //loadStyle('plugins/'+plugin+'/'+plugin+'.css', null, this.frame );
-        loadStyle('plugins/'+plugin+'/Console.css', null, this.frame );
+        loadStyle('plugins/'+plugin+'/Console.css', null, this.frame);
       }
       loadStyle('styles/ShiftSpace.css', this.buildPluginMenu.bind(this), this.frame );
     }.bind(this), this.frame );
@@ -735,7 +734,6 @@ var Console = new Class({
       var space = spaceInput.value;
       if (space == '') return;
 
-      // TODO: make a private method - David
       SSInstallSpace(space);
       
     }.bind(this));

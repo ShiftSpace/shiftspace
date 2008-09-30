@@ -2,13 +2,17 @@
 
 header('Content-type: text/plain');
 
-$options = array('server', 'debug', 'cacheFiles');
+// NOTE: move from setting server var here- David
+//$options = array('server', 'debug', 'cacheFiles');
+$options = array('debug', 'cacheFiles');
 
 $base = file("$dir/client/ShiftSpace.js");
 $include_regex = '#^\s*//\s*INCLUDE\s+(\S+)\s*$#';
 $variable_regex = '#^\s*var\s*(\w+)\s*=\s*(\S+\s*);#';
 
-$config = array('server' => $server);
+// NOTE: move away from setting server var here, second check for security reasons- David
+/*$config = array('server' => $server);*/
+$config = array();
 foreach ($_POST as $key => $value) {
   if (in_array($key, $options)) {
     $config[$key] = $value;
@@ -37,7 +41,7 @@ foreach ($base as $n => $line) {
 } 
 
 if (!empty($_GET['sandbox'])) {
-  echo "// Sandbox mode\nvar ShiftSpaceSandBoxMode = true;\n\n";
+  //echo "// Sandbox mode\nvar ShiftSpaceSandBoxMode = true;\nvar server = '$server';\n";
 }
 echo join('', $base);
 

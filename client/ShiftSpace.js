@@ -64,12 +64,14 @@ var ShiftSpace = new (function() {
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
     // permissions problem here?
-    
+    console.log('Initializing ShiftSpace, server: ' + server + ' sandbox: ' + ShiftSpaceSandBoxMode + ' _server_: ' + _server_);
     if (typeof server == 'undefined') {
+      console.log('spitting out the server '+ server);
       var server = getValue('server', 'http://www.shiftspace.org/dev/');
     }
     
-    server = "http://localhost/~davidnolen/shiftspace-0.11/";
+    // TODO: all calls to discover the server needs to abstracted by ShiftSpace.info().server
+    server = "http://localhost/~davidnolen/shiftspace-0.11-clean/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/api/";
@@ -151,29 +153,56 @@ var ShiftSpace = new (function() {
     var __pluginsData__ = {};
     
     // Each space and a corresponding URL of its origin
-    var installed = getValue('installed', {
-      'Notes' : server + 'spaces/Notes/Notes.js',
-      'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
-      'Highlights': server + 'spaces/Highlights/Highlights.js',
-      'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
-    });
+    var installed;
+    if(typeof ShiftSpaceSandBoxMode == 'undefined')
+    {
+      // respect that fact that different space may come from different servers
+      // besides the one where user data is being stored
+      installed = getValue('installed', {
+        'Notes' : server + 'spaces/Notes/Notes.js',
+        'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
+        'Highlights': server + 'spaces/Highlights/Highlights.js',
+        'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
+      });
+    }
+    else
+    {
+      // if in sandbox dev'ing load from the global server var
+      installed = {
+        'Notes' : server + 'spaces/Notes/Notes.js',
+        'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
+        'Highlights': server + 'spaces/Highlights/Highlights.js',
+        'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
+      };
+      console.log(installed);
+    }
     
     var spacePrefs = getValue('spacePrefs', {});
-    
-    // installed = {
-    //   'Notes' : myFiles + 'spaces/Notes/Notes.js',
-    //   'ImageSwap': myFiles + 'spaces/ImageSwap/ImageSwap.js',
-    //   'Highlights': myFiles + 'spaces/Highlights/Highlights.js',
-    //   'SourceShift': myFiles + 'spaces/SourceShift/SourceShift.js',
-    // };
 
     // Each plugin and a corresponding URL of its origin
-    var installedPlugins = getValue('installedPlugins', {
-      'Delicious': server + 'plugins/Delicious/Delicious.js',
-      'Trails': server + 'plugins/Trails/NewTrail.js',
-      'Comments': server + 'plugins/Comments/Comments.js',
-      'Twitter': server + 'plugins/Twitter/Twitter.js'
-    });
+    var installedPlugins;
+    if(typeof ShiftSpaceSandBoxMode == 'undefined')
+    {
+      // otherwise respect existing values, servers might be different
+      // for different resources
+      installedPlugins = getValue('installedPlugins', {
+        'Delicious': server + 'plugins/Delicious/Delicious.js',
+        'Trails': server + 'plugins/Trails/NewTrail.js',
+        'Comments': server + 'plugins/Comments/Comments.js',
+        'Twitter': server + 'plugins/Twitter/Twitter.js'
+      });
+      console.log(installedPlugins);
+    }
+    else
+    {
+      // hard code so that we pick up from localhost if dev'ing
+      installedPlugins = {
+        'Delicious': server + 'plugins/Delicious/Delicious.js',
+        'Trails': server + 'plugins/Trails/NewTrail.js',
+        'Comments': server + 'plugins/Comments/Comments.js',
+        'Twitter': server + 'plugins/Twitter/Twitter.js'
+      };
+    }
 
     // installedPlugins = {
     //   'Trails' : myFiles + 'plugins/Trails/NewTrail.js'
@@ -1592,7 +1621,6 @@ var ShiftSpace = new (function() {
     function SSAddRecentlyViewedShift(shiftId)
     {
       // store a reference to this
-      // TODO: only add these if the user is logged in
       if(ShiftSpace.User.isLoggedIn() && !SSIsNewShift(shiftId))
       {
         getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
@@ -1631,6 +1659,9 @@ var ShiftSpace = new (function() {
       var params = {
         href: window.location.href
       };
+      console.log('========================================== SSCheckForContent');
+      console.log(params);
+      console.log(server);
       serverCall('query', params, function(json) {
         //console.log('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
         if (!json.status) {
@@ -1805,7 +1836,6 @@ var ShiftSpace = new (function() {
           ShiftSpace.Console.addShifts(shifts);
           
           // check for autolaunched content, better for sandbox
-          // TODO: refactor
           if(ShiftSpace.User.isLoggedIn())
           {
             SSCheckForAutolaunch();
@@ -2512,7 +2542,7 @@ var ShiftSpace = new (function() {
           }
         },
         'onerror': function(response) {
-          console.error("Error: failed GM_xmlhttpRequest, " + response);
+          console.error("Error: failed loadFile call, for file " + url);
           if(errCallback && typeof errCallback == 'function') errCallback();
         }
       });
@@ -2537,6 +2567,7 @@ var ShiftSpace = new (function() {
       
       if(space)
       {
+        console.log('loading space: ' + space);
         if (typeof ShiftSpaceSandBoxMode != 'undefined') 
         {
           var url = installed[space] + '?' + new Date().getTime();
@@ -2544,17 +2575,16 @@ var ShiftSpace = new (function() {
             id: space
           });
 
+          console.log('Direct inject ' + space);
           if(callback) callback();
         }
         else 
         {
-          console.log('loading space: ' + space);
+          console.log('Load and eval ' + space);
           loadFile(installed[space], function(rx) {
             var err;
             //console.log(space + ' Space loaded, rx.responseText:' + rx.responseText);
             
-            // TODO: for Safari the following does not work, we need a function in Space
-            // that evals the actual space. - David
             try
             {
               if(window.webkit)
@@ -2586,9 +2616,9 @@ var ShiftSpace = new (function() {
       instance - A space object.
     */
     function SSRegisterSpace(instance) {
-      //console.log("SSRegisterSpace");
+      console.log("SSRegisterSpace");
       var spaceName = instance.attributes.name;
-      //console.log('Register Space ===================================== ' + spaceName);
+      console.log('Register Space ===================================== ' + spaceName);
       spaces[spaceName] = instance;
       instance.addEvent('onShiftUpdate', saveShift.bind(this));
 
@@ -2862,6 +2892,7 @@ var ShiftSpace = new (function() {
         },
         onerror: function(err) {
           console.log(err);
+          console.error('Error: could not request ' + url);
         }
       };
       
@@ -2942,6 +2973,7 @@ var ShiftSpace = new (function() {
       callback - A custom function to handle css text if you don't want to use GM_addStyle
       spaceCallback - A callback function for spaces that want to use GM_addStyle but need to be notified of CSS load.
     */
+    // TODO: the following is fragile because of safeCall and the fact that we don't support error callback, we need to move to the MooTools style named parameters with event handlers - David
     function loadStyle(url, callback, frame) {
       // TODO: check to see if the domain is different, if so don't mess with the url - David
       var dir = url.split('/');
@@ -3339,6 +3371,11 @@ var ShiftSpace = new (function() {
       this.getValue = getValue;
       this.plugins = plugins;
       unsafeWindow.ShiftSpace = this;
+      
+      // For Sandbox export classes
+      this.Space = ShiftSpace.Space;
+      this.Shift = ShiftSpace.Shift;
+      this.Plugin = ShiftSpace.Plugin;
 
       // for Action Menu debugging
       this.SSGetPageShifts = SSGetPageShifts;

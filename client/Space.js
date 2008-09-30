@@ -20,6 +20,8 @@ ShiftSpace.Space = new Class({
   */
   initialize: function( shiftClass ) 
   {
+    console.log('INITIALIZE: ' + this.attributes.name);
+
     this.shiftClass = shiftClass;
     
     // set the interface built flag
@@ -61,7 +63,15 @@ ShiftSpace.Space = new Class({
 
     if( valid )
     {
-      if(typeof SSRegisterSpace != 'undefined') SSRegisterSpace( this, this.attributes );
+      if(typeof SSRegisterSpace != 'undefined')
+      {
+        console.log('REGISTER >');
+        SSRegisterSpace( this, this.attributes );
+      }
+      else
+      {
+        console.log('SSRegisterSpace is NOT defined.');
+      }
     }
     else
     {
