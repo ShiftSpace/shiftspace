@@ -137,7 +137,7 @@ var Actions = new Class({
         args: this.selected[0],
         callback: null
       });
-    });
+    }.bind(this));
     
     // Privacy changes
     this.privateButton.addEvent('click', this.makePrivate.bind(this));

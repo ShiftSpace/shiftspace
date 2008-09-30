@@ -13,6 +13,10 @@ var Delicious = new Class({
   
   setup: function() {
     
+  },
+  
+  showDeliciousWindow: function(shift) {
+    alert('Delicious: ' + shift.id);
   }
   
 });

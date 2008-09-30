@@ -79,7 +79,7 @@ var ShiftSpace = new (function() {
     }
     
     // TODO: all calls to discover the server needs to abstracted by ShiftSpace.info().server
-    server = "http://localhost/shiftspace/";
+    //server = "http://localhost/shiftspace/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/api/";
