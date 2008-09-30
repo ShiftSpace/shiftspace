@@ -17,6 +17,7 @@ var Actions = new Class({
       '<div class="group">' +
         '<a title="Permalink for selected shift" id="SSLinkToShiftButton" href="#" class="first button link"></a>' +
         '<a title="Trail selected shift" id="SSTrailShiftButton" href="#" class="button trails"></a>' +
+        '<a title="Post to Delicious" id="SSDeliciousToShiftButton" href="#" class="button delicious"></a>' +
         '<br class="clear" />' +
       '</div>' +
       '<div class="group">' +

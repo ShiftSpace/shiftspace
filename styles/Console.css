@@ -552,11 +552,12 @@ input.submit:active {
   opacity: 0.3;
 }
 
-#actions .favorite { background-image: url(../images/Actions/unstarred.png); }
-#actions .link     { background-image: url(../images/Actions/link.png); }
-#actions .trails   { background-image: url(../images/Actions/trails.png); }
-#actions .edit     { background-image: url(../images/Actions/edit.png); }
-#actions .delete   { background-image: url(../images/Actions/delete.png); }
+#actions .favorite  { background-image: url(../images/Actions/unstarred.png); }
+#actions .link      { background-image: url(../images/Actions/link.png); }
+#actions .trails    { background-image: url(../images/Actions/trails.png); }
+#actions .delicious { background-image: url(../images/Actions/delicious.png); }
+#actions .edit      { background-image: url(../images/Actions/edit.png); }
+#actions .delete    { background-image: url(../images/Actions/delete.png); }
 
 #actions .dropdown {
   float: left;
