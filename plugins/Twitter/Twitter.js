@@ -21,6 +21,19 @@ var TwitterPlugin = ShiftSpace.Plugin.extend({
   onCssLoad: function()
   {
     this.buildInterface();
+    this.attachEvents();
+  },
+  
+  
+  attachEvents: function()
+  {
+    this.cancelAuthButton.addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      this.hideAuthenticationDialog();
+      this.exitModal();
+    }.bind(this));
+    
+    this.authButton.addEvent('click', this.submitAuthentication.bind(this));
   },
   
   
@@ -45,6 +58,36 @@ var TwitterPlugin = ShiftSpace.Plugin.extend({
   },
   
   
+  submitAuthentication: function()
+  {
+    var name = this.userInput.getProperty('value');
+    var pass = this.passwordInput.getProperty('value');
+    
+    console.log('submitAuthentication');
+    console.log(name);
+    console.log(pass);
+    
+    this.xmlHttpRequest({
+      url: 'http://twitter.com/statuses/friends_timeline.json',
+      method: 'GET',
+      headers:
+      {
+        "Authorization": "Basic " + btoa(name + ':' + pass)
+      },
+      onload: function(rx)
+      {
+        console.log('Authorized');
+        console.log(rx);
+      }.bind(this),
+      onerror: function(rx)
+      {
+        console.log('Oops');
+        console.log(rx);
+      }.bind(this)
+    });
+  },
+  
+  
   didAuthenticate: function()
   {
     console.log('didAuthenticate');
@@ -54,6 +97,12 @@ var TwitterPlugin = ShiftSpace.Plugin.extend({
   showAuthenticationdialog: function()
   {
     this.authenticateDialog.removeClass('SSDisplayNone');
+  },
+  
+  
+  hideAuthenticationDialog: function()
+  {
+    this.authenticateDialog.addClass('SSDisplayNone');
   },
 
   
@@ -97,6 +146,45 @@ var TwitterPlugin = ShiftSpace.Plugin.extend({
       id: "SSTwitterPluginAuthenticateDialog", 
       'class': "SSTwitterPluginDialog SSDisplayNone"
     });
+
+    this.userLabel = new ShiftSpace.Element('div', {
+      id: 'SSTwitterPluginAuthenticateUserLabel', 
+    });
+    this.userLabel.setText('User name:');
+
+    this.userInput = new ShiftSpace.Element('input', {
+      id: "SSTwitterPluginAuthenticateUserInput",
+      type: "text"
+    });
+
+    this.passwordLabel = new ShiftSpace.Element('div', {
+      id: "SSTwitterPluginAuthenticatePasswordLabel"
+    });
+    this.passwordLabel.setText('Password:');
+    
+    this.passwordInput = new ShiftSpace.Element('input', {
+      id: "SSTwitterPluginAuthenticatePasswordInput",
+      type: 'password'
+    });
+    
+    this.authButton = new ShiftSpace.Element('input', {
+      id: "SSTwitterPluginAuthenticateSubmitButton",
+      type: "button",
+      value: "Authenticate"
+    });
+    
+    this.cancelAuthButton = new ShiftSpace.Element('input', {
+      id: "SSTwitterPluginAuthenticateCancelButton",
+      type: "button",
+      value: "Cancel"
+    });
+    
+    this.userLabel.injectInside(this.authenticateDialog);
+    this.userInput.injectInside(this.authenticateDialog);
+    this.passwordLabel.injectInside(this.authenticateDialog);
+    this.passwordInput.injectInside(this.authenticateDialog);
+    this.authButton.injectInside(this.authenticateDialog);
+    this.cancelAuthButton.injectInside(this.authenticateDialog);
     
     this.authenticateDialog.injectInside(document.body);
   },
@@ -110,7 +198,7 @@ var TwitterPlugin = ShiftSpace.Plugin.extend({
     });
     
     this.tweetDialog.injectInside(document.body);
-  },
+  }
   
 });
 

@@ -274,8 +274,6 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     this.frame.contentWindow.document.body.innerHTML = json.html;
     $('com-count-span').setText(json.count);
     
-    
-    
     // attach events
     // can listen to window events?
     var self = this;

@@ -267,13 +267,13 @@ ShiftSpace.Plugin = new Class({
 
   enterModal: function()
   {
-    SSEnterModal();
+    SSEnterModal(this);
   },
   
   
   exitModal: function()
   {
-    SSExitModal();
+    SSExitModal(this);
   }
   
 });

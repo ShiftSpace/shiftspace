@@ -3118,18 +3118,29 @@ var ShiftSpace = new (function() {
     
     
     var __modalDiv__;
+    var __modalDelegate__;
     function SSCreateModalDiv()
     {
       __modalDiv__ = new ShiftSpace.Element('div', {
         id: "SSModalDiv"
       });
+      
+      __modalDiv__.addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+        // TODO: deal with modal delegates here - David
+      });
     }
     
     
-    function SSEnterModal()
+    function SSEnterModal(delegate)
     {
       // add the modal div to the dom
       __modalDiv__.injectInside(document.body);
+      
+      if(delegate)
+      {
+        __modalDelegate__ = delegate;
+      }
     }
     
     
@@ -3137,6 +3148,7 @@ var ShiftSpace = new (function() {
     {
       // remove the modal div from the dom
       __modalDiv__.remove();
+      __modalDelegate__ = null;
     }
     
     var __errorWindowShiftPropertyModel__;
