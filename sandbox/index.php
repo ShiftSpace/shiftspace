@@ -1,5 +1,9 @@
 <?php
 
+if (preg_match('/shifts\/([a-z0-9]+)/', $_SERVER['REQUEST_URI'], $matches)) {
+  $_GET['id'] = $matches[1];
+}
+
 if (!empty($_GET['id'])) {
   require_once 'simple_proxy.php';
   exit;
