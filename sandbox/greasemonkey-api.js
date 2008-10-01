@@ -51,17 +51,21 @@ function GM_registerMenuCommand() {
 }
 
 function GM_xmlhttpRequest(details) {
-  //console.log('GM_xmlhttpRequest');
+  var xdomain = false;
+  console.log('GM_xmlhttpRequest');
+  
   if (typeof details != 'object' ||
       !details.method ||
       !details.url) {
     return false;
   }
+  
   var options = {
     'url': details.url,
     'method': details.method,
     'headers': details.headers
   };
+  // pass on the requestMethod to the proxy so that it is sent the proper way
   
   if (details.onload) {
     options.onSuccess = function() {
@@ -85,11 +89,15 @@ function GM_xmlhttpRequest(details) {
     }
   }
   
-  if (location.hostname == details.url.match(/http:\/\/([^\/]+)/)[1]) {
+  // check that it's not cross domain
+  if (location.hostname == details.url.match(/http:\/\/([^\/]+)/)[1]) 
+  {
     var url = details.url;
-  } else {
-    var url = '../shiftspace.php?method=sandbox.proxy&url=' +
-              encodeURIComponent(details.url);
+  } 
+  else 
+  {
+    xdomain = true;
+    var url = '../shiftspace.php?method=sandbox.proxy&url=' + encodeURIComponent(details.url) + '&parameters=' + encodeURIComponent(Json.toString(details.data));
   }
   
   var xhr = new XHR(options, {
@@ -102,7 +110,9 @@ function GM_xmlhttpRequest(details) {
       //console.log(r);
     }
   });
-  xhr.send(url, details.data);
+  
+  // do something different for xdomain requests
+  (!xdomain) ? xhr.send(url, details.data) : xhr.send(url);
 }
 
 var unsafeWindow = window;
