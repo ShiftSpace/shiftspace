@@ -240,7 +240,7 @@ foreach ($shift_ids as $an_id)
     $legacyValue = ($legacy) ? 'true' : 'false';
 
     // check the database for the shift's space load
-    $ShiftSpace .= '<script type="text/javascript" src="../spaces/'.$spaceName.'/'.$spaceName.'.js" charset="utf-8"></script>';
+    $ShiftSpace .= '<script type="text/javascript" src="'.$base_url.'../spaces/'.$spaceName.'/'.$spaceName.'.js" charset="utf-8"></script>';
 
     // get the shift out of the database
     $ShiftSpace .= "<script type='text/javascript' charset='utf-8'>
@@ -266,7 +266,7 @@ $proxymessage = "<div id='SSProxyMessage' class='ShiftSpaceElement'>
 	<div id='SSProxyMessageLeft'>
 		<a href='http://www.shiftspace.org/' id='SSProxyMessageLogo' title='visit www.shiftspace.org'></a>
 		<a href='http://www.shiftspace.org/spaces/$spaceName/' id='SSProxyMessageSpace' title='more about this ShiftSpace feature'>
-			<img src='../spaces/$spaceName/$spaceName.png' alt='$spaceName icon'/>
+			<img src='$base_url../spaces/$spaceName/$spaceName.png' alt='$spaceName icon'/>
 		</a>
 		<div id='SSProxyMessagedescription'>
 			This is a representation of a page shifted <span class='SSProxyMessageDate'>$date</a> by ShiftSpace user, <b>$userName</b>, using the <b>$spaceName</b> feature
