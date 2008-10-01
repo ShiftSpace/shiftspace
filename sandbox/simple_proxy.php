@@ -109,8 +109,8 @@ $result = preg_replace("/onresize=\'.*?\'/i","",$result);
 $result = preg_replace("/onload=\'.*?\'/i","",$result);
 
 // load styles
-$ShiftSpace = '<link type="text/css" rel="stylesheet"" href="../styles/ShiftSpace.css"></link>';
-$ShiftSpace .= '<link type="text/css" rel="stylesheet"" href="../styles/SSProxyMessage.css"></link>';
+$ShiftSpace = "<link type=\"text/css\" rel=\"stylesheet\" href=\"$base_url../styles/ShiftSpace.css\" />\n";
+$ShiftSpace .= "<link type=\"text/css\" rel=\"stylesheet\" href=\"$base_url../styles/SSProxyMessage.css\" />";
 
 // Bootstrap
 $server = $_SERVER['HTTP_HOST'];
@@ -132,9 +132,9 @@ $ShiftSpace .= '<script type="text/javascript">
   var __server__ = "http://'.$server.'"+__ssdir__.slice(0, __ssdir__.length-1).join("/")+"/";
 </script>';
 
-$ShiftSpace .= '<script type="text/javascript" src="../client/Mootools.js"></script>';
-$ShiftSpace .= '<script type="text/javascript" src="SSProxyMessage.js"></script>';
-$ShiftSpace .= '<script type="text/javascript" src="greasemonkey-api.js"></script>';
+$ShiftSpace .= "<script type=\"text/javascript\" src=\"$base_url../client/Mootools.js\"></script>\n";
+$ShiftSpace .= "<script type=\"text/javascript\" src=\"{$base_url}SSProxyMessage.js\"></script>\n";
+$ShiftSpace .= "<script type=\"text/javascript\" src=\"{$base_url}greasemonkey-api.js\"></script>\n";
 
 $ShiftSpace .= '<script type="text/javascript">var ShiftSpace = {
   info: function()
@@ -146,12 +146,12 @@ $ShiftSpace .= '<script type="text/javascript">var ShiftSpace = {
   xmlhttpRequest: GM_xmlhttpRequest
 };</script>';
 
-$ShiftSpace .= '<script type="text/javascript" src="bootstrap.js"></script>';
-$ShiftSpace .= '<script type="text/javascript" src="../client/Pin.js"></script>';
-$ShiftSpace .= '<script type="text/javascript" src="../client/RangeCoder.js"></script>';
-$ShiftSpace .= '<script type="text/javascript" src="../client/Element.js"></script>';
-$ShiftSpace .= '<script type="text/javascript" src="../client/Space.js" charset="utf-8"></script>';
-$ShiftSpace .= '<script type="text/javascript" src="../client/Shift.js" charset="utf-8"></script>';
+$ShiftSpace .= "<script type=\"text/javascript\" src=\"{$base_url}bootstrap.js\"></script>\n";
+$ShiftSpace .= "<script type=\"text/javascript\" src=\"$base_url../client/Pin.js\"></script>\n";
+$ShiftSpace .= "<script type=\"text/javascript\" src=\"$base_url../client/RangeCoder.js\"></script>\n";
+$ShiftSpace .= "<script type=\"text/javascript\" src=\"$base_url../client/Element.js\"></script>\n";
+$ShiftSpace .= "<script type=\"text/javascript\" src=\"$base_url../client/Space.js\"></script>\n";
+$ShiftSpace .= "<script type=\"text/javascript\" src=\"$base_url../client/Shift.js\"></script>\n";
 
 // Build shift_ids array if it wasn't already parsed from id param
 if (!count($shift_ids) && !empty($_GET['all_shifts'])) {

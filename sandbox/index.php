@@ -1,7 +1,9 @@
 <?php
 
+$url_base = '';
 if (preg_match('/shifts\/([a-z0-9]+)/', $_SERVER['REQUEST_URI'], $matches)) {
   $_GET['id'] = $matches[1];
+  $url_base = '/api/sandbox/';
 }
 
 if (!empty($_GET['id'])) {
