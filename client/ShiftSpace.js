@@ -327,6 +327,9 @@ var ShiftSpace = new (function() {
       // See if there's anything on the current page
       SSCheckForContent();
       
+      // Create the modal div
+      SSCreateModalDiv();
+      
       SSLog('ShiftSpace initialize complete');
     };
     
@@ -3111,6 +3114,29 @@ var ShiftSpace = new (function() {
     function SSCanExitFullScreen()
     {
       return true;
+    }
+    
+    
+    var __modalDiv__;
+    function SSCreateModalDiv()
+    {
+      __modalDiv__ = new ShiftSpace.Element('div', {
+        id: "SSModalDiv"
+      });
+    }
+    
+    
+    function SSEnterModal()
+    {
+      // add the modal div to the dom
+      __modalDiv__.injectInside(document.body);
+    }
+    
+    
+    function SSExitModal()
+    {
+      // remove the modal div from the dom
+      __modalDiv__.remove();
     }
     
     var __errorWindowShiftPropertyModel__;

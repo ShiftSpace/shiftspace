@@ -264,6 +264,18 @@ ShiftSpace.Plugin = new Class({
     loadStyle.safeCall(['plugins', this.attributes.name, filename].join('/'), callback, frame);
   },
   
+
+  enterModal: function()
+  {
+    SSEnterModal();
+  },
+  
+  
+  exitModal: function()
+  {
+    SSExitModal();
+  }
+  
 });
 
 ShiftSpace.Plugin.implement(new Events);
