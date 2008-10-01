@@ -65,10 +65,11 @@ var ShiftSpace = new (function() {
     var SSLogMessage = 1;
     var SSLogError = 2;
     var SSLogWarning = 4;
-    var SSLogAll = SSLogError | SSLogWarning | SSLogMessage;
+    var SSLogPlugin = 8;
+    var SSLogAll = SSLogError | SSLogWarning | SSLogMessage | SSLogPlugin;
     var __ssloglevel__ = SSNoLogging;
     
-    SSSetLogLevel(SSLogMessage);
+    SSSetLogLevel(SSLogPlugin);
     
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
@@ -78,8 +79,8 @@ var ShiftSpace = new (function() {
       var server = getValue('server', 'http://www.shiftspace.org/dev/');
     }
     
-    // TODO: all calls to discover the server needs to abstracted by ShiftSpace.info().server
-    //server = "http://localhost/shiftspace/";
+    // FIXME: all calls to discover the server needs to abstracted by ShiftSpace.info().server - David
+    server = "http://localhost/~davidnolen/shiftspace-0.11-clean/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
     //var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/api/";
@@ -108,11 +109,10 @@ var ShiftSpace = new (function() {
       
       function execute()
       {
-        //SSLog('executing plugin ' + options.name + ' call ' + options.method);
-        //SSLog('plugin installed ' + plugins[options.name]);
+        SSLog('executing plugin ' + options.name + ' call ' + options.method, SSLogPlugin);
+        SSLog('plugin installed ' + plugins[options.name], SSLogPlugin);
         if(options.method)
         {
-          //SSLog();
           plugins[options.name][options.method].apply(plugins[options.name], args);
           if(options.callback && $type(options.callback) == 'function') options.callback();
         }
@@ -121,9 +121,10 @@ var ShiftSpace = new (function() {
       // load then call
       if(!plugins[options.name])
       {
-        //SSLog('Load plugin');
+        SSLog('Load plugin ' + options.name, SSLogPlugin);
         // Listen for the real load event
         SSAddEvent('onPluginLoad', function(plugin) {
+          SSLog(options.name + ' plugin loaded ', SSLogPlugin);
           if(plugin.attributes.name == options.name) execute();
         });
         // Loading the plugin
@@ -3425,6 +3426,9 @@ var ShiftSpace = new (function() {
       this.SSShowShift = showShift;
       this.SSUserOwnsShift = SSUserOwnsShift;
       this.SSSetShiftStatus = SSSetShiftStatus;
+      
+      // export SSLog
+      window.SSLog = SSLog;
     }
     
     return this;

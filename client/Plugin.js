@@ -56,6 +56,12 @@ ShiftSpace.Plugin = new Class({
     serverCall.safeCall('plugins.'+this.attributes.name+'.'+method, params, callback);
   },
   
+
+  xmlHttpRequest: function(request)
+  {
+    SSXmlHttpRequest.safeCall(request);
+  },
+  
   /*
     Function: setInterfaceIsBuilt (private)
       Set the internal flag tracking whether the interface has been constructed yet.
