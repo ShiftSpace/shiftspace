@@ -52,8 +52,7 @@ function GM_registerMenuCommand() {
 
 function GM_xmlhttpRequest(details) {
   var xdomain = false;
-  console.log('GM_xmlhttpRequest');
-  
+
   if (typeof details != 'object' ||
       !details.method ||
       !details.url) {

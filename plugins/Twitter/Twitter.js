@@ -15,6 +15,31 @@ var TwitterPlugin = ShiftSpace.Plugin.extend({
   setup: function()
   {
     console.log('Setting up Twitter plugin');
+    this.setAuthenticated(false);
+  },
+  
+  
+  setUsername: function(username)
+  {
+    this.__username__ = username;
+  },
+  
+  
+  username: function()
+  {
+    return this.__username__;
+  },
+  
+  
+  setPassword: function(pass)
+  {
+    this.__password__ = pass;
+  },
+  
+  
+  password: function()
+  {
+    return this.__password__;
   },
   
   
@@ -60,40 +85,86 @@ var TwitterPlugin = ShiftSpace.Plugin.extend({
   
   submitAuthentication: function()
   {
+    console.log('submitAuthentication');
     var name = this.userInput.getProperty('value');
     var pass = this.passwordInput.getProperty('value');
     
-    console.log('submitAuthentication');
-    console.log(name);
-    console.log(pass);
+    this.setUsername(name);
+    this.setPassword(pass);
     
-    this.xmlHttpRequest({
-      url: 'http://twitter.com/statuses/friends_timeline.json',
-      method: 'GET',
-      headers:
-      {
-        "Authorization": "Basic " + btoa(name + ':' + pass)
-      },
-      onload: function(rx)
-      {
-        console.log('Authorized');
-        console.log(rx);
-      }.bind(this),
-      onerror: function(rx)
-      {
-        console.log('Oops');
-        console.log(rx);
-      }.bind(this)
-    });
+    // run a test to make sure that this user authenticates
+    this.transact('verify_credentials', null, this.didAuthenticate.bind(this), this.authenticationFailed.bind(this));
+    //this.transact('public_timeline', null, this.didAuthenticate.bind(this), this.authenticationFailed.bind(this));
   },
   
   
   didAuthenticate: function()
   {
-    console.log('didAuthenticate');
+    this.setAuthenticated(true);
+    this.hideAuthenticationDialog();
+    this.exitModal();
+    alert("Authenticated!");
+  },
+  
+  
+  authenticationFailed: function()
+  {
+    this.hideAuthenticationDialog();
+    this.exitModal();
+    alert("Sorry, wrong user name anad password");
   },
 
   
+  tweetShift: function(shiftId)
+  {
+    this.transact('update', {
+      status: "Hello I just shifted " + shiftId
+    }, this.onTweet.bind(this));
+  },
+  
+  
+  onTweet: function()
+  {
+    console.log('Your shift was tweeted!');
+  },
+
+  
+  transact: function(method, parameters, callback, errcallback)
+  {
+    var params = parameters || {};
+    
+    var methodType = {
+      'verify_credentials': 'GET',
+      'public_timeline': 'GET',
+      'update': 'POST'
+    }[method] || 'GET';
+    
+    console.log(methodType);
+    console.log(params);
+    
+    this.xmlHttpRequest({
+      url: "http://www.twitter.com/statuses/"+method+".json",
+      method: methodType,
+      data: params,
+      headers:
+      {
+        "Authorization": "Basic " + btoa(this.username() + ':' + this.password())
+      },
+      onload: function(rx)
+      {
+        console.log(rx.responseText);
+        var json = Json.evaluate(rx.responseText);
+        if(callback && $type(callback) == 'function') callback(json);
+      }.bind(this),
+      onerror: function(rx)
+      {
+        SSLog('Twitter plugin transaction (' + url + ') failed.', SSLogError);
+        if(errcallback && $typepe(errcallback) == 'function') errcallback(rx);
+      }.bind(this)
+    });
+  },
+  
+
   showAuthenticationdialog: function()
   {
     this.authenticateDialog.removeClass('SSDisplayNone');
@@ -113,7 +184,7 @@ var TwitterPlugin = ShiftSpace.Plugin.extend({
     {
       if(this.isAuthenticated())
       {
-        
+        this.tweetShift(shiftId);
       }
       else
       {
