@@ -9,11 +9,30 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 
     renderIcon: function(that, target) {
 
-	var img = "http://www.newstrust.net/Images/newstrust.gif";
-	if (that.newsTrustIconLink)
-	    img = that.newsTrustIconLink;
+/*
+	// Box to hold icon
+	that.iconBox = new ShiftSpace.Element('div', {'class':'FisheyeIconBox'});
+	that.iconBox.setStyles({
+	    'width':  that.newsTrustIconLink ? '92px' : '16px',
+	    'height':  '16px',
+	});
+	that.iconBox.injectInside(target);
 
-	target.setHTML('<img src="' + img + '" />');
+	// NT icon or rating as stars
+	that.iconImageBox = new ShiftSpace.Element('div');
+*/
+	var img = "http://www.newstrust.net/Images/newstrust.gif";
+	//if (that.newsTrustIconLink)
+	    //img = that.newsTrustIconLink;
+	//that.iconImageBox.setHTML('<img src="' + img + '" />');
+	var percentStr = "";
+	if (that.newsTrustRating > 0) {
+	  var percent = that.newsTrustRating / .05;
+	  percent = percent.toFixed(0); // round off decimal points for print
+	  percentStr += percent + '%';
+	}
+	target.setHTML('<img src="' + img + '" />' + percentStr);
+	//that.iconImageBox.injectInside(that.iconBox);
 
 	// Get NT data if necessary
 	if (!that.haveQueriedNewsTrust) {
@@ -31,6 +50,7 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 	    return;
 	}
 
+/*
 	var someBox = new ShiftSpace.Element('div');
 	someBox.setStyles({
 	    'padding':  '10px 0px 10px 0px',
@@ -51,6 +71,7 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 	imgBox.injectInside(someBox);
 
 	someBox.injectInside(container);
+*/
     },
 
 
@@ -60,7 +81,8 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 
 	// XXX: i18n for plugins?
 	if (that.newsTrustResponseStatus == 200) {
-	    var sumHtml = "Newstrust users have rated this story on a 5.0 scale and given it a ";
+	    var sumHtml = "NewsTrust users have rated this story on a 5.0 scale and given it a ";
+		// TODO: review vs reviews
 	    sumHtml += "<b>" + that.newsTrustRating + "</b> avg. based on <b>";
 	    sumHtml += that.newsTrustNumReviews + "</b> reviews";
 	    summaryBox.setHTML(sumHtml);
@@ -104,8 +126,8 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 	var realThis = this;
 	that.log("queryNewsTrust");
 	  // XXX: hardcoded ID length is poor way to avoid querying before ID set
-	if (!that.criticismLink || that.criticismLink.length >= 12 || that.criticismLink.length < 5) {
-	    that.log("NewsTrust storyID '" + that.criticismLink + "' seems invalid");
+	if (!that.criticismLink || that.criticismLink.length <= 5) {
+	    that.log("NewsTrust storyID seems invalid");
 	    return;
 	}
 	var url = "http://www.newstrust.net/webx?14@@";
@@ -119,6 +141,7 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 		    realThis.parseNewsTrustStoryPage(this, response.responseText);
 	}.bind(that))
     },
+
 
     parseNewsTrustStoryPage: function(that, body) {
 
@@ -139,14 +162,29 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 	var strEnd = body.indexOf('</span>', strIdx);
 	that.newsTrustRateText = body.substr(strIdx+1, strEnd-strIdx-1);
 
-	// Parse out rating and number of reviews
+	// Parse out rating
 	// XXX: breaks if there is only 1 rating (different text)
-	strIdx = that.newsTrustRateText.indexOf(' avg');
-	that.newsTrustRating = that.newsTrustRateText.substr(0, strIdx);
-	var endIdx = that.newsTrustRateText.indexOf(' reviews');
+	strIdx = body.indexOf('Our Rating');
+	strIdx = body.indexOf('Quality', strIdx);
+	strIdx = body.indexOf('"numeric_rating">', strIdx);
+	that.newsTrustRating = body.substr(strIdx+17, 3);
+
+	// parse out number of reviews
+	strIdx = body.indexOf('Our Rating');
+	//strIdx = body.indexOf('Quality', strIdx);
+	var notenoughIdx = body.indexOf('not enough reviews', strIdx);
+	if (notenoughIdx != -1)
+		strIdx = notenoughIdx + 18;
+	var endIdx = body.indexOf(' review', strIdx);
+	strIdx = endIdx-1;
+	// Handle multi-digit numbers TODO: test on NT page with 10+ reviews
+	var ValidChars = "0123456789.";
+	while (strIdx > 0 && ValidChars.indexOf(body.charAt(strIdx-1)) != -1)
+	  strIdx--;
 	that.log("got endIdx '" + endIdx + "' (strIdx '" + strIdx + "')");
 	that.newsTrustNumReviews = 
-	    that.newsTrustRateText.substr(strIdx+11, endIdx-strIdx-11);
+	    body.substr(strIdx, endIdx-strIdx);
+	    //body.substr(strIdx, 12);
 
 	that.rebuild();
     },
