@@ -18,13 +18,23 @@ var QuoteShift = ShiftSpace.Shift.extend({
     var bod = document.getElement("body");
     $(bod).addEvents({
       "mouseover": function(e){
-        self.addOverEffect(e.target);
+        if(!ShiftSpace.isSSElement(e.target)){
+          self.addOverEffect(e.target);
+        }
       },
       "mouseout":function(e){
-        self.removeOverEffect(e.target);
+        if(!ShiftSpace.isSSElement(e.target)){
+          self.removeOverEffect(e.target);
+        }
       },
       "mousedown":function(e){
-        console.log(self.getClone(e.target));
+        //need to grab styles from children elements as well
+        if(!ShiftSpace.isSSElement(e.target) && !self.quotedElement){
+          self.quotedElement = self.getClone(e.target);
+        }else{
+          console.log(self.quotedElement);
+          self.quotedElement = null;
+        }
       }
     });
   },
@@ -39,7 +49,8 @@ var QuoteShift = ShiftSpace.Shift.extend({
     var styles = document.defaultView.getComputedStyle(elem,null);
     var clone = elem.clone();
     for(s in styles){
-        if(styles[s] != "" || styles[s] != null || s != 'outline' ){
+      this.allImages = $$('img').filter(function(anImage) { return !ShiftSpace.isSSElement(anImage);});
+        if(styles[s] != "" || styles[s] != null || s != 'outline'){
           try{
             clone.setStyle(s + "",styles[s] + "");
           }catch(TypeError){
