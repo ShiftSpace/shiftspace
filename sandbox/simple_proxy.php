@@ -70,9 +70,9 @@ if(!preg_match("/^http:\/\//",$myurl)){
   $myurl = "http://" . $myurl;
 }
 //test wether url ends with a / if not add one
-if(!preg_match("/[a-zA-Z]+\/$/",$myurl)){
+/*if(!preg_match("/[a-zA-Z]+\/$/",$myurl)){
   $myurl = $myurl . "/";
-}
+}*/
 // get the base url
 
 preg_match("/^(http:\/\/)?([^\/]+)/i",$myurl, $matches);
@@ -82,6 +82,10 @@ $baseurl = $matches[2];
 // part of url is trucated to allow path to be rewritten correctly
 preg_match('/.+\/(?=.+\/.+$)/',$myurl,$relativeUrlMatch);
 $relativeUrl = $relativeUrlMatch[0];
+
+//for relative links i.e. ./styles/style.css
+preg_match('/(.+\/)(.+$)?/',$myurl,$dotSlashMatch);
+$dotSlashMatch = $dotSlashMatch[1];
 
 // replace relative links with absolute links
 // if beings with src="/
@@ -94,6 +98,8 @@ $result = preg_replace("/src=\"(?!http|www)/i","src=\"$myurl",$result);
 $result = preg_replace("/href=\"\//i","href=\"http://$baseurl/" ,$result);
 // href="folder/file
 $result = preg_replace("/href=\"(?=[^http|\/|www|\.\.])/i","href=\"$myurl" ,$result);
+// href ="./
+$result = preg_replace("/href=\"\.\//","href=\"$dotSlashMatch",$result);
 // href="../
 $result = preg_replace("/href=\"\.\./i","href=\"$relativeUrl" ,$result);
 // css imports
