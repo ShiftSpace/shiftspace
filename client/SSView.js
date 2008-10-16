@@ -72,7 +72,7 @@ var SSView = new Class({
   */
   awake: function()
   {
-    console.log(this.getId() + " awake, outlets " + JSON.encode(this.outlets().getKeys()));
+    SSLog(this.getId() + " awake, outlets " + JSON.encode(this.outlets().getKeys()));
   },
 
 
@@ -112,7 +112,7 @@ var SSView = new Class({
   
   addOutletWithName: function(name, outlet)
   {
-    console.log('Setting name ' + name + ' for ' + outlet);
+    SSLog('Setting name ' + name + ' for ' + outlet, SSLogViews);
     this.outlets().set(name, outlet);
   },
 
@@ -230,7 +230,7 @@ var SSView = new Class({
   */
   controllerForNode: function(node)
   {
-    //console.log('controllerForNode ' + node);
+    //SSLog(('controllerForNode ' + node);
     // return the storage property
     return SSControllerForNode(node);
   },
@@ -312,7 +312,7 @@ var SSView = new Class({
 
   localizationChanged: function(newLocalization)
   {
-    console.log('localizationChanged');
+    SSLog('localizationChanged');
   }
 
 });

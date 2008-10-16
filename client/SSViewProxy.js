@@ -45,8 +45,8 @@ var SSViewProxy = new Class({
   deliverMessages: function()
   {
     var controller = SSControllerForNode(this.element);
-    console.log('deliverMessages ' + this.element);
-    console.log(controller);
+    SSLog('deliverMessages ' + this.element, SSLogViews);
+    SSLog(controller, SSLogViews);
     this.messages().each(function(message) {
       controller[message.name].apply(controller, message.arguments);
     });

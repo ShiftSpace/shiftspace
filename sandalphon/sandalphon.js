@@ -145,7 +145,7 @@ var SandalphonClass = new Class({
   {
     var context = ctxt || window;
     
-    console.log('>>>>>>>>>>>>>>>>>> activate');
+    SSLog('>>>>>>>>>>>>>>>>>> activate', SSLogSandalphon);
     
     // First generate the outlet bindings
     this.generateOutletBindings(context);
@@ -260,7 +260,7 @@ var SandalphonClass = new Class({
       SSControllerForNode(target).addOutletWithName(sourceName, source);
     }.bind(this));
     
-    console.log(this.outletBindings);
+    SSLog(this.outletBindings, SSLogSandalphon);
   },
   
   
@@ -314,7 +314,7 @@ var SandalphonToolClass = new Class({
 
    initialize: function(storage)
    { 
-     console.log('Sandalphon, sister of Metatron, starting up.');
+     SSLog('Sandalphon, sister of Metatron, starting up.', SSLogSandalphon);
      // setup the persistent storage
      this.setStorage(storage);
      // initialize the classpath
@@ -328,17 +328,17 @@ var SandalphonToolClass = new Class({
 
    loadLocalizedStrings: function(lang)
    {
-     console.log('load localized strings ' + lang);
+     SSLog('load localized strings ' + lang, SSLogSandalphon);
      new Request({
        url: "../client/LocalizedStrings/"+lang+".js",
        method: "get",
        onComplete: function(responseText, responseXML)
        {
-         console.log(lang + " - " + ShiftSpace.lang);
+         SSLog(lang + " - " + ShiftSpace.lang, SSLogSandalphon);
          if(lang != ShiftSpace.lang)
          {
            ShiftSpace.localizedStrings = JSON.decode(responseText);
-           console.log(ShiftSpace.localizedStrings);
+           SSLog(ShiftSpace.localizedStrings, SSLogSandalphon);
 
            // update objects
            ShiftSpace.Objects.each(function(object, objectId) {
@@ -378,7 +378,7 @@ var SandalphonToolClass = new Class({
    */
    initInterface: function()
    {
-     console.log('Initializing interface');
+     SSLog('Initializing interface', SSLogSandalphon);
 
      this.storage().get('lastInterfaceFile', function(ok, value) {
        if(ok && value) $('loadFileInput').setProperty('value', value);
@@ -404,7 +404,7 @@ var SandalphonToolClass = new Class({
          if(!value)
          {
          */
-           console.log('Initializing class paths.');
+           SSLog('Initializing class paths.', SSLogSandalphon);
            this.storage().set('UIClassPaths', JSON.encode(ShiftSpace.UIClassPaths));
            this.storage().set('ClassPaths', JSON.encode(ShiftSpace.ClassPaths));
          /*}
@@ -444,7 +444,7 @@ var SandalphonToolClass = new Class({
        new Asset.javascript(path+'.js');
      }
 
-     console.log('Class files loaded.');
+     SSLog('Class files loaded.', SSLogSandalphon);
    },
    
    /*
@@ -456,7 +456,7 @@ var SandalphonToolClass = new Class({
    */
    loadTest: function(path)
    {
-     console.log('Loading test file');
+     SSLog('Loading test file', SSLogSandalphon);
      // save for later
      this.storage().set('lastTestFile', path);
 
@@ -468,14 +468,14 @@ var SandalphonToolClass = new Class({
        {
          try
          {
-           console.log('Evaluating test');
+           SSLog('Evaluating test', SSLogSandalphon);
            eval(responseText);         
-           console.log('Running test');   
+           SSLog('Running test', SSLogSandalphon);   
            this.runTest()  
          }
          catch(exc)
          {
-           console.log(exc);
+           SSLog(exc, SSLogError);
          }
        }.bind(this),
        onFailure: function()

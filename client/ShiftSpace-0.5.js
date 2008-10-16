@@ -66,8 +66,12 @@ var ShiftSpace = new (function() {
     var SSLogPlugin = 1 << 3;
     var SSLogServerCall = 1 << 4;
     var SSLogSpaceError = 1 << 5;
-    var SSLogShiftError = 1 << 6;
-    var SSLogAll = SSLogError | SSLogWarning | SSLogMessage | SSLogPlugin | SSLogServerCall;
+    var SSLogShift = 1 << 6;
+    var SSLogSpace = 1 << 7;
+    var SSLogViews = 1 << 8;
+    var SSLogSandalphon = 1 << 9;
+    
+    var SSLogAll = SSLogError | SSLogWarning | SSLogMessage | SSLogPlugin | SSLogServerCall | SSLogSpaceError | SSLogShift | SSLogSpace | SSLogViews | SSLogSandalphon;
     var __ssloglevel__ = SSNoLogging;
     
     SSSetLogLevel(SSLogPlugin | SSLogServerCall);
@@ -1484,12 +1488,16 @@ var ShiftSpace = new (function() {
         url - (Optional) The URL of the file to remove. If not specified, all
               files in the cache will be deleted.
     */
-    function SSClearCache(url) {
-      if (typeof url == 'string') {
+    function SSClearCache(url) 
+    {
+      if (typeof url == 'string') 
+      {
         // Clear a specific file from the cache
         log('Clearing ' + url + ' from cache');
         setValue('cache.' + url, 0);
-      } else {
+      } 
+      else 
+      {
         // Clear all the files from the cache
         cache.each(function(url) {
           log('Clearing ' + url + ' from cache');
@@ -1506,15 +1514,18 @@ var ShiftSpace = new (function() {
     Parameters:
       space - The name of the Space the Shift belongs to.
     */
-    function SSInitShift(spaceName, options) {
+    function SSInitShift(spaceName, options) 
+    {
       SSLog('spaceName: ' + spaceName);
-      if (!installed[spaceName]) {
+      if (!installed[spaceName]) 
+      {
         SSLog('Space ' + spaceName + ' does not exist.', SSLogError);
         return;
       }
 
       var tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
-      while (shifts[tempId]) {
+      while (shifts[tempId]) 
+      {
         tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
       }
 
@@ -2823,9 +2834,9 @@ var ShiftSpace = new (function() {
       instance - A space object.
     */
     function SSRegisterSpace(instance) {
-      //SSLog("SSRegisterSpace");
+      SSLog("SSRegisterSpace");
       var spaceName = instance.attributes.name;
-      //SSLog('Register Space ===================================== ' + spaceName);
+      SSLog('Register Space ===================================== ' + spaceName);
       spaces[spaceName] = instance;
       instance.addEvent('onShiftUpdate', saveShift.bind(this));
 
