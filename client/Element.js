@@ -6,11 +6,10 @@
     operations don't break.
 */
 ShiftSpace.Element = new Class({
-  
   /*
     Function: initialize (private)
       Initialize the element and if necessary add appropiate event handlers.
-    
+
     Parameters:
       _el - a raw DOM node or a string representing a HTML tag type.
       props - the same list of options that would be passed to the MooTools Element class.
@@ -18,17 +17,17 @@ ShiftSpace.Element = new Class({
     Returns:
       An ShiftSpace initialized and MooTools wrapped DOM node.
   */
-  initialize: function(_el, props) 
+  initialize: function(_el, props)
   {
-    var el = new Element(_el, props);
-    
+    var el = (_el == 'iframe') ? new IFrame(props) : new Element(_el, props);
+
     // ShiftSpaceElement style needs to be first, otherwise it overrides passed in CSS classes - David
     el.setProperty( 'class', 'ShiftSpaceElement ' + el.getProperty('class') );
-    
+
     // remap makeResizable and makeDraggable - might want to look into this more
     var resizeFunc = el.makeResizable;
     var dragFunc = el.makeDraggable;
-    
+
     // override the default behavior
     if(SSAddIframeCovers)
     {
@@ -49,10 +48,10 @@ ShiftSpace.Element = new Class({
         });
         dragObj.addEvent('onDrag', SSUpdateIframeCovers);
         dragObj.addEvent('onComplete', SSRemoveIframeCovers);
-      
+
         return dragObj;
-      }
-    
+      };
+
       // override the default behavior
       el.makeResizable = function(options)
       {
@@ -65,13 +64,13 @@ ShiftSpace.Element = new Class({
         {
           resizeObj = (resizeFunc.bind(el, options))();
         }
-        
+
         resizeObj.addEvent('onStart', SSAddIframeCovers);
         resizeObj.addEvent('onDrag', SSUpdateIframeCovers);
         resizeObj.addEvent('onComplete', SSRemoveIframeCovers);
-      
+
         return resizeObj;
-      }
+      };
     }
 
     return el;
@@ -85,15 +84,17 @@ ShiftSpace.Element = new Class({
     MooTools into the Iframe.  Inherits from <ShiftSpace.Element>.  You shouldn't instantiate
     this class directly, just use <ShiftSpace.Element>.
 */
-ShiftSpace.Iframe = ShiftSpace.Element.extend({
-  
+ShiftSpace.Iframe = new Class({
+
+  Extends: ShiftSpace.Element,
+
   /*
     Function: initialize (private)
       Initializes the iframe.
-      
+
     Parameters:
       props - the same properties that would be passed to a MooTools element.
-      
+
     Returns:
       A ShiftSpace initialized and MooTools wrapped Iframe.
   */
@@ -101,18 +102,18 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
   {
     // check for the css property
     this.css = props.css;
-    
+
     // check for cover property to see if we need to add a cover to catch events
     var loadCallBack = props.onload;
     delete props.onload;
-    
+
     // eliminate the styles, add on load event
     var finalprops = $merge(props, {
-      events: 
+      events:
       {
         load : function(_cb) {
           // load the css
-          if(this.css) 
+          if(this.css)
           {
             loadStyle(this.css, null, this.frame);
           }
@@ -120,10 +121,10 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
         }.bind(this, loadCallBack)
       }
     });
-    
+
     // store a ref for tricking
     this.frame = this.parent('iframe', finalprops);
-    
+
     var addCover = true;
     if($type(props.addCover) != 'undefined' && props.addCover == false) addCover = false;
 
@@ -136,13 +137,14 @@ ShiftSpace.Iframe = ShiftSpace.Element.extend({
     {
       SSLog('=========================== No cover to add!');
     }
-    
+
     // return
     return this.frame;
   }
 });
 
-ShiftSpace.Input = ShiftSpace.Element.extend({
+ShiftSpace.Input = new Class({
+  Extends: ShiftSpace.Element
   // Create an iframe
   // Apply the styles
   // Create the requested input field

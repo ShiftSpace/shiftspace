@@ -2,7 +2,7 @@ import os
 import sys
 import re
 import xml.etree.ElementTree as ElementTree
-from elementtidy import TidyHTMLTreeBuilder
+from elementtidy import TidyHTMLTreeBuilder # You need to install this package from here http://effbot.org/downloads/ - David
 
 class ViewParser:
     def __init__(self, element):
@@ -253,6 +253,3 @@ if __name__ == "__main__":
     print ("sandalphon.py compiling " + sys.argv[1])
     compiler = SandalphonCompiler()
     compiler.compile(sys.argv[1])
-
-# test
-# 

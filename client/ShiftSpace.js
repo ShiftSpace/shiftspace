@@ -3474,7 +3474,7 @@ var ShiftSpace = new (function() {
     return this;
 })();
 
-// NOTE: For Safari to keep SS extensions out of private scope - David
+// NOTE: For Safari & Firefox 3.1 to keep SS extensions out of private scope - David
 ShiftSpace.__externals__ = {
   evaluate: function(external, object)
   {
@@ -3495,6 +3495,7 @@ function SSDescribeException(_exception)
   }
   return "Exception:{ " + temp.join(', ') +" }";
 }
+
 
 if(self == top) 
 {

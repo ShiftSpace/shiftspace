@@ -6,11 +6,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Sandalphon</title>
     
-    <!-- Load mootools script files -->
-    <script src="../mootools/mootools-1.2-core.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../mootools/mootools-1.2-more.js" type="text/javascript" charset="utf-8"></script>
-
-    <!-- boot strap -->
+    <!-- Globals -->
     <script type="text/javascript" charset="utf-8">
       var server = "http://localhost/~davidnolen/shiftspace-0.11/";
       var SandalphonToolMode = true;
@@ -82,12 +78,68 @@
           }
         }));
       }
+    </script>
+    
+    <!-- Load mootools script files -->
+    <script src="../mootools/mootools-1.2-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mootools/mootools-1.2-more.js" type="text/javascript" charset="utf-8"></script>
+    
+    <!-- boot strap -->
+    <script src="../sandbox/greasemonkey-api-0.5.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../sandbox/bootstrap.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
       
       // Localized String Support
       function SSLocalizedString(string)
       {
         if(ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
         return string;
+      }
+      
+      var __sslang__;
+      function SSLoadLocalizedStrings(lang, ctxt)
+      {
+        var context = ctxt || window;
+        //console.log('load localized strings ' + lang);
+        loadFile("client/LocalizedStrings/"+lang+".js", function(rx) {
+          //console.log(')))))))))))))))))))))))))))))))))))))))))))');
+          //console.log(lang + " - " + __sslang__);
+          if(lang != __sslang__)
+          {
+            ShiftSpace.localizedStrings = JSON.decode(rx.responseText);
+            //console.log(ShiftSpace.localizedStrings);
+
+            // update objects
+            ShiftSpace.Objects.each(function(object, objectId) {
+              if(object.localizationChanged) object.localizationChanged();
+            });
+
+            // in case we get a raw context from FF3
+            if(!context.$$)
+            {
+              context = new Window(context);
+            }
+
+            // update markup
+            //console.log('fix localized');
+            context.$$(".SSLocalized").each(function(node) {
+
+              var originalText = node.getProperty('title');
+
+              if(node.get('tag') == 'input' && node.getProperty('type') == 'button')
+              {
+                node.setProperty('value', SSLocalizedString(originalText));
+              }
+              else
+              {
+                node.set('text', SSLocalizedString(originalText));
+              }
+
+            }.bind(this));
+          }
+
+          __sslang__ = lang;
+        });
       }
       
       var __controlledNodes__ = $H();

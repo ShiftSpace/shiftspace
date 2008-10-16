@@ -15,7 +15,7 @@ else if (!empty($_REQUEST['id']))
   {
     // Only want one shift
     $shift_clause = "AND s.url_slug = '$id'";
-  } 
+  }
   else 
   {
     // Want multiple shifts

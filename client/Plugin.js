@@ -18,7 +18,7 @@ ShiftSpace.Plugin = new Class({
   */
   initialize: function(json)
   {
-    if(ShiftSpace.Plugin.types.hasKey(this.pluginType))
+    if(ShiftSpace.Plugin.types.has(this.pluginType))
     {
       switch(this.pluginType)
       {
@@ -97,6 +97,12 @@ ShiftSpace.Plugin = new Class({
       Show the plugin interface.
   */
   showInterface: function() {},
+  
+  /*
+    Function: hideInterface (private)
+      To be implemented by subclasses.
+  */
+  hideInterface: function() {},
   
   /*
     Function: buildInterface (abstract)
@@ -278,10 +284,10 @@ ShiftSpace.Plugin = new Class({
   
 });
 
-ShiftSpace.Plugin.implement(new Events);
-
-ShiftSpace.Plugin.types = new Hash(
+ShiftSpace.Plugin.types = $H(
 {
   kMenuTypePlugin: "kMenuTypePlugin",
   kInterfaceTypePlugin: "kInterfaceTypePlugin"
 });
+
+ShiftSpace.Plugin.implement(new Events);

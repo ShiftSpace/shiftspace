@@ -24,20 +24,31 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>ShiftSpace Sandbox</title>
     <link rel="stylesheet" href="style.css" type="text/css" />
+
     <script type="text/javascript" charset="utf-8">
       var server = "<?php echo $server; ?>";
       var _server_ = "<?php echo $server; ?>";
       var ShiftSpaceSandBoxMode = true;
     </script>
-    <script src="../client/Mootools.js" type="text/javascript"></script>
+    
+    <script src="../mootools/mootools-1.2-core.js" type="text/javascript"></script>
+    <script src="../mootools/mootools-1.2-more.js" type="text/javascript"></script>
+    <script src="greasemonkey-api-0.5.js" type="text/javascript"></script>
+
+    <!--
+    <script src="../client/Mootools.js" type="text/javascript" charset="utf-8"></script>
+    <script src="greasemonkey-api.js" type="text/javascript" charset="utf-8"></script>
+    -->
+
     <script src="../client/Videobox.js" type="text/javascript"></script>
-    <script src="greasemonkey-api.js" type="text/javascript"></script>
-    <script src="../shiftspace.php?method=shiftspace.user.js&sandbox=1&nocache=<?php echo time();?>" type="text/javascript" charset="utf-8"></script>
+    <script src="../shiftspace.php?method=shiftspace.user.js&version=0.5&sandbox=1&nocache=<?php echo time();?>" type="text/javascript" charset="utf-8"></script>
+    
     <!--<script src="../client/Actions.js" type="text/javascript"></script>-->
     <style type="text/css">
     .first{
       margin-top:100px;
     }
+    
     </style>
   </head>
   <body>

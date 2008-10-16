@@ -11,12 +11,12 @@ ShiftSpace.Shift = new Class({
   getDefaults: function()
   {
     return {};
-  }, 
-  
+  },
+
   /*
     Function : initialize (private)
       Takes a json object and creates the shift.
-      
+
     Parameter :
       _json - The JSON object that contains the properties the shift will have.
   */
@@ -24,7 +24,7 @@ ShiftSpace.Shift = new Class({
   {
     SSLog('====================================================== STARTING UP');
     this.setOptions(this.getDefaults(), _json);
-    
+
     // private id var
     var id = _json.id;
     // private parent shift var
@@ -32,9 +32,9 @@ ShiftSpace.Shift = new Class({
 
     // rename options to json
     this.defaults = this.options;
-    
+
     // the above probably should privatized against people accidentally using the options property
-    
+
     // These two functions prevent spoofing an id
     // The id can be set only at shift instantiation
     // and Shiftspace checks if id number is available
@@ -42,26 +42,26 @@ ShiftSpace.Shift = new Class({
     // isn't it use, the json object must be equal to the
     // one in Shiftspace.
     // perhaps ID block should be part of a user session?
-    
+
     /* ------------------- Private Getters/Setters ------------------- */
     this.setId = function( aId ) {
       if( id == null || id.substr(0, 8) == 'newShift')
       {
         id = aId;
       }
-    }
-    
+    };
+
     /*
       Function: getId
         Return the private id variable.
-        
+
       Returns:
         the id (string).
     */
     this.getId = function() {
       return id;
-    }
-    
+    };
+
     /*
       Function: setParentSpace (private)
         Sets the private parent space var.  You should not call this directly.
@@ -71,8 +71,8 @@ ShiftSpace.Shift = new Class({
       {
         parentSpace = _parentSpace;
       }
-    }
-    
+    };
+
     /*
       Function: getParentSpace
         Returns the parent space instance. Useful when a shift needs to communicate the space object, which
@@ -80,9 +80,9 @@ ShiftSpace.Shift = new Class({
     */
     this.getParentSpace = function() {
       return parentSpace;
-    }
+    };
     /* ------------------- End Private Getters/Setters ----------------- */
-    
+
     // set the id & parent space
     if( _json.id )
     {
@@ -92,33 +92,33 @@ ShiftSpace.Shift = new Class({
     {
       this.setParentSpace( this.options.parentSpace );
     }
-    
+
     this.setTitle(_json.summary || '');
-    
+
     SSLog('======================================== CALLING SETUP ' + this.getParentSpace().attributes.name);
-    
+
     // call setup
     this.setup(_json);
-    
+
     // TODO: should pin if it's possible to pin - David
 
     return this;
   },
-  
+
   /*
     Function: setup (abstract)
       To implemented by the subclass.  All initialization of your Shift instance should happen here.
-      
+
     Parameters:
       json - an Object whose properties should be loaded by the instance.  This object contains a "location" property which is the mouse location.
-      
+
     Example:
       (start code)
       setup: function(json)
       {
         this.build();
         this.attachEvents();
-        
+
         var mainView = this.getMainView();
         if(json.position)
         {
@@ -127,7 +127,7 @@ ShiftSpace.Shift = new Class({
             top: json.position.y
           });
         }
-        
+
         if(json.title)
         {
           this.setTitle(json.title);
@@ -138,11 +138,11 @@ ShiftSpace.Shift = new Class({
   setup: function(json)
   {
   },
-  
+
   /*
     Function: isNewShift
       Returns whether this shift is newly created or not.
-      
+
     Returns:
       A boolean.
   */
@@ -150,7 +150,7 @@ ShiftSpace.Shift = new Class({
   {
     return SSIsNewShift(this.getId());
   },
-  
+
   /*
     Function: setFocusRegions
       Takes a variable list of DOM element that will trigger this
@@ -168,7 +168,7 @@ ShiftSpace.Shift = new Class({
       }.bind(this));
     }
   },
-  
+
   /*
     Function: edit
       The shift should present it's editing interface.  Puts the shift into editing mode.  Be sure to call this.parent()
@@ -190,12 +190,12 @@ ShiftSpace.Shift = new Class({
     this.getParentSpace().updateShift( this );
     this.fireEvent('onShiftSave', this.getId());
   },
-  
+
   markDirty: function()
   {
     this.dirty = true;
   },
-  
+
   /*
     Function: refresh (abstact)
       You should always provide some kind of refresh function
@@ -203,16 +203,16 @@ ShiftSpace.Shift = new Class({
       window size changes, showing, hiding, etc.
   */
   refresh : function() {},
-  
+
   /*
     Function: encode (abstract)
       To be implemented by the subclass. This method should return an object whose the properties
       accurately represent the state of this shift.  When shift is instantiated this same object
       will be passed to the new instance so that you may restore the state of the shift.
-      
+
     Returns:
       A object whose properties represent the current state of the shift instance.
-      
+
     Example:
       (start code)
       encode: function()
@@ -228,11 +228,11 @@ ShiftSpace.Shift = new Class({
   {
     return {};
   },
-  
+
   /*
     Function : canShow
       A function which determines whether the shift can be shown.
-      
+
     Returns :
       A boolean.
   */
@@ -240,11 +240,11 @@ ShiftSpace.Shift = new Class({
   {
     return true;
   },
-  
+
   /*
     Function : canHide
       A function which determines whether the shift can be hidden.
-      
+
     Returns :
       A boolean.
   */
@@ -252,7 +252,7 @@ ShiftSpace.Shift = new Class({
   {
     return true;
   },
-  
+
   /*
     Function : destroy
       Destroys the shift.  This will remove the shift's main view from the DOM as well as erase
@@ -270,7 +270,7 @@ ShiftSpace.Shift = new Class({
 
   _show: function()
   {
-    
+
   },
 
   /*
@@ -281,21 +281,21 @@ ShiftSpace.Shift = new Class({
   {
     this.setIsVisible(true);
     var mainView = this.getMainView();
-    
+
     if( mainView )
     {
       mainView.removeClass('SSDisplayNone');
     }
-    
+
     this.refresh();
     this.fireEvent('onShiftShow', this.getId());
   },
-  
+
   _hide : function()
   {
-    
+
   },
-  
+
   /*
     Function : hide
       Hide the shift.  If you want to add custom behavior by overriding this method be sure to call this.parent() as the first line in your new method.
@@ -309,15 +309,15 @@ ShiftSpace.Shift = new Class({
     {
       mainView.addClass('SSDisplayNone');
     }
-    
+
     this.fireEvent('onShiftHide', this.getId());
   },
-  
+
   /*
     Function : manageElement
       Sets the main view of the shift.  This lets ShiftSpace now what the main display
       element of your Shift is.  This is required for proper display ordering.
-      
+
     Parameters:
       el - A ShiftSpace.Element
   */
@@ -335,7 +335,7 @@ ShiftSpace.Shift = new Class({
       console.error('Error: Attempt to set mainView to null.');
     }
   },
-  
+
   /*
     Function : focus
       Tell ShiftSpace we want to focus this shift.
@@ -343,13 +343,13 @@ ShiftSpace.Shift = new Class({
   focus : function() {
     this.fireEvent('onShiftFocus', this.getId() );
   },
-  
+
   /*
     Function: onFocus
       Do any updating of the shift's interface for focus events here.
   */
   onFocus: function() {},
-  
+
   /*
     Function: unfocus
       Tell ShiftSpace we want to blur this shift.
@@ -358,17 +358,17 @@ ShiftSpace.Shift = new Class({
     this.setIsBeingEdited(false);
     this.fireEvent('onShiftBlur', this.getId() );
   },
-  
+
   /*
     Function: onBlur
       Do any updating of the shift's interface here.
   */
   onBlur: function() {},
-  
+
   /*
     Function: getMainView
       Returns the main view of the shift.  Without this ShiftSpace cannot order the shift.
-      
+
     Returns:
       <ShiftSpace.Element>
   */
@@ -376,11 +376,11 @@ ShiftSpace.Shift = new Class({
   {
     return this.mainView;
   },
-  
+
   /*
     Function: mainViewIsVisible
       Returns whether the main view of the shift is visible or not.
-      
+
     Returns:
       boolean
   */
@@ -389,11 +389,11 @@ ShiftSpace.Shift = new Class({
     // TODO: change for 1.2 - David
     return ( this.mainView.getStyle('display') != 'none' );
   },
-  
+
   /*
     Function: setIsVisible (private)
      Set the internal private flag tracking whether this shift is visible or not.  You should not call this directly.
-     
+
     Parameters:
       val - a boolean.
   */
@@ -401,11 +401,11 @@ ShiftSpace.Shift = new Class({
   {
     this.__isVisible__ = val;
   },
-  
+
   /*
     Function: isVisible
       Returns whether this shift is visible or not.
-      
+
     Returns:
       A boolean.
   */
@@ -413,11 +413,11 @@ ShiftSpace.Shift = new Class({
   {
     return  this.__isVisible__;
   },
-  
+
   /*
     Function: setIsBeingEdited (private)
       Sets the internal flag that tracks whether the shift is currently being edited or not.
-      
+
     Parameters:
       val - a boolean.
   */
@@ -425,11 +425,11 @@ ShiftSpace.Shift = new Class({
   {
     this.__isBeingEdited__ = val;
   },
-  
+
   /*
     Function: isBeingEdited
       Returns whether this shift is currently being edited or not.
-      
+
     Returns:
       A boolean.
   */
@@ -437,12 +437,12 @@ ShiftSpace.Shift = new Class({
   {
     return this.__isBeingEdited__;
   },
-  
+
   getRegion : function()
   {
     var pos = this.getMainView().getPos();
     var size = this.getMainView().getSize().size;
-    
+
     return {
       left : pos.x,
       right : pos.x + size.x,
@@ -450,19 +450,19 @@ ShiftSpace.Shift = new Class({
       bottom : pos.y + size.y
     };
   },
-  
+
   /*
     Function: pin
       Pins an element of the shift to a node on the page.
-    
+
     Parameters:
       element - the Element to be pinned.
       pinRef - A pinRef JSON object created by <Pin>
-      
+
     See Also:
       <Pin>,
       <PinWidget>
-      
+
     Example:
       (start code)
       this.pin($('cssId), ShiftSpace.Pin.toRef($('someOtherCSSId')));
@@ -487,14 +487,14 @@ ShiftSpace.Shift = new Class({
           this.setPinTargetStyles(targetStyles);
           element.setStyles(targetStyles);
         break;
-        
+
         case 'relative':
         break;
-        
+
         default:
         break;
       }
-    
+
       // store the size before pinning
       this.setPinElementDimensions(element.getSize().size);
 
@@ -504,10 +504,10 @@ ShiftSpace.Shift = new Class({
         // clears everything
         this.unpin();
       }
-    
+
       this.setPinTarget(pinTarget);
       this.setPinElement(element);
-    
+
       // call ShiftSpace Pin API to pin this element
       pinRef.shift = this;
       SSPinElement(element, pinRef);
@@ -516,15 +516,15 @@ ShiftSpace.Shift = new Class({
     {
       // Should throw an Exception ? - David
     }
-    
+
     // fire a pin event
     this.fireEvent('pin', this);
   },
-  
+
   /*
     Function: unPin
       Unpins an element of this shift from a element on the page.
-      
+
     See Also:
       <Pin>,
       <PinWidget>
@@ -535,19 +535,19 @@ ShiftSpace.Shift = new Class({
     if(this.getPinElement())
     {
       SSUnpinElement(this.getPinRef());
-      
+
       // clear out these vars
       this.setPinTarget(null);
       this.setPinElement(null);
     }
-    
+
     this.fireEvent('unpin', this);
   },
-  
+
   /*
     Function: setPinElement (private)
       Set the element of the shift that will actually be pinned.
-      
+
     Parameters:
       newEl - The element of the shift that will be pinned.
   */
@@ -555,12 +555,12 @@ ShiftSpace.Shift = new Class({
   {
     this.pinElement = newEl;
   },
-  
+
   /*
     Function: getPinElement (private)
       Returns the current element that is pinned.  This will return
       null if the shift is not currently pinned.
-      
+
     Returns:
       A DOM node.
   */
@@ -568,38 +568,38 @@ ShiftSpace.Shift = new Class({
   {
     return this.pinElement;
   },
-  
+
   /*
     Function: setPinRef
       Set the current pinRef object. This is normally called automatically
       you should rarely if ever call this directly.
-      
+
     Parameters:
       pinRef - Set the current pinRef object.
   */
   setPinRef : function(pinRef)
   {
-    this.pinRef = pinRef
+    this.pinRef = pinRef;
   },
-  
+
   /*
     Function: getPinRef
       Returns the set pinRef object (created by <Pin>) if this shift has one.
   */
   getPinRef : function()
   {
-    return this.pinRef
+    return this.pinRef;
   },
-  
+
   /*
     Function: getEncodablePinRef
       This returns a version of the pin reference object that is encodable.  This is necessary
       because we store dom node references in the pin reference and these should not
       get encoded on Shift save. Used to remove circular references that will break Json.toString().
-      
+
     Returns:
       And encodable Object representation of the pin reference object.
-      
+
     Example:
       (start code)
       encode: function()
@@ -617,7 +617,7 @@ ShiftSpace.Shift = new Class({
   {
     var pinRef = this.getPinRef();
     var temp = {};
-    
+
     // don't attempt to encode element, targetElement, or wrapper properties
     for(var key in pinRef)
     {
@@ -625,22 +625,22 @@ ShiftSpace.Shift = new Class({
       {
         temp[key] = pinRef[key];
       }
-      
+
       if(key == 'offset' && pinRef.action == 'relative')
       {
         // we need to get the latest offset
         temp['offset'] = {x: pinRef.element.offsetLeft, y: pinRef.element.offsetTop};
       }
     }
-    
+
     return temp;
   },
-  
+
   /*
     Function: setPinTarget (private)
       Sets the pin target.  This is the element on the page that has been targeted
       by the user.
-      
+
     Parameters:
       pinTarget - A DOM node.
   */
@@ -648,7 +648,7 @@ ShiftSpace.Shift = new Class({
   {
     this.pinTarget = pinTarget;
   },
-  
+
   /*
     Function: getPinTarget (private)
       Returns the current pin target if there is one.
@@ -657,14 +657,14 @@ ShiftSpace.Shift = new Class({
   {
     return this.pinTarget;
   },
-  
+
   /*
     Function: setPinTargetStyles
       When replacing a target node or being inserted before or after it is important
       to pick up some of the CSS dimensions of that target node.  In the case of replacing
       these styles need to be saved before the node is replaced and removed from the
       page DOM.
-      
+
     Parameters:
       newStyles - A JSON object of saved CSS dimension styles.
   */
@@ -672,11 +672,11 @@ ShiftSpace.Shift = new Class({
   {
     this.targetStyles = newStyles;
   },
-  
+
   /*
     Function: getPinTargetStyles
       Returns the JSON object of the target nodes CSS dimension styles.
-      
+
     Returns:
       An Object.
   */
@@ -684,31 +684,31 @@ ShiftSpace.Shift = new Class({
   {
     return this.targetStyles;
   },
-  
+
   setPinElementStyles : function(newStyles)
   {
     this.pinElementStyles = newStyles;
   },
-  
+
   getPinElementStyles: function()
   {
     return this.pinElementStyles;
   },
-  
+
   setPinElementDimensions: function(size)
   {
     this.pinElementDimensions = size;
   },
-  
+
   getPinElementDimensions: function(size)
   {
     return this.pinElementDimensions;
   },
-  
+
   /*
     Function: isPinned
       Returns true if this shift is currently pinned.
-      
+
     Returns:
       A boolean.
   */
@@ -716,11 +716,11 @@ ShiftSpace.Shift = new Class({
   {
     return (this.getPinTarget() != null);
   },
-  
+
   /*
     Function: updateTitle
       Update the title of the shift. Implictly saves the shift.
-      
+
     Parameters:
       newTitle - a new title (string).
   */
@@ -732,11 +732,11 @@ ShiftSpace.Shift = new Class({
       this.save();
     }
   },
-  
+
   /*
     Function: setTitle
       Used to set the current title of the shift.
-      
+
     Parameters:
       newTitle - a new title (string).
   */
@@ -744,11 +744,11 @@ ShiftSpace.Shift = new Class({
   {
     this.__title__ = newTitle;
   },
-  
+
   /*
     Function: getTitle
       Returns the title of the shift.
-      
+
     Returns:
       A string.
   */
@@ -756,11 +756,11 @@ ShiftSpace.Shift = new Class({
   {
     return (this.__title__ || this.defaultTitle());
   },
-  
+
   /*
     Function: defaultTitle (abstract)
       To be implemented by subclasses.  Returns "Untitled" otherwise.
-      
+
     Returns:
       A String.
   */
@@ -768,11 +768,11 @@ ShiftSpace.Shift = new Class({
   {
     return "Untitled";
   },
-  
+
   /*
     Function: getAuthor
       Returns the display name of the user that authored this shift.
-      
+
     See Also:
       <SSGetAuthorForShift>
   */
@@ -780,7 +780,7 @@ ShiftSpace.Shift = new Class({
   {
     return SSGetAuthorForShift(this.getId());
   },
-  
+
   /*
     Function : build (abstract)
       To be implemented by the subclass. Build the DOM for the shift.
@@ -788,26 +788,26 @@ ShiftSpace.Shift = new Class({
   build : function()
   {
   },
-  
+
   /*
   */
   failedView: function()
   {
     // TODO: Show the failed view, if this shift can't be shown
   },
-  
+
   errorView: function(err)
   {
-    
+
   },
-  
+
   /*
     Function: xmlhttpRequest
       Safe version of GM_xmlhttpRequest for shifts.
-      
+
     Parameters:
       config - the same type of object that should be passed to GM_xmlhttpRequest.
-      
+
     See Also:
       <SSXmlHttpRequest>
   */

@@ -7,7 +7,7 @@
 */
 
 var TrailPage = new Class({
-  
+
   // let's have some default options
   getOptions : function()
   {
@@ -21,7 +21,7 @@ var TrailPage = new Class({
       user : 'shiftspace',
       nodes : [],
       space : null
-    }
+    };
   },
 
   // intialize this puppy
@@ -37,9 +37,9 @@ var TrailPage = new Class({
     this.href = this.options.url || this.options.href || '';
     this.nodes = this.options.nodes;
     this.user = this.options.username || this.options.user;
-    
+
     //SSLog(options);
-    
+
     if(this.options.space)
     {
       this.space = this.options.space;
@@ -51,10 +51,10 @@ var TrailPage = new Class({
       if(space == 'highlight') space += 's';
       this.space = space;
     }
-    
+
     // get the space icon
     this.icon = Trails.attributes.dir+'images/'+this.space.toLowerCase()+'_trailsicon.png';
-    
+
     // use the thumb if there is one
     if(this.options.thumb)
     {
@@ -80,20 +80,20 @@ var TrailPage = new Class({
 
         this.thumbEl.injectInside( el );
         this.thumbEl.setProperty( 'width', TrailPage.kPageMinSize.x );
-        
+
         // add an event on click on the image
         this.thumbEl.addEvent( 'click', function( e ) {
             this.isDragging = false;
         }.bind( this ) );
       }
-      
+
       // add this to the apge
       el.injectInside( $('SSTrailsPlugInScrollArea') );
-      
+
       // set the initial width and height
       el.setStyle( 'width', TrailPage.kPageMinSize.width );
       el.setStyle( 'height', TrailPage.kPageMinSize.height );
-      
+
       // add the zoom event
       el.addEvent('mouseenter', this.zoom.bind(this));
       el.addEvent('mouseover', this.zoom.bind(this));
@@ -118,19 +118,19 @@ var TrailPage = new Class({
           this.unzoom();
         }
       }.bind(this));
-      
+
     }
 
     this.element = el;
     this.element.parentObject = this;
-    
+
     // prevent clicks from moving up to window
-    this.element.addEvent( 'click', function( e ) { 
+    this.element.addEvent( 'click', function( e ) {
       e.stopPropagation();
     }.bind( this ) );
-    
+
     this.element.addClass( 'TrailPage' );
-    
+
     // create the link point
     this.createLinkPoint();
     this.createDescription();
@@ -142,12 +142,12 @@ var TrailPage = new Class({
     // since we might want to turn off dragging behavior
     // later
     this.dragObject = new Drag.Move( this.element, {
-      onDrag : function() 
+      onDrag : function()
       {
         this.isDragging = true;
         this.update();
       }.bind( this ),
-      
+
       onComplete : function()
       {
         this.isDragging = false;
@@ -155,18 +155,18 @@ var TrailPage = new Class({
 
       lockRegions : [this.linkPoint]
     });
-    
+
     // put in the initial position
     this.setPosition( this.loc );
 
     // create a slot for a link
     this.links = [];
-    
+
     this.update();
 
     return this;
   },
-  
+
   /*
     Create a remove button.
   */
@@ -176,18 +176,18 @@ var TrailPage = new Class({
     this.removeButton.addClass( 'TrailPageRemove' );
     this.removeButton.addClass( 'hidden' );
     this.removeButton.injectInside( this.element );
-    
-    this.removeButton.addEvent( 'mouseenter', function( e ) { 
+
+    this.removeButton.addEvent( 'mouseenter', function( e ) {
       this.removeButton.removeClass( 'TrailPageRemove' );
       this.removeButton.addClass( 'TrailPageRemoveHover' );
     }.bind( this ) );
-    this.removeButton.addEvent( 'mouseleave', function( e ) { 
+    this.removeButton.addEvent( 'mouseleave', function( e ) {
       this.removeButton.removeClass( 'TrailPageRemoveHover' );
       this.removeButton.addClass( 'TrailPageRemove' );
     }.bind( this ) );
     this.removeButton.addEvent( 'click', this.close.bind( this ) );
   },
-  
+
   /*
     Create a space thumb.
   */
@@ -198,7 +198,7 @@ var TrailPage = new Class({
     this.spaceThumb.setProperty( 'src', this.icon );
     this.spaceThumb.injectInside( this.element );
   },
-  
+
   /*
     Create the floating and transparent text area
   */
@@ -208,7 +208,7 @@ var TrailPage = new Class({
     this.description.setAttribute( 'href', this.href );
     this.description.addClass( 'TrailPageDescription' );
     this.description.addClass( 'hidden' );
-    
+
     // hover effect
     this.description.addEvent( 'mouseover', function() {
       this.element.setOpacity( 1.0 );
@@ -216,7 +216,7 @@ var TrailPage = new Class({
     this.description.addEvent( 'mouseout', function() {
       this.element.setOpacity( 0.8 );
     }.bind(this));
-    
+
     // create title
     var descTextArea = new Element( 'div' );
     descTextArea.addClass( 'TrailPageDescriptionTextArea' );
@@ -225,16 +225,16 @@ var TrailPage = new Class({
     descTitleText.addClass( 'TrailPageDescriptionTitleText' );
     descTitleText.setHTML( this.title );
     this.descriptionTitle = descTitleText;
-    
+
     var descUserText = new Element( 'div' );
     descUserText.addClass( 'TrailPageDescriptionUserText' );
     descUserText.setHTML( this.user );
     this.descriptionUser = descUserText;
-    
+
     //var descTitleUserSeparator = new Element( 'div' );
     //descTitleUserSeparator.addClass( 'TrailPageDescriptionTitleUserSeparator' );
     //descTitleUserSeparator.setHTML( '|' );
-    
+
     var descTitleUserText = new Element( 'div' );
     descTitleUserText.addClass( 'TrailPageDescriptionTitleUserText' );
     descTitleUserText.appendChild(descTitleText);
@@ -242,11 +242,11 @@ var TrailPage = new Class({
     descTitleUserText.appendChild(descUserText);
     var br = descTitleUserText.appendChild(new Element('br'));
     br.className = 'clear';
-    
+
     var url = new Element( 'a' );
     url.addClass( 'TrailPageDescriptionLink' );
     url.setProperty( 'href', this.href );
-    
+
     var shortHref = (this.href.length > 40) ? (this.href.substr(0, 40) + '...') : this.href;
     url.setText( shortHref );
 
@@ -254,9 +254,9 @@ var TrailPage = new Class({
     descTitleUserText.injectInside( descTextArea );
     // add the actual url
     url.injectInside( descTextArea );
-    
+
     descTextArea.injectInside( this.description );
-    
+
     // add an event on click on the image
     this.description.addEvent( 'click', function( e ) {
       if( !this.isDragging )
@@ -268,10 +268,10 @@ var TrailPage = new Class({
         this.isDragging = false;
       }
     }.bind( this ) );
-    
+
     this.description.injectInside( this.element );
   },
-  
+
   /*
     Add the big delete button
   */
@@ -282,7 +282,7 @@ var TrailPage = new Class({
     this.deleteButton.addClass( 'hidden' );
     this.deleteButton.injectInside( this.element );
   },
-  
+
   /*
     Create link point, this is for creating the first and also for one that
     are generated when creating new links.
@@ -290,26 +290,26 @@ var TrailPage = new Class({
   createLinkPoint : function()
   {
     var el = this.element;
-    
+
     // add the link point
     this.linkPoint = new Element( 'div' );
     this.linkPoint.addClass( 'TrailPageLinkPoint' );
     // add the link point to the el
     this.linkPoint.injectInside( el );
-    
+
     // create the minus link point
     this.minusLinkPoint = new Element( 'div' );
     this.minusLinkPoint.addClass( 'TrailPageMinusLinkPoint' );
     this.minusLinkPoint.injectInside( el );
     this.minusLinkPoint.addClass( 'hidden' );
-    
+
     // change the style of the link point and check
     // for the start of dragging
     this.linkPoint.addEvent( 'mousedown', function( e ) {
       var evt = new Event(e);
       // stop this event so it doesn't get to scrolling
       evt.stopPropagation();
-      
+
       if( this == Trail.gFocusedNode )
       {
         this.linkClicked = true;
@@ -318,29 +318,29 @@ var TrailPage = new Class({
     }.bind( this ) );
     // check for mouse up
     this.linkPoint.addEvent( 'mouseup', this.cancelCreateLink.bind( this ) );
-    
+
     // update the focused nodes hovered link point just in case of drop
     this.linkPoint.addEvent( 'mouseenter', function( e ) {
       if( this.parentTrail.isEditable() ) this.linkPoint.addClass( 'TrailPageLinkPointLargeHover' );
 
       if( Trail.gFocusedNode && Trail.gFocusedNode.linkPoint != this.linkPoint )
       {
-        Trail.gFocusedNode.lastHoveredLinkPoint = this.linkPoint
+        Trail.gFocusedNode.lastHoveredLinkPoint = this.linkPoint;
       }
     }.bind( this ));
-    
+
     // remove the hover
-    this.linkPoint.addEvent( 'mouseleave', function( e ) { 
+    this.linkPoint.addEvent( 'mouseleave', function( e ) {
       this.linkPoint.removeClass( 'TrailPageLinkPointLargeHover' );
     }.bind( this ) );
-    
+
     // start dragging
     this.linkPoint.addEvent( 'mousemove', function( e ) {
       if( this.linkClicked && !this.isCreatingLink && !this.parentTrail.deleteMode )
       {
         // add a window.mouse up event
         window.addEvent( 'mouseup', this.cancelCreateLink.bind( this ) );
-        
+
         // only if the trail is editable, this should probably be moved into Trails
         if( this.parentTrail.isEditable() )
         {
@@ -348,16 +348,16 @@ var TrailPage = new Class({
         }
       }
     }.bind( this ) );
-    
+
     // do the hover for the minus sign
     var self = this;
-    this.minusLinkPoint.addEvent( 'mouseenter', function( e ) { 
+    this.minusLinkPoint.addEvent( 'mouseenter', function( e ) {
       self.minusLinkPoint.addClass( 'TrailPageMinusLinkPointHover' );
     });
-    this.minusLinkPoint.addEvent( 'mouseleave', function( e ) { 
+    this.minusLinkPoint.addEvent( 'mouseleave', function( e ) {
       self.minusLinkPoint.removeClass( 'TrailPageMinusLinkPointHover' );;
     });
-    this.minusLinkPoint.addEvent( 'click', function( e ) { 
+    this.minusLinkPoint.addEvent( 'click', function( e ) {
       //SSLog('click!');
       self.deleteLinkMode.delay(0, self);
     });
@@ -365,7 +365,7 @@ var TrailPage = new Class({
     // set the parentNode
     this.linkPoint.linkNode = this;
   },
-  
+
   /*
     Return the link point.
   */
@@ -373,7 +373,7 @@ var TrailPage = new Class({
   {
     return this.linkPoint;
   },
-  
+
   /*
     Create a link and handle the dragging operation
   */
@@ -383,23 +383,23 @@ var TrailPage = new Class({
     // we're creating a link, prevent unzooming
     this.isCreatingLink = true;
     //SSLog(this.isCreatingLink);
-    
+
     // lock the position of the page
     this.lock();
-    
+
     // create a draggable link
     this.createDragLinkPoint( e );
   },
-  
+
   /*
     Cancel link creation.
   */
-  cancelCreateLink : function( e ) 
+  cancelCreateLink : function( e )
   {
     this.linkClicked = false;
     this.isCreatingLink = false;
   },
-  
+
   /*
     Create the drag link point which is used for making links
   */
@@ -414,13 +414,13 @@ var TrailPage = new Class({
     this.dragLinkPoint.addClass( 'TrailPageDragLinkPoint' );
     this.dragLinkPoint.injectInside(document.body);
     //this.dragLinkPoint.injectInside( $('SSTrailsPlugInScrollArea') );
-    
+
     this.dragLinkPoint.setStyles({
       left : evt.page.x-5,
       top : evt.page.y-5
     });
-    
-    this.dragLinkPoint.addEvent( 'mouseup', function( e ) { 
+
+    this.dragLinkPoint.addEvent( 'mouseup', function( e ) {
       this.releaseEvent = e;
     }.bind( this ) );
 
@@ -429,24 +429,24 @@ var TrailPage = new Class({
 
     // handle the dragging link behavior
     this.dragLinkPointRef = new Drag.Move( this.dragLinkPoint, {
-      onDrag : function( e ) 
+      onDrag : function( e )
       {
         newLink.update();
         newLink.render();
       },
-      
+
       onComplete : function( e )
       {
         var evt = new Event( this.releaseEvent || window.event );
-        
+
         if( Trail.gHoveredNode )
         {
           if( TrailPage.ElementContainsPoint( Trail.gHoveredNode.element, new Vector( evt.page.x, evt.page.y ) ) )
           {
             // create a real link between the two nodes
-            var final = new TrailLink( this, Trail.gHoveredNode );
+            new TrailLink( this, Trail.gHoveredNode );
             this.update();
-            
+
             var success = true;
           }
         }
@@ -458,7 +458,7 @@ var TrailPage = new Class({
         // clean up
         this.dragLinkPoint.remove();
         newLink.destroyImmediate();
-        
+
         // clear flag
         this.isCreatingLink = false;
         // unlock
@@ -472,7 +472,7 @@ var TrailPage = new Class({
 
     this.dragLinkPointRef.start( new Event( this.startDragEvent ) );
   },
-  
+
   /*
     Handle dragging the link.
   */
@@ -480,11 +480,11 @@ var TrailPage = new Class({
   {
     /*
     var mouse = e.page;
-    
+
    SSLog( mouse );
     */
   },
-  
+
   /*
     Lock the draggable.
   */
@@ -493,7 +493,7 @@ var TrailPage = new Class({
     // lock the drag object to our current location
     this.dragObject.detach();
   },
-  
+
   /*
     Unlock the the draggable.
   */
@@ -513,10 +513,10 @@ var TrailPage = new Class({
       left : this.options.offset.x + newPos.x,
       top : this.options.offset.y + newPos.y
     });
-    
+
     this.getPosition();
   },
-  
+
   /*
     Get the position of the page, a convenience method.
   */
@@ -526,18 +526,18 @@ var TrailPage = new Class({
       x : parseInt(this.element.getStyle('left')),
       y : parseInt(this.element.getStyle('top'))
     };
-    
+
     return temp;
   },
-  
+
   getRealPosition : function()
   {
     var pos = this.getPosition();
-    var fpos = { x : pos.x - this.options.offset.x, 
+    var fpos = { x : pos.x - this.options.offset.x,
                  y : pos.y - this.options.offset.y };
     return fpos;
   },
-  
+
   /*
     Load the page's URL.
   */
@@ -553,42 +553,42 @@ var TrailPage = new Class({
   */
   addLink : function( newLink )
   {
-  
+
     // add this to our links
     this.links.push( newLink );
 
     var nodeId = newLink.getSibling( this ).id;
-    
+
     if( !this.nodes.contains(nodeId) )
     {
       this.nodes.push( nodeId );
     }
-    
+
     // update the trail
     if( this.parentTrail )
     {
       this.parentTrail.addLink( newLink );
     }
   },
-  
+
   /*
     Zoom the page.
   */
   zoom : function()
   {
-    if( !this.isZooming && 
+    if( !this.isZooming &&
         !this.isZoomed &&
         (Trail.gFocusedNode == null || Trail.gFocusedNode != this) &&
         !this.isClosing )
     {
       var linkMode = (Trail.gFocusedNode && Trail.gFocusedNode.isCreatingLink);
-      
+
       // unzoom the last one
       if(Trail.gFocusedNode && !linkMode)
       {
         Trail.gFocusedNode.unzoom();
       }
-      
+
       // this is now the focused node
       if(!linkMode)
       {
@@ -599,33 +599,33 @@ var TrailPage = new Class({
       {
         //SSLog('IS CREATING LINK');
       }
-      
+
       // change the border to red
-      if (this.thumbEl) 
+      if (this.thumbEl)
       {
         this.thumbEl.addClass( 'TrailPageZoomBorder' );
       }
-      
+
       this.element.setStyle( 'zIndex', 99 );
       this.element.setOpacity( 0.8 );
 
       this.isZooming = true;
       // store our old position
       this.oldPosition = this.getPosition();
-    
+
       var dx = ( TrailPage.kPageMaxSize.width - TrailPage.kPageMinSize.width ) / 2;
       var dy = ( TrailPage.kPageMaxSize.height - TrailPage.kPageMinSize.height ) / 2;
-      
+
       // get the new top left
       var newPos = { x : this.oldPosition.x - Math.round( dx ),
                      y : this.oldPosition.y - Math.round( dy ) };
-                     
+
       // set up animation for the size
       var sizeFX = this.element.effects({
         duration : 300,
         transition : Fx.Transitions.Cubic.easeOut
       });
-      
+
       sizeFX.start({
         width : [ TrailPage.kPageMinSize.width, TrailPage.kPageMaxSize.width ],
         height : [ TrailPage.kPageMinSize.height, TrailPage.kPageMaxSize.height ]
@@ -636,17 +636,17 @@ var TrailPage = new Class({
         duration : 300,
         transition : Fx.Transitions.Cubic.easeOut
       });
-      
+
       posFX.start({
         left : [ this.oldPosition.x, newPos.x ],
         top : [ this.oldPosition.y, newPos.y ]
       });
-      
+
       // set up animation for thumb
       var thumbFX = this.spaceThumb.effects({
         duration : 300,
         transition : Fx.Transitions.Cubic.easeOut
-      })
+      });
       thumbFX.start({
         /*
         left: [60, 198],
@@ -654,7 +654,7 @@ var TrailPage = new Class({
         width: [22, 44],
         height: [22, 44]
       });
-      
+
       // wait for all the fx to change then updae
       var updateGroup = new Group( sizeFX, posFX, thumbFX );
       updateGroup.addEvent( 'onChange', function() {
@@ -665,15 +665,15 @@ var TrailPage = new Class({
       var completeGroup = new Group( sizeFX, posFX );
       completeGroup.addEvent( 'onComplete', this.zoomComplete.bind( this ) );
     }
-    
+
     if( linkMode )
     {
       Trail.gHoveredNode = this;
     }
-    
+
     //SSLog(Trail.gFocusedNode + ", " + (Trail.gFocusedNode != this));
   },
-  
+
   /*
     Handle zoom completion.
   */
@@ -682,39 +682,39 @@ var TrailPage = new Class({
     // set the vars
     this.isZooming = false;
     this.isZoomed = true;
-    
+
     // need to switch the image to the other style
     if( this.parentTrail.isEditable() )
     {
       // show the link creation button
       this.linkPoint.removeClass( 'TrailPageLinkPoint' );
       this.linkPoint.addClass( 'TrailPageLinkPointLarge' );
-      
+
       // reveal the minus link point
       this.minusLinkPoint.removeClass( 'hidden' );
       // show the remove button
       this.removeButton.removeClass( 'hidden' );
     }
-    
+
     // show the description
     this.description.removeClass( 'hidden' );
-    if ( this.descriptionTitle.offsetWidth > 255 - this.descriptionUser.offsetWidth ) 
+    if ( this.descriptionTitle.offsetWidth > 255 - this.descriptionUser.offsetWidth )
     {
       this.descriptionTitle.style.width = ( 255 - this.descriptionUser.offsetWidth ) + 'px';
     }
-    
+
     // update!
     this.update();
   },
-  
+
   /*
     Unzoom the thumb on mouse exit.
   */
   unzoom : function()
   {
-    if( !this.isZooming && 
-        this.isZoomed && 
-        !this.isDragging && 
+    if( !this.isZooming &&
+        this.isZoomed &&
+        !this.isDragging &&
         !this.isCreatingLink &&
         !this.parentTrail.deleteMode )
     {
@@ -725,13 +725,13 @@ var TrailPage = new Class({
 
       // hide the description area
       this.description.addClass( 'hidden' );
-      
+
       // hide the minus link point
       this.minusLinkPoint.addClass( 'hidden' );
-      
+
       // change the border to red
       this.thumbEl.removeClass( 'TrailPageZoomBorder' );
-      
+
       // set the zindex and the opacity
       this.element.setStyle( 'zIndex', 2 );
       this.element.setOpacity( 1 );
@@ -748,9 +748,9 @@ var TrailPage = new Class({
       // set up animation for the size
       var sizeFX = this.element.effects({
         duration : 300,
-        transition : Fx.Transitions.Cubic.easeOut,
+        transition : Fx.Transitions.Cubic.easeOut
       });
-  
+
       // shrink!
       sizeFX.start({
         width : [ TrailPage.kPageMaxSize.width, TrailPage.kPageMinSize.width  ],
@@ -764,17 +764,18 @@ var TrailPage = new Class({
         duration : 300,
         transition : Fx.Transitions.Cubic.easeOut
       });
-  
+
       posFX.start({
         left : [ curPos.x, this.oldPosition.x ],
         top : [ curPos.y , this.oldPosition.y ]
       });
-      
+
       // set up animation for thumb
       var thumbFX = this.spaceThumb.effects({
         duration : 300,
         transition : Fx.Transitions.Cubic.easeOut
-      })
+      });
+
       thumbFX.start({
         /*
         left: [118, 60],
@@ -782,7 +783,7 @@ var TrailPage = new Class({
         width: [44, 22],
         height: [44, 22]
       });
-    
+
       // wait for all the fx to change then update
       var updateGroup = new Group( sizeFX, posFX, thumbFX );
       updateGroup.addEvent( 'onChange', function() {
@@ -794,14 +795,14 @@ var TrailPage = new Class({
       completeGroup.addEvent( 'onComplete', this.unzoomComplete.bind( this ) );
     }
   },
-  
+
   unzoomComplete : function()
   {
     this.isZooming = false;
     this.isZoomed = false;
-    
+
     // need to remove the drag stuff
-    
+
     // update!
     this.update();
   },
@@ -816,7 +817,7 @@ var TrailPage = new Class({
       curLink.update( this );
       curLink.render();
     }
-    
+
     var size = this.element.getSize().size;
 
     // update the thumb
@@ -825,23 +826,23 @@ var TrailPage = new Class({
       this.thumbEl.setProperty( 'width', size.x - 2 );
       this.thumbEl.setProperty( 'height', size.y - 2 );
     }
-    
+
     // keep the space thumb proportional
     if( this.spaceThumb )
     {
       this.spaceThumb.setProperty( 'width', ( size.x / 80 ) * 22 );
     }
-    
+
     // update the linking point
     if( this.linkPoint )
     {
       var lsize = this.linkPoint.getSize().size;
-      
+
       // set the position
       this.linkPoint.setStyles({
         left : Math.round( size.x - ( lsize.x / 2 ) + 2 ),
         top : Math.round( size.y - ( lsize.y / 2 ) + 3 )
-      })
+      });
     }
 
     // need to update the oldPosition value
@@ -849,14 +850,14 @@ var TrailPage = new Class({
     {
       // get the position
       var curPos = this.getPosition();
-      
+
       var dx = ( TrailPage.kPageMaxSize.width - TrailPage.kPageMinSize.width ) / 2;
       var dy = ( TrailPage.kPageMaxSize.height - TrailPage.kPageMinSize.height ) / 2;
-      
+
       this.oldPosition = { x : curPos.x + Math.round( dx ), y : curPos.y + Math.round( dy ) };
     }
   },
-  
+
   /*
     The delete link mode
   */
@@ -881,15 +882,15 @@ var TrailPage = new Class({
         connectedNodes.each( function( x ) {
           x.cancelDelete();
         });
-       
+
         // unzoom
         self.parentTrail.deleteMode = false;
         self.unzoom();
-        
+
         $('SSTrailsPlugInScrollArea').removeEvent( 'click' );
       }
     });
-    
+
     // tell each one to prepare for delete
     //SSLog('adding delete link buttons');
     connectedNodes.each( function( x ) {
@@ -898,7 +899,7 @@ var TrailPage = new Class({
       x.deleteButton.removeClass( 'hidden' );
 
       // make the delete button work
-      x.deleteButton.addEvent( 'click', function( e ) { 
+      x.deleteButton.addEvent( 'click', function( e ) {
         Trail.gDeleteFocusNode = x;
 
         x.parentTrail.deleteLink( x, self );
@@ -911,31 +912,31 @@ var TrailPage = new Class({
         // cancel delete
         connectedNodes.each( function( x ) {
           x.cancelDelete();
-        })
-        
+        });
+
         // unzoom ourselves
         self.unzoom();
 
       } );
-      
+
     } );
-    
+
     //SSLog('done');
   },
-  
+
   /*
     Show the deletion box.
   */
-  prepareDeleteTo : function( aNode ) 
+  prepareDeleteTo : function( aNode )
   {
     this.deleteButton.removeClass( 'hidden' );
-    
-    this.deleteButton.addEvent( 'click', function( e ) { 
+
+    this.deleteButton.addEvent( 'click', function( e ) {
       this.parentTrail.deleteLink( this, aNode );
       aNode.finishDeletion();
     }.bind( this ) );
   },
-  
+
   /*
     Clean up the deletion.
   */
@@ -944,7 +945,7 @@ var TrailPage = new Class({
     // delete mode is false
     this.parentTrail.deleteMode = false;
   },
-  
+
   /*
     Close the trail and put it into the nav
   */
@@ -954,7 +955,7 @@ var TrailPage = new Class({
 
     Trail.gFocusedNode = null;
     Trail.gHoveredNode = null;
-    
+
     // if this already in the nav reveal it
     if( window.nav )
     {
@@ -969,41 +970,41 @@ var TrailPage = new Class({
         nav.addShift( this.encode() );
       }
     }
-    
+
     this.parentTrail.removeShift( this );
   },
-  
+
   cancelDelete : function()
   {
     this.deleteButton.addClass( 'hidden' );
   },
-  
+
   destroy : function()
   {
     var fadeFX = this.element.effects({
       duration : 300,
       transition : Fx.Transitions.Cubic.easeOut,
-      onComplete : function () 
+      onComplete : function ()
       {
         this.element.remove();
-        delete this;        
+        delete this;
       }.bind( this )
     });
-    
+
     fadeFX.start({
       opacity: [1.0, 0]
     });
   },
-  
+
   /*
     Convert to JSON.
   */
   encode : function()
   {
     var pos = this.getPosition();
-    var fpos = { x : pos.x - this.options.offset.x, 
+    var fpos = { x : pos.x - this.options.offset.x,
                  y : pos.y - this.options.offset.y };
-                 
+
     return {
       id : this.id,
       title : this.title,
@@ -1031,7 +1032,7 @@ TrailPage.ElementContainsPoint = function( el, v )
   var pos = el.getPosition();
   var windowScroll = window.getSize().scroll;
   pos = new Vector(pos.x+windowScroll.x, pos.y+windowScroll.y);
-  
+
   var size = el.getSize().size;
   var result = ( v.x >= pos.x &&
                  v.x <= pos.x + size.x &&
@@ -1039,6 +1040,6 @@ TrailPage.ElementContainsPoint = function( el, v )
                  v.y <= pos.y + size.y );
   //SSLog("TrailPage.ElementContainsPoint " + result);
   return result;
-}
+};
 
 ShiftSpace.__externals__.TrailPage = TrailPage; // For Safari

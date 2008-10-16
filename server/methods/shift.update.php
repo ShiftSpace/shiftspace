@@ -13,7 +13,7 @@ $shift = $db->row("
 
 // Sanity checks
 if (empty($shift)) {
-  respond(0, "Shift not found.");
+  respond(0, "Shift not found.");\
 }
 if ($shift->user_id != $user->id && $user->status < 2) {
   respond(0, "You don't have permission to update that shift.");

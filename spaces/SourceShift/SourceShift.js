@@ -1,6 +1,6 @@
 var SourceShiftSpace = ShiftSpace.Space.extend({
-  
-  attributes : 
+
+  attributes :
   {
     name : 'SourceShift',
     icon : 'SourceShift.png',
@@ -8,13 +8,13 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     css : 'SourceShift.css'
   },
 
-  
-  setup: function(options) 
+
+  setup: function(options)
   {
     this.mode = 'xhtml';
   },
-  
-  
+
+
   addShift: function(shift)
   {
     var newShift = this.parent(shift);
@@ -25,15 +25,15 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       this.fireEvent('unpin');
     }.bind(this));
   },
-  
-  
+
+
   updateTitleOfShift: function(shiftId, title)
   {
     this.parent(shiftId, title);
     this.titleField.setProperty('value', title);
   },
-  
-  
+
+
   refresh : function()
   {
     var handleSize = this.handleArea.getSize().size;
@@ -42,7 +42,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     {
       this.origHeight = this.editSourceShift.getSize().size.y;
       this.minHeight = this.editSourceShift.getStyle('min-height');
-      
+
       this.editSourceShift.setStyle('min-height', handleSize.y+4);
       this.editSourceShift.setStyle('height', handleSize.y);
     }
@@ -52,11 +52,11 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       this.editSourceShift.setStyle('height', this.origHeight);
       this.origHeight = null;
     }
-    
+
     var size = this.editSourceShift.getSize().size;
     var topSize = this.top.getSize().size;
     var bottomSize = this.bottom.getSize().size;
-    
+
     // refresh the edit area
     /*
     this.editSource.setStyles({
@@ -64,36 +64,36 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       height : size.y - handleSize.y - topSize.y - bottomSize.y
     });
     */
-    
+
     // weird browser bug that I can't track
     if(this.editSource.getSize().size.x > size.x)
     {
-      this.editSource.setStyle('width', size.x-18);      
+      this.editSource.setStyle('width', size.x-18);
     }
   },
-  
-  
+
+
   onCssLoad: function()
   {
     this.parent();
   },
-  
-  
+
+
   showInterface : function()
   {
     SSLog('=================================== SHOW INTERFACE');
     this.parent();
     if(this.editSourceShift) this.editSourceShift.removeClass('SSDisplayNone');
   },
-  
-  
+
+
   hideInterface : function()
   {
     this.parent();
     if(this.editSourceShift) this.editSourceShift.addClass('SSDisplayNone');
   },
-  
-  
+
+
   setMode : function(newMode)
   {
     if(newMode == 'xhtml')
@@ -113,13 +113,13 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       console.error('Error: SourceShift.setMode, unknown mode ' + newMode);
     }
   },
-  
-  
+
+
   onShiftCreate : function(shiftId)
   {
     // if a brand new shift set the title to untitled-#
     var untitledCount = 0;
-    
+
     for(var shift in this.shifts)
     {
       var title = this.shifts[shift].getTitle();
@@ -128,30 +128,30 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
         untitledCount++;
       }
     }
-    
+
     this.shifts[shiftId].setTitle('untitled-'+untitledCount);
   },
-  
-  
+
+
   onShiftEdit: function(shiftId)
   {
     // set the mode to xhtml and set to the html of the current shift
     var currentShift = this.shifts[shiftId];
-    
+
     this.setMode('xhtml');
-    
+
     if(this.interfaceIsBuilt() && this.isVisible())
     {
       this.editSource.setProperty('value', currentShift.getMarkup());
       this.titleField.setProperty('value', currentShift.getTitle());
-      
+
       // refresh the interface first
       this.refresh();
-      
+
       // update the location of the editing window
       var position = currentShift.getPosition();
       var size = this.editSourceShift.getSize().size;
-      
+
       this.editSourceShift.setStyles({
         left: position.x - size.x - 10,
         top: position.y
@@ -168,8 +168,8 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       this.fireEvent('unpin');
     }
   },
-  
-  
+
+
   onShiftFocus: function(shiftId)
   {
     // we are in edit mode
@@ -181,8 +181,8 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       */
     }
   },
-  
-  
+
+
   onShiftHide: function(shiftId)
   {
     for(var shift in this.shifts)
@@ -194,14 +194,14 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     }
     this.hideInterface();
   },
-  
-  
+
+
   attachEvents : function()
   {
     // update xhtml/css of shift as user types
     this.editSource.addEvent('keyup', function( _evt ) {
       var currentShift = this.getCurrentShift();
-      
+
       if(this.mode == 'xhtml')
       {
         currentShift.updateMarkup(this.editSource.getProperty('value'));
@@ -211,7 +211,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
         currentShift.updateCSS(this.editSource.getProperty('value'));
       }
     }.bind(this));
-    
+
     // update title of shift as user types
     this.titleField.addEvent('keyup', function( _evt) {
       if(this.titleField.getProperty('value'))
@@ -219,66 +219,66 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
         this.getCurrentShift().setTitle(this.titleField.getProperty('value'));
       }
     }.bind(this));
-    
+
     this.titleField.addEvent('click', function( _evt) {
     }.bind(this));
-    
+
     this.saveButton.addEvent('click', function( _evt) {
       this.getCurrentShift().save();
     }.bind(this));
-    
+
     this.previewButton.addEvent('click', function( _evt ) {
       if(!this.__previewMode__)
       {
         this.__previewMode__ = true;
-        this.getCurrentShift().show();   
+        this.getCurrentShift().show();
         this.highlightButton(this.previewButton);
       }
       else
       {
         this.__previewMode__ = false;
-        this.getCurrentShift().edit()
+        this.getCurrentShift().edit();
         this.unhighlightButton(this.previewButton);
       }
     }.bind(this));
-    
+
     // setup the resizing behavior
     this.editSourceShift.makeResizable({
       handle: this.resizeControl,
       onDrag: this.refresh.bind(this)
     });
-    
+
     // set up the tab button behavior
     this.xhtmlButton.addEvent('click', function(_evt) {
       var currentShift = this.getCurrentShift();
-      
+
       // set the mode
       this.selectTabButton(this.xhtmlButton);
       this.deselectTabButton(this.cssButton);
-      
+
       currentShift.setCSS(this.editSource.getProperty('value'));
       this.editSource.setProperty('value', currentShift.getMarkup());
-      
+
       // set the mode
       this.mode = 'xhtml';
 
     }.bind(this));
-    
+
     this.cssButton.addEvent('click', function(_evt) {
       var currentShift = this.getCurrentShift();
-      
+
       // set the mode
       this.selectTabButton(this.cssButton);
       this.deselectTabButton(this.xhtmlButton);
 
       currentShift.setMarkup(this.editSource.getProperty('value'));
       this.editSource.setProperty('value', currentShift.getCSS());
-      
+
       // set the mode
       this.mode = 'css';
-      
+
     }.bind(this));
-    
+
     // setup minimize
     this.minimizeButton.addEvent('click', function(_evt) {
       if(!this.isMinimized)
@@ -297,7 +297,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       }
       this.refresh();
     }.bind(this));
-    
+
     // setup close
     this.closeButton.addEvent('click', function(_evt) {
       this.isMinimized = false;
@@ -305,24 +305,24 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       this.hideInterface();
     }.bind(this));
   },
-  
-  
+
+
   highlightButton: function(button)
   {
     button.getElement('.SSLeft').addClass('SSLeftActive');
     button.getElement('.middle').addClass('middleActive');
     button.getElement('.SSRight').addClass('SSRightActive');
   },
-  
-  
+
+
   unhighlightButton: function(button)
   {
     button.getElement('.SSLeft').removeClass('SSLeftActive');
     button.getElement('.middle').removeClass('middleActive');
     button.getElement('.SSRight').removeClass('SSRightActive');
   },
-  
-  
+
+
   buildHandle : function()
   {
     // create the handle area
@@ -330,9 +330,9 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       'class': "SSSourceShiftEditorHandleArea"
     });
     this.handle = new ShiftSpace.Element('div', {
-      'class': "SSSourceShiftEditorHandle", 
+      'class': "SSSourceShiftEditorHandle"
     });
-    
+
     // build the window buttons
     this.windowButtons = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorWindowButtons"
@@ -345,14 +345,14 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     });
     this.closeButton.injectInside(this.windowButtons);
     this.minimizeButton.injectInside(this.windowButtons);
-    
+
     this.handle.injectInside(this.handleArea);
     this.windowButtons.injectInside(this.handleArea);
-    
+
     this.handleArea.injectInside(this.editSourceShift);
   },
-  
-  
+
+
   buildTop : function()
   {
     this.top = new ShiftSpace.Element('div', {
@@ -361,49 +361,49 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
 
     // add the title and the icons
     this.topTitle = new ShiftSpace.Element('div', {
-      'class': "SSSourceShiftEditorTopTitle SSUserSelectNone", 
+      'class': "SSSourceShiftEditorTopTitle SSUserSelectNone"
     });
     this.topTitle.setText('SourceShift');
-    
+
     this.topIcon = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorIcon"
     });
-    
+
     // add the controls area
     this.controlsArea = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorControlsArea"
     });
-    
+
     this.titleField = new ShiftSpace.Element('input', {
-      'class': "SSSourceShiftTitleInputField", 
+      'class': "SSSourceShiftTitleInputField",
       type: "text"
     });
-    
+
     var buttonMarkup = "<div class='SSLeft ShiftSpaceElement SSUserSelectNone'></div><div class='middle'></div><div class='SSRight'></div>";
     this.previewButton = new ShiftSpace.Element('div', {
-      value: "Preview", 
-      'class': "SSSourceShiftButton SSUserSelectNone", 
+      value: "Preview",
+      'class': "SSSourceShiftButton SSUserSelectNone",
       type: "button"
     });
     this.previewButton.setHTML(buttonMarkup);
     this.previewButton.getElement('.middle').setText('Preview');
     if(window.webkit) this.previewButton.addClass('SSSourceShiftButtonWebKit');
-    
+
     this.saveButton = new ShiftSpace.Element('div', {
-      value: "Save", 
+      value: "Save",
       'class': "SSSourceShiftButton SSUserSelectNone",
       type: "button"
     });
     this.saveButton.setHTML(buttonMarkup);
     this.saveButton.getElement('.middle').setText('Save');
     if(window.webkit) this.saveButton.addClass('SSSourceShiftButtonWebKit');
-    
+
     // setup hover events for the two buttons
-    
+
     this.titleField.injectInside(this.controlsArea);
     this.saveButton.injectInside(this.controlsArea);
     this.previewButton.injectInside(this.controlsArea);
-    
+
     // add the tab area
     this.tabArea = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorTabArea"
@@ -412,11 +412,11 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.xhtmlButton = this.createTabButton();
     this.xhtmlButton.getElement('.middle').setText('XHTML');
     this.xhtmlButton.injectInside(this.tabArea);
-    
+
     this.cssButton = this.createTabButton();
     this.cssButton.getElement('.middle').setText('CSS');
     this.cssButton.injectInside(this.tabArea);
-    
+
     // add the pin widget
     this.pinWidgetPrompt = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorPinPrompt SSUserSelectNone"
@@ -436,26 +436,26 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     this.tabArea.injectInside(this.top);
     this.top.injectInside(this.editSourceShift);
   },
-  
-  
+
+
   getPinRef: function()
   {
     return this.getCurrentShift().getPinRef();
   },
-  
-  
+
+
   getPinWidgetButton: function()
   {
     return this.pinWidgetDiv;
   },
-  
-  
+
+
   getPinWidgetAllowedActions: function()
   {
     return ['before', 'replace', 'after', 'relative'];
   },
-  
-  
+
+
   onPin: function(pinRef)
   {
     var currentShift = this.getCurrentShift();
@@ -463,7 +463,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     // set the pin location of the current shift
     if(currentShift)
     {
-      if(pinRef.action == 'unpin') 
+      if(pinRef.action == 'unpin')
       {
         currentShift.unpin();
       }
@@ -473,8 +473,8 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       }
     }
   },
-  
-  
+
+
   isPinned: function()
   {
     var currentShift = this.getCurrentShift();
@@ -482,12 +482,13 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     {
       return currentShift.isPinned();
     }
+    return false;
   },
-  
+
   /*
     Function: selectButton
       Takes a tab button and sets the image styles so it looks focused.
-      
+
     Parameters:
       button - A tab button element.
   */
@@ -502,11 +503,11 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       button.setStyle('z-index', 1);
     }
   },
-  
+
   /*
     Function: deselectTabButton
       Takes a tab button and sets the images style so it looks unfocused.
-      
+
     Parameters:
       button - A tab button element.
   */
@@ -520,7 +521,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
       button.setStyle('z-index', 0);
     }
   },
-  
+
   /*
     Function: createTabButton
       Creates a tab button for the editor interface.
@@ -530,7 +531,7 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     var tabButton = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorTabButton"
     });
-    
+
     var left = new ShiftSpace.Element('div', {
       'class': "SSLeft SSSourceShiftEditorTabButtonLeft"
     });
@@ -540,53 +541,53 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     var right = new ShiftSpace.Element('div', {
       'class': "SSRight SSSourceShiftEditorTabButtonRight"
     });
-    
+
     left.injectInside(tabButton);
     middle.injectInside(tabButton);
     right.injectInside(tabButton);
-    
+
     return tabButton;
   },
-  
+
   /*
     Function: buildFrame
       Builds the iframe that protects the text encoding.
   */
   buildFrame: function()
   {
-    
+
   },
-  
+
   buildBottom: function()
   {
     this.bottom = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorBottom"
     });
-    
+
     // add the resize control
     this.resizeControl = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorResizeControl"
     });
-    
+
     this.resizeControl.injectInside(this.bottom);
 
     this.bottom.injectInside(this.editSourceShift);
   },
-  
-  
+
+
   buildInterface : function()
   {
     this.editSourceShift = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditWindow"
     });
-    
+
     this.buildHandle();
     this.buildTop();
-    
+
     this.editSourceWrapper = new ShiftSpace.Element('div', {
-      'class': "SSSourceShiftEditorTextAreaDiv" 
+      'class': "SSSourceShiftEditorTextAreaDiv"
     });
-    
+
     this.editSource = new ShiftSpace.Element('textarea', {
       'class': "SSSourceShiftEditorTextArea",
       cols : 1000,
@@ -596,23 +597,23 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
     // add the edit source and the bottom
     this.editSource.injectInside(this.editSourceWrapper);
     this.editSourceWrapper.injectInside(this.editSourceShift);
-    
+
     this.buildBottom();
 
     this.editSourceShift.makeDraggable({
       handle: this.handle
     });
-    
+
     this.editSourceShift.injectInside(document.body);
-    
+
     // the xhtml button should be selected by default
     this.deselectTabButton(this.cssButton);
-    
+
     // attach events and refresh
     this.attachEvents();
     this.refresh();
   }
-  
+
 });
 
 var SourceShiftShift = ShiftSpace.Shift.extend({
@@ -620,33 +621,33 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   setup : function(json)
   {
     this.mode = 'edit';
-    
+
     // set the markup and css and title
     this.markup = (json.markup && json.markup.replace(/<br\/>/g, '\n')) || '';
     this.cssText = (json.css && json.css.replace(/<br\/>/g, '\n')) || '';
-    
+
     this.frameLoaded = false;
     this.build();
-    
+
     this.setTitle( json.title || json.summary || '' );
-    
+
     this.attachEvents();
-    
+
     this.manageElement(this.element);
-    
+
     this.element.setStyles({
       left: json.position.x,
       top: json.position.y
     });
-    
+
     if(json.size)
     {
       this.setSize(json.size);
     }
-    
+
     // pin the shift if necessary
     if(json.pinRef) this.pin(json.pinRef);
-    
+
     // update the way that it looks
     if(this.markup != '')
     {
@@ -656,13 +657,13 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     {
       this.updateCSS(this.cssText);
     }
-    
+
     this.setFocusRegions( this.top, this.handle, this.resizeControl );
 
     this.refresh();
   },
-  
-  
+
+
   setTitle: function(newTitle)
   {
     this.parent(newTitle);
@@ -673,8 +674,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.refresh();
     }
   },
-  
-  
+
+
   setSize: function(size)
   {
     this.__size__ = size;
@@ -685,22 +686,22 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
     this.refresh();
   },
-  
-  
+
+
   getSize: function()
   {
     return this.__size__;
   },
-  
-  
-  encode : function(markup)
+
+
+  encode : function()
   {
     var pos = (!this.isPinned()) ? this.element.getPosition() :  this.frame.getPosition();
     var cssText = this.cssText.replace(/\n/g, '<br/>');
     var markup = this.markup.replace(/\n/g, '<br/>');
-    
+
     // remove any javascript
-    
+
     return {
       position: pos,
       css: cssText,
@@ -709,45 +710,45 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       title: this.getTitle(),
       pinRef: this.getEncodablePinRef(),
       size: this.frame.getSize().size,
-      filters: 
+      filters:
       {
         markup: 'html',
         css: 'css'
       }
     };
   },
-  
-  
+
+
   cleanMarkup: function(markup)
   {
     // TODO: strip any js out - David
     return markup;
   },
-  
-  
+
+
   setCSS : function(css)
   {
     this.cssText = css;
   },
-  
-  
+
+
   getCSS : function()
   {
     return this.cssText;
   },
-  
-  
+
+
   setMarkup : function(markup)
   {
     this.markup = markup;
   },
-  
-  
+
+
   getMarkup : function()
   {
     return this.markup;
   },
-  
+
   /*
     Function: updateMarkup
       Update the markup inside of the iframe.
@@ -765,7 +766,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
 
       try
       {
-        
+
         this.source.setHTML(markup);
       }
       catch(err)
@@ -775,22 +776,22 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.refresh();
     }
   },
-  
-  
+
+
   updateCSS : function(css)
   {
     this.cssText = css;
-    
+
     /*
     // Safari doesn't support empty on CSS elements
     for(var i = 0; i < this.css.childNodes.length; i++)
     {
       this.css.removeChild(this.css.childNodes[i]);
     }
-    
+
     this.css.appendText(css);
     */
-    
+
     // update the iframe css tag
     if(this.iframeCss)
     {
@@ -798,14 +799,14 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       {
         this.iframeCss.removeChild(this.iframeCss.childNodes[i]);
       }
-      
+
       this.iframeCss.appendText(css);
     }
-    
+
     this.refresh();
   },
-  
-  
+
+
   resizeToContent : function()
   {
     // if the scroll has changed update the shift dimensions
@@ -824,23 +825,23 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       });
     }
   },
-  
-  
+
+
   refresh: function()
   {
     var size = this.element.getSize().size;
-    
+
     var iconSize = this.titleIcon.getSize().size;
     var titleSize = this.title.getSize().size;
-    
+
     // check the title's actualSize
     this.title.setStyle('width', '');
     this.titleTextDiv.setStyle('width', '');
     var actualTitleHeight = this.titleTextDiv.getSize().size.y;
-    
+
     var nsize = size.x-(iconSize.x+titleSize.x)-13;
     var fsizey = size.y-this.top.getSize().size.y;
-    
+
     var topSize = this.top.getSize().size;
 
     // TODO: fix this behavior
@@ -849,7 +850,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.title.setStyle('width', size.x - 80);
       this.titleTextDiv.setStyle('width', 10000);
     }
-    
+
     this.updateHandle();
 
     var frameSize = this.frame.getSize().size;
@@ -857,20 +858,20 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       width: frameSize.x,
       height: frameSize.y+topSize.y
     });
-    
+
     this.cover.setStyles({
       bottom: 0
     });
   },
-  
-  
+
+
   dragRefresh: function()
   {
     if(!this.getPinRef())
     {
       var size = this.element.getSize().size;
       var fsizey = size.y-this.top.getSize().size.y;
-      
+
       this.updateHandle();
 
       // set the frame dimensions
@@ -880,20 +881,20 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       });
     }
   },
-  
-  
+
+
   updateHandle: function()
   {
     var iconSize = this.titleIcon.getSize().size;
     var titleSize = this.title.getSize().size;
-    
+
     // update the handle
     this.handle.setStyles({
       left: iconSize.x + titleSize.x + 8
     });
   },
 
-  
+
   attachEvents: function()
   {
     this.cover.addEvent('mouseover', function(_evt) {
@@ -903,15 +904,15 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.show();
     }.bind(this));
   },
-  
-  
+
+
   show : function()
   {
     this.parent();
-    
+
     this.previewMode = true;
     this.hideFrame();
-    
+
     if(this.getPinRef())
     {
       if(!this.isPinned())
@@ -927,20 +928,20 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       }
     }
   },
-  
-  
+
+
   hide: function()
   {
     this.parent();
-    
+
     if(this.isPinned())
     {
       this.unpin();
     }
     this.element.addClass('SSDisplayNone');
   },
-  
-  
+
+
   showFrame: function()
   {
     if(!this.frameIsVisible())
@@ -949,7 +950,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.top.getElements('*').setStyle('visibility', 'visible');
       this.resizeControl.setStyle('visibility', 'visible');
       this.element.setStyle('borderWidth', 2);
-    
+
       if(this.__hiddenFrame__)
       {
         this.__hiddenFrame__ = false;
@@ -961,8 +962,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       }
     }
   },
-  
-  
+
+
   hideFrame: function()
   {
     if(this.frameIsVisible())
@@ -982,18 +983,18 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       });
     }
   },
-  
-  
+
+
   frameIsVisible: function()
   {
     return this.top.getStyle('visibility') == 'visible';
   },
-  
-  
+
+
   edit : function()
   {
     this.parent();
-    
+
     this.previewMode = false;
 
     if(this.isPinned())
@@ -1008,7 +1009,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.frame.removeClass('SSFrameBorder');
     }
   },
-  
+
   /*
     Function: finishFrame
       Finish the frame. Load the markup if it's not done yet.
@@ -1016,13 +1017,13 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   finishFrame : function()
   {
     this.frameLoaded = true;
-    
+
     var doc = this.frame.contentDocument;
 
     // MooTools-ize the body of the document
     $(doc.body).setProperty('id', 'SSSourceShiftFrameBody');
     this.frameBody = $(doc.body);
-    
+
     if(this.isPinned()) this.frameBody.setStyles({
       left: -8,
       top: -8
@@ -1037,7 +1038,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     {
       this.updateMarkup(this.markup);
     }
-    
+
     // add a style tag to iframe
     // TODO: this should be convenience function, injectCSS(id, iframeTarget) - David
     if( doc.getElementsByTagName('head').length != 0 )
@@ -1052,7 +1053,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       var head = $(doc.createElement( 'head' ));
       head.injectBefore( doc.body );
     }
-    
+
     this.iframeCss = $(doc.createElement('style'));
     this.iframeCss.setProperty('type', 'text/css');
     this.iframeCss.injectInside(head);
@@ -1063,29 +1064,29 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       this.updateCSS(this.cssText);
     }
   },
-  
+
   /*
   buildStyleSheet: function()
-  {    
+  {
     this.cssId = "SourceShiftStyle" + this.getId();
     this.css = new ShiftSpace.Element('style', {
       id: this.cssId,
-      type: 'text/css' 
+      type: 'text/css'
     });
     this.css.injectInside(document.head);
   },
   */
-  
-  
+
+
   build : function()
   {
     //this.buildStyleSheet();
-    
+
     // the main frame
     this.element = new ShiftSpace.Element('div', {
       'class': "SSSourceShift"
     });
-    
+
     this.top = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftTop"
     });
@@ -1094,7 +1095,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       'class' : "SSSourceShiftTitleIcon"
     });
     this.titleIcon.injectInside(this.top);
-    
+
     this.title = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftTitle SSUserSelectNone"
     });
@@ -1103,30 +1104,30 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     });
     this.titleTextDiv.injectInside(this.title);
     this.titleTextDiv.appendText('SourceShift');
-    
+
     this.handle = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftHandle"
     });
     this.title.injectInside(this.top);
     this.handle.injectInside(this.top);
-    
+
     // make the SourceShift draggable
     this.element.makeDraggable({
       handle: this.handle
     });
-    
+
     this.element.makeDraggable({
       handle: this.titleTextDiv
     });
-    
+
     this.closeButton = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftCloseButton"
     });
     this.closeButton.injectInside(this.top);
     this.closeButton.addEvent('click', this.hide.bind(this));
-    
+
     this.top.injectInside(this.element);
-    
+
     // create an iframe with the css already loaded
     this.frame = new ShiftSpace.Iframe({
       'class' : 'SSSourceShiftFrame',
@@ -1138,13 +1139,13 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       onload : this.finishFrame.bind(this)
     });
     this.frame.injectInside(this.element);
-    
+
     // resize control
     this.resizeControl = new ShiftSpace.Element('div', {
       'class': 'SSSourceShiftResizeControl'
     });
     this.resizeControl.injectInside(this.element);
-    
+
     // pinned resize control
     this.pinnedResizer = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftPinnedResizer SSDisplayNone"
@@ -1154,7 +1155,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       onDrag: this.refreshPinnedDragResizer.bind(this)
     });
     this.pinnedResizerDragRef.detach();
-    
+
     // pinned handle
     this.pinnedHandle = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftPinnedHandle SSDisplayNone"
@@ -1164,25 +1165,25 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       onDrag: this.refreshPinnedHandle.bind(this)
     });
     this.pinnedHandleDragRef.detach();
-    
+
     // clear out dragging stuff
     this.frame.setStyles({
       position: '',
       left: '',
       top: ''
     });
-    
+
     this.element.makeResizable({
       handle: this.resizeControl,
       onDrag : this.dragRefresh.bind(this)
     });
-    
+
     // build the cover
     this.buildCover();
-    
+
     this.element.injectInside(document.body);
   },
-  
+
   /*
     Function: buildDragCover
       Add the drag cover.  This prevents events from falling into the iframe
@@ -1194,33 +1195,33 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       'class': "SSSourceShiftCover"
     });
   },
-  
-  
+
+
   showPinnedResizer: function()
   {
     // show handy resizer for when source shift is pinned as it's difficult to guess dimensions
     this.pinnedResizer.injectInside(document.body);
-    
+
     // get the frame location
     this.refreshPinnedDragResizer();
     this.pinnedResizer.removeClass('SSDisplayNone');
-    
+
     this.pinnedResizerDragRef.attach();
   },
-  
-  
+
+
   refreshPinnedDragResizer: function()
   {
     // get the frame location
     var framePos = this.frame.getPosition();
     var frameSize = this.frame.getSize().size;
-    
+
     this.pinnedResizer.setStyles({
       position: 'absolute',
       left: framePos.x + frameSize.x,
       top: framePos.y + frameSize.y
     });
-    
+
     this.pinnedHandle.setStyles({
       position: 'absolute',
       left: framePos.x,
@@ -1228,8 +1229,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       width: frameSize.x
     });
   },
-  
-  
+
+
   hidePinnedResizer: function()
   {
     // hide handy resizer
@@ -1237,42 +1238,42 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     if(this.pinnedResizer.getParent()) this.pinnedResizer.remove();
     this.pinnedResizerDragRef.detach();
   },
-  
-  
+
+
   showPinnedHandle: function()
   {
     // show handy resizer for when source shift is pinned as it's difficult to guess dimensions
     this.pinnedHandle.injectInside(document.body);
-    
+
     // get the frame location
     this.refreshPinnedHandle();
     this.pinnedHandle.removeClass('SSDisplayNone');
-    
+
     this.pinnedHandleDragRef.attach();
   },
-  
-  
+
+
   refreshPinnedHandle: function()
   {
     // get the frame location
     var framePos = this.frame.getPosition();
     var frameSize = this.frame.getSize().size;
-    
+
     this.pinnedHandle.setStyles({
       position: 'absolute',
       left: framePos.x,
       top: framePos.y - 5,
       width: frameSize.x
     });
-    
+
     this.pinnedResizer.setStyles({
       position: 'absolute',
       left: framePos.x + frameSize.x,
       top: framePos.y + frameSize.y
     });
   },
-  
-  
+
+
   hidePinnedHandle: function()
   {
     // hide handy resizer
@@ -1280,8 +1281,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     if(this.pinnedHandle.getParent()) this.pinnedHandle.remove();
     this.pinnedHandleDragRef.detach();
   },
-  
-  
+
+
   pin : function(pinRef)
   {
     // call the parent pin method
@@ -1308,7 +1309,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
         });
       }
     }
-    
+
     if(this.isBeingEdited())
     {
       this.frame.addClass('SSFrameBorder');
@@ -1318,7 +1319,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
 
     // hide the element now
     this.element.addClass('SSDisplayNone');
-    
+
     if(this.getSize())
     {
       this.frame.setStyles({
@@ -1330,33 +1331,33 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     // refresh
     this.refresh();
   },
-  
-  
+
+
   unpin : function()
   {
     this.hidePinnedResizer();
     this.hidePinnedHandle();
-    
+
     // restore
     this.parent();
     // put it back
     this.element.removeClass('SSDisplayNone');
     this.frame.injectAfter(this.top);
-    
+
     // restore the styles
     this.frame.setStyles({
-      float: '',
+      "float": '',
       width: '',
       height: '',
       position: '',
       display: ''
     });
-    
+
     if(this.frameBody) this.frameBody.setStyles({
-      left: '', 
+      left: '',
       top: ''
     });
-    
+
     this.showFrame();
     this.frame.removeClass('SSFrameBorder');
     this.frame.removeClass('SSDisplayNone');
@@ -1364,8 +1365,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     // refresh
     this.refresh();
   },
-  
-  
+
+
   onFocus : function()
   {
     // update the interface
@@ -1373,8 +1374,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.top.removeClass('SSSourceShiftTopBlur');
     this.element.setOpacity(1.0);
   },
-  
-  
+
+
   onBlur : function()
   {
     // update the interface
@@ -1384,8 +1385,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     this.element.setOpacity(0.5);
     */
   },
-  
-  
+
+
   getPosition: function()
   {
     if(this.isPinned())
@@ -1397,8 +1398,8 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       return this.element.getPosition();
     }
   },
-  
-  
+
+
   getMainView: function()
   {
     if(this.isPinned())
@@ -1410,7 +1411,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       return this.element;
     }
   }
-  
+
 });
 
 var SourceShift = new SourceShiftSpace(SourceShiftShift);

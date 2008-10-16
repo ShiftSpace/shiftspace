@@ -6,7 +6,16 @@ header('Content-type: text/plain');
 //$options = array('server', 'debug', 'cacheFiles');
 $options = array('debug', 'cacheFiles');
 
-$base = file("$dir/client/ShiftSpace.js");
+$version = $_GET['version'];
+if(!empty($version) && $version == '0.5')
+{
+  $base = file("$dir/client/ShiftSpace-0.5.js");  
+}
+else
+{
+  $base = file("$dir/client/ShiftSpace.js");
+}
+
 $include_regex = '#^\s*//\s*INCLUDE\s+(\S+)\s*$#';
 $variable_regex = '#^\s*var\s*(\w+)\s*=\s*(\S+\s*);#';
 
