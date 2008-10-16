@@ -465,7 +465,7 @@ ShiftSpace.Space = new Class({
   */
   allocateNewShift: function()
   {
-    if(typeof initShift != 'undefined') initShift(this.getName(), {});
+    if(typeof SSInitShift != 'undefined') SSInitShift(this.getName(), {});
   },
 
   /*

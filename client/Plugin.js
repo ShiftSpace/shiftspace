@@ -35,8 +35,11 @@ ShiftSpace.Plugin = new Class({
     }
     
     // do some stuff
-    ShiftSpace.Console.addEvent('select' + this.attributes.name, this.menuForShift.bind(this));
-    ShiftSpace.Console.addEvent('closeMenu', this.closeMenu.bind(this));
+    if(ShiftSpace.Console)
+    {
+      ShiftSpace.Console.addEvent('select' + this.attributes.name, this.menuForShift.bind(this));
+      ShiftSpace.Console.addEvent('closeMenu', this.closeMenu.bind(this));
+    }
 
     SSRegisterPlugin(this);
     this.setup();

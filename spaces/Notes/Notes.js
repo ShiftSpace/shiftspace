@@ -84,7 +84,6 @@ var NotesShift = new Class({
     });
   },
 
-
   /*
   */
   setup: function(json)

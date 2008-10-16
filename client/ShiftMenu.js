@@ -106,13 +106,13 @@ var ShiftMenu = new Class({
         // we need to load the space first
         loadSpace(spaceName, null, function() {
           SSLog('>>>>>>>>>>>>>>>>>>>>>>>>> space loaded');
-          initShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
+          SSInitShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
         });
       }
       else
       {
         // just show it
-        initShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
+        SSInitShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
       }
       this.hide(true);
     }.bind(this));
