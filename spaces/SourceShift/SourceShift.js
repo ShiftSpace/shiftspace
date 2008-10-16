@@ -1,4 +1,6 @@
-var SourceShiftSpace = ShiftSpace.Space.extend({
+var SourceShiftSpace = new Class({
+
+  Extends: ShiftSpace.Space,
 
   attributes :
   {
@@ -616,9 +618,11 @@ var SourceShiftSpace = ShiftSpace.Space.extend({
 
 });
 
-var SourceShiftShift = ShiftSpace.Shift.extend({
+var SourceShiftShift = ShiftSpace.Shift({
+  
+  Extends: ShiftSpace.Shift,
 
-  setup : function(json)
+  setup: function(json)
   {
     this.mode = 'edit';
 
@@ -694,7 +698,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   },
 
 
-  encode : function()
+  encode: function()
   {
     var pos = (!this.isPinned()) ? this.element.getPosition() :  this.frame.getPosition();
     var cssText = this.cssText.replace(/\n/g, '<br/>');
@@ -726,25 +730,25 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   },
 
 
-  setCSS : function(css)
+  setCSS: function(css)
   {
     this.cssText = css;
   },
 
 
-  getCSS : function()
+  getCSS: function()
   {
     return this.cssText;
   },
 
 
-  setMarkup : function(markup)
+  setMarkup: function(markup)
   {
     this.markup = markup;
   },
 
 
-  getMarkup : function()
+  getMarkup: function()
   {
     return this.markup;
   },
@@ -753,7 +757,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     Function: updateMarkup
       Update the markup inside of the iframe.
   */
-  updateMarkup : function(markup)
+  updateMarkup: function(markup)
   {
     if(!this.frameLoaded)
     {
@@ -778,7 +782,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   },
 
 
-  updateCSS : function(css)
+  updateCSS: function(css)
   {
     this.cssText = css;
 
@@ -807,7 +811,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   },
 
 
-  resizeToContent : function()
+  resizeToContent: function()
   {
     // if the scroll has changed update the shift dimensions
     var size = this.frame.getSize().size;
@@ -991,7 +995,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   },
 
 
-  edit : function()
+  edit: function()
   {
     this.parent();
 
@@ -1014,7 +1018,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
     Function: finishFrame
       Finish the frame. Load the markup if it's not done yet.
   */
-  finishFrame : function()
+  finishFrame: function()
   {
     this.frameLoaded = true;
 
@@ -1078,7 +1082,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   */
 
 
-  build : function()
+  build: function()
   {
     //this.buildStyleSheet();
 
@@ -1189,7 +1193,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
       Add the drag cover.  This prevents events from falling into the iframe
       during resize operations.
   */
-  buildCover : function()
+  buildCover: function()
   {
     this.cover = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftCover"
@@ -1283,7 +1287,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   },
 
 
-  pin : function(pinRef)
+  pin: function(pinRef)
   {
     // call the parent pin method
     this.parent(this.frame, pinRef);
@@ -1333,7 +1337,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   },
 
 
-  unpin : function()
+  unpin: function()
   {
     this.hidePinnedResizer();
     this.hidePinnedHandle();
@@ -1367,7 +1371,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   },
 
 
-  onFocus : function()
+  onFocus: function()
   {
     // update the interface
     this.element.removeClass('SSSourceShiftBorderBlur');
@@ -1376,7 +1380,7 @@ var SourceShiftShift = ShiftSpace.Shift.extend({
   },
 
 
-  onBlur : function()
+  onBlur: function()
   {
     // update the interface
     /*
