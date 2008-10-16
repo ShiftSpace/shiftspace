@@ -618,7 +618,7 @@ var SourceShiftSpace = new Class({
 
 });
 
-var SourceShiftShift = ShiftSpace.Shift({
+var SourceShiftShift = new Class({
   
   Extends: ShiftSpace.Shift,
 

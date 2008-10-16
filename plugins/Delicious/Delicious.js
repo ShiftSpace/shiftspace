@@ -1,5 +1,7 @@
 var Delicious = new Class({
   
+  Extends: ShiftSpace.Plugin,
+
   pluginType: ShiftSpace.Plugin.types.get('kInterfaceTypePlugin'),
 
   attributes:

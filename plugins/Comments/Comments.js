@@ -1,4 +1,7 @@
-var CommentsPlugin = ShiftSpace.Plugin.extend({
+var CommentsPlugin = new Class({
+  
+  Extends: ShiftSpace.Plugin,
+
   pluginType: ShiftSpace.Plugin.types.get('kInterfaceTypePlugin'),
 
   attributes:
@@ -13,7 +16,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
   setup: function()
   {
     // Listen to the relevant events
-    ShiftSpace.Console.addEvent('onHide', this.hideInterface.bind(this));
+    if(ShiftSpace.Console) ShiftSpace.Console.addEvent('onHide', this.hideInterface.bind(this));
     
     ShiftSpace.User.addEvent('onUserLogin', function() {
       if(this.isVisible()) this.refresh();
@@ -84,7 +87,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
         // notify listeners
         this.fireEvent('onCommentAdd', this.currentShiftId());
         // TODO: fix this at some point, we need a notification system - David
-        ShiftSpace.Console.addCommentToShift(this.currentShiftId());
+        if(ShiftSpace.Console) ShiftSpace.Console.addCommentToShift(this.currentShiftId());
       }.bind(this));
     }
   },
@@ -127,7 +130,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
     
       this.element.removeClass('SSDisplayNone');
     
-      if(!this.isVisible())
+      if(!this.isVisible() && ShiftSpace.Console)
       {
         ShiftSpace.Console.halfMode(function() {
           var resizeFx = this.element.effects({
@@ -166,7 +169,7 @@ var CommentsPlugin = ShiftSpace.Plugin.extend({
           // hide ourselves
           this.element.addClass('SSDisplayNone');
           this.setIsVisible(false);
-          ShiftSpace.Console.fullMode();
+          if(ShiftSpace.Console) ShiftSpace.Console.fullMode();
         }.bind(this)
       });
     

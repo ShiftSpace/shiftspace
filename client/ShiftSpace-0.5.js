@@ -236,10 +236,10 @@ var ShiftSpace = new (function() {
     {
       // hard code so that we pick up from localhost if dev'ing
       installedPlugins = {
-        'Delicious': server + 'plugins/Delicious/Delicious.js',
+        /*'Delicious': server + 'plugins/Delicious/Delicious.js',*/
         'Trails': server + 'plugins/Trails/NewTrail.js',
-        'Comments': server + 'plugins/Comments/Comments.js',
-        'Twitter': server + 'plugins/Twitter/Twitter.js'
+        'Comments': server + 'plugins/Comments/Comments.js'/*,
+        'Twitter': server + 'plugins/Twitter/Twitter.js'*/
       };
     }
 
@@ -320,7 +320,7 @@ var ShiftSpace = new (function() {
       // INCLUDE ../sandalphon/sandalphon.js
       SSLog('sandalphon.js loaded');
       // INCLUDE views/SSConsole/SSConsole.js
-      SSLog('Console-0.5.js loaded');
+      SSLog('SSConsole.js loaded');
 
       // INCLUDE Space.js
       SSLog('Space.js loaded');

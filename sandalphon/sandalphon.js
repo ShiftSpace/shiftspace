@@ -166,7 +166,7 @@ var SandalphonClass = new Class({
     var context = ctxt || window;
     
     var views = this.contextQuery(context, '*[uiclass]');
-
+    
     // instantiate all objects
     views.each(function(aView) {
       var theClass = aView.getProperty('uiclass');

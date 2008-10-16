@@ -6,6 +6,8 @@ var SSConsole = new Class({
 
   initialize: function(el, options)
   {
+    console.log("================================================ SSConsole");
+    
     // only really relevant under Sandalphon
     this.parent(el, options);
 
@@ -306,6 +308,7 @@ var SSConsole = new Class({
 // Create the object right away if we're not running under the Sandalphon tool
 if(typeof SandalphonToolMode == 'undefined')
 {
+  console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SSConsole");
   new SSConsole();
 }
 else

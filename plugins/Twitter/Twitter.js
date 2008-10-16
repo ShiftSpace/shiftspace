@@ -1,4 +1,6 @@
-var TwitterPlugin = ShiftSpace.Plugin.extend({
+var TwitterPlugin = new Class({
+  
+  Extends: ShiftSpace.Plugin,
 
   pluginType: ShiftSpace.Plugin.types.get('kInterfaceTypePlugin'),
 
