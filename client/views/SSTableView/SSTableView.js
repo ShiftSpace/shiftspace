@@ -12,11 +12,11 @@ var SSTableView = new Class({
 
   initialize: function(el, options)
   {
-    console.log('SSTableView initialize');
+    SSLog('SSTableView initialize', SSLogViews);
     // need to pass this up to parent
     this.parent(el);
 
-    console.log('SSTableView parent called');
+    SSLog('SSTableView parent called', SSLogViews);
 
     // for speed
     this.contentView = this.element._getElement('> .SSScrollView .SSContentView');
@@ -727,14 +727,14 @@ var SSTableView = new Class({
 
   columnChangedForRow: function(row, columnIndex, data)
   {
-    console.log('columnChangedForRow');
+    SSLog('columnChangedForRow', SSLogViews);
     if(this.datasource())
     {
       this.datasource().updateRowColumn(this.indexOfRow(row), this.columnNames()[columnIndex], data);
     }
     else
     {
-      console.log('no datasource');
+      SSLog('no datasource', SSLogViews);
     }
   },
 
@@ -744,7 +744,7 @@ var SSTableView = new Class({
   */
   refresh: function()
   {
-    console.log('SSTableView refresh');
+    SSLog('SSTableView refresh', SSLogViews);
 
     // empty the content view
     this.contentView.getElement('tbody').empty();

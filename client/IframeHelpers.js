@@ -62,7 +62,7 @@ function SSUpdateIframeCovers()
 {
   __iframeCovers__.each(function(aCover) {
     var pos = aCover.frame.getPosition();
-    var size = aCover.frame.getSize().size;
+    var size = aCover.frame.getSize();
     aCover.cover.setStyles({
       left: pos.x,
       top: pos.y,
