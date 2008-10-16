@@ -89,7 +89,7 @@ ShiftSpace.Space = new Class({
       // clear it out
       SSSetPendingShift(null);
       // show the pending shift
-      showShift(pendingShift);
+      SSShowShift(pendingShift);
     }
 
     return this;
@@ -142,11 +142,11 @@ ShiftSpace.Space = new Class({
       this.__deferredShifts__.each(function(aShift) {
         if(aShift.id)
         {
-          showShift(aShift.id);
+          SSShowShift(aShift.id);
         }
         else
         {
-          showShift(aShift);
+          SSShowShift(aShift);
         }
       }.bind(this));
 

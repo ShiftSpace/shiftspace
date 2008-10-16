@@ -60,16 +60,17 @@ Class: ShiftSpace
 var ShiftSpace = new (function() {
     // Internal Error Logging, trust me, you don't need this - kisses ShiftSpace Core Robot
     var SSNoLogging = 0;
-    var SSLogMessage = 1;
-    var SSLogError = 1 << 1;
-    var SSLogWarning = 1 << 2;
-    var SSLogPlugin = 1 << 3;
-    var SSLogServerCall = 1 << 4;
-    var SSLogSpaceError = 1 << 5;
-    var SSLogShift = 1 << 6;
-    var SSLogSpace = 1 << 7;
-    var SSLogViews = 1 << 8;
-    var SSLogSandalphon = 1 << 9;
+    
+    var SSLogMessage        = 1;
+        SSLogError          = 1 << 1,
+        SSLogWarning        = 1 << 2,
+        SSLogPlugin         = 1 << 3,
+        SSLogServerCall     = 1 << 4,
+        SSLogSpaceError     = 1 << 5,
+        SSLogShift          = 1 << 6,
+        SSLogSpace          = 1 << 7,
+        SSLogViews          = 1 << 8,
+        SSLogSandalphon     = 1 << 9;
     
     var SSLogAll = SSLogError | SSLogWarning | SSLogMessage | SSLogPlugin | SSLogServerCall | SSLogSpaceError | SSLogShift | SSLogSpace | SSLogViews | SSLogSandalphon;
     var __ssloglevel__ = SSNoLogging;
@@ -560,6 +561,7 @@ var ShiftSpace = new (function() {
     function SSAddEvent(eventType, callback) {
       __eventProxy__.addEvent(eventType, callback);
     };
+    this.addEvent = SSAddEvent;
 
     /*
       Function: SSFireEvent
@@ -1569,7 +1571,7 @@ var ShiftSpace = new (function() {
 
       // call onShiftCreate
       SSLog('SSShowNewShift');
-      showShift(shiftId); // TODO: remove - David
+      SSShowShift(shiftId); // TODO: remove - David
       SSLog('calling onShiftCreate');
       space.onShiftCreate(shiftId);
       editShift(shiftId);
@@ -1704,24 +1706,24 @@ var ShiftSpace = new (function() {
     function updateTitleOfShift(shiftId, title)
     {
       SSSpaceForShift(shiftId).updateTitleOfShift(shiftId, title);
-      showShift(shiftId);
+      SSShowShift(shiftId);
     }
 
     /*
-    Function: showShift
+    Function: SSShowShift
       Displays a shift on the page.
 
     Parameters:
       shiftId - The ID of the shift to display.
     */
-    function showShift(shiftId)
+    function SSShowShift(shiftId)
     {
-      SSLog('showShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + SSShiftIsLoaded(shiftId));
+      SSLog('SSShowShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + SSShiftIsLoaded(shiftId));
       if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
       {
         SSLog('SSLoadShift');
         // first make sure that is loaded
-        SSLoadShift(shiftId, showShift.bind(ShiftSpace));
+        SSLoadShift(shiftId, SSShowShift.bind(ShiftSpace));
         return;
       }
       else
@@ -1924,14 +1926,14 @@ var ShiftSpace = new (function() {
           {
             // load the space first
             loadSpace(space, null, function() {
-              ids.each(showShift);
+              ids.each(SSShowShift);
             });
             return;
           }
           else
           {
             // otherwise just show the puppies, this works in the sandbox
-            ids.each(showShift);
+            ids.each(SSShowShift);
           }
         }
       }
@@ -2404,8 +2406,9 @@ var ShiftSpace = new (function() {
       SSLog('//////////////////////////////////////////////////////////////////');
       */
 
+      console.log('saving new shift!');
       serverCall.safeCall('shift.create', params, function(json) {
-        //SSLog('>>>>>>>>>>>>>>>>> SAVED new shift');
+        SSLog('>>>>>>>>>>>>>>>>> SAVED new shift', SSLogServerCall);
         if (!json.status)
         {
           console.error(json.message);
@@ -2425,9 +2428,11 @@ var ShiftSpace = new (function() {
         delete shifts[shiftJson.id];
         delete space.shifts[shiftJson.id];
 
-        if (SSFocusedShiftId() == shiftJson.id) {
+        if (SSFocusedShiftId() == shiftJson.id) 
+        {
           SSSetFocusedShiftId(json.id);
         }
+        
         shiftJson.id = json.id;
         shiftJson.content = JSON.encode(shiftJson);
         shifts[shiftJson.id] = shiftJson;
@@ -2443,6 +2448,10 @@ var ShiftSpace = new (function() {
 
         // call onShiftSave
         space.onShiftSave(shiftJson.id);
+        
+        // fire an event with the real id
+        console.log('here we go!');
+        SSFireEvent('onShiftSave', shiftJson.id);
       });
 
     }
@@ -2504,7 +2513,7 @@ var ShiftSpace = new (function() {
           focusSpace(space, (shiftJson && shiftJson.position) || null);
 
           // show the shift first, this way edit and show are both atomic - David
-          showShift(shiftId);
+          SSShowShift(shiftId);
 
           // then edit it
           space.editShift(shiftId);
@@ -3055,16 +3064,20 @@ var ShiftSpace = new (function() {
       parameters - Values passed with the call (object)
       callback - (optional) A function to execute upon completion
     */
-    function serverCall(method, parameters, _callback) {
+    function serverCall(method, parameters, _callback) 
+    {
       var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
       
+      console.log('serverCall ' + $type(callback));
       SSLog('serverCall: ' + url, SSLogServerCall);
       
       var data = '';
 
-      for (var key in parameters) {
-        if (data != '') {
+      for (var key in parameters) 
+      {
+        if (data != '') 
+        {
           data += '&';
         }
         data += key + '=' + encodeURIComponent(parameters[key]);
@@ -3083,14 +3096,17 @@ var ShiftSpace = new (function() {
         method: 'POST',
         url: url,
         data: data,
-        onload: function(_rx) {
+        onload: function(_rx) 
+        {
+          console.log('done!');
           var rx = _rx;
-          SSLog('servercall returned');
+          SSLog('servercall returned', SSLogServerCall);
           /*
           SSLog(rx.responseText);
           SSLog(typeof callback == 'function');
           */
-          if (typeof callback == 'function') {
+          if ($type(callback) == 'function') 
+          {
             //SSLog('evaluate ' + rx.responseText);
             try
             {
@@ -3099,23 +3115,27 @@ var ShiftSpace = new (function() {
               SSLog(eval('(' + rx.responseText + ')'));
               SSLog('tried ' + url);
               var theJson = JSON.decode(rx.responseText);
+              console.log('success!');
             }
             catch(exc)
             {
-              SSLog('Server call exception: ' + SSDescribeException(exc));
+              console.log('server call exception');
+              SSLog('Server call exception: ' + SSDescribeException(exc), SSLogServerCall);
             }
             /*
             SSLog('done evaluating');
             SSLog(callback);
             */
+            console.log('calling callback');
             callback(theJson);
           }
           else
           {
-            SSLog('callback is not a function');
+            SSLog('callback is not a function', SSLogServerCall);
           }
         },
-        onerror: function(err) {
+        onerror: function(err)  
+        {
           SSLog(err);
         }
       };
@@ -3673,7 +3693,7 @@ var ShiftSpace = new (function() {
       this.SSHideShift = hideShift;
       this.SSDeleteShift = deleteShift;
       this.SSEditShift = editShift;
-      this.SSShowShift = showShift;
+      this.SSShowShift = SSShowShift;
       this.SSUserOwnsShift = SSUserOwnsShift;
       this.SSSetShiftStatus = SSSetShiftStatus;
       

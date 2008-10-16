@@ -279,6 +279,11 @@ var SSView = new Class({
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
   },
+  
+  isVisible: function()
+  {
+    return (this.element.getStyle('display') != 'none');
+  },
 
   /*
     Function: destroy

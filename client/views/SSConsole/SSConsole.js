@@ -20,6 +20,7 @@ var SSConsole = new Class({
     // listen for login/logout eventss
     ShiftSpace.User.addEvent('onUserLogin', this.handleLogin.bind(this));
     ShiftSpace.User.addEvent('onUserLogout', this.handleLogout.bind(this));
+    ShiftSpace.addEvent('onShiftSave', this.refreshTableViews.bind(this));
 
     // listen for global events as well
 
@@ -256,7 +257,11 @@ var SSConsole = new Class({
     {
       console.log('all shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
       // show the shift
-      if(typeof showShift != 'undefined') showShift(datasource.data()[args.rowIndex].id);
+      if(typeof SSShowShift != 'undefined') 
+      {
+        console.log('show shift!');
+        SSShowShift(datasource.data()[args.rowIndex].id);
+      }
     }
     else if(args.tableView == this.myShiftsTableView)
     {
@@ -300,7 +305,27 @@ var SSConsole = new Class({
     }
 
     return true;
-  }
+  },
+  
+  
+  getVisibleTableView: function()
+  {
+    if(this.allShiftsTableView.isVisible()) return this.allShiftsTableView;
+    if(this.myShiftsTableView.isVisible()) return this.myShiftsTableView;
+  },
+  
+  
+  refreshTableViews: function(shiftId)
+  {
+    console.log('refreshTableViews');
+    var visibleTableView = this.getVisibleTableView();
+
+    if(visibleTableView)
+    {
+      // reload the table
+      visibleTableView.reload();
+    }
+  },
 
 
 });
