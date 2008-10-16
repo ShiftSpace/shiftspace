@@ -38,11 +38,11 @@ var SourceShiftSpace = new Class({
 
   refresh : function()
   {
-    var handleSize = this.handleArea.getSize().size;
+    var handleSize = this.handleArea.getSize();
 
     if(this.isMinimized)
     {
-      this.origHeight = this.editSourceShift.getSize().size.y;
+      this.origHeight = this.editSourceShift.getSize().y;
       this.minHeight = this.editSourceShift.getStyle('min-height');
 
       this.editSourceShift.setStyle('min-height', handleSize.y+4);
@@ -55,9 +55,9 @@ var SourceShiftSpace = new Class({
       this.origHeight = null;
     }
 
-    var size = this.editSourceShift.getSize().size;
-    var topSize = this.top.getSize().size;
-    var bottomSize = this.bottom.getSize().size;
+    var size = this.editSourceShift.getSize();
+    var topSize = this.top.getSize();
+    var bottomSize = this.bottom.getSize();
 
     // refresh the edit area
     /*
@@ -68,7 +68,7 @@ var SourceShiftSpace = new Class({
     */
 
     // weird browser bug that I can't track
-    if(this.editSource.getSize().size.x > size.x)
+    if(this.editSource.getSize().x > size.x)
     {
       this.editSource.setStyle('width', size.x-18);
     }
@@ -152,7 +152,7 @@ var SourceShiftSpace = new Class({
 
       // update the location of the editing window
       var position = currentShift.getPosition();
-      var size = this.editSourceShift.getSize().size;
+      var size = this.editSourceShift.getSize();
 
       this.editSourceShift.setStyles({
         left: position.x - size.x - 10,
@@ -365,7 +365,7 @@ var SourceShiftSpace = new Class({
     this.topTitle = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorTopTitle SSUserSelectNone"
     });
-    this.topTitle.setText('SourceShift');
+    this.topTitle.set('text', 'SourceShift');
 
     this.topIcon = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorIcon"
@@ -387,8 +387,8 @@ var SourceShiftSpace = new Class({
       'class': "SSSourceShiftButton SSUserSelectNone",
       type: "button"
     });
-    this.previewButton.setHTML(buttonMarkup);
-    this.previewButton.getElement('.middle').setText('Preview');
+    this.previewButton.set('html', buttonMarkup);
+    this.previewButton.getElement('.middle').set('text', 'Preview');
     if(window.webkit) this.previewButton.addClass('SSSourceShiftButtonWebKit');
 
     this.saveButton = new ShiftSpace.Element('div', {
@@ -396,8 +396,8 @@ var SourceShiftSpace = new Class({
       'class': "SSSourceShiftButton SSUserSelectNone",
       type: "button"
     });
-    this.saveButton.setHTML(buttonMarkup);
-    this.saveButton.getElement('.middle').setText('Save');
+    this.saveButton.set('html', buttonMarkup);
+    this.saveButton.getElement('.middle').set('text', 'Save');
     if(window.webkit) this.saveButton.addClass('SSSourceShiftButtonWebKit');
 
     // setup hover events for the two buttons
@@ -412,18 +412,18 @@ var SourceShiftSpace = new Class({
     });
 
     this.xhtmlButton = this.createTabButton();
-    this.xhtmlButton.getElement('.middle').setText('XHTML');
+    this.xhtmlButton.getElement('.middle').set('text', 'XHTML');
     this.xhtmlButton.injectInside(this.tabArea);
 
     this.cssButton = this.createTabButton();
-    this.cssButton.getElement('.middle').setText('CSS');
+    this.cssButton.getElement('.middle').set('text', 'CSS');
     this.cssButton.injectInside(this.tabArea);
 
     // add the pin widget
     this.pinWidgetPrompt = new ShiftSpace.Element('div', {
       'class': "SSSourceShiftEditorPinPrompt SSUserSelectNone"
     });
-    this.pinWidgetPrompt.setText('Pin to element');
+    this.pinWidgetPrompt.set('text', 'Pin to element');
     this.pinWidgetPrompt.injectInside(this.tabArea);
     this.pinWidgetDiv = new ShiftSpace.Element('div', {
       'class': 'SSSourceShiftEditorPinWidget'
@@ -674,7 +674,7 @@ var SourceShiftShift = new Class({
 
     if(this.titleTextDiv)
     {
-      this.titleTextDiv.setText(newTitle);
+      this.titleTextDiv.set('text', newTitle);
       this.refresh();
     }
   },
@@ -713,7 +713,7 @@ var SourceShiftShift = new Class({
       summary: this.getTitle(),
       title: this.getTitle(),
       pinRef: this.getEncodablePinRef(),
-      size: this.frame.getSize().size,
+      size: this.frame.getSize(),
       filters:
       {
         markup: 'html',
@@ -771,7 +771,7 @@ var SourceShiftShift = new Class({
       try
       {
 
-        this.source.setHTML(markup);
+        this.source.set('html', markup);
       }
       catch(err)
       {
@@ -814,13 +814,13 @@ var SourceShiftShift = new Class({
   resizeToContent: function()
   {
     // if the scroll has changed update the shift dimensions
-    var size = this.frame.getSize().size;
-    var topy = this.top.getSize().size.y;
+    var size = this.frame.getSize();
+    var topy = this.top.getSize().y;
 
     if(this.source)
     {
-      var w = this.source.getSize().size.x;
-      var h = this.source.getSize().size.y;
+      var w = this.source.getSize().x;
+      var h = this.source.getSize().y;
 
       // set the size of the element
       this.frame.setStyles({
@@ -833,20 +833,20 @@ var SourceShiftShift = new Class({
 
   refresh: function()
   {
-    var size = this.element.getSize().size;
+    var size = this.element.getSize();
 
-    var iconSize = this.titleIcon.getSize().size;
-    var titleSize = this.title.getSize().size;
+    var iconSize = this.titleIcon.getSize();
+    var titleSize = this.title.getSize();
 
     // check the title's actualSize
     this.title.setStyle('width', '');
     this.titleTextDiv.setStyle('width', '');
-    var actualTitleHeight = this.titleTextDiv.getSize().size.y;
+    var actualTitleHeight = this.titleTextDiv.getSize().y;
 
     var nsize = size.x-(iconSize.x+titleSize.x)-13;
-    var fsizey = size.y-this.top.getSize().size.y;
+    var fsizey = size.y-this.top.getSize().y;
 
-    var topSize = this.top.getSize().size;
+    var topSize = this.top.getSize();
 
     // TODO: fix this behavior
     if(actualTitleHeight > 20)
@@ -857,7 +857,7 @@ var SourceShiftShift = new Class({
 
     this.updateHandle();
 
-    var frameSize = this.frame.getSize().size;
+    var frameSize = this.frame.getSize();
     this.element.setStyles({
       width: frameSize.x,
       height: frameSize.y+topSize.y
@@ -873,8 +873,8 @@ var SourceShiftShift = new Class({
   {
     if(!this.getPinRef())
     {
-      var size = this.element.getSize().size;
-      var fsizey = size.y-this.top.getSize().size.y;
+      var size = this.element.getSize();
+      var fsizey = size.y-this.top.getSize().y;
 
       this.updateHandle();
 
@@ -889,8 +889,8 @@ var SourceShiftShift = new Class({
 
   updateHandle: function()
   {
-    var iconSize = this.titleIcon.getSize().size;
-    var titleSize = this.title.getSize().size;
+    var iconSize = this.titleIcon.getSize();
+    var titleSize = this.title.getSize();
 
     // update the handle
     this.handle.setStyles({
@@ -1218,7 +1218,7 @@ var SourceShiftShift = new Class({
   {
     // get the frame location
     var framePos = this.frame.getPosition();
-    var frameSize = this.frame.getSize().size;
+    var frameSize = this.frame.getSize();
 
     this.pinnedResizer.setStyles({
       position: 'absolute',
@@ -1261,7 +1261,7 @@ var SourceShiftShift = new Class({
   {
     // get the frame location
     var framePos = this.frame.getPosition();
-    var frameSize = this.frame.getSize().size;
+    var frameSize = this.frame.getSize();
 
     this.pinnedHandle.setStyles({
       position: 'absolute',

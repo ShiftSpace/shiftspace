@@ -154,20 +154,20 @@ var PinWidget = new Class({
     this.menuTopItem = new ShiftSpace.Element('div', {
       'class': "SSPinMenuTopItem item"
     });
-    this.menuTopItem.setHTML("<div class='SSLeft'><div class='radio off'></div><span></span></div><div class='SSRight'></div>");
+    this.menuTopItem.set('html', "<div class='SSLeft'><div class='radio off'></div><span></span></div><div class='SSRight'></div>");
     this.menuTopItem.injectInside(this.menu);
 
     // don't add this one, we'll clone it
     this.menuItem = new ShiftSpace.Element('div', {
       'class': "SSPinMenuItem item"
     });
-    this.menuItem.setHTML("<div class='SSLeft'><div class='radio off'></div><span></span></div><div class='SSRight'></div>");
+    this.menuItem.set('html', "<div class='SSLeft'><div class='radio off'></div><span></span></div><div class='SSRight'></div>");
 
     // add the bottom items, always unpin
     this.menuBottomItem = new ShiftSpace.Element('div', {
       'class': "SSPinMenuBottomItem item"
     });
-    this.menuBottomItem.setHTML("<div class='SSLeft'><div class='radio off'></div><span>Unpin</span></div><div class='SSRight'></div>");
+    this.menuBottomItem.set('html', "<div class='SSLeft'><div class='radio off'></div><span>Unpin</span></div><div class='SSRight'></div>");
     this.menuBottomItem.injectInside(this.menu);
 
     // hide the menu
@@ -196,19 +196,19 @@ var PinWidget = new Class({
 
     // set the first menu item
     this.menuTopItem.addClass(actions[0]);
-    this.menuTopItem.getElement('span').setText(actions[0].capitalize());
+    this.menuTopItem.getElement('span').set('text', actions[0].capitalize());
 
     // add the rest
     for(i = 0; i < this.menu.getElements('.SSPinMenuItem').length; i++)
     {
       var item = this.menu.getElements('.SSPinMenuItem')[i];
       item.addClass(actions[i+1]);
-      item.getElement('span').setText(actions[i+1].capitalize());
+      item.getElement('span').set('text', actions[i+1].capitalize());
     }
 
     // set the last item
     this.menuBottomItem.addClass('unpin');
-    this.menuBottomItem.getElement('span').setText('Unpin');
+    this.menuBottomItem.getElement('span').set('text', 'Unpin');
   },
 
   /*
@@ -287,7 +287,7 @@ var PinWidget = new Class({
   showMenu: function(_evt)
   {
     var position = this.element.getPosition();
-    var size = this.element.getSize().size;
+    var size = this.element.getSize();
 
     this.element.addClass('SSPinWidgetMenuOpen');
 

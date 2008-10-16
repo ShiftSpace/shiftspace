@@ -262,7 +262,7 @@ ShiftSpace.Shift = new Class({
   {
     if(this.getMainView() && this.getMainView().getParent())
     {
-      this.getMainView().remove();
+      this.getMainView().dispose();
     }
 
     this.fireEvent('onShiftDestroy', this.getId());
