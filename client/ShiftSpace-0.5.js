@@ -367,8 +367,6 @@ var ShiftSpace = new (function() {
 
       SSLog('Grabbing content');
 
-      // See if there's anything on the current page
-      SSCheckForContent();
       // Create the modal div
       SSCreateModalDiv();
       SSLog('ShiftSpace initialize complete');
@@ -1826,47 +1824,6 @@ var ShiftSpace = new (function() {
 
 
     /*
-    Function: SSCheckForContent
-      Sends a request to the server about the current page's ShiftSpace content.
-    */
-    function SSCheckForContent() {
-      var params = {
-        href: window.location.href
-      };
-      serverCall('query', params, function(json) {
-        //SSLog('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
-        if (!json.status) {
-          console.error('Error checking for content: ' + json.message);
-          return;
-        }
-
-        if (json.username)
-        {
-          // Set private user variable
-          ShiftSpace.User.setUsername(json.username);
-          ShiftSpace.User.setEmail(json.email);
-
-          // fire user login for the Console
-          if (__consoleIsWaiting__)
-          {
-            SSFireEvent('onUserLogin', {status:1});
-          }
-
-          // make sure default shift status preference is set
-          SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
-        }
-
-        SSSetPendingShifts(json.count);
-
-        if (ShiftSpace.Console && json.count > 0 && __consoleIsWaiting__)
-        {
-          //SSLog('about to show notifier');
-          ShiftSpace.Console.showNotifier();
-        }
-      });
-    }
-
-    /*
       Function: SSCheckForAutolaunch
         Check for Spaces which need to be auto-launched.
     */
@@ -1936,83 +1893,6 @@ var ShiftSpace = new (function() {
       {
         ShiftSpace.Console.showNotifier();
       }
-    }
-
-
-    /*
-    Function: loadShifts
-      Loads the actual shift data for the current page.
-    */
-    function loadShifts() {
-      SSLog('====================================================================');
-      SSLog('LOAD SHIFTS');
-      SSLog('====================================================================');
-
-      var params = {
-          href: window.location.href
-      };
-      serverCall('shift.query', params, function(json) {
-          if (!json.status) {
-            console.error('Error loading shifts: ' + json.message);
-            return;
-          }
-
-          //SSLog(JSON.encode(json));
-
-          SSLog('====================================================================');
-          SSLog('SHIFT QUERY RETURN');
-          SSLog('====================================================================');
-          SSLog(json);
-
-
-          // save the pluginsData
-          for(var plugin in installedPlugins)
-          {
-            //SSLog('++++++++++++++++++++++++++++++++++++++ CHECKING FOR ' + plugin);
-            if(json[plugin])
-            {
-              /*
-              SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-              SSLog('LOADING INITIAL DATA FOR ' + plugin);
-              SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-              */
-              __pluginsData__[plugin] = json[plugin];
-            }
-          }
-
-          //SSLog(__pluginsData__);
-
-          json.shifts.each(function(shift) {
-            shifts[shift.id] = shift;
-
-            if(['notes', 'highlight', 'sourceshift', 'imageswap'].contains(shift.space))
-            {
-              shift.space = shift.space.capitalize();
-              shift.legacy = true;
-            }
-            if(shift.space == 'Highlight')
-            {
-              shift.space += 's';
-            }
-            if(shift.space == 'Sourceshift')
-            {
-              shift.space = 'SourceShift';
-            }
-            if(shift.space == 'Imageswap')
-            {
-              shift.space = 'ImageSwap';
-            }
-          });
-
-          if(ShiftSpace.Console) ShiftSpace.Console.addShifts(shifts);
-
-          // check for autolaunched content, better for sandbox
-          // TODO: refactor
-          if(ShiftSpace.User.isLoggedIn())
-          {
-            SSCheckForAutolaunch();
-          }
-      });
     }
 
     /*
