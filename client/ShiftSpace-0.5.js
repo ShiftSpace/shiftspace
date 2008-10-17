@@ -231,8 +231,8 @@ var ShiftSpace = new (function() {
     var cache = getValue('cache', []);
 
     // new additions for Sandalphon
-    this.UI = {};
-    this.Objects = new Hash();
+    this.UI = {}; // holds all UI class objects
+    this.Objects = new Hash(); // holds all instantiated UI objects
 
     // Private variable and function for controlling user authentication
     var username = false;
@@ -331,7 +331,7 @@ var ShiftSpace = new (function() {
         for (var space in installed) 
         {
           SSLog('loading space ' + space);
-          loadSpace(space);
+          SSLoadSpace(space);
         }
         for(var plugin in installedPlugins) 
         {
@@ -547,7 +547,7 @@ var ShiftSpace = new (function() {
         {
           if(!spaces[options.name])
           {
-            loadSpace(options.name, null, function() {
+            SSLoadSpace(options.name, null, function() {
               fn.apply(obj, args);
             });
           }
@@ -1280,7 +1280,7 @@ var ShiftSpace = new (function() {
       }
       if(__shiftSpaceState__.get('focusedShiftId'))
       {
-        focusShift(__shiftSpaceState__.get('focusedShiftId'));
+        SSFocusShift(__shiftSpaceState__.get('focusedShiftId'));
       }
 
       // restore the spaces
@@ -1348,7 +1348,7 @@ var ShiftSpace = new (function() {
         setValue('installed', installed);
 
         // let everyone else know
-        loadSpace(space, pendingShift, function() {
+        SSLoadSpace(space, pendingShift, function() {
           alert(space + " space installed.");
           SSFireEvent('onSpaceInstall', space);
         }.bind(this));
@@ -1480,18 +1480,18 @@ var ShiftSpace = new (function() {
       SSLog('calling onShiftCreate');
       space.onShiftCreate(shiftId);
       SSEditShift(shiftId);
-      focusShift(shiftId, false);
+      SSFocusShift(shiftId, false);
     }
 
 
     /*
-    Function: focusShift
+    Function: SSFocusShift
       Focuses a shift.
 
     Parameter:
       shiftId - the id of the shift.
     */
-    function focusShift(shiftId)
+    function SSFocusShift(shiftId)
     {
       var shift = shifts[shiftId];
       var space = SSSpaceForShift(shiftId);
@@ -1560,13 +1560,13 @@ var ShiftSpace = new (function() {
     }
 
     /*
-      Function: blurShift
+      Function: SSBlurShift
         Blurs a shift.
 
       Parameters:
         shiftId - a shift id.
     */
-    function blurShift(shiftId)
+    function SSBlurShift(shiftId)
     {
       // create a blur event so console gets updated
       var space = SSSpaceForShift(shiftId);
@@ -1575,13 +1575,13 @@ var ShiftSpace = new (function() {
     }
 
     /*
-    focusSpace
+    SSFocusSpace
     Focuses a space.
 
     Parameter:
       space - a ShiftSpace.Space instance
     */
-    function focusSpace(space, position)
+    function SSFocusSpace(space, position)
     {
       SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOCUS SPACE');
 
@@ -1655,7 +1655,7 @@ var ShiftSpace = new (function() {
           {
             SSLog(shift);
             SSLog('space not loaded ' + shift.space + ', ' + shiftId);
-            loadSpace(shift.space, shiftId);
+            SSLoadSpace(shift.space, shiftId);
             return;
           }
 
@@ -1709,7 +1709,7 @@ var ShiftSpace = new (function() {
             spaces[shift.space].showShift(shiftJson);
           }
 
-          focusShift(shift.id);
+          SSFocusShift(shift.id);
 
           // call onShiftShow
           space.onShiftShow(shiftId);
@@ -1730,90 +1730,18 @@ var ShiftSpace = new (function() {
       }
     }
 
-    /*
-      Function: SSAddRecentlyViewedShift
-        Add a recently viewed shift.
-
-      Parameters:
-        shiftId - a shift id
-    */
-    function SSAddRecentlyViewedShift(shiftId)
-    {
-      // store a reference to this
-      // TODO: only add these if the user is logged in
-      if(ShiftSpace.User.isLoggedIn() && !SSIsNewShift(shiftId))
-      {
-        getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
-          // simply mark the ids
-          recentlyViewedShifts.unshift(shiftId);
-          // store the recently viewed shifts
-          setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', recentlyViewedShifts);
-        });
-      }
-    }
-    
-    /*
-      Function: SSGetRecentlyViewedShifts
-        Returns a hash of recently viewed shifts.  The shifts are hashed by
-        their id.  Each id points to a Javascript object that has the metadata
-        for that particular shift.
-
-      Parameters:
-        callback - a function to be called when the operation is complete.  A callback is necessary since plugins have access.
-    */
-    function SSGetRecentlyViewedShifts(callback)
-    {
-      // array of shifts on the currently viewed url
-      var localShifts = {};
-      // array of shifts living on other urls
-      var remoteShifts = [];
-
-      // grab the local shifs and generate an array of remote shifts
-      getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
-        var len = recentlyViewedShifts.length;
-
-        len.times(function(i) {
-          var shiftId = recentlyViewedShifts[i];
-          if(SSGetShift(shiftId))
-          {
-            localShifts[shiftId] = SSGetShiftData(shiftId);
-          }
-          else
-          {
-            remoteShifts.push(shiftId);
-          }
-        });
-
-        if(remoteShifts.length > 0)
-        {
-          SSLoadShifts(remoteShifts, function(remoteShiftsArray) {
-            // convert array into hash
-            var theRemoteShifts = {};
-            remoteShiftsArray.each(function(shift) {
-              theRemoteShifts[shift.id] = shift;
-            });
-            // merge local and remote
-            callback($merge(localShifts, theRemoteShifts));
-          });
-        }
-        else
-        {
-          callback(localShifts);
-        };
-      });
-    }
-    
+    // INCLUDE RecentlyViewedHelpers.js
 
     /*
 
-    Function: hideShift
+    Function: SSHideShift
       Hides a shift from the page.
 
     Parameters:
         shiftId - The ID of the shift to hide.
 
     */
-    function hideShift(shiftId)
+    function SSHideShift(shiftId)
     {
       var shift = SSGetShift(shiftId);
       var space = SSSpaceForShift(shiftId);
@@ -1841,7 +1769,7 @@ var ShiftSpace = new (function() {
           if(!spaceObject)
           {
             // load the space first
-            loadSpace(space, null, function() {
+            SSLoadSpace(space, null, function() {
               ids.each(SSShowShift);
             });
             return;
@@ -1873,26 +1801,6 @@ var ShiftSpace = new (function() {
         }
       }
       return shiftsForSpace;
-    }
-
-
-    /*
-    Function: SSConsoleIsReady
-      Called by the Console object when it finishes initializing.
-
-    Returns:
-      A boolean value.
-    */
-    function SSConsoleIsReady()
-    {
-      if (SSPendingShifts() == -1)
-      {
-        __consoleIsWaiting__ = true;
-      }
-      else if (ShiftSpace.Console && SSPendingShifts() > 0)
-      {
-        ShiftSpace.Console.showNotifier();
-      }
     }
 
     /*
@@ -2320,7 +2228,7 @@ var ShiftSpace = new (function() {
         // load the space first
         if(!space)
         {
-          loadSpace(shift.space, shiftId, function() {
+          SSLoadSpace(shift.space, shiftId, function() {
             SSEditShift(shiftId);
           });
           return;
@@ -2349,7 +2257,7 @@ var ShiftSpace = new (function() {
           var shiftJson = SSGetShiftContent(shiftId);
 
           // show the interface
-          focusSpace(space, (shiftJson && shiftJson.position) || null);
+          SSFocusSpace(space, (shiftJson && shiftJson.position) || null);
 
           // show the shift first, this way edit and show are both atomic - David
           SSShowShift(shiftId);
@@ -2359,7 +2267,7 @@ var ShiftSpace = new (function() {
           space.onShiftEdit(shiftId);
 
           // focus the shift
-          focusShift(shiftId);
+          SSFocusShift(shiftId);
 
           SSFireEvent('onShiftEdit', shiftId);
         }
@@ -2371,13 +2279,13 @@ var ShiftSpace = new (function() {
     }
 
     /*
-    Function: deleteShift
+    Function: SSDeleteShift
       Deletes a shift from the server.
 
     Parameters:
       shiftId - a shift id.
     */
-    function deleteShift(shiftId) {
+    function SSDeleteShift(shiftId) {
       var space = SSSpaceForShift(shiftId);
 
       // don't assume the space is loaded
@@ -2614,7 +2522,7 @@ var ShiftSpace = new (function() {
     }
 
     /*
-    Function: loadSpace
+    Function: SSLoadSpace
       Loads the space's source code, executes it and stores an instance of the
       space class in the 'spaces' object
 
@@ -2623,7 +2531,7 @@ var ShiftSpace = new (function() {
       pendingShift - a pending shift id, will probably become deprecaed.
       callback - a callback function to run when the space is loaded.
     */
-    function loadSpace(space, pendingShift, callback)
+    function SSLoadSpace(space, pendingShift, callback)
     {
       // set the pending shift if there is one
       SSSetPendingShift(pendingShift);
@@ -2681,7 +2589,8 @@ var ShiftSpace = new (function() {
     Parameters:
       instance - A space object.
     */
-    function SSRegisterSpace(instance) {
+    function SSRegisterSpace(instance) 
+    {
       SSLog("SSRegisterSpace");
       var spaceName = instance.attributes.name;
       SSLog('Register Space ===================================== ' + spaceName);
@@ -2692,10 +2601,13 @@ var ShiftSpace = new (function() {
 
       instance.attributes.dir = spaceDir;
 
-      if (!instance.attributes.icon) {
+      if (!instance.attributes.icon) 
+      {
         var icon = installed[spaceName].replace('.js', '.png');
         instance.attributes.icon = icon;
-      } else if (instance.attributes.icon.indexOf('/') == -1) {
+      } 
+      else if (instance.attributes.icon.indexOf('/') == -1) 
+      {
         var icon = spaceDir + instance.attributes.icon;
         instance.attributes.icon = icon;
       }
@@ -2703,8 +2615,10 @@ var ShiftSpace = new (function() {
       //SSLog("Space icon: " + instance.attribution.icon);
 
       // if a css file is defined in the attributes load the style
-      if (instance.attributes.css) {
-        if (instance.attributes.css.indexOf('/') == -1) {
+      if (instance.attributes.css) 
+      {
+        if (instance.attributes.css.indexOf('/') == -1) 
+        {
           var css = spaceDir + instance.attributes.css;
           instance.attributes.css = css;
         }
@@ -2712,7 +2626,8 @@ var ShiftSpace = new (function() {
       }
 
       // This exposes each space instance to the console
-      if (debug) {
+      if (debug) 
+      {
         ShiftSpace[instance.attributes.name + 'Space'] = instance;
       }
 
@@ -2725,11 +2640,11 @@ var ShiftSpace = new (function() {
         if(ShiftSpace.Console) ShiftSpace.Console.showShift(shiftId);
       });
       instance.addEvent('onShiftBlur', function(shiftId) {
-        blurShift(shiftId);
+        SSBlurShift(shiftId);
         if(ShiftSpace.Console) ShiftSpace.Console.blurShift(shiftId);
       });
       instance.addEvent('onShiftFocus', function(shiftId) {
-        focusShift(shiftId);
+        SSFocusShift(shiftId);
         if(ShiftSpace.Console) ShiftSpace.Console.focusShift(shiftId);
       });
       instance.addEvent('onShiftSave', function(shiftId) {
@@ -3167,294 +3082,7 @@ var ShiftSpace = new (function() {
       __modalDelegate__ = null;
     }
 
-    var __errorWindowShiftPropertyModel__;
-    var __errorWindowMinimized__ = true;
-
-    /*
-      Function: SSCreateErrorWindow
-        Create the error window.
-    */
-    function SSCreateErrorWindow()
-    {
-      // Create the model for the table
-      __errorWindowShiftPropertyModel__ = new ShiftSpace.Element('tr');
-      __errorWindowShiftPropertyModel__.setStyle('display', '');
-      var propertyName = new ShiftSpace.Element('td');
-      propertyName.addClass('SSErrorWindowShiftProperty');
-      var propertyValue = new ShiftSpace.Element('td');
-      propertyName.injectInside(__errorWindowShiftPropertyModel__);
-      propertyValue.injectInside(__errorWindowShiftPropertyModel__);
-
-      // the error window
-      __errorWindow__ = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindow SSDisplayNone"
-      });
-
-      // error title area
-      var errorWindowTitle = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowTitle"
-      });
-      errorWindowTitle.injectInside(__errorWindow__);
-      errorWindowTitle.set('text', 'Oops ... it seems this shift is broken');
-
-      // the errow message area
-      var errorWindowMessage = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowMessage"
-      });
-      errorWindowMessage.injectInside(__errorWindow__);
-      errorWindowMessage.set('html', 'Help us improve our experimental fix feature, copy and paste the shift details and <a target="new" href="http://metatron.shiftspace.org/trac/newticket">file a bug report</a>.');
-
-      var br = new ShiftSpace.Element('br');
-      br.setStyle('clear', 'both');
-      br.injectInside(__errorWindow__);
-
-      // add the bottom
-      var errorWindowBottom = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowBottom"
-      });
-      errorWindowBottom.injectInside(__errorWindow__);
-
-      // build the disclosure triangle and label
-      var errorWindowDisclosure = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowDisclosure"
-      });
-      var errorWindowExpandWrapper = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowExpandWrapper SSUserSelectNone"
-      });
-      var errorWindowExpand = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowExpand"
-      });
-      errorWindowExpand.injectInside(errorWindowExpandWrapper);
-      var errorWindowExpandLabel = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowExpandLabel SSDefaultCursor"
-      });
-      errorWindowExpandLabel.set('text', 'view shift details');
-      errorWindowExpandLabel.injectInside(errorWindowExpandWrapper);
-      errorWindowExpandWrapper.injectInside(errorWindowDisclosure);
-
-      errorWindowDisclosure.injectInside(errorWindowBottom);
-
-      // bulid the table where the shift data will be shows
-      var errorWindowShiftStatusScroll = new ShiftSpace.Element('div', {
-        'class': 'SSErrorWindowShiftStatusScroll SSDisplayNone'
-      });
-      var errorWindowShiftStatus = new ShiftSpace.Element('table', {
-        'class': "SSErrorWindowShiftStatus",
-        'col' : 2
-      });
-      errorWindowShiftStatus.injectInside(errorWindowShiftStatusScroll);
-      errorWindowShiftStatusScroll.injectInside(errorWindowDisclosure);
-
-
-      // build the ok button
-      var errorWindowOk = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowOk SSUserSelectNone"
-      });
-      errorWindowOk.set('text', 'OK');
-      errorWindowOk.injectInside(errorWindowBottom);
-
-      // build the fix button
-      var errorWindowFix = new ShiftSpace.Element('div', {
-        'class': "SSErrorWindowFix SSErrorWindowButton SSDisplayNone"
-      });
-      errorWindowFix.set('text', 'Fix');
-      errorWindowFix.injectInside(errorWindowBottom);
-
-      errorWindowOk.addEvent('click', function(_evt) {
-        var evt = new Event(_evt);
-
-        var fadeFx = __errorWindow__.effects({
-          duration: 300,
-          transition: Fx.Transitions.Cubic.easeOut,
-          onComplete: function()
-          {
-            // reset the error window
-            __errorWindow__.setStyles({
-              width: 280,
-              height: 100
-            });
-            errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
-            errorWindowExpandLabel.set('text', 'view shift details');
-            errorWindowShiftStatusScroll.addClass('SSDisplayNone');
-            __errorWindowMinimized__ = true;
-          }
-        });
-
-        fadeFx.start({
-          opacity: [0.95, 0]
-        });
-      });
-
-      // add expand action
-      errorWindowExpandWrapper.addEvent('click', function(_evt) {
-        var evt = new Event(_evt);
-
-        if(!__errorWindowMinimized__)
-        {
-          errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
-          errorWindowExpandLabel.set('text', 'view shift details');
-          errorWindowShiftStatusScroll.addClass('SSDisplayNone');
-        }
-        else
-        {
-          errorWindowExpand.addClass('SSErrorWindowExpandOpen');
-          errorWindowExpandLabel.set('text', 'hide shift details');
-        }
-
-        var resizeFx = __errorWindow__.effects({
-          duration: 500,
-          transition: Fx.Transitions.Cubic.easeOut,
-          onComplete: function()
-          {
-            if(!__errorWindowMinimized__)
-            {
-              errorWindowShiftStatusScroll.removeClass('SSDisplayNone');
-            }
-          }
-        });
-
-        if(__errorWindowMinimized__)
-        {
-          resizeFx.start({
-            width: [280, 340],
-            height: [100, 300]
-          });
-        }
-        else
-        {
-          resizeFx.start({
-            width: [340, 280],
-            height: [300, 100]
-          });
-        }
-
-        __errorWindowMinimized__ = !__errorWindowMinimized__;
-      });
-
-      __errorWindow__.injectInside(document.body);
-    }
-
-    /*
-      Function: SSShowErrorWindow
-        Show the error window.
-
-      Parameters:
-        shiftId - a shift id.
-    */
-    function SSShowErrorWindow(shiftId)
-    {
-      /*
-      __errorWindow__.getElement('.SSErrorWindowTitle').set('text', title);
-      __errorWindow__.getElement('.SSErrorWindowMessage').set('text', message);
-      */
-
-      if(shiftId) SSErrorWindowUpdateTableForShift(shiftId);
-
-      // is this shift fixable, if so show the fix button
-      var space = SSSpaceForShift(shiftId);
-      var fixButton = __errorWindow__.getElement('.SSErrorWindowFix');
-
-      if(space && space.fix && SSUserCanEditShift(shiftId))
-      {
-        fixButton.removeClass('SSDisplayNone');
-        fixButton.removeEvents();
-
-        fixButton.addEvent('click', function(_evt) {
-          var evt = new Event(_evt);
-
-          // close the error window
-          SSHideErrorWindow();
-
-          var shift = SSGetShift(shiftId);
-
-          // hmm add the shift, not show it
-          // load the shift
-          space.addShift({
-            id: shiftId,
-            username: shift.username,
-            summary: shift.summary
-          });
-          // set the current shift
-          space.setCurrentShiftById(shiftId);
-          // edit the shift
-          space.editShift(shiftId);
-
-          // attempt to fix it
-          var err = space.fix({
-            id: shiftId,
-            username: shift.username,
-            summary: shift.summary,
-            content: unescape(shift.content)
-          });
-
-        });
-      }
-      else
-      {
-        fixButton.addClass('SSDisplayNone');
-      }
-
-      __errorWindow__.setOpacity(0);
-      __errorWindow__.removeClass('SSDisplayNone');
-
-      var fadeFx = __errorWindow__.effects({
-        duration: 300,
-        transition: Fx.Transitions.Cubic.easeOut
-      });
-
-      fadeFx.start({
-        opacity: [0, 0.95]
-      });
-    }
-
-    /*
-      Function: SSHideErrorWindow
-        Hide the error window.
-    */
-    function SSHideErrorWindow()
-    {
-      __errorWindow__.addClass('SSDisplayNone');
-    }
-
-    /*
-      Function: SSErrorWindowUpdateTableForShift
-        Update object description table for a shift.
-
-      Parameters:
-        shiftId - a shift id.
-    */
-    function SSErrorWindowUpdateTableForShift(shiftId)
-    {
-      var statusTable = __errorWindow__.getElement('.SSErrorWindowShiftStatus');
-      // clear out the table of it's contents
-      statusTable.empty();
-
-      var theShift = SSGetShift(shiftId);
-      var shiftContent;
-
-      try
-      {
-        shiftContent = SSGetShiftContent(shiftId);
-      }
-      catch(err)
-      {
-        shiftContent = {
-          id: theShift.id,
-          content: unescape(theShift.content)
-        };
-      }
-
-      for(var prop in shiftContent)
-      {
-        var newPair = __errorWindowShiftPropertyModel__.clone(true);
-        var tds = newPair.getElements('td');
-
-        tds[0].set('text', prop);
-        tds[1].set('text', shiftContent[prop]);
-
-        newPair.injectInside(statusTable);
-      }
-    }
+    // INCLUDE ErrorWindow.js
 
     // In sandbox mode, expose something for easier debugging.
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
@@ -3474,8 +3102,8 @@ var ShiftSpace = new (function() {
 
       // for Action Menu debugging
       this.SSGetPageShifts = SSGetPageShifts;
-      this.SSHideShift = hideShift;
-      this.SSDeleteShift = deleteShift;
+      this.SSHideShift = SSHideShift;
+      this.SSDeleteShift = SSDeleteShift;
       this.SSEditShift = SSEditShift;
       this.SSShowShift = SSShowShift;
       this.SSUserOwnsShift = SSUserOwnsShift;

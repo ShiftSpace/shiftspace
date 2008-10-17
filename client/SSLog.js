@@ -1,3 +1,8 @@
+// ==Builder==
+// @required
+// @dependencies      greasemonkey-api.js
+// ==/Builder==
+
 // Internal Error Logging, trust me, you don't need this - kisses ShiftSpace Core Robot
 var SSNoLogging = 0;
 

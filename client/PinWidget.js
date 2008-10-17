@@ -1,3 +1,9 @@
+// ==Builder==
+// @optional          
+// @package           Pinning
+// @dependencies      PinHelpers.js
+// ==/Builder==
+
 /*
   Class: PinWidget
     A widget class that you can include on shift or space to allow for pinning functionality.  You should make use of this class if your shifts require complex targeting of HTML elements on the page.  If you space requires being embedded the HTML document or replacing an element HTML element in the document, PinWidget is designed for you.  You do not interact with the PinWidget directly.  You simply implement the delegate protocol defined by this class and everything happens automatically.
@@ -471,4 +477,5 @@ var PinWidget = new Class({
     }
   }
 });
+
 ShiftSpace.PinWidget = PinWidget;

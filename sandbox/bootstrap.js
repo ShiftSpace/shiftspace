@@ -1,4 +1,4 @@
-function focusShift() {};
+function SSFocusShift() {};
 
 if(!ShiftSpace.User)
 {

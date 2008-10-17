@@ -1,3 +1,9 @@
+// ==Builder==
+// @optional          
+// @package           Pinning
+// @dependencies      Pin.js
+// ==/Builder==
+
 // ===================
 // = Pin API Support =
 // ===================

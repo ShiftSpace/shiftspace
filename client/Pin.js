@@ -1,3 +1,9 @@
+// ==Builder==
+// @optional          
+// @package           Pinning
+// @dependencies      SandalphonHelpers.js
+// ==/Builder==
+
 /*
   Class: Pin
     Convenience class for targeting nodes on a page. You can access the functionality via

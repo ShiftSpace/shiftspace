@@ -107,7 +107,7 @@ var Actions = new Class({
         }
         if(confirm('Are you sure want to delete ' + str + '? There is no undo'))
         {
-          this.selected.each(deleteShift);
+          this.selected.each(SSDeleteShift);
           this.selected = [];
           
           this.updateMenu();
