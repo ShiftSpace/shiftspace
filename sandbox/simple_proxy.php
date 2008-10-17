@@ -70,9 +70,9 @@ if(!preg_match("/^http:\/\//",$myurl)){
   $myurl = "http://" . $myurl;
 }
 //test wether url ends with a / if not add one
-/*if(!preg_match("/[a-zA-Z]+\/$/",$myurl)){
+if(!preg_match("/[a-zA-Z]+\/$/",$myurl)){
   $myurl = $myurl . "/";
-}*/
+}
 // get the base url
 
 preg_match("/^(http:\/\/)?([^\/]+)/i",$myurl, $matches);
