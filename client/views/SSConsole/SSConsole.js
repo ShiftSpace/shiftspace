@@ -317,7 +317,6 @@ var SSConsole = new Class({
   
   refreshTableViews: function(shiftId)
   {
-    console.log('refreshTableViews');
     var visibleTableView = this.getVisibleTableView();
 
     if(visibleTableView)
@@ -325,7 +324,7 @@ var SSConsole = new Class({
       // reload the table
       visibleTableView.reload();
     }
-  },
+  }
 
 
 });

@@ -58,23 +58,7 @@ Class: ShiftSpace
 */
 
 var ShiftSpace = new (function() {
-    // Internal Error Logging, trust me, you don't need this - kisses ShiftSpace Core Robot
-    var SSNoLogging = 0;
-    
-    var SSLogMessage        = 1;
-        SSLogError          = 1 << 1,
-        SSLogWarning        = 1 << 2,
-        SSLogPlugin         = 1 << 3,
-        SSLogServerCall     = 1 << 4,
-        SSLogSpaceError     = 1 << 5,
-        SSLogShift          = 1 << 6,
-        SSLogSpace          = 1 << 7,
-        SSLogViews          = 1 << 8,
-        SSLogSandalphon     = 1 << 9;
-    
-    var SSLogAll = SSLogError | SSLogWarning | SSLogMessage | SSLogPlugin | SSLogServerCall | SSLogSpaceError | SSLogShift | SSLogSpace | SSLogViews | SSLogSandalphon;
-    var __ssloglevel__ = SSNoLogging;
-    
+    // INCLUDE SSLog.js
     SSSetLogLevel(SSLogPlugin | SSLogServerCall);
 
     // The server variable determines where to look for ShiftSpace content
@@ -933,56 +917,6 @@ var ShiftSpace = new (function() {
       return SSGetShift(shiftId).href;
     }
 
-    /*
-      Function: SSGetRecentlyViewedShifts
-        Returns a hash of recently viewed shifts.  The shifts are hashed by
-        their id.  Each id points to a Javascript object that has the metadata
-        for that particular shift.
-
-      Parameters:
-        callback - a function to be called when the operation is complete.  A callback is necessary since plugins have access.
-    */
-    function SSGetRecentlyViewedShifts(callback)
-    {
-      // array of shifts on the currently viewed url
-      var localShifts = {};
-      // array of shifts living on other urls
-      var remoteShifts = [];
-
-      // grab the local shifs and generate an array of remote shifts
-      getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
-        var len = recentlyViewedShifts.length;
-
-        len.times(function(i) {
-          var shiftId = recentlyViewedShifts[i];
-          if(SSGetShift(shiftId))
-          {
-            localShifts[shiftId] = SSGetShiftData(shiftId);
-          }
-          else
-          {
-            remoteShifts.push(shiftId);
-          }
-        });
-
-        if(remoteShifts.length > 0)
-        {
-          SSLoadShifts(remoteShifts, function(remoteShiftsArray) {
-            // convert array into hash
-            var theRemoteShifts = {};
-            remoteShiftsArray.each(function(shift) {
-              theRemoteShifts[shift.id] = shift;
-            });
-            // merge local and remote
-            callback($merge(localShifts, theRemoteShifts));
-          });
-        }
-        else
-        {
-          callback(localShifts);
-        };
-      });
-    }
 
     /*
       Function: SSSpaceForShift
@@ -1390,10 +1324,11 @@ var ShiftSpace = new (function() {
     }
 
     // TODO: write some documentation here
-    function SSCheckForUpdates() {
-
+    function SSCheckForUpdates() 
+    {
       // Only check once per page load
-      if (alreadyCheckedForUpdate) {
+      if (alreadyCheckedForUpdate) 
+      {
         return false;
       }
       alreadyCheckedForUpdate = true;
@@ -1410,11 +1345,11 @@ var ShiftSpace = new (function() {
           method: 'POST',
           url: server + 'shiftspace.php?method=version',
           onload: function(rx)
-	  {
+          {
             if (rx.responseText != version)
-	    {
+            {
               if (confirm('There is a new version of ShiftSpace available. Would you like to update now?'))
-	      {
+              {
                 window.location = 'http://www.shiftspace.org/api/shiftspace.php?method=shiftspace.user.js';
               }
             }
@@ -1437,7 +1372,8 @@ var ShiftSpace = new (function() {
       pendingShift - A shift to show upon installation
 
     */
-    function SSInstallSpace(space, pendingShift) {
+    function SSInstallSpace(space, pendingShift) 
+    {
       if(!installed[space])
       {
         var url = server + 'spaces/' + space + '/' + space + '.js';
@@ -1459,7 +1395,8 @@ var ShiftSpace = new (function() {
     Parameters:
         space - the Space name to remove
     */
-    function SSUninstallSpace(spaceName) {
+    function SSUninstallSpace(spaceName) 
+    {
       var url = installed[spaceName];
       delete spaces[spaceName];
       delete installed[spaceName];
@@ -1478,7 +1415,8 @@ var ShiftSpace = new (function() {
       Parameters:
         config - same JSON object as used by GM_xmlhttpRequest.
     */
-    function SSXmlHttpRequest(config) {
+    function SSXmlHttpRequest(config) 
+    {
       GM_xmlhttpRequest(config);
     }
 
@@ -1846,6 +1784,58 @@ var ShiftSpace = new (function() {
         });
       }
     }
+    
+    /*
+      Function: SSGetRecentlyViewedShifts
+        Returns a hash of recently viewed shifts.  The shifts are hashed by
+        their id.  Each id points to a Javascript object that has the metadata
+        for that particular shift.
+
+      Parameters:
+        callback - a function to be called when the operation is complete.  A callback is necessary since plugins have access.
+    */
+    function SSGetRecentlyViewedShifts(callback)
+    {
+      // array of shifts on the currently viewed url
+      var localShifts = {};
+      // array of shifts living on other urls
+      var remoteShifts = [];
+
+      // grab the local shifs and generate an array of remote shifts
+      getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
+        var len = recentlyViewedShifts.length;
+
+        len.times(function(i) {
+          var shiftId = recentlyViewedShifts[i];
+          if(SSGetShift(shiftId))
+          {
+            localShifts[shiftId] = SSGetShiftData(shiftId);
+          }
+          else
+          {
+            remoteShifts.push(shiftId);
+          }
+        });
+
+        if(remoteShifts.length > 0)
+        {
+          SSLoadShifts(remoteShifts, function(remoteShiftsArray) {
+            // convert array into hash
+            var theRemoteShifts = {};
+            remoteShiftsArray.each(function(shift) {
+              theRemoteShifts[shift.id] = shift;
+            });
+            // merge local and remote
+            callback($merge(localShifts, theRemoteShifts));
+          });
+        }
+        else
+        {
+          callback(localShifts);
+        };
+      });
+    }
+    
 
     /*
 
@@ -3267,61 +3257,6 @@ var ShiftSpace = new (function() {
         }
 
       });
-    }
-
-    /*
-    Function: log
-      Logs a message to the console, but only in debug mode or when reporting
-      errors.
-
-    Parameters:
-      msg - The message to be logged in the JavaScript console.
-      verbose - Force the message to be logged when not in debug mode.
-    */
-    function SSLog(msg, type) 
-    {
-      if (typeof console == 'object' && SSLog) 
-      {
-        var messageType = '';
-
-        if(type == SSLogError)
-        {
-          messageType = 'ERROR: ';
-        }
-        
-        if(type == SSLogWarning)
-        {
-          messageType = 'WARNING: ';
-        }
-        
-        if(__ssloglevel__ == SSLogAll || (type && (__ssloglevel__ & type)))
-        {
-          if($type(msg) != 'string')
-          {
-            SSLog(msg);
-          }
-          else
-          {
-            SSLog(messageType + msg);
-          }
-        }
-      } 
-      else if (typeof GM_log != 'undefined') 
-      {
-        GM_log(msg);
-      } 
-      else 
-      {
-        setTimeout(function() {
-          throw(msg);
-        }, 0);
-      }
-    }
-    
-    function SSSetLogLevel(level)
-    {
-      SSLog('SSSetLogLevel ' + level);
-      __ssloglevel__ = level;
     }
 
     /*
