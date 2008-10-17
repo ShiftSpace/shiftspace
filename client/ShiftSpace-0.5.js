@@ -1291,7 +1291,7 @@ var ShiftSpace = new (function() {
     }
 
     // TODO: write some documentation here
-    function SSCheckForUpdates() 
+    function SSCheckForUpdates()
     {
       // Only check once per page load
       if (alreadyCheckedForUpdate) 
