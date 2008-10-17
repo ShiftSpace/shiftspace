@@ -5,6 +5,8 @@
 */
 var User = new Class({
   
+  Implements: Events,
+  
   setUsername: function(_username)
   {
     username = _username;
@@ -169,5 +171,4 @@ var User = new Class({
 
 });
 
-User.implement(new Events);
 ShiftSpace.User = new User();

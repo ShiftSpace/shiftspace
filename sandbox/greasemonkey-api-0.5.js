@@ -21,7 +21,11 @@ function GM_getValue(key, defaultValue)
     url: '../shiftspace.php?method=sandbox.getvalue',
     async: false,
     method: 'post',
-    data: {key: key, default: defaultValue}
+    data: 
+    { 
+      key: key, 
+      'default': defaultValue
+    }
   }).send();
   
   return request.response.text;
