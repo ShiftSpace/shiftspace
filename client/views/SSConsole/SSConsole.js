@@ -20,7 +20,7 @@ var SSConsole = new Class({
     // listen for login/logout eventss
     ShiftSpace.User.addEvent('onUserLogin', this.handleLogin.bind(this));
     ShiftSpace.User.addEvent('onUserLogout', this.handleLogout.bind(this));
-    ShiftSpace.addEvent('onShiftSave', this.refreshTableViews.bind(this));
+    SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));
 
     // listen for global events as well
 

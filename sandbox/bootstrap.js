@@ -1,14 +1,17 @@
 function focusShift() {};
 
-var User = new Class({
-  getUsername: function() { return false; },
-  isLoggedIn: function(showErrorAlert) { return false; },
-  login: function(credentials, _callback) {},
-  logout: function() {},
-  join: function(userInfo, callback) {}
-});
+if(!ShiftSpace.User)
+{
+  var User = new Class({
+    getUsername: function() { return false; },
+    isLoggedIn: function(showErrorAlert) { return false; },
+    login: function(credentials, _callback) {},
+    logout: function() {},
+    join: function(userInfo, callback) {}
+  });
 
-ShiftSpace.User = new User();
+  ShiftSpace.User = new User();
+}
 
 function SSIsNewShift(shiftId)
 {
