@@ -90,7 +90,7 @@ var Actions = new Class({
       var evt = new Event(_evt);
       if(!$(evt.target).hasClass('disabled'))
       {
-        editShift(this.selected[0]);
+        SSEditShift(this.selected[0]);
       }
       this.clearAndHide();
     }.bind(this));

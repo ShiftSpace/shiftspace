@@ -1479,7 +1479,7 @@ var ShiftSpace = new (function() {
       SSShowShift(shiftId); // TODO: remove - David
       SSLog('calling onShiftCreate');
       space.onShiftCreate(shiftId);
-      editShift(shiftId);
+      SSEditShift(shiftId);
       focusShift(shiftId, false);
     }
 
@@ -2160,7 +2160,7 @@ var ShiftSpace = new (function() {
 
 
     /*
-      Function: saveShift
+      Function: SSSaveShift
         Saves a shift's JSON object to the server.
 
       Parameters:
@@ -2169,13 +2169,13 @@ var ShiftSpace = new (function() {
       See Also:
         Shift.encode
     */
-    function saveShift(shiftJson) {
+    function SSSaveShift(shiftJson) {
       //SSLog('saveShift');
       //SSLog(shiftJson);
 
-      // if new skip to saveNewShift
+      // if new skip to SSSaveNewShift
       if (shiftJson.id.substr(0, 8) == 'newShift') {
-        saveNewShift.safeCall(shiftJson);
+        SSSaveNewShift.safeCall(shiftJson);
         return;
       }
 
@@ -2212,7 +2212,7 @@ var ShiftSpace = new (function() {
     }
 
     /*
-    Function: saveNewShift
+    Function: SSSaveNewShift
       Creates a new entry for the shift on the server.
 
     Parameters:
@@ -2221,7 +2221,7 @@ var ShiftSpace = new (function() {
     See Also:
       Shift.encode
     */
-    function saveNewShift(shiftJson)
+    function SSSaveNewShift(shiftJson)
     {
       var space = spaces[shiftJson.space];
 
@@ -2296,13 +2296,13 @@ var ShiftSpace = new (function() {
     }
 
     /*
-    Function: editShift
+    Function: SSEditShift
       Edit a shift.
 
     Parameters:
       shiftId - a shift id.
     */
-    function editShift(shiftId)
+    function SSEditShift(shiftId)
     {
       // make sure shift content is either loaded or that it is a newly created shift (thus no content)
       if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
@@ -2321,7 +2321,7 @@ var ShiftSpace = new (function() {
         if(!space)
         {
           loadSpace(shift.space, shiftId, function() {
-            editShift(shiftId);
+            SSEditShift(shiftId);
           });
           return;
         }
@@ -2686,7 +2686,7 @@ var ShiftSpace = new (function() {
       var spaceName = instance.attributes.name;
       SSLog('Register Space ===================================== ' + spaceName);
       spaces[spaceName] = instance;
-      instance.addEvent('onShiftUpdate', saveShift.bind(this));
+      instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
 
       var spaceDir = installed[spaceName].match(/(.+\/)[^\/]+\.js/)[1];
 
@@ -3476,7 +3476,7 @@ var ShiftSpace = new (function() {
       this.SSGetPageShifts = SSGetPageShifts;
       this.SSHideShift = hideShift;
       this.SSDeleteShift = deleteShift;
-      this.SSEditShift = editShift;
+      this.SSEditShift = SSEditShift;
       this.SSShowShift = SSShowShift;
       this.SSUserOwnsShift = SSUserOwnsShift;
       this.SSSetShiftStatus = SSSetShiftStatus;

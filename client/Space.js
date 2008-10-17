@@ -153,7 +153,7 @@ ShiftSpace.Space = new Class({
       // edit any deferred shifts
       this.__deferredEdits__.each(function(aShift) {
         SSLog('deferred edit');
-        editShift(aShift);
+        SSEditShift(aShift);
       }.bind(this));
 
       // load any deferred just created shifts
