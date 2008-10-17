@@ -1,0 +1,1 @@
+# Builds a custom ShiftSpace core file from a config file, handles depedencies
