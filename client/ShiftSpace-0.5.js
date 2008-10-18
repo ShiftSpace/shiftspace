@@ -397,58 +397,7 @@ var ShiftSpace = new (function() {
       }
     }
 
-    var __sslang__;
-    function SSLoadLocalizedStrings(lang, ctxt)
-    {
-      var context = ctxt || window;
-      //SSLog('load localized strings ' + lang);
-      loadFile("client/LocalizedStrings/"+lang+".js", function(rx) {
-        //SSLog(')))))))))))))))))))))))))))))))))))))))))))');
-        //SSLog(lang + " - " + __sslang__);
-        if(lang != __sslang__)
-        {
-          ShiftSpace.localizedStrings = JSON.decode(rx.responseText);
-          //SSLog(ShiftSpace.localizedStrings);
-
-          // update objects
-          ShiftSpace.Objects.each(function(object, objectId) {
-            if(object.localizationChanged) object.localizationChanged();
-          });
-
-          // in case we get a raw context from FF3
-          if(!context.$$)
-          {
-            context = new Window(context);
-          }
-
-          // update markup
-          //SSLog('fix localized');
-          context.$$(".SSLocalized").each(function(node) {
-
-            var originalText = node.getProperty('title');
-
-            if(node.get('tag') == 'input' && node.getProperty('type') == 'button')
-            {
-              node.setProperty('value', SSLocalizedString(originalText));
-            }
-            else
-            {
-              node.set('text', SSLocalizedString(originalText));
-            }
-
-          }.bind(this));
-        }
-
-        __sslang__ = lang;
-      });
-    }
-
-    // Localized String Support
-    function SSLocalizedString(string)
-    {
-      if(ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
-      return string;
-    }
+    // INCLUDE LocalizedStringsSupport.js
 
     var __controllers__ = $H();
     // we generate ids and store controller refs ourselves this is because of weird garbage collection
@@ -474,7 +423,7 @@ var ShiftSpace = new (function() {
     }
     this.$C = SSControllerForNode;
 
-    // Element extensions
+    // Element extensions because child selectors don't work properly in MooTools 1.2 for some reason - David
     Element.implement({
       _ssgenId: function()
       {
@@ -567,10 +516,9 @@ var ShiftSpace = new (function() {
           }
         }
       };
-
     };
 
-    // This won't work for GM_getValue of course
+    // This won't work for GM_getValue of course - David
     Function.prototype.safeCall = function() {
       var self = this, args = [], len = arguments.length;
       for(var i = 0; i < len; i++) args.push(arguments[i]);
@@ -579,7 +527,7 @@ var ShiftSpace = new (function() {
       }, 0);
     };
 
-    // Work around for GM_getValue
+    // Work around for GM_getValue - David
     Function.prototype.safeCallWithResult = function() {
       var self = this, args = [], len = arguments.length;
       for(var i = 0; i < len-1; i++) args.push(arguments[i]);
