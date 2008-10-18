@@ -251,6 +251,11 @@ var SSConsole = new Class({
 
   userClickedRow: function(args)
   {
+  },
+
+
+  userSelectedRow: function(args)
+  {
     console.log('MyTableViewDelegate, userClickedRow: ' + args.rowIndex);
     var datasource = args.tableView.datasource();
     if(args.tableView == this.allShiftsTableView)
@@ -271,15 +276,15 @@ var SSConsole = new Class({
   },
 
 
-  userSelectedRow: function(args)
-  {
-
-  },
-
-
   userDeselectedRow: function(args)
   {
-
+    console.log('userDeselectedRow');
+    var datasource = args.tableView.datasource();
+    
+    if(args.tableView == this.allShiftsTableView)
+    {
+      SSHideShift(datasource.data()[args.rowIndex].id);
+    }
   },
 
 

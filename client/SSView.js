@@ -1,3 +1,9 @@
+// ==Builder==
+// @required
+// @package           SSViews
+// @dependencies      SandalaphonTools.js, sandalphon.js
+// ==/Builder==
+
 var SSView = new Class({
 
   name: 'SSView',

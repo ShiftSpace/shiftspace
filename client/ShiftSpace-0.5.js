@@ -59,7 +59,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogPlugin | SSLogServerCall | SSLogForce | SSLogError);
+    SSSetLogLevel(SSLogPlugin | SSLogError);
 
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
@@ -379,7 +379,8 @@ var ShiftSpace = new (function() {
     Function: SSSynch
       Synchronize with server: checks for logged in user.
     */
-    function SSSynch() {
+    function SSSynch() 
+    {
       var params = {
         href: window.location.href
       };
@@ -408,7 +409,6 @@ var ShiftSpace = new (function() {
       });
     }
     
-
     // INCLUDE LocalizedStringsSupport.js
     // INCLUDE SandalphonSupport.js
 
@@ -566,6 +566,27 @@ var ShiftSpace = new (function() {
       }
       return defaultValue;
     }
+    
+    /*
+      Function: SSSetShiftStatus
+        Sets the shift public private status.
+
+      Parameters:
+        shiftId - a shift id.
+        newStatus - the status.
+    */
+    function SSSetShiftStatus(shiftId, newStatus) 
+    {
+      SSGetShift(shiftId).status = newStatus;
+      var params = {
+        id: shiftId,
+        status: newStatus
+      };
+      serverCall('shift.update', params, function() {
+        SSLog('>>>>>>>>>>>>>>>>>>>>>>>> shiftId ' + shiftId);
+        SSFireEvent('onShiftUpdate', shiftId);
+      });
+    }
 
     /*
       Function: SSSetDefaultShiftStatus
@@ -598,7 +619,6 @@ var ShiftSpace = new (function() {
       return (checkPref && SSGetPref('defaultShiftStatus', 1)) || __defaultShiftStatus__;
     }
     
-    
     function SSSetDefaultEmailComments(value)
     {
       if(value)
@@ -613,7 +633,6 @@ var ShiftSpace = new (function() {
       // NOTE: 2 because we can't store 0s in the DB when in the sandbox, 1 = false, 2 = true in this case - David
       return (checkPref && SSGetPref('defaultEmailComments', 2) || __defaultEmailComments__);
     }
-
 
     /*
       Function: SSSetPrefForSpace
@@ -633,7 +652,6 @@ var ShiftSpace = new (function() {
         setValue(key, value);
       }
     }
-
 
     /*
       Function: SSGetPrefForSpace
@@ -773,7 +791,7 @@ var ShiftSpace = new (function() {
         var shift = SSGetShift(shiftId);
         var content = unescape(shift.content);
 
-        // if it starts with a quote remove the extra quoting
+        // if it starts with a quote remove the extra quoting, became an issue when we don't preload shifts - David
         if(content[0] == '"')
         {
           content = content.substr(1, content.length-2);
@@ -826,7 +844,6 @@ var ShiftSpace = new (function() {
       //SSLog(shifts[shiftId]);
       return SSGetShift(shiftId).href;
     }
-
 
     /*
       Function: SSSpaceForShift
@@ -901,26 +918,6 @@ var ShiftSpace = new (function() {
     function SSIsNewShift(shiftId)
     {
       return (shiftId.search('newShift') != -1);
-    }
-
-    /*
-      Function: SSSetShiftStatus
-        Sets the shift public private status.
-
-      Parameters:
-        shiftId - a shift id.
-        newStatus - the status.
-    */
-    function SSSetShiftStatus(shiftId, newStatus) {
-      SSGetShift(shiftId).status = newStatus;
-      var params = {
-        id: shiftId,
-        status: newStatus
-      };
-      serverCall('shift.update', params, function() {
-        SSLog('>>>>>>>>>>>>>>>>>>>>>>>> shiftId ' + shiftId);
-        SSFireEvent('onShiftUpdate', shiftId);
-      });
     }
 
     // ==================
@@ -1356,7 +1353,6 @@ var ShiftSpace = new (function() {
       }
     };
 
-
     /*
     Function: SSInitShift
       Creates a new shift on the page.
@@ -1425,7 +1421,6 @@ var ShiftSpace = new (function() {
       SSEditShift(shiftId);
       SSFocusShift(shiftId, false);
     }
-
 
     /*
     Function: SSFocusShift
@@ -2017,7 +2012,8 @@ var ShiftSpace = new (function() {
       See Also:
         Shift.encode
     */
-    function SSSaveShift(shiftJson) {
+    function SSSaveShift(shiftJson) 
+    {
       //SSLog('saveShift');
       //SSLog(shiftJson);
 
@@ -2225,7 +2221,8 @@ var ShiftSpace = new (function() {
     Parameters:
       shiftId - a shift id.
     */
-    function SSDeleteShift(shiftId) {
+    function SSDeleteShift(shiftId) 
+    {
       var space = SSSpaceForShift(shiftId);
 
       // don't assume the space is loaded
@@ -2860,10 +2857,14 @@ var ShiftSpace = new (function() {
     Returns:
         The value passed in.
     */
-    function setValue(key, value, rawValue) {
-      if (rawValue) {
+    function setValue(key, value, rawValue) 
+    {
+      if (rawValue) 
+      {
         GM_setValue(key, value);
-      } else {
+      } 
+      else 
+      {
         GM_setValue(key, JSON.encode(value));
       }
       return value;
@@ -2987,7 +2988,7 @@ var ShiftSpace = new (function() {
       return true;
     }
     
-    
+
     var __modalDiv__;
     var __modalDelegate__;
     function SSCreateModalDiv()

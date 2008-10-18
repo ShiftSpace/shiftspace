@@ -355,10 +355,21 @@ var SSTableView = new Class({
     Parameters:
       row - an HTML element.
   */
-  deselectRow: function(row)
+  deselectRow: function(idx)
   {
+    var row = this.rowForIndex(idx);
+
+    console.log(idx);
+    console.log(row);
+    
     row.removeClass('SSActive');
+    
     if(this.modelRowController()) this.modelRowController().deselect(row);
+    
+    if(this.delegate() && this.delegate().userDeselectedRow)
+    {
+      this.delegate().userDeselectedRow({tableView:this, rowIndex:idx, target:row});
+    }
   },
 
   /*
@@ -385,7 +396,13 @@ var SSTableView = new Class({
   selectRow: function(idx)
   {
     this.deselectAll();
-    this.contentView._getElements(".SSRow")[idx].addClass('SSActive');
+    var target = this.contentView._getElements(".SSRow")[idx];
+    target.addClass('SSActive');
+    
+    if(this.delegate() && this.delegate().userSelectedRow)
+    {
+      this.delegate().userSelectedRow({tableView:this, rowIndex:idx, target:target});
+    }
   },
 
   /*
@@ -408,7 +425,7 @@ var SSTableView = new Class({
   */
   deselectAll: function()
   {
-    if(this.selectedRow()) this.deselectRow(this.selectedRow());
+    if(this.selectedRow()) this.deselectRow(this.selectedRowIndex());
     if(this.selectedColumn()) this.deselectColumn(this.selectedColumn());
   },
 
@@ -425,6 +442,13 @@ var SSTableView = new Class({
   columnHeadingForIndex: function(idx)
   {
     return this.element._getElements('> .SSControlView .SSColumnHeading')[idx];
+  },
+  
+  
+  rowForIndex: function(idx)
+  {
+    console.log('rowForIndex');
+    return this.element._getElements('> .SSScrollView .SSContentView .SSRow')[idx];
   },
   
   
@@ -484,7 +508,7 @@ var SSTableView = new Class({
       this.selectRow(rowIndex);
     }
 
-    if(this.delegate())
+    if(this.delegate() && this.delegate().userClickedRow)
     {
       this.delegate().userClickedRow({tableView:this, rowIndex:rowIndex, target:target});
     }
