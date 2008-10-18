@@ -372,56 +372,8 @@ var ShiftSpace = new (function() {
       SSLog('ShiftSpace initialize complete');
     };
 
-    var SSInstantiationListeners = {};
-    function SSAddInstantiationListener(element, listener)
-    {
-      var id = element._ssgenId();
-      if(!SSInstantiationListeners[id])
-      {
-        SSInstantiationListeners[id] = [];
-      }
-      SSInstantiationListeners[id].push(listener);
-    }
-
-    function SSNotifyInstantiationListeners(element)
-    {
-      var listeners = SSInstantiationListeners[element.getProperty('id')];
-      if(listeners)
-      {
-        listeners.each(function(listener) {
-          if(listener.onInstantiate)
-          {
-            listener.onInstantiate();
-          }
-        });
-      }
-    }
-
     // INCLUDE LocalizedStringsSupport.js
-
-    var __controllers__ = $H();
-    // we generate ids and store controller refs ourselves this is because of weird garbage collection
-    // around iframes and wrappers around dom nodes when SS run under GM
-    function SSSetControllerForNode(controller, _node)
-    {
-      var node = $(_node);
-
-      // generate our own id
-      node._ssgenId();
-      // keep back reference
-      __controllers__.set(node.getProperty('id'), controller);
-    }
-
-    // return the controller for a node
-    function SSControllerForNode(_node)
-    {
-      var node = $(_node);
-
-      return __controllers__.get(node.getProperty('id')) ||
-             (node.getProperty('uiclass') && new SSViewProxy(node)) ||
-             null;
-    }
-    this.$C = SSControllerForNode;
+    // INCLUDE SandalphonSupport.js
 
     // Element extensions because child selectors don't work properly in MooTools 1.2 for some reason - David
     Element.implement({
@@ -457,7 +409,6 @@ var ShiftSpace = new (function() {
        x.addEvent('click', SSHandleInstallSpaceLink);
       });
     }
-    
     
     function SSHandleInstallSpaceLink(_evt)
     {
@@ -2462,7 +2413,7 @@ var ShiftSpace = new (function() {
         },
         'onerror': function(response) {
           SSLog("failed loadFile call, for file " + url, SSLogError);
-          if(errCallback && typeof errCallback == 'function') errCallback();
+          if(errCallback && typeof errCallback == 'function') errCallback(); // FIXME: broken - David
         }
       });
 

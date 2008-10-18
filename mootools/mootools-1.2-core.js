@@ -141,8 +141,19 @@ function $extend(original, extended){
 	return original;
 };
 
+var visited = []; // FIX: for infinite unlink loops - David
 function $unlink(object){
 	var unlinked;
+	
+  // prevent infinite loops in unlinking, push the object onto the visited stack
+	if(!visited.contains(object))
+	{
+	  visited.push(object);	  
+	}
+	else
+	{
+	  return object;
+	}
 	
 	switch ($type(object)){
 		case 'object':
@@ -158,6 +169,9 @@ function $unlink(object){
 		break;
 		default: return object;
 	}
+	
+	// pop the object off the visited stack
+	visited.pop();
 	
 	return unlinked;
 };
