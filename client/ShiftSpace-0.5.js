@@ -370,7 +370,44 @@ var ShiftSpace = new (function() {
       // Create the modal div
       SSCreateModalDiv();
       SSLog('ShiftSpace initialize complete');
+      
+      // Synch with server, 
+      SSSynch();
     };
+    
+    /*
+    Function: SSSynch
+      Synchronize with server: checks for logged in user.
+    */
+    function SSSynch() {
+      var params = {
+        href: window.location.href
+      };
+      serverCall('query', params, function(json) {
+        //SSLog('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
+        if (!json.status) {
+          console.error('Error checking for content: ' + json.message);
+          return;
+        }
+
+        if (json.username)
+        {
+          // Set private user variable
+          ShiftSpace.User.setUsername(json.username);
+          ShiftSpace.User.setEmail(json.email);
+
+          // fire user login for the Console
+          if (__consoleIsWaiting__)
+          {
+            SSFireEvent('onUserLogin', {status:1});
+          }
+
+          // make sure default shift status preference is set
+          SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
+        }
+      });
+    }
+    
 
     // INCLUDE LocalizedStringsSupport.js
     // INCLUDE SandalphonSupport.js
