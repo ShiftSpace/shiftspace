@@ -59,7 +59,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogPlugin | SSLogServerCall);
+    SSSetLogLevel(SSLogPlugin | SSLogServerCall | SSLogForce | SSLogError);
 
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
@@ -771,14 +771,21 @@ var ShiftSpace = new (function() {
       if(!SSIsNewShift(shiftId))
       {
         var shift = SSGetShift(shiftId);
-        var content = unescape(shift.content); // MERGE: for 0.5 - David
+        var content = unescape(shift.content);
 
+        // if it starts with a quote remove the extra quoting
+        if(content[0] == '"')
+        {
+          content = content.substr(1, content.length-2);
+        }
+
+        // replace any spurious newlines or carriage returns
         if(content)
         {
           content = content.replace(/\n/g, '\\n');
           content = content.replace(/\r/g, '\\r');
         }
-
+        
         // legacy content, strip surrounding parens
         if(content[0] == "(")
         {
@@ -1458,9 +1465,10 @@ var ShiftSpace = new (function() {
       if(mainView && !SSIsNewShift(shiftId))
       {
         var pos = mainView.getPosition();
-        var vsize = mainView.getSize().size;
-        var viewPort = window.getSize().viewPort;
-        var windowScroll = window.getSize().scroll;
+        var vsize = mainView.getSize();
+        //var viewPort = window.getSize().viewPort; // window.getViewPort();
+        var viewPort = window.getSize();
+        var windowScroll = window.getScroll();
 
         var leftScroll = (windowScroll.x > pos.x-25);
         var rightScroll = (windowScroll.x < pos.x-25);
@@ -1476,8 +1484,6 @@ var ShiftSpace = new (function() {
             duration: 1000,
             transition: Fx.Transitions.Cubic.easeIn
           });
-
-          var size = window.getSize();
 
           if(!window.webkit)
           {
@@ -1571,6 +1577,7 @@ var ShiftSpace = new (function() {
       {
         try
         {
+          console.log('Try showing shift!');
           // get the space and the shift
           var shift = SSGetShift(shiftId);
 
@@ -1589,8 +1596,8 @@ var ShiftSpace = new (function() {
           // load the space first
           if(!space)
           {
-            SSLog(shift);
-            SSLog('space not loaded ' + shift.space + ', ' + shiftId);
+            console.log(shift);
+            console.log('space not loaded ' + shift.space + ', ' + shiftId);
             SSLoadSpace(shift.space, shiftId);
             return;
           }
@@ -1606,7 +1613,7 @@ var ShiftSpace = new (function() {
 
           // extract the shift content
           var shiftJson = SSGetShiftContent(shiftId);
-          SSLog('extracted shift json');
+          console.log('extracted shift json');
           shiftJson.id = shiftId;
 
           // SSLog('foo -- - - -- - - --- - - -- - -- -- - -');
@@ -1757,7 +1764,6 @@ var ShiftSpace = new (function() {
 
       return null;
     }
-    this.SSGetShift = SSGetShift; // temporary - David
 
     /*
       Function: SSGetAuthorForShift
@@ -1806,9 +1812,7 @@ var ShiftSpace = new (function() {
     */
     function SSSetShift(shiftId, shiftData)
     {
-      shifts[shiftId] = $merge(shifts[shiftId], {
-        content: shiftData.content
-      });
+      shifts[shiftId] = $merge(shifts[shiftId], shiftData);
     }
 
     /*
@@ -1828,8 +1832,8 @@ var ShiftSpace = new (function() {
         if(returnArray && returnArray[0])
         {
           var shiftObj = returnArray[0];
-          SSLog('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-          SSLog(shiftObj);
+          SSLog('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++', SSLogForce);
+          SSLog(shiftObj, SSLogForce);
           SSSetShift(shiftObj.id, shiftObj);
 
           if(callback && $type(callback) == 'function')
@@ -3036,7 +3040,7 @@ var ShiftSpace = new (function() {
       this.Shift = ShiftSpace.Shift;
       this.Plugin = ShiftSpace.Plugin;
 
-      // for Action Menu debugging
+      this.SSGetShift = SSGetShift;
       this.SSGetPageShifts = SSGetPageShifts;
       this.SSHideShift = SSHideShift;
       this.SSDeleteShift = SSDeleteShift;

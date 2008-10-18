@@ -77,7 +77,6 @@ function SSCreateErrorWindow()
   errorWindowShiftStatus.injectInside(errorWindowShiftStatusScroll);
   errorWindowShiftStatusScroll.injectInside(errorWindowDisclosure);
 
-
   // build the ok button
   var errorWindowOk = new ShiftSpace.Element('div', {
     'class': "SSErrorWindowOk SSUserSelectNone"
@@ -91,30 +90,39 @@ function SSCreateErrorWindow()
   });
   errorWindowFix.set('text', 'Fix');
   errorWindowFix.injectInside(errorWindowBottom);
+  
+  __errorWindow__.set('tween', {
+    duration: 300,
+    transition: Fx.Transitions.Cubic.easeOut,
+    onComplete: function()
+    {
+      // reset the error window
+      __errorWindow__.setStyles({
+        width: 280,
+        height: 100
+      });
+      errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
+      errorWindowExpandLabel.set('text', 'view shift details');
+      errorWindowShiftStatusScroll.addClass('SSDisplayNone');
+      __errorWindowMinimized__ = true;
+    }
+  });
+  
+  __errorWindow__.set('morph', {
+    duration: 500,
+    transition: Fx.Transitions.Cubic.easeOut,
+    onComplete: function()
+    {
+      if(!__errorWindowMinimized__)
+      {
+        errorWindowShiftStatusScroll.removeClass('SSDisplayNone');
+      }
+    }
+  });
 
   errorWindowOk.addEvent('click', function(_evt) {
     var evt = new Event(_evt);
-
-    var fadeFx = __errorWindow__.effects({
-      duration: 300,
-      transition: Fx.Transitions.Cubic.easeOut,
-      onComplete: function()
-      {
-        // reset the error window
-        __errorWindow__.setStyles({
-          width: 280,
-          height: 100
-        });
-        errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
-        errorWindowExpandLabel.set('text', 'view shift details');
-        errorWindowShiftStatusScroll.addClass('SSDisplayNone');
-        __errorWindowMinimized__ = true;
-      }
-    });
-
-    fadeFx.start({
-      opacity: [0.95, 0]
-    });
+    __errorWindow__.tween('opacity', 0);
   });
 
   // add expand action
@@ -133,30 +141,18 @@ function SSCreateErrorWindow()
       errorWindowExpandLabel.set('text', 'hide shift details');
     }
 
-    var resizeFx = __errorWindow__.effects({
-      duration: 500,
-      transition: Fx.Transitions.Cubic.easeOut,
-      onComplete: function()
-      {
-        if(!__errorWindowMinimized__)
-        {
-          errorWindowShiftStatusScroll.removeClass('SSDisplayNone');
-        }
-      }
-    });
-
     if(__errorWindowMinimized__)
     {
-      resizeFx.start({
-        width: [280, 340],
-        height: [100, 300]
+      __errorWindow__.morph({
+        width: 340,
+        height: 300
       });
     }
     else
     {
-      resizeFx.start({
-        width: [340, 280],
-        height: [300, 100]
+      __errorWindow__.morph({
+        width: 280,
+        height: 100
       });
     }
 
@@ -228,15 +224,7 @@ function SSShowErrorWindow(shiftId)
 
   __errorWindow__.setOpacity(0);
   __errorWindow__.removeClass('SSDisplayNone');
-
-  var fadeFx = __errorWindow__.effects({
-    duration: 300,
-    transition: Fx.Transitions.Cubic.easeOut
-  });
-
-  fadeFx.start({
-    opacity: [0, 0.95]
-  });
+  __errorWindow__.tween('opacity',0.95);
 }
 
 /*

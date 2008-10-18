@@ -15,9 +15,10 @@ var SSLogMessage        = 1;
     SSLogShift          = 1 << 6,
     SSLogSpace          = 1 << 7,
     SSLogViews          = 1 << 8,
-    SSLogSandalphon     = 1 << 9;
+    SSLogSandalphon     = 1 << 9,
+    SSLogForce          = 1 << 10;
 
-var SSLogAll = SSLogError | SSLogWarning | SSLogMessage | SSLogPlugin | SSLogServerCall | SSLogSpaceError | SSLogShift | SSLogSpace | SSLogViews | SSLogSandalphon;
+var SSLogAll = SSLogError | SSLogWarning | SSLogMessage | SSLogPlugin | SSLogServerCall | SSLogSpaceError | SSLogShift | SSLogSpace | SSLogViews | SSLogSandalphon | SSLogForce;
 var __ssloglevel__ = SSNoLogging;
 
 /*
