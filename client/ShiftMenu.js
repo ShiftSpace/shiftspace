@@ -67,7 +67,7 @@ var ShiftMenu = new Class({
   addSpace: function(spaceName) 
   {
     // TODO: we need the icon to not be separate from the space so that we can do incremental loading.
-    console.log('adding space ' + spaceName);
+    SSLog('adding space ' + spaceName);
     var spaceAttrs = ShiftSpace.info(spaceName);
     var container = this.element.firstChild;
     var clear = container.getElementsByTagName('br')[0];

@@ -15,7 +15,7 @@ var NotesSpace = new Class({
 
   intialize: function()
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>> Notes starting up!');
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>> Notes starting up!');
     this.parent();
   },
 
@@ -88,9 +88,6 @@ var NotesShift = new Class({
   */
   setup: function(json)
   {
-    console.log('Create Notes shift');
-    console.log(json);
-
     if(json.legacy)
     {
       json.position = {x: json.x, y: json.y};
@@ -101,7 +98,7 @@ var NotesShift = new Class({
     this.noteText = (json.noteText && json.noteText.replace(/<br\/>/g, "\n")) || null;
     //SSLog('Notes shift about to build');
     this.build();
-    console.log('Notes shift built');
+    SSLog('Notes shift built');
     //SSLog('Notes shift built');
     
     // attach events

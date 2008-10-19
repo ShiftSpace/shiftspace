@@ -165,7 +165,6 @@ var SSCustomTableRow = new Class({
       }
     }
   }
-
 });
 
 // add it to the UI object if possible

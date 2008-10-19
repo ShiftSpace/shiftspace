@@ -280,7 +280,6 @@ var SSConsole = new Class({
   {
     console.log('userDeselectedRow');
     var datasource = args.tableView.datasource();
-    
     if(args.tableView == this.allShiftsTableView)
     {
       SSHideShift(datasource.data()[args.rowIndex].id);

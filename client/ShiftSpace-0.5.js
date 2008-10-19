@@ -59,7 +59,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogPlugin | SSLogError);
+    SSSetLogLevel(SSLogPlugin | SSLogError | SSLogForce);
 
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
@@ -1572,7 +1572,7 @@ var ShiftSpace = new (function() {
       {
         try
         {
-          console.log('Try showing shift!');
+          SSLog('Try showing shift!');
           // get the space and the shift
           var shift = SSGetShift(shiftId);
 
@@ -1591,8 +1591,8 @@ var ShiftSpace = new (function() {
           // load the space first
           if(!space)
           {
-            console.log(shift);
-            console.log('space not loaded ' + shift.space + ', ' + shiftId);
+            SSLog(shift);
+            SSLog('space not loaded ' + shift.space + ', ' + shiftId);
             SSLoadSpace(shift.space, shiftId);
             return;
           }
@@ -1608,7 +1608,7 @@ var ShiftSpace = new (function() {
 
           // extract the shift content
           var shiftJson = SSGetShiftContent(shiftId);
-          console.log('extracted shift json');
+          SSLog('extracted shift json');
           shiftJson.id = shiftId;
 
           // SSLog('foo -- - - -- - - --- - - -- - -- -- - -');
@@ -2089,7 +2089,7 @@ var ShiftSpace = new (function() {
       SSLog('//////////////////////////////////////////////////////////////////');
       */
 
-      console.log('saving new shift!');
+      SSLog('saving new shift!');
       serverCall.safeCall('shift.create', params, function(json) {
         SSLog('>>>>>>>>>>>>>>>>> SAVED new shift', SSLogServerCall);
         if (!json.status)
@@ -2133,7 +2133,7 @@ var ShiftSpace = new (function() {
         space.onShiftSave(shiftJson.id);
         
         // fire an event with the real id
-        console.log('here we go!');
+        SSLog('here we go!');
         SSFireEvent('onShiftSave', shiftJson.id);
       });
 
@@ -2760,7 +2760,6 @@ var ShiftSpace = new (function() {
       var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
       
-      console.log('serverCall ' + $type(callback));
       SSLog('serverCall: ' + url, SSLogServerCall);
       
       var data = '';
@@ -2789,7 +2788,7 @@ var ShiftSpace = new (function() {
         data: data,
         onload: function(_rx) 
         {
-          console.log('done!');
+          SSLog('done!');
           var rx = _rx;
           SSLog('servercall returned', SSLogServerCall);
           /*
@@ -2806,18 +2805,16 @@ var ShiftSpace = new (function() {
               SSLog(eval('(' + rx.responseText + ')'));
               SSLog('tried ' + url);
               var theJson = JSON.decode(rx.responseText);
-              console.log('success!');
+              SSLog('success!');
             }
             catch(exc)
             {
-              console.log('server call exception');
               SSLog('Server call exception: ' + SSDescribeException(exc), SSLogServerCall);
             }
             /*
             SSLog('done evaluating');
             SSLog(callback);
             */
-            console.log('calling callback');
             callback(theJson);
           }
           else

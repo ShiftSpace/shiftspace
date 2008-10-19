@@ -7,11 +7,23 @@ var SSTableView = new Class({
   name: 'SSTableView',
 
   Extends: SSView,
+  
+  defaults: function() 
+  {
+    return {
+      multipleSelection: false,
+      toggleSelection: false
+    };
+  },
 
   DelegateProtocol: ['userClickedRow, userSelectedRow, itemForRowColumn, rowCount'],
 
-  initialize: function(el, options)
+  initialize: function(el, _options)
   {
+    // FIXME: figure out why safe JSON.decode doesn't work
+    var options = _options || JSON.decode(el.getProperty('options'));
+    this.setOptions(this.defaults(), options);
+    
     SSLog('SSTableView initialize', SSLogViews);
     // need to pass this up to parent
     this.parent(el);
@@ -335,7 +347,19 @@ var SSTableView = new Class({
   {
     return this.contentView._getElement('.SSRow.SSActive');
   },
-
+  
+  /*
+    Function: rowIsSelected
+      Returns true/false if the row is selected.
+      
+    Returns:
+      A boolean value.
+  */
+  rowIsSelected: function(index)
+  {
+    return this.rowForIndex(index).hasClass('SSActive');
+  },
+  
   /*
     Function: selectedRowIndex
       Returns the index of the selected row.
@@ -358,10 +382,6 @@ var SSTableView = new Class({
   deselectRow: function(idx)
   {
     var row = this.rowForIndex(idx);
-
-    console.log(idx);
-    console.log(row);
-    
     row.removeClass('SSActive');
     
     if(this.modelRowController()) this.modelRowController().deselect(row);
@@ -395,7 +415,12 @@ var SSTableView = new Class({
   */
   selectRow: function(idx)
   {
-    this.deselectAll();
+    if(!this.options.multipleSelection)
+    {
+      SSLog('Deselect all!', SSLogForce);
+      this.deselectAll();
+    }
+    
     var target = this.contentView._getElements(".SSRow")[idx];
     target.addClass('SSActive');
     
@@ -447,7 +472,6 @@ var SSTableView = new Class({
   
   rowForIndex: function(idx)
   {
-    console.log('rowForIndex');
     return this.element._getElements('> .SSScrollView .SSContentView .SSRow')[idx];
   },
   
@@ -497,17 +521,30 @@ var SSTableView = new Class({
   handleRowClick: function(row, target)
   {
     var rowIndex = this.indexOfRow(row);
-    console.log('Row click ' + rowIndex);
-
-    if(row == this.selectedRow())
+    
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
+    SSLog(row, SSLogForce);
+    SSLog(this.rowIsSelected(rowIndex), SSLogForce);
+    
+    // deslect all if not multiple selection type table
+    if(!this.options.multipleSelection)
     {
       this.deselectAll();
     }
-    else
+
+    // check for selection toggling
+    if(this.options.toggleSelection && this.rowIsSelected(rowIndex))
     {
-      this.selectRow(rowIndex);
+      SSLog('deselect', SSLogForce);
+      this.deselectRow(this.indexOfRow(row));
+    }
+    else if(!this.rowIsSelected(rowIndex))
+    {
+      // otherwise if not already selected, select it
+      this.selectRow(rowIndex);            
     }
 
+    // notify the delegate
     if(this.delegate() && this.delegate().userClickedRow)
     {
       this.delegate().userClickedRow({tableView:this, rowIndex:rowIndex, target:target});
@@ -797,7 +834,6 @@ var SSTableView = new Class({
     this.updateColumnTitles(newTitles);
     if(this.isVisible())
     {
-      console.log('Refreshing table');
       this.refresh();
     }
   }

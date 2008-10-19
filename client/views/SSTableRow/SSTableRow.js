@@ -75,7 +75,6 @@ var SSTableRow = new Class({
       return cell.get('text');
     }
   }
-  
 });
 
 // add it to the UI object if possible

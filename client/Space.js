@@ -46,20 +46,20 @@ ShiftSpace.Space = new Class({
     if(!this.shiftClass)
     {
       valid = false;
-      console.error( 'Error: You did not specify a Shift Class for this Space.' );
+      SSLog('You did not specify a Shift Class for this Space.', SSLogError);
     }
 
     // Error checking for Developers, probably should just replace with defaults
     if( !this.attributes.name )
     {
       valid = false;
-      console.log(this);
-      console.error( 'Error: This Space does not define a name attribute.' );
+      SSLog(this);
+      SSLog('This Space does not define a name attribute.', SSLogError);
     }
     if( !this.attributes.icon )
     {
       valid = false;
-      console.error( 'Error: This Space does not have an icon.' );
+      SSLog('Error: This Space does not have an icon.', SSLogError);
     }
 
     if( valid )
@@ -402,11 +402,8 @@ ShiftSpace.Space = new Class({
     // add a backreference
     aShift.parentSpace = this;
 
-    //SSLog('constructing');
-    //SSLog(this.shiftClass);
-
-    console.log('constructing');
-    console.log(this.shiftClass);
+    SSLog('constructing');
+    SSLog(this.shiftClass);
 
     // create the new shift
     try
@@ -480,10 +477,9 @@ ShiftSpace.Space = new Class({
   */
   createShift : function( newShiftJson )
   {
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> createShift');
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> createShift');
     if(this.cssIsLoaded())
     {
-      console.log('adding shift!');
       this.addShift(newShiftJson);
       SSLog('added shift');
       var _newShift = this.shifts[newShiftJson.id];
