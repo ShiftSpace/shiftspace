@@ -1,4 +1,4 @@
-<div id="LoginTabView" class="SSTabView SSTabViewSubTabStyle" uiclass="SSTabView" outlet="SSConsole">
+<div id="LoginTabView" class="SSTabView SSTabViewSubTabStyle SSTabPane" uiclass="SSTabView" outlet="SSConsole">
   
   <div class="SSControlView">
     <div title="Login" class="SSButton SSActive SSLocalized">Login</div>
@@ -9,7 +9,7 @@
   <!-- Start Content View -->
   <div class="SSContentView" autoresize="1">
     <!-- The Login Pane -->
-    <div>
+    <div class="SSTabPane">
       <form id="SSLoginForm" outlet="SSConsole">
         
         <label title="User Name" class="SSLocalized">
@@ -32,7 +32,7 @@
     <!-- End Login Pane -->
 
     <!-- The Sign up Pane -->
-    <div>
+    <div class="SSTabPane">
       <form id="SSSignUpForm">
         
         <label title="User Name" class="SSLocalized">
@@ -62,7 +62,7 @@
     <!-- End Login Pane -->
 
     <!-- Start Password Pane -->
-    <div>
+    <div class="SSTabPane">
       <form id="SSForgottenPasswordForm">
         <div>Forgot your password? Enter your email and we'll send it to you</div>
         <input id="SSForgottenPasswordFormEmail" type="text" outlet="SSConsole"></input>

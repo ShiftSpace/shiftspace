@@ -1,14 +1,20 @@
 var Actions = new Class({
   
-  initialize: function() {
+  Extends: SSView,
+  
+  initialize: function() 
+  {
     this.selected = [];
     this.menuBuilt = false;
     
     ShiftSpace.User.addEvent('onUserLogin', this.updateMenu.bind(this));
     ShiftSpace.User.addEvent('onUserLogout', this.updateMenu.bind(this));
+    
+    // Load the interface
   },
   
-  buildMenu: function() {
+  buildMenu: function() 
+  {
     this.doc = ShiftSpace.Console.frame.contentWindow.document;
     this.el = $(this.doc.getElementById('actions'));
     this.el.addClass('SSUserSelectNone');
@@ -49,32 +55,27 @@ var Actions = new Class({
     this.dropdown = $(this.dropdown);
     this.dropdown.addEvent('click', this.updatePrivacyMenu.bind(this, [true]));
     
-    /*
-    this.privacyOptions = this.dropdown.clone();
-    this.privacyOptions.setAttribute('id', 'privacyOptions');
-    this.privacyOptions.setStyle('left', this.dropdown.getSize().x);
-    this.privacyOptions.setStyle('top', this.dropdown.getSize().y);
-    this.privacyOptions.inject(this.dropdown.parentNode);
-    */
-    
     this.attachEvents();
-
   },
   
   
   attachEvents: function()
   {
-    // Favorite
-    /*
-    this.favoriteButton.addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      if(!evt.target.hasClass('disabled'))
-      {
-        //SSFavoriteShif(this.selected.getFirst());
-      }
-    }.bind(this));
-    */
+    this.initLinkButton();
+    this.initEditButton();
+    this.initDeleteButton();
+    this.initTrailButton();
+    //this.initTwitterButton();
+    //this.initDeleteButton();
     
+    // Privacy changes
+    this.privateButton.addEvent('click', this.makePrivate.bind(this));
+    this.publicButton.addEvent('click', this.makePublic.bind(this));
+  },
+  
+  
+  initLinkButton: function()
+  {
     // Link
     this.linkButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
@@ -84,7 +85,11 @@ var Actions = new Class({
       }
       this.clearAndHide();
     }.bind(this));
-    
+  },
+  
+  
+  initEditButton: function()
+  {
     // Edit
     this.editButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
@@ -94,7 +99,11 @@ var Actions = new Class({
       }
       this.clearAndHide();
     }.bind(this));
-    
+  },
+  
+  
+  initDeleteButton: function()
+  {
     // Delete
     this.deleteButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
@@ -116,7 +125,11 @@ var Actions = new Class({
       }
       this.clearAndHide();
     }.bind(this));
-    
+  },
+  
+  
+  initTrailButton: function()
+  {
     // Trail
     this.trailButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
@@ -129,7 +142,11 @@ var Actions = new Class({
       });
       this.clearAndHide();
     }.bind(this));
-    
+  },
+  
+  
+  initDeliciousButton: function()
+  {
     this.deliciousButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       
@@ -140,7 +157,11 @@ var Actions = new Class({
         callback: null
       });
     }.bind(this));
-    
+  },
+  
+  
+  initTwitterButton: function()
+  {
     this.twitterButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       
@@ -151,10 +172,6 @@ var Actions = new Class({
         callback: null 
       });
     }.bind(this));
-    
-    // Privacy changes
-    this.privateButton.addEvent('click', this.makePrivate.bind(this));
-    this.publicButton.addEvent('click', this.makePublic.bind(this));
   },
   
   
@@ -191,17 +208,20 @@ var Actions = new Class({
   },
 
   
-  setIsVisible: function(val) {
+  setIsVisible: function(val) 
+  {
     this.__visible__ = val;
   },
   
 
-  isVisible: function() {
+  isVisible: function() 
+  {
     return this.__visible__;
   },
   
 
-  select: function(shiftId) {
+  select: function(shiftId) 
+  {
     this.selected.push(shiftId);
     SSLog('select');
     this.showMenu();
@@ -209,7 +229,8 @@ var Actions = new Class({
   },
   
 
-  deselect: function(shiftId) {
+  deselect: function(shiftId) 
+  {
     this.selected.remove(shiftId);
     if (this.selected.length == 0) 
     {
@@ -222,11 +243,13 @@ var Actions = new Class({
   },
   
 
-  showMenu: function() {
+  showMenu: function() 
+  {
     if(!this.isVisible())
     {
       this.setIsVisible(true);
-      if (!this.menuBuilt) {
+      if (!this.menuBuilt) 
+      {
         this.buildMenu();
         this.menuBuilt = true;
       }

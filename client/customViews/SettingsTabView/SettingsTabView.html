@@ -1,5 +1,5 @@
 <!-- Start Settings subtab view -->
-<div class="SSTabView SSTabViewSubTabStyle" uiclass="SSTabView">
+<div class="SSTabView SSTabViewSubTabStyle SSTabPane" uiclass="SSTabView">
 
   <div class="SSControlView">
     <div title="Installed" class="SSButton SSLocalized">Installed</div>
@@ -9,10 +9,10 @@
   </div>
 
   <div class="SSContentView">
-    <div>Pane 1</div>
-    <div>Pane 2</div>
-    <div>Pane 3</div>
-    <div>
+    <div class="SSTabPane">Pane 1</div>
+    <div class="SSTabPane">Pane 2</div>
+    <div class="SSTabPane">Pane 3</div>
+    <div class="SSTabPane">
       <select id="SSSelectLanguage" outlet="SSConsole">
         <option value="en">English</option>
         <option value="fr">French</option>

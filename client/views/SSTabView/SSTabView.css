@@ -17,12 +17,12 @@
   cursor: default;
 }
 
-.SSTabView > .SSControlView > div.SSActive
+.SSTabView > .SSControlView > .SSButton.SSActive
 {
   color: red;
 }
 
-.SSTabView > .SSContentView > div.SSActive
+.SSTabView > .SSContentView > .SSTabPane.SSActive
 {
   
 }
@@ -32,12 +32,12 @@
   
 }
 
-.SSTabView > .SSContentView > div
+.SSTabView > .SSContentView > .SSTabPane
 {
   display:none;
 }
 
-.SSTabView > .SSContentView > .SSActive
+.SSTabView > .SSContentView > .SSTabPane.SSActive
 {
   display:block;
 }

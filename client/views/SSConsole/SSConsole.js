@@ -6,8 +6,6 @@ var SSConsole = new Class({
 
   initialize: function(el, options)
   {
-    console.log("================================================ SSConsole");
-    
     // only really relevant under Sandalphon
     this.parent(el, options);
 
@@ -220,12 +218,16 @@ var SSConsole = new Class({
 
   buildInterface: function(ui)
   {
+    // create the iframe where the console will live
     this.element = new IFrame({
       id: 'SSConsole'
     });
+    // since we're creating the frame via code we need to hook up the controller
+    // reference manually
     SSSetControllerForNode(this, this.element);
     this.element.injectInside(document.body);
 
+    // finish initialization after iframe load
     this.element.addEvent('load', function() {
       var context = this.element.contentWindow;
 
@@ -236,14 +238,17 @@ var SSConsole = new Class({
         var doc = new Document(context.document);
       }
 
-      // add the style
+      // add the styles into the iframe
       Sandalphon.addStyle(ui.styles, context);
+      
       // grab the interface, strip the outer level, we're putting the console into an iframe
       var fragment = Sandalphon.convertToFragment(ui['interface'], context).getFirst();
+      
       // place it in the frame
       $(context.document.body).grab(fragment);
       $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
-      // activate the iframe context
+      
+      // activate the iframe context: create controllers hook up outlets
       Sandalphon.activate(context);
     }.bind(this));
   },

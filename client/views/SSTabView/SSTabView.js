@@ -4,7 +4,7 @@ var SSTabView = new Class({
   
   Extends: SSView,
 
-  initialize: function(el)
+  initialize: function(el, options)
   {
     this.parent(el);
     
@@ -29,16 +29,16 @@ var SSTabView = new Class({
 
     this.element.addEvent('click', this.eventDispatch.bind(this));
     
-    //console.log('refresh SSTabView');
+    //SSLog('refresh SSTabView');
     // refresh the dimensions
     this.refresh();
-    //console.log('SSTabView initialized');
+    //SSLog('SSTabView initialized');
   },
   
   
   eventDispatch: function(evt)
   {
-    //console.log('eventDispatch');
+    //SSLog('eventDispatch');
 
     var theEvent = new Event(evt);
     var theTarget = $(evt.target);
@@ -99,13 +99,13 @@ var SSTabView = new Class({
   
   indexOfContentView: function(contentView)
   {
-    return this.indexOfNode(this.element._getElements('> .SSContentView > div'), contentView);
+    return this.indexOfNode(this.element._getElements('> .SSContentView > .SSTabPane'), contentView);
   },
   
   
   contentViewForIndex: function(idx)
   {
-    return this.element._getElements('> .SSContentView > div')[idx];
+    return this.element._getElements('> .SSContentView > .SSTabPane')[idx];
   },
   
 
@@ -127,7 +127,7 @@ var SSTabView = new Class({
 
   selectTab: function(idx)
   {
-    //console.log(this.element.getProperty('id') + ' selectTab ' + idx);
+    SSLog(this.element.getProperty('id') + ' selectTab ' + idx, SSLogForce);
     if(this.__selectedTab__ != idx)
     {
       // hide the last tab button and tab pane only if there was a last selected tab
@@ -137,9 +137,10 @@ var SSTabView = new Class({
 
         // hide the last tab pane
         var lastTabPane = this.contentViewForIndex(this.__selectedTab__);
-        //console.log('controller for last tab ' + lastTabPane + ' ' + $uid(lastTabPane));
+        //SSLog('controller for last tab ' + lastTabPane + ' ' + $uid(lastTabPane));
         var lastTabPaneController = this.controllerForNode(lastTabPane);
-        //console.log('got controller');
+        SSLog('got controller', SSLogForce);
+        SSLog(lastTabPaneController, SSLogForce);
 
         if(lastTabPaneController)
         {
@@ -153,12 +154,13 @@ var SSTabView = new Class({
 
       // check to see if there is a view controller for the content view
       var controller = this.contentViewControllerForIndex(idx);
-      //console.log('>>>>>>>>>>>>>>>>>>>>>>>> getting tab content view controller');
+      SSLog('>>>>>>>>>>>>>>>>>>>>>>>> getting tab content view controller', SSLogForce);
+      SSLog(controller, SSLogForce);
       if(controller)
       {
-        //console.log('showing controller');
+        //SSLog('showing controller');
         controller.show();
-        //console.log('refreshing controller');
+        //SSLog('refreshing controller');
         controller.refresh();
       }
       else
@@ -166,15 +168,20 @@ var SSTabView = new Class({
         this.contentViewForIndex(idx).addClass('SSActive');
       }
       
-      //console.log('Activating tab button');
+      SSLog('Activating tab button', SSLogForce);
+      SSLog(this.tabButtonForIndex(idx), SSLogForce);
       // hide the tab button
       this.tabButtonForIndex(idx).addClass('SSActive');
       
       this.__selectedTab__ = idx;
       
-      //console.log('fire tabSelected');
+      //SSLog('fire tabSelected');
       this.fireEvent('tabSelected', {tabView:this, tabIndex:this.__selectedTab__});
-      //console.log('exit tabSelected');
+      //SSLog('exit tabSelected');
+    }
+    else
+    {
+      SSLog('Tab already selected', SSLogForce);
     }
   },
   
@@ -186,7 +193,9 @@ var SSTabView = new Class({
       'class': "SSButton"
     });
     tabButton.set('text', name);
-    var tabContent = new Element('div');
+    var tabContent = new Element('div', {
+      'class': 'SSTabPane'
+    });
     
     tabButton.injectInside(this.element._getElement('> .SSControlView'));
     tabContent.injectInside(this.element._getElement('> .SSContentView'));
@@ -195,7 +204,7 @@ var SSTabView = new Class({
   
   contentViewControllerForIndex: function(idx)
   {
-    //console.log('contentViewControllerForIndex ' + idx + ' ' + this.contentViewForIndex(idx));
+    //SSLog('contentViewControllerForIndex ' + idx + ' ' + this.contentViewForIndex(idx));
     return this.controllerForNode(this.contentViewForIndex(idx));
   },
   

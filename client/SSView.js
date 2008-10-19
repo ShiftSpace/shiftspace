@@ -118,7 +118,7 @@ var SSView = new Class({
   
   addOutletWithName: function(name, outlet)
   {
-    SSLog('Setting name ' + name + ' for ' + outlet, SSLogViews);
+    SSLog('Setting name ' + name + ' for ' + outlet);
     this.outlets().set(name, outlet);
   },
 
