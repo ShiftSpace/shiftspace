@@ -417,7 +417,7 @@ var SSTableView = new Class({
   {
     if(!this.options.multipleSelection)
     {
-      SSLog('Deselect all!', SSLogForce);
+      SSLog('Deselect all!');
       this.deselectAll();
     }
     
@@ -522,9 +522,9 @@ var SSTableView = new Class({
   {
     var rowIndex = this.indexOfRow(row);
     
-    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
-    SSLog(row, SSLogForce);
-    SSLog(this.rowIsSelected(rowIndex), SSLogForce);
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>');
+    SSLog(row);
+    SSLog(this.rowIsSelected(rowIndex));
     
     // deslect all if not multiple selection type table
     if(!this.options.multipleSelection)
@@ -535,7 +535,7 @@ var SSTableView = new Class({
     // check for selection toggling
     if(this.options.toggleSelection && this.rowIsSelected(rowIndex))
     {
-      SSLog('deselect', SSLogForce);
+      SSLog('deselect');
       this.deselectRow(this.indexOfRow(row));
     }
     else if(!this.rowIsSelected(rowIndex))

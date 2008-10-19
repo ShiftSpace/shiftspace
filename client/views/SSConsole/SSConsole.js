@@ -18,7 +18,10 @@ var SSConsole = new Class({
     // listen for login/logout eventss
     ShiftSpace.User.addEvent('onUserLogin', this.handleLogin.bind(this));
     ShiftSpace.User.addEvent('onUserLogout', this.handleLogout.bind(this));
+    
+    // listen for shift events
     SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));
+    SSAddEvent('onShiftHide', this.deselectShift.bind(this))
 
     // listen for global events as well
 
@@ -333,6 +336,12 @@ var SSConsole = new Class({
       // reload the table
       visibleTableView.reload();
     }
+  },
+  
+  
+  deselectShift: function(shiftId)
+  {
+    
   }
 
 

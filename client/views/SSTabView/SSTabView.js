@@ -127,7 +127,7 @@ var SSTabView = new Class({
 
   selectTab: function(idx)
   {
-    SSLog(this.element.getProperty('id') + ' selectTab ' + idx, SSLogForce);
+    SSLog(this.element.getProperty('id') + ' selectTab ' + idx);
     if(this.__selectedTab__ != idx)
     {
       // hide the last tab button and tab pane only if there was a last selected tab
@@ -139,8 +139,8 @@ var SSTabView = new Class({
         var lastTabPane = this.contentViewForIndex(this.__selectedTab__);
         //SSLog('controller for last tab ' + lastTabPane + ' ' + $uid(lastTabPane));
         var lastTabPaneController = this.controllerForNode(lastTabPane);
-        SSLog('got controller', SSLogForce);
-        SSLog(lastTabPaneController, SSLogForce);
+        SSLog('got controller');
+        SSLog(lastTabPaneController);
 
         if(lastTabPaneController)
         {
@@ -154,8 +154,8 @@ var SSTabView = new Class({
 
       // check to see if there is a view controller for the content view
       var controller = this.contentViewControllerForIndex(idx);
-      SSLog('>>>>>>>>>>>>>>>>>>>>>>>> getting tab content view controller', SSLogForce);
-      SSLog(controller, SSLogForce);
+      SSLog('>>>>>>>>>>>>>>>>>>>>>>>> getting tab content view controller');
+      SSLog(controller);
       if(controller)
       {
         //SSLog('showing controller');
@@ -168,8 +168,8 @@ var SSTabView = new Class({
         this.contentViewForIndex(idx).addClass('SSActive');
       }
       
-      SSLog('Activating tab button', SSLogForce);
-      SSLog(this.tabButtonForIndex(idx), SSLogForce);
+      SSLog('Activating tab button');
+      SSLog(this.tabButtonForIndex(idx));
       // hide the tab button
       this.tabButtonForIndex(idx).addClass('SSActive');
       
@@ -181,7 +181,7 @@ var SSTabView = new Class({
     }
     else
     {
-      SSLog('Tab already selected', SSLogForce);
+      SSLog('Tab already selected');
     }
   },
   
