@@ -1,4 +1,4 @@
-#actions {
+#ActionMenu {
   display: none;
   position: absolute;
   top: 0px;
@@ -10,7 +10,7 @@
   z-index: 1;
 }
 
-#actions .group {
+#ActionMenu .group {
   float: left;
   padding: 1px;
   background-color: rgba(0, 0, 0, 0.2);
@@ -19,7 +19,7 @@
   height: 18px;
 }
 
-#actions .button {
+#ActionMenu .button {
   display: block;
   float: left;
   background-color: #faf9f7;
@@ -38,29 +38,29 @@
   opacity: 0.85;
 }
 
-#actions a.button:hover, #actions div#privacy:hover
+#ActionMenu a.button:hover, #ActionMenu div#privacy:hover
 {
   opacity: 1.0;
 }
 
-#actions a.button.disabled:hover, #actions div#privacy.disabled:hover
+#ActionMenu a.button.disabled:hover, #ActionMenu div#privacy.disabled:hover
 {
   opacity: 0.3;
 }
 
-#actions .button.disabled, #actions #privacy.disabled, #SSMakeShiftPublicButton.disabled, #SSMakeShiftPrivateButton.disabled
+#ActionMenu .button.disabled, #ActionMenu #privacy.disabled, #SSMakeShiftPublicButton.disabled, #SSMakeShiftPrivateButton.disabled
 {
   opacity: 0.3;
 }
 
-#actions .favorite  { background-image: url(../images/Actions/unstarred.png); }
-#actions .link      { background-image: url(../images/Actions/link.png); }
-#actions .trails    { background-image: url(../images/Actions/trails.png); }
-#actions .delicious { background-image: url(../images/Actions/delicious.png); }
-#actions .edit      { background-image: url(../images/Actions/edit.png); }
-#actions .delete    { background-image: url(../images/Actions/delete.png); }
+#ActionMenu .favorite  { background-image: url(../images/Actions/unstarred.png); }
+#ActionMenu .link      { background-image: url(../images/Actions/link.png); }
+#ActionMenu .trails    { background-image: url(../images/Actions/trails.png); }
+#ActionMenu .delicious { background-image: url(../images/Actions/delicious.png); }
+#ActionMenu .edit      { background-image: url(../images/Actions/edit.png); }
+#ActionMenu .delete    { background-image: url(../images/Actions/delete.png); }
 
-#actions .dropdown {
+#ActionMenu .dropdown {
   float: left;
   background: #faf9f7 url(../images/Actions/arrow.gif) no-repeat right top;
   margin-left: 4px;
@@ -69,11 +69,11 @@
   height: 18px;
 }
 
-#actions .first {
+#ActionMenu .first {
   margin-left: 0;
 }
 
-#actions .dropdown .option {
+#ActionMenu .dropdown .option {
   background-position: 2px 2px;
   display: none;
   text-decoration: none;
@@ -82,24 +82,24 @@
   border-top: 1px solid #fae6de;
 }
 
-#actions .dropdown .first, #actions .dropdown .selected {
+#ActionMenu .dropdown .first, #ActionMenu .dropdown .selected {
   border-top: none;
   margin-top: 0;
   padding-top: 2px;
 }
 
-#actions .dropdown a:hover {
+#ActionMenu .dropdown a:hover {
   color: #F63B02;
 }
 
 /*
-#actions .dropdown .first {
+#ActionMenu .dropdown .first {
   padding-left: 5px;
   border-top: 0;
 }
 */
 
-#actions .dropdown .selected {
+#ActionMenu .dropdown .selected {
   display: block;
 }
 
@@ -139,12 +139,12 @@
   display: block;
 }
 
-#actions .dropdown-open .option {
+#ActionMenu .dropdown-open .option {
   /*display: block;*/
 }
 
-#actions .dropdown .public { background-image: url(../images/Actions/public.png); }
-#actions .dropdown .private { background-image: url(../images/Actions/private.png); }
+#ActionMenu .dropdown .public { background-image: url(../images/Actions/public.png); }
+#ActionMenu .dropdown .private { background-image: url(../images/Actions/private.png); }
 
 #privacyOptions {
   position: absolute;

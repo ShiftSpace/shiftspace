@@ -2,17 +2,20 @@ var ActionMenu = new Class({
   
   Extends: SSView,
   
-  initialize: function() 
+  initialize: function(el, options) 
   {
+    this.parent(el);
+    
     this.selected = [];
     this.menuBuilt = false;
     
     ShiftSpace.User.addEvent('onUserLogin', this.updateMenu.bind(this));
     ShiftSpace.User.addEvent('onUserLogout', this.updateMenu.bind(this));
     
-    // Load the interface
-    if(typeof SandalphonToolMode == 'undefined')
+    // Load the interface if not in Sandalphon
+    if($type(SandalphonToolMode) == 'undefined')
     {
+      SSLog('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++', SSLogForce);
       Sandalphon.load('/client/customViews/ActionMenu/ActionMenu.html', this.buildInterface.bind(this));
     }
   },
@@ -36,12 +39,10 @@ var ActionMenu = new Class({
       this.publicButton = this.outlets().get('SSSetShiftPublicButton');
       
       // initialize the dropdown
-      this.dropdown = _$(this.el).getElementsByClassName('dropdown')[0];
-      this.dropdown = $(this.dropdown);
+      this.dropdown = this.outlets().get('privacy');
       this.dropdown.addEvent('click', this.updatePrivacyMenu.bind(this, [true]));
 
       this.attachEvents();
-      
       this.initFx();
     }
   },
@@ -49,21 +50,22 @@ var ActionMenu = new Class({
   
   initFx: function()
   {
-    this.el.set('tween', {
+    this.element.set('tween', {
       duration: 300,
       transition: Fx.Transitions.linear,
       onStart: function()
       {
-        this.el.setStyle('height', 0);
-        this.el.setStyle('overflow', 'hidden');
-        this.el.setStyle('display', 'block');
+        this.element.setStyle('height', 0);
+        this.element.setStyle('overflow', 'hidden');
+        this.element.setStyle('display', 'block');
       }.bind(this),
       onComplete: function()
       {
-        this.el.setStyle('overflow', 'visible');
+        this.element.setStyle('overflow', 'visible');
       }.bind(this)
     });
     
+    /*
     $(this.doc.getElementById('scroller')).set('tween', {
       duration: 300,
       transition: Fx.Transitions.linear,
@@ -78,6 +80,7 @@ var ActionMenu = new Class({
         $(this.doc.getElementById('scroller')).addClass('withActions');
       }.bind(this)
     });
+    */
   },
   
   
@@ -116,76 +119,91 @@ var ActionMenu = new Class({
   editShift: function()
   {
     // Edit
-    if(!this.editButton.hasClass('disabled'))
+    if(SSEditShift)
     {
-      SSEditShift(this.selected[0]);
+      if(!this.editButton.hasClass('disabled'))
+      {
+        SSEditShift(this.selected[0]);
+      }
+      this.clearAndHide();
     }
-    this.clearAndHide();
   },
   
   
   deleteShifts: function()
   {
     // Delete
-    if(!this.deleteButton.hasClass('disabled'))
+    if(SSDeleteShift)
     {
-      var str = 'this shift';
-      if(this.selected.length > 1)
+      if(!this.deleteButton.hasClass('disabled'))
       {
-        str = 'these shifts';
-      }
-      if(confirm('Are you sure want to delete ' + str + '? There is no undo'))
-      {
-        this.selected.each(SSDeleteShift);
-        this.selected = [];
+        var str = 'this shift';
+        if(this.selected.length > 1)
+        {
+          str = 'these shifts';
+        }
+        if(confirm('Are you sure want to delete ' + str + '? There is no undo'))
+        {
+          this.selected.each(SSDeleteShift);
+          this.selected = [];
         
-        this.updateMenu();
-        this.hideMenu();
+          this.updateMenu();
+          this.hideMenu();
+        }
       }
+      this.clearAndHide();
     }
-    this.clearAndHide();
   },
   
   
   trailShift: function()
   {
-    plugins.attempt({
-      name: 'Trails', 
-      method: 'newTrail', 
-      args: this.selected[0],
-      callback: null
-    });
-    this.clearAndHide();
+    if(plugins && plugins.attempt)
+    {
+      plugins.attempt({
+        name: 'Trails', 
+        method: 'newTrail', 
+        args: this.selected[0],
+        callback: null
+      });
+      this.clearAndHide();
+    }
   },
   
   
   initDeliciousButton: function()
   {
-    this.deliciousButton.addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
+    if(plugins && plugins.attempt)
+    {
+      this.deliciousButton.addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
       
-      plugins.attempt({
-        name: "Delicious", 
-        method: 'showDeliciousWindow',
-        args: this.selected[0],
-        callback: null
-      });
-    }.bind(this));
+        plugins.attempt({
+          name: "Delicious", 
+          method: 'showDeliciousWindow',
+          args: this.selected[0],
+          callback: null
+        });
+      }.bind(this));
+    }
   },
   
   
   initTwitterButton: function()
   {
-    this.twitterButton.addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
+    if(plugins && plugins.attempt)
+    {
+      this.twitterButton.addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
       
-      plugins.attempt({
-        name: 'Twitter', 
-        method: "show", 
-        args: this.selected[0],
-        callback: null 
-      });
-    }.bind(this));
+        plugins.attempt({
+          name: 'Twitter', 
+          method: "show", 
+          args: this.selected[0],
+          callback: null 
+        });
+      }.bind(this));
+    }
   },
   
   
@@ -268,8 +286,8 @@ var ActionMenu = new Class({
         this.menuBuilt = true;
       }
       
-      this.el.tween('height', 22);
-      $(this.doc.getElementById('scroller')).tween('top', 23);
+      this.element.tween('height', 22);
+      //$(this.doc.getElementById('scroller')).tween('top', 23);
     }
   },
   
@@ -279,8 +297,8 @@ var ActionMenu = new Class({
     this.setIsVisible(false);
     this.updatePrivacyMenu();
     
-    this.el.tween('height', 0);
-    $(this.doc.getElementById('scroller')).tween('top', 0);
+    this.element.tween('height', 0);
+    //$(this.doc.getElementById('scroller')).tween('top', 0);
   },
 
   
@@ -450,4 +468,8 @@ var ActionMenu = new Class({
   
 });
 
-ShiftSpace.ActionMenu = new ActionMenu();
+// Add it the global UI class lookup
+if($type(ShiftSpace.UI) != 'undefined')
+{
+  ShiftSpace.UI.ActionMenu = ActionMenu;
+}

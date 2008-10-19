@@ -163,10 +163,13 @@ var SandalphonClass = new Class({
   */
   instantiateControllers: function(ctxt)
   {
+    SSLog('instantiateControllers', SSLogSandalphon);
     var context = ctxt || window;
     
     var views = this.contextQuery(context, '*[uiclass]');
     
+    SSLog(views, SSLogSandalphon);  
+
     // instantiate all objects
     views.each(function(aView) {
       var theClass = aView.getProperty('uiclass');
@@ -249,6 +252,8 @@ var SandalphonClass = new Class({
         // throw an exception
         console.error('Error: Sandalphon bindOutlets, binding target does not exist! ' + targetName);
         console.error(source);
+        // bail
+        return;
       }
       
       // check for a controller on the source

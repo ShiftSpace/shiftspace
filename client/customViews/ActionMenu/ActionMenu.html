@@ -1,4 +1,4 @@
-<div class="ActionMenu" uiclass="ActionMenu" outlet="SSConsole">
+<div id="ActionMenu" uiclass="ActionMenu" outlet="SSConsole">
   <div class="group"> 
     <a title="Permalink for selected shift" id="SSLinkToShiftButton" href="#" class="first button link" outlet="ActionMenu"></a> 
     <a title="Trail selected shift" id="SSTrailShiftButton" href="#" class="button trails" outlet="ActionMenu"></a> 
@@ -7,7 +7,7 @@
     <br class="clear"/> 
   </div> 
   <div class="group"> 
-    <div title="Set private/public status of selected shifts" id="privacy" class="dropdown first" outlet="ActionMenu"> 
+    <div id="privacy" title="Set private/public status of selected shifts" class="dropdown first" outlet="ActionMenu"> 
       <a id="SSSetBatchPrivacy" style="padding-left:4px" href="#" class="first option" outlet="ActionMenu">Set privacy</a> 
       <a id="SSSetShiftPublicButton" href="#" class="option public selected" outlet="ActionMenu">Public</a> 
       <a id="SSSetShiftPrivateButton" href="#" class="option private" outlet="ActionMenu">Private</a> 
@@ -15,6 +15,6 @@
     <a title="Edit selected shift" id="SSEditShiftButton" href="#" class="button edit" outlet="ActionMenu"></a> 
     <a title="Delete selected shift" id="SSDeleteShiftButton" href="#" class="button delete" outlet="ActionMenu"></a> 
     <br class="clear"/> 
-  </div> 
+  </div>
   <br class="clear"/>
 </div>
