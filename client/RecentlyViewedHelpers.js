@@ -1,7 +1,8 @@
 // ==Builder==
-// @optional          
+// @optional
+// @namae             RecentlyViewedHelpers
 // @package           Trails
-// @dependencies      NewTrail.js
+// @dependencies      TrailsPlugin
 // ==/Builder==
 
 /*

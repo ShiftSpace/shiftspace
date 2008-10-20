@@ -1,7 +1,8 @@
 // ==Builder==
 // @optional          
+// @name              PinHelpers
 // @package           Pinning
-// @dependencies      Pin.js
+// @dependencies      Pin
 // ==/Builder==
 
 // ===================

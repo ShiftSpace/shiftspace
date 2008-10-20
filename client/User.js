@@ -1,3 +1,9 @@
+// ==Builder==
+// @optional
+// @name              User
+// @package           System
+// ==/Builder==
+
 /*
   Class: User
     A an object wrapping the current ShiftSpace User.  Use this class to check the user's display

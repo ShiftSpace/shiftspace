@@ -1,7 +1,7 @@
 // ==Builder==
 // @required
 // @package           SSViews
-// @dependencies      SandalaphonTools.js, sandalphon.js
+// @dependencies      Sandalphon
 // ==/Builder==
 
 var SSView = new Class({

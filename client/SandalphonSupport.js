@@ -1,7 +1,8 @@
 // ==Builder==
-// @required          
+// @required
+// @name              SandalphonSupport
 // @package           Sandalphon
-// @dependecies       sandalphon.js
+// @dependecies       SandalphonCore
 // ==/Builder==
 
 var SSInstantiationListeners = {};

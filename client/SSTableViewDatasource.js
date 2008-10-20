@@ -1,3 +1,9 @@
+// ==Builder==
+// @optional
+// @name              SSTableViewDatasource
+// @package           ShiftSpaceCore
+// ==/Builder==
+
 /*
   Class: SSTableViewDatasource
     Properties passed to the data providing url should send a json object with the following structure
@@ -31,7 +37,7 @@ var SSTableViewDatasource = new Class({
 
   initialize: function(options)
   {
-    console.log('SSTableViewDatasource instantiated.');
+    SSLog('SSTableViewDatasource instantiated.');
     this.setOptions(options);
 
     // set the options
@@ -95,11 +101,11 @@ var SSTableViewDatasource = new Class({
 
   updateRowColumn: function(rowIndex, columnName, value)
   {
-    console.log('SSTableViewDatasource updateRowColumn');
+    SSLog('SSTableViewDatasource updateRowColumn');
     // make an update call to the data source
     if(this.dataUpdateURL())
     {
-      console.log('we have an update url ' + rowIndex + ", " + columnName + " : " + value);
+      SSLog('we have an update url ' + rowIndex + ", " + columnName + " : " + value);
 
       var params = {};
       var updateKey = this.dataUpdateKey();
@@ -107,9 +113,10 @@ var SSTableViewDatasource = new Class({
       params[updateKey] = this.data()[rowIndex][updateKey];
       params[columnName] = value;
 
-      console.log(params);
+      SSLog(params);
 
       // make an update request
+      // FIXME: need to update this to do something else - David
       new Request({
         url: this.dataUpdateURL(),
         data: params,
@@ -234,7 +241,7 @@ var SSTableViewDatasource = new Class({
 
   sortByColumn: function(column, direction)
   {
-    console.log('sort by column ' + column + ', direction ' + direction);
+    SSLog('sort by column ' + column + ', direction ' + direction);
     this.fetch({
       sortByColumn: column,
       sortByDirection: direction
@@ -275,17 +282,18 @@ var SSTableViewDatasource = new Class({
 
   fetch: function(_properties)
   {
-    console.log('data source fetch');
+    SSLog('data source fetch');
 
     // make sure the properties are a Hash
     var properties = (!_properties && $H()) || (_properties instanceof Hash && _properties) || $H(_properties);
     // combine them with the existing properties, careful not to modify this.properties()
     var allProperties = $H(this.properties().getClean()).combine(properties);
     var isMissingProperties = this.isMissingProperties(allProperties);
+    
     // check for missing properties
     if( !isMissingProperties && this.dataProviderURL())
     {
-      console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> SSTableViewDatasource fetch');
+      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>> SSTableViewDatasource fetch');
       // if actually running in ShiftSpace
       serverCall(this.dataProviderURL(), allProperties.getClean(), function(json) {
         this.updateData(json[this.dataKey()]);

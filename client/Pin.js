@@ -1,7 +1,8 @@
 // ==Builder==
-// @optional          
+// @optional  
+// @name              Pin
 // @package           Pinning
-// @dependencies      SandalphonHelpers.js
+// @dependencies      SandalphonHelpers
 // ==/Builder==
 
 /*

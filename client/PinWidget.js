@@ -1,7 +1,8 @@
 // ==Builder==
-// @optional          
+// @optional         
+// @name              PinWidget
 // @package           Pinning
-// @dependencies      PinHelpers.js
+// @dependencies      PinHelpers, ShiftSpaceElement
 // ==/Builder==
 
 /*

@@ -1,3 +1,9 @@
+// ==Builder==
+// @required
+// @name              Space
+// @package           System
+// ==/Builder==
+
 /*
   Class: ShiftSpace.Space
     The base class for spaces.  A Space is essentially an extension to the ShiftSpace architecture.  You can think of ShiftSpace

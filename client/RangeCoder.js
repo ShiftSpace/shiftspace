@@ -1,3 +1,9 @@
+// ==Builder==
+// @optional
+// @name              RangeCoder
+// @package           Pinning
+// ==/Builder==
+
 /*
   Class: RangeCoder
     A convenience class to encode and decode W3C Ranges <-> opaque objects.

@@ -1,3 +1,10 @@
+// ==Builder==
+// @required
+// @name              SSLog
+// @package           System
+// @dependencies      ShiftSpaceElement
+// ==/Builder==
+
 /*
   Class: ShiftMenu
     A singleton Class that represents the ShiftMenu. It is used to create new shifts.

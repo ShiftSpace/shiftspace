@@ -1,3 +1,9 @@
+// ==Builder==
+// @required
+// @name              Shift
+// @package           System
+// ==/Builder==
+
 /*
   Class: ShiftSpace.Shift
     The base class for shifts.  Shifts can essentially be thought of as documents.  If you consider things from the MVC perspective

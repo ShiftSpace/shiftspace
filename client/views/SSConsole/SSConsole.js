@@ -2,7 +2,7 @@
 // @optional
 // @name              SSConsole
 // @package           ShiftSpaceCoreUI
-// @dependencies      SSView
+// @dependencies      SSView, ShiftSpaceElement
 // ==/Builder==
 
 var SSConsole = new Class({
