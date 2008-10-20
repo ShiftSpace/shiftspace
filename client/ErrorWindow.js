@@ -1,3 +1,10 @@
+// ==Builder==
+// @optional
+// @name              ErrowWindow
+// @package           ErrorHandling
+// @dependencies      Element
+// ==/Builder==
+
 var __errorWindow__,
     __errorWindowShiftPropertyModel__,
     __errorWindowMinimized__ = true;

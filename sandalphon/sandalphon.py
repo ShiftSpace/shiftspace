@@ -1,8 +1,7 @@
 import os
 import sys
 import re
-import xml.etree.ElementTree as ElementTree # You need to install cElementTree - David
-from elementtidy import TidyHTMLTreeBuilder # You need to install this package from here http://effbot.org/downloads/ - David
+import xml.etree.ElementTree as ElementTree
 
 class ViewParser:
     def __init__(self, element):

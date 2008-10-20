@@ -1,3 +1,9 @@
+// ==Builder==
+// @required
+// @name              EventProxy
+// @package           System
+// ==/Builder==
+
 // event proxy object since, ShiftSpace is not a MooTools class
 var __eventProxyClass__ = new Class({});
 __eventProxyClass__.implement(new Events);

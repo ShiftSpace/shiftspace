@@ -1,3 +1,10 @@
+// ==Builder==
+// @optional
+// @name              FullScreen
+// @package           UtilitiesExtras
+// @dependencies      Element
+// ==/Builder==
+
 // ======================
 // = FullScreen Support =
 // ======================

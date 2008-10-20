@@ -1,3 +1,10 @@
+// ==Builder==
+// @optional
+// @name              SSConsole
+// @package           ShiftSpaceCoreUI
+// @dependencies      SSView
+// ==/Builder==
+
 var SSConsole = new Class({
 
   name: 'SSConsole',
@@ -123,7 +130,7 @@ var SSConsole = new Class({
       this.handleLoginFormSubmit();
     }.bind(this));
 
-    // listen for tabShow events
+    // listen for tabSelected events so we can clear out the login form
     this.outlets().get('LoginTabView').addEvent('tabSelected', this.handleTabSelect.bind(this));
   },
 
@@ -162,7 +169,15 @@ var SSConsole = new Class({
 
   initSignUpForm: function()
   {
+    // catch click
     this.outlets().get('SSSignUpFormSubmit').addEvent('click', this.handleSignUpFormSubmit.bind(this));
+    
+    // catch enter
+    this.outlets().get('SSLoginForm').addEvent('submit', function(_evt) {
+      var evt = new Event(_evt);
+      evt.preventDefault();
+      this.handleSignUpFormSubmit();
+    }.bind(this));
   },
 
 
