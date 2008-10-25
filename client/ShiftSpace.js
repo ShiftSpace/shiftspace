@@ -63,14 +63,13 @@ var ShiftSpace = new (function() {
     // Internal Error Logging, trust me, you don't need this - kisses ShiftSpace Core Robot
     var SSNoLogging = 0;
     var SSLogMessage = 1;
-    var SSLogError = 1 << 1;
-    var SSLogWarning = 1 << 2;
-    var SSLogPlugin = 1 << 3;
-    var SSLogServerCall = 1 << 4;
-    var SSLogAll = SSLogError | SSLogWarning | SSLogMessage | SSLogPlugin | SSLogServerCall;
+    var SSLogError = 2;
+    var SSLogWarning = 4;
+    var SSLogPlugin = 8;
+    var SSLogAll = SSLogError | SSLogWarning | SSLogMessage | SSLogPlugin;
     var __ssloglevel__ = SSNoLogging;
     
-    SSSetLogLevel(SSLogPlugin | SSLogServerCall);
+    SSSetLogLevel(SSLogMessage);
     
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
@@ -327,9 +326,6 @@ var ShiftSpace = new (function() {
       
       // See if there's anything on the current page
       SSCheckForContent();
-      
-      // Create the modal div
-      SSCreateModalDiv();
       
       SSLog('ShiftSpace initialize complete');
     };
@@ -1673,8 +1669,8 @@ var ShiftSpace = new (function() {
         href: window.location.href
       };
       SSLog('========================================== SSCheckForContent');
-      console.log(params);
-      console.log(server);
+      SSLog(params);
+      SSLog(server);
       serverCall('query', params, function(json) {
         //SSLog('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
         if (!json.status) {
@@ -1805,6 +1801,7 @@ var ShiftSpace = new (function() {
           SSLog('SHIFT QUERY RETURN');
           SSLog('====================================================================');
           SSLog(json);
+
 
           // save the pluginsData
           for(var plugin in installedPlugins)
@@ -2847,9 +2844,7 @@ var ShiftSpace = new (function() {
     function serverCall(method, parameters, _callback) {
       var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
-      
-      SSLog('serverCall: ' + url, SSLogServerCall);
-      
+      //SSLog('serverCall: ' + url);
       var data = '';
       
       for (var key in parameters) {
@@ -3116,41 +3111,6 @@ var ShiftSpace = new (function() {
     function SSCanExitFullScreen()
     {
       return true;
-    }
-    
-    
-    var __modalDiv__;
-    var __modalDelegate__;
-    function SSCreateModalDiv()
-    {
-      __modalDiv__ = new ShiftSpace.Element('div', {
-        id: "SSModalDiv"
-      });
-      
-      __modalDiv__.addEvent('click', function(_evt) {
-        var evt = new Event(_evt);
-        // TODO: deal with modal delegates here - David
-      });
-    }
-    
-    
-    function SSEnterModal(delegate)
-    {
-      // add the modal div to the dom
-      __modalDiv__.injectInside(document.body);
-      
-      if(delegate)
-      {
-        __modalDelegate__ = delegate;
-      }
-    }
-    
-    
-    function SSExitModal()
-    {
-      // remove the modal div from the dom
-      __modalDiv__.remove();
-      __modalDelegate__ = null;
     }
     
     var __errorWindowShiftPropertyModel__;
@@ -3474,7 +3434,7 @@ var ShiftSpace = new (function() {
     return this;
 })();
 
-// NOTE: For Safari & Firefox 3.1 to keep SS extensions out of private scope - David
+// NOTE: For Safari to keep SS extensions out of private scope - David
 ShiftSpace.__externals__ = {
   evaluate: function(external, object)
   {
@@ -3495,7 +3455,6 @@ function SSDescribeException(_exception)
   }
   return "Exception:{ " + temp.join(', ') +" }";
 }
-
 
 if(self == top) 
 {

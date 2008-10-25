@@ -149,7 +149,6 @@ var Actions = new Class({
   {
     this.deliciousButton.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
-      
       plugins.attempt({
         name: "Delicious", 
         method: 'showDeliciousWindow',

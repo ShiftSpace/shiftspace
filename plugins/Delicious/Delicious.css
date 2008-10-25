@@ -1,0 +1,208 @@
+div#SSDelicious{
+	width: 378px;
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 11px;
+	color: #736357;
+	line-height: 1.4em;
+}
+
+#SSDelicious.InShiftSpace
+{
+	position: fixed;
+	right: 10px;
+	bottom: 0px;
+	z-index: 1000003;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+#SSDelicious.InShiftSpace #del-header
+{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 360px;
+}
+
+#SSDelicious.InShiftSpace #del-header .del-minimize
+{
+  /*
+  position: fixed;
+  right: 50px;
+  */
+  float: left;
+}
+
+#SSDelicious.InShiftSpace #del-body
+{
+  position: absolute;
+  left: 0px;
+  width: 100%;
+  bottom: 0px;
+  top: 40px;
+}
+
+#SSDeliciousFrameWrapper
+{
+  position: absolute;
+  left: 17px;
+  right: 20px;
+  bottom: 0px;
+  top: 0px;
+}
+
+#SSDeliciousFrame
+{
+  width: 100%;
+  height: 100%;
+}
+
+div#SSDelicious a{
+	color: #f63b02;
+	text-decoration: none;
+}
+
+div#SSDelicious a:hover{
+	text-decoration: underline;
+}
+
+div#SSDelicious a img{
+	border: none;
+}
+
+div#del-header{
+	background: url(images/head_bg.png) no-repeat;
+	height: 20px;
+	padding: 20px 22px 0 19px;
+}
+
+div#del-count{
+  color:#fff;
+  float:left;
+  height:100%;
+  margin-top:1px;
+  width:320px;
+}
+
+div#del-count span{
+	width: 20px;
+	text-align: center;
+	float: left;
+	margin-right: 3px;
+	line-height: 137%;
+}
+
+div.del-minimize{
+	background: url(images/minimize.png) no-repeat;
+	height: 13px;
+	width: 13px;
+	float: right;
+	display: block;
+	margin-top: 2px;
+}
+
+div#del-body{
+	background: url(images/bg.png) repeat-y;
+}
+
+div#del-scroll{
+	overflow-y: scroll;
+	padding: 8px;
+	width: 324px;
+	height: 200px;
+	margin: 0px 17px;
+}
+
+a.del-reply{
+	background: url(images/reply_icon.png) no-repeat right center;
+	display: block;
+	height: 14px;
+	padding: 4px 25px 0px 0px;
+	text-align: right;
+	text-decoration: none;
+	color: #736357;
+	margin:3px;
+}
+
+ul#del-list
+{
+  padding: 0px;
+  margin: 0px;
+}
+
+ul#del-list li{
+	padding: 0px;
+	list-style: none;
+}
+
+ul#del-list li.comment div.del-meta{
+	background: url(images/meta_bg.png) no-repeat;
+	display: block;
+	height: 44px;
+	width: 309px;
+	clear: both;
+}
+
+ul#del-list li.shift div.del-meta{
+	background: url(images/shift-meta_bg.png) no-repeat;
+}
+
+div.del-meta-text{
+	float: left;
+	width: 247px;
+	height: 25px;
+	line-height: 0.9em;
+	margin: 17px 0px 0px 17px;
+}
+
+ul#del-list li.shift div.del-meta-text{
+	margin: 13px 0px 0px 34px;
+	width: 230px;
+}
+
+span.del-num{
+	font-family: Georgia;
+	font-size: 15px;
+}
+
+a.del-author img{
+	margin: 5px 0px 0px 6px;
+}
+
+div.del-content{
+	margin: 5px 15px;
+	font-size: 12px;
+}
+
+ul#del-list li.shift div.del-content{
+	font-family: Georgia;
+	font-size: 13px;
+	font-style: italic;
+	float: left;
+	margin:5px 5px 5px 15px;
+	width:204px;
+}
+
+a.del-shift-thumb img{
+	float: left;
+	width: 80px;
+}
+
+#respond{
+	font-size:12px;
+	margin:5px 15px;
+}
+
+textarea{
+	width: 290px;
+}
+
+input{
+	float: right;
+}
+
+#respond #submit
+{
+  margin-right: 5px;
+  margin-top: 5px;
+}
