@@ -1,3 +1,10 @@
+// ==Builder==
+// @required
+// @name              SSTableView
+// @package           ShiftSpaceCoreUI
+// @dependencies      SSView
+// ==/Builder==
+
 /*
   Class: SSTableView
     View controller for table views in the ShiftSpace environment

@@ -187,6 +187,7 @@ class SandalphonCompiler:
         # add the css for the main file at this path
         self.addCSSForHTMLPath(path)
         
+        # i think this finds all of them, might want to use this - David
         matches = self.templatePattern.finditer(interfaceFile)
         
         hasCustomViews = True

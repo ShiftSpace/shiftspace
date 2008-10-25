@@ -1,3 +1,10 @@
+// ==Builder==
+// @required
+// @name              SSTabView
+// @package           ShiftSpaceCoreUI
+// @dependencies      SSView
+// ==/Builder==
+
 var SSTabView = new Class({
   
   name: 'SSTabView',

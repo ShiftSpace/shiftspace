@@ -2,7 +2,7 @@
 // @required
 // @name              SandalphonSupport
 // @package           Sandalphon
-// @dependecies       SandalphonCore
+// @dependencies      SandalphonCore
 // ==/Builder==
 
 var SSInstantiationListeners = {};

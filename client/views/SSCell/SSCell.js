@@ -1,3 +1,10 @@
+// ==Builder==
+// @optional
+// @name              SSCell
+// @package           ShiftSpaceCoreUI
+// @dependences       SSTableView
+// ==/Builder==
+
 var SSCell = new Class({
 
   name: 'SSCell',

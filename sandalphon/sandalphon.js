@@ -1,3 +1,9 @@
+// ==Builder==
+// @required
+// @name              SandalphonCore
+// @package           System
+// ==/Builder==
+
 var SandalphonClass = new Class({
 
   initialize: function(attribute)
@@ -91,7 +97,6 @@ var SandalphonClass = new Class({
           console.error('Oops could not load that interface file');
         }
       });
-    
       
       // Group HTMl and CSS calls
       var loadGroup = new Group(interfaceCall, stylesCall);
@@ -99,7 +104,7 @@ var SandalphonClass = new Class({
         //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> load group done');
         if(callback) callback({interface:interface, styles:styles});
       });
-
+      
       // fetch
       interfaceCall.send();
       stylesCall.send();

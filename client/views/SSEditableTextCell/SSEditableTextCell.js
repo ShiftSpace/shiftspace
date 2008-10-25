@@ -1,3 +1,10 @@
+// ==Builder==
+// @required
+// @name              SSEditableTextCell
+// @package           ShiftSpaceCoreUI
+// @dependencies      SSTableView
+// ==/Builder==
+
 var SSEditableTextCell = new Class({
 
   name: 'SSEditableTextCell',

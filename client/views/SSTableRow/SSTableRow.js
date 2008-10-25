@@ -1,3 +1,10 @@
+// ==Builder==
+// @required
+// @name              SSTableRow
+// @package           ShiftSpaceCoreUI
+// @dependencies      SSTableView
+// ==/Builder==
+
 var SSTableRow = new Class({
   
   Extends: SSView,
