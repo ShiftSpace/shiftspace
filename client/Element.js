@@ -1,3 +1,9 @@
+// ==Builder==
+// @required
+// @name	            ShiftSpaceElement
+// @package           System
+// ==/Builder==
+
 /*
   Class: ShiftSpace.Element
     A wrapper around the MooTools Element class that marks each DOM node with the ShiftSpaceElement CSS

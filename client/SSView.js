@@ -1,8 +1,8 @@
 // ==Builder==
 // @required
-// @name	      SSView
+// @name	            SSView
 // @package           SSViews
-// @dependencies      Sandalphon
+// @dependencies      SandalphonCore
 // ==/Builder==
 
 var SSView = new Class({
