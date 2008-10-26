@@ -2,7 +2,7 @@
 // @required
 // @name              SSEditableTextCell
 // @package           ShiftSpaceCoreUI
-// @dependencies      SSTableView
+// @dependencies      SSTableView, SSCell
 // ==/Builder==
 
 var SSEditableTextCell = new Class({

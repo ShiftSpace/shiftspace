@@ -1,7 +1,7 @@
 import os
 import sys
 import re
-import xml.etree.ElementTree as ElementTree
+import xml.etree.ElementTree as ElementTree # Python >= 2.5
 
 class ViewParser:
     def __init__(self, element):

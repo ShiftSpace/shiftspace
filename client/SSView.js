@@ -1,5 +1,6 @@
 // ==Builder==
 // @required
+// @name	      SSView
 // @package           SSViews
 // @dependencies      Sandalphon
 // ==/Builder==
@@ -114,8 +115,8 @@ var SSView = new Class({
     var controller = this.controllerForNode(element);
     this.outlets().set(element.getProperty('id'), (controller || element));
   },
-  
-  
+
+
   addOutletWithName: function(name, outlet)
   {
     SSLog('Setting name ' + name + ' for ' + outlet);
@@ -285,7 +286,7 @@ var SSView = new Class({
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
   },
-  
+
   isVisible: function()
   {
     return (this.element.getStyle('display') != 'none');

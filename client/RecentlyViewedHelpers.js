@@ -1,6 +1,6 @@
 // ==Builder==
 // @optional
-// @namae             RecentlyViewedHelpers
+// @name              RecentlyViewedHelpers
 // @package           Trails
 // @dependencies      TrailsPlugin
 // ==/Builder==
