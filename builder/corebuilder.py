@@ -21,32 +21,6 @@ class SSBuilderNoSuchFileOrPackage(SSError): pass
 
 # Utilities ===============================
 
-# sorting
-def dependencySortForBuilder(builder):
-  def fn(fileA, fileB):
-    fA = builder.metadata[fileA]
-    fB = builder.metadata[fileB]
-
-    if fA.has_key('dependencies'):
-      try:
-        idx = fA['dependencies'].index(fileB)
-        # also need to check if the file is the dependency tree
-        print "< %s, %s, %s" % (fileA, fileB, idx)
-        return 1
-      except ValueError:
-        pass
-
-    if fB.has_key('dependencies'):
-      try:
-        idx = fB['dependencies'].index(fileA)
-        print "> %s, %s, %s" % (fileA, fileB, idx)
-        return -1
-      except ValueError:
-        pass
-
-    print "== %s, %s" % (fileA, fileB)
-    return 0
-  return fn
 
 
 # SSCoreBuilder ===========================
@@ -104,7 +78,8 @@ class SSCoreBuilder():
       # parse the description
       self.buildMetadataForFile(path, builderDescription)
     else:
-      print "No description for %s" % fileName
+      #print "No description for %s" % fileName
+      pass
 
     fileHandle.close()
 
@@ -178,6 +153,41 @@ class SSCoreBuilder():
 
     return metadata
 
+
+  # sorting
+  def dependencySortForPackage(package):
+    def fn(fileA, fileB):
+      fA = self.metadata[fileA]
+      fB = self.metadata[fileB]
+
+      # if no deps in package it's the least
+      
+      # if deps, can sort as below
+
+      if fA.has_key('dependencies'):
+        try:
+          idx = fA['dependencies'].index(fileB)
+          # also need to check if the file is the dependency tree
+          print "< %s, %s, %s" % (fileA, fileB, idx)
+          return 1
+        except ValueError:
+          pass
+
+      if fB.has_key('dependencies'):
+        try:
+          idx = fB['dependencies'].index(fileA)
+          print "> %s, %s, %s" % (fileA, fileB, idx)
+          return -1
+        except ValueError:
+          pass
+
+      # check if this file has dependecies with something else in the package
+      
+      print "== %s, %s" % (fileA, fileB)
+      return 0
+    
+    return fn
+
   
   def dependenciesForFile(self, name):
     deps = None
@@ -194,6 +204,12 @@ class SSCoreBuilder():
       pass
     return False
 
+  
+  def sortPackage(self, name):
+    newOrder = []
+    for file in self.package[name]:
+      pass
+  
   
   def fileIsInDependencyTree(self, base, file):
     # NOTE: we could memoize to increase perf
