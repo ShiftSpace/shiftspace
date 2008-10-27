@@ -46,19 +46,11 @@ class SSCoreBuilder():
     self.dependencySort = dependencySortForBuilder(self)
 
 
-  def parseHeader(self, header):
-    """
-    Parse the header for a single file.
-    """
-    pass
-
-
   def parseFile(self, path):
     """
     Parse all of the relevant files.
     """
     self.hasBuildDefinition(path)
-    pass
 
 
   def hasBuildDefinition(self, path):
@@ -143,6 +135,9 @@ class SSCoreBuilder():
 
 
   def metadataForFile(self, name):
+    """
+    Returns the metadata for a particular file.
+    """
     metadata = None
     
     try:
@@ -156,13 +151,18 @@ class SSCoreBuilder():
 
   # sorting
   def dependencySortForPackage(package):
+    # a stratification
     def fn(fileA, fileB):
       fA = self.metadata[fileA]
       fB = self.metadata[fileB]
 
-      # if no deps in package it's the least
+      # if no deps in package it's the least important
       
-      # if deps, can sort as below
+      # if deps it should go later
+
+      # elements in a package should not have more than one level of dep
+
+      # packages can contain packages
 
       if fA.has_key('dependencies'):
         try:
@@ -190,6 +190,9 @@ class SSCoreBuilder():
 
   
   def dependenciesForFile(self, name):
+    """
+    Returns the dependency list for a particular file.
+    """
     deps = None
     if (self.metadataForFile(name)).has_key('dependencies'):
       deps =  (self.metadataForFile(name))['dependencies']
@@ -197,6 +200,9 @@ class SSCoreBuilder():
 
 
   def listContains(self, alist, object):
+    """
+    Convenience function, returns whether a list contains an object.
+    """
     try:
       idx = alist.index(object)
       return True
@@ -212,6 +218,9 @@ class SSCoreBuilder():
   
   
   def fileIsInDependencyTree(self, base, file):
+    """
+    
+    """
     # NOTE: we could memoize to increase perf
     baseD = self.metadataForFile(base)
     deps = self.dependenciesForFile(base)
@@ -253,6 +262,10 @@ class SSCoreBuilder():
 
 
   def substringForMatch(self, string, match):
+    """
+    Utility method takes a regex match result and a string and returns the matching 
+    portion.
+    """
     if match:
       span = match.span()
       return string[span[0]:span[1]]
@@ -260,18 +273,34 @@ class SSCoreBuilder():
 
   
   def substringForPattern(self, string, pattern):
+    """
+    Utility method that tages a compiled regex pattern and returns the first match
+    in the string.
+    """
     return self.substringForMatch(string, pattern.search(string))
 
 
   def parseRequiredDirective(self, builderDescription):
+    """
+    Parse the required directive in a builder description.
+    Returns None or a match.
+    """
     return self.requiredPattern.search(builderDescription)
 
 
   def parseOptionalDirective(self, builderDescription):
+    """
+    Parse the optional directive in a builder description.
+    Returns None or a match.
+    """
     return self.optionalPattern.search(builderDescription)
 
 
   def parseNameDirective(self, builderDescription):
+    """
+    Parse the name directive in a builder description.
+    Returns None or a match.
+    """
     nameString = self.substringForPattern(builderDescription,
                                           self.namePattern)
     if nameString:
