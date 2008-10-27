@@ -13,24 +13,44 @@ class PDO_Store extends Store {
     try {
       $this->conn = new PDO($dsn, $username, $password);
     } catch (PDOException $e) {
-      throw new Exception('PDO connection failed: ' . $e->getMessage());
+      throw new Exception('Database error: ' . $e->getMessage());
     }
     $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    if (empty($this->config['setup'])) {
+      $this->setup();
+    }
   }
   
   
-  function load($options) {
-    
-    $defaults = array(
-      'key' => 'id',
-      'sql' => 'SELECT * FROM {table} WHERE {key} = :value'
-    );
+  function setup() {
+    echo 'setup';
+    foreach ($this->config as $key => $value) {
+      if (preg_match('/^vars:(\w+)$/', $key, $matches)) {
+        list(, $table) = $matches;
+        $this->setupTable($table, $value);
+      }
+    }
+    $server = $this->config['_server'];
+    $name = $this->config['_name'];
+    $config = $server->_config->get("store:$name");
+    $config['setup'] = true;
+    $server->_config->set("store:$name", $config);
+    $server->_config->save();
+  }
+  
+  
+  function load($options, $value = false) {
     
     $regex = '/^(\w+)\((.+)\)$/';
-    if (is_scalar($options) && preg_match($regex, $options, $matches)) {
+    if (is_string($options) && preg_match($regex, $options, $matches)) {
       $options = array(
         'table' => $matches[1],
         'value' => $matches[2]
+      );
+    } else if (is_string($options) && !empty($value)) {
+      $options = array(
+        'table' => $options,
+        'value' => $value
       );
     }
     
@@ -38,9 +58,12 @@ class PDO_Store extends Store {
       return false;
     }
     
-    if (isset($this->config["{$options['table']}_class"])) {
-      $defaults['class'] = $this->config["{$options['table']}_class"];
-    }
+    $defaults = array(
+      'key' => 'id',
+      'sql' => "SELECT '{class}', * FROM {table} WHERE {key} = :value",
+      '_store' => $this,
+      'class' => "{$options['table']}_Object"
+    );
     $options = array_merge($defaults, $options);
     
     $sql = $this->substitute($options['sql'], $options);
@@ -54,18 +77,30 @@ class PDO_Store extends Store {
       }
     }
     
-    if (isset($options['class']) && class_exists($options['class'])) {
-      $options['values'] = $this->row($sql, $values, PDO::FETCH_ASSOC);
-      return Object::factory($options);
-    } else {
-      return $this->row($sql, $values);
-    }
+    $fetchStyle = PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE;
+    return $this->row($sql, $values, $fetchStyle);
     
   }
   
-  
-  function save($object) {
-    
+  public function save($object) {
+    $vars = $object->get();
+    $table = substr(get_class($object), 0, -7);
+    $values = array();
+    if (!isset($object->id)) {
+      $columns = implode(', ', array_keys($vars));
+      foreach ($vars as $key => $value) {
+        $values[] = ":$key";
+      }
+      $values = implode(', ', $values);
+      $template = "INSERT INTO $table ($columns) VALUES ($values)";
+    } else {
+      foreach ($vars as $key => $value) {
+        $values[] = "$key = :$key";
+      }
+      $values = implode(', ', $values);
+      $template = "UPDATE $table SET $values WHERE id = :id";
+    }
+    return $this->query($template, $vars);
   }
   
   
@@ -371,6 +406,38 @@ class PDO_Store extends Store {
     }
     $dsn .= implode($separator, $options);
     return $dsn;
+  }
+  
+  protected protected function setupTable($table, $vars) {
+    
+    $types = array(
+      'table' =>      $table,
+      'sequence' =>   $this->get('sequence'),
+      'binary' =>     'BLOB',
+      'boolean' =>    'TINYINT(1)',
+      'date' =>       'DATE',
+      'datetime' =>   'DATETIME',
+      'decimal' =>    'DECIMAL',
+      'float' =>      'FLOAT',
+      'integer' =>    'INT(11)',
+      'string' =>     'VARCHAR(255)',
+      'text' =>       'TEXT',
+      'time' =>       'TIME',
+      'timestamp' =>  'TIMESTAMP'
+    );
+    
+    $columns = array();
+    foreach ($vars as $name => $type) {
+      $columns[] = "  $name {{$type}}";
+    }
+    $template = $this->get('createTable', $columns);
+    $this->query($this->substitute($template, $types));
+    
+  }
+  
+  protected function getCreateTable($columns) {
+    $columns = implode(",\n", $columns);
+    return "\nCREATE TABLE IF NOT EXISTS {table} (\n$columns\n)\n";
   }
   
 }

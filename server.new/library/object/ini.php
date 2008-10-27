@@ -24,11 +24,12 @@ class Ini_Object extends Object {
     if (!file_exists($file)) {
       throw new Exception("Config file '$file' not found.");
     }
+    $this->_file = $file;
     try {
       $content = parse_ini_file($file, true);
     } catch (Exception $e) {
       $message = $e->getMessage();
-      throw new Exception("Could not parse config file '$file': $message");
+      throw new Exception("Could not parse INI file '$file': $message");
     }
     foreach ($this->loadArray($content) as $key => $value) {
       $this->$key = $value;
@@ -48,12 +49,17 @@ class Ini_Object extends Object {
     See also:
       <load>
   */
-  public function save($file) {
+  public function save($file = false) {
+    if (empty($file) && isset($this->_file)) {
+      $file = $this->_file;
+    } else if (empty($file)) {
+      throw new Exception("Cannot save without a file parameter.");
+    }
     if (!is_writable(dirname($file)) ||
         file_exists($file) && !is_writable($file)) {
       throw new Exception("Could not save config file '$file'.");
     }
-    $contents = $this->saveArray(get_object_vars($this));
+    $contents = $this->saveArray($this->get());
     file_put_contents($file, $contents);
   }
   
@@ -100,7 +106,7 @@ class Ini_Object extends Object {
       if (is_scalar($value)) {
         $contents .= "$key = \"" . $this->escape($value) . '"' . "\n";
       } else if (is_array($value)) {
-        $contents .= "[$key]\n" . $this->saveArray($value);
+        $contents .= "[$key]\n" . $this->saveArray($value) . "\n";
       } else {
         $serialized = serialize($value);
         $contents .= "$key = \"__SERIALIZED__:" .
