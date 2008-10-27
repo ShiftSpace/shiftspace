@@ -242,10 +242,17 @@ var ShiftSpace = new (function() {
 
     var alreadyCheckedForUpdate = false;
 
+    // {PACKAGE:SystemBootstrap}
     // INCLUDE IframeHelpers.js
     // INCLUDE PinHelpers.js
     // INCLUDE SSViewProxy.js
-
+    // INCLUDE LocalizedStringsSupport.js
+    // INCLUDE SandalphonSupport.js
+    // INCLUDE EventProxy.js
+    // INCLUDE RecentlyViewedHelpers.js
+    // INCLUDE FullScreen.js
+    // INCLUDE ErrorWindow.js
+    
     /*
 
     Function: initialize
@@ -260,6 +267,7 @@ var ShiftSpace = new (function() {
       SSCheckForInstallSpaceLinks();
       
       // Load external scripts (pre-processing required)
+      // {PACKAGE:System}
       // INCLUDE User.js
       SSLog('User.js loaded');
 
@@ -281,6 +289,8 @@ var ShiftSpace = new (function() {
       // INCLUDE Element.js
       SSLog('Element.js loaded');
 
+      // {PACKAGE:ShiftSpaceCoreUI}
+      
       // INCLUDE SSView.js
       SSLog('SSView.js loaded');
       // INCLUDE views/SSCell/SSCell.js
@@ -409,9 +419,6 @@ var ShiftSpace = new (function() {
       });
     }
     
-    // INCLUDE LocalizedStringsSupport.js
-    // INCLUDE SandalphonSupport.js
-
     // Element extensions because child selectors don't work properly in MooTools 1.2 for some reason - David
     Element.implement({
       _ssgenId: function()
@@ -461,7 +468,7 @@ var ShiftSpace = new (function() {
       SSInstallSpace(spaceName);
     }
 
-    // INCLUDE EventProxy.js
+
 
     // ===============================
     // = Function Prototype Helpers  =
@@ -1573,7 +1580,7 @@ var ShiftSpace = new (function() {
       }
     }
 
-    // INCLUDE RecentlyViewedHelpers.js
+
 
     /*
 
@@ -2873,9 +2880,6 @@ var ShiftSpace = new (function() {
 
       });
     }
-    
-    // INCLUDE FullScreen.js
-    // INCLUDE ErrorWindow.js
 
     // In sandbox mode, expose something for easier debugging.
     if (typeof ShiftSpaceSandBoxMode != 'undefined')

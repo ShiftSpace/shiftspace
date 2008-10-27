@@ -204,12 +204,6 @@ class SSCoreBuilder():
     return False
 
   
-  def sortPackage(self, name):
-    newOrder = []
-    for file in self.package[name]:
-      pass
-  
-  
   def fileIsInDependencyTree(self, base, file):
     """
     
