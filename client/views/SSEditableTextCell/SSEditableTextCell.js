@@ -2,14 +2,13 @@
 // @required
 // @name              SSEditableTextCell
 // @package           ShiftSpaceCoreUI
-// @dependencies      SSTableView, SSCell
+// @dependencies      SSCell
 // ==/Builder==
 
 var SSEditableTextCell = new Class({
 
   name: 'SSEditableTextCell',
   Extends: SSCell,
-
 
   initialize: function(el, options)
   {

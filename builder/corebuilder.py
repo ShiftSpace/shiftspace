@@ -6,13 +6,6 @@ import sys
 import re
 import simplejson as json # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
 
-#python json
-#json.dumps([1, 2, 3, 4, 5]) -> returns '[1, 2, 3, 4, 5]'
-
-#pretty print
-#json.dumps([1, 2, 3, 4, 5], sort_keys=True, indent=4)
-#/Users/davidnolen/Sites/shiftspace-0.5/client/
-
 # Exceptions ==============================
 
 class SSError(Exception): pass

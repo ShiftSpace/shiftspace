@@ -2,7 +2,7 @@
 // @optional
 // @name              SSCell
 // @package           ShiftSpaceCoreUI
-// @dependences       SSTableView
+// @dependences       SSView
 // ==/Builder==
 
 var SSCell = new Class({

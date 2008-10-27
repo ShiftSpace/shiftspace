@@ -1,7 +1,7 @@
 // ==Builder==
 // @required
 // @name              SandalphonSupport
-// @package           Sandalphon
+// @package           System
 // @dependencies      SandalphonCore
 // ==/Builder==
 

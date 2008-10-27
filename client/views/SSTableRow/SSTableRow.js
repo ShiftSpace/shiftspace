@@ -2,7 +2,7 @@
 // @required
 // @name              SSTableRow
 // @package           ShiftSpaceCoreUI
-// @dependencies      SSTableView
+// @dependencies      SSView
 // ==/Builder==
 
 var SSTableRow = new Class({

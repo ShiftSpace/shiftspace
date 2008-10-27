@@ -1,7 +1,8 @@
 // ==Builder==
 // @required
-// @name	      SSViewProxy
-// @dependencies      SandalphonHelpers.js
+// @name	            SSViewProxy
+// @package           System
+// @dependencies      SandalphonSupport
 // ==/Builder==
 
 var SSViewProxy = new Class({
