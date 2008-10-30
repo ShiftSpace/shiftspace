@@ -69,13 +69,12 @@ SSUnitTest.TestCase = new Class({
   
   initialize: function(dummy)
   {
-    this.tests = $H();   
-    this.testCount = 0;
+    this.__tests = $H();   
     
     // to skip any properties defined on base class
     if(!dummy) 
     {
-      this.dummy = new SSUnitTest.TestCase(true);
+      this.__dummy = new SSUnitTest.TestCase(true);
       // add this instance to SSUnitTest
       SSUnitTest.addTestCase(this.name, this);
     }
@@ -86,6 +85,7 @@ SSUnitTest.TestCase = new Class({
   {
   },
   
+  
   tearDown: function() 
   {
   },
@@ -94,113 +94,9 @@ SSUnitTest.TestCase = new Class({
   run: function()
   {
     // collect all the tests and build metadata
-    this.collectTests();
-    this.runTests();
-    this.reportResults();
-  },
-  
-  
-  nameForTest: function(fn)
-  {
-    return fn.name
-  },
-  
-  
-  setNameForTest: function(fn, name)
-  {
-    fn.name = name;
-  },
-  
-  
-  collectTests: function()
-  {
-    // collect all object properties that have 'test' as the first four characters
-    for(var propertyName in this)
-    {
-      if(!this.dummy[propertyName])
-      {
-        var property = this[propertyName];
-      
-        if(propertyName.search("test") == 0 && 
-           $type(property) == 'function') 
-        {
-          var theTest = property,
-              testName = propertyName;
-                    
-          // add it to the testing data
-          var testData = $H();
-          // add a new hash for this test
-          this.tests.set(testName, testData);
-          // set the name of the original function
-          this.setNameForTest(theTest, testName);
-          // set a bound function with the name set
-          var boundTest = theTest.bind(this);
-          this.setNameForTest(boundTest, testName);
-          testData.set('function', boundTest);
-        }
-      }
-    }
-  },
-  
-  
-  runTests: function()
-  {
-    this.tests.each(function(testData, testName){
-      try
-      {
-        this.setup();
-      }
-      catch(err)
-      {
-        throw SSUnitTest.Error(err, "Uncaught exception in setup.");
-      }
-      
-      try
-      {
-        testData.function();
-      }
-      catch(err)
-      {
-        throw SSUnitTest.Error(err, "Uncaught exception in test.");
-      }
-      
-      // default to success, if the test failed this won't do anything
-      this.setTestSuccess(testData.function);
-      
-      try
-      {
-        this.tearDown();
-      }
-      catch(err)
-      {
-        throw SSUnitTest.Error(err, "Uncaught exception in tearDwon.");
-      }
-    }.bind(this));
-  },
-  
-  
-  dataForTest: function(aTest)
-  {
-    return this.tests.get(this.nameForTest(aTest));
-  },
-  
-  
-  setTestSuccess: function(aTest)
-  {
-    var data = this.dataForTest(aTest);
-    var success = data.get('success');
-    
-    // only set success if there isn't an existing value
-    if(success == null)
-    {
-      data.set('success', true)
-    }
-  },
-  
-  
-  setTestFail: function(aTest)
-  {
-    this.dataForTest(aTest).set('success', false);
+    this.__collectTests__();
+    this.__runTests__();
+    this.__reportResults__();
   },
   
   
@@ -220,15 +116,16 @@ SSUnitTest.TestCase = new Class({
     {
       if(err instanceof exception)
       {
-        this.setTestSuccess(caller);
+        this.__setTestSuccess__(caller);
       }
       else
       {
-        this.setTestFail(caller);
+        this.__setTestFail__(caller);
         throw err;
       }
     }
   },
+
 
   assert: function assertEquals(value)
   {
@@ -238,13 +135,14 @@ SSUnitTest.TestCase = new Class({
     
     if(value == true)
     {
-      this.setTestSuccess(caller);
+      this.__setTestSuccess__(caller);
     }
     else
     {
-      this.setTestFail(caller);
+      this.__setTestFail__(caller);
     }
   },  
+  
   
   assertEqual: function assertEquals(a, b)
   {
@@ -254,11 +152,11 @@ SSUnitTest.TestCase = new Class({
     
     if(a == b)
     {
-      this.setTestSuccess(caller);
+      this.__setTestSuccess__(caller);
     }
     else
     {
-      this.setTestFail(caller);
+      this.__setTestFail__(caller);
     }
   },
   
@@ -271,21 +169,125 @@ SSUnitTest.TestCase = new Class({
     
     if(a != b)
     {
-      this.setTestSuccess(caller);
+      this.__setTestSuccess__(caller);
     }
     else
     {
-      this.setTestFail(caller);
+      this.__setTestFail__(caller);
     }
   },
   
   
-  reportResults: function()
+  __nameForTest__: function(fn)
   {
-    var passed = this.tests.getValues().filter(function(x){return x.success});
-    var passedTests = passed.map(function(x){return this.nameForTest(x.function)}.bind(this));
-    var failed = this.tests.getValues().filter(function(x){return !x.success});
-    var failedTests = failed.map(function(x){return this.nameForTest(x.function)}.bind(this));
+    return fn.name
+  },
+  
+  
+  __setNameForTest__: function(fn, name)
+  {
+    fn.name = name;
+  },
+  
+  
+  __collectTests__: function()
+  {
+    // collect all object properties that have 'test' as the first four characters
+    for(var propertyName in this)
+    {
+      if(!this.__dummy[propertyName])
+      {
+        var property = this[propertyName];
+      
+        if(propertyName.search("test") == 0 && 
+           $type(property) == 'function') 
+        {
+          var theTest = property,
+              testName = propertyName;
+                    
+          // add it to the testing data
+          var testData = $H();
+          // add a new hash for this test
+          this.__tests.set(testName, testData);
+          // set the name of the original function
+          this.__setNameForTest__(theTest, testName);
+          // set a bound function with the name set
+          var boundTest = theTest.bind(this);
+          this.__setNameForTest__(boundTest, testName);
+          testData.set('function', boundTest);
+        }
+      }
+    }
+  },
+  
+  
+  __runTests__: function()
+  {
+    this.__tests.each(function(testData, testName){
+      try
+      {
+        this.setup();
+      }
+      catch(err)
+      {
+        throw SSUnitTest.Error(err, "Uncaught exception in setup.");
+      }
+      
+      try
+      {
+        testData.function();
+      }
+      catch(err)
+      {
+        throw SSUnitTest.Error(err, "Uncaught exception in test.");
+      }
+      
+      // default to success, if the test failed this won't do anything
+      this.__setTestSuccess__(testData.function);
+      
+      try
+      {
+        this.tearDown();
+      }
+      catch(err)
+      {
+        throw SSUnitTest.Error(err, "Uncaught exception in tearDwon.");
+      }
+    }.bind(this));
+  },
+  
+  
+  __dataForTest__: function(aTest)
+  {
+    return this.__tests.get(this.__nameForTest__(aTest));
+  },
+  
+  
+  __setTestSuccess__: function(aTest)
+  {
+    var data = this.__dataForTest__(aTest);
+    var success = data.get('success');
+    
+    // only set success if there isn't an existing value
+    if(success == null)
+    {
+      data.set('success', true)
+    }
+  },
+  
+  
+  __setTestFail__: function(aTest)
+  {
+    this.__dataForTest__(aTest).set('success', false);
+  },
+  
+  
+  __reportResults__: function()
+  {
+    var passed = this.__tests.getValues().filter(function(x){return x.success});
+    var passedTests = passed.map(function(x){return this.__nameForTest__(x.function)}.bind(this));
+    var failed = this.__tests.getValues().filter(function(x){return !x.success});
+    var failedTests = failed.map(function(x){return this.__nameForTest__(x.function)}.bind(this));
     
     // create a report json object
     
@@ -293,7 +295,7 @@ SSUnitTest.TestCase = new Class({
     console.log(passedTests)
     console.log(failed.length + " tests failed.");
     console.log(failedTests)
-    console.log(this.tests.getLength() + " tests.");
+    console.log(this.__tests.getLength() + " tests.");
   }
   
 });
