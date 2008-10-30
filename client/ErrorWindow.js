@@ -1,8 +1,8 @@
 // ==Builder==
 // @optional
-// @name              ErrowWindow
+// @name              ErrorWindow
 // @package           ErrorHandling
-// @dependencies      Element
+// @dependencies      ShiftSpaceElement
 // ==/Builder==
 
 var __errorWindow__,

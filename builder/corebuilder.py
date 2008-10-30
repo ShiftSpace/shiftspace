@@ -14,8 +14,9 @@ class SSError(Exception):
     if builder.sorter != None:
       builder.sorter.emptyDependencyStack()
 
-class SSBuilderNoNameError(SSError): pass
-class SSBuilderNoSuchFileOrPackage(SSError): pass
+class NoNameError(SSError): pass
+class NoSuchFileError(SSError): pass
+class NoSuchPackage(SSError): pass
 
 # Utilities ===============================
 
@@ -110,9 +111,6 @@ class SSCoreBuilder():
       # get the package directive
       package = self.parsePackageDirective(builderDescription)
 
-      if package != None:
-        self.metadata[name]['package'] = package
-        
       # check if this package already exists
       if not self.packages.has_key(package) or self.packages[package] == None:
         self.packages[package] = []
@@ -120,10 +118,13 @@ class SSCoreBuilder():
       # add the name of the file to the package 
       self.packages[package].append(name)
 
+      if package != None:
+        self.metadata[name]['package'] = {'name':package, 'files':self.packages[package]}
+
     else:
       # raise an error if no file name
       print "No name for %s" % path
-      raise SSBuilderNoNameError(self)
+      raise NoNameError(self)
 
 
   def metadataForFile(self, name):
@@ -136,13 +137,37 @@ class SSCoreBuilder():
       metadata = self.metadata[name]
     except:
       print "metadataForFile error: %s" % name
-      raise SSBuilderNoSuchFileOrPackage(self)
+      raise NoSuchFileError(self)
 
     return metadata
 
 
-  def dependenciesFor(self, file):
-    return self.dependenciesForFile(file)
+  def packageForFile(self, name):
+    """
+    Returns the package that a file belongs to.
+    """
+    metadata = self.metadataForFile(name)
+
+    if metadata['package'] != None:
+      return metadata['package']
+    else:
+      raise NoSuchPackage(self)
+
+
+  def dependenciesFor(self, file, excludeNonPackageFiles=True):
+    deps = self.dependenciesForFile(file)
+    if not excludeNonPackageFiles:
+      return deps
+    packageFiles = (self.packageForFile(file))['files']
+    return [f for f in deps if self.listContains(packageFiles, f)]
+
+
+  def listContains(self, list, obj):
+    try:
+      idx = list.index(obj)
+      return True
+    except:
+      return False
 
 
   def dependenciesForFile(self, name):
@@ -273,11 +298,11 @@ class SSCoreBuilder():
     """
     Returns a list of files that have particular dependency
     """
-    filesWithDepedency = []
+    filesWithDependency = []
     for fileName, metadata in self.metadata.items():
       if self.sorter.isInDependencyTree(fileName, name):
-        filesWithDepedency.append(fileName)
-    return filesWithDepedency
+        filesWithDependency.append(fileName)
+    return filesWithDependency
 
 
   def build(self, path):
@@ -285,6 +310,7 @@ class SSCoreBuilder():
     self.parseDirectory(path)
     # sort the internal package data structure
     self.sortPackages()
+
 
   def buildTarget(self, packageJSON):
     """

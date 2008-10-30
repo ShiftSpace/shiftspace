@@ -2,7 +2,6 @@
 // @optional  
 // @name              Pin
 // @package           Pinning
-// @dependencies      SandalphonHelpers
 // ==/Builder==
 
 /*

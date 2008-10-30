@@ -1,3 +1,10 @@
+// ==Builder==
+// @optional
+// @name              TrailsPlugin
+// @package           Trails
+// @dependencies      Plugin
+// ==/Builder==
+
 var TrailsPlugin = new Class({
 
   Extends: ShiftSpace.Plugin,
