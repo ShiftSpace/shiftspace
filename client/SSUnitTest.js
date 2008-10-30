@@ -16,16 +16,18 @@ var SSUnitTest = {};
 // ==============
 
 SSUnitTest.Error = new Class({
-  Extends: SSException
-});
-
-SSUnitTest.AssertEqualError = new Class({
+  Extends: SSException,
+  
   initialize: function(_error, message)
   {
     this.parent(_error);
     this.setMessage(message);
   }
 });
+
+SSUnitTest.AssertError = new Class({Extends: SSUnitTest.Error});
+SSUnitTest.AssertEqualError = new Class({Extends: SSUnitTest.Error});
+SSUnitTest.AssertNotEqualError = new Class({Extends: SSUnitTest.Extends});
 
 // =======================
 // = SSUnitTest.TestCase =
@@ -49,7 +51,7 @@ SSUnitTest.TestCase = new Class({
   {
     // collect all the tests and build metadata
     this.collectTests();
-    this.runTests();
+    this.run();
     this.reportResults();
   },
   
@@ -97,13 +99,11 @@ SSUnitTest.TestCase = new Class({
   },
   
   
-  runTests: function()
+  run: function()
   {
-    console.log('runTests')
     this.tests.each(function(testData, testName){
-      console.log(testName)
-      console.log(testData)
       testData.function();
+      // default to success, if the test failed this won't do anything
       this.setTestSuccess(testData.function);
     }.bind(this));
   },
@@ -155,10 +155,26 @@ SSUnitTest.TestCase = new Class({
       else
       {
         this.setTestFail(caller);
+        throw err;
       }
     }
   },
-  
+
+  assert: function assertEquals(value)
+  {
+    if(arguments.length < 1) throw SSUnitTest.AssertError(new Error(), 'assert expects 1 arguments.')
+
+    var caller = assertEquals.caller;
+    
+    if(value == true)
+    {
+      this.setTestSuccess(caller);
+    }
+    else
+    {
+      this.setTestFail(caller);
+    }
+  },  
   
   assertEqual: function assertEquals(a, b)
   {
@@ -177,6 +193,23 @@ SSUnitTest.TestCase = new Class({
   },
   
   
+  assertNotEqual: function assertEquals(a, b)
+  {
+    if(arguments.length < 2) throw SSUnitTest.AssertNotEqualError(new Error(), 'assertNotEqual expects 2 arguments.')
+
+    var caller = assertEquals.caller;
+    
+    if(a != b)
+    {
+      this.setTestSuccess(caller);
+    }
+    else
+    {
+      this.setTestFail(caller);
+    }
+  },
+  
+  
   reportResults: function()
   {
     var passed = this.tests.getValues().filter(function(x){return x.success});
@@ -184,9 +217,11 @@ SSUnitTest.TestCase = new Class({
     var failed = this.tests.getValues().filter(function(x){return !x.success});
     var failedTests = failed.map(function(x){return this.nameForTest(x.function)}.bind(this));
     
+    // create a report json object
+    
     console.log(passed.length + " tests passed.");
     console.log(passedTests)
-    console.log(failed.length + " test failed.");
+    console.log(failed.length + " tests failed.");
     console.log(failedTests)
     console.log(this.tests.getLength() + " tests.");
   }
