@@ -242,8 +242,9 @@ var ShiftSpace = new (function() {
 
     var alreadyCheckedForUpdate = false;
 
-    // {PACKAGE:SystemBootstrap}
+    // {SystemBasePackages}
     // INCLUDE IframeHelpers.js
+    // INCLUDE Exception.js
     // INCLUDE PinHelpers.js
     // INCLUDE SSViewProxy.js
     // INCLUDE LocalizedStringsSupport.js
@@ -868,6 +869,24 @@ var ShiftSpace = new (function() {
       //SSLog('SSSpaceForShift');
       var shift = SSGetShift(shiftId);
       return spaces[shift.space];
+    }
+    
+    /*
+      Functions: SSpaceForName
+        Returns the space associated with a particular name.
+    */
+    functin SSSpaceForName(name)
+    {
+      var space = spaces[name];
+      
+      if(!space)
+      {
+        throw SSNot
+      }
+      else
+      {
+        return spaces[name];
+      }
     }
 
     /*

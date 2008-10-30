@@ -32,7 +32,6 @@ class SSPackageSorter():
 
 
   def emptyDependencyStack(self):
-    print "Empty stack"
     self.__dependencyStack = []
 
 

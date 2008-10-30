@@ -76,6 +76,10 @@ class SSCoreBuilder():
 
 
   def buildMetadataForFile(self, path, builderDescription):
+    """
+    Construct metadata for each file based on the builder description.
+    """
+
     # get the name
     name = self.parseNameDirective(builderDescription)
 
@@ -155,6 +159,9 @@ class SSCoreBuilder():
 
 
   def dependenciesFor(self, file, excludeNonPackageFiles=True):
+    """
+    Returns the dependencies for a particular file. Excludes files in the file's own package by default.
+    """
     deps = self.dependenciesForFile(file)
     if not excludeNonPackageFiles:
       return deps
@@ -163,6 +170,9 @@ class SSCoreBuilder():
 
 
   def listContains(self, list, obj):
+    """
+    Convenience method for checking if an object exists in a list.
+    """
     try:
       idx = list.index(obj)
       return True
@@ -283,6 +293,10 @@ class SSCoreBuilder():
 
   
   def sortPackages(self):
+    """
+    Sorts all of the packages.  This should be called only after all the
+    internal tables have been built via parseDirectory.
+    """
     for packageName, package in self.packages.items():
       self.packages[packageName] = self.sorter.sortPackage(package)
 
@@ -305,7 +319,17 @@ class SSCoreBuilder():
     return filesWithDependency
 
 
+  def checkPackageDependencies(self):
+    """
+    Checks to see which packages are dependent on each other.
+    """
+    pass
+
+
   def build(self, path):
+    """
+    Creats all the internal data structures and sorts all found packages.
+    """
     # build all the internal data structures
     self.parseDirectory(path)
     # sort the internal package data structure

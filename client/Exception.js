@@ -1,25 +1,36 @@
+// ==Builder==
+// @optional
+// @name              SSException
+// @package           System
+// ==/Builder==
+
 var SSException = new Class({
   
   name: 'SSException',
   
-  initialize: function(_error, obj)
+  initialize: function(_error)
   {
-    this.objectId = (obj && obj.getId()) || null;
-    
-    this.message = function()
-    {
-      return error.message;
-    }
-    
-    this.fileName = function()
-    {
-      return error.fileName;
-    }
+    this.theError = _error;
+  },
+  
+  message: function()
+  {
+    return this.theError.message;
+  },
+  
+  fileName: function()
+  {
+    return this.theError.fileName;
+  },
 
-    this.lineNumber = function()
-    {
-      return error.lineNumber;
-    }
+  lineNumber: function()
+  {
+    return this.theError.lineNumber;
+  },
+  
+  originalError: function()
+  {
+    return this.theError;
   },
   
   toString: function()
@@ -27,4 +38,21 @@ var SSException = new Class({
     return ["[SSException] message:", this.message(), " fileName:", this.fileName(), " lineNumber:", this.lineNumber(), " objectId:", this.objectId].join(", ");
   }
   
+});
+
+var SSSpaceDoesNotExistError = new Class({
+  Extends: SSException,
+  
+  name: 'SSSpaceDoesNotExistError'
+  
+  initialize: function(_error, spaceName)
+  {
+    this.parent(_error);
+  },
+  
+  message: function()
+  {
+    
+  }
+
 });
