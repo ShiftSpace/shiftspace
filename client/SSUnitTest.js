@@ -2,9 +2,34 @@
 // @optional
 // @name              SSUnitTest
 // @package           Testing
+// @dependencies      SSException
 // ==/Builder==
 
+// =============
+// = NameSpace =
+// =============
+
 var SSUnitTest = {};
+
+// ==============
+// = Exceptions =
+// ==============
+
+SSUnitTest.Error = new Class({
+  Extends: SSException
+});
+
+SSUnitTest.AssertEqualError = new Class({
+  initialize: function(_error, message)
+  {
+    this.parent(_error);
+    this.setMessage(message);
+  }
+});
+
+// =======================
+// = SSUnitTest.TestCase =
+// =======================
 
 SSUnitTest.TestCase = new Class({
   name: 'SSUnitTest',
@@ -79,7 +104,8 @@ SSUnitTest.TestCase = new Class({
       console.log(testName)
       console.log(testData)
       testData.function();
-    });
+      this.setTestSuccess(testData.function);
+    }.bind(this));
   },
   
   
@@ -108,28 +134,27 @@ SSUnitTest.TestCase = new Class({
   },
   
   
-  assertThrows: function assertThrows(exception, fn, bind)
+  assertThrows: function assertThrows(exception, fn)
   {
     // convert the argument list into an array
     var varargs = $A(arguments);
     // grab the remaining arguments
-    var testArgs = varargs.slice(3, varargs.length);
+    var testArgs = varargs.slice(2, varargs.length);
+    var caller = assertThrows.caller;
     
-    console.log('assertThrows: ' + this.nameForTest(assertThrows.caller));
-      
     try
     {
-      fn.apply(bind, testArgs);
+      fn.apply(null, testArgs);
     }
     catch(err)
     {
       if(err instanceof exception)
       {
-        this.setTestSuccess(fn);
+        this.setTestSuccess(caller);
       }
       else
       {
-        this.setTestFail(fn)
+        this.setTestFail(caller);
       }
     }
   },
@@ -137,7 +162,8 @@ SSUnitTest.TestCase = new Class({
   
   assertEqual: function assertEquals(a, b)
   {
-    console.log('Assert equal ' + this.nameForTest(assertEquals.caller));
+    if(arguments.length < 2) throw SSUnitTest.AssertEqualError(new Error(), 'assertEqual expects 2 arguments.')
+
     var caller = assertEquals.caller;
     
     if(a == b)
@@ -154,9 +180,9 @@ SSUnitTest.TestCase = new Class({
   reportResults: function()
   {
     var passed = this.tests.getValues().filter(function(x){return x.success});
-    var passedTests = passed.map(function(x){return this.nameForTest(x)}.bind(this));
+    var passedTests = passed.map(function(x){return this.nameForTest(x.function)}.bind(this));
     var failed = this.tests.getValues().filter(function(x){return !x.success});
-    var failedTests = failed.map(function(x){return this.nameForTest(x)}.bind(this));
+    var failedTests = failed.map(function(x){return this.nameForTest(x.function)}.bind(this));
     
     console.log(passed.length + " tests passed.");
     console.log(passedTests)
@@ -167,6 +193,14 @@ SSUnitTest.TestCase = new Class({
   
 });
 
+var TestCaseTestDivideByZeroException = new Class({
+  Extends: SSException
+});
+
+function TestCaseDivide(x, y)
+{
+  if(y == 0) throw new TestCaseTestDivideByZeroException(new Error());
+}
 
 var SSTestCaseTest = new Class({
   name: 'SSTestCaseTest',
@@ -180,6 +214,6 @@ var SSTestCaseTest = new Class({
   
   testDivide: function()
   {
-    
+    this.assertThrows(TestCaseTestDivideByZeroException, TestCaseDivide, 5, 0);
   }
 });

@@ -13,19 +13,24 @@ var SSException = new Class({
     this.theError = _error;
   },
   
+  setMessage: function(msg)
+  {
+    this.__message__ = msg;
+  },
+  
   message: function()
   {
-    return this.theError.message;
+    return this.__message__ || (this.theError && this.theError.message) || 'n/a';
   },
   
   fileName: function()
   {
-    return this.theError.fileName;
+    return (this.theError && this.theError.fileName) || 'n/a';
   },
 
   lineNumber: function()
   {
-    return this.theError.lineNumber;
+    return (this.theError && this.theError.lineNumber) || 'n/a';
   },
   
   originalError: function()
@@ -37,27 +42,5 @@ var SSException = new Class({
   {
     return ["[SSException] message:", this.message(), " fileName:", this.fileName(), " lineNumber:", this.lineNumber(), " objectId:", this.objectId].join(", ");
   }
-  
-});
-
-var SSSpaceDoesNotExistError = new Class({
-  Extends: SSException,
-  
-  name: 'SSSpaceDoesNotExistError',
-  
-  initialize: function(_error, spaceName)
-  {
-    this.parent(_error);
-    this.spaceName = spaceName;
-  },
-  
-  message: function()
-  {
-    return "Space " + this.spaceName + " does not exist.";
-  }
-
-});
-
-var ShiftDoesNotExistError = new Class({
   
 });
