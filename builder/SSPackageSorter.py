@@ -2,9 +2,9 @@
 # Exceptions ============================== 
 
 class SSPackageSorterError(Exception): pass
-class SSPackageSorterCircularReferenceError(SSPackageSorterError): pass
-class SSInvalidPackageSorterDelegate(SSPackageSorterError): pass
-class SSNoPackageSorterDelegateSet(SSPackageSorterError): pass
+class CircularReferenceError(SSPackageSorterError): pass
+class InvalidDelegate(SSPackageSorterError): pass
+class NoDelegateSet(SSPackageSorterError): pass
 
 # SSPackageSorter =========================
 
@@ -28,7 +28,7 @@ class SSPackageSorter():
     try:
       getattr(delegate, "dependenciesFor")
     except AttributeError:
-      raise SSInvalidPackageSorterDelegate
+      raise InvalidDelegate
 
     self.__delegate = delegate
 
@@ -46,17 +46,26 @@ class SSPackageSorter():
     """
 
     if self.delegate() == None:
-      raise SSNoPackageSorterDelegateSet
+      raise NoDelegateSet
+
+    try:
+      index = self.dependencyStack.index(fileA)
+      raise CircularReferenceError
+    except ValueError:
+      self.dependencyStack.append(fileA)
 
     # should memo-ize the files
     deps = self.delegate().dependenciesFor(fileA);
 
     val = 0
     if len(deps) == 0:
+      self.dependencyStack.pop()
       return 0
     else:
       for f in deps:
         val = max(val, 1+self.depthScore(f))
+
+    self.dependencyStack.pop()
     return val
 	
 
@@ -67,7 +76,7 @@ class SSPackageSorter():
     return [self.depthScore(f) for f in package]
 
 
-  def applyDepthsScoreToPackage(self, package):
+  def depthScoredPackage(self, package):
     """
     Creates a copy with depth metadata attached.
     """
@@ -94,12 +103,12 @@ class SSPackageSorter():
     """
 
     if self.delegate() == None:
-      raise SSNoPackageSorterDelegateSet
+      raise NoDelegateSet
 
     # check for circular reference 
     try:
       index = self.dependencyStack.index(fileA)
-      raise SSPackageSorterCircularReferenceError
+      raise CircularReferenceError
     except ValueError:
       self.dependencyStack.append(fileA)
 
@@ -125,7 +134,7 @@ class SSPackageSorter():
     """
     Takes a package and returns a sorted copy.
     """
-    wrappedPackage = self.applyDepthsScoreToPackage(package)
-    wrappedPackage.sort(self.depthSort)
-    return [f['object'] for f in wrappedPackage]
+    scoredPackage = self.depthScoredPackage(package)
+    scoredPackage.sort(self.depthSort)
+    return [f['object'] for f in scoredPackage]
 
