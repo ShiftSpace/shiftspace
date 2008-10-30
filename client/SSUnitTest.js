@@ -360,9 +360,9 @@ SSUnitTest.TestCase = new Class({
     // create a report json object
     
     console.log(passed.length + " tests passed.");
-    console.log(passedTests)
+    console.log(passedTests.toString())
     console.log(failed.length + " tests failed.");
-    console.log(failedTests)
+    console.log(failedTests.toString())
     console.log(this.__tests.getLength() + " tests.");
   }
   
@@ -390,6 +390,23 @@ var SSTestCaseTest = new Class({
   testDivide: function()
   {
     this.assertThrows(TestCaseTestDivideByZeroException, TestCaseDivide, 5, 0);
+  },
+  
+  testSubstract: function()
+  {
+    var x = 5;
+    this.assertNotEqual(x-2, 5);
+  },
+  
+  testFail: function()
+  {
+    var x = 5;
+    this.assertNotEqual(x, 5);
+  },
+  
+  testMultiply: function()
+  {
+    this.assert((3*3) == 9);
   }
 });
 
