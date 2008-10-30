@@ -1,6 +1,6 @@
 // ==Builder==
 // @required
-// @name              SSLog
+// @name              ShiftMenu
 // @package           System
 // @dependencies      ShiftSpaceElement
 // ==/Builder==
