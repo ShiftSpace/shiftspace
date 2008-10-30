@@ -80,17 +80,26 @@ SSUnitTest.TestCase = new Class({
     }
   },
   
-
+  /*
+    Function: setup (abstract)
+      Called before each test.  Do any initialization here.
+  */
   setup: function() 
   {
   },
   
-  
+  /*
+    Function: tearDown (abstract)
+      Called after each test. Do any cleanup here.
+  */
   tearDown: function() 
   {
   },
 
-  
+  /*
+    Function: run
+      Runs the teset case.
+  */
   run: function()
   {
     // collect all the tests and build metadata
@@ -99,7 +108,20 @@ SSUnitTest.TestCase = new Class({
     this.__reportResults__();
   },
   
-  
+  /*
+    Function: assertThrows
+      Assert that a particular exception is throw.
+      
+    Parameters:
+      exception - an exception class.
+      fn - a function to call. Remember to bind if passing in a method of an object.
+      
+    Example:
+      testSomeMethod: function()
+      {
+        this.assertThrows(MyException, this.someMethod.bind(this), arg1, arg2, ...)
+      }
+  */
   assertThrows: function assertThrows(exception, fn)
   {
     // convert the argument list into an array
@@ -126,7 +148,19 @@ SSUnitTest.TestCase = new Class({
     }
   },
 
-
+  /*
+    Function: assert
+      Assert that a value is truthy.
+      
+    Parameters:
+      value - a value.
+      
+    Example:
+      testSomeMethod: function()
+      {
+        this.assert(aFunction());
+      }
+  */
   assert: function assertEquals(value)
   {
     if(arguments.length < 1) throw SSUnitTest.AssertError(new Error(), 'assert expects 1 arguments.')
@@ -143,7 +177,24 @@ SSUnitTest.TestCase = new Class({
     }
   },  
   
-  
+  /*
+    Function: assertEqual
+      Assert that two value match.
+      
+    Parameters:
+      a - a value.
+      b - a value.
+      
+    Example:
+      testSomeMethod: function()
+      {
+        var correctValue = x;
+        this.assertEqual(correctValue, this.someMethod());
+      }
+      
+    See Also:
+        assertNotEqual
+  */
   assertEqual: function assertEquals(a, b)
   {
     if(arguments.length < 2) throw SSUnitTest.AssertEqualError(new Error(), 'assertEqual expects 2 arguments.')
@@ -160,7 +211,24 @@ SSUnitTest.TestCase = new Class({
     }
   },
   
-  
+  /*
+    Function: assertNotEqual
+      Assert that two value match.
+      
+    Parameters:
+      a - a value.
+      b - a value.
+      
+    Example:
+      testSomeMethod: function()
+      {
+        var aValue = x;
+        this.assertNotEqual(correctValue, this.someMethod());
+      }
+      
+    See Also:
+        assertEqual
+  */
   assertNotEqual: function assertEquals(a, b)
   {
     if(arguments.length < 2) throw SSUnitTest.AssertNotEqualError(new Error(), 'assertNotEqual expects 2 arguments.')
