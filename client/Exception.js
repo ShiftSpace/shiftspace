@@ -43,7 +43,7 @@ var SSException = new Class({
 var SSSpaceDoesNotExistError = new Class({
   Extends: SSException,
   
-  name: 'SSSpaceDoesNotExistError'
+  name: 'SSSpaceDoesNotExistError',
   
   initialize: function(_error, spaceName)
   {
