@@ -89,7 +89,7 @@ class TestPackageSorter(unittest.TestCase):
     sorter = SSPackageSorter.SSPackageSorter(delegate)
     
     self.assertRaises(SSPackageSorter.CircularReferenceError, sorter.depthScore, f9)
-    self.assertRaises(SSPackageSorter.CircularReferenceError, sorter.isInDependencyTree, f9, f10)
+    self.assertRaises(SSPackageSorter.CircularReferenceError, sorter.checkForCircularReferences, f9, f10)
 
 
   def testSortPackage(self):

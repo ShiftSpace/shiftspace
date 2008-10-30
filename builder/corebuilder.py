@@ -5,10 +5,15 @@ import os
 import sys
 import re
 import simplejson as json # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
+from SSPackageSorter import SSPackageSorter
 
 # Exceptions ==============================
 
-class SSError(Exception): pass
+class SSError(Exception): 
+  def __init__(self, builder):
+    if builder.sorter != None:
+      builder.sorter.emptyDependencyStack()
+
 class SSBuilderNoNameError(SSError): pass
 class SSBuilderNoSuchFileOrPackage(SSError): pass
 
@@ -36,6 +41,7 @@ class SSCoreBuilder():
     self.optionalPattern = re.compile('@optioned\s*[A-Za-z0-9_.]*')
     self.packagePattern = re.compile('@package\s*[A-Za-z0-9_.]*')
     self.dependenciesPattern = re.compile('@dependencies\s*[A-Za-z0-9_.,\s]*')
+    self.sorter = SSPackageSorter(self)
 
 
   def parseFile(self, path):
@@ -72,9 +78,6 @@ class SSCoreBuilder():
     # get the name
     name = self.parseNameDirective(builderDescription)
 
-    print "=============================="
-    print name
-
     # if name, parse the directives
     if name:
       # get the actual file name
@@ -98,9 +101,11 @@ class SSCoreBuilder():
 
       # get the dependencies
       dependencies = self.parseDependenciesDirective(builderDescription)
-      if dependencies:
-        self.metadata[name]['dependencies'] = dependencies
-        # sort the names in the packages based on dependencies
+      # set it to an empty array for SSPackageSorter
+      if dependencies == None:
+        dependencies = []
+      
+      self.metadata[name]['dependencies'] = dependencies
 
       # get the package directive
       package = self.parsePackageDirective(builderDescription)
@@ -115,13 +120,10 @@ class SSCoreBuilder():
       # add the name of the file to the package 
       self.packages[package].append(name)
 
-      # sort the package files based on dependencies
-      #self.packages[package].sort(self.dependencySort)
-
     else:
       # raise an error if no file name
       print "No name for %s" % path
-      raise SSBuilderNoNameError
+      raise SSBuilderNoNameError(self)
 
 
   def metadataForFile(self, name):
@@ -133,120 +135,24 @@ class SSCoreBuilder():
     try:
       metadata = self.metadata[name]
     except:
-      print name
-      raise SSBuilderNoSuchFileOrPackage
+      print "metadataForFile error: %s" % name
+      raise SSBuilderNoSuchFileOrPackage(self)
 
     return metadata
 
 
-  # sorting
-  def dependencySortForPackage(self, package):
-    # a stratification
-    def fn(fileA, fileB):
-      fA = self.metadata[fileA]
-      fB = self.metadata[fileB]
-
-      # if no deps in package it's the least important
-      
-      # if deps it should go later
-
-      # elements in a package should not have more than one level of dep
-
-      # packages can contain packages
-
-      if fA.has_key('dependencies'):
-        try:
-          idx = fA['dependencies'].index(fileB)
-          # also need to check if the file is the dependency tree
-          print "< %s, %s, %s" % (fileA, fileB, idx)
-          return 1
-        except ValueError:
-          pass
-
-      if fB.has_key('dependencies'):
-        try:
-          idx = fB['dependencies'].index(fileA)
-          print "> %s, %s, %s" % (fileA, fileB, idx)
-          return -1
-        except ValueError:
-          pass
-
-      # check if this file has dependecies with something else in the package
-      
-      print "== %s, %s" % (fileA, fileB)
-      return 0
-    
-    return fn
+  def dependenciesFor(self, file):
+    return self.dependenciesForFile(file)
 
 
-  def fileIsDependent(self, fileA, fileB):
-    
-    pass
-
-
-  def depsContainsFile(self, deps, file):
-    try:
-      idx = deps.index(file)
-      return True
-    except ValueError:
-      return False
-
-  
   def dependenciesForFile(self, name):
     """
     Returns the dependency list for a particular file.
     """
-    deps = None
+    deps = []
     if (self.metadataForFile(name)).has_key('dependencies'):
-      deps =  (self.metadataForFile(name))['dependencies']
+      deps = (self.metadataForFile(name))['dependencies']
     return deps
-
-
-  def listContains(self, alist, object):
-    """
-    Convenience function, returns whether a list contains an object.
-    """
-    try:
-      idx = alist.index(object)
-      return True
-    except ValueError:
-      pass
-    return False
-
-  
-  def fileIsInDependencyTree(self, base, file):
-    """
-    Check if base depends on file.
-    """
-    # NOTE: we could memoize to increase perf
-    baseD = self.metadataForFile(base)
-    deps = self.dependenciesForFile(base)
-
-    # check if the file is in the deps list
-    if self.listContains(deps, file):
-      return True
-
-    # check if the file and base share dependencies
-    fdeps = self.dependenciesForFile(file)
-    fileD = self.metadataForFile(file)
-
-    if deps == None:
-      return False
-    
-    # check if file is directly in the dependency list
-    try:
-      deps.index(file)
-      return True
-    except ValueError:
-      pass
-
-    # if not check the deps for each dep
-    for depFile in deps:
-      print "Checking %s" % depFile
-      if self.fileIsInDependencyTree(base, depFile):
-        return True
-
-    return False
 
 
   def isDirectoryOrJsFile(self, path):
@@ -350,6 +256,11 @@ class SSCoreBuilder():
       else:
         self.parseFile(path)
 
+  
+  def sortPackages(self):
+    for packageName, package in self.packages.items():
+      self.packages[packageName] = self.sorter.sortPackage(package)
+
 
   def writePackagesJSON(self):
     """
@@ -357,6 +268,23 @@ class SSCoreBuilder():
     """
     print json.dumps(self.packages, sort_keys=True, indent=4)
 
+
+  def filesWithDependency(self, name):
+    """
+    Returns a list of files that have particular dependency
+    """
+    filesWithDepedency = []
+    for fileName, metadata in self.metadata.items():
+      if self.sorter.isInDependencyTree(fileName, name):
+        filesWithDepedency.append(fileName)
+    return filesWithDepedency
+
+
+  def build(self, path):
+    # build all the internal data structures
+    self.parseDirectory(path)
+    # sort the internal package data structure
+    self.sortPackages()
 
   def buildTarget(self, packageJSON):
     """
@@ -370,7 +298,7 @@ b = None
 def test():
   global b
   b = SSCoreBuilder()
-  b.parseDirectory("/Users/davidnolen/Sites/shiftspace-0.5/")
+  b.build("/Users/davidnolen/Sites/shiftspace-0.5/")
 
 #if __name__ == "__main__":
 #  print ("corebuilder.py running " + sys.argv[1])

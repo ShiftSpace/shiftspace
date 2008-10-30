@@ -1,7 +1,9 @@
-
 # Exceptions ============================== 
 
-class SSPackageSorterError(Exception): pass
+class SSPackageSorterError(Exception):
+  def __init__(self, sorter):
+    sorter.emptyDependencyStack()
+
 class CircularReferenceError(SSPackageSorterError): pass
 class InvalidDelegate(SSPackageSorterError): pass
 class NoDelegateSet(SSPackageSorterError): pass
@@ -18,7 +20,32 @@ class SSPackageSorter():
   def __init__(self, packageDelegate=None):
     if packageDelegate != None:
       self.setDelegate(packageDelegate)
-    self.dependencyStack = []
+    self.setDependencyStack([])
+
+
+  def setDependencyStack(self, newStack):
+    self.__dependencyStack = newStack
+
+
+  def dependencyStack(self):
+    return self.__dependencyStack
+
+
+  def emptyDependencyStack(self):
+    print "Empty stack"
+    self.__dependencyStack = []
+
+
+  def dependencyStackPush(self, item):
+    self.__dependencyStack.append(item)
+
+  
+  def dependencyStackPop(self):
+    self.__dependencyStack.pop()
+
+
+  def fileIsOnDependencyStack(self, file):
+    pass
 
 
   def setDelegate(self, delegate):
@@ -28,7 +55,7 @@ class SSPackageSorter():
     try:
       getattr(delegate, "dependenciesFor")
     except AttributeError:
-      raise InvalidDelegate
+      raise InvalidDelegate(self)
 
     self.__delegate = delegate
 
@@ -46,26 +73,27 @@ class SSPackageSorter():
     """
 
     if self.delegate() == None:
-      raise NoDelegateSet
+      raise NoDelegateSet(self)
 
     try:
-      index = self.dependencyStack.index(fileA)
-      raise CircularReferenceError
+      index = self.dependencyStack().index(fileA)
+      print "CircularReferenceError file:%s stack:%s" % (fileA, self.dependencyStack())
+      raise CircularReferenceError(self)
     except ValueError:
-      self.dependencyStack.append(fileA)
+      self.dependencyStackPush(fileA)
 
     # should memo-ize the files
     deps = self.delegate().dependenciesFor(fileA);
 
     val = 0
     if len(deps) == 0:
-      self.dependencyStack.pop()
+      self.dependencyStackPop()
       return 0
     else:
       for f in deps:
         val = max(val, 1+self.depthScore(f))
 
-    self.dependencyStack.pop()
+    self.dependencyStackPop()
     return val
 	
 
@@ -97,36 +125,62 @@ class SSPackageSorter():
     return cmp(fileA['depth'], fileB['depth'])
 
 
+  def checkForCircularReferences(self, fileA, fileB):
+    if self.delegate() == None:
+      print "No delegate set!"
+      raise NoDelegateSet(self)
+
+    # check for circular reference 
+    try:
+      index = self.dependencyStack().index(fileA)
+      raise CircularReferenceError(self)
+    except ValueError:
+      self.dependencyStackPush(fileA)
+
+    # check dependecies whether file is in dependency tree
+    for f in self.delegate().dependenciesFor(fileA):
+      if self.isInDependencyTree(f, fileB):
+        self.dependencyStackPop()
+        return True
+
+    # pop the item off the stack on exit
+    self.dependencyStackPop()
+    return False
+
+
   def isInDependencyTree(self, fileA, fileB):
     """
     Checks if the first argument is dependent on the second argument
     """
-
     if self.delegate() == None:
-      raise NoDelegateSet
+      print "No delegate set!"
+      raise NoDelegateSet(self)
 
     # check for circular reference 
     try:
-      index = self.dependencyStack.index(fileA)
-      raise CircularReferenceError
+      index = self.dependencyStack().index(fileA)
+      print "CircularReferenceError file:%s stack:%s" % (fileA, self.dependencyStack())
+      raise CircularReferenceError(self)
     except ValueError:
-      self.dependencyStack.append(fileA)
+      self.dependencyStackPush(fileA)
 
     # check if the fileA is dependent on fileB directly
     try:
       idx = self.delegate().dependenciesFor(fileA).index(fileB)
+      print idx
+      self.dependencyStackPop()
       return True
     except ValueError:
       pass
 
     # check dependecies whether file is in dependency tree
     for f in self.delegate().dependenciesFor(fileA):
-      if self.isInDependencyTree(f, fileB, orig):
+      if self.isInDependencyTree(f, fileB):
+        self.dependencyStackPop()
         return True
 
     # pop the item off the stack on exit
-    self.dependencyStack.pop()
-
+    self.dependencyStackPop()
     return False
 
 
