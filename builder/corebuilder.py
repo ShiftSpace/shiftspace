@@ -36,7 +36,6 @@ class SSCoreBuilder():
     self.optionalPattern = re.compile('@optioned\s*[A-Za-z0-9_.]*')
     self.packagePattern = re.compile('@package\s*[A-Za-z0-9_.]*')
     self.dependenciesPattern = re.compile('@dependencies\s*[A-Za-z0-9_.,\s]*')
-    self.dependencySort = dependencySortForBuilder(self)
 
 
   def parseFile(self, path):
@@ -116,10 +115,8 @@ class SSCoreBuilder():
       # add the name of the file to the package 
       self.packages[package].append(name)
 
-      print "Pre-sort: %s" % self.packages[package]
       # sort the package files based on dependencies
-      self.packages[package].sort(self.dependencySort)
-      print "Post-sort: %s" % self.packages[package]
+      #self.packages[package].sort(self.dependencySort)
 
     else:
       # raise an error if no file name
@@ -143,7 +140,7 @@ class SSCoreBuilder():
 
 
   # sorting
-  def dependencySortForPackage(package):
+  def dependencySortForPackage(self, package):
     # a stratification
     def fn(fileA, fileB):
       fA = self.metadata[fileA]
@@ -181,6 +178,19 @@ class SSCoreBuilder():
     
     return fn
 
+
+  def fileIsDependent(self, fileA, fileB):
+    
+    pass
+
+
+  def depsContainsFile(self, deps, file):
+    try:
+      idx = deps.index(file)
+      return True
+    except ValueError:
+      return False
+
   
   def dependenciesForFile(self, name):
     """
@@ -206,7 +216,7 @@ class SSCoreBuilder():
   
   def fileIsInDependencyTree(self, base, file):
     """
-    
+    Check if base depends on file.
     """
     # NOTE: we could memoize to increase perf
     baseD = self.metadataForFile(base)

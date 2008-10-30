@@ -468,8 +468,6 @@ var ShiftSpace = new (function() {
       SSInstallSpace(spaceName);
     }
 
-
-
     // ===============================
     // = Function Prototype Helpers  =
     // ===============================
