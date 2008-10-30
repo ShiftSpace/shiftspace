@@ -9,7 +9,37 @@
 // = NameSpace =
 // =============
 
-var SSUnitTest = {};
+var SSUnitTestClass = new Class({
+
+  initialize: function()
+  {
+    this.__testCases__ = [];
+  },
+  
+
+  testCases: function()
+  {
+    return this.__testCases__;
+  },
+
+
+  addTestCase: function(caseName, theCase)
+  {
+    console.log('Adding ' + caseName)
+    this.testCases().push($H({name:caseName || 'UntitledTestCase', testCase:theCase}));
+  },
+  
+  
+  main: function()
+  {
+    this.testCases().each(function(caseHash) {
+      console.log(caseHash)
+      caseHash.get('testCase').run();
+    });
+  }
+  
+});
+var SSUnitTest = new SSUnitTestClass()
 
 // ==============
 // = Exceptions =
@@ -34,7 +64,7 @@ SSUnitTest.AssertNotEqualError = new Class({Extends: SSUnitTest.Extends});
 // =======================
 
 SSUnitTest.TestCase = new Class({
-  name: 'SSUnitTest',
+  name: 'SSUnitTest.TestCase',
   
   
   initialize: function(dummy)
@@ -43,19 +73,29 @@ SSUnitTest.TestCase = new Class({
     this.testCount = 0;
     
     // to skip any properties defined on base class
-    if(!dummy) this.dummy = new SSUnitTest.TestCase(true);
+    if(!dummy) 
+    {
+      this.dummy = new SSUnitTest.TestCase(true);
+      // add this instance to SSUnitTest
+      SSUnitTest.addTestCase(this.name, this);
+    }
   },
   
 
-  setup: function() {},
-  tearDown: function() {},
+  setup: function() 
+  {
+  },
+  
+  tearDown: function() 
+  {
+  },
 
   
-  main: function()
+  run: function()
   {
     // collect all the tests and build metadata
     this.collectTests();
-    this.run();
+    this.runTests();
     this.reportResults();
   },
   
@@ -103,7 +143,7 @@ SSUnitTest.TestCase = new Class({
   },
   
   
-  run: function()
+  runTests: function()
   {
     this.tests.each(function(testData, testName){
       try
@@ -282,3 +322,9 @@ var SSTestCaseTest = new Class({
     this.assertThrows(TestCaseTestDivideByZeroException, TestCaseDivide, 5, 0);
   }
 });
+
+function go()
+{
+  new SSTestCaseTest();
+  SSUnitTest.main();
+}
