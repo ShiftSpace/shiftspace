@@ -46,6 +46,10 @@ SSUnitTest.TestCase = new Class({
     if(!dummy) this.dummy = new SSUnitTest.TestCase(true);
   },
   
+
+  setup: function() {},
+  tearDown: function() {},
+
   
   main: function()
   {
@@ -102,9 +106,35 @@ SSUnitTest.TestCase = new Class({
   run: function()
   {
     this.tests.each(function(testData, testName){
-      testData.function();
+      try
+      {
+        this.setup();
+      }
+      catch(err)
+      {
+        throw SSUnitTest.Error(err, "Uncaught exception in setup.");
+      }
+      
+      try
+      {
+        testData.function();
+      }
+      catch(err)
+      {
+        throw SSUnitTest.Error(err, "Uncaught exception in test.");
+      }
+      
       // default to success, if the test failed this won't do anything
       this.setTestSuccess(testData.function);
+      
+      try
+      {
+        this.tearDown();
+      }
+      catch(err)
+      {
+        throw SSUnitTest.Error(err, "Uncaught exception in tearDwon.");
+      }
     }.bind(this));
   },
   
