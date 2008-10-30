@@ -875,13 +875,13 @@ var ShiftSpace = new (function() {
       Functions: SSpaceForName
         Returns the space associated with a particular name.
     */
-    functin SSSpaceForName(name)
+    function SSSpaceForName(name)
     {
       var space = spaces[name];
       
       if(!space)
       {
-        throw SSNot
+        throw SSSpaceDoesNotExistError(new Error());
       }
       else
       {

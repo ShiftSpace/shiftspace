@@ -48,11 +48,16 @@ var SSSpaceDoesNotExistError = new Class({
   initialize: function(_error, spaceName)
   {
     this.parent(_error);
+    this.spaceName = spaceName;
   },
   
   message: function()
   {
-    
+    return "Space " + this.spaceName + " does not exist.";
   }
 
+});
+
+var ShiftDoesNotExistError = new Class({
+  
 });
