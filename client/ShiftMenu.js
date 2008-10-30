@@ -18,7 +18,7 @@ var ShiftMenu = new Class({
   initialize: function(options) 
   {
     this.menuVisible = false;
-    this.spaces = {};
+    this.spaceButtons = {};
     
     // we want to know about install and uninstall events
     SSAddEvent('onSpaceInstall', this.addSpace.bind(this));
@@ -88,7 +88,7 @@ var ShiftMenu = new Class({
     });
     icon.injectInside(button);
     button.injectBefore(clear);
-    this.spaces[spaceName] = button;
+    this.spaceButtons[spaceName] = button;
     
     icon.addEvent('mouseover', function() {
       button.addClass('hover');
@@ -108,7 +108,7 @@ var ShiftMenu = new Class({
         return;
       }
       var event = new Event(e);
-      if(!spaces[spaceName])
+      if(!SSSpaceForName(spaceName))
       {
         // we need to load the space first
         SSLoadSpace(spaceName, null, function() {
@@ -133,9 +133,7 @@ var ShiftMenu = new Class({
   */
   removeSpace: function(spaceName) 
   {
-    SSLog(spaceName);
-    SSLog(this.spaces[spaceName]);
-    this.spaces[spaceName].remove();
+    this.spaceButtons[spaceName].remove();
   },
   
   /*

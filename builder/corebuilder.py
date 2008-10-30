@@ -323,6 +323,7 @@ class SSCoreBuilder():
     """
     Checks to see which packages are dependent on each other.
     """
+    # look at the packages and determine their dependencies
     pass
 
 
