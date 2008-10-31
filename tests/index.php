@@ -11,6 +11,7 @@
     <script src="../mootools/mootools-1.2-more.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/Exception.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
+    <script src="SSTestRunner.js" type="text/javascript" charset="utf-8"></script>
     <!-- 
     <script src="../packages&load=SSUnitTest" type="text/javascript" charset="utf-8"></script>
       -->
@@ -25,24 +26,17 @@
         <form action="">
           <table>
             <tr>
-              <th>Load Interface File:</th>
+              <th>Load Test:</th>
               <td>
                 <input id="loadFileInput" type="text" value="/client/views/SSConsole/SSConsole"></input>
                 <!--<input id="loadFile" type="button" name="LoadInterface" value="Load"></input>-->
                 <input id="compileFile" type="button" name="Compile" value="Compile"></input>
               </td>
             </tr>
-            <tr>
-              <th>Load Test File:</th>
-              <td>
-                <input id="loadTestInput" type="text" value="/client/views/SSConsole/test.js"></input>
-                <input id="loadTestFile" type="button" name="LoadTest" value="Load"></input>
-              </td>
-            </tr>
           </table>
         </form>
       </div>
-      <span id='title'>Sandalphon v0.1</span>
+      <span id='title'>ShiftSpace TestRunner v0.1</span>
     </div>
     
     <div id="SSSandalphonDisplay">

@@ -311,14 +311,23 @@ class SSCoreBuilder():
       self.packages[packageName] = self.sorter.sortPackage(package)
 
 
-  def writePackagesJSON(self, output="packages.json"):
+  def writePackagesJSON(self, output="../config/packages.json"):
     """
     Write a package json description.
     """
+
+    # create dictionary to hold file data as well as package data
     packageDict = {}
     packageDict['packages'] = self.packages
     packageDict['files'] = self.metadata
-    print json.dumps(packageDict, sort_keys=True, indent=4)
+    
+    # get a json dump
+    jsonString = json.dumps(packageDict, sort_keys=True, indent=4)
+    
+    # write this out to a file
+    fileHandle = open(output, "w")
+    fileHandle.write(jsonString)
+    fileHandle.close()
 
 
   def filesWithDependency(self, name):
@@ -340,7 +349,7 @@ class SSCoreBuilder():
     pass
 
 
-  def build(self, path, recurse=False, output="packages.json"):
+  def build(self, path, recurse=False, output="../config/packages.json"):
     """
     Creats all the internal data structures and sorts all found packages.
     """
@@ -349,7 +358,7 @@ class SSCoreBuilder():
     # sort the internal package data structure
     self.sortPackages()
     # write out the file
-    #self.writePackagesJSON(output)
+    self.writePackagesJSON(output)
 
 
   def buildTarget(self, packageJSON):
@@ -380,7 +389,7 @@ def main(argv):
   # certain directories exist so that this
   # script isn't accidentally run anywhere
   inputFile = "../"
-  outputFile = "test.json"
+  outputFile = "../config/packages.json"
   recursive = False
 
   try:
@@ -402,9 +411,8 @@ def main(argv):
     else:
       assert False, "unhandled options"
 
-  print "input:%s, output:%s, recurse:%s" % (inputFile, outputFile, recursive)
-  #builder = SSCoreBuilder()
-  #builder.build(path=inputField, output=outputFile, recurse=True)
+  builder = SSCoreBuilder()
+  builder.build(path=inputFile, output=outputFile, recurse=True)
   
   
 if __name__ == "__main__":
