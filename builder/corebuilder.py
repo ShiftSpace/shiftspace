@@ -4,6 +4,7 @@
 import os
 import sys
 import re
+import getopt
 import simplejson as json # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
 from SSPackageSorter import SSPackageSorter
 
@@ -276,7 +277,7 @@ class SSCoreBuilder():
 
     if depsString:
       # get the dependency names and strip each of white space
-      dependencies = [name.strip() 
+      dependencies = [name.strip()
                       for name in depsString[len("@dependencies"):len(depsString)].split(',')]
       return dependencies
     
@@ -361,7 +362,34 @@ def test():
   b = SSCoreBuilder()
   b.build("/Users/davidnolen/Sites/shiftspace-0.5/")
 
-#if __name__ == "__main__":
-#  print ("corebuilder.py running " + sys.argv[1])
-#  builder = SSCoreBuilder()
-#  builder.writePackageJSON([])
+def usage():
+  print "corebuilder.py takes the following flags:"
+  print "-h help"
+  print "-i input"
+  print "-o output directory"
+
+def main(argv):
+  # there is a sanity check to make sure that
+  # certain directories exist so that this
+  # script isn't accidentally run anywhere
+  inputFile = "../"
+  outputFile = "test.json"
+
+  try:
+    opts, args = getopt.getopt(argv, "hdo", ["help", "input=", "output="])
+  except getopt.GetoptError:
+    usage()
+    sys.exit(2)
+
+  for opt, arg in opts:
+    if opt in ("-h", "--help"):
+      usage()
+      sys.exit()
+    elif opt in ("-i", "--input"):
+      inputFile = arg
+    elif opt in ("-o", "--output"):
+      outputFile = arg
+  
+  
+if __name__ == "__main__":
+  main(sys.argv[1:])
