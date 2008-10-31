@@ -123,7 +123,7 @@ class SSCoreBuilder():
       self.packages[package].append(name)
 
       if package != None:
-        self.metadata[name]['package'] = {'name':package, 'files':self.packages[package]}
+        self.metadata[name]['package'] = package
 
     else:
       # raise an error if no file name
@@ -153,9 +153,16 @@ class SSCoreBuilder():
     metadata = self.metadataForFile(name)
 
     if metadata['package'] != None:
-      return metadata['package']
+      return self.packageForName(metadata['package'])
     else:
       raise NoSuchPackage(self)
+
+
+  def packageForName(self, name):
+    """
+    Returns the package for a particular name.
+    """
+    return self.packages[name]
 
 
   def dependenciesFor(self, file, excludeNonPackageFiles=True):
@@ -165,7 +172,7 @@ class SSCoreBuilder():
     deps = self.dependenciesForFile(file)
     if not excludeNonPackageFiles:
       return deps
-    packageFiles = (self.packageForFile(file))['files']
+    packageFiles = self.packageForFile(file)
     return [f for f in deps if self.listContains(packageFiles, f)]
 
 
@@ -305,7 +312,10 @@ class SSCoreBuilder():
     """
     Write a package json description.
     """
-    print json.dumps(self.packages, sort_keys=True, indent=4)
+    packageDict = {}
+    packageDict['packages'] = self.packages
+    packageDict['files'] = self.metadata
+    print json.dumps(packageDict, sort_keys=True, indent=4)
 
 
   def filesWithDependency(self, name):
