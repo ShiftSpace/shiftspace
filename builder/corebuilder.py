@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 # Builds a custom ShiftSpace core file from a config file, handles depedencies
 
 #import json # only available in Python >= 2.6 
@@ -386,9 +388,6 @@ def main(argv):
   except getopt.GetoptError:
     usage()
     sys.exit(2)
-
-  print opts
-  print args
 
   for opt, arg in opts:
     if opt in ("-h", "--help"):
