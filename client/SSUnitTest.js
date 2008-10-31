@@ -386,6 +386,33 @@ SSUnitTest.TestCase = new Class({
 
 SSUnitTest.TestResult = new Class({
   
+  Implement: Options,
+  
+  defaults: 
+  {
+    testName: 'UntitledTest',
+    success: true,
+    error: null
+  },
+  
+  initialize: function(options)
+  {
+    this.setOptions(this.defaults, options);
+    
+    this.__testName = options.testName;
+    this.__success = options.success;
+    this.__error = options.error;
+  }
+  
+});
+
+
+// ==================================
+// = SSUnitTest.TestResultFormatter =
+// ==================================
+
+SSUnitTest.TestResultFormatter = new Class({
+  
   initialize: function()
   {
     
