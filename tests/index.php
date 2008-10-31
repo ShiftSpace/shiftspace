@@ -12,6 +12,8 @@
     <script src="../client/Exception.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
     <script src="SSTestRunner.js" type="text/javascript" charset="utf-8"></script>
+    <script src="init.js" type="text/javascript" charset="utf-8"></script>
+    <script src="SSDefaultTest.js" type="text/javascript" charset="utf-8"></script>
     <!-- 
     <script src="../packages&load=SSUnitTest" type="text/javascript" charset="utf-8"></script>
       -->
@@ -19,6 +21,7 @@
     <!-- Load the relevant style files -->
     <link rel="stylesheet" href="../styles/ShiftSpace.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     <link rel="stylesheet" href="sandalphon.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+    
   <body>
     
     <div id="SSSandalphonControls">
@@ -28,9 +31,9 @@
             <tr>
               <th>Load Test:</th>
               <td>
-                <input id="loadFileInput" type="text" value="/client/views/SSConsole/SSConsole"></input>
+                <input id="loadTestInput" type="text" value="/client/views/SSConsole/SSConsole"></input>
                 <!--<input id="loadFile" type="button" name="LoadInterface" value="Load"></input>-->
-                <input id="compileFile" type="button" name="Compile" value="Compile"></input>
+                <input id="loadTest" type="button" name="Compile" value="Compile"></input>
               </td>
             </tr>
           </table>
