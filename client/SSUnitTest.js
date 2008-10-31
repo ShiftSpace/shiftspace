@@ -10,10 +10,20 @@
 // =============
 
 var SSUnitTestClass = new Class({
-
-  initialize: function()
+  
+  Implements: Options,
+  
+  defaults:
   {
+    formatter: null
+  },
+
+  initialize: function(options)
+  {
+    this.setOptions(this.defaults, options)
+
     this.__tests = [];
+    this.__results = [];
   },
   
 
@@ -30,12 +40,28 @@ var SSUnitTestClass = new Class({
   },
   
   
+  addResults: function(results)
+  {
+    this.__results.push(results);
+  },
+  
+  
   main: function()
   {
     this.tests().each(function(caseHash) {
-      console.log(caseHash)
       caseHash.get('test').run();
-    });
+      this.addResults(caseHash.get('test').getResults());
+    }.bind(this));
+  },
+  
+  
+  outputResults: function(formatter)
+  {
+    // throw an error if no formatter
+    this.__results.each(function(results) {
+      var individualTests = results.get('tests');
+      individualTests.each(formatter.output.bind(formatter));
+    }.bind(this));
   }
   
 });
@@ -70,7 +96,12 @@ SSUnitTest.TestCase = new Class({
   
   initialize: function(dummy)
   {
-    this.__tests = $H();   
+    this.__tests = $H();
+    this.__results = $H();
+    this.__results.set('count', 0);
+    this.__results.set('passed', 0);
+    this.__results.set('failed', 0);
+    this.__results.set('tests', []);
     
     // to skip any properties defined on base class
     if(!dummy) 
@@ -98,9 +129,10 @@ SSUnitTest.TestCase = new Class({
   },
   
   
-  results: function()
+  getResults: function()
   {
     // returns a SSUnitTest.TestResult object
+    return this.__results;
   },
 
   /*
@@ -112,7 +144,7 @@ SSUnitTest.TestCase = new Class({
     // collect all the tests and build metadata
     this.__collectTests__();
     this.__runTests__();
-    this.__reportResults__();
+    this.__collectResults__();
   },
   
   /*
@@ -367,20 +399,23 @@ SSUnitTest.TestCase = new Class({
   },
   
   
-  __reportResults__: function()
+  __collectResults__: function()
   {
     var passed = this.__tests.getValues().filter(function(x){return x.success});
     var passedTests = passed.map(function(x){return this.__nameForTest__(x.function)}.bind(this));
     var failed = this.__tests.getValues().filter(function(x){return !x.success});
     var failedTests = failed.map(function(x){return this.__nameForTest__(x.function)}.bind(this));
     
-    // create a report json object
+    this.__tests.each(function(testData, testName) {
+      this.__results.get('tests').push(new SSUnitTest.TestResult({
+        testName: testName,
+        success: testData.get('success')
+      }));
+    }.bind(this));
     
-    console.log(passed.length + " tests passed.");
-    console.log(passedTests.toString())
-    console.log(failed.length + " tests failed.");
-    console.log(failedTests.toString())
-    console.log(this.__tests.getLength() + " tests.");
+    this.__results.set('count', this.__tests.getLength());
+    this.__results.set('passed', passed.length);
+    this.__results.set('failed', failed.length);
   }
   
 });
@@ -392,7 +427,7 @@ SSUnitTest.TestCase = new Class({
 
 SSUnitTest.TestResult = new Class({
   
-  Implement: Options,
+  Implements: Options,
   
   defaults: 
   {
@@ -420,7 +455,7 @@ SSUnitTest.TestResult = new Class({
   
   successOrFail: function()
   {
-    return this.__testName;
+    return this.__success;
   },
   
   
@@ -460,11 +495,6 @@ SSUnitTest.TestResultFormatter = new Class({
 SSUnitTest.TestResultFormatter.Console = new Class({
   
   Extends: SSUnitTest.TestResultFormatter,
-  
-  initialize: function()
-  {
-    
-  },
   
   output: function(testResult)
   {
@@ -559,4 +589,5 @@ function go()
 {
   new SSTestCaseTest();
   SSUnitTest.main();
+  SSUnitTest.outputResults(new SSUnitTest.TestResultFormatter.Console());
 }
