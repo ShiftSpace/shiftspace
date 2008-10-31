@@ -42,10 +42,12 @@ class SSCoreBuilder():
     self.builderPattern = re.compile('\/\/\s*==\s*Builder\s*==[\sA-Za-z0-9@.=/,_]*\/\/\s*==\s*/Builder\s*==', re.MULTILINE)
     self.namePattern = re.compile('@name\s*[A-Za-z0-9_.]*')
     self.requiredPattern = re.compile('@required\s*[A-Za-z0-9_.]*')
-    self.optionalPattern = re.compile('@optioned\s*[A-Za-z0-9_.]*')
+    self.optionalPattern = re.compile('@optional\s*[A-Za-z0-9_.]*')
+    self.testPattern = re.compile('@test\s*[A-Za-z0-9_.]*')
     self.packagePattern = re.compile('@package\s*[A-Za-z0-9_.]*')
+    self.suitePattern = re.compile('@suite\s*[A-Za-z0-9_.]*')
     self.dependenciesPattern = re.compile('@dependencies\s*[A-Za-z0-9_.,\s]*')
-    self.sorter = SSPackageSorter(self)
+    self.sorter = SSPackageSorter(self)    
 
 
   def parseFile(self, path):
@@ -112,20 +114,29 @@ class SSCoreBuilder():
       # set it to an empty array for SSPackageSorter
       if dependencies == None:
         dependencies = []
+
+      # check to see if this is a test
+      isTest = self.parseTestDirective(builderDescription)
+      if isTest:
+        print "Found a test %s" % path
+        self.metadata[name]['test'] = True
+        # check for suite
+        suite = self.parseTestSuiteDirective(builderDescription)
+        if suite:
+          self.metadata[name]['suite'] = suite
       
       self.metadata[name]['dependencies'] = dependencies
 
       # get the package directive
       package = self.parsePackageDirective(builderDescription)
 
-      # check if this package already exists
-      if not self.packages.has_key(package) or self.packages[package] == None:
-        self.packages[package] = []
+      if package:
+        # check if this package already exists
+        if not self.packages.has_key(package) or self.packages[package] == None:
+          self.packages[package] = []
 
-      # add the name of the file to the package 
-      self.packages[package].append(name)
-
-      if package != None:
+        # add the name of the file to the package 
+        self.packages[package].append(name)
         self.metadata[name]['package'] = package
 
     else:
@@ -155,10 +166,10 @@ class SSCoreBuilder():
     """
     metadata = self.metadataForFile(name)
 
-    if metadata['package'] != None:
+    if metadata.has_key('package') and metadata['package'] != None:
       return self.packageForName(metadata['package'])
     else:
-      raise NoSuchPackage(self)
+      return []
 
 
   def packageForName(self, name):
@@ -244,13 +255,20 @@ class SSCoreBuilder():
     return self.optionalPattern.search(builderDescription)
 
 
+  def parseTestDirective(self, builderDescription):
+    """
+    Parse the test directive in a builder description.
+    Returns None or a match.
+    """
+    return self.testPattern.search(builderDescription)
+
+
   def parseNameDirective(self, builderDescription):
     """
     Parse the name directive in a builder description.
     Returns None or a match.
     """
-    nameString = self.substringForPattern(builderDescription,
-                                          self.namePattern)
+    nameString = self.substringForPattern(builderDescription, self.namePattern)
     if nameString:
       return nameString[len("@name"):len(nameString)].strip()
 
@@ -261,11 +279,22 @@ class SSCoreBuilder():
     """
     Parses a package directive from a builder description.
     """
-    packageString = self.substringForPattern(builderDescription,
-                                             self.packagePattern)
+    packageString = self.substringForPattern(builderDescription, self.packagePattern)
 
     if packageString:
       return packageString[len("@package"):len(packageString)].strip()
+
+    return None
+
+
+  def parseTestSuiteDirective(self, builderDescription):
+    """
+    Parses a test suite directive from a builder description.
+    """
+    suiteString = self.substringForPattern(builderDescription, self.testPattern)
+
+    if suiteString:
+      return suiteString[len("@suite"):len(suiteString)].strip()
 
     return None
 
@@ -274,8 +303,7 @@ class SSCoreBuilder():
     """
     Parse a dependency description from a builder description.
     """
-    depsString = self.substringForPattern(builderDescription, 
-                                         self.dependenciesPattern)
+    depsString = self.substringForPattern(builderDescription, self.dependenciesPattern)
 
     if depsString:
       # get the dependency names and strip each of white space
@@ -311,7 +339,7 @@ class SSCoreBuilder():
       self.packages[packageName] = self.sorter.sortPackage(package)
 
 
-  def writePackagesJSON(self, output="../config/packages.json"):
+  def writePackagesJSON(self, output="../config/packages.json", writeToFile=True):
     """
     Write a package json description.
     """
@@ -325,9 +353,12 @@ class SSCoreBuilder():
     jsonString = json.dumps(packageDict, sort_keys=True, indent=4)
     
     # write this out to a file
-    fileHandle = open(output, "w")
-    fileHandle.write(jsonString)
-    fileHandle.close()
+    if writeToFile:
+      fileHandle = open(output, "w")
+      fileHandle.write(jsonString)
+      fileHandle.close()
+    else:
+      print jsonString
 
 
   def filesWithDependency(self, name):
@@ -341,15 +372,7 @@ class SSCoreBuilder():
     return filesWithDependency
 
 
-  def checkPackageDependencies(self):
-    """
-    Checks to see which packages are dependent on each other.
-    """
-    # look at the packages and determine their dependencies
-    pass
-
-
-  def build(self, path, recurse=False, output="../config/packages.json"):
+  def build(self, path, recurse=False):
     """
     Creats all the internal data structures and sorts all found packages.
     """
@@ -357,8 +380,6 @@ class SSCoreBuilder():
     self.parseDirectory(path, recurse)
     # sort the internal package data structure
     self.sortPackages()
-    # write out the file
-    self.writePackagesJSON(output)
 
 
   def buildTarget(self, packageJSON):
@@ -374,6 +395,7 @@ def test():
   global b
   b = SSCoreBuilder()
   b.build(path="/Users/davidnolen/Sites/shiftspace-0.5/", recurse=True)
+  b.writePackagesJSON(writeToFile=False)
 
 
 def usage():
@@ -412,8 +434,10 @@ def main(argv):
       assert False, "unhandled options"
 
   builder = SSCoreBuilder()
-  builder.build(path=inputFile, output=outputFile, recurse=True)
+  builder.build(path=inputFile, recurse=True)
+  builder.writePackagesJSON(output=outputFile)
   
   
 if __name__ == "__main__":
-  main(sys.argv[1:])
+  #main(sys.argv[1:])
+  pass
