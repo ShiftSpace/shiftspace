@@ -295,7 +295,7 @@ class SSCoreBuilder():
       path = os.path.join(dir, file)
       # check each file for the presence of a build directive
       if os.path.isdir(path) and recurse:
-        self.parseDirectory(path)
+        self.parseDirectory(path, recurse)
       elif os.path.isfile(path):
         self.parseFile(path)
 
