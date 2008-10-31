@@ -398,7 +398,8 @@ SSUnitTest.TestResult = new Class({
   {
     testName: 'UntitledTest',
     success: true,
-    error: null
+    error: null,
+    message: ''
   },
   
   initialize: function(options)
@@ -408,6 +409,24 @@ SSUnitTest.TestResult = new Class({
     this.__testName = options.testName;
     this.__success = options.success;
     this.__error = options.error;
+  },
+  
+  
+  testName: function()
+  {
+    return this.__testName;
+  },
+  
+  
+  successOrFail: function()
+  {
+    return this.__testName;
+  },
+  
+  
+  error: function()
+  {
+    return this.__error;
   }
   
 });
@@ -419,9 +438,37 @@ SSUnitTest.TestResult = new Class({
 
 SSUnitTest.TestResultFormatter = new Class({
   
+  initialize: function() {},
+  
+  stringResult: function(testResult) 
+  {
+    var resultString = [];
+    resultString.push(testResult.testName() + ":");
+    resultString.push((testResult.successOrFail() && "passed") || "failed");
+    if(testResult.error())
+    {
+      resultString.push(", error:" + testResult.error);
+    }
+    resultString.push("...");
+    return resultString.join(" ");
+  },
+    
+  domResult: function() {}
+  
+});
+
+SSUnitTest.TestResultFormatter.Console = new Class({
+  
+  Extends: SSUnitTest.TestResultFormatter,
+  
   initialize: function()
   {
     
+  },
+  
+  output: function(testResult)
+  {
+    console.log(this.stringResult(testResult));
   }
   
 });
