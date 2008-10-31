@@ -309,7 +309,7 @@ class SSCoreBuilder():
       self.packages[packageName] = self.sorter.sortPackage(package)
 
 
-  def writePackagesJSON(self):
+  def writePackagesJSON(self, output="packages.json"):
     """
     Write a package json description.
     """
@@ -338,7 +338,7 @@ class SSCoreBuilder():
     pass
 
 
-  def build(self, path, recurse=False):
+  def build(self, path, recurse=False, output="packages.json"):
     """
     Creats all the internal data structures and sorts all found packages.
     """
@@ -346,6 +346,8 @@ class SSCoreBuilder():
     self.parseDirectory(path, recurse)
     # sort the internal package data structure
     self.sortPackages()
+    # write out the file
+    #self.writePackagesJSON(output)
 
 
   def buildTarget(self, packageJSON):
@@ -366,9 +368,9 @@ def test():
 def usage():
   print "corebuilder.py takes the following flags:"
   print "-h help"
-  print "-i input"
+  print "-i input, directory or file"
   print "-r recursively search directories"
-  print "-o output directory"
+  print "-o output file, file name defaults to packages.json"
 
 
 def main(argv):
@@ -380,10 +382,13 @@ def main(argv):
   recursive = False
 
   try:
-    opts, args = getopt.getopt(argv, "hdo:r", ["help", "input=", "output="])
+    opts, args = getopt.getopt(argv, "hi:o:r", ["help", "input=", "output="])
   except getopt.GetoptError:
     usage()
     sys.exit(2)
+
+  print opts
+  print args
 
   for opt, arg in opts:
     if opt in ("-h", "--help"):
@@ -395,8 +400,12 @@ def main(argv):
       outputFile = arg
     elif opt == "-r":
       recursive = True
+    else:
+      assert False, "unhandled options"
 
-  print "input:%s, ouput:%s" % (inputFile, outputFile)
+  print "input:%s, output:%s, recurse:%s" % (inputFile, outputFile, recursive)
+  #builder = SSCoreBuilder()
+  #builder.build(path=inputField, output=outputFile, recurse=True)
   
   
 if __name__ == "__main__":
