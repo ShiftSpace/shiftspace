@@ -13,28 +13,28 @@ var SSUnitTestClass = new Class({
 
   initialize: function()
   {
-    this.__testCases__ = [];
+    this.__tests = [];
   },
   
 
-  testCases: function()
+  tests: function()
   {
-    return this.__testCases__;
+    return this.__tests;
   },
 
 
-  addTestCase: function(caseName, theCase)
+  addTest: function(caseName, theCase)
   {
     console.log('Adding ' + caseName)
-    this.testCases().push($H({name:caseName || 'UntitledTestCase', testCase:theCase}));
+    this.tests().push($H({name:caseName || 'UntitledTest', 'test':theCase}));
   },
   
   
   main: function()
   {
-    this.testCases().each(function(caseHash) {
+    this.tests().each(function(caseHash) {
       console.log(caseHash)
-      caseHash.get('testCase').run();
+      caseHash.get('test').run();
     });
   }
   
@@ -76,7 +76,7 @@ SSUnitTest.TestCase = new Class({
     {
       this.__dummy = new SSUnitTest.TestCase(true);
       // add this instance to SSUnitTest
-      SSUnitTest.addTestCase(this.name, this);
+      SSUnitTest.addTest(this.name, this);
     }
   },
   
@@ -95,6 +95,12 @@ SSUnitTest.TestCase = new Class({
   tearDown: function() 
   {
   },
+  
+  
+  results: function()
+  {
+    // returns a SSUnitTest.TestResult object
+  },
 
   /*
     Function: run
@@ -110,8 +116,9 @@ SSUnitTest.TestCase = new Class({
   
   /*
     Function: assertThrows
-      Assert that a particular exception is throw.
-      
+      Assert that a particular exception is throw.  This function is named
+      so that we can access its caller property.
+       
     Parameters:
       exception - an exception class.
       fn - a function to call. Remember to bind if passing in a method of an object.
@@ -150,7 +157,8 @@ SSUnitTest.TestCase = new Class({
 
   /*
     Function: assert
-      Assert that a value is truthy.
+      Assert that a value is truthy.  This function is named so that we can access its
+      caller property.
       
     Parameters:
       value - a value.
@@ -161,11 +169,11 @@ SSUnitTest.TestCase = new Class({
         this.assert(aFunction());
       }
   */
-  assert: function assertEquals(value)
+  assert: function assert(value)
   {
     if(arguments.length < 1) throw SSUnitTest.AssertError(new Error(), 'assert expects 1 arguments.')
 
-    var caller = assertEquals.caller;
+    var caller = assert.caller;
     
     if(value == true)
     {
@@ -179,7 +187,8 @@ SSUnitTest.TestCase = new Class({
   
   /*
     Function: assertEqual
-      Assert that two value match.
+      Assert that two value match. This method is named so that we can
+      access the caller property inside the method.
       
     Parameters:
       a - a value.
@@ -195,11 +204,11 @@ SSUnitTest.TestCase = new Class({
     See Also:
         assertNotEqual
   */
-  assertEqual: function assertEquals(a, b)
+  assertEqual: function assertEqual(a, b)
   {
     if(arguments.length < 2) throw SSUnitTest.AssertEqualError(new Error(), 'assertEqual expects 2 arguments.')
 
-    var caller = assertEquals.caller;
+    var caller = assertEqual.caller;
     
     if(a == b)
     {
@@ -213,7 +222,8 @@ SSUnitTest.TestCase = new Class({
   
   /*
     Function: assertNotEqual
-      Assert that two value match.
+      Assert that two value match. This method is named so we can called the
+      caller property inside the method.
       
     Parameters:
       a - a value.
@@ -229,11 +239,11 @@ SSUnitTest.TestCase = new Class({
     See Also:
         assertEqual
   */
-  assertNotEqual: function assertEquals(a, b)
+  assertNotEqual: function assertNotEqual(a, b)
   {
     if(arguments.length < 2) throw SSUnitTest.AssertNotEqualError(new Error(), 'assertNotEqual expects 2 arguments.')
 
-    var caller = assertEquals.caller;
+    var caller = assertNotEqual.caller;
     
     if(a != b)
     {
@@ -263,6 +273,7 @@ SSUnitTest.TestCase = new Class({
     // collect all object properties that have 'test' as the first four characters
     for(var propertyName in this)
     {
+      // don't consider any methods that are a part of SSUnitTest.TestCase
       if(!this.__dummy[propertyName])
       {
         var property = this[propertyName];
@@ -368,6 +379,60 @@ SSUnitTest.TestCase = new Class({
   
 });
 
+
+// =========================
+// = SSUnitTest.TestResult =
+// =========================
+
+SSUnitTest.TestResult = new Class({
+  
+  initialize: function()
+  {
+    
+  }
+  
+});
+
+
+// ========================
+// = SSUnitTest.TestSuite =
+// ========================
+
+SSUnitTest.TestSuite = new Class({
+  
+  initialize: function()
+  {
+    this.__tests =[];
+  },
+
+  
+  tests: function()
+  {
+    return this.__tests();
+  },
+
+  
+  addTest: function(aTest)
+  {
+    this.tests().push(aTest);
+  },
+
+  
+  addTests: function(tests)
+  {
+    this.tests().extend(tests);
+  },
+  
+  
+  run: function()
+  {
+    this.tests().each(function(aTest) {
+      aTest.run();
+    });
+  }
+  
+});
+
 var TestCaseTestDivideByZeroException = new Class({
   Extends: SSException
 });
@@ -398,7 +463,7 @@ var SSTestCaseTest = new Class({
     this.assertNotEqual(x-2, 5);
   },
   
-  testFail: function()
+  testShouldFail: function()
   {
     var x = 5;
     this.assertNotEqual(x, 5);
