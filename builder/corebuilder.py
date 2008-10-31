@@ -284,7 +284,7 @@ class SSCoreBuilder():
     return None
     
 
-  def parseDirectory(self, dir):
+  def parseDirectory(self, dir, recurse=False):
     """
     Parse a directory for javascript files.
     """
@@ -294,9 +294,9 @@ class SSCoreBuilder():
     for file in files:
       path = os.path.join(dir, file)
       # check each file for the presence of a build directive
-      if os.path.isdir(path):
+      if os.path.isdir(path) and recurse:
         self.parseDirectory(path)
-      else:
+      elif os.path.isfile(path):
         self.parseFile(path)
 
   
@@ -338,12 +338,12 @@ class SSCoreBuilder():
     pass
 
 
-  def build(self, path):
+  def build(self, path, recurse=False):
     """
     Creats all the internal data structures and sorts all found packages.
     """
     # build all the internal data structures
-    self.parseDirectory(path)
+    self.parseDirectory(path, recurse)
     # sort the internal package data structure
     self.sortPackages()
 
@@ -360,13 +360,16 @@ b = None
 def test():
   global b
   b = SSCoreBuilder()
-  b.build("/Users/davidnolen/Sites/shiftspace-0.5/")
+  b.build(path="/Users/davidnolen/Sites/shiftspace-0.5/", recurse=True)
+
 
 def usage():
   print "corebuilder.py takes the following flags:"
   print "-h help"
   print "-i input"
+  print "-r recursively search directories"
   print "-o output directory"
+
 
 def main(argv):
   # there is a sanity check to make sure that
@@ -374,9 +377,10 @@ def main(argv):
   # script isn't accidentally run anywhere
   inputFile = "../"
   outputFile = "test.json"
+  recursive = False
 
   try:
-    opts, args = getopt.getopt(argv, "hdo", ["help", "input=", "output="])
+    opts, args = getopt.getopt(argv, "hdo:r", ["help", "input=", "output="])
   except getopt.GetoptError:
     usage()
     sys.exit(2)
@@ -389,6 +393,10 @@ def main(argv):
       inputFile = arg
     elif opt in ("-o", "--output"):
       outputFile = arg
+    elif opt == "-r":
+      recursive = True
+
+  print "input:%s, ouput:%s" % (inputFile, outputFile)
   
   
 if __name__ == "__main__":
