@@ -17,7 +17,7 @@ var SSUnit = {};
 
 var SSUnitTestClass = new Class({
   
-  Implements: Options,
+  Implements: [Events, Options],
   
   defaults:
   {
@@ -25,11 +25,38 @@ var SSUnitTestClass = new Class({
     interactive: false
   },
 
+
   initialize: function(options)
   {
     this.setOptions(this.defaults, options)
+    this.setInteractive(this.options.interactive);
+    this.setFormmatter(this.options.formatter);
 
     this.reset();
+  },
+  
+
+  setInteractive: function(value)
+  {
+    this.__interactive = value;
+  },
+  
+
+  isInteractive: function()
+  {
+    return this.__interactive;
+  },
+  
+
+  setFormmatter: function(formatter)
+  {
+    this.__formatter = formatter;
+  },
+  
+
+  formatter: function()
+  {
+    return this.__formatter;
   },
   
   /*
@@ -49,10 +76,14 @@ var SSUnitTestClass = new Class({
   },
 
 
-  addTest: function(caseName, theCase)
+  addTest: function(theTest)
   {
-    console.log('Adding ' + caseName);
-    this.tests().push($H({name:caseName || 'UntitledTest', 'test':theCase}));
+    console.log('Adding ' + theTest.name + ' and adding events');
+    // listen in on the test
+    theTest.addEvent('onStart', this.onStart.bind(this));
+    theTest.addEvent('onComplete', this.onComplete.bind(this));
+    // add the test
+    this.tests().push($H({name:theTest.name || 'UntitledTest', 'test':theTest}));
   },
   
   
@@ -62,8 +93,17 @@ var SSUnitTestClass = new Class({
   },
   
   
-  main: function(formatter)
+  main: function(options)
   {
+    if(options.formatter)
+    {
+      this.setFormmatter(options.formatter);
+    }
+    if(options.interactive)
+    {
+      this.setInteractive(options.interactive);
+    }
+    
     this.tests().each(function(caseHash) {
       caseHash.get('test').run();
       this.addResults(caseHash.get('test').getResults());
@@ -71,9 +111,27 @@ var SSUnitTestClass = new Class({
   },
   
   
+  onStart: function(aTest)
+  {
+    if(this.isInteractive())
+    {
+      console.log('-onStart ' + aTest.type + ' ' + aTest.name);
+    }
+  },
+  
+  
+  onComplete: function(aTest)
+  {
+    if(this.isInteractive())
+    {
+      console.log('-onComplete ' + aTest.type + ' ' + aTest.name);
+    }
+  },
+  
+  
   outputResults: function(_formatter)
   {
-    var formatter = (!_formatter) ? new SSUnitTest.ResultFormatter.Console() : _formatter;
+    var formatter = (!_formatter) ? (this.formatter() || new SSUnitTest.ResultFormatter.Console()) : _formatter;
 
     // throw an error if no formatter
     this.__results.each(function(results) {
@@ -113,10 +171,23 @@ SSUnitTest.NoFormatter = new Class({Extends: SSUnitTest.Error});
 SSUnitTest.TestCase = new Class({
   name: 'SSUnitTest.TestCase',
   
-  Implements: Events,
+  Implements: [Events, Options],
   
-  initialize: function(dummy)
+  defaults:
   {
+    dummy: false,
+    autocollect: true
+  },
+  
+  initialize: function(options)
+  {
+    this.setOptions(this.defaults, options);
+    
+    if(!this.options.dummy)
+    {
+      console.log('Creating test case ' + this.name);
+    }
+    
     this.__tests = $H();
     this.__results = $H();
     this.__results.set('count', 0);
@@ -125,11 +196,17 @@ SSUnitTest.TestCase = new Class({
     this.__results.set('tests', []);
     
     // to skip any properties defined on base class
-    if(!dummy) 
+    // wish MooTools supported class reflection!
+    if(!this.options.dummy) 
     {
-      this.__dummy = new SSUnitTest.TestCase(true);
-      // add this instance to SSUnitTest
-      SSUnitTest.addTest(this.name, this);
+      this.__dummy = new SSUnitTest.TestCase({dummy:true});
+      
+      // auto collect into the SSUnitTest singleton
+      if(this.options.autocollect)
+      {
+        // add this instance to SSUnitTest
+        SSUnitTest.addTest(this);
+      }
     }
   },
   
@@ -162,10 +239,12 @@ SSUnitTest.TestCase = new Class({
   */
   run: function()
   {
+    this.fireEvent('onStart', {type:'testcase', name:this.name, ref:this});
     // collect all the tests and build metadata
     this.__collectTests__();
     this.__runTests__();
     this.__collectResults__();
+    this.fireEvent('onComplete', {type:'testcase', name:this.name, ref:this});
   },
   
   /*
@@ -359,7 +438,7 @@ SSUnitTest.TestCase = new Class({
   __runTests__: function()
   {
     this.__tests.each(function(testData, testName) {
-      this.fireEvent('onStart', this.onStart.bind(this, testName));
+      this.fireEvent('onStart', {type:'function', name:testName});
       // catch errors in setup, bail if there are any
       try
       {
@@ -373,7 +452,7 @@ SSUnitTest.TestCase = new Class({
       // run the function, catch any exceptions that are not caught
       try
       {
-        testData.function();
+        testData['function']();
       }
       catch(err)
       {
@@ -392,23 +471,11 @@ SSUnitTest.TestCase = new Class({
       {
         throw new SSUnitTest.Error(err, "Uncaught exception in tearDwon.");
       }
-      this.fireEvent('onComplete', this.onComplete.bind(this, testName));
+      this.fireEvent('onComplete', {type:'function', name:testName});
     }.bind(this));
   },
   
-  
-  onStart: function(testName)
-  {
-    console.log('onStart: ' + testName)
-  },
-  
-  
-  onComplete: function(testName)
-  {
-    console.log('onComplete: ' + testName);
-  },
-  
-  
+
   __dataForTest__: function(aTest)
   {
     return this.__tests.get(this.__nameForTest__(aTest));
@@ -595,31 +662,55 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
 
 SSUnitTest.TestSuite = new Class({
   
-  initialize: function()
+  name: 'SSUnitTest.TestSuite',
+  
+  Implements: [Events, Options],
+  
+  defaults:
   {
-    this.__tests =[];
+    autocollect: true
+  },
+  
+  initialize: function(options)
+  {
+    this.setOptions(this.defaults, options);
+    this.setTests([]);
+    
+    if(this.options.autocollect)
+    {
+      SSUnitTest.addTest(this.name);
+    }
   },
 
+  setTests: function(tests)
+  {
+    this.__tests = tests;
+  },
   
   tests: function()
   {
-    return this.__tests();
+    return this.__tests;
   },
 
   
   addTest: function(aTest)
   {
-    this.tests().push(aTest);
+    console.log('adding a test');
+
+    var instance = new aTest({autocollect:false});
+    
+    // listen in for start and complete
+    instance.addEvent('onStart', this.onStart.bind(this));
+    instance.addEvent('onComplete', this.onComplete.bind(this));
+    
+    // add it to the internal array
+    this.tests().push(instance);
   },
 
   
   addTests: function(tests)
   {
-    tests.each(function(aTest) { 
-      aTest.addEvent('onStart', this.onStart.bind(this));
-      aTest.addEvent('onComplete', this.onComplete.bind(this));
-    });
-    this.tests().extend(tests);
+    test.each(this.addTests.bind(this));
   },
   
   
@@ -637,9 +728,12 @@ SSUnitTest.TestSuite = new Class({
   
   run: function()
   {
+    console.log('running test suite');
+    this.fireEvent('onStart', {type:'testsuite', name:this.name, ref:this});
     this.tests().each(function(aTest) {
       aTest.run();
     });
+    this.fireEvent('onComplete', {type:'testsuite', name:this.name, ref:this});
   }
   
 });
