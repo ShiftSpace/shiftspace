@@ -57,6 +57,12 @@ var SSUnitTestClass = new Class({
   
   outputResults: function(formatter)
   {
+    if(!formatter) 
+    {
+      console.log('throwing error!')
+      throw new SSUnitTest.NoFormatter(new Error());
+    }
+    
     // throw an error if no formatter
     this.__results.each(function(results) {
       var individualTests = results.get('tests');
@@ -85,6 +91,7 @@ SSUnitTest.AssertError = new Class({Extends: SSUnitTest.Error});
 SSUnitTest.AssertEqualError = new Class({Extends: SSUnitTest.Error});
 SSUnitTest.AssertNotEqualError = new Class({Extends: SSUnitTest.Error});
 SSUnitTest.AssertThrowsError = new Class({Extends: SSUnitTest.Error});
+SSUnitTest.NoFormatter = new Class({Extends: SSUnitTest.Error});
 
 // =======================
 // = SSUnitTest.TestCase =
@@ -164,7 +171,7 @@ SSUnitTest.TestCase = new Class({
   */
   assertThrows: function assertThrows(exception, fn)
   {
-    if(arguments.length < 2) throw SSUnitTest.AssertThrowsError(new Error(), 'assertThrows expects 2 arguments.');
+    if(arguments.length < 2) throw new SSUnitTest.AssertThrowsError(new Error(), 'assertThrows expects 2 arguments.');
     
     // convert the argument list into an array
     var varargs = $A(arguments);
@@ -206,7 +213,7 @@ SSUnitTest.TestCase = new Class({
   */
   assert: function assert(value)
   {
-    if(arguments.length < 1) throw SSUnitTest.AssertError(new Error(), 'assert expects 1 arguments.');
+    if(arguments.length < 1) throw new SSUnitTest.AssertError(new Error(), 'assert expects 1 arguments.');
 
     var caller = assert.caller;
     
@@ -241,7 +248,7 @@ SSUnitTest.TestCase = new Class({
   */
   assertEqual: function assertEqual(a, b)
   {
-    if(arguments.length < 2) throw SSUnitTest.AssertEqualError(new Error(), 'assertEqual expects 2 arguments.');
+    if(arguments.length < 2) throw new SSUnitTest.AssertEqualError(new Error(), 'assertEqual expects 2 arguments.');
 
     var caller = assertEqual.caller;
     
@@ -276,7 +283,7 @@ SSUnitTest.TestCase = new Class({
   */
   assertNotEqual: function assertNotEqual(a, b)
   {
-    if(arguments.length < 2) throw SSUnitTest.AssertNotEqualError(new Error(), 'assertNotEqual expects 2 arguments.');
+    if(arguments.length < 2) throw new SSUnitTest.AssertNotEqualError(new Error(), 'assertNotEqual expects 2 arguments.');
 
     var caller = assertNotEqual.caller;
     
@@ -345,7 +352,7 @@ SSUnitTest.TestCase = new Class({
       }
       catch(err)
       {
-        throw SSUnitTest.Error(err, "Uncaught exception in setup.");
+        throw new SSUnitTest.Error(err, "Uncaught exception in setup.");
       }
       
       // run the function, catch any exceptions that are not caught
@@ -355,7 +362,7 @@ SSUnitTest.TestCase = new Class({
       }
       catch(err)
       {
-        throw SSUnitTest.Error(err, "Uncaught exception in test.");
+        throw new SSUnitTest.Error(err, "Uncaught exception in test.");
       }
       
       // default to success, if the test failed this won't do anything
@@ -368,7 +375,7 @@ SSUnitTest.TestCase = new Class({
       }
       catch(err)
       {
-        throw SSUnitTest.Error(err, "Uncaught exception in tearDwon.");
+        throw new SSUnitTest.Error(err, "Uncaught exception in tearDwon.");
       }
     }.bind(this));
   },
@@ -499,6 +506,44 @@ SSUnitTest.TestResultFormatter.Console = new Class({
   output: function(testResult)
   {
     console.log(this.stringResult(testResult));
+  }
+  
+});
+
+
+SSUnitTest.TestResultFormatter.BasicDOM = new Class({
+  
+  Extends: SSUnitTest.TestResultFormatter,
+
+
+  initialize: function(_container)
+  {
+    this.__container = ($type(_container) == 'string') ? $(_container) : _container;
+  },
+  
+
+  domForResult: function(testResult)
+  {
+    var resultDiv = new Element('div', {
+      'class': 'SSUnitTestResult'
+    });
+    
+    var testData = {
+      testName: testResult.testName(),
+      status: (testResult.successOrFail() && 'passed') || 'failed',
+      statusColor: (testResult.successOrFail() && 'green') || 'red'
+    };
+    
+    resultDiv.set('html', ('<span>{testName}:</span> <span style="color:{statusColor};">{status}</span> ...').substitute(testData));
+    
+    return resultDiv;
+  },
+
+
+  output: function(testResult)
+  {
+    console.log('outputting')
+    this.__container.grab(this.domForResult(testResult));
   }
   
 });
