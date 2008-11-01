@@ -50,12 +50,22 @@ var SSTestRunner = new Class({
       method: "get",
       onComplete: function(responseText, responseXML)
       {
+        // evaluate test
         eval(responseText);
+        
+        // load the class
         var testInstance = eval(base);
+        
         new testInstance();
+        
+        $('SSSandalphonContainer').empty();
         
         // run all the tests
         SSUnitTest.main();
+        SSUnitTest.outputResults(new SSUnitTest.ResultFormatter.BasicDOM($('SSSandalphonContainer')));
+        //SSUnitTest.outputResults();
+        SSUnitTest.reset();
+        
       }.bind(this),
       onFailure: function(responseText, responseXML)
       {

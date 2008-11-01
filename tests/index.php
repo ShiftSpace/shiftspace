@@ -31,9 +31,9 @@
             <tr>
               <th>Load Test:</th>
               <td>
-                <input id="loadTestInput" type="text" value="/client/views/SSConsole/SSConsole"></input>
+                <input id="loadTestInput" type="text" value="SSDefaultTest.js"></input>
                 <!--<input id="loadFile" type="button" name="LoadInterface" value="Load"></input>-->
-                <input id="loadTest" type="button" name="Compile" value="Compile"></input>
+                <input id="loadTest" type="button" name="Load & Run" value="Load & Run"></input>
               </td>
             </tr>
           </table>

@@ -4,6 +4,11 @@
 // @suite       SSDefaultTestSuite
 // ==/Builder==
 
+function TestCaseDivide(x, y)
+{
+  if(y == 0) throw new TestCaseTestDivideByZeroException(new Error());
+}
+
 var SSDefaultTest = new Class({
   
   name: 'SSTestCaseTest',
