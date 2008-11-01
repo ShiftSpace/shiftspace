@@ -537,7 +537,8 @@ SSUnitTest.TestResult = new Class({
     testName: 'UntitledTest',
     success: true,
     error: null,
-    message: ''
+    message: '',
+    subResults: $H()
   },
   
   initialize: function(options)
@@ -763,7 +764,7 @@ SSUnitTest.TestSuite = new Class({
   {
     console.log('running test suite');
     this.fireEvent('onStart', {type:'testsuite', name:this.name, ref:this});
-    this.tests().each(function(aTestName, aTest) {
+    this.tests().each(function(aTest, testName) {
       aTest.run();
     });
     this.fireEvent('onComplete', {type:'testsuite', name:this.name, ref:this});
@@ -781,14 +782,14 @@ SSUnitTest.TestSuite = new Class({
     
     suiteResults.set('tests', $H());
     
-    this.tests().each(function(aTestName, aTest) {
+    this.tests().each(function(aTest, testName) {
       var results = aTest.getResults();
       // add this results to the master
-      suiteResults.get('tests').set(aTestName, results);
+      suiteResults.get('tests').set(testName, results);
       // collect counts
-      suiteResults.set('count') = suiteResults.get('count') + results.get('count');
-      suiteResults.set('passed') = suiteResults.get('passed') + results.get('passed');
-      suiteResults.set('failed') = suiteResults.get('failed') + results.get('failed');
+      suiteResults.set('count', suiteResults.get('count') + results.get('count'));
+      suiteResults.set('passed', suiteResults.get('passed') + results.get('passed'));
+      suiteResults.set('failed', suiteResults.get('failed') + results.get('failed'));
     });
     
     return suiteResults;
