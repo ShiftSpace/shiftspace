@@ -51,7 +51,7 @@ var SSUnitTestClass = new Class({
 
   addTest: function(caseName, theCase)
   {
-    console.log('Adding ' + caseName)
+    console.log('Adding ' + caseName);
     this.tests().push($H({name:caseName || 'UntitledTest', 'test':theCase}));
   },
   
@@ -71,11 +71,10 @@ var SSUnitTestClass = new Class({
   },
   
   
-  outputResults: function(_formatter, _depth)
+  outputResults: function(_formatter)
   {
     var formatter = (!_formatter) ? new SSUnitTest.ResultFormatter.Console() : _formatter;
-    var depth = (!_depth) ? 0 : _depth;
-    
+
     // throw an error if no formatter
     this.__results.each(function(results) {
       var individualTests = results.get('tests');
@@ -400,13 +399,13 @@ SSUnitTest.TestCase = new Class({
   
   onStart: function(testName)
   {
-    
+    console.log('onStart: ' + testName)
   },
   
   
   onComplete: function(testName)
   {
-    
+    console.log('onComplete: ' + testName);
   },
   
   
@@ -626,13 +625,13 @@ SSUnitTest.TestSuite = new Class({
   
   onStart: function(aTest)
   {
-    
+    console.log('testsuite onStart');
   },
   
   
   onComplete: function(aTest)
   {
-    
+    console.log('testsuite onComplete');
   },
   
   
@@ -644,52 +643,3 @@ SSUnitTest.TestSuite = new Class({
   }
   
 });
-
-var TestCaseTestDivideByZeroException = new Class({
-  Extends: SSException
-});
-
-function TestCaseDivide(x, y)
-{
-  if(y == 0) throw new TestCaseTestDivideByZeroException(new Error());
-}
-
-var SSTestCaseTest = new Class({
-  name: 'SSTestCaseTest',
-  
-  Extends: SSUnitTest.TestCase,
-  
-  testAdd: function()
-  {
-    this.assertEqual(2+3, 5);
-  },
-  
-  testDivide: function()
-  {
-    this.assertThrows(TestCaseTestDivideByZeroException, TestCaseDivide, 5, 0);
-  },
-  
-  testSubstract: function()
-  {
-    var x = 5;
-    this.assertNotEqual(x-2, 5);
-  },
-  
-  testShouldFail: function()
-  {
-    var x = 5;
-    this.assertNotEqual(x, 5);
-  },
-  
-  testMultiply: function()
-  {
-    this.assert((3*3) == 9);
-  }
-});
-
-function go()
-{
-  new SSTestCaseTest();
-  SSUnitTest.main();
-  SSUnitTest.outputResults(new SSUnitTest.TestResultFormatter.Console());
-}
