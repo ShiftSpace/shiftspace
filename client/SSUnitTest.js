@@ -78,6 +78,7 @@ var SSUnitTestClass = new Class({
 
   addTest: function(theTest)
   {
+    console.log(theTest);
     console.log('Adding ' + theTest.name + ' and adding events');
     // listen in on the test
     theTest.addEvent('onStart', this.onStart.bind(this));
@@ -543,9 +544,10 @@ SSUnitTest.TestResult = new Class({
   {
     this.setOptions(this.defaults, options);
     
-    this.__testName = options.testName;
-    this.__success = options.success;
-    this.__error = options.error;
+    this.__testName = this.options.testName;
+    this.__success = this.options.success;
+    this.__error = this.options.error;
+    this.__subResults = this.options.subResults;
   },
   
   
@@ -564,6 +566,12 @@ SSUnitTest.TestResult = new Class({
   error: function()
   {
     return this.__error;
+  },
+
+  
+  subResults: function()
+  {
+    return this.__subResults;
   }
   
 });
@@ -577,7 +585,7 @@ SSUnitTest.ResultFormatter = new Class({
   
   initialize: function() {},
   
-  stringResult: function(testResult) 
+  asString: function(testResult) 
   {
     var resultString = [];
     resultString.push(testResult.testName() + ":");
@@ -590,7 +598,20 @@ SSUnitTest.ResultFormatter = new Class({
     return resultString.join(" ");
   },
     
-  domResult: function() {}
+  format: function(aResult) 
+  {
+    
+  },
+  
+  output: function(aResult, depth) 
+  {
+    if(aResult.subResults() && aResult.subResults().length > 0)
+    {
+      aResult.subResults().each(function(testName, results) {
+        this.output(results, depth+1);
+      }.bind(this));
+    }
+  }
   
 });
 
@@ -602,9 +623,11 @@ SSUnitTest.ResultFormatter.Console = new Class({
   
   Extends: SSUnitTest.ResultFormatter,
   
-  output: function(testResult)
+  output: function(testResult, depth)
   {
-    console.log(this.stringResult(testResult));
+    console.log(this.asString(testResult));
+    // call parent
+    this.parent(result, depth);
   }
   
 });
@@ -625,7 +648,7 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
   },
   
 
-  domForResult: function(testResult)
+  format: function(testResult)
   {
     var resultDiv = new Element('div', {
       'class': 'SSUnitTestResult'
@@ -643,9 +666,12 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
   },
 
 
-  output: function(testResult)
+  output: function(testResult, depth)
   {
-    this.__container.grab(this.domForResult(testResult));
+    console.log(testResult)
+    this.__container.grab(this.format(testResult));
+    // call parent
+    this.parent(testResult, depth);
   }
   
 });
@@ -674,19 +700,22 @@ SSUnitTest.TestSuite = new Class({
   initialize: function(options)
   {
     this.setOptions(this.defaults, options);
-    this.setTests([]);
+    this.setTests($H());
     
+    // add it to the singleton unless autocollect is set to false
     if(this.options.autocollect)
     {
-      SSUnitTest.addTest(this.name);
+      SSUnitTest.addTest(this);
     }
   },
+
 
   setTests: function(tests)
   {
     this.__tests = tests;
   },
   
+
   tests: function()
   {
     return this.__tests;
@@ -704,25 +733,29 @@ SSUnitTest.TestSuite = new Class({
     instance.addEvent('onComplete', this.onComplete.bind(this));
     
     // add it to the internal array
-    this.tests().push(instance);
+    this.tests().set(instance.name, instance);
   },
 
   
   addTests: function(tests)
   {
-    test.each(this.addTests.bind(this));
+    tests.each(this.addTests.bind(this));
   },
   
   
-  onStart: function(aTest)
+  onStart: function(testData)
   {
-    console.log('testsuite onStart');
+    console.log('testsuite onStart ' + testData);
+    // propagate subtest onStart events
+    this.fireEvent('onStart', testData);
   },
   
   
-  onComplete: function(aTest)
+  onComplete: function(testData)
   {
-    console.log('testsuite onComplete');
+    console.log('testsuite onComplete ' + testData);
+    // propagate subtest onComplete events
+    this.fireEvent('onComplete', testData);
   },
   
   
@@ -730,10 +763,35 @@ SSUnitTest.TestSuite = new Class({
   {
     console.log('running test suite');
     this.fireEvent('onStart', {type:'testsuite', name:this.name, ref:this});
-    this.tests().each(function(aTest) {
+    this.tests().each(function(aTestName, aTest) {
       aTest.run();
     });
     this.fireEvent('onComplete', {type:'testsuite', name:this.name, ref:this});
+  },
+  
+  
+  getResults: function()
+  {
+    var suiteResults = $H({
+      subtests: $H(),
+      count: 0,
+      passed: 0,
+      failed: 0
+    });
+    
+    suiteResults.set('tests', $H());
+    
+    this.tests().each(function(aTestName, aTest) {
+      var results = aTest.getResults();
+      // add this results to the master
+      suiteResults.get('tests').set(aTestName, results);
+      // collect counts
+      suiteResults.set('count') = suiteResults.get('count') + results.get('count');
+      suiteResults.set('passed') = suiteResults.get('passed') + results.get('passed');
+      suiteResults.set('failed') = suiteResults.get('failed') + results.get('failed');
+    });
+    
+    return suiteResults;
   }
   
 });
