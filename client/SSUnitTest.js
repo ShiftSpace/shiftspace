@@ -540,13 +540,16 @@ SSUnitTest.ResultFormatter = new Class({
     return resultString.join(" ");
   },
     
-  format: function(aResult, depth) 
+  format: function(aResult, _depth) 
   {
     
   },
   
-  output: function(aResult, depth) 
+  output: function(aResult, _depth) 
   {
+    // get the depth
+    var depth = (_depth != null) ? _depth : 0;
+    
     var subResults = aResult.get('tests');
     console.log('checking for subResults');
     console.log(subResults);
@@ -595,17 +598,20 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
 
   format: function(testResult, depth)
   {
-    console.log('formatting result');
+    console.log('formatting result ' + depth);
     console.log(testResult);
     
     var resultDiv = new Element('div', {
       'class': 'SSUnitTestResult'
     });
+    resultDiv.setStyles({
+      marginLeft: 10*depth
+    });
     
     var testData = {
       testName: testResult.get('name'),
       status: (testResult.get('success') && 'passed') || 'failed',
-      statusColor: (testResult.get('success') && 'green') || 'red'
+      statusColor: (testResult.get('success') && 'green') || 'red',
     };
     
     resultDiv.set('html', ('<span>{testName}:</span> <span style="color:{statusColor};">{status}</span> ...').substitute(testData));
@@ -616,7 +622,7 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
 
   output: function(testResult, depth)
   {
-    this.__container.grab(this.format(testResult));
+    this.__container.grab(this.format(testResult, depth));
     // call parent
     this.parent(testResult, depth);
   }
