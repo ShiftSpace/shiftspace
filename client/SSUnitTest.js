@@ -86,12 +86,6 @@ var SSUnitTestClass = new Class({
   },
   
   
-  addResults: function(results)
-  {
-    this.__results.push(results);
-  },
-  
-  
   main: function(options)
   {
     if(options.formatter)
@@ -105,8 +99,6 @@ var SSUnitTestClass = new Class({
     
     this.tests().each(function(caseHash) {
       caseHash.get('test').run();
-      // don't need to add the results here
-      this.addResults(caseHash.get('test').getResults());
     }.bind(this));
   },
   
@@ -134,11 +126,11 @@ var SSUnitTestClass = new Class({
     var formatter = (!_formatter) ? (this.formatter() || new SSUnitTest.ResultFormatter.Console()) : _formatter;
 
     // throw an error if no formatter
-    this.__results.each(function(results) {
-      var individualTests = results.get('tests');
-      // TODO: recurse on outputResults, passing the depth
-      individualTests.each(formatter.output.bind(formatter));
-    }.bind(this));
+    this.tests().each(function(aTestHash) {
+      console.log('outputting results');
+      console.log(aTestHash.get('test'));
+      formatter.output(aTestHash.get('test').getResults());
+    });
   }
   
 });
@@ -193,7 +185,7 @@ SSUnitTest.TestCase = new Class({
     this.__results.set('count', 0);
     this.__results.set('passed', 0);
     this.__results.set('failed', 0);
-    this.__results.set('tests', []);
+    this.__results.set('tests', $H());
     
     // to skip any properties defined on base class
     // wish MooTools supported class reflection!
@@ -508,13 +500,15 @@ SSUnitTest.TestCase = new Class({
     var failed = this.__tests.getValues().filter(function(x){return !x.success});
     var failedTests = failed.map(function(x){return this.__nameForTest__(x.function)}.bind(this));
     
+    // collect data about each individual test
     this.__tests.each(function(testData, testName) {
-      this.__results.get('tests').push($H({
+      this.__results.get('tests').set(testName, $H({
         name: testName,
         success: testData.get('success')
       }));
     }.bind(this));
     
+    // collect test case data
     this.__results.set('name', this.name);
     this.__results.set('count', this.__tests.getLength());
     this.__results.set('passed', passed.length);
@@ -546,7 +540,7 @@ SSUnitTest.ResultFormatter = new Class({
     return resultString.join(" ");
   },
     
-  format: function(aResult) 
+  format: function(aResult, depth) 
   {
     
   },
@@ -554,10 +548,12 @@ SSUnitTest.ResultFormatter = new Class({
   output: function(aResult, depth) 
   {
     var subResults = aResult.get('tests');
-    if(subResults && subResults.length > 0)
+    console.log('checking for subResults');
+    console.log(subResults);
+    if(subResults && subResults.getLength() > 0)
     {
-      subResults.each(function(testName, results) {
-        this.output(results, depth+1);
+      subResults.each(function(subResult, subResultName) {
+        this.output(subResult, depth+1);
       }.bind(this));
     }
   }
@@ -597,8 +593,11 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
   },
   
 
-  format: function(testResult)
+  format: function(testResult, depth)
   {
+    console.log('formatting result');
+    console.log(testResult);
+    
     var resultDiv = new Element('div', {
       'class': 'SSUnitTestResult'
     });
@@ -728,13 +727,21 @@ SSUnitTest.TestSuite = new Class({
     
     this.tests().each(function(aTest, testName) {
       var results = aTest.getResults();
+      
       // add this results to the master
       suiteResults.get('tests').set(testName, results);
-      // collect counts
+      
+      // accumulate
       suiteResults.set('count', suiteResults.get('count') + results.get('count'));
       suiteResults.set('passed', suiteResults.get('passed') + results.get('passed'));
       suiteResults.set('failed', suiteResults.get('failed') + results.get('failed'));
     });
+    
+    // only if everything passed do we set success to true
+    if(suiteResults.get('failed').length == 0)
+    {
+      suiteResults.set('success', true);
+    }
     
     return suiteResults;
   }
