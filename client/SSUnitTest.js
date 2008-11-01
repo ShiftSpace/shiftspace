@@ -78,8 +78,6 @@ var SSUnitTestClass = new Class({
 
   addTest: function(theTest)
   {
-    console.log(theTest);
-    console.log('Adding ' + theTest.name + ' and adding events');
     // listen in on the test
     theTest.addEvent('onStart', this.onStart.bind(this));
     theTest.addEvent('onComplete', this.onComplete.bind(this));
@@ -107,6 +105,7 @@ var SSUnitTestClass = new Class({
     
     this.tests().each(function(caseHash) {
       caseHash.get('test').run();
+      // don't need to add the results here
       this.addResults(caseHash.get('test').getResults());
     }.bind(this));
   },
@@ -510,69 +509,17 @@ SSUnitTest.TestCase = new Class({
     var failedTests = failed.map(function(x){return this.__nameForTest__(x.function)}.bind(this));
     
     this.__tests.each(function(testData, testName) {
-      this.__results.get('tests').push(new SSUnitTest.TestResult({
-        testName: testName,
+      this.__results.get('tests').push($H({
+        name: testName,
         success: testData.get('success')
       }));
     }.bind(this));
     
+    this.__results.set('name', this.name);
     this.__results.set('count', this.__tests.getLength());
     this.__results.set('passed', passed.length);
     this.__results.set('failed', failed.length);
-  }
-  
-});
-
-
-// =========================
-// = SSUnitTest.TestResult =
-// =========================
-
-SSUnitTest.TestResult = new Class({
-  
-  Implements: Options,
-  
-  defaults: 
-  {
-    testName: 'UntitledTest',
-    success: true,
-    error: null,
-    message: '',
-    subResults: $H()
-  },
-  
-  initialize: function(options)
-  {
-    this.setOptions(this.defaults, options);
-    
-    this.__testName = this.options.testName;
-    this.__success = this.options.success;
-    this.__error = this.options.error;
-    this.__subResults = this.options.subResults;
-  },
-  
-  
-  testName: function()
-  {
-    return this.__testName;
-  },
-  
-  
-  successOrFail: function()
-  {
-    return this.__success;
-  },
-  
-  
-  error: function()
-  {
-    return this.__error;
-  },
-
-  
-  subResults: function()
-  {
-    return this.__subResults;
+    this.__results.set('success', (failed.length == 0));
   }
   
 });
@@ -589,11 +536,11 @@ SSUnitTest.ResultFormatter = new Class({
   asString: function(testResult) 
   {
     var resultString = [];
-    resultString.push(testResult.testName() + ":");
-    resultString.push((testResult.successOrFail() && "passed") || "failed");
-    if(testResult.error())
+    resultString.push(testResult.get('name') + ":");
+    resultString.push((testResult.get('success') && "passed") || "failed");
+    if(testResult.get('error'))
     {
-      resultString.push(", error:" + testResult.error);
+      resultString.push(", error:" + testResult.get('error'));
     }
     resultString.push("...");
     return resultString.join(" ");
@@ -606,9 +553,10 @@ SSUnitTest.ResultFormatter = new Class({
   
   output: function(aResult, depth) 
   {
-    if(aResult.subResults() && aResult.subResults().length > 0)
+    var subResults = aResult.get('tests');
+    if(subResults && subResults.length > 0)
     {
-      aResult.subResults().each(function(testName, results) {
+      subResults.each(function(testName, results) {
         this.output(results, depth+1);
       }.bind(this));
     }
@@ -656,9 +604,9 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
     });
     
     var testData = {
-      testName: testResult.testName(),
-      status: (testResult.successOrFail() && 'passed') || 'failed',
-      statusColor: (testResult.successOrFail() && 'green') || 'red'
+      testName: testResult.get('name'),
+      status: (testResult.get('success') && 'passed') || 'failed',
+      statusColor: (testResult.get('success') && 'green') || 'red'
     };
     
     resultDiv.set('html', ('<span>{testName}:</span> <span style="color:{statusColor};">{status}</span> ...').substitute(testData));
@@ -669,7 +617,6 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
 
   output: function(testResult, depth)
   {
-    console.log(testResult)
     this.__container.grab(this.format(testResult));
     // call parent
     this.parent(testResult, depth);
@@ -746,7 +693,6 @@ SSUnitTest.TestSuite = new Class({
   
   onStart: function(testData)
   {
-    console.log('testsuite onStart ' + testData);
     // propagate subtest onStart events
     this.fireEvent('onStart', testData);
   },
@@ -754,7 +700,6 @@ SSUnitTest.TestSuite = new Class({
   
   onComplete: function(testData)
   {
-    console.log('testsuite onComplete ' + testData);
     // propagate subtest onComplete events
     this.fireEvent('onComplete', testData);
   },
@@ -762,7 +707,6 @@ SSUnitTest.TestSuite = new Class({
   
   run: function()
   {
-    console.log('running test suite');
     this.fireEvent('onStart', {type:'testsuite', name:this.name, ref:this});
     this.tests().each(function(aTest, testName) {
       aTest.run();
