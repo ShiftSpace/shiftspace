@@ -78,6 +78,7 @@ var SSUnitTestClass = new Class({
 
   addTest: function(theTest)
   {
+    console.log('SSUnitTest adding ' + theTest.name);
     // listen in on the test
     theTest.addEvent('onStart', this.onStart.bind(this));
     theTest.addEvent('onComplete', this.onComplete.bind(this));
@@ -107,7 +108,7 @@ var SSUnitTestClass = new Class({
   {
     if(this.isInteractive())
     {
-      console.log('-onStart ' + aTest.type + ' ' + aTest.name);
+      //console.log('-onStart ' + aTest.type + ' ' + aTest.name);
     }
   },
   
@@ -116,7 +117,7 @@ var SSUnitTestClass = new Class({
   {
     if(this.isInteractive())
     {
-      console.log('-onComplete ' + aTest.type + ' ' + aTest.name);
+      //console.log('-onComplete ' + aTest.type + ' ' + aTest.name);
     }
   },
   
@@ -127,8 +128,8 @@ var SSUnitTestClass = new Class({
 
     // throw an error if no formatter
     this.tests().each(function(aTestHash) {
-      console.log('outputting results');
-      console.log(aTestHash.get('test'));
+      //console.log('outputting results');
+      //console.log(aTestHash.get('test'));
       formatter.output(aTestHash.get('test').getResults());
     });
   }
@@ -177,7 +178,7 @@ SSUnitTest.TestCase = new Class({
     
     if(!this.options.dummy)
     {
-      console.log('Creating test case ' + this.name);
+      //console.log('Creating test case ' + this.name);
     }
     
     this.__tests = $H();
@@ -531,7 +532,7 @@ SSUnitTest.ResultFormatter = new Class({
   {
     var resultString = [];
     resultString.push(testResult.get('name') + ":");
-    resultString.push((testResult.get('success') && "passed") || "failed");
+    resultString.push((testResult.get('success') && "PASS") || "FAIL");
     if(testResult.get('error'))
     {
       resultString.push(", error:" + testResult.get('error'));
@@ -545,14 +546,14 @@ SSUnitTest.ResultFormatter = new Class({
     
   },
   
-  output: function(aResult, _depth) 
+  output: function(aResult, _depth)
   {
     // get the depth
     var depth = (_depth != null) ? _depth : 0;
     
     var subResults = aResult.get('tests');
-    console.log('checking for subResults');
-    console.log(subResults);
+    //console.log('checking for subResults');
+    //console.log(subResults);
     if(subResults && subResults.getLength() > 0)
     {
       subResults.each(function(subResult, subResultName) {
@@ -573,7 +574,7 @@ SSUnitTest.ResultFormatter.Console = new Class({
   
   output: function(testResult, depth)
   {
-    console.log(this.asString(testResult));
+    console.log("\t".repeat(depth) + this.asString(testResult));
     // call parent
     this.parent(result, depth);
   }
@@ -598,8 +599,8 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
 
   format: function(testResult, depth)
   {
-    console.log('formatting result ' + depth);
-    console.log(testResult);
+    //console.log('formatting result ' + depth);
+    //console.log(testResult);
     
     var resultDiv = new Element('div', {
       'class': 'SSUnitTestResult'
@@ -677,7 +678,7 @@ SSUnitTest.TestSuite = new Class({
   
   addTest: function(aTest)
   {
-    console.log('adding a test');
+    //console.log('adding a test');
 
     var instance = new aTest({autocollect:false});
     
@@ -745,7 +746,8 @@ SSUnitTest.TestSuite = new Class({
     });
     
     // only if everything passed do we set success to true
-    if(suiteResults.get('failed').length == 0)
+    
+    if(suiteResults.get('failed') == 0)
     {
       suiteResults.set('success', true);
     }
