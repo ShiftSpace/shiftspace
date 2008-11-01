@@ -22,6 +22,12 @@ var SSUnitTestClass = new Class({
   {
     this.setOptions(this.defaults, options)
 
+    this.reset();
+  },
+  
+  
+  reset: function()
+  {
     this.__tests = [];
     this.__results = [];
   },
