@@ -723,6 +723,7 @@ SSUnitTest.TestSuite = new Class({
   getResults: function()
   {
     var suiteResults = $H({
+      name: this.name,
       subtests: $H(),
       count: 0,
       passed: 0,
