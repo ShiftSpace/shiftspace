@@ -9,13 +9,20 @@
 // = NameSpace =
 // =============
 
+var SSUnit = {};
+
+// ========================
+// = SSUnitTest Singleton =
+// ========================
+
 var SSUnitTestClass = new Class({
   
   Implements: Options,
   
   defaults:
   {
-    formatter: null
+    formatter: null,
+    interactive: false
   },
 
   initialize: function(options)
@@ -25,7 +32,10 @@ var SSUnitTestClass = new Class({
     this.reset();
   },
   
-  
+  /*
+    Function: reset
+      Resets SSUnitTest singleton. This empties the internal array of tests as well as results.
+  */
   reset: function()
   {
     this.__tests = [];
@@ -52,7 +62,7 @@ var SSUnitTestClass = new Class({
   },
   
   
-  main: function()
+  main: function(formatter)
   {
     this.tests().each(function(caseHash) {
       caseHash.get('test').run();
@@ -61,17 +71,15 @@ var SSUnitTestClass = new Class({
   },
   
   
-  outputResults: function(formatter)
+  outputResults: function(_formatter, _depth)
   {
-    if(!formatter) 
-    {
-      console.log('throwing error!')
-      throw new SSUnitTest.NoFormatter(new Error());
-    }
+    var formatter = (!_formatter) ? new SSUnitTest.ResultFormatter.Console() : _formatter;
+    var depth = (!_depth) ? 0 : _depth;
     
     // throw an error if no formatter
     this.__results.each(function(results) {
       var individualTests = results.get('tests');
+      // TODO: recurse on outputResults, passing the depth
       individualTests.each(formatter.output.bind(formatter));
     }.bind(this));
   }
@@ -106,6 +114,7 @@ SSUnitTest.NoFormatter = new Class({Extends: SSUnitTest.Error});
 SSUnitTest.TestCase = new Class({
   name: 'SSUnitTest.TestCase',
   
+  Implements: Events,
   
   initialize: function(dummy)
   {
@@ -351,6 +360,7 @@ SSUnitTest.TestCase = new Class({
   __runTests__: function()
   {
     this.__tests.each(function(testData, testName) {
+      this.fireEvent('onStart', this.onStart.bind(this, testName));
       // catch errors in setup, bail if there are any
       try
       {
@@ -383,7 +393,20 @@ SSUnitTest.TestCase = new Class({
       {
         throw new SSUnitTest.Error(err, "Uncaught exception in tearDwon.");
       }
+      this.fireEvent('onComplete', this.onComplete.bind(this, testName));
     }.bind(this));
+  },
+  
+  
+  onStart: function(testName)
+  {
+    
+  },
+  
+  
+  onComplete: function(testName)
+  {
+    
   },
   
   
@@ -481,10 +504,10 @@ SSUnitTest.TestResult = new Class({
 
 
 // ==================================
-// = SSUnitTest.TestResultFormatter =
+// = SSUnitTest.ResultFormatter =
 // ==================================
 
-SSUnitTest.TestResultFormatter = new Class({
+SSUnitTest.ResultFormatter = new Class({
   
   initialize: function() {},
   
@@ -505,9 +528,13 @@ SSUnitTest.TestResultFormatter = new Class({
   
 });
 
-SSUnitTest.TestResultFormatter.Console = new Class({
+// ==========================================
+// = SSUnitTest.ResultFormatter.Console =
+// ==========================================
+
+SSUnitTest.ResultFormatter.Console = new Class({
   
-  Extends: SSUnitTest.TestResultFormatter,
+  Extends: SSUnitTest.ResultFormatter,
   
   output: function(testResult)
   {
@@ -517,9 +544,13 @@ SSUnitTest.TestResultFormatter.Console = new Class({
 });
 
 
-SSUnitTest.TestResultFormatter.BasicDOM = new Class({
+// ===========================================
+// = SSUnitTest.ResultFormatter.BasicDOM =
+// ===========================================
+
+SSUnitTest.ResultFormatter.BasicDOM = new Class({
   
-  Extends: SSUnitTest.TestResultFormatter,
+  Extends: SSUnitTest.ResultFormatter,
 
 
   initialize: function(_container)
@@ -548,11 +579,15 @@ SSUnitTest.TestResultFormatter.BasicDOM = new Class({
 
   output: function(testResult)
   {
-    console.log('outputting')
     this.__container.grab(this.domForResult(testResult));
   }
   
 });
+
+
+// ============================================
+// = SSUnitTest.ResultFormatter.AccordionList =
+// ============================================
 
 
 // ========================
@@ -581,7 +616,23 @@ SSUnitTest.TestSuite = new Class({
   
   addTests: function(tests)
   {
+    tests.each(function(aTest) { 
+      aTest.addEvent('onStart', this.onStart.bind(this));
+      aTest.addEvent('onComplete', this.onComplete.bind(this));
+    });
     this.tests().extend(tests);
+  },
+  
+  
+  onStart: function(aTest)
+  {
+    
+  },
+  
+  
+  onComplete: function(aTest)
+  {
+    
   },
   
   
