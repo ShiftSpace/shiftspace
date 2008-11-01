@@ -14,6 +14,9 @@
     <script src="SSTestRunner.js" type="text/javascript" charset="utf-8"></script>
     <script src="init.js" type="text/javascript" charset="utf-8"></script>
     <script src="SSDefaultTest.js" type="text/javascript" charset="utf-8"></script>
+    <script src="SSAnotherDefaultTest.js" type="text/javascript" charset="utf-8"></script>
+    <script src="SSDefaultTestSuite.js" type="text/javascript" charset="utf-8"></script>
+    
     <!-- 
     <script src="../packages&load=SSUnitTest" type="text/javascript" charset="utf-8"></script>
       -->
@@ -31,9 +34,10 @@
             <tr>
               <th>Load Test:</th>
               <td>
-                <input id="loadTestInput" type="text" value="SSDefaultTest.js"></input>
-                <!--<input id="loadFile" type="button" name="LoadInterface" value="Load"></input>-->
-                <input id="loadTest" type="button" name="Load & Run" value="Load & Run"></input>
+                <input id="loadTestInput" type="text" value="SSDefaultTest.js">
+                </input>
+                <input id="loadTest" type="button" name="Load & Run" value="Load & Run">
+                </input>
               </td>
             </tr>
           </table>

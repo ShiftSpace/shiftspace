@@ -40,6 +40,14 @@ var SSTestRunner = new Class({
   
   loadTest: function(path)
   {
+    // first look for the file in the package json
+    
+    // notify if we don't find it
+    
+    // if we do find it, we need to first load any dependencies
+    
+    // look for the file in the local directory
+
     // split the path components
     var components = path.split("/");
     var testname = components.getLast();
@@ -61,7 +69,8 @@ var SSTestRunner = new Class({
         $('SSSandalphonContainer').empty();
         
         // run all the tests
-        SSUnitTest.main();
+        SSUnitTest.main({interactive:true});
+        console.log('outputting')
         SSUnitTest.outputResults(new SSUnitTest.ResultFormatter.BasicDOM($('SSSandalphonContainer')));
         //SSUnitTest.outputResults();
         SSUnitTest.reset();
