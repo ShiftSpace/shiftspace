@@ -130,7 +130,9 @@ var SSUnitTestClass = new Class({
     this.tests().each(function(aTestHash) {
       //console.log('outputting results');
       //console.log(aTestHash.get('test'));
-      formatter.output(aTestHash.get('test').getResults());
+      var results = aTestHash.get('test').getResults();
+      formatter.output(results);
+      formatter.totals(results);
     });
   }
   
@@ -560,6 +562,11 @@ SSUnitTest.ResultFormatter = new Class({
         this.output(subResult, depth+1);
       }.bind(this));
     }
+  },
+  
+  totals: function()
+  {
+    
   }
   
 });
@@ -574,9 +581,21 @@ SSUnitTest.ResultFormatter.Console = new Class({
   
   output: function(testResult, depth)
   {
-    console.log("\t".repeat(depth) + this.asString(testResult));
-    // call parent
-    this.parent(result, depth);
+    console.log("  ".repeat(depth) + this.asString(testResult));
+    // call parent, required for relaying depth of test
+    this.parent(testResult, depth);
+  },
+  
+  totals: function(testResult)
+  {
+    var totals = {
+      count: testResult.get('count'),
+      passed: testResult.get('passed'),
+      failed: testResult.get('failed')
+    };
+    
+    console.log('------------------------------------------');
+    console.log('{count} tests, {passed} passed, {failed} failed.'.substitute(totals));
   }
   
 });
@@ -594,6 +613,18 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
   initialize: function(_container)
   {
     this.__container = ($type(_container) == 'string') ? $(_container) : _container;
+  },
+  
+  
+  setContainer: function(aContainer)
+  {
+    this.__container = aContainer;
+  },
+  
+  
+  container: function()
+  {
+    return this.__container;
   },
   
 
@@ -623,9 +654,30 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
 
   output: function(testResult, depth)
   {
-    this.__container.grab(this.format(testResult, depth));
+    this.container().grab(this.format(testResult, depth));
     // call parent
     this.parent(testResult, depth);
+  },
+  
+  
+  totals: function(testResult)
+  {
+    var totals = {
+      count: testResult.get('count'),
+      passed: testResult.get('passed'),
+      failed: testResult.get('failed')
+    };
+    
+    var totalsDiv = new Element('div', {
+      'class': "SSTestResultTotals"
+    });
+    totalsDiv.setStyles({
+      borderTop: '1px dashed black'
+    });
+    
+    totalsDiv.set('text', ("Total test: {count}, Passed: {passed}, Failed: {failed}").substitute(totals));
+    
+    this.container().grab(totalsDiv);
   }
   
 });
