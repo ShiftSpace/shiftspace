@@ -53,7 +53,7 @@ SSUnit.Base = new Class({
   
   __nameForFunction__: function(fn)
   {
-    return fn.ssname
+    return fn.ssname;
   },
   
   
@@ -81,21 +81,40 @@ SSUnit.TestIterator = new Class({
   },
   
   
+  setTests: function(tests)
+  {
+    this.__tests = tests;
+  },
+  
+
   tests: function()
   {
-    if(!this.__tests) this.__tests = [];
+    if(!this.__tests) this.setTests([]);
     return this.__tests;
   },
   
   
-  addTest: function(aTest)
+  addTest: function(_aTest)
   {
+    // interesting class is a type
+    var aTest = ($type(_aTest) == 'class') ? new _aTest({autocollect:false}) : _aTest;
+    
+    console.log('addTest ' + aTest.name + ' to ' + this.name);
+
+    // otherwise just add it
     this.tests().push(aTest);
+  },
+  
+  
+  addTests: function(tests)
+  {
+    tests.each(this.addTests.bind(this));
   },
   
 
   runTest: function(aTest)
   {
+    console.log(this.name+"/"+aTest.name);
     aTest.addEvent('onComplete', this.nextTest.bind(this));
     aTest.run();
   },
@@ -103,25 +122,41 @@ SSUnit.TestIterator = new Class({
 
   nextTest: function(aTest)
   {
-    if(this.tests().contains(aTest))
+    if(this.runningTests().contains(aTest))
     {
-      this.tests().remove(aTest);
-      var nextTest = this.tests().getFirst();
+      var nextTest = this.runningTests().shift();
       if(nextTest)
       {
         this.runTest(nextTest);
       }
       else
       {
+        this.finish();
         this.fireEvent('onComplete', {type:this.type(), name:this.name, ref:this});
       }
     }
   },
   
   
+  finish: function()
+  {
+  },
+  
+  
+  runningTests: function()
+  {
+    if(!this.__runningTests)
+    {
+      this.__runningTests = this.tests().copy();
+    }
+    return this.__runningTests;
+  }, 
+  
+  
   run: function()
   {
-    this.runTest(this.tests().getFirst());
+    this.fireEvent('onStart', {type:this.type(), name:this.name, ref:this});
+    this.runTest(this.runningTests().shift());
   }
   
 });
@@ -133,7 +168,9 @@ SSUnit.TestIterator = new Class({
 
 var SSUnitTestClass = new Class({
   
-  Implements: [Events, Options], 
+  name: "SSUnitTest",
+  
+  Implements: [Events, Options, SSUnit.TestIterator], 
 
   defaults:
   {
@@ -181,30 +218,15 @@ var SSUnitTestClass = new Class({
   */
   reset: function()
   {
-    this.__tests = [];
-    this.__results = [];
-  },
-  
-
-  tests: function()
-  {
-    return this.__tests;
-  },
-
-
-  addTest: function(theTest)
-  {
-    console.log('SSUnitTest adding ' + theTest.name);
-    // listen in on the test
-    theTest.addEvent('onStart', this.onStart.bind(this));
-    theTest.addEvent('onComplete', this.onComplete.bind(this));
-    // add the test
-    this.tests().push($H({name:theTest.name || 'UntitledTest', 'test':theTest}));
+    this.setTests([]);
   },
   
   
   main: function(options)
   {
+    console.log('main');
+    console.log(this.tests());
+    
     // set a formatter
     if(options.formatter)
     {
@@ -217,22 +239,13 @@ var SSUnitTestClass = new Class({
       this.setInteractive(options.interactive);
     }
     
-    this.tests().each(function(caseHash) {
-      caseHash.get('test').run();
-    }.bind(this));
+    this.run();
   },
   
   
-  runTest: function(aTest)
+  finish: function()
   {
-    aTest.addEvent('onComplete', this.nextTest.bind(this));
-    aTest.run();
-  }, 
-  
-
-  nextTest: function(previousTest)
-  {
-    
+    console.log('finish!');
   },
   
   
@@ -259,10 +272,8 @@ var SSUnitTestClass = new Class({
     var formatter = (!_formatter) ? (this.formatter() || new SSUnitTest.ResultFormatter.Console()) : _formatter;
 
     // throw an error if no formatter
-    this.tests().each(function(aTestHash) {
-      //console.log('outputting results');
-      //console.log(aTestHash.get('test'));
-      var results = aTestHash.get('test').getResults();
+    this.tests().each(function(aTest) {
+      var results = aTest.getResults();
       formatter.output(results);
       formatter.totals(results);
     });
@@ -321,6 +332,7 @@ SSUnitTest.TestCase = new Class({
     this.__results.set('passed', 0);
     this.__results.set('failed', 0);
     this.__results.set('tests', $H());
+    this.__runningTests = [];
     
     // to skip any properties defined on base class
     // wish MooTools supported class reflection!
@@ -374,23 +386,8 @@ SSUnitTest.TestCase = new Class({
     
     // collect when all is done
     this.__collectResults__();
-    
-    if(this.__hasAsyncTests__())
-    {
-      
-    }
-    else
-    {
-      this.fireEvent('onComplete', {type:'testcase', name:this.name, ref:this});
-    }
   },
   
-  __onAsyncComplete__: function(fnName)
-  {
-    this.__runningTests__.remove(fnName);
-    // only if all completed do we run
-    if(!completed.contains(false)) this.fireEvent('onComplete', {type:'testcase', name:this.name, ref:this});
-  },
   
   /*
     Function: assertThrows
@@ -567,7 +564,10 @@ SSUnitTest.TestCase = new Class({
           // set a bound function with the name set
           var boundTest = theTest.bind(this);
           this.__setNameForFunction__(boundTest, testName);
+          // set function reference to bound test
           testData.set('function', boundTest);
+          // set complete status
+          testData.set('complete', false);
         }
       }
     }
@@ -577,7 +577,8 @@ SSUnitTest.TestCase = new Class({
   __runTests__: function()
   {
     this.__tests.each(function(testData, testName) {
-      this.fireEvent('onStart', {type:'function', name:testName, ref:this[testName]});
+      this.__onStart__(testData.get('function'));
+      
       // catch errors in setup, bail if there are any
       try
       {
@@ -591,7 +592,7 @@ SSUnitTest.TestCase = new Class({
       // run the function, catch any exceptions that are not caught
       try
       {
-        testData['function']();
+        testData.get('function')();
       }
       catch(err)
       {
@@ -610,8 +611,42 @@ SSUnitTest.TestCase = new Class({
       {
         throw new SSUnitTest.Error(err, "Uncaught exception in tearDwon.");
       }
-      this.fireEvent('onComplete', {type:'function', name:testName, ref:this[testName]});
+      
+      if(!testData.get('async'))
+      {
+        this.__onComplete__(testData);
+      }
     }.bind(this));
+  },
+  
+  
+  __onStart__: function(fn)
+  {
+    // do some special interactive reporting stuff here?
+  },
+  
+  
+  __onComplete__: function(testData)
+  {
+    testData.set('complete', true);
+    
+    var complete = this.__tests.every(function(data, testName) {
+      return data.get('complete');
+    });
+    
+    if(complete)
+    {
+      this.__wrapup__();
+    }
+  },
+  
+  
+  __wrapup__: function()
+  {
+    // collect test results
+    this.__collectResults__();
+    // fire onComplete event
+    this.fireEvent('onComplete', {type:'testcase', name:this.name, ref:this});
   },
   
 
@@ -634,12 +669,17 @@ SSUnitTest.TestCase = new Class({
   },
   
   
-  runsAsync: function()
+  startAsync: function()
   {
-    // a single async test makes the whole thing async
-    this.___hasAsyncTests = true;
-    
-    var caller = arguments.callee.caller;
+    var data = this.__dataForTest__(arguments.callee.caller);
+    data.set('async', true);
+    return data;
+  },
+  
+  
+  endAsync: function(ref)
+  {
+    this.onComplete(ref);
   },
   
   
@@ -722,10 +762,8 @@ SSUnitTest.ResultFormatter = new Class({
   {
     // get the depth
     var depth = (_depth != null) ? _depth : 0;
-    
     var subResults = aResult.get('tests');
-    //console.log('checking for subResults');
-    //console.log(subResults);
+    
     if(subResults && subResults.getLength() > 0)
     {
       subResults.each(function(subResult, subResultName) {
@@ -803,9 +841,6 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
 
   format: function(testResult, depth)
   {
-    //console.log('formatting result ' + depth);
-    //console.log(testResult);
-    
     var resultDiv = new Element('div', {
       'class': 'SSUnitTestResult'
     });
@@ -819,8 +854,6 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
       statusColor: (testResult.get('success') && 'green') || 'red',
       doc: (testResult.get('doc')) || ''
     };
-    
-    console.log(testResult.getClean());
     
     resultDiv.set('html', ('<span><b>{testName}:</b></span> <span>{doc}</span> <span style="color:{statusColor};">{status}</span> ...').substitute(testData));
     
@@ -872,6 +905,8 @@ SSUnitTest.TestSuite = new Class({
   
   name: 'SSUnitTest.TestSuite',
   
+  Implements: SSUnit.TestIterator,
+  
   Extends: SSUnit.Base,
   
   defaults:
@@ -882,7 +917,6 @@ SSUnitTest.TestSuite = new Class({
   initialize: function(options)
   {
     this.setOptions(this.defaults, options);
-    this.setTests($H());
     
     // add it to the singleton unless autocollect is set to false
     if(this.options.autocollect)
@@ -890,64 +924,6 @@ SSUnitTest.TestSuite = new Class({
       SSUnitTest.addTest(this);
     }
   },
-
-
-  setTests: function(tests)
-  {
-    this.__tests = tests;
-  },
-  
-
-  tests: function()
-  {
-    return this.__tests;
-  },
-
-  
-  addTest: function(aTest)
-  {
-    //console.log('adding a test');
-
-    var instance = new aTest({autocollect:false});
-    
-    // listen in for start and complete
-    instance.addEvent('onStart', this.onStart.bind(this));
-    instance.addEvent('onComplete', this.onComplete.bind(this));
-    
-    // add it to the internal array
-    this.tests().set(instance.name, instance);
-  },
-
-  
-  addTests: function(tests)
-  {
-    tests.each(this.addTests.bind(this));
-  },
-  
-  
-  onStart: function(testData)
-  {
-    // propagate subtest onStart events
-    this.fireEvent('onStart', testData);
-  },
-  
-  
-  onComplete: function(testData)
-  {
-    // propagate subtest onComplete events
-    this.fireEvent('onComplete', testData);
-  },
-  
-  
-  run: function()
-  {
-    this.fireEvent('onStart', {type:'testsuite', name:this.name, ref:this});
-    this.tests().each(function(aTest, testName) {
-      aTest.run();
-    });
-    this.fireEvent('onComplete', {type:'testsuite', name:this.name, ref:this});
-  },
-  
   
   getResults: function()
   {
@@ -961,11 +937,11 @@ SSUnitTest.TestSuite = new Class({
     
     suiteResults.set('tests', $H());
     
-    this.tests().each(function(aTest, testName) {
+    this.tests().each(function(aTest) {
       var results = aTest.getResults();
       
       // add this results to the master
-      suiteResults.get('tests').set(testName, results);
+      suiteResults.get('tests').set(aTest.name, results);
       
       // accumulate
       suiteResults.set('count', suiteResults.get('count') + results.get('count'));
