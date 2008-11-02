@@ -15,16 +15,55 @@ var SSUnit = {};
 // = SSUnitTest.Base =
 // ===================
 
-var SSUnitTestBase = new Class({
+SSUnit.Base = new Class({
 
   Implements: [Events, Options],
 
-  name: "SSUnitTestBase",
+  name: "SSUnit.Base",
 
-  doc: function doc(string)
+  doc: function(string)
   {
-    //var caller.name = 
+    var caller = arguments.callee.caller;
+    this.__setDocForFunction__(string);
   },
+  
+
+  __setDocForFunction__: function(fn, doc)
+  {
+    var fn = this.__functionForName__(fnName);
+    fn.ssdoc = doc;
+  },
+  
+
+  __docForFunction__: function(fn)
+  {
+    return fn.ssdoc;
+  },
+
+  
+  __functionForName__: function(fnName)
+  {
+    if(this[fnName] && $type(this[fnName]) == 'function')
+    {
+      this[fnName].ssdoc = doc;
+    }
+    else
+    {
+      // Throw an error here.
+    }
+  },
+  
+  
+  __nameForFunction__: function(fn)
+  {
+    return fn.ssname
+  },
+  
+  
+  __setNameForFunction__: function(fn, name)
+  {
+    fn.ssname = name;
+  }
 
 });
 
@@ -34,8 +73,8 @@ var SSUnitTestBase = new Class({
 
 var SSUnitTestClass = new Class({
   
-  Implements: [Events, Options],
-  
+  Implements: [Events, Options], 
+
   defaults:
   {
     formatter: null,
@@ -183,7 +222,7 @@ SSUnitTest.NoFormatter = new Class({Extends: SSUnitTest.Error});
 SSUnitTest.TestCase = new Class({
   name: 'SSUnitTest.TestCase',
   
-  Implements: [Events, Options],
+  Extends: SSUnit.Base,
   
   defaults:
   {
@@ -409,18 +448,6 @@ SSUnitTest.TestCase = new Class({
   },
   
   
-  __nameForTest__: function(fn)
-  {
-    return fn.ssname
-  },
-  
-  
-  __setNameForTest__: function(fn, name)
-  {
-    fn.ssname = name;
-  },
-  
-  
   __collectTests__: function()
   {
     // collect all object properties that have 'test' as the first four characters
@@ -442,10 +469,10 @@ SSUnitTest.TestCase = new Class({
           // add a new hash for this test
           this.__tests.set(testName, testData);
           // set the name of the original function
-          this.__setNameForTest__(theTest, testName);
+          this.__setNameForFunction__(theTest, testName);
           // set a bound function with the name set
           var boundTest = theTest.bind(this);
-          this.__setNameForTest__(boundTest, testName);
+          this.__setNameForFunction__(boundTest, testName);
           testData.set('function', boundTest);
         }
       }
@@ -496,7 +523,7 @@ SSUnitTest.TestCase = new Class({
 
   __dataForTest__: function(aTest)
   {
-    return this.__tests.get(this.__nameForTest__(aTest));
+    return this.__tests.get(this.__nameForFunction__(aTest));
   },
   
   
@@ -522,9 +549,9 @@ SSUnitTest.TestCase = new Class({
   __collectResults__: function()
   {
     var passed = this.__tests.getValues().filter(function(x){return x.success});
-    var passedTests = passed.map(function(x){return this.__nameForTest__(x.function)}.bind(this));
+    var passedTests = passed.map(function(x){return this.__nameForFunction__(x.function)}.bind(this));
     var failed = this.__tests.getValues().filter(function(x){return !x.success});
-    var failedTests = failed.map(function(x){return this.__nameForTest__(x.function)}.bind(this));
+    var failedTests = failed.map(function(x){return this.__nameForFunction__(x.function)}.bind(this));
     
     // collect data about each individual test
     this.__tests.each(function(testData, testName) {
@@ -728,7 +755,7 @@ SSUnitTest.TestSuite = new Class({
   
   name: 'SSUnitTest.TestSuite',
   
-  Implements: [Events, Options],
+  Extends: SSUnit.Base,
   
   defaults:
   {
