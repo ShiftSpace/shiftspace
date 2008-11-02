@@ -245,7 +245,7 @@ var SSTableViewDatasource = new Class({
     this.fetch({
       sortByColumn: column,
       sortByDirection: direction
-    })  ;
+    });
   },
 
 

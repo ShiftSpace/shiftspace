@@ -23,7 +23,7 @@ var SSUnitTestBase = new Class({
 
   doc: function doc(string)
   {
-    
+    //var caller.name = 
   },
 
 });
@@ -411,13 +411,13 @@ SSUnitTest.TestCase = new Class({
   
   __nameForTest__: function(fn)
   {
-    return fn.name
+    return fn.ssname
   },
   
   
   __setNameForTest__: function(fn, name)
   {
-    fn.name = name;
+    fn.ssname = name;
   },
   
   
