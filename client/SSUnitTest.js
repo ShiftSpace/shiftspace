@@ -106,8 +106,6 @@ SSUnit.TestIterator = new Class({
     // interesting class is a type
     var aTest = ($type(_aTest) == 'class') ? new _aTest({autocollect:false}) : _aTest;
     
-    console.log('addTest ' + aTest.name + ' to ' + this.name + ' ' + this.tests().length);
-
     // otherwise just add it
     this.tests().push(aTest);
   },
@@ -121,7 +119,6 @@ SSUnit.TestIterator = new Class({
 
   runTest: function(aTest)
   {
-    console.log(this.name+"/"+aTest.name);
     aTest.addEvent('onComplete', this.nextTest.bind(this));
     aTest.run();
   },
@@ -136,15 +133,9 @@ SSUnit.TestIterator = new Class({
     }
     else
     {
-      this.finish();
+      if(this.finish) this.finish();
       this.fireEvent('onComplete', {type:this.type(), name:this.name, ref:this});
     }
-  },
-  
-  
-  finish: function()
-  {
-    console.log('FINISH');
   },
   
   
@@ -188,8 +179,7 @@ var SSUnitTestClass = new Class({
   {
     this.setOptions(this.defaults, options)
     this.setInteractive(this.options.interactive);
-    this.setFormmatter(this.options.formatter);
-
+    this.setFormatter(this.options.formatter);
     this.reset();
   },
   
@@ -206,7 +196,7 @@ var SSUnitTestClass = new Class({
   },
   
 
-  setFormmatter: function(formatter)
+  setFormatter: function(formatter)
   {
     this.__formatter = formatter;
   },
@@ -220,9 +210,6 @@ var SSUnitTestClass = new Class({
   
   main: function(options)
   {
-    console.log('main');
-    console.log(this.tests());
-    
     // set a formatter
     if(options.formatter)
     {
@@ -241,7 +228,7 @@ var SSUnitTestClass = new Class({
   
   finish: function()
   {
-    console.log('finish!');
+    this.outputResults();
   },
   
   
@@ -266,7 +253,7 @@ var SSUnitTestClass = new Class({
   outputResults: function(_formatter)
   {
     var formatter = (!_formatter) ? (this.formatter() || new SSUnitTest.ResultFormatter.Console()) : _formatter;
-
+    
     // throw an error if no formatter
     this.tests().each(function(aTest) {
       var results = aTest.getResults();
@@ -724,6 +711,8 @@ SSUnitTest.TestCase = new Class({
 
 SSUnitTest.ResultFormatter = new Class({
   
+  name: 'SSUnitTest.ResultFormatter',
+  
   initialize: function() {},
   
   asString: function(testResult) 
@@ -785,6 +774,8 @@ SSUnitTest.ResultFormatter = new Class({
 */
 SSUnitTest.ResultFormatter.Console = new Class({
   
+  namae: 'SSUnitTest.ResultFormatter.Console',
+  
   Extends: SSUnitTest.ResultFormatter,
   
   output: function(testResult, depth)
@@ -813,9 +804,10 @@ SSUnitTest.ResultFormatter.Console = new Class({
     Formats test results to the DOM.
 */
 SSUnitTest.ResultFormatter.BasicDOM = new Class({
+
+  name: 'SSUnitTest.ResultFormatter.BasicDOM',
   
   Extends: SSUnitTest.ResultFormatter,
-
 
   initialize: function(_container)
   {
