@@ -1,11 +1,11 @@
 <?php
 
 // Check for content based on URL
-$href = $db->escape(normalize_url(@$_POST['href']));
+$href = $this->normalizeURL(@$_POST['href']));
 
 // Sanity check
 if (empty($href)) {
-  respond(0, "Please specify an 'href' argument.");
+  $this->respond(0, "Please specify an 'href' argument.");
 }
 
 $response = array();

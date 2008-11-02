@@ -26,10 +26,10 @@ class Object extends Base {
   }
   
   public function save($store = false) {
-    if (empty($store) && empty($this->contents['_store'])) {
-      throw new Exception("Save failed, no store provided.");
+    if (empty($store) && !empty($this->_store)) {
+      $store = $this->_store;
     } else if (empty($store)) {
-      $store = $this->contents['_store'];
+      throw new Exception("Save failed, no store provided.");
     }
     $store->save($this);
   }

@@ -23,7 +23,6 @@ class PDO_Store extends Store {
   
   
   function setup() {
-    echo 'setup';
     foreach ($this->config as $key => $value) {
       if (preg_match('/^vars:(\w+)$/', $key, $matches)) {
         list(, $table) = $matches;

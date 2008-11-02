@@ -1,6 +1,6 @@
 <?php
 
-class Shift_Object extends Object {
+class Shift extends Object {
   
   
   

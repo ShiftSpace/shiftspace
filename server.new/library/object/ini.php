@@ -2,8 +2,10 @@
 
 class Ini_Object extends Object {
   
-  public function __construct($file) {
-    $this->load($file);
+  public function __construct($file = false) {
+    if (!empty($file)) {
+      $this->load($file);
+    }
   }
   
   
