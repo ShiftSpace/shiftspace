@@ -11,6 +11,23 @@
 
 var SSUnit = {};
 
+// ===================
+// = SSUnitTest.Base =
+// ===================
+
+var SSUnitTestBase = new Class({
+
+  Implements: [Events, Options],
+
+  name: "SSUnitTestBase",
+
+  doc: function doc(string)
+  {
+    
+  },
+
+});
+
 // ========================
 // = SSUnitTest Singleton =
 // ========================
@@ -244,20 +261,21 @@ SSUnitTest.TestCase = new Class({
   
   /*
     Function: assertThrows
-      Assert that a particular exception is throw.  This function is named
-      so that we can access its caller property.
+      Assert that a particular exception is throw.
        
     Parameters:
       exception - an exception class.
       fn - a function to call. Remember to bind if passing in a method of an object.
       
     Example:
+      (start code)
       testSomeMethod: function()
       {
         this.assertThrows(MyException, this.someMethod.bind(this), arg1, arg2, ...)
       }
+      (end)
   */
-  assertThrows: function assertThrows(exception, fn)
+  assertThrows: function(exception, fn)
   {
     if(arguments.length < 2) throw new SSUnitTest.AssertThrowsError(new Error(), 'assertThrows expects 2 arguments.');
     
@@ -265,7 +283,7 @@ SSUnitTest.TestCase = new Class({
     var varargs = $A(arguments);
     // grab the remaining arguments
     var testArgs = varargs.slice(2, varargs.length);
-    var caller = assertThrows.caller;
+    var caller = arguments.callee.caller;
     
     try
     {
@@ -287,23 +305,24 @@ SSUnitTest.TestCase = new Class({
 
   /*
     Function: assert
-      Assert that a value is truthy.  This function is named so that we can access its
-      caller property.
+      Assert that a value is truthy.
       
     Parameters:
       value - a value.
       
     Example:
+      (start code)
       testSomeMethod: function()
       {
         this.assert(aFunction());
       }
+      (end)
   */
-  assert: function assert(value)
+  assert: function(value)
   {
     if(arguments.length < 1) throw new SSUnitTest.AssertError(new Error(), 'assert expects 1 arguments.');
 
-    var caller = assert.caller;
+    var caller = arguments.callee.caller;
     
     if(value == true)
     {
@@ -325,20 +344,22 @@ SSUnitTest.TestCase = new Class({
       b - a value.
       
     Example:
+      (start code)
       testSomeMethod: function()
       {
         var correctValue = x;
         this.assertEqual(correctValue, this.someMethod());
       }
+      (end)
       
     See Also:
         assertNotEqual
   */
-  assertEqual: function assertEqual(a, b)
+  assertEqual: function(a, b)
   {
     if(arguments.length < 2) throw new SSUnitTest.AssertEqualError(new Error(), 'assertEqual expects 2 arguments.');
 
-    var caller = assertEqual.caller;
+    var caller = arguments.callee.caller;
     
     if(a == b)
     {
@@ -360,20 +381,22 @@ SSUnitTest.TestCase = new Class({
       b - a value.
       
     Example:
+      (start code)
       testSomeMethod: function()
       {
         var aValue = x;
         this.assertNotEqual(correctValue, this.someMethod());
       }
+      (end)
       
     See Also:
         assertEqual
   */
-  assertNotEqual: function assertNotEqual(a, b)
+  assertNotEqual: function(a, b)
   {
     if(arguments.length < 2) throw new SSUnitTest.AssertNotEqualError(new Error(), 'assertNotEqual expects 2 arguments.');
 
-    var caller = assertNotEqual.caller;
+    var caller = arguments.callee.caller;
     
     if(a != b)
     {
@@ -548,6 +571,15 @@ SSUnitTest.ResultFormatter = new Class({
     
   },
   
+  /*
+    Function: output
+      Takes a test result and depth.  Depth is used for formatting. Output recurses
+      on test result Hash objects.
+      
+    Parameters:
+      aResult - a Hash object.  You should get one from a test that has been run.
+      _depth - used for formatting.
+  */
   output: function(aResult, _depth)
   {
     // get the depth
@@ -564,17 +596,21 @@ SSUnitTest.ResultFormatter = new Class({
     }
   },
   
-  totals: function()
+  /*
+    Function: totals
+      Reports the totals for a test, does not recurse on a test result.
+  */
+  totals: function(aResult)
   {
     
   }
   
 });
 
-// ==========================================
-// = SSUnitTest.ResultFormatter.Console =
-// ==========================================
-
+/*
+  Class: SSUnitTest.ResultFormatter.Console
+    Formats test results to the JavaScript console.  Requires Firefox, Safari, IE 8.
+*/
 SSUnitTest.ResultFormatter.Console = new Class({
   
   Extends: SSUnitTest.ResultFormatter,
@@ -600,10 +636,6 @@ SSUnitTest.ResultFormatter.Console = new Class({
   
 });
 
-
-// ===========================================
-// = SSUnitTest.ResultFormatter.BasicDOM =
-// ===========================================
 
 SSUnitTest.ResultFormatter.BasicDOM = new Class({
   
