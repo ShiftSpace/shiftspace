@@ -64,6 +64,69 @@ SSUnit.Base = new Class({
 
 });
 
+
+SSUnit.TestIterator = new Class({
+  
+  Implements: [Events, Options],
+  
+  setType: function(type)
+  {
+    this.__type = type;
+  },
+  
+  
+  type: function()
+  {
+    return this.__type || 'test';
+  },
+  
+  
+  tests: function()
+  {
+    if(!this.__tests) this.__tests = [];
+    return this.__tests;
+  },
+  
+  
+  addTest: function(aTest)
+  {
+    this.tests().push(aTest);
+  },
+  
+
+  runTest: function(aTest)
+  {
+    aTest.addEvent('onComplete', this.nextTest.bind(this));
+    aTest.run();
+  },
+  
+
+  nextTest: function(aTest)
+  {
+    if(this.tests().contains(aTest))
+    {
+      this.tests().remove(aTest);
+      var nextTest = this.tests().getFirst();
+      if(nextTest)
+      {
+        this.runTest(nextTest);
+      }
+      else
+      {
+        this.fireEvent('onComplete', {type:this.type(), name:this.name, ref:this});
+      }
+    }
+  },
+  
+  
+  run: function()
+  {
+    this.runTest(this.tests().getFirst());
+  }
+  
+});
+
+
 // ========================
 // = SSUnitTest Singleton =
 // ========================
@@ -142,10 +205,13 @@ var SSUnitTestClass = new Class({
   
   main: function(options)
   {
+    // set a formatter
     if(options.formatter)
     {
       this.setFormmatter(options.formatter);
     }
+    
+    // output results on the fly don't wait till the end
     if(options.interactive)
     {
       this.setInteractive(options.interactive);
@@ -154,6 +220,19 @@ var SSUnitTestClass = new Class({
     this.tests().each(function(caseHash) {
       caseHash.get('test').run();
     }.bind(this));
+  },
+  
+  
+  runTest: function(aTest)
+  {
+    aTest.addEvent('onComplete', this.nextTest.bind(this));
+    aTest.run();
+  }, 
+  
+
+  nextTest: function(previousTest)
+  {
+    
   },
   
   
@@ -288,11 +367,29 @@ SSUnitTest.TestCase = new Class({
   run: function()
   {
     this.fireEvent('onStart', {type:'testcase', name:this.name, ref:this});
+    
     // collect all the tests and build metadata
     this.__collectTests__();
     this.__runTests__();
+    
+    // collect when all is done
     this.__collectResults__();
-    this.fireEvent('onComplete', {type:'testcase', name:this.name, ref:this});
+    
+    if(this.__hasAsyncTests__())
+    {
+      
+    }
+    else
+    {
+      this.fireEvent('onComplete', {type:'testcase', name:this.name, ref:this});
+    }
+  },
+  
+  __onAsyncComplete__: function(fnName)
+  {
+    this.__runningTests__.remove(fnName);
+    // only if all completed do we run
+    if(!completed.contains(false)) this.fireEvent('onComplete', {type:'testcase', name:this.name, ref:this});
   },
   
   /*
@@ -480,7 +577,7 @@ SSUnitTest.TestCase = new Class({
   __runTests__: function()
   {
     this.__tests.each(function(testData, testName) {
-      this.fireEvent('onStart', {type:'function', name:testName});
+      this.fireEvent('onStart', {type:'function', name:testName, ref:this[testName]});
       // catch errors in setup, bail if there are any
       try
       {
@@ -513,7 +610,7 @@ SSUnitTest.TestCase = new Class({
       {
         throw new SSUnitTest.Error(err, "Uncaught exception in tearDwon.");
       }
-      this.fireEvent('onComplete', {type:'function', name:testName});
+      this.fireEvent('onComplete', {type:'function', name:testName, ref:this[testName]});
     }.bind(this));
   },
   
@@ -534,6 +631,21 @@ SSUnitTest.TestCase = new Class({
     {
       data.set('success', true)
     }
+  },
+  
+  
+  runsAsync: function()
+  {
+    // a single async test makes the whole thing async
+    this.___hasAsyncTests = true;
+    
+    var caller = arguments.callee.caller;
+  },
+  
+  
+  __hasAsyncTests__: function()
+  {
+    return this.__hasAsyncTests;
   },
   
   
@@ -582,6 +694,7 @@ SSUnitTest.ResultFormatter = new Class({
   {
     var resultString = [];
     resultString.push(testResult.get('name') + ":");
+    resultString.push(testResult.get('doc') || '');
     resultString.push((testResult.get('success') && "PASS") || "FAIL");
     if(testResult.get('error'))
     {
