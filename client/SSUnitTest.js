@@ -23,34 +23,31 @@ SSUnit.Base = new Class({
 
   doc: function(string)
   {
+    var docs = this.__getDocs__();
     var caller = arguments.callee.caller;
-    this.__setDocForFunction__(string);
+    this.__setDocForFunction__(caller, string);
   },
   
-
+  
+  __getDocs__: function()
+  {
+    if(!this.__docs) 
+    {
+      this.__docs = $H();
+    }
+    return this.__docs;
+  },
+  
+  
   __setDocForFunction__: function(fn, doc)
   {
-    var fn = this.__functionForName__(fnName);
-    fn.ssdoc = doc;
+    this.__getDocs__().set($H(this).keyOf(fn), doc);
   },
   
 
-  __docForFunction__: function(fn)
+  __docForFunction__: function(fnName)
   {
-    return fn.ssdoc;
-  },
-
-  
-  __functionForName__: function(fnName)
-  {
-    if(this[fnName] && $type(this[fnName]) == 'function')
-    {
-      this[fnName].ssdoc = doc;
-    }
-    else
-    {
-      // Throw an error here.
-    }
+    return this.__getDocs__().get(fnName);
   },
   
   
@@ -557,7 +554,8 @@ SSUnitTest.TestCase = new Class({
     this.__tests.each(function(testData, testName) {
       this.__results.get('tests').set(testName, $H({
         name: testName,
-        success: testData.get('success')
+        success: testData.get('success'),
+        doc: this.__docForFunction__(this.__nameForFunction__(testData.get('function')))
       }));
     }.bind(this));
     
@@ -663,7 +661,10 @@ SSUnitTest.ResultFormatter.Console = new Class({
   
 });
 
-
+/*
+  Class: SSUnitTest.ResultFormatter.BasicDOM
+    Formats test results to the DOM.
+*/
 SSUnitTest.ResultFormatter.BasicDOM = new Class({
   
   Extends: SSUnitTest.ResultFormatter,
@@ -703,9 +704,12 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
       testName: testResult.get('name'),
       status: (testResult.get('success') && 'passed') || 'failed',
       statusColor: (testResult.get('success') && 'green') || 'red',
+      doc: (testResult.get('doc')) || ''
     };
     
-    resultDiv.set('html', ('<span>{testName}:</span> <span style="color:{statusColor};">{status}</span> ...').substitute(testData));
+    console.log(testResult.getClean());
+    
+    resultDiv.set('html', ('<span><b>{testName}:</b></span> <span>{doc}</span> <span style="color:{statusColor};">{status}</span> ...').substitute(testData));
     
     return resultDiv;
   },
