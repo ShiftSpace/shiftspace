@@ -94,12 +94,19 @@ SSUnit.TestIterator = new Class({
   },
   
   
+  reset: function()
+  {
+    this.setTests([]);
+    delete this.__runningTests;
+  },
+  
+  
   addTest: function(_aTest)
   {
     // interesting class is a type
     var aTest = ($type(_aTest) == 'class') ? new _aTest({autocollect:false}) : _aTest;
     
-    console.log('addTest ' + aTest.name + ' to ' + this.name);
+    console.log('addTest ' + aTest.name + ' to ' + this.name + ' ' + this.tests().length);
 
     // otherwise just add it
     this.tests().push(aTest);
@@ -122,24 +129,22 @@ SSUnit.TestIterator = new Class({
 
   nextTest: function(aTest)
   {
-    if(this.runningTests().contains(aTest))
+    var nextTest = this.runningTests().shift();
+    if(nextTest)
     {
-      var nextTest = this.runningTests().shift();
-      if(nextTest)
-      {
-        this.runTest(nextTest);
-      }
-      else
-      {
-        this.finish();
-        this.fireEvent('onComplete', {type:this.type(), name:this.name, ref:this});
-      }
+      this.runTest(nextTest);
+    }
+    else
+    {
+      this.finish();
+      this.fireEvent('onComplete', {type:this.type(), name:this.name, ref:this});
     }
   },
   
   
   finish: function()
   {
+    console.log('FINISH');
   },
   
   
@@ -210,15 +215,6 @@ var SSUnitTestClass = new Class({
   formatter: function()
   {
     return this.__formatter;
-  },
-  
-  /*
-    Function: reset
-      Resets SSUnitTest singleton. This empties the internal array of tests as well as results.
-  */
-  reset: function()
-  {
-    this.setTests([]);
   },
   
   
@@ -679,7 +675,7 @@ SSUnitTest.TestCase = new Class({
   
   endAsync: function(ref)
   {
-    this.onComplete(ref);
+    this.__onComplete__(ref);
   },
   
   
