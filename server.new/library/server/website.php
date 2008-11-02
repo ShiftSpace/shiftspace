@@ -2,11 +2,6 @@
 
 class Website_Server extends Server {
 
-  function __construct($filename) {
-    $this->configure($filename);
-    
-  }
-  
   function main() {
     foreach ($this->config->pages as $name => $pattern) {
       if (($vars = $this->checkPattern($pattern))) {
