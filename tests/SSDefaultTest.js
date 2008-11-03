@@ -33,7 +33,7 @@ var SSDefaultTest = new Class({
   testDivide: function()
   {
     this.doc("Test dividing two values and assert correct sum.");
-    this.assertThrows(TestCaseTestDivideByZeroException, TestCaseDivide, 5, 0);
+    this.assertThrows(TestCaseTestDivideByZeroException, TestCaseDivide, [5, 0]);
   },
 
   testSubtract: function()
