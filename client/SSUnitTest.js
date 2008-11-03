@@ -5,6 +5,28 @@
 // @dependencies      SSException
 // ==/Builder==
 
+// ==============
+// = Utilities =
+// ==============
+
+Array.implement({
+  copy: function()
+  {
+    var results = [];
+    for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
+    return results;
+  }
+});
+
+String.implement({
+  repeat: function(times) 
+  {
+    var result = "";
+    for(var i = 0; i < times; i++) result += this;
+    return result;
+  }
+});
+
 // =============
 // = NameSpace =
 // =============
@@ -152,7 +174,15 @@ SSUnit.TestIterator = new Class({
   run: function()
   {
     this.fireEvent('onStart', {type:this.type(), name:this.name, ref:this});
-    this.runTest(this.runningTests().shift());
+    var first = this.runningTests().shift();
+    if(first != null) 
+    {
+      this.runTest(first);
+    }
+    else
+    {
+      throw new SSUnitTest.Error(new Error(), "No tests to run");
+    }
   }
   
 });
@@ -211,15 +241,18 @@ var SSUnitTestClass = new Class({
   main: function(options)
   {
     // set a formatter
-    if(options.formatter)
+    if(options != null)
     {
-      this.setFormmatter(options.formatter);
-    }
-    
-    // output results on the fly don't wait till the end
-    if(options.interactive)
-    {
-      this.setInteractive(options.interactive);
+      if(options.formatter)
+      {
+        this.setFormatter(options.formatter);
+      }
+
+      // output results on the fly don't wait till the end
+      if(options.interactive)
+      {
+        this.setInteractive(options.interactive);
+      }
     }
     
     this.run();
@@ -270,20 +303,27 @@ var SSUnitTest = new SSUnitTestClass()
 // ==============
 
 SSUnitTest.Error = new Class({
+  name: 'SSUnitTest.Error',
+  
   Extends: SSException,
   
   initialize: function(_error, message)
   {
     this.parent(_error);
     this.setMessage(message);
+  },
+  
+  toString: function()
+  {
+    return this.parent();
   }
 });
 
-SSUnitTest.AssertError = new Class({Extends: SSUnitTest.Error});
-SSUnitTest.AssertEqualError = new Class({Extends: SSUnitTest.Error});
-SSUnitTest.AssertNotEqualError = new Class({Extends: SSUnitTest.Error});
-SSUnitTest.AssertThrowsError = new Class({Extends: SSUnitTest.Error});
-SSUnitTest.NoFormatter = new Class({Extends: SSUnitTest.Error});
+SSUnitTest.AssertError = new Class({name:'SSUnitTest.AssertError', Extends: SSUnitTest.Error});
+SSUnitTest.AssertEqualError = new Class({name:'SSUnitTest.AssertEqualError', Extends: SSUnitTest.Error});
+SSUnitTest.AssertNotEqualError = new Class({name:'SSUnitTest.AssertNotEqualError', Extends: SSUnitTest.Error});
+SSUnitTest.AssertThrowsError = new Class({name:'SSUnitTest.AssertThrowsError', Extends: SSUnitTest.Error});
+SSUnitTest.NoFormatter = new Class({name:'SSUnitTest.NoFormatter', Extends: SSUnitTest.Error});
 
 // =======================
 // = SSUnitTest.TestCase =
@@ -579,7 +619,8 @@ SSUnitTest.TestCase = new Class({
       }
       catch(err)
       {
-        throw new SSUnitTest.Error(err, "Uncaught exception in test.");
+        console.error("Uncaught exception in test " + testName + " in testcase " + this.name + '.');
+        console.error(err);
       }
       
       // default to success, if the test failed this won't do anything

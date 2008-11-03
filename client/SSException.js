@@ -40,7 +40,7 @@ var SSException = new Class({
   
   toString: function()
   {
-    return ["[SSException] message:", this.message(), " fileName:", this.fileName(), " lineNumber:", this.lineNumber(), " objectId:", this.objectId].join(", ");
+    return ["["+this.name+"] message: " + this.message(), " fileName:" + this.fileName(), " lineNumber: " + this.lineNumber(), this.originalError().message].join(", ");
   }
   
 });

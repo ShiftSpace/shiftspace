@@ -244,7 +244,7 @@ var ShiftSpace = new (function() {
 
     // {SystemBasePackages}
     // INCLUDE IframeHelpers.js
-    // INCLUDE Exception.js
+    // INCLUDE SSException.js
     // INCLUDE PinHelpers.js
     // INCLUDE SSViewProxy.js
     // INCLUDE LocalizedStringsSupport.js
