@@ -4,10 +4,19 @@
 // @package           System
 // ==/Builder==
 
+var SSExceptionPrinter = new Class({
+  toString: function()
+  {
+    return ["["+this.name+"] message: " + this.message(), " fileName:" + this.fileName(), " lineNumber: " + this.lineNumber(), this.originalError().message].join(", ");
+  }
+});
+
 var SSException = new Class({
   
   name: 'SSException',
-  
+
+  Implements: SSExceptionPrinter,
+    
   initialize: function(_error)
   {
     this.theError = _error;
@@ -15,7 +24,7 @@ var SSException = new Class({
   
   setMessage: function(msg)
   {
-    this.__message__ = msg;
+    this.__message__ = msg; 
   },
   
   message: function()
@@ -36,11 +45,6 @@ var SSException = new Class({
   originalError: function()
   {
     return this.theError;
-  },
-  
-  toString: function()
-  {
-    return ["["+this.name+"] message: " + this.message(), " fileName:" + this.fileName(), " lineNumber: " + this.lineNumber(), this.originalError().message].join(", ");
   }
   
 });

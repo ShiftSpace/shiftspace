@@ -304,26 +304,44 @@ var SSUnitTest = new SSUnitTestClass()
 
 SSUnitTest.Error = new Class({
   name: 'SSUnitTest.Error',
-  
   Extends: SSException,
-  
+  Implements: SSExceptionPrinter,
   initialize: function(_error, message)
   {
     this.parent(_error);
     this.setMessage(message);
-  },
-  
-  toString: function()
-  {
-    return this.parent();
   }
 });
 
-SSUnitTest.AssertError = new Class({name:'SSUnitTest.AssertError', Extends: SSUnitTest.Error});
-SSUnitTest.AssertEqualError = new Class({name:'SSUnitTest.AssertEqualError', Extends: SSUnitTest.Error});
-SSUnitTest.AssertNotEqualError = new Class({name:'SSUnitTest.AssertNotEqualError', Extends: SSUnitTest.Error});
-SSUnitTest.AssertThrowsError = new Class({name:'SSUnitTest.AssertThrowsError', Extends: SSUnitTest.Error});
-SSUnitTest.NoFormatter = new Class({name:'SSUnitTest.NoFormatter', Extends: SSUnitTest.Error});
+SSUnitTest.AssertError = new Class({
+  name:'SSUnitTest.AssertError', 
+  Extends: SSUnitTest.Error,
+  Implements: SSExceptionPrinter
+});
+
+SSUnitTest.AssertEqualError = new Class({
+  name:'SSUnitTest.AssertEqualError', 
+  Extends: SSUnitTest.Error,
+  Implements: SSExceptionPrinter
+});
+
+SSUnitTest.AssertNotEqualError = new Class({
+  name:'SSUnitTest.AssertNotEqualError', 
+  Extends: SSUnitTest.Error,
+  Implements: SSExceptionPrinter
+});
+
+SSUnitTest.AssertThrowsError = new Class({
+  name:'SSUnitTest.AssertThrowsError', 
+  Extends: SSUnitTest.Error,
+  Implements: SSExceptionPrinter
+});
+
+SSUnitTest.NoFormatter = new Class({
+  name:'SSUnitTest.NoFormatter', 
+  Extends: SSUnitTest.Error,
+  Implements: SSExceptionPrinter
+});
 
 // =======================
 // = SSUnitTest.TestCase =
