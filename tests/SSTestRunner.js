@@ -58,6 +58,9 @@ var SSTestRunner = new Class({
       method: "get",
       onComplete: function(responseText, responseXML)
       {
+        // reset the SSUnitTest
+        SSUnitTest.reset();
+        
         // evaluate test
         eval(responseText);
         
@@ -69,11 +72,9 @@ var SSTestRunner = new Class({
         $('SSSandalphonContainer').empty();
         
         // run all the tests
+
+        SSUnitTest.setFormatter(new SSUnitTest.ResultFormatter.BasicDOM($('SSSandalphonContainer')));
         SSUnitTest.main({interactive:true});
-        console.log('outputting')
-        SSUnitTest.outputResults(new SSUnitTest.ResultFormatter.BasicDOM($('SSSandalphonContainer')));
-        //SSUnitTest.outputResults();
-        SSUnitTest.reset();
         
       }.bind(this),
       onFailure: function(responseText, responseXML)

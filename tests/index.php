@@ -9,7 +9,7 @@
     <!-- Load mootools script files -->
     <script src="../mootools/mootools-1.2-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="../mootools/mootools-1.2-more.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../client/Exception.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../client/SSException.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
     <script src="SSTestRunner.js" type="text/javascript" charset="utf-8"></script>
     <script src="init.js" type="text/javascript" charset="utf-8"></script>
