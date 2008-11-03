@@ -419,6 +419,8 @@ SSUnitTest.TestCase = new Class({
     Parameters:
       exception - an exception class.
       fn - a function to call. Remember to bind if passing in a method of an object.
+      args - a single parameter or an array of parameter.
+      hook - for asynchronous calls.
       
     Example:
       (start code)
@@ -428,15 +430,13 @@ SSUnitTest.TestCase = new Class({
       }
       (end)
   */
-  assertThrows: function(exception, fn)
+  assertThrows: function(exception, fn, args, hook)
   {
-    if(arguments.length < 2) throw new SSUnitTest.AssertThrowsError(new Error(), 'assertThrows expects 2 arguments.');
+    if(arguments.length < 2) throw new SSUnitTest.AssertThrowsError(new Error(), 'assertThrows expects at least 2 arguments.');
     
-    // convert the argument list into an array
-    var varargs = $A(arguments);
     // grab the remaining arguments
-    var testArgs = varargs.slice(2, varargs.length);
-    var caller = arguments.callee.caller;
+    var testArgs = $splat(args);
+    var caller = $pick(hook, arguments.callee.caller);
     
     try
     {
@@ -462,6 +462,7 @@ SSUnitTest.TestCase = new Class({
       
     Parameters:
       value - a value.
+      hook - for async calls.
       
     Example:
       (start code)
@@ -471,11 +472,11 @@ SSUnitTest.TestCase = new Class({
       }
       (end)
   */
-  assert: function(value)
+  assert: function(value, hook)
   {
     if(arguments.length < 1) throw new SSUnitTest.AssertError(new Error(), 'assert expects 1 arguments.');
 
-    var caller = arguments.callee.caller;
+    var caller = $pick(hook, arguments.callee.caller);
     
     if(value == true)
     {
@@ -495,6 +496,7 @@ SSUnitTest.TestCase = new Class({
     Parameters:
       a - a value.
       b - a value.
+      hook - for async calls.
       
     Example:
       (start code)
@@ -508,11 +510,11 @@ SSUnitTest.TestCase = new Class({
     See Also:
         assertNotEqual
   */
-  assertEqual: function(a, b)
+  assertEqual: function(a, b, hook)
   {
     if(arguments.length < 2) throw new SSUnitTest.AssertEqualError(new Error(), 'assertEqual expects 2 arguments.');
 
-    var caller = arguments.callee.caller;
+    var caller = $pick(hook, arguments.callee.caller);
     
     if(a == b)
     {
@@ -532,6 +534,7 @@ SSUnitTest.TestCase = new Class({
     Parameters:
       a - a value.
       b - a value.
+      hook - for async calls.
       
     Example:
       (start code)
@@ -545,11 +548,11 @@ SSUnitTest.TestCase = new Class({
     See Also:
         assertEqual
   */
-  assertNotEqual: function(a, b)
+  assertNotEqual: function(a, b, hook)
   {
     if(arguments.length < 2) throw new SSUnitTest.AssertNotEqualError(new Error(), 'assertNotEqual expects 2 arguments.');
 
-    var caller = arguments.callee.caller;
+    var caller = $pick(hook, arguments.callee.caller);
     
     if(a != b)
     {
@@ -697,13 +700,13 @@ SSUnitTest.TestCase = new Class({
   {
     var data = this.__dataForTest__(arguments.callee.caller);
     data.set('async', true);
-    return data;
+    return data.get('function');
   },
   
   
   endAsync: function(ref)
   {
-    this.__onComplete__(ref);
+    this.__onComplete__(this.__dataForTest__(ref));
   },
   
   
