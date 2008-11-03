@@ -43,6 +43,11 @@ SSUnit.Base = new Class({
 
   name: "SSUnit.Base",
 
+  /*
+    Function: doc
+      Sets the documentation for a fixture.  This takes effect at the test run time.
+      This function should be run before anything else in the fixture.
+  */
   doc: function(string)
   {
     var docs = this.__getDocs__();
@@ -86,7 +91,11 @@ SSUnit.Base = new Class({
 
 });
 
-
+/*
+  Class: SSUnit.TestIterator
+    Methods for iterating over tests.  Tests must fire 'onComplete' events for this class to work.
+    The SSUnitTest singleton, and SSUnitTest.TestSuite implement this.
+*/
 SSUnit.TestIterator = new Class({
   
   Implements: [Events, Options],
@@ -108,21 +117,33 @@ SSUnit.TestIterator = new Class({
     this.__tests = tests;
   },
   
-
+  /*
+    Function: tests
+      Returns all collected tests.
+  */
   tests: function()
   {
     if(!this.__tests) this.setTests([]);
     return this.__tests;
   },
   
-  
+  /*
+    Functions: reset
+      Resets the internal array of collected tests.
+  */
   reset: function()
   {
     this.setTests([]);
     delete this.__runningTests;
   },
   
-  
+  /*
+    Function: addTest
+      Adds a test to the internal array
+      
+    Parameters:
+      _aTest - SSUnitTest.TestSuite/TestCase instance.
+  */
   addTest: function(_aTest)
   {
     // interesting class is a type
@@ -170,7 +191,10 @@ SSUnit.TestIterator = new Class({
     return this.__runningTests;
   }, 
   
-  
+  /*
+    Function: run
+      Runs all of the tests in the internal tests array.
+  */
   run: function()
   {
     this.fireEvent('onStart', {type:this.type(), name:this.name, ref:this});
@@ -722,12 +746,6 @@ SSUnitTest.TestCase = new Class({
   endAsync: function(ref)
   {
     this.__onComplete__(this.__dataForTest__(ref));
-  },
-  
-  
-  __hasAsyncTests__: function()
-  {
-    return this.__hasAsyncTests;
   },
   
   
