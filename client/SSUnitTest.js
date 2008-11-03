@@ -645,7 +645,7 @@ SSUnitTest.TestCase = new Class({
       }
       
       // default to success, if the test failed this won't do anything
-      this.__setTestSuccess__(testData.function);
+      this.__setTestSuccess__(testData['function']);
       
       // catch an errors in tearDown, bail if there are any
       try
@@ -743,9 +743,9 @@ SSUnitTest.TestCase = new Class({
   __collectResults__: function()
   {
     var passed = this.__tests.getValues().filter(function(x){return x.success});
-    var passedTests = passed.map(function(x){return this.__nameForFunction__(x.function)}.bind(this));
+    var passedTests = passed.map(function(x){return this.__nameForFunction__(x['function'])}.bind(this));
     var failed = this.__tests.getValues().filter(function(x){return !x.success});
-    var failedTests = failed.map(function(x){return this.__nameForFunction__(x.function)}.bind(this));
+    var failedTests = failed.map(function(x){return this.__nameForFunction__(x['function'])}.bind(this));
     
     // collect data about each individual test
     this.__tests.each(function(testData, testName) {
