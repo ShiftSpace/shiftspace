@@ -424,9 +424,6 @@ SSUnitTest.TestCase = new Class({
     // collect all the tests and build metadata
     this.__collectTests__();
     this.__runTests__();
-    
-    // collect when all is done
-    this.__collectResults__();
   },
   
   
