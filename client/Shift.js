@@ -14,6 +14,11 @@
     you want when ShiftSpace calls these methods based on user interaction with the shift menu and the shift console.
 */
 ShiftSpace.Shift = new Class({
+  
+  name: 'ShiftSpace.Shift',
+  
+  Implements: [Events, Options],
+
   getDefaults: function()
   {
     return {};
@@ -180,7 +185,8 @@ ShiftSpace.Shift = new Class({
       The shift should present it's editing interface.  Puts the shift into editing mode.  Be sure to call this.parent()
       if you override this method.
   */
-  edit: function() {
+  edit: function() 
+  {
     this.setIsBeingEdited(true);
   },
 
@@ -346,7 +352,8 @@ ShiftSpace.Shift = new Class({
     Function : focus
       Tell ShiftSpace we want to focus this shift.
   */
-  focus : function() {
+  focus : function() 
+  {
     this.fireEvent('onShiftFocus', this.getId() );
   },
 
@@ -360,7 +367,8 @@ ShiftSpace.Shift = new Class({
     Function: unfocus
       Tell ShiftSpace we want to blur this shift.
   */
-  blur : function() {
+  blur : function() 
+  {
     this.setIsBeingEdited(false);
     this.fireEvent('onShiftBlur', this.getId() );
   },
@@ -822,6 +830,3 @@ ShiftSpace.Shift = new Class({
     SSXmlHttpRequest.safeCall(config);
   }
 });
-
-ShiftSpace.Shift.implement( new Options );
-ShiftSpace.Shift.implement( new Events );

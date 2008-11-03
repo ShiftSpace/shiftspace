@@ -17,6 +17,11 @@
     not the developer.  To get a better understanding of this please refer to the ShiftSpace tutorial.
 */
 ShiftSpace.Space = new Class({
+  
+  name: 'ShiftSpace.Space',
+  
+  Implements: [Events, Options],
+
   attributes : {},
 
   /*
@@ -1074,6 +1079,3 @@ ShiftSpace.Space = new Class({
   }
 
 });
-
-ShiftSpace.Space.implement( new Options );
-ShiftSpace.Space.implement( new Events );
