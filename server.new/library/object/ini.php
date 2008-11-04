@@ -57,7 +57,7 @@ class Ini_Object extends Object {
     } else if (empty($file)) {
       throw new Exception("Cannot save without a file parameter.");
     }
-    if (!is_writable(dirname($file)) ||
+    if (!file_exists($file) && !is_writable(dirname($file)) ||
         file_exists($file) && !is_writable($file)) {
       throw new Exception("Could not save config file '$file'.");
     }

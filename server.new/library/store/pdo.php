@@ -29,12 +29,7 @@ class PDO_Store extends Store {
         $this->setupTable($table, $value);
       }
     }
-    $server = $this->config['_server'];
-    $name = $this->config['_name'];
-    $config = $server->_config->get("store:$name");
-    $config['setup'] = true;
-    $server->_config->set("store:$name", $config);
-    $server->_config->save();
+    $this->saveSetupConfig();
   }
   
   

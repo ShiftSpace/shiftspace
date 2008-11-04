@@ -5,18 +5,18 @@ class Server extends Base {
   static private $instance;
   
   public function __construct($filename) {
-    $this->_config = new Ini_Object(BASE_DIR . "/config/$filename");
-    $this->_stores = array();
-    foreach ($this->_config->get() as $key => $value) {
+    $this->config = new Ini_Object(BASE_DIR . "/config/$filename");
+    $this->stores = array();
+    foreach ($this->config->get() as $key => $value) {
       if (preg_match('/^store:(\w+)$/', $key, $matches)) {
         list(, $storeName) = $matches;
-        $this->_stores[$storeName] = $value;
+        $this->stores[$storeName] = $value;
       } else if (preg_match('/^store:(\w+):(\w+)$/', $key, $matches)) {
         list(, $storeName, $table) = $matches;
-        $this->_stores[$storeName]["vars:$table"] = $value;
+        $this->stores[$storeName]["vars:$table"] = $value;
       }
     }
-    foreach ($this->_stores as $name => $config) {
+    foreach ($this->stores as $name => $config) {
       $config['_server'] = $this;
       $config['_name'] = $name;
       $this->$name = Store::factory($config);
@@ -24,9 +24,11 @@ class Server extends Base {
   }
   
   static public function singleton($filename) {
+    $name = substr($filename, 0, -4);
     if (!isset(self::$instance)) {
       try {
-        $class = substr($filename, 0, -4) . '_Server';
+        $class = $name . '_Server';
+        define('BASE_SERVER', strtolower($name));
         self::$instance = new $class($filename);
       } catch (Exception $e) {
         $class = 'Server';

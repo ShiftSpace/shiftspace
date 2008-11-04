@@ -10,15 +10,14 @@ if (!function_exists('__autoload')) {
       $filename = "$class/$class.php";
     } else {
       $path = explode('_', $class);
-      $filename = implode('/', array_reverse($path)) . '.php';
+      if (!defined('BASE_SERVER') || strtolower($path[0]) != BASE_SERVER) {
+        $path = array_reverse($path);
+      }
+      $filename = implode('/', $path) . '.php';
     }
     $filename = strtolower($filename);
     if (file_exists(BASE_DIR . "/library/$filename")) {
       require_once BASE_DIR . "/library/$filename";
-    }
-    if (!class_exists($class) && isset($path)) {
-      $class = array_shift($path);
-      __autoload($class);
     }
   }
 }
@@ -60,7 +59,11 @@ class Base {
     if (method_exists($this, $method)) {
       return $this->$method($options);
     } else if (is_subclass_of($this, 'Object')) {
-      return $this->contents['values'][$key];
+      if (isset($this->contents['values'][$key])) {
+        return $this->contents['values'][$key];
+      } else {
+        return null;
+      }
     } else {
       return $this->$key;
     }

@@ -2,12 +2,25 @@
 
 class Website_Server extends Server {
 
+  public $defaultClass = 'Page_Object';
+  
   function main() {
+    header('Content-type: text/html; charset=utf-8');
     foreach ($this->config->pages as $name => $pattern) {
-      if (($vars = $this->checkPattern($pattern))) {
-        $this->page = new Page_Object($name, $vars);
-        echo $this->page;
-        return;
+      if (($vars = $this->checkPattern($pattern)) !== false) {
+        $pagePath = BASE_DIR . '/library/' . BASE_SERVER . "/$name.php";
+        if (file_exists($pagePath)) {
+          require_once $pagePath;
+        }
+        $class = $this->defaultClass;
+        if (class_exists("{$name}_Page")) {
+          $class = "{$name}_Page";
+        }
+        $this->page = new $class($name, $vars);
+        if ($this->page->exists($pattern)) {
+          echo $this->page->main();
+          return;
+        }
       }
     }
     echo "Not found.";

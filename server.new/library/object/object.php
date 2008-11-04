@@ -6,6 +6,12 @@ class Object extends Base {
     'values' => array()
   );
   
+  public function __construct($template = false) {
+    if (!empty($template)) {
+      $this->template = $this->loadTemplate($template);
+    }
+  }
+  
   static public function factory($options) {
     if (is_string($options)) {
       $options = array(
@@ -66,6 +72,18 @@ class Object extends Base {
       unset($this->contents[$key]);
     } else {
       unset($this->contents['values'][$key]);
+    }
+  }
+  
+  function loadTemplate($filename) {
+    return file_get_contents(BASE_DIR . "/public/markup/$filename");
+  }
+  
+  public function __toString() {
+    if (isset($this->template)) {
+      return $this->substitute($this->template);
+    } else {
+      return '';
     }
   }
   
