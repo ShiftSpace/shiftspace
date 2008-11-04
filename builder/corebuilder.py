@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Builds a custom ShiftSpace core file from a config file, handles depedencies
+# Builds a custom ShiftSpace core file from a config file, handles dependencies
 
 #import json # only available in Python >= 2.6 
 import os
@@ -8,6 +8,7 @@ import sys
 import re
 import getopt
 import simplejson as json # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
+
 from SSPackageSorter import SSPackageSorter
 
 # Exceptions ==============================
@@ -20,195 +21,64 @@ class SSError(Exception):
 class NoNameError(SSError): pass
 class NoSuchFileError(SSError): pass
 class NoSuchPackage(SSError): pass
-
-# Utilities ===============================
-
-
+class BuilderDirectiveNotClosed(SSError): pass
 
 # SSCoreBuilder ===========================
 
 class SSCoreBuilder():
 
   def __init__(self):
-    self.buildDefinitions = {}
-    self.packages = {}
-    self.names = {}
-    self.metadata = {}
-    self.requiredFiles = []
-    self.optionalFile = []
+    self.BUILDER_BEGIN_PATTERN = re.compile("\/\/\s*==Builder==")
+    self.BUILDER_END_PATTERN = re.compile("\/\/\s*==\/Builder==")
+    self.DIRECTIVE_PATTERN = re.compile("\/\/\s*@([^\s]*)\s*(.*)")
+    self.DIRECTIVES_WITH_MULTIPLE_VALUES = ["dependencies"]
 
-    # regex for checking for a build definition
-    # TODO: the following should be allow for Unicode characters
-    self.builderPattern = re.compile('\/\/\s*==\s*Builder\s*==[\sA-Za-z0-9@.=/,_]*\/\/\s*==\s*/Builder\s*==', re.MULTILINE)
-    self.namePattern = re.compile('@name\s*[A-Za-z0-9_.]*')
-    self.requiredPattern = re.compile('@required\s*[A-Za-z0-9_.]*')
-    self.optionalPattern = re.compile('@optional\s*[A-Za-z0-9_.]*')
-    self.testPattern = re.compile('@test\s*[A-Za-z0-9_.]*')
-    self.packagePattern = re.compile('@package\s*[A-Za-z0-9_.]*')
-    self.suitePattern = re.compile('@suite\s*[A-Za-z0-9_.]*')
-    self.dependenciesPattern = re.compile('@dependencies\s*[A-Za-z0-9_.,\s]*')
-    self.sorter = SSPackageSorter(self)    
+#    self.sorter = SSPackageSorter(self)    
 
 
   def parseFile(self, path):
     """
     Parse all of the relevant files.
     """
-    self.hasBuildDefinition(path)
 
-
-  def hasBuildDefinition(self, path):
-    """
-    Check if a file has a build definition.
-    """
-
-    # store a description for this file
     fileName = os.path.basename(path)
     fileHandle = open(path)
-    contents = fileHandle.read()
-    match = self.builderPattern.search(contents)
 
-    if match:
-      # grab the build description
-      builderDescription = self.substringForMatch(contents, match)
-      # parse the description
-      self.buildMetadataForFile(path, builderDescription)
-    else:
-      #print "No description for %s" % fileName
-      pass
+    for line in fileHandle:
+      if self.BUILDER_BEGIN_PATTERN.match(line.strip()):
+        # we found the beginning of the header. now go parse it
+        directives = self.parseDirectives(fileHandle);
+        self.metadata[directives["name"]] = directives;
+        break;
 
     fileHandle.close()
 
 
-  def buildMetadataForFile(self, path, builderDescription):
+  def parseDirectives(self, fileHandle):
     """
-    Construct metadata for each file based on the builder description.
+    Parse all directives -- @<directive> <list of values>
     """
 
-    # get the name
-    name = self.parseNameDirective(builderDescription)
+    directives = {}
 
-    # if name, parse the directives
-    if name:
-      # get the actual file name
-      #rname = os.path.basename(path)['name']
-      # add it to internal array
-      self.metadata[name] = {}
-      self.metadata[name]['path'] = path
+    for line in fileHandle:
+      # check if we are done with the metadata header
+      if self.BUILDER_END_PATTERN.match(line.strip()):
+        return directives;
 
-      # get optional directive
-      optional = self.parseOptionalDirective(builderDescription)
-      if optional != None:
-        self.metadata[name]['optional'] = True
+      # match a directive line
+      match = self.DIRECTIVE_PATTERN.match(line.strip())
+      if match:
+        directive = match.group(1);
+        value = match.group(2);
 
-      # get the required directive
-      required = self.parseRequiredDirective(builderDescription)
-      if required != None:
-        self.metadata[name]['required'] = True
+        # if can have multiple values, split it
+        if directive in self.DIRECTIVES_WITH_MULTIPLE_VALUES:
+          value = [x.strip() for x in value.split(',')]
 
-      if optional == None and required == None:
-        self.metadata[name]['optional'] = True
+        directives[directive] = value;
 
-      # get the dependencies
-      dependencies = self.parseDependenciesDirective(builderDescription)
-      # set it to an empty array for SSPackageSorter
-      if dependencies == None:
-        dependencies = []
-
-      # check to see if this is a test
-      isTest = self.parseTestDirective(builderDescription)
-      if isTest:
-        print "Found a test %s" % path
-        self.metadata[name]['test'] = True
-        # check for suite
-        suite = self.parseTestSuiteDirective(builderDescription)
-        if suite:
-          self.metadata[name]['suite'] = suite
-      
-      self.metadata[name]['dependencies'] = dependencies
-
-      # get the package directive
-      package = self.parsePackageDirective(builderDescription)
-
-      if package:
-        # check if this package already exists
-        if not self.packages.has_key(package) or self.packages[package] == None:
-          self.packages[package] = []
-
-        # add the name of the file to the package 
-        self.packages[package].append(name)
-        self.metadata[name]['package'] = package
-
-    else:
-      # raise an error if no file name
-      print "No name for %s" % path
-      raise NoNameError(self)
-
-
-  def metadataForFile(self, name):
-    """
-    Returns the metadata for a particular file.
-    """
-    metadata = None
-    
-    try:
-      metadata = self.metadata[name]
-    except:
-      print "metadataForFile error: %s" % name
-      raise NoSuchFileError(self)
-
-    return metadata
-
-
-  def packageForFile(self, name):
-    """
-    Returns the package that a file belongs to.
-    """
-    metadata = self.metadataForFile(name)
-
-    if metadata.has_key('package') and metadata['package'] != None:
-      return self.packageForName(metadata['package'])
-    else:
-      return []
-
-
-  def packageForName(self, name):
-    """
-    Returns the package for a particular name.
-    """
-    return self.packages[name]
-
-
-  def dependenciesFor(self, file, excludeNonPackageFiles=True):
-    """
-    Returns the dependencies for a particular file. Excludes files in the file's own package by default.
-    """
-    deps = self.dependenciesForFile(file)
-    if not excludeNonPackageFiles:
-      return deps
-    packageFiles = self.packageForFile(file)
-    return [f for f in deps if self.listContains(packageFiles, f)]
-
-
-  def listContains(self, list, obj):
-    """
-    Convenience method for checking if an object exists in a list.
-    """
-    try:
-      idx = list.index(obj)
-      return True
-    except:
-      return False
-
-
-  def dependenciesForFile(self, name):
-    """
-    Returns the dependency list for a particular file.
-    """
-    deps = []
-    if (self.metadataForFile(name)).has_key('dependencies'):
-      deps = (self.metadataForFile(name))['dependencies']
-    return deps
+    raise BuilderDirectiveNotClosed(self)
 
 
   def isDirectoryOrJsFile(self, path):
@@ -220,99 +90,6 @@ class SSCoreBuilder():
              os.path.splitext(path)[1] == '.js'))
 
 
-  def substringForMatch(self, string, match):
-    """
-    Utility method takes a regex match result and a string and returns the matching 
-    portion.
-    """
-    if match:
-      span = match.span()
-      return string[span[0]:span[1]]
-    return None
-
-  
-  def substringForPattern(self, string, pattern):
-    """
-    Utility method that tages a compiled regex pattern and returns the first match
-    in the string.
-    """
-    return self.substringForMatch(string, pattern.search(string))
-
-
-  def parseRequiredDirective(self, builderDescription):
-    """
-    Parse the required directive in a builder description.
-    Returns None or a match.
-    """
-    return self.requiredPattern.search(builderDescription)
-
-
-  def parseOptionalDirective(self, builderDescription):
-    """
-    Parse the optional directive in a builder description.
-    Returns None or a match.
-    """
-    return self.optionalPattern.search(builderDescription)
-
-
-  def parseTestDirective(self, builderDescription):
-    """
-    Parse the test directive in a builder description.
-    Returns None or a match.
-    """
-    return self.testPattern.search(builderDescription)
-
-
-  def parseNameDirective(self, builderDescription):
-    """
-    Parse the name directive in a builder description.
-    Returns None or a match.
-    """
-    nameString = self.substringForPattern(builderDescription, self.namePattern)
-    if nameString:
-      return nameString[len("@name"):len(nameString)].strip()
-
-    return None
-
-
-  def parsePackageDirective(self, builderDescription):
-    """
-    Parses a package directive from a builder description.
-    """
-    packageString = self.substringForPattern(builderDescription, self.packagePattern)
-
-    if packageString:
-      return packageString[len("@package"):len(packageString)].strip()
-
-    return None
-
-
-  def parseTestSuiteDirective(self, builderDescription):
-    """
-    Parses a test suite directive from a builder description.
-    """
-    suiteString = self.substringForPattern(builderDescription, self.testPattern)
-
-    if suiteString:
-      return suiteString[len("@suite"):len(suiteString)].strip()
-
-    return None
-
-  
-  def parseDependenciesDirective(self, builderDescription):
-    """
-    Parse a dependency description from a builder description.
-    """
-    depsString = self.substringForPattern(builderDescription, self.dependenciesPattern)
-
-    if depsString:
-      # get the dependency names and strip each of white space
-      dependencies = [name.strip()
-                      for name in depsString[len("@dependencies"):len(depsString)].split(',')]
-      return dependencies
-    
-    return None
-    
 
   def parseDirectory(self, dir, recurse=False):
     """
@@ -346,7 +123,7 @@ class SSCoreBuilder():
 
     # create dictionary to hold file data as well as package data
     packageDict = {}
-    packageDict['packages'] = self.packages
+#    packageDict['packages'] = self.packages
     packageDict['files'] = self.metadata
     
     # get a json dump
@@ -365,6 +142,7 @@ class SSCoreBuilder():
     """
     Returns a list of files that have particular dependency
     """
+
     filesWithDependency = []
     for fileName, metadata in self.metadata.items():
       if self.sorter.isInDependencyTree(fileName, name):
@@ -374,28 +152,22 @@ class SSCoreBuilder():
 
   def build(self, path, recurse=False):
     """
-    Creats all the internal data structures and sorts all found packages.
+    Creates all the internal data structures and sorts all found packages.
     """
+
+    self.metadata = {};
     # build all the internal data structures
     self.parseDirectory(path, recurse)
     # sort the internal package data structure
-    self.sortPackages()
+    #self.sortPackages()
 
 
   def buildTarget(self, packageJSON):
     """
     Build a target based on the package description.
     """
+
     pass
-
-
-# testing function
-b = None
-def test():
-  global b
-  b = SSCoreBuilder()
-  b.build(path="/Users/davidnolen/Sites/shiftspace-0.5/", recurse=True)
-  b.writePackagesJSON(writeToFile=False)
 
 
 def usage():
