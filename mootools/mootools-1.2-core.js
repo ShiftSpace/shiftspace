@@ -457,6 +457,14 @@ Array.implement({
 		}
 		return -1;
 	},
+	
+	// CHANGE: I added this - David
+	copy: function()
+	{
+	  var results = [];
+	  for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
+	  return results;
+	},
 
 	map: function(fn, bind){
 		var results = [];
@@ -559,7 +567,6 @@ Array.implement({
 		}
 		return (array) ? hex : '#' + hex.join('');
 	}
-
 });
 
 /*
@@ -751,7 +758,16 @@ String.implement({
 			if (match.charAt(0) == '\\') return match.slice(1);
 			return (object[name] != undefined) ? object[name] : '';
 		});
-	}
+	},
+	
+	// CHANGE: I added this - David
+  repeat: function(times) {
+    var result = "";
+    for(var i = 0; i < times; i++) {
+      result += this;
+    }
+    return result;
+  }
 
 });
 
@@ -1289,7 +1305,7 @@ var IFrame = new Native({
 				if(!win.Element.prototype) win.Element.prototype = {}; // CHANGE: fix for GM and MT1.2 IFrames - David
 				$extend(win.Element.prototype, Element.Prototype);
 			}
-			console.log('DONE!');
+			//console.log('DONE!');
 			onload.call(iframe.contentWindow, iframe.contentWindow.document);
 		};
 		(!window.frames[props.id]) ? iframe.addListener('load', onFrameLoad) : onFrameLoad();
