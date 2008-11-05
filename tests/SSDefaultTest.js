@@ -4,12 +4,18 @@
 // @suite       SSDefaultTestSuite
 // ==/Builder==
 
-var TestCaseTestDivideByZeroException = new Class({Extends:SSException});
+var TestCaseTestDivideByZeroException = new Class({
+  name: 'TestCaseTestDivideByZeroException',
+  Extends:SSException,
+  Implements:SSExceptionPrinter
+});
 
 function TestCaseDivide(x, y)
 {
-  if(y == 0) throw new TestCaseTestDivideByZeroException(new Error());
+  if(y == 0) throw new TestCaseTestDivideByZeroException(new Error(), "Oops! Division by zero!");
+  return x/y;
 }
+
 
 var SSDefaultTest = new Class({
   
@@ -32,7 +38,7 @@ var SSDefaultTest = new Class({
 
   testDivide: function()
   {
-    this.doc("Test dividing two values and assert correct sum.");
+    this.doc("Division by zero should throw TestCaseTestDivideByZeroException.");
     this.assertThrows(TestCaseTestDivideByZeroException, TestCaseDivide, [5, 0]);
   },
 
