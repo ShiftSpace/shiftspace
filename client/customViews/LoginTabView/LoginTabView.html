@@ -10,7 +10,7 @@
   <div class="SSContentView" autoresize="1">
     <!-- The Login Pane -->
     <div class="SSTabPane">
-      <form id="SSLoginForm" outlet="SSConsole">
+      <form id="SSLoginForm" class="LoginTabViewForm" outlet="SSConsole">
         
         <label title="User Name" class="SSLocalized">
           User Name
@@ -33,7 +33,7 @@
 
     <!-- The Sign up Pane -->
     <div class="SSTabPane">
-      <form id="SSSignUpForm">
+      <form id="SSSignUpForm" class="LoginTabViewForm">
         
         <label title="User Name" class="SSLocalized">
           User Name
@@ -63,7 +63,7 @@
 
     <!-- Start Password Pane -->
     <div class="SSTabPane">
-      <form id="SSForgottenPasswordForm">
+      <form id="SSForgottenPasswordForm" class="LoginTabViewForm">
         <div>Forgot your password? Enter your email and we'll send it to you</div>
         <input id="SSForgottenPasswordFormEmail" type="text" outlet="SSConsole"></input>
         <input id="SSForgottenPasswordFormSubmit" class="SSLocalized" type="button" title="Submit" value="Submit" outlet="SSConsole"></input>

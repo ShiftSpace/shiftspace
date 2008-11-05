@@ -1,3 +1,11 @@
+// ==Builder==
+// @uiclass
+// @optional
+// @name              SSCustomTableRow
+// @package           ShiftSpaceCoreUI
+// @dependencies      SSTableRow
+// ==/Builder==
+
 var SSCustomTableRow = new Class({
 
   name: 'SSCustomTableRow',

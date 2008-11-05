@@ -1,3 +1,11 @@
+// ==Builder==
+// @uiclass
+// @optional
+// @name              ActionMenu
+// @package           ShiftSpaceUI
+// @dependencies      SSView
+// ==/Builder==
+
 var ActionMenu = new Class({
   
   Extends: SSView,

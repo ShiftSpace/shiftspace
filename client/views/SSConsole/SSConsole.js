@@ -1,4 +1,5 @@
 // ==Builder==
+// @uiclass
 // @optional
 // @name              SSConsole
 // @package           ShiftSpaceUI
@@ -66,6 +67,7 @@ var SSConsole = new Class({
       if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
       if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
       if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
+      if(this.outlets().get('SSSetServers')) this.initSetServersForm();
     }
   },
 
@@ -131,6 +133,16 @@ var SSConsole = new Class({
 
     // listen for tabSelected events so we can clear out the login form
     this.outlets().get('LoginTabView').addEvent('tabSelected', this.handleTabSelect.bind(this));
+  },
+  
+  
+  initSetServersForm: function()
+  {
+    var apiField = this.outlets().get('SSSetApiURLField');
+    var spacesDirField = this.outlets().get('SSSetSpaceDirField');
+    
+    apiField.setProperty('value', ShiftSpace.info().server);
+    spacesDirField.setProperty('value', ShiftSpace.info().spacesDir);
   },
 
 

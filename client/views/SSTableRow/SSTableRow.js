@@ -1,4 +1,5 @@
 // ==Builder==
+// @uiclass
 // @required
 // @name              SSTableRow
 // @package           ShiftSpaceCoreUI

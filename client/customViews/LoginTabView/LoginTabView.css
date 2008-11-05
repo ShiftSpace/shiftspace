@@ -1,0 +1,21 @@
+#LoginTabView .SSContentView .SSTabPane
+{
+  height: 100%;
+  overflow-y: scroll;
+}
+
+#LoginTabView .SSTabPane form
+{
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+.LoginTabViewForm input
+{
+  display: block;
+}
+
+.LoginTabViewForm label
+{
+  display: block;
+}

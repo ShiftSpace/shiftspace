@@ -6,6 +6,7 @@
     <div title="Plugins" class="SSButton SSLocalized">Plugins</div>
     <div title="Account" class="SSButton SSLocalized">Account</div>
     <div title="Account" class="SSButton SSLocalized">Language</div>
+    <div title="Account" class="SSButton SSLocalized">Developer</div>
   </div>
 
   <div class="SSContentView">
@@ -20,6 +21,15 @@
         <option value="sv">Swedish</option>
         <option value="ko">Korean</option>
       </select>
+    </div>
+    <div id="SSSetServers" class="SSTabPane" outlet="SSConsole">
+      <form id="SSSetServersForm">
+        <label>API:</label>
+        <input id="SSSetApiURLField" type="text" name="SSSetApiURLField" outlet="SSConsole"></input>
+        <br/>
+        <label>Spaces Directory:</label>
+        <input id="SSSetSpaceDirField" type="text" name="SSSetSpaceDirField" outlet="SSConsole"></input>
+      </form>
     </div>
   </div>
 

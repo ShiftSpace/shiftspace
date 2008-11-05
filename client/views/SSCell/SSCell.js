@@ -1,4 +1,5 @@
 // ==Builder==
+// @uiclass
 // @optional
 // @name              SSCell
 // @package           ShiftSpaceCoreUI

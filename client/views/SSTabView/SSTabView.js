@@ -1,4 +1,5 @@
 // ==Builder==
+// @uiclass
 // @required
 // @name              SSTabView
 // @package           ShiftSpaceCoreUI

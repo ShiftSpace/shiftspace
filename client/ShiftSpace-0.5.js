@@ -59,15 +59,11 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogAll);
+    SSSetLogLevel(SSLogError);
 
-    // The server variable determines where to look for ShiftSpace content
-    // Check to see if the server URL is already stored
-    // permissions problem here?
-    if (typeof server == 'undefined') 
-    {
-      var server = getValue('server', 'http://www.shiftspace.org/dev/');
-    }
+    // Default to http://shiftspace.org/dev
+    var server = getValue('server', 'http://www.shiftspace.org/dev/');
+    var spacesDir = getValue('spaceDir', 'http://www.shiftspace.org/dev/spaces/');
 
     //server = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
@@ -736,6 +732,7 @@ var ShiftSpace = new (function() {
       }
       return {
         server: server,
+        spacesDir: spacesDir,
         spaces: spaceIndex.join(', '),
         version: version
       };
