@@ -66,7 +66,7 @@ var User = new Class({
   login: function(credentials, _callback) 
   {
     var callback = _callback;
-    serverCall('user.login', credentials, function(json) {
+    SSServerCall('user.login', credentials, function(json) {
       if (json.status) 
       {
         SSLog('//////////////////////////////////////////////////////////');
@@ -93,7 +93,7 @@ var User = new Class({
   {
     username = false;
     setValue('username', '');
-    serverCall('user.logout');
+    SSServerCall('user.logout');
     this.fireEvent('onUserLogout');
   },
   
@@ -103,7 +103,7 @@ var User = new Class({
   */
   join: function(userInfo, callback) 
   {
-    serverCall('user.join', userInfo, function(json) {
+    SSServerCall('user.join', userInfo, function(json) {
       if (json.status) 
       {
         username = userInfo.username;
@@ -126,7 +126,7 @@ var User = new Class({
       callback - callback function to be run when update server call is complete.
   */
   update: function(info, callback) {
-    serverCall('user.update', info, callback);
+    SSServerCall('user.update', info, callback);
   },
   
   /*
@@ -138,7 +138,7 @@ var User = new Class({
       callback - callback function to be run when resetPassword is complete.
   */
   resetPassword: function(info, callback) {
-    serverCall('user.resetPassword', info, callback);
+    SSServerCall('user.resetPassword', info, callback);
   },
   
   
@@ -154,7 +154,7 @@ var User = new Class({
     // setting the value, can't use zero because of PHP, GRRR - David
     SSSetDefaultEmailComments(newValue+1);
     
-    serverCall('user.update', {
+    SSServerCall('user.update', {
       email_comments: newValue
     }, function(json) {
       SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>> Default changed!');

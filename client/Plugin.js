@@ -62,7 +62,7 @@ ShiftSpace.Plugin = new Class({
   */
   serverCall: function(method, params, callback)
   {
-    serverCall.safeCall('plugins.'+this.attributes.name+'.'+method, params, callback);
+    SSServerCall.safeCall('plugins.'+this.attributes.name+'.'+method, params, callback);
   },
   
 

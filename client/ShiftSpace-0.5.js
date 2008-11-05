@@ -395,7 +395,7 @@ var ShiftSpace = new (function() {
       var params = {
         href: window.location.href
       };
-      serverCall('query', params, function(json) {
+      SSServerCall('query', params, function(json) {
         //SSLog('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
         if (!json.status) {
           console.error('Error checking for content: ' + json.message);
@@ -588,7 +588,7 @@ var ShiftSpace = new (function() {
         id: shiftId,
         status: newStatus
       };
-      serverCall('shift.update', params, function() {
+      SSServerCall('shift.update', params, function() {
         SSLog('>>>>>>>>>>>>>>>>>>>>>>>> shiftId ' + shiftId);
         SSFireEvent('onShiftUpdate', shiftId);
       });
@@ -1429,14 +1429,14 @@ var ShiftSpace = new (function() {
     }
 
     /*
-      Function: updateTitleOfShift
+      Function: SSUpdateTitleOfShift
         Tell the space to the update the title of the shift if necessary.
 
       Parameters:
         shiftId - a shift id.
         title - the new title.
     */
-    function updateTitleOfShift(shiftId, title)
+    function SSUpdateTitleOfShift(shiftId, title)
     {
       SSSpaceForShift(shiftId).updateTitleOfShift(shiftId, title);
       SSShowShift(shiftId);
@@ -1547,7 +1547,7 @@ var ShiftSpace = new (function() {
         {
           SSLog('Could not show shift, ' + SSDescribeException(err), SSLogError);
           var params = {id:shiftId};
-          serverCall.safeCall('shift.broken', params, function(result) {
+          SSServerCall.safeCall('shift.broken', params, function(result) {
             SSLog(result);
           });
 
@@ -1714,7 +1714,7 @@ var ShiftSpace = new (function() {
       // fetch a content from the network;
 
       var params = { shiftIds: shiftId };
-      serverCall.safeCall('shift.get', params, function(returnArray) {
+      SSServerCall.safeCall('shift.get', params, function(returnArray) {
         if(returnArray && returnArray[0])
         {
           var shiftObj = returnArray[0];
@@ -1742,7 +1742,7 @@ var ShiftSpace = new (function() {
     {
       // fetch a content from the network;
       var params = { shiftIds: shiftIds.join(',') };
-      serverCall.safeCall('shift.get', params, function(_returnArray) {
+      SSServerCall.safeCall('shift.get', params, function(_returnArray) {
         var returnArray = _returnArray;
 
         if(returnArray && returnArray.length > 0)
@@ -1825,7 +1825,7 @@ var ShiftSpace = new (function() {
       // put these together
       var params = { shiftIds: newShiftIds.join(',') };
 
-      serverCall.safeCall('shift.get', params, function(json) {
+      SSServerCall.safeCall('shift.get', params, function(json) {
         if(json.contains(null))
         {
           if(errorHandler && $type(errorHandler) == 'function')
@@ -1934,7 +1934,7 @@ var ShiftSpace = new (function() {
         params.space = space.attributes.name;
       }
 
-      serverCall.safeCall('shift.update', params, function(json) {
+      SSServerCall.safeCall('shift.update', params, function(json) {
         SSLog('returned shift.update! ' + JSON.encode(json));
         if (!json.status) {
           console.error(json.message);
@@ -1981,7 +1981,7 @@ var ShiftSpace = new (function() {
       */
 
       SSLog('saving new shift!');
-      serverCall.safeCall('shift.create', params, function(json) {
+      SSServerCall.safeCall('shift.create', params, function(json) {
         SSLog('>>>>>>>>>>>>>>>>> SAVED new shift', SSLogServerCall);
         if (!json.status)
         {
@@ -2128,7 +2128,7 @@ var ShiftSpace = new (function() {
         id: shiftId
       };
 
-      serverCall('shift.delete', params, function(json) {
+      SSServerCall('shift.delete', params, function(json) {
         if (!json.status) {
           console.error(json.message);
           return;
@@ -2638,7 +2638,7 @@ var ShiftSpace = new (function() {
     }
 
     /*
-    Function: serverCall
+    Function: SSServerCall
       Sends a request to the server.
 
     Parameters:
@@ -2646,7 +2646,7 @@ var ShiftSpace = new (function() {
       parameters - Values passed with the call (object)
       callback - (optional) A function to execute upon completion
     */
-    function serverCall(method, parameters, _callback) 
+    function SSServerCall(method, parameters, _callback) 
     {
       var callback = _callback;
       var url = server + 'shiftspace.php?method=' + method;
