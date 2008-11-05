@@ -59,7 +59,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogPlugin | SSLogError | SSLogForce);
+    SSSetLogLevel(SSLogAll);
 
     // The server variable determines where to look for ShiftSpace content
     // Check to see if the server URL is already stored
@@ -199,7 +199,10 @@ var ShiftSpace = new (function() {
     var spacePrefs = getValue('spacePrefs', {});
 
     // Each plugin and a corresponding URL of its origin
-    var installedPlugins;
+
+    var installedPlugins = {};
+    
+    /*
     if(typeof ShiftSpaceSandBoxMode == 'undefined')
     {
       // otherwise respect existing values, servers might be different
@@ -216,12 +219,11 @@ var ShiftSpace = new (function() {
     {
       // hard code so that we pick up from localhost if dev'ing
       installedPlugins = {
-        /*'Delicious': server + 'plugins/Delicious/Delicious.js',*/
         'Trails': server + 'plugins/Trails/NewTrail.js',
-        'Comments': server + 'plugins/Comments/Comments.js'/*,
-        'Twitter': server + 'plugins/Twitter/Twitter.js'*/
+        'Comments': server + 'plugins/Comments/Comments.js'
       };
     }
+    */
 
     // installedPlugins = {
     //   'Trails' : myFiles + 'plugins/Trails/NewTrail.js'
@@ -396,8 +398,10 @@ var ShiftSpace = new (function() {
         href: window.location.href
       };
       SSServerCall('query', params, function(json) {
-        //SSLog('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
-        if (!json.status) {
+        SSLog('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
+        
+        if (!json.status) 
+        {
           console.error('Error checking for content: ' + json.message);
           return;
         }
@@ -417,6 +421,7 @@ var ShiftSpace = new (function() {
           // make sure default shift status preference is set
           SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         }
+        SSLog('+++++++++++++++++++++++++++++++++++++++++++ exit SSynch');
       });
     }
     
