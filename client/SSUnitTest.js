@@ -372,6 +372,7 @@ SSUnitTest.NoFormatter = new Class({
 // =======================
 
 SSUnitTest.TestCase = new Class({
+  
   name: 'SSUnitTest.TestCase',
   
   Extends: SSUnit.Base,

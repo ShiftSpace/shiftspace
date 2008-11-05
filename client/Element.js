@@ -121,7 +121,7 @@ ShiftSpace.Iframe = new Class({
           // load the css
           if(this.css)
           {
-            loadStyle(this.css, null, this.frame);
+            SSLoadStyle(this.css, null, this.frame);
           }
           _cb();
         }.bind(this, loadCallBack)

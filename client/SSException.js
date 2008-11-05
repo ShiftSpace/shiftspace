@@ -21,7 +21,7 @@ var SSException = new Class({
   {
     this.theError = _error;
   },
-  
+    
   setMessage: function(msg)
   {
     this.__message__ = msg; 

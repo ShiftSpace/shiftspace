@@ -329,11 +329,11 @@ var ShiftSpace = new (function() {
       SSLog('ShiftMenu.js loaded');
 
       // Load CSS styles
-      loadStyle('styles/ShiftSpace.css', function() {
+      SSLoadStyle('styles/ShiftSpace.css', function() {
         // create the error window
         SSCreateErrorWindow();
       });
-      loadStyle('styles/ShiftMenu.css');
+      SSLoadStyle('styles/ShiftMenu.css');
 
       SSLog('>>>>>>>>>>>>>>>>>>>>>>> Loading Spaces');
       // Load all spaces and plugins immediately if in the sanbox
@@ -741,44 +741,6 @@ var ShiftSpace = new (function() {
     {
       // fetch data for the space
     }
-
-    function SSGetElementByClass(searchClass, _node)
-    {
-      return SSGetElementsByClass(searchClass, _node)[0];
-    }
-
-    // Safari 3 and FF3 support this natively
-    function SSGetElementsByClass(searchClass, _node)
-    {
-      var classElements = new Array();
-      var node = _node || this;
-      var els = node.getElementsByTagName('*');
-      var elsLen = els.length;
-
-      var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
-      for (var i = 0; i < elsLen; i++)
-      {
-        if ( pattern.test(els[i].className) )
-        {
-          classElements.push(els[i]);
-        }
-      }
-      return classElements.map(function(node) {return _$(node);});
-    }
-
-    // our special wrapper
-    function _$(el)
-    {
-      if(!el) return null;
-
-      el.getElementsByClassName = SSGetElementsByClass;
-      el.getElementByClassName = function(className) {
-        return this.getElementsByClassName(className)[0];
-      };
-
-      return el;
-    }
-    this._$ = _$; // export
 
 
     /*
@@ -2325,14 +2287,14 @@ var ShiftSpace = new (function() {
     }
 
     /*
-    Function: loadFile
+    Function: SSLoadFile
       Loads a URL and executes a callback with the response
 
     Parameters:
       url - The URL of the target file
       callback - A function to process the file once it's loaded
     */
-    function loadFile(url, callback)
+    function SSLoadFile(url, callback)
     {
       // If the URL doesn't start with "http://", assume it's on our server
       if (url.substr(0, 7) != 'http://' &&
@@ -2419,7 +2381,7 @@ var ShiftSpace = new (function() {
         else
         {
           SSLog('loading space: ' + space);
-          loadFile(installed[space], function(rx) {
+          SSLoadFile(installed[space], function(rx) {
             var err;
             //SSLog(space + ' Space loaded, rx.responseText:' + rx.responseText);
 
@@ -2488,7 +2450,7 @@ var ShiftSpace = new (function() {
           var css = spaceDir + instance.attributes.css;
           instance.attributes.css = css;
         }
-        setTimeout(loadStyle.bind(ShiftSpace, [instance.attributes.css, instance.onCssLoad.bind(instance)]), 0);
+        setTimeout(SSLoadStyle.bind(ShiftSpace, [instance.attributes.css, instance.onCssLoad.bind(instance)]), 0);
       }
 
       // This exposes each space instance to the console
@@ -2562,7 +2524,7 @@ var ShiftSpace = new (function() {
       }
       else
       {
-        loadFile(installedPlugins[plugin], function(rx) {
+        SSLoadFile(installedPlugins[plugin], function(rx) {
           //SSLog(plugin + " Plugin loaded");
           // TODO: The following does not work we need to use the plugin eval
           try
@@ -2607,7 +2569,7 @@ var ShiftSpace = new (function() {
           var css = pluginDir + plugin.attributes.css;
           plugin.attributes.css = css;
         }
-        loadStyle.safeCall(plugin.attributes.css, plugin.onCssLoad.bind(plugin));
+        SSLoadStyle.safeCall(plugin.attributes.css, plugin.onCssLoad.bind(plugin));
       }
       plugin.attributes.dir = pluginDir;
 
@@ -2836,7 +2798,7 @@ var ShiftSpace = new (function() {
 
 
     /*
-    Function: loadStyle
+    Function: SSLoadStyle
       Loads a CSS file, processes it to make URLs absolute, then appends it as a
       STYLE element in the page HEAD.
 
@@ -2845,7 +2807,7 @@ var ShiftSpace = new (function() {
       callback - A custom function to handle css text if you don't want to use GM_addStyle
       spaceCallback - A callback function for spaces that want to use GM_addStyle but need to be notified of CSS load.
     */
-    function loadStyle(url, callback, frame) 
+    function SSLoadStyle(url, callback, frame) 
     {
       // TODO: check to see if the domain is different, if so don't mess with the url - David
       var dir = url.split('/');
@@ -2856,7 +2818,7 @@ var ShiftSpace = new (function() {
       }
 
       //SSLog('loadStyle: ' + url);
-      loadFile(url, function(rx) {
+      SSLoadFile(url, function(rx) {
         //SSLog(')))))))))))))))))))))))))))))))))))))))))))))))))) ' + url);
         var css = rx.responseText;
         // this needs to be smarter, only works on directory specific urls
