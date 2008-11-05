@@ -14,14 +14,21 @@ from SSPackageSorter import SSPackageSorter
 # Exceptions ==============================
 
 class SSError(Exception): 
-  def __init__(self, builder):
+  def __init__(self, builder, message = ''):
     if builder.sorter != None:
       builder.sorter.emptyDependencyStack()
+
+    self.message = message
+
+  def __str__(self):
+    return self.message
 
 class NoNameError(SSError): pass
 class NoSuchFileError(SSError): pass
 class NoSuchPackage(SSError): pass
 class BuilderDirectiveNotClosed(SSError): pass
+class FilenameExistsTwice(SSError): pass
+  
 
 # SSCoreBuilder ===========================
 
@@ -34,7 +41,7 @@ class SSCoreBuilder():
     self.DIRECTIVES_WITH_MULTIPLE_VALUES = ["dependencies"]
 
 #    self.sorter = SSPackageSorter(self)    
-
+    self.sorter = None
 
   def parseFile(self, path):
     """
@@ -42,13 +49,19 @@ class SSCoreBuilder():
     """
 
     fileName = os.path.basename(path)
+    name = fileName.split('.')[0]
+
+    if self.metadata.has_key(name):
+      raise FilenameExistsTwice(self, "%s and %s" % (path, self.metadata[name]['path']))
+
     fileHandle = open(path)
 
     for line in fileHandle:
       if self.BUILDER_BEGIN_PATTERN.match(line.strip()):
         # we found the beginning of the header. now go parse it
         directives = self.parseDirectives(fileHandle);
-        self.metadata[directives["name"]] = directives;
+        directives['path'] = path;
+        self.metadata[name] = directives;
         break;
 
     fileHandle.close()
@@ -75,6 +88,9 @@ class SSCoreBuilder():
         # if can have multiple values, split it
         if directive in self.DIRECTIVES_WITH_MULTIPLE_VALUES:
           value = [x.strip() for x in value.split(',')]
+
+        if not value:
+          value = True
 
         directives[directive] = value;
 
