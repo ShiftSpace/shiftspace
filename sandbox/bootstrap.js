@@ -128,14 +128,14 @@ function SSRegisterSpace(instance)
       var css = spaceDir + instance.attributes.css;
       instance.attributes.css = css;
     }
-    loadStyle(instance.attributes.css, instance.onCssLoad.bind(instance));
+    SSLoadStyle(instance.attributes.css, instance.onCssLoad.bind(instance));
   }
 
   // This exposes each space instance to the console
   ShiftSpace[instance.attributes.name + 'Space'] = instance;
 }
 
-function loadFile(url, callback) 
+function SSLoadFile(url, callback) 
 {
   // If the URL doesn't start with "http://", assume it's on our server
   if (url.substr(0, 7) != 'http://' &&
@@ -160,7 +160,7 @@ function loadFile(url, callback)
   return true;
 }
 
-function loadStyle(url, callback, frame) 
+function SSLoadStyle(url, callback, frame) 
 {
   // TODO: check to see if the domain is different, if so don't mess with the url - David
   var dir = url.split('/');
@@ -171,7 +171,7 @@ function loadStyle(url, callback, frame)
     dir = __server__ + dir;
   }
 
-  loadFile(url, function(rx) {
+  SSLoadFile(url, function(rx) {
     var css = rx.responseText;
     css = css.replace(/url\(([^)]+)\)/g, 'url(' + dir + '/$1)');
     
