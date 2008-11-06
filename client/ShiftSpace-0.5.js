@@ -351,11 +351,13 @@ var ShiftSpace = new (function() {
       // If all spaces have been loaded, build the shift menu and the console
       ShiftSpace.ShiftMenu.buildMenu();
 
-      // Set up event handlers
+      // Set up event handlers, these should not be tied into core
+      /*
       window.addEvent('keydown', keyDownHandler.bind(this));
       window.addEvent('keyup', keyUpHandler.bind(this));
       window.addEvent('keypress', keyPressHandler.bind(this));
       window.addEvent('mousemove', mouseMoveHandler.bind(this));
+      */
 
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -2131,7 +2133,8 @@ var ShiftSpace = new (function() {
       };
 
       SSServerCall('shift.delete', params, function(json) {
-        if (!json.status) {
+        if (!json.status) 
+        {
           console.error(json.message);
           return;
         }
@@ -2152,7 +2155,8 @@ var ShiftSpace = new (function() {
     Handles keydown events.
 
     */
-    function keyDownHandler(_event) {
+    function keyDownHandler(_event) 
+    {
       var event = new Event(_event);
       var now = new Date();
 
@@ -2248,10 +2252,12 @@ var ShiftSpace = new (function() {
     Handles keyup events.
 
     */
-    function keyUpHandler(_event) {
+    function keyUpHandler(_event) 
+    {
       var event = new Event(_event);
       // If the user is letting go of the shift key, hide the menu and reset
-      if (event.code == 16) {
+      if (event.code == 16) 
+      {
         keyState.shiftPressed = false;
         keyState.ignoreSubsequentSpaces = false;
         ShiftSpace.ShiftMenu.hide();
@@ -2265,9 +2271,11 @@ var ShiftSpace = new (function() {
     Handles keypress events.
 
     */
-    function keyPressHandler(event) {
+    function keyPressHandler(event) 
+    {
       // Cancel if a keydown already picked up the shift + space
-      if (keyState.cancelKeyPress) {
+      if (keyState.cancelKeyPress) 
+      {
         keyState.cancelKeyPress = false;
         event = new Event(event);
         event.stopPropagation();
@@ -2276,14 +2284,18 @@ var ShiftSpace = new (function() {
     }
 
 
-    function mouseMoveHandler(e) {
+    function mouseMoveHandler(e) 
+    {
       var event = new Event(e);
       keyState.x = event.page.x;
       keyState.y = event.page.y;
 
-      if (event.shift) {
+      if (event.shift) 
+      {
         ShiftSpace.ShiftMenu.show(keyState.x, keyState.y);
-      } else if (ShiftSpace.ShiftMenu) {
+      } 
+      else if (ShiftSpace.ShiftMenu) 
+      {
         ShiftSpace.ShiftMenu.hide();
       }
     }
@@ -2307,19 +2319,24 @@ var ShiftSpace = new (function() {
       //SSLog('loadFile:' + url);
 
       // Caching is implemented as a rather blunt instrument ...
-      if (!cacheFiles) {
+      if (!cacheFiles) 
+      {
         // ... either append the current timestamp to the URL ...
         var now = new Date();
         url += (url.indexOf('?') == -1) ? '?' : '&';
         url += now.getTime();
-      } else {
+      } 
+      else 
+      {
         SSLog('load from cache');
         // ... or use getValue to retrieve the file's contents
         var cached = getValue('cache.' + url, false, true);
 
-        if (cached) {
+        if (cached) 
+        {
           //SSLog('Loading ' + url + ' from cache');
-          if (typeof callback == 'function') {
+          if (typeof callback == 'function') 
+          {
             callback({ responseText: cached });
           }
           return true;
@@ -2331,18 +2348,22 @@ var ShiftSpace = new (function() {
       GM_xmlhttpRequest({
         'method': 'GET',
         'url': url,
-        'onload': function(response) {
+        'onload': function(response) 
+        {
           // Store file contents for later retrieval
-          if (cacheFiles) {
+          if (cacheFiles) 
+          {
             cache.push(url);
             setValue('cache', cache);
             setValue('cache.' + url, response.responseText, true);
           }
-          if (typeof callback == 'function') {
+          if (typeof callback == 'function') 
+          {
             callback(response);
           }
         },
-        'onerror': function(response) {
+        'onerror': function(response) 
+        {
           SSLog("failed loadFile call, for file " + url, SSLogError);
           if(errCallback && typeof errCallback == 'function') errCallback(); // FIXME: broken - David
         }

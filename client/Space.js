@@ -965,7 +965,7 @@ ShiftSpace.Space = new Class({
   */
   getValue : function(key, defaultValue, callback)
   {
-    getValue.safeCallWithResult(this.attributes.name + '.' + key, defaultValue, callback);
+    SSGetValue.safeCallWithResult(this.attributes.name + '.' + key, defaultValue, callback);
   },
 
   /*
