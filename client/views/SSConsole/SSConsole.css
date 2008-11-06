@@ -43,6 +43,18 @@
   margin-top: 5px;
 }
 
+#SSUserLoginStatus div
+{
+  display: none;
+  float: right;
+  margin-top: 5px;
+}
+
+#SSUserLoginStatus .SSActive
+{
+  display: block;
+}
+
 .SSConsoleControlButton
 {
   float: left;

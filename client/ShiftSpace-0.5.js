@@ -65,10 +65,7 @@ var ShiftSpace = new (function() {
     var server = SSGetValue('server', 'http://www.shiftspace.org/dev/');
     var spacesDir = SSGetValue('spaceDir', 'http://www.shiftspace.org/dev/spaces/');
 
-    //server = "http://localhost/~davidnolen/shiftspace-0.11/";
-    //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
-    //var myFiles = "http://localhost/~davidnolen/shiftspace-0.11/";
-    //server = "http://metatron.shiftspace.org/api/";
+    // TODO: a place to set deploy vs. develop variables - David
 
     // Current ShiftSpace version
     var version = '0.13';
@@ -288,7 +285,7 @@ var ShiftSpace = new (function() {
       // INCLUDE Element.js
       SSLog('Element.js loaded');
 
-      // {PACKAGE:ShiftSpaceCoreUI}
+      // {PACKAGE:CorePackage}
       
       // INCLUDE SSView.js
       SSLog('SSView.js loaded');

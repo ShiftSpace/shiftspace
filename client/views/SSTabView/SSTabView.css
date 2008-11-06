@@ -84,7 +84,7 @@
   -moz-border-radius-topright: 6px;
 }
 
-.SSTabViewConsoleStyle > .SSControlView > .SSActive
+.SSTabViewConsoleStyle > .SSControlView > .SSButton.SSActive
 {
   background-color: #E6E4A3;
 }

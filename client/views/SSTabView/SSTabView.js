@@ -19,7 +19,7 @@ var SSTabView = new Class({
     this.__selectedTab__ = -1;
 
     // check for default tab
-    var defaultActiveTab = this.element._getElement('> .SSControlView .SSButton.SSActive');
+    var defaultActiveTab = this.element._getElement('> .SSControlView > .SSButton.SSActive');
     
     if(defaultActiveTab)
     {
@@ -219,7 +219,7 @@ var SSTabView = new Class({
   
   activeTab: function()
   {
-    return this.indexOfTab(this.element._getElement('> .SSControlView > .SSActive'));
+    return this.indexOfTab(this.element._getElement('> .SSControlView > .SSButton.SSActive'));
   },
   
   

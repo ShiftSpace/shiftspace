@@ -9,7 +9,7 @@
       <div title="Login" class="SSButton SSLocalized">Login</div>
       <div title="Welcome" class="SSButton SSLocalized">Welcome</div>
       <!-- End tab buttons -->
-      
+
       <!-- Console User Controls -->
       <div id="SSConsoleControls">
         <div id="SSConsoleLoginOutButton" title="Login/Logout" class="SSConsoleControlButton" outlet="SSConsole"></div>
@@ -17,6 +17,16 @@
         <div id="SSConsoleCloseButton" title="Close" class="SSConsoleControlButton" outlet="SSConsole"></div>
       </div>
       <!-- End Console User Controls -->
+      
+      <!-- User status -->
+      <div id="SSUserLoginStatus">
+        <div>
+          You are not signed in.
+        </div>
+        <div>
+          Signed in as <span class="SSUserName"></span>
+        </div>
+      </div>
     </div>
   
     <div class="SSContentView">
