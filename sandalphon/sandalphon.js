@@ -141,6 +141,21 @@ var SandalphonClass = new Class({
     var style = context.$(contextDoc.createElement('style'));
     style.setProperty('type', 'text/css');
     
+    // Add some base styles
+    css += "                          \
+      .SSDisplayNone                  \
+      {                               \
+        display: none;                \
+      }                               \
+      .SSUserSelectNone               \
+      {                               \
+        -moz-user-select: none;       \
+        user-select: none;            \
+        -webkit-user-select: none;    \
+      }                               \
+    ";
+
+    
     style.appendText(css);
     style.injectInside(head);
   },
