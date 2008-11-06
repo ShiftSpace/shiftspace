@@ -68,6 +68,12 @@ var SSView = new Class({
     {
       this.setup();
     }
+    
+    // add to global name look up dictionary
+    if(ShiftSpace.NameTable && this.element.getProperty('id').search('generatedId') == -1)
+    {
+      ShiftSpace.NameTable.set(this.element.getProperty('id'), this);
+    }
   },
 
 
@@ -93,6 +99,12 @@ var SSView = new Class({
   getId: function()
   {
     return this.__id__;
+  },
+  
+  
+  elId: function()
+  {
+    return this.element.getProperty('id');
   },
 
 

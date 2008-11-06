@@ -228,6 +228,7 @@ var ShiftSpace = new (function() {
     // new additions for Sandalphon
     this.UI = {}; // holds all UI class objects
     this.Objects = new Hash(); // holds all instantiated UI objects
+    this.NameTable = new Hash(); // holds all instantiated UI object by CSS id
 
     // Private variable and function for controlling user authentication
     var username = false;

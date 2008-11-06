@@ -16,7 +16,7 @@ var SSViewProxy = new Class({
     // store the element
     this.element = $(el);
 
-    // generate an id for the element
+    // generate an id for the element in case it doesn't already have one
     el._ssgenId();
     // set messages
     this.setMessages([]);

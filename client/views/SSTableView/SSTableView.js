@@ -813,6 +813,8 @@ var SSTableView = new Class({
   */
   refresh: function()
   {
+    console.log('refresh ' + this.elId());
+    
     SSLog('SSTableView refresh', SSLogViews);
 
     // empty the content view
