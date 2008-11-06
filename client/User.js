@@ -92,7 +92,7 @@ var User = new Class({
   logout: function() 
   {
     username = false;
-    setValue('username', '');
+    SSSetValue('username', '');
     SSServerCall('user.logout');
     this.fireEvent('onUserLogout');
   },
@@ -107,7 +107,7 @@ var User = new Class({
       if (json.status) 
       {
         username = userInfo.username;
-        setValue('username', userInfo.username);
+        SSSetValue('username', userInfo.username);
         callback(json);
       } 
       else 

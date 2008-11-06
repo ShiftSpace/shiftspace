@@ -18,11 +18,11 @@ function SSAddRecentlyViewedShift(shiftId)
   // TODO: only add these if the user is logged in
   if(ShiftSpace.User.isLoggedIn() && !SSIsNewShift(shiftId))
   {
-    getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
+    SSGetValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
       // simply mark the ids
       recentlyViewedShifts.unshift(shiftId);
       // store the recently viewed shifts
-      setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', recentlyViewedShifts);
+      SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', recentlyViewedShifts);
     });
   }
 }
@@ -44,7 +44,7 @@ function SSGetRecentlyViewedShifts(callback)
   var remoteShifts = [];
 
   // grab the local shifs and generate an array of remote shifts
-  getValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
+  SSGetValue.safeCallWithResult(ShiftSpace.User.getUsername()+'.recentlyViewedShifts', null, null, function(recentlyViewedShifts) {
     var len = recentlyViewedShifts.length;
 
     len.times(function(i) {

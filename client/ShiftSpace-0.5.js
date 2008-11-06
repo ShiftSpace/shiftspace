@@ -62,8 +62,8 @@ var ShiftSpace = new (function() {
     SSSetLogLevel(SSLogError);
 
     // Default to http://shiftspace.org/dev
-    var server = getValue('server', 'http://www.shiftspace.org/dev/');
-    var spacesDir = getValue('spaceDir', 'http://www.shiftspace.org/dev/spaces/');
+    var server = SSGetValue('server', 'http://www.shiftspace.org/dev/');
+    var spacesDir = SSGetValue('spaceDir', 'http://www.shiftspace.org/dev/spaces/');
 
     //server = "http://localhost/~davidnolen/shiftspace-0.11/";
     //server = "http://metatron.shiftspace.org/~dnolen/shiftspace/";
@@ -173,7 +173,7 @@ var ShiftSpace = new (function() {
     {
       // respect that fact that different space may come from different servers
       // besides the one where user data is being stored
-      installed = getValue('installed', {
+      installed = SSGetValue('installed', {
         'Notes' : server + 'spaces/Notes/Notes.js',
         'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
         'Highlights': server + 'spaces/Highlights/Highlights.js',
@@ -192,7 +192,7 @@ var ShiftSpace = new (function() {
       SSLog(installed);
     }
 
-    var spacePrefs = getValue('spacePrefs', {});
+    var spacePrefs = SSGetValue('spacePrefs', {});
 
     // Each plugin and a corresponding URL of its origin
 
@@ -203,7 +203,7 @@ var ShiftSpace = new (function() {
     {
       // otherwise respect existing values, servers might be different
       // for different resources
-      installedPlugins = getValue('installedPlugins', {
+      installedPlugins = SSGetValue('installedPlugins', {
         'Delicious': server + 'plugins/Delicious/Delicious.js',
         'Trails': server + 'plugins/Trails/NewTrail.js',
         'Comments': server + 'plugins/Comments/Comments.js',
@@ -226,7 +226,7 @@ var ShiftSpace = new (function() {
     // };
 
     // An index of cached files, used to clear the cache when necessary
-    var cache = getValue('cache', []);
+    var cache = SSGetValue('cache', []);
 
     // new additions for Sandalphon
     this.UI = {}; // holds all UI class objects
@@ -278,7 +278,7 @@ var ShiftSpace = new (function() {
         SSLog('ShiftSpace Login ======================================');
         SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         // clear out recently viewed shifts on login
-        setValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
+        SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
       });
 
       ShiftSpace.User.addEvent('onUserLogout', function() {
@@ -537,27 +537,27 @@ var ShiftSpace = new (function() {
 
     /*
       Function: SSSetPref
-        Set a user preference. Implicitly calls setValue which will JSON encode the value.
+        Set a user preference. Implicitly calls SSSetValue which will JSON encode the value.
 
       Parameters:
         pref - the preference name as string.
         value - the value.
 
       See Also:
-        setValue
+        SSSetValue
     */
     function SSSetPref(pref, value)
     {
       if(ShiftSpace.User.isLoggedIn())
       {
         var key = [ShiftSpace.User.getUsername(), pref].join('.');
-        setValue(key, value);
+        SSSetValue(key, value);
       }
     }
 
     /*
       Function: SSGetPref
-        Return a user preference.  Implicity calls getValue which will JSON decode the value.
+        Return a user preference.  Implicity calls SSGetValue which will JSON decode the value.
 
       Parameters:
         pref - the preference key as a string.
@@ -571,7 +571,7 @@ var ShiftSpace = new (function() {
       if(ShiftSpace.User.isLoggedIn())
       {
         var key = [ShiftSpace.User.getUsername(), pref].join('.');
-        return getValue(key, defaultValue);
+        return SSGetValue(key, defaultValue);
       }
       return defaultValue;
     }
@@ -645,7 +645,7 @@ var ShiftSpace = new (function() {
 
     /*
       Function: SSSetPrefForSpace
-        Set user preference for a space.  Calls setValue.  The preference
+        Set user preference for a space.  Calls SSSetValue.  The preference
         key will be converted to username.spaceName.preferenceKey.
 
       Parameters:
@@ -658,7 +658,7 @@ var ShiftSpace = new (function() {
       if(ShiftSpace.User.isLoggedIn())
       {
         var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
-        setValue(key, value);
+        SSSetValue(key, value);
       }
     }
 
@@ -675,7 +675,7 @@ var ShiftSpace = new (function() {
       if(ShiftSpace.User.isLoggedIn())
       {
         var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
-        var value = getValue(key, null);
+        var value = SSGetValue(key, null);
         return value;
       }
       return null;
@@ -1136,12 +1136,12 @@ var ShiftSpace = new (function() {
       alreadyCheckedForUpdate = true;
 
       var now = new Date();
-      var lastUpdate = getValue('lastCheckedForUpdate', now.getTime());
+      var lastUpdate = SSGetValue('lastCheckedForUpdate', now.getTime());
 
       // Only check every 24 hours
       if (lastUpdate - now.getTime() > 86400)
       {
-        setValue('lastCheckedForUpdate', now.getTime());
+        SSSetValue('lastCheckedForUpdate', now.getTime());
 
         GM_xmlhttpRequest({
           method: 'POST',
@@ -1180,7 +1180,7 @@ var ShiftSpace = new (function() {
       {
         var url = server + 'spaces/' + space + '/' + space + '.js';
         installed[space] = url;
-        setValue('installed', installed);
+        SSSetValue('installed', installed);
 
         // let everyone else know
         SSLoadSpace(space, pendingShift, function() {
@@ -1202,7 +1202,7 @@ var ShiftSpace = new (function() {
       var url = installed[spaceName];
       delete spaces[spaceName];
       delete installed[spaceName];
-      setValue('installed', installed);
+      SSSetValue('installed', installed);
 
       SSClearCache(url);
 
@@ -1236,14 +1236,14 @@ var ShiftSpace = new (function() {
       {
         // Clear a specific file from the cache
         log('Clearing ' + url + ' from cache');
-        setValue('cache.' + url, 0);
+        SSSetValue('cache.' + url, 0);
       } 
       else 
       {
         // Clear all the files from the cache
         cache.each(function(url) {
           log('Clearing ' + url + ' from cache');
-          setValue('cache.' + url, 0);
+          SSSetValue('cache.' + url, 0);
         });
       }
     };
@@ -2329,8 +2329,8 @@ var ShiftSpace = new (function() {
       else 
       {
         SSLog('load from cache');
-        // ... or use getValue to retrieve the file's contents
-        var cached = getValue('cache.' + url, false, true);
+        // ... or use SSGetValue to retrieve the file's contents
+        var cached = SSGetValue('cache.' + url, false, true);
 
         if (cached) 
         {
@@ -2354,8 +2354,8 @@ var ShiftSpace = new (function() {
           if (cacheFiles) 
           {
             cache.push(url);
-            setValue('cache', cache);
-            setValue('cache.' + url, response.responseText, true);
+            SSSetValue('cache', cache);
+            SSSetValue('cache.' + url, response.responseText, true);
           }
           if (typeof callback == 'function') 
           {
@@ -2757,7 +2757,7 @@ var ShiftSpace = new (function() {
 
 
     /*
-    Function: setValue
+    Function: SSSetValue
       A wrapper function for GM_setValue that handles non-string data better.
 
     Parameters:
@@ -2768,7 +2768,7 @@ var ShiftSpace = new (function() {
     Returns:
         The value passed in.
     */
-    function setValue(key, value, rawValue) 
+    function SSSetValue(key, value, rawValue) 
     {
       if (rawValue) 
       {
@@ -2783,7 +2783,7 @@ var ShiftSpace = new (function() {
 
 
     /*
-    Function: getValue (private, except in debug mode)
+    Function: SSGetValue (private, except in debug mode)
       A wrapper function for GM_getValue that handles non-string data better.
 
     Parameters:
@@ -2794,7 +2794,7 @@ var ShiftSpace = new (function() {
     Returns:
       Either the stored value, or defaultValue if none is found.
     */
-    function getValue(key, defaultValue, rawValue) 
+    function SSGetValue(key, defaultValue, rawValue) 
     {
       if (!rawValue) 
       {
@@ -2804,17 +2804,17 @@ var ShiftSpace = new (function() {
       // Fix for GreaseKit, which doesn't support default values
       if (result == null) 
       {
-        SSLog('getValue("' + key + '") = ' + JSON.decode(defaultValue));
+        SSLog('SSGetValue("' + key + '") = ' + JSON.decode(defaultValue));
         return JSON.decode(defaultValue);
       } 
       else if (rawValue) 
       {
-        SSLog('getValue("' + key + '") = ' + result);
+        SSLog('SSGetValue("' + key + '") = ' + result);
         return result;
       } 
       else 
       {
-        SSLog('getValue("' + key + '") = ...' + JSON.decode(result));
+        SSLog('SSGetValue("' + key + '") = ...' + JSON.decode(result));
         return JSON.decode(result);
       }
     }
@@ -2889,8 +2889,8 @@ var ShiftSpace = new (function() {
       this.spaces = spaces;
       this.shifts = shifts;
       this.trails = trails;
-      this.setValue = setValue;
-      this.getValue = getValue;
+      this.SSSetValue = SSSetValue;
+      this.SSGetValue = SSGetValue;
       this.plugins = plugins;
       unsafeWindow.ShiftSpace = this;
       

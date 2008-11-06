@@ -951,7 +951,7 @@ ShiftSpace.Space = new Class({
   */
   setValue : function(key, value)
   {
-    setValue.safeCall(this.attributes.name + "." + key, value);
+    SSSetValue.safeCall(this.attributes.name + "." + key, value);
   },
 
   /*
