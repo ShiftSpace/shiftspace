@@ -68,6 +68,7 @@ var SSConsole = new Class({
       if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
       if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
       if(this.outlets().get('SSSetServers')) this.initSetServersForm();
+      if(this.outlets().get('SSUserLoginStatus')) this.initUserLoginStatus();
     }
   },
 
@@ -83,6 +84,16 @@ var SSConsole = new Class({
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpace.User.getUsername());
     // switch to the tab view
     this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
+    
+    // update login status
+    var loginStatus = this.outlets().get('SSUserLoginStatus');
+    if(loginStatus)
+    {
+      loginStatus.getElementById('SSUserIsNotLoggedIn').removeClass('SSActive');
+      var isLoggedIn = loginStatus.getElementById('SSUserIsLoggedIn');
+      isLoggedIn.addClass('SSActive');
+      isLoggedIn.getElement('span').set('text', ShiftSpace.User.getUsername());
+    }
   },
 
 
@@ -96,6 +107,14 @@ var SSConsole = new Class({
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', null);
     // refresh the main tab view
     this.outlets().get('MainTabView').refresh();
+    
+    // update login status
+    var loginStatus = this.outlets().get('SSUserLoginStatus');
+    if(loginStatus)
+    {
+      loginStatus.getElementById('SSUserIsNotLoggedIn').addClass('SSActive');
+      loginStatus.getElementById('SSUserIsLoggedIn').removeClass('SSActive');
+    }
   },
 
 
@@ -163,6 +182,12 @@ var SSConsole = new Class({
         console.log('Update the space dir variable. prev:' + previousValue);
       }
     }.bind(this));
+  },
+  
+  
+  initUserLoginStatus: function()
+  {
+    
   },
 
 

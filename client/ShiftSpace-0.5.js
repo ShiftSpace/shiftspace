@@ -66,6 +66,8 @@ var ShiftSpace = new (function() {
     var spacesDir = SSGetValue('spaceDir', 'http://www.shiftspace.org/dev/spaces/');
 
     // TODO: a place to set deploy vs. develop variables - David
+    
+    // Load packages.json
 
     // Current ShiftSpace version
     var version = '0.13';
@@ -239,6 +241,8 @@ var ShiftSpace = new (function() {
     var alreadyCheckedForUpdate = false;
 
     // {SystemBasePackages}
+    
+    
     // INCLUDE IframeHelpers.js
     // INCLUDE SSException.js
     // INCLUDE PinHelpers.js
@@ -257,7 +261,8 @@ var ShiftSpace = new (function() {
 
     */
     this.initialize = function() {
-
+      // ShiftSpace global var is set by this point not before.
+      
       debug = 0;
 
       // look for install links

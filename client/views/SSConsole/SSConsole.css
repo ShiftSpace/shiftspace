@@ -47,7 +47,8 @@
 {
   display: none;
   float: right;
-  margin-top: 5px;
+  margin-top: 8px;
+  margin-right: 10px;
 }
 
 #SSUserLoginStatus .SSActive

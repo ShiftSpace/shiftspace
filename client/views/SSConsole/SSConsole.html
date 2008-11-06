@@ -19,12 +19,12 @@
       <!-- End Console User Controls -->
       
       <!-- User status -->
-      <div id="SSUserLoginStatus">
-        <div>
-          You are not signed in.
+      <div id="SSUserLoginStatus" outlet="SSConsole">
+        <div id="SSUserIsNotLoggedIn" class="SSActive">
+          You are not signed in
         </div>
-        <div>
-          Signed in as <span class="SSUserName"></span>
+        <div id="SSUserIsLoggedIn">
+          Signed in as <a><span class="SSUserName"></span></a>
         </div>
       </div>
     </div>
