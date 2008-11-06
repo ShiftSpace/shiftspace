@@ -19,3 +19,9 @@
 {
   display: block;
 }
+
+#SSSignUpForm fieldset
+{
+  border: none;
+  float: left;
+}
