@@ -35,13 +35,15 @@ class FilenameExistsTwice(SSError): pass
 class SSCoreBuilder():
 
   def __init__(self):
+    self.packages = {}
+
     self.BUILDER_BEGIN_PATTERN = re.compile("\/\/\s*==Builder==")
     self.BUILDER_END_PATTERN = re.compile("\/\/\s*==\/Builder==")
     self.DIRECTIVE_PATTERN = re.compile("\/\/\s*@([^\s]*)\s*(.*)")
     self.DIRECTIVES_WITH_MULTIPLE_VALUES = ["dependencies"]
 
-#    self.sorter = SSPackageSorter(self)    
-    self.sorter = None
+    self.sorter = SSPackageSorter(self)    
+
 
   def parseFile(self, path):
     """
@@ -60,8 +62,18 @@ class SSCoreBuilder():
       if self.BUILDER_BEGIN_PATTERN.match(line.strip()):
         # we found the beginning of the header. now go parse it
         directives = self.parseDirectives(fileHandle);
+
+        if directives.has_key('package'):
+          package = directives['package']
+         
+          if not self.packages.has_key(package):
+            self.packages[package] = []
+
+          self.packages[package].append(name)
+
         directives['path'] = path;
         self.metadata[name] = directives;
+        
         break;
 
     fileHandle.close()
@@ -132,6 +144,54 @@ class SSCoreBuilder():
       self.packages[packageName] = self.sorter.sortPackage(package)
 
 
+  def metadataForFile(self, name):
+    """
+    Returns the metadata for a particular file, throwing an exception if not found
+    """
+    metadata = None
+    
+    try:
+      metadata = self.metadata[name]
+    except:
+      print "metadataForFile error: %s" % name
+      raise NoSuchFileError(self)
+
+    return metadata
+
+
+  def dependenciesForFile(self, name):
+    """
+    Returns the dependency list for a particular file.
+    """
+    deps = []
+    if (self.metadataForFile(name)).has_key('dependencies'):
+      deps = (self.metadataForFile(name))['dependencies']
+    return deps
+
+
+  def packageForFile(self, name):
+    """
+    Returns the package that a file belongs to.
+    """
+    metadata = self.metadataForFile(name)
+
+    if metadata.has_key('package') and metadata['package'] != None:
+      return self.packages[metadata['package']]
+    else:
+      return []
+
+
+  def dependenciesFor(self, file, excludeNonPackageFiles=True):
+    """
+    Returns the dependencies for a particular file. Excludes files not in the file's own package by default.
+    """
+    deps = self.dependenciesForFile(file)
+    if not excludeNonPackageFiles:
+      return deps
+    packageFiles = self.packageForFile(file)
+    return [f for f in deps if f in packageFiles]
+
+
   def writePackagesJSON(self, output="../config/packages.json", writeToFile=True):
     """
     Write a package json description.
@@ -139,7 +199,7 @@ class SSCoreBuilder():
 
     # create dictionary to hold file data as well as package data
     packageDict = {}
-#    packageDict['packages'] = self.packages
+    packageDict['packages'] = self.packages
     packageDict['files'] = self.metadata
     
     # get a json dump
@@ -175,14 +235,13 @@ class SSCoreBuilder():
     # build all the internal data structures
     self.parseDirectory(path, recurse)
     # sort the internal package data structure
-    #self.sortPackages()
+    self.sortPackages()
 
 
   def buildTarget(self, packageJSON):
     """
     Build a target based on the package description.
     """
-
     pass
 
 
