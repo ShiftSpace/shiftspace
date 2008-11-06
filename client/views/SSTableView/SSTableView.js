@@ -106,7 +106,7 @@ var SSTableView = new Class({
     if(model)
     {
       var tableHead = this.element._getElement('> .SSControlView');
-
+      
       // get the column names
       this.columnTitles().length.times(function(idx) {
         // grab the column name
@@ -127,6 +127,12 @@ var SSTableView = new Class({
       // hmm we really need a table head cell controller
     }
   },
+  
+  
+  columnCount: function()
+  {
+    return this.contentView._getElements('> .SSDefinition col').length;
+  },
 
 
   updateColumnTitles: function(columnTitles)
@@ -146,7 +152,7 @@ var SSTableView = new Class({
   {
     // make the column titles refres to the column definition width - David
     this.columnHeadings().length.times(function(idx) {
-      var colWidth = this.columnDefinitionForIndex(idx).getSize().x;
+      var colWidth = this.columnDefinitionForIndex(idx).getSize().x || this.columnDefinitionForIndex(idx).getStyle('width');
       this.columnHeadingForIndex(idx).setStyle('width', colWidth);
     }.bind(this));
   },
@@ -813,8 +819,6 @@ var SSTableView = new Class({
   */
   refresh: function()
   {
-    console.log('refresh ' + this.elId());
-    
     SSLog('SSTableView refresh', SSLogViews);
 
     // empty the content view
