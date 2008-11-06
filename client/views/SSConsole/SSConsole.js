@@ -74,6 +74,7 @@ var SSConsole = new Class({
 
   handleLogin: function()
   {
+    console.log('HANDLE LOGIN');
     // empty the login form
     this.emptyLoginForm();
     // hide the login tab

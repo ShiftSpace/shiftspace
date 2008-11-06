@@ -231,6 +231,7 @@ var SSTabView = new Class({
   
   hideTab: function(index)
   {
+    console.log('hideTab ' + index);
     this.tabButtonForIndex(index).addClass('SSDisplayNone');
     this.contentViewForIndex(index).addClass('SSDisplayNone');
   },

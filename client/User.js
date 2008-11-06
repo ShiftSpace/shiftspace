@@ -15,7 +15,13 @@ var User = new Class({
   
   setUsername: function(_username)
   {
+    console.log('SETTING USER NAME ' + username + ' ' + _username);
+    var fireLogIn = (username == false) && (_username != null);
     username = _username;
+    if(fireLogIn)
+    {
+      this.fireEvent('onUserLogin');
+    }
   },
 
   /*
