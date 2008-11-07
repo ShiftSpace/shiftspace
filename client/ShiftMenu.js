@@ -48,7 +48,7 @@ var ShiftMenu = new Class({
     var container = new ShiftSpace.Element('div', {
       'class': 'container',
       styles: {
-        width: (26 * spaces.length)
+        width: (26 * SSSpacesCount())
       }
     }).injectInside(this.element);
     this.element.injectInside(document.body);

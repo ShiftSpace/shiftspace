@@ -61,11 +61,12 @@ function ShiftSpaceHide()
   // hide the spaces
   for(var space in spaces)
   {
-    spaces[space].saveState();
+    var theSpace = SSSpaceForName(space);
+    theSpace.saveState();
 
-    if(spaces[space].isVisible())
+    if(theSpace.isVisible())
     {
-      spaces[space].hide();
+      theSpace.hide();
     }
   }
 }
@@ -93,7 +94,7 @@ function ShiftSpaceShow()
   // restore the spaces
   for(var space in spaces)
   {
-    spaces[space].restoreState();
+    SSSpaceForName(space).restoreState();
   }
 }
 

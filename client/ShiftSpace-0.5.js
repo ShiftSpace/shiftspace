@@ -253,6 +253,16 @@ var ShiftSpace = new (function() {
     // INCLUDE FullScreen.js
     // INCLUDE ErrorWindow.js
     
+    function SSResetCore()
+    {
+      // reset all internal state
+    }
+    
+    function SSAllSpaces()
+    {
+      //return spaces
+    }
+    
     /*
 
     Function: initialize
@@ -469,45 +479,6 @@ var ShiftSpace = new (function() {
     // ===============================
     // = Function Prototype Helpers  =
     // ===============================
-
-    // bindResource - for atomic operations
-    Function.prototype.bindResource = function(obj, options)
-    {
-      var fn = this;
-
-      // check to make sure it's not already there
-      if(spaces[options.name] || plugins[options.name])
-      {
-        var args = options.args || [];
-        return fn.bind(obj, args);
-      }
-
-      return function() {
-        if(options.type == 'space')
-        {
-          if(!spaces[options.name])
-          {
-            SSLoadSpace(options.name, null, function() {
-              fn.apply(obj, args);
-            });
-          }
-        }
-        if(options.type == 'plugin')
-        {
-          if(!plugins[options.name])
-          {
-            SSLoadPlugin(options.name, function() {
-              fn.apply(obj, options.args);
-
-              if(options.method)
-              {
-                plugins[options.name][options.method].apply(plugins[options.name], options.args);
-              }
-            });
-          }
-        }
-      };
-    };
 
     // This won't work for GM_getValue of course - David
     Function.prototype.safeCall = function() {
@@ -828,7 +799,7 @@ var ShiftSpace = new (function() {
     {
       //SSLog('SSSpaceForShift');
       var shift = SSGetShift(shiftId);
-      return spaces[shift.space];
+      return SSSpaceForName(shift.space);
     }
     
     /*
@@ -845,7 +816,36 @@ var ShiftSpace = new (function() {
       }
       else
       {
-        return spaces[name];
+        return space;
+      }
+    }
+    
+    function SSSetSpaceForName(space, name)
+    {
+      spaces[name] = space;
+    }
+    
+    function SSRemoveSpace(name)
+    {
+      delete spaces[name];
+    }
+    
+    function SSSpacesCount()
+    {
+      return spaces.length;
+    }
+    
+    function SSPluginForName(name)
+    {
+      var plugin = plugin[name];
+      
+      if(!plugin)
+      {
+        throw SSPluginDoesNotExistError(new Error());
+      }
+      else
+      {
+        return plugin;
       }
     }
 
@@ -1194,7 +1194,7 @@ var ShiftSpace = new (function() {
     function SSUninstallSpace(spaceName) 
     {
       var url = installed[spaceName];
-      delete spaces[spaceName];
+      SSRemoveSpace(spaceName);
       delete installed[spaceName];
       SSSetValue('installed', installed);
 
@@ -1276,9 +1276,9 @@ var ShiftSpace = new (function() {
       shifts[tempId] = shiftJson;
 
       SSLog('+++++++++++++++++++++++++++++++++++++++++++++++');
-      SSLog(spaces[spaceName]);
+      SSLog(SSSpaceForName(spaceName));
       SSLog('calling create shift');
-      var noError = spaces[spaceName].createShift(shiftJson);
+      var noError = SSSpaceForName(spaceName).createShift(shiftJson);
       SSLog('noError : ' + noError);
       if(noError)
       {
@@ -1522,7 +1522,7 @@ var ShiftSpace = new (function() {
             try
             {
               SSLog('showing the shift =======================================');
-              spaces[shift.space].showShift(shiftJson);
+              SSSpaceForName(shift.space).showShift(shiftJson);
             }
             catch(err)
             {
@@ -1533,7 +1533,7 @@ var ShiftSpace = new (function() {
           else
           {
             // in the sandbox we just want to see the damn error
-            spaces[shift.space].showShift(shiftJson);
+            SSSpaceForName(shift.space).showShift(shiftJson);
           }
 
           SSFocusShift(shift.id);
@@ -1589,8 +1589,7 @@ var ShiftSpace = new (function() {
         if(SSGetPrefForSpace(space, 'autolaunch'))
         {
           var ids = SSAllShiftIdsForSpace(space);
-
-          var spaceObject = spaces[space];
+          var spaceObject = SSSpaceForName(space);
 
           // in the case of the web we need to load the space first
           if(!spaceObject)
@@ -1915,7 +1914,7 @@ var ShiftSpace = new (function() {
       var filters = shiftJson.filters;
       delete shiftJson.filters;
 
-      var space = spaces[shiftJson.space];
+      var space = SSSpaceForName(shiftJson.space);
       var params = {
         id: shiftJson.id, // TODO: handle this in a more secure way
         summary: shiftJson.summary,
@@ -1940,7 +1939,7 @@ var ShiftSpace = new (function() {
         }
         if(ShiftSpace.Console) ShiftSpace.Console.updateShift(shiftJson);
         // call onShiftSave
-        spaces[shiftJson.space].onShiftSave(shiftJson.id);
+        SSSpaceForName(shiftJson.space).onShiftSave(shiftJson.id);
       });
     }
 
@@ -1956,7 +1955,7 @@ var ShiftSpace = new (function() {
     */
     function SSSaveNewShift(shiftJson)
     {
-      var space = spaces[shiftJson.space];
+      var space = SSSpaceForName(shiftJson.space);
 
       // remove the filters from the json object
       var filters = shiftJson.filters;
@@ -2285,7 +2284,7 @@ var ShiftSpace = new (function() {
       SSLog("SSRegisterSpace");
       var spaceName = instance.attributes.name;
       SSLog('Register Space ===================================== ' + spaceName);
-      spaces[spaceName] = instance;
+      SSSetSpaceForName(instance, spaceName);
       instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
 
       var spaceDir = installed[spaceName].match(/(.+\/)[^\/]+\.js/)[1];
