@@ -324,12 +324,46 @@ var SSConsole = new Class({
       
       // activate the iframe context: create controllers hook up outlets
       Sandalphon.activate(context);
+      
+      // create the resizer
+      this.initResizer();
     }.bind(this));
+  },
+  
+  
+  initResizer: function()
+  {
+    // place the resizer above the thing
+    var resizer = new ShiftSpace.Element('div', {
+      'id': 'SSConsoleResizer'
+    });
+    document.body.grab(resizer);
+    
+    resizer.makeDraggable({
+      modifiers: {x:'', y:'bottom'},
+      invert: true,
+      onStart: function()
+      {
+        SSAddDragDiv();
+      },
+      onComplete: function()
+      {
+        SSRemoveDragDiv();
+      }
+    });
+
+    // make the console resizeable
+    this.element.makeResizable({
+      handle: resizer,
+      modifiers: {x:'', y:'height'},
+      invert: true
+    });
   },
 
 
   userClickedRow: function(args)
   {
+    
   },
 
 

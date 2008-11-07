@@ -65,6 +65,8 @@ var ShiftSpace = new (function() {
     var server = SSGetValue('server', 'http://www.shiftspace.org/dev/');
     var spacesDir = SSGetValue('spaceDir', 'http://www.shiftspace.org/dev/spaces/');
 
+    // make sure all our stuff is hidden at first
+
     // TODO: a place to set deploy vs. develop variables - David
     
     // Load packages.json
@@ -242,7 +244,6 @@ var ShiftSpace = new (function() {
 
     // {SystemBasePackages}
     
-    
     // INCLUDE IframeHelpers.js
     // INCLUDE SSException.js
     // INCLUDE PinHelpers.js
@@ -353,9 +354,8 @@ var ShiftSpace = new (function() {
 
       // If all spaces have been loaded, build the shift menu and the console
       ShiftSpace.ShiftMenu.buildMenu();
-      
       // INCLUDE CoreEvents.js
-
+      
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
         if(ShiftSpace.Console)
@@ -377,6 +377,7 @@ var ShiftSpace = new (function() {
 
       // Create the modal div
       SSCreateModalDiv();
+      SSCreateDragDiv();
       SSLog('ShiftSpace initialize complete');
       
       // Synch with server, 
@@ -2724,6 +2725,26 @@ var ShiftSpace = new (function() {
         }
 
       });
+    }
+    
+    var __dragDiv__;
+    function SSCreateDragDiv()
+    {
+      __dragDiv__ = new ShiftSpace.Element('div', {
+        id: 'SSDragDiv'
+      });
+    }
+    
+    function SSAddDragDiv()
+    {
+      console.log('SSAddDragDiv');
+      document.body.grab(__dragDiv__);
+    }
+    
+    function SSRemoveDragDiv()
+    {
+      console.log('SSRemoveDragDiv');
+      __dragDiv__ = __dragDiv__.dispose();
     }
 
     // In sandbox mode, expose something for easier debugging.

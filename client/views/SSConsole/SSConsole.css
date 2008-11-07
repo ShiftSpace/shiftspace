@@ -64,3 +64,15 @@
   height: 18px;
   border: 1px solid red;
 }
+
+#SSConsoleResizer
+{
+  position: fixed;
+  background-color:red;
+  bottom:180px;
+  cursor:ns-resize;
+  height:10px;
+  left:10px;
+  right:10px;
+  width:100%;
+}
