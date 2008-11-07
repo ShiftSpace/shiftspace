@@ -111,7 +111,7 @@ var ShiftMenu = new Class({
       if(!SSSpaceForName(spaceName))
       {
         // we need to load the space first
-        SSLoadSpace(spaceName, null, function() {
+        SSLoadSpace(spaceName, function() {
           SSInitShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
         });
       }

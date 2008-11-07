@@ -1177,7 +1177,7 @@ var ShiftSpace = new (function() {
         SSSetValue('installed', installed);
 
         // let everyone else know
-        SSLoadSpace(space, pendingShift, function() {
+        SSLoadSpace(space, function() {
           alert(space + " space installed.");
           SSFireEvent('onSpaceInstall', space);
         }.bind(this));
@@ -1482,7 +1482,7 @@ var ShiftSpace = new (function() {
           {
             SSLog(shift);
             SSLog('space not loaded ' + shift.space + ', ' + shiftId);
-            SSLoadSpace(shift.space, shiftId);
+            SSLoadSpace(shift.space);
             return;
           }
 
@@ -1595,7 +1595,7 @@ var ShiftSpace = new (function() {
           if(!spaceObject)
           {
             // load the space first
-            SSLoadSpace(space, null, function() {
+            SSLoadSpace(space, function() {
               ids.each(SSShowShift);
             });
             return;
@@ -2052,7 +2052,7 @@ var ShiftSpace = new (function() {
         // load the space first
         if(!space)
         {
-          SSLoadSpace(shift.space, shiftId, function() {
+          SSLoadSpace(shift.space, function() {
             SSEditShift(shiftId);
           });
           return;
@@ -2218,10 +2218,9 @@ var ShiftSpace = new (function() {
 
     Parameters:
       space - the Space name to load
-      pendingShift - a pending shift id, will probably become deprecaed.
       callback - a callback function to run when the space is loaded.
     */
-    function SSLoadSpace(space, pendingShift, callback)
+    function SSLoadSpace(space, callback)
     {
       // set the pending shift if there is one
       SSSetPendingShift(pendingShift);
