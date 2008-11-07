@@ -59,7 +59,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogError);
+    SSSetLogLevel(SSLogAll);
 
     // Default to http://shiftspace.org/dev
     var server = SSGetValue('server', 'http://www.shiftspace.org/dev/');
@@ -2716,7 +2716,14 @@ var ShiftSpace = new (function() {
         }
         else
         {
-          GM_addStyle(css);
+          if(!Browser.Engine.trident)
+          {
+            GM_addStyle(css);
+          }
+          else
+          {
+            Asset.css(url);
+          }
         }
 
         if (typeof callback == 'function')

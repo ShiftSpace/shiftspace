@@ -17,20 +17,20 @@ var SSEditableTextCell = new Class({
   },
 
 
-  set value(value)
+  setValue: function(value)
   {
     if(this.element) this.element.setProperty('value', value);
   },
 
 
-  get value()
+  value: function()
   {
     if(this.element) return this.element.getProperty('value');
     return null;
   },
 
 
-  set editable(value)
+  setEditable: function(value)
   {
     if(this.element)
     {
@@ -46,7 +46,7 @@ var SSEditableTextCell = new Class({
   },
 
 
-  get editable()
+  editable: function()
   {
     if(this.element) this.element.getProperty('enabled');
   },
@@ -57,7 +57,7 @@ var SSEditableTextCell = new Class({
     // add key events
     this.element.addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
-      var value = this.value;
+      var value = this.value();
 
       if(this.isEditing)
       {
@@ -101,7 +101,7 @@ var SSEditableTextCell = new Class({
       this.originalValue = this.element.getProperty('value');
       this.observeEvents();
       // make the field editable
-      this.editable = true;
+      this.setEditable(true);
       this.editStyle();
     }
   },
@@ -113,7 +113,7 @@ var SSEditableTextCell = new Class({
     {
       this.isEditing = false;
       // restore original value
-      this.value = this.originalValue;
+      this.setValue(this.originalValue);
       // leave edit mode
       this.finishEdit();
       this.fireEvent("SSEditableTextCellDidCancelEdit", this);
@@ -129,7 +129,7 @@ var SSEditableTextCell = new Class({
       // empty out original value
       this.originalValue = null;
       // make the field uneditable
-      this.editable = false;
+      this.setEditable(false);
       this.unobserveEvents();
       this.normalStyle();
     }
