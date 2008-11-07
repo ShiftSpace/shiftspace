@@ -518,6 +518,16 @@ ShiftSpace.Space = new Class({
 
     this.fireEvent( 'onDeleteShift', shiftId );
   },
+  
+  unintern: function(shiftId)
+  {
+    delete this.shifts[shiftId];
+  },
+  
+  intern: function(shiftId, shift)
+  {
+    this.shifts[shiftId] = shift;
+  },
 
   /*
     Function: editShift

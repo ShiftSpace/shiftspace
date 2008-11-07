@@ -72,6 +72,7 @@ var User = new Class({
   login: function(credentials, _callback) 
   {
     var callback = _callback;
+    
     SSServerCall('user.login', credentials, function(json) {
       if (json.status) 
       {
@@ -109,6 +110,7 @@ var User = new Class({
   */
   join: function(userInfo, callback) 
   {
+    
     SSServerCall('user.join', userInfo, function(json) {
       if (json.status) 
       {

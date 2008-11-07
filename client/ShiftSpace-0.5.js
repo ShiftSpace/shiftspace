@@ -86,7 +86,7 @@ var ShiftSpace = new (function() {
     // = ShiftSpace Core Objects =
     // ===========================
     
-    var spaces = {};
+    var __spaces__ = {};
     var shifts = {};
     var trails = {};
     var plugins = {};
@@ -252,11 +252,7 @@ var ShiftSpace = new (function() {
     function SSResetCore()
     {
       // reset all internal state
-    }
-    
-    function SSAllSpaces()
-    {
-      //return spaces
+      __spaces__ = {};
     }
     
     /*
@@ -798,13 +794,19 @@ var ShiftSpace = new (function() {
       return SSSpaceForName(shift.space);
     }
     
+    function SSSpaceNameForShift(shiftId)
+    {
+      var shift = SSGetShift(shiftId);
+      return shift.space;
+    }
+    
     /*
       Functions: SSpaceForName
         Returns the space associated with a particular name.
     */
     function SSSpaceForName(name)
     {
-      var space = spaces[name];
+      var space = __spaces__[name];
       
       if(!space)
       {
@@ -818,17 +820,27 @@ var ShiftSpace = new (function() {
     
     function SSSetSpaceForName(space, name)
     {
-      spaces[name] = space;
+      __spaces__[name] = space;
     }
     
     function SSRemoveSpace(name)
     {
-      delete spaces[name];
+      delete __spaces__[name];
     }
     
     function SSSpacesCount()
     {
-      return spaces.length;
+      return __spaces__.length;
+    }
+    
+    function SSAllSpaces()
+    {
+      return __spaces__;
+    }
+    
+    function SSAllShifts()
+    {
+      return shifts;
     }
     
     function SSPluginForName(name)
@@ -857,7 +869,7 @@ var ShiftSpace = new (function() {
     */
     function SSUserForShift(shiftId)
     {
-      return shifts[shiftId].username;
+      return SSGetShift(shiftId).username;
     }
 
     /*
@@ -1248,7 +1260,7 @@ var ShiftSpace = new (function() {
       }
 
       var tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
-      while (shifts[tempId]) 
+      while (SSGetShift(tempId)) 
       {
         tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
       }
@@ -1262,13 +1274,16 @@ var ShiftSpace = new (function() {
       };
       //SSLog(shiftJson);
 
-      shifts[tempId] = shiftJson;
+      SSSetShift(tempId, shiftJson);
 
       SSLog('+++++++++++++++++++++++++++++++++++++++++++++++');
       SSLog(SSSpaceForName(spaceName));
       SSLog('calling create shift');
+      
       var noError = SSSpaceForName(spaceName).createShift(shiftJson);
+      
       SSLog('noError : ' + noError);
+      
       if(noError)
       {
         //SSLog('tempId:' + tempId);
@@ -1309,13 +1324,13 @@ var ShiftSpace = new (function() {
     */
     function SSFocusShift(shiftId)
     {
-      var shift = shifts[shiftId];
+      var shift = SSGetShift(shiftId);
       var space = SSSpaceForShift(shiftId);
       var lastFocusedShift = SSFocusedShiftId();
 
       // unfocus the last shift
       if (lastFocusedShift &&
-          shifts[lastFocusedShift] &&
+          SSGetShift(lastFocusedShift) &&
           lastFocusedShift != shiftId)
       {
         var lastSpace = SSSpaceForShift(lastFocusedShift);
@@ -1608,9 +1623,10 @@ var ShiftSpace = new (function() {
     function SSAllShiftIdsForSpace(spaceName)
     {
       var shiftsForSpace = [];
-      for(shiftId in shifts)
+      var allShifts = SSAllShifts();
+      for(shiftId in allShifts)
       {
-        if(shifts[shiftId].space == spaceName)
+        if(SSSpaceNameForShift(shiftId) == spaceName)
         {
           shiftsForSpace.push(shiftId);
         }
@@ -1631,7 +1647,7 @@ var ShiftSpace = new (function() {
 
       if(theShift)
       {
-        return shifts[shiftId];
+        return theShift;
       }
 
       return null;
@@ -1854,10 +1870,10 @@ var ShiftSpace = new (function() {
       if(ShiftSpace.User.isLoggedIn())
       {
         var username = ShiftSpace.User.getUsername();
-
-        for(shiftId in shifts)
+        var allShifts = SSAllShifts();
+        for(shiftId in allShifts)
         {
-          if(shifts[shiftId].username == username)
+          if(SSUserForShift(shiftId) == username)
           {
             shiftIds.push(shiftId);
           }
@@ -1970,12 +1986,12 @@ var ShiftSpace = new (function() {
         shiftJson.href = window.location.href;
 
         // with the real value
-        var shiftObj = space.shifts[shiftJson.id];
+        var shiftObj = space.getShift(shiftJson.id);
         shiftObj.setId(json.id);
 
         // delete the temporary stuff
-        delete shifts[shiftJson.id];
-        delete space.shifts[shiftJson.id];
+        SSRemoveShift(shiftJson.id);
+        space.unintern(shiftJson.id);
 
         if (SSFocusedShiftId() == shiftJson.id) 
         {
@@ -1984,8 +2000,9 @@ var ShiftSpace = new (function() {
         
         shiftJson.id = json.id;
         shiftJson.content = JSON.encode(shiftJson);
-        shifts[shiftJson.id] = shiftJson;
-        space.shifts[shiftJson.id] = shiftObj;
+        
+        SSSetShift(shiftJson.id, shiftJson);
+        space.intern(shiftJson.id, shiftObj);
 
         // add and show the shift
         if(ShiftSpace.Console)
@@ -2726,7 +2743,7 @@ var ShiftSpace = new (function() {
     // In sandbox mode, expose something for easier debugging.
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
-      this.spaces = spaces;
+      this.spaces = SSAllSpaces();
       this.shifts = shifts;
       this.trails = trails;
       this.SSSetValue = SSSetValue;
