@@ -18,17 +18,6 @@ function SSIsNewShift(shiftId)
   return (shiftId.search('newShift') != -1);
 }
 
-var __pendingShift__ = null;
-function SSSetPendingShift(shiftId)
-{
-  __pendingShift__ = shiftId;
-}
-
-function SSPendingShift()
-{
-  return __pendingShift__;
-}
-
 // ==========================
 // = Iframe Cover Functions =
 // ==========================
