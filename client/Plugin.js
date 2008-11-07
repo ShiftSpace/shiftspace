@@ -10,6 +10,8 @@
 */
 ShiftSpace.Plugin = new Class({
   
+  name: 'ShiftSpace.Plugin',
+  
   attributes:
   {
     name: null,

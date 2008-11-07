@@ -133,10 +133,6 @@ var ShiftSpace = new (function() {
     var __focusedShiftId__ = null;
     var __focusedSpace__ = null;
 
-    // These are for the race condition between shifts loading and console setup
-    var __pendingShifts__ = -1;
-    // A shift pending space load
-    var __pendingShift__ = null;
     var __consoleIsWaiting__ = false;
     var __defaultShiftStatus__ = 1;
     var __defaultEmailComments__ = 1;
@@ -1066,11 +1062,6 @@ var ShiftSpace = new (function() {
     }
 
 
-    function SSSetPendingShifts(val)
-    {
-      __pendingShifts__ = val;
-    }
-
     /*
       Function: SSFocusedShiftId
         Returns the current focused shift's id.
@@ -1165,10 +1156,8 @@ var ShiftSpace = new (function() {
 
     Parameters:
       space - The Space name to install
-      pendingShift - A shift to show upon installation
-
     */
-    function SSInstallSpace(space, pendingShift) 
+    function SSInstallSpace(space) 
     {
       if(!installed[space])
       {
@@ -1792,17 +1781,6 @@ var ShiftSpace = new (function() {
     }
 
 
-    function SSSetPendingShift(shiftId)
-    {
-      __pendingShift__ = shiftId;
-    }
-
-
-    function SSPendingShift()
-    {
-      return __pendingShift__;
-    }
-
     /*
       Function: SSGetShifts
         Similar to SSLoadShifts, probably should be merged.  Only used by plugins.
@@ -2222,12 +2200,9 @@ var ShiftSpace = new (function() {
     */
     function SSLoadSpace(space, callback)
     {
-      // set the pending shift if there is one
-      SSSetPendingShift(pendingShift);
-
       if(space)
       {
-        SSLog('loading space: ' + space);
+        SSLog('loading space: ' + space); 
         if (typeof ShiftSpaceSandBoxMode != 'undefined')
         {
           var url = installed[space] + '?' + new Date().getTime();

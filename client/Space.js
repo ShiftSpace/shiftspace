@@ -93,16 +93,6 @@ ShiftSpace.Space = new Class({
     //SSLog('/ / / / SETTING UP');
     this.setup();
 
-    // check for a pending shift
-    var pendingShift = SSPendingShift();
-    if(pendingShift)
-    {
-      // clear it out
-      SSSetPendingShift(null);
-      // show the pending shift
-      SSShowShift(pendingShift);
-    }
-
     return this;
   },
 
