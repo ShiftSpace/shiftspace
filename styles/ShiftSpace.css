@@ -87,11 +87,12 @@ body > #SSConsole
 #SSConsoleResizer
 {
   position: fixed;
-  bottom: 142px;
-  left: 25px;
-  height: 11px;
-  cursor: ns-resize;
-  z-index: 1000002;
+  /*background-color:red;*/
+  bottom:180px;
+  cursor:ns-resize;
+  height:10px;
+  left:10px;
+  right:10px;
 }
 
 #SSConsoleResizeMask
@@ -678,5 +679,15 @@ table.SSErrorWindowShiftStatus
   width: 100%;
   height: 100%;
   opacity: 0.5;
+  z-index: 2000000;
+}
+
+#SSDragDiv
+{
+  background-color: black;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  opacity: 0.0;
   z-index: 2000000;
 }

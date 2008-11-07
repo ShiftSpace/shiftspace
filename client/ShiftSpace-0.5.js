@@ -59,7 +59,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogAll);
+    SSSetLogLevel(SSLogError);
 
     // Default to http://shiftspace.org/dev
     var server = SSGetValue('server', 'http://www.shiftspace.org/dev/');
@@ -73,21 +73,19 @@ var ShiftSpace = new (function() {
 
     // Current ShiftSpace version
     var version = '0.13';
-
-    // Logging verbosity and non-sandboxed JS visibility
-    var debug = 0;
-
     // Cache loadFile data
     var cacheFiles = 0;
 
-    // get Dan's input on how to set this
     if(typeof ShiftSpaceSandBoxMode != 'undefined') 
     {
       server = window.location.href.substr(0, window.location.href.indexOf('sandbox'));
       cacheFiles = 0;
     }
 
-    // The basic building blocks of ShiftSpace (private objects)
+    // ===========================
+    // = ShiftSpace Core Objects =
+    // ===========================
+    
     var spaces = {};
     var shifts = {};
     var trails = {};
@@ -264,8 +262,6 @@ var ShiftSpace = new (function() {
     this.initialize = function() {
       // ShiftSpace global var is set by this point not before.
       
-      debug = 0;
-
       // look for install links
       SSCheckForInstallSpaceLinks();
       
@@ -2321,7 +2317,7 @@ var ShiftSpace = new (function() {
       }
 
       // This exposes each space instance to the console
-      if (debug) 
+      if (typeof ShiftSpaceSandBoxMode != 'undefined') 
       {
         ShiftSpace[instance.attributes.name + 'Space'] = instance;
       }
@@ -2498,7 +2494,7 @@ var ShiftSpace = new (function() {
       });
 
       // This exposes each space instance to the console
-      if (debug)
+      if (typeof ShiftSpaceSandBoxMode != 'undefined')
       {
         ShiftSpace[plugin.attributes.name] = plugin;
       }

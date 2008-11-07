@@ -593,6 +593,8 @@ var SandalphonToolClass = new Class({
     */
    compileFile: function()
    {
+     // clear out all existing system data
+
      // grab the filepath
      var filepath = $('loadFileInput').getProperty('value');
      // save for later

@@ -161,27 +161,30 @@ var SSConsole = new Class({
     var apiField = this.outlets().get('SSSetApiURLField');
     var spacesDirField = this.outlets().get('SSSetSpaceDirField');
     
-    apiField.setProperty('value', ShiftSpace.info().server);
-    spacesDirField.setProperty('value', ShiftSpace.info().spacesDir);
-    
-    // add keydown event handlers on them for carraige return
-    apiField.addEvent('keydown', function(_evt) {
-      var evt = new Event(_evt);
-      var previousValue = SSGetValue('server', ShiftSpace.info().server);
-      if(evt.key == 'enter')
-      {
-        console.log('Update the api variable. prev: ' + previousValue);
-      }
-    }.bind(this));
-    
-    spacesDirField.addEvent('keydown', function(_evt) {
-      var evt = new Event(_evt);
-      var previousValue = SSGetValue('spacesDir', ShiftSpace.info().spacesDir);
-      if(evt.key == 'enter')
-      {
-        console.log('Update the space dir variable. prev:' + previousValue);
-      }
-    }.bind(this));
+    if(ShiftSpace.info)
+    {
+      apiField.setProperty('value', ShiftSpace.info().server);
+      spacesDirField.setProperty('value', ShiftSpace.info().spacesDir);
+
+      // add keydown event handlers on them for carraige return
+      apiField.addEvent('keydown', function(_evt) {
+        var evt = new Event(_evt);
+        var previousValue = SSGetValue('server', ShiftSpace.info().server);
+        if(evt.key == 'enter')
+        {
+          console.log('Update the api variable. prev: ' + previousValue);
+        }
+      }.bind(this));
+
+      spacesDirField.addEvent('keydown', function(_evt) {
+        var evt = new Event(_evt);
+        var previousValue = SSGetValue('spacesDir', ShiftSpace.info().spacesDir);
+        if(evt.key == 'enter')
+        {
+          console.log('Update the space dir variable. prev:' + previousValue);
+        }
+      }.bind(this));
+    }
   },
   
   
