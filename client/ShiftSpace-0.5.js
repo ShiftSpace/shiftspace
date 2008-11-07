@@ -1965,12 +1965,6 @@ var ShiftSpace = new (function() {
         status: SSGetDefaultShiftStatus() // TODO: this call is in the space ecosystem
       };
 
-      /*
-      SSLog('//////////////////////////////////////////////////////////////////');
-      SSLog(JSON.encode(params));
-      SSLog('//////////////////////////////////////////////////////////////////');
-      */
-
       SSLog('saving new shift!');
       SSServerCall.safeCall('shift.create', params, function(json) {
         SSLog('>>>>>>>>>>>>>>>>> SAVED new shift', SSLogServerCall);
@@ -1989,8 +1983,9 @@ var ShiftSpace = new (function() {
         var shiftObj = space.getShift(shiftJson.id);
         shiftObj.setId(json.id);
 
-        // delete the temporary stuff
+        // unintern this id
         SSRemoveShift(shiftJson.id);
+        // we just want to change the name, so don't delete
         space.unintern(shiftJson.id);
 
         if (SSFocusedShiftId() == shiftJson.id) 
@@ -2001,7 +1996,9 @@ var ShiftSpace = new (function() {
         shiftJson.id = json.id;
         shiftJson.content = JSON.encode(shiftJson);
         
+        // intern local copy
         SSSetShift(shiftJson.id, shiftJson);
+        // intern the space copy
         space.intern(shiftJson.id, shiftObj);
 
         // add and show the shift
@@ -2042,7 +2039,7 @@ var ShiftSpace = new (function() {
       {
         var space = SSSpaceForShift(shiftId);
         var user = SSUserForShift(shiftId);
-        var shift = shifts[shiftId];
+        var shift = SSGetShift(shiftId);
 
         // load the space first
         if(!space)
@@ -2129,7 +2126,7 @@ var ShiftSpace = new (function() {
         if(ShiftSpace.Console) ShiftSpace.Console.removeShift(shiftId);
         // don't assume the space is loaded
         if(space) space.onShiftDelete(shiftId);
-        delete shifts[shiftId];
+        SSRemoveShift(shiftId);
       });
     }
 
