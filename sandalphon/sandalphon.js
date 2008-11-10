@@ -138,8 +138,6 @@ var SandalphonClass = new Class({
       var head = context.$(contextDoc.createElement('head'));
       head.injectBefore($(contextDoc.body));
     }
-    var style = context.$(contextDoc.createElement('style'));
-    style.setProperty('type', 'text/css');
     
     // Add some base styles
     css += "                          \
@@ -154,10 +152,19 @@ var SandalphonClass = new Class({
         -webkit-user-select: none;    \
       }                               \
     ";
-
     
-    style.appendText(css);
-    style.injectInside(head);
+    if(!Browser.Engine.trident)
+    {
+      var style = context.$(contextDoc.createElement('style'));
+      style.setProperty('type', 'text/css');
+      style.appendText(css);
+      style.injectInside(head);
+    }
+    else
+    {
+      var style = contextDoc.createStyleSheet();
+      style.cssText = css;
+    }
   },
   
   

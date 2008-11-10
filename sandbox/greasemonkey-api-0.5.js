@@ -1,16 +1,28 @@
 function GM_addStyle(css) 
 {
-  if (document.getElementsByTagName('head').length != 0) {
+  if (document.getElementsByTagName('head').length != 0) 
+  {
     var head = document.getElementsByTagName('head')[0];
-  } else {
+  } 
+  else 
+  {
     var head = new Element('head');
     head.injectBefore($(document.body));
   }
-  var style = new Element('style', {
-    type: 'text/css'
-  });
-  style.appendText(css);
-  style.injectInside(head);
+  
+  if(!Browser.Engine.trident)
+  {
+    var style = new Element('style', {
+      type: 'text/css'
+    });
+    style.appendText(css);
+    style.injectInside(head);
+  }
+  else
+  {
+    var style = document.createStyleSheet();
+    style.cssText = css;
+  }
 }
 
 

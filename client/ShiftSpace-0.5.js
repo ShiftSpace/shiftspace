@@ -2660,6 +2660,7 @@ var ShiftSpace = new (function() {
     function SSLoadStyle(url, callback, frame) 
     {
       // TODO: check to see if the domain is different, if so don't mess with the url - David
+      // TODO: get rid of frame, change to context so we can use this function for iframe's as well
       var dir = url.split('/');
       dir.pop();
       dir = dir.join('/');
@@ -2699,14 +2700,8 @@ var ShiftSpace = new (function() {
         }
         else
         {
-          if(!Browser.Engine.trident)
-          {
-            GM_addStyle(css);
-          }
-          else
-          {
-            Asset.css(url);
-          }
+          // FIXME: we don't want to rely on this, we can't target iframes - David
+          GM_addStyle(css);
         }
 
         if (typeof callback == 'function')
