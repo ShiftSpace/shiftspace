@@ -295,6 +295,8 @@ var SSConsole = new Class({
 
   buildInterface: function(ui)
   {
+    SSLog("BUILD SSConsole interface");
+
     // create the iframe where the console will live
     this.element = new IFrame({
       id: 'SSConsole'
@@ -302,10 +304,12 @@ var SSConsole = new Class({
     // since we're creating the frame via code we need to hook up the controller
     // reference manually
     SSSetControllerForNode(this, this.element);
+    SSLog("Iframe injected");
     this.element.injectInside(document.body);
 
     // finish initialization after iframe load
     this.element.addEvent('load', function() {
+      SSLog("SSConsole iframe loaded");
       var context = this.element.contentWindow;
 
       // under GM not wrapped, erg - David

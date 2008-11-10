@@ -347,6 +347,7 @@ Browser.Plugins.Flash = (function(){
 })();
 
 function $exec(text){
+  console.log('$EXEC ' + text);
 	if (!text) return text;
 	if (window.execScript){
 		window.execScript(text);
@@ -1561,6 +1562,11 @@ Element.implement({
 	},
 
 	clone: function(contents, keepid){
+	  // CHANGE: fix for IE8, treats closing tags as real nodes - David
+	  if(Browser.Engine.trident && this.tagName && this.tagName.test('/'))
+	  {
+	    return null;
+	  }
 		switch ($type(this)){
 			case 'element':
 				var attributes = {};
@@ -1572,6 +1578,9 @@ Element.implement({
 					if (value != 'inherit' && ['string', 'number'].contains($type(value))) attributes[key] = value;
 				}
 				var element = new Element(this.nodeName.toLowerCase(), attributes);
+				// CHANGE: Fix for IE8, the attribute thing doesn't work - David
+				element.setAttribute('class', this.getAttribute('class'));
+				element.setAttribute('style', this.getAttribute('style'));
 				if (contents !== false){
 					for (var i = 0, k = this.childNodes.length; i < k; i++){
 						var child = Element.clone(this.childNodes[i], true, keepid);

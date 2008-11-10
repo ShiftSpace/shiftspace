@@ -50,10 +50,3 @@ function SSLoadLocalizedStrings(lang, ctxt)
     __sslang__ = lang;
   });
 }
-
-// Localized String Support
-function SSLocalizedString(string)
-{
-  if(ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
-  return string;
-}

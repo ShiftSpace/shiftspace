@@ -67,6 +67,8 @@ var SandalphonClass = new Class({
     var interface;
     var styles;
     
+    SSLog("Sandalphon LOAD " + path);
+    
     var server = (ShiftSpace && ShiftSpace.info && ShiftSpace.info().server) || '..';
     //console.log('load!');
     // load the interface file
@@ -77,6 +79,7 @@ var SandalphonClass = new Class({
         method: 'get',
         onComplete: function(responseText, responseXML)
         {
+          SSLog("Sandalphon interface call complete");
           interface = responseText;
         }.bind(this),
         onFailure: function()
@@ -90,6 +93,7 @@ var SandalphonClass = new Class({
         method: 'get',
         onComplete: function(responseText, responseXML)
         {
+          SSLog("Sandalphon styles call complete");
           styles = responseText;
         }.bind(this),
         onFailure: function()
@@ -101,7 +105,7 @@ var SandalphonClass = new Class({
       // Group HTMl and CSS calls
       var loadGroup = new Group(interfaceCall, stylesCall);
       loadGroup.addEvent('complete', function() {
-        //console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> load group done');
+        SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sandalphon interface loda complete');
         if(callback) callback({interface:interface, styles:styles});
       });
       
@@ -200,10 +204,14 @@ var SandalphonClass = new Class({
     // instantiate all objects
     views.each(function(aView) {
       var theClass = aView.getProperty('uiclass');
+      SSLog('=========================================');
+      SSLog('instantiating ' + theClass);
       new ShiftSpace.UI[theClass](aView);
+      SSLog('instantation complete');
     });
     
     // notify all listeners
+    SSLog('Notifying all listeners');
     views.each(SSNotifyInstantiationListeners);
   },
   

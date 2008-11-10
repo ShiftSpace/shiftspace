@@ -13,6 +13,7 @@ var SSTableRow = new Class({
   initialize: function(el)
   {
     this.parent(el);
+    SSLog('Preparing model');
     this.prepareAndSetModel(el);
   },
   

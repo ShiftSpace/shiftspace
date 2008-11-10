@@ -273,7 +273,7 @@ var ShiftSpace = new (function() {
       SSLog('User.js loaded');
 
       SSLog('load localized strings');
-      if(typeof __sslang__ != 'undefined') SSLoadLocalizedStrings("en");
+      if(SSLocalizedStringSupport()) SSLoadLocalizedStrings("en");
 
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
@@ -310,7 +310,7 @@ var ShiftSpace = new (function() {
       SSLog('SSCustomTableRow.js loaded');
       // INCLUDE ../sandalphon/sandalphon.js
       SSLog('sandalphon.js loaded');
-      //   views/SSConsole/SSConsole.js
+      // INCLUDE views/SSConsole/SSConsole.js
       SSLog('SSConsole.js loaded');
 
       // INCLUDE Space.js
@@ -442,6 +442,18 @@ var ShiftSpace = new (function() {
         return (new Document(this.ownerDocument)).getWindow().$$('#' + this.getProperty('id') + ' ' + sel);
       }
     });
+    
+    function SSLocalizedStringSupport()
+    {
+      return (typeof __sslang__ != 'undefined');
+    }
+    
+    // Localized String Support
+    function SSLocalizedString(string)
+    {
+      if(SSLocalizedStringSupport() && ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
+      return string;
+    }
     
     function SSCheckForInstallSpaceLinks()
     {

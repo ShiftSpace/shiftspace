@@ -29,7 +29,9 @@ var SSCustomTableRow = new Class({
   
   prepareModel: function(model)
   {
+    SSLog('Preparing the model, first generating clone');
     var clone = $(model.clone(true));
+    SSLog('Cleaning the model');
     // clean up the properties from the editable text cell, it's a singleton, we don't want these to be carried over
     clone.getElement('.SSEditableTextCell').removeProperty('uiclass');
     clone.getElement('.SSEditableTextCell').removeProperty('outlet');
@@ -133,6 +135,7 @@ var SSCustomTableRow = new Class({
       var server = (ShiftSpace.info && ShiftSpace.info().server) || '..';
       
       image.setProperty('src', [server, '/spaces/', space, '/', space, '.png'].join(''));
+      
       span.set('text', SSLocalizedString(space));
     } 
   },

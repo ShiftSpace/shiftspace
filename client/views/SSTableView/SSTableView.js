@@ -36,23 +36,31 @@ var SSTableView = new Class({
     // need to pass this up to parent
     this.parent(el);
 
-    SSLog('SSTableView parent called', SSLogViews);
+    SSLog('SSTableView parent called ' + this.elId(), SSLogViews);
 
     // for speed
+    SSLog('Grab content view');
     this.contentView = this.element._getElement('> .SSScrollView .SSContentView');
     // set the model row
+    SSLog('Extract model row');
     this.setModelRow(this.contentView._getElement('.SSModel').dispose());
     // set the model row controller if there is one
+    SSLog('Set model row controller');
     this.setModelRowController(this.controllerForNode(this.modelRow()));
     // set the column names
+    SSLog('Set table view column names');
     this.setColumnNames(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name');}));
     // set the column display titles
+    SSLog('Set column titles');
     this.setColumnTitles(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('title');}));
+    SSLog('Initialize column sorting');
     // set up the column orders
     this.initColumnSort();
     // initialize the table header
+    SSLog('Initialize table head');
     this.initTableHead();
     // create resize masks
+    SSLog('Intialize column resizers'); 
     this.initColumnResizers();
 
     // give time for double click
@@ -65,6 +73,7 @@ var SSTableView = new Class({
     // listen for window resize
     window.addEvent('resize', this.refreshColumnHeadings.bind(this));
     /*window.addEvent('keyup', this.eventDispatch.bind(this));*/
+    SSLog('Finished initializing table view');
   },
 
 
