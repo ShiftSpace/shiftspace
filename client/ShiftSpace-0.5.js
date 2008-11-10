@@ -59,7 +59,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogError);
+    SSSetLogLevel(SSLogAll);
 
     // Default to http://shiftspace.org/dev
     var server = SSGetValue('server', 'http://www.shiftspace.org/dev/');
@@ -242,7 +242,7 @@ var ShiftSpace = new (function() {
     // INCLUDE SSException.js
     // INCLUDE PinHelpers.js
     // INCLUDE SSViewProxy.js
-    // INCLUDE LocalizedStringsSupport.js
+    // LocalizedStringsSupport.js
     // INCLUDE SandalphonSupport.js
     // INCLUDE EventProxy.js
     // INCLUDE RecentlyViewedHelpers.js
@@ -273,7 +273,7 @@ var ShiftSpace = new (function() {
       SSLog('User.js loaded');
 
       SSLog('load localized strings');
-      SSLoadLocalizedStrings("en");
+      if(typeof __sslang__ != 'undefined') SSLoadLocalizedStrings("en");
 
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
@@ -310,7 +310,7 @@ var ShiftSpace = new (function() {
       SSLog('SSCustomTableRow.js loaded');
       // INCLUDE ../sandalphon/sandalphon.js
       SSLog('sandalphon.js loaded');
-      // INCLUDE views/SSConsole/SSConsole.js
+      //   views/SSConsole/SSConsole.js
       SSLog('SSConsole.js loaded');
 
       // INCLUDE Space.js

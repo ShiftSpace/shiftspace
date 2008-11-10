@@ -4,16 +4,17 @@
 // @package           Internationalization
 // ==/Builder==
 
-var __sslang__;
+var __sslang__ = null;
 function SSLoadLocalizedStrings(lang, ctxt)
 {
   var context = ctxt || window;
   //SSLog('load localized strings ' + lang);
   SSLoadFile("client/LocalizedStrings/"+lang+".js", function(rx) {
-    //SSLog(')))))))))))))))))))))))))))))))))))))))))))');
-    //SSLog(lang + " - " + __sslang__);
+    SSLog(')))))))))))))))))))))))))))))))))))))))))))');
+    SSLog(lang + " - " + __sslang__);
     if(lang != __sslang__)
     {
+      SSLog('Evaluating language file');
       ShiftSpace.localizedStrings = JSON.decode(rx.responseText);
       //SSLog(ShiftSpace.localizedStrings);
 
