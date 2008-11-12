@@ -219,7 +219,18 @@ var SSTableView = new Class({
   eventDispatch: function(theEvent)
   {
     var evt = new Event(theEvent);
-    var type = evt.event.type;
+    var type;
+    
+    try
+    {
+      // capture IE8 error
+      type = evt.type;
+    }
+    catch(err)
+    {
+      if($type(type) == 'undefined') type = null;
+    }
+    
     var target = evt.target;
 
     if(type == 'dblclick')
