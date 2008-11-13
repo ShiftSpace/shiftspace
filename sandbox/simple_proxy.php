@@ -65,54 +65,11 @@ if(!$result){
     $result . "</p>";
   exit;
 }
-//test if url begins with http:// if not add it
-if(!preg_match("/^http:\/\//",$myurl)){
-  $myurl = "http://" . $myurl;
-}
-//test wether url ends with a / if not add one
-if(!preg_match("/[a-zA-Z]+\/$/",$myurl)){
-  $myurl = $myurl . "/";
-}
-// get the base url
 
-preg_match("/^(http:\/\/)?([^\/]+)/i",$myurl, $matches);
-$baseurl = $matches[2];
-
-// for relative links i.e. ../images/myImage.jpg
-// part of url is trucated to allow path to be rewritten correctly
-preg_match('/.+\/(?=.+\/.+$)/',$myurl,$relativeUrlMatch);
-$relativeUrl = $relativeUrlMatch[0];
-
-//for relative links i.e. ./styles/style.css
-preg_match('/(.+\/)(.+$)?/',$myurl,$dotSlashMatch);
-$dotSlashMatch = $dotSlashMatch[1];
-
-// replace relative links with absolute links
-// if beings with src="/
-$result = preg_replace("/src=\"\//i","src=\"http://$baseurl/" ,$result);
-// if begins with src="../
-$result = preg_replace("/src=\"\.\./i","src=\"$relativeUrl" ,$result);
-// if begins with src="word/ && word != http or www
-$result = preg_replace("/src=\"(?!http|www)/i","src=\"$myurl",$result);
-// href=/
-$result = preg_replace("/href=\"\//i","href=\"http://$baseurl/" ,$result);
-// href="folder/file
-$result = preg_replace("/href=\"(?=[^http|\/|www|\.\.])/i","href=\"$myurl" ,$result);
-// href ="./
-$result = preg_replace("/href=\"\.\//","href=\"$dotSlashMatch",$result);
-// href="../
-$result = preg_replace("/href=\"\.\./i","href=\"$relativeUrl" ,$result);
-// css imports
-$result = preg_replace("/@import\s+url\(\//i","@import url(http://$baseurl/", $result);
-// css for for href=\"/css/essay.css
-$result = preg_replace("/href=\"?\//i","href=\"$myurl", $result);
-
-// remove 'most' javascript
-$result = preg_replace("/<script.*?<\/script>/ims","<!--removedjavascript-->",$result);
-$result = preg_replace("/onresize=\".*?\"/i","",$result);
-$result = preg_replace("/onload=\".*?\"/i","",$result);
-$result = preg_replace("/onresize=\'.*?\'/i","",$result);
-$result = preg_replace("/onload=\'.*?\'/i","",$result);
+$lp = new LinkProcessor();
+$lp->setUrl($myurl);
+$lp->setDoc($result);
+$result = $lp->getProcessedDoc();
 
 // load styles
 $ShiftSpace = "<link type=\"text/css\" rel=\"stylesheet\" href=\"$base_url../styles/ShiftSpace.css\" />\n";
