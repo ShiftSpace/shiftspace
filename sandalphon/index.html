@@ -13,7 +13,7 @@
     <script src="../sandbox/greasemonkey-api-0.5.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/SSLog.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
-      SSSetLogLevel(SSLogAll);
+      SSSetLogLevel(SSLogError);
     </script>
     
     <!-- Globals -->
@@ -55,6 +55,18 @@
     <script src="../client/LocalizedStringsSupport.js" type="text/javascript" charset="utf-8"></script>
     
     <script type="text/javascript" charset="utf-8">
+      function SSLocalizedStringSupport()
+      {
+        return (typeof __sslang__ != 'undefined');
+      }
+
+      // Localized String Support
+      function SSLocalizedString(string)
+      {
+        if(SSLocalizedStringSupport() && ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
+        return string;
+      }
+      
       var __controlledNodes__ = $H();
       // This is because node references get wrapped and look different to Mootools
       function SSSetControllerForNode(controller, node)

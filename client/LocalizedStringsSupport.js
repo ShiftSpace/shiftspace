@@ -9,7 +9,7 @@ function SSLoadLocalizedStrings(lang, ctxt)
 {
   var context = ctxt || window;
   //SSLog('load localized strings ' + lang);
-  SSLoadFile("client/LocalizedStrings/"+lang+".js", function(rx) {
+  SSLoadFile("client/LocalizedStrings/"+lang+".json", function(rx) {
     SSLog(')))))))))))))))))))))))))))))))))))))))))))');
     SSLog(lang + " - " + __sslang__);
     if(lang != __sslang__)

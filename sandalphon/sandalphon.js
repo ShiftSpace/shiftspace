@@ -354,6 +354,7 @@ var SandalphonToolClass = new Class({
 
    initialize: function(storage)
    { 
+     console.log('starting up!');
      SSLog('Sandalphon, sister of Metatron, starting up.', SSLogSandalphon);
      // setup the persistent storage
      this.setStorage(storage);
@@ -361,6 +362,7 @@ var SandalphonToolClass = new Class({
      this.setupClassPaths();
      // intialize the interface
      this.initInterface();
+     console.log('Loading localized strings!');
      // load localised strings
      this.loadLocalizedStrings(this.Language);
    },
@@ -368,16 +370,20 @@ var SandalphonToolClass = new Class({
 
    loadLocalizedStrings: function(lang)
    {
+     console.log('Making the request');
      SSLog('load localized strings ' + lang, SSLogSandalphon);
      new Request({
-       url: "../client/LocalizedStrings/"+lang+".js",
+       url: "../client/LocalizedStrings/"+lang+".json",
        method: "get",
        onComplete: function(responseText, responseXML)
        {
+         console.log('Response returned')
          SSLog(lang + " - " + ShiftSpace.lang, SSLogSandalphon);
          if(lang != ShiftSpace.lang)
          {
+           console.log('decoding language file');
            ShiftSpace.localizedStrings = JSON.decode(responseText);
+           console.log('done');
            SSLog(ShiftSpace.localizedStrings, SSLogSandalphon);
 
            // update objects

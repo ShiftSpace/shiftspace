@@ -23,7 +23,7 @@ var SSTableViewDatasource = new Class({
   Implements: [Events, Options],
 
 
-  options:
+  defaults:
   {
     data: [],
     dataKey: null,
@@ -38,14 +38,14 @@ var SSTableViewDatasource = new Class({
   initialize: function(options)
   {
     SSLog('SSTableViewDatasource instantiated.');
-    this.setOptions(options);
+    this.setOptions(this.defaults, options);
 
     // set the options
     this.setProperties($H());
     this.setRequiredProperties(this.options.requiredProperties);
     this.setUpdateProperties({});
 
-    this.setData(options.data);
+    this.setData(this.options.data);
 
     this.setDataKey(this.options.dataKey);
     this.setDataUpdateKey(this.options.dataUpdateKey);
@@ -59,6 +59,7 @@ var SSTableViewDatasource = new Class({
 
   setData: function(newData)
   {
+    console.log('setData ' + newData.length);
     this.__data__ = newData;
   },
 
@@ -276,6 +277,7 @@ var SSTableViewDatasource = new Class({
     {
       data = this.dataNormalizer().normalize(data);
     }
+
     this.setData(data);
   },
 
@@ -296,6 +298,8 @@ var SSTableViewDatasource = new Class({
       SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>> SSTableViewDatasource fetch');
       // if actually running in ShiftSpace
       SSServerCall(this.dataProviderURL(), allProperties.getClean(), function(json) {
+        SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>> SSTableViewDatasource fetch RETURNED');
+        console.log('data fetched ' + JSON.encode(json));
         this.updateData(json[this.dataKey()]);
         this.fireEvent('onload');
       }.bind(this));

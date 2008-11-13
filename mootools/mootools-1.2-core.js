@@ -347,7 +347,6 @@ Browser.Plugins.Flash = (function(){
 })();
 
 function $exec(text){
-  console.log('$EXEC ' + text);
 	if (!text) return text;
 	if (window.execScript){
 		window.execScript(text);
