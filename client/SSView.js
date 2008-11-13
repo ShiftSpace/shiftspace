@@ -32,6 +32,7 @@ var SSView = new Class({
   {
     // generate an id
     this.__id__ = this._genId();
+    this.setIsAwake(false);
 
     // add to global hash
     if(ShiftSpace.Objects) ShiftSpace.Objects.set(this.__id__, this);
@@ -87,6 +88,19 @@ var SSView = new Class({
   awake: function()
   {
     SSLog(this.getId() + " awake, outlets " + JSON.encode(this.outlets().getKeys()));
+  },
+  
+  
+  setIsAwake: function(val)
+  {
+    console.log(this.name + ' is awake ' + val);
+    this.__isAwake__ = val;
+  },
+  
+  
+  isAwake: function()
+  {
+    return this.__isAwake__;
   },
 
 

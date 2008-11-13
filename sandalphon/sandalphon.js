@@ -307,7 +307,11 @@ var SandalphonClass = new Class({
   awakeObjects: function(context)
   {
     ShiftSpace.Objects.each(function(object, objectId) {
-      if(object.awake) object.awake(context);
+      if(object.awake)
+      {
+        object.awake(context);
+        object.setIsAwake(true);
+      }
     });
   },
   

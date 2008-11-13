@@ -22,9 +22,10 @@ var SSConsole = new Class({
       Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
     }
 
-    // listen for login/logout eventss
-    ShiftSpace.User.addEvent('onUserLogin', this.handleLogin.bind(this));
-    ShiftSpace.User.addEvent('onUserLogout', this.handleLogout.bind(this));
+    // listen for login/logout events, pass in reference to self
+    // so that ShiftSpace notifies post awake
+    SSAddEvent('onUserLogin', this.handleLogin.bind(this), this);
+    SSAddEvent('onUserLogout', this.handleLogout.bind(this), this);
     
     // listen for shift events
     SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));

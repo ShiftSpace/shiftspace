@@ -59,7 +59,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogAll);
+    SSSetLogLevel(SSLogError);
 
     // Default to http://shiftspace.org/dev
     var server = SSGetValue('server', 'http://www.shiftspace.org/dev/');
@@ -68,7 +68,6 @@ var ShiftSpace = new (function() {
     // make sure all our stuff is hidden at first
 
     // TODO: a place to set deploy vs. develop variables - David
-    
     // Load packages.json
 
     // Current ShiftSpace version
@@ -281,6 +280,7 @@ var ShiftSpace = new (function() {
         SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         // clear out recently viewed shifts on login
         SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
+        SSFireEvent('onUserLogin');
       });
 
       ShiftSpace.User.addEvent('onUserLogout', function() {
