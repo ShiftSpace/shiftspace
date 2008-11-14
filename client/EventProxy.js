@@ -20,9 +20,14 @@ var __eventProxy__ = new __eventProxyClass__();
   See also:
     SSFireEvent
 */
+var __eventsForContext__ = $H();
 function SSAddEvent(eventType, callback, anObject)
 {
+  // check to see if the object's context is ready
+  //console.log(anObject.getContext());
+  //console.log(Sandalphon.contextIsRead(anObject))
   __eventProxy__.addEvent(eventType, callback);
+  // if not
 };
 
 /*
@@ -38,7 +43,6 @@ function SSFireEvent(eventType, data)
   __eventProxy__.fireEvent(eventType, data);
 };
 
-var __eventQueue__ = [];
 function SSFlushEventQueueForContext(context)
 {
   console.log('SSFlushEventQueueForContext ' + context);

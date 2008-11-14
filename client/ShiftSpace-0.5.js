@@ -248,6 +248,7 @@ var ShiftSpace = new (function() {
     // INCLUDE RecentlyViewedHelpers.js
     // INCLUDE FullScreen.js
     // INCLUDE ErrorWindow.js
+    // INCLUDE Element.js
     
     function SSResetCore()
     {
@@ -264,6 +265,11 @@ var ShiftSpace = new (function() {
     this.initialize = function() {
       // ShiftSpace global var is set by this point not before.
       
+      // export for third party deveopers
+      ShiftSpace.Element = SSElement;
+      ShiftSpace.Iframe = SSIframe;
+      ShiftSpace.Input = SSInput;
+      
       // look for install links
       SSCheckForInstallSpaceLinks();
       if(SSLocalizedStringSupport()) SSLoadLocalizedStrings("en");
@@ -273,7 +279,7 @@ var ShiftSpace = new (function() {
 
       // INCLUDE User.js
       SSLog('User.js loaded');
-      // INCLUDE Element.js
+
       SSLog('Element.js loaded');
       // INCLUDE SSView.js
       SSLog('SSView.js loaded');

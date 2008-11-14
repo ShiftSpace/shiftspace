@@ -19,10 +19,37 @@ var SandalphonClass = new Class({
       Generate an object id.  Used for debugging.  The instance is indentified by this in the global
       ShiftSpace.Objects hash.
   */
-  _genId: function()
+  _genContextId: function()
   {
     return ('ctxtid_'+(Math.round(Math.random()*1000000+(new Date()).getMilliseconds())));
   },
+  
+  
+  getContextId: function(ctxt)
+  {
+    if(!ctxt.ssctxtid)
+    {
+      ctxt.ssctxtid = this._genContextId();
+    }
+    return ctxt.ssctxtid;
+  },
+  
+  
+  internContext: function(ctxt)
+  {
+    var ctxtId = this.getContextId(ctxt);
+    if(this.contextHash.get(ctxtId))
+    {
+      this.contextHash.set(ctxtId, {isReady:false, context:ctxt});
+    }
+  },
+  
+  
+  contextIsReady: function(ctxt)
+  {
+    return this.contextHash.get(this.getContextId(ctxt)).isReady;
+  },
+  
   
   convertToFragment: function(markup, ctxt)
   {
@@ -185,6 +212,9 @@ var SandalphonClass = new Class({
   activate: function(ctxt)
   {
     var context = ctxt || window;
+    
+    // internalize this context
+    this.internContext(ctxt);
     
     SSLog('>>>>>>>>>>>>>>>>>> activate', SSLogSandalphon);
     

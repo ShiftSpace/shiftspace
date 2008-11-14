@@ -11,7 +11,7 @@
     of iFrames this is also used to make sure that iFrame covers get generated so that drag and resize
     operations don't break.
 */
-ShiftSpace.Element = new Class({
+var SSElement = new Class({
   /*
     Function: initialize (private)
       Initialize the element and if necessary add appropiate event handlers.
@@ -90,9 +90,9 @@ ShiftSpace.Element = new Class({
     MooTools into the Iframe.  Inherits from <ShiftSpace.Element>.  You shouldn't instantiate
     this class directly, just use <ShiftSpace.Element>.
 */
-ShiftSpace.Iframe = new Class({
+var SSIframe = new Class({
 
-  Extends: ShiftSpace.Element,
+  Extends: SSElement,
 
   /*
     Function: initialize (private)
@@ -149,8 +149,8 @@ ShiftSpace.Iframe = new Class({
   }
 });
 
-ShiftSpace.Input = new Class({
-  Extends: ShiftSpace.Element
+var SSInput = new Class({
+  Extends: SSElement
   // Create an iframe
   // Apply the styles
   // Create the requested input field
