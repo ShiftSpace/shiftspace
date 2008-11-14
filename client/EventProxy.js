@@ -41,5 +41,5 @@ function SSFireEvent(eventType, data)
 var __eventQueue__ = [];
 function SSFlushEventQueueForContext(context)
 {
-  
+  console.log('SSFlushEventQueueForContext ' + context);
 }

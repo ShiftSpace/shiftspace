@@ -31,8 +31,8 @@ function SSNotifyInstantiationListeners(element)
 }
 
 var __controllers__ = $H();
-// we generate ids and store controller refs ourselves this is because of weird garbage collection
-// around iframes and wrappers around dom nodes when SS run under GM
+// NOTE: we generate ids and store controller refs ourselves this is because of weird garbage collection
+// around iframes and wrappers around dom nodes when SS runs under GM - David
 function SSSetControllerForNode(controller, _node)
 {
   var node = $(_node);

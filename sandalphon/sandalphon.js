@@ -11,8 +11,18 @@ var SandalphonClass = new Class({
     // for analyzing fragments of markup
     this.setFragment(new Element('div'));
     this.outletBindings = [];
+    this.contextHash = $H();
   },
   
+  /*
+    Function: _genId
+      Generate an object id.  Used for debugging.  The instance is indentified by this in the global
+      ShiftSpace.Objects hash.
+  */
+  _genId: function()
+  {
+    return ('ctxtid_'+(Math.round(Math.random()*1000000+(new Date()).getMilliseconds())));
+  },
   
   convertToFragment: function(markup, ctxt)
   {
@@ -185,6 +195,9 @@ var SandalphonClass = new Class({
     // Initialize all outlets
     this.bindOutlets(context);
     this.awakeObjects(context);
+    
+    // fire event passing the context
+    SSFlushEventQueueForContext(context);
   },
   
   
@@ -206,7 +219,9 @@ var SandalphonClass = new Class({
       var theClass = aView.getProperty('uiclass');
       SSLog('=========================================');
       SSLog('instantiating ' + theClass);
-      new ShiftSpace.UI[theClass](aView);
+      new ShiftSpace.UI[theClass](aView, {
+        context: context
+      });
       SSLog('instantation complete');
     });
     

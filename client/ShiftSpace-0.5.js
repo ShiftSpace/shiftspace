@@ -266,33 +266,15 @@ var ShiftSpace = new (function() {
       
       // look for install links
       SSCheckForInstallSpaceLinks();
+      if(SSLocalizedStringSupport()) SSLoadLocalizedStrings("en");
+      SSLog('load localized strings');
       
       // Load external scripts (pre-processing required)
-      // {PACKAGE:System}
+
       // INCLUDE User.js
       SSLog('User.js loaded');
-
-      SSLog('load localized strings');
-      if(SSLocalizedStringSupport()) SSLoadLocalizedStrings("en");
-
-      // Set up user event handlers
-      ShiftSpace.User.addEvent('onUserLogin', function() {
-        SSLog('ShiftSpace Login ======================================');
-        SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
-        // clear out recently viewed shifts on login
-        SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
-        SSFireEvent('onUserLogin');
-      });
-
-      ShiftSpace.User.addEvent('onUserLogout', function() {
-        SSFireEvent('onUserLogout');
-      });
-
       // INCLUDE Element.js
       SSLog('Element.js loaded');
-
-      // {PACKAGE:CorePackage}
-      
       // INCLUDE SSView.js
       SSLog('SSView.js loaded');
       // INCLUDE views/SSCell/SSCell.js
@@ -313,7 +295,6 @@ var ShiftSpace = new (function() {
       SSLog('sandalphon.js loaded');
       // INCLUDE views/SSConsole/SSConsole.js
       SSLog('SSConsole.js loaded');
-
       // INCLUDE Space.js
       SSLog('Space.js loaded');
       // INCLUDE Shift.js
@@ -328,7 +309,22 @@ var ShiftSpace = new (function() {
       SSLog('Plugin.js loaded');
       // INCLUDE ShiftMenu.js
       SSLog('ShiftMenu.js loaded');
+      // INCLUDE CoreEvents.js
+      SSLog('CoreEvents.sj loaded');
+      
+      // Set up user event handlers
+      ShiftSpace.User.addEvent('onUserLogin', function() {
+        SSLog('ShiftSpace Login ======================================');
+        SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
+        // clear out recently viewed shifts on login
+        SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
+        SSFireEvent('onUserLogin');
+      });
 
+      ShiftSpace.User.addEvent('onUserLogout', function() {
+        SSFireEvent('onUserLogout');
+      });
+      
       // Load CSS styles
       SSLoadStyle('styles/ShiftSpace.css', function() {
         // create the error window
@@ -353,7 +349,6 @@ var ShiftSpace = new (function() {
 
       // If all spaces have been loaded, build the shift menu and the console
       ShiftSpace.ShiftMenu.buildMenu();
-      // INCLUDE CoreEvents.js
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
