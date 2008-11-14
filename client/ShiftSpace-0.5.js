@@ -249,6 +249,7 @@ var ShiftSpace = new (function() {
     // INCLUDE FullScreen.js
     // INCLUDE ErrorWindow.js
     // INCLUDE Element.js
+    // INCLUDE ../sandalphon/sandalphon.js
     
     function SSResetCore()
     {
@@ -297,8 +298,6 @@ var ShiftSpace = new (function() {
       SSLog('SSTableRow.js loaded');
       // INCLUDE customViews/SSCustomTableRow/SSCustomTableRow.js
       SSLog('SSCustomTableRow.js loaded');
-      // INCLUDE ../sandalphon/sandalphon.js
-      SSLog('sandalphon.js loaded');
       // INCLUDE views/SSConsole/SSConsole.js
       SSLog('SSConsole.js loaded');
       // INCLUDE Space.js

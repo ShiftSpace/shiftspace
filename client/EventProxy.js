@@ -24,8 +24,15 @@ var __eventsForContext__ = $H();
 function SSAddEvent(eventType, callback, anObject)
 {
   // check to see if the object's context is ready
-  //console.log(anObject.getContext());
-  //console.log(Sandalphon.contextIsRead(anObject))
+  if(anObject)
+  {
+    /*
+    console.log('>>>>>>>>>>>>>>>>>>> SSAddEvent ' + anObject);
+    console.log(anObject.getContext());
+    console.log(Sandalphon.contextIsReady(anObject))
+    */
+  }
+
   __eventProxy__.addEvent(eventType, callback);
   // if not
 };
