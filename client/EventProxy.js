@@ -20,17 +20,8 @@ var __eventProxy__ = new __eventProxyClass__();
   See also:
     SSFireEvent
 */
-var __awakeEvents__ = $H();
 function SSAddEvent(eventType, callback, anObject)
 {
-  if(anObject != null && $type(anObject.awake) == 'function')
-  {
-    console.log('SSAddEvent set ' + eventType)
-    console.log(anObject);
-    var eventsArray = $pick(__awakeEvents__.get(eventType), []);
-    eventsArray.push(anObject);
-    __awakeEvents__.set(eventType, eventsArray);
-  }
   __eventProxy__.addEvent(eventType, callback);
 };
 
@@ -44,16 +35,11 @@ function SSAddEvent(eventType, callback, anObject)
 */
 function SSFireEvent(eventType, data) 
 {
-  console.log('SSFireEvent ' + eventType);
   __eventProxy__.fireEvent(eventType, data);
-  // notify any sleeping objects
-  if(__awakeEvents__.get(eventType))
-  {
-    console.log('listing on fire event');
-    console.log(eventType);
-    console.log(__awakeEvents__.get(eventType));
-    __awakeEvents__.set(eventType, __awakeEvents__.get(eventType).filter(function(anObject) {!anObject.isAwake();}));
-    console.log('Sleeping objects!');
-    console.log(__awakeEvents__.get(eventType));
-  }
 };
+
+var __eventQueue__ = [];
+function SSFlushEventQueueForContext(context)
+{
+  
+}

@@ -18,10 +18,10 @@ var SSTableView = new Class({
   
   defaults: function() 
   {
-    return {
+    return $merge(this.parent(), {
       multipleSelection: false,
       toggleSelection: false
-    };
+    });
   },
 
   DelegateProtocol: ['userClickedRow, userSelectedRow, itemForRowColumn, rowCount'],
@@ -30,11 +30,10 @@ var SSTableView = new Class({
   {
     // FIXME: figure out why safe JSON.decode doesn't work
     var options = _options || JSON.decode(el.getProperty('options'));
-    this.setOptions(this.defaults(), options);
     
     SSLog('SSTableView initialize', SSLogViews);
     // need to pass this up to parent
-    this.parent(el);
+    this.parent(el, options);
 
     SSLog('SSTableView parent called ' + this.elId(), SSLogViews);
 

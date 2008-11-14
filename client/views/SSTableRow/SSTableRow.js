@@ -10,9 +10,9 @@ var SSTableRow = new Class({
   
   Extends: SSView,
   
-  initialize: function(el)
+  initialize: function(el, options)
   {
-    this.parent(el);
+    this.parent(el, options);
     SSLog('Preparing model');
     this.prepareAndSetModel(el);
   },

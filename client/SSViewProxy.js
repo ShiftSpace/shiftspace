@@ -10,6 +10,11 @@ var SSViewProxy = new Class({
   name: "SSViewProxy",
 
   Implements: [Options, Events],
+  
+  defaults: function()
+  {
+    return {};
+  },
 
   initialize: function(el, options)
   {

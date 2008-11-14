@@ -90,6 +90,7 @@ var ShiftSpace = new (function() {
     var trails = {};
     var plugins = {};
     var displayList = [];
+    var __globalState__ = $H();
 
     // NOTE: will replace with ResourceManager in 0.5 - David
     plugins.attempt = function(options)

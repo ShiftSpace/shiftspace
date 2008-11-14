@@ -10,6 +10,13 @@ var SSView = new Class({
   name: 'SSView',
 
   Implements: [Events, Options],
+  
+  defaults: function()
+  {
+    return {
+      context: document.window
+    };
+  },
 
   /*
     Function: _genId
@@ -30,6 +37,9 @@ var SSView = new Class({
   */
   initialize: function(el, options)
   {
+    // get the options first
+    this.setOptions(this.defaults(), options);
+    
     // generate an id
     this.__id__ = this._genId();
     this.setIsAwake(false);
@@ -77,10 +87,16 @@ var SSView = new Class({
       ShiftSpace.NameTable.set(this.element.getProperty('id'), this);
     }
   },
-
-
+  
+  
+  getContext: function()
+  {
+    return this.options.context;
+  },
+  
+  
   setup: function() {},
-
+  
   /*
     Function: awake
       Called after the outlets have been attached.
