@@ -109,7 +109,6 @@ var SSView = new Class({
   
   setIsAwake: function(val)
   {
-    console.log(this.name + ' is awake ' + val);
     this.__isAwake__ = val;
   },
   

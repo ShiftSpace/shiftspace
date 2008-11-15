@@ -34,14 +34,22 @@ var SandalphonClass = new Class({
     return ctxt.ssctxtid;
   },
   
+
+  contextForId: function(id)
+  {
+    return this.contextHash.get(id).context;
+  },
+  
   
   internContext: function(ctxt)
   {
     var ctxtId = this.getContextId(ctxt);
     if(!this.contextHash.get(ctxtId))
     {
-      this.contextHash.set(ctxtId, {isReady:false, context:ctxt});
+      // default isReady to true, because some contexts aren't activated
+      this.contextHash.set(ctxtId, {isReady:true, context:ctxt});
     }
+    return ctxtId;
   },
   
   
@@ -50,6 +58,12 @@ var SandalphonClass = new Class({
     // intern the context just in case
     this.internContext(ctxt);
     return this.contextHash.get(this.getContextId(ctxt)).isReady;
+  },
+  
+  
+  setContextIsReady: function(ctxtid, val)
+  {
+    this.contextForId(ctxtid).isReady = val;
   },
   
   
@@ -216,9 +230,11 @@ var SandalphonClass = new Class({
     var context = ctxt || window;
     
     // internalize this context
-    this.internContext(ctxt);
+    var ctxtid = this.internContext(ctxt);
+    this.setContextIsReady(ctxtid, false);
     
     SSLog('>>>>>>>>>>>>>>>>>> activate', SSLogSandalphon);
+    console.log('>>>>>>>>>>>>>>>>>>> activate');
     
     // First generate the outlet bindings
     this.generateOutletBindings(context);
@@ -227,6 +243,13 @@ var SandalphonClass = new Class({
     // Initialize all outlets
     this.bindOutlets(context);
     this.awakeObjects(context);
+    
+    // the context is ready now
+    this.setContextIsReady(ctxtid, true);
+    
+    console.log('============= context is ready ');
+    console.log(context);
+    console.log(this.contextIsReady(context));
     
     // fire event passing the context
     SSFlushEventQueueForContext(context);

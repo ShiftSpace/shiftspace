@@ -2769,6 +2769,7 @@ var ShiftSpace = new (function() {
       this.SSShowShift = SSShowShift;
       this.SSUserOwnsShift = SSUserOwnsShift;
       this.SSSetShiftStatus = SSSetShiftStatus;
+      this.Sandalphon = Sandalphon;
       
       // export SSLog
       window.SSLog = SSLog;
