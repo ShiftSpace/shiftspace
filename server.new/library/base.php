@@ -1,7 +1,7 @@
 <?php
 
 if (!defined('BASE_DIR')) {
-  define('BASE_DIR', dirname(__FILE__));
+  define('BASE_DIR', dirname(dirname(__FILE__)));
 }
 
 if (!function_exists('__autoload')) {
@@ -18,7 +18,11 @@ if (!function_exists('__autoload')) {
     $filename = strtolower($filename);
     if (file_exists(BASE_DIR . "/$filename")) {
       require_once BASE_DIR . "/$filename";
-    } else if (file_exists(BASE_DIR . "/library/$filename")) {
+    }
+    if (file_exists(BASE_DIR . "/public/$filename")) {
+      require_once BASE_DIR . "/public/$filename";
+    }
+    if (file_exists(BASE_DIR . "/library/$filename")) {
       require_once BASE_DIR . "/library/$filename";
     }
   }

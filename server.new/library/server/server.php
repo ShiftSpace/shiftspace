@@ -4,6 +4,21 @@ class Server extends Base {
   
   static private $instance;
   
+  static public function singleton($filename) {
+    $name = substr($filename, 0, -4);
+    if (!isset(self::$instance)) {
+      try {
+        $class = "{$name}_Server";
+        define('BASE_SERVER', strtolower($name));
+        self::$instance = new $class($filename);
+      } catch (Exception $e) {
+        $class = 'Server';
+        self::$instance = new $class($filename);
+      }
+    }
+    return self::$instance;
+  }
+  
   public function __construct($filename) {
     $this->config = new Ini_Object("config/$filename");
     $this->stores = array();
@@ -21,21 +36,6 @@ class Server extends Base {
       $config['_name'] = $name;
       $this->$name = Store::factory($config);
     }
-  }
-  
-  static public function singleton($filename) {
-    $name = substr($filename, 0, -4);
-    if (!isset(self::$instance)) {
-      try {
-        $class = $name . '_Server';
-        define('BASE_SERVER', strtolower($name));
-        self::$instance = new $class($filename);
-      } catch (Exception $e) {
-        $class = 'Server';
-        self::$instance = new $class($filename);
-      }
-    }
-    return self::$instance;
   }
   
   public function __clone() {

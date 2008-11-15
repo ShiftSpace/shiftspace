@@ -7,7 +7,7 @@ class Website_Server extends Server {
   function main() {
     foreach ($this->config->routes as $name => $pattern) {
       if (($vars = $this->checkPattern($pattern)) !== false) {
-        $filename = BASE_DIR . '/' . BASE_SERVER . "/$name.php";
+        $filename = BASE_DIR . '/public/' . BASE_SERVER . "/$name.php";
         if (file_exists($filename)) {
           require_once $filename;
         }
