@@ -26,11 +26,8 @@ function SSAddEvent(eventType, callback, anObject)
   // check to see if the object's context is ready
   if(anObject)
   {
-    /*
     console.log('>>>>>>>>>>>>>>>>>>> SSAddEvent ' + anObject);
-    console.log(anObject.getContext());
-    console.log(Sandalphon.contextIsReady(anObject))
-    */
+    console.log(Sandalphon.contextIsReady(anObject.getContext()))
   }
 
   __eventProxy__.addEvent(eventType, callback);
@@ -53,4 +50,4 @@ function SSFireEvent(eventType, data)
 function SSFlushEventQueueForContext(context)
 {
   console.log('SSFlushEventQueueForContext ' + context);
-}
+};

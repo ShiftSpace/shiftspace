@@ -38,7 +38,7 @@ var SandalphonClass = new Class({
   internContext: function(ctxt)
   {
     var ctxtId = this.getContextId(ctxt);
-    if(this.contextHash.get(ctxtId))
+    if(!this.contextHash.get(ctxtId))
     {
       this.contextHash.set(ctxtId, {isReady:false, context:ctxt});
     }
@@ -47,6 +47,8 @@ var SandalphonClass = new Class({
   
   contextIsReady: function(ctxt)
   {
+    // intern the context just in case
+    this.internContext(ctxt);
     return this.contextHash.get(this.getContextId(ctxt)).isReady;
   },
   
