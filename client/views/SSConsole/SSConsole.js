@@ -58,7 +58,7 @@ var SSConsole = new Class({
   awake: function(context)
   {
     this.parent();
-
+    
     // in Sandalphon tool mode we're not iframed, in ShiftSpace we are
     if((context == window && typeof SandalphonToolMode != 'undefined') ||
        (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))

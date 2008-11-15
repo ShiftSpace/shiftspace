@@ -27,6 +27,7 @@ var SandalphonClass = new Class({
   
   getContextId: function(ctxt)
   {
+    console.log(ctxt);
     if(!ctxt.ssctxtid)
     {
       ctxt.ssctxtid = this._genContextId();
@@ -230,7 +231,7 @@ var SandalphonClass = new Class({
     var context = ctxt || window;
     
     // internalize this context
-    var ctxtid = this.internContext(ctxt);
+    var ctxtid = this.internContext(context);
     this.setContextIsReady(ctxtid, false);
     
     SSLog('>>>>>>>>>>>>>>>>>> activate', SSLogSandalphon);
@@ -246,13 +247,6 @@ var SandalphonClass = new Class({
     
     // the context is ready now
     this.setContextIsReady(ctxtid, true);
-    
-    console.log('============= context is ready ');
-    console.log(context);
-    console.log(this.contextIsReady(context));
-    
-    // fire event passing the context
-    SSFlushEventQueueForContext(context);
   },
   
   
@@ -377,10 +371,11 @@ var SandalphonClass = new Class({
   awakeObjects: function(context)
   {
     ShiftSpace.Objects.each(function(object, objectId) {
-      if(object.awake)
+      if(object.awake && !object.isAwake())
       {
         object.awake(context);
         object.setIsAwake(true);
+        object.fireEvent('onAwake');
       }
     });
   },
