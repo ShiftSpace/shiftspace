@@ -23,6 +23,7 @@ class Ini_Object extends Object {
       <save>
   */
   public function load($file) {
+    $file = BASE_DIR . "/$file";
     if (!file_exists($file)) {
       throw new Exception("Config file '$file' not found.");
     }

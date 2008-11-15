@@ -76,7 +76,7 @@ class Object extends Base {
   }
   
   function loadTemplate($filename) {
-    return file_get_contents(BASE_DIR . "/public/markup/$filename");
+    return file_get_contents(BASE_DIR . "/$filename");
   }
   
   public function __toString() {

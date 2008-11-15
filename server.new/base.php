@@ -16,7 +16,9 @@ if (!function_exists('__autoload')) {
       $filename = implode('/', $path) . '.php';
     }
     $filename = strtolower($filename);
-    if (file_exists(BASE_DIR . "/library/$filename")) {
+    if (file_exists(BASE_DIR . "/$filename")) {
+      require_once BASE_DIR . "/$filename";
+    } else if (file_exists(BASE_DIR . "/library/$filename")) {
       require_once BASE_DIR . "/library/$filename";
     }
   }
@@ -24,7 +26,7 @@ if (!function_exists('__autoload')) {
 
 class Base {
   
-  static private $_subRegex = '/\\\?\{([^}]+)\}/';
+  static private $_subRegex = '/\\\?\{(\w+)\}/';
   static private $_subVars = null;
   protected $events;
   
@@ -69,9 +71,13 @@ class Base {
     }
   }
   
-  public function set($key, $value) {
+  public function set($key, $value = false) {
     $method = "set$key";
-    if (method_exists($this, $method)) {
+    if (empty($value) && is_array($key)) {
+      foreach ($key as $var => $value) {
+        $this->set($var, $value);
+      }
+    } else if (method_exists($this, $method)) {
       return $this->$method($value);
     } else if (is_subclass_of($this, 'Object')) {
       $this->contents['values'][$key] = $value;

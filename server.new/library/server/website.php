@@ -5,16 +5,15 @@ class Website_Server extends Server {
   public $defaultClass = 'Page_Object';
   
   function main() {
-    header('Content-type: text/html; charset=utf-8');
-    foreach ($this->config->pages as $name => $pattern) {
+    foreach ($this->config->routes as $name => $pattern) {
       if (($vars = $this->checkPattern($pattern)) !== false) {
-        $pagePath = BASE_DIR . '/library/' . BASE_SERVER . "/$name.php";
-        if (file_exists($pagePath)) {
-          require_once $pagePath;
+        $filename = BASE_DIR . '/' . BASE_SERVER . "/$name.php";
+        if (file_exists($filename)) {
+          require_once $filename;
         }
         $class = $this->defaultClass;
-        if (class_exists("{$name}_Page")) {
-          $class = "{$name}_Page";
+        if (class_exists($name)) {
+          $class = $name;
         }
         $this->page = new $class($name, $vars);
         if ($this->page->exists($pattern)) {

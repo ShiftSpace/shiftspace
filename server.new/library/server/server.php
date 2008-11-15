@@ -5,7 +5,7 @@ class Server extends Base {
   static private $instance;
   
   public function __construct($filename) {
-    $this->config = new Ini_Object(BASE_DIR . "/config/$filename");
+    $this->config = new Ini_Object("config/$filename");
     $this->stores = array();
     foreach ($this->config->get() as $key => $value) {
       if (preg_match('/^store:(\w+)$/', $key, $matches)) {
