@@ -546,6 +546,8 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	// Hidden until mouseover XXX: take edit/havesaved into account?  seems to work as is....
 	if (this.posRange)
           this.element.addClass('FisheyeHidden');
+
+	FisheyeConsole.registerShift(this);
     },
 
 
@@ -864,6 +866,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	this.renderClass = this.refreshRenderClass();
 	this.summaryText = this.inputArea.value;
 	this.rebuild();
+	FisheyeConsole.updateConsole();
     },
 
     changeCategory: function() {
@@ -1007,6 +1010,81 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 // ?? Register our Space class, passing the Shift class definition
 // platform will need to instantiatiate and hook into us
 var Fisheye = new FisheyeSpace(FisheyeShift);
+
+
+
+var FisheyeConsoleClass = new Class({
+
+    registeredShifts: [],
+
+    registerShift: function(shift) {
+
+	this.registeredShifts[this.registeredShifts.length] = shift;
+
+	if (this.registeredShifts.length == 1)
+	    this.makeConsole();
+	else
+	    this.updateConsole();
+    },
+
+    updateConsole: function() {
+	var byType = [];
+	var byTypeCount = [];
+
+	var container = this.consoleElement;
+        container.setStyles({
+            'font': '16px verdana, sans-serif',
+	    border : 'medium double #C4C87C' ,
+        });
+	container.setHTML("");
+
+	var summaryBox = makeNoteBox(container);
+	var content = "Fisheye summary:";
+        summaryBox.setStyles({ 'font': '16px verdana, sans-serif', });
+	summaryBox.setHTML(content);
+	summaryBox.injectInside(container);
+
+	for (var i=0; i < this.registeredShifts.length; i++) {
+		var ashift = this.registeredShifts[i];
+		byType[ashift.categoryType] = ashift;
+		if (byTypeCount[ashift.categoryType])
+			byTypeCount[ashift.categoryType]++;
+		else
+			byTypeCount[ashift.categoryType] = 1;
+	}
+	for (var i=0; i < byType.length; i++) {
+		if (!byType[i])
+			continue;
+		var shiftBox = new ShiftSpace.Element('div');
+		var ashift = byType[i];
+		var cat = ashift.criticismCategoryGetName(ashift.categoryType);
+		shiftBox.appendText(byTypeCount[i] + " " + cat);
+		ashift.refreshStyle(shiftBox);
+		shiftBox.injectInside(container);
+	}
+    },
+
+    makeConsole: function() {
+        this.consoleElement = new ShiftSpace.Element('div');
+
+	this.consoleElement.addEvent('click', function(){
+	    this.consoleElement.addClass('FisheyeHidden');
+	}.bind (this));
+
+	this.consoleElement.setStyles({
+	  'position': 'absolute',
+	  left : 0,
+	  top : 0,
+	  zIndex : 2
+	});
+	this.updateConsole();
+        this.consoleElement.injectInside(document.body);
+    },
+
+});
+
+var FisheyeConsole = new FisheyeConsoleClass();
+
 
 
 
