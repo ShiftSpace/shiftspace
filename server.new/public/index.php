@@ -2,7 +2,7 @@
 
 require_once '../library/base.php';
 try {
-  $server = Server::singleton('dp.ini');
+  $server = Server::singleton('shiftspace.ini');
   $server->main();
 } catch (Exception $e) {
   echo 'Error: ' . $e->getMessage();
