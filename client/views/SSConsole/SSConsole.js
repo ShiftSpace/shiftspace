@@ -23,7 +23,8 @@ var SSConsole = new Class({
     }
 
     // listen for login/logout events, pass in reference to self
-    // so that ShiftSpace notifies post awake
+    // so that ShiftSpace notifies after this object's awake method has been called
+    // this is because outlets won't be set until that point
     SSAddEvent('onUserLogin', this.handleLogin.bind(this), this);
     SSAddEvent('onUserLogout', this.handleLogout.bind(this), this);
     

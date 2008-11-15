@@ -20,6 +20,7 @@ function GM_addStyle(css)
   }
   else
   {
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>> adding stylesheet');
     var style = document.createStyleSheet();
     style.cssText = css;
   }

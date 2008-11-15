@@ -2693,23 +2693,31 @@ var ShiftSpace = new (function() {
         {
           var doc = frame.contentDocument;
 
-          if( doc.getElementsByTagName('head').length != 0 )
+          if(!Browser.Engine.trident)
           {
-            var head = doc.getElementsByTagName('head')[0];
+            if( doc.getElementsByTagName('head').length != 0 )
+            {
+              var head = doc.getElementsByTagName('head')[0];
+            }
+            else
+            {
+              // In Safari iframes don't get the head element by default - David
+              // Mootools-ize body
+              $(doc.body);
+              var head = new Element( 'head' );
+              head.injectBefore( doc.body );
+            }
+
+            var style = doc.createElement('style');
+            style.setAttribute('type', 'text/css');
+            style.appendChild(doc.createTextNode(css)); // You can not use setHTML on style elements in Safari - David
+            head.appendChild(style);
           }
           else
           {
-            // In Safari iframes don't get the head element by default - David
-            // Mootools-ize body
-            $(doc.body);
-            var head = new Element( 'head' );
-            head.injectBefore( doc.body );
+            var style = doc.createStyleSheet()
+            style.cssText = css;
           }
-
-          var style = doc.createElement('style');
-          style.setAttribute('type', 'text/css');
-          style.appendChild(doc.createTextNode(css)); // You can not use setHTML on style elements in Safari - David
-          head.appendChild(style);
         }
         else
         {
