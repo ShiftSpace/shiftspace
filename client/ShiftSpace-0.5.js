@@ -290,8 +290,8 @@ var ShiftSpace = new (function() {
       SSLog('SSEditableTextCell.js loaded');
       // INCLUDE views/SSTabView/SSTabView.js
       SSLog('SSTabView.js loaded');
-      // INCLUDE SSTableViewDataSource.js
-      SSLog('SSTableViewDataSource.js loaded');
+      // INCLUDE SSTableViewDatasource.js
+      SSLog('SSTableViewDatasource.js loaded');
       // INCLUDE views/SSTableView/SSTableView.js
       SSLog('SSTableView.js loaded');
       // INCLUDE views/SSTableRow/SSTableRow.js
