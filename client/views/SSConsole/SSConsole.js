@@ -363,7 +363,7 @@ var SSConsole = new Class({
     var resizer = new ShiftSpace.Element('div', {
       'id': 'SSConsoleResizer'
     });
-    document.body.grab(resizer);
+    $(document.body).grab(resizer);
     
     resizer.makeDraggable({
       modifiers: {x:'', y:'bottom'},

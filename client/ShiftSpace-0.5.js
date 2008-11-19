@@ -2696,7 +2696,7 @@ var ShiftSpace = new (function() {
     function SSAddDragDiv()
     {
       console.log('SSAddDragDiv');
-      document.body.grab(__dragDiv__);
+      $(document.body).grab(__dragDiv__);
     }
     
     function SSRemoveDragDiv()
