@@ -24,15 +24,17 @@ INCLUDE_REGEX = re.compile('^\s*//\s*INCLUDE\s+(\S+)\s*$');
 
 def includeFile(outFile, incFilename):
   flen = len(incFilename);
-  logline = "\nif (SSInclude != undefined) SSLog('Including %s', SSInclude);\n" % incFilename 
+  logline1 = "\nif (SSInclude != undefined) SSLog('Including %s...', SSInclude);\n" % incFilename 
   prefix = ("\n// Start %s " % incFilename) + (69 - flen) * '-' + "\n\n"
   postfix = ("\n\n// End %s " % incFilename) + (71 - flen) * '-' + "\n\n"
+  logline2 = "\nif (SSInclude != undefined) SSLog('... complete.', SSInclude);\n"
               
   incFile = open('../client/%s' % incFilename)
-  outFile.write(logline)
+  outFile.write(logline1)
   outFile.write(prefix)
   outFile.write(incFile.read())
   outFile.write(postfix)
+  outFile.write(logline2)
   incFile.close()
 
 def main(argv):

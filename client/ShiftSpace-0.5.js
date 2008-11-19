@@ -59,7 +59,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogError);
+    SSSetLogLevel(SSLogAll);
 
     // Default to http://shiftspace.org/dev
     var server = SSGetValue('server', 'http://www.shiftspace.org/dev/');
