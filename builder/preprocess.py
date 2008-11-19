@@ -78,7 +78,7 @@ def main(argv):
         includeFile(outFile, incFilename)
       else:
         for key in env.keys():
-          line = line.replace(key, env[key])
+          line = line.replace(("%%%%%s%%%%" % (key)), '"%s"' % env[key])
           
         outFile.write(line) 
   
