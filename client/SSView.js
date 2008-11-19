@@ -13,9 +13,12 @@ var SSView = new Class({
   
   defaults: function()
   {
-    return {
-      context: document.window
+    SSLog('Returning defaults', SSLogViewSystem);
+    var temp = {
+      context: document.window,
+      generateElement: true
     };
+    return temp;
   },
 
   /*
@@ -37,35 +40,66 @@ var SSView = new Class({
   */
   initialize: function(el, options)
   {
-    // get the options first
-    this.setOptions(this.defaults(), options);
+    SSLog("Initialize SSView", SSLogViewSystem);
+    if(el)
+    {
+      SSLog('Instantiating SSView with ' + el.getProperty('id'), SSLogMessage);
+    }
     
+    // get the options first
+    SSLog('Setting options', SSLogViewSystem);
+    SSLog('testing defaults', SSLogViewSystem);
+    SSLog(this.defaults, SSLogViewSystem);
+    SSLog('calling defaults', SSLogViewSystem);
+    console.log(this.defaults());
+    SSLog(this.defaults(), SSLogViewSystem);
+    SSLog('checked defaults', SSLogViewSystem)
+    SSLog(JSON.encode(this.defaults()), SSLogViewSystem);
+    SSLog('encoding defaults', SSLogViewSystem);
+    this.setOptions(this.defaults(), options);
+    SSLog('Done setting options', SSLogViewSystem);
+
     // generate an id
     this.__id__ = this._genId();
     this.setIsAwake(false);
 
     // add to global hash
     if(ShiftSpace.Objects) ShiftSpace.Objects.set(this.__id__, this);
+    
+    SSLog('Interned view into ShiftSpace.Objects hash', SSLogViewSystem);
 
     // check if we are prebuilt
-    this.__prebuilt__ = (el && true) || false;
+    //this.__prebuilt__ = (el && true) || false; // NOT IMPLEMENTED - David
     this.__ssviewcontrollers__ = [];
     this.__delegate__ = null;
     this.__outlets__ = new Hash();
-
-    this.element = (el && $(el)) || (new Element('div'));
     
-    // NOTE: the following breaks tables, so we should avoid it for now - David
-    //this.element.setProperty('class', 'ShiftSpaceElement '+this.element.getProperty('class'));
+    SSLog('SSView internal vars set', SSLogViewSystem);
 
-    // store a back reference to this class
-    SSSetControllerForNode(this, this.element);
+    this.element = (el && $(el)) || (this.options.generateElement && new Element('div')) || null;
+    
+    if(this.element)
+    {
+      // NOTE: the following breaks tables, so we should avoid it for now - David
+      //this.element.setProperty('class', 'ShiftSpaceElement '+this.element.getProperty('class'));
 
-    // We need to build this class via code
+      // store a back reference to this class
+      SSSetControllerForNode(this, this.element);
+
+      // add to global name look up dictionary
+      if(ShiftSpace.NameTable && this.element.getProperty('id').search('generatedId') == -1)
+      {
+        ShiftSpace.NameTable.set(this.element.getProperty('id'), this);
+      }
+    }
+
+    // We need to build this class via code - NOT IMPLEMENTED - David
+    /*
     if(!this.__prebuilt__)
     {
       this.build();
     }
+    */
 
     this.__subviews__ = [];
 
@@ -81,13 +115,7 @@ var SSView = new Class({
       this.setup();
     }
     
-    // add to global name look up dictionary
-    if(ShiftSpace.NameTable && this.element.getProperty('id').search('generatedId') == -1)
-    {
-      ShiftSpace.NameTable.set(this.element.getProperty('id'), this);
-    }
   },
-  
   
   getContext: function()
   {
