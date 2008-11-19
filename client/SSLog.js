@@ -19,7 +19,9 @@ var SSLogMessage        = 1,
     SSLogViews          = 1 << 8,
     SSLogSandalphon     = 1 << 9,
     SSLogForce          = 1 << 10,
-    SSInclude           = 1 << 11;
+    SSInclude           = 1 << 11,
+    SSLogViewSystem     = 1 << 12;
+    SSLogSystem         = 1 << 13;
 
 var SSLogAll = 0xfffffff;           // All bits on (if we have at most 32 types)
 var __ssloglevel__ = SSNoLogging;
