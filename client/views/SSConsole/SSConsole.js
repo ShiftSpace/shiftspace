@@ -328,8 +328,8 @@ var SSConsole = new Class({
       var fragment = Sandalphon.convertToFragment(ui['interface'], context).getFirst();
       
       // place it in the frame
-      $(context.document.body).grab(fragment);
       $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
+      $(context.document.body).grab(fragment);
       
       // activate the iframe context: create controllers hook up outlets
       Sandalphon.activate(context);
