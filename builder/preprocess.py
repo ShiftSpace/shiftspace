@@ -48,8 +48,16 @@ def main(argv):
   if len(argv) < 1:
     print "Usage: python preprocess.py <environment definition>"
     return -1
+
+  envFile = None
+  try:
+    # load environment file
+    envFile = open('../config/env/%s.json' % argv[0])
+  except IOError:
+    # bail!
+    print "Error: no such environment file exist."
+    sys.exit(2)
     
-  envFile = open('../config/env/%s.json' % argv[0])
   env = json.loads(envFile.read())
   envFile.close()
   
