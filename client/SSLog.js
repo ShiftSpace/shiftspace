@@ -8,7 +8,7 @@
 // Internal Error Logging, trust me, you don't need this - kisses ShiftSpace Core Robot
 var SSNoLogging = 0;
 
-var SSLogMessage        = 1;
+var SSLogMessage        = 1,
     SSLogError          = 1 << 1,
     SSLogWarning        = 1 << 2,
     SSLogPlugin         = 1 << 3,
