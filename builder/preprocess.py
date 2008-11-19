@@ -73,6 +73,7 @@ def main(argv):
 
       outFile.write('\n// === END PACKAGE [%s] ===\n\n' % package)
     else:
+      mo = INCLUDE_REGEX.match(line)
       if mo:
         incFilename = mo.group(1)
         includeFile(outFile, incFilename)
