@@ -1,6 +1,6 @@
 <?php
 
-class CouchDB_Store extends Store {
+class CouchDB_Store extends Base_Store {
   
   public $config = array(
     'host' => 'localhost',

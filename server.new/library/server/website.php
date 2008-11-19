@@ -1,6 +1,6 @@
 <?php
 
-class Website_Server extends Server {
+class Website_Server extends Base_Server {
 
   public $defaultClass = 'Page_Object';
   

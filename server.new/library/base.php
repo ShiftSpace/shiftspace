@@ -6,24 +6,18 @@ if (!defined('BASE_DIR')) {
 
 if (!function_exists('__autoload')) {
   function __autoload($class) {
-    if (strpos($class, '_') === false) {
-      $filename = "$class/$class.php";
+    if (!strpos($class, '_') && file_exists(BASE_DIR . "/$class.php")) {
+      require_once BASE_DIR . "/$class.php";
+    } else if (strpos($class, 'Base_') === 0) {
+      $name = substr($class, 5);
+      require_once BASE_DIR . "/library/$name/$name.php";
     } else {
       $path = explode('_', $class);
-      if (!defined('BASE_SERVER') || strtolower($path[0]) != BASE_SERVER) {
-        $path = array_reverse($path);
-      }
+      $path = array_reverse($path);
       $filename = implode('/', $path) . '.php';
-    }
-    $filename = strtolower($filename);
-    if (file_exists(BASE_DIR . "/$filename")) {
-      require_once BASE_DIR . "/$filename";
-    }
-    if (file_exists(BASE_DIR . "/public/$filename")) {
-      require_once BASE_DIR . "/public/$filename";
-    }
-    if (file_exists(BASE_DIR . "/library/$filename")) {
-      require_once BASE_DIR . "/library/$filename";
+      if (file_exists(BASE_DIR . "/library/$filename")) {
+        require_once BASE_DIR . "/library/$filename";
+      }
     }
   }
 }

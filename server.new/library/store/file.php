@@ -1,6 +1,6 @@
 <?php
 
-class File_Store extends Store {
+class File_Store extends Base_Store {
   
   function __construct($base) {
     $this->base = $base;

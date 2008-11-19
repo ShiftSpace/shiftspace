@@ -1,14 +1,19 @@
 <?php
 
-class Server extends Base {
+class Base_Server extends Base {
   
   static private $instance;
   
   static public function singleton($filename) {
-    $name = substr($filename, 0, -4);
+    $name = substr(basename($filename), 0, -4);
+    $config = new Ini_Object($filename);
+    if (!empty($config->server) && !empty($config->server['class'])) {
+      $class = $config->server['class'];
+    } else {
+      $class = 'Server';
+    }
     if (!isset(self::$instance)) {
       try {
-        $class = "{$name}_Server";
         define('BASE_SERVER', strtolower($name));
         self::$instance = new $class($filename);
       } catch (Exception $e) {
@@ -20,7 +25,7 @@ class Server extends Base {
   }
   
   public function __construct($filename) {
-    $this->config = new Ini_Object("config/$filename");
+    $this->config = new Ini_Object($filename);
     $this->stores = array();
     foreach ($this->config->get() as $key => $value) {
       if (preg_match('/^store:(\w+)$/', $key, $matches)) {

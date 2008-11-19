@@ -1,6 +1,6 @@
 <?php
 
-class Store extends Base {
+class Base_Store extends Base {
   
   static public function factory($config) {
     if (empty($config['class'])) {

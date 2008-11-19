@@ -1,6 +1,6 @@
 <?php
 
-class Ini_Object extends Object {
+class Ini_Object extends Base_Object {
   
   public function __construct($file = false) {
     if (!empty($file)) {

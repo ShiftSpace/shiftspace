@@ -1,6 +1,6 @@
 <?php
 
-class PDO_Store extends Store {
+class PDO_Store extends Base_Store {
   
   protected $conn;
   protected $activeTransaction = false;

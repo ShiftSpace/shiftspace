@@ -1,6 +1,6 @@
 <?php
 
-class Page_Object extends Object {
+class Page_Object extends Base_Object {
   
   function __construct($name, $vars) {
     global $server;

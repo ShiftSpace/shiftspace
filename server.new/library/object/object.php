@@ -1,6 +1,6 @@
 <?php
 
-class Object extends Base {
+class Base_Object extends Base {
   
   public $contents = array(
     'values' => array()
