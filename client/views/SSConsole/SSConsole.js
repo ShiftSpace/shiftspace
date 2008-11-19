@@ -13,7 +13,6 @@ var SSConsole = new Class({
 
   initialize: function(el, options)
   {
-    console.log(window);
     SSLog("INSTANTIATING SSConsole", SSLogMessage);
     SSLog("Calling parent", SSLogMessage);
     

@@ -15,7 +15,7 @@ var SSView = new Class({
   {
     SSLog('Returning defaults', SSLogViewSystem);
     var temp = {
-      context: document.window,
+      context: null,
       generateElement: true
     };
     return temp;
