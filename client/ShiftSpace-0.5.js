@@ -61,9 +61,10 @@ var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
     SSSetLogLevel(SSLogAll);
 
-    // Default to http://shiftspace.org/dev
-    var server = SSGetValue('server', 'http://www.shiftspace.org/dev/');
-    var spacesDir = SSGetValue('spaceDir', 'http://www.shiftspace.org/dev/spaces/');
+    // NOTE: This will be preprocessed by preprocess.py and replaced with the proper
+    // servers
+    var server = SSGetValue('server', %%SERVER%%);
+    var spacesDir = SSGetValue('spaceDir', %%SPACEDIR%%);
 
     // make sure all our stuff is hidden at first
 

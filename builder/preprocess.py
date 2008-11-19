@@ -45,6 +45,14 @@ def main(argv):
   inFile = open('../client/ShiftSpace-0.5.js')
   outFile = open('../shiftspace.user.js', 'w')
   
+  if len(argv) < 1:
+    print "Usage: python preprocess.py <environment definition>"
+    return -1
+    
+  envFile = open('../config/env/%s.json' % argv[0])
+  env = json.loads(envFile.read())
+  envFile.close()
+  
   for line in inFile:
     mo = INCLUDE_PACKAGE_REGEX.match(line)
     if mo:
@@ -57,12 +65,17 @@ def main(argv):
 
       outFile.write('\n// === END PACKAGE [%s] ===\n\n' % package)
     else:
-      mo = INCLUDE_REGEX.match(line)
       if mo:
         incFilename = mo.group(1)
         includeFile(outFile, incFilename)
       else:
+        for key in env.keys():
+          line = line.replace(key, env[key])
+          
         outFile.write(line) 
+  
+  outFile.close()
+  inFile.close()
   
 if __name__ == "__main__":
   main(sys.argv[1:])
