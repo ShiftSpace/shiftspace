@@ -65,6 +65,9 @@ var ShiftSpace = new (function() {
     // servers
     var server = SSGetValue('server', %%SERVER%%);
     var spacesDir = SSGetValue('spaceDir', %%SPACEDIR%%);
+    
+    console.log('SERVER: ' + server);
+    console.log('SPACESDIR: ' + spaceDir);
 
     // make sure all our stuff is hidden at first
 
