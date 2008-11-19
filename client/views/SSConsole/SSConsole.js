@@ -13,10 +13,24 @@ var SSConsole = new Class({
 
   initialize: function(el, options)
   {
+    console.log(window);
+    SSLog("INSTANTIATING SSConsole", SSLogMessage);
+    SSLog("Calling parent", SSLogMessage);
+    
     // only really relevant under Sandalphon
-    this.parent(el, options);
+    if(typeof SandalphonToolMode == 'undefined')
+    {
+      this.parent(el, options);
+    }
+    else
+    {
+      this.parent(el, $merge(options, {
+        generateElement: false
+      }));
+    }
 
-    // if not tool mode, we load the interface ourselves
+    // if not tool mode, we load the interface ourselve
+    SSLog("Loading interface", SSLogMessage);
     if(typeof SandalphonToolMode == 'undefined')
     {
       Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
@@ -25,6 +39,7 @@ var SSConsole = new Class({
     // listen for login/logout events, pass in reference to self
     // so that ShiftSpace notifies after this object's awake method has been called
     // this is because outlets won't be set until that point
+    SSLog('Adding SSConsole events', SSLogMessage);
     SSAddEvent('onUserLogin', this.handleLogin.bind(this), this);
     SSAddEvent('onUserLogout', this.handleLogout.bind(this), this);
     
@@ -35,6 +50,7 @@ var SSConsole = new Class({
     // listen for global events as well
 
     // allocate datasource for page shifts
+    SSLog('Adding datasources', SSLogMessage);
     this.allShiftsDatasource = new SSTableViewDatasource({
       dataKey: 'shifts',
       dataUpdateKey: 'id',
@@ -52,6 +68,8 @@ var SSConsole = new Class({
       dataNormalizer: this.legacyNormalizer,
       requiredProperties: ['username']
     });
+    
+    SSLog('Done with initialization', SSLogMessage);
   },
   
   
