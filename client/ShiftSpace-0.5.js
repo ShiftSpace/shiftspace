@@ -236,20 +236,10 @@ var ShiftSpace = new (function() {
 
     var alreadyCheckedForUpdate = false;
 
-    // {SystemBasePackages}
-    
-    // INCLUDE IframeHelpers.js
-    // INCLUDE SSException.js
-    // INCLUDE PinHelpers.js
-    // INCLUDE SSViewProxy.js
-    // LocalizedStringsSupport.js
-    // INCLUDE SandalphonSupport.js
-    // INCLUDE EventProxy.js
-    // INCLUDE RecentlyViewedHelpers.js
-    // INCLUDE FullScreen.js
-    // INCLUDE ErrorWindow.js
-    // INCLUDE Element.js
-    // INCLUDE ../sandalphon/sandalphon.js
+    // INCLUDE PACKAGE System
+    // INCLUDE PACKAGE ErrorHandling
+    // INCLUDE PACKAGE Internationalization
+    // INCLUDE PACKAGE UtilitiesExtras
     
     function SSResetCore()
     {
@@ -278,44 +268,10 @@ var ShiftSpace = new (function() {
       
       // Load external scripts (pre-processing required)
 
-      // INCLUDE User.js
-      SSLog('User.js loaded');
-
-      SSLog('Element.js loaded');
-      // INCLUDE SSView.js
-      SSLog('SSView.js loaded');
-      // INCLUDE views/SSCell/SSCell.js
-      SSLog('SSCell.js loaded');
-      // INCLUDE views/SSEditableTextCell/SSEditableTextCell.js
-      SSLog('SSEditableTextCell.js loaded');
-      // INCLUDE views/SSTabView/SSTabView.js
-      SSLog('SSTabView.js loaded');
-      // INCLUDE SSTableViewDatasource.js
-      SSLog('SSTableViewDatasource.js loaded');
-      // INCLUDE views/SSTableView/SSTableView.js
-      SSLog('SSTableView.js loaded');
-      // INCLUDE views/SSTableRow/SSTableRow.js
-      SSLog('SSTableRow.js loaded');
-      // INCLUDE customViews/SSCustomTableRow/SSCustomTableRow.js
-      SSLog('SSCustomTableRow.js loaded');
-      // INCLUDE views/SSConsole/SSConsole.js
-      SSLog('SSConsole.js loaded');
-      // INCLUDE Space.js
-      SSLog('Space.js loaded');
-      // INCLUDE Shift.js
-      SSLog('Shift.js loaded');
-      // INCLUDE RangeCoder.js
-      SSLog('RangeCoder.js loaded');
-      // INCLUDE Pin.js
-      SSLog('Pin.js loaded');
-      // INCLUDE PinWidget.js
-      SSLog('PinWidget.js loaded');
-      // INCLUDE Plugin.js
-      SSLog('Plugin.js loaded');
-      // INCLUDE ShiftMenu.js
-      SSLog('ShiftMenu.js loaded');
-      // INCLUDE CoreEvents.js
-      SSLog('CoreEvents.sj loaded');
+      // INCLUDE PACKAGE Pinning
+      // INCLUDE PACKAGE ShiftSpaceCore
+      // INCLUDE PACKAGE ShiftSpaceCoreUI
+      // INCLUDE PACKAGE ShiftSpaceUI
       
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
@@ -2693,31 +2649,23 @@ var ShiftSpace = new (function() {
         {
           var doc = frame.contentDocument;
 
-          if(!Browser.Engine.trident)
+          if( doc.getElementsByTagName('head').length != 0 )
           {
-            if( doc.getElementsByTagName('head').length != 0 )
-            {
-              var head = doc.getElementsByTagName('head')[0];
-            }
-            else
-            {
-              // In Safari iframes don't get the head element by default - David
-              // Mootools-ize body
-              $(doc.body);
-              var head = new Element( 'head' );
-              head.injectBefore( doc.body );
-            }
-
-            var style = doc.createElement('style');
-            style.setAttribute('type', 'text/css');
-            style.appendChild(doc.createTextNode(css)); // You can not use setHTML on style elements in Safari - David
-            head.appendChild(style);
+            var head = doc.getElementsByTagName('head')[0];
           }
           else
           {
-            var style = doc.createStyleSheet()
-            style.cssText = css;
+            // In Safari iframes don't get the head element by default - David
+            // Mootools-ize body
+            $(doc.body);
+            var head = new Element( 'head' );
+            head.injectBefore( doc.body );
           }
+
+          var style = doc.createElement('style');
+          style.setAttribute('type', 'text/css');
+          style.appendChild(doc.createTextNode(css)); // You can not use setHTML on style elements in Safari - David
+          head.appendChild(style);
         }
         else
         {
@@ -2777,7 +2725,6 @@ var ShiftSpace = new (function() {
       this.SSShowShift = SSShowShift;
       this.SSUserOwnsShift = SSUserOwnsShift;
       this.SSSetShiftStatus = SSSetShiftStatus;
-      this.Sandalphon = Sandalphon;
       
       // export SSLog
       window.SSLog = SSLog;

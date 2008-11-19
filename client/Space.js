@@ -1,7 +1,7 @@
 // ==Builder==
 // @required
 // @name              Space
-// @package           System
+// @package           ShiftSpaceCore
 // ==/Builder==
 
 /*

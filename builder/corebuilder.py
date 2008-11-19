@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-# Builds a custom ShiftSpace core file from a config file, handles dependencies
+# Parses metadata in ShiftSpace client components and their dependencies, generates
+# a JSON representation of that in a way that would allow later loading of components
+# on a per-file or per-package basis
 
 #import json # only available in Python >= 2.6 
 import os

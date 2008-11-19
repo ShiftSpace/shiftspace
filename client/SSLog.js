@@ -1,7 +1,7 @@
 // ==Builder==
 // @required
 // @name              SSLog
-// @package           System
+// @package           System_
 // @dependencies      GreaseMonkeyApi
 // ==/Builder==
 

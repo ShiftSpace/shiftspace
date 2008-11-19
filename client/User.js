@@ -1,7 +1,7 @@
 // ==Builder==
 // @optional
 // @name              User
-// @package           System
+// @package           ShiftSpaceCore
 // ==/Builder==
 
 /*

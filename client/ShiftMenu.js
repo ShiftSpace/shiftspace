@@ -1,8 +1,8 @@
 // ==Builder==
 // @required
 // @name              ShiftMenu
-// @package           System
-// @dependencies      ShiftSpaceElement
+// @package           ShiftSpaceUI
+// @dependencies      ShiftSpaceElement, EventProxy
 // ==/Builder==
 
 /*
