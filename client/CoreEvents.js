@@ -1,3 +1,9 @@
+// ==Builder==
+// @option
+// @name	            CoreEvents
+// @package           EventHandling
+// ==/Builder==
+
 // Set up event handlers, these should not be tied into core
 window.addEvent('keydown', SSKeyDownHandler.bind(this));
 window.addEvent('keyup', SSKeyUpHandler.bind(this));

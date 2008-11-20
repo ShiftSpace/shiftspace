@@ -65,6 +65,7 @@ var ShiftSpace = new (function() {
     // servers
     var server = SSGetValue('server', %%SERVER%%);
     var spacesDir = SSGetValue('spaceDir', %%SPACEDIR%%);
+    var __sys__ = %%SYSTEM_TABLE%%;
     
     console.log('SERVER: ' + server);
     console.log('SPACESDIR: ' + spacesDir);
@@ -243,6 +244,7 @@ var ShiftSpace = new (function() {
     // INCLUDE PACKAGE System
     // INCLUDE PACKAGE ErrorHandling
     // INCLUDE PACKAGE Internationalization
+    // INCLUDE PACKAGE EventHandling
     // INCLUDE PACKAGE UtilitiesExtras
     
     function SSResetCore()
@@ -2729,6 +2731,7 @@ var ShiftSpace = new (function() {
       this.SSShowShift = SSShowShift;
       this.SSUserOwnsShift = SSUserOwnsShift;
       this.SSSetShiftStatus = SSSetShiftStatus;
+      this.sys = __sys__;
       
       // export SSLog
       window.SSLog = SSLog;

@@ -28,7 +28,7 @@ def includeFile(outFile, incFilename):
   prefix = ("\n// Start %s " % incFilename) + (69 - flen) * '-' + "\n\n"
   postfix = ("\n\n// End %s " % incFilename) + (71 - flen) * '-' + "\n\n"
   logline2 = "\nif (SSInclude != undefined) SSLog('... complete.', SSInclude);\n"
-              
+  
   incFile = open('../client/%s' % incFilename)
   outFile.write(logline1)
   outFile.write(prefix)
@@ -39,7 +39,8 @@ def includeFile(outFile, incFilename):
 
 def main(argv):
   metadataJsonFile = open('../config/packages.json')
-  metadata = json.loads(metadataJsonFile.read())
+  metadataStr = metadataJsonFile.read()
+  metadata = json.loads(metadataStr)
   metadataJsonFile.close()
   
   inFile = open('../client/ShiftSpace-0.5.js')
@@ -68,6 +69,11 @@ def main(argv):
 
       outFile.write('\n// === START PACKAGE [%s] ===\n\n' % package)
 
+      # bail!
+      if not metadata['packages'].has_key(package):
+        print "Error: no such package %s exists, perhaps you forgot to run corebuilder.py first?" % package
+        sys.exit(2)
+
       for component in metadata['packages'][package]:
         includeFile(outFile, metadata['files'][component]['path'])
 
@@ -80,8 +86,10 @@ def main(argv):
       else:
         for key in env.keys():
           line = line.replace(("%%%%%s%%%%" % (key)), '"%s"' % env[key])
-          
-        outFile.write(line) 
+        line = line.replace("%%SYSTEM_TABLE%%", metadataStr)
+        outFile.write(line)
+
+  
   
   outFile.close()
   inFile.close()
