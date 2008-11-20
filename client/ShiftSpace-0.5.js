@@ -345,6 +345,16 @@ var ShiftSpace = new (function() {
       SSSynch();
     };
     
+    function SSHasResource(resourceName)
+    {
+      if(__sys__.files[resourceName]) return true;
+      for(var aPackage in __sys__.packages)
+      {
+        if(aPackage.contains(resourceName)) return true;
+      }
+      return false;
+    }
+    
     /*
     Function: SSSynch
       Synchronize with server: checks for logged in user.
@@ -2732,6 +2742,7 @@ var ShiftSpace = new (function() {
       this.SSUserOwnsShift = SSUserOwnsShift;
       this.SSSetShiftStatus = SSSetShiftStatus;
       this.sys = __sys__;
+      this.SSHasResource = SSHasResource;
       
       // export SSLog
       window.SSLog = SSLog;
