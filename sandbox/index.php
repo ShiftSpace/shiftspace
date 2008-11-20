@@ -35,7 +35,10 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     <script src="../mootools/mootools-1.2-more.js" type="text/javascript"></script>
     <script src="greasemonkey-api-0.5.js" type="text/javascript"></script>
     <script src="../client/Videobox.js" type="text/javascript"></script>
+    <!--
     <script src="../shiftspace.php?method=shiftspace.user.js&version=0.5&sandbox=1&nocache=<?php echo time();?>" type="text/javascript" charset="utf-8"></script>
+    -->
+    <script src="../shiftspace.user.js" type="text/javascript" charset="utf-8"></script>
     <!--<script src="../client/Actions.js" type="text/javascript"></script>-->
     <style type="text/css">
     .first
