@@ -52,9 +52,11 @@ def main(argv):
     return -1
 
   envFile = None
+  evnFileName = None
   try:
     # load environment file
     envFile = open('../config/env/%s.json' % argv[0])
+    envFileName = argv[0]
   except IOError:
     # bail!
     print "Error: no such environment file exist."
@@ -87,8 +89,9 @@ def main(argv):
         includeFile(outFile, incFilename)
       else:
         for key in env.keys():
-          line = line.replace(("%%%%%s%%%%" % (key)), '"%s"' % env[key])
+          line = line.replace(("%%%%%s%%%%" % (key)), '%s' % env[key])
         line = line.replace("%%SYSTEM_TABLE%%", metadataStr)
+        line = line.replace("%%ENV_NAME%%", envFileName)
         outFile.write(line)
 
   

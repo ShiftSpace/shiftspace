@@ -1,7 +1,8 @@
 // ==Builder==
 // @optional
 // @name              SSCustomExceptions
-// @package           ShiftSpaceCore
+// @package           System
+// @dependencies      Exception
 // ==/Builder==
 
 var SSSpaceDoesNotExistError = new Class({

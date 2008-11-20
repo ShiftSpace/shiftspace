@@ -51,7 +51,7 @@ function SSLog(msg, type)
       messageType = 'WARNING: ';
     }
     
-    if(__ssloglevel__ == SSLogAll || (type && (__ssloglevel__ & type)))
+    if(__ssloglevel__ == SSLogAll || (type && (__ssloglevel__ & type)) || type == SSLogForce)
     {
       if($type(msg) != 'string')
       {

@@ -46,7 +46,7 @@ Credits:
 
 // ShiftSpace is built on the Mootools framework (pre-processing required)
 
-console.log('Loading ShiftSpace');
+if(console && console.log) console.log('Loading ShiftSpace');
 
 /*
 
@@ -59,20 +59,29 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE SSLog.js
-    SSSetLogLevel(SSLogAll);
+    if(typeof %%LOG_LEVEL%% != 'undefined')
+    {
+      SSSetLogLevel(%%LOG_LEVEL%%);
+    }
+    else
+    {
+      throw new Error("Bailing: No such logging level %%LOG_LEVEL%%, please fix the config/env/%%ENV_NAME%%.json file.");
+      return;
+    }
 
     // NOTE: This will be preprocessed by preprocess.py and replaced with the proper
     // servers
-    var server = SSGetValue('server', %%SERVER%%);
-    var spacesDir = SSGetValue('spaceDir', %%SPACEDIR%%);
+    var server = SSGetValue('server', '%%SERVER%%');
+    var spacesDir = SSGetValue('spaceDir', '%%SPACEDIR%%');
+    
     var __sys__ = %%SYSTEM_TABLE%%;
     var __sysavail__ = {
       files: [],
       packages: []
     };
     
-    console.log('SERVER: ' + server);
-    console.log('SPACESDIR: ' + spacesDir);
+    SSLog('SERVER: ' + server, SSLogForce);
+    SSLog('SPACESDIR: ' + spacesDir, SSLogForce);
 
     // make sure all our stuff is hidden at first
 
