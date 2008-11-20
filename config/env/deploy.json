@@ -1,4 +1,5 @@
 {
   "SERVER": "http://shiftspace.org/api/",
-  "SPACEDIR": "http://shiftspace.org/api/spaces/"
+  "SPACEDIR": "http://shiftspace.org/api/spaces/",
+  "LOG_LEVEL": "SSNoLogging"
 }
