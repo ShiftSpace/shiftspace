@@ -35,6 +35,7 @@ def includeFile(outFile, incFilename):
   outFile.write(incFile.read())
   outFile.write(postfix)
   outFile.write(logline2)
+  outFile.write("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
   incFile.close()
 
 def main(argv):
@@ -68,6 +69,7 @@ def main(argv):
       package = mo.group(1)
 
       outFile.write('\n// === START PACKAGE [%s] ===\n\n' % package)
+      outFile.write('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
 
       # bail!
       if not metadata['packages'].has_key(package):

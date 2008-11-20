@@ -66,6 +66,10 @@ var ShiftSpace = new (function() {
     var server = SSGetValue('server', %%SERVER%%);
     var spacesDir = SSGetValue('spaceDir', %%SPACEDIR%%);
     var __sys__ = %%SYSTEM_TABLE%%;
+    var __sysavail__ = {
+      files: [],
+      packages: []
+    };
     
     console.log('SERVER: ' + server);
     console.log('SPACESDIR: ' + spacesDir);
@@ -283,8 +287,11 @@ var ShiftSpace = new (function() {
       ShiftSpace.User.addEvent('onUserLogin', function() {
         SSLog('ShiftSpace Login ======================================');
         SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
-        // clear out recently viewed shifts on login
-        SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
+        // FIXME: Just make this into a onUserLogin hook - David
+        if(SSHasResource('RecentlyViewedHelpers'))
+        {
+          SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
+        }
         SSFireEvent('onUserLogin');
       });
 
@@ -347,12 +354,12 @@ var ShiftSpace = new (function() {
     
     function SSHasResource(resourceName)
     {
-      if(__sys__.files[resourceName]) return true;
-      for(var aPackage in __sys__.packages)
-      {
-        if(aPackage.contains(resourceName)) return true;
-      }
-      return false;
+      return __sysavail__.files.contains(resourceName) || __sysavail__.packages.contains(resourceName);
+    }
+    
+    function SSResourceExists(resourceName)
+    {
+      return __sys__.files[resourceName] != null || __sys__.packages[resourceName] != null;
     }
     
     /*
@@ -1502,8 +1509,11 @@ var ShiftSpace = new (function() {
           // fix legacy content
           shiftJson.legacy = shift.legacy;
 
-          // add to recently viewed list
-          SSAddRecentlyViewedShift(shiftId);
+          // FIXME: make into onShowShift hook - David
+          if(SSHasResource('RecentlyViewedHelpers'))
+          {
+            SSAddRecentlyViewedShift(shiftId);
+          }
 
           // wrap this in a try catch
           if(typeof ShiftSpaceSandBoxMode == 'undefined')
@@ -2743,6 +2753,7 @@ var ShiftSpace = new (function() {
       this.SSSetShiftStatus = SSSetShiftStatus;
       this.sys = __sys__;
       this.SSHasResource = SSHasResource;
+      this.SSResourceExists = SSResourceExists;
       
       // export SSLog
       window.SSLog = SSLog;
