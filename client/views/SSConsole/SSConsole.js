@@ -315,6 +315,11 @@ var SSConsole = new Class({
   buildInterface: function(ui)
   {
     SSLog("BUILD SSConsole interface");
+    
+    if($('SSConsole'))
+    {
+      throw new Error("Ooops it looks an instace of ShiftSpace is already running. Please turn off Greasemonkey or leave this page.");
+    }
 
     // create the iframe where the console will live
     this.element = new IFrame({
