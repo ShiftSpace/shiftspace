@@ -171,12 +171,6 @@ var ShiftSpace = new (function() {
     this.Objects = new Hash(); // holds all instantiated UI objects
     this.NameTable = new Hash(); // holds all instantiated UI object by CSS id
 
-    // Private variable and function for controlling user authentication
-    var username = false;
-    function setUsername(_username) {
-      username = _username;
-    }
-
     var alreadyCheckedForUpdate = false;
 
     // INCLUDE PACKAGE System
@@ -291,16 +285,6 @@ var ShiftSpace = new (function() {
       SSLog('Synchronizing with server', SSLogSystem);
       SSSynch();
     };
-    
-    function SSHasResource(resourceName)
-    {
-      return __sysavail__.files.contains(resourceName) || __sysavail__.packages.contains(resourceName);
-    }
-    
-    function SSResourceExists(resourceName)
-    {
-      return __sys__.files[resourceName] != null || __sys__.packages[resourceName] != null;
-    }
     
     /*
     Function: SSSynch

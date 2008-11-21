@@ -4,6 +4,12 @@
 // @package           Core
 // ==/Builder==
 
+// Private variable and function for controlling user authentication
+var username = false;
+
+function setUsername(_username) {
+  username = _username;
+}
 
 /*
   Function: SSUserForShift

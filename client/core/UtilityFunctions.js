@@ -174,3 +174,13 @@ function SSGetDefaultEmailComments(checkPref)
   // NOTE: 2 because we can't store 0s in the DB when in the sandbox, 1 = false, 2 = true in this case - David
   return (checkPref && SSGetPref('defaultEmailComments', 2) || __defaultEmailComments__);
 }
+
+function SSHasResource(resourceName)
+{
+  return __sysavail__.files.contains(resourceName) || __sysavail__.packages.contains(resourceName);
+}
+
+function SSResourceExists(resourceName)
+{
+  return __sys__.files[resourceName] != null || __sys__.packages[resourceName] != null;
+}
