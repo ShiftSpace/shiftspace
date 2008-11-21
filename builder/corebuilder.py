@@ -74,7 +74,11 @@ class SSCoreBuilder():
           self.packages[package].append(name)
 
         directives['path'] = path;
-        self.metadata[name] = directives;
+
+        if directives.has_key('test'):
+          self.testsMetadata[name] = directives
+        else:
+          self.metadata[name] = directives;
         
         break;
 
@@ -152,13 +156,10 @@ class SSCoreBuilder():
     """
     metadata = None
     
-    try:
-      metadata = self.metadata[name]
-    except:
-      print "metadataForFile error: %s" % name
-      raise NoSuchFileError(self)
-
-    return metadata
+    if self.metadata.has_key(name):
+      return self.metadata[name]
+    else:
+      raise NoSuchFileError(self, "metadataForFile error: %s" % name)
 
 
   def dependenciesForFile(self, name):
@@ -215,6 +216,26 @@ class SSCoreBuilder():
     else:
       print jsonString
 
+  def writeTestsJSON(self, output="../config/tests.json", writeToFile=True):
+    """
+    Write tests json description.
+    """
+
+    # create dictionary to hold file data as well as package data
+    testsDict = {}
+    testsDict['dependencies'] = self.testDependencies
+    
+    # get a json dump
+    jsonString = json.dumps(testsDict, sort_keys=True, indent=4)
+    
+    # write this out to a file
+    if writeToFile:
+      fileHandle = open(output, "w")
+      fileHandle.write(jsonString)
+      fileHandle.close()
+    else:
+      print jsonString
+
 
   def filesWithDependency(self, name):
     """
@@ -228,23 +249,53 @@ class SSCoreBuilder():
     return filesWithDependency
 
 
+  def recursivelyAddTestDependency(self, testFile, dependency):
+    """
+    Add a file to the list of dependencies of a test. If this file is dependent on other
+    files add them to the list before
+    """
+    
+    dependencies = self.dependenciesForFile(dependency)
+    transitiveDependencies = self.testDependencies[testFile]
+    
+    # always add X's dependencies before adding X itself
+    for newDependency in dependencies:
+      self.recursivelyAddTestDependency(testFile, newDependency)
+      
+    path = self.metadata[dependency]['path']
+    
+    if not path in transitiveDependencies:
+      transitiveDependencies.append(path)
+    
+
+  def calculateTestDependencies(self):
+    """
+    Create a list of files to be loaded before a each test can be run
+    """
+    
+    self.testDependencies = {}
+    
+    for testFile in self.testsMetadata.keys():
+      metadata = self.testsMetadata[testFile]
+      self.testDependencies[testFile] = []
+      
+      if metadata.has_key('dependencies'):
+        for dependency in metadata['dependencies']:
+          self.recursivelyAddTestDependency(testFile, dependency)
+
+
   def build(self, path, recurse=False):
     """
     Creates all the internal data structures and sorts all found packages.
     """
 
-    self.metadata = {};
+    self.metadata = {}
+    self.testsMetadata = {}
     # build all the internal data structures
     self.parseDirectory(path, recurse)
     # sort the internal package data structure
     self.sortPackages()
-
-
-  def buildTarget(self, packageJSON):
-    """
-    Build a target based on the package description.
-    """
-    pass
+    self.calculateTestDependencies()
 
 
 def usage():
@@ -252,7 +303,7 @@ def usage():
   print "-h help"
   print "-i input, directory or file"
   print "-r recursively search directories"
-  print "-o output file, file name defaults to packages.json"
+  print "-o output directory. two files will be generated - packages.json and tests.json"
 
 
 def main(argv):
@@ -260,7 +311,7 @@ def main(argv):
   # certain directories exist so that this
   # script isn't accidentally run anywhere
   inputFile = "../"
-  outputFile = "../config/packages.json"
+  outputDir = "../config"
   recursive = False
 
   try:
@@ -276,15 +327,19 @@ def main(argv):
     elif opt in ("-i", "--input"):
       inputFile = arg
     elif opt in ("-o", "--output"):
-      outputFile = arg
+      outputDir = arg
     elif opt == "-r":
       recursive = True
     else:
       assert False, "unhandled options"
 
+  packagesFile = outputDir + '/packages.json'
+  testsFile = outputDir + '/tests.json'
+
   builder = SSCoreBuilder()
   builder.build(path=inputFile, recurse=True)
-  builder.writePackagesJSON(output=outputFile)
+  builder.writePackagesJSON(output=packagesFile)
+  builder.writeTestsJSON(output=testsFile)
   
   
 if __name__ == "__main__":

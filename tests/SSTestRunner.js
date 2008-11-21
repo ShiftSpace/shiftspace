@@ -4,31 +4,31 @@ var SSTestRunner = new Class({
   
   initialize: function()
   {
-    this.loadPackages();
+    this.loadTestDependencies();
   },
 
   
-  setPackages: function(packages)
+  setTestDependencies: function(testDependencies)
   {
-    this.__packages = packages;
+    this.__testDependencies = testDependencies;
   },
   
   
-  packages: function()
+  testDependencies: function()
   {
-    return this.__packages;
+    return this.__testDependencies;
   },
     
   
-  loadPackages: function()
+  loadTestDependencies: function()
   {
     // load the package json
     new Request({
-      url: "../config/packages.json",
+      url: "../config/tests.json",
       method: "get",
       onComplete: function(responseText, responseXML)
       {
-        this.setPackages(JSON.decode(responseText));
+        this.setTestDependencies(JSON.decode(responseText)['dependencies']);
       }.bind(this),
       onFailure: function(responseText, responseXML)
       {
@@ -52,6 +52,17 @@ var SSTestRunner = new Class({
     var components = path.split("/");
     var testname = components.getLast();
     var base = testname.split('.')[0];
+    
+    var dependencies = this.testDependencies()[base];
+ 
+    dependencies.each(function(dependency) {
+      new Request({
+        url: dependency,
+        method: "get",
+        onComplete: function(responseText, responseXML) {
+          eval(responseText);
+        }}).send();
+    });
     
     new Request({
       url: path,
