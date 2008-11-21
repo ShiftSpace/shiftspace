@@ -67,6 +67,8 @@ var SSTestRunner = new Class({
         // load the class
         var testInstance = eval(base);
         
+        // david, you are such a hacker.
+        // the initialize method in SSUnitTest.TestCase adds itself to the list of testcases
         new testInstance();
         
         $('SSSandalphonContainer').empty();
