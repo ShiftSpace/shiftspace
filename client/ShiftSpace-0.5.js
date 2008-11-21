@@ -108,27 +108,6 @@ var ShiftSpace = new (function() {
     var __consoleIsWaiting__ = false;
     var __defaultEmailComments__ = 1;
 
-    // paths to required ShiftSpace files
-    // TODO: remove this dependency - David
-    this.ClassPaths = {
-      'SSTableViewDatasource': '/client/'
-    };
-
-    // TODO: paths to view controllers, should probably just default unless defined in UserClassPaths - David
-    this.UIClassPaths = {
-      'SSCell': '/client/views/SSCell/',
-      'SSEditableTextCell': '/client/views/SSEditableTextCell/',
-      'SSTabView': '/client/views/SSTabView/',
-      'SSTableView': '/client/views/SSTableView/',
-      'SSTableRow': '/client/views/SSTableRow/',
-      'SSConsole': '/client/views/SSConsole/'
-    };
-
-      // path to user defined view controllers
-    this.UserClassPaths = {
-      'SSCustomTableRow': '/client/customViews/SSCustomTableRow/' // TODO: change this to point to the real folder - David
-    };
-
     // Stores initial data for plugins that are needed for the console at startup
     // since the plugins won't actually be loaded until they are needed
     var __pluginsData__ = {};
@@ -165,12 +144,6 @@ var ShiftSpace = new (function() {
 
     // An index of cached files, used to clear the cache when necessary
     var cache = SSGetValue('cache', []);
-
-    // new additions for Sandalphon
-    this.UI = {}; // holds all UI class objects
-    this.Objects = new Hash(); // holds all instantiated UI objects
-    this.NameTable = new Hash(); // holds all instantiated UI object by CSS id
-
     var alreadyCheckedForUpdate = false;
 
     // INCLUDE PACKAGE System
@@ -193,6 +166,32 @@ var ShiftSpace = new (function() {
 
     */
     this.initialize = function() {
+      // paths to required ShiftSpace files
+      // new additions for Sandalphon
+      ShiftSpace.UI = {}; // holds all UI class objects
+      ShiftSpace.Objects = new Hash(); // holds all instantiated UI objects
+      ShiftSpace.NameTable = new Hash(); // holds all instantiated UI object by CSS id
+      
+      // TODO: remove this dependency - David
+      ShiftSpace.ClassPaths = {
+        'SSTableViewDatasource': '/client/'
+      };
+
+      // TODO: paths to view controllers, should probably just default unless defined in UserClassPaths - David
+      ShiftSpace.UIClassPaths = {
+        'SSCell': '/client/views/SSCell/',
+        'SSEditableTextCell': '/client/views/SSEditableTextCell/',
+        'SSTabView': '/client/views/SSTabView/',
+        'SSTableView': '/client/views/SSTableView/',
+        'SSTableRow': '/client/views/SSTableRow/',
+        'SSConsole': '/client/views/SSConsole/'
+      };
+
+        // path to user defined view controllers
+      ShiftSpace.UserClassPaths = {
+        'SSCustomTableRow': '/client/customViews/SSCustomTableRow/' // TODO: change this to point to the real folder - David
+      };
+      
       // ShiftSpace global var is set by this point not before.
       ShiftSpace.info = SSInfo;
       // export for third party deveopers
@@ -386,37 +385,6 @@ var ShiftSpace = new (function() {
         });
       }
     };
-
-    /*
-      Function: SSCheckForAutolaunch
-        Check for Spaces which need to be auto-launched.
-    */
-    function SSCheckForAutolaunch()
-    {
-      for(space in installed)
-      {
-        if(SSGetPrefForSpace(space, 'autolaunch'))
-        {
-          var ids = SSAllShiftIdsForSpace(space);
-          var spaceObject = SSSpaceForName(space);
-
-          // in the case of the web we need to load the space first
-          if(!spaceObject)
-          {
-            // load the space first
-            SSLoadSpace(space, function() {
-              ids.each(SSShowShift);
-            });
-            return;
-          }
-          else
-          {
-            // otherwise just show the puppies, this works in the sandbox
-            ids.each(SSShowShift);
-          }
-        }
-      }
-    }
 
     // In sandbox mode, expose something for easier debugging.
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
