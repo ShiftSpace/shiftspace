@@ -4,6 +4,9 @@
 // @package           Core
 // ==/Builder==
 
+var __spaces__ = {};
+var __focusedSpace__ = null;
+
 /*
 Function: SSLoadSpace
   Loads the space's source code, executes it and stores an instance of the

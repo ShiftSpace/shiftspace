@@ -5,6 +5,101 @@
 // ==/Builder==
 
 /*
+Function: SSServerCall
+  Sends a request to the server.
+
+Parameters:
+  method - Which method to call on the server (string)
+  parameters - Values passed with the call (object)
+  callback - (optional) A function to execute upon completion
+*/
+function SSServerCall(method, parameters, _callback) 
+{
+  var callback = _callback;
+  var url = server + 'shiftspace.php?method=' + method;
+  
+  SSLog('serverCall: ' + url, SSLogServerCall);
+  
+  var data = '';
+
+  for (var key in parameters) 
+  {
+    if (data != '') 
+    {
+      data += '&';
+    }
+    data += key + '=' + encodeURIComponent(parameters[key]);
+  }
+
+  var plugins = new Hash(installedPlugins);
+  url += '&plugins=' + plugins.getKeys().join(',');
+
+  var now = new Date();
+  url += '&cache=' + now.getTime();
+
+  //SSLog(data);
+
+  //GM_openInTab(url);
+  var req = {
+    method: 'POST',
+    url: url,
+    data: data,
+    onload: function(_rx) 
+    {
+      SSLog('done!');
+      var rx = _rx;
+      SSLog('servercall returned', SSLogServerCall);
+      /*
+      SSLog(rx.responseText);
+      SSLog(typeof callback == 'function');
+      */
+      if ($type(callback) == 'function') 
+      {
+        //SSLog('evaluate ' + rx.responseText);
+        try
+        {
+          SSLog('trying ' + url);
+          SSLog(rx.responseText);
+          SSLog(eval('(' + rx.responseText + ')'));
+          SSLog('tried ' + url);
+          var theJson = JSON.decode(rx.responseText);
+          SSLog('success!');
+        }
+        catch(exc)
+        {
+          SSLog('Server call exception: ' + SSDescribeException(exc), SSLogServerCall);
+        }
+        /*
+        SSLog('done evaluating');
+        SSLog(callback);
+        */
+        callback(theJson);
+      }
+      else
+      {
+        SSLog('callback is not a function', SSLogServerCall);
+      }
+    },
+    onerror: function(err)  
+    {
+      SSLog(err);
+    }
+  };
+
+  // Firefox doesn't work without this
+  // and the existence of this breaks Safari
+  if(!window.webkit)
+  {
+    req.headers = {
+      'Content-type': 'application/x-www-form-urlencoded'
+    };
+  }
+
+  // we need to have error handling right here
+  GM_xmlhttpRequest(req);
+}
+
+/*
 Function: SSLoadStyle
   Loads a CSS file, processes it to make URLs absolute, then appends it as a
   STYLE element in the page HEAD.
@@ -67,4 +162,88 @@ function SSLoadStyle(url, callback, frame)
     }
 
   });
+}
+
+/*
+Function: SSLoadFile
+  Loads a URL and executes a callback with the response
+
+Parameters:
+  url - The URL of the target file
+  callback - A function to process the file once it's loaded
+*/
+function SSLoadFile(url, callback)
+{
+  // If the URL doesn't start with "http://", assume it's on our server
+  if (url.substr(0, 7) != 'http://' &&
+      url.substr(0, 8) != 'https://') {
+    url = server + url;
+  }
+
+  //SSLog('loadFile:' + url);
+
+  // Caching is implemented as a rather blunt instrument ...
+  if (!cacheFiles) 
+  {
+    // ... either append the current timestamp to the URL ...
+    var now = new Date();
+    url += (url.indexOf('?') == -1) ? '?' : '&';
+    url += now.getTime();
+  } 
+  else 
+  {
+    SSLog('load from cache');
+    // ... or use SSGetValue to retrieve the file's contents
+    var cached = SSGetValue('cache.' + url, false, true);
+
+    if (cached) 
+    {
+      //SSLog('Loading ' + url + ' from cache');
+      if (typeof callback == 'function') 
+      {
+        callback({ responseText: cached });
+      }
+      return true;
+    }
+  }
+
+  // Load the URL then execute the callback
+  //SSLog('Loading ' + url + ' from network');
+  GM_xmlhttpRequest({
+    'method': 'GET',
+    'url': url,
+    'onload': function(response) 
+    {
+      // Store file contents for later retrieval
+      if (cacheFiles) 
+      {
+        cache.push(url);
+        SSSetValue('cache', cache);
+        SSSetValue('cache.' + url, response.responseText, true);
+      }
+      if (typeof callback == 'function') 
+      {
+        callback(response);
+      }
+    },
+    'onerror': function(response) 
+    {
+      SSLog("failed loadFile call, for file " + url, SSLogError);
+      if(errCallback && typeof errCallback == 'function') errCallback(); // FIXME: broken - David
+    }
+  });
+
+  return true;
+}
+
+/*
+  Function: SSXmlHttpRequest
+    Private version of GM_xmlHttpRequest. Implemented for public use via Space/Shift.xmlhttpRequest.
+
+  Parameters:
+    config - same JSON object as used by GM_xmlhttpRequest.
+*/
+function SSXmlHttpRequest(config) 
+{
+  GM_xmlhttpRequest(config);
 }

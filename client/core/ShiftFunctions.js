@@ -4,6 +4,10 @@
 // @package           Core
 // ==/Builder==
 
+var shifts = {};
+var __focusedShiftId__ = null; // Holds the id of the currently focused shift
+var __defaultShiftStatus__ = 1;
+
 /*
 Function: SSInitShift
   Creates a new shift on the page.

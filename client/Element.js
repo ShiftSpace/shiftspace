@@ -4,6 +4,30 @@
 // @package           System
 // ==/Builder==
 
+// Element extensions because child selectors don't work properly in MooTools 1.2 for some reason - David
+Element.implement({
+  _ssgenId: function()
+  {
+    var id = this.getProperty('id');
+    if(!id)
+    {
+      id = Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
+      this.setProperty('id', 'generatedId_'+id);
+    }
+    return id;
+  },
+  _getElement: function(sel)
+  {
+    this._ssgenId();
+    return (new Document(this.ownerDocument)).getWindow().$$('#' + this.getProperty('id') + ' ' + sel)[0];
+  },
+  _getElements: function(sel)
+  {
+    this._ssgenId();
+    return (new Document(this.ownerDocument)).getWindow().$$('#' + this.getProperty('id') + ' ' + sel);
+  }
+});
+
 /*
   Class: ShiftSpace.Element
     A wrapper around the MooTools Element class that marks each DOM node with the ShiftSpaceElement CSS

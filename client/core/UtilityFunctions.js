@@ -4,6 +4,65 @@
 // @package           Core
 // ==/Builder==
 
+/*
+
+Function: info
+Provides basic information about ShiftSpace's current state.
+
+Parameters:
+    spaceName - (optional) Get information about a specific installed space.
+
+Returns:
+    When no parameter is specified, returns an object with the following
+    variables set:
+
+    - server (string), the base URL of the ShiftSpace server
+    - spaces (string), a list of currently installed spaces
+    - version (string), the current version of ShiftSpace
+
+    If spaceName is specified, returns the following information about the
+    space:
+
+    - title (string), a human-readable version of the space name
+    - icon (string), the URL of the Space's icon
+    - version (string), the current version of the installed Space
+
+*/
+function SSInfo(spaceName) 
+{
+  if (typeof spaceName != 'undefined') 
+  {
+    var defaults = {
+      title: spaceName,
+      icon: server + 'images/unknown-space.png',
+      version: '1.0'
+    };
+    if (!installed[spaceName]) 
+    {
+      defaults.unknown = true;
+      return defaults;
+    }
+    // TODO - this must be fixed, we need to cache space attributes - David
+    defaults.icon = server + 'spaces/' + spaceName + '/' + spaceName + '.png';
+    //var spaceInfo = $merge(defaults, spaces[spaceName].attributes);
+    var spaceInfo = $merge(defaults, {});
+    delete spaceInfo.name; // No need to send this back
+    spaceInfo.url = installed[spaceName];
+    return spaceInfo;
+  }
+  var spaceIndex = [];
+  for (var aSpaceName in installed) 
+  {
+    spaceIndex.push(aSpaceName);
+  }
+  return {
+    server: server,
+    spacesDir: spacesDir,
+    spaces: spaceIndex.join(', '),
+    version: version
+  };
+};
+
 // ===============================
 // = Function Prototype Helpers  =
 // ===============================
@@ -27,6 +86,22 @@ Function.prototype.safeCallWithResult = function() {
     callback(self.apply(null, args));
   }, 0);
 };
+
+/*
+  Function: SSHasProperty
+    Convenience function to check whether an object has a property.
+
+  Parameters:
+    obj - an Object.
+    prop - the property name as a string.
+
+  Returns:
+    a boolean.
+*/
+function SSHasProperty(obj, prop)
+{
+  return (typeof obj[prop] != 'undefined');
+}
 
 /*
   Function: SSImplementsProtocol
@@ -53,4 +128,49 @@ function SSImplementsProtocol(protocol, object)
     }
   }
   return {'result': result, 'missing': missing};
+}
+
+var __dragDiv__;
+function SSCreateDragDiv()
+{
+  __dragDiv__ = new ShiftSpace.Element('div', {
+    id: 'SSDragDiv'
+  });
+}
+
+function SSAddDragDiv()
+{
+  $(document.body).grab(__dragDiv__);
+}
+
+function SSRemoveDragDiv()
+{
+  __dragDiv__ = __dragDiv__.dispose();
+}
+
+function SSLocalizedStringSupport()
+{
+  return (typeof __sslang__ != 'undefined');
+}
+
+// Localized String Support
+function SSLocalizedString(string)
+{
+  if(SSLocalizedStringSupport() && ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
+  return string;
+}
+
+function SSSetDefaultEmailComments(value)
+{
+  if(value)
+  {
+    __defaultEmailComments__ = value;
+    SSSetPref('defaultEmailComments', __defaultEmailComments__);
+  }
+}
+
+function SSGetDefaultEmailComments(checkPref)
+{
+  // NOTE: 2 because we can't store 0s in the DB when in the sandbox, 1 = false, 2 = true in this case - David
+  return (checkPref && SSGetPref('defaultEmailComments', 2) || __defaultEmailComments__);
 }

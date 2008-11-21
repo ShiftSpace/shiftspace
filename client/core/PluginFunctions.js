@@ -4,6 +4,43 @@
 // @package           Core
 // ==/Builder==
 
+var plugins = {};
+
+// NOTE: will replace with ResourceManager in 0.5 - David
+plugins.attempt = function(options)
+{
+  //SSLog('attempting to call plugin');
+  var args = ($type(options.args) == 'array' && options.args) || [options.args];
+  
+  function execute()
+  {
+    SSLog('executing plugin ' + options.name + ' call ' + options.method, SSLogPlugin);
+    SSLog('plugin installed ' + plugins[options.name], SSLogPlugin);
+    if(options.method)
+    {
+      plugins[options.name][options.method].apply(plugins[options.name], args);
+      if(options.callback && $type(options.callback) == 'function') options.callback();
+    }
+  };
+
+  // load then call
+  if(!plugins[options.name])
+  {
+    SSLog('Load plugin ' + options.name, SSLogPlugin);
+    // Listen for the real load event
+    SSAddEvent('onPluginLoad', function(plugin) {
+      SSLog(options.name + ' plugin loaded ', SSLogPlugin);
+      if(plugin.attributes.name == options.name) execute();
+    });
+    // Loading the plugin
+    SSLoadPlugin(options.name, null);
+  }
+  else
+  {
+    execute();
+  }
+};
+
 /*
   Function: SSLoadPlugin
     Loads a plugin
