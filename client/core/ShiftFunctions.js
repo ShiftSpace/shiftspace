@@ -289,6 +289,87 @@ function SSEditShift(shiftId)
 }
 
 /*
+Function: SSSaveNewShift
+  Creates a new entry for the shift on the server.
+
+Parameters:
+  shiftJson - a shift json object, delivered from Shift.encode
+
+See Also:
+  Shift.encode
+*/
+function SSSaveNewShift(shiftJson)
+{
+  var space = SSSpaceForName(shiftJson.space);
+
+  // remove the filters from the json object
+  var filters = shiftJson.filters;
+  delete shiftJson.filters;
+
+  var params = {
+    href: window.location.href,
+    space: shiftJson.space,
+    summary: shiftJson.summary,
+    content: escape(JSON.encode(shiftJson)),
+    version: space.attributes.version,
+    filters: JSON.encode(filters),
+    status: SSGetDefaultShiftStatus() // TODO: this call is in the space ecosystem
+  };
+
+  SSLog('saving new shift!');
+  SSServerCall.safeCall('shift.create', params, function(json) {
+    SSLog('>>>>>>>>>>>>>>>>> SAVED new shift', SSLogServerCall);
+    if (!json.status)
+    {
+      console.error(json.message);
+      return;
+    }
+
+    shiftJson.username = ShiftSpace.User.getUsername();
+    shiftJson.created = 'Just posted';
+    shiftJson.status = SSGetDefaultShiftStatus();
+    shiftJson.href = window.location.href;
+
+    // with the real value
+    var shiftObj = space.getShift(shiftJson.id);
+    shiftObj.setId(json.id);
+
+    // unintern this id
+    SSRemoveShift(shiftJson.id);
+    // we just want to change the name, so don't delete
+    space.unintern(shiftJson.id);
+
+    if (SSFocusedShiftId() == shiftJson.id) 
+    {
+      SSSetFocusedShiftId(json.id);
+    }
+    
+    shiftJson.id = json.id;
+    shiftJson.content = JSON.encode(shiftJson);
+    
+    // intern local copy
+    SSSetShift(shiftJson.id, shiftJson);
+    // intern the space copy
+    space.intern(shiftJson.id, shiftObj);
+
+    // add and show the shift
+    if(ShiftSpace.Console)
+    {
+      ShiftSpace.Console.show();
+      ShiftSpace.Console.addShift(shiftJson, {isActive:true});
+      ShiftSpace.Console.showShift(shiftJson.id);
+    }
+
+    // call onShiftSave
+    space.onShiftSave(shiftJson.id);
+    
+    // fire an event with the real id
+    SSLog('here we go!');
+    SSFireEvent('onShiftSave', shiftJson.id);
+  });
+}
+
+/*
   Function: SSSaveShift
     Saves a shift's JSON object to the server.
 
@@ -339,4 +420,570 @@ function SSSaveShift(shiftJson)
     // call onShiftSave
     SSSpaceForName(shiftJson.space).onShiftSave(shiftJson.id);
   });
+}
+
+/*
+  Function: SSGetShifts
+    Similar to SSLoadShifts, probably should be merged.  Only used by plugins.
+
+  Parameters:
+    shiftIds - an array of shift ids.
+    callBack - a callback function.
+    errorHandler - a error handling function.
+*/
+function SSGetShifts(shiftIds, callBack, errorHandler)
+{
+  var newShiftIds = [];
+  var finalJson = {};
+
+  newShiftIds = shiftIds;
+
+  // put these together
+  var params = { shiftIds: newShiftIds.join(',') };
+
+  SSServerCall.safeCall('shift.get', params, function(json) {
+    if(json.contains(null))
+    {
+      if(errorHandler && $type(errorHandler) == 'function')
+      {
+        errorHandler({
+          type: __SSInvalidShiftIdError__,
+          message: "one or more invalid shift ids to SSGetShift"
+        });
+      }
+    }
+    else
+    {
+      // should probably filter out any uncessary data
+      json.each(function(x) {
+        finalJson[x.id] = x;
+      });
+
+      if(callBack) callBack(finalJson);
+    }
+  });
+}
+
+function SSGetPageShifts(shiftIds)
+{
+  var result = [];
+  for(var i = 0; i < shiftIds.length; i++)
+  {
+    var cshift = SSGetShift(shiftIds[i]);
+    var copy = {
+      username: cshift.username,
+      space: cshift.space,
+      status: cshift.status
+    };
+    result.push(copy);
+  }
+  return result;
+}
+
+
+/*
+  Function: SSGetPageShiftIdsForUser
+    Gets all the shifts ids on the current page for the logged in user.
+
+  Returns:
+    An array of shift ids.
+*/
+function SSGetPageShiftIdsForUser()
+{
+  var shiftIds = [];
+
+  if(ShiftSpace.User.isLoggedIn())
+  {
+    var username = ShiftSpace.User.getUsername();
+    var allShifts = SSAllShifts();
+    for(shiftId in allShifts)
+    {
+      if(SSUserForShift(shiftId) == username)
+      {
+        shiftIds.push(shiftId);
+      }
+    }
+  }
+
+  return shiftIds;
+}
+
+/*
+Function: SSAllShiftIdsForSpace
+  Returns all shift ids on the current url for a particular Space.
+
+Parameters:
+  spaceName - the name of the Space as a string.
+*/
+function SSAllShiftIdsForSpace(spaceName)
+{
+  var shiftsForSpace = [];
+  var allShifts = SSAllShifts();
+  for(shiftId in allShifts)
+  {
+    if(SSSpaceNameForShift(shiftId) == spaceName)
+    {
+      shiftsForSpace.push(shiftId);
+    }
+  }
+  return shiftsForSpace;
+}
+
+/*
+  Function: SSGetShift
+    Returns a shift by shift id.
+
+  Parameters:
+    shiftId - a shift id.
+*/
+function SSGetShift(shiftId)
+{
+  var theShift = shifts[shiftId];
+
+  if(theShift)
+  {
+    return theShift;
+  }
+
+  return null;
+}
+
+/*
+  Function: SSGetAuthorForShift
+    Returns the username of the Shift owner as a string.
+
+  Parameters:
+    shiftId - a shift id.
+
+  Returns:
+    A user name as a string.
+*/
+function SSGetAuthorForShift(shiftId)
+{
+  return SSGetShift(shiftId).username;
+}
+
+/*
+Function: SSGetShiftData
+  Returns a copy of the shift data.
+
+Parameters:
+  shiftId - a shift id.
+
+Returns:
+  An copy of the shift's properties.
+*/
+function SSGetShiftData(shiftId)
+{
+  var shift = SSGetShift(shiftId);
+  return {
+    id : shift.id,
+    title : shift.summary,
+    summary: shift.summary,
+    space: shift.space,
+    href : shift.href,
+    username : shift.username
+  };
+}
+
+/*
+  Function: SSSetShift
+    Update the shift properties of a shift.
+
+  Parameters:
+    shiftId - a shift id.
+*/
+function SSSetShift(shiftId, shiftData)
+{
+  shifts[shiftId] = $merge(shifts[shiftId], shiftData);
+}
+
+/*
+  Function: SSLoadShift
+    Load a single shift from the network.
+
+  Parameters:
+    shiftId - a shift id.
+    callback - a callback handler.
+*/
+function SSLoadShift(shiftId, callback)
+{
+  // fetch a content from the network;
+
+  var params = { shiftIds: shiftId };
+  SSServerCall.safeCall('shift.get', params, function(returnArray) {
+    if(returnArray && returnArray[0])
+    {
+      var shiftObj = returnArray[0];
+      SSLog('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++', SSLogForce);
+      SSLog(shiftObj, SSLogForce);
+      SSSetShift(shiftObj.id, shiftObj);
+
+      if(callback && $type(callback) == 'function')
+      {
+        callback(shiftObj.id);
+      }
+    }
+  });
+}
+
+/*
+  Function: SSLoadShifts
+    Same as SSLoadShift except handles an array of shift id.
+
+  Parameters:
+    shiftIds - an array of shift ids.
+    callback - a callback handler.
+*/
+function SSLoadShifts(shiftIds, callback)
+{
+  // fetch a content from the network;
+  var params = { shiftIds: shiftIds.join(',') };
+  SSServerCall.safeCall('shift.get', params, function(_returnArray) {
+    var returnArray = _returnArray;
+
+    if(returnArray && returnArray.length > 0)
+    {
+      // filter out null shifts
+      returnArray = returnArray.filter(function(x) { return x != null; });
+
+      // update internal array
+      returnArray.each(function (shiftObj) {
+        SSSetShift(shiftObj.id, shiftObj);
+      });
+
+      if(callback && $type(callback) == 'function')
+      {
+        callback(returnArray);
+      }
+    }
+  });
+}
+
+/*
+  Function: SSShiftIsLoaded
+    Check to see if the shift has it's content loaded yet.
+
+  Parameters:
+    shiftId - a shift id.
+
+  Returns:
+    a boolean value.
+*/
+function SSShiftIsLoaded(shiftId)
+{
+  return (SSGetShift(shiftId) && SSHasProperty(SSGetShift(shiftId), ('content')));
+}
+
+/*
+  Function: SSUpdateTitleOfShift
+    Tell the space to the update the title of the shift if necessary.
+
+  Parameters:
+    shiftId - a shift id.
+    title - the new title.
+*/
+function SSUpdateTitleOfShift(shiftId, title)
+{
+  SSSpaceForShift(shiftId).updateTitleOfShift(shiftId, title);
+  SSShowShift(shiftId);
+}
+
+/*
+Function: SSShowShift
+  Displays a shift on the page.
+
+Parameters:
+  shiftId - The ID of the shift to display.
+*/
+function SSShowShift(shiftId)
+{
+  SSLog('SSShowShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + SSShiftIsLoaded(shiftId));
+  if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
+  {
+    SSLog('SSLoadShift');
+    // first make sure that is loaded
+    SSLoadShift(shiftId, SSShowShift.bind(ShiftSpace));
+    return;
+  }
+  else
+  {
+    try
+    {
+      SSLog('Try showing shift!');
+      // get the space and the shift
+      var shift = SSGetShift(shiftId);
+
+      // check to see if this is a known space
+      if (ShiftSpace.info(shift.space).unknown)
+      {
+        if (confirm('Would you like to install the space ' + shift.space + '?'))
+        {
+          SSInstallSpace(shift.space, shiftId);
+          return;
+        }
+      }
+
+      var space = SSSpaceForShift(shiftId);
+
+      // load the space first
+      if(!space)
+      {
+        SSLog(shift);
+        SSLog('space not loaded ' + shift.space + ', ' + shiftId);
+        SSLoadSpace(shift.space);
+        return;
+      }
+
+      // if the space is loaded check if this shift can be shown
+      if(space)
+      {
+        if(!space.canShowShift(SSGetShiftContent(shiftId)))
+        {
+          throw new Error();
+        }
+      }
+
+      // extract the shift content
+      var shiftJson = SSGetShiftContent(shiftId);
+      SSLog('extracted shift json');
+      shiftJson.id = shiftId;
+
+      // SSLog('foo -- - - -- - - --- - - -- - -- -- - -');
+      // SSLog(shiftJson);
+      // check to make sure the css is loaded first
+      if(!space.cssIsLoaded())
+      {
+        //SSLog('css not loaded');
+        space.addDeferredShift(shiftJson);
+        return;
+      }
+
+      // fix legacy content
+      shiftJson.legacy = shift.legacy;
+
+      // FIXME: make into onShowShift hook - David
+      if(SSHasResource('RecentlyViewedHelpers'))
+      {
+        SSAddRecentlyViewedShift(shiftId);
+      }
+
+      // wrap this in a try catch
+      if(typeof ShiftSpaceSandBoxMode == 'undefined')
+      {
+        try
+        {
+          SSLog('showing the shift =======================================');
+          SSSpaceForName(shift.space).showShift(shiftJson);
+        }
+        catch(err)
+        {
+          SSLog('Exception: ' + SSDescribeException(err));
+          console.error(err);
+        }
+      }
+      else
+      {
+        // in the sandbox we just want to see the damn error
+        SSSpaceForName(shift.space).showShift(shiftJson);
+      }
+
+      SSFocusShift(shift.id);
+
+      // call onShiftShow
+      space.onShiftShow(shiftId);
+    }
+    catch(err)
+    {
+      SSLog('Could not show shift, ' + SSDescribeException(err), SSLogError);
+      var params = {id:shiftId};
+      SSServerCall.safeCall('shift.broken', params, function(result) {
+        SSLog(result);
+      });
+
+      SSShowErrorWindow(shiftId);
+
+      // probably need to do some kind of cleanup
+      if(ShiftSpace.Console) ShiftSpace.Console.hideShift(shiftId);
+    }
+  }
+}
+
+/*
+
+Function: SSHideShift
+  Hides a shift from the page.
+
+Parameters:
+    shiftId - The ID of the shift to hide.
+
+*/
+function SSHideShift(shiftId)
+{
+  var shift = SSGetShift(shiftId);
+  var space = SSSpaceForShift(shiftId);
+
+  space.hideShift(shiftId);
+  space.onShiftHide(shiftId);
+}
+
+/*
+  Function: SSAllShifts
+    Returns the private shifts variable.
+    
+  Returns:
+    The internal hash table of all currently loaed shifts.
+*/
+function SSAllShifts()
+{
+  return shifts;
+}
+
+/*
+  Function: SSFocusedShiftId
+    Returns the current focused shift's id.
+
+  Returns:
+    a shift id.
+*/
+function SSFocusedShiftId()
+{
+  return __focusedShiftId__;
+}
+
+/*
+  Function: SSSetFocusedShiftId
+    Should never be called.
+
+  Parameters:
+    newId - a shift id.
+*/
+function SSSetFocusedShiftId(newId)
+{
+  __focusedShiftId__ = newId;
+}
+
+/*
+  Function: SSSetShiftStatus
+    Sets the shift public private status.
+
+  Parameters:
+    shiftId - a shift id.
+    newStatus - the status.
+*/
+function SSSetShiftStatus(shiftId, newStatus) 
+{
+  SSGetShift(shiftId).status = newStatus;
+  var params = {
+    id: shiftId,
+    status: newStatus
+  };
+  SSServerCall('shift.update', params, function() {
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>> shiftId ' + shiftId);
+    SSFireEvent('onShiftUpdate', shiftId);
+  });
+}
+
+/*
+  Function: SSSetDefaultShiftStatus
+    Set the default shift status, the only valid values are 1 for public, 2 for private.
+
+  Parameters:
+    value - the new shift status value.
+*/
+function SSSetDefaultShiftStatus(value)
+{
+  if(value)
+  {
+    __defaultShiftStatus__ = value;
+    SSSetPref('defaultShiftStatus', __defaultShiftStatus__);
+  }
+}
+
+/*
+  Function: SSGetDefaultShiftStatus
+    Returns the default shift status.
+
+  Parameters:
+    checkPref - if the value should be grabbed directly via SSGetPref.
+
+  Returns:
+    Either 1 for public or 2 for private.
+*/
+function SSGetDefaultShiftStatus(checkPref)
+{
+  return (checkPref && SSGetPref('defaultShiftStatus', 1)) || __defaultShiftStatus__;
+}
+
+/*
+  Function: SSGetShiftContent
+    Returns the actual content of shift.  The content is the actual
+    representation of the shift as defined by the encode method of the
+    originating Shift class.
+
+  Parameters:
+    shiftId - a shift id.
+
+  Returns:
+    A Javascript object with the shifts's properties.
+*/
+function SSGetShiftContent(shiftId)
+{
+  if(!SSIsNewShift(shiftId))
+  {
+    var shift = SSGetShift(shiftId);
+    var content = unescape(shift.content);
+
+    // if it starts with a quote remove the extra quoting, became an issue when we don't preload shifts - David
+    if(content[0] == '"')
+    {
+      content = content.substr(1, content.length-2);
+    }
+
+    // replace any spurious newlines or carriage returns
+    if(content)
+    {
+      content = content.replace(/\n/g, '\\n');
+      content = content.replace(/\r/g, '\\r');
+    }
+    
+    // legacy content, strip surrounding parens
+    if(content[0] == "(")
+    {
+      content = content.substr(1, content.length-2);
+    }
+
+    var obj = null;
+    try
+    {
+      obj = JSON.decode(content);
+    }
+    catch(err)
+    {
+      SSLog('content for shift ' + shiftId +' failed to load', SSLogError);
+      throw err;
+    }
+
+    return obj;
+  }
+  else
+  {
+    return {};
+  }
+}
+
+/*
+  Function: SSGetUrlForShift
+    Returns the url of a shift.
+
+  Parameters:
+    shiftId - a shift id.
+
+  Returns:
+    A url as a string.
+*/
+function SSGetUrlForShift(shiftId)
+{
+  //SSLog(shifts[shiftId]);
+  return SSGetShift(shiftId).href;
 }
