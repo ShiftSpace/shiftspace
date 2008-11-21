@@ -309,19 +309,20 @@ var ShiftSpace = new (function() {
       });
       
       // Load CSS styles
+      SSLog('Loading core stylesheets', SSLogSystem);
       SSLoadStyle('styles/ShiftSpace.css', function() {
         // create the error window
         SSCreateErrorWindow();
       });
       SSLoadStyle('styles/ShiftMenu.css');
 
-      SSLog('>>>>>>>>>>>>>>>>>>>>>>> Loading Spaces');
+      SSLog('>>>>>>>>>>>>>>>>>>>>>>> Loading Spaces', SSLogSystem);
       // Load all spaces and plugins immediately if in the sanbox
       if (typeof ShiftSpaceSandBoxMode != 'undefined') 
       {
         for (var space in installed) 
         {
-          SSLog('loading space ' + space);
+          SSLog('loading space ' + space, SSLogSystem);
           SSLoadSpace(space);
         }
         for(var plugin in installedPlugins) 
@@ -331,6 +332,7 @@ var ShiftSpace = new (function() {
       }
 
       // If all spaces have been loaded, build the shift menu and the console
+      SSLog('Building ShiftMenu', SSLogSystem);
       ShiftSpace.ShiftMenu.buildMenu();
       
       // hide all pinWidget menus on window click
@@ -345,6 +347,7 @@ var ShiftSpace = new (function() {
       });
 
       // create the pin selection bounding box
+      SSLog('Creating pin selection DOM', SSLogSystem);
       SSCreatePinSelect();
 
       // check for page iframes
@@ -353,11 +356,13 @@ var ShiftSpace = new (function() {
       SSLog('Grabbing content');
 
       // Create the modal div
+      SSLog('Create DOM for modal mode and dragging', SSLogSystem);
       SSCreateModalDiv();
       SSCreateDragDiv();
       SSLog('ShiftSpace initialize complete');
       
       // Synch with server, 
+      SSLog('Synchronizing with server', SSLogSystem);
       SSSynch();
     };
     
@@ -802,36 +807,64 @@ var ShiftSpace = new (function() {
     }
     
     /*
-      Functions: SSpaceForName
+      Function: SSpaceForName
         Returns the space associated with a particular name.
+        
+      Parameters:
+        space - the name of the space.
+        
+      Returns:
+        The space instance.
     */
     function SSSpaceForName(name)
     {
       var space = __spaces__[name];
-      
-      if(!space)
-      {
-        throw SSSpaceDoesNotExistError(new Error());
-      }
-      else
-      {
-        return space;
-      }
+      return space;
     }
     
+    /*
+      Function: SSSetSpaceForName
+        Set the space instance for a name.
+        
+      Parameters:
+        space - a space instance.
+        name - the name of the space.
+        
+      Returns:
+        nothing
+    */
     function SSSetSpaceForName(space, name)
     {
       __spaces__[name] = space;
     }
     
+    /*
+      Function: SSRemoveSpace
+        Removes a space from the interal instances hash.
+        
+      Parameters:
+        name - the name of the space to remove.
+        
+      Return:
+        nothing.
+    */
     function SSRemoveSpace(name)
     {
       delete __spaces__[name];
     }
     
+    /*
+      Function:
+        Returns the number of installed spaces.
+        
+      Returns:
+        An int.
+    */
     function SSSpacesCount()
     {
-      return __spaces__.length;
+      var length;
+      for(var space in __spaces__) length++;
+      return length;
     }
     
     function SSAllSpaces()
@@ -2635,17 +2668,17 @@ var ShiftSpace = new (function() {
       // Fix for GreaseKit, which doesn't support default values
       if (result == null) 
       {
-        SSLog('SSGetValue("' + key + '") = ' + JSON.decode(defaultValue));
+        SSLog('SSGetValue("' + key + '") = ' + JSON.decode(defaultValue), SSLogForce);
         return JSON.decode(defaultValue);
       } 
       else if (rawValue) 
       {
-        SSLog('SSGetValue("' + key + '") = ' + result);
+        SSLog('SSGetValue("' + key + '") = ' + result, SSLogForce);
         return result;
       } 
       else 
       {
-        SSLog('SSGetValue("' + key + '") = ...' + JSON.decode(result));
+        SSLog('SSGetValue("' + key + '") = ...' + JSON.decode(result), SSLogForce);
         return JSON.decode(result);
       }
     }
