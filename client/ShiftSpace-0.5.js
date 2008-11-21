@@ -181,29 +181,12 @@ var ShiftSpace = new (function() {
     var __pluginsData__ = {};
 
     // Each space and a corresponding URL of its origin
-    var installed;
-    if(typeof ShiftSpaceSandBoxMode == 'undefined')
-    {
-      // respect that fact that different space may come from different servers
-      // besides the one where user data is being stored
-      installed = SSGetValue('installed', {
-        'Notes' : server + 'spaces/Notes/Notes.js',
-        'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
-        'Highlights': server + 'spaces/Highlights/Highlights.js',
-        'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
-      });
-    }
-    else
-    {
-      // if in sandbox dev'ing load from the global server var
-      installed = {
-        'Notes' : server + 'spaces/Notes/Notes.js',
-        'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
-        'Highlights': server + 'spaces/Highlights/Highlights.js',
-        'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
-      };
-      SSLog(installed);
-    }
+    var installed = SSGetValue('installed', {
+      'Notes' : server + 'spaces/Notes/Notes.js',
+      'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
+      'Highlights': server + 'spaces/Highlights/Highlights.js',
+      'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
+    });
 
     var spacePrefs = SSGetValue('spacePrefs', {});
 
@@ -212,26 +195,15 @@ var ShiftSpace = new (function() {
     var installedPlugins = {};
     
     /*
-    if(typeof ShiftSpaceSandBoxMode == 'undefined')
-    {
-      // otherwise respect existing values, servers might be different
-      // for different resources
-      installedPlugins = SSGetValue('installedPlugins', {
-        'Delicious': server + 'plugins/Delicious/Delicious.js',
-        'Trails': server + 'plugins/Trails/NewTrail.js',
-        'Comments': server + 'plugins/Comments/Comments.js',
-        'Twitter': server + 'plugins/Twitter/Twitter.js'
-      });
-      SSLog(installedPlugins);
-    }
-    else
-    {
-      // hard code so that we pick up from localhost if dev'ing
-      installedPlugins = {
-        'Trails': server + 'plugins/Trails/NewTrail.js',
-        'Comments': server + 'plugins/Comments/Comments.js'
-      };
-    }
+    // otherwise respect existing values, servers might be different
+    // for different resources
+    installedPlugins = SSGetValue('installedPlugins', {
+      'Delicious': server + 'plugins/Delicious/Delicious.js',
+      'Trails': server + 'plugins/Trails/NewTrail.js',
+      'Comments': server + 'plugins/Comments/Comments.js',
+      'Twitter': server + 'plugins/Twitter/Twitter.js'
+    });
+    SSLog(installedPlugins);
     */
 
     // installedPlugins = {
@@ -275,7 +247,7 @@ var ShiftSpace = new (function() {
     */
     this.initialize = function() {
       // ShiftSpace global var is set by this point not before.
-      
+      ShiftSpace.info = SSInfo;
       // export for third party deveopers
       ShiftSpace.Element = SSElement;
       ShiftSpace.Iframe = SSIframe;
@@ -450,30 +422,6 @@ var ShiftSpace = new (function() {
       return string;
     }
 
-    // ===============================
-    // = Function Prototype Helpers  =
-    // ===============================
-
-    // This won't work for GM_getValue of course - David
-    Function.prototype.safeCall = function() {
-      var self = this, args = [], len = arguments.length;
-      for(var i = 0; i < len; i++) args.push(arguments[i]);
-      setTimeout(function() {
-        return self.apply(null, args);
-      }, 0);
-    };
-
-    // Work around for GM_getValue - David
-    Function.prototype.safeCallWithResult = function() {
-      var self = this, args = [], len = arguments.length;
-      for(var i = 0; i < len-1; i++) args.push(arguments[i]);
-      // the last argument is the callback
-      var callback = arguments[len-1];
-      setTimeout(function() {
-        callback(self.apply(null, args));
-      }, 0);
-    };
-
     /*
       Function: SSSetPref
         Set a user preference. Implicitly calls SSSetValue which will JSON encode the value.
@@ -554,7 +502,7 @@ var ShiftSpace = new (function() {
         - version (string), the current version of the installed Space
 
     */
-    this.info = function(spaceName) 
+    function SSInfo(spaceName) 
     {
       if (typeof spaceName != 'undefined') 
       {
@@ -589,236 +537,9 @@ var ShiftSpace = new (function() {
       };
     };
 
-    
-    function SSPluginForName(name)
-    {
-      var plugin = plugin[name];
-      
-      if(!plugin)
-      {
-        throw SSPluginDoesNotExistError(new Error());
-      }
-      else
-      {
-        return plugin;
-      }
-    }
-
-    /*
-      Function: SSUserForShift
-        Returns the username for a shift.
-
-      Parameters:
-        shiftId - a shift id.
-
-      Returns:
-        The shift author's username as a string.
-    */
-    function SSUserForShift(shiftId)
-    {
-      return SSGetShift(shiftId).username;
-    }
-
-    /*
-      Function: SSUserOwnsShift
-        Used to check whether the currently logged in user authored a shift.
-
-      Parameters:
-        shiftId - a shift id.
-
-      Returns:
-        true or false.
-    */
-    function SSUserOwnsShift(shiftId)
-    {
-      return (SSUserForShift(shiftId) == ShiftSpace.User.getUsername());
-    }
-
-    /*
-      Function: SSUserCanEditShift
-        Used to check whether a user has permission to edit a shift.
-
-      Parameters:
-        shiftId - a shift id.
-
-      Returns:
-        true or false.
-    */
-    function SSUserCanEditShift(shiftId)
-    {
-      return (ShiftSpace.User.isLoggedIn() &&
-              SSUserOwnsShift(shiftId));
-    }
-
-    /*
-      Function: SSIsNewShift
-        Used to check whether a shift is newly created and unsaved.
-
-      Parameters:
-        shiftId - a shift id.
-    */
-    function SSIsNewShift(shiftId)
-    {
-      return (shiftId.search('newShift') != -1);
-    }
-
-    // ==================
-    // = Plugin Support =
-    // ==================
-
-    /*
-      Function: SSGetPlugin
-        Returns a plugin object.
-
-      Parameters:
-        pluginName - a name representing a plugin.
-
-      Returns:
-        A plugin object.
-    */
-    function SSGetPlugin(pluginName)
-    {
-      return plugins[pluginName];
-    }
-
-    /*
-      Function: SSGetPluginType
-        Returns the plugin type.
-
-      Parameters:
-        pluginName - the plugin name as a string.
-
-      See Also:
-        Plugin.js
-    */
-    function SSGetPluginType(pluginName)
-    {
-      SSLog('SSGetPluginType');
-      if(__pluginsData__[pluginName] && __pluginsData__[pluginName].type)
-      {
-        return __pluginsData__[pluginName].type;
-      }
-      else
-      {
-        SSLog('(1) If this is at ShiftSpace load time: if you wish to include plugin data included at shift query time for the ' + pluginName + ' plugin you must include a shift.query.php file in your plugin folder.  Please refer to the Comments version of this file for reference. (2) You need to define plugin type, refer to Plugin.js. kisses, The ShiftSpace Core Robot', SSLogWarning);
-        return null;
-      }
-    }
-
-    /*
-      Function: SSPlugInMenuIconForShift
-        Returns the icon for a particular shift if the plugin is menu based.
-
-      Parameters:
-        pluginName - plugin name as string.
-        shiftId - a shift id.
-        callback - a function callback because the plugin may not be loaded yet.
-
-      Returns:
-        A CSS style with a background image style that will point to the icon image.
-    */
-    function SSPlugInMenuIconForShift(pluginName, shiftId, callback)
-    {
-      var plugin = SSGetPlugin(pluginName);
-      // if the plugin isn't loaded yet, use the initial plugins data
-      if(!plugin)
-      {
-        var shiftData = __pluginsData__[pluginName]['data'][shiftId];
-        if(__pluginsData__[pluginName]['data'][shiftId])
-        {
-          return shiftData['icon'];
-        }
-        else
-        {
-          return __pluginsData__[pluginName]['defaultIcon'];
-        }
-      }
-      else
-      {
-        plugin.menuIconForShift(shiftId, callback);
-	return null;
-      }
-    };
-
-    /*
-      Function: SSImplementsProtocol
-        A method to check if an object implements the required properties.
-
-      Parameters:
-        protocol - an array of required properties
-        object - the javascript object in need of verification.
-
-      Returns:
-        A javascript object that contains two properties, 'result' which is a boolean and 'missing', an array of missing properties.
-    */
-    function SSImplementsProtocol(protocol, object)
-    {
-      var result = true;
-      var missing = [];
-      for(var i = 0; i < protocol.length; i++)
-      {
-        var prop = protocol[i];
-        if(!object[prop])
-        {
-           result = false;
-           missing.push(prop);
-        }
-      }
-      return {'result': result, 'missing': missing};
-    }
-
     // =============
     // = Utilities =
     // =============
-
-    /*
-      Function: SSIsSSElement
-        Check wheter a node is a ShiftSpace Element or has a parent node that is.
-
-      Parameters:
-        node - a DOM node.
-
-      Returns:
-        true or false.
-    */
-    function SSIsSSElement(node)
-    {
-      if(node.hasClass('ShiftSpaceElement'))
-      {
-        return true;
-      }
-
-      var hasSSParent = false;
-      var curNode = node;
-
-      while(curNode.getParent() && $(curNode.getParent()).hasClass && !hasSSParent)
-      {
-        if($(curNode.getParent()).hasClass('ShiftSpaceElement'))
-        {
-          hasSSParent = true;
-          continue;
-        }
-        curNode = curNode.getParent();
-      }
-
-      return hasSSParent;
-    }
-    this.isSSElement = SSIsSSElement;
-
-    /*
-      Function: SSIsNotSSElement
-        Conveniece function that returns the opposite of SSIsSSElement.  Useful for node filtering.
-
-      Parameters:
-        node - a DOM node.
-
-      Returns:
-        true or false.
-    */
-    function SSIsNotSSElement(node)
-    {
-      return !SSIsSSElement(node);
-    }
 
     // TODO: write some documentation here
     function SSCheckForUpdates()
@@ -1173,72 +894,6 @@ var ShiftSpace = new (function() {
         SSLog('SSGetValue("' + key + '") = ...' + JSON.decode(result), SSLogForce);
         return JSON.decode(result);
       }
-    }
-
-
-    /*
-    Function: SSLoadStyle
-      Loads a CSS file, processes it to make URLs absolute, then appends it as a
-      STYLE element in the page HEAD.
-
-    Parameters:
-      url - The URL of the CSS file to load
-      callback - A custom function to handle css text if you don't want to use GM_addStyle
-      spaceCallback - A callback function for spaces that want to use GM_addStyle but need to be notified of CSS load.
-    */
-    function SSLoadStyle(url, callback, frame) 
-    {
-      // TODO: check to see if the domain is different, if so don't mess with the url - David
-      // TODO: get rid of frame, change to context so we can use this function for iframe's as well
-      var dir = url.split('/');
-      dir.pop();
-      dir = dir.join('/');
-      if (dir.substr(0, 7) != 'http://') {
-        dir = server + dir;
-      }
-
-      //SSLog('loadStyle: ' + url);
-      SSLoadFile(url, function(rx) {
-        //SSLog(')))))))))))))))))))))))))))))))))))))))))))))))))) ' + url);
-        var css = rx.responseText;
-        // this needs to be smarter, only works on directory specific urls
-        css = css.replace(/url\(([^)]+)\)/g, 'url(' + dir + '/$1)');
-
-        // if it's a frame load it into the frame
-        if(frame)
-        {
-          var doc = frame.contentDocument;
-
-          if( doc.getElementsByTagName('head').length != 0 )
-          {
-            var head = doc.getElementsByTagName('head')[0];
-          }
-          else
-          {
-            // In Safari iframes don't get the head element by default - David
-            // Mootools-ize body
-            $(doc.body);
-            var head = new Element( 'head' );
-            head.injectBefore( doc.body );
-          }
-
-          var style = doc.createElement('style');
-          style.setAttribute('type', 'text/css');
-          style.appendChild(doc.createTextNode(css)); // You can not use setHTML on style elements in Safari - David
-          head.appendChild(style);
-        }
-        else
-        {
-          // FIXME: we don't want to rely on this, we can't target iframes - David
-          GM_addStyle(css);
-        }
-
-        if (typeof callback == 'function')
-        {
-          callback();
-        }
-
-      });
     }
     
     var __dragDiv__;

@@ -142,3 +142,95 @@ function SSRegisterPlugin(plugin)
     ShiftSpace[plugin.attributes.name] = plugin;
   }
 }
+
+// ==================
+// = Plugin Support =
+// ==================
+
+/*
+  Function: SSGetPlugin
+    Returns a plugin object.
+
+  Parameters:
+    pluginName - a name representing a plugin.
+
+  Returns:
+    A plugin object.
+*/
+function SSGetPlugin(pluginName)
+{
+  return plugins[pluginName];
+}
+
+/*
+  Function: SSGetPluginType
+    Returns the plugin type.
+
+  Parameters:
+    pluginName - the plugin name as a string.
+
+  See Also:
+    Plugin.js
+*/
+function SSGetPluginType(pluginName)
+{
+  SSLog('SSGetPluginType');
+  if(__pluginsData__[pluginName] && __pluginsData__[pluginName].type)
+  {
+    return __pluginsData__[pluginName].type;
+  }
+  else
+  {
+    SSLog('(1) If this is at ShiftSpace load time: if you wish to include plugin data included at shift query time for the ' + pluginName + ' plugin you must include a shift.query.php file in your plugin folder.  Please refer to the Comments version of this file for reference. (2) You need to define plugin type, refer to Plugin.js. kisses, The ShiftSpace Core Robot', SSLogWarning);
+    return null;
+  }
+}
+
+/*
+  Function: SSPlugInMenuIconForShift
+    Returns the icon for a particular shift if the plugin is menu based.
+
+  Parameters:
+    pluginName - plugin name as string.
+    shiftId - a shift id.
+    callback - a function callback because the plugin may not be loaded yet.
+
+  Returns:
+    A CSS style with a background image style that will point to the icon image.
+*/
+function SSPlugInMenuIconForShift(pluginName, shiftId, callback)
+{
+  var plugin = SSGetPlugin(pluginName);
+  // if the plugin isn't loaded yet, use the initial plugins data
+  if(!plugin)
+  {
+    var shiftData = __pluginsData__[pluginName]['data'][shiftId];
+    if(__pluginsData__[pluginName]['data'][shiftId])
+    {
+      return shiftData['icon'];
+    }
+    else
+    {
+      return __pluginsData__[pluginName]['defaultIcon'];
+    }
+  }
+  else
+  {
+    plugin.menuIconForShift(shiftId, callback);
+    return null;
+  }
+}
+
+function SSPluginForName(name)
+{
+  var plugin = plugin[name];
+  
+  if(!plugin)
+  {
+    throw SSPluginDoesNotExistError(new Error());
+  }
+  else
+  {
+    return plugin;
+  }
+}

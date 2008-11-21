@@ -157,3 +157,52 @@ var SSInput = new Class({
   // set the input field / textarea to be position absolute, left top right bottom all 0
   // set up event handlers so they get pass up to the developer
 });
+
+/*
+  Function: SSIsSSElement
+    Check wheter a node is a ShiftSpace Element or has a parent node that is.
+
+  Parameters:
+    node - a DOM node.
+
+  Returns:
+    true or false.
+*/
+function SSIsSSElement(node)
+{
+  if(node.hasClass('ShiftSpaceElement'))
+  {
+    return true;
+  }
+
+  var hasSSParent = false;
+  var curNode = node;
+
+  while(curNode.getParent() && $(curNode.getParent()).hasClass && !hasSSParent)
+  {
+    if($(curNode.getParent()).hasClass('ShiftSpaceElement'))
+    {
+      hasSSParent = true;
+      continue;
+    }
+    curNode = curNode.getParent();
+  }
+
+  return hasSSParent;
+}
+this.isSSElement = SSIsSSElement;
+
+/*
+  Function: SSIsNotSSElement
+    Conveniece function that returns the opposite of SSIsSSElement.  Useful for node filtering.
+
+  Parameters:
+    node - a DOM node.
+
+  Returns:
+    true or false.
+*/
+function SSIsNotSSElement(node)
+{
+  return !SSIsSSElement(node);
+}

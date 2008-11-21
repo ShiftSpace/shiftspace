@@ -987,3 +987,15 @@ function SSGetUrlForShift(shiftId)
   //SSLog(shifts[shiftId]);
   return SSGetShift(shiftId).href;
 }
+
+/*
+  Function: SSIsNewShift
+    Used to check whether a shift is newly created and unsaved.
+
+  Parameters:
+    shiftId - a shift id.
+*/
+function SSIsNewShift(shiftId)
+{
+  return (shiftId.search('newShift') != -1);
+}
