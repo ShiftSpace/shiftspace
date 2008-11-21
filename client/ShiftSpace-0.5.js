@@ -83,14 +83,7 @@ var ShiftSpace = new (function() {
     SSLog('SERVER: ' + server, SSLogForce);
     SSLog('SPACESDIR: ' + spacesDir, SSLogForce);
 
-    // make sure all our stuff is hidden at first
-
-    // TODO: a place to set deploy vs. develop variables - David
-    // Load packages.json
-
-    // Current ShiftSpace version
     var version = '0.13';
-    // Cache loadFile data
     var cacheFiles = 0;
 
     if(typeof ShiftSpaceSandBoxMode != 'undefined') 
@@ -98,10 +91,6 @@ var ShiftSpace = new (function() {
       server = window.location.href.substr(0, window.location.href.indexOf('sandbox'));
       cacheFiles = 0;
     }
-
-    // ===========================
-    // = ShiftSpace Core Objects =
-    // ===========================
 
     var displayList = [];
     var __SSInvalidShiftIdError__ = "__SSInvalidShiftIdError__";
@@ -167,6 +156,7 @@ var ShiftSpace = new (function() {
     */
     this.initialize = function() {
       // paths to required ShiftSpace files
+      
       // new additions for Sandalphon
       ShiftSpace.UI = {}; // holds all UI class objects
       ShiftSpace.Objects = new Hash(); // holds all instantiated UI objects
