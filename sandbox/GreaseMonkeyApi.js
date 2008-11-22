@@ -1,3 +1,9 @@
+// ==Builder==
+// @optional
+// @name              GreaseMonkeyApi
+// @package           System_
+// ==/Builder==
+
 function GM_addStyle(css) 
 {
   if (document.getElementsByTagName('head').length != 0) 

@@ -2,7 +2,7 @@
 // @required
 // @name	            SSView
 // @package           ShiftSpaceCoreUI
-// @dependencies      SandalphonCore
+// @dependencies      SandalphonCore, SSLog
 // ==/Builder==
 
 var SSView = new Class({
@@ -47,17 +47,7 @@ var SSView = new Class({
     }
     
     // get the options first
-    SSLog('Setting options', SSLogViewSystem);
-    SSLog('testing defaults', SSLogViewSystem);
-    SSLog(this.defaults, SSLogViewSystem);
-    SSLog('calling defaults', SSLogViewSystem);
-    console.log(this.defaults());
-    SSLog(this.defaults(), SSLogViewSystem);
-    SSLog('checked defaults', SSLogViewSystem)
-    SSLog(JSON.encode(this.defaults()), SSLogViewSystem);
-    SSLog('encoding defaults', SSLogViewSystem);
     this.setOptions(this.defaults(), options);
-    SSLog('Done setting options', SSLogViewSystem);
 
     // generate an id
     this.__id__ = this._genId();
