@@ -16,12 +16,19 @@ function TestCaseDivide(x, y)
   return x/y;
 }
 
-
 var SSDefaultTest = new Class({
   
   name: 'SSDefaultTest',
 
   Extends: SSUnitTest.TestCase,
+  
+  setup: function()
+  {
+  },
+  
+  teardown: function()
+  {
+  },
 
   testAdd: function()
   {

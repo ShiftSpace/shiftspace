@@ -38,6 +38,12 @@ def includeFile(outFile, incFilename):
   outFile.write("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
   incFile.close()
 
+
+def missingFileError():
+  print "Error: no such package %s exists, perhaps you forgot to run corebuilder.py first?" % package
+  sys.exit(2)
+
+
 def main(argv):
   metadataJsonFile = open('../config/packages.json')
   metadataStr = metadataJsonFile.read()
@@ -75,8 +81,7 @@ def main(argv):
 
       # bail!
       if not metadata['packages'].has_key(package):
-        print "Error: no such package %s exists, perhaps you forgot to run corebuilder.py first?" % package
-        sys.exit(2)
+        missingFileError()
 
       for component in metadata['packages'][package]:
         includeFile(outFile, metadata['files'][component]['path'])
@@ -86,7 +91,12 @@ def main(argv):
       mo = INCLUDE_REGEX.match(line)
       if mo:
         incFilename = mo.group(1)
-        includeFile(outFile, incFilename)
+        
+        # bail!
+        if not metadata['files'].has_key(incFilename):
+          missingFileError()
+
+        includeFile(outFile, metadata['files'][incFilename]['path'])
       else:
         for key in env.keys():
           line = line.replace(("%%%%%s%%%%" % (key)), '%s' % env[key])

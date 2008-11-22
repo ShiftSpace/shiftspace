@@ -985,6 +985,8 @@ SSUnitTest.TestSuite = new Class({
     this.setOptions(this.defaults, options);
     
     // add it to the singleton unless autocollect is set to false
+    // autocollect will be false if this testsuite is embededded
+    // into another testsuite
     if(this.options.autocollect)
     {
       SSUnitTest.addTest(this);

@@ -75,7 +75,7 @@ var SSTestRunner = new Class({
         // evaluate test
         eval(responseText);
         
-        // load the class
+        // load the TestCase or TestSuite instance
         var testInstance = eval(base);
         
         // david, you are such a hacker.

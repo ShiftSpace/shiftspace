@@ -58,7 +58,7 @@ Class: ShiftSpace
 */
 
 var ShiftSpace = new (function() {
-    // INCLUDE SSLog.js
+    // INCLUDE SSLog
     if(typeof %%LOG_LEVEL%% != 'undefined')
     {
       SSSetLogLevel(%%LOG_LEVEL%%);
@@ -68,6 +68,8 @@ var ShiftSpace = new (function() {
       throw new Error("Bailing: No such logging level %%LOG_LEVEL%%, please fix the config/env/%%ENV_NAME%%.json file.");
       return;
     }
+    
+    // INCLUDE PreInitDeclarations
 
     // NOTE: This will be preprocessed by preprocess.py and replaced with the proper
     // servers
@@ -156,6 +158,8 @@ var ShiftSpace = new (function() {
     */
     this.initialize = function() {
       // paths to required ShiftSpace files
+      
+      // INCLUDE PostInitDeclarations
       
       // new additions for Sandalphon
       ShiftSpace.UI = {}; // holds all UI class objects
