@@ -35,15 +35,15 @@ var QuoteShift = ShiftSpace.Shift.extend({
           self.quotedElement = self.getClone(e.target);
           
           // store 
-          GM_setValue('SSQuote','test me!');
+          console.log(self);
+          self.setValue('SSQ',{'content':'myContent'});
           
         }else{
           
-          console.log(GM_getValue('SSQuote'));
+          self.getValue('SSQ',null,function(SSQ){
+              console.log(SSQ.content);
+          });
           var container = self.createContainer();
-          self.quotedElement.removeEvent('mouseover');
-          self.quotedElement.removeEvent('mouseout');
-          self.quotedElement.removeEvent('mousedown');
           container.appendChild(self.quotedElement);
           container.injectInside(document.body);
           var handle = container.getElementsByClassName('SSQuoteHandle')[0];
