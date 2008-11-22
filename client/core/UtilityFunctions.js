@@ -215,3 +215,9 @@ function SSCheckForAutolaunch()
     }
   }
 }
+
+function SSResetCore()
+{
+  // reset all internal state
+  __spaces__ = {};
+}

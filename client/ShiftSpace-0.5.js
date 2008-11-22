@@ -67,12 +67,6 @@ var ShiftSpace = new (function() {
     // INCLUDE PACKAGE UtilitiesExtras
     // INCLUDE PACKAGE Core
     
-    function SSResetCore()
-    {
-      // reset all internal state
-      __spaces__ = {};
-    }
-    
     /*
 
     Function: initialize

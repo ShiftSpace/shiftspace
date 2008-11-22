@@ -1,0 +1,18 @@
+li.SSInstalledSpaceCell
+{
+  width: 100%;
+}
+
+img.SSInstalledSpaceCellImage
+{
+  width: 32px;
+  height: 32px;
+}
+
+span.SSInstalledSpaceCellSpaceName
+{
+}
+
+input.SSInstalledSpaceCellUninstallButton
+{
+}
