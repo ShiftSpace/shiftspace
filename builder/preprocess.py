@@ -22,7 +22,16 @@ class SSError(Exception):
 INCLUDE_PACKAGE_REGEX = re.compile('^\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*$');
 INCLUDE_REGEX = re.compile('^\s*//\s*INCLUDE\s+(\S+)\s*$');
 
-def includeFile(outFile, incFilename):
+def setEnvVars(line, env=None):
+  if env != None:
+    for key in env['data'].keys():
+      line = line.replace(("%%%%%s%%%%" % (key)), '%s' % env['data'][key])
+    line = line.replace("%%SYSTEM_TABLE%%", env['meta'])
+    line = line.replace("%%ENV_NAME%%", env['name'])
+  return line
+  
+
+def includeFile(outFile, incFilename, env=None):
   flen = len(incFilename);
   logline1 = "\nif (SSInclude != undefined) SSLog('Including %s...', SSInclude);\n" % incFilename 
   prefix = ("\n// Start %s " % incFilename) + (69 - flen) * '-' + "\n\n"
@@ -32,7 +41,12 @@ def includeFile(outFile, incFilename):
   incFile = open('../client/%s' % incFilename)
   outFile.write(logline1)
   outFile.write(prefix)
-  outFile.write(incFile.read())
+
+  for line in incFile:
+    if env != None:
+      setEnvVars(line, env)
+    outFile.write(line)
+
   outFile.write(postfix)
   outFile.write(logline2)
   outFile.write("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
@@ -69,6 +83,8 @@ def main(argv):
     sys.exit(2)
     
   env = json.loads(envFile.read())
+  envData = {"name":envFileName, "data":env, "meta":metadataStr}
+
   envFile.close()
   
   for line in inFile:
@@ -77,14 +93,15 @@ def main(argv):
       package = mo.group(1)
 
       outFile.write('\n// === START PACKAGE [%s] ===\n\n' % package)
+      # update the available packages dictionary
       outFile.write('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
 
-      # bail!
+      # bail! no such package
       if not metadata['packages'].has_key(package):
         missingFileError()
 
       for component in metadata['packages'][package]:
-        includeFile(outFile, metadata['files'][component]['path'])
+        includeFile(outFile, metadata['files'][component]['path'], envData)
 
       outFile.write('\n// === END PACKAGE [%s] ===\n\n' % package)
     else:
@@ -92,22 +109,17 @@ def main(argv):
       if mo:
         incFilename = mo.group(1)
         
-        # bail!
+        # bail! no such file
         if not metadata['files'].has_key(incFilename):
           missingFileError()
 
-        includeFile(outFile, metadata['files'][incFilename]['path'])
+        includeFile(outFile, metadata['files'][incFilename]['path'], envData)
       else:
-        for key in env.keys():
-          line = line.replace(("%%%%%s%%%%" % (key)), '%s' % env[key])
-        line = line.replace("%%SYSTEM_TABLE%%", metadataStr)
-        line = line.replace("%%ENV_NAME%%", envFileName)
-        outFile.write(line)
-
-  
+        outFile.write(setEnvVars(line, envData))
   
   outFile.close()
   inFile.close()
+
   
 if __name__ == "__main__":
   main(sys.argv[1:])
