@@ -44,7 +44,7 @@ def includeFile(outFile, incFilename, env=None):
 
   for line in incFile:
     if env != None:
-      setEnvVars(line, env)
+      line = setEnvVars(line, env)
     outFile.write(line)
 
   outFile.write(postfix)

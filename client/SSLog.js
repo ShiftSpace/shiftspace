@@ -80,3 +80,13 @@ function SSSetLogLevel(level)
   SSLog('SSSetLogLevel ' + level);
   __ssloglevel__ = level;
 }
+
+if(typeof %%LOG_LEVEL%% != 'undefined')
+{
+  SSSetLogLevel(%%LOG_LEVEL%%);
+}
+else
+{
+  throw new Error("Bailing: No such logging level %%LOG_LEVEL%%, please fix the config/env/%%ENV_NAME%%.json file.");
+  return;
+}
