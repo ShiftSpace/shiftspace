@@ -53,7 +53,7 @@ def includeFile(outFile, incFilename, env=None):
   incFile.close()
 
 
-def missingFileError():
+def missingFileError(package):
   print "Error: no such package %s exists, perhaps you forgot to run corebuilder.py first?" % package
   sys.exit(2)
 
@@ -67,38 +67,58 @@ def main(argv):
   inFile = open('../client/ShiftSpace-0.5.js')
   outFile = open('../shiftspace.user.js', 'w')
   
-  if len(argv) < 1:
-    print "Usage: python preprocess.py <environment definition>"
+  if len(argv) < 2:
+    print "Usage: python preprocess.py <project> <environment definition>"
     return -1
 
   envFile = None
   evnFileName = None
+  envFilePath = '../config/env/%s.json' % argv[1]
   try:
     # load environment file
-    envFile = open('../config/env/%s.json' % argv[0])
+    envFile = open(envFilePath)
     envFileName = argv[0]
+    env = json.loads(envFile.read())
+    envFile.close()
+    envData = {"name": envFileName, "data": env, "meta": metadataStr}
   except IOError:
     # bail!
-    print "Error: no such environment file exist."
+    print "Error: no such environment file exists. (%s)" % envFilePath
     sys.exit(2)
     
-  env = json.loads(envFile.read())
-  envData = {"name":envFileName, "data":env, "meta":metadataStr}
+  projFilePath = '../config/proj/%s.json' % argv[0]
+  try:
+    # load project file
+    projFile = open(projFilePath)
+    proj = json.loads(projFile.read())
+    projFile.close()
+  except IOError:
+    # bail!
+    print "Error: no such project file exists. (%s)" % projFilePath
+    sys.exit(2)
 
-  envFile.close()
-  
   for line in inFile:
     mo = INCLUDE_PACKAGE_REGEX.match(line)
     if mo:
       package = mo.group(1)
 
-      outFile.write('\n// === START PACKAGE [%s] ===\n\n' % package)
+      outFile.write('\n// === START PACKAGE [%s] ===\n' % package)
+      
+      if proj.has_key(package):
+        package = proj[package]
+        
+        if package == '':
+          outFile.write('// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n')
+          continue
+        else:
+          outFile.write('// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package)
+        
       # update the available packages dictionary
       outFile.write('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
 
       # bail! no such package
       if not metadata['packages'].has_key(package):
-        missingFileError()
+        missingFileError(package)
 
       for component in metadata['packages'][package]:
         includeFile(outFile, metadata['files'][component]['path'], envData)
@@ -111,7 +131,7 @@ def main(argv):
         
         # bail! no such file
         if not metadata['files'].has_key(incFilename):
-          missingFileError()
+          missingFileError(incFilename)
 
         includeFile(outFile, metadata['files'][incFilename]['path'], envData)
       else:
