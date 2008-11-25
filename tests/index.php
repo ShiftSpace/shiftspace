@@ -13,9 +13,6 @@
     <script src="../client/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
     <script src="SSTestRunner.js" type="text/javascript" charset="utf-8"></script>
     <script src="init.js" type="text/javascript" charset="utf-8"></script>
-    <script src="SSDefaultTest.js" type="text/javascript" charset="utf-8"></script>
-    <script src="SSAnotherDefaultTest.js" type="text/javascript" charset="utf-8"></script>
-    <script src="SSDefaultTestSuite.js" type="text/javascript" charset="utf-8"></script>
     
     <!-- 
     <script src="../packages&load=SSUnitTest" type="text/javascript" charset="utf-8"></script>
