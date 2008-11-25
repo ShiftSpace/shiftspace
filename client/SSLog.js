@@ -88,5 +88,4 @@ if(typeof %%LOG_LEVEL%% != 'undefined')
 else
 {
   throw new Error("Bailing: No such logging level %%LOG_LEVEL%%, please fix the config/env/%%ENV_NAME%%.json file.");
-  return;
 }
