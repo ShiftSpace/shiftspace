@@ -2,7 +2,7 @@
 // @required
 // @name	            SSView
 // @package           ShiftSpaceCoreUI
-// @dependencies      SandalphonCore, SSLog
+// @dependencies      SandalphonCore, SSLog, PreInitDeclarations, UtilityFunctions
 // ==/Builder==
 
 var SSView = new Class({
@@ -16,7 +16,8 @@ var SSView = new Class({
     SSLog('Returning defaults', SSLogViewSystem);
     var temp = {
       context: null,
-      generateElement: true
+      generateElement: true,
+      suppress: false
     };
     return temp;
   },

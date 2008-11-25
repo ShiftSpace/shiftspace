@@ -3,6 +3,8 @@
 // @name              PostInitDeclarations
 // ==/Builder==
 
+if(typeof ShiftSpace == 'undefined') ShiftSpace = {};
+
 // new additions for Sandalphon
 ShiftSpace.UI = {}; // holds all UI class objects
 ShiftSpace.Objects = new Hash(); // holds all instantiated UI objects

@@ -1,7 +1,7 @@
 // ==Builder==
 // @test
 // @name              SSDefaultTestSuperSuite
-// @dependencies      Shift
+// @dependencies      SSDefaultTestSuite
 // ==/Builder==
 
 var SSDefaultTestSuperSuite = new Class({

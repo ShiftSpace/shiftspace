@@ -1,3 +1,10 @@
+// ==Builder==
+// @test
+// @suite             SSDefaultTestSuperSuite
+// @name              SSDefaultTestSuite
+// @dependencies      SSDefaultTest
+// ==/Builder==
+
 var SSDefaultTestSuite = new Class({
 
   Extends: SSUnitTest.TestSuite,

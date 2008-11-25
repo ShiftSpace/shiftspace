@@ -1,6 +1,6 @@
 // ==Builder==
 // @test
-// @suite       TestTesting
+// @suite           TestTesting
 // @dependencies    SomeFile1, SomeFile2
 // ==/Builder==
 
