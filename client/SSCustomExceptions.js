@@ -2,7 +2,7 @@
 // @optional
 // @name              SSCustomExceptions
 // @package           System
-// @dependencies      Exception
+// @dependencies      SSException
 // ==/Builder==
 
 var SSSpaceDoesNotExistError = new Class({

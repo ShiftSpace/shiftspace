@@ -7,7 +7,7 @@
 var SSExceptionPrinter = new Class({
   toString: function()
   {
-    return ["["+this.name+"] message: " + this.message(), " fileName:" + this.fileName(), " lineNumber: " + this.lineNumber(), this.originalError().message].join(", ");
+    return ["["+this.name+"] message: " + this.message(), " fileName:" + this.fileName(), " lineNumber: " + this.lineNumber(), (this.originalError() && this.originalError().message) || 'no original error'].join(", ");
   }
 });
 
