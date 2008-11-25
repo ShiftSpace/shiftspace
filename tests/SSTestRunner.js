@@ -4,39 +4,8 @@ var SSTestRunner = new Class({
   
   initialize: function()
   {
-    this.loadTestDependencies();
   },
 
-  
-  setTestDependencies: function(testDependencies)
-  {
-    this.__testDependencies = testDependencies;
-  },
-  
-  
-  testDependencies: function()
-  {
-    return this.__testDependencies;
-  },
-    
-  
-  loadTestDependencies: function()
-  {
-    // load the package json
-    new Request({
-      url: "../config/tests.json",
-      method: "get",
-      onComplete: function(responseText, responseXML)
-      {
-        this.setTestDependencies(JSON.decode(responseText)['dependencies']);
-      }.bind(this),
-      onFailure: function(responseText, responseXML)
-      {
-        console.error("Error: could not load packages.json file");
-      }.bind(this)
-    }).send();
-  },
-  
   
   loadTest: function(path)
   {
@@ -53,22 +22,8 @@ var SSTestRunner = new Class({
     var testname = components.getLast();
     var base = testname.split('.')[0];
     
-    var dependencies = this.testDependencies()[base];
- 
-    // FIXME: Async can't guarantee this will work properly - David
-    // need a call that actually puts all the files together
-    // and preprocess them with the dev json
-    dependencies.each(function(dependency) {
-      new Request({
-        url: dependency,
-        method: "get",
-        onComplete: function(responseText, responseXML) {
-          eval(responseText);
-        }}).send();
-    });
-    
     new Request({
-      url: path,
+      url: "../builder/build_test.php?env=dev_avital&test=" + base,
       method: "get",
       onComplete: function(responseText, responseXML)
       {

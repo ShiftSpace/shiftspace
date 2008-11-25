@@ -34,7 +34,7 @@
             <tr>
               <th>Load Test:</th>
               <td>
-                <input id="loadTestInput" type="text" value="SSDefaultTest.js">
+                <input id="loadTestInput" type="text" value="SSDefaultTest">
                 </input>
                 <input id="loadTest" type="button" name="Load & Run" value="Load & Run">
                 </input>

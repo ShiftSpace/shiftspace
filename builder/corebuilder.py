@@ -52,6 +52,7 @@ class SSCoreBuilder():
     Parse all of the relevant files.
     """
 
+    print "Parsing %s" % path
     fileName = os.path.basename(path)
     name = fileName.split('.')[0]
 
@@ -75,10 +76,10 @@ class SSCoreBuilder():
 
         directives['path'] = path;
 
-        if directives.has_key('test'):
-          self.testsMetadata[name] = directives
-        else:
-          self.metadata[name] = directives;
+#        if directives.has_key('test'):
+#          self.tests.append(directives
+        
+        self.metadata[name] = directives;
         
         break;
 
@@ -275,13 +276,16 @@ class SSCoreBuilder():
     
     self.testDependencies = {}
     
-    for testFile in self.testsMetadata.keys():
-      metadata = self.testsMetadata[testFile]
+    for testFile in self.metadata.keys():
+      print "Calculating test dependency: %s" % testFile
+      metadata = self.metadata[testFile]
       self.testDependencies[testFile] = []
       
       if metadata.has_key('dependencies'):
         for dependency in metadata['dependencies']:
           self.recursivelyAddTestDependency(testFile, dependency)
+
+      self.testDependencies[testFile].append(metadata['path'])
 
 
   def build(self, path, recurse=False):
@@ -290,7 +294,6 @@ class SSCoreBuilder():
     """
 
     self.metadata = {}
-    self.testsMetadata = {}
     # build all the internal data structures
     self.parseDirectory(path, recurse)
     # sort the internal package data structure

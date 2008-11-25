@@ -59,21 +59,34 @@ def missingFileError(package):
 
 
 def main(argv):
+  if len(argv) < 1:
+    print "Usage: python preprocess.py <environment definition> [<project>] [<input file>]"
+    print
+    print "Project defaults to shiftspace"
+    print "Input file defaults to ../client/ShiftSpace-0.5.js"
+    print "If different input file is specified, writes to standard output" 
+    return -1
+
   metadataJsonFile = open('../config/packages.json')
   metadataStr = metadataJsonFile.read()
   metadata = json.loads(metadataStr)
   metadataJsonFile.close()
   
-  inFile = open('../client/ShiftSpace-0.5.js')
-  outFile = open('../shiftspace.user.js', 'w')
+  if len(argv) > 1:
+    proj = argv[1]
+  else:
+    proj = 'shiftspace'
   
-  if len(argv) < 2:
-    print "Usage: python preprocess.py <project> <environment definition>"
-    return -1
-
+  if len(argv) > 2:
+    inFile = open(argv[2])
+    outFile = sys.stdout
+  else:  
+    inFile = open('../client/ShiftSpace-0.5.js')
+    outFile = open('../shiftspace.user.js', 'w')
+  
   envFile = None
   evnFileName = None
-  envFilePath = '../config/env/%s.json' % argv[1]
+  envFilePath = '../config/env/%s.json' % argv[0]
   try:
     # load environment file
     envFile = open(envFilePath)
@@ -86,7 +99,7 @@ def main(argv):
     print "Error: no such environment file exists. (%s)" % envFilePath
     sys.exit(2)
     
-  projFilePath = '../config/proj/%s.json' % argv[0]
+  projFilePath = '../config/proj/%s.json' % proj
   try:
     # load project file
     projFile = open(projFilePath)
