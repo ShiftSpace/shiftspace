@@ -25,16 +25,16 @@
       
       if(!ShiftSpace) var ShiftSpace = {};
       if(!ShiftSpace.UI) ShiftSpace.UI = {};
-      if(!ShiftSpace.Objects) ShiftSpace.Objects = new Hash();
+      if(!ShiftSpaceObjects) ShiftSpaceObjects = new Hash();
       if(!ShiftSpace.instantiationListeners) ShiftSpace.instantiationListeners = {};
 
       // paths to required ShiftSpace files
-      ShiftSpace.ClassPaths = {
+      ShiftSpaceClassPaths = {
         'SSTableViewDatasource': '/client/'
       };
 
       // paths to view controllers
-      ShiftSpace.UIClassPaths = { 
+      ShiftSpaceUIClassPaths = { 
         'SSCell': '/client/views/SSCell/',
         'SSEditableTextCell': '/client/views/SSEditableTextCell/',
         'SSTabView': '/client/views/SSTabView/',
@@ -44,7 +44,7 @@
       };
 
         // path to user defined view controllers
-      ShiftSpace.UserClassPaths = {
+      ShiftSpaceUserClassPaths = {
         'SSCustomTableRow': '/client/customViews/SSCustomTableRow/'
       };
     </script>

@@ -17,7 +17,7 @@ var SandalphonClass = new Class({
   /*
     Function: _genId
       Generate an object id.  Used for debugging.  The instance is indentified by this in the global
-      ShiftSpace.Objects hash.
+      ShiftSpaceObjects hash.
   */
   _genContextId: function()
   {
@@ -370,7 +370,7 @@ var SandalphonClass = new Class({
   
   awakeObjects: function(context)
   {
-    ShiftSpace.Objects.each(function(object, objectId) {
+    ShiftSpaceObjects.each(function(object, objectId) {
       if(object.awake && !object.isAwake())
       {
         object.awake(context);
@@ -399,7 +399,7 @@ var SandalphonClass = new Class({
     // First verify that we have a real path for each class
     var missingClasses = false;
     classes.each(function(x) {
-      if(!missingClasses) missingClasses = (ShiftSpace.ClassPaths[x] == null && ShiftSpace.UIClassPaths[x] == null && ShiftSpace.UserClassPaths[x] == null);
+      if(!missingClasses) missingClasses = (ShiftSpaceClassPaths[x] == null && ShiftSpaceUIClassPaths[x] == null && ShiftSpaceUserClassPaths[x] == null);
     }.bind(this));
     
     if(missingClasses) console.error('Error missing uiclasses.');
@@ -456,7 +456,7 @@ var SandalphonToolClass = new Class({
            SSLog(ShiftSpace.localizedStrings, SSLogSandalphon);
 
            // update objects
-           ShiftSpace.Objects.each(function(object, objectId) {
+           ShiftSpaceObjects.each(function(object, objectId) {
              if(object.localizationChanged) object.localizationChanged();
            });
 
@@ -520,8 +520,8 @@ var SandalphonToolClass = new Class({
          {
          */
            SSLog('Initializing class paths.', SSLogSandalphon);
-           this.storage().set('UIClassPaths', JSON.encode(ShiftSpace.UIClassPaths));
-           this.storage().set('ClassPaths', JSON.encode(ShiftSpace.ClassPaths));
+           this.storage().set('UIClassPaths', JSON.encode(ShiftSpaceUIClassPaths));
+           this.storage().set('ClassPaths', JSON.encode(ShiftSpaceClassPaths));
          /*}
          else
          {
@@ -539,22 +539,22 @@ var SandalphonToolClass = new Class({
    */
    loadClassFiles: function()
    {
-     for(var className in ShiftSpace.ClassPaths)
+     for(var className in ShiftSpaceClassPaths)
      {
-       var path = '..' + ShiftSpace.ClassPaths[className] + className;
+       var path = '..' + ShiftSpaceClassPaths[className] + className;
        new Asset.javascript(path+'.js');
      }
 
-     for(var className in ShiftSpace.UIClassPaths)
+     for(var className in ShiftSpaceUIClassPaths)
      {
-       var path = '..' + ShiftSpace.UIClassPaths[className] + className;
+       var path = '..' + ShiftSpaceUIClassPaths[className] + className;
        new Asset.css(path+'.css');
        new Asset.javascript(path+'.js');
      }
 
-     for(var className in ShiftSpace.UserClassPaths)
+     for(var className in ShiftSpaceUserClassPaths)
      {
-       var path = '..' + ShiftSpace.UserClassPaths[className] + className;
+       var path = '..' + ShiftSpaceUserClassPaths[className] + className;
        new Asset.css(path+'.css');
        new Asset.javascript(path+'.js');
      }

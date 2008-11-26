@@ -179,7 +179,7 @@ var SSCustomTableRow = new Class({
 });
 
 // add it to the UI object if possible
-if($type(ShiftSpace.UI) != 'undefined')
+if($type(ShiftSpaceUI)) != 'undefined')
 {
-  ShiftSpace.UI.SSCustomTableRow = SSCustomTableRow;
+  ShiftSpaceUI.SSCustomTableRow = SSCustomTableRow;
 }

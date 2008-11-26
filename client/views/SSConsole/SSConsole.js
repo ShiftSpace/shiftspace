@@ -491,9 +491,9 @@ if(typeof SandalphonToolMode == 'undefined')
 else
 {
   // Add it the global UI class lookup
-  if($type(ShiftSpace.UI) != 'undefined')
+  if($type(ShiftSpaceUI)) != 'undefined')
   {
-    ShiftSpace.UI.SSConsole = SSConsole;
+    ShiftSpaceUI.SSConsole = SSConsole;
   }
 }
 

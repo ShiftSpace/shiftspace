@@ -2,7 +2,7 @@
 // @required
 // @name	            SSView
 // @package           ShiftSpaceCoreUI
-// @dependencies      SandalphonCore, SSLog, PreInitDeclarations, UtilityFunctions
+// @dependencies      SandalphonCore
 // ==/Builder==
 
 var SSView = new Class({
@@ -25,7 +25,7 @@ var SSView = new Class({
   /*
     Function: _genId
       Generate an object id.  Used for debugging.  The instance is indentified by this in the global
-      ShiftSpace.Objects hash.
+      ShiftSpaceObjects hash.
   */
   _genId: function()
   {
@@ -55,9 +55,9 @@ var SSView = new Class({
     this.setIsAwake(false);
 
     // add to global hash
-    if(ShiftSpace.Objects) ShiftSpace.Objects.set(this.__id__, this);
+    if(ShiftSpaceObjects) ShiftSpaceObjects.set(this.__id__, this);
     
-    SSLog('Interned view into ShiftSpace.Objects hash', SSLogViewSystem);
+    SSLog('Interned view into ShiftSpaceObjects hash', SSLogViewSystem);
 
     // check if we are prebuilt
     //this.__prebuilt__ = (el && true) || false; // NOT IMPLEMENTED - David
@@ -78,9 +78,9 @@ var SSView = new Class({
       SSSetControllerForNode(this, this.element);
 
       // add to global name look up dictionary
-      if(ShiftSpace.NameTable && this.element.getProperty('id').search('generatedId') == -1)
+      if(ShiftSpaceNameTable && this.element.getProperty('id').search('generatedId') == -1)
       {
-        ShiftSpace.NameTable.set(this.element.getProperty('id'), this);
+        ShiftSpaceNameTable.set(this.element.getProperty('id'), this);
       }
     }
 
@@ -392,7 +392,7 @@ var SSView = new Class({
 });
 
 // Add it the global UI class lookup
-if($type(ShiftSpace.UI) != 'undefined')
+if($type(ShiftSpaceUI)) != 'undefined')
 {
-  ShiftSpace.UI.SSView = SSView;
+  ShiftSpaceUI.SSView = SSView;
 }

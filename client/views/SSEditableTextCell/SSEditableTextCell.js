@@ -164,7 +164,7 @@ var SSEditableTextCell = new Class({
 });
 
 // Add it the global UI class lookup
-if($type(ShiftSpace.UI) != 'undefined')
+if($type(ShiftSpaceUI)) != 'undefined')
 {
-  ShiftSpace.UI.SSEditableTextCell = SSEditableTextCell;
+  ShiftSpaceUI.SSEditableTextCell = SSEditableTextCell;
 }

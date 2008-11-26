@@ -87,7 +87,7 @@ var SSTableRow = new Class({
 });
 
 // add it to the UI object if possible
-if($type(ShiftSpace.UI) != 'undefined')
+if($type(ShiftSpaceUI)) != 'undefined')
 {
-  ShiftSpace.UI.SSTableRow = SSTableRow;
+  ShiftSpaceUI.SSTableRow = SSTableRow;
 }

@@ -44,7 +44,7 @@ var SSCell = new Class({
 });
 
 // Add it the global UI class lookup
-if($type(ShiftSpace.UI) != 'undefined')
+if($type(ShiftSpaceUI)) != 'undefined')
 {
-  ShiftSpace.UI.SSCell = SSCell;
+  ShiftSpaceUI.SSCell = SSCell;
 }

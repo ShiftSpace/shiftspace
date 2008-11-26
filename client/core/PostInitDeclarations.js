@@ -6,17 +6,17 @@
 if(typeof ShiftSpace == 'undefined') ShiftSpace = {};
 
 // new additions for Sandalphon
-ShiftSpace.UI = {}; // holds all UI class objects
-ShiftSpace.Objects = new Hash(); // holds all instantiated UI objects
-ShiftSpace.NameTable = new Hash(); // holds all instantiated UI object by CSS id
+ShiftSpaceUI = {}; // holds all UI class objects
+ShiftSpaceObjects = new Hash(); // holds all instantiated UI objects
+ShiftSpaceNameTable = new Hash(); // holds all instantiated UI object by CSS id
 
 // TODO: remove this dependency - David
-ShiftSpace.ClassPaths = {
+ShiftSpaceClassPaths = {
   'SSTableViewDatasource': '/client/'
 };
 
 // TODO: paths to view controllers, should probably just default unless defined in UserClassPaths - David
-ShiftSpace.UIClassPaths = {
+ShiftSpaceUIClassPaths = {
   'SSCell': '/client/views/SSCell/',
   'SSEditableTextCell': '/client/views/SSEditableTextCell/',
   'SSTabView': '/client/views/SSTabView/',
@@ -26,7 +26,7 @@ ShiftSpace.UIClassPaths = {
 };
 
   // path to user defined view controllers
-ShiftSpace.UserClassPaths = {
+ShiftSpaceUserClassPaths = {
   'SSCustomTableRow': '/client/customViews/SSCustomTableRow/' // TODO: change this to point to the real folder - David
 };
 
