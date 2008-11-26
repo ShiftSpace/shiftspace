@@ -1,4 +1,16 @@
 {
-  "ShiftSpaceUI": "MoMAUI",
-  "Trails": ""
+  "packages": {
+    "remove": [
+      "Trails"
+    ],
+    "replace": {
+      "ShiftSpaceUI": "MoMAUI"
+    }
+  },
+  "files": {
+    "remove": [
+    ],
+    "replace": {
+    }
+  }
 }
