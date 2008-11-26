@@ -23,15 +23,15 @@ class SSPreProcessor:
   INCLUDE_PACKAGE_REGEX = re.compile('^\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*$');
   INCLUDE_REGEX = re.compile('^\s*//\s*INCLUDE\s+(\S+)\s*$');
 
-  def setEnvVars(self, line, env=None):
-    if env != None:
-      for key in env['data'].keys():
-        line = line.replace(("%%%%%s%%%%" % (key)), '%s' % env['data'][key])
-      line = line.replace("%%SYSTEM_TABLE%%", env['meta'])
-      line = line.replace("%%ENV_NAME%%", env['name'])
+  def setEnvVars(self, line):
+    if self.envData != None:
+      for key in self.envData['data'].keys():
+        line = line.replace(("%%%%%s%%%%" % (key)), '%s' % self.envData['data'][key])
+      line = line.replace("%%SYSTEM_TABLE%%", self.envData['meta'])
+      line = line.replace("%%ENV_NAME%%", self.envData['name'])
     return line
   
-  def includeFile(self, outFile, incFilename, env=None):
+  def includeFile(self, incFilename):
     print incFilename
   
     flen = len(incFilename);
@@ -40,28 +40,69 @@ class SSPreProcessor:
     postfix = ("\n\n// End %s " % incFilename) + (71 - flen) * '-' + "\n\n"
     logline2 = "\nif (SSInclude != undefined) SSLog('... complete.', SSInclude);\n"
   
-    outFile.write(logline1)
+    self.outFile.write(logline1)
 
     if incFilename in self.proj['files']['remove']:
-      outFile.write('// PROJECT OVERRIDE -- FILE NOT INCLUDED\n\n')
+      self.outFile.write('// PROJECT OVERRIDE -- FILE NOT INCLUDED\n\n')
       return
         
     if self.proj['files']['replace'].has_key(incFilename):
       incFilename = self.proj['files']['replace'][incFilename]
-      outFile.write('// PROJECT OVERRIDE -- INCLUDING %s INSTEAD\n' % incFilename)
+      self.outFile.write('// PROJECT OVERRIDE -- INCLUDING %s INSTEAD\n' % incFilename)
     
-    outFile.write(prefix)
+    self.outFile.write(prefix)
 
     incFile = open('../client/%s' % incFilename)
-    for line in incFile:
-      if env != None:
-        line = self.setEnvVars(line, env)
-      outFile.write(line)
 
-    outFile.write(postfix)
-    outFile.write(logline2)
-    outFile.write("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
+    self.preprocessFile(incFile)
+
+    self.outFile.write(postfix)
+    self.outFile.write(logline2)
+    self.outFile.write("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
     incFile.close()
+
+  def preprocessFile(self, file):
+    for line in file:
+      line = self.setEnvVars(line)
+      
+      mo = self.INCLUDE_PACKAGE_REGEX.match(line)
+      if mo:
+        package = mo.group(1)
+
+        self.outFile.write('\n// === START PACKAGE [%s] ===\n' % package)
+      
+        if package in self.proj['packages']['remove']:
+          self.outFile.write('// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n')
+          continue
+        
+        if self.proj['packages']['replace'].has_key(package):
+          package = self.proj['packages']['replace'][package]
+          self.outFile.write('// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package)
+        
+        # update the available packages dictionary
+        self.outFile.write('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
+
+        # bail! no such package
+        if not self.metadata['packages'].has_key(package):
+          self.missingFileError(package)
+
+        for component in self.metadata['packages'][package]:
+          self.includeFile(self.metadata['files'][component]['path'])
+
+        self.outFile.write('\n// === END PACKAGE [%s] ===\n\n' % package)
+      else:
+        mo = self.INCLUDE_REGEX.match(line)
+        if mo:
+          incFilename = mo.group(1)
+        
+          # bail! no such file
+          if not self.metadata['files'].has_key(incFilename):
+            self.missingFileError(incFilename)
+
+          self.includeFile(self.metadata['files'][incFilename]['path'])
+        else:
+          self.outFile.write(self.setEnvVars(line))
+  
 
   def missingFileError(self, package):
     print "Error: no such package %s exists, perhaps you forgot to run corebuilder.py first?" % package
@@ -79,7 +120,7 @@ class SSPreProcessor:
 
     metadataJsonFile = open('../config/packages.json')
     metadataStr = metadataJsonFile.read()
-    metadata = json.loads(metadataStr)
+    self.metadata = json.loads(metadataStr)
     metadataJsonFile.close()
   
     if len(argv) > 1:
@@ -89,10 +130,10 @@ class SSPreProcessor:
   
     if len(argv) > 2:
       inFile = open(argv[2])
-      outFile = sys.stdout
+      self.outFile = sys.stdout
     else:  
       inFile = open('../client/ShiftSpace-0.5.js')
-      outFile = open('../shiftspace.user.js', 'w')
+      self.outFile = open('../shiftspace.user.js', 'w')
   
     envFile = None
     evnFileName = None
@@ -103,7 +144,7 @@ class SSPreProcessor:
       envFileName = argv[0]
       env = json.loads(envFile.read())
       envFile.close()
-      envData = {"name": envFileName, "data": env, "meta": metadataStr}
+      self.envData = {"name": envFileName, "data": env, "meta": metadataStr}
     except IOError:
       # bail!
       print "Error: no such environment file exists. (%s)" % envFilePath
@@ -120,46 +161,9 @@ class SSPreProcessor:
       print "Error: no such project file exists. (%s)" % projFilePath
       sys.exit(2)
 
-    for line in inFile:
-      mo = self.INCLUDE_PACKAGE_REGEX.match(line)
-      if mo:
-        package = mo.group(1)
-
-        outFile.write('\n// === START PACKAGE [%s] ===\n' % package)
-      
-        if package in self.proj['packages']['remove']:
-          outFile.write('// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n')
-          continue
-        
-        if self.proj['packages']['replace'].has_key(package):
-          package = self.proj['packages']['replace'][package]
-          outFile.write('// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package)
-        
-        # update the available packages dictionary
-        outFile.write('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
-
-        # bail! no such package
-        if not metadata['packages'].has_key(package):
-          self.missingFileError(package)
-
-        for component in metadata['packages'][package]:
-          self.includeFile(outFile, metadata['files'][component]['path'], envData)
-
-        outFile.write('\n// === END PACKAGE [%s] ===\n\n' % package)
-      else:
-        mo = self.INCLUDE_REGEX.match(line)
-        if mo:
-          incFilename = mo.group(1)
-        
-          # bail! no such file
-          if not metadata['files'].has_key(incFilename):
-            self.missingFileError(incFilename)
-
-          self.includeFile(outFile, metadata['files'][incFilename]['path'], envData)
-        else:
-          outFile.write(self.setEnvVars(line, envData))
-  
-    outFile.close()
+    self.preprocessFile(inFile)
+    
+    self.outFile.close()
     inFile.close()
 
   
