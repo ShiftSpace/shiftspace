@@ -1,0 +1,514 @@
+{
+    "files": {
+        "ActionMenu": {
+            "customView": true, 
+            "dependencies": [
+                "SSView"
+            ], 
+            "name": "ActionMenu", 
+            "optional": true, 
+            "package": "ShiftSpaceUI", 
+            "path": "..\/client\/customViews\/ActionMenu\/ActionMenu.js", 
+            "uiclass": true
+        }, 
+        "CoreEvents": {
+            "name": "CoreEvents", 
+            "option": true, 
+            "package": "EventHandling", 
+            "path": "..\/client\/CoreEvents.js"
+        }, 
+        "ErrorWindow": {
+            "dependencies": [
+                "ShiftSpaceElement"
+            ], 
+            "name": "ErrorWindow", 
+            "optional": true, 
+            "package": "ErrorHandling", 
+            "path": "..\/client\/ErrorWindow.js"
+        }, 
+        "EventProxy": {
+            "name": "EventProxy", 
+            "package": "System", 
+            "path": "..\/client\/EventProxy.js", 
+            "required": true
+        }, 
+        "FullScreen": {
+            "dependencies": [
+                "ShiftSpaceElement"
+            ], 
+            "name": "FullScreen", 
+            "optional": true, 
+            "package": "UtilitiesExtras", 
+            "path": "..\/client\/FullScreen.js"
+        }, 
+        "GreaseMonkeyApi": {
+            "name": "GreaseMonkeyApi", 
+            "optional": true, 
+            "package": "System_", 
+            "path": "..\/sandbox\/GreaseMonkeyApi.js"
+        }, 
+        "IframeHelpers": {
+            "dependences": "Element", 
+            "name": "IframeHelpers", 
+            "optional": true, 
+            "package": "UtilitiesExtras", 
+            "path": "..\/client\/IframeHelpers.js"
+        }, 
+        "LocalizedStringsSupport": {
+            "name": "LocalizedStringsSupport", 
+            "package": "Internationalization", 
+            "path": "..\/client\/LocalizedStringsSupport.js", 
+            "required": true
+        }, 
+        "NewTrail": {
+            "dependencies": [
+                "Plugin"
+            ], 
+            "name": "TrailsPlugin", 
+            "optional": true, 
+            "package": "Trails", 
+            "path": "..\/plugins\/Trails\/NewTrail.js"
+        }, 
+        "PersistenceFunctions": {
+            "name": "PersistenceFunctions", 
+            "optional": true, 
+            "package": "Core", 
+            "path": "..\/client\/core\/PersistenceFunctions.js"
+        }, 
+        "Pin": {
+            "name": "Pin", 
+            "optional": true, 
+            "package": "Pinning", 
+            "path": "..\/client\/Pin.js"
+        }, 
+        "PinHelpers": {
+            "dependencies": [
+                "Pin"
+            ], 
+            "name": "PinHelpers", 
+            "optional": true, 
+            "package": "Pinning", 
+            "path": "..\/client\/PinHelpers.js"
+        }, 
+        "PinWidget": {
+            "dependencies": [
+                "PinHelpers", 
+                "ShiftSpaceElement"
+            ], 
+            "name": "PinWidget", 
+            "optional": true, 
+            "package": "Pinning", 
+            "path": "..\/client\/PinWidget.js"
+        }, 
+        "Plugin": {
+            "name": "Plugin", 
+            "package": "ShiftSpaceCore", 
+            "path": "..\/client\/Plugin.js", 
+            "required": true
+        }, 
+        "PluginFunctions": {
+            "name": "PluginFunctions", 
+            "optional": true, 
+            "package": "Core", 
+            "path": "..\/client\/core\/PluginFunctions.js"
+        }, 
+        "PostInitDeclarations": {
+            "name": "PostInitDeclarations", 
+            "optional": true, 
+            "path": "..\/client\/core\/PostInitDeclarations.js"
+        }, 
+        "PreInitDeclarations": {
+            "name": "PreInitDeclarations", 
+            "optional": true, 
+            "path": "..\/client\/core\/PreInitDeclarations.js"
+        }, 
+        "RangeCoder": {
+            "name": "RangeCoder", 
+            "optional": true, 
+            "package": "Pinning", 
+            "path": "..\/client\/RangeCoder.js"
+        }, 
+        "RecentlyViewedHelpers": {
+            "name": "RecentlyViewedHelpers", 
+            "optional": true, 
+            "package": "Trails", 
+            "path": "..\/client\/RecentlyViewedHelpers.js"
+        }, 
+        "RemoteFunctions": {
+            "name": "RemoteFunctions", 
+            "optional": true, 
+            "package": "Core", 
+            "path": "..\/client\/core\/RemoteFunctions.js"
+        }, 
+        "SSCell": {
+            "dependencies": [
+                "SSView"
+            ], 
+            "name": "SSCell", 
+            "optional": true, 
+            "package": "ShiftSpaceCoreUI", 
+            "path": "..\/client\/views\/SSCell\/SSCell.js", 
+            "uiclass": true
+        }, 
+        "SSConsole": {
+            "name": "SSConsole", 
+            "optional": true, 
+            "package": "ShiftSpaceUI", 
+            "path": "..\/client\/views\/SSConsole\/SSConsole.js", 
+            "uiclass": true
+        }, 
+        "SSCustomExceptions": {
+            "dependencies": [
+                "SSException"
+            ], 
+            "name": "SSCustomExceptions", 
+            "optional": true, 
+            "package": "System", 
+            "path": "..\/client\/SSCustomExceptions.js"
+        }, 
+        "SSCustomTableRow": {
+            "dependencies": [
+                "SSTableRow"
+            ], 
+            "name": "SSCustomTableRow", 
+            "optional": true, 
+            "package": "ShiftSpaceCoreUI", 
+            "path": "..\/client\/customViews\/SSCustomTableRow\/SSCustomTableRow.js", 
+            "uiclass": true
+        }, 
+        "SSDefaultTest": {
+            "name": "SSDefaultTest", 
+            "path": "..\/tests\/SSDefaultTest.js", 
+            "suite": "SSDefaultTestSuite", 
+            "test": true
+        }, 
+        "SSDefaultTestSuite": {
+            "dependencies": [
+                "SSDefaultTest"
+            ], 
+            "name": "SSDefaultTestSuite", 
+            "path": "..\/tests\/SSDefaultTestSuite.js", 
+            "suite": "SSDefaultTestSuperSuite", 
+            "test": true
+        }, 
+        "SSDefaultTestSuperSuite": {
+            "dependencies": [
+                "SSDefaultTestSuite"
+            ], 
+            "name": "SSDefaultTestSuperSuite", 
+            "path": "..\/tests\/SSDefaultTestSuperSuite.js", 
+            "test": true
+        }, 
+        "SSEditableTextCell": {
+            "dependencies": [
+                "SSCell"
+            ], 
+            "name": "SSEditableTextCell", 
+            "package": "ShiftSpaceCoreUI", 
+            "path": "..\/client\/views\/SSEditableTextCell\/SSEditableTextCell.js", 
+            "required": true, 
+            "uiclass": true
+        }, 
+        "SSException": {
+            "name": "SSException", 
+            "optional": true, 
+            "package": "System", 
+            "path": "..\/client\/SSException.js"
+        }, 
+        "SSListView": {
+            "dependencies": [
+                "SSView", 
+                "SSCell"
+            ], 
+            "name": "SSListView", 
+            "optional": true, 
+            "package": "ShiftSpaceCoreUI", 
+            "path": "..\/client\/views\/SSListView\/SSListView.js", 
+            "uiclass": true
+        }, 
+        "SSListViewTest": {
+            "dependencies": [
+                "SSListView"
+            ], 
+            "name": "SSListViewTest", 
+            "path": "..\/tests\/SSListViewTest\/SSListViewTest.js", 
+            "suite": "UI", 
+            "test": true
+        }, 
+        "SSLog": {
+            "dependencies": [
+                "GreaseMonkeyApi"
+            ], 
+            "name": "SSLog", 
+            "package": "System_", 
+            "path": "..\/client\/SSLog.js", 
+            "required": true
+        }, 
+        "SSTabView": {
+            "dependencies": [
+                "SSView"
+            ], 
+            "name": "SSTabView", 
+            "package": "ShiftSpaceCoreUI", 
+            "path": "..\/client\/views\/SSTabView\/SSTabView.js", 
+            "required": true, 
+            "uiclass": true
+        }, 
+        "SSTableRow": {
+            "dependencies": [
+                "SSView"
+            ], 
+            "name": "SSTableRow", 
+            "package": "ShiftSpaceCoreUI", 
+            "path": "..\/client\/views\/SSTableRow\/SSTableRow.js", 
+            "required": true, 
+            "uiclass": true
+        }, 
+        "SSTableView": {
+            "dependencies": [
+                "SSView"
+            ], 
+            "name": "SSTableView", 
+            "package": "ShiftSpaceCoreUI", 
+            "path": "..\/client\/views\/SSTableView\/SSTableView.js", 
+            "required": true, 
+            "uiclass": true
+        }, 
+        "SSTableViewDatasource": {
+            "name": "SSTableViewDatasource", 
+            "optional": true, 
+            "package": "ShiftSpaceCore", 
+            "path": "..\/client\/SSTableViewDatasource.js"
+        }, 
+        "SSUnitTest": {
+            "dependencies": [
+                "SSException"
+            ], 
+            "name": "SSUnitTest", 
+            "optional": true, 
+            "package": "Testing", 
+            "path": "..\/client\/SSUnitTest.js"
+        }, 
+        "SSView": {
+            "dependencies": [
+                "SandalphonCore", 
+                "SSLog", 
+                "PreInitDeclarations", 
+                "UtilityFunctions"
+            ], 
+            "name": "SSView", 
+            "package": "ShiftSpaceCoreUI", 
+            "path": "..\/client\/SSView.js", 
+            "required": true
+        }, 
+        "SSViewProxy": {
+            "dependencies": [
+                "SandalphonSupport"
+            ], 
+            "name": "SSViewProxy", 
+            "package": "System", 
+            "path": "..\/client\/SSViewProxy.js", 
+            "required": true
+        }, 
+        "SandalphonCore": {
+            "name": "SandalphonCore", 
+            "package": "System", 
+            "path": "..\/sandalphon\/SandalphonCore.js", 
+            "required": true
+        }, 
+        "SandalphonSupport": {
+            "dependencies": [
+                "SandalphonCore"
+            ], 
+            "name": "SandalphonSupport", 
+            "package": "System", 
+            "path": "..\/client\/SandalphonSupport.js", 
+            "required": true
+        }, 
+        "Shift": {
+            "name": "Shift", 
+            "package": "ShiftSpaceCore", 
+            "path": "..\/client\/Shift.js", 
+            "required": true
+        }, 
+        "ShiftFunctions": {
+            "name": "ShiftFunctions", 
+            "optional": true, 
+            "package": "Core", 
+            "path": "..\/client\/core\/ShiftFunctions.js"
+        }, 
+        "ShiftMenu": {
+            "dependencies": [
+                "ShiftSpaceElement", 
+                "EventProxy"
+            ], 
+            "name": "ShiftMenu", 
+            "package": "ShiftSpaceUI", 
+            "path": "..\/client\/ShiftMenu.js", 
+            "required": true
+        }, 
+        "ShiftSpaceElement": {
+            "name": "ShiftSpaceElement", 
+            "package": "System", 
+            "path": "..\/client\/ShiftSpaceElement.js", 
+            "required": true
+        }, 
+        "SomeFile1": {
+            "dependencies": [
+                "SomeFile3"
+            ], 
+            "package": "TestTesting", 
+            "path": "..\/client\/testTesting\/SomeFile1.js", 
+            "required": true
+        }, 
+        "SomeFile2": {
+            "dependencies": [
+                "SomeFile3"
+            ], 
+            "package": "TestTesting", 
+            "path": "..\/client\/testTesting\/SomeFile2.js", 
+            "required": true
+        }, 
+        "SomeFile3": {
+            "package": "TestTesting", 
+            "path": "..\/client\/testTesting\/SomeFile3.js", 
+            "required": true
+        }, 
+        "Space": {
+            "name": "Space", 
+            "package": "ShiftSpaceCore", 
+            "path": "..\/client\/Space.js", 
+            "required": true
+        }, 
+        "SpaceFunctions": {
+            "name": "SpaceFunctions", 
+            "optional": true, 
+            "package": "Core", 
+            "path": "..\/client\/core\/SpaceFunctions.js"
+        }, 
+        "TestTesting": {
+            "dependencies": [
+                "SomeFile1", 
+                "SomeFile2"
+            ], 
+            "path": "..\/tests\/TestTesting.js", 
+            "suite": "TestTesting", 
+            "test": true
+        }, 
+        "User": {
+            "name": "User", 
+            "optional": true, 
+            "package": "ShiftSpaceCore", 
+            "path": "..\/client\/User.js"
+        }, 
+        "UserFunctions": {
+            "name": "UserFunctions", 
+            "optional": true, 
+            "package": "Core", 
+            "path": "..\/client\/core\/UserFunctions.js"
+        }, 
+        "UtilityFunctions": {
+            "name": "UtilityFunctions", 
+            "optional": true, 
+            "package": "Core", 
+            "path": "..\/client\/core\/UtilityFunctions.js"
+        }, 
+        "shiftspace": {
+            "dependencies": [
+                "GreaseMonkeyApi"
+            ], 
+            "name": "SSLog", 
+            "package": "System_", 
+            "path": "..\/shiftspace.user.js", 
+            "required": true
+        }, 
+        "shiftspace-orig": {
+            "dependencies": [
+                "GreaseMonkeyApi"
+            ], 
+            "name": "SSLog", 
+            "package": "System_", 
+            "path": "..\/shiftspace-orig.user.js", 
+            "required": true
+        }
+    }, 
+    "packages": {
+        "Core": [
+            "UserFunctions", 
+            "UtilityFunctions", 
+            "ShiftFunctions", 
+            "PersistenceFunctions", 
+            "RemoteFunctions", 
+            "PluginFunctions", 
+            "SpaceFunctions"
+        ], 
+        "ErrorHandling": [
+            "ErrorWindow"
+        ], 
+        "EventHandling": [
+            "CoreEvents"
+        ], 
+        "Internationalization": [
+            "LocalizedStringsSupport"
+        ], 
+        "Pinning": [
+            "RangeCoder", 
+            "Pin", 
+            "PinHelpers", 
+            "PinWidget"
+        ], 
+        "ShiftSpaceCore": [
+            "SSTableViewDatasource", 
+            "Shift", 
+            "Space", 
+            "Plugin", 
+            "User"
+        ], 
+        "ShiftSpaceCoreUI": [
+            "SSView", 
+            "SSTabView", 
+            "SSTableView", 
+            "SSTableRow", 
+            "SSCell", 
+            "SSCustomTableRow", 
+            "SSEditableTextCell", 
+            "SSListView"
+        ], 
+        "ShiftSpaceUI": [
+            "ActionMenu", 
+            "SSConsole", 
+            "ShiftMenu"
+        ], 
+        "System": [
+            "ShiftSpaceElement", 
+            "SSException", 
+            "EventProxy", 
+            "SandalphonCore", 
+            "SandalphonSupport", 
+            "SSCustomExceptions", 
+            "SSViewProxy"
+        ], 
+        "System_": [
+            "GreaseMonkeyApi", 
+            "SSLog", 
+            "shiftspace", 
+            "shiftspace-orig"
+        ], 
+        "TestTesting": [
+            "SomeFile3", 
+            "SomeFile2", 
+            "SomeFile1"
+        ], 
+        "Testing": [
+            "SSUnitTest"
+        ], 
+        "Trails": [
+            "NewTrail", 
+            "RecentlyViewedHelpers"
+        ], 
+        "UtilitiesExtras": [
+            "FullScreen", 
+            "IframeHelpers"
+        ]
+    }
+}

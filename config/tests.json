@@ -1,0 +1,261 @@
+{
+    "dependencies": {
+        "ActionMenu": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js", 
+            "..\/client\/core\/PreInitDeclarations.js", 
+            "..\/client\/core\/UtilityFunctions.js", 
+            "..\/client\/SSView.js", 
+            "..\/client\/customViews\/ActionMenu\/ActionMenu.js"
+        ], 
+        "CoreEvents": [
+            "..\/client\/CoreEvents.js"
+        ], 
+        "ErrorWindow": [
+            "..\/client\/ShiftSpaceElement.js", 
+            "..\/client\/ErrorWindow.js"
+        ], 
+        "EventProxy": [
+            "..\/client\/EventProxy.js"
+        ], 
+        "FullScreen": [
+            "..\/client\/ShiftSpaceElement.js", 
+            "..\/client\/FullScreen.js"
+        ], 
+        "GreaseMonkeyApi": [
+            "..\/sandbox\/GreaseMonkeyApi.js"
+        ], 
+        "IframeHelpers": [
+            "..\/client\/IframeHelpers.js"
+        ], 
+        "LocalizedStringsSupport": [
+            "..\/client\/LocalizedStringsSupport.js"
+        ], 
+        "NewTrail": [
+            "..\/client\/Plugin.js", 
+            "..\/plugins\/Trails\/NewTrail.js"
+        ], 
+        "PersistenceFunctions": [
+            "..\/client\/core\/PersistenceFunctions.js"
+        ], 
+        "Pin": [
+            "..\/client\/Pin.js"
+        ], 
+        "PinHelpers": [
+            "..\/client\/Pin.js", 
+            "..\/client\/PinHelpers.js"
+        ], 
+        "PinWidget": [
+            "..\/client\/Pin.js", 
+            "..\/client\/PinHelpers.js", 
+            "..\/client\/ShiftSpaceElement.js", 
+            "..\/client\/PinWidget.js"
+        ], 
+        "Plugin": [
+            "..\/client\/Plugin.js"
+        ], 
+        "PluginFunctions": [
+            "..\/client\/core\/PluginFunctions.js"
+        ], 
+        "PostInitDeclarations": [
+            "..\/client\/core\/PostInitDeclarations.js"
+        ], 
+        "PreInitDeclarations": [
+            "..\/client\/core\/PreInitDeclarations.js"
+        ], 
+        "RangeCoder": [
+            "..\/client\/RangeCoder.js"
+        ], 
+        "RecentlyViewedHelpers": [
+            "..\/client\/RecentlyViewedHelpers.js"
+        ], 
+        "RemoteFunctions": [
+            "..\/client\/core\/RemoteFunctions.js"
+        ], 
+        "SSCell": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js", 
+            "..\/client\/core\/PreInitDeclarations.js", 
+            "..\/client\/core\/UtilityFunctions.js", 
+            "..\/client\/SSView.js", 
+            "..\/client\/views\/SSCell\/SSCell.js"
+        ], 
+        "SSConsole": [
+            "..\/client\/views\/SSConsole\/SSConsole.js"
+        ], 
+        "SSCustomExceptions": [
+            "..\/client\/SSException.js", 
+            "..\/client\/SSCustomExceptions.js"
+        ], 
+        "SSCustomTableRow": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js", 
+            "..\/client\/core\/PreInitDeclarations.js", 
+            "..\/client\/core\/UtilityFunctions.js", 
+            "..\/client\/SSView.js", 
+            "..\/client\/views\/SSTableRow\/SSTableRow.js", 
+            "..\/client\/customViews\/SSCustomTableRow\/SSCustomTableRow.js"
+        ], 
+        "SSDefaultTest": [
+            "..\/tests\/SSDefaultTest.js"
+        ], 
+        "SSDefaultTestSuite": [
+            "..\/tests\/SSDefaultTest.js", 
+            "..\/tests\/SSDefaultTestSuite.js"
+        ], 
+        "SSDefaultTestSuperSuite": [
+            "..\/tests\/SSDefaultTest.js", 
+            "..\/tests\/SSDefaultTestSuite.js", 
+            "..\/tests\/SSDefaultTestSuperSuite.js"
+        ], 
+        "SSEditableTextCell": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js", 
+            "..\/client\/core\/PreInitDeclarations.js", 
+            "..\/client\/core\/UtilityFunctions.js", 
+            "..\/client\/SSView.js", 
+            "..\/client\/views\/SSCell\/SSCell.js", 
+            "..\/client\/views\/SSEditableTextCell\/SSEditableTextCell.js"
+        ], 
+        "SSException": [
+            "..\/client\/SSException.js"
+        ], 
+        "SSListView": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js", 
+            "..\/client\/core\/PreInitDeclarations.js", 
+            "..\/client\/core\/UtilityFunctions.js", 
+            "..\/client\/SSView.js", 
+            "..\/client\/views\/SSCell\/SSCell.js", 
+            "..\/client\/views\/SSListView\/SSListView.js"
+        ], 
+        "SSListViewTest": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js", 
+            "..\/client\/core\/PreInitDeclarations.js", 
+            "..\/client\/core\/UtilityFunctions.js", 
+            "..\/client\/SSView.js", 
+            "..\/client\/views\/SSCell\/SSCell.js", 
+            "..\/client\/views\/SSListView\/SSListView.js", 
+            "..\/tests\/SSListViewTest\/SSListViewTest.js"
+        ], 
+        "SSLog": [
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js"
+        ], 
+        "SSTabView": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js", 
+            "..\/client\/core\/PreInitDeclarations.js", 
+            "..\/client\/core\/UtilityFunctions.js", 
+            "..\/client\/SSView.js", 
+            "..\/client\/views\/SSTabView\/SSTabView.js"
+        ], 
+        "SSTableRow": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js", 
+            "..\/client\/core\/PreInitDeclarations.js", 
+            "..\/client\/core\/UtilityFunctions.js", 
+            "..\/client\/SSView.js", 
+            "..\/client\/views\/SSTableRow\/SSTableRow.js"
+        ], 
+        "SSTableView": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js", 
+            "..\/client\/core\/PreInitDeclarations.js", 
+            "..\/client\/core\/UtilityFunctions.js", 
+            "..\/client\/SSView.js", 
+            "..\/client\/views\/SSTableView\/SSTableView.js"
+        ], 
+        "SSTableViewDatasource": [
+            "..\/client\/SSTableViewDatasource.js"
+        ], 
+        "SSUnitTest": [
+            "..\/client\/SSException.js", 
+            "..\/client\/SSUnitTest.js"
+        ], 
+        "SSView": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/client\/SSLog.js", 
+            "..\/client\/core\/PreInitDeclarations.js", 
+            "..\/client\/core\/UtilityFunctions.js", 
+            "..\/client\/SSView.js"
+        ], 
+        "SSViewProxy": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/client\/SandalphonSupport.js", 
+            "..\/client\/SSViewProxy.js"
+        ], 
+        "SandalphonCore": [
+            "..\/sandalphon\/SandalphonCore.js"
+        ], 
+        "SandalphonSupport": [
+            "..\/sandalphon\/SandalphonCore.js", 
+            "..\/client\/SandalphonSupport.js"
+        ], 
+        "Shift": [
+            "..\/client\/Shift.js"
+        ], 
+        "ShiftFunctions": [
+            "..\/client\/core\/ShiftFunctions.js"
+        ], 
+        "ShiftMenu": [
+            "..\/client\/ShiftSpaceElement.js", 
+            "..\/client\/EventProxy.js", 
+            "..\/client\/ShiftMenu.js"
+        ], 
+        "ShiftSpaceElement": [
+            "..\/client\/ShiftSpaceElement.js"
+        ], 
+        "SomeFile1": [
+            "..\/client\/testTesting\/SomeFile3.js", 
+            "..\/client\/testTesting\/SomeFile1.js"
+        ], 
+        "SomeFile2": [
+            "..\/client\/testTesting\/SomeFile3.js", 
+            "..\/client\/testTesting\/SomeFile2.js"
+        ], 
+        "SomeFile3": [
+            "..\/client\/testTesting\/SomeFile3.js"
+        ], 
+        "Space": [
+            "..\/client\/Space.js"
+        ], 
+        "SpaceFunctions": [
+            "..\/client\/core\/SpaceFunctions.js"
+        ], 
+        "TestTesting": [
+            "..\/client\/testTesting\/SomeFile3.js", 
+            "..\/client\/testTesting\/SomeFile1.js", 
+            "..\/client\/testTesting\/SomeFile2.js", 
+            "..\/tests\/TestTesting.js"
+        ], 
+        "User": [
+            "..\/client\/User.js"
+        ], 
+        "UserFunctions": [
+            "..\/client\/core\/UserFunctions.js"
+        ], 
+        "UtilityFunctions": [
+            "..\/client\/core\/UtilityFunctions.js"
+        ], 
+        "shiftspace": [
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/shiftspace.user.js"
+        ], 
+        "shiftspace-orig": [
+            "..\/sandbox\/GreaseMonkeyApi.js", 
+            "..\/shiftspace-orig.user.js"
+        ]
+    }
+}
