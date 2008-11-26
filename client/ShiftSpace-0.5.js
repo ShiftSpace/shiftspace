@@ -58,14 +58,7 @@ Class: ShiftSpace
 */
 
 var ShiftSpace = new (function() {
-    // INCLUDE SSLog
-    // INCLUDE PreInitDeclarations
-    // INCLUDE PACKAGE System
-    // INCLUDE PACKAGE ErrorHandling
-    // INCLUDE PACKAGE Internationalization
-    // INCLUDE PACKAGE EventHandling
-    // INCLUDE PACKAGE UtilitiesExtras
-    // INCLUDE PACKAGE Core
+    // INCLUDE Bootstrap
     
     /*
 
