@@ -1,3 +1,7 @@
+// ==Builder==
+// @test
+// ==/Builder==
+
 var SSAnotherDefaultTest = new Class({
   
   name: 'SSAnotherDefaultTest',
