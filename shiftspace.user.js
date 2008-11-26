@@ -146,14 +146,13 @@ function SSSetLogLevel(level)
   __ssloglevel__ = level;
 }
 
-if(typeof SSLogAll != 'undefined')
+if(typeof SSLogError != 'undefined')
 {
-  SSSetLogLevel(SSLogAll);
+  SSSetLogLevel(SSLogError);
 }
 else
 {
-  throw new Error("Bailing: No such logging level SSLogAll, please fix the config/env/dev_avital.json file.");
-  return;
+  throw new Error("Bailing: No such logging level SSLogError, please fix the config/env/dev.json file.");
 }
 
 
@@ -175,8 +174,8 @@ if (SSInclude != undefined) SSLog('Including ../client/core/PreInitDeclarations.
 
 // NOTE: This will be preprocessed by preprocess.py and replaced with the proper
 // servers
-var server = SSGetValue('server', 'http://localhost/shiftspace/');
-var spacesDir = SSGetValue('spaceDir', 'http://localhost/shiftspace/spaces/');
+var server = SSGetValue('server', 'http://localhost/~davidnolen/shiftspace-0.5/');
+var spacesDir = SSGetValue('spaceDir', 'http://localhost/~davidnolen/shiftspace-0.5/spaces/');
 
 var __sys__ = {
     "files": {
@@ -196,12 +195,6 @@ var __sys__ = {
             "option": true, 
             "package": "EventHandling", 
             "path": "..\/client\/CoreEvents.js"
-        }, 
-        "Element": {
-            "name": "ShiftSpaceElement", 
-            "package": "System", 
-            "path": "..\/client\/Element.js", 
-            "required": true
         }, 
         "ErrorWindow": {
             "dependencies": [
@@ -315,9 +308,6 @@ var __sys__ = {
             "path": "..\/client\/RangeCoder.js"
         }, 
         "RecentlyViewedHelpers": {
-            "dependencies": [
-                "TrailsPlugin"
-            ], 
             "name": "RecentlyViewedHelpers", 
             "optional": true, 
             "package": "Trails", 
@@ -348,7 +338,7 @@ var __sys__ = {
         }, 
         "SSCustomExceptions": {
             "dependencies": [
-                "Exception"
+                "SSException"
             ], 
             "name": "SSCustomExceptions", 
             "optional": true, 
@@ -364,6 +354,29 @@ var __sys__ = {
             "package": "ShiftSpaceCoreUI", 
             "path": "..\/client\/customViews\/SSCustomTableRow\/SSCustomTableRow.js", 
             "uiclass": true
+        }, 
+        "SSDefaultTest": {
+            "name": "SSDefaultTest", 
+            "path": "..\/tests\/SSDefaultTest.js", 
+            "suite": "SSDefaultTestSuite", 
+            "test": true
+        }, 
+        "SSDefaultTestSuite": {
+            "dependencies": [
+                "SSDefaultTest"
+            ], 
+            "name": "SSDefaultTestSuite", 
+            "path": "..\/tests\/SSDefaultTestSuite.js", 
+            "suite": "SSDefaultTestSuperSuite", 
+            "test": true
+        }, 
+        "SSDefaultTestSuperSuite": {
+            "dependencies": [
+                "SSDefaultTestSuite"
+            ], 
+            "name": "SSDefaultTestSuperSuite", 
+            "path": "..\/tests\/SSDefaultTestSuperSuite.js", 
+            "test": true
         }, 
         "SSEditableTextCell": {
             "dependencies": [
@@ -391,6 +404,15 @@ var __sys__ = {
             "package": "ShiftSpaceCoreUI", 
             "path": "..\/client\/views\/SSListView\/SSListView.js", 
             "uiclass": true
+        }, 
+        "SSListViewTest": {
+            "dependencies": [
+                "SSListView"
+            ], 
+            "name": "SSListViewTest", 
+            "path": "..\/tests\/SSListViewTest\/SSListViewTest.js", 
+            "suite": "UI", 
+            "test": true
         }, 
         "SSLog": {
             "dependencies": [
@@ -449,7 +471,9 @@ var __sys__ = {
         "SSView": {
             "dependencies": [
                 "SandalphonCore", 
-                "SSLog"
+                "SSLog", 
+                "PreInitDeclarations", 
+                "UtilityFunctions"
             ], 
             "name": "SSView", 
             "package": "ShiftSpaceCoreUI", 
@@ -502,6 +526,12 @@ var __sys__ = {
             "path": "..\/client\/ShiftMenu.js", 
             "required": true
         }, 
+        "ShiftSpaceElement": {
+            "name": "ShiftSpaceElement", 
+            "package": "System", 
+            "path": "..\/client\/ShiftSpaceElement.js", 
+            "required": true
+        }, 
         "SomeFile1": {
             "dependencies": [
                 "SomeFile3"
@@ -534,6 +564,15 @@ var __sys__ = {
             "optional": true, 
             "package": "Core", 
             "path": "..\/client\/core\/SpaceFunctions.js"
+        }, 
+        "TestTesting": {
+            "dependencies": [
+                "SomeFile1", 
+                "SomeFile2"
+            ], 
+            "path": "..\/tests\/TestTesting.js", 
+            "suite": "TestTesting", 
+            "test": true
         }, 
         "User": {
             "name": "User", 
@@ -620,12 +659,12 @@ var __sys__ = {
             "ShiftMenu"
         ], 
         "System": [
-            "SSCustomExceptions", 
+            "ShiftSpaceElement", 
             "SSException", 
-            "Element", 
             "EventProxy", 
             "SandalphonCore", 
             "SandalphonSupport", 
+            "SSCustomExceptions", 
             "SSViewProxy"
         ], 
         "System_": [
@@ -724,111 +763,9 @@ if(__sysavail__) __sysavail__.files.push('PreInitDeclarations');
 
 if(__sysavail__) __sysavail__.packages.push("System");
 
-if (SSInclude != undefined) SSLog('Including ../client/SSCustomExceptions.js...', SSInclude);
+if (SSInclude != undefined) SSLog('Including ../client/ShiftSpaceElement.js...', SSInclude);
 
-// Start ../client/SSCustomExceptions.js --------------------------------------
-
-// ==Builder==
-// @optional
-// @name              SSCustomExceptions
-// @package           System
-// @dependencies      Exception
-// ==/Builder==
-
-var SSSpaceDoesNotExistError = new Class({
-  Extends: SSException,
-  
-  name: 'SSSpaceDoesNotExistError',
-  
-  initialize: function(_error, spaceName)
-  {
-    this.parent(_error);
-    this.spaceName = spaceName;
-  },
-  
-  message: function()
-  {
-    return "Space " + this.spaceName + " does not exist.";
-  }
-
-});
-
-var ShiftDoesNotExistError = new Class({
-  
-});
-
-// End ../client/SSCustomExceptions.js ----------------------------------------
-
-
-if (SSInclude != undefined) SSLog('... complete.', SSInclude);
-
-if(__sysavail__) __sysavail__.files.push('SSCustomExceptions');
-
-if (SSInclude != undefined) SSLog('Including ../client/SSException.js...', SSInclude);
-
-// Start ../client/SSException.js ---------------------------------------------
-
-// ==Builder==
-// @optional
-// @name              SSException
-// @package           System
-// ==/Builder==
-
-var SSExceptionPrinter = new Class({
-  toString: function()
-  {
-    return ["["+this.name+"] message: " + this.message(), " fileName:" + this.fileName(), " lineNumber: " + this.lineNumber(), this.originalError().message].join(", ");
-  }
-});
-
-var SSException = new Class({
-  
-  name: 'SSException',
-
-  Implements: SSExceptionPrinter,
-    
-  initialize: function(_error)
-  {
-    this.theError = _error;
-  },
-    
-  setMessage: function(msg)
-  {
-    this.__message__ = msg; 
-  },
-  
-  message: function()
-  {
-    return this.__message__ || (this.theError && this.theError.message) || 'n/a';
-  },
-  
-  fileName: function()
-  {
-    return (this.theError && this.theError.fileName) || 'n/a';
-  },
-
-  lineNumber: function()
-  {
-    return (this.theError && this.theError.lineNumber) || 'n/a';
-  },
-  
-  originalError: function()
-  {
-    return this.theError;
-  }
-  
-});
-
-// End ../client/SSException.js -----------------------------------------------
-
-
-if (SSInclude != undefined) SSLog('... complete.', SSInclude);
-
-if(__sysavail__) __sysavail__.files.push('SSException');
-
-if (SSInclude != undefined) SSLog('Including ../client/Element.js...', SSInclude);
-
-// Start ../client/Element.js -------------------------------------------------
+// Start ../client/ShiftSpaceElement.js ---------------------------------------
 
 // ==Builder==
 // @required
@@ -1063,12 +1000,74 @@ function SSIsNotSSElement(node)
   return !SSIsSSElement(node);
 }
 
-// End ../client/Element.js ---------------------------------------------------
+// End ../client/ShiftSpaceElement.js -----------------------------------------
 
 
 if (SSInclude != undefined) SSLog('... complete.', SSInclude);
 
-if(__sysavail__) __sysavail__.files.push('Element');
+if(__sysavail__) __sysavail__.files.push('ShiftSpaceElement');
+
+if (SSInclude != undefined) SSLog('Including ../client/SSException.js...', SSInclude);
+
+// Start ../client/SSException.js ---------------------------------------------
+
+// ==Builder==
+// @optional
+// @name              SSException
+// @package           System
+// ==/Builder==
+
+var SSExceptionPrinter = new Class({
+  toString: function()
+  {
+    return ["["+this.name+"] message: " + this.message(), " fileName:" + this.fileName(), " lineNumber: " + this.lineNumber(), (this.originalError() && this.originalError().message) || 'no original error'].join(", ");
+  }
+});
+
+var SSException = new Class({
+  
+  name: 'SSException',
+
+  Implements: SSExceptionPrinter,
+    
+  initialize: function(_error)
+  {
+    this.theError = _error;
+  },
+    
+  setMessage: function(msg)
+  {
+    this.__message__ = msg; 
+  },
+  
+  message: function()
+  {
+    return this.__message__ || (this.theError && this.theError.message) || 'n/a';
+  },
+  
+  fileName: function()
+  {
+    return (this.theError && this.theError.fileName) || 'n/a';
+  },
+
+  lineNumber: function()
+  {
+    return (this.theError && this.theError.lineNumber) || 'n/a';
+  },
+  
+  originalError: function()
+  {
+    return this.theError;
+  }
+  
+});
+
+// End ../client/SSException.js -----------------------------------------------
+
+
+if (SSInclude != undefined) SSLog('... complete.', SSInclude);
+
+if(__sysavail__) __sysavail__.files.push('SSException');
 
 if (SSInclude != undefined) SSLog('Including ../client/EventProxy.js...', SSInclude);
 
@@ -1970,6 +1969,46 @@ function SSControllerForNode(_node)
 if (SSInclude != undefined) SSLog('... complete.', SSInclude);
 
 if(__sysavail__) __sysavail__.files.push('SandalphonSupport');
+
+if (SSInclude != undefined) SSLog('Including ../client/SSCustomExceptions.js...', SSInclude);
+
+// Start ../client/SSCustomExceptions.js --------------------------------------
+
+// ==Builder==
+// @optional
+// @name              SSCustomExceptions
+// @package           System
+// @dependencies      SSException
+// ==/Builder==
+
+var SSSpaceDoesNotExistError = new Class({
+  Extends: SSException,
+  
+  name: 'SSSpaceDoesNotExistError',
+  
+  initialize: function(_error, spaceName)
+  {
+    this.parent(_error);
+    this.spaceName = spaceName;
+  },
+  
+  message: function()
+  {
+    return "Space " + this.spaceName + " does not exist.";
+  }
+
+});
+
+var ShiftDoesNotExistError = new Class({
+  
+});
+
+// End ../client/SSCustomExceptions.js ----------------------------------------
+
+
+if (SSInclude != undefined) SSLog('... complete.', SSInclude);
+
+if(__sysavail__) __sysavail__.files.push('SSCustomExceptions');
 
 if (SSInclude != undefined) SSLog('Including ../client/SSViewProxy.js...', SSInclude);
 
@@ -5365,6 +5404,8 @@ if (SSInclude != undefined) SSLog('Including ../client/core/PostInitDeclarations
 // @optional
 // @name              PostInitDeclarations
 // ==/Builder==
+
+if(typeof ShiftSpace == 'undefined') ShiftSpace = {};
 
 // new additions for Sandalphon
 ShiftSpace.UI = {}; // holds all UI class objects
@@ -9766,7 +9807,7 @@ if (SSInclude != undefined) SSLog('Including ../client/SSView.js...', SSInclude)
 // @required
 // @name	            SSView
 // @package           ShiftSpaceCoreUI
-// @dependencies      SandalphonCore, SSLog
+// @dependencies      SandalphonCore, SSLog, PreInitDeclarations, UtilityFunctions
 // ==/Builder==
 
 var SSView = new Class({
@@ -9780,7 +9821,8 @@ var SSView = new Class({
     SSLog('Returning defaults', SSLogViewSystem);
     var temp = {
       context: null,
-      generateElement: true
+      generateElement: true,
+      suppress: false
     };
     return temp;
   },
@@ -12007,6 +12049,1466 @@ if(__sysavail__) __sysavail__.files.push('SSListView');
 
 
 // === START PACKAGE [ShiftSpaceUI] ===
-// PROJECT OVERRIDE -- INCLUDING PACKAGE MoMAUI INSTEAD
 
-if(__sysavail__) __sysavail__.packages.push("MoMAUI");
+if(__sysavail__) __sysavail__.packages.push("ShiftSpaceUI");
+
+if (SSInclude != undefined) SSLog('Including ../client/customViews/ActionMenu/ActionMenu.js...', SSInclude);
+
+// Start ../client/customViews/ActionMenu/ActionMenu.js -----------------------
+
+// ==Builder==
+// @uiclass
+// @customView
+// @optional
+// @name              ActionMenu
+// @package           ShiftSpaceUI
+// @dependencies      SSView
+// ==/Builder==
+
+var ActionMenu = new Class({
+  
+  Extends: SSView,
+  
+  initialize: function(el, options) 
+  {
+    this.parent(el);
+    
+    this.selected = [];
+    this.menuBuilt = false;
+    
+    ShiftSpace.User.addEvent('onUserLogin', this.updateMenu.bind(this));
+    ShiftSpace.User.addEvent('onUserLogout', this.updateMenu.bind(this));
+    
+    // Load the interface if not in Sandalphon
+    if($type(SandalphonToolMode) == 'undefined')
+    {
+      SSLog('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++', SSLogForce);
+      Sandalphon.load('/client/customViews/ActionMenu/ActionMenu.html', this.buildInterface.bind(this));
+    }
+  },
+  
+  
+  awake: function(context)
+  {
+    // in Sandalphon tool mode we're not iframed, in ShiftSpace we are
+    if((context == window && typeof SandalphonToolMode != 'undefined') ||
+       (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
+    {
+      this.linkButton = this.outlets().get('SSLinkToShiftButton');
+      this.trailButton = this.outlets().get('SSTrailShiftButton');
+      this.deliciousButton = this.outlets().get('SSDeliciousButton');
+      this.twitterButton = this.outlets().get('SSTwitterButton');
+      this.editButton = this.outlets().get('SSEditShiftButton');
+      this.deleteButton = this.outlets().get('SSDeleteShiftButton');
+      this.privacyButtons = this.outlets().get('privacy');
+      this.batchPrivacy = this.outlets().get('SSSetBatchPrivacy');
+      this.privateButton = this.outlets().get('SSSetShiftPrivateButton');
+      this.publicButton = this.outlets().get('SSSetShiftPublicButton');
+      
+      // initialize the dropdown
+      this.dropdown = this.outlets().get('privacy');
+      this.dropdown.addEvent('click', this.updatePrivacyMenu.bind(this, [true]));
+
+      this.attachEvents();
+      this.initFx();
+    }
+  },
+  
+  
+  initFx: function()
+  {
+    this.element.set('tween', {
+      duration: 300,
+      transition: Fx.Transitions.linear,
+      onStart: function()
+      {
+        this.element.setStyle('height', 0);
+        this.element.setStyle('overflow', 'hidden');
+        this.element.setStyle('display', 'block');
+      }.bind(this),
+      onComplete: function()
+      {
+        this.element.setStyle('overflow', 'visible');
+      }.bind(this)
+    });
+    
+    /*
+    $(this.doc.getElementById('scroller')).set('tween', {
+      duration: 300,
+      transition: Fx.Transitions.linear,
+      onStart: function()
+      {
+        $(this.doc.getElementById('scroller')).setStyle('top', 0);
+        $(this.doc.getElementById('scroller')).setStyle('position', 'absolute');
+      }.bind(this),
+      onComplete: function()
+      {
+        $(this.doc.getElementById('scroller')).setStyle('position', '');
+        $(this.doc.getElementById('scroller')).addClass('withActions');
+      }.bind(this)
+    });
+    */
+  },
+  
+  
+  buildMenu: function() 
+  {
+    this.attachEvents();
+  },
+  
+  
+  attachEvents: function()
+  {
+    this.linkButton.addEvent('click', this.linkToShift.bind(this));
+    this.editButton.addEvent('click', this.editShift.bind(this));
+    this.deleteButton.addEvent('click', this.deleteShifts.bind(this));
+    this.trailButton.addEvent('click', this.trailShift.bind(this));
+    //this.initTwitterButton();
+    //this.initDeleteButton();
+    
+    // Privacy changes
+    this.privateButton.addEvent('click', this.makePrivate.bind(this));
+    this.publicButton.addEvent('click', this.makePublic.bind(this));
+  },
+  
+  
+  linkToShift: function()
+  {
+    // Link
+    if(!this.linkButton.hasClass('disabled'))
+    {
+      window.open(ShiftSpace.info().server + 'sandbox?id=' + this.selected[0]);
+    }
+    this.clearAndHide();
+  },
+  
+  
+  editShift: function()
+  {
+    // Edit
+    if(SSEditShift)
+    {
+      if(!this.editButton.hasClass('disabled'))
+      {
+        SSEditShift(this.selected[0]);
+      }
+      this.clearAndHide();
+    }
+  },
+  
+  
+  deleteShifts: function()
+  {
+    // Delete
+    if(SSDeleteShift)
+    {
+      if(!this.deleteButton.hasClass('disabled'))
+      {
+        var str = 'this shift';
+        if(this.selected.length > 1)
+        {
+          str = 'these shifts';
+        }
+        if(confirm('Are you sure want to delete ' + str + '? There is no undo'))
+        {
+          this.selected.each(SSDeleteShift);
+          this.selected = [];
+        
+          this.updateMenu();
+          this.hideMenu();
+        }
+      }
+      this.clearAndHide();
+    }
+  },
+  
+  
+  trailShift: function()
+  {
+    if(plugins && plugins.attempt)
+    {
+      plugins.attempt({
+        name: 'Trails', 
+        method: 'newTrail', 
+        args: this.selected[0],
+        callback: null
+      });
+      this.clearAndHide();
+    }
+  },
+  
+  
+  initDeliciousButton: function()
+  {
+    if(plugins && plugins.attempt)
+    {
+      this.deliciousButton.addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+      
+        plugins.attempt({
+          name: "Delicious", 
+          method: 'showDeliciousWindow',
+          args: this.selected[0],
+          callback: null
+        });
+      }.bind(this));
+    }
+  },
+  
+  
+  initTwitterButton: function()
+  {
+    if(plugins && plugins.attempt)
+    {
+      this.twitterButton.addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+      
+        plugins.attempt({
+          name: 'Twitter', 
+          method: "show", 
+          args: this.selected[0],
+          callback: null 
+        });
+      }.bind(this));
+    }
+  },
+  
+  
+  makePrivate: function()
+  {
+    if(this.privacyButtons.hasClass('toggleMenu') ||
+       this.privacyButtons.hasClass('batchMenu'))
+    {
+      SSLog('makePrivate');
+      // update the contents of the menu based on the current selections
+      this.selected.each(function(shiftId) {
+        SSSetShiftStatus(shiftId, 2);
+      });
+      
+      this.clearAndHide();
+    }
+  },
+  
+  
+  makePublic: function()
+  {
+
+    if(this.privacyButtons.hasClass('toggleMenu') ||
+       this.privacyButtons.hasClass('batchMenu'))
+    {
+      SSLog('makePublic');
+      // update the contents of the menu based on the current selections
+      this.selected.each(function(shiftId) {
+        SSSetShiftStatus(shiftId, 1);
+      });
+      
+      this.clearAndHide();
+    }
+  },
+
+  
+  setIsVisible: function(val) 
+  {
+    this.__visible__ = val;
+  },
+  
+
+  isVisible: function() 
+  {
+    return this.__visible__;
+  },
+  
+
+  select: function(shiftId) 
+  {
+    this.selected.push(shiftId);
+    SSLog('select');
+    this.showMenu();
+    this.updateMenu();
+  },
+  
+
+  deselect: function(shiftId) 
+  {
+    this.selected.remove(shiftId);
+    if (this.selected.length == 0) 
+    {
+      this.hideMenu();
+    }
+    else
+    {
+      this.updateMenu();
+    }
+  },
+  
+
+  showMenu: function() 
+  {
+    if(!this.isVisible())
+    {
+      this.setIsVisible(true);
+      if (!this.menuBuilt) 
+      {
+        this.buildMenu();
+        this.menuBuilt = true;
+      }
+      
+      this.element.tween('height', 22);
+      //$(this.doc.getElementById('scroller')).tween('top', 23);
+    }
+  },
+  
+  
+  hideMenu: function() 
+  {
+    this.setIsVisible(false);
+    this.updatePrivacyMenu();
+    
+    this.element.tween('height', 0);
+    //$(this.doc.getElementById('scroller')).tween('top', 0);
+  },
+
+  
+  updateMenu: function() 
+  {
+    if(this.isVisible())
+    {
+      // update the contents of the menu based on the current selections
+      var selectedShifts = SSGetPageShifts(this.selected);
+      if(selectedShifts && selectedShifts.length > 0)
+      {
+        var notTheLoggedInUser = function(x) {
+          return x.username != ShiftSpace.User.getUsername();        
+        };
+
+        var usernames = selectedShifts.filter(notTheLoggedInUser);      
+        if(usernames.length > 0)
+        {
+          this.disablePrivelegedButton();
+        }
+        else
+        {
+          this.enablePrivelegedButtons();
+        }
+        
+        if(selectedShifts.length > 1)
+        {
+          this.linkButton.addClass('disabled')
+          this.trailButton.addClass('disabled');
+          this.editButton.addClass('disabled');
+        }
+        else
+        {
+          this.linkButton.removeClass('disabled');
+          this.trailButton.removeClass('disabled');
+          if(SSUserOwnsShift(this.selected[0])) this.editButton.removeClass('disabled');
+        }
+        
+        if(selectedShifts.length >= 1 && 
+          (this.privacyButtons.hasClass('toggleMenu') ||
+           this.privacyButtons.hasClass('batchMenu'))) 
+           this.updatePrivacyMenu();
+           
+        this.updatePrivacyButtons(selectedShifts);
+      }
+    }
+  },
+  
+  
+  updatePrivacyButtons: function(selectedShifts)
+  {
+    if(selectedShifts.length == 1)
+    {
+      var newTopLevelButton;
+      if(selectedShifts[0].status == 1)
+      {
+        this.publicButton.addClass('selected');
+        this.publicButton.addClass('first');
+        this.privateButton.removeClass('selected');
+        this.privateButton.removeClass('first');
+        newTopLevelButton = this.publicButton;
+      }
+      else
+      {
+        this.publicButton.removeClass('selected');
+        this.publicButton.removeClass('first');
+        this.privateButton.addClass('selected');
+        this.privateButton.addClass('first');
+        newTopLevelButton = this.privateButton;
+      }
+      
+      this.batchPrivacy.removeClass('first');
+      this.batchPrivacy.removeClass('selected');
+      
+      newTopLevelButton.remove();
+      newTopLevelButton.injectTop(this.privacyButtons);
+    }
+    else if(selectedShifts.length > 1)
+    {
+      this.privateButton.removeClass('first');
+      this.privateButton.removeClass('selected');
+      this.publicButton.removeClass('first');
+      this.publicButton.removeClass('selected');
+      
+      this.batchPrivacy.remove();
+      this.batchPrivacy.injectTop(this.privacyButtons);
+      this.batchPrivacy.addClass('first');
+      this.batchPrivacy.addClass('selected');
+    }
+  },
+  
+
+  enablePrivelegedButtons: function()
+  {
+    this.setDisabledPrivilegedButtons(false);
+  },
+  
+  
+  disablePrivelegedButton: function()
+  {
+    this.setDisabledPrivilegedButtons(true);
+  },
+  
+
+  setDisabledPrivilegedButtons: function(disabled)
+  {
+    var method = (disabled == true && 'addClass') || (disabled == false  && 'removeClass') || null;
+    
+    if(!method) return;
+    
+    // logged in and owns all the selected shifts
+    this.editButton[method]('disabled');
+    this.deleteButton[method]('disabled');
+    this.privacyButtons[method]('disabled');
+    /*
+    this.publicButton[method]('disabled');
+    this.privateButton[method]('disabled');
+    */
+  },
+  
+  
+  clearAndHide: function()
+  {
+    ShiftSpace.Console.clearSelections();
+    this.selected = [];
+    this.hideMenu();
+  },
+  
+
+  updatePrivacyMenu: function(click) 
+  {
+    SSLog('updatePrivacyMenu');
+    if(!this.privacyButtons.hasClass('disabled'))
+    {
+      if(this.selected.length == 1)
+      {
+        if(!this.privacyButtons.hasClass('toggleMenu'))
+        {
+          this.privacyButtons.removeClass('batchMenu');
+          this.privacyButtons.addClass('toggleMenu')
+        }
+        else if(click)
+        {
+          this.privacyButtons.removeClass('toggleMenu');
+        }
+      }
+      else if(this.selected.length > 1)
+      {
+        if(!this.privacyButtons.hasClass('batchMenu'))
+        {
+          this.privacyButtons.removeClass('toggleMenu');
+          this.privacyButtons.addClass('batchMenu');
+        }
+        else if(click)
+        {
+          this.privacyButtons.removeClass('batchMenu');
+        }
+      }
+      else
+      {
+        // no selections
+        this.privacyButtons.removeClass('batchMenu');
+        this.privacyButtons.removeClass('toggleMenu');
+      }
+    }
+  }
+  
+});
+
+// Add it the global UI class lookup
+if($type(ShiftSpace.UI) != 'undefined')
+{
+  ShiftSpace.UI.ActionMenu = ActionMenu;
+}
+
+// End ../client/customViews/ActionMenu/ActionMenu.js -------------------------
+
+
+if (SSInclude != undefined) SSLog('... complete.', SSInclude);
+
+if(__sysavail__) __sysavail__.files.push('ActionMenu');
+
+if (SSInclude != undefined) SSLog('Including ../client/views/SSConsole/SSConsole.js...', SSInclude);
+
+// Start ../client/views/SSConsole/SSConsole.js -------------------------------
+
+// ==Builder==
+// @uiclass
+// @optional
+// @name              SSConsole
+// @package           ShiftSpaceUI
+// ==/Builder==
+
+var SSConsole = new Class({
+
+  name: 'SSConsole',
+
+  Extends: SSView,
+
+  initialize: function(el, options)
+  {
+    SSLog("INSTANTIATING SSConsole", SSLogMessage);
+    SSLog("Calling parent", SSLogMessage);
+    
+    // only really relevant under Sandalphon
+    if(typeof SandalphonToolMode == 'undefined')
+    {
+      this.parent(el, options);
+    }
+    else
+    {
+      this.parent(el, $merge(options, {
+        generateElement: false
+      }));
+    }
+
+    // if not tool mode, we load the interface ourselve
+    SSLog("Loading interface", SSLogMessage);
+    if(typeof SandalphonToolMode == 'undefined')
+    {
+      Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
+    }
+
+    // listen for login/logout events, pass in reference to self
+    // so that ShiftSpace notifies after this object's awake method has been called
+    // this is because outlets won't be set until that point
+    SSLog('Adding SSConsole events', SSLogMessage);
+    SSAddEvent('onUserLogin', this.handleLogin.bind(this), this);
+    SSAddEvent('onUserLogout', this.handleLogout.bind(this), this);
+    
+    // listen for shift events
+    SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));
+    SSAddEvent('onShiftHide', this.deselectShift.bind(this))
+
+    // listen for global events as well
+
+    // allocate datasource for page shifts
+    SSLog('Adding datasources', SSLogMessage);
+    this.allShiftsDatasource = new SSTableViewDatasource({
+      dataKey: 'shifts',
+      dataUpdateKey: 'id',
+      dataUpdateURL: 'shift.update',
+      dataProviderURL: 'shift.query',
+      dataNormalizer: this.legacyNormalizer
+    });
+
+    // allocate datasource for user shifts
+    this.myShiftsDatasource = new SSTableViewDatasource({
+      dataKey: 'shifts',
+      dataUpdateKey: 'id',
+      dataUpdateURL: 'shift.update',
+      dataProviderURL: 'shift.query',
+      dataNormalizer: this.legacyNormalizer,
+      requiredProperties: ['username']
+    });
+    
+    SSLog('Done with initialization', SSLogMessage);
+  },
+  
+  
+  awake: function(context)
+  {
+    this.parent();
+    
+    // in Sandalphon tool mode we're not iframed, in ShiftSpace we are
+    if((context == window && typeof SandalphonToolMode != 'undefined') ||
+       (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
+    {
+      if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
+      if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
+      if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
+      if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
+      if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
+      if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
+      if(this.outlets().get('SSSetServers')) this.initSetServersForm();
+      if(this.outlets().get('SSUserLoginStatus')) this.initUserLoginStatus();
+    }
+  },
+
+
+  handleLogin: function()
+  {
+    console.log('HANDLE LOGIN');
+    // empty the login form
+    this.emptyLoginForm();
+    // hide the login tab
+    this.outlets().get('MainTabView').hideTabByName('LoginTabView');
+    // update the datasource
+    if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpace.User.getUsername());
+    // switch to the tab view
+    this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
+    
+    // update login status
+    var loginStatus = this.outlets().get('SSUserLoginStatus');
+    if(loginStatus)
+    {
+      loginStatus.getElementById('SSUserIsNotLoggedIn').removeClass('SSActive');
+      var isLoggedIn = loginStatus.getElementById('SSUserIsLoggedIn');
+      isLoggedIn.addClass('SSActive');
+      isLoggedIn.getElement('span').set('text', ShiftSpace.User.getUsername());
+    }
+  },
+
+
+  handleLogout: function()
+  {
+    // empty the login form
+    this.emptyLoginForm();
+    // reveal the login tab
+    this.outlets().get('MainTabView').revealTabByName('LoginTabView');
+    // update data source
+    if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', null);
+    // refresh the main tab view
+    this.outlets().get('MainTabView').refresh();
+    
+    // update login status
+    var loginStatus = this.outlets().get('SSUserLoginStatus');
+    if(loginStatus)
+    {
+      loginStatus.getElementById('SSUserIsNotLoggedIn').addClass('SSActive');
+      loginStatus.getElementById('SSUserIsLoggedIn').removeClass('SSActive');
+    }
+  },
+
+
+  setAllShiftsTableView: function(tableView)
+  {
+    var properties = (typeof SandalphonToolMode == 'undefined' ) ? {href:window.location} : {href:server+'sandbox/index.php'};
+
+    this.allShiftsTableView = tableView;
+    tableView.setDelegate(this);
+    tableView.setDatasource(this.allShiftsDatasource);
+    this.allShiftsDatasource.setProperties(properties);
+    this.allShiftsDatasource.fetch();
+  },
+
+
+  setMyShiftsTableView: function(tableView)
+  {
+    this.myShiftsTableView = tableView;
+    tableView.setDelegate(this);
+    tableView.setDatasource(this.myShiftsDatasource);
+    this.myShiftsDatasource.fetch();
+  },
+
+
+  initLoginForm: function()
+  {
+    // catch click
+    this.outlets().get('SSLoginFormSubmit').addEvent('click', this.handleLoginFormSubmit.bind(this));
+
+    // catch enter
+    this.outlets().get('SSLoginForm').addEvent('submit', function(_evt) {
+      var evt = new Event(_evt);
+      evt.preventDefault();
+      this.handleLoginFormSubmit();
+    }.bind(this));
+
+    // listen for tabSelected events so we can clear out the login form
+    this.outlets().get('LoginTabView').addEvent('tabSelected', this.handleTabSelect.bind(this));
+  },
+  
+  
+  initSetServersForm: function()
+  {
+    var apiField = this.outlets().get('SSSetApiURLField');
+    var spacesDirField = this.outlets().get('SSSetSpaceDirField');
+    
+    if(ShiftSpace.info)
+    {
+      apiField.setProperty('value', ShiftSpace.info().server);
+      spacesDirField.setProperty('value', ShiftSpace.info().spacesDir);
+
+      // add keydown event handlers on them for carraige return
+      apiField.addEvent('keydown', function(_evt) {
+        var evt = new Event(_evt);
+        var previousValue = SSGetValue('server', ShiftSpace.info().server);
+        if(evt.key == 'enter')
+        {
+          console.log('Update the api variable. prev: ' + previousValue);
+        }
+      }.bind(this));
+
+      spacesDirField.addEvent('keydown', function(_evt) {
+        var evt = new Event(_evt);
+        var previousValue = SSGetValue('spacesDir', ShiftSpace.info().spacesDir);
+        if(evt.key == 'enter')
+        {
+          console.log('Update the space dir variable. prev:' + previousValue);
+        }
+      }.bind(this));
+    }
+  },
+  
+  
+  initUserLoginStatus: function()
+  {
+    
+  },
+
+
+  handleTabSelect: function(args)
+  {
+    if(args.tabView == this.outlets().get('LoginTabView') && args.tabIndex == 0)
+    {
+      this.emptyLoginForm();
+    }
+  },
+
+
+  emptyLoginForm: function()
+  {
+    this.outlets().get('SSLoginFormUsername').setProperty('value', '');
+    this.outlets().get('SSLoginFormPassword').setProperty('value', '');
+  },
+
+
+  handleLoginFormSubmit: function()
+  {
+    ShiftSpace.User.login({
+      username: this.outlets().get('SSLoginFormUsername').getProperty('value'),
+      password: this.outlets().get('SSLoginFormPassword').getProperty('value')
+    }, this.loginFormSubmitCallback.bind(this));
+  },
+
+
+  loginFormSubmitCallback: function(response)
+  {
+    console.log('Login call back!');
+    console.log(response);
+  },
+
+
+  initSignUpForm: function()
+  {
+    // catch click
+    this.outlets().get('SSSignUpFormSubmit').addEvent('click', this.handleSignUpFormSubmit.bind(this));
+    
+    // catch enter
+    this.outlets().get('SSLoginForm').addEvent('submit', function(_evt) {
+      var evt = new Event(_evt);
+      evt.preventDefault();
+      this.handleSignUpFormSubmit();
+    }.bind(this));
+  },
+
+
+  handleSignUpFormSubmit: function()
+  {
+    var joinInput = {
+      username: this.outlets().get('SSSignUpFormUsername').getProperty('value'),
+      email: this.outlets().get('SSSignUpFormEmail').getProperty('value'),
+      password: this.outlets().get('SSSignUpFormPassword').getProperty('value'),
+      password_again: this.outlets().get('SSSignUpFormPassword').getProperty('value')
+    };
+
+    ShiftSpace.User.join(joinInput, this.signUpFormSubmitCallback.bind(this));
+  },
+
+
+  signUpFormSubmitCallback: function(response)
+  {
+    console.log('Joined!');
+    console.log(response);
+  },
+
+
+  initConsoleControls: function()
+  {
+    // init login/logout button
+    this.outlets().get('SSConsoleLoginOutButton').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        // logout the user
+        ShiftSpace.User.logout();
+      }
+      else
+      {
+        // select the login tab view
+        this.outlets().get('MainTabView').selectTabByName('LoginTabView');
+      }
+    }.bind(this));
+
+    // init bug report button
+
+    // init close button
+  },
+
+
+  initSelectLanguage: function()
+  {
+    // attach events to localization switcher
+    this.outlets().get('SSSelectLanguage').addEvent('change', function(_evt) {
+      var evt = new Event(_evt);
+      SSLoadLocalizedStrings(evt.target.getProperty('value'), this.element.contentWindow);
+    }.bind(this));
+  },
+  
+
+  buildInterface: function(ui)
+  {
+    SSLog("BUILD SSConsole interface");
+    
+    if($('SSConsole'))
+    {
+      throw new Error("Ooops it looks an instace of ShiftSpace is already running. Please turn off Greasemonkey or leave this page.");
+    }
+
+    // create the iframe where the console will live
+    this.element = new IFrame({
+      id: 'SSConsole'
+    });
+    // since we're creating the frame via code we need to hook up the controller
+    // reference manually
+    SSSetControllerForNode(this, this.element);
+    SSLog("Iframe injected");
+    this.element.injectInside(document.body);
+
+    // finish initialization after iframe load
+    this.element.addEvent('load', function() {
+      SSLog("SSConsole iframe loaded");
+      var context = this.element.contentWindow;
+
+      // under GM not wrapped, erg - David
+      if(!context.$)
+      {
+        context = new Window(context);
+        var doc = new Document(context.document);
+      }
+
+      // add the styles into the iframe
+      Sandalphon.addStyle(ui.styles, context);
+      
+      // grab the interface, strip the outer level, we're putting the console into an iframe
+      var fragment = Sandalphon.convertToFragment(ui['interface'], context).getFirst();
+      
+      // place it in the frame
+      $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
+      $(context.document.body).grab(fragment);
+      
+      // activate the iframe context: create controllers hook up outlets
+      Sandalphon.activate(context);
+      
+      // create the resizer
+      this.initResizer();
+    }.bind(this));
+  },
+  
+  
+  initResizer: function()
+  {
+    // place the resizer above the thing
+    var resizer = new ShiftSpace.Element('div', {
+      'id': 'SSConsoleResizer'
+    });
+    $(document.body).grab(resizer);
+    
+    resizer.makeDraggable({
+      modifiers: {x:'', y:'bottom'},
+      invert: true,
+      onStart: function()
+      {
+        SSAddDragDiv();
+      },
+      onComplete: function()
+      {
+        SSRemoveDragDiv();
+      }
+    });
+
+    // make the console resizeable
+    this.element.makeResizable({
+      handle: resizer,
+      modifiers: {x:'', y:'height'},
+      invert: true
+    });
+  },
+
+
+  userClickedRow: function(args)
+  {
+    
+  },
+
+
+  userSelectedRow: function(args)
+  {
+    console.log('MyTableViewDelegate, userClickedRow: ' + args.rowIndex);
+    var datasource = args.tableView.datasource();
+    if(args.tableView == this.allShiftsTableView)
+    {
+      console.log('all shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
+      // show the shift
+      if(typeof SSShowShift != 'undefined') 
+      {
+        console.log('show shift!');
+        SSShowShift(datasource.data()[args.rowIndex].id);
+      }
+    }
+    else if(args.tableView == this.myShiftsTableView)
+    {
+      console.log('my shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
+      // set a variable for opening this shift on the next page if the url is different
+    }
+  },
+
+
+  userDeselectedRow: function(args)
+  {
+    console.log('userDeselectedRow');
+    var datasource = args.tableView.datasource();
+    if(args.tableView == this.allShiftsTableView)
+    {
+      SSHideShift(datasource.data()[args.rowIndex].id);
+    }
+  },
+
+
+  canSelectRow: function(data)
+  {
+
+  },
+
+
+  canSelectColumn: function(data)
+  {
+
+  },
+
+
+  canEditRow: function(args)
+  {
+    console.log('canEditRow');
+    // in the all shifts table the user can edit only if she owns the shift
+    if(args.tableView == this.allShiftsTableView)
+    {
+      return (ShiftSpace.User.getUsername() == this.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));
+    }
+
+    return true;
+  },
+  
+  
+  getVisibleTableView: function()
+  {
+    if(this.allShiftsTableView.isVisible()) return this.allShiftsTableView;
+    if(this.myShiftsTableView.isVisible()) return this.myShiftsTableView;
+  },
+  
+  
+  refreshTableViews: function(shiftId)
+  {
+    var visibleTableView = this.getVisibleTableView();
+
+    if(visibleTableView)
+    {
+      // reload the table
+      visibleTableView.reload();
+    }
+  },
+  
+  
+  deselectShift: function(shiftId)
+  {
+    
+  }
+
+
+});
+
+// Create the object right away if we're not running under the Sandalphon tool
+if(typeof SandalphonToolMode == 'undefined')
+{
+  new SSConsole();
+}
+else
+{
+  // Add it the global UI class lookup
+  if($type(ShiftSpace.UI) != 'undefined')
+  {
+    ShiftSpace.UI.SSConsole = SSConsole;
+  }
+}
+
+
+
+// End ../client/views/SSConsole/SSConsole.js ---------------------------------
+
+
+if (SSInclude != undefined) SSLog('... complete.', SSInclude);
+
+if(__sysavail__) __sysavail__.files.push('SSConsole');
+
+if (SSInclude != undefined) SSLog('Including ../client/ShiftMenu.js...', SSInclude);
+
+// Start ../client/ShiftMenu.js -----------------------------------------------
+
+// ==Builder==
+// @required
+// @name              ShiftMenu
+// @package           ShiftSpaceUI
+// @dependencies      ShiftSpaceElement, EventProxy
+// ==/Builder==
+
+/*
+  Class: ShiftMenu
+    A singleton Class that represents the ShiftMenu. It is used to create new shifts.
+*/
+var ShiftMenu = new Class({
+  
+  /*
+    Function: initialize
+      Initializes the shift menu.
+  */
+  initialize: function(options) 
+  {
+    this.menuVisible = false;
+    this.spaceButtons = {};
+    
+    // we want to know about install and uninstall events
+    SSAddEvent('onSpaceInstall', this.addSpace.bind(this));
+    SSAddEvent('onSpaceUninstall', this.removeSpace.bind(this));
+  },
+  
+  /*
+    Function: buildMenu
+      Construct the shift menu interface.
+  */
+  buildMenu: function() 
+  {
+    this.element = new ShiftSpace.Element('div', {
+      id: 'SS_ShiftMenu',
+      styles: {
+        display: 'none'
+      }
+    });
+    this.element.addEvent('mouseover', function() {
+      this.element.style.display = 'block';
+      this.element.addClass('hover');
+    }.bind(this));
+    this.element.addEvent('mouseout', function() {
+      this.element.removeClass('hover');
+    }.bind(this));
+    
+    var container = new ShiftSpace.Element('div', {
+      'class': 'container',
+      styles: {
+        width: (26 * SSSpacesCount())
+      }
+    }).injectInside(this.element);
+    this.element.injectInside(document.body);
+    
+    new ShiftSpace.Element('br', {
+      styles: {
+        clear: 'both'
+      }
+    }).injectInside(container);
+    
+    for (var spaceName in installed) {
+      this.addSpace(spaceName);
+    }
+  },
+  
+  /*
+    Function: addSpace
+      Add a new space icon to the menu.
+      
+    Parameters:
+      spaceName - the name of Space as a string.
+  */
+  addSpace: function(spaceName) 
+  {
+    // TODO: we need the icon to not be separate from the space so that we can do incremental loading.
+    SSLog('adding space ' + spaceName);
+    var spaceAttrs = ShiftSpace.info(spaceName);
+    var container = this.element.firstChild;
+    var clear = container.getElementsByTagName('br')[0];
+    var button = new ShiftSpace.Element('div', {
+      'class': 'button',
+      'title': spaceAttrs.title
+    });
+    
+    var icon = new ShiftSpace.Element('img', {
+      src: spaceAttrs.icon
+    });
+    icon.injectInside(button);
+    button.injectBefore(clear);
+    this.spaceButtons[spaceName] = button;
+    
+    icon.addEvent('mouseover', function() {
+      button.addClass('hover');
+    });
+    
+    icon.addEvent('mouseout', function() {
+      button.removeClass('hover');
+    });
+    
+    icon.addEvent('click', function(e) {
+      if (!ShiftSpace.User.isLoggedIn()) {
+        window.alert('Sorry, you must be signed in to create new shifts.');
+        this.hide(true);
+        return;
+      }
+      if (SSCheckForUpdates()) {
+        return;
+      }
+      var event = new Event(e);
+      if(!SSSpaceForName(spaceName))
+      {
+        // we need to load the space first
+        SSLoadSpace(spaceName, function() {
+          SSInitShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
+        });
+      }
+      else
+      {
+        // just show it
+        SSInitShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
+      }
+      this.hide(true);
+    }.bind(this));
+  },
+  
+  /*
+    Function: removeSpace
+      Remove a space icon from the menu.
+      
+    Parameters:
+      spaceName - a space name as a string.
+  */
+  removeSpace: function(spaceName) 
+  {
+    this.spaceButtons[spaceName].remove();
+  },
+  
+  /*
+    Function: show
+      Show the menu.
+      
+    Parameters:
+      x - the current x mouse location.
+      y - the current y mouse location.
+  */
+  show: function(x, y) 
+  {
+    if (!this.element) 
+    {
+      return;
+    }
+    if (!this.menuVisible && !ShiftSpaceIsHidden()) 
+    {
+      this.menuVisible = true;
+      this.element.setStyles({
+        left: (x + 10) + 'px',
+        top: (y - 5) + 'px',
+        display: 'block'
+      });
+    }
+  },
+  
+  /*
+    Function: hide
+      hide the menu.
+      
+    Parameters:
+      forceHide - a boolean to force hide the menu.
+  */
+  hide: function(forceHide) {
+    if (!this.element) {
+      return;
+    }
+    if (forceHide || !this.element.hasClass('hover')) {
+      this.menuVisible = false;
+      this.element.setStyle('display', 'none');
+    }
+  }
+  
+});
+
+ShiftSpace.ShiftMenu = new ShiftMenu();
+
+
+// End ../client/ShiftMenu.js -------------------------------------------------
+
+
+if (SSInclude != undefined) SSLog('... complete.', SSInclude);
+
+if(__sysavail__) __sysavail__.files.push('ShiftMenu');
+
+// === END PACKAGE [ShiftSpaceUI] ===
+
+      
+      // Set up user event handlers
+      ShiftSpace.User.addEvent('onUserLogin', function() {
+        SSLog('ShiftSpace Login ======================================');
+        SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
+        // FIXME: Just make this into a onUserLogin hook - David
+        if(SSHasResource('RecentlyViewedHelpers'))
+        {
+          SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
+        }
+        SSFireEvent('onUserLogin');
+      });
+
+      ShiftSpace.User.addEvent('onUserLogout', function() {
+        SSFireEvent('onUserLogout');
+      });
+      
+      // Load CSS styles
+      SSLog('Loading core stylesheets', SSLogSystem);
+      SSLoadStyle('styles/ShiftSpace.css', function() {
+        // create the error window
+        SSCreateErrorWindow();
+      });
+      SSLoadStyle('styles/ShiftMenu.css');
+
+      SSLog('>>>>>>>>>>>>>>>>>>>>>>> Loading Spaces', SSLogSystem);
+      // Load all spaces and plugins immediately if in the sanbox
+      if (typeof ShiftSpaceSandBoxMode != 'undefined') 
+      {
+        for (var space in installed) 
+        {
+          SSLog('loading space ' + space, SSLogSystem);
+          SSLoadSpace(space);
+        }
+        for(var plugin in installedPlugins) 
+        {
+          SSLoadPlugin(plugin);
+        }
+      }
+
+      // If all spaces have been loaded, build the shift menu and the console
+      SSLog('Building ShiftMenu', SSLogSystem);
+      ShiftSpace.ShiftMenu.buildMenu();
+      
+      // hide all pinWidget menus on window click
+      window.addEvent('click', function() {
+        if(ShiftSpace.Console)
+        {
+          ShiftSpace.Console.hidePluginMenu.bind(ShiftSpace.Console)();
+          __pinWidgets__.each(function(x){
+            if(!x.isSelecting) x.hideMenu();
+          });
+        }
+      });
+
+      // create the pin selection bounding box
+      SSLog('Creating pin selection DOM', SSLogSystem);
+      SSCreatePinSelect();
+
+      // check for page iframes
+      SSCheckForPageIframes();
+
+      SSLog('Grabbing content');
+
+      // Create the modal div
+      SSLog('Create DOM for modal mode and dragging', SSLogSystem);
+      SSCreateModalDiv();
+      SSCreateDragDiv();
+      SSLog('ShiftSpace initialize complete');
+      
+      // Synch with server, 
+      SSLog('Synchronizing with server', SSLogSystem);
+      SSSynch();
+    };
+    
+    /*
+    Function: SSSynch
+      Synchronize with server: checks for logged in user.
+    */
+    function SSSynch() 
+    {
+      var params = {
+        href: window.location.href
+      };
+      SSServerCall('query', params, function(json) {
+        SSLog('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
+        
+        if (!json.status) 
+        {
+          console.error('Error checking for content: ' + json.message);
+          return;
+        }
+
+        if (json.username)
+        {
+          // Set private user variable
+          ShiftSpace.User.setUsername(json.username);
+          ShiftSpace.User.setEmail(json.email);
+
+          // fire user login for the Console
+          if (__consoleIsWaiting__)
+          {
+            SSFireEvent('onUserLogin', {status:1});
+          }
+
+          // make sure default shift status preference is set
+          SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
+        }
+        SSLog('+++++++++++++++++++++++++++++++++++++++++++ exit SSynch');
+      });
+    }
+
+    // TODO: write some documentation here
+    function SSCheckForUpdates()
+    {
+      // Only check once per page load
+      if (alreadyCheckedForUpdate) 
+      {
+        return false;
+      }
+      alreadyCheckedForUpdate = true;
+
+      var now = new Date();
+      var lastUpdate = SSGetValue('lastCheckedForUpdate', now.getTime());
+
+      // Only check every 24 hours
+      if (lastUpdate - now.getTime() > 86400)
+      {
+        SSSetValue('lastCheckedForUpdate', now.getTime());
+
+        GM_xmlhttpRequest({
+          method: 'POST',
+          url: server + 'shiftspace.php?method=version',
+          onload: function(rx)
+          {
+            if (rx.responseText != version)
+            {
+              if (confirm('There is a new version of ShiftSpace available. Would you like to update now?'))
+              {
+                window.location = 'http://www.shiftspace.org/api/shiftspace.php?method=shiftspace.user.js';
+              }
+            }
+          }
+        });
+
+        return true;
+      }
+      return false;
+    };
+
+    /*
+    Function: SSClearCache
+      Expunge previously stored files.
+
+    Parameters:
+        url - (Optional) The URL of the file to remove. If not specified, all
+              files in the cache will be deleted.
+    */
+    function SSClearCache(url) 
+    {
+      if (typeof url == 'string') 
+      {
+        // Clear a specific file from the cache
+        log('Clearing ' + url + ' from cache');
+        SSSetValue('cache.' + url, 0);
+      } 
+      else 
+      {
+        // Clear all the files from the cache
+        cache.each(function(url) {
+          log('Clearing ' + url + ' from cache');
+          SSSetValue('cache.' + url, 0);
+        });
+      }
+    };
+
+    // In sandbox mode, expose something for easier debugging.
+    if (typeof ShiftSpaceSandBoxMode != 'undefined')
+    {
+      this.spaces = SSAllSpaces();
+      this.shifts = shifts;
+      this.SSSetValue = SSSetValue;
+      this.SSGetValue = SSGetValue;
+      this.plugins = plugins;
+      unsafeWindow.ShiftSpace = this;
+      
+      // For Sandbox export classes
+      this.Space = ShiftSpace.Space;
+      this.Shift = ShiftSpace.Shift;
+      this.Plugin = ShiftSpace.Plugin;
+
+      this.SSGetShift = SSGetShift;
+      this.SSGetPageShifts = SSGetPageShifts;
+      this.SSHideShift = SSHideShift;
+      this.SSDeleteShift = SSDeleteShift;
+      this.SSEditShift = SSEditShift;
+      this.SSShowShift = SSShowShift;
+      this.SSUserOwnsShift = SSUserOwnsShift;
+      this.SSSetShiftStatus = SSSetShiftStatus;
+      this.sys = __sys__;
+      this.SSHasResource = SSHasResource;
+      this.SSResourceExists = SSResourceExists;
+      
+      // export SSLog
+      window.SSLog = SSLog;
+    }
+
+    return this;
+})();
+
+// NOTE: For Safari & Firefox 3.1 to keep SS extensions out of private scope - David
+ShiftSpace.__externals__ = {
+  evaluate: function(external, object)
+  {
+    with(ShiftSpace.__externals__)
+    {
+      eval(external);
+    }
+  }
+};
+
+// For errors in Safari because many errors are silent in GreaseKit
+function SSDescribeException(_exception)
+{
+  var temp = [];
+  for(var prop in _exception)
+  {
+    temp.push(prop + ':' + _exception[prop]);
+  }
+  return "Exception:{ " + temp.join(', ') +" }";
+}
+
+if(self == top)
+{
+  // if in sandbox mode need to wait until the window is ready to open
+  if(typeof ShiftSpaceSandBoxMode != 'undefined')
+  {
+    window.addEvent('domready', function(){
+      ShiftSpace.initialize();
+    });
+  }
+  else
+  {
+    try
+    {
+      console.log('starting up');
+      ShiftSpace.initialize();
+    }
+    catch(exc)
+    {
+      console.error("Unable to install ShiftSpace :(, " + SSDescribeException(exc));
+    }
+  }
+}
