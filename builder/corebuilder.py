@@ -38,6 +38,7 @@ class SSCoreBuilder():
 
   def __init__(self):
     self.packages = {}
+    self.tests = []
 
     self.BUILDER_BEGIN_PATTERN = re.compile("\/\/\s*==Builder==")
     self.BUILDER_END_PATTERN = re.compile("\/\/\s*==\/Builder==")
@@ -74,12 +75,12 @@ class SSCoreBuilder():
 
           self.packages[package].append(name)
 
-        directives['path'] = path;
+        directives['path'] = path
 
-#        if directives.has_key('test'):
-#          self.tests.append(directives
+        if directives.has_key('test'):
+          self.tests.append(name)
         
-        self.metadata[name] = directives;
+        self.metadata[name] = directives
         
         break;
 
@@ -276,7 +277,7 @@ class SSCoreBuilder():
     
     self.testDependencies = {}
     
-    for testFile in self.metadata.keys():
+    for testFile in self.tests:
       print "Calculating test dependency: %s" % testFile
       metadata = self.metadata[testFile]
       self.testDependencies[testFile] = []
