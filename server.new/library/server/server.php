@@ -39,7 +39,7 @@ class Base_Server extends Base {
     foreach ($this->stores as $name => $config) {
       $config['_server'] = $this;
       $config['_name'] = $name;
-      $this->$name = Store::factory($config);
+      $this->$name = Base_Store::factory($config);
     }
   }
   

@@ -6,8 +6,8 @@ if (!defined('BASE_DIR')) {
 
 if (!function_exists('__autoload')) {
   function __autoload($class) {
-    if (!strpos($class, '_') && file_exists(BASE_DIR . "/$class.php")) {
-      require_once BASE_DIR . "/$class.php";
+    if (!strpos($class, '_') && file_exists(BASE_DIR . "/app/$class.php")) {
+      require_once BASE_DIR . "/app/$class.php";
     } else if (strpos($class, 'Base_') === 0) {
       $name = substr($class, 5);
       require_once BASE_DIR . "/library/$name/$name.php";
@@ -64,8 +64,10 @@ class Base {
       } else {
         return null;
       }
-    } else {
+    } else if (isset($this->$key)) {
       return $this->$key;
+    } else {
+      return null;
     }
   }
   
@@ -80,7 +82,7 @@ class Base {
     } else if (is_subclass_of($this, 'Object')) {
       $this->contents['values'][$key] = $value;
     } else {
-      return $this->$key = $value;
+      $this->$key = $value;
     }
   }
   

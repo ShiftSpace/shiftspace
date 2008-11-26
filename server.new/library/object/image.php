@@ -20,7 +20,7 @@ class Image_Object extends Base_Object {
   function getColors() {
     $colors = array();
     for ($i = 0; $i < imagecolorstotal($this->im); $i++) {
-      $colors[] = imagecolorsforindex($i);
+      $colors[] = imagecolorsforindex($this->im, $i);
     }
     return $colors;
   }
