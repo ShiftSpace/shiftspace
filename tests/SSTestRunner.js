@@ -7,7 +7,7 @@ var SSTestRunner = new Class({
   },
 
   
-  loadTest: function(path)
+  loadTest: function(path, env)
   {
     // first look for the file in the package json
     
@@ -23,7 +23,7 @@ var SSTestRunner = new Class({
     var base = testname.split('.')[0];
     
     new Request({
-      url: "../builder/build_test.php?env=dev_avital&test=" + base,
+      url: "../builder/build_test.php?env=" + env + "&test=" + base,
       method: "get",
       onComplete: function(responseText, responseXML)
       {
