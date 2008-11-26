@@ -32,8 +32,6 @@ class SSPreProcessor:
     return line
   
   def includeFile(self, incFilename):
-    print incFilename
-  
     flen = len(incFilename);
     logline1 = "\nif (SSInclude != undefined) SSLog('Including %s...', SSInclude);\n" % incFilename 
     prefix = ("\n// Start %s " % incFilename) + (69 - flen) * '-' + "\n\n"
