@@ -645,6 +645,8 @@ SSUnitTest.TestCase = new Class({
     this.__tests.each(function(testData, testName) {
       this.__onStart__(testData.get('function'));
       
+      var failed = false;
+      
       // catch errors in setup, bail if there are any
       try
       {
@@ -662,12 +664,18 @@ SSUnitTest.TestCase = new Class({
       }
       catch(err)
       {
-        console.error("Uncaught exception in test " + testName + " in testcase " + this.name + '.');
-        console.error(err);
+        testData.set('message', "Uncaught exception in test: " + err);
+        failed = true;
       }
       
-      // default to success, if the test failed this won't do anything
-      this.__setTestSuccess__(testData['function']);
+      if(failed)
+      {
+        this.__setTestFail__(testData['function']);
+      }
+      else
+      {
+        this.__setTestSuccess__(testData['function']);
+      }
       
       // catch an errors in tearDown, bail if there are any
       try
@@ -763,12 +771,13 @@ SSUnitTest.TestCase = new Class({
     var failed = this.__tests.getValues().filter(function(x){return !x.success});
     var failedTests = failed.map(function(x){return this.__nameForFunction__(x['function'])}.bind(this));
     
-    // collect data about each individual test
+    // NOTE: collect data about each individual test, could just pass direct reference I think - David
     this.__tests.each(function(testData, testName) {
       this.__results.get('tests').set(testName, $H({
         name: testName,
         success: testData.get('success'),
-        doc: this.__docForFunction__(this.__nameForFunction__(testData.get('function')))
+        doc: this.__docForFunction__(this.__nameForFunction__(testData.get('function'))),
+        message: testData.get('message') || ''
       }));
     }.bind(this));
     
@@ -799,6 +808,7 @@ SSUnitTest.ResultFormatter = new Class({
     resultString.push(testResult.get('name') + ":");
     resultString.push(testResult.get('doc') || '');
     resultString.push((testResult.get('success') && "PASS") || "FAIL");
+    resultString.push(testResult.get('message') || "");
     if(testResult.get('error'))
     {
       resultString.push(", error:" + testResult.get('error'));
@@ -868,7 +878,7 @@ SSUnitTest.ResultFormatter.Console = new Class({
     var totals = {
       count: testResult.get('count'),
       passed: testResult.get('passed'),
-      failed: testResult.get('failed')
+      failed: testResult.get('failed'),
     };
     
     console.log('------------------------------------------');
@@ -918,10 +928,11 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
       testName: testResult.get('name'),
       status: (testResult.get('success') && 'passed') || 'failed',
       statusColor: (testResult.get('success') && 'green') || 'red',
-      doc: (testResult.get('doc')) || ''
+      doc: testResult.get('doc') || '',
+      message: testResult.get('message') || ''
     };
     
-    resultDiv.set('html', ('<span><b>{testName}:</b></span> <span>{doc}</span> <span style="color:{statusColor};">{status}</span> ...').substitute(testData));
+    resultDiv.set('html', ('<span><b>{testName}:</b></span> <span>{doc}</span> <span style="color:{statusColor};">{status}</span> <span style="color:{statusColor}">{message}</span> ...').substitute(testData));
     
     return resultDiv;
   },

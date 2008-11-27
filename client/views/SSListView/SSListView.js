@@ -20,27 +20,27 @@ var SSListView = new Class({
   },
   
 
-  initiialize: function(el, options)
+  initialize: function(el, options)
   {
     this.parent(el, options);
+    this.setCells([]);
   },
   
 
-  setCells: function()
+  setCells: function(newCells)
   {
-    
+    this.__cells = newCells;
   },
   
 
   cells: function()
   {
-    
+    return this.__cells;
   },
   
 
-  addCell: function()
+  addCell: function(cellData)
   {
-    
   },
   
 

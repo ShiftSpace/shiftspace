@@ -40,11 +40,11 @@ var SSTestRunner = new Class({
         // the initialize method in SSUnitTest.TestCase adds itself to the list of testcases
         new testInstance();
         
-        $('SSSandalphonContainer').empty();
+        $('SSTestRunnerOutput').empty();
         
         // run all the tests
 
-        SSUnitTest.setFormatter(new SSUnitTest.ResultFormatter.BasicDOM($('SSSandalphonContainer')));
+        SSUnitTest.setFormatter(new SSUnitTest.ResultFormatter.BasicDOM($('SSTestRunnerOutput')));
         SSUnitTest.main({interactive:true});
         
       }.bind(this),

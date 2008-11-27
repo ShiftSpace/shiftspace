@@ -59,13 +59,23 @@ body
   width:100%;
 }
 
-#SSSandalphonContainer
+#SSTestRunnerStage
 {
   position:absolute;
   background-color:#EFEFEF;
-
   top:10px;
   right:10px;
-  bottom:10px;
+  height:50%;
+  left:10px;
+}
+
+#SSTestRunnerOutput
+{
+  overflow-y: scroll;
+  position:absolute;
+  background-color:#ccc;
+  top:50%;
+  right:10px;
+  height:50%;
   left:10px;
 }

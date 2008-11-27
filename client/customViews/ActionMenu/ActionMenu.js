@@ -478,7 +478,7 @@ var ActionMenu = new Class({
 });
 
 // Add it the global UI class lookup
-if($type(ShiftSpaceUI)) != 'undefined')
+if(typeof ShiftSpaceUI != 'undefined')
 {
   ShiftSpaceUI.ActionMenu = ActionMenu;
 }
