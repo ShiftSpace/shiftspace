@@ -41,7 +41,6 @@ var SSListViewTest = new Class({
     var before = this.listView.cells().length;
     this.listView.addCell();
     var after = this.listView.cells().length;
-    this.listView.getCellDivs();
     this.assertNotEqual(before, after);
   },
   
@@ -86,7 +85,7 @@ var SSListViewTest = new Class({
   },
   
   
-  testRefreshCell: function()
+  testRefreshListView: function()
   {
     this.doc("Test refresh the content of a cell");
     

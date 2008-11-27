@@ -268,7 +268,7 @@ var SandalphonClass = new Class({
       var theClass = aView.getProperty('uiclass');
       SSLog('=========================================');
       SSLog('instantiating ' + theClass);
-      new ShiftSpace.UI[theClass](aView, {
+      new ShiftSpaceUI[theClass](aView, {
         context: context
       });
       SSLog('instantation complete');

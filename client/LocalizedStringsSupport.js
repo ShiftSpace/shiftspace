@@ -19,7 +19,7 @@ function SSLoadLocalizedStrings(lang, ctxt)
       //SSLog(ShiftSpace.localizedStrings);
 
       // update objects
-      ShiftSpace.Objects.each(function(object, objectId) {
+      ShiftSpaceObjects.each(function(object, objectId) {
         if(object.localizationChanged) object.localizationChanged();
       });
 
