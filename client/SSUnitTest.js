@@ -481,6 +481,7 @@ SSUnitTest.TestCase = new Class({
     try
     {
       fn.apply(null, testArgs);
+      this.__setTestFail__(caller);
     }
     catch(err)
     {
@@ -664,7 +665,17 @@ SSUnitTest.TestCase = new Class({
       }
       catch(err)
       {
-        testData.set('message', "Uncaught exception in test: " + err);
+        var message = testData.get('message');
+        var newmessage = "Uncaught exception: " + err
+        if(message)
+        {
+          message += ", " + newmessage;
+        }
+        else
+        {
+          message = newmessage;
+        }
+        testData.set('message', message);
         failed = true;
       }
       
