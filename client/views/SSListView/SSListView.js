@@ -6,6 +6,21 @@
 // @dependencies      SSView, SSCell
 // ==/Builder==
 
+// ==============
+// = Exceptions =
+// ==============
+
+var SSListViewError = SSException;
+SSListViewError.OutOfBounds = new Class({
+  name:"SSListViewError.OutOfBounds",
+  Extends: SSException,
+  Implements: SSExceptionPrinter
+});
+
+// ====================
+// = Class Definition =
+// ====================
+
 var SSListView = new Class({
   name: "SSListView",
   
@@ -23,7 +38,20 @@ var SSListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    this.setDataProvider([]);
     this.setCells([]);
+  },
+  
+  
+  setDataProvider: function(dp)
+  {
+    this.__dataProvider = dp;
+  },
+  
+  
+  dataProvider: function()
+  {
+    return this.__dataProvider;
   },
   
 
@@ -38,13 +66,42 @@ var SSListView = new Class({
     return this.__cells;
   },
   
+  
+  count: function()
+  {
+    return this.__cells.length;
+  },
+  
+  
+  cellForId: function(id)
+  {
+  },
+  
+  
+  indexOfCell: function()
+  {
+    
+  },
+  
+  
+  indexOfCellById: function(id)
+  {
+    
+  },
+  
 
   addCell: function(cellData)
   {
   },
   
 
-  insertCell: function()
+  insertCell: function(cellData, index)
+  {
+    
+  },
+  
+  
+  moveCell: function()
   {
     
   },
@@ -53,5 +110,17 @@ var SSListView = new Class({
   removeCell: function(idx)
   {
     
+  },
+  
+  
+  cellNodes: function()
+  {
+    return this.element._getElements("> .SSCell");
+  },
+  
+  
+  refresh: function()
+  {
+    this.parent();
   }
 })
