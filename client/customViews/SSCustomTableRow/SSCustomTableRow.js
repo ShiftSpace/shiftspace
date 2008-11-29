@@ -132,7 +132,7 @@ var SSCustomTableRow = new Class({
       var image = cell._getElement('> img');
       var span = cell._getElement('> span');
     
-      var server = (ShiftSpace.info && ShiftSpace.info().server) || '..';
+      var server = (SSInfo && SSInfo().server) || '..';
       
       image.setProperty('src', [server, '/spaces/', space, '/', space, '.png'].join(''));
       
@@ -143,7 +143,7 @@ var SSCustomTableRow = new Class({
   
   setUsername: function(cell, username)
   {
-    if(ShiftSpace.User.getUsername() == username)
+    if(ShiftSpaceUser.getUsername() == username)
     {
       cell.addClass('SSAuthor');
     }

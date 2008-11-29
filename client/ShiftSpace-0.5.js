@@ -77,7 +77,6 @@ var ShiftSpace = new (function() {
       SSLog('load localized strings');
       
       // Load external scripts (pre-processing required)
-      // INCLUDE PACKAGE ShiftSpaceCoreUI
       // INCLUDE PACKAGE ShiftSpaceUI
       
       // Set up user event handlers

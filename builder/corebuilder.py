@@ -55,10 +55,10 @@ class SSCoreBuilder():
 
     print "Parsing %s" % path
     fileName = os.path.basename(path)
-    name = fileName.split('.')[0]
+    name = os.path.splitext(fileName)[0]
 
     if self.metadata.has_key(name):
-      raise FilenameExistsTwice(self, "%s and %s" % (path, self.metadata[name]['path']))
+      raise FilenameExistsTwice(self, "name: %s, %s and %s" % (name, path, self.metadata[name]['path']))
 
     fileHandle = open(path)
 
