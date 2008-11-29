@@ -8,6 +8,16 @@ var FisheyeSpace = ShiftSpace.Space.extend({
 	}
 });
 
+
+var wrapSetHTML =  function(el, html) {
+    if (typeof (el.setHTML) != 'undefined') {
+	    el.setHTML(html);
+    } else if (typeof (el.set) != 'undefined') {
+	    el.set("html", html);
+    }
+    // TODO: alert if supports neither
+}
+
 // Get the latest plugins, languages, and layout from SVN
 //var feRoot="http://metatron.shiftspace.org/code/trunk/spaces/Fisheye/";
 var feRoot="http://fisheye.ffem.org/shiftspace_0.5/spaces/Fisheye/";
@@ -48,7 +58,7 @@ var makeDisplayItem = function(target) {
 
 var addImage = function(imguri, container) {
 	imageBox = new ShiftSpace.Element('div');
-	imageBox.setHTML('<img src="' + imguri + '" />');
+	wrapSetHTML(imageBox, '<img src="' + imguri + '" />');
 	imageBox.injectInside(container);
 }
 
@@ -336,7 +346,7 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	    fillBody	: function(that, container) {
 		if (that.settingsLayout) {
 		    that.settingsBox = makeNoteBox(container);
-		    that.settingsBox.setHTML(that.settingsLayout);
+		    wrapSetHTML(that.settingsBox, that.settingsLayout);
 		    var listitems = that.settingsBox.getElementsByTagName("*");
 		    for (i=0; i<listitems.length; i++) {
 			el = listitems[i];
@@ -350,9 +360,9 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 		} else {
 		    that.settingsBox = makeNoteBox(container);
 		    if (that.isProxy())
-		        that.settingsBox.setHTML("Settings disabled in proxy mode");
+		        wrapSetHTML(that.settingsBox, "Settings disabled in proxy mode");
 		    else
-		        that.settingsBox.setHTML("MISSING LAYOUT");
+		        wrapSetHTML(that.settingsBox, "MISSING LAYOUT");
 		}
 	    },
 	  },
@@ -416,6 +426,9 @@ var FisheyeShift = ShiftSpace.Shift.extend({
 	return displayTextEnglish[word];
 	
     },
+
+    // Allow shift to serve as handle to a few local funcs
+    wrapSetHTML: function(el, html) { wrapSetHTML(el, html); },
 
     log: function(msg) {
 	if (typeof console == 'object' && console.log) {
@@ -811,9 +824,9 @@ var FisheyeShift = ShiftSpace.Shift.extend({
     rebuild: function() {
 	if (this.rebuildLockCount > 0)
 	    return;
-	this.element.setHTML("");
+    	this.wrapSetHTML(this.element, "");
 	this.fillElement(this.element);
-	this.anchoredIcon.setHTML("");
+	this.wrapSetHTML(this.anchoredIcon, "");
 	this.renderClass.renderIcon(this, this.anchoredIcon);
     },
 
@@ -1036,12 +1049,12 @@ var FisheyeConsoleClass = new Class({
             'font': '16px verdana, sans-serif',
 	    border : 'medium double #C4C87C' ,
         });
-	container.setHTML("");
+	wrapSetHTML(container, "");
 
 	var summaryBox = makeNoteBox(container);
 	var content = "Fisheye summary:";
         summaryBox.setStyles({ 'font': '16px verdana, sans-serif', });
-	summaryBox.setHTML(content);
+	wrapSetHTML(summaryBox, content);
 	summaryBox.injectInside(container);
 
 	for (var i=0; i < this.registeredShifts.length; i++) {
