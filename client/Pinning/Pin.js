@@ -21,7 +21,7 @@
   See Also:
     <PinWidget>
 */
-var Pin = new Class({
+var ShiftSpacePin = new Class({
   /*
     Property: toRef
       Takes a node and an action and returns a reference JSON which can be used
@@ -126,8 +126,7 @@ var Pin = new Class({
   isValidRef: function(pinRef)
   {
     if(!pinRef || (!pinRef.ancestorId && !pinRef.relativeXPath)) return false;
-    var node = ShiftSpace.Pin.toNode(pinRef)
+    var node = ShiftSpacePin.toNode(pinRef)
     return (node != null);
   }
 });
-ShiftSpace.Pin = new Pin();

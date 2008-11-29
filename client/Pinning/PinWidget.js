@@ -51,7 +51,7 @@
     }
     (end)
 */
-var PinWidget = new Class({
+var ShiftSpacePinWidget = new Class({
 
   protocol: ['getPinRef', 'getPinWidgetButton', 'getPinWidgetAllowedActions', 'onPin', 'isPinned'],
 
@@ -93,7 +93,7 @@ var PinWidget = new Class({
     this.menuIsVisible = false;
 
     // create an image and stick in it there
-    this.iconImg = new ShiftSpace.Element('img', {
+    this.iconImg = new SSElement('img', {
       'class': 'normal',
       'src': server + 'images/ShiftMenu/blank.png'
     });
@@ -118,7 +118,7 @@ var PinWidget = new Class({
   delegateWasPinned: function()
   {
     var pinRef = this.delegate.getPinRef();
-    var targetNode = ShiftSpace.Pin.toNode(pinRef);
+    var targetNode = ShiftSpacePin.toNode(pinRef);
 
     if(targetNode != this.getPinnedElement())
     {
@@ -151,27 +151,27 @@ var PinWidget = new Class({
   */
   createMenu: function()
   {
-    this.menu = new ShiftSpace.Element('div', {
+    this.menu = new SSElement('div', {
       'class': "SSPinMenu"
     });
 
     // build the menu
 
     // the top item
-    this.menuTopItem = new ShiftSpace.Element('div', {
+    this.menuTopItem = new SSElement('div', {
       'class': "SSPinMenuTopItem item"
     });
     this.menuTopItem.set('html', "<div class='SSLeft'><div class='radio off'></div><span></span></div><div class='SSRight'></div>");
     this.menuTopItem.injectInside(this.menu);
 
     // don't add this one, we'll clone it
-    this.menuItem = new ShiftSpace.Element('div', {
+    this.menuItem = new SSElement('div', {
       'class': "SSPinMenuItem item"
     });
     this.menuItem.set('html', "<div class='SSLeft'><div class='radio off'></div><span></span></div><div class='SSRight'></div>");
 
     // add the bottom items, always unpin
-    this.menuBottomItem = new ShiftSpace.Element('div', {
+    this.menuBottomItem = new SSElement('div', {
       'class': "SSPinMenuBottomItem item"
     });
     this.menuBottomItem.set('html', "<div class='SSLeft'><div class='radio off'></div><span>Unpin</span></div><div class='SSRight'></div>");
@@ -440,7 +440,7 @@ var PinWidget = new Class({
       }
       else
       {
-        this.pinRef = ShiftSpace.Pin.toRef(this.pinnedElement, action);
+        this.pinRef = ShiftSpacePin.toRef(this.pinnedElement, action);
       }
 
       // store the shift element that is pinned
@@ -478,5 +478,3 @@ var PinWidget = new Class({
     }
   }
 });
-
-ShiftSpace.PinWidget = PinWidget;

@@ -486,4 +486,3 @@ var RangeCoder = new Class({
     return null;
   }
 });
-ShiftSpace.RangeCoder = new RangeCoder();

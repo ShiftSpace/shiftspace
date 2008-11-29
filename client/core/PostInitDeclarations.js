@@ -11,3 +11,6 @@ ShiftSpace.info = SSInfo;
 ShiftSpace.Element = SSElement;
 ShiftSpace.Iframe = SSIframe;
 ShiftSpace.Input = SSInput;
+ShiftSpace.Pin = ShiftSpacePin;
+ShiftSpace.PinWidget = ShiftSpacePinWidget;
+ShiftSpace.RangeCoder = RangeCoder;
