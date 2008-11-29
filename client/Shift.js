@@ -13,7 +13,7 @@
     The key functions such as show, edit, hide, save, setup should not be called directly by you.  You simply implement the behavior
     you want when ShiftSpace calls these methods based on user interaction with the shift menu and the shift console.
 */
-ShiftSpace.Shift = new Class({
+var ShiftSpaceShift = new Class({
   
   name: 'ShiftSpace.Shift',
   

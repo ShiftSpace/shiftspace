@@ -14,3 +14,7 @@ ShiftSpace.Input = SSInput;
 ShiftSpace.Pin = ShiftSpacePin;
 ShiftSpace.PinWidget = ShiftSpacePinWidget;
 ShiftSpace.RangeCoder = RangeCoder;
+ShiftSpace.User = ShiftSpaceUser;
+ShiftSpace.Plugin = ShiftSpacePlugin;
+ShiftSpace.Space = ShiftSpaceSpace;
+ShiftSpace.Shift = ShiftSpaceShift;

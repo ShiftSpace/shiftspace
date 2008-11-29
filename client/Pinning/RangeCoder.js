@@ -8,7 +8,7 @@
   Class: RangeCoder
     A convenience class to encode and decode W3C Ranges <-> opaque objects.
 */
-var RangeCoder = new Class({
+var RangeCoderClass = new Class({
   /*
     Property: toRange
       Takes a reference object and returns a W3C range.  The reference object is
@@ -486,3 +486,5 @@ var RangeCoder = new Class({
     return null;
   }
 });
+
+var RangeCoder = new RangeCoderClass();

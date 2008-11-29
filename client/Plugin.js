@@ -8,9 +8,11 @@
   Class: ShiftSpace.Plugin
     Abstract class interface for plugin.  Currently only used Trails.
 */
-ShiftSpace.Plugin = new Class({
+var ShiftSpacePlugin = new Class({
   
   name: 'ShiftSpace.Plugin',
+  
+  Implements: [Events],
   
   attributes:
   {
@@ -295,10 +297,8 @@ ShiftSpace.Plugin = new Class({
   
 });
 
-ShiftSpace.Plugin.types = $H(
+ShiftSpacePlugin.types = $H(
 {
   kMenuTypePlugin: "kMenuTypePlugin",
   kInterfaceTypePlugin: "kInterfaceTypePlugin"
 });
-
-ShiftSpace.Plugin.implement(new Events);

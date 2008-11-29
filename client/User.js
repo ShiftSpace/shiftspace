@@ -9,7 +9,7 @@
     A an object wrapping the current ShiftSpace User.  Use this class to check the user's display
     name as well as checking if the user is logged in or out.
 */
-var User = new Class({
+var ShiftSpaceUserClass = new Class({
   
   Implements: Events,
   
@@ -185,4 +185,4 @@ var User = new Class({
 
 });
 
-ShiftSpace.User = new User();
+var ShiftSpaceUser = new ShiftSpaceUserClass();

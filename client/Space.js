@@ -16,7 +16,7 @@
     Users should be in control of whether a shift is visible or not.  In general the user of ShiftSpace is in control of the experience
     not the developer.  To get a better understanding of this please refer to the ShiftSpace tutorial.
 */
-ShiftSpace.Space = new Class({
+var ShiftSpaceSpace = new Class({
   
   name: 'ShiftSpace.Space',
   

@@ -11,3 +11,4 @@
 // INCLUDE PACKAGE UtilitiesExtras
 // INCLUDE PACKAGE Core
 // INCLUDE PACKAGE Pinning
+// INCLUDE PACKAGE ShiftSpaceCore
