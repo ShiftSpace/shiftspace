@@ -1,2 +1,112 @@
+#SSQuoteWidget{
+  position:absolute;
+  height:30px;
+  width:24px;
+  /*background-color:#448811;*/
+  z-index:99999;
+  overflow:hidden;
+}
+
+#SSQuoteUI{
+  float:left;
+  height:28px;
+  width:100%;
+  padding: 0 3px 0 3px;
+  margin-bottom:8px;
+  background-color:#FFF;
+  border-bottom:1px solid #AAAAAA;
+}
+
+#SSQuoteHandle{
+  /*position:absolute;*/
+  float:left;
+  top:0px;
+  left:0px;
+  width:100%;
+  height:6px;
+  background-color:#888;
+}
+  
+#SSQuoteButton,#SSQuoteTransparentButton,#SSQuoteWhiteButton,#SSQuoteBlackButton{
+  float:left;
+  margin-right:3px;
+  width:18px;
+  height:18px;
+  cursor:default;
+  border: 1px solid #333;
+  -moz-border-radius: 4px;
+}
+#SSQuoteButton{
+  color:#AAA;
+  width:18px;
+  height:18px;
+  font-family:Helvetica,Arial,sans-serif;
+  background-color:#336699;
+  cursor:default;
+  background-image: url(quote_button.png);
+  
+}
+#SSQuoteButton:hover{
+  background-color: #777722;
+}
+#SSQuoteButton:active{
+  background-color: red;
+}
+#SSQuoteTransparentButton{
+  width:18px;
+  height:18px;
+  display:block;
+  background-image: url(transparent_button.png);
+  
+}
+#SSQuoteTransparentButton:hover{
+  
+}
+#SSQuoteTransparentButton:active{
+  
+}
+#SSQuoteWhiteButton{
+  width:18px;
+  height:18px;
+  display:block; 
+  background-color:#FFF;
+  /*background-image: url(white_button.png);*/
+}
+#SSQuoteWhiteButton:hover{
+  
+}
+#SSQuoteWhiteButton:active{
+  
+}
+#SSQuoteBlackButton{
+  width:18px;
+  height:18px;
+  display:block; 
+  background-image: url(black_button.png);  
+}
+#SSQuoteBlackButton:hover{
+  
+}
+#SSQuoteBlackButton:active{
+  
+}
+#SSQuoteCancelButton{
+  
+}
+#SSQuoteCancelButton:hover{
+  
+}
+#SSQuoteCancelButton:active{
+  
+}
+#SSQuoteSaveButton{
+  
+}
+#SSQuoteSaveButton:hover{
+  
+}
+#SSQuoteSaveButton:active{
+  
+}
 
 
