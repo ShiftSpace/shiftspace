@@ -107,35 +107,72 @@ class SSPreProcessor:
     sys.exit(2)
 
 
-  def main(self, argv):
-    if len(argv) < 1:
+  def usage(self):
       print "Usage: python preprocess.py <environment definition> [<project>] [<input file>]"
-      print
-      print "Project defaults to shiftspace"
-      print "Input file defaults to ../client/ShiftSpace-0.5.js"
-      print "If different input file is specified, writes to standard output" 
-      return -1
+      print "  -h help"
+      print "  -e environment file, this must be in SHIFTSPACE_DIR/config/env/"
+      print "  -p project, defaults to shiftspace.json, should be in SHIFTSPACE_DIR/config/proj/"
+      print "  -i input file, defaults to SHIFTSPACE_DIR/client/ShiftSpace-0.5.js"
+      print "  -o output file, if non specified, writes to standard output" 
 
+
+  def main(self, argv):
+    # defaults
+    proj = "shiftspace"
+    outFile = None
+    inFile = None
+    envFileOption = None
+
+    try:
+      opts, args = getopt.getopt(argv, "hp:i:o:e:", ["environment=", "project=", "output=", "input=", "help", "project"])
+    except getopt.GetoptError:
+      self.usage()
+      sys.exit(2)
+
+    # parse arguments
+    for opt, arg in opts:
+      if opt in ("-h", "--help"):
+        self.usage()
+        sys.exit()
+      elif opt in ("-p", "--project"):
+        proj = arg
+      elif opt in ("-o", "--output"):
+        outFile = arg
+      elif opt in ("-i", "--input"):
+        inFile = arg
+      elif opt in ("-e", "--environment"):
+        envFileOption = arg
+      else:
+        assert False, "unhandled options"
+        
+    # get the metadata
     metadataJsonFile = open('../config/packages.json')
     metadataStr = metadataJsonFile.read()
     self.metadata = json.loads(metadataStr)
     metadataJsonFile.close()
-  
-    if len(argv) > 1:
-      proj = argv[1]
+
+    # get the input file
+    if inFile != None:
+      try:
+        self.inFile = open(inFile)
+      except IOError:
+        # bail!
+        print "Error: no such input file exist"
+        sys.exit(2)
     else:
-      proj = 'shiftspace'
-  
-    if len(argv) > 2:
-      inFile = open(argv[2])
+      self.inFile = open('../client/ShiftSpace-0.5.js')
+
+    # get the output file
+    if outFile != None:
+      self.outFile = open(outFile, "w")
+    else:
       self.outFile = sys.stdout
-    else:  
-      inFile = open('../client/ShiftSpace-0.5.js')
-      self.outFile = open('../shiftspace.user.js', 'w')
   
+    # load environment file
     envFile = None
     evnFileName = None
-    envFilePath = '../config/env/%s.json' % argv[0]
+    envFilePath = '../config/env/%s.json' % (os.path.splitext(envFileOption)[0])
+
     try:
       # load environment file
       envFile = open(envFilePath)
@@ -159,10 +196,10 @@ class SSPreProcessor:
       print "Error: no such project file exists. (%s)" % projFilePath
       sys.exit(2)
 
-    self.preprocessFile(inFile)
+    self.preprocessFile(self.inFile)
     
     self.outFile.close()
-    inFile.close()
+    self.inFile.close()
 
   
 if __name__ == "__main__":

@@ -304,10 +304,10 @@ class SSCoreBuilder():
 
 def usage():
   print "corebuilder.py takes the following flags:"
-  print "-h help"
-  print "-i input, directory or file"
-  print "-r recursively search directories"
-  print "-o output directory. two files will be generated - packages.json and tests.json"
+  print "  -h help"
+  print "  -i input, directory or file"
+  print "  -r recursively search directories"
+  print "  -o output directory. two files will be generated - packages.json and tests.json"
 
 
 def main(argv):
