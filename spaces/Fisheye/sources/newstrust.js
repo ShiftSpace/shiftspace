@@ -31,7 +31,7 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 	  percent = percent.toFixed(0); // round off decimal points for print
 	  percentStr += percent + '%';
 	}
-	target.setHTML('<img src="' + img + '" />' + percentStr);
+	that.wrapSetHTML(target, '<img src="' + img + '" />' + percentStr);
 	//that.iconImageBox.injectInside(that.iconBox);
 
 	// Get NT data if necessary
@@ -67,7 +67,7 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 	var img = "http://www.newstrust.net/Images/ui/newstrust-logo_24px.gif";
 	var someHtml = '<a href="http://www.newstrust.net/">';
 	someHtml += '<img src="' + img + '" width="161" height="24"/></a>';
-	imgBox.setHTML(someHtml);
+	that.wrapSetHTML(imgBox, someHtml);
 	imgBox.injectInside(someBox);
 
 	someBox.injectInside(container);
@@ -85,7 +85,7 @@ var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
 		// TODO: review vs reviews
 	    sumHtml += "<b>" + that.newsTrustRating + "</b> avg. based on <b>";
 	    sumHtml += that.newsTrustNumReviews + "</b> reviews";
-	    summaryBox.setHTML(sumHtml);
+	    that.wrapSetHTML(summaryBox, sumHtml);
 	}
 	else if (that.newsTrustResponseStatus)
 	    summaryBox.appendText("NewsTrust server failed with " + that.newsTrustResponseStatus);
