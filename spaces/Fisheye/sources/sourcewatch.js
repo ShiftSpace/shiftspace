@@ -48,7 +48,7 @@ var FisheyeCriticismSourceWatchRenderClass = FisheyeCriticismRenderClass.extend(
 
 	var sumHtml = "SourceWatch has an open wiki page on ";
 	sumHtml +=  that.criticismLink;
-	summaryBox.setHTML(sumHtml);
+	that.wrapSetHTML(summaryBox, sumHtml);
 
 	var aBox = new ShiftSpace.Element ('div', {'class':'FisheyeDisplayItem'});
 	var aHref = "http://www.sourcewatch.org/index.php?title=" + that.criticismLink;
