@@ -121,9 +121,10 @@ var SandalphonClass = new Class({
     var interface;
     var styles;
     
-    SSLog("Sandalphon LOAD " + path);
+    console.log('Sandalphon load!');
+    SSLog("Sandalphon LOAD " + path, SSLogSandalphon);
     
-    var server = (ShiftSpace && ShiftSpace.info && ShiftSpace.info().server) || '..';
+    var server = (SSInfo && SSInfo().server) || '..';
     //console.log('load!');
     // load the interface file
     if(typeof SandalphonToolMode != 'undefined')
@@ -432,58 +433,6 @@ var SandalphonToolClass = new Class({
      // intialize the interface
      this.initInterface();
      console.log('Loading localized strings!');
-     // load localised strings
-     this.loadLocalizedStrings(this.Language);
-   },
-
-
-   loadLocalizedStrings: function(lang)
-   {
-     console.log('Making the request');
-     SSLog('load localized strings ' + lang, SSLogSandalphon);
-     new Request({
-       url: "../client/LocalizedStrings/"+lang+".json",
-       method: "get",
-       onComplete: function(responseText, responseXML)
-       {
-         console.log('Response returned')
-         SSLog(lang + " - " + ShiftSpace.lang, SSLogSandalphon);
-         if(lang != ShiftSpace.lang)
-         {
-           console.log('decoding language file');
-           ShiftSpace.localizedStrings = JSON.decode(responseText);
-           console.log('done');
-           SSLog(ShiftSpace.localizedStrings, SSLogSandalphon);
-
-           // update objects
-           ShiftSpaceObjects.each(function(object, objectId) {
-             if(object.localizationChanged) object.localizationChanged();
-           });
-
-           // update markup
-           $$(".SSLocalized").each(function(node) {
-
-             var originalText = node.getProperty('title');
-
-             if(node.get('tag') == 'input' && node.getProperty('type') == 'button')
-             {
-               node.setProperty('value', SSLocalizedString(originalText));
-             }
-             else
-             {
-               node.set('text', SSLocalizedString(originalText));              
-             }
-
-           }.bind(this));
-         }
-
-         ShiftSpace.lang = lang;
-       },
-       onFailure: function(response)
-       {
-         console.error('Error loading localized strings ' + response);
-       }
-     }).send();
    },
 
 
@@ -673,7 +622,7 @@ var SandalphonToolClass = new Class({
      // attach events to localization switcher
      $('localizedStrings').addEvent('change', function(_evt) {
        var evt = new Event(_evt);
-       this.loadLocalizedStrings($('localizedStrings').getProperty('value'));
+       SSLoadLocalizedStrings($('localizedStrings').getProperty('value'));
      }.bind(this));
    },
    

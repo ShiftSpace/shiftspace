@@ -11,7 +11,7 @@
     <script src="../mootools/mootools-1.2-more.js" type="text/javascript" charset="utf-8"></script>
     <!-- boot strap -->
     <script src="../sandbox/GreaseMonkeyApi.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../shiftspace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../builder/preprocess.php?env=sandalphon&input=../client/BootStrap.js&proj=sandalphon" type="text/javascript" charset="utf-8"></script>
     <!-- what's need to startup the tool -->
     <script type="text/javascript" charset="utf-8">
       // Actual Sandalphon

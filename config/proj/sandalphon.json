@@ -1,0 +1,15 @@
+{
+  "packages": {
+    "remove": [
+    ],
+    "replace": {
+    }
+  },
+  "files": {
+    "remove": [
+      "CoreEvents"
+    ],
+    "replace": {
+    }
+  }
+}

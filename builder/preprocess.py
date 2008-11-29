@@ -40,18 +40,20 @@ class SSPreProcessor:
   
     self.outFile.write(logline1)
 
-    if incFilename in self.proj['files']['remove']:
+    realName = os.path.splitext(os.path.basename(incFilename))[0]
+
+    if realName in self.proj['files']['remove']:
       self.outFile.write('// PROJECT OVERRIDE -- FILE NOT INCLUDED\n\n')
       return
         
-    if self.proj['files']['replace'].has_key(incFilename):
-      incFilename = self.proj['files']['replace'][incFilename]
+    if self.proj['files']['replace'].has_key(realName):
+      incFilename = self.metadata['files'][realName]['path']
       self.outFile.write('// PROJECT OVERRIDE -- INCLUDING %s INSTEAD\n' % incFilename)
     
     self.outFile.write(prefix)
 
-    incFile = open('../client/%s' % incFilename)
-
+    incFile = open(incFilename)
+    
     self.preprocessFile(incFile)
 
     self.outFile.write(postfix)
@@ -111,9 +113,9 @@ class SSPreProcessor:
       print "Usage: python preprocess.py <environment definition> [<project>] [<input file>]"
       print "  -h help"
       print "  -e environment file, this must be in SHIFTSPACE_DIR/config/env/"
-      print "  -p project, defaults to shiftspace.json, should be in SHIFTSPACE_DIR/config/proj/"
+      print "  -p project, defaults to shiftspace.json, must be in SHIFTSPACE_DIR/config/proj/"
       print "  -i input file, defaults to SHIFTSPACE_DIR/client/ShiftSpace-0.5.js"
-      print "  -o output file, if non specified, writes to standard output" 
+      print "  -o output file, if none specified, writes to standard output" 
 
 
   def main(self, argv):
@@ -185,7 +187,7 @@ class SSPreProcessor:
       print "Error: no such environment file exists. (%s)" % envFilePath
       sys.exit(2)
     
-    projFilePath = '../config/proj/%s.json' % proj
+    projFilePath = '../config/proj/%s.json' % (os.path.splitext(proj)[0])
     try:
       # load project file
       projFile = open(projFilePath)

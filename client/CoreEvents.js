@@ -1,6 +1,5 @@
 // ==Builder==
 // @option
-// @name	            CoreEvents
 // @package           EventHandling
 // ==/Builder==
 
