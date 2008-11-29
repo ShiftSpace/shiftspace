@@ -21,7 +21,7 @@
   See Also:
     <PinWidget>
 */
-var ShiftSpacePin = new Class({
+var ShiftSpacePinClass = new Class({
   /*
     Property: toRef
       Takes a node and an action and returns a reference JSON which can be used
@@ -130,3 +130,5 @@ var ShiftSpacePin = new Class({
     return (node != null);
   }
 });
+
+var ShiftSpacePin = new ShiftSpacePinClass();
