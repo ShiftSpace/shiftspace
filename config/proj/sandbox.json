@@ -7,10 +7,9 @@
   },
   "files": {
     "remove": [
-      "CoreEvents"
     ],
     "replace": {
     }
   },
-  "main": "ShiftSpaceMain.js"
+  "main": "SandboxMain.js"
 }
