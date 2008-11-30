@@ -137,7 +137,7 @@ class SSPreProcessor:
     envFileOption = None
 
     try:
-      opts, args = getopt.getopt(argv, "hp:i:o:e:", ["environment=", "project=", "output=", "input=", "help", "project"])
+      opts, args = getopt.getopt(argv, "hp:i:o:e:x", ["environment=", "project=", "output=", "input=", "help", "project", "export"])
     except getopt.GetoptError:
       self.usage()
       sys.exit(2)

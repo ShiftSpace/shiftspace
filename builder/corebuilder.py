@@ -43,7 +43,7 @@ class SSCoreBuilder():
     self.BUILDER_BEGIN_PATTERN = re.compile("\/\/\s*==Builder==")
     self.BUILDER_END_PATTERN = re.compile("\/\/\s*==\/Builder==")
     self.DIRECTIVE_PATTERN = re.compile("\/\/\s*@([^\s]*)\s*(.*)")
-    self.DIRECTIVES_WITH_MULTIPLE_VALUES = ["dependencies"]
+    self.DIRECTIVES_WITH_MULTIPLE_VALUES = ["dependencies", "export"]
 
     self.sorter = SSPackageSorter(self)    
 
