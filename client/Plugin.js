@@ -1,5 +1,6 @@
 // ==Builder==
 // @required
+// @export
 // @name              Plugin
 // @package           ShiftSpaceCore
 // ==/Builder==

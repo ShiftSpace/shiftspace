@@ -1,5 +1,6 @@
 // ==Builder==
 // @optional  
+// @export            ShiftSpacePin as Pin
 // @name              Pin
 // @package           Pinning
 // ==/Builder==

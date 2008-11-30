@@ -1,5 +1,6 @@
 // ==Builder==
 // @optional
+// @export            ShiftSpaceUser as User
 // @name              User
 // @package           ShiftSpaceCore
 // ==/Builder==

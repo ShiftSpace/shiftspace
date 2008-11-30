@@ -295,8 +295,6 @@ var SandalphonClass = new Class({
     var context = ctxt || window;
     var outlets = this.contextQuery(context, '*[outlet]');
 
-    // TODO: need to figure out what the outlets are going to be BEFORE instantiating controllers
-
     outlets.each(function(anOutlet) {
       var outletTarget, sourceName;
       

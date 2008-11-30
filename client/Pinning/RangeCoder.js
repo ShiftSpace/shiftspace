@@ -1,5 +1,6 @@
 // ==Builder==
 // @optional
+// @export            RangeCoder
 // @name              RangeCoder
 // @package           Pinning
 // ==/Builder==

@@ -1,5 +1,6 @@
 // ==Builder==
 // @required
+// @export            ShiftSpaceShift as Shift
 // @name              Shift
 // @package           ShiftSpaceCore
 // ==/Builder==
