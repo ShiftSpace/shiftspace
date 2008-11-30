@@ -1041,8 +1041,8 @@ var FisheyeConsoleClass = new Class({
     },
 
     updateConsole: function() {
-	var byType = [];
-	var byTypeCount = [];
+	var byType = {};
+	var byTypeCount = {};
 
 	var container = this.consoleElement;
         container.setStyles({
@@ -1065,13 +1065,19 @@ var FisheyeConsoleClass = new Class({
 		else
 			byTypeCount[ashift.categoryType] = 1;
 	}
-	for (var i=0; i < byType.length; i++) {
-		if (!byType[i])
-			continue;
+
+	var sortedTypes = new Array();
+	for (var key in byType) {
+	    sortedTypes.push(key);
+	}
+	sortedTypes = sortedTypes.sort();
+	
+	for (var i=0; i < sortedTypes.length; i++) {
+		var key = sortedTypes[i];
 		var shiftBox = new ShiftSpace.Element('div');
-		var ashift = byType[i];
+		var ashift = byType[key];
 		var cat = ashift.criticismCategoryGetName(ashift.categoryType);
-		shiftBox.appendText(byTypeCount[i] + " " + cat);
+		shiftBox.appendText(byTypeCount[key] + " " + cat);
 		ashift.refreshStyle(shiftBox);
 		shiftBox.injectInside(container);
 	}
