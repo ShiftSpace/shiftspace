@@ -19,18 +19,26 @@ class SSError(Exception):
   def __str__(self):
     return self.message
 
+# FIXME: this file needs some serious optimization - David
 class SSPreProcessor:
+
   INCLUDE_PACKAGE_REGEX = re.compile('^\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*$');
   INCLUDE_REGEX = re.compile('^\s*//\s*INCLUDE\s+(\S+)\s*$');
 
   def setEnvVars(self, line):
     if self.envData != None:
+      vars = ""
       for key in self.envData['data'].keys():
-        line = line.replace(("%%%%%s%%%%" % (key)), '%s' % self.envData['data'][key])
+        if key != "VARS":
+          line = line.replace(("%%%%%s%%%%" % (key)), '%s' % self.envData['data'][key])
+        else:
+          vars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
       line = line.replace("%%SYSTEM_TABLE%%", self.envData['meta'])
       line = line.replace("%%ENV_NAME%%", self.envData['name'])
+      line = line.replace("%%VARS%%", vars)
     return line
   
+
   def includeFile(self, incFilename):
     flen = len(incFilename);
     logline1 = "\nif (SSInclude != undefined) SSLog('Including %s...', SSInclude);\n" % incFilename 
@@ -40,6 +48,7 @@ class SSPreProcessor:
   
     self.outFile.write(logline1)
 
+    # get the real name, incFilename is the pathname
     realName = os.path.splitext(os.path.basename(incFilename))[0]
 
     if realName in self.proj['files']['remove']:
@@ -47,6 +56,7 @@ class SSPreProcessor:
       return
         
     if self.proj['files']['replace'].has_key(realName):
+      # get the path of the file
       incFilename = self.metadata['files'][realName]['path']
       self.outFile.write('// PROJECT OVERRIDE -- INCLUDING %s INSTEAD\n' % incFilename)
     
@@ -60,6 +70,7 @@ class SSPreProcessor:
     self.outFile.write(logline2)
     self.outFile.write("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
     incFile.close()
+
 
   def preprocessFile(self, file):
     for line in file:

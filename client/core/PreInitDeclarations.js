@@ -5,6 +5,11 @@
 
 // NOTE: This will be preprocessed by preprocess.py and replaced with the proper
 // servers
+
+// any environment specific vars
+%%VARS%%
+
+// two most important vars
 var server = SSGetValue('server', '%%SERVER%%');
 var spacesDir = SSGetValue('spaceDir', '%%SPACEDIR%%');
 
