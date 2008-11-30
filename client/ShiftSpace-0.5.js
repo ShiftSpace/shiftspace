@@ -309,26 +309,3 @@ function SSDescribeException(_exception)
   }
   return "Exception:{ " + temp.join(', ') +" }";
 }
-
-if(self == top)
-{
-  // if in sandbox mode need to wait until the window is ready to open
-  if(typeof ShiftSpaceSandBoxMode != 'undefined')
-  {
-    window.addEvent('domready', function(){
-      ShiftSpace.initialize();
-    });
-  }
-  else
-  {
-    try
-    {
-      console.log('starting up');
-      ShiftSpace.initialize();
-    }
-    catch(exc)
-    {
-      console.error("Unable to install ShiftSpace :(, " + SSDescribeException(exc));
-    }
-  }
-}

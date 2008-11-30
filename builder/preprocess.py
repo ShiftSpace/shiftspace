@@ -13,7 +13,7 @@ import simplejson as json # need to install simplejson from here http://pypi.pyt
 # Exceptions ==============================
 
 class SSError(Exception): 
-  def __init__(self, builder, message = ''):
+  def __init__(self, message = ''):
     self.message = message
 
   def __str__(self):
@@ -27,15 +27,15 @@ class SSPreProcessor:
 
   def setEnvVars(self, line):
     if self.envData != None:
-      vars = ""
+      envVars = ""
       for key in self.envData['data'].keys():
         if key != "VARS":
           line = line.replace(("%%%%%s%%%%" % (key)), '%s' % self.envData['data'][key])
         else:
-          vars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
+          envVars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
       line = line.replace("%%SYSTEM_TABLE%%", self.envData['meta'])
       line = line.replace("%%ENV_NAME%%", self.envData['name'])
-      line = line.replace("%%VARS%%", vars)
+      line = line.replace("%%VARS%%", envVars)
     return line
   
 
@@ -183,7 +183,6 @@ class SSPreProcessor:
   
     # load environment file
     envFile = None
-    evnFileName = None
     envFilePath = '../config/env/%s.json' % (os.path.splitext(envFileOption)[0])
 
     try:
@@ -210,7 +209,18 @@ class SSPreProcessor:
       sys.exit(2)
 
     self.preprocessFile(self.inFile)
-    
+
+    # load main if there is one
+    if self.proj["main"]:
+      mainFile = "../config/main/%s.js" % os.path.splitext(self.proj["main"])[0]
+      try:
+        mainFileHandle = open(mainFile)
+        self.outFile.write(mainFileHandle.read())
+        mainFileHandle.close()
+      except IOError:
+        # bail!
+        print "Error: no such main file exists. (%s)" % mainFile
+
     self.outFile.close()
     self.inFile.close()
 

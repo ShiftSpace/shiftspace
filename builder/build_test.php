@@ -7,7 +7,7 @@ $fileOrder = $testsJson['dependencies'][$test];
 
 foreach ($fileOrder as $f)
 {
-  system("python preprocess.py -e $env -p shiftspace -i $f");
+  system("python preprocess.py -e $env -p test -i $f");
   echo "\n";
 }
 
