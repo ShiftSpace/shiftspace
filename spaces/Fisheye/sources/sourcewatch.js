@@ -1,6 +1,7 @@
 
 
-var FisheyeCriticismSourceWatchRenderClass = FisheyeCriticismRenderClass.extend({
+var FisheyeCriticismSourceWatchRenderClass = new Class({
+    Extends: FisheyeCriticismRenderClass,
 
     renderIcon: function(that, target) {
 

@@ -1,6 +1,7 @@
 
 // Our Space class - refs to our code, icon, and css
-var FisheyeSpace = ShiftSpace.Space.extend({
+var FisheyeSpace = new Class({
+	Extends: ShiftSpace.Space,
 	attributes: {
 		name: 'Fisheye',
 		icon: 'Fisheye.png',
@@ -202,7 +203,8 @@ var displayLanguages = {
 };
 
 
-var FisheyeShift = ShiftSpace.Shift.extend({
+var FisheyeShift = new Class({
+	Extends: ShiftSpace.Shift,
 
     /*
 	 Categories Static Data

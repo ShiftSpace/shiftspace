@@ -1,5 +1,6 @@
 
-var FisheyeCriticismNewsTrustRenderClass = FisheyeCriticismRenderClass.extend({
+var FisheyeCriticismNewsTrustRenderClass = new Class({
+    Extends: FisheyeCriticismRenderClass,
 
     key: 10,
 
