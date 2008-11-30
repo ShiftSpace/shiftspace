@@ -21,7 +21,7 @@ var wrapSetHTML =  function(el, html) {
 
 // Get the latest plugins, languages, and layout from SVN
 //var feRoot="http://metatron.shiftspace.org/code/trunk/spaces/Fisheye/";
-var feRoot="http://fisheye.ffem.org/shiftspace_0.5/spaces/Fisheye/";
+var feRoot="http://fisheye.ffem.org/shiftspace_0.5_nov_2008/spaces/Fisheye/";
 
 var makeTextBox = function(target, text) {
     var usrBox = new ShiftSpace.Element('div');
