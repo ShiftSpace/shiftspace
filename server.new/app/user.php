@@ -1,6 +1,6 @@
 <?php
 
-class User extends Object {
+class User extends Base_Object {
   
   
   
