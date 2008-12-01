@@ -1,7 +1,6 @@
 // ==Builder==
 // @required
 // @export            ShiftSpaceSpace as Space
-// @name              Space
 // @package           ShiftSpaceCore
 // ==/Builder==
 

@@ -17,7 +17,7 @@ from SSPackageSorter import SSPackageSorter
 
 # Exceptions ==============================
 
-class SSError(Exception): 
+class SSError(Exception):
   def __init__(self, builder, message = ''):
     if builder.sorter != None:
       builder.sorter.emptyDependencyStack()
@@ -32,6 +32,7 @@ class NoSuchFileError(SSError): pass
 class NoSuchPackage(SSError): pass
 class BuilderDirectiveNotClosed(SSError): pass
 class FilenameExistsTwice(SSError): pass
+class MissingExportDescription(SSError): pass
   
 
 # SSCoreBuilder ===========================
@@ -136,8 +137,8 @@ class SSCoreBuilder():
     files = [f for f in os.listdir(dir) 
              if(f != ".svn" and self.isDirectoryOrJsFile(os.path.join(dir, f)))]
 
-    for file in files:
-      path = os.path.join(dir, file)
+    for afile in files:
+      path = os.path.join(dir, afile)
       # check each file for the presence of a build directive
       if os.path.isdir(path) and recurse:
         self.parseDirectory(path, recurse)
@@ -158,8 +159,6 @@ class SSCoreBuilder():
     """
     Returns the metadata for a particular file, throwing an exception if not found
     """
-    metadata = None
-    
     if self.metadata.has_key(name):
       return self.metadata[name]
     else:
@@ -208,6 +207,7 @@ class SSCoreBuilder():
     packageDict = {}
     packageDict['packages'] = self.packages
     packageDict['files'] = self.metadata
+    packageDict['exports'] = self.exports
     
     # get a json dump
     jsonString = json.dumps(packageDict, sort_keys=True, indent=4)
@@ -291,6 +291,25 @@ class SSCoreBuilder():
       self.testDependencies[testFile].append(metadata['path'])
 
 
+  def collectExports(self):
+    """
+    Collects all export metadata.
+    """
+    self.exports = {}
+    for afile in self.metadata:
+      if self.metadata[afile].has_key('export'):
+        # determine the exports
+        fileExports = self.metadata[afile]['export']
+        print fileExports
+        if isinstance(fileExports, bool):
+          raise MissingExportDescription(self, message="No mapping value supplied to @export directive in file %s" % self.metadata[afile]['path'])
+        exportMappings = dict([((len(kv) > 1 and (kv[0].strip(), kv[1].strip())) or 
+                                (kv[0], kv[0])) 
+                               for kv in [s.split(" as ") for s in fileExports]])
+        self.exports.update(exportMappings)
+        
+
+
   def build(self, path, recurse=False):
     """
     Creates all the internal data structures and sorts all found packages.
@@ -302,6 +321,7 @@ class SSCoreBuilder():
     # sort the internal package data structure
     self.sortPackages()
     self.calculateTestDependencies()
+    self.collectExports()
 
 
 def usage():
@@ -313,9 +333,6 @@ def usage():
 
 
 def main(argv):
-  # there is a sanity check to make sure that
-  # certain directories exist so that this
-  # script isn't accidentally run anywhere
   inputFile = "../"
   outputDir = "../config"
   recursive = False

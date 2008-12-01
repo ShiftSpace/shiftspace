@@ -24,16 +24,11 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
     <title>ShiftSpace Sandbox</title>
     <link rel="stylesheet" href="style.css" type="text/css"></link>
-
-    <script type="text/javascript" charset="utf-8">
-      var ShiftSpaceSandBoxMode = true;
-    </script>
-    
     <script src="../mootools/mootools-1.2-core.js" type="text/javascript"></script>
     <script src="../mootools/mootools-1.2-more.js" type="text/javascript"></script>
     <script src="GreaseMonkeyApi.js" type="text/javascript"></script>
     <script src="../client/Videobox.js" type="text/javascript"></script>
-    <script src="../shiftspace.user.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../builds/shiftspace.sandbox.js" type="text/javascript" charset="utf-8"></script>
     <!--<script src="../client/Actions.js" type="text/javascript"></script>-->
     <style type="text/css">
     .first
