@@ -135,6 +135,7 @@ class SSPreProcessor:
     outFile = None
     inFile = None
     envFileOption = None
+    exportObjects = False
 
     try:
       opts, args = getopt.getopt(argv, "hp:i:o:e:x", ["environment=", "project=", "output=", "input=", "help", "project", "export"])
@@ -155,6 +156,8 @@ class SSPreProcessor:
         inFile = arg
       elif opt in ("-e", "--environment"):
         envFileOption = arg
+      elif opt in ("-x", "--export"):
+        exportObjects = True
       else:
         assert False, "unhandled options"
         
@@ -210,8 +213,16 @@ class SSPreProcessor:
 
     self.preprocessFile(self.inFile)
 
+    # export symbols
+    if exportObjects and len(self.metadata['exports']) > 0:
+      print self.metadata['exports']
+      print type(self.metadata['exports'])
+      self.outFile.write('if(typeof ShiftSpace == "undefined") ShiftSpace = {};\n')
+      for realName, exportName in self.metadata['exports'].iteritems():
+        self.outFile.write('if(typeof %s != "undefined") ShiftSpace.%s = %s;\n' % (realName, exportName, realName))
+
     # load main if there is one
-    if self.proj["main"]:
+    if self.proj.has_key("main"):
       mainFile = "../config/main/%s.js" % os.path.splitext(self.proj["main"])[0]
       try:
         mainFileHandle = open(mainFile)
