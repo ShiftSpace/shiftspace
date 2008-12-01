@@ -124,3 +124,9 @@ var SSListView = new Class({
     this.parent();
   }
 })
+
+// Add it to UI objects if possible
+if(typeof ShiftSpaceUI != "undefined")
+{
+  ShiftSpaceUI.SSListView = SSListView;
+}

@@ -11,9 +11,11 @@ var SSTabView = new Class({
   name: 'SSTabView',
   
   Extends: SSView,
-
+  
   initialize: function(el, options)
   {
+    this.setOptions(this.defaults(), options)
+    
     this.parent(el, options);
     
     this.__selectedTab__ = -1;

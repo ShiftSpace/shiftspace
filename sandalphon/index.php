@@ -14,11 +14,6 @@
     <script src="../builds/shiftspace.sandalphon.js" charset="utf-8"></script>
     <!-- what's need to startup the tool -->
     <script type="text/javascript" charset="utf-8">
-      // Actual Sandalphon
-      var Sandalphon;
-      // Just the interface tool
-      var SandalphonTool;
-
       window.addEvent('domready', function() {
         waitForConsole();
       });
