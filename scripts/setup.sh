@@ -12,10 +12,21 @@ echo A rabbi, a priest and a javascript programmer are sitting in a coffee shop.
 echo =============================================================================
 echo
 echo
-echo
+
+./build_ss.sh
+
+echo ============================================================================================
+echo "Suddenly, David Nolen walks in and says 'don't be lazy!' [They weren't really being lazy...]"
+echo ============================================================================================
 echo
 echo
 
-./build_ss.sh
 ./build_sb.sh
+
+echo ============================================================================================
+echo Unfortunately, we didn\'t end up drinking sambouka at all, even though it was _really_ close.
+echo ============================================================================================
+echo
+echo
+
 ./build_sd.sh
