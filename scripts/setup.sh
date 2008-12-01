@@ -1,0 +1,1 @@
+# make the build, and compiledViews diretories and set their permissions
