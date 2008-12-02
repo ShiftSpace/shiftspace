@@ -131,6 +131,18 @@ var SSListView = new Class({
   },
   
   
+  scrollLeft: function()
+  {
+    
+  },
+  
+  
+  scrollRight: function()
+  {
+    
+  },
+  
+  
   refresh: function()
   {
     this.parent();

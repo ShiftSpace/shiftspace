@@ -1,13 +1,20 @@
 {
   "packages": {
     "remove": [
+      "Pinning"
     ],
     "replace": {
     }
   },
   "files": {
     "remove": [
-      "CoreEvents"
+      "CoreEvents",
+      "PluginFunctions",
+      "ShiftFunctions",
+      "SpaceFunctions",
+      "FullScreen",
+      "RecentlyViewedHelpers",
+      "ErrorWindow"
     ],
     "replace": {
     }

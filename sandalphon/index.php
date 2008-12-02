@@ -76,13 +76,6 @@
                 </select>
               </td>
             </tr>
-            <tr>
-              <th>Load Test File:</th>
-              <td>
-                <input id="loadTestInput" type="text" value="/client/views/SSConsole/test.js"></input>
-                <input id="loadTestFile" type="button" name="LoadTest" value="Load"></input>
-              </td>
-            </tr>
           </table>
         </form>
       </div>

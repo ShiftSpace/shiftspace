@@ -444,9 +444,6 @@ var SandalphonToolClass = new Class({
      this.storage().get('lastInterfaceFile', function(ok, value) {
        if(ok && value) $('loadFileInput').setProperty('value', value);
      });
-     this.storage().get('lastTestFile', function(ok, value) {
-       if(ok && value) $('loadTestInput').setProperty('value', value);
-     });
 
      this.attachEvents();    
    },
@@ -508,43 +505,6 @@ var SandalphonToolClass = new Class({
      SSLog('Class files loaded.', SSLogSandalphon);
    },
    
-   /*
-     Function: loadTest
-       Loads a test file.
-
-     Parameters:
-       path - the path to the test file as a string.  The path should be absolute from the root ShiftSpace directory.
-   */
-   loadTest: function(path)
-   {
-     SSLog('Loading test file', SSLogSandalphon);
-     // save for later
-     this.storage().set('lastTestFile', path);
-
-     // load the interface file
-     new Request({
-       url:  '..'+path,
-       method: 'get',
-       onSuccess: function(responseText, responseXML)
-       {
-         try
-         {
-           SSLog('Evaluating test', SSLogSandalphon);
-           eval(responseText);         
-           SSLog('Running test', SSLogSandalphon);   
-           this.runTest()  
-         }
-         catch(exc)
-         {
-           SSLog(exc, SSLogError);
-         }
-       }.bind(this),
-       onFailure: function()
-       {
-         console.error('Oops could not load that test file.');
-       }
-     }).send();
-   },
    
    /*
      Function: storage
@@ -601,20 +561,6 @@ var SandalphonToolClass = new Class({
 
      // attach the compile events
      $('compileFile').addEvent('click', this.compileFile.bind(this));
-
-     // attach test events
-     $('loadTestInput').addEvent('keyup', function(_evt) {
-       var evt = new Event(_evt);
-       if(evt.key == 'enter')
-       {
-         this.loadTest($('loadTestInput').getProperty('value'));
-       }
-     }.bind(this));
-
-     $('loadTestFile').addEvent('click', function(_evt) {
-       var evt = new Event(_evt);
-       this.loadTest($('loadTestInput').getProperty('value'));
-     }.bind(this));
 
      // attach events to localization switcher
      $('localizedStrings').addEvent('change', function(_evt) {

@@ -1,14 +1,25 @@
 {
   "packages": {
     "remove": [
-      "Trails"
+      "Pinning"
     ],
     "replace": {
-      "ShiftSpaceUI": "MoMAUI"
     }
   },
   "files": {
     "remove": [
+      "CoreEvents",
+      "PluginFunctions",
+      "ShiftFunctions",
+      "SpaceFunctions",
+      "FullScreen",
+      "RecentlyViewedHelpers",
+      "ErrorWindow",
+      "SSTableView",
+      "SSEditableTextCell",
+      "SSTableRow",
+      "SSTabView",
+      "SSCustomTableRow"
     ],
     "replace": {
     }
