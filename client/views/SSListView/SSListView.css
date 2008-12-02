@@ -1,21 +1,17 @@
 .SSListView
 {
+  padding: 0px;
   background-color: orange;
   width: 100%;
   height: 100%;
 }
 
-.SSListView.HorizontalListView > .SSCell
+.SSListView.HorizontalListView > li.SSListViewCell
 {
   float: left;
 }
 
-.SSListView.VerticalListView > .SSCell
+.SSListView.VerticalListView > li.SSListViewCell
 {
   display: block;
-}
-
-.SSListView > ul.SSListItem
-{
-  
 }

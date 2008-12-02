@@ -113,6 +113,18 @@ var SSListView = new Class({
   },
   
   
+  canSelect: function(cell)
+  {
+    return true;
+  },
+  
+  
+  selectByNode: function(node)
+  {
+    console.log('selectByNode');
+  },
+  
+  
   cellNodes: function()
   {
     return this.element._getElements("> .SSCell");
