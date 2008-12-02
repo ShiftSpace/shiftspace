@@ -504,7 +504,7 @@ var SandalphonToolClass = new Class({
 
      SSLog('Class files loaded.', SSLogSandalphon);
    },
-   
+      
    
    /*
      Function: storage
