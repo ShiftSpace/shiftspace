@@ -5,6 +5,7 @@
 // @dependencies      SandalphonCore
 // ==/Builder==
 
+
 var SSView = new Class({
 
   name: 'SSView',
