@@ -149,8 +149,9 @@ Function: SSInstallSpace
 Parameters:
   space - The Space name to install
 */
-function SSInstallSpace(space) 
+function SSInstallSpace(space)
 {
+  SSLog("Install space " + space, SSLogForce);
   if(!installed[space])
   {
     var url = server + 'spaces/' + space + '/' + space + '.js';
@@ -184,6 +185,21 @@ function SSUninstallSpace(spaceName)
   // let everyone else know
   SSFireEvent('onSpaceUninstall', spaceName);
 };
+
+
+function SSUninstallAllSpaces()
+{
+  for(var spaceName in installed)
+  {
+    SSUninstallSpace(spaceName);
+  }
+  SSSetValue('installed', null);
+}
+
+
+function SSResetSpaces()
+{
+}
 
 /*
   Function: SSpaceForName

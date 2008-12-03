@@ -243,8 +243,8 @@ var ShiftSpace = new (function() {
         // Clear a specific file from the cache
         SSLog('Clearing ' + url + ' from cache', SSLogSystem);
         SSSetValue('cache.' + url, 0);
-      } 
-      else 
+      }
+      else
       {
         // Clear all the files from the cache
         cache.each(function(url) {

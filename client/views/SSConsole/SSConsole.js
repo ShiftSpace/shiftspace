@@ -88,6 +88,13 @@ var SSConsole = new Class({
       if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
       if(this.outlets().get('SSSetServers')) this.initSetServersForm();
       if(this.outlets().get('SSUserLoginStatus')) this.initUserLoginStatus();
+      if(this.outlets().get('clearInstalledButton'))
+      {
+        this.outlets().get('clearInstalledButton').addEvent('click', function(_evt) {
+          var evt = new Event(_evt);
+          SSUninstallAllSpaces();
+        });
+      }
     }
   },
 

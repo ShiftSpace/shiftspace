@@ -48,6 +48,9 @@ var installed = SSGetValue('installed', {
   'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
 });
 
+SSLog("Installed ================", SSLogSystem | SSLogForce);
+SSLog(JSON.encode(installed), SSLogSystem | SSLogForce);
+
 var spacePrefs = SSGetValue('spacePrefs', {});
 
 // Each plugin and a corresponding URL of its origin
