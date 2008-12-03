@@ -1616,8 +1616,8 @@ Element.implement({
 	},
 
 	getComputedStyle: function(property){
-		if (this.currentStyle) return this.currentStyle[property.camelCase()];
-		var computed = this.getWindow().getComputedStyle(this, null);
+		if ($(this).currentStyle) return $(this).currentStyle[property.camelCase()];    // CHANGE: For GM - David
+		var computed = $(this).getWindow().getComputedStyle($(this), null);             // CHANGE: ditto
 		return (computed) ? computed.getPropertyValue([property.hyphenate()]) : null;
 	},
 

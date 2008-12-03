@@ -304,6 +304,7 @@ See Also:
 */
 function SSSaveNewShift(shiftJson)
 {
+  SSLog('SSSaveNewShift', SSLogShift);
   var space = SSSpaceForName(shiftJson.space);
 
   // remove the filters from the json object
@@ -320,9 +321,9 @@ function SSSaveNewShift(shiftJson)
     status: SSGetDefaultShiftStatus() // TODO: this call is in the space ecosystem
   };
 
-  SSLog('saving new shift!');
+  SSLog('saving new shift!', SSLogSystem);
   SSServerCall.safeCall('shift.create', params, function(json) {
-    SSLog('>>>>>>>>>>>>>>>>> SAVED new shift', SSLogServerCall);
+    SSLog('>>>>>>>>>>>>>>>>> SAVED new shift', SSLogSystem);
     if (!json.status)
     {
       console.error(json.message);
@@ -385,7 +386,7 @@ function SSSaveNewShift(shiftJson)
 */
 function SSSaveShift(shiftJson) 
 {
-  //SSLog('saveShift');
+  SSLog('SSSaveShift', SSLogShift);
   //SSLog(shiftJson);
 
   // if new skip to SSSaveNewShift
