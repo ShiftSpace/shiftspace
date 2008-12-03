@@ -459,11 +459,10 @@ Array.implement({
 	},
 	
 	// CHANGE: I added this - David
-	copy: function()
-	{
-	  var results = [];
-	  for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
-	  return results;
+	copy: function(){
+		var results = [];
+		for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
+		return results;
 	},
 
 	map: function(fn, bind){

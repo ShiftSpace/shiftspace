@@ -61,19 +61,19 @@ var ShiftSpaceSpace = new Class({
     }
 
     // Error checking for Developers, probably should just replace with defaults
-    if( !this.attributes.name )
+    if(!this.attributes.name)
     {
       valid = false;
       SSLog(this);
-      SSLog('This Space does not define a name attribute.', SSLogError);
+      SSLog('This space does not define a name attribute.', SSLogError);
     }
-    if( !this.attributes.icon )
+    if(!this.attributes.icon)
     {
       valid = false;
-      SSLog('Error: This Space does not have an icon.', SSLogError);
+      SSLog('Error: This space does not have an icon.', SSLogError);
     }
 
-    if( valid )
+    if(valid)
     {
       if(typeof SSRegisterSpace != 'undefined')
       {

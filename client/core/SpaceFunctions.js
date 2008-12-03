@@ -20,7 +20,7 @@ function SSLoadSpace(space, callback)
 {
   if(space)
   {
-    SSLog('loading space: ' + space); 
+    SSLog('loading space: ' + space, SSLogSystem);
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
       var url = installed[space] + '?' + new Date().getTime();
@@ -29,12 +29,12 @@ function SSLoadSpace(space, callback)
         id: space
       });
 
-      SSLog('Direct inject ' + space);
+      SSLog('Direct inject ' + space, SSLogSystem);
       if(callback) callback();
     }
     else
     {
-      SSLog('loading space: ' + space);
+      SSLog('loading space: ' + space + ' from ' + installed[space], SSLogSystem);
       SSLoadFile(installed[space], function(rx) {
         var err;
         //SSLog(space + ' Space loaded, rx.responseText:' + rx.responseText);

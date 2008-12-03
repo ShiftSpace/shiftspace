@@ -1,6 +1,6 @@
 {
-  "SERVER": "http://localhost/~davidnolen/shiftspace-0.5/",
-  "SPACEDIR": "http://localhost/~davidnolen/shiftspace-0.5/spaces/",
+  "SERVER": "http://localhost/~davidnolen/shiftspace/",
+  "SPACEDIR": "http://localhost/~davidnolen/shiftspace/spaces/",
   "LOG_LEVEL": "SSLogError",
   "VARS": {
     "ShiftSpaceSandBoxMode": true

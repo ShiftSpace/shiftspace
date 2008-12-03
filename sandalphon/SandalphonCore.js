@@ -26,7 +26,6 @@ var SandalphonClass = new Class({
   
   getContextId: function(ctxt)
   {
-    console.log(ctxt);
     if(!ctxt.ssctxtid)
     {
       ctxt.ssctxtid = this._genContextId();
@@ -120,7 +119,6 @@ var SandalphonClass = new Class({
     var interface;
     var styles;
     
-    console.log('Sandalphon load!');
     SSLog("Sandalphon LOAD " + path, SSLogSandalphon);
     
     var server = (SSInfo && SSInfo().server) || '..';
@@ -129,7 +127,7 @@ var SandalphonClass = new Class({
     if(typeof SandalphonToolMode != 'undefined')
     {
       var interfaceCall = new Request({
-        url:  server+path+'.html',
+        url: server+path+'.html',
         method: 'get',
         onComplete: function(responseText, responseXML)
         {
@@ -143,7 +141,7 @@ var SandalphonClass = new Class({
       });
       
       var stylesCall = new Request({
-        url:  '..'+path+'.css',
+        url:  server+path+'.css',
         method: 'get',
         onComplete: function(responseText, responseXML)
         {
@@ -235,7 +233,6 @@ var SandalphonClass = new Class({
     this.setContextIsReady(ctxtid, false);
     
     SSLog('>>>>>>>>>>>>>>>>>> activate', SSLogSandalphon);
-    console.log('>>>>>>>>>>>>>>>>>>> activate');
     
     // First generate the outlet bindings
     this.generateOutletBindings(context);
@@ -421,7 +418,6 @@ var SandalphonToolClass = new Class({
 
    initialize: function(storage)
    { 
-     console.log('starting up!');
      SSLog('Sandalphon, sister of Metatron, starting up.', SSLogSandalphon);
      // setup the persistent storage
      this.setStorage(storage);
@@ -429,7 +425,6 @@ var SandalphonToolClass = new Class({
      this.setupClassPaths();
      // intialize the interface
      this.initInterface();
-     console.log('Loading localized strings!');
    },
 
 
@@ -584,11 +579,11 @@ var SandalphonToolClass = new Class({
 
      new Request({
        url: "compile.php",
-       data: {"filepath":'..'+filepath+'.html'},
+       data: {"filepath":'../'+filepath+'.html'},
        onComplete: function(responseText, responseXml)
        {
          var filename = filepath.split('/').getLast();
-         Sandalphon.load('/client/compiledViews/'+filename, this.loadUI.bind(this));
+         Sandalphon.load('client/compiledViews/'+filename, this.loadUI.bind(this));
        }.bind(this),
        onFailure: function(response)
        {

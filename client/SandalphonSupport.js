@@ -47,7 +47,6 @@ function SSSetControllerForNode(controller, _node)
 function SSControllerForNode(_node)
 {
   var node = $(_node);
-  SSLog(_node, SSLogForce);
   return __controllers__.get(node.getProperty('id')) ||
          (node.getProperty('uiclass') && new SSViewProxy(node)) ||
          null;

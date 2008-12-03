@@ -10,8 +10,8 @@
 %%VARS%%
 
 // two most important vars
-var server = SSGetValue('server', '%%SERVER%%');
-var spacesDir = SSGetValue('spaceDir', '%%SPACEDIR%%');
+var server = '%%SERVER%%';
+var spacesDir = '%%SPACEDIR%%';
 
 var __sys__ = %%SYSTEM_TABLE%%;
 var __sysavail__ = {
