@@ -6,9 +6,11 @@ if (!defined('BASE_DIR')) {
 
 if (!function_exists('__autoload')) {
   function __autoload($class) {
+    $class = strtolower($class);
+    
     if (!strpos($class, '_') && file_exists(BASE_DIR . "/app/$class.php")) {
       require_once BASE_DIR . "/app/$class.php";
-    } else if (strpos($class, 'Base_') === 0) {
+    } else if (strpos($class, 'base_') === 0) {
       $name = substr($class, 5);
       require_once BASE_DIR . "/library/$name/$name.php";
     } else {
