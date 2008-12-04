@@ -10,8 +10,8 @@
 %%VARS%%
 
 // two most important vars
-var server = SSGetValue('server', '%%SERVER%%');
-var spacesDir = SSGetValue('spaceDir', '%%SPACEDIR%%');
+var server = '%%SERVER%%';
+var spacesDir = '%%SPACEDIR%%';
 
 var __sys__ = %%SYSTEM_TABLE%%;
 var __sysavail__ = {
@@ -47,6 +47,9 @@ var installed = SSGetValue('installed', {
   'Highlights': server + 'spaces/Highlights/Highlights.js',
   'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
 });
+
+SSLog("Installed ================", SSLogSystem | SSLogForce);
+SSLog(JSON.encode(installed), SSLogSystem | SSLogForce);
 
 var spacePrefs = SSGetValue('spacePrefs', {});
 

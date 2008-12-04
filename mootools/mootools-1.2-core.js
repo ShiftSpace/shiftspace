@@ -459,11 +459,10 @@ Array.implement({
 	},
 	
 	// CHANGE: I added this - David
-	copy: function()
-	{
-	  var results = [];
-	  for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
-	  return results;
+	copy: function(){
+		var results = [];
+		for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
+		return results;
 	},
 
 	map: function(fn, bind){
@@ -1617,8 +1616,8 @@ Element.implement({
 	},
 
 	getComputedStyle: function(property){
-		if (this.currentStyle) return this.currentStyle[property.camelCase()];
-		var computed = this.getWindow().getComputedStyle(this, null);
+		if ($(this).currentStyle) return $(this).currentStyle[property.camelCase()];    // CHANGE: For GM - David
+		var computed = $(this).getWindow().getComputedStyle($(this), null);             // CHANGE: ditto
 		return (computed) ? computed.getPropertyValue([property.hyphenate()]) : null;
 	},
 

@@ -20,7 +20,7 @@ function SSLoadSpace(space, callback)
 {
   if(space)
   {
-    SSLog('loading space: ' + space); 
+    SSLog('loading space: ' + space, SSLogSystem);
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
       var url = installed[space] + '?' + new Date().getTime();
@@ -29,12 +29,12 @@ function SSLoadSpace(space, callback)
         id: space
       });
 
-      SSLog('Direct inject ' + space);
+      SSLog('Direct inject ' + space, SSLogSystem);
       if(callback) callback();
     }
     else
     {
-      SSLog('loading space: ' + space);
+      SSLog('loading space: ' + space + ' from ' + installed[space], SSLogSystem);
       SSLoadFile(installed[space], function(rx) {
         var err;
         //SSLog(space + ' Space loaded, rx.responseText:' + rx.responseText);
@@ -149,8 +149,9 @@ Function: SSInstallSpace
 Parameters:
   space - The Space name to install
 */
-function SSInstallSpace(space) 
+function SSInstallSpace(space)
 {
+  SSLog("Install space " + space, SSLogForce);
   if(!installed[space])
   {
     var url = server + 'spaces/' + space + '/' + space + '.js';
@@ -184,6 +185,21 @@ function SSUninstallSpace(spaceName)
   // let everyone else know
   SSFireEvent('onSpaceUninstall', spaceName);
 };
+
+
+function SSUninstallAllSpaces()
+{
+  for(var spaceName in installed)
+  {
+    SSUninstallSpace(spaceName);
+  }
+  SSSetValue('installed', null);
+}
+
+
+function SSResetSpaces()
+{
+}
 
 /*
   Function: SSpaceForName

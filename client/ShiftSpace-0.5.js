@@ -241,14 +241,14 @@ var ShiftSpace = new (function() {
       if (typeof url == 'string') 
       {
         // Clear a specific file from the cache
-        log('Clearing ' + url + ' from cache');
+        SSLog('Clearing ' + url + ' from cache', SSLogSystem);
         SSSetValue('cache.' + url, 0);
-      } 
-      else 
+      }
+      else
       {
         // Clear all the files from the cache
         cache.each(function(url) {
-          log('Clearing ' + url + ' from cache');
+          SSLog('Clearing ' + url + ' from cache', SSLogSystem);
           SSSetValue('cache.' + url, 0);
         });
       }

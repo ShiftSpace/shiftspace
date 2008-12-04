@@ -74,7 +74,7 @@ var ShiftMenu = new Class({
   addSpace: function(spaceName) 
   {
     // TODO: we need the icon to not be separate from the space so that we can do incremental loading.
-    SSLog('adding space ' + spaceName);
+    SSLog('adding space ' + spaceName, SSLogForce);
     var spaceAttrs = ShiftSpace.info(spaceName);
     var container = this.element.firstChild;
     var clear = container.getElementsByTagName('br')[0];
@@ -99,6 +99,7 @@ var ShiftMenu = new Class({
     });
     
     icon.addEvent('click', function(e) {
+      SSLog('Space clicked ' + spaceName, SSLogForce);
       if (!ShiftSpace.User.isLoggedIn()) {
         window.alert('Sorry, you must be signed in to create new shifts.');
         this.hide(true);
