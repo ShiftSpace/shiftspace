@@ -1,7 +1,6 @@
 // ==Builder==
 // @uiclass
 // @optional
-// @name              SSConsole
 // @package           ShiftSpaceUI
 // ==/Builder==
 
@@ -489,18 +488,3 @@ var SSConsole = new Class({
 
 
 });
-
-// Create the object right away if we're not running under the Sandalphon tool
-if(typeof SandalphonToolMode == 'undefined')
-{
-  new SSConsole();
-}
-else
-{
-  // Add it the global UI class lookup
-  if(typeof ShiftSpaceUI != 'undefined')
-  {
-    ShiftSpaceUI.SSConsole = SSConsole;
-  }
-}
-

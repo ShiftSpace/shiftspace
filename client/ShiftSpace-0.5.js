@@ -79,6 +79,10 @@ var ShiftSpace = new (function() {
       // Load external scripts (pre-processing required)
       // INCLUDE PACKAGE ShiftSpaceUI
       
+      // Create the object right away if we're not running under the Sandalphon tool
+      new SSConsole();
+      // ShiftSpace.Console = new SSConsole();
+      
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
         SSLog('ShiftSpace Login ======================================');
@@ -241,14 +245,14 @@ var ShiftSpace = new (function() {
       if (typeof url == 'string') 
       {
         // Clear a specific file from the cache
-        SSLog('Clearing ' + url + ' from cache', SSLogSystem);
+        log('Clearing ' + url + ' from cache');
         SSSetValue('cache.' + url, 0);
-      }
-      else
+      } 
+      else 
       {
         // Clear all the files from the cache
         cache.each(function(url) {
-          SSLog('Clearing ' + url + ' from cache', SSLogSystem);
+          log('Clearing ' + url + ' from cache');
           SSSetValue('cache.' + url, 0);
         });
       }

@@ -68,6 +68,11 @@ class SSPreProcessor:
 
     self.outFile.write(postfix)
     self.outFile.write(logline2)
+    
+    # if uiclass internalize it into ShiftSpaceUI
+    if self.metadata['files'][realName].has_key('uiclass'):
+      self.outFile.write("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (realName, realName))
+    # intern into internal list of available components
     self.outFile.write("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
     incFile.close()
 
