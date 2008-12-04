@@ -117,7 +117,7 @@ class SSPreProcessor:
           self.outFile.write(self.setEnvVars(line))
 
     # if uiclass internalize it into ShiftSpaceUI    
-    if self.metadata['files'][fileName].has_key('uiclass'):
+    if self.metadata['files'].has_key(fileName) and self.metadata['files'][fileName].has_key('uiclass'):
       self.outFile.write("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (fileName, fileName))
 
   

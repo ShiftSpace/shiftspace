@@ -80,8 +80,8 @@ var ShiftSpace = new (function() {
       // INCLUDE PACKAGE ShiftSpaceUI
       
       // Create the object right away if we're not running under the Sandalphon tool
-      new SSConsole();
-      // ShiftSpace.Console = new SSConsole();
+      ShiftSpace.ShiftMenu = new ShiftMenu();
+      ShiftSpace.Console = new SSConsole();
       
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
