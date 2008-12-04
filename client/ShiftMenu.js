@@ -180,5 +180,3 @@ var ShiftMenu = new Class({
   }
   
 });
-
-ShiftSpace.ShiftMenu = new ShiftMenu();

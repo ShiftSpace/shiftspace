@@ -14,7 +14,8 @@
       "SpaceFunctions",
       "FullScreen",
       "RecentlyViewedHelpers",
-      "ErrorWindow"
+      "ErrorWindow",
+      "ShiftMenu"
     ],
     "replace": {
     }

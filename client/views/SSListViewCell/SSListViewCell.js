@@ -37,8 +37,3 @@ var SSListViewCell = new Class({
   
 
 });
-
-if(typeof ShiftSpaceUI != "undefined")
-{
-  ShiftSpaceUI.SSListViewCell = SSListViewCell;
-}

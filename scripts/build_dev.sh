@@ -1,0 +1,1 @@
+python ../builder/preprocess.py -e devtest -i ../client/ShiftSpace-0.5.js -o ../builds/shiftspace.dev.user.js;

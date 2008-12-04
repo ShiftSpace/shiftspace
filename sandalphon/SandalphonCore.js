@@ -264,7 +264,7 @@ var SandalphonClass = new Class({
     views.each(function(aView) {
       var theClass = aView.getProperty('uiclass');
       SSLog('=========================================');
-      SSLog('instantiating ' + theClass);
+      SSLog('instantiating ' + theClass, SSLogSandalphon);
       new ShiftSpaceUI[theClass](aView, {
         context: context
       });
@@ -421,12 +421,8 @@ var SandalphonToolClass = new Class({
      SSLog('Sandalphon, sister of Metatron, starting up.', SSLogSandalphon);
      // setup the persistent storage
      this.setStorage(storage);
-     // initialize the classpath
-     this.setupClassPaths();
-     // intialize the interface
      this.initInterface();
    },
-
 
    /*
      Function: initInterface
@@ -443,63 +439,6 @@ var SandalphonToolClass = new Class({
      this.attachEvents();    
    },
 
-   /*
-     Function: setupClassPaths
-       Loads the class paths.  Doesn't really do all that much now.
-   */
-   setupClassPaths: function()
-   {
-     // initialize the UIClassPaths var
-     this.storage().get('UIClassPaths', function(ok, value) {
-       if(ok)
-       {
-         /*
-         if(!value)
-         {
-         */
-           SSLog('Initializing class paths.', SSLogSandalphon);
-           this.storage().set('UIClassPaths', JSON.encode(ShiftSpaceUIClassPaths));
-           this.storage().set('ClassPaths', JSON.encode(ShiftSpaceClassPaths));
-         /*}
-         else
-         {
-           console.log('Loading class paths.');
-           this.UIClassPaths = JSON.decode('('+value+')');
-         }*/
-         this.loadClassFiles();
-       }
-     }.bind(this));
-   },
-
-   /*
-     Function: loadClassFiles
-       Loads all of the files pointed to in the class path dictionaries.
-   */
-   loadClassFiles: function()
-   {
-     for(var className in ShiftSpaceClassPaths)
-     {
-       var path = '..' + ShiftSpaceClassPaths[className] + className;
-       new Asset.javascript(path+'.js');
-     }
-
-     for(var className in ShiftSpaceUIClassPaths)
-     {
-       var path = '..' + ShiftSpaceUIClassPaths[className] + className;
-       new Asset.css(path+'.css');
-       new Asset.javascript(path+'.js');
-     }
-
-     for(var className in ShiftSpaceUserClassPaths)
-     {
-       var path = '..' + ShiftSpaceUserClassPaths[className] + className;
-       new Asset.css(path+'.css');
-       new Asset.javascript(path+'.js');
-     }
-
-     SSLog('Class files loaded.', SSLogSandalphon);
-   },
-      
    
    /*
      Function: storage

@@ -1,7 +1,6 @@
 // ==Builder==
 // @uiclass
 // @optional
-// @name              SSConsole
 // @package           ShiftSpaceUI
 // ==/Builder==
 
@@ -107,7 +106,7 @@ var SSConsole = new Class({
     // hide the login tab
     this.outlets().get('MainTabView').hideTabByName('LoginTabView');
     // update the datasource
-    if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpace.User.getUsername());
+    if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUsername());
     // switch to the tab view
     this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
     
@@ -118,7 +117,7 @@ var SSConsole = new Class({
       loginStatus.getElementById('SSUserIsNotLoggedIn').removeClass('SSActive');
       var isLoggedIn = loginStatus.getElementById('SSUserIsLoggedIn');
       isLoggedIn.addClass('SSActive');
-      isLoggedIn.getElement('span').set('text', ShiftSpace.User.getUsername());
+      isLoggedIn.getElement('span').set('text', ShiftSpaceUser.getUsername());
     }
   },
 
@@ -187,27 +186,27 @@ var SSConsole = new Class({
     var apiField = this.outlets().get('SSSetApiURLField');
     var spacesDirField = this.outlets().get('SSSetSpaceDirField');
     
-    if(ShiftSpace.info)
+    if(SSInfo)
     {
-      apiField.setProperty('value', ShiftSpace.info().server);
-      spacesDirField.setProperty('value', ShiftSpace.info().spacesDir);
+      apiField.setProperty('value', SSInfo().server);
+      spacesDirField.setProperty('value', SSInfo().spacesDir);
 
       // add keydown event handlers on them for carraige return
       apiField.addEvent('keydown', function(_evt) {
         var evt = new Event(_evt);
-        var previousValue = SSGetValue('server', ShiftSpace.info().server);
+        var previousValue = SSGetValue('server', SSInfo().server);
         if(evt.key == 'enter')
         {
-          console.log('Update the api variable. prev: ' + previousValue);
+          SSLog('Update the api variable. prev: ' + previousValue);
         }
       }.bind(this));
 
       spacesDirField.addEvent('keydown', function(_evt) {
         var evt = new Event(_evt);
-        var previousValue = SSGetValue('spacesDir', ShiftSpace.info().spacesDir);
+        var previousValue = SSGetValue('spacesDir', SSInfo().spacesDir);
         if(evt.key == 'enter')
         {
-          console.log('Update the space dir variable. prev:' + previousValue);
+          SSLog('Update the space dir variable. prev:' + previousValue);
         }
       }.bind(this));
     }
@@ -238,7 +237,7 @@ var SSConsole = new Class({
 
   handleLoginFormSubmit: function()
   {
-    ShiftSpace.User.login({
+    ShiftSpaceUser.login({
       username: this.outlets().get('SSLoginFormUsername').getProperty('value'),
       password: this.outlets().get('SSLoginFormPassword').getProperty('value')
     }, this.loginFormSubmitCallback.bind(this));
@@ -275,7 +274,7 @@ var SSConsole = new Class({
       password_again: this.outlets().get('SSSignUpFormPassword').getProperty('value')
     };
 
-    ShiftSpace.User.join(joinInput, this.signUpFormSubmitCallback.bind(this));
+    ShiftSpaceUser.join(joinInput, this.signUpFormSubmitCallback.bind(this));
   },
 
 
@@ -291,10 +290,10 @@ var SSConsole = new Class({
     // init login/logout button
     this.outlets().get('SSConsoleLoginOutButton').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
-      if(ShiftSpace.User.isLoggedIn())
+      if(ShiftSpaceUser.isLoggedIn())
       {
         // logout the user
-        ShiftSpace.User.logout();
+        ShiftSpaceUser.logout();
       }
       else
       {
@@ -372,7 +371,7 @@ var SSConsole = new Class({
   initResizer: function()
   {
     // place the resizer above the thing
-    var resizer = new ShiftSpace.Element('div', {
+    var resizer = new SSElement('div', {
       'id': 'SSConsoleResizer'
     });
     $(document.body).grab(resizer);
@@ -456,7 +455,7 @@ var SSConsole = new Class({
     // in the all shifts table the user can edit only if she owns the shift
     if(args.tableView == this.allShiftsTableView)
     {
-      return (ShiftSpace.User.getUsername() == this.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));
+      return (ShiftSpaceUser.getUsername() == this.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));
     }
 
     return true;
@@ -489,18 +488,3 @@ var SSConsole = new Class({
 
 
 });
-
-// Create the object right away if we're not running under the Sandalphon tool
-if(typeof SandalphonToolMode == 'undefined')
-{
-  new SSConsole();
-}
-else
-{
-  // Add it the global UI class lookup
-  if(typeof ShiftSpaceUI != 'undefined')
-  {
-    ShiftSpaceUI.SSConsole = SSConsole;
-  }
-}
-

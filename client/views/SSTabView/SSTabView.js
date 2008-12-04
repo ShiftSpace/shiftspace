@@ -310,9 +310,3 @@ var SSTabView = new Class({
   }
   
 });
-
-// add it to the UI object if possible
-if(typeof ShiftSpaceUI != 'undefined')
-{
-  ShiftSpaceUI.SSTabView = SSTabView;
-}
