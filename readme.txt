@@ -183,44 +183,40 @@ account.
     should have a directory called shiftspace with everything you need inside
     it.
 
-    Using Subversion
+    Using Git
     ----------------
 
-    Subversion is source control software that allows you to easily download
+    Git is source control software that allows you to easily download
     files and, once you have them, keep them up-to-date with updates from other
     developers. It also lets you contribute code back into the repository and
     merge your changes with those of other people.
 
     There is a very good manual on Subversion basics available at
-    http://svnbook.red-bean.com/. To install the Subversion software, choose an
+    http://git.or.cz/#documentation. To install the Git software, choose an
     installation package from their available packages:
-    http://subversion.tigris.org/project_packages.html
+    http://git.or.cz/#dowload
 
-    By default Subversion is controlled through the command-line. There are
+    By default Git is controlled through the command-line (terminal). There are
     various GUI interfaces for Subversion, which may make it easier to get
-    started. For Windows there is TortoiseSVN and on Macs there is svnX.
+    started. Some links to several packages and utilities are availiable in the link above.
     
-        TortoiseSVN:
-        http://tortoisesvn.tigris.org/
-        
-        svnX
-        http://www.lachoseinteractive.net/en/community/subversion/svnx/
 
-    Once you have Subversion installed, here is the repository URL that you can
+
+    Once you have Git installed, here is the repository URL that you can
     use to check out the ShiftSpace repository:
-    http://shiftspace.org/code/branches/0.11. To download the latest files with
-    Subversion, here's the command to use:
+    git://github.com/ShiftSpace/shiftspace.git. To download the latest files with
+    Git, here's the command to use:
 
-        svn checkout http://shiftspace.org/code/branches/0.11
+        git clone git://github.com/ShiftSpace/shiftspace.git
 
     You should see a list of files being downloaded. If you want to update them
     in the future, just issue this command from the source code directory:
     
-        svn update
+        git pull
 
     If you need help with Subversion, you can always use this command:
 
-        svn help
+        git help
 
     Move files
     ----------
