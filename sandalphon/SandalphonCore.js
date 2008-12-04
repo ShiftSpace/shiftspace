@@ -264,7 +264,7 @@ var SandalphonClass = new Class({
     views.each(function(aView) {
       var theClass = aView.getProperty('uiclass');
       SSLog('=========================================');
-      SSLog('instantiating ' + theClass);
+      SSLog('instantiating ' + theClass, SSLogSandalphon);
       new ShiftSpaceUI[theClass](aView, {
         context: context
       });

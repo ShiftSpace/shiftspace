@@ -64,20 +64,17 @@ class SSPreProcessor:
 
     incFile = open(incFilename)
     
-    self.preprocessFile(incFile)
+    self.preprocessFile(incFile, realName)
 
     self.outFile.write(postfix)
     self.outFile.write(logline2)
     
-    # if uiclass internalize it into ShiftSpaceUI
-    if self.metadata['files'][realName].has_key('uiclass'):
-      self.outFile.write("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (realName, realName))
     # intern into internal list of available components
     self.outFile.write("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
     incFile.close()
 
 
-  def preprocessFile(self, file):
+  def preprocessFile(self, file, fileName):
     for line in file:
       line = self.setEnvVars(line)
       
@@ -118,6 +115,11 @@ class SSPreProcessor:
           self.includeFile(self.metadata['files'][incFilename]['path'])
         else:
           self.outFile.write(self.setEnvVars(line))
+
+    # if uiclass internalize it into ShiftSpaceUI    
+    if self.metadata['files'][fileName].has_key('uiclass'):
+      self.outFile.write("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (fileName, fileName))
+
   
 
   def missingFileError(self, package):
@@ -141,6 +143,7 @@ class SSPreProcessor:
     inFile = None
     envFileOption = None
     exportObjects = False
+    fileName = None
 
     try:
       opts, args = getopt.getopt(argv, "hp:i:o:e:x", ["environment=", "project=", "output=", "input=", "help", "project", "export"])
@@ -176,6 +179,7 @@ class SSPreProcessor:
     if inFile != None:
       try:
         self.inFile = open(inFile)
+        fileName = os.path.splitext(os.path.basename(inFile))[0]
       except IOError:
         # bail!
         print "Error: no such input file exist"
@@ -216,7 +220,7 @@ class SSPreProcessor:
       print "Error: no such project file exists. (%s)" % projFilePath
       sys.exit(2)
 
-    self.preprocessFile(self.inFile)
+    self.preprocessFile(self.inFile, fileName)
 
     # export symbols
     if exportObjects and len(self.metadata['exports']) > 0:

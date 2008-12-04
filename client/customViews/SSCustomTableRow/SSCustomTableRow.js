@@ -177,9 +177,3 @@ var SSCustomTableRow = new Class({
     }
   }
 });
-
-// add it to the UI object if possible
-if(typeof ShiftSpaceUI != 'undefined')
-{
-  ShiftSpaceUI.SSCustomTableRow = SSCustomTableRow;
-}
