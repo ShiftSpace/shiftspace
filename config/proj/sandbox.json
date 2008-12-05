@@ -11,5 +11,6 @@
     "replace": {
     }
   },
-  "main": "SandboxMain.js"
+  "main": "SandboxMain.js",
+  "target": "shiftspace.sandbox.js"
 }
