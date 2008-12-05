@@ -2292,6 +2292,12 @@ Native.implement([Document, Window], {
 	getCoordinates: function(){
 		var size = this.getSize();
 		return {top: 0, left: 0, bottom: size.y, right: size.x, height: size.y, width: size.x};
+	},
+	
+	getViewport: function(){
+	  var scroll = this.getScroll();
+	  var size = this.getSize();
+	  return {top:scroll.y, left:scroll.x, bottom:size.y+scroll.y, right:size.x+scroll.x};
 	}
 
 });

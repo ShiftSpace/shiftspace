@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="sandalphon.css" type="text/css" media="screen" title="no title" charset="utf-8" />
   </head>
   
-  <body>
+  <body class="InSandalphon">
     
     <div id="SSSandalphonControls">
       <div style="float: left;">
