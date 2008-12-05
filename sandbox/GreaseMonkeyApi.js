@@ -69,12 +69,6 @@ function GM_log(msg)
   {
     console.log(msg);
   } 
-  else 
-  {
-    setTimeout(function() {
-      throw(msg);
-    }, 0);
-  }
 }
 
 

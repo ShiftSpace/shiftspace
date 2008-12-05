@@ -531,5 +531,5 @@ var SandalphonToolClass = new Class({
          console.error(response);
        }
      }).send();
-   },
+   }
 });
