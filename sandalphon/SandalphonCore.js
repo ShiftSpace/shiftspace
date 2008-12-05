@@ -291,10 +291,6 @@ var SandalphonClass = new Class({
     var context = ctxt || window;
     var outlets = this.contextQuery(context, '*[outlet]');
     
-    console.log(ctxt);
-    console.log('outlets!');
-    console.log(outlets);
-
     outlets.each(function(anOutlet) {
       var outletTarget, sourceName;
       
@@ -322,8 +318,6 @@ var SandalphonClass = new Class({
         context: context
       });
       
-      console.log(this.outletBindings);
-
     }.bind(this));
   },
   
@@ -364,7 +358,6 @@ var SandalphonClass = new Class({
         source = SSControllerForNode(source);
       }
       
-      console.log(target);
       SSControllerForNode(target).addOutletWithName(sourceName, source);
     }.bind(this));
     
