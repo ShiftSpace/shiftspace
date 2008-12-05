@@ -19,5 +19,6 @@
     ],
     "replace": {
     }
-  }
+  },
+  "target": "shiftspace.sandalphon.js"
 }

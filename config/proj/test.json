@@ -10,5 +10,6 @@
     ],
     "replace": {
     }
-  }
+  },
+  "target": "shiftspace.dev.user.js"
 }

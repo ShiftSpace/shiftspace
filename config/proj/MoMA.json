@@ -19,9 +19,14 @@
       "SSEditableTextCell",
       "SSTableRow",
       "SSTabView",
-      "SSCustomTableRow"
+      "SSCustomTableRow",
+      "SSTableViewDatasource",
+      "Space",
+      "Shift"
     ],
     "replace": {
     }
-  }
+  },
+  "main": "MoMAMain.js",
+  "target": "shiftspace.moma.js"
 }

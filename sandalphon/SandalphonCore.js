@@ -290,7 +290,7 @@ var SandalphonClass = new Class({
     // grab the right context, grab all outlets
     var context = ctxt || window;
     var outlets = this.contextQuery(context, '*[outlet]');
-
+    
     outlets.each(function(anOutlet) {
       var outletTarget, sourceName;
       
@@ -317,7 +317,7 @@ var SandalphonClass = new Class({
         targetName: outletTarget,
         context: context
       });
-
+      
     }.bind(this));
   },
   
@@ -327,12 +327,14 @@ var SandalphonClass = new Class({
     // bind each outlet
     this.outletBindings.each(function(binding) {
       
-      var context = binding.context,
+      // get the real window context
+      var context = ($type(binding.context) == 'window' && binding.context) ||
+                    ($type(binding.context) == 'element' && binding.context.getWindow()),
           sourceName = binding.sourceName,
           source = binding.source,
           targetName = binding.targetName;
       
-      // check the context, and the top level window    
+      // first check frame then check parent window    
       var target = context.$(targetName) || (context != window && $(targetName));
         
       if(!target)

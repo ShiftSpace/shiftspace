@@ -11,5 +11,6 @@
     "replace": {
     }
   },
-  "main": "ShiftSpaceMain.js"
+  "main": "ShiftSpaceMain.js",
+  "target": "shiftspace.user.js"
 }
