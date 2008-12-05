@@ -35,8 +35,10 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     {
       margin-top:100px;
     }
-    
     </style>
+    <!--[if IE 6]>
+    <link rel="stylesheet" href="../styles/ShiftSpaceIE6.css" type="text/css"></link>
+    <![endif]-->
   </head>
   <body>
     <div id="lipsum">
