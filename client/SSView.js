@@ -185,6 +185,15 @@ var SSView = new Class({
     SSLog('Setting name ' + name + ' for ' + outlet);
     this.outlets().set(name, outlet);
   },
+  
+  
+  mapOutletsToThis: function()
+  {
+    this.outlets().each(function(object, name){ 
+      console.log('map ' + object + ' to ' + name);
+      this[name] = object;
+    }.bind(this));
+  },
 
 
   /*
