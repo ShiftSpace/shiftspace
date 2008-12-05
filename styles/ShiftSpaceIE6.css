@@ -1,0 +1,6 @@
+/* Allows Position Fixed Behavior with Position Absolute */
+html, body 
+{
+  height: 100%;	
+  overflow: auto; 
+}
