@@ -42,10 +42,10 @@ var __pluginsData__ = {};
 
 // Each space and a corresponding URL of its origin
 var installed = SSGetValue('installed', {
-  'Notes' : server + 'spaces/Notes/Notes.js',
-  'ImageSwap': server + 'spaces/ImageSwap/ImageSwap.js',
-  'Highlights': server + 'spaces/Highlights/Highlights.js',
-  'SourceShift': server + 'spaces/SourceShift/SourceShift.js'
+  'Notes' : spacesDir + 'Notes/Notes.js',
+  'ImageSwap': spacesDir + 'ImageSwap/ImageSwap.js',
+  'Highlights': spacesDir + 'Highlights/Highlights.js',
+  'SourceShift': spacesDir + 'SourceShift/SourceShift.js'
 });
 
 SSLog("Installed ================", SSLogSystem | SSLogForce);
