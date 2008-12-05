@@ -190,7 +190,6 @@ var SSView = new Class({
   mapOutletsToThis: function()
   {
     this.outlets().each(function(object, name){ 
-      console.log('map ' + object + ' to ' + name);
       this[name] = object;
     }.bind(this));
   },
