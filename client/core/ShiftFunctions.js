@@ -361,7 +361,6 @@ function SSSaveNewShift(shiftJson)
     if(ShiftSpace.Console)
     {
       ShiftSpace.Console.show();
-      ShiftSpace.Console.addShift(shiftJson, {isActive:true});
       ShiftSpace.Console.showShift(shiftJson.id);
     }
 
@@ -809,7 +808,11 @@ function SSShowShift(shiftId)
       SSShowErrorWindow(shiftId);
 
       // probably need to do some kind of cleanup
-      if(ShiftSpace.Console) ShiftSpace.Console.hideShift(shiftId);
+      if(ShiftSpace.Console) 
+      {
+        SSLog('Hiding a shift ' + shiftId, SSLogSystem);
+        ShiftSpace.Console.hideShift(shiftId);
+      }
     }
   }
 }

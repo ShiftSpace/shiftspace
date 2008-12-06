@@ -415,7 +415,7 @@ var SSConsole = new Class({
       if(typeof SSShowShift != 'undefined') 
       {
         console.log('show shift!');
-        SSShowShift(datasource.data()[args.rowIndex].id);
+        this.showShift(datasource.data()[args.rowIndex].id);
       }
     }
     else if(args.tableView == this.myShiftsTableView)
@@ -424,8 +424,32 @@ var SSConsole = new Class({
       // set a variable for opening this shift on the next page if the url is different
     }
   },
-
-
+  
+  
+  showShift: function(shiftId)
+  {
+    SSShowShift(shiftId);
+  },
+  
+  
+  hideShift: function(shiftId)
+  {
+    SSHideShift(shiftId);
+  },
+  
+  
+  focusShift: function(shiftId)
+  {
+    
+  },
+  
+  
+  blurShift: function(shiftId)
+  {
+    
+  },
+  
+  
   userDeselectedRow: function(args)
   {
     console.log('userDeselectedRow');

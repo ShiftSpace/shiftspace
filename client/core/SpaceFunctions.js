@@ -73,9 +73,9 @@ Parameters:
 */
 function SSRegisterSpace(instance) 
 {
-  SSLog("SSRegisterSpace");
+  SSLog("SSRegisterSpace", SSLogSystem);
   var spaceName = instance.attributes.name;
-  SSLog('Register Space ===================================== ' + spaceName);
+  SSLog('Register Space ===================================== ' + spaceName, SSLogSystem);
   SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
 
@@ -133,7 +133,6 @@ function SSRegisterSpace(instance)
     if(ShiftSpace.Console)
     {
       ShiftSpace.Console.blurShift(shiftId);
-      ShiftSpace.Console.setTitleForShift(shifts[shiftId].summary);
     }
   });
 
