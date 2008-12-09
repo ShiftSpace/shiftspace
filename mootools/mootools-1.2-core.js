@@ -1746,6 +1746,10 @@ Element.implement({
 	getChildren: function(match, nocash){
 		return walk(this, 'nextSibling', 'firstChild', match, true, nocash);
 	},
+	
+	getChild: function(match, nocash){
+	  return walk(this, 'nextSibling', 'firstChild', match, false, nocash);
+	},
 
 	hasChild: function(el){
 		el = $(el, true);
@@ -2505,7 +2509,7 @@ Selectors.Utils = {
 		}
 		return true;
 	},
-	
+		
 	getByTagAndID: function(ctx, tag, id){
 		if (id){
 			var item = (ctx.getElementById) ? ctx.getElementById(id, true) : Element.getElementById(ctx, id, true);
@@ -2514,14 +2518,30 @@ Selectors.Utils = {
 			return ctx.getElementsByTagName(tag);
 		}
 	},
+
+	genId: function(self){
+		var id = self.getProperty('id');
+		if(!id){
+			id = 'genId'+Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
+			self.setProperty('id', id);
+		}
+		return id;
+	},
 	
 	search: function(self, expression, local){
 		var splitters = [];
-		
+
 		var selectors = expression.trim().replace(Selectors.RegExps.splitter, function(m0, m1, m2){
 			splitters.push(m1);
 			return ':)' + m2;
 		}).split(':)');
+		
+		// allows .getElement('> selector') and .getElements('> selector')
+		selectors = selectors.filter(function(selector) { return (selector != '');});
+		
+		if(splitters.length == selectors.length){
+			return self.getWindow().$$('#'+this.genId(self)+' '+expression);
+		}
 		
 		var items, match, filtered, item;
 		
@@ -2557,11 +2577,8 @@ Selectors.Utils = {
 				}
 				items = filtered;
 			}
-			
 		}
-		
 		return items;
-		
 	}
 	
 };

@@ -129,9 +129,9 @@ var SSCustomTableRow = new Class({
   {
     if(cell)
     {
-      var image = cell._getElement('> img');
-      var span = cell._getElement('> span');
-    
+      var image = cell.getElement('> img');
+      var span = cell.getElement('> span');
+      
       var server = (SSInfo && SSInfo().server) || '..';
       
       image.setProperty('src', [server, '/spaces/', space, '/', space, '.png'].join(''));

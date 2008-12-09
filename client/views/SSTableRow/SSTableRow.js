@@ -59,7 +59,7 @@ var SSTableRow = new Class({
   setProperty: function(row, prop, value)
   {
     var propMethod = 'set'+prop.capitalize();
-    var cell = row._getElement('> td[name='+prop+']');
+    var cell = row.getElement('> td[name='+prop+']');
     if(this[propMethod])
     {
       this[propMethod](cell, value);
@@ -74,7 +74,7 @@ var SSTableRow = new Class({
   getProperty: function(row, prop)
   {
     var propMethod = 'get'+prop.capitalize();
-    var cell = row._getElement('> td[name='+prop+']');
+    var cell = row.getElement('> td[name='+prop+']');
     if(this[propMethod])
     {
       return this[propMethod](cell, prop);

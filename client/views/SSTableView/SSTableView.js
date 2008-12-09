@@ -39,19 +39,19 @@ var SSTableView = new Class({
 
     // for speed
     SSLog('Grab content view');
-    this.contentView = this.element._getElement('> .SSScrollView .SSContentView');
+    this.contentView = this.element.getElement('> .SSScrollView .SSContentView');
     // set the model row
     SSLog('Extract model row');
-    this.setModelRow(this.contentView._getElement('.SSModel').dispose());
+    this.setModelRow(this.contentView.getElement('.SSModel').dispose());
     // set the model row controller if there is one
     SSLog('Set model row controller');
     this.setModelRowController(this.controllerForNode(this.modelRow()));
     // set the column names
     SSLog('Set table view column names');
-    this.setColumnNames(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name');}));
+    this.setColumnNames(this.element.getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name');}));
     // set the column display titles
     SSLog('Set column titles');
-    this.setColumnTitles(this.element._getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('title');}));
+    this.setColumnTitles(this.element.getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('title');}));
     SSLog('Initialize column sorting');
     // set up the column orders
     this.initColumnSort();
@@ -78,7 +78,7 @@ var SSTableView = new Class({
 
   validateTable: function()
   {
-    if(!this.contentView._getElement('> .SSDefinition'))
+    if(!this.contentView.getElement('> .SSDefinition'))
     {
       throw new SSException(new Error("SSTableView missing table definition, refer to documentation."), this);
     }
@@ -91,7 +91,7 @@ var SSTableView = new Class({
   */
   initTableHead: function()
   {
-    var tableHead = this.element._getElement('> .SSControlView');
+    var tableHead = this.element.getElement('> .SSControlView');
     if(!tableHead)
     {
       tableHead = new Element('div', {
@@ -108,12 +108,12 @@ var SSTableView = new Class({
   */
   initColumnHeadings: function()
   {
-    var model = this.element._getElement('> .SSControlView .SSModel');
+    var model = this.element.getElement('> .SSControlView .SSModel');
     this.__columnHeadingModel__ = model.dispose();
 
     if(model)
     {
-      var tableHead = this.element._getElement('> .SSControlView');
+      var tableHead = this.element.getElement('> .SSControlView');
       
       // get the column names
       this.columnTitles().length.times(function(idx) {
@@ -139,13 +139,13 @@ var SSTableView = new Class({
   
   columnCount: function()
   {
-    return this.contentView._getElements('> .SSDefinition col').length;
+    return this.contentView.getElements('> .SSDefinition col').length;
   },
 
 
   updateColumnTitles: function(columnTitles)
   {
-    var tableHead = this.element._getElement('> .SSControlView');
+    var tableHead = this.element.getElement('> .SSControlView');
     columnTitles.length.times(function(idx) {
       var columnTitle = columnTitles[idx];
       this.columnHeadingForIndex(idx).getElement('span.SSColumnHeadingTitle').set('text', columnTitle);
@@ -161,7 +161,7 @@ var SSTableView = new Class({
     // make the column titles refres to the column definition width - David
     this.columnHeadings().length.times(function(idx) {
       var colWidth = this.columnDefinitionForIndex(idx).getSize().x || this.columnDefinitionForIndex(idx).getStyle('width');
-      this.columnHeadingForIndex(idx).setStyle('width', colWidth);
+      this.columnHeadingForIndex(idx).setStyle('width', colWidth+1);
     }.bind(this));
   },
 
@@ -171,7 +171,7 @@ var SSTableView = new Class({
   */
   initColumnResizers: function()
   {
-    var resizers = this.element._getElements('> .SSControlView .SSResize');
+    var resizers = this.element.getElements('> .SSControlView .SSResize');
     var table = this.contentView;
 
     // setup the column resizers
@@ -354,7 +354,7 @@ var SSTableView = new Class({
   */
   selectedColumn: function()
   {
-    return this.contentView._getElement('> .SSDefinition col.SSActive');
+    return this.contentView.getElement('> .SSDefinition col.SSActive');
   },
 
   /*
@@ -366,7 +366,7 @@ var SSTableView = new Class({
   */
   selectedColumnIndex: function()
   {
-    return this.indexOfNode(this.contentView._getElements('> .SSDefinition col'), this.selectedColumn());
+    return this.indexOfNode(this.contentView.getElements('> .SSDefinition col'), this.selectedColumn());
   },
 
   /*
@@ -378,7 +378,7 @@ var SSTableView = new Class({
   */
   selectedRow: function()
   {
-    return this.contentView._getElement('.SSRow.SSActive');
+    return this.contentView.getElement('.SSRow.SSActive');
   },
   
   /*
@@ -402,7 +402,7 @@ var SSTableView = new Class({
   */
   selectedRowIndex: function()
   {
-    return this.indexOfNode(this.contentView._getElements('.SSRow'), this.selectedRow());
+    return this.indexOfNode(this.contentView.getElements('.SSRow'), this.selectedRow());
   },
 
   /*
@@ -454,7 +454,7 @@ var SSTableView = new Class({
       this.deselectAll();
     }
     
-    var target = this.contentView._getElements(".SSRow")[idx];
+    var target = this.contentView.getElements(".SSRow")[idx];
     target.addClass('SSActive');
     
     if(this.delegate() && this.delegate().userSelectedRow)
@@ -473,7 +473,7 @@ var SSTableView = new Class({
   selectColumn: function(idx)
   {
     this.deselectAll();
-    this.contentView._getElements("> .SSDefinition col")[idx].addClass('SSActive');
+    this.contentView.getElements("> .SSDefinition col")[idx].addClass('SSActive');
     this.columnHeadingForIndex(idx).addClass('SSActive');
   },
 
@@ -499,19 +499,19 @@ var SSTableView = new Class({
   */
   columnHeadingForIndex: function(idx)
   {
-    return this.element._getElements('> .SSControlView .SSColumnHeading')[idx];
+    return this.element.getElements('> .SSControlView .SSColumnHeading')[idx];
   },
   
   
   rowForIndex: function(idx)
   {
-    return this.element._getElements('> .SSScrollView .SSContentView .SSRow')[idx];
+    return this.element.getElements('> .SSScrollView .SSContentView .SSRow')[idx];
   },
   
   
   columnHeadings: function()
   {
-    return $A(this.element._getElements('> .SSControlView .SSColumnHeading'));
+    return $A(this.element.getElements('> .SSControlView .SSColumnHeading'));
   },
 
 
@@ -524,7 +524,7 @@ var SSTableView = new Class({
   */
   columnDefinitionForIndex: function(idx)
   {
-    return this.contentView._getElements('> .SSDefinition col')[idx];
+    return this.contentView.getElements('> .SSDefinition col')[idx];
   },
 
   /*
@@ -540,7 +540,7 @@ var SSTableView = new Class({
   columnIndexForNode: function(_node)
   {
     var node = (_node.hasClass('SSColumnHeading')) ? _node : _node.getParent('.SSColumnHeading');
-    return this.indexOfNode(this.element._getElements('> .SSControlView .SSColumnHeading'), node);
+    return this.indexOfNode(this.element.getElements('> .SSControlView .SSColumnHeading'), node);
   },
 
   /*
@@ -593,7 +593,7 @@ var SSTableView = new Class({
   */
   indexOfRow: function(row)
   {
-    return this.indexOfNode(this.contentView._getElements('.SSRow'), row);
+    return this.indexOfNode(this.contentView.getElements('.SSRow'), row);
   },
 
   /*
@@ -767,7 +767,7 @@ var SSTableView = new Class({
 
       if(!controller)
       {
-        newRow._getElement('> td[name='+columnName+']').set('text', data[columnName]);
+        newRow.getElement('> td[name='+columnName+']').set('text', data[columnName]);
       }
       else
       {

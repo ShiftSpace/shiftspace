@@ -21,7 +21,7 @@ var SSTabView = new Class({
     this.__selectedTab__ = -1;
 
     // check for default tab
-    var defaultActiveTab = this.element._getElement('> .SSControlView > .SSButton.SSActive');
+    var defaultActiveTab = this.element.getElement('> .SSControlView > .SSButton.SSActive');
     
     if(defaultActiveTab)
     {
@@ -68,7 +68,7 @@ var SSTabView = new Class({
   
   indexOfTabByName: function(name)
   {
-    var tab = this.element._getElement('> .SSControlView #'+name);
+    var tab = this.element.getElement('> .SSControlView #'+name);
     
     // return tab index if we have it
     if(tab)
@@ -76,7 +76,7 @@ var SSTabView = new Class({
       return this.indexOfTab(tab);
     }
     
-    tab = this.element._getElement('> .SSContentView #'+name);
+    tab = this.element.getElement('> .SSContentView #'+name);
     
     // return content view index if we have it
     if(tab)
@@ -91,31 +91,31 @@ var SSTabView = new Class({
   
   indexOfTab: function(tabButton)
   {
-    return this.indexOfNode(this.element._getElements('> .SSControlView > .SSButton'), tabButton);
+    return this.indexOfNode(this.element.getElements('> .SSControlView > .SSButton'), tabButton);
   },
   
   
   tabButtonForIndex: function(idx)
   {
-    return this.element._getElements('> .SSControlView > .SSButton')[idx];
+    return this.element.getElements('> .SSControlView > .SSButton')[idx];
   },
   
   
   tabButtonForName: function(name)
   {
-    return this.element._getElement('> .SSControlView #'+name);
+    return this.element.getElement('> .SSControlView #'+name);
   },
   
   
   indexOfContentView: function(contentView)
   {
-    return this.indexOfNode(this.element._getElements('> .SSContentView > .SSTabPane'), contentView);
+    return this.indexOfNode(this.element.getElements('> .SSContentView > .SSTabPane'), contentView);
   },
   
   
   contentViewForIndex: function(idx)
   {
-    return this.element._getElements('> .SSContentView > .SSTabPane')[idx];
+    return this.element.getElements('> .SSContentView > .SSTabPane')[idx];
   },
   
 
@@ -207,21 +207,20 @@ var SSTabView = new Class({
       'class': 'SSTabPane'
     });
     
-    tabButton.injectInside(this.element._getElement('> .SSControlView'));
-    tabContent.injectInside(this.element._getElement('> .SSContentView'));
+    tabButton.injectInside(this.element.getElement('> .SSControlView'));
+    tabContent.injectInside(this.element.getElement('> .SSContentView'));
   },
   
   
   contentViewControllerForIndex: function(idx)
   {
-    //SSLog('contentViewControllerForIndex ' + idx + ' ' + this.contentViewForIndex(idx));
     return this.controllerForNode(this.contentViewForIndex(idx));
   },
   
   
   activeTab: function()
   {
-    return this.indexOfTab(this.element._getElement('> .SSControlView > .SSButton.SSActive'));
+    return this.indexOfTab(this.element.getElement('> .SSControlView > .SSButton.SSActive'));
   },
   
   
@@ -233,7 +232,6 @@ var SSTabView = new Class({
   
   hideTab: function(index)
   {
-    console.log('hideTab ' + index);
     this.tabButtonForIndex(index).addClass('SSDisplayNone');
     this.contentViewForIndex(index).addClass('SSDisplayNone');
   },
@@ -288,8 +286,8 @@ var SSTabView = new Class({
 
   refresh: function()
   {
-    var theControlView = this.element._getElement('> .SSControlView');
-    var theContentView = this.element._getElement('> .SSContentView');
+    var theControlView = this.element.getElement('> .SSControlView');
+    var theContentView = this.element.getElement('> .SSContentView');
     
     // resize content view if it's supposed to autoresize
     if(theContentView.getProperty('autoresize'))

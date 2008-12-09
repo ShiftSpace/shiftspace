@@ -127,7 +127,7 @@ var SSListView = new Class({
   
   cellNodes: function()
   {
-    return this.element._getElements("> .SSCell");
+    return this.element.getElements("> .SSCell");
   },
   
   

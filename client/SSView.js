@@ -250,7 +250,7 @@ var SSView = new Class({
   hitTest: function(target, selectorOfTest)
   {
     var node = target;
-    var matches = this.element._getElements(selectorOfTest);
+    var matches = this.element.getElements(selectorOfTest);
 
     while(node && node != this.element)
     {
