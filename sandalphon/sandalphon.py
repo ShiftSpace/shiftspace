@@ -95,7 +95,11 @@ class SandalphonCompiler:
         Load a views a view and returns it.
         """
         # check to see if path is none otherwise check member var
-        filePath = self.paths[view]
+        if path == None:
+            filePath = self.paths[view]
+        else:
+            filePath = path
+
         print "loadView: (%s, %s)" % (view, filePath)
 
         if filePath != None:

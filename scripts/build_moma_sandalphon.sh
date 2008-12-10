@@ -1,1 +1,1 @@
-python ../builder/preprocess.py -e sandalphon -i ../momasocialbar/BootstrapMoMA.js -p MoMA -o ../builds/shiftspace.sandalphon.js -x
+python ../builder/preprocess.py -e my_sandalphon -i ../momasocialbar/BootstrapMoMA.js -p MoMA -o ../builds/shiftspace.sandalphon.js -x
