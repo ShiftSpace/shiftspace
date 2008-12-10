@@ -1,0 +1,16 @@
+.SSForm
+{
+  width: 100%;
+  height: 100%;
+  background-color: #fcc;
+}
+
+.SSForm .SSubForm
+{
+  display: none;
+}
+
+.SSForm .SSubForm.SSActive
+{
+  display: block;
+}
