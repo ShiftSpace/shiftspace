@@ -14,8 +14,6 @@ var SSForm = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-
-    
   },
   
   initSubForm: function()

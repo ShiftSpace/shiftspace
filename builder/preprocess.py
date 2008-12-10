@@ -126,11 +126,11 @@ class SSPreProcessor:
     print "Error: no such package %s exists, perhaps you forgot to run corebuilder.py first?" % package
     sys.exit(2)
 
-
+            
   def usage(self):
       print "Usage: python preprocess.py <environment definition> [<project>] [<input file>]"
+      print "  -e REQUIRED, the environment file, must be in SHIFTSPACE_DIR/config/env/"
       print "  -h help"
-      print "  -e environment file, this must be in SHIFTSPACE_DIR/config/env/"
       print "  -p project, defaults to shiftspace.json, must be in SHIFTSPACE_DIR/config/proj/"
       print "  -i input file, defaults to SHIFTSPACE_DIR/client/ShiftSpace-0.5.js"
       print "  -o output file, if none specified, writes to standard output" 
@@ -148,6 +148,12 @@ class SSPreProcessor:
     try:
       opts, args = getopt.getopt(argv, "hp:i:o:e:x", ["environment=", "project=", "output=", "input=", "help", "project", "export"])
     except getopt.GetoptError:
+      self.usage()
+      sys.exit(2)
+
+    # check for environment key
+    optsDict = dict(opts)
+    if not optsDict.has_key("-e") and not optsDict.has_key("--environment"):
       self.usage()
       sys.exit(2)
 
