@@ -90,10 +90,11 @@ class SandalphonCompiler:
             return None
 
 
-    def loadView(self, view):
+    def loadView(self, view, path=None):
         """
         Load a views a view and returns it.
         """
+        # check to see if path is none otherwise check member var
         filePath = self.paths[view]
         print "loadView: (%s, %s)" % (view, filePath)
 
@@ -168,7 +169,11 @@ class SandalphonCompiler:
             theView = self.loadView(instruction[1])
             # replace the match
             return self.templatePattern.sub(theView, file, 1)
-
+        elif instruction[0] == "path":
+            theView = self.loadView(os.path.basename(instruction[1]),
+                                    os.path.dirname(instruction[1]))
+            return self.templatePattern.sub(theView, file, 1)
+        
         return file
     
 
