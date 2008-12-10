@@ -5,12 +5,12 @@
   background-color: #fcc;
 }
 
-.SSForm .SSubForm
+.SSForm .SSSubForm
 {
   display: none;
 }
 
-.SSForm .SSubForm.SSActive
+.SSForm .SSSubForm.SSActive
 {
   display: block;
 }
