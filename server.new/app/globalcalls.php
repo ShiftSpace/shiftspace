@@ -45,7 +45,7 @@ class GlobalCalls {
     
     $data = array();
     
-    if (empty($this->user)) {
+    if (empty($this->server->user)) {
       // Only check for public content
       $data['count'] = $this->server->db->value($this->sql['queryAnonymous'], array(
         'href' => $href
@@ -56,8 +56,9 @@ class GlobalCalls {
         'user' => $this->user->id,
         'href' => $href
       ));
-      $data['username'] = $this->user->username;
-      $data['email'] = $this->user->email;
+      
+      $data['username'] = $this->server->user->username;
+      $data['email'] = $this->server->user->email;
     }
     
     return new Response($data);

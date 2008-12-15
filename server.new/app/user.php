@@ -29,7 +29,7 @@ class User {
     $username = $_POST['username'];
     $password = md5($_POST['password']);
 
-    $user = $this->server->db->row($sql['login'], array(
+    $user = $this->server->db->row($this->sql['login'], array(
       'username' => $username,
       'password' => $password
     ));
@@ -40,18 +40,20 @@ class User {
       if (!preg_match('#^[a-zA-Z0-9_.]+$#', $_POST['username'])) {
         return new Response(false, "We're sorry, but your username is not compatible with the latest release of ShiftSpace. Please contact us at info@shiftspace.org so we can fix your account.");
       }
-      
-      $_SESSION['user'] = $user;
+
+      $this->server->user = $user;      
       return new Response($user);
     }
   }
   
   public function join() {
     $user = new User_Object();
-    $user->username = 'avital';
-    $user->password = md5('avital');
-    $user->display_name = 'avital';
+    $user->set('username', 'avital');
+    $user->set('password', md5('avital'));
+    $user->set('display_name', 'avital');
     $this->server->db->save($user);
+
+    $this->server->user = $user;    
   }
 }
 

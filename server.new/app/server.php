@@ -5,6 +5,9 @@ define('SHIFTSPACE_VERSION', '0.5');
 class Server extends Base_Server {
   function main() {
     try {
+      session_start();
+      $this->user = $_SESSION['user'];
+      
       $method = @$_GET['method'];
       $global = new GlobalCalls($this);
       if (empty($method)) {
@@ -23,6 +26,8 @@ class Server extends Base_Server {
       } else {
         throw new Error("Method '$method' not defined.");
       }
+      
+      $_SESSION['user'] = $this->user;
     } catch (Error $e) {
       $response = Response::currentResponse();
       $response->handleError($e);
