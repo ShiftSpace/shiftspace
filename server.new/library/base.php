@@ -6,9 +6,11 @@ if (!defined('BASE_DIR')) {
 
 if (!function_exists('__autoload')) {
   function __autoload($class) {
+    $class = strtolower($class);
+    
     if (!strpos($class, '_') && file_exists(BASE_DIR . "/app/$class.php")) {
       require_once BASE_DIR . "/app/$class.php";
-    } else if (strpos($class, 'Base_') === 0) {
+    } else if (strpos($class, 'base_') === 0) {
       $name = substr($class, 5);
       require_once BASE_DIR . "/library/$name/$name.php";
     } else {
@@ -50,7 +52,7 @@ class Base {
   }
   
   public function get($key = false, $options = false) {
-    if (empty($key) && is_subclass_of($this, 'Object')) {
+    if (empty($key) && is_subclass_of($this, 'Base_Object')) {
       return $this->contents['values'];
     } else if (empty($key)) {
       return get_object_vars($this);
@@ -58,7 +60,7 @@ class Base {
     $method = "get$key";
     if (method_exists($this, $method)) {
       return $this->$method($options);
-    } else if (is_subclass_of($this, 'Object')) {
+    } else if (is_subclass_of($this, 'Base_Object')) {
       if (isset($this->contents['values'][$key])) {
         return $this->contents['values'][$key];
       } else {
@@ -79,7 +81,7 @@ class Base {
       }
     } else if (method_exists($this, $method)) {
       return $this->$method($value);
-    } else if (is_subclass_of($this, 'Object')) {
+    } else if (is_subclass_of($this, 'Base_Object')) {
       $this->contents['values'][$key] = $value;
     } else {
       $this->$key = $value;

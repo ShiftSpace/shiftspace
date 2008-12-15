@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteBase /shiftspacegit/
+RewriteRule ^shiftspace.php(.*)$ server.new/public/$1
