@@ -1,7 +1,6 @@
 <?php
 
-class Base_Server extends Base {
-  
+class Base_Server {  
   static private $instance;
   
   static public function singleton($filename) {

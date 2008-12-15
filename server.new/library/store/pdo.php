@@ -94,6 +94,7 @@ class PDO_Store extends Base_Store {
       $values = implode(', ', $values);
       $template = "UPDATE $table SET $values WHERE id = :id";
     }
+    
     return $this->query($template, $vars);
   }
   
