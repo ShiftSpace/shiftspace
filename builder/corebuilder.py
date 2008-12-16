@@ -304,7 +304,7 @@ class SSCoreBuilder():
         if isinstance(fileExports, bool):
           raise MissingExportDescription(self, message="No mapping value supplied to @export directive in file %s" % self.metadata[afile]['path'])
         exportMappings = dict([((len(kv) > 1 and (kv[0].strip(), kv[1].strip())) or 
-                                (kv[0], kv[0])) 
+                                (kv[0].strip(), kv[0].strip())) 
                                for kv in [s.split(" as ") for s in fileExports]])
         self.exports.update(exportMappings)
         
