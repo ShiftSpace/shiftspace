@@ -46,6 +46,18 @@ class Server extends Base_Server {
     
     return $url;
   }
+  
+  
+  function summarize($summary) {
+    $summary = strip_tags($summary);
+    $summary = preg_replace("#\s+#", ' ', $summary);
+  
+    if (strlen($summary) > 140) {
+      $summary = substr($summary, 0, 140) . '...';
+    }
+                
+    return $summary;
+  }
 }
 
 ?>

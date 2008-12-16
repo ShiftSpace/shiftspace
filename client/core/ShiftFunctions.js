@@ -616,9 +616,9 @@ function SSLoadShift(shiftId, callback)
 
   var params = { shiftIds: shiftId };
   SSServerCall.safeCall('shift.get', params, function(returnArray) {
-    if(returnArray && returnArray[0])
+    if(returnArray.data && returnArray.data[0])
     {
-      var shiftObj = returnArray[0];
+      var shiftObj = returnArray.data[0];
       SSLog('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++', SSLogForce);
       SSLog(shiftObj, SSLogForce);
       SSSetShift(shiftObj.id, shiftObj);

@@ -298,7 +298,7 @@ var SSTableViewDatasource = new Class({
       // if actually running in ShiftSpace
       SSServerCall(this.dataProviderURL(), allProperties.getClean(), function(json) {
         SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>> SSTableViewDatasource fetch RETURNED');
-        this.updateData(json[this.dataKey()]);
+        this.updateData(json.data[this.dataKey()]);
         this.fireEvent('onload');
       }.bind(this));
     }

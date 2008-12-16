@@ -168,17 +168,17 @@ var ShiftSpace = new (function() {
       SSServerCall('query', params, function(json) {
         SSLog('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
         
-        if (!json.status) 
+        if (json.error) 
         {
-          console.error('Error checking for content: ' + json.message);
+          console.error('Error checking for content: ' + json.error.message);
           return;
         }
 
-        if (json.username)
+        if (json.data.username)
         {
           // Set private user variable
-          ShiftSpace.User.setUsername(json.username);
-          ShiftSpace.User.setEmail(json.email);
+          ShiftSpace.User.setUsername(json.data.username);
+          ShiftSpace.User.setEmail(json.data.email);
 
           // fire user login for the Console
           if (__consoleIsWaiting__)

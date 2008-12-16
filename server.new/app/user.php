@@ -45,6 +45,10 @@ class User {
       return new Response($user);
     }
   }
+
+  public function logout() {
+    $this->server->user = null;
+  }
   
   public function join() {
     $user = new User_Object();
@@ -52,8 +56,6 @@ class User {
     $user->set('password', md5('avital'));
     $user->set('display_name', 'avital');
     $this->server->db->save($user);
-
-    $this->server->user = $user;    
   }
 }
 

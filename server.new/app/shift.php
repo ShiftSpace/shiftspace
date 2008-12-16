@@ -1,5 +1,8 @@
 <?php
 
+class Shift_Object extends Base_Object {
+}
+
 class Shift {
   public function __construct($server) {
     $this->server = $server;
@@ -11,13 +14,15 @@ class Shift {
 
   public function query() {
 
-if (!empty($user)) {
+  $user_id = $this->server->user->id;
+
+if (!empty($this->server->user)) {
   // Include private shifts if logged in
   $user_clause = "
     (s.status = 1
     OR (
       s.status = 2
-      AND s.user_id = $user->id
+      AND s.user_id = $user_id
     ))
   ";
 } else {
@@ -129,6 +134,73 @@ else
   
     return new Response($response);
   }  
+
+  function calculate_domain($url) {
+    $url = @parse_url($url);
+    if (empty($url) || empty($url['host'])) {
+      continue;
+    }
+    $domain = $url['host'];
+    if (substr($domain, 0, 4) == 'www.') {
+      $domain = substr($domain, 4);
+    }
+    return $domain; 
+  }
+
+  public function create() {
+    $href = $this->server->normalizeURL($_POST['href']);
+    $summary = $this->server->summarize($_POST['summary']);
+    $space = $_POST['space'];
+    $content = $_POST['content'];
+    $version = $_POST['version'];
+    $status = 1;
+    
+    if (empty($href)) {
+      return new Response(false, 'Please specify a href argument');
+    } else if (empty($space)) {
+      return new Response(false, 'Please specify a space argument');
+    } else if (empty($content)) {
+      return new Response(false, 'Please specify a content argument');
+    } else if (empty($summary)) {
+      return new Response(false, 'Please specify a summary argument');
+    }
+    
+    if (empty($version)) {
+      $version = '1.0';
+    }
+    
+    $created = date('Y-m-d H:i:s');
+    $modified = $created;
+    $domain = $this->calculate_domain($href);
+    
+    $shift = new Shift_Object();
+    $shift->set('user_id', $this->server->user->id);
+    $shift->set('space', $space);
+    $shift->set('href', $href);
+    $shift->set('summary', $summary);
+    $shift->set('content', $content);
+    $shift->set('domain', $domain);
+    $shift->set('created', $created);
+    $shift->set('modified', $modified);
+    $shift->set('version', $version);
+    $shift->set('status', $status);
+    $shift->set('broken', 0);
+    $this->server->db->save($shift);
+    
+    return new Response($shift); 
+  }
+  
+  public function get() {
+    $shiftIdsStr = $_POST['shiftIds'];
+    $shiftIds = explode(',', $shiftIdsStr);
+    $theShifts = array();
+    
+    foreach ($shiftIds as $shiftId) {
+      $theShifts[] = $this->server->db->load("shift($shiftId)")->contents['values'];
+    }
+    
+    return new Response($theShifts);
+  }
 }
 
 ?>
