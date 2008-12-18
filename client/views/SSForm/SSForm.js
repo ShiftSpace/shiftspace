@@ -13,30 +13,46 @@ var SSForm = new Class({
 
   initialize: function(el, options)
   {
-    this.parent(el, options);
+    this.parent(el, $merge(options, SSGetInlineOptions(el)));
+    // initialize the subforms
+    this.initSubForms();
   },
   
-  initSubForm: function()
+  
+  awake: function()
   {
-    this.element.getElements('.SSFormStep').each(function(subForm) {
-      // prevent default submit behavior
-      subForm.addEvent('submit', function(_evt) {
-        var evt = new Event(_evt);
-        evt.preventDefault();
-      }.bind(this));
-      
-      this.initSubmitButtonForSubForm(aStep, aStep.getElement('input[submit]'));
-    });
+    if(this.options.delegate)
+    {
+      this.setDelegate(SSControllerForNode($(this.options.delegate)));
+    }
   },
+
   
-  initSubmitButtonForSubForm: function(step, button)
+  initSubForms: function()
   {
-    
+    // initialize each sub form
+    this.element.getElements('.SSSubForm').each(this.initSubForm.bind(this));
   },
   
+  
+  initSubForm: function(subForm)
+  {
+    // prevent default submit behavior
+    subForm.addEvent('submit', function(_evt) {
+      var evt = new Event(_evt);
+      evt.stop();
+      if(this.validateSubForm(subForm))
+      {
+        console.log('submit form! ' + this.delegate);
+        if(this.delegate() && this.delegate().onFormSubmit) this.delegate().onFormSubmit(subForm.getProperty('id'));
+      }
+    }.bind(this));
+  },
+  
+
   validateSubForm: function(subForm)
   {
-    
+    return true;
   }
 
 });

@@ -51,3 +51,8 @@ function SSControllerForNode(_node)
          (node.getProperty('uiclass') && new SSViewProxy(node)) ||
          null;
 }
+
+function SSGetInlineOptions(el)
+{
+  return JSON.decode(el.getProperty('options'));
+}
