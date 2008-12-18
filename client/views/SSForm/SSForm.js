@@ -43,7 +43,6 @@ var SSForm = new Class({
       evt.stop();
       if(this.validateSubForm(subForm))
       {
-        console.log('submit form! ' + this.delegate);
         if(this.delegate() && this.delegate().onFormSubmit) this.delegate().onFormSubmit(subForm.getProperty('id'));
       }
     }.bind(this));
@@ -53,6 +52,17 @@ var SSForm = new Class({
   validateSubForm: function(subForm)
   {
     return true;
+  },
+  
+  
+  showForm: function(formName)
+  {
+    var subform = this.element.getElementById(formName);
+    if(!subform.hasClass('SSActive'))
+    {
+      this.element.getElement('.SSActive').removeClass('SSActive');
+      subform.addClass('SSActive');
+    }
   }
 
 });
