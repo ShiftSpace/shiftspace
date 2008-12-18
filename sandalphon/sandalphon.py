@@ -1,3 +1,7 @@
+#!/usr/bin/python
+
+#  Take a HTML file and loads any referenced HTML files as well as CSS files.
+
 import os
 import sys
 import re
