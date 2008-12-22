@@ -156,13 +156,13 @@ else
     $status = 1;
     
     if (empty($href)) {
-      return new Response(false, 'Please specify a href argument');
+      throw new Error('Please specify a href argument');
     } else if (empty($space)) {
-      return new Response(false, 'Please specify a space argument');
+      throw new Error('Please specify a space argument');
     } else if (empty($content)) {
-      return new Response(false, 'Please specify a content argument');
+      throw new Error('Please specify a content argument');
     } else if (empty($summary)) {
-      return new Response(false, 'Please specify a summary argument');
+      throw new Error('Please specify a summary argument');
     }
     
     if (empty($version)) {
@@ -172,19 +172,11 @@ else
     $created = date('Y-m-d H:i:s');
     $modified = $created;
     $domain = $this->calculate_domain($href);
+    $user_id = $this->server->user->id;
+    $broken = false;
     
     $shift = new Shift_Object();
-    $shift->set('user_id', $this->server->user->id);
-    $shift->set('space', $space);
-    $shift->set('href', $href);
-    $shift->set('summary', $summary);
-    $shift->set('content', $content);
-    $shift->set('domain', $domain);
-    $shift->set('created', $created);
-    $shift->set('modified', $modified);
-    $shift->set('version', $version);
-    $shift->set('status', $status);
-    $shift->set('broken', 0);
+    $shift->set(compact('user_id', 'space', 'href', 'summary', 'content', 'domain', 'created', 'mofified', 'version', 'status', 'broken'));
     $this->server->db->save($shift);
     
     return new Response($shift); 
@@ -196,7 +188,7 @@ else
     $theShifts = array();
     
     foreach ($shiftIds as $shiftId) {
-      $theShifts[] = $this->server->db->load("shift($shiftId)")->contents['values'];
+      $theShifts[] = $this->server->db->load("shift($shiftId)")->get();
     }
     
     return new Response($theShifts);

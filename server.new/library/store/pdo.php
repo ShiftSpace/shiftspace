@@ -33,8 +33,7 @@ class PDO_Store extends Base_Store {
   }
   
   
-  function load($options, $value = false) {
-    
+  function load($options, $value = false) {    
     $regex = '/^(\w+)\((.+)\)$/';
     if (is_string($options) && preg_match($regex, $options, $matches)) {
       $options = array(
@@ -94,7 +93,7 @@ class PDO_Store extends Base_Store {
       $values = implode(', ', $values);
       $template = "UPDATE $table SET $values WHERE id = :id";
     }
-    
+
     return $this->query($template, $vars);
   }
   
@@ -114,6 +113,14 @@ class PDO_Store extends Base_Store {
   public function query($sql, $vars = null) {
     $query = $this->prepare($sql);
     try {
+      // bug with false boolean value: http://pecl.php.net/bugs/bug.php?id=8298
+      if ($vars) {
+        foreach ($vars as $key => &$value) {
+          if ($value == false)
+            $value = 0;
+       }
+     }
+      
       $query->execute($vars);
     } catch (PDOException $e) {
       if ($this->activeTransaction) {

@@ -6,13 +6,9 @@ class Response {
   private $resources = array();
   private $error = false;
   
-  public function __construct($data = false, $error = false) {
+  public function __construct($data = false) {
     if (!empty($data)) {
       $this->data = $data;
-    }
-    
-    if (!empty($error)) {
-      $this->error = array('message' => $error);
     }
     
     if (!isset(self::$current)) {

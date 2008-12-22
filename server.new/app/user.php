@@ -19,11 +19,11 @@ class User {
 
   public function login() { 
     if ($_SERVER['REQUEST_METHOD'] != 'POST') {
-      return new Response(false, 'Invalid request.');
+      throw new Error('Invalid request.');
     } else if (empty($_POST['username'])) {
-      return new Response(false, 'Oops, you forgot to enter a username.');
+      throw new Error('Oops, you forgot to enter a username.');
     } else if (empty($_POST['password'])) {
-      return new Response(false, 'Oops, you forgot to enter a password.');
+      throw new Error('Oops, you forgot to enter a password.');
     }
     
     $username = $_POST['username'];
@@ -35,10 +35,10 @@ class User {
     ));
 
     if (empty($user)) {
-      return new Response(false, 'Oops! Please try again.');
+      throw new Error('Oops! Please try again.');
     } else {
       if (!preg_match('#^[a-zA-Z0-9_.]+$#', $_POST['username'])) {
-        return new Response(false, "We're sorry, but your username is not compatible with the latest release of ShiftSpace. Please contact us at info@shiftspace.org so we can fix your account.");
+        throw new Error("We're sorry, but your username is not compatible with the latest release of ShiftSpace. Please contact us at info@shiftspace.org so we can fix your account.");
       }
 
       $this->server->user = $user;      
