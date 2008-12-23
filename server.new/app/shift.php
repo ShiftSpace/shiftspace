@@ -1,8 +1,5 @@
 <?php
 
-class Shift_Object extends Base_Object {
-}
-
 class Shift {
   public function __construct($server) {
     $this->server = $server;

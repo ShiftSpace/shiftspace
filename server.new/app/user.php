@@ -1,8 +1,5 @@
 <?php
 
-class User_Object extends Base_Object {
-}
-
 class User {
   protected $sql = array(
     'login' => "
@@ -10,6 +7,16 @@ class User {
       FROM user
       WHERE username = :username
       AND password = :password
+    ",
+    'checkuser' => "
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    ",
+    'checkemail' => "
+      SELECT COUNT(*)
+      FROM user
+      WHERE email = :email
     "
   );
   
@@ -51,11 +58,33 @@ class User {
   }
   
   public function join() {
+    extract($_POST);
+    
+    if ($password != $password_again)
+      throw new Error("Passwords do not match");
+    if (strlen($password) < 6)
+      throw new Error("Oops, please enter a password at least 6 characters long.");
+    if (!preg_match('#^[a-zA-Z0-9_.]+$#', $username))
+      throw new Error("Oops, please enter a username composed letters, numbers, periods or underscores.");
+
+    $userexists = $this->server->db->value($this->sql['checkuser'], array('username' => $username));
+    if ($userexists)
+      throw new Error('Sorry, that username has already been taken. Please choose again.');
+
+    $emailexists = $this->server->db->value($this->sql['checkemail'], array('email' => $email));
+    if ($emailexists)
+      throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
+
     $user = new User_Object();
-    $user->set('username', 'avital');
-    $user->set('password', md5('avital'));
-    $user->set('display_name', 'avital');
+    $user->set(array(
+      'username'      => $username,
+      'display_name'  => $username,
+      'password'      => md5($password),
+      'email'         => $email
+    ));
+    
     $this->server->db->save($user);
+    $this->server->user = $user;
   }
 }
 

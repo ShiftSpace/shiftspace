@@ -9,20 +9,25 @@ class Sandbox {
   }
   
   function getvalue() {
+/*
     $key = $_REQUEST['key'];
-    $value = $this->server->db->load("sandbox($key)")->contents['values']->value;
+    $value = $this->server->db->load("sandbox($key)")->get();
     $default = json_decode($_REQUEST['default']);
     
     if (!empty($value))
       return $value;
     else
       return $default->$key;
+*/
   }
   
   function setvalue() {
     $sandbox_object = new Sandbox_Object();
-    $sandbox_object->set('id', $_REQUEST['key']);
-    $sandbox_object->set('value', $_REQUEST['value']);
+    $sandbox_object->set(array(
+      'key' => $_REQUEST['key'],
+      'value' => $_REQUEST['value']
+    ));
+    
     $this->server->db->save($sandbox_object);
   }
 }

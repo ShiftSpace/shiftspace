@@ -53,7 +53,7 @@ class GlobalCalls {
     } else {
       // Check for both public and private content
       $data['count'] = $this->server->db->value($this->sql['queryLoggedIn'], array(
-        'user' => $this->user->id,
+        'user' => $this->server->user->id,
         'href' => $href
       ));
       
