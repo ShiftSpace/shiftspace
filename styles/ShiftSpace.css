@@ -691,3 +691,13 @@ table.SSErrorWindowShiftStatus
   opacity: 0.0;
   z-index: 2000000;
 }
+
+.SSFloatLeft
+{
+  float: left;
+}
+
+.SSFloatRight
+{
+  float: right;
+}

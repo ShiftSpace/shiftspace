@@ -18,7 +18,6 @@
       "SSTableView",
       "SSEditableTextCell",
       "SSTableRow",
-      "SSTabView",
       "SSCustomTableRow",
       "SSTableViewDatasource",
       "Space",
