@@ -47,8 +47,8 @@
             <h2 id="concepts">Core Builder</h2>
             <div class="content">
                 <p>
-                  The Core Builder script looks at every file within <i>$SHIFTSPACE_ROOT</i> for a builder description.
-                  this script is can be found at <i>$SHIFTSPACE_ROOT/builder/corebuilder.py</i>.
+                  The Core Builder script looks at every file within <b>$SHIFTSPACE_ROOT</b> for a builder description.
+                  this script is can be found at <b>$SHIFTSPACE_ROOT/builder/corebuilder.py</b>.
                 </p>
             </div>
             <br />
@@ -85,7 +85,8 @@
                      which you created to setup your development environment defines the location of the server as
                      well as the location of the spaces directory.  It also declares globals so that the particular
                      build knows whether it is running under Greasemonkey, Website, or Sandalphon mode.  The Website
-                     mode is synonymous with the sandbox.
+                     mode is synonymous with the sandbox.  Environment files are located in 
+                     <b>$SHIFTSPACE_ROOT/config/env/</b>, project files in <b>$SHIFTSPACE_ROOT/config/proj</b>.
                    </p>
                    <p>
                      The project file defines which files should be included in your build.  By default ShiftSpace
@@ -100,7 +101,16 @@
                 <h3>Anatomy of a Project file</h3>
                 <div class="content">
                    <p>
-                     Let's examine a project file.
+                     In order to understand project files you should make sure to read over the Core Builder section.
+                     The corebuilder.py outputs by default a file called package.json in <b>$SHIFTSPACE_ROOT/config/</b>.
+                     This is essentially a master table of all ShiftSpace related files in <b>$SHIFTSPACE_ROOT</b>.
+                     It is simply a JSON file.  It includes a list of every file, a list of packages, and a list of exports.
+                   </p>
+                   <p>
+                     A package is simply a list of files which are conceptually grouped together.  Each package entry
+                     lists it's files in the order defined by their dependencies.  The export list defines how objects
+                     should be exported.  For example the ShiftSpacePin helper class gets exported as ShiftSpace.Pin
+                     for third party developers.
                    </p>
                 </div>
                 <br />
