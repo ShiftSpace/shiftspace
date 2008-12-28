@@ -701,3 +701,13 @@ table.SSErrorWindowShiftStatus
 {
   float: right;
 }
+
+.SSMessage
+{
+  display:none;
+}
+
+.SSMessage.SSVisible
+{
+  display: block;
+}
