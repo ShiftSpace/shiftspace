@@ -300,7 +300,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       position (optional) - the x/y position of the mouse.
   */
-  showInterface : function(position)
+  showInterface: function(position)
   {
     if(!this.interfaceIsBuilt() )
     {
@@ -321,7 +321,7 @@ var ShiftSpaceSpace = new Class({
       Hide the interface of the space.  If there are any unsaved shifts they will be destroyed. Can be overriden, remember to call
       this.parent() from your overriding method.
   */
-  hideInterface : function()
+  hideInterface: function()
   {
     // remove any unsaved shifts
     var unsavedShifts = [];
@@ -361,7 +361,7 @@ var ShiftSpaceSpace = new Class({
       }
       (end)
   */
-  buildInterface : function() {},
+  buildInterface: function() {},
 
   /*
     Function: getName
@@ -370,7 +370,7 @@ var ShiftSpaceSpace = new Class({
     Returns:
       The name of the space as a string.
   */
-  getName : function()
+  getName: function()
   {
     return this.attributes.name;
   },
@@ -386,7 +386,7 @@ var ShiftSpaceSpace = new Class({
     Returns:
       The internal shift instance.
   */
-  addShift : function( aShift )
+  addShift: function(aShift)
   {
     // add a backreference
     aShift.parentSpace = this;
@@ -397,7 +397,7 @@ var ShiftSpaceSpace = new Class({
     // create the new shift
     try
     {
-      var newShift = new this.shiftClass( aShift );
+      var newShift = new this.shiftClass(aShift);
     }
     catch(exc)
     {
@@ -464,7 +464,7 @@ var ShiftSpaceSpace = new Class({
     Returns:
       The new Shift object.
   */
-  createShift : function( newShiftJson )
+  createShift: function(newShiftJson)
   {
     SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> createShift');
     if(this.cssIsLoaded())
@@ -473,7 +473,10 @@ var ShiftSpaceSpace = new Class({
       SSLog('added shift');
       var _newShift = this.shifts[newShiftJson.id];
       SSLog('fire event');
-      this.fireEvent( 'onCreateShift', { 'space' : this, 'shift' : _newShift } );
+      this.fireEvent('onCreateShift', { 
+        'space': this, 
+        'shift' : _newShift 
+      });
       SSLog('return new baby');
       return _newShift;
     }
@@ -481,7 +484,7 @@ var ShiftSpaceSpace = new Class({
     {
       SSLog('++++++++++++++++++++++++++++ css not loaded');
       // we need to load these when the css is done
-      this.addDeferredNew( newShiftJson );
+      this.addDeferredNew(newShiftJson);
     }
 
     return null;
@@ -495,7 +498,7 @@ var ShiftSpaceSpace = new Class({
     Parameters :
       shiftId - The id of the shift.
   */
-  deleteShift : function( shiftId )
+  deleteShift: function(shiftId)
   {
     // destroy the shift
     if (this.shifts[shiftId])
@@ -504,7 +507,7 @@ var ShiftSpaceSpace = new Class({
         delete this.shifts[shiftId];
     }
 
-    this.fireEvent( 'onDeleteShift', shiftId );
+    this.fireEvent('onDeleteShift', shiftId);
   },
   
   unintern: function(shiftId)
