@@ -83,6 +83,7 @@
                 </div>
                 <br />
             </div>
+            
             <div class="section">
                 <h3>Mac OS X 10.5 &ldquo;Leopard&rdquo;</h3>
                 <div class="content">
@@ -93,6 +94,7 @@
                 </div>
                 <br />
             </div>
+            
             <div class="section">
                 <h3>Windows XP</h3>
                 <div class="content">
@@ -126,6 +128,28 @@
                 </div>
                 <br />
             </div>
+            
+            <div class="section">
+                <h3>Ubuntu Linux</h3>
+                <div class="content">
+                    <p>
+                      These instructions for getting ShiftSpace running under Ubuntu Linux (8.10).  You should be able to get ShiftSpace running under a different Linux distro by following the following instruction and using the relevant package management system.  If you would like to submit instructions for another Linux distro, please contact us.
+                    </p>
+                    <p>
+                      Install git via the terminal with sudo aptitude install git-core.
+                    </p>
+                    <p>
+                      From the top menu, open <b>System > Adminstration > Synaptic Package Manager</b>. 
+                      Search and select the <b>mysql</b>, <b>php5</b>, and <b>apache2</b> packages. Just click when you it 
+                      mentions the dependencies.  Click the apply button.
+                    </p>
+                    <p>
+                      If you run into any trouble there are more detailed instructions <a href="https://help.ubuntu.com/community/ApacheMySQLPHP">here</a>.
+                    </p>
+                </div>
+                <br />
+            </div>
+            
             <div class="section">
                 <h3 id="checking-your-installation">Checking your installation</h3>
                 <div class="content">
