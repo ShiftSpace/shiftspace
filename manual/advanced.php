@@ -25,8 +25,11 @@
             <h2 id="concepts">Sandalphon</h2>
             <div class="content">
                 <p>
-                  Sandalphon is a internal tool for developing UI components to be used from within ShiftSpace.  You can
-                  load any UI component under development and test it's behaviors.
+                  Sandalphon is a tool for developing UI components to be used from within ShiftSpace.  You can
+                  load any UI component under development and test it's behaviors.  If you are interested in
+                  creating custom core UI components (that not code for spaces or shifts), or you are interested 
+                  in building a version of ShiftSpace that can be run on your domain without the Greasemonkey
+                  plugin, then you should read this document.
                 </p>
                 <p>
                   Sandalphon describes the tool as well as the helper class which ShiftSpace uses to instantiates UI
@@ -99,6 +102,7 @@ myAppController.outlets.get('MyTabView').hide();</pre>
                 <h3>Developing UI components</h3>
                 <div class="content">
                    <p>
+                     Here's a quick tutorial on using the Sandalphon tool.
                    </p>
                 </div>
                 <br />
@@ -107,7 +111,8 @@ myAppController.outlets.get('MyTabView').hide();</pre>
             <div class="section">
                 <h3 id="method-types">Loading UI Components</h3>
                 <div class="content">
-                    <p>Placeholder</p>
+                    <p>
+                    </p>
                 </div>
                 <br />
             </div>
