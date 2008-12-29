@@ -258,18 +258,6 @@ var ShiftSpaceSpace = new Class({
   },
 
 
-  sleep: function()
-  {
-    // keep track of all the visible shifts
-  },
-
-
-  wake: function()
-  {
-    // restore the previously visible shifts
-  },
-
-
   /*
     Function: setIsVisible
       Setter for internal flag about whether the Space and/or it's shifts are visible.

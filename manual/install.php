@@ -87,10 +87,18 @@
             <div class="section">
                 <h3>Mac OS X 10.5 &ldquo;Leopard&rdquo;</h3>
                 <div class="content">
-                    <p>Mac OS 10.5 already has all the software you need, you just need to enable it. First we'll configure your pre-installed Apache server to use the bundled PHP module. Open up the Terminal and enter the following command: (followed by enter)</p>
-                    <pre>sudo nano /etc/apache2/httpd.conf</pre>
-                    <p>Press ctrl-W and search for <em>php</em>. Uncomment the line <tt>LoadModule php5_module</tt> by removing the <tt>#</tt> from the start of the line. Save your changes by pressing ctrl-X, then choosing Y and pressing enter.</p>
-                    <p>Now you just need to turn Apache on. Go to the Sharing pane of the System Preferences. In the Services tab, enable the checkbox for "Personal Web Sharing". That's it!</p>
+                    <p>
+                      Mac OS 10.5 already has all the software you need, you just need to enable it. First we'll configure your pre-installed Apache server to use the bundled PHP module. Open up the Terminal and enter the following command: (followed by enter)
+                    </p>
+                    <pre>
+                      sudo nano /etc/apache2/httpd.conf
+                    </pre>
+                    <p>
+                      Press ctrl-W and search for <em>php</em>. Uncomment the line <tt>LoadModule php5_module</tt> by removing the <tt>#</tt> from the start of the line. Save your changes by pressing ctrl-X, then choosing Y and pressing enter.
+                    </p>
+                    <p>
+                      Now you just need to turn Apache on. Go to the Sharing pane of the System Preferences. In the Services tab, enable the checkbox for "Personal Web Sharing". That's it!
+                    </p>
                 </div>
                 <br />
             </div>
@@ -130,24 +138,42 @@
             </div>
             
             <div class="section">
-                <h3>Ubuntu Linux</h3>
-                <div class="content">
-                    <p>
-                      These instructions for getting ShiftSpace running under Ubuntu Linux (8.10).  You should be able to get ShiftSpace running under a different Linux distro by following the following instruction and using the relevant package management system.  If you would like to submit instructions for another Linux distro, please contact us.
-                    </p>
-                    <p>
-                      Install git via the terminal with sudo aptitude install git-core.
-                    </p>
-                    <p>
-                      From the top menu, open <b>System > Adminstration > Synaptic Package Manager</b>. 
-                      Search and select the <b>mysql</b>, <b>php5</b>, and <b>apache2</b> packages. Just click when you it 
-                      mentions the dependencies.  Click the apply button.
-                    </p>
-                    <p>
-                      If you run into any trouble there are more detailed instructions <a href="https://help.ubuntu.com/community/ApacheMySQLPHP">here</a>.
-                    </p>
-                </div>
-                <br />
+              <h3>Ubuntu Linux</h3>
+              <div class="content">
+                <p>
+                  These instructions for getting ShiftSpace running under Ubuntu Linux (8.10).  You should be able to get ShiftSpace running under a different Linux distro by following the following instruction and using the relevant package management system.  If you would like to submit instructions for another Linux distro, please contact us.
+                </p>
+                <p>
+                  Launch the Terminal application via <b>Applications > Accessories > Terminal</b>. Install git via the with:
+                </p>
+                <pre>sudo aptitude install git-core.</pre>
+                <p>
+                  You can check to make sure that git is installed by typing "git" on the command line.
+                </p>
+                <p>
+                  Next you need to set up LAMP (Linux-Apache-MySQL-PHP). The L is taken care of.  From the top menu, open <b>System > Adminstration > Synaptic Package Manager</b>. 
+                  Search for and select the <b>mysql</b>, <b>php5</b>, and <b>apache2</b> packages. Just click when you it 
+                  mentions the dependencies.  Click the apply button.
+                </p>
+                <p>
+                  If you run into any trouble there are more detailed instructions <a href="https://help.ubuntu.com/community/ApacheMySQLPHP">here</a>.
+                </p>
+              </div>
+              <br />
+            </div>
+            
+            <div class="section">
+              <h3>PHP 5.0+ Issues</h3>
+              <div class="content">
+                <p>
+                  There is an issue with PHP 5's default settings where the magic quote feature is turned on.  You will need to edit your php.ini file with the following:
+                </p>
+                <pre>sudo nano /private/etc/php.ini</pre>
+                <p>Search for the following line:</p>
+                <pre>magic_quotes_gpc = On</pre>
+                <p>Replace On with Off.</p>
+              </div>
+              <br />
             </div>
             
             <div class="section">
@@ -181,6 +207,7 @@
                 </div>
                 <br />
             </div>
+            
             <div class="section">
                 <h3>Using Subversion</h3>
                 <div class="content">
@@ -198,6 +225,21 @@
                 </div>
                 <br />
             </div>
+            
+            <div class="section">
+              <h3>Using Git</h3>
+              <div class="content">
+                <p>
+                  The ShiftSpace project has recently moved over to Git for a variety of reasons.  Git better suits our development model.  ShiftSpace is an opensource project where people commit changes and improvements on their free time.  Because there isn’t a rigid development schedule, a distributed version control avoids some problems presented by central repository systems like Subversion.  The biggest drawback in switching over to Git is the lack of good GUI clients.  Fortunately Git is very simple and this section will guide you through the parts of Git version control related to hacking ShiftSpace.
+                </p>
+                <p>
+                  Currently the ShiftSpace project is hosted on GitHub, here. GitHub has excellent instructions on how to get started with git and daily usage. On a Intel Mac you should install git-core via MacPorts.  We recommend that you use the Porticus GUI client.  On Windows we recommend msysgit.  On Ubuntu you can install git-core from the Terminal with:
+                </p>
+                <pre>sudo aptitude install git-core</pre>
+              </div>
+              <br />
+            </div>
+            
             <div class="section">
                 <h3>Move files</h3>
                 <div class="content">
