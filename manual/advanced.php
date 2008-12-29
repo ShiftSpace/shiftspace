@@ -25,17 +25,85 @@
             <h2 id="concepts">Sandalphon</h2>
             <div class="content">
                 <p>
-                  Sandalphon is a internal tool for developing UI components to be used from within ShiftSpace.
+                  Sandalphon is a internal tool for developing UI components to be used from within ShiftSpace.  You can
+                  load any UI component under development and test it's behaviors.
                 </p>
+                <p>
+                  Sandalphon describes the tool as well as the helper class which ShiftSpace uses to instantiates UI
+                  components.  Sandalphon exists to separate logic from presentation in a project that makes heavy
+                  use of Javascript.  In many Javascript frameworks the developer must either inline markup or build
+                  UI elements via the DOM.
+                </p>
+                <p>
+                  Neither of these things are good solutions for developing complex AJAX interfaces where components
+                  may be embedded within other components. Building UI via the DOM
+                  is dreadfullly slow, especially for things like building large tables of data with complex UI
+                  behaviors.  Inlining markup in Javascript is also undesirable because it decreases code readability
+                  and makes modifying interface structure particularly tedious.  It also prevents project contributors
+                  who are not programmers from contributing to the interface design.
+                </p>
+                <p>
+                  Sandalphon was created to solve these issues.  ShiftSpace in fact had these problems prior to the
+                  0.5 release.  Sandalphon provides a completely new approach.  A ShiftSpace build (see the Core Builder and Custom Builds
+                  sections below), includes a master table of which files and packages are available to a particular
+                  ShiftSpace script. Some of these files represent controller objects for interface components.
+                </p>
+                <p>
+                  To declare that a particular element in the markup is "backed" by a UI component you must declare
+                  the class of this UI component in a custom property, <b>uiclass</b>.
+                </p>
+                <pre>&lt;div id=&quot;MyTabView&quot; class=&quot;SSTabView&quot; uiclass=&quot;SSTabView&quot;&gt;
+...
+&lt;/div&gt;</pre>
+                <p>
+                  This approach is akin to the NIB file system in OS X. The interface file is a self contained piece of
+                  markup which defines relationships including options.  It negates the need to have large blocks of
+                  code which simply instantiates objects.
+                </p>
+                <p>
+                  One question that arises then is how does one access the Javascript controller for a particular DOM element?
+                  <b>SSControllerForNode</b> will retrieve the Javascript controller associated with a particular node.
+                  However in most applications there will be something akin to a main controller.  Usually this controller
+                  needs access to the various components of the user interface.  To solve this problem, Sandalphon allows
+                  for outlets.  Outlets are mappings from a particular element (or controller) to the controller which needs
+                  to know.
+                </p>
+                <pre>&lt;div id=&quot;MyTabView&quot; ... uiclass=&quot;SSTabView&quot; outlet=&quot;MyApplication&quot;&gt;
+...
+&lt;/div&gt;</pre>
+                <p>
+                  The above code assumes there is an element on the page with the id MyApplication which has a backing
+                  Javascript controller, the class of this object is not important.  It simply must be an element
+                  which is "backed".  The outlet object which referenced will provide a hook via the requesting elements
+                  CSS id.  Thus it is imperative that you assign a unique CSS id to any element or controller that you
+                  want to access.  For example:
+                </p>
+                <pre>myAppController.MyTabView.hide(); // or
+myAppController.outlets.get('MyTabView').hide();</pre>
             </div>
             <br />
+            
             <div class="section">
-                <h3>Developing UI components</h3>
+                <h3>Digging Deeper</h3>
                 <div class="content">
-                   <p>Placeholder</p>
+                   <p>
+                     If you've done a fair amount of Browser programming you might be wondering how instantiation order
+                     can be guaranteed, especially since DOM results might be returned out of order. There's also the issue
+                     of when you can in your code reasonably expect outlets to be set.
+                   </p>
                 </div>
                 <br />
             </div>
+            
+            <div class="section">
+                <h3>Developing UI components</h3>
+                <div class="content">
+                   <p>
+                   </p>
+                </div>
+                <br />
+            </div>
+            
             <div class="section">
                 <h3 id="method-types">Loading UI Components</h3>
                 <div class="content">
@@ -44,18 +112,46 @@
                 <br />
             </div>
             
-            <h2 id="concepts">Core Builder</h2>
+            <h2 id="concepts">Core Builder & Preprocessing</h2>
             <div class="content">
                 <p>
                   The Core Builder script looks at every file within <b>$SHIFTSPACE_ROOT</b> for a builder description.
                   this script is can be found at <b>$SHIFTSPACE_ROOT/builder/corebuilder.py</b>.
                 </p>
+                <p>
+                  When run it creates a master table of all files, export, and packages associated with your build.
+                  You only need to run corebuilder.py when you've created a new piece of code, either a collection
+                  of functions or a class that needs to be included.
+                </p>
+                <p>
+                  preprocess.py which resides in the same folder as corebuilder.py actually takes and environment
+                  file and a project file both represented as json objects and produces the actual build. For example
+                  when building a ShiftSpace script to be run under GreaseMonkey you should use the build_shiftspace.php
+                  script found in <b>$SHIFTSPACE_ROOT/scripts/</b> folder. Note that this scripts uses the deploy.json
+                  environment file and by default use the shiftspace.json project file.
+                </p>
+                <p>
+                  In the scripts directory there are shell scripts for producing builds of ShiftSpace that can run
+                  under GreaseMonkey, outside of Greasemonkey, and also under Sandalphon.
+                </p>
             </div>
             <br />
             <div class="section">
-                <h3>Developing UI components</h3>
+                <h3>Builder Description</h3>
                 <div class="content">
-                   <p>Placeholder</p>
+                   <p>
+                     Any file that you want to be included in master packages.json needs to to have a builder
+                     description.  It can appear anywhere in your file but it standard to put as the very first
+                     thing.  The formatting of the builder description is borrowed from the description of
+                     GreaseMonkey userscripts.
+                    </p>
+                   <pre>// ==Builder==
+// @uiclass
+// @required
+// @name              SSTabView
+// @package           ShiftSpaceCoreUI
+// @dependencies      SSView
+// ==/Builder==</pre>
                 </div>
                 <br />
             </div>
