@@ -527,7 +527,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  editShift : function( shiftId )
+  editShift: function(shiftId)
   {
     var theShift = this.shifts[shiftId];
 
@@ -545,7 +545,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       aShift - The shift instance to update.
   */
-  updateShift : function( aShift )
+  updateShift: function(aShift)
   {
     // notify other object such as the console
     var shiftJson = aShift.encode();
@@ -585,7 +585,7 @@ var ShiftSpaceSpace = new Class({
     Returns :
       An _ACTUAL_ Shift object, _NOT_ an id.
   */
-  showShift : function( aShift )
+  showShift: function(aShift)
   {
     if(!this.cssIsLoaded())
     {
@@ -659,7 +659,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  hideShift : function( shiftId )
+  hideShift: function(shiftId)
   {
     var cShift = this.shifts[shiftId];
 
@@ -699,7 +699,7 @@ var ShiftSpaceSpace = new Class({
       shiftId - the id of the Shift.
       layer - not yet implemented.
   */
-  orderFront : function( shiftId, layer )
+  orderFront: function(shiftId, layer)
   {
     var mv = this.shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered'))
@@ -716,7 +716,7 @@ var ShiftSpaceSpace = new Class({
       shiftId - the id of the Shift.
       layer - not yet implemented.
   */
-  orderBack : function( shiftId, layer )
+  orderBack: function(shiftId, layer)
   {
     var mv = this.shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered'))
@@ -729,7 +729,7 @@ var ShiftSpaceSpace = new Class({
     Function: setDepth
       Not yet implemented.
   */
-  setDepth: function( shiftId, depth )
+  setDepth: function(shiftId, depth)
   {
     var mv = this.shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered'))
@@ -742,7 +742,7 @@ var ShiftSpaceSpace = new Class({
     Function: regionIsObscured
       Not yet implemented.
   */
-  regionIsObscured : function( region )
+  regionIsObscured: function(region)
   {
     var len = this.shifts.length;
     for(var i = 0; i < len; i++ )
@@ -774,7 +774,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       newShift - an internal shift instance.
   */
-  setCurrentShift : function(newShift)
+  setCurrentShift: function(newShift)
   {
     this.__currentShift__ = newShift;
   },
@@ -798,7 +798,7 @@ var ShiftSpaceSpace = new Class({
     Returns:
       The current focused shift instance.
   */
-  getCurrentShift : function()
+  getCurrentShift: function()
   {
     return this.__currentShift__;
   },
@@ -822,7 +822,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  focusShift : function(shiftId)
+  focusShift: function(shiftId)
   {
     this.setCurrentShift(this.shifts[shiftId]);
     this.getCurrentShift().onFocus();
@@ -849,7 +849,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  onShiftPrepare : function(shiftId) {},
+  onShiftPrepare: function(shiftId) {},
 
   /*
     Function: onShiftCreate (abstract)
@@ -858,7 +858,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  onShiftCreate : function(shiftId) {},
+  onShiftCreate: function(shiftId) {},
 
   /*
     Function: onShiftEdit (abstract)
@@ -876,7 +876,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  onShiftSave : function(shiftId) {},
+  onShiftSave: function(shiftId) {},
 
   /*
     Function: onShiftDelete (abstract)
@@ -885,7 +885,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  onShiftDelete : function(shiftId) {},
+  onShiftDelete: function(shiftId) {},
 
   /*
     Function: onShiftDestroy (abstract)
@@ -894,7 +894,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  onShiftDestroy : function(shiftId) {},
+  onShiftDestroy: function(shiftId) {},
 
   /*
     Function: onShiftShow (abstract)
@@ -903,7 +903,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  onShiftShow : function(shiftId) {},
+  onShiftShow: function(shiftId) {},
 
   /*
     Function: onShiftHide (abstract)
@@ -912,7 +912,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  onShiftHide : function(shiftId) {},
+  onShiftHide: function(shiftId) {},
 
   /*
     Function: onShiftFocus (abstract)
@@ -921,7 +921,7 @@ var ShiftSpaceSpace = new Class({
     Parameters:
       shiftId - a shift id.
   */
-  onShiftFocus : function(shiftId) {},
+  onShiftFocus: function(shiftId) {},
 
   /*
     Function: onShiftBlur (abstract)
@@ -940,7 +940,7 @@ var ShiftSpaceSpace = new Class({
       key - a string. The actual key is "spaceName.key"
       value - a value to be set.
   */
-  setValue : function(key, value)
+  setValue: function(key, value)
   {
     SSSetValue.safeCall(this.attributes.name + "." + key, value);
   },
@@ -954,7 +954,7 @@ var ShiftSpaceSpace = new Class({
       defaultValue - a default value is the key doesn't exist.
       callback - a callback function.
   */
-  getValue : function(key, defaultValue, callback)
+  getValue: function(key, defaultValue, callback)
   {
     SSGetValue.safeCallWithResult(this.attributes.name + '.' + key, defaultValue, callback);
   },
