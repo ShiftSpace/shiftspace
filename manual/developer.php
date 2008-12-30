@@ -20,7 +20,9 @@
             <h1>Developer Guide</h1>
             <h2 id="introduction">Introduction</h2>
             <div class="content">
-                <p>This section presents a broad overview of the concepts and technologies that compose the ShiftSpace platform. The ShiftSpace client software is written entirely in JavaScript, but depends on the Greasemonkey and MooTools frameworks, which are described below. A tutorial is also provided here to help illustrate the initial stages of developing a new Space.</p>
+                <p>
+                  This section presents a broad overview of the concepts and technologies that compose the ShiftSpace platform. The ShiftSpace client software is written entirely in JavaScript, but depends on the Greasemonkey API (not Greasemonkey) and MooTools frameworks, which are described below. A tutorial is also provided here to help illustrate the initial stages of developing a new Space.
+                </p>
             </div>
             <br />
             <div class="section">
@@ -102,7 +104,9 @@ badVariable = "bar";      // Potentially harmful</pre>
             </div>
             <h2 id="greasemonkey">Greasemonkey</h2>
             <div class="content">
-                <p><a href="http://greasespot.net/">Greasemonkey</a> is a browser extension for Firefox that allows you to augment your browsing experience through a variety of installable "userscripts". These are similar to <a href="http://en.wikipedia.org/wiki/Bookmarklet">bookmarklets</a> (or "favelets"), except that they execute automatically instead of being initiated by the user. In both cases they are composed of JavaScript code that is invoked by the user's browser and not the original webpage itself.</p>
+                <p>
+                  <a href="http://greasespot.net/">Greasemonkey</a> is a browser extension for Firefox that allows you to augment your browsing experience through a variety of installable "userscripts". These are similar to <a href="http://en.wikipedia.org/wiki/Bookmarklet">bookmarklets</a> (or "favelets"), except that they execute automatically instead of being initiated by the user. In both cases they are composed of JavaScript code that is invoked by the user's browser and not the original webpage itself. Greasemonkey is deployment method for the canonical ShiftSpace userscript.  It must be made clear that this is in <i>NO WAY</i> a requirement.  It is quite possible to host ShiftSpace so that it is available to visitors to your website.  This version of ShiftSpace could connect to your database, or it could connect back to ours.  It's entirely up to you.
+                </p>
             </div>
             <br />
             <div class="section">

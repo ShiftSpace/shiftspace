@@ -22,14 +22,22 @@
           
             <h1>Advanced Topics</h1>
             
+            <h2 id="concepts">Overview</h2>
+            <div class="content">
+                <p>
+                  If you are interested in creating custom core UI components (that is, <i>not</i> code for spaces or shifts), or you are interested 
+                  in building a version of ShiftSpace that can be run on your domain without the Greasemonkey
+                  plugin, then you should read this document.  This section is also illuminating for understanding
+                  how the core of ShiftSpace works.
+                </p>
+            </div>
+            <br />
+            
             <h2 id="concepts">Sandalphon</h2>
             <div class="content">
                 <p>
                   Sandalphon is a tool for developing UI components to be used from within ShiftSpace.  You can
-                  load any UI component under development and test it's behaviors.  If you are interested in
-                  creating custom core UI components (that not code for spaces or shifts), or you are interested 
-                  in building a version of ShiftSpace that can be run on your domain without the Greasemonkey
-                  plugin, then you should read this document.
+                  load any UI component under development and test its behaviors.  
                 </p>
                 <p>
                   Sandalphon describes the tool as well as the helper class which ShiftSpace uses to instantiates UI
@@ -93,6 +101,19 @@ myAppController.outlets.get('MyTabView').hide();</pre>
                      If you've done a fair amount of Browser programming you might be wondering how instantiation order
                      can be guaranteed, especially since DOM results might be returned out of order. There's also the issue
                      of when you can in your code reasonably expect outlets to be set.
+                   </p>
+                   <p>
+                     If you are developing a UI component you must inherit from SSView. SSView handles a lot of interal bookeeping.
+                     You must call <b>parent</b> (this may change in the future to more closely follow the ShiftSpace setup method).
+                     SSView implements and abstract method called <b>awake</b>. This function notifies your controller that
+                     it's outlets are set. A context variable is passed in. This variable is really only useful if your UI
+                     component uses IFrames. This is a pretty advanced topic which will be covered in a future document.  You
+                     should not attempt to access outlets before awake gets called. If for some reason you need to reference
+                     an outlet in a function where it might not be availabe, you first check for it's existence in that code.
+                   </p>
+                   <p>
+                     Just to be clear, outlets needs not be controller backed DOM elements. Outlets can simply be DOM nodes.
+                     This is a convenience that removes the need to query the DOM.
                    </p>
                 </div>
                 <br />
