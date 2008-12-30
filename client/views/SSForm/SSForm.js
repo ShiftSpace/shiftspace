@@ -19,6 +19,17 @@ var SSForm = new Class({
   },
   
   
+  hide: function()
+  {
+    console.log('hide!');
+    this.parent();
+    if(this.options.firstSubForm)
+    {
+      this.showForm(this.options.firstSubForm);
+    }
+  },
+  
+  
   awake: function()
   {
     // set the delegate if there is one
