@@ -21,7 +21,6 @@ var SSForm = new Class({
   
   hide: function()
   {
-    console.log('hide!');
     this.parent();
     if(this.options.firstSubForm)
     {
