@@ -49,7 +49,7 @@ var SSView = new Class({
     }
     
     // get the options first
-    this.setOptions(this.defaults(), $merge(options, SSGetInlineOptions(el)));
+    this.setOptions(this.defaults(), (el && $merge(options, SSGetInlineOptions(el))) || {});
 
     // generate an id
     this.__id__ = this._genId();
