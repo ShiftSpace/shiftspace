@@ -21,9 +21,18 @@ var SSForm = new Class({
   
   awake: function()
   {
+    // set the delegate if there is one
     if(this.options.delegate)
     {
       this.setDelegate(SSControllerForNode($(this.options.delegate)));
+    }
+    
+    // connect the anchors to their respective forms
+    if(this.options.anchors)
+    {
+      $H(this.options.anchors).each(function(formName, anchorName) {
+        this.element.getElementById(anchorName).addEvent('click', this.showForm.bind(this, [formName]));
+      }.bind(this));
     }
   },
 
