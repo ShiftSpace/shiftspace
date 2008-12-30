@@ -28,11 +28,8 @@ var SSTableView = new Class({
 
   DelegateProtocol: ['userClickedRow, userSelectedRow, itemForRowColumn, rowCount'],
 
-  initialize: function(el, _options)
+  initialize: function(el, options)
   {
-    // FIXME: figure out why safe JSON.decode doesn't work
-    var options = _options || JSON.decode(el.getProperty('options'));
-    
     SSLog('SSTableView initialize', SSLogViews);
     // need to pass this up to parent
     this.parent(el, options);

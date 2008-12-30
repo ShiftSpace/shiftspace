@@ -13,7 +13,7 @@ var SSForm = new Class({
 
   initialize: function(el, options)
   {
-    this.parent(el, $merge(options, SSGetInlineOptions(el)));
+    this.parent(el, options);
     // initialize the subforms
     this.initSubForms();
   },
