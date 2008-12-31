@@ -1,8 +1,6 @@
 // ==Builder==
 // @test
 // @suite             UI
-// @name              SSListViewTest
-// @dependencies      Bootstrap, SSListView
 // ==/Builder==
 
 var SSListViewTest = new Class({

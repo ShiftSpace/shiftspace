@@ -22,6 +22,7 @@
     <script src="../client/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
     <script src="SSTestRunner.js" type="text/javascript" charset="utf-8"></script>
     <script src="init.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../builds/shiftspace.sandalphon.js" type="text/javascript" charset="utf-8"></script>
     <!-- 
     <script src="../packages&load=SSUnitTest" type="text/javascript" charset="utf-8"></script>
       -->
