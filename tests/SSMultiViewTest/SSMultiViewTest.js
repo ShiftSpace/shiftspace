@@ -3,9 +3,9 @@
 // @suite             UI
 // ==/Builder==
 
-var SSListViewTest = new Class({
+var SSMultiViewTest = new Class({
   
-  name: "SSListViewTest",
+  name: "SSMultiViewTest",
   
   Extends: SSUnitTest.TestCase,
   
@@ -22,11 +22,13 @@ var SSListViewTest = new Class({
   testShowSubView: function()
   {
     var hook = this.startAsync();
-    Sandalphon.load('SSMultiViewTest1.html', function(ui) {
-      $('SSTestRunnerStage').set('html', ui);
-      Sandalphon.activate(ui);
-      SSControllerForNode($('SSMultiViewTest'));
-    });
+    Sandalphon.load('tests/SSMultiViewTest/SSMultiViewTest1', function(ui) {
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      var multiview = SSControllerForNode($('SSMultiViewTest'));
+      this.endAsync(hook);
+    }.bind(this));
   }
   
 });

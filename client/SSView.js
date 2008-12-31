@@ -1,4 +1,5 @@
 // ==Builder==
+// @uiclass
 // @required
 // @package           ShiftSpaceCoreUI
 // @dependencies      SandalphonCore

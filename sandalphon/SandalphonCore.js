@@ -150,7 +150,8 @@ var SandalphonClass = new Class({
         }.bind(this),
         onFailure: function()
         {
-          console.error('Oops could not load that interface file');
+          // we don't care if the interface file is missing
+          stylesCall.fireEvent('complete');
         }
       });
       
