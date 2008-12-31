@@ -1,0 +1,13 @@
+.SSMultiView
+{
+}
+
+.SSMultiView > .SSSubView
+{
+  display: none;
+}
+
+.SSMultiView > .SSSubView.SSActive
+{
+  display: block;
+}
