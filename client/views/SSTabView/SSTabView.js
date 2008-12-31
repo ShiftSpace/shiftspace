@@ -1,7 +1,6 @@
 // ==Builder==
 // @uiclass
 // @required
-// @name              SSTabView
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSView
 // ==/Builder==

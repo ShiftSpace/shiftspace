@@ -1,6 +1,5 @@
 // ==Builder==
 // @required
-// @name	            SSView
 // @package           ShiftSpaceCoreUI
 // @dependencies      SandalphonCore
 // ==/Builder==

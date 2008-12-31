@@ -56,7 +56,7 @@ class SSCoreBuilder():
     Parse all of the relevant files.
     """
 
-    print "Parsing %s" % path
+    #print "Parsing %s" % path
     fileName = os.path.basename(path)
     name = os.path.splitext(fileName)[0]
 
@@ -67,6 +67,7 @@ class SSCoreBuilder():
 
     for line in fileHandle:
       if self.BUILDER_BEGIN_PATTERN.match(line.strip()):
+        print "== %s" % name
         # we found the beginning of the header. now go parse it
         directives = self.parseDirectives(fileHandle);
 

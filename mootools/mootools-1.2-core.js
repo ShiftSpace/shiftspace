@@ -1402,7 +1402,17 @@ $.element = function(el, nocash){
 	$uid(el);
 	if (!nocash && !el.$family && !(/^object|embed$/i).test(el.tagName)){
 		var proto = Element.Prototype;
-		for (var p in proto) el[p] = proto[p];
+		for (var p in proto) 
+		{
+		  try
+		  {
+		    el[p] = proto[p];
+	    }
+	    catch(err)
+	    {
+	      console.log("Failed on " + p);
+	    }
+	  }
 	};
 	return el;
 };
