@@ -1,7 +1,6 @@
 // ==Builder==
 // @uiclass
 // @required
-// @name              SSTableView
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSView
 // ==/Builder==
