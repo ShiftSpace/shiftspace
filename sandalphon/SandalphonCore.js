@@ -247,6 +247,14 @@ var SandalphonClass = new Class({
   },
   
   
+  associate: function(controller, interface)
+  {
+    controller.element = Sandalphon.convertToFragment(interface);
+    SSSetControllerForNode(controller, controller.element);
+    return controller.element;
+  },
+  
+  
   /*
     Function: instantiateControllers
       Instantiate any backing JS view controllers for the interface.
