@@ -71,11 +71,20 @@ class PDO_Store extends Base_Store {
     }
     
     $fetchStyle = PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE;
-    return $this->row($sql, $values, $fetchStyle);
-    
+    $result = $this->row($sql, $values, $fetchStyle);
+
+    // SQLite3 does not support PDO::FETCH_CLASS properly - http://www.sitepoint.com/forums/showthread.php?t=528019
+    // This hack should make it work.
+    if (is_array($result)) {
+      $correctResult = new $options['class'];
+      $correctResult->set($result);
+      return $correctResult;
+    }
+
+    return $result;
   }
   
-  public function save($object) {
+  public function save(&$object) {
     $vars = $object->get();
     $table = substr(get_class($object), 0, -7);
     $values = array();
@@ -93,8 +102,9 @@ class PDO_Store extends Base_Store {
       $values = implode(', ', $values);
       $template = "UPDATE $table SET $values WHERE id = :id";
     }
-
-    return $this->query($template, $vars);
+    
+    $this->query($template, $vars);
+    $object->set('id', $this->lastInsertId);
   }
   
   
@@ -118,9 +128,10 @@ class PDO_Store extends Base_Store {
         foreach ($vars as $key => &$value) {
           if ($value == false)
             $value = 0;
-       }
-     }
+        }
+      }
       
+      $this->logQuery($sql, $vars);
       $query->execute($vars);
     } catch (PDOException $e) {
       if ($this->activeTransaction) {
@@ -128,12 +139,14 @@ class PDO_Store extends Base_Store {
       }
       throw new Exception($e->getMessage());
     }
+    
     $insertId = $this->conn->lastInsertId();
     if (empty($this->lastInsertId) ||
         $insertId != $this->lastInsertId) {
       $this->lastInsertId = $insertId;
       $query->insertId = $insertId;
     }
+
     return $query;
   }
   
@@ -441,7 +454,14 @@ class PDO_Store extends Base_Store {
     $columns = implode(",\n", $columns);
     return "\nCREATE TABLE IF NOT EXISTS {table} (\n$columns\n)\n";
   }
-  
+
+  protected function logQuery($sql, $vars) {
+    $f = fopen(dirname(__FILE__)."/query.log", "a");
+    fwrite($f, "Query: $sql\n");
+    fwrite($f, "Vars: ".print_r($vars, true)."\n\n");
+    fwrite($f, "=====\n\n");
+    fclose($f);
+  }
 }
 
 ?>
