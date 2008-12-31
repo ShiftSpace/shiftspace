@@ -1,4 +1,5 @@
-// ==Builder==
+// ==Builder
+// @uiclass
 // @required
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSView
@@ -21,7 +22,7 @@ var SSMultiView = new Class({
 
   initialize: function(el, options)
   {
-    this.parent(el, options);    
+    this.parent(el, options);
   },
   
 
