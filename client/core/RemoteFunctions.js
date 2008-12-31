@@ -16,7 +16,7 @@ Parameters:
 function SSServerCall(method, parameters, _callback) 
 {
   var callback = _callback;
-  var url = server + 'shiftspace.php?method=' + method;
+  var url = server + 'server/?method=' + method;
   
   SSLog('serverCall: ' + url, SSLogServerCall);
   

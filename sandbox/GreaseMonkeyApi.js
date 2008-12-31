@@ -36,7 +36,7 @@ function GM_getValue(key, defaultValue)
 {
 
   var request = new Request({
-    url: '../shiftspace.php?method=sandbox.getvalue',
+    url: '../server/?method=sandbox.getvalue',
     async: false,
     method: 'post',
     data: 
@@ -53,7 +53,7 @@ function GM_getValue(key, defaultValue)
 function GM_setValue(key, value) 
 {
   var request = new Request({
-    url: '../shiftspace.php?method=sandbox.setvalue',
+    url: '../server/?method=sandbox.setvalue',
     async: false,
     method: 'post',
     data: {key: key, value: value}
@@ -137,7 +137,7 @@ function GM_xmlhttpRequest(details)
   } 
   else 
   {
-    var url = '../shiftspace.php?method=sandbox.proxy&url=' + encodeURIComponent(details.url);
+    var url = '../server/?method=sandbox.proxy&url=' + encodeURIComponent(details.url);
   }
   
   if(url)

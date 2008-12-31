@@ -1231,7 +1231,7 @@ var ShiftSpace = new (function() {
         setValue('lastCheckedForUpdate', now.getTime());
         GM_xmlhttpRequest({
           method: 'POST',
-          url: server + 'shiftspace.php?method=version',
+          url: server + 'server/?method=version',
           onload: function(rx) {
             if (rx.responseText != version) {
               if (confirm('There is a new version of ShiftSpace available. Would you like to update now?')) {
@@ -2843,7 +2843,7 @@ var ShiftSpace = new (function() {
     */
     function serverCall(method, parameters, _callback) {
       var callback = _callback;
-      var url = server + 'shiftspace.php?method=' + method;
+      var url = server + 'server/?method=' + method;
       //SSLog('serverCall: ' + url);
       var data = '';
       
