@@ -693,7 +693,7 @@ var Console = new Class({
       serverInput.value = newServer;
       GM_xmlhttpRequest({
         method: 'GET',
-        url: serverInput.value + 'shiftspace.php?method=version',
+        url: serverInput.value + 'method=version',
         onload: function(rx) {
           if (rx.responseText == version) {
             setValue('server', serverInput.value);
@@ -706,7 +706,7 @@ var Console = new Class({
       });
     });
     
-    $(sections[1]).setHTML('<form action="' + server + 'shiftspace.php">' +
+    $(sections[1]).setHTML('<form action="' + server + '">' +
                         '<label for="install-space">Install a space</label>' +
                         '<input style="float:left" type="text" name="space" id="install-space" class="text" size="40" />' +
                         '<input style="float:right" type="submit" value="Install" class="submit" />' +
@@ -739,7 +739,7 @@ var Console = new Class({
     }.bind(this));
     
     $(sections[2]).setHTML(
-      '<form action="' + server + 'shiftspace.php" style="padding-top: 15px;" id="settings-account">' +
+      '<form action="' + server + 'server/" style="padding-top: 15px;" id="settings-account">' +
         '<div class="form-column">' +
           '<label for="account-password">Change your password</label>' +
           '<input type="password" name="account-password" id="account-password" class="text" />' +

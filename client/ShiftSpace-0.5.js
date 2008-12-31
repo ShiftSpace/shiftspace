@@ -213,14 +213,14 @@ var ShiftSpace = new (function() {
 
         GM_xmlhttpRequest({
           method: 'POST',
-          url: server + 'shiftspace.php?method=version',
+          url: server + 'server/?method=version',
           onload: function(rx)
           {
             if (rx.responseText != version)
             {
               if (confirm('There is a new version of ShiftSpace available. Would you like to update now?'))
               {
-                window.location = 'http://www.shiftspace.org/api/shiftspace.php?method=shiftspace.user.js';
+                window.location = 'http://www.shiftspace.org/api/shiftspace?method=shiftspace.user.js';
               }
             }
           }
