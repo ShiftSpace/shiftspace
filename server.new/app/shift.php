@@ -10,98 +10,54 @@ class Shift {
   }
 
   public function query() {
+    if (!empty($this->server->user)) {
+      $user_id = $this->server->user->id;
+      
+      // Include private shifts if logged in
+      $user_clause = "
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      ";
+    } else {
+      // Only public shifts if not logged in
+      $user_clause = "s.status = 1"; 
+    }
 
-  $user_id = $this->server->user->id;
+    // defaults
+    $sortByDirection = 0;
 
-if (!empty($this->server->user)) {
-  // Include private shifts if logged in
-  $user_clause = "
-    (s.status = 1
-    OR (
-      s.status = 2
-      AND s.user_id = $user_id
-    ))
-  ";
-} else {
-  // Only public shifts if not logged in
-  $user_clause = "s.status = 1";
-}
+    // extract args from request    
+    extract($_REQUEST);
 
+    if (!empty($href)) {
+      // Load shifts by URL
+      $href = $this->server->normalizeURL($href);
+      $shift_clause = 'AND s.href = :href';
+    } else {
+      $shift_clause = '';
+    }
+    
+    // For table view sorting
+    if (empty($sortByColumn)) {
+      $sortByColumn = 'created';
+    }
 
-if (!empty($_REQUEST['href'])) 
-{
-  // Load shifts by URL
-  $href = $this->server->normalizeURL($_REQUEST['href']);
-  $shift_clause = "AND s.href = '$href'";
-} 
-else if (!empty($_REQUEST['id'])) 
-{
-  $id = $_REQUEST['id'];
-  // Load shifts by ID
-  if (strpos($id, ',') === false) 
-  {
-    // Only want one shift
-    $shift_clause = "AND s.url_slug = '$id'";
-  }
-  else 
-  {
-    // Want multiple shifts
-    $id = explode(',', $id);
-    $id = "'" . implode("','", $id) . "'";
-    $shift_clause = "AND s.url_slug IN ($id)";
-  }
-}
-else
-{
-  $shift_clause = "";
-}
+    if ($sortByDirection == 1)
+      $sortByDirection = 'ASC';
+    else
+      $sortByDirection = 'DESC';
 
-// For table view sorting
-if (!empty($_REQUEST['sortByColumn']))
-{
-  $sortByColumn = $_REQUEST['sortByColumn'];
-}
-else
-{
-  $sortByColumn = 'created';
-}
-
-// For table view sorting
-if (!empty($_REQUEST['sortByDirection']))
-{
-  $sortValue = $_REQUEST['sortByDirection'];
-  if($sortValue == 1)
-  {
-    $sortByDirection = "ASC";
-  }
-  else
-  {
-    $sortByDirection = "DESC";
-  }
-}
-else
-{
-  $sortByDirection = "DESC";
-}
-
-// For selecting a specific user's public shifts
-if(!empty($_REQUEST['username']))
-{
-  $selectByUser = $_REQUEST['username'];
-  $select_by_user_clause = "AND u.username = '$selectByUser'";
-}
-else
-{
-  $select_by_user_clause = "";
-}
-
-
-
-
-
-
-
-
+    // For selecting a specific user's public shifts
+    if (!empty($username)) {
+      $select_by_user_clause = "AND u.username = :username";
+    }
+    else {
+      $select_by_user_clause = '';
+    }
+      
     $shifts = $this->server->db->rows("
       SELECT s.id AS id,
          s.href AS href,
@@ -117,8 +73,7 @@ else
       AND s.broken = 0
       AND s.user_id = u.id
       ORDER BY $sortByColumn $sortByDirection
-    ");
-
+    ", compact('user_id', 'href', 'username'));
 
     // Make created property more human-friendly
     array_map($this->set_elapsed_time, $shifts);
