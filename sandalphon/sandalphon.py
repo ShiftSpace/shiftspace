@@ -6,6 +6,7 @@ import os
 import sys
 import re
 import xml.etree.ElementTree as ElementTree # Python >= 2.5
+import simplejson as json  # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
 
 class ViewParser:
     def __init__(self, element):
@@ -262,7 +263,35 @@ class SandalphonCompiler:
         """
 
 
+def usage():
+    pass
+
+
+def main(argv):
+    """
+    Parse the command line arguments.
+    """
+    jsonOutput = False
+    ouputDirectory = "../compiledViews/"
+    
+    try:
+        opts, args = getopt.getopt(argv, "i:jh", ["input=", "json" "help"])
+    except:
+        usage()
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+
+    pass
+
+
 if __name__ == "__main__":
-    print ("sandalphon.py compiling " + sys.argv[1])
-    compiler = SandalphonCompiler()
-    compiler.compile(sys.argv[1])
+    if len(sys.argv) > 1:
+        print ("sandalphon.py compiling " + sys.argv[1])
+        compiler = SandalphonCompiler()
+        compiler.compile(sys.argv[1])
+    else:
+        usage()
