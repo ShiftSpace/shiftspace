@@ -14,10 +14,12 @@ var SSMultiViewTest = new Class({
     
   },
   
+  
   teardown: function()
   {
     
   },
+  
   
   testShowSubView: function()
   {
