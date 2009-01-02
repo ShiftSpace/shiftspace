@@ -110,7 +110,20 @@ var SandalphonClass = new Class({
   
   compileAndLoad: function(path, callback)
   {
-    
+    var request = new Request({
+      url: "../sandalphon/compile_and_load.php",
+      data: {filePath: path},
+      onComplete: function(responseText, responseXml)
+      {
+        var escapedUI = JSON.decode(responseText);
+        callback({interface:unescape(escapedUI.interface), styles:unescape(escapedUI.styles)});
+      },
+      onFailure: function(responseText, responseXml)
+      {
+        
+      }
+    });
+    request.send();
   },
   
 
@@ -184,7 +197,6 @@ var SandalphonClass = new Class({
         });
       });
     }
-
   },
   
   
