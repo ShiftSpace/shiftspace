@@ -5,6 +5,9 @@
 import os
 import sys
 import re
+import getopt
+import urllib
+import xml
 import xml.etree.ElementTree as ElementTree # Python >= 2.5
 import simplejson as json  # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
 
@@ -77,9 +80,9 @@ class SandalphonCompiler:
         Make sure the passed in markup checks out.
         """
         try:
-            element = ElementTree.fromstring(markup)
+            ElementTree.fromstring(markup)
         except xml.parsers.expat.ExpatError:
-            raise xml.parsers.expath.ExpatError
+            raise xml.parsers.expat.ExpatError
         pass
 
 
@@ -180,21 +183,18 @@ class SandalphonCompiler:
         return file
     
 
-    def compile(self, path):
+    def compile(self, inputFile=None, outputDirectory=None, jsonOutput=False):
         """
         Compile an interface file down to its parts
         """
         # First regex any dependent files into a master view
         # Parse the file at the path
-        fileHandle = open(path)
+        fileHandle = open(inputFile)
         interfaceFile = fileHandle.read()
         fileHandle.close()
 
         # add the css for the main file at this path
-        self.addCSSForHTMLPath(path)
-        
-        # i think this finds all of them, might want to use this - David
-        matches = self.templatePattern.finditer(interfaceFile)
+        self.addCSSForHTMLPath(inputFile)
         
         hasCustomViews = True
         while hasCustomViews:
@@ -210,35 +210,47 @@ class SandalphonCompiler:
                 hasCustomViews = False
                 
         # validate it
-        tree = ElementTree.fromstring(interfaceFile)
+        ElementTree.fromstring(interfaceFile)
  
         # load any css for references found at this level
         self.addCSSForUIClasses(interfaceFile)
 
-        # get the actual file name
-        compiledViewsDirectory = "../client/compiledViews/"
+        # output to specified directory or standard out or as json
+        if outputDirectory != None:
+            fileName = os.path.basename(inputFile)
+            fullPath = os.path.join(outputDirectory, fileName)
 
-        fileName = os.path.basename(path)
-        fullPath = os.path.join(compiledViewsDirectory, fileName)
+            fileHandle = open(fullPath, "w")
+            fileHandle.write(interfaceFile)
+            fileHandle.close()
 
-        fileHandle = open(fullPath, "w")
-        # write the compiled file
-        fileHandle.write(interfaceFile)
-        # close the file
-        fileHandle.close()
+            cssFileName = os.path.splitext(fileName)[0]+".css"
+            cssFilePath = os.path.join(outputDirectory, cssFileName)
+            fileHandle = open(cssFilePath, "w")
+            fileHandle.write(self.cssFile)
+            fileHandle.close()
 
-        cssFileName = os.path.splitext(fileName)[0]+".css"
-        cssFilePath = os.path.join(compiledViewsDirectory, cssFileName)
-        fileHandle = open(cssFilePath, "w")
-        fileHandle.write(self.cssFile)
-        fileHandle.close()
+            # make it pretty
+            return os.system('tidy -i -xml -m %s' % (fullPath))
 
-        # make it pretty
-        exitcode = os.system('tidy -i -xml -m %s' % (fullPath))
+        elif jsonOutput == True:
+            outputJsonDict = {}
+            outputJsonDict['interface'] = urllib.quote(interfaceFile)
+            outputJsonDict['styles'] = urllib.quote(self.cssFile)
+            print json.dumps(outputJsonDict, indent=4)
+
+        else:
+            print interfaceFile
+            print "\n"
+            print self.cssFile
 
 
 def usage():
-    pass
+    print "sandalphon.py takes the following flags:"
+    print "  -h help"
+    print "  -i input file, must be an .html file"
+    print "  -o output directory."
+    print "  -j json output. Sends to standard out."
 
 
 def main(argv):
@@ -246,11 +258,13 @@ def main(argv):
     Parse the command line arguments.
     """
     jsonOutput = False
-    ouputDirectory = "../compiledViews/"
-    
+    outputDirectory = None
+    inputFile = None
+
     try:
-        opts, args = getopt.getopt(argv, "i:jh", ["input=", "json" "help"])
+        opts, args = getopt.getopt(argv, "i:o:jh", ["input=", "output=", "json", "help"])
     except:
+        print "Invalid flag\n"
         usage()
         sys.exit(2)
 
@@ -258,13 +272,24 @@ def main(argv):
         if opt in ("-h", "--help"):
             usage()
             sys.exit()
+        elif opt in ("-i", "--input"):
+            inputFile = arg
+        elif opt in ("-o", "--output"):
+            outputDirectory = arg
+        elif opt in ("-j", "--json"):
+            jsonOutput = True
 
-    pass
+    if inputFile == None:
+        print "No input file\n"
+        usage()
+        sys.exit(2)
+
+    compiler = SandalphonCompiler()
+    compiler.compile(inputFile, outputDirectory, jsonOutput)
 
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        compiler = SandalphonCompiler()
-        compiler.compile(sys.argv[1])
+        main(sys.argv[1:])
     else:
         usage()
