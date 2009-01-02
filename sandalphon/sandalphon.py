@@ -105,11 +105,8 @@ class SandalphonCompiler:
         else:
             filePath = path
 
-        print "loadView: (%s, %s)" % (view, filePath)
-
         if filePath != None:
             htmlPath = os.path.join(filePath, view+'.html')
-            print "htmlPath %s" % htmlPath
             # load the file
             fileHandle = open(htmlPath)
 
@@ -128,7 +125,6 @@ class SandalphonCompiler:
 
 
     def addCSSForHTMLPath(self, filePath):
-        print "addCSSForHTMLPath %s" % filePath
         cssPath = os.path.splitext(filePath)[0]+".css"
         # load the css file
         try:
@@ -139,15 +135,13 @@ class SandalphonCompiler:
 
             fileHandle.close()
         except IOError:
-            print "***** Could not load css file at %s *****" % cssPath
+            pass
 
     
     def addCSSForUIClasses(self, interfaceFile):
         # parse this file
         element = ElementTree.fromstring(interfaceFile)
         uiclasses = [el.get('uiclass') for el in element.findall(".//*") if elementHasAttribute(el, "uiclass")]
-
-        print "Found some : %s" % uiclasses
 
         seen = {}
 
@@ -192,11 +186,9 @@ class SandalphonCompiler:
         """
         # First regex any dependent files into a master view
         # Parse the file at the path
-        print "Loading file at path " + path
         fileHandle = open(path)
         interfaceFile = fileHandle.read()
         fileHandle.close()
-        print "File loaded"
 
         # add the css for the main file at this path
         self.addCSSForHTMLPath(path)
@@ -229,38 +221,20 @@ class SandalphonCompiler:
         fileName = os.path.basename(path)
         fullPath = os.path.join(compiledViewsDirectory, fileName)
 
-        print "Writing compiled view file"
         fileHandle = open(fullPath, "w")
         # write the compiled file
-        #print interfaceFile
         fileHandle.write(interfaceFile)
         # close the file
         fileHandle.close()
 
-        print "Writing CSS file"
         cssFileName = os.path.splitext(fileName)[0]+".css"
         cssFilePath = os.path.join(compiledViewsDirectory, cssFileName)
         fileHandle = open(cssFilePath, "w")
         fileHandle.write(self.cssFile)
         fileHandle.close()
 
-        print "Pretty printing"
         # make it pretty
         exitcode = os.system('tidy -i -xml -m %s' % (fullPath))
-
-        print self.cssFile
-        
-        """
-        # Grab the root element
-        root = interfaceFile.getroot()
-        # Check if it has a backing uiclass
-        print "Root has uiclass %s" % elementHasAttribute(root, "uiclass")
-        # Grab all the other uiclasses
-        uiclasses = [el for el in interfaceFile.findall("//*") if elementHasAttribute(el, "uiclass")]
-        print uiclasses
-        # Instantiate each one with it's proper class
-        [self.parserForView(el)(el) for el in uiclasses]
-        """
 
 
 def usage():
@@ -290,7 +264,6 @@ def main(argv):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        print ("sandalphon.py compiling " + sys.argv[1])
         compiler = SandalphonCompiler()
         compiler.compile(sys.argv[1])
     else:
