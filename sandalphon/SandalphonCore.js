@@ -13,6 +13,14 @@ var SandalphonClass = new Class({
     this.contextHash = $H();
   },
   
+  
+  reset: function()
+  {
+    this.outletBindings = [];
+    this.contextHash = $H();
+    SSClearControllersTable();
+  },
+  
   /*
     Function: _genId
       Generate an object id.  Used for debugging.  The instance is indentified by this in the global

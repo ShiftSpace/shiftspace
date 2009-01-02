@@ -11,6 +11,7 @@ var SSMultiViewTest = new Class({
   
   setup: function()
   {
+    Sandalphon.reset();
   },
   
   
@@ -200,6 +201,35 @@ var SSMultiViewTest = new Class({
       this.endAsync(hook);
       
     }.bind(this));
+  },
+  
+  
+  testEmbeddedMultiView: function()
+  {
+    this.doc("test behavior when multiviews are embedded.");
+    
+    var hook = this.startAsync();
+    
+    Sandalphon.compileAndLoad('tests/SSMultiViewTest/SSMultiViewTest3', function(ui) {
+
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+
+      var multiview = SSControllerForNode($('SSMultiViewTest'));
+      
+      multiview.showView(3);
+      multiview.getCurrentView().showView(1);
+      
+      var submultiview = multiview.getCurrentView();
+      
+      this.assertEqual(multiview.indexOfView(multiview.getRawCurrentView()), 3, hook);
+      this.assertEqual(submultiview.indexOfView(submultiview.getRawCurrentView()), 1, hook);
+
+      this.endAsync(hook);
+      
+    }.bind(this));
   }
+  
   
 });

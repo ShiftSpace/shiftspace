@@ -27,8 +27,9 @@ var SSMultiView = new Class({
     // add subview class for CSS styling reasons
     if(this.options.subViewSelector != '.SSSubView')
     {
-      console.log('fixing subviews');
-      this.getRawSubViews().each(function(x) { x.addClass('SSSubView'); });
+      this.getRawSubViews().each(function(x) { 
+        if(!x.hasClass('SSSubView')) x.addClass('SSSubView'); 
+      });
     }
   },
   
@@ -56,11 +57,26 @@ var SSMultiView = new Class({
     return SSControllerOrNode(this.getRawCurrentView());
   },
   
+  
+  getViewByIndex: function(idx)
+  {
+    return this.element.getElements('> ' + this.options.subViewSelector)[idx];
+  },
+  
+  
+  indexOfView: function(_view)
+  {
+    var view = (SSIsController(_view) && _view.element) || _view;
+    return this.getRawSubViews().indexOf(view);
+  },
+  
 
   showView: function(idx)
   {
+    // TODO: throw an error, if index too great! - David
+    
     // hide the old view
-    var el = this.element.getElement('> .SSActive');
+    var el = this.getRawCurrentView();
     var controller = SSControllerForNode(el);
     if(controller)
     {
@@ -72,7 +88,7 @@ var SSMultiView = new Class({
     }
     
     // show the new view
-    el = this.element.getElements(this.options.subViewSelector)[idx];
+    el = this.getViewByIndex(idx);
     controller = SSControllerForNode(el);
     if(controller)
     {
