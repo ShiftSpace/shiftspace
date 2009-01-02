@@ -28,24 +28,25 @@ var SSMultiView = new Class({
   
   getRawSubViews: function()
   {
-    
+    return this.element.getElements('> ' + this.options.subViewSelector);
   },
   
   
   getSubViews: function()
   {
-    
+    return this.getRawSubViews().map(function(x) { return SSControllerForNode(x); });
   },
   
   
   getRawCurrentView: function()
   {
-    
+    return this.element.getElement('> ' + this.option.subViewSelector + '.SSActive');
   },
   
 
   getCurrentView: function()
   {
+    return SSControllerOrNode(this.getRawCurrentView());
   },
   
 
