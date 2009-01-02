@@ -27,6 +27,7 @@ var SSMultiViewTest = new Class({
     
     var hook = this.startAsync();
     Sandalphon.compileAndLoad('tests/SSMultiViewTest/SSMultiViewTest1', function(ui) {
+      console.log(ui.styles);
       Sandalphon.addStyle(ui.styles);
       $('SSTestRunnerStage').set('html', ui.interface);
       Sandalphon.activate($('SSTestRunnerStage'));
