@@ -145,7 +145,6 @@ class SandalphonCompiler:
         """
         Loads an uiclass css that hasn't already been included.
         """
-        print "addCSSForUIClasses"
         # parse this file
         element = ElementTree.fromstring(interfaceFile)
         uiclasses = [el.get('uiclass') for el in element.findall(".//*") if elementHasAttribute(el, "uiclass")]
@@ -162,7 +161,6 @@ class SandalphonCompiler:
         viewDirectory = "../client/views/"
 
         toLoad = seen.keys()
-        print toLoad
         [self.addCSSForHTMLPath(os.path.join(os.path.join(viewDirectory, item), item+".css")) for item in toLoad]
 
     
