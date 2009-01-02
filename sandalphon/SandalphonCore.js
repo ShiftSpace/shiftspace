@@ -106,6 +106,13 @@ var SandalphonClass = new Class({
   {
     this.__fragment__ = frag;
   },
+  
+  
+  compileAndLoad: function(path, callback)
+  {
+    
+  },
+  
 
   /*
     Function: loadFile
