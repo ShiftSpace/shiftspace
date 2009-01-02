@@ -527,7 +527,24 @@ SSUnitTest.TestCase = new Class({
     {
       this.__setTestFail__(caller);
     }
-  },  
+  },
+  
+  
+  assertFalse: function(value, hook)
+  {
+    if(arguments.length < 1) throw new SSUnitTest.AssertError(new Error(), 'assertFalse expects 1 arguments.');
+
+    var caller = $pick(hook, arguments.callee.caller);
+    
+    if(value == false)
+    {
+      this.__setTestSuccess__(caller);
+    }
+    else
+    {
+      this.__setTestFail__(caller);
+    }
+  },
   
   /*
     Function: assertEqual

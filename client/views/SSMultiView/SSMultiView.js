@@ -34,7 +34,7 @@ var SSMultiView = new Class({
   
   getSubViews: function()
   {
-    return this.getRawSubViews().map(function(x) { return SSControllerForNode(x); });
+    return this.getRawSubViews().map(function(x) { return SSControllerOrNode(x); });
   },
   
   
