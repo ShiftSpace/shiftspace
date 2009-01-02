@@ -217,6 +217,7 @@ var SandalphonClass = new Class({
     }
     
     // Add some base styles
+    /*
     css += "                          \
       .SSDisplayNone                  \
       {                               \
@@ -229,6 +230,7 @@ var SandalphonClass = new Class({
         -webkit-user-select: none;    \
       }                               \
     ";
+    */
     
     if(!Browser.Engine.trident)
     {
