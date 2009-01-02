@@ -112,7 +112,8 @@ var SandalphonClass = new Class({
   {
     var request = new Request({
       url: "../sandalphon/compile_and_load.php",
-      data: {filePath: path},
+      method: "get",
+      data: { filepath: "../" + path + ".html" },
       onComplete: function(responseText, responseXml)
       {
         var escapedUI = JSON.decode(responseText);

@@ -1,3 +1,4 @@
 <?php
-echo shell_exec("python ../sandalphon/sandalphon.py -i" . $_POST['filepath'] . " -j");
+$command = "python ../sandalphon/sandalphon.py -i " . $_GET['filepath'] . " -j";
+echo shell_exec($command);
 ?>
