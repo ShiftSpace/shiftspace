@@ -68,12 +68,30 @@ var SSMultiViewTest = new Class({
     }.bind(this));
   },
   
-  
+
   testSubViewSelector: function()
   {
     this.doc("Test using a different subview CSS selector than .SSSubView");
     
+    var hook = this.startAsync();
     
+    Sandalphon.compileAndLoad('tests/SSMultiViewTest/SSMultiViewTest2', function(ui) {
+      
+      /*
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      
+      var multiview = SSControllerForNode($('SSMultiViewTest'));
+      multiview.showView(1);
+      //var allSubViews = multiview.getRawSubViews();
+
+      this.assertEqual(1, allSubViews.indexOf(multiview.element.getElement('.SSActive')), hook);
+      */
+      
+      this.endAsync(hook);
+      
+    }.bind(this));
   }
   
 });

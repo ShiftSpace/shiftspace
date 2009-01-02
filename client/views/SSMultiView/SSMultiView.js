@@ -25,6 +25,29 @@ var SSMultiView = new Class({
     this.parent(el, options);
   },
   
+  
+  getRawSubViews: function()
+  {
+    
+  },
+  
+  
+  getSubViews: function()
+  {
+    
+  },
+  
+  
+  getRawCurrentView: function()
+  {
+    
+  },
+  
+
+  getCurrentView: function()
+  {
+  },
+  
 
   showView: function(idx)
   {

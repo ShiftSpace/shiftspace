@@ -52,6 +52,24 @@ function SSControllerForNode(_node)
          null;
 }
 
+function SSControllerOrNode(object)
+{
+  return SSControllerForNode(object) || object;
+}
+
+function SSIsController(object)
+{
+  if($type(object) == 'element')
+  {
+    return false;
+  }
+  else if(object._genId)
+  {
+    return true;
+  }
+  return false;
+}
+
 function SSGetInlineOptions(el)
 {
   return JSON.decode(el.getProperty('options'));
