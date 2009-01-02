@@ -180,19 +180,23 @@ var SSMultiViewTest = new Class({
     var hook = this.startAsync();
     
     Sandalphon.compileAndLoad('tests/SSMultiViewTest/SSMultiViewTest2', function(ui) {
-      
-      /*
+
       Sandalphon.addStyle(ui.styles);
       $('SSTestRunnerStage').set('html', ui.interface);
       Sandalphon.activate($('SSTestRunnerStage'));
-      
-      var multiview = SSControllerForNode($('SSMultiViewTest'));
-      multiview.showView(1);
-      //var allSubViews = multiview.getRawSubViews();
 
-      this.assertEqual(1, allSubViews.indexOf(multiview.element.getElement('.SSActive')), hook);
-      */
+      var multiview = SSControllerForNode($('SSMultiViewTest'));
+      var rawViews1 = multiview.getRawSubViews();
+      var rawViews2 = multiview.element.getElements('> .SSSubForm');
       
+      this.assertEqual(rawViews1.length, 4, hook);
+      this.assertEqual(rawViews2.length, 4, hook);
+      
+      var match = rawViews1.every(function(x) { return rawViews2.contains(x); });
+      this.assert(match, hook);
+      match = rawViews1.every(function(x) { return $type(x) == 'element'; });
+      this.assert(match, hook);
+
       this.endAsync(hook);
       
     }.bind(this));

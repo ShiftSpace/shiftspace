@@ -23,6 +23,13 @@ var SSMultiView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    
+    // add subview class for CSS styling reasons
+    if(this.options.subViewSelector != '.SSSubView')
+    {
+      console.log('fixing subviews');
+      this.getRawSubViews().each(function(x) { x.addClass('SSSubView'); });
+    }
   },
   
   

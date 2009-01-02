@@ -112,6 +112,7 @@ var SandalphonClass = new Class({
   {
     var request = new Request({
       url: "../sandalphon/compile_and_load.php",
+      async: false,
       method: "get",
       data: { filepath: "../" + path + ".html" },
       onComplete: function(responseText, responseXml)
