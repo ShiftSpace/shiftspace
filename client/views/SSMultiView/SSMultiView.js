@@ -40,7 +40,7 @@ var SSMultiView = new Class({
   
   getRawCurrentView: function()
   {
-    return this.element.getElement('> ' + this.option.subViewSelector + '.SSActive');
+    return this.element.getElement('> ' + this.options.subViewSelector + '.SSActive');
   },
   
 

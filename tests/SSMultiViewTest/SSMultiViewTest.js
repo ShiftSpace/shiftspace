@@ -64,13 +64,61 @@ var SSMultiViewTest = new Class({
       var multiview = SSControllerForNode($('SSMultiViewTest'));
       var views = multiview.getSubViews();
       
-      console.log(views);
-      
       this.assertFalse(SSIsController(views[0]), hook);
       this.assert(SSIsController(views[1]), hook);
       this.assert(SSIsController(views[2]), hook);
       this.assertFalse(SSIsController(views[3]), hook);
 
+      this.endAsync(hook);
+
+    }.bind(this));
+  },
+  
+  
+  testGetRawCurrentView: function()
+  {
+    this.doc("getting the raw current view.");
+    
+    var hook = this.startAsync();
+    
+    Sandalphon.compileAndLoad('tests/SSMultiViewTest/SSMultiViewTest1', function(ui) {
+
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      
+      var multiview = SSControllerForNode($('SSMultiViewTest'));
+      var rawView = multiview.getRawCurrentView();
+      var check = multiview.element.getElement('> .SSActive');
+      
+      this.assertEqual(rawView, check, hook);
+ 
+      this.endAsync(hook);
+
+    }.bind(this));
+  },
+  
+  
+  testGetCurrentView: function()
+  {
+    this.doc("getting the current view.");
+    
+    var hook = this.startAsync();
+    
+    Sandalphon.compileAndLoad('tests/SSMultiViewTest/SSMultiViewTest1', function(ui) {
+
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      
+      var multiview = SSControllerForNode($('SSMultiViewTest'));
+      multiview.showView(1);
+      var view = multiview.getCurrentView();
+      var check = multiview.element.getElement('> .SSActive');
+      
+      this.assert(SSIsController(view), hook);
+      this.assertEqual(view.element, check, hook);
+ 
       this.endAsync(hook);
 
     }.bind(this));
