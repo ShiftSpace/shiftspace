@@ -229,7 +229,54 @@ var SSMultiViewTest = new Class({
       this.endAsync(hook);
       
     }.bind(this));
-  }
+  },
+  
+  
+  testOutOfBoundsError: function()
+  {
+    this.doc("throw error on subview index beyond subview count.");
+    
+    var hook = this.startAsync();
+    
+    Sandalphon.compileAndLoad('tests/SSMultiViewTest/SSMultiViewTest1', function(ui) {
+      
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      
+      var multiview = SSControllerForNode($('SSMultiViewTest'));
+      
+      this.assert(1 == 1, hook);
+      // hmm not working!
+      this.assertThrows(SSMultiView.OutOfBoundsError, multiview.showView.bind(multiview), 4, hook);
+      
+      this.endAsync(hook);
+      
+    }.bind(this));
+  }/*,
+  
+  
+  testNoSuchSubViewError: function()
+  {
+    this.doc("throw error on incorrect subview name.");
+    
+    var hook = this.startAsync();
+    
+    Sandalphon.compileAndLoad('tests/SSMultiViewTest/SSMultiViewTest1', function(ui) {
+      
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      
+      var multiview = SSControllerForNode($('SSMultiViewTest'));
+      
+      this.assert(1 == 1, hook);
+      //this.assertThrows(SSMultiView.NoSuchSubViewError, multiview.);
+      
+      this.endAsync(hook);
+      
+    }.bind(this));   
+  }*/
   
   
 });
