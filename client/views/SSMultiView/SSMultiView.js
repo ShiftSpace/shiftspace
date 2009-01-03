@@ -74,6 +74,10 @@ var SSMultiView = new Class({
   showView: function(idx)
   {
     // TODO: throw an error, if index too great! - David
+    if(idx >= this.getRawSubViews().length)
+    {
+      throw new SSMultiView.OutOfBoundsError(new Error(), "index of view out of bounds.");
+    }
     
     // hide the old view
     var el = this.getRawCurrentView();
@@ -103,6 +107,10 @@ var SSMultiView = new Class({
   
   showViewByName: function(name)
   {
+    if(!this.element.getElementById(name))
+    {
+      throw new SSMultiView.NoSuchSubViewError(new Error(), this.element.getProperty('id') + "'s controller has no subview with name " + name + ".");
+    }
     this.showView(this.element.getChildren().indexOf(this.element.getElement('> #'+name)));
   }
 

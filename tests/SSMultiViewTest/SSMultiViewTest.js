@@ -234,7 +234,7 @@ var SSMultiViewTest = new Class({
   
   testOutOfBoundsError: function()
   {
-    this.doc("throw error on subview index beyond subview count.");
+    this.doc("throw SSMultiView.OutOfBoundsError on subview index beyond subview count.");
     
     var hook = this.startAsync();
     
@@ -246,14 +246,12 @@ var SSMultiViewTest = new Class({
       
       var multiview = SSControllerForNode($('SSMultiViewTest'));
       
-      this.assert(1 == 1, hook);
-      // hmm not working!
       this.assertThrows(SSMultiView.OutOfBoundsError, multiview.showView.bind(multiview), 4, hook);
       
       this.endAsync(hook);
       
     }.bind(this));
-  }/*,
+  },
   
   
   testNoSuchSubViewError: function()
@@ -270,13 +268,12 @@ var SSMultiViewTest = new Class({
       
       var multiview = SSControllerForNode($('SSMultiViewTest'));
       
-      this.assert(1 == 1, hook);
-      //this.assertThrows(SSMultiView.NoSuchSubViewError, multiview.);
+      this.assertThrows(SSMultiView.NoSuchSubViewError, multiview.showViewByName.bind(multiview), "FakeView", hook);
       
       this.endAsync(hook);
       
     }.bind(this));   
-  }*/
+  }
   
   
 });
