@@ -1,0 +1,28 @@
+<ul id="SSListViewTest" 
+    class="SSListView" 
+    uicass="SSListView"
+    options="{
+      actions: [
+        {
+          selector: 'li .runMethodOne',
+          method: 'methodOne'
+        },
+        {
+          selector: 'li .runMethodTwo',
+          method: 'methodTwo'
+        }
+      ]
+    }">
+    <li class="SSModel">
+      <img src="../images/HelloWorld.png"></img>
+      <span>
+        ListItem
+      </span>
+      <span class="runMethodOne">
+        Action 1
+      </span>
+      <span class="runMethodTwo">
+        Action 2
+      </span>
+    </li>
+</ul>

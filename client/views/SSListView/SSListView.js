@@ -11,6 +11,7 @@
 // ==============
 
 var SSListViewError = SSException;
+
 SSListViewError.OutOfBounds = new Class({
   name:"SSListViewError.OutOfBounds",
   Extends: SSListViewError,
@@ -147,4 +148,5 @@ var SSListView = new Class({
   {
     this.parent();
   }
+  
 });
