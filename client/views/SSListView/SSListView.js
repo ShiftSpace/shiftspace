@@ -13,7 +13,7 @@
 var SSListViewError = SSException;
 SSListViewError.OutOfBounds = new Class({
   name:"SSListViewError.OutOfBounds",
-  Extends: SSException,
+  Extends: SSListViewError,
   Implements: SSExceptionPrinter
 });
 

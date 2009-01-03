@@ -5,6 +5,27 @@
 // @dependencies      SSView
 // ==/Builder==
 
+// ==============
+// = Exceptions =
+// ==============
+
+var SSMultiViewError = SSException;
+
+SSMultiViewError.NoSuchSubView = new Class({
+  name: "SSMultiViewError.NoSuchSubView",
+  Extends: SSMultiViewError,
+  Implements: SSExceptionPrinter
+});
+
+SSMultiViewError.OutOfBounds = new Class({
+  name: "SSMultiViewError.OutOfBounds",
+  Extends: SSMultiViewError,
+  Implements: SSExceptionPrinter
+});
+
+// =========
+// = Class =
+// =========
 
 var SSMultiView = new Class({
 
@@ -76,7 +97,7 @@ var SSMultiView = new Class({
     // TODO: throw an error, if index too great! - David
     if(idx >= this.getRawSubViews().length)
     {
-      throw new SSMultiView.OutOfBoundsError(new Error(), "index of view out of bounds.");
+      throw new SSMultiViewError.OutOfBounds(new Error(), "index of view out of bounds.");
     }
     
     // hide the old view
@@ -109,28 +130,9 @@ var SSMultiView = new Class({
   {
     if(!this.element.getElementById(name))
     {
-      throw new SSMultiView.NoSuchSubViewError(new Error(), this.element.getProperty('id') + "'s controller has no subview with name " + name + ".");
+      throw new SSMultiViewError.NoSuchSubView(new Error(), this.element.getProperty('id') + "'s controller has no subview with name " + name + ".");
     }
     this.showView(this.element.getChildren().indexOf(this.element.getElement('> #'+name)));
   }
 
-});
-
-
-SSMultiView.Error = new Class({
-  name: "SSMultiView.Error", 
-  Extends: SSException, 
-  Implements: SSExceptionPrinter
-});
-
-SSMultiView.NoSuchSubViewError = new Class({
-  name: "SSMultiView.NoSuchSubViewError",
-  Extends: SSMultiView.Error,
-  Implements: SSExceptionPrinter
-});
-
-SSMultiView.OutOfBoundsError = new Class({
-  name: "SSMultiView.OutOfBoundsError",
-  Extends: SSMultiView.Error,
-  Implements: SSExceptionPrinter
 });
