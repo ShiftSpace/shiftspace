@@ -1,9 +1,17 @@
-var SSTestRunner = new Class({
+var SSTestRunnerClass = new Class({
   
   Implements: [Events, Options],
   
   initialize: function()
   {
+  },
+  
+  
+  createMouseEventForNode: function(eventType, node)
+  {
+    var evt = document.createEvent("MouseEvents");
+    evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    node.dispatchEvent(evt);
   },
 
   
@@ -62,3 +70,5 @@ var SSTestRunner = new Class({
   }
   
 });
+
+var SSTestRunner = new SSTestRunnerClass();

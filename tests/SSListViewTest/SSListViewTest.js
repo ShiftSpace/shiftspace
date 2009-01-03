@@ -54,7 +54,7 @@ var SSListViewTest = new Class({
     this.doc("cell action should fire method");
     
     // create a browser event
-    $$('.runMethodOne')[0].fireEvent('click', 'testCellAction');
+    SSTestRunner.createMouseEventForNode('click', $$('.runMethodOne')[0]);
     
     this.assert(this.ref == 'testCellAction');
   },
