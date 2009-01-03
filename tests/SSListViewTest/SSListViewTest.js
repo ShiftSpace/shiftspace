@@ -10,26 +10,53 @@ var SSListViewTest = new Class({
   
   setup: function()
   {
-    // add it to the view
-    var el = new Element('div', {
-      id: "SSListViewTest", 
-      styles:
-      {
-        backgroundColor: 'red',
-        width: 100,
-        height: 100
-      }
-    });
-    $('SSTestRunnerStage').grab(el);
-    this.listView = new SSListView(el);
+    Sandalphon.reset();
+    Sandalphon.compileAndLoad('tests/SSListViewTest/SSListViewTest', function(ui) {
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      this.listView = SSControllerForNode($('SSListViewTest'));
+      this.listView.setDelegate(this);
+    }.bind(this));
   },
   
   
   tearDown: function()
   {
-    delete this.listView;
-    // remove the list view
-    $('SSListViewTest').dispose();
+  },
+  
+  
+  methodOne: function(ref)
+  {
+    this.ref = ref;
+  },
+  
+  
+  methodTwo: function(ref)
+  {
+    this.ref = ref;
+  },
+  
+  
+  testAddCellActions: function()
+  {
+    this.doc("set actions for cells");
+    
+    var actions = this.listView.getActions();
+    
+    this.assert(actions[0].method == this.methodOne);
+    this.assert(actions[1].method == this.methodTwo);
+  },
+  
+  
+  testCellAction: function()
+  {
+    this.doc("cell action should fire method");
+    
+    // create a browser event
+    $$('.runMethodOne')[0].fireEvent('click', 'testCellAction');
+    
+    this.assert(this.ref == 'testCellAction');
   },
   
   

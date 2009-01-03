@@ -39,8 +39,56 @@ var SSListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    this.initActions();
     this.setDataProvider([]);
     this.setCells([]);
+    this.attachEvents();
+  },
+  
+  
+  attachEvents: function()
+  {
+    this.element.addEvent('click', this.eventDispatch.bindWithEvent(this, 'click'));
+  },
+  
+  
+  initActions: function()
+  {
+    if(this.options.actions && this.delegate())
+    {
+      console.log(this.options.actions);
+      var actions = this.options.actions.map(function(x) {
+        x.method = this.delegate()[x.method];
+        return x;
+      }.bind(this));
+      this.setActions(actions);
+    }
+  },
+  
+  
+  setDelegate: function(delegate)
+  {
+    this.parent(delegate);
+    this.initActions();
+  },
+  
+  
+  eventDispatch: function(event, eventType)
+  {
+    console.log('eventDispatch');
+  },
+  
+  
+  setActions: function(actions)
+  {
+    this.__actions = actions;
+    console.log(this.__actions);
+  },
+  
+  
+  getActions: function()
+  {
+    return this.__actions;
   },
   
   
@@ -147,6 +195,7 @@ var SSListView = new Class({
   refresh: function()
   {
     this.parent();
+    // reload data
   }
   
 });

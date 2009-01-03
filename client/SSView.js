@@ -219,7 +219,7 @@ var SSView = new Class({
 
   eventDispatch: function(evt)
   {
-
+    
   },
 
 
