@@ -56,7 +56,6 @@ var SSListView = new Class({
   {
     if(this.options.actions && this.delegate())
     {
-      console.log(this.options.actions);
       var actions = this.options.actions.map(function(x) {
         x.method = this.delegate()[x.method];
         return x;
@@ -105,7 +104,6 @@ var SSListView = new Class({
   setActions: function(actions)
   {
     this.__actions = actions;
-    console.log(this.__actions);
   },
   
   
@@ -193,7 +191,6 @@ var SSListView = new Class({
   
   selectByNode: function(node)
   {
-    console.log('selectByNode');
   },
   
   
