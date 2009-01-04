@@ -11,6 +11,10 @@ var SSListViewTest = new Class({
   setup: function()
   {
     Sandalphon.reset();
+    
+    this.methodOneRef = false;
+    this.methodTwoRef = false;
+    
     Sandalphon.compileAndLoad('tests/SSListViewTest/SSListViewTest', function(ui) {
       Sandalphon.addStyle(ui.styles);
       $('SSTestRunnerStage').set('html', ui.interface);
@@ -28,13 +32,13 @@ var SSListViewTest = new Class({
   
   methodOne: function(ref)
   {
-    this.ref = ref;
+    this.methodOneRef = true;
   },
   
   
   methodTwo: function(ref)
   {
-    this.ref = ref;
+    this.methodTwoRef = true;
   },
   
   
@@ -56,7 +60,7 @@ var SSListViewTest = new Class({
     // create a browser event
     SSTestRunner.createMouseEventForNode('click', $$('.runMethodOne')[0]);
     
-    this.assert(this.ref == 'testCellAction');
+    this.assert(this.methodOneRef);
   },
   
   

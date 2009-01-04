@@ -73,9 +73,32 @@ var SSListView = new Class({
   },
   
   
-  eventDispatch: function(event, eventType)
+  eventDispatch: function(_event, eventType)
   {
-    console.log('eventDispatch');
+    var event = new Event(_event);
+    
+    var action = this.actionForNode(event.target);
+    
+    if(action.length > 0)
+    {
+      (action[0].method.bind(this.delegate()))(_event);
+    }
+  },
+  
+  
+  collectActionNodes: function()
+  {
+    return this.getActions().map(function(x) {
+      return this.element.getElements('> ' + x.selector);
+    }.bind(this)).flatten();
+  },
+  
+  
+  actionForNode: function(node)
+  {
+    return this.getActions().filter(function(x) {
+      return this.element.getElements('> ' + x.selector).contains(node);
+    }.bind(this));
   },
   
   
