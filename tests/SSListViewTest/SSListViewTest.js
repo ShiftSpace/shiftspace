@@ -53,6 +53,11 @@ var SSListViewTest = new Class({
   },
   
   
+  // testSetDataProvider
+  
+  // testSetModel
+  
+  
   testCellAction: function()
   {
     this.doc("cell action should fire method");
