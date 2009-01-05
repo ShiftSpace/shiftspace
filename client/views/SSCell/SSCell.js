@@ -14,6 +14,7 @@ var SSCell = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    console.log('creating a cell object');
     if(this.options.properties)
     {
       this.setPropertyList(this.options.properties);

@@ -37,6 +37,12 @@ function SSClearControllersTable()
   __controllers__ = $H();
 }
 
+function SSClearObjects()
+{
+  ShiftSpaceObjects.empty();
+  ShiftSpaceNameTable.empty();
+}
+
 // NOTE: we generate ids and store controller refs ourselves this is because of weird garbage collection
 // around iframes and wrappers around dom nodes when SS runs under GM - David
 function SSSetControllerForNode(controller, _node)

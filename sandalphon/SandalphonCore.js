@@ -19,6 +19,7 @@ var SandalphonClass = new Class({
     this.outletBindings = [];
     this.contextHash = $H();
     SSClearControllersTable();
+    SSClearObjects();
   },
   
   /*

@@ -31,7 +31,8 @@ var SSCellTest = new Class({
   {
     this.doc("set properties from inline options");
     
-    //var propertyList = 
+    var propertyList = ['artworkId', 'title', 'image'];
+    this.assert(this.cell.getPropertyList().equalSet(propertyList));
   },
   
   
