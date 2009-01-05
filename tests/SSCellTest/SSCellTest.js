@@ -33,7 +33,6 @@ var SSCellTest = new Class({
   
   methodOne: function(sender)
   {
-    console.log('methodOne!');
     this.methodOneDidRun = true;
   },
   
@@ -189,7 +188,7 @@ var SSCellTest = new Class({
   {
     this.doc("set actions for cells");
     
-    var actions = this.listView.getActions();
+    this.cell.setProxy(this);
     
     // create a browser event
     SSTestRunner.createMouseEventForNode('click', $$('.button1')[0]);

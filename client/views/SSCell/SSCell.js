@@ -42,6 +42,7 @@ var SSCell = new Class({
   {
     this.parent(el, options);
     
+    this.initActions();
     this.attachEvents();
     this.prepareClone();
     
@@ -85,7 +86,9 @@ var SSCell = new Class({
     if(this.options.actions)
     {
       var actions = this.options.actions.map(function(x) {
-        x.method = ShiftSpaceNameTable[x.target][x.method] || this.forwardToProxy.bind(this, [x.method]);
+        var target = ShiftSpaceNameTable[x.target];
+        x.method = (target && target[x.method] && target[x.method].bind(target)) || 
+                    this.forwardToProxy.bind(this, [x.method]);
         return x;
       }.bind(this));
       this.setActions(actions);
@@ -97,11 +100,16 @@ var SSCell = new Class({
   {
     var event = new Event(_event);
     
+    console.log('eventDispatch');
+
     var action = this.actionForNode(event.target);
+    
+    console.log('action');
     
     if(action.length > 0)
     {
-      (action[0].method.bind(this.delegate()))(_event);
+      console.log('dispatching action!');
+      action[0].method(this, _event);
     }
   },
   
