@@ -137,7 +137,14 @@ var SSCell = new Class({
   */
   clone: function()
   {
-    return this.__modelClone.clone(true);
+    var clone = this.__modelClone.clone(true);
+    
+    if(clone.getElement('*[uiclass]'))
+    {
+      Sandalphon.activate(clone);
+    }
+    
+    return clone;
   },
   
   /*

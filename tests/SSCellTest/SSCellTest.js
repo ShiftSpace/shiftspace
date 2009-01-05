@@ -122,8 +122,6 @@ var SSCellTest = new Class({
     
     var clone = this.cell.clone();
     
-    // check structure and all properties of the returned node
-    
     this.assert(clone.getElement('img') != null);
     this.assert(clone.getElement('span') != null);
     this.assert(clone.getProperty('uiclass') == null);
@@ -137,12 +135,11 @@ var SSCellTest = new Class({
     this.doc('clone a cell with data');
     
     var clone = this.cell.cloneWithData({
-      artworkdId: 2,
+      artworkId: 2,
       title: 'Fountain',
       image: 'fountain.png'
     });
     
-    // assert that the dom node has been modified
     this.assert(clone.getElement('span').get('text') == 'Fountain');
     this.assertFalse(this.cell.isLocked());
   },
@@ -152,6 +149,11 @@ var SSCellTest = new Class({
   {
     this.doc('cell with embedded view');
     
-    this.assert(false);
+    var clone = this.cell.clone();
+    
+    var controller = SSControllerForNode(clone.getElement('div'));
+
+    this.assert(controller != null);
+    this.assertFalse(controller instanceof SSViewProxy);
   }
 });
