@@ -23,6 +23,12 @@ SSCellError.NoLock = new Class({
   Implements: SSExceptionPrinter
 });
 
+SSCellError.MissingAccessor = new Class({
+  name:"SSCellError.MissingAccessor",
+  Extends: SSCellError,
+  Implements: SSExceptionPrinter
+});
+
 // ====================
 // = Class Definition =
 // ====================
@@ -44,13 +50,24 @@ var SSCell = new Class({
   
   setPropertyList: function(propertyList)
   {
-    this.__properties = propertyList
+    this.__properties = propertyList;
   },
   
   
   getPropertyList: function()
   {
     return this.__properties;
+  },
+  
+  
+  verifyPropertyAccess: function()
+  {
+    this.getPropertyList().each(function(property) {
+      if(!this['get'+property.capitalize()] || !this['set'+property.capitalize()])
+      {
+        throw new SSCellError.MissingAccessor(new Error(), "missing accessor for " + property);
+      }
+    }.bind(this));
   },
   
   
@@ -131,6 +148,7 @@ var SSCell = new Class({
     this.unlock(clone);
     return clone;
   },
+  
   
   lockedElement: function()
   {

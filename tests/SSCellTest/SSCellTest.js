@@ -51,9 +51,19 @@ var SSCellTest = new Class({
   },
   
   
+  testVerifyPropertyAccess: function()
+  {
+    this.doc("throw error if missing setter or getter for cell");
+    this.cell.setPropertyList(['foo', 'bar']);
+    this.assertThrows(SSCellError.MissingAccessor, this.cell.verifyPropertyAccess.bind(this.cell));
+  },
+  
+  
   testSetData: function()
   {
     this.doc("set data");
+    
+    this.cell.lock($('SSCellTest'));
     
     this.cell.setData({
       artworkId: 1,
