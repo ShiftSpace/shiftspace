@@ -1,8 +1,8 @@
 // ==Builder==
 // @test
 // @suite             UI
+// @dependencies       SSCellTestCell
 // ==/Builder==
-
 
 var SSCellTest = new Class({
   name: "SSCellTest",
@@ -80,6 +80,8 @@ var SSCellTest = new Class({
   testSetFaultyData: function()
   {
     this.doc("throw error on invalid property");
+    
+    this.cell.lock($('SSCellTest'));
     this.assertThrows(SSCellError.NoSuchProperty, this.cell.setData.bind(this.cell), {foobar:'baz'});
   },
   
@@ -88,6 +90,8 @@ var SSCellTest = new Class({
   {
     this.doc("get data");
     
+    this.cell.lock($('SSCellTest'));
+
     this.cell.setData({
       artworkId: 1,
       title: 'Starry Night',
@@ -105,6 +109,9 @@ var SSCellTest = new Class({
   testGetFaultyData: function()
   {
     this.doc("throw error on faulty data");
+    
+    this.cell.lock($('SSCellTest'));
+
     this.assertThrows(SSCellError.NoSuchProperty, this.cell.getData.bind(this.cell), ['foobar']);
   },
   

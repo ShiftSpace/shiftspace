@@ -81,16 +81,12 @@ var SSCell = new Class({
   
   getData: function()
   {
-    var args;
-    if(arguments.length == 1 && $type(arguments[0]) == 'array')
+    var args = $A(arguments);
+    if((args.length == 1) && (args[0] instanceof Array))
     {
-      args = arguments[0];
+      args = $A(args[0]);
     }
-    else if(arguments.length > 1)
-    {
-      args = $A(arguments);
-    }
-    return args.map(this.getProperty.bind(this));
+    return args.map(this.getProperty.bind(this)).associate(args);
   },
   
   
@@ -98,7 +94,6 @@ var SSCell = new Class({
   {
     if(!this.isLocked()) throw new SSCellError.NoLock(new Error(), "attempt to set property " + property + " without element lock.");
     if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
-    console.log('setting property ' + property);
     var setter = 'set'+property.capitalize();
     if(this[setter])
     {
@@ -111,7 +106,6 @@ var SSCell = new Class({
   {
     if(!this.isLocked()) throw new SSCellError.NoLock(new Error(), "attempt to get property " + property + " without element lock.");
     if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
-    console.log('getting property ' + property);
     var getter = 'get'+property.capitalize();
     if(this[getter])
     {
