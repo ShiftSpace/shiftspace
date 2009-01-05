@@ -51,9 +51,32 @@ var SSCell = new Class({
     }
   },
   
+  
   attachEvents: function()
   {
     this.element.addEvent('click', this.eventDispatch.bindWithEvent(this, 'click'));
+  },
+  
+  
+  setProxy: function(newProxy)
+  {
+    this.__proxy = newProxy;
+  },
+  
+  
+  proxy: function()
+  {
+    return this.__proxy;
+  },
+
+
+  forwardToProxy: function(methodName)
+  {
+    var proxy = this.proxy();
+    if(proxy && proxy[methodName])
+    {
+      proxy[methodName](this);
+    }
   },
   
   
@@ -62,7 +85,7 @@ var SSCell = new Class({
     if(this.options.actions)
     {
       var actions = this.options.actions.map(function(x) {
-        x.method = ShiftSpaceNameTable[x.target][x.method];
+        x.method = ShiftSpaceNameTable[x.target][x.method] || this.forwardToProxy.bind(this, [x.method]);
         return x;
       }.bind(this));
       this.setActions(actions);

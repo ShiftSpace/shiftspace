@@ -28,6 +28,30 @@ var SSCellTest = new Class({
   },
   
   
+  methodOne: function(sender)
+  {
+    console.log('methodOne!');
+    this.methodOneDidRun = true;
+  },
+  
+  
+  methodTwo: function(sender)
+  {
+    this.methodTwoDidRun = true;
+  },
+  
+  
+  testForwardToProxy: function()
+  {
+    this.doc("forward a method to a proxy");
+    
+    this.cell.setProxy(this);
+    this.cell.forwardToProxy('methodOne');
+    
+    this.assert(this.methodOneDidRun);
+  },
+  
+  
   testSetProperties: function()
   {
     this.doc("set properties from inline options");
@@ -155,18 +179,6 @@ var SSCellTest = new Class({
 
     this.assert(controller != null);
     this.assertFalse(controller instanceof SSViewProxy);
-  },
-  
-  
-  methodOne: function(ref)
-  {
-    this.methodOneRef = true;
-  },
-  
-  
-  methodTwo: function(ref)
-  {
-    this.methodTwoRef = true;
   },
   
   
