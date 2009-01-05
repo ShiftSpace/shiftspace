@@ -13,6 +13,9 @@ var SSCellTest = new Class({
   {
     Sandalphon.reset();
     
+    this.methodOneDidRun = false;
+    this.methodTwoDidRun = false;
+    
     Sandalphon.compileAndLoad('tests/SSCellTest/SSCellTest', function(ui) {
       Sandalphon.addStyle(ui.styles);
       $('SSTestRunnerStage').set('html', ui.interface);
@@ -182,24 +185,30 @@ var SSCellTest = new Class({
   },
   
   
-  testAddCellActions: function()
+  testCellActions: function()
   {
     this.doc("set actions for cells");
     
     var actions = this.listView.getActions();
     
-    this.assert(actions[0].method == this.methodOne);
-    this.assert(actions[1].method == this.methodTwo);
-  },
-  
-  
-  testCellAction: function()
-  {
-    this.doc("cell action should fire method");
-    
     // create a browser event
-    SSTestRunner.createMouseEventForNode('click', $$('.runMethodOne')[0]);
+    SSTestRunner.createMouseEventForNode('click', $$('.button1')[0]);
+    SSTestRunner.createMouseEventForNode('click', $$('.button2')[0]);
     
-    this.assert(this.methodOneRef);
+    this.assert(this.methodOneDidRun);
+    this.assert(this.methodTwoDidRun);
   },
+  
+  
+  testTargetDoesNotExistError: function()
+  {
+    this.doc("throw error if target does not exist in ShiftSpaceNameTable");
+    
+    Sandalphon.compileAndLoad('tests/SSCellTest/SSCellTest2', function(ui) {
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+    }.bind(this));
+    
+    this.assertThrows(SSCellError.TargetDoesNotExist, Sandalphon.activate.bind(Sandalphon), $('SSTestRunnerStage'));
+  }
 });
