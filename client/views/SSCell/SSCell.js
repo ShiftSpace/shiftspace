@@ -82,7 +82,7 @@ var SSCell = new Class({
     if(!this.isLocked()) throw new SSCellError.NoLock(new Error(), "attempt to set property " + property + " without element lock.");
     if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
     var setter = 'set'+property.capitalize();
-    if(this.isLocked() && this[setter])
+    if(this[setter])
     {
       this[setter](value);
     }
@@ -94,9 +94,9 @@ var SSCell = new Class({
     if(!this.isLocked()) throw new SSCellError.NoLock(new Error(), "attempt to get property " + property + " without element lock.");
     if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
     var getter = 'get'+property.capitalize();
-    if(this.isLocked() && this[getter])
+    if(this[getter])
     {
-      return this[getter];
+      return this[getter]();
     }
     return null;
   },
