@@ -37,6 +37,20 @@ var SSCellTest = new Class({
   },
   
   
+  testSetWithoutLock: function()
+  {
+    this.doc("throw error if set data with out an element lock");
+    this.assertThrows(SSCellError.NoLock, this.cell.setProperty.bind(this.cell), ['artworkId', 1]);
+  },
+  
+  
+  testGetWithoutLock: function()
+  {
+    this.doc("throw error if get data without an element lock");
+    this.assertThrows(SSCellError.NoLock, this.cell.getProperty.bind(this.cell), 'artworkId')
+  },
+  
+  
   testSetData: function()
   {
     this.doc("set data");

@@ -17,6 +17,12 @@ SSCellError.NoSuchProperty = new Class({
   Implements: SSExceptionPrinter
 });
 
+SSCellError.NoLock = new Class({
+  name:"SSCellError.NoLock",
+  Extends: SSCellError,
+  Implements: SSExceptionPrinter
+});
+
 // ====================
 // = Class Definition =
 // ====================
@@ -50,36 +56,30 @@ var SSCell = new Class({
   
   setData: function(data)
   {
-    if(this.isLocked())
-    {
-      $H(data).each(function(value, property) {
-        this.setProperty(property, value);
-      }.bind(this));
-    }
+    $H(data).each(function(value, property) {
+      this.setProperty(property, value);
+    }.bind(this));
   },
   
   
   getData: function()
   {
-    if(this.isLocked())
+    var args;
+    if(arguments.length == 1 && $type(arguments[0]) == 'array')
     {
-      var args;
-      if(arguments.length == 1 && $type(arguments[0]) == 'array')
-      {
-        args = arguments[0];
-      }
-      else if(arguments.length > 1)
-      {
-        args = $A(arguments);
-      }
-      return args.map(this.getProperty.bind(this));
+      args = arguments[0];
     }
-    return null;
+    else if(arguments.length > 1)
+    {
+      args = $A(arguments);
+    }
+    return args.map(this.getProperty.bind(this));
   },
   
   
   setProperty: function(property, value)
   {
+    if(!this.isLocked()) throw new SSCellError.NoLock(new Error(), "attempt to set property " + property + " without element lock.");
     if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
     var setter = 'set'+property.capitalize();
     if(this.isLocked() && this[setter])
@@ -91,6 +91,7 @@ var SSCell = new Class({
   
   getProperty: function(property)
   {
+    if(!this.isLocked()) throw new SSCellError.NoLock(new Error(), "attempt to get property " + property + " without element lock.");
     if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
     var getter = 'get'+property.capitalize();
     if(this.isLocked() && this[getter])
