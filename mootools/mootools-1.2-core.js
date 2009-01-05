@@ -464,6 +464,19 @@ Array.implement({
 		for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
 		return results;
 	},
+	
+	equals: function(other){
+		if(this.length != other.length) return false;
+		for(var i = 0, l = this.length; i < l; i++) if(this[i] != other[i]) return false;
+		return true;
+	},
+	
+	equalSet: function(other){
+		if(this.length != other.length) return false;
+		for(var i = 0, l = this.length; i < l; i++) if(!other.contains(this[i])) return false;
+		for(var i = 0, l = other.length; i < l; i++) if(!this.contains(other[i])) return false;
+		return true;
+	},
 
 	map: function(fn, bind){
 		var results = [];

@@ -16,8 +16,20 @@ var SSCell = new Class({
     this.parent(el, options);
     if(this.options.properties)
     {
-      this.properties = this.options.properties;
+      this.setPropertyList(this.options.properties);
     }
+  },
+  
+  
+  setPropertyList: function(propertyList)
+  {
+    this.__properties = propertyList
+  },
+  
+  
+  getPropertyList: function()
+  {
+    return this.__properties;
   },
   
   
@@ -61,7 +73,7 @@ var SSCell = new Class({
   },
   
   
-  getProperty: function(property, value)
+  getProperty: function(property)
   {
     var getter = 'get'+property.capitalize();
     if(this.isLocked() && this[getter])

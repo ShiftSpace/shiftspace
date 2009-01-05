@@ -30,6 +30,8 @@ var SSCellTest = new Class({
   testSetProperties: function()
   {
     this.doc("set properties from inline options");
+    
+    //var propertyList = 
   },
   
   
