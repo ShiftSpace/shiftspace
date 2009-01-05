@@ -41,6 +41,8 @@ var SSCell = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    
+    this.prepareClone();
     if(this.options.properties)
     {
       this.setPropertyList(this.options.properties);
@@ -114,6 +116,18 @@ var SSCell = new Class({
     return null;
   },
   
+  
+  prepareClone: function()
+  {
+    var clone = this.element.clone(true);
+    
+    clone.removeProperty('options');
+    clone.removeProperty('uiclass');
+    clone.removeProperty('outlet');
+    
+    this.__modelClone = clone;
+  },
+  
   /*
     Function: clone
       Creates a clone of the DOM model and returns it.
@@ -123,7 +137,7 @@ var SSCell = new Class({
   */
   clone: function()
   {
-    
+    return this.__modelClone.clone(true);
   },
   
   /*
