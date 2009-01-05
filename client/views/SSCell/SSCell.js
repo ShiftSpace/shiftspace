@@ -131,6 +131,11 @@ var SSCell = new Class({
     this.unlock(clone);
     return clone;
   },
+  
+  lockedElement: function()
+  {
+    return this.__lockedElement;
+  },
 
   /*
     Function: lock
@@ -142,8 +147,7 @@ var SSCell = new Class({
   */
   lock: function(element)
   {
-    this.__isLocked = true;
-    this.element = element;
+    this.__lockedElement = element;
   },
 
   /*
@@ -152,8 +156,7 @@ var SSCell = new Class({
   */
   unlock: function()
   {
-    this.__isLocked = false;
-    this.element = null;
+    this.__lockedElement = null;
   },
 
   /*
@@ -165,7 +168,7 @@ var SSCell = new Class({
   */
   isLocked: function()
   {
-    return this.__isLocked;
+    return this.__lockedElement != null;
   },
 
 
