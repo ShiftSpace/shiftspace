@@ -74,6 +74,9 @@ var SSCell = new Class({
   /*
     Function: clone
       Creates a clone of the DOM model and returns it.
+      
+    Returns:
+      A DOM node.
   */
   clone: function()
   {
@@ -84,6 +87,9 @@ var SSCell = new Class({
     Function: cloneWithData
       Creates a clone, locks it, modifies it's content
       and returns it.
+      
+    Returns:
+      A DOM node.
   */
   cloneWithData: function(data)
   {
@@ -116,7 +122,13 @@ var SSCell = new Class({
     this.element = null;
   },
 
-
+  /*
+    Function: isLocked
+      Returns the lock status of this cell.
+      
+    Returns:
+      A boolean.
+  */
   isLocked: function()
   {
     return (this.element != null);
@@ -125,6 +137,7 @@ var SSCell = new Class({
 
   getParentRow: function()
   {
+    // TODO: related to SSTableView - not sure if this should be here.
     if(this.element) return this.element.getParent('.SSRow');
     return null;
   }
