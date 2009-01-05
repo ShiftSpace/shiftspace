@@ -39,77 +39,8 @@ var SSListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    this.initActions();
     this.setDataProvider([]);
     this.setCells([]);
-    this.attachEvents();
-  },
-  
-  
-  attachEvents: function()
-  {
-    this.element.addEvent('click', this.eventDispatch.bindWithEvent(this, 'click'));
-  },
-  
-  
-  initActions: function()
-  {
-    if(this.options.actions && this.delegate())
-    {
-      var actions = this.options.actions.map(function(x) {
-        x.method = this.delegate()[x.method];
-        return x;
-      }.bind(this));
-      this.setActions(actions);
-    }
-  },
-  
-  
-  setDelegate: function(delegate)
-  {
-    this.parent(delegate);
-    this.initActions();
-  },
-  
-  
-  eventDispatch: function(_event, eventType)
-  {
-    var event = new Event(_event);
-    
-    var action = this.actionForNode(event.target);
-    
-    if(action.length > 0)
-    {
-      (action[0].method.bind(this.delegate()))(_event);
-    }
-  },
-  
-  
-  collectActionNodes: function()
-  {
-    return this.getActions().map(function(x) {
-      return this.element.getElements('> ' + x.selector);
-    }.bind(this)).flatten();
-  },
-  
-  
-  actionForNode: function(node)
-  {
-    return this.getActions().filter(function(x) {
-      return this.element.getElements('> ' + x.selector).contains(node);
-    }.bind(this));
-  },
-  
-  
-  setActions: function(actions)
-  {
-    this.__actions = actions;
-  },
-  
-  
-  getActions: function()
-  {
-    return this.__actions;
   },
   
   

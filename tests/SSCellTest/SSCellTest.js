@@ -155,5 +155,39 @@ var SSCellTest = new Class({
 
     this.assert(controller != null);
     this.assertFalse(controller instanceof SSViewProxy);
-  }
+  },
+  
+  
+  methodOne: function(ref)
+  {
+    this.methodOneRef = true;
+  },
+  
+  
+  methodTwo: function(ref)
+  {
+    this.methodTwoRef = true;
+  },
+  
+  
+  testAddCellActions: function()
+  {
+    this.doc("set actions for cells");
+    
+    var actions = this.listView.getActions();
+    
+    this.assert(actions[0].method == this.methodOne);
+    this.assert(actions[1].method == this.methodTwo);
+  },
+  
+  
+  testCellAction: function()
+  {
+    this.doc("cell action should fire method");
+    
+    // create a browser event
+    SSTestRunner.createMouseEventForNode('click', $$('.runMethodOne')[0]);
+    
+    this.assert(this.methodOneRef);
+  },
 });

@@ -42,11 +42,64 @@ var SSCell = new Class({
   {
     this.parent(el, options);
     
+    this.attachEvents();
     this.prepareClone();
+    
     if(this.options.properties)
     {
       this.setPropertyList(this.options.properties);
     }
+  },
+  
+  attachEvents: function()
+  {
+    this.element.addEvent('click', this.eventDispatch.bindWithEvent(this, 'click'));
+  },
+  
+  
+  initActions: function()
+  {
+    if(this.options.actions)
+    {
+      var actions = this.options.actions.map(function(x) {
+        x.method = ShiftSpaceNameTable[x.target][x.method];
+        return x;
+      }.bind(this));
+      this.setActions(actions);
+    }
+  },
+  
+  
+  eventDispatch: function(_event, eventType)
+  {
+    var event = new Event(_event);
+    
+    var action = this.actionForNode(event.target);
+    
+    if(action.length > 0)
+    {
+      (action[0].method.bind(this.delegate()))(_event);
+    }
+  },
+  
+  
+  actionForNode: function(node)
+  {
+    return this.getActions().filter(function(x) {
+      return this.element.getElements('> ' + x.selector).contains(node);
+    }.bind(this));
+  },
+  
+  
+  setActions: function(actions)
+  {
+    this.__actions = actions;
+  },
+  
+  
+  getActions: function()
+  {
+    return this.__actions;
   },
   
   
