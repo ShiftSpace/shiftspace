@@ -39,7 +39,13 @@ var SSTestRunnerClass = new Class({
         SSUnitTest.reset();
         
         // evaluate test
-        eval(responseText);
+        var result = eval(responseText);
+        
+        if(result && result.error)
+        {
+          alert(result.error);
+          return;
+        }
         
         // load the TestCase or TestSuite instance
         var testInstance = eval(base);
