@@ -1,10 +1,25 @@
 // ==Builder==
 // @uiclass
 // @optional
-// @name              SSCell
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSView
 // ==/Builder==
+
+// ==============
+// = Exceptions =
+// ==============
+
+var SSCellError = SSException;
+
+SSCellError.NoSuchProperty = new Class({
+  name:"SSCellError.NoSuchProperty",
+  Extends: SSCellError,
+  Implements: SSExceptionPrinter
+});
+
+// ====================
+// = Class Definition =
+// ====================
 
 var SSCell = new Class({
 
@@ -14,7 +29,6 @@ var SSCell = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    console.log('creating a cell object');
     if(this.options.properties)
     {
       this.setPropertyList(this.options.properties);
@@ -52,7 +66,7 @@ var SSCell = new Class({
       var args;
       if(arguments.length == 1 && $type(arguments[0]) == 'array')
       {
-        args = $A(arguments[0]);
+        args = arguments[0];
       }
       else if(arguments.length > 1)
       {
@@ -66,6 +80,7 @@ var SSCell = new Class({
   
   setProperty: function(property, value)
   {
+    if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
     var setter = 'set'+property.capitalize();
     if(this.isLocked() && this[setter])
     {
@@ -76,6 +91,7 @@ var SSCell = new Class({
   
   getProperty: function(property)
   {
+    if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
     var getter = 'get'+property.capitalize();
     if(this.isLocked() && this[getter])
     {

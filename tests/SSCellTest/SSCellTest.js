@@ -3,6 +3,7 @@
 // @suite             UI
 // ==/Builder==
 
+
 var SSCellTest = new Class({
   name: "SSCellTest",
   
@@ -32,8 +33,6 @@ var SSCellTest = new Class({
     this.doc("set properties from inline options");
     
     var propertyList = ['artworkId', 'image', 'title'];
-    console.log(this.cell);
-    
     this.assert(this.cell.getPropertyList().equalSet(propertyList));
   },
   
@@ -82,13 +81,17 @@ var SSCellTest = new Class({
   testGetFaultyData: function()
   {
     this.doc("throw error on faulty data");
-    this.assertThrows(SSCellError.NoSuchProperty, this.cell.getData.bind(this), 'foobar');
+    this.assertThrows(SSCellError.NoSuchProperty, this.cell.getData.bind(this.cell), ['foobar']);
   },
   
   
   testClone: function()
   {
     this.doc('clone a cell');
+    
+    var clone = this.cell.clone();
+    
+    // check structure and all properties of the returned node
     
     this.assert(false);
   },
@@ -97,6 +100,14 @@ var SSCellTest = new Class({
   testCloneWithData: function()
   {
     this.doc('clone a cell with data');
+    
+    var clone = this.cell.cloneWithData({
+      artworkdId: 2,
+      title: 'Fountain',
+      image: 'fountain.png'
+    });
+    
+    // check structure and all properties of the returned node
     
     this.assert(false);
   }
