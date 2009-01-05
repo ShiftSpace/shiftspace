@@ -208,6 +208,6 @@ var SSCellTest = new Class({
       $('SSTestRunnerStage').set('html', ui.interface);
     }.bind(this));
     
-    this.assertThrows(SSCellError.TargetDoesNotExist, Sandalphon.activate.bind(Sandalphon), $('SSTestRunnerStage'));
+    this.assertThrows(SSCellError.NoSuchTarget, Sandalphon.activate.bind(Sandalphon), $('SSTestRunnerStage'));
   }
 });

@@ -29,6 +29,12 @@ SSCellError.MissingAccessor = new Class({
   Implements: SSExceptionPrinter
 });
 
+SSCellError.NoSuchTarget = new Class({
+  name:"SSCellError.NoSuchTarget",
+  Extends: SSCellError,
+  Implements: SSExceptionPrinter
+});
+
 // ====================
 // = Class Definition =
 // ====================
@@ -87,8 +93,12 @@ var SSCell = new Class({
     {
       var actions = this.options.actions.map(function(x) {
         var target = ShiftSpaceNameTable[x.target];
-        x.method = (target && target[x.method] && target[x.method].bind(target)) || 
-                    this.forwardToProxy.bind(this, [x.method]);
+        x.method = ((target && target[x.method] && target[x.method].bind(target)) || 
+                    (x.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [x.method])));
+        if(!x.method)
+        {
+          throw new SSCellError.NoSuchTarget(new Error(), "target " + x.target + " does not exist.");
+        }
         return x;
       }.bind(this));
       this.setActions(actions);
@@ -100,15 +110,10 @@ var SSCell = new Class({
   {
     var event = new Event(_event);
     
-    console.log('eventDispatch');
-
     var action = this.actionForNode(event.target);
-    
-    console.log('action');
     
     if(action.length > 0)
     {
-      console.log('dispatching action!');
       action[0].method(this, _event);
     }
   },
