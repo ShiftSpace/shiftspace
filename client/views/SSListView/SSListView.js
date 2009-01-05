@@ -91,24 +91,30 @@ var SSListView = new Class({
   },
   
 
-  addCell: function(cellData)
+  add: function(cellData)
   {
   },
   
 
-  insertCell: function(cellData, index)
+  insert: function(cellData, index)
   {
     
   },
   
   
-  moveCell: function()
+  move: function()
   {
     
   },
   
-
-  removeCell: function(idx)
+  
+  swap: function()
+  {
+    
+  },
+  
+  
+  remove: function(idx)
   {
     
   },

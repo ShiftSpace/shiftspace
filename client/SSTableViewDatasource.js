@@ -1,6 +1,5 @@
 // ==Builder==
 // @optional
-// @name              SSTableViewDatasource
 // @package           ShiftSpaceCore
 // ==/Builder==
 
