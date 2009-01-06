@@ -183,12 +183,30 @@ var SSCellTest = new Class({
     this.assertFalse(controller instanceof SSViewProxy);
   },
   
+
+  testActionForNodeWithoutLock: function()
+  {
+    this.doc("should raise error is actionForNode without a lock");
+    
+    this.cell.setProxy(this);
+    
+    // lock the cell
+    var el = $$('.button1')[0];
+    this.assertThrows(SSCellError.NoLock, this.cell.actionForNode.bind(this.cell), el);
+  },
+  
   
   testCellActions: function()
   {
     this.doc("set actions for cells");
     
     this.cell.setProxy(this);
+    
+    // lock the cell
+    this.cell.lock($('SSCellTest'));
+    
+    // listen for events
+    $('SSCellTest').addEvent('click', this.cell.eventDispatch.bind(this.cell));
     
     // create a browser event
     SSTestRunner.createMouseEventForNode('click', $$('.button1')[0]);
@@ -212,6 +230,10 @@ var SSCellTest = new Class({
     }.bind(this));
     
     var el = $$('.button1')[0];
+    
+    // lock the cell
+    this.cell.lock($('SSCellTest'));
+    
     var action = this.cell.actionForNode(el);
     this.assertThrows(SSCellError.NoSuchTarget, this.cell.runAction.bind(this.cell), action);
   }

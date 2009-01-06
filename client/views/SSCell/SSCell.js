@@ -100,6 +100,8 @@ var SSCell = new Class({
   {
     var event = new Event(_event);
     
+    console.log('eventDispatch');
+
     var action = this.actionForNode(event.target);
     
     if(action)
@@ -111,6 +113,8 @@ var SSCell = new Class({
   
   runAction: function(action, event)
   {
+    console.log('runAction');
+    
     var target = ShiftSpaceNameTable[action.target];
     var method = ((target && target[action.method] && target[action.method].bind(target)) || 
                   (action.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [action.method]))) ||
@@ -127,8 +131,9 @@ var SSCell = new Class({
   
   actionForNode: function(node)
   {
+    if(!this.lockedElement()) throw new SSCellError.NoLock(new Error(), "actionForNode called with no locked element.");
     var ary = this.getActions().filter(function(x) {
-      return this.element.getElements('> ' + x.selector).contains(node);
+      return this.lockedElement().getElements('> ' + x.selector).contains(node);
     }.bind(this));
     if(ary.length > 0) return ary[0];
     return null;
@@ -306,6 +311,7 @@ var SSCell = new Class({
   getParentRow: function()
   {
     // TODO: related to SSTableView - not sure if this should be here.
+    // probably should not because this.element is not in the DOM
     if(this.element) return this.element.getParent('.SSRow');
     return null;
   }

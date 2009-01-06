@@ -39,6 +39,19 @@ var SSListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    this.attachEvents();
+  },
+  
+  
+  attachEvents: function()
+  {
+    this.element.addEvent('click', this.eventDispatch.bind(this));
+  },
+  
+  
+  eventDispatch: function()
+  {
+    
   },
   
   
