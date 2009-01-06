@@ -91,18 +91,7 @@ var SSCell = new Class({
   {
     if(this.options.actions)
     {
-      var actions = this.options.actions.map(function(x) {
-        var target = ShiftSpaceNameTable[x.target];
-        x.method = ((target && target[x.method] && target[x.method].bind(target)) || 
-                    (x.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [x.method]))) ||
-                    null;
-        if(!x.method)
-        {
-          throw (new SSCellError.NoSuchTarget(new Error(), "target " + x.target + " does not exist."));
-        }
-        return x;
-      }.bind(this));
-      this.setActions(actions);
+      this.setActions(this.options.actions);
     }
   },
   
@@ -113,18 +102,36 @@ var SSCell = new Class({
     
     var action = this.actionForNode(event.target);
     
-    if(action.length > 0)
+    if(action)
     {
-      action[0].method(this, _event);
+      this.runAction(action);
     }
+  },
+  
+  
+  runAction: function(action, event)
+  {
+    var target = ShiftSpaceNameTable[action.target];
+    var method = ((target && target[action.method] && target[action.method].bind(target)) || 
+                  (action.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [action.method]))) ||
+                  null;
+                  
+    if(!method)
+    {
+      throw (new SSCellError.NoSuchTarget(new Error(), "target " + target + " does not exist."));
+    }
+    
+    method(this, event);
   },
   
   
   actionForNode: function(node)
   {
-    return this.getActions().filter(function(x) {
+    var ary = this.getActions().filter(function(x) {
       return this.element.getElements('> ' + x.selector).contains(node);
     }.bind(this));
+    if(ary.length > 0) return ary[0];
+    return null;
   },
   
   

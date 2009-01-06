@@ -203,11 +203,16 @@ var SSCellTest = new Class({
   {
     this.doc("throw error if target does not exist in ShiftSpaceNameTable");
     
+    Sandalphon.reset();
     Sandalphon.compileAndLoad('tests/SSCellTest/SSCellTest2', function(ui) {
       Sandalphon.addStyle(ui.styles);
       $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      this.cell = SSControllerForNode($('SSCellTest'));
     }.bind(this));
     
-    this.assertThrows(SSCellError.NoSuchTarget, Sandalphon.activate.bind(Sandalphon), $('SSTestRunnerStage'));
+    var el = $$('.button1')[0];
+    var action = this.cell.actionForNode(el);
+    this.assertThrows(SSCellError.NoSuchTarget, this.cell.runAction.bind(this.cell), action);
   }
 });

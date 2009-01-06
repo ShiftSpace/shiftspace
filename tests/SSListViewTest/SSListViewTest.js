@@ -17,10 +17,22 @@ var SSListViewTest = new Class({
     this.methodTwoRef = false;
     
     Sandalphon.compileAndLoad('tests/SSListViewTest/SSListViewTest', function(ui) {
+      
       Sandalphon.addStyle(ui.styles);
       $('SSTestRunnerStage').set('html', ui.interface);
       Sandalphon.activate($('SSTestRunnerStage'));
       this.listView = SSControllerForNode($('SSListViewTest'));
+      
+      var data = [
+        {artworkId:0, title:'foo', image:'hellworld.png'},
+        {artworkId:1, title:'bar', image:'hellworld.png'},
+        {artworkId:2, title:'baz', image:'hellworld.png'},
+        {artworkId:3, title:'naz', image:'hellworld.png'},
+        {artworkId:3, title:'grr', image:'hellworld.png'}
+      ];
+      
+      this.listView.setData(data);
+      
     }.bind(this));
   },
   
@@ -39,28 +51,43 @@ var SSListViewTest = new Class({
   },
   
   
+  testSetCellDelegate: function()
+  {
+    this.doc("the cell delegate should be properly set");
+    
+    this.assertEqual(this.listView.cell().delegate(), this.listView);
+  },
+  
+  
   testSetData: function()
   {
     this.doc("set data for list view, refreshed contents should reflect.");
     
-    var data = [
-      {artworkId:0, title:'foo', image:'hellworld.png'},
-      {artworkId:1, title:'bar', image:'hellworld.png'},
-      {artworkId:2, title:'baz', image:'hellworld.png'}
-    ];
+    this.assertEqual(this.listView.length(), 5);
+    this.assertEqual(this.listView.element.getElements('li').length, 5);
+  },
+  
+  
+  testCellAction: function()
+  {
+    this.doc("cells should fire their methods");
     
-    this.listView.setData(data);
-
-    this.assertEqual(this.listView.length(), 3);
-  }/*,
+    var removeDidRun = false;
+    this.listView.remove = function() {
+      console.log('remove!');
+      removeDidRun = true;
+    };
+    
+    SSTestRunner.createMouseEventForNode('click', $$('.button2')[0]);
+    
+    this.assert(removeDidRun);
+  },
   
   
   testAdd: function()
   {
     this.doc("Test the addition of a new cell");
     
-    console.log('test add');
-
     var before = this.listView.cells().length;
     this.listView.addCell();
     var after = this.listView.cells().length;
@@ -123,13 +150,7 @@ var SSListViewTest = new Class({
     this.listView.refresh();
     
     this.assertEqual(this.listView.cellNodes().length, 3);
-  },
-  
-  
-  testCellAction: function()
-  {
-    this.assert(false);
-  }*/
+  }
   
 });
 

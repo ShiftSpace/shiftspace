@@ -51,6 +51,7 @@ var SSListView = new Class({
   setCell: function(cell)
   {
     this.__cell = cell;
+    cell.setDelegate(this);
     cell.element.dispose();
   },
   
