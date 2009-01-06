@@ -65,21 +65,21 @@ var SSCellTest = new Class({
   
   testSetWithoutLock: function()
   {
-    this.doc("throw error if set data with out an element lock");
+    this.doc("throw SSCellError.NoLock if set data with out an element lock");
     this.assertThrows(SSCellError.NoLock, this.cell.setProperty.bind(this.cell), ['artworkId', 1]);
   },
   
   
   testGetWithoutLock: function()
   {
-    this.doc("throw error if get data without an element lock");
+    this.doc("throw SSCellError.NoLock if get data without an element lock");
     this.assertThrows(SSCellError.NoLock, this.cell.getProperty.bind(this.cell), 'artworkId')
   },
   
   
   testVerifyPropertyAccess: function()
   {
-    this.doc("throw error if missing setter or getter for cell");
+    this.doc("throw SSCellError.MissingAccessor if missing setter or getter for cell");
     this.cell.setPropertyList(['foo', 'bar']);
     this.assertThrows(SSCellError.MissingAccessor, this.cell.verifyPropertyAccess.bind(this.cell));
   },
@@ -105,7 +105,7 @@ var SSCellTest = new Class({
   
   testSetFaultyData: function()
   {
-    this.doc("throw error on invalid property");
+    this.doc("throw SSCellError.NoSuchProperty when attempting to set non-existant property.");
     
     this.cell.lock($('SSCellTest'));
     this.assertThrows(SSCellError.NoSuchProperty, this.cell.setData.bind(this.cell), {foobar:'baz'});
@@ -134,7 +134,7 @@ var SSCellTest = new Class({
   
   testGetFaultyData: function()
   {
-    this.doc("throw error on faulty data");
+    this.doc("throw SSCellError.NoSuchProperty on request for nonexistant property.");
     
     this.cell.lock($('SSCellTest'));
 
@@ -186,7 +186,7 @@ var SSCellTest = new Class({
 
   testActionForNodeWithoutLock: function()
   {
-    this.doc("should raise error is actionForNode without a lock");
+    this.doc("should raise SSCellError.NoLock if actionForNode called without a lock");
     
     this.cell.setProxy(this);
     
