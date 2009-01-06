@@ -74,7 +74,6 @@ var SSListViewTest = new Class({
     
     var removeDidRun = false;
     this.listView.remove = function() {
-      console.log('remove!');
       removeDidRun = true;
     };
     

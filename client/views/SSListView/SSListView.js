@@ -49,9 +49,22 @@ var SSListView = new Class({
   },
   
   
-  eventDispatch: function()
+  eventDispatch: function(_event, eventType)
   {
+    var event = new Event(_event);
+    var target = event.target;
     
+    switch(true)
+    {
+      case(this.hitTest(target, '> li *') != null):
+        this.cell().lock(this.cachedHit().getParent('li'));
+        this.cell().eventDispatch(event, eventType);
+        this.cell().unlock();
+      break;
+      
+      default:
+      break;
+    }
   },
   
   

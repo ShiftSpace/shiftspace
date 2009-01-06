@@ -100,8 +100,6 @@ var SSCell = new Class({
   {
     var event = new Event(_event);
     
-    console.log('eventDispatch');
-
     var action = this.actionForNode(event.target);
     
     if(action)
@@ -113,8 +111,6 @@ var SSCell = new Class({
   
   runAction: function(action, event)
   {
-    console.log('runAction');
-    
     var target = ShiftSpaceNameTable[action.target];
     var method = ((target && target[action.method] && target[action.method].bind(target)) || 
                   (action.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [action.method]))) ||
