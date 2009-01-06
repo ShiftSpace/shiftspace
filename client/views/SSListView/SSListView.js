@@ -143,8 +143,11 @@ var SSListView = new Class({
   },
   
 
-  add: function(cellData)
+  add: function(newItem)
   {
+    // update the data
+    this.data().push(newItem);
+    this.refresh();
   },
   
   

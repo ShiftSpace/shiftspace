@@ -28,7 +28,7 @@ var SSListViewTest = new Class({
         {artworkId:1, title:'bar', image:'hellworld.png'},
         {artworkId:2, title:'baz', image:'hellworld.png'},
         {artworkId:3, title:'naz', image:'hellworld.png'},
-        {artworkId:3, title:'grr', image:'hellworld.png'}
+        {artworkId:4, title:'grr', image:'hellworld.png'}
       ];
       
       this.listView.setData(data);
@@ -87,9 +87,10 @@ var SSListViewTest = new Class({
   {
     this.doc("Test the addition of a new cell");
     
-    var before = this.listView.cells().length;
-    this.listView.addCell();
-    var after = this.listView.cells().length;
+    var before = this.listView.data().length;
+    this.listView.add({artworkId:5, title:'jar', image:'helloworld.png'});
+    var after = this.listView.data().length;
+    
     this.assertNotEqual(before, after);
   },
   
