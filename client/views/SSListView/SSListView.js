@@ -196,9 +196,17 @@ var SSListView = new Class({
   },
   
   
-  remove: function(idx)
+  remove: function(index)
   {
-    
+    if(this.data().remove)
+    {
+      this.data().remove(index);
+    }
+    else
+    {
+      this.data().splice(index, 1);
+    }
+    this.refresh();
   },
   
   

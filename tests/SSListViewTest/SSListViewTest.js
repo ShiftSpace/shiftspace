@@ -137,11 +137,16 @@ var SSListViewTest = new Class({
   {
     this.doc("Test the removal of a cell");
     
-    this.listView.setCells([{id:"foo"}, {id:"bar"}]);
-    this.listView.removeCell(this.listView.indexOfCellById("foo"));
+    function byArtworkId(id) {
+      return function(x) {
+        return x.artworkId == id;
+      }
+    };
     
-    this.assertEqual(this.listView.cellForId("foo"), null);
-    this.assertEqual(this.listView.count(), 1);
+    this.listView.remove(2);
+    
+    this.assertEqual(this.listView.count(), 4);
+    this.assertEqual(this.listView.find(byArtworkId(2)), -1);
   },
   
   
