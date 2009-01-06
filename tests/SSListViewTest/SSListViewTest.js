@@ -39,6 +39,7 @@ var SSListViewTest = new Class({
   
   tearDown: function()
   {
+    delete this.listView;
   },
   
   
@@ -118,6 +119,7 @@ var SSListViewTest = new Class({
   
   testSwap: function()
   {
+    this.doc("swap two items in the list view");
     this.assert(false);
   },
   

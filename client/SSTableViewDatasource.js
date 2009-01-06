@@ -21,7 +21,6 @@ var SSTableViewDatasource = new Class({
 
   Implements: [Events, Options],
 
-
   defaults:
   {
     data: [],
