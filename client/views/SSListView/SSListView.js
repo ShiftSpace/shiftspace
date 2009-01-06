@@ -101,10 +101,22 @@ var SSListView = new Class({
   },
   
   
-  length: function()
+  count: function()
   {
     if($type(this.data().length) == 'function') return this.data().length();
     return this.data().length;
+  },
+  
+  
+  find: function(fn)
+  {
+    
+  },
+  
+  
+  findAll: function(fn)
+  {
+    
   },
   
   
@@ -120,18 +132,12 @@ var SSListView = new Class({
   },
   
   
-  count: function()
-  {
-    return this.__cells.length;
-  },
-  
-  
   cellForId: function(id)
   {
   },
   
   
-  indexOfCell: function()
+  indexOfCell: function(cell)
   {
     
   },

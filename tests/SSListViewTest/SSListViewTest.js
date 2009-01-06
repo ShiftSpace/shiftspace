@@ -87,11 +87,13 @@ var SSListViewTest = new Class({
   {
     this.doc("Test the addition of a new cell");
     
-    var before = this.listView.data().length;
+    var before = this.listView.count();
     this.listView.add({artworkId:5, title:'jar', image:'helloworld.png'});
-    var after = this.listView.data().length;
+    var after = this.listView.count();
     
     this.assertNotEqual(before, after);
+    this.assertEqual(before, 5);
+    this.assertEqual(after, 6);
   },
   
   
