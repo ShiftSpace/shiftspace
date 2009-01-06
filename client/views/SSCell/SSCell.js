@@ -94,10 +94,11 @@ var SSCell = new Class({
       var actions = this.options.actions.map(function(x) {
         var target = ShiftSpaceNameTable[x.target];
         x.method = ((target && target[x.method] && target[x.method].bind(target)) || 
-                    (x.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [x.method])));
+                    (x.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [x.method]))) ||
+                    null;
         if(!x.method)
         {
-          throw new SSCellError.NoSuchTarget(new Error(), "target " + x.target + " does not exist.");
+          throw (new SSCellError.NoSuchTarget(new Error(), "target " + x.target + " does not exist."));
         }
         return x;
       }.bind(this));
@@ -210,6 +211,7 @@ var SSCell = new Class({
   {
     var clone = this.element.clone(true);
     
+    clone.removeClass('SSCell');
     clone.removeProperty('options');
     clone.removeProperty('uiclass');
     clone.removeProperty('outlet');

@@ -39,29 +39,54 @@ var SSListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    this.setDataProvider([]);
-    this.setCells([]);
   },
   
   
-  setDataProvider: function(dp)
+  awake: function(context)
   {
-    this.__dataProvider = dp;
+    this.setCell(SSControllerForNode(this.element.getElement('> .SSCell')));
   },
   
   
-  dataProvider: function()
+  setCell: function(cell)
   {
-    return this.__dataProvider;
+    this.__cell = cell;
+    cell.element.dispose();
   },
   
-
-  setCells: function(newCells)
+  
+  cell: function()
   {
-    this.__cells = newCells;
+    return this.__cell;
   },
   
-
+  
+  setData: function(newData)
+  {
+    this.__data = newData;
+    
+    if(newData.addView)
+    {
+      newData.addView(this);
+    }
+    
+    this.refresh();
+  },
+  
+  
+  length: function()
+  {
+    if($type(this.data().length) == 'function') return this.data().length();
+    return this.data().length;
+  },
+  
+  
+  data: function()
+  {
+    return this.__data;
+  },
+  
+  
   cells: function()
   {
     return this.__cells;
@@ -93,6 +118,12 @@ var SSListView = new Class({
 
   add: function(cellData)
   {
+  },
+  
+  
+  edit: function()
+  {
+    
   },
   
 
@@ -152,7 +183,15 @@ var SSListView = new Class({
   refresh: function()
   {
     this.parent();
-    // reload data
+    
+    this.element.empty();
+    
+    if(this.data().length > 0)
+    {
+      this.data().each(function(x) {
+        this.element.grab(this.cell().cloneWithData(x));
+      }.bind(this));
+    }
   }
   
 });

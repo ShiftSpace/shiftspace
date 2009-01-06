@@ -6,6 +6,11 @@
   height: 100%;
 }
 
+.SSListView > .SSCell
+{
+  display: none;
+}
+
 .SSListView.HorizontalListView > li.SSListViewCell
 {
   float: left;

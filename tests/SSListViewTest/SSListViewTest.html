@@ -2,31 +2,32 @@
     class="SSListView" 
     uiclass="SSListView">
     
-    <li class="SSModel" 
+    <li class="SSCell" 
         uiclass="SSListViewTestCell" 
         options="{
           properties: ['artworkId', 'title', 'image'],
           actions: [
             {
-              selector: '.runMethodOne',
+              selector: '.button1',
               target: 'SSListViewTest',
-              method: 'methodOne'
+              method: 'edit'
             },
             {
+              selector: '.button2',
               target: 'SSListViewTest',
-              selector: '.runMethodTwo',
-              method: 'methodTwo'
+              method: 'remove'
             }
           ]
         }">
+        
       <img src="../images/HelloWorld.png"></img>
-      <span>
-        ListItem
+      <span class="title">
+        Title
       </span>
-      <span class="runMethodOne">
+      <span class="button1">
         Action 1
       </span>
-      <span class="runMethodTwo">
+      <span class="button2">
         Action 2
       </span>
     </li>

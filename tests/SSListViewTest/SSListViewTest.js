@@ -1,6 +1,7 @@
 // ==Builder==
 // @test
 // @suite             UI
+// @dependencies      SSListViewTestCell
 // ==/Builder==
 
 var SSListViewTest = new Class({
@@ -20,7 +21,6 @@ var SSListViewTest = new Class({
       $('SSTestRunnerStage').set('html', ui.interface);
       Sandalphon.activate($('SSTestRunnerStage'));
       this.listView = SSControllerForNode($('SSListViewTest'));
-      this.listView.setDelegate(this);
     }.bind(this));
   },
   
@@ -30,12 +30,37 @@ var SSListViewTest = new Class({
   },
   
   
-  // testSetDataProvider
+  testSetCell: function()
+  {
+    this.doc("test the cell is set properly");
+    
+    this.assert(this.listView.cell() != null);
+    this.assert(this.listView.cell() instanceof SSListViewTestCell);
+  },
   
   
-  testAddCell: function()
+  testSetData: function()
+  {
+    this.doc("set data for list view, refreshed contents should reflect.");
+    
+    var data = [
+      {artworkId:0, title:'foo', image:'hellworld.png'},
+      {artworkId:1, title:'bar', image:'hellworld.png'},
+      {artworkId:2, title:'baz', image:'hellworld.png'}
+    ];
+    
+    this.listView.setData(data);
+
+    this.assertEqual(this.listView.length(), 3);
+  }/*,
+  
+  
+  testAdd: function()
   {
     this.doc("Test the addition of a new cell");
+    
+    console.log('test add');
+
     var before = this.listView.cells().length;
     this.listView.addCell();
     var after = this.listView.cells().length;
@@ -43,7 +68,7 @@ var SSListViewTest = new Class({
   },
   
   
-  testInsertCell: function()
+  testInsert: function()
   {
     this.doc("Test the insertion of a new cell");
     
@@ -60,7 +85,13 @@ var SSListViewTest = new Class({
   },
   
   
-  testInsertCellBounds: function()
+  testSwap: function()
+  {
+    this.assert(false);
+  },
+  
+  
+  testOutOfBounds: function()
   {
     this.doc("Test that exception is thrown on insert out of bounds of SSListView.");
     
@@ -71,7 +102,7 @@ var SSListViewTest = new Class({
   },
   
   
-  testRemoveCell: function()
+  testRemove: function()
   {
     this.doc("Test the removal of a cell");
     
@@ -83,7 +114,7 @@ var SSListViewTest = new Class({
   },
   
   
-  testRefreshListView: function()
+  testRefresh: function()
   {
     this.doc("Test refresh the content of a cell");
     
@@ -92,6 +123,13 @@ var SSListViewTest = new Class({
     this.listView.refresh();
     
     this.assertEqual(this.listView.cellNodes().length, 3);
-  }
+  },
+  
+  
+  testCellAction: function()
+  {
+    this.assert(false);
+  }*/
+  
 });
 
