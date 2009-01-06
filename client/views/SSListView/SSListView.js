@@ -100,6 +100,20 @@ var SSListView = new Class({
     this.refresh();
   },
   
+
+  data: function()
+  {
+    return this.__data;
+  },
+  
+  
+  rawData: function()
+  {
+    var data = this.data();
+    if(data.internal) return data.internal();
+    return data;
+  },
+  
   
   count: function()
   {
@@ -110,25 +124,24 @@ var SSListView = new Class({
   
   find: function(fn)
   {
-    
+    var data = this.rawData();
+    for(var i = 0, l = data.length; i < l; i++) if(fn(data[i])) return i;
+    return -1;
   },
   
   
   findAll: function(fn)
   {
-    
-  },
-  
-  
-  data: function()
-  {
-    return this.__data;
+    var data = this.rawData();
+    var result = [];
+    for(var i = 0, l = data.length; i < l; i++) if(fn(data[i])) result.push[1];
+    return result;
   },
   
   
   cells: function()
   {
-    return this.__cells;
+    return this.element.getElements('> li');
   },
   
   
@@ -139,16 +152,10 @@ var SSListView = new Class({
   
   indexOfCell: function(cell)
   {
-    
+    return this.cells().indexOf(cell);
   },
   
   
-  indexOfCellById: function(id)
-  {
-    
-  },
-  
-
   add: function(newItem)
   {
     // update the data
@@ -162,16 +169,24 @@ var SSListView = new Class({
     
   },
   
-
+  
   insert: function(cellData, index)
   {
-    
+    if(this.data().insert)
+    {
+      this.data().insert(cellData, index);
+    }
+    else
+    {
+      this.data().splice(index, 0, cellData);
+    }
+    this.refresh();
   },
   
   
-  move: function()
+  move: function(from, to)
   {
-    
+    var data = this.data();
   },
   
   
@@ -187,32 +202,15 @@ var SSListView = new Class({
   },
   
   
+  removeObject: function(object, equalFn)
+  {
+    
+  },
+  
+  
   canSelect: function(cell)
   {
     return true;
-  },
-  
-  
-  selectByNode: function(node)
-  {
-  },
-  
-  
-  cellNodes: function()
-  {
-    return this.element.getElements("> .SSCell");
-  },
-  
-  
-  scrollLeft: function()
-  {
-    
-  },
-  
-  
-  scrollRight: function()
-  {
-    
   },
   
   

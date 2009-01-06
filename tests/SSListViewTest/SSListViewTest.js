@@ -63,7 +63,7 @@ var SSListViewTest = new Class({
   {
     this.doc("set data for list view, refreshed contents should reflect.");
     
-    this.assertEqual(this.listView.length(), 5);
+    this.assertEqual(this.listView.count(), 5);
     this.assertEqual(this.listView.element.getElements('li').length, 5);
   },
   
@@ -101,16 +101,18 @@ var SSListViewTest = new Class({
   {
     this.doc("Test the insertion of a new cell");
     
-    this.listView.setCells([{id:"foo"}, {id:"bar"}]);
-    this.listView.insertCell({id:"baz"}, 1);
+    this.listView.insert({artworkId:10, title:"nar", image:"helloworld.png"}, 2);
     
-    var theCell = this.listView.cellForId("cool");
-    var fooCell = this.listView.cellForId("food");
-    var barCell = this.listView.cellForId("bar");
+    function byArtworkId(id) {
+      return function(x) {
+        return x.artworkId == id;
+      }
+    };
     
-    this.assertEqual(this.listView.indexOfCell(fooCell), 0);
-    this.assertEqual(this.listView.indexOfCell(theCell), 1);
-    this.assertEqual(this.listView.indexOfCell(barCell), 2);
+    var idx = this.listView.find(byArtworkId(10));
+    
+    this.assertEqual(this.listView.count(), 6);
+    this.assertEqual(idx, 2);
   },
   
   
