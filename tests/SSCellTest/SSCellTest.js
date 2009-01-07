@@ -1,7 +1,7 @@
 // ==Builder==
 // @test
 // @suite             UI
-// @dependencies       SSCellTestCell
+// @dependencies      SSCellTestCell
 // ==/Builder==
 
 var SSCellTest = new Class({

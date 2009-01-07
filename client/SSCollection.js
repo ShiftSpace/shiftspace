@@ -3,13 +3,38 @@
 // @package           ShiftSpaceCore
 // ==/Builder==
 
+// =========================
+// = Collection Management =
+// =========================
+
+var SSCollections = $H();
+
+function SSCollectionForName(name)
+{
+  return SSCollections.get(name);
+}
+
+function SSSetCollectionForName(collection, name)
+{
+  SSCollections.set(name, collection);
+}
+
+function SSClearCollections()
+{
+  SSCollections.empty();
+}
+
+// ====================
+// = Class Definition =
+// ====================
+
 var SSCollection = new Class({
 
   Implements: [Events, Options],
 
   name: "SSCollection",
 
-  initialize: function()
+  initialize: function(name)
   {
     // a new collection
   },
