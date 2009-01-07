@@ -120,6 +120,8 @@ var SSListViewTest = new Class({
   testSwap: function()
   {
     this.doc("swap two items in the list view");
+    
+    
     this.assert(false);
   },
   
@@ -149,14 +151,26 @@ var SSListViewTest = new Class({
   },
   
   
-  testRefresh: function()
+  testSetGet: function()
   {
-    this.doc("Test refresh the content of a cell");
+    this.doc("set/get the content of a cell");
     
-    this.listView.setCells([{id:"foo"}, {id:"bar"}]);
-    this.listView.dataProvider().push({id:"baz"});
+    this.listView.set({artworkId:22, title: 'cool', image:'goodbye.png'}, 1);
+    var cellData = this.listView.get(1);
+    
+    console.log(cellData);
+    
+    this.assert(cellData.artworkId == 22);
+    this.assert(cellData.title == 'cool');
+    this.assert(cellData.image == 'goodbye.png');
+  },
+  
+  
+  testUpdate: function()
+  {
+    this.doc("update the content of a cell");
+    
     this.listView.refresh();
-    
     this.assertEqual(this.listView.cellNodes().length, 3);
   }
   

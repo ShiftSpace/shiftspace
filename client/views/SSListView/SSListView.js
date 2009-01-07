@@ -172,7 +172,7 @@ var SSListView = new Class({
   
   insert: function(cellData, index)
   {
-    if(index < 0 || index >= this.count()) throw new SSListViewError.OutOfBounds(new Error(), index + " index is out bounds.");
+    this.boundsCheck(index);
     
     if(this.data().insert)
     {
@@ -183,6 +183,71 @@ var SSListView = new Class({
       this.data().splice(index, 0, cellData);
     }
     this.refresh();
+  },
+  
+  
+  set: function(cellData, index)
+  {
+    this.boundsCheck(index);
+    this.__set__(cellData, index);
+  },
+  
+  
+  __set__: function(cellData, index)
+  {
+    if(this.data().set)
+    {
+      this.data().set(cellData, index);
+    }
+    else
+    {
+      this.data()[index] = cellData;
+    }
+  },
+  
+  
+  get: function(index)
+  {
+    var copy = {};
+    var data = this.__get__(index);
+    for(prop in data)
+    {
+      copy[prop] = data[prop];
+    }
+    return copy;
+  },
+  
+
+  __get__: function(index)
+  {
+    if(this.data().get)
+    {
+      return this.data().get(index);
+    }
+    else
+    {
+      return this.data()[index];
+    }
+  },
+  
+
+  update: function(cellData, index)
+  {
+  },
+  
+
+  __update__: function(cellData, index)
+  {
+    var oldData;
+    if(this.data().get)
+    {
+      oldData = this.data().get(index);
+    }
+    else
+    {
+      oldData = this.data()[index];
+    }
+    this.__set__(oldData.merge(cellData));
   },
   
   
@@ -236,6 +301,12 @@ var SSListView = new Class({
         this.element.grab(this.cell().cloneWithData(x));
       }.bind(this));
     }
+  },
+  
+  
+  boundsCheck: function(index)
+  {
+    if(index < 0 || index >= this.count()) throw new SSListViewError.OutOfBounds(new Error(), index + " index is out bounds.");
   }
   
 });

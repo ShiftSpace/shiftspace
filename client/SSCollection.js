@@ -45,7 +45,7 @@ var SSCollection = new Class({
   Implements: [Events, Options],
 
   name: "SSCollection",
-
+  
   initialize: function(name)
   {
     if(name == null)
