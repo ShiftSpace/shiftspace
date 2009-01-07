@@ -3,6 +3,18 @@
 // @package           ShiftSpaceCore
 // ==/Builder==
 
+// ==============
+// = Exceptions =
+// ==============
+
+var SSCollectionError = SSException;
+
+SSCollectionError.NoName = new Class({
+  name:"SSCollectionError.NoName",
+  Extends: SSCollectionError,
+  Implements: SSExceptionPrinter
+});
+
 // =========================
 // = Collection Management =
 // =========================
@@ -36,7 +48,12 @@ var SSCollection = new Class({
 
   initialize: function(name)
   {
+    if(name == null)
+    {
+      throw new SSCollectionError.NoName(new Error(), "collection instantiated without name.");
+    }
     // a new collection
+    SSSetCollectionForName(name);
   },
   
   metadata: function()

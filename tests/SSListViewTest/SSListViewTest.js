@@ -127,11 +127,8 @@ var SSListViewTest = new Class({
   testOutOfBounds: function()
   {
     this.doc("Test that exception is thrown on insert out of bounds of SSListView.");
-    
-    this.listView.setCells([{id:"foo"}, {id:"bar"}]);
-    
-    this.assertThrows(SSListViewError.OutOfBounds, this.listView.insertCell.bind(this.listView), [{id:"baz"}, 3]);
-    this.assertThrows(SSListViewError.OutOfBounds, this.listView.insertCell.bind(this.listView), [{id:"baz"}, -1]);
+    this.assertThrows(SSListViewError.OutOfBounds, this.listView.insert.bind(this.listView), [{id:"baz"}, 6]);
+    this.assertThrows(SSListViewError.OutOfBounds, this.listView.insert.bind(this.listView), [{id:"baz"}, -1]);
   },
   
   

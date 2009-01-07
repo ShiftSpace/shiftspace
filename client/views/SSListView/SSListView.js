@@ -172,6 +172,8 @@ var SSListView = new Class({
   
   insert: function(cellData, index)
   {
+    if(index < 0 || index >= this.count()) throw new SSListViewError.OutOfBounds(new Error(), index + " index is out bounds.");
+    
     if(this.data().insert)
     {
       this.data().insert(cellData, index);
@@ -190,7 +192,7 @@ var SSListView = new Class({
   },
   
   
-  swap: function()
+  swap: function(fromIndex, toIndex)
   {
     
   },
