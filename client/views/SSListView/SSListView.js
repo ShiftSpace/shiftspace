@@ -233,6 +233,8 @@ var SSListView = new Class({
 
   update: function(cellData, index)
   {
+    var oldData = this.get(index);
+    this.set($merge(oldData, cellData), index);
   },
   
 

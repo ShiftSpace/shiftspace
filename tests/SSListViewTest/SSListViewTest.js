@@ -24,11 +24,11 @@ var SSListViewTest = new Class({
       this.listView = SSControllerForNode($('SSListViewTest'));
       
       var data = [
-        {artworkId:0, title:'foo', image:'hellworld.png'},
-        {artworkId:1, title:'bar', image:'hellworld.png'},
-        {artworkId:2, title:'baz', image:'hellworld.png'},
-        {artworkId:3, title:'naz', image:'hellworld.png'},
-        {artworkId:4, title:'grr', image:'hellworld.png'}
+        {artworkId:0, title:'foo', image:'helloworld.png'},
+        {artworkId:1, title:'bar', image:'helloworld.png'},
+        {artworkId:2, title:'baz', image:'helloworld.png'},
+        {artworkId:3, title:'naz', image:'helloworld.png'},
+        {artworkId:4, title:'grr', image:'helloworld.png'}
       ];
       
       this.listView.setData(data);
@@ -158,8 +158,6 @@ var SSListViewTest = new Class({
     this.listView.set({artworkId:22, title: 'cool', image:'goodbye.png'}, 1);
     var cellData = this.listView.get(1);
     
-    console.log(cellData);
-    
     this.assert(cellData.artworkId == 22);
     this.assert(cellData.title == 'cool');
     this.assert(cellData.image == 'goodbye.png');
@@ -170,8 +168,14 @@ var SSListViewTest = new Class({
   {
     this.doc("update the content of a cell");
     
-    this.listView.refresh();
-    this.assertEqual(this.listView.cellNodes().length, 3);
+    this.listView.update({artworkId:22, title: 'cool'}, 1);
+    var cellData = this.listView.get(1);
+    
+    console.log(cellData);
+
+    this.assert(cellData.artworkId == 22);
+    this.assert(cellData.title == 'cool');
+    this.assert(cellData.image == 'helloworld.png');
   }
   
 });
