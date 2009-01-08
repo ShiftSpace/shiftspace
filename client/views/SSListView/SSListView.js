@@ -70,7 +70,12 @@ var SSListView = new Class({
   
   awake: function(context)
   {
-    this.setCell(SSControllerForNode(this.element.getElement('> .SSCell')));
+    var cellNode = this.element.getElement('> .SSCell');
+    
+    if(cellNode)
+    {
+      this.setCell(SSControllerForNode(cellNode));
+    }
   },
   
   
