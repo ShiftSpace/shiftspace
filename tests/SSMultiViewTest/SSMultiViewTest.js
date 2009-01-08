@@ -273,6 +273,25 @@ var SSMultiViewTest = new Class({
       this.endAsync(hook);
       
     }.bind(this));   
+  },
+  
+  
+  testPivot: function()
+  {
+    this.doc("move to the a view via a pivot");
+    
+    var multiview;
+    Sandalphon.compileAndLoad('tests/SSMultiViewTest/SSMultiViewTest1', function(ui) {
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      multiview = SSControllerForNode($('SSMultiViewTest'));
+    });
+    
+    // create a mouse event on the pivot
+    SSTestRunner.createMouseEventForNode('click', $('GotoSubView2'));
+    
+    this.assert(multiview.getIndexOfCurrentView() == 1);
   }
   
   

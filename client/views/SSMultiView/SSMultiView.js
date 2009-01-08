@@ -45,6 +45,8 @@ var SSMultiView = new Class({
   {
     this.parent(el, options);
     
+    this.initPivots();
+    
     // add subview class for CSS styling reasons
     if(this.options.subViewSelector != '.SSSubView')
     {
@@ -98,6 +100,12 @@ var SSMultiView = new Class({
   getCurrentView: function()
   {
     return SSControllerOrNode(this.getRawCurrentView());
+  },
+  
+  
+  getIndexOfCurrentView: function()
+  {
+    return this.getRawSubViews().indexOf(this.getRawCurrentView());
   },
   
   
