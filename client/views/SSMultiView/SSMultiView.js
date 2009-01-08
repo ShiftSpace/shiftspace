@@ -57,6 +57,16 @@ var SSMultiView = new Class({
   },
   
   
+  hide: function()
+  {
+    this.parent();
+    if(this.options.defaultView)
+    {
+      this.showViewByName(this.options.defaultView);
+    }
+  },
+  
+  
   initPivots: function(el, options)
   {
     if(this.options.pivots)
