@@ -257,18 +257,26 @@ var SSListView = new Class({
   },
   
   
-  move: function(from, to)
+  move: function(fromIndex, toIndex)
   {
-    this.boundsCheck(from);
-    this.boundsCheck(to);
-    
-    var data = this.data();
+    this.boundsCheck(fromIndex);
+    this.boundsCheck(toIndex);
+    this.__move__(fromIndex, toIndex);
   },
   
   
-  swap: function(fromIndex, toIndex)
+  __move__: function(fromIndex, toIndex)
   {
-    
+    if(this.data().move)
+    {
+      this.data().move(fromIndex, toIndex);
+    }
+    else
+    {
+      var data = this.get(fromIndex);
+      this.remove(fromIndex);
+      this.insert(data, toIndex);
+    }
   },
   
   
@@ -324,7 +332,7 @@ var SSListView = new Class({
   cellNodeForIndex: function(index)
   {
     this.boundsCheck(index);
-    return this.element.getElements('> li')[index];
+    return this.cellNodes()[index];
   }
   
 });

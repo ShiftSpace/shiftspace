@@ -117,12 +117,17 @@ var SSListViewTest = new Class({
   },
   
   
-  testSwap: function()
+  testMove: function()
   {
-    this.doc("swap two items in the list view");
+    this.doc("move an item to a different position in the list view");
     
+    this.listView.move(3, 1);
+    var data = this.listView.get(1);
     
-    this.assert(false);
+    console.log(data);
+
+    this.assert(data.artworkId == 3);
+    this.assert(data.title == "naz");
   },
   
   

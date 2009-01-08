@@ -56,15 +56,18 @@ var SSCollection = new Class({
     SSSetCollectionForName(name);
   },
   
+  
   metadata: function()
   {
     
   },
   
+  
   length: function()
   {
     
   },
+  
   
   add: function(obj)
   {
@@ -72,11 +75,13 @@ var SSCollection = new Class({
     this.fireEvent('onChange');
   },
   
+  
   remove: function(idx)
   {
     this.fireEvent('onRemove', idx);
     this.fireEvent('onChange');
   },
+  
   
   insert: function(obj, idx)
   {
@@ -84,10 +89,12 @@ var SSCollection = new Class({
     this.fireEvent('onChange');
   },
   
-  swap: function(fromIndex, toIndex)
+  
+  move: function(fromIndex, toIndex)
   {
-    this.fireEvent('onSwap', {from:fromIndex, to:toIndex});
+    this.fireEvent('onMove', {from:fromIndex, to:toIndex});
   },
+  
   
   update: function(index, newValues)
   {
@@ -95,7 +102,14 @@ var SSCollection = new Class({
     this.fireEvent('onUpdate');
   },
   
-  load: function(idx, count)
+  
+  set: function(data, index)
+  {
+    
+  },
+  
+  
+  load: function(index, count)
   {
     // actually load content
   }
