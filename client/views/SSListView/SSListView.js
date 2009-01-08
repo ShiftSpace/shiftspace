@@ -31,7 +31,7 @@ var SSListView = new Class({
   {
     return $merge(this.parent(), {
       cell: null,
-      reorderable: false
+      sortable: false
     });
   },
   
@@ -40,7 +40,49 @@ var SSListView = new Class({
   {
     this.parent(el, options);
     this.setData([]);
+    this.initSortables();
     this.attachEvents();
+  },
+  
+  
+  initSortables: function()
+  {
+    if(this.options.sortable)
+    {
+      // destroy any previous sortables
+      if(this.__sortables)
+      {
+        this.__sortables.detach();
+        delete this.__sortables;
+      }
+      
+      this.__sortables = new Sortables(this.element, {
+        constrain: true,
+        clone: true,
+        snap: 4,
+        revert: true,
+        onStart: this.sortStart.bind(this),
+        onSort: this.sortSort.bind(this),
+        onComplete: this.sortComplete.bind(this)
+      });
+    }
+  },
+  
+  
+  sortStart: function(cellNode)
+  {
+    this.__sortStart = this.cellNodes().indexOf(cellNode)-1;
+  },
+  
+  
+  sortSort: function(cellNode)
+  {
+  },
+  
+  
+  sortComplete: function(cellNode)
+  {
+    this.__move__(this.__sortStart, this.cellNodes().indexOf(cellNode));
   },
   
   
@@ -179,7 +221,13 @@ var SSListView = new Class({
   insert: function(cellData, index)
   {
     this.boundsCheck(index);
-    
+    this.__insert__(cellData, index);
+    this.refresh();
+  },
+  
+  
+  __insert__: function(cellData, index)
+  {
     if(this.data().insert)
     {
       this.data().insert(cellData, index);
@@ -187,8 +235,7 @@ var SSListView = new Class({
     else
     {
       this.data().splice(index, 0, cellData);
-    }
-    this.refresh();
+    }    
   },
   
   
@@ -196,6 +243,7 @@ var SSListView = new Class({
   {
     this.boundsCheck(index);
     this.__set__(cellData, index);
+    this.refresh();
   },
   
   
@@ -245,6 +293,8 @@ var SSListView = new Class({
     
     var oldData = this.get(index);
     this.set($merge(oldData, cellData), index);
+    
+    this.refresh();
   },
   
 
@@ -268,6 +318,7 @@ var SSListView = new Class({
     this.boundsCheck(fromIndex);
     this.boundsCheck(toIndex);
     this.__move__(fromIndex, toIndex);
+    this.refresh();
   },
   
   
@@ -279,9 +330,11 @@ var SSListView = new Class({
     }
     else
     {
+      console.log('from: ' + fromIndex);
+      console.log('to: ' + toIndex);
       var data = this.get(fromIndex);
-      this.remove(fromIndex);
-      this.insert(data, toIndex);
+      this.__remove__(fromIndex);
+      this.__insert__(data, toIndex);
     }
   },
   
@@ -289,7 +342,13 @@ var SSListView = new Class({
   remove: function(index)
   {
     this.boundsCheck(index);
-    
+    this.__remove__(index);
+    this.refresh();
+  },
+  
+  
+  __remove__: function(index)
+  {
     if(this.data().remove)
     {
       this.data().remove(index);
@@ -297,8 +356,7 @@ var SSListView = new Class({
     else
     {
       this.data().splice(index, 1);
-    }
-    this.refresh();
+    }    
   },
   
   
@@ -324,6 +382,8 @@ var SSListView = new Class({
       this.data().each(function(x) {
         this.element.grab(this.cell().cloneWithData(x));
       }.bind(this));
+      
+      this.initSortables();
     }
   },
   
