@@ -55,6 +55,28 @@ var SSMultiView = new Class({
   },
   
   
+  initPivots: function(el, options)
+  {
+    if(this.options.pivots)
+    {
+      for(selector in this.options.pivots)
+      {
+        this.initPivot(selector, this.options.pivots[selector]);
+      }
+    }
+  },
+  
+  
+  initPivot: function(selector, view)
+  {
+    this.element.getElement(selector).addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if($type(view) == 'number') this.showView(view);
+      if($type(view) == 'string') this.showViewByName(view);
+    }.bind(this));
+  },
+  
+  
   getRawSubViews: function()
   {
     return this.element.getElements('> ' + this.options.subViewSelector);

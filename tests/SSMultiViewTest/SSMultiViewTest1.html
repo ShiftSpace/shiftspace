@@ -1,7 +1,15 @@
-<div id="SSMultiViewTest" class="SSMultiView" uiclass="SSMultiView">
+<div id="SSMultiViewTest" 
+     class="SSMultiView"
+     uiclass="SSMultiView"
+     options="{
+       pivots: {
+         '#GotoSubView2': 1
+       }
+     }">
   
   <div id="SSMultiViewSubView1" class="SSSubView SSActive">
     View 1
+    <div id="GotoSubView2"></div>
   </div>
   
   <div id="SSMultiViewSubView2" class="SSSubView" uiclass="SSView">
