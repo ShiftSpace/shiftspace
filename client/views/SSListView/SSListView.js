@@ -139,20 +139,9 @@ var SSListView = new Class({
   },
   
   
-  cells: function()
+  cellNodes: function()
   {
     return this.element.getElements('> li');
-  },
-  
-  
-  cellForId: function(id)
-  {
-  },
-  
-  
-  indexOfCell: function(cell)
-  {
-    return this.cells().indexOf(cell);
   },
   
   
@@ -164,9 +153,20 @@ var SSListView = new Class({
   },
   
   
-  edit: function()
+  edit: function(index)
   {
+    this.boundsCheck(index);
     
+    var canEdit = true;
+    if(this.delegate() && this.delegate().canEdit)
+    {
+      canEdit = this.data().canEdit(index);
+    }
+
+    if(canEdit)
+    {
+      this.cell().edit(this.cellNodeForIndex(index));
+    }
   },
   
   
@@ -208,6 +208,8 @@ var SSListView = new Class({
   
   get: function(index)
   {
+    this.boundsCheck(index);
+    
     var copy = {};
     var data = this.__get__(index);
     for(prop in data)
@@ -233,6 +235,8 @@ var SSListView = new Class({
 
   update: function(cellData, index)
   {
+    this.boundsCheck(index);
+    
     var oldData = this.get(index);
     this.set($merge(oldData, cellData), index);
   },
@@ -255,6 +259,9 @@ var SSListView = new Class({
   
   move: function(from, to)
   {
+    this.boundsCheck(from);
+    this.boundsCheck(to);
+    
     var data = this.data();
   },
   
@@ -267,6 +274,8 @@ var SSListView = new Class({
   
   remove: function(index)
   {
+    this.boundsCheck(index);
+    
     if(this.data().remove)
     {
       this.data().remove(index);
@@ -309,6 +318,13 @@ var SSListView = new Class({
   boundsCheck: function(index)
   {
     if(index < 0 || index >= this.count()) throw new SSListViewError.OutOfBounds(new Error(), index + " index is out bounds.");
+  },
+  
+  
+  cellNodeForIndex: function(index)
+  {
+    this.boundsCheck(index);
+    return this.element.getElements('> li')[index];
   }
   
 });
