@@ -124,8 +124,6 @@ var SSListViewTest = new Class({
     this.listView.move(3, 1);
     var data = this.listView.get(1);
     
-    console.log(data);
-
     this.assert(data.artworkId == 3);
     this.assert(data.title == "naz");
   },
@@ -176,8 +174,6 @@ var SSListViewTest = new Class({
     this.listView.update({artworkId:22, title: 'cool'}, 1);
     var cellData = this.listView.get(1);
     
-    console.log(cellData);
-
     this.assert(cellData.artworkId == 22);
     this.assert(cellData.title == 'cool');
     this.assert(cellData.image == 'helloworld.png');
