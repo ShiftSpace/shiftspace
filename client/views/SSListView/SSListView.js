@@ -39,6 +39,7 @@ var SSListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    this.setData([]);
     this.attachEvents();
   },
   
@@ -317,10 +318,9 @@ var SSListView = new Class({
   {
     this.parent();
     
-    this.element.empty();
-    
     if(this.data().length > 0)
     {
+      this.element.empty();
       this.data().each(function(x) {
         this.element.grab(this.cell().cloneWithData(x));
       }.bind(this));
