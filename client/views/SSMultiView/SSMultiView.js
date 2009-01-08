@@ -72,9 +72,15 @@ var SSMultiView = new Class({
   initPivot: function(selector, view)
   {
     this.element.getElement(selector).addEvent('click', function(_evt) {
+      
       var evt = new Event(_evt);
+      if(!this.delegate() ||
+         !this.delegate().canPivot ||
+         this.delegate().canPivot(this))
+         
       if($type(view) == 'number') this.showView(view);
       if($type(view) == 'string') this.showViewByName(view);
+      
     }.bind(this));
   },
   

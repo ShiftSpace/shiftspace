@@ -292,6 +292,37 @@ var SSMultiViewTest = new Class({
     SSTestRunner.createMouseEventForNode('click', $('GotoSubView2'));
     
     this.assert(multiview.getIndexOfCurrentView() == 1);
+  },
+  
+  
+  canPivot: function(aView)
+  {
+    this.canPivotDidRun = true;
+    this.canPivotSender = aView;
+    
+    return true;
+  },
+  
+  
+  testCanPivot: function()
+  {
+    this.doc("call delegate can pivot");
+    
+    var multiview;
+    Sandalphon.compileAndLoad('tests/SSMultiViewTest/SSMultiViewTest1', function(ui) {
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      multiview = SSControllerForNode($('SSMultiViewTest'));
+    });
+    
+    multiview.setDelegate(this);
+
+    // create a mouse event on the pivot
+    SSTestRunner.createMouseEventForNode('click', $('GotoSubView2'));
+    
+    this.assert(this.canPivotDidRun);
+    this.assert(this.canPivotSender == multiview);
   }
   
   

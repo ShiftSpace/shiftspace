@@ -46,8 +46,18 @@ var SSCollection = new Class({
 
   name: "SSCollection",
   
-  initialize: function(name)
+  defaults: function()
   {
+    return {
+      table: null,
+      fields: {}
+    }
+  },
+  
+  initialize: function(name, options)
+  {
+    this.setOptions(this.defaults(), options);
+    
     if(name == null)
     {
       throw new SSCollectionError.NoName(new Error(), "collection instantiated without name.");

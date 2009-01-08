@@ -31,7 +31,8 @@ var SSListView = new Class({
   {
     return $merge(this.parent(), {
       cell: null,
-      sortable: false
+      sortable: false,
+      lazy: false
     });
   },
   
