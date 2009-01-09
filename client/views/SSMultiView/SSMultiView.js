@@ -62,6 +62,7 @@ var SSMultiView = new Class({
     this.parent();
     if(this.options.defaultView)
     {
+      console.log('showing ' + this.options.defaultView);
       this.showViewByName(this.options.defaultView);
     }
   },
@@ -178,7 +179,7 @@ var SSMultiView = new Class({
     {
       throw new SSMultiViewError.NoSuchSubView(new Error(), this.element.getProperty('id') + "'s controller has no subview with name " + name + ".");
     }
-    this.showView(this.element.getChildren().indexOf(this.element.getElement('> #'+name)));
+    this.showView(this.getRawSubViews().indexOf(this.element.getElement('> #'+name)));
   }
 
 });
