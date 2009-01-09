@@ -196,10 +196,9 @@ var SSListView = new Class({
     {
       var data = this.get(index);
       var result = {};
-      for(prop in arg)
-      {
+      arg.each(function(prop) {
         result[prop] = data[prop];
-      }
+      });
       return result;
     }
     return null;
