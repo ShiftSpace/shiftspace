@@ -423,7 +423,7 @@ var SSListView = new Class({
   
   indexOf: function(object)
   {
-    if(object instanceof SSCell)
+    if($memberof(object, 'SSCell'))
     {
       return this.indexOfCellNode(object.lockedElement());
     }
@@ -439,6 +439,7 @@ var SSListView = new Class({
   
   onCellClick: function(cellNode)
   {
+    console.log('onCellClick');
     var index = this.cellNodes().indexOf(cellNode);
     if(this.delegate() && this.delegate().userDidClickListItem)
     {

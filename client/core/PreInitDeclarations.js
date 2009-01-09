@@ -81,3 +81,39 @@ var alreadyCheckedForUpdate = false;
 ShiftSpaceUI = {}; // holds all UI class objects
 ShiftSpaceObjects = new Hash(); // holds all instantiated UI objects
 ShiftSpaceNameTable = new Hash(); // holds all instantiated UI object by CSS id
+
+var __membermemo__ = {};
+function $memberof(_subclass, class)
+{
+  if(_subclass == class) return true;
+  
+  var subclass = ($type(_subclass) == 'object' && _subclass.name) || _subclass;
+  
+  // check memo
+  if(__membermemo__[subclass+':'+class] != null) 
+  {
+    return __membermemo__[subclass+':'+class];
+  }
+  
+  // check deps
+  var deps = __sys__.files[subclass].dependencies;
+  if(deps == null || deps.length == 0) return false;
+  var memberof = false;
+  
+  if(deps.contains(class))
+  {
+    // memoize
+    __membermemo__[subclass+':'+class] = true;
+    return true;
+  }
+  
+  // each dep
+  for(var i = 0, l = deps.length; i < l; i++)
+  {
+    if($memberof(deps[i], x)) return true;
+  }
+  
+  // memoize
+  __membermemo__[subclass+':'+class] = false;
+  return false;
+}

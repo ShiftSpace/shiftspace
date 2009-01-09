@@ -109,7 +109,8 @@ var SSCell = new Class({
     
     if(this.delegate() && this.delegate().onCellClick)
     {
-      this.delegate().onCellClick(event.target);
+      var cellNode = (event.target.get('tag') == 'li' && event.target) || event.target.getParent('li');
+      this.delegate().onCellClick(cellNode);
     }
   },
   
@@ -198,10 +199,8 @@ var SSCell = new Class({
   
   setProperty: function(property, value)
   {
-    console.log('setProperty');
     if(!this.isLocked()) throw new SSCellError.NoLock(new Error(), "attempt to set property " + property + " without element lock.");
     if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
-    console.log('setProperty ' + property + ' ' + value);
     var setter = 'set'+property.capitalize();
     if(this[setter])
     {
