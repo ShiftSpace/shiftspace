@@ -1,7 +1,7 @@
 {
-  "SERVER": "http://localhost/shiftspacegit/",
-  "SPACEDIR": "http://localhost/shiftspacegit/spaces/",
-  "LOG_LEVEL": "SSLogAll",
+  "SERVER": "http://shiftspace.org/api/",
+  "SPACEDIR": "http://shiftspace.org/api/spaces/",
+  "LOG_LEVEL": "SSLogError",
   "VARS": { 
     "ShiftSpaceSandBoxMode": true
   }
