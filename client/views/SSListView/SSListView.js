@@ -188,6 +188,12 @@ var SSListView = new Class({
     return result;
   },
   
+
+  query: function(index, property)
+  {
+    return this.get(index)[property];
+  },
+  
   
   cellNodes: function()
   {
