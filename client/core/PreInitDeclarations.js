@@ -83,16 +83,17 @@ ShiftSpaceObjects = new Hash(); // holds all instantiated UI objects
 ShiftSpaceNameTable = new Hash(); // holds all instantiated UI object by CSS id
 
 var __membermemo__ = {};
-function $memberof(_subclass, class)
+function $memberof(_subclass, superclass)
 {
-  if(_subclass == class) return true;
+ if(_subclass == superclass) return true;
   
   var subclass = ($type(_subclass) == 'object' && _subclass.name) || _subclass;
+  var tag = subclass+':'+superclass;
   
   // check memo
-  if(__membermemo__[subclass+':'+class] != null) 
+  if(__membermemo__[tag] != null) 
   {
-    return __membermemo__[subclass+':'+class];
+    return __membermemo__[tag];
   }
   
   // check deps
@@ -100,10 +101,10 @@ function $memberof(_subclass, class)
   if(deps == null || deps.length == 0) return false;
   var memberof = false;
   
-  if(deps.contains(class))
+  if(deps.contains(superclass))
   {
     // memoize
-    __membermemo__[subclass+':'+class] = true;
+    __membermemo__[tag] = true;
     return true;
   }
   
@@ -114,6 +115,6 @@ function $memberof(_subclass, class)
   }
   
   // memoize
-  __membermemo__[subclass+':'+class] = false;
+  __membermemo__[tag] = false;
   return false;
 }
