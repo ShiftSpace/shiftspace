@@ -117,6 +117,16 @@ var SSView = new Class({
   
   setup: function() {},
   
+  
+  __awake__: function()
+  {
+    if(this.options.delegate)
+    {
+      console.log(this.options.delegate);
+      this.setDelegate(SSControllerForNode($(this.options.delegate)));
+    }
+  },
+  
   /*
     Function: awake
       Called after the outlets have been attached.

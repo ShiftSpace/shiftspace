@@ -408,6 +408,12 @@ var SandalphonClass = new Class({
   
   awakeObjects: function(context)
   {
+    // set any delegate references
+    ShiftSpaceObjects.each(function(object, objectId) {
+      if(object.__awake__) object.__awake__();
+    });
+
+    // awake all the objects
     ShiftSpaceObjects.each(function(object, objectId) {
       if(object.awake && !object.isAwake())
       {
