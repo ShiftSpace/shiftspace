@@ -178,8 +178,9 @@ var SSCell = new Class({
   
   setData: function(data)
   {
+    var propertyList = this.getPropertyList();
     $H(data).each(function(value, property) {
-      this.setProperty(property, value);
+      if(propertyList.contains(propertyList)) this.setProperty(property, value);
     }.bind(this));
   },
   
