@@ -249,6 +249,14 @@ var SSView = new Class({
   */
   hitTest: function(target, selectorOfTest)
   {
+    var parts = selectorOfTest.split(',');
+    if(parts.length > 1)
+    {
+      return parts.map(function(selector) {
+        return this.hitTest(target, selector);
+      }.bind(this)).flatten().clean()[0];
+    }
+
     var node = target;
     var matches = this.element.getElements(selectorOfTest);
 

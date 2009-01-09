@@ -106,6 +106,11 @@ var SSCell = new Class({
     {
       this.runAction(action);
     }
+    
+    if(this.delegate() && this.delegate().onCellClick)
+    {
+      this.delegate().onCellClick(event.target);
+    }
   },
   
   

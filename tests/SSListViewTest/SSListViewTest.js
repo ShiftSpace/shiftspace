@@ -177,6 +177,27 @@ var SSListViewTest = new Class({
     this.assert(cellData.artworkId == 22);
     this.assert(cellData.title == 'cool');
     this.assert(cellData.image == 'helloworld.png');
+  },
+  
+  
+  userDidClickListItem: function(index)
+  {
+    this.userDidClickListItemDidRun = true;
+    this.userDidClickListItemIndex = index;
+  },
+  
+  
+  testUserDidClickListItemDelegateMethod: function()
+  {
+    this.doc("userDidClickListItem delegate method");
+    
+    this.listView.setDelegate(this);
+    
+    console.log(this.listView.cellNodeForIndex(1));
+    SSTestRunner.createMouseEventForNode('click', this.listView.cellNodeForIndex(1));
+    
+    this.assert(this.userDidClickListItemDidRun);
+    this.assert(this.userDidClickListItemIndex == 1);
   }
   
 });

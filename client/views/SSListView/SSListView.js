@@ -100,8 +100,9 @@ var SSListView = new Class({
     
     switch(true)
     {
-      case(this.hitTest(target, '> li *') != null):
-        this.cell().lock(this.cachedHit().getParent('li'));
+      case(this.hitTest(target, 'li, > li *') != null):
+        var hit = this.cachedHit();
+        this.cell().lock((hit.get('tag') == 'li' && hit) || hit.getParent('li'));
         this.cell().eventDispatch(event, eventType);
         this.cell().unlock();
       break;
@@ -212,7 +213,7 @@ var SSListView = new Class({
       canEdit = this.data().canEdit(index);
     }
 
-    if(canEdit)
+    if(canEdit && this.cell().edit)
     {
       this.cell().edit(this.cellNodeForIndex(index));
     }
@@ -331,8 +332,6 @@ var SSListView = new Class({
     }
     else
     {
-      console.log('from: ' + fromIndex);
-      console.log('to: ' + toIndex);
       var data = this.get(fromIndex);
       this.__remove__(fromIndex);
       this.__insert__(data, toIndex);
@@ -367,8 +366,12 @@ var SSListView = new Class({
   },
   
   
-  canSelect: function(cell)
+  canSelect: function(index)
   {
+    if(this.delegate() && this.delegate().canSelect)
+    {
+      return this.delegate().canSelect(index);
+    }
     return true;
   },
   
@@ -399,6 +402,23 @@ var SSListView = new Class({
   {
     this.boundsCheck(index);
     return this.cellNodes()[index];
+  },
+  
+  
+  indexOfCellNode: function(cellNode)
+  {
+    return this.cellNodes().indexOf(cellNode);
+  },
+  
+  
+  onCellClick: function(cellNode)
+  {
+    console.log('onCellClick!');
+    var index = this.cellNodes().indexOf(cellNode);
+    if(this.delegate() && this.delegate().userClickedListItem)
+    {
+      this.delegate().userClickedListItem(index);
+    }
   }
   
 });
