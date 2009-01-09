@@ -118,11 +118,10 @@ var SSView = new Class({
   setup: function() {},
   
   
-  __awake__: function()
+  beforeAwake: function(context)
   {
     if(this.options.delegate)
     {
-      console.log(this.options.delegate);
       this.setDelegate(SSControllerForNode($(this.options.delegate)));
     }
   },
@@ -131,7 +130,7 @@ var SSView = new Class({
     Function: awake
       Called after the outlets have been attached.
   */
-  awake: function()
+  awake: function(context)
   {
     SSLog(this.getId() + " awake, outlets " + JSON.encode(this.outlets().getKeys()));
   },

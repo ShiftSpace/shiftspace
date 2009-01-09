@@ -410,7 +410,7 @@ var SandalphonClass = new Class({
   {
     // set any delegate references
     ShiftSpaceObjects.each(function(object, objectId) {
-      if(object.__awake__) object.__awake__();
+      if(object.beforeAwake) object.beforeAwake(context);
     });
 
     // awake all the objects
@@ -420,6 +420,14 @@ var SandalphonClass = new Class({
         object.awake(context);
         object.setIsAwake(true);
         object.fireEvent('onAwake');
+      }
+    });
+    
+    // post awake, all outlets set
+    ShiftSpaceObjects.each(function(object, objectId) {
+      if(object.afterAwake)
+      {
+        object.afterAwake(context);
       }
     });
   },
