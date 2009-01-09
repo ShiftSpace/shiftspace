@@ -189,9 +189,20 @@ var SSListView = new Class({
   },
   
 
-  query: function(index, property)
+  query: function(index, arg)
   {
-    return this.get(index)[property];
+    if($type(arg) == 'string') return this.get(index)[arg];
+    if($type(arg) == 'array')
+    {
+      var data = this.get(index);
+      var result = {};
+      for(prop in arg)
+      {
+        result[prop] = data[prop];
+      }
+      return result;
+    }
+    return null;
   },
   
   

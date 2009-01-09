@@ -197,6 +197,14 @@ var SSListViewTest = new Class({
     
     this.assert(this.userDidClickListItemDidRun);
     this.assert(this.userDidClickListItemIndex == 2);
+  },
+  
+  
+  testQuery: function()
+  {
+    this.doc("query the list for data");
+    
+    this.assert(false);
   }
   
 });
