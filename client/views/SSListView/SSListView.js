@@ -405,6 +405,16 @@ var SSListView = new Class({
   },
   
   
+  indexOf: function(object)
+  {
+    if(object instanceof SSCell)
+    {
+      return this.indexOfCellNode(object.lockedElement());
+    }
+    return -1;
+  },
+  
+  
   indexOfCellNode: function(cellNode)
   {
     return this.cellNodes().indexOf(cellNode);
