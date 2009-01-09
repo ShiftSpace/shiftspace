@@ -86,3 +86,14 @@ function SSGetInlineOptions(el)
 {
   return JSON.decode(el.getProperty('options'));
 }
+
+var __ssappdelegate__;
+function SSSetAppDelegate(delegate)
+{
+  __ssappdelegate__ = delegate;
+}
+
+function SSAppDelegate()
+{
+  return __ssappdelegate__;
+}
