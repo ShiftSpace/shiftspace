@@ -413,11 +413,10 @@ var SSListView = new Class({
   
   onCellClick: function(cellNode)
   {
-    console.log('onCellClick!');
     var index = this.cellNodes().indexOf(cellNode);
-    if(this.delegate() && this.delegate().userClickedListItem)
+    if(this.delegate() && this.delegate().userDidClickListItem)
     {
-      this.delegate().userClickedListItem(index);
+      this.delegate().userDidClickListItem(index);
     }
   }
   

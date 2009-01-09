@@ -193,11 +193,10 @@ var SSListViewTest = new Class({
     
     this.listView.setDelegate(this);
     
-    console.log(this.listView.cellNodeForIndex(1));
-    SSTestRunner.createMouseEventForNode('click', this.listView.cellNodeForIndex(1));
+    SSTestRunner.createMouseEventForNode('click', this.listView.cellNodeForIndex(2));
     
     this.assert(this.userDidClickListItemDidRun);
-    this.assert(this.userDidClickListItemIndex == 1);
+    this.assert(this.userDidClickListItemIndex == 2);
   }
   
 });
