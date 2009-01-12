@@ -13,10 +13,9 @@ class Base_Store extends Base {
   public function saveSetupConfig() {
     $server = $this->config['_server'];
     $name = $this->config['_name'];
-    $config = $server->config->get("store:$name");
-    $config['setup'] = true;
-    $server->config->set("store:$name", $config);
-    $server->config->save();
+    
+    $server->workingConfig->set("store:$name", array('setup' => true));
+    $server->workingConfig->save();
   }
   
 }

@@ -39,7 +39,6 @@ class Server extends Base_Server {
     echo $response;
   }
 
-
   function normalizeURL($url) {
     $anchor_pos = strpos($url, '#');
 
@@ -49,8 +48,7 @@ class Server extends Base_Server {
     
     return $url;
   }
-  
-  
+    
   function summarize($summary) {
     $summary = strip_tags($summary);
     $summary = preg_replace("#\s+#", ' ', $summary);
@@ -60,6 +58,12 @@ class Server extends Base_Server {
     }
                 
     return $summary;
+  }
+  
+  function requireLogin() {
+    if (empty($this->user) || empty($this->user->id)) {
+      throw new Error('Oops, your session has expired. Please login and try again.');
+    }                          
   }
 }
 

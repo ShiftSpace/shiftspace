@@ -2,9 +2,9 @@
 
 class Ini_Object extends Base_Object {
   
-  public function __construct($file = false) {
+  public function __construct($file = false, $createIfNeeded = false) {
     if (!empty($file)) {
-      $this->load($file);
+      $this->load($file, $createIfNeeded);
     }
   }
   
@@ -22,20 +22,28 @@ class Ini_Object extends Base_Object {
     See also:
       <save>
   */
-  public function load($file) {
+  public function load($file, $createIfNeeded) {
     $file = BASE_DIR . "/$file";
-    if (!file_exists($file)) {
-      throw new Exception("Config file '$file' not found.");
-    }
     $this->_file = $file;
-    try {
-      $content = parse_ini_file($file, true);
-    } catch (Exception $e) {
-      $message = $e->getMessage();
-      throw new Exception("Could not parse INI file '$file': $message");
+
+    if (!file_exists($file)) {
+      if ($createIfNeeded) {
+        $content = array();
+      }
+      else {
+        throw new Exception("Config file '$file' not found.");
+      }
     }
-    foreach ($this->loadArray($content) as $key => $value) {
-      $this->$key = $value;
+    else {
+      try {
+        $content = parse_ini_file($file, true);
+      } catch (Exception $e) {
+        $message = $e->getMessage();
+        throw new Exception("Could not parse INI file '$file': $message");
+      }
+      foreach ($this->loadArray($content) as $key => $value) {
+        $this->$key = $value;
+      }
     }
   }
   

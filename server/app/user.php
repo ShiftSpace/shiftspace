@@ -59,7 +59,7 @@ class User {
   
   public function join() {
     extract($_POST);
-    
+
     if ($password != $password_again)
       throw new Error("Passwords do not match");
     if (strlen($password) < 6)

@@ -7,6 +7,7 @@ class PDO_Store extends Base_Store {
   
   function __construct($config) {
     $this->config = $config;
+    
     $dsn = $this->get('dsn');
     $username = empty($config['username']) ? null : $config['username'];
     $password = empty($config['password']) ? null : $config['password'];
@@ -456,7 +457,7 @@ class PDO_Store extends Base_Store {
   }
 
   protected function logQuery($sql, $vars) {
-    $f = fopen(dirname(__FILE__)."/query.log", "a");
+    $f = fopen(dirname(__FILE__)."/../../working/query.log", "a");
     fwrite($f, "Query: $sql\n");
     fwrite($f, "Vars: ".print_r($vars, true)."\n\n");
     fwrite($f, "=====\n\n");

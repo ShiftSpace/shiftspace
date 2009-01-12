@@ -24,8 +24,7 @@ if (!function_exists('__autoload')) {
   }
 }
 
-class Base {
-  
+class Base {  
   static private $_subRegex = '/\\\?\{(\w+)\}/';
   static private $_subVars = null;
   protected $events;

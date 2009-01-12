@@ -1,0 +1,4100 @@
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE email = :email
+    
+Vars: Array
+(
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: INSERT INTO User (username, display_name, password, email) VALUES (:username, :display_name, :password, :email)
+Vars: Array
+(
+    [username] => avital
+    [display_name] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE email = :email
+    
+Vars: Array
+(
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: INSERT INTO User (username, display_name, password, email) VALUES (:username, :display_name, :password, :email)
+Vars: Array
+(
+    [username] => avital
+    [display_name] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 5
+    ))
+  
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 5
+    ))
+  
+        
+        AND u.username = 'avital'
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => username
+    [value] => ""
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 5
+    ))
+  
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 5
+    ))
+  
+        
+        AND u.username = 'avital'
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE email = :email
+    
+Vars: Array
+(
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: INSERT INTO User (username, display_name, password, email) VALUES (:username, :display_name, :password, :email)
+Vars: Array
+(
+    [username] => avital
+    [display_name] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE email = :email
+    
+Vars: Array
+(
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: INSERT INTO User (username, display_name, password, email) VALUES (:username, :display_name, :password, :email)
+Vars: Array
+(
+    [username] => avital
+    [display_name] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE email = :email
+    
+Vars: Array
+(
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: INSERT INTO User (username, display_name, password, email) VALUES (:username, :display_name, :password, :email)
+Vars: Array
+(
+    [username] => avital
+    [display_name] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE email = :email
+    
+Vars: Array
+(
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: INSERT INTO User (username, display_name, password, email) VALUES (:username, :display_name, :password, :email)
+Vars: Array
+(
+    [username] => avital
+    [display_name] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 0
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 9
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 9
+    ))
+  
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 9
+    ))
+  
+        
+        AND u.username = 'avital'
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE username = :username
+    
+Vars: Array
+(
+    [username] => avital
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(*)
+      FROM user
+      WHERE email = :email
+    
+Vars: Array
+(
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: INSERT INTO User (username, display_name, password, email) VALUES (:username, :display_name, :password, :email)
+Vars: Array
+(
+    [username] => avital
+    [display_name] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+    [email] => avital@thewe.net
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 10
+    ))
+  
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 10
+    ))
+  
+        
+        AND u.username = 'avital'
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => username
+    [value] => ""
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 10
+    ))
+  
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 10
+    ))
+  
+        
+        AND u.username = 'avital'
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => username
+    [value] => ""
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 913c4494cd0be2de46a7f0f30500b11e
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 10
+    ))
+  
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 10
+    ))
+  
+        
+        AND u.username = 'avital'
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: INSERT INTO Shift (user_id, space, href, summary, content, domain, created, version, status, broken) VALUES (:user_id, :space, :href, :summary, :content, :domain, :created, :version, :status, :broken)
+Vars: Array
+(
+    [user_id] => 10
+    [space] => Notes
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [summary] => Version 1
+    [content] => %7B%22position%22%3A%7B%22x%22%3A730%2C%22y%22%3A190%7D%2C%22size%22%3A%7B%22x%22%3A200%2C%22y%22%3A200%7D%2C%22noteText%22%3A%22Version%201%22%2C%22summary%22%3A%22Version%201%22%2C%22pinRef%22%3A%7B%7D%2C%22id%22%3A%22newShift656748%22%2C%22space%22%3A%22Notes%22%2C%22username%22%3A%22avital%22%7D
+    [domain] => localhost
+    [created] => 2008-12-22 19:30:52
+    [version] => 0.1
+    [status] => 1
+    [broken] => 0
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 10
+    ))
+  
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+    (s.status = 1
+    OR (
+      s.status = 2
+      AND s.user_id = 10
+    ))
+  
+        
+        AND u.username = 'avital'
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: SELECT 'shift_Object', * FROM shift WHERE id = :value
+Vars: Array
+(
+    [value] => 1
+)
+
+
+=====
+
+Query: SELECT 'shift_Object', * FROM shift WHERE id = :value
+Vars: Array
+(
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: SELECT 'shift_Object', * FROM shift WHERE id = :value
+Vars: Array
+(
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY space DESC
+    
+Vars: 
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = 'http://localhost/shiftspacegit/sandbox/'
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        
+        AND u.username = 'avital'
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: 
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => created
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => space
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => created
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        
+        AND u.username = :username
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [sortByColumn] => created
+    [username] => avital
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: INSERT INTO Shift (user_id, space, href, summary, content, domain, created, version, status, broken) VALUES (:user_id, :space, :href, :summary, :content, :domain, :created, :version, :status, :broken)
+Vars: Array
+(
+    [user_id] => 10
+    [space] => Notes
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [summary] => Version 0
+    [content] => %7B%22position%22%3A%7B%22x%22%3A456%2C%22y%22%3A71%7D%2C%22size%22%3A%7B%22x%22%3A200%2C%22y%22%3A200%7D%2C%22noteText%22%3A%22Version%200%22%2C%22summary%22%3A%22Version%200%22%2C%22pinRef%22%3A%7B%7D%2C%22id%22%3A%22newShift514423%22%2C%22space%22%3A%22Notes%22%2C%22username%22%3A%22avital%22%7D
+    [domain] => localhost
+    [created] => 2008-12-24 18:05:28
+    [version] => 0.1
+    [status] => 1
+    [broken] => 0
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => created
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        
+        AND u.username = :username
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [sortByColumn] => created
+    [username] => avital
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => summary
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => summary
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn ASC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => summary
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => created
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => created
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY :sortByColumn ASC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => summary
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY summary ASC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => summary
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => created
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => created
+)
+
+
+=====
+
+Query: INSERT INTO Shift (user_id, space, href, summary, content, domain, created, version, status, broken) VALUES (:user_id, :space, :href, :summary, :content, :domain, :created, :version, :status, :broken)
+Vars: Array
+(
+    [user_id] => 10
+    [space] => Notes
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [summary] => Version 2
+    [content] => %7B%22position%22%3A%7B%22x%22%3A520%2C%22y%22%3A74%7D%2C%22size%22%3A%7B%22x%22%3A200%2C%22y%22%3A200%7D%2C%22noteText%22%3A%22Version%202%22%2C%22summary%22%3A%22Version%202%22%2C%22pinRef%22%3A%7B%7D%2C%22id%22%3A%22newShift824069%22%2C%22space%22%3A%22Notes%22%2C%22username%22%3A%22avital%22%7D
+    [domain] => localhost
+    [created] => 2008-12-24 18:06:25
+    [version] => 0.1
+    [status] => 1
+    [broken] => 0
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => created
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        
+        AND u.username = :username
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [sortByColumn] => created
+    [username] => avital
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => created
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+    [sortByColumn] => created
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: SELECT 'shift_Object', * FROM shift WHERE id = :value
+Vars: Array
+(
+    [value] => 3
+)
+
+
+=====
+
+Query: SELECT 'shift_Object', * FROM shift WHERE id = :value
+Vars: Array
+(
+    [value] => 2
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        
+        AND u.username = :username
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [username] => avital
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => username
+    [value] => ""
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 26f5bb38bd88ba082e2fcfd808057f1b
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        
+        AND u.username = :username
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [username] => avital
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => username
+    [value] => ""
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        
+        AND u.username = :username
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [username] => avital
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => username
+    [value] => ""
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(s.id)
+      FROM shift s,
+           user u
+      WHERE (
+        s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user
+        )
+      )
+      AND s.user_id = u.id
+      AND s.href = :href
+    
+Vars: Array
+(
+    [user] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE 
+        (s.status = 1
+        OR (
+          s.status = 2
+          AND s.user_id = :user_id
+        ))
+      
+        
+        AND u.username = :username
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [user_id] => 10
+    [username] => avital
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => avital.defaultShiftStatus
+    [value] => 1
+)
+
+
+=====
+
+Query: INSERT INTO Sandbox (key, value) VALUES (:key, :value)
+Vars: Array
+(
+    [key] => username
+    [value] => ""
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT *
+      FROM user
+      WHERE username = :username
+      AND password = :password
+    
+Vars: Array
+(
+    [username] => avital
+    [password] => 0999bcaf3be7d0734b25a6640cf18414
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: SELECT 'shift_Object', * FROM shift WHERE id = :value
+Vars: Array
+(
+    [value] => 2
+)
+
+
+=====
+
+Query: SELECT 'shift_Object', * FROM shift WHERE id = :value
+Vars: Array
+(
+    [value] => 3
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: SELECT 'shift_Object', * FROM shift WHERE id = :value
+Vars: Array
+(
+    [value] => 3
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: SELECT 'shift_Object', * FROM shift WHERE id = :value
+Vars: Array
+(
+    [value] => 3
+)
+
+
+=====
+
+Query: SELECT 'shift_Object', * FROM shift WHERE id = :value
+Vars: Array
+(
+    [value] => 2
+)
+
+
+=====
+
+Query: 
+      SELECT COUNT(id)
+      FROM shift
+      WHERE status = 1
+      AND href = :href
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+
+Query: 
+      SELECT s.id AS id,
+         s.href AS href,
+         s.space AS space,
+         s.summary AS summary,
+         s.created AS created,
+         u.username AS username,
+         s.status AS status
+      FROM shift AS s, user AS u
+      WHERE s.status = 1
+        AND s.href = :href
+        
+      AND s.broken = 0
+      AND s.user_id = u.id
+      ORDER BY created DESC
+    
+Vars: Array
+(
+    [href] => http://localhost/shiftspacegit/sandbox/
+)
+
+
+=====
+

@@ -100,15 +100,17 @@ class Shift {
   }
 
   public function create() {
+    $this->server->requireLogin();
+  
     $href = $this->server->normalizeURL($_POST['href']);
     $summary = $this->server->summarize($_POST['summary']);
     $space = $_POST['space'];
     $content = $_POST['content'];
     $version = $_POST['version'];
     $status = 1;
-    
+
     if (empty($href)) {
-      throw new Error('Please specify a href argument');
+      throw new Error('Please specify an href argument');
     } else if (empty($space)) {
       throw new Error('Please specify a space argument');
     } else if (empty($content)) {

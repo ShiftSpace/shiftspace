@@ -248,6 +248,7 @@ var SSConsole = new Class({
   {
     console.log('Login call back!');
     console.log(response);
+    this.fireEvent('onUserLogin');
   },
 
 
