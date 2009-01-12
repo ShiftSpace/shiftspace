@@ -205,6 +205,27 @@ var SSListViewTest = new Class({
     this.doc("query the list for data");
     
     this.assert(false);
+  },
+  
+  
+  testUseCollection: function()
+  {
+    this.doc("use a named collection");
+    
+    new SSCollection("SSTestCollection", {
+      array: [{artworkId:0, title:'foo', image:'helloworld.png'},
+              {artworkId:1, title:'bar', image:'helloworld.png'},
+              {artworkId:2, title:'baz', image:'helloworld.png'},
+              {artworkId:3, title:'naz', image:'helloworld.png'},
+              {artworkId:4, title:'grr', image:'helloworld.png'}]
+    });
+    
+    this.listView.useCollection("SSTestCollection");
+    var data = this.listView.get(1);
+    
+    this.assert(data.artworkId == 1);
+    this.assert(data.title == 'bar');
+    this.assert(data.image == 'helloworld.png');
   }
   
 });

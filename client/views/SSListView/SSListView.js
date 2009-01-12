@@ -445,6 +445,12 @@ var SSListView = new Class({
     {
       this.delegate().userDidClickListItem(index);
     }
+  },
+  
+  
+  useCollection: function(collectionName)
+  {
+    this.setData(SSCollectionForName(collectionName));
   }
   
 });
