@@ -31,6 +31,14 @@ var SSListViewTest = new Class({
         {artworkId:4, title:'grr', image:'helloworld.png'}
       ];
       
+      new SSCollection("SSTestCollection", {
+        array: [{artworkId:0, title:'cool', image:'helloworld.png'},
+                {artworkId:1, title:'fool', image:'helloworld.png'},
+                {artworkId:2, title:'drool', image:'helloworld.png'},
+                {artworkId:3, title:'ghoul', image:'helloworld.png'},
+                {artworkId:4, title:'jewel', image:'helloworld.png'}]
+      });
+      
       this.listView.setData(data);
       
     }.bind(this));
