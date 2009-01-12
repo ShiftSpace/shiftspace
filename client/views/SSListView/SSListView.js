@@ -40,7 +40,16 @@ var SSListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    this.setData([]);
+    
+    if(this.options.collection)
+    {
+      this.useCollection(this.options.collection);
+    }
+    else
+    {
+      this.setData([]);
+    }
+    
     this.initSortables();
     this.attachEvents();
   },
@@ -439,7 +448,6 @@ var SSListView = new Class({
   
   onCellClick: function(cellNode)
   {
-    console.log('onCellClick');
     var index = this.cellNodes().indexOf(cellNode);
     if(this.delegate() && this.delegate().userDidClickListItem)
     {

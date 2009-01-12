@@ -31,14 +31,6 @@ var SSListViewTest = new Class({
         {artworkId:4, title:'grr', image:'helloworld.png'}
       ];
       
-      new SSCollection("SSTestCollection", {
-        array: [{artworkId:0, title:'cool', image:'helloworld.png'},
-                {artworkId:1, title:'fool', image:'helloworld.png'},
-                {artworkId:2, title:'drool', image:'helloworld.png'},
-                {artworkId:3, title:'ghoul', image:'helloworld.png'},
-                {artworkId:4, title:'jewel', image:'helloworld.png'}]
-      });
-      
       this.listView.setData(data);
       
     }.bind(this));
@@ -224,18 +216,24 @@ var SSListViewTest = new Class({
     this.doc("use a named collection");
     
     new SSCollection("SSTestCollection", {
-      array: [{artworkId:0, title:'foo', image:'helloworld.png'},
-              {artworkId:1, title:'bar', image:'helloworld.png'},
-              {artworkId:2, title:'baz', image:'helloworld.png'},
-              {artworkId:3, title:'naz', image:'helloworld.png'},
-              {artworkId:4, title:'grr', image:'helloworld.png'}]
+      array: [{artworkId:0, title:'cool', image:'helloworld.png'},
+              {artworkId:1, title:'fool', image:'helloworld.png'},
+              {artworkId:2, title:'drool', image:'helloworld.png'},
+              {artworkId:3, title:'ghoul', image:'helloworld.png'},
+              {artworkId:4, title:'jewel', image:'helloworld.png'}]
     });
     
-    this.listView.useCollection("SSTestCollection");
+    Sandalphon.compileAndLoad('tests/SSListViewTest/SSListViewTest2', function(ui) {
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      this.listView = SSControllerForNode($('SSListViewTest'));
+    }.bind(this));
+    
     var data = this.listView.get(1);
     
     this.assert(data.artworkId == 1);
-    this.assert(data.title == 'bar');
+    this.assert(data.title == 'fool');
     this.assert(data.image == 'helloworld.png');
   }
   
