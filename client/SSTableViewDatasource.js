@@ -1,6 +1,5 @@
 // ==Builder==
 // @optional
-// @name              SSTableViewDatasource
 // @package           ShiftSpaceCore
 // ==/Builder==
 
@@ -21,7 +20,6 @@
 var SSTableViewDatasource = new Class({
 
   Implements: [Events, Options],
-
 
   defaults:
   {

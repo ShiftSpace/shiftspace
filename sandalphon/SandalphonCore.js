@@ -13,6 +13,15 @@ var SandalphonClass = new Class({
     this.contextHash = $H();
   },
   
+  
+  reset: function()
+  {
+    this.outletBindings = [];
+    this.contextHash = $H();
+    SSClearControllersTable();
+    SSClearObjects();
+  },
+  
   /*
     Function: _genId
       Generate an object id.  Used for debugging.  The instance is indentified by this in the global
@@ -106,6 +115,28 @@ var SandalphonClass = new Class({
   {
     this.__fragment__ = frag;
   },
+  
+  
+  compileAndLoad: function(path, callback)
+  {
+    var request = new Request({
+      url: "../sandalphon/compile_and_load.php",
+      async: false,
+      method: "get",
+      data: { filepath: "../" + path + ".html" },
+      onComplete: function(responseText, responseXml)
+      {
+        var escapedUI = JSON.decode(responseText);
+        callback({interface:unescape(escapedUI.interface), styles:unescape(escapedUI.styles)});
+      },
+      onFailure: function(responseText, responseXml)
+      {
+        
+      }
+    });
+    request.send();
+  },
+  
 
   /*
     Function: loadFile
@@ -150,7 +181,8 @@ var SandalphonClass = new Class({
         }.bind(this),
         onFailure: function()
         {
-          console.error('Oops could not load that interface file');
+          // we don't care if the interface file is missing
+          stylesCall.fireEvent('complete');
         }
       });
       
@@ -176,7 +208,6 @@ var SandalphonClass = new Class({
         });
       });
     }
-
   },
   
   
@@ -196,6 +227,7 @@ var SandalphonClass = new Class({
     }
     
     // Add some base styles
+    /*
     css += "                          \
       .SSDisplayNone                  \
       {                               \
@@ -208,6 +240,7 @@ var SandalphonClass = new Class({
         -webkit-user-select: none;    \
       }                               \
     ";
+    */
     
     if(!Browser.Engine.trident)
     {
@@ -375,12 +408,26 @@ var SandalphonClass = new Class({
   
   awakeObjects: function(context)
   {
+    // set any delegate references
+    ShiftSpaceObjects.each(function(object, objectId) {
+      if(object.beforeAwake) object.beforeAwake(context);
+    });
+
+    // awake all the objects
     ShiftSpaceObjects.each(function(object, objectId) {
       if(object.awake && !object.isAwake())
       {
         object.awake(context);
         object.setIsAwake(true);
         object.fireEvent('onAwake');
+      }
+    });
+    
+    // post awake, all outlets set
+    ShiftSpaceObjects.each(function(object, objectId) {
+      if(object.afterAwake)
+      {
+        object.afterAwake(context);
       }
     });
   },

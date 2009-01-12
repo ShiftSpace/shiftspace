@@ -21,7 +21,9 @@
       "SSCustomTableRow",
       "SSTableViewDatasource",
       "Space",
-      "Shift"
+      "Shift",
+      "Plugin",
+      "IframeHelpers"
     ],
     "replace": {
     }

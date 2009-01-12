@@ -1,9 +1,11 @@
 .SSListView
 {
   padding: 0px;
-  background-color: orange;
-  width: 100%;
-  height: 100%;
+}
+
+.SSListView > .SSCell
+{
+  display: none;
 }
 
 .SSListView.HorizontalListView > li.SSListViewCell

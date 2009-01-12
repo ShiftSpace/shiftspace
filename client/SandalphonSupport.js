@@ -31,6 +31,18 @@ function SSNotifyInstantiationListeners(element)
 }
 
 var __controllers__ = $H();
+
+function SSClearControllersTable()
+{
+  __controllers__ = $H();
+}
+
+function SSClearObjects()
+{
+  ShiftSpaceObjects.empty();
+  ShiftSpaceNameTable.empty();
+}
+
 // NOTE: we generate ids and store controller refs ourselves this is because of weird garbage collection
 // around iframes and wrappers around dom nodes when SS runs under GM - David
 function SSSetControllerForNode(controller, _node)
@@ -52,7 +64,36 @@ function SSControllerForNode(_node)
          null;
 }
 
+function SSControllerOrNode(object)
+{
+  return SSControllerForNode(object) || object;
+}
+
+function SSIsController(object)
+{
+  if($type(object) == 'element')
+  {
+    return false;
+  }
+  else if(object._genId)
+  {
+    return true;
+  }
+  return false;
+}
+
 function SSGetInlineOptions(el)
 {
   return JSON.decode(el.getProperty('options'));
+}
+
+var __ssappdelegate__;
+function SSSetAppDelegate(delegate)
+{
+  __ssappdelegate__ = delegate;
+}
+
+function SSAppDelegate()
+{
+  return __ssappdelegate__;
 }

@@ -5,7 +5,11 @@
 import os
 import sys
 import re
+import getopt
+import urllib
+import xml
 import xml.etree.ElementTree as ElementTree # Python >= 2.5
+import simplejson as json  # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
 
 class ViewParser:
     def __init__(self, element):
@@ -76,9 +80,9 @@ class SandalphonCompiler:
         Make sure the passed in markup checks out.
         """
         try:
-            element = ElementTree.fromstring(markup)
+            ElementTree.fromstring(markup)
         except xml.parsers.expat.ExpatError:
-            raise xml.parsers.expath.ExpatError
+            raise xml.parsers.expat.ExpatError
         pass
 
 
@@ -104,11 +108,8 @@ class SandalphonCompiler:
         else:
             filePath = path
 
-        print "loadView: (%s, %s)" % (view, filePath)
-
         if filePath != None:
             htmlPath = os.path.join(filePath, view+'.html')
-            print "htmlPath %s" % htmlPath
             # load the file
             fileHandle = open(htmlPath)
 
@@ -127,7 +128,6 @@ class SandalphonCompiler:
 
 
     def addCSSForHTMLPath(self, filePath):
-        print "addCSSForHTMLPath %s" % filePath
         cssPath = os.path.splitext(filePath)[0]+".css"
         # load the css file
         try:
@@ -138,15 +138,20 @@ class SandalphonCompiler:
 
             fileHandle.close()
         except IOError:
-            print "***** Could not load css file at %s *****" % cssPath
+            pass
 
     
     def addCSSForUIClasses(self, interfaceFile):
+        """
+        Loads an uiclass css that hasn't already been included.
+        """
         # parse this file
         element = ElementTree.fromstring(interfaceFile)
         uiclasses = [el.get('uiclass') for el in element.findall(".//*") if elementHasAttribute(el, "uiclass")]
 
-        print "Found some : %s" % uiclasses
+        # check the root element as well
+        if elementHasAttribute(element, "uiclass"):
+            uiclasses.append(element.get('uiclass'))
 
         seen = {}
 
@@ -185,23 +190,18 @@ class SandalphonCompiler:
         return file
     
 
-    def compile(self, path):
+    def compile(self, inputFile=None, outputDirectory=None, jsonOutput=False):
         """
         Compile an interface file down to its parts
         """
         # First regex any dependent files into a master view
         # Parse the file at the path
-        print "Loading file at path " + path
-        fileHandle = open(path)
+        fileHandle = open(inputFile)
         interfaceFile = fileHandle.read()
         fileHandle.close()
-        print "File loaded"
 
         # add the css for the main file at this path
-        self.addCSSForHTMLPath(path)
-        
-        # i think this finds all of them, might want to use this - David
-        matches = self.templatePattern.finditer(interfaceFile)
+        self.addCSSForHTMLPath(inputFile)
         
         hasCustomViews = True
         while hasCustomViews:
@@ -217,52 +217,86 @@ class SandalphonCompiler:
                 hasCustomViews = False
                 
         # validate it
-        tree = ElementTree.fromstring(interfaceFile)
+        ElementTree.fromstring(interfaceFile)
  
         # load any css for references found at this level
         self.addCSSForUIClasses(interfaceFile)
 
-        # get the actual file name
-        compiledViewsDirectory = "../client/compiledViews/"
+        # output to specified directory or standard out or as json
+        if outputDirectory != None:
+            fileName = os.path.basename(inputFile)
+            fullPath = os.path.join(outputDirectory, fileName)
 
-        fileName = os.path.basename(path)
-        fullPath = os.path.join(compiledViewsDirectory, fileName)
+            fileHandle = open(fullPath, "w")
+            fileHandle.write(interfaceFile)
+            fileHandle.close()
 
-        print "Writing compiled view file"
-        fileHandle = open(fullPath, "w")
-        # write the compiled file
-        #print interfaceFile
-        fileHandle.write(interfaceFile)
-        # close the file
-        fileHandle.close()
+            cssFileName = os.path.splitext(fileName)[0]+".css"
+            cssFilePath = os.path.join(outputDirectory, cssFileName)
+            fileHandle = open(cssFilePath, "w")
+            fileHandle.write(self.cssFile)
+            fileHandle.close()
 
-        print "Writing CSS file"
-        cssFileName = os.path.splitext(fileName)[0]+".css"
-        cssFilePath = os.path.join(compiledViewsDirectory, cssFileName)
-        fileHandle = open(cssFilePath, "w")
-        fileHandle.write(self.cssFile)
-        fileHandle.close()
+            # make it pretty
+            return os.system('tidy -i -xml -m %s' % (fullPath))
 
-        print "Pretty printing"
-        # make it pretty
-        exitcode = os.system('tidy -i -xml -m %s' % (fullPath))
+        elif jsonOutput == True:
+            outputJsonDict = {}
+            outputJsonDict['interface'] = urllib.quote(interfaceFile)
+            outputJsonDict['styles'] = urllib.quote(self.cssFile)
+            print json.dumps(outputJsonDict, indent=4)
 
-        print self.cssFile
-        
-        """
-        # Grab the root element
-        root = interfaceFile.getroot()
-        # Check if it has a backing uiclass
-        print "Root has uiclass %s" % elementHasAttribute(root, "uiclass")
-        # Grab all the other uiclasses
-        uiclasses = [el for el in interfaceFile.findall("//*") if elementHasAttribute(el, "uiclass")]
-        print uiclasses
-        # Instantiate each one with it's proper class
-        [self.parserForView(el)(el) for el in uiclasses]
-        """
+        else:
+            print interfaceFile
+            print "\n"
+            print self.cssFile
+
+
+def usage():
+    print "sandalphon.py takes the following flags:"
+    print "  -h help"
+    print "  -i input file, must be an .html file"
+    print "  -o output directory."
+    print "  -j json output. Sends to standard out."
+
+
+def main(argv):
+    """
+    Parse the command line arguments.
+    """
+    jsonOutput = False
+    outputDirectory = None
+    inputFile = None
+
+    try:
+        opts, args = getopt.getopt(argv, "i:o:jh", ["input=", "output=", "json", "help"])
+    except:
+        print "Invalid flag\n"
+        usage()
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif opt in ("-i", "--input"):
+            inputFile = arg
+        elif opt in ("-o", "--output"):
+            outputDirectory = arg
+        elif opt in ("-j", "--json"):
+            jsonOutput = True
+
+    if inputFile == None:
+        print "No input file\n"
+        usage()
+        sys.exit(2)
+
+    compiler = SandalphonCompiler()
+    compiler.compile(inputFile, outputDirectory, jsonOutput)
 
 
 if __name__ == "__main__":
-    print ("sandalphon.py compiling " + sys.argv[1])
-    compiler = SandalphonCompiler()
-    compiler.compile(sys.argv[1])
+    if len(sys.argv) > 1:
+        main(sys.argv[1:])
+    else:
+        usage()

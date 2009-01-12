@@ -22,8 +22,8 @@ class SSError(Exception):
 # FIXME: this file needs some serious optimization - David
 class SSPreProcessor:
 
-  INCLUDE_PACKAGE_REGEX = re.compile('^\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*$');
-  INCLUDE_REGEX = re.compile('^\s*//\s*INCLUDE\s+(\S+)\s*$');
+  INCLUDE_PACKAGE_REGEX = re.compile('^\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*$')
+  INCLUDE_REGEX = re.compile('^\s*//\s*INCLUDE\s+(\S+)\s*$')
 
   def setEnvVars(self, line):
     if self.envData != None:
@@ -40,7 +40,7 @@ class SSPreProcessor:
   
 
   def includeFile(self, incFilename):
-    flen = len(incFilename);
+    flen = len(incFilename)
     logline1 = "\nif (SSInclude != undefined) SSLog('Including %s...', SSInclude);\n" % incFilename 
     prefix = ("\n// Start %s " % incFilename) + (69 - flen) * '-' + "\n\n"
     postfix = ("\n\n// End %s " % incFilename) + (71 - flen) * '-' + "\n\n"
@@ -100,7 +100,8 @@ class SSPreProcessor:
           self.missingFileError(package)
 
         for component in self.metadata['packages'][package]:
-          self.includeFile(self.metadata['files'][component]['path'])
+          if self.metadata['files'].has_key(component):
+            self.includeFile(self.metadata['files'][component]['path'])
 
         self.outFile.write('\n// === END PACKAGE [%s] ===\n\n' % package)
       else:
@@ -209,6 +210,7 @@ class SSPreProcessor:
       envFileName = argv[0]
       env = json.loads(envFile.read())
       envFile.close()
+      
       self.envData = {"name": envFileName, "data": env, "meta": metadataStr}
     except IOError:
       # bail!
@@ -225,7 +227,14 @@ class SSPreProcessor:
       # bail!
       print "Error: no such project file exists. (%s)" % projFilePath
       sys.exit(2)
-
+    
+    # remove things not included in the project
+    for packageToRemove in self.proj['packages']['remove']:
+      self.metadata['packages'].pop(packageToRemove)
+    for fileToRemove in self.proj['files']['remove']:
+      self.metadata['files'].pop(fileToRemove)
+    self.envData['meta'] = json.dumps(self.metadata, sort_keys=True, indent=4)
+    
     self.preprocessFile(self.inFile, fileName)
 
     # export symbols

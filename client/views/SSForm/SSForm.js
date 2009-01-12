@@ -29,7 +29,7 @@ var SSForm = new Class({
   },
   
   
-  awake: function()
+  awake: function(context)
   {
     // set the delegate if there is one
     if(this.options.delegate)

@@ -1,9 +1,17 @@
-var SSTestRunner = new Class({
+var SSTestRunnerClass = new Class({
   
   Implements: [Events, Options],
   
   initialize: function()
   {
+  },
+  
+  
+  createMouseEventForNode: function(eventType, node)
+  {
+    var evt = document.createEvent("MouseEvents");
+    evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    node.dispatchEvent(evt);
   },
 
   
@@ -31,7 +39,13 @@ var SSTestRunner = new Class({
         SSUnitTest.reset();
         
         // evaluate test
-        eval(responseText);
+        var result = eval(responseText);
+        
+        if(result && result.error)
+        {
+          alert(result.error);
+          return;
+        }
         
         // load the TestCase or TestSuite instance
         var testInstance = eval(base);
@@ -62,3 +76,5 @@ var SSTestRunner = new Class({
   }
   
 });
+
+var SSTestRunner = new SSTestRunnerClass();

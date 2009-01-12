@@ -43,7 +43,7 @@ var SSConsole = new Class({
     
     // listen for shift events
     SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));
-    SSAddEvent('onShiftHide', this.deselectShift.bind(this))
+    SSAddEvent('onShiftHide', this.deselectShift.bind(this));
 
     // listen for global events as well
 

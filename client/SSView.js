@@ -1,4 +1,5 @@
 // ==Builder==
+// @uiclass
 // @required
 // @package           ShiftSpaceCoreUI
 // @dependencies      SandalphonCore
@@ -116,11 +117,20 @@ var SSView = new Class({
   
   setup: function() {},
   
+  
+  beforeAwake: function(context)
+  {
+    if(this.options.delegate)
+    {
+      this.setDelegate(SSControllerForNode($(this.options.delegate)));
+    }
+  },
+  
   /*
     Function: awake
       Called after the outlets have been attached.
   */
-  awake: function()
+  awake: function(context)
   {
     SSLog(this.getId() + " awake, outlets " + JSON.encode(this.outlets().getKeys()));
   },
@@ -218,7 +228,7 @@ var SSView = new Class({
 
   eventDispatch: function(evt)
   {
-
+    
   },
 
 
@@ -248,6 +258,14 @@ var SSView = new Class({
   */
   hitTest: function(target, selectorOfTest)
   {
+    var parts = selectorOfTest.split(',');
+    if(parts.length > 1)
+    {
+      return parts.map(function(selector) {
+        return this.hitTest(target, selector);
+      }.bind(this)).flatten().clean()[0];
+    }
+
     var node = target;
     var matches = this.element.getElements(selectorOfTest);
 

@@ -1,0 +1,30 @@
+<div id="SSCellTest" 
+     uiclass="SSCellTestCell"
+     options="{
+       properties: ['artworkId', 'title', 'image'],
+       actions: [
+         {
+           selector:'div .button1',
+           target:'SSCelTest',
+           method:'methodOne'
+         },
+         {
+           selector:'div .button2',
+           target:'SSCelTest',
+           method:'methodTwo'
+         }
+       ]
+     }">
+     
+     <img src="../images/HelloWorld.png"></img>
+     <span>A title</span>
+     <div uiclass="SSView">
+        A view.
+     </div>
+     
+     <div class="SSCellTestButtons">
+       <div class="button1"></div>
+       <div class="button2"></div>
+     </div>
+      
+</div>

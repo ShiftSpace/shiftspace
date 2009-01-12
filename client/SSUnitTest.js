@@ -470,9 +470,16 @@ SSUnitTest.TestCase = new Class({
       }
       (end)
   */
-  assertThrows: function(exception, fn, args, hook)
+  assertThrows: function(exceptionType, fn, args, hook)
   {
-    if(arguments.length < 2) throw new SSUnitTest.AssertThrowsError(new Error(), 'assertThrows expects at least 2 arguments.');
+    if(arguments.length < 2)
+    {
+      throw new SSUnitTest.AssertThrowsError(new Error(), 'assertThrows expects at least 2 arguments.');
+    }
+    if(exceptionType == null)
+    {
+      throw new SSUnitTest.AssertThrowsError(new Error(), 'assertThrows exception type is null.');
+    }
     
     // grab the remaining arguments
     var testArgs = $splat(args);
@@ -485,14 +492,13 @@ SSUnitTest.TestCase = new Class({
     }
     catch(err)
     {
-      if(err instanceof exception)
+      if(err instanceof exceptionType)
       {
         this.__setTestSuccess__(caller);
       }
       else
       {
         this.__setTestFail__(caller);
-        throw err;
       }
     }
   },
@@ -527,7 +533,24 @@ SSUnitTest.TestCase = new Class({
     {
       this.__setTestFail__(caller);
     }
-  },  
+  },
+  
+  
+  assertFalse: function(value, hook)
+  {
+    if(arguments.length < 1) throw new SSUnitTest.AssertError(new Error(), 'assertFalse expects 1 arguments.');
+
+    var caller = $pick(hook, arguments.callee.caller);
+    
+    if(value == false)
+    {
+      this.__setTestSuccess__(caller);
+    }
+    else
+    {
+      this.__setTestFail__(caller);
+    }
+  },
   
   /*
     Function: assertEqual

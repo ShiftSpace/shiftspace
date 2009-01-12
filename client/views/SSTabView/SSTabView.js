@@ -133,6 +133,12 @@ var SSTabView = new Class({
     return (controller || contentView);
   },
   
+  
+  selectedTab: function()
+  {
+    return this.__selectedTab__;
+  },
+  
 
   selectTab: function(idx)
   {
@@ -159,6 +165,8 @@ var SSTabView = new Class({
         {
           lastTabPane.removeClass('SSActive');
         }
+        
+        this.fireEvent('tabDeselected', {tabView:this, tabIndex:this.__selectedTab__});
       }
 
       // check to see if there is a view controller for the content view
