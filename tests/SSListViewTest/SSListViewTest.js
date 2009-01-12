@@ -204,7 +204,10 @@ var SSListViewTest = new Class({
   {
     this.doc("query the list for data");
     
-    this.assert(false);
+    var data = this.listView.query(2, ['artworkId', 'title']);
+    
+    this.assert(data.artworkId == 2);
+    this.assert(data.title == 'baz');
   },
   
   
