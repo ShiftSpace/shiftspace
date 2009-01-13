@@ -108,7 +108,7 @@ var SSCellTest = new Class({
     this.doc("throw SSCellError.NoSuchProperty when attempting to set non-existant property.");
     
     this.cell.lock($('SSCellTest'));
-    this.assertThrows(SSCellError.NoSuchProperty, this.cell.setData.bind(this.cell), {foobar:'baz'});
+    this.assertThrows(SSCellError.NoSuchProperty, this.cell.setProperty.bind(this.cell), ['foobar', 'baz']);
   },
   
   
