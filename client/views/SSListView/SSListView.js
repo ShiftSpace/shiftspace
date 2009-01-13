@@ -156,6 +156,8 @@ var SSListView = new Class({
       newData.addView(this);
     }
     
+    this.setIsDirty(true);
+    
     this.refresh();
   },
   
@@ -416,10 +418,14 @@ var SSListView = new Class({
   refresh: function()
   {
     this.parent();
-
-    if(!this.isDirty()) return;
     
+    if(!this.isVisible()) return;
+    
+    console.log('refreshing ' + this.isVisible());
+
+    // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
+    
     if(len > 0 && this.cell())
     {
       this.element.empty();
@@ -431,6 +437,7 @@ var SSListView = new Class({
     }
     
     this.setIsDirty(false);
+    console.log('refreshed list view ' + this.elId());
   },
   
   
@@ -482,9 +489,6 @@ var SSListView = new Class({
       coll.addEvent('onChange', function() {
         this.setIsDirty(true);
       }.bind(this));
-      
-      // set ourselves dirty
-      this.setIsDirty(true);
       
       this.setData(coll);
     }

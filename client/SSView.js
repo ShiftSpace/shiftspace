@@ -365,10 +365,17 @@ var SSView = new Class({
     this.element.removeClass('SSDisplayNone');
     
     var subviews = this.element.getChildren('*[uiclass]').filter(function(node) {
-      return (node.getStyle('display') != 'none') && $memberof(node.getProperty('uiclass'), "SSView");
+      return $memberof(node.getProperty('uiclass'), "SSView");
     }).map(SSControllerForNode);
     
-    subviews.each(function(instance) { instance.refresh(); });
+    subviews = subviews.filter(function(c) {
+      return c.isVisible();
+    });
+    
+    subviews.each(function(instance) { 
+      if(instance.isDirty && !instance.isDirty()) return;
+      instance.refresh(); 
+    });
   },
   
 
@@ -385,7 +392,13 @@ var SSView = new Class({
 
   isVisible: function()
   {
-    return (this.element.getStyle('display') != 'none');
+    var curElement = this.element;
+    while(curElement)
+    {
+      if(curElement.getStyle('display') == 'none') return false;
+      curElement = curElement.getParent();
+    }
+    return true;
   },
 
   /*
