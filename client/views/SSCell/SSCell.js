@@ -102,10 +102,6 @@ var SSCell = new Class({
     
     var action = this.actionForNode(event.target);
     
-    console.log('cell event dispatch');
-    console.log(event.target);
-    console.log(action);
-    
     if(action)
     {
       this.runAction(action);
@@ -353,14 +349,22 @@ var SSCell = new Class({
   },
   
   
+  leaveEdit: function()
+  {
+    var el = this.lockedElement();
+    
+    // let the delegate know the edits were committed
+    el.getElement('.SSEditView').removeClass('SSActive');    
+  },
+  
+  
   commitEdit: function()
   {
     var el = this.lockedElement();
     
     console.log('commit edited cell!')
     
-    // let the delegate know the edits were committed
-    el.getElement('.SSEditView').removeClass('SSActive');
+    this.leaveEdit();
   }
 
 });

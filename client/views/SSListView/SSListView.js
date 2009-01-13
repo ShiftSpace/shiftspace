@@ -32,7 +32,8 @@ var SSListView = new Class({
     return $merge(this.parent(), {
       cell: null,
       sortable: false,
-      lazy: false
+      lazy: false,
+      multipleSelection: false
     });
   },
   
@@ -40,6 +41,8 @@ var SSListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    
+    this.__cellBeingEdited = -1;
     
     if(this.options.collection)
     {
@@ -111,7 +114,6 @@ var SSListView = new Class({
     {
       case(this.hitTest(target, 'li, > li *') != null):
         var hit = this.cachedHit();
-        console.log('HIT!');
         this.cell().lock((hit.get('tag') == 'li' && hit) || hit.getParent('li'));
         this.cell().eventDispatch(event, eventType);
         this.cell().unlock();
@@ -120,8 +122,6 @@ var SSListView = new Class({
       default:
       break;
     }
-    
-    console.log('event dispatched');
     
     event.stop();
   },
@@ -418,15 +418,39 @@ var SSListView = new Class({
   
   editObject: function(sender)
   {
-    console.log('editObject');
     var index = this.indexOf(sender);
     var delegate = this.delegate();
     if((delegate && delegate.canEdit && delegate.canEdit()) ||
        !delegate)
     {
+      if(!this.options.multipleSelection && this.cellBeingEdited() != -1) this.cancelEdit();
+
+      this.setCellBeingEdited(index);
+      
       this.cell().lock(this.cellNodeForIndex(index));
       this.cell().edit();
       this.cell().unlock();
+    }
+  },
+  
+  
+  checkForUnsavedChanges: function(properties)
+  {
+    // grab the old values
+    return false;
+  },
+  
+  
+  cancelEdit: function()
+  {
+    var cellBeingEdited = this.cellBeingEdited();
+    
+    if(cellBeingEdited != -1)
+    {
+      this.cell().lock(this.cellNodeForIndex(cellBeingEdited));
+      this.cell().leaveEdit();
+      this.cell().unlock();
+      this.setCellBeingEdited(-1);
     }
   },
   
@@ -532,6 +556,18 @@ var SSListView = new Class({
   isDirty: function()
   {
     return this.__isDirty;
+  },
+  
+  
+  setCellBeingEdited: function(index)
+  {
+    this.__cellBeingEdited = index;
+  },
+  
+  
+  cellBeingEdited: function()
+  {
+    return this.__cellBeingEdited;
   }
   
 });
