@@ -1,14 +1,14 @@
-.SSCell
+.SSCellClone
 {
   
 }
 
-.SSCell .SSEditView
+.SSCellClone .SSEditView
 {
   display: none;
 }
 
-.SSCell .SSEditView.SSActive
+.SSCellClone .SSEditView.SSActive
 {
-  display: blockgit ;
+  display: block;
 }

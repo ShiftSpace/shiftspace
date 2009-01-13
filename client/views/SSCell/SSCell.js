@@ -102,6 +102,10 @@ var SSCell = new Class({
     
     var action = this.actionForNode(event.target);
     
+    console.log('cell event dispatch');
+    console.log(event.target);
+    console.log(action);
+    
     if(action)
     {
       this.runAction(action);
@@ -151,7 +155,7 @@ var SSCell = new Class({
   {
     if(!this.lockedElement()) throw new SSCellError.NoLock(new Error(), "actionForNode called with no locked element.");
     var ary = this.getActions().filter(function(x) {
-      return this.lockedElement().getElements('> ' + x.selector).contains(node);
+      return this.lockedElement().getElements(x.selector).contains(node);
     }.bind(this));
     if(ary.length > 0) return ary[0];
     return null;
@@ -266,6 +270,8 @@ var SSCell = new Class({
       Sandalphon.activate(clone);
     }
     
+    clone.addClass('SSCellClone');
+    
     return clone;
   },
   
@@ -338,7 +344,23 @@ var SSCell = new Class({
   
   edit: function()
   {
+    var el = this.lockedElement();
+    
+    console.log('edit cell!');
+
     // show the edit view
+    el.getElement('.SSEditView').addClass('SSActive');
+  },
+  
+  
+  commitEdit: function()
+  {
+    var el = this.lockedElement();
+    
+    console.log('commit edited cell!')
+    
+    // let the delegate know the edits were committed
+    el.getElement('.SSEditView').removeClass('SSActive');
   }
 
 });

@@ -111,6 +111,7 @@ var SSListView = new Class({
     {
       case(this.hitTest(target, 'li, > li *') != null):
         var hit = this.cachedHit();
+        console.log('HIT!');
         this.cell().lock((hit.get('tag') == 'li' && hit) || hit.getParent('li'));
         this.cell().eventDispatch(event, eventType);
         this.cell().unlock();
@@ -119,6 +120,8 @@ var SSListView = new Class({
       default:
       break;
     }
+    
+    console.log('event dispatched');
     
     event.stop();
   },
@@ -415,6 +418,7 @@ var SSListView = new Class({
   
   editObject: function(sender)
   {
+    console.log('editObject');
     var index = this.indexOf(sender);
     var delegate = this.delegate();
     if((delegate && delegate.canEdit && delegate.canEdit()) ||
