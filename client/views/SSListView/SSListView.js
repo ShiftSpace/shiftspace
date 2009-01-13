@@ -119,6 +119,8 @@ var SSListView = new Class({
       default:
       break;
     }
+    
+    event.stop();
   },
   
   
@@ -166,6 +168,12 @@ var SSListView = new Class({
   {
     if(this.__pendingCollection) this.checkPendingCollection();
     return this.__data;
+  },
+  
+  
+  getData: function()
+  {
+    return this.data();
   },
   
   
@@ -399,9 +407,9 @@ var SSListView = new Class({
   },
   
   
-  removeObject: function(object, equalFn)
+  removeObject: function(sender)
   {
-    
+    var err = this.remove(this.indexOf(sender));
   },
   
   
