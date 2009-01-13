@@ -416,6 +416,8 @@ var SSListView = new Class({
   refresh: function()
   {
     this.parent();
+
+    if(!this.isDirty()) return;
     
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
     if(len > 0 && this.cell())
@@ -427,6 +429,8 @@ var SSListView = new Class({
       
       this.initSortables();
     }
+    
+    this.setIsDirty(false);
   },
   
   
@@ -474,12 +478,32 @@ var SSListView = new Class({
     var coll = SSCollectionForName(collectionName, this);
     if(coll) 
     {
+      // list for collection change events
+      coll.addEvent('onChange', function() {
+        this.setIsDirty(true);
+      }.bind(this));
+      
+      // set ourselves dirty
+      this.setIsDirty(true);
+      
       this.setData(coll);
     }
     else
     {
       this.__pendingCollection = collectionName;
     }
+  },
+  
+  
+  setIsDirty: function(value)
+  {
+    this.__isDirty = value;
+  },
+  
+  
+  isDirty: function()
+  {
+    return this.__isDirty;
   }
   
 });
