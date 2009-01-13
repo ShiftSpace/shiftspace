@@ -111,7 +111,7 @@ function $memberof(_subclass, superclass)
   // each dep
   for(var i = 0, l = deps.length; i < l; i++)
   {
-    if($memberof(deps[i], x)) return true;
+    if($memberof(deps[i], superclass)) return true;
   }
   
   // memoize
