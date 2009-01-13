@@ -16,6 +16,8 @@ var SSListViewTest = new Class({
     this.methodOneRef = false;
     this.methodTwoRef = false;
     
+    SSClearCollections();
+    
     Sandalphon.compileAndLoad('tests/SSListViewTest/SSListViewTest', function(ui) {
       
       Sandalphon.addStyle(ui.styles);
@@ -229,6 +231,35 @@ var SSListViewTest = new Class({
       Sandalphon.activate($('SSTestRunnerStage'));
       this.listView = SSControllerForNode($('SSListViewTest'));
     }.bind(this));
+    
+    var data = this.listView.get(1);
+    
+    this.assert(data.artworkId == 1);
+    this.assert(data.title == 'fool');
+    this.assert(data.image == 'helloworld.png');
+  },
+  
+  
+  testPendingCollection: function()
+  {
+    this.doc("use a pending collection");
+    
+    Sandalphon.compileAndLoad('tests/SSListViewTest/SSListViewTest2', function(ui) {
+      Sandalphon.addStyle(ui.styles);
+      $('SSTestRunnerStage').set('html', ui.interface);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      this.listView = SSControllerForNode($('SSListViewTest'));
+    }.bind(this));
+    
+    console.log('loading the collection now');
+
+    new SSCollection("SSTestCollection", {
+      array: [{artworkId:0, title:'cool', image:'helloworld.png'},
+              {artworkId:1, title:'fool', image:'helloworld.png'},
+              {artworkId:2, title:'drool', image:'helloworld.png'},
+              {artworkId:3, title:'ghoul', image:'helloworld.png'},
+              {artworkId:4, title:'jewel', image:'helloworld.png'}]
+    });
     
     var data = this.listView.get(1);
     

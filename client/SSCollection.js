@@ -19,7 +19,7 @@ SSCollectionError.NoName = new Class({
 // = Collection Management =
 // =========================
 
-var SSCollections = $H();
+var SSCollections = $H()
 
 function SSCollectionForName(name)
 {

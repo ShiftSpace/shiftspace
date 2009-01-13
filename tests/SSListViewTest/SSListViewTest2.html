@@ -1,0 +1,39 @@
+<ul id="SSListViewTest" 
+    class="SSListView" 
+    uiclass="SSListView"
+    options="{
+      collection: 'SSTestCollection',
+      sortable: true
+    }">
+    
+    <li class="SSCell" 
+        uiclass="SSListViewTestCell" 
+        options="{
+          properties: ['artworkId', 'title', 'image'],
+          actions: [
+            {
+              selector: '.button1',
+              target: 'SSListViewTest',
+              method: 'edit'
+            },
+            {
+              selector: '.button2',
+              target: 'SSListViewTest',
+              method: 'remove'
+            }
+          ]
+        }">
+        
+      <img src="../images/HelloWorld.png"></img>
+      <span class="title">
+        Title
+      </span>
+      <span class="button1">
+        Action 1
+      </span>
+      <span class="button2">
+        Action 2
+      </span>
+    </li>
+    
+</ul>

@@ -162,7 +162,19 @@ var SSListView = new Class({
 
   data: function()
   {
+    if(this.__pendingCollection) this.checkPendingCollection();
     return this.__data;
+  },
+  
+  
+  checkPendingCollection: function()
+  {
+    var coll = SSCollectionForName(this.__pendingCollection);
+    if(coll)
+    {
+      delete this.__pendingCollection;
+      this.setData(coll);
+    }
   },
   
   
@@ -458,7 +470,15 @@ var SSListView = new Class({
   
   useCollection: function(collectionName)
   {
-    this.setData(SSCollectionForName(collectionName));
+    var coll = SSCollectionForName(collectionName, this);
+    if(coll) 
+    {
+      this.setData(coll);
+    }
+    else
+    {
+      this.__pendingCollection = collectionName;
+    }
   }
   
 });
