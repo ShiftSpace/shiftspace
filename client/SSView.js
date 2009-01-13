@@ -126,6 +126,22 @@ var SSView = new Class({
     }
   },
   
+  
+  __awake__: function(context)
+  {
+    var superview = this.getSuperView(context);
+    if(superview) 
+    {
+      superview.addEvent('onRefresh', function() {
+        if(this.isVisible && !this.isVisible()) return;
+        if(this.isDirty && !this.isDirty()) return;
+        this.refresh();
+        this.fireEvent('onRefresh');
+      }.bind(this));
+    }
+  },
+  
+  
   /*
     Function: awake
       Called after the outlets have been attached.
@@ -363,19 +379,8 @@ var SSView = new Class({
   {
     this.element.addClass('SSActive');
     this.element.removeClass('SSDisplayNone');
-    
-    var subviews = this.element.getChildren('*[uiclass]').filter(function(node) {
-      return $memberof(node.getProperty('uiclass'), "SSView");
-    }).map(SSControllerForNode);
-    
-    subviews = subviews.filter(function(c) {
-      return c.isVisible();
-    });
-    
-    subviews.each(function(instance) { 
-      if(instance.isDirty && !instance.isDirty()) return;
-      instance.refresh(); 
-    });
+    this.refresh();
+    this.fireEvent('onRefresh');
   },
   
 
@@ -411,6 +416,15 @@ var SSView = new Class({
     this.element.destroy();
     delete this;
   },
+  
+  
+  getSuperView: function(context)
+  {
+    var parent = this.element.getParent('*[uiclass]');
+    if(parent) return SSControllerForNode(parent);
+    return null;
+  },
+  
 
   /*
     Function: refresh (abstract)

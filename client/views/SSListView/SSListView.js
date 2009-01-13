@@ -421,8 +421,6 @@ var SSListView = new Class({
     
     if(!this.isVisible()) return;
     
-    console.log('refreshing ' + this.isVisible());
-
     // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
     
@@ -437,7 +435,6 @@ var SSListView = new Class({
     }
     
     this.setIsDirty(false);
-    console.log('refreshed list view ' + this.elId());
   },
   
   
