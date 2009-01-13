@@ -122,7 +122,7 @@ var SSCollection = new Class({
   
   remove: function(idx)
   {
-    this.__array.slice(idx, 0);
+    this.__array.splice(idx, 1);
     
     this.fireEvent('onRemove', idx);
     this.fireEvent('onChange');
@@ -131,7 +131,7 @@ var SSCollection = new Class({
   
   insert: function(obj, idx)
   {
-    this.__array.slice(idx, 1, obj);
+    this.__array.splice(idx, 0, obj);
     
     this.fireEvent('onInsert', {object:obj, index:idx});
     this.fireEvent('onChange');
