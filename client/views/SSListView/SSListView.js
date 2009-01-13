@@ -413,6 +413,20 @@ var SSListView = new Class({
   },
   
   
+  editObject: function(sender)
+  {
+    var index = this.indexOf(sender);
+    var delegate = this.delegate();
+    if((delegate && delegate.canEdit && delegate.canEdit()) ||
+       !delegate)
+    {
+      this.cell().lock(this.cellNodeForIndex(index));
+      this.cell().edit();
+      this.cell().unlock();
+    }
+  },
+  
+  
   canSelect: function(index)
   {
     if(this.delegate() && this.delegate().canSelect)

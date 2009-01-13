@@ -333,6 +333,12 @@ var SSCell = new Class({
     // probably should not because this.element is not in the DOM
     if(this.element) return this.element.getParent('.SSRow');
     return null;
+  },
+  
+  
+  edit: function()
+  {
+    // show the edit view
   }
 
 });

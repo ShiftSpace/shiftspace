@@ -1,0 +1,14 @@
+.SSCell
+{
+  
+}
+
+.SSCell .SSEditView
+{
+  display: none;
+}
+
+.SSCell .SSEditView.SSActive
+{
+  display: blockgit ;
+}
