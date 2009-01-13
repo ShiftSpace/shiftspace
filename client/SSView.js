@@ -365,7 +365,7 @@ var SSView = new Class({
     this.element.removeClass('SSDisplayNone');
     
     var subviews = this.element.getChildren('*[uiclass]').filter(function(node) {
-      return $memberof(node.getProperty('uiclass'), "SSView");
+      return (node.getStyle('display') != 'none') && $memberof(node.getProperty('uiclass'), "SSView");
     }).map(SSControllerForNode);
     
     subviews.each(function(instance) { instance.refresh(); });
