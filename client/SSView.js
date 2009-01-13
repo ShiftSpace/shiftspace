@@ -363,7 +363,14 @@ var SSView = new Class({
   {
     this.element.addClass('SSActive');
     this.element.removeClass('SSDisplayNone');
+    
+    var subviews = this.element.getChildren('*[uiclass]').filter(function(node) {
+      return $memberof(node.getProperty('uiclass'), "SSView");
+    }).map(SSControllerForNode);
+    
+    subviews.each(function(instance) { instance.refresh(); });
   },
+  
 
   /*
     Function: hide
@@ -374,6 +381,7 @@ var SSView = new Class({
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
   },
+  
 
   isVisible: function()
   {

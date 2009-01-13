@@ -417,7 +417,8 @@ var SSListView = new Class({
   {
     this.parent();
     
-    if(this.data().length > 0)
+    var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
+    if(len > 0 && this.cell())
     {
       this.element.empty();
       this.data().each(function(x) {

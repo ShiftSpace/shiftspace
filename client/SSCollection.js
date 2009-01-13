@@ -162,6 +162,12 @@ var SSCollection = new Class({
   load: function(index, count)
   {
     // actually load content
+  },
+  
+  
+  each: function(fn)
+  {
+    this.__array.each(fn);
   }
 
 });
