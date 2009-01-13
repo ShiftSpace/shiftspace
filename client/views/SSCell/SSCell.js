@@ -117,7 +117,7 @@ var SSCell = new Class({
   
   runAction: function(action, event)
   {
-    var target = ShiftSpaceNameTable[action.target];
+    var target = this.getBinding(action.target);
     var method = ((target && target[action.method] && target[action.method].bind(target)) || 
                   (action.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [action.method]))) ||
                   null;
@@ -128,6 +128,22 @@ var SSCell = new Class({
     }
     
     method(this, event);
+  },
+  
+  
+  getBinding: function(target)
+  {
+    // TODO: allow getBinding to access simple properties - David
+    var parts = target.split('.');
+    var base = ShiftSpaceNameTable[parts.shift()];
+    var result = base;
+    if(parts.length < 1) return result;
+    while(parts.length > 0)
+    {
+      var property = parts.shift();
+      result = result['get'+property.capitalize()]();
+    }
+    return result;
   },
   
   

@@ -236,5 +236,24 @@ var SSCellTest = new Class({
     
     var action = this.cell.actionForNode(el);
     this.assertThrows(SSCellError.NoSuchTarget, this.cell.runAction.bind(this.cell), action);
+  },
+  
+  
+  testGetBinding: function()
+  {
+    this.doc("binding feature of SSCell");
+    
+    ShiftSpaceNameTable['MyObject'] = {
+      getData: function()
+      {
+        return ["Hello", "world!"];
+      }
+    };
+    
+    var cell = new SSCell(new Element('li'));
+    var data = cell.getBinding('MyObject.data');
+    
+    this.assert(data[0] == "Hello");
+    this.assert(data[1] == "world!");
   }
 });
