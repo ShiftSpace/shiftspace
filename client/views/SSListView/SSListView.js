@@ -485,6 +485,7 @@ var SSListView = new Class({
       // list for collection change events
       coll.addEvent('onChange', function() {
         this.setIsDirty(true);
+        if(this.isVisible()) this.refreshAndFire();
       }.bind(this));
       
       this.setData(coll);

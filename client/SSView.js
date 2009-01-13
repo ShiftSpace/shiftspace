@@ -135,8 +135,7 @@ var SSView = new Class({
       superview.addEvent('onRefresh', function() {
         if(this.isVisible && !this.isVisible()) return;
         if(this.isDirty && !this.isDirty()) return;
-        this.refresh();
-        this.fireEvent('onRefresh');
+        this.refreshAndFire();
       }.bind(this));
     }
   },
@@ -379,8 +378,7 @@ var SSView = new Class({
   {
     this.element.addClass('SSActive');
     this.element.removeClass('SSDisplayNone');
-    this.refresh();
-    this.fireEvent('onRefresh');
+    this.refreshAndFire();
   },
   
 
@@ -433,6 +431,12 @@ var SSView = new Class({
   refresh: function()
   {
 
+  },
+  
+  refreshAndFire: function()
+  {
+    this.refresh();
+    this.fireEvent('onRefresh');
   },
 
   /*
