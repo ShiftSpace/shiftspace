@@ -345,6 +345,7 @@ var SSCell = new Class({
     console.log('edit cell!');
 
     // show the edit view
+    el.addClass('SSIsBeingEdited');
     el.getElement('.SSEditView').addClass('SSActive');
   },
   
@@ -354,6 +355,7 @@ var SSCell = new Class({
     var el = this.lockedElement();
     
     // let the delegate know the edits were committed
+    el.removeClass('SSIsBeingEdited');
     el.getElement('.SSEditView').removeClass('SSActive');    
   },
   

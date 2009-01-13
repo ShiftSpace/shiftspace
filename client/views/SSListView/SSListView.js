@@ -33,7 +33,9 @@ var SSListView = new Class({
       cell: null,
       sortable: false,
       lazy: false,
-      multipleSelection: false
+      multipleSelection: false,
+      horizontal: false,
+      cellSize: null
     });
   },
   
@@ -426,7 +428,7 @@ var SSListView = new Class({
       if(!this.options.multipleSelection && this.cellBeingEdited() != -1) this.cancelEdit();
 
       this.setCellBeingEdited(index);
-      
+
       this.cell().lock(this.cellNodeForIndex(index));
       this.cell().edit();
       this.cell().unlock();
@@ -445,6 +447,7 @@ var SSListView = new Class({
   {
     var cellBeingEdited = this.cellBeingEdited();
     
+    // check for unsaved changes
     if(cellBeingEdited != -1)
     {
       this.cell().lock(this.cellNodeForIndex(cellBeingEdited));
@@ -476,6 +479,12 @@ var SSListView = new Class({
     
     if(len > 0 && this.cell())
     {
+      if(this.options.horizontal && this.options.cellSize)
+      {
+        var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
+        this.element.setStyle('width', (this.options.cellSize.x*len)+modifer);
+      }
+
       this.element.empty();
       this.data().each(function(x) {
         this.element.grab(this.cell().cloneWithData(x));
@@ -544,6 +553,12 @@ var SSListView = new Class({
     {
       this.__pendingCollection = collectionName;
     }
+  },
+  
+  
+  useCollectionWithFilter: function(collectionName, fn)
+  {
+    
   },
   
   
