@@ -433,6 +433,7 @@ var SSView = new Class({
 
   },
   
+  
   refreshAndFire: function()
   {
     this.refresh();
