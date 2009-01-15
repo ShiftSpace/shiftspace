@@ -109,6 +109,7 @@ var SSView = new Class({
     
   },
   
+  
   getContext: function()
   {
     return this.options.context;

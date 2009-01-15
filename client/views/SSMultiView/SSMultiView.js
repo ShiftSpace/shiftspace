@@ -62,7 +62,6 @@ var SSMultiView = new Class({
     this.parent();
     if(this.options.defaultView)
     {
-      console.log('showing ' + this.options.defaultView);
       this.showViewByName(this.options.defaultView);
     }
   },

@@ -183,16 +183,16 @@ function SSLoadFile(url, callback)
   //SSLog('loadFile:' + url);
 
   // Caching is implemented as a rather blunt instrument ...
-  if (!cacheFiles) 
+  if ((typeof cacheFiles != 'undefined') && !cacheFiles) 
   {
     // ... either append the current timestamp to the URL ...
     var now = new Date();
     url += (url.indexOf('?') == -1) ? '?' : '&';
     url += now.getTime();
   } 
-  else 
+  else if((typeof cacheFiles != 'undefined') && cacheFiles)
   {
-    SSLog('load from cache');
+    SSLog('SSLoadFile, load from cache', SSLogForce);
     // ... or use SSGetValue to retrieve the file's contents
     var cached = SSGetValue('cache.' + url, false, true);
 
@@ -215,7 +215,7 @@ function SSLoadFile(url, callback)
     'onload': function(response) 
     {
       // Store file contents for later retrieval
-      if (cacheFiles) 
+      if (typeof cacheFiles != 'undefined' && cacheFiles) 
       {
         cache.push(url);
         SSSetValue('cache', cache);

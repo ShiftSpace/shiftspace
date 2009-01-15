@@ -341,8 +341,6 @@ var SSCell = new Class({
   edit: function()
   {
     var el = this.lockedElement();
-    
-    console.log('edit cell!');
 
     // show the edit view
     el.addClass('SSIsBeingEdited');
