@@ -3,6 +3,7 @@
 // ==/Builder==
 
 // INCLUDE SSLog
+// INCLUDE Base
 // INCLUDE PreInitDeclarations
 // INCLUDE PACKAGE System
 // INCLUDE PACKAGE ErrorHandling

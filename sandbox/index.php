@@ -58,7 +58,7 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
   <body>
     <div id="lipsum">
       <img src="logo.png" alt="logo"></img>
-      <ul>
+      <ul id="testdata" moma:metadata="event:26">
         <li>first one</li>
         <li>second two</li>
         <li>third three</li>

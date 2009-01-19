@@ -32,7 +32,10 @@ var SSListView = new Class({
     return $merge(this.parent(), {
       cell: null,
       sortable: false,
-      lazy: false
+      lazy: false,
+      multipleSelection: false,
+      horizontal: false,
+      cellSize: null
     });
   },
   
@@ -40,7 +43,18 @@ var SSListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    this.setData([]);
+    
+    this.__cellBeingEdited = -1;
+    
+    if(this.options.collection)
+    {
+      this.useCollection(this.options.collection);
+    }
+    else
+    {
+      this.setData([]);
+    }
+    
     this.initSortables();
     this.attachEvents();
   },
@@ -110,6 +124,8 @@ var SSListView = new Class({
       default:
       break;
     }
+    
+    event.stop();
   },
   
   
@@ -147,13 +163,33 @@ var SSListView = new Class({
       newData.addView(this);
     }
     
+    this.setIsDirty(true);
+    
     this.refresh();
   },
   
 
   data: function()
   {
+    if(this.__pendingCollection) this.checkPendingCollection();
     return this.__data;
+  },
+  
+  
+  getData: function()
+  {
+    return this.data();
+  },
+  
+  
+  checkPendingCollection: function()
+  {
+    var coll = SSCollectionForName(this.__pendingCollection);
+    if(coll)
+    {
+      delete this.__pendingCollection;
+      this.setData(coll);
+    }
   },
   
   
@@ -376,9 +412,49 @@ var SSListView = new Class({
   },
   
   
-  removeObject: function(object, equalFn)
+  removeObject: function(sender)
   {
+    var err = this.remove(this.indexOf(sender));
+  },
+  
+  
+  editObject: function(sender)
+  {
+    var index = this.indexOf(sender);
+    var delegate = this.delegate();
+    if((delegate && delegate.canEdit && delegate.canEdit()) ||
+       !delegate)
+    {
+      if(!this.options.multipleSelection && this.cellBeingEdited() != -1) this.cancelEdit();
+
+      this.setCellBeingEdited(index);
+
+      this.cell().lock(this.cellNodeForIndex(index));
+      this.cell().edit();
+      this.cell().unlock();
+    }
+  },
+  
+  
+  checkForUnsavedChanges: function(properties)
+  {
+    // grab the old values
+    return false;
+  },
+  
+  
+  cancelEdit: function()
+  {
+    var cellBeingEdited = this.cellBeingEdited();
     
+    // check for unsaved changes
+    if(cellBeingEdited != -1)
+    {
+      this.cell().lock(this.cellNodeForIndex(cellBeingEdited));
+      this.cell().leaveEdit();
+      this.cell().unlock();
+      this.setCellBeingEdited(-1);
+    }
   },
   
   
@@ -396,8 +472,19 @@ var SSListView = new Class({
   {
     this.parent();
     
-    if(this.data().length > 0)
+    if(!this.isVisible()) return;
+    
+    // check whether collection or array
+    var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
+    
+    if(len > 0 && this.cell())
     {
+      if(this.options.horizontal && this.options.cellSize)
+      {
+        var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
+        this.element.setStyle('width', (this.options.cellSize.x*len)+modifer);
+      }
+
       this.element.empty();
       this.data().each(function(x) {
         this.element.grab(this.cell().cloneWithData(x));
@@ -405,6 +492,8 @@ var SSListView = new Class({
       
       this.initSortables();
     }
+    
+    this.setIsDirty(false);
   },
   
   
@@ -439,12 +528,61 @@ var SSListView = new Class({
   
   onCellClick: function(cellNode)
   {
-    console.log('onCellClick');
     var index = this.cellNodes().indexOf(cellNode);
     if(this.delegate() && this.delegate().userDidClickListItem)
     {
       this.delegate().userDidClickListItem(index);
     }
+  },
+  
+  
+  useCollection: function(collectionName)
+  {
+    var coll = SSCollectionForName(collectionName, this);
+    if(coll) 
+    {
+      // list for collection change events
+      coll.addEvent('onChange', function() {
+        this.setIsDirty(true);
+        if(this.isVisible()) this.refreshAndFire();
+      }.bind(this));
+      
+      this.setData(coll);
+    }
+    else
+    {
+      this.__pendingCollection = collectionName;
+    }
+  },
+  
+  
+  useCollectionWithFilter: function(collectionName, fn)
+  {
+    
+  },
+  
+  
+  setIsDirty: function(value)
+  {
+    this.__isDirty = value;
+  },
+  
+  
+  isDirty: function()
+  {
+    return this.__isDirty;
+  },
+  
+  
+  setCellBeingEdited: function(index)
+  {
+    this.__cellBeingEdited = index;
+  },
+  
+  
+  cellBeingEdited: function()
+  {
+    return this.__cellBeingEdited;
   }
   
 });

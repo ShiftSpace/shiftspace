@@ -2441,7 +2441,7 @@ Selectors.RegExps = {
 	tag: (/^(\w+|\*)/),
 	quick: (/^(\w+|\*)$/),
 	splitter: (/\s*([+>~\s])\s*([a-zA-Z#.*:\[])/g),
-	combined: (/\.([\w-]+)|\[(\w+)(?:([!*^$~|]?=)["']?(.*?)["']?)?\]|:([\w-]+)(?:\(["']?(.*?)?["']?\)|$)/g)
+	combined: (/\.([\w-]+)|\[([\w:]+)(?:([!*^$~|]?=)["']?(.*?)["']?)?\]|:([\w-]+)(?:\(["']?(.*?)?["']?\)|$)/g)
 };
 
 Selectors.Utils = {
@@ -2483,7 +2483,10 @@ Selectors.Utils = {
 	},
 	
 	parseSelector: function(selector){
-		if (Selectors.Cache.parsed[selector]) return Selectors.Cache.parsed[selector];
+		if (Selectors.Cache.parsed[selector])
+		{
+		  return Selectors.Cache.parsed[selector];
+	  }
 		var m, parsed = {classes: [], pseudos: [], attributes: []};
 		while ((m = Selectors.RegExps.combined.exec(selector))){
 			var cn = m[1], an = m[2], ao = m[3], av = m[4], pn = m[5], pa = m[6];

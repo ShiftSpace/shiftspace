@@ -1,23 +1,11 @@
 // ==Builder==
 // @optional
-// @name              PreInitDeclarations
 // ==/Builder==
 
 // NOTE: This will be preprocessed by preprocess.py and replaced with the proper
 // servers
 
-// any environment specific vars
-%%VARS%%
-
-// two most important vars
-var server = '%%SERVER%%';
 var spacesDir = '%%SPACEDIR%%';
-
-var __sys__ = %%SYSTEM_TABLE%%;
-var __sysavail__ = {
-  files: [],
-  packages: []
-};
 
 SSLog('SERVER: ' + server, SSLogForce);
 SSLog('SPACESDIR: ' + spacesDir, SSLogForce);
@@ -76,45 +64,3 @@ SSLog(installedPlugins);
 // An index of cached files, used to clear the cache when necessary
 var cache = SSGetValue('cache', []);
 var alreadyCheckedForUpdate = false;
-
-// new additions for Sandalphon
-ShiftSpaceUI = {}; // holds all UI class objects
-ShiftSpaceObjects = new Hash(); // holds all instantiated UI objects
-ShiftSpaceNameTable = new Hash(); // holds all instantiated UI object by CSS id
-
-var __membermemo__ = {};
-function $memberof(_subclass, superclass)
-{
- if(_subclass == superclass) return true;
-  
-  var subclass = ($type(_subclass) == 'object' && _subclass.name) || _subclass;
-  var tag = subclass+':'+superclass;
-  
-  // check memo
-  if(__membermemo__[tag] != null) 
-  {
-    return __membermemo__[tag];
-  }
-  
-  // check deps
-  var deps = __sys__.files[subclass].dependencies;
-  if(deps == null || deps.length == 0) return false;
-  var memberof = false;
-  
-  if(deps.contains(superclass))
-  {
-    // memoize
-    __membermemo__[tag] = true;
-    return true;
-  }
-  
-  // each dep
-  for(var i = 0, l = deps.length; i < l; i++)
-  {
-    if($memberof(deps[i], x)) return true;
-  }
-  
-  // memoize
-  __membermemo__[tag] = false;
-  return false;
-}

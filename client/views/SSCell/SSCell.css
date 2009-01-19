@@ -1,0 +1,14 @@
+.SSCellClone
+{
+  
+}
+
+.SSCellClone .SSEditView
+{
+  display: none;
+}
+
+.SSCellClone .SSEditView.SSActive
+{
+  display: block;
+}

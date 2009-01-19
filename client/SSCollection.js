@@ -19,7 +19,7 @@ SSCollectionError.NoName = new Class({
 // = Collection Management =
 // =========================
 
-var SSCollections = $H();
+var SSCollections = $H()
 
 function SSCollectionForName(name)
 {
@@ -57,30 +57,64 @@ var SSCollection = new Class({
   initialize: function(name, options)
   {
     this.setOptions(this.defaults(), options);
+    this.setArray(this.options.array || []);
     
     if(name == null)
     {
       throw new SSCollectionError.NoName(new Error(), "collection instantiated without name.");
     }
+    
     // a new collection
-    SSSetCollectionForName(name);
+    SSSetCollectionForName(this, name);
+  },
+  
+  
+  setArray: function(array)
+  {
+    this.__array = array;
+  },
+  
+  
+  getArray: function()
+  {
+    return this.__array;
+  },
+  
+  
+  get: function(index)
+  {
+    return this.__array[index];
+  },
+  
+  
+  push: function(object)
+  {
+    this.__array.push(object);
+  },
+  
+  
+  setMetadata: function(metadata)
+  {
+    this.__metadata = metadata;
   },
   
   
   metadata: function()
   {
-    
+    return this.__metadata;
   },
   
   
   length: function()
   {
-    
+    return this.__array.length;
   },
   
   
   add: function(obj)
   {
+    this.__array.push(obj);
+    
     this.fireEvent('onAdd');
     this.fireEvent('onChange');
   },
@@ -88,6 +122,8 @@ var SSCollection = new Class({
   
   remove: function(idx)
   {
+    this.__array.splice(idx, 1);
+    
     this.fireEvent('onRemove', idx);
     this.fireEvent('onChange');
   },
@@ -95,6 +131,8 @@ var SSCollection = new Class({
   
   insert: function(obj, idx)
   {
+    this.__array.splice(idx, 0, obj);
+    
     this.fireEvent('onInsert', {object:obj, index:idx});
     this.fireEvent('onChange');
   },
@@ -102,26 +140,34 @@ var SSCollection = new Class({
   
   move: function(fromIndex, toIndex)
   {
+    
     this.fireEvent('onMove', {from:fromIndex, to:toIndex});
   },
   
   
   update: function(index, newValues)
   {
-    this.data[index] = this.data[index].merge(newValues);
+    this.__array[index] = $merge(this.__array[index], newValues);
+    
     this.fireEvent('onUpdate');
   },
   
   
-  set: function(data, index)
+  set: function(obj, index)
   {
-    
+    this.__array[index] = obj;
   },
   
   
   load: function(index, count)
   {
     // actually load content
+  },
+  
+  
+  each: function(fn)
+  {
+    this.__array.each(fn);
   }
 
 });

@@ -117,7 +117,7 @@ var SSCell = new Class({
   
   runAction: function(action, event)
   {
-    var target = ShiftSpaceNameTable[action.target];
+    var target = this.getBinding(action.target);
     var method = ((target && target[action.method] && target[action.method].bind(target)) || 
                   (action.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [action.method]))) ||
                   null;
@@ -131,11 +131,27 @@ var SSCell = new Class({
   },
   
   
+  getBinding: function(target)
+  {
+    // TODO: allow getBinding to access simple properties - David
+    var parts = target.split('.');
+    var base = ShiftSpaceNameTable[parts.shift()];
+    var result = base;
+    if(parts.length < 1) return result;
+    while(parts.length > 0)
+    {
+      var property = parts.shift();
+      result = result['get'+property.capitalize()]();
+    }
+    return result;
+  },
+  
+  
   actionForNode: function(node)
   {
     if(!this.lockedElement()) throw new SSCellError.NoLock(new Error(), "actionForNode called with no locked element.");
     var ary = this.getActions().filter(function(x) {
-      return this.lockedElement().getElements('> ' + x.selector).contains(node);
+      return this.lockedElement().getElements(x.selector).contains(node);
     }.bind(this));
     if(ary.length > 0) return ary[0];
     return null;
@@ -250,6 +266,8 @@ var SSCell = new Class({
       Sandalphon.activate(clone);
     }
     
+    clone.addClass('SSCellClone');
+    
     return clone;
   },
   
@@ -317,6 +335,36 @@ var SSCell = new Class({
     // probably should not because this.element is not in the DOM
     if(this.element) return this.element.getParent('.SSRow');
     return null;
+  },
+  
+  
+  edit: function()
+  {
+    var el = this.lockedElement();
+
+    // show the edit view
+    el.addClass('SSIsBeingEdited');
+    el.getElement('.SSEditView').addClass('SSActive');
+  },
+  
+  
+  leaveEdit: function()
+  {
+    var el = this.lockedElement();
+    
+    // let the delegate know the edits were committed
+    el.removeClass('SSIsBeingEdited');
+    el.getElement('.SSEditView').removeClass('SSActive');    
+  },
+  
+  
+  commitEdit: function()
+  {
+    var el = this.lockedElement();
+    
+    console.log('commit edited cell!')
+    
+    this.leaveEdit();
   }
 
 });

@@ -109,6 +109,7 @@ var SSView = new Class({
     
   },
   
+  
   getContext: function()
   {
     return this.options.context;
@@ -125,6 +126,21 @@ var SSView = new Class({
       this.setDelegate(SSControllerForNode($(this.options.delegate)));
     }
   },
+  
+  
+  __awake__: function(context)
+  {
+    var superview = this.getSuperView(context);
+    if(superview) 
+    {
+      superview.addEvent('onRefresh', function() {
+        if(this.isVisible && !this.isVisible()) return;
+        if(this.isDirty && !this.isDirty()) return;
+        this.refreshAndFire();
+      }.bind(this));
+    }
+  },
+  
   
   /*
     Function: awake
@@ -363,7 +379,9 @@ var SSView = new Class({
   {
     this.element.addClass('SSActive');
     this.element.removeClass('SSDisplayNone');
+    this.refreshAndFire();
   },
+  
 
   /*
     Function: hide
@@ -374,10 +392,17 @@ var SSView = new Class({
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
   },
+  
 
   isVisible: function()
   {
-    return (this.element.getStyle('display') != 'none');
+    var curElement = this.element;
+    while(curElement)
+    {
+      if(curElement.getStyle('display') == 'none') return false;
+      curElement = curElement.getParent();
+    }
+    return true;
   },
 
   /*
@@ -390,6 +415,15 @@ var SSView = new Class({
     this.element.destroy();
     delete this;
   },
+  
+  
+  getSuperView: function(context)
+  {
+    var parent = this.element.getParent('*[uiclass]');
+    if(parent) return SSControllerForNode(parent);
+    return null;
+  },
+  
 
   /*
     Function: refresh (abstract)
@@ -398,6 +432,13 @@ var SSView = new Class({
   refresh: function()
   {
 
+  },
+  
+  
+  refreshAndFire: function()
+  {
+    this.refresh();
+    this.fireEvent('onRefresh');
   },
 
   /*

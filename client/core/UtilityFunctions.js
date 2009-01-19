@@ -51,16 +51,19 @@ function SSInfo(spaceName)
     spaceInfo.url = installed[spaceName];
     return spaceInfo;
   }
-  var spaceIndex = [];
-  for (var aSpaceName in installed) 
+  if(typeof installed != 'undefined')
   {
-    spaceIndex.push(aSpaceName);
+    var spaceIndex = [];
+    for (var aSpaceName in installed) 
+    {
+      spaceIndex.push(aSpaceName);
+    }
   }
   return {
     server: server,
-    spacesDir: spacesDir,
-    spaces: spaceIndex.join(', '),
-    version: version
+    spacesDir: (typeof spacesDir != 'undefined' && spacesDir) || null,
+    spaces: (spaceIndex && spaceIndex.join(', ')) || null,
+    version: (typeof version != 'undefined' && version) || null
   };
 };
 
