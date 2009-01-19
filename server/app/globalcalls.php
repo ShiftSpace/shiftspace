@@ -63,6 +63,105 @@ class GlobalCalls {
     
     return new Response($data);
   }
+  
+  function collections() {
+    $desc = json_decode($_POST['desc'], true);
+    $method = 'collections_'.$desc['action'];
+    return $this->$method($desc);
+  }
+  
+  function generate_where_clause($constraints) {
+    $sql = '';
+    
+    if (!empty($constraints)) {
+      $sql .= " WHERE ";
+      $first = false;
+      
+      foreach ($constraints as $column => $value) {
+        if ($first) $sql .= " AND ";
+        
+        if (is_string($value))
+          $value = "'$value'";
+        
+        $sql .= "$column = $value";
+        $first = true;
+      }
+    }
+
+    return $sql;    
+  }
+  
+  function collections_read($desc) {
+    extract($desc);
+    $sql = "SELECT $properties FROM $table";
+    $sql .= $this->generate_where_clause($constraints);
+    
+    if (!empty($orderby)) {
+      if ($orderby[0] == '>')
+        $ascdesc = 'DESC';
+      else if ($orderby[0] == '<')
+        $ascdesc = 'ASC';
+      else
+        throw new Error('orderby first value must be "<" or ">"');  
+
+      $sql .= " ORDER BY $orderby[1] $ascdesc"; 
+    }
+
+    if (!empty($range)) {
+      extract($range);
+      $sql .= " LIMIT $count OFFSET $startIndex";
+    }
+      
+    $rows = $this->server->db->rows($sql);
+    return new Response($rows);
+  }
+
+  function collections_delete($desc) {
+    extract($desc);
+    $sql = "DELETE FROM $table";
+    $sql .= $this->generate_where_clause($constraints);
+    $query = $this->server->db->query($sql);
+    return new Response($query->rowCount());    
+  }
+
+  function collections_update($desc) {
+    extract($desc);
+    $sql = "UPDATE $table SET ";
+    
+    $valuesSql = array();
+    foreach ($values as $key => $value) {
+      if (is_string($value))
+        $value = "'$value'";
+        
+      $valuesSql[] = "$key = $value";
+    }
+                 
+    $sql .= implode(', ', $valuesSql);                                             
+    $sql .= $this->generate_where_clause($constraints);
+    
+    $query = $this->server->db->query($sql);
+    return new Response($query->rowCount());    
+  }
+
+  function collections_create($desc) {
+    extract($desc);
+    $sql = "INSERT INTO $table ";
+
+    $valuesSql = array();
+    $columns = implode(', ', array_keys($values));
+    foreach ($values as $key => $value) {
+      if (is_string($value))
+        $value = "'$value'";
+        
+      $valuesSql[] = $value;
+    }
+    
+    $valuesClause = implode(', ', $valuesSql);
+    $sql .= "($columns) VALUES ($valuesClause)";
+    
+    $query = $this->server->db->query($sql);
+    return new Response($query->insertId);    
+  }
 }
 
 ?>

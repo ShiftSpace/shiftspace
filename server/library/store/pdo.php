@@ -1,6 +1,7 @@
 <?php
 
 class PDO_Store extends Base_Store {
+  protected $logQuery = true;
   
   protected $conn;
   protected $activeTransaction = false;
@@ -205,9 +206,10 @@ class PDO_Store extends Base_Store {
       A single row result from the query. Encoded as an anonymous object by
       default, but varies according to the $style parameter.
   */
-  public function row($sql, $vars = null, $style = PDO::FETCH_OBJ) {
+  public function row($sql, $vars = null, $style = PDO::FETCH_OBJ, $intoObj = null) {
     $query = $this->query($sql, $vars);
-    return $query->fetch($style);
+    $result = $query->fetch($style, $intoObj);
+    return $result;
   }
   
   
@@ -457,11 +459,13 @@ class PDO_Store extends Base_Store {
   }
 
   protected function logQuery($sql, $vars) {
-    $f = fopen(dirname(__FILE__)."/../../working/query.log", "a");
-    fwrite($f, "Query: $sql\n");
-    fwrite($f, "Vars: ".print_r($vars, true)."\n\n");
-    fwrite($f, "=====\n\n");
-    fclose($f);
+    if ($this->logQuery) {
+      $f = fopen(dirname(__FILE__)."/../../working/query.log", "a");
+      fwrite($f, "Query: $sql\n");
+      fwrite($f, "Vars: ".print_r($vars, true)."\n\n");
+      fwrite($f, "=====\n\n");
+      fclose($f);
+    }
   }
 }
 

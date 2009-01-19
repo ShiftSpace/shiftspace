@@ -11,7 +11,7 @@ class Server extends Base_Server {
       session_start();
       $this->user = $_SESSION['user'];
       
-      $method = @$_GET['method'];
+      $method = @$_REQUEST['method'];
       $global = new GlobalCalls($this);
       if (empty($method)) {
         throw new Error('No method parameter specified');

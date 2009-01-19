@@ -39,13 +39,19 @@ class Response {
           'message' => $this->error['message']
         );
       }
-      if (isset($_GET['debug'])) {
-        setcookie('debug', $_GET['debug']);
+      if (isset($_REQUEST['debug'])) {
+        setcookie('debug', $_REQUEST['debug']);
       }
     }
+
+/*
     if (empty($response)) {
       $response['data'] = 'ok';
     }
+*/
+    
+    echo $response;
+    
     return json_encode($response);
   }
   

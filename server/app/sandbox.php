@@ -9,26 +9,33 @@ class Sandbox {
   }
   
   function getvalue() {
-/*
     $key = $_REQUEST['key'];
-    $value = $this->server->db->load("sandbox($key)")->get();
+    $value = $this->server->db->row("select value from sandbox where key=:key", array('key' => $key));
     $default = json_decode($_REQUEST['default']);
     
     if (!empty($value))
-      return $value;
+      return $value->value;
     else
       return $default->$key;
-*/
   }
   
   function setvalue() {
-    $sandbox_object = new Sandbox_Object();
-    $sandbox_object->set(array(
+    $key = $_REQUEST['key'];
+    $sandboxObject = new Sandbox_Object();
+    
+    $this->server->db->row("select * from sandbox where key=:key", array('key' => $key), PDO::FETCH_INTO, $sandboxObject);
+    if (empty($sandboxObject->id)) {
+      echo "yyy\n";
+      $sandboxObject = new Sandbox_Object();
+    }
+    else echo "xxx\n";
+    
+    $sandboxObject->set(array(
       'key' => $_REQUEST['key'],
       'value' => $_REQUEST['value']
     ));
     
-    $this->server->db->save($sandbox_object);
+    $this->server->db->save($sandboxObject);
   }
 }
 
