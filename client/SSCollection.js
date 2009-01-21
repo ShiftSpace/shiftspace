@@ -69,6 +69,57 @@ var SSCollection = new Class({
   },
   
   
+  transact: function(action, options)
+  {
+    var payload = {
+      action: action,
+      table: this.table(),
+      properties: this.options.properties,
+      contrainsts: this.options.contraints,
+      orderby: this.options.orderby,
+      startIndex: this.options.startIndex,
+      range: this.options.range
+    };
+    
+    new Request({
+      url: this.provider(),
+      data: {desc: JSON.encode(payload)},
+      onComplete: function(responseText, responseXml)
+      {
+        
+      }.bind(this),
+      onFailure: function(responseText, responseXml)
+      {
+        
+      }.bind(this)
+    }).send();
+  },
+  
+  
+  setProvider: function(url)
+  {
+    this.__provider = url;
+  },
+  
+  
+  provider: function()
+  {
+    return this.__provider;
+  },
+  
+  
+  setTable: function(table)
+  {
+    this.__table = table;
+  },
+  
+  
+  table: function()
+  {
+    return this.__table;
+  },
+  
+  
   setArray: function(array)
   {
     this.__array = array;
