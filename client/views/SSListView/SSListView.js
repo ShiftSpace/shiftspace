@@ -397,8 +397,16 @@ var SSListView = new Class({
   remove: function(index)
   {
     this.boundsCheck(index);
-    this.__remove__(index);
-    this.refresh();
+    
+    var delegate = this.delegate();
+    var canRemove = (delegate && delegate.canRemove && delegate.canRemove(index)) || true;
+    var override = (delegate && delegate.overrides && delegate.overides().contains('remove')) || false;
+    
+    if(canRemove)
+    {
+      this.__remove__(index);
+      if(!override) this.refresh();
+    }
   },
   
   
