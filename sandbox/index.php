@@ -25,12 +25,12 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
     <title>ShiftSpace Sandbox</title>
-    <!--[if IE 6]>
+    <!--
     <script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script>
-    <![endif]-->
-    <!--[if IE 7]>
+    -->
+    <!--
     <script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script>
-    <![endif]-->
+    -->
     <!--
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.js" type="text/javascript" charset="utf-8"></script>
   	<script>

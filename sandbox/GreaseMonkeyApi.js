@@ -72,7 +72,7 @@ function GM_log(msg)
 }
 
 
-function GM_openInTab() 
+function GM_openInTab()
 {
   return false;
 }

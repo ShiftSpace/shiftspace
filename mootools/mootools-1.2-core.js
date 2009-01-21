@@ -458,13 +458,6 @@ Array.implement({
 		return -1;
 	},
 	
-	// CHANGE: I added this - David
-	copy: function(){
-		var results = [];
-		for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
-		return results;
-	},
-	
 	equals: function(other){
 		if(this.length != other.length) return false;
 		for(var i = 0, l = this.length; i < l; i++) if(this[i] != other[i]) return false;
@@ -770,16 +763,7 @@ String.implement({
 			if (match.charAt(0) == '\\') return match.slice(1);
 			return (object[name] != undefined) ? object[name] : '';
 		});
-	},
-	
-	// CHANGE: I added this - David
-  repeat: function(times) {
-    var result = "";
-    for(var i = 0; i < times; i++) {
-      result += this;
-    }
-    return result;
-  }
+	}
 
 });
 
@@ -1310,14 +1294,11 @@ var IFrame = new Native({
 				return iframe.contentWindow.location.host;
 			});
 			if ((host && host == window.location.host) || !host){ // CHANGE: so that frames with no host work - David
-			  //console.log('EXTENDING IFRAME WINDOW!');
 				var win = new Window(iframe.contentWindow);
-				//console.log('EXTENDING IFRAME DOCUMENT!');
 				var doc = new Document(iframe.contentWindow.document);
 				if(!win.Element.prototype) win.Element.prototype = {}; // CHANGE: fix for GM and MT1.2 IFrames - David
 				$extend(win.Element.prototype, Element.Prototype);
 			}
-			//console.log('DONE!');
 			onload.call(iframe.contentWindow, iframe.contentWindow.document);
 		};
 		(!window.frames[props.id]) ? iframe.addListener('load', onFrameLoad) : onFrameLoad();
@@ -2544,15 +2525,6 @@ Selectors.Utils = {
 			return ctx.getElementsByTagName(tag);
 		}
 	},
-
-	genId: function(self){
-		var id = self.getProperty('id');
-		if(!id){
-			id = 'genId'+Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
-			self.setProperty('id', id);
-		}
-		return id;
-	},
 	
 	search: function(self, expression, local){
 		var splitters = [];
@@ -2561,13 +2533,6 @@ Selectors.Utils = {
 			splitters.push(m1);
 			return ':)' + m2;
 		}).split(':)');
-		
-		// allows .getElement('> selector') and .getElements('> selector')
-		selectors = selectors.filter(function(selector) { return (selector != '');});
-		
-		if(splitters.length == selectors.length){
-			return self.getWindow().$$('#'+this.genId(self)+' '+expression);
-		}
 		
 		var items, match, filtered, item;
 		
