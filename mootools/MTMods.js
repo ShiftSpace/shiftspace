@@ -8,6 +8,14 @@ String.implement({
   }
 });
 
+Array.implement({
+  copy: function(){
+    var results = [];
+    for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
+    return results;
+  },
+});
+
 var IFrame = new Native({
 
   name: 'IFrame',
