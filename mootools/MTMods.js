@@ -1,3 +1,7 @@
+// ==Builder==
+// @required
+// ==/Builder==
+
 String.implement({
   repeat: function(times) {
     var result = "";
@@ -48,7 +52,7 @@ var IFrame = new Native({
 
 });
 
-Selectors.Utils.getId = function(self){
+Selectors.Utils.genId = function(self){
   var id = self.getProperty('id');
   if(!id){
     id = 'genId'+Math.round(Math.random()*1000000+(new Date()).getMilliseconds());

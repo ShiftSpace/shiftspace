@@ -458,13 +458,6 @@ Array.implement({
 		return -1;
 	},
 	
-	// CHANGE: I added this - David
-	copy: function(){
-		var results = [];
-		for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
-		return results;
-	},
-	
 	equals: function(other){
 		if(this.length != other.length) return false;
 		for(var i = 0, l = this.length; i < l; i++) if(this[i] != other[i]) return false;
@@ -770,16 +763,7 @@ String.implement({
 			if (match.charAt(0) == '\\') return match.slice(1);
 			return (object[name] != undefined) ? object[name] : '';
 		});
-	},
-	
-	// CHANGE: I added this - David
-  repeat: function(times) {
-    var result = "";
-    for(var i = 0; i < times; i++) {
-      result += this;
-    }
-    return result;
-  }
+	}
 
 });
 
@@ -2541,15 +2525,6 @@ Selectors.Utils = {
 			return ctx.getElementsByTagName(tag);
 		}
 	},
-
-	genId: function(self){
-		var id = self.getProperty('id');
-		if(!id){
-			id = 'genId'+Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
-			self.setProperty('id', id);
-		}
-		return id;
-	},
 	
 	search: function(self, expression, local){
 		var splitters = [];
@@ -2558,13 +2533,6 @@ Selectors.Utils = {
 			splitters.push(m1);
 			return ':)' + m2;
 		}).split(':)');
-		
-		// allows .getElement('> selector') and .getElements('> selector')
-		selectors = selectors.filter(function(selector) { return (selector != '');});
-		
-		if(splitters.length == selectors.length){
-			return self.getWindow().$$('#'+this.genId(self)+' '+expression);
-		}
 		
 		var items, match, filtered, item;
 		
