@@ -259,15 +259,18 @@ var SSListView = new Class({
   {
     this.boundsCheck(index);
     
-    var canEdit = true;
-    if(this.delegate() && this.delegate().canEdit)
+    var delegate = this.delegate();
+    var canEdit = (delegate && delegate.canEdit && delegate.canEdit(index)) || true;
+    
+    if(canEdit)
     {
-      canEdit = this.data().canEdit(index);
-    }
+      if(!this.options.multipleSelection && this.cellBeingEdited() != -1) this.cancelEdit();
 
-    if(canEdit && this.cell().edit)
-    {
-      this.cell().edit(this.cellNodeForIndex(index));
+      this.setCellBeingEdited(index);
+
+      this.cell().lock(this.cellNodeForIndex(index));
+      this.cell().edit();
+      this.cell().unlock();
     }
   },
   
@@ -421,18 +424,7 @@ var SSListView = new Class({
   editObject: function(sender)
   {
     var index = this.indexOf(sender);
-    var delegate = this.delegate();
-    if((delegate && delegate.canEdit && delegate.canEdit()) ||
-       !delegate)
-    {
-      if(!this.options.multipleSelection && this.cellBeingEdited() != -1) this.cancelEdit();
-
-      this.setCellBeingEdited(index);
-
-      this.cell().lock(this.cellNodeForIndex(index));
-      this.cell().edit();
-      this.cell().unlock();
-    }
+    this.edit(index);
   },
   
   
@@ -536,17 +528,36 @@ var SSListView = new Class({
   },
   
   
+  __addEventsToCollection__: function(coll)
+  {
+    coll.addEvent('onRemove', function(idx) {
+      if(this.delegate() && this.isVisible())
+      {
+        this.delegate().onRemove(idx);
+      }
+    }.bind(this));
+    
+    coll.addEvent('onAdd', function(idx) {
+      if(this.delegate() && this.isVisible())
+      {
+        this.delegate().onAdd(idx);
+      }
+    }.bind(this));
+    
+    coll.addEvent('onChange', function() {
+      this.setIsDirty(true);
+      // just refresh normally
+      if(!this.delegate() && this.isVisible()) this.refreshAndFire();
+    }.bind(this));
+  },
+  
+  
   useCollection: function(collectionName)
   {
     var coll = SSCollectionForName(collectionName, this);
     if(coll) 
     {
-      // list for collection change events
-      coll.addEvent('onChange', function() {
-        this.setIsDirty(true);
-        if(this.isVisible()) this.refreshAndFire();
-      }.bind(this));
-      
+      this.__addEventsToCollection__(coll);
       this.setData(coll);
     }
     else
