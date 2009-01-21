@@ -2,6 +2,15 @@
 // @required
 // ==/Builder==
 
+// allows for queries on namespaced attributes
+Selectors.RegExps = {
+	id: (/#([\w-]+)/),
+	tag: (/^(\w+|\*)/),
+	quick: (/^(\w+|\*)$/),
+	splitter: (/\s*([+>~\s])\s*([a-zA-Z#.*:\[])/g),
+	combined: (/\.([\w-]+)|\[([\w:]+)(?:([!*^$~|]?=)["']?(.*?)["']?)?\]|:([\w-]+)(?:\(["']?(.*?)?["']?\)|$)/g)
+};
+
 String.implement({
   repeat: function(times) {
     var result = "";
