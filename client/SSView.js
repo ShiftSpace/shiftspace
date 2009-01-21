@@ -431,7 +431,7 @@ var SSView = new Class({
   */
   refresh: function()
   {
-
+    
   },
   
   

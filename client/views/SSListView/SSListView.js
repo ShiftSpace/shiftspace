@@ -265,12 +265,24 @@ var SSListView = new Class({
     if(canEdit)
     {
       if(!this.options.multipleSelection && this.cellBeingEdited() != -1) this.cancelEdit();
-
-      this.setCellBeingEdited(index);
-
-      this.cell().lock(this.cellNodeForIndex(index));
-      this.cell().edit();
-      this.cell().unlock();
+      
+      var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'edit', listView:this, index:index})) || false;
+      
+      var editModeForCell = function() {
+        this.setCellBeingEdited(index);
+        this.cell().lock(this.cellNodeForIndex(index));
+        this.cell().edit();
+        this.cell().unlock();
+      }.bind(this);
+      
+      if(anim)
+      {
+        anim().chain(editModeForCell);
+      }
+      else
+      {
+        editModeForCell();
+      }
     }
   },
   
@@ -400,12 +412,20 @@ var SSListView = new Class({
     
     var delegate = this.delegate();
     var canRemove = (delegate && delegate.canRemove && delegate.canRemove(index)) || true;
-    var override = (delegate && delegate.overrides && delegate.overides().contains('remove')) || false;
+    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
     
     if(canRemove)
     {
       this.__remove__(index);
-      if(!override) this.refresh();
+      
+      if(anim)
+      {
+        anim().chain(this.refresh.bind(this));
+      }
+      else
+      { 
+        this.refresh();
+      }
     }
   },
   
@@ -479,6 +499,7 @@ var SSListView = new Class({
     
     if(len > 0 && this.cell())
     {
+      // set the width programmatically if horizontal
       if(this.options.horizontal && this.options.cellSize)
       {
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
@@ -538,6 +559,7 @@ var SSListView = new Class({
   
   __addEventsToCollection__: function(coll)
   {
+    /*
     coll.addEvent('onRemove', function(idx) {
       if(this.delegate() && this.isVisible())
       {
@@ -551,11 +573,10 @@ var SSListView = new Class({
         this.delegate().onAdd(idx);
       }
     }.bind(this));
+    */
     
     coll.addEvent('onChange', function() {
-      this.setIsDirty(true);
-      // just refresh normally
-      if(!this.delegate() && this.isVisible()) this.refreshAndFire();
+      if(!this.isVisible()) this.setIsDirty(true);
     }.bind(this));
   },
   
