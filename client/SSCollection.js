@@ -49,6 +49,7 @@ var SSCollection = new Class({
   defaults: function()
   {
     return {
+      provider: null,
       table: null,
       fields: {}
     }
@@ -106,18 +107,6 @@ var SSCollection = new Class({
         
       }.bind(this)
     }).send();
-  },
-  
-  
-  setProvider: function(url)
-  {
-    this.__provider = url;
-  },
-  
-  
-  provider: function()
-  {
-    return this.__provider;
   },
   
   
@@ -223,9 +212,34 @@ var SSCollection = new Class({
   },
   
   
-  load: function(index, count)
+  loadIndex: function(index, count)
   {
-    // actually load content
+
+  },
+  
+  
+  load: function()
+  {
+    SSCollectionsCall({
+      desc: 
+      {
+        action: 'read',
+        table: this.table(),
+        properties: '*'
+      },
+      onComplete: this.onLoad.bind(this),
+      onFailure: function(rtxt)
+      {
+        console.log(rtxt)
+      }
+    });
+  },
+  
+  
+  onLoad: function(data)
+  {
+    console.log('received data');
+    console.log(data);
   },
   
   
