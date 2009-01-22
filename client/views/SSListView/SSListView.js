@@ -247,9 +247,12 @@ var SSListView = new Class({
   },
   
   
-  add: function(newItem)
+  add: function(newItem, animate)
   {
-    // update the data
+    var delegate = this.delegate();
+    
+    // TODO: allow for add new item animation.
+    
     this.data().push(newItem);
     this.refresh();
   },
