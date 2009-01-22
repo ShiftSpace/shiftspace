@@ -44,7 +44,8 @@ class Base_Server {
     foreach ($this->workingConfig->get() as $key => $value) {
       if (preg_match('/^store:(\w+)$/', $key, $matches)) {
         list(, $storeName) = $matches;
-        $this->stores[$storeName] += $value;
+        if (in_array($storeName, array_keys($this->stores)))
+          $this->stores[$storeName] += $value;
       }
     }
     
