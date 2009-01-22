@@ -44,14 +44,6 @@ class Response {
       }
     }
 
-/*
-    if (empty($response)) {
-      $response['data'] = 'ok';
-    }
-*/
-    
-    echo $response;
-    
     return json_encode($response);
   }
   

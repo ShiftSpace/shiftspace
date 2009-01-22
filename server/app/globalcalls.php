@@ -112,7 +112,7 @@ class GlobalCalls {
       $sql .= " LIMIT $count OFFSET $startIndex";
     }
       
-    $rows = $this->server->db->rows($sql);
+    $rows = $this->server->moma->rows($sql);
     return new Response($rows);
   }
 
@@ -120,7 +120,7 @@ class GlobalCalls {
     extract($desc);
     $sql = "DELETE FROM $table";
     $sql .= $this->generate_where_clause($constraints);
-    $query = $this->server->db->query($sql);
+    $query = $this->server->moma->query($sql);
     return new Response($query->rowCount());    
   }
 
@@ -139,7 +139,7 @@ class GlobalCalls {
     $sql .= implode(', ', $valuesSql);                                             
     $sql .= $this->generate_where_clause($constraints);
     
-    $query = $this->server->db->query($sql);
+    $query = $this->server->moma->query($sql);
     return new Response($query->rowCount());    
   }
 
@@ -159,7 +159,7 @@ class GlobalCalls {
     $valuesClause = implode(', ', $valuesSql);
     $sql .= "($columns) VALUES ($valuesClause)";
     
-    $query = $this->server->db->query($sql);
+    $query = $this->server->moma->query($sql);
     return new Response($query->insertId);    
   }
 }
