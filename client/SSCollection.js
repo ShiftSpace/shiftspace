@@ -65,7 +65,20 @@ var SSCollection = new Class({
     }
     
     // a new collection
+    this.setName(name);
     SSSetCollectionForName(this, name);
+  },
+  
+  
+  setName: function(name)
+  {
+    this.__name = name;
+  },
+  
+  
+  name: function()
+  {
+    return this.__name;
   },
   
   

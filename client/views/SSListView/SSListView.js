@@ -247,9 +247,12 @@ var SSListView = new Class({
   },
   
   
-  add: function(newItem)
+  add: function(newItem, animate)
   {
-    // update the data
+    var delegate = this.delegate();
+    
+    // TODO: allow for add new item animation.
+    
     this.data().push(newItem);
     this.refresh();
   },
@@ -259,15 +262,30 @@ var SSListView = new Class({
   {
     this.boundsCheck(index);
     
-    var canEdit = true;
-    if(this.delegate() && this.delegate().canEdit)
+    var delegate = this.delegate();
+    var canEdit = (delegate && delegate.canEdit && delegate.canEdit(index)) || true;
+    
+    if(canEdit)
     {
-      canEdit = this.data().canEdit(index);
-    }
-
-    if(canEdit && this.cell().edit)
-    {
-      this.cell().edit(this.cellNodeForIndex(index));
+      if(!this.options.multipleSelection && this.cellBeingEdited() != -1) this.cancelEdit();
+      
+      var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'edit', listView:this, index:index})) || false;
+      
+      var editModeForCell = function() {
+        this.setCellBeingEdited(index);
+        this.cell().lock(this.cellNodeForIndex(index));
+        this.cell().edit();
+        this.cell().unlock();
+      }.bind(this);
+      
+      if(anim)
+      {
+        anim().chain(editModeForCell);
+      }
+      else
+      {
+        editModeForCell();
+      }
     }
   },
   
@@ -394,8 +412,24 @@ var SSListView = new Class({
   remove: function(index)
   {
     this.boundsCheck(index);
-    this.__remove__(index);
-    this.refresh();
+    
+    var delegate = this.delegate();
+    var canRemove = (delegate && delegate.canRemove && delegate.canRemove(index)) || true;
+    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
+    
+    if(canRemove)
+    {
+      this.__remove__(index);
+      
+      if(anim)
+      {
+        anim().chain(this.refresh.bind(this));
+      }
+      else
+      { 
+        this.refresh();
+      }
+    }
   },
   
   
@@ -421,18 +455,7 @@ var SSListView = new Class({
   editObject: function(sender)
   {
     var index = this.indexOf(sender);
-    var delegate = this.delegate();
-    if((delegate && delegate.canEdit && delegate.canEdit()) ||
-       !delegate)
-    {
-      if(!this.options.multipleSelection && this.cellBeingEdited() != -1) this.cancelEdit();
-
-      this.setCellBeingEdited(index);
-
-      this.cell().lock(this.cellNodeForIndex(index));
-      this.cell().edit();
-      this.cell().unlock();
-    }
+    this.edit(index);
   },
   
   
@@ -479,6 +502,7 @@ var SSListView = new Class({
     
     if(len > 0 && this.cell())
     {
+      // set the width programmatically if horizontal
       if(this.options.horizontal && this.options.cellSize)
       {
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
@@ -536,17 +560,36 @@ var SSListView = new Class({
   },
   
   
+  __addEventsToCollection__: function(coll)
+  {
+    /*
+    coll.addEvent('onRemove', function(idx) {
+      if(this.delegate() && this.isVisible())
+      {
+        this.delegate().onRemove(idx);
+      }
+    }.bind(this));
+    
+    coll.addEvent('onAdd', function(idx) {
+      if(this.delegate() && this.isVisible())
+      {
+        this.delegate().onAdd(idx);
+      }
+    }.bind(this));
+    */
+    
+    coll.addEvent('onChange', function() {
+      if(!this.isVisible()) this.setIsDirty(true);
+    }.bind(this));
+  },
+  
+  
   useCollection: function(collectionName)
   {
     var coll = SSCollectionForName(collectionName, this);
     if(coll) 
     {
-      // list for collection change events
-      coll.addEvent('onChange', function() {
-        this.setIsDirty(true);
-        if(this.isVisible()) this.refreshAndFire();
-      }.bind(this));
-      
+      this.__addEventsToCollection__(coll);
       this.setData(coll);
     }
     else

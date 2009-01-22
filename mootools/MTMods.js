@@ -2,6 +2,15 @@
 // @required
 // ==/Builder==
 
+// allows for queries on namespaced attributes
+Selectors.RegExps = {
+	id: (/#([\w-]+)/),
+	tag: (/^(\w+|\*)/),
+	quick: (/^(\w+|\*)$/),
+	splitter: (/\s*([+>~\s])\s*([a-zA-Z#.*:\[])/g),
+	combined: (/\.([\w-]+)|\[([\w:]+)(?:([!*^$~|]?=)["']?(.*?)["']?)?\]|:([\w-]+)(?:\(["']?(.*?)?["']?\)|$)/g)
+};
+
 String.implement({
   repeat: function(times) {
     var result = "";
@@ -17,7 +26,7 @@ Array.implement({
     var results = [];
     for(var i = 0, l = this.length; i < l; i++) results[i] = this[i];
     return results;
-  },
+  }
 });
 
 var IFrame = new Native({
