@@ -60,6 +60,18 @@ var SSListView = new Class({
   },
   
   
+  setHasCollection: function(val)
+  {
+    this.__hasCollection = val;
+  },
+  
+  
+  hasCollection: function()
+  {
+    return this.__hasCollection;
+  },
+  
+  
   initSortables: function()
   {
     if(this.options.sortable)
@@ -412,37 +424,44 @@ var SSListView = new Class({
   remove: function(index)
   {
     this.boundsCheck(index);
-    
+
     var delegate = this.delegate();
     var canRemove = (delegate && delegate.canRemove && delegate.canRemove(index)) || true;
-    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
-    
+
     if(canRemove)
     {
-      this.__remove__(index);
-      
-      if(anim)
+      if(this.hasCollection())
       {
-        anim().chain(this.refresh.bind(this));
+        this.getData().delete(index);
+        return;
       }
       else
-      { 
-        this.refresh();
+      {
+        this.__remove__(index);
+        this.onRemove(index);
       }
+    }
+  },
+  
+  
+  onRemove: function(index)
+  {
+    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
+    
+    if(anim)
+    {
+      anim().chain(this.refresh.bind(this));
+    }
+    else
+    {
+      this.refresh();
     }
   },
   
   
   __remove__: function(index)
   {
-    if(this.data().remove)
-    {
-      this.data().remove(index);
-    }
-    else
-    {
-      this.data().splice(index, 1);
-    }    
+    this.data().splice(index, 1);
   },
   
   
@@ -562,36 +581,33 @@ var SSListView = new Class({
   
   __addEventsToCollection__: function(coll)
   {
-    /*
-    coll.addEvent('onRemove', function(idx) {
-      if(this.delegate() && this.isVisible())
-      {
-        this.delegate().onRemove(idx);
-      }
-    }.bind(this));
+    coll.addEvent('onCreate', function(index) {
+      console.log('onCreate');
+    });
     
-    coll.addEvent('onAdd', function(idx) {
-      if(this.delegate() && this.isVisible())
-      {
-        this.delegate().onAdd(idx);
-      }
+    coll.addEvent('onDelete', function(index) {
+      if(this.isVisible()) this.onRemove.bind(index);
     }.bind(this));
-    */
     
     coll.addEvent('onChange', function() {
       if(!this.isVisible()) this.setIsDirty(true);
     }.bind(this));
     
+    coll.addEvent('onUpdate', function() {
+      console.log('onUpdate');
+    }.bind(this));
+    
     coll.addEvent('onLoad', function() {
       this.setIsDirty(true);
       if(this.isVisible()) this.refresh();
-    });
+    }.bind(this));
   },
   
   
   useCollection: function(collectionName)
   {
     var coll = SSCollectionForName(collectionName, this);
+    this.setHasCollection(true);
     if(coll) 
     {
       this.__addEventsToCollection__(coll);
@@ -599,6 +615,7 @@ var SSListView = new Class({
     }
     else
     {
+      // not ready yet, controller loaded before collection
       this.__pendingCollection = collectionName;
     }
   },

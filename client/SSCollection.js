@@ -135,12 +135,8 @@ var SSCollection = new Class({
       range: options.range
     };
     
-    console.log(payload);
-    
     payload = this.cleanPayload(payload);
     
-    console.log(payload);
-
     SSCollectionsCall({
       desc: payload,
       onComplete: options.onComplete,
@@ -247,6 +243,7 @@ var SSCollection = new Class({
   
   length: function()
   {
+    if(!this.__array) return 0;
     return this.__array.length;
   },
   
@@ -286,16 +283,7 @@ var SSCollection = new Class({
   
   move: function(fromIndex, toIndex)
   {
-    
     this.fireEvent('onMove', {from:fromIndex, to:toIndex});
-  },
-  
-  
-  update: function(index, newValues)
-  {
-    this.__array[index] = $merge(this.__array[index], newValues);
-    
-    this.fireEvent('onUpdate');
   },
   
   
@@ -311,7 +299,7 @@ var SSCollection = new Class({
   },
   
   
-  read: function(callback)
+  read: function()
   {
     this.transact('read', {
       table: this.table(),
@@ -327,25 +315,59 @@ var SSCollection = new Class({
     this.transact('create', {
       table: this.table(),
       contraints: this.contraints(),
-      values: data
+      values: data,
+      onComplete: this.onCreate.bind(this)
     });
   },
   
   
-  delete: function()
+  delete: function(index)
   {
     this.transact('delete', {
       table: this.table(),
-      constraints: this.constraints()
+      constraints: $merge(this.constraints(), {
+        id: this.get(index).id
+      }),
+      onComplete: this.onDelete.bind(this)
     });
+  },
+  
+  
+  update: function(index, newValues)
+  {
+    this.__array[index] = $merge(this.__array[index], newValues);
+    this.fireEvent('onUpdate');
   },
   
   
   onRead: function(data)
   {
+    console.log('onRead ' + this.name());
+    console.log(data);
     var obj = JSON.decode(data);
     this.setArray(obj.data);
     this.fireEvent('onLoad');
+  },
+  
+  
+  onCreate: function(data)
+  {
+    var obj = JSON.decode(data);
+    this.fireEvent('onCreate', obj.data);
+  },
+  
+  
+  onDelete: function(data)
+  {
+    var obj = JSON.decode(data);
+    this.fireEvent('onDelete', obj.data);
+  },
+  
+  
+  onUpdate: function(data)
+  {
+    var obj = JSON.decode(data);
+    this.fireEvent('onUpdate', obj.data);
   },
   
   
