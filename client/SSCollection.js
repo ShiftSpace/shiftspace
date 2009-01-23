@@ -49,16 +49,36 @@ var SSCollection = new Class({
   defaults: function()
   {
     return {
-      provider: null,
       table: null,
-      fields: {}
+      constraints: null,
+      properties: [],
+      orderBy: null,
+      startIndex: null,
+      range: null
     }
   },
   
   initialize: function(name, options)
   {
     this.setOptions(this.defaults(), options);
-    this.setArray(this.options.array || []);
+    
+    if(this.options.array)
+    {
+      this.setArray(this.options.array)
+    }
+    else if(this.options.table)
+    {
+      this.setLoadRefresh(true);
+      this.setTable(this.options.table);
+      this.setConstraints(this.options.constraints);
+      this.setProperties(this.options.properties);
+      this.setOrderBy(this.options.orderBy);
+      this.setRange(this.options.range);
+    }
+    else
+    {
+      this.setArray([]);
+    }
     
     if(name == null)
     {
@@ -68,6 +88,18 @@ var SSCollection = new Class({
     // a new collection
     this.setName(name);
     SSSetCollectionForName(this, name);
+  },
+  
+  
+  setLoadRefresh: function(val)
+  {
+    this.__loadOnRefresh = val;
+  },
+  
+
+  shouldLoadOnRefresh: function()
+  {
+    return this.__loadOnRefresh;
   },
   
   
@@ -119,6 +151,54 @@ var SSCollection = new Class({
   table: function()
   {
     return this.__table;
+  },
+  
+  
+  setProperties: function(props)
+  {
+    this.__properties = props;
+  },
+  
+  
+  properties: function()
+  {
+    return this.__properties;
+  },
+  
+  
+  setOrderBy: function(orderBy)
+  {
+    this.__orderBy = orderBy;
+  },
+  
+
+  orderBy: function()
+  {
+    return this.__orderBy;
+  },
+  
+  
+  setRange: function(range)
+  {
+    this.__range = range;
+  },
+  
+  
+  range: function()
+  {
+    return this.__range;
+  },
+  
+  
+  setConstraints: function(constraints)
+  {
+    this.__constraints = constraints;
+  },
+  
+  
+  constraints: function()
+  {
+    return this.__constraints;
   },
   
   
@@ -225,7 +305,8 @@ var SSCollection = new Class({
       {
         action: 'read',
         table: this.table(),
-        properties: '*'
+        constraints: this.constraints(),
+        properties: this.properties()
       },
       onComplete: this.onLoad.bind(this),
       onFailure: function(rtxt)
@@ -238,8 +319,9 @@ var SSCollection = new Class({
   
   onLoad: function(data)
   {
-    console.log('received data');
-    console.log(data);
+    var obj = JSON.decode(data);
+    this.setArray(obj.data);
+    this.fireEvent('onLoad');
   },
   
   

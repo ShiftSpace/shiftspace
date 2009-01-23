@@ -581,6 +581,11 @@ var SSListView = new Class({
     coll.addEvent('onChange', function() {
       if(!this.isVisible()) this.setIsDirty(true);
     }.bind(this));
+    
+    coll.addEvent('onLoad', function() {
+      this.setIsDirty(true);
+      if(this.isVisible()) this.refresh();
+    });
   },
   
   
