@@ -88,6 +88,9 @@ class GlobalCalls {
       }
     }
 
+    if ($sql == '')
+      return " ITS_NOT_A_GOOD_IDEA_TO_DELETE_YOUR_ENTIRE_TABLE";
+
     return $sql;    
   }
   
@@ -126,21 +129,32 @@ class GlobalCalls {
 
   function collections_update($desc) {
     extract($desc);
-    $sql = "UPDATE $table SET ";
+    $result = 0;
     
-    $valuesSql = array();
-    foreach ($values as $key => $value) {
-      if (is_string($value))
-        $value = "'$value'";
-        
-      $valuesSql[] = "$key = $value";
+    if (empty($bulk)) {
+      $bulk = array($desc);
     }
-                 
-    $sql .= implode(', ', $valuesSql);                                             
-    $sql .= $this->generate_where_clause($constraints);
+
+    foreach ($bulk as $clause) {
+      extract($clause);
+      $sql = "UPDATE $table SET ";
     
-    $query = $this->server->moma->query($sql);
-    return new Response($query->rowCount());    
+      $valuesSql = array();
+      foreach ($values as $key => $value) {
+        if (is_string($value))
+          $value = "'$value'";
+        
+        $valuesSql[] = "$key = $value";
+      }
+                 
+      $sql .= implode(', ', $valuesSql);                                             
+      $sql .= $this->generate_where_clause($constraints);
+    
+      $query = $this->server->moma->query($sql);
+      $result += $query->rowCount();
+    }
+    
+    return new Response($result);    
   }
 
   function collections_create($desc) {
