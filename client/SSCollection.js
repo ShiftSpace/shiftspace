@@ -115,30 +115,37 @@ var SSCollection = new Class({
   },
   
   
+  cleanPayload: function(payload)
+  {
+    return $H(payload).filter(function(value, key) {
+      return value != null;
+    }).getClean();
+  },
+  
+  
   transact: function(action, options)
   {
     var payload = {
       action: action,
-      table: this.table(),
-      properties: this.options.properties,
-      contrainsts: this.options.contraints,
-      orderby: this.options.orderby,
-      startIndex: this.options.startIndex,
-      range: this.options.range
+      table: options.table,
+      properties: options.properties,
+      contraints: options.constraints,
+      orderby: options.orderby,
+      startIndex: options.startIndex,
+      range: options.range
     };
     
-    new Request({
-      url: this.provider(),
-      data: {desc: JSON.encode(payload)},
-      onComplete: function(responseText, responseXml)
-      {
-        
-      }.bind(this),
-      onFailure: function(responseText, responseXml)
-      {
-        
-      }.bind(this)
-    }).send();
+    console.log(payload);
+    
+    payload = this.cleanPayload(payload);
+    
+    console.log(payload);
+
+    SSCollectionsCall({
+      desc: payload,
+      onComplete: options.onComplete,
+      onFailure: options.onFailure
+    });
   },
   
   
@@ -255,10 +262,16 @@ var SSCollection = new Class({
   
   remove: function(idx)
   {
-    this.__array.splice(idx, 1);
-    
-    this.fireEvent('onRemove', idx);
-    this.fireEvent('onChange');
+    if(!this.table())
+    { 
+      this.__array.splice(idx, 1);
+    }
+    else
+    {
+      this.__array.splice(idx, 1);
+      this.fireEvent('onRemove', idx);
+      this.fireEvent('onChange');
+    }
   },
   
   
@@ -298,26 +311,37 @@ var SSCollection = new Class({
   },
   
   
-  load: function()
+  read: function(callback)
   {
-    SSCollectionsCall({
-      desc: 
-      {
-        action: 'read',
-        table: this.table(),
-        constraints: this.constraints(),
-        properties: this.properties()
-      },
-      onComplete: this.onLoad.bind(this),
-      onFailure: function(rtxt)
-      {
-        console.log(rtxt)
-      }
+    this.transact('read', {
+      table: this.table(),
+      constraints: this.constraints(),
+      properties: this.properties(),
+      onComplete: this.onRead.bind(this)
     });
   },
   
   
-  onLoad: function(data)
+  create: function(data)
+  {
+    this.transact('create', {
+      table: this.table(),
+      contraints: this.contraints(),
+      values: data
+    });
+  },
+  
+  
+  delete: function()
+  {
+    this.transact('delete', {
+      table: this.table(),
+      constraints: this.constraints()
+    });
+  },
+  
+  
+  onRead: function(data)
   {
     var obj = JSON.decode(data);
     this.setArray(obj.data);
