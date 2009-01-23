@@ -215,6 +215,7 @@ var SSListView = new Class({
   
   count: function()
   {
+    // TODO: not sure about the bounds checking in SSListView, this should probably be put into SSCollections - David
     if($type(this.data().length) == 'function') return this.data().length();
     return this.data().length;
   },
@@ -446,6 +447,7 @@ var SSListView = new Class({
   
   onRemove: function(index)
   {
+    var delegate = this.delegate();
     var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
     
     if(anim)
@@ -467,7 +469,10 @@ var SSListView = new Class({
   
   removeObject: function(sender)
   {
-    var err = this.remove(this.indexOf(sender));
+    if(confirm("Are you sure that you want to delete this artwork? There is no undo."))
+    {
+      this.remove(this.indexOf(sender));
+    }
   },
   
   
@@ -548,7 +553,6 @@ var SSListView = new Class({
   
   cellNodeForIndex: function(index)
   {
-    this.boundsCheck(index);
     return this.cellNodes()[index];
   },
   
@@ -582,11 +586,13 @@ var SSListView = new Class({
   __addEventsToCollection__: function(coll)
   {
     coll.addEvent('onCreate', function(index) {
-      console.log('onCreate');
     });
     
     coll.addEvent('onDelete', function(index) {
-      if(this.isVisible()) this.onRemove.bind(index);
+      if(this.isVisible()) 
+      {
+        this.onRemove(index);
+      }
     }.bind(this));
     
     coll.addEvent('onChange', function() {
@@ -594,7 +600,6 @@ var SSListView = new Class({
     }.bind(this));
     
     coll.addEvent('onUpdate', function() {
-      console.log('onUpdate');
     }.bind(this));
     
     coll.addEvent('onLoad', function() {

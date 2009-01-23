@@ -129,7 +129,7 @@ var SSCollection = new Class({
       action: action,
       table: options.table,
       properties: options.properties,
-      contraints: options.constraints,
+      constraints: options.constraints,
       orderby: options.orderby,
       startIndex: options.startIndex,
       range: options.range
@@ -266,7 +266,6 @@ var SSCollection = new Class({
     else
     {
       this.__array.splice(idx, 1);
-      this.fireEvent('onRemove', idx);
       this.fireEvent('onChange');
     }
   },
@@ -328,8 +327,19 @@ var SSCollection = new Class({
       constraints: $merge(this.constraints(), {
         id: this.get(index).id
       }),
-      onComplete: this.onDelete.bind(this)
+      onComplete: function(data) {
+        this.onDelete(data, index);
+      }.bind(this),
+      onFailure: function(data) {
+        this.onFailure('delete', data, index);
+      }.bind(this)
     });
+  },
+  
+  
+  onFailure: function(action, data, index)
+  {
+    
   },
   
   
@@ -342,8 +352,6 @@ var SSCollection = new Class({
   
   onRead: function(data)
   {
-    console.log('onRead ' + this.name());
-    console.log(data);
     var obj = JSON.decode(data);
     this.setArray(obj.data);
     this.fireEvent('onLoad');
@@ -357,10 +365,12 @@ var SSCollection = new Class({
   },
   
   
-  onDelete: function(data)
+  onDelete: function(data, index)
   {
     var obj = JSON.decode(data);
-    this.fireEvent('onDelete', obj.data);
+    // synchronize internal
+    this.remove(index);
+    this.fireEvent('onDelete', index);
   },
   
   
