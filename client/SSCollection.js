@@ -128,6 +128,7 @@ var SSCollection = new Class({
     var payload = {
       action: action,
       table: options.table,
+      values: options.values,
       properties: options.properties,
       constraints: options.constraints,
       orderby: options.orderby,
@@ -337,16 +338,27 @@ var SSCollection = new Class({
   },
   
   
+  update: function(data, index)
+  {
+    this.transact('update', {
+      table: this.table(),
+      values: data, 
+      constraints: $merge(this.constraints(), {
+        id: this.get(index).id
+      }),
+      onComplete: function(rx) {
+        this.onUpdate(data, index);
+      }.bind(this),
+      onFailure: function(data) {
+        this.onFailure('delete', data, index);
+      }.bind(this)
+    });
+  },
+  
+    
   onFailure: function(action, data, index)
   {
     
-  },
-  
-  
-  update: function(index, newValues)
-  {
-    this.__array[index] = $merge(this.__array[index], newValues);
-    this.fireEvent('onUpdate');
   },
   
   
@@ -374,10 +386,10 @@ var SSCollection = new Class({
   },
   
   
-  onUpdate: function(data)
+  onUpdate: function(data, index)
   {
-    var obj = JSON.decode(data);
-    this.fireEvent('onUpdate', obj.data);
+    this.__array[index] = $merge(this.__array[index], data);
+    this.fireEvent('onUpdate', index);
   },
   
   

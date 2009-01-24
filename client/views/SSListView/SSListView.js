@@ -324,27 +324,6 @@ var SSListView = new Class({
   },
   
   
-  set: function(cellData, index)
-  {
-    this.boundsCheck(index);
-    this.__set__(cellData, index);
-    this.refresh();
-  },
-  
-  
-  __set__: function(cellData, index)
-  {
-    if(this.data().set)
-    {
-      this.data().set(cellData, index);
-    }
-    else
-    {
-      this.data()[index] = cellData;
-    }
-  },
-  
-  
   get: function(index)
   {
     this.boundsCheck(index);
@@ -375,11 +354,23 @@ var SSListView = new Class({
   update: function(cellData, index)
   {
     this.boundsCheck(index);
-    
-    var oldData = this.get(index);
-    this.set($merge(oldData, cellData), index);
-    
-    //this.refresh();
+
+    var delegate = this.delegate();
+    var canUpdate = (delegate && delegate.canUpdate && delegate.canUpdate(index)) || true;
+
+    if(canUpdate)
+    {
+      if(this.hasCollection())
+      {
+        this.getData().update(cellData, index);
+        return;
+      }
+      else
+      {
+        this.__update__(cellData, index);
+        this.onUpdate(index);
+      }
+    }
   },
   
   
@@ -392,16 +383,37 @@ var SSListView = new Class({
 
   __update__: function(cellData, index)
   {
-    var oldData;
-    if(this.data().get)
+    var oldData =this.data()[index];
+    this.__set__(oldData.merge(cellData), index);
+  },
+  
+  
+  onUpdate: function(index)
+  {
+    var delegate = this.delegate();
+    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'update', listView:this, index:index})) || false;
+    
+    if(anim)
     {
-      oldData = this.data().get(index);
+      anim().chain(this.refresh.bind(this));
     }
     else
     {
-      oldData = this.data()[index];
+      this.refresh();
     }
-    this.__set__(oldData.merge(cellData));
+  },
+  
+  
+  set: function(cellData, index)
+  {
+    this.boundsCheck(index);
+    this.__set__(cellData, index);
+  },
+  
+  
+  __set__: function(cellData, index)
+  {
+    this.data()[index] = cellData;
   },
   
   
