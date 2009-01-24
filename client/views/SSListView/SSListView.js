@@ -452,7 +452,7 @@ var SSListView = new Class({
     {
       if(this.hasCollection())
       {
-        this.getData().delete(index);
+        this.getData()['delete'](index);
         return;
       }
       else

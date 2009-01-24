@@ -321,7 +321,7 @@ var SSCollection = new Class({
   },
   
   
-  delete: function(index)
+  'delete': function(index)
   {
     this.transact('delete', {
       table: this.table(),
