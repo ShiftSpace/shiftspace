@@ -379,7 +379,14 @@ var SSListView = new Class({
     var oldData = this.get(index);
     this.set($merge(oldData, cellData), index);
     
-    this.refresh();
+    //this.refresh();
+  },
+  
+  
+  updateObject: function(sender)
+  {
+    var index = this.indexOf(sender);
+    this.update(this.cell().getAllData(), index);
   },
   
 
@@ -493,6 +500,8 @@ var SSListView = new Class({
   cancelEdit: function()
   {
     var cellBeingEdited = this.cellBeingEdited();
+    
+    console.log('cancelEdit');
     
     // check for unsaved changes
     if(cellBeingEdited != -1)

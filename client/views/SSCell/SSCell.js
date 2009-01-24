@@ -118,9 +118,9 @@ var SSCell = new Class({
   runAction: function(action, event)
   {
     var target = this.getBinding(action.target);
-    var method = ((target && target[action.method] && target[action.method].bind(target)) || 
-                  (action.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [action.method]))) ||
-                  null;
+    var method = (target && target[action.method] && target[action.method].bind(target)) || 
+                 (action.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [action.method])) ||
+                 null;
                   
     if(!method)
     {
@@ -134,6 +134,8 @@ var SSCell = new Class({
   getBinding: function(target)
   {
     // TODO: allow getBinding to access simple properties - David
+    if(target == 'self') return this;
+    
     var parts = target.split('.');
     var base = ShiftSpaceNameTable[parts.shift()];
     var result = base;
@@ -210,6 +212,24 @@ var SSCell = new Class({
       args = $A(args[0]);
     }
     return args.map(this.getProperty.bind(this)).associate(args);
+  },
+  
+  
+  cleanData: function(data)
+  {
+    return $H(data).filter(function(value, key) {
+      return value != null;
+    }).getClean();
+  },
+  
+  
+  getAllData: function()
+  {
+    var data = {};
+    this.getPropertyList().each(function(property) {
+      data[property] = this.getProperty(property);
+    }.bind(this));
+    return this.cleanData(data);
   },
   
   
@@ -354,17 +374,7 @@ var SSCell = new Class({
     
     // let the delegate know the edits were committed
     el.removeClass('SSIsBeingEdited');
-    el.getElement('.SSEditView').removeClass('SSActive');    
-  },
-  
-  
-  commitEdit: function()
-  {
-    var el = this.lockedElement();
-    
-    console.log('commit edited cell!')
-    
-    this.leaveEdit();
+    el.getElement('.SSEditView').removeClass('SSActive');
   }
 
 });
