@@ -60,6 +60,18 @@ var SSListView = new Class({
   },
   
   
+  setHasCollection: function(val)
+  {
+    this.__hasCollection = val;
+  },
+  
+  
+  hasCollection: function()
+  {
+    return this.__hasCollection;
+  },
+  
+  
   initSortables: function()
   {
     if(this.options.sortable)
@@ -203,6 +215,7 @@ var SSListView = new Class({
   
   count: function()
   {
+    // TODO: not sure about the bounds checking in SSListView, this should probably be put into SSCollections - David
     if($type(this.data().length) == 'function') return this.data().length();
     return this.data().length;
   },
@@ -311,27 +324,6 @@ var SSListView = new Class({
   },
   
   
-  set: function(cellData, index)
-  {
-    this.boundsCheck(index);
-    this.__set__(cellData, index);
-    this.refresh();
-  },
-  
-  
-  __set__: function(cellData, index)
-  {
-    if(this.data().set)
-    {
-      this.data().set(cellData, index);
-    }
-    else
-    {
-      this.data()[index] = cellData;
-    }
-  },
-  
-  
   get: function(index)
   {
     this.boundsCheck(index);
@@ -362,26 +354,66 @@ var SSListView = new Class({
   update: function(cellData, index)
   {
     this.boundsCheck(index);
-    
-    var oldData = this.get(index);
-    this.set($merge(oldData, cellData), index);
-    
-    this.refresh();
+
+    var delegate = this.delegate();
+    var canUpdate = (delegate && delegate.canUpdate && delegate.canUpdate(index)) || true;
+
+    if(canUpdate)
+    {
+      if(this.hasCollection())
+      {
+        this.getData().update(cellData, index);
+        return;
+      }
+      else
+      {
+        this.__update__(cellData, index);
+        this.onUpdate(index);
+      }
+    }
+  },
+  
+  
+  updateObject: function(sender)
+  {
+    var index = this.indexOf(sender);
+    this.update(this.cell().getAllData(), index);
   },
   
 
   __update__: function(cellData, index)
   {
-    var oldData;
-    if(this.data().get)
+    var oldData =this.data()[index];
+    this.__set__(oldData.merge(cellData), index);
+  },
+  
+  
+  onUpdate: function(index)
+  {
+    var delegate = this.delegate();
+    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'update', listView:this, index:index})) || false;
+    
+    if(anim)
     {
-      oldData = this.data().get(index);
+      anim().chain(this.refresh.bind(this));
     }
     else
     {
-      oldData = this.data()[index];
+      this.refresh();
     }
-    this.__set__(oldData.merge(cellData));
+  },
+  
+  
+  set: function(cellData, index)
+  {
+    this.boundsCheck(index);
+    this.__set__(cellData, index);
+  },
+  
+  
+  __set__: function(cellData, index)
+  {
+    this.data()[index] = cellData;
   },
   
   
@@ -412,43 +444,54 @@ var SSListView = new Class({
   remove: function(index)
   {
     this.boundsCheck(index);
-    
+
     var delegate = this.delegate();
     var canRemove = (delegate && delegate.canRemove && delegate.canRemove(index)) || true;
-    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
-    
+
     if(canRemove)
     {
-      this.__remove__(index);
-      
-      if(anim)
+      if(this.hasCollection())
       {
-        anim().chain(this.refresh.bind(this));
+        this.getData()['delete'](index);
+        return;
       }
       else
-      { 
-        this.refresh();
+      {
+        this.__remove__(index);
+        this.onRemove(index);
       }
+    }
+  },
+  
+  
+  onRemove: function(index)
+  {
+    var delegate = this.delegate();
+    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
+    
+    if(anim)
+    {
+      anim().chain(this.refresh.bind(this));
+    }
+    else
+    {
+      this.refresh();
     }
   },
   
   
   __remove__: function(index)
   {
-    if(this.data().remove)
-    {
-      this.data().remove(index);
-    }
-    else
-    {
-      this.data().splice(index, 1);
-    }    
+    this.data().splice(index, 1);
   },
   
   
   removeObject: function(sender)
   {
-    var err = this.remove(this.indexOf(sender));
+    if(confirm("Are you sure that you want to delete this artwork? There is no undo."))
+    {
+      this.remove(this.indexOf(sender));
+    }
   },
   
   
@@ -469,6 +512,8 @@ var SSListView = new Class({
   cancelEdit: function()
   {
     var cellBeingEdited = this.cellBeingEdited();
+    
+    console.log('cancelEdit');
     
     // check for unsaved changes
     if(cellBeingEdited != -1)
@@ -529,7 +574,6 @@ var SSListView = new Class({
   
   cellNodeForIndex: function(index)
   {
-    this.boundsCheck(index);
     return this.cellNodes()[index];
   },
   
@@ -562,24 +606,26 @@ var SSListView = new Class({
   
   __addEventsToCollection__: function(coll)
   {
-    /*
-    coll.addEvent('onRemove', function(idx) {
-      if(this.delegate() && this.isVisible())
-      {
-        this.delegate().onRemove(idx);
-      }
-    }.bind(this));
+    coll.addEvent('onCreate', function(index) {
+    });
     
-    coll.addEvent('onAdd', function(idx) {
-      if(this.delegate() && this.isVisible())
+    coll.addEvent('onDelete', function(index) {
+      if(this.isVisible()) 
       {
-        this.delegate().onAdd(idx);
+        this.onRemove(index);
       }
     }.bind(this));
-    */
     
     coll.addEvent('onChange', function() {
       if(!this.isVisible()) this.setIsDirty(true);
+    }.bind(this));
+    
+    coll.addEvent('onUpdate', function() {
+    }.bind(this));
+    
+    coll.addEvent('onLoad', function() {
+      this.setIsDirty(true);
+      if(this.isVisible()) this.refresh();
     }.bind(this));
   },
   
@@ -587,6 +633,7 @@ var SSListView = new Class({
   useCollection: function(collectionName)
   {
     var coll = SSCollectionForName(collectionName, this);
+    this.setHasCollection(true);
     if(coll) 
     {
       this.__addEventsToCollection__(coll);
@@ -594,6 +641,7 @@ var SSListView = new Class({
     }
     else
     {
+      // not ready yet, controller loaded before collection
       this.__pendingCollection = collectionName;
     }
   },

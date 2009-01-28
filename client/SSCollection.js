@@ -50,14 +50,35 @@ var SSCollection = new Class({
   {
     return {
       table: null,
-      fields: {}
+      constraints: null,
+      properties: [],
+      orderBy: null,
+      startIndex: null,
+      range: null
     }
   },
   
   initialize: function(name, options)
   {
     this.setOptions(this.defaults(), options);
-    this.setArray(this.options.array || []);
+    
+    if(this.options.array)
+    {
+      this.setArray(this.options.array)
+    }
+    else if(this.options.table)
+    {
+      this.setLoadRefresh(true);
+      this.setTable(this.options.table);
+      this.setConstraints(this.options.constraints);
+      this.setProperties(this.options.properties);
+      this.setOrderBy(this.options.orderBy);
+      this.setRange(this.options.range);
+    }
+    else
+    {
+      this.setArray([]);
+    }
     
     if(name == null)
     {
@@ -67,6 +88,18 @@ var SSCollection = new Class({
     // a new collection
     this.setName(name);
     SSSetCollectionForName(this, name);
+  },
+  
+  
+  setLoadRefresh: function(val)
+  {
+    this.__loadOnRefresh = val;
+  },
+  
+
+  shouldLoadOnRefresh: function()
+  {
+    return this.__loadOnRefresh;
   },
   
   
@@ -82,42 +115,34 @@ var SSCollection = new Class({
   },
   
   
+  cleanPayload: function(payload)
+  {
+    return $H(payload).filter(function(value, key) {
+      return value != null;
+    }).getClean();
+  },
+  
+  
   transact: function(action, options)
   {
     var payload = {
       action: action,
-      table: this.table(),
-      properties: this.options.properties,
-      contrainsts: this.options.contraints,
-      orderby: this.options.orderby,
-      startIndex: this.options.startIndex,
-      range: this.options.range
+      table: options.table,
+      values: options.values,
+      properties: options.properties,
+      constraints: options.constraints,
+      orderby: options.orderby,
+      startIndex: options.startIndex,
+      range: options.range
     };
     
-    new Request({
-      url: this.provider(),
-      data: {desc: JSON.encode(payload)},
-      onComplete: function(responseText, responseXml)
-      {
-        
-      }.bind(this),
-      onFailure: function(responseText, responseXml)
-      {
-        
-      }.bind(this)
-    }).send();
-  },
-  
-  
-  setProvider: function(url)
-  {
-    this.__provider = url;
-  },
-  
-  
-  provider: function()
-  {
-    return this.__provider;
+    payload = this.cleanPayload(payload);
+    
+    SSCollectionsCall({
+      desc: payload,
+      onComplete: options.onComplete,
+      onFailure: options.onFailure
+    });
   },
   
   
@@ -130,6 +155,54 @@ var SSCollection = new Class({
   table: function()
   {
     return this.__table;
+  },
+  
+  
+  setProperties: function(props)
+  {
+    this.__properties = props;
+  },
+  
+  
+  properties: function()
+  {
+    return this.__properties;
+  },
+  
+  
+  setOrderBy: function(orderBy)
+  {
+    this.__orderBy = orderBy;
+  },
+  
+
+  orderBy: function()
+  {
+    return this.__orderBy;
+  },
+  
+  
+  setRange: function(range)
+  {
+    this.__range = range;
+  },
+  
+  
+  range: function()
+  {
+    return this.__range;
+  },
+  
+  
+  setConstraints: function(constraints)
+  {
+    this.__constraints = constraints;
+  },
+  
+  
+  constraints: function()
+  {
+    return this.__constraints;
   },
   
   
@@ -171,6 +244,7 @@ var SSCollection = new Class({
   
   length: function()
   {
+    if(!this.__array) return 0;
     return this.__array.length;
   },
   
@@ -186,10 +260,15 @@ var SSCollection = new Class({
   
   remove: function(idx)
   {
-    this.__array.splice(idx, 1);
-    
-    this.fireEvent('onRemove', idx);
-    this.fireEvent('onChange');
+    if(!this.table())
+    { 
+      this.__array.splice(idx, 1);
+    }
+    else
+    {
+      this.__array.splice(idx, 1);
+      this.fireEvent('onChange');
+    }
   },
   
   
@@ -204,16 +283,7 @@ var SSCollection = new Class({
   
   move: function(fromIndex, toIndex)
   {
-    
     this.fireEvent('onMove', {from:fromIndex, to:toIndex});
-  },
-  
-  
-  update: function(index, newValues)
-  {
-    this.__array[index] = $merge(this.__array[index], newValues);
-    
-    this.fireEvent('onUpdate');
   },
   
   
@@ -223,9 +293,103 @@ var SSCollection = new Class({
   },
   
   
-  load: function(index, count)
+  loadIndex: function(index, count)
   {
-    // actually load content
+
+  },
+  
+  
+  read: function()
+  {
+    this.transact('read', {
+      table: this.table(),
+      constraints: this.constraints(),
+      properties: this.properties(),
+      onComplete: this.onRead.bind(this)
+    });
+  },
+  
+  
+  create: function(data)
+  {
+    this.transact('create', {
+      table: this.table(),
+      contraints: this.contraints(),
+      values: data,
+      onComplete: this.onCreate.bind(this)
+    });
+  },
+  
+  
+  'delete': function(index)
+  {
+    this.transact('delete', {
+      table: this.table(),
+      constraints: $merge(this.constraints(), {
+        id: this.get(index).id
+      }),
+      onComplete: function(data) {
+        this.onDelete(data, index);
+      }.bind(this),
+      onFailure: function(data) {
+        this.onFailure('delete', data, index);
+      }.bind(this)
+    });
+  },
+  
+  
+  update: function(data, index)
+  {
+    this.transact('update', {
+      table: this.table(),
+      values: data, 
+      constraints: $merge(this.constraints(), {
+        id: this.get(index).id
+      }),
+      onComplete: function(rx) {
+        this.onUpdate(data, index);
+      }.bind(this),
+      onFailure: function(data) {
+        this.onFailure('delete', data, index);
+      }.bind(this)
+    });
+  },
+  
+    
+  onFailure: function(action, data, index)
+  {
+    
+  },
+  
+  
+  onRead: function(data)
+  {
+    var obj = JSON.decode(data);
+    this.setArray(obj.data);
+    this.fireEvent('onLoad');
+  },
+  
+  
+  onCreate: function(data)
+  {
+    var obj = JSON.decode(data);
+    this.fireEvent('onCreate', obj.data);
+  },
+  
+  
+  onDelete: function(data, index)
+  {
+    var obj = JSON.decode(data);
+    // synchronize internal
+    this.remove(index);
+    this.fireEvent('onDelete', index);
+  },
+  
+  
+  onUpdate: function(data, index)
+  {
+    this.__array[index] = $merge(this.__array[index], data);
+    this.fireEvent('onUpdate', index);
   },
   
   

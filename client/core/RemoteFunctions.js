@@ -99,6 +99,43 @@ function SSServerCall(method, parameters, _callback)
   GM_xmlhttpRequest(req);
 }
 
+function SSCollectionsCall(options)
+{
+  var url = server + 'server/index.php';
+  
+  var req = {
+    method: 'POST',
+    url: url,
+    data: $H({method: "collections", desc:JSON.encode(options.desc)}).toQueryString(),
+    onload: function(_rx) 
+    {
+      if(options.onComplete)
+      {
+        options.onComplete(_rx.responseText);
+      }
+    },
+    onerror: function(err)  
+    {
+      if(options.onFailure)
+      {
+        options.onFailure(_rx.responseText);
+      }
+    }
+  };
+
+  // Firefox doesn't work without this
+  // and the existence of this breaks Safari
+  if(!window.webkit)
+  {
+    req.headers = {
+      'Content-type': 'application/x-www-form-urlencoded'
+    };
+  }
+  
+  // we need to have error handling right here
+  GM_xmlhttpRequest(req);
+}
+
 /*
 Function: SSLoadStyle
   Loads a CSS file, processes it to make URLs absolute, then appends it as a
