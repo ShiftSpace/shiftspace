@@ -35,7 +35,8 @@ var SSListView = new Class({
       lazy: false,
       multipleSelection: false,
       horizontal: false,
-      cellSize: null
+      cellSize: null,
+      filter: null
     });
   },
   

@@ -323,6 +323,7 @@ var SSCollection = new Class({
   
   'delete': function(index)
   {
+    /*
     this.transact('delete', {
       table: this.table(),
       constraints: $merge(this.constraints(), {
@@ -335,6 +336,8 @@ var SSCollection = new Class({
         this.onFailure('delete', data, index);
       }.bind(this)
     });
+    */
+    this.onDelete(null, index);
   },
   
   
