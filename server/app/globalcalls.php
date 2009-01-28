@@ -1,5 +1,8 @@
 <?php
 
+$dir = dirname(__FILE__);
+require_once "$dir/collections.php";
+
 class GlobalCalls {
   protected $sql = array(
     'queryAnonymous' => "
@@ -66,115 +69,9 @@ class GlobalCalls {
   
   function collections() {
     $desc = json_decode($_POST['desc'], true);
-    $method = 'collections_'.$desc['action'];
-    return $this->$method($desc);
-  }
-  
-  function generate_where_clause($constraints) {
-    $sql = '';
-    
-    if (!empty($constraints)) {
-      $sql .= " WHERE ";
-      $first = false;
-      
-      foreach ($constraints as $column => $value) {
-        if ($first) $sql .= " AND ";
-        
-        if (is_string($value))
-          $value = "'$value'";
-        
-        $sql .= "$column = $value";
-        $first = true;
-      }
-    }
-
-    if ($sql == '')
-      return " ITS_NOT_A_GOOD_IDEA_TO_DELETE_YOUR_ENTIRE_TABLE";
-
-    return $sql;    
-  }
-  
-  function collections_read($desc) {
-    extract($desc);
-    $sql = "SELECT $properties FROM $table";
-    $sql .= $this->generate_where_clause($constraints);
-    
-    if (!empty($orderby)) {
-      if ($orderby[0] == '>')
-        $ascdesc = 'DESC';
-      else if ($orderby[0] == '<')
-        $ascdesc = 'ASC';
-      else
-        throw new Error('orderby first value must be "<" or ">"');  
-
-      $sql .= " ORDER BY $orderby[1] $ascdesc"; 
-    }
-
-    if (!empty($range)) {
-      extract($range);
-      $sql .= " LIMIT $count OFFSET $startIndex";
-    }
-      
-    $rows = $this->server->moma->rows($sql);
-    return new Response($rows);
-  }
-
-  function collections_delete($desc) {
-    extract($desc);
-    $sql = "DELETE FROM $table";
-    $sql .= $this->generate_where_clause($constraints);
-    $query = $this->server->moma->query($sql);
-    return new Response($query->rowCount());    
-  }
-
-  function collections_update($desc) {
-    extract($desc);
-    $result = 0;
-    
-    if (empty($bulk)) {
-      $bulk = array($desc);
-    }
-
-    foreach ($bulk as $clause) {
-      extract($clause);
-      $sql = "UPDATE $table SET ";
-    
-      $valuesSql = array();
-      foreach ($values as $key => $value) {
-        if (is_string($value))
-          $value = "'$value'";
-        
-        $valuesSql[] = "$key = $value";
-      }
-                 
-      $sql .= implode(', ', $valuesSql);                                             
-      $sql .= $this->generate_where_clause($constraints);
-    
-      $query = $this->server->moma->query($sql);
-      $result += $query->rowCount();
-    }
-    
-    return new Response($result);    
-  }
-
-  function collections_create($desc) {
-    extract($desc);
-    $sql = "INSERT INTO $table ";
-
-    $valuesSql = array();
-    $columns = implode(', ', array_keys($values));
-    foreach ($values as $key => $value) {
-      if (is_string($value))
-        $value = "'$value'";
-        
-      $valuesSql[] = $value;
-    }
-    
-    $valuesClause = implode(', ', $valuesSql);
-    $sql .= "($columns) VALUES ($valuesClause)";
-    
-    $query = $this->server->moma->query($sql);
-    return new Response($query->insertId);    
+    $collections = new Collections($this->server);
+    $method = $desc['action'];
+    return $collections->$method($desc);
   }
 }
 

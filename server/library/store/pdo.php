@@ -5,6 +5,8 @@ class PDO_Store extends Base_Store {
   
   protected $conn;
   protected $activeTransaction = false;
+
+  public $joinData = array();
   
   function __construct($config) {
     $this->config = $config;
@@ -18,9 +20,7 @@ class PDO_Store extends Base_Store {
       throw new Exception('Database error: ' . $e->getMessage());
     }
     $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    if (empty($this->config['setup'])) {
-      $this->setup();
-    }
+    $this->setup();
   }
   
   
@@ -426,8 +426,7 @@ class PDO_Store extends Base_Store {
     return $dsn;
   }
   
-  protected protected function setupTable($table, $vars) {
-    
+  protected function setupTable($table, $vars) {  
     $types = array(
       'table' =>      $table,
       'sequence' =>   $this->get('sequence'),
@@ -443,14 +442,29 @@ class PDO_Store extends Base_Store {
       'time' =>       'TIME',
       'timestamp' =>  'TIMESTAMP'
     );
-    
+
     $columns = array();
+    
+    $this->joinData[$table] = array();    
     foreach ($vars as $name => $type) {
+      $n = 'link to ';
+      if (substr($type, 0, strlen($n)) == $n) {
+        $linkData = split('\.', substr($type, strlen($n)));
+      
+        $this->joinData[$table][$name] = $linkData;
+        $type = 'integer';
+      }
+
       $columns[] = "  $name {{$type}}";
     }
-    $template = $this->get('createTable', $columns);
-    $this->query($this->substitute($template, $types));
-    
+
+    if (empty($this->config['setup'])) {
+      // actually create table
+      $template = $this->get('createTable', $columns);
+      $query = $this->substitute($template, $types);
+      $this->logQuery($query, null);
+      $this->query($query);
+    }
   }
   
   protected function getCreateTable($columns) {
