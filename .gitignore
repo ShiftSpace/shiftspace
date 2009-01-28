@@ -1,2 +1,10 @@
 *~
 
+momasocialbar/images
+momasocialbar/templates
+momasocialbar/stylesheets
+momasocialbar/views
+momasocialbar/scripts
+sandalphon/simplejson
+builder/simplejson
+client/compiledViews
