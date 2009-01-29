@@ -47,8 +47,8 @@ class Collections {
   function read($desc) {
     extract($desc);
     $sql = "SELECT $properties FROM $table";
-    $sql .= $this->generate_where_clause($constraints);
     $sql .= $this->generate_join_clause($table);
+    $sql .= $this->generate_where_clause($constraints);
     
     if (!empty($orderby)) {
       if ($orderby[0] == '>')

@@ -123,6 +123,8 @@ class PDO_Store extends Base_Store {
       A PDOStatement object resulting from the query.
   */
   public function query($sql, $vars = null) {
+    $this->logQuery($sql, $vars);
+  
     $query = $this->prepare($sql);
     try {
       // bug with false boolean value: http://pecl.php.net/bugs/bug.php?id=8298
@@ -132,8 +134,7 @@ class PDO_Store extends Base_Store {
             $value = 0;
         }
       }
-      
-      $this->logQuery($sql, $vars);
+
       $query->execute($vars);
     } catch (PDOException $e) {
       if ($this->activeTransaction) {
@@ -478,6 +479,7 @@ class PDO_Store extends Base_Store {
       fwrite($f, "Query: $sql\n");
       fwrite($f, "Vars: ".print_r($vars, true)."\n\n");
       fwrite($f, "=====\n\n");
+      fflush($f);
       fclose($f);
     }
   }
