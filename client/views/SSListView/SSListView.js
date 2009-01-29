@@ -470,6 +470,7 @@ var SSListView = new Class({
     var delegate = this.delegate();
     var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
     
+    
     if(anim)
     {
       anim().chain(this.refresh.bind(this));

@@ -1,6 +1,7 @@
 .SSListView
 {
   padding: 0px;
+  position: relative;
 }
 
 .SSListView > .SSCell
