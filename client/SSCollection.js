@@ -54,7 +54,8 @@ var SSCollection = new Class({
       properties: [],
       orderBy: null,
       startIndex: null,
-      range: null
+      range: null,
+      delegate: null
     }
   },
   
@@ -62,12 +63,17 @@ var SSCollection = new Class({
   {
     this.setOptions(this.defaults(), options);
     
+    // set the delegate
+    if(this.options.delegate) this.setDelegate(this.options.delegate);
+
+    // check if using array
     if(this.options.array)
     {
       this.setArray(this.options.array)
     }
     else if(this.options.table)
     {
+      // real DB backend
       this.setLoadRefresh(true);
       this.setTable(this.options.table);
       this.setConstraints(this.options.constraints);
