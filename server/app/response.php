@@ -7,7 +7,7 @@ class Response {
   private $error = false;
   
   public function __construct($data = false) {
-    if (!empty($data)) {
+    if ($data !== false) {
       $this->data = $data;
     }
     
@@ -25,7 +25,7 @@ class Response {
   
   public function __toString() {
     $response = array();
-    if (!empty($this->data)) {
+    if (isset($this->data)) {
       $response['data'] = $this->data;
     }
     if (!empty($this->resources)) {
