@@ -20,7 +20,7 @@ class Collections {
     return $sql;
   }
   
-  function generate_where_clause($constraints) {
+  function generate_where_clause($constraints, $careful = false) {
     $sql = '';
     
     if (!empty($constraints)) {
@@ -38,7 +38,7 @@ class Collections {
       }
     }
 
-    if ($sql == '')
+    if ($sql == '' && $careful)
       return " ITS_NOT_A_GOOD_IDEA_TO_DELETE_YOUR_ENTIRE_TABLE";
 
     return $sql;    
@@ -67,45 +67,38 @@ class Collections {
     }
       
     $rows = $this->server->moma->rows($sql);
-    return new Response($rows);
+    return $rows;
   }
 
   function delete($desc) {
     extract($desc);
     $sql = "DELETE FROM $table";
-    $sql .= $this->generate_where_clause($constraints);
+    $sql .= $this->generate_where_clause($constraints, true);
     $query = $this->server->moma->query($sql);
-    return new Response($query->rowCount());    
+    return $query->rowCount();    
   }
 
   function update($desc) {
     extract($desc);
     $result = 0;
     
-    if (empty($bulk)) {
-      $bulk = array($desc);
-    }
-
-    foreach ($bulk as $clause) {
-      extract($clause);
-      $sql = "UPDATE $table SET ";
-    
-      $valuesSql = array();
-      foreach ($values as $key => $value) {
-        if (is_string($value))
-          $value = "'$value'";
+    $sql = "UPDATE $table SET ";
+   
+    $valuesSql = array();
+    foreach ($values as $key => $value) {
+      if (is_string($value))
+        $value = "'$value'";
         
-        $valuesSql[] = "$key = $value";
-      }
-                 
-      $sql .= implode(', ', $valuesSql);                                             
-      $sql .= $this->generate_where_clause($constraints);
-    
-      $query = $this->server->moma->query($sql);
-      $result += $query->rowCount();
+      $valuesSql[] = "$key = $value";
     }
+                 
+    $sql .= implode(', ', $valuesSql);                                             
+    $sql .= $this->generate_where_clause($constraints);
     
-    return new Response($result);    
+    $query = $this->server->moma->query($sql);
+    $result = $query->rowCount();
+    
+    return $result;    
   }
 
   function create($desc) {
@@ -125,7 +118,7 @@ class Collections {
     $sql .= "($columns) VALUES ($valuesClause)";
     
     $query = $this->server->moma->query($sql);
-    return new Response($query->insertId);    
+    return $query->insertId;    
   }
 }
 

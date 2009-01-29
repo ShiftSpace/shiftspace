@@ -70,8 +70,22 @@ class GlobalCalls {
   function collections() {
     $desc = json_decode($_POST['desc'], true);
     $collections = new Collections($this->server);
-    $method = $desc['action'];
-    return $collections->$method($desc);
+    $result = array();
+    
+    if (!isset($desc[0])) {
+      // this is an associative array meaning its not a bulk operation
+      $method = $desc['action'];
+      return new Response($collections->$method($desc));
+    }
+    else {
+      // bulk operation      
+      foreach ($desc as $operation) {
+        $method = $operation['action'];
+        $result[] = $collections->$method($operation);
+      }
+    }
+    
+    return new Response($result);
   }
 }
 
