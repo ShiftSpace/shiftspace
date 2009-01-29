@@ -91,6 +91,18 @@ var SSCollection = new Class({
   },
   
   
+  setDelegate: function(delegate)
+  {
+    this.__delegate = delegate;
+  },
+  
+  
+  delegate: function()
+  {
+    return this.__delegate;
+  },
+  
+  
   setLoadRefresh: function(val)
   {
     this.__loadOnRefresh = val;
@@ -135,6 +147,10 @@ var SSCollection = new Class({
       startIndex: options.startIndex,
       range: options.range
     };
+    
+    // allow the delegate to 
+    var delegate = this.delegate();
+    if(delegate && delegate.onTransact) payload = delegate.onTransact(this, payload);
     
     payload = this.cleanPayload(payload);
     
