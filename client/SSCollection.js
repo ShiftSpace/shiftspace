@@ -85,6 +85,9 @@ var SSCollection = new Class({
     
     // set the delegate
     if(this.options.delegate) this.setDelegate(this.options.delegate);
+    
+    // TODO: shouldn't allow plugins from element, need a way to prevent - David
+    this.setPlugins($H());
 
     // check if using array
     if(this.options.array)
@@ -114,6 +117,43 @@ var SSCollection = new Class({
     // a new collection
     this.setName(name);
     SSSetCollectionForName(this, name);
+  },
+  
+
+  setPlugins: function(newPlugins)
+  {
+    this.__plugins = newPlugins;
+  },
+  
+  
+  plugins: function()
+  {
+    return this.__plugins;
+  },
+  
+  
+  pluginsForAction: function(action)
+  {
+    return this.plugins().get(action);
+  },
+
+  
+  addPlugin: function(actionType, plugin)
+  {
+    var pluginsForAction = this.pluginsForAction(actionType);
+    if(pluginsForAction == null) this.plugins().set(actionType, []);
+    pluginsForAction.push(plugin);
+  },
+  
+  
+  removePlugin: function(actionType, plugin)
+  {
+    // erase a plugin
+    var pluginsForAction = this.pluginsForAction(actionType);
+    if(pluginsForAction)
+    {
+      this.plugins().set(actionType, pluginsForAction.erase(plugin));
+    }
   },
   
   
