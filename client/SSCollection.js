@@ -377,7 +377,6 @@ var SSCollection = new Class({
         this.onFailure('delete', data, index);
       }.bind(this)
     });
-    this.onDelete(null, index);
   },
   
   
