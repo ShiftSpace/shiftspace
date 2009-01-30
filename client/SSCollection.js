@@ -134,18 +134,14 @@ var SSCollection = new Class({
   
   pluginsForAction: function(action)
   {
-    return this.plugins().get(action);
+    if(!this.plugins().get(action)) this.plugins().set(action, []);
+    return $A(this.plugins().get(action));
   },
 
   
   addPlugin: function(actionType, plugin)
   {
     var pluginsForAction = this.pluginsForAction(actionType);
-    if(pluginsForAction == null) 
-    {
-      pluginsForAction = [];
-      this.plugins().set(actionType, pluginsForAction);
-    }
     pluginsForAction.push(plugin);
   },
   
@@ -154,10 +150,7 @@ var SSCollection = new Class({
   {
     // erase a plugin
     var pluginsForAction = this.pluginsForAction(actionType);
-    if(pluginsForAction)
-    {
-      this.plugins().set(actionType, pluginsForAction.erase(plugin));
-    }
+    this.plugins().set(actionType, pluginsForAction.erase(plugin));
   },
   
   
@@ -228,11 +221,19 @@ var SSCollection = new Class({
       desc: payload,
       onComplete: function(response) {
         var result = JSON.decode(response);
+        var data = result.data;
+        data = this.applyPlugins(action, data);
         // transform the data
-        options.onComplete(result.data);
-      },
+        options.onComplete(data);
+      }.bind(this),
       onFailure: options.onFailure
     });
+  },
+  
+  
+  applyPlugins: function(action, data)
+  {
+    return data;
   },
   
   
