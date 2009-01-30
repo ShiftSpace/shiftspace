@@ -46,6 +46,7 @@ class Collections {
   
   function read($desc) {
     extract($desc);
+    
     $sql = "SELECT $properties FROM $table";
     $sql .= $this->generate_join_clause($table);
     $sql .= $this->generate_where_clause($constraints);
@@ -66,8 +67,22 @@ class Collections {
       $sql .= " LIMIT $count OFFSET $startIndex";
     }
       
-    $rows = $this->server->moma->rows($sql);
-    return $rows;
+    if (strpos($sql, '%id') !== false) {
+      // special %id form
+      $result = array();
+      
+      foreach ($this->lastResult as $idRow) {
+        $newsql = str_replace("'%id'", $idRow->id, $sql);
+        $result[] = $this->server->moma->rows($newsql);
+      }
+      
+      return $result;
+    }  
+    else {
+      $rows = $this->server->moma->rows($sql);
+      $this->lastResult = $rows;
+      return $rows;
+    }
   }
 
   function delete($desc) {
