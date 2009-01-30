@@ -435,7 +435,8 @@ var SSCollection = new Class({
   
   updateConstraints: function(constraint, value)
   {
-    this.setConstraints($merge(this.constraints(), constraint.assoc(vaue)));
+    this.setConstraints($merge(this.constraints(), constraint.assoc(value)));
+    this.read();
   }
 
 });
