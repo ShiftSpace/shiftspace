@@ -12,6 +12,17 @@ String.implement({
   }
 });
 
+Hash.implement({
+  copy: function(value)
+  {
+    var copy = $H();
+    this.each(function(value, key) {
+      copy.set(value, key);
+    });
+    return copy;
+  }
+});
+
 // ==============
 // = Exceptions =
 // ==============
@@ -354,7 +365,6 @@ var SSCollection = new Class({
   
   'delete': function(index)
   {
-    /*
     this.transact('delete', {
       table: this.table(),
       constraints: $merge(this.constraints(), {
@@ -367,7 +377,6 @@ var SSCollection = new Class({
         this.onFailure('delete', data, index);
       }.bind(this)
     });
-    */
     this.onDelete(null, index);
   },
   
