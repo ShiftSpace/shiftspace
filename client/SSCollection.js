@@ -3,6 +3,15 @@
 // @package           ShiftSpaceCore
 // ==/Builder==
 
+String.implement({
+  assoc: function(value)
+  {
+    var result = {};
+    result[this] = value;
+    return result;
+  }
+});
+
 // ==============
 // = Exceptions =
 // ==============
@@ -421,6 +430,12 @@ var SSCollection = new Class({
   each: function(fn)
   {
     this.__array.each(fn);
+  },
+  
+  
+  updateConstraints: function(constraint, value)
+  {
+    this.setConstraints($merge(this.constraints(), constraint.assoc(vaue)));
   }
 
 });
