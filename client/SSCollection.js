@@ -141,7 +141,11 @@ var SSCollection = new Class({
   addPlugin: function(actionType, plugin)
   {
     var pluginsForAction = this.pluginsForAction(actionType);
-    if(pluginsForAction == null) this.plugins().set(actionType, []);
+    if(pluginsForAction == null) 
+    {
+      pluginsForAction = [];
+      this.plugins().set(actionType, pluginsForAction);
+    }
     pluginsForAction.push(plugin);
   },
   
@@ -222,7 +226,11 @@ var SSCollection = new Class({
     
     SSCollectionsCall({
       desc: payload,
-      onComplete: options.onComplete,
+      onComplete: function(response) {
+        var result = JSON.decode(response);
+        // transform the data
+        options.onComplete(result.data);
+      },
       onFailure: options.onFailure
     });
   },
@@ -446,22 +454,19 @@ var SSCollection = new Class({
   
   onRead: function(data)
   {
-    var obj = JSON.decode(data);
-    this.setArray(obj.data);
+    this.setArray(data);
     this.fireEvent('onLoad');
   },
   
   
   onCreate: function(data)
   {
-    var obj = JSON.decode(data);
-    this.fireEvent('onCreate', obj.data);
+    this.fireEvent('onCreate', data);
   },
   
   
   onDelete: function(data, index)
   {
-    var obj = JSON.decode(data);
     // synchronize internal
     this.remove(index);
     this.fireEvent('onDelete', index);
