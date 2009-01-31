@@ -303,7 +303,6 @@ var SSListView = new Class({
       var anim = (animate && delegate && delegate.animationFor && delegate.animationFor({action:'edit', listView:this, index:index})) || false;
       
       var editModeForCell = function() {
-        console.log('editModeForCell');
         this.setCellBeingEdited(index);
         this.cell().lock(this.cellNodeForIndex(index));
         this.cell().edit();
@@ -536,8 +535,6 @@ var SSListView = new Class({
   {
     var animate = (_animate == null && true) || _animate;
     var cellBeingEdited = this.cellBeingEdited();
-    
-    console.log('canLeaveEdit ' + index);
     
     var delegate = this.delegate();
     var canLeaveEdit = (delegate && delegate.canLeaveEdit && delegate.canLeaveEdit(index)) || true;
