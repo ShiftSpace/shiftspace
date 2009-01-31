@@ -143,6 +143,7 @@ var SSCollection = new Class({
   {
     var pluginsForAction = this.pluginsForAction(actionType);
     pluginsForAction.push(plugin);
+    this.plugins().set(actionType, pluginsForAction);
   },
   
   
@@ -233,7 +234,19 @@ var SSCollection = new Class({
   
   applyPlugins: function(action, data)
   {
-    return data;
+    var rdata = data;
+    var pluginsForAction = this.pluginsForAction(action);
+    
+    if(pluginsForAction.length == 0) return rdata;
+
+    var plugin = pluginsForAction.shift();
+    while(plugin)
+    {
+      rdata = plugin(rdata);
+      plugin = pluginsForAction.shift();
+    }
+    
+    return rdata;
   },
   
   
