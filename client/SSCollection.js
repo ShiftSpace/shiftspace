@@ -334,6 +334,14 @@ var SSCollection = new Class({
   },
   
   
+  getColumn: function(col)
+  {
+    return this.getArray().map(function(x) {
+      return x[col];
+    });
+  },
+  
+  
   get: function(index)
   {
     return this.__array[index];
