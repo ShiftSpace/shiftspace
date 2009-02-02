@@ -47,6 +47,8 @@ var SSListView = new Class({
     
     this.__cellBeingEdited = -1;
     
+    if(this.options.filter) this.setFilter(this.options.filter);
+    
     if(this.options.collection)
     {
       this.useCollection(this.options.collection);
@@ -58,6 +60,42 @@ var SSListView = new Class({
     
     this.initSortables();
     this.attachEvents();
+  },
+  
+  
+  setFilter: function(fn)
+  {
+    this.__filter = fn;
+  },
+  
+  
+  getFilter: function()
+  {
+    return this.__filter;
+  },
+  
+  
+  filter: function(data)
+  {
+    var filterFn = this.getFilter();
+    
+    if(filterFn)
+    {
+      return filterFn(data);
+    }
+    return false;
+  },
+  
+  
+  setFilter: function(fn)
+  {
+    this.__filter = fn;
+  },
+  
+  
+  filter: function()
+  {
+    return this.__filter;
   },
   
   
@@ -272,8 +310,9 @@ var SSListView = new Class({
   },
   
   
-  edit: function(index)
+  edit: function(index, _animate)
   {
+    var animate = (_animate == null && true) || _animate;
     this.boundsCheck(index);
     
     var delegate = this.delegate();
@@ -281,9 +320,13 @@ var SSListView = new Class({
     
     if(canEdit)
     {
-      if(!this.options.multipleSelection && this.cellBeingEdited() != -1) this.cancelEdit();
+      if(!this.options.multipleSelection && this.cellBeingEdited() != -1)
+      {
+        animate = false;
+        this.cancelEdit(this.cellBeingEdited(), false);
+      }
       
-      var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'edit', listView:this, index:index})) || false;
+      var anim = (animate && delegate && delegate.animationFor && delegate.animationFor({action:'edit', listView:this, index:index})) || false;
       
       var editModeForCell = function() {
         this.setCellBeingEdited(index);
@@ -294,7 +337,11 @@ var SSListView = new Class({
       
       if(anim)
       {
-        anim().chain(editModeForCell);
+        var animData = anim();
+        animData.animation().chain(function() {
+          animData.cleanup();
+          editModeForCell();
+        });
       }
       else
       {
@@ -447,6 +494,8 @@ var SSListView = new Class({
     this.boundsCheck(index);
 
     var delegate = this.delegate();
+    
+    // FIXME: this logic is broken - David
     var canRemove = (delegate && delegate.canRemove && delegate.canRemove(index)) || true;
 
     if(canRemove)
@@ -470,7 +519,6 @@ var SSListView = new Class({
     var delegate = this.delegate();
     var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
     
-    
     if(anim)
     {
       anim().chain(this.refresh.bind(this));
@@ -490,7 +538,12 @@ var SSListView = new Class({
   
   removeObject: function(sender)
   {
-    if(confirm("Are you sure that you want to delete this artwork? There is no undo."))
+    var delegate = this.delegate();
+    
+    var canDelete = true;
+    if(delegate && delegate.canDelete) canDelete = delegate.canDelete({listView:this, sender:sender});
+    
+    if(canDelete)
     {
       this.remove(this.indexOf(sender));
     }
@@ -504,6 +557,42 @@ var SSListView = new Class({
   },
   
   
+  hideItem: function(index, animate)
+  {
+    var animate = (_animate == null && true) || _animate;
+    this.boundsCheck(index);
+    
+    var delegate = this.delegate();
+    var canHide = (delegate && delegate.canHide && delegate.canHide(index)) || true;
+    
+    if(canHide)
+    { 
+      var anim = (animate && delegate && delegate.animationFor && delegate.animationFor({action:'hide', listView:this, index:index})) || false;
+      
+      if(anim)
+      {
+        var animData = anim();
+        animData.animation().chain(function() {
+          animData.cleanup();
+          this.refresh();
+        });
+      }
+      else
+      {
+        this.refresh();
+      }
+    }
+  },
+
+
+  hideObject: function(sender)
+  {
+    var index = this.indexOf(sender);
+    console.log('hideObject');
+    //this.hideItem(index);
+  },
+  
+  
   checkForUnsavedChanges: function(properties)
   {
     // grab the old values
@@ -511,20 +600,46 @@ var SSListView = new Class({
   },
   
   
-  cancelEdit: function()
+  cancelEdit: function(index, _animate)
   {
+    var animate = (_animate == null && true) || _animate;
     var cellBeingEdited = this.cellBeingEdited();
     
-    console.log('cancelEdit');
-    
+    var delegate = this.delegate();
+    var canLeaveEdit = (delegate && delegate.canLeaveEdit && delegate.canLeaveEdit(index)) || true;
+
     // check for unsaved changes
-    if(cellBeingEdited != -1)
+    if(cellBeingEdited != -1 && canLeaveEdit)
     {
-      this.cell().lock(this.cellNodeForIndex(cellBeingEdited));
-      this.cell().leaveEdit();
-      this.cell().unlock();
-      this.setCellBeingEdited(-1);
+      var anim = (animate && delegate && delegate.animationFor && delegate.animationFor({action:'leaveEdit', listView:this, index:index})) || false;
+      
+      var leaveEditModeForCell = function() {
+        this.cell().lock(this.cellNodeForIndex(cellBeingEdited));
+        this.cell().leaveEdit();
+        this.cell().unlock();
+        this.setCellBeingEdited(-1);
+      }.bind(this);
+      
+      if(anim)
+      {
+        var animData = anim();
+        animData.animation().chain(function() {
+          animData.cleanup();
+          leaveEditModeForCell();
+        });
+      }
+      else
+      {
+        leaveEditModeForCell();
+      }
     }
+  },
+  
+  
+  cancelEditObject: function(sender)
+  {
+    var index = this.indexOf(sender);
+    this.cancelEdit(index);
   },
   
   
@@ -558,7 +673,9 @@ var SSListView = new Class({
 
       this.element.empty();
       this.data().each(function(x) {
-        this.element.grab(this.cell().cloneWithData(x));
+        // TODO: make sure it pass the filter
+        var filter = this.filter(x);
+        if(!filter) this.element.grab(this.cell().cloneWithData(x));
       }.bind(this));
       
       this.initSortables();

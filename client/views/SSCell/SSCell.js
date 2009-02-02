@@ -372,10 +372,11 @@ var SSCell = new Class({
   {
     var el = this.lockedElement();
     
-    console.log('leave edit!');
-    
     // let the delegate know the edits were committed
     el.removeClass('SSIsBeingEdited');
+    el.setStyles({
+      width: ''
+    });
     el.getElement('.SSEditView').removeClass('SSActive');
   }
 

@@ -3,6 +3,28 @@
 // @package           ShiftSpaceCore
 // ==/Builder==
 
+String.implement({
+  assoc: function(value)
+  {
+    var result = {};
+    result[this] = value;
+    return result;
+  }
+});
+
+/*
+Hash.implement({
+  copy: function(value)
+  {
+    var copy = $H();
+    this.each(function(value, key) {
+      copy.set(value, key);
+    });
+    return copy;
+  }
+});
+*/
+
 // ==============
 // = Exceptions =
 // ==============
@@ -65,6 +87,9 @@ var SSCollection = new Class({
     
     // set the delegate
     if(this.options.delegate) this.setDelegate(this.options.delegate);
+    
+    // TODO: shouldn't allow plugins from element, need a way to prevent - David
+    this.setPlugins($H());
 
     // check if using array
     if(this.options.array)
@@ -94,6 +119,41 @@ var SSCollection = new Class({
     // a new collection
     this.setName(name);
     SSSetCollectionForName(this, name);
+  },
+  
+
+  setPlugins: function(newPlugins)
+  {
+    this.__plugins = newPlugins;
+  },
+  
+  
+  plugins: function()
+  {
+    return this.__plugins;
+  },
+  
+  
+  pluginsForAction: function(action)
+  {
+    if(!this.plugins().get(action)) this.plugins().set(action, []);
+    return $A(this.plugins().get(action));
+  },
+
+  
+  addPlugin: function(actionType, plugin)
+  {
+    var pluginsForAction = this.pluginsForAction(actionType);
+    pluginsForAction.push(plugin);
+    this.plugins().set(actionType, pluginsForAction);
+  },
+  
+  
+  removePlugin: function(actionType, plugin)
+  {
+    // erase a plugin
+    var pluginsForAction = this.pluginsForAction(actionType);
+    this.plugins().set(actionType, pluginsForAction.erase(plugin));
   },
   
   
@@ -133,11 +193,21 @@ var SSCollection = new Class({
   },
   
   
-  cleanPayload: function(payload)
+  cleanObject: function(anObject)
   {
-    return $H(payload).filter(function(value, key) {
+    return $H(anObject).filter(function(value, key) {
       return value != null;
     }).getClean();
+  },
+  
+  
+  cleanPayload: function(payload)
+  {
+    if($type(payload) == 'array')
+    {
+      return payload.map(this.cleanObject);
+    }
+    return this.cleanObject(payload);
   },
   
   
@@ -162,9 +232,33 @@ var SSCollection = new Class({
     
     SSCollectionsCall({
       desc: payload,
-      onComplete: options.onComplete,
+      onComplete: function(response) {
+        var result = JSON.decode(response);
+        var data = result.data;
+        data = this.applyPlugins(action, data);
+        // transform the data
+        options.onComplete(data);
+      }.bind(this),
       onFailure: options.onFailure
     });
+  },
+  
+  
+  applyPlugins: function(action, data)
+  {
+    var rdata = data;
+    var pluginsForAction = this.pluginsForAction(action);
+    
+    if(pluginsForAction.length == 0) return rdata;
+
+    var plugin = pluginsForAction.shift();
+    while(plugin)
+    {
+      rdata = plugin(rdata);
+      plugin = pluginsForAction.shift();
+    }
+    
+    return rdata;
   },
   
   
@@ -345,7 +439,6 @@ var SSCollection = new Class({
   
   'delete': function(index)
   {
-    /*
     this.transact('delete', {
       table: this.table(),
       constraints: $merge(this.constraints(), {
@@ -358,8 +451,6 @@ var SSCollection = new Class({
         this.onFailure('delete', data, index);
       }.bind(this)
     });
-    */
-    this.onDelete(null, index);
   },
   
   
@@ -389,22 +480,19 @@ var SSCollection = new Class({
   
   onRead: function(data)
   {
-    var obj = JSON.decode(data);
-    this.setArray(obj.data);
+    this.setArray(data);
     this.fireEvent('onLoad');
   },
   
   
   onCreate: function(data)
   {
-    var obj = JSON.decode(data);
-    this.fireEvent('onCreate', obj.data);
+    this.fireEvent('onCreate', data);
   },
   
   
   onDelete: function(data, index)
   {
-    var obj = JSON.decode(data);
     // synchronize internal
     this.remove(index);
     this.fireEvent('onDelete', index);
@@ -421,6 +509,13 @@ var SSCollection = new Class({
   each: function(fn)
   {
     this.__array.each(fn);
+  },
+  
+  
+  updateConstraints: function(constraint, value)
+  {
+    this.setConstraints($merge(this.constraints(), constraint.assoc(value)));
+    this.read();
   }
 
 });
