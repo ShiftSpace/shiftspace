@@ -664,7 +664,12 @@ var SSListView = new Class({
       this.data().each(function(x) {
         // TODO: make sure it pass the filter
         var filter = this.filter(x);
-        if(!filter) this.element.grab(this.cell().cloneWithData(x));
+        var newCell = this.cell().cloneWithData(x);
+        
+        // hide it
+        if(filter) newCell.addClass('SSDisplayNone');
+        
+        this.element.grab(newCell);
       }.bind(this));
       
       this.initSortables();

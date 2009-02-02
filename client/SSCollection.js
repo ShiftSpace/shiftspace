@@ -438,7 +438,6 @@ var SSCollection = new Class({
   {
     this.transact('create', {
       table: this.table(),
-      contraints: this.contraints(),
       values: data,
       onComplete: this.onCreate.bind(this)
     });
