@@ -87,18 +87,6 @@ var SSListView = new Class({
   },
   
   
-  setFilter: function(fn)
-  {
-    this.__filter = fn;
-  },
-  
-  
-  filter: function()
-  {
-    return this.__filter;
-  },
-  
-  
   setHasCollection: function(val)
   {
     this.__hasCollection = val;
@@ -557,7 +545,7 @@ var SSListView = new Class({
   },
   
   
-  hideItem: function(index, animate)
+  hideItem: function(index, _animate)
   {
     var animate = (_animate == null && true) || _animate;
     this.boundsCheck(index);
@@ -573,9 +561,9 @@ var SSListView = new Class({
       {
         var animData = anim();
         animData.animation().chain(function() {
-          animData.cleanup();
+          if(animData.cleanup) animData.cleanup();
           this.refresh();
-        });
+        }.bind(this));
       }
       else
       {
@@ -589,7 +577,7 @@ var SSListView = new Class({
   {
     var index = this.indexOf(sender);
     console.log('hideObject');
-    //this.hideItem(index);
+    this.hideItem(index);
   },
   
   
@@ -624,7 +612,7 @@ var SSListView = new Class({
       {
         var animData = anim();
         animData.animation().chain(function() {
-          animData.cleanup();
+          if(animData.cleanup) animData.cleanup();
           leaveEditModeForCell();
         });
       }
