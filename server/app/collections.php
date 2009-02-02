@@ -66,13 +66,15 @@ class Collections {
       extract($range);
       $sql .= " LIMIT $count OFFSET $startIndex";
     }
-      
-    if (strpos($sql, '%id') !== false) {
-      // special %id form
-      $result = array();
+
+    if (($pos = strpos($sql, '%')) !== false) {
+      // special %column% form
+      $endpos = strpos($sql, '%', $pos + 1);
+      $columnIdent = substr($sql, $pos, $endpos + 1 - $pos);
+      $column = substr($columnIdent, 1, -1);
       
       foreach ($this->lastResult as $idRow) {
-        $newsql = str_replace("'%id'", $idRow->id, $sql);
+        $newsql = str_replace("'$columnIdent'", $idRow->$column, $sql);
         $result[] = $this->server->moma->rows($newsql);
       }
       
