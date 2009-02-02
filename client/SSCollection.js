@@ -12,6 +12,7 @@ String.implement({
   }
 });
 
+/*
 Hash.implement({
   copy: function(value)
   {
@@ -22,6 +23,7 @@ Hash.implement({
     return copy;
   }
 });
+*/
 
 // ==============
 // = Exceptions =
@@ -191,11 +193,21 @@ var SSCollection = new Class({
   },
   
   
-  cleanPayload: function(payload)
+  cleanObject: function(anObject)
   {
-    return $H(payload).filter(function(value, key) {
+    return $H(anObject).filter(function(value, key) {
       return value != null;
     }).getClean();
+  },
+  
+  
+  cleanPayload: function(payload)
+  {
+    if($type(payload) == 'array')
+    {
+      return payload.map(this.cleanObject);
+    }
+    return this.cleanObject(payload);
   },
   
   

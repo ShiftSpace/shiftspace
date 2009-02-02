@@ -494,6 +494,8 @@ var SSListView = new Class({
     this.boundsCheck(index);
 
     var delegate = this.delegate();
+    
+    // FIXME: this logic is broken - David
     var canRemove = (delegate && delegate.canRemove && delegate.canRemove(index)) || true;
 
     if(canRemove)
@@ -536,7 +538,12 @@ var SSListView = new Class({
   
   removeObject: function(sender)
   {
-    if(confirm("Are you sure that you want to delete this artwork? There is no undo."))
+    var delegate = this.delegate();
+    
+    var canDelete = true;
+    if(delegate && delegate.canDelete) canDelete = delegate.canDelete({listView:this, sender:sender});
+    
+    if(canDelete)
     {
       this.remove(this.indexOf(sender));
     }
@@ -600,7 +607,7 @@ var SSListView = new Class({
     
     var delegate = this.delegate();
     var canLeaveEdit = (delegate && delegate.canLeaveEdit && delegate.canLeaveEdit(index)) || true;
-    
+
     // check for unsaved changes
     if(cellBeingEdited != -1 && canLeaveEdit)
     {
