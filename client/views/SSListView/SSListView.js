@@ -47,6 +47,8 @@ var SSListView = new Class({
     
     this.__cellBeingEdited = -1;
     
+    if(this.options.filter) this.setFilter(this.options.filter);
+    
     if(this.options.collection)
     {
       this.useCollection(this.options.collection);
@@ -58,6 +60,30 @@ var SSListView = new Class({
     
     this.initSortables();
     this.attachEvents();
+  },
+  
+  
+  setFilter: function(fn)
+  {
+    this.__filter = fn;
+  },
+  
+  
+  getFilter: function()
+  {
+    return this.__filter;
+  },
+  
+  
+  filter: function(data)
+  {
+    var filterFn = this.getFilter();
+    
+    if(filterFn)
+    {
+      return filterFn(data);
+    }
+    return false;
   },
   
   
@@ -524,6 +550,42 @@ var SSListView = new Class({
   },
   
   
+  hideItem: function(index, animate)
+  {
+    var animate = (_animate == null && true) || _animate;
+    this.boundsCheck(index);
+    
+    var delegate = this.delegate();
+    var canHide = (delegate && delegate.canHide && delegate.canHide(index)) || true;
+    
+    if(canHide)
+    { 
+      var anim = (animate && delegate && delegate.animationFor && delegate.animationFor({action:'hide', listView:this, index:index})) || false;
+      
+      if(anim)
+      {
+        var animData = anim();
+        animData.animation().chain(function() {
+          animData.cleanup();
+          this.refresh();
+        });
+      }
+      else
+      {
+        this.refresh();
+      }
+    }
+  },
+
+
+  hideObject: function(sender)
+  {
+    var index = this.indexOf(sender);
+    console.log('hideObject');
+    //this.hideItem(index);
+  },
+  
+  
   checkForUnsavedChanges: function(properties)
   {
     // grab the old values
@@ -604,7 +666,9 @@ var SSListView = new Class({
 
       this.element.empty();
       this.data().each(function(x) {
-        this.element.grab(this.cell().cloneWithData(x));
+        // TODO: make sure it pass the filter
+        var filter = this.filter(x);
+        if(!filter) this.element.grab(this.cell().cloneWithData(x));
       }.bind(this));
       
       this.initSortables();
