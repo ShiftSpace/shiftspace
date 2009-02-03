@@ -463,6 +463,17 @@ var SSCollection = new Class({
   },
   
   
+  indexWhere: function(fn, properties)
+  {
+    var ary = this.getArray();
+    for(var i = 0, len = ary.length; i < len; i++)
+    {
+      if(fn(ary[i])) return i;
+    }
+    return -1;
+  },
+  
+  
   'delete': function(index)
   {
     this.transact('delete', {
