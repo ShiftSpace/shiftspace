@@ -12,7 +12,7 @@ String.implement({
   }
 });
 
-/*
+
 Hash.implement({
   copy: function(value)
   {
@@ -23,7 +23,18 @@ Hash.implement({
     return copy;
   }
 });
-*/
+
+
+Hash.implement({
+  choose: function(_properties)
+  {
+    var properties = $splat(_properties);
+    return this.filter(function(value, key) {
+      return properties.contains(key);
+    });
+  }
+});
+
 
 // ==============
 // = Exceptions =
@@ -440,6 +451,14 @@ var SSCollection = new Class({
       table: this.table(),
       values: data,
       onComplete: this.onCreate.bind(this)
+    });
+  },
+  
+  
+  query: function(queryFn, properties)
+  {
+    return this.getArray().filter(queryFn).map(function(obj) {
+      return $H(obj).choose(properties).getClean();
     });
   },
   
