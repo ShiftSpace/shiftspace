@@ -81,6 +81,7 @@ var SSListView = new Class({
     
     if(filterFn)
     {
+      console.log('filter ' + JSON.encode(data));
       return filterFn(data);
     }
     return false;
