@@ -65,7 +65,6 @@ var SSListView = new Class({
   
   setFilter: function(fn)
   {
-    console.log('setFilter!');
     this.__filter = fn;
   },
   
