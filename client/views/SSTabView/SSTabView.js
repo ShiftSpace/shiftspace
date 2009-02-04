@@ -44,7 +44,15 @@ var SSTabView = new Class({
     //SSLog('SSTabView initialized');
   },
   
-  
+  /*
+    Function: eventDispatch (private)
+      Selects a tab on button hit.  If a tab    
+    
+    Paremeters:
+      evt - A DOM node event 
+
+    
+  */
   eventDispatch: function(evt)
   {
     //SSLog('eventDispatch');
@@ -64,6 +72,21 @@ var SSTabView = new Class({
     }
   },
   
+  /*
+    Function: indexOfTabByName
+      Takes the tab's class name and returns its index
+    
+    Pararmeter:
+      name - class name of tab
+    
+    Return:
+      Returns the index of a tab node if a contentView or tabPane name exists
+      If a tab name doesn't exist, return -1
+    
+    See Also: 
+      indexOfTab
+  
+  */
   
   indexOfTabByName: function(name)
   {
@@ -87,37 +110,110 @@ var SSTabView = new Class({
     return -1;
   },
   
-  
+  /*
+    Funtion: indexOfTab
+      Takes the class name of a tab and returns its nodes index 
+    
+    Parameters:
+      tabButton -  SSButton class name of tab button
+    
+    Returns:
+      Index node of tab 
+      
+    See Also:
+      indexOfTabByName 
+  */
   indexOfTab: function(tabButton)
   {
     return this.indexOfNode(this.element.getElements('> .SSControlView > .SSButton'), tabButton);
   },
   
-  
+  /*
+    Funtion: tabButtonForIndex
+      Takes the index of tab and returns its DOM node
+    
+    Parameters:
+      idx - index of tab button 
+    
+    Returns:
+      DOM node of tab
+      
+    See Also: 
+      tabButtonForName
+      
+  */
   tabButtonForIndex: function(idx)
   {
     return this.element.getElements('> .SSControlView > .SSButton')[idx];
   },
   
-  
+  /*
+    Funtion: tabButtonForName
+      Takes the class name of tab and returns its DOM node 
+    
+    Parameters:
+      name - id name of tab button 
+    
+    Returns:
+      DOM node of tab
+      
+    See Also: 
+      tabButtonForIndex
+      
+  */
   tabButtonForName: function(name)
   {
     return this.element.getElement('> .SSControlView #'+name);
   },
   
-  
+  /*
+    Funtion: indexOfContentView
+      Takes the class name of contentView Div
+    
+    Parameters:
+      contentView - class name of contentView Div
+    
+    Returns:
+      Index of contentView Div
+      
+    See Also: 
+      indexOfTab
+      
+  */
   indexOfContentView: function(contentView)
   {
     return this.indexOfNode(this.element.getElements('> .SSContentView > .SSTabPane'), contentView);
   },
   
-  
+  /*
+    Funtion: contentViewForIndex
+      Takes the index of a SSContentView Div and returns its DOM node
+    
+    Parameters:
+      idx - index of Tab
+    
+    Returns:
+      DOM node of SSContentView
+      
+    See Also: 
+      indexOfContentView
+      
+  */
   contentViewForIndex: function(idx)
   {
     return this.element.getElements('> .SSContentView > .SSTabPane')[idx];
   },
   
-
+  /*
+    Funtion: selectTabByName
+      Selects a tab by its name
+      
+    Parameters:
+      name - class name of Tab 
+      
+    See Also: 
+      selectTab
+  */
   selectTabByName: function(name)
   {
     this.selectTab(this.indexOfTabByName(name));
