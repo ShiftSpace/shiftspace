@@ -65,6 +65,7 @@ var SSListView = new Class({
   
   setFilter: function(fn)
   {
+    SSLogForce("setFilter!");
     this.__filter = fn;
   },
   
@@ -562,6 +563,7 @@ var SSListView = new Class({
         var animData = anim();
         animData.animation().chain(function() {
           if(animData.cleanup) animData.cleanup();
+          // masking is preventing filtering from working
           this.refresh();
         }.bind(this));
       }
