@@ -44,8 +44,27 @@ class Collections {
     return $sql;    
   }
   
+  function generate_all_properties($table) {
+    $joinData = $this->server->moma->joinData[$table];
+    
+    if (empty($joinData))
+      return '*';
+    else {
+      foreach ($joinData as $column => $joins) {
+        $sql .= $joins[0].'.*, ';
+      }
+
+      $sql .= "$table.*";
+      
+      return $sql;      
+    }
+  }
+  
   function read($desc) {
     extract($desc);
+  
+    if ($properties == '*')
+      $properties = $this->generate_all_properties($table);
     
     $sql = "SELECT $properties FROM $table";
     $sql .= $this->generate_join_clause($table);
