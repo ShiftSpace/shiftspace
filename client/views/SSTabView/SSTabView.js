@@ -219,7 +219,7 @@ var SSTabView = new Class({
     this.selectTab(this.indexOfTabByName(name));
   },
   
-  
+  /* */
   selectedContentView: function()
   {
     // grab the DOM node
