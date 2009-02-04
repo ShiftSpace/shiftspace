@@ -12,7 +12,7 @@ String.implement({
   }
 });
 
-/*
+
 Hash.implement({
   copy: function(value)
   {
@@ -23,7 +23,18 @@ Hash.implement({
     return copy;
   }
 });
-*/
+
+
+Hash.implement({
+  choose: function(_properties)
+  {
+    var properties = $splat(_properties);
+    return this.filter(function(value, key) {
+      return properties.contains(key);
+    });
+  }
+});
+
 
 // ==============
 // = Exceptions =
@@ -334,6 +345,14 @@ var SSCollection = new Class({
   },
   
   
+  getColumn: function(col)
+  {
+    return this.getArray().map(function(x) {
+      return x[col];
+    });
+  },
+  
+  
   get: function(index)
   {
     return this.__array[index];
@@ -430,10 +449,28 @@ var SSCollection = new Class({
   {
     this.transact('create', {
       table: this.table(),
-      contraints: this.contraints(),
       values: data,
       onComplete: this.onCreate.bind(this)
     });
+  },
+  
+  
+  query: function(queryFn, properties)
+  {
+    return this.getArray().filter(queryFn).map(function(obj) {
+      return $H(obj).choose(properties).getClean();
+    });
+  },
+  
+  
+  indexWhere: function(fn, properties)
+  {
+    var ary = this.getArray();
+    for(var i = 0, len = ary.length; i < len; i++)
+    {
+      if(fn(ary[i])) return i;
+    }
+    return -1;
   },
   
   

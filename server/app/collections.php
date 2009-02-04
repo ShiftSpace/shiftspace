@@ -41,7 +41,7 @@ class Collections {
     if ($sql == '' && $careful)
       return " ITS_NOT_A_GOOD_IDEA_TO_DELETE_YOUR_ENTIRE_TABLE";
 
-    return $sql;    
+    return $sql;
   }
   
   function generate_all_properties($table) {
