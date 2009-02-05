@@ -495,7 +495,7 @@ var SSCollection = new Class({
   {
     this.transact('update', {
       table: this.table(),
-      values: data, 
+      values: data,
       constraints: $merge(this.constraints(), {
         id: this.get(index).id
       }),

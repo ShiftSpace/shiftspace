@@ -47,6 +47,8 @@ var SSListView = new Class({
     
     this.__cellBeingEdited = -1;
     
+    this.setSuppressRefresh(false);
+    
     if(this.options.filter) this.setFilter(this.options.filter);
     
     if(this.options.collection)
@@ -81,7 +83,6 @@ var SSListView = new Class({
     
     if(filterFn)
     {
-      console.log('filter ' + JSON.encode(data));
       return filterFn(data);
     }
     return false;
@@ -739,8 +740,20 @@ var SSListView = new Class({
     
     coll.addEvent('onLoad', function() {
       this.setIsDirty(true);
-      if(this.isVisible()) this.refresh();
+      if(this.isVisible() && !this.suppressRefresh()) this.refresh();
     }.bind(this));
+  },
+  
+  
+  setSuppressRefresh: function(val)
+  {
+    this.__suppressRefresh = val;
+  },
+  
+  
+  suppressRefresh: function(val)
+  {
+    return this.__suppressRefresh;
   },
   
   
