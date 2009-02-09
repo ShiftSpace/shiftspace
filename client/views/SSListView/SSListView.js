@@ -564,8 +564,7 @@ var SSListView = new Class({
         var animData = anim();
         animData.animation().chain(function() {
           if(animData.cleanup) animData.cleanup();
-          // masking is preventing filtering from working
-          this.refresh();
+          if(!this.suppressRefresh()) this.refresh();
         }.bind(this));
       }
       else
