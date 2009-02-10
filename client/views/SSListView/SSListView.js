@@ -563,8 +563,8 @@ var SSListView = new Class({
       {
         var animData = anim();
         animData.animation().chain(function() {
-          if(animData.cleanup) animData.cleanup();
           if(!this.suppressRefresh()) this.refresh();
+          if(animData.cleanup) animData.cleanup();
         }.bind(this));
       }
       else
@@ -578,7 +578,6 @@ var SSListView = new Class({
   hideObject: function(sender)
   {
     var index = this.indexOf(sender);
-    console.log('hideObject');
     this.hideItem(index);
   },
   
@@ -643,11 +642,12 @@ var SSListView = new Class({
   },
   
   
-  refresh: function()
+  refresh: function(force)
   {
     this.parent();
     
-    if(!this.isVisible()) return;
+    // don't refresh if we're visible
+    if(!this.isVisible() && !force) return;
     
     // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
@@ -660,7 +660,7 @@ var SSListView = new Class({
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
         this.element.setStyle('width', (this.options.cellSize.x*len)+modifer);
       }
-
+      
       this.element.empty();
       this.data().each(function(x) {
         // TODO: make sure it pass the filter
