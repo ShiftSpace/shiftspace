@@ -434,13 +434,16 @@ var SSCollection = new Class({
   },
   
   
-  read: function()
+  read: function(callback)
   {
     this.transact('read', {
       table: this.table(),
       constraints: this.constraints(),
       properties: this.properties(),
-      onComplete: this.onRead.bind(this)
+      onComplete: function(data) {
+        this.onRead(data);
+        if(callback) callback();
+      }.bind(this)
     });
   },
   
