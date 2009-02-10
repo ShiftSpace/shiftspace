@@ -536,6 +536,7 @@ var SSListView = new Class({
     if(canDelete)
     {
       this.remove(this.indexOf(sender));
+      this.fireEvent('onRemove');
     }
   },
   
