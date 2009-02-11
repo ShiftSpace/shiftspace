@@ -442,7 +442,22 @@ var SSCollection = new Class({
       properties: this.properties(),
       onComplete: function(data) {
         this.onRead(data);
-        if(callback) callback();
+        if(callback) callback(data);
+      }.bind(this)
+    });
+  },
+  
+  
+  readIndex: function(index, constraint, callback)
+  {
+    var theConstraint = {};
+    theConstraint[constraint] = this.get(index)[constraint];
+    this.transact('read', {
+      table: this.table(),
+      constraints: $merge(this.constraints(), theConstraint),
+      properties: this.properties(),
+      onComplete: function(data) {
+        if(callback) callback(data);
       }.bind(this)
     });
   },

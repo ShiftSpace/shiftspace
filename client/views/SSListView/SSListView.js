@@ -389,23 +389,24 @@ var SSListView = new Class({
   },
   
 
-  update: function(cellData, index)
+  update: function(cellData, index, _noArrayUpdate)
   {
     this.boundsCheck(index);
-
+    
+    var noArrayUpdate = _noArrayUpdate || false;
     var delegate = this.delegate();
     var canUpdate = (delegate && delegate.canUpdate && delegate.canUpdate(index)) || true;
-
+    
     if(canUpdate)
     {
       if(this.hasCollection())
       {
-        this.getData().update(cellData, index);
+        if(!noArrayUpdate) this.getData().update(cellData, index);
         return;
       }
       else
       {
-        this.__update__(cellData, index);
+        if(!noArrayUpdate) this.__update__(cellData, index);
         this.onUpdate(index);
       }
     }
