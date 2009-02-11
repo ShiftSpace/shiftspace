@@ -419,7 +419,17 @@ var SSListView = new Class({
     this.update(this.cell().getAllData(), index);
   },
   
-
+  
+  updateCellView: function(cellData, index)
+  {
+    console.log(cellData);
+    console.log(index);
+    this.cell().lock(this.cellNodeForIndex(index));
+    this.cell().setData(cellData);
+    this.cell().unlock();
+  },
+  
+  
   __update__: function(cellData, index)
   {
     var oldData =this.data()[index];

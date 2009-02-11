@@ -457,7 +457,7 @@ var SSCollection = new Class({
       constraints: $merge(this.constraints(), theConstraint),
       properties: this.properties(),
       onComplete: function(data) {
-        if(callback) callback(data);
+        if(callback && data.length > 0) callback(data[0]);
       }.bind(this)
     });
   },
