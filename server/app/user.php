@@ -36,7 +36,7 @@ class User {
     $username = $_POST['username'];
     $password = md5($_POST['password']);
 
-    $user = $this->server->db->row($this->sql['login'], array(
+    $user = $this->server->moma->row($this->sql['login'], array(
       'username' => $username,
       'password' => $password
     ));
@@ -67,11 +67,11 @@ class User {
     if (!preg_match('#^[a-zA-Z0-9_.]+$#', $username))
       throw new Error("Oops, please enter a username composed letters, numbers, periods or underscores.");
 
-    $userexists = $this->server->db->value($this->sql['checkuser'], array('username' => $username));
+    $userexists = $this->server->moma->value($this->sql['checkuser'], array('username' => $username));
     if ($userexists)
       throw new Error('Sorry, that username has already been taken. Please choose again.');
 
-    $emailexists = $this->server->db->value($this->sql['checkemail'], array('email' => $email));
+    $emailexists = $this->server->moma->value($this->sql['checkemail'], array('email' => $email));
     if ($emailexists)
       throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
 
@@ -83,8 +83,10 @@ class User {
       'email'         => $email
     ));
     
-    $this->server->db->save($user);
+    $this->server->moma->save($user);
     $this->server->user = $user;
+    
+    return new Response($user);
   }
 }
 
