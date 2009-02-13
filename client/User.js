@@ -14,6 +14,19 @@ var ShiftSpaceUserClass = new Class({
   
   Implements: Events,
   
+  
+  setId: function(id)
+  {
+    this.__userId = id;
+  },
+  
+  
+  getId: function()
+  {
+    return this.__userId;
+  },
+  
+  
   setUsername: function(_username)
   {
     var fireLogIn = (username == false) && (_username != null);
@@ -74,21 +87,15 @@ var ShiftSpaceUserClass = new Class({
     var callback = _callback;
     
     SSServerCall('user.login', credentials, function(json) {
-      if (json.status) 
+      if(json.data) 
       {
-        SSLog('//////////////////////////////////////////////////////////');
-        SSLog(json);
-        // set username
-        username = credentials.username;
-        // set email
-        this.setEmail(json.email);
-        callback(json);
-        this.fireEvent('onUserLogin');
-      } 
-      else 
-      {
-        if(callback) callback(json);
+        var data = json.data;
+        this.setUsername(data.username);
+        this.setId(data.id);
+        this.setEmail(data.email);
+        this.fireEvent('onUserLogin', data);
       }
+      if(callback) callback(json);
     }.bind(this));
   },
   
@@ -96,7 +103,7 @@ var ShiftSpaceUserClass = new Class({
     Function: logout (private)
       Logout a user. Will probably be moved into ShiftSpace.js.
   */
-  logout: function() 
+  logout: function()
   {
     username = false;
     SSSetValue('username', '');
@@ -108,20 +115,19 @@ var ShiftSpaceUserClass = new Class({
     Function: join (private)
       Join a new user.  Will probably be moved into ShiftSpace.js.
   */
-  join: function(userInfo, callback) 
+  join: function(userInfo, _callback) 
   {
-    
+    var callback = _callback;
     SSServerCall('user.join', userInfo, function(json) {
-      if (json.status) 
+      if (json.data) 
       {
-        username = userInfo.username;
-        SSSetValue('username', userInfo.username);
-        callback(json);
+        var data = json.data;
+        this.setUsername(data.username);
+        this.setId(data.id);
+        this.setEmail(data.email);
+        this.fireEvent('onUserJoin', data);
       } 
-      else 
-      {
-        callback(json);
-      }
+      if(callback) callback(json);
     }.bind(this));
   },
   
