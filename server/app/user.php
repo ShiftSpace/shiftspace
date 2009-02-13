@@ -89,6 +89,10 @@ class User {
     
     return new Response($user);
   }
+  
+  public function query() {
+    return new Response($this->server->user);
+  }
 }
 
 ?>

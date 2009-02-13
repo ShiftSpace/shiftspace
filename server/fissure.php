@@ -43,7 +43,7 @@ function method_form($httpmethod, $method, $args) {
 <?php method_form('post', 'user.login', array('username', 'password')); ?>
 <?php method_form('post', 'user.logout', array()); ?>
 <?php method_form('post', 'user.join', array('username', 'password', 'password_again', 'email', 'phone')); ?>
-
+<?php method_form('post', 'user.query', array()); ?>
 </body>
 </html>
 
