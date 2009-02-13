@@ -80,6 +80,7 @@ class User {
       'username'      => $username,
       'display_name'  => $username,
       'password'      => md5($password),
+      'phone'         => $phone,
       'email'         => $email
     ));
     
