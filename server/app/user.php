@@ -56,6 +56,33 @@ class User {
   public function logout() {
     $this->server->user = null;
   }
+
+  public function update() {
+    extract($_POST);
+
+    if (isset($password) && $password != '') {
+      if ($password != $password_again)
+        throw new Error("Passwords do not match");
+      if (strlen($password) < 6)
+        throw new Error("Oops, please enter a password at least 6 characters long.");
+    }
+    
+    $emailexists = $this->server->moma->value($this->sql['checkemail'], array('email' => $email));
+    if ($emailexists)
+      throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
+
+    $user = $this->server->user;
+    $user->set(array(
+      'password'      => md5($password),
+      'phone'         => $phone,
+      'email'         => $email
+    ));
+    
+    $this->server->moma->save($user);
+    $this->server->user = $user;
+    
+    return new Response($user);
+  }
   
   public function join() {
     extract($_POST);
