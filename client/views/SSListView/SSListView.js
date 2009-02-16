@@ -47,6 +47,7 @@ var SSListView = new Class({
     
     this.__cellBeingEdited = -1;
     
+    this.setIsDirty(true);
     this.setSuppressRefresh(false);
     
     if(this.options.filter) this.setFilter(this.options.filter);
@@ -173,7 +174,6 @@ var SSListView = new Class({
   awake: function(context)
   {
     var cellNode = this.element.getElement('> .SSCell');
-    
     if(cellNode)
     {
       this.setCell(SSControllerForNode(cellNode));
@@ -289,14 +289,51 @@ var SSListView = new Class({
   },
   
   
-  add: function(newItem, animate)
+  add: function(newItem, _animate)
   {
+    var animate = (_animate == null && true) || _animate;
+
     var delegate = this.delegate();
+    var canAdd = (delegate && delegate.canAdd && delegate.canAdd()) || true;
     
-    // TODO: allow for add new item animation.
-    
+    if(canAdd)
+    {
+      if(this.hasCollection())
+      {
+        this.getData()['create'](newItem);
+      }
+    }
+
     this.data().push(newItem);
     this.refresh();
+  },
+  
+  
+  onAdd: function(data)
+  {
+    var anim = (animate && 
+                delegate && 
+                delegate.animationFor && 
+                delegate.animationFor({action:'add', listView:this, userData:data})) || false;
+    
+    if(anim)
+    {
+      var animData = anim();
+      anim.animation().chain(function() {
+        if(animData.cleanup) animData.cleanup();
+      });
+    }
+    else
+    {
+      console.log('no animation, just refresh!');
+      this.refresh();
+    }
+  },
+  
+  
+  addObject: function(sender)
+  {
+    this.add(sender.dataForNewItem());
   },
   
   
@@ -329,7 +366,7 @@ var SSListView = new Class({
       {
         var animData = anim();
         animData.animation().chain(function() {
-          animData.cleanup();
+          if(animData.cleanup) animData.cleanup();
           editModeForCell();
         });
       }
@@ -422,8 +459,6 @@ var SSListView = new Class({
   
   updateCellView: function(cellData, index)
   {
-    console.log(cellData);
-    console.log(index);
     this.cell().lock(this.cellNodeForIndex(index));
     this.cell().setData(cellData);
     this.cell().unlock();
@@ -489,14 +524,13 @@ var SSListView = new Class({
     }
   },
   
-  
+  // TODO: animation support
   remove: function(index)
   {
     this.boundsCheck(index);
 
     var delegate = this.delegate();
     
-    // FIXME: this logic is broken - David
     var canRemove = (delegate && delegate.canRemove && delegate.canRemove(index)) || true;
 
     if(canRemove)
@@ -659,7 +693,10 @@ var SSListView = new Class({
     this.parent();
     
     // don't refresh if we're visible
-    if(!this.isVisible() && !force) return;
+    if(!this.isVisible() && !force) 
+    {
+      return;
+    }
     
     // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
@@ -688,7 +725,10 @@ var SSListView = new Class({
       this.initSortables();
     }
     
-    this.setIsDirty(false);
+    if(!this.__pendingCollection)
+    {
+      this.setIsDirty(false);
+    }
   },
   
   
@@ -732,7 +772,11 @@ var SSListView = new Class({
   
   __addEventsToCollection__: function(coll)
   {
-    coll.addEvent('onCreate', function(index) {
+    coll.addEvent('onCreate', function(data) {
+      if(this.isVisible())
+      {
+        this.onAdd(data);
+      }
     });
     
     coll.addEvent('onDelete', function(index) {
@@ -782,12 +826,6 @@ var SSListView = new Class({
       // not ready yet, controller loaded before collection
       this.__pendingCollection = collectionName;
     }
-  },
-  
-  
-  useCollectionWithFilter: function(collectionName, fn)
-  {
-    
   },
   
   

@@ -134,8 +134,14 @@ var SSView = new Class({
     if(superview) 
     {
       superview.addEvent('onRefresh', function() {
-        if(this.isVisible && !this.isVisible()) return;
-        if(this.isDirty && !this.isDirty()) return;
+        if(this.isVisible && !this.isVisible())
+        {
+          return;
+        }
+        if(this.isDirty && !this.isDirty())
+        {
+          return;
+        }
         this.refreshAndFire();
       }.bind(this));
     }
@@ -154,7 +160,6 @@ var SSView = new Class({
   
   setIsAwake: function(val)
   {
-    //console.log(this.getId() + ' is awake ' + val);
     this.__isAwake__ = val;
   },
   
