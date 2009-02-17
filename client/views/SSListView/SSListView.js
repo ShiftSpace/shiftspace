@@ -312,8 +312,8 @@ var SSListView = new Class({
   
   onAdd: function(data)
   {
-    var anim = (animate && 
-                delegate && 
+    var delegate = this.delegate();
+    var anim = (delegate &&
                 delegate.animationFor && 
                 delegate.animationFor({action:'add', listView:this, userData:data})) || false;
     
@@ -329,7 +329,7 @@ var SSListView = new Class({
       this.refresh();
     }
     
-    this.console.log(data);
+    this.reload();
   },
   
   
@@ -355,7 +355,10 @@ var SSListView = new Class({
         this.cancelEdit(this.cellBeingEdited(), false);
       }
       
-      var anim = (animate && delegate && delegate.animationFor && delegate.animationFor({action:'edit', listView:this, index:index})) || false;
+      var anim = (animate && 
+                  delegate && 
+                  delegate.animationFor && 
+                  delegate.animationFor({action:'edit', listView:this, index:index})) || false;
       
       var editModeForCell = function() {
         this.setCellBeingEdited(index);
@@ -477,7 +480,9 @@ var SSListView = new Class({
   onUpdate: function(index)
   {
     var delegate = this.delegate();
-    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'update', listView:this, index:index})) || false;
+    var anim = (delegate && 
+                delegate.animationFor && 
+                delegate.animationFor({action:'update', listView:this, index:index})) || false;
     
     if(anim)
     {
@@ -574,9 +579,10 @@ var SSListView = new Class({
   
   onRemove: function(index)
   {
-    console.log('onRemove!');
     var delegate = this.delegate();
-    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
+    var anim = (delegate && 
+                delegate.animationFor && 
+                delegate.animationFor({action:'remove', listView:this, index:index})) || false;
     
     if(anim)
     {
@@ -731,6 +737,15 @@ var SSListView = new Class({
     if(!this.__pendingCollection)
     {
       this.setIsDirty(false);
+    }
+  },
+  
+  
+  reload: function()
+  {
+    if(this.hasCollection())
+    {
+      this.data().read();
     }
   },
   

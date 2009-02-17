@@ -479,8 +479,8 @@ var SSCollection = new Class({
     this.transact('create', {
       table: this.table(),
       values: data,
-      onComplete: function(result) {
-        this.onCreate($merge(data, {id:result.id}));
+      onComplete: function(theId) {
+        this.onCreate($merge(data, {id:theId}));
       }.bind(this)
     });
   },
