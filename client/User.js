@@ -48,7 +48,6 @@ var ShiftSpaceUserClass = new Class({
     if(username != null && username != false)
     {
       this.__username = username;
-      this.fireEvent('onUserLogin');
     }
   },
 
