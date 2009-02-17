@@ -39,7 +39,9 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
   	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.5.3/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
     -->
     <link rel="stylesheet" href="style.css" type="text/css"></link>
+    <!--[if lt IE 7]>
     <script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE7.js" type="text/javascript" charset="utf-8"></script>
+    <![endif]-->
     <script src="../mootools/mootools-1.2-core.js" type="text/javascript"></script>
     <script src="../mootools/mootools-1.2-more.js" type="text/javascript"></script>
     <script src="GreaseMonkeyApi.js" type="text/javascript"></script>
