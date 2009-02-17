@@ -229,6 +229,7 @@ var SSListView = new Class({
     if(coll)
     {
       delete this.__pendingCollection;
+      this.__addEventsToCollection__(coll);
       this.setData(coll);
     }
   },
@@ -325,9 +326,10 @@ var SSListView = new Class({
     }
     else
     {
-      console.log('no animation, just refresh!');
       this.refresh();
     }
+    
+    this.console.log(data);
   },
   
   
@@ -543,24 +545,8 @@ var SSListView = new Class({
       else
       {
         this.__remove__(index);
-        this.onRemove(index);
+        this.e(index);
       }
-    }
-  },
-  
-  
-  onRemove: function(index)
-  {
-    var delegate = this.delegate();
-    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
-    
-    if(anim)
-    {
-      anim().chain(this.refresh.bind(this));
-    }
-    else
-    {
-      this.refresh();
     }
   },
   
@@ -582,6 +568,23 @@ var SSListView = new Class({
     {
       this.remove(this.indexOf(sender));
       this.fireEvent('onRemove');
+    }
+  },
+  
+  
+  onRemove: function(index)
+  {
+    console.log('onRemove!');
+    var delegate = this.delegate();
+    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
+    
+    if(anim)
+    {
+      anim().chain(this.refresh.bind(this));
+    }
+    else
+    {
+      this.refresh();
     }
   },
   
@@ -777,7 +780,7 @@ var SSListView = new Class({
       {
         this.onAdd(data);
       }
-    });
+    }.bind(this));
     
     coll.addEvent('onDelete', function(index) {
       if(this.isVisible()) 

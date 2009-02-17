@@ -433,15 +433,26 @@ var SSCollection = new Class({
 
   },
   
-  
-  read: function(callback)
+  /*
+    Function: read
+      Read from the collection. Accepts a callback. Also fires
+      an onLoad event that can be listened to. The onLoad event
+      can be suppressed.  This is useful for handling animations
+      which should wait until the result is synchronized with the
+      server.
+      
+    Parameters:
+      callback - a function.
+      suppressEvent - a boolean value.
+  */
+  read: function(callback, suppressEvent)
   {
     this.transact('read', {
       table: this.table(),
       constraints: this.constraints(),
       properties: this.properties(),
       onComplete: function(data) {
-        this.onRead(data);
+        this.onRead(data, suppressEvent);
         if(callback) callback(data);
       }.bind(this)
     });
@@ -535,7 +546,7 @@ var SSCollection = new Class({
   },
   
   
-  onRead: function(data)
+  onRead: function(data, suppressEvent)
   {
     this.setArray(data);
     this.fireEvent('onLoad');
