@@ -488,6 +488,9 @@ var SSCollection = new Class({
   
   query: function(queryFn, properties)
   {
+    // IE6 fix
+    if(!this.getArray()) return;
+    
     return this.getArray().filter(queryFn).map(function(obj) {
       return $H(obj).choose(properties).getClean();
     });

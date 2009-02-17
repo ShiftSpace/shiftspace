@@ -700,6 +700,8 @@ var SSListView = new Class({
   {
     this.parent();
     
+    if(!this.data()) return;
+    
     // don't refresh if we're visible
     if(!this.isVisible() && !force) 
     {
