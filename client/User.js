@@ -14,14 +14,40 @@ var ShiftSpaceUserClass = new Class({
   
   Implements: Events,
   
-  setUsername: function(_username)
+  
+  initialize: function()
   {
-    console.log('SETTING USER NAME ' + username + ' ' + _username);
-    var fireLogIn = (username == false) && (_username != null);
-    username = _username;
-    if(fireLogIn)
+    this.setUsername(null);
+    this.setId(null);
+    this.setEmail(null);
+  },
+  
+  
+  syncData: function(data)
+  {
+    this.setUsername(data.username);
+    this.setId(data.id);
+    this.setEmail(data.email);
+  },
+  
+  
+  setId: function(id)
+  {
+    this.__userId = id;
+  },
+  
+  
+  getId: function()
+  {
+    return this.__userId;
+  },
+  
+  
+  setUsername: function(username)
+  {
+    if(username != null && username != false)
     {
-      this.fireEvent('onUserLogin');
+      this.__username = username;
     }
   },
 
@@ -34,19 +60,19 @@ var ShiftSpaceUserClass = new Class({
   */
   getUsername: function() 
   {
-    return username;
+    return this.__username;
   },
   
   
   setEmail: function(email)
   {
-    this.__email__ = email;
+    this.__email = email;
   },
   
   
   email: function()
   {
-    return this.__email__;
+    return this.__email;
   },
   
 
@@ -59,7 +85,18 @@ var ShiftSpaceUserClass = new Class({
   */
   isLoggedIn: function(showErrorAlert) 
   {
-    return (username != false);
+    return (this.getId() != null);
+  },
+  
+  
+  query: function(_callback)
+  {
+    var callback = _callback;
+    SSServerCall('user.query', null, function(json) {
+      if(json.data) this.syncData(json.data);
+      this.fireEvent('onUserQuery', json);
+      if(callback) callback(json);
+    }.bind(this));
   },
   
   /*
@@ -75,21 +112,9 @@ var ShiftSpaceUserClass = new Class({
     var callback = _callback;
     
     SSServerCall('user.login', credentials, function(json) {
-      if (json.status) 
-      {
-        SSLog('//////////////////////////////////////////////////////////');
-        SSLog(json);
-        // set username
-        username = credentials.username;
-        // set email
-        this.setEmail(json.email);
-        callback(json);
-        this.fireEvent('onUserLogin');
-      } 
-      else 
-      {
-        if(callback) callback(json);
-      }
+      if(json.data) this.syncData(json.data);
+      this.fireEvent('onUserLogin', json);
+      if(callback) callback(json);
     }.bind(this));
   },
   
@@ -97,10 +122,8 @@ var ShiftSpaceUserClass = new Class({
     Function: logout (private)
       Logout a user. Will probably be moved into ShiftSpace.js.
   */
-  logout: function() 
+  logout: function()
   {
-    username = false;
-    SSSetValue('username', '');
     SSServerCall('user.logout');
     this.fireEvent('onUserLogout');
   },
@@ -109,20 +132,13 @@ var ShiftSpaceUserClass = new Class({
     Function: join (private)
       Join a new user.  Will probably be moved into ShiftSpace.js.
   */
-  join: function(userInfo, callback) 
+  join: function(userInfo, _callback) 
   {
-    
+    var callback = _callback;
     SSServerCall('user.join', userInfo, function(json) {
-      if (json.status) 
-      {
-        username = userInfo.username;
-        SSSetValue('username', userInfo.username);
-        callback(json);
-      } 
-      else 
-      {
-        callback(json);
-      }
+      if(json.data) this.syncData(json.data);
+      this.fireEvent('onUserJoin', json);
+      if(callback) callback(json);
     }.bind(this));
   },
   
@@ -134,7 +150,8 @@ var ShiftSpaceUserClass = new Class({
       info - info to be updated.
       callback - callback function to be run when update server call is complete.
   */
-  update: function(info, callback) {
+  update: function(info, callback) 
+  {
     SSServerCall('user.update', info, callback);
   },
   
@@ -146,16 +163,11 @@ var ShiftSpaceUserClass = new Class({
       info - ?
       callback - callback function to be run when resetPassword is complete.
   */
-  resetPassword: function(info, callback) {
+  resetPassword: function(info, callback) 
+  {
     SSServerCall('user.resetPassword', info, callback);
   },
-  
-  
-  setPublishDefault: function()
-  {
-    
-  },
-  
+
   
   setEmailCommentsDefault: function(newValue, callback)
   {
@@ -166,8 +178,6 @@ var ShiftSpaceUserClass = new Class({
     SSServerCall('user.update', {
       email_comments: newValue
     }, function(json) {
-      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>> Default changed!');
-      SSLog(json);
     });
   },
   
@@ -176,14 +186,7 @@ var ShiftSpaceUserClass = new Class({
   {
     // setting the value, can't user zero because of PHP, GRRR - David
     return (SSGetDefaultEmailComments(true)-1);
-  },
-  
-  
-  setDefault: function(aDefault, value)
-  {
-    
   }
-
 });
 
 var ShiftSpaceUser = new ShiftSpaceUserClass();

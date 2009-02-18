@@ -36,7 +36,7 @@ class User {
     $username = $_POST['username'];
     $password = md5($_POST['password']);
 
-    $user = $this->server->db->row($this->sql['login'], array(
+    $user = $this->server->moma->row($this->sql['login'], array(
       'username' => $username,
       'password' => $password
     ));
@@ -56,6 +56,33 @@ class User {
   public function logout() {
     $this->server->user = null;
   }
+
+  public function update() {
+    extract($_POST);
+
+    if (isset($password) && $password != '') {
+      if ($password != $password_again)
+        throw new Error("Passwords do not match");
+      if (strlen($password) < 6)
+        throw new Error("Oops, please enter a password at least 6 characters long.");
+    }
+    
+    $emailexists = $this->server->moma->value($this->sql['checkemail'], array('email' => $email));
+    if ($emailexists)
+      throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
+
+    $user = $this->server->user;
+    $user->set(array(
+      'password'      => md5($password),
+      'phone'         => $phone,
+      'email'         => $email
+    ));
+    
+    $this->server->moma->save($user);
+    $this->server->user = $user;
+    
+    return new Response($user);
+  }
   
   public function join() {
     extract($_POST);
@@ -67,11 +94,11 @@ class User {
     if (!preg_match('#^[a-zA-Z0-9_.]+$#', $username))
       throw new Error("Oops, please enter a username composed letters, numbers, periods or underscores.");
 
-    $userexists = $this->server->db->value($this->sql['checkuser'], array('username' => $username));
+    $userexists = $this->server->moma->value($this->sql['checkuser'], array('username' => $username));
     if ($userexists)
       throw new Error('Sorry, that username has already been taken. Please choose again.');
 
-    $emailexists = $this->server->db->value($this->sql['checkemail'], array('email' => $email));
+    $emailexists = $this->server->moma->value($this->sql['checkemail'], array('email' => $email));
     if ($emailexists)
       throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
 
@@ -80,11 +107,18 @@ class User {
       'username'      => $username,
       'display_name'  => $username,
       'password'      => md5($password),
+      'phone'         => $phone,
       'email'         => $email
     ));
     
-    $this->server->db->save($user);
+    $this->server->moma->save($user);
     $this->server->user = $user;
+    
+    return new Response($user);
+  }
+  
+  public function query() {
+    return new Response($this->server->user);
   }
 }
 

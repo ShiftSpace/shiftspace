@@ -47,6 +47,9 @@ var SSListView = new Class({
     
     this.__cellBeingEdited = -1;
     
+    this.setIsDirty(true);
+    this.setSuppressRefresh(false);
+    
     if(this.options.filter) this.setFilter(this.options.filter);
     
     if(this.options.collection)
@@ -171,7 +174,6 @@ var SSListView = new Class({
   awake: function(context)
   {
     var cellNode = this.element.getElement('> .SSCell');
-    
     if(cellNode)
     {
       this.setCell(SSControllerForNode(cellNode));
@@ -227,6 +229,7 @@ var SSListView = new Class({
     if(coll)
     {
       delete this.__pendingCollection;
+      this.__addEventsToCollection__(coll);
       this.setData(coll);
     }
   },
@@ -287,14 +290,51 @@ var SSListView = new Class({
   },
   
   
-  add: function(newItem, animate)
+  add: function(newItem, _animate)
   {
+    var animate = (_animate == null && true) || _animate;
+
     var delegate = this.delegate();
+    var canAdd = (delegate && delegate.canAdd && delegate.canAdd()) || true;
     
-    // TODO: allow for add new item animation.
-    
+    if(canAdd)
+    {
+      if(this.hasCollection())
+      {
+        this.getData()['create'](newItem);
+      }
+    }
+
     this.data().push(newItem);
     this.refresh();
+  },
+  
+  
+  onAdd: function(data)
+  {
+    var delegate = this.delegate();
+    var anim = (delegate &&
+                delegate.animationFor && 
+                delegate.animationFor({action:'add', listView:this, userData:data})) || false;
+    
+    if(anim)
+    {
+      var animData = anim();
+      anim.animation().chain(function() {
+        if(animData.cleanup) animData.cleanup();
+        this.reload();
+      });
+    }
+    else
+    {
+      this.reload();
+    }
+  },
+  
+  
+  addObject: function(sender)
+  {
+    this.add(sender.dataForNewItem());
   },
   
   
@@ -314,7 +354,10 @@ var SSListView = new Class({
         this.cancelEdit(this.cellBeingEdited(), false);
       }
       
-      var anim = (animate && delegate && delegate.animationFor && delegate.animationFor({action:'edit', listView:this, index:index})) || false;
+      var anim = (animate && 
+                  delegate && 
+                  delegate.animationFor && 
+                  delegate.animationFor({action:'edit', listView:this, index:index})) || false;
       
       var editModeForCell = function() {
         this.setCellBeingEdited(index);
@@ -327,7 +370,7 @@ var SSListView = new Class({
       {
         var animData = anim();
         animData.animation().chain(function() {
-          animData.cleanup();
+          if(animData.cleanup) animData.cleanup();
           editModeForCell();
         });
       }
@@ -387,23 +430,24 @@ var SSListView = new Class({
   },
   
 
-  update: function(cellData, index)
+  update: function(cellData, index, _noArrayUpdate)
   {
     this.boundsCheck(index);
-
+    
+    var noArrayUpdate = _noArrayUpdate || false;
     var delegate = this.delegate();
     var canUpdate = (delegate && delegate.canUpdate && delegate.canUpdate(index)) || true;
-
+    
     if(canUpdate)
     {
       if(this.hasCollection())
       {
-        this.getData().update(cellData, index);
+        if(!noArrayUpdate) this.getData().update(cellData, index);
         return;
       }
       else
       {
-        this.__update__(cellData, index);
+        if(!noArrayUpdate) this.__update__(cellData, index);
         this.onUpdate(index);
       }
     }
@@ -416,7 +460,15 @@ var SSListView = new Class({
     this.update(this.cell().getAllData(), index);
   },
   
-
+  
+  updateCellView: function(cellData, index)
+  {
+    this.cell().lock(this.cellNodeForIndex(index));
+    this.cell().setData(cellData);
+    this.cell().unlock();
+  },
+  
+  
   __update__: function(cellData, index)
   {
     var oldData =this.data()[index];
@@ -427,7 +479,9 @@ var SSListView = new Class({
   onUpdate: function(index)
   {
     var delegate = this.delegate();
-    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'update', listView:this, index:index})) || false;
+    var anim = (delegate && 
+                delegate.animationFor && 
+                delegate.animationFor({action:'update', listView:this, index:index})) || false;
     
     if(anim)
     {
@@ -476,14 +530,13 @@ var SSListView = new Class({
     }
   },
   
-  
+  // TODO: animation support
   remove: function(index)
   {
     this.boundsCheck(index);
 
     var delegate = this.delegate();
     
-    // FIXME: this logic is broken - David
     var canRemove = (delegate && delegate.canRemove && delegate.canRemove(index)) || true;
 
     if(canRemove)
@@ -496,24 +549,8 @@ var SSListView = new Class({
       else
       {
         this.__remove__(index);
-        this.onRemove(index);
+        this.e(index);
       }
-    }
-  },
-  
-  
-  onRemove: function(index)
-  {
-    var delegate = this.delegate();
-    var anim = (delegate && delegate.animationFor && delegate.animationFor({action:'remove', listView:this, index:index})) || false;
-    
-    if(anim)
-    {
-      anim().chain(this.refresh.bind(this));
-    }
-    else
-    {
-      this.refresh();
     }
   },
   
@@ -534,6 +571,25 @@ var SSListView = new Class({
     if(canDelete)
     {
       this.remove(this.indexOf(sender));
+      this.fireEvent('onRemove');
+    }
+  },
+  
+  
+  onRemove: function(index)
+  {
+    var delegate = this.delegate();
+    var anim = (delegate && 
+                delegate.animationFor && 
+                delegate.animationFor({action:'remove', listView:this, index:index})) || false;
+    
+    if(anim)
+    {
+      anim().chain(this.refresh.bind(this));
+    }
+    else
+    {
+      this.refresh();
     }
   },
   
@@ -561,8 +617,8 @@ var SSListView = new Class({
       {
         var animData = anim();
         animData.animation().chain(function() {
+          if(!this.suppressRefresh()) this.refresh();
           if(animData.cleanup) animData.cleanup();
-          this.refresh();
         }.bind(this));
       }
       else
@@ -576,7 +632,6 @@ var SSListView = new Class({
   hideObject: function(sender)
   {
     var index = this.indexOf(sender);
-    console.log('hideObject');
     this.hideItem(index);
   },
   
@@ -641,11 +696,17 @@ var SSListView = new Class({
   },
   
   
-  refresh: function()
+  refresh: function(force)
   {
     this.parent();
     
-    if(!this.isVisible()) return;
+    if(!this.data()) return;
+    
+    // don't refresh if we're visible
+    if(!this.isVisible() && !force) 
+    {
+      return;
+    }
     
     // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
@@ -658,7 +719,7 @@ var SSListView = new Class({
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
         this.element.setStyle('width', (this.options.cellSize.x*len)+modifer);
       }
-
+      
       this.element.empty();
       this.data().each(function(x) {
         // TODO: make sure it pass the filter
@@ -674,7 +735,19 @@ var SSListView = new Class({
       this.initSortables();
     }
     
-    this.setIsDirty(false);
+    if(!this.__pendingCollection)
+    {
+      this.setIsDirty(false);
+    }
+  },
+  
+  
+  reload: function()
+  {
+    if(this.hasCollection())
+    {
+      this.data().read();
+    }
   },
   
   
@@ -718,8 +791,12 @@ var SSListView = new Class({
   
   __addEventsToCollection__: function(coll)
   {
-    coll.addEvent('onCreate', function(index) {
-    });
+    coll.addEvent('onCreate', function(data) {
+      if(this.isVisible())
+      {
+        this.onAdd(data);
+      }
+    }.bind(this));
     
     coll.addEvent('onDelete', function(index) {
       if(this.isVisible()) 
@@ -737,8 +814,20 @@ var SSListView = new Class({
     
     coll.addEvent('onLoad', function() {
       this.setIsDirty(true);
-      if(this.isVisible()) this.refresh();
+      if(this.isVisible() && !this.suppressRefresh()) this.refresh();
     }.bind(this));
+  },
+  
+  
+  setSuppressRefresh: function(val)
+  {
+    this.__suppressRefresh = val;
+  },
+  
+  
+  suppressRefresh: function(val)
+  {
+    return this.__suppressRefresh;
   },
   
   
@@ -756,12 +845,6 @@ var SSListView = new Class({
       // not ready yet, controller loaded before collection
       this.__pendingCollection = collectionName;
     }
-  },
-  
-  
-  useCollectionWithFilter: function(collectionName, fn)
-  {
-    
   },
   
   

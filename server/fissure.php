@@ -39,6 +39,12 @@ function method_form($httpmethod, $method, $args) {
 <?php method_form('get', "shift.query", array("href")); ?>
 <?php method_form('get', "sandbox.proxy", array("url", "parameters")); ?>
 <?php method_form('post', "collections", array("desc_")); ?>
+<?php method_form('post', 'sms.send', array('phone', 'message')); ?>
+<?php method_form('post', 'user.login', array('username', 'password')); ?>
+<?php method_form('post', 'user.logout', array()); ?>
+<?php method_form('post', 'user.join', array('username', 'password', 'password_again', 'email', 'phone')); ?>
+<?php method_form('post', 'user.update', array('password', 'password_again', 'email', 'phone')); ?>
+<?php method_form('post', 'user.query', array()); ?>
 </body>
 </html>
 

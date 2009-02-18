@@ -52,6 +52,7 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     }
     </style>
     <!--[if IE 6]>
+    <script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE7.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="../styles/ShiftSpaceIE6.css" type="text/css"></link>
     <![endif]-->
   </head>

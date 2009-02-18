@@ -433,14 +433,43 @@ var SSCollection = new Class({
 
   },
   
-  
-  read: function()
+  /*
+    Function: read
+      Read from the collection. Accepts a callback. Also fires
+      an onLoad event that can be listened to. The onLoad event
+      can be suppressed.  This is useful for handling animations
+      which should wait until the result is synchronized with the
+      server.
+      
+    Parameters:
+      callback - a function.
+      suppressEvent - a boolean value.
+  */
+  read: function(callback, suppressEvent)
   {
     this.transact('read', {
       table: this.table(),
       constraints: this.constraints(),
       properties: this.properties(),
-      onComplete: this.onRead.bind(this)
+      onComplete: function(data) {
+        this.onRead(data, suppressEvent);
+        if(callback) callback(data);
+      }.bind(this)
+    });
+  },
+  
+  
+  readIndex: function(index, constraint, callback)
+  {
+    var theConstraint = {};
+    theConstraint[constraint] = this.get(index)[constraint];
+    this.transact('read', {
+      table: this.table(),
+      constraints: $merge(this.constraints(), theConstraint),
+      properties: this.properties(),
+      onComplete: function(data) {
+        if(callback && data.length > 0) callback(data[0]);
+      }.bind(this)
     });
   },
   
@@ -450,13 +479,18 @@ var SSCollection = new Class({
     this.transact('create', {
       table: this.table(),
       values: data,
-      onComplete: this.onCreate.bind(this)
+      onComplete: function(theId) {
+        this.onCreate($merge(data, {id:theId}));
+      }.bind(this)
     });
   },
   
   
   query: function(queryFn, properties)
   {
+    // IE6 fix
+    if(!this.getArray()) return;
+    
     return this.getArray().filter(queryFn).map(function(obj) {
       return $H(obj).choose(properties).getClean();
     });
@@ -495,7 +529,7 @@ var SSCollection = new Class({
   {
     this.transact('update', {
       table: this.table(),
-      values: data, 
+      values: data,
       constraints: $merge(this.constraints(), {
         id: this.get(index).id
       }),
@@ -515,7 +549,7 @@ var SSCollection = new Class({
   },
   
   
-  onRead: function(data)
+  onRead: function(data, suppressEvent)
   {
     this.setArray(data);
     this.fireEvent('onLoad');

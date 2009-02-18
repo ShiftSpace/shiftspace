@@ -31,15 +31,15 @@ function SSServerCall(method, parameters, _callback)
     data += key + '=' + encodeURIComponent(parameters[key]);
   }
 
-  var plugins = new Hash(installedPlugins);
-  url += '&plugins=' + plugins.getKeys().join(',');
+  if(typeof installedPlugins != 'undefined')
+  {
+    var plugins = new Hash(installedPlugins);
+    url += '&plugins=' + plugins.getKeys().join(',');
+  }
 
   var now = new Date();
   url += '&cache=' + now.getTime();
 
-  //SSLog(data);
-
-  //GM_openInTab(url);
   var req = {
     method: 'POST',
     url: url,
@@ -49,13 +49,9 @@ function SSServerCall(method, parameters, _callback)
       SSLog('done!');
       var rx = _rx;
       SSLog('servercall returned', SSLogServerCall);
-      /*
-      SSLog(rx.responseText);
-      SSLog(typeof callback == 'function');
-      */
+
       if ($type(callback) == 'function') 
       {
-        //SSLog('evaluate ' + rx.responseText);
         try
         {
           SSLog('trying ' + url);
@@ -69,10 +65,6 @@ function SSServerCall(method, parameters, _callback)
         {
           SSLog('Server call exception: ' + SSDescribeException(exc), SSLogServerCall);
         }
-        /*
-        SSLog('done evaluating');
-        SSLog(callback);
-        */
         callback(theJson);
       }
       else
