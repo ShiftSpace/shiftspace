@@ -18,7 +18,7 @@ var SSTabView = new Class({
     this.parent(el, options);
     
     this.__selectedTab__ = -1;
-
+    
     // check for default tab
     var defaultActiveTab = this.element.getElement('> .SSControlView > .SSButton.SSActive');
     
@@ -43,6 +43,7 @@ var SSTabView = new Class({
     this.refresh();
     //SSLog('SSTabView initialized');
   },
+  
   
   /*
     Function: eventDispatch (private)
@@ -295,6 +296,7 @@ var SSTabView = new Class({
     else
     {
       SSLog('Tab already selected');
+      this.fireEvent('tabClicked', {tabView:this, tabIndex:idx});
     }
   },
   
