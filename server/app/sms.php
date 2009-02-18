@@ -15,7 +15,7 @@ class Sms {
   }
   
   public function receive() {
-    extract($_POST);
+    extract($_REQUEST);
         
     $f = fopen(dirname(__FILE__)."/sms.log", "a");
     fwrite($f, "Phone: $phone\n");
@@ -26,9 +26,16 @@ class Sms {
     fclose($f);
 
     $artworkid = trim($msg);
-    $artwork = $this->server->moma->load("artwork($artworkid)")->get();
-    $title = $artwork['title'];
-    return "Hey there. $title was just saved for you. Go to txt.moma.org to retrieve it and any other works you collect. See you there!";
+    $artwork = $this->server->moma->load("artwork($artworkid)");
+    
+    if ($artwork) {
+      $artwork = $artwork->get();
+      $title = $artwork['title'];
+      return "Hey there. '$title' was just saved for you. Go to txt.moma.org to retrieve it and any other works you collect. See you there!";
+    } 
+    else {
+      return "$artworkid does not refer to any item in our database. Please verify the number and try again.";
+    }
   }
 }
 
