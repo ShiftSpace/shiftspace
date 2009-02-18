@@ -46,8 +46,8 @@ var SSTabView = new Class({
   
   /*
     Function: eventDispatch (private)
-      Selects a tab on button hit.  If a tab    
-    
+      Dispatches the selectTab event when tab when hit. selectTab is only called if the SSControlView class name is not null. 
+      
     Paremeters:
       evt - A DOM node event 
 
@@ -112,7 +112,7 @@ var SSTabView = new Class({
   
   /*
     Funtion: indexOfTab
-      Takes the class name of a tab and returns its nodes index 
+      Takes the class name of a tab and returns the tab's node index 
     
     Parameters:
       tabButton -  SSButton class name of tab button
@@ -122,6 +122,8 @@ var SSTabView = new Class({
       
     See Also:
       indexOfTabByName 
+      
+      
   */
   indexOfTab: function(tabButton)
   {
@@ -168,7 +170,7 @@ var SSTabView = new Class({
   
   /*
     Funtion: indexOfContentView
-      Takes the class name of contentView Div
+      Takes the class name of contentView Div and returns its index
     
     Parameters:
       contentView - class name of contentView Div
@@ -220,7 +222,11 @@ var SSTabView = new Class({
   },
   
   /*
-  Function: selectedContentView
+    Function: selectedContentView
+      Checks the currently selected tab's for a controller. Returns the selected tab's controller if it exsists, or else returns the contentView. 
+      
+    Returns: 
+      Selected tab's controller or contentView
    */
   selectedContentView: function()
   {
@@ -232,12 +238,29 @@ var SSTabView = new Class({
   },
   
   
+  /*
+    Function: selectedTab
+      Returns the currenlty selected tab
+      
+    Returns: 
+      Currently selected tab
+    
+    See Also:
+      SelectTab
+      
+  */
   selectedTab: function()
   {
     return this.__selectedTab__;
   },
   
-
+  /*
+    Function: selectTab
+      Takes the index of a tab, makes it active, and displays content of the new selected tab if it exists. Removes the active class from the previously selected tab. 
+    
+    Parameters:
+      idx - index of Tab
+  */
   selectTab: function(idx)
   {
     SSLog(this.element.getProperty('id') + ' selectTab ' + idx);
@@ -300,7 +323,15 @@ var SSTabView = new Class({
     }
   },
   
-  
+  /*
+    Function: addTab
+      Creates a new tab and applies the passed argument to its id name. 
+      
+    Parameters:
+      name - Name of the new tab
+      
+      
+  */
   addTab: function(name)
   {
     var tabButton = new Element('div', {
@@ -316,51 +347,123 @@ var SSTabView = new Class({
     tabContent.injectInside(this.element.getElement('> .SSContentView'));
   },
   
-  
+  /*
+    Function: contentViewControllerForIndex
+      Takes the index of a contentView and returns the controller's DOM node
+      
+    Parameters:
+      idx - index of contentView 
+      
+    Returns:
+      DOM node of controller 
+
+  */
   contentViewControllerForIndex: function(idx)
   {
     return this.controllerForNode(this.contentViewForIndex(idx));
   },
   
-  
+  /*
+    Function: activeTab
+      Returns the index of the currently active tab
+      
+    Returns:
+      Index of tab
+      
+      
+  */
   activeTab: function()
   {
     return this.indexOfTab(this.element.getElement('> .SSControlView > .SSButton.SSActive'));
   },
   
-  
+  /*
+    Function: hideTabByName
+      Takes a tab's id name and hides the tab.
+    
+    Parameters:
+      name - Tab id name
+      
+    See Also:
+      hideTab
+  */
   hideTabByName: function(name)
   {
     this.hideTab(this.indexOfTabByName(name));
   },
   
-  
+  /*
+    Function: hideTab
+      Takes a tab's node index and hides the tab.
+    
+    Parameters:
+      index - Tab node index
+      
+    See Also:
+      hideTabByName
+  */
   hideTab: function(index)
   {
     this.tabButtonForIndex(index).addClass('SSDisplayNone');
     this.contentViewForIndex(index).addClass('SSDisplayNone');
   },
   
-  
+  /*
+    Function: revealTabByName
+      Takes a tab's id name and reveals the tab.
+    
+    Parameters:
+       name - Tab id name
+      
+    See Also:
+      revealTab
+  */
   revealTabByName: function(name)
   {
     this.revealTab(this.indexOfTabByName(name));
   },
   
-  
+  /*
+    Function: revealTab
+      Takes a tab's node index and reveals the tab.
+    
+    Parameters:
+       name - Tab node index
+      
+    See Also:
+      revealTabByName
+  */
   revealTab: function(index)
   {
     this.tabButtonForIndex(index).removeClass('SSDisplayNone');
     this.contentViewForIndex(index).removeClass('SSDisplayNone');
   },
 
-
+  /*
+    Function: removeTabByName
+      Takes a tab's id name and removes the tab.
+    
+    Parameters:
+       name - Tab id name
+      
+    See Also:
+      removeTab
+  */
   removeTabByName: function(name)
   {
     this.removeTab(this.indexOfTabByName(name));
   },
 
-
+  /*
+    Function: removeTab
+      Takes a tab's node index and removes the tab and its controller. If the currently selected tab is being removed, the first tab is selected.
+    
+    Parameters:
+       idx - Tab node index 
+      
+    See Also:
+      removeTabByName
+  */
   removeTab: function(idx)
   {
     // if removing selected tab, highlight a different tab
@@ -388,7 +491,10 @@ var SSTabView = new Class({
     }
   },
   
-
+  /*
+    Function: refresh
+      Resizes the the SSContentView and SSControlView if they contain the autosize property
+  */
   refresh: function()
   {
     var theControlView = this.element.getElement('> .SSControlView');
