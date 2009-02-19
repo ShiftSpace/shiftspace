@@ -602,6 +602,8 @@ var SSListView = new Class({
     {
       this.refresh();
     }
+    
+    this.fireEvent('onRemove', index);
   },
   
   
