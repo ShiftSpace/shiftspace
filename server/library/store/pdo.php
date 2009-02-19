@@ -88,6 +88,12 @@ class PDO_Store extends Base_Store {
   
   public function save(&$object) {
     $vars = $object->get();
+    
+    // there must be a cool one-line thing that does this
+    foreach ($vars as $key => $value)
+      if (!isset($value))
+        $$vars[$key] = 'NULL';
+        
     $table = substr(get_class($object), 0, -7);
     $values = array();
     if (!isset($object->id)) {

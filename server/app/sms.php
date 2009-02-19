@@ -56,7 +56,8 @@ class Sms {
       $title = $artwork['title'];
         
       if (!$dontremind) {      
-        $updateuser = $this->server->moma->load("user($userid)");
+        $updateuser = new User_Object();
+        $updateuser->set($user);
         $updateuser->set('dontremind', 1);
         $this->server->moma->save($updateuser);
 
