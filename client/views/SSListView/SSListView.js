@@ -338,6 +338,8 @@ var SSListView = new Class({
     {
       this.reload();
     }
+    
+    this.fireEvent('onAdd', data);
   },
   
   
