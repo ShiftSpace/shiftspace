@@ -149,6 +149,7 @@ var SSMultiView = new Class({
     // hide the old view
     var el = this.getRawCurrentView();
     var controller = SSControllerForNode(el);
+    var oldIndex = this.getIndexOfCurrentView();
     if(controller)
     {
       controller.hide();
@@ -157,6 +158,7 @@ var SSMultiView = new Class({
     {
       el.removeClass('SSActive');
     }
+    this.fireEvent('onViewHide', {multiView:this, index:oldIndex});
     
     // show the new view
     el = this.getViewByIndex(idx);
@@ -169,6 +171,7 @@ var SSMultiView = new Class({
     {
       el.addClass('SSActive');
     }
+    this.fireEvent('onViewShow', {multiView:this, index:idx});
   },
   
   
