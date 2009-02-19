@@ -254,6 +254,9 @@ var SSCollection = new Class({
     
     payload = this.cleanPayload(payload);
     
+    // clean values as well
+    if(payload.values) payload.values = this.cleanObject(payload.values);
+    
     SSCollectionsCall({
       desc: payload,
       onComplete: function(response) {
