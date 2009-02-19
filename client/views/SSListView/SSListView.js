@@ -118,7 +118,10 @@ var SSListView = new Class({
         clone: true,
         snap: 4,
         revert: true,
-        onStart: this.sortStart.bind(this),
+        onStart: function(cellNode) {
+          this.__sortables.clone.addClass('Clone');
+          this.sortStart(cellNode);
+        }.bind(this),
         onSort: this.sortSort.bind(this),
         onComplete: this.sortComplete.bind(this)
       });
