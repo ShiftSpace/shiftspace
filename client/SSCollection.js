@@ -220,7 +220,7 @@ var SSCollection = new Class({
   cleanObject: function(anObject)
   {
     return $H(anObject).filter(function(value, key) {
-      return value != null;
+      return value != null && value == '';
     }).getClean();
   },
   
