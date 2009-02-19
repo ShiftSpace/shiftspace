@@ -36,7 +36,8 @@ var SSListView = new Class({
       multipleSelection: false,
       horizontal: false,
       cellSize: null,
-      filter: null
+      filter: null,
+      addAt: 'bottom'
     });
   },
   
@@ -308,10 +309,13 @@ var SSListView = new Class({
       {
         this.getData()['create']($merge(newItem, addData));
       }
+      else
+      {
+        if(this.options.addAt == 'bottom') this.data().push(newItem);
+        if(this.options.addAt == 'top') this.data().unshift(newItem);
+        this.refresh();
+      }
     }
-
-    this.data().push(newItem);
-    this.refresh();
   },
   
   
