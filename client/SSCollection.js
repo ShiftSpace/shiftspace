@@ -69,6 +69,13 @@ function SSClearCollections()
   SSCollections.empty();
 }
 
+function SSCollectionsClearAllPlugins()
+{
+  SSCollections.each(function(coll, name) {
+    coll.clearPlugins();
+  });
+}
+
 // ====================
 // = Class Definition =
 // ====================
@@ -165,6 +172,12 @@ var SSCollection = new Class({
     // erase a plugin
     var pluginsForAction = this.pluginsForAction(actionType);
     this.plugins().set(actionType, pluginsForAction.erase(plugin));
+  },
+  
+  
+  clearPlugins: function()
+  {
+    this.setPlugins($H());
   },
   
   
