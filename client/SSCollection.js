@@ -230,7 +230,7 @@ var SSCollection = new Class({
       values: options.values,
       properties: options.properties,
       constraints: options.constraints,
-      orderby: options.orderby,
+      orderby: options.orderBy,
       startIndex: options.startIndex,
       range: options.range
     };
