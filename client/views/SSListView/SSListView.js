@@ -298,13 +298,15 @@ var SSListView = new Class({
     var animate = (_animate == null && true) || _animate;
 
     var delegate = this.delegate();
-    var canAdd = (delegate && delegate.canAdd && delegate.canAdd()) || true;
+    var canAdd = (delegate && delegate.canAdd && delegate.canAdd(this)) || true;
     
     if(canAdd)
     {
+      var addData = delegate.dataFor('add', this);
+      
       if(this.hasCollection())
       {
-        this.getData()['create'](newItem);
+        this.getData()['create']($merge(newItem, addData));
       }
     }
 
