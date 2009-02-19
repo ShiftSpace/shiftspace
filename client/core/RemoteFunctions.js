@@ -4,6 +4,39 @@
 // @package           Core
 // ==/Builder==
 
+var __sspendingRequest = 0;
+var __ssshowLoader = false;
+var __ssloaderListeners = [];
+
+function SSAddLoaderListener(obj)
+{
+  __ssloaderListeners.push(obj);
+}
+
+function SSIncPendingRequests()
+{
+  __sspendingRequest = __sspendingRequest + 1;
+  if(!__ssshowLoader)
+  {
+    __ssloaderListeners.each(function(listener) {
+      if(listener.showLoader) listener.showLoader();
+    });
+    __ssshowLoader = true;
+  }
+}
+
+function SSDecPendingRequests()
+{
+  if(__sspendingRequest > 0) __sspendingRequest = __sspendingRequest - 1;
+  if(__sspendingRequest == 0)
+  {
+    __ssloaderListeners.each(function(listener) {
+      if(listener.hideLoader) listener.hideLoader();
+    });
+    __ssshowLoader = false;
+  }
+}
+
 /*
 Function: SSServerCall
   Sends a request to the server.
@@ -15,6 +48,8 @@ Parameters:
 */
 function SSServerCall(method, parameters, _callback) 
 {
+  SSIncPendingRequests();
+
   var callback = _callback;
   var url = server + 'server/?method=' + method;
   
@@ -46,6 +81,8 @@ function SSServerCall(method, parameters, _callback)
     data: data,
     onload: function(_rx) 
     {
+      SSDecPendingRequests();
+      
       SSLog('done!');
       var rx = _rx;
       SSLog('servercall returned', SSLogServerCall);
@@ -74,6 +111,7 @@ function SSServerCall(method, parameters, _callback)
     },
     onerror: function(err)  
     {
+      SSDecPendingRequests();
       SSLog(err);
     }
   };
@@ -93,6 +131,7 @@ function SSServerCall(method, parameters, _callback)
 
 function SSCollectionsCall(options)
 {
+  SSIncPendingRequests();
   var url = server + 'server/index.php';
   
   var req = {
@@ -101,6 +140,7 @@ function SSCollectionsCall(options)
     data: $H({method: "collections", desc:JSON.encode(options.desc)}).toQueryString(),
     onload: function(_rx) 
     {
+      SSDecPendingRequests();
       if(options.onComplete)
       {
         options.onComplete(_rx.responseText);
@@ -108,6 +148,7 @@ function SSCollectionsCall(options)
     },
     onerror: function(err)  
     {
+      SSDecPendingRequests();
       if(options.onFailure)
       {
         options.onFailure(_rx.responseText);
