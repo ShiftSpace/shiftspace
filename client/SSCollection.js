@@ -451,6 +451,7 @@ var SSCollection = new Class({
       table: this.table(),
       constraints: this.constraints(),
       properties: this.properties(),
+      orderBy: this.orderBy(),
       onComplete: function(data) {
         this.onRead(data, suppressEvent);
         if(callback) callback(data);
