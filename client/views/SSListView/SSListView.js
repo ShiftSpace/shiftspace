@@ -548,7 +548,7 @@ var SSListView = new Class({
 
     var delegate = this.delegate();
     
-    var canRemove = (delegate && delegate.canRemove && delegate.canRemove(index)) || true;
+    var canRemove = (delegate && delegate.canRemove && delegate.canRemove({listView:this, index:index})) || true;
 
     if(canRemove)
     {
@@ -574,16 +574,8 @@ var SSListView = new Class({
   
   removeObject: function(sender)
   {
-    var delegate = this.delegate();
-    
-    var canDelete = true;
-    if(delegate && delegate.canDelete) canDelete = delegate.canDelete({listView:this, sender:sender});
-    
-    if(canDelete)
-    {
-      this.remove(this.indexOf(sender));
-      this.fireEvent('onRemove');
-    }
+    var index = this.indexOf(sender);
+    this.remove(index);
   },
   
   
