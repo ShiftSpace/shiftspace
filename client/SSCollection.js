@@ -69,6 +69,13 @@ function SSClearCollections()
   SSCollections.empty();
 }
 
+function SSCollectionsClearAllPlugins()
+{
+  SSCollections.each(function(coll, name) {
+    coll.clearPlugins();
+  });
+}
+
 // ====================
 // = Class Definition =
 // ====================
@@ -168,6 +175,12 @@ var SSCollection = new Class({
   },
   
   
+  clearPlugins: function()
+  {
+    this.setPlugins($H());
+  },
+  
+  
   setDelegate: function(delegate)
   {
     this.__delegate = delegate;
@@ -207,7 +220,7 @@ var SSCollection = new Class({
   cleanObject: function(anObject)
   {
     return $H(anObject).filter(function(value, key) {
-      return value != null;
+      return value != null && value != '';
     }).getClean();
   },
   
@@ -230,7 +243,7 @@ var SSCollection = new Class({
       values: options.values,
       properties: options.properties,
       constraints: options.constraints,
-      orderby: options.orderby,
+      orderby: options.orderBy,
       startIndex: options.startIndex,
       range: options.range
     };
@@ -240,6 +253,9 @@ var SSCollection = new Class({
     if(delegate && delegate.onTransact) payload = delegate.onTransact(this, payload);
     
     payload = this.cleanPayload(payload);
+    
+    // clean values as well
+    if(payload.values) payload.values = this.cleanObject(payload.values);
     
     SSCollectionsCall({
       desc: payload,
@@ -451,6 +467,7 @@ var SSCollection = new Class({
       table: this.table(),
       constraints: this.constraints(),
       properties: this.properties(),
+      orderBy: this.orderBy(),
       onComplete: function(data) {
         this.onRead(data, suppressEvent);
         if(callback) callback(data);
@@ -586,7 +603,6 @@ var SSCollection = new Class({
   updateConstraints: function(constraint, value)
   {
     this.setConstraints($merge(this.constraints(), constraint.assoc(value)));
-    this.read();
   }
 
 });
