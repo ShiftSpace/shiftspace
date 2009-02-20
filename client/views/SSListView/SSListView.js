@@ -716,6 +716,9 @@ var SSListView = new Class({
     // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
     
+    // empty on refresh
+    this.element.empty();
+    
     if(len > 0 && this.cell())
     {
       // set the width programmatically if horizontal
@@ -725,7 +728,6 @@ var SSListView = new Class({
         this.element.setStyle('width', (this.options.cellSize.x*len)+modifer);
       }
       
-      this.element.empty();
       this.data().each(function(x) {
         // TODO: make sure it pass the filter
         var filter = this.filter(x);
