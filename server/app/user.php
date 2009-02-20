@@ -58,7 +58,7 @@ class User {
       }
 
       $this->server->user = $user;      
-      return new Response($user);
+      return new Response($this->server->user);
     }
   }
 
