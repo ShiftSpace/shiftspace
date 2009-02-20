@@ -237,8 +237,12 @@ class SandalphonCompiler:
             fileHandle.write(self.cssFile)
             fileHandle.close()
 
-            # make it pretty
-            return os.system('tidy -i -xml -m %s' % (fullPath))
+            # make it pretty 
+            # AVITAL - removed call to tidy because of a bug it has that destroys textarea
+            #          elements by inserting tabs where they shouldn't belong. 
+            #          See http://sourceforge.net/tracker/index.php?func=detail&aid=1532698&group_id=27659&atid=390963
+            #          and http://lists.w3.org/Archives/Public/html-tidy/2000OctDec/0341.html
+            # return os.system('tidy -i -xml -m %s' % (fullPath))
 
         elif jsonOutput == True:
             outputJsonDict = {}
