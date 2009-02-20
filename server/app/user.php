@@ -77,7 +77,7 @@ class User {
         throw new Error("Oops, please enter a password at least 6 characters long.");
     }
     
-    $userid = $this->server->user->id;
+    $userid = $this->server->user['id'];
 
     $emailexists = $this->server->moma->value($this->sql['checkemailupdate'], array('email' => $email, 'userid' => $userid));
     if ($emailexists)
@@ -85,21 +85,20 @@ class User {
 
     $user = $this->server->moma->load("user($userid)");
 
-    print_r($user);
-
     $user->set(array(
-      'password'          => md5($password),
       'phone'             => $phone,
       'normalized_phone'  => Sms::normalizePhoneNumber($phone),
       'email'             => $email
     ));
 
-    print_r($user);
+    if (isset($password) && $password != '') {
+      $user->set('password', md5($password));
+    }
 
     $this->server->moma->save($user);
 
     $user = $this->server->moma->load("user($userid)");
-    $this->server->user = $user;
+    $this->server->user = $user->get();
     
     return new Response($user);
   }

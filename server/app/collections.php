@@ -118,6 +118,8 @@ class Collections {
     extract($desc);
     $result = 0;
     
+    $values['modified'] = time();
+
     $sql = "UPDATE $table SET ";
    
     $valuesSql = array();
@@ -142,6 +144,10 @@ class Collections {
     $sql = "INSERT INTO $table ";
 
     $valuesSql = array();
+
+    $values['created'] = time();
+    $values['modified'] = time();
+
     $columns = implode(', ', array_keys($values));
     foreach ($values as $key => $value) {
       if (is_string($value))
@@ -150,6 +156,7 @@ class Collections {
       $valuesSql[] = $value;
     }
     
+                 
     $valuesClause = implode(', ', $valuesSql);
     $sql .= "($columns) VALUES ($valuesClause)";
     
