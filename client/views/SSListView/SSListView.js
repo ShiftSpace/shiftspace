@@ -548,10 +548,11 @@ var SSListView = new Class({
 
     var delegate = this.delegate();
     
-    var canRemove = (delegate && delegate.canRemove && delegate.canRemove({listView:this, index:index})) || null;
-    console.log('canRemove ' + canRemove);
-    if(canRemove == null) canRemove = true;
-    console.log('canRemove ' + canRemove);
+    var canRemove = true;
+    if(delegate && delegate.canRemove)
+    {
+      canRemove = delegate.canRemove({listView:this, index:index}));
+    } 
 
     if(canRemove)
     {
