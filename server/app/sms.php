@@ -15,7 +15,7 @@ class Sms {
     extract($_POST);
 
     $f = fopen(dirname(__FILE__)."/sms.log", "a");
-    fwrite($f, "[SEND]\n";
+    fwrite($f, "[SEND]\n");
     fwrite($f, "Phone: $phone\n");
     fwrite($f, "Message: $msg\n");
     fwrite($f, "Toself: $toself\n");
@@ -68,7 +68,7 @@ class Sms {
     extract($_REQUEST);
         
     $f = fopen(dirname(__FILE__)."/sms.log", "a");
-    fwrite($f, "[RECEIVE]\n";
+    fwrite($f, "[RECEIVE]\n");
     fwrite($f, "Phone: $phone\n");
     fwrite($f, "Message: $msg\n");
     fwrite($f, "Action: $action\n");
