@@ -18,7 +18,7 @@ Hash.implement({
   {
     var copy = $H();
     this.each(function(value, key) {
-      copy.set(value, key);
+      copy.set(key, value);
     });
     return copy;
   }
