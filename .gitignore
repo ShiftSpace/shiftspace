@@ -1,4 +1,5 @@
 *~
+*.save
 
 momasocialbar/images
 momasocialbar/templates
@@ -8,3 +9,5 @@ momasocialbar/scripts
 sandalphon/simplejson
 builder/simplejson
 client/compiledViews
+server/app/sms.log
+server/server.ini

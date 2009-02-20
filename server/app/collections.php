@@ -123,7 +123,7 @@ class Collections {
     $valuesSql = array();
     foreach ($values as $key => $value) {
       if (is_string($value))
-        $value = "'$value'";
+        $value = "'".sqlite_escape_string($value)."'";
         
       $valuesSql[] = "$key = $value";
     }
