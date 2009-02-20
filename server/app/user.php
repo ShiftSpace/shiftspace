@@ -20,6 +20,12 @@ class User {
       SELECT COUNT(*)
       FROM user
       WHERE email = :email
+    ",
+    'checkemailupdate' => "
+      SELECT COUNT(*)
+      FROM user
+      WHERE email = :email
+      AND id <> :userid
     "
   );
   
@@ -71,18 +77,28 @@ class User {
         throw new Error("Oops, please enter a password at least 6 characters long.");
     }
     
-    $emailexists = $this->server->moma->value($this->sql['checkemail'], array('email' => $email));
+    $userid = $this->server->user->id;
+
+    $emailexists = $this->server->moma->value($this->sql['checkemailupdate'], array('email' => $email, 'userid' => $userid));
     if ($emailexists)
       throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
 
-    $user = $this->server->user;
+    $user = $this->server->moma->load("user($userid)");
+
+    print_r($user);
+
     $user->set(array(
-      'password'      => md5($password),
-      'phone'         => $phone,
-      'email'         => $email
+      'password'          => md5($password),
+      'phone'             => $phone,
+      'normalized_phone'  => Sms::normalizePhoneNumber($phone),
+      'email'             => $email
     ));
-    
+
+    print_r($user);
+
     $this->server->moma->save($user);
+
+    $user = $this->server->moma->load("user($userid)");
     $this->server->user = $user;
     
     return new Response($user);
