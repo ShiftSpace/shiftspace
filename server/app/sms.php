@@ -31,7 +31,7 @@ class Sms {
       $numbers = array();
       
     if ($toself == 1) {
-      $numbers[] = $this->server->user->normalized_phone;
+      $numbers[] = $this->server->user['normalized_phone'];
     }
     
     foreach ($numbers as $number) {
