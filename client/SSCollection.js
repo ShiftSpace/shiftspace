@@ -277,7 +277,7 @@ var SSCollection = new Class({
     payload = this.cleanPayload(payload);
     
     // clean values as well
-    if(payload.values) payload.values = this.escapeValues(this.cleanObject(payload.values));
+    if(payload.values) payload.values = this.cleanObject(payload.values);
     
     SSCollectionsCall({
       desc: payload,
