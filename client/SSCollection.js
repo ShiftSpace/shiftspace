@@ -237,7 +237,7 @@ var SSCollection = new Class({
   
   escapeValues: function(obj)
   {
-    return $H(obj).each(function(value, key) {
+    return $H(obj).map(function(value, key) {
       return escape(value);
     }).getClean();
   },
