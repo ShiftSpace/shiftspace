@@ -72,11 +72,13 @@ class GlobalCalls {
 
     $method = $desc['action'];
     try {
-      $collections->$method($desc);
+      return $collections->$method($desc);
     }
     catch (Exception $e) {
       if (!$desc['attempt'])
         throw $e;
+      else
+        return $e;
     }
   }
     
