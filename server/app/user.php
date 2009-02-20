@@ -100,7 +100,7 @@ class User {
     $user = $this->server->moma->load("user($userid)");
     $this->server->user = $user->get();
     
-    return new Response($user);
+    return new Response($this->server->user);
   }
   
   public function join() {
