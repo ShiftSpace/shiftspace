@@ -284,7 +284,7 @@ var SSCollection = new Class({
       onComplete: function(response) {
         var result = JSON.decode(response);
         var data = result.data;
-        data = this.unescapeResult(this.applyPlugins(action, data));
+        data = this.applyPlugins(action, data);
         // transform the data
         options.onComplete(data);
       }.bind(this),
