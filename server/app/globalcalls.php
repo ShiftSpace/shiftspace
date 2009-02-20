@@ -66,26 +66,36 @@ class GlobalCalls {
     
     return new Response($data);
   }
-  
+
+  function collections_method($desc) {
+    $collections = new Collections($this->server);
+
+    $method = $desc['action'];
+    try {
+      $collections->$method($desc);
+    }
+    catch (Exception $e) {
+      if (!$desc['attempt'])
+        throw $e;
+    }
+  }
+    
   function collections() {
     $desc = json_decode($_POST['desc'], true);
-    $collections = new Collections($this->server);
     $result = array();
     
     if (!isset($desc[0])) {
       // this is an associative array meaning its not a bulk operation
-      $method = $desc['action'];
-      return new Response($collections->$method($desc));
+      return new Response($this->collections_method($desc));
     }
     else {
       // bulk operation      
       foreach ($desc as $operation) {
-        $method = $operation['action'];
-        $result[] = $collections->$method($operation);
+        $result[] = $this->collections_method($desc);
       }
-    }
     
-    return new Response($result);
+      return new Response($result);
+    }
   }
 }
 
