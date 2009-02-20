@@ -62,7 +62,7 @@ class Collections {
   
   function read($desc) {
     extract($desc);
-  
+    
     if ($properties == '*')
       $properties = $this->generate_all_properties($table);
     

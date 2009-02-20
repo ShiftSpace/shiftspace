@@ -68,11 +68,9 @@ class GlobalCalls {
   }
 
   function collections_method($desc) {
-    $collections = new Collections($this->server);
-
     $method = $desc['action'];
     try {
-      return $collections->$method($desc);
+      return $this->collections->$method($desc);
     }
     catch (Exception $e) {
       if (!$desc['attempt'])
@@ -83,6 +81,7 @@ class GlobalCalls {
   }
     
   function collections() {
+    $this->collections = new Collections($this->server);
     $desc = json_decode($_POST['desc'], true);
     $result = array();
     
@@ -93,7 +92,7 @@ class GlobalCalls {
     else {
       // bulk operation      
       foreach ($desc as $operation) {
-        $result[] = $this->collections_method($desc);
+        $result[] = $this->collections_method($operation);
       }
     
       return new Response($result);
