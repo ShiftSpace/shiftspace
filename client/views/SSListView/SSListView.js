@@ -304,7 +304,7 @@ var SSListView = new Class({
     
     if(canAdd)
     {
-      var addData = delegate.dataFor('add', this);
+      var addData = (delegate.dataFor && delegate.dataFor('add', this));
       
       if(this.hasCollection())
       {
