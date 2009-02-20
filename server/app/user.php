@@ -134,7 +134,7 @@ class User {
     $this->server->moma->save($user);
     $this->server->user = $user->get();
     
-    return new Response($user);
+    return new Response($this->server->user);
   }
   
   public function query() {
