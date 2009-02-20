@@ -145,7 +145,7 @@ class Collections {
     $columns = implode(', ', array_keys($values));
     foreach ($values as $key => $value) {
       if (is_string($value))
-        $value = "'$value'";
+        $value = "'".sqlite_escape_string($value)."'";
         
       $valuesSql[] = $value;
     }
