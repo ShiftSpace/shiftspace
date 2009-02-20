@@ -235,9 +235,9 @@ var SSCollection = new Class({
   },
   
   
-  escapeValues: function(object)
+  escapeValues: function(obj)
   {
-    return $H(object).each(function(value, key) {
+    return $H(obj).each(function(value, key) {
       return escape(value);
     }).getClean();
   },
@@ -248,6 +248,12 @@ var SSCollection = new Class({
     return $H(object).each(function(value, key) {
       return unescape(value);
     }).getClean();
+  },
+  
+  
+  unescapeResult: function(ary)
+  {
+    return ary.map(this.unescapeValues);
   },
   
   
@@ -278,7 +284,7 @@ var SSCollection = new Class({
       onComplete: function(response) {
         var result = JSON.decode(response);
         var data = result.data;
-        data = this.unescapeValues(this.applyPlugins(action, data));
+        data = this.unescapeResult(this.applyPlugins(action, data));
         // transform the data
         options.onComplete(data);
       }.bind(this),
