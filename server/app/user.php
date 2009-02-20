@@ -132,7 +132,7 @@ class User {
     ));
     
     $this->server->moma->save($user);
-    $this->server->user = $user;
+    $this->server->user = $user->get();
     
     return new Response($user);
   }
