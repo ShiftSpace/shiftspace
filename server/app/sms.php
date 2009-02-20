@@ -1,5 +1,8 @@
 <?php
 
+$dir = dirname(__FILE__);
+require_once("$dir/../../momasocialbar/sms.php");
+
 class Artwork_Object extends Base_Object {}
 class SavedArtWork_Object extends Base_Object {}
 
@@ -11,11 +14,10 @@ class Sms {
   public function send() {
     extract($_POST);
 
-    $message = urlencode($message);
+    return new Response(sendsms($phone, $msg));
   }
   
   private function userByPhone($phone) {
-
     $users = $this->server->moma->rows("select * from user where phone=:phone", compact('phone'), PDO::FETCH_ASSOC);
     if (count($users) > 0) {
       return array($users[0], false);
@@ -62,13 +64,13 @@ class Sms {
         $this->server->moma->save($updateuser);
 
         if ($username == '')
-          return "Hey there. '$title' was just saved for you. Go to txt.moma.org to retrieve it and any other works you collect. See you there!";
+          sendsms($phone, "Hey there. '$title' was just saved for you. Go to txt.moma.org to retrieve it and any other works you collect. See you there!");
         else
-          return "Hey $username. '$title' was added to your collection. You will find it and any other work you collect on moma.org. See you there!";
+          sendsms($phone, "Hey $username. '$title' was added to your collection. You will find it and any other work you collect on moma.org. See you there!");
       }
     } 
     else {
-      return "$artworkid does not refer to any item in our database. Please verify the number and try again.";
+      sendsms($phone, "$artworkid does not refer to any item in our database. Please verify the number and try again.");
     }
   }
 }
