@@ -13,12 +13,26 @@ class Sms {
   
   public function send() {
     extract($_POST);
+    $result = Array();
 
-    return new Response(sendsms($phone, $msg));
+    foreach (explode(',', $phone) as $number) {
+      $result[] = sendsms($this->normalizePhoneNumber($number), $msg);
+    }
+
+    return new Response($result);
+  }
+
+  static public function normalizePhoneNumber($phone) {
+    $phone = str_replace(Array('.', '(', ')', '-', ' '), '', $phone);
+    
+    if (substr($phone, 0, 1) != '+') // We're in the US
+      $phone = '+1' . $phone;
+    
+    return $phone;
   }
   
   private function userByPhone($phone) {
-    $users = $this->server->moma->rows("select * from user where phone=:phone", compact('phone'), PDO::FETCH_ASSOC);
+    $users = $this->server->moma->rows("select * from user where normalized_phone=:phone", compact('phone'), PDO::FETCH_ASSOC);
     if (count($users) > 0) {
       return array($users[0], false);
     }  

@@ -1,5 +1,8 @@
 <?php
 
+$dir = dirname(__FILE__);
+require_once("$dir/sms.php");
+
 class User {
   protected $sql = array(
     'login' => "
@@ -105,11 +108,12 @@ class User {
 
     $user = new User_Object();
     $user->set(array(
-      'username'      => $username,
-      'display_name'  => $username,
-      'password'      => md5($password),
-      'phone'         => $phone,
-      'email'         => $email
+      'username'          => $username,
+      'display_name'      => $username,
+      'password'          => md5($password),
+      'phone'             => $phone,
+      'normalized_phone'  => Sms::normalizePhoneNumber($phone),
+      'email'             => $email
     ));
     
     $this->server->moma->save($user);

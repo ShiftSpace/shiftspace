@@ -3,7 +3,7 @@ cp moma.sqlite3 moma.sqlite3.bak
 mv moma.sqlite3 moma_.sqlite3
 rm -f server.ini
 
-echo 'You should already have a new verison of server.ini'
+echo 'If you are running this, you already have a new verison of server.ini, right?'
 echo
 echo '(1) *** please enter fissure and run version to generate a clean db with the new schema.'
 echo '(1.5) sudo chmod a+w moma.sqlite3'
