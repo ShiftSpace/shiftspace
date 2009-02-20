@@ -235,6 +235,22 @@ var SSCollection = new Class({
   },
   
   
+  escapeValues: function(object)
+  {
+    return $H(object).each(function(value, key) {
+      return escape(value);
+    }).getClean();
+  },
+  
+  
+  unescapeValues: function(object)
+  {
+    return $H(object).each(function(value, key) {
+      return unescape(value);
+    }).getClean();
+  },
+  
+  
   transact: function(action, options)
   {
     var payload = {
@@ -255,14 +271,14 @@ var SSCollection = new Class({
     payload = this.cleanPayload(payload);
     
     // clean values as well
-    if(payload.values) payload.values = this.cleanObject(payload.values);
+    if(payload.values) payload.values = this.escapeValues(this.cleanObject(payload.values));
     
     SSCollectionsCall({
       desc: payload,
       onComplete: function(response) {
         var result = JSON.decode(response);
         var data = result.data;
-        data = this.applyPlugins(action, data);
+        data = this.unescapeValues(this.applyPlugins(action, data));
         // transform the data
         options.onComplete(data);
       }.bind(this),
