@@ -144,6 +144,7 @@ var SSListView = new Class({
   sortComplete: function(cellNode)
   {
     this.__move__(this.__sortStart, this.cellNodes().indexOf(cellNode));
+    this.fireEvent('onSortComplete');
   },
   
   
