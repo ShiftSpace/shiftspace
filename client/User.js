@@ -124,8 +124,13 @@ var ShiftSpaceUserClass = new Class({
   */
   logout: function()
   {
-    SSServerCall('user.logout');
-    this.fireEvent('onUserLogout');
+    SSServerCall('user.logout', null, function(json) {
+      // clear out all values
+      this.setUsername(null);
+      this.setId(null);
+      this.setEmail(null);
+      this.fireEvent('onUserLogout');
+    });
   },
   
   /*
