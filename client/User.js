@@ -130,7 +130,7 @@ var ShiftSpaceUserClass = new Class({
       this.setId(null);
       this.setEmail(null);
       this.fireEvent('onUserLogout');
-    });
+    }.bind(this));
   },
   
   /*
