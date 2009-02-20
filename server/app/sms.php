@@ -15,7 +15,16 @@ class Sms {
     extract($_POST);
     $result = Array();
 
-    foreach (explode(',', $phone) as $number) {
+    if (isset($phone) && $phone != '')
+      $numbers = explode(',', $phone);
+    else
+      $numbers = array();
+      
+    if ($toself == 1) {
+      $numbers[] = $this->server->user->normalized_phone;
+    }
+    
+    foreach ($numbers as $number) {
       $result[] = sendsms($this->normalizePhoneNumber($number), $msg);
     }
 
