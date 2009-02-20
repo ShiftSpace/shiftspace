@@ -243,9 +243,9 @@ var SSCollection = new Class({
   },
   
   
-  unescapeValues: function(object)
+  unescapeValues: function(obj)
   {
-    return $H(object).each(function(value, key) {
+    return $H(obj).each(function(value, key) {
       return unescape(value);
     }).getClean();
   },
