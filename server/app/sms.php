@@ -13,9 +13,28 @@ class Sms {
   
   public function send() {
     extract($_POST);
+
+    $f = fopen(dirname(__FILE__)."/sms.log", "a");
+    fwrite($f, "[SEND]\n");
+    fwrite($f, "Phone: $phone\n");
+    fwrite($f, "Message: $msg\n");
+    fwrite($f, "Toself: $toself\n");
+    fwrite($f, "=====\n\n");
+    fflush($f);
+    fclose($f);
+
     $result = Array();
 
-    foreach (explode(',', $phone) as $number) {
+    if (isset($phone) && $phone != '')
+      $numbers = explode(',', $phone);
+    else
+      $numbers = array();
+      
+    if ($toself == 1) {
+      $numbers[] = $this->server->user['normalized_phone'];
+    }
+    
+    foreach ($numbers as $number) {
       $result[] = sendsms($this->normalizePhoneNumber($number), $msg);
     }
 
@@ -49,6 +68,7 @@ class Sms {
     extract($_REQUEST);
         
     $f = fopen(dirname(__FILE__)."/sms.log", "a");
+    fwrite($f, "[RECEIVE]\n");
     fwrite($f, "Phone: $phone\n");
     fwrite($f, "Message: $msg\n");
     fwrite($f, "Action: $action\n");

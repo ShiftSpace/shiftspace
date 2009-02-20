@@ -20,6 +20,12 @@ class User {
       SELECT COUNT(*)
       FROM user
       WHERE email = :email
+    ",
+    'checkemailupdate' => "
+      SELECT COUNT(*)
+      FROM user
+      WHERE email = :email
+      AND id <> :userid
     "
   );
   
@@ -51,8 +57,8 @@ class User {
         throw new Error("We're sorry, but your username is not compatible with the latest release of ShiftSpace. Please contact us at info@shiftspace.org so we can fix your account.");
       }
 
-      $this->server->user = $user;      
-      return new Response($user);
+      $this->server->user = get_object_vars($user);      
+      return new Response($this->server->user);
     }
   }
 
@@ -71,21 +77,30 @@ class User {
         throw new Error("Oops, please enter a password at least 6 characters long.");
     }
     
-    $emailexists = $this->server->moma->value($this->sql['checkemail'], array('email' => $email));
+    $userid = $this->server->user['id'];
+
+    $emailexists = $this->server->moma->value($this->sql['checkemailupdate'], array('email' => $email, 'userid' => $userid));
     if ($emailexists)
       throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
 
-    $user = $this->server->user;
+    $user = $this->server->moma->load("user($userid)");
+
     $user->set(array(
-      'password'      => md5($password),
-      'phone'         => $phone,
-      'email'         => $email
+      'phone'             => $phone,
+      'normalized_phone'  => Sms::normalizePhoneNumber($phone),
+      'email'             => $email
     ));
-    
+
+    if (isset($password) && $password != '') {
+      $user->set('password', md5($password));
+    }
+
     $this->server->moma->save($user);
-    $this->server->user = $user;
+
+    $user = $this->server->moma->load("user($userid)");
+    $this->server->user = $user->get();
     
-    return new Response($user);
+    return new Response($this->server->user);
   }
   
   public function join() {
@@ -117,9 +132,9 @@ class User {
     ));
     
     $this->server->moma->save($user);
-    $this->server->user = $user;
+    $this->server->user = $user->get();
     
-    return new Response($user);
+    return new Response($this->server->user);
   }
   
   public function query() {
