@@ -55,6 +55,7 @@ class User {
 
   public function logout() {
     $this->server->user = null;
+    return new Response('ok');
   }
 
   public function update() {
