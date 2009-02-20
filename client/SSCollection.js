@@ -628,7 +628,7 @@ var SSCollection = new Class({
   },
   
   
-  empty: functinon()
+  empty: function()
   {
     this.setArray([]);
     this.fireEvent('onLoad');
