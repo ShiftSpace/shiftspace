@@ -551,7 +551,7 @@ var SSListView = new Class({
     var canRemove = true;
     if(delegate && delegate.canRemove)
     {
-      canRemove = delegate.canRemove({listView:this, index:index}));
+      canRemove = delegate.canRemove({listView:this, index:index});
     } 
 
     if(canRemove)
