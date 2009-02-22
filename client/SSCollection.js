@@ -310,7 +310,7 @@ var SSCollection = new Class({
   bulkTransact: function(payload, options)
   {
     SSCollectionsCall({
-      desc: payload
+      desc: payload,
       onComplete: function(response) {
         var result = JSON.decode(response);
         var data = result.data;
