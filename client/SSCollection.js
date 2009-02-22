@@ -300,7 +300,7 @@ var SSCollection = new Class({
   },
   
   
-  bulkTransact: function(actions, options)
+  bulkTransact: function(payload, options)
   {
     SSCollectionsCall({
       desc: payload,
