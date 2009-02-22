@@ -566,12 +566,12 @@ var SSCollection = new Class({
   
   update: function(data, index)
   {
+    var indexConstraint = (index && {id: this.get(index).id}) || null;
+    })
     this.transact('update', {
       table: this.table(),
       values: data,
-      constraints: $merge(this.constraints(), {
-        id: this.get(index).id
-      }),
+      constraints: $merge(this.constraints(), indexConstraint),
       onComplete: function(rx) {
         this.onUpdate(data, index);
       }.bind(this),
