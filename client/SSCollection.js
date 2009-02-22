@@ -257,7 +257,7 @@ var SSCollection = new Class({
   },
   
   
-  transact: function(action, options)
+  transact: function(action, options, bulk)
   {
     var payload = {
       action: action,
@@ -270,15 +270,38 @@ var SSCollection = new Class({
       range: options.range
     };
     
-    // allow the delegate to 
-    var delegate = this.delegate();
-    if(delegate && delegate.onTransact) payload = delegate.onTransact(this, payload);
-    
-    payload = this.cleanPayload(payload);
-    
-    // clean values as well
-    if(payload.values) payload.values = this.cleanObject(payload.values);
-    
+    if(!bulk)
+    {
+      // allow the delegate to add info
+      var delegate = this.delegate();
+      if(delegate && delegate.onTransact) payload = delegate.onTransact(this, payload);
+
+      payload = this.cleanPayload(payload);
+
+      // clean values as well
+      if(payload.values) payload.values = this.cleanObject(payload.values);
+      
+      SSCollectionsCall({
+        desc: payload,
+        onComplete: function(response) {
+          var result = JSON.decode(response);
+          var data = result.data;
+          data = this.applyPlugins(action, data);
+          // transform the data
+          options.onComplete(data);
+        }.bind(this),
+        onFailure: options.onFailure
+      });
+    }
+    else
+    {
+      return payload;
+    }
+  },
+  
+  
+  bulkTransact: function(actions, options)
+  {
     SSCollectionsCall({
       desc: payload,
       onComplete: function(response) {
@@ -485,7 +508,7 @@ var SSCollection = new Class({
   */
   read: function(callback, suppressEvent)
   {
-    this.transact('read', {
+    return this.transact('read', {
       table: this.table(),
       constraints: this.constraints(),
       properties: this.properties(),
@@ -515,7 +538,7 @@ var SSCollection = new Class({
   
   create: function(data)
   {
-    this.transact('create', {
+    return this.transact('create', {
       table: this.table(),
       values: data,
       onComplete: function(theId) {
@@ -549,7 +572,7 @@ var SSCollection = new Class({
   
   'delete': function(index)
   {
-    this.transact('delete', {
+    return this.transact('delete', {
       table: this.table(),
       constraints: $merge(this.constraints(), {
         id: this.get(index).id
@@ -564,11 +587,11 @@ var SSCollection = new Class({
   },
   
   
-  update: function(data, index)
+  update: function(data, index, bulk)
   {
     var indexConstraint = (index && {id: this.get(index).id}) || null;
 
-    this.transact('update', {
+    return this.transact('update', {
       table: this.table(),
       values: data,
       constraints: $merge(this.constraints(), indexConstraint),
@@ -578,10 +601,10 @@ var SSCollection = new Class({
       onFailure: function(data) {
         this.onFailure('delete', data, index);
       }.bind(this)
-    });
+    }, bulk);
   },
   
-    
+  
   onFailure: function(action, data, index)
   {
     
