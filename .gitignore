@@ -11,3 +11,14 @@ builder/simplejson
 client/compiledViews
 server/app/sms.log
 server/server.ini
+
+builder/SSPackageSorter.pyc
+builds/shiftspace.sandalphon.js
+builds/shiftspace.sandbox.js
+builds/shiftspace.user.js
+config/env/my_sandalphon.json
+config/env/mydev.json
+config/packages.json
+config/tests.json
+momasocialbar/
+
