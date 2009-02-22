@@ -299,15 +299,21 @@ var SSCollection = new Class({
     }
   },
   
-  
+  /*
+    Function: bulkTransact
+      Takes a series of methods. Incomplete implementation, does not support
+      plugins.
+    
+    Parameters:
+      payload - an array of collection methods.
+  */
   bulkTransact: function(payload, options)
   {
     SSCollectionsCall({
-      desc: payload,
+      desc: payload
       onComplete: function(response) {
         var result = JSON.decode(response);
         var data = result.data;
-        data = this.applyPlugins(action, data);
         // transform the data
         options.onComplete(data);
       }.bind(this),
