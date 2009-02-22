@@ -567,7 +567,7 @@ var SSCollection = new Class({
   update: function(data, index)
   {
     var indexConstraint = (index && {id: this.get(index).id}) || null;
-    })
+
     this.transact('update', {
       table: this.table(),
       values: data,
