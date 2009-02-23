@@ -420,9 +420,9 @@ var SSCollection = new Class({
   },
   
   
-  get: function(index)
+  get: function(idx)
   {
-    return this.__array[index];
+    return this.__array[idx];
   },
   
   
@@ -599,8 +599,8 @@ var SSCollection = new Class({
     
     if(bulk)
     {
-      SSLog(JSON.encode(this.getArray()), SSLogForce);
       SSLog(index + ' update id ' + indexConstraint, SSLogForce);
+      SSLog(this.__array[0], SSLogForce);
       SSLog(indexConstraint, SSLogForce);
     }
 
