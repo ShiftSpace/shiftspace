@@ -596,7 +596,7 @@ var SSCollection = new Class({
   update: function(data, index, bulk)
   {
     var indexConstraint = null;
-    if(index != null) indexConstraint = {id: this.get(index).id});
+    if(index != null) indexConstraint = {id: this.get(index).id};
 
     if(bulk)
     {
