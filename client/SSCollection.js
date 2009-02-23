@@ -565,7 +565,7 @@ var SSCollection = new Class({
   },
   
   
-  indexWhere: function(fn, properties)
+  indexWhere: function(fn)
   {
     var ary = this.getArray();
     for(var i = 0, len = ary.length; i < len; i++)
