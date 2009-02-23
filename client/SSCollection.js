@@ -598,13 +598,6 @@ var SSCollection = new Class({
     var indexConstraint = null;
     if(index != null) indexConstraint = {id: this.get(index).id};
 
-    if(bulk)
-    {
-      SSLog(index + ' update id ' + indexConstraint, SSLogForce);
-      SSLog(this.__array[0], SSLogForce);
-      SSLog(indexConstraint, SSLogForce);
-    }
-
     return this.transact('update', {
       table: this.table(),
       values: data,
