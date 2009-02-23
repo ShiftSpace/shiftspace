@@ -599,7 +599,8 @@ var SSCollection = new Class({
     
     if(bulk)
     {
-      SSLog('update id' + indexConstraint, SSLogForce);
+      SSLog(this.getArray(), SSLogForce);
+      SSLog('update id ' + indexConstraint, SSLogForce);
       SSLog(indexConstraint, SSLogForce);
     }
 
