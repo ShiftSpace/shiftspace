@@ -553,7 +553,17 @@ var SSCollection = new Class({
     });
   },
   
-  
+  /*
+    Function: query
+      Takes a predicate function and a list of properties to be returned for each matching item.
+      
+    Parameters:
+      queryFn - a predicate function.
+      properties - an array of string of the properties to be returned.
+      
+    Returns:
+      An array of matching items containing only the request properties.
+  */
   query: function(queryFn, properties)
   {
     // IE6 fix
@@ -564,7 +574,16 @@ var SSCollection = new Class({
     });
   },
   
-  
+  /*
+    Function: indexWhere
+      Returns the first index of the item matching the predicate fn.
+      
+    Parameters:
+      fn - A predicate function.
+      
+    Returns:
+      The index of the first matching item, or -1 if no match.
+  */
   indexWhere: function(fn)
   {
     var ary = this.getArray();
@@ -573,6 +592,29 @@ var SSCollection = new Class({
       if(fn(ary[i])) return i;
     }
     return -1;
+  },
+  
+  /*
+    Function: find
+      Returns the first item matching the passed in predicated:
+      
+    Parameters:
+      fn - a predicate function.
+      
+    Returns:
+      The first item matching the predicate or null.
+  */
+  find: function(fn)
+  {
+    var index = this.indexWhere(fn);
+    if(index == -1)
+    {
+      return null;
+    }
+    else
+    {
+      return this.get(index);
+    }
   },
   
   
