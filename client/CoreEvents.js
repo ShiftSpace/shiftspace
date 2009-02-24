@@ -172,3 +172,9 @@ function SSMouseMoveHandler(_event)
     ShiftSpace.ShiftMenu.hide();
   }
 }
+
+var SSNotificationCenterClass = new Class({
+  Implements: [Events, Options]
+});
+
+var SSNotificationCenter = new SSNotificationCenter();
