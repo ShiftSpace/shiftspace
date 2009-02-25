@@ -65,20 +65,52 @@ var SSListView = new Class({
     this.initSortables();
     this.attachEvents();
   },
-  
-  
+
+/*
+    Function: setFilter
+      Sets the filter as a function.
+      
+    Parameters: 
+      fn - A function.
+      
+    See Also: 
+      getFilter
+      filter
+*/  
   setFilter: function(fn)
   {
     this.__filter = fn;
   },
-  
-  
+  /*
+    Function: getFilter
+      Returns the current filter.
+      
+    Returns: 
+      A function.
+      
+    See Also: 
+      setFilter
+      filter
+  */
   getFilter: function()
   {
     return this.__filter;
   },
   
-  
+  /*
+    Function: filter
+      Returns true if the filter is set. 
+      
+    Parameters: 
+      data - a row in a javascript array. //NOTE:The name data is a bit ambigious. rowData maybe? -Jusitn
+        
+    Returns:
+      A boolean value
+    
+    See Also:
+      setFilter
+      getFilter
+*/
   filter: function(data)
   {
     var filterFn = this.getFilter();
@@ -90,19 +122,41 @@ var SSListView = new Class({
     return false;
   },
   
-  
+  /*
+    Function: setHasCollection
+      Sets the value of hasCollection to a boolean
+      
+    Parameters:
+      val - a boolean value
+      
+    See Also: 
+      hasCollection
+  */
   setHasCollection: function(val)
   {
     this.__hasCollection = val;
   },
   
-  
+  /*
+    Function: hasCollection
+      Returns a the boolean value of hasCollection 
+    
+    Returns:
+      A boolean value.
+      
+    See Also: 
+      setHasCollection
+  */
   hasCollection: function()
   {
     return this.__hasCollection;
   },
   
+/*
+    Function: initSortables (private)
+      Called during intialize(). Creates a new sortable object.   
   
+*/
   initSortables: function()
   {
     if(this.options.sortable)
@@ -129,31 +183,63 @@ var SSListView = new Class({
     }
   },
   
-  
+/*
+    Function: sortStart
+      Sets the sortStart property to the index of a cell node. Determines the starting point for a sort.  
+                  
+    Parameters:
+     cellNode - a cell's DOM node
+*/
   sortStart: function(cellNode)
   {
     this.__sortStart = this.cellNodes().indexOf(cellNode)-1;
   },
   
-  
+  /*
+    Function: sortSort (abstract)
+      Sorts changed hooks.  
+      
+    Note: 
+      This name needs to be change. sortChange?  -Justin
+  */
   sortSort: function(cellNode)
   {
   },
   
-  
+  /*
+    Function: sortComplete
+      Calls the move function and sorts an array from sortStart to the passed cell node.
+      
+    Parameters:
+     cellNode - a cell's DOM node. Determines where the sort ends. 
+     
+    See Also:
+      move
+  */
   sortComplete: function(cellNode)
   {
     this.__move__(this.__sortStart, this.cellNodes().indexOf(cellNode));
     this.fireEvent('onSortComplete');
   },
   
-  
+  /*
+    Function: attatchEvents (private)
+      Called by the initialize function.  Adds an event that calls eventDispatch on a click event. 
+      
+  */
   attachEvents: function()
   {
     this.element.addEvent('click', this.eventDispatch.bind(this));
   },
   
+  /*
+    Function: eventDispatch (private)
+      Called on click event. 
   
+    Parameters:
+      _event - the event issueing the function. Always a "click" event. 
+      eventType - //NOTE: I'm not sure what this argument means. -Justin\\
+  */
   eventDispatch: function(_event, eventType)
   {
     var event = new Event(_event);
@@ -174,8 +260,14 @@ var SSListView = new Class({
     
     event.stop();
   },
-  
-  
+
+/*
+    Function: awake
+      If a cell has content, set the cell's content to the assigned context.
+      
+    Parameters:
+      context - The context a object was created for. Either a window, element, or iframe.
+*/
   awake: function(context)
   {
     var cellNode = this.element.getElement('> .SSCell');
@@ -185,7 +277,16 @@ var SSListView = new Class({
     }
   },
   
-  
+  /*
+      Function: setCell
+        Sets the cell class, and sets a delegate instance of the cell. 
+
+      Parameters:
+        cell - A cell class
+        
+      See also:
+        cell
+  */
   setCell: function(cell)
   {
     this.__cell = cell;
@@ -194,12 +295,31 @@ var SSListView = new Class({
   },
   
   
+  /*
+      Function: cell
+        Returns the cell class. 
+
+      Returns:
+        A cell class
+        
+      See also:
+        setCell
+  */  
   cell: function()
   {
     return this.__cell;
   },
-  
-  
+  /*
+    Function: setData
+      Sets the data property of the class. 
+      
+    Parameters:
+      newData - A javascript array row.
+      
+    See Also:
+      getData
+      data
+*/
   setData: function(newData)
   {
     this.__data = newData;
@@ -213,21 +333,36 @@ var SSListView = new Class({
     
     this.refresh();
   },
-  
+    /*
+      Function: data
+        Returns the data property. 
+      
+      Returns:
+        A javascript array row. 
 
+      See Also:
+        setData
+        getData
+  */
   data: function()
   {
     if(this.__pendingCollection) this.checkPendingCollection();
     return this.__data;
   },
   
-  
+    /*
+     Note:
+      MARKED FOR DELETION: Redundant function, see data -Justin
+  */
   getData: function()
   {
     return this.data();
   },
-  
-  
+    /*
+      Function: checkPendingCollection 
+        If a pending collection exists, delete the current one and reassign it. 
+        
+    */
   checkPendingCollection: function()
   {
     var coll = SSCollectionForName(this.__pendingCollection);
@@ -238,8 +373,16 @@ var SSListView = new Class({
       this.setData(coll);
     }
   },
-  
-  
+  /*
+      Function: rawData
+        Returns the data property of the class.  
+      
+      Returns:
+        A row in a javascript array. 
+        
+      Note:
+        Internal is a possible future implementation. 
+   */
   rawData: function()
   {
     var data = this.data();
@@ -247,7 +390,14 @@ var SSListView = new Class({
     return data;
   },
   
+  /*
   
+      Function: count
+         //NOTE: See TODO in function. 
+         
+      Returns:
+        The length of a row in a Javascript array. 
+  */
   count: function()
   {
     // TODO: not sure about the bounds checking in SSListView, this should probably be put into SSCollections - David
@@ -255,7 +405,15 @@ var SSListView = new Class({
     return this.data().length;
   },
   
-  
+  /*
+      Function: find
+      
+      Parameters:
+        fn - A function
+        
+      Returns:
+        
+  */
   find: function(fn)
   {
     var data = this.rawData();
@@ -263,7 +421,16 @@ var SSListView = new Class({
     return -1;
   },
   
-  
+  /*
+  ?????
+      Function: findAll
+      
+      Parameters:
+        fn - A function
+        
+      Returns:
+        
+  */
   findAll: function(fn)
   {
     var data = this.rawData();
@@ -272,7 +439,17 @@ var SSListView = new Class({
     return result;
   },
   
-
+  /*
+  ?????
+      Function: query
+      
+      Parameters:
+        index -
+        arg - 
+        
+      Returns:
+        
+  */
   query: function(index, arg)
   {
     if($type(arg) == 'string') return this.get(index)[arg];
