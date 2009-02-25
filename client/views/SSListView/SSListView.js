@@ -407,7 +407,7 @@ var SSListView = new Class({
   
   /*
       Function: find
-      
+        jd
       Parameters:
         fn - A function
         
@@ -422,7 +422,6 @@ var SSListView = new Class({
   },
   
   /*
-  ?????
       Function: findAll
       
       Parameters:
