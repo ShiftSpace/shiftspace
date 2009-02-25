@@ -364,7 +364,7 @@ var SSCell = new Class({
 
     // show the edit view
     el.addClass('SSIsBeingEdited');
-    el.getElement('.SSEditView').addClass('SSActive');
+    if(el.getElement('.SSEditView')) el.getElement('.SSEditView').addClass('SSActive');
   },
   
   
@@ -374,10 +374,13 @@ var SSCell = new Class({
     
     // let the delegate know the edits were committed
     el.removeClass('SSIsBeingEdited');
+    
+    // FIXME: hmm seems hacky - David
     el.setStyles({
       width: ''
     });
-    el.getElement('.SSEditView').removeClass('SSActive');
+    
+    if(el.getElement('.SSEditView')) el.getElement('.SSEditView').removeClass('SSActive');
   }
 
 });
