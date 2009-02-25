@@ -391,7 +391,6 @@ var SSListView = new Class({
   },
   
   /*
-  
       Function: count
          //NOTE: See TODO in function. 
          
@@ -407,11 +406,13 @@ var SSListView = new Class({
   
   /*
       Function: find
-        jd
+        Returns a 0 if a row in a raw data array is found in a passed function, otherwise returns -1.
+        
       Parameters:
         fn - A function
         
       Returns:
+        An integer 
         
   */
   find: function(fn)
@@ -423,11 +424,13 @@ var SSListView = new Class({
   
   /*
       Function: findAll
+        Returns an array containing all of the found raw data rows in a passed function. 
       
       Parameters:
         fn - A function
         
       Returns:
+        An array
         
   */
   findAll: function(fn)
@@ -439,7 +442,6 @@ var SSListView = new Class({
   },
   
   /*
-  ?????
       Function: query
       
       Parameters:
