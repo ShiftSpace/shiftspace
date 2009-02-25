@@ -238,7 +238,7 @@ var SSListView = new Class({
   
     Parameters:
       _event - the event issueing the function. Always a "click" event. 
-      eventType - //NOTE: I'm not sure what this argument means. -Justin\\
+      eventType - //NOTE: I'm not sure what this argument means. -Justin
   */
   eventDispatch: function(_event, eventType)
   {
@@ -392,7 +392,7 @@ var SSListView = new Class({
   
   /*
       Function: count
-         //NOTE: See TODO in function. 
+         //NOTE: See TODO in function. -Justin  
          
       Returns:
         The length of a row in a Javascript array. 
@@ -450,8 +450,8 @@ var SSListView = new Class({
         Accepts an index and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
       
       Parameters:
-        index - the index of a
-        arg - an argument of a function 
+        index - the index of a 
+        arg   - an argument of a function 
         
       Returns:
         An string, array or null.
@@ -486,10 +486,11 @@ var SSListView = new Class({
   
     /*
       Function: add
+        Adds an object, that is specified with the newItem argument, to SSCollection. The _animate argument determines if an animation occurs during function.
         
       Parameters:
-        newItem - 
-        _animate - 
+        newItem  - a javascript object
+        _animate - a boolean
   */
   add: function(newItem, _animate)
   {
@@ -515,7 +516,14 @@ var SSListView = new Class({
     }
   },
   
-  
+/*
+    Function: onAdd (private)
+      Event 
+    
+    Parameters:
+      data - A row in a javascript array.
+      
+*/
   onAdd: function(data)
   {
     var delegate = this.delegate();
