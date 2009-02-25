@@ -391,7 +391,6 @@ var SSListView = new Class({
   },
   
   /*
-  
       Function: count
          //NOTE: See TODO in function. 
          
@@ -407,12 +406,16 @@ var SSListView = new Class({
   
   /*
       Function: find
-      
+        Returns a 0 if a row in a raw data array is found in a passed function, otherwise returns -1.
+        
       Parameters:
         fn - A function
         
       Returns:
+        An integer 
         
+      See Also:
+        findAll
   */
   find: function(fn)
   {
@@ -422,14 +425,17 @@ var SSListView = new Class({
   },
   
   /*
-  ?????
       Function: findAll
+        Returns an array containing all of the found raw data rows in a passed function. 
       
       Parameters:
         fn - A function
         
       Returns:
-        
+        An array
+    
+      See Also:
+        find   
   */
   findAll: function(fn)
   {
@@ -440,14 +446,15 @@ var SSListView = new Class({
   },
   
   /*
-  ?????
       Function: query
+        Accepts an index and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
       
       Parameters:
-        index -
-        arg - 
+        index - the index of a
+        arg - an argument of a function 
         
       Returns:
+        An string, array or null.
         
   */
   query: function(index, arg)
@@ -465,13 +472,25 @@ var SSListView = new Class({
     return null;
   },
   
-  
+  /*
+    Function: cellNodes
+      Returns all the  list elements of an element
+      
+    Returns:
+      A list of li elements
+*/
   cellNodes: function()
   {
     return this.element.getElements('> li');
   },
   
-  
+    /*
+      Function: add
+        
+      Parameters:
+        newItem - 
+        _animate - 
+  */
   add: function(newItem, _animate)
   {
     var animate = (_animate == null && true) || _animate;
@@ -591,7 +610,16 @@ var SSListView = new Class({
     }    
   },
   
-  
+  /*
+    Function: get 
+      Accepts an index performs a boundsCheck to make sure index is valid. Retreives the propeties of each data element, stores them in an array, and returns it. 
+      
+    Parameters:
+      index - An integer. 
+      
+    Returns: 
+      An array. 
+  */
   get: function(index)
   {
     this.boundsCheck(index);
