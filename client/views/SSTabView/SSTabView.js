@@ -357,7 +357,7 @@ var SSTabView = new Class({
       idx - index of contentView 
       
     Returns:
-      A DOM node
+      DOM node of controller 
 
   */
   contentViewControllerForIndex: function(idx)
