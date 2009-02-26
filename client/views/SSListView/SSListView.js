@@ -486,7 +486,7 @@ var SSListView = new Class({
   
     /*
       Function: add
-        Adds an object, that is specified with the newItem argument, to SSCollection. The _animate argument determines if an animation occurs during function call.
+        Adds an object, that is specified with the newItem argument, to a collection. The _animate argument determines if an animation occurs during function call.
         
       Parameters:
         newItem  - a javascript object
@@ -517,13 +517,12 @@ var SSListView = new Class({
   },
   
 /*
-??
     Function: onAdd (private)
       Callback event when a new Item is added to a collection. 
     
     Parameters:
       data - A row in a javascript array.
-      
+    
 */
   onAdd: function(data)
   {
@@ -548,17 +547,28 @@ var SSListView = new Class({
     this.fireEvent('onAdd', data);
   },
   /*
+  ??
+  what does this do? - Justin
+  ??
     Function: addObject
       
     Parameters:
-      sender - 
+      sender -   
   */
   addObject: function(sender)
   {
     this.add(sender.dataForNewItem());
   },
   
+  /*
+    Function: edit
+      Accepts an index of a collection item and 
+      
+    Parameters:
+      index - The index of an item in a collection
+      _animate - A boolean value.
   
+  */
   edit: function(index, _animate)
   {
     var animate = (_animate == null && true) || _animate;
