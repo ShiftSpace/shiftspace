@@ -99,9 +99,9 @@ class Sms {
         $this->server->moma->save($updateuser);
 
         if ($username == '')
-          sendsms($phone, "Hey there. '$title' was just saved for you. Go to txt.moma.org to retrieve it and any other works you collect. See you there!");
+          sendsms($normalized_phone, "Hey there. '$title' was just saved for you. Go to txt.moma.org to retrieve it and any other works you collect. See you there!");
         else
-          sendsms($phone, "Hey $username. '$title' was added to your collection. You will find it and any other work you collect on moma.org. See you there!");
+          sendsms($normalized_phone, "Hey $username. '$title' was added to your collection. You will find it and any other work you collect on moma.org. See you there!");
       }
     } 
     else {
