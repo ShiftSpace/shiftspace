@@ -94,8 +94,8 @@ var ShiftSpaceUserClass = new Class({
     var callback = _callback;
     SSServerCall('user.query', null, function(json) {
       if(json.data) this.syncData(json.data);
-      this.fireEvent('onUserQuery', json);
       if(callback) callback(json);
+      this.fireEvent('onUserQuery', json);
     }.bind(this));
   },
   
@@ -113,8 +113,8 @@ var ShiftSpaceUserClass = new Class({
     
     SSServerCall('user.login', credentials, function(json) {
       if(json.data) this.syncData(json.data);
-      this.fireEvent('onUserLogin', json);
       if(callback) callback(json);
+      this.fireEvent('onUserLogin', json);
     }.bind(this));
   },
   
@@ -142,8 +142,8 @@ var ShiftSpaceUserClass = new Class({
     var callback = _callback;
     SSServerCall('user.join', userInfo, function(json) {
       if(json.data) this.syncData(json.data);
-      this.fireEvent('onUserJoin', json);
       if(callback) callback(json);
+      this.fireEvent('onUserJoin', json);
     }.bind(this));
   },
   

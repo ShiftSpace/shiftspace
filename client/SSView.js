@@ -56,7 +56,7 @@ var SSView = new Class({
     // generate an id
     this.__id__ = this._genId();
     this.setIsAwake(false);
-
+    
     // add to global hash
     if(ShiftSpaceObjects) ShiftSpaceObjects.set(this.__id__, this);
     
