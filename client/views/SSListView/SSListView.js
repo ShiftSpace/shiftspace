@@ -238,7 +238,7 @@ var SSListView = new Class({
   
     Parameters:
       _event - the event issueing the function. Always a "click" event. 
-      eventType - //NOTE: I'm not sure what this argument means. -Justin\\
+      eventType - //NOTE: I'm not sure what this argument means. -Justin
   */
   eventDispatch: function(_event, eventType)
   {
@@ -352,7 +352,7 @@ var SSListView = new Class({
   
     /*
      Note:
-      MARKED FOR DELETION: Redundant function, see data -Justin
+      MARKED FOR DELETION: Redundant function, see data() above -Justin
   */
   getData: function()
   {
@@ -392,7 +392,7 @@ var SSListView = new Class({
   
   /*
       Function: count
-         //NOTE: See TODO in function. 
+         //NOTE: See TODO in function. -Justin  
          
       Returns:
         The length of a row in a Javascript array. 
@@ -447,11 +447,11 @@ var SSListView = new Class({
   
   /*
       Function: query
-        Accepts an index and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
+        Accepts an index of a collection item and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
       
       Parameters:
-        index - the index of a
-        arg - an argument of a function 
+        index - An integer. The index of an item in a collection.
+        arg   - An argument of a function. 
         
       Returns:
         An string, array or null.
@@ -474,7 +474,7 @@ var SSListView = new Class({
   
   /*
     Function: cellNodes
-      Returns all the  list elements of an element
+      Returns all the list elements of an element
       
     Returns:
       A list of li elements
@@ -486,10 +486,11 @@ var SSListView = new Class({
   
     /*
       Function: add
+        Adds an object, that is specified with the newItem argument, to a collection. The _animate argument determines if an animation occurs during function call.
         
       Parameters:
-        newItem - 
-        _animate - 
+        newItem  - a javascript object
+        _animate - a boolean
   */
   add: function(newItem, _animate)
   {
@@ -515,7 +516,14 @@ var SSListView = new Class({
     }
   },
   
-  
+/*
+    Function: onAdd (private)
+      Callback event when a new Item is added to a collection. 
+    
+    Parameters:
+      data - A row in a javascript array.
+    
+*/
   onAdd: function(data)
   {
     var delegate = this.delegate();
@@ -538,14 +546,30 @@ var SSListView = new Class({
     
     this.fireEvent('onAdd', data);
   },
-  
-  
+  /*
+  ??
+  //Note - what does this do? sender? - Justin
+  ??
+    Function: addObject
+      
+      
+    Parameters:
+      sender -   
+  */
   addObject: function(sender)
   {
     this.add(sender.dataForNewItem());
   },
   
+  /*
+    Function: edit
+      Accepts the index of a cell in a collection and allows it to be edited (if permitted). The _animate argument determines if an animation occurs during function call.
+      
+    Parameters:
+      index -  An integer. The index of an item in a collection
+      _animate - A boolean value.
   
+  */
   edit: function(index, _animate)
   {
     var animate = (_animate == null && true) || _animate;
@@ -588,16 +612,21 @@ var SSListView = new Class({
       }
     }
   },
-  
-  
+  /*
+    Function: insert
+      Inserts data into a cell at a specified index
+      
+    Parameters:
+      cellData - An object.
+      index - An integer. The index of an item in a collection.
+*/  
   insert: function(cellData, index)
   {
     this.boundsCheck(index);
     this.__insert__(cellData, index);
     this.refresh();
   },
-  
-  
+
   __insert__: function(cellData, index)
   {
     if(this.data().insert)
@@ -612,7 +641,7 @@ var SSListView = new Class({
   
   /*
     Function: get 
-      Accepts an index performs a boundsCheck to make sure index is valid. Retreives the propeties of each data element, stores them in an array, and returns it. 
+      Accepts an index of a collection item and performs a boundsCheck to make sure index is valid. Retreives the propeties of each data element, stores them in an array, and returns the array. 
       
     Parameters:
       index - An integer. 
@@ -646,7 +675,14 @@ var SSListView = new Class({
     }
   },
   
-
+/*
+    Function: update  
+  
+    Parameters:
+      cellData -  
+      index -
+      _noArrayUpdate -
+*/
   update: function(cellData, index, _noArrayUpdate)
   {
     this.boundsCheck(index);
