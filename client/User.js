@@ -160,6 +160,17 @@ var ShiftSpaceUserClass = new Class({
     SSServerCall('user.update', info, callback);
   },
   
+  
+  validatePhone: function(_callback) 
+  {
+    var callback = _callback;
+    SSServerCall('user.validate_phone', userInfo, function(json) {
+      if(json.data) this.syncData(json.data);
+      if(callback) callback(json);
+      this.fireEvent('onUserValidatePhone', json);
+    }.bind(this));
+  },
+  
   /*
     Function: resetPassword (private)
       Reset a user's password
