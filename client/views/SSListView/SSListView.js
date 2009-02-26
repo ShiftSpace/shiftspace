@@ -447,10 +447,10 @@ var SSListView = new Class({
   
   /*
       Function: query
-        Accepts an index and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
+        Accepts an index of a collection item and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
       
       Parameters:
-        index - the index of a 
+        index - the index of an item in a collection
         arg   - an argument of a function 
         
       Returns:
@@ -474,7 +474,7 @@ var SSListView = new Class({
   
   /*
     Function: cellNodes
-      Returns all the  list elements of an element
+      Returns all the list elements of an element
       
     Returns:
       A list of li elements
@@ -486,7 +486,7 @@ var SSListView = new Class({
   
     /*
       Function: add
-        Adds an object, that is specified with the newItem argument, to SSCollection. The _animate argument determines if an animation occurs during function.
+        Adds an object, that is specified with the newItem argument, to SSCollection. The _animate argument determines if an animation occurs during function call.
         
       Parameters:
         newItem  - a javascript object
@@ -517,8 +517,9 @@ var SSListView = new Class({
   },
   
 /*
+??
     Function: onAdd (private)
-      Event 
+      Callback event when a new Item is added to a collection. 
     
     Parameters:
       data - A row in a javascript array.
@@ -546,8 +547,12 @@ var SSListView = new Class({
     
     this.fireEvent('onAdd', data);
   },
-  
-  
+  /*
+    Function: addObject
+      
+    Parameters:
+      sender - 
+  */
   addObject: function(sender)
   {
     this.add(sender.dataForNewItem());
@@ -620,7 +625,7 @@ var SSListView = new Class({
   
   /*
     Function: get 
-      Accepts an index performs a boundsCheck to make sure index is valid. Retreives the propeties of each data element, stores them in an array, and returns it. 
+      Accepts an index of a collection item and performs a boundsCheck to make sure index is valid. Retreives the propeties of each data element, stores them in an array, and returns it. 
       
     Parameters:
       index - An integer. 
