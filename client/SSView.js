@@ -50,6 +50,8 @@ var SSView = new Class({
     
     // get the options first
     this.setOptions(this.defaults(), (el && $merge(options, SSGetInlineOptions(el))) || {});
+    // remove them
+    if(el) el.removeProperty('options');
 
     // generate an id
     this.__id__ = this._genId();
