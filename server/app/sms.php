@@ -14,15 +14,6 @@ class Sms {
   public function send() {
     extract($_POST);
 
-    $f = fopen(dirname(__FILE__)."/sms.log", "a");
-    fwrite($f, "[SEND]\n");
-    fwrite($f, "Phone: $phone\n");
-    fwrite($f, "Message: $msg\n");
-    fwrite($f, "Toself: $toself\n");
-    fwrite($f, "=====\n\n");
-    fflush($f);
-    fclose($f);
-
     $result = Array();
 
     if (isset($phone) && $phone != '')
@@ -99,7 +90,7 @@ class Sms {
         $this->server->moma->save($updateuser);
 
         if ($username == '')
-          sendsms($normalized_phone, "Hey there. '$title' was just saved for you. Go to txt.moma.org to retrieve it and any other works you collect. See you there!");
+          sendsms($normalized_phone, "Hey there. '$title' was just saved for you. Go to moma.org/txt to retrieve it and any other works you collect. See you there!");
         else
           sendsms($normalized_phone, "Hey $username. '$title' was added to your collection. You will find it and any other work you collect on moma.org. See you there!");
       }
