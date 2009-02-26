@@ -85,9 +85,18 @@ class User {
 
     $user = $this->server->moma->load("user($userid)");
 
+    $nPhone = Sms::normalizePhoneNumber($phone);
+    
+    if ($nPhone != $this->server->user['normalized_phone']) {
+      $user->set('phone_validated', 0);
+      $user->set('phone_key', 0);
+    }
+    
+    echo "<p>";
+    
     $user->set(array(
       'phone'             => $phone,
-      'normalized_phone'  => Sms::normalizePhoneNumber($phone),
+      'normalized_phone'  => $nPhone,
       'email'             => $email
     ));
 
@@ -101,6 +110,42 @@ class User {
     $this->server->user = $user->get();
     
     return new Response($this->server->user);
+  }
+
+  private function generate_key() {
+    return rand(100000, 999999);
+  }
+
+  public function validate_phone() {
+    if ($this->server->user['phone_validated'] == 1)
+      return new Response("ok");
+    else {
+      $key = $this->generate_key();
+      $this->server->user['phone_key'] = md5($key);
+
+      $user = new User_Object();
+      $user->set($this->server->user);
+      $this->server->moma->save($user);
+      
+      sendsms($this->server->user['normalized_phone'], $key);
+      return new Response("key"); 
+    }
+  }
+
+  public function validate_phone_complete() {
+    extract($_POST);
+    
+    if (md5($key) == $this->server->user['phone_key']) {
+      $this->server->user['phone_validated'] = 1;
+
+      $user = new User_Object();
+      $user->set($this->server->user);
+      $this->server->moma->save($user);
+      
+      return new Response("ok");
+    } else {
+      throw new Error("Invalid key");
+    }
   }
   
   public function join() {
