@@ -21,11 +21,41 @@ class User {
       FROM user
       WHERE email = :email
     ",
+    'checkphone' => "
+      SELECT COUNT(*)
+      FROM user
+      WHERE normalized_phone = :nPhone
+      AND phone_validated = 1
+      AND username <> ''
+    ",
     'checkemailupdate' => "
       SELECT COUNT(*)
       FROM user
       WHERE email = :email
       AND id <> :userid
+    ",
+    'checkphoneupdate' => "
+      SELECT COUNT(*)
+      FROM user
+      WHERE normalized_phone = :nPhone
+      AND phone_validated = 1
+      AND username <> ''
+      AND id <> :userid
+    ",
+    'find_userid_by_phone' => "
+      SELECT id, username
+      FROM user
+      WHERE normalized_phone = :nphone
+      AND phone_validated = 1
+    ",
+    'replace_bookmarks' => "
+      UPDATE savedartwork
+      SET userid = :newuserid
+      WHERE userid = :olduserid  
+    ",
+    'delete_user' => "
+      DELETE FROM user
+      WHERE id = :userid
     "
   );
   
@@ -83,10 +113,14 @@ class User {
     if ($emailexists)
       throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
 
+    $nPhone = Sms::normalizePhoneNumber($phone);
+
+    $phoneexists = $this->server->moma->value($this->sql['checkphoneupdate'], array('nphone' => $nPhone, 'userid' => $userid));
+    if ($emailexists)
+      throw new Error('Sorry, that phone number has already been used.');
+
     $user = $this->server->moma->load("user($userid)");
 
-    $nPhone = Sms::normalizePhoneNumber($phone);
-    
     if ($nPhone != $this->server->user['normalized_phone']) {
       $user->set('phone_validated', 0);
       $user->set('phone_key', 0);
@@ -136,13 +170,25 @@ class User {
     extract($_POST);
     
     if (md5($key) == $this->server->user['phone_key']) {
+      
+      $oldusers = $this->server->moma->rows($this->sql['find_userid_by_phone'], array('nphone' => $this->server->user['normalized_phone']), PDO::FETCH_ASSOC);
+      if (count($oldusers) > 0) {
+        $olduserid = $oldusers[0]['id'];
+  
+        // an sms bookmarked user
+        $this->server->moma->query($this->sql['replace_bookmarks'], array('olduserid' => $olduserid, 'newuserid' => $this->server->user['id']));
+        $this->server->moma->query($this->sql['delete_user'], array('userid' => $olduserid));
+      }
+      
       $this->server->user['phone_validated'] = 1;
 
       $user = new User_Object();
       $user->set($this->server->user);
       $this->server->moma->save($user);
       
-      return new Response("ok");
+      
+      
+      return new Response("validated");
     } else {
       throw new Error("Invalid key");
     }
@@ -166,13 +212,19 @@ class User {
     if ($emailexists)
       throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
 
+    $nPhone = Sms::normalizePhoneNumber($phone);
+
+    $phoneexists = $this->server->moma->value($this->sql['checkphone'], array('nPhone' => $nPhone));
+    if ($phoneexists)
+      throw new Error('Sorry, that phone number has already been used. You can use the password retrieval form to retrieve your username.');
+
     $user = new User_Object();
     $user->set(array(
       'username'          => $username,
       'display_name'      => $username,
       'password'          => md5($password),
       'phone'             => $phone,
-      'normalized_phone'  => Sms::normalizePhoneNumber($phone),
+      'normalized_phone'  => $nPhone,
       'email'             => $email
     ));
     

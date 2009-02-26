@@ -51,13 +51,14 @@ class Sms {
   }
   
   private function userByPhone($phone) {
-    $users = $this->server->moma->rows("select * from user where normalized_phone=:phone", compact('phone'), PDO::FETCH_ASSOC);
+    $users = $this->server->moma->rows("select * from user where normalized_phone=:phone and phone_validated=1", compact('phone'), PDO::FETCH_ASSOC);
     if (count($users) > 0) {
       return array($users[0], false);
     }  
     else {
       $user = new User_Object();
-      $user->set(compact('phone'));
+      $user->set('normalized_phone', $phone);
+      $user->set('phone_validated', 1);
       $this->server->moma->save($user);
       
       return array($user->get(), true);
