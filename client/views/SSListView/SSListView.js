@@ -450,8 +450,8 @@ var SSListView = new Class({
         Accepts an index of a collection item and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
       
       Parameters:
-        index - the index of an item in a collection
-        arg   - an argument of a function 
+        index - An integer. The index of an item in a collection.
+        arg   - An argument of a function. 
         
       Returns:
         An string, array or null.
@@ -548,9 +548,10 @@ var SSListView = new Class({
   },
   /*
   ??
-  what does this do? - Justin
+  //Note - what does this do? sender? - Justin
   ??
     Function: addObject
+      
       
     Parameters:
       sender -   
@@ -562,10 +563,10 @@ var SSListView = new Class({
   
   /*
     Function: edit
-      Accepts an index of a collection item and 
+      Accepts the index of a cell in a collection and allows it to be edited (if permitted). The _animate argument determines if an animation occurs during function call.
       
     Parameters:
-      index - The index of an item in a collection
+      index -  An integer. The index of an item in a collection
       _animate - A boolean value.
   
   */
@@ -611,16 +612,21 @@ var SSListView = new Class({
       }
     }
   },
-  
-  
+  /*
+    Function: insert
+      Inserts data into a cell at a specified index
+      
+    Parameters:
+      cellData - An object.
+      index - An integer. The index of an item in a collection.
+*/  
   insert: function(cellData, index)
   {
     this.boundsCheck(index);
     this.__insert__(cellData, index);
     this.refresh();
   },
-  
-  
+
   __insert__: function(cellData, index)
   {
     if(this.data().insert)
@@ -635,7 +641,7 @@ var SSListView = new Class({
   
   /*
     Function: get 
-      Accepts an index of a collection item and performs a boundsCheck to make sure index is valid. Retreives the propeties of each data element, stores them in an array, and returns it. 
+      Accepts an index of a collection item and performs a boundsCheck to make sure index is valid. Retreives the propeties of each data element, stores them in an array, and returns the array. 
       
     Parameters:
       index - An integer. 
@@ -669,7 +675,14 @@ var SSListView = new Class({
     }
   },
   
-
+/*
+    Function: update  
+  
+    Parameters:
+      cellData -  
+      index -
+      _noArrayUpdate -
+*/
   update: function(cellData, index, _noArrayUpdate)
   {
     this.boundsCheck(index);
