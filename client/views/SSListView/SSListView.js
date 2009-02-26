@@ -352,7 +352,7 @@ var SSListView = new Class({
   
     /*
      Note:
-      MARKED FOR DELETION: Redundant function, see data -Justin
+      MARKED FOR DELETION: Redundant function, see data() above -Justin
   */
   getData: function()
   {
