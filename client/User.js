@@ -164,10 +164,19 @@ var ShiftSpaceUserClass = new Class({
   validatePhone: function(_callback) 
   {
     var callback = _callback;
-    SSServerCall('user.validate_phone', userInfo, function(json) {
-      if(json.data) this.syncData(json.data);
+    SSServerCall('user.validate_phone', null, function(json) {
       if(callback) callback(json);
       this.fireEvent('onUserValidatePhone', json);
+    }.bind(this));
+  },
+  
+  
+  validatePhoneComplete: function(passcode, _callback)
+  {
+    var callback = _callback;
+    SSServerCall('user.validate_phone_complete', {key:passcode}, function(json) {
+      if(callback) callback(json);
+      this.fireEvent('onUserValidatePhoneComplete', json);
     }.bind(this));
   },
   
