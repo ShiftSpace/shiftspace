@@ -225,6 +225,16 @@ var ShiftSpaceUserClass = new Class({
   },
   
   
+  bookmarksByPhone: function(phone, _callback)
+  {
+    var callback = _callback;
+    SSServerCall('user.bookmarks_by_phone', {phone:phone}, function(json) {
+      if(callback) callback(json);
+      this.fireEvent('onBookmarksByPhoneComplete', json);
+    }.bind(this));
+  },
+  
+  
   getEmailCommentsDefault: function()
   {
     // setting the value, can't user zero because of PHP, GRRR - David
