@@ -225,6 +225,26 @@ var ShiftSpaceUserClass = new Class({
   },
   
   
+  sendEmail: function(parameters, _callback)
+  {
+    var callback = _callback;
+    SSServerCall('send.email', parameters, function(json) {
+      if(callback) callback(json);
+      this.fireEvent('onSendEmailComplete', json);
+    }.bind(this));
+  },
+  
+  
+  sendText: function(parameters, _callback)
+  {
+    var callback = _callback;
+    SSServerCall('send.text', parameters, function(json) {
+      if(callback) callback(json);
+      this.fireEvent('onSendTextComplete', json);
+    }.bind(this));
+  },
+  
+  
   bookmarksByPhone: function(phone, _callback)
   {
     var callback = _callback;
