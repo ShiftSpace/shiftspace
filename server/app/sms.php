@@ -75,11 +75,16 @@ class Sms {
       list($user, $new) = $this->userByPhone($phone);
       extract($user);
       $userid = $id;
+
+      $args = compact('userid', 'artworkid');
+      $count = $this->server->moma->value("SELECT COUNT(*) FROM savedartwork WHERE userid=:userid AND artworkid=:artworkid", $args);
       
-      $savedartwork = new SavedArtWork_Object();
-      $savedartwork->set(compact('userid', 'artworkid'));
-      $this->server->moma->save($savedartwork);
-      
+      if ($count == 0) {      
+        $savedartwork = new SavedArtWork_Object();
+        $savedartwork->set(compact('userid', 'artworkid'));
+        $this->server->moma->save($savedartwork);
+      }
+            
       $artwork = $artwork->get();
       $title = $artwork['title'];
         
