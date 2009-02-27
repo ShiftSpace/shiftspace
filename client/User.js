@@ -84,7 +84,7 @@ var ShiftSpaceUserClass = new Class({
   },
   
   
-  setPhone: functino(phone)
+  setPhone: function(phone)
   {
     this.__phone = phone;
   },
