@@ -17,9 +17,7 @@ var ShiftSpaceUserClass = new Class({
   
   initialize: function()
   {
-    this.setUsername(null);
-    this.setId(null);
-    this.setEmail(null);
+    this.clearData();
   },
   
   
@@ -28,6 +26,16 @@ var ShiftSpaceUserClass = new Class({
     this.setUsername(data.username);
     this.setId(data.id);
     this.setEmail(data.email);
+    this.setPhone(data.phone);
+  },
+  
+  
+  clearData: function()
+  {
+    this.setUsername(null);
+    this.setId(null);
+    this.setEmail(null);
+    this.setPhone(null);
   },
   
   
@@ -73,6 +81,18 @@ var ShiftSpaceUserClass = new Class({
   email: function()
   {
     return this.__email;
+  },
+  
+  
+  setPhone: function(phone)
+  {
+    this.__phone = phone;
+  },
+  
+  
+  phone: function()
+  {
+    return this.__phone;
   },
   
 
@@ -126,9 +146,7 @@ var ShiftSpaceUserClass = new Class({
   {
     SSServerCall('user.logout', null, function(json) {
       // clear out all values
-      this.setUsername(null);
-      this.setId(null);
-      this.setEmail(null);
+      this.clearData();
       this.fireEvent('onUserLogout');
     }.bind(this));
   },
