@@ -707,7 +707,8 @@ var SSListView = new Class({
 
     if(this.options.leaveEditOnUpdate)
     {
-      this.cell().leaveEdit();
+      var canLeaveEdit = (this.canLeaveEdit && this.canLeaveEdit(index)) || true;
+      if(canLeaveEdit) this.cell().leaveEdit();
     }
   },
   
