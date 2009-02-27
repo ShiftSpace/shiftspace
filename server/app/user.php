@@ -239,7 +239,7 @@ class User {
   }
   
   public function bookmarks_by_phone() {
-    extract($_GET);
+    extract($_REQUEST);
     
     $result = $this->server->moma->value("SELECT COUNT(*) FROM savedartwork, user WHERE savedartwork.userid = user.id 
                                           AND user.normalized_phone = :nphone AND user.phone_validated = 1", 
