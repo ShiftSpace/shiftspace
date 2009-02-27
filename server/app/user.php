@@ -237,6 +237,16 @@ class User {
   public function query() {
     return new Response($this->server->user);
   }
+  
+  public function bookmarks_by_phone() {
+    extract($_GET);
+    
+    $result = $this->server->moma->value("SELECT COUNT(*) FROM savedartwork, user WHERE savedartwork.userid = user.id 
+                                          AND user.normalized_phone = :nphone AND user.phone_validated = 1", 
+                                          array('nphone' => Sms::normalizePhoneNumber($phone)));
+    
+    return new Response($result);
+  }
 }
 
 ?>
