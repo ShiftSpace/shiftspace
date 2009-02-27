@@ -1,5 +1,7 @@
 <?php
 
+require_once "Mail.php";
+
 class Email {
   public function __construct($server) {
     $this->server = $server;
@@ -9,17 +11,23 @@ class Email {
     extract($_POST);
 
     $useremail = $this->server->user['email'];
-    $headers = "From: $useremail";
-    
-    if ($send_email_to_current_user == 1)
-      $headers .= "\r\nCc: $useremail";
-            
-    $result = mail($email_addresses, $email_subject, $message, $headers);
 
-    if ($result)
-      return new Response('ok');
-    else
+    $headers = array ('From' => $useremail,
+      'To' => $email_addresses,
+      'Subject' => $subject);
+
+    if ($send_email_to_current_user == 1)
+      $headers['Cc'] = $useremail;
+
+    $smtp = Mail::factory('smtp', array ('host' => 'owa.moma.org')); 
+    $mail = $smtp->send($email_addresses, $headers, $body);
+              
+    if (PEAR::isError($mail)) {
       throw new Error('Error sending e-mail');
+    } 
+    else {
+      return new Response('ok');
+    }
   }
 }
 
