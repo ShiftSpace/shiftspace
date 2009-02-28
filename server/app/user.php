@@ -225,7 +225,10 @@ class User {
       'password'          => md5($password),
       'phone'             => $phone,
       'normalized_phone'  => $nPhone,
-      'email'             => $email
+      'email'             => $email,
+      'membership_id'     => $membership_id,
+      'first_name'        => $first_name,
+      'last_name'         => $last_name
     ));
     
     $this->server->moma->save($user);
