@@ -24,7 +24,7 @@ class User {
     'checkphone' => "
       SELECT COUNT(*)
       FROM user
-      WHERE normalized_phone = :nohone
+      WHERE normalized_phone = :nphone
       AND phone_validated = 1
       AND username <> ''
     ",
