@@ -37,7 +37,8 @@ var SSListView = new Class({
       horizontal: false,
       cellSize: null,
       filter: null,
-      addAt: 'bottom'
+      addAt: 'bottom',
+      leaveEditOnUpdate: false
     });
   },
   
@@ -696,13 +697,18 @@ var SSListView = new Class({
       if(this.hasCollection())
       {
         if(!noArrayUpdate) this.getData().update(cellData, index);
-        return;
       }
       else
       {
         if(!noArrayUpdate) this.__update__(cellData, index);
         this.onUpdate(index);
       }
+    }
+
+    if(this.options.leaveEditOnUpdate)
+    {
+      var canLeaveEdit = (this.canLeaveEdit && this.canLeaveEdit(index)) || true;
+      if(canLeaveEdit) this.cell().leaveEdit();
     }
   },
   
