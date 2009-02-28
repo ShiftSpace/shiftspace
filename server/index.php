@@ -1,10 +1,6 @@
 <?php
 
 
-
-
-
-
 define('SESSION_DB_HOST', 'momaorgdbp1.museum.moma.org');
 define('SESSION_DB_USER', 'shiftspace');
 define('SESSION_DB_PASS', '3ma1lbr0k3n');
@@ -164,5 +160,3 @@ try {
 // testing
 
 ?>
-
-

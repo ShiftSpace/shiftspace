@@ -24,7 +24,7 @@ class User {
     'checkphone' => "
       SELECT COUNT(*)
       FROM user
-      WHERE normalized_phone = :nPhone
+      WHERE normalized_phone = :nohone
       AND phone_validated = 1
       AND username <> ''
     ",
@@ -37,7 +37,7 @@ class User {
     'checkphoneupdate' => "
       SELECT COUNT(*)
       FROM user
-      WHERE normalized_phone = :nPhone
+      WHERE normalized_phone = :nphone
       AND phone_validated = 1
       AND username <> ''
       AND id <> :userid
@@ -113,25 +113,24 @@ class User {
     if ($emailexists)
       throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
 
-    $nPhone = Sms::normalizePhoneNumber($phone);
+    $nphone = Sms::normalizePhoneNumber($phone);
 
-    $phoneexists = $this->server->moma->value($this->sql['checkphoneupdate'], array('nphone' => $nPhone, 'userid' => $userid));
+    $phoneexists = $this->server->moma->value($this->sql['checkphoneupdate'], array('nphone' => $nphone, 'userid' => $userid));
     if ($emailexists)
       throw new Error('Sorry, that phone number has already been used.');
 
     $user = $this->server->moma->load("user($userid)");
 
-    if ($nPhone != $this->server->user['normalized_phone']) {
+    if ($nphone != $this->server->user['normalized_phone']) {
       $user->set('phone_validated', 0);
       $user->set('phone_key', 0);
     }
     
-    echo "<p>";
-    
     $user->set(array(
       'phone'             => $phone,
-      'normalized_phone'  => $nPhone,
-      'email'             => $email
+      'normalized_phone'  => $nphone,
+      'email'             => $email,
+      'perspective'       => $perspective
     ));
 
     if (isset($password) && $password != '') {
@@ -186,8 +185,6 @@ class User {
       $user->set($this->server->user);
       $this->server->moma->save($user);
       
-      
-      
       return new Response("validated");
     } else {
       throw new Error("Invalid key");
@@ -212,9 +209,9 @@ class User {
     if ($emailexists)
       throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
 
-    $nPhone = Sms::normalizePhoneNumber($phone);
+    $nphone = Sms::normalizePhoneNumber($phone);
 
-    $phoneexists = $this->server->moma->value($this->sql['checkphone'], array('nPhone' => $nPhone));
+    $phoneexists = $this->server->moma->value($this->sql['checkphone'], array('nphone' => $nphone));
     if ($phoneexists)
       throw new Error('Sorry, that phone number has already been used. You can use the password retrieval form to retrieve your username.');
 
@@ -224,11 +221,12 @@ class User {
       'display_name'      => $username,
       'password'          => md5($password),
       'phone'             => $phone,
-      'normalized_phone'  => $nPhone,
+      'normalized_phone'  => $nphone,
       'email'             => $email,
       'membership_id'     => $membership_id,
       'first_name'        => $first_name,
-      'last_name'         => $last_name
+      'last_name'         => $last_name,
+      'perspective'       => $perspective
     ));
     
     $this->server->moma->save($user);

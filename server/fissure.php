@@ -46,8 +46,8 @@ function method_form($httpmethod, $method, $args) {
 <?php method_form('post', 'user.logout', array()); ?>
 <?php method_form('post', 'user.validate_phone', array()); ?>
 <?php method_form('post', 'user.validate_phone_complete', array('key')); ?>
-<?php method_form('post', 'user.join', array('username', 'password', 'password_again', 'email', 'phone', 'membership_id', 'first_name', 'last_name')); ?>
-<?php method_form('post', 'user.update', array('password', 'password_again', 'email', 'phone')); ?>
+<?php method_form('post', 'user.join', array('username', 'password', 'password_again', 'email', 'phone', 'membership_id', 'first_name', 'last_name', 'perspective')); ?>
+<?php method_form('post', 'user.update', array('password', 'password_again', 'email', 'phone', 'perspective')); ?>
 <?php method_form('post', 'user.query', array()); ?>
 <?php method_form('get', 'user.bookmarks_by_phone', array('phone')); ?>
 </body>
