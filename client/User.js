@@ -148,7 +148,14 @@ var ShiftSpaceUserClass = new Class({
     SSServerCall('user.login', credentials, function(json) {
       if(json.data) this.syncData(json.data);
       if(callback) callback(json);
-      if(!json.error) this.fireEvent('onUserLogin', json);
+      if(!json.error)
+      {
+        this.fireEvent('onUserLogin', json);
+      }
+      else
+      {
+        this.fireEvent('onUserLoginError', json);
+      }
     }.bind(this));
   },
   
@@ -161,7 +168,14 @@ var ShiftSpaceUserClass = new Class({
     SSServerCall('user.logout', null, function(json) {
       // clear out all values
       this.clearData();
-      if(!json.error) this.fireEvent('onUserLogout');
+      if(!json.error)
+      {
+        this.fireEvent('onUserLogout');
+      }
+      else
+      {
+        this.fireEvent('onUserLogoutError', json);
+      }
     }.bind(this));
   },
   
@@ -175,7 +189,14 @@ var ShiftSpaceUserClass = new Class({
     SSServerCall('user.join', userInfo, function(json) {
       if(json.data) this.syncData(json.data);
       if(callback) callback(json);
-      if(!json.error) this.fireEvent('onUserJoin', json);
+      if(!json.error)
+      {
+        this.fireEvent('onUserJoin', json);
+      }
+      else
+      {
+        this.fireEvent('onUserJoinError', json);
+      }
     }.bind(this));
   },
   
