@@ -67,9 +67,9 @@ class User {
     if ($_SERVER['REQUEST_METHOD'] != 'POST') {
       throw new Error('Invalid request.');
     } else if (empty($_POST['username'])) {
-      throw new Error('Oops, you forgot to enter a username.');
+      throw new Error('Please enter a username.');
     } else if (empty($_POST['password'])) {
-      throw new Error('Oops, you forgot to enter a password.');
+      throw new Error('Please enter your password.');
     }
     
     $username = $_POST['username'];
@@ -81,7 +81,7 @@ class User {
     ));
 
     if (empty($user)) {
-      throw new Error('Oops! Please try again.');
+      throw new Error('Incorrect username or password. Please try again.');
     } else {
       if (!preg_match('#^[a-zA-Z0-9_.]+$#', $_POST['username'])) {
         throw new Error("We're sorry, but your username is not compatible with the latest release of ShiftSpace. Please contact us at info@shiftspace.org so we can fix your account.");
