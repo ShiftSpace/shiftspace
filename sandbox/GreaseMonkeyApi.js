@@ -131,7 +131,8 @@ function GM_xmlhttpRequest(details)
     }
   }
   
-  if (location.hostname == details.url.match(/http:\/\/([^\/]+)/)[1]) 
+  // FIXME: needs to be improved, works OK - David
+  if (location.hostname == details.url.match(/http:\/\/([^\/]+)([:][0-9]+)?/)[1])
   {
     var url = details.url;
   } 
