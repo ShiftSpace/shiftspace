@@ -248,6 +248,12 @@ class User {
     
     return new Response($result);
   }
+
+  public function getname() {
+    extract($_REQUEST);
+    $user = $this->server->moma->load("user($userid)");
+    return new Response($user->username);
+  }
 }
 
 ?>
