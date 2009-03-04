@@ -967,8 +967,15 @@ var SSListView = new Class({
     {
       return;
     }
-    
-    this.reloadData();
+
+    if(this.hasCollection())
+    {
+      this.data().read(this.reloadData.bind(this));
+    }
+    else
+    {
+      this.reloadData();
+    }
   },
   
   
@@ -1065,14 +1072,12 @@ var SSListView = new Class({
     }.bind(this));
     
     coll.addEvent('onChange', function() {
-      if(!this.isVisible()) this.setIsDirty(true);
     }.bind(this));
     
     coll.addEvent('onUpdate', function() {
     }.bind(this));
     
     coll.addEvent('onLoad', function() {
-      if(this.isVisible()) this.reloadData();
     }.bind(this));
   },
   
