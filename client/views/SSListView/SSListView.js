@@ -330,8 +330,6 @@ var SSListView = new Class({
     }
     
     this.setNeedsDisplay(true);
-    
-    this.refresh();
   },
     /*
       Function: data
@@ -970,6 +968,7 @@ var SSListView = new Class({
 
     if(this.hasCollection())
     {
+      SSLog('has collection read first', SSLogForce);
       this.data().read(this.reloadData.bind(this));
     }
     else

@@ -40,7 +40,7 @@ var SSTabView = new Class({
     
     //SSLog('refresh SSTabView');
     // refresh the dimensions
-    this.refresh();
+    //this.refresh();
     //SSLog('SSTabView initialized');
   },
   
@@ -300,7 +300,7 @@ var SSTabView = new Class({
         //SSLog('showing controller');
         controller.show();
         //SSLog('refreshing controller');
-        controller.refresh();
+        //controller.refresh();
       }
       else
       {
@@ -507,17 +507,11 @@ var SSTabView = new Class({
     {
       var size = this.element.getSize();
       var controlSize = theControlView.getSize();
-    
-      /*
-      theContentView.setStyles({
-        width: size.x-controlSize.x
-      });
-      */
     }
     
     // refresh the selected content view as well
     var contentView = this.selectedContentView();
-    if(contentView.refresh) contentView.refresh();
+    //if(contentView.refresh) contentView.refresh();
   }
   
 });
