@@ -130,19 +130,9 @@ function GM_xmlhttpRequest(details)
       details.onload({responseText: this.response.text, responseXml: this.response.xml});
     }
   }
-  
-  var domainCheck = details.url.match(/http:\/\/([^\/]+)([:])?/)[1];
-  var hostname = (location.port) ? [location.hostname, ':', location.port].join('') : location.hostname;
-  
-  if (hostname == domainCheck)
-  {
-    var url = details.url;
-  } 
-  else 
-  {
-    var url = '../server/?method=sandbox.proxy&url=' + encodeURIComponent(details.url);
-  }
-  
+
+  var url = details.url;
+
   if(url)
   {
     options.url = url;
