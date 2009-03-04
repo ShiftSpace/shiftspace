@@ -983,6 +983,8 @@ var SSListView = new Class({
     // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
     
+    SSLog('len ' + len, SSLogForce);
+    
     // empty on refresh
     this.element.empty();
     
