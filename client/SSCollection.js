@@ -527,15 +527,14 @@ var SSCollection = new Class({
       suppressEvent - a boolean value.
   */
   read: function(callback, suppressEvent)
-  {
-    this.setIsUnread(false);
-    
+  {    
     return this.transact('read', {
       table: this.table(),
       constraints: this.constraints(),
       properties: this.properties(),
       orderBy: this.orderBy(),
       onComplete: function(data) {
+        this.setIsUnread(false);
         this.onRead(data, suppressEvent);
         if(callback && $type(callback) == 'function') callback(data);
       }.bind(this)
