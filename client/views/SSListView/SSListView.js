@@ -1123,7 +1123,7 @@ var SSListView = new Class({
   setNeedsDisplay: function(value)
   {
     this.parent(value);
-    if(value && this.element && this.cell()) 
+    if(value && this.element && this.cell() && !this.isVisible())
     {
       this.element.empty();
     }
