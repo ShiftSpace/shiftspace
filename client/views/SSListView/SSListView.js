@@ -297,7 +297,7 @@ var SSListView = new Class({
   
   /*
       Function: cell
-        Returns the cell class. 
+        Returns the cell class.  dd
 
       Returns:
         A cell class
