@@ -466,7 +466,7 @@ var SSView = new Class({
   
   needsDisplay: function()
   {
-    return ths.__needsDisplay;
+    return this.__needsDisplay;
   },
 
 
