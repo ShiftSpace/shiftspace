@@ -521,7 +521,7 @@ var SSCollection = new Class({
       orderBy: this.orderBy(),
       onComplete: function(data) {
         this.onRead(data, suppressEvent);
-        if(callback) callback(data);
+        if(callback && $type(callback) == 'function') callback(data);
       }.bind(this)
     });
   },
@@ -708,8 +708,11 @@ var SSCollection = new Class({
   
   onUpdateById: function(data, id)
   {
+    var byId = function(x) { return x == id; };
+    var index = this.indexWhere(byId);
+    
     this.__array[index] = $merge(this.__array[index], data);
-    this.fireEvent('onUpdate', index);
+    this.fireEvent('onUpdateById', index);
   },
   
   

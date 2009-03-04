@@ -998,6 +998,9 @@ var SSListView = new Class({
         var filter = this.filter(x);
         var newCell = this.cell().cloneWithData(x);
         
+        // store ref id
+        if(x.id) newCell.store('refid', x.id);
+        
         // hide it
         if(filter) newCell.addClass('SSDisplayNone');
         
