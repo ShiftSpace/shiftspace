@@ -422,15 +422,9 @@ var SandalphonClass = new Class({
     ShiftSpaceObjects.each(function(object, objectId) {
       if(object.awake && !object.isAwake())
       {
-        SSLog('awake ' + object.getId(), SSLogForce);
         object.awake(context);
         object.setIsAwake(true);
         object.fireEvent('onAwake');
-      }
-      else
-      {
-        SSLog('Object is awake', SSLogForce);
-        SSLog(object, SSLogForce);
       }
     });
     
