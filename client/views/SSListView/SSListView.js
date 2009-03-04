@@ -1119,6 +1119,13 @@ var SSListView = new Class({
   cellBeingEdited: function()
   {
     return this.__cellBeingEdited;
+  },
+  
+  
+  setNeedsDisplay: function(value)
+  {
+    this.parent(value);
+    if(value) this.element.empty();
   }
   
 });
