@@ -108,6 +108,8 @@ var SSCollection = new Class({
     
     // TODO: shouldn't allow plugins from element, need a way to prevent - David
     this.setPlugins($H());
+    
+    this.setIsUnread(true);
 
     // check if using array
     if(this.options.array)
@@ -137,6 +139,18 @@ var SSCollection = new Class({
     // a new collection
     this.setName(name);
     SSSetCollectionForName(this, name);
+  },
+  
+  
+  setIsUnread: function(value)
+  {
+    this.__isunread = value;
+  },
+  
+  
+  isUnread: function()
+  {
+    return this.__isunread;
   },
   
 
@@ -514,6 +528,8 @@ var SSCollection = new Class({
   */
   read: function(callback, suppressEvent)
   {
+    this.setIsUnread(false);
+    
     return this.transact('read', {
       table: this.table(),
       constraints: this.constraints(),
