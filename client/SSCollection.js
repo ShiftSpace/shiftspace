@@ -706,11 +706,15 @@ var SSCollection = new Class({
   },
   
   
+  byId: function(id)
+  {
+    return this.indexWhere(function(x) { return x == id;} );
+  },
+  
+  
   onUpdateById: function(data, id)
   {
-    var byId = function(x) { return x == id; };
-    var index = this.indexWhere(byId);
-    
+    var index = this.byId(id);
     this.__array[index] = $merge(this.__array[index], data);
     this.fireEvent('onUpdateById', index);
   },
