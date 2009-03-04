@@ -1126,7 +1126,11 @@ var SSListView = new Class({
   {
     this.parent(value);
     SSLog('setNeedsDisplay ' + value, SSLogForce);
-    if(value && this.element) this.element.empty();
+    if(value && this.element) 
+    {
+      SSLog('empty from setNeedsDisplay', SSLogForce);
+      this.element.empty();
+    }
   }
   
 });
