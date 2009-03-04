@@ -260,6 +260,7 @@ var SSTabView = new Class({
   selectTab: function(idx)
   {
     SSLog(this.element.getProperty('id') + ' selectTab ' + idx);
+    
     if(this.__selectedTab__ != idx)
     {
       // hide the last tab button and tab pane only if there was a last selected tab
