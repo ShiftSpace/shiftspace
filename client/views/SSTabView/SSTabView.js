@@ -37,11 +37,6 @@ var SSTabView = new Class({
     }
 
     this.element.addEvent('click', this.eventDispatch.bind(this));
-    
-    //SSLog('refresh SSTabView');
-    // refresh the dimensions
-    //this.refresh();
-    //SSLog('SSTabView initialized');
   },
   
   
@@ -299,8 +294,6 @@ var SSTabView = new Class({
       {
         //SSLog('showing controller');
         controller.show();
-        //SSLog('refreshing controller');
-        //controller.refresh();
       }
       else
       {
@@ -511,7 +504,6 @@ var SSTabView = new Class({
     
     // refresh the selected content view as well
     var contentView = this.selectedContentView();
-    //if(contentView.refresh) contentView.refresh();
   }
   
 });

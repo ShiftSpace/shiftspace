@@ -968,7 +968,6 @@ var SSListView = new Class({
 
     if(this.hasCollection())
     {
-      SSLog('has collection read first', SSLogForce);
       this.data().read(this.reloadData.bind(this));
     }
     else
@@ -982,8 +981,6 @@ var SSListView = new Class({
   {
     // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
-    
-    SSLog('len ' + len, SSLogForce);
     
     // empty on refresh
     this.element.empty();
@@ -1127,10 +1124,8 @@ var SSListView = new Class({
   setNeedsDisplay: function(value)
   {
     this.parent(value);
-    SSLog('setNeedsDisplay ' + value, SSLogForce);
     if(value && this.element && this.cell()) 
     {
-      SSLog('empty from setNeedsDisplay', SSLogForce);
       this.element.empty();
     }
   }
