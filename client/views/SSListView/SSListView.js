@@ -1014,6 +1014,8 @@ var SSListView = new Class({
     {
       this.setNeedsDisplay(false);
     }
+    
+    this.fireEvent('onReloadData', this);
   },
   
   
