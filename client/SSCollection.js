@@ -542,13 +542,15 @@ var SSCollection = new Class({
   },
   
   
-  create: function(data)
+  create: function(data, callback)
   {
     return this.transact('create', {
       table: this.table(),
       values: data,
       onComplete: function(theId) {
-        this.onCreate($merge(data, {id:theId}));
+        var newData = $merge(data, {id:theId});
+        this.onCreate(newData);
+        if(callback && $type(callback) == 'function') callback(newData);
       }.bind(this)
     });
   },
