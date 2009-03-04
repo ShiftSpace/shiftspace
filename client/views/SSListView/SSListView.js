@@ -50,6 +50,8 @@ var SSListView = new Class({
     this.__cellBeingEdited = -1;
     
     this.setIsDirty(true);
+
+    this.setNeedsDisplay();
     this.setSuppressRefresh(false);
     
     if(this.options.filter) this.setFilter(this.options.filter);
