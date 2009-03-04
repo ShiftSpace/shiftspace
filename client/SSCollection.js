@@ -661,7 +661,7 @@ var SSCollection = new Class({
       values: data,
       constraints: $merge(this.constraints(), {id: id}),
       onComplete: function(rx) {
-        this.onUpdate(data, index);
+        this.onUpdateById(data, id);
       }.bind(this),
       onFailure: function(data) {
         this.onFailure('delete', data, index);
@@ -698,6 +698,13 @@ var SSCollection = new Class({
   
   
   onUpdate: function(data, index)
+  {
+    this.__array[index] = $merge(this.__array[index], data);
+    this.fireEvent('onUpdate', index);
+  },
+  
+  
+  onUpdateById: function(data, id)
   {
     this.__array[index] = $merge(this.__array[index], data);
     this.fireEvent('onUpdate', index);
