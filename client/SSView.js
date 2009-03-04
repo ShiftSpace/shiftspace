@@ -458,7 +458,6 @@ var SSView = new Class({
   setNeedsDisplay: function(val)
   {
     this.__needsDisplay = val;
-    if(this.element && this.isVisible()) this.show();
   },
   
   
