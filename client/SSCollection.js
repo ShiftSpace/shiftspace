@@ -708,7 +708,7 @@ var SSCollection = new Class({
   
   byId: function(id)
   {
-    return this.indexWhere(function(x) { return x == id;} );
+    return this.indexWhere(function(x) { return x.id == id;});
   },
   
   
