@@ -160,7 +160,8 @@ class User {
       $user->set($this->server->user);
       $this->server->moma->save($user);
       
-      sendsms($this->server->user['normalized_phone'], $key);
+      $sms_msg = "Enter this passcode on MoMA.org to validate your phone: $key";
+      sendsms($this->server->user['normalized_phone'], $sms_msg);
       return new Response("key"); 
     }
   }
