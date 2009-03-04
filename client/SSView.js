@@ -48,6 +48,9 @@ var SSView = new Class({
       SSLog('Instantiating SSView with ' + el.getProperty('id'), SSLogMessage);
     }
     
+    // we are new and we are dirty
+    this.setNeedsDisplay(true);
+    
     // get the options first
     this.setOptions(this.defaults(), (el && $merge(options, SSGetInlineOptions(el))) || {});
     // remove them
@@ -136,14 +139,8 @@ var SSView = new Class({
     if(superview) 
     {
       superview.addEvent('onRefresh', function() {
-        if(this.isVisible && !this.isVisible())
-        {
-          return;
-        }
-        if(this.isDirty && !this.isDirty())
-        {
-          return;
-        }
+        if(!this.isVisible()) return;
+        if(!this.needsDisplay()) return;
         this.refreshAndFire();
       }.bind(this));
     }
@@ -458,9 +455,9 @@ var SSView = new Class({
   },
   
   
-  setNeedsDisplay: function()
+  setNeedsDisplay: function(val)
   {
-    this.__needsDisplay = true;
+    this.__needsDisplay = val;
   },
   
   

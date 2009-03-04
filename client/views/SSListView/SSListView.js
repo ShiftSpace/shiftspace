@@ -49,9 +49,6 @@ var SSListView = new Class({
     
     this.__cellBeingEdited = -1;
     
-    this.setIsDirty(true);
-
-    this.setNeedsDisplay();
     this.setSuppressRefresh(false);
     
     if(this.options.filter) this.setFilter(this.options.filter);
@@ -332,7 +329,7 @@ var SSListView = new Class({
       newData.addView(this);
     }
     
-    this.setIsDirty(true);
+    this.setNeedsDisplay(true);
     
     this.refresh();
   },
@@ -959,7 +956,11 @@ var SSListView = new Class({
   {
     this.parent();
     
+    // no data nothing to do
     if(!this.data()) return;
+    
+    // collection not yet loaded nothing to do
+    if(this.__pendingCollection) return;
     
     // don't refresh if we're visible
     if(!this.isVisible() && !force) 
@@ -967,6 +968,12 @@ var SSListView = new Class({
       return;
     }
     
+    this.reloadData();
+  },
+  
+  
+  reloadData: function()
+  {
     // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
     
@@ -995,19 +1002,10 @@ var SSListView = new Class({
       
       this.initSortables();
     }
-    
+
     if(!this.__pendingCollection)
     {
-      this.setIsDirty(false);
-    }
-  },
-  
-  
-  reload: function()
-  {
-    if(this.hasCollection())
-    {
-      this.data().read();
+      this.setNeedsDisplay(false);
     }
   },
   
@@ -1074,8 +1072,7 @@ var SSListView = new Class({
     }.bind(this));
     
     coll.addEvent('onLoad', function() {
-      this.setIsDirty(true);
-      if(this.isVisible() && !this.suppressRefresh()) this.refresh();
+      if(this.isVisible()) this.reloadData();
     }.bind(this));
   },
   
@@ -1106,18 +1103,6 @@ var SSListView = new Class({
       // not ready yet, controller loaded before collection
       this.__pendingCollection = collectionName;
     }
-  },
-  
-  
-  setIsDirty: function(value)
-  {
-    this.__isDirty = value;
-  },
-  
-  
-  isDirty: function()
-  {
-    return this.__isDirty;
   },
   
   
