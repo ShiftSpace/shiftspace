@@ -654,6 +654,22 @@ var SSCollection = new Class({
   },
   
   
+  updateById: function(data, id, bulk)
+  {
+    return this.transact('update', {
+      table: this.table(),
+      values: data,
+      constraints: $merge(this.constraints(), {id: id}),
+      onComplete: function(rx) {
+        this.onUpdate(data, index);
+      }.bind(this),
+      onFailure: function(data) {
+        this.onFailure('delete', data, index);
+      }.bind(this)
+    }, bulk);
+  },
+  
+  
   onFailure: function(action, data, index)
   {
     
