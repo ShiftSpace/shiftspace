@@ -338,6 +338,8 @@ var SandalphonClass = new Class({
       // grab the outlet parent id
       var outlet = anOutlet.getProperty('outlet').trim();
       
+      SSLog(outlet, SSLogForce);
+      
       // if not a JSON value it's just the id
       if(outlet[0] != '{')
       {
