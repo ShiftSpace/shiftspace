@@ -548,6 +548,7 @@ var SSCollection = new Class({
       properties: this.properties(),
       orderBy: this.orderBy(),
       onComplete: function(data) {
+        SSLog('setting array', SSLogForce);
         this.setArray(data);
         this.setIsUnread(false);
         this.setIsReading(false);
