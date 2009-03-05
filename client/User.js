@@ -91,7 +91,7 @@ var ShiftSpaceUserClass = new Class({
   
   setPhone: function(phone)
   {
-    if(email != '' && email != 'NULL' && email != null)
+    if(phone != '' && phone != 'NULL' && phone != null)
     {
       this.__phone = phone;
     }
