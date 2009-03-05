@@ -79,7 +79,7 @@ class Collections {
     if ($properties == '*')
       $properties = $this->generate_all_properties($table);
 
-    if (!ctype_alpha2(str_replace(array('*', '_', '.', ' ', ','), '', $properties)))
+    if (!ctype_alpha2(str_replace(array('*', '_', '.', ' ', ',', '(', ')'), '', $properties)))
       throw new Error("2");
     
     if (!ctype_alpha2($table))
