@@ -11,13 +11,12 @@ class Email {
   public function send() {
     extract($_POST);
 
-    $text = 'Text version of email';
     $crlf = "\n";
                                           
     $mime = new Mail_mime($crlf);
                                           
     $mime->setTXTBody(strip_tags($body));
-    $mime->setHTMLBody($body);
+//    $mime->setHTMLBody($body);
     $mimebody = $mime->get();
 
     $useremail = $this->server->user['email'];

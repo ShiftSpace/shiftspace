@@ -3,6 +3,9 @@
 $dir = dirname(__FILE__);
 require_once("$dir/sms.php");
 
+require_once "Mail.php";
+require_once 'Mail/mime.php';
+
 class User {
   protected $sql = array(
     'login' => "
@@ -160,7 +163,8 @@ class User {
       $user->set($this->server->user);
       $this->server->moma->save($user);
       
-      sendsms($this->server->user['normalized_phone'], $key);
+      $sms_msg = "Enter this passcode on MoMA.org to validate your phone: $key";
+      sendsms($this->server->user['normalized_phone'], $sms_msg);
       return new Response("key"); 
     }
   }
@@ -249,10 +253,81 @@ class User {
     return new Response($result);
   }
 
+  static function generatePassword ($length = 8)
+  {
+
+    // start with a blank password
+    $password = "";
+
+    // define possible characters
+    $possible = "0123456789bcdfghjkmnpqrstvwxyz"; 
+    
+    // set up a counter
+    $i = 0; 
+    
+    // add random characters to $password until $length is reached
+    while ($i < $length) { 
+
+      // pick a random character from the possible ones
+      $char = substr($possible, mt_rand(0, strlen($possible)-1), 1);
+        
+      // we don't want this character if it's already in the password
+      if (!strstr($password, $char)) { 
+        $password .= $char;
+        $i++;
+      }
+
+    }
+
+    // done!
+    return $password;
+  }
+
   public function getname() {
     extract($_REQUEST);
     $user = $this->server->moma->load("user($userid)");
     return new Response($user->username);
+  }
+  
+  public function renew_password() {
+    extract($_REQUEST);
+    
+    $to = $this->server->moma->row("SELECT email FROM user WHERE username=:username", compact('username'));
+
+    if ($to == null)
+      throw new Error("No such username");
+
+    $to = $to->email;
+
+    $new_password = $this->generatePassword();
+    $md5 = md5($new_password);
+    
+    $this->server->moma->query("UPDATE user SET password=:md5 WHERE username=:username", compact('md5', 'username'));    
+
+    $crlf = "\n";
+    $mime = new Mail_mime($crlf);
+    $mime->setTXTBody("Your new password is $new_password. You can change it once you log-in.");
+    $mimebody = $mime->get();
+
+    $useremail = $this->server->user['email'];
+    if ($useremail == null)
+      $useremail = "noreply@moma.org";
+
+    $headers = array ('From' => 'noreply@moma.org',
+      'Subject' => 'New password for MoMA.org',
+      'To' => $to);
+
+    $headers = $mime->headers($headers);
+
+    $smtp = Mail::factory('smtp', array ('host' => 'owa.moma.org'));
+    $mail = $smtp->send($to, $headers, $mimebody);
+
+    if (PEAR::isError($mail)) {
+      throw new Error('Error sending e-mail: '.$mail->getMessage());
+    }
+    else {
+      return new Response('ok');
+    }
   }
 }
 
