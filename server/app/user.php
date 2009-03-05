@@ -110,7 +110,7 @@ class User {
         throw new Error("Oops, please enter a password at least 6 characters long.");
     }
     
-    if ($email = '')
+    if ($email == '')
       throw new Error('Please enter an e-mail address');
 
     $userid = $this->server->user['id'];
