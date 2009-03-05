@@ -6,9 +6,6 @@ require_once("$dir/sms.php");
 require_once "Mail.php";
 require_once 'Mail/mime.php';
 
-class user_Object {
-}
-
 class User {
   protected $sql = array(
     'login' => "
