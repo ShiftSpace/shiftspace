@@ -110,7 +110,7 @@ class User {
         throw new Error("Oops, please enter a password at least 6 characters long.");
     }
     
-    if ($email = '')
+    if ($email == '')
       throw new Error('Please enter an e-mail address');
 
     $userid = $this->server->user['id'];
@@ -203,6 +203,8 @@ class User {
 
     if ($password != $password_again)
       throw new Error("Passwords do not match");
+    if (strlen($username) < 6)
+      throw new Error("Oops, please enter a username at least 6 characters long.");
     if (strlen($password) < 6)
       throw new Error("Oops, please enter a password at least 6 characters long.");
     if (!preg_match('#^[a-zA-Z0-9_.]+$#', $username))
