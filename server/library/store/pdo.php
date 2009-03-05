@@ -55,7 +55,7 @@ class PDO_Store extends Base_Store {
     
     $defaults = array(
       'key' => 'id',
-      'sql' => "SELECT '{class}', * FROM {table} WHERE {key} = :value",
+      'sql' => "SELECT * FROM {table} WHERE {key} = :value",
       '_store' => $this,
       'class' => "{$options['table']}_Object"
     );
