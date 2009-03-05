@@ -177,6 +177,7 @@ var SSMultiView = new Class({
   
   showViewByName: function(name)
   {
+    SSLog('showViewByName ' + name, SSLogForce);
     if(!this.element.getElementById(name))
     {
       throw new SSMultiViewError.NoSuchSubView(new Error(), this.element.getProperty('id') + "'s controller has no subview with name " + name + ".");
