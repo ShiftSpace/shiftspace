@@ -548,10 +548,11 @@ var SSCollection = new Class({
       properties: this.properties(),
       orderBy: this.orderBy(),
       onComplete: function(data) {
+        this.setArray(data);
         this.setIsUnread(false);
         this.setIsReading(false);
         this.clearOnReadFns();
-        this.onRead(data, suppressEvent);
+        this.onRead(suppressEvent);
         if(callback && $type(callback) == 'function') callback(data);
       }.bind(this)
     });
@@ -728,9 +729,8 @@ var SSCollection = new Class({
   },
   
   
-  onRead: function(data, suppressEvent)
+  onRead: function(suppressEvent)
   {
-    this.setArray(data);
     this.fireEvent('onLoad');
   },
   
