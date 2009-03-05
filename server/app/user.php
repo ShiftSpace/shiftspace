@@ -203,7 +203,7 @@ class User {
     if (strlen($password) < 6)
       throw new Error("Oops, please enter a password at least 6 characters long.");
     if (!preg_match('#^[a-zA-Z0-9_.]+$#', $username))
-      throw new Error("Oops, please enter a username composed letters, numbers, periods or underscores.");
+      throw new Error("Oops, please enter a username composed of letters, numbers, periods or underscores.");
 
     $userexists = $this->server->moma->value($this->sql['checkuser'], array('username' => $username));
     if ($userexists)
