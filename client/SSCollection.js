@@ -659,7 +659,6 @@ var SSCollection = new Class({
   find: function(fn)
   {
     var index = this.indexWhere(fn);
-    SSLog('find ' + index, SSLogForce);
     if(index == -1)
     {
       return null;
