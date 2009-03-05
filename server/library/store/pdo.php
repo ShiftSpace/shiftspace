@@ -72,8 +72,7 @@ class PDO_Store extends Base_Store {
       }
     }
     
-    $fetchStyle = PDO::FETCH_CLASS | PDO::FETCH_CLASSTYPE;
-    $result = $this->row($sql, $values, $fetchStyle);
+    $result = $this->row($sql, $values, PDO::FETCH_ASSOC);
 
     // SQLite3 does not support PDO::FETCH_CLASS properly - http://www.sitepoint.com/forums/showthread.php?t=528019
     // This hack should make it work.
