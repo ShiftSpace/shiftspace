@@ -549,8 +549,8 @@ var SSCollection = new Class({
       orderBy: this.orderBy(),
       onComplete: function(data) {
         this.onRead(data, suppressEvent);
-        this.isReading(false);
         this.setIsUnread(false);
+        this.setIsReading(false);
         this.clearOnReadFns();
         if(callback && $type(callback) == 'function') callback(data);
       }.bind(this)
@@ -573,6 +573,7 @@ var SSCollection = new Class({
   clearOnReadFns: function()
   {
     this.__readFns.each(function(fn){fn();});
+    this.__readFns = [];
   },
   
   
