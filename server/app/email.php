@@ -31,7 +31,7 @@ class Email {
     if ($email_addresses != '')
       $headers['To'] = $email_addresses;
 
-    if ($send_email_to_current_user == 1) {
+    if ($toself == 1) {
       $headers['Cc'] = $useremail;
       
       if ($to != '')
