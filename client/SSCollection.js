@@ -153,6 +153,18 @@ var SSCollection = new Class({
     return this.__isunread;
   },
   
+  
+  setIsReading: function(value)
+  {
+    this.__isreading = value;
+  },
+  
+  
+  isReading: function()
+  {
+    return this.__isreading;
+  },
+  
 
   setPlugins: function(newPlugins)
   {
@@ -527,18 +539,40 @@ var SSCollection = new Class({
       suppressEvent - a boolean value.
   */
   read: function(callback, suppressEvent)
-  {    
+  {
+    this.setIsReading(true);
+    this.initializeReadFns();
     return this.transact('read', {
       table: this.table(),
       constraints: this.constraints(),
       properties: this.properties(),
       orderBy: this.orderBy(),
       onComplete: function(data) {
-        this.setIsUnread(false);
         this.onRead(data, suppressEvent);
+        this.isReading(false);
+        this.setIsUnread(false);
+        this.clearOnReadFns();
         if(callback && $type(callback) == 'function') callback(data);
       }.bind(this)
     });
+  },
+  
+  
+  initializeReadFns: function()
+  {
+    this.__readFns = [];
+  },
+  
+  
+  addOnReadFn: function(fn)
+  {
+    this.__readFns.push(fn);
+  },
+  
+  
+  clearOnReadFns: function()
+  {
+    this.__readFns.each(function(fn){fn();});
   },
   
   
