@@ -33,11 +33,11 @@ var ShiftSpaceUserClass = new Class({
   
   clearData: function()
   {
-    this.setUsername(null);
-    this.setId(null);
-    this.setEmail(null);
-    this.setPhone(null);
-    this.setPhoneValidated(null);
+    this.__username = null;
+    this.__userId = null;
+    this.__email = null;
+    this.__phone = null;
+    this.__phoneValidated = null;
   },
   
   
@@ -76,7 +76,10 @@ var ShiftSpaceUserClass = new Class({
   
   setEmail: function(email)
   {
-    this.__email = email;
+    if(email != '' && email != 'NULL' && email != null)
+    {
+      this.__email = email;
+    }
   },
   
   
@@ -88,7 +91,10 @@ var ShiftSpaceUserClass = new Class({
   
   setPhone: function(phone)
   {
-    this.__phone = phone;
+    if(phone != '' && phone != 'NULL' && phone != null)
+    {
+      this.__phone = phone;
+    }
   },
   
   
