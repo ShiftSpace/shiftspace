@@ -1,5 +1,9 @@
 <?php
 
+function ctype_alpha2($str) {
+  return $str == '' || ctype_alpha($str);
+}
+
 class Collections {
   public function __construct($server) {
     $this->server = $server;
@@ -39,7 +43,7 @@ class Collections {
           $value = "'$value'";
         }
 
-        if (!ctype_alpha(str_replace(array('.', '_'), '', $column)))
+        if (!ctype_alpha2(str_replace(array('.', '_'), '', $column)))
           throw new Error("1");
           
         $sql .= "$column = $value";
@@ -75,10 +79,10 @@ class Collections {
     if ($properties == '*')
       $properties = $this->generate_all_properties($table);
 
-    if (!ctype_alpha(str_replace(array('*', '_', '.', ' ', ','), '', $properties)))
+    if (!ctype_alpha2(str_replace(array('*', '_', '.', ' ', ','), '', $properties)))
       throw new Error("2");
     
-    if (!ctype_alpha($table))
+    if (!ctype_alpha2($table))
       throw new Error("3");
     
     $sql = "SELECT $properties FROM $table";
@@ -93,7 +97,7 @@ class Collections {
       else
         throw new Error('orderby first value must be "<" or ">"');  
 
-      if (!ctype_alpha(str_replace(array('.', '_'), '', $orderby[1])))
+      if (!ctype_alpha2(str_replace(array('.', '_'), '', $orderby[1])))
         throw new Error("4");
 
       $sql .= " ORDER BY $orderby[1] $ascdesc"; 
@@ -131,7 +135,7 @@ class Collections {
   function delete($desc) {
     extract($desc);
 
-    if (!ctype_alpha($table))
+    if (!ctype_alpha2($table))
       throw new Error("6");
     
     $sql = "DELETE FROM $table";
@@ -146,14 +150,14 @@ class Collections {
     
     $values['modified'] = time();
 
-    if (!ctype_alpha($table))
+    if (!ctype_alpha2($table))
       throw new Error("7");
     
     $sql = "UPDATE $table SET ";
    
     $valuesSql = array();
     foreach ($values as $key => $value) {
-      if (!ctype_alpha(str_replace(array('_', '.'), '', $key)))
+      if (!ctype_alpha2(str_replace(array('_', '.'), '', $key)))
         throw new Error("8");
 
       if (is_string($value))
@@ -174,7 +178,7 @@ class Collections {
   function create($desc) {
     extract($desc);
 
-    if (!ctype_alpha($table))
+    if (!ctype_alpha2($table))
       throw new Error("9");
     
     $sql = "INSERT INTO $table ";
@@ -186,7 +190,7 @@ class Collections {
 
     $columns = implode(', ', array_keys($values));
     foreach ($values as $key => $value) {
-      if (!ctype_alpha(str_replace(array('_', '.'), '', $key)))
+      if (!ctype_alpha2(str_replace(array('_', '.'), '', $key)))
         throw new Error("10");
 
       if (is_string($value))
