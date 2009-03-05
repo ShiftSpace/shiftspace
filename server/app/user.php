@@ -128,7 +128,7 @@ class User {
       $user->set('phone_validated', 0);
       $user->set('phone_key', 0);
     }
-    
+
     $user->set(array(
       'phone'             => $phone,
       'normalized_phone'  => $nphone,
