@@ -210,7 +210,18 @@ var ShiftSpaceUserClass = new Class({
   */
   update: function(info, callback) 
   {
-    SSServerCall('user.update', info, callback);
+    SSServerCall('user.update', info, function(json) {
+      if(json.data) this.syncData(json.data);
+      if(callback) callback(json);
+      if(!json.error)
+      {
+        this.fireEvent('onUserUpdate', json);
+      }
+      else
+      {
+        this.fireEvent('onUserUpdateError', json);
+      }
+    }.bind(this));
   },
   
   
