@@ -167,7 +167,7 @@ class Collections {
     }
                  
     $sql .= implode(', ', $valuesSql);                                             
-    $sql .= $this->generate_where_clause($constraints, false, true);
+    $sql .= $this->generate_where_clause($constraints, false, $table != 'artwork');
     
     $query = $this->server->moma->query($sql);
     $result = $query->rowCount();
