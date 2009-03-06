@@ -1,4 +1,4 @@
-\<?php
+<?php
 
 function ctype_alpha2($str) {
   return $str == '' || ctype_alpha($str);
