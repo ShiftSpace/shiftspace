@@ -28,6 +28,7 @@ var ShiftSpaceUserClass = new Class({
     this.setEmail(data.email);
     this.setPhone(data.phone);
     this.setPhoneValidated(data.phone_validated);
+    this.setPreview(data.preview);
   },
   
   
@@ -38,6 +39,7 @@ var ShiftSpaceUserClass = new Class({
     this.__email = null;
     this.__phone = null;
     this.__phoneValidated = null;
+    this.__preview = null;
   },
   
   
@@ -50,6 +52,18 @@ var ShiftSpaceUserClass = new Class({
   getId: function()
   {
     return this.__userId;
+  },
+  
+  
+  setPreview: function(val)
+  {
+    this.__preview = val;
+  },
+  
+  
+  preview: function()
+  {
+    return this.__preview;
   },
   
   
