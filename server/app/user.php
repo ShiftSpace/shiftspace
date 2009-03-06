@@ -86,10 +86,6 @@ class User {
     if (empty($user)) {
       throw new Error('Incorrect username or password. Please try again.');
     } else {
-      if (!preg_match('#^[a-zA-Z0-9_.]+$#', $_POST['username'])) {
-        throw new Error("We're sorry, but your username is not compatible with the latest release of ShiftSpace. Please contact us at info@shiftspace.org so we can fix your account.");
-      }
-
       $this->server->user = get_object_vars($user);      
       return new Response($this->server->user);
     }
@@ -238,7 +234,9 @@ class User {
       'membership_id'     => $membership_id,
       'first_name'        => $first_name,
       'last_name'         => $last_name,
-      'perspective'       => $perspective
+      'perspective'       => $perspective,
+      'phone_validated'   => 0,
+      'phone_key'         => 0
     ));
     
     $this->server->moma->save($user);
