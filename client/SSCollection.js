@@ -785,6 +785,13 @@ var SSCollection = new Class({
   empty: function()
   {
     this.setArray([]);
+  },
+  
+  
+  reset: function()
+  {
+    this.empty();
+    this.setIsUnread(true);
   }
 
 });

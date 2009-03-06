@@ -80,6 +80,10 @@ var ShiftSpaceUserClass = new Class({
     {
       this.__email = email;
     }
+    else
+    {
+      this.__email = '';
+    }
   },
   
   
@@ -94,6 +98,10 @@ var ShiftSpaceUserClass = new Class({
     if(phone != '' && phone != 'NULL' && phone != null)
     {
       this.__phone = phone;
+    }
+    else
+    {
+      this.__phone = '';
     }
   },
   
