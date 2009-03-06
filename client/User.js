@@ -80,7 +80,7 @@ var ShiftSpaceUserClass = new Class({
     {
       this.__email = email;
     }
-    else 
+    else
     {
       this.__email = '';
     }
