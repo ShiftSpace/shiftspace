@@ -162,6 +162,9 @@ class Collections {
 
       if (is_string($value))
         $value = '"'.mysql_escape_string($value).'"';
+
+      if ($key == 'setnote' || $key == 'title')
+        $value = strip_tags($value);
         
       $valuesSql[] = "$key = $value";
     }
@@ -195,6 +198,9 @@ class Collections {
 
       if (is_string($value))
         $value = '"'.mysql_escape_string($value).'"';
+        
+      if ($key == 'setnote' || $key == 'title')
+        $value = strip_tags($value);
         
       $valuesSql[] = $value;
     }
