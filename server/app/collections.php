@@ -160,8 +160,12 @@ class Collections {
       if (!ctype_alpha2(str_replace(array('_', '.'), '', $key)))
         throw new Error("8");
 
+      echo "$value<br><br>";
+
       if (is_string($value))
-        $value = "'".mysql_escape_string($value)."'";
+        $value = '"'.mysql_escape_string($value).'"';
+        
+      echo "$value<br><br><br>";
         
       $valuesSql[] = "$key = $value";
     }
@@ -194,7 +198,7 @@ class Collections {
         throw new Error("10");
 
       if (is_string($value))
-        $value = "'".sqlite_escape_string($value)."'";
+        $value = '"'.mysql_escape_string($value).'"';
         
       $valuesSql[] = $value;
     }
