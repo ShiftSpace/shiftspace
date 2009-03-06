@@ -1,4 +1,4 @@
-<?php
+\<?php
 
 function ctype_alpha2($str) {
   return $str == '' || ctype_alpha($str);
@@ -163,7 +163,7 @@ class Collections {
       if (is_string($value))
         $value = "'".mysql_escape_string($value)."'";
 
-      $value = str_replace('\\'', "''", $value);
+      $value = str_replace("\\'", "''", $value);
         
       if ($key == 'setnote' || $key == 'title')
         $value = strip_tags($value);
@@ -201,7 +201,7 @@ class Collections {
       if (is_string($value))
         $value = "'".mysql_escape_string($value)."'";
         
-      $value = str_replace('\\'', "''", $value);
+      $value = str_replace("\\'", "''", $value);
         
       if ($key == 'setnote' || $key == 'title')
         $value = strip_tags($value);
