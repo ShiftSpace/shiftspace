@@ -161,7 +161,12 @@ class Collections {
         throw new Error("8");
 
       if (is_string($value))
-        $value = '"'.mysql_escape_string($value).'"';
+        $value = "'".mysql_escape_string($value)."'";
+
+      $value = str_replace("\\'", "''", $value);
+        
+      if ($key == 'setnote' || $key == 'title')
+        $value = strip_tags($value);
         
       $valuesSql[] = "$key = $value";
     }
@@ -194,7 +199,12 @@ class Collections {
         throw new Error("10");
 
       if (is_string($value))
-        $value = '"'.mysql_escape_string($value).'"';
+        $value = "'".mysql_escape_string($value)."'";
+        
+      $value = str_replace("\\'", "''", $value);
+        
+      if ($key == 'setnote' || $key == 'title')
+        $value = strip_tags($value);
         
       $valuesSql[] = $value;
     }
