@@ -136,7 +136,8 @@ class User {
       'phone'             => $phone,
       'normalized_phone'  => $nphone,
       'email'             => $email,
-      'perspective'       => $perspective
+      'perspective'       => $perspective,
+      'preview'           => $preview
     ));
 
     if (isset($password) && $password != '') {
