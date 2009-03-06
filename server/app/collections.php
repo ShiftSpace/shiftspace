@@ -161,7 +161,7 @@ class Collections {
         throw new Error("8");
 
       if (is_string($value))
-        $value = "'".mysql_escape_string($value)."'";
+        $value = '"'.mysql_escape_string($value).'"';
         
       $valuesSql[] = "$key = $value";
     }
@@ -194,7 +194,7 @@ class Collections {
         throw new Error("10");
 
       if (is_string($value))
-        $value = "'".sqlite_escape_string($value)."'";
+        $value = '"'.mysql_escape_string($value).'"';
         
       $valuesSql[] = $value;
     }

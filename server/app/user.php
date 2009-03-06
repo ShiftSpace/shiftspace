@@ -136,7 +136,8 @@ class User {
       'phone'             => $phone,
       'normalized_phone'  => $nphone,
       'email'             => $email,
-      'perspective'       => $perspective
+      'perspective'       => $perspective,
+      'preview'           => $preview
     ));
 
     if (isset($password) && $password != '') {
@@ -209,7 +210,7 @@ class User {
       throw new Error("Oops, please enter a password at least 6 characters long.");
     if (!preg_match('#^[a-zA-Z0-9_.]+$#', $username))
       throw new Error("Oops, please enter a username composed of letters, numbers, periods or underscores, but no spaces.");
-    if ($email = '')
+    if ($email == '')
       throw new Error('Please enter an e-mail address');
 
     $userexists = $this->server->moma->value($this->sql['checkuser'], array('username' => $username));

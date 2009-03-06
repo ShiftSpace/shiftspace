@@ -99,7 +99,7 @@ var ShiftSpaceUserClass = new Class({
     {
       this.__phone = phone;
     }
-    else
+    else 
     {
       this.__phone = '';
     }
