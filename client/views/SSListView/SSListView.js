@@ -124,7 +124,7 @@ var SSListView = new Class({
   
   /*
     Function: setHasCollection
-      Sets the value of hasCollection to a boolean
+      Sets the hasCollection property.
       
     Parameters:
       val - a boolean value
@@ -297,7 +297,7 @@ var SSListView = new Class({
   
   /*
       Function: cell
-        Returns the cell class.  dd
+        Returns the cell class.
 
       Returns:
         A cell class
@@ -545,14 +545,14 @@ var SSListView = new Class({
     this.fireEvent('onAdd', data);
   },
   /*
-  ??
-  //Note - what does this do? sender? - Justin
-  ??
     Function: addObject
-      
+      Adds an object to a collection. The sender argument specifies the object to add. Intended to be used for event handling.
       
     Parameters:
-      sender -   
+      sender -  An HTML Element (SSCell)
+      
+    See Also:
+      add
   */
   addObject: function(sender)
   {
@@ -612,7 +612,7 @@ var SSListView = new Class({
   },
   /*
     Function: insert
-      Inserts data into a cell at a specified index
+      Inserts data into a cell at a specified index and refreshes collection. 
       
     Parameters:
       cellData - An object.
@@ -624,7 +624,14 @@ var SSListView = new Class({
     this.__insert__(cellData, index);
     this.refresh();
   },
-
+/*
+    Function: __insert__  (private)
+      Inserts data into a cell at a specified index.
+      
+    Parameters:
+      cellData - An object.
+      index - An integer. The index of an item in a collection.
+*/
   __insert__: function(cellData, index)
   {
     if(this.data().insert)
@@ -659,8 +666,13 @@ var SSListView = new Class({
     }
     return copy;
   },
-  
-
+  /*
+    Function: get (private)
+     
+    
+    Parameters: 
+      index - An integer.
+*/
   __get__: function(index)
   {
     if(this.data().get)
@@ -675,11 +687,12 @@ var SSListView = new Class({
   
 /*
     Function: update  
-  
+      Updates a collection's content with the passed cellData at the specified index. Accepts the current data, the index of the collection to update, and whether 
+    
     Parameters:
-      cellData -  
-      index -
-      _noArrayUpdate -
+      cellData - An object.
+      index - An integer
+      _noArrayUpdate - A boolean.
 */
   update: function(cellData, index, _noArrayUpdate)
   {
@@ -707,8 +720,14 @@ var SSListView = new Class({
       var canLeaveEdit = (this.canLeaveEdit && this.canLeaveEdit(index)) || true;
       if(canLeaveEdit) this.cell().leaveEdit();
     }
+    
   },
-  
+  /*
+    Function: updateObject 
+      
+    Parameters:
+       sender -  An HTML Element (SSCell)
+  */
   
   updateObject: function(sender)
   {
@@ -716,7 +735,14 @@ var SSListView = new Class({
     this.update(this.cell().getAllData(), index);
   },
   
-  
+  /*
+    Function: updateCellView 
+      
+    
+    Parameters: 
+      cellData - An Object.
+      index - An Integer.
+  */
   updateCellView: function(cellData, index)
   {
     this.cell().lock(this.cellNodeForIndex(index));
@@ -724,14 +750,27 @@ var SSListView = new Class({
     this.cell().unlock();
   },
   
-  
+  /*
+    Function: __update__ (private)
+              
+        
+    Parameters: 
+      cellData - An Object. 
+      index -  An Integer. 
+  */
   __update__: function(cellData, index)
   {
     var oldData =this.data()[index];
     this.__set__(oldData.merge(cellData), index);
   },
   
-  
+  /*
+    Function: onUpdate 
+        
+    
+    Parameter: 
+      index - An Integer. 
+  */
   onUpdate: function(index)
   {
     var delegate = this.delegate();
@@ -749,14 +788,26 @@ var SSListView = new Class({
     }
   },
   
-  
+  /*
+    Function: set
+      
+    Parameters: 
+      cellData - An Object. 
+      index -  An Integer.
+  */
   set: function(cellData, index)
   {
     this.boundsCheck(index);
     this.__set__(cellData, index);
   },
   
-  
+  /*
+    Function: set (private)
+    
+    Parameters: 
+      cellData - An Object. 
+      index -  An Integer.
+  */
   __set__: function(cellData, index)
   {
     this.data()[index] = cellData;
