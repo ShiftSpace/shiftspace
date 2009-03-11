@@ -323,12 +323,13 @@ var SSListView = new Class({
   setData: function(newData)
   {
     this.__data = newData;
-    
+    //MARKED FOR DELETION - add.view method is never being used -Justin
     if(newData.addView)
     {
       newData.addView(this);
     }
-    
+    //END OF DELETION
+  
     this.setNeedsDisplay(true);
   },
     /*
@@ -472,10 +473,10 @@ var SSListView = new Class({
   
   /*
     Function: cellNodes
-      Returns all the list elements of an element
+      Returns all the listed cell nodes of an element.
       
     Returns:
-      A list of li elements
+      A group of list elements
 */
   cellNodes: function()
   {
@@ -549,7 +550,7 @@ var SSListView = new Class({
       Adds an object to a collection. The sender argument specifies the object to add. Intended to be used for event handling.
       
     Parameters:
-      sender -  An HTML Element (SSCell)
+      sender -  An HTML element. (SSCell)
       
     See Also:
       add
@@ -631,7 +632,7 @@ var SSListView = new Class({
     Parameters:
       cellData - An object.
       index - An integer. The index of an item in a collection.
-*/
+*/s
   __insert__: function(cellData, index)
   {
     if(this.data().insert)
@@ -668,7 +669,7 @@ var SSListView = new Class({
   },
   /*
     Function: get (private)
-     
+     Accepts the index of a colletion and calls the get method
     
     Parameters: 
       index - An integer.
@@ -724,9 +725,10 @@ var SSListView = new Class({
   },
   /*
     Function: updateObject 
+      Accepts a SSCell object in a collection and updates it.
       
     Parameters:
-       sender -  An HTML Element (SSCell)
+      sender -  An HTML element. (SSCell)
   */
   
   updateObject: function(sender)
@@ -737,8 +739,8 @@ var SSListView = new Class({
   
   /*
     Function: updateCellView 
+      Accepts a cell's index in a collection array, and updates the cell's view with new cell data. 
       
-    
     Parameters: 
       cellData - An Object.
       index - An Integer.
@@ -752,11 +754,12 @@ var SSListView = new Class({
   
   /*
     Function: __update__ (private)
-              
+      Accepts cell data and a cell's index. Merges the new cell data with the existing data of a specified cell in a collection.
         
     Parameters: 
       cellData - An Object. 
       index -  An Integer. 
+      
   */
   __update__: function(cellData, index)
   {
@@ -766,13 +769,15 @@ var SSListView = new Class({
   
   /*
     Function: onUpdate 
-        
+      Accepts the index of cell in a collection, checks if an animaton should be applied, and refreshes it.
     
     Parameter: 
       index - An Integer. 
   */
+  
   onUpdate: function(index)
   {
+    //NOTE: animation support to be implemented -Justin
     var delegate = this.delegate();
     var anim = (delegate && 
                 delegate.animationFor && 
@@ -790,10 +795,11 @@ var SSListView = new Class({
   
   /*
     Function: set
+      Accepts cell data and a cell index, and applies the data to the specified cell after performing a bounds check.
       
     Parameters: 
-      cellData - An Object. 
-      index -  An Integer.
+      cellData - An object. 
+      index -  An integer.
   */
   set: function(cellData, index)
   {
@@ -802,18 +808,26 @@ var SSListView = new Class({
   },
   
   /*
-    Function: set (private)
+    Function: __set__ (private)
+      Accepts cell data and a cell index, and applies the data to the specified cell.
     
     Parameters: 
-      cellData - An Object. 
-      index -  An Integer.
+      cellData - An object. 
+      index -  An integer.
   */
   __set__: function(cellData, index)
   {
     this.data()[index] = cellData;
   },
-  
-  
+  /*
+    Function: move
+      Checks the bounds for speciifed to and from indexes, and moves
+    
+    Parameters:
+      fromIndex - An integer.
+      toIndex - An integer.
+    
+  */
   move: function(fromIndex, toIndex)
   {
     this.boundsCheck(fromIndex);
@@ -821,6 +835,16 @@ var SSListView = new Class({
     this.__move__(fromIndex, toIndex);
     this.refresh();
   },
+  
+  /*
+      Function: __move__ (private)
+          */    /*
+      
+      Parameters:
+        fromIndex - An integer.
+        toIndex - An integer.
+
+  */
   
   
   __move__: function(fromIndex, toIndex)
@@ -837,7 +861,15 @@ var SSListView = new Class({
     }
   },
   
-  // TODO: animation support
+
+  /*
+    Function: remove
+      Accepts an cell index, 
+      
+    Parameter:
+      index - An integer.
+  */
+    // TODO: animation support
   remove: function(index)
   {
     this.boundsCheck(index);
@@ -864,13 +896,25 @@ var SSListView = new Class({
       }
     }
   },
-  
+  /*
+    Function: __remove__ (private)
+      */    /*
+    Parameters:
+      index - An integer. 
+  */
   
   __remove__: function(index)
   {
     this.data().splice(index, 1);
   },
   
+  /*
+    Function: removeObject
+   */    /*
+    
+    Parameters:
+      sender -  An HTML element. (SSCell)
+  */
   
   removeObject: function(sender)
   {
@@ -982,15 +1026,27 @@ var SSListView = new Class({
       }
     }
   },
-  
-  
+  /*
+    Function: canSelect
+      Cancels edits to a passed SSCell object.
+      
+    Parameters:
+      sender -  An HTML element. (SSCell)
+      
+    See Also:
+      cancelEdit
+  */
   cancelEditObject: function(sender)
   {
     var index = this.indexOf(sender);
     this.cancelEdit(index);
   },
-  
-  
+  /*
+    Function: canSelect
+  */    /*
+    Parameters:
+      index - An integer.
+  */
   canSelect: function(index)
   {
     if(this.delegate() && this.delegate().canSelect)
@@ -999,7 +1055,13 @@ var SSListView = new Class({
     }
     return true;
   },
-  
+  /*
+    Function: refresh
+      Checks to see if refresh can be called, and calls reloadData. Setting the force paremeter to true bypasses the initial checks.
+      
+    Parameters:
+      force - A Boolean.
+  */
   
   refresh: function(force)
   {
@@ -1026,7 +1088,12 @@ var SSListView = new Class({
       this.reloadData();
     }
   },
+  /*
+    Function: reloadData (private)
+      
+  */    /*
   
+  */
   
   reloadData: function()
   {
@@ -1075,13 +1142,24 @@ var SSListView = new Class({
   {
     if(index < 0 || index >= this.count()) throw new SSListViewError.OutOfBounds(new Error(), index + " index is out bounds.");
   },
-  
-  
+  /*
+    Function: cellNodeForIndex
+      Returns the SSCell object based on the passed index parameter.
+    
+    Parameters: 
+      index - An integer.
+  */
   cellNodeForIndex: function(index)
   {
     return this.cellNodes()[index];
   },
-  
+  /*
+    Function: indexOf
+      Returns the index of a SSCell objet that contains the passed object. If the object is not found in a SSCell, it returns -1.
+    
+    Parameters:
+      object - An object.
+  */
   
   indexOf: function(object)
   {
@@ -1092,7 +1170,15 @@ var SSListView = new Class({
     return -1;
   },
   
-  
+  /*
+    Function: indexOfCellNode 
+      Returns the index of the passed cell node.
+    
+    Parameter:
+      cellNode - a cell's DOM node
+      
+   */
+   
   indexOfCellNode: function(cellNode)
   {
     return this.cellNodes().indexOf(cellNode);
