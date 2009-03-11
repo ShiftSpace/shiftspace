@@ -279,10 +279,10 @@ var SSListView = new Class({
   
   /*
       Function: setCell
-        Sets the cell class, and sets a delegate instance of the cell. 
+        Sets the cell object, and sets a delegate instance of the cell. 
 
       Parameters:
-        cell - A cell class
+        cell - A cell object.
         
       See also:
         cell
@@ -297,10 +297,10 @@ var SSListView = new Class({
   
   /*
       Function: cell
-        Returns the cell class.
+        Returns the cell object.
 
       Returns:
-        A cell class
+        A cell ojbecct
         
       See also:
         setCell
@@ -773,11 +773,13 @@ var SSListView = new Class({
     
     Parameter: 
       index - An Integer. 
+      
+    //NOTE: animation support to be implemented -Justin
   */
   
   onUpdate: function(index)
   {
-    //NOTE: animation support to be implemented -Justin
+
     var delegate = this.delegate();
     var anim = (delegate && 
                 delegate.animationFor && 
@@ -820,12 +822,7 @@ var SSListView = new Class({
     this.data()[index] = cellData;
   },
   /*
-    Function: move
-      Checks the bounds for speciifed to and from indexes, and moves
-    
-    Parameters:
-      fromIndex - An integer.
-      toIndex - An integer.
+      //MARKED FOR DELETION -Justin
     
   */
   move: function(fromIndex, toIndex)
@@ -837,13 +834,8 @@ var SSListView = new Class({
   },
   
   /*
-      Function: __move__ (private)
-          */    /*
+      //MARKED FOR DELETION -Justin
       
-      Parameters:
-        fromIndex - An integer.
-        toIndex - An integer.
-
   */
   
   
@@ -864,10 +856,15 @@ var SSListView = new Class({
 
   /*
     Function: remove
-      Accepts an cell index, 
+      Accepts an cell index, and removes the cell from the collection
       
     Parameter:
       index - An integer.
+      
+    See Also:
+      removeObject
+      
+    //NOTE: ability to remove a cell with and without using collections needs to be redesigned.
   */
     // TODO: animation support
   remove: function(index)
@@ -892,13 +889,13 @@ var SSListView = new Class({
       else
       {
         this.__remove__(index);
-        this.e(index);
       }
     }
   },
   /*
     Function: __remove__ (private)
-      */    /*
+      Accepts a cell's index and removes it from the array.
+      
     Parameters:
       index - An integer. 
   */
@@ -910,19 +907,29 @@ var SSListView = new Class({
   
   /*
     Function: removeObject
-   */    /*
+      Accepts a cell element and removes it from a collection.
     
     Parameters:
       sender -  An HTML element. (SSCell)
+      
+    See Also:
+      remove
   */
-  
   removeObject: function(sender)
   {
     var index = this.indexOf(sender);
     this.remove(index);
   },
   
-  
+  /*
+    Function: onRemove (private)
+      Checks to see if an animation should be applied after removing a cell, and then calls refresh.
+    
+    Parameters:
+      index - An integer.
+      
+    //NOTE: animation support to be implemented -Justin
+  */
   onRemove: function(index)
   {
     var delegate = this.delegate();
@@ -941,13 +948,27 @@ var SSListView = new Class({
     
     this.fireEvent('onRemove', index);
   },
-  
+  /*
+    Function: editObject
+      Accepts a cell element and allows that cell to be edited.
+    
+    Parameters:
+      sender -  An HTML element. (SSCell)
+  */
   
   editObject: function(sender)
   {
     var index = this.indexOf(sender);
     this.edit(index);
   },
+  /*
+    Function: hideItem
+      Hides the specified cell within a collection, and checks to see if animation should occur during hiding. Calls the refresh function to perform filtering of hidden items. Accepts a cell index and a boolean that determines whether animation occurs.  
+    
+    Parameters:
+      index -  An integer.
+      _animate - A boolean.
+  */
   
   
   hideItem: function(index, _animate)
@@ -976,21 +997,40 @@ var SSListView = new Class({
       }
     }
   },
-
+  /*
+    Function: hideObject
+      Accepts a cell element and calls hideItem.
+    
+    Parameters:
+      sender -  An HTML element. (SSCell)
+    
+    See Also:
+      hideItem
+    
+    //NOTE:  Shouldn't this function have an _animate parameter?  -Justin
+  */
 
   hideObject: function(sender)
   {
     var index = this.indexOf(sender);
     this.hideItem(index);
   },
-  
-  
+  /*
+    Function: checkForUnsavedChanges 
+      //Note: Needs work  
+  */
   checkForUnsavedChanges: function(properties)
   {
     // grab the old values
     return false;
   },
-  
+  /*
+    Function: cancelEdit
+      
+    Parameters:
+      index -  An integer.
+      _animate - A boolean.
+  */
   
   cancelEdit: function(index, _animate)
   {
@@ -1027,7 +1067,7 @@ var SSListView = new Class({
     }
   },
   /*
-    Function: canSelect
+    Function: cancelEditObject
       Cancels edits to a passed SSCell object.
       
     Parameters:
@@ -1035,6 +1075,8 @@ var SSListView = new Class({
       
     See Also:
       cancelEdit
+      
+    //NOTE:  Shouldn't this function have an _animate parameter?  -Justin
   */
   cancelEditObject: function(sender)
   {
@@ -1184,7 +1226,14 @@ var SSListView = new Class({
     return this.cellNodes().indexOf(cellNode);
   },
   
-  
+  /*
+    Function: onCellClick 
+      Accepts a cell node and sets a userDidClickListItem delegate with the index of the passed cell node.
+      
+    Parameter:
+      cellNode - A cell's DOM node
+      
+   */
   onCellClick: function(cellNode)
   {
     var index = this.cellNodes().indexOf(cellNode);
@@ -1193,7 +1242,13 @@ var SSListView = new Class({
       this.delegate().userDidClickListItem(index);
     }
   },
-  
+  /*
+    Function: __addEventsToCollection__ (private)
+      Adds events to a collection. 
+      
+    Parameters:  
+      coll - A SSCollection object.
+  */
   
   __addEventsToCollection__: function(coll)
   {
@@ -1221,12 +1276,27 @@ var SSListView = new Class({
     }.bind(this));
   },
   
-  
+  /*
+    Function: setSuppressRefresh
+      Sets the suppressRefresh property to the passed boolean. If true, it prevents a refresh from occuring.
+      
+      
+    Parameter:
+      val - A boolean value.
+  */
   setSuppressRefresh: function(val)
   {
     this.__suppressRefresh = val;
   },
-  
+  /*
+    Function: suppressRefresh
+      Returns the supressRefresh property.
+      
+    //NOTE: function just returns a property value, no need for a "val" parameter. - Justin 
+     
+    Parameter:
+      val - A boolean value.
+  */
   
   suppressRefresh: function(val)
   {
@@ -1250,12 +1320,23 @@ var SSListView = new Class({
     }
   },
   
+  /*
+    Function: setCellBeingEdited
+      Accepts an index of a cell, and sets the __cellBeingEdited property value to that index.  Used to identify which cell is currently being edited by a user.
+      
+    Parameters:
+      index - An integer.
+    
+  */
   
   setCellBeingEdited: function(index)
   {
     this.__cellBeingEdited = index;
   },
-  
+  /*
+    Function: cellBeingEdited
+      Returns the __cellBeingEdited property value.
+  */
   
   cellBeingEdited: function()
   {
