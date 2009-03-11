@@ -449,7 +449,7 @@ var SSListView = new Class({
         Accepts an index of a collection item and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
       
       Parameters:
-        index - An integer. The index of an item in a collection.
+        index - the index of a SSCell object
         arg   - An argument of a function. 
         
       Returns:
@@ -565,7 +565,7 @@ var SSListView = new Class({
       Accepts the index of a cell in a collection and allows it to be edited (if permitted). The _animate argument determines if an animation occurs during function call.
       
     Parameters:
-      index -  An integer. The index of an item in a collection
+      index - the index of a SSCell object. 
       _animate - A boolean value.
   
   */
@@ -617,7 +617,7 @@ var SSListView = new Class({
       
     Parameters:
       cellData - An object.
-      index - An integer. The index of an item in a collection.
+      index - the index of a SSCell object
 */  
   insert: function(cellData, index)
   {
@@ -631,7 +631,7 @@ var SSListView = new Class({
       
     Parameters:
       cellData - An object.
-      index - An integer. The index of an item in a collection.
+      index - the index of a SSCell object. 
 */s
   __insert__: function(cellData, index)
   {
@@ -647,10 +647,10 @@ var SSListView = new Class({
   
   /*
     Function: get 
-      Accepts an index of a collection item and performs a boundsCheck to make sure index is valid. Retreives the propeties of each data element, stores them in an array, and returns the array. 
+      Accepts an index of cell in a collection  and performs a boundsCheck to make sure the index is valid. Retreives the propeties of each data element, stores them in an array, and returns the array. 
       
     Parameters:
-      index - An integer. 
+      index - the index of a SSCell object. 
       
     Returns: 
       An array. 
@@ -669,10 +669,12 @@ var SSListView = new Class({
   },
   /*
     Function: get (private)
-     Accepts the index of a colletion and calls the get method
-    
+     Accepts the index of cell in a colletion and calls the returns the cells data in an array.
     Parameters: 
-      index - An integer.
+      index - the index of a SSCell object.
+      
+    Returns:
+      An array
 */
   __get__: function(index)
   {
@@ -692,7 +694,7 @@ var SSListView = new Class({
     
     Parameters:
       cellData - An object.
-      index - An integer
+      index - the index of a SSCell object
       _noArrayUpdate - A boolean.
 */
   update: function(cellData, index, _noArrayUpdate)
@@ -743,7 +745,7 @@ var SSListView = new Class({
       
     Parameters: 
       cellData - An Object.
-      index - An Integer.
+      index - the index of a SSCell object.
   */
   updateCellView: function(cellData, index)
   {
@@ -758,7 +760,7 @@ var SSListView = new Class({
         
     Parameters: 
       cellData - An Object. 
-      index -  An Integer. 
+      index - the index of a SSCell object. 
       
   */
   __update__: function(cellData, index)
@@ -772,7 +774,7 @@ var SSListView = new Class({
       Accepts the index of cell in a collection, checks if an animaton should be applied, and refreshes it.
     
     Parameter: 
-      index - An Integer. 
+      index - the index of a SSCell object. 
       
     //NOTE: animation support to be implemented -Justin
   */
@@ -801,7 +803,7 @@ var SSListView = new Class({
       
     Parameters: 
       cellData - An object. 
-      index -  An integer.
+      index - the index of a SSCell object.
   */
   set: function(cellData, index)
   {
@@ -815,7 +817,7 @@ var SSListView = new Class({
     
     Parameters: 
       cellData - An object. 
-      index -  An integer.
+      index - the index of a SSCell object.
   */
   __set__: function(cellData, index)
   {
@@ -859,7 +861,7 @@ var SSListView = new Class({
       Accepts an cell index, and removes the cell from the collection
       
     Parameter:
-      index - An integer.
+      index - the index of a SSCell object.
       
     See Also:
       removeObject
@@ -897,7 +899,7 @@ var SSListView = new Class({
       Accepts a cell's index and removes it from the array.
       
     Parameters:
-      index - An integer. 
+      index - the index of a SSCell object. 
   */
   
   __remove__: function(index)
@@ -926,7 +928,7 @@ var SSListView = new Class({
       Checks to see if an animation should be applied after removing a cell, and then calls refresh.
     
     Parameters:
-      index - An integer.
+      index - the index of a SSCell object.
       
     //NOTE: animation support to be implemented -Justin
   */
@@ -966,7 +968,7 @@ var SSListView = new Class({
       Hides the specified cell within a collection, and checks to see if animation should occur during hiding. Calls the refresh function to perform filtering of hidden items. Accepts a cell index and a boolean that determines whether animation occurs.  
     
     Parameters:
-      index -  An integer.
+      index - the index of a SSCell object.
       _animate - A boolean.
   */
   
@@ -999,7 +1001,7 @@ var SSListView = new Class({
   },
   /*
     Function: hideObject
-      Accepts a cell element and calls hideItem.
+      Accepts a cell object and hides it by passsing it to hideItem
     
     Parameters:
       sender -  An HTML element. (SSCell)
@@ -1026,9 +1028,10 @@ var SSListView = new Class({
   },
   /*
     Function: cancelEdit
+      Cancels Accepts a cell index and a boolean that determines if animation occurs.
       
     Parameters:
-      index -  An integer.
+      index - the index of a SSCell object.
       _animate - A boolean.
   */
   
@@ -1085,9 +1088,13 @@ var SSListView = new Class({
   },
   /*
     Function: canSelect
-  */    /*
+      Returns 
+      
     Parameters:
-      index - An integer.
+      index - the index of a SSCell object.
+      
+    Returns:
+      An index value or true
   */
   canSelect: function(index)
   {
@@ -1189,7 +1196,7 @@ var SSListView = new Class({
       Returns the SSCell object based on the passed index parameter.
     
     Parameters: 
-      index - An integer.
+      index - the index of a SSCell object.
   */
   cellNodeForIndex: function(index)
   {
@@ -1201,6 +1208,9 @@ var SSListView = new Class({
     
     Parameters:
       object - An object.
+      
+    Returns:
+      A cell node index or -1.
   */
   
   indexOf: function(object)
@@ -1218,6 +1228,9 @@ var SSListView = new Class({
     
     Parameter:
       cellNode - a cell's DOM node
+      
+    Returns:
+      The index of a cell node
       
    */
    
@@ -1280,7 +1293,6 @@ var SSListView = new Class({
     Function: setSuppressRefresh
       Sets the suppressRefresh property to the passed boolean. If true, it prevents a refresh from occuring.
       
-      
     Parameter:
       val - A boolean value.
   */
@@ -1291,11 +1303,14 @@ var SSListView = new Class({
   /*
     Function: suppressRefresh
       Returns the supressRefresh property.
-      
-    //NOTE: function just returns a property value, no need for a "val" parameter. - Justin 
      
     Parameter:
       val - A boolean value.
+      
+    Returns:
+      A boolean value
+      
+   //NOTE: function just returns a property value, no need for a "val" parameter. - Justin 
   */
   
   suppressRefresh: function(val)
@@ -1303,6 +1318,13 @@ var SSListView = new Class({
     return this.__suppressRefresh;
   },
   
+  /*
+  
+    Function: useCollection 
+      
+    Parameters: 
+      collectionName - A string, the name of a collection
+  */
   
   useCollection: function(collectionName)
   {
@@ -1325,7 +1347,7 @@ var SSListView = new Class({
       Accepts an index of a cell, and sets the __cellBeingEdited property value to that index.  Used to identify which cell is currently being edited by a user.
       
     Parameters:
-      index - An integer.
+      index - the index of a SSCell object.
     
   */
   
@@ -1342,7 +1364,12 @@ var SSListView = new Class({
   {
     return this.__cellBeingEdited;
   },
-  
+  /*
+    Function: setNeedsDisplay
+    */           /* 
+    Parameter: 
+      value - A boolean value.
+  */
   
   setNeedsDisplay: function(value)
   {
