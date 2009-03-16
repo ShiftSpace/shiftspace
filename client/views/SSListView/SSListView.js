@@ -42,7 +42,7 @@ var SSListView = new Class({
     });
   },
   
-
+  
   initialize: function(el, options)
   {
     this.parent(el, options);
@@ -66,21 +66,22 @@ var SSListView = new Class({
     this.attachEvents();
   },
 
-/*
-    Function: setFilter
-      Sets the filter as a function.
+  /*
+      Function: setFilter
+        Sets the filter as a function.
       
-    Parameters: 
-      fn - A function.
+      Parameters: 
+        fn - A function.
       
-    See Also: 
-      getFilter
-      filter
-*/  
+      See Also: 
+        getFilter
+        filter
+  */  
   setFilter: function(fn)
   {
     this.__filter = fn;
   },
+  
   /*
     Function: getFilter
       Returns the current filter.
@@ -110,7 +111,7 @@ var SSListView = new Class({
     See Also:
       setFilter
       getFilter
-*/
+  */
   filter: function(data)
   {
     var filterFn = this.getFilter();
@@ -152,11 +153,11 @@ var SSListView = new Class({
     return this.__hasCollection;
   },
   
-/*
-    Function: initSortables (private)
-      Called during intialize(). Creates a new sortable object.   
+  /*
+      Function: initSortables (private)
+        Called during intialize(). Creates a new sortable object.   
   
-*/
+  */
   initSortables: function()
   {
     if(this.options.sortable)
@@ -183,13 +184,13 @@ var SSListView = new Class({
     }
   },
   
-/*
-    Function: sortStart
-      Sets the sortStart property to the index of a cell node. Determines the starting point for a sort.  
+  /*
+      Function: sortStart
+        Sets the sortStart property to the index of a cell node. Determines the starting point for a sort.  
                   
-    Parameters:
-     cellNode - a cell's DOM node
-*/
+      Parameters:
+       cellNode - a cell's DOM node
+  */
   sortStart: function(cellNode)
   {
     this.__sortStart = this.cellNodes().indexOf(cellNode)-1;
@@ -261,13 +262,13 @@ var SSListView = new Class({
     event.stop();
   },
 
-/*
-    Function: awake
-      If a cell has content, set the cell's content to the assigned context.
+  /*
+      Function: awake
+        If a cell has content, set the cell's content to the assigned context.
       
-    Parameters:
-      context - The context a object was created for. Either a window, element, or iframe.
-*/
+      Parameters:
+        context - The context a object was created for. Either a window, element, or iframe.
+  */
   awake: function(context)
   {
     var cellNode = this.element.getElement('> .SSCell');
@@ -293,8 +294,7 @@ var SSListView = new Class({
     cell.setDelegate(this);
     cell.element.dispose();
   },
-  
-  
+    
   /*
       Function: cell
         Returns the cell object.
@@ -309,17 +309,18 @@ var SSListView = new Class({
   {
     return this.__cell;
   },
+
   /*
     Function: setData
       Sets the data property of the class. 
-      
+    
     Parameters:
       newData - A javascript array row.
-      
+    
     See Also:
       getData
       data
-*/
+  */
   setData: function(newData)
   {
     this.__data = newData;
@@ -332,7 +333,8 @@ var SSListView = new Class({
   
     this.setNeedsDisplay(true);
   },
-    /*
+    
+  /*
       Function: data
         Returns the data property. 
       
@@ -349,7 +351,7 @@ var SSListView = new Class({
     return this.__data;
   },
   
-    /*
+  /*
      Note:
       MARKED FOR DELETION: Redundant function, see data() above -Justin
   */
@@ -357,11 +359,12 @@ var SSListView = new Class({
   {
     return this.data();
   },
-    /*
-      Function: checkPendingCollection 
-        If a pending collection exists, delete the current one and reassign it. 
-        
-    */
+  
+  /*
+    Function: checkPendingCollection 
+      If a pending collection exists, delete the current one and reassign it. 
+      
+  */
   checkPendingCollection: function()
   {
     var coll = SSCollectionForName(this.__pendingCollection);
@@ -372,6 +375,7 @@ var SSListView = new Class({
       this.setData(coll);
     }
   },
+  
   /*
       Function: rawData
         Returns the data property of the class.  
@@ -477,13 +481,13 @@ var SSListView = new Class({
       
     Returns:
       A group of list elements
-*/
+  */
   cellNodes: function()
   {
     return this.element.getElements('> li');
   },
   
-    /*
+  /*
       Function: add
         Adds an object, that is specified with the newItem argument, to a collection. The _animate argument determines if an animation occurs during function call.
         
@@ -515,14 +519,14 @@ var SSListView = new Class({
     }
   },
   
-/*
-    Function: onAdd (private)
-      Callback event when a new Item is added to a collection. 
+  /*
+      Function: onAdd (private)
+        Callback event when a new Item is added to a collection. 
     
-    Parameters:
-      data - A row in a javascript array.
+      Parameters:
+        data - A row in a javascript array.
     
-*/
+  */
   onAdd: function(data)
   {
     var delegate = this.delegate();
@@ -545,6 +549,7 @@ var SSListView = new Class({
     
     this.fireEvent('onAdd', data);
   },
+  
   /*
     Function: addObject
       Adds an object to a collection. The sender argument specifies the object to add. Intended to be used for event handling.
@@ -611,28 +616,30 @@ var SSListView = new Class({
       }
     }
   },
+  
   /*
-    Function: insert
-      Inserts data into a cell at a specified index and refreshes collection. 
+      Function: insert
+        Inserts data into a cell at a specified index and refreshes collection. 
       
-    Parameters:
-      cellData - An object.
-      index - the index of a SSCell object
-*/  
+      Parameters:
+        cellData - An object.
+        index - the index of a SSCell object
+  */  
   insert: function(cellData, index)
   {
     this.boundsCheck(index);
     this.__insert__(cellData, index);
     this.refresh();
   },
-/*
-    Function: __insert__  (private)
-      Inserts data into a cell at a specified index.
+  
+  /*
+      Function: __insert__  (private)
+        Inserts data into a cell at a specified index.
       
-    Parameters:
-      cellData - An object.
-      index - the index of a SSCell object. 
-*/s
+      Parameters:
+        cellData - An object.
+        index - the index of a SSCell object. 
+  */
   __insert__: function(cellData, index)
   {
     if(this.data().insert)
@@ -667,6 +674,7 @@ var SSListView = new Class({
     }
     return copy;
   },
+  
   /*
     Function: get (private)
      Accepts the index of cell in a colletion and calls the returns the cells data in an array.
@@ -675,7 +683,7 @@ var SSListView = new Class({
       
     Returns:
       An array
-*/
+      */
   __get__: function(index)
   {
     if(this.data().get)
@@ -688,15 +696,15 @@ var SSListView = new Class({
     }
   },
   
-/*
-    Function: update  
-      Updates a collection's content with the passed cellData at the specified index. Accepts the current data, the index of the collection to update, and whether 
+  /*
+      Function: update  
+        Updates a collection's content with the passed cellData at the specified index. Accepts the current data, the index of the collection to update, and whether 
     
-    Parameters:
-      cellData - An object.
-      index - the index of a SSCell object
-      _noArrayUpdate - A boolean.
-*/
+      Parameters:
+        cellData - An object.
+        index - the index of a SSCell object
+        _noArrayUpdate - A boolean.
+  */
   update: function(cellData, index, _noArrayUpdate)
   {
     this.boundsCheck(index);
@@ -725,6 +733,7 @@ var SSListView = new Class({
     }
     
   },
+  
   /*
     Function: updateObject 
       Accepts a SSCell object in a collection and updates it.
@@ -732,7 +741,6 @@ var SSListView = new Class({
     Parameters:
       sender -  An HTML element. (SSCell)
   */
-  
   updateObject: function(sender)
   {
     var index = this.indexOf(sender);
@@ -778,7 +786,6 @@ var SSListView = new Class({
       
     //NOTE: animation support to be implemented -Justin
   */
-  
   onUpdate: function(index)
   {
 
@@ -823,6 +830,7 @@ var SSListView = new Class({
   {
     this.data()[index] = cellData;
   },
+  
   /*
       //MARKED FOR DELETION -Justin
     
@@ -839,8 +847,6 @@ var SSListView = new Class({
       //MARKED FOR DELETION -Justin
       
   */
-  
-  
   __move__: function(fromIndex, toIndex)
   {
     if(this.data().move)
@@ -868,7 +874,7 @@ var SSListView = new Class({
       
     //NOTE: ability to remove a cell with and without using collections needs to be redesigned.
   */
-    // TODO: animation support
+  // TODO: animation support
   remove: function(index)
   {
     this.boundsCheck(index);
@@ -894,6 +900,7 @@ var SSListView = new Class({
       }
     }
   },
+  
   /*
     Function: __remove__ (private)
       Accepts a cell's index and removes it from the array.
@@ -901,7 +908,6 @@ var SSListView = new Class({
     Parameters:
       index - the index of a SSCell object. 
   */
-  
   __remove__: function(index)
   {
     this.data().splice(index, 1);
@@ -950,6 +956,7 @@ var SSListView = new Class({
     
     this.fireEvent('onRemove', index);
   },
+  
   /*
     Function: editObject
       Accepts a cell element and allows that cell to be edited.
@@ -957,12 +964,12 @@ var SSListView = new Class({
     Parameters:
       sender -  An HTML element. (SSCell)
   */
-  
   editObject: function(sender)
   {
     var index = this.indexOf(sender);
     this.edit(index);
   },
+  
   /*
     Function: hideItem
       Hides the specified cell within a collection, and checks to see if animation should occur during hiding. Calls the refresh function to perform filtering of hidden items. Accepts a cell index and a boolean that determines whether animation occurs.  
@@ -971,8 +978,6 @@ var SSListView = new Class({
       index - the index of a SSCell object.
       _animate - A boolean.
   */
-  
-  
   hideItem: function(index, _animate)
   {
     var animate = (_animate == null && true) || _animate;
@@ -999,6 +1004,7 @@ var SSListView = new Class({
       }
     }
   },
+  
   /*
     Function: hideObject
       Accepts a cell object and hides it by passsing it to hideItem
@@ -1011,12 +1017,12 @@ var SSListView = new Class({
     
     //NOTE:  Shouldn't this function have an _animate parameter?  -Justin
   */
-
   hideObject: function(sender)
   {
     var index = this.indexOf(sender);
     this.hideItem(index);
   },
+
   /*
     Function: checkForUnsavedChanges 
       //Note: Needs work  
@@ -1026,6 +1032,7 @@ var SSListView = new Class({
     // grab the old values
     return false;
   },
+
   /*
     Function: cancelEdit
       Cancels Accepts a cell index and a boolean that determines if animation occurs.
@@ -1034,7 +1041,6 @@ var SSListView = new Class({
       index - the index of a SSCell object.
       _animate - A boolean.
   */
-  
   cancelEdit: function(index, _animate)
   {
     var animate = (_animate == null && true) || _animate;
@@ -1069,6 +1075,7 @@ var SSListView = new Class({
       }
     }
   },
+  
   /*
     Function: cancelEditObject
       Cancels edits to a passed SSCell object.
@@ -1086,6 +1093,7 @@ var SSListView = new Class({
     var index = this.indexOf(sender);
     this.cancelEdit(index);
   },
+  
   /*
     Function: canSelect
       Returns 
@@ -1104,6 +1112,7 @@ var SSListView = new Class({
     }
     return true;
   },
+  
   /*
     Function: refresh
       Checks to see if refresh can be called, and calls reloadData. Setting the force paremeter to true bypasses the initial checks.
@@ -1111,7 +1120,6 @@ var SSListView = new Class({
     Parameters:
       force - A Boolean.
   */
-  
   refresh: function(force)
   {
     this.parent();
@@ -1137,13 +1145,10 @@ var SSListView = new Class({
       this.reloadData();
     }
   },
+  
   /*
     Function: reloadData (private)
-      
-  */    /*
-  
   */
-  
   reloadData: function()
   {
     // check whether collection or array
@@ -1191,6 +1196,7 @@ var SSListView = new Class({
   {
     if(index < 0 || index >= this.count()) throw new SSListViewError.OutOfBounds(new Error(), index + " index is out bounds.");
   },
+  
   /*
     Function: cellNodeForIndex
       Returns the SSCell object based on the passed index parameter.
@@ -1202,6 +1208,7 @@ var SSListView = new Class({
   {
     return this.cellNodes()[index];
   },
+  
   /*
     Function: indexOf
       Returns the index of a SSCell objet that contains the passed object. If the object is not found in a SSCell, it returns -1.
@@ -1212,7 +1219,6 @@ var SSListView = new Class({
     Returns:
       A cell node index or -1.
   */
-  
   indexOf: function(object)
   {
     if($memberof(object, 'SSCell'))
@@ -1232,8 +1238,7 @@ var SSListView = new Class({
     Returns:
       The index of a cell node
       
-   */
-   
+  */
   indexOfCellNode: function(cellNode)
   {
     return this.cellNodes().indexOf(cellNode);
@@ -1246,7 +1251,7 @@ var SSListView = new Class({
     Parameter:
       cellNode - A cell's DOM node
       
-   */
+  */
   onCellClick: function(cellNode)
   {
     var index = this.cellNodes().indexOf(cellNode);
@@ -1255,6 +1260,7 @@ var SSListView = new Class({
       this.delegate().userDidClickListItem(index);
     }
   },
+  
   /*
     Function: __addEventsToCollection__ (private)
       Adds events to a collection. 
@@ -1262,7 +1268,6 @@ var SSListView = new Class({
     Parameters:  
       coll - A SSCollection object.
   */
-  
   __addEventsToCollection__: function(coll)
   {
     coll.addEvent('onCreate', function(data) {
@@ -1300,6 +1305,7 @@ var SSListView = new Class({
   {
     this.__suppressRefresh = val;
   },
+  
   /*
     Function: suppressRefresh
       Returns the supressRefresh property.
@@ -1312,7 +1318,6 @@ var SSListView = new Class({
       
    //NOTE: function just returns a property value, no need for a "val" parameter. - Justin 
   */
-  
   suppressRefresh: function(val)
   {
     return this.__suppressRefresh;
@@ -1325,7 +1330,6 @@ var SSListView = new Class({
     Parameters: 
       collectionName - A string, the name of a collection
   */
-  
   useCollection: function(collectionName)
   {
     var coll = SSCollectionForName(collectionName, this);
@@ -1350,27 +1354,26 @@ var SSListView = new Class({
       index - the index of a SSCell object.
     
   */
-  
   setCellBeingEdited: function(index)
   {
     this.__cellBeingEdited = index;
   },
+
   /*
     Function: cellBeingEdited
       Returns the __cellBeingEdited property value.
   */
-  
   cellBeingEdited: function()
   {
     return this.__cellBeingEdited;
   },
+
   /*
     Function: setNeedsDisplay
-    */           /* 
+
     Parameter: 
       value - A boolean value.
   */
-  
   setNeedsDisplay: function(value)
   {
     this.parent(value);
