@@ -201,7 +201,7 @@ var SSCollection = new Class({
        Returns the plugins all of the plugins currently applied to a collection. 
       
     Returns:
-      A boolean value. 
+       An array.
   */  
   plugins: function()
   {
