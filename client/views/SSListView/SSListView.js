@@ -1086,7 +1086,7 @@ var SSListView = new Class({
     See Also:
       cancelEdit
       
-    //NOTE:  Shouldn't this function have an _animate parameter?  -Justin
+    //NOTE:  Shouldn't this function have an _animate parameter to send to cancelEdit?  -Justin
   */
   cancelEditObject: function(sender)
   {
@@ -1096,13 +1096,13 @@ var SSListView = new Class({
   
   /*
     Function: canSelect
-      Returns 
+      Checks the delagate of a cell specified by the index argument.  If a delegate exists, it returns whether the cell is set as selectable. Returns true by default.
       
     Parameters:
       index - the index of a SSCell object.
       
     Returns:
-      An index value or true
+      An Boolean
   */
   canSelect: function(index)
   {
@@ -1148,6 +1148,7 @@ var SSListView = new Class({
   
   /*
     Function: reloadData (private)
+      Called by refresh(). Checks the length of the current collection data, and clears the currently loaded collection data.  If the collection array contains data, it resizes the elements and applies set filters. If the collection is not pending, the content is displayed. 
   */
   reloadData: function()
   {
@@ -1190,8 +1191,13 @@ var SSListView = new Class({
     
     this.fireEvent('onReloadData', this);
   },
-  
-  
+  /*
+    Function: boundsCheck
+      Tests to see if the passed index is within the bounds of the SSCollection array. Throws a SSListViewError message if the index is out of bounds. 
+    
+    Parameters:
+      index - the index of a SSCell object 
+  */
   boundsCheck: function(index)
   {
     if(index < 0 || index >= this.count()) throw new SSListViewError.OutOfBounds(new Error(), index + " index is out bounds.");
@@ -1324,8 +1330,8 @@ var SSListView = new Class({
   },
   
   /*
-  
     Function: useCollection 
+      Accepts a collection name and checks to see if it's valid. If the collection exists, the events and data are applied to the collection. Otherwise, it is set as a pending collection.
       
     Parameters: 
       collectionName - A string, the name of a collection
@@ -1352,7 +1358,6 @@ var SSListView = new Class({
       
     Parameters:
       index - the index of a SSCell object.
-    
   */
   setCellBeingEdited: function(index)
   {
@@ -1370,7 +1375,8 @@ var SSListView = new Class({
 
   /*
     Function: setNeedsDisplay
-
+      Sets whether the display should be set for the ListView content.  When set to true, the SSListView is cleared.
+      
     Parameter: 
       value - A boolean value.
   */
