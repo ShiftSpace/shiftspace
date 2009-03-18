@@ -141,43 +141,78 @@ var SSCollection = new Class({
     SSSetCollectionForName(this, name);
   },
   
-  
+  /*
+    Function: setIsUnread 
+      Sets the isUnread property of a collection. This property specifies if any of the information has been read from the collection array. 
+      
+    Parameters:
+      value - A boolean value.
+  */
   setIsUnread: function(value)
   {
     this.__isunread = value;
   },
-  
-  
+  /*
+    Function: isUnread 
+       Returns the isUnread property of a collection. This property specifies if any of the information has been read from the collection array. 
+      
+    Returns:
+      A boolean value. 
+  */
   isUnread: function()
   {
     return this.__isunread;
   },
-  
-  
+  /*
+    Function: setIsReading 
+      Sets the isreading property of a collection. This property specifies if the content of a collection is being read. 
+      
+    Parameters:
+      value - A boolean value.
+  */
   setIsReading: function(value)
   {
     this.__isreading = value;
   },
-  
-  
+  /*
+    Function: isReading 
+       Returns the isreading property of a collection. This property specifies if the content of a collection is being read
+      
+    Returns:
+      A boolean value. 
+  */
   isReading: function()
   {
     return this.__isreading;
   },
-  
-
+  /*
+    Function: setPlugins 
+       Sets the plugin(s) to apply to a collection. 
+       
+    Parameters:
+      newPlugins - plugin names as string, or an array of string values. 
+  */
   setPlugins: function(newPlugins)
   {
     this.__plugins = newPlugins;
   },
-  
-  
+  /*
+    Function: plugins 
+       Returns the plugins all of the plugins currently applied to a collection. 
+      
+    Returns:
+      A boolean value. 
+  */  
   plugins: function()
   {
     return this.__plugins;
   },
-  
-  
+  /*
+    Function: pluginsForAction
+    
+    Parameters: 
+      action - An event.
+  */
   pluginsForAction: function(action)
   {
     if(!this.plugins().get(action)) this.plugins().set(action, []);
