@@ -44,7 +44,7 @@ class Collections {
         }
 
         if (!ctype_alpha2(str_replace(array('.', '_'), '', $column)))
-          throw new Error("1");
+          throw new Error("Possible hack attempt 1");
           
         $sql .= "$column = $value";
         $first = true;
@@ -80,10 +80,10 @@ class Collections {
       $properties = $this->generate_all_properties($table);
 
     if (!ctype_alpha2(str_replace(array('*', '_', '.', ' ', ',', '(', ')'), '', $properties)))
-      throw new Error("2");
+      throw new Error("Possible hack attempt 2");
     
     if (!ctype_alpha2($table))
-      throw new Error("3");
+      throw new Error("Possible hack attempt 3");
     
     $sql = "SELECT $properties FROM $table";
     $sql .= $this->generate_join_clause($table);
@@ -98,7 +98,7 @@ class Collections {
         throw new Error('orderby first value must be "<" or ">"');  
 
       if (!ctype_alpha2(str_replace(array('.', '_'), '', $orderby[1])))
-        throw new Error("4");
+        throw new Error("Possible hack attempt 4");
 
       $sql .= " ORDER BY $orderby[1] $ascdesc"; 
     }
@@ -106,8 +106,8 @@ class Collections {
     if (!empty($range)) {
       extract($range);
 
-      if (!ctype_digit($count) || !ctype_digit($startIndex))
-        throw new Error("5");
+      if (!is_numeric($count) || !is_numeric($startIndex))
+        throw new Error("Possible hack attempt 5");
 
       $sql .= " LIMIT $count OFFSET $startIndex";
     }
@@ -136,7 +136,7 @@ class Collections {
     extract($desc);
 
     if (!ctype_alpha2($table))
-      throw new Error("6");
+      throw new Error("Possible hack attempt 6");
     
     $sql = "DELETE FROM $table";
     $sql .= $this->generate_where_clause($constraints, true, true);
@@ -151,14 +151,14 @@ class Collections {
     $values['modified'] = time();
 
     if (!ctype_alpha2($table))
-      throw new Error("7");
+      throw new Error("Possible hack attempt 7");
     
     $sql = "UPDATE $table SET ";
    
     $valuesSql = array();
     foreach ($values as $key => $value) {
       if (!ctype_alpha2(str_replace(array('_', '.'), '', $key)))
-        throw new Error("8");
+        throw new Error("Possible hack attempt 8");
 
       if (is_string($value))
         $value = "'".mysql_escape_string($value)."'";
@@ -184,7 +184,7 @@ class Collections {
     extract($desc);
 
     if (!ctype_alpha2($table))
-      throw new Error("9");
+      throw new Error("Possible hack attempt 9");
     
     $sql = "INSERT INTO $table ";
 
@@ -196,7 +196,7 @@ class Collections {
     $columns = implode(', ', array_keys($values));
     foreach ($values as $key => $value) {
       if (!ctype_alpha2(str_replace(array('_', '.'), '', $key)))
-        throw new Error("10");
+        throw new Error("Possible hack attempt 10");
 
       if (is_string($value))
         $value = "'".mysql_escape_string($value)."'";
