@@ -28,13 +28,10 @@ class Sms {
     else
       $numbers = array();
       
-    if ($toself == 1) {
+    if ($toself == 1)
       $numbers[] = $this->server->user['normalized_phone'];
-      $this->server->user['num_sms']++;
-    }
     
     foreach ($numbers as $number) {
-      $result[] = sendsms($this->normalizePhoneNumber($number), $msg);
       $this->server->user['num_sms']++;
 
       if ($this->server->user['num_sms'] > 3) {
@@ -44,6 +41,8 @@ class Sms {
                          
         throw new Error("Sorry, you have surpassed your allowed monthly text message limit");
       }
+
+      $result[] = sendsms($this->normalizePhoneNumber($number), $msg);
     }
 
     $user = new User_Object();
