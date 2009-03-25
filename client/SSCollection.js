@@ -228,7 +228,7 @@ var SSCollection = new Class({
       Accepts an event and a plugin, and inserts it into the current plugins array. 
       
     Parameters: 
-      action -  the type of action (read, write, delete, update)
+      action -  the type of action (create, write, delete, update)
       plugin -  Plugin name as string
       
   */
@@ -244,7 +244,7 @@ var SSCollection = new Class({
       Accepts an event and a plugin, and clears it from the current plugins array. 
       
     Parameters: 
-      action - the type of action (read, write, delete, update)
+      action - the type of action (create, write, delete, update)
       plugin -  Plugin name as string
   */
   removePlugin: function(action, plugin)
@@ -392,7 +392,19 @@ var SSCollection = new Class({
   {
     return ary.map(this.unescapeValues);
   },
-  
+  /*
+      Function: transact
+        Accepts
+      
+      Parameters:
+        action - the type of action (create, write, delete, update)
+        options - An array of options to apply to the transaction.
+        bulk -    the bulk 
+        
+      Returns:
+        A payload object, an array of collection methods.
+        
+  */
   
   transact: function(action, options, bulk)
   {
