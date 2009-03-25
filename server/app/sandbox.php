@@ -9,6 +9,7 @@ class Sandbox {
   }
   
   function getvalue() {
+  /*
     $key = $_REQUEST['key'];
     $value = $this->server->db->row("select value from sandbox where key=:key", array('key' => $key));
     $default = json_decode($_REQUEST['default']);
@@ -17,9 +18,11 @@ class Sandbox {
       return $value->value;
     else
       return $default->$key;
+  */
   }
   
   function setvalue() {
+  /*
     $key = $_REQUEST['key'];
     $sandboxObject = new Sandbox_Object();
     
@@ -36,6 +39,7 @@ class Sandbox {
     ));
     
     $this->server->db->save($sandboxObject);
+  */
   }
   
   function proxy() {

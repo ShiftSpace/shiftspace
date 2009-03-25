@@ -106,36 +106,46 @@ class User {
         throw new Error("Oops, please enter a password at least 6 characters long.");
     }
     
-    if ($email == '')
+    if ($email === '')
       throw new Error('Please enter an e-mail address');
 
     $userid = $this->server->user['id'];
-
-    $emailexists = $this->server->moma->value($this->sql['checkemailupdate'], array('email' => $email, 'userid' => $userid));
-    if ($emailexists)
-      throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
-
-    $nphone = Sms::normalizePhoneNumber($phone);
-
-    $phoneexists = $this->server->moma->value($this->sql['checkphoneupdate'], array('nphone' => $nphone, 'userid' => $userid));
-    if ($emailexists)
-      throw new Error('Sorry, that phone number has already been used.');
-
     $user = $this->server->moma->load("user($userid)");
 
-    if ($nphone != $this->server->user['normalized_phone']) {
-      $user->set('phone_validated', 0);
-      $user->set('phone_key', 0);
+    if (isset($email)) {
+      $emailexists = $this->server->moma->value($this->sql['checkemailupdate'], array('email' => $email, 'userid' => $userid));
+      
+      if ($emailexists)
+        throw new Error('Sorry, that email has already been used. You can use the password retrieval form to retrieve your username.');
+
+      $user->set('email', $email);
     }
 
-    $user->set(array(
-      'phone'             => $phone,
-      'normalized_phone'  => $nphone,
-      'email'             => $email,
-      'perspective'       => $perspective,
-      'preview'           => $preview
-    ));
+    if (isset($phone)) {    
+      $nphone = Sms::normalizePhoneNumber($phone);
 
+      $phoneexists = $this->server->moma->value($this->sql['checkphoneupdate'], array('nphone' => $nphone, 'userid' => $userid));
+
+      if ($phoneexists)
+        throw new Error('Sorry, that phone number has already been used.');
+      
+      if ($nphone != $this->server->user['normalized_phone']) {
+        $user->set('phone_validated', 0);
+        $user->set('phone_key', 0);
+      }
+
+      $user->set(array(
+        'phone'             => $phone,
+        'normalized_phone'  => $nphone
+      ));
+    }
+
+    if (isset($perspective))
+      $user->set('perspective', $perspective);
+      
+    if (isset($preview)) 
+      $user->set('preview', $preview);
+    
     if (isset($password) && $password != '') {
       $user->set('password', md5($password));
     }
@@ -223,6 +233,8 @@ class User {
     if ($phoneexists)
       throw new Error('Sorry, that phone number has already been used. You can use the password retrieval form to retrieve your username.');
 
+    $this->verify_membership($membership_id, $first_name, $last_name);
+
     $user = new User_Object();
     $user->set(array(
       'username'          => $username,
@@ -243,6 +255,17 @@ class User {
     $this->server->user = $user->get();
     
     return new Response($this->server->user);
+  }
+  
+  private function verify_membership($membership_id, $first_name, $last_name) {
+    if ($membership_id == '' || $first_name == '' || $last_name == '')
+      throw new Error("Please fill all membership fields or leave all empty.");
+      
+    $verify_url = "http://momaorgwebp2.museum.moma.org:3001/support/membership/member_check/$membership_id/$first_name/$last_name.xml";
+    $result = file_get_contents($verify_url);
+    if (strpos($result, "OK") === FALSE) {
+      throw new Error("Membership verification failed. Please check your membership information or retry without it.");
+    }
   }
   
   public function query() {
