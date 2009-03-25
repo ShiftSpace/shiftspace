@@ -209,74 +209,137 @@ var SSCollection = new Class({
   },
   /*
     Function: pluginsForAction
-    
+      Returns all of the plugins currently applied with the specified action.
+      
     Parameters: 
       action - An event.
+      
+    Returns:
+      A plugin, or an array of plugins. 
   */
   pluginsForAction: function(action)
   {
     if(!this.plugins().get(action)) this.plugins().set(action, []);
     return $A(this.plugins().get(action));
   },
-
+  /*
+    Function: addPlugin
+      Accepts an event and a plugin, and inserts it into the current plugins array. 
+      
+    Parameters: 
+      action -  the type of action (read, write, delete, update)
+      plugin -  Plugin name as string
+      
+  */
   
-  addPlugin: function(actionType, plugin)
+  addPlugin: function(action, plugin)
   {
-    var pluginsForAction = this.pluginsForAction(actionType);
+    var pluginsForAction = this.pluginsForAction(action);
     pluginsForAction.push(plugin);
-    this.plugins().set(actionType, pluginsForAction);
+    this.plugins().set(action, pluginsForAction);
   },
-  
-  
-  removePlugin: function(actionType, plugin)
+  /*
+    Function: removePlugin
+      Accepts an event and a plugin, and clears it from the current plugins array. 
+      
+    Parameters: 
+      action - the type of action (read, write, delete, update)
+      plugin -  Plugin name as string
+  */
+  removePlugin: function(action, plugin)
   {
     // erase a plugin
-    var pluginsForAction = this.pluginsForAction(actionType);
-    this.plugins().set(actionType, pluginsForAction.erase(plugin));
+    var pluginsForAction = this.pluginsForAction(action);
+    this.plugins().set(action, pluginsForAction.erase(plugin));
   },
-  
+  /*
+    Function: clearPlugins
+      Clears all of the currently set plugins for the collection.
+  */
   
   clearPlugins: function()
   {
     this.setPlugins($H());
   },
-  
+  /*
+    Function: setDelegate
+      Sets a delegate for the collection.
+      
+    Parameter:
+      delegate - A delegate object. 
+  */
   
   setDelegate: function(delegate)
   {
     this.__delegate = delegate;
   },
-  
+  /*
+    Function: delegate
+      Returns the delegate for the collection.
+      
+    Return:
+      A delegate object. 
+  */
   
   delegate: function()
   {
     return this.__delegate;
   },
-  
+  /*
+    Function: setLoadRefresh
+      Sets the loadOnRefresh property, which determines if the collection should be loaded in when refreshed. 
+      
+    Parameters:
+      val - A boolean value.
+  */
   
   setLoadRefresh: function(val)
   {
     this.__loadOnRefresh = val;
   },
-  
+  /*
+    Function: setLoadRefresh
+      Returns whether the collection should be loaded in when refreshed. 
+      
+    Returns:
+      A boolean value.
+  */
 
   shouldLoadOnRefresh: function()
   {
     return this.__loadOnRefresh;
   },
-  
+  /*
+    Function: setName
+      Sets the name of the collection 
+      
+    Parameters:
+      name - A string.
+  */
   
   setName: function(name)
   {
     this.__name = name;
   },
-  
+  /*
+    Function: name
+      Returns the name of the collection 
+      
+    Returns:
+      A string.
+  */
   
   name: function()
   {
     return this.__name;
   },
-  
+  /*
+    Function: cleanObject
+      Accepts an object, and removes any null values contained within it. 
+      
+    Parameters:
+      anObject - An object.
+  */
   
   cleanObject: function(anObject)
   {
@@ -284,6 +347,13 @@ var SSCollection = new Class({
       return value != null && value !== '';
     }).getClean();
   },
+  /*
+    Function: cleanPayload
+      Accepts an payload, and removes any null values contained within it. 
+      
+    Parameters:
+      anObject - An object.
+  */
   
   
   cleanPayload: function(payload)
@@ -294,15 +364,18 @@ var SSCollection = new Class({
     }
     return this.cleanObject(payload);
   },
-  
-  
+  /*
+      MARKED FOR DELETION: never used -Justin 
+  */
   escapeValues: function(obj)
   {
     return $H(obj).map(function(value, key) {
       return escape(value);
     }).getClean();
   },
-  
+  /*
+      MARKED FOR DELETION: never used -Justin 
+  */
   
   unescapeValues: function(obj)
   {
@@ -310,7 +383,9 @@ var SSCollection = new Class({
       return unescape(value);
     }).getClean();
   },
-  
+  /*
+      MARKED FOR DELETION: never used -Justin 
+  */
   
   unescapeResult: function(ary)
   {
