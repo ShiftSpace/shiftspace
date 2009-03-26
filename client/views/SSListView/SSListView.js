@@ -1194,12 +1194,12 @@ var SSListView = new Class({
     }
   },
   
-  newCellForItemData: function(itemData)
+  newCellForItemData: function(itemData, index)
   {
-    var filter = this.filter(itemData);
+    var filtered = this.filter(itemData, index);
     var newCell = this.cell().cloneWithData(itemData);
     if(itemData.id) newCell.store('refid', itemData.id);
-    if(filter) newCell.addClass('SSDisplayNone');
+    if(filtered) newCell.addClass('SSDisplayNone');
     return newCell;
   },
   
