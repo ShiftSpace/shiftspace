@@ -548,10 +548,10 @@ var SSListView = new Class({
       SSLog(animData, SSLogForce);
       animData.animation().chain(function() {
         SSLog('Animation done refreshing!', SSLogForce);
-        if(animData.cleanup) animData.cleanup();
         // refreshing content
         this.refresh(true);
-      });
+        if(animData.cleanup) animData.cleanup();
+      }.bind(this));
     }
     else
     {
@@ -619,7 +619,7 @@ var SSListView = new Class({
         animData.animation().chain(function() {
           if(animData.cleanup) animData.cleanup();
           editModeForCell();
-        });
+        }.bind(this));
       }
       else
       {
@@ -969,7 +969,7 @@ var SSListView = new Class({
       SSLog(animData, SSLogForce);
       animData.animation().chain(function() {
         if(animData.cleanup) animData.cleanup();
-        this.refresh.bind(this)
+        this.refresh();
       }.bind(this));
       SSLog('animation running!', SSLogForce);
     }
@@ -1018,8 +1018,8 @@ var SSListView = new Class({
       {
         var animData = anim();
         animData.animation().chain(function() {
-          if(animData.cleanup) animData.cleanup();
           if(!this.suppressRefresh()) this.refresh();
+          if(animData.cleanup) animData.cleanup();
         }.bind(this));
       }
       else
@@ -1089,9 +1089,9 @@ var SSListView = new Class({
       {
         var animData = anim();
         animData.animation().chain(function() {
-          if(animData.cleanup) animData.cleanup();
           leaveEditModeForCell();
-        });
+          if(animData.cleanup) animData.cleanup();
+        }.bind(this));
       }
       else
       {
