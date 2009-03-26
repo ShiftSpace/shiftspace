@@ -38,6 +38,8 @@ var SSPageControl = new Class({
       {
         this.initalizeInterface();
       }
+      
+      SSLog('listening for onReloadData', SSLogForce);
       this.listView().addEvent('onReloadData', this.initalizeInterface.bind(this));
     }
   },
