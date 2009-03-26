@@ -964,7 +964,11 @@ var SSListView = new Class({
     
     if(anim)
     {
-      anim().chain(this.refresh.bind(this));
+      var animData = anim();
+      animData.animation().chain(function () {
+        if(animData.cleanup) animData.cleanup();
+        this.refresh.bind(this)
+      }.bind(this));
     }
     else
     {
@@ -1011,8 +1015,8 @@ var SSListView = new Class({
       {
         var animData = anim();
         animData.animation().chain(function() {
-          if(!this.suppressRefresh()) this.refresh();
           if(animData.cleanup) animData.cleanup();
+          if(!this.suppressRefresh()) this.refresh();
         }.bind(this));
       }
       else
