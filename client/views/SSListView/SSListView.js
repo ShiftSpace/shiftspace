@@ -971,7 +971,7 @@ var SSListView = new Class({
         if(animData.cleanup) animData.cleanup();
         this.refresh();
       }.bind(this));
-      SSLog('animation running!', SSLogForce);
+      SSLog('animation ran!', SSLogForce);
     }
     else
     {
@@ -1185,6 +1185,8 @@ var SSListView = new Class({
   */
   reloadData: function()
   {
+    SSLog('SSListView reloadData', SSLogForce);
+    
     // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
     
