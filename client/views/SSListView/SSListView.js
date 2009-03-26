@@ -529,16 +529,20 @@ var SSListView = new Class({
   */
   onAdd: function(data)
   {
+    SSLog('on add!', SSLogForce);
     var delegate = this.delegate();
     var anim = (delegate &&
                 delegate.animationFor && 
                 delegate.animationFor({action:'add', listView:this, userData:data})) || false;
     
+    SSLog(anim, SSLogForce);
     if(anim)
     {
       var animData = anim();
+      SSLog(animData, SSLogForce);
       animData.animation().chain(function() {
         if(animData.cleanup) animData.cleanup();
+        // refreshing content
         this.refresh(true);
       });
     }
