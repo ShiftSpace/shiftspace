@@ -67,6 +67,18 @@ var ShiftSpaceUserClass = new Class({
   },
   
   
+  setPerspective: function(perspective)
+  {
+    this.__perspective = perspective;
+  },
+  
+  
+  perspective: function()
+  {
+    return this.__perspective;
+  },
+  
+  
   setUsername: function(username)
   {
     if(username != null && username != false)
