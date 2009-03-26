@@ -530,6 +530,12 @@ var SSListView = new Class({
   onAdd: function(data)
   {
     SSLog('on add!', SSLogForce);
+    // leave editing a cell if it's being edited
+    if(this.cellBeingEdited() != -1)
+    {
+      this.cancelEdit(this.cellBeingEdited(), false);
+    }
+
     var delegate = this.delegate();
     var anim = (delegate &&
                 delegate.animationFor && 
