@@ -223,8 +223,8 @@ var SSListView = new Class({
     this.__sortEnd = this.cellNodes().indexOf(cellNode);
     SSLog(this.__sortStart + " " + this.__sortEnd, SSLogForce);
     this.fireEvent('onSortComplete');
-    if(typeof this.__sortStart != undefined &&
-       typeof this.__sortEnd != undefined &&
+    if(this.__sortStart != undefined &&
+       this.__sortEnd != undefined &&
        this.__sortStart != this.__sortEnd)
     {
       this.fireEvent('onOrderChange', {
