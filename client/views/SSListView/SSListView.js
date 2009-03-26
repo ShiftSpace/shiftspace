@@ -1157,6 +1157,15 @@ var SSListView = new Class({
     }
   },
   
+  newCellForItemData: function(itemData)
+  {
+    var filter = this.filter(itemData);
+    var newCell = this.cell().cloneWithData(itemData);
+    if(itemData.id) newCell.store('refid', itemData.id);
+    if(filter) newCell.addClass('SSDisplayNone');
+    return newCell;
+  },
+  
   /*
     Function: reloadData (private)
       Called by refresh(). Checks the length of the current collection data, and clears the currently loaded collection data.  If the collection array contains data, it resizes the elements and applies set filters. If the collection is not pending, the content is displayed. 
@@ -1178,19 +1187,8 @@ var SSListView = new Class({
         this.element.setStyle('width', (this.options.cellSize.x*len)+modifer);
       }
       
-      this.data().each(function(x) {
-        // TODO: make sure it pass the filter
-        var filter = this.filter(x);
-        var newCell = this.cell().cloneWithData(x);
-        
-        // store ref id
-        if(x.id) newCell.store('refid', x.id);
-        
-        // hide it
-        if(filter) newCell.addClass('SSDisplayNone');
-        
-        this.element.grab(newCell);
-      }.bind(this));
+      var cells = this.data().map(this.newCellForItemData.bind(this));
+      cell.each(this.element.grab.bind(this.element));
       
       this.initSortables();
     }
