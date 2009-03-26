@@ -18,7 +18,7 @@ var SSPageControl = new Class({
 
   initialize: function(el, options)
   {
-    this.setOptions(defaults, options);
+    this.setOptions(this.defaults, options);
     this.element = el;
     
     this.setInterfaceInitialized(false);
