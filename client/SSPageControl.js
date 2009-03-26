@@ -31,8 +31,9 @@ var SSPageControl = new Class({
       // set a filter
       SSLog('applying filter', SSLogForce);
       this.listView().setFilter(this.filterItem.bind(this));
-
-      if(options.listView.dataIsReady())
+      
+      SSLog(this.options.listView.dataIsReady(), SSLogForce);
+      if(this.options.listView.dataIsReady())
       {
         this.initalizeInterface();
       }

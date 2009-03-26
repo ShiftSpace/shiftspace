@@ -71,7 +71,7 @@ var SSListView = new Class({
   {
     if(this.hasCollection())
     {
-      return (this.data() && this.data().isUnread()) || false;
+      return (this.data() && !this.data().isUnread()) || false;
     }
     else
     {
