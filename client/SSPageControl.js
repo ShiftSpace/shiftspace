@@ -23,11 +23,13 @@ var SSPageControl = new Class({
     
     this.setInterfaceInitialized(false);
     
-    if(options.listView)
+    if(this.options.listView)
     {
-      this.setListView(options.listView);
+      SSLog('setting list view', SSLogForce);
+      this.setListView(this.options.listView);
       
       // set a filter
+      SSLog('applying filter', SSLogForce);
       this.listView().setFilter(this.filterItem.bind(this));
 
       if(options.listView.dataIsReady())
@@ -108,6 +110,8 @@ var SSPageControl = new Class({
   
   initalizeInterface: function()
   {
+    SSLog('initalizeInterface', SSLogForce);
+
     // initialize the page control
     var count = this.listView().count();
     var numPages = count % this.perPage();
