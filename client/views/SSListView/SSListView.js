@@ -223,7 +223,9 @@ var SSListView = new Class({
     this.__sortEnd = this.cellNodes().indexOf(cellNode);
     SSLog(this.__sortStart + " " + this.__sortEnd, SSLogForce);
     this.fireEvent('onSortComplete');
-    if(this.__sortStart != this.__sortEnd)
+    if(typeof this.__sortStart != undefined &&
+       typeof this.__sortEnd != undefined &&
+       this.__sortStart != this.__sortEnd)
     {
       this.fireEvent('onOrderChange', {
         listView: this, 
