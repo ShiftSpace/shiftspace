@@ -2,8 +2,8 @@
 // @required
 // ==/Builder==
 
+/*
 var unlink_visited = []; // FIX: for infinite unlink loops - David
-
 function $unlink(object){
   var unlinked;
 
@@ -37,6 +37,7 @@ function $unlink(object){
 
   return unlinked;
 };
+*/
 
 // allows for queries on namespaced attributes
 Selectors.RegExps = {
