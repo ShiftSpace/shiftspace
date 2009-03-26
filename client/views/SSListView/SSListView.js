@@ -222,7 +222,9 @@ var SSListView = new Class({
   {
     this.__sortEnd = this.cellNodes().indexOf(cellNode);
     SSLog(this.__sortStart + " " + this.__sortEnd, SSLogForce);
+    
     this.fireEvent('onSortComplete');
+    
     if(this.__sortStart != undefined &&
        this.__sortEnd != undefined &&
        this.__sortStart != this.__sortEnd)
@@ -233,6 +235,11 @@ var SSListView = new Class({
         end: this.__sortEnd
       });
     }
+    
+    // clear the state vars
+    this.__sortStart = undefined;
+    this.__sortCurrent = undefined;
+    this.__sortEnd = undefined;
   },
   
   /*
