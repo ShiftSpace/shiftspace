@@ -193,7 +193,7 @@ var SSListView = new Class({
   */
   sortStart: function(cellNode)
   {
-    this.__sortStart = this.cellNodes().indexOf(cellNode)-1;
+    this.__sortStart = this.cellNodes().indexOf(cellNode);
   },
   
   /*
@@ -205,6 +205,7 @@ var SSListView = new Class({
   */
   sortSort: function(cellNode)
   {
+    this.__sortCurrent = this.cellNodes().indexOf(cellNode);
   },
   
   /*
@@ -219,8 +220,17 @@ var SSListView = new Class({
   */
   sortComplete: function(cellNode)
   {
-    this.__move__(this.__sortStart, this.cellNodes().indexOf(cellNode));
+    this.__sortEnd = this.cellNodes().indexOf(cellNode);
+    SSLog(this.__sortStart + " " + this.__sortEnd, SSLogForce);
     this.fireEvent('onSortComplete');
+    if(this.__sortStart != this.__sortEnd)
+    {
+      this.fireEvent('onOrderChange', {
+        listView: this, 
+        start: this.__sortStart, 
+        end: this.__sortEnd
+      });
+    }
   },
   
   /*
