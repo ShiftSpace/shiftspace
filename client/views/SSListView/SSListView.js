@@ -221,7 +221,6 @@ var SSListView = new Class({
   sortComplete: function(cellNode)
   {
     this.__sortEnd = this.cellNodes().indexOf(cellNode);
-    SSLog(this.__sortStart + " " + this.__sortEnd, SSLogForce);
     
     this.fireEvent('onSortComplete');
     
@@ -548,7 +547,6 @@ var SSListView = new Class({
   */
   onAdd: function(data)
   {
-    SSLog('on add!', SSLogForce);
     // leave editing a cell if it's being edited
     if(this.cellBeingEdited() != -1)
     {
@@ -560,13 +558,10 @@ var SSListView = new Class({
                 delegate.animationFor && 
                 delegate.animationFor({action:'add', listView:this, userData:data})) || false;
     
-    SSLog(anim, SSLogForce);
     if(anim)
     {
       var animData = anim();
-      SSLog(animData, SSLogForce);
       animData.animation().chain(function() {
-        SSLog('Animation done refreshing!', SSLogForce);
         // refreshing content
         this.refresh(true);
         if(animData.cleanup) animData.cleanup();
@@ -984,15 +979,10 @@ var SSListView = new Class({
     if(anim)
     {
       var animData = anim();
-      SSLog('onRemove', SSLogForce);
-      SSLog(animData, SSLogForce);
       animData.animation().chain(function() {
-        SSLog('cleanup', SSLogForce);
         if(animData.cleanup) animData.cleanup();
-        SSLog('refresh!', SSLogForce);
         this.refresh();
       }.bind(this));
-      SSLog('animation ran!', SSLogForce);
     }
     else
     {
@@ -1206,8 +1196,6 @@ var SSListView = new Class({
   */
   reloadData: function()
   {
-    SSLog('SSListView reloadData', SSLogForce);
-    
     // check whether collection or array
     var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
     
@@ -1224,7 +1212,6 @@ var SSListView = new Class({
       }
       
       var cells = this.data().map(this.newCellForItemData.bind(this));
-      SSLog(cells, SSLogForce);
       cells.each(function(cell) {
         this.element.grab(cell)
       }.bind(this));
