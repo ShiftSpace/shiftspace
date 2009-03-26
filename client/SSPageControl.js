@@ -82,7 +82,7 @@ var SSPageControl = new Class({
   },
   
   
-  setListVew: function(newListView)
+  setListView: function(newListView)
   {
     this.__listView = newListView;
   },
