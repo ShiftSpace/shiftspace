@@ -944,6 +944,12 @@ var SSListView = new Class({
     var anim = (delegate && 
                 delegate.animationFor && 
                 delegate.animationFor({action:'remove', listView:this, index:index})) || false;
+                
+    // check if we need to reset cellBeingEdited
+    if(index == this.cellBeingEdited())
+    {
+      this.setCellBeingEdited(-1);
+    }
     
     if(anim)
     {
