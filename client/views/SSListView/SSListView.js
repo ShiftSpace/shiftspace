@@ -1188,6 +1188,7 @@ var SSListView = new Class({
       }
       
       var cells = this.data().map(this.newCellForItemData.bind(this));
+      SSLog(cells, SSLogForce);
       cells.each(this.element.grab.bind(this.element));
       
       this.initSortables();
