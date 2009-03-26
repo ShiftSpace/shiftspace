@@ -990,7 +990,7 @@ var SSListView = new Class({
         SSLog('cleanup', SSLogForce);
         if(animData.cleanup) animData.cleanup();
         SSLog('refresh!', SSLogForce);
-        //this.refresh();
+        this.refresh();
       }.bind(this));
       SSLog('animation ran!', SSLogForce);
     }
