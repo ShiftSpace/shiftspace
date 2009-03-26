@@ -150,6 +150,7 @@ var SSCollection = new Class({
   */
   setIsUnread: function(value)
   {
+    if(this.__isunread && !value) this.fireEvent('onCollectionFirstRead');
     this.__isunread = value;
   },
   /*

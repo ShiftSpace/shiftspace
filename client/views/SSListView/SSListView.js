@@ -65,6 +65,19 @@ var SSListView = new Class({
     this.initSortables();
     this.attachEvents();
   },
+  
+  
+  dataIsReady: function()
+  {
+    if(this.hasCollection())
+    {
+      return (this.data() && this.data().isUnread()) || false;
+    }
+    else
+    {
+      return true;
+    }
+  },
 
   /*
       Function: setFilter
