@@ -886,6 +886,12 @@ var SSCollection = new Class({
   },
   
   
+  map: function(fn)
+  {
+    return this.__array.map(fn);
+  },
+  
+  
   updateConstraints: function(constraint, value)
   {
     this.setConstraints($merge(this.constraints(), constraint.assoc(value)));

@@ -189,7 +189,7 @@ var SandalphonClass = new Class({
       // Group HTMl and CSS calls
       var loadGroup = new Group(interfaceCall, stylesCall);
       loadGroup.addEvent('complete', function() {
-        SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sandalphon interface loda complete');
+        SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sandalphon interface load complete');
         if(callback) callback({interface:interface, styles:styles});
       });
       
