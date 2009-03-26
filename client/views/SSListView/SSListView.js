@@ -967,10 +967,11 @@ var SSListView = new Class({
       var animData = anim();
       SSLog('onRemove', SSLogForce);
       SSLog(animData, SSLogForce);
-      animData.animation().chain(function () {
+      animData.animation().chain(function() {
         if(animData.cleanup) animData.cleanup();
         this.refresh.bind(this)
       }.bind(this));
+      SSLog('animation running!', SSLogForce);
     }
     else
     {
