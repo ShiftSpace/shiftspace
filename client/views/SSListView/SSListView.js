@@ -42,7 +42,6 @@ var SSListView = new Class({
     });
   },
   
-  
   initialize: function(el, options)
   {
     this.parent(el, options);
@@ -1237,6 +1236,7 @@ var SSListView = new Class({
       this.setNeedsDisplay(false);
     }
     
+    SSLog('firing onReloadData', SSLogForce);
     this.fireEvent('onReloadData', this);
   },
   /*
