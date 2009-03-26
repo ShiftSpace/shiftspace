@@ -541,6 +541,7 @@ var SSListView = new Class({
       var animData = anim();
       SSLog(animData, SSLogForce);
       animData.animation().chain(function() {
+        SSLog('Animation done refreshing!', SSLogForce);
         if(animData.cleanup) animData.cleanup();
         // refreshing content
         this.refresh(true);
