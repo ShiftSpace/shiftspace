@@ -141,7 +141,7 @@ var SSPageControl = new Class({
     if(numPages > this.element.getElements('.page').length)
     {
       var count = this.element.getElements('.page').length;
-      this.addPages(curCount+1, numPages-count);
+      this.addPages(count+1, numPages-count);
     }
     
     this.element.getElements('.page').each(function(x) {
