@@ -113,7 +113,7 @@ var SSPageControl = new Class({
   {
     for(var i = 0, j=startIndex; i < n; i++, j++)
     {
-      var link = new Elemetn('a');
+      var link = new Element('a');
       link.set('text', j);
       var newPage = new Element('span', {
         class: 'page'
@@ -121,7 +121,7 @@ var SSPageControl = new Class({
       var divider = new Element('span');
       divider.set('text', '|');
       
-      newPage.grabLink();
+      newPage.grab(link);
       newPage.inject(this.element.getElements('.page').getLast(), 'after');
       
       divider.inject(newPage, 'after');
