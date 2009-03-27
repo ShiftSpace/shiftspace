@@ -33,10 +33,10 @@ var SSPageControl = new Class({
       
       if(this.listView().dataIsReady())
       {
-        this.initalizeInterface();
+        this.initializeInterface();
       }
       
-      this.listView().addEvent('onReloadData', this.initalizeInterface.bind(this));
+      this.listView().addEvent('onReloadData', this.initializeInterface.bind(this));
     }
   },
   
@@ -129,9 +129,9 @@ var SSPageControl = new Class({
   },
   
   
-  initalizeInterface: function()
+  initializeInterface: function()
   {
-    SSLog('initalizeInterface', SSLogForce);
+    SSLog('initializeInterface', SSLogForce);
     SSLog(this.element, SSLogForce);
 
     // initialize the page control
