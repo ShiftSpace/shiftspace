@@ -42,7 +42,7 @@ var SSPageControl = new Class({
   
   filterItem: function(x, index)
   {
-    SSLog('filterItem ' + index, SSLogForce);
+    if(index == undefined) return true;
     return !(index >= this.lowerBound()) || !(index <= this.upperBound());
   },
   
