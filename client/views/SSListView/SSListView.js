@@ -599,7 +599,6 @@ var SSListView = new Class({
         // refreshing content
         if(animData.cleanup)
         {
-          SSLog('message', SSLogForce);
           animData.cleanup();
         }
         this.refresh(true);
@@ -1266,7 +1265,6 @@ var SSListView = new Class({
 
     if(this.pageControl()) this.pageControl().initializeInterface();
     
-    SSLog('firing onReloadData', SSLogForce);
     this.fireEvent('onReloadData', this);
   },
   /*
