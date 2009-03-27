@@ -299,7 +299,7 @@ function SSLoadFile(url, callback)
     'onerror': function(response) 
     {
       SSLog("failed loadFile call, for file " + url, SSLogError);
-      if(errCallback && typeof errCallback == 'function') errCallback(); // FIXME: broken - David
+      if(typeof errCallback != 'undefined' && typeof errCallback == 'function') errCallback(); // FIXME: broken - David
     }
   });
 
