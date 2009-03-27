@@ -123,7 +123,7 @@ var SSPageControl = new Class({
       if(idx > numPages)
       {
         x.addClass('SSDisplayNone');
-        if(x.nextSibling()) x.nextSibling().addClass('SSDisplayNone');
+        if(x.getNext()) x.getNext().addClass('SSDisplayNone');
       }
       else
       {
