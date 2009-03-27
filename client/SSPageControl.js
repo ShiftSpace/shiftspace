@@ -147,7 +147,7 @@ var SSPageControl = new Class({
       var idx = this.element.getElements('.page').indexOf(x);
       
       // hide page that beyond the numbe available
-      if(idx > numPages)
+      if((idx+1) > numPages)
       {
         x.addClass('SSDisplayNone');
         if(x.getNext()) x.getNext().addClass('SSDisplayNone');
