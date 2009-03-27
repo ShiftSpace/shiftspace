@@ -585,8 +585,8 @@ var SSListView = new Class({
       var animData = anim();
       animData.animation().chain(function() {
         // refreshing content
-        this.refresh(true);
         if(animData.cleanup) animData.cleanup();
+        this.refresh(true);
       }.bind(this));
     }
     else
