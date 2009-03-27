@@ -571,9 +571,8 @@ var SSListView = new Class({
       this.cancelEdit(this.cellBeingEdited(), false);
     }
     
-    var atIndex = userData.atIndex;
     var filtered = false;
-    if(atIndex) filtered = this.filter(newItem, atIndex);
+    if(userData && userData.atIndex != null) filtered = this.filter(newItem, userData.atIndex);
 
     var delegate = this.delegate();
     var anim = (!filtered &&
@@ -1335,10 +1334,10 @@ var SSListView = new Class({
   */
   __addEventsToCollection__: function(coll)
   {
-    coll.addEvent('onCreate', function(data, userData) {
+    coll.addEvent('onCreate', function(event) {
       if(this.isVisible())
       {
-        this.onAdd(data, userData);
+        this.onAdd(event.data, event.userData);
       }
     }.bind(this));
     
