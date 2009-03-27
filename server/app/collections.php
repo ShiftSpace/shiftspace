@@ -183,6 +183,11 @@ class Collections {
   function create($desc) {
     extract($desc);
 
+    // crazy non-generic hack
+    if ($table == 'savedartwork') {
+      Artwork::store_artwork_by_id($values['artworkid']);
+    }
+    
     if (!ctype_alpha2($table))
       throw new Error("Possible hack attempt 9");
     

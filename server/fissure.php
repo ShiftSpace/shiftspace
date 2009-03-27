@@ -50,6 +50,7 @@ function method_form($httpmethod, $method, $args) {
 <?php method_form('post', 'user.update', array('password', 'password_again', 'email', 'phone', 'perspective', 'preview')); ?>
 <?php method_form('post', 'user.query', array()); ?>
 <?php method_form('post', 'user.renew_password', array('username')); ?>
+<?php method_form('post', 'artwork.store', array('jsonObject_')); ?>
 <?php method_form('get', 'user.bookmarks_by_phone', array('phone')); ?>
 <?php method_form('get', 'user.getname', array('userid')); ?>
 </body>

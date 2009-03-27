@@ -95,7 +95,7 @@ class PDO_Store extends Base_Store {
         
     $table = strtolower(substr(get_class($object), 0, -7));
     $values = array();
-    if (!isset($object->id)) {
+    if (!isset($object->id) || $object->_new) {
       $columns = implode(', ', array_keys($vars));
       foreach ($vars as $key => $value) {
         $values[] = ":$key";
@@ -110,8 +110,15 @@ class PDO_Store extends Base_Store {
       $template = "UPDATE $table SET $values WHERE id = :id";
     }
     
-    $this->query($template, $vars);
-    $object->set('id', $this->lastInsertId);
+    if ($object->_new)
+      $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    try {
+      $this->query($template, $vars);
+      $object->set('id', $this->lastInsertId);
+    }
+    catch (Exception $e) {
+    }
   }
   
   
