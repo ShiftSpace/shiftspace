@@ -136,7 +136,7 @@ var SSPageControl = new Class({
         x.removeEvents('click');
         x.addEvent('click', function(_evt) {
           var evt = new Event(_evt);
-          x.element.getElements('.page').removeClass('SSActive');
+          this.element.getElements('.page').removeClass('SSActive');
           x.addClass('SSActive');
           this.setCurrentPage(idx);
         }.bind(this));
