@@ -258,6 +258,9 @@ class User {
   }
   
   private function verify_membership($membership_id, $first_name, $last_name) {
+    if ($membership_ip == '' && $first_name == '' && $last_name == '')
+      return;
+
     if ($membership_id == '' || $first_name == '' || $last_name == '')
       throw new Error("Please fill all membership fields or leave all empty.");
       
