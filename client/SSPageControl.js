@@ -23,6 +23,7 @@ var SSPageControl = new Class({
     SSLog(this.element, SSLogForce);
     
     this.setInterfaceInitialized(false);
+    this.setCurrentPage(0);
     
     if(listView)
     {
@@ -48,6 +49,7 @@ var SSPageControl = new Class({
   filterItem: function(x, index)
   {
     SSLog('filterItem ' + index, SSLogForce);
+    SSLog(this.lowerBound() + " " + this.upperBound(), SSLogForce);
     return (index >= this.lowerBound()) || (index <= this.upperBound());
   },
   
