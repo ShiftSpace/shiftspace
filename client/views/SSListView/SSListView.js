@@ -585,7 +585,11 @@ var SSListView = new Class({
       var animData = anim();
       animData.animation().chain(function() {
         // refreshing content
-        if(animData.cleanup) animData.cleanup();
+        if(animData.cleanup)
+        {
+          SSLog('calling cleanup', SSLogForce);
+          animData.cleanup();
+        }
         this.refresh(true);
       }.bind(this));
     }
