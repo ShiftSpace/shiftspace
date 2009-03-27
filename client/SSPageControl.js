@@ -50,6 +50,9 @@ var SSPageControl = new Class({
   
   setCurrentPage: function(page)
   {
+    var els = this.element.getElements('.page');
+    els.removeClass('SSActive');
+    els[page].addClass('SSActive');
     this.__currentPage = page;
     if(this.listView()) this.listView().refresh(true);
   },
@@ -163,8 +166,6 @@ var SSPageControl = new Class({
         x.removeEvents('click');
         x.addEvent('click', function(_evt) {
           var evt = new Event(_evt);
-          this.element.getElements('.page').removeClass('SSActive');
-          x.addClass('SSActive');
           this.setCurrentPage(idx);
         }.bind(this));
       }
