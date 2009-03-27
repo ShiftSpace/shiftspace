@@ -55,6 +55,24 @@ var SSPageControl = new Class({
     els[page].addClass('SSActive');
     this.__currentPage = page;
     if(this.listView()) this.listView().refresh(true);
+    
+    if(page == 0)
+    {
+      this.element.getElement('.previous').addClass('SSDisplayNone');
+    }
+    else
+    {
+      this.element.getElement('.previous').removeClass('SSDisplayNone');
+    }
+    
+    if(page == (this.numPages()-1))
+    {
+      this.element.getElement('.next').addClass('SSDisplayNone');
+    }
+    else
+    {
+      this.element.getElement('.next').removeClass('SSDisplayNone');
+    }
   },
   
   
@@ -128,6 +146,12 @@ var SSPageControl = new Class({
       newPage.inject(this.element.getElements('span').getLast(), 'before');
       divider.inject(newPage, 'after');
     }
+  },
+  
+  
+  numPages: function()
+  {
+    return (this.listView().count() / this.perPage()).ceil();
   },
   
   
