@@ -55,8 +55,19 @@ var SSPageControl = new Class({
     els[page].addClass('SSActive');
     this.__currentPage = page;
     if(this.listView()) this.listView().refresh(true);
-    
-    if(page == 0)
+    this.updatePreviousAndNext();
+  },
+  
+  
+  currentPage: function()
+  {
+    return this.__currentPage;
+  },
+  
+  
+  updatePreviousAndNext: function()
+  {
+    if(this.currentPage() == 0)
     {
       this.element.getElement('.previous').addClass('SSDisplayNone');
     }
@@ -65,7 +76,7 @@ var SSPageControl = new Class({
       this.element.getElement('.previous').removeClass('SSDisplayNone');
     }
     
-    if(page == (this.numPages()-1))
+    if(this.currentPage() == (this.numPages()-1))
     {
       this.element.getElement('.next').addClass('SSDisplayNone');
     }
@@ -73,12 +84,6 @@ var SSPageControl = new Class({
     {
       this.element.getElement('.next').removeClass('SSDisplayNone');
     }
-  },
-  
-  
-  currentPage: function()
-  {
-    return this.__currentPage;
   },
   
   
@@ -195,6 +200,8 @@ var SSPageControl = new Class({
         }.bind(this));
       }
     }.bind(this));
+    
+    this.updatePreviousAndNext();
     
     // check if no visible page is selected (this would happen from a deletion), if not select the last page in the list
     var currentPage = this.element.getElement('.SSActive');
