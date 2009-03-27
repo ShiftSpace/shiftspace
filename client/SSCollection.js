@@ -889,7 +889,13 @@ var SSCollection = new Class({
   
   map: function(fn)
   {
-    return this.__array.map(fn);
+    var result = []
+    var len = this.__array.length;
+    for(var i = 0; i < len; i++)
+    {
+      result.push(fn(this.__array[i], i));
+    }
+    return result;
   },
   
   
