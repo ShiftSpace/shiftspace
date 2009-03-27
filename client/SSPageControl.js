@@ -109,6 +109,26 @@ var SSPageControl = new Class({
   },
   
   
+  addPages: function(startIndex, n)
+  {
+    for(var i = 0, j=startIndex; i < n; i++, j++)
+    {
+      var link = new Elemetn('a');
+      link.set('text', j);
+      var newPage = new Element('span', {
+        class: 'page'
+      });
+      var divider = new Element('span');
+      divider.set('text', '|');
+      
+      newPage.grabLink();
+      newPage.inject(this.element.getElements('.page').getLast(), 'after');
+      
+      divider.inject(newPage, 'after');
+    }
+  },
+  
+  
   initalizeInterface: function()
   {
     SSLog('initalizeInterface', SSLogForce);
@@ -117,6 +137,12 @@ var SSPageControl = new Class({
     // initialize the page control
     var count = this.listView().count();
     var numPages = (count / this.perPage()).floor();
+    
+    if(numPages > this.element.getElements('.page').length)
+    {
+      var count = this.element.getElements('.page').length;
+      this.addPages(curCount+1, numPages-count);
+    }
     
     this.element.getElements('.page').each(function(x) {
       var idx = this.element.getElements('.page').indexOf(x);
