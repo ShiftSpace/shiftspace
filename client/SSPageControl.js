@@ -26,6 +26,7 @@ var SSPageControl = new Class({
     if(listView)
     {
       this.setListView(listView);
+      this.listView().setPageControl(this);
       
       // set a filter
       this.listView().setFilter(this.filterItem.bind(this));

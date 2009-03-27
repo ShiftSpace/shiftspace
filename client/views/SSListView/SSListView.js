@@ -66,6 +66,18 @@ var SSListView = new Class({
   },
   
   
+  setPageControl: function(pageControl)
+  {
+    this.__pageControl = pageControl;
+  },
+  
+  
+  pageControl: function()
+  {
+    return this.__pageControl;
+  },
+  
+  
   dataIsReady: function()
   {
     if(this.hasCollection())
@@ -1230,11 +1242,13 @@ var SSListView = new Class({
     
     if(len > 0 && this.cell())
     {
+      var perPage = (this.pageControl() && this.pageControl().perPage()) || len;
+      
       // set the width programmatically if horizontal
       if(this.options.horizontal && this.options.cellSize)
       {
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
-        this.element.setStyle('width', (this.options.cellSize.x*len)+modifer);
+        this.element.setStyle('width', (this.options.cellSize.x*perPage)+modifer);
       }
       
       var cells = this.data().map(this.newCellForItemData.bind(this));
