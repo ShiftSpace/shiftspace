@@ -138,6 +138,8 @@ var SSPageControl = new Class({
     var numPages = (count / this.perPage()).floor();
     var remainder = count % this.perPage();
     
+    SSLog('numPages:' + numPages + ' remainder:' + remainder, SSLogForce);
+    
     if(numPages > this.element.getElements('.page').length)
     {
       var curCount = this.element.getElements('.page').length;
