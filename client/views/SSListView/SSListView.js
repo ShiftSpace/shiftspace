@@ -523,7 +523,7 @@ var SSListView = new Class({
         
       Parameters:
         newItem  - a javascript object
-        _animate - a boolean
+        options - an object, can contain animate boolean as well as atIndex value.
   */
   add: function(newItem, options)
   {
@@ -572,7 +572,7 @@ var SSListView = new Class({
     }
     
     var filtered = false;
-    if(userData && userData.atIndex != null) filtered = this.filter(newItem, userData.atIndex);
+    if(userData && userData.atIndex != null) filtered = this.filter(data, userData.atIndex);
 
     var delegate = this.delegate();
     var anim = (!filtered &&
