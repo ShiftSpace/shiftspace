@@ -1263,7 +1263,7 @@ var SSListView = new Class({
     {
       this.setNeedsDisplay(false);
     }
-    
+
     if(this.pageControl()) this.pageControl().initializeInterface();
     
     SSLog('firing onReloadData', SSLogForce);
