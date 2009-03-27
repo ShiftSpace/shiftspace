@@ -136,6 +136,7 @@ var SSPageControl = new Class({
     // initialize the page control
     var count = this.listView().count();
     var numPages = (count / this.perPage()).floor();
+    var remainder = count % this.perPage();
     
     if(numPages > this.element.getElements('.page').length)
     {
@@ -147,7 +148,8 @@ var SSPageControl = new Class({
       var idx = this.element.getElements('.page').indexOf(x);
       
       // hide page that beyond the numbe available
-      if((idx+1) > numPages)
+      if(idx > numPages ||
+         (idx == numPages && remainder == 0))
       {
         x.addClass('SSDisplayNone');
         if(x.getNext()) x.getNext().addClass('SSDisplayNone');
