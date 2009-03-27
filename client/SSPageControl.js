@@ -22,6 +22,7 @@ var SSPageControl = new Class({
     this.setInterfaceInitialized(false);
     this.setCurrentPage(0);
     this.setPerPage(this.options.perPage);
+    this.attachEvents();
     
     if(listView)
     {
@@ -50,14 +51,40 @@ var SSPageControl = new Class({
   
   setCurrentPage: function(page)
   {
+    var els = this.element.getElements('.page');
+    els.removeClass('SSActive');
+    els[page].addClass('SSActive');
     this.__currentPage = page;
     if(this.listView()) this.listView().refresh(true);
+    this.updatePreviousAndNext();
   },
   
   
   currentPage: function()
   {
     return this.__currentPage;
+  },
+  
+  
+  updatePreviousAndNext: function()
+  {
+    if(this.currentPage() == 0)
+    {
+      this.element.getElement('.previous').addClass('SSDisplayNone');
+    }
+    else
+    {
+      this.element.getElement('.previous').removeClass('SSDisplayNone');
+    }
+    
+    if(this.currentPage() == (this.numPages()-1))
+    {
+      this.element.getElement('.next').addClass('SSDisplayNone');
+    }
+    else
+    {
+      this.element.getElement('.next').removeClass('SSDisplayNone');
+    }
   },
   
   
@@ -128,14 +155,33 @@ var SSPageControl = new Class({
   },
   
   
+  numPages: function()
+  {
+    if(this.listView()) return (this.listView().count() / this.perPage()).ceil();
+    return 1;
+  },
+  
+  
+  attachEvents: function()
+  {
+    this.element.getElement('.previous').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if(this.currentPage() > 0) this.setCurrentPage(this.currentPage()-1);
+    }.bind(this));
+    
+    this.element.getElement('.next').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if((this.currentPage()+1) < this.numPages()) this.setCurrentPage(this.currentPage()+1);
+    }.bind(this));
+  },
+  
+  
   initializeInterface: function()
   {
-    SSLog('initializeInterface', SSLogForce);
-    SSLog(this.element, SSLogForce);
-
     // initialize the page control
     var count = this.listView().count();
-    var numPages = (count / this.perPage()).floor();
+    var numPages = (count / this.perPage()).ceil();
+    var remainder = count % this.perPage();
     
     if(numPages > this.element.getElements('.page').length)
     {
@@ -147,23 +193,32 @@ var SSPageControl = new Class({
       var idx = this.element.getElements('.page').indexOf(x);
       
       // hide page that beyond the numbe available
-      if(idx > numPages)
+      if(idx >= numPages)
       {
         x.addClass('SSDisplayNone');
         if(x.getNext()) x.getNext().addClass('SSDisplayNone');
       }
       else
       {
+        x.removeClass('SSDisplayNone');
+        x.getNext().removeClass('SSDisplayNone');
         // set up the click event
         x.removeEvents('click');
         x.addEvent('click', function(_evt) {
           var evt = new Event(_evt);
-          this.element.getElements('.page').removeClass('SSActive');
-          x.addClass('SSActive');
           this.setCurrentPage(idx);
         }.bind(this));
       }
     }.bind(this));
+    
+    this.updatePreviousAndNext();
+    
+    // check if no visible page is selected (this would happen from a deletion), if not select the last page in the list
+    var currentPage = this.element.getElement('.SSActive');
+    if(currentPage.hasClass('SSDisplayNone'))
+    {
+      this.setCurrentPage(numPages-1);
+    }
   },
   
   
