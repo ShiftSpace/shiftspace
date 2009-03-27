@@ -19,29 +19,22 @@ var SSPageControl = new Class({
     this.setOptions(this.defaults, options);
     this.element = el;
 
-    SSLog('element', SSLogForce);
-    SSLog(this.element, SSLogForce);
-    
     this.setInterfaceInitialized(false);
     this.setCurrentPage(0);
     this.setPerPage(this.options.perPage);
     
     if(listView)
     {
-      SSLog('setting list view', SSLogForce);
       this.setListView(listView);
       
       // set a filter
-      SSLog('applying filter', SSLogForce);
       this.listView().setFilter(this.filterItem.bind(this));
       
-      SSLog(this.listView().dataIsReady(), SSLogForce);
       if(this.listView().dataIsReady())
       {
         this.initalizeInterface();
       }
       
-      SSLog('listening for onReloadData', SSLogForce);
       this.listView().addEvent('onReloadData', this.initalizeInterface.bind(this));
     }
   },
@@ -49,8 +42,6 @@ var SSPageControl = new Class({
   
   filterItem: function(x, index)
   {
-    SSLog('filterItem ' + index, SSLogForce);
-    SSLog(this.lowerBound() + " " + this.upperBound(), SSLogForce);
     return !(index >= this.lowerBound()) || !(index <= this.upperBound());
   },
   
@@ -123,7 +114,7 @@ var SSPageControl = new Class({
 
     // initialize the page control
     var count = this.listView().count();
-    var numPages = count % this.perPage();
+    var numPages = (count / this.perPage()).floor();
     
     this.element.getElements('.page').each(function(x) {
       var idx = this.element.getElements('.page').indexOf(x);
