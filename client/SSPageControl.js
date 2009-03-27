@@ -57,7 +57,7 @@ var SSPageControl = new Class({
   setCurrentPage: function(page)
   {
     this.__currentPage = page;
-    this.listView().refresh(true);
+    if(this.listView()) this.listView().refresh(true);
   },
   
   
