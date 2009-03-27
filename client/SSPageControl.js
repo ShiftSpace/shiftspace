@@ -51,7 +51,7 @@ var SSPageControl = new Class({
   {
     SSLog('filterItem ' + index, SSLogForce);
     SSLog(this.lowerBound() + " " + this.upperBound(), SSLogForce);
-    return (index >= this.lowerBound()) || (index <= this.upperBound());
+    return !(index >= this.lowerBound()) || !(index <= this.upperBound());
   },
   
   
