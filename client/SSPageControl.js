@@ -178,15 +178,10 @@ var SSPageControl = new Class({
   
   initializeInterface: function()
   {
-    SSLog('initializeInterface', SSLogForce);
-    SSLog(this.element, SSLogForce);
-
     // initialize the page control
     var count = this.listView().count();
     var numPages = (count / this.perPage()).ceil();
     var remainder = count % this.perPage();
-    
-    SSLog('numPages:' + numPages + ' remainder:' + remainder, SSLogForce);
     
     if(numPages > this.element.getElements('.page').length)
     {
