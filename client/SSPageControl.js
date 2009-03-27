@@ -20,6 +20,7 @@ var SSPageControl = new Class({
     this.element = el;
 
     this.setInterfaceInitialized(false);
+    this.setCurrentPage(0);
     this.setPerPage(this.options.perPage);
     
     if(listView)
@@ -37,8 +38,6 @@ var SSPageControl = new Class({
       
       this.listView().addEvent('onReloadData', this.initializeInterface.bind(this));
     }
-    
-    this.setCurrentPage(0);
   },
   
   
@@ -152,7 +151,8 @@ var SSPageControl = new Class({
   
   numPages: function()
   {
-    return (this.listView().count() / this.perPage()).ceil();
+    if(this.listView()) return (this.listView().count() / this.perPage()).ceil();
+    return 1;
   },
   
   
