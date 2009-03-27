@@ -3,7 +3,6 @@
 $dir = dirname(__FILE__);
 require_once("$dir/../../momasocialbar/sms.php");
 
-class Artwork_Object extends Base_Object {}
 class SavedArtWork_Object extends Base_Object {}
 
 class Sms {
@@ -14,7 +13,7 @@ class Sms {
   public function send() {
     extract($_POST);
 
-    $result = Array();
+    $errors = Array();
 
     $month = date('m/Y');
     
@@ -34,7 +33,7 @@ class Sms {
     foreach ($numbers as $number) {
       $this->server->user['num_sms']++;
 
-      if ($this->server->user['num_sms'] > 3) {
+      if ($this->server->user['num_sms'] > 30) {
         $user = new User_Object();
         $user->set($this->server->user);
         $this->server->moma->save($user);                
@@ -42,14 +41,20 @@ class Sms {
         throw new Error("Sorry, you have surpassed your allowed monthly text message limit");
       }
 
-      $result[] = sendsms($this->normalizePhoneNumber($number), $msg);
+      $result = sendsms($this->normalizePhoneNumber($number), $msg);
+
+      if (strpos($result, 'ERR') !== FALSE)
+        $errors[] = $number;
     }
 
     $user = new User_Object();
     $user->set($this->server->user);
     $this->server->moma->save($user);
-                  
-    return new Response($result);
+     
+    if (count($errors) > 0)
+      throw new Error("Could not send to phone numbers ". implode($errors, ', '));
+    else                   
+      return new Response('ok');
   }
 
   static public function normalizePhoneNumber($phone) {
@@ -89,6 +94,9 @@ class Sms {
     fclose($f);
 
     $artworkid = trim($msg);
+
+    Artwork::store_artwork_by_id($artworkid);
+
     $artwork = $this->server->moma->load("artwork($artworkid)");
     
     if ($artwork) {
