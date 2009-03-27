@@ -22,6 +22,7 @@ var SSPageControl = new Class({
     this.setInterfaceInitialized(false);
     this.setCurrentPage(0);
     this.setPerPage(this.options.perPage);
+    this.attachEvents();
     
     if(listView)
     {
@@ -158,6 +159,20 @@ var SSPageControl = new Class({
   {
     if(this.listView()) return (this.listView().count() / this.perPage()).ceil();
     return 1;
+  },
+  
+  
+  attachEvents: function()
+  {
+    this.element.getElement('.previous').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if(this.currentPage() > 0) this.setCurrentPage(this.currentPage()-1);
+    }.bind(this));
+    
+    this.element.getElement('.next').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if((this.currentPage()+1) < this.numPages()) this.setCurrentPage(this.currentPage()+1);
+    }.bind(this));
   },
   
   
