@@ -66,6 +66,18 @@ var SSListView = new Class({
   },
   
   
+  setPageControl: function(pageControl)
+  {
+    this.__pageControl = pageControl;
+  },
+  
+  
+  pageControl: function()
+  {
+    return this.__pageControl;
+  },
+  
+  
   dataIsReady: function()
   {
     if(this.hasCollection())
@@ -523,22 +535,28 @@ var SSListView = new Class({
         
       Parameters:
         newItem  - a javascript object
-        _animate - a boolean
+        options - an object, can contain animate boolean as well as atIndex value.
   */
-  add: function(newItem, _animate)
+  add: function(newItem, options)
   {
-    var animate = (_animate == null && true) || _animate;
+    var animate = ((!options || options.animate == null) && true) || options.animate;
 
     var delegate = this.delegate();
     var canAdd = (delegate && delegate.canAdd && delegate.canAdd(this)) || true;
     
     if(canAdd)
     {
+      // grab extra data, not completely sure why we need this here - David
       var addData = (delegate.dataFor && delegate.dataFor('add', this));
       
       if(this.hasCollection())
       {
-        this.getData()['create']($merge(newItem, addData));
+        this.getData()['create']($merge(newItem, addData), {
+          userData:
+          {
+            atIndex: (options && options.atIndex)
+          }
+        });
       }
       else
       {
@@ -557,26 +575,34 @@ var SSListView = new Class({
         data - A row in a javascript array.
     
   */
-  onAdd: function(data)
+  onAdd: function(data, userData)
   {
     // leave editing a cell if it's being edited
     if(this.cellBeingEdited() != -1)
     {
       this.cancelEdit(this.cellBeingEdited(), false);
     }
+    
+    var filtered = false;
+    if(userData && userData.atIndex != null) filtered = this.filter(data, userData.atIndex);
 
     var delegate = this.delegate();
-    var anim = (delegate &&
+    var anim = (!filtered &&
+                delegate &&
                 delegate.animationFor && 
                 delegate.animationFor({action:'add', listView:this, userData:data})) || false;
     
     if(anim)
     {
       var animData = anim();
-      animData.animation().chain(function() {
+      animData.animation(function() {
         // refreshing content
+        if(animData.cleanup)
+        {
+          SSLog('message', SSLogForce);
+          animData.cleanup();
+        }
         this.refresh(true);
-        if(animData.cleanup) animData.cleanup();
       }.bind(this));
     }
     else
@@ -597,9 +623,9 @@ var SSListView = new Class({
     See Also:
       add
   */
-  addObject: function(sender)
+  addObject: function(sender, options)
   {
-    this.add(sender.dataForNewItem());
+    this.add(sender.dataForNewItem(), options);
   },
   
   /*
@@ -1216,11 +1242,13 @@ var SSListView = new Class({
     
     if(len > 0 && this.cell())
     {
+      var perPage = (this.pageControl() && this.pageControl().perPage()) || len;
+      
       // set the width programmatically if horizontal
       if(this.options.horizontal && this.options.cellSize)
       {
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
-        this.element.setStyle('width', (this.options.cellSize.x*len)+modifer);
+        this.element.setStyle('width', (this.options.cellSize.x*perPage)+modifer);
       }
       
       var cells = this.data().map(this.newCellForItemData.bind(this));
@@ -1235,6 +1263,8 @@ var SSListView = new Class({
     {
       this.setNeedsDisplay(false);
     }
+    
+    if(this.pageControl()) this.pageControl().initializeInterface();
     
     SSLog('firing onReloadData', SSLogForce);
     this.fireEvent('onReloadData', this);
@@ -1324,10 +1354,10 @@ var SSListView = new Class({
   */
   __addEventsToCollection__: function(coll)
   {
-    coll.addEvent('onCreate', function(data) {
+    coll.addEvent('onCreate', function(event) {
       if(this.isVisible())
       {
-        this.onAdd(data);
+        this.onAdd(event.data, event.userData);
       }
     }.bind(this));
     

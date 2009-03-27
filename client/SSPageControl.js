@@ -11,7 +11,7 @@ var SSPageControl = new Class({
   
   defaults: {
     listView: null,
-    perpage: 25
+    perPage: 25
   }, 
 
   initialize: function(el, listView, options)
@@ -19,27 +19,23 @@ var SSPageControl = new Class({
     this.setOptions(this.defaults, options);
     this.element = el;
 
-    SSLog('element', SSLogForce);
-    SSLog(this.element, SSLogForce);
-    
     this.setInterfaceInitialized(false);
+    this.setCurrentPage(0);
+    this.setPerPage(this.options.perPage);
     
     if(listView)
     {
-      SSLog('setting list view', SSLogForce);
       this.setListView(listView);
+      this.listView().setPageControl(this);
       
       // set a filter
-      SSLog('applying filter', SSLogForce);
       this.listView().setFilter(this.filterItem.bind(this));
       
-      SSLog(this.listView().dataIsReady(), SSLogForce);
       if(this.listView().dataIsReady())
       {
         this.initalizeInterface();
       }
       
-      SSLog('listening for onReloadData', SSLogForce);
       this.listView().addEvent('onReloadData', this.initalizeInterface.bind(this));
     }
   },
@@ -47,15 +43,15 @@ var SSPageControl = new Class({
   
   filterItem: function(x, index)
   {
-    SSLog('filterItem ' + index, SSLogForce);
-    return (index >= this.lowerBound()) || (index <= this.upperBound());
+    if(index == undefined) return false;
+    return !(index >= this.lowerBound()) || !(index <= this.upperBound());
   },
   
   
   setCurrentPage: function(page)
   {
     this.__currentPage = page;
-    this.listView().refresh(true);
+    if(this.listView()) this.listView().refresh(true);
   },
   
   
@@ -113,6 +109,26 @@ var SSPageControl = new Class({
   },
   
   
+  addPages: function(startIndex, n)
+  {
+    for(var i = 0, j=startIndex; i < n; i++, j++)
+    {
+      var link = new Element('a');
+      link.set('text', j);
+      var newPage = new Element('span', {
+        class: 'page'
+      });
+      var divider = new Element('span');
+      divider.set('text', '|');
+      
+      newPage.grab(link);
+      newPage.inject(this.element.getElements('.page').getLast(), 'after');
+      
+      divider.inject(newPage, 'after');
+    }
+  },
+  
+  
   initalizeInterface: function()
   {
     SSLog('initalizeInterface', SSLogForce);
@@ -120,7 +136,13 @@ var SSPageControl = new Class({
 
     // initialize the page control
     var count = this.listView().count();
-    var numPages = count % this.perPage();
+    var numPages = (count / this.perPage()).floor();
+    
+    if(numPages > this.element.getElements('.page').length)
+    {
+      var count = this.element.getElements('.page').length;
+      this.addPages(count+1, numPages-count);
+    }
     
     this.element.getElements('.page').each(function(x) {
       var idx = this.element.getElements('.page').indexOf(x);
@@ -129,7 +151,7 @@ var SSPageControl = new Class({
       if(idx > numPages)
       {
         x.addClass('SSDisplayNone');
-        if(x.nextSibling()) x.nextSibling().addClass('SSDisplayNone');
+        if(x.getNext()) x.getNext().addClass('SSDisplayNone');
       }
       else
       {
