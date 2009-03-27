@@ -158,6 +158,7 @@ var SSPageControl = new Class({
       else
       {
         x.removeClass('SSDisplayNone');
+        x.getNext().removeClass('SSDisplayNone');
         // set up the click event
         x.removeEvents('click');
         x.addEvent('click', function(_evt) {
