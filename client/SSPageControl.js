@@ -122,8 +122,7 @@ var SSPageControl = new Class({
       divider.set('text', '|');
       
       newPage.grab(link);
-      newPage.inject(this.element.getElements('.page').getLast(), 'after');
-      
+      newPage.inject(this.element.getElements('span').getLast(), 'before');
       divider.inject(newPage, 'after');
     }
   },
