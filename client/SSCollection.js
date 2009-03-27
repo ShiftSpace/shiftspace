@@ -712,7 +712,7 @@ var SSCollection = new Class({
       onComplete: function(theId) {
         var newData = $merge(data, {id:theId});
         this.onCreate(newData, (options && options.userData));
-        if(options.onCreate && $type(options.onCreate) == 'function') options.onCreate(newData);
+        if(options && options.onCreate && $type(options.onCreate) == 'function') options.onCreate(newData);
       }.bind(this)
     });
   },
