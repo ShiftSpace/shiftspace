@@ -14,7 +14,7 @@ var SSPageControl = new Class({
     perpage: 25
   }, 
 
-  initialize: function(el, options)
+  initialize: function(el, listView, options)
   {
     this.setOptions(this.defaults, options);
     this.element = el;
@@ -24,10 +24,10 @@ var SSPageControl = new Class({
     
     this.setInterfaceInitialized(false);
     
-    if(this.options.listView)
+    if(listView)
     {
       SSLog('setting list view', SSLogForce);
-      this.setListView(this.options.listView);
+      this.setListView(listView);
       
       // set a filter
       SSLog('applying filter', SSLogForce);
