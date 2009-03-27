@@ -111,7 +111,7 @@ var SSPageControl = new Class({
   
   addPages: function(startIndex, n)
   {
-    for(var i = 0, j=startIndex; i < n; i++, j++)
+    for(var i = 0, j=startIndex; i <= n; i++, j++)
     {
       var link = new Element('a');
       link.set('text', j);
@@ -139,8 +139,8 @@ var SSPageControl = new Class({
     
     if(numPages > this.element.getElements('.page').length)
     {
-      var count = this.element.getElements('.page').length;
-      this.addPages(count+1, numPages-count);
+      var curCount = this.element.getElements('.page').length;
+      this.addPages(curCount+1, numPages-curCount);
     }
     
     this.element.getElements('.page').each(function(x) {
