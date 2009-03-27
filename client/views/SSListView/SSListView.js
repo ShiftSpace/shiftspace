@@ -124,13 +124,13 @@ var SSListView = new Class({
       setFilter
       getFilter
   */
-  filter: function(data)
+  filter: function(data, index)
   {
     var filterFn = this.getFilter();
     
     if(filterFn)
     {
-      return filterFn(data);
+      return filterFn(data, index);
     }
     return false;
   },
