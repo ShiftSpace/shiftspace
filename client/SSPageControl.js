@@ -157,6 +157,7 @@ var SSPageControl = new Class({
       }
       else
       {
+        x.removeClass('SSDisplayNone');
         // set up the click event
         x.removeEvents('click');
         x.addEvent('click', function(_evt) {
@@ -167,6 +168,13 @@ var SSPageControl = new Class({
         }.bind(this));
       }
     }.bind(this));
+    
+    // check if no visible page is selected (this would happen from a deletion), if not select the last page in the list
+    var currentPage = this.element.getElement('.SSActive');
+    if(currentPage.hasClass('SSDisplayNone'))
+    {
+      this.setCurrentPage(numPages-1);
+    }
   },
   
   
