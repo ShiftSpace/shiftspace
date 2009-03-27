@@ -704,15 +704,15 @@ var SSCollection = new Class({
   },
   
   
-  create: function(data, callback)
+  create: function(data, options)
   {
     return this.transact('create', {
       table: this.table(),
       values: data,
       onComplete: function(theId) {
         var newData = $merge(data, {id:theId});
-        this.onCreate(newData);
-        if(callback && $type(callback) == 'function') callback(newData);
+        this.onCreate(newData, options.userData);
+        if(options.onCreate && $type(options.onCreate) == 'function') options.onCreate(newData);
       }.bind(this)
     });
   },
@@ -846,9 +846,9 @@ var SSCollection = new Class({
   },
   
   
-  onCreate: function(data)
+  onCreate: function(data, userData)
   {
-    this.fireEvent('onCreate', data);
+    this.fireEvent('onCreate', {data:data, userData:userData});
   },
   
   

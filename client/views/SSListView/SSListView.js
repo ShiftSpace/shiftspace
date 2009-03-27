@@ -525,20 +525,26 @@ var SSListView = new Class({
         newItem  - a javascript object
         _animate - a boolean
   */
-  add: function(newItem, _animate)
+  add: function(newItem, options)
   {
-    var animate = (_animate == null && true) || _animate;
+    var animate = (options.animate == null && true) || options.animate;
 
     var delegate = this.delegate();
     var canAdd = (delegate && delegate.canAdd && delegate.canAdd(this)) || true;
     
     if(canAdd)
     {
+      // grab extra data, not completely sure why we need this here - David
       var addData = (delegate.dataFor && delegate.dataFor('add', this));
       
       if(this.hasCollection())
       {
-        this.getData()['create']($merge(newItem, addData));
+        this.getData()['create']($merge(newItem, addData), {
+          userData:
+          {
+            atIndex: options.atIndex
+          }
+        });
       }
       else
       {
@@ -557,16 +563,21 @@ var SSListView = new Class({
         data - A row in a javascript array.
     
   */
-  onAdd: function(data)
+  onAdd: function(data, userData)
   {
     // leave editing a cell if it's being edited
     if(this.cellBeingEdited() != -1)
     {
       this.cancelEdit(this.cellBeingEdited(), false);
     }
+    
+    var atIndex = userData.atIndex;
+    var filtered = false;
+    if(atIndex) filtered = this.filter(newItem, atIndex);
 
     var delegate = this.delegate();
-    var anim = (delegate &&
+    var anim = (!filtered &&
+                delegate &&
                 delegate.animationFor && 
                 delegate.animationFor({action:'add', listView:this, userData:data})) || false;
     
@@ -597,9 +608,9 @@ var SSListView = new Class({
     See Also:
       add
   */
-  addObject: function(sender)
+  addObject: function(sender, options)
   {
-    this.add(sender.dataForNewItem());
+    this.add(sender.dataForNewItem(), options);
   },
   
   /*
@@ -1324,10 +1335,10 @@ var SSListView = new Class({
   */
   __addEventsToCollection__: function(coll)
   {
-    coll.addEvent('onCreate', function(data) {
+    coll.addEvent('onCreate', function(data, userData) {
       if(this.isVisible())
       {
-        this.onAdd(data);
+        this.onAdd(data, userData);
       }
     }.bind(this));
     
