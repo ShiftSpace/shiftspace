@@ -527,7 +527,7 @@ var SSListView = new Class({
   */
   add: function(newItem, options)
   {
-    var animate = (options.animate == null && true) || options.animate;
+    var animate = ((!options || options.animate == null) && true) || options.animate;
 
     var delegate = this.delegate();
     var canAdd = (delegate && delegate.canAdd && delegate.canAdd(this)) || true;
