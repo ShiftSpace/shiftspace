@@ -542,7 +542,7 @@ var SSListView = new Class({
         this.getData()['create']($merge(newItem, addData), {
           userData:
           {
-            atIndex: options.atIndex
+            atIndex: (options && options.atIndex)
           }
         });
       }
