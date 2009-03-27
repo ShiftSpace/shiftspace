@@ -129,7 +129,7 @@ var SSPageControl = new Class({
       {
         x.addClass('SSDisplayNone');
         if(x.nextSibling()) x.nextSibling().addClass('SSDisplayNone');
-      } 
+      }
       else
       {
         // set up the click event
@@ -141,7 +141,7 @@ var SSPageControl = new Class({
           this.setCurrentPage(idx);
         }.bind(this));
       }
-    });
+    }.bind(this));
   },
   
   
