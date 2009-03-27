@@ -11,7 +11,7 @@ var SSPageControl = new Class({
   
   defaults: {
     listView: null,
-    perpage: 25
+    perPage: 25
   }, 
 
   initialize: function(el, listView, options)
@@ -24,6 +24,7 @@ var SSPageControl = new Class({
     
     this.setInterfaceInitialized(false);
     this.setCurrentPage(0);
+    this.setPerPage(this.options.perPage);
     
     if(listView)
     {
