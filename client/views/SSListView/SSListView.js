@@ -21,6 +21,11 @@ SSListViewError.OutOfBounds = new Class({
 // ====================
 // = Class Definition =
 // ====================
+  /*
+    Class: SSListView
+      SSListView controls the display of Collection content within the console. 
+      
+  */
 
 var SSListView = new Class({
   name: "SSListView",
@@ -740,6 +745,7 @@ var SSListView = new Class({
   /*
     Function: get (private)
      Accepts the index of cell in a colletion and calls the returns the cells data in an array.
+     
     Parameters: 
       index - the index of a SSCell object.
       

@@ -5,6 +5,14 @@
 // @dependencies      SSView
 // ==/Builder==
 
+  /*
+    ====================
+    = Class Definition =
+    ====================
+    
+    Class: SSTabView
+      SSTabView controls the view and function of tabs within the console. 
+  */
 var SSTabView = new Class({
   
   name: 'SSTabView',
@@ -365,8 +373,6 @@ var SSTabView = new Class({
       
     Returns:
       Index of tab
-      
-      
   */
   activeTab: function()
   {
