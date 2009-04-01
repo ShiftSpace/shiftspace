@@ -120,6 +120,7 @@ var SSCollection = new Class({
     {
       // real DB backend
       this.setLoadRefresh(true);
+      //setTable is marked for DELETION.
       this.setTable(this.options.table);
       this.setConstraints(this.options.constraints);
       this.setProperties(this.options.properties);
@@ -188,7 +189,7 @@ var SSCollection = new Class({
   },
   /*
     Function: setPlugins 
-       Sets the plugin(s) to apply to a collection. 
+       Sets the plugin(s) to apply to a collection. Plugins are used to assign multiple actions on collections.
        
     Parameters:
       newPlugins - plugin names as string, or an array of string values. 
@@ -232,7 +233,6 @@ var SSCollection = new Class({
       plugin -  Plugin name as string
       
   */
-  
   addPlugin: function(action, plugin)
   {
     var pluginsForAction = this.pluginsForAction(action);
@@ -257,7 +257,6 @@ var SSCollection = new Class({
     Function: clearPlugins
       Clears all of the currently set plugins for the collection.
   */
-  
   clearPlugins: function()
   {
     this.setPlugins($H());
@@ -269,7 +268,6 @@ var SSCollection = new Class({
     Parameter:
       delegate - A delegate object. 
   */
-  
   setDelegate: function(delegate)
   {
     this.__delegate = delegate;
@@ -281,7 +279,6 @@ var SSCollection = new Class({
     Return:
       A delegate object. 
   */
-  
   delegate: function()
   {
     return this.__delegate;
@@ -293,7 +290,6 @@ var SSCollection = new Class({
     Parameters:
       val - A boolean value.
   */
-  
   setLoadRefresh: function(val)
   {
     this.__loadOnRefresh = val;
@@ -305,7 +301,6 @@ var SSCollection = new Class({
     Returns:
       A boolean value.
   */
-
   shouldLoadOnRefresh: function()
   {
     return this.__loadOnRefresh;
@@ -317,7 +312,6 @@ var SSCollection = new Class({
     Parameters:
       name - A string.
   */
-  
   setName: function(name)
   {
     this.__name = name;
@@ -329,7 +323,6 @@ var SSCollection = new Class({
     Returns:
       A string.
   */
-  
   name: function()
   {
     return this.__name;
@@ -341,7 +334,6 @@ var SSCollection = new Class({
     Parameters:
       anObject - An object.
   */
-  
   cleanObject: function(anObject)
   {
     return $H(anObject).filter(function(value, key) {
@@ -355,8 +347,6 @@ var SSCollection = new Class({
     Parameters:
       anObject - An object.
   */
-  
-  
   cleanPayload: function(payload)
   {
     if($type(payload) == 'array')
@@ -377,7 +367,6 @@ var SSCollection = new Class({
   /*
       MARKED FOR DELETION: never used -Justin 
   */
-  
   unescapeValues: function(obj)
   {
     return $H(obj).map(function(value, key) {
@@ -387,21 +376,18 @@ var SSCollection = new Class({
   /*
       MARKED FOR DELETION: never used -Justin 
   */
-  
   unescapeResult: function(ary)
   {
     return ary.map(this.unescapeValues);
   },
   /*
       Function: transact
-        Accepts an action, an array of options, and a ... If a bulk is not passed or is null, 
+        Accepts an action, an array of options, and a compiled collection. If a bulk is not passed or is null, the collection object is cleaned and the currently set delagates are applied....//||\\ 
       
       Parameters:
         action - the type of action (create, write, delete, update)
         options - An array of options to apply to the transaction.
-        bulk -    the b
-        
-        A bulk is a compiled version without any server calls/actions.
+        bulk -   A bulk is a compiled version without any server calls/actions.
         
       Returns:
         A payload object, an array of collection methods.
@@ -449,7 +435,6 @@ var SSCollection = new Class({
       return payload;
     }
   },
-  
   /*
     Function: bulkTransact
       Takes a series of methods. Incomplete implementation, does not support
@@ -471,8 +456,17 @@ var SSCollection = new Class({
       onFailure: options.onFailure
     });
   },
-  
-  
+  /*
+     Function: applyPlugins
+      Takes an action and a collection, and applies the currently set plugins to the collection. The modified collection is returned. 
+      
+     Parameters:
+       action - the type of action (create, write, delete, update)
+       data - an array. 
+       
+      Returns: 
+        A collection array. 
+   */
   applyPlugins: function(action, data)
   {
     var rdata = data;
@@ -489,119 +483,210 @@ var SSCollection = new Class({
     
     return rdata;
   },
-  
-  
+  /*
+    NOTE: MARKED FOR DELETION - justin  
+  */
   setTable: function(table)
   {
     this.__table = table;
   },
-  
-  
+  /*
+    NOTE: MARKED FOR DELETION - justin  
+  */
   table: function()
   {
     return this.__table;
   },
-  
-  
+  /*
+    Function: setProperties
+      Sets the properties property of a collection. The coloums that are to be affected in the sqlLite database.
+      
+    Parameters:
+      props - 
+  */ 
   setProperties: function(props)
   {
     this.__properties = props;
   },
-  
-  
+  /*
+    Function: properties
+      Returns properties property of a collection. 
+      
+    Returns:
+      An array.
+  */
   properties: function()
   {
     return this.__properties;
   },
-  
-  
+  /*
+    Function: setOrderBy
+      Sets the orderBy property of a collection. 
+      
+    Parameters:
+      orderBy - A string.
+  */
   setOrderBy: function(orderBy)
   {
     this.__orderBy = orderBy;
   },
-  
-
+  /*
+    Function: orderBy
+      Returns the orderBy property of a collection. 
+      
+    Returns:
+      A string.
+  */
   orderBy: function()
   {
     return this.__orderBy;
   },
-  
-  
+  /*
+    Function: setRange
+      Sets the range property of a collection. 
+      
+    Parameters:
+      range - An integer.
+  */
   setRange: function(range)
   {
     this.__range = range;
   },
-  
-  
+  /*
+    Function: range
+      Sets the range property of a collection. 
+      
+    Returns:
+       An integer.
+  */
   range: function()
   {
     return this.__range;
   },
-  
-  
+  /*
+    Function: setConstraints
+      Sets the constraints property of a collection. 
+      
+    Parameters:
+      constraints - An array.
+  */
   setConstraints: function(constraints)
   {
     this.__constraints = constraints;
   },
-  
-  
+  /*
+    Function: constraints
+      Returns the constraints property of a collection. 
+      
+    Return:
+      An array.
+  */
   constraints: function()
   {
     return this.__constraints;
   },
-  
-  
+  /*
+    Function: setArray
+      Sets the array property of a collection. 
+      
+    Parameters:
+      array - An array.
+  */
   setArray: function(array)
   {
     this.__array = array;
   },
-  
-  
+  /*
+    Function: getArray
+      Returns the array property of a collection. 
+      
+    Parameters:
+      array - An array.
+  */
   getArray: function()
   {
     return this.__array;
   },
-  
-  
+  /*
+    Function: getColumn
+      Returns a coloumn in the collections array.
+    
+    Parameters:
+      col - An integer
+    
+    Returns:
+      An object. 
+  */
   getColumn: function(col)
   {
     return this.getArray().map(function(x) {
       return x[col];
     });
   },
-  
-  
+  /*
+    Function: getColumn
+      Returns a row in the collections array.
+      
+    Parameters:
+      idx - An integer.
+      
+    Returns:
+      An object.
+  */
   get: function(idx)
   {
     return this.__array[idx];
   },
-  
-  
+  /*
+    Function: push
+      Takes an object and inserts it into the collections array.
+      
+    Parameters:
+      object - An object.
+      
+    Note:
+      See add method. Possibly redundant? - justin
+
+  */
   push: function(object)
   {
     this.__array.push(object);
   },
-  
-  
+  /*
+    NOTE: marked for deletion - justin
+  */
   setMetadata: function(metadata)
   {
     this.__metadata = metadata;
   },
-  
-  
+  /*
+    NOTE: marked for deletion - justin
+  */
   metadata: function()
   {
     return this.__metadata;
   },
-  
-  
+  /*
+    Function: length
+      Returns the length of an array, or 0 an array is not set.
+      
+    Returns:
+      An integer
+      
+  */
   length: function()
   {
     if(!this.__array) return 0;
     return this.__array.length;
   },
-  
-  
+  /*
+    Function: add 
+      Takes an object and adds it the the collections array.  Fires the onAdd and onChange events.
+      
+    Parameters:
+      An integer
+      
+  */
   add: function(obj)
   {
     this.__array.push(obj);
@@ -609,8 +694,14 @@ var SSCollection = new Class({
     this.fireEvent('onAdd');
     this.fireEvent('onChange');
   },
-  
-  
+  /*
+    Function: remove
+      Takes an index and removes the row from the array. 
+      
+    Parameters:
+      An integer
+      
+  */
   remove: function(idx)
   {
     if(!this.table())
@@ -623,8 +714,13 @@ var SSCollection = new Class({
       this.fireEvent('onChange');
     }
   },
-  
-  
+  /*
+    Function: insert
+    
+    Parameters: 
+      obj - An object.
+      idx - An integer.
+  */
   insert: function(obj, idx)
   {
     this.__array.splice(idx, 0, obj);
