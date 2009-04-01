@@ -8,7 +8,7 @@ Selectors.RegExps = {
 	tag: (/^(\w+|\*)/),
 	quick: (/^(\w+|\*)$/),
 	splitter: (/\s*([+>~\s])\s*([a-zA-Z#.*:\[])/g),
-	combined: (/\.([\w-]+)|\[([\w:]+)(?:([!*^$~|]?=)["']?(.*?)["']?)?\]|:([\w-]+)(?:\(["']?(.*?)?["']?\)|$)/g)
+	combined: (/\.([\w-]+)|\[([\w:]+)(?:([!*^$~|]?=)(["']?)([^\4]*?)\4)?\]|:([\w-]+)(?:\(["']?(.*?)?["']?\)|$)/g)
 };
 
 String.implement({
@@ -72,7 +72,7 @@ Selectors.Utils.genId = function(self){
 
 Selectors.Utils.search = function(self, expression, local){
   var splitters = [];
-
+  
   var selectors = expression.trim().replace(Selectors.RegExps.splitter, function(m0, m1, m2){
     splitters.push(m1);
     return ':)' + m2;
@@ -80,7 +80,7 @@ Selectors.Utils.search = function(self, expression, local){
 
   // allows .getElement('> selector') and .getElements('> selector')
   selectors = selectors.filter(function(selector) { return (selector != '');});
-
+  
   if(splitters.length == selectors.length){
     return self.getWindow().$$('#'+this.genId(self)+' '+expression);
   }
