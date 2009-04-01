@@ -21,6 +21,11 @@ SSListViewError.OutOfBounds = new Class({
 // ====================
 // = Class Definition =
 // ====================
+  /*
+    Class: SSListView
+      SSListView controls the display of Collection content within the console. 
+      
+  */
 
 var SSListView = new Class({
   name: "SSListView",

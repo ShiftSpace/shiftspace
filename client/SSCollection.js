@@ -394,12 +394,14 @@ var SSCollection = new Class({
   },
   /*
       Function: transact
-        Accepts
+        Accepts an action, an array of options, and a ... If a bulk is not passed or is null, 
       
       Parameters:
         action - the type of action (create, write, delete, update)
         options - An array of options to apply to the transaction.
-        bulk -    the bulk 
+        bulk -    the b
+        
+        A bulk is a compiled version without any server calls/actions.
         
       Returns:
         A payload object, an array of collection methods.
