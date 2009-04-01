@@ -81,11 +81,6 @@ Selectors.Utils.search = function(self, expression, local){
   // allows .getElement('> selector') and .getElements('> selector')
   selectors = selectors.filter(function(selector) { return (selector != '');});
   
-  console.log('splitters');
-  console.log(splitters);
-  console.log('selectors');
-  console.log(selectors);
-
   if(splitters.length == selectors.length){
     return self.getWindow().$$('#'+this.genId(self)+' '+expression);
   }
