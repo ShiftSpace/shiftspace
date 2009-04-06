@@ -143,7 +143,7 @@ var SSPageControl = new Class({
       var link = new Element('a');
       link.set('text', j);
       var newPage = new Element('span', {
-        class: 'page'
+        'class': 'page'
       });
       var divider = new Element('span');
       divider.set('text', '|');
