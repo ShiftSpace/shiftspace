@@ -759,7 +759,7 @@ var SSCollection = new Class({
     this.__array[index] = obj;
   },
   /*
-    Function: laodIndex (abstract)
+    Function: loadIndex (abstract)
         
         
     Parameters: 
@@ -814,7 +814,7 @@ var SSCollection = new Class({
     this.__readFns = [];
   },
   /*
-    Function: addOnReadFn
+    Function: addOnReadFn 
       Takes a function and adds it to the readFns array. 
       
     Parameters: 
@@ -829,6 +829,7 @@ var SSCollection = new Class({
   /*
     Function: clearOnReadFns
       Clears the readFns array.
+      
   */
   
   clearOnReadFns: function()
@@ -839,6 +840,10 @@ var SSCollection = new Class({
   /*
     Function: readIndex
       
+    Parameters:
+      index - An integer.
+      constraint - An integer. 
+      callback - A function.
   */
   
   readIndex: function(index, constraint, callback)
@@ -854,8 +859,18 @@ var SSCollection = new Class({
       }.bind(this)
     });
   },
-  
-  
+  /*
+    Function: create 
+      
+
+    Parameters:
+      data - An array.
+      options - An array.
+      
+    Returns: 
+      A payload object, an array of collection methods.
+  */
+
   create: function(data, options)
   {
     return this.transact('create', {
@@ -990,40 +1005,84 @@ var SSCollection = new Class({
   {
     
   },
-  
-  
+  /*
+    Function: onRead 
+      
+    Parameters:
+      suppressEvent - NOTE: Not being used in the function. Is it Neccessary? - Justin 
+  */  
   onRead: function(suppressEvent)
   {
     this.fireEvent('onLoad');
   },
-  
+  /*
+    Function: onCreate 
+      
+    Paramters:
+      data - An array.
+      userData - An array.
+      
+    See Also:
+      create
+  */
   
   onCreate: function(data, userData)
   {
     this.fireEvent('onCreate', {data:data, userData:userData});
   },
-  
-  
+  /*
+    Function: onDelete
+      Takes an index row in the collection and removes it from the array. Fires the onDelete event when called. 
+      
+    Parameters:
+      data - An array. NOTE: unused. - Justin
+      index - An integer.
+      
+    See Also:
+      delete
+  */
   onDelete: function(data, index)
   {
     // synchronize internal
     this.remove(index);
     this.fireEvent('onDelete', index);
   },
-  
-  
+  /*
+    Function: onUpdate
+      Merges an array of data into the passed index in the collection array. Fires the onUpdate event when called. 
+      
+    Parameters:
+      data - An array. NOTE: unused. - Justin
+      index - An integer.
+  */
   onUpdate: function(data, index)
   {
     this.__array[index] = $merge(this.__array[index], data);
     this.fireEvent('onUpdate', index);
   },
-  
+  /*
+    Function: byId 
+      Returns a row in the collection array specified by the passed id.
+      
+    Parameters:
+      id - An integer.
+    
+    Returns:
+       A row in the collection array.
+  */
   
   byId: function(id)
   {
     return this.find(function(x){return x.id == id;});
   },
-  
+  /*
+    Function: onUpdateById
+      Merges an array of data into the passed id in the collection array. Fires the onUpdateById event when called.
+      
+    Parameters: 
+      data - An array of data. 
+      id - An integer.
+  */
   
   onUpdateById: function(data, id)
   {
@@ -1031,14 +1090,27 @@ var SSCollection = new Class({
     this.__array[index] = $merge(this.__array[index], data);
     this.fireEvent('onUpdateById', index);
   },
-  
+  /*
+    Function: each
+      
+      
+    Parameters:
+      fn - A function. 
+  */
   
   each: function(fn)
   {
     this.__array.each(fn);
   },
   
-  
+  /*
+    Function: map
+      Takes a function and performs it on each row in the collection array. Returns an array containing the results of each function call. 
+      ??
+      
+    Parameters:
+      fn - A function.
+  */
   map: function(fn)
   {
     var result = []
@@ -1049,20 +1121,31 @@ var SSCollection = new Class({
     }
     return result;
   },
-  
-  
+  /*
+    Function: updateConstraints
+      Takes an array of constraints and a value, and update the constraints array.
+      ??
+      
+    Parameters:
+      constraint - An array.
+      value - An integer.
+  */
   updateConstraints: function(constraint, value)
   {
     this.setConstraints($merge(this.constraints(), constraint.assoc(value)));
   },
-  
-  
+  /*
+    Function: empty 
+      Clears the collections array. 
+  */
   empty: function()
   {
     this.setArray([]);
   },
-  
-  
+  /*
+    Function: reset
+      Clears the collections array and sets the unread attribute of the collection to true. 
+  */
   reset: function()
   {
     this.empty();
