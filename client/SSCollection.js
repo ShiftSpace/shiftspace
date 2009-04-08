@@ -285,7 +285,8 @@ var SSCollection = new Class({
   },
   /*
     Function: setLoadRefresh
-      Sets the loadOnRefresh property, which determines if the collection should be loaded in when refreshed. 
+      Sets the loadOnRefresh property, which determines if the collection
+      should be loaded in when refreshed. 
       
     Parameters:
       val - A boolean value.
@@ -458,7 +459,8 @@ var SSCollection = new Class({
   },
   /*
      Function: applyPlugins
-      Takes an action and a collection, and applies the currently set plugins to the collection. The modified collection is returned. 
+      Takes an action and a collection, and applies the currently set plugins
+      to the collection. The modified collection is returned. 
       
      Parameters:
        action - the type of action (create, write, delete, update)
@@ -499,7 +501,8 @@ var SSCollection = new Class({
   },
   /*
     Function: setProperties
-      Sets the properties property of a collection. The coloums that are to be affected in the sqlLite database.
+      Sets the properties property of a collection. The coloumns that
+      are to be affected in the sqlLite database.
       
     Parameters:
       props - 
@@ -681,11 +684,11 @@ var SSCollection = new Class({
   },
   /*
     Function: add 
-      Takes an object and adds it the the collections array.  Fires the onAdd and onChange events.
+      Takes an object and adds it the the collections array.  
+      Fires the onAdd and onChange events.
       
     Parameters:
       An integer
-      
   */
   add: function(obj)
   {
@@ -699,8 +702,7 @@ var SSCollection = new Class({
       Takes an index and removes the row from the array. 
       
     Parameters:
-      An integer
-      
+      inx - An integer
   */
   remove: function(idx)
   {
@@ -716,7 +718,10 @@ var SSCollection = new Class({
   },
   /*
     Function: insert
-    
+      Takes an object and an index, and inserts the object into 
+      the collection array at the passed index. Fires an onInsert 
+      and onChange event.
+      
     Parameters: 
       obj - An object.
       idx - An integer.
@@ -728,25 +733,44 @@ var SSCollection = new Class({
     this.fireEvent('onInsert', {object:obj, index:idx});
     this.fireEvent('onChange');
   },
-  
-  
+  /*
+    Function: move
+      Takes a fromIndex and a toIndex, and fires an onMove event 
+      
+    Parameters: 
+      fromIndex - An integer.
+      toIndex - An integer.
+  */
   move: function(fromIndex, toIndex)
   {
     this.fireEvent('onMove', {from:fromIndex, to:toIndex});
   },
-  
-  
+  /*
+    Function: set      
+      Takes an object and an index, and sets the object into the
+      collection array at the passed index. 
+      
+    Parameters: 
+      obj - An object.
+      index -  An integer.
+  */
   set: function(obj, index)
   {
     this.__array[index] = obj;
   },
-  
+  /*
+    Function: laodIndex (abstract)
+        
+        
+    Parameters: 
+      index - An integer.
+      count -  An integer.
+  */
   
   loadIndex: function(index, count)
   {
 
   },
-  
   /*
     Function: read
       Read from the collection. Accepts a callback. Also fires
@@ -759,6 +783,7 @@ var SSCollection = new Class({
       callback - a function.
       suppressEvent - a boolean value.
   */
+  
   read: function(callback, suppressEvent)
   {
     this.setIsReading(true);
@@ -778,26 +803,43 @@ var SSCollection = new Class({
       }.bind(this)
     });
   },
-  
+  /*
+    Function: initializeReadFns (private)
+      Creates a new readFns array, which stores the functions
+      
+  */
   
   initializeReadFns: function()
   {
     this.__readFns = [];
   },
-  
+  /*
+    Function: addOnReadFn
+      Takes a function and adds it to the readFns array. 
+      
+    Parameters: 
+      fn - A function.
+      
+  */
   
   addOnReadFn: function(fn)
   {
     this.__readFns.push(fn);
   },
-  
+  /*
+    Function: clearOnReadFns
+      Clears the readFns array.
+  */
   
   clearOnReadFns: function()
   {
     this.__readFns.each(function(fn){fn();});
     this.__readFns = [];
   },
-  
+  /*
+    Function: readIndex
+      
+  */
   
   readIndex: function(index, constraint, callback)
   {
