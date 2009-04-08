@@ -391,8 +391,7 @@ var SSCollection = new Class({
         bulk -   A bulk is a compiled version without any server calls/actions.
         
       Returns:
-        A payload object, an array of collection methods.
-        
+        A payload object, an array of collection methods.      
   */
   
   transact: function(action, options, bulk)
@@ -999,8 +998,15 @@ var SSCollection = new Class({
       }.bind(this)
     }, bulk);
   },
-  
-  
+  /*
+    Function: onFailure 
+      ??
+      
+    Parameter:
+      action -
+      data - 
+      index - 
+  */
   onFailure: function(action, data, index)
   {
     
