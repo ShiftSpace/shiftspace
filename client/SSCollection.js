@@ -120,8 +120,6 @@ var SSCollection = new Class({
     {
       // real DB backend
       this.setLoadRefresh(true);
-      //setTable is marked for DELETION.
-      this.setTable(this.options.table);
       this.setConstraints(this.options.constraints);
       this.setProperties(this.options.properties);
       this.setOrderBy(this.options.orderBy);
@@ -356,31 +354,8 @@ var SSCollection = new Class({
     }
     return this.cleanObject(payload);
   },
-  /*
-      MARKED FOR DELETION: never used -Justin 
-  */
-  escapeValues: function(obj)
-  {
-    return $H(obj).map(function(value, key) {
-      return escape(value);
-    }).getClean();
-  },
-  /*
-      MARKED FOR DELETION: never used -Justin 
-  */
-  unescapeValues: function(obj)
-  {
-    return $H(obj).map(function(value, key) {
-      return unescape(value);
-    }).getClean();
-  },
-  /*
-      MARKED FOR DELETION: never used -Justin 
-  */
-  unescapeResult: function(ary)
-  {
-    return ary.map(this.unescapeValues);
-  },
+
+
   /*
       Function: transact
         Accepts an action, an array of options, and a compiled collection. If a bulk is not passed or is null, the collection object is cleaned and the currently set delagates are applied....//||\\ 
@@ -484,20 +459,8 @@ var SSCollection = new Class({
     
     return rdata;
   },
-  /*
-    NOTE: MARKED FOR DELETION - justin  
-  */
-  setTable: function(table)
-  {
-    this.__table = table;
-  },
-  /*
-    NOTE: MARKED FOR DELETION - justin  
-  */
-  table: function()
-  {
-    return this.__table;
-  },
+
+
   /*
     Function: setProperties
       Sets the properties property of a collection. The coloumns that
@@ -654,20 +617,8 @@ var SSCollection = new Class({
   {
     this.__array.push(object);
   },
-  /*
-    NOTE: marked for deletion - justin
-  */
-  setMetadata: function(metadata)
-  {
-    this.__metadata = metadata;
-  },
-  /*
-    NOTE: marked for deletion - justin
-  */
-  metadata: function()
-  {
-    return this.__metadata;
-  },
+
+
   /*
     Function: length
       Returns the length of an array, or 0 an array is not set.
