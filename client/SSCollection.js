@@ -297,6 +297,7 @@ var SSCollection = new Class({
     Function: setLoadRefresh
       Returns whether the collection should be loaded in when refreshed. 
       
+      
     Returns:
       A boolean value.
   */
