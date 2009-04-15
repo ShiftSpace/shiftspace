@@ -36,7 +36,7 @@ function method_form($httpmethod, $method, $args) {
 <?php method_form('get', "query", array("href")); ?>
 <?php method_form('get', "sandbox.getvalue", array("default", "key")); ?>
 <?php method_form('get', "sandbox.setvalue", array("key", "value")); ?>
-<?php method_form('get', "shift.get", array("shiftIds")); ?>
+<?php method_form('post', "shift.get", array("shiftIds")); ?>
 <?php method_form('get', "shift.query", array("href")); ?>
 <?php method_form('get', "sandbox.proxy", array("url", "parameters")); ?>
 <?php method_form('post', "collections", array("desc_")); ?>
