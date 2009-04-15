@@ -60,10 +60,10 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     <div id="lipsum">
       <img src="logo.png" alt="logo"></img>
       <ul id="testdata" moma:metadata="event:26">
-        <li>first one</li>
-        <li>second two</li>
-        <li>third three</li>
-        <li>fourth four</li>
+        <li class="foo0">first one</li>
+        <li class="foo1">second two</li>
+        <li class="foo2">third three</li>
+        <li class="2foo">fourth four</li>
       </ul>
       <script type="text/javascript">/*javascript comment*/</script>
       <p>In <a title="Publishing" href="http://en.wikipedia.org/wiki/Publishing">publishing</a> and <a title="Graphic design" href="http://en.wikipedia.org/wiki/Graphic_design">graphic design</a>, <b>lorem ipsum</b> is common <a title="Placeholder text" class="mw-redirect" href="http://en.wikipedia.org/wiki/Placeholder_text">placeholder text</a> used to demonstrate the <a title="Graphics" href="http://en.wikipedia.org/wiki/Graphics">graphic</a> elements of a document or visual presentation, such as <a title="Font" href="http://en.wikipedia.org/wiki/Font">font</a>, <a title="Typography" href="http://en.wikipedia.org/wiki/Typography">typography</a>, and <a title="Layout" href="http://en.wikipedia.org/wiki/Layout">layout</a>. It is a form of "<a title="Greeking" href="http://en.wikipedia.org/wiki/Greeking">greeking</a>".</p>

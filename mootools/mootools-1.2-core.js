@@ -2470,7 +2470,7 @@ Selectors.Utils = {
 	  }
 		var m, parsed = {classes: [], pseudos: [], attributes: []};
 		while ((m = Selectors.RegExps.combined.exec(selector))){
-			var cn = m[1], an = m[2], ao = m[3], av = m[4], pn = m[5], pa = m[6];
+			var cn = m[1], an = m[2], ao = m[3], av = m[5], pn = m[6], pa = m[7];
 			if (cn){
 				parsed.classes.push(cn);
 			} else if (pn){

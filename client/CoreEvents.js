@@ -177,4 +177,4 @@ var SSNotificationCenterClass = new Class({
   Implements: [Events, Options]
 });
 
-var SSNotificationCenter = new SSNotificationCenter();
+var SSNotificationCenter = new SSNotificationCenterClass();
