@@ -923,7 +923,6 @@ var SSCollection = new Class({
     }
     return -1;
   },
-  
   /*
     Function: find
       Returns the first item matching the passed in predicated:
