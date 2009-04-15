@@ -137,7 +137,7 @@ class Shift {
   }
   
   public function get() {
-    $shiftIdsStr = $_POST['shiftIds'];
+    $shiftIdsStr = $_REQUEST['shiftIds'];
     $shiftIds = explode(',', $shiftIdsStr);
     $theShifts = array();
     
