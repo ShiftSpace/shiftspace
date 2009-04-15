@@ -23,6 +23,7 @@ SSCellError.NoLock = new Class({
   Implements: SSExceptionPrinter
 });
 
+// DELETE
 SSCellError.MissingAccessor = new Class({
   name:"SSCellError.MissingAccessor",
   Extends: SSCellError,
