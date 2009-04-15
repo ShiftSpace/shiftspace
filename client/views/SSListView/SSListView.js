@@ -371,13 +371,6 @@ var SSListView = new Class({
   setData: function(newData)
   {
     this.__data = newData;
-    //MARKED FOR DELETION - add.view method is never being used -Justin
-    if(newData.addView)
-    {
-      newData.addView(this);
-    }
-    //END OF DELETION
-  
     this.setNeedsDisplay(true);
   },
     
@@ -398,14 +391,6 @@ var SSListView = new Class({
     return this.__data;
   },
   
-  /*
-     Note:
-      MARKED FOR DELETION: Redundant function, see data() above -Justin
-  */
-  getData: function()
-  {
-    return this.data();
-  },
   
   /*
     Function: checkPendingCollection 
@@ -556,7 +541,7 @@ var SSListView = new Class({
       
       if(this.hasCollection())
       {
-        this.getData()['create']($merge(newItem, addData), {
+        this.data()['create']($merge(newItem, addData), {
           userData:
           {
             atIndex: (options && options.atIndex)
@@ -785,7 +770,7 @@ var SSListView = new Class({
     {
       if(this.hasCollection())
       {
-        if(!noArrayUpdate) this.getData().update(cellData, index);
+        if(!noArrayUpdate) this.data().update(cellData, index);
       }
       else
       {
@@ -899,37 +884,7 @@ var SSListView = new Class({
     this.data()[index] = cellData;
   },
   
-  /*
-      //MARKED FOR DELETION -Justin
-    
-  */
-  move: function(fromIndex, toIndex)
-  {
-    this.boundsCheck(fromIndex);
-    this.boundsCheck(toIndex);
-    this.__move__(fromIndex, toIndex);
-    this.refresh();
-  },
   
-  /*
-      //MARKED FOR DELETION -Justin
-      
-  */
-  __move__: function(fromIndex, toIndex)
-  {
-    if(this.data().move)
-    {
-      this.data().move(fromIndex, toIndex);
-    }
-    else
-    {
-      var data = this.get(fromIndex);
-      this.__remove__(fromIndex);
-      this.__insert__(data, toIndex);
-    }
-  },
-  
-
   /*
     Function: remove
       Accepts an cell index, and removes the cell from the collection
@@ -959,7 +914,7 @@ var SSListView = new Class({
     {
       if(this.hasCollection())
       {
-        this.getData()['delete'](index);
+        this.data()['delete'](index);
         return;
       }
       else

@@ -120,8 +120,6 @@ var SSCollection = new Class({
     {
       // real DB backend
       this.setLoadRefresh(true);
-      //setTable is marked for DELETION.
-      this.setTable(this.options.table);
       this.setConstraints(this.options.constraints);
       this.setProperties(this.options.properties);
       this.setOrderBy(this.options.orderBy);
@@ -299,6 +297,7 @@ var SSCollection = new Class({
     Function: setLoadRefresh
       Returns whether the collection should be loaded in when refreshed. 
       
+      
     Returns:
       A boolean value.
   */
@@ -356,31 +355,8 @@ var SSCollection = new Class({
     }
     return this.cleanObject(payload);
   },
-  /*
-      MARKED FOR DELETION: never used -Justin 
-  */
-  escapeValues: function(obj)
-  {
-    return $H(obj).map(function(value, key) {
-      return escape(value);
-    }).getClean();
-  },
-  /*
-      MARKED FOR DELETION: never used -Justin 
-  */
-  unescapeValues: function(obj)
-  {
-    return $H(obj).map(function(value, key) {
-      return unescape(value);
-    }).getClean();
-  },
-  /*
-      MARKED FOR DELETION: never used -Justin 
-  */
-  unescapeResult: function(ary)
-  {
-    return ary.map(this.unescapeValues);
-  },
+
+
   /*
       Function: transact
         Accepts an action, an array of options, and a compiled collection. If a bulk is not passed or is null, the collection object is cleaned and the currently set delagates are applied....//||\\ 
@@ -484,27 +460,15 @@ var SSCollection = new Class({
     
     return rdata;
   },
-  /*
-    NOTE: MARKED FOR DELETION - justin  
-  */
-  setTable: function(table)
-  {
-    this.__table = table;
-  },
-  /*
-    NOTE: MARKED FOR DELETION - justin  
-  */
-  table: function()
-  {
-    return this.__table;
-  },
+
+
   /*
     Function: setProperties
       Sets the properties property of a collection. The coloumns that
       are to be affected in the sqlLite database.
       
     Parameters:
-      props - 
+      props  - An array of properties.  
   */ 
   setProperties: function(props)
   {
@@ -655,20 +619,6 @@ var SSCollection = new Class({
     this.__array.push(object);
   },
   /*
-    NOTE: marked for deletion - justin
-  */
-  setMetadata: function(metadata)
-  {
-    this.__metadata = metadata;
-  },
-  /*
-    NOTE: marked for deletion - justin
-  */
-  metadata: function()
-  {
-    return this.__metadata;
-  },
-  /*
     Function: length
       Returns the length of an array, or 0 an array is not set.
       
@@ -781,6 +731,9 @@ var SSCollection = new Class({
     Parameters:
       callback - a function.
       suppressEvent - a boolean value.
+      
+    Returns: 
+      A payload object.
   */
   
   read: function(callback, suppressEvent)
@@ -839,6 +792,7 @@ var SSCollection = new Class({
   /*
     Function: readIndex
       
+      
     Parameters:
       index - An integer.
       constraint - An integer. 
@@ -869,7 +823,6 @@ var SSCollection = new Class({
     Returns: 
       A payload object, an array of collection methods.
   */
-
   create: function(data, options)
   {
     return this.transact('create', {
@@ -923,7 +876,6 @@ var SSCollection = new Class({
     }
     return -1;
   },
-  
   /*
     Function: find
       Returns the first item matching the passed in predicated:
@@ -946,7 +898,17 @@ var SSCollection = new Class({
       return this.get(index);
     }
   },
-  
+  /*
+    Function: delete 
+      Delete from the collection. Accepts the index to be deleted in the collection.
+      Returns a payload object. Also fires an onComplete and onFailure event. 
+      
+    Parameters: 
+      index - An integer.
+      
+    Returns: 
+      A payload object, an array of collection methods.
+  */
   
   'delete': function(index)
   {
@@ -963,8 +925,23 @@ var SSCollection = new Class({
       }.bind(this)
     });
   },
-  
-  
+  /*
+    Function: update
+      
+      
+    Parameters:
+      data - An array. 
+      index - An integer.
+      bulk - A bulk is a compiled version without any server calls/actions.
+      
+    Returns:
+      A payload object.
+      
+    See Also: 
+      updateById
+      
+  */
+
   update: function(data, index, bulk)
   {
     var indexConstraint = null;
@@ -982,8 +959,20 @@ var SSCollection = new Class({
       }.bind(this)
     }, bulk);
   },
+  /*
+    Function: updateById
+    
+    Parameters:
+      data - An array. 
+      id - An integer.
+      bulk - A bulk is a compiled version without any server calls/actions.
+
+    Returns:
+      A payload object.
   
-  
+    See Also: 
+      update
+  */
   updateById: function(data, id, bulk)
   {
     return this.transact('update', {
@@ -999,13 +988,12 @@ var SSCollection = new Class({
     }, bulk);
   },
   /*
-    Function: onFailure 
-      ??
+    Function: onFailure (abstract)
       
     Parameter:
-      action -
-      data - 
-      index - 
+      action - The type of action (create, write, delete, update)
+      data -   An array.
+      index -  An integer.
   */
   onFailure: function(action, data, index)
   {
@@ -1013,6 +1001,7 @@ var SSCollection = new Class({
   },
   /*
     Function: onRead 
+      Fires the onLoad event 
       
     Parameters:
       suppressEvent - NOTE: Not being used in the function. Is it Neccessary? - Justin 
@@ -1022,7 +1011,8 @@ var SSCollection = new Class({
     this.fireEvent('onLoad');
   },
   /*
-    Function: onCreate 
+    Function: onCreate (private)
+      Called in the create function. Fires the onCreate event after create has completed. 
       
     Paramters:
       data - An array.
@@ -1037,7 +1027,7 @@ var SSCollection = new Class({
     this.fireEvent('onCreate', {data:data, userData:userData});
   },
   /*
-    Function: onDelete
+    Function: onDelete (private)
       Takes an index row in the collection and removes it from the array. Fires the onDelete event when called. 
       
     Parameters:
@@ -1054,7 +1044,7 @@ var SSCollection = new Class({
     this.fireEvent('onDelete', index);
   },
   /*
-    Function: onUpdate
+    Function: onUpdate (private)
       Merges an array of data into the passed index in the collection array. Fires the onUpdate event when called. 
       
     Parameters:
@@ -1112,7 +1102,6 @@ var SSCollection = new Class({
   /*
     Function: map
       Takes a function and performs it on each row in the collection array. Returns an array containing the results of each function call. 
-      ??
       
     Parameters:
       fn - A function.
@@ -1130,7 +1119,6 @@ var SSCollection = new Class({
   /*
     Function: updateConstraints
       Takes an array of constraints and a value, and update the constraints array.
-      ??
       
     Parameters:
       constraint - An array.
