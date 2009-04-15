@@ -347,6 +347,7 @@ var SandalphonClass = new Class({
       else
       {
         // otherwise JSON decode it in safe mode
+        // FIXME: should be in safe mode - David
         var outletBinding = JSON.decode(outlet);
         outletTarget = outletBinding.target;
         sourceName = outletBinding.name;

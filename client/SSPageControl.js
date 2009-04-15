@@ -45,7 +45,7 @@ var SSPageControl = new Class({
   filterItem: function(x, index)
   {
     if(index == undefined) return false;
-    return !(index >= this.lowerBound()) || !(index <= this.upperBound());
+    return !(index >= this.lowerBound()) || !(index < this.upperBound());
   },
   
   
