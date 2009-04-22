@@ -177,15 +177,14 @@ var ShiftSpace = new (function() {
 
         if (json.data.username)
         {
+          SSLog('User is loggedin', SSLogForce);
+          
           // Set private user variable
           ShiftSpace.User.setUsername(json.data.username);
           ShiftSpace.User.setEmail(json.data.email);
 
           // fire user login for the Console
-          if (__consoleIsWaiting__)
-          {
-            SSFireEvent('onUserLogin', {status:1});
-          }
+          SSFireEvent('onUserLogin', {status:1});
 
           // make sure default shift status preference is set
           SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));

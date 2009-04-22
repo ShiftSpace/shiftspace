@@ -67,7 +67,7 @@ var SSConsole = new Class({
       requiredProperties: ['username']
     });
     
-    SSLog('Done with initialization', SSLogMessage);
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>> Done with initialization', SSLogForce);
   },
   
   
@@ -94,13 +94,32 @@ var SSConsole = new Class({
           SSUninstallAllSpaces();
         });
       }
+      
+      if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled())
+      {
+        this.handleLogin();
+      }
     }
+  },
+  
+  
+  setLoginHandled: function(value)
+  {
+    this.__loginHandled = value;
+  },
+  
+  
+  loginHandled: function()
+  {
+    return this.__loginHandled;
   },
 
 
   handleLogin: function()
   {
-    console.log('HANDLE LOGIN');
+    SSLog('Handle login', SSLogForce);
+    this.setLoginHandled(true);
+    
     // empty the login form
     this.emptyLoginForm();
     // hide the login tab
@@ -124,6 +143,8 @@ var SSConsole = new Class({
 
   handleLogout: function()
   {
+    this.setLoginHandled(false);
+    
     // empty the login form
     this.emptyLoginForm();
     // reveal the login tab
