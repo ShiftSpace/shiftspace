@@ -24,7 +24,7 @@ function SSKeyDownHandler(_event)
   var event = new Event(_event);
   var now = new Date();
 
-  //SSLog('keyDownHandler');
+  SSLog('SSKeyDownHandler');
 
   // Try to prevent accidental shift+space activation by requiring a 500ms
   //   lull since the last keypress
@@ -120,6 +120,7 @@ function SSKeyDownHandler(_event)
 function SSKeyUpHandler(_event) 
 {
   var event = new Event(_event);
+  console.log('SSKeyUpHandler');
   // If the user is letting go of the shift key, hide the menu and reset
   if (event.code == 16) 
   {
@@ -140,11 +141,12 @@ function SSKeyUpHandler(_event)
 function SSKeyPressHandler(_event)
 {
   var event = new Event(_event);
-  
+  console.log('SSKeyPressHandler');
   // Cancel if a keydown already picked up the shift + space
   if (__keyState__.cancelKeyPress) 
   {
     __keyState__.cancelKeyPress = false;
+
     event.stopPropagation();
     event.preventDefault();
   }
