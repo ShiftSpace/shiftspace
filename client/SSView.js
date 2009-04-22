@@ -124,15 +124,13 @@ var SSView = new Class({
   setup: function() {},
   
   
-  beforeAwake: function(context)
-  {
-    if(this.options.delegate)
-    {
-      this.setDelegate(SSControllerForNode($(this.options.delegate)));
-    }
-  },
-  
-  
+  /*
+    __awake__ (private):
+      Private method, handles view refreshing event chaining.
+      
+    Parameters:
+      context - a window object or DOM element.
+  */
   __awake__: function(context)
   {
     var superview = this.getSuperView(context);
@@ -143,6 +141,15 @@ var SSView = new Class({
         if(!this.needsDisplay()) return;
         this.refreshAndFire();
       }.bind(this));
+    }
+  },
+  
+  
+  beforeAwake: function(context)
+  {
+    if(this.options.delegate)
+    {
+      this.setDelegate(SSControllerForNode($(this.options.delegate)));
     }
   },
   

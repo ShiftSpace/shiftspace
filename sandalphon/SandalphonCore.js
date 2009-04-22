@@ -5,14 +5,19 @@
 
 var SandalphonClass = new Class({
 
-  initialize: function(attribute)
+  initialize: function()
   {
     // for analyzing fragments of markup
     this.setFragment(new Element('div'));
     this.outletBindings = [];
   },
   
-  
+  /*
+    Function: reset
+      Reset Sandalphon. This wipes out any and all outlet
+      bindings. It clears the controllers table and clears
+      the object table.
+  */
   reset: function()
   {
     this.outletBindings = [];
@@ -20,7 +25,17 @@ var SandalphonClass = new Class({
     SSClearObjects();
   },
   
-  
+  /*
+    Function: convertToFragment
+      Converts a markup to into an HTML fragment.
+      
+    Parameters:
+      markup - an string of HTML markup string.
+      ctxt - a context, a window object.
+      
+    Returns:
+      a DOM element.
+  */
   convertToFragment: function(markup, ctxt)
   {
     var context = ctxt || window;
@@ -65,6 +80,14 @@ var SandalphonClass = new Class({
       Returns via the callback an object which has two properties, 'interface' and 'styles'.
       'styles' can be added to the document via Sandalphon.addStyle. 'interface' is
       a string which should be used with the innerHTML or the MooTools set html form.
+      This also processes the HTML file with sandalphon.py.
+      
+    Parameters:
+      path - a path to a file, do not include the .html or .css extension. Should be absolute from the ShiftSpace directory.
+      callback - the callback handler to which the user interface object will get passed to.
+      
+    See Also:
+      loadFile
   */
   compileAndLoad: function(path, callback)
   {
@@ -89,10 +112,10 @@ var SandalphonClass = new Class({
 
   /*
     Function: loadFile
-      Loads an interface file from the speficied path.
+      Loads an interface file from the speficied path, does not compile.
     
     Parameters:
-      path - a file path as string.  This path should be absolute from the root ShiftSpace directory.
+      path - a file path as string. This path should be absolute from the root ShiftSpace directory.
   */
   load: function(path, callback)
   {
@@ -159,7 +182,14 @@ var SandalphonClass = new Class({
     }
   },
   
-  
+  /*
+    Function: addStyle
+      Adds a style string to the document with a dynamically added style element.
+      
+    Parameters:
+      css - a string of valid CSS.
+      ctxt - a window object where the style will be added.
+  */
   addStyle: function(css, ctxt) 
   {
     var context = ctxt || window;
@@ -205,13 +235,18 @@ var SandalphonClass = new Class({
     }
   },
   
-  
+  /*
+    Function: activate
+      Activates a context. This will find all uiclass backed DOM elements
+      and instantiate any controllers with that matching DOM element. Also
+      binds any outlets. Also call awake on every object.
+    
+    Parameters:
+      ctxt - a window object or DOM element.
+  */
   activate: function(ctxt)
   {
     var context = ctxt || window;
-
-    SSLog('>>>>>>>>>>>>>>>>>> activate', SSLogSandalphon);
-    
     // First generate the outlet bindings
     this.generateOutletBindings(context);
     // First instantiate all controllers
@@ -221,7 +256,15 @@ var SandalphonClass = new Class({
     this.awakeObjects(context);
   },
   
-  
+  /*
+    Function: associate
+      Takes a controller and valid HTML markup and creates
+      a DOM element and attaches a controller.
+      
+    Parameters:
+      controller - a Javascript controller object, generally SSView or a subclass.
+      interface - a string of valid HTML markup.
+  */
   associate: function(controller, interface)
   {
     controller.element = Sandalphon.convertToFragment(interface);
@@ -229,10 +272,12 @@ var SandalphonClass = new Class({
     return controller.element;
   },
   
-  
   /*
     Function: instantiateControllers
       Instantiate any backing JS view controllers for the interface.
+      
+    Parameters:
+      ctxt - a window object or a DOM element.
   */
   instantiateControllers: function(ctxt)
   {
@@ -246,7 +291,6 @@ var SandalphonClass = new Class({
     // instantiate all objects
     views.each(function(aView) {
       var theClass = aView.getProperty('uiclass');
-      SSLog('=========================================');
       SSLog('instantiating ' + theClass, SSLogSandalphon);
       new ShiftSpaceUI[theClass](aView, {
         context: context
@@ -254,12 +298,21 @@ var SandalphonClass = new Class({
       SSLog('instantation complete');
     });
     
-    // notify all listeners
-    SSLog('Notifying all listeners');
     views.each(SSNotifyInstantiationListeners);
   },
   
-  
+  /*
+    contextQuery:
+      A function which will run the MooTools $$ function against any
+      object, whether a Window object or a DOM element.
+      
+    Parameters:
+      context - a window object or DOM element.
+      sel - a valid CSS3 selector that is supported by MooTools.
+      
+    Returns:
+      An array of DOM nodes. See the $$ in the MooTools documentation.
+  */
   contextQuery: function(context, sel)
   {
     return (context.$$ && context.$$(sel)) ||
@@ -267,7 +320,14 @@ var SandalphonClass = new Class({
            [];
   },
   
-  
+  /*
+    generateOutletBindings:
+      Creates the outlet bindings for a context. Finds all the outlet
+      mappings and associates them to a target controller.
+      
+    Parameters:
+      ctxt - a  window object or DOM element.
+  */
   generateOutletBindings: function(ctxt)
   {
     // grab the right context, grab all outlets
@@ -305,7 +365,10 @@ var SandalphonClass = new Class({
     }.bind(this));
   },
   
-  
+  /*
+    bindOutlets:
+      Binds all controllers and/or elements to the target controller.
+  */
   bindOutlets: function()
   {
     // bind each outlet
@@ -348,7 +411,15 @@ var SandalphonClass = new Class({
     SSLog(this.outletBindings, SSLogSandalphon);
   },
   
-  
+  /*
+    awakeObjects:
+      Call beforeAwake, awake, and afterAwake on all instantiated controllers.
+      All of an object's bindings are guaranteed to be bound by awake. If you wish
+      to access the bindings of bound objects you must do this from afterAwake.
+    
+    Parameters:
+      context - a window object or DOM element.
+  */
   awakeObjects: function(context)
   {
     // set up superview relationships
