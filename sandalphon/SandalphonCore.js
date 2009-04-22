@@ -10,68 +10,14 @@ var SandalphonClass = new Class({
     // for analyzing fragments of markup
     this.setFragment(new Element('div'));
     this.outletBindings = [];
-    this.contextHash = $H();
   },
   
   
   reset: function()
   {
     this.outletBindings = [];
-    this.contextHash = $H();
     SSClearControllersTable();
     SSClearObjects();
-  },
-  
-  /*
-    Function: _genId
-      Generate an object id.  Used for debugging.  The instance is indentified by this in the global
-      ShiftSpaceObjects hash.
-  */
-  _genContextId: function()
-  {
-    return ('ctxtid_'+(Math.round(Math.random()*1000000+(new Date()).getMilliseconds())));
-  },
-  
-  
-  getContextId: function(ctxt)
-  {
-    if(!ctxt.ssctxtid)
-    {
-      ctxt.ssctxtid = this._genContextId();
-    }
-    return ctxt.ssctxtid;
-  },
-  
-
-  contextForId: function(id)
-  {
-    return this.contextHash.get(id).context;
-  },
-  
-  
-  internContext: function(ctxt)
-  {
-    var ctxtId = this.getContextId(ctxt);
-    if(!this.contextHash.get(ctxtId))
-    {
-      // default isReady to true, because some contexts aren't activated
-      this.contextHash.set(ctxtId, {isReady:true, context:ctxt});
-    }
-    return ctxtId;
-  },
-  
-  
-  contextIsReady: function(ctxt)
-  {
-    // intern the context just in case
-    this.internContext(ctxt);
-    return this.contextHash.get(this.getContextId(ctxt)).isReady;
-  },
-  
-  
-  setContextIsReady: function(ctxtid, val)
-  {
-    this.contextForId(ctxtid).isReady = val;
   },
   
   
@@ -86,9 +32,6 @@ var SandalphonClass = new Class({
     // TODO: generalize to return markup that doesn't have a root node
     var markupFrag = $(fragment.getFirst().dispose());
 
-    //console.log('convertToFragment');
-    //console.log(markupFrag.getProperty('id'));
-    
     // destroy the temporary fragment
     fragment.destroy();
     
@@ -116,7 +59,13 @@ var SandalphonClass = new Class({
     this.__fragment__ = frag;
   },
   
-  
+  /*
+    Function: compileAndLoad
+      Takes a path to a Sandalphon resource (a .html and .css file with the same name)
+      Returns via the callback an object which has two properties, 'interface' and 'styles'.
+      'styles' can be added to the document via Sandalphon.addStyle. 'interface' is
+      a string which should be used with the innerHTML or the MooTools set html form.
+  */
   compileAndLoad: function(path, callback)
   {
     var request = new Request({
@@ -153,7 +102,7 @@ var SandalphonClass = new Class({
     SSLog("Sandalphon LOAD " + path, SSLogSandalphon);
     
     var server = (SSInfo && SSInfo().server) || '..';
-    //console.log('load!');
+
     // load the interface file
     if(typeof SandalphonToolMode != 'undefined')
     {
@@ -260,11 +209,7 @@ var SandalphonClass = new Class({
   activate: function(ctxt)
   {
     var context = ctxt || window;
-    
-    // internalize this context
-    var ctxtid = this.internContext(context);
-    this.setContextIsReady(ctxtid, false);
-    
+
     SSLog('>>>>>>>>>>>>>>>>>> activate', SSLogSandalphon);
     
     // First generate the outlet bindings
@@ -274,9 +219,6 @@ var SandalphonClass = new Class({
     // Initialize all outlets
     this.bindOutlets(context);
     this.awakeObjects(context);
-    
-    // the context is ready now
-    this.setContextIsReady(ctxtid, true);
   },
   
   
@@ -530,7 +472,6 @@ var SandalphonToolClass = new Class({
    
    loadUI: function(ui)
    {
-     //console.log(ui);
      // empty it out first
      $('SSSandalphonContainer').empty();
      // Add the style
