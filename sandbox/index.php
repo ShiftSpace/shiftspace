@@ -43,7 +43,7 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     <script src="../mootools/mootools-1.2-more.js" type="text/javascript"></script>
     <script src="GreaseMonkeyApi.js" type="text/javascript"></script>
     <script src="../client/Videobox.js" type="text/javascript"></script>
-    <script src="../builds/shiftspace.sandbox.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../builds/shiftspace.sandbox.js" type="text/javascript"></script>
     <!--<script src="../client/Actions.js" type="text/javascript"></script>-->
     <style type="text/css">
     .first

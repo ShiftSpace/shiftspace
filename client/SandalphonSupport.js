@@ -5,6 +5,14 @@
 // @dependencies      SandalphonCore
 // ==/Builder==
 
+var SSSandalphonError = SSException;
+
+SSSandalphonError.NoControllerForCSSId = new Class({
+  name: "SSSandalphonError.NoSuchSubView",
+  Extends: SSSandalphonError,
+  Implements: SSExceptionPrinter
+});
+
 var SSInstantiationListeners = {};
 function SSAddInstantiationListener(element, listener)
 {
@@ -59,6 +67,12 @@ function SSSetControllerForNode(controller, _node)
 function SSControllerForNode(_node)
 {
   var node = $(_node);
+  
+  if(node == null)
+  {
+    throw new SSSandalphonError.NoControllerForCSSId(new Error(), "No controller for element " + _node);
+  }
+  
   return __controllers__.get(node.getProperty('id')) ||
          (node.getProperty('uiclass') && new SSViewProxy(node)) ||
          null;
