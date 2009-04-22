@@ -240,7 +240,7 @@ $proxymessage = "<div id='SSProxyMessage' class='ShiftSpaceElement'>
 		view original page
 	</a>";
 	
-$result = preg_replace("/<\/html>/", $proxymessage."</html>", $result);
+$result = preg_replace("/<\/html>/i", $proxymessage."</html>", $result);
 
 echo $result;
 
