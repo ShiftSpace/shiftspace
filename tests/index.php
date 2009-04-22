@@ -41,19 +41,6 @@
               <td>
                 <input id="loadTestInput" type="text" value="SSDefaultTest">
                 </input>
-                <label for="env">Environment:</label>
-                <select id="env">
-                  <?php
-                  $envs = scandir('../config/env');
-
-                  foreach ($envs as $envfile) {
-                    if (substr($envfile, -5) == '.json') {
-                      $env = substr($envfile, 0, strlen($envfile) - 5);
-                      echo "<option value=$env>$env</option>\n";
-                    }
-                  }
-                  ?>
-                </select>
                 <input id="loadTest" type="button" name="Load & Run" value="Load & Run">
                 </input>
               </td>
