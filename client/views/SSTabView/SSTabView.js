@@ -222,7 +222,7 @@ var SSTabView = new Class({
   */
   selectTabByName: function(name)
   {
-    this.selectTab(this.indexOfTabByName(name));
+    return this.selectTab(this.indexOfTabByName(name));
   },
   
   /*
