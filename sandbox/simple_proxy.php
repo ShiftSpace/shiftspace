@@ -223,7 +223,7 @@ foreach ($shift_ids as $an_id)
     </script>";
 }
 
-$result = preg_replace("/<\/head>/",$ShiftSpace . "</head>", $result);
+$result = preg_replace("/<\/head>/i",$ShiftSpace . "</head>", $result);
 
 $proxymessage = "<div id='SSProxyMessage' class='ShiftSpaceElement'>
 	<div id='SSProxyMessageLeft'>
