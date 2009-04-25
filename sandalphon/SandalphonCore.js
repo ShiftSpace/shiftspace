@@ -3,6 +3,15 @@
 // @package           System
 // ==/Builder==
 
+var SSSandalphonError = SSException;
+
+SSMultiViewError.NoSuchResource = new Class({
+  name: "SSMultiViewError.NoSuchResource",
+  Extends: SSSandalphonError,
+  Implements: SSExceptionPrinter
+});
+
+
 var SandalphonClass = new Class({
 
   initialize: function()
