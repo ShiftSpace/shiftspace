@@ -31,6 +31,7 @@ var SandalphonTest = new Class({
     this.assertEqual(node.getElement('p').get('text'), "Hello world!");
   },
   
+  
   testCompileAndLoad: function()
   {
     this.doc("Compile and load an interface file.");
@@ -51,6 +52,7 @@ var SandalphonTest = new Class({
       
     }.bind(this));
   },
+
 
   testBindOutlets: function()
   {
@@ -73,30 +75,28 @@ var SandalphonTest = new Class({
       
     }.bind(this));
   },
-
-  // has to come last, since this realy is asynchronous
-  testConvertToFragmentIframe: function()
+  
+  
+  testAwake: function()
   {
-    this.doc("Convert a string fragment into html checking to see that it was created in an iFrame.");
-    
-    var frame = new IFrame({
-      id:"SandalphonTestFrame", 
-    });
+    this.doc("Check that all controllers woke up.");
     
     var hook = this.startAsync();
     
-    $('SSTestRunnerStage').grab(frame);
-    
-    frame.addEvent('load', function() {
-
-      var node = Sandalphon.convertToFragment("<div><p>Hello world!</p></div>", frame.contentWindow);
+    Sandalphon.compileAndLoad('tests/SandalphonTest/SandalphonTest1', function(ui) {
       
-      this.assertEqual(node.get('tag'), 'div', hook);
-      this.assertEqual(node.getElement('p').get('text'), "Hello world!", hook);
-      this.assertEqual(node.getDocument(), frame.contentWindow.document, hook);
-      this.assertEqual(node.getWindow(), frame.contentWindow, hook);
+      Sandalphon.addStyle(ui.styles);      
+      var element = Sandalphon.convertToFragment(ui.interface);
+      $('SSTestRunnerStage').grab(element);
+      Sandalphon.activate($('SSTestRunnerStage'));
       
-      this.endAsync(hook);      
+      var outlet = ShiftSpaceNameTable.MainView.outlets().get('TestTabView');
+      
+      this.assert(ShiftSpaceNameTable.MainView.isAwake(), hook);
+      this.assert(ShiftSpaceNameTable.TestTabView.isAwake(), hook);
+      
+      this.endAsync(hook);
+      
     }.bind(this));
   }
 
