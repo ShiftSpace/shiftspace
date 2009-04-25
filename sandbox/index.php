@@ -39,8 +39,8 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
   	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.5.3/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
     -->
     <link rel="stylesheet" href="style.css" type="text/css"></link>
-    <script src="../mootools/mootools-1.2-core.js" type="text/javascript"></script>
-    <script src="../mootools/mootools-1.2-more.js" type="text/javascript"></script>
+    <script src="../mootools/mootools-1.2.2-core.js" type="text/javascript"></script>
+    <script src="../mootools/mootools-1.2.2.1-more.js" type="text/javascript"></script>
     <script src="GreaseMonkeyApi.js" type="text/javascript"></script>
     <script src="../client/Videobox.js" type="text/javascript"></script>
     <script src="../builds/shiftspace.sandbox.js" type="text/javascript"></script>

@@ -22,3 +22,9 @@ config/packages.json
 config/tests.json
 momasocialbar/
 
+sandalphon/sandalphon.pyc
+mootools/mootools-1.2-core.js.bak2
+builder/preprocess.pyc
+builder/preprocess.pyc
+shiftspace.tmproj
+server/.DS_Store
