@@ -5,8 +5,8 @@
 
 var SSSandalphonError = SSException;
 
-SSMultiViewError.NoSuchResource = new Class({
-  name: "SSMultiViewError.NoSuchResource",
+SSSandalphonError.NoSuchResource = new Class({
+  name: "SSSandalphonError.NoSuchResource",
   Extends: SSSandalphonError,
   Implements: SSExceptionPrinter
 });
@@ -112,7 +112,6 @@ var SandalphonClass = new Class({
       },
       onFailure: function(responseText, responseXml)
       {
-        
       }
     });
     request.send();

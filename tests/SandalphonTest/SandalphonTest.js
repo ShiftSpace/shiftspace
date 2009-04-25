@@ -12,12 +12,12 @@ var SandalphonTest = new Class({
   setup: function()
   {
     Sandalphon.reset();
+    $('SSTestRunnerStage').empty();
   },
   
   
   teardown: function()
   {
-    
   },
   
   
@@ -31,7 +31,30 @@ var SandalphonTest = new Class({
     this.assertEqual(node.getElement('p').get('text'), "Hello world!");
   },
   
+  testCompileAndLoad: function()
+  {
+    this.doc("Compile and load an interface file.");
+    
+    var hook = this.startAsync();
+    
+    // TODO: throw an error if file not found
+    Sandalphon.compileAndLoad('tests/SandalphonTest/SandalphonTest1', function(ui) {
+
+      Sandalphon.addStyle(ui.styles);      
+      var element = Sandalphon.convertToFragment(ui.interface);
+      $('SSTestRunnerStage').grab(element);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      
+      this.assert(ShiftSpaceNameTable.MainView != null, hook);
+      this.assert(ShiftSpaceNameTable.TestTabView != null, hook);
+      
+      this.endAsync(hook);
+      
+    }.bind(this));
+  }, 
   
+  // has to come last, since this realy is asynchronous
+  /*
   testConvertToFragmentIframe: function()
   {
     this.doc("Convert a string fragment into html checking to see that it was created in an iFrame.");
@@ -56,19 +79,7 @@ var SandalphonTest = new Class({
       this.endAsync(hook);
       
     }.bind(this));
-  },
-  
-  
-  testCompileAndLoad: function()
-  {
-    this.doc("Compile and load an interface file.");
-    
-    var hook = this.startAsync();
-    
-    Sandalphon.compileAndLoad('tests/SandalphonTest/SandalphonTest', function(ui) {
-      
-      this.endAsync(hook);
-    }.bind(this));
   }
+  */
 
 });
