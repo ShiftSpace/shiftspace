@@ -16,7 +16,7 @@ var SandalphonTest = new Class({
   },
   
   
-  teardown: function()
+  tearDown: function()
   {
   },
   
@@ -37,9 +37,8 @@ var SandalphonTest = new Class({
     
     var hook = this.startAsync();
     
-    // TODO: throw an error if file not found
     Sandalphon.compileAndLoad('tests/SandalphonTest/SandalphonTest1', function(ui) {
-
+      
       Sandalphon.addStyle(ui.styles);      
       var element = Sandalphon.convertToFragment(ui.interface);
       $('SSTestRunnerStage').grab(element);
@@ -51,10 +50,31 @@ var SandalphonTest = new Class({
       this.endAsync(hook);
       
     }.bind(this));
-  }, 
-  
+  },
+
+  testBindOutlets: function()
+  {
+    this.doc("Check that outlets get bound.");
+    
+    var hook = this.startAsync();
+    
+    Sandalphon.compileAndLoad('tests/SandalphonTest/SandalphonTest1', function(ui) {
+      
+      Sandalphon.addStyle(ui.styles);      
+      var element = Sandalphon.convertToFragment(ui.interface);
+      $('SSTestRunnerStage').grab(element);
+      Sandalphon.activate($('SSTestRunnerStage'));
+      
+      var outlet = ShiftSpaceNameTable.MainView.outlets().get('TestTabView');
+      
+      this.assertEqual(ShiftSpaceNameTable.TestTabView, outlet, hook);
+      
+      this.endAsync(hook);
+      
+    }.bind(this));
+  },
+
   // has to come last, since this realy is asynchronous
-  /*
   testConvertToFragmentIframe: function()
   {
     this.doc("Convert a string fragment into html checking to see that it was created in an iFrame.");
@@ -76,10 +96,8 @@ var SandalphonTest = new Class({
       this.assertEqual(node.getDocument(), frame.contentWindow.document, hook);
       this.assertEqual(node.getWindow(), frame.contentWindow, hook);
       
-      this.endAsync(hook);
-      
+      this.endAsync(hook);      
     }.bind(this));
   }
-  */
 
 });

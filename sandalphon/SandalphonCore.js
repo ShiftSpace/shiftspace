@@ -11,7 +11,6 @@ SSSandalphonError.NoSuchResource = new Class({
   Implements: SSExceptionPrinter
 });
 
-
 var SandalphonClass = new Class({
 
   initialize: function()
@@ -107,6 +106,12 @@ var SandalphonClass = new Class({
       data: { filepath: "../" + path + ".html" },
       onComplete: function(responseText, responseXml)
       {
+        if(responseText == "")
+        {
+          console.error('No resource at path: ' + path);
+          throw new SSSandalphonError.NoSuchResource(new Error(), "No resource at path:" + path);
+        }
+        
         var escapedUI = JSON.decode(responseText);
         callback({interface:unescape(escapedUI.interface), styles:unescape(escapedUI.styles)});
       },
