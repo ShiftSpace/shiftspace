@@ -56,6 +56,19 @@ var SandalphonTest = new Class({
       this.endAsync(hook);
       
     }.bind(this));
+  },
+  
+  
+  testCompileAndLoad: function()
+  {
+    this.doc("Compile and load an interface file.");
+    
+    var hook = this.startAsync();
+    
+    Sandalphon.compileAndLoad('tests/SandalphonTest/SandalphonTest', function(ui) {
+      
+      this.endAsync(hook);
+    }.bind(this));
   }
 
 });
