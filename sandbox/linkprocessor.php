@@ -132,7 +132,7 @@ class LinkProcessor{
     // href ="./
     $this->ProcessedDoc = preg_replace("/href=\"\.\//","href=\"$this->CurrentDirUrl",$this->Doc);
     // href="../
-    $this->ProcessedDoc = preg_replace("/href=\"\.\.\//i","href=\"$this->RelativeBaseUrl" ,$this->Doc);
+    $this->ProcessedDoc = preg_replace("/href=\"\.\./i","href=\"$this->RelativeBaseUrl" ,$this->Doc);
   }
   
   private function processJavaScript(){
