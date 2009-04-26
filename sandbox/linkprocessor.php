@@ -130,7 +130,7 @@ class LinkProcessor{
     // href="folder/file
     $this->ProcessedDoc = preg_replace("/href=\"(?=[^http|\/|www|\.\.])/i","href=\"$this->OrigUrl" ,$this->Doc);
     // href ="./
-    $this->ProcessedDoc = preg_replace("/href=\"\.\//","href=\"$this->CurrentDirUrl",$this->Doc);
+    $this->ProcessedDoc = preg_replace("/href=\"\.\//i","href=\"$this->CurrentDirUrl",$this->Doc);
     // href="../
     $this->ProcessedDoc = preg_replace("/href=\"\.\./i","href=\"$this->RelativeBaseUrl" ,$this->Doc);
   }
