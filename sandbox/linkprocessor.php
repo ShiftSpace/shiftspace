@@ -1,4 +1,10 @@
 <?php
+/*
+//for debugging with firePHP
+require_once('FirePHPCore/FirePHP.class.php');
+ob_start();
+*/
+
 //TODO finish refactoring regexs
 //finish writing tests
 class LinkProcessor{
@@ -16,8 +22,7 @@ class LinkProcessor{
   protected $CurrentDirUrl;     //the current directory
   
   public function __construct(){
-    /*BLAR ?*/
-            /*BLAR ?*/
+    /*$this->firephp = FirePHP::getInstance(true);*/
   }
 
  public function setUrl($OrigUrl){
@@ -28,22 +33,27 @@ class LinkProcessor{
   
   public function setDoc($Doc){
     $this->Doc = $Doc;
+    $this->ProcessedDoc = $Doc;
     $this->processDoc();
   }
   
   public function getUrl(){
+    /*$this->firephp->log($this->OrigUrl,"getUrl");*/
     return $this->OrigUrl;
   }
   
   public function getBaseUrl(){
+    /*$this->firephp->log($this->BaseUrl,"getBaseUrl");*/
     return $this->BaseUrl;
   }
   
   public function getRelativeBaseUrl(){
+    /*$this->firephp->log($this->RelativeBaseUrl,"getRelativeBaseUrl");*/
     return $this->RelativeBaseUrl;
   }
   
   public function getCurrentDirUrl(){
+    /*$this->firephp->log($this->CurrentDirUrl,"getCurrentDirUrl");*/
     return $this->CurrentDirUrl;
   }
   
@@ -84,7 +94,7 @@ class LinkProcessor{
     /*
     http://nytimes.com/dir1/dir2 to http://nytimes.com/dir1/
     
-    i.e. baseUrl = nytimes.com/weather/ and there exists on
+    e.g. baseUrl = nytimes.com/weather/ and there exists on
     the page ../images/myImage.jpg we want to: 
     src="nytimes.com/images/myImage.jpg"
     */
@@ -101,7 +111,7 @@ class LinkProcessor{
     http://nytimes.com/dir1/index.html to http://nytimes/dir1/
     
     for paths that start with ./
-    i.e. ./styles/style.css
+    e.g. ./styles/style.css
     */
     $regex = "/
               (.+\/)          #match up to + including last fslash
@@ -114,38 +124,37 @@ class LinkProcessor{
   private function processSrcLinks(){
     // replace relative links with absolute links
     // src="/
-    $this->ProcessedDoc = preg_replace("/src=\"\//i","src=\"$this->BaseUrl" ,$this->Doc);
+    $this->ProcessedDoc = preg_replace("/src=\"\//i","src=\"$this->BaseUrl" ,$this->ProcessedDoc);
     // src="./
-    $this->ProcessedDoc = preg_replace("/src=\"\.\//","src=\"$this->CurrentDirUrl",$this->Doc);
+    $this->ProcessedDoc = preg_replace("/src=\"\.\//i","src=\"$this->CurrentDirUrl",$this->ProcessedDoc);
     // src="../
-    $this->ProcessedDoc = preg_replace("/src=\"\.\./i","src=\"$this->RelativeBaseUrl" ,$this->Doc);
+    $this->ProcessedDoc = preg_replace("/src=\"\.\.\//i","src=\"$this->RelativeBaseUrl" ,$this->ProcessedDoc);
     // src="word/ && word != http or www
-    $this->ProcessedDoc = preg_replace("/src=\"(?!http|www)\//i","src=\"$this->OrigUrl",$this->Doc);  
-    
+    $this->ProcessedDoc = preg_replace("/src=\"(?=[^http|\/|www|\.\.])/i","src=\"$this->CurrentDirUrl" ,$this->ProcessedDoc);
   }
   
   private function processHrefLinks(){
     // href=/
-    $this->ProcessedDoc = preg_replace("/href=\"\//i","href=\"$this->BaseUrl/" ,$this->Doc);
+    $this->ProcessedDoc = preg_replace("/href=\"\//i","href=\"$this->BaseUrl" ,$this->ProcessedDoc);
     // href="folder/file
-    $this->ProcessedDoc = preg_replace("/href=\"(?=[^http|\/|www|\.\.])/i","href=\"$this->OrigUrl" ,$this->Doc);
+    $this->ProcessedDoc = preg_replace("/href=\"(?=[^http|\/|www|\.\.])/i","href=\"$this->CurrentDirUrl" ,$this->ProcessedDoc);
     // href ="./
-    $this->ProcessedDoc = preg_replace("/href=\"\.\//","href=\"$this->CurrentDirUrl",$this->Doc);
+    $this->ProcessedDoc = preg_replace("/href=\"\.\//","href=\"$this->CurrentDirUrl",$this->ProcessedDoc);
     // href="../
-    $this->ProcessedDoc = preg_replace("/href=\"\.\./i","href=\"$this->RelativeBaseUrl" ,$this->Doc);
+    $this->ProcessedDoc = preg_replace("/href=\"\.\.\//i","href=\"$this->RelativeBaseUrl" ,$this->ProcessedDoc);
   }
   
   private function processJavaScript(){
-    $this->ProcessedDoc = preg_replace("/<script.*?<\/script>/ims","<!--removedjavascript-->",$this->Doc);
-    $this->ProcessedDoc = preg_replace("/onresize=\".*?\"/i","",$this->Doc);
-    $this->ProcessedDoc = preg_replace("/onload=\".*?\"/i","",$this->Doc);
-    $this->ProcessedDoc = preg_replace("/onresize=\'.*?\'/i","",$this->Doc);
-    $this->ProcessedDoc = preg_replace("/onload=\'.*?\'/i","",$this->Doc);    
+    $this->ProcessedDoc = preg_replace("/<script.*?<\/script>/ims","<!--removedjavascript-->",$this->ProcessedDoc);
+    $this->ProcessedDoc = preg_replace("/onresize=\".*?\"/i","",$this->ProcessedDoc);
+    $this->ProcessedDoc = preg_replace("/onload=\".*?\"/i","",$this->ProcessedDoc);
+    $this->ProcessedDoc = preg_replace("/onresize=\'.*?\'/i","",$this->ProcessedDoc);
+    $this->ProcessedDoc = preg_replace("/onload=\'.*?\'/i","",$this->ProcessedDoc);
   }
   
   private function processCssImports(){
     // css imports
-    $this->ProcessedDoc = preg_replace("/@import\s+url\(\//i","@import url($this->BaseUrl", $this->Doc);
+    $this->ProcessedDoc = preg_replace("/@import\s+url\(\//i","@import url($this->BaseUrl", $this->ProcessedDoc);
   }    
 }
 ?>
