@@ -205,7 +205,7 @@ function SSDeleteShift(shiftId)
   };
 
   SSServerCall('shift.delete', params, function(json) {
-    if (!json.status) 
+    if (!json.data.status) 
     {
       console.error(json.message);
       return;
@@ -322,9 +322,10 @@ function SSSaveNewShift(shiftJson)
   };
 
   SSLog('saving new shift!', SSLogSystem);
-  SSServerCall.safeCall('shift.create', params, function(json) {
-    SSLog('>>>>>>>>>>>>>>>>> SAVED new shift', SSLogSystem);
-    if (!json.status)
+  SSServerCall.safeCall('shift.create', params, function(response) {
+    var json = SSGetJsonData(response);
+
+    if (json['error'])
     {
       console.error(json.message);
       return;
@@ -361,6 +362,8 @@ function SSSaveNewShift(shiftJson)
     if(ShiftSpace.Console)
     {
       ShiftSpace.Console.show();
+      SSLog('showing shift >>>>>>>>>>>>>>>', SSLogForce);
+      SSLog(shiftJson, SSLogForce);
       ShiftSpace.Console.showShift(shiftJson.id);
     }
 
@@ -416,7 +419,7 @@ function SSSaveShift(shiftJson)
 
   SSServerCall.safeCall('shift.update', params, function(json) {
     SSLog('returned shift.update! ' + JSON.encode(json));
-    if (!json.status) {
+    if (json['error']) {
       console.error(json.message);
       return;
     }
@@ -703,6 +706,9 @@ Parameters:
 function SSShowShift(shiftId)
 {
   SSLog('SSShowShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + SSShiftIsLoaded(shiftId));
+  SSLog('SSShowShift', SSLogForce);
+  SSLog(shiftId, SSLogForce);
+  
   if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
   {
     SSLog('SSLoadShift');

@@ -13,7 +13,7 @@ SSLog('SPACESDIR: ' + spacesDir, SSLogForce);
 var version = '0.13';
 var cacheFiles = 0;
 
-if(typeof ShiftSpaceSandBoxMode != 'undefined') 
+if(typeof ShiftSpaceSandBoxMode != 'undefined' && ShiftSpaceSandBoxMode) 
 {
   server = window.location.href.substr(0, window.location.href.indexOf('sandbox'));
   cacheFiles = 0;

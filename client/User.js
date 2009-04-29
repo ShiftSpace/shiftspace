@@ -159,7 +159,7 @@ var ShiftSpaceUserClass = new Class({
   */
   isLoggedIn: function(showErrorAlert) 
   {
-    return (this.getId() != null);
+    return (this.getId() != null) || (this.getUsername() != null);
   },
   
   
