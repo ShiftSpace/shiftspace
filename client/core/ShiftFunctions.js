@@ -323,13 +323,14 @@ function SSSaveNewShift(shiftJson)
 
   SSLog('saving new shift!', SSLogSystem);
   SSServerCall.safeCall('shift.create', params, function(response) {
-    var json = SSGetJsonData(response);
 
-    if (json['error'])
+    if (response['error'])
     {
       console.error(json.message);
       return;
     }
+    
+    var json = SSGetJsonData(response);
 
     shiftJson.username = ShiftSpace.User.getUsername();
     shiftJson.created = 'Just posted';

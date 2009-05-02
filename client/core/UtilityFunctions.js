@@ -228,5 +228,5 @@ function SSResetCore()
 
 function SSGetJsonData(json)
 {
-  return json.data;
+  return json.data.contents.values;
 }
