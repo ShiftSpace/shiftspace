@@ -34,7 +34,7 @@ var SSListViewTest = new Class({
       ];
       
       this.listView.setData(data);
-      
+      console.log(this.listView.data());      
     }.bind(this));
   },
   
@@ -67,9 +67,11 @@ var SSListViewTest = new Class({
     this.doc("set data for list view, refreshed contents should reflect.");
     
     this.assertEqual(this.listView.count(), 5);
+    this.listView.reloadData();
     this.assertEqual(this.listView.element.getElements('li').length, 5);
   },
   
+
   
   testCellAction: function()
   {
@@ -79,26 +81,26 @@ var SSListViewTest = new Class({
     this.listView.remove = function() {
       removeDidRun = true;
     };
-    
+    this.listView.reloadData();
     SSTestRunner.createMouseEventForNode('click', $$('.button2')[0]);
-    
     this.assert(removeDidRun);
   },
   
-  
+ 
   testAdd: function()
   {
     this.doc("Test the addition of a new cell");
     
     var before = this.listView.count();
     this.listView.add({artworkId:5, title:'jar', image:'helloworld.png'});
-    var after = this.listView.count();
     
+    var after = this.listView.count();
+ 
     this.assertNotEqual(before, after);
     this.assertEqual(before, 5);
     this.assertEqual(after, 6);
   },
-  
+
   
   testInsert: function()
   {
@@ -119,25 +121,13 @@ var SSListViewTest = new Class({
   },
   
   
-  testMove: function()
-  {
-    this.doc("move an item to a different position in the list view");
-    
-    this.listView.move(3, 1);
-    var data = this.listView.get(1);
-    
-    this.assert(data.artworkId == 3);
-    this.assert(data.title == "naz");
-  },
-  
-  
   testOutOfBounds: function()
   {
     this.doc("Test that exception is thrown on insert out of bounds of SSListView.");
     this.assertThrows(SSListViewError.OutOfBounds, this.listView.insert.bind(this.listView), [{id:"baz"}, 6]);
     this.assertThrows(SSListViewError.OutOfBounds, this.listView.insert.bind(this.listView), [{id:"baz"}, -1]);
   },
-  
+
   
   testRemove: function()
   {
@@ -154,7 +144,7 @@ var SSListViewTest = new Class({
     this.assertEqual(this.listView.count(), 4);
     this.assertEqual(this.listView.find(byArtworkId(2)), -1);
   },
-  
+
   
   testSetGet: function()
   {
@@ -168,11 +158,11 @@ var SSListViewTest = new Class({
     this.assert(cellData.image == 'goodbye.png');
   },
   
-  
   testUpdate: function()
   {
     this.doc("update the content of a cell");
-    
+    this.listView.reloadData();
+    console.log("dump:" + this.listView.data());
     this.listView.update({artworkId:22, title: 'cool'}, 1);
     var cellData = this.listView.get(1);
     
@@ -180,7 +170,6 @@ var SSListViewTest = new Class({
     this.assert(cellData.title == 'cool');
     this.assert(cellData.image == 'helloworld.png');
   },
-  
   
   userDidClickListItem: function(index)
   {
@@ -194,7 +183,7 @@ var SSListViewTest = new Class({
     this.doc("userDidClickListItem delegate method");
     
     this.listView.setDelegate(this);
-    
+    this.listView.reloadData();
     SSTestRunner.createMouseEventForNode('click', this.listView.cellNodeForIndex(2));
     
     this.assert(this.userDidClickListItemDidRun);
@@ -267,6 +256,7 @@ var SSListViewTest = new Class({
     this.assert(data.title == 'fool');
     this.assert(data.image == 'helloworld.png');
   }
+
   
 });
 
