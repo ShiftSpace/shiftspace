@@ -537,7 +537,7 @@ var SSListView = new Class({
     if(canAdd)
     {
       // grab extra data, not completely sure why we need this here - David
-      var addData = (delegate.dataFor && delegate.dataFor('add', this));
+      var addData = (delgaate && delegate.dataFor && delegate.dataFor('add', this));
       
       if(this.hasCollection())
       {
