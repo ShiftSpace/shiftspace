@@ -826,8 +826,8 @@ var SSListView = new Class({
   */
   __update__: function(cellData, index)
   {
-    var oldData =this.data()[index];
-    this.__set__(oldData.merge(cellData), index);
+    var oldData = this.data()[index];
+    this.__set__($merge(oldData, cellData), index);
   },
   
   /*
