@@ -1,4 +1,5 @@
 var HighlightsSpace = new Class({
+  
   Extends: ShiftSpace.Space,
 
   attributes:
@@ -12,10 +13,9 @@ var HighlightsSpace = new Class({
 
   setup: function()
   {
-    // we can longer use bound functions as event handlder in FF3
+    // we can longer use bound functions as event handler in FF3
     // bound functions will throw a security error. Instead we just
     // manually create a closure.
-
     var self = this;
 
     this.mousemove = function(e) {

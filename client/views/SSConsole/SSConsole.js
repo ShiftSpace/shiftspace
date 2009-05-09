@@ -267,8 +267,6 @@ var SSConsole = new Class({
 
   loginFormSubmitCallback: function(response)
   {
-    console.log('Login call back!');
-    console.log(response);
     this.fireEvent('onUserLogin');
   },
 
@@ -302,8 +300,6 @@ var SSConsole = new Class({
 
   signUpFormSubmitCallback: function(response)
   {
-    console.log('Joined!');
-    console.log(response);
   },
 
 
@@ -428,21 +424,19 @@ var SSConsole = new Class({
 
   userSelectedRow: function(args)
   {
-    console.log('MyTableViewDelegate, userClickedRow: ' + args.rowIndex);
     var datasource = args.tableView.datasource();
     if(args.tableView == this.allShiftsTableView)
     {
-      console.log('all shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
       // show the shift
       if(typeof SSShowShift != 'undefined') 
       {
-        console.log('show shift!');
-        this.showShift(datasource.data()[args.rowIndex].id);
+        var shiftId = datasource.data()[args.rowIndex].id;
+        SSShowShift(shiftId);
+        this.showShift(shiftId);
       }
     }
     else if(args.tableView == this.myShiftsTableView)
     {
-      console.log('my shifts table view, id of shift ' + datasource.data()[args.rowIndex].id);
       // set a variable for opening this shift on the next page if the url is different
     }
   },
@@ -450,13 +444,13 @@ var SSConsole = new Class({
   
   showShift: function(shiftId)
   {
-    SSShowShift(shiftId);
+    // highlight the shift
   },
   
   
   hideShift: function(shiftId)
   {
-    SSHideShift(shiftId);
+    // unhighlight the shift
   },
   
   
@@ -474,7 +468,6 @@ var SSConsole = new Class({
   
   userDeselectedRow: function(args)
   {
-    console.log('userDeselectedRow');
     var datasource = args.tableView.datasource();
     if(args.tableView == this.allShiftsTableView)
     {
@@ -497,7 +490,6 @@ var SSConsole = new Class({
 
   canEditRow: function(args)
   {
-    console.log('canEditRow');
     // in the all shifts table the user can edit only if she owns the shift
     if(args.tableView == this.allShiftsTableView)
     {

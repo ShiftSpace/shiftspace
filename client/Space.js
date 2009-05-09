@@ -404,36 +404,36 @@ var ShiftSpaceSpace = new Class({
       SSLog(SSDescribeException(exc));
     }
 
-    //SSLog('a new shift');
+    //SSLog('a new sthishift');
     //SSLog(newShift);
 
     // listen for shift updates
-    newShift.addEvent( 'onUpdate', this.updateShift.bind( this ) );
+    newShift.addEvent('onUpdate', this.updateShift.bind(this));
     // Set up events that console will listen to
-    newShift.addEvent( 'onShiftShow', function( shiftId ) {
+    newShift.addEvent('onShiftShow', function(shiftId) {
       this.onShiftShow(shiftId);
-      this.fireEvent( 'onShiftShow', shiftId );
-    }.bind( this ) );
-    newShift.addEvent( 'onShiftHide', function( shiftId ) {
+      this.fireEvent('onShiftShow', shiftId);
+    }.bind(this));
+    newShift.addEvent('onShiftHide', function(shiftId) {
       this.onShiftHide(shiftId);
-      this.fireEvent( 'onShiftHide', shiftId );
-    }.bind( this ) );
-    newShift.addEvent( 'onShiftDestroy', function( shiftId ) {
+      this.fireEvent('onShiftHide', shiftId);
+    }.bind(this));
+    newShift.addEvent('onShiftDestroy', function(shiftId) {
       this.onShiftDestroy(shiftId);
-      this.fireEvent( 'onShiftDestroy', shiftId );
-    }.bind( this ) );
-    newShift.addEvent( 'onShiftFocus', function( shiftId ) {
+      this.fireEvent('onShiftDestroy', shiftId);
+    }.bind(this));
+    newShift.addEvent('onShiftFocus', function(shiftId) {
       this.onShiftFocus(shiftId);
-      this.fireEvent( 'onShiftFocus', shiftId );
-    }.bind( this ));
-    newShift.addEvent( 'onShiftBlur', function( shiftId ) {
+      this.fireEvent('onShiftFocus', shiftId);
+    }.bind(this));
+    newShift.addEvent('onShiftBlur', function(shiftId) {
       this.onShiftBlur(shiftId);
-      this.fireEvent( 'onShiftBlur', shiftId );
-    }.bind( this ));
-    newShift.addEvent( 'onShiftSave', function( shiftId ) {
+      this.fireEvent('onShiftBlur', shiftId);
+    }.bind(this));
+    newShift.addEvent('onShiftSave', function(shiftId) {
       this.onShiftSave(shiftId);
-      this.fireEvent( 'onShiftSave', shiftId );
-    }.bind( this ));
+      this.fireEvent('onShiftSave', shiftId);
+    }.bind(this));
 
     //SSLog('events added');
 

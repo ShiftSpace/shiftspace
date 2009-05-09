@@ -119,6 +119,7 @@ function SSRegisterSpace(instance)
   }
 
   instance.addEvent('onShiftShow', function(shiftId) {
+    SSLog('onShiftShow: ' + shiftId, SSLogForce);
     if(ShiftSpace.Console) ShiftSpace.Console.showShift(shiftId);
   });
   instance.addEvent('onShiftBlur', function(shiftId) {

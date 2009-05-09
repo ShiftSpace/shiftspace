@@ -17,7 +17,7 @@ Parameters:
 */
 function SSInitShift(spaceName, options) 
 {
-  SSLog('spaceName: ' + spaceName);
+  SSLog('spaceName: ' + spaceName, SSLogSystem);
   if (!installed[spaceName]) 
   {
     SSLog('Space ' + spaceName + ' does not exist.', SSLogError);
@@ -41,9 +41,9 @@ function SSInitShift(spaceName, options)
 
   SSSetShift(tempId, shiftJson);
 
-  SSLog('+++++++++++++++++++++++++++++++++++++++++++++++');
-  SSLog(SSSpaceForName(spaceName));
-  SSLog('calling create shift');
+  SSLog('+++++++++++++++++++++++++++++++++++++++++++++++ ', SSLogSystem);
+  SSLog(SSSpaceForName(spaceName), SSLogSystem);
+  SSLog('calling create shift ', SSLogSystem);
   
   var noError = SSSpaceForName(spaceName).createShift(shiftJson);
   
@@ -70,13 +70,13 @@ function SSInitShift(spaceName, options)
 function SSShowNewShift(shiftId)
 {
   var space = SSSpaceForShift(shiftId);
+  SSLog('SSShowNewShift', SSLogForce);
+  SSLog(shifts, SSLogForce);
 
-  // call onShiftCreate
-  SSLog('SSShowNewShift');
-  SSShowShift(shiftId); // TODO: remove - David
-  SSLog('calling onShiftCreate');
   space.onShiftCreate(shiftId);
+  SSLog('SSEditShift', SSLogForce);
   SSEditShift(shiftId);
+  SSLog('SSFocusShift', SSLogForce);
   SSFocusShift(shiftId, false);
 }
 
@@ -304,7 +304,7 @@ See Also:
 */
 function SSSaveNewShift(shiftJson)
 {
-  SSLog('SSSaveNewShift', SSLogShift);
+  SSLog('>>>>>>>>>>>>>>>>>>>> SSSaveNewShift', SSLogSystem);
   var space = SSSpaceForName(shiftJson.space);
 
   // remove the filters from the json object
@@ -389,7 +389,7 @@ function SSSaveNewShift(shiftJson)
 */
 function SSSaveShift(shiftJson) 
 {
-  SSLog('SSSaveShift', SSLogShift);
+  SSLog('>>>>>>>>>>>>>>>>>>>>> SSSaveShift', SSLogSystem);
   //SSLog(shiftJson);
 
   // if new skip to SSSaveNewShift
@@ -706,13 +706,10 @@ Parameters:
 */
 function SSShowShift(shiftId)
 {
-  SSLog('SSShowShift >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ' + SSShiftIsLoaded(shiftId));
-  SSLog('SSShowShift', SSLogForce);
-  SSLog(shiftId, SSLogForce);
-  
+  SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SSShowShift ' + SSShiftIsLoaded(shiftId), SSLogForce);
+
   if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
   {
-    SSLog('SSLoadShift');
     // first make sure that is loaded
     SSLoadShift(shiftId, SSShowShift.bind(ShiftSpace));
     return;
@@ -721,10 +718,9 @@ function SSShowShift(shiftId)
   {
     try
     {
-      SSLog('Try showing shift!');
       // get the space and the shift
       var shift = SSGetShift(shiftId);
-
+      
       // check to see if this is a known space
       if (ShiftSpace.info(shift.space).unknown)
       {
@@ -740,8 +736,6 @@ function SSShowShift(shiftId)
       // load the space first
       if(!space)
       {
-        SSLog(shift);
-        SSLog('space not loaded ' + shift.space + ', ' + shiftId);
         SSLoadSpace(shift.space);
         return;
       }
@@ -757,15 +751,11 @@ function SSShowShift(shiftId)
 
       // extract the shift content
       var shiftJson = SSGetShiftContent(shiftId);
-      SSLog('extracted shift json');
       shiftJson.id = shiftId;
 
-      // SSLog('foo -- - - -- - - --- - - -- - -- -- - -');
-      // SSLog(shiftJson);
       // check to make sure the css is loaded first
       if(!space.cssIsLoaded())
       {
-        //SSLog('css not loaded');
         space.addDeferredShift(shiftJson);
         return;
       }
@@ -784,12 +774,10 @@ function SSShowShift(shiftId)
       {
         try
         {
-          SSLog('showing the shift =======================================');
           SSSpaceForName(shift.space).showShift(shiftJson);
         }
         catch(err)
         {
-          SSLog('Exception: ' + SSDescribeException(err));
           console.error(err);
         }
       }
@@ -806,7 +794,6 @@ function SSShowShift(shiftId)
     }
     catch(err)
     {
-      SSLog('Could not show shift, ' + SSDescribeException(err), SSLogError);
       var params = {id:shiftId};
       SSServerCall.safeCall('shift.broken', params, function(result) {
         SSLog(result);
@@ -817,7 +804,6 @@ function SSShowShift(shiftId)
       // probably need to do some kind of cleanup
       if(ShiftSpace.Console) 
       {
-        SSLog('Hiding a shift ' + shiftId, SSLogSystem);
         ShiftSpace.Console.hideShift(shiftId);
       }
     }
@@ -978,11 +964,16 @@ function SSGetShiftContent(shiftId)
       SSLog('content for shift ' + shiftId +' failed to load', SSLogError);
       throw err;
     }
+    
+    SSLog('SSGetShiftContent', SSLogForce);
+    SSLog(obj, SSLogForce);
 
     return obj;
   }
   else
   {
+    SSLog('SSGetShiftContent', SSLogForce);
+    SSLog('is new shift', SSLogForce);
     return {};
   }
 }
