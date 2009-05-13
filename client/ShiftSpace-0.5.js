@@ -267,6 +267,8 @@ var ShiftSpace = new (function() {
       this.plugins = plugins;
       unsafeWindow.ShiftSpace = this;
       
+      this.Sandalphon = Sandalphon;
+      
       // For Sandbox export classes
       this.Space = ShiftSpace.Space;
       this.Shift = ShiftSpace.Shift;

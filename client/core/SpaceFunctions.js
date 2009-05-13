@@ -37,10 +37,6 @@ function SSLoadSpace(space, callback)
       SSLog('loading space: ' + space + ' from ' + SSURLForSpace(space), SSLogSystem);
       SSLoadFile(SSURLForSpace(space), function(rx) {
         var err;
-        //SSLog(space + ' Space loaded, rx.responseText:' + rx.responseText);
-
-        // TODO: for Safari the following does not work, we need a function in Space
-        // that evals the actual space. - David
         try
         {
           if(window.webkit)

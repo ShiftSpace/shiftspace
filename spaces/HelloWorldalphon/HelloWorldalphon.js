@@ -1,9 +1,10 @@
-var HelloWorldalphon = new Class({
+var HelloWorldalphonSpace = new Class({
   
     Extends: ShiftSpace.Space,
     
     attributes: {
         name: 'HelloWorldalphon',
+        version: 0.1,
         icon: 'HelloWorld.png',
         css:  'HelloWorldalphon.css'
     }
@@ -43,4 +44,4 @@ var HelloWorldalphonShift = new Class({
     }
 });
 
-var HelloWorldalphon = new HelloWorldalphon(HelloWorldalphonShift);
+var HelloWorldalphon = new HelloWorldalphonSpace(HelloWorldalphonShift);
