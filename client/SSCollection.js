@@ -791,7 +791,7 @@ var SSCollection = new Class({
   },
   /*
     Function: readIndex
-      
+      Takes an index, constraint, and callback function
       
     Parameters:
       index - An integer.
@@ -961,7 +961,8 @@ var SSCollection = new Class({
   },
   /*
     Function: updateById
-    
+      
+      
     Parameters:
       data - An array. 
       id - An integer.
@@ -988,7 +989,8 @@ var SSCollection = new Class({
     }, bulk);
   },
   /*
-    Function: onFailure (abstract)
+    Function: onFailure 
+      NOTE:  Empty function. To delete?? - Justin
       
     Parameter:
       action - The type of action (create, write, delete, update)
@@ -1088,7 +1090,7 @@ var SSCollection = new Class({
   },
   /*
     Function: each
-      
+      Takes a function and applies it to each row in the collection array. 
       
     Parameters:
       fn - A function. 
