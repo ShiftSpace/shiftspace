@@ -15,7 +15,8 @@ var cacheFiles = 0;
 
 if(typeof ShiftSpaceSandBoxMode != 'undefined' && ShiftSpaceSandBoxMode) 
 {
-  server = window.location.href.substr(0, window.location.href.indexOf('sandbox'));
+  //TODO: remove - David Nolen
+  //server = window.location.href.substr(0, window.location.href.indexOf('sandbox'));
   cacheFiles = 0;
 }
 
