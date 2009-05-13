@@ -154,7 +154,7 @@ function SSInstallSpace(space)
   if(!SSURLForSpace(space))
   {
     var url = server + 'spaces/' + space + '/' + space + '.js';
-    SSURLForSpace(space) = url;
+    __installed[space] = url;
     SSSetValue('installed', SSInstalledSpaces());
     SSLoadSpace(space, function() {
       alert(space + " space installed.");
