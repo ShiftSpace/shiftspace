@@ -38,7 +38,7 @@ function SSInfo(spaceName)
       icon: server + 'images/unknown-space.png',
       version: '1.0'
     };
-    if (!installed[spaceName]) 
+    if (!SSURLForSpace(spaceName)) 
     {
       defaults.unknown = true;
       return defaults;
@@ -48,17 +48,16 @@ function SSInfo(spaceName)
     //var spaceInfo = $merge(defaults, spaces[spaceName].attributes);
     var spaceInfo = $merge(defaults, {});
     delete spaceInfo.name; // No need to send this back
-    spaceInfo.url = installed[spaceName];
+    spaceInfo.url = SSURLForSpace(spaceName);
     return spaceInfo;
   }
-  if(typeof installed != 'undefined')
+
+  var spaceIndex = [];
+  for (var aSpaceName in SSInstalledSpaces()) 
   {
-    var spaceIndex = [];
-    for (var aSpaceName in installed) 
-    {
-      spaceIndex.push(aSpaceName);
-    }
+    spaceIndex.push(aSpaceName);
   }
+
   return {
     server: server,
     spacesDir: (typeof spacesDir != 'undefined' && spacesDir) || null,
@@ -195,7 +194,7 @@ function SSResourceExists(resourceName)
 */
 function SSCheckForAutolaunch()
 {
-  for(space in installed)
+  for(space in SSInstalledSpaces())
   {
     if(SSGetPrefForSpace(space, 'autolaunch'))
     {

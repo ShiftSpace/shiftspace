@@ -59,7 +59,7 @@ var ShiftMenu = new Class({
       }
     }).injectInside(container);
     
-    for (var spaceName in installed) {
+    for (var spaceName in SSInstalledSpaces()) {
       this.addSpace(spaceName);
     }
   },

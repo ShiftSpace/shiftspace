@@ -100,7 +100,7 @@ function SSRegisterSpace(instance)
 
   if (!instance.attributes.icon) 
   {
-    var icon = installed[spaceName].replace('.js', '.png');
+    var icon = SSURLForSpace(spaceName).replace('.js', '.png');
     instance.attributes.icon = icon;
   } 
   else if (instance.attributes.icon.indexOf('/') == -1) 

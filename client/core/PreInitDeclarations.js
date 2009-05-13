@@ -30,7 +30,7 @@ var __defaultEmailComments__ = 1;
 var __pluginsData__ = {};
 
 // Each space and a corresponding URL of its origin
-var installed = SSGetValue('installed', {
+var __installed = SSGetValue('installed', {
   'Notes' : spacesDir + 'Notes/Notes.js',
   'ImageSwap': spacesDir + 'ImageSwap/ImageSwap.js',
   'Highlights': spacesDir + 'Highlights/Highlights.js',
@@ -38,7 +38,7 @@ var installed = SSGetValue('installed', {
 });
 
 SSLog("Installed ================", SSLogSystem | SSLogForce);
-SSLog(JSON.encode(installed), SSLogSystem | SSLogForce);
+SSLog(JSON.encode(__installed), SSLogSystem | SSLogForce);
 
 var spacePrefs = SSGetValue('spacePrefs', {});
 

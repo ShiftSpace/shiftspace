@@ -18,7 +18,7 @@ Parameters:
 function SSInitShift(spaceName, options) 
 {
   SSLog('spaceName: ' + spaceName, SSLogSystem);
-  if (!installed[spaceName]) 
+  if (!SSURLForSpace(spaceName)) 
   {
     SSLog('Space ' + spaceName + ' does not exist.', SSLogError);
     return;

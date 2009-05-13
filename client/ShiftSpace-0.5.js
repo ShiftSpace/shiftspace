@@ -112,7 +112,7 @@ var ShiftSpace = new (function() {
       // Load all spaces and plugins immediately if in the sanbox
       if (typeof ShiftSpaceSandBoxMode != 'undefined') 
       {
-        for (var space in installed) 
+        for (var space in SSInstalledSpaces())
         {
           SSLog('loading space ' + space, SSLogSystem);
           SSLoadSpace(space);
@@ -271,6 +271,9 @@ var ShiftSpace = new (function() {
       this.Space = ShiftSpace.Space;
       this.Shift = ShiftSpace.Shift;
       this.Plugin = ShiftSpace.Plugin;
+      this.installSpace = SSInstallSpace;
+      this.uninstallSpace = SSUninstallSpace;
+      this.installed = SSInstalledSpaces;
 
       this.SSGetShift = SSGetShift;
       this.SSGetPageShifts = SSGetPageShifts;

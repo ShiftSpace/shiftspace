@@ -23,7 +23,7 @@ function SSLoadSpace(space, callback)
     SSLog('loading space: ' + space, SSLogSystem);
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
-      var url = installed[space] + '?' + new Date().getTime();
+      var url = SSURLForSpace(space) + '?' + new Date().getTime();
       SSLog('loading ' + url);
       var newSpace = new Asset.javascript(url, {
         id: space
@@ -34,8 +34,8 @@ function SSLoadSpace(space, callback)
     }
     else
     {
-      SSLog('loading space: ' + space + ' from ' + installed[space], SSLogSystem);
-      SSLoadFile(installed[space], function(rx) {
+      SSLog('loading space: ' + space + ' from ' + SSURLForSpace(space), SSLogSystem);
+      SSLoadFile(SSURLForSpace(space), function(rx) {
         var err;
         //SSLog(space + ' Space loaded, rx.responseText:' + rx.responseText);
 
@@ -79,13 +79,13 @@ function SSRegisterSpace(instance)
   SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
 
-  var spaceDir = installed[spaceName].match(/(.+\/)[^\/]+\.js/)[1];
+  var spaceDir = SSURLForSpace(spaceName).match(/(.+\/)[^\/]+\.js/)[1];
 
   instance.attributes.dir = spaceDir;
 
   if (!instance.attributes.icon) 
   {
-    var icon = installed[spaceName].replace('.js', '.png');
+    var icon = SSURLForSpace(spaceName).replace('.js', '.png');
     instance.attributes.icon = icon;
   } 
   else if (instance.attributes.icon.indexOf('/') == -1) 
@@ -151,14 +151,11 @@ Parameters:
 */
 function SSInstallSpace(space)
 {
-  SSLog("Install space " + space, SSLogForce);
-  if(!installed[space])
+  if(!SSURLForSpace(space))
   {
     var url = server + 'spaces/' + space + '/' + space + '.js';
-    installed[space] = url;
-    SSSetValue('installed', installed);
-
-    // let everyone else know
+    SSURLForSpace(space) = url;
+    SSSetValue('installed', SSInstalledSpaces());
     SSLoadSpace(space, function() {
       alert(space + " space installed.");
       SSFireEvent('onSpaceInstall', space);
@@ -175,21 +172,31 @@ Parameters:
 */
 function SSUninstallSpace(spaceName) 
 {
-  var url = installed[spaceName];
+  var url = SSURLForSpace(spaceName);
   SSRemoveSpace(spaceName);
-  delete installed[spaceName];
-  SSSetValue('installed', installed);
-
+  delete __installed[spaceName];
+  SSSetValue('installed', SSInstalledSpaces());
   SSClearCache(url);
-
   // let everyone else know
   SSFireEvent('onSpaceUninstall', spaceName);
 };
 
 
+function SSInstalledSpaces()
+{
+  return __installed;
+}
+
+
+function SSURLForSpace(spaceName)
+{
+  return __installed[spaceName];
+}
+
+
 function SSUninstallAllSpaces()
 {
-  for(var spaceName in installed)
+  for(var spaceName in SSInstalledSpaces())
   {
     SSUninstallSpace(spaceName);
   }
