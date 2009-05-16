@@ -13,10 +13,24 @@
     <div class="SSTabPane">
       <input id="clearInstalledButton" type="button" name="clearInstalledButton" value="Clear" outlet="SSConsole"></input>
       <!-- Installed Spaces List -->
-      <ul id="SSInstalledSpaces" class="SSListView" uiclass="SSListView">
-        <li class="SSCell SSInstalledSpaceCell" uiclass="SSInstalledSpaceCell">
+      <ul id="SSInstalledSpaces" 
+          class="SSListView" 
+          uiclass="SSListView"
+          outlet="SSConsole">
+        <li class="SSCell SSInstalledSpaceCell" 
+            uiclass="SSInstalledSpaceCell"
+            options="{
+              properties: ['name', 'image', 'autolaunch'],
+              actions: [
+                {
+                  selector: '.uninstall',
+                  target: 'SSInstalledSpace',
+                  method: 'deleteObject'
+                }
+              ]
+            }">
           <img></img>
-          <span class="name"></span> 
+          <span class="name"></span>
           <span class="autolaunch"></span>
           <input class="uninstall" type="button" value="Uninstall"></input>
         </li>
