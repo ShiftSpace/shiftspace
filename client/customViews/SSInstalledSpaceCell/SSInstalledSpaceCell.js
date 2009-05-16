@@ -16,19 +16,28 @@ var SSInstalledSpaceCell = new Class({
     this.mapOutletsToThis();
   },
   
-  setImage: function(image)
+  setImage: function(imageSrc)
   {
-    
+    SSLog('setImage', SSLogForce);
+    var el = this.lockedElement();
+    if(imageSrc)
+    {
+      el.getElement('img').setProperty('src', ShiftSpace.info().spacesDir+image);      
+    }
   },
   
   setName: function(name)
   {
-    
+    SSLog('setName', SSLogForce);
+    var el = this.lockedElement();
+    if(name)
+    {
+      el.getElement('.name').setProperty('text', name);
+    }
   },
 
-
-  setAutolaunch: function(name)
+  setAutolaunch: function(autolaunch)
   {
-    
+    SSLog('setAutolaunch', SSLogForce);
   }
 });

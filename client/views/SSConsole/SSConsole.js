@@ -94,11 +94,7 @@ var SSConsole = new Class({
           SSUninstallAllSpaces();
         });
       }
-      if(this.outlets().get('SSInstalledSpaces'))
-      {
-        SSLog('Initialize installed spaces!', SSLogForce);
-        
-      }
+      if(this.outlets().get('SSInstalledSpaces')) this.initInstalledSpacesListView();
       
       if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled())
       {
@@ -237,7 +233,12 @@ var SSConsole = new Class({
       }.bind(this));
     }
   },
-  
+
+  initInstalledSpacesListView: function()
+  {
+    this.SSInstalledSpaces = this.outlets().get('SSInstalledSpaces');
+    this.SSInstalledSpaces.setData(SSSpacesByPosition());
+  },
   
   initUserLoginStatus: function()
   {

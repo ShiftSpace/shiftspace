@@ -19,3 +19,9 @@ ul#SSInstalledSpaces
 {
   list-style-type: none;
 }
+
+div#SSInstalledSpacesTabPane
+{
+  overflow-y: scroll;
+  height: 100%;
+}

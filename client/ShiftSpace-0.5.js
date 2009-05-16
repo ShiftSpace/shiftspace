@@ -276,6 +276,7 @@ var ShiftSpace = new (function() {
       this.installSpace = SSInstallSpace;
       this.uninstallSpace = SSUninstallSpace;
       this.installed = SSInstalledSpaces;
+      this.byPosition = SSSpacesByPosition;
 
       this.SSGetShift = SSGetShift;
       this.SSGetPageShifts = SSGetPageShifts;

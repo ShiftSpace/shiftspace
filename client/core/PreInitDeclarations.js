@@ -31,10 +31,38 @@ var __pluginsData__ = {};
 
 // Each space and it's associated metadata
 var __installed = SSGetValue('installed', {
-  'Notes': {name:'Notes', url: spacesDir + 'Notes/Notes.js', position:0, attrs: {}},
-  'ImageSwap': {name:'ImageSwap', url: spacesDir + 'ImageSwap/ImageSwap.js', position:1, attrs: {}},
-  'Highlights': {name:'Highlights', url: spacesDir + 'Highlights/Highlights.js', position:2, attrs: {}},
-  'SourceShift': {name:'SourceShift', url: spacesDir + 'SourceShift/SourceShift.js', position:3, attrs: {}}
+  'Notes': 
+  {
+    name:'Notes', 
+    url: spacesDir + 'Notes/Notes.js', 
+    position:0, 
+    icon:'Notes.png', 
+    attrs: {}
+  },
+  'ImageSwap': 
+  {
+    name:'ImageSwap', 
+    url: spacesDir + 'ImageSwap/ImageSwap.js', 
+    icon:'ImageSwap.png', 
+    position:1, 
+    attrs: {}
+  },
+  'Highlights': 
+  {
+    name:'Highlights', 
+    url: spacesDir + 'Highlights/Highlights.js', 
+    icon:'Highlights.png', 
+    position:2, 
+    attrs: {}
+  },
+  'SourceShift': 
+  {
+    name:'SourceShift', 
+    url: spacesDir + 'SourceShift/SourceShift.js', 
+    icon:'SourceShift.png',
+    position:3, 
+    attrs: {}
+  }
 });
 
 SSLog("Installed ================", SSLogSystem);

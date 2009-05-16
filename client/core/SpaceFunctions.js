@@ -237,6 +237,24 @@ function SSSetSpaceForName(space, name)
   __spaces__[name] = space;
 }
 
+function SSSetSpacePosition(spaceName, newpos)
+{
+  
+}
+
+function SSSpacesByPosition()
+{
+  var spaces = SSInstalledSpaces();
+  var result = [];
+  $H(spaces).each(function(v, k) {
+    result.push(v);
+  });
+  result.sort(function(a, b) {
+    return a.position - b.position;
+  });
+  return result;
+}
+
 /*
   Function: SSRemoveSpace
     Removes a space from the interal instances hash.
