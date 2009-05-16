@@ -31,14 +31,14 @@ var __pluginsData__ = {};
 
 // Each space and a corresponding URL of its origin
 var __installed = SSGetValue('installed', {
-  'Notes': {displayName:'Notes', url: spacesDir + 'Notes/Notes.js', position:0},
-  'ImageSwap': {displayName:'ImageSwap', url: spacesDir + 'ImageSwap/ImageSwap.js', position:1},
-  'Highlights': {displayName:'Highlights', url: spacesDir + 'Highlights/Highlights.js', position:2},
-  'SourceShift': {displayName:'SourceShift', url: spacesDir + 'SourceShift/SourceShift.js', position:3}
+  'Notes': {displayName:'Notes', url: spacesDir + 'Notes/Notes.js', position:0, attrs: {}},
+  'ImageSwap': {displayName:'ImageSwap', url: spacesDir + 'ImageSwap/ImageSwap.js', position:1, attrs: {}},
+  'Highlights': {displayName:'Highlights', url: spacesDir + 'Highlights/Highlights.js', position:2, attrs: {}},
+  'SourceShift': {displayName:'SourceShift', url: spacesDir + 'SourceShift/SourceShift.js', position:3, attrs: {}}
 });
 
-SSLog("Installed ================", SSLogSystem | SSLogForce);
-SSLog(JSON.encode(__installed), SSLogSystem | SSLogForce);
+SSLog("Installed ================", SSLogSystem);
+SSLog(JSON.encode(__installed), SSLogSystem);
 
 var spacePrefs = SSGetValue('spacePrefs', {});
 
