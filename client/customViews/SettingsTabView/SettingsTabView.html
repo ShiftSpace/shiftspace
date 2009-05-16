@@ -12,12 +12,16 @@
   <div class="SSContentView">
     <div class="SSTabPane">
       <input id="clearInstalledButton" type="button" name="clearInstalledButton" value="Clear" outlet="SSConsole"></input>
-      <ul id="SSInstalledSpaces">
-        <li class="SSInstalledSpace">
-          <img class="icon"></img>
-          <span class="name">SpaceName</span>
+      <!-- Installed Spaces List -->
+      <ul id="SSInstalledSpaces" class="SSListView" uiclass="SSListView">
+        <li class="SSCell SSInstalledSpaceCell" uiclass="SSInstalledSpaceCell">
+          <img></img>
+          <span class="name"></span> 
+          <span class="autolaunch"></span>
+          <input class="uninstall" type="button" value="Uninstall"></input>
         </li>
       </ul>
+      <!-- End Installed Spaces List -->
     </div>
     <div class="SSTabPane">Pane 2</div>
     <div class="SSTabPane">Pane 3</div>
