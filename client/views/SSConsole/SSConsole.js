@@ -94,6 +94,11 @@ var SSConsole = new Class({
           SSUninstallAllSpaces();
         });
       }
+      if(this.outlets().get('SSInstalledSpaces'))
+      {
+        SSLog('Initialize installed spaces!', SSLogForce);
+        
+      }
       
       if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled())
       {
