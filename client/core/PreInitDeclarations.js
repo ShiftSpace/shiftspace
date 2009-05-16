@@ -29,12 +29,12 @@ var __defaultEmailComments__ = 1;
 // since the plugins won't actually be loaded until they are needed
 var __pluginsData__ = {};
 
-// Each space and a corresponding URL of its origin
+// Each space and it's associated metadata
 var __installed = SSGetValue('installed', {
-  'Notes': {displayName:'Notes', url: spacesDir + 'Notes/Notes.js', position:0, attrs: {}},
-  'ImageSwap': {displayName:'ImageSwap', url: spacesDir + 'ImageSwap/ImageSwap.js', position:1, attrs: {}},
-  'Highlights': {displayName:'Highlights', url: spacesDir + 'Highlights/Highlights.js', position:2, attrs: {}},
-  'SourceShift': {displayName:'SourceShift', url: spacesDir + 'SourceShift/SourceShift.js', position:3, attrs: {}}
+  'Notes': {name:'Notes', url: spacesDir + 'Notes/Notes.js', position:0, attrs: {}},
+  'ImageSwap': {name:'ImageSwap', url: spacesDir + 'ImageSwap/ImageSwap.js', position:1, attrs: {}},
+  'Highlights': {name:'Highlights', url: spacesDir + 'Highlights/Highlights.js', position:2, attrs: {}},
+  'SourceShift': {name:'SourceShift', url: spacesDir + 'SourceShift/SourceShift.js', position:3, attrs: {}}
 });
 
 SSLog("Installed ================", SSLogSystem);
