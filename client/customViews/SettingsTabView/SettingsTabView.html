@@ -16,7 +16,10 @@
       <ul id="SSInstalledSpaces" 
           class="SSListView" 
           uiclass="SSListView"
-          outlet="SSConsole">
+          outlet="SSConsole"
+          options="{
+            delegate: 'SSConsole'
+          }">
         <li class="SSCell SSInstalledSpaceCell" 
             uiclass="SSInstalledSpaceCell"
             options="{
@@ -24,8 +27,8 @@
               actions: [
                 {
                   selector: '.uninstall',
-                  target: 'SSInstalledSpace',
-                  method: 'deleteObject'
+                  target: 'SSInstalledSpaces',
+                  method: 'removeObject'
                 }
               ]
             }">

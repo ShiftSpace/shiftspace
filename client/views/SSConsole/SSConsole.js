@@ -528,7 +528,34 @@ var SSConsole = new Class({
   deselectShift: function(shiftId)
   {
     
+  },
+  
+  canRemove: function(sender)
+  {
+    SSLog(sender, SSLogForce);
+    
+    var canRemove = false;
+    switch(sender.listView)
+    {
+      case this.SSInstalledSpaces:
+        this.uninstallSpace(sender.index);
+        canRemove = true;
+        break;
+      default:
+        SSLog('No matching list view', SSLogForce);
+        break;
+    }
+    
+    return canRemove;
+  },
+  
+  
+  uninstallSpace:function(index)
+  {
+    SSLog('uninstallSpace', SSLogForce);
+    var spaces = SSSpacesByPosition();
+    var spaceToRemove = spaces[index];
+    SSUninstallSpace(spaceToRemove.name);
   }
-
 
 });
