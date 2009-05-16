@@ -16,19 +16,17 @@ var SSInstalledSpaceCell = new Class({
     this.mapOutletsToThis();
   },
   
-  setImage: function(imageSrc)
+  setIcon: function(imageSrc)
   {
-    SSLog('setImage', SSLogForce);
     var el = this.lockedElement();
     if(imageSrc)
     {
-      el.getElement('img').setProperty('src', ShiftSpace.info().spacesDir+image);      
+      el.getElement('img').setProperty('src', ShiftSpace.info().spacesDir+imageSrc);
     }
   },
   
   setName: function(name)
   {
-    SSLog('setName', SSLogForce);
     var el = this.lockedElement();
     if(name)
     {

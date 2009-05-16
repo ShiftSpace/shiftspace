@@ -36,32 +36,36 @@ var __installed = SSGetValue('installed', {
     name:'Notes', 
     url: spacesDir + 'Notes/Notes.js', 
     position:0, 
-    icon:'Notes.png', 
-    attrs: {}
+    icon:'Notes/Notes.png', 
+    attrs: {},
+    autolaunch: false
   },
   'ImageSwap': 
   {
     name:'ImageSwap', 
     url: spacesDir + 'ImageSwap/ImageSwap.js', 
-    icon:'ImageSwap.png', 
+    icon:'ImageSwap/ImageSwap.png', 
     position:1, 
-    attrs: {}
+    attrs: {},
+    autolaunch: false
   },
   'Highlights': 
   {
     name:'Highlights', 
     url: spacesDir + 'Highlights/Highlights.js', 
-    icon:'Highlights.png', 
+    icon:'Highlights/Highlights.png', 
     position:2, 
-    attrs: {}
+    attrs: {},
+    autolaunch: false
   },
   'SourceShift': 
   {
     name:'SourceShift', 
     url: spacesDir + 'SourceShift/SourceShift.js', 
-    icon:'SourceShift.png',
+    icon:'SourceShift/SourceShift.png',
     position:3, 
-    attrs: {}
+    attrs: {},
+    autolaunch: false
   }
 });
 
