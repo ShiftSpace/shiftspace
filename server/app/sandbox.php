@@ -24,17 +24,16 @@ class Sandbox {
     $sandboxObject = new Sandbox_Object();
     
     $sandboxObject = $this->server->db->row("select * from sandbox where key=:key", array('key' => $key));
-    if (empty($sandboxObject->id)) {
-      $sandboxObject = new Sandbox_Object();
-    }
-    
     $saveObject = new Sandbox_Object();
     
     $saveObject->set(array(
-      'id' => $sandboxObject->id,
       'key' => $_REQUEST['key'],
       'value' => $_REQUEST['value']
     ));
+
+    if (!empty($sandboxObject->id)) {
+      $saveObject->set('id', $sandboxObject->id);
+    }
     
     $this->server->db->save($saveObject);
   }
