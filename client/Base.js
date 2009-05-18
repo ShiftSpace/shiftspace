@@ -19,7 +19,7 @@ var __sysavail__ = {
   packages: []
 };
 
-var __membermemo__ = {};
+var __membermemo = {};
 function $memberof(_subclass, superclass)
 {
  if(_subclass == superclass) return true;
@@ -28,9 +28,9 @@ function $memberof(_subclass, superclass)
   var tag = subclass+':'+superclass;
   
   // check memo
-  if(__membermemo__[tag] != null) 
+  if(__membermemo[tag] != null) 
   {
-    return __membermemo__[tag];
+    return __membermemo[tag];
   }
   
   // check deps
@@ -41,7 +41,7 @@ function $memberof(_subclass, superclass)
   if(deps.contains(superclass))
   {
     // memoize
-    __membermemo__[tag] = true;
+    __membermemo[tag] = true;
     return true;
   }
   
@@ -52,6 +52,6 @@ function $memberof(_subclass, superclass)
   }
   
   // memoize
-  __membermemo__[tag] = false;
+  __membermemo[tag] = false;
   return false;
 }
