@@ -27,7 +27,7 @@ var __defaultEmailComments = 1;
 
 // Stores initial data for plugins that are needed for the console at startup
 // since the plugins won't actually be loaded until they are needed
-var __pluginsData__ = {};
+var __pluginsData = {};
 
 // Each space and it's associated metadata
 var __installed = SSGetValue('installed', {
