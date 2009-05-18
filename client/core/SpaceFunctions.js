@@ -5,7 +5,7 @@
 // ==/Builder==
 
 var __spaces = {};
-var __focusedSpace__ = null;
+var __focusedSpace = null;
 
 /*
 Function: SSLoadSpace
@@ -324,7 +324,7 @@ function SSFocusSpace(space, position)
 */
 function SSFocusedSpace()
 {
-  return __focusedSpace__;
+  return __focusedSpace;
 }
 
 /*
@@ -336,7 +336,7 @@ function SSFocusedSpace()
 */
 function SSSetFocusedSpace(newSpace)
 {
-  __focusedSpace__ = newSpace;
+  __focusedSpace = newSpace;
 }
 
 /*

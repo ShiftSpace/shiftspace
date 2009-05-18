@@ -21,9 +21,9 @@ if(typeof ShiftSpaceSandBoxMode != 'undefined' && ShiftSpaceSandBoxMode)
 }
 
 var displayList = [];
-var __SSInvalidShiftIdError__ = "__SSInvalidShiftIdError__";
-var __consoleIsWaiting__ = false;
-var __defaultEmailComments__ = 1;
+var __SSInvalidShiftIdError = "__SSInvalidShiftIdError";
+var __consoleIsWaiting = false;
+var __defaultEmailComments = 1;
 
 // Stores initial data for plugins that are needed for the console at startup
 // since the plugins won't actually be loaded until they are needed
