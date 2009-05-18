@@ -296,4 +296,4 @@ var TrailNavPage = new Class({
 
 TrailNavPage.implement( new Options );
 
-ShiftSpace.__externals__.TrailNavPage = TrailNavPage; // For Safari
+ShiftSpace.__externals.TrailNavPage = TrailNavPage; // For Safari

@@ -74,7 +74,7 @@ function SSLoadPlugin(plugin, callback)
       {
         if(window.webkit)
         {
-          ShiftSpace.__externals__.evaluate(rx.responseText);
+          ShiftSpace.__externals.evaluate(rx.responseText);
         }
         else
         {
@@ -141,7 +141,7 @@ function SSRegisterPlugin(plugin)
           {
             if(window.webkit)
             {
-              ShiftSpace.__externals__.evaluate(rx.responseText);
+              ShiftSpace.__externals.evaluate(rx.responseText);
             }
             else
             {

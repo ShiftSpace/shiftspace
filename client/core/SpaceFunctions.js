@@ -41,7 +41,7 @@ function SSLoadSpace(space, callback)
         {
           if(window.webkit)
           {
-            ShiftSpace.__externals__.evaluate(rx.responseText);
+            ShiftSpace.__externals.evaluate(rx.responseText);
           }
           else
           {

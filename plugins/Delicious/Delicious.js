@@ -247,4 +247,4 @@ var DeliciousPlugin = ShiftSpace.Plugin.extend({
 });
 
 var Delicious = new DeliciousPlugin();
-ShiftSpace.__externals__.Delicious = Delicious; // For Safari
+ShiftSpace.__externals.Delicious = Delicious; // For Safari

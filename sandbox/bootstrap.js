@@ -72,10 +72,10 @@ SSRemoveIframeCovers = function() {
 }
 
 // NOTE: For Safari to keep SS extensions out of private scope - David
-ShiftSpace.__externals__ = {
+ShiftSpace.__externals = {
   evaluate: function(external, object)
   {
-    with(ShiftSpace.__externals__)
+    with(ShiftSpace.__externals)
     {
       eval(external);
     }

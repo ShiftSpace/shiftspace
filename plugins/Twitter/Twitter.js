@@ -276,4 +276,4 @@ var TwitterPlugin = new Class({
 });
 
 var Twitter = new TwitterPlugin();
-ShiftSpace.__externals__.Twitter = Twitter; // For Safari & Firefox 3.1
+ShiftSpace.__externals.Twitter = Twitter; // For Safari & Firefox 3.1

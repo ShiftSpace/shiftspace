@@ -297,4 +297,4 @@ Trail.gDeleteFocusNode = null;
 Trail.gFocusedNode = null;
 Trail.gHoveredNode = null;
 
-ShiftSpace.__externals__.Trail = Trail; // For Safari
+ShiftSpace.__externals.Trail = Trail; // For Safari

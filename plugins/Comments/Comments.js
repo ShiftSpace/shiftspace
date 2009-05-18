@@ -349,4 +349,4 @@ var CommentsPlugin = new Class({
 
 
 var Comments = new CommentsPlugin();
-ShiftSpace.__externals__.Comments = Comments; // For Safari & Firefox 3.1
+ShiftSpace.__externals.Comments = Comments; // For Safari & Firefox 3.1

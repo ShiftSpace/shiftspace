@@ -235,4 +235,4 @@ TrailNav.parse = function( json )
   return { pages : pages, dict : dict };
 }
 
-ShiftSpace.__externals__.TrailNav = TrailNav; // For Safari
+ShiftSpace.__externals.TrailNav = TrailNav; // For Safari
