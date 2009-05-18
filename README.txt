@@ -282,15 +282,22 @@ The final step is to run the setup.sh shell script.
     make that the location of your database file.  To change the
     location of your database file, edit the file server/config.php.
 
-4. Install the userscript
--------------------------
+4. Developing in the sandbox
+----------------------------
 
-Once the status page determines that your development environment is ready, it
-should include a link at the bottom to install a developer's userscript. Click
-that link to get started using your local ShiftSpace installation. Be sure to
-disable any other ShiftSpace userscripts you might have installed previously
-since they will interfere with each other.
+To start developing point your browser to the URL you used in Step 3:
 
-To start using your newly installed ShiftSpace, reload the page and
-press [shift] + [space]!
+   http://url/to/shiftspace/sandbox
 
+As we are currently developing a complete overhaul of the ShiftSpace
+platform the userscript will probably not work consistently for a
+couple of months. However the sandbox should be adequate to develop a
+space. Also, if you have an existing space that is compatible with the
+current stable ShiftSpace release, the sandbox is a great way to
+check that your space will be compatible with the next version. The
+main source of incompatability will be with MooTools- the Subversion
+branch of ShiftSpace uses MooTools 1.11, while the Git branch is on
+1.2.2.
+
+If you would like to target the current stable version of ShiftSpace,
+please do a checkout of the Subversion branch.
