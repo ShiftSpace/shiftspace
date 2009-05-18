@@ -4,7 +4,7 @@
 // @package           Core
 // ==/Builder==
 
-var __spaces__ = {};
+var __spaces = {};
 var __focusedSpace__ = null;
 
 /*
@@ -217,7 +217,7 @@ function SSResetSpaces()
 */
 function SSSpaceForName(name)
 {
-  var space = __spaces__[name];
+  var space = __spaces[name];
   return space;
 }
 
@@ -234,7 +234,7 @@ function SSSpaceForName(name)
 */
 function SSSetSpaceForName(space, name)
 {
-  __spaces__[name] = space;
+  __spaces[name] = space;
 }
 
 function SSSetSpacePosition(spaceName, newpos)
@@ -267,7 +267,7 @@ function SSSpacesByPosition()
 */
 function SSRemoveSpace(name)
 {
-  delete __spaces__[name];
+  delete __spaces[name];
 }
 
 /*
@@ -280,13 +280,13 @@ function SSRemoveSpace(name)
 function SSSpacesCount()
 {
   var length;
-  for(var space in __spaces__) length++;
+  for(var space in __spaces) length++;
   return length;
 }
 
 function SSAllSpaces()
 {
-  return __spaces__;
+  return __spaces;
 }
 
 /*

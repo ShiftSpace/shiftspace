@@ -222,7 +222,7 @@ function SSCheckForAutolaunch()
 function SSResetCore()
 {
   // reset all internal state
-  __spaces__ = {};
+  __spaces = {};
 }
 
 function SSGetJsonData(json)
