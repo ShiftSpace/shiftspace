@@ -22,8 +22,7 @@ class PDO_Store extends Base_Store {
     $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $this->setup();
   }
-  
-  
+    
   function setup() {
     foreach ($this->config as $key => $value) {
       if (preg_match('/^vars:(\w+)$/', $key, $matches)) {
@@ -33,7 +32,6 @@ class PDO_Store extends Base_Store {
     }
     $this->saveSetupConfig();
   }
-  
   
   function load($options, $value = false) {    
     $regex = '/^(\w+)\((.+)\)$/';
@@ -84,6 +82,36 @@ class PDO_Store extends Base_Store {
 
     return $result;
   }
+
+  public function toggleon($object) {
+    $table = strtolower(substr(get_class($object), 0, -7));
+    $vars = $object->get();
+    
+    foreach ($vars as $key => $value) {
+      $values[] = "$key = :$key";
+    }
+    $values = implode(' AND ', $values);
+    $template = "SELECT COUNT(*) FROM $table WHERE $values";
+
+    $row = $this->query($template, $vars)->fetch(PDO::FETCH_NUM);
+    if ($row[0] == 0) {
+      $object->set('since', time());
+      $this->save($object);
+    }                  
+  }
+
+  public function toggleoff($object) {
+    $table = strtolower(substr(get_class($object), 0, -7));
+    $vars = $object->get();
+    
+    foreach ($vars as $key => $value) {
+      $values[] = "$key = :$key";
+    }
+    $values = implode(' AND ', $values);
+    $template = "DELETE FROM $table WHERE $values";
+
+    $this->query($template, $vars);
+  }
   
   public function save(&$object) {
     $vars = $object->get();
@@ -120,7 +148,6 @@ class PDO_Store extends Base_Store {
     catch (Exception $e) {
     }
   }
-  
   
   /*
     Method: query
