@@ -255,4 +255,4 @@ TrailLink.SSCalcLowerRight = function( element )
   return new Vector( loc.x + size.x + windowScroll.x, loc.y + size.y + windowScroll.y);
 }
 
-ShiftSpace.__externals__.TrailLink = TrailLink; // For Safari
+ShiftSpace.__externals.TrailLink = TrailLink; // For Safari

@@ -74,7 +74,7 @@ function SSLoadPlugin(plugin, callback)
       {
         if(window.webkit)
         {
-          ShiftSpace.__externals__.evaluate(rx.responseText);
+          ShiftSpace.__externals.evaluate(rx.responseText);
         }
         else
         {
@@ -141,7 +141,7 @@ function SSRegisterPlugin(plugin)
           {
             if(window.webkit)
             {
-              ShiftSpace.__externals__.evaluate(rx.responseText);
+              ShiftSpace.__externals.evaluate(rx.responseText);
             }
             else
             {
@@ -212,9 +212,9 @@ function SSGetPlugin(pluginName)
 function SSGetPluginType(pluginName)
 {
   SSLog('SSGetPluginType');
-  if(__pluginsData__[pluginName] && __pluginsData__[pluginName].type)
+  if(__pluginsData[pluginName] && __pluginsData[pluginName].type)
   {
-    return __pluginsData__[pluginName].type;
+    return __pluginsData[pluginName].type;
   }
   else
   {
@@ -241,14 +241,14 @@ function SSPlugInMenuIconForShift(pluginName, shiftId, callback)
   // if the plugin isn't loaded yet, use the initial plugins data
   if(!plugin)
   {
-    var shiftData = __pluginsData__[pluginName]['data'][shiftId];
-    if(__pluginsData__[pluginName]['data'][shiftId])
+    var shiftData = __pluginsData[pluginName]['data'][shiftId];
+    if(__pluginsData[pluginName]['data'][shiftId])
     {
       return shiftData['icon'];
     }
     else
     {
-      return __pluginsData__[pluginName]['defaultIcon'];
+      return __pluginsData[pluginName]['defaultIcon'];
     }
   }
   else

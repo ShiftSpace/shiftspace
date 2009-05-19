@@ -3,16 +3,16 @@ li.SSInstalledSpaceCell
   width: 100%;
 }
 
-img.SSInstalledSpaceCellImage
+li.SSInstalledSpaceCell img
 {
   width: 32px;
   height: 32px;
 }
 
-span.SSInstalledSpaceCellSpaceName
+li.SSInstalledSpaceCell span.name
 {
 }
 
-input.SSInstalledSpaceCellUninstallButton
+li.SSInstalledSpaceCell input.uninstall
 {
 }

@@ -21,24 +21,56 @@ if(typeof ShiftSpaceSandBoxMode != 'undefined' && ShiftSpaceSandBoxMode)
 }
 
 var displayList = [];
-var __SSInvalidShiftIdError__ = "__SSInvalidShiftIdError__";
-var __consoleIsWaiting__ = false;
-var __defaultEmailComments__ = 1;
+var __SSInvalidShiftIdError = "__SSInvalidShiftIdError";
+var __consoleIsWaiting = false;
+var __defaultEmailComments = 1;
 
 // Stores initial data for plugins that are needed for the console at startup
 // since the plugins won't actually be loaded until they are needed
-var __pluginsData__ = {};
+var __pluginsData = {};
 
-// Each space and a corresponding URL of its origin
+// Each space and it's associated metadata
 var __installed = SSGetValue('installed', {
-  'Notes' : spacesDir + 'Notes/Notes.js',
-  'ImageSwap': spacesDir + 'ImageSwap/ImageSwap.js',
-  'Highlights': spacesDir + 'Highlights/Highlights.js',
-  'SourceShift': spacesDir + 'SourceShift/SourceShift.js'
+  'Notes': 
+  {
+    name:'Notes', 
+    url: spacesDir + 'Notes/Notes.js', 
+    position:0, 
+    icon:'Notes/Notes.png', 
+    attrs: {},
+    autolaunch: false
+  },
+  'ImageSwap': 
+  {
+    name:'ImageSwap', 
+    url: spacesDir + 'ImageSwap/ImageSwap.js', 
+    icon:'ImageSwap/ImageSwap.png', 
+    position:1, 
+    attrs: {},
+    autolaunch: false
+  },
+  'Highlights': 
+  {
+    name:'Highlights', 
+    url: spacesDir + 'Highlights/Highlights.js', 
+    icon:'Highlights/Highlights.png', 
+    position:2, 
+    attrs: {},
+    autolaunch: false
+  },
+  'SourceShift': 
+  {
+    name:'SourceShift', 
+    url: spacesDir + 'SourceShift/SourceShift.js', 
+    icon:'SourceShift/SourceShift.png',
+    position:3, 
+    attrs: {},
+    autolaunch: false
+  }
 });
 
-SSLog("Installed ================", SSLogSystem | SSLogForce);
-SSLog(JSON.encode(__installed), SSLogSystem | SSLogForce);
+SSLog("Installed ================", SSLogSystem);
+SSLog(JSON.encode(__installed), SSLogSystem);
 
 var spacePrefs = SSGetValue('spacePrefs', {});
 

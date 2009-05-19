@@ -94,6 +94,7 @@ var SSConsole = new Class({
           SSUninstallAllSpaces();
         });
       }
+      if(this.outlets().get('SSInstalledSpaces')) this.initInstalledSpacesListView();
       
       if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled())
       {
@@ -232,7 +233,12 @@ var SSConsole = new Class({
       }.bind(this));
     }
   },
-  
+
+  initInstalledSpacesListView: function()
+  {
+    this.SSInstalledSpaces = this.outlets().get('SSInstalledSpaces');
+    this.SSInstalledSpaces.setData(SSSpacesByPosition());
+  },
   
   initUserLoginStatus: function()
   {
@@ -522,7 +528,34 @@ var SSConsole = new Class({
   deselectShift: function(shiftId)
   {
     
+  },
+  
+  canRemove: function(sender)
+  {
+    SSLog(sender, SSLogForce);
+    
+    var canRemove = false;
+    switch(sender.listView)
+    {
+      case this.SSInstalledSpaces:
+        this.uninstallSpace(sender.index);
+        canRemove = true;
+        break;
+      default:
+        SSLog('No matching list view', SSLogForce);
+        break;
+    }
+    
+    return canRemove;
+  },
+  
+  
+  uninstallSpace:function(index)
+  {
+    SSLog('uninstallSpace', SSLogForce);
+    var spaces = SSSpacesByPosition();
+    var spaceToRemove = spaces[index];
+    SSUninstallSpace(spaceToRemove.name);
   }
-
 
 });

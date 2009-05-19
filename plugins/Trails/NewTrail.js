@@ -477,4 +477,4 @@ var TrailsPlugin = new Class({
 });
 
 var Trails = new TrailsPlugin();
-ShiftSpace.__externals__.Trails = Trails; // For Safari & Firefox 3.1
+ShiftSpace.__externals.Trails = Trails; // For Safari & Firefox 3.1

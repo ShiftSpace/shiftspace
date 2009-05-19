@@ -455,7 +455,7 @@ function SSGetShifts(shiftIds, callBack, errorHandler)
       if(errorHandler && $type(errorHandler) == 'function')
       {
         errorHandler({
-          type: __SSInvalidShiftIdError__,
+          type: __SSInvalidShiftIdError,
           message: "one or more invalid shift ids to SSGetShift"
         });
       }

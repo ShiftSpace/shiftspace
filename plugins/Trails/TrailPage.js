@@ -1042,4 +1042,4 @@ TrailPage.ElementContainsPoint = function( el, v )
   return result;
 };
 
-ShiftSpace.__externals__.TrailPage = TrailPage; // For Safari
+ShiftSpace.__externals.TrailPage = TrailPage; // For Safari

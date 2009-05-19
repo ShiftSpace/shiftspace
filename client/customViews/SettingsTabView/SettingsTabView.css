@@ -14,3 +14,14 @@
   width: 300px;
   display: block;
 }
+
+ul#SSInstalledSpaces
+{
+  list-style-type: none;
+}
+
+div#SSInstalledSpacesTabPane
+{
+  overflow-y: scroll;
+  height: 100%;
+}

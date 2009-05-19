@@ -4,8 +4,8 @@
 // @package           Core
 // ==/Builder==
 
-var __spaces__ = {};
-var __focusedSpace__ = null;
+var __spaces = {};
+var __focusedSpace = null;
 
 /*
 Function: SSLoadSpace
@@ -41,7 +41,7 @@ function SSLoadSpace(space, callback)
         {
           if(window.webkit)
           {
-            ShiftSpace.__externals__.evaluate(rx.responseText);
+            ShiftSpace.__externals.evaluate(rx.responseText);
           }
           else
           {
@@ -150,7 +150,8 @@ function SSInstallSpace(space)
   if(!SSURLForSpace(space))
   {
     var url = server + 'spaces/' + space + '/' + space + '.js';
-    __installed[space] = url;
+    var count = $H(SSInstalledSpaces()).getLength();
+    __installed[space] = {url:url, displayName:space, position: count};
     SSSetValue('installed', SSInstalledSpaces());
     SSLoadSpace(space, function() {
       alert(space + " space installed.");
@@ -186,7 +187,7 @@ function SSInstalledSpaces()
 
 function SSURLForSpace(spaceName)
 {
-  return __installed[spaceName];
+  return __installed[spaceName].url;
 }
 
 
@@ -216,7 +217,7 @@ function SSResetSpaces()
 */
 function SSSpaceForName(name)
 {
-  var space = __spaces__[name];
+  var space = __spaces[name];
   return space;
 }
 
@@ -233,7 +234,25 @@ function SSSpaceForName(name)
 */
 function SSSetSpaceForName(space, name)
 {
-  __spaces__[name] = space;
+  __spaces[name] = space;
+}
+
+function SSSetSpacePosition(spaceName, newpos)
+{
+  
+}
+
+function SSSpacesByPosition()
+{
+  var spaces = SSInstalledSpaces();
+  var result = [];
+  $H(spaces).each(function(v, k) {
+    result.push(v);
+  });
+  result.sort(function(a, b) {
+    return a.position - b.position;
+  });
+  return result;
 }
 
 /*
@@ -248,7 +267,7 @@ function SSSetSpaceForName(space, name)
 */
 function SSRemoveSpace(name)
 {
-  delete __spaces__[name];
+  delete __spaces[name];
 }
 
 /*
@@ -261,13 +280,13 @@ function SSRemoveSpace(name)
 function SSSpacesCount()
 {
   var length;
-  for(var space in __spaces__) length++;
+  for(var space in __spaces) length++;
   return length;
 }
 
 function SSAllSpaces()
 {
-  return __spaces__;
+  return __spaces;
 }
 
 /*
@@ -305,7 +324,7 @@ function SSFocusSpace(space, position)
 */
 function SSFocusedSpace()
 {
-  return __focusedSpace__;
+  return __focusedSpace;
 }
 
 /*
@@ -317,7 +336,7 @@ function SSFocusedSpace()
 */
 function SSSetFocusedSpace(newSpace)
 {
-  __focusedSpace__ = newSpace;
+  __focusedSpace = newSpace;
 }
 
 /*
