@@ -20,7 +20,7 @@ var HelloWorldalphonShift = new Class({
         this.build();
         console.log("happy4");
        // this.save();
-        //this.manageElement(this.element);
+        //this.manageElement(this.element);s
     },
     
     build: function() {
