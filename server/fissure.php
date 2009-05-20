@@ -54,6 +54,10 @@ function method_form($httpmethod, $method, $args) {
 <?php method_form('post', 'artwork.store', array('jsonObject_')); ?>
 <?php method_form('get', 'user.bookmarks_by_phone', array('phone')); ?>
 <?php method_form('get', 'user.getname', array('userid')); ?>
+<?php method_form('post', 'event.subscribe', array('stream_id')); ?>
+<?php method_form('post', 'event.unsubscribe', array('stream_id')); ?>
+<?php method_form('post', 'event.post', array('stream_ids', 'display')); ?>
+<?php method_form('post', 'event.feed', array()); ?>
 </body>
 </html>
 
