@@ -151,7 +151,16 @@ function SSInstallSpace(space)
   {
     var url = server + 'spaces/' + space + '/' + space + '.js';
     var count = $H(SSInstalledSpaces()).getLength();
-    __installed[space] = {url:url, displayName:space, position: count};
+    
+    __installed[space] = {
+      url:url, 
+      name:space, 
+      position: count, 
+      icon: space+'/'+space+'.png',
+      attrs: {},
+      autolaunch: false
+    };
+    
     SSSetValue('installed', SSInstalledSpaces());
     SSLoadSpace(space, function() {
       alert(space + " space installed.");
@@ -187,7 +196,7 @@ function SSInstalledSpaces()
 
 function SSURLForSpace(spaceName)
 {
-  return __installed[spaceName].url;
+  return (__installed[spaceName] && __installed[spaceName].url) || null;
 }
 
 
