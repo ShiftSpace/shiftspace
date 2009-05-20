@@ -137,6 +137,19 @@ function SSRegisterSpace(instance)
 }
 
 /*
+Function: SSGetSpaceAttributes
+  Loads the attributes for the space. This is a json file named attrs.jsoon
+  that sits in that space's directory.
+*/
+function SSGetSpaceAttributes(space)
+{
+  SSLoadFile(ShiftSpace.info().spacesDir+space+'/attrs.json', function(response) {
+   SSLog('retrieved json:', SSLogForce);
+   SSLog(JSON.decode(response.responseText), SSLogForce);
+  });
+}
+
+/*
 
 Function: SSInstallSpace
   Loads the JavaScript source of a Space, then loads the space into memory.
