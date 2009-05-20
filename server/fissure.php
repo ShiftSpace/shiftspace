@@ -56,8 +56,11 @@ function method_form($httpmethod, $method, $args) {
 <?php method_form('get', 'user.getname', array('userid')); ?>
 <?php method_form('post', 'event.subscribe', array('stream_id')); ?>
 <?php method_form('post', 'event.unsubscribe', array('stream_id')); ?>
-<?php method_form('post', 'event.post', array('stream_ids', 'display')); ?>
+<?php method_form('post', 'event.post', array('stream_id', 'display', 'object_ref')); ?>
 <?php method_form('post', 'event.feed', array()); ?>
+<?php method_form('post', 'event.onefeed', array('stream_id')); ?>
+<?php method_form('post', 'event.createstream', array('private')); ?>
+<?php method_form('post', 'event.permissionstream', array('stream_id', 'user_id', 'type')); ?>
 </body>
 </html>
 

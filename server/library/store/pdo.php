@@ -147,6 +147,8 @@ class PDO_Store extends Base_Store {
     }
     catch (Exception $e) {
     }
+
+    return $object;
   }
   
   /*
