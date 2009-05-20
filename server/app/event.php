@@ -80,6 +80,9 @@ class Event {
   private function can_read($stream_id) {
     $stream = $this->server->db->load("stream($stream_id)");
 
+    if (!$stream)
+      throw new Error("No such stream.");
+      
     if ($stream->private) {
       if ($this->server->user) {
         if ($this->permission($stream_id) < 1) {
@@ -129,6 +132,11 @@ class Event {
     else {
       throw new Error("You don't have permission for this operation.");
     }
+  }
+
+  public function findstreams() {
+    extract($_REQUEST);
+    return new Response($this->server->db->rows("SELECT * FROM event, stream WHERE event.stream_id = stream.id AND stream.private = 0 AND object_ref=:object_ref", compact('object_ref')));
   }
 }
 

@@ -61,6 +61,7 @@ function method_form($httpmethod, $method, $args) {
 <?php method_form('post', 'event.onefeed', array('stream_id')); ?>
 <?php method_form('post', 'event.createstream', array('private')); ?>
 <?php method_form('post', 'event.permissionstream', array('stream_id', 'user_id', 'type')); ?>
+<?php method_form('post', 'event.findstreams', array('object_ref')); ?>
 </body>
 </html>
 
