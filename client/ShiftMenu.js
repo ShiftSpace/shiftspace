@@ -135,7 +135,7 @@ var ShiftMenu = new Class({
   */
   removeSpace: function(spaceName) 
   {
-    this.spaceButtons[spaceName].remove();
+    this.spaceButtons[spaceName].dispose();
   },
   
   /*

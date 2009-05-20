@@ -934,6 +934,7 @@ var SSListView = new Class({
   __remove__: function(index)
   {
     this.data().splice(index, 1);
+    this.refresh(true);
   },
   
   /*

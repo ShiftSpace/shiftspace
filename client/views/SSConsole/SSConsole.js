@@ -234,11 +234,21 @@ var SSConsole = new Class({
     }
   },
 
+
   initInstalledSpacesListView: function()
   {
+    if(this.outlets().get('SSInstallSpace'))
+    {
+      SSLog('initializing install space button', SSLogForce);
+      this.outlets().get('SSInstallSpace').addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+        this.installSpace(this.outlets().get('SSInstallSpaceField').getProperty('value'));
+      }.bind(this));
+    }
     this.SSInstalledSpaces = this.outlets().get('SSInstalledSpaces');
-    this.SSInstalledSpaces.setData(SSSpacesByPosition());
+    this.updateInstalledSpaces();
   },
+  
   
   initUserLoginStatus: function()
   {
@@ -547,6 +557,27 @@ var SSConsole = new Class({
     }
     
     return canRemove;
+  },
+  
+  
+  installSpace:function(spaceName)
+  {
+    SSLog('installSpace ' + spaceName, SSLogForce);
+    SSInstallSpace(spaceName);
+    this.updateInstalledSpaces();
+    this.refreshInstalledSpaces();
+  },
+  
+  
+  updateInstalledSpaces: function()
+  {
+    this.SSInstalledSpaces.setData(SSSpacesByPosition());
+  },
+  
+  
+  refreshInstalledSpaces: function()
+  {
+    this.SSInstalledSpaces.refresh(true);
   },
   
   

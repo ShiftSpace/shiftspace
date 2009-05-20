@@ -5,7 +5,7 @@ var HelloWorldalphonSpace = new Class({
     attributes: {
         name: 'HelloWorldalphon',
         version: 0.1,
-        icon: 'HelloWorld.png',
+        icon: 'HelloWorldalphon.png',
         css:  'HelloWorldalphon.css'
     }
 });
@@ -15,15 +15,19 @@ var HelloWorldalphonShift = new Class({
     Extends: ShiftSpace.Shift,
   
     setup: function(json) {
-        this.build(json);
-        this.save();
-        this.manageElement(this.element);
-        Sandalphon.reset();
+        //Sandalphon.reset();
+        console.log("happy0");
+        this.build();
+        console.log("happy4");
+       // this.save();
+        //this.manageElement(this.element);s
     },
     
-    build: function(json) {
-      Sandalphon.compileAndLoad('spaces/HelloWorldalphon/HelloWorldalphon', function(ui) {
-        Sandalphon.addStyle(ui.styles);
+    build: function() {
+      console.log("happy2");
+      Sandalphon.load('spaces/HelloWorldalphon/HelloWorldalphon', function(ui) {
+        console.log("happy3");
+        Sandalphon.activate($('SSHWmain'));
       });
     },
     
