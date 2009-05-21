@@ -21,7 +21,8 @@ var SSInstalledSpaceCell = new Class({
     var el = this.lockedElement();
     if(imageSrc)
     {
-      el.getElement('img').setProperty('src', ShiftSpace.info().spacesDir+imageSrc);
+      var attrs = SSGetSpaceAttributes(el.retrieve('spaceName'));
+      el.getElement('img').setProperty('src', attrs.url+attrs.icon);
     }
   },
   
@@ -30,12 +31,12 @@ var SSInstalledSpaceCell = new Class({
     var el = this.lockedElement();
     if(name)
     {
+      el.store('spaceName', name);
       el.getElement('.name').setProperty('text', name);
     }
   },
 
   setAutolaunch: function(autolaunch)
   {
-    SSLog('setAutolaunch', SSLogForce);
   }
 });
