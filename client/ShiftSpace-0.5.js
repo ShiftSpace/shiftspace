@@ -75,18 +75,15 @@ var ShiftSpace = new (function() {
       // look for install links
       SSCheckForInstallSpaceLinks();
       if(SSLocalizedStringSupport()) SSLoadLocalizedStrings("en");
-      SSLog('load localized strings');
       
       // Load external scripts (pre-processing required)
       // INCLUDE PACKAGE ShiftSpaceUI
       
-      // Create the object right away if we're not running under the Sandalphon tool
       ShiftSpace.ShiftMenu = new ShiftMenu();
       ShiftSpace.Console = new SSConsole();
       
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
-        SSLog('ShiftSpace Login ======================================');
         SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         // FIXME: Just make this into a onUserLogin hook - David
         if(SSHasResource('RecentlyViewedHelpers'))
@@ -101,20 +98,17 @@ var ShiftSpace = new (function() {
       });
       
       // Load CSS styles
-      SSLog('Loading core stylesheets', SSLogSystem);
       SSLoadStyle('styles/ShiftSpace.css', function() {
         // create the error window
         SSCreateErrorWindow();
       });
       SSLoadStyle('styles/ShiftMenu.css');
 
-      SSLog('>>>>>>>>>>>>>>>>>>>>>>> Loading Spaces', SSLogSystem);
       // Load all spaces and plugins immediately if in the sanbox
       if (typeof ShiftSpaceSandBoxMode != 'undefined') 
       {
         for (var space in SSInstalledSpaces())
         {
-          SSLog('loading space ' + space, SSLogSystem);
           SSLoadSpace(space);
         }
         for(var plugin in installedPlugins) 
@@ -122,10 +116,6 @@ var ShiftSpace = new (function() {
           SSLoadPlugin(plugin);
         }
       }
-
-      // If all spaces have been loaded, build the shift menu and the console
-      SSLog('Building ShiftMenu', SSLogSystem);
-      ShiftSpace.ShiftMenu.buildMenu();
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -138,22 +128,16 @@ var ShiftSpace = new (function() {
       });
 
       // create the pin selection bounding box
-      SSLog('Creating pin selection DOM', SSLogSystem);
       SSCreatePinSelect();
 
       // check for page iframes
       SSCheckForPageIframes();
 
-      SSLog('Grabbing content');
-
       // Create the modal div
-      SSLog('Create DOM for modal mode and dragging', SSLogSystem);
       SSCreateModalDiv();
       SSCreateDragDiv();
-      SSLog('ShiftSpace initialize complete');
       
       // Synch with server, 
-      SSLog('Synchronizing with server', SSLogSystem);
       SSSynch();
     };
     
@@ -167,18 +151,14 @@ var ShiftSpace = new (function() {
         href: window.location.href
       };
       SSServerCall('query', params, function(json) {
-        SSLog('++++++++++++++++++++++++++++++++++++++++++++ GOT CONTENT');
-        
         if (json.error) 
         {
           console.error('Error checking for content: ' + json.error.message);
           return;
         }
 
-        if (json.data.username)
+        if(json.data.username)
         {
-          SSLog('User is loggedin', SSLogForce);
-          
           // Set private user variable
           ShiftSpace.User.setUsername(json.data.username);
           ShiftSpace.User.setEmail(json.data.email);
@@ -189,7 +169,13 @@ var ShiftSpace = new (function() {
           // make sure default shift status preference is set
           SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         }
-        SSLog('+++++++++++++++++++++++++++++++++++++++++++ exit SSynch');
+        else
+        {
+          SSLog('Guest account', SSLogForce);
+        }
+        
+        // build menu only after we know which spaces the users has installed
+        ShiftSpace.ShiftMenu.buildMenu();
       });
     }
 

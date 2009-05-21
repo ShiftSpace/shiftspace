@@ -27,7 +27,6 @@ function SSLoadSpace(space, callback)
       var newSpace = new Asset.javascript(url, {
         id: space,
         onload: function() {
-          SSLog('Space ' + space + ' loaded.', SSLogForce);
         }
       });
 
@@ -111,7 +110,6 @@ function SSRegisterSpace(instance)
   }
 
   instance.addEvent('onShiftShow', function(shiftId) {
-    SSLog('onShiftShow: ' + shiftId, SSLogForce);
     if(ShiftSpace.Console) ShiftSpace.Console.showShift(shiftId);
   });
   instance.addEvent('onShiftBlur', function(shiftId) {
@@ -159,9 +157,6 @@ function SSLoadSpaceAttributes(space, callback)
     
     // position default to end
     json.position = $H(SSInstalledSpaces()).getLength();
-    
-    SSLog('SSLoadSpaceAttributes', SSLogForce);
-    SSLog(JSON.encode(json), SSLogForce);
     
     callback(json);
   });
@@ -471,8 +466,6 @@ function SSHandleInstallSpaceLink(_evt)
   var target = evt.target;
   var spaceName = target.getAttribute('title');
   
-  SSLog('installing ' + spaceName);
-
   // first check for the attributes file
   SSInstallSpace(spaceName);
 }
