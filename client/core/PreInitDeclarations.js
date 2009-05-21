@@ -10,7 +10,7 @@ var spacesDir = '%%SPACEDIR%%';
 SSLog('SERVER: ' + server, SSLogForce);
 SSLog('SPACESDIR: ' + spacesDir, SSLogForce);
 
-var version = '0.13';
+var version = '1.0';
 var cacheFiles = 0;
 
 if(typeof ShiftSpaceSandBoxMode != 'undefined' && ShiftSpaceSandBoxMode) 
@@ -73,9 +73,6 @@ var __installed = SSGetValue('installed', {
   }
 });
 
-SSLog("Installed ================", SSLogSystem);
-SSLog(JSON.encode(__installed), SSLogSystem);
-
 var spacePrefs = SSGetValue('spacePrefs', {});
 
 // Each plugin and a corresponding URL of its origin
@@ -91,7 +88,6 @@ installedPlugins = SSGetValue('installedPlugins', {
   'Comments': server + 'plugins/Comments/Comments.js',
   'Twitter': server + 'plugins/Twitter/Twitter.js'
 });
-SSLog(installedPlugins);
 */
 
 // installedPlugins = {
