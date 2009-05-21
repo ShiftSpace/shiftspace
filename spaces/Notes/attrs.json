@@ -1,7 +1,7 @@
 {
   name: 'Notes',
   authors: ['dphiffer', 'mushon', 'dnolen'],
-  url: 'http://www.shiftspace.org/api/spaces/Notes',
+  url: '{SPACES}/Notes',
   icon: 'Notes.png',
   css: 'Notes.css',
   description: 'Leave a sticky note.',

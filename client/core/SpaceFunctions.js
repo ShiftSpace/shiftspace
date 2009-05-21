@@ -20,22 +20,22 @@ function SSLoadSpace(space, callback)
 {
   if(space)
   {
-    SSLog('loading space: ' + space, SSLogSystem);
+    var url = SSURLForSpace(space) + space + '.js';
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
-      var url = SSURLForSpace(space) + '?' + new Date().getTime();
-      SSLog('loading ' + url);
+      url += '?' + new Date().getTime();
       var newSpace = new Asset.javascript(url, {
-        id: space
+        id: space,
+        onload: function() {
+          SSLog('Space ' + space + ' loaded.', SSLogForce);
+        }
       });
 
-      SSLog('Direct inject ' + space, SSLogSystem);
       if(callback) callback();
     }
     else
     {
-      SSLog('loading space: ' + space + ' from ' + SSURLForSpace(space), SSLogSystem);
-      SSLoadFile(SSURLForSpace(space), function(rx) {
+      SSLoadFile(url, function(rx) {
         var err;
         try
         {
@@ -69,17 +69,15 @@ Parameters:
 */
 function SSRegisterSpace(instance) 
 {
-  SSLog("SSRegisterSpace", SSLogSystem);
   var spaceName = instance.attributes.name;
-  SSLog('Register Space ===================================== ' + spaceName, SSLogSystem);
   SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
 
-  var spaceDir = SSURLForSpace(spaceName).match(/(.+\/)[^\/]+\.js/)[1];
+  var spaceDir = SSURLForSpace(spaceName);
 
   instance.attributes.dir = spaceDir;
 
-  if (!instance.attributes.icon) 
+  if (!instance.attributes.icon)
   {
     var icon = SSURLForSpace(spaceName).replace('.js', '.png');
     instance.attributes.icon = icon;
@@ -89,8 +87,6 @@ function SSRegisterSpace(instance)
     var icon = spaceDir + instance.attributes.icon;
     instance.attributes.icon = icon;
   }
-
-  //SSLog("Space icon: " + instance.attribution.icon);
 
   // if a css file is defined in the attributes load the style
   if (instance.attributes.css) 
@@ -137,16 +133,21 @@ function SSRegisterSpace(instance)
 }
 
 /*
-Function: SSGetSpaceAttributes
-  Loads the attributes for the space. This is a json file named attrs.jsoon
+Function: SSLoadSpaceAttributes
+  Loads the attributes for the space. This is a json file named attrs.json
   that sits in that space's directory.
 */
-function SSGetSpaceAttributes(space)
+function SSLoadSpaceAttributes(space, callback)
 {
   SSLoadFile(ShiftSpace.info().spacesDir+space+'/attrs.json', function(response) {
-   SSLog('retrieved json:', SSLogForce);
-   SSLog(JSON.decode(response.responseText), SSLogForce);
+   callback(JSON.decode(response.responseText));
   });
+}
+
+function SSGetSpaceAttributes(space)
+{
+  // TODO: fix the resolution of the icon url - David
+  return SSInstalledSpaces()[space];
 }
 
 /*
@@ -165,20 +166,32 @@ function SSInstallSpace(space)
     var url = server + 'spaces/' + space + '/' + space + '.js';
     var count = $H(SSInstalledSpaces()).getLength();
     
-    __installed[space] = {
-      url:url, 
-      name:space, 
-      position: count, 
-      icon: space+'/'+space+'.png',
-      attrs: {},
-      autolaunch: false
-    };
-    
-    SSSetValue('installed', SSInstalledSpaces());
-    SSLoadSpace(space, function() {
-      alert(space + " space installed.");
-      SSFireEvent('onSpaceInstall', space);
-    }.bind(this));
+    SSLoadSpaceAttributes(space, function(attrs) {
+      if(!attrs)
+      {
+        var attrs = {
+          url:url, 
+          name:space, 
+          position: count, 
+          icon: space+'/'+space+'.png',
+          attrs: {},
+          autolaunch: false
+        };
+      }
+      else
+      {
+        attrs.url = attrs.url.substitute({SPACES:ShiftSpace.info().spacesDir});
+      }
+      
+      __installed[space] = attrs;
+      
+      SSSetValue('installed', SSInstalledSpaces());
+      SSLoadSpace(space, function() {
+        alert(space + " space installed.");
+        SSFireEvent('onSpaceInstall', space);
+      });
+      
+    });
   }
 };
 
@@ -320,8 +333,6 @@ Parameter:
 */
 function SSFocusSpace(space, position)
 {
-  SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOCUS SPACE');
-
   var lastFocusedSpace = SSFocusedSpace();
 
   if(lastFocusedSpace && lastFocusedSpace != space)
@@ -411,7 +422,6 @@ function SSGetPrefForSpace(spaceName, pref)
 */
 function SSSpaceForShift(shiftId)
 {
-  //SSLog('SSSpaceForShift');
   var shift = SSGetShift(shiftId);
   return SSSpaceForName(shift.space);
 }
@@ -429,7 +439,6 @@ function SSCheckForInstallSpaceLinks()
   $$('.SSInstallFirstLink').setStyle('display', 'none');
 
   $$('.SSInstallSpaceLink').each(function(x) {
-   SSLog('================================================== SSCheckForInstallSpaceLinks');
    x.setStyle('display', 'block');
    x.addEvent('click', SSHandleInstallSpaceLink);
   });
@@ -442,11 +451,9 @@ function SSHandleInstallSpaceLink(_evt)
   var target = evt.target;
   var spaceName = target.getAttribute('title');
   
-  //SSLog(target);
   SSLog('installing ' + spaceName);
-  
+
   // first check for the attributes file
-  // loadFile(server + 'spaces/' + spaceName + '/attributes.js', SSInstallSpaceLinkCallback, SSInstallSpaceLinkCallback);
   SSInstallSpace(spaceName);
 }
 

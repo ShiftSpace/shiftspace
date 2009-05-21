@@ -289,6 +289,7 @@ var ShiftSpace = new (function() {
       this.sys = __sys__;
       this.SSHasResource = SSHasResource;
       this.SSResourceExists = SSResourceExists;
+      this.SSLoadSpaceAttributes = SSLoadSpaceAttributes;
       this.SSGetSpaceAttributes = SSGetSpaceAttributes;
       
       // export SSLog
