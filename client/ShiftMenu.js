@@ -87,7 +87,7 @@ var ShiftMenu = new Class({
     });
     
     var icon = new ShiftSpace.Element('img', {
-      src: meta.url + meta.icon
+      src: meta.icon
     });
     icon.injectInside(button);
     button.injectBefore(clear);

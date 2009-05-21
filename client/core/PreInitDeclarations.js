@@ -35,8 +35,9 @@ var __installed = SSGetValue('installed', {
   {
     name:'Notes', 
     url: spacesDir + 'Notes/', 
+    icon: spacesDir + 'Notes/' + 'Notes.png', 
+    css: spacesDir + 'Notes/' + 'Notes.css',
     position:0, 
-    icon:'Notes.png', 
     attrs: {},
     autolaunch: false
   },
@@ -44,7 +45,8 @@ var __installed = SSGetValue('installed', {
   {
     name:'ImageSwap', 
     url: spacesDir + 'ImageSwap/', 
-    icon:'ImageSwap.png', 
+    icon: spacesDir + 'ImageSwap/' + 'ImageSwap.png', 
+    css: spacesDir + 'ImageSwap/' + 'ImageSwap.css',
     position:1, 
     attrs: {},
     autolaunch: false
@@ -53,7 +55,8 @@ var __installed = SSGetValue('installed', {
   {
     name:'Highlights', 
     url: spacesDir + 'Highlights/', 
-    icon:'Highlights.png', 
+    icon: spacesDir + 'Highlights/' + 'Highlights.png', 
+    css: spacesDir + 'Highlights/' + 'Highlights.css',
     position:2, 
     attrs: {},
     autolaunch: false
@@ -62,7 +65,8 @@ var __installed = SSGetValue('installed', {
   {
     name:'SourceShift', 
     url: spacesDir + 'SourceShift/', 
-    icon:'SourceShift.png',
+    icon: spacesDir + 'SourceShift/' + 'SourceShift.png',
+    css: spacesDir + 'SourceShift/' + 'SourceShift.css',
     position:3, 
     attrs: {},
     autolaunch: false

@@ -44,6 +44,9 @@ var SSConsole = new Class({
     // listen for shift events
     SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));
     SSAddEvent('onShiftHide', this.deselectShift.bind(this));
+    
+    // space install event
+    SSAddEvent('onSpaceInstall', this.onSpaceInstall.bind(this));
 
     // listen for global events as well
 
@@ -564,6 +567,11 @@ var SSConsole = new Class({
   {
     SSLog('installSpace ' + spaceName, SSLogForce);
     SSInstallSpace(spaceName);
+  },
+  
+  
+  onSpaceInstall: function()
+  {
     this.updateInstalledSpaces();
     this.refreshInstalledSpaces();
   },
@@ -577,6 +585,7 @@ var SSConsole = new Class({
   
   refreshInstalledSpaces: function()
   {
+    SSLog('refreshInstalledSpaces', SSLogForce);
     this.SSInstalledSpaces.refresh(true);
   },
   

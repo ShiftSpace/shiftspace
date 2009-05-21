@@ -132,6 +132,11 @@ function SSRegisterSpace(instance)
   instance.addEvent('onShiftDestroy', SSRemoveShift);
 }
 
+function SSIsAbsoluteURL(string)
+{
+  return (string.search("http://") == 0);
+}
+
 /*
 Function: SSLoadSpaceAttributes
   Loads the attributes for the space. This is a json file named attrs.json
@@ -140,7 +145,25 @@ Function: SSLoadSpaceAttributes
 function SSLoadSpaceAttributes(space, callback)
 {
   SSLoadFile(ShiftSpace.info().spacesDir+space+'/attrs.json', function(response) {
-   callback(JSON.decode(response.responseText));
+    // check to see that the resources urls are full
+    var json = JSON.decode(response.responseText);
+    
+    // clear whitespace
+    json.url = json.url.trim();
+    json.icon = json.icon.trim();
+    json.css = json.css.trim();
+    
+    if(!SSIsAbsoluteURL(json.url)) json.url = json.url.substitute({SPACEDIR:ShiftSpace.info().spacesDir});
+    if(!SSIsAbsoluteURL(json.icon)) json.icon = json.url + json.icon;
+    if(!SSIsAbsoluteURL(json.css)) json.css = json.url + json.css;
+    
+    // position default to end
+    json.position = $H(SSInstalledSpaces()).getLength();
+    
+    SSLog('SSLoadSpaceAttributes', SSLogForce);
+    SSLog(JSON.encode(json), SSLogForce);
+    
+    callback(json);
   });
 }
 
@@ -167,6 +190,7 @@ function SSInstallSpace(space)
     var count = $H(SSInstalledSpaces()).getLength();
     
     SSLoadSpaceAttributes(space, function(attrs) {
+      // TODO: throw an error if no attributes file - David
       if(!attrs)
       {
         var attrs = {
@@ -177,10 +201,6 @@ function SSInstallSpace(space)
           attrs: {},
           autolaunch: false
         };
-      }
-      else
-      {
-        attrs.url = attrs.url.substitute({SPACES:ShiftSpace.info().spacesDir});
       }
       
       __installed[space] = attrs;
