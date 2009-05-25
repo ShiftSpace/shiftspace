@@ -18,15 +18,13 @@ var MoMAUserClass = new Class({
   initialize: function()
   {
     this.parent();
-    this.clearData();
   },
   
   
   syncData: function(data)
   {
-    this.setUsername(data.username);
-    this.setId(data.id);
-    this.setEmail(data.email);
+    this.parent(data);
+
     this.setPhone(data.phone);
     this.setPhoneValidated(data.phone_validated);
     this.setPreview(data.preview);
@@ -35,9 +33,8 @@ var MoMAUserClass = new Class({
   
   clearData: function()
   {
-    this.__username = null;
-    this.__userId = null;
-    this.__email = null;
+    this.parent();
+    
     this.__phone = null;
     this.__phoneValidated = null;
     this.__preview = null;

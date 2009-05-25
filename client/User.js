@@ -26,9 +26,6 @@ var ShiftSpaceUserClass = new Class({
     this.setUsername(data.username);
     this.setId(data.id);
     this.setEmail(data.email);
-    this.setPhone(data.phone);
-    this.setPhoneValidated(data.phone_validated);
-    this.setPreview(data.preview);
   },
   
   
@@ -37,9 +34,6 @@ var ShiftSpaceUserClass = new Class({
     this.__username = null;
     this.__userId = null;
     this.__email = null;
-    this.__phone = null;
-    this.__phoneValidated = null;
-    this.__preview = null;
   },
   
   
@@ -52,30 +46,6 @@ var ShiftSpaceUserClass = new Class({
   getId: function()
   {
     return this.__userId;
-  },
-  
-  
-  setPreview: function(val)
-  {
-    this.__preview = val;
-  },
-  
-  
-  preview: function()
-  {
-    return this.__preview;
-  },
-  
-  
-  setPerspective: function(perspective)
-  {
-    this.__perspective = perspective;
-  },
-  
-  
-  perspective: function()
-  {
-    return this.__perspective;
   },
   
   
@@ -119,37 +89,6 @@ var ShiftSpaceUserClass = new Class({
   },
   
   
-  setPhone: function(phone)
-  {
-    if(phone != '' && phone != 'NULL' && phone != null)
-    {
-      this.__phone = phone;
-    }
-    else 
-    {
-      this.__phone = '';
-    }
-  },
-  
-  
-  phone: function()
-  {
-    return this.__phone;
-  },
-  
-  
-  setPhoneValidated: function(value)
-  {
-    this.__phoneValidated = value;
-  },
-  
-  
-  phoneValidated: function()
-  {
-    return this.__phoneValidated;
-  },
-  
-
   /*
     Function: isLoggedIn
       Checks whether there is a logged in user.
@@ -265,25 +204,6 @@ var ShiftSpaceUserClass = new Class({
   },
   
   
-  validatePhone: function(_callback) 
-  {
-    var callback = _callback;
-    SSServerCall('user.validate_phone', null, function(json) {
-      if(callback) callback(json);
-      this.fireEvent('onUserValidatePhone', json);
-    }.bind(this));
-  },
-  
-  
-  validatePhoneComplete: function(passcode, _callback)
-  {
-    var callback = _callback;
-    SSServerCall('user.validate_phone_complete', {key:passcode}, function(json) {
-      if(callback) callback(json);
-      this.fireEvent('onUserValidatePhoneComplete', json);
-    }.bind(this));
-  },
-  
   /*
     Function: resetPassword (private)
       Reset a user's password
@@ -308,16 +228,6 @@ var ShiftSpaceUserClass = new Class({
       email_comments: newValue
     }, function(json) {
     });
-  },
-  
-  
-  bookmarksByPhone: function(phone, _callback)
-  {
-    var callback = _callback;
-    SSServerCall('user.bookmarks_by_phone', {phone:phone}, function(json) {
-      if(callback) callback(json);
-      this.fireEvent('onBookmarksByPhoneComplete', json);
-    }.bind(this));
   },
   
   
