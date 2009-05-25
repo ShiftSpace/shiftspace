@@ -325,6 +325,18 @@ var ShiftSpaceUserClass = new Class({
   {
     // setting the value, can't user zero because of PHP, GRRR - David
     return (SSGetDefaultEmailComments(true)-1);
+  },
+  
+  
+  savePreference: function() 
+  {
+    
+  },
+  
+  
+  removePreference: function()
+  {
+    
   }
 });
 
