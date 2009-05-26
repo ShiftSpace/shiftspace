@@ -22,7 +22,7 @@ function SSIsNewShift(shiftId)
 // = Iframe Cover Functions =
 // ==========================
 
-var __iframeCovers__ = [];
+var __iframeCovers = [];
 SSCheckForPageIframes = function()
 {
   $$('iframe').filter(SSIsNotSSElement).each(function(aFrame) {
@@ -43,17 +43,17 @@ SSCreateCover = function()
 SSAddCover = function(newCover)
 {
   // create covers if we haven't already
-  __iframeCovers__.push(newCover);
+  __iframeCovers.push(newCover);
 }
 
 SSAddIframeCovers = function() {
-  __iframeCovers__.each(function(aCover) {
+  __iframeCovers.each(function(aCover) {
     aCover.cover.setStyle('display', 'block');
   });
 }
 
 SSUpdateIframeCovers = function() {
-  __iframeCovers__.each(function(aCover) {
+  __iframeCovers.each(function(aCover) {
     var pos = aCover.frame.getPosition();
     var size = aCover.frame.getSize().size;
     aCover.cover.setStyles({
@@ -66,7 +66,7 @@ SSUpdateIframeCovers = function() {
 }
 
 SSRemoveIframeCovers = function() {
-  __iframeCovers__.each(function(aCover) {
+  __iframeCovers.each(function(aCover) {
     aCover.cover.setStyle('display', 'none');
   });
 }

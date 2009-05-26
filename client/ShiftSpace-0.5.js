@@ -121,7 +121,7 @@ var ShiftSpace = new (function() {
       window.addEvent('click', function() {
         if(ShiftSpace.Console)
         {
-          __pinWidgets__.each(function(x){
+          __pinWidgets.each(function(x){
             if(!x.isSelecting) x.hideMenu();
           });
         }

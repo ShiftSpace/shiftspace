@@ -109,7 +109,7 @@ var ShiftSpacePinWidget = new Class({
     this.delegate.addEvent('pin', this.delegateWasPinned.bind(this));
     this.delegate.addEvent('unpin', this.delegateWasUnpinned.bind(this));
 
-    __pinWidgets__.push(this);
+    __pinWidgets.push(this);
   },
 
   /*

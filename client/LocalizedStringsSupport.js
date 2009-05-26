@@ -4,15 +4,15 @@
 // @package           Internationalization
 // ==/Builder==
 
-var __sslang__ = null;
+var __sslang = null;
 function SSLoadLocalizedStrings(lang, ctxt)
 {
   var context = ctxt || window;
   //SSLog('load localized strings ' + lang);
   SSLoadFile("client/LocalizedStrings/"+lang+".json", function(rx) {
     SSLog(')))))))))))))))))))))))))))))))))))))))))))');
-    SSLog(lang + " - " + __sslang__);
-    if(lang != __sslang__)
+    SSLog(lang + " - " + __sslang);
+    if(lang != __sslang)
     {
       SSLog('Evaluating language file');
       ShiftSpace.localizedStrings = JSON.decode(rx.responseText);
@@ -47,6 +47,6 @@ function SSLoadLocalizedStrings(lang, ctxt)
       }.bind(this));
     }
 
-    __sslang__ = lang;
+    __sslang = lang;
   });
 }
