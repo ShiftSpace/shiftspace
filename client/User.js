@@ -15,6 +15,12 @@ var ShiftSpaceUserClass = new Class({
   Implements: Events,
   
   
+  defaultUserName: function()
+  {
+    return "guest";
+  },
+  
+  
   initialize: function()
   {
     this.clearData();
@@ -98,7 +104,7 @@ var ShiftSpaceUserClass = new Class({
   */
   isLoggedIn: function(showErrorAlert) 
   {
-    return (this.getId() != null) || (this.getUsername() != null);
+    return (this.getId() != null);
   },
   
   

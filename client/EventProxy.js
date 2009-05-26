@@ -5,9 +5,9 @@
 // ==/Builder==
 
 // event proxy object since, ShiftSpace is not a MooTools class
-var __eventProxyClass__ = new Class({});
-__eventProxyClass__.implement(new Events);
-var __eventProxy__ = new __eventProxyClass__();
+var __eventProxyClass = new Class({});
+__eventProxyClass.implement(new Events);
+var __eventProxy = new __eventProxyClass();
 
 /*
   Function: SSAddEvent
@@ -43,7 +43,7 @@ function SSAddEvent(eventType, callback, anObject)
   }
   else
   {
-    __eventProxy__.addEvent(eventType, callback);
+    __eventProxy.addEvent(eventType, callback);
   }
 };
 
@@ -58,7 +58,7 @@ function SSAddEvent(eventType, callback, anObject)
 function SSFireEvent(eventType, data) 
 {
   //console.log('SSFireEvent ' + eventType);
-  __eventProxy__.fireEvent(eventType, data);
+  __eventProxy.fireEvent(eventType, data);
   
   var awakeNow = __sleepingObjects__.filter(function(objectHash, objectName) {
     return objectHash.get('object').isAwake();

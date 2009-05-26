@@ -4,16 +4,11 @@
 // @package           MoMA
 // ==/Builder==
 
-/*
-  Class: User
-    A an object wrapping the current ShiftSpace User.  Use this class to check the user's display
-    name as well as checking if the user is logged in or out.
-*/
 var MoMAUserClass = new Class({
   
   Implements: Events,
   
-  Extends: ShiftSpaceUser,
+  Extends: ShiftSpaceUserClass,
   
   initialize: function()
   {

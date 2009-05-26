@@ -10,12 +10,12 @@
 // ===================
 
 // An array of allocated Pin Widgets
-var __pinWidgets__ = [];
+var __pinWidgets = [];
 // Exceptions
-var __SSPinOpException__ = "__SSPinOpException__";
+var __SSPinOpException = "__SSPinOpException";
 // for holding the current pin selection
-var __currentPinSelection__ = null;
-var __shiftSpacePinSelect__ = null;
+var __currentPinSelection = null;
+var __shiftSpacePinSelect = null;
 
 /*
   Function: SSCreatePinSelect
@@ -36,7 +36,7 @@ function SSCreatePinSelect()
   insetTwo.injectInside(insetOne);
   insetOne.injectInside(targetBorder);
   
-  __shiftSpacePinSelect__ = targetBorder;
+  __shiftSpacePinSelect = targetBorder;
 }
 
 /*
@@ -54,18 +54,18 @@ function SSPinMouseOverHandler (_evt)
   if(!SSIsSSElement(target) &&
      !target.hasClass('SSPinSelect'))
   {
-    __currentPinSelection__ = target;
+    __currentPinSelection = target;
     var pos = target.getPosition();
     var size = target.getSize().size;
   
-    __shiftSpacePinSelect__.setStyles({
+    __shiftSpacePinSelect.setStyles({
       left: pos.x-3,
       top: pos.y-3,
       width: size.x+3,
       height: size.y+3
     });
 
-    __shiftSpacePinSelect__.injectInside(document.body);
+    __shiftSpacePinSelect.injectInside(document.body);
   }
 }
 
@@ -78,9 +78,9 @@ function SSPinMouseOverHandler (_evt)
 */
 function SSPinMouseMoveHandler(_evt) 
 {
-  if(__shiftSpacePinSelect__.getParent())
+  if(__shiftSpacePinSelect.getParent())
   {
-    __shiftSpacePinSelect__.remove();
+    __shiftSpacePinSelect.remove();
   }
 }
 
@@ -97,9 +97,9 @@ function SSPinMouseClickHandler(_evt)
   evt.stop();
   if(__currentPinWidget__)
   {
-    if(__shiftSpacePinSelect__.getParent()) __shiftSpacePinSelect__.remove();
+    if(__shiftSpacePinSelect.getParent()) __shiftSpacePinSelect.remove();
     SSRemovePinEvents();
-    __currentPinWidget__.userPinnedElement(__currentPinSelection__);
+    __currentPinWidget__.userPinnedElement(__currentPinSelection);
   }
 }
 
@@ -155,7 +155,7 @@ function SSPinElement(element, pinRef)
   if(!targetNode)
   {
     // throw an exception
-    throw(__SSPinOpException__);
+    throw(__SSPinOpException);
   }
   
   // store the styles
@@ -341,7 +341,7 @@ function SSAttachPinEvents()
 {
   window.addEvent('mouseover', SSPinMouseOverHandler);
   window.addEvent('click', SSPinMouseClickHandler);
-  __shiftSpacePinSelect__.addEvent('mousemove', SSPinMouseMoveHandler);
+  __shiftSpacePinSelect.addEvent('mousemove', SSPinMouseMoveHandler);
 }
 
 /*
@@ -352,7 +352,7 @@ function SSRemovePinEvents()
 {
   window.removeEvent('mouseover', SSPinMouseOverHandler);
   window.removeEvent('click', SSPinMouseClickHandler);
-  __shiftSpacePinSelect__.removeEvent('mousemove', SSPinMouseMoveHandler);
+  __shiftSpacePinSelect.removeEvent('mousemove', SSPinMouseMoveHandler);
 }
 
 // hold the current active pin widget
@@ -378,6 +378,6 @@ function SSStartPinSelection(widget)
 function SSStopPinSelection() 
 {
   __currentPinWidget__ = null;
-  if(__shiftSpacePinSelect__.getParent()) __shiftSpacePinSelect__.remove();
+  if(__shiftSpacePinSelect.getParent()) __shiftSpacePinSelect.remove();
   SSRemovePinEvents();
 }

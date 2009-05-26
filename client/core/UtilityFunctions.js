@@ -153,7 +153,7 @@ function SSRemoveDragDiv()
 
 function SSLocalizedStringSupport()
 {
-  return (typeof __sslang__ != 'undefined');
+  return (typeof __sslang != 'undefined');
 }
 
 // Localized String Support
