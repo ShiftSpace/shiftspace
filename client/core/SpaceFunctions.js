@@ -228,12 +228,22 @@ function SSUninstallSpace(spaceName)
   SSFireEvent('onSpaceUninstall', spaceName);
 };
 
+function SSSetInstalledSpaces(installed)
+{
+  SSLog('SSSetInstalledSpaces', SSLogForce);
+  SSLog(installed, SSLogForce);
+  __installed = installed;
+}
 
 function SSInstalledSpaces()
 {
   return __installed;
 }
 
+function SSDefaultSpaces()
+{
+  return __defaultSpaces;
+}
 
 function SSURLForSpace(spaceName)
 {

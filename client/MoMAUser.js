@@ -10,6 +10,13 @@ var MoMAUserClass = new Class({
   
   Extends: ShiftSpaceUserClass,
   
+
+  defaulUsername: funtion()
+  {
+    return "";
+  },
+  
+  
   initialize: function()
   {
     this.parent();

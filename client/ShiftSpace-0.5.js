@@ -163,9 +163,6 @@ var ShiftSpace = new (function() {
           ShiftSpace.User.setUsername(json.data.username);
           ShiftSpace.User.setEmail(json.data.email);
 
-          // fire user login for the Console
-          SSFireEvent('onUserLogin', {status:1});
-
           // make sure default shift status preference is set
           SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         }
@@ -174,8 +171,13 @@ var ShiftSpace = new (function() {
           SSLog('Guest account', SSLogForce);
         }
         
+        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
+        
         // build menu only after we know which spaces the users has installed
         ShiftSpace.ShiftMenu.buildMenu();
+        
+        // notify SSConsole
+        if(ShiftSpace.User.isLoggedIn()) SSFireEvent('onUserLogin', {status:1});
       });
     }
 

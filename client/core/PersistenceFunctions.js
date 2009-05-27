@@ -18,7 +18,7 @@ Returns:
 */
 function SSSetValue(key, value, rawValue) 
 {
-  SSLog('SSSetValue ' + key, SSLogForce);
+  SSLog('SSSetValue ' + key, SSLogSystem);
   if (rawValue) 
   {
     GM_setValue(key, value);
@@ -42,34 +42,13 @@ Parameters:
 Returns:
   Either the stored value, or defaultValue if none is found.
 */
-function SSGetValue(key, defaultValue, rawValue)
+function SSGetValue(key, defaultValue)
 {
-  if (!rawValue) 
-  {
-    defaultValue = JSON.encode(defaultValue);
-  }
   var result = GM_getValue(key, defaultValue);
-  var temp = JSON.decode(result);
-
-  if(temp == null || temp == 'null') result = null;
-  
-  if (result == null) 
-  {
-    SSLog('is null SSGetValue("' + key + '") = ' + JSON.decode(defaultValue), SSLogForce);
-    return JSON.decode(defaultValue);
-  } 
-  else if (rawValue) 
-  {
-    SSLog('raw value SSGetValue("' + key + '") = ' + result, SSLogForce);
-    return result;
-  } 
-  else 
-  {
-    SSLog('real value SSGetValue("' + key + '") = ...' + JSON.decode(result), SSLogForce);
-    return JSON.decode(result);
-  }
+  result = (result != defaultValue) ? JSON.decode(result) : result;
+  if(result == 'null') result = null;
+  return result;
 }
-
 
 /*
   Function: SSSetPref

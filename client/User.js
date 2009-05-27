@@ -244,7 +244,7 @@ var ShiftSpaceUserClass = new Class({
   },
   
   
-  setPreference: function(pref, value) 
+  setPreference: function(pref, value)
   {
     SSSetValue([this.getUsername(), pref].join('.'), JSON.encode(value));
   },
