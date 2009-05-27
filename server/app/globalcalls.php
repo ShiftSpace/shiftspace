@@ -60,8 +60,7 @@ class GlobalCalls {
         'href' => $href
       ));
       
-      $data['username'] = $this->server->user->username;
-      $data['email'] = $this->server->user->email;
+      $data['user'] = $this->server->user;
     }
     
     return new Response($data);
