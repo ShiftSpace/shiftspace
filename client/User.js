@@ -72,7 +72,7 @@ var ShiftSpaceUserClass = new Class({
   */
   getUsername: function() 
   {
-    return this.__username;
+    return (this.isLoggedIn() ? this.__username : this.defaultUserName());
   },
   
   
@@ -244,15 +244,20 @@ var ShiftSpaceUserClass = new Class({
   },
   
   
-  savePreference: function() 
+  setPreference: function(pref, value) 
   {
-    
+    SSSetValue([this.getUsername(), pref].join('.'), JSON.encode(value));
+  },
+  
+  
+  getPreference: function(pref, defaultValue)
+  {
+    return JSON.decode(SSGetValue([this.getUsername(), pref].join('.'), defaultValue));
   },
   
   
   removePreference: function()
   {
-    
   }
 });
 
