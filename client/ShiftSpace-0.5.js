@@ -85,6 +85,7 @@ var ShiftSpace = new (function() {
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
         SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
+        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
         // FIXME: Just make this into a onUserLogin hook - David
         if(SSHasResource('RecentlyViewedHelpers'))
         {
@@ -95,6 +96,7 @@ var ShiftSpace = new (function() {
 
       ShiftSpace.User.addEvent('onUserLogout', function() {
         SSFireEvent('onUserLogout');
+        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
       });
       
       // Load CSS styles

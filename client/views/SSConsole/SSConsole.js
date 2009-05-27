@@ -143,6 +143,8 @@ var SSConsole = new Class({
       isLoggedIn.addClass('SSActive');
       isLoggedIn.getElement('span').set('text', ShiftSpaceUser.getUsername());
     }
+    
+    this.updateInstalledSpaces();
   },
 
 
@@ -166,6 +168,8 @@ var SSConsole = new Class({
       loginStatus.getElementById('SSUserIsNotLoggedIn').addClass('SSActive');
       loginStatus.getElementById('SSUserIsLoggedIn').removeClass('SSActive');
     }
+    
+    this.updateInstalledSpaces();
   },
 
 
@@ -243,7 +247,6 @@ var SSConsole = new Class({
   {
     if(this.outlets().get('SSInstallSpace'))
     {
-      SSLog('initializing install space button', SSLogForce);
       this.outlets().get('SSInstallSpace').addEvent('click', function(_evt) {
         var evt = new Event(_evt);
         this.installSpace(this.outlets().get('SSInstallSpaceField').getProperty('value'));

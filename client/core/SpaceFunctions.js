@@ -200,7 +200,7 @@ function SSInstallSpace(space)
       
       __installed[space] = attrs;
       
-      SSSetValue('installed', SSInstalledSpaces());
+      ShiftSpace.User.setPreference('installed', SSInstalledSpaces());
       SSLoadSpace(space, function() {
         alert(space + " space installed.");
         SSFireEvent('onSpaceInstall', space);
@@ -222,7 +222,7 @@ function SSUninstallSpace(spaceName)
   var url = SSURLForSpace(spaceName);
   SSRemoveSpace(spaceName);
   delete __installed[spaceName];
-  SSSetValue('installed', SSInstalledSpaces());
+  ShiftSpace.User.setPreference('installed', SSInstalledSpaces());
   SSClearCache(url);
   // let everyone else know
   SSFireEvent('onSpaceUninstall', spaceName);
@@ -257,7 +257,7 @@ function SSUninstallAllSpaces()
   {
     SSUninstallSpace(spaceName);
   }
-  SSSetValue('installed', null);
+  ShiftSpace.User.setPreference('installed', null);
 }
 
 
@@ -399,8 +399,8 @@ function SSSetFocusedSpace(newSpace)
 
 /*
   Function: SSSetPrefForSpace
-    Set user preference for a space.  Calls SSSetValue.  The preference
-    key will be converted to username.spaceName.preferenceKey.
+    Set user preference for a space.  Calls ShiftSpace.User.setPreference.  
+    The preference key will be converted to username.spaceName.preferenceKey.
 
   Parameters:
     spaceName - space name as string.
@@ -411,8 +411,8 @@ function SSSetPrefForSpace(spaceName, pref, value)
 {
   if(ShiftSpace.User.isLoggedIn())
   {
-    var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
-    SSSetValue(key, value);
+    var key = [spaceName, pref].join('.');
+    ShiftSpace.User.setPreference(key, value);
   }
 }
 
@@ -428,8 +428,8 @@ function SSGetPrefForSpace(spaceName, pref)
 {
   if(ShiftSpace.User.isLoggedIn())
   {
-    var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
-    var value = SSGetValue(key, null);
+    var key = [spaceName, pref].join('.');
+    var value = ShiftSpace.User.getPreference(key, null);
     return value;
   }
   return null;
