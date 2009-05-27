@@ -16,10 +16,10 @@ Parameters:
 Returns:
     The value passed in.
 */
-function SSSetValue(key, value, rawValue) 
+function SSSetValue(key, value) 
 {
   SSLog('SSSetValue ' + key, SSLogSystem);
-  if (rawValue) 
+  if ($type(value) == 'string') 
   {
     GM_setValue(key, value);
   } 
@@ -27,7 +27,6 @@ function SSSetValue(key, value, rawValue)
   {
     GM_setValue(key, JSON.encode(value));
   }
-  return value;
 }
 
 /*
