@@ -9,8 +9,8 @@
 // = FullScreen Support =
 // ======================
 
-var __isHidden__ = false;
-var __shiftSpaceState__ = new Hash();
+var __isHidden = false;
+var __shiftSpaceState = new Hash();
 
 /*
   Function: SSSetHidden
@@ -21,7 +21,7 @@ var __shiftSpaceState__ = new Hash();
 */
 function SSSetHidden(val)
 {
-  __isHidden__ = val;
+  __isHidden = val;
 }
 
 /*
@@ -33,7 +33,7 @@ function SSSetHidden(val)
 */
 function ShiftSpaceIsHidden()
 {
-  return __isHidden__;
+  return __isHidden;
 }
 
 /*
@@ -47,13 +47,13 @@ function ShiftSpaceHide()
   SSSetHidden(true);
 
   // remove all the previous state vars
-  __shiftSpaceState__.empty();
+  __shiftSpaceState.empty();
 
   if(ShiftSpace.Console)
   {
-    __shiftSpaceState__.set('consoleVisible', ShiftSpace.Console.isVisible());
+    __shiftSpaceState.set('consoleVisible', ShiftSpace.Console.isVisible());
   }
-  __shiftSpaceState__.set('focusedShiftId', SSFocusedShiftId());
+  __shiftSpaceState.set('focusedShiftId', SSFocusedShiftId());
 
   // go through each space and close it down, and sleep it
   if(ShiftSpace.Console) ShiftSpace.Console.hide();
@@ -82,13 +82,13 @@ function ShiftSpaceShow()
   SSSetHidden(false);
 
   // restore ShiftSpace
-  if(ShiftSpace.Console && __shiftSpaceState__.get('consoleVisible'))
+  if(ShiftSpace.Console && __shiftSpaceState.get('consoleVisible'))
   {
     ShiftSpace.Console.show();
   }
-  if(__shiftSpaceState__.get('focusedShiftId'))
+  if(__shiftSpaceState.get('focusedShiftId'))
   {
-    SSFocusShift(__shiftSpaceState__.get('focusedShiftId'));
+    SSFocusShift(__shiftSpaceState.get('focusedShiftId'));
   }
 
   // restore the spaces

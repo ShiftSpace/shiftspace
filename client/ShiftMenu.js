@@ -75,6 +75,8 @@ var ShiftMenu = new Class({
   {
     // TODO: we need the icon to not be separate from the space so that we can do incremental loading.
     SSLog('adding space ' + spaceName, SSLogSystem);
+    var meta = SSGetSpaceAttributes(spaceName);
+    SSLog(meta, SSLogForce);
     
     var spaceAttrs = ShiftSpace.info(spaceName);
     var container = this.element.firstChild;
@@ -85,7 +87,7 @@ var ShiftMenu = new Class({
     });
     
     var icon = new ShiftSpace.Element('img', {
-      src: spaceAttrs.icon
+      src: meta.icon
     });
     icon.injectInside(button);
     button.injectBefore(clear);

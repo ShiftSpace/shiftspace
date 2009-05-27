@@ -41,12 +41,11 @@ function GM_getValue(key, defaultValue)
     method: 'post',
     data: 
     { 
-      key: key, 
-      'default': defaultValue
+      key: key
     }
   }).send();
   
-  return request.response.text;
+  return request.response.text || defaultValue;
 }
 
 

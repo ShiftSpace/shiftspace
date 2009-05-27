@@ -44,6 +44,9 @@ var SSConsole = new Class({
     // listen for shift events
     SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));
     SSAddEvent('onShiftHide', this.deselectShift.bind(this));
+    
+    // space install event
+    SSAddEvent('onSpaceInstall', this.onSpaceInstall.bind(this));
 
     // listen for global events as well
 
@@ -94,6 +97,7 @@ var SSConsole = new Class({
           SSUninstallAllSpaces();
         });
       }
+      // FIXME: postpone until after SSSynch - David 5/27/2009
       if(this.outlets().get('SSInstalledSpaces')) this.initInstalledSpacesListView();
       
       if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled())
@@ -139,6 +143,8 @@ var SSConsole = new Class({
       isLoggedIn.addClass('SSActive');
       isLoggedIn.getElement('span').set('text', ShiftSpaceUser.getUsername());
     }
+    
+    this.updateInstalledSpaces();
   },
 
 
@@ -162,6 +168,8 @@ var SSConsole = new Class({
       loginStatus.getElementById('SSUserIsNotLoggedIn').addClass('SSActive');
       loginStatus.getElementById('SSUserIsLoggedIn').removeClass('SSActive');
     }
+    
+    this.updateInstalledSpaces();
   },
 
 
@@ -239,7 +247,6 @@ var SSConsole = new Class({
   {
     if(this.outlets().get('SSInstallSpace'))
     {
-      SSLog('initializing install space button', SSLogForce);
       this.outlets().get('SSInstallSpace').addEvent('click', function(_evt) {
         var evt = new Event(_evt);
         this.installSpace(this.outlets().get('SSInstallSpaceField').getProperty('value'));
@@ -564,6 +571,11 @@ var SSConsole = new Class({
   {
     SSLog('installSpace ' + spaceName, SSLogForce);
     SSInstallSpace(spaceName);
+  },
+  
+  
+  onSpaceInstall: function()
+  {
     this.updateInstalledSpaces();
     this.refreshInstalledSpaces();
   },
@@ -577,6 +589,7 @@ var SSConsole = new Class({
   
   refreshInstalledSpaces: function()
   {
+    SSLog('refreshInstalledSpaces', SSLogForce);
     this.SSInstalledSpaces.refresh(true);
   },
   

@@ -20,22 +20,21 @@ function SSLoadSpace(space, callback)
 {
   if(space)
   {
-    SSLog('loading space: ' + space, SSLogSystem);
+    var url = SSURLForSpace(space) + space + '.js';
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
-      var url = SSURLForSpace(space) + '?' + new Date().getTime();
-      SSLog('loading ' + url);
+      url += '?' + new Date().getTime();
       var newSpace = new Asset.javascript(url, {
-        id: space
+        id: space,
+        onload: function() {
+        }
       });
 
-      SSLog('Direct inject ' + space, SSLogSystem);
       if(callback) callback();
     }
     else
     {
-      SSLog('loading space: ' + space + ' from ' + SSURLForSpace(space), SSLogSystem);
-      SSLoadFile(SSURLForSpace(space), function(rx) {
+      SSLoadFile(url, function(rx) {
         var err;
         try
         {
@@ -69,17 +68,15 @@ Parameters:
 */
 function SSRegisterSpace(instance) 
 {
-  SSLog("SSRegisterSpace", SSLogSystem);
   var spaceName = instance.attributes.name;
-  SSLog('Register Space ===================================== ' + spaceName, SSLogSystem);
   SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
 
-  var spaceDir = SSURLForSpace(spaceName).match(/(.+\/)[^\/]+\.js/)[1];
+  var spaceDir = SSURLForSpace(spaceName);
 
   instance.attributes.dir = spaceDir;
 
-  if (!instance.attributes.icon) 
+  if (!instance.attributes.icon)
   {
     var icon = SSURLForSpace(spaceName).replace('.js', '.png');
     instance.attributes.icon = icon;
@@ -89,8 +86,6 @@ function SSRegisterSpace(instance)
     var icon = spaceDir + instance.attributes.icon;
     instance.attributes.icon = icon;
   }
-
-  //SSLog("Space icon: " + instance.attribution.icon);
 
   // if a css file is defined in the attributes load the style
   if (instance.attributes.css) 
@@ -115,7 +110,6 @@ function SSRegisterSpace(instance)
   }
 
   instance.addEvent('onShiftShow', function(shiftId) {
-    SSLog('onShiftShow: ' + shiftId, SSLogForce);
     if(ShiftSpace.Console) ShiftSpace.Console.showShift(shiftId);
   });
   instance.addEvent('onShiftBlur', function(shiftId) {
@@ -136,17 +130,42 @@ function SSRegisterSpace(instance)
   instance.addEvent('onShiftDestroy', SSRemoveShift);
 }
 
+function SSIsAbsoluteURL(string)
+{
+  return (string.search("http://") == 0);
+}
+
 /*
-Function: SSGetSpaceAttributes
-  Loads the attributes for the space. This is a json file named attrs.jsoon
+Function: SSLoadSpaceAttributes
+  Loads the attributes for the space. This is a json file named attrs.json
   that sits in that space's directory.
 */
-function SSGetSpaceAttributes(space)
+function SSLoadSpaceAttributes(space, callback)
 {
   SSLoadFile(ShiftSpace.info().spacesDir+space+'/attrs.json', function(response) {
-   SSLog('retrieved json:', SSLogForce);
-   SSLog(JSON.decode(response.responseText), SSLogForce);
+    // check to see that the resources urls are full
+    var json = JSON.decode(response.responseText);
+    
+    // clear whitespace
+    json.url = json.url.trim();
+    json.icon = json.icon.trim();
+    json.css = json.css.trim();
+    
+    if(!SSIsAbsoluteURL(json.url)) json.url = json.url.substitute({SPACEDIR:ShiftSpace.info().spacesDir});
+    if(!SSIsAbsoluteURL(json.icon)) json.icon = json.url + json.icon;
+    if(!SSIsAbsoluteURL(json.css)) json.css = json.url + json.css;
+    
+    // position default to end
+    json.position = $H(SSInstalledSpaces()).getLength();
+    
+    callback(json);
   });
+}
+
+function SSGetSpaceAttributes(space)
+{
+  // TODO: fix the resolution of the icon url - David
+  return SSInstalledSpaces()[space];
 }
 
 /*
@@ -165,20 +184,29 @@ function SSInstallSpace(space)
     var url = server + 'spaces/' + space + '/' + space + '.js';
     var count = $H(SSInstalledSpaces()).getLength();
     
-    __installed[space] = {
-      url:url, 
-      name:space, 
-      position: count, 
-      icon: space+'/'+space+'.png',
-      attrs: {},
-      autolaunch: false
-    };
-    
-    SSSetValue('installed', SSInstalledSpaces());
-    SSLoadSpace(space, function() {
-      alert(space + " space installed.");
-      SSFireEvent('onSpaceInstall', space);
-    }.bind(this));
+    SSLoadSpaceAttributes(space, function(attrs) {
+      // TODO: throw an error if no attributes file - David
+      if(!attrs)
+      {
+        var attrs = {
+          url:url, 
+          name:space, 
+          position: count, 
+          icon: space+'/'+space+'.png',
+          attrs: {},
+          autolaunch: false
+        };
+      }
+      
+      __installed[space] = attrs;
+      
+      ShiftSpace.User.setPreference('installed', SSInstalledSpaces());
+      SSLoadSpace(space, function() {
+        alert(space + " space installed.");
+        SSFireEvent('onSpaceInstall', space);
+      });
+      
+    });
   }
 };
 
@@ -194,18 +222,28 @@ function SSUninstallSpace(spaceName)
   var url = SSURLForSpace(spaceName);
   SSRemoveSpace(spaceName);
   delete __installed[spaceName];
-  SSSetValue('installed', SSInstalledSpaces());
+  ShiftSpace.User.setPreference('installed', SSInstalledSpaces());
   SSClearCache(url);
   // let everyone else know
   SSFireEvent('onSpaceUninstall', spaceName);
 };
 
+function SSSetInstalledSpaces(installed)
+{
+  SSLog('SSSetInstalledSpaces', SSLogForce);
+  SSLog(installed, SSLogForce);
+  __installed = installed;
+}
 
 function SSInstalledSpaces()
 {
   return __installed;
 }
 
+function SSDefaultSpaces()
+{
+  return __defaultSpaces;
+}
 
 function SSURLForSpace(spaceName)
 {
@@ -219,7 +257,7 @@ function SSUninstallAllSpaces()
   {
     SSUninstallSpace(spaceName);
   }
-  SSSetValue('installed', null);
+  ShiftSpace.User.setPreference('installed', null);
 }
 
 
@@ -320,8 +358,6 @@ Parameter:
 */
 function SSFocusSpace(space, position)
 {
-  SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FOCUS SPACE');
-
   var lastFocusedSpace = SSFocusedSpace();
 
   if(lastFocusedSpace && lastFocusedSpace != space)
@@ -363,8 +399,8 @@ function SSSetFocusedSpace(newSpace)
 
 /*
   Function: SSSetPrefForSpace
-    Set user preference for a space.  Calls SSSetValue.  The preference
-    key will be converted to username.spaceName.preferenceKey.
+    Set user preference for a space.  Calls ShiftSpace.User.setPreference.  
+    The preference key will be converted to username.spaceName.preferenceKey.
 
   Parameters:
     spaceName - space name as string.
@@ -375,8 +411,8 @@ function SSSetPrefForSpace(spaceName, pref, value)
 {
   if(ShiftSpace.User.isLoggedIn())
   {
-    var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
-    SSSetValue(key, value);
+    var key = [spaceName, pref].join('.');
+    ShiftSpace.User.setPreference(key, value);
   }
 }
 
@@ -392,8 +428,8 @@ function SSGetPrefForSpace(spaceName, pref)
 {
   if(ShiftSpace.User.isLoggedIn())
   {
-    var key = [ShiftSpace.User.getUsername(), spaceName, pref].join('.');
-    var value = SSGetValue(key, null);
+    var key = [spaceName, pref].join('.');
+    var value = ShiftSpace.User.getPreference(key, null);
     return value;
   }
   return null;
@@ -411,7 +447,6 @@ function SSGetPrefForSpace(spaceName, pref)
 */
 function SSSpaceForShift(shiftId)
 {
-  //SSLog('SSSpaceForShift');
   var shift = SSGetShift(shiftId);
   return SSSpaceForName(shift.space);
 }
@@ -429,7 +464,6 @@ function SSCheckForInstallSpaceLinks()
   $$('.SSInstallFirstLink').setStyle('display', 'none');
 
   $$('.SSInstallSpaceLink').each(function(x) {
-   SSLog('================================================== SSCheckForInstallSpaceLinks');
    x.setStyle('display', 'block');
    x.addEvent('click', SSHandleInstallSpaceLink);
   });
@@ -442,11 +476,7 @@ function SSHandleInstallSpaceLink(_evt)
   var target = evt.target;
   var spaceName = target.getAttribute('title');
   
-  //SSLog(target);
-  SSLog('installing ' + spaceName);
-  
   // first check for the attributes file
-  // loadFile(server + 'spaces/' + spaceName + '/attributes.js', SSInstallSpaceLinkCallback, SSInstallSpaceLinkCallback);
   SSInstallSpace(spaceName);
 }
 

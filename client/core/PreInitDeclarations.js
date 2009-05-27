@@ -10,7 +10,7 @@ var spacesDir = '%%SPACEDIR%%';
 SSLog('SERVER: ' + server, SSLogForce);
 SSLog('SPACESDIR: ' + spacesDir, SSLogForce);
 
-var version = '0.13';
+var version = '1.0';
 var cacheFiles = 0;
 
 if(typeof ShiftSpaceSandBoxMode != 'undefined' && ShiftSpaceSandBoxMode) 
@@ -30,21 +30,25 @@ var __defaultEmailComments = 1;
 var __pluginsData = {};
 
 // Each space and it's associated metadata
-var __installed = SSGetValue('installed', {
+var __installed;
+
+var __defaultSpaces = {
   'Notes': 
   {
     name:'Notes', 
-    url: spacesDir + 'Notes/Notes.js', 
+    url: spacesDir + 'Notes/', 
+    icon: spacesDir + 'Notes/' + 'Notes.png', 
+    css: spacesDir + 'Notes/' + 'Notes.css',
     position:0, 
-    icon:'Notes/Notes.png', 
     attrs: {},
     autolaunch: false
   },
   'ImageSwap': 
   {
     name:'ImageSwap', 
-    url: spacesDir + 'ImageSwap/ImageSwap.js', 
-    icon:'ImageSwap/ImageSwap.png', 
+    url: spacesDir + 'ImageSwap/', 
+    icon: spacesDir + 'ImageSwap/' + 'ImageSwap.png', 
+    css: spacesDir + 'ImageSwap/' + 'ImageSwap.css',
     position:1, 
     attrs: {},
     autolaunch: false
@@ -52,8 +56,9 @@ var __installed = SSGetValue('installed', {
   'Highlights': 
   {
     name:'Highlights', 
-    url: spacesDir + 'Highlights/Highlights.js', 
-    icon:'Highlights/Highlights.png', 
+    url: spacesDir + 'Highlights/', 
+    icon: spacesDir + 'Highlights/' + 'Highlights.png', 
+    css: spacesDir + 'Highlights/' + 'Highlights.css',
     position:2, 
     attrs: {},
     autolaunch: false
@@ -61,16 +66,14 @@ var __installed = SSGetValue('installed', {
   'SourceShift': 
   {
     name:'SourceShift', 
-    url: spacesDir + 'SourceShift/SourceShift.js', 
-    icon:'SourceShift/SourceShift.png',
+    url: spacesDir + 'SourceShift/', 
+    icon: spacesDir + 'SourceShift/' + 'SourceShift.png',
+    css: spacesDir + 'SourceShift/' + 'SourceShift.css',
     position:3, 
     attrs: {},
     autolaunch: false
   }
-});
-
-SSLog("Installed ================", SSLogSystem);
-SSLog(JSON.encode(__installed), SSLogSystem);
+};
 
 var spacePrefs = SSGetValue('spacePrefs', {});
 
@@ -87,7 +90,6 @@ installedPlugins = SSGetValue('installedPlugins', {
   'Comments': server + 'plugins/Comments/Comments.js',
   'Twitter': server + 'plugins/Twitter/Twitter.js'
 });
-SSLog(installedPlugins);
 */
 
 // installedPlugins = {
