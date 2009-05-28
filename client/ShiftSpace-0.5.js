@@ -86,6 +86,8 @@ var ShiftSpace = new (function() {
       ShiftSpace.User.addEvent('onUserLogin', function() {
         SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
+        SSLog('User logged in ============', SSLogForce);
+        SSLog(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()), SSLogForce);
         // FIXME: Just make this into a onUserLogin hook - David
         if(SSHasResource('RecentlyViewedHelpers'))
         {
@@ -95,6 +97,7 @@ var ShiftSpace = new (function() {
       });
 
       ShiftSpace.User.addEvent('onUserLogout', function() {
+        SSLog('ShiftSpace detects user logout', SSLogForce);
         SSFireEvent('onUserLogout');
         SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
       });
@@ -149,6 +152,7 @@ var ShiftSpace = new (function() {
     */
     function SSSynch() 
     {
+      SSLog('SSSynch >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
       var params = {
         href: window.location.href
       };
@@ -159,11 +163,11 @@ var ShiftSpace = new (function() {
           return;
         }
 
-        if(json.data.username)
+        if(json.data.user)
         {
+          SSLog('User is logged in', SSLogForce);
           // Set private user variable
-          ShiftSpace.User.setUsername(json.data.username);
-          ShiftSpace.User.setEmail(json.data.email);
+          ShiftSpace.User.syncData(json.data.user)
 
           // make sure default shift status preference is set
           SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
@@ -267,6 +271,7 @@ var ShiftSpace = new (function() {
       this.uninstallSpace = SSUninstallSpace;
       this.installed = SSInstalledSpaces;
       this.byPosition = SSSpacesByPosition;
+      this.eventProxy = SSEventProxy;
 
       this.SSGetShift = SSGetShift;
       this.SSGetPageShifts = SSGetPageShifts;

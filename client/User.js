@@ -155,6 +155,7 @@ var ShiftSpaceUserClass = new Class({
       this.clearData();
       if(!json.error)
       {
+        SSLog('user is logging out', SSLogForce);
         this.fireEvent('onUserLogout');
       }
       else

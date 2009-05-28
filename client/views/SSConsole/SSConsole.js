@@ -150,6 +150,7 @@ var SSConsole = new Class({
 
   handleLogout: function()
   {
+    SSLog('handleLogout', SSLogForce);
     this.setLoginHandled(false);
     
     // empty the login form
@@ -583,6 +584,8 @@ var SSConsole = new Class({
   
   updateInstalledSpaces: function()
   {
+    SSLog('updateInstalledSpaces', SSLogForce);
+    SSLog(SSSpacesByPosition(), SSLogForce);
     this.SSInstalledSpaces.setData(SSSpacesByPosition());
   },
   
