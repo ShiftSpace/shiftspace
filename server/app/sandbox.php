@@ -11,7 +11,7 @@ class Sandbox {
   function getvalue() {
     $key = $_REQUEST['key'];
     $value = $this->server->db->row("select value from sandbox where key=:key", array('key' => $key));
-    $default = $_REQUEST['default'];
+    $default = $_REQUEST['default'] || '';
     
     if (!empty($value))
       return $value->value;
