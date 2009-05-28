@@ -19,6 +19,18 @@ function SSSetEventProxy(newProxy)
   __eventProxy = newProxy;
 }
 
+function SSAddObserver(options)
+{
+}
+
+function SSRemoveObserver(options)
+{
+}
+
+function SSPostNotification(name)
+{
+}
+
 /*
   Function: SSAddEvent
     Adds a Mootools style custom event to the ShiftSpace object.
@@ -33,7 +45,6 @@ function SSSetEventProxy(newProxy)
 var __sleepingObjects = $H();
 function SSAddEvent(eventType, callback, anObject)
 {
-  //console.log('adding event ' + eventType);
   if(anObject && anObject.isAwake && !anObject.isAwake())
   {
     var objId = anObject.getId();
@@ -67,36 +78,27 @@ function SSAddEvent(eventType, callback, anObject)
 */
 function SSFireEvent(eventType, data) 
 {
-  //console.log('SSFireEvent ' + eventType);
   __eventProxy.fireEvent(eventType, data);
   
   var awakeNow = __sleepingObjects.filter(function(objectHash, objectName) {
     return objectHash.get('object').isAwake();
   });
   
-  // call back these immediate
   awakeNow.each(function(objectHash, objectName) {
-    //console.log('now awake ' + objectName);
     SSAddEventsAndFire(eventType, objectHash.get('events').get(eventType));
   });
   
   var stillSleeping = __sleepingObjects.filter(function(objectHash, objectName) {
-    //console.log('checking ' + objectName + ' ' + objectHash.get('object').isAwake());
     return !objectHash.get('object').isAwake();
   });
   
   stillSleeping.each(function(objectHash, objectName) {
     objectHash.get('object').addEvent('onAwake', function() {
-      //console.log('waking up!');
       SSAddEventsAndFire(eventType, objectHash.get('events').get(eventType));
     });
   });
   
-  // update which objects are still sleeping
   __sleepingObjects = stillSleeping;
-  
-  //console.log('still sleeping');
-  //console.log(__sleepingObjects.getLength());
 };
 
 // takes and event type and a list of event callbacks
