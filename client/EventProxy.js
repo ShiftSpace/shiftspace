@@ -9,6 +9,16 @@ var __eventProxyClass = new Class({});
 __eventProxyClass.implement(new Events);
 var __eventProxy = new __eventProxyClass();
 
+function SSEventProxy()
+{
+  return __eventProxy;
+}
+
+function SSSetEventProxy(newProxy)
+{
+  __eventProxy = newProxy;
+}
+
 /*
   Function: SSAddEvent
     Adds a Mootools style custom event to the ShiftSpace object.
