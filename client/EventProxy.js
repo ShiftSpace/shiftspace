@@ -20,21 +20,21 @@ var __eventProxy = new __eventProxyClass();
   See also:
     SSFireEvent
 */
-var __sleepingObjects__ = $H();
+var __sleepingObjects = $H();
 function SSAddEvent(eventType, callback, anObject)
 {
   //console.log('adding event ' + eventType);
   if(anObject && anObject.isAwake && !anObject.isAwake())
   {
     var objId = anObject.getId();
-    if(!__sleepingObjects__.get(objId))
+    if(!__sleepingObjects.get(objId))
     {
-      __sleepingObjects__.set(anObject.getId(), $H({
+      __sleepingObjects.set(anObject.getId(), $H({
         object: anObject,
         events: $H()
       }));
     }
-    var eventsHash = __sleepingObjects__.get(objId).get('events');
+    var eventsHash = __sleepingObjects.get(objId).get('events');
     if(!eventsHash.get(eventType))
     {
       eventsHash.set(eventType, []);
@@ -60,7 +60,7 @@ function SSFireEvent(eventType, data)
   //console.log('SSFireEvent ' + eventType);
   __eventProxy.fireEvent(eventType, data);
   
-  var awakeNow = __sleepingObjects__.filter(function(objectHash, objectName) {
+  var awakeNow = __sleepingObjects.filter(function(objectHash, objectName) {
     return objectHash.get('object').isAwake();
   });
   
@@ -70,7 +70,7 @@ function SSFireEvent(eventType, data)
     SSAddEventsAndFire(eventType, objectHash.get('events').get(eventType));
   });
   
-  var stillSleeping = __sleepingObjects__.filter(function(objectHash, objectName) {
+  var stillSleeping = __sleepingObjects.filter(function(objectHash, objectName) {
     //console.log('checking ' + objectName + ' ' + objectHash.get('object').isAwake());
     return !objectHash.get('object').isAwake();
   });
@@ -83,10 +83,10 @@ function SSFireEvent(eventType, data)
   });
   
   // update which objects are still sleeping
-  __sleepingObjects__ = stillSleeping;
+  __sleepingObjects = stillSleeping;
   
   //console.log('still sleeping');
-  //console.log(__sleepingObjects__.getLength());
+  //console.log(__sleepingObjects.getLength());
 };
 
 // takes and event type and a list of event callbacks
