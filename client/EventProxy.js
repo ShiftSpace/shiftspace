@@ -19,16 +19,70 @@ function SSSetEventProxy(newProxy)
   __eventProxy = newProxy;
 }
 
-function SSAddObserver(options)
+var __observers = $H();
+var __notificationQueue = $H();
+
+function SSAddObserver(object, name, method, sender)
 {
+  var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
+  if(!__observers.get(notificationName))
+  {
+    __observers.set(notificationName, $H());
+  }
+  __observers.get(notificationName).set(object.getId(), method);
 }
 
-function SSRemoveObserver(options)
+function SSRemoveObserver(object, name, sender)
 {
+  var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
+  __observers.get(notificationName).erase(object.getId());
 }
 
-function SSPostNotification(name)
+function SSPostNotification(name, data, sender)
 {
+  var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
+  var observers = SSGetObservers(notificationName);
+  
+  observers.each(function(method, objid) {
+    var obj = ShiftSpaceNameTable[objid];
+    
+    if(obj.isAwake())
+    {
+      method(data);
+    }
+    else
+    {
+      SSAddToNotificationQueue(obj, method, data);
+    }
+  });
+}
+
+function SSAddToNotificationQueue(object, method, data)
+{
+  var id = object.getId();
+  if(!__notificationQueue.get(id))
+  {
+    __notificationQueue.set(id, []);
+  }
+  __notificationQueue.get(id).push({method:method, data:data});
+}
+
+function SSFlushNotificationQueue()
+{
+  __notificationQueue = $H();
+}
+
+function SSFlushNotificationQueueForObject(object)
+{
+  __notificationQueue.get(object.getId()).each(function(notif) {
+    notif.method(notif.data);
+  });
+  __notificationQueue.erase(id);
+}
+
+function SSGetObservers(name)
+{
+  return __observers.get(name);
 }
 
 /*
