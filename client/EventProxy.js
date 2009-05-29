@@ -83,6 +83,12 @@ function SSAddToNotificationQueue(object, method, data)
 }
 
 
+function SSClearObservers()
+{
+  __observers = $H();
+}
+
+
 function SSFlushNotificationQueue()
 {
   __notificationQueue = $H();
@@ -92,6 +98,13 @@ function SSFlushNotificationQueue()
 function SSNotificationQueue()
 {
   return __notificationQueue;
+}
+
+
+function SSNotificationCenterReset()
+{
+  SSClearObservers();
+  SSFlushNotificationQueue();
 }
 
 

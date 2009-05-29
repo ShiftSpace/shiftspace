@@ -38,6 +38,12 @@ var NotificationTest = new Class({
   },
   
   
+  tearDown: function()
+  {
+    
+  },
+  
+  
   testAddObserver: function()
   {
     this.doc("Add an observer");
