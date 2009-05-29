@@ -22,6 +22,7 @@ function SSSetEventProxy(newProxy)
 var __observers = $H();
 var __notificationQueue = $H();
 
+
 function SSAddObserver(object, name, method, sender)
 {
   var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
@@ -32,11 +33,24 @@ function SSAddObserver(object, name, method, sender)
   __observers.get(notificationName).set(object.getId(), method);
 }
 
+
+function SSGetObservers(name, sender)
+{
+  if(name)
+  {
+    var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
+    return __observers.get(notificationName);
+  }
+  return __observers;
+}
+
+
 function SSRemoveObserver(object, name, sender)
 {
   var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
   __observers.get(notificationName).erase(object.getId());
 }
+
 
 function SSPostNotification(name, data, sender)
 {
@@ -57,6 +71,7 @@ function SSPostNotification(name, data, sender)
   });
 }
 
+
 function SSAddToNotificationQueue(object, method, data)
 {
   var id = object.getId();
@@ -67,10 +82,18 @@ function SSAddToNotificationQueue(object, method, data)
   __notificationQueue.get(id).push({method:method, data:data});
 }
 
+
 function SSFlushNotificationQueue()
 {
   __notificationQueue = $H();
 }
+
+
+function SSNotificationQueue()
+{
+  return __notificationQueue;
+}
+
 
 function SSFlushNotificationQueueForObject(object)
 {
@@ -78,11 +101,6 @@ function SSFlushNotificationQueueForObject(object)
     notif.method(notif.data);
   });
   __notificationQueue.erase(id);
-}
-
-function SSGetObservers(name)
-{
-  return __observers.get(name);
 }
 
 /*
