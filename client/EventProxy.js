@@ -22,85 +22,142 @@ function SSSetEventProxy(newProxy)
 var __observers = $H();
 var __notificationQueue = $H();
 
-
+/*
+  Function: SSAddObserver
+    Add an observer to the notification center.
+    
+  Parameters:
+    object - an object, must implement getId.
+    name - the name of the notification.
+    method - the function to called when the notification is posted.
+    sender - an object, must implement getId.
+*/
 function SSAddObserver(object, name, method, sender)
 {
   var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
-  if(!__observers.get(notificationName))
+  if(!__observers[notificationName])
   {
-    __observers.set(notificationName, $H());
+    __observers[notificationName] = $H();
   }
-  __observers.get(notificationName).set(object.getId(), method);
+  if(!__observers[notificationName][object.getId()]) __observers[notificationName][object.getId()] = [];
+  __observers[notificationName][object.getId()].push(method);
 }
 
-
+/*
+  Function: SSGetObservers
+    Return the all the observers register for a notification.
+    
+  Parameters:
+    name - the name of the notification.
+    sender - the sender of notification (optional).
+    
+  Returns:
+    a hash table of objects listening to the notification.
+*/
 function SSGetObservers(name, sender)
 {
   if(name)
   {
     var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
-    return __observers.get(notificationName);
+    return __observers[notificationName];
   }
   return __observers;
 }
 
-
+/*
+  Function: SSRemoveObserver
+    Remove an observer from the notification center.
+    
+  Parameters:
+    object - an object, must implement getId.
+    name - the name of the notification to be observed.
+    sender - only notify if notification posted by sender who also must implement getId. (options)
+*/
 function SSRemoveObserver(object, name, sender)
 {
   var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
-  __observers.get(notificationName).erase(object.getId());
+  __observers[notificationName].erase(object.getId());
 }
 
-
+/*
+  Function: SSPostNotification
+    Post a notification, all observers will be notified.
+    
+  Parameters:
+    name - the name of the notification to listen for.
+    data - data to be sent to the observer.
+    sender - the sender of the notification, must implement getId.
+*/
 function SSPostNotification(name, data, sender)
 {
   var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
   var observers = SSGetObservers(notificationName);
   
-  observers.each(function(method, objid) {
-    var obj = ShiftSpaceNameTable[objid];
+  observers.each(function(methods, objid) {
+    var obj = ShiftSpaceObjects[objid];
     
     if(obj.isAwake())
     {
-      method(data);
+      methods.each(function(method) { method(data); });
     }
     else
     {
-      SSAddToNotificationQueue(obj, method, data);
+      SSAddToNotificationQueue(obj, methods, data);
     }
   });
 }
 
-
-function SSAddToNotificationQueue(object, method, data)
+/*
+  Function: SSAddToNotificationQueue
+    Add a sleeping object to the notification queue.
+    
+  Parameters:
+    object - an object, must implement getId.
+    method - the callback function.
+    data - the data to be passed. NOTE: be watchful of mutating data.
+*/
+function SSAddToNotificationQueue(object, methods, data)
 {
   var id = object.getId();
   if(!__notificationQueue.get(id))
   {
     __notificationQueue.set(id, []);
   }
-  __notificationQueue.get(id).push({method:method, data:data});
+  __notificationQueue.get(id).push({methods:methods, data:data});
 }
 
-
+/*
+  Function: SSClearObservers
+    Clear all observers from the notification center.
+*/
 function SSClearObservers()
 {
   __observers = $H();
 }
 
-
+/*
+  Function: SSFlushNotificationQueue
+    Clear the notification queue.
+*/
 function SSFlushNotificationQueue()
 {
   __notificationQueue = $H();
 }
 
-
+/*
+  Function: SSNotificationQueue
+    Return the notification queue, a hash object.
+*/
 function SSNotificationQueue()
 {
   return __notificationQueue;
 }
 
-
+/*
+  Function: SSNotificationCenterReset
+    Reset the notification center. Clears all observers and flushes
+    the notification queue.
+*/
 function SSNotificationCenterReset()
 {
   SSClearObservers();
@@ -108,10 +165,20 @@ function SSNotificationCenterReset()
 }
 
 
+function SSNotificationQueueForObject(object)
+{
+  return __notificationQueue[object.getId()];
+}
+
+/*
+  Function: SSFlushNotificationQueueForObject
+    Flush the notification queue for a single object.
+*/
 function SSFlushNotificationQueueForObject(object)
 {
-  __notificationQueue.get(object.getId()).each(function(notif) {
-    notif.method(notif.data);
+  var id = object.getId();
+  __notificationQueue[id].each(function(notif) {
+    notif.methods.each(function (method) { method(notif.data); });
   });
   __notificationQueue.erase(id);
 }

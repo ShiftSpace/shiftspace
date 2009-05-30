@@ -35,12 +35,16 @@ var NotificationTest = new Class({
       isAwake: function() { return this.__awake; },
       doSomething: function(data) { console.log('dummyObjectC notified!' + data) }
     };
+    
+    ShiftSpaceObjects.dummyObjectA = this.dummyObjectA;
+    ShiftSpaceObjects.dummyObjectB = this.dummyObjectB;
+    ShiftSpaceObjects.dummyObjectC = this.dummyObjectC;
   },
   
   
   tearDown: function()
   {
-    
+    SSNotificationCenterReset();
   },
   
   
@@ -50,19 +54,44 @@ var NotificationTest = new Class({
     
     var fnrefA = this.dummyObjectA.doSomething.bind(this.dummyObjectA);
     SSAddObserver(this.dummyObjectA, "FooBarNotification", fnrefA);
-    
-    this.assertEqual(SSGetObservers("FooBarNotification").get('dummyObjectA'), fnrefA);
+
+    this.assertEqual(SSGetObservers("FooBarNotification").dummyObjectA[0], fnrefA);
     
     var fnrefB = this.dummyObjectB.doSomething.bind(this.dummyObjectB);
     SSAddObserver(this.dummyObjectB, "FooBarNotification", fnrefB, this.dummyObjectA);
     
-    this.assertEqual(SSGetObservers("FooBarNotification", this.dummyObjectA).get('dummyObjectB'), fnrefB);
+    this.assertEqual(SSGetObservers("FooBarNotification", this.dummyObjectA).dummyObjectB[0], fnrefB);
   },
   
   
   testRemoveObserver: function()
   {
     this.doc("Remove a specific observer");
+    
+    var fnrefA = this.dummyObjectA.doSomething.bind(this.dummyObjectA);
+    SSAddObserver(this.dummyObjectA, "FooBarNotification", fnrefA);
+    SSRemoveObserver(this.dummyObjectA, "FooBarNotification");
+    
+    this.assertEqual(SSGetObservers("FooBarNotification").dummyObjectA, null);
+    
+    var fnrefB = this.dummyObjectB.doSomething.bind(this.dummyObjectB);
+    SSAddObserver(this.dummyObjectB, "FooBarNotification", fnrefB, this.dummyObjectA);
+    SSRemoveObserver(this.dummyObjectB, "FooBarNotification", this.dummyObjectA);
+    
+    this.assertEqual(SSGetObservers("FooBarNotification", this.dummyObjectA).dummyObjectB, null);
+  },
+  
+  
+  testAddToNotificationQueue: function()
+  {
+    this.doc("Add an object to the notification queue.");
+    
+    var fnrefA = this.dummyObjectA.doSomething.bind(this.dummyObjectA);
+    SSAddObserver(this.dummyObjectA, "FooBarNotification", fnrefA);
+    
+    SSPostNotification("FooBarNotification");
+    
+    this.assertNotEqual(SSNotificationQueueForObject(this.dummyObjectA), null);
   },
   
   

@@ -10,7 +10,7 @@ function GM_addStyle(css)
   {
     var head = document.getElementsByTagName('head')[0];
   } 
-  else 
+  else
   {
     var head = new Element('head');
     head.injectBefore($(document.body));
