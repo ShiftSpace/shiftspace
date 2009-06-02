@@ -50,7 +50,7 @@ class Event {
     extract($_REQUEST);
     
     $object = new Stream_Object();
-    $object->set(compact('private'));    
+    $object->set(compact('private', 'stream_name'));    
     $this->server->db->save($object);
     
     $permission = new StreamPermission_Object();
@@ -98,7 +98,7 @@ class Event {
     extract($_REQUEST);
     $this->can_read($stream_id);
        
-    return new Response($this->server->db->rows("SELECT * FROM event WHERE stream_id=:stream_id", compact('stream_id')));
+    return new Response($this->server->db->rows("SELECT * FROM stream, event WHERE event.stream_id = stream.id AND event.stream_id=:stream_id", compact('stream_id')));
   }
   
   public function feed() {
@@ -115,7 +115,7 @@ class Event {
     if (count($values) == 0)
       return new Response(Array());
     else
-      return new Response($this->server->db->rows("SELECT * FROM event LEFT JOIN eventread ON event.id = eventread.event_id AND eventread.user_id = ".$this->server->user->id." WHERE ".implode(' OR ', $values)));
+      return new Response($this->server->db->rows("SELECT * FROM stream, event LEFT JOIN eventread ON event.id = eventread.event_id AND event.stream_id = stream.id AND eventread.user_id = ".$this->server->user->id." WHERE ".implode(' OR ', $values)));
   }
   
   public function permissionstream() {
