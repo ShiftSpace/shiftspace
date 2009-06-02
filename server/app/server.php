@@ -37,8 +37,11 @@ class Server extends Base_Server {
     }
     header('Content-type: text/plain');
     
-    if (isset($response))
-      echo $response;
+    if (isset($response)) 
+      if (get_class($response) == 'Response')
+        echo $response;
+      else
+        echo new Response($response);
     else
       echo new Response("ok");
   }

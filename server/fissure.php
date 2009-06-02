@@ -1,7 +1,11 @@
 <?php
-function method_form($httpmethod, $method, $args) {
+function method_form($httpmethod, $method, $args, $comment = '') {
   echo "<form method=$httpmethod action=index.php>\n";
   echo "<h2>$method</h2>";
+  
+  if ($comment)
+    echo "<p><span style='border: 1px solid red; padding: 3px 3px 3px 3px; margin-left: 5px;'>$comment</span></p>";
+    
   echo "<table>\n";
   echo "<input type=hidden name=method value=$method>\n";
   
@@ -54,14 +58,19 @@ function method_form($httpmethod, $method, $args) {
 <?php method_form('post', 'artwork.store', array('jsonObject_')); ?>
 <?php method_form('get', 'user.bookmarks_by_phone', array('phone')); ?>
 <?php method_form('get', 'user.getname', array('userid')); ?>
+
+<?php method_form('post', 'event.subscriptions', array()); ?>
 <?php method_form('post', 'event.subscribe', array('stream_id')); ?>
 <?php method_form('post', 'event.unsubscribe', array('stream_id')); ?>
-<?php method_form('post', 'event.post', array('stream_id', 'display', 'object_ref')); ?>
+<?php method_form('post', 'event.post', array('stream_id', 'display_string', 'object_ref', 'has_read_status')); ?>
 <?php method_form('post', 'event.feed', array()); ?>
 <?php method_form('post', 'event.onefeed', array('stream_id')); ?>
 <?php method_form('post', 'event.createstream', array('private', 'stream_name')); ?>
-<?php method_form('post', 'event.permissionstream', array('stream_id', 'user_id', 'type')); ?>
+<?php method_form('post', 'event.streamsetpermission', array('stream_id', 'user_id', 'level'), 'level: 0=none, 1=read, 2=write, 3=administrator (can give permissions)'); ?>
 <?php method_form('post', 'event.findstreams', array('object_ref')); ?>
+<?php method_form('post', 'event.markread', array('event_id')); ?>
+<?php method_form('post', 'event.markunread', array('event_id')); ?>
+
 </body>
 </html>
 
