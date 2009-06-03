@@ -247,7 +247,7 @@ function SSDefaultSpaces()
 
 function SSURLForSpace(spaceName)
 {
-  var installed = ShiftSpace.User.getPreference('installed');
+  var installed = ShiftSpace.User.getPreference('installed', SSDefaultSpaces());
   return (installed[spaceName] && installed[spaceName].url) || null;
 }
 
