@@ -21,6 +21,16 @@ String.implement({
   }
 });
 
+Function.implement({
+  partial: function(bind, args) {
+    var self = this;
+    args = $splat(args);
+    return function() {
+      return self.apply(bind, args.concat($A(arguments)));
+    };
+  }
+});
+
 var IFrame = new Native({
 
   name: 'IFrame',

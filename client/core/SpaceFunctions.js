@@ -486,3 +486,16 @@ function SSGetInfoForInstalledSpace(spaceName, callback)
 {
   // fetch data for the space
 }
+
+
+var __installedSpacesDataProvider;
+function SSSetInstalledSpacesDataProvider(dataProvider)
+{
+  __installedSpacesDataProvider = dataProvider;
+}
+
+
+function SSUpdateInstalledSpaces()
+{
+  SSSetInstalledSpaces(__installedSpacesDataProvider.installedSpaces());
+}

@@ -146,8 +146,8 @@ var ShiftSpaceUserClass = new Class({
   logout: function()
   {
     SSServerCall('user.logout', null, function(json) {
-      // clear out all values
       this.clearData();
+      
       if(!json.error)
       {
         SSLog('user is logging out', SSLogForce);
@@ -263,6 +263,18 @@ var ShiftSpaceUserClass = new Class({
   
   removePreference: function()
   {
+  },
+  
+  
+  installedSpaces: function()
+  {
+    return this.getPreference('installed', SSDefaultSpaces());
+  },
+  
+  
+  refreshInstalledSpaces: function()
+  {
+    this.setPreference('installed', this.installedSpaces());
   }
 });
 

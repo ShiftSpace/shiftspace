@@ -81,7 +81,6 @@ var ShiftMenu = new Class({
   */
   addSpace: function(spaceName) 
   {
-    // TODO: we need the icon to not be separate from the space so that we can do incremental loading.
     SSLog('adding space ' + spaceName, SSLogSystem);
     var meta = SSGetSpaceAttributes(spaceName);
     SSLog(meta, SSLogForce);
@@ -97,6 +96,7 @@ var ShiftMenu = new Class({
     var icon = new ShiftSpace.Element('img', {
       src: meta.icon
     });
+
     icon.injectInside(button);
     button.injectBefore(clear);
     this.spaceButtons[spaceName] = button;
@@ -109,31 +109,35 @@ var ShiftMenu = new Class({
       button.removeClass('hover');
     });
     
-    icon.addEvent('click', function(e) {
-      SSLog('Space clicked ' + spaceName, SSLogForce);
-      if (!ShiftSpace.User.isLoggedIn()) {
-        window.alert('Sorry, you must be signed in to create new shifts.');
-        this.hide(true);
-        return;
-      }
-      if (SSCheckForUpdates()) {
-        return;
-      }
-      var event = new Event(e);
-      if(!SSSpaceForName(spaceName))
-      {
-        // we need to load the space first
-        SSLoadSpace(spaceName, function() {
-          SSInitShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
-        });
-      }
-      else
-      {
-        // just show it
-        SSInitShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
-      }
+    icon.addEvent('click', this.createShift.partial(this, spaceName));
+  },
+  
+  
+  createShift: function(spaceName, e)
+  {
+    SSLog('Space clicked ' + spaceName, SSLogForce);
+    if (!ShiftSpace.User.isLoggedIn()) {
+      window.alert('Sorry, you must be signed in to create new shifts.');
       this.hide(true);
-    }.bind(this));
+      return;
+    }
+    if (SSCheckForUpdates()) {
+      return;
+    }
+    var event = new Event(e);
+    if(!SSSpaceForName(spaceName))
+    {
+      // we need to load the space first
+      SSLoadSpace(spaceName, function() {
+        SSInitShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
+      });
+    }
+    else
+    {
+      // just show it
+      SSInitShift(spaceName, {position:{x: event.page.x, y:event.page.y}});
+    }
+    this.hide(true);
   },
   
   /*
