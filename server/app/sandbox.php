@@ -15,7 +15,7 @@ class Sandbox {
     if (!empty($value))
       return $value->value;
     else
-      return "";
+      return new Response();
   }
   
   function setvalue() {
