@@ -1107,6 +1107,9 @@ var SSCollection = new Class({
       
     Parameters:
       fn - A function.
+      
+    Returns:
+      An array 
   */
   map: function(fn)
   {
