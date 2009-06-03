@@ -359,7 +359,7 @@ var SSCollection = new Class({
 
   /*
       Function: transact
-        Accepts an action, an array of options, and a compiled collection. If a bulk is not passed or is null, the collection object is cleaned and the currently set delagates are applied....//||\\ 
+        Accepts an action, an array of options, and a compiled collection. If a bulk is not passed or is null, the collection object is cleaned and the currently set delagates are applied.
       
       Parameters:
         action - the type of action (create, write, delete, update)
@@ -709,7 +709,7 @@ var SSCollection = new Class({
   },
   /*
     Function: loadIndex (abstract)
-        
+        NOTE: Abstract or To Be Deleted? -Justin
         
     Parameters: 
       index - An integer.
@@ -814,7 +814,7 @@ var SSCollection = new Class({
   },
   /*
     Function: create 
-      
+      Creates a new set or work in the collection. Accepts an array of data to be created and an array of options. 
 
     Parameters:
       data - An array.
@@ -927,7 +927,7 @@ var SSCollection = new Class({
   },
   /*
     Function: update
-      
+      Updates the collection by index. Accepts the updated array of data, the index to insert the new data, and a bulk .... 
       
     Parameters:
       data - An array. 
@@ -961,7 +961,7 @@ var SSCollection = new Class({
   },
   /*
     Function: updateById
-      
+      Updates the collection by id. Accepts the updated array of data, the id to insert the new data, and a bulk .....
       
     Parameters:
       data - An array. 
@@ -1107,6 +1107,9 @@ var SSCollection = new Class({
       
     Parameters:
       fn - A function.
+      
+    Returns:
+      An array 
   */
   map: function(fn)
   {
