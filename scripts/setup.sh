@@ -20,7 +20,6 @@ then
   echo  }                                   >> ../config/env/mydev.json
   
   chmod a+w ../server/working
-  cp ../server/shiftspace.ini ../server/server.ini
 fi
 
 python ../builder/corebuilder.py

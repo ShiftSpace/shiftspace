@@ -5,9 +5,9 @@
 // @dependencies      ShiftSpaceElement
 // ==/Builder==
 
-var __errorWindow__,
-    __errorWindowShiftPropertyModel__,
-    __errorWindowMinimized__ = true;
+var __errorWindow,
+    __errorWindowShiftPropertyModel,
+    __errorWindowMinimized = true;
 
 /*
   Function: SSCreateErrorWindow
@@ -16,16 +16,16 @@ var __errorWindow__,
 function SSCreateErrorWindow()
 {
   // Create the model for the table
-  __errorWindowShiftPropertyModel__ = new ShiftSpace.Element('tr');
-  __errorWindowShiftPropertyModel__.setStyle('display', '');
+  __errorWindowShiftPropertyModel = new ShiftSpace.Element('tr');
+  __errorWindowShiftPropertyModel.setStyle('display', '');
   var propertyName = new ShiftSpace.Element('td');
   propertyName.addClass('SSErrorWindowShiftProperty');
   var propertyValue = new ShiftSpace.Element('td');
-  propertyName.injectInside(__errorWindowShiftPropertyModel__);
-  propertyValue.injectInside(__errorWindowShiftPropertyModel__);
+  propertyName.injectInside(__errorWindowShiftPropertyModel);
+  propertyValue.injectInside(__errorWindowShiftPropertyModel);
 
   // the error window
-  __errorWindow__ = new ShiftSpace.Element('div', {
+  __errorWindow = new ShiftSpace.Element('div', {
     'class': "SSErrorWindow SSDisplayNone"
   });
 
@@ -33,25 +33,25 @@ function SSCreateErrorWindow()
   var errorWindowTitle = new ShiftSpace.Element('div', {
     'class': "SSErrorWindowTitle"
   });
-  errorWindowTitle.injectInside(__errorWindow__);
+  errorWindowTitle.injectInside(__errorWindow);
   errorWindowTitle.set('text', 'Oops ... it seems this shift is broken');
 
   // the errow message area
   var errorWindowMessage = new ShiftSpace.Element('div', {
     'class': "SSErrorWindowMessage"
   });
-  errorWindowMessage.injectInside(__errorWindow__);
+  errorWindowMessage.injectInside(__errorWindow);
   errorWindowMessage.set('html', 'Help us improve our experimental fix feature, copy and paste the shift details and <a target="new" href="http://metatron.shiftspace.org/trac/newticket">file a bug report</a>.');
 
   var br = new ShiftSpace.Element('br');
   br.setStyle('clear', 'both');
-  br.injectInside(__errorWindow__);
+  br.injectInside(__errorWindow);
 
   // add the bottom
   var errorWindowBottom = new ShiftSpace.Element('div', {
     'class': "SSErrorWindowBottom"
   });
-  errorWindowBottom.injectInside(__errorWindow__);
+  errorWindowBottom.injectInside(__errorWindow);
 
   // build the disclosure triangle and label
   var errorWindowDisclosure = new ShiftSpace.Element('div', {
@@ -98,29 +98,29 @@ function SSCreateErrorWindow()
   errorWindowFix.set('text', 'Fix');
   errorWindowFix.injectInside(errorWindowBottom);
   
-  __errorWindow__.set('tween', {
+  __errorWindow.set('tween', {
     duration: 300,
     transition: Fx.Transitions.Cubic.easeOut,
     onComplete: function()
     {
       // reset the error window
-      __errorWindow__.setStyles({
+      __errorWindow.setStyles({
         width: 280,
         height: 100
       });
       errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
       errorWindowExpandLabel.set('text', 'view shift details');
       errorWindowShiftStatusScroll.addClass('SSDisplayNone');
-      __errorWindowMinimized__ = true;
+      __errorWindowMinimized = true;
     }
   });
   
-  __errorWindow__.set('morph', {
+  __errorWindow.set('morph', {
     duration: 500,
     transition: Fx.Transitions.Cubic.easeOut,
     onComplete: function()
     {
-      if(!__errorWindowMinimized__)
+      if(!__errorWindowMinimized)
       {
         errorWindowShiftStatusScroll.removeClass('SSDisplayNone');
       }
@@ -129,14 +129,14 @@ function SSCreateErrorWindow()
 
   errorWindowOk.addEvent('click', function(_evt) {
     var evt = new Event(_evt);
-    __errorWindow__.tween('opacity', 0);
+    __errorWindow.tween('opacity', 0);
   });
 
   // add expand action
   errorWindowExpandWrapper.addEvent('click', function(_evt) {
     var evt = new Event(_evt);
 
-    if(!__errorWindowMinimized__)
+    if(!__errorWindowMinimized)
     {
       errorWindowExpand.removeClass('SSErrorWindowExpandOpen');
       errorWindowExpandLabel.set('text', 'view shift details');
@@ -148,25 +148,25 @@ function SSCreateErrorWindow()
       errorWindowExpandLabel.set('text', 'hide shift details');
     }
 
-    if(__errorWindowMinimized__)
+    if(__errorWindowMinimized)
     {
-      __errorWindow__.morph({
+      __errorWindow.morph({
         width: 340,
         height: 300
       });
     }
     else
     {
-      __errorWindow__.morph({
+      __errorWindow.morph({
         width: 280,
         height: 100
       });
     }
 
-    __errorWindowMinimized__ = !__errorWindowMinimized__;
+    __errorWindowMinimized = !__errorWindowMinimized;
   });
 
-  __errorWindow__.injectInside(document.body);
+  __errorWindow.injectInside(document.body);
 }
 
 /*
@@ -179,15 +179,15 @@ function SSCreateErrorWindow()
 function SSShowErrorWindow(shiftId)
 {
   /*
-  __errorWindow__.getElement('.SSErrorWindowTitle').set('text', title);
-  __errorWindow__.getElement('.SSErrorWindowMessage').set('text', message);
+  __errorWindow.getElement('.SSErrorWindowTitle').set('text', title);
+  __errorWindow.getElement('.SSErrorWindowMessage').set('text', message);
   */
 
   if(shiftId) SSErrorWindowUpdateTableForShift(shiftId);
 
   // is this shift fixable, if so show the fix button
   var space = SSSpaceForShift(shiftId);
-  var fixButton = __errorWindow__.getElement('.SSErrorWindowFix');
+  var fixButton = __errorWindow.getElement('.SSErrorWindowFix');
 
   if(space && space.fix && SSUserCanEditShift(shiftId))
   {
@@ -229,9 +229,9 @@ function SSShowErrorWindow(shiftId)
     fixButton.addClass('SSDisplayNone');
   }
 
-  __errorWindow__.setOpacity(0);
-  __errorWindow__.removeClass('SSDisplayNone');
-  __errorWindow__.tween('opacity',0.95);
+  __errorWindow.setOpacity(0);
+  __errorWindow.removeClass('SSDisplayNone');
+  __errorWindow.tween('opacity',0.95);
 }
 
 /*
@@ -240,7 +240,7 @@ function SSShowErrorWindow(shiftId)
 */
 function SSHideErrorWindow()
 {
-  __errorWindow__.addClass('SSDisplayNone');
+  __errorWindow.addClass('SSDisplayNone');
 }
 
 /*
@@ -252,7 +252,7 @@ function SSHideErrorWindow()
 */
 function SSErrorWindowUpdateTableForShift(shiftId)
 {
-  var statusTable = __errorWindow__.getElement('.SSErrorWindowShiftStatus');
+  var statusTable = __errorWindow.getElement('.SSErrorWindowShiftStatus');
   // clear out the table of it's contents
   statusTable.empty();
 
@@ -273,7 +273,7 @@ function SSErrorWindowUpdateTableForShift(shiftId)
 
   for(var prop in shiftContent)
   {
-    var newPair = __errorWindowShiftPropertyModel__.clone(true);
+    var newPair = __errorWindowShiftPropertyModel.clone(true);
     var tds = newPair.getElements('td');
 
     tds[0].set('text', prop);

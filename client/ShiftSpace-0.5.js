@@ -85,6 +85,9 @@ var ShiftSpace = new (function() {
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
         SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
+        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
+        SSLog('User logged in ============', SSLogForce);
+        SSLog(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()), SSLogForce);
         // FIXME: Just make this into a onUserLogin hook - David
         if(SSHasResource('RecentlyViewedHelpers'))
         {
@@ -94,7 +97,9 @@ var ShiftSpace = new (function() {
       });
 
       ShiftSpace.User.addEvent('onUserLogout', function() {
+        SSLog('ShiftSpace detects user logout', SSLogForce);
         SSFireEvent('onUserLogout');
+        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
       });
       
       // Load CSS styles
@@ -121,7 +126,7 @@ var ShiftSpace = new (function() {
       window.addEvent('click', function() {
         if(ShiftSpace.Console)
         {
-          __pinWidgets__.each(function(x){
+          __pinWidgets.each(function(x){
             if(!x.isSelecting) x.hideMenu();
           });
         }
@@ -147,6 +152,7 @@ var ShiftSpace = new (function() {
     */
     function SSSynch() 
     {
+      SSLog('SSSynch >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
       var params = {
         href: window.location.href
       };
@@ -157,14 +163,11 @@ var ShiftSpace = new (function() {
           return;
         }
 
-        if(json.data.username)
+        if(json.data.user)
         {
+          SSLog('User is logged in', SSLogForce);
           // Set private user variable
-          ShiftSpace.User.setUsername(json.data.username);
-          ShiftSpace.User.setEmail(json.data.email);
-
-          // fire user login for the Console
-          SSFireEvent('onUserLogin', {status:1});
+          ShiftSpace.User.syncData(json.data.user)
 
           // make sure default shift status preference is set
           SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
@@ -174,8 +177,13 @@ var ShiftSpace = new (function() {
           SSLog('Guest account', SSLogForce);
         }
         
+        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
+        
         // build menu only after we know which spaces the users has installed
         ShiftSpace.ShiftMenu.buildMenu();
+        
+        // notify SSConsole
+        if(ShiftSpace.User.isLoggedIn()) SSFireEvent('onUserLogin', {status:1});
       });
     }
 
@@ -263,6 +271,7 @@ var ShiftSpace = new (function() {
       this.uninstallSpace = SSUninstallSpace;
       this.installed = SSInstalledSpaces;
       this.byPosition = SSSpacesByPosition;
+      this.eventProxy = SSEventProxy;
 
       this.SSGetShift = SSGetShift;
       this.SSGetPageShifts = SSGetPageShifts;

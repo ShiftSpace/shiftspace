@@ -1,5 +1,6 @@
 // ==Builder==
-// @required
+// @required         
+// @dependencies      SSException
 // @package           System
 // ==/Builder==
 

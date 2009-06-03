@@ -24,12 +24,12 @@ var SSException = new Class({
     
   setMessage: function(msg)
   {
-    this.__message__ = msg; 
+    this.__message = msg; 
   },
   
   message: function()
   {
-    return this.__message__ || (this.theError && this.theError.message) || 'n/a';
+    return this.__message || (this.theError && this.theError.message) || 'n/a';
   },
   
   fileName: function()

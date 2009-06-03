@@ -5,9 +5,183 @@
 // ==/Builder==
 
 // event proxy object since, ShiftSpace is not a MooTools class
-var __eventProxyClass__ = new Class({});
-__eventProxyClass__.implement(new Events);
-var __eventProxy__ = new __eventProxyClass__();
+var __eventProxyClass = new Class({});
+__eventProxyClass.implement(new Events);
+var __eventProxy = new __eventProxyClass();
+
+function SSEventProxy()
+{
+  return __eventProxy;
+}
+
+function SSSetEventProxy(newProxy)
+{
+  __eventProxy = newProxy;
+}
+
+var __observers = $H();
+var __notificationQueue = $H();
+
+/*
+  Function: SSAddObserver
+    Add an observer to the notification center.
+    
+  Parameters:
+    object - an object, must implement getId.
+    name - the name of the notification.
+    method - the function to called when the notification is posted.
+    sender - an object, must implement getId.
+*/
+function SSAddObserver(object, name, method, sender)
+{
+  var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
+  if(!__observers[notificationName])
+  {
+    __observers[notificationName] = $H();
+  }
+  if(!__observers[notificationName][object.getId()]) __observers[notificationName][object.getId()] = [];
+  __observers[notificationName][object.getId()].push(method);
+}
+
+/*
+  Function: SSGetObservers
+    Return the all the observers register for a notification.
+    
+  Parameters:
+    name - the name of the notification.
+    sender - the sender of notification (optional).
+    
+  Returns:
+    a hash table of objects listening to the notification.
+*/
+function SSGetObservers(name, sender)
+{
+  if(name)
+  {
+    var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
+    return __observers[notificationName];
+  }
+  return __observers;
+}
+
+/*
+  Function: SSRemoveObserver
+    Remove an observer from the notification center.
+    
+  Parameters:
+    object - an object, must implement getId.
+    name - the name of the notification to be observed.
+    sender - only notify if notification posted by sender who also must implement getId. (options)
+*/
+function SSRemoveObserver(object, name, sender)
+{
+  var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
+  __observers[notificationName].erase(object.getId());
+}
+
+/*
+  Function: SSPostNotification
+    Post a notification, all observers will be notified.
+    
+  Parameters:
+    name - the name of the notification to listen for.
+    data - data to be sent to the observer.
+    sender - the sender of the notification, must implement getId.
+*/
+function SSPostNotification(name, data, sender)
+{
+  var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
+  var observers = SSGetObservers(notificationName);
+  
+  observers.each(function(methods, objid) {
+    var obj = ShiftSpaceObjects[objid];
+    
+    if(obj.isAwake())
+    {
+      methods.each(function(method) { method(data); });
+    }
+    else
+    {
+      SSAddToNotificationQueue(obj, methods, data);
+    }
+  });
+}
+
+/*
+  Function: SSAddToNotificationQueue
+    Add a sleeping object to the notification queue.
+    
+  Parameters:
+    object - an object, must implement getId.
+    method - the callback function.
+    data - the data to be passed. NOTE: be watchful of mutating data.
+*/
+function SSAddToNotificationQueue(object, methods, data)
+{
+  var id = object.getId();
+  if(!__notificationQueue.get(id))
+  {
+    __notificationQueue.set(id, []);
+  }
+  __notificationQueue.get(id).push({methods:methods, data:data});
+}
+
+/*
+  Function: SSClearObservers
+    Clear all observers from the notification center.
+*/
+function SSClearObservers()
+{
+  __observers = $H();
+}
+
+/*
+  Function: SSFlushNotificationQueue
+    Clear the notification queue.
+*/
+function SSFlushNotificationQueue()
+{
+  __notificationQueue = $H();
+}
+
+/*
+  Function: SSNotificationQueue
+    Return the notification queue, a hash object.
+*/
+function SSNotificationQueue()
+{
+  return __notificationQueue;
+}
+
+/*
+  Function: SSNotificationCenterReset
+    Reset the notification center. Clears all observers and flushes
+    the notification queue.
+*/
+function SSNotificationCenterReset()
+{
+  SSClearObservers();
+  SSFlushNotificationQueue();
+}
+
+
+function SSNotificationQueueForObject(object)
+{
+  return __notificationQueue[object.getId()];
+}
+
+/*
+  Function: SSFlushNotificationQueueForObject
+    Flush the notification queue for a single object.
+*/
+function SSFlushNotificationQueueForObject(object)
+{
+  var id = object.getId();
+  __notificationQueue[id].each(function(notif) {
+    notif.methods.each(function (method) { method(notif.data); });
+  });
+  __notificationQueue.erase(id);
+}
 
 /*
   Function: SSAddEvent
@@ -20,21 +194,20 @@ var __eventProxy__ = new __eventProxyClass__();
   See also:
     SSFireEvent
 */
-var __sleepingObjects__ = $H();
+var __sleepingObjects = $H();
 function SSAddEvent(eventType, callback, anObject)
 {
-  //console.log('adding event ' + eventType);
   if(anObject && anObject.isAwake && !anObject.isAwake())
   {
     var objId = anObject.getId();
-    if(!__sleepingObjects__.get(objId))
+    if(!__sleepingObjects.get(objId))
     {
-      __sleepingObjects__.set(anObject.getId(), $H({
+      __sleepingObjects.set(anObject.getId(), $H({
         object: anObject,
         events: $H()
       }));
     }
-    var eventsHash = __sleepingObjects__.get(objId).get('events');
+    var eventsHash = __sleepingObjects.get(objId).get('events');
     if(!eventsHash.get(eventType))
     {
       eventsHash.set(eventType, []);
@@ -43,7 +216,7 @@ function SSAddEvent(eventType, callback, anObject)
   }
   else
   {
-    __eventProxy__.addEvent(eventType, callback);
+    __eventProxy.addEvent(eventType, callback);
   }
 };
 
@@ -57,36 +230,27 @@ function SSAddEvent(eventType, callback, anObject)
 */
 function SSFireEvent(eventType, data) 
 {
-  //console.log('SSFireEvent ' + eventType);
-  __eventProxy__.fireEvent(eventType, data);
+  __eventProxy.fireEvent(eventType, data);
   
-  var awakeNow = __sleepingObjects__.filter(function(objectHash, objectName) {
+  var awakeNow = __sleepingObjects.filter(function(objectHash, objectName) {
     return objectHash.get('object').isAwake();
   });
   
-  // call back these immediate
   awakeNow.each(function(objectHash, objectName) {
-    //console.log('now awake ' + objectName);
     SSAddEventsAndFire(eventType, objectHash.get('events').get(eventType));
   });
   
-  var stillSleeping = __sleepingObjects__.filter(function(objectHash, objectName) {
-    //console.log('checking ' + objectName + ' ' + objectHash.get('object').isAwake());
+  var stillSleeping = __sleepingObjects.filter(function(objectHash, objectName) {
     return !objectHash.get('object').isAwake();
   });
   
   stillSleeping.each(function(objectHash, objectName) {
     objectHash.get('object').addEvent('onAwake', function() {
-      //console.log('waking up!');
       SSAddEventsAndFire(eventType, objectHash.get('events').get(eventType));
     });
   });
   
-  // update which objects are still sleeping
-  __sleepingObjects__ = stillSleeping;
-  
-  //console.log('still sleeping');
-  //console.log(__sleepingObjects__.getLength());
+  __sleepingObjects = stillSleeping;
 };
 
 // takes and event type and a list of event callbacks

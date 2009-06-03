@@ -10,7 +10,7 @@ function GM_addStyle(css)
   {
     var head = document.getElementsByTagName('head')[0];
   } 
-  else 
+  else
   {
     var head = new Element('head');
     head.injectBefore($(document.body));
@@ -41,12 +41,11 @@ function GM_getValue(key, defaultValue)
     method: 'post',
     data: 
     { 
-      key: key, 
-      'default': defaultValue
+      key: key
     }
   }).send();
   
-  return request.response.text;
+  return request.response.text || defaultValue;
 }
 
 

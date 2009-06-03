@@ -36,7 +36,14 @@ class Server extends Base_Server {
       $response->handleError($e);
     }
     header('Content-type: text/plain');
-    echo $response;
+    
+    if (isset($response)) 
+      if (get_class($response) == 'Response')
+        echo $response;
+      else
+        echo new Response($response);
+    else
+      echo new Response("ok");
   }
 
   function normalizeURL($url) {

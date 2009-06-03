@@ -10,7 +10,7 @@
 // ==========================
 
 // Used to cover iframes so that resize and drag operations don't get borked
-var __iframeCovers__ = [];
+var __iframeCovers = [];
 
 /*
   Function: SSCheckForPageIframes
@@ -47,7 +47,7 @@ function SSCreateCover()
 function SSAddCover(newCover)
 {
   // create covers if we haven't already
-  __iframeCovers__.push(newCover);
+  __iframeCovers.push(newCover);
 }
 
 /*
@@ -56,7 +56,7 @@ function SSAddCover(newCover)
 */
 function SSAddIframeCovers() 
 {
-  __iframeCovers__.each(function(aCover) {
+  __iframeCovers.each(function(aCover) {
     aCover.cover.setStyle('display', 'block');
   });
 }
@@ -67,7 +67,7 @@ function SSAddIframeCovers()
 */
 function SSUpdateIframeCovers() 
 {
-  __iframeCovers__.each(function(aCover) {
+  __iframeCovers.each(function(aCover) {
     var pos = aCover.frame.getPosition();
     var size = aCover.frame.getSize();
     aCover.cover.setStyles({
@@ -85,7 +85,7 @@ function SSUpdateIframeCovers()
 */
 function SSRemoveIframeCovers() 
 {
-  __iframeCovers__.each(function(aCover) {
+  __iframeCovers.each(function(aCover) {
     aCover.cover.setStyle('display', 'none');
   });
 }

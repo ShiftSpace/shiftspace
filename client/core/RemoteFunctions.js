@@ -264,7 +264,7 @@ function SSLoadFile(url, callback)
   {
     SSLog('SSLoadFile, load from cache', SSLogForce);
     // ... or use SSGetValue to retrieve the file's contents
-    var cached = SSGetValue('cache.' + url, false, true);
+    var cached = SSGetValue('cache.' + url, false);
 
     if (cached) 
     {
@@ -289,7 +289,7 @@ function SSLoadFile(url, callback)
       {
         cache.push(url);
         SSSetValue('cache', cache);
-        SSSetValue('cache.' + url, response.responseText, true);
+        SSSetValue('cache.' + url, response.responseText);
       }
       if (typeof callback == 'function') 
       {

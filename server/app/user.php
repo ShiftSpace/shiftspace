@@ -85,6 +85,8 @@ class User {
     
     $this->server->db->save($user);
     $this->server->user = $user;
+
+    return new Response($this->server->user);
   }
 }
 

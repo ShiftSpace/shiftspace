@@ -30,7 +30,9 @@ var __defaultEmailComments = 1;
 var __pluginsData = {};
 
 // Each space and it's associated metadata
-var __installed = SSGetValue('installed', {
+var __installed;
+
+var __defaultSpaces = {
   'Notes': 
   {
     name:'Notes', 
@@ -71,7 +73,7 @@ var __installed = SSGetValue('installed', {
     attrs: {},
     autolaunch: false
   }
-});
+};
 
 var spacePrefs = SSGetValue('spacePrefs', {});
 
