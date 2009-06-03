@@ -6,10 +6,10 @@ class Response {
   private $resources = array();
   private $error = false;
   
-  public function __construct($data = false) {
-    if ($data !== false) {
+  public function __construct($data = null) {
+//    if ($data !== false) {
       $this->data = $data;
-    }
+//    }
     
     if (!isset(self::$current)) {
       self::$current = $this;
@@ -25,13 +25,14 @@ class Response {
   
   public function __toString() {
     $response = array();
-    if (isset($this->data)) {
+//    if (isset($this->data)) {
       $response['data'] = $this->data;
-    }
+//    }
     if (!empty($this->resources)) {
       $response['resources'] = $this->resources;
     }
     if (!empty($this->error)) {
+      unset($response['data']);
       if (!empty($_REQUEST['debug'])) {
         $response['error'] = $this->error;
       } else {
