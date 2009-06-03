@@ -179,6 +179,18 @@ var NotificationTest = new Class({
     SSPostNotification("FooBarNotificationA", data);
     
     this.assertEqual(this.dummyObjectC.data, data);
+  },
+  
+  
+  testPostNotificationNoObserver()
+  {
+    this.doc("Post a notification which has no observer");
+  },
+  
+  
+  testRaiseObjectDoesNotImplementGetId()
+  {
+    this.doc("Throw error when an observer does not implement getId.");
   }
 
 });

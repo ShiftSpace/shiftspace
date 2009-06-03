@@ -463,6 +463,11 @@ var SandalphonClass = new Class({
         object.afterAwake(context);
       }
     });
+    
+    // send all notifications
+    ShiftSpaceObjects.each(function(object, objectId) {
+      SSFlushNotificationQueueForObject(object);
+    });
   },
   
   

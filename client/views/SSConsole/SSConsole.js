@@ -38,8 +38,8 @@ var SSConsole = new Class({
     // so that ShiftSpace notifies after this object's awake method has been called
     // this is because outlets won't be set until that point
     SSLog('Adding SSConsole events', SSLogMessage);
-    SSAddEvent('onUserLogin', this.handleLogin.bind(this), this);
-    SSAddEvent('onUserLogout', this.handleLogout.bind(this), this);
+    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this), this);
+    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this), this);
     
     // listen for shift events
     SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));

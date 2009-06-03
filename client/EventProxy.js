@@ -1,7 +1,7 @@
 // ==Builder==
 // @required
 // @name              EventProxy
-// @package           System
+// @package           System_
 // ==/Builder==
 
 // event proxy object since, ShiftSpace is not a MooTools class
@@ -21,6 +21,10 @@ function SSSetEventProxy(newProxy)
 
 var __observers = $H();
 var __notificationQueue = $H();
+
+var SSNotificationProxy = {
+  getId: function() { return "ShiftSpace"; }
+};
 
 /*
   Function: SSAddObserver
@@ -90,22 +94,27 @@ function SSRemoveObserver(object, name, sender)
 */
 function SSPostNotification(name, data, sender)
 {
+  SSLog('SSPostNotification ' + name, SSLogForce);
   var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
   var observers = SSGetObservers(notificationName);
   
-  observers.each(function(methods, objid) {
-    var obj = ShiftSpaceObjects[objid];
+  if(observers)
+  {
+    observers.each(function(methods, objid) {
+      var obj = ShiftSpaceObjects[objid];
     
-    if((obj.isAwake && obj.isAwake()) ||
-      !obj.isAwake)
-    {
-      methods.each(function(method) { method(data); });
-    }
-    else
-    {
-      SSAddToNotificationQueue(obj, methods, data);
-    }
-  });
+      if((obj && obj.isAwake && obj.isAwake()) ||
+         (obj && !obj.isAwake) ||
+         !obj)
+      {
+        methods.each(function(method) { method(data); });
+      }
+      else
+      {
+        SSAddToNotificationQueue(obj, methods, data);
+      }
+    });
+  }
 }
 
 /*
@@ -178,10 +187,13 @@ function SSNotificationQueueForObject(object)
 function SSFlushNotificationQueueForObject(object)
 {
   var id = object.getId();
-  __notificationQueue[id].each(function(notif) {
-    notif.methods.each(function (method) { method(notif.data); });
-  });
-  __notificationQueue.erase(id);
+  if(__notificationQueue[id])
+  {
+    __notificationQueue[id].each(function(notif) {
+      notif.methods.each(function (method) { method(notif.data); });
+    });
+    __notificationQueue.erase(id);
+  }
 }
 
 /*

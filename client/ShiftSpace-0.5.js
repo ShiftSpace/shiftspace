@@ -84,9 +84,10 @@ var ShiftSpace = new (function() {
       
       // Add to look up table
       ShiftSpaceObjects.ShiftMenu = ShiftSpace.ShiftMenu;
+      ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
       
       // Set up user event handlers
-      ShiftSpace.User.addEvent('onUserLogin', function() {
+      SSAddObserver(SSNotificationProxy, 'onUserLogin', function() {
         SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
         SSLog('User logged in ============', SSLogForce);
@@ -99,15 +100,13 @@ var ShiftSpace = new (function() {
         SSFireEvent('onUserLogin');
       });
 
-      ShiftSpace.User.addEvent('onUserLogout', function() {
+      SSAddObserver(SSNotificationProxy, 'onUserLogout', function() {
         SSLog('ShiftSpace detects user logout', SSLogForce);
         SSFireEvent('onUserLogout');
         SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
       });
       
-      // Load CSS styles
       SSLoadStyle('styles/ShiftSpace.css', function() {
-        // create the error window
         SSCreateErrorWindow();
       });
       SSLoadStyle('styles/ShiftMenu.css');
@@ -155,7 +154,6 @@ var ShiftSpace = new (function() {
     */
     function SSSynch() 
     {
-      SSLog('SSSynch >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
       var params = {
         href: window.location.href
       };
@@ -181,9 +179,6 @@ var ShiftSpace = new (function() {
         }
         
         SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
-
-        // notify SSConsole
-        if(ShiftSpace.User.isLoggedIn()) SSFireEvent('onUserLogin', {status:1});
         SSPostNotification("onSynch");
       });
     }
