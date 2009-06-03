@@ -21,8 +21,10 @@ var NotificationTest = new Class({
       { 
         this.notified = true;
         this.data = data;
-        console.log('dummyObjectA notified!');
-        console.log(this); 
+      },
+      notifyB: function(data)
+      {
+        SSPostNotification("FooBarNotificationB", data);
       }
     };
     
@@ -35,7 +37,10 @@ var NotificationTest = new Class({
       { 
         this.notified = true;
         this.data = data;
-        console.log('dummyObjectB notified!'); 
+      },
+      notifyC: function(data)
+      {
+        SSPostNotification("FooBarNotificationC", data)
       }
     };
     
@@ -48,7 +53,10 @@ var NotificationTest = new Class({
       {
         this.notified = true;
         this.data = data;
-        console.log('dummyObjectC notified!') 
+      },
+      handleNotif: function(data)
+      {
+        this.data = data;
       }
     };
     
@@ -150,6 +158,27 @@ var NotificationTest = new Class({
     SSPostNotification("FooBarNotification", data);
     
     this.assertEqual(this.dummyObjectA.data, data);
+  },
+  
+
+  testPostNotificationMultiple: function()
+  {
+    this.doc("Trigger a chain of notifications");
+    
+    var fnrefA = this.dummyObjectA.notifyB.bind(this.dummyObjectA);
+    SSAddObserver(this.dummyObjectA, "FooBarNotificationA", fnrefA);
+
+    var fnrefB = this.dummyObjectB.notifyC.bind(this.dummyObjectB);
+    SSAddObserver(this.dummyObjectB, "FooBarNotificationB", fnrefB);
+
+    var fnrefC = this.dummyObjectC.handleNotif.bind(this.dummyObjectC);
+    SSAddObserver(this.dummyObjectC, "FooBarNotificationC", fnrefC);
+    
+    this.dummyObjectA.__awake = this.dummyObjectB.__awake = this.dummyObjectC.__awake = true;
+    var data = {foo:"bar"};
+    SSPostNotification("FooBarNotificationA", data);
+    
+    this.assertEqual(this.dummyObjectC.data, data);
   }
 
 });
