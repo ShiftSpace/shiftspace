@@ -25,16 +25,9 @@ var HelloWorldalphonShift = new Class({
     build: function() {
       console.log("happy2");
       ShiftSpace.Sandalphon.load('spaces/HelloWorldalphon/HelloWorldalphon', function(ui) {
-        console.log("happy3");
+        document.body.grab(ShiftSpace.Sandalphon.convertToFragment(ui.interface));
         ShiftSpace.Sandalphon.activate($('SSHWmain'));
-      });
-    },
-    
-    changeMessage: function() {
-        var msg = prompt("Please enter a new message:", this.messageValue);
-        this.messageValue = msg;
-        this.element.setHTML(msg);
-        this.save();
+      }.bind(this));
     },
     
     encode: function() {
