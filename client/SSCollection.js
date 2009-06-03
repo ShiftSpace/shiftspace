@@ -709,7 +709,7 @@ var SSCollection = new Class({
   },
   /*
     Function: loadIndex (abstract)
-        
+        NOTE: Abstract or To Be Deleted? -Justin
         
     Parameters: 
       index - An integer.
@@ -814,7 +814,7 @@ var SSCollection = new Class({
   },
   /*
     Function: create 
-      
+      ??????doc needed here?????
 
     Parameters:
       data - An array.
@@ -927,7 +927,7 @@ var SSCollection = new Class({
   },
   /*
     Function: update
-      
+      Updates the collection. Accepts the updated array of data, the index to insert the new data, and a bulk ??????.
       
     Parameters:
       data - An array. 
