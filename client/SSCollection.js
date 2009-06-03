@@ -927,7 +927,7 @@ var SSCollection = new Class({
   },
   /*
     Function: update
-      Updates the collection by index. Accepts the updated array of data, the index to insert the new data, and a bulk 
+      Updates the collection by index. Accepts the updated array of data, the index to insert the new data, and a bulk .... 
       
     Parameters:
       data - An array. 
@@ -961,7 +961,7 @@ var SSCollection = new Class({
   },
   /*
     Function: updateById
-      Updates the collection by id. Accepts the updated array of data, the id to insert the new data, and a bulk 
+      Updates the collection by id. Accepts the updated array of data, the id to insert the new data, and a bulk .....
       
     Parameters:
       data - An array. 
