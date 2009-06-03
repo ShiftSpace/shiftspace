@@ -26,7 +26,7 @@ var HelloWorldalphonShift = new Class({
       console.log("happy2");
       ShiftSpace.Sandalphon.load('spaces/HelloWorldalphon/HelloWorldalphon', function(ui) {
         console.log("happy3");
-        Sandalphon.activate($('SSHWmain'));
+        ShiftSpace.Sandalphon.activate($('SSHWmain'));
       });
     },
     
