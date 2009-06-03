@@ -1,6 +1,5 @@
 // ==Builder==
 // @required
-// @name              EventProxy
 // @package           System_
 // ==/Builder==
 

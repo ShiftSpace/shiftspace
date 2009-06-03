@@ -1,7 +1,5 @@
 // ==Builder==
 // @optional
-// @name              GreaseMonkeyApi
-// @package           System_
 // ==/Builder==
 
 function GM_addStyle(css) 
