@@ -97,12 +97,10 @@ var ShiftSpace = new (function() {
         {
           SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
         }
-        SSFireEvent('onUserLogin');
       });
 
       SSAddObserver(SSNotificationProxy, 'onUserLogout', function() {
         SSLog('ShiftSpace detects user logout', SSLogForce);
-        SSFireEvent('onUserLogout');
         SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
       });
       
@@ -269,6 +267,7 @@ var ShiftSpace = new (function() {
       this.defaults = SSDefaultSpaces;
       this.byPosition = SSSpacesByPosition;
       this.eventProxy = SSEventProxy;
+      this.getObservers = SSGetObservers;
 
       this.SSGetShift = SSGetShift;
       this.SSGetPageShifts = SSGetPageShifts;

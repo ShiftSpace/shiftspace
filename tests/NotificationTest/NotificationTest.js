@@ -160,8 +160,27 @@ var NotificationTest = new Class({
     this.assertEqual(this.dummyObjectA.data, data);
   },
   
+  
+  testPostNotificationToMultipleObservers: function()
+  {
+    this.doc("Post a notification to multiple observers");
+    
+    var fnrefA = this.dummyObjectA.doSomething.bind(this.dummyObjectA);
+    SSAddObserver(this.dummyObjectA, "FooBarNotification", fnrefA);
+    
+    var fnrefB = this.dummyObjectB.doSomething.bind(this.dummyObjectB);
+    SSAddObserver(this.dummyObjectB, "FooBarNotification", fnrefB);
+    
+    this.dummyObjectA.__awake = this.dummyObjectB.__awake = true;
+    
+    SSPostNotification("FooBarNotification");
+    
+    this.assertEqual(this.dummyObjectA.notified, true);
+    this.assertEqual(this.dummyObjectB.notified, true);
+  },
+  
 
-  testPostNotificationMultiple: function()
+  testPostNotificationChain: function()
   {
     this.doc("Trigger a chain of notifications");
     
@@ -182,13 +201,13 @@ var NotificationTest = new Class({
   },
   
   
-  testPostNotificationNoObserver()
+  testPostNotificationNoObserver: function()
   {
     this.doc("Post a notification which has no observer");
   },
   
   
-  testRaiseObjectDoesNotImplementGetId()
+  testRaiseObjectDoesNotImplementGetId: function()
   {
     this.doc("Throw error when an observer does not implement getId.");
   }

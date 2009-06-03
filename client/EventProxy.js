@@ -38,13 +38,18 @@ var SSNotificationProxy = {
 */
 function SSAddObserver(object, name, method, sender)
 {
+  var id = object.getId();
+  
   var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
   if(!__observers[notificationName])
   {
     __observers[notificationName] = $H();
   }
-  if(!__observers[notificationName][object.getId()]) __observers[notificationName][object.getId()] = [];
-  __observers[notificationName][object.getId()].push(method);
+  if(!__observers[notificationName][id])
+  {
+    __observers[notificationName][id] = [];
+  }
+  __observers[notificationName][id].push(method);
 }
 
 /*
@@ -94,10 +99,9 @@ function SSRemoveObserver(object, name, sender)
 */
 function SSPostNotification(name, data, sender)
 {
-  SSLog('SSPostNotification ' + name, SSLogForce);
   var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
   var observers = SSGetObservers(notificationName);
-  
+
   if(observers)
   {
     observers.each(function(methods, objid) {

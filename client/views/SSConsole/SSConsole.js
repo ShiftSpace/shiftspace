@@ -37,9 +37,9 @@ var SSConsole = new Class({
     // listen for login/logout events, pass in reference to self
     // so that ShiftSpace notifies after this object's awake method has been called
     // this is because outlets won't be set until that point
-    SSLog('Adding SSConsole events', SSLogMessage);
-    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this), this);
-    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this), this);
+    SSLog('Listening for user notifications', SSLogForce);
+    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     
     // listen for shift events
     SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));
@@ -122,7 +122,7 @@ var SSConsole = new Class({
 
   handleLogin: function()
   {
-    SSLog('Handle login', SSLogForce);
+    SSLog('Handle login >>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
     this.setLoginHandled(true);
     
     // empty the login form
