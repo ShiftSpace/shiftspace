@@ -38,7 +38,7 @@ function method_form($httpmethod, $method, $args, $comment = '') {
 <hr>
 <?php method_form('get', "version", array()); ?>
 <?php method_form('get', "query", array("href")); ?>
-<?php method_form('get', "sandbox.getvalue", array("default", "key")); ?>
+<?php method_form('get', "sandbox.getvalue", array("key")); ?>
 <?php method_form('get', "sandbox.setvalue", array("key", "value")); ?>
 <?php method_form('post', "shift.get", array("shiftIds")); ?>
 <?php method_form('get', "shift.query", array("href")); ?>
