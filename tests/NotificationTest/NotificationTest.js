@@ -17,7 +17,13 @@ var NotificationTest = new Class({
       __awake: false,
       awake: function() { this.__awake == true; },
       isAwake: function() { return this.__awake; },
-      doSomething: function(data) { console.log('dummyObjectA notified!' + data) }
+      doSomething: function(data) 
+      { 
+        this.notified = true;
+        this.data = data;
+        console.log('dummyObjectA notified!');
+        console.log(this); 
+      }
     };
     
     this.dummyObjectB = {
@@ -25,7 +31,12 @@ var NotificationTest = new Class({
       __awake: false,
       awake: function() { this.__awake == true; },
       isAwake: function() { return this.__awake; },
-      doSomething: function(data) { console.log('dummyObjectB notified!' + data) }
+      doSomething: function(data) 
+      { 
+        this.notified = true;
+        this.data = data;
+        console.log('dummyObjectB notified!'); 
+      }
     };
     
     this.dummyObjectC = {
@@ -33,7 +44,12 @@ var NotificationTest = new Class({
       __awake: false,
       awake: function() { this.__awake == true; },
       isAwake: function() { return this.__awake; },
-      doSomething: function(data) { console.log('dummyObjectC notified!' + data) }
+      doSomething: function(data) 
+      {
+        this.notified = true;
+        this.data = data;
+        console.log('dummyObjectC notified!') 
+      }
     };
     
     ShiftSpaceObjects.dummyObjectA = this.dummyObjectA;
@@ -88,22 +104,52 @@ var NotificationTest = new Class({
     
     var fnrefA = this.dummyObjectA.doSomething.bind(this.dummyObjectA);
     SSAddObserver(this.dummyObjectA, "FooBarNotification", fnrefA);
-    
     SSPostNotification("FooBarNotification");
     
     this.assertNotEqual(SSNotificationQueueForObject(this.dummyObjectA), null);
   },
   
   
-  testFlushObserverQueue: function()
+  testEmptyNotificationQueue: function()
   {
-    this.doc("Flush the observer queue");
+    this.doc("Flush the notification queue");
+    
+    var fnrefA = this.dummyObjectA.doSomething.bind(this.dummyObjectA);
+    SSAddObserver(this.dummyObjectA, "FooBarNotification", fnrefA);
+    SSPostNotification("FooBarNotification");
+
+    SSEmptyNotificationQueue();
+    
+    this.assertEqual(SSNotificationQueueForObject(this.dummyObjectA), null);
   },
   
   
   testPostNotification: function()
   {
     this.doc("Post a notification");
+    
+    var fnrefA = this.dummyObjectA.doSomething.bind(this.dummyObjectA);
+    SSAddObserver(this.dummyObjectA, "FooBarNotification", fnrefA);
+    this.dummyObjectA.__awake = true;
+
+    SSPostNotification("FooBarNotification");
+
+    this.assertEqual(this.dummyObjectA.notified, true);
+  },
+  
+  
+  testPostNotificationWithData: function()
+  {
+    this.doc("Post a notification with data");
+    
+    var fnrefA = this.dummyObjectA.doSomething.bind(this.dummyObjectA);
+    SSAddObserver(this.dummyObjectA, "FooBarNotification", fnrefA);
+    this.dummyObjectA.__awake = true;
+    
+    var data = {foo:"bar"};
+    SSPostNotification("FooBarNotification", data);
+    
+    this.assertEqual(this.dummyObjectA.data, data);
   }
 
 });

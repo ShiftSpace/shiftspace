@@ -136,10 +136,10 @@ function SSClearObservers()
 }
 
 /*
-  Function: SSFlushNotificationQueue
+  Function: SSEmptyNotificationQueue
     Clear the notification queue.
 */
-function SSFlushNotificationQueue()
+function SSEmptyNotificationQueue()
 {
   __notificationQueue = $H();
 }
@@ -161,7 +161,7 @@ function SSNotificationQueue()
 function SSNotificationCenterReset()
 {
   SSClearObservers();
-  SSFlushNotificationQueue();
+  SSEmptyNotificationQueue();
 }
 
 
