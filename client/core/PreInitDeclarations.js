@@ -29,9 +29,7 @@ var __defaultEmailComments = 1;
 // since the plugins won't actually be loaded until they are needed
 var __pluginsData = {};
 
-// Each space and it's associated metadata
-var __installed;
-
+// Default Spaces
 var __defaultSpaces = {
   'Notes': 
   {

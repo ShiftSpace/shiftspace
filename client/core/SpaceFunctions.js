@@ -198,9 +198,10 @@ function SSInstallSpace(space)
         };
       }
       
-      __installed[space] = attrs;
+      var installed = SSInstalledSpaces();
+      installed[space] = attrs;
       
-      ShiftSpace.User.setPreference('installed', SSInstalledSpaces());
+      ShiftSpace.User.setPreference('installed', installed);
       SSLoadSpace(space, function() {
         alert(space + " space installed.");
         SSFireEvent('onSpaceInstall', space);
@@ -221,8 +222,9 @@ function SSUninstallSpace(spaceName)
 {
   var url = SSURLForSpace(spaceName);
   SSRemoveSpace(spaceName);
-  delete __installed[spaceName];
-  ShiftSpace.User.setPreference('installed', SSInstalledSpaces());
+  var installed = SSInstalledSpaces();
+  delete installed[spaceName];
+  ShiftSpace.User.setPreference('installed', installed);
   SSClearCache(url);
   // let everyone else know
   SSFireEvent('onSpaceUninstall', spaceName);
@@ -230,14 +232,12 @@ function SSUninstallSpace(spaceName)
 
 function SSSetInstalledSpaces(installed)
 {
-  SSLog('SSSetInstalledSpaces ===================================', SSLogForce);
-  SSLog(installed, SSLogForce);
-  __installed = installed;
+  ShiftSpace.User.setPreference('installed', installed);
 }
 
 function SSInstalledSpaces()
 {
-  return __installed;
+  return ShiftSpace.User.getPreference('installed', SSDefaultSpaces());
 }
 
 function SSDefaultSpaces()
@@ -247,7 +247,8 @@ function SSDefaultSpaces()
 
 function SSURLForSpace(spaceName)
 {
-  return (__installed[spaceName] && __installed[spaceName].url) || null;
+  var installed = ShiftSpace.User.getPreference('installed');
+  return (installed[spaceName] && installed[spaceName].url) || null;
 }
 
 
