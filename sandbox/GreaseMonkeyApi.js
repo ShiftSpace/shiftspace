@@ -45,7 +45,8 @@ function GM_getValue(key, defaultValue)
     }
   }).send();
   
-  return request.response.text || defaultValue;
+  var result = JSON.decode(request.response.text).data;
+  return (result != null && result) || defaultValue;
 }
 
 

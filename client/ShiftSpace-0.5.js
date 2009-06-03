@@ -82,6 +82,9 @@ var ShiftSpace = new (function() {
       ShiftSpace.ShiftMenu = new ShiftMenu();
       ShiftSpace.Console = new SSConsole();
       
+      // Add to look up table
+      ShiftSpaceObjects.ShiftMenu = ShiftSpace.ShiftMenu;
+      
       // Set up user event handlers
       ShiftSpace.User.addEvent('onUserLogin', function() {
         SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
@@ -178,12 +181,10 @@ var ShiftSpace = new (function() {
         }
         
         SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
-        
-        // build menu only after we know which spaces the users has installed
-        ShiftSpace.ShiftMenu.buildMenu();
-        
+
         // notify SSConsole
         if(ShiftSpace.User.isLoggedIn()) SSFireEvent('onUserLogin', {status:1});
+        SSPostNotification("onSynch");
       });
     }
 
@@ -270,6 +271,7 @@ var ShiftSpace = new (function() {
       this.installSpace = SSInstallSpace;
       this.uninstallSpace = SSUninstallSpace;
       this.installed = SSInstalledSpaces;
+      this.defaults = SSDefaultSpaces;
       this.byPosition = SSSpacesByPosition;
       this.eventProxy = SSEventProxy;
 

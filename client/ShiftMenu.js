@@ -11,6 +11,11 @@
 */
 var ShiftMenu = new Class({
   
+  getId: function() 
+  {
+    return "ShiftMenu";
+  },
+  
   /*
     Function: initialize
       Initializes the shift menu.
@@ -19,6 +24,9 @@ var ShiftMenu = new Class({
   {
     this.menuVisible = false;
     this.spaceButtons = {};
+    
+    // TODO: build menu onSynch event - David 6/2/09
+    SSAddObserver(this, "onSynch", this.buildMenu.bind(this));
     
     // we want to know about install and uninstall events
     SSAddEvent('onSpaceInstall', this.addSpace.bind(this));

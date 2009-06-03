@@ -96,7 +96,8 @@ function SSPostNotification(name, data, sender)
   observers.each(function(methods, objid) {
     var obj = ShiftSpaceObjects[objid];
     
-    if(obj.isAwake())
+    if((obj.isAwake && obj.isAwake()) ||
+      !obj.isAwake)
     {
       methods.each(function(method) { method(data); });
     }

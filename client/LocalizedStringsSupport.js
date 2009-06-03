@@ -8,15 +8,10 @@ var __sslang = null;
 function SSLoadLocalizedStrings(lang, ctxt)
 {
   var context = ctxt || window;
-  //SSLog('load localized strings ' + lang);
   SSLoadFile("client/LocalizedStrings/"+lang+".json", function(rx) {
-    SSLog(')))))))))))))))))))))))))))))))))))))))))))');
-    SSLog(lang + " - " + __sslang);
     if(lang != __sslang)
     {
-      SSLog('Evaluating language file');
       ShiftSpace.localizedStrings = JSON.decode(rx.responseText);
-      //SSLog(ShiftSpace.localizedStrings);
 
       // update objects
       ShiftSpaceObjects.each(function(object, objectId) {
@@ -30,7 +25,6 @@ function SSLoadLocalizedStrings(lang, ctxt)
       }
 
       // update markup
-      //SSLog('fix localized');
       context.$$(".SSLocalized").each(function(node) {
 
         var originalText = node.getProperty('title');

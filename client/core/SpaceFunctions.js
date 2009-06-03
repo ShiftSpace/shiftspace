@@ -230,7 +230,7 @@ function SSUninstallSpace(spaceName)
 
 function SSSetInstalledSpaces(installed)
 {
-  SSLog('SSSetInstalledSpaces', SSLogForce);
+  SSLog('SSSetInstalledSpaces ===================================', SSLogForce);
   SSLog(installed, SSLogForce);
   __installed = installed;
 }
@@ -464,8 +464,8 @@ function SSCheckForInstallSpaceLinks()
   $$('.SSInstallFirstLink').setStyle('display', 'none');
 
   $$('.SSInstallSpaceLink').each(function(x) {
-   x.setStyle('display', 'block');
-   x.addEvent('click', SSHandleInstallSpaceLink);
+    x.setStyle('display', 'block');
+    x.addEvent('click', SSHandleInstallSpaceLink);
   });
 }
 
