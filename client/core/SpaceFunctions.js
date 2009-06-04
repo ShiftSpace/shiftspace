@@ -224,8 +224,18 @@ function SSUninstallSpace(spaceName)
   var url = SSURLForSpace(spaceName);
   SSRemoveSpace(spaceName);
   var installed = SSInstalledSpaces();
+
   delete installed[spaceName];
-  ShiftSpace.User.setPreference('installed', installed);
+
+  if($H(installed).getLength() == 0)
+  {
+    SSSetInstalledSpaces(null);
+  }
+  else
+  {
+    SSSetInstalledSpaces(installed);    
+  }
+
   SSClearCache(url);
   // let everyone else know
   SSFireEvent('onSpaceUninstall', spaceName);
@@ -233,17 +243,17 @@ function SSUninstallSpace(spaceName)
 
 function SSSetInstalledSpaces(installed)
 {
-  ShiftSpace.User.setPreference('installed', installed);
+  __installedSpacesDataProvider.setInstalledSpaces(installed);
 }
 
 function SSInstalledSpaces()
 {
-  return __installedSpaces;
+  return __installedSpaces || SSDefaultSpaces();
 }
 
 function SSUpdateInstalledSpaces()
 {
-  SSSetInstalledSpaces(__installedSpacesDataProvider.installedSpaces());
+  __installedSpaces = __installedSpacesDataProvider.installedSpaces();
 }
 
 function SSDefaultSpaces()
@@ -253,7 +263,7 @@ function SSDefaultSpaces()
 
 function SSURLForSpace(spaceName)
 {
-  var installed = ShiftSpace.User.getPreference('installed', SSDefaultSpaces());
+  var installed = SSInstalledSpaces();
   return (installed[spaceName] && installed[spaceName].url) || null;
 }
 
@@ -264,7 +274,6 @@ function SSUninstallAllSpaces()
   {
     SSUninstallSpace(spaceName);
   }
-  ShiftSpace.User.setPreference('installed', null);
 }
 
 
