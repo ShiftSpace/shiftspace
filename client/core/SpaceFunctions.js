@@ -202,7 +202,7 @@ function SSInstallSpace(space)
       var installed = SSInstalledSpaces();
       installed[space] = attrs;
       
-      ShiftSpace.User.setPreference('installed', installed);
+      SSSetInstalledSpaces(installed);
       SSLoadSpace(space, function() {
         alert(space + " space installed.");
         SSFireEvent('onSpaceInstall', space);
