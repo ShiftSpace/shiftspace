@@ -23,35 +23,33 @@ function SSInitShift(spaceName, options)
     SSLog('Space ' + spaceName + ' does not exist.', SSLogError);
     return;
   }
-
+  
   var tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
   while (SSGetShift(tempId)) 
   {
     tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
   }
-
-  var _position = (options && options.position && { x: options.position.x, y: options.position.y }) || null;
+  
+  var _position = (options && options.position && {x: options.position.x, y: options.position.y }) || null;
   var shiftJson = {
     id: tempId,
     space: spaceName,
     username: ShiftSpace.User.getUsername(),
     position: _position
   };
-  //SSLog(shiftJson);
 
   SSSetShift(tempId, shiftJson);
 
-  SSLog('+++++++++++++++++++++++++++++++++++++++++++++++ ', SSLogSystem);
-  SSLog(SSSpaceForName(spaceName), SSLogSystem);
-  SSLog('calling create shift ', SSLogSystem);
+  SSLog('+++++++++++++++++++++++++++++++++++++++++++++++ ', SSLogForce);
+  SSLog(SSSpaceForName(spaceName), SSLogForce);
+  SSLog('calling create shift ', SSLogForce);
   
   var noError = SSSpaceForName(spaceName).createShift(shiftJson);
   
-  SSLog('noError : ' + noError);
-  
+  SSLog('!noError : ' + noError, SSLogForce);
   if(noError)
   {
-    //SSLog('tempId:' + tempId);
+    SSLog('tempId: ' + tempId, SSLogForce);
     SSShowNewShift(tempId);
   }
   else
@@ -69,10 +67,11 @@ function SSInitShift(spaceName, options)
 */
 function SSShowNewShift(shiftId)
 {
+  SSLog('SSShowNewShift', SSLogForce);
   var space = SSSpaceForShift(shiftId);
   SSLog('SSShowNewShift', SSLogForce);
   SSLog(shifts, SSLogForce);
-
+  
   space.onShiftCreate(shiftId);
   SSLog('SSEditShift', SSLogForce);
   SSEditShift(shiftId);

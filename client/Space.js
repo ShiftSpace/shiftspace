@@ -466,7 +466,9 @@ var ShiftSpaceSpace = new Class({
   */
   createShift: function(newShiftJson)
   {
-    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> createShift');
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> createShift', SSLogForce);
+    SSLog(newShiftJson, SSLogForce);
+    
     if(this.cssIsLoaded())
     {
       this.addShift(newShiftJson);
@@ -482,7 +484,7 @@ var ShiftSpaceSpace = new Class({
     }
     else
     {
-      SSLog('++++++++++++++++++++++++++++ css not loaded');
+      SSLog('++++++++++++++++++++++++++++ css not loaded', SSLogForce);
       // we need to load these when the css is done
       this.addDeferredNew(newShiftJson);
     }

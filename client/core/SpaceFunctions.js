@@ -6,6 +6,8 @@
 
 var __spaces = {};
 var __focusedSpace = null;
+var __installedSpaces = null;
+var __installedSpacesDataProvider = null;
 
 /*
 Function: SSLoadSpace
@@ -169,7 +171,6 @@ function SSGetSpaceAttributes(space)
 }
 
 /*
-
 Function: SSInstallSpace
   Loads the JavaScript source of a Space, then loads the space into memory.
   The source URL is saved in the 'installed' object for future reference.
@@ -237,7 +238,12 @@ function SSSetInstalledSpaces(installed)
 
 function SSInstalledSpaces()
 {
-  return ShiftSpace.User.getPreference('installed', SSDefaultSpaces());
+  return __installedSpaces;
+}
+
+function SSUpdateInstalledSpaces()
+{
+  SSSetInstalledSpaces(__installedSpacesDataProvider.installedSpaces());
 }
 
 function SSDefaultSpaces()
@@ -488,14 +494,7 @@ function SSGetInfoForInstalledSpace(spaceName, callback)
 }
 
 
-var __installedSpacesDataProvider;
 function SSSetInstalledSpacesDataProvider(dataProvider)
 {
   __installedSpacesDataProvider = dataProvider;
-}
-
-
-function SSUpdateInstalledSpaces()
-{
-  SSSetInstalledSpaces(__installedSpacesDataProvider.installedSpaces());
 }

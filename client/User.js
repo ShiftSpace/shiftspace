@@ -130,6 +130,7 @@ var ShiftSpaceUserClass = new Class({
       if(!json.error)
       {
         if(json.data) this.syncData(json.data);
+        SSPostNotification('onInstalledSpacesDidChange');
         SSPostNotification('onUserLogin', json);
       }
       else
@@ -147,10 +148,10 @@ var ShiftSpaceUserClass = new Class({
   {
     SSServerCall('user.logout', null, function(json) {
       this.clearData();
-      
       if(!json.error)
       {
         SSLog('user is logging out', SSLogForce);
+        SSPostNotification('onInstalledSpacesDidChange');
         SSPostNotification('onUserLogout', json);
       }
       else
@@ -170,6 +171,7 @@ var ShiftSpaceUserClass = new Class({
       if(!json.error)
       {
         if(json.data) this.syncData(json.data);
+        SSPostNotification('onInstalledSpacesDidChange');
         SSPostNotification('onUserJoin', json);
       }
       else

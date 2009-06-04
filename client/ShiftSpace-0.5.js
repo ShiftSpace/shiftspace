@@ -87,12 +87,16 @@ var ShiftSpace = new (function() {
       ShiftSpaceObjects.ShiftMenu = ShiftSpace.ShiftMenu;
       ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
       
+      // FIXME: this should be more modular! - David 6/3/09
+      SSSetInstalledSpacesDataProvider(ShiftSpaceUser);
+      
+      // Update installed spaces
+      SSAddObserver(SSNotificationProxy, 'onInstalledSpacesDidChange', SSUpdateInstalledSpaces);
+      
       // Set up user event handlers
       SSAddObserver(SSNotificationProxy, 'onUserLogin', function() {
-        SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
-        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
+        //SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         SSLog('User logged in ============', SSLogForce);
-        SSLog(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()), SSLogForce);
         // FIXME: Just make this into a onUserLogin hook - David
         if(SSHasResource('RecentlyViewedHelpers'))
         {
@@ -102,7 +106,6 @@ var ShiftSpace = new (function() {
 
       SSAddObserver(SSNotificationProxy, 'onUserLogout', function() {
         SSLog('ShiftSpace detects user logout', SSLogForce);
-        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
       });
       
       SSLoadStyle('styles/ShiftSpace.css', function() {
@@ -170,14 +173,14 @@ var ShiftSpace = new (function() {
           ShiftSpace.User.syncData(json.data.user)
 
           // make sure default shift status preference is set
-          SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
+          //SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         }
         else
         {
           SSLog('Guest account', SSLogForce);
         }
         
-        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
+        SSUpdateInstalledSpaces();
         SSPostNotification("onSynch");
       });
     }
