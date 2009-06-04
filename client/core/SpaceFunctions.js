@@ -413,43 +413,6 @@ function SSSetFocusedSpace(newSpace)
   __focusedSpace = newSpace;
 }
 
-/*
-  Function: SSSetPrefForSpace
-    Set user preference for a space.  Calls ShiftSpace.User.setPreference.  
-    The preference key will be converted to username.spaceName.preferenceKey.
-
-  Parameters:
-    spaceName - space name as string.
-    pref - string representing the preference name.
-    value - the value to be set.
-*/
-function SSSetPrefForSpace(spaceName, pref, value)
-{
-  if(ShiftSpace.User.isLoggedIn())
-  {
-    var key = [spaceName, pref].join('.');
-    ShiftSpace.User.setPreference(key, value);
-  }
-}
-
-/*
-  Function: SSGetPrefForSpace
-    Retrieve a preference for a space.
-
-  Parameters:
-    spaceName - spaceName as string.
-    pref - the preference key.
-*/
-function SSGetPrefForSpace(spaceName, pref)
-{
-  if(ShiftSpace.User.isLoggedIn())
-  {
-    var key = [spaceName, pref].join('.');
-    var value = ShiftSpace.User.getPreference(key, null);
-    return value;
-  }
-  return null;
-};
 
 /*
   Function: SSSpaceForShift

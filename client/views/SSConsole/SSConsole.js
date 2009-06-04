@@ -567,7 +567,6 @@ var SSConsole = new Class({
   
   updateInstalledSpaces: function()
   {
-    SSLog('updateInstalledSpaces ===============================', SSLogForce);
     this.SSInstalledSpaces.setData(SSSpacesByPosition());
     this.SSInstalledSpaces.refresh();
   },

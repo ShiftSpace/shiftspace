@@ -1056,6 +1056,18 @@ var ShiftSpaceSpace = new Class({
   {
     this.setValue(this.attributes.name+'.prefs.'+key, value);
   },
+  
+  
+  setPreference: function(key, value)
+  {
+    ShiftSpace.User.setPreference(this.attributes.name+'.'+key, vlaue);
+  },
+  
+  
+  getPreference: function(key, defaultValue, callback)
+  {
+    ShiftSpace.User.getPreference.safeCallWithResult(this.attributes.name+'.'+key, defaultValue, callback);
+  }
 
   /*
     Function: getPref
