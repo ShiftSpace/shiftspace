@@ -2,7 +2,6 @@
 // @uiclass
 // @customView
 // @optional
-// @name              ActionMenu
 // @package           ShiftSpaceUI
 // @dependencies      SSView
 // ==/Builder==

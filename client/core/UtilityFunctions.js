@@ -31,7 +31,7 @@ Returns:
 */
 function SSInfo(spaceName) 
 {
-  if (typeof spaceName != 'undefined') 
+  if (spaceName) 
   {
     var defaults = {
       title: spaceName,
@@ -52,10 +52,13 @@ function SSInfo(spaceName)
     return spaceInfo;
   }
 
-  var spaceIndex = [];
-  for (var aSpaceName in SSInstalledSpaces()) 
+  if(typeof SandalphonToolMode == 'undefined')
   {
-    spaceIndex.push(aSpaceName);
+    var spaceIndex = [];
+    for (var aSpaceName in SSInstalledSpaces()) 
+    {
+      spaceIndex.push(aSpaceName);
+    }
   }
 
   return {

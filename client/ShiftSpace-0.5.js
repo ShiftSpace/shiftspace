@@ -81,6 +81,7 @@ var ShiftSpace = new (function() {
       
       ShiftSpace.ShiftMenu = new ShiftMenu();
       ShiftSpace.Console = new SSConsole();
+      ShiftSpace.SSNotifier = new SSNotifierView();
       ShiftSpace.Sandalphon = Sandalphon;
       
       // Add to look up table

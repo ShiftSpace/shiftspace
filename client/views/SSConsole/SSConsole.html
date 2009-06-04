@@ -5,6 +5,9 @@
     <div class="SSControlView">
       <!-- The tab buttons -->
       <div xmlns:ss="http://shiftspace.org" ss:localized="Shifts" title="Shifts" class="SSButton SSActive SSLocalized">Shifts</div>
+      <div xmlns:ss="http://shiftspace.org" ss:localized="Shifts" title="Shifts" class="SSButton SSActive SSLocalized">My §</div>
+      <div xmlns:ss="http://shiftspace.org" ss:localized="Shifts" title="Shifts" class="SSButton SSActive SSLocalized">Inbox</div>
+      <div xmlns:ss="http://shiftspace.org" ss:localized="Shifts" title="Shifts" class="SSButton SSActive SSLocalized">Following</div>
       <div xmlns:ss="http://shiftspace.org" ss:localized="Settings" title="Settings" class="SSButton SSLocalized">Settings</div>
       <div xmlns:ss="http://shiftspace.org" ss:localized="Login" title="Login" class="SSButton SSLocalized">Login</div>
       <div xmlns:ss="http://shiftspace.org" ss:localized="Welcome" title="Welcome" class="SSButton SSLocalized">Welcome</div>
@@ -31,6 +34,9 @@
   
     <div class="SSContentView">
       <?customView:ShiftsTabView?>
+      <div id="MyShiftSpacePane" class="SSTabPane"></div>
+      <div id="InboxPane" class="SSTabPane"></div>
+      <div id="FollowingPane" class="SSTabPane"></div>
       <?customView:SettingsTabView?>
       <?customView:LoginTabView?>
       <div id="WelcomePane" class="SSTabPane">
