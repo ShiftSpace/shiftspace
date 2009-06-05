@@ -1,6 +1,5 @@
 // ==Builder==
 // @required
-// @name              SandalphonSupport
 // @package           System
 // @dependencies      SandalphonCore
 // ==/Builder==
@@ -8,9 +7,9 @@
 var SSSandalphonError = SSException;
 
 SSSandalphonError.NoControllerForCSSId = new Class({
-  name: "SSSandalphonError.NoSuchSubView",
   Extends: SSSandalphonError,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name: "SSSandalphonError.NoSuchSubView"
 });
 
 var SSInstantiationListeners = {};

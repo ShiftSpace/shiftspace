@@ -6,10 +6,9 @@
 
 var SSConsole = new Class({
 
-  name: 'SSConsole',
-
   Extends: SSView,
-
+  name: 'SSConsole',
+  
   initialize: function(el, options)
   {
     // only really relevant under Sandalphon

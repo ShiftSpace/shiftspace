@@ -1,16 +1,15 @@
 // ==Builder==
 // @uiclass
 // @required
-// @name              SSEditableTextCell
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSCell
 // ==/Builder==
 
 var SSEditableTextCell = new Class({
 
-  name: 'SSEditableTextCell',
   Extends: SSCell,
-
+  name: 'SSEditableTextCell',
+  
   initialize: function(el, options)
   {
     this.parent(el, options);

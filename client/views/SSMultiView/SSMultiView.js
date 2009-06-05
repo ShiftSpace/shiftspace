@@ -12,15 +12,15 @@
 var SSMultiViewError = SSException;
 
 SSMultiViewError.NoSuchSubView = new Class({
-  name: "SSMultiViewError.NoSuchSubView",
   Extends: SSMultiViewError,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name: "SSMultiViewError.NoSuchSubView"
 });
 
 SSMultiViewError.OutOfBounds = new Class({
-  name: "SSMultiViewError.OutOfBounds",
   Extends: SSMultiViewError,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name: "SSMultiViewError.OutOfBounds"
 });
 
 // =========

@@ -1,16 +1,14 @@
 // ==Builder==
 // @optional
-// @name              MoMAUser
 // @package           MoMA
 // ==/Builder==
 
 var MoMAUserClass = new Class({
   
-  Implements: Events,
-  
   Extends: ShiftSpaceUserClass,
   
-
+  Implements: Events,
+  
   defaulUsername: funtion()
   {
     return "";

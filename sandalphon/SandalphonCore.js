@@ -7,9 +7,9 @@
 var SSSandalphonError = SSException;
 
 SSSandalphonError.NoSuchResource = new Class({
-  name: "SSSandalphonError.NoSuchResource",
   Extends: SSSandalphonError,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter, 
+  name: "SSSandalphonError.NoSuchResource"
 });
 
 var SandalphonClass = new Class({

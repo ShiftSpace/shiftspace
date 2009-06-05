@@ -1,7 +1,6 @@
 // ==Builder==
 // @required
 // @export            SSElement as Element, SSIframe as Iframe, SSInput as Input
-// @name	            ShiftSpaceElement
 // @package           System
 // ==/Builder==
 
@@ -37,6 +36,9 @@ Element.implement({
     operations don't break.
 */
 var SSElement = new Class({
+  
+  name: "SSElement",
+  
   /*
     Function: initialize (private)
       Initialize the element and if necessary add appropiate event handlers.
@@ -118,6 +120,8 @@ var SSElement = new Class({
 var SSIframe = new Class({
 
   Extends: SSElement,
+  
+  name: "SSIframe",
 
   /*
     Function: initialize (private)
