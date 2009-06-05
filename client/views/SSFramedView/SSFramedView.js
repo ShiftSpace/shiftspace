@@ -28,8 +28,16 @@ var SSFramedView = new Class({
     if(typeof SandalphonToolMode == 'undefined')
     {
       SSLog('SSFramedView loading ' + this.name, SSLogForce);
-      Sandalphon.load('/client/compiledViews/'+this.name, this.onInterfaceLoad.bind(this));
+      SSLoadFile('client/customViews/'+this.name+'/'+this.name+'Frame.css', this.onStyleLoad.bind(this));
     }
+  },
+  
+  
+  onStyleLoad: function(response)
+  {
+    var style = response.responseText;
+    if(style) Sandalphon.addStyle(style);
+    Sandalphon.load('/client/compiledViews/'+this.name, this.onInterfaceLoad.bind(this))
   },
   
   
@@ -37,7 +45,7 @@ var SSFramedView = new Class({
   {
     this.ui = ui;
     this.element = new IFrame({
-      id: this.getId()
+      'class': this.name+'Frame'
     });
     SSSetControllerForNode(this, this.element);
     this.element.injectInside(document.body);

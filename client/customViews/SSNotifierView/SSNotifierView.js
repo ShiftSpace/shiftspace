@@ -13,7 +13,6 @@ var SSNotifierView = new Class({
 
   initialize: function(el, options)
   {
-    SSLog('>>>>>>>>>>>>>>>>>>>> this.name ' + this.name, SSLogForce);
     this.parent(el, options);
   },
   
