@@ -260,6 +260,8 @@ var SandalphonClass = new Class({
   */
   activate: function(ctxt)
   {
+    //SSLog('activate', SSLogForce);
+    //SSLog(ctxt, SSLogForce);
     var context = ctxt || window;
     // First generate the outlet bindings
     this.generateOutletBindings(context);
@@ -268,6 +270,10 @@ var SandalphonClass = new Class({
     // Initialize all outlets
     this.bindOutlets(context);
     this.awakeObjects(context);
+    if(ctxt.__sscontextowner)
+    {
+      ctxt.__sscontextowner.onContextActivate(ctxt);
+    }
   },
   
   /*

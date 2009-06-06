@@ -16,6 +16,32 @@ var SSNotifierView = new Class({
     this.parent(el, options);
     this.setIsOpen(false);
     this.setIsAnimating(false);
+    
+    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
+  },
+  
+  
+  handleLogin: function()
+  {
+    SSLog('handleLogin', SSLogForce);
+    this.updateUsername();
+  },
+  
+  
+  handleLogout: function()
+  {
+    SSLog('handleLogout', SSLogForce);
+    this.updateUsername();
+  },
+  
+  
+  updateUsername: function()
+  {
+    if(this.SSUsername)
+    {
+      this.SSUsername.set('text', ShiftSpace.User.getUsername());
+    }
   },
   
   
@@ -72,7 +98,15 @@ var SSNotifierView = new Class({
   
   showControls: function()
   {
-    
+    this.window().$$('.SSNotifierSubView').removeClass('SSActive');
+    this.SSNotifierControlsView.addClass('SSActive');
+  },
+  
+  
+  hideControls: function()
+  {
+    this.window().$$('.SSNotifierSubView').removeClass('SSActive');
+    this.SSNotifierDefaultView.addClass('SSActive');
   },
   
   
@@ -85,13 +119,14 @@ var SSNotifierView = new Class({
   
   awake: function(context)
   {
+  },
+  
+  
+  onContextActivate: function(context)
+  {
     if(context == this.element.contentWindow)
     {
-      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>> notifier frame window is awake', SSLogForce);
-    }
-    else
-    {
-      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>> notifier awake', SSLogForce);
+      this.mapOutletsToThis();
     }
   },
   
@@ -119,6 +154,7 @@ var SSNotifierView = new Class({
       transition: Fx.Transitions.Cubic.easeIn,
       onStart: function()
       {
+        this.hideControls();
         this.setIsAnimating(true);
         this.element.setStyles({
           width: window.getSize().x
@@ -139,5 +175,7 @@ var SSNotifierView = new Class({
     
     this.initAnimations();
     this.attachEvents();
+    
+    SSPostNotification('onNotifierLoad', this);
   }
 });

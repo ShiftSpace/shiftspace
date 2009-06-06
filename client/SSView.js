@@ -477,6 +477,12 @@ var SSView = new Class({
   localizationChanged: function(newLocalization)
   {
     SSLog('localizationChanged');
+  },
+  
+  
+  onContextActivate: function(ctxt)
+  {
+    
   }
 
 });

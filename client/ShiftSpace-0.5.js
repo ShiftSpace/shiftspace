@@ -273,6 +273,7 @@ var ShiftSpace = new (function() {
       this.byPosition = SSSpacesByPosition;
       this.eventProxy = SSEventProxy;
       this.getObservers = SSGetObservers;
+      this.controllerForNode = SSControllerForNode;
 
       this.SSGetShift = SSGetShift;
       this.SSGetPageShifts = SSGetPageShifts;

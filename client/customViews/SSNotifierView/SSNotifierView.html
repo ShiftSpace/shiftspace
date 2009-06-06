@@ -1,9 +1,14 @@
 <div id="SSNotifier" class="SSNotifierView SSNotifierClosed" uiclass="SSNotifierView">
-  <div class="SSNotifierSubView SSActive">
+  
+  <div id="SSNotifierDefaultView" class="SSNotifierSubView SSActive" outlet="SSNotifier">
     <span>§</span>
     <span>35 shifts</span>
   </div>
-  <div class="SSNotifierSubView">
-    <button>Use a space</button>
+  
+  <div id="SSNotifierControlsView" class="SSNotifierSubView" outlet="SSNotifier">
+    <button id="SSSelectSpace">Use a space</button>
+    <span id="SSGreeting">Hi <span id="SSUsername" outlet="SSNotifier">foobar</span></span>
+    <button id="SSLogout">Logout</button>
   </div>
+  
 </div>

@@ -1,6 +1,38 @@
+.SSNotifierViewFrameBody
+{
+  margin: 0px;
+  width: 100%;
+  height: 100%;
+}
+
 .SSNotifierView
 {
   height: 100%;
   background-color: red;
+}
+
+.SSNotifier .SSNotifierSubView, .SSNotifierViewFrameBody .SSNotifierSubView
+{
+  display: none;
+}
+
+.SSNotifier .SSNotifierSubView.SSActive, .SSNotifierViewFrameBody .SSNotifierSubView.SSActive
+{
+  display: block;
+}
+
+#SSSelectSpace
+{
+  float: left;
+}
+
+#SSGreeting
+{
+  float: right;
+}
+
+#SSLogout
+{
+  float: right;
 }
 
