@@ -52,7 +52,6 @@ var SSNotifierView = new Class({
   
   open: function()
   {
-    var evt = new Event(_evt);
     if(!this.isOpen() && !this.isAnimating())
     {
       this.openFx.start('width', window.getSize().x);
@@ -63,12 +62,37 @@ var SSNotifierView = new Class({
   
   close: function()
   {
-    var evt = new Event(_evt);
     if(this.isOpen() && !this.isAnimating())
     {
       this.setIsOpen(false);
       this.closeFx.start('width', 200);
     }    
+  },
+  
+  
+  showControls: function()
+  {
+    
+  },
+  
+  
+  onInterfaceLoad: function(ui)
+  {
+    this.parent(ui);
+    this.element.setProperty('id', 'SSNotifier');
+  },
+  
+  
+  awake: function(context)
+  {
+    if(context == this.element.contentWindow)
+    {
+      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>> notifier frame window is awake', SSLogForce);
+    }
+    else
+    {
+      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>> notifier awake', SSLogForce);
+    }
   },
   
   
@@ -86,6 +110,7 @@ var SSNotifierView = new Class({
         this.element.addClass('SSNotifierOpen');
         this.element.setStyle('width', null);
         this.setIsAnimating(false);
+        this.showControls();
       }.bind(this)
     });
     
@@ -111,8 +136,6 @@ var SSNotifierView = new Class({
   buildInterface: function()
   {
     this.parent();
-    
-    var size = this.document().body.getSize();
     
     this.initAnimations();
     this.attachEvents();
