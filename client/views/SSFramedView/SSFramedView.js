@@ -53,23 +53,39 @@ var SSFramedView = new Class({
   },
   
   
+  document: function()
+  {
+    return this.__document;
+  },
+  
+  
+  window: function()
+  {
+    return this.__window;
+  },
+  
+  
   buildInterface: function()
   {
     var context = this.element.contentWindow;
-
+    var doc = context.document;
+    
     // under GM not wrapped, erg - David
     if(!context.$)
     {
       context = new Window(context);
-      var doc = new Document(context.document);
+      doc = new Document(context.document);
     }
-
+    
     Sandalphon.addStyle(this.ui.styles, context);
     
     var fragment = Sandalphon.convertToFragment(this.ui['interface'], context).getFirst();
     
     $(context.document.body).setProperty('class', this.uiclass + 'FrameBody');
     $(context.document.body).grab(fragment);
+
+    this.__window = context;
+    this.__document = doc;
     
     Sandalphon.activate(context);
   }
