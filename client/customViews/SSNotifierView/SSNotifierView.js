@@ -24,7 +24,7 @@ var SSNotifierView = new Class({
   
   handleLogin: function()
   {
-    SSLog('handleLogin', SSLogForce);
+    SSLog('handleLogin!', SSLogForce);
     this.updateUsername();
   },
   
@@ -73,6 +73,7 @@ var SSNotifierView = new Class({
   {
     this.document().body.addEvent('mouseenter', this.open.bind(this));
     this.document().body.addEvent('mouseleave', this.close.bind(this));
+    this.SSLogout.addEvent('click', ShiftSpace.User.logout.bind(ShiftSpace.User));
   },
   
   
@@ -127,6 +128,7 @@ var SSNotifierView = new Class({
     if(context == this.element.contentWindow)
     {
       this.mapOutletsToThis();
+      this.updateUsername();
     }
   },
   

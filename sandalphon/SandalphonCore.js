@@ -12,6 +12,13 @@ SSSandalphonError.NoSuchResource = new Class({
   name: "SSSandalphonError.NoSuchResource"
 });
 
+var __framedViews = $H();
+
+function SSAddFramedView(framedView)
+{
+  __framedViews[framedView.getId()] = framedView;
+}
+
 var SandalphonClass = new Class({
 
   initialize: function()

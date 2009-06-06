@@ -72,6 +72,12 @@ var SSFramedView = new Class({
   },
   
   
+  forwardEvents: function()
+  {
+    
+  },
+  
+  
   buildInterface: function()
   {
     SSLog('buildInterface SSFramedView', SSLogForce);

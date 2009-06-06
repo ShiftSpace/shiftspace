@@ -29,8 +29,8 @@ var ShiftSpaceUserClass = new Class({
   syncData: function(data)
   {
     this.setUsername(data.username || null);
-    this.setId(data.id || null);
     this.setEmail(data.email || null);
+    this.setId(data.id || null);
   },
   
   
@@ -46,6 +46,14 @@ var ShiftSpaceUserClass = new Class({
   {
     this.__userId = id;
     
+    if(id == null)
+    {
+      SSPostNotification('onUserLogout');
+    }
+    else
+    {
+      SSPostNotification('onUserLogin');
+    }
   },
   
   
@@ -130,7 +138,6 @@ var ShiftSpaceUserClass = new Class({
       {
         if(json.data) this.syncData(json.data);
         SSPostNotification('onInstalledSpacesDidChange');
-        SSPostNotification('onUserLogin', json);
       }
       else
       {
@@ -151,7 +158,6 @@ var ShiftSpaceUserClass = new Class({
       {
         SSLog('user is logging out', SSLogForce);
         SSPostNotification('onInstalledSpacesDidChange');
-        SSPostNotification('onUserLogout', json);
       }
       else
       {
