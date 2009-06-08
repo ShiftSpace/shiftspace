@@ -79,10 +79,8 @@ var SSConsole = new Class({
       if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
       if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
       if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
-      if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
       if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
       if(this.outlets().get('SSSetServers')) this.initSetServersForm();
-      if(this.outlets().get('SSUserLoginStatus')) this.initUserLoginStatus();
       if(this.outlets().get('clearInstalledButton'))
       {
         this.outlets().get('clearInstalledButton').addEvent('click', function(_evt) {
@@ -126,16 +124,6 @@ var SSConsole = new Class({
     // switch to the tab view
     this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
     
-    // update login status
-    var loginStatus = this.outlets().get('SSUserLoginStatus');
-    if(loginStatus)
-    {
-      loginStatus.getElementById('SSUserIsNotLoggedIn').removeClass('SSActive');
-      var isLoggedIn = loginStatus.getElementById('SSUserIsLoggedIn');
-      isLoggedIn.addClass('SSActive');
-      isLoggedIn.getElement('span').set('text', ShiftSpaceUser.getUsername());
-    }
-    
     this.updateInstalledSpaces();
   },
 
@@ -152,14 +140,6 @@ var SSConsole = new Class({
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', null);
     // refresh the main tab view
     this.outlets().get('MainTabView').refresh();
-    
-    // update login status
-    var loginStatus = this.outlets().get('SSUserLoginStatus');
-    if(loginStatus)
-    {
-      loginStatus.getElementById('SSUserIsNotLoggedIn').addClass('SSActive');
-      loginStatus.getElementById('SSUserIsLoggedIn').removeClass('SSActive');
-    }
     
     this.updateInstalledSpaces();
   },
@@ -249,12 +229,6 @@ var SSConsole = new Class({
   },
   
   
-  initUserLoginStatus: function()
-  {
-    
-  },
-
-
   handleTabSelect: function(args)
   {
     if(args.tabView == this.outlets().get('LoginTabView') && args.tabIndex == 0)
@@ -315,28 +289,6 @@ var SSConsole = new Class({
 
   signUpFormSubmitCallback: function(response)
   {
-  },
-
-
-  initConsoleControls: function()
-  {
-    // init login/logout button
-    this.outlets().get('SSConsoleLoginOutButton').addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      if(ShiftSpaceUser.isLoggedIn())
-      {
-        // logout the user
-        ShiftSpaceUser.logout();
-      }
-      else
-      {
-        this.showLogin();
-      }
-    }.bind(this));
-
-    // init bug report button
-
-    // init close button
   },
   
   
