@@ -25,22 +25,34 @@ var SSNotifierView = new Class({
   handleLogin: function()
   {
     SSLog('handleLogin!', SSLogForce);
-    this.updateUsername();
+    this.updateControls();
   },
   
   
   handleLogout: function()
   {
     SSLog('handleLogout', SSLogForce);
-    this.updateUsername();
+    this.updateControls();
   },
   
   
-  updateUsername: function()
+  updateControls: function()
   {
     if(this.SSUsername)
     {
       this.SSUsername.set('text', ShiftSpace.User.getUsername());
+    }
+    
+    if(this.SSLogInOut)
+    {
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        this.SSLogInOut.set('text', 'Logout')
+      }
+      else
+      {
+        this.SSLogInOut.set('text', 'Login');
+      }
     }
   },
   
@@ -73,7 +85,17 @@ var SSNotifierView = new Class({
   {
     this.document().body.addEvent('mouseenter', this.open.bind(this));
     this.document().body.addEvent('mouseleave', this.close.bind(this));
-    this.SSLogout.addEvent('click', ShiftSpace.User.logout.bind(ShiftSpace.User));
+    
+    this.SSLogInOut.addEvent('click', function() {
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        ShiftSpace.User.logout()
+      }
+      else
+      {
+        ShiftSpace.Console.showLogin();
+      }
+    }.bind(this));
   },
   
   
@@ -128,7 +150,7 @@ var SSNotifierView = new Class({
     if(context == this.element.contentWindow)
     {
       this.mapOutletsToThis();
-      this.updateUsername();
+      this.updateControls();
     }
   },
   

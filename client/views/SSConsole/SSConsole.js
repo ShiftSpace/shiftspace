@@ -4,6 +4,8 @@
 // @package           ShiftSpaceUI
 // ==/Builder==
 
+var SSConsoleIsReadyNotification = 'SSConsoleIsReadyNotification';
+
 var SSConsole = new Class({
 
   Extends: SSView,
@@ -328,14 +330,20 @@ var SSConsole = new Class({
       }
       else
       {
-        // select the login tab view
-        this.outlets().get('MainTabView').selectTabByName('LoginTabView');
+        this.showLogin();
       }
     }.bind(this));
 
     // init bug report button
 
     // init close button
+  },
+  
+  
+  showLogin: function()
+  {
+    // select the login tab view
+    this.outlets().get('MainTabView').selectTabByName('LoginTabView');
   },
 
 
@@ -391,6 +399,8 @@ var SSConsole = new Class({
       
       // create the resizer
       this.initResizer();
+      
+      SSPostNotification(SSConsoleIsReadyNotification, this);
     }.bind(this));
   },
   
