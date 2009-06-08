@@ -122,7 +122,7 @@ var SSConsole = new Class({
     // update the datasource
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUsername());
     // switch to the tab view
-    this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
+    this.outlets().get('MainTabView').selectTabByName('AllShiftsTableView');
     
     this.updateInstalledSpaces();
   },
