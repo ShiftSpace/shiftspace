@@ -83,8 +83,8 @@ var SSNotifierView = new Class({
   
   attachEvents: function()
   {
-    this.document().body.addEvent('mouseenter', this.open.bind(this));
-    this.document().body.addEvent('mouseleave', this.close.bind(this));
+    this.document().body.addEvent('mouseenter', this['open'].bind(this));
+    this.document().body.addEvent('mouseleave', this['close'].bind(this));
     
     this.SSLogInOut.addEvent('click', function() {
       if(ShiftSpace.User.isLoggedIn())
@@ -99,8 +99,11 @@ var SSNotifierView = new Class({
   },
   
   
-  open: function()
+  'open': function()
   {
+    this.openTime = new Date();
+    $clear(this.closeTimer);
+
     if(!this.isOpen() && !this.isAnimating())
     {
       this.openFx.start('width', window.getSize().x);
@@ -109,12 +112,24 @@ var SSNotifierView = new Class({
   },
   
   
-  close: function()
+  'close': function()
   {
+    var now = new Date();
+    
     if(this.isOpen() && !this.isAnimating())
     {
-      this.setIsOpen(false);
-      this.closeFx.start('width', 200);
+      var delta = now.getTime() - this.openTime.getTime();
+    
+      if(delta >= 3000)
+      {
+        this.setIsOpen(false);
+        this.closeFx.start('width', 200);
+      }
+      else
+      {
+        $clear(this.closeTimer);
+        this.closeTimer = this.close.delay(3000-delta, this);
+      }
     }    
   },
   
