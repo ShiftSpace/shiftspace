@@ -6,10 +6,10 @@ var HelloWorldalphonSpace = new Class({
         name: 'HelloWorldalphon',
         version: 0.1,
         icon: 'HelloWorldalphon.png',
-        css:  'HelloWorldalphon.css'
+        css: 'HelloWorldalphon.css'
     }
 });
-
+ 
 var HelloWorldalphonShift = new Class({
   
     Extends: ShiftSpace.Shift,
@@ -20,7 +20,7 @@ var HelloWorldalphonShift = new Class({
         this.build();
         this.addEvents();
         console.log("happy4");
-
+ 
     },
     
     build: function() {
@@ -44,10 +44,10 @@ var HelloWorldalphonShift = new Class({
     },
     
     addEvents: function(){
-      $('SSHWmain').addEvent('click', this.fadeOut.bind(this)); 
-      $('SSTabView1').addEvent('click', this.addFragment.bind(this)); 
+      $('SSHWmain').addEvent('click', this.fadeOut.bind(this));
+      $('SSTabView1').addEvent('click', this.addFragment.bind(this));
     }
     }
 });
-
+ 
 var HelloWorldalphon = new HelloWorldalphonSpace(HelloWorldalphonShift);

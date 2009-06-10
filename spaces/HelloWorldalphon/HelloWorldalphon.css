@@ -8,3 +8,15 @@
   left:200px;
   top:200px;
 }
+
+#SSHWNewMessage
+{
+  font: 12px Helvetica sans-serif;
+  font-weight:bold;
+  position: absolute;
+  padding:  5px 10px 5px 10px;
+  color: #010101;
+  background-color: #82D8FD;
+  left:600px;
+  top:50px;
+}
