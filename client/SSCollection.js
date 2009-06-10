@@ -297,7 +297,6 @@ var SSCollection = new Class({
     Function: setLoadRefresh
       Returns whether the collection should be loaded in when refreshed. 
       
-      
     Returns:
       A boolean value.
   */
@@ -359,7 +358,7 @@ var SSCollection = new Class({
 
   /*
       Function: transact
-        Accepts an action, an array of options, and a compiled collection. If a bulk is not passed or is null, the collection object is cleaned and the currently set delagates are applied.
+        Accepts an action, an array of options, and a compiled collection. If a bulk is not passed or is null, the collection object is cleaned and the currently set delagates are applied. 
       
       Parameters:
         action - the type of action (create, write, delete, update)
@@ -927,7 +926,7 @@ var SSCollection = new Class({
   },
   /*
     Function: update
-      Updates the collection by index. Accepts the updated array of data, the index to insert the new data, and a bulk .... 
+      Updates the collection by index. Accepts the updated array of data, the index to insert the new data, and a bulk. Inserts the new data into the Collection array at the given index.  
       
     Parameters:
       data - An array. 
@@ -974,6 +973,7 @@ var SSCollection = new Class({
     See Also: 
       update
   */
+  
   updateById: function(data, id, bulk)
   {
     return this.transact('update', {
@@ -989,8 +989,8 @@ var SSCollection = new Class({
     }, bulk);
   },
   /*
-    Function: onFailure 
-      NOTE:  Empty function. To delete?? - Justin
+    Function: onFailure (abstract)
+      Event handler for failure.
       
     Parameter:
       action - The type of action (create, write, delete, update)
@@ -1050,7 +1050,7 @@ var SSCollection = new Class({
       Merges an array of data into the passed index in the collection array. Fires the onUpdate event when called. 
       
     Parameters:
-      data - An array. NOTE: unused. - Justin
+      data - An array. 
       index - An integer.
   */
   onUpdate: function(data, index)

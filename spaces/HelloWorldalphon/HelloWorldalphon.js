@@ -18,6 +18,7 @@ var HelloWorldalphonShift = new Class({
         //Sandalphon.reset();
         console.log("happy0");
         this.build();
+        this.addEvents();
         console.log("happy4");
 
     },
@@ -26,7 +27,6 @@ var HelloWorldalphonShift = new Class({
       console.log("happy2");
       ShiftSpace.Sandalphon.load('spaces/HelloWorldalphon/HelloWorldalphon', function(ui) {
         document.body.grab(ShiftSpace.Sandalphon.convertToFragment(ui.interface));
-        $('SSHWmain').addEvent('click', this.fadeOut.bind(this)); 
         ShiftSpace.Sandalphon.activate($('SSHWmain'));
       }.bind(this));
     },
@@ -38,13 +38,15 @@ var HelloWorldalphonShift = new Class({
          myFx.start('top','50')
     },
     
-    encode: function() {
-        var pos = this.element.getPosition();
-        return {
-            summary: this.messageValue,
-            message: this.messageValue,
-            position: pos
-        };
+    addFragment: function(){
+      
+      
+    },
+    
+    addEvents: function(){
+      $('SSHWmain').addEvent('click', this.fadeOut.bind(this)); 
+      $('SSTabView1').addEvent('click', this.addFragment.bind(this)); 
+    }
     }
 });
 
