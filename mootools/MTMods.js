@@ -1,6 +1,50 @@
 // ==Builder==
 // @required
+// @package        System_
 // ==/Builder==
+
+Array.implement({
+  first: function() {
+    return this[0];
+  },
+  
+  rest: function() {
+    return this.slice(1, this.length);
+  },
+  
+  drop: function(n) {
+    return this.slice(n, this.length);
+  },
+  
+  isEmpty: function() {
+    return this.length == 0;
+  }
+});
+
+function $get(first, prop) {
+  var args = $A(arguments);
+  var rest = args.drop(2);
+  var next;
+  
+  if(rest.length == 0) return first[prop];
+  if(['object', 'array'].contains($type(first)))
+  {
+    next = first[prop];
+  }
+  if($type(next) == 'function')
+  {
+    next = next();
+  }
+
+  return (next == null) ? null : $get.apply(null, [next].concat(rest));
+};
+
+// var obj = {"foo":[1, 2, {"bar": 9, "baz": function() {return {"wow":"zers"};}}]};
+// $get(obj, "foo", 2, "baz", "wow");
+
+function $getf(first, prop) {
+  return $get.apply(null, arguments) || $empty;
+};
 
 // allows for queries on namespaced attributes
 Selectors.RegExps = {

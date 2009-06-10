@@ -19,6 +19,19 @@ var SSNotifierView = new Class({
     
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
+    SSAddObserver(this, 'onSync', this.handleSync.bind(this));
+  },
+  
+  
+  handleSync: function()
+  {
+    ShiftSpace.User.getShifts(function(shifts) {
+      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
+      if(shifts && shifts.length > 0)
+      {
+        SSLog('>>>>>>>>>>>>>>>>>>>> upate notifier!', SSLogForce);
+      }
+    }.bind(this));
   },
   
   
@@ -130,7 +143,7 @@ var SSNotifierView = new Class({
         $clear(this.closeTimer);
         this.closeTimer = this.close.delay(3000-delta, this);
       }
-    }    
+    }
   },
   
   

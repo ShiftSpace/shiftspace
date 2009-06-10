@@ -21,6 +21,52 @@ var ShiftSpaceUserClass = new Class({
   },
   
   
+  defaultFilters: function()
+  {
+    return {
+      onThisDomain: true
+    };
+  },
+  
+  
+  initialize: function()
+  {
+    this.parent();
+    this.setFilters(this.getPreference('filters', this.defaultFilters()));
+  },
+  
+  
+  setFilters: function(newFilters)
+  {
+    this.__filters = newFilters;
+  },
+  
+  
+  filters: function()
+  {
+    return this.__filters;
+  },
+  
+  
+  setFilter: function(filter, value)
+  {
+    this.filters()[filter] = value;
+  },
+  
+  
+  getShifts: function(callback)
+  {
+    var filters = this.filters();
+    if(filters.onThisDomain)
+    {
+      SSServerCall('shift.query', {href:window.location}, function(json) {
+        var shifts = $get(json, 'data', 'shifts');
+        if(shifts) callback(shifts);
+      });
+    }
+  },
+  
+  
   setEmailCommentsDefault: function(newValue)
   {
     // setting the value, can't use zero because of PHP, GRRR - David

@@ -36,6 +36,7 @@ var SSConsole = new Class({
     // this is because outlets won't be set until that point
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
+    SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     
     // listen for shift events
     SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));
@@ -64,6 +65,11 @@ var SSConsole = new Class({
       dataNormalizer: this.legacyNormalizer,
       requiredProperties: ['username']
     });
+  },
+  
+  
+  handleSync: function()
+  {
   },
   
   

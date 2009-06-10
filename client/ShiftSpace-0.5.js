@@ -148,14 +148,14 @@ var ShiftSpace = new (function() {
       SSCreateDragDiv();
       
       // Synch with server, 
-      SSSynch();
+      SSSync();
     };
     
     /*
     Function: SSSynch
       Synchronize with server: checks for logged in user.
     */
-    function SSSynch() 
+    function SSSync() 
     {
       var params = {
         href: window.location.href
@@ -182,7 +182,7 @@ var ShiftSpace = new (function() {
         }
         
         SSUpdateInstalledSpaces();
-        SSPostNotification("onSynch");
+        SSPostNotification("onSync");
       });
     }
 
@@ -288,6 +288,8 @@ var ShiftSpace = new (function() {
       this.SSResourceExists = SSResourceExists;
       this.SSLoadSpaceAttributes = SSLoadSpaceAttributes;
       this.SSGetSpaceAttributes = SSGetSpaceAttributes;
+      this.$get = $get;
+      this.$getf = $getf;
       
       // export SSLog
       window.SSLog = SSLog;

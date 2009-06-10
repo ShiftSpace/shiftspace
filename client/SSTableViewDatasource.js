@@ -123,7 +123,7 @@ var SSTableViewDatasource = new Class({
         {
           // update the local copy of the data
           this.data()[rowIndex][columnName] = value;
-          this.fireEvent('SSTabViewDatasourceDataUpdate', this);
+          this.fireEvent('SSTableViewDatasourceDataUpdate', this);
         }.bind(this),
         onFailure: function()
         {
@@ -297,7 +297,7 @@ var SSTableViewDatasource = new Class({
       SSServerCall(this.dataProviderURL(), allProperties.getClean(), function(json) {
         SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>> SSTableViewDatasource fetch RETURNED');
         this.updateData(json.data[this.dataKey()]);
-        this.fireEvent('onload');
+        this.fireEvent('onload', this);
       }.bind(this));
     }
     else
@@ -308,7 +308,7 @@ var SSTableViewDatasource = new Class({
         this.setData([]);
       }
 
-      this.fireEvent('onload');
+      this.fireEvent('onload', this);
     }
   }
 
