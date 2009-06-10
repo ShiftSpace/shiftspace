@@ -73,10 +73,6 @@ var __defaultSpaces = {
   }
 };
 
-var spacePrefs = SSGetValue('spacePrefs', {});
-
-// Each plugin and a corresponding URL of its origin
-
 var installedPlugins = {};
 
 /*

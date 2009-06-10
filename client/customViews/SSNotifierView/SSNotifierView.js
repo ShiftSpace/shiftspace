@@ -15,6 +15,7 @@ var SSNotifierView = new Class({
     this.parent(el, options);
     this.setIsOpen(false);
     this.setIsAnimating(false);
+    this.setShiftIsDown(false);
     
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
@@ -147,11 +148,13 @@ var SSNotifierView = new Class({
     
     window.addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
+      SSLog('keyup', SSLogForce);
       if(evt.key == 'shift') this.handleKeyUp.bind(this, [evt]);
     }.bind(this));
 
     window.addEvent('keydown', function(_evt) {
       var evt = new Event(_evt);
+      SSLog('keydown', SSLogForce);
       if(evt.key == 'shift') this.handleKeyDown.bind(this, [evt]);
     }.bind(this));
   },
@@ -159,13 +162,24 @@ var SSNotifierView = new Class({
   
   handleKeyUp: function(evt)
   {
-    
+    SSLog('handleKeyup ' + evt, SSLogForce);
+    this.setShiftIsDown(false);
   },
   
   
   handleKeyDown: function(evt)
   {
-    
+    SSLog('handleKeyDown ' + evt, SSLogForce);
+    this.setShiftIsDown(true);
+
+    if(!this.isVisible())
+    {
+      
+    }
+    else
+    {
+      
+    }
   },
   
   
@@ -242,6 +256,18 @@ var SSNotifierView = new Class({
   },
   
   
+  setShiftIsDown: function(val)
+  {
+    this.__shiftIsDown = val;
+  },
+  
+  
+  shiftIsDown: function()
+  {
+    return this.__shiftIsDown;
+  },
+  
+  
   initAnimations: function()
   {
     this.showFx = new Fx.Morph(this.element, {
@@ -253,6 +279,7 @@ var SSNotifierView = new Class({
       }.bind(this),
       onComplete: function()
       {
+        if(!this.shiftIsDown()) this.hide.delay(3000, this);
       }.bind(this)
     });
     
