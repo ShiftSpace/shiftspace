@@ -1,6 +1,5 @@
 // ==Builder==
 // @optional
-// @name              SSCustomExceptions
 // @package           System
 // @dependencies      SSException
 // ==/Builder==

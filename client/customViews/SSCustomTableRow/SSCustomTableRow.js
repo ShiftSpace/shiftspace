@@ -1,17 +1,16 @@
 // ==Builder==
 // @uiclass
 // @optional
-// @name              SSCustomTableRow
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSTableRow
 // ==/Builder==
 
 var SSCustomTableRow = new Class({
 
-  name: 'SSCustomTableRow',
   Extends: SSTableRow,
   
-
+  name: 'SSCustomTableRow',
+  
   initialize: function(el)
   {
     this.parent(el);

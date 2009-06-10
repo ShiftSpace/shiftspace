@@ -4,17 +4,15 @@
 // @package           ShiftSpaceUI
 // ==/Builder==
 
+var SSConsoleIsReadyNotification = 'SSConsoleIsReadyNotification';
+
 var SSConsole = new Class({
 
-  name: 'SSConsole',
-
   Extends: SSView,
-
+  name: 'SSConsole',
+  
   initialize: function(el, options)
   {
-    SSLog("INSTANTIATING SSConsole", SSLogMessage);
-    SSLog("Calling parent", SSLogMessage);
-    
     // only really relevant under Sandalphon
     if(typeof SandalphonToolMode == 'undefined')
     {
@@ -28,7 +26,6 @@ var SSConsole = new Class({
     }
 
     // if not tool mode, we load the interface ourselve
-    SSLog("Loading interface", SSLogMessage);
     if(typeof SandalphonToolMode == 'undefined')
     {
       Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
@@ -37,9 +34,9 @@ var SSConsole = new Class({
     // listen for login/logout events, pass in reference to self
     // so that ShiftSpace notifies after this object's awake method has been called
     // this is because outlets won't be set until that point
-    SSLog('Adding SSConsole events', SSLogMessage);
-    SSAddEvent('onUserLogin', this.handleLogin.bind(this), this);
-    SSAddEvent('onUserLogout', this.handleLogout.bind(this), this);
+    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
+    SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     
     // listen for shift events
     SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));
@@ -51,7 +48,6 @@ var SSConsole = new Class({
     // listen for global events as well
 
     // allocate datasource for page shifts
-    SSLog('Adding datasources', SSLogMessage);
     this.allShiftsDatasource = new SSTableViewDatasource({
       dataKey: 'shifts',
       dataUpdateKey: 'id',
@@ -69,8 +65,11 @@ var SSConsole = new Class({
       dataNormalizer: this.legacyNormalizer,
       requiredProperties: ['username']
     });
-    
-    SSLog('>>>>>>>>>>>>>>>>>>>>>>> Done with initialization', SSLogForce);
+  },
+  
+  
+  handleSync: function()
+  {
   },
   
   
@@ -86,10 +85,8 @@ var SSConsole = new Class({
       if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
       if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
       if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
-      if(this.outlets().get('SSConsoleLoginOutButton')) this.initConsoleControls();
       if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
       if(this.outlets().get('SSSetServers')) this.initSetServersForm();
-      if(this.outlets().get('SSUserLoginStatus')) this.initUserLoginStatus();
       if(this.outlets().get('clearInstalledButton'))
       {
         this.outlets().get('clearInstalledButton').addEvent('click', function(_evt) {
@@ -122,7 +119,6 @@ var SSConsole = new Class({
 
   handleLogin: function()
   {
-    SSLog('Handle login', SSLogForce);
     this.setLoginHandled(true);
     
     // empty the login form
@@ -132,17 +128,7 @@ var SSConsole = new Class({
     // update the datasource
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUsername());
     // switch to the tab view
-    this.outlets().get('MainTabView').selectTabByName('ShiftsTabView');
-    
-    // update login status
-    var loginStatus = this.outlets().get('SSUserLoginStatus');
-    if(loginStatus)
-    {
-      loginStatus.getElementById('SSUserIsNotLoggedIn').removeClass('SSActive');
-      var isLoggedIn = loginStatus.getElementById('SSUserIsLoggedIn');
-      isLoggedIn.addClass('SSActive');
-      isLoggedIn.getElement('span').set('text', ShiftSpaceUser.getUsername());
-    }
+    this.outlets().get('MainTabView').selectTabByName('AllShiftsTableView');
     
     this.updateInstalledSpaces();
   },
@@ -150,7 +136,6 @@ var SSConsole = new Class({
 
   handleLogout: function()
   {
-    SSLog('handleLogout', SSLogForce);
     this.setLoginHandled(false);
     
     // empty the login form
@@ -161,14 +146,6 @@ var SSConsole = new Class({
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', null);
     // refresh the main tab view
     this.outlets().get('MainTabView').refresh();
-    
-    // update login status
-    var loginStatus = this.outlets().get('SSUserLoginStatus');
-    if(loginStatus)
-    {
-      loginStatus.getElementById('SSUserIsNotLoggedIn').addClass('SSActive');
-      loginStatus.getElementById('SSUserIsLoggedIn').removeClass('SSActive');
-    }
     
     this.updateInstalledSpaces();
   },
@@ -258,12 +235,6 @@ var SSConsole = new Class({
   },
   
   
-  initUserLoginStatus: function()
-  {
-    
-  },
-
-
   handleTabSelect: function(args)
   {
     if(args.tabView == this.outlets().get('LoginTabView') && args.tabIndex == 0)
@@ -325,28 +296,12 @@ var SSConsole = new Class({
   signUpFormSubmitCallback: function(response)
   {
   },
-
-
-  initConsoleControls: function()
+  
+  
+  showLogin: function()
   {
-    // init login/logout button
-    this.outlets().get('SSConsoleLoginOutButton').addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      if(ShiftSpaceUser.isLoggedIn())
-      {
-        // logout the user
-        ShiftSpaceUser.logout();
-      }
-      else
-      {
-        // select the login tab view
-        this.outlets().get('MainTabView').selectTabByName('LoginTabView');
-      }
-    }.bind(this));
-
-    // init bug report button
-
-    // init close button
+    // select the login tab view
+    this.outlets().get('MainTabView').selectTabByName('LoginTabView');
   },
 
 
@@ -362,8 +317,6 @@ var SSConsole = new Class({
 
   buildInterface: function(ui)
   {
-    SSLog("BUILD SSConsole interface");
-    
     if($('SSConsole'))
     {
       throw new Error("Ooops it looks an instace of ShiftSpace is already running. Please turn off Greasemonkey or leave this page.");
@@ -376,14 +329,12 @@ var SSConsole = new Class({
     // since we're creating the frame via code we need to hook up the controller
     // reference manually
     SSSetControllerForNode(this, this.element);
-    SSLog("Iframe injected");
     this.element.injectInside(document.body);
 
     // finish initialization after iframe load
     this.element.addEvent('load', function() {
-      SSLog("SSConsole iframe loaded");
       var context = this.element.contentWindow;
-
+      
       // under GM not wrapped, erg - David
       if(!context.$)
       {
@@ -406,6 +357,8 @@ var SSConsole = new Class({
       
       // create the resizer
       this.initResizer();
+      
+      SSPostNotification(SSConsoleIsReadyNotification, this);
     }.bind(this));
   },
   
@@ -550,8 +503,6 @@ var SSConsole = new Class({
   
   canRemove: function(sender)
   {
-    SSLog(sender, SSLogForce);
-    
     var canRemove = false;
     switch(sender.listView)
     {
@@ -570,7 +521,6 @@ var SSConsole = new Class({
   
   installSpace:function(spaceName)
   {
-    SSLog('installSpace ' + spaceName, SSLogForce);
     SSInstallSpace(spaceName);
   },
   
@@ -584,22 +534,19 @@ var SSConsole = new Class({
   
   updateInstalledSpaces: function()
   {
-    SSLog('updateInstalledSpaces', SSLogForce);
-    SSLog(SSSpacesByPosition(), SSLogForce);
     this.SSInstalledSpaces.setData(SSSpacesByPosition());
+    this.SSInstalledSpaces.refresh();
   },
   
   
   refreshInstalledSpaces: function()
   {
-    SSLog('refreshInstalledSpaces', SSLogForce);
     this.SSInstalledSpaces.refresh(true);
   },
   
   
   uninstallSpace:function(index)
   {
-    SSLog('uninstallSpace', SSLogForce);
     var spaces = SSSpacesByPosition();
     var spaceToRemove = spaces[index];
     SSUninstallSpace(spaceToRemove.name);

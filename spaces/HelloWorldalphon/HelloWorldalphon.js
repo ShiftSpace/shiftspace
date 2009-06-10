@@ -6,10 +6,10 @@ var HelloWorldalphonSpace = new Class({
         name: 'HelloWorldalphon',
         version: 0.1,
         icon: 'HelloWorldalphon.png',
-        css:  'HelloWorldalphon.css'
+        css: 'HelloWorldalphon.css'
     }
 });
-
+ 
 var HelloWorldalphonShift = new Class({
   
     Extends: ShiftSpace.Shift,
@@ -18,34 +18,36 @@ var HelloWorldalphonShift = new Class({
         //Sandalphon.reset();
         console.log("happy0");
         this.build();
+        this.addEvents();
         console.log("happy4");
-       // this.save();
-        //this.manageElement(this.element);s
+ 
     },
     
     build: function() {
       console.log("happy2");
-      Sandalphon.load('spaces/HelloWorldalphon/HelloWorldalphon', function(ui) {
-        console.log("happy3");
-        Sandalphon.activate($('SSHWmain'));
-      });
+      ShiftSpace.Sandalphon.load('spaces/HelloWorldalphon/HelloWorldalphon', function(ui) {
+        document.body.grab(ShiftSpace.Sandalphon.convertToFragment(ui.interface));
+        ShiftSpace.Sandalphon.activate($('SSHWmain'));
+      }.bind(this));
     },
     
-    changeMessage: function() {
-        var msg = prompt("Please enter a new message:", this.messageValue);
-        this.messageValue = msg;
-        this.element.setHTML(msg);
-        this.save();
+    fadeOut: function(){
+      var myFx = new Fx.Tween($('SSHWmain'));
+         myFx.start('background-color', '#000', '#f00');
+         myFx.start('background-color', '#00f');
+         myFx.start('top','50')
     },
     
-    encode: function() {
-        var pos = this.element.getPosition();
-        return {
-            summary: this.messageValue,
-            message: this.messageValue,
-            position: pos
-        };
+    addFragment: function(){
+      
+      
+    },
+    
+    addEvents: function(){
+      $('SSHWmain').addEvent('click', this.fadeOut.bind(this));
+      $('SSTabView1').addEvent('click', this.addFragment.bind(this));
+    }
     }
 });
-
+ 
 var HelloWorldalphon = new HelloWorldalphonSpace(HelloWorldalphonShift);

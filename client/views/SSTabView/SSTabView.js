@@ -15,10 +15,9 @@
   */
 var SSTabView = new Class({
   
-  name: 'SSTabView',
-  
   Extends: SSView,
-  
+  name: 'SSTabView',
+    
   initialize: function(el, options)
   {
     this.setOptions(this.defaults(), options)

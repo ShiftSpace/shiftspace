@@ -1,6 +1,6 @@
 {
-  "SERVER": "http://shiftspace.org/dev/",
-  "SPACEDIR": "http://shiftspace.org/dev/spaces/",
+  "SERVER": "http://localhost/~davidnolen/shiftspace/",
+  "SPACEDIR": "http://localhost/~davidnolen/shiftspace/spaces/",
   "LOG_LEVEL": "SSLogError | SSLogSandalphon",
   "VARS": {
     "SandalphonToolMode": true

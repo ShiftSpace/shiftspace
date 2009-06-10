@@ -1,6 +1,5 @@
 // ==Builder==
-// @optional
-// @name              GreaseMonkeyApi
+// @required
 // @package           System_
 // ==/Builder==
 
@@ -34,9 +33,8 @@ function GM_addStyle(css)
 
 function GM_getValue(key, defaultValue) 
 {
-
   var request = new Request({
-    url: '../server/?method=sandbox.getvalue',
+    url: SSInfo().server + 'server/?method=sandbox.getvalue',
     async: false,
     method: 'post',
     data: 
@@ -45,14 +43,15 @@ function GM_getValue(key, defaultValue)
     }
   }).send();
   
-  return request.response.text || defaultValue;
+  var result = JSON.decode(request.response.text).data;
+  return (result != null && result) || defaultValue;
 }
 
 
 function GM_setValue(key, value) 
 {
   var request = new Request({
-    url: '../server/?method=sandbox.setvalue',
+    url: SSInfo().server + 'server/?method=sandbox.setvalue',
     async: false,
     method: 'post',
     data: {key: key, value: value}

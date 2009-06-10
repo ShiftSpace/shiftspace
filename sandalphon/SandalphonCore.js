@@ -7,10 +7,17 @@
 var SSSandalphonError = SSException;
 
 SSSandalphonError.NoSuchResource = new Class({
-  name: "SSSandalphonError.NoSuchResource",
   Extends: SSSandalphonError,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter, 
+  name: "SSSandalphonError.NoSuchResource"
 });
+
+var __framedViews = $H();
+
+function SSAddFramedView(framedView)
+{
+  __framedViews[framedView.getId()] = framedView;
+}
 
 var SandalphonClass = new Class({
 
@@ -260,6 +267,8 @@ var SandalphonClass = new Class({
   */
   activate: function(ctxt)
   {
+    //SSLog('activate', SSLogForce);
+    //SSLog(ctxt, SSLogForce);
     var context = ctxt || window;
     // First generate the outlet bindings
     this.generateOutletBindings(context);
@@ -268,6 +277,10 @@ var SandalphonClass = new Class({
     // Initialize all outlets
     this.bindOutlets(context);
     this.awakeObjects(context);
+    if(ctxt.__sscontextowner)
+    {
+      ctxt.__sscontextowner.onContextActivate(ctxt);
+    }
   },
   
   /*
@@ -462,6 +475,11 @@ var SandalphonClass = new Class({
       {
         object.afterAwake(context);
       }
+    });
+    
+    // send all notifications
+    ShiftSpaceObjects.each(function(object, objectId) {
+      SSFlushNotificationQueueForObject(object);
     });
   },
   

@@ -6,13 +6,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Sandalphon</title>
     
-    <!--[if IE 6]>
-    <script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script>
-    <![endif]-->
-    <!--[if IE 7]>
-    <script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script>
-    <![endif]-->
-    
     <!-- Load mootools script files -->
     <script src="../mootools/mootools-1.2-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="../mootools/mootools-1.2-more.js" type="text/javascript" charset="utf-8"></script>

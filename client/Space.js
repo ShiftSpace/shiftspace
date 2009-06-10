@@ -466,7 +466,9 @@ var ShiftSpaceSpace = new Class({
   */
   createShift: function(newShiftJson)
   {
-    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> createShift');
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> createShift', SSLogForce);
+    SSLog(newShiftJson, SSLogForce);
+    
     if(this.cssIsLoaded())
     {
       this.addShift(newShiftJson);
@@ -482,7 +484,7 @@ var ShiftSpaceSpace = new Class({
     }
     else
     {
-      SSLog('++++++++++++++++++++++++++++ css not loaded');
+      SSLog('++++++++++++++++++++++++++++ css not loaded', SSLogForce);
       // we need to load these when the css is done
       this.addDeferredNew(newShiftJson);
     }
@@ -1041,32 +1043,17 @@ var ShiftSpaceSpace = new Class({
   {
     SSXmlHttpRequest.safeCall(config);
   },
-
-  /*
-    Function: setPref
-      Set a space pref.
-
-    Parameters:
-      key - a key.
-      value - a value to be set. If value is an Object make sure there aren't circular references.
-  */
-  setPref: function(key, value)
+  
+  
+  setPreference: function(key, value)
   {
-    this.setValue(this.attributes.name+'.prefs.'+key, value);
+    ShiftSpace.User.setPreference(this.attributes.name+'.'+key, vlaue);
   },
-
-  /*
-    Function: getPref
-      Returns a space pref.
-
-    Parameters:
-      key - a key.
-      defaultValue - a default value.
-      callback - a function to be called when the value has been retrieved.
-  */
-  getPref: function(key, defaultValue, callback)
+  
+  
+  getPreference: function(key, defaultValue, callback)
   {
-    this.getValue(this.attributes.name+'.prefs.'+key, defaultValue, callback);
+    ShiftSpace.User.getPreference.safeCallWithResult(this.attributes.name+'.'+key, defaultValue, callback);
   }
 
 });

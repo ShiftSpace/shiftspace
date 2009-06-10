@@ -12,28 +12,28 @@
 var SSCellError = SSException;
 
 SSCellError.NoSuchProperty = new Class({
-  name:"SSCellError.NoSuchProperty",
   Extends: SSCellError,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name:"SSCellError.NoSuchProperty"
 });
 
 SSCellError.NoLock = new Class({
-  name:"SSCellError.NoLock",
   Extends: SSCellError,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name:"SSCellError.NoLock"
 });
 
 // DELETE
 SSCellError.MissingAccessor = new Class({
-  name:"SSCellError.MissingAccessor",
   Extends: SSCellError,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name:"SSCellError.MissingAccessor"
 });
 
 SSCellError.NoSuchTarget = new Class({
-  name:"SSCellError.NoSuchTarget",
   Extends: SSCellError,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name:"SSCellError.NoSuchTarget"
 });
 
 // ====================
@@ -42,9 +42,9 @@ SSCellError.NoSuchTarget = new Class({
 
 var SSCell = new Class({
 
-  name: 'SSCell',
   Extends: SSView,
-
+  name: 'SSCell',
+  
   initialize: function(el, options)
   {
     this.parent(el, options);

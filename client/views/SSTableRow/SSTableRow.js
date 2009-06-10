@@ -1,7 +1,6 @@
 // ==Builder==
 // @uiclass
 // @required
-// @name              SSTableRow
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSView
 // ==/Builder==
@@ -9,6 +8,7 @@
 var SSTableRow = new Class({
   
   Extends: SSView,
+  name: 'SSTableRow',
   
   initialize: function(el, options)
   {

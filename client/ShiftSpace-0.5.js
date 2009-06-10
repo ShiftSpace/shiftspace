@@ -81,30 +81,35 @@ var ShiftSpace = new (function() {
       
       ShiftSpace.ShiftMenu = new ShiftMenu();
       ShiftSpace.Console = new SSConsole();
+      ShiftSpace.SSNotifier = new SSNotifierView();
+      ShiftSpace.Sandalphon = Sandalphon;
+      
+      // Add to look up table
+      ShiftSpaceObjects.ShiftMenu = ShiftSpace.ShiftMenu;
+      ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
+      
+      // FIXME: this should be more modular! - David 6/3/09
+      SSSetInstalledSpacesDataProvider(ShiftSpaceUser);
+      
+      // Update installed spaces
+      SSAddObserver(SSNotificationProxy, 'onInstalledSpacesDidChange', SSUpdateInstalledSpaces);
       
       // Set up user event handlers
-      ShiftSpace.User.addEvent('onUserLogin', function() {
-        SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
-        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
+      SSAddObserver(SSNotificationProxy, 'onUserLogin', function() {
+        //SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         SSLog('User logged in ============', SSLogForce);
-        SSLog(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()), SSLogForce);
         // FIXME: Just make this into a onUserLogin hook - David
         if(SSHasResource('RecentlyViewedHelpers'))
         {
           SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
         }
-        SSFireEvent('onUserLogin');
       });
 
-      ShiftSpace.User.addEvent('onUserLogout', function() {
+      SSAddObserver(SSNotificationProxy, 'onUserLogout', function() {
         SSLog('ShiftSpace detects user logout', SSLogForce);
-        SSFireEvent('onUserLogout');
-        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
       });
       
-      // Load CSS styles
       SSLoadStyle('styles/ShiftSpace.css', function() {
-        // create the error window
         SSCreateErrorWindow();
       });
       SSLoadStyle('styles/ShiftMenu.css');
@@ -143,16 +148,15 @@ var ShiftSpace = new (function() {
       SSCreateDragDiv();
       
       // Synch with server, 
-      SSSynch();
+      SSSync();
     };
     
     /*
     Function: SSSynch
       Synchronize with server: checks for logged in user.
     */
-    function SSSynch() 
+    function SSSync() 
     {
-      SSLog('SSSynch >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
       var params = {
         href: window.location.href
       };
@@ -170,20 +174,15 @@ var ShiftSpace = new (function() {
           ShiftSpace.User.syncData(json.data.user)
 
           // make sure default shift status preference is set
-          SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
+          //SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
         }
         else
         {
           SSLog('Guest account', SSLogForce);
         }
         
-        SSSetInstalledSpaces(ShiftSpace.User.getPreference('installed', SSDefaultSpaces()));
-        
-        // build menu only after we know which spaces the users has installed
-        ShiftSpace.ShiftMenu.buildMenu();
-        
-        // notify SSConsole
-        if(ShiftSpace.User.isLoggedIn()) SSFireEvent('onUserLogin', {status:1});
+        SSUpdateInstalledSpaces();
+        SSPostNotification("onSync");
       });
     }
 
@@ -270,8 +269,11 @@ var ShiftSpace = new (function() {
       this.installSpace = SSInstallSpace;
       this.uninstallSpace = SSUninstallSpace;
       this.installed = SSInstalledSpaces;
+      this.defaults = SSDefaultSpaces;
       this.byPosition = SSSpacesByPosition;
       this.eventProxy = SSEventProxy;
+      this.getObservers = SSGetObservers;
+      this.controllerForNode = SSControllerForNode;
 
       this.SSGetShift = SSGetShift;
       this.SSGetPageShifts = SSGetPageShifts;
@@ -286,6 +288,8 @@ var ShiftSpace = new (function() {
       this.SSResourceExists = SSResourceExists;
       this.SSLoadSpaceAttributes = SSLoadSpaceAttributes;
       this.SSGetSpaceAttributes = SSGetSpaceAttributes;
+      this.$get = $get;
+      this.$getf = $getf;
       
       // export SSLog
       window.SSLog = SSLog;

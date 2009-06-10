@@ -5,32 +5,22 @@
     <div class="SSControlView">
       <!-- The tab buttons -->
       <div xmlns:ss="http://shiftspace.org" ss:localized="Shifts" title="Shifts" class="SSButton SSActive SSLocalized">Shifts</div>
+      <div xmlns:ss="http://shiftspace.org" ss:localized="My §" title="My §" class="SSButton SSLocalized">My §</div>
+      <div xmlns:ss="http://shiftspace.org" ss:localized="Inbox" title="Inbox" class="SSButton SSLocalized">Inbox</div>
+      <div xmlns:ss="http://shiftspace.org" ss:localized="Following" title="Following" class="SSButton SSLocalized">Following</div>
+      <div xmlns:ss="http://shiftspace.org" ss:localized="Groups" title="Groups" class="SSButton SSLocalized">Groups</div>
       <div xmlns:ss="http://shiftspace.org" ss:localized="Settings" title="Settings" class="SSButton SSLocalized">Settings</div>
       <div xmlns:ss="http://shiftspace.org" ss:localized="Login" title="Login" class="SSButton SSLocalized">Login</div>
       <div xmlns:ss="http://shiftspace.org" ss:localized="Welcome" title="Welcome" class="SSButton SSLocalized">Welcome</div>
       <!-- End tab buttons -->
-
-      <!-- Console User Controls -->
-      <div id="SSConsoleControls">
-        <div id="SSConsoleLoginOutButton" title="Login/Logout" class="SSConsoleControlButton" outlet="SSConsole"></div>
-        <div id="SSConsoleBugReportButton" title="Report a bug" class="SSConsoleControlButton" outlet="SSConsole"></div>
-        <div id="SSConsoleCloseButton" title="Close" class="SSConsoleControlButton" outlet="SSConsole"></div>
-      </div>
-      <!-- End Console User Controls -->
-      
-      <!-- User status -->
-      <div id="SSUserLoginStatus" outlet="SSConsole">
-        <div id="SSUserIsNotLoggedIn" class="SSActive">
-          You are not signed in
-        </div>
-        <div id="SSUserIsLoggedIn">
-          Signed in as <a><span class="SSUserName"></span></a>
-        </div>
-      </div>
     </div>
   
     <div class="SSContentView">
-      <?customView:ShiftsTabView?>
+      <?customView:CustomTableView?>
+      <div id="MyShiftSpacePane" class="SSTabPane"></div>
+      <div id="InboxPane" class="SSTabPane"></div>
+      <div id="FollowingPane" class="SSTabPane"></div>
+      <div id="GroupsPane" class="SSTabPane"></div>
       <?customView:SettingsTabView?>
       <?customView:LoginTabView?>
       <div id="WelcomePane" class="SSTabPane">

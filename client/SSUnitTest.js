@@ -327,44 +327,44 @@ var SSUnitTest = new SSUnitTestClass()
 // ==============
 
 SSUnitTest.Error = new Class({
-  name: 'SSUnitTest.Error',
   Extends: SSException,
   Implements: SSExceptionPrinter,
   initialize: function(_error, message)
   {
     this.parent(_error);
     this.setMessage(message);
-  }
+  },
+  name: 'SSUnitTest.Error'
 });
 
 SSUnitTest.AssertError = new Class({
-  name:'SSUnitTest.AssertError', 
   Extends: SSUnitTest.Error,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name:'SSUnitTest.AssertError'
 });
 
 SSUnitTest.AssertEqualError = new Class({
-  name:'SSUnitTest.AssertEqualError', 
   Extends: SSUnitTest.Error,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name:'SSUnitTest.AssertEqualError'
 });
 
 SSUnitTest.AssertNotEqualError = new Class({
-  name:'SSUnitTest.AssertNotEqualError', 
   Extends: SSUnitTest.Error,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name:'SSUnitTest.AssertNotEqualError'
 });
 
 SSUnitTest.AssertThrowsError = new Class({
-  name:'SSUnitTest.AssertThrowsError', 
   Extends: SSUnitTest.Error,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name:'SSUnitTest.AssertThrowsError'
 });
 
 SSUnitTest.NoFormatter = new Class({
-  name:'SSUnitTest.NoFormatter', 
   Extends: SSUnitTest.Error,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name:'SSUnitTest.NoFormatter'
 });
 
 // =======================
@@ -373,9 +373,9 @@ SSUnitTest.NoFormatter = new Class({
 
 SSUnitTest.TestCase = new Class({
   
-  name: 'SSUnitTest.TestCase',
+  Extends: SSUnit.Base,       
   
-  Extends: SSUnit.Base,
+  name: 'SSUnitTest.TestCase',
   
   defaults:
   {
@@ -896,9 +896,9 @@ SSUnitTest.ResultFormatter = new Class({
 */
 SSUnitTest.ResultFormatter.Console = new Class({
   
-  namae: 'SSUnitTest.ResultFormatter.Console',
-  
   Extends: SSUnitTest.ResultFormatter,
+
+  name: 'SSUnitTest.ResultFormatter.Console',
   
   output: function(testResult, depth)
   {
@@ -926,11 +926,11 @@ SSUnitTest.ResultFormatter.Console = new Class({
     Formats test results to the DOM.
 */
 SSUnitTest.ResultFormatter.BasicDOM = new Class({
-
-  name: 'SSUnitTest.ResultFormatter.BasicDOM',
   
   Extends: SSUnitTest.ResultFormatter,
 
+  name: 'SSUnitTest.ResultFormatter.BasicDOM',
+  
   initialize: function(_container)
   {
     this.__container = ($type(_container) == 'string') ? $(_container) : _container;
@@ -1014,11 +1014,9 @@ SSUnitTest.ResultFormatter.BasicDOM = new Class({
 
 SSUnitTest.TestSuite = new Class({
   
-  name: 'SSUnitTest.TestSuite',
-  
-  Implements: SSUnit.TestIterator,
-  
   Extends: SSUnit.Base,
+  Implements: SSUnit.TestIterator,
+  name: 'SSUnitTest.TestSuite',
   
   defaults:
   {

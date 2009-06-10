@@ -11,6 +11,15 @@ window.addEvent('mousemove', SSMouseMoveHandler.bind(this));
 
 // Used by keyboard handlers to maintain state information
 var __keyState = {};
+/*
+var __showNotifierTimer;
+var __notiferIsVisible = false;
+var __openNotifierTimer;
+var __notiferIsOpen = false;
+*/
+
+// add shift to key
+Event.Keys.shift = 16;
 
 /*
   Function: SSKeyDownHandler
@@ -24,8 +33,6 @@ function SSKeyDownHandler(_event)
   var event = new Event(_event);
   var now = new Date();
 
-  SSLog('SSKeyDownHandler');
-
   // Try to prevent accidental shift+space activation by requiring a 500ms
   // lull since the last keypress
   if (event.key == 'space' &&
@@ -36,10 +43,24 @@ function SSKeyDownHandler(_event)
     return false;
   }
 
-  if (event.code != 16)
+  if (event.key == 'shift')
   {
     // Remember when last non-shift keypress occurred
     __keyState.keyDownTime = now.getTime();
+
+    // set up show and open timers for the notifier
+    /*
+    __showNotifierTimer = function() {
+      __showNotifierTimer = null;
+      SSPostNotification('showNotifier');
+      __notifierIsVisible = true;
+      __openNotifierTimer = function() {
+        __openNotifierTimer = null;
+        SSPostNotification('openNotifier');
+        __notifierIsShown = true;
+      }.delay(1000);
+    }.delay(500);
+    */
   }
   else if (!__keyState.shiftPressed)
   {
@@ -57,8 +78,8 @@ function SSKeyDownHandler(_event)
   // then definately shiftspace should not be invocated
   // unless shift is let go and pressed again
   if (__keyState.shiftPressed &&
-    event.key != 'space' &&
-    event.code != 16)
+      event.key != 'space' &&
+      event.key != 'shift')
   {
     __keyState.ignoreSubsequentSpaces = true;
 
@@ -71,8 +92,8 @@ function SSKeyDownHandler(_event)
 
   // Check for shift + space keyboard press
   if (!__keyState.ignoreSubsequentSpaces &&
-    event.key == 'space' &&
-    event.shift)
+      event.key == 'space' &&
+      event.shift)
   {
     //SSLog('space pressed');
     // Make sure a keypress event doesn't fire
@@ -113,12 +134,40 @@ function SSKeyDownHandler(_event)
 function SSKeyUpHandler(_event) 
 {
   var event = new Event(_event);
+
   // If the user is letting go of the shift key, hide the menu and reset
-  if (event.code == 16) 
+  if (event.key == 'shift') 
   {
     __keyState.shiftPressed = false;
     __keyState.ignoreSubsequentSpaces = false;
+
     ShiftSpace.ShiftMenu.hide();
+    
+    // clear the timers and null them
+    /*
+    if(__showNotifierTimer)
+    {
+      $clear(__showNotifierTimer);
+      __showNotifierTimer = null;
+    }
+
+    if(__openNotifierTimer)
+    {
+      $clear(__openNotifierTimer);
+      __openNotifierTimer = null;
+    }
+    
+    // close the notifier
+    if(__notifierIsShown)
+    {
+      SSPostNotification('closeNotifier');
+    }
+    else if(__notifierIsVisible)
+    {
+      SSPostNotification('hideNotifier');
+    }
+    */
+    
   }
   
   return true;

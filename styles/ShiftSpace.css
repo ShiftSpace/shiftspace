@@ -79,7 +79,7 @@ body > #SSConsole
   position: fixed;
   height: 180px;
   left: 0px;
-  bottom: 0px;
+  bottom: 35px;
   width: 100%;
   border: 0px;
 }

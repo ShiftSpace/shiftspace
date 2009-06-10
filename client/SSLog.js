@@ -1,8 +1,6 @@
 // ==Builder==
 // @required
-// @name              SSLog
 // @package           System_
-// @dependencies      GreaseMonkeyApi
 // ==/Builder==
 
 // Internal Error Logging, trust me, you don't need this - kisses ShiftSpace Core Robot

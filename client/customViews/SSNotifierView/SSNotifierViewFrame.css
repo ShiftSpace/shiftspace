@@ -1,0 +1,30 @@
+.SSNotifierViewFrame
+{
+  position: fixed;
+  bottom: 0px;
+  background-color: red;
+  border: none;
+  height: 35px;
+  overflow: hidden;
+  width: 200px;
+}
+
+.SSNotifierOpen
+{
+  width: 100%;
+}
+
+.SSNotifierClosed
+{
+  width: 200px;
+}
+
+.SSNotifierHidden
+{
+  margin-left: -200px;
+}
+
+.SSNotifierVisible
+{
+  margin-left: 0px;
+}

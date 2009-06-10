@@ -32,6 +32,15 @@ body#SSConsoleFrameBody
   height: auto;
 }
 
+#MainTabView
+{
+  background: transparent;
+}
+
+#MainTabView > .SSControlView > .SSButton
+{
+  background-color: #E6E4A3;
+}
 
 #MainTabView > .SSControlView > div:first-child
 {

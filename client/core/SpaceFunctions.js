@@ -6,6 +6,8 @@
 
 var __spaces = {};
 var __focusedSpace = null;
+var __installedSpaces = null;
+var __installedSpacesDataProvider = null;
 
 /*
 Function: SSLoadSpace
@@ -169,7 +171,6 @@ function SSGetSpaceAttributes(space)
 }
 
 /*
-
 Function: SSInstallSpace
   Loads the JavaScript source of a Space, then loads the space into memory.
   The source URL is saved in the 'installed' object for future reference.
@@ -198,9 +199,10 @@ function SSInstallSpace(space)
         };
       }
       
-      __installed[space] = attrs;
+      var installed = SSInstalledSpaces();
+      installed[space] = attrs;
       
-      ShiftSpace.User.setPreference('installed', SSInstalledSpaces());
+      SSSetInstalledSpaces(installed);
       SSLoadSpace(space, function() {
         alert(space + " space installed.");
         SSFireEvent('onSpaceInstall', space);
@@ -221,8 +223,19 @@ function SSUninstallSpace(spaceName)
 {
   var url = SSURLForSpace(spaceName);
   SSRemoveSpace(spaceName);
-  delete __installed[spaceName];
-  ShiftSpace.User.setPreference('installed', SSInstalledSpaces());
+  var installed = SSInstalledSpaces();
+
+  delete installed[spaceName];
+
+  if($H(installed).getLength() == 0)
+  {
+    SSSetInstalledSpaces(null);
+  }
+  else
+  {
+    SSSetInstalledSpaces(installed);    
+  }
+
   SSClearCache(url);
   // let everyone else know
   SSFireEvent('onSpaceUninstall', spaceName);
@@ -230,14 +243,17 @@ function SSUninstallSpace(spaceName)
 
 function SSSetInstalledSpaces(installed)
 {
-  SSLog('SSSetInstalledSpaces', SSLogForce);
-  SSLog(installed, SSLogForce);
-  __installed = installed;
+  __installedSpacesDataProvider.setInstalledSpaces(installed);
 }
 
 function SSInstalledSpaces()
 {
-  return __installed;
+  return __installedSpaces || SSDefaultSpaces();
+}
+
+function SSUpdateInstalledSpaces()
+{
+  __installedSpaces = __installedSpacesDataProvider.installedSpaces();
 }
 
 function SSDefaultSpaces()
@@ -247,7 +263,8 @@ function SSDefaultSpaces()
 
 function SSURLForSpace(spaceName)
 {
-  return (__installed[spaceName] && __installed[spaceName].url) || null;
+  var installed = SSInstalledSpaces();
+  return (installed[spaceName] && installed[spaceName].url) || null;
 }
 
 
@@ -257,7 +274,6 @@ function SSUninstallAllSpaces()
   {
     SSUninstallSpace(spaceName);
   }
-  ShiftSpace.User.setPreference('installed', null);
 }
 
 
@@ -397,43 +413,6 @@ function SSSetFocusedSpace(newSpace)
   __focusedSpace = newSpace;
 }
 
-/*
-  Function: SSSetPrefForSpace
-    Set user preference for a space.  Calls ShiftSpace.User.setPreference.  
-    The preference key will be converted to username.spaceName.preferenceKey.
-
-  Parameters:
-    spaceName - space name as string.
-    pref - string representing the preference name.
-    value - the value to be set.
-*/
-function SSSetPrefForSpace(spaceName, pref, value)
-{
-  if(ShiftSpace.User.isLoggedIn())
-  {
-    var key = [spaceName, pref].join('.');
-    ShiftSpace.User.setPreference(key, value);
-  }
-}
-
-/*
-  Function: SSGetPrefForSpace
-    Retrieve a preference for a space.
-
-  Parameters:
-    spaceName - spaceName as string.
-    pref - the preference key.
-*/
-function SSGetPrefForSpace(spaceName, pref)
-{
-  if(ShiftSpace.User.isLoggedIn())
-  {
-    var key = [spaceName, pref].join('.');
-    var value = ShiftSpace.User.getPreference(key, null);
-    return value;
-  }
-  return null;
-};
 
 /*
   Function: SSSpaceForShift
@@ -464,8 +443,8 @@ function SSCheckForInstallSpaceLinks()
   $$('.SSInstallFirstLink').setStyle('display', 'none');
 
   $$('.SSInstallSpaceLink').each(function(x) {
-   x.setStyle('display', 'block');
-   x.addEvent('click', SSHandleInstallSpaceLink);
+    x.setStyle('display', 'block');
+    x.addEvent('click', SSHandleInstallSpaceLink);
   });
 }
 
@@ -484,4 +463,10 @@ function SSHandleInstallSpaceLink(_evt)
 function SSGetInfoForInstalledSpace(spaceName, callback)
 {
   // fetch data for the space
+}
+
+
+function SSSetInstalledSpacesDataProvider(dataProvider)
+{
+  __installedSpacesDataProvider = dataProvider;
 }

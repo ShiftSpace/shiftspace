@@ -1,7 +1,6 @@
 // ==Builder==
 // @uiclass
 // @optional
-// @name              SSListView
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSView, SSCell
 // ==/Builder==
@@ -13,9 +12,9 @@
 var SSListViewError = SSException;
 
 SSListViewError.OutOfBounds = new Class({
-  name:"SSListViewError.OutOfBounds",
   Extends: SSListViewError,
-  Implements: SSExceptionPrinter
+  Implements: SSExceptionPrinter,
+  name:"SSListViewError.OutOfBounds"
 });
 
 // ====================
@@ -28,10 +27,10 @@ SSListViewError.OutOfBounds = new Class({
   */
 
 var SSListView = new Class({
-  name: "SSListView",
-  
+
   Extends: SSView,
-  
+  name: "SSListView",
+    
   defaults: function()
   {
     return $merge(this.parent(), {
