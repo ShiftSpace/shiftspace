@@ -19,7 +19,14 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
+
+    /*
     SSAddObserver(this, 'showNotifier', this.show.bind(this));
+    SSAddObserver(this, 'hideNotifier', this.hide.bind(this));
+
+    SSAddObserver(this, 'openNotifier', this.open.bind(this));
+    SSAddObserver(this, 'closeNotifier', this.close.bind(this));
+    */
   },
   
   
@@ -45,12 +52,9 @@ var SSNotifierView = new Class({
   handleSync: function()
   {
     ShiftSpace.User.getShifts(function(shifts) {
-      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
       if(shifts && shifts.length > 0)
       {
-        SSLog('>>>>>>>>>>>>>>>>>>>> upate notifier!', SSLogForce);
         this.show();
-
       }
     }.bind(this));
   },
@@ -58,14 +62,12 @@ var SSNotifierView = new Class({
   
   handleLogin: function()
   {
-    SSLog('handleLogin!', SSLogForce);
     this.updateControls();
   },
   
   
   handleLogout: function()
   {
-    SSLog('handleLogout', SSLogForce);
     this.updateControls();
   },
   
@@ -142,6 +144,28 @@ var SSNotifierView = new Class({
         ShiftSpace.Console.showLogin();
       }
     }.bind(this));
+    
+    window.addEvent('keyup', function(_evt) {
+      var evt = new Event(_evt);
+      if(evt.key == 'shift') this.handleKeyUp.bind(this, [evt]);
+    }.bind(this));
+
+    window.addEvent('keydown', function(_evt) {
+      var evt = new Event(_evt);
+      if(evt.key == 'shift') this.handleKeyDown.bind(this, [evt]);
+    }.bind(this));
+  },
+  
+  
+  handleKeyUp: function(evt)
+  {
+    
+  },
+  
+  
+  handleKeyDown: function(evt)
+  {
+    
   },
   
   
@@ -229,7 +253,6 @@ var SSNotifierView = new Class({
       }.bind(this),
       onComplete: function()
       {
-        if(this.isVisible()) this.hideTimer = this.hide.delay(3000, this); 
       }.bind(this)
     });
     
