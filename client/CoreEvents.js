@@ -24,7 +24,7 @@ function SSKeyDownHandler(_event)
   var event = new Event(_event);
   var now = new Date();
 
-  SSLog('SSKeyDownHandler');
+  SSLog('SSKeyDownHandler', SSLogForce);
 
   // Try to prevent accidental shift+space activation by requiring a 500ms
   // lull since the last keypress
@@ -50,6 +50,7 @@ function SSKeyDownHandler(_event)
     {
       __keyState.shiftMenuShown = true;
       ShiftSpace.ShiftMenu.show(__keyState.x, __keyState.y);
+      SSPostNotification('showNotifier');
     }
   }
 
@@ -113,6 +114,9 @@ function SSKeyDownHandler(_event)
 function SSKeyUpHandler(_event) 
 {
   var event = new Event(_event);
+  
+  SSLog('SSKeyUpHandler', SSLogForce);
+  
   // If the user is letting go of the shift key, hide the menu and reset
   if (event.code == 16) 
   {

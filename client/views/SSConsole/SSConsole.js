@@ -334,7 +334,7 @@ var SSConsole = new Class({
     // finish initialization after iframe load
     this.element.addEvent('load', function() {
       var context = this.element.contentWindow;
-
+      
       // under GM not wrapped, erg - David
       if(!context.$)
       {

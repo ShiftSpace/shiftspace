@@ -6,6 +6,7 @@
   border: none;
   height: 35px;
   overflow: hidden;
+  width: 200px;
 }
 
 .SSNotifierOpen
@@ -16,4 +17,14 @@
 .SSNotifierClosed
 {
   width: 200px;
+}
+
+.SSNotifierHidden
+{
+  margin-left: -200px;
+}
+
+.SSNotifierVisible
+{
+  margin-left: 0px;
 }
