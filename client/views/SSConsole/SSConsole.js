@@ -68,6 +68,12 @@ var SSConsole = new Class({
   },
   
   
+  isVisible: function()
+  {
+    return !this.element.hasClass('SSDisplayNone');
+  },
+  
+  
   show: function()
   {
     this.element.removeClass('SSDisplayNone');
@@ -312,6 +318,7 @@ var SSConsole = new Class({
   
   showLogin: function()
   {
+    if(!this.isVisible()) this.show();
     // select the login tab view
     this.outlets().get('MainTabView').selectTabByName('LoginTabView');
   },
@@ -338,6 +345,8 @@ var SSConsole = new Class({
     this.element = new IFrame({
       id: 'SSConsole'
     });
+    this.element.addClass('SSDisplayNone');
+    
     // since we're creating the frame via code we need to hook up the controller
     // reference manually
     SSSetControllerForNode(this, this.element);

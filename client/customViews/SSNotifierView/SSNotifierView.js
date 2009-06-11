@@ -150,12 +150,12 @@ var SSNotifierView = new Class({
       }
     }.bind(this));
     
-    window.addEvent('keyup', function(_evt) {
+    SSAddEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
       if(evt.key == 'shift') this.handleKeyUp(evt);
     }.bind(this));
 
-    window.addEvent('keydown', function(_evt) {
+    SSAddEvent('keydown', function(_evt) {
       var evt = new Event(_evt);
       if(evt.key == 'shift') this.handleKeyDown(evt);
     }.bind(this));
@@ -227,6 +227,8 @@ var SSNotifierView = new Class({
   'close': function()
   {
     var now = new Date();
+    
+    if(ShiftSpace.Console.isVisible()) return;
     
     if(this.isOpen() && !this.isAnimating())
     {

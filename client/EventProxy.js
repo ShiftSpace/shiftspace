@@ -208,7 +208,7 @@ function SSFlushNotificationQueueForObject(object)
     callback - a function.
 
   See also:
-    SSFireEvent
+    SSPostNotification
 */
 var __listeners = $H();
 function SSAddEvent(eventType, callback)
@@ -237,7 +237,11 @@ function SSRemoveEvent(eventType, callback)
 */
 function SSFireEvent(eventType, eventData) 
 {
-  __listeners[eventType].each(function(fn) {
-    fn(eventData);
-  });
+  var callbacks = __listeners[eventType];
+  if(callbacks) 
+  {
+    callbacks.each(function(fn) {
+      fn(eventData);
+    });
+  }
 };

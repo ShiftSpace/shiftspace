@@ -86,8 +86,16 @@ var SSFramedView = new Class({
     var doc = context.document;
     
     // forward key up and down events to parent window
-    context.addEvent('keyup', SSFireEvent.partial('keyup'));
-    context.addEvent('keydown', SSFireEvent.partial('keydown'));
+    context.addEvent('keyup', function(evt) {
+      SSLog('SSFramedView keyup event', SSLogForce);
+      evt = new Event(evt);
+      SSFireEvent('keyup', evt);
+    });
+    context.addEvent('keydown', function(evt) {
+      SSLog('SSFramedView keydown event', SSLogForce);
+      evt = new Event(evt);
+      SSFireEvent('keydown', evt); 
+    });
     
     // store the name on the window for debugging
     context.__ssname = this.element.getProperty('id');
