@@ -3,6 +3,8 @@
 // @package        System_
 // ==/Builder==
 
+Event.Keys.shift = 16;
+
 Array.implement({
   first: function() {
     return this[0];
