@@ -9,7 +9,6 @@
 // INCLUDE PACKAGE System
 // INCLUDE PACKAGE ErrorHandling
 // INCLUDE PACKAGE Internationalization
-// INCLUDE PACKAGE EventHandling
 // INCLUDE PACKAGE UtilitiesExtras
 // INCLUDE PACKAGE Core
 // INCLUDE PACKAGE Pinning

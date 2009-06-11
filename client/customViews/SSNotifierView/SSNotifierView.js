@@ -30,7 +30,6 @@ var SSNotifierView = new Class({
   
   onConsoleShow: function()
   {
-    SSLog('onConsoleShow', SSLogForce);
     this.clearTimers();
     this.show(false);
     this.open(false);
@@ -73,7 +72,7 @@ var SSNotifierView = new Class({
   },
   
   
-  hide: function()
+  hide: function(animate)
   {
     if(ShiftSpace.Console.isVisible()) return;
     this.showFx.start('.SSNotifierHidden');
@@ -83,7 +82,7 @@ var SSNotifierView = new Class({
   hideComplete: function()
   {
     this.element.setStyles({
-      marginLeft: null
+      marginLeft: ""
     });
     this.element.removeClass('SSNotifierVisible');
     this.element.addClass('SSNotifierHidden');
@@ -294,7 +293,6 @@ var SSNotifierView = new Class({
   'close': function(animate)
   {
     var now = new Date();
-    
     if(ShiftSpace.Console.isVisible()) return;
     
     if(this.isOpen() && !this.isAnimating())
@@ -385,7 +383,7 @@ var SSNotifierView = new Class({
         {
           this.hideComplete();
         }
-        if(!this.shiftIsDown())
+        if(!this.shiftIsDown() && this.isVisible())
         {
           this.hideTimer = this.hide.delay(3000, this);
         }
