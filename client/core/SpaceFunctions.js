@@ -205,7 +205,7 @@ function SSInstallSpace(space)
       SSSetInstalledSpaces(installed);
       SSLoadSpace(space, function() {
         alert(space + " space installed.");
-        SSFireEvent('onSpaceInstall', space);
+        SSPostNotification('onSpaceInstall', space);
       });
       
     });
@@ -238,7 +238,7 @@ function SSUninstallSpace(spaceName)
 
   SSClearCache(url);
   // let everyone else know
-  SSFireEvent('onSpaceUninstall', spaceName);
+  SSPostNotification('onSpaceUninstall', spaceName);
 };
 
 function SSSetInstalledSpaces(installed)

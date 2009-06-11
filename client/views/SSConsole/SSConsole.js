@@ -77,12 +77,14 @@ var SSConsole = new Class({
   show: function()
   {
     this.element.removeClass('SSDisplayNone');
+    SSPostNotification('onConsoleShow');
   },
   
   
   hide: function()
   {
     this.element.addClass('SSDisplayNone');
+    SSPostNotification('onConsoleHide');
   },
   
   
@@ -378,9 +380,61 @@ var SSConsole = new Class({
       
       // create the resizer
       this.initResizer();
+      this.attachEvents();
       
       SSPostNotification(SSConsoleIsReadyNotification, this);
     }.bind(this));
+  },
+  
+  
+  attachEvents: function()
+  {
+    SSAddEvent('keydown', this.handleKeyDown.bind(this));
+    SSAddEvent('keyup', this.handleKeyUp.bind(this));
+  },
+  
+  
+  handleKeyDown: function(evt)
+  {
+    evt = new Event(evt);
+    if(evt.key == 'shift')
+    {
+      this.shiftDownTime = $time();
+      this.shiftDown = true;
+    }
+  },
+  
+  
+  handleKeyUp: function(evt)
+  {
+    evt = new Event(evt);
+    
+    if(this.shiftDown)
+    {
+      var now = $time();
+      var delta = now - this.shiftDownTime;
+    }
+    
+    if(evt.key == 'shift')
+    {
+      this.shiftDown = false;
+    }
+    
+    if(this.shiftDown && 
+       evt.key == 'space' &&
+       delta >= 300)
+    {
+      if(!this.isVisible())
+      {
+        this.show();
+      }
+      else
+      {
+        this.hide();
+      }
+      evt.preventDefault();
+      evt.stop();
+    }
   },
   
   

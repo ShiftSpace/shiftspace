@@ -23,25 +23,70 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
+    SSAddObserver(this, 'onConsoleShow', this.onConsoleShow.bind(this));
+    SSAddObserver(this, 'onConsoleHide', this.onConsoleHide.bind(this));
   },
   
   
-  show: function()
+  onConsoleShow: function()
   {
-    if(this.showFx)
+    SSLog('onConsoleShow', SSLogForce);
+    this.clearTimers();
+    this.show(false);
+    this.open(false);
+  },
+  
+  
+  onConsoleHide: function()
+  {
+    
+  },
+  
+  
+  show: function(animate)
+  {
+    if(animate == false)
     {
-      if(!this.isVisible()) this.showFx.start('.SSNotifierVisible');
+      this.showComplete();
     }
     else
     {
-      SSAddObserver(this, 'onNotifierLoad', this.show.bind(this));
+      if(this.showFx)
+      {
+        if(!this.isVisible()) this.showFx.start('.SSNotifierVisible');
+      }
+      else
+      {
+        SSAddObserver(this, 'onNotifierLoad', this.show.bind(this));
+      }
     }
+  },
+  
+  
+  showComplete: function()
+  {
+    this.element.setStyles({
+      marginLeft: null
+    });
+    this.element.removeClass('SSNotifierHidden');
+    this.element.addClass('SSNotifierVisible');
   },
   
   
   hide: function()
   {
+    if(ShiftSpace.Console.isVisible()) return;
     this.showFx.start('.SSNotifierHidden');
+  },
+  
+  
+  hideComplete: function()
+  {
+    this.element.setStyles({
+      marginLeft: null
+    });
+    this.element.removeClass('SSNotifierVisible');
+    this.element.addClass('SSNotifierHidden');
   },
   
   
@@ -135,7 +180,7 @@ var SSNotifierView = new Class({
       }
       else
       {
-        SSLog('shift is down', SSLogForce);
+        //SSLog('shift is down', SSLogForce);
       }
     }.bind(this));
     
@@ -159,36 +204,27 @@ var SSNotifierView = new Class({
       var evt = new Event(_evt);
       if(evt.key == 'shift') this.handleKeyDown(evt);
     }.bind(this));
+    
+    this.SSNotifierControlsView.addEvent('click', function() {
+      ShiftSpace.Console.show();
+    }.bind(this));
   },
   
   
-  handleKeyUp: function(evt)
+  clearTimers: function(evt)
   {
-    this.setShiftIsDown(false);
-
     $clear(this.closeTimer);
     $clear(this.hideTimer);
-
-    if(this.isOpen())
-    {
-      SSLog('close!', SSLogForce);
-      this.close();
-    }
-    else if(this.isVisible())
-    {
-      SSLog('hide!', SSLogForce);
-      this.hide();
-    }
+    $clear(this.showTimer);
+    $clear(this.openTimer);
   },
   
   
   handleKeyDown: function(evt)
   {
     this.setShiftIsDown(true);
-
-    $clear(this.closeTimer);
-    $clear(this.hideTimer);
-
+    this.clearTimers();
+    
     if(!this.isAnimating())
     {
       if(!this.isVisible())
@@ -197,7 +233,7 @@ var SSNotifierView = new Class({
           this.show();
           this.openTimer = function() {
             this.open();
-          }.delay(1000, this);
+          }.delay(2000, this);
         }.delay(500, this);
       }
       else if(this.isVisible() && !this.isOpen())
@@ -210,13 +246,36 @@ var SSNotifierView = new Class({
   },
   
   
-  'open': function()
+  handleKeyUp: function(evt)
+  {
+    this.setShiftIsDown(false);
+    this.clearTimers();
+
+    if(!this.isAnimating())
+    {
+      if(this.isOpen())
+      {
+        this.close();
+      }
+      else if(this.isVisible())
+      {
+        this.hide();
+      }
+    }
+  },
+  
+  
+  'open': function(animate)
   {
     this.openTime = new Date();
     $clear(this.closeTimer);
     $clear(this.hideTimer);
 
-    if(!this.isOpen() && !this.isAnimating())
+    if(animate == false)
+    {
+      this.openComplete();
+    }
+    else if(!this.isOpen() && !this.isAnimating())
     {
       this.openFx.start('width', window.getSize().x);
       this.setIsOpen(true);
@@ -224,7 +283,15 @@ var SSNotifierView = new Class({
   },
   
   
-  'close': function()
+  openComplete: function()
+  {
+    this.element.addClass('SSNotifierOpen');
+    this.element.setStyle('width', null);
+    this.showControls();
+  },
+  
+  
+  'close': function(animate)
   {
     var now = new Date();
     
@@ -244,10 +311,6 @@ var SSNotifierView = new Class({
         $clear(this.closeTimer);
         this.closeTimer = this.close.delay(3000-delta, this);
       }
-    }
-    else
-    {
-      SSLog('not open or is animating', SSLogForce);
     }
   },
   
@@ -308,10 +371,20 @@ var SSNotifierView = new Class({
       transition: Fx.Transitions.Cubic.easeOut,
       onStart: function()
       {
+        this.setIsAnimating(true);
         this.setIsVisible(!this.isVisible());
       }.bind(this),
       onComplete: function()
       {
+        this.setIsAnimating(false);
+        if(this.isVisible())
+        {
+          this.showComplete();
+        }
+        else
+        {
+          this.hideComplete();
+        }
         if(!this.shiftIsDown())
         {
           this.hideTimer = this.hide.delay(3000, this);
@@ -328,10 +401,8 @@ var SSNotifierView = new Class({
       }.bind(this),
       onComplete: function()
       {
-        this.element.addClass('SSNotifierOpen');
-        this.element.setStyle('width', null);
+        this.openComplete();
         this.setIsAnimating(false);
-        this.showControls();
       }.bind(this)
     });
     

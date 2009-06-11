@@ -19,6 +19,8 @@
 .SSNotifier .SSNotifierSubView.SSActive, .SSNotifierViewFrameBody .SSNotifierSubView.SSActive
 {
   display: block;
+  width: 100%;
+  height: 100%;
 }
 
 #SSSelectSpace
