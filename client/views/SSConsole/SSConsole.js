@@ -39,11 +39,11 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     
     // listen for shift events
-    SSAddEvent('onShiftSave', this.refreshTableViews.bind(this));
-    SSAddEvent('onShiftHide', this.deselectShift.bind(this));
+    SSAddObserver(this, 'onShiftSave', this.refreshTableViews.bind(this));
+    SSAddObserver(this, 'onShiftHide', this.deselectShift.bind(this));
     
     // space install event
-    SSAddEvent('onSpaceInstall', this.onSpaceInstall.bind(this));
+    SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
 
     // listen for global events as well
 
@@ -65,6 +65,18 @@ var SSConsole = new Class({
       dataNormalizer: this.legacyNormalizer,
       requiredProperties: ['username']
     });
+  },
+  
+  
+  show: function()
+  {
+    this.element.removeClass('SSDisplayNone');
+  },
+  
+  
+  hide: function()
+  {
+    this.element.addClass('SSDisplayNone');
   },
   
   

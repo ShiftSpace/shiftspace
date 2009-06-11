@@ -11,12 +11,6 @@ window.addEvent('mousemove', SSMouseMoveHandler.bind(this));
 
 // Used by keyboard handlers to maintain state information
 var __keyState = {};
-/*
-var __showNotifierTimer;
-var __notiferIsVisible = false;
-var __openNotifierTimer;
-var __notiferIsOpen = false;
-*/
 
 // add shift to key
 Event.Keys.shift = 16;
@@ -47,20 +41,6 @@ function SSKeyDownHandler(_event)
   {
     // Remember when last non-shift keypress occurred
     __keyState.keyDownTime = now.getTime();
-
-    // set up show and open timers for the notifier
-    /*
-    __showNotifierTimer = function() {
-      __showNotifierTimer = null;
-      SSPostNotification('showNotifier');
-      __notifierIsVisible = true;
-      __openNotifierTimer = function() {
-        __openNotifierTimer = null;
-        SSPostNotification('openNotifier');
-        __notifierIsShown = true;
-      }.delay(1000);
-    }.delay(500);
-    */
   }
   else if (!__keyState.shiftPressed)
   {
@@ -142,32 +122,6 @@ function SSKeyUpHandler(_event)
     __keyState.ignoreSubsequentSpaces = false;
 
     ShiftSpace.ShiftMenu.hide();
-    
-    // clear the timers and null them
-    /*
-    if(__showNotifierTimer)
-    {
-      $clear(__showNotifierTimer);
-      __showNotifierTimer = null;
-    }
-
-    if(__openNotifierTimer)
-    {
-      $clear(__openNotifierTimer);
-      __openNotifierTimer = null;
-    }
-    
-    // close the notifier
-    if(__notifierIsShown)
-    {
-      SSPostNotification('closeNotifier');
-    }
-    else if(__notifierIsVisible)
-    {
-      SSPostNotification('hideNotifier');
-    }
-    */
-    
   }
   
   return true;

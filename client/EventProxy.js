@@ -201,7 +201,7 @@ function SSFlushNotificationQueueForObject(object)
 
 /*
   Function: SSAddEvent
-    Adds a Mootools style custom event to the ShiftSpace object.
+    Add an event handler to the window.
 
   Parameters:
     eventType - a event type as string.
@@ -210,74 +210,34 @@ function SSFlushNotificationQueueForObject(object)
   See also:
     SSFireEvent
 */
-var __sleepingObjects = $H();
-function SSAddEvent(eventType, callback, anObject)
+var __listeners = $H();
+function SSAddEvent(eventType, callback)
 {
-  if(anObject && anObject.isAwake && !anObject.isAwake())
+  if(!__listeners[eventType])
   {
-    var objId = anObject.getId();
-    if(!__sleepingObjects.get(objId))
-    {
-      __sleepingObjects.set(anObject.getId(), $H({
-        object: anObject,
-        events: $H()
-      }));
-    }
-    var eventsHash = __sleepingObjects.get(objId).get('events');
-    if(!eventsHash.get(eventType))
-    {
-      eventsHash.set(eventType, []);
-    }
-    eventsHash.get(eventType).push(callback);
+    __listeners[eventType] = [];
   }
-  else
-  {
-    __eventProxy.addEvent(eventType, callback);
-  }
+  __listeners[eventType].push(callback);
+  window.addEvent(eventType, callback);
 };
+
+function SSRemoveEvent(eventType, callback)
+{
+  __listeners[eventType].remove(callback);
+  window.removeEvent(eventType, callback);
+}
 
 /*
   Function: SSFireEvent
-    A function to fire events.
+    A function to fire events on the window - for event forwarding.
 
   Parameters:
     eventType - event type as string.
-    data - any extra event data that should be passed to the event listener.
+    data - event data
 */
-function SSFireEvent(eventType, data) 
+function SSFireEvent(eventType, eventData) 
 {
-  __eventProxy.fireEvent(eventType, data);
-  
-  var awakeNow = __sleepingObjects.filter(function(objectHash, objectName) {
-    return objectHash.get('object').isAwake();
+  __listeners[eventType].each(function(fn) {
+    fn(eventData);
   });
-  
-  awakeNow.each(function(objectHash, objectName) {
-    SSAddEventsAndFire(eventType, objectHash.get('events').get(eventType));
-  });
-  
-  var stillSleeping = __sleepingObjects.filter(function(objectHash, objectName) {
-    return !objectHash.get('object').isAwake();
-  });
-  
-  stillSleeping.each(function(objectHash, objectName) {
-    objectHash.get('object').addEvent('onAwake', function() {
-      SSAddEventsAndFire(eventType, objectHash.get('events').get(eventType));
-    });
-  });
-  
-  __sleepingObjects = stillSleeping;
 };
-
-// takes and event type and a list of event callbacks
-// adds each callback as well as executing
-function SSAddEventsAndFire(eventType, events)
-{
-  if(events && events.length > 0)
-  {
-    events.each(function(callback) {
-      SSAddEvent(eventType, callback);
-      callback();
-    });
-  }
-}

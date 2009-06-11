@@ -28,7 +28,7 @@ plugins.attempt = function(options)
   {
     SSLog('Load plugin ' + options.name, SSLogPlugin);
     // Listen for the real load event
-    SSAddEvent('onPluginLoad', function(plugin) {
+    SSAddObserver('onPluginLoad', function(plugin) {
       SSLog(options.name + ' plugin loaded ', SSLogPlugin);
       if(plugin.attributes.name == options.name) execute();
     });
@@ -156,7 +156,7 @@ function SSRegisterPlugin(plugin)
           if(includeLoadCount == includesTotal) 
           {
             //SSLog('onPluginLoad');
-            SSFireEvent('onPluginLoad', plugin);
+            SSPostNotification('onPluginLoad', plugin);
           }
         }, null);
       });
@@ -165,12 +165,12 @@ function SSRegisterPlugin(plugin)
   else
   {
     // Notify listeners of plugin load
-    SSFireEvent('onPluginLoad', plugin);
+    SSPostNotification('onPluginLoad', plugin);
   }
 
   // listen for plugin status changes and pass them on
   plugin.addEvent('onPluginStatusChange', function(evt) {
-    SSFireEvent('onPluginStatusChange', evt);
+    SSPostNotification('onPluginStatusChange', evt);
   });
 
   // This exposes each space instance to the console

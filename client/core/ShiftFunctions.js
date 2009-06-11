@@ -282,7 +282,7 @@ function SSEditShift(shiftId)
      // focus the shift
      SSFocusShift(shiftId);
 
-     SSFireEvent('onShiftEdit', shiftId);
+     SSPostNotification('onShiftEdit', shiftId);
    }
    else
    {
@@ -372,7 +372,7 @@ function SSSaveNewShift(shiftJson)
     
     // fire an event with the real id
     SSLog('here we go!');
-    SSFireEvent('onShiftSave', shiftJson.id);
+    SSPostNotification('onShiftSave', shiftJson.id);
   });
 }
 
@@ -880,7 +880,7 @@ function SSSetShiftStatus(shiftId, newStatus)
   };
   SSServerCall('shift.update', params, function() {
     SSLog('>>>>>>>>>>>>>>>>>>>>>>>> shiftId ' + shiftId);
-    SSFireEvent('onShiftUpdate', shiftId);
+    SSPostNotification('onShiftUpdate', shiftId);
   });
 }
 

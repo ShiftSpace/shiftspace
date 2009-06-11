@@ -29,8 +29,8 @@ var ShiftMenu = new Class({
     SSAddObserver(this, "onSynch", this.buildMenu.bind(this));
     
     // we want to know about install and uninstall events
-    SSAddEvent('onSpaceInstall', this.addSpace.bind(this));
-    SSAddEvent('onSpaceUninstall', this.removeSpace.bind(this));
+    SSAddObserver(this, 'onSpaceInstall', this.addSpace.bind(this));
+    SSAddObserver(this, 'onSpaceUninstall', this.removeSpace.bind(this));
   },
   
   /*

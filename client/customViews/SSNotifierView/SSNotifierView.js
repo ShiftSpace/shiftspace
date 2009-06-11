@@ -23,14 +23,6 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
-
-    /*
-    SSAddObserver(this, 'showNotifier', this.show.bind(this));
-    SSAddObserver(this, 'hideNotifier', this.hide.bind(this));
-
-    SSAddObserver(this, 'openNotifier', this.open.bind(this));
-    SSAddObserver(this, 'closeNotifier', this.close.bind(this));
-    */
   },
   
   
@@ -136,7 +128,16 @@ var SSNotifierView = new Class({
   attachEvents: function()
   {
     this.document().body.addEvent('mouseenter', this['open'].bind(this));
-    this.document().body.addEvent('mouseleave', this['close'].bind(this));
+    this.document().body.addEvent('mouseleave', function() {
+      if(!this.shiftIsDown())
+      {
+        this['close']();
+      }
+      else
+      {
+        SSLog('shift is down', SSLogForce);
+      }
+    }.bind(this));
     
     this.SSLogInOut.addEvent('click', function() {
       if(ShiftSpace.User.isLoggedIn())
@@ -170,10 +171,12 @@ var SSNotifierView = new Class({
 
     if(this.isOpen())
     {
+      SSLog('close!', SSLogForce);
       this.close();
     }
     else if(this.isVisible())
     {
+      SSLog('hide!', SSLogForce);
       this.hide();
     }
   },
@@ -239,6 +242,10 @@ var SSNotifierView = new Class({
         $clear(this.closeTimer);
         this.closeTimer = this.close.delay(3000-delta, this);
       }
+    }
+    else
+    {
+      SSLog('not open or is animating', SSLogForce);
     }
   },
   
