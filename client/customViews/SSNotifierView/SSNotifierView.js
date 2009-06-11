@@ -13,7 +13,10 @@ var SSNotifierView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     this.setIsOpen(false);
+    this.setIsVisible(false);
+    
     this.setIsAnimating(false);
     this.setShiftIsDown(false);
     
@@ -148,37 +151,58 @@ var SSNotifierView = new Class({
     
     window.addEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
-      SSLog('keyup', SSLogForce);
-      if(evt.key == 'shift') this.handleKeyUp.bind(this, [evt]);
+      if(evt.key == 'shift') this.handleKeyUp(evt);
     }.bind(this));
 
     window.addEvent('keydown', function(_evt) {
       var evt = new Event(_evt);
-      SSLog('keydown', SSLogForce);
-      if(evt.key == 'shift') this.handleKeyDown.bind(this, [evt]);
+      if(evt.key == 'shift') this.handleKeyDown(evt);
     }.bind(this));
   },
   
   
   handleKeyUp: function(evt)
   {
-    SSLog('handleKeyup ' + evt, SSLogForce);
     this.setShiftIsDown(false);
+
+    $clear(this.closeTimer);
+    $clear(this.hideTimer);
+
+    if(this.isOpen())
+    {
+      this.close();
+    }
+    else if(this.isVisible())
+    {
+      this.hide();
+    }
   },
   
   
   handleKeyDown: function(evt)
   {
-    SSLog('handleKeyDown ' + evt, SSLogForce);
     this.setShiftIsDown(true);
 
-    if(!this.isVisible())
+    $clear(this.closeTimer);
+    $clear(this.hideTimer);
+
+    if(!this.isAnimating())
     {
-      
-    }
-    else
-    {
-      
+      if(!this.isVisible())
+      {
+        this.showTimer = function() {
+          this.show();
+          this.openTimer = function() {
+            this.open();
+          }.delay(1000, this);
+        }.delay(500, this);
+      }
+      else if(this.isVisible() && !this.isOpen())
+      {
+        this.openTimer = function() {
+          this.open();
+        }.delay(500, this)
+      }
     }
   },
   
@@ -279,7 +303,10 @@ var SSNotifierView = new Class({
       }.bind(this),
       onComplete: function()
       {
-        if(!this.shiftIsDown()) this.hide.delay(3000, this);
+        if(!this.shiftIsDown())
+        {
+          this.hideTimer = this.hide.delay(3000, this);
+        }
       }.bind(this)
     });
     
@@ -314,7 +341,10 @@ var SSNotifierView = new Class({
       onComplete: function()
       {
         this.setIsAnimating(false);
-        this.hideTimer = this.hide.delay(3000, this);
+        if(!this.shiftIsDown())
+        {
+          this.hideTimer = this.hide.delay(3000, this);
+        }
       }.bind(this)
     });
   },
@@ -322,7 +352,6 @@ var SSNotifierView = new Class({
   
   buildInterface: function()
   {
-    SSLog('buildInterface', SSLogForce);
     this.parent();
     
     this.initAnimations();
