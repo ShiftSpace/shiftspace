@@ -1,0 +1,11 @@
+.SSPublishPane
+{
+  position:; absolute;
+  top: 0px;
+  right: 0px;
+  width: 250px;
+  bottom: 0px;
+  
+  z-index: 2;
+  background-color: blue;
+}

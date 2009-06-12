@@ -146,6 +146,7 @@ class SandalphonCompiler:
     
             
     def uiclassDeps(self, uiclass, result=[]):
+        # TODO - throw error if uiclass not found! David 7/12/09
         # load any css for any dependencies as well
         entry = self.files[uiclass]
         
@@ -183,6 +184,7 @@ class SandalphonCompiler:
         viewDirectory = "../client/views/"
 
         toLoad = seen.keys()
+        # TODO: doesn't look in custom view, we should see if it is a custom view - David 7/12/09
         [self.addCSSForHTMLPath(os.path.join(os.path.join(viewDirectory, item), item+".css")) for item in toLoad]
 
     
