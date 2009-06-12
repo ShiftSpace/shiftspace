@@ -46,7 +46,7 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
     
     // listen for events that open publish view
-    SSAddObserver(this, 'userDidClickCheckboxForRowInTableView', this.showPublishView.bind(this));
+    SSAddObserver(this, 'userDidClickCheckboxForRowInTableView', this.userDidClickCheckboxForRowInTableView.bind(this));
 
     // listen for global events as well
 
@@ -119,6 +119,10 @@ var SSConsole = new Class({
       }
       // FIXME: postpone until after SSSynch - David 5/27/2009
       if(this.outlets().get('SSInstalledSpaces')) this.initInstalledSpacesListView();
+      if(this.outlets()['PublishPane'])
+      {
+        this.PublishPane = this.outlets()['PublishPane'];
+      }
       
       if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled())
       {
@@ -632,15 +636,18 @@ var SSConsole = new Class({
   },
   
   
-  showPublishView: function()
+  userDidClickCheckboxForRowInTableView: function(data)
   {
-    SSLog('showPublishView', SSLogForce);
-  },
-  
-  
-  hidePublishView: function()
-  {
+    var checkedRows = data.tableView.checkedRows();
     
+    if(checkedRows.length > 0)
+    {
+      this.PublishPane.show();
+    }
+    else
+    {
+      this.PublishPane.hide();
+    }
   }
 
 });

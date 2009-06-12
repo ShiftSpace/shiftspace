@@ -52,8 +52,8 @@ var SSCustomTableRow = new Class({
       // lock the element
       var checked = evt.target.getProperty('checked');
       SSPostNotification('userDidClickCheckboxForRowInTableView', {
-        tableView: this.delegate,
-        rowIndex: this.rowForNode(evt.target)
+        tableView: this.delegate(),
+        rowIndex: this.delegate().indexOfRow(this.rowForNode(evt.target))
       });
       // unlock the element
     }.bind(this));

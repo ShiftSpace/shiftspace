@@ -14,6 +14,11 @@ var ShiftsTableView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+  },
+  
+  checkedRows: function()
+  {
+    return this.contentView.getElements('.SSRow input:checked');
   }
 
 });

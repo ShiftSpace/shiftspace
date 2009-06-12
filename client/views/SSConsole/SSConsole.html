@@ -15,8 +15,10 @@
       <!-- End tab buttons -->
     </div>
     
-    <div id="FilterPane" uiclass="SSFilterPane">
-      
+    <div id="FilterPane" 
+         class="SSFilterPane SSDisplayNone" 
+         uiclass="SSFilterPane"
+         outlet="SSConsole">
     </div>
   
     <div class="SSContentView">
@@ -32,9 +34,7 @@
       </div>
     </div>
     
-    <div id="PublishPane" uiclass="SSPublishPane">
-      
-    </div>
+    <?path:../client/views/SSPublishPane/SSPublishPane?>
   
   </div>
   
