@@ -383,6 +383,7 @@ var SSConsole = new Class({
       this.attachEvents();
       
       SSPostNotification(SSConsoleIsReadyNotification, this);
+      this.fireEvent('load', this);
     }.bind(this));
   },
   

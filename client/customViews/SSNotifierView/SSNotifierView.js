@@ -97,6 +97,7 @@ var SSNotifierView = new Class({
     ShiftSpace.User.getShifts(function(shifts) {
       if(shifts && shifts.length > 0)
       {
+        this.SSShiftCount.set('text', shifts.length + ((shifts.length == 1) ? ' shift' : ' shifts'));
         this.show();
       }
     }.bind(this));
@@ -501,5 +502,6 @@ var SSNotifierView = new Class({
     this.attachEvents();
     
     SSPostNotification('onNotifierLoad', this);
+    this.fireEvent('load', this);
   }
 });

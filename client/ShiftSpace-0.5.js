@@ -81,7 +81,7 @@ var ShiftSpace = new (function() {
       
       ShiftSpace.ShiftMenu = new ShiftMenu();
       ShiftSpace.Console = new SSConsole();
-      ShiftSpace.SSNotifier = new SSNotifierView();
+      ShiftSpace.Notifier = new SSNotifierView();
       ShiftSpace.Sandalphon = Sandalphon;
       
       // Add to look up table
@@ -182,7 +182,9 @@ var ShiftSpace = new (function() {
         }
         
         SSUpdateInstalledSpaces();
-        SSPostNotification("onSync");
+        
+        var group = new Group(ShiftSpace.Console, ShiftSpace.Notifier);
+        group.addEvent('load', SSPostNotification.bind(this, ["onSync"]));
       });
     }
 
