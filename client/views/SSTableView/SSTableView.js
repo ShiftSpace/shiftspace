@@ -26,35 +26,24 @@ var SSTableView = new Class({
 
   initialize: function(el, options)
   {
-    SSLog('SSTableView initialize', SSLogViews);
     // need to pass this up to parent
     this.parent(el, options);
 
-    SSLog('SSTableView parent called ' + this.elId(), SSLogViews);
-
     // for speed
-    SSLog('Grab content view');
     this.contentView = this.element.getElement('> .SSScrollView .SSContentView');
     // set the model row
-    SSLog('Extract model row');
     this.setModelRow(this.contentView.getElement('.SSModel').dispose());
     // set the model row controller if there is one
-    SSLog('Set model row controller');
     this.setModelRowController(this.controllerForNode(this.modelRow()));
     // set the column names
-    SSLog('Set table view column names');
     this.setColumnNames(this.element.getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name');}));
     // set the column display titles
-    SSLog('Set column titles');
     this.setColumnTitles(this.element.getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('title');}));
-    SSLog('Initialize column sorting');
     // set up the column orders
     this.initColumnSort();
     // initialize the table header
-    SSLog('Initialize table head');
     this.initTableHead();
     // create resize masks
-    SSLog('Intialize column resizers'); 
     this.initColumnResizers();
 
     // give time for double click
@@ -66,8 +55,6 @@ var SSTableView = new Class({
     this.element.addEvent('dblclick', this.eventDispatch.bind(this));
     // listen for window resize
     window.addEvent('resize', this.refreshColumnHeadings.bind(this));
-    /*window.addEvent('keyup', this.eventDispatch.bind(this));*/
-    SSLog('Finished initializing table view');
   },
 
 
@@ -445,7 +432,6 @@ var SSTableView = new Class({
   {
     if(!this.options.multipleSelection)
     {
-      SSLog('Deselect all!');
       this.deselectAll();
     }
     
@@ -550,10 +536,6 @@ var SSTableView = new Class({
   {
     var rowIndex = this.indexOfRow(row);
     
-    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>');
-    SSLog(row);
-    SSLog(this.rowIsSelected(rowIndex));
-    
     // deslect all if not multiple selection type table
     if(!this.options.multipleSelection)
     {
@@ -563,7 +545,6 @@ var SSTableView = new Class({
     // check for selection toggling
     if(this.options.toggleSelection && this.rowIsSelected(rowIndex))
     {
-      SSLog('deselect');
       this.deselectRow(this.indexOfRow(row));
     }
     else if(!this.rowIsSelected(rowIndex))
@@ -816,14 +797,9 @@ var SSTableView = new Class({
 
   columnChangedForRow: function(row, columnIndex, data)
   {
-    SSLog('columnChangedForRow', SSLogViews);
     if(this.datasource())
     {
       this.datasource().updateRowColumn(this.indexOfRow(row), this.columnNames()[columnIndex], data);
-    }
-    else
-    {
-      SSLog('no datasource', SSLogViews);
     }
   },
 
@@ -833,8 +809,6 @@ var SSTableView = new Class({
   */
   refresh: function()
   {
-    SSLog('SSTableView refresh', SSLogViews);
-
     // empty the content view
     this.contentView.getElement('tbody').empty();
 
