@@ -14,6 +14,7 @@ var FilterPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    SSLog('new FilterPane', SSLogForce);
   }
 
 });

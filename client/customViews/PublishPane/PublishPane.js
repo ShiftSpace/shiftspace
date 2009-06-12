@@ -14,6 +14,7 @@ var PublishPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    SSLog('new PublishPane', SSLogForce);
   }
 
 });
