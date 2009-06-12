@@ -1,29 +1,29 @@
-.SSPostNotification
+.ShiftsTableView
 {
   
 }
 
-.SSPostNotification > .SSScrollView > .SSContentView > colgroup col[name=selected]
+.ShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=selected]
 {
   width: 75px;
 }
 
-.SSPostNotification > .SSScrollView > .SSContentView > colgroup col[name=space]
+.ShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=space]
 {
   width: 150px;
 }
 
-.SSPostNotification > .SSScrollView > .SSContentView > colgroup col[name=summary]
+.ShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=summary]
 {
   width: 200px;
 }
 
-.SSPostNotification > .SSScrollView > .SSContentView > colgroup col[name=username]
+.ShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=username]
 {
   width: 150px;
 }
 
-.SSPostNotification > .SSScrollView > .SSContentView > colgroup col[name=created]
+.ShiftsTableView > .SSScrollView > .SSContentView > colgroup col[name=created]
 {
   width: 150px;
 }
