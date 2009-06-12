@@ -1,5 +1,10 @@
 #PublishPane
 {
-  width: 200px;
-  height: 100%;
+  position:; absolute;
+  top: 0px;
+  right: 0px;
+  width: 250px;
+  bottmo: 0px;
+  
+  background-color: blue;
 }

@@ -93,3 +93,13 @@ body#SSConsoleFrameBody
   right:10px;
   width:100%;
 }
+
+#SSConsole.FilterPaneOpen > .SSContentView, #SSConsoleFrameBody.FilterPaneOpen > .SSContentView
+{
+  left: 140px;
+}
+
+#SSConsole.PublishPaneOpen > .SSContentView, #SSConsoleFrameBody.PublishPaneOpen > .SSContentView
+{
+  right: 250px;
+}
