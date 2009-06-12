@@ -8,7 +8,7 @@
 
 var ShiftsTableView = new Class({
 
-  Extends: SSView,
+  Extends: SSTableView,
   name: "ShiftsTableView",
 
   initialize: function(el, options)

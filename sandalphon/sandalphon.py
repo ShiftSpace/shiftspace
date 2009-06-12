@@ -36,10 +36,14 @@ def elementHasAttribute(element, attrib, value=None):
 
 class SandalphonCompiler:
 
-    def __init__(self):
+    def __init__(self, packages):
         # store paths to interface files
         self.paths = {}
         self.visitedViews = {}
+        
+        self.packages = packages
+        self.files = packages['files']
+        
         # store concatenated CSS file
         self.cssFile = ''
         # regex for template pattern /<\?.+?\?>/g
@@ -139,6 +143,19 @@ class SandalphonCompiler:
             fileHandle.close()
         except IOError:
             pass
+    
+            
+    def uiclassDeps(self, uiclass, result=[]):
+        # load any css for any dependencies as well
+        entry = self.files[uiclass]
+        
+        if entry.has_key('dependencies'):
+            deps = entry['dependencies']
+            for dep in deps:
+                if self.files[dep].has_key('uiclass'):
+                    result.append(dep)
+                    self.uiclassDeps(dep, result)
+        return result
 
     
     def addCSSForUIClasses(self, interfaceFile):
@@ -152,12 +169,17 @@ class SandalphonCompiler:
         # check the root element as well
         if elementHasAttribute(element, "uiclass"):
             uiclasses.append(element.get('uiclass'))
+        
+        depuiclasses = []
+        for uiclass in uiclasses:
+            depuiclasses.extend(self.uiclassDeps(uiclass))
+        uiclasses.extend(depuiclasses)
 
         seen = {}
 
         for item in uiclasses:
             seen[item] = True
-
+        
         viewDirectory = "../client/views/"
 
         toLoad = seen.keys()
@@ -294,8 +316,12 @@ def main(argv):
         print "No input file\n"
         usage()
         sys.exit(2)
-
-    compiler = SandalphonCompiler()
+        
+    # load the packages json file
+    packagesJsonFile = open('../config/packages.json')
+    packages = packagesJsonFile.read()
+    # todo throw error if this isn't there - David
+    compiler = SandalphonCompiler(json.loads(packages))
     compiler.compile(inputFile, outputDirectory, jsonOutput)
 
 
