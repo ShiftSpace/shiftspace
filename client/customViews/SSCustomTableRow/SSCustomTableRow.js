@@ -23,6 +23,10 @@ var SSCustomTableRow = new Class({
     {
       this.initEditTextCell();
     }
+    if(this.outlets().get('actionCell'))
+    {
+      this.initActionCell();
+    }
   },
   
   
@@ -43,9 +47,26 @@ var SSCustomTableRow = new Class({
     var clone = this.parent();
     // readonly property gets lost in cloning for some reason, put it back
     clone.getElement('.SSEditableTextCell').setProperty('readonly', '1');
+    clone.getElement('.SSActionCell').addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      // lock the element
+      var checked = evt.target.getProperty('checked');
+      SSPostNotification('userDidClickCheckboxForRowInTableView', {
+        tableView: this.delegate,
+        rowIndex: this.rowForNode(evt.target)
+      });
+      // unlock the element
+    }.bind(this));
     return clone;
   },
   
+  
+  initActionCell: function()
+  {
+    this.actionCellControl = this.outlets().get('actionCell');
+    SSLog('initActionCell', SSLogForce);
+  },
+
   
   initEditTextCell: function()
   {

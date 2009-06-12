@@ -1,13 +1,27 @@
 <tr class="SSRow SSModel SSCustomTableRow" uiclass='SSCustomTableRow'>
   <td name="selected">
-    <input class="SSActionCell" type="checkbox"></input>
+    <input class="SSActionCell" 
+           type="checkbox"
+           outlet="{
+             name:'actionCell',
+             target:'.SSCustomTableRow'
+           }">
+    </input>
   </td>
   <td name="space">
     <img></img>
     <span></span>
   </td>
   <td name="summary">
-    <input type="text" readonly="1" uiclass="SSEditableTextCell" class="SSEditableTextCell" outlet="{name:'editTextCell', target:'.SSCustomTableRow'}"></input>
+    <input type="text" 
+           readonly="1" 
+           uiclass="SSEditableTextCell" 
+           class="SSEditableTextCell" 
+           outlet="{
+             name:'editTextCell', 
+             target:'.SSCustomTableRow'
+           }">
+    </input>
   </td>
   <td name="username">
     <a class="SSUserLink" target="new" href="#">

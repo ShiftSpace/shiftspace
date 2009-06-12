@@ -44,6 +44,9 @@ var SSConsole = new Class({
     
     // space install event
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
+    
+    // listen for events that open publish view
+    SSAddObserver(this, 'userDidClickCheckboxForRowInTableView', this.showPublishView.bind(this));
 
     // listen for global events as well
 
@@ -626,6 +629,18 @@ var SSConsole = new Class({
     var spaces = SSSpacesByPosition();
     var spaceToRemove = spaces[index];
     SSUninstallSpace(spaceToRemove.name);
+  },
+  
+  
+  showPublishView: function()
+  {
+    SSLog('showPublishView', SSLogForce);
+  },
+  
+  
+  hidePublishView: function()
+  {
+    
   }
 
 });
