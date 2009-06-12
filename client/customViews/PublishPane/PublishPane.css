@@ -4,7 +4,8 @@
   top: 0px;
   right: 0px;
   width: 250px;
-  bottmo: 0px;
+  bottom: 0px;
   
+  z-index: 2;
   background-color: blue;
 }

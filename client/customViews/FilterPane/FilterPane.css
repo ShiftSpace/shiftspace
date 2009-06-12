@@ -1,10 +1,14 @@
-.FilterPane
+/* Different right value for different browsers */
+
+#FilterPane
 {
   position: absolute;
   left: 0px;
   width: 140px;
   top: 0px;
   bottom: 0px;
+  right: 15px;
   
+  z-index: 2;
   background-color: green;
 }

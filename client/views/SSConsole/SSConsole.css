@@ -94,12 +94,7 @@ body#SSConsoleFrameBody
   width:100%;
 }
 
-#SSConsole.FilterPaneOpen > .SSContentView, #SSConsoleFrameBody.FilterPaneOpen > .SSContentView
+#SSConsole.FilterPaneOpen #MainTabView > .SSContentView, #SSConsoleFrameBody.FilterPaneOpen #MainTabView > .SSContentView
 {
   left: 140px;
-}
-
-#SSConsole.PublishPaneOpen > .SSContentView, #SSConsoleFrameBody.PublishPaneOpen > .SSContentView
-{
-  right: 250px;
 }

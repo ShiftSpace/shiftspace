@@ -87,12 +87,10 @@ var SSFramedView = new Class({
     
     // forward key up and down events to parent window
     context.addEvent('keyup', function(evt) {
-      SSLog('SSFramedView keyup event', SSLogForce);
       evt = new Event(evt);
       SSFireEvent('keyup', evt);
     });
     context.addEvent('keydown', function(evt) {
-      SSLog('SSFramedView keydown event', SSLogForce);
       evt = new Event(evt);
       SSFireEvent('keydown', evt); 
     });
