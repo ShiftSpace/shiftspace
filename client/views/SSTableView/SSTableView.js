@@ -18,7 +18,8 @@ var SSTableView = new Class({
   {
     return $merge(this.parent(), {
       multipleSelection: false,
-      toggleSelection: false
+      toggleSelection: false,
+      showHeader: false
     });
   },
 
@@ -31,29 +32,24 @@ var SSTableView = new Class({
 
     // for speed
     this.contentView = this.element.getElement('> .SSScrollView .SSContentView');
-    // set the model row
     this.setModelRow(this.contentView.getElement('.SSModel').dispose());
-    // set the model row controller if there is one
     this.setModelRowController(this.controllerForNode(this.modelRow()));
-    // set the column names
     this.setColumnNames(this.element.getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('name');}));
-    // set the column display titles
     this.setColumnTitles(this.element.getElements('> .SSScrollView .SSDefinition col').map(function(x) {return x.getProperty('title');}));
-    // set up the column orders
     this.initColumnSort();
-    // initialize the table header
-    this.initTableHead();
-    // create resize masks
-    this.initColumnResizers();
+    
+    if(this.options.showHeader)
+    {
+      this.initTableHead();
+      this.initColumnResizers();
+    }
 
     // give time for double click
     this.element.addEvent('click', function(_evt) {
       this.eventDispatch.delay(300, this, _evt);
     }.bind(this));
 
-    // listen for double click
     this.element.addEvent('dblclick', this.eventDispatch.bind(this));
-    // listen for window resize
     window.addEvent('resize', this.refreshColumnHeadings.bind(this));
   },
 
