@@ -1,0 +1,24 @@
+<div id="SpacesMenu" 
+     class="SSSpacesMenu" 
+     uiclass="SSSpacesMenu"
+     outlet="SSConsole">
+
+  <ul id="SpacesMenuList" 
+      class="SSListView" 
+      uiclass="SSListView"
+      outlet="SSConsole"
+      options="{
+        delegate: 'SSConsole'
+      }">
+    <li class="SSCell SpacesMenuListCell" 
+        uiclass="SpacesMenuListCell"
+        options="{
+          properties: ['name', 'icon'],
+        }">
+      <img class="icon"></img>
+      <span class="name"></span>
+      <span class="handle"></span>
+    </li>
+  </ul>
+
+</div>
