@@ -133,7 +133,7 @@ class SSPreProcessor:
       print "  -e REQUIRED, the environment file, must be in SHIFTSPACE_DIR/config/env/"
       print "  -h help"
       print "  -p project, defaults to shiftspace.json, must be in SHIFTSPACE_DIR/config/proj/"
-      print "  -i input file, defaults to SHIFTSPACE_DIR/client/ShiftSpace-0.5.js"
+      print "  -i input file, defaults to SHIFTSPACE_DIR/client/ShiftSpace.js"
       print "  -o output file, if none specified, writes to standard output" 
 
 
@@ -192,7 +192,7 @@ class SSPreProcessor:
         print "Error: no such input file exist"
         sys.exit(2)
     else:
-      self.inFile = open('../client/ShiftSpace-0.5.js')
+      self.inFile = open('../client/ShiftSpace.js')
 
     # get the output file
     if outFile != None:
