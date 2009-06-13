@@ -365,14 +365,17 @@ var SSConsole = new Class({
     // finish initialization after iframe load
     this.element.addEvent('load', function() {
       var context = this.element.contentWindow;
+      var doc = context.document;
       
       // under GM not wrapped, erg - David
       if(!context.$)
       {
         context = new Window(context);
-        var doc = new Document(context.document);
+        doc = new Document(context.document);
       }
-
+      this.context = context;
+      this.doc = doc;
+      
       // add the styles into the iframe
       Sandalphon.addStyle(ui.styles, context);
       
@@ -649,6 +652,25 @@ var SSConsole = new Class({
     {
       this.PublishPane.hide();
     }
+  },
+  
+  
+  checkedShifts: function()
+  {
+    SSLog(this.tableViews().filter($msg('isVisible')), SSLogForce);
+  },
+  
+  
+  subViews: function()
+  {
+    return this.context.$$('*[uiclass]').map(SSControllerForNode);
+  },
+  
+  
+  tableViews: function()
+  {
+    return this.subViews().filter(function(subView) {
+      return $memberof(subView.name, 'SSTableView');
+    });
   }
-
 });

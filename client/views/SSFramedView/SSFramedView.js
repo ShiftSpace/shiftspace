@@ -110,7 +110,9 @@ var SSFramedView = new Class({
     if(!context.$)
     {
       context = new Window(context);
+      this.context = context;
       doc = new Document(context.document);
+      this.doc = doc;
     }
     
     Sandalphon.addStyle(this.ui.styles, context);
@@ -121,6 +123,12 @@ var SSFramedView = new Class({
     $(context.document.body).adopt.apply($(context.document.body), children);
     
     Sandalphon.activate(context);
+  },
+  
+  
+  subViews: function()
+  {
+    return this.context.$$('*[uiclass]').map(SSControllerForNode);
   }
   
 });

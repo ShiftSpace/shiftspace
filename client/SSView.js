@@ -416,6 +416,12 @@ var SSView = new Class({
     }
     return true;
   },
+  
+  
+  isHidden: function()
+  {
+    return !this.isVisible();
+  },
 
   /*
     Function: destroy
@@ -484,6 +490,12 @@ var SSView = new Class({
   onContextActivate: function(ctxt)
   {
     
+  },
+  
+  
+  subViews: function()
+  {
+    return this.element.getElements('*[uiclass]').map(SSControllerForNode);
   }
 
 });

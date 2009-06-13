@@ -290,6 +290,8 @@ var ShiftSpace = new (function() {
       this.SSResourceExists = SSResourceExists;
       this.SSLoadSpaceAttributes = SSLoadSpaceAttributes;
       this.SSGetSpaceAttributes = SSGetSpaceAttributes;
+      
+      this.$msg = $msg;
       this.$get = $get;
       this.$getf = $getf;
       
