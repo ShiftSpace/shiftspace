@@ -36,9 +36,6 @@ var SSFramedView = new Class({
     if(typeof SandalphonToolMode == 'undefined')
     {
       var url = 'client/'+this.options.location+'/'+this.name+'/'+this.name+'Frame.css';
-      console.log(options);
-      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
-      SSLog(url, SSLogForce);
       SSLoadFile(url, this.onStyleLoad.bind(this));
     }
   },
@@ -92,8 +89,6 @@ var SSFramedView = new Class({
   
   buildInterface: function()
   {
-    SSLog('buildInterface SSFramedView', SSLogForce);
-    
     var context = this.element.contentWindow;
     var doc = context.document;
     

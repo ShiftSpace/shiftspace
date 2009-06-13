@@ -14,32 +14,62 @@ var SSSpaceMenu = new Class({
   {
     this.parent(el, options);
     
-    SSLog('>>>>>> options', SSLogForce);
-    SSLog(options, SSLogForce);
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>> SSSpaceMenu', SSLogForce);
 
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
+    SSAddObserver(this, 'showSpaceMenu', this.show.bind(this));
+    SSAddObserver(this, 'hideSpaceMenu', this.hide.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
+  },
+  
+  
+  show: function()
+  {
+    this.element.removeClass('SSDisplayNone')
+  },
+  
+  
+  hide: function()
+  {
+    this.element.addClass('SSDisplayNone');
   },
   
   
   handleLogin: function()
   {
-    var spaces = SSSpacesByPosition();
-    SSLog('SpaceMenu spaces', SSLogForce);
-    SSLog(spaces, SSLogForce);
   },
   
   
   handleLogout: function()
   {
-    
   },
   
   
   handleSync: function()
   {
+  },
+  
+  
+  onSpaceSort: function()
+  {
+    SSLog('onSpaceSort', SSLogForce);
     
+    var spaces = SSInstalledSpaces();
+    var listItems = this.SpaceMenuList.cellNodes();
+    
+    var newSpaceOrder = listItems.map(function(el) {
+      return {
+        name:el.getElement('.name').get('text'), 
+        position: listItems.indexOf(el)
+      };
+    });
+    
+    newSpaceOrder.each(function(newSpacePos) {
+      spaces[newSpacePos.name].position = newSpacePos.position;
+    });
+    
+    SSSetInstalledSpaces(spaces);
   },
   
   
@@ -63,6 +93,21 @@ var SSSpaceMenu = new Class({
   buildInterface: function()
   {
     this.parent();
+    
+    var spaces = SSSpacesByPosition();
+    SSLog('SpaceMenu spaces', SSLogForce);
+    SSLog(spaces, SSLogForce);
+    this.SpaceMenuList.setData(spaces);
+    this.SpaceMenuList.refresh();
+    
+    this.SpaceMenuList.addEvent('onSortComplete', this.onSpaceSort.bind(this));
+    
     this.fireEvent('load');
+  },
+  
+  
+  localizationChanged: function()
+  {
+    
   }
 });

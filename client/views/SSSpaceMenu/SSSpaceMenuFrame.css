@@ -1,8 +1,11 @@
-#SSSpaceMenuFrame
+.SSSpaceMenuFrame
 {
   position: fixed;
   bottom: 35px;
   left: 35px;
+
   width: 180px;
-  height: 300px;
+  height: 120px;
+
+  border: none;
 }

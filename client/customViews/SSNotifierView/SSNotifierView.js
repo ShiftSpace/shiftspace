@@ -16,6 +16,7 @@ var SSNotifierView = new Class({
 
     this.setIsOpen(false);
     this.setIsVisible(false);
+    this.spaceMenuIsVisible(false);
     
     this.setIsAnimating(false);
     this.setShiftIsDown(false);
@@ -221,9 +222,22 @@ var SSNotifierView = new Class({
   },
   
   
+  setSpaceMenuIsVisible: function(val)
+  {
+    this.__spaceMenuIsVisible = val;
+  },
+  
+  
+  spaceMenuIsVisible: function()
+  {
+    return this.__spaceMenuIsVisible;
+  },
+  
+  
   attachEvents: function()
   {
     this.document().body.addEvent('mouseenter', this['open'].bind(this));
+    
     this.document().body.addEvent('mouseleave', function() {
       if(!this.shiftIsDown())
       {
@@ -252,8 +266,24 @@ var SSNotifierView = new Class({
       if(evt.key == 'shift') this.handleKeyDown(evt);
     }.bind(this));
     
-    this.SSNotifierControlsView.addEvent('click', function() {
-      ShiftSpace.Console.show();
+    this.SSSelectSpace.addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if(!this.spaceMenuIsVisible())
+      {
+        this.setSpaceMenuIsVisible(true);
+        SSPostNotification('showSpaceMenu', this);
+      }
+      else
+      {
+        this.setSpaceMenuIsVisible(false);
+        SSPostNotification('hideSpaceMenu', this);
+        this.close();
+      }
+    }.bind(this));
+    
+    this.SSNotifierControlsView.addEvent('click', function(evt) {
+      evt = new Event(evt);
+      if(evt.target != this.SSSelectSpace) ShiftSpace.Console.show();
     }.bind(this));
   },
   
@@ -348,7 +378,7 @@ var SSNotifierView = new Class({
     var now = new Date();
     this.clearTimers();
     
-    if(ShiftSpace.Console.isVisible()) return;
+    if(ShiftSpace.Console.isVisible() || this.spaceMenuIsVisible()) return;
     
     if(this.isOpen() && !this.isAnimating())
     {
@@ -503,5 +533,11 @@ var SSNotifierView = new Class({
     
     SSPostNotification('onNotifierLoad', this);
     this.fireEvent('load', this);
+  },
+  
+  
+  localizationChanged: function()
+  {
+    
   }
 });

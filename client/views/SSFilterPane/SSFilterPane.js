@@ -14,7 +14,6 @@ var SSFilterPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    SSLog('new SSFilterPane', SSLogForce);
   }
 
 });

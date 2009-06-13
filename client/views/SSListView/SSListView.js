@@ -197,7 +197,7 @@ var SSListView = new Class({
         delete this.__sortables;
       }
       
-      this.__sortables = new Sortables(this.element, {
+      var options = {
         constrain: true,
         clone: true,
         snap: 4,
@@ -208,7 +208,10 @@ var SSListView = new Class({
         }.bind(this),
         onSort: this.sortSort.bind(this),
         onComplete: this.sortComplete.bind(this)
-      });
+      };
+      
+      if(this.options.handle) options.handle = this.options.handle;
+      this.__sortables = new Sortables(this.element, options);
     }
   },
   

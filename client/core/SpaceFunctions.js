@@ -251,7 +251,7 @@ function SSInstalledSpaces()
   return __installedSpaces || SSDefaultSpaces();
 }
 
-function SSUpdateInstalledSpaces()
+function SSUpdateInstalledSpaces(force)
 {
   __installedSpaces = __installedSpacesDataProvider.installedSpaces();
 }
@@ -313,7 +313,7 @@ function SSSetSpaceForName(space, name)
   __spaces[name] = space;
 }
 
-function SSSetSpacePosition(spaceName, newpos)
+function SSSetSpacePositions(spaceName, newpos)
 {
   
 }

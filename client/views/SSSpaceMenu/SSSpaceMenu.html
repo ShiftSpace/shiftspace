@@ -6,19 +6,24 @@
   <ul id="SpaceMenuList" 
       class="SSListView" 
       uiclass="SSListView"
-      outlet="SSConsole"
+      outlet="SpaceMenu"
       options="{
-        delegate: 'SSConsole'
+        delegate: 'SpaceMenu',
+        sortable: true
       }">
+      
     <li class="SSCell SSSpaceMenuListCell" 
         uiclass="SSSpaceMenuListCell"
         options="{
           properties: ['name', 'icon', 'action'],
-        }">
+        }"
+        outlet="SpaceMenu">
         <img class="icon"></img>
         <span class="name"></span>
         <span class="action"></span>
+        <span class="handle"></span>
     </li>
+    
   </ul>
 
 </div>

@@ -153,10 +153,15 @@ var SSCell = new Class({
   actionForNode: function(node)
   {
     if(!this.lockedElement()) throw new SSCellError.NoLock(new Error(), "actionForNode called with no locked element.");
-    var ary = this.getActions().filter(function(x) {
-      return this.lockedElement().getElements(x.selector).contains(node);
-    }.bind(this));
-    if(ary.length > 0) return ary[0];
+    var actions = this.getActions();
+    
+    if(actions && actions.length > 0)
+    {
+      var ary = actions.filter(function(x) {
+        return this.lockedElement().getElements(x.selector).contains(node);
+      }.bind(this));
+      if(ary.length > 0) return ary[0];
+    }
     return null;
   },
   

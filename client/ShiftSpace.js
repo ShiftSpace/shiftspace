@@ -98,7 +98,6 @@ var ShiftSpace = new (function() {
       // Set up user event handlers
       SSAddObserver(SSNotificationProxy, 'onUserLogin', function() {
         //SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
-        SSLog('User logged in ============', SSLogForce);
         // FIXME: Just make this into a onUserLogin hook - David
         if(SSHasResource('RecentlyViewedHelpers'))
         {

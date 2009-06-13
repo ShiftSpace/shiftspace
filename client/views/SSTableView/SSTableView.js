@@ -829,7 +829,7 @@ var SSTableView = new Class({
   localizationChanged: function()
   {
     var newTitles = this.columnTitles().map(SSLocalizedString);
-    this.updateColumnTitles(newTitles);
+    if(this.options.showHeader) this.updateColumnTitles(newTitles);
     if(this.isVisible())
     {
       this.refresh();
