@@ -6,15 +6,16 @@
 // ==/Builder==
 
 var SSInstalledSpaceCell = new Class({
-
+  
   Extends: SSCell,
-
   name: "SSInstalledSpaceCell",
+  
   
   awake: function(context)
   {
     this.mapOutletsToThis();
   },
+  
   
   setIcon: function(imageSrc)
   {
@@ -26,6 +27,7 @@ var SSInstalledSpaceCell = new Class({
     }
   },
   
+  
   setName: function(name)
   {
     var el = this.lockedElement();
@@ -35,8 +37,10 @@ var SSInstalledSpaceCell = new Class({
       el.getElement('.name').setProperty('text', name);
     }
   },
-
+  
+  
   setAutolaunch: function(autolaunch)
   {
   }
+  
 });

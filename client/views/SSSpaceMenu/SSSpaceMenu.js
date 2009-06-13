@@ -13,8 +13,6 @@ var SSSpaceMenu = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    
-    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>> SSSpaceMenu', SSLogForce);
 
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
@@ -53,8 +51,6 @@ var SSSpaceMenu = new Class({
   
   onSpaceSort: function()
   {
-    SSLog('onSpaceSort', SSLogForce);
-    
     var spaces = SSInstalledSpaces();
     var listItems = this.SpaceMenuList.cellNodes();
     
@@ -95,8 +91,7 @@ var SSSpaceMenu = new Class({
     this.parent();
     
     var spaces = SSSpacesByPosition();
-    SSLog('SpaceMenu spaces', SSLogForce);
-    SSLog(spaces, SSLogForce);
+
     this.SpaceMenuList.setData(spaces);
     this.SpaceMenuList.refresh();
     

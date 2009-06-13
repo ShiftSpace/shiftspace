@@ -58,18 +58,18 @@ var SSView = new Class({
     if(el) el.removeProperty('options');
 
     // generate an id
-    this.__id__ = this._genId();
+    this.__id = this._genId();
     this.setIsAwake(false);
     
     // add to global hash
-    if(ShiftSpaceObjects) ShiftSpaceObjects.set(this.__id__, this);
+    if(ShiftSpaceObjects) ShiftSpaceObjects.set(this.__id, this);
     
     SSLog('Interned view into ShiftSpaceObjects hash', SSLogViewSystem);
 
     // check if we are prebuilt
     //this.__prebuilt__ = (el && true) || false; // NOT IMPLEMENTED - David
     this.__ssviewcontrollers__ = [];
-    this.__delegate__ = null;
+    this.__delegate = null;
     this.__outlets__ = new Hash();
     
     SSLog('SSView internal vars set', SSLogViewSystem);
@@ -138,7 +138,7 @@ var SSView = new Class({
     if(superview) 
     {
       superview.addEvent('onRefresh', function() {
-        if(!this.isVisible()) return;
+        SSLog('onRefresh ' + this.needsDisplay(), SSLogForce);
         if(!this.needsDisplay()) return;
         this.refreshAndFire();
       }.bind(this));
@@ -186,7 +186,7 @@ var SSView = new Class({
   */
   getId: function()
   {
-    return this.__id__;
+    return this.__id;
   },
   
   
@@ -241,7 +241,7 @@ var SSView = new Class({
   */
   setDelegate: function(delegate)
   {
-    this.__delegate__ = delegate;
+    this.__delegate = delegate;
   },
 
   /*
@@ -250,7 +250,7 @@ var SSView = new Class({
   */
   delegate: function()
   {
-    return this.__delegate__;
+    return this.__delegate;
   },
 
 

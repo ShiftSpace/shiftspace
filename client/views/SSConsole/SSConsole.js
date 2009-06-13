@@ -93,6 +93,8 @@ var SSConsole = new Class({
   
   handleSync: function()
   {
+    // FIXME: postpone until after SSSynch - David 5/27/2009
+    if(this.outlets().get('SSInstalledSpaces')) this.initInstalledSpacesListView();
   },
   
   
@@ -117,8 +119,7 @@ var SSConsole = new Class({
           SSUninstallAllSpaces();
         });
       }
-      // FIXME: postpone until after SSSynch - David 5/27/2009
-      if(this.outlets().get('SSInstalledSpaces')) this.initInstalledSpacesListView();
+
       if(this.outlets()['PublishPane'])
       {
         this.PublishPane = this.outlets()['PublishPane'];

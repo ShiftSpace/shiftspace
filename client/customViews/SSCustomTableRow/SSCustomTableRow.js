@@ -64,7 +64,6 @@ var SSCustomTableRow = new Class({
   initActionCell: function()
   {
     this.actionCellControl = this.outlets().get('actionCell');
-    SSLog('initActionCell', SSLogForce);
   },
 
   

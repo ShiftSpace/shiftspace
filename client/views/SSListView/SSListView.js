@@ -320,6 +320,11 @@ var SSListView = new Class({
   */
   awake: function(context)
   {
+  },
+  
+  
+  afterAwake: function(context)
+  {
     var cellNode = this.element.getElement('> .SSCell');
     if(cellNode)
     {
@@ -1182,6 +1187,21 @@ var SSListView = new Class({
     }
   },
   
+  
+  show: function()
+  {
+    this.parent();
+    
+    // just in case this doesn't work
+    if(this.cell() && 
+       this.cellNodes().length == 0 && 
+       this.data().length > 0)
+    {
+      this.reloadData();
+    }
+  },
+  
+  
   newCellForItemData: function(itemData, index)
   {
     var filtered = this.filter(itemData, index);
@@ -1219,12 +1239,8 @@ var SSListView = new Class({
         this.element.grab(cell)
       }.bind(this));
       
-      this.initSortables();
-    }
-
-    if(!this.__pendingCollection)
-    {
       this.setNeedsDisplay(false);
+      this.initSortables();
     }
 
     if(this.pageControl()) this.pageControl().initializeInterface();
