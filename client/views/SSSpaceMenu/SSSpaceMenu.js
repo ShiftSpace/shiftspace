@@ -1,6 +1,5 @@
 // ==Builder==
 // @uiclass
-// @customView
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSFramedView
 // ==/Builder==
@@ -14,9 +13,33 @@ var SSSpaceMenu = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    
+    SSLog('>>>>>> options', SSLogForce);
+    SSLog(options, SSLogForce);
 
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
+    SSAddObserver(this, 'onSync', this.handleSync.bind(this));
+  },
+  
+  
+  handleLogin: function()
+  {
+    var spaces = SSSpacesByPosition();
+    SSLog('SpaceMenu spaces', SSLogForce);
+    SSLog(spaces, SSLogForce);
+  },
+  
+  
+  handleLogout: function()
+  {
+    
+  },
+  
+  
+  handleSync: function()
+  {
+    
   },
   
   

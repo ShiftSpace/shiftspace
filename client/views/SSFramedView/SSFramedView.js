@@ -8,8 +8,16 @@
 var SSFramedView = new Class({
   
   Extends: SSView,
-
   name: 'SSFramedView',
+  
+  
+  defaults: function()
+  {
+    return $merge(this.parent(), {
+      location: 'customViews'
+    });
+  },
+  
   
   initialize: function(el, options)
   { 
@@ -27,7 +35,11 @@ var SSFramedView = new Class({
 
     if(typeof SandalphonToolMode == 'undefined')
     {
-      SSLoadFile('client/customViews/'+this.name+'/'+this.name+'Frame.css', this.onStyleLoad.bind(this));
+      var url = 'client/'+this.options.location+'/'+this.name+'/'+this.name+'Frame.css';
+      console.log(options);
+      SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', SSLogForce);
+      SSLog(url, SSLogForce);
+      SSLoadFile(url, this.onStyleLoad.bind(this));
     }
   },
   
@@ -36,7 +48,7 @@ var SSFramedView = new Class({
   {
     var style = response.responseText;
     if(style) Sandalphon.addStyle(style);
-    Sandalphon.load('/client/customViews/'+this.name+'/'+this.name, this.onInterfaceLoad.bind(this))
+    Sandalphon.load('/client/'+this.options.location+'/'+this.name+'/'+this.name, this.onInterfaceLoad.bind(this))
   },
   
   

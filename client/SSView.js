@@ -52,7 +52,8 @@ var SSView = new Class({
     this.setNeedsDisplay(true);
     
     // get the options first
-    this.setOptions(this.defaults(), (el && $merge(options, SSGetInlineOptions(el))) || {});
+    this.setOptions(this.defaults(), $merge((el && SSGetInlineOptions(el)) || {}, options));
+    
     // remove them
     if(el) el.removeProperty('options');
 
