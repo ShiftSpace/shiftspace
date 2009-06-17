@@ -70,6 +70,23 @@ var SSListView = new Class({
   },
   
   
+  hasCell: function()
+  {
+    if(this.__hasCell) return true;
+
+    var node = this.element.getElement('> .SSCell');
+    var controller = SSControllerForNode(node);
+    this.__hasCell = (controller != null) && (!$memberof(controller.name, 'SSViewProxy'));
+
+    if(this.__hasCell)
+    {
+      this.setCell(controller);
+    }
+    
+    return this.__hasCell;
+  },
+  
+  
   setPageControl: function(pageControl)
   {
     this.__pageControl = pageControl;
@@ -1170,6 +1187,9 @@ var SSListView = new Class({
   refresh: function(force)
   {
     this.parent();
+    
+    var hasCell = this.hasCell()
+    if(!hasCell) return;
     
     // no data nothing to do
     if(!this.data()) return;

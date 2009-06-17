@@ -294,6 +294,7 @@ var ShiftSpace = new (function() {
       this.$msg = $msg;
       this.$get = $get;
       this.$getf = $getf;
+      this.$memberof = $memberof;
       
       // export SSLog
       window.SSLog = SSLog;
