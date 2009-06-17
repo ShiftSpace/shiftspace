@@ -72,17 +72,15 @@ var SSListView = new Class({
   
   hasCell: function()
   {
-    if(this.__hasCell) return true;
-
+    if(this.__hasCell || this.cell()) return true;
     var node = this.element.getElement('> .SSCell');
+    if(!node) return false;
     var controller = SSControllerForNode(node);
     this.__hasCell = (controller != null) && (!$memberof(controller.name, 'SSViewProxy'));
-
     if(this.__hasCell)
     {
       this.setCell(controller);
     }
-    
     return this.__hasCell;
   },
   
@@ -1188,6 +1186,8 @@ var SSListView = new Class({
   {
     this.parent();
     
+    SSLog('refresh', SSLogForce);
+    
     var hasCell = this.hasCell()
     if(!hasCell) return;
     
@@ -1209,6 +1209,7 @@ var SSListView = new Class({
     }
     else
     {
+      SSLog('reloadData', SSLogForce);
       this.reloadData();
     }
   },
