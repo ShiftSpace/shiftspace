@@ -395,10 +395,6 @@ var SSNotifierView = new Class({
         this.closeTimer = this.close.delay(3000-delta, this);
       }
     }
-    else
-    {
-      SSLog("isOpen: " + this.isOpen() + ", isAnimating: " + this.isAnimating(), SSLogForce);
-    }
   },
   
   

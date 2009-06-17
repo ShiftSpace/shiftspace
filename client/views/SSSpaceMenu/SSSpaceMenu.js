@@ -24,7 +24,18 @@ var SSSpaceMenu = new Class({
   
   show: function()
   {
-    this.element.removeClass('SSDisplayNone')
+    this.element.removeClass('SSDisplayNone');
+    this.resize();
+  },
+  
+  
+  resize: function()
+  {
+    var body = this.document().body
+    this.element.setStyles({
+      width: body.offsetWidth,
+      height: body.offsetHeight
+    });
   },
   
   
@@ -90,13 +101,12 @@ var SSSpaceMenu = new Class({
   {
     this.SpaceMenuList.addEvent('onSortComplete', this.onSpaceSort.bind(this));
     this.SpaceMenuList.addEvent('onRowClick', this.newShift.bind(this));
+    this.SpaceMenuList.addEvent('onReload', this.resize.bind(this));
   },
   
   
   newShift: function(data)
   {
-    SSLog('create new shift', SSLogForce);
-    SSLog(data, SSLogForce);
     SSInitShift(SSSpaceForPosition(data.index).name);
   },
 
