@@ -79,8 +79,7 @@ var HelloWorldalphonShift = new Class({
                     myEffect.start({
                     'top':  $random(0,400), 
                     'left': $random(0,400),
-                    'opacity': 1
-             });
+                    'opacity': 1 });
         }
     },
     
