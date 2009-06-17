@@ -16,6 +16,8 @@ var SSSpaceMenu = new Class({
 
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
+    SSAddObserver(this, 'onSpaceInstall', this.update.bind(this));
+    SSAddObserver(this, 'onSpaceUninstall', this.update.bind(this));
     SSAddObserver(this, 'showSpaceMenu', this.show.bind(this));
     SSAddObserver(this, 'hideSpaceMenu', this.hide.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
@@ -109,19 +111,24 @@ var SSSpaceMenu = new Class({
   {
     SSInitShift(SSSpaceForPosition(data.index).name);
   },
+  
+  
+  update: function()
+  {
+    var spaces = SSSpacesByPosition();
+
+    this.SpaceMenuList.setData(spaces);
+    this.SpaceMenuList.refresh();
+
+    if(this.isVisible()) this.resize();
+  },
 
   
   buildInterface: function()
   {
     this.parent();
-    
-    var spaces = SSSpacesByPosition();
-
-    this.SpaceMenuList.setData(spaces);
-    this.SpaceMenuList.refresh();
-    
+    this.update();
     this.attachEvents();
-    
     this.fireEvent('load');
   },
   
