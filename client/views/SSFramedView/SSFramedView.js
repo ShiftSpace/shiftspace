@@ -102,6 +102,14 @@ var SSFramedView = new Class({
       SSFireEvent('keydown', evt); 
     });
     
+    this.element.getElement = function(sel) {
+      return this.element.contentWindow.$$(sel)[0];
+    }.bind(this);
+    
+    this.element.getElements = function(sel) {
+      return this.element.contentWindow.$$(sel);
+    }.bind(this);
+    
     // store the name on the window for debugging
     context.__ssname = this.element.getProperty('id');
     context.__sscontextowner = this;

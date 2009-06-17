@@ -85,6 +85,21 @@ var SSSpaceMenu = new Class({
     }
   },
   
+
+  attachEvents: function()
+  {
+    this.SpaceMenuList.addEvent('onSortComplete', this.onSpaceSort.bind(this));
+    this.SpaceMenuList.addEvent('onRowClick', this.newShift.bind(this));
+  },
+  
+  
+  newShift: function(data)
+  {
+    SSLog('create new shift', SSLogForce);
+    SSLog(data, SSLogForce);
+    SSInitShift(SSSpaceForPosition(data.index).name);
+  },
+
   
   buildInterface: function()
   {
@@ -95,7 +110,7 @@ var SSSpaceMenu = new Class({
     this.SpaceMenuList.setData(spaces);
     this.SpaceMenuList.refresh();
     
-    this.SpaceMenuList.addEvent('onSortComplete', this.onSpaceSort.bind(this));
+    this.attachEvents();
     
     this.fireEvent('load');
   },

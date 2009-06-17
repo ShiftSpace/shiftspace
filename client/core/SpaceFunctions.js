@@ -331,6 +331,11 @@ function SSSpacesByPosition()
   return result;
 }
 
+function SSSpaceForPosition(index)
+{
+  return SSSpacesByPosition()[index];
+}
+
 /*
   Function: SSRemoveSpace
     Removes a space from the interal instances hash.

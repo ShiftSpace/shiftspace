@@ -294,14 +294,20 @@ var SSListView = new Class({
   {
     var event = new Event(_event);
     var target = event.target;
+    var type = event.type;
     
     switch(true)
     {
       case(this.hitTest(target, 'li, > li *') != null):
         var hit = this.cachedHit();
-        this.cell().lock((hit.get('tag') == 'li' && hit) || hit.getParent('li'));
-        this.cell().eventDispatch(event, eventType);
+        var cellNode = (hit.get('tag') == 'li' && hit) || hit.getParent('li');
+        this.cell().lock(cellNode);
+        this.cell().eventDispatch(event, type);
         this.cell().unlock();
+        if(type == 'click')
+        {
+          this.fireEvent('onRowClick', {listView:this, index:this.indexOfCellNode(cellNode)});
+        }
       break;
       
       default:

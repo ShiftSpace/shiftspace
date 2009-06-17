@@ -207,12 +207,12 @@ var Trail = new Class({
   
   setDelegate: function(newDelegate)
   {
-    this.__delegate__ = newDelegate;
+    this.__delegate = newDelegate;
   },
   
   delegate: function()
   {
-    return this.__delegate__;
+    return this.__delegate;
   },
   
   isEditable: function()

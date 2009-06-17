@@ -93,8 +93,7 @@ var SSConsole = new Class({
   
   handleSync: function()
   {
-    // FIXME: postpone until after SSSynch - David 5/27/2009
-    if(this.outlets().get('SSInstalledSpaces')) this.initInstalledSpacesListView();
+    this.updateInstalledSpaces();
   },
   
   
@@ -112,6 +111,7 @@ var SSConsole = new Class({
       if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
       if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
       if(this.outlets().get('SSSetServers')) this.initSetServersForm();
+      if(this.outlets().get('SSInstalledSpaces')) this.initInstalledSpacesListView();
       if(this.outlets().get('clearInstalledButton'))
       {
         this.outlets().get('clearInstalledButton').addEvent('click', function(_evt) {
@@ -130,6 +130,12 @@ var SSConsole = new Class({
         this.handleLogin();
       }
     }
+  },
+  
+  
+  onContextActivate: function(context)
+  {
+    
   },
   
   
@@ -259,7 +265,6 @@ var SSConsole = new Class({
       }.bind(this));
     }
     this.SSInstalledSpaces = this.outlets().get('SSInstalledSpaces');
-    this.updateInstalledSpaces();
   },
   
   
@@ -588,6 +593,7 @@ var SSConsole = new Class({
     
   },
   
+  
   canRemove: function(sender)
   {
     var canRemove = false;
@@ -657,7 +663,12 @@ var SSConsole = new Class({
   
   checkedShifts: function()
   {
-    SSLog(this.tableViews().filter($msg('isVisible')), SSLogForce);
+    var tv = this.visibleTableView();
+
+    if(tv)
+    {
+      return tv.checkedShifts();
+    }
   },
   
   
@@ -672,5 +683,11 @@ var SSConsole = new Class({
     return this.subViews().filter(function(subView) {
       return $memberof(subView.name, 'SSTableView');
     });
+  },
+  
+  
+  visibleTableView: function()
+  {
+    return this.tableViews().filter($msg('isVisible')).first();
   }
 });
