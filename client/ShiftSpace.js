@@ -79,14 +79,12 @@ var ShiftSpace = new (function() {
       // Load external scripts (pre-processing required)
       // INCLUDE PACKAGE ShiftSpaceUI
       
-      ShiftSpace.ShiftMenu = new ShiftMenu();
       ShiftSpace.Console = new SSConsole();
       ShiftSpace.Notifier = new SSNotifierView();
-      ShiftSpace.SpaceMenu = new SSSpaceMenu(null, {location:'views'});
+      ShiftSpace.SpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
       ShiftSpace.Sandalphon = Sandalphon;
       
       // Add to look up table
-      ShiftSpaceObjects.ShiftMenu = ShiftSpace.ShiftMenu;
       ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
       
       // FIXME: this should be more modular! - David 6/3/09
@@ -112,20 +110,6 @@ var ShiftSpace = new (function() {
       SSLoadStyle('styles/ShiftSpace.css', function() {
         SSCreateErrorWindow();
       });
-      SSLoadStyle('styles/ShiftMenu.css');
-
-      // Load all spaces and plugins immediately if in the sanbox
-      if (typeof ShiftSpaceSandBoxMode != 'undefined') 
-      {
-        for (var space in SSInstalledSpaces())
-        {
-          SSLoadSpace(space);
-        }
-        for(var plugin in installedPlugins) 
-        {
-          SSLoadPlugin(plugin);
-        }
-      }
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -185,6 +169,19 @@ var ShiftSpace = new (function() {
         
         var group = new Group(ShiftSpace.Console, ShiftSpace.Notifier);
         group.addEvent('load', SSPostNotification.bind(this, ["onSync"]));
+        
+        // Load all spaces and plugins immediately if in the sanbox
+        if (typeof ShiftSpaceSandBoxMode != 'undefined') 
+        {
+          for (var space in SSInstalledSpaces())
+          {
+            SSLoadSpace(space);
+          }
+          for(var plugin in installedPlugins) 
+          {
+            SSLoadPlugin(plugin);
+          }
+        }
       });
     }
 
@@ -295,6 +292,7 @@ var ShiftSpace = new (function() {
       this.$get = $get;
       this.$getf = $getf;
       this.$memberof = $memberof;
+      this.spaceForName = SSSpaceForName;
       
       // export SSLog
       window.SSLog = SSLog;

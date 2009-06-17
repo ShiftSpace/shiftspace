@@ -78,17 +78,13 @@ var ShiftSpaceSpace = new Class({
       if(typeof SSRegisterSpace != 'undefined')
       {
         SSLog('REGISTER >');
-        SSRegisterSpace( this, this.attributes );
-      }
-      else
-      {
-        SSLog('SSRegisterSpace is NOT defined.');
+        SSRegisterSpace(this, this.attributes);
       }
     }
     else
     {
       var name = this.attributes.name || '';
-      console.error( 'Error: The  ' + name + ' is not valid and will not be instantiated.' );
+      console.error('Error: The  ' + name + ' is not valid and will not be instantiated.');
     }
     //SSLog('/ / / / SETTING UP');
     this.setup();

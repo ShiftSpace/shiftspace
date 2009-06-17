@@ -4,7 +4,7 @@
 // @package           Core
 // ==/Builder==
 
-var __spaces = {};
+var __spaces = $H();
 var __focusedSpace = null;
 var __installedSpaces = null;
 var __installedSpacesDataProvider = null;
@@ -310,6 +310,7 @@ function SSSpaceForName(name)
 */
 function SSSetSpaceForName(space, name)
 {
+  SSLog('set space for name: ' + name, SSLogForce);
   __spaces[name] = space;
 }
 

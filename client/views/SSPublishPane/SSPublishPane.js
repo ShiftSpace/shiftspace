@@ -61,14 +61,15 @@ var SSPublishPane = new Class({
   },
 
   
-  deleteShifts: function()
+  deleteShifts: function(evt)
   {
     evt = new Event(evt);
     var shifts = this.checkedShifts();
+    SSLog(shifts, SSLogForce);
   },
   
   
-  saveShifts: function()
+  saveShifts: function(evt)
   {
     evt = new Event(evt);
     var shifts = this.checkedShifts();

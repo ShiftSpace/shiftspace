@@ -30,7 +30,10 @@ function SSInitShift(spaceName, options)
     tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
   }
   
-  var _position = (options && options.position && {x: options.position.x, y: options.position.y }) || null;
+  var winSize = window.getSize();
+  var _position = (options && options.position && {x: options.position.x, y: options.position.y }) || 
+                  {x: winSize.x/2, y: winSize.y/2};
+                  
   var shiftJson = {
     id: tempId,
     space: spaceName,

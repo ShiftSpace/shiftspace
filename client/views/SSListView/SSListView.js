@@ -1186,8 +1186,6 @@ var SSListView = new Class({
   {
     this.parent();
     
-    SSLog('refresh', SSLogForce);
-    
     var hasCell = this.hasCell()
     if(!hasCell) return;
     
@@ -1198,7 +1196,7 @@ var SSListView = new Class({
     if(this.__pendingCollection) return;
     
     // don't refresh if we're visible
-    if(!this.isVisible() && !force) 
+    if(!this.isVisible() && !force)
     {
       return;
     }
@@ -1209,7 +1207,6 @@ var SSListView = new Class({
     }
     else
     {
-      SSLog('reloadData', SSLogForce);
       this.reloadData();
     }
   },

@@ -666,7 +666,8 @@ var SSConsole = new Class({
   checkedShifts: function()
   {
     var tv = this.visibleTableView();
-
+    SSLog('checkedShifts', SSLogForce);
+    SSLog(tv, SSLogForce);
     if(tv)
     {
       return tv.checkedShifts();
