@@ -169,8 +169,18 @@ var ShiftSpace = new (function() {
         
         SSUpdateInstalledSpaces();
         
-        var group = new Group(ShiftSpace.Console, ShiftSpace.Notifier);
-        group.addEvent('load', SSPostNotification.bind(this, ["onSync"]));
+        // wait for Console and Notifier
+        var ui = [ShiftSpace.Console, ShiftSpace.Notifier];
+        if(!ui.every($msg('isLoaded')))
+        {
+          ui.each($msg('addEvent', 'load', function(obj) {
+            if(ui.every($msg('isLoaded'))) SSPostNotification("onSync");
+          }.bind(this)))
+        }
+        else
+        {
+          SSPostNotification("onSync");
+        }
         
         // Load all spaces and plugins immediately if in the sanbox
         if (typeof ShiftSpaceSandBoxMode != 'undefined') 

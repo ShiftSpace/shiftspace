@@ -496,6 +496,25 @@ var SSView = new Class({
   subViews: function()
   {
     return this.element.getElements('*[uiclass]').map(SSControllerForNode);
+  },
+  
+  
+  setIsLoaded: function(val)
+  {
+    this.__isLoaded = val;
+    if(val) this.fireEvent('load', this);
+  },
+  
+  
+  isLoaded: function()
+  {
+    return this.__isLoaded;
+  },
+  
+  
+  isNotLoaded: function()
+  {
+    return !this.isLoaded();
   }
 
 });
