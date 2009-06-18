@@ -84,7 +84,6 @@ function GM_registerMenuCommand()
 
 function GM_xmlhttpRequest(details) 
 {
-  //console.log('GM_xmlhttpRequest');
   if (typeof details != 'object' ||
       !details.method ||
       !details.url) 
@@ -140,8 +139,8 @@ function GM_xmlhttpRequest(details)
   {
     options.data = details.data;
   }
-  
-  new Request(options).send();
+  console.log(options);
+  return (new Request(options).send());
 }
 
 var unsafeWindow = window;

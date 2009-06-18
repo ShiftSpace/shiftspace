@@ -50,7 +50,7 @@ var SSPublishPane = new Class({
   
   checkedShifts: function()
   {
-    return $getf(this, 'delegate', 'checkedShifts')();
+    return $getf(this, 'delegate', 'checkedShifts').bind(this.delegate())();
   },
   
   
@@ -64,6 +64,8 @@ var SSPublishPane = new Class({
   deleteShifts: function(evt)
   {
     evt = new Event(evt);
+    SSLog('deleteShifts', SSLogForce);
+    SSLog(this.delegate(), SSLogForce);
     var shifts = this.checkedShifts();
     SSLog(shifts, SSLogForce);
   },

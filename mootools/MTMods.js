@@ -42,14 +42,10 @@ function $get(first, prop) {
   }
   if($type(next) == 'function')
   {
-    next = next();
+    next = first[prop]();
   }
-
   return (next == null) ? null : $get.apply(null, [next].concat(rest));
 };
-
-// var obj = {"foo":[1, 2, {"bar": 9, "baz": function() {return {"wow":"zers"};}}]};
-// $get(obj, "foo", 2, "baz", "wow");
 
 function $getf(first, prop) {
   return $get.apply(null, arguments) || $empty;

@@ -141,10 +141,12 @@ var ShiftSpace = new (function() {
     */
     function SSSync() 
     {
+      SSLog('SSSync', SSLogForce);
       var params = {
         href: window.location.href
       };
       SSServerCall('query', params, function(json) {
+        SSLog("sync'ed", SSLogForce);
         if (json.error) 
         {
           console.error('Error checking for content: ' + json.error.message);
@@ -181,6 +183,10 @@ var ShiftSpace = new (function() {
           {
             SSLoadPlugin(plugin);
           }
+        }
+        else
+        {
+          SSLog('not in ShiftSpaceSandBoxMode', SSLogForce);
         }
       });
     }

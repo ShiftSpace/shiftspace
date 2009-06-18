@@ -41,6 +41,12 @@ var SSInstalledSpaceCell = new Class({
   
   setAutolaunch: function(autolaunch)
   {
+  },
+  
+  
+  localizationChanged: function()
+  {
+    SSLog('SSInstalledSpaceCell localizationChanged', SSLogForce);
   }
   
 });
