@@ -310,7 +310,6 @@ function SSSpaceForName(name)
 */
 function SSSetSpaceForName(space, name)
 {
-  SSLog('set space for name: ' + name, SSLogForce);
   __spaces[name] = space;
 }
 
