@@ -139,7 +139,6 @@ function GM_xmlhttpRequest(details)
   {
     options.data = details.data;
   }
-  console.log(options);
   return (new Request(options).send());
 }
 
