@@ -836,10 +836,10 @@ var SSTableView = new Class({
     }
   },
   
-  // TODO: need a new class
+  // TODO: move to new class - David 7/18/09
   checkedShifts: function()
   {
-    return this.element.getElements('.SSRow input.SSSelectShift[checked]').map(this.indexOfNode.bind(this));
+    return this.element.getElements('.SSRow input.SSSelectShift[checked]').getParent('.SSRow').map(this.indexOfRow.bind(this));
   }
 
 });

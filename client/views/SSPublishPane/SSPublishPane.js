@@ -64,10 +64,9 @@ var SSPublishPane = new Class({
   deleteShifts: function(evt)
   {
     evt = new Event(evt);
-    SSLog('deleteShifts', SSLogForce);
-    SSLog(this.delegate(), SSLogForce);
-    var shifts = this.checkedShifts();
-    SSLog(shifts, SSLogForce);
+    var shiftIds = this.checkedShifts();
+    SSLog(shiftIds, SSLogForce);
+    shiftIds.each(SSDeleteShift);
   },
   
   

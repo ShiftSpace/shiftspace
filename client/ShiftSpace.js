@@ -170,11 +170,22 @@ var ShiftSpace = new (function() {
         SSUpdateInstalledSpaces();
         
         // wait for Console and Notifier
-        var ui = [ShiftSpace.Console, ShiftSpace.Notifier];
+        var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
         if(!ui.every($msg('isLoaded')))
         {
+          //SSLog('++++++++++++++++++++ not all loaded', SSLogForce);
+          //SSLog(ui.filter($msg('isNotLoaded')), SSLogForce);
           ui.each($msg('addEvent', 'load', function(obj) {
-            if(ui.every($msg('isLoaded'))) SSPostNotification("onSync");
+            if(ui.every($msg('isLoaded')))
+            {
+              //SSLog('++++++++++++++++++++++ all loaded', SSLogForce);
+              SSPostNotification("onSync");
+            }
+            else
+            {
+              //SSLog('++++++++++++++++++++++ not all loaded', SSLogForce);
+              //SSLog(ui.filter($msg('isNotLoaded')), SSLogForce);
+            }
           }.bind(this)))
         }
         else

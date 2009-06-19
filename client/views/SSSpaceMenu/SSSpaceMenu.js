@@ -129,7 +129,8 @@ var SSSpaceMenu = new Class({
     this.parent();
     this.update();
     this.attachEvents();
-    this.fireEvent('load');
+    SSLog('>>>>>>>>>>>>>>>>>>>>> SpaceMenu is loaded', SSLogForce);
+    this.setIsLoaded(true);
   },
   
   

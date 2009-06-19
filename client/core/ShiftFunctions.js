@@ -5,8 +5,8 @@
 // ==/Builder==
 
 var shifts = {};
-var __focusedShiftId__ = null; // Holds the id of the currently focused shift
-var __defaultShiftStatus__ = 1;
+var __focusedShiftId = null; // Holds the id of the currently focused shift
+var __defaultShiftStatus = 1;
 
 /*
 Function: SSInitShift
@@ -17,7 +17,6 @@ Parameters:
 */
 function SSInitShift(spaceName, options) 
 {
-  SSLog('spaceName: ' + spaceName, SSLogSystem);
   if (!SSURLForSpace(spaceName)) 
   {
     SSLog('Space ' + spaceName + ' does not exist.', SSLogError);
@@ -43,16 +42,10 @@ function SSInitShift(spaceName, options)
 
   SSSetShift(tempId, shiftJson);
 
-  SSLog('+++++++++++++++++++++++++++++++++++++++++++++++ ', SSLogForce);
-  SSLog(SSSpaceForName(spaceName), SSLogForce);
-  SSLog('calling create shift ', SSLogForce);
-  
   var noError = SSSpaceForName(spaceName).createShift(shiftJson);
   
-  SSLog('!noError : ' + noError, SSLogForce);
   if(noError)
   {
-    SSLog('tempId: ' + tempId, SSLogForce);
     SSShowNewShift(tempId);
   }
   else
@@ -70,15 +63,9 @@ function SSInitShift(spaceName, options)
 */
 function SSShowNewShift(shiftId)
 {
-  SSLog('SSShowNewShift', SSLogForce);
   var space = SSSpaceForShift(shiftId);
-  SSLog('SSShowNewShift', SSLogForce);
-  SSLog(shifts, SSLogForce);
-  
   space.onShiftCreate(shiftId);
-  SSLog('SSEditShift', SSLogForce);
   SSEditShift(shiftId);
-  SSLog('SSFocusShift', SSLogForce);
   SSFocusShift(shiftId, false);
 }
 
@@ -306,7 +293,6 @@ See Also:
 */
 function SSSaveNewShift(shiftJson)
 {
-  SSLog('>>>>>>>>>>>>>>>>>>>> SSSaveNewShift', SSLogSystem);
   var space = SSSpaceForName(shiftJson.space);
 
   // remove the filters from the json object
@@ -323,7 +309,6 @@ function SSSaveNewShift(shiftJson)
     status: SSGetDefaultShiftStatus() // TODO: this call is in the space ecosystem
   };
 
-  SSLog('saving new shift!', SSLogSystem);
   SSServerCall.safeCall('shift.create', params, function(response) {
 
     if (response['error'])
@@ -365,8 +350,6 @@ function SSSaveNewShift(shiftJson)
     if(ShiftSpace.Console)
     {
       ShiftSpace.Console.show();
-      SSLog('showing shift >>>>>>>>>>>>>>>', SSLogForce);
-      SSLog(shiftJson, SSLogForce);
       ShiftSpace.Console.showShift(shiftJson.id);
     }
 
@@ -374,7 +357,6 @@ function SSSaveNewShift(shiftJson)
     space.onShiftSave(shiftJson.id);
     
     // fire an event with the real id
-    SSLog('here we go!');
     SSPostNotification('onShiftSave', shiftJson.id);
   });
 }
@@ -391,9 +373,6 @@ function SSSaveNewShift(shiftJson)
 */
 function SSSaveShift(shiftJson) 
 {
-  SSLog('>>>>>>>>>>>>>>>>>>>>> SSSaveShift', SSLogSystem);
-  //SSLog(shiftJson);
-
   // if new skip to SSSaveNewShift
   if (shiftJson.id.substr(0, 8) == 'newShift') {
     SSSaveNewShift.safeCall(shiftJson);
@@ -421,7 +400,6 @@ function SSSaveShift(shiftJson)
   }
 
   SSServerCall.safeCall('shift.update', params, function(json) {
-    SSLog('returned shift.update! ' + JSON.encode(json));
     if (json['error']) {
       console.error(json.message);
       return;
@@ -625,8 +603,6 @@ function SSLoadShift(shiftId, callback)
     if(returnArray.data && returnArray.data[0])
     {
       var shiftObj = returnArray.data[0];
-      SSLog('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++', SSLogForce);
-      SSLog(shiftObj, SSLogForce);
       SSSetShift(shiftObj.id, shiftObj);
 
       if(callback && $type(callback) == 'function')
@@ -708,8 +684,6 @@ Parameters:
 */
 function SSShowShift(shiftId)
 {
-  SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> SSShowShift ' + SSShiftIsLoaded(shiftId), SSLogForce);
-
   if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
   {
     // first make sure that is loaded
@@ -851,7 +825,7 @@ function SSAllShifts()
 */
 function SSFocusedShiftId()
 {
-  return __focusedShiftId__;
+  return __focusedShiftId;
 }
 
 /*
@@ -863,7 +837,7 @@ function SSFocusedShiftId()
 */
 function SSSetFocusedShiftId(newId)
 {
-  __focusedShiftId__ = newId;
+  __focusedShiftId = newId;
 }
 
 /*
@@ -882,7 +856,6 @@ function SSSetShiftStatus(shiftId, newStatus)
     status: newStatus
   };
   SSServerCall('shift.update', params, function() {
-    SSLog('>>>>>>>>>>>>>>>>>>>>>>>> shiftId ' + shiftId);
     SSPostNotification('onShiftUpdate', shiftId);
   });
 }
@@ -898,8 +871,8 @@ function SSSetDefaultShiftStatus(value)
 {
   if(value)
   {
-    __defaultShiftStatus__ = value;
-    SSSetPref('defaultShiftStatus', __defaultShiftStatus__);
+    __defaultShiftStatus = value;
+    SSSetPref('defaultShiftStatus', __defaultShiftStatus);
   }
 }
 
@@ -915,7 +888,7 @@ function SSSetDefaultShiftStatus(value)
 */
 function SSGetDefaultShiftStatus(checkPref)
 {
-  return (checkPref && SSGetPref('defaultShiftStatus', 1)) || __defaultShiftStatus__;
+  return (checkPref && SSGetPref('defaultShiftStatus', 1)) || __defaultShiftStatus;
 }
 
 /*
@@ -967,15 +940,10 @@ function SSGetShiftContent(shiftId)
       throw err;
     }
     
-    SSLog('SSGetShiftContent', SSLogForce);
-    SSLog(obj, SSLogForce);
-
     return obj;
   }
   else
   {
-    SSLog('SSGetShiftContent', SSLogForce);
-    SSLog('is new shift', SSLogForce);
     return {};
   }
 }
@@ -992,7 +960,6 @@ function SSGetShiftContent(shiftId)
 */
 function SSGetUrlForShift(shiftId)
 {
-  //SSLog(shifts[shiftId]);
   return SSGetShift(shiftId).href;
 }
 
