@@ -41,6 +41,8 @@ function method_form($httpmethod, $method, $args, $comment = '') {
 <?php method_form('get', "sandbox.getvalue", array("key")); ?>
 <?php method_form('get', "sandbox.setvalue", array("key", "value")); ?>
 <?php method_form('post', "shift.get", array("shiftIds")); ?>
+<?php method_form('post', "shift.create", array("href", "summary", "space", "content_", "version")); ?>
+<?php method_form('post', "shift.delete", array("shiftId")); ?>
 <?php method_form('get', "shift.query", array("href")); ?>
 <?php method_form('get', "sandbox.proxy", array("url", "parameters")); ?>
 <?php method_form('post', "collections", array("desc_")); ?>

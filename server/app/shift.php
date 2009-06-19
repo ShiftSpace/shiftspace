@@ -99,6 +99,12 @@ class Shift {
     return $domain; 
   }
 
+  public function delete() {
+    $this->server->requireLogin();
+    extract($_REQUEST);
+    $this->server->db->query("DELETE FROM shift WHERE id=:shiftId", compact('shiftId'));
+  }    
+
   public function create() {
     $this->server->requireLogin();
   
