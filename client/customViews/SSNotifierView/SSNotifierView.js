@@ -13,7 +13,6 @@ var SSNotifierView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-
     this.setIsOpen(false);
     this.setIsVisible(false);
     this.spaceMenuIsVisible(false);
@@ -528,7 +527,7 @@ var SSNotifierView = new Class({
     this.attachEvents();
     
     SSPostNotification('onNotifierLoad', this);
-    this.fireEvent('load', this);
+    this.setIsLoaded(true);
   },
   
   

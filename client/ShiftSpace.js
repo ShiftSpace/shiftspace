@@ -141,10 +141,12 @@ var ShiftSpace = new (function() {
     */
     function SSSync() 
     {
+      SSLog('SSSync', SSLogForce);
       var params = {
         href: window.location.href
       };
       SSServerCall('query', params, function(json) {
+        SSLog("sync'ed", SSLogForce);
         if (json.error) 
         {
           console.error('Error checking for content: ' + json.error.message);
@@ -167,8 +169,29 @@ var ShiftSpace = new (function() {
         
         SSUpdateInstalledSpaces();
         
-        var group = new Group(ShiftSpace.Console, ShiftSpace.Notifier);
-        group.addEvent('load', SSPostNotification.bind(this, ["onSync"]));
+        // wait for Console and Notifier
+        var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
+        if(!ui.every($msg('isLoaded')))
+        {
+          //SSLog('++++++++++++++++++++ not all loaded', SSLogForce);
+          //SSLog(ui.filter($msg('isNotLoaded')), SSLogForce);
+          ui.each($msg('addEvent', 'load', function(obj) {
+            if(ui.every($msg('isLoaded')))
+            {
+              //SSLog('++++++++++++++++++++++ all loaded', SSLogForce);
+              SSPostNotification("onSync");
+            }
+            else
+            {
+              //SSLog('++++++++++++++++++++++ not all loaded', SSLogForce);
+              //SSLog(ui.filter($msg('isNotLoaded')), SSLogForce);
+            }
+          }.bind(this)))
+        }
+        else
+        {
+          SSPostNotification("onSync");
+        }
         
         // Load all spaces and plugins immediately if in the sanbox
         if (typeof ShiftSpaceSandBoxMode != 'undefined') 
@@ -181,6 +204,10 @@ var ShiftSpace = new (function() {
           {
             SSLoadPlugin(plugin);
           }
+        }
+        else
+        {
+          SSLog('not in ShiftSpaceSandBoxMode', SSLogForce);
         }
       });
     }
@@ -253,7 +280,7 @@ var ShiftSpace = new (function() {
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
       this.spaces = SSAllSpaces();
-      this.shifts = shifts;
+      this.shifts = __loadedShifts;
       this.SSSetValue = SSSetValue;
       this.SSGetValue = SSGetValue;
       this.plugins = plugins;

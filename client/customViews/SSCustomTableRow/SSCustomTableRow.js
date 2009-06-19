@@ -123,7 +123,6 @@ var SSCustomTableRow = new Class({
   
   deselect: function(row)
   {
-    console.log('DESELECT');
     if(this.editCellControl.isLocked() && this.editCellControl.getParentRow() == row) this.editCellControl.unlock();
   },
   

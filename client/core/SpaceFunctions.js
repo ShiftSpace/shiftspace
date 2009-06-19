@@ -129,7 +129,7 @@ function SSRegisterSpace(instance)
     }
   });
 
-  instance.addEvent('onShiftDestroy', SSRemoveShift);
+  instance.addEvent('onShiftDestroy', SSUnloadShift);
 }
 
 function SSIsAbsoluteURL(string)
@@ -310,7 +310,6 @@ function SSSpaceForName(name)
 */
 function SSSetSpaceForName(space, name)
 {
-  SSLog('set space for name: ' + name, SSLogForce);
   __spaces[name] = space;
 }
 

@@ -12,6 +12,7 @@
 var SSTableView = new Class({
 
   Extends: SSView,
+  DelegateProtocol: ['userClickedRow, userSelectedRow, itemForRowColumn, rowCount'],
   name: 'SSTableView',
     
   defaults: function() 
@@ -23,7 +24,6 @@ var SSTableView = new Class({
     });
   },
 
-  DelegateProtocol: ['userClickedRow, userSelectedRow, itemForRowColumn, rowCount'],
 
   initialize: function(el, options)
   {
@@ -87,7 +87,7 @@ var SSTableView = new Class({
   initColumnHeadings: function()
   {
     var model = this.element.getElement('> .SSControlView .SSModel');
-    this.__columnHeadingModel__ = model.dispose();
+    this.__columnHeadingModel = model.dispose();
 
     if(model)
     {
@@ -580,13 +580,13 @@ var SSTableView = new Class({
     if(datasource)
     {
       // remove the previous onload from the last datasource
-      if(this.__datasource__)
+      if(this.__datasource)
       {
-        this.__datasource__.removeEvent('onload');
+        this.__datasource.removeEvent('onload');
       }
-      this.__datasource__ = datasource;
+      this.__datasource = datasource;
       // listen for onload events on the new datasource
-      this.__datasource__.addEvent('onload', this.refresh.bind(this));
+      this.__datasource.addEvent('onload', this.refresh.bind(this));
     }
     else
     {
@@ -603,7 +603,7 @@ var SSTableView = new Class({
   */
   datasource: function()
   {
-    return this.__datasource__;
+    return this.__datasource;
   },
 
   /*
@@ -619,13 +619,13 @@ var SSTableView = new Class({
 
   setColumnTitles: function(columnTitles)
   {
-    this.__columnTitles__ = columnTitles;
+    this.__columnTitles = columnTitles;
   },
 
 
   columnTitles: function()
   {
-    return this.__columnTitles__;
+    return this.__columnTitles;
   },
 
   /*
@@ -637,7 +637,7 @@ var SSTableView = new Class({
   */
   setColumnNames: function(columnNames)
   {
-    this.__columnNames__ = columnNames;
+    this.__columnNames = columnNames;
   },
 
   /*
@@ -649,7 +649,7 @@ var SSTableView = new Class({
   */
   setColumnSortOrders: function(newOrders)
   {
-    this.__columnSortOrders__ = newOrders;
+    this.__columnSortOrders = newOrders;
   },
 
   /*
@@ -661,7 +661,7 @@ var SSTableView = new Class({
   */
   columnSortOrders: function()
   {
-    return this.__columnSortOrders__;
+    return this.__columnSortOrders;
   },
 
   /*
@@ -712,7 +712,7 @@ var SSTableView = new Class({
   */
   columnNames: function()
   {
-    return this.__columnNames__;
+    return this.__columnNames;
   },
 
   /*
@@ -757,7 +757,7 @@ var SSTableView = new Class({
   */
   setModelRow: function(modelRow)
   {
-    this.__modelRow__ = modelRow;
+    this.__modelRow = modelRow;
   },
 
   /*
@@ -769,7 +769,7 @@ var SSTableView = new Class({
   */
   modelRow: function()
   {
-    return this.__modelRow__;
+    return this.__modelRow;
   },
 
 
@@ -834,6 +834,12 @@ var SSTableView = new Class({
     {
       this.refresh();
     }
+  },
+  
+  // TODO: move to new class - David 7/18/09
+  checkedShifts: function()
+  {
+    return this.element.getElements('.SSRow input.SSSelectShift[checked]').getParent('.SSRow').map(this.indexOfRow.bind(this));
   }
 
 });
