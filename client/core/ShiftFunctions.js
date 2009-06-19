@@ -4,7 +4,7 @@
 // @package           Core
 // ==/Builder==
 
-var shifts = {};
+var __loadedShifts = $H();
 var __focusedShiftId = null; // Holds the id of the currently focused shift
 var __defaultShiftStatus = 1;
 
@@ -159,15 +159,15 @@ function SSBlurShift(shiftId)
 }
 
 /*
-  Function: SSRemoveShift
+  Function: SSUnloadShift
     Remove a shift from the internal array.
 
   Parameters:
     shiftId - a shift id.
 */
-function SSRemoveShift(shiftId)
+function SSUnloadShift(shiftId)
 {
-  delete shifts[shiftId];
+  delete __loadedShifts[shiftId];
 }
 
 /*
@@ -202,7 +202,7 @@ function SSDeleteShift(shiftId)
     if(ShiftSpace.Console) ShiftSpace.Console.removeShift(shiftId);
     // don't assume the space is loaded
     if(space) space.onShiftDelete(shiftId);
-    SSRemoveShift(shiftId);
+    SSUnloadShift(shiftId);
   });
 }
 
@@ -329,7 +329,7 @@ function SSSaveNewShift(shiftJson)
     shiftObj.setId(json.id);
 
     // unintern this id
-    SSRemoveShift(shiftJson.id);
+    SSUnloadShift(shiftJson.id);
     // we just want to change the name, so don't delete
     space.unintern(shiftJson.id);
 
@@ -526,7 +526,7 @@ function SSAllShiftIdsForSpace(spaceName)
 */
 function SSGetShift(shiftId)
 {
-  var theShift = shifts[shiftId];
+  var theShift = __loadedShifts[shiftId];
 
   if(theShift)
   {
@@ -583,7 +583,7 @@ function SSGetShiftData(shiftId)
 */
 function SSSetShift(shiftId, shiftData)
 {
-  shifts[shiftId] = $merge(shifts[shiftId], shiftData);
+  __loadedShifts[shiftId] = $merge(__loadedShifts[shiftId], shiftData);
 }
 
 /*
@@ -596,8 +596,6 @@ function SSSetShift(shiftId, shiftData)
 */
 function SSLoadShift(shiftId, callback)
 {
-  // fetch a content from the network;
-
   var params = { shiftIds: shiftId };
   SSServerCall.safeCall('shift.get', params, function(returnArray) {
     if(returnArray.data && returnArray.data[0])
@@ -624,7 +622,7 @@ function SSLoadShift(shiftId, callback)
 function SSLoadShifts(shiftIds, callback)
 {
   // fetch a content from the network;
-  var params = { shiftIds: shiftIds.join(',') };
+  var params = {shiftIds: shiftIds.join(',')};
   SSServerCall.safeCall('shift.get', params, function(_returnArray) {
     var returnArray = _returnArray;
 
@@ -658,7 +656,7 @@ function SSLoadShifts(shiftIds, callback)
 */
 function SSShiftIsLoaded(shiftId)
 {
-  return (SSGetShift(shiftId) && SSHasProperty(SSGetShift(shiftId), ('content')));
+  return (SSGetShift(shiftId) && SSHasProperty(SSGetShift(shiftId), 'content'));
 }
 
 /*

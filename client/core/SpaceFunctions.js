@@ -129,7 +129,7 @@ function SSRegisterSpace(instance)
     }
   });
 
-  instance.addEvent('onShiftDestroy', SSRemoveShift);
+  instance.addEvent('onShiftDestroy', SSUnloadShift);
 }
 
 function SSIsAbsoluteURL(string)

@@ -280,7 +280,7 @@ var ShiftSpace = new (function() {
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
       this.spaces = SSAllSpaces();
-      this.shifts = shifts;
+      this.shifts = __loadedShifts;
       this.SSSetValue = SSSetValue;
       this.SSGetValue = SSGetValue;
       this.plugins = plugins;
