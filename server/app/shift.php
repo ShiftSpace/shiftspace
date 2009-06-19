@@ -102,7 +102,7 @@ class Shift {
   public function delete() {
     $this->server->requireLogin();
     extract($_REQUEST);
-    $this->server->db->query("DELETE FROM shift WHERE id=:shiftId", compact('shiftId'));
+    $this->server->db->query("DELETE FROM shift WHERE id=:id", compact('id'));
   }    
 
   public function create() {
