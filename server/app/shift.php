@@ -65,7 +65,8 @@ class Shift {
          s.summary AS summary,
          s.created AS created,
          u.username AS username,
-         s.status AS status
+         s.status AS status,
+         s.modified AS modified
       FROM shift AS s, user AS u
       WHERE $user_clause
         $shift_clause
@@ -105,6 +106,15 @@ class Shift {
     $this->server->db->query("DELETE FROM shift WHERE id=:id", compact('id'));
   }    
 
+  public function update() {
+    $this->server->requireLogin();
+    extract($_REQUEST);
+    $shift = new Shift_Object();
+    $modified = date('Y-m-d H:i:s');
+    $shift->set(compact('id', 'summary', 'content', 'modified'));
+    $this->server->db->save($shift);
+  }
+  
   public function create() {
     $this->server->requireLogin();
   
