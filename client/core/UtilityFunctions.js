@@ -166,21 +166,6 @@ function SSLocalizedString(string)
   return string;
 }
 
-function SSSetDefaultEmailComments(value)
-{
-  if(value)
-  {
-    __defaultEmailComments = value;
-    SSSetPref('defaultEmailComments', __defaultEmailComments);
-  }
-}
-
-function SSGetDefaultEmailComments(checkPref)
-{
-  // NOTE: 2 because we can't store 0s in the DB when in the sandbox, 1 = false, 2 = true in this case - David
-  return (checkPref && SSGetPref('defaultEmailComments', 2) || __defaultEmailComments);
-}
-
 function SSHasResource(resourceName)
 {
   return __sysavail__.files.contains(resourceName) || __sysavail__.packages.contains(resourceName);

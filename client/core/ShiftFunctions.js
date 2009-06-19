@@ -179,10 +179,11 @@ Parameters:
 */
 function SSDeleteShift(shiftId) 
 {
-  var space = SSSpaceForShift(shiftId);
-
-  // don't assume the space is loaded
-  if(space) space.deleteShift(shiftId);
+  if(SSShiftIsLoaded(shiftId))
+  {
+    var space = SSSpaceForShift(shiftId);    
+    space.deleteShift(shiftId);
+  }
 
   if(SSFocusedShiftId() == shiftId)
   {
@@ -194,12 +195,14 @@ function SSDeleteShift(shiftId)
   };
 
   SSServerCall('shift.delete', params, function(json) {
-    if (!json.data.status) 
+    SSLog('deleting shift', SSLogForce);
+    SSLog(json, SSLogForce);
+    if (json.error) 
     {
       console.error(json.message);
       return;
     }
-    if(ShiftSpace.Console) ShiftSpace.Console.removeShift(shiftId);
+    SSPostNotification('onShiftDelete', shiftId);
     // don't assume the space is loaded
     if(space) space.onShiftDelete(shiftId);
     SSUnloadShift(shiftId);
@@ -858,36 +861,6 @@ function SSSetShiftStatus(shiftId, newStatus)
   });
 }
 
-/*
-  Function: SSSetDefaultShiftStatus
-    Set the default shift status, the only valid values are 1 for public, 2 for private.
-
-  Parameters:
-    value - the new shift status value.
-*/
-function SSSetDefaultShiftStatus(value)
-{
-  if(value)
-  {
-    __defaultShiftStatus = value;
-    SSSetPref('defaultShiftStatus', __defaultShiftStatus);
-  }
-}
-
-/*
-  Function: SSGetDefaultShiftStatus
-    Returns the default shift status.
-
-  Parameters:
-    checkPref - if the value should be grabbed directly via SSGetPref.
-
-  Returns:
-    Either 1 for public or 2 for private.
-*/
-function SSGetDefaultShiftStatus(checkPref)
-{
-  return (checkPref && SSGetPref('defaultShiftStatus', 1)) || __defaultShiftStatus;
-}
 
 /*
   Function: SSGetShiftContent
