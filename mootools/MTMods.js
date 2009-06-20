@@ -1,6 +1,5 @@
 // ==Builder==
 // @required
-// @package        System_
 // ==/Builder==
 
 Event.Keys.shift = 16;
