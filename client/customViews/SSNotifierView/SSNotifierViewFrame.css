@@ -21,20 +21,10 @@
 
 .SSNotifierHidden
 {
-  margin-left: -200px;
-}
-
-.SSNotifierHiddenBodyMargin
-{
-  margin-left: -208px;
+  left: -200px;
 }
 
 .SSNotifierVisible
 {
-  margin-left: 0px;
-}
-
-.SSNotifierVisibleBodyMargin
-{
-  margin-left: -8px;
+  left: 0px;
 }

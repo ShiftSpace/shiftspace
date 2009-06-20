@@ -17,18 +17,6 @@ var SSNotifierView = new Class({
     this.setIsVisible(false);
     this.spaceMenuIsVisible(false);
     
-    var bodyLeftMargin = $(document.body).getStyle('marginLeft').toInt();
-    if(bodyLeftMargin > 0)
-    {
-      this.setVisibleClass("SSNotifierVisibleBodyMargin");
-      this.setHiddenClass("SSNotifierHiddenBodyMargin");
-    }
-    else
-    {
-      this.setVisibleClass("SSNotifierVisible");
-      this.setHiddenClass("SSNotifierHidden");
-    }
-    
     this.setIsAnimating(false);
     this.setShiftIsDown(false);
     
@@ -37,30 +25,6 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     SSAddObserver(this, 'onConsoleShow', this.onConsoleShow.bind(this));
     SSAddObserver(this, 'onConsoleHide', this.onConsoleHide.bind(this));
-  },
-  
-  
-  setVisibleClass: function(class)
-  {
-    this.__visibleClass = class;
-  },
-  
-  
-  visibleClass: function(includePeriod)
-  {
-    return (includePeriod ? '.' + this.__visibleClass : this.__visibleClass);
-  },
-  
-  
-  setHiddenClass: function(class)
-  {
-    this.__hiddenClass = class;
-  },
-  
-  
-  hiddenClass: function(includePeriod)
-  {
-    return (includePeriod ? '.' + this.__hiddenClass : this.__hiddenClass);
   },
   
   
@@ -89,7 +53,7 @@ var SSNotifierView = new Class({
     {
       if(this.showFx)
       {
-        if(!this.isVisible()) this.showFx.start(this.visibleClass(true));
+        if(!this.isVisible()) this.showFx.start(".SSNotifierVisible");
       }
       else
       {
@@ -104,8 +68,8 @@ var SSNotifierView = new Class({
     this.element.setStyles({
       marginLeft: null
     });
-    this.element.removeClass(this.hiddenClass());
-    this.element.addClass(this.visibleClass());
+    this.element.removeClass("SSNotifierHidden");
+    this.element.addClass("SSNotifierVisible");
     this.setIsVisible(true);
   },
   
@@ -113,7 +77,7 @@ var SSNotifierView = new Class({
   hide: function(animate)
   {
     if(ShiftSpace.Console.isVisible()) return;
-    this.hideFx.start(this.hiddenClass(true));
+    this.hideFx.start(".SSNotifierHidden");
   },
   
   
@@ -122,8 +86,8 @@ var SSNotifierView = new Class({
     this.element.setStyles({
       marginLeft: ""
     });
-    this.element.removeClass(this.visibleClass());
-    this.element.addClass(this.hiddenClass());
+    this.element.removeClass("SSNotifierVisible");
+    this.element.addClass("SSNotifierHidden");
     this.setIsVisible(false);
   },
   
@@ -456,7 +420,7 @@ var SSNotifierView = new Class({
   {
     this.parent(ui);
     this.element.setProperty('id', 'SSNotifier');
-    this.element.addClass(this.hiddenClass());
+    this.element.addClass("SSNotifierHidden");
   },
   
   
