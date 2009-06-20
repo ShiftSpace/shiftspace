@@ -36,7 +36,6 @@ var SSSpaceMenu = new Class({
     var context = this.contentWindow();
     var body = context.$(this.contentDocument().body);
     this.element.setStyles({
-      width: body.offsetWidth,
       height: body.offsetHeight
     });
   },
