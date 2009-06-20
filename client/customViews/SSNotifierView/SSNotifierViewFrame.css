@@ -24,6 +24,11 @@
   margin-left: -200px;
 }
 
+.SSNotifierHiddenBodyMargin
+{
+  margin-left: -208px;
+}
+
 .SSNotifierVisible
 {
   margin-left: 0px;

@@ -17,6 +17,15 @@ var SSNotifierView = new Class({
     this.setIsVisible(false);
     this.spaceMenuIsVisible(false);
     
+    if($(document.body).getStyle('marginLeft').toInt() > 0)
+    {
+      this.setHiddenClass(".SSNotifierHiddenBodyMargin");
+    }
+    else
+    {
+      this.setHiddenClass(".SSNotifierHidden");
+    }
+    
     this.setIsAnimating(false);
     this.setShiftIsDown(false);
     
@@ -25,6 +34,18 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     SSAddObserver(this, 'onConsoleShow', this.onConsoleShow.bind(this));
     SSAddObserver(this, 'onConsoleHide', this.onConsoleHide.bind(this));
+  },
+  
+  
+  setHiddenClass: function(class)
+  {
+    this.__hiddenClass = class;
+  },
+  
+  
+  hiddenClass: function()
+  {
+    return this.__hiddenClass;
   },
   
   
@@ -68,7 +89,7 @@ var SSNotifierView = new Class({
     this.element.setStyles({
       marginLeft: null
     });
-    this.element.removeClass('SSNotifierHidden');
+    this.element.removeClass(this.hiddenClass());
     this.element.addClass('SSNotifierVisible');
     this.setIsVisible(true);
   },
@@ -77,7 +98,7 @@ var SSNotifierView = new Class({
   hide: function(animate)
   {
     if(ShiftSpace.Console.isVisible()) return;
-    this.hideFx.start('.SSNotifierHidden');
+    this.hideFx.start(this.hiddenClass());
   },
   
   
@@ -87,7 +108,7 @@ var SSNotifierView = new Class({
       marginLeft: ""
     });
     this.element.removeClass('SSNotifierVisible');
-    this.element.addClass('SSNotifierHidden');
+    this.element.addClass(this.hiddenClass());
     this.setIsVisible(false);
   },
   
@@ -420,7 +441,7 @@ var SSNotifierView = new Class({
   {
     this.parent(ui);
     this.element.setProperty('id', 'SSNotifier');
-    this.element.addClass('SSNotifierHidden');
+    this.element.addClass(this.hiddenClass());
   },
   
   
