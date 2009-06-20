@@ -20,10 +20,12 @@ var SSNotifierView = new Class({
     var bodyLeftMargin = $(document.body).getStyle('marginLeft').toInt();
     if(bodyLeftMargin > 0)
     {
+      this.setVisibleClass("SSNotifierVisibleBodyMargin");
       this.setHiddenClass("SSNotifierHiddenBodyMargin");
     }
     else
     {
+      this.setVisibleClass("SSNotifierVisible");
       this.setHiddenClass("SSNotifierHidden");
     }
     
@@ -35,6 +37,18 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     SSAddObserver(this, 'onConsoleShow', this.onConsoleShow.bind(this));
     SSAddObserver(this, 'onConsoleHide', this.onConsoleHide.bind(this));
+  },
+  
+  
+  setVisibleClass: function(class)
+  {
+    this.__visibleClass = class;
+  },
+  
+  
+  visibleClass: function(includePeriod)
+  {
+    return (includePeriod ? '.' + this.__visibleClass : this.__visibleClass);
   },
   
   
@@ -75,7 +89,7 @@ var SSNotifierView = new Class({
     {
       if(this.showFx)
       {
-        if(!this.isVisible()) this.showFx.start('.SSNotifierVisible');
+        if(!this.isVisible()) this.showFx.start(this.visibleClass(true));
       }
       else
       {
@@ -91,7 +105,7 @@ var SSNotifierView = new Class({
       marginLeft: null
     });
     this.element.removeClass(this.hiddenClass());
-    this.element.addClass('SSNotifierVisible');
+    this.element.addClass(this.visibleClass());
     this.setIsVisible(true);
   },
   
@@ -108,7 +122,7 @@ var SSNotifierView = new Class({
     this.element.setStyles({
       marginLeft: ""
     });
-    this.element.removeClass('SSNotifierVisible');
+    this.element.removeClass(this.visibleClass());
     this.element.addClass(this.hiddenClass());
     this.setIsVisible(false);
   },
