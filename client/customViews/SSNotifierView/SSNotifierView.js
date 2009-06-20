@@ -235,9 +235,11 @@ var SSNotifierView = new Class({
   
   attachEvents: function()
   {
-    this.document().body.addEvent('mouseenter', this['open'].bind(this));
+    var context = this.contentWindow();
+    var doc = this.contentDocument();
+    context.$(doc.body).addEvent('mouseenter', this['open'].bind(this));
     
-    this.document().body.addEvent('mouseleave', function() {
+    context.$(doc.body).addEvent('mouseleave', function() {
       if(!this.shiftIsDown())
       {
         this['close']();
@@ -399,14 +401,14 @@ var SSNotifierView = new Class({
   
   showControls: function()
   {
-    this.window().$$('.SSNotifierSubView').removeClass('SSActive');
+    this.contentWindow().$$('.SSNotifierSubView').removeClass('SSActive');
     this.SSNotifierControlsView.addClass('SSActive');
   },
   
   
   hideControls: function()
   {
-    this.window().$$('.SSNotifierSubView').removeClass('SSActive');
+    this.contentWindow().$$('.SSNotifierSubView').removeClass('SSActive');
     this.SSNotifierDefaultView.addClass('SSActive');
   },
   

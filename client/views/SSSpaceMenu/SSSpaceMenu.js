@@ -33,7 +33,8 @@ var SSSpaceMenu = new Class({
   
   resize: function()
   {
-    var body = this.document().body
+    var context = this.contentWindow();
+    var body = context.$(this.contentDocument().body);
     this.element.setStyles({
       width: body.offsetWidth,
       height: body.offsetHeight
@@ -129,7 +130,6 @@ var SSSpaceMenu = new Class({
     this.parent();
     this.update();
     this.attachEvents();
-    SSLog('>>>>>>>>>>>>>>>>>>>>> SpaceMenu is loaded', SSLogForce);
     this.setIsLoaded(true);
   },
   
