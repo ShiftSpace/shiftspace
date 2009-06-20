@@ -237,7 +237,10 @@ var SSNotifierView = new Class({
   {
     var context = this.contentWindow();
     var doc = this.contentDocument();
-    context.$(doc.body).addEvent('mouseenter', this['open'].bind(this));
+    
+    context.$(doc.body).addEvent('mouseenter', function(evt) {
+      this['open']();
+    }.bind(this));
     
     context.$(doc.body).addEvent('mouseleave', function() {
       if(!this.shiftIsDown())

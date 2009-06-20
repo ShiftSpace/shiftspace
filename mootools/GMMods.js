@@ -22,6 +22,10 @@ Window.implement({
     }
     return new Elements(elements);
   },
+  
+  getDocument: function(){
+    return new Document(this.document);
+  }
 });
 
 Element.implement({
@@ -34,8 +38,8 @@ Element.implement({
   },
   
   getDocument: function(){
-		return new Document(this.ownerDocument);
-	},
+    return (new Document(this.ownerDocument));
+  },
 
   getComputedStyle: function(property){
     if ($(this).currentStyle) return $(this).currentStyle[property.camelCase()];
