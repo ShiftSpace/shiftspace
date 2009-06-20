@@ -32,6 +32,10 @@ Element.implement({
   getWindow: function(){
     return (new Window(this.ownerDocument.defaultView || this.ownerDocument.parentWindow));
   },
+  
+  getDocument: function(){
+		return new Document(this.ownerDocument);
+	},
 
   getComputedStyle: function(property){
     if ($(this).currentStyle) return $(this).currentStyle[property.camelCase()];
