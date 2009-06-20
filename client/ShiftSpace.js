@@ -6,10 +6,10 @@
 // @exclude        http://metatron.shiftspace.org/api/sandbox/*
 // @exclude        http://shiftspace.org/api/sandbox/*
 // @exclude        http://www.shiftspace.org/api/sandbox/*
-// @exclude        http://%%SERVER%%/sandbox/*
-// @require        http://%%SERVER%%/mootools/mootools-1.2.3-core.js
-// @require        http://%%SERVER%%/mootools/mootools-1.2.3.1-more.js
-// @require        http://%%SERVER%%/client/Videobox.js
+// @exclude        http://%%SERVER%%sandbox/*
+// @require        http://%%SERVER%%mootools/mootools-1.2.3-core.js
+// @require        http://%%SERVER%%mootools/mootools-1.2.3.1-more.js
+// @require        http://%%SERVER%%client/Videobox.js
 // ==/UserScript==
 
 /*
