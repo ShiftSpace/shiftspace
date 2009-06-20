@@ -17,13 +17,14 @@ var SSNotifierView = new Class({
     this.setIsVisible(false);
     this.spaceMenuIsVisible(false);
     
-    if($(document.body).getStyle('marginLeft').toInt() > 0)
+    var bodyLeftMargin = $(document.body).getStyle('marginLeft').toInt();
+    if(bodyLeftMargin > 0)
     {
-      this.setHiddenClass(".SSNotifierHiddenBodyMargin");
+      this.setHiddenClass("SSNotifierHiddenBodyMargin");
     }
     else
     {
-      this.setHiddenClass(".SSNotifierHidden");
+      this.setHiddenClass("SSNotifierHidden");
     }
     
     this.setIsAnimating(false);
@@ -43,9 +44,9 @@ var SSNotifierView = new Class({
   },
   
   
-  hiddenClass: function()
+  hiddenClass: function(includePeriod)
   {
-    return this.__hiddenClass;
+    return (includePeriod ? '.' + this.__hiddenClass : this.__hiddenClass);
   },
   
   
@@ -98,7 +99,7 @@ var SSNotifierView = new Class({
   hide: function(animate)
   {
     if(ShiftSpace.Console.isVisible()) return;
-    this.hideFx.start(this.hiddenClass());
+    this.hideFx.start(this.hiddenClass(true));
   },
   
   
