@@ -4,15 +4,10 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Sandalphon</title>
-    
-    <!-- Load mootools script files -->
-    <script src="../mootools/mootools-1.2-core.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../mootools/mootools-1.2-more.js" type="text/javascript" charset="utf-8"></script>
-    <!-- boot strap -->
+    <script src="../mootools/mootools-1.2.3-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mootools/mootools-1.2.3.1-more.js" type="text/javascript" charset="utf-8"></script>
     <script src="../sandbox/GreaseMonkeyApi.js" type="text/javascript" charset="utf-8"></script>
     <script src="../builds/shiftspace.sandalphon.js" charset="utf-8"></script>
-    <!-- what's need to startup the tool -->
     <script type="text/javascript" charset="utf-8">
       window.addEvent('domready', function() {
         waitForConsole();
@@ -31,13 +26,8 @@
         }
       }
     </script>
-
-    <!-- Persistence for local prefs -->
     <script src="persist.js" type="text/javascript" charset="utf-8"></script>
-    
     <title>Sandalphon Interface Tool</title>
-    
-    <!-- Load the relevant style files -->
     <link rel="stylesheet" href="../styles/ShiftSpace.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     <link rel="stylesheet" href="sandalphon.css" type="text/css" media="screen" title="no title" charset="utf-8" />
   </head>
@@ -52,7 +42,6 @@
               <th>Load Interface File:</th>
               <td>
                 <input id="loadFileInput" type="text" value="/client/views/SSConsole/SSConsole"></input>
-                <!--<input id="loadFile" type="button" name="LoadInterface" value="Load"></input>-->
                 <input id="compileFile" type="button" name="Compile" value="Compile"></input>
                 <select id="localizedStrings">
                   <option value="en">English</option>

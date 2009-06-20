@@ -5,28 +5,17 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Test Runner</title>
-    <!--[if IE 6]>
-    <script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script>
-    <![endif]-->
-    <!--[if IE 7]>
-    <script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script>
-    <![endif]-->    
-    <!-- Load mootools script files -->
     <script>
       var ShiftSpace = {};
     </script>
-    <script src="../mootools/mootools-1.2-core.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../mootools/mootools-1.2-more.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mootools/mootools-1.2.3-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mootools/mootools-1.2.3.1-more.js" type="text/javascript" charset="utf-8"></script>
     <script src="../sandbox/GreaseMonkeyApi.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/SSException.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
     <script src="SSTestRunner.js" type="text/javascript" charset="utf-8"></script>
     <script src="init.js" type="text/javascript" charset="utf-8"></script>
     <script src="../builds/shiftspace.sandalphon.js" type="text/javascript" charset="utf-8"></script>
-    <!-- 
-    <script src="../packages&load=SSUnitTest" type="text/javascript" charset="utf-8"></script>
-      -->
-    <!-- Load the relevant style files -->
     <link rel="stylesheet" href="../styles/ShiftSpace.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     <link rel="stylesheet" href="sandalphon.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     

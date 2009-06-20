@@ -1,7 +1,7 @@
 //MooTools More, <http://mootools.net/more>. Copyright (c) 2006-2009 Aaron Newton <http://clientcide.com/>, Valerio Proietti <http://mad4milk.net> & the MooTools team <http://mootools.net/developers>, MIT Style License.
 
 MooTools.More = {
-	'version': '1.2.2.1'
+	'version': '1.2.3.1'
 };
 
 /*
@@ -190,7 +190,7 @@ Script: Class.Occlude.js
 Class.Occlude = new Class({
 
 	occlude: function(property, element){
-		element = $(element || this.element);
+		element = document.id(element || this.element);
 		var instance = element.retrieve(property || this.property);
 		if (instance && !$defined(this.occluded)){
 			this.occluded = instance;
@@ -306,22 +306,19 @@ Script: Date.js
 		Aaron Newton
 		Nicholas Barthelemy - https://svn.nbarthelemy.com/date-js/
 		Harald Kirshner - mail [at] digitarald.de; http://digitarald.de
+		Scott Kyle - scott [at] appden.com; http://appden.com
 
 */
 
 (function(){
 
-new Native({name: 'Date', initialize: Date, protect: true});
-
-['now','parse','UTC'].each(function(method){
-	Native.genericize(Date, method, true);
-});
+if (!Date.now) Date.now = $time;
 
 Date.Methods = {};
 
 ['Date', 'Day', 'FullYear', 'Hours', 'Milliseconds', 'Minutes', 'Month', 'Seconds', 'Time', 'TimezoneOffset',
-	'Week', 'Timezone', 'GMTOffset', 'DayOfYear', 'LastMonth', 'UTCDate', 'UTCDay', 'UTCFullYear',
-	'AMPM', 'UTCHours', 'UTCMilliseconds', 'UTCMinutes', 'UTCMonth', 'UTCSeconds'].each(function(method){
+	'Week', 'Timezone', 'GMTOffset', 'DayOfYear', 'LastMonth', 'LastDayOfMonth', 'UTCDate', 'UTCDay', 'UTCFullYear',
+	'AMPM', 'Ordinal', 'UTCHours', 'UTCMilliseconds', 'UTCMinutes', 'UTCMonth', 'UTCSeconds'].each(function(method){
 	Date.Methods[method.toLowerCase()] = method;
 });
 
@@ -337,7 +334,7 @@ $each({
 });
 
 var zeroize = function(what, length){
-	return '0'.repeat(length - what.toString().length) + what;
+	return new Array(length - what.toString().length + 1).join('0') + what;
 };
 
 Date.implement({
@@ -355,10 +352,10 @@ Date.implement({
 		return this;
 	},
 
-	get: function(key){
-		key = key.toLowerCase();
+	get: function(prop){
+		prop = prop.toLowerCase();
 		var m = Date.Methods;
-		if (m[key]) return this['get' + m[key]]();
+		if (m[prop]) return this['get' + m[prop]]();
 		return null;
 	},
 
@@ -367,54 +364,29 @@ Date.implement({
 	},
 
 	increment: function(interval, times){
-		return this.multiply(interval, times);
+		interval = interval || 'day';
+		times = $pick(times, 1);
+
+		switch (interval){
+			case 'year':
+				return this.increment('month', times * 12);
+			case 'month':
+				var d = this.get('date');
+				this.set('date', 1).set('mo', this.get('mo') + times);
+				return this.set('date', d.min(this.get('lastdayofmonth')));
+			case 'week':
+				return this.increment('day', times * 7);
+			case 'day':
+				return this.set('date', this.get('date') + times);
+		}
+
+		if (!Date.units[interval]) throw new Error(interval + ' is not a supported interval');
+
+		return this.set('time', this.get('time') + times * Date.units[interval]());
 	},
 
 	decrement: function(interval, times){
-		return this.multiply(interval, times, false);
-	},
-
-	multiply: function(interval, times, increment){
-		interval = interval || 'day';
-		times = $pick(times, 1);
-		increment = $pick(increment, true);
-		var multiplier = increment ? 1 : -1;
-		var month = this.format('%m').toInt() - 1;
-		var year = this.format('%Y').toInt();
-		var time = this.get('time');
-		var offset = 0;
-		switch (interval) {
-				case 'year':
-					times.times(function(val) {
-						if (Date.isLeapYear(year+val) && month > 1 && multiplier > 0) val++;
-						if (Date.isLeapYear(year+val) && month <= 1 && multiplier < 0) val--;
-						offset += Date.units.year(year+val);
-					});
-					break;
-				case 'month':
-					times.times(function(val){
-						if (multiplier < 0) val++;
-						var mo = month+(val * multiplier);
-						var year = year;
-						if (mo < 0) {
-							year--;
-							mo = 12+mo;
-						}
-						if (mo > 11 || mo < 0) {
-							year += (mo / 12).toInt() * multiplier;
-							mo = mo % 12;
-						}
-						offset += Date.units.month(mo, year);
-					});
-					break;
-				case 'day':
-					return this.set('date', this.get('date')+(multiplier*times));
-				default:
-					offset = Date.units[interval]() * times;
-					break;
-		}
-		this.set('time', time + (offset * multiplier));
-		return this;
+		return this.increment(interval, -1 * $pick(times, 1));
 	},
 
 	isLeapYear: function(){
@@ -422,35 +394,43 @@ Date.implement({
 	},
 
 	clearTime: function(){
-		['hr', 'min', 'sec', 'ms'].each(function(t){
-			this.set(t, 0);
-		}, this);
-		return this;
+		return this.set({hr: 0, min: 0, sec: 0, ms: 0});
 	},
 
 	diff: function(d, resolution){
 		resolution = resolution || 'day';
 		if ($type(d) == 'string') d = Date.parse(d);
+
 		switch (resolution){
 			case 'year':
-				return d.format('%Y').toInt() - this.format('%Y').toInt();
-				break;
+				return d.get('year') - this.get('year');
 			case 'month':
-				var months = (d.format('%Y').toInt() - this.format('%Y').toInt())*12;
-				return months + d.format('%m').toInt() - this.format('%m').toInt();
-				break;
+				var months = (d.get('year') - this.get('year')) * 12;
+				return months + d.get('mo') - this.get('mo');
 			default:
 				var diff = d.get('time') - this.get('time');
-				if (diff < 0 && Date.units[resolution]() > (-1*(diff))) return 0;
-				else if (diff >= 0 && diff < Date.units[resolution]()) return 0;
+				if (Date.units[resolution]() > diff.abs()) return 0;
 				return ((d.get('time') - this.get('time')) / Date.units[resolution]()).round();
 		}
+
 		return null;
 	},
 
+	getLastDayOfMonth: function(){
+		return Date.daysInMonth(this.get('mo'), this.get('year'));
+	},
+
+	getDayOfYear: function(){
+		return (Date.UTC(this.get('year'), this.get('mo'), this.get('date') + 1) 
+			- Date.UTC(this.get('year'), 0, 1)) / Date.units.day();
+	},
+
 	getWeek: function(){
-		var day = (new Date(this.get('year'), 0, 1)).get('date');
-		return Math.round((this.get('dayofyear') + (day > 3 ? day - 4 : day + 3)) / 7);
+		return (this.get('dayofyear') / 7).ceil();
+	},
+	
+	getOrdinal: function(day){
+		return Date.getMsg('ordinal', day || this.get('date'));
 	},
 
 	getTimezone: function(){
@@ -461,9 +441,19 @@ Date.implement({
 
 	getGMTOffset: function(){
 		var off = this.get('timezoneOffset');
-		return ((off > 0) ? '-' : ' + ')
-			+ zeroize(Math.floor(Math.abs(off) / 60), 2)
-			+ zeroize(off % 60, 2);
+		return ((off > 0) ? '-' : '+') + zeroize((off.abs() / 60).floor(), 2) + zeroize(off % 60, 2);
+	},
+
+	setAMPM: function(ampm){
+		ampm = ampm.toUpperCase();
+		var hr = this.get('hr');
+		if (hr > 11 && ampm == 'AM') return this.decrement('hour', 12);
+		else if (hr < 12 && ampm == 'PM') return this.increment('hour', 12);
+		return this;
+	},
+
+	getAMPM: function(){
+		return (this.get('hr') < 12) ? 'AM' : 'PM';
 	},
 
 	parse: function(str){
@@ -478,17 +468,9 @@ Date.implement({
 	format: function(f){
 		if (!this.isValid()) return 'invalid date';
 		f = f || '%x %X';
-		//replace short-hand with actual format
-		f = ({
-			db: '%Y-%m-%d %H:%M:%S',
-			compact: '%Y%m%dT%H%M%S',
-			iso8601: '%Y-%m-%dT%H:%M:%S%T',
-			rfc822: '%a, %d %b %Y %H:%M:%S %Z',
-			'short': '%d %b %H:%M',
-			'long': '%B %d, %Y %H:%M'
-		})[f.toLowerCase()] || f;
+		f = formats[f.toLowerCase()] || f; // replace short-hand with actual format
 		var d = this;
-		return f.replace(/\%([aAbBcdHIjmMpSUWwxXyYTZ\%])/g,
+		return f.replace(/%([a-z%])/gi,
 			function($1, $2){
 				switch ($2){
 					case 'a': return Date.getMsg('days')[d.get('day')].substr(0, 3);
@@ -502,10 +484,10 @@ Date.implement({
 					case 'j': return zeroize(d.get('dayofyear'), 3);
 					case 'm': return zeroize((d.get('mo') + 1), 2);
 					case 'M': return zeroize(d.get('min'), 2);
-					case 'p': return Date.getMsg(d.get('hr') < 12 ? 'AM' : 'PM');
+					case 'o': return d.get('ordinal');
+					case 'p': return Date.getMsg(d.get('ampm'));
 					case 'S': return zeroize(d.get('seconds'), 2);
 					case 'U': return zeroize(d.get('week'), 2);
-					case 'W': throw new Error('%W is not supported yet');
 					case 'w': return d.get('day');
 					case 'x': return d.format(Date.getMsg('shortDate'));
 					case 'X': return d.format(Date.getMsg('shortTime'));
@@ -513,20 +495,14 @@ Date.implement({
 					case 'Y': return d.get('year');
 					case 'T': return d.get('GMTOffset');
 					case 'Z': return d.get('Timezone');
-					case '%': return '%';
 				}
 				return $2;
 			}
 		);
 	},
 
-	setAMPM: function(ampm){
-		ampm = ampm.toUpperCase();
-		if (this.format('%H').toInt() > 11 && ampm == 'AM')
-			return this.decrement('hour', 12);
-		else if (this.format('%H').toInt() < 12 && ampm == 'PM')
-			return this.increment('hour', 12);
-		return this;
+	toISOString: function(){
+		return this.format('iso8601');
 	}
 
 });
@@ -534,15 +510,43 @@ Date.implement({
 Date.alias('diff', 'compare');
 Date.alias('format', 'strftime');
 
+var formats = {
+	db: '%Y-%m-%d %H:%M:%S',
+	compact: '%Y%m%dT%H%M%S',
+	iso8601: '%Y-%m-%dT%H:%M:%S%T',
+	rfc822: '%a, %d %b %Y %H:%M:%S %Z',
+	'short': '%d %b %H:%M',
+	'long': '%B %d, %Y %H:%M'
+};
+
 var nativeParse = Date.parse;
 
-var daysInMonth = function(monthIndex, year){
-	if (Date.isLeapYear(year.toInt()) && monthIndex === 1) return 29;
-	return [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][monthIndex];
+var parseWord = function(type, word, num){
+	var ret = -1;
+	var translated = Date.getMsg(type + 's');
+
+	switch ($type(word)){
+		case 'object':
+			ret = translated[word.get(type)];
+			break;
+		case 'number':
+			ret = translated[month - 1];
+			if (!ret) throw new Error('Invalid ' + type + ' index: ' + index);
+			break;
+		case 'string':
+			var match = translated.filter(function(name){
+				return this.test(name);
+			}, new RegExp('^' + word, 'i'));
+			if (!match.length)    throw new Error('Invalid ' + type + ' string');
+			if (match.length > 1) throw new Error('Ambiguous ' + type);
+			ret = match[0];
+	}
+
+	return (num) ? translated.indexOf(ret) : ret;
 };
 
 
-$extend(Date, {
+Date.extend({
 
 	getMsg: function(key, args) {
 		return MooTools.lang.get('Date', key, args);
@@ -555,87 +559,56 @@ $extend(Date, {
 		hour: $lambda(3600000),
 		day: $lambda(86400000),
 		week: $lambda(608400000),
-		month: function(monthIndex, year){
-			var d = new Date();
-			return daysInMonth($pick(monthIndex,d.format('%m').toInt()), $pick(year,d.format('%Y').toInt())) * 86400000;
+		month: function(month, year){
+			var d = new Date;
+			return Date.daysInMonth($pick(month, d.get('mo')), $pick(year, d.get('year'))) * 86400000;
 		},
 		year: function(year){
-			year = year || new Date().format('%Y').toInt();
-			return Date.isLeapYear(year.toInt()) ? 31622400000 : 31536000000;
+			year = year || new Date().get('year');
+			return Date.isLeapYear(year) ? 31622400000 : 31536000000;
 		}
 	},
 
-	isLeapYear: function(yr){
-		return new Date(yr , 1, 29).getDate() == 29;
+	daysInMonth: function(month, year){
+		return [31, Date.isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][month];
 	},
 
-	fixY2K: function(d){
-		if (!isNaN(d)){
-			var newDate = new Date(d);
-			if (newDate.get('year') < 2000 && d.toString().indexOf(newDate.get('year')) < 0) newDate.increment('year', 100);
-			return newDate;
-		} else {
-			return d;
-		}
+	isLeapYear: function(year){
+		return new Date(year, 1, 29).get('date') == 29;
 	},
 
 	parse: function(from){
 		var t = $type(from);
 		if (t == 'number') return new Date(from);
 		if (t != 'string') return from;
+		from = from.clean();
 		if (!from.length) return null;
+
 		var parsed;
-		Date.parsePatterns.each(function(pattern, i){
-			if (parsed) return;
+		Date.parsePatterns.some(function(pattern){
 			var r = pattern.re.exec(from);
-			if (r) parsed = pattern.handler(r);
+			return (r) ? (parsed = pattern.handler(r)) : false;
 		});
+
 		return parsed || new Date(nativeParse(from));
 	},
 
 	parseDay: function(day, num){
-		var ret = -1;
-		switch ($type(day)){
-			case 'number':
-				ret = Date.getMsg('days')[day - 1] || false;
-				if (!ret) throw new Error('Invalid day index value must be between 1 and 7');
-				break;
-			case 'string':
-				var match = Date.getMsg('days').filter(function(name){
-					return this.test(name);
-				}, new RegExp('^' + day, 'i'));
-				if (!match.length) throw new Error('Invalid day string');
-				if (match.length > 1) throw new Error('Ambiguous day');
-				ret = match[0];
-		}
-		return (num) ? Date.getMsg('days').indexOf(ret) : ret;
+		return parseWord('day', day, num);
 	},
 
 	parseMonth: function(month, num){
-		var ret = -1;
-		switch ($type(month)){
-			case 'object':
-				ret = Date.getMsg('months')[month.get('mo')];
-				break;
-			case 'number':
-				ret = Date.getMsg('months')[month - 1] || false;
-				if (!ret) throw new Error('Invalid month index value must be between 1 and 12:' + index);
-				break;
-			case 'string':
-				var match = Date.getMsg('months').filter(function(name){
-					return this.test(name);
-				}, new RegExp('^' + month, 'i'));
-				if (!match.length) throw new Error('Invalid month string');
-				if (match.length > 1) throw new Error('Ambiguous month');
-				ret = match[0];
-		}
-		return (num) ? Date.getMsg('months').indexOf(ret) : ret;
+		return parseWord('month', month, num);
 	},
 
 	parseUTC: function(value){
 		var localDate = new Date(value);
-		var utcSeconds = Date.UTC(localDate.get('year'), localDate.get('mo'),
-		localDate.get('date'), localDate.get('hr'), localDate.get('min'), localDate.get('sec'));
+		var utcSeconds = Date.UTC(localDate.get('year'), 
+		localDate.get('mo'),
+		localDate.get('date'), 
+		localDate.get('hr'), 
+		localDate.get('min'), 
+		localDate.get('sec'));
 		return new Date(utcSeconds);
 	},
 
@@ -643,54 +616,148 @@ $extend(Date, {
 		return Date.getMsg('dateOrder').indexOf(unit) + 1;
 	},
 
-	parsePatterns: [
-		{
-			//"1999-12-31"
-			re: /^(\d{4})[\.\-\/](\d{1,2})[\.\-\/](\d{1,2})$/,
-			handler: function(bits){
-				return new Date(bits[1], bits[2] - 1, bits[3]);
-			}
-		},
-		{
-			//"1999-12-31 23:59:59"
-			re: /^(\d{4})[\.\-\/](\d{1,2})[\.\-\/](\d{1,2})\s(\d{1,2}):(\d{1,2})(?:\:(\d{1,2}))?(\w{2})?$/,
-			handler: function(bits){
-				var d = new Date(bits[1], bits[2] - 1, bits[3]);
-				d.set('hr', bits[4]);
-				d.set('min', bits[5]);
-				d.set('sec', bits[6] || 0);
-				if (bits[7]) d.set('ampm', bits[7]);
-				return d;
-			}
-		},
-		{
-			//"12.31.08", "12-31-08", "12/31/08", "12.31.2008", "12-31-2008", "12/31/2008"
-			re: /^(\d{1,2})[\.\-\/](\d{1,2})[\.\-\/](\d{2,4})$/,
-			handler: function(bits){
-				var d = new Date(bits[Date.orderIndex('year')],
-								 bits[Date.orderIndex('month')] - 1,
-								 bits[Date.orderIndex('date')]);
-				return Date.fixY2K(d);
-			}
-		},
-		//"12.31.08", "12-31-08", "12/31/08", "12.31.2008", "12-31-2008", "12/31/2008"
-		//above plus "10:45pm" ex: 12.31.08 10:45pm
-		{
-			re: /^(\d{1,2})[\.\-\/](\d{1,2})[\.\-\/](\d{2,4})\s(\d{1,2})[:\.](\d{1,2})(?:[\:\.](\d{1,2}))?(\w{2})?$/,
-			handler: function(bits){
-				var d = new Date(bits[Date.orderIndex('year')],
-								 bits[Date.orderIndex('month')] - 1,
-								 bits[Date.orderIndex('date')]);
-				d.set('hr', bits[4]);
-				d.set('min', bits[5]);
-				d.set('sec', bits[6] || 0);
-				if (bits[7]) d.set('ampm', bits[7]);
-				return Date.fixY2K(d);
-			}
-		}
-	]
+	defineFormat: function(name, format){
+		formats[name] = format;
+	},
+
+	defineFormats: function(formats){
+		for (var name in formats) Date.defineFormat(name, formats[f]);
+	},
+
+	parsePatterns: [],
+	
+	defineParser: function(pattern){
+		Date.parsePatterns.push( pattern.re && pattern.handler ? pattern : build(pattern) );
+	},
+	
+	defineParsers: function(){
+		Array.flatten(arguments).each(Date.defineParser);
+	},
+	
+	define2DigitYearStart: function(year){
+		yr_start = year % 100;
+		yr_base = year - yr_start;
+	}
 
 });
+
+var yr_base = 1900;
+var yr_start = 70;
+
+var replacers = function(key){
+	switch(key){
+		case 'x': // iso8601 covers yyyy-mm-dd, so just check if month is first
+			return (Date.orderIndex('month') == 1) ? '%m[.-/]%d([.-/]%y)?' : '%d[.-/]%m([.-/]%y)?';
+		case 'X':
+			return '%H([.:]%M)?([.:]%S([.:]%s)?)?\\s?%p?\\s?%T?';
+		case 'o':
+			return '[^\\d\\s]*';
+	}
+	return null;
+};
+
+var keys = {
+	a: /[a-z]{3,}/,
+	d: /[0-2]?[0-9]|3[01]/,
+	H: /[01]?[0-9]|2[0-3]/,
+	I: /0?[1-9]|1[0-2]/,
+	M: /[0-5]?\d/,
+	s: /\d+/,
+	p: /[ap]\.?m\.?/,
+	y: /\d{2}|\d{4}/,
+	Y: /\d{4}/,
+	T: /Z|[+-]\d{2}(?::?\d{2})?/
+};
+
+keys.B = keys.b = keys.A = keys.a;
+keys.m = keys.I;
+keys.S = keys.M;
+
+var lang;
+
+var build = function(format){
+	if (!lang) return {format: format}; // wait until language is set
+	
+	var parsed = [null];
+
+	var re = (format.source || format) // allow format to be regex
+	 .replace(/%([a-z])/gi,
+		function($1, $2){
+			return replacers($2) || $1;
+		}
+	).replace(/\((?!\?)/g, '(?:') // make all groups non-capturing
+	 .replace(/ (?!\?|\*)/g, ',? ') // be forgiving with spaces and commas
+	 .replace(/%([a-z%])/gi,
+		function($1, $2){
+			var p = keys[$2];
+			if (!p) return $2;
+			parsed.push($2);
+			return '(' + p.source + ')';
+		}
+	);
+
+	return {
+		format: format,
+		re: new RegExp('^' + re + '$', 'i'),
+		handler: function(bits){
+			var date = new Date().clearTime();
+			for (var i = 1; i < parsed.length; i++)
+				date = handle.call(date, parsed[i], bits[i]);
+			return date;
+		}
+	};
+};
+
+var handle = function(key, value){
+	if (!value){
+		if (key == 'm' || key == 'd') value = 1;
+		else return this;
+	}
+
+	switch(key){
+		case 'a': case 'A': return this.set('day', Date.parseDay(value, true));
+		case 'b': case 'B': return this.set('mo', Date.parseMonth(value, true));
+		case 'd': return this.set('date', value);
+		case 'H': case 'I': return this.set('hr', value);
+		case 'm': return this.set('mo', value - 1);
+		case 'M': return this.set('min', value);
+		case 'p': return this.set('ampm', value.replace(/\./g, ''));
+		case 'S': return this.set('sec', value);
+		case 's': return this.set('ms', ('0.' + value) * 1000);
+		case 'w': return this.set('day', value);
+		case 'Y': return this.set('year', value);
+		case 'y':
+			value = +value;
+			if (value < 100) value += yr_base + (value < yr_start ? 100 : 0);
+			return this.set('year', value);
+		case 'T':
+			if (value == 'Z') value = '+00';
+			var offset = value.match(/([+-])(\d{2}):?(\d{2})?/);
+			offset = (offset[1] + '1') * (offset[2] * 60 + (+offset[3] || 0)) + this.getTimezoneOffset();
+			return this.set('time', (this * 1) - offset * 60000);
+	}
+
+	return this;
+};
+
+Date.defineParsers(
+	'%Y([-./]%m([-./]%d((T| )%X)?)?)?', // "1999-12-31", "1999-12-31 11:59pm", "1999-12-31 23:59:59", ISO8601
+	'%Y%m%d(T%H(%M%S?)?)?', // "19991231", "19991231T1159", compact
+	'%x( %X)?', // "12/31", "12.31.99", "12-31-1999", "12/31/2008 11:59 PM"
+	'%d%o( %b( %Y)?)?( %X)?', // "31st", "31st December", "31 Dec 1999", "31 Dec 1999 11:59pm"
+	'%b %d%o?( %Y)?( %X)?', // Same as above with month and day switched
+	'%b %Y' // "December 1999"
+);
+
+MooTools.lang.addEvent('langChange', function(language){
+	if (!MooTools.lang.get('Date')) return;
+
+	lang = language;
+	Date.parsePatterns.each(function(pattern, i){
+		if (pattern.format) Date.parsePatterns[i] = build(pattern.format);
+	});
+
+}).fireEvent('langChange', MooTools.lang.getCurrentLanguage());
 
 })();
 
@@ -706,210 +773,77 @@ Script: Date.Extras.js
 
 */
 
-['LastDayOfMonth', 'Ordinal'].each(function(method){
-	Date.Methods[method.toLowerCase()] = method;
-});
-
-
 Date.implement({
 
 	timeDiffInWords: function(relative_to){
 		return Date.distanceOfTimeInWords(this, relative_to || new Date);
-	},
-
-	getOrdinal: function(dayOfMonth){
-		return Date.getMsg('ordinal', dayOfMonth || this.get('date'));
-	},
-
-	getDayOfYear: function(){
-		return ((Date.UTC(this.getFullYear(), this.getMonth(), this.getDate() + 1, 0, 0, 0)
-			- Date.UTC(this.getFullYear(), 0, 1, 0, 0, 0) ) / Date.units.day());
-	},
-
-	getLastDayOfMonth: function(){
-		var ret = this.clone();
-		ret.setMonth(ret.getMonth() + 1, 0);
-		return ret.getDate();
 	}
 
 });
 
 Date.alias('timeDiffInWords', 'timeAgoInWords');
 
-$extend(Date, {
+Date.extend({
 
-	distanceOfTimeInWords: function(fromTime, toTime){
-		return this.getTimePhrase(((toTime.getTime() - fromTime.getTime()) / 1000).toInt(), fromTime, toTime);
+	distanceOfTimeInWords: function(from, to){
+		return Date.getTimePhrase(((to - from) / 1000).toInt());
 	},
 
-	getTimePhrase: function(delta, fromTime, toTime){
-		var getPhrase = function(){
-			var suffix;
-			if (delta >= 0){
-				suffix = 'Ago';
-			} else {
-				delta = delta * -1;
-				suffix = 'Until';
-			}
-			if (delta < 60){
-				return Date.getMsg('lessThanMinute' + suffix, delta);
-			} else if (delta < 120){
-				return Date.getMsg('minute' + suffix, delta);
-			} else if (delta < (45 * 60)){
-				delta = (delta / 60).round();
-				return Date.getMsg('minutes' + suffix, delta);
-			} else if (delta < (90 * 60)){
-				return Date.getMsg('hour' + suffix, delta);
-			} else if (delta < (24 * 60 * 60)){
-				delta = (delta / 3600).round();
-				return Date.getMsg('hours' + suffix, delta);
-			} else if (delta < (48 * 60 * 60)){
-				return Date.getMsg('day' + suffix, delta);
-			} else {
-				delta = (delta / 86400).round();
-				return Date.getMsg('days' + suffix, delta);
-			}
-		};
-		return getPhrase().substitute({delta: delta});
+	getTimePhrase: function(delta){
+		var suffix = (delta < 0) ? 'Until' : 'Ago';
+		if (delta < 0) delta *= -1;
+		
+		var msg = (delta < 60) ? 'lessThanMinute' :
+				  (delta < 120) ? 'minute' :
+				  (delta < (45 * 60)) ? 'minutes' :
+				  (delta < (90 * 60)) ? 'hour' :
+				  (delta < (24 * 60 * 60)) ? 'hours' :
+				  (delta < (48 * 60 * 60)) ? 'day' :
+				  'days';
+		
+		switch(msg){
+			case 'minutes': delta = (delta / 60).round(); break;
+			case 'hours':   delta = (delta / 3600).round(); break;
+			case 'days': 	delta = (delta / 86400).round();
+		}
+		
+		return Date.getMsg(msg + suffix, delta).substitute({delta: delta});
 	}
 
 });
 
 
-Date.parsePatterns.extend([
+Date.defineParsers(
 
 	{
-		// yyyy-mm-ddTHH:MM:SS-0500 (ISO8601) i.e.2007-04-17T23:15:22Z
-		// inspired by: http://delete.me.uk/2005/03/iso8601.html
-		re: /^(\d{4})(?:-?(\d{2})(?:-?(\d{2})(?:[T ](\d{2})(?::?(\d{2})(?::?(\d{2})(?:\.(\d+))?)?)?(?:Z|(?:([-+])(\d{2})(?::?(\d{2}))?)?)?)?)?)?$/,
+		// "today", "tomorrow", "yesterday"
+		re: /^tod|tom|yes/i,
 		handler: function(bits){
-			var offset = 0;
-			var d = new Date(bits[1], 0, 1);
-			if (bits[3]) d.set('date', bits[3]);
-			if (bits[2]) d.set('mo', bits[2] - 1);
-			if (bits[4]) d.set('hr', bits[4]);
-			if (bits[5]) d.set('min', bits[5]);
-			if (bits[6]) d.set('sec', bits[6]);
-			if (bits[7]) d.set('ms', ('0.' + bits[7]).toInt() * 1000);
-			if (bits[9]){
-				offset = (bits[9].toInt() * 60) + bits[10].toInt();
-				offset *= ((bits[8] == '-') ? 1 : -1);
+			var d = new Date().clearTime();
+			switch(bits[0]){
+				case 'tom': return d.increment();
+				case 'yes': return d.decrement();
+				default: 	return d;
 			}
-			//offset -= d.getTimezoneOffset();
-			d.setTime((d * 1) + (offset * 60 * 1000).toInt());
-			return d;
 		}
 	},
 
 	{
-		//"today"
-		re: /^tod/i,
-		handler: function(){
-			return new Date();
-		}
-	},
-
-	{
-		//"tomorow"
-		re: /^tom/i,
-		handler: function(){
-			return new Date().increment();
-		}
-	},
-
-	{
-		//"yesterday"
-		re: /^yes/i,
-		handler: function(){
-			return new Date().decrement();
-		}
-	},
-
-	{
-		//4th, 23rd
-		re: /^(\d{1,2})(st|nd|rd|th)?$/i,
+		// "next Wednesday", "last Thursday"
+		re: /^(next|last) ([a-z]+)$/i,
 		handler: function(bits){
-			var d = new Date();
-			d.set('date', bits[1].toInt());
-			return d;
-		}
-	},
-
-	{
-		//4th Jan, 23rd May
-		re: /^(\d{1,2})(?:st|nd|rd|th)? (\w+)$/i,
-		handler: function(bits){
-			var d = new Date();
-			d.set('mo', Date.parseMonth(bits[2], true), bits[1].toInt());
-			return d;
-		}
-	},
-
-	{
-		//4th Jan 2000, 23rd May 2004
-		re: /^(\d{1,2})(?:st|nd|rd|th)? (\w+),? (\d{4})$/i,
-		handler: function(bits){
-			var d = new Date();
-			d.set('mo', Date.parseMonth(bits[2], true), bits[1].toInt());
-			d.setYear(bits[3]);
-			return d;
-		}
-	},
-
-	{
-		//Jan 4th
-		re: /^(\w+) (\d{1,2})(?:st|nd|rd|th)?,? (\d{4})$/i,
-		handler: function(bits){
-			var d = new Date();
-			d.set('mo', Date.parseMonth(bits[1], true), bits[2].toInt());
-			d.setYear(bits[3]);
-			return d;
-		}
-	},
-
-	{
-		//Jan 4th 2003
-		re: /^next (\w+)$/i,
-		handler: function(bits){
-			var d = new Date();
+			var d = new Date().clearTime();
 			var day = d.getDay();
-			var newDay = Date.parseDay(bits[1], true);
+			var newDay = Date.parseDay(bits[2], true);
 			var addDays = newDay - day;
-			if (newDay <= day){
-				addDays += 7;
-			}
-			d.set('date', d.getDate() + addDays);
-			return d;
-		}
-	},
-
-	{
-		//4 May 08:12
-		re: /^\d+\s[a-zA-z]..\s\d.\:\d.$/,
-		handler: function(bits){
-			var d = new Date();
-			bits = bits[0].split(' ');
-			d.set('date', bits[0]);
-			var m;
-			Date.getMsg('months').each(function(mo, i){
-				if (new RegExp('^' + bits[1]).test(mo)) m = i;
-			});
-			d.set('mo', m);
-			d.set('hr', bits[2].split(':')[0]);
-			d.set('min', bits[2].split(':')[1]);
-			d.set('ms', 0);
-			return d;
-		}
-	},
-
-	{
-		re: /^last (\w+)$/i,
-		handler: function(bits){
-			return Date.parse('next ' + bits[0]).decrement('day', 7);
+			if (newDay <= day) addDays += 7;
+			if (bits[1] == 'last') addDays -= 7;
+			return d.set('date', d.getDate() + addDays);
 		}
 	}
 
-]);
+);
+
 
 /*
 Script: Hash.Extras.js
@@ -1021,7 +955,7 @@ String.implement({
 
 })();
 
-﻿/*
+/*
 Script: String.QueryString.js
 	...
 
@@ -1108,7 +1042,7 @@ var URI = new Class({
 	},
 
 	merge: function(bits, base){
-		if (!bits.scheme && !base.scheme) return false;
+		if ((!bits || !bits.scheme) && (!base || !base.scheme)) return false;
 		if (base){
 			this.parts.every(function(part){
 				if (bits[part]) return false;
@@ -1147,6 +1081,8 @@ var URI = new Class({
 			if (scheme) scheme = scheme[1];
 			if (scheme && !$defined(this.schemes[scheme.toLowerCase()])) this.parsed = { scheme: scheme, value: value };
 			else this.parsed = this.parse(value, (base || this).parsed) || (scheme ? { scheme: scheme, value: value } : { value: value });
+		} else if (part == 'data') {
+			this.setData(value);
 		} else {
 			this.parsed[part] = value;
 		}
@@ -1213,7 +1149,7 @@ String.implement({
 
 });
 
-﻿/*
+/*
 Script: URI.Relative.js
 	Extends the URI class to add methods for computing relative and absolute urls.
 
@@ -1269,6 +1205,7 @@ Script: Element.Forms.js
 		Aaron Newton
 
 */
+
 Element.implement({
 
 	tidy: function(){
@@ -1280,8 +1217,8 @@ Element.implement({
 	},
 
 	getSelectedText: function(){
-		if (document.selection && document.selection.createRange) return document.selection.createRange().text;
-		return this.getTextInRange(this.getSelectionStart(), this.getSelectionEnd());
+		if (this.setSelectionRange) return this.getTextInRange(this.getSelectionStart(), this.getSelectionEnd());
+		return document.selection.createRange().text;
 	},
 
 	getSelectedRange: function() {
@@ -1324,7 +1261,10 @@ Element.implement({
 	},
 
 	selectRange: function(start, end){
-		if (this.createTextRange){
+		if (this.setSelectionRange) {
+			this.focus();
+			this.setSelectionRange(start, end);
+		} else {
 			var value = this.get('value');
 			var diff = value.substr(start, end - start).replace(/\r/g, '').length;
 			start = value.substr(0, start).replace(/\r/g, '').length;
@@ -1333,9 +1273,6 @@ Element.implement({
 			range.moveEnd('character', start + diff);
 			range.moveStart('character', start);
 			range.select();
-		} else {
-			this.focus();
-			this.setSelectionRange(start, end);
 		}
 		return this;
 	},
@@ -1414,12 +1351,15 @@ Element.implement({
 
 	expose: function(){
 		if (this.getStyle('display') != 'none') return $empty;
-		var before = this.getStyles('display', 'position', 'visibility');
-		return this.setStyles({
+		var before = this.style.cssText;
+		this.setStyles({
 			display: 'block',
 			position: 'absolute',
 			visibility: 'hidden'
-		}).setStyles.pass(before, this);
+		});
+		return function(){
+			this.style.cssText = before;
+		}.bind(this);
 	},
 
 	getDimensions: function(options){
@@ -1645,7 +1585,7 @@ Element.implement({
 		 * a mootools extended element in IE, an error occurs on the call to expose. See:
 		 * http://mootools.lighthouseapp.com/projects/2706/tickets/333-element-getoffsetparent-inconsistency-between-ie-and-other-browsers */
 		var offsetParent = this.measure(function(){
-			return $(this.getOffsetParent());
+			return document.id(this.getOffsetParent());
 		});
 		if (offsetParent && offsetParent != this.getDocument().body){
 			parentOffset = offsetParent.measure(function(){
@@ -1677,7 +1617,7 @@ Element.implement({
 		}
 
 		this.setStyle('position', 'absolute');
-		var rel = $(options.relativeTo) || document.body;
+		var rel = document.id(options.relativeTo) || document.body;
 		var calc = rel == document.body ? window.getScroll() : rel.getPosition();
 		var top = calc.y;
 		var left = calc.x;
@@ -1811,6 +1751,965 @@ Element.implement({
 
 
 /*
+Script: FormValidator.js
+	A css-class based form validation system.
+
+	License:
+		MIT-style license.
+
+	Authors:
+		Aaron Newton
+*/
+var InputValidator = new Class({
+
+	Implements: [Options],
+
+	options: {
+		errorMsg: 'Validation failed.',
+		test: function(field){return true;}
+	},
+
+	initialize: function(className, options){
+		this.setOptions(options);
+		this.className = className;
+	},
+
+	test: function(field, props){
+		if (document.id(field)) return this.options.test(document.id(field), props||this.getProps(field));
+		else return false;
+	},
+
+	getError: function(field, props){
+		var err = this.options.errorMsg;
+		if ($type(err) == 'function') err = err(document.id(field), props||this.getProps(field));
+		return err;
+	},
+
+	getProps: function(field){
+		if (!document.id(field)) return {};
+		return field.get('validatorProps');
+	}
+
+});
+
+Element.Properties.validatorProps = {
+
+	set: function(props){
+		return this.eliminate('validatorProps').store('validatorProps', props);
+	},
+
+	get: function(props){
+		if (props) this.set(props);
+		if (this.retrieve('validatorProps')) return this.retrieve('validatorProps');
+		if (this.getProperty('validatorProps')){
+			try {
+				this.store('validatorProps', JSON.decode(this.getProperty('validatorProps')));
+			}catch(e){
+				return {};
+			}
+		} else {
+			var vals = this.get('class').split(' ').filter(function(cls){
+				return cls.test(':');
+			});
+			if (!vals.length){
+				this.store('validatorProps', {});
+			} else {
+				props = {};
+				vals.each(function(cls){
+					var split = cls.split(':');
+					if (split[1]) {
+						try {
+							props[split[0]] = JSON.decode(split[1]);
+						} catch(e) {}
+					}
+				});
+				this.store('validatorProps', props);
+			}
+		}
+		return this.retrieve('validatorProps');
+	}
+
+};
+
+var FormValidator = new Class({
+
+	Implements:[Options, Events],
+
+	Binds: ['onSubmit'],
+
+	options: {/*
+		onFormValidate: $empty(isValid, form, event),
+		onElementValidate: $empty(isValid, field, className, warn),
+		onElementPass: $empty(field),
+		onElementFail: $empty(field, validatorsFailed) */
+		fieldSelectors: 'input, select, textarea',
+		ignoreHidden: true,
+		useTitles: false,
+		evaluateOnSubmit: true,
+		evaluateFieldsOnBlur: true,
+		evaluateFieldsOnChange: true,
+		serial: true,
+		stopOnFailure: true,
+		warningPrefix: function(){
+			return FormValidator.getMsg('warningPrefix') || 'Warning: ';
+		},
+		errorPrefix: function(){
+			return FormValidator.getMsg('errorPrefix') || 'Error: ';
+		}
+	},
+
+	initialize: function(form, options){
+		this.setOptions(options);
+		this.element = document.id(form);
+		this.element.store('validator', this);
+		this.warningPrefix = $lambda(this.options.warningPrefix)();
+		this.errorPrefix = $lambda(this.options.errorPrefix)();
+		if (this.options.evaluateOnSubmit) this.element.addEvent('submit', this.onSubmit);
+		if (this.options.evaluateFieldsOnBlur || this.options.evaluateFieldsOnChange) this.watchFields(this.getFields());
+	},
+
+	toElement: function(){
+		return this.element;
+	},
+
+	getFields: function(){
+		return (this.fields = this.element.getElements(this.options.fieldSelectors));
+	},
+
+	watchFields: function(fields){
+		fields.each(function(el){
+			if (this.options.evaluateFieldsOnBlur)
+				el.addEvent('blur', this.validationMonitor.pass([el, false], this));
+			if (this.options.evaluateFieldsOnChange)
+				el.addEvent('change', this.validationMonitor.pass([el, true], this));
+		}, this);
+	},
+
+	validationMonitor: function(){
+		$clear(this.timer);
+		this.timer = this.validateField.delay(50, this, arguments);
+	},
+
+	onSubmit: function(event){
+		if (!this.validate(event) && event) event.preventDefault();
+		else this.reset();
+	},
+
+	reset: function(){
+		this.getFields().each(this.resetField, this);
+		return this;
+	},
+
+	validate: function(event){
+		var result = this.getFields().map(function(field){
+			return this.validateField(field, true);
+		}, this).every(function(v){ return v;});
+		this.fireEvent('formValidate', [result, this.element, event]);
+		if (this.options.stopOnFailure && !result && event) event.preventDefault();
+		return result;
+	},
+
+	validateField: function(field, force){
+		if (this.paused) return true;
+		field = document.id(field);
+		var passed = !field.hasClass('validation-failed');
+		var failed, warned;
+		if (this.options.serial && !force){
+			failed = this.element.getElement('.validation-failed');
+			warned = this.element.getElement('.warning');
+		}
+		if (field && (!failed || force || field.hasClass('validation-failed') || (failed && !this.options.serial))){
+			var validators = field.className.split(' ').some(function(cn){
+				return this.getValidator(cn);
+			}, this);
+			var validatorsFailed = [];
+			field.className.split(' ').each(function(className){
+				if (className && !this.test(className, field)) validatorsFailed.include(className);
+			}, this);
+			passed = validatorsFailed.length === 0;
+			if (validators && !field.hasClass('warnOnly')){
+				if (passed){
+					field.addClass('validation-passed').removeClass('validation-failed');
+					this.fireEvent('elementPass', field);
+				} else {
+					field.addClass('validation-failed').removeClass('validation-passed');
+					this.fireEvent('elementFail', [field, validatorsFailed]);
+				}
+			}
+			if (!warned){
+				var warnings = field.className.split(' ').some(function(cn){
+					if (cn.test('^warn-') || field.hasClass('warnOnly'))
+						return this.getValidator(cn.replace(/^warn-/,''));
+					else return null;
+				}, this);
+				field.removeClass('warning');
+				var warnResult = field.className.split(' ').map(function(cn){
+					if (cn.test('^warn-') || field.hasClass('warnOnly'))
+						return this.test(cn.replace(/^warn-/,''), field, true);
+					else return null;
+				}, this);
+			}
+		}
+		return passed;
+	},
+
+	test: function(className, field, warn){
+		var validator = this.getValidator(className);
+		field = document.id(field);
+		if (field.hasClass('ignoreValidation')) return true;
+		warn = $pick(warn, false);
+		if (field.hasClass('warnOnly')) warn = true;
+		var isValid = validator ? validator.test(field) : true;
+		if (validator && this.isVisible(field)) this.fireEvent('elementValidate', [isValid, field, className, warn]);
+		if (warn) return true;
+		return isValid;
+	},
+
+	isVisible : function(field){
+		if (!this.options.ignoreHidden) return true;
+		while(field != document.body){
+			if (document.id(field).getStyle('display') == 'none') return false;
+			field = field.getParent();
+		}
+		return true;
+	},
+
+	resetField: function(field){
+		field = document.id(field);
+		if (field){
+			field.className.split(' ').each(function(className){
+				if (className.test('^warn-')) className = className.replace(/^warn-/, '');
+				field.removeClass('validation-failed');
+				field.removeClass('warning');
+				field.removeClass('validation-passed');
+			}, this);
+		}
+		return this;
+	},
+
+	stop: function(){
+		this.paused = true;
+		return this;
+	},
+
+	start: function(){
+		this.paused = false;
+		return this;
+	},
+
+	ignoreField: function(field, warn){
+		field = document.id(field);
+		if (field){
+			this.enforceField(field);
+			if (warn) field.addClass('warnOnly');
+			else field.addClass('ignoreValidation');
+		}
+		return this;
+	},
+
+	enforceField: function(field){
+		field = document.id(field);
+		if (field) field.removeClass('warnOnly').removeClass('ignoreValidation');
+		return this;
+	}
+
+});
+
+FormValidator.getMsg = function(key){
+	return MooTools.lang.get('FormValidator', key);
+};
+
+FormValidator.adders = {
+
+	validators:{},
+
+	add : function(className, options){
+		this.validators[className] = new InputValidator(className, options);
+		//if this is a class (this method is used by instances of FormValidator and the FormValidator namespace)
+		//extend these validators into it
+		//this allows validators to be global and/or per instance
+		if (!this.initialize){
+			this.implement({
+				validators: this.validators
+			});
+		}
+	},
+
+	addAllThese : function(validators){
+		$A(validators).each(function(validator){
+			this.add(validator[0], validator[1]);
+		}, this);
+	},
+
+	getValidator: function(className){
+		return this.validators[className.split(':')[0]];
+	}
+
+};
+
+$extend(FormValidator, FormValidator.adders);
+
+FormValidator.implement(FormValidator.adders);
+
+FormValidator.add('IsEmpty', {
+
+	errorMsg: false,
+	test: function(element){
+		if (element.type == 'select-one' || element.type == 'select')
+			return !(element.selectedIndex >= 0 && element.options[element.selectedIndex].value != '');
+		else
+			return ((element.get('value') == null) || (element.get('value').length == 0));
+	}
+
+});
+
+FormValidator.addAllThese([
+
+	['required', {
+		errorMsg: function(){
+			return FormValidator.getMsg('required');
+		},
+		test: function(element){
+			return !FormValidator.getValidator('IsEmpty').test(element);
+		}
+	}],
+
+	['minLength', {
+		errorMsg: function(element, props){
+			if ($type(props.minLength))
+				return FormValidator.getMsg('minLength').substitute({minLength:props.minLength,length:element.get('value').length });
+			else return '';
+		},
+		test: function(element, props){
+			if ($type(props.minLength)) return (element.get('value').length >= $pick(props.minLength, 0));
+			else return true;
+		}
+	}],
+
+	['maxLength', {
+		errorMsg: function(element, props){
+			//props is {maxLength:10}
+			if ($type(props.maxLength))
+				return FormValidator.getMsg('maxLength').substitute({maxLength:props.maxLength,length:element.get('value').length });
+			else return '';
+		},
+		test: function(element, props){
+			//if the value is <= than the maxLength value, element passes test
+			return (element.get('value').length <= $pick(props.maxLength, 10000));
+		}
+	}],
+
+	['validate-integer', {
+		errorMsg: FormValidator.getMsg.pass('integer'),
+		test: function(element){
+			return FormValidator.getValidator('IsEmpty').test(element) || (/^(-?[1-9]\d*|0)$/).test(element.get('value'));
+		}
+	}],
+
+	['validate-numeric', {
+		errorMsg: FormValidator.getMsg.pass('numeric'),
+		test: function(element){
+			return FormValidator.getValidator('IsEmpty').test(element) ||
+				(/^-?(?:0$0(?=\d*\.)|[1-9]|0)\d*(\.\d+)?$/).test(element.get('value'));
+		}
+	}],
+
+	['validate-digits', {
+		errorMsg: FormValidator.getMsg.pass('digits'),
+		test: function(element){
+			return FormValidator.getValidator('IsEmpty').test(element) || (/^[\d() .:\-\+#]+$/.test(element.get('value')));
+		}
+	}],
+
+	['validate-alpha', {
+		errorMsg: FormValidator.getMsg.pass('alpha'),
+		test: function(element){
+			return FormValidator.getValidator('IsEmpty').test(element) ||  (/^[a-zA-Z]+$/).test(element.get('value'));
+		}
+	}],
+
+	['validate-alphanum', {
+		errorMsg: FormValidator.getMsg.pass('alphanum'),
+		test: function(element){
+			return FormValidator.getValidator('IsEmpty').test(element) || !(/\W/).test(element.get('value'));
+		}
+	}],
+
+	['validate-date', {
+		errorMsg: function(element, props){
+			if (Date.parse){
+				var format = props.dateFormat || '%x';
+				return FormValidator.getMsg('dateSuchAs').substitute({date: new Date().format(format)});
+			} else {
+				return FormValidator.getMsg('dateInFormatMDY');
+			}
+		},
+		test: function(element, props){
+			if (FormValidator.getValidator('IsEmpty').test(element)) return true;
+			var d;
+			if (Date.parse){
+				var format = props.dateFormat || '%x';
+				d = Date.parse(element.get('value'));
+				var formatted = d.format(format);
+				if (formatted != 'invalid date') element.set('value', formatted);
+				return !isNaN(d);
+			} else {
+				var regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+				if (!regex.test(element.get('value'))) return false;
+				d = new Date(element.get('value').replace(regex, '$1/$2/$3'));
+				return (parseInt(RegExp.$1, 10) == (1 + d.getMonth())) &&
+					(parseInt(RegExp.$2, 10) == d.getDate()) &&
+					(parseInt(RegExp.$3, 10) == d.getFullYear());
+			}
+		}
+	}],
+
+	['validate-email', {
+		errorMsg: FormValidator.getMsg.pass('email'),
+		test: function(element){
+			return FormValidator.getValidator('IsEmpty').test(element) || (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i).test(element.get('value'));
+		}
+	}],
+
+	['validate-url', {
+		errorMsg: FormValidator.getMsg.pass('url'),
+		test: function(element){
+			return FormValidator.getValidator('IsEmpty').test(element) || (/^(https?|ftp|rmtp|mms):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i).test(element.get('value'));
+		}
+	}],
+
+	['validate-currency-dollar', {
+		errorMsg: FormValidator.getMsg.pass('currencyDollar'),
+		test: function(element){
+			// [$]1[##][,###]+[.##]
+			// [$]1###+[.##]
+			// [$]0.##
+			// [$].##
+			return FormValidator.getValidator('IsEmpty').test(element) ||  (/^\$?\-?([1-9]{1}[0-9]{0,2}(\,[0-9]{3})*(\.[0-9]{0,2})?|[1-9]{1}\d*(\.[0-9]{0,2})?|0(\.[0-9]{0,2})?|(\.[0-9]{1,2})?)$/).test(element.get('value'));
+		}
+	}],
+
+	['validate-one-required', {
+		errorMsg: FormValidator.getMsg.pass('oneRequired'),
+		test: function(element, props){
+			var p = document.id(props['validate-one-required']) || element.parentNode;
+			return p.getElements('input').some(function(el){
+				if (['checkbox', 'radio'].contains(el.get('type'))) return el.get('checked');
+				return el.get('value');
+			});
+		}
+	}]
+
+]);
+
+Element.Properties.validator = {
+
+	set: function(options){
+		var validator = this.retrieve('validator');
+		if (validator) validator.setOptions(options);
+		return this.store('validator:options');
+	},
+
+	get: function(options){
+		if (options || !this.retrieve('validator')){
+			if (options || !this.retrieve('validator:options')) this.set('validator', options);
+			this.store('validator', new FormValidator(this, this.retrieve('validator:options')));
+		}
+		return this.retrieve('validator');
+	}
+
+};
+
+Element.implement({
+
+	validate: function(options){
+		this.set('validator', options);
+		return this.get('validator', options).validate();
+	}
+
+});
+
+/*
+Script: FormValidator.Inline.js
+	Extends FormValidator to add inline messages.
+
+	License:
+		MIT-style license.
+
+	Authors:
+		Aaron Newton
+*/
+
+FormValidator.Inline = new Class({
+
+	Extends: FormValidator,
+
+	options: {
+		scrollToErrorsOnSubmit: true,
+		scrollFxOptions: {
+			transition: 'quad:out',
+			offset: {
+				y: -20
+			}
+		}
+	},
+
+	initialize: function(form, options){
+		this.parent(form, options);
+		this.addEvent('onElementValidate', function(isValid, field, className, warn){
+			var validator = this.getValidator(className);
+			if (!isValid && validator.getError(field)){
+				if (warn) field.addClass('warning');
+				var advice = this.makeAdvice(className, field, validator.getError(field), warn);
+				this.insertAdvice(advice, field);
+				this.showAdvice(className, field);
+			} else {
+				this.hideAdvice(className, field);
+			}
+		});
+	},
+
+	makeAdvice: function(className, field, error, warn){
+		var errorMsg = (warn)?this.warningPrefix:this.errorPrefix;
+			errorMsg += (this.options.useTitles) ? field.title || error:error;
+		var cssClass = (warn) ? 'warning-advice' : 'validation-advice';
+		var advice = this.getAdvice(className, field);
+		if(advice) {
+			advice = advice.clone(true, true).set('html', errorMsg).replaces(advice);
+		} else {
+			advice = new Element('div', {
+				html: errorMsg,
+				styles: { display: 'none' },
+				id: 'advice-' + className + '-' + this.getFieldId(field)
+			}).addClass(cssClass);
+		}
+		field.store('advice-' + className, advice);
+		return advice;
+	},
+
+	getFieldId : function(field){
+		return field.id ? field.id : field.id = 'input_' + field.name;
+	},
+
+	showAdvice: function(className, field){
+		var advice = this.getAdvice(className, field);
+		if (advice && !field.retrieve(this.getPropName(className))
+				&& (advice.getStyle('display') == 'none'
+				|| advice.getStyle('visiblity') == 'hidden'
+				|| advice.getStyle('opacity') == 0)){
+			field.store(this.getPropName(className), true);
+			if (advice.reveal) advice.reveal();
+			else advice.setStyle('display', 'block');
+		}
+	},
+
+	hideAdvice: function(className, field){
+		var advice = this.getAdvice(className, field);
+		if (advice && field.retrieve(this.getPropName(className))){
+			field.store(this.getPropName(className), false);
+			//if Fx.Reveal.js is present, transition the advice out
+			if (advice.dissolve) advice.dissolve();
+			else advice.setStyle('display', 'none');
+		}
+	},
+
+	getPropName: function(className){
+		return 'advice' + className;
+	},
+
+	resetField: function(field){
+		field = document.id(field);
+		if (!field) return this;
+		this.parent(field);
+		field.className.split(' ').each(function(className){
+			this.hideAdvice(className, field);
+		}, this);
+		return this;
+	},
+
+	getAllAdviceMessages: function(field, force){
+		var advice = [];
+		if (field.hasClass('ignoreValidation') && !force) return advice;
+		var validators = field.className.split(' ').some(function(cn){
+			var warner = cn.test('^warn-') || field.hasClass('warnOnly');
+			if (warner) cn = cn.replace(/^warn-/, '');
+			var validator = this.getValidator(cn);
+			if (!validator) return;
+			advice.push({
+				message: validator.getError(field),
+				warnOnly: warner,
+				passed: validator.test(),
+				validator: validator
+			});
+		}, this);
+		return advice;
+	},
+
+	getAdvice: function(className, field){
+		return field.retrieve('advice-' + className);
+	},
+
+	insertAdvice: function(advice, field){
+		//Check for error position prop
+		var props = field.get('validatorProps');
+		//Build advice
+		if (!props.msgPos || !document.id(props.msgPos)){
+			if(field.type.toLowerCase() == 'radio') field.getParent().adopt(advice);
+			else advice.inject(document.id(field), 'after');
+		} else {
+			document.id(props.msgPos).grab(advice);
+		}
+	},
+
+	validateField: function(field, force){
+		var result = this.parent(field, force);
+		if (this.options.scrollToErrorsOnSubmit && !result){
+			var failed = document.id(this).getElement('.validation-failed');
+			var par = document.id(this).getParent();
+			while (par != document.body && par.getScrollSize().y == par.getSize().y){
+				par = par.getParent();
+			}
+			var fx = par.retrieve('fvScroller');
+			if (!fx && window.Fx && Fx.Scroll){
+				fx = new Fx.Scroll(par, this.options.scrollFxOptions);
+				par.store('fvScroller', fx);
+			}
+			if (failed){
+				if (fx) fx.toElement(failed);
+				else par.scrollTo(par.getScroll().x, failed.getPosition(par).y - 20);
+			}
+		}
+		return result;
+	}
+
+});
+
+
+/*
+Script: FormValidator.Extras.js
+	Additional validators for the FormValidator class.
+
+	License:
+		MIT-style license.
+
+	Authors:
+		Aaron Newton
+*/
+FormValidator.addAllThese([
+
+	['validate-enforce-oncheck', {
+		test: function(element, props){
+			if (element.checked){
+				var fv = element.getParent('form').retrieve('validator');
+				if (!fv) return true;
+				(props.toEnforce || document.id(props.enforceChildrenOf).getElements('input, select, textarea')).map(function(item){
+					fv.enforceField(item);
+				});
+			}
+			return true;
+		}
+	}],
+
+	['validate-ignore-oncheck', {
+		test: function(element, props){
+			if (element.checked){
+				var fv = element.getParent('form').retrieve('validator');
+				if (!fv) return true;
+				(props.toIgnore || document.id(props.ignoreChildrenOf).getElements('input, select, textarea')).each(function(item){
+					fv.ignoreField(item);
+					fv.resetField(item);
+				});
+			}
+			return true;
+		}
+	}],
+
+	['validate-nospace', {
+		errorMsg: function(){
+			return FormValidator.getMsg('noSpace');
+		},
+		test: function(element, props){
+			return !element.get('value').test(/\s/);
+		}
+	}],
+
+	['validate-toggle-oncheck', {
+		test: function(element, props){
+			var fv = element.getParent('form').retrieve('validator');
+			if (!fv) return true;
+			var eleArr = props.toToggle || document.id(props.toToggleChildrenOf).getElements('input, select, textarea');
+			if (!element.checked){
+				eleArr.each(function(item){
+					fv.ignoreField(item);
+					fv.resetField(item);
+				});
+			} else {
+				eleArr.each(function(item){
+					fv.enforceField(item);
+				});
+			}
+			return true;
+		}
+	}],
+
+	['validate-reqchk-bynode', {
+		errorMsg: function(){
+			return FormValidator.getMsg('reqChkByNode');
+		},
+		test: function(element, props){
+			return (document.id(props.nodeId).getElements(props.selector || 'input[type=checkbox], input[type=radio]')).some(function(item){
+				return item.checked;
+			});
+		}
+	}],
+
+	['validate-required-check', {
+		errorMsg: function(element, props){
+			return props.useTitle ? element.get('title') : FormValidator.getMsg('requiredChk');
+		},
+		test: function(element, props){
+			return !!element.checked;
+		}
+	}],
+
+	['validate-reqchk-byname', {
+		errorMsg: function(element, props){
+			return FormValidator.getMsg('reqChkByName').substitute({label: props.label || element.get('type')});
+		},
+		test: function(element, props){
+			var grpName = props.groupName || element.get('name');
+			var oneCheckedItem = $$(document.getElementsByName(grpName)).some(function(item, index){
+				return item.checked;
+			});
+			var fv = element.getParent('form').retrieve('validator');
+			if (oneCheckedItem && fv) fv.resetField(element);
+			return oneCheckedItem;
+		}
+	}],
+
+	['validate-match', {
+		errorMsg: function(element, props){
+			return FormValidator.getMsg('match').substitute({matchName: props.matchName || document.id(props.matchInput).get('name')});
+		},
+		test: function(element, props){
+			var eleVal = element.get('value');
+			var matchVal = document.id(props.matchInput) && document.id(props.matchInput).get('value');
+			return eleVal && matchVal ? eleVal == matchVal : true;
+		}
+	}],
+
+	['validate-after-date', {
+		errorMsg: function(element, props){
+			return FormValidator.getMsg('afterDate').substitute({
+				label: props.afterLabel || (props.afterElement ? FormValidator.getMsg('startDate') : FormValidator.getMsg('currentDate'))
+			});
+		},
+		test: function(element, props){
+			var start = document.id(props.afterElement) ? Date.parse(document.id(props.afterElement).get('value')) : new Date();
+			var end = Date.parse(element.get('value'));
+			return end && start ? end >= start : true;
+		}
+	}],
+
+	['validate-before-date', {
+		errorMsg: function(element, props){
+			return FormValidator.getMsg('beforeDate').substitute({
+				label: props.beforeLabel || (props.beforeElement ? FormValidator.getMsg('endDate') : FormValidator.getMsg('currentDate'))
+			});
+		},
+		test: function(element, props){
+			var start = Date.parse(element.get('value'));
+			var end = document.id(props.beforeElement) ? Date.parse(document.id(props.beforeElement).get('value')) : new Date();
+			return end && start ? end >= start : true;
+		}
+	}],
+
+	['validate-custom-required', {
+		errorMsg: function(){
+			return FormValidator.getMsg('required');
+		},
+		test: function(element, props){
+			return element.get('value') != props.emptyValue;
+		}
+	}],
+
+	['validate-same-month', {
+		errorMsg: function(element, props){
+			var startMo = document.id(props.sameMonthAs) && document.id(props.sameMonthAs).get('value');
+			var eleVal = element.get('value');
+			if (eleVal != '') return FormValidator.getMsg(startMo ? 'sameMonth' : 'startMonth');
+		},
+		test: function(element, props){
+			var d1 = Date.parse(element.get('value'));
+			var d2 = Date.parse(document.id(props.sameMonthAs) && document.id(props.sameMonthAs).get('value'));
+			return d1 && d2 ? d1.format('%B') == d2.format('%B') : true;
+		}
+	}]
+
+]);
+
+/*
+Script: OverText.js
+	Shows text over an input that disappears when the user clicks into it. The text remains hidden if the user adds a value.
+
+	License:
+		MIT-style license.
+
+	Authors:
+		Aaron Newton
+*/
+
+var OverText = new Class({
+
+	Implements: [Options, Events, Class.Occlude],
+
+	Binds: ['reposition', 'assert', 'focus'],
+
+	options: {/*
+		textOverride: null,
+		onFocus: $empty()
+		onTextHide: $empty(textEl, inputEl),
+		onTextShow: $empty(textEl, inputEl), */
+		element: 'label',
+		positionOptions: {
+			position: 'upperLeft',
+			edge: 'upperLeft',
+			offset: {
+				x: 4,
+				y: 2
+			}
+		},
+		poll: false,
+		pollInterval: 250
+	},
+
+	property: 'OverText',
+
+	initialize: function(element, options){
+		this.element = document.id(element);
+		if (this.occlude()) return this.occluded;
+		this.setOptions(options);
+		this.attach(this.element);
+		OverText.instances.push(this);
+		if (this.options.poll) this.poll();
+		return this;
+	},
+
+	toElement: function(){
+		return this.element;
+	},
+
+	attach: function(){
+		var val = this.options.textOverride || this.element.get('alt') || this.element.get('title');
+		if (!val) return;
+		this.text = new Element(this.options.element, {
+			'class': 'overTxtLabel',
+			styles: {
+				lineHeight: 'normal',
+				position: 'absolute'
+			},
+			html: val,
+			events: {
+				click: this.hide.pass(true, this)
+			}
+		}).inject(this.element, 'after');
+		if (this.options.element == 'label') this.text.set('for', this.element.get('id'));
+		this.element.addEvents({
+			focus: this.focus,
+			blur: this.assert,
+			change: this.assert
+		}).store('OverTextDiv', this.text);
+		window.addEvent('resize', this.reposition.bind(this));
+		this.assert(true);
+		this.reposition();
+	},
+
+	startPolling: function(){
+		this.pollingPaused = false;
+		return this.poll();
+	},
+
+	poll: function(stop){
+		//start immediately
+		//pause on focus
+		//resumeon blur
+		if (this.poller && !stop) return this;
+		var test = function(){
+			if (!this.pollingPaused) this.assert(true);
+		}.bind(this);
+		if (stop) $clear(this.poller);
+		else this.poller = test.periodical(this.options.pollInterval, this);
+		return this;
+	},
+
+	stopPolling: function(){
+		this.pollingPaused = true;
+		return this.poll(true);
+	},
+
+	focus: function(){
+		if (!this.text.isDisplayed() || this.element.get('disabled')) return;
+		this.hide();
+	},
+
+	hide: function(suppressFocus){
+		if (this.text.isDisplayed() && !this.element.get('disabled')){
+			this.text.hide();
+			this.fireEvent('textHide', [this.text, this.element]);
+			this.pollingPaused = true;
+			try {
+				if (!suppressFocus) this.element.fireEvent('focus').focus();
+			} catch(e){} //IE barfs if you call focus on hidden elements
+		}
+		return this;
+	},
+
+	show: function(){
+		if (!this.text.isDisplayed()){
+			this.text.show();
+			this.reposition();
+			this.fireEvent('textShow', [this.text, this.element]);
+			this.pollingPaused = false;
+		}
+		return this;
+	},
+
+	assert: function(suppressFocus){
+		this[this.test() ? 'show' : 'hide'](suppressFocus);
+	},
+
+	test: function(){
+		var v = this.element.get('value');
+		return !v;
+	},
+
+	reposition: function(){
+		this.assert(true);
+		if (!this.element.getParent() || !this.element.offsetHeight) return this.stopPolling().hide();
+		if (this.test()) this.text.position($merge(this.options.positionOptions, {relativeTo: this.element}));
+		return this;
+	}
+
+});
+
+OverText.instances = [];
+
+OverText.update = function(){
+
+	return OverText.instances.map(function(ot){
+		if (ot.element && ot.text) return ot.reposition();
+		return null; //the input or the text was destroyed
+	});
+
+};
+
+if (window.Fx && Fx.Reveal) {
+	Fx.Reveal.implement({
+		hideInputs: Browser.Engine.trident ? 'select, input, textarea, object, embed, .overTxtLabel' : false
+	});
+}
+
+/*
 Script: Fx.Elements.js
 	Effect to change any number of CSS properties of any number of Elements.
 
@@ -1898,7 +2797,7 @@ var Accordion = Fx.Accordion = new Class({
 		var params = Array.link(arguments, {'container': Element.type, 'options': Object.type, 'togglers': $defined, 'elements': $defined});
 		this.parent(params.elements, params.options);
 		this.togglers = $$(params.togglers);
-		this.container = $(params.container);
+		this.container = document.id(params.container);
 		this.previous = -1;
 		if (this.options.alwaysHide) this.options.wait = true;
 		if ($chk(this.options.show)){
@@ -1925,8 +2824,8 @@ var Accordion = Fx.Accordion = new Class({
 	},
 
 	addSection: function(toggler, element){
-		toggler = $(toggler);
-		element = $(element);
+		toggler = document.id(toggler);
+		element = document.id(element);
 		var test = this.togglers.contains(toggler);
 		this.togglers.include(toggler);
 		this.elements.include(element);
@@ -2035,9 +2934,9 @@ Fx.Reveal = new Class({
 	Extends: Fx.Morph,
 
 	options: {/*	  
-		onShow: $empty(thisElemeng),
-		onHide: $empty(thisElemeng),
-		onComplete: $empty(thisElemeng),
+		onShow: $empty(thisElement),
+		onHide: $empty(thisElement),
+		onComplete: $empty(thisElement),
 		heightOverride: null,
 		widthOverride: null, */
 		styles: ['padding', 'border', 'margin'],
@@ -2273,11 +3172,11 @@ Fx.Scroll = new Class({
 	},
 
 	initialize: function(element, options){
-		this.element = this.subject = $(element);
+		this.element = this.subject = document.id(element);
 		this.parent(options);
 		var cancel = this.cancel.bind(this, false);
 
-		if ($type(this.element) != 'element') this.element = $(this.element.getDocument().body);
+		if ($type(this.element) != 'element') this.element = document.id(this.element.getDocument().body);
 
 		var stopper = this.element;
 
@@ -2332,8 +3231,32 @@ Fx.Scroll = new Class({
 	},
 
 	toElement: function(el){
-		var position = $(el).getPosition(this.element);
+		var position = document.id(el).getPosition(this.element);
 		return this.start(position.x, position.y);
+	},
+
+	scrollIntoView: function(el, axes, offset){
+		axes = axes ? $splat(axes) : ['x','y'];
+		var to = {};
+		el = document.id(el);
+		var pos = el.getPosition(this.element);
+		var size = el.getSize();
+		var scroll = this.element.getScroll();
+		var containerSize = this.element.getSize();
+		var edge = {
+			x: pos.x + size.x,
+			y: pos.y + size.y
+		};
+		['x','y'].each(function(axis) {
+			if (axes.contains(axis)) {
+				if (edge[axis] > scroll[axis] + containerSize[axis]) to[axis] = edge[axis] - containerSize[axis];
+				if (pos[axis] < scroll[axis]) to[axis] = pos[axis];
+			}
+			if (to[axis] == null) to[axis] = scroll[axis];
+			if (offset && offset[axis]) to[axis] = to[axis] + offset[axis];
+		}, this);
+		if (to.x != scroll.x || to.y != scroll.y) this.start(to.x, to.y);
+		return this;
 	}
 
 });
@@ -2363,7 +3286,7 @@ Fx.Slide = new Class({
 			this.open = (this.wrapper['offset' + this.layout.capitalize()] != 0);
 			if (this.open && Browser.Engine.webkit419) this.element.dispose().inject(this.wrapper);
 		}, true);
-		this.element = this.subject = $(element);
+		this.element = this.subject = document.id(element);
 		this.parent(options);
 		var wrapper = this.element.retrieve('wrapper');
 		this.wrapper = wrapper || new Element('div', {
@@ -2518,7 +3441,7 @@ var SmoothScroll = Fx.SmoothScroll = new Class({
 	useLink: function(link, anchor){
 		var el;
 		link.addEvent('click', function(event){
-			if (el !== false && !el) el = $(anchor) || this.doc.getElement('a[name=' + anchor + ']');
+			if (el !== false && !el) el = document.id(anchor) || this.doc.getElement('a[name=' + anchor + ']');
 			if (el) {
 				event.preventDefault();
 				this.anchor = anchor;
@@ -2719,11 +3642,11 @@ var Drag = new Class({
 
 	initialize: function(){
 		var params = Array.link(arguments, {'options': Object.type, 'element': $defined});
-		this.element = $(params.element);
+		this.element = document.id(params.element);
 		this.document = this.element.getDocument();
 		this.setOptions(params.options || {});
 		var htype = $type(this.options.handle);
-		this.handles = ((htype == 'array' || htype == 'collection') ? $$(this.options.handle) : $(this.options.handle)) || this.element;
+		this.handles = ((htype == 'array' || htype == 'collection') ? $$(this.options.handle) : document.id(this.options.handle)) || this.element;
 		this.mouse = {'now': {}, 'pos': {}};
 		this.value = {'start': {}, 'now': {}};
 
@@ -2800,7 +3723,7 @@ var Drag = new Class({
 					this.value.now[z] = this.limit[z][0];
 				}
 			}
-			if (this.options.grid[z]) this.value.now[z] -= ((this.value.now[z] - this.limit[z][0]) % this.options.grid[z]);
+			if (this.options.grid[z]) this.value.now[z] -= ((this.value.now[z] - (this.limit[z][0]||0)) % this.options.grid[z]);
 			if (this.options.style) this.element.setStyle(this.options.modifiers[z], this.value.now[z] + this.options.unit);
 			else this.element[this.options.modifiers[z]] = this.value.now[z];
 		}
@@ -2868,8 +3791,8 @@ Drag.Move = new Class({
 	initialize: function(element, options){
 		this.parent(element, options);
 		this.droppables = $$(this.options.droppables);
-		this.container = $(this.options.container);
-		if (this.container && $type(this.container) != 'element') this.container = $(this.container.getDocument().body);
+		this.container = document.id(this.options.container);
+		if (this.container && $type(this.container) != 'element') this.container = document.id(this.container.getDocument().body);
 
 		var position = this.element.getStyle('position');
 		if (position=='static') position = 'absolute';
@@ -2994,8 +3917,8 @@ var Slider = new Class({
 
 	initialize: function(element, knob, options){
 		this.setOptions(options);
-		this.element = $(element);
-		this.knob = $(knob);
+		this.element = document.id(element);
+		this.knob = document.id(knob);
 		this.previousChange = this.previousEnd = this.step = -1;
 		var offset, limit = {}, modifiers = {'x': false, 'y': false};
 		switch (this.options.mode){
@@ -3162,7 +4085,7 @@ var Sortables = new Class({
 		this.lists = [];
 		this.idle = true;
 
-		this.addLists($$($(lists) || lists));
+		this.addLists($$(document.id(lists) || lists));
 		if (!this.options.clone) this.options.revert = false;
 		if (this.options.revert) this.effect = new Fx.Morph(null, $merge({duration: 250, link: 'cancel'}, this.options.revert));
 	},
@@ -3379,7 +4302,7 @@ Request.JSONP = new Class({
 					this.triesRemaining[index] = remaining - 1;
 					if (script){
 						script.destroy();
-						this.request(options, index);
+						this.send(options, index);
 						this.fireEvent('retry', this.triesRemaining[index]);
 					}
 				} else if(script && this.options.timeout){
@@ -3404,7 +4327,7 @@ Request.JSONP = new Class({
 		Request.JSONP.counter++;
 
 		switch ($type(options.data)){
-			case 'element': data = $(options.data).toQueryString(); break;
+			case 'element': data = document.id(options.data).toQueryString(); break;
 			case 'object': case 'hash': data = Hash.toQueryString(options.data);
 		}
 
@@ -3431,6 +4354,237 @@ Request.JSONP = new Class({
 
 Request.JSONP.counter = 0;
 Request.JSONP.request_map = {};
+
+/*
+Script: Request.Queue.js
+	Controls several instances of Request and its variants to run only one request at a time.
+
+	License:
+		MIT-style license.
+
+	Authors:
+		Aaron Newton
+*/
+
+Request.Queue = new Class({
+
+	Implements: [Options, Events],
+
+	Binds: ['attach', 'request', 'complete', 'cancel', 'success', 'failure', 'exception'],
+
+	options: {/*
+		onRequest: $empty(argsPassedToOnRequest),
+		onSuccess: $empty(argsPassedToOnSuccess),
+		onComplete: $empty(argsPassedToOnComplete),
+		onCancel: $empty(argsPassedToOnCancel),
+		onException: $empty(argsPassedToOnException),
+		onFailure: $empty(argsPassedToOnFailure),*/
+		stopOnFailure: true,
+		autoAdvance: true,
+		concurrent: 1,
+		requests: {}
+	},
+
+	initialize: function(options){
+		this.setOptions(options);
+		this.requests = new Hash;
+		this.addRequests(this.options.requests);
+		this.queue = [];
+		this.reqBinders = {};
+	},
+
+	addRequest: function(name, request){
+		this.requests.set(name, request);
+		this.attach(name, request);
+		return this;
+	},
+
+	addRequests: function(obj){
+		$each(obj, function(req, name){
+			this.addRequest(name, req);
+		}, this);
+		return this;
+	},
+
+	getName: function(req){
+		return this.requests.keyOf(req);
+	},
+
+	attach: function(name, req){
+		if (req._groupSend) return this;
+		['request', 'complete', 'cancel', 'success', 'failure', 'exception'].each(function(evt){
+			if(!this.reqBinders[name]) this.reqBinders[name] = {};
+			this.reqBinders[name][evt] = function(){
+				this['on' + evt.capitalize()].apply(this, [name, req].extend(arguments));
+			}.bind(this);
+			req.addEvent(evt, this.reqBinders[name][evt]);
+		}, this);
+		req._groupSend = req.send;
+		req.send = function(options){
+			this.send(name, options);
+			return req;
+		}.bind(this);
+		return this;
+	},
+
+	removeRequest: function(req){
+		var name = $type(req) == 'object' ? this.getName(req) : req;
+		if (!name && $type(name) != 'string') return this;
+		req = this.requests.get(name);
+		if (!req) return this;
+		['request', 'complete', 'cancel', 'success', 'failure', 'exception'].each(function(evt){
+			req.removeEvent(evt, this.reqBinders[name][evt]);
+		}, this);
+		req.send = req._groupSend;
+		delete req._groupSend;
+		return this;
+	},
+
+	getRunning: function(){
+		return this.requests.filter(function(r){ return r.running; });
+	},
+
+	isRunning: function(){
+		return !!this.getRunning().getKeys().length;
+	},
+
+	send: function(name, options){
+		var q = function(){
+			this.requests.get(name)._groupSend(options);
+			this.queue.erase(q);
+		}.bind(this);
+		q.name = name;
+		if (this.getRunning().getKeys().length >= this.options.concurrent || (this.error && this.options.stopOnFailure)) this.queue.push(q);
+		else q();
+		return this;
+	},
+
+	hasNext: function(name){
+		return (!name) ? !!this.queue.length : !!this.queue.filter(function(q){ return q.name == name; }).length;
+	},
+
+	resume: function(){
+		this.error = false;
+		(this.options.concurrent - this.getRunning().getKeys().length).times(this.runNext, this);
+		return this;
+	},
+
+	runNext: function(name){
+		if (!this.queue.length) return this;
+		if (!name){
+			this.queue[0]();
+		} else {
+			var found;
+			this.queue.each(function(q){
+				if (!found && q.name == name){
+					found = true;
+					q();
+				}
+			});
+		}
+		return this;
+	},
+
+	runAll: function() {
+		this.queue.each(function(q) {
+			q();
+		});
+		return this;
+	},
+
+	clear: function(name){
+		if (!name){
+			this.queue.empty();
+		} else {
+			this.queue = this.queue.map(function(q){
+				if (q.name != name) return q;
+				else return false;
+			}).filter(function(q){ return q; });
+		}
+		return this;
+	},
+
+	cancel: function(name){
+		this.requests.get(name).cancel();
+		return this;
+	},
+
+	onRequest: function(){
+		this.fireEvent('request', arguments);
+	},
+
+	onComplete: function(){
+		this.fireEvent('complete', arguments);
+	},
+
+	onCancel: function(){
+		if (this.options.autoAdvance && !this.error) this.runNext();
+		this.fireEvent('cancel', arguments);
+	},
+
+	onSuccess: function(){
+		if (this.options.autoAdvance && !this.error) this.runNext();
+		this.fireEvent('success', arguments);
+	},
+
+	onFailure: function(){
+		this.error = true;
+		if (!this.options.stopOnFailure && this.options.autoAdvance) this.runNext();
+		this.fireEvent('failure', arguments);
+	},
+
+	onException: function(){
+		this.error = true;
+		if (!this.options.stopOnFailure && this.options.autoAdvance) this.runNext();
+		this.fireEvent('exception', arguments);
+	}
+
+});
+
+
+/*
+Script: Request.Periodical.js
+	Requests the same url at a time interval that increases when no data is returned from the requested server
+
+	License:
+		MIT-style license.
+
+	Authors:
+		Christoph Pojer
+
+*/
+
+Request.implement({
+
+	options: {
+		initialDelay: 5000,
+		delay: 5000,
+		limit: 60000
+	},
+
+	startTimer: function(data){
+		var fn = (function(){
+			if (!this.running) this.send({data: data});
+		});
+		this.timer = fn.delay(this.options.initialDelay, this);
+		this.lastDelay = this.options.initialDelay;
+		this.completeCheck = function(j){
+			$clear(this.timer);
+			if (j) this.lastDelay = this.options.delay;
+			else this.lastDelay = (this.lastDelay+this.options.delay).min(this.options.limit);
+			this.timer = fn.delay(this.lastDelay, this);
+		};
+		this.addEvent('complete', this.completeCheck);
+		return this;
+	},
+
+	stopTimer: function(){
+		$clear(this.timer);
+		this.removeEvent('complete', this.completeCheck);
+		return this;
+	}
+
+});
 
 /*
 Script: Assets.js
@@ -3486,7 +4640,7 @@ var Asset = {
 			onerror: $empty
 		}, properties);
 		var image = new Image();
-		var element = $(image) || new Element('img');
+		var element = document.id(image) || new Element('img');
 		['load', 'abort', 'error'].each(function(name){
 			var type = 'on' + name;
 			var event = properties[type];
@@ -3510,19 +4664,26 @@ var Asset = {
 	images: function(sources, options){
 		options = $merge({
 			onComplete: $empty,
-			onProgress: $empty
+			onProgress: $empty,
+			onError: $empty,
+			properties: {}
 		}, options);
 		sources = $splat(sources);
 		var images = [];
 		var counter = 0;
 		return new Elements(sources.map(function(source){
-			return Asset.image(source, {
+			return Asset.image(source, $extend(options.properties, {
 				onload: function(){
 					options.onProgress.call(this, counter, sources.indexOf(source));
 					counter++;
 					if (counter == sources.length) options.onComplete();
+				},
+				onerror: function(){
+					options.onError.call(this, counter, sources.indexOf(source));
+					counter++;
+					if (counter == sources.length) options.onComplete();
 				}
-			});
+			}));
 		}));
 	}
 
@@ -3788,13 +4949,13 @@ var IframeShim = new Class({
 		zIndex: null,
 		margin: 0,
 		offset: {x: 0, y: 0},
-		browsers: true || (Browser.Engine.trident4 || (Browser.Engine.gecko && !Browser.Engine.gecko19 && Browser.Platform.mac))
+		browsers: (Browser.Engine.trident4 || (Browser.Engine.gecko && !Browser.Engine.gecko19 && Browser.Platform.mac))
 	},
 
 	property: 'IframeShim',
 
 	initialize: function(element, options){
-		this.element = $(element);
+		this.element = document.id(element);
 		if (this.occlude()) return this.occluded;
 		this.setOptions(options);
 		this.makeShim();
@@ -3806,14 +4967,15 @@ var IframeShim = new Class({
 			var zIndex = this.element.getStyle('zIndex').toInt();
 
 			if (!zIndex){
+				zIndex = 1;
 				var pos = this.element.getStyle('position');
 				if (pos == 'static' || !pos) this.element.setStyle('position', 'relative');
-				this.element.setStyle('zIndex', zIndex || 1);
+				this.element.setStyle('zIndex', zIndex);
 			}
 			zIndex = ($chk(this.options.zIndex) && zIndex > this.options.zIndex) ? this.options.zIndex : zIndex - 1;
 			if (zIndex < 0) zIndex = 1;
 			this.shim = new Element('iframe', {
-				src: (window.location.protocol == 'https') ? '://0' : 'javascript:void(0)',
+				src:'javascript:false;document.write("");',
 				scrolling: 'no',
 				frameborder: 0,
 				styles: {
@@ -3881,6 +5043,243 @@ window.addEvent('load', function(){
 });
 
 /*
+Script: Scroller.js
+	Class which scrolls the contents of any Element (including the window) when the mouse reaches the Element's boundaries.
+
+	License:
+		MIT-style license.
+
+	Authors:
+		Valerio Proietti
+*/
+
+var Scroller = new Class({
+
+	Implements: [Events, Options],
+
+	options: {
+		area: 20,
+		velocity: 1,
+		onChange: function(x, y){
+			this.element.scrollTo(x, y);
+		},
+		fps: 50
+	},
+
+	initialize: function(element, options){
+		this.setOptions(options);
+		this.element = document.id(element);
+		this.listener = ($type(this.element) != 'element') ? document.id(this.element.getDocument().body) : this.element;
+		this.timer = null;
+		this.bound = {
+			attach: this.attach.bind(this),
+			detach: this.detach.bind(this),
+			getCoords: this.getCoords.bind(this)
+		};
+	},
+
+	start: function(){
+		this.listener.addEvents({
+			mouseenter: this.bound.attach,
+			mouseleave: this.bound.detach
+		});
+	},
+
+	stop: function(){
+		this.listener.removeEvents({
+			mouseenter: this.bound.attach,
+			mouseleave: this.bound.detach
+		});
+		this.timer = $clear(this.timer);
+	},
+
+	attach: function(){
+		this.listener.addEvent('mousemove', this.bound.getCoords);
+	},
+
+	detach: function(){
+		this.listener.removeEvent('mousemove', this.bound.getCoords);
+		this.timer = $clear(this.timer);
+	},
+
+	getCoords: function(event){
+		this.page = (this.listener.get('tag') == 'body') ? event.client : event.page;
+		if (!this.timer) this.timer = this.scroll.periodical(Math.round(1000 / this.options.fps), this);
+	},
+
+	scroll: function(){
+		var size = this.element.getSize(), 
+			scroll = this.element.getScroll(), 
+			pos = this.element.getOffsets(), 
+			scrollSize = this.element.getScrollSize(), 
+			change = {x: 0, y: 0};
+		for (var z in this.page){
+			if (this.page[z] < (this.options.area + pos[z]) && scroll[z] != 0)
+				change[z] = (this.page[z] - this.options.area - pos[z]) * this.options.velocity;
+			else if (this.page[z] + this.options.area > (size[z] + pos[z]) && scroll[z] + size[z] != scrollSize[z])
+				change[z] = (this.page[z] - size[z] + this.options.area - pos[z]) * this.options.velocity;
+		}
+		if (change.y || change.x) this.fireEvent('change', [scroll.x + change.x, scroll.y + change.y]);
+	}
+
+});
+
+/*
+Script: Tips.js
+	Class for creating nice tips that follow the mouse cursor when hovering an element.
+
+	License:
+		MIT-style license.
+
+	Authors:
+		Valerio Proietti
+		Christoph Pojer
+*/
+
+var Tips = new Class({
+
+	Implements: [Events, Options],
+
+	options: {
+		onShow: function(tip){
+			tip.setStyle('visibility', 'visible');
+		},
+		onHide: function(tip){
+			tip.setStyle('visibility', 'hidden');
+		},
+		title: 'title',
+		text: function(el){
+			return el.get('rel') || el.get('href');
+		},
+		showDelay: 100,
+		hideDelay: 100,
+		className: null,
+		offset: {x: 16, y: 16},
+		fixed: false
+	},
+
+	initialize: function(){
+		var params = Array.link(arguments, {options: Object.type, elements: $defined});
+		if (params.options && params.options.offsets) params.options.offset = params.options.offsets;
+		this.setOptions(params.options);
+		this.container = new Element('div', {'class': 'tip'});
+		this.tip = this.getTip();
+		
+		if (params.elements) this.attach(params.elements);
+	},
+
+	getTip: function(){
+		return new Element('div', {
+			'class': this.options.className,
+			styles: {
+				visibility: 'hidden',
+				display: 'none',
+				position: 'absolute',
+				top: 0,
+				left: 0
+			}
+		}).adopt(
+			new Element('div', {'class': 'tip-top'}),
+			this.container,
+			new Element('div', {'class': 'tip-bottom'})
+		).inject(document.body);
+	},
+
+	attach: function(elements){
+		var read = function(option, element){
+			if (option == null) return '';
+			return $type(option) == 'function' ? option(element) : element.get(option);
+		};
+		$$(elements).each(function(element){
+			var title = read(this.options.title, element);
+			element.erase('title').store('tip:native', title).retrieve('tip:title', title);
+			element.retrieve('tip:text', read(this.options.text, element));
+			
+			var events = ['enter', 'leave'];
+			if (!this.options.fixed) events.push('move');
+			
+			events.each(function(value){
+				element.addEvent('mouse' + value, element.retrieve('tip:' + value, this['element' + value.capitalize()].bindWithEvent(this, element)));
+			}, this);
+		}, this);
+		
+		return this;
+	},
+
+	detach: function(elements){
+		$$(elements).each(function(element){
+			['enter', 'leave', 'move'].each(function(value){
+				element.removeEvent('mouse' + value, element.retrieve('tip:' + value) || $empty);
+			});
+			
+			element.eliminate('tip:enter').eliminate('tip:leave').eliminate('tip:move');
+			
+			if ($type(this.options.title) == 'string' && this.options.title == 'title'){
+				var original = element.retrieve('tip:native');
+				if (original) element.set('title', original);
+			}
+		}, this);
+		
+		return this;
+	},
+
+	elementEnter: function(event, element){
+		$A(this.container.childNodes).each(Element.dispose);
+		
+		['title', 'text'].each(function(value){
+			var content = element.retrieve('tip:' + value);
+			if (!content) return;
+			
+			this[value + 'Element'] = new Element('div', {'class': 'tip-' + value}).inject(this.container);
+			this.fill(this[value + 'Element'], content);
+		}, this);
+		
+		this.timer = $clear(this.timer);
+		this.timer = this.show.delay(this.options.showDelay, this, element);
+		this.tip.setStyle('display', 'block');
+		this.position((!this.options.fixed) ? event : {page: element.getPosition()});
+	},
+
+	elementLeave: function(event, element){
+		$clear(this.timer);
+		this.tip.setStyle('display', 'none');
+		this.timer = this.hide.delay(this.options.hideDelay, this, element);
+	},
+
+	elementMove: function(event){
+		this.position(event);
+	},
+
+	position: function(event){
+		var size = window.getSize(), scroll = window.getScroll(),
+			tip = {x: this.tip.offsetWidth, y: this.tip.offsetHeight},
+			props = {x: 'left', y: 'top'},
+			obj = {};
+		
+		for (var z in props){
+			obj[props[z]] = event.page[z] + this.options.offset[z];
+			if ((obj[props[z]] + tip[z] - scroll[z]) > size[z]) obj[props[z]] = event.page[z] - this.options.offset[z] - tip[z];
+		}
+		
+		this.tip.setStyles(obj);
+	},
+
+	fill: function(element, contents){
+		if(typeof contents == 'string') element.set('html', contents);
+		else element.adopt(contents);
+	},
+
+	show: function(el){
+		this.fireEvent('show', [this.tip, el]);
+	},
+
+	hide: function(el){
+		this.fireEvent('hide', [this.tip, el]);
+	}
+
+});
+
+/*
 Script: Date.English.US.js
 	Date messages for US English.
 
@@ -3923,5 +5322,53 @@ MooTools.lang.set('en-US', 'Date', {
 	hoursUntil: 'about {delta} hours from now',
 	dayUntil: '1 day from now',
 	daysUntil: '{delta} days from now'
+
+});
+
+/*
+Script: FormValidator.English.js
+	Date messages for English.
+
+	License:
+		MIT-style license.
+
+	Authors:
+		Aaron Newton
+
+*/
+
+MooTools.lang.set('en-US', 'FormValidator', {
+
+	required:'This field is required.',
+	minLength:'Please enter at least {minLength} characters (you entered {length} characters).',
+	maxLength:'Please enter no more than {maxLength} characters (you entered {length} characters).',
+	integer:'Please enter an integer in this field. Numbers with decimals (e.g. 1.25) are not permitted.',
+	numeric:'Please enter only numeric values in this field (i.e. "1" or "1.1" or "-1" or "-1.1").',
+	digits:'Please use numbers and punctuation only in this field (for example, a phone number with dashes or dots is permitted).',
+	alpha:'Please use letters only (a-z) with in this field. No spaces or other characters are allowed.',
+	alphanum:'Please use only letters (a-z) or numbers (0-9) only in this field. No spaces or other characters are allowed.',
+	dateSuchAs:'Please enter a valid date such as {date}',
+	dateInFormatMDY:'Please enter a valid date such as MM/DD/YYYY (i.e. "12/31/1999")',
+	email:'Please enter a valid email address. For example "fred@domain.com".',
+	url:'Please enter a valid URL such as http://www.google.com.',
+	currencyDollar:'Please enter a valid $ amount. For example $100.00 .',
+	oneRequired:'Please enter something for at least one of these inputs.',
+	errorPrefix: 'Error: ',
+	warningPrefix: 'Warning: ',
+
+	//FormValidator.Extras
+
+	noSpace: 'There can be no spaces in this input.',
+	reqChkByNode: 'No items are selected.',
+	requiredChk: 'This field is required.',
+	reqChkByName: 'Please select a {label}.',
+	match: 'This field needs to match the {matchName} field',
+	startDate: 'the start date',
+	endDate: 'the end date',
+	currendDate: 'the current date',
+	afterDate: 'The date should be the same or after {label}.',
+	beforeDate: 'The date should be the same or before {label}.',
+	startMonth: 'Please select a start month',
+	sameMonth: 'These two dates must be in the same month - you must change one or the other.'
 
 });

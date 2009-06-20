@@ -69,15 +69,15 @@ var SSFramedView = new Class({
   },
   
   
-  document: function()
+  contentDocument: function()
   {
-    return this.element.contentDocument;
+    return new Document(this.element.contentDocument);
   },
   
   
-  window: function()
+  contentWindow: function()
   {
-    return this.element.contentWindow;
+    return new Window(this.element.contentWindow);
   },
   
   
@@ -89,8 +89,8 @@ var SSFramedView = new Class({
   
   buildInterface: function()
   {
-    var context = this.element.contentWindow;
-    var doc = context.document;
+    var context = this.contentWindow();
+    var doc = this.contentDocument();
     
     // forward key up and down events to parent window
     context.addEvent('keyup', function(evt) {
@@ -103,32 +103,23 @@ var SSFramedView = new Class({
     });
     
     this.element.getElement = function(sel) {
-      return this.element.contentWindow.$$(sel)[0];
+      return this.contentWindow().$$(sel)[0];
     }.bind(this);
     
     this.element.getElements = function(sel) {
-      return this.element.contentWindow.$$(sel);
+      return this.contentWindow().$$(sel);
     }.bind(this);
     
     // store the name on the window for debugging
     context.__ssname = this.element.getProperty('id');
     context.__sscontextowner = this;
     
-    // under GM not wrapped, erg - David
-    if(!context.$)
-    {
-      context = new Window(context);
-      this.context = context;
-      doc = new Document(context.document);
-      this.doc = doc;
-    }
-    
     Sandalphon.addStyle(this.ui.styles, context);
     
     var children = Sandalphon.convertToFragment(this.ui['interface'], context).getChildren();
     
-    $(context.document.body).setProperty('class', this.name + 'FrameBody');
-    $(context.document.body).adopt.apply($(context.document.body), children);
+    $(doc.body).setProperty('class', this.name + 'FrameBody');
+    $(doc.body).adopt.apply($(doc.body), children);
     
     Sandalphon.activate(context);
   },
@@ -136,7 +127,7 @@ var SSFramedView = new Class({
   
   subViews: function()
   {
-    return this.context.$$('*[uiclass]').map(SSControllerForNode);
+    return this.contentWindow().$$('*[uiclass]').map(SSControllerForNode);
   }
   
 });
