@@ -309,7 +309,6 @@ function SSSaveNewShift(shiftJson)
     content: escape(JSON.encode(shiftJson)),
     version: space.attributes.version,
     filters: JSON.encode(filters),
-    status: SSGetDefaultShiftStatus() // TODO: this call is in the space ecosystem
   };
 
   SSServerCall.safeCall('shift.create', params, function(response) {
@@ -324,7 +323,6 @@ function SSSaveNewShift(shiftJson)
 
     shiftJson.username = ShiftSpace.User.getUsername();
     shiftJson.created = 'Just posted';
-    shiftJson.status = SSGetDefaultShiftStatus();
     shiftJson.href = window.location.href;
 
     // with the real value
