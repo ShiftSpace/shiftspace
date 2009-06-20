@@ -111,6 +111,7 @@ var SSSpaceMenu = new Class({
   newShift: function(data)
   {
     SSInitShift(SSSpaceForPosition(data.index).name);
+    this.hide();
   },
   
   
