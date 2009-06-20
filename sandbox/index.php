@@ -25,35 +25,17 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
     <title>ShiftSpace Sandbox</title>
-    <!--
-    <script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script>
-    -->
-    <!--
-    <script type="text/javascript" src="http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js"></script>
-    -->
-    <!--
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.2.6/jquery.js" type="text/javascript" charset="utf-8"></script>
-  	<script>
-  	  if(typeof jQuery != 'undefined') jQuery.noConflict();
-  	</script>
-  	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.5.3/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
-    -->
     <link rel="stylesheet" href="style.css" type="text/css"></link>
-    <script src="../mootools/mootools-1.2.2-core.js" type="text/javascript"></script>
-    <script src="../mootools/mootools-1.2.2.1-more.js" type="text/javascript"></script>
+    <script src="../mootools/mootools-1.2.3-core.js" type="text/javascript"></script>
+    <script src="../mootools/mootools-1.2.3.1-more.js" type="text/javascript"></script>
     <script src="../client/Videobox.js" type="text/javascript"></script>
     <script src="../builds/shiftspace.sandbox.js" type="text/javascript"></script>
-    <!--<script src="../client/Actions.js" type="text/javascript"></script>-->
     <style type="text/css">
     .first
     {
       margin-top:100px;
     }
     </style>
-    <!--[if IE 6]>
-    <script src="http://ie7-js.googlecode.com/svn/version/2.0(beta3)/IE7.js" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" href="../styles/ShiftSpaceIE6.css" type="text/css"></link>
-    <![endif]-->
   </head>
   <body>
     <div id="lipsum">
