@@ -9,6 +9,11 @@ var __focusedSpace = null;
 var __installedSpaces = null;
 var __installedSpacesDataProvider = null;
 
+function SSSpaceIsLoaded(space)
+{
+  return (SSSpaceForName(space) != null); 
+}
+
 /*
 Function: SSLoadSpace
   Loads the space's source code, executes it and stores an instance of the

@@ -25,7 +25,6 @@ Array.implement({
 function $msg(methodName) {
   var rest = $A(arguments).drop(1);
   return function(obj) {
-    SSLog('methodName: ' + methodName, SSLogForce);
     return obj[methodName].apply(obj, rest);
   };
 };

@@ -14,7 +14,6 @@ var SSView = new Class({
   
   defaults: function()
   {
-    SSLog('Returning defaults', SSLogViewSystem);
     var temp = {
       context: null,
       generateElement: true,
@@ -42,12 +41,6 @@ var SSView = new Class({
   */
   initialize: function(el, options)
   {
-    SSLog("Initialize SSView", SSLogViewSystem);
-    if(el)
-    {
-      SSLog('Instantiating SSView with ' + el.getProperty('id'), SSLogMessage);
-    }
-    
     // we are new and we are dirty
     this.setNeedsDisplay(true);
     
@@ -64,16 +57,12 @@ var SSView = new Class({
     // add to global hash
     if(ShiftSpaceObjects) ShiftSpaceObjects.set(this.__id, this);
     
-    SSLog('Interned view into ShiftSpaceObjects hash', SSLogViewSystem);
-
     // check if we are prebuilt
     //this.__prebuilt__ = (el && true) || false; // NOT IMPLEMENTED - David
     this.__ssviewcontrollers__ = [];
     this.__delegate = null;
     this.__outlets__ = new Hash();
     
-    SSLog('SSView internal vars set', SSLogViewSystem);
-
     this.element = (el && $(el)) || (this.options.generateElement && new Element('div')) || null;
     
     if(this.element)
@@ -138,7 +127,6 @@ var SSView = new Class({
     if(superview) 
     {
       superview.addEvent('onRefresh', function() {
-        SSLog('onRefresh ' + this.needsDisplay(), SSLogForce);
         if(!this.needsDisplay()) return;
         this.refreshAndFire();
       }.bind(this));
@@ -161,7 +149,6 @@ var SSView = new Class({
   */
   awake: function(context)
   {
-    SSLog(this.getId() + " awake, outlets " + JSON.encode(this.outlets().getKeys()));
   },
   
   
@@ -219,7 +206,6 @@ var SSView = new Class({
 
   addOutletWithName: function(name, outlet)
   {
-    SSLog('Setting name ' + name + ' for ' + outlet);
     this.outlets().set(name, outlet);
   },
   
@@ -262,9 +248,6 @@ var SSView = new Class({
 
   checkForMatch: function(_cands, node)
   {
-    SSLog('checkForMatch', SSLogForce);
-    SSLog('$id ' + $id(node), SSLogForce);
-    
     if(_cands.length == 0) return null;
 
     var cands = (_cands instanceof Array && _cands) || [_cands];
@@ -272,7 +255,6 @@ var SSView = new Class({
     var len = cands.length;
     for(var i = 0; i < len; i++)
     {
-      SSLog('cand $id ' + $id(cands[i]) + ' '+ cands[i].getProperty('id'), SSLogForce);
       if(cands[i].isEqual(node)) return true;
     }
 
@@ -301,13 +283,10 @@ var SSView = new Class({
     var node = $(target);
     var matches = this.element.getElements(selectorOfTest);
 
-    SSLog('hit test!', SSLogForce);
-
     while(node && node != this.element)
     {
       if(this.checkForMatch(matches, node))
       {
-        SSLog('hit! ' + node.getProperty('id'), SSLogForce);
         this.setCachedHit(node);
         return node;
       }
@@ -361,7 +340,6 @@ var SSView = new Class({
   */
   controllerForNode: function(node)
   {
-    //SSLog(('controllerForNode ' + node);
     // return the storage property
     return SSControllerForNode(node);
   },

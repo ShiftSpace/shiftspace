@@ -17,6 +17,11 @@ Parameters:
 */
 function SSInitShift(spaceName, options) 
 {
+  if(!SSSpaceIsLoaded(spaceName))
+  {
+    SSLoadSpace(spaceName, SSInitShift.bind(null, [spaceName, options]));
+  }
+  
   if (!SSURLForSpace(spaceName)) 
   {
     SSLog('Space ' + spaceName + ' does not exist.', SSLogError);

@@ -311,8 +311,6 @@ var SSListView = new Class({
     var target = $(event.target);
     var type = event.type;
     
-    SSLog('SSListView eventDispatch', SSLogForce);
-    
     switch(true)
     {
       case(this.hitTest(target, 'li, > li *') != null):
