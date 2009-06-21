@@ -1331,7 +1331,7 @@ var SSListView = new Class({
   */
   indexOfCellNode: function(cellNode)
   {
-    return this.cellNodes().indexOf(cellNode);
+    return this.indexOfNode(this.cellNodes(), cellNode);
   },
   
   /*
