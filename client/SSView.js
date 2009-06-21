@@ -262,6 +262,9 @@ var SSView = new Class({
 
   checkForMatch: function(_cands, node)
   {
+    SSLog('checkForMatch', SSLogForce);
+    SSLog('$id ' + $id(node), SSLogForce);
+    
     if(_cands.length == 0) return null;
 
     var cands = (_cands instanceof Array && _cands) || [_cands];
@@ -269,7 +272,8 @@ var SSView = new Class({
     var len = cands.length;
     for(var i = 0; i < len; i++)
     {
-      if(cands[i] == node) return true;
+      SSLog('cand $id ' + $id(cands[i]) + ' '+ cands[i].getProperty('id'), SSLogForce);
+      if(cands[i].isEqual(node)) return true;
     }
 
     return false;
@@ -294,13 +298,16 @@ var SSView = new Class({
       }.bind(this)).flatten().clean()[0];
     }
 
-    var node = target;
+    var node = $(target);
     var matches = this.element.getElements(selectorOfTest);
+
+    SSLog('hit test!', SSLogForce);
 
     while(node && node != this.element)
     {
       if(this.checkForMatch(matches, node))
       {
+        SSLog('hit! ' + node.getProperty('id'), SSLogForce);
         this.setCachedHit(node);
         return node;
       }
@@ -320,7 +327,7 @@ var SSView = new Class({
   */
   setCachedHit: function(node)
   {
-    this.__cachedHit__ = node;
+    this.__cachedHit = node;
   },
 
   /*
@@ -332,16 +339,17 @@ var SSView = new Class({
   */
   cachedHit: function()
   {
-    return this.__cachedHit__;
+    return this.__cachedHit;
   },
 
 
-  indexOfNode: function(array, node)
+  indexOfNode: function(elements, node)
   {
-    var len = array.length;
+    elements.each($msg('_ssgenId'));
+    var len = elements.length;
     for(var i = 0; i < len; i++)
     {
-      if(array[i] == node) return i;
+      if(elements[i].isEqual(node)) return i;
     }
     return -1;
   },

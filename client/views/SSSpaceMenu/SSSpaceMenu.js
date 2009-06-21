@@ -109,6 +109,8 @@ var SSSpaceMenu = new Class({
   
   newShift: function(data)
   {
+    SSLog('newShift!', SSLogForce);
+    SSLog(data.index, SSLogForce);
     SSInitShift(SSSpaceForPosition(data.index).name);
     this.hide();
   },

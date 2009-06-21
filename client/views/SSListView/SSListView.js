@@ -308,17 +308,21 @@ var SSListView = new Class({
   eventDispatch: function(_event, eventType)
   {
     var event = new Event(_event);
-    var target = event.target;
+    var target = $(event.target);
     var type = event.type;
+    
+    SSLog('SSListView eventDispatch', SSLogForce);
     
     switch(true)
     {
       case(this.hitTest(target, 'li, > li *') != null):
         var hit = this.cachedHit();
         var cellNode = (hit.get('tag') == 'li' && hit) || hit.getParent('li');
+        
         this.cell().lock(cellNode);
         this.cell().eventDispatch(event, type);
         this.cell().unlock();
+        
         if(type == 'click')
         {
           this.fireEvent('onRowClick', {listView:this, index:this.indexOfCellNode(cellNode)});

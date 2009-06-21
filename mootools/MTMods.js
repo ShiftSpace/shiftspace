@@ -79,6 +79,38 @@ Function.implement({
   }
 });
 
+function $id(node)
+{
+  return node._ssgenId();
+}
+
+Element.implement({
+  _ssgenId: function()
+  {
+    var id = this.getProperty('id');
+    if(!id)
+    {
+      id = Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
+      this.setProperty('id', 'generatedId_'+id);
+    }
+    return id;
+  },
+  _getElement: function(sel)
+  {
+    this._ssgenId();
+    return (new Document(this.ownerDocument)).getWindow().$$('#' + this.getProperty('id') + ' ' + sel)[0];
+  },
+  _getElements: function(sel)
+  {
+    this._ssgenId();
+    return (new Document(this.ownerDocument)).getWindow().$$('#' + this.getProperty('id') + ' ' + sel);
+  },
+  isEqual: function(node)
+  {
+    return (this == node) || (this.getProperty('id') == node.getProperty('id'));
+  }
+});
+
 var IFrame = new Native({
 
   name: 'IFrame',
