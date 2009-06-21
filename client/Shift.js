@@ -435,7 +435,7 @@ var ShiftSpaceShift = new Class({
     return this.__isBeingEdited;
   },
 
-  getRegion : function()
+  getRegion: function()
   {
     var pos = this.getMainView().getPos();
     var size = this.getMainView().getSize().size;
@@ -465,7 +465,7 @@ var ShiftSpaceShift = new Class({
       this.pin($('cssId), ShiftSpace.Pin.toRef($('someOtherCSSId')));
       (end)
   */
-  pin : function(element, pinRef)
+  pin: function(element, pinRef)
   {
     // get the target
     var pinTarget = ShiftSpace.Pin.toNode(pinRef);
@@ -498,7 +498,6 @@ var ShiftSpaceShift = new Class({
       // this is already pinned need to unpin first
       if(this.getPinElement())
       {
-        // clears everything
         this.unpin();
       }
 
@@ -526,7 +525,7 @@ var ShiftSpaceShift = new Class({
       <Pin>,
       <PinWidget>
   */
-  unpin : function()
+  unpin: function()
   {
     // check to make sure there is an pinned element to restore
     if(this.getPinElement())
@@ -574,7 +573,7 @@ var ShiftSpaceShift = new Class({
     Parameters:
       pinRef - Set the current pinRef object.
   */
-  setPinRef : function(pinRef)
+  setPinRef: function(pinRef)
   {
     this.pinRef = pinRef;
   },
@@ -583,7 +582,7 @@ var ShiftSpaceShift = new Class({
     Function: getPinRef
       Returns the set pinRef object (created by <Pin>) if this shift has one.
   */
-  getPinRef : function()
+  getPinRef: function()
   {
     return this.pinRef;
   },
@@ -709,7 +708,7 @@ var ShiftSpaceShift = new Class({
     Returns:
       A boolean.
   */
-  isPinned : function()
+  isPinned: function()
   {
     return (this.getPinTarget() != null);
   },
@@ -737,9 +736,9 @@ var ShiftSpaceShift = new Class({
     Parameters:
       newTitle - a new title (string).
   */
-  setTitle : function(newTitle)
+  setTitle: function(newTitle)
   {
-    this.__title__ = newTitle;
+    this.__title = newTitle;
   },
 
   /*
@@ -751,7 +750,7 @@ var ShiftSpaceShift = new Class({
   */
   getTitle: function()
   {
-    return (this.__title__ || this.defaultTitle());
+    return (this.__title || this.defaultTitle());
   },
 
   /*
@@ -779,10 +778,10 @@ var ShiftSpaceShift = new Class({
   },
 
   /*
-    Function : build (abstract)
+    Function: build (abstract)
       To be implemented by the subclass. Build the DOM for the shift.
   */
-  build : function()
+  build: function()
   {
   },
 
