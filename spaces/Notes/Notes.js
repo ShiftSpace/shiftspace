@@ -15,7 +15,6 @@ var NotesSpace = new Class({
 
   intialize: function()
   {
-    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>> Notes starting up!');
     this.parent();
   },
 
@@ -94,24 +93,14 @@ var NotesShift = new Class({
       json.noteText = json.content;
     }
 
-    // store a noteText ref
     this.noteText = (json.noteText && json.noteText.replace(/<br\/>/g, "\n")) || null;
-    //SSLog('Notes shift about to build');
     this.build();
-    SSLog('Notes shift built');
-    //SSLog('Notes shift built');
-    
-    // attach events
     this.attachEvents();
-    //SSLog('Note shift events attached');
 
-    // set the size to the defaults size declared above
     this.element.setStyles({
       width: this.defaults.size.x,
       height: this.defaults.size.y
     });
-
-    //SSLog('styles set');
 
     this.element.set('tween', {
       duration: 300,
@@ -119,17 +108,9 @@ var NotesShift = new Class({
     });
     this.element.tween('opacity', [0, 1]);
 
-    //SSLog('fx about to start');
-
-    // set the main view
     this.manageElement(this.element);
-
-    //SSLog('prepare refresh');
-    // refresh - generally a good idea
     this.refresh();
-    //SSLog('refresh');
 
-    //SSLog('check pin');
     // check to see if this note is pinned
     if(ShiftSpace.Pin.isValidRef(json.pinRef))
     {
@@ -139,7 +120,6 @@ var NotesShift = new Class({
     {
       // otherwise set the position of the note to the mouse
       // or the last saved absolute position
-      //SSLog('set position');
       if(json.position)
       {
         this.element.setStyles({
@@ -161,7 +141,6 @@ var NotesShift = new Class({
       }
     }
 
-    //SSLog('refresh again');
     this.refresh();
   },
 
@@ -184,10 +163,8 @@ var NotesShift = new Class({
   */
   attachEvents: function( e )
   {
-    // setup close button
     this.closeButton.addEvent('click', this.cancel.bind(this));
 
-    // make the note draggable
     this.dragRef = this.element.makeDraggable({
       handle: this.top,
       
@@ -200,15 +177,12 @@ var NotesShift = new Class({
       }.bind(this)
     });
 
-    // set up the save event
     this.saveButton.addEvent( 'click', function() {
       this.save();
     }.bind(this));
 
-    // set up the cancel event
     this.cancelButton.addEvent( 'click', this.cancel.bind( this ) );
 
-    // make the note resizeable
     this.element.makeResizable({
       handle: this.resizeControl,
       
@@ -223,10 +197,8 @@ var NotesShift = new Class({
       onDrag: this.refresh.bind(this)
     });
 
-    // add areas of the shift that will trigger a focus event on mousedown
     this.setFocusRegions( this.grabber, this.resizeControl );
 
-    // set up the mouse enter/leave events for hiding and reveal controls
     this.element.addEvent('mouseover', this.revealControls.bind(this));
     this.element.addEvent('mouseout', this.hideControls.bind(this));
   },
@@ -254,7 +226,7 @@ var NotesShift = new Class({
   */
   hideControls: function( e )
   {
-    // we don't want the even to continue
+    // we don't want the event to continue
     var evt = new Event(e);
     evt.stopPropagation();
 
@@ -441,13 +413,11 @@ var NotesShift = new Class({
     if(this.inputArea)
     {
       this.inputArea.removeProperty('readonly');
-      // show the input area
       this.inputArea.setStyle('display', 'block');
     }
 
     if(this.viewArea)
     {
-      // hide the viewing area
       this.viewArea.setStyle('display', 'none');
     }
 
@@ -464,13 +434,11 @@ var NotesShift = new Class({
     if(this.inputArea)
     {
       this.inputArea.setProperty('readonly', 1);
-      // hide the input area
       this.inputArea.setStyle('display', 'none');
     }
 
     if(this.viewArea)
     {
-      // show the viewing area
       this.viewArea.setStyle('display', 'block');
     }
 
@@ -484,25 +452,15 @@ var NotesShift = new Class({
   */
   build: function()
   {
-    // create the element
     this.element = new ShiftSpace.Element( 'div', {
       'class': 'SSNoteShift'
     });
     this.element.setOpacity(0);
 
-    //SSLog('built top');
-    // build the top handle and close button
     this.buildTop();
-    //SSLog('built frame');
-    // build the iframe to hold the text
     this.buildFrame();
-    //SSLog('built bottom');
-    // build the bottom portion of the note
     this.buildBottom();
-    //SSLog('built edges');
-    // build the drop shadow edges
     this.buildEdges();
-    //SSLog('injecting');
     this.element.injectInside( document.body );
   },
 
@@ -513,26 +471,18 @@ var NotesShift = new Class({
   */
   buildTop: function()
   {
-    // create the top part where the handle will be
     this.top = new ShiftSpace.Element('div', {
       'class': 'SSNoteShiftTop'
     });
-
-    // create the grabber guide
     this.grabber = new ShiftSpace.Element('div', {
       'class': "SSNoteShiftGrabber SSHidden"
     });
-
-    // create the close button
     this.closeButton = new ShiftSpace.Element('div', {
       'class': 'SSNoteShiftCloseButton SSHidden'
     });
 
-    // add the grabber
     this.grabber.injectInside(this.top);
-    // add the close button to the top
     this.closeButton.injectInside(this.top);
-    // add top to the main element
     this.top.injectInside(this.element);
   },
 
@@ -583,13 +533,11 @@ var NotesShift = new Class({
       text = this.noteText;
     }
 
-    // Get document reference and MooToolize the body
     var notedoc = this.frame.contentDocument || this.frame.document;
     this.notedoc = notedoc;
     this.frameBody = $(notedoc.body);
     this.frameBody.setProperty('id', 'SSNoteShiftFrameBody');
 
-    // create the text area
     this.inputArea = $(notedoc.createElement('textarea'));
     this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
     this.inputArea.setStyle('display', 'none');
@@ -599,7 +547,6 @@ var NotesShift = new Class({
 
     this.inputArea.addEvent('keyup', this.updateText.bind(this));
 
-    // create the view text area
     this.viewArea = $(notedoc.createElement('div'));
     this.viewArea.setProperty('class', 'SSNoteShiftViewArea SSDisplayNone');
     this.viewArea.injectInside(this.frameBody);
@@ -626,14 +573,12 @@ var NotesShift = new Class({
       });
     }
 
-    // update the view
     this.update();
 
     if(this.isBeingEdited())
     {
       this.edit();
     }
-
   },
 
 
@@ -644,72 +589,46 @@ var NotesShift = new Class({
   */
   buildBottom: function()
   {
-    //SSLog('YYYYYYYYYYYYYYYYYYYYAAAAAAAAAAAAAAAAAAAAARRRRRRRRRRRRRRRRRRRR');
-    // create the bottom portion of the note
     this.bottom = new ShiftSpace.Element('div', {
       'class': "SSNoteShiftBottom"
     });
 
-    //SSLog('1');
-
-    // create the save button
     this.saveButton = new ShiftSpace.Element('input', {
       'type': 'button',
       'value': 'Save',
       'class': 'SSNoteShiftButton'
     });
-    //SSLog('1.5');
-
     this.saveButton.injectInside( this.element );
 
-    //SSLog('2');
-
-    // create the cancel button
     this.cancelButton = new ShiftSpace.Element('input', {
       'type': 'button',
       'value': 'Cancel',
       'class': 'SSNoteShiftButton'
     });
-
-    // create the resize control
     this.resizeControl = new ShiftSpace.Element('div', {
       'class': "SSNoteShiftResize SSHidden"
     });
-
     this.pinWidgetDiv = new ShiftSpace.Element('div', {
       'class': "SSPinWidgetButton"
     });
-
     this.buttonDiv = new ShiftSpace.Element('div', {
       'class': "SSNoteShiftButtonDiv"
     });
 
-    //SSLog('all the els created');
-
-    // build the bottom
-
     this.cancelButton.injectInside(this.buttonDiv);
     this.saveButton.injectInside(this.buttonDiv);
     this.buttonDiv.injectInside(this.bottom);
-    //SSLog('added basics');
-
     this.pinWidgetDiv.injectInside(this.bottom);
-    //SSLog('pin widget div');
 
     try
     {
       this.pinWidget = new ShiftSpace.PinWidget(this);
-      //SSLog('adding pin widget');
     }
     catch(err)
     {
     }
 
     this.resizeControl.injectInside(this.bottom);
-    //SSLog('resizeControl');
-
-    // add it to the note element
-    //SSLog('adding into the bottm');
     this.bottom.injectInside(this.element);
   },
 
@@ -755,11 +674,9 @@ var NotesShift = new Class({
     var rightEdge = new ShiftSpace.Element('div', {
       'class': "SSNoteShiftRightEdge"
     });
-
     var bottomEdge = new ShiftSpace.Element('div', {
       'class': "SSNoteShiftBottomEdge"
     });
-
     var corner = new ShiftSpace.Element('div', {
       'class': "SSNoteShiftCorner"
     });

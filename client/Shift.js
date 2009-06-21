@@ -32,31 +32,17 @@ var ShiftSpaceShift = new Class({
   */
   initialize: function(_json)
   {
-    SSLog('====================================================== STARTING UP', SSLogForce);
-    SSLog('shift json', SSLogForce);
-    SSLog(JSON.encode(_json), SSLogForce);
     this.setOptions(this.getDefaults(), _json);
-    SSLog('options set!', SSLogForce);
 
-    // private vars
     var id = _json.id;
     var parentSpace;
 
-    // rename options to defaults
     this.defaults = this.options;
 
-    /* ------------------- Private Getters/Setters ------------------- */
     this.setId = function(aId) {
       if(id == null || id.substr(0, 8) == 'newShift') id = aId;
     };
 
-    /*
-      Function: getId
-        Return the private id variable.
-
-      Returns:
-        the id (string).
-    */
     this.getId = function() {
       return id;
     };
