@@ -194,25 +194,25 @@ var CommentsPlugin = new Class({
   
   setIsShowing: function(newValue)
   {
-    this.__isShowing__ = newValue;
+    this.__isShowing = newValue;
   },
 
 
   isShowing: function()
   {
-    return this.__isShowing__;
+    return this.__isShowing;
   },
   
   
   setIsVisible: function(newValue)
   {
-    this.__isVisible__ = newValue;
+    this.__isVisible = newValue;
   },
   
   
   isVisible: function()
   {
-    return this.__isVisible__;
+    return this.__isVisible;
   },
   
 

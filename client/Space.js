@@ -263,7 +263,7 @@ var ShiftSpaceSpace = new Class({
   */
   setIsVisible: function(val)
   {
-    this.__isVisible__ = val;
+    this.__isVisible = val;
   },
 
 
@@ -285,7 +285,7 @@ var ShiftSpaceSpace = new Class({
         continue;
       }
     }
-    return this.__isVisible__ || visibleShifts;
+    return this.__isVisible || visibleShifts;
   },
 
   /*
@@ -387,8 +387,8 @@ var ShiftSpaceSpace = new Class({
     // add a backreference
     aShift.parentSpace = this;
 
-    SSLog('constructing');
-    SSLog(this.shiftClass);
+    SSLog('constructing a shift', SSLogForce);
+    SSLog(this.shiftClass, SSLogForce);
 
     // create the new shift
     try
@@ -397,11 +397,12 @@ var ShiftSpaceSpace = new Class({
     }
     catch(exc)
     {
-      SSLog(SSDescribeException(exc));
+      SSLog("Failed to create new shift!", SSLogForce);
+      return null;
     }
 
-    //SSLog('a new sthishift');
-    //SSLog(newShift);
+    SSLog('a new shift', SSLogForce);
+    SSLog(newShift, SSLogForce);
 
     // listen for shift updates
     newShift.addEvent('onUpdate', this.updateShift.bind(this));

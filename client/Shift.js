@@ -25,10 +25,10 @@ var ShiftSpaceShift = new Class({
   },
 
   /*
-    Function : initialize (private)
+    Function: initialize (private)
       Takes a json object and creates the shift.
 
-    Parameter :
+    Parameters:
       _json - The JSON object that contains the properties the shift will have.
   */
   initialize: function(_json)
@@ -36,30 +36,16 @@ var ShiftSpaceShift = new Class({
     SSLog('====================================================== STARTING UP');
     this.setOptions(this.getDefaults(), _json);
 
-    // private id var
+    // private vars
     var id = _json.id;
-    // private parent shift var
     var parentSpace;
 
     // rename options to json
     this.defaults = this.options;
 
-    // the above probably should privatized against people accidentally using the options property
-
-    // These two functions prevent spoofing an id
-    // The id can be set only at shift instantiation
-    // and Shiftspace checks if id number is available
-    // or whether or not it is already in use and if it
-    // isn't it use, the json object must be equal to the
-    // one in Shiftspace.
-    // perhaps ID block should be part of a user session?
-
     /* ------------------- Private Getters/Setters ------------------- */
-    this.setId = function( aId ) {
-      if( id == null || id.substr(0, 8) == 'newShift')
-      {
-        id = aId;
-      }
+    this.setId = function(aId) {
+      if(id == null || id.substr(0, 8) == 'newShift') id = aId;
     };
 
     /*
@@ -78,7 +64,7 @@ var ShiftSpaceShift = new Class({
         Sets the private parent space var.  You should not call this directly.
     */
     this.setParentSpace = function(_parentSpace) {
-      if( parentSpace == null )
+      if(parentSpace == null)
       {
         parentSpace = _parentSpace;
       }
@@ -95,23 +81,21 @@ var ShiftSpaceShift = new Class({
     /* ------------------- End Private Getters/Setters ----------------- */
 
     // set the id & parent space
-    if( _json.id )
+    if(_json.id)
     {
-      this.setId( _json.id );
+      this.setId(_json.id);
     }
-    if( this.options.parentSpace )
+    if(this.options.parentSpace)
     {
-      this.setParentSpace( this.options.parentSpace );
+      this.setParentSpace(this.options.parentSpace);
     }
 
     this.setTitle(_json.summary || '');
 
-    SSLog('======================================== CALLING SETUP ' + this.getParentSpace().attributes.name);
+    SSLog('======================================== CALLING SETUP ' + this.getParentSpace().attributes.name, SSLogForce);
 
     // call setup
     this.setup(_json);
-
-    // TODO: should pin if it's possible to pin - David
 
     return this;
   },
@@ -167,11 +151,11 @@ var ShiftSpaceShift = new Class({
       Takes a variable list of DOM element that will trigger this
       shift to fire an onFocus event.
   */
-  setFocusRegions : function()
+  setFocusRegions: function()
   {
     var args = new Array(arguments);
 
-    for( var i = 0; i < arguments.length; i++ )
+    for(var i = 0; i < arguments.length; i++)
     {
       var aRegion = arguments[i];
       aRegion.addEvent('mousedown', function() {
@@ -191,15 +175,15 @@ var ShiftSpaceShift = new Class({
   },
 
   /*
-    Function : save
+    Function: save
       Fires the onUpdate event for anyone who is listening. Passes a ref to this object as
       the event parameter.
   */
-  save : function()
+  save: function()
   {
     // We can use events here because if we do
     // a Shift cannot save in their initialize method
-    this.getParentSpace().updateShift( this );
+    this.getParentSpace().updateShift(this);
     this.fireEvent('onShiftSave', this.getId());
   },
 
@@ -214,7 +198,7 @@ var ShiftSpaceShift = new Class({
       so that your shift can correct itself for resize operations,
       window size changes, showing, hiding, etc.
   */
-  refresh : function() {},
+  refresh: function() {},
 
   /*
     Function: encode (abstract)
@@ -236,16 +220,16 @@ var ShiftSpaceShift = new Class({
       }
       (end)
   */
-  encode : function()
+  encode: function()
   {
     return {};
   },
 
   /*
-    Function : canShow
+    Function: canShow
       A function which determines whether the shift can be shown.
 
-    Returns :
+    Returns:
       A boolean.
   */
   canShow : function()
@@ -254,23 +238,23 @@ var ShiftSpaceShift = new Class({
   },
 
   /*
-    Function : canHide
+    Function: canHide
       A function which determines whether the shift can be hidden.
 
-    Returns :
+    Returns:
       A boolean.
   */
-  canHide : function()
+  canHide: function()
   {
     return true;
   },
 
   /*
-    Function : destroy
+    Function: destroy
       Destroys the shift.  This will remove the shift's main view from the DOM as well as erase
       the shift from the ShiftSpace DB.
   */
-  destroy : function()
+  destroy: function()
   {
     if(this.getMainView() && this.getMainView().getParent())
     {
@@ -286,15 +270,15 @@ var ShiftSpaceShift = new Class({
   },
 
   /*
-    Function : show
+    Function: show
       Make the shift visible.  If you want to add custom behavior by overriding this method sure to add a call to this.parent() as the first line in your new method.
   */
-  show : function()
+  show: function()
   {
     this.setIsVisible(true);
     var mainView = this.getMainView();
 
-    if( mainView )
+    if(mainView)
     {
       mainView.removeClass('SSDisplayNone');
     }
@@ -303,21 +287,21 @@ var ShiftSpaceShift = new Class({
     this.fireEvent('onShiftShow', this.getId());
   },
 
-  _hide : function()
+  _hide: function()
   {
 
   },
 
   /*
-    Function : hide
+    Function: hide
       Hide the shift.  If you want to add custom behavior by overriding this method be sure to call this.parent() as the first line in your new method.
   */
-  hide : function(el)
+  hide: function(el)
   {
     this.setIsVisible(false);
     var mainView = this.getMainView();
 
-    if( mainView )
+    if(mainView)
     {
       mainView.addClass('SSDisplayNone');
     }
@@ -326,16 +310,16 @@ var ShiftSpaceShift = new Class({
   },
 
   /*
-    Function : manageElement
+    Function: manageElement
       Sets the main view of the shift.  This lets ShiftSpace now what the main display
       element of your Shift is.  This is required for proper display ordering.
 
     Parameters:
       el - A ShiftSpace.Element
   */
-  manageElement : function( el )
+  manageElement: function(el)
   {
-    if( el )
+    if(el)
     {
       this.mainView = el;
       this.mainView.addEvent('mousedown', function() {
@@ -349,10 +333,10 @@ var ShiftSpaceShift = new Class({
   },
 
   /*
-    Function : focus
+    Function: focus
       Tell ShiftSpace we want to focus this shift.
   */
-  focus : function() 
+  focus: function() 
   {
     this.fireEvent('onShiftFocus', this.getId() );
   },
@@ -386,7 +370,7 @@ var ShiftSpaceShift = new Class({
     Returns:
       <ShiftSpace.Element>
   */
-  getMainView : function()
+  getMainView: function()
   {
     return this.mainView;
   },
@@ -398,10 +382,9 @@ var ShiftSpaceShift = new Class({
     Returns:
       boolean
   */
-  mainViewIsVisible : function()
+  mainViewIsVisible: function()
   {
-    // TODO: change for 1.2 - David
-    return ( this.mainView.getStyle('display') != 'none' );
+    return (this.mainView.getStyle('display') != 'none');
   },
 
   /*
@@ -413,7 +396,7 @@ var ShiftSpaceShift = new Class({
   */
   setIsVisible: function(val)
   {
-    this.__isVisible__ = val;
+    this.__isVisible = val;
   },
 
   /*
@@ -425,7 +408,7 @@ var ShiftSpaceShift = new Class({
   */
   isVisible: function()
   {
-    return  this.__isVisible__;
+    return  this.__isVisible;
   },
 
   /*
@@ -437,7 +420,7 @@ var ShiftSpaceShift = new Class({
   */
   setIsBeingEdited: function(val)
   {
-    this.__isBeingEdited__ = val;
+    this.__isBeingEdited = val;
   },
 
   /*
@@ -449,7 +432,7 @@ var ShiftSpaceShift = new Class({
   */
   isBeingEdited: function(val)
   {
-    return this.__isBeingEdited__;
+    return this.__isBeingEdited;
   },
 
   getRegion : function()
