@@ -16,7 +16,6 @@
 var ShiftSpaceShift = new Class({
   
   name: 'ShiftSpace.Shift',
-  
   Implements: [Events, Options],
 
   getDefaults: function()
@@ -33,14 +32,17 @@ var ShiftSpaceShift = new Class({
   */
   initialize: function(_json)
   {
-    SSLog('====================================================== STARTING UP');
+    SSLog('====================================================== STARTING UP', SSLogForce);
+    SSLog('shift json', SSLogForce);
+    SSLog(JSON.encode(_json), SSLogForce);
     this.setOptions(this.getDefaults(), _json);
+    SSLog('options set!', SSLogForce);
 
     // private vars
     var id = _json.id;
     var parentSpace;
 
-    // rename options to json
+    // rename options to defaults
     this.defaults = this.options;
 
     /* ------------------- Private Getters/Setters ------------------- */
@@ -59,45 +61,17 @@ var ShiftSpaceShift = new Class({
       return id;
     };
 
-    /*
-      Function: setParentSpace (private)
-        Sets the private parent space var.  You should not call this directly.
-    */
-    this.setParentSpace = function(_parentSpace) {
-      if(parentSpace == null)
-      {
-        parentSpace = _parentSpace;
-      }
-    };
-
-    /*
-      Function: getParentSpace
-        Returns the parent space instance. Useful when a shift needs to communicate the space object, which
-        of course should be rare.
-    */
-    this.getParentSpace = function() {
-      return parentSpace;
-    };
-    /* ------------------- End Private Getters/Setters ----------------- */
-
-    // set the id & parent space
-    if(_json.id)
-    {
-      this.setId(_json.id);
-    }
-    if(this.options.parentSpace)
-    {
-      this.setParentSpace(this.options.parentSpace);
-    }
-
+    if(_json.id) this.setId(_json.id);
     this.setTitle(_json.summary || '');
-
-    SSLog('======================================== CALLING SETUP ' + this.getParentSpace().attributes.name, SSLogForce);
-
-    // call setup
     this.setup(_json);
 
     return this;
+  },
+  
+  
+  getParentSpace: function(attribute)
+  {
+    return SSSpaceForName(this.options.space);
   },
 
   /*

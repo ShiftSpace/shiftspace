@@ -384,9 +384,6 @@ var ShiftSpaceSpace = new Class({
   */
   addShift: function(aShift)
   {
-    // add a backreference
-    aShift.parentSpace = this;
-
     SSLog('constructing a shift', SSLogForce);
     SSLog(this.shiftClass, SSLogForce);
 
@@ -397,8 +394,8 @@ var ShiftSpaceSpace = new Class({
     }
     catch(exc)
     {
-      SSLog("Failed to create new shift!", SSLogForce);
-      return null;
+      SSLog("ERROR: Could not instantiate shift.", SSLogForce);
+      throw exc;
     }
 
     SSLog('a new shift', SSLogForce);
