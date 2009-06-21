@@ -36,12 +36,12 @@ var ShiftSpaceSpace = new Class({
     this.shiftClass = shiftClass;
 
     // set the interface built flag
-    this.__interfaceBuilt__ = false;
-    this.__state__ = new Hash();
+    this.__interfaceBuilt = false;
+    this.__state = new Hash();
 
-    this.__deferredNewShifts__= [];
-    this.__deferredShifts__ = [];
-    this.__deferredEdits__ = [];
+    this.__deferredNewShifts= [];
+    this.__deferredShifts = [];
+    this.__deferredEdits = [];
 
     // if no css file, we don't need to wait for it to load
     this.setCssLoaded(!this.attributes.css);
@@ -104,7 +104,7 @@ var ShiftSpaceSpace = new Class({
   */
   interfaceIsBuilt : function()
   {
-    return this.__interfaceBuilt__;
+    return this.__interfaceBuilt;
   },
 
   /*
@@ -116,7 +116,7 @@ var ShiftSpaceSpace = new Class({
   */
   setInterfaceIsBuilt : function(val)
   {
-    return this.__interfaceBuilt__ = val;
+    return this.__interfaceBuilt = val;
   },
 
   /*
@@ -128,15 +128,15 @@ var ShiftSpaceSpace = new Class({
   {
     this.setCssLoaded(true);
 
-    if(this.__deferredContent__)
+    if(this.__deferredContent)
     {
-      SSLog('__deferredContent__');
+      SSLog('__deferredContent');
 
       this.showInterface();
       this.hideInterface();
 
       // load any deferred shifts
-      this.__deferredShifts__.each(function(aShift) {
+      this.__deferredShifts.each(function(aShift) {
         if(aShift.id)
         {
           SSShowShift(aShift.id);
@@ -148,13 +148,13 @@ var ShiftSpaceSpace = new Class({
       }.bind(this));
 
       // edit any deferred shifts
-      this.__deferredEdits__.each(function(aShift) {
+      this.__deferredEdits.each(function(aShift) {
         SSLog('deferred edit');
         SSEditShift(aShift);
       }.bind(this));
 
       // load any deferred just created shifts
-      this.__deferredNewShifts__.each(function(aShift) {
+      this.__deferredNewShifts.each(function(aShift) {
         SSLog('show deferred new shift');
         this.createShift(aShift);
         SSShowNewShift(aShift.id);
@@ -172,8 +172,8 @@ var ShiftSpaceSpace = new Class({
   */
   addDeferredNew: function(shift)
   {
-    this.__deferredNewShifts__.push(shift);
-    this.__deferredContent__ = true;
+    this.__deferredNewShifts.push(shift);
+    this.__deferredContent = true;
   },
 
   /*
@@ -186,8 +186,8 @@ var ShiftSpaceSpace = new Class({
   */
   addDeferredShift: function(shiftId)
   {
-    this.__deferredShifts__.push(shiftId);
-    this.__deferredContent__ = true;
+    this.__deferredShifts.push(shiftId);
+    this.__deferredContent = true;
   },
 
   /*
@@ -200,8 +200,8 @@ var ShiftSpaceSpace = new Class({
   */
   addDeferredEdit: function(shiftId)
   {
-    this.__deferredEdits__.push(shiftId);
-    this.__deferredContent__ = true;
+    this.__deferredEdits.push(shiftId);
+    this.__deferredContent = true;
   },
 
   /*
@@ -307,7 +307,7 @@ var ShiftSpaceSpace = new Class({
       }
       else
       {
-        this.__deferredContent__ = true;
+        this.__deferredContent = true;
       }
     }
   },
@@ -587,7 +587,7 @@ var ShiftSpaceSpace = new Class({
   {
     if(!this.cssIsLoaded())
     {
-      this.__deferredShifts__.push(aShift);
+      this.__deferredShifts.push(aShift);
     }
     else
     {
@@ -993,7 +993,7 @@ var ShiftSpaceSpace = new Class({
   saveState: function()
   {
     // empty the state
-    this.__state__.empty();
+    this.__state.empty();
 
     var visibleShifts = [];
     for(var shift in this.shifts)
@@ -1003,7 +1003,7 @@ var ShiftSpaceSpace = new Class({
         visibleShifts.push(this.shifts[shift]);
       }
     }
-    this.__state__.set('visibleShifts', visibleShifts);
+    this.__state.set('visibleShifts', visibleShifts);
   },
 
   /*
@@ -1013,7 +1013,7 @@ var ShiftSpaceSpace = new Class({
   */
   restoreState: function()
   {
-    this.__state__.get('visibleShifts').each(function(x) { x.show(); });
+    this.__state.get('visibleShifts').each(function(x) { x.show(); });
   },
 
   /*

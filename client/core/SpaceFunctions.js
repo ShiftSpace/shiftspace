@@ -45,14 +45,7 @@ function SSLoadSpace(space, callback)
         var err;
         try
         {
-          if(window.webkit)
-          {
-            ShiftSpace.__externals.evaluate(rx.responseText);
-          }
-          else
-          {
-            eval(rx.responseText, ShiftSpace);
-          }
+          ShiftSpace.__externals.evaluate(rx.responseText);
         }
         catch(exc)
         {
@@ -75,6 +68,7 @@ Parameters:
 */
 function SSRegisterSpace(instance) 
 {
+  SSLog('SSRegisterSpace! ' + instance, SSLogForce);
   var spaceName = instance.attributes.name;
   SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
@@ -298,8 +292,8 @@ function SSResetSpaces()
 */
 function SSSpaceForName(name)
 {
-  var space = __spaces[name];
-  return space;
+  SSLog('SSSpaceForName ' + name, SSLogForce);
+  return __spaces[name];
 }
 
 /*
@@ -315,6 +309,7 @@ function SSSpaceForName(name)
 */
 function SSSetSpaceForName(space, name)
 {
+  SSLog('SSSetSpaceForName ' + name, SSLogForce);
   __spaces[name] = space;
 }
 

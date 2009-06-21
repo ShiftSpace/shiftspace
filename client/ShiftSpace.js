@@ -329,7 +329,7 @@ var ShiftSpace = new (function() {
     return this;
 })();
 
-// NOTE: For Safari & Firefox 3.1 to keep SS extensions out of private scope - David
+// NOTE: To keep SS extensions out of private scope - David
 ShiftSpace.__externals = {
   evaluate: function(external, object)
   {
