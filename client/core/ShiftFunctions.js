@@ -20,6 +20,7 @@ function SSInitShift(spaceName, options)
   if(!SSSpaceIsLoaded(spaceName))
   {
     SSLoadSpace(spaceName, SSInitShift.bind(null, [spaceName, options]));
+    return;
   }
   
   if (!SSURLForSpace(spaceName)) 

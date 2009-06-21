@@ -68,7 +68,6 @@ Parameters:
 */
 function SSRegisterSpace(instance) 
 {
-  SSLog('SSRegisterSpace! ' + instance, SSLogForce);
   var spaceName = instance.attributes.name;
   SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
@@ -292,7 +291,6 @@ function SSResetSpaces()
 */
 function SSSpaceForName(name)
 {
-  SSLog('SSSpaceForName ' + name, SSLogForce);
   return __spaces[name];
 }
 
@@ -309,7 +307,6 @@ function SSSpaceForName(name)
 */
 function SSSetSpaceForName(space, name)
 {
-  SSLog('SSSetSpaceForName ' + name, SSLogForce);
   __spaces[name] = space;
 }
 
