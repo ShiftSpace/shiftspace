@@ -36,6 +36,7 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     -->
     <script src="../mootools/mootools-1.2.3-core.js" type="text/javascript"></script>
     <script src="../mootools/mootools-1.2.3.1-more.js" type="text/javascript"></script>
+    <script src="install.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/Videobox.js" type="text/javascript"></script>
     <script src="../builds/shiftspace.sandbox.js" type="text/javascript"></script>
     <style type="text/css">
@@ -46,6 +47,9 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     </style>
   </head>
   <body>
+    <div id="install">
+      Install dev userscript
+    </div>
     <div id="lipsum">
       <img src="logo.png" alt="logo"></img>
       <ul id="testdata" moma:metadata="event:26">

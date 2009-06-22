@@ -14,3 +14,14 @@ body {
 a {
   color: #1f0b0c;
 }
+
+#install
+{
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  -moz-border-radius: 6px;
+  border: 1px solid black;
+  background-color: white;
+  padding: 8px;
+}

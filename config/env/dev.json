@@ -1,8 +1,5 @@
 {
-  "SERVER": "http://shiftspace.org/api/",
-  "SPACEDIR": "http://shiftspace.org/api/spaces/",
-  "LOG_LEVEL": "SSLogError",
-  "VARS": { 
-    "ShiftSpaceSandBoxMode": true
-  }
+"SERVER": "http://localhost/~davidnolen/shiftspace/",
+"SPACEDIR": "http://localhost/~davidnolen/shiftspace/spaces/",
+"LOG_LEVEL": "SSLogError | SSLogSystem | SSLogShift"
 }
