@@ -20,8 +20,8 @@ class SSError(Exception):
 
 class SSPreProcessor:
 
-  INCLUDE_PACKAGE_REGEX = re.compile('\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*')
-  INCLUDE_REGEX = re.compile('\s*//\s*INCLUDE\s+(\S+)\s*')
+  INCLUDE_PACKAGE_REGEX = re.compile('\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*\n')
+  INCLUDE_REGEX = re.compile('\s*//\s*INCLUDE\s+(\S+)\s*\n')
   SYSTEM_TABLE_REGEX = re.compile('%%SYSTEM_TABLE%%')
   ENV_NAME_REGEX = re.compile('%%ENV_NAME%%')
   VARS_REGEX = re.compile('%%VARS%%')
@@ -112,18 +112,26 @@ class SSPreProcessor:
         package = packageMatch.group(1)
         print "including package %s" % package 
         source = self.sourceForPackage(package)
-        print "substituting source (%s, %s)" % (packageMatch.start(), packageMatch.end())
-        # switch to str join, it's too slow
-        preprocessed = self.INCLUDE_PACKAGE_REGEX.sub(source, preprocessed, 1)
-        print "done"
+
+        start = packageMatch.start()
+        end = packageMatch.end()
+        
+        preprocessed = ''.join([preprocessed[0:start],
+                                source,
+                                preprocessed[end:len(preprocessed)]])
+        print "done preprocessed length %s" % len(preprocessed)
       elif fileIncludeMatch:
         incFilename = fileIncludeMatch.group(1)
         if not self.metadata['files'].has_key(incFilename):
           self.missingFileError(incFilename)
         source = self.sourceForFile(self.metadata['files'][incFilename]['path'])
-        print "substituting source"
-        # switch to str join, it's too slow
-        preprocessed = self.INCLUDE_REGEX.sub(source, preprocessed, 1)
+
+        start = fileIncludeMatch.start()
+        end = fileIncludeMatch.end()
+        
+        preprocessed = ''.join([preprocessed[0:start], 
+                                source, 
+                                preprocessed[end:len(preprocessed)]])
         print "done"
       else:
         hasPackageOrFileInclude = False
@@ -133,6 +141,8 @@ class SSPreProcessor:
     # if uiclass internalize it into ShiftSpaceUI    
     if self.metadata['files'].has_key(fileName) and self.metadata['files'][fileName].has_key('uiclass'):
       preprocessed = preprocessed + ("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (fileName, fileName))
+      
+    return preprocessed
 
 
   def missingFileError(self, package):
@@ -243,7 +253,8 @@ class SSPreProcessor:
       self.metadata['files'].pop(fileToRemove)
     self.envData['meta'] = json.dumps(self.metadata, sort_keys=True, indent=4)
     
-    self.preprocessFile(self.inFile, fileName)
+    preprocessed = self.preprocessFile(self.inFile, fileName)
+    self.outFile.write(preprocessed)
 
     # export symbols
     if exportObjects and len(self.metadata['exports']) > 0:
