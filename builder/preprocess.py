@@ -3,7 +3,6 @@
 # Reads the file/package metadata information which was created by corebuilder
 # and preprocesses ShiftSpace.js into shiftspace.user.js
 
-#import json # only available in Python >= 2.6 
 import os
 import sys
 import re
@@ -23,20 +22,27 @@ class SSPreProcessor:
 
   INCLUDE_PACKAGE_REGEX = re.compile('^\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*$')
   INCLUDE_REGEX = re.compile('^\s*//\s*INCLUDE\s+(\S+)\s*$')
+  SYSTEM_TABLE_REGEX = re.compile('%%SYSTEM_TABLE%%')
+  ENV_NAME_REGEX = re.compile('%%ENV_NAME%%')
+  VARS_REGEX = re.compile('%%VARS%%')
 
-  def setEnvVars(self, line):
+  def setEnvVars(self, source):
     if self.envData != None:
-      envVars = ""
       for key in self.envData['data'].keys():
         if key != "VARS":
-          line = line.replace(("%%%%%s%%%%" % (key)), '%s' % self.envData['data'][key])
-        else:
-          envVars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
-      line = line.replace("%%SYSTEM_TABLE%%", self.envData['meta'])
-      line = line.replace("%%ENV_NAME%%", self.envData['name'])
-      line = line.replace("%%VARS%%", envVars)
-    return line
-  
+          varRegex = re.compile("%%%%%s%%%%" % (key))
+          source = varRegex.sub('%s' % self.envData['data'][key], source)
+
+      source = self.SYSTEM_TABLE_REGEX.sub(self.envData['meta'], source)
+      source = self.ENV_NAME_REGEX.sub(self.envData['name'], source)
+
+      if self.envVars['data'].has_key("VARS"):
+        envVars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
+      else:
+        envVars = ""
+      source = self.VARS_REGEX.sub(enVars, source)
+    return source
+
 
   def sourceForFile(self, incFilename):
     source = ""
