@@ -36,11 +36,10 @@ class SSPreProcessor:
       source = self.SYSTEM_TABLE_REGEX.sub(self.envData['meta'], source)
       source = self.ENV_NAME_REGEX.sub(self.envData['name'], source)
 
-      if self.envVars['data'].has_key("VARS"):
+      envVars = ""
+      if self.envData['data'].has_key("VARS"):
         envVars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
-      else:
-        envVars = ""
-      source = self.VARS_REGEX.sub(enVars, source)
+      source = self.VARS_REGEX.sub(envVars, source)
     return source
 
 
@@ -99,8 +98,9 @@ class SSPreProcessor:
   def preprocessFile(self, file, fileName):
     preprocessed = file.read()
     
+    # recursively include source for packages and files
     hasPackageOrFileInclude = True
-    while hasPackageOrInclude:
+    while hasPackageOrFileInclude:
       packageMatch = None
       fileIncludeMatch = None
       
@@ -111,21 +111,21 @@ class SSPreProcessor:
       if packageMatch:
         package = packageMatch.group(1)
         source = self.sourceForPackage(package)
-        preprocessed = self.INCLUDE_REGEX.sub(source, preprocessed, 1)
-      else if fileIncludeMatch:
+        preprocessed = self.INCLUDE_PACKAGE_REGEX.sub(source, preprocessed, 1)
+      elif fileIncludeMatch:
         incFilename = fileIncludeMatch.group(1)
-        
         if not self.metadata['files'].has_key(incFilename):
           self.missingFileError(incFilename)
-        
         source = self.sourceForFile(self.metadata['files'][incFilename]['path'])
         preprocessed = self.INCLUDE_REGEX.sub(source, preprocessed, 1)
       else:
-        hasPackageOrInclude = False
+        hasPackageOrFileInclude = False
+    
+    preprocessed = self.setEnvVars(preprocessed)
 
     # if uiclass internalize it into ShiftSpaceUI    
     if self.metadata['files'].has_key(fileName) and self.metadata['files'][fileName].has_key('uiclass'):
-      self.outFile.write("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (fileName, fileName))
+      preprocessed = preprocessed + ("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (fileName, fileName))
 
 
   def missingFileError(self, package):
