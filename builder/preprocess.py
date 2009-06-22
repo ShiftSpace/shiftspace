@@ -44,55 +44,50 @@ class SSPreProcessor:
 
 
   def sourceForFile(self, incFilename):
-    source = ""
-    
     flen = len(incFilename)
-    logline1 = "\nif (SSInclude != undefined) SSLog('Including %s...', SSInclude);\n" % incFilename 
-    prefix = ("\n// Start %s " % incFilename) + (69 - flen) * '-' + "\n\n"
-    postfix = ("\n\n// End %s " % incFilename) + (71 - flen) * '-' + "\n\n"
+
+    logline1 = ''.join(["\nif (SSInclude != undefined) SSLog('Including ", incFilename, "...', SSInclude);\n"])
+    prefix = ''.join(["\n// Start ", incFilename, (69 - flen) * '-', "\n\n"])
+    postfix = ''.join(["\n\n// End ", incFilename, (71 - flen) * '-', "\n\n"])
     logline2 = "\nif (SSInclude != undefined) SSLog('... complete.', SSInclude);\n"
   
-    source = source + logline1
     realName = os.path.splitext(os.path.basename(incFilename))[0]
 
     if realName in self.proj['files']['remove']:
-      source = source + '// PROJECT OVERRIDE -- FILE NOT INCLUDED\n\n'
-      return source
+      return '// PROJECT OVERRIDE -- FILE NOT INCLUDED\n\n'
     if self.proj['files']['replace'].has_key(realName):
       incFilename = self.metadata['files'][realName]['path']
-      source = source + ('// PROJECT OVERRIDE -- INCLUDING %s INSTEAD\n' % incFilename)
+      return ''.join(['// PROJECT OVERRIDE -- INCLUDING ', incFilename, ' INSTEAD\n'])
     
-    source = source + prefix
-    incFile = open(incFilename)
-
-    source = source + postfix + logline2
-    source = source + ("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
-    return source
+    sourceFile = open(incFilename)
+    sysavail = ("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
+    
+    return ''.join([logline1, prefix, sourceFile.read(), postfix, logline2, sysavail])
     
     
   def sourceForPackage(self, package):
-    source = ""
-    source = source + ('\n// === START PACKAGE [%s] ===\n' % package)
+    source = []
+    source.append('\n// === START PACKAGE [%s] ===\n' % package)
 
     if package in self.proj['packages']['remove']:
-      source = source + ('// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n')
+      source.append('// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n')
       return
 
     if self.proj['packages']['replace'].has_key(package):
       package = self.proj['packages']['replace'][package]
-      source = source + ('// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package)
+      source.append('// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package)
 
-    source = source + ('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
+    source.append('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
 
     if not self.metadata['packages'].has_key(package):
       self.missingFileError(package)
 
     for component in self.metadata['packages'][package]:
       if self.metadata['files'].has_key(component):
-        self.sourceForFile(self.metadata['files'][component]['path'])
+        source.append(self.sourceForFile(self.metadata['files'][component]['path']))
 
-    source = source + ('\n// === END PACKAGE [%s] ===\n\n' % package)
-    return source
+    source.append('\n// === END PACKAGE [%s] ===\n\n' % package)
+    return ''.join(source)
 
 
   def preprocessFile(self, file, fileName):
