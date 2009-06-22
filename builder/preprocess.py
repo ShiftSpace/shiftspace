@@ -46,8 +46,6 @@ class SSPreProcessor:
   def sourceForFile(self, incFilename):
     flen = len(incFilename)
     
-    print "sourceForFile %s" % incFilename 
-
     logline1 = ''.join(["\nif (SSInclude != undefined) SSLog('Including ", incFilename, "...', SSInclude);\n"])
     prefix = ''.join(["\n// Start ", incFilename, (69 - flen) * '-', "\n\n"])
     postfix = ''.join(["\n\n// End ", incFilename, (71 - flen) * '-', "\n\n"])
@@ -62,9 +60,14 @@ class SSPreProcessor:
       return ''.join(['// PROJECT OVERRIDE -- INCLUDING ', incFilename, ' INSTEAD\n'])
     
     sourceFile = open(incFilename)
+
     sysavail = ("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
     
-    return ''.join([logline1, prefix, sourceFile.read(), postfix, logline2, sysavail])
+    uiclass = ""
+    if self.metadata['files'].has_key(realName) and self.metadata['files'][realName].has_key('uiclass'):
+      uiclass = ("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (realName, realName))
+    
+    return ''.join([logline1, prefix, sourceFile.read(), postfix, logline2, sysavail, uiclass])
     
     
   def sourceForPackage(self, package):
@@ -101,16 +104,16 @@ class SSPreProcessor:
       packageMatch = None
       fileIncludeMatch = None
       
-      print "Searching for package include"
+      #print "Searching for package include"
       packageMatch = self.INCLUDE_PACKAGE_REGEX.search(preprocessed)
       
       if packageMatch == None:
-        print "Searching for file include"
+        #print "Searching for file include"
         fileIncludeMatch = self.INCLUDE_REGEX.search(preprocessed)
 
       if packageMatch:
         package = packageMatch.group(1)
-        print "including package %s" % package 
+        #print "including package %s" % package 
         source = self.sourceForPackage(package)
 
         start = packageMatch.start()
@@ -119,7 +122,7 @@ class SSPreProcessor:
         preprocessed = ''.join([preprocessed[0:start],
                                 source,
                                 preprocessed[end:len(preprocessed)]])
-        print "done preprocessed length %s" % len(preprocessed)
+        #print "done preprocessed length %s" % len(preprocessed)
       elif fileIncludeMatch:
         incFilename = fileIncludeMatch.group(1)
         if not self.metadata['files'].has_key(incFilename):
@@ -132,15 +135,11 @@ class SSPreProcessor:
         preprocessed = ''.join([preprocessed[0:start], 
                                 source, 
                                 preprocessed[end:len(preprocessed)]])
-        print "done"
+        #print "done"
       else:
         hasPackageOrFileInclude = False
     
     preprocessed = self.setEnvVars(preprocessed)
-
-    # if uiclass internalize it into ShiftSpaceUI    
-    if self.metadata['files'].has_key(fileName) and self.metadata['files'][fileName].has_key('uiclass'):
-      preprocessed = preprocessed + ("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (fileName, fileName))
       
     return preprocessed
 
@@ -281,4 +280,3 @@ class SSPreProcessor:
 if __name__ == "__main__":
   preprocessor = SSPreProcessor()
   preprocessor.main(sys.argv[1:])
-  pass
