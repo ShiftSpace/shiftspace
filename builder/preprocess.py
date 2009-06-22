@@ -104,16 +104,13 @@ class SSPreProcessor:
       packageMatch = None
       fileIncludeMatch = None
       
-      #print "Searching for package include"
       packageMatch = self.INCLUDE_PACKAGE_REGEX.search(preprocessed)
       
       if packageMatch == None:
-        #print "Searching for file include"
         fileIncludeMatch = self.INCLUDE_REGEX.search(preprocessed)
 
       if packageMatch:
         package = packageMatch.group(1)
-        #print "including package %s" % package 
         source = self.sourceForPackage(package)
 
         start = packageMatch.start()
@@ -122,7 +119,6 @@ class SSPreProcessor:
         preprocessed = ''.join([preprocessed[0:start],
                                 source,
                                 preprocessed[end:len(preprocessed)]])
-        #print "done preprocessed length %s" % len(preprocessed)
       elif fileIncludeMatch:
         incFilename = fileIncludeMatch.group(1)
         if not self.metadata['files'].has_key(incFilename):
@@ -135,7 +131,6 @@ class SSPreProcessor:
         preprocessed = ''.join([preprocessed[0:start], 
                                 source, 
                                 preprocessed[end:len(preprocessed)]])
-        #print "done"
       else:
         hasPackageOrFileInclude = False
     
