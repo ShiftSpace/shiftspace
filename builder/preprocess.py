@@ -45,6 +45,8 @@ class SSPreProcessor:
 
   def sourceForFile(self, incFilename):
     flen = len(incFilename)
+    
+    print "sourceForFile %s" % incFilename 
 
     logline1 = ''.join(["\nif (SSInclude != undefined) SSLog('Including ", incFilename, "...', SSInclude);\n"])
     prefix = ''.join(["\n// Start ", incFilename, (69 - flen) * '-', "\n\n"])
@@ -99,21 +101,28 @@ class SSPreProcessor:
       packageMatch = None
       fileIncludeMatch = None
       
+      print "Searching for package include"
       packageMatch = self.INCLUDE_PACKAGE_REGEX.search(preprocessed)
       
       if packageMatch == None:
+        print "Searching for file include"
         fileIncludeMatch = self.INCLUDE_REGEX.search(preprocessed)
 
       if packageMatch:
         package = packageMatch.group(1)
+        print "including package %s" % package 
         source = self.sourceForPackage(package)
+        print "substituting source"
         preprocessed = self.INCLUDE_PACKAGE_REGEX.sub(source, preprocessed, 1)
+        print "done"
       elif fileIncludeMatch:
         incFilename = fileIncludeMatch.group(1)
         if not self.metadata['files'].has_key(incFilename):
           self.missingFileError(incFilename)
         source = self.sourceForFile(self.metadata['files'][incFilename]['path'])
+        print "substituting source"
         preprocessed = self.INCLUDE_REGEX.sub(source, preprocessed, 1)
+        print "done"
       else:
         hasPackageOrFileInclude = False
     
