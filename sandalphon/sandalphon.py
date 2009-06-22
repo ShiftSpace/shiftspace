@@ -11,21 +11,6 @@ import xml
 import xml.etree.ElementTree as ElementTree # Python >= 2.5
 import simplejson as json  # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
 
-class ViewParser:
-    def __init__(self, element):
-        self.element = element;
-
-
-class SSTableViewParser(ViewParser):
-    def __init__(self, element):
-        ViewParser.__init__(self, element)
-        pass
-
-
-class SSCustomTableRowParser(ViewParser):
-    def __init__(self, element):
-        ViewParser.__init__(self, element)
-
 
 def elementHasAttribute(element, attrib, value=None):
     """
@@ -88,18 +73,6 @@ class SandalphonCompiler:
         except xml.parsers.expat.ExpatError:
             raise xml.parsers.expat.ExpatError
         pass
-
-
-    def parserForView(self, view):
-        """
-        Return the view parser class object associated with the view element.
-        """
-        theClass = view.get("uiclass") + "Parser"
-        module = sys.modules[ViewParser.__module__]
-        if(hasattr(module, theClass)):
-            return getattr(module, theClass)
-        else:
-            return None
 
 
     def loadView(self, view, path=None):
