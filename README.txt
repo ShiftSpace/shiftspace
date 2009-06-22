@@ -251,10 +251,10 @@ once you've been granted a Subversion account.
 3. Setting up ShiftSpace
 ------------------------
 
-The final step is to run the setup.sh shell script.
+The final steps are as follows:
 
     setup.sh    
-    ---------------------
+    --------
     Open up a terminal, change directories into the ShiftSpace root
     directory.  Once there run the following commands:
 
@@ -263,6 +263,24 @@ The final step is to run the setup.sh shell script.
 
     You will be asked to give the url that you'll use when developing
     your Space.
+    
+    change permissions
+    ------------------
+    Two directories should be readable/writable by PHP. From the
+    ShiftSpace root directory run the following from your Terminal.
+    
+    > chmod 777 builds
+    > chmod 777 builds/*
+    > chmod 777 client/compiledViews
+    > chmod 777 client/compiledViews/*
+    
+    These security settings are only safe for local development
+    environments. You should not run these commands in a production
+    setting.
+    
+    These permissions will allow your interface modifications
+    to appear when you refresh the sandbox page as well make it easy
+    to install the developer userscript.
     
     Security
     --------
