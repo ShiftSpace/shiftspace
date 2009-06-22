@@ -3,14 +3,12 @@
 # Reads the file/package metadata information which was created by corebuilder
 # and preprocesses ShiftSpace.js into shiftspace.user.js
 
-#import json # only available in Python >= 2.6 
 import os
 import sys
 import re
 import getopt
 import simplejson as json # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
 
-# Exceptions ==============================
 
 class SSError(Exception): 
   def __init__(self, message = ''):
@@ -19,112 +17,132 @@ class SSError(Exception):
   def __str__(self):
     return self.message
 
-# FIXME: this file needs some serious optimization - David
+
 class SSPreProcessor:
 
-  INCLUDE_PACKAGE_REGEX = re.compile("^\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*$")
-  INCLUDE_REGEX = re.compile("^\s*//\s*INCLUDE\s+(\S+)\s*$")
-  SYSTEM_REGEX = re.compile("%%SYSTEM_TABLE%%");
-  ENV_NAME_REGEX = re.compile("%%ENV_NAME%%")
-  VARS_REGEX = re.compile("%%VARS%%")
+  INCLUDE_PACKAGE_REGEX = re.compile('\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*\n')
+  INCLUDE_REGEX = re.compile('\s*//\s*INCLUDE\s+(\S+)\s*\n')
+  SYSTEM_TABLE_REGEX = re.compile('%%SYSTEM_TABLE%%')
+  ENV_NAME_REGEX = re.compile('%%ENV_NAME%%')
+  VARS_REGEX = re.compile('%%VARS%%')
 
-  def setEnvVars(self, line):
+  def setEnvVars(self, source):
     if self.envData != None:
-      envVars = ""
       for key in self.envData['data'].keys():
         if key != "VARS":
-          line = line.replace(("%%%%%s%%%%" % (key)), '%s' % self.envData['data'][key])
-        else:
-          envVars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
-      line = line.replace("%%SYSTEM_TABLE%%", self.envData['meta'])
-      line = line.replace("%%ENV_NAME%%", self.envData['name'])
-      line = line.replace("%%VARS%%", envVars)
-    return line
-  
+          varRegex = re.compile("%%%%%s%%%%" % (key))
+          source = varRegex.sub('%s' % self.envData['data'][key], source)
 
-  def includeFile(self, incFilename):
+      source = self.SYSTEM_TABLE_REGEX.sub(self.envData['meta'], source)
+      source = self.ENV_NAME_REGEX.sub(self.envData['name'], source)
+
+      envVars = ""
+      if self.envData['data'].has_key("VARS"):
+        envVars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
+      source = self.VARS_REGEX.sub(envVars, source)
+    return source
+
+
+  def sourceForFile(self, incFilename):
     flen = len(incFilename)
-    logline1 = "\nif (SSInclude != undefined) SSLog('Including %s...', SSInclude);\n" % incFilename 
-    prefix = ("\n// Start %s " % incFilename) + (69 - flen) * '-' + "\n\n"
-    postfix = ("\n\n// End %s " % incFilename) + (71 - flen) * '-' + "\n\n"
+    
+    logline1 = ''.join(["\nif (SSInclude != undefined) SSLog('Including ", incFilename, "...', SSInclude);\n"])
+    prefix = ''.join(["\n// Start ", incFilename, (69 - flen) * '-', "\n\n"])
+    postfix = ''.join(["\n\n// End ", incFilename, (71 - flen) * '-', "\n\n"])
     logline2 = "\nif (SSInclude != undefined) SSLog('... complete.', SSInclude);\n"
   
-    self.outFile.write(logline1)
-
-    # get the real name, incFilename is the pathname
     realName = os.path.splitext(os.path.basename(incFilename))[0]
 
     if realName in self.proj['files']['remove']:
-      self.outFile.write('// PROJECT OVERRIDE -- FILE NOT INCLUDED\n\n')
-      return
-        
+      return '// PROJECT OVERRIDE -- FILE NOT INCLUDED\n\n'
     if self.proj['files']['replace'].has_key(realName):
-      # get the path of the file
       incFilename = self.metadata['files'][realName]['path']
-      self.outFile.write('// PROJECT OVERRIDE -- INCLUDING %s INSTEAD\n' % incFilename)
+      return ''.join(['// PROJECT OVERRIDE -- INCLUDING ', incFilename, ' INSTEAD\n'])
     
-    self.outFile.write(prefix)
+    sourceFile = open(incFilename)
 
-    incFile = open(incFilename)
+    sysavail = ("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
     
-    self.preprocessFile(incFile, realName)
+    uiclass = ""
+    if self.metadata['files'].has_key(realName) and self.metadata['files'][realName].has_key('uiclass'):
+      uiclass = ("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (realName, realName))
+    
+    return ''.join([logline1, prefix, sourceFile.read(), postfix, logline2, sysavail, uiclass])
+    
+    
+  def sourceForPackage(self, package):
+    source = []
+    source.append('\n// === START PACKAGE [%s] ===\n' % package)
 
-    self.outFile.write(postfix)
-    self.outFile.write(logline2)
-    
-    # intern into internal list of available components
-    self.outFile.write("\nif(__sysavail__) __sysavail__.files.push('%s');\n" % os.path.splitext(os.path.basename(incFilename))[0])
-    incFile.close()
+    if package in self.proj['packages']['remove']:
+      source.append('// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n')
+      return
+
+    if self.proj['packages']['replace'].has_key(package):
+      package = self.proj['packages']['replace'][package]
+      source.append('// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package)
+
+    source.append('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
+
+    if not self.metadata['packages'].has_key(package):
+      self.missingFileError(package)
+
+    for component in self.metadata['packages'][package]:
+      if self.metadata['files'].has_key(component):
+        source.append(self.sourceForFile(self.metadata['files'][component]['path']))
+
+    source.append('\n// === END PACKAGE [%s] ===\n\n' % package)
+    return ''.join(source)
 
 
   def preprocessFile(self, file, fileName):
-    for line in file:
-      line = self.setEnvVars(line)
+    preprocessed = file.read()  
+    
+    # recursively include source for packages and files
+    hasPackageOrFileInclude = True
+    while hasPackageOrFileInclude:
+      packageMatch = None
+      fileIncludeMatch = None
       
-      mo = self.INCLUDE_PACKAGE_REGEX.match(line)
-      if mo:
-        package = mo.group(1)
-
-        self.outFile.write('\n// === START PACKAGE [%s] ===\n' % package)
+      #print "Searching for package include"
+      packageMatch = self.INCLUDE_PACKAGE_REGEX.search(preprocessed)
       
-        if package in self.proj['packages']['remove']:
-          self.outFile.write('// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n')
-          continue
+      if packageMatch == None:
+        #print "Searching for file include"
+        fileIncludeMatch = self.INCLUDE_REGEX.search(preprocessed)
+
+      if packageMatch:
+        package = packageMatch.group(1)
+        #print "including package %s" % package 
+        source = self.sourceForPackage(package)
+
+        start = packageMatch.start()
+        end = packageMatch.end()
         
-        if self.proj['packages']['replace'].has_key(package):
-          package = self.proj['packages']['replace'][package]
-          self.outFile.write('// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package)
+        preprocessed = ''.join([preprocessed[0:start],
+                                source,
+                                preprocessed[end:len(preprocessed)]])
+        #print "done preprocessed length %s" % len(preprocessed)
+      elif fileIncludeMatch:
+        incFilename = fileIncludeMatch.group(1)
+        if not self.metadata['files'].has_key(incFilename):
+          self.missingFileError(incFilename)
+        source = self.sourceForFile(self.metadata['files'][incFilename]['path'])
+
+        start = fileIncludeMatch.start()
+        end = fileIncludeMatch.end()
         
-        # update the available packages dictionary
-        self.outFile.write('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
-
-        # bail! no such package
-        if not self.metadata['packages'].has_key(package):
-          self.missingFileError(package)
-
-        for component in self.metadata['packages'][package]:
-          if self.metadata['files'].has_key(component):
-            self.includeFile(self.metadata['files'][component]['path'])
-
-        self.outFile.write('\n// === END PACKAGE [%s] ===\n\n' % package)
+        preprocessed = ''.join([preprocessed[0:start], 
+                                source, 
+                                preprocessed[end:len(preprocessed)]])
+        #print "done"
       else:
-        mo = self.INCLUDE_REGEX.match(line)
-        if mo:
-          incFilename = mo.group(1)
-        
-          # bail! no such file
-          if not self.metadata['files'].has_key(incFilename):
-            self.missingFileError(incFilename)
+        hasPackageOrFileInclude = False
+    
+    preprocessed = self.setEnvVars(preprocessed)
+      
+    return preprocessed
 
-          self.includeFile(self.metadata['files'][incFilename]['path'])
-        else:
-          self.outFile.write(self.setEnvVars(line))
-
-    # if uiclass internalize it into ShiftSpaceUI    
-    if self.metadata['files'].has_key(fileName) and self.metadata['files'][fileName].has_key('uiclass'):
-      self.outFile.write("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (fileName, fileName))
-
-  
 
   def missingFileError(self, package):
     print "Error: no such package %s exists, perhaps you forgot to run corebuilder.py first?" % package
@@ -191,13 +209,11 @@ class SSPreProcessor:
         self.inFile = open(inFile)
         fileName = os.path.splitext(os.path.basename(inFile))[0]
       except IOError:
-        # bail!
         print "Error: no such input file exist"
         sys.exit(2)
     else:
       self.inFile = open('../client/ShiftSpace.js')
 
-    # get the output file
     if outFile != None:
       self.outFile = open(outFile, "w")
     else:
@@ -216,7 +232,6 @@ class SSPreProcessor:
       
       self.envData = {"name": envFileName, "data": env, "meta": metadataStr}
     except IOError:
-      # bail!
       print "Error: no such environment file exists. (%s)" % envFilePath
       sys.exit(2)
     
@@ -227,7 +242,6 @@ class SSPreProcessor:
       self.proj = json.loads(projFile.read())
       projFile.close()
     except IOError:
-      # bail!
       print "Error: no such project file exists. (%s)" % projFilePath
       sys.exit(2)
     
@@ -238,7 +252,8 @@ class SSPreProcessor:
       self.metadata['files'].pop(fileToRemove)
     self.envData['meta'] = json.dumps(self.metadata, sort_keys=True, indent=4)
     
-    self.preprocessFile(self.inFile, fileName)
+    preprocessed = self.preprocessFile(self.inFile, fileName)
+    self.outFile.write(preprocessed)
 
     # export symbols
     if exportObjects and len(self.metadata['exports']) > 0:
@@ -256,7 +271,6 @@ class SSPreProcessor:
         self.outFile.write(mainFileHandle.read())
         mainFileHandle.close()
       except IOError:
-        # bail!
         print "Error: no such main file exists. (%s)" % mainFile
 
     self.outFile.close()
@@ -266,4 +280,3 @@ class SSPreProcessor:
 if __name__ == "__main__":
   preprocessor = SSPreProcessor()
   preprocessor.main(sys.argv[1:])
-  pass
