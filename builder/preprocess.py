@@ -118,7 +118,7 @@ class SSPreProcessor:
         
         preprocessed = ''.join([preprocessed[0:start],
                                 source,
-                                preprocessed[end:len(preprocessed)]])
+                                preprocessed[end:]])
       elif fileIncludeMatch:
         incFilename = fileIncludeMatch.group(1)
         if not self.metadata['files'].has_key(incFilename):
