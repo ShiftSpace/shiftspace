@@ -20,8 +20,8 @@ class SSError(Exception):
 
 class SSPreProcessor:
 
-  INCLUDE_PACKAGE_REGEX = re.compile('^\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*$')
-  INCLUDE_REGEX = re.compile('^\s*//\s*INCLUDE\s+(\S+)\s*$')
+  INCLUDE_PACKAGE_REGEX = re.compile('\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*')
+  INCLUDE_REGEX = re.compile('\s*//\s*INCLUDE\s+(\S+)\s*')
   SYSTEM_TABLE_REGEX = re.compile('%%SYSTEM_TABLE%%')
   ENV_NAME_REGEX = re.compile('%%ENV_NAME%%')
   VARS_REGEX = re.compile('%%VARS%%')
@@ -89,14 +89,14 @@ class SSPreProcessor:
 
     for component in self.metadata['packages'][package]:
       if self.metadata['files'].has_key(component):
-        self.includeFile(self.metadata['files'][component]['path'])
+        self.sourceForFile(self.metadata['files'][component]['path'])
 
     source = source + ('\n// === END PACKAGE [%s] ===\n\n' % package)
     return source
 
 
   def preprocessFile(self, file, fileName):
-    preprocessed = file.read()
+    preprocessed = file.read()  
     
     # recursively include source for packages and files
     hasPackageOrFileInclude = True
@@ -105,9 +105,10 @@ class SSPreProcessor:
       fileIncludeMatch = None
       
       packageMatch = self.INCLUDE_PACKAGE_REGEX.search(preprocessed)
-      if not packageMatch:
+      
+      if packageMatch == None:
         fileIncludeMatch = self.INCLUDE_REGEX.search(preprocessed)
-        
+
       if packageMatch:
         package = packageMatch.group(1)
         source = self.sourceForPackage(package)
