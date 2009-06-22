@@ -112,7 +112,8 @@ class SSPreProcessor:
         package = packageMatch.group(1)
         print "including package %s" % package 
         source = self.sourceForPackage(package)
-        print "substituting source"
+        print "substituting source (%s, %s)" % (packageMatch.start(), packageMatch.end())
+        # switch to str join, it's too slow
         preprocessed = self.INCLUDE_PACKAGE_REGEX.sub(source, preprocessed, 1)
         print "done"
       elif fileIncludeMatch:
@@ -121,6 +122,7 @@ class SSPreProcessor:
           self.missingFileError(incFilename)
         source = self.sourceForFile(self.metadata['files'][incFilename]['path'])
         print "substituting source"
+        # switch to str join, it's too slow
         preprocessed = self.INCLUDE_REGEX.sub(source, preprocessed, 1)
         print "done"
       else:
