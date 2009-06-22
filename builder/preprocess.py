@@ -22,8 +22,11 @@ class SSError(Exception):
 # FIXME: this file needs some serious optimization - David
 class SSPreProcessor:
 
-  INCLUDE_PACKAGE_REGEX = re.compile('^\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*$')
-  INCLUDE_REGEX = re.compile('^\s*//\s*INCLUDE\s+(\S+)\s*$')
+  INCLUDE_PACKAGE_REGEX = re.compile("^\s*//\s*INCLUDE PACKAGE\s+(\S+)\s*$")
+  INCLUDE_REGEX = re.compile("^\s*//\s*INCLUDE\s+(\S+)\s*$")
+  SYSTEM_REGEX = re.compile("%%SYSTEM_TABLE%%");
+  ENV_NAME_REGEX = re.compile("%%ENV_NAME%%")
+  VARS_REGEX = re.compile("%%VARS%%")
 
   def setEnvVars(self, line):
     if self.envData != None:
