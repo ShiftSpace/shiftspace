@@ -251,6 +251,7 @@ var SSView = new Class({
     if(_cands.length == 0) return null;
 
     var cands = (_cands instanceof Array && _cands) || [_cands];
+    cands.each($msg('_ssgenId'));
 
     var len = cands.length;
     for(var i = 0; i < len; i++)
@@ -282,7 +283,7 @@ var SSView = new Class({
 
     var node = $(target);
     var matches = this.element.getElements(selectorOfTest);
-
+    
     while(node && node != this.element)
     {
       if(this.checkForMatch(matches, node))

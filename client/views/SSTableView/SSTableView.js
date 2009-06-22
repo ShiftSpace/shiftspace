@@ -220,7 +220,7 @@ var SSTableView = new Class({
       this.clickCount--;
       return;
     }
-
+    
     switch(true)
     {
       case (type == 'click' && this.hitTest(target, '> .SSControlView .SSResize') != null):
@@ -261,6 +261,7 @@ var SSTableView = new Class({
           if(canEdit) this.modelRowController().editCell(this.cachedHit());
         }
       default:
+        SSLog('No hit!', SSLogForce);
       break;
     }
 

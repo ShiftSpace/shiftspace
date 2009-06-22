@@ -107,7 +107,10 @@ Element.implement({
   },
   isEqual: function(node)
   {
-    return (this == node) || (this.getProperty('id') == node.getProperty('id'));
+    var id = this.getProperty('id');
+    var oid = node.getProperty('id');
+    return (this == node) || 
+           (id && oid && (id == oid));
   }
 });
 
