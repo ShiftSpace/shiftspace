@@ -79,7 +79,6 @@ class SandalphonCompiler:
         """
         Load a views a view and returns it.
         """
-        # check to see if path is none otherwise check member var
         if path == None:
             filePath = self.paths[view]
         else:
@@ -87,10 +86,9 @@ class SandalphonCompiler:
 
         if filePath != None:
             htmlPath = os.path.join(filePath, view+'.html')
-            # load the file
+
             fileHandle = open(htmlPath)
 
-            # verify that this file is valid mark up
             fileContents = fileHandle.read()
             fileHandle.close()
             
@@ -204,11 +202,8 @@ class SandalphonCompiler:
         while hasCustomViews:
             match = self.templatePattern.search(interfaceFile)
             if match:
-                # get the span of the match in the file
                 span = match.span()
-                # grab the instruction
                 instruction = self.getInstruction(interfaceFile[span[0]:span[1]])
-                # mutate the file based on it
                 interfaceFile = self.handleInstruction(instruction, interfaceFile)
             else:
                 hasCustomViews = False
