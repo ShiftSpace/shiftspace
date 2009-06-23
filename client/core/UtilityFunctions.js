@@ -52,7 +52,8 @@ function SSInfo(spaceName)
     return spaceInfo;
   }
 
-  if(typeof SandalphonToolMode == 'undefined' && SSInstalledSpaces)
+  if(typeof SandalphonToolMode == 'undefined' && 
+     typeof SSInstalledSpaces == 'undefined')
   {
     var spaceIndex = [];
     for (var aSpaceName in SSInstalledSpaces()) 
