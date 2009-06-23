@@ -21,10 +21,11 @@ def elementHasAttribute(element, attrib, value=None):
 
 class SandalphonCompiler:
 
-    def __init__(self, packages):
+    def __init__(self, packages, env=None):
         # store paths to interface files
         self.paths = {}
         self.visitedViews = {}
+        self.env = env
         
         self.packages = packages
         self.files = packages['files']
@@ -109,7 +110,9 @@ class SandalphonCompiler:
             fileHandle = open(cssPath)
 
             if fileHandle != None:
-                self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n" + fileHandle.read()
+                self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
+                #self.cssFile = "@import"
+                self.cssFile = self.cssFile +  fileHandle.read()
 
             fileHandle.close()
         except IOError:
@@ -263,9 +266,11 @@ def main(argv):
     jsonOutput = False
     outputDirectory = None
     inputFile = None
+    envFileName = None
+    env = None
 
     try:
-        opts, args = getopt.getopt(argv, "i:o:jh", ["input=", "output=", "json", "help"])
+        opts, args = getopt.getopt(argv, "i:o:e:jh", ["input=", "output=", "environment=", "json", "help"])
     except:
         print "Invalid flag\n"
         usage()
@@ -281,17 +286,28 @@ def main(argv):
             outputDirectory = arg
         elif opt in ("-j", "--json"):
             jsonOutput = True
+        elif opt in ("-e", "--environment"):
+            envFileName = arg
 
     if inputFile == None:
         print "No input file\n"
         usage()
         sys.exit(2)
+    
+    if envFileName:
+        envFile = open('../config/env/%s.json' % envFileName)
+        if envFile == None:
+            print "Environment file SHIFTSPACE_ROOT/config/env/%s.json does not exist" % envFileName
+            sys.exit(2)
+        else:
+            env = json.loads(envFile.read())
+            envFile.close()
         
     # load the packages json file
     packagesJsonFile = open('../config/packages.json')
     packages = packagesJsonFile.read()
     # todo throw error if this isn't there - David
-    compiler = SandalphonCompiler(json.loads(packages))
+    compiler = SandalphonCompiler(json.loads(packages), env)
     compiler.compile(inputFile, outputDirectory, jsonOutput)
 
 
