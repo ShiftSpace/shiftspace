@@ -21,7 +21,20 @@ a {
   left: 10px;
   top: 10px;
   -moz-border-radius: 6px;
-  border: 1px solid black;
+  border: 2px solid grey;
   background-color: white;
   padding: 8px;
+  cursor: pointer;
+  user-select: none;
+  -moz-user-select: none;
+}
+
+#install:hover
+{
+  background-color: #cfc;
+}
+
+#install:active
+{
+  background-color: #efe;
 }
