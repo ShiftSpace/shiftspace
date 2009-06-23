@@ -33,10 +33,6 @@ then
   echo     \"SandalphonToolMode\": true                                >> ../config/env/sandalphon.json
   echo    }                                                            >> ../config/env/sandalphon.json
   echo }                                                               >> ../config/env/sandalphon.json
-  
-  chmod a+w ../server/working
-  chmod a+w ../client/compiledViews
-  chmod a+w ../builds
 fi
 
 python ../builder/corebuilder.py
@@ -70,3 +66,14 @@ echo
 echo
 
 ./build_sandalphon.sh
+
+chmod a+w ../server/working
+
+chmod a+w ../client/compiledViews
+chmod a+w ../client/compiledViews/SSConsole.html
+chmod a+w ../client/compiledViews/SSConsole.css
+
+chmod a+w ../builds
+chmod a+w ../builds/shiftspace.user.js
+chmod a+w ../builds/shiftspace.dev.user.js
+chmod a+w ../builds/shiftspace.sandbox.js
