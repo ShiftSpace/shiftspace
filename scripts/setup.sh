@@ -35,6 +35,8 @@ then
   echo }                                                               >> ../config/env/sandalphon.json
   
   chmod a+w ../server/working
+  chmod a+w ../client/compiledViews
+  chmod a+w ../builds
 fi
 
 python ../builder/corebuilder.py
