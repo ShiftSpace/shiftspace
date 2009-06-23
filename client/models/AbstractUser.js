@@ -24,6 +24,16 @@ var AbstractUser = new Class({
   },
   
   
+  data: function()
+  {
+    return {
+      id: this.getId(),
+      username: this.getUsername(),
+      email: this.email()
+    };
+  },
+  
+  
   syncData: function(data)
   {
     this.setUsername(data.username || null);
@@ -50,7 +60,7 @@ var AbstractUser = new Class({
     }
     else
     {
-      SSPostNotification('onUserLogin');
+      SSPostNotification('onUserLogin', this.data());
     }
   },
   
