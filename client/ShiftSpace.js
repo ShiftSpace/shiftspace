@@ -9,7 +9,7 @@
 // @exclude        %%SERVER%%sandbox/*
 // @require        %%SERVER%%externals/mootools-1.2.3-core.js
 // @require        %%SERVER%%externals/mootools-1.2.3.1-more.js
-// @require        %%SERVER%%client/Videobox.js
+// @require        %%SERVER%%externals/Videobox.js
 // ==/UserScript==
 
 /*
