@@ -35,7 +35,7 @@ function SSInfo(spaceName)
   {
     var defaults = {
       title: spaceName,
-      icon: server + 'images/unknown-space.png',
+      icon: __server + 'images/unknown-space.png',
       version: '1.0'
     };
     if (!SSURLForSpace(spaceName)) 
@@ -44,7 +44,7 @@ function SSInfo(spaceName)
       return defaults;
     }
     // TODO - this must be fixed, we need to cache space attributes, the only way to capture the icon for a space! - David 5/13/09
-    defaults.icon = server + 'spaces/' + spaceName + '/' + spaceName + '.png';
+    defaults.icon = __server + 'spaces/' + spaceName + '/' + spaceName + '.png';
     //var spaceInfo = $merge(defaults, SSSpaceForName(spaceName).attributes);
     var spaceInfo = $merge(defaults, {});
     delete spaceInfo.name; // No need to send this back
@@ -62,7 +62,7 @@ function SSInfo(spaceName)
   }
 
   return {
-    server: server,
+    server: __server,
     spacesDir: (typeof spacesDir != 'undefined' && spacesDir) || null,
     spaces: (spaceIndex && spaceIndex.join(', ')) || null,
     version: (typeof version != 'undefined' && version) || null

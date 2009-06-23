@@ -6,7 +6,7 @@
 %%VARS%%
 
 // two most important vars
-var server = '%%SERVER%%';
+var __server = '%%SERVER%%';
 
 // new additions for Sandalphon
 ShiftSpaceUI = {}; // holds all UI class objects
@@ -22,7 +22,7 @@ var __sysavail__ = {
 var __membermemo = {};
 function $memberof(_subclass, superclass)
 {
- if(_subclass == superclass) return true;
+  if(_subclass == superclass) return true;
   
   var subclass = ($type(_subclass) == 'object' && _subclass.name) || _subclass;
   var tag = subclass+':'+superclass;

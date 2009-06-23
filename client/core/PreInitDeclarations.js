@@ -5,22 +5,22 @@
 // NOTE: This will be preprocessed by preprocess.py and replaced with the proper
 // servers
 
-var spacesDir = '%%SPACEDIR%%';
+var __spacesDir = '%%SPACEDIR%%';
 
-SSLog('SERVER: ' + server, SSLogForce);
-SSLog('SPACESDIR: ' + spacesDir, SSLogForce);
+SSLog('SERVER: ' + __server, SSLogForce);
+SSLog('SPACESDIR: ' + __spacesDir, SSLogForce);
 
 var version = '1.0';
-var cacheFiles = 0;
+var __cacheFiles = 0;
 
 if(typeof ShiftSpaceSandBoxMode != 'undefined' && ShiftSpaceSandBoxMode) 
 {
   //TODO: remove - David Nolen
   //server = window.location.href.substr(0, window.location.href.indexOf('sandbox'));
-  cacheFiles = 0;
+  __cacheFiles = 0;
 }
 
-var displayList = [];
+var __displayList = [];
 var __SSInvalidShiftIdError = "__SSInvalidShiftIdError";
 var __consoleIsWaiting = false;
 var __defaultEmailComments = 1;
@@ -34,9 +34,9 @@ var __defaultSpaces = {
   'Notes': 
   {
     name:'Notes', 
-    url: spacesDir + 'Notes/', 
-    icon: spacesDir + 'Notes/' + 'Notes.png', 
-    css: spacesDir + 'Notes/' + 'Notes.css',
+    url: __spacesDir + 'Notes/', 
+    icon: __spacesDir + 'Notes/' + 'Notes.png', 
+    css: __spacesDir + 'Notes/' + 'Notes.css',
     position:0, 
     attrs: {},
     autolaunch: false
@@ -44,9 +44,9 @@ var __defaultSpaces = {
   'ImageSwap': 
   {
     name:'ImageSwap', 
-    url: spacesDir + 'ImageSwap/', 
-    icon: spacesDir + 'ImageSwap/' + 'ImageSwap.png', 
-    css: spacesDir + 'ImageSwap/' + 'ImageSwap.css',
+    url: __spacesDir + 'ImageSwap/', 
+    icon: __spacesDir + 'ImageSwap/' + 'ImageSwap.png', 
+    css: __spacesDir + 'ImageSwap/' + 'ImageSwap.css',
     position:1, 
     attrs: {},
     autolaunch: false
@@ -54,9 +54,9 @@ var __defaultSpaces = {
   'Highlights': 
   {
     name:'Highlights', 
-    url: spacesDir + 'Highlights/', 
-    icon: spacesDir + 'Highlights/' + 'Highlights.png', 
-    css: spacesDir + 'Highlights/' + 'Highlights.css',
+    url: __spacesDir + 'Highlights/', 
+    icon: __spacesDir + 'Highlights/' + 'Highlights.png', 
+    css: __spacesDir + 'Highlights/' + 'Highlights.css',
     position:2, 
     attrs: {},
     autolaunch: false
@@ -64,9 +64,9 @@ var __defaultSpaces = {
   'SourceShift': 
   {
     name:'SourceShift', 
-    url: spacesDir + 'SourceShift/', 
-    icon: spacesDir + 'SourceShift/' + 'SourceShift.png',
-    css: spacesDir + 'SourceShift/' + 'SourceShift.css',
+    url: __spacesDir + 'SourceShift/', 
+    icon: __spacesDir + 'SourceShift/' + 'SourceShift.png',
+    css: __spacesDir + 'SourceShift/' + 'SourceShift.css',
     position:3, 
     attrs: {},
     autolaunch: false

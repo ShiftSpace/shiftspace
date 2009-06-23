@@ -51,7 +51,7 @@ function SSServerCall(method, parameters, _callback)
   SSIncPendingRequests();
 
   var callback = _callback;
-  var url = server + 'server/?method=' + method;
+  var url = SSInfo().server + 'server/?method=' + method;
   
   SSLog('serverCall: ' + url, SSLogServerCall);
   
@@ -132,7 +132,7 @@ function SSServerCall(method, parameters, _callback)
 function SSCollectionsCall(options)
 {
   SSIncPendingRequests();
-  var url = server + 'server/index.php';
+  var url = SSInfo().server + 'server/index.php';
   
   var req = {
     method: 'POST',
@@ -187,7 +187,7 @@ function SSLoadStyle(url, callback, frame)
   dir.pop();
   dir = dir.join('/');
   if (dir.substr(0, 7) != 'http://') {
-    dir = server + dir;
+    dir = SSInfo().server + dir;
   }
 
   //SSLog('loadStyle: ' + url);
@@ -247,20 +247,20 @@ function SSLoadFile(url, callback)
   // If the URL doesn't start with "http://", assume it's on our server
   if (url.substr(0, 7) != 'http://' &&
       url.substr(0, 8) != 'https://') {
-    url = server + url;
+    url = SSInfo().server + url;
   }
 
   //SSLog('loadFile:' + url);
 
   // Caching is implemented as a rather blunt instrument ...
-  if ((typeof cacheFiles != 'undefined') && !cacheFiles) 
+  if ((typeof __cacheFiles != 'undefined') && !__cacheFiles) 
   {
     // ... either append the current timestamp to the URL ...
     var now = new Date();
     url += (url.indexOf('?') == -1) ? '?' : '&';
     url += now.getTime();
   } 
-  else if((typeof cacheFiles != 'undefined') && cacheFiles)
+  else if((typeof __cacheFiles != 'undefined') && __cacheFiles)
   {
     SSLog('SSLoadFile, load from cache', SSLogForce);
     // ... or use SSGetValue to retrieve the file's contents
@@ -285,7 +285,7 @@ function SSLoadFile(url, callback)
     'onload': function(response) 
     {
       // Store file contents for later retrieval
-      if (typeof cacheFiles != 'undefined' && cacheFiles) 
+      if (typeof __cacheFiles != 'undefined' && __cacheFiles) 
       {
         cache.push(url);
         SSSetValue('cache', cache);

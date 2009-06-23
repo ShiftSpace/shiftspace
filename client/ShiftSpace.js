@@ -234,7 +234,7 @@ var ShiftSpace = new (function() {
 
         GM_xmlhttpRequest({
           method: 'POST',
-          url: server + 'server/?method=version',
+          url: SSInfo().server + 'server/?method=version',
           onload: function(rx)
           {
             if (rx.responseText != version)
