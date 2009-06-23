@@ -31,9 +31,9 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"></meta>
     <title>ShiftSpace Sandbox</title>
     <link rel="stylesheet" href="style.css" type="text/css"></link>
-    <script src="../mootools/jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../mootools/mootools-1.2.3-core.js" type="text/javascript"></script>
-    <script src="../mootools/mootools-1.2.3.1-more.js" type="text/javascript"></script>
+    <script src="../externals/jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../externals/mootools-1.2.3-core.js" type="text/javascript"></script>
+    <script src="../externals/mootools-1.2.3.1-more.js" type="text/javascript"></script>
 
     <script src="install.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/Videobox.js" type="text/javascript"></script>

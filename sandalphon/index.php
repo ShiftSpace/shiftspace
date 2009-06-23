@@ -4,8 +4,8 @@
 
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="../mootools/mootools-1.2.3-core.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../mootools/mootools-1.2.3.1-more.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../externals/mootools-1.2.3-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../externals/mootools-1.2.3.1-more.js" type="text/javascript" charset="utf-8"></script>
     <script src="../sandbox/GreaseMonkeyApi.js" type="text/javascript" charset="utf-8"></script>
     <script src="../builds/shiftspace.sandalphon.js" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">

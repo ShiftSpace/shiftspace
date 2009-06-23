@@ -8,8 +8,8 @@
     <script>
       var ShiftSpace = {};
     </script>
-    <script src="../mootools/mootools-1.2.3-core.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../mootools/mootools-1.2.3.1-more.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../externals/mootools-1.2.3-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../externals/mootools-1.2.3.1-more.js" type="text/javascript" charset="utf-8"></script>
     <script src="../sandbox/GreaseMonkeyApi.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/SSException.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
