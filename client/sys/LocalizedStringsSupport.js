@@ -8,7 +8,7 @@ var __sslang = null;
 function SSLoadLocalizedStrings(lang, ctxt)
 {
   var context = ctxt || window;
-  SSLoadFile("client/LocalizedStrings/"+lang+".json", function(rx) {
+  SSLoadFile("client/localizedStrings/"+lang+".json", function(rx) {
     if(lang != __sslang)
     {
       ShiftSpace.localizedStrings = JSON.decode(rx.responseText);
