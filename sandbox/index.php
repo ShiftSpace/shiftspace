@@ -11,9 +11,7 @@ if (!empty($_GET['id'])) {
   exit;
 }
 
-// NOTE:
-// need to chmod 777 builds, and compiledViews directories
-shell_exec("python ../sandalphon/sandalphon.py -i ../client/views/SSConsole/SSConsole.html -o ../client/compiledViews/");
+shell_exec("python ../sandalphon/sandalphon.py -i ../client/views/SSConsole/SSConsole.html -o ../client/compiledViews/ -e mydev");
 shell_exec("python ../builder/preprocess.py -e mydev -i ../client/ShiftSpace.js -p sandbox -o ../builds/shiftspace.sandbox.js;");
 
 $path = explode('/', $_SERVER['REQUEST_URI']);
