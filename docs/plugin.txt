@@ -1,0 +1,31 @@
+Plugin Issues When Developing With ShiftSpace
+================================================================================
+
+Some issues you may run into when developing a space intended to run
+under the GreaseMonkey plugin version of ShiftSpace.
+
+  z-index
+  --------------------------------------------------
+  Many sites will use fairly large z-index values. You will need to
+  pick a sufficient large z-index if you do not want your page
+  modifications to be obscured by content on the page. ShiftSpace has
+  three many UI components, the notifier, the space menu, and the
+  console. The console is at z-index 1000000, the notifier at
+  1000001, the space menu at 1000002.
+
+
+  frames
+  --------------------------------------------------
+  CSS on the page will invariably interact with your CSS. You should
+  not create DOM nodes using Element, rather you should use
+  ShifSpace.Element. It's a little bit more to type but we add a
+  fairly aggressive CSS reset. Even this won't save you from CSS
+  conflicts with complex stylesheeets. If you really want to protect
+  your shift or space from the page CSS you should subclass
+  SSFramedView. Refer to the API document for usage.
+
+  encoding
+  --------------------------------------------------
+  in order to preserve the default encoding you will also need to put
+  your input fields in an iframe. We're considering providing a
+  generic framed input class.
