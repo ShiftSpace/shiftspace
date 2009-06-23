@@ -9,6 +9,7 @@
   font-family: verdana;
   font-size: 12px;
   color: green;
+  z-index: 1000000;
 }
 
 /*

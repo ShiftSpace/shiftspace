@@ -82,6 +82,7 @@ body > #SSConsole
   bottom: 35px;
   width: 100%;
   border: 0px;
+  z-index: 1000000;
 }
 
 #SSConsoleResizer

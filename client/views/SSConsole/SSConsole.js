@@ -346,7 +346,7 @@ var SSConsole = new Class({
     // attach events to localization switcher
     this.outlets().get('SSSelectLanguage').addEvent('change', function(_evt) {
       var evt = new Event(_evt);
-      SSLoadLocalizedStrings(evt.target.getProperty('value'), this.element.contentWindow);
+      SSLoadLocalizedStrings($(evt.target).getProperty('value'), this.element.contentWindow);
     }.bind(this));
   },
   

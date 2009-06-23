@@ -8,4 +8,6 @@
   height: 120px;
 
   border: none;
+  
+  z-index: 1000002;
 }

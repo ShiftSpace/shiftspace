@@ -50,7 +50,7 @@ var SSCustomTableRow = new Class({
     clone.getElement('.SSActionCell').addEvent('click', function(_evt) {
       var evt = new Event(_evt);
       // lock the element
-      var checked = evt.target.getProperty('checked');
+      var checked = $(evt.target).getProperty('checked');
       SSPostNotification('userDidClickCheckboxForRowInTableView', {
         tableView: this.delegate(),
         rowIndex: this.delegate().indexOfRow(this.rowForNode(evt.target))
