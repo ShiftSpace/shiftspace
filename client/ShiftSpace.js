@@ -46,8 +46,6 @@ Credits:
 
 */
 
-// ShiftSpace is built on the Mootools framework (pre-processing required)
-
 if(typeof console != 'undefined' && console.log)
 {
   console.log('Loading ShiftSpace');
