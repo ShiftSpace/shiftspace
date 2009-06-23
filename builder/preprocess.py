@@ -75,12 +75,11 @@ class SSPreProcessor:
     source.append('\n// === START PACKAGE [%s] ===\n' % package)
 
     if package in self.proj['packages']['remove']:
-      source.append('// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n')
-      return
+      return '// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n'
 
     if self.proj['packages']['replace'].has_key(package):
       package = self.proj['packages']['replace'][package]
-      source.append('// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package)
+      return '// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package
 
     source.append('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
 
