@@ -173,7 +173,8 @@ var AbstractUser = new Class({
     SSServerCall('user.join', userInfo, function(json) {
       if(!json.error)
       {
-        if(json.data) this.syncData(json.data);
+        var data = $get(json, 'data', 'contents', 'values');
+        if(data) this.syncData(data);
         SSPostNotification('onInstalledSpacesDidChange');
         SSPostNotification('onUserJoin', json);
       }
