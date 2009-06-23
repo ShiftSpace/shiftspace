@@ -110,9 +110,7 @@ class SandalphonCompiler:
             fileHandle = open(cssPath)
 
             if fileHandle != None:
-                self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
-                #self.cssFile = "@import"
-                self.cssFile = self.cssFile +  fileHandle.read()
+                self.cssFile = self.cssFile + "@import url(%sclient/%s);\n" % (self.env["SERVER"], cssPath)
 
             fileHandle.close()
         except IOError:
