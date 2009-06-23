@@ -40,6 +40,7 @@ var SSConsole = new Class({
     
     // listen for shift events
     SSAddObserver(this, 'onShiftSave', this.refreshTableViews.bind(this));
+    SSAddObserver(this, 'onShiftDelete', this.refreshTableViews.bind(this));
     SSAddObserver(this, 'onShiftHide', this.deselectShift.bind(this));
     
     // space install event
