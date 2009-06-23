@@ -4,6 +4,7 @@ Plugin Issues When Developing With ShiftSpace
 Some issues you may run into when developing a space intended to run
 under the GreaseMonkey plugin version of ShiftSpace.
 
+
   z-index
   --------------------------------------------------
   Many sites will use fairly large z-index values. You will need to
@@ -23,6 +24,7 @@ under the GreaseMonkey plugin version of ShiftSpace.
   conflicts with complex stylesheeets. If you really want to protect
   your shift or space from the page CSS you should subclass
   SSFramedView. Refer to the API document for usage.
+
 
   encoding
   --------------------------------------------------
