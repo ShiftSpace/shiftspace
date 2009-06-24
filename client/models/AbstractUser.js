@@ -56,11 +56,11 @@ var AbstractUser = new Class({
     
     if(id == null)
     {
-      SSPostNotification('onUserLogout');
+      this.onLogout();
     }
     else
     {
-      SSPostNotification('onUserLogin', this.data());
+      this.onLogin();
     }
   },
   
@@ -151,20 +151,27 @@ var AbstractUser = new Class({
       if(!json.error)
       {
         if(json.data) this.syncData(json.data);
-        SSPostNotification('onInstalledSpacesDidChange');
+        this.onLogin(json);
       }
       else
       {
-        SSPostNotification('onUserLoginError', json);
+        this.onLoginError(json);
       }
     }.bind(this));
   },
   
   
-  onLogin: function()
+  onLogin: function(json)
   {
-    
+    SSPostNotification('onUserLogin', this.data());
+    SSPostNotification('onInstalledSpacesDidChange');
   },
+  
+  
+  onLoginError: function(json)
+  {
+    SSPostNotification('onUserLoginError', json);
+  }
   
   /*
     Function: logout (private)
@@ -177,20 +184,28 @@ var AbstractUser = new Class({
       if(!json.error)
       {
         SSLog('user is logging out', SSLogForce);
-        SSPostNotification('onInstalledSpacesDidChange');
+        this.onLogout(json);
       }
       else
       {
-        SSPostNotification('onUserLogoutError', json);
+        this.onLogoutError(json);
       }
     }.bind(this));
   },
   
   
-  onLogout: function()
+  onLogout: function(json)
   {
-    
+    SSPostNotification('onUserLogout');
+    SSPostNotification('onInstalledSpacesDidChange');
   },
+  
+  
+  onLogoutError: function(data)
+  {
+    SSPostNotification('onUserLogoutError');
+  },
+  
   
   /*
     Function: join (private)
@@ -203,20 +218,26 @@ var AbstractUser = new Class({
       {
         var data = $get(json, 'data', 'contents', 'values');
         if(data) this.syncData(data);
-        SSPostNotification('onInstalledSpacesDidChange');
-        SSPostNotification('onUserJoin', json);
+        this.onJoin(json);
       }
       else
       {
-        SSPostNotification('onUserJoinError', json);
+        this.onJoinError(json);
       }
     }.bind(this));
   },
   
   
-  onJoin: function()
+  onJoin: function(json)
   {
-    
+    SSPostNotification('onInstalledSpacesDidChange');
+    SSPostNotification('onUserJoin', json);
+  },
+  
+  
+  onJoinError: function(json)
+  {
+    SSPostNotification('onUserJoinError', json);
   },
   
   
@@ -233,19 +254,25 @@ var AbstractUser = new Class({
       if(!json.error)
       {
         if(json.data) this.syncData(json.data);
-        SSPostNotification('onUserUpdate', json);
+        this.onUpdate(json);
       }
       else
       {
-        SSPostNotification('onUserUpdateError', json);
+        this.onUpdateError(json);
       }
     }.bind(this));
   },
   
   
-  onUpdate: function()
+  onUpdate: function(json)
   {
-    
+    SSPostNotification('onUserUpdate', json);
+  },
+  
+  
+  onUpdateError: function(json)
+  {
+    SSPostNotification('onUserUpdateError', json);
   },
   
   
@@ -261,18 +288,24 @@ var AbstractUser = new Class({
     SSServerCall('user.resetPassword', info, function(json) {
       if(!json.error)
       {
-        SSPostNotification('onUserPasswordReset', json);
+        this.onResetPassword(json);
       }
       else
       {
-        SSPostNotification('onUserPasswordResetError', json);
+        this.onResetPasswordError(json);
       }
     });
   },
   
   
-  onResetPassword: function()
+  onResetPassword: function(json)
   {
-    
+    SSPostNotification('onUserPasswordReset', json);
+  },
+  
+  
+  onResetPasswordError: function(json)
+  {
+    SSPostNotification('onUserPasswordResetError', json);
   }
 });
