@@ -163,7 +163,7 @@ var AbstractUser = new Class({
   
   onLogin: function(json)
   {
-    SSPostNotification('onUserLogin', this.data());
+    SSPostNotification('onUserLogin', json);
   },
   
   
@@ -195,13 +195,13 @@ var AbstractUser = new Class({
   
   onLogout: function(json)
   {
-    SSPostNotification('onUserLogout');
+    SSPostNotification('onUserLogout', json);
   },
   
   
-  onLogoutError: function(data)
+  onLogoutError: function(json)
   {
-    SSPostNotification('onUserLogoutError');
+    SSPostNotification('onUserLogoutError', json);
   },
   
   
