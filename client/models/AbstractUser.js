@@ -53,15 +53,6 @@ var AbstractUser = new Class({
   setId: function(id)
   {
     this.__userId = id;
-    
-    if(id == null)
-    {
-      this.onLogout();
-    }
-    else
-    {
-      this.onLogin();
-    }
   },
   
   
@@ -148,7 +139,7 @@ var AbstractUser = new Class({
   login: function(credentials) 
   {
     SSServerCall('user.login', credentials, function(json) {
-      if(!json.error)
+      if(!json['error'])
       {
         if(json.data) this.syncData(json.data);
         this.onLogin(json);
@@ -180,9 +171,8 @@ var AbstractUser = new Class({
   {
     SSServerCall('user.logout', null, function(json) {
       this.clearData();
-      if(!json.error)
+      if(!json['error'])
       {
-        SSLog('user is logging out', SSLogForce);
         this.onLogout(json);
       }
       else
@@ -212,11 +202,13 @@ var AbstractUser = new Class({
   join: function(userInfo) 
   {
     SSServerCall('user.join', userInfo, function(json) {
-      if(!json.error)
+      if(!json['error'])
       {
         var data = $get(json, 'data', 'contents', 'values');
         if(data) this.syncData(data);
+        
         this.onJoin(json);
+        this.onLogin(json);
       }
       else
       {
@@ -248,7 +240,7 @@ var AbstractUser = new Class({
   update: function(info) 
   {
     SSServerCall('user.update', info, function(json) {
-      if(!json.error)
+      if(!json['error'])
       {
         if(json.data) this.syncData(json.data);
         this.onUpdate(json);
@@ -283,7 +275,7 @@ var AbstractUser = new Class({
   resetPassword: function(info) 
   {
     SSServerCall('user.resetPassword', info, function(json) {
-      if(!json.error)
+      if(!json['error'])
       {
         this.onResetPassword(json);
       }
