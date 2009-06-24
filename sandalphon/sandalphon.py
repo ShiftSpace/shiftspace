@@ -37,12 +37,9 @@ class SandalphonCompiler:
     self.packages = packages
     self.files = packages['files']
 
-    # store concatenated CSS file
     self.cssFile = ''
-    # regex for template pattern /<\?.+?\?>/g
     self.templatePattern = re.compile('<\?.+?\?>')
     self.imagePattern = re.compile('url\(/images')
-    # generate lookup paths
     self.getPaths()
 
 
@@ -53,9 +50,7 @@ class SandalphonCompiler:
     viewsDirectory = "../client/views/"
     customViewsDirectory = "../client/customViews/"
     
-    # grab the base view classes and filter out .svn files
     views = [f for f in os.listdir(viewsDirectory) if(f != ".svn")]
-    # grab the custom views and filter out the .svn files
     customViews = [f for f in os.listdir(customViewsDirectory) if (f != ".svn")]
     
     self.paths = {}
