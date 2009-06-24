@@ -39,7 +39,7 @@ class SandalphonCompiler:
 
     self.cssFile = ''
     self.templatePattern = re.compile('<\?.+?\?>')
-    self.imagePattern = re.compile('url\(/images')
+    self.imagePattern = re.compile('url\(/images/')
     self.getPaths()
 
 
