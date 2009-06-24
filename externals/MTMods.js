@@ -213,3 +213,33 @@ Selectors.Utils.search = function(self, expression, local){
   }
   return items;
 };
+
+Fx.CSS.implement({
+  search: function(selector){
+    if (Fx.CSS.Cache[selector]) return Fx.CSS.Cache[selector];
+    var to = {};
+    
+    function extract(sheet, j){
+      var href = sheet.href;
+      if (href && href.contains('://') && !href.contains(document.domain)) return;
+      var rules = sheet.rules || sheet.cssRules;
+      Array.each(sheet.imports, extract);
+      Array.each(rules, function(rule, i){
+        if (rule.styleSheet) extract(rule.styleSheet);
+        if (!rule.style) return;
+        var selectorText = (rule.selectorText) ? rule.selectorText.replace(/^\w+/, function(m){
+          return m.toLowerCase();
+        }) : null;
+        if (!selectorText || !selectorText.test('^' + selector + '$')) return;
+        Element.Styles.each(function(value, style){
+          if (!rule.style[style] || Element.ShortStyles[style]) return;
+          value = String(rule.style[style]);
+          to[style] = (value.test(/^rgb/)) ? value.rgbToHex() : value;
+        });
+      });
+    }
+
+    Array.each(document.styleSheets, extract);
+    return Fx.CSS.Cache[selector] = to;
+  }
+});
