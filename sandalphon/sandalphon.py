@@ -21,11 +21,12 @@ def elementHasAttribute(element, attrib, value=None):
 
 class SandalphonCompiler:
 
-  def __init__(self, packages, env=None):
+  def __init__(self, packages, outputDirectory=None, env=None):
     # store paths to interface files
     self.paths = {}
     self.visitedViews = {}
     self.env = env
+    self.outputDirectory = outputDirectory
 
     self.packages = packages
     self.files = packages['files']
@@ -200,7 +201,7 @@ class SandalphonCompiler:
     return file
   
 
-  def compile(self, inputFile=None, outputDirectory=None, jsonOutput=False):
+  def compile(self, inputFile=None, jsonOutput=False):
     """
     Compile an interface file down to its parts
     """
@@ -230,16 +231,16 @@ class SandalphonCompiler:
     self.addCSSForUIClasses(interfaceFile)
 
     # output to specified directory or standard out or as json
-    if outputDirectory != None:
+    if self.outputDirectory != None:
       fileName = os.path.basename(inputFile)
-      fullPath = os.path.join(outputDirectory, fileName)
+      fullPath = os.path.join(self.outputDirectory, fileName)
       
       fileHandle = open(fullPath, "w")
       fileHandle.write(interfaceFile)
       fileHandle.close()
       
       cssFileName = os.path.splitext(fileName)[0]+".css"
-      cssFilePath = os.path.join(outputDirectory, cssFileName)
+      cssFilePath = os.path.join(self.outputDirectory, cssFileName)
       fileHandle = open(cssFilePath, "w")
       fileHandle.write(self.cssFile)
       fileHandle.close()
@@ -312,8 +313,8 @@ def main(argv):
   packagesJsonFile = open('../config/packages.json')
   packages = packagesJsonFile.read()
   # todo throw error if this isn't there - David
-  compiler = SandalphonCompiler(json.loads(packages), env)
-  compiler.compile(inputFile, outputDirectory, jsonOutput)
+  compiler = SandalphonCompiler(json.loads(packages), outputDirectory, env)
+  compiler.compile(inputFile, jsonOutput)
 
 
 if __name__ == "__main__":

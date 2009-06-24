@@ -28,6 +28,7 @@ var SSConsole = new Class({
     // if not tool mode, we load the interface ourselve
     if(typeof SandalphonToolMode == 'undefined')
     {
+      // load from the proper place
       Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
     }
 
