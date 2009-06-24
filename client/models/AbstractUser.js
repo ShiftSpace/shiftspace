@@ -171,7 +171,7 @@ var AbstractUser = new Class({
   onLoginError: function(json)
   {
     SSPostNotification('onUserLoginError', json);
-  }
+  },
   
   /*
     Function: logout (private)
