@@ -118,7 +118,6 @@ class SandalphonCompiler:
 
       if fileHandle != None:
         if self.env:
-          # preprocess the css file and write to the environment directory
           self.cssFile = self.cssFile + "@import url(%sclient/%s);\n" % (self.env["SERVER"], cssPath)
         else:
           self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"

@@ -6,7 +6,7 @@
 %%VARS%%
 
 var __server = '%%SERVER%%';
-var __env;
+var __env = '%%ENV_NAME%%';
 
 // new additions for Sandalphon
 ShiftSpaceUI = {}; // holds all UI class objects

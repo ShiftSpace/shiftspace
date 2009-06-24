@@ -220,11 +220,10 @@ class SSPreProcessor:
     try:
       # load environment file
       envFile = open(envFilePath)
-      envFileName = argv[0]
       env = json.loads(envFile.read())
       envFile.close()
       
-      self.envData = {"name": envFileName, "data": env, "meta": metadataStr}
+      self.envData = {"name": envFileOption, "data": env, "meta": metadataStr}
     except IOError:
       print "Error: no such environment file exists. (%s)" % envFilePath
       sys.exit(2)
