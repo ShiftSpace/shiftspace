@@ -101,6 +101,10 @@ class SandalphonCompiler:
       return fileContents
     else:
       return None
+      
+  
+  def preprocessCSS(self, file):
+    pass
 
 
   def addCSSForHTMLPath(self, filePath):
