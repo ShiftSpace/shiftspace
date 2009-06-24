@@ -26,7 +26,11 @@ class SandalphonCompiler:
     self.paths = {}
     self.visitedViews = {}
     self.env = env
-    self.outputDirectory = outputDirectory
+    
+    if env:
+      self.outputDirectory = os.path.join(outputDirectory, env)
+    else:
+      self.outputDirectory = outputDirectory
 
     self.packages = packages
     self.files = packages['files']

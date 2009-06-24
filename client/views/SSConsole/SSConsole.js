@@ -29,7 +29,7 @@ var SSConsole = new Class({
     if(typeof SandalphonToolMode == 'undefined')
     {
       // load from the proper place
-      Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
+      Sandalphon.load('/client/compiledViews/'+SSInfo().env+'SSConsole', this.buildInterface.bind(this));
     }
 
     // listen for login/logout events, pass in reference to self
