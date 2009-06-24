@@ -164,7 +164,6 @@ var AbstractUser = new Class({
   onLogin: function(json)
   {
     SSPostNotification('onUserLogin', this.data());
-    SSPostNotification('onInstalledSpacesDidChange');
   },
   
   
@@ -197,7 +196,6 @@ var AbstractUser = new Class({
   onLogout: function(json)
   {
     SSPostNotification('onUserLogout');
-    SSPostNotification('onInstalledSpacesDidChange');
   },
   
   
@@ -230,7 +228,6 @@ var AbstractUser = new Class({
   
   onJoin: function(json)
   {
-    SSPostNotification('onInstalledSpacesDidChange');
     SSPostNotification('onUserJoin', json);
   },
   
