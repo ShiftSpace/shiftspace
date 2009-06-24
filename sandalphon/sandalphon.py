@@ -28,7 +28,9 @@ class SandalphonCompiler:
     self.env = env
     
     if env:
-      self.outputDirectory = os.path.join(outputDirectory, env)
+      self.outputDirectory = os.path.join(outputDirectory, env["name"])
+      if not os.path.exists(self.outputDirectory):
+        os.makedirs(self.outputDirectory)
     else:
       self.outputDirectory = outputDirectory
 
@@ -123,7 +125,7 @@ class SandalphonCompiler:
 
       if fileHandle != None:
         if self.env:
-          self.cssFile = self.cssFile + "@import url(%sclient/%s);\n" % (self.env["SERVER"], cssPath)
+          self.cssFile = self.cssFile + "@import url(%sclient/%s);\n" % (self.env["data"]["SERVER"], cssPath)
         else:
           self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
           self.cssFile = self.cssFile +  fileHandle.read()
@@ -304,15 +306,17 @@ def main(argv):
     usage()
     sys.exit(2)
     
+  env = None
   if envFileName:
     envFile = open('../config/env/%s.json' % envFileName)
     if envFile == None:
       print "Environment file SHIFTSPACE_ROOT/config/env/%s.json does not exist" % envFileName
       sys.exit(2)
     else:
-      env = json.loads(envFile.read())
+      envData = json.loads(envFile.read())
       envFile.close()
-        
+      env = {"name": envFileName, "data": envData}
+
   # load the packages json file
   packagesJsonFile = open('../config/packages.json')
   packages = packagesJsonFile.read()
