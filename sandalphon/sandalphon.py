@@ -108,6 +108,9 @@ class SandalphonCompiler:
 
 
   def addCSSForHTMLPath(self, filePath):
+    """
+    Appends the contents of the specified css file to self.cssFile.
+    """
     cssPath = os.path.splitext(filePath)[0]+".css"
     # load the css file
     try:
@@ -115,6 +118,7 @@ class SandalphonCompiler:
 
       if fileHandle != None:
         if self.env:
+          # preprocess the css file and write to the environment directory
           self.cssFile = self.cssFile + "@import url(%sclient/%s);\n" % (self.env["SERVER"], cssPath)
         else:
           self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
@@ -126,6 +130,9 @@ class SandalphonCompiler:
     
             
   def uiclassDeps(self, uiclass, result=[]):
+    """
+    Returns all uiclass superclasses fo a uiclass.
+    """
     # TODO - throw error if uiclass not found! David 7/12/09
     # load any css for any dependencies as well
     entry = self.files[uiclass]
