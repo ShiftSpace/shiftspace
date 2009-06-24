@@ -132,6 +132,12 @@ var AbstractUser = new Class({
     }.bind(this));
   },
   
+  
+  onQuery: function()
+  {
+    
+  },
+  
   /*
     Function: login (private)
       Login a user. Will probably be moved into ShiftSpace.js.
@@ -154,6 +160,12 @@ var AbstractUser = new Class({
     }.bind(this));
   },
   
+  
+  onLogin: function()
+  {
+    
+  },
+  
   /*
     Function: logout (private)
       Logout a user. Will probably be moved into ShiftSpace.js.
@@ -172,6 +184,12 @@ var AbstractUser = new Class({
         SSPostNotification('onUserLogoutError', json);
       }
     }.bind(this));
+  },
+  
+  
+  onLogout: function()
+  {
+    
   },
   
   /*
@@ -194,6 +212,13 @@ var AbstractUser = new Class({
       }
     }.bind(this));
   },
+  
+  
+  onJoin: function()
+  {
+    
+  },
+  
   
   /*
     Function: update
@@ -218,6 +243,12 @@ var AbstractUser = new Class({
   },
   
   
+  onUpdate: function()
+  {
+    
+  },
+  
+  
   /*
     Function: resetPassword (private)
       Reset a user's password
@@ -237,5 +268,11 @@ var AbstractUser = new Class({
         SSPostNotification('onUserPasswordResetError', json);
       }
     });
+  },
+  
+  
+  onResetPassword: function()
+  {
+    
   }
 });
