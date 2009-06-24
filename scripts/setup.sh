@@ -36,44 +36,7 @@ then
 fi
 
 python ../builder/corebuilder.py
-python ../sandalphon/sandalphon.py -i ../client/views/SSConsole/SSConsole.html -o ../client/compiledViews/
-
-echo
-echo
-echo
-echo
-echo
-echo =============================================================================
-echo A rabbi, a priest and a javascript programmer are sitting in a coffee shop...
-echo =============================================================================
-echo
-echo
-
-./build_shiftspace.sh
-
-echo ============================================================================================
-echo "Suddenly, David Nolen walks in and says 'don't be lazy!' [They weren't really being lazy...]"
-echo ============================================================================================
-echo
-echo
-
-./build_sandbox.sh
-
-echo ============================================================================================
-echo Unfortunately, we didn\'t end up drinking sambouka at all, even though it was _really_ close.
-echo ============================================================================================
-echo
-echo
-
-./build_sandalphon.sh
 
 chmod a+w ../server/working
-
 chmod a+w ../client/compiledViews
-chmod a+w ../client/compiledViews/SSConsole.html
-chmod a+w ../client/compiledViews/SSConsole.css
-
 chmod a+w ../builds
-chmod a+w ../builds/shiftspace.user.js
-chmod a+w ../builds/shiftspace.dev.user.js
-chmod a+w ../builds/shiftspace.sandbox.js
