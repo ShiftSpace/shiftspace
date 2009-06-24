@@ -41,6 +41,7 @@ class SandalphonCompiler:
     self.cssFile = ''
     # regex for template pattern /<\?.+?\?>/g
     self.templatePattern = re.compile('<\?.+?\?>')
+    self.imagePattern = re.compile('url\(/images')
     # generate lookup paths
     self.getPaths()
 
@@ -110,25 +111,36 @@ class SandalphonCompiler:
       return None
       
   
-  def preprocessCSS(self, file):
-    pass
+  def preprocessImageUrls(self, css, imageUrl):
+    return self.imagePattern.sub(imageUrl, css)
 
 
   def addCSSForHTMLPath(self, filePath):
     """
     Appends the contents of the specified css file to self.cssFile.
     """
+    
     cssPath = os.path.splitext(filePath)[0]+".css"
+    basename = os.path.basename(cssPath)
+    
     # load the css file
     try:
       fileHandle = open(cssPath)
 
       if fileHandle != None:
         if self.env:
-          self.cssFile = self.cssFile + "@import url(%sclient/%s);\n" % (self.env["data"]["SERVER"], cssPath)
+          importPath = "%sclient/%s" % (self.env["data"]["SERVER"], cssPath)
+          imageUrl = self.env["data"].get("IMAGESDIR")
+          if imageUrl:
+            preprocessed = self.preprocessImageUrls(fileHandle.read(), imageUrl)
+            importPath = os.path.join(self.outputDirectory, basename)
+            newCSSFileHandle = open(importPath, 'w')
+            newCSSFileHandle.write(preprocessed)
+            newCSSFileHandle.close()
+          self.cssFile = self.cssFile + "@import url(%s);\n" % importPath
         else:
           self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
-          self.cssFile = self.cssFile +  fileHandle.read()
+          self.cssFile = self.cssFile + fileHandle.read()
 
       fileHandle.close()
     except IOError:
@@ -238,15 +250,14 @@ class SandalphonCompiler:
 
     # output to specified directory or standard out or as json
     if self.outputDirectory != None:
-      fileName = os.path.basename(inputFile)
-      fullPath = os.path.join(self.outputDirectory, fileName)
+      fileName, ext = os.path.splitext(os.path.basename(inputFile))
+      fullPath = os.path.join(self.outputDirectory, fileName+"Main.html")
       
       fileHandle = open(fullPath, "w")
       fileHandle.write(interfaceFile)
       fileHandle.close()
       
-      cssFileName = os.path.splitext(fileName)[0]+".css"
-      cssFilePath = os.path.join(self.outputDirectory, cssFileName)
+      cssFilePath = os.path.join(self.outputDirectory, fileName+"Main.css")
       fileHandle = open(cssFilePath, "w")
       fileHandle.write(self.cssFile)
       fileHandle.close()
