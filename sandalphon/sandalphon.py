@@ -107,7 +107,7 @@ class SandalphonCompiler:
       
   
   def preprocessImageUrls(self, css, imageUrl):
-    return self.imagePattern.sub(imageUrl, css)
+    return self.imagePattern.sub('url('+imageUrl, css)
 
 
   def addCSSForHTMLPath(self, filePath):
