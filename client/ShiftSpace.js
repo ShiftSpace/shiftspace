@@ -281,50 +281,8 @@ var ShiftSpace = new (function() {
     // In sandbox mode, expose something for easier debugging.
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
-      this.spaces = SSAllSpaces();
-      this.shifts = __loadedShifts;
-      this.SSSetValue = SSSetValue;
-      this.SSGetValue = SSGetValue;
-      this.plugins = plugins;
       unsafeWindow.ShiftSpace = this;
-      
-      this.Sandalphon = Sandalphon;
-      
-      // For Sandbox export classes
-      this.Space = ShiftSpace.Space;
-      this.Shift = ShiftSpace.Shift;
-      this.Plugin = ShiftSpace.Plugin;
-      this.installSpace = SSInstallSpace;
-      this.uninstallSpace = SSUninstallSpace;
-      this.installed = SSInstalledSpaces;
-      this.defaults = SSDefaultSpaces;
-      this.byPosition = SSSpacesByPosition;
-      this.eventProxy = SSEventProxy;
-      this.getObservers = SSGetObservers;
-      this.controllerForNode = SSControllerForNode;
-
-      this.SSGetShift = SSGetShift;
-      this.SSGetPageShifts = SSGetPageShifts;
-      this.SSHideShift = SSHideShift;
-      this.SSDeleteShift = SSDeleteShift;
-      this.SSEditShift = SSEditShift;
-      this.SSShowShift = SSShowShift;
-      this.SSUserOwnsShift = SSUserOwnsShift;
-      this.SSSetShiftStatus = SSSetShiftStatus;
       this.sys = __sys__;
-      this.SSHasResource = SSHasResource;
-      this.SSResourceExists = SSResourceExists;
-      this.SSLoadSpaceAttributes = SSLoadSpaceAttributes;
-      this.SSGetSpaceAttributes = SSGetSpaceAttributes;
-      
-      this.$msg = $msg;
-      this.$get = $get;
-      this.$getf = $getf;
-      this.$memberof = $memberof;
-      this.spaceForName = SSSpaceForName;
-      
-      // export SSLog
-      window.SSLog = SSLog;
     }
 
     return this;
