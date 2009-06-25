@@ -39,7 +39,8 @@ class SandalphonCompiler:
 
     self.cssFile = ''
     self.templatePattern = re.compile('<\?.+?\?>')
-    self.imagePattern = re.compile('url\(/images')
+    self.cssImagePattern = re.compile('(?<=url\()/images/')
+    #self.htmlImagePattern  =
     self.getPaths()
 
 
@@ -107,7 +108,7 @@ class SandalphonCompiler:
       
   
   def preprocessImageUrls(self, css, imageUrl):
-    return self.imagePattern.sub('url('+imageUrl, css)
+    return self.cssImagePattern.sub(imageUrl, css)
 
 
   def addCSSForHTMLPath(self, filePath):
