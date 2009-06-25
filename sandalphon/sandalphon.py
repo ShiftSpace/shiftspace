@@ -40,7 +40,7 @@ class SandalphonCompiler:
     self.cssFile = ''
     self.templatePattern = re.compile('<\?.+?\?>')
     self.cssImagePattern = re.compile('(?<=url\()/images/')
-    self.htmlImagePattern = re.compile(u"(?<=src=[\"\'])/images/(?=.+?[\"\'])")
+    self.htmlImagePattern = re.compile("(?<=src=[\"\'])/images/(?=.+?[\"\'])")
     self.getPaths()
 
 
@@ -112,6 +112,7 @@ class SandalphonCompiler:
     
     
   def preprocessHTMLImageUrls(self, html, imageUrl):
+    html = unicode(html, sys.stdout.encoding)
     return self.htmlImagePattern.sub(imageUrl, html)
 
 
