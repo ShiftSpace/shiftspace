@@ -112,7 +112,6 @@ class SandalphonCompiler:
     
     
   def preprocessHTMLImageUrls(self, html, imageUrl):
-    html = unicode(html, sys.stdout.encoding)
     return self.htmlImagePattern.sub(imageUrl, html)
 
 
