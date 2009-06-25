@@ -2,28 +2,34 @@
 // @required
 // ==/Builder==
 
-function SSGetAllStreams(callback)
+function SSGetAllFeeds(callback)
 {
 }
 
-function SSGetStream(streamId, callback)
+function SSGetFeed(streamId, callback)
 {
   
 }
 
 function SSCreateStream(callback)
 {
-  
+  SSStreamCall('event.createstream', callback);
 }
 
 function SSSetStreamPermission(streamId, userId, level, callback)
 {
-  
+  SSStreamCall('event.setstreampermissions', {
+    stream_id: streamId,
+    user_id: userId,
+    level: level
+  }, callback);
 }
 
 function SSFindStreams(ref, callback)
 {
-  
+  SSStreamCall('event.findstreams', {
+    object_ref: ref
+  }, callback);
 }
 
 function SSSubscriptionsForLoggedInUser(callback)
