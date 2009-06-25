@@ -12,9 +12,15 @@ function SSGetFeed(streamId, callback)
   SSStreamCall('event.onefeed', {stream_id:streamId}, callback);
 }
 
-function SSCreateStream(callback)
+function SSCreateStream(name, isPrivate, callback)
 {
-  SSStreamCall('event.createstream', null, callback);
+  if(isPrivate == false) isPrivate = 0;
+  if(isPrivate == true) isPrivate = 1;
+  
+  SSStreamCall('event.createstream', {
+    stream_name: name,
+    private: isPrivate == true
+  }, callback);
 }
 
 function SSSetStreamPermission(streamId, userId, level, callback)
