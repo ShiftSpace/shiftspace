@@ -26,13 +26,13 @@ var SSAbstractStream = new Class({
   },
   
   
-  setPermission: function(id, userid, level)
+  setPermission: function(id, level)
   {
     
   },
   
   
-  create: function(callback)
+  create: function(name, private, callback)
   {
     
   },
