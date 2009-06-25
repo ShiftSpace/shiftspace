@@ -2,12 +2,11 @@
 // @required
 // ==/Builder==
 
-function SSGetAllStreams()
+function SSGetAllStreams(callback)
 {
-  
 }
 
-function SSGetStream(streamId)
+function SSGetStream(streamId, callback)
 {
   
 }
@@ -17,43 +16,48 @@ function SSCreateStream(callback)
   
 }
 
-function SSSetStreamPermission(streamId, userId, level)
+function SSSetStreamPermission(streamId, userId, level, callback)
 {
   
 }
 
-function SSFindStreams(ref)
+function SSFindStreams(ref, callback)
 {
   
 }
 
-function SSSubscriptionsForLoggedInUser()
+function SSSubscriptionsForLoggedInUser(callback)
 {
   
 }
 
-function SSSubscribeLoggedInUser(streamId)
+function SSSubscribeLoggedInUser(streamId, callback)
 {
   
 }
 
-function SSUnsubscribeLoggedInUser(streamId)
+function SSUnsubscribeLoggedInUser(streamId, callback)
 {
   
 }
 
-function SSPostEventToStream(streamId, displayString, ref, hasReadStatus)
+function SSPostEventToStream(streamId, displayString, ref, hasReadStatus, callback)
 {
   
 }
 
-function SSMarkEventReadForLoggedInUser(eventId)
+function SSMarkEventReadForLoggedInUser(eventId, callback)
 {
   
 }
 
-function SSMarkEventUneadForLoggedInUser(eventId)
+function SSMarkEventUneadForLoggedInUser(eventId, callback)
 {
   
+}
+
+function SSStreamCall(method, params, callback)
+{
+  SSServerCall(method, params, callback);
 }
 

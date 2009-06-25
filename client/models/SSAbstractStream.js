@@ -19,7 +19,7 @@ var SSAbstractStream = new Class({
   feed: function(callback)
   {
     
-  }
+  },
   
   
   oneFeed: function(id, callback)
