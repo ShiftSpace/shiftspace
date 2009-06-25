@@ -1,5 +1,7 @@
 // ==Builder==
 // @required
+// @package           Core
+// @dependencies      RemoteFunctions
 // ==/Builder==
 
 function SSGetAllFeeds(callback)

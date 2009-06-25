@@ -5,10 +5,8 @@
 
 var SSAbstractStream = new Class({
 
-  Extends: SuperClass,
   Implements: [Events, Options],
   name: "SSAbstractStream",
-
 
   initialize: function()
   {
