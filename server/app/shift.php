@@ -79,6 +79,7 @@ class Shift {
     // Make created property more human-friendly
     array_map($this->set_elapsed_time, $shifts);
 
+
     // The response data
     $response = array(
       'count' => count($shifts),
@@ -153,14 +154,15 @@ class Shift {
   }
   
   public function get() {
+	
     $shiftIdsStr = $_REQUEST['shiftIds'];
     $shiftIds = explode(',', $shiftIdsStr);
-    $theShifts = array();
+	$theShifts = array();
     
-    foreach ($shiftIds as $shiftId) {
-      $theShifts[] = $this->server->db->load("shift($shiftId)")->get();
-    }
-    
+	foreach ($shiftIds as $shiftId) {
+	  $shiftId = trim($shiftId);	  
+	  $theShifts[] = $this->server->db->load("shift($shiftId)")->get();	
+	}
     return new Response($theShifts);
   }
 }
