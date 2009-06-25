@@ -53,8 +53,6 @@ function SSServerCall(method, parameters, _callback)
   var callback = _callback;
   var url = SSInfo().server + 'server/?method=' + method;
   
-  SSLog('serverCall: ' + url, SSLogServerCall);
-  
   var data = '';
 
   for (var key in parameters) 
@@ -83,20 +81,13 @@ function SSServerCall(method, parameters, _callback)
     {
       SSDecPendingRequests();
       
-      SSLog('done!');
       var rx = _rx;
-      SSLog('servercall returned', SSLogServerCall);
 
       if ($type(callback) == 'function') 
       {
         try
         {
-          SSLog('trying ' + url);
-          SSLog(rx.responseText);
-          SSLog(eval('(' + rx.responseText + ')'));
-          SSLog('tried ' + url);
           var theJson = JSON.decode(rx.responseText);
-          SSLog('success!');
         }
         catch(exc)
         {
@@ -190,9 +181,7 @@ function SSLoadStyle(url, callback, frame)
     dir = SSInfo().server + dir;
   }
 
-  //SSLog('loadStyle: ' + url);
   SSLoadFile(url, function(rx) {
-    //SSLog(')))))))))))))))))))))))))))))))))))))))))))))))))) ' + url);
     var css = rx.responseText;
     // this needs to be smarter, only works on directory specific urls
     css = css.replace(/url\(([^)]+)\)/g, 'url(' + dir + '/$1)');
@@ -250,8 +239,6 @@ function SSLoadFile(url, callback)
     url = SSInfo().server + url;
   }
 
-  //SSLog('loadFile:' + url);
-
   // Caching is implemented as a rather blunt instrument ...
   if ((typeof __cacheFiles != 'undefined') && !__cacheFiles) 
   {
@@ -262,13 +249,11 @@ function SSLoadFile(url, callback)
   } 
   else if((typeof __cacheFiles != 'undefined') && __cacheFiles)
   {
-    SSLog('SSLoadFile, load from cache', SSLogForce);
     // ... or use SSGetValue to retrieve the file's contents
     var cached = SSGetValue('cache.' + url, false);
 
     if (cached) 
     {
-      //SSLog('Loading ' + url + ' from cache');
       if (typeof callback == 'function') 
       {
         callback({ responseText: cached });
@@ -278,7 +263,6 @@ function SSLoadFile(url, callback)
   }
 
   // Load the URL then execute the callback
-  //SSLog('Loading ' + url + ' from network');
   GM_xmlhttpRequest({
     'method': 'GET',
     'url': url,

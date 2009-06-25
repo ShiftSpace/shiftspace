@@ -39,7 +39,8 @@ class SandalphonCompiler:
 
     self.cssFile = ''
     self.templatePattern = re.compile('<\?.+?\?>')
-    self.imagePattern = re.compile('url\(/images/')
+    self.cssImagePattern = re.compile('(?<=url\()/images/')
+    self.htmlImagePattern = re.compile(u"(?<=src=[\"\'])/images/(?=.+?[\"\'])")
     self.getPaths()
 
 
@@ -106,8 +107,12 @@ class SandalphonCompiler:
       return None
       
   
-  def preprocessImageUrls(self, css, imageUrl):
-    return self.imagePattern.sub('url('+imageUrl, css)
+  def preprocessCSSImageUrls(self, css, imageUrl):
+    return self.cssImagePattern.sub(imageUrl, css)
+    
+    
+  def preprocessHTMLImageUrls(self, html, imageUrl):
+    return self.htmlImagePattern.sub(imageUrl, html)
 
 
   def addCSSForHTMLPath(self, filePath):
@@ -127,7 +132,7 @@ class SandalphonCompiler:
           importPath = "%sclient/%s" % (self.env["data"]["SERVER"], cssPath)
           imageUrl = self.env["data"].get("IMAGESDIR")
           if imageUrl:
-            preprocessed = self.preprocessImageUrls(fileHandle.read(), imageUrl)
+            preprocessed = self.preprocessCSSImageUrls(fileHandle.read(), imageUrl)
             importPath = os.path.join(self.outputDirectory, basename)
             newCSSFileHandle = open(importPath, 'w')
             newCSSFileHandle.write(preprocessed)
@@ -249,6 +254,10 @@ class SandalphonCompiler:
       fullPath = os.path.join(self.outputDirectory, fileName+"Main.html")
       
       fileHandle = open(fullPath, "w")
+      if self.env:
+        imagesUrl = self.env["data"].get("IMAGESDIR")
+        if imagesUrl:
+          interfaceFile = self.preprocessHTMLImageUrls(interfaceFile, imagesUrl)
       fileHandle.write(interfaceFile)
       fileHandle.close()
       
