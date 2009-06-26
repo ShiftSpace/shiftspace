@@ -24,6 +24,16 @@ var AbstractUser = new Class({
   },
   
   
+  data: function()
+  {
+    return {
+      id: this.getId(),
+      username: this.getUsername(),
+      email: this.email()
+    };
+  },
+  
+  
   syncData: function(data)
   {
     this.setUsername(data.username || null);
@@ -43,15 +53,6 @@ var AbstractUser = new Class({
   setId: function(id)
   {
     this.__userId = id;
-    
-    if(id == null)
-    {
-      SSPostNotification('onUserLogout');
-    }
-    else
-    {
-      SSPostNotification('onUserLogin');
-    }
   },
   
   
@@ -122,6 +123,12 @@ var AbstractUser = new Class({
     }.bind(this));
   },
   
+  
+  onQuery: function()
+  {
+    
+  },
+  
   /*
     Function: login (private)
       Login a user. Will probably be moved into ShiftSpace.js.
@@ -132,16 +139,28 @@ var AbstractUser = new Class({
   login: function(credentials) 
   {
     SSServerCall('user.login', credentials, function(json) {
-      if(!json.error)
+      if(!json['error'])
       {
         if(json.data) this.syncData(json.data);
-        SSPostNotification('onInstalledSpacesDidChange');
+        this.onLogin(json);
       }
       else
       {
-        SSPostNotification('onUserLoginError', json);
+        this.onLoginError(json);
       }
     }.bind(this));
+  },
+  
+  
+  onLogin: function(json)
+  {
+    SSPostNotification('onUserLogin', json);
+  },
+  
+  
+  onLoginError: function(json)
+  {
+    SSPostNotification('onUserLoginError', json);
   },
   
   /*
@@ -152,17 +171,29 @@ var AbstractUser = new Class({
   {
     SSServerCall('user.logout', null, function(json) {
       this.clearData();
-      if(!json.error)
+      if(!json['error'])
       {
-        SSLog('user is logging out', SSLogForce);
-        SSPostNotification('onInstalledSpacesDidChange');
+        this.onLogout(json);
       }
       else
       {
-        SSPostNotification('onUserLogoutError', json);
+        this.onLogoutError(json);
       }
     }.bind(this));
   },
+  
+  
+  onLogout: function(json)
+  {
+    SSPostNotification('onUserLogout', json);
+  },
+  
+  
+  onLogoutError: function(json)
+  {
+    SSPostNotification('onUserLogoutError', json);
+  },
+  
   
   /*
     Function: join (private)
@@ -171,19 +202,33 @@ var AbstractUser = new Class({
   join: function(userInfo) 
   {
     SSServerCall('user.join', userInfo, function(json) {
-      if(!json.error)
+      if(!json['error'])
       {
         var data = $get(json, 'data', 'contents', 'values');
         if(data) this.syncData(data);
-        SSPostNotification('onInstalledSpacesDidChange');
-        SSPostNotification('onUserJoin', json);
+        
+        this.onJoin(json);
+        this.onLogin(json);
       }
       else
       {
-        SSPostNotification('onUserJoinError', json);
+        this.onJoinError(json);
       }
     }.bind(this));
   },
+  
+  
+  onJoin: function(json)
+  {
+    SSPostNotification('onUserJoin', json);
+  },
+  
+  
+  onJoinError: function(json)
+  {
+    SSPostNotification('onUserJoinError', json);
+  },
+  
   
   /*
     Function: update
@@ -195,16 +240,28 @@ var AbstractUser = new Class({
   update: function(info) 
   {
     SSServerCall('user.update', info, function(json) {
-      if(!json.error)
+      if(!json['error'])
       {
         if(json.data) this.syncData(json.data);
-        SSPostNotification('onUserUpdate', json);
+        this.onUpdate(json);
       }
       else
       {
-        SSPostNotification('onUserUpdateError', json);
+        this.onUpdateError(json);
       }
     }.bind(this));
+  },
+  
+  
+  onUpdate: function(json)
+  {
+    SSPostNotification('onUserUpdate', json);
+  },
+  
+  
+  onUpdateError: function(json)
+  {
+    SSPostNotification('onUserUpdateError', json);
   },
   
   
@@ -218,14 +275,26 @@ var AbstractUser = new Class({
   resetPassword: function(info) 
   {
     SSServerCall('user.resetPassword', info, function(json) {
-      if(!json.error)
+      if(!json['error'])
       {
-        SSPostNotification('onUserPasswordReset', json);
+        this.onResetPassword(json);
       }
       else
       {
-        SSPostNotification('onUserPasswordResetError', json);
+        this.onResetPasswordError(json);
       }
     });
+  },
+  
+  
+  onResetPassword: function(json)
+  {
+    SSPostNotification('onUserPasswordReset', json);
+  },
+  
+  
+  onResetPasswordError: function(json)
+  {
+    SSPostNotification('onUserPasswordResetError', json);
   }
 });

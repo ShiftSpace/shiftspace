@@ -10,24 +10,27 @@ then
   
   read ss_url
   
-  echo {                                     > ../config/env/mydev.json
-  echo   \"SERVER\": \"$ss_url/\",          >> ../config/env/mydev.json
-  echo   \"SPACEDIR\": \"$ss_url/spaces/\", >> ../config/env/mydev.json
-  echo   \"LOG_LEVEL\": \"SSLogError\",     >> ../config/env/mydev.json
-  echo   \"VARS\": {                        >> ../config/env/mydev.json
-  echo     \"ShiftSpaceSandBoxMode\": true  >> ../config/env/mydev.json
-  echo    }                                 >> ../config/env/mydev.json
-  echo  }                                   >> ../config/env/mydev.json
+  echo {                                           > ../config/env/mydev.json
+  echo   \"SERVER\": \"$ss_url/\",                >> ../config/env/mydev.json
+  echo   \"SPACEDIR\": \"$ss_url/spaces/\",       >> ../config/env/mydev.json
+  echo   \"IMAGESDIR\": \"$ss_url/images/\",      >> ../config/env/mydev.json
+  echo   \"LOG_LEVEL\": \"SSLogError\",           >> ../config/env/mydev.json
+  echo   \"VARS\": {                              >> ../config/env/mydev.json
+  echo     \"ShiftSpaceSandBoxMode\": true        >> ../config/env/mydev.json
+  echo    }                                       >> ../config/env/mydev.json
+  echo  }                                         >> ../config/env/mydev.json
   
   echo {                                                                > ../config/env/dev.json
   echo   \"SERVER\": \"$ss_url/\",                                     >> ../config/env/dev.json
   echo   \"SPACEDIR\": \"$ss_url/spaces/\",                            >> ../config/env/dev.json
+  echo   \"IMAGESDIR\": \"$ss_url/images/\",                           >> ../config/env/dev.json
   echo   \"LOG_LEVEL\": \"SSLogError \| SSLogSystem \| SSLogShift\"    >> ../config/env/dev.json
   echo }                                                               >> ../config/env/dev.json
   
   echo {                                                                > ../config/env/sandalphon.json
   echo   \"SERVER\": \"$ss_url/\",                                     >> ../config/env/sandalphon.json
   echo   \"SPACEDIR\": \"$ss_url/spaces/\",                            >> ../config/env/sandalphon.json
+  echo   \"IMAGESDIR\": \"$ss_url/images/\",                           >> ../config/env/sandalphon.json
   echo   \"LOG_LEVEL\": \"SSLogError \| SSLogSandalphon\",             >> ../config/env/sandalphon.json
   echo   \"VARS\": {                                                   >> ../config/env/sandalphon.json
   echo     \"SandalphonToolMode\": true                                >> ../config/env/sandalphon.json
@@ -36,44 +39,7 @@ then
 fi
 
 python ../builder/corebuilder.py
-python ../sandalphon/sandalphon.py -i ../client/views/SSConsole/SSConsole.html -o ../client/compiledViews/
-
-echo
-echo
-echo
-echo
-echo
-echo =============================================================================
-echo A rabbi, a priest and a javascript programmer are sitting in a coffee shop...
-echo =============================================================================
-echo
-echo
-
-./build_shiftspace.sh
-
-echo ============================================================================================
-echo "Suddenly, David Nolen walks in and says 'don't be lazy!' [They weren't really being lazy...]"
-echo ============================================================================================
-echo
-echo
-
-./build_sandbox.sh
-
-echo ============================================================================================
-echo Unfortunately, we didn\'t end up drinking sambouka at all, even though it was _really_ close.
-echo ============================================================================================
-echo
-echo
-
-./build_sandalphon.sh
 
 chmod a+w ../server/working
-
 chmod a+w ../client/compiledViews
-chmod a+w ../client/compiledViews/SSConsole.html
-chmod a+w ../client/compiledViews/SSConsole.css
-
 chmod a+w ../builds
-chmod a+w ../builds/shiftspace.user.js
-chmod a+w ../builds/shiftspace.dev.user.js
-chmod a+w ../builds/shiftspace.sandbox.js

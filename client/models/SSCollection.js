@@ -120,6 +120,7 @@ var SSCollection = new Class({
     {
       // real DB backend
       this.setLoadRefresh(true);
+      this.setTable(this.options.table);
       this.setConstraints(this.options.constraints);
       this.setProperties(this.options.properties);
       this.setOrderBy(this.options.orderBy);
@@ -139,6 +140,7 @@ var SSCollection = new Class({
     this.setName(name);
     SSSetCollectionForName(this, name);
   },
+  
   
   /*
     Function: setIsUnread 
@@ -458,6 +460,18 @@ var SSCollection = new Class({
     }
     
     return rdata;
+  },
+  
+  
+  setTable: function(table)
+  {
+    this.__table = table;
+  },
+  
+  
+  table: function()
+  {
+    return this.__table;
   },
 
 

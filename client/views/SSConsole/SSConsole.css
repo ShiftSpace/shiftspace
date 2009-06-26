@@ -12,6 +12,11 @@
   z-index: 1000000;
 }
 
+.testClass
+{
+  background-image: url(/images/foo/bar);
+}
+
 /*
 body#SSConsoleFrameBody
 {

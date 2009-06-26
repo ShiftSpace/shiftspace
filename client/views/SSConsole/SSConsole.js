@@ -28,7 +28,8 @@ var SSConsole = new Class({
     // if not tool mode, we load the interface ourselve
     if(typeof SandalphonToolMode == 'undefined')
     {
-      Sandalphon.load('/client/compiledViews/SSConsole', this.buildInterface.bind(this));
+      // load from the proper place
+      Sandalphon.load('/client/compiledViews/'+SSInfo().env+'/SSConsoleMain', this.buildInterface.bind(this));
     }
 
     // listen for login/logout events, pass in reference to self
