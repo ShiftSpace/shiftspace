@@ -1,0 +1,36 @@
+Proxy Issues
+================================================================================
+Some issues and thoughts relevant to the proxy.
+
+
+  Usability 
+  ------------------------------ 
+  In order to allow normal execution of page scripts, ShiftSpace
+  should run in a frame outside of the page.
+
+  Web developers often interact with the DOM by directly calling
+  methods or properties on the global document and window
+  objects. Such techniques will not work under the proxy. Space who
+  wish for their extensions to work under the proxy will need to call
+  SSDocument() and SSWindow(). 
+
+  Unfortunately this also means that most open source JavaScript
+  libraries will not work without a bit of intelligent search and
+  replace, for large codebases this will be a non-trivial amount of
+  work.
+
+  Any page can break ShiftSpace by talking across the iFrame barrier
+  since the domains are the same. Nothing can be done about this.
+  Framekillers can be prevented however.
+
+
+  Security 
+  ------------------------------ 
+  We cannot use real user session cookies when a user is viewing a
+  page on the proxy. These can be stolen. Cookied will be invalid on
+  the proxy path.  When a user attempts to access a private shift,
+  they should enter their credentials.  The server will give the user
+  a unique md5 hashed url. This url will be very difficult to discover,
+  but no further security is provided.
+
+

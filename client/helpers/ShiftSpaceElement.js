@@ -4,6 +4,25 @@
 // @package           System
 // ==/Builder==
 
+var __window = window;
+var __document = document;
+
+function SSSetGlobalContext(aWindow)
+{
+  __window = aWindow;
+  __document = aWindow.document;
+}
+
+function SSWindow()
+{
+  return new Window(__window);
+}
+
+function SSDocument()
+{
+  return new Document(__document);
+}
+
 /*
   Class: ShiftSpace.Element
     A wrapper around the MooTools Element class that marks each DOM node with the ShiftSpaceElement CSS
