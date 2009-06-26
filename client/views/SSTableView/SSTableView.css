@@ -115,6 +115,11 @@
   Table Content View Styles
 */
 
+.SSTableView > .SSScrollView > .SSContentView
+{
+  width: 100%;
+}
+
 .SSTableView > .SSScrollView > .SSContentView .SSRow
 {
   border-collapse: separate;
