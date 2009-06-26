@@ -65,6 +65,36 @@ var SSCommentsClass = new Class({
   removeComment: function(commentId)
   {
     
+  },
+  
+  // Collections Interface
+  read: function()
+  {
+    
+  },
+  
+  
+  add: function()
+  {
+    
+  },
+  
+  
+  remove: function()
+  {
+    
+  },
+  
+  
+  update: function()
+  {
+    
+  },
+  
+  
+  data: function()
+  {
+    
   }
 
 });
