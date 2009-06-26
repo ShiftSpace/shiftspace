@@ -8,13 +8,14 @@ var SSAbstractStream = new Class({
   Implements: [Events, Options],
   name: "SSAbstractStream",
 
+
   initialize: function()
   {
     
   },
   
   
-  feed: function(callback)
+  feeds: function(callback)
   {
     
   },

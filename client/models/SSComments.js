@@ -9,22 +9,60 @@ var SSCommentsClass = new Class({
   Extends: SSAbstractStream,
   name: "SSComments",
 
-  initialize: function()
+
+  initialize: function(ref, options)
+  {
+    this.setRef(ref);
+    
+    this.objectHasComment(function(json) {
+      if(!json.data) this.createCommentThread(this.ref());
+    }.bind(this));
+  },
+  
+  
+  setRef: function(ref)
+  {
+    this.__ref = ref;
+  },
+  
+  
+  ref: function()
+  {
+    return this.__ref;
+  },
+  
+  
+  comments: function(callback)
   {
     
   },
   
-  commentsForObject: function(ref)
+  
+  objectHasComment: function(callback)
   {
     
   },
   
-  addCommentToObject: function(ref)
+  
+  createCommentThread: function(callback)
   {
     
   },
   
-  removeCommentFromObject: function(ref)
+  
+  addComment: function()
+  {
+    
+  },
+  
+  
+  updateComment: function(commentId)
+  {
+    
+  },
+  
+  
+  removeComment: function(commentId)
   {
     
   }
