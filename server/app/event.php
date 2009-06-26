@@ -51,7 +51,9 @@ class Event {
     extract($_REQUEST);
     
     $object = new Stream_Object();
-    $object->set(compact('private', 'stream_name'));    
+    $created_by = $this->server->user->id;
+    $created_by_name = $this->server->user->username;
+    $object->set(compact('private', 'stream_name', 'created_by', 'created_by_name', 'object_ref'));    
     $this->server->db->save($object);
     
     $permission = new StreamPermission_Object();
@@ -75,9 +77,12 @@ class Event {
     $object->set(compact('stream_id', 'display_string', 'object_ref', 'has_read_status'));
     $object->set('created', time());
     $object->set('created_by', $this->server->user->id);
+    $object->set('created_by_name', $this->server->user->username);
     $this->server->db->save($object);
     
     $this->markread($object->id);
+
+    return $object;  
   }
 
   private function event_read_object($event_id) {
@@ -117,12 +122,14 @@ class Event {
       }
     }
   }    
- 
+
   public function onefeed() {
     extract($_REQUEST);
     $this->can_read($stream_id);
-       
-    return new Response($this->server->db->rows("SELECT * FROM stream, event WHERE event.stream_id = stream.id AND event.stream_id=:stream_id", compact('stream_id')));
+    
+    $result = $this->server->db->load("stream($stream_id)");
+    $result->feed = $this->server->db->rows("SELECT * FROM stream, event WHERE event.stream_id = stream.id AND event.stream_id=:stream_id", compact('stream_id'));
+    return $result;
   }
   
   public function subscriptions() {
@@ -167,6 +174,20 @@ class Event {
     }
   }
 
+  public function findevents() {
+    extract($_REQUEST);
+    if ($this->server->user) {
+      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND user_id = ".$this->server->user->id;
+      $permissions_clause = "OR (stream.private = 1 AND streampermission.level >= 1)";
+    }
+    else {
+      $user_clause = "";
+      $permissions_clause = "";
+    }
+    
+    return new Response($this->server->db->rows("SELECT * FROM stream, event $user_clause WHERE event.stream_id = stream.id AND (stream.private = 0 $permissions_clause) AND event.object_ref=:object_ref", compact('object_ref')));
+  }
+
   public function findstreams() {
     extract($_REQUEST);
     if ($this->server->user) {
@@ -178,7 +199,7 @@ class Event {
       $permissions_clause = "";
     }
     
-    return new Response($this->server->db->rows("SELECT * FROM event, stream $user_clause WHERE event.stream_id = stream.id AND (stream.private = 0 $permissions_clause) AND object_ref=:object_ref", compact('object_ref')));
+    return new Response($this->server->db->rows("SELECT * FROM stream $user_clause WHERE (stream.private = 0 $permissions_clause) AND object_ref=:object_ref", compact('object_ref')));
   }
 }
 
