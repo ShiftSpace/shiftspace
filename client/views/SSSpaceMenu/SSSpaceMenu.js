@@ -109,8 +109,6 @@ var SSSpaceMenu = new Class({
   
   newShift: function(data)
   {
-    SSLog('newShift!', SSLogForce);
-    SSLog(data.index, SSLogForce);
     if(ShiftSpace.User.isLoggedIn())
     {
       SSInitShift(SSSpaceForPosition(data.index).name);
