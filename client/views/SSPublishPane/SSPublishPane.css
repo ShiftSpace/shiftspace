@@ -12,6 +12,10 @@
   font-family:Helvetica,Arial,Verdana, sans-serif;
   font-size:12px;
   color:#4b423a;
+  background-color: #fff;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  padding:2px 3px 1px 3px;
 }
 
 #SSPublishPaneHeader
@@ -104,6 +108,8 @@
 #SSPublishShare{
     padding-top:20px;
 }
+
+#
 
 .SSPPTagTag{
     color:#0054a6;
