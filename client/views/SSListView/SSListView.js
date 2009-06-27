@@ -325,12 +325,9 @@ var SSListView = new Class({
     var target = $(event.target);
     var type = event.type;
     
-    SSLog('eventDispatch', SSLogForce);
-    
     switch(true)
     {
       case(this.hitTest(target, 'li, > li *') != null):
-        SSLog('hit!', SSLogForce);
         var hit = this.cachedHit();
         var cellNode = (hit.get('tag') == 'li' && hit) || hit.getParent('li');
         
