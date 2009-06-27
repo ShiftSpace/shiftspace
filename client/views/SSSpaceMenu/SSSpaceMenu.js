@@ -111,7 +111,14 @@ var SSSpaceMenu = new Class({
   {
     SSLog('newShift!', SSLogForce);
     SSLog(data.index, SSLogForce);
-    SSInitShift(SSSpaceForPosition(data.index).name);
+    if(ShiftSpace.User.isLoggedIn())
+    {
+      SSInitShift(SSSpaceForPosition(data.index).name);
+    }
+    else
+    {
+      alert("You must be logged in to create shifts!");
+    }
     this.hide();
   },
   
