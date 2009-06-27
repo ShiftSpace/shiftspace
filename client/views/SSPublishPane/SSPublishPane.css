@@ -16,8 +16,9 @@
 
 #SSPublishPaneHeader
 {
+    background-image:url(/images/Console/publish-top-bg.gif);
     height:27px;
-    width:268px;
+    padding:2px 0px 0px 4px;
     background:#e3dfdb;
 }
 
@@ -26,19 +27,24 @@
     background:#C6C1BD;
     height:86px;
     margin-top:0px;
-    width:268px;
+    padding-left:3px;
+    background-image:url(/images/Console/publish-top-body.gif);
+    background-repeat:repeat-y;
 }
 
 #SSPublishPaneFooter
 {
-   
+    padding-top:7px;
     height:32px;
     background:#ffffff;
     width:268px;
+    background-image:url(/images/Console/publish-top-footer.gif);
 }
 
 #SSPublishPaneBody a img{
     border-style:none;
+    position:relative;
+    left:2px;
 }
 
 .SSPPradio{
@@ -53,6 +59,7 @@
     height:22px;
     border:0px;
     margin-left:2px;
+    padding-bottom:5px;
 }
 
 .SSPPBodyBorder{
@@ -78,17 +85,32 @@
 
 }
 
+.SSPPsharelabel{
+    padding-bottom:3px;
+}
+
 .SSPPTagGroup{
     color:#8e2327;
 }
 
-#SSPublishShare{
-    position:relative;
+#SSPublishPaneTags{
     padding-top:5px;
+}
+
+#SSPublishPaneBody label{
+    padding-bottom:4px;
+}
+
+#SSPublishShare{
+    padding-top:20px;
 }
 
 .SSPPTagTag{
     color:#0054a6;
+}
+
+#SaveShift{
+    display:none;
 }
 
 .SSPublishPubButton{
@@ -105,5 +127,5 @@
     background-color: #fff;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
-    padding:0px 2px;
+    padding:2px 3px 1px 3px;
 }

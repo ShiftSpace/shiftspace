@@ -23,11 +23,10 @@
 		<span class="SSPPTagsroundedCorners SSPPTagTag SSPPTagFont">@tagname</span>
 		</div>
 	   <div id="SSPublishShare">
-       <input type="checkbox"></input>
        <input id="PublishTargets" type="text" outlet="PublishPane" class="SSPinput"></input>
-	  
-       <label>Share</label>
-		<a href=""><img src="/images/Console/publish-share-main.png"/></a>
+       <img src="/images/Console/publish-share-main.png"/>
+       <label>Share:</label>
+		
 		<a href=""><img src="/images/Console/publish-share-permalink.png"/></a>
 		<a href=""><img src="/images/Console/publish-share-twitter.png"/></a>
 		<a href=""><img src="/images/Console/publish-share-del.png"/></a>
@@ -37,9 +36,8 @@
      </div>
      <div id="SSPublishPaneFooter">
 	   <label>Current Status: <b>Draft</b></label>
-       <span id="ShiftStatus" outlet="PublishPane">Private</span>
-       <button id="DeleteShift" outlet="PublishPane"></button>
-       <button id="SaveShift" outlet="PublishPane"></button>
+       <button id="DeleteShift" outlet="PublishPane" class="SSPublishPubButton">Delete</button>
+       <button id="SaveShift" outlet="PublishPane">Save</button>
        <button id="PublishShift" outlet="PublishPane" class="SSPublishPubButton">Publish</button>
      </div>
 </div>
