@@ -24,6 +24,7 @@ ul#SpaceMenuList li
 ul#SpaceMenuList li > *
 {
   float: left;
+  
   margin-left: 4px;
   margin-top: 4px;
 }
