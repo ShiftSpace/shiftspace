@@ -197,7 +197,7 @@ var ShiftSpace = new (function() {
         }
         
         // Load all spaces and plugins immediately if in the sanbox
-        if (typeof ShiftSpaceSandBoxMode != 'undefined') 
+        if (typeof ShiftSpaceSandBoxMode != 'undefined')
         {
           for (var space in SSInstalledSpaces())
           {

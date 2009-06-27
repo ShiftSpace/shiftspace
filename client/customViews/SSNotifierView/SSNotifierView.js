@@ -249,31 +249,7 @@ var SSNotifierView = new Class({
       }
     }.bind(this));
     
-    this.SSToggleConsole.addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
-      if(ShiftSpace.Console.isVisible())
-      {
-        this.SSToggleConsole.set('text', "Open Console");
-        ShiftSpace.Console.hide();
-      }
-      else
-      {
-        this.SSToggleConsole.set('text', "Close Console");
-        ShiftSpace.Console.show();
-      }
-    }.bind(this));
-    
-    this.SSLogInOut.addEvent('click', function() {
-      if(ShiftSpace.User.isLoggedIn())
-      {
-        ShiftSpace.User.logout()
-      }
-      else
-      {
-        ShiftSpace.Console.showLogin();
-      }
-    }.bind(this));
-    
+    this.attachConsoleEvents();
     this.attachKeyEvents();
     
     this.SSSelectSpace.addEvent('click', function(_evt) {
@@ -288,6 +264,37 @@ var SSNotifierView = new Class({
         this.setSpaceMenuIsVisible(false);
         SSPostNotification('hideSpaceMenu', this);
         this.close();
+      }
+    }.bind(this));
+  },
+  
+  
+  attachConsoleEvents: function()
+  {
+    this.SSToggleConsole.addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if(ShiftSpace.Console.isVisible())
+      {
+        SSLog('hiding console', SSLogForce);
+        this.SSToggleConsole.set('text', "Open Console");
+        ShiftSpace.Console.hide();
+      }
+      else
+      {
+        SSLog('showing console', SSLogForce);
+        this.SSToggleConsole.set('text', "Close Console");
+        ShiftSpace.Console.show();
+      }
+    }.bind(this));
+    
+    this.SSLogInOut.addEvent('click', function() {
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        ShiftSpace.User.logout()
+      }
+      else
+      {
+        ShiftSpace.Console.showLogin();
       }
     }.bind(this));
   },
