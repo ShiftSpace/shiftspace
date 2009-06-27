@@ -24,8 +24,8 @@
   position: relative;
   z-index:10;
   top:1px;
-  -moz-box-shadow: -2px -1px 1px #A9D4BA, 2px -1px 1px #A9D4BA;
-  -webkit-box-shadow: -2px -1px 1px #A9D4BA, 2px -1px 1px #A9D4BA;
+  -moz-box-shadow: 1px -7px 2px #A9D4BA, -1px -7px 2px #A9D4BA;
+  -webkit-box-shadow: 1px -7px 2px #A9D4BA, -1 -7px 2px #A9D4BA;
 }
 
 .SSTabView > .SSContentView > .SSTabPane.SSActive
@@ -78,10 +78,10 @@
 .SSTabViewConsoleStyle > .SSControlView > .SSButton
 {
   float: left;
-  margin-right: 4px;
+  margin-right: 6px;
   background-color: inherit;
   height: 20px;
-  padding: 5px;
+  padding: 5px 10px;
   border-top: 3px solid #D4E7DA;
   border-left: 3px solid #D4E7DA;
   border-right: 3px solid #D4E7DA;
@@ -107,8 +107,9 @@
   border-color: #D4E7DA;
   -moz-border-radius-topleft: 6px;
   -moz-border-radius-topright: 6px;
-  -moz-box-shadow: -2px -2px 1px 1px #A9D4BA,2px -2px 1px 1px #A9D4BA;
-  -webkit-box-shadow: -2px -2px 1px 1px #A9D4BA,2px -2px 1px 1px #A9D4BA;
+  -moz-box-shadow: -2px -2px 1px  #A9D4BA, 2px -2px 1px #A9D4BA;
+  -webkit-box-shadow: -2px -2px 1px  #A9D4BA, 2px -2px 1px #A9D4BA;
+  background-color:#F7F2EF;
 }
 
 /*
