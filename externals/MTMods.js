@@ -223,7 +223,7 @@ Fx.CSS.implement({
       var href = sheet.href;
       if (href && href.contains('://') && !href.contains(document.domain)) return;
       var rules = sheet.rules || sheet.cssRules;
-      Array.each(sheet.imports, extract);
+      if(sheet.imports) Array.each(sheet.imports, extract);
       Array.each(rules, function(rule, i){
         if (rule.styleSheet) extract(rule.styleSheet);
         if (!rule.style) return;
@@ -238,7 +238,6 @@ Fx.CSS.implement({
         });
       });
     }
-
     Array.each(document.styleSheets, extract);
     return Fx.CSS.Cache[selector] = to;
   }
