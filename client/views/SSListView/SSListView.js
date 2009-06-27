@@ -218,6 +218,7 @@ var SSListView = new Class({
         snap: 4,
         revert: true,
         onStart: function(cellNode) {
+          this.setIsBeingSorted(true);
           this.__sortables.clone.addClass('Clone');
           this.sortStart(cellNode);
         }.bind(this),
@@ -228,6 +229,18 @@ var SSListView = new Class({
       if(this.options.handle) options.handle = this.options.handle;
       this.__sortables = new Sortables(this.element, options);
     }
+  },
+  
+
+  setIsBeingSorted: function(val)
+  {
+    this.__isBeingSorted = val;
+  },
+  
+
+  isBeingSorted: function()
+  {
+    return this.__isBeingSorted;
   },
   
   /*
@@ -266,6 +279,7 @@ var SSListView = new Class({
   */
   sortComplete: function(cellNode)
   {
+    this.setIsBeingSorted(false);
     this.__sortEnd = this.cellNodes().indexOf(cellNode);
     
     this.fireEvent('onSortComplete');
@@ -311,12 +325,9 @@ var SSListView = new Class({
     var target = $(event.target);
     var type = event.type;
     
-    SSLog('eventDispatch', SSLogForce);
-    
     switch(true)
     {
       case(this.hitTest(target, 'li, > li *') != null):
-        SSLog('hit!', SSLogForce);
         var hit = this.cachedHit();
         var cellNode = (hit.get('tag') == 'li' && hit) || hit.getParent('li');
         
