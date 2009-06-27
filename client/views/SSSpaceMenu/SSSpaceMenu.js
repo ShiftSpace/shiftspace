@@ -73,12 +73,21 @@ var SSSpaceMenu = new Class({
         position: listItems.indexOf(el)
       };
     });
+  
+    var newOrder = newSpaceOrder.map(function(obj) {
+      return obj.name;
+    });
+    
+    var oldOrder = [];
+    $H(spaces).each(function(space) {
+      return oldOrder[space.position] = space.name;
+    });
     
     newSpaceOrder.each(function(newSpacePos) {
       spaces[newSpacePos.name].position = newSpacePos.position;
     });
-    
-    SSSetInstalledSpaces(spaces);
+
+   if(!newOrder.isEqual(oldOrder)) SSSetInstalledSpaces(spaces);
   },
   
   

@@ -19,6 +19,15 @@ Array.implement({
   
   isEmpty: function() {
     return this.length == 0;
+  },
+  
+  isEqual: function(ary) {
+    if(this.length != ary.length) return false;
+    for(var i = 0; i < this.length; i++)
+    {
+      if(this[i] != ary[i]) return false;
+    }
+    return true
   }
 });
 
