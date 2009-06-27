@@ -129,7 +129,8 @@ class SandalphonCompiler:
 
       if fileHandle != None:
         if self.env:
-          importPath = "%sclient/%s" % (self.env["data"]["SERVER"], cssPath)
+          server = self.env["data"]["SERVER"]
+          importPath = "%sclient/%s" % (server, cssPath)
           imageUrl = self.env["data"].get("IMAGESDIR")
           if imageUrl:
             preprocessed = self.preprocessCSSImageUrls(fileHandle.read(), imageUrl)
@@ -137,7 +138,7 @@ class SandalphonCompiler:
             newCSSFileHandle = open(importPath, 'w')
             newCSSFileHandle.write(preprocessed)
             newCSSFileHandle.close()
-          self.cssFile = self.cssFile + "@import url(%s);\n" % importPath
+          self.cssFile = self.cssFile + "@import url(%s);\n" % importPath.replace('../', server)
         else:
           self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
           self.cssFile = self.cssFile + fileHandle.read()
