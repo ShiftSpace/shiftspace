@@ -75,18 +75,19 @@ var SSSpaceMenu = new Class({
     });
   
     var newOrder = newSpaceOrder.map(function(obj) {
-      return obj.position;
+      return obj.name;
     });
     
-    var oldOrder = Array.toArray(spaces.map(function(space) {
-      return space.position;
-    }));
+    var oldOrder = [];
+    $H(spaces).each(function(space) {
+      return oldOrder[space.position] = space.name;
+    });
     
     newSpaceOrder.each(function(newSpacePos) {
       spaces[newSpacePos.name].position = newSpacePos.position;
     });
 
-    SSSetInstalledSpaces(spaces);
+   if(!newOrder.isEqual(oldOrder)) SSSetInstalledSpaces(spaces);
   },
   
   

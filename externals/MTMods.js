@@ -21,17 +21,6 @@ Array.implement({
     return this.length == 0;
   },
   
-  toArray: function(hash) {
-    var ary = [];
-    console.log(hash);
-    for(var index in hash)
-    {
-      console.log('index');
-      ary[index] = hash[index];
-    }
-    return ary;
-  },
-  
   isEqual: function(ary) {
     if(this.length != ary.length) return false;
     for(var i = 0; i < this.length; i++)
