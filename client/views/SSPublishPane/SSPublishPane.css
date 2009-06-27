@@ -3,11 +3,107 @@
   position: absolute;
   top: 30px;
   right: 15px;
-  width: 250px;
+  width: 268px;
   bottom: 0px;
-  
   color: black;
-  
   z-index: 2;
-  background-color: #ccf;
+  background-color: #ff0000;
+  border:3px #f8f5f2 solid;
+  font-family:Helvetica,Arial,Verdana, sans-serif;
+  font-size:12px;
+  color:#4b423a;
+}
+
+#SSPublishPaneHeader
+{
+    height:27px;
+    width:268px;
+    background:#e3dfdb;
+}
+
+#SSPublishPaneBody
+{
+    background:#C6C1BD;
+    height:86px;
+    margin-top:0px;
+    width:268px;
+}
+
+#SSPublishPaneFooter
+{
+   
+    height:32px;
+    background:#ffffff;
+    width:268px;
+}
+
+#SSPublishPaneBody a img{
+    border-style:none;
+}
+
+.SSPPradio{
+    background-image:url(/images/Console/publish-form-radio.gif);
+    width:12px;
+    height:12px;
+}
+
+.SSPinput{
+    background-image:url(/images/Console/publish-form-input.gif);
+    width:262px;
+    height:22px;
+    border:0px;
+    margin-left:2px;
+}
+
+.SSPPBodyBorder{
+    background-image:url(/images/Console/public-innerborder-left.gif) repeat-y;
+
+}
+
+.SSBorderTop{
+    
+    
+}
+.SSBorderBottom{
+    
+}
+
+.SSPPTagFont{
+    font-size:10px;
+    font-weight: bold;
+}
+
+.SSPPTagUser{
+    color:#f63b02;
+
+}
+
+.SSPPTagGroup{
+    color:#8e2327;
+}
+
+#SSPublishShare{
+    position:relative;
+    padding-top:5px;
+}
+
+.SSPPTagTag{
+    color:#0054a6;
+}
+
+.SSPublishPubButton{
+    background-color: #f63b02;
+    color:fff;
+    border:1px #b52b01 solid;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    padding:0px 5px;
+    font-weight:bold;
+}
+
+.SSPPTagsroundedCorners{
+    background-color: #fff;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    padding:0px 2px;
 }
