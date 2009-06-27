@@ -19,12 +19,13 @@ ul#SpaceMenuList li
 {
   width: 100%;
   float: left;
-  padding: 4px;
 }
 
 ul#SpaceMenuList li > *
 {
   float: left;
+  margin-left: 4px;
+  margin-top: 4px;
 }
 
 ul#SpaceMenuList li > span.handle

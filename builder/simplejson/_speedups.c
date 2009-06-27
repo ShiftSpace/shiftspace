@@ -1841,7 +1841,6 @@ encoder_listencode_dict(PyEncoderObject *s, PyObject *rval, PyObject *dct, Py_ss
         goto bail;
 
     if (s->indent != Py_None) {
-        /* TODO: DOES NOT RUN */
         indent_level += 1;
         /*
             newline_indent = '\n' + (' ' * (_indent * _current_indent_level))
@@ -1849,8 +1848,6 @@ encoder_listencode_dict(PyEncoderObject *s, PyObject *rval, PyObject *dct, Py_ss
             buf += newline_indent
         */
     }
-
-    /* TODO: C speedup not implemented for sort_keys */
 
     pos = 0;
     skipkeys = PyObject_IsTrue(s->skipkeys);
@@ -1881,7 +1878,6 @@ encoder_listencode_dict(PyEncoderObject *s, PyObject *rval, PyObject *dct, Py_ss
             continue;
         }
         else {
-            /* TODO: include repr of key */
             PyErr_SetString(PyExc_ValueError, "keys must be a string");
             goto bail;
         }
@@ -1912,7 +1908,6 @@ encoder_listencode_dict(PyEncoderObject *s, PyObject *rval, PyObject *dct, Py_ss
         Py_CLEAR(ident);
     }
     if (s->indent != Py_None) {
-        /* TODO: DOES NOT RUN */
         indent_level -= 1;
         /*
             yield '\n' + (' ' * (_indent * _current_indent_level))
@@ -1978,7 +1973,6 @@ encoder_listencode_list(PyEncoderObject *s, PyObject *rval, PyObject *seq, Py_ss
     if (PyList_Append(rval, open_array))
         goto bail;
     if (s->indent != Py_None) {
-        /* TODO: DOES NOT RUN */
         indent_level += 1;
         /*
             newline_indent = '\n' + (' ' * (_indent * _current_indent_level))
@@ -2001,7 +1995,6 @@ encoder_listencode_list(PyEncoderObject *s, PyObject *rval, PyObject *seq, Py_ss
         Py_CLEAR(ident);
     }
     if (s->indent != Py_None) {
-        /* TODO: DOES NOT RUN */
         indent_level -= 1;
         /*
             yield '\n' + (' ' * (_indent * _current_indent_level))

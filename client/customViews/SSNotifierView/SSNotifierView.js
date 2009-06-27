@@ -66,7 +66,7 @@ var SSNotifierView = new Class({
   showComplete: function()
   {
     this.element.setStyles({
-      marginLeft: null
+      left: ""
     });
     this.element.removeClass("SSNotifierHidden");
     this.element.addClass("SSNotifierVisible");
@@ -84,7 +84,7 @@ var SSNotifierView = new Class({
   hideComplete: function()
   {
     this.element.setStyles({
-      marginLeft: ""
+      left: ""
     });
     this.element.removeClass("SSNotifierVisible");
     this.element.addClass("SSNotifierHidden");
