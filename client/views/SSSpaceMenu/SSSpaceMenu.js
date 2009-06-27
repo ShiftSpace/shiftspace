@@ -73,11 +73,19 @@ var SSSpaceMenu = new Class({
         position: listItems.indexOf(el)
       };
     });
+  
+    var newOrder = newSpaceOrder.map(function(obj) {
+      return obj.position;
+    });
+    
+    var oldOrder = Array.toArray(spaces.map(function(space) {
+      return space.position;
+    }));
     
     newSpaceOrder.each(function(newSpacePos) {
       spaces[newSpacePos.name].position = newSpacePos.position;
     });
-    
+
     SSSetInstalledSpaces(spaces);
   },
   
