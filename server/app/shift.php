@@ -153,7 +153,21 @@ class Shift {
     return new Response($shift); 
   }
   
-  public function get() {
+public function select_all() {
+	//$this->server->requireLogin();
+    //extract($_REQUEST);
+	$shifts = $this->server->db->rows("
+      			SELECT id, href, space, summary, created, user_id, status, modified
+         	    FROM shift");
+
+    $response = array(
+      'count' => count($shifts),
+      'shifts' => $shifts
+    );
+	return $response;
+}
+  
+public function get() {
 	
     $shiftIdsStr = $_REQUEST['shiftIds'];
     $shiftIds = explode(',', $shiftIdsStr);
@@ -166,5 +180,4 @@ class Shift {
     return new Response($theShifts);
   }
 }
-
 ?>
