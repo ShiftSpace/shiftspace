@@ -249,6 +249,20 @@ var SSNotifierView = new Class({
       }
     }.bind(this));
     
+    this.SSToggleConsole.addEvent('click', function(_evt) {
+      var evt = new Event(_evt);
+      if(ShiftSpace.Console.isVisible())
+      {
+        this.SSToggleConsole.set('text', "Open Console");
+        ShiftSpace.Console.hide();
+      }
+      else
+      {
+        this.SSToggleConsole.set('text', "Close Console");
+        ShiftSpace.Console.show();
+      }
+    }.bind(this));
+    
     this.SSLogInOut.addEvent('click', function() {
       if(ShiftSpace.User.isLoggedIn())
       {
@@ -260,15 +274,7 @@ var SSNotifierView = new Class({
       }
     }.bind(this));
     
-    SSAddEvent('keyup', function(_evt) {
-      var evt = new Event(_evt);
-      if(evt.key == 'shift') this.handleKeyUp(evt);
-    }.bind(this));
-
-    SSAddEvent('keydown', function(_evt) {
-      var evt = new Event(_evt);
-      if(evt.key == 'shift') this.handleKeyDown(evt);
-    }.bind(this));
+    this.attachKeyEvents();
     
     this.SSSelectSpace.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
@@ -284,11 +290,20 @@ var SSNotifierView = new Class({
         this.close();
       }
     }.bind(this));
-    
-    this.SSNotifierControlsView.addEvent('click', function(evt) {
-      evt = new Event(evt);
-      if(evt.target != this.SSSelectSpace) ShiftSpace.Console.show();
+  },
+  
+  
+  attachKeyEvents: function()
+  {
+    SSAddEvent('keyup', function(_evt) {
+      var evt = new Event(_evt);
+      if(evt.key == 'shift') this.handleKeyUp(evt);
     }.bind(this));
+
+    SSAddEvent('keydown', function(_evt) {
+      var evt = new Event(_evt);
+      if(evt.key == 'shift') this.handleKeyDown(evt);
+    }.bind(this));    
   },
   
   
