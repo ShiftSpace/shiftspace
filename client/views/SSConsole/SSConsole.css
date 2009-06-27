@@ -50,7 +50,6 @@ body#SSConsoleFrameBody
 
 #MainTabView > .SSControlView > div:first-child
 {
-  margin-left: 32px;
 }
 
 #SSConsole > .SSContentView > div
