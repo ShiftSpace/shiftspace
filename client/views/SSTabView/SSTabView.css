@@ -14,12 +14,15 @@
 {
   user-select: none;
   -moz-user-select: none;
+  color: #74665A;
   cursor: default;
 }
 
 .SSTabView > .SSControlView > .SSButton.SSActive
 {
-  color: red;
+  color: #F63B02;
+  position: relative;
+  z-index:10;
 }
 
 .SSTabView > .SSContentView > .SSTabPane.SSActive
@@ -67,7 +70,6 @@
   right: 0px;
   left: 0px;
   height: 30px;
-  border-bottom: solid 1px #000;
 }
 
 .SSTabViewConsoleStyle > .SSControlView > .SSButton
@@ -77,9 +79,9 @@
   background-color: inherit;
   height: 20px;
   padding: 5px;
-  border-top: 1px solid black;
-  border-left: 1px solid black;
-  border-right: 1px solid black;
+  border-top: 3px solid #D4E7DA;
+  border-left: 3px solid #D4E7DA;
+  border-right: 3px solid #D4E7DA;
   -moz-border-radius-topleft: 6px;
   -moz-border-radius-topright: 6px;
 }
@@ -97,6 +99,13 @@
   left: 0px;
   right: 0px;
   bottom: 0px;
+  border-style: solid;
+  border-width: 3px 3px 0px 3px;
+  border-color: #D4E7DA;
+  -moz-border-radius-topleft: 6px;
+  -moz-border-radius-topright: 6px;
+  -moz-box-shadow: -2px -2px 1px 1px #A9D4BA,2px -2px 1px 1px #A9D4BA;
+  -webkit-box-shadow: -0.4em -0.4em 1em olive;
 }
 
 /*
