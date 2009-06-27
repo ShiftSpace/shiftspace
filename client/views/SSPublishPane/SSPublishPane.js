@@ -65,7 +65,9 @@ var SSPublishPane = new Class({
   {
     evt = new Event(evt);
     var shiftIds = this.checkedShifts();
-    SSLog(shiftIds, SSLogForce);
+    var len = shiftIds.length;
+    var str = (len != 1) ? "these shifts" : "this shift";
+    if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
     shiftIds.each(SSDeleteShift);
   },
   
