@@ -3,12 +3,27 @@
 .SSFilterPane
 {
   position: absolute;
-  left: 0px;
-  width: 140px;
-  top: 30px;
+  left: 6px;
+  width: 160px;
+  top: 38px;
   bottom: 0px;
-  right: 15px;
   
   z-index: 2;
-  background-color: green;
+  color: black;
+  background-color: #bbb;
+}
+
+.SSFilterPane > div:first-child
+{
+  margin-top: 4px;
+}
+
+.SSFilterPane > div
+{
+  margin-left: 4px;
+}
+
+#SSSearchBy
+{
+  width: 80px;
 }

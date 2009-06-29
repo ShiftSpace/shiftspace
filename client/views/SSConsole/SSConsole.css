@@ -44,6 +44,22 @@ body#SSConsoleFrameBody
   background: transparent;
 }
 
+#MainTabView .SSTableView
+{
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: auto;
+  height: auto;
+}
+
+#MainTabView .SSTableView.SSFilterPaneOpen
+{
+  left: 176px;
+}
+
 #MainTabView > .SSControlView > .SSButton
 {
   background-color: #F7F2EF;
