@@ -558,6 +558,10 @@ var SSNotifierView = new Class({
   buildInterface: function()
   {
     this.parent();
+
+    this.contentWindow().$$(".SSNotifierSubView").setStyles({
+      "background-image": "url("+SSInfo().server+"images/shiftspace_icon.png)"
+    });
     
     this.initAnimations();
     this.attachEvents();
