@@ -8,6 +8,8 @@
   left: 0px;
   right: 0px;
   height: 40px;
+  
+  font-size: 13px;
 
   background: transparent;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -103,7 +105,16 @@ button.ActionButton:hover
 
 #SSGreeting
 {
+  font-size: 12px;
   float: right;
+  margin-right: 8px;
+  height: 100%;
+  line-height: 30px;
+}
+
+#SSGreeting span
+{
+  font-weight: bold;
 }
 
 #SSLogInOut
