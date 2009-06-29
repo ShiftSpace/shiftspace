@@ -35,9 +35,15 @@ var SSSpaceMenu = new Class({
   {
     var context = this.contentWindow();
     var body = context.$(this.contentDocument().body);
-    this.element.setStyles({
-      height: body.offsetHeight
-    });
+    var ul = $(this.contentWindow().$('SpaceMenuList'));
+    
+    if(ul)
+    {
+      SSLog('resize space menu ' + ul.getSize().y, SSLogForce);
+      this.element.setStyles({
+        height: ul.getSize().y + 4
+      });
+    }
   },
   
   

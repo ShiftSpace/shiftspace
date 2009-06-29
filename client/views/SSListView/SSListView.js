@@ -217,6 +217,7 @@ var SSListView = new Class({
         clone: true,
         snap: 4,
         revert: true,
+        opacity: 0.5,
         onStart: function(cellNode) {
           this.setIsBeingSorted(true);
           this.__sortables.clone.addClass('Clone');

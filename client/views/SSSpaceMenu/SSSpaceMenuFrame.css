@@ -1,13 +1,14 @@
 .SSSpaceMenuFrame
 {
   position: fixed;
-  bottom: 35px;
-  left: 35px;
+  bottom: 38px;
+  
+  left: 154px;
 
   width: 180px;
   height: 120px;
 
   border: none;
   
-  z-index: 1000002;
+  z-index: 1000003;
 }
