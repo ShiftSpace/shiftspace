@@ -77,9 +77,9 @@
 body > #SSConsole
 {
   position: fixed;
-  height: 180px;
+  height: 184px;
   left: 0px;
-  bottom: 35px;
+  bottom: 40px;
   width: 100%;
   border: 0px;
   z-index: 1000000;
