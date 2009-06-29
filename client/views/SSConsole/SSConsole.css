@@ -28,9 +28,10 @@ body#SSConsoleFrameBody
 #SSConsoleFrameBody #MainTabView.SSTabView
 {
   position: absolute;
+  
   left: 10px;
   right: 10px;
-  top: 0px;
+  top: 4px;
   bottom: 0px;
   
   /* override defaults in SSTabView */
@@ -46,6 +47,16 @@ body#SSConsoleFrameBody
 #MainTabView > .SSControlView > .SSButton
 {
   background-color: #F7F2EF;
+  height: 28px;
+  overflow-y: visible;
+  padding: 0px;
+}
+
+#MainTabView > .SSControlView > .SSButton div
+{
+  background-color: #F7F2EF;
+  height: 22px; 
+  padding: 5px 10px;
 }
 
 #MainTabView > .SSControlView > div:first-child
