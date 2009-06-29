@@ -275,13 +275,11 @@ var SSNotifierView = new Class({
       var evt = new Event(_evt);
       if(ShiftSpace.Console.isVisible())
       {
-        SSLog('hiding console', SSLogForce);
         this.SSToggleConsole.set('text', "Open Console");
         ShiftSpace.Console.hide();
       }
       else
       {
-        SSLog('showing console', SSLogForce);
         this.SSToggleConsole.set('text', "Close Console");
         ShiftSpace.Console.show();
       }
@@ -421,7 +419,6 @@ var SSNotifierView = new Class({
   
   startClose: function()
   {
-    SSLog('startClose', SSLogForce);
     this.SSNotifierControlsView.removeClass('Open');
   },
   
