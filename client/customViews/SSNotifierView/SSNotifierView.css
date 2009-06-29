@@ -51,11 +51,27 @@
 
 .SSNotifierSubView button
 {
-  margin-top: 5px;
+  margin-top: 3px;
 }
 
-.SSNotifierViewFrameBody #SSNotifierControlsView.SSNotifierSubView
+button.ActionButton
 {
+  padding: 4px;
+  color: #F63B02;
+  font-weight: bold;
+
+  background-color: white;
+  margin-right: 8px;
+    
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  
+  border: 1px solid #ccc;
+}
+
+button.ActionButton:hover
+{
+  background-image: none;
 }
 
 .SSNotifier .SSNotifierSubView, .SSNotifierViewFrameBody .SSNotifierSubView
