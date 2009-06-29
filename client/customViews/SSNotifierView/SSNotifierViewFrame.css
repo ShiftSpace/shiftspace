@@ -2,9 +2,9 @@
 {
   position: fixed;
   bottom: 0px;
-  background-color: red;
+  background: transparent;
   border: none;
-  height: 35px;
+  height: 44px;
   overflow: hidden;
   width: 200px;
   z-index: 1000001;

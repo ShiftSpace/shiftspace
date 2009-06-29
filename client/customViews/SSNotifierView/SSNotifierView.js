@@ -388,14 +388,9 @@ var SSNotifierView = new Class({
   {
     this.element.addClass('SSNotifierOpen');
     this.element.setStyle('width', null);
+    this.SSNotifierControlsView.addClass('Open');
     this.showControls();
     this.setIsOpen(true);
-  },
-  
-  
-  closeComplete: function()
-  {
-    this.setIsOpen(false);
   },
   
   
@@ -421,6 +416,19 @@ var SSNotifierView = new Class({
         this.closeTimer = this.close.delay(3000-delta, this);
       }
     }
+  },
+  
+  
+  startClose: function()
+  {
+    SSLog('startClose', SSLogForce);
+    this.SSNotifierControlsView.removeClass('Open');
+  },
+  
+  
+  closeComplete: function()
+  {
+    this.setIsOpen(false);
   },
   
   
@@ -531,6 +539,7 @@ var SSNotifierView = new Class({
         this.element.setStyles({
           width: window.getSize().x
         });
+        this.startClose();
         this.element.removeClass('SSNotifierOpen');
       }.bind(this),
       onComplete: function()
