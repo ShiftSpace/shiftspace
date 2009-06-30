@@ -31,8 +31,6 @@ var ShiftSpaceSpace = new Class({
   */
   initialize: function( shiftClass )
   {
-    SSLog('INITIALIZE: ' + this.attributes.name);
-
     this.shiftClass = shiftClass;
 
     // set the interface built flag
@@ -64,7 +62,6 @@ var ShiftSpaceSpace = new Class({
     if(!this.attributes.name)
     {
       valid = false;
-      SSLog(this);
       SSLog('This space does not define a name attribute.', SSLogError);
     }
     if(!this.attributes.icon)
@@ -77,7 +74,6 @@ var ShiftSpaceSpace = new Class({
     {
       if(typeof SSRegisterSpace != 'undefined')
       {
-        SSLog('REGISTER >');
         SSRegisterSpace(this, this.attributes);
       }
     }
@@ -86,7 +82,6 @@ var ShiftSpaceSpace = new Class({
       var name = this.attributes.name || '';
       console.error('Error: The  ' + name + ' is not valid and will not be instantiated.');
     }
-    //SSLog('/ / / / SETTING UP');
     this.setup();
 
     return this;
@@ -130,8 +125,6 @@ var ShiftSpaceSpace = new Class({
 
     if(this.__deferredContent)
     {
-      SSLog('__deferredContent');
-
       this.showInterface();
       this.hideInterface();
 
@@ -149,13 +142,11 @@ var ShiftSpaceSpace = new Class({
 
       // edit any deferred shifts
       this.__deferredEdits.each(function(aShift) {
-        SSLog('deferred edit');
         SSEditShift(aShift);
       }.bind(this));
 
       // load any deferred just created shifts
       this.__deferredNewShifts.each(function(aShift) {
-        SSLog('show deferred new shift');
         this.createShift(aShift);
         SSShowNewShift(aShift.id);
       }.bind(this));
@@ -384,9 +375,6 @@ var ShiftSpaceSpace = new Class({
   */
   addShift: function(aShift)
   {
-    SSLog('constructing a shift', SSLogForce);
-    SSLog(this.shiftClass, SSLogForce);
-
     // create the new shift
     try
     {
@@ -397,9 +385,6 @@ var ShiftSpaceSpace = new Class({
       SSLog("ERROR: Could not instantiate shift.", SSLogForce);
       throw exc;
     }
-
-    SSLog('a new shift', SSLogForce);
-    SSLog(newShift, SSLogForce);
 
     // listen for shift updates
     newShift.addEvent('onUpdate', this.updateShift.bind(this));
@@ -429,12 +414,7 @@ var ShiftSpaceSpace = new Class({
       this.fireEvent('onShiftSave', shiftId);
     }.bind(this));
 
-    //SSLog('events added');
-
     this.shifts[newShift.getId()] = newShift;
-
-    //SSLog('exiting');
-
     return this.shifts[newShift.getId()];
   },
 
@@ -460,25 +440,18 @@ var ShiftSpaceSpace = new Class({
   */
   createShift: function(newShiftJson)
   {
-    SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> createShift', SSLogForce);
-    SSLog(newShiftJson, SSLogForce);
-    
     if(this.cssIsLoaded())
     {
       this.addShift(newShiftJson);
-      SSLog('added shift');
       var _newShift = this.shifts[newShiftJson.id];
-      SSLog('fire event');
       this.fireEvent('onCreateShift', { 
         'space': this, 
         'shift' : _newShift 
       });
-      SSLog('return new baby');
       return _newShift;
     }
     else
     {
-      SSLog('++++++++++++++++++++++++++++ css not loaded', SSLogForce);
       // we need to load these when the css is done
       this.addDeferredNew(newShiftJson);
     }

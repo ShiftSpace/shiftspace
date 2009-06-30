@@ -22,9 +22,14 @@ var SSNotifierView = new Class({
     
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
+    
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
+    
     SSAddObserver(this, 'onConsoleShow', this.onConsoleShow.bind(this));
     SSAddObserver(this, 'onConsoleHide', this.onConsoleHide.bind(this));
+    
+    SSAddObserver(this, 'onSpaceMenuShow', this.onSpaceMenuShow.bind(this));
+    SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
   },
   
   
@@ -32,14 +37,29 @@ var SSNotifierView = new Class({
   {
     this.clearTimers();
     this.show(false);
-    this.open(false);
+    this['open'](false);
   },
   
   
   onConsoleHide: function()
   {
     this.clearTimers();
-    this.close();
+    this['close']();
+  },
+  
+  
+  onSpaceMenuShow: function(spaceMenu)
+  {
+  },
+  
+  
+  onSpaceMenuHide: function(spaceMenu)
+  {
+    SSLog('notifier got space menu hide event', SSLogForce);
+    if(!ShiftSpace.Console.isVisible())
+    {
+      this['close']();
+    }
   },
   
   
@@ -263,7 +283,7 @@ var SSNotifierView = new Class({
       {
         this.setSpaceMenuIsVisible(false);
         SSPostNotification('hideSpaceMenu', this);
-        this.close();
+        this['close']();
       }
     }.bind(this));
   },
@@ -333,14 +353,14 @@ var SSNotifierView = new Class({
         this.showTimer = function() {
           this.show();
           this.openTimer = function() {
-            this.open();
+            this['open']();
           }.delay(2000, this);
         }.delay(500, this);
       }
       else if(this.isVisible() && !this.isOpen())
       {
         this.openTimer = function() {
-          this.open();
+          this['open']();
         }.delay(500, this)
       }
     }
@@ -356,7 +376,7 @@ var SSNotifierView = new Class({
     {
       if(this.isOpen())
       {
-        this.close();
+        this['close']();
       }
       else if(this.isVisible())
       {

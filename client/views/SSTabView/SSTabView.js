@@ -24,7 +24,7 @@ var SSTabView = new Class({
     
     this.parent(el, options);
     
-    this.__selectedTab__ = -1;
+    this.__selectedTab = -1;
     
     // check for default tab
     var defaultActiveTab = this.element.getElement('> .SSControlView > .SSButton.SSActive');
@@ -34,11 +34,11 @@ var SSTabView = new Class({
       var idx = this.indexOfTab(defaultActiveTab);
       // force selection of default tab
       this.selectTab(idx);
-      this.__selectedTab__ = idx;
+      this.__selectedTab = idx;
     }
     
     // if none select the first
-    if(this.__selectedTab__ == -1)
+    if(this.__selectedTab == -1)
     {
       this.selectTab(0);
     }
@@ -58,8 +58,6 @@ var SSTabView = new Class({
   */
   eventDispatch: function(evt)
   {
-    //SSLog('eventDispatch');
-
     var theEvent = new Event(evt);
     var theTarget = $(evt.target);
     
@@ -234,7 +232,7 @@ var SSTabView = new Class({
   selectedContentView: function()
   {
     // grab the DOM node
-    var contentView = this.contentViewForIndex(this.__selectedTab__);
+    var contentView = this.contentViewForIndex(this.__selectedTab);
     // check for a controller
     var controller = this.controllerForNode(contentView);
     return (controller || contentView);
@@ -254,7 +252,7 @@ var SSTabView = new Class({
   */
   selectedTab: function()
   {
-    return this.__selectedTab__;
+    return this.__selectedTab;
   },
   
   /*
@@ -266,21 +264,16 @@ var SSTabView = new Class({
   */
   selectTab: function(idx)
   {
-    SSLog(this.element.getProperty('id') + ' selectTab ' + idx);
-    
-    if(this.__selectedTab__ != idx)
+    if(this.__selectedTab != idx)
     {
       // hide the last tab button and tab pane only if there was a last selected tab
-      if(this.__selectedTab__ != -1)
+      if(this.__selectedTab != -1)
       {
-        this.tabButtonForIndex(this.__selectedTab__).removeClass('SSActive');
+        this.tabButtonForIndex(this.__selectedTab).removeClass('SSActive');
 
         // hide the last tab pane
-        var lastTabPane = this.contentViewForIndex(this.__selectedTab__);
-        //SSLog('controller for last tab ' + lastTabPane + ' ' + $uid(lastTabPane));
+        var lastTabPane = this.contentViewForIndex(this.__selectedTab);
         var lastTabPaneController = this.controllerForNode(lastTabPane);
-        SSLog('got controller');
-        SSLog(lastTabPaneController);
 
         if(lastTabPaneController)
         {
@@ -291,16 +284,14 @@ var SSTabView = new Class({
           lastTabPane.removeClass('SSActive');
         }
         
-        this.fireEvent('tabDeselected', {tabView:this, tabIndex:this.__selectedTab__});
+        this.fireEvent('tabDeselected', {tabView:this, tabIndex:this.__selectedTab});
       }
 
       // check to see if there is a view controller for the content view
       var controller = this.contentViewControllerForIndex(idx);
-      SSLog('>>>>>>>>>>>>>>>>>>>>>>>> getting tab content view controller');
-      SSLog(controller);
+
       if(controller)
       {
-        //SSLog('showing controller');
         controller.show();
       }
       else
@@ -308,20 +299,15 @@ var SSTabView = new Class({
         this.contentViewForIndex(idx).addClass('SSActive');
       }
       
-      SSLog('Activating tab button');
-      SSLog(this.tabButtonForIndex(idx));
       // hide the tab button
       this.tabButtonForIndex(idx).addClass('SSActive');
       
-      this.__selectedTab__ = idx;
+      this.__selectedTab = idx;
       
-      //SSLog('fire tabSelected');
-      this.fireEvent('tabSelected', {tabView:this, tabIndex:this.__selectedTab__});
-      //SSLog('exit tabSelected');
+      this.fireEvent('tabSelected', {tabView:this, tabIndex:this.__selectedTab});
     }
     else
     {
-      SSLog('Tab already selected');
       this.fireEvent('tabClicked', {tabView:this, tabIndex:idx});
     }
   },
