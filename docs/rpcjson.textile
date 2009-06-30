@@ -45,9 +45,10 @@ A stream abstracts tagging, commenting, events, groups and more. For example if 
    
 * id (string, auto-generated)
 * type = "stream"
+* createdBy (string, user id)
 * displayName (string)
 * created (date)
-* createdBy (string, user id)
+* modified (date)
 * private (boolean)
 * objectRef (string, format "documentType:id")
 
@@ -57,10 +58,11 @@ An event is something that occurred. When you tag a shift, this adds an event to
 
 * id (string, auto-generated)
 * type = "event"
-* displayString (string)
-* streamId (string)
-* created (date)
 * createdBy (string, user id)
+* streamId (string)
+* displayString (string)
+* created (date)
+* modified (date)
 * objectRef (string, format "documentType:id")
 
 h2. permission
@@ -84,10 +86,11 @@ h3. Create a user:
 POST /user
 </pre>
 
-a stream with objectRef set to "user:id" should be created with the createdBy field set to the user's id.
+The server should record the time and set the joined field. In addition a stream with objectRef set to "user:id" should be created with the createdBy field set to the user's id.
 
 * *required parameters:* userName, email, password
 * *optional parameters:* preferences, displayName
+* *returns*: a json object containing at least userName, email, and displayName.
 
 h3. Update a user:
 
@@ -104,7 +107,7 @@ h3. Delete a user:
 DELETE /user/:userName
 </pre>
 
-user shift, trail, and event documents must be deleted (streams?)
+The user's stream, events, shifts should be deleted. Streams that the user created will not be deleted. The behavior of a stream with a deleted creator is undefined (who gets admin privileges?, notify stream members of orphan status?). You should implement the proper handling behavior for each particular type of stream for your application when a user deletion occurs. 
 
 * *client authentication required*.
 
@@ -124,7 +127,7 @@ h3. Logout a user:
 POST /user/logout
 </pre>
 
-End a user session.
+End a user session. This should update the lastSeen field of the user's document. This value can be used to figure out which feeds to bring in.
 
 h3. Check if there is an existing session:
 
@@ -140,7 +143,7 @@ h3. Subscribe a user to a stream
 POST /user/:userName/subscribe
 </pre>
 
-After subscribing, the specified stream's events will appear when calling /user/:userName/feeds.
+After subscribing, the specified stream's events will appear when calling /user/:userName/feeds. A user may only subscribe to a stream which has a permission object with userId set to his/her userId or to the value "any".
 
 * *required parameters:* streamId
 
@@ -178,7 +181,7 @@ h3. Create a shift:
 POST /shift to create a shift
 </pre>
 
-Aa corresponding stream object with an objectRef property set to "shift:id" should be created along with the shift creator set as an admin for this stream. 
+A corresponding stream object with an objectRef property set to "shift:id" and createdBy set to the user's id should be created.
 
 h3. Update a shift:
 
@@ -256,11 +259,21 @@ An event should be copied for each each subscriber of the stream.
 
 h2. permissions
 
+Permissions control who can see and edit a stream besides the creator.
+
 h3. Create a permission:
 
 <pre>
 POST /permission
 </pre>
+
+Adds a permission document to a stream. A stream cannot be read or written to by non-creators without at least one corresponding permission document. If you wish to give public read access set the userId field to "any" and set the level field to 1. There can either be one permission object with userId field set to "any" or multiple permission objects with valid userIds.
+
+Only the creator or admins can create new permission objects for a stream.
+
+* *required paramaters:* streamId, userId
+* *optional parameters:* level (default 0)
+* *client authentication required*
 
 h3. Update a permission:
 
@@ -268,16 +281,20 @@ h3. Update a permission:
 PUT /permission/:id
 </pre>
 
-h3. Delete a permission 
+After creation only the level maybe changed. All other values in the update operations are invalid and should throw an error.
+
+* *client authentication required*
+
+h3. Delete a permission
+
+If the user is subscribed to a stream to which his/her permission has been deleted, he/she will be unsubscribed. Any events posted by user on the stream should also be deleted.
 
 <pre>
 DELETE /permission/:id
 </pre>
 
+* *client authentication required*
+
 h2. Bulk
 
 Often times it is convenient to pass in a set of operations. The operation list should take the following form. For each operation, the server will return a result for that operation. Warning, if an operation the server will continue to execute following operations.  The result of the failed operation will reflect the error.
-
-h2. About Permissions
-
-Client deletion of objects requires a match between the user and the createdBy field of the object to be destroyed. createdBy always represents the root owner of the object.
