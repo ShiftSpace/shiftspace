@@ -64,6 +64,7 @@ An event is something that occurred. When you tag a shift, this adds an event to
 * created (date)
 * modified (date)
 * objectRef (string, format "documentType:id")
+* content (schema-less object)
 
 h2. permission
 
@@ -235,7 +236,13 @@ h3. Create an event
 
 <pre>
 POST /event
-</pre> 
+</pre>
+
+A user can only post an event to a stream for which he/she has write permissions.
+
+* *required parameters*: streamId
+* *options paramaters*: objectRef, displayString
+* *client authentication required*
 
 h3. Update an event
 
@@ -243,11 +250,17 @@ h3. Update an event
 PUT /event/:id
 </pre>
 
+Only the creator of the event can modify the event and only the displayString and content fields may be modified after creation. 
+
+* *client authentication required*, createdBy must match the user attempting the modification.
+
 h3. Delete an event
 
 <pre>
 DELETE /event/:id
 </pre>
+
+* *client authentication required*, createdBy must match the user attempting the deletion.
 
 h3. Find matching events
 
@@ -255,11 +268,11 @@ h3. Find matching events
 GET /event/find/:objectRef
 </pre> 
 
-An event should be copied for each each subscriber of the stream.
+Find all events for which the requester has stream permissions (hmm this sounds tricky)
 
 h2. permissions
 
-Permissions control who can see and edit a stream besides the creator.
+Permissions control who can see and edit a stream as well control who can add others to the stream.
 
 h3. Create a permission:
 
