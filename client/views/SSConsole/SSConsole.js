@@ -109,7 +109,12 @@ var SSConsole = new Class({
        (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
     {
       if(this.outlets().get('MainTabView')) this.initMainTabView();
-      if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
+      if(this.outlets().get('AllShiftsTableView'))
+      {
+        var AllShiftsTableView = this.outlets()['AllShiftsTableView'];
+        this.initAllShiftsTableView();
+        this.setAllShiftsTableView(AllShiftsTableView);
+      }
       if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
       if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
       if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
@@ -213,23 +218,17 @@ var SSConsole = new Class({
   initMainTabView: function()
   {
     this.MainTabView = this.outlets()['MainTabView'];
-    this.MainTabView.addEvent('tabSelected', this.handleTabChanged.bind(this));
   },
   
   
-  handleTabChanged: function(event)
+  initAllShiftsTableView: function()
   {
-    if(event.tabIndex == 0)
-    {
-      this.showFilterPane();
-    }
-    else
-    {
-      this.hideFilterPane();
-    }
+    this.AllShiftsTableView = this.outlets()['AllShiftsTableView'];
+    this.AllShiftsTableView.addEvent('willShow', this.showFilterPane.bind(this));
+    this.AllShiftsTableView.addEvent('hide', this.hideFilterPane.bind(this));
   },
-
-
+  
+  
   initLoginForm: function()
   {
     // catch click
