@@ -194,7 +194,9 @@ PUT /shift/:id
 
 h3. Delete a shift:
 
-DELETE /shift/:id to delete a shift
+<pre>
+DELETE /shift/:id
+</pre>
 
 * *client authentication required*, user attempting delete must match createdBy
 
