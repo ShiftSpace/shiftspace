@@ -22,9 +22,7 @@ var SSNotifierView = new Class({
     
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
-    
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
-    
     SSAddObserver(this, 'onConsoleShow', this.onConsoleShow.bind(this));
     SSAddObserver(this, 'onConsoleHide', this.onConsoleHide.bind(this));
   },
