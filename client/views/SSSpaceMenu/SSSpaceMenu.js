@@ -16,10 +16,13 @@ var SSSpaceMenu = new Class({
 
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
+    
     SSAddObserver(this, 'onSpaceInstall', this.update.bind(this));
     SSAddObserver(this, 'onSpaceUninstall', this.update.bind(this));
+    
     SSAddObserver(this, 'showSpaceMenu', this.show.bind(this));
     SSAddObserver(this, 'hideSpaceMenu', this.hide.bind(this));
+    
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
   },
   
@@ -28,6 +31,7 @@ var SSSpaceMenu = new Class({
   {
     this.element.removeClass('SSDisplayNone');
     this.resize();
+    SSPostNotification('spaceMenuDidShow', this);
   },
   
   
@@ -50,6 +54,7 @@ var SSSpaceMenu = new Class({
   hide: function()
   {
     this.element.addClass('SSDisplayNone');
+    SSPostNotification('spaceMenuDidHide', this);
   },
   
   
