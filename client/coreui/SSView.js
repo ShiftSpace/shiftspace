@@ -376,6 +376,7 @@ var SSView = new Class({
   */
   show: function()
   {
+    this.fireEvent('willShow', this);
     this.element.addClass('SSActive');
     this.element.removeClass('SSDisplayNone');
     if(this.isVisible() && this.needsDisplay()) this.refreshAndFire();
@@ -388,6 +389,7 @@ var SSView = new Class({
   */
   hide: function()
   {
+    this.fireEvent('willHide', this);
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
   },
