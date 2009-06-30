@@ -78,61 +78,57 @@ Refer to the "CouchDB HTTP Document API":http://wiki.apache.org/couchdb/HTTP_Doc
 
 h2. user
 
-h3. Core User Functions
+h3. Create a user: POST /user
 
-h4. Create a user: POST /user
-
-a stream with objectRef set to "user:id" should be created as well as a corresponding permission object with this user set as the admin.
+a stream with objectRef set to "user:id" should be created with the createdBy field set to the user's id.
 
 * *required parameters:* userName, email, password
 * *optional parameters:* preferences, displayName
   
-h4. Update a user: PUT /user/:userName
+h3. Update a user: PUT /user/:userName
 
 * *optional parameters:* userName, displayName, email, password, preferences.
 * *client authentication required*.
 
-h4. Delete a user: DELETE /user/:userName
+h3. Delete a user: DELETE /user/:userName
 
 user shift, trail, and event documents must be deleted (streams?)
 
 * *client authentication required*.
 
-h4. Login a user: POST /user/login
+h3. Login a user: POST /user/login
 
 Start a user session.
 
 * *required parameters:* userName, password
 
-h4. Logout a user: POST /user/logout
+h3. Logout a user: POST /user/logout
 
 End a user session.
 
-GET /user/query to check to see if the user is currently logged in
+h3. GET /user/query to check to see if the user is currently logged in
 
 If there is an existing user session returns an object containing at least the userName, userId, email, and preferences. 
 
-h4. Stream User Functions   
-
-POST /user/:id/subscribe
+h3. POST /user/:id/subscribe
 
 Subscribe a user to a stream. After the subscribing, the specified stream's events will appear when calling /user/:userName/feeds.
 
 * *required parameters:* streamId
 
-POST /user/:id/unsubscribe
+h3. POST /user/:id/unsubscribe
 
 Unsubscribe a user from a stream. After unsubscribing, the specified stream's events will no longer appear when calling /user/:userName/feeds.
 
 * *required parameters:* streamId
 
-GET /user/:id/feeds, returns the list of events for all the streams that a user is subscribed to. 
+h3. GET /user/:id/feeds, returns the list of events for all the streams that a user is subscribed to. 
 
-GET /user/:id/feed, to get a specific stream for a particular user, must specify a streamId
+h3. GET /user/:id/feed, to get a specific stream for a particular user, must specify a streamId
 
-h3. shift
+h2. shift
 
-POST /shift to create a shift, a corresponding stream object with an objectRef property set to "shift:id" should be created along with the shift creator set as an admin for this stream. 
+h3. POST /shift to create a shift, a corresponding stream object with an objectRef property set to "shift:id" should be created along with the shift creator set as an admin for this stream. 
 
 PUT /shift/:id to update a shift
 
@@ -169,3 +165,11 @@ POST /permission to create a permission
 PUT /permission/:id to update a permission
 
 DELETE /permission/:id to delete a permission
+
+h2. Bulk
+
+Often times it is convenient to pass in a set of operations. The operation list should take the following form. For each operation, the server will return a result for that operation. Warning, if an operation the server will continue to execute following operations.  The result of the failed operation will reflect the error.
+
+h2. About Permissions
+
+Client deletion of objects requires a match between the user and the createdBy field of the object to be destroyed. createdBy always represents the root owner of the object.
