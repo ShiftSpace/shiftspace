@@ -137,7 +137,7 @@ If there is an existing user session returns an object containing at least the u
 h3. Subscribe a user to a stream
 
 <pre>
-POST /user/:id/subscribe
+POST /user/:userName/subscribe
 </pre>
 
 After subscribing, the specified stream's events will appear when calling /user/:userName/feeds.
@@ -147,7 +147,7 @@ After subscribing, the specified stream's events will appear when calling /user/
 h3. Unsubscribe a user from a stream
 
 <pre>
-POST /user/:id/unsubscribe
+POST /user/:userName/unsubscribe
 </pre>
 
 After unsubscribing, the specified stream's events will no longer appear when calling /user/:userName/feeds.
@@ -157,7 +157,7 @@ After unsubscribing, the specified stream's events will no longer appear when ca
 h3. Get a feed of all the user's subscriptions 
 
 <pre>
-GET /user/:id/feeds
+GET /user/:userName/feeds
 </pre>
   
 Returns the list of events for all the streams that a user is subscribed to. 
@@ -165,7 +165,7 @@ Returns the list of events for all the streams that a user is subscribed to.
 h3. Get only a specific subscription 
 
 <pre>
-GET /user/:id/feed
+GET /user/:userName/feed
 </pre>
 
 * *required parameters:* streamId
