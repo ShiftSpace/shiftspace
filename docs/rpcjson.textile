@@ -77,7 +77,7 @@ This object controls who can view/post events to a stream as well as modify perm
 
 h1. API
 
-Refer to the "CouchDB HTTP Document API":http://wiki.apache.org/couchdb/HTTP_Document_API to understand the rationale. All server call should return ack:
+Refer to the "CouchDB HTTP Document API":http://wiki.apache.org/couchdb/HTTP_Document_API to understand the rationale. All server calls should return ack:
 
 <pre>
 {data: "ok"}
