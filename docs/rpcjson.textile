@@ -78,7 +78,11 @@ Refer to the "CouchDB HTTP Document API":http://wiki.apache.org/couchdb/HTTP_Doc
 
 h2. user
 
-h3. Create a user: POST /user
+h3. Create a user: 
+
+<pre>
+POST /user
+</pre>
 
 a stream with objectRef set to "user:id" should be created with the createdBy field set to the user's id.
 
@@ -90,81 +94,181 @@ h3. Update a user: PUT /user/:userName
 * *optional parameters:* userName, displayName, email, password, preferences.
 * *client authentication required*.
 
-h3. Delete a user: DELETE /user/:userName
+h3. Delete a user: 
+
+<pre>
+DELETE /user/:userName
+</pre>
 
 user shift, trail, and event documents must be deleted (streams?)
 
 * *client authentication required*.
 
-h3. Login a user: POST /user/login
+h3. Login a user: 
+
+<pre>
+POST /user/login
+</pre>
 
 Start a user session.
 
 * *required parameters:* userName, password
 
-h3. Logout a user: POST /user/logout
+h3. Logout a user: 
+
+<pre>
+POST /user/logout
+</pre>
 
 End a user session.
 
-h3. GET /user/query to check to see if the user is currently logged in
+h3. Check if there is an existing session
+
+<pre>
+GET /user/query 
+</pre>
 
 If there is an existing user session returns an object containing at least the userName, userId, email, and preferences. 
 
-h3. POST /user/:id/subscribe
+h3. Subscribe a user to a stream
 
-Subscribe a user to a stream. After the subscribing, the specified stream's events will appear when calling /user/:userName/feeds.
+<pre>
+POST /user/:id/subscribe
+</pre>
 
-* *required parameters:* streamId
-
-h3. POST /user/:id/unsubscribe
-
-Unsubscribe a user from a stream. After unsubscribing, the specified stream's events will no longer appear when calling /user/:userName/feeds.
+After subscribing, the specified stream's events will appear when calling /user/:userName/feeds.
 
 * *required parameters:* streamId
 
-h3. GET /user/:id/feeds, returns the list of events for all the streams that a user is subscribed to. 
+h3. Unsubscribe a user from a stream
 
-h3. GET /user/:id/feed, to get a specific stream for a particular user, must specify a streamId
+<pre>
+POST /user/:id/unsubscribe
+</pre>
+
+After unsubscribing, the specified stream's events will no longer appear when calling /user/:userName/feeds.
+
+* *required parameters:* streamId
+
+h3. Get a feed of all the user's subscriptions 
+
+<pre>
+GET /user/:id/feeds
+<pre>
+  
+Returns the list of events for all the streams that a user is subscribed to. 
+
+h3. Get only a specific subscription 
+
+<pre>
+GET /user/:id/feed
+</pre>
+
+* *required parameters:* streamId
 
 h2. shift
 
-h3. POST /shift to create a shift, a corresponding stream object with an objectRef property set to "shift:id" should be created along with the shift creator set as an admin for this stream. 
+h3. Create a shift: 
 
-PUT /shift/:id to update a shift
+<pre>
+POST /shift to create a shift
+</pre>
+
+Aa corresponding stream object with an objectRef property set to "shift:id" should be created along with the shift creator set as an admin for this stream. 
+
+h3. Update a shift:
+
+<pre>
+PUT /shift/:id
+</pre>
+
+* *client authentication required*, user attempting update must match createdBy
+
+h3. Delete a shift:
 
 DELETE /shift/:id to delete a shift
 
-h3. stream
+* *client authentication required*, user attempting delete must match createdBy
 
-POST /stream to create a stream
+h2. stream
 
-PUT /stream/:id to update a stream
+h3. Create a stream
 
-DELETE /stream/:id to delete a stream
+<pre>
+POST /stream
+</pre>
 
-GET /stream/find/:objectRef to find a stream relating to a particular object reference
+h3. Update a stream
 
-GET /stream/has/:objectRef to find all streams that have events referring to a particular object reference.
+<pre>
+PUT /stream/:id
+</pre>
 
-h3. event
+h3. Delete a stream
 
-POST /event to create an event. And event must specify a stream id.
+<pre>
+DELETE /stream/:id
+</pre>
 
-PUT /event/:id to update an event.
+h3. Find a stream:
 
-DELETE /event/:id to delete an event
+<pre>
+GET /stream/find/:objectRef
+</pre>
 
-GET /event/find/:objectRef to find all events that refer to a particular object reference.
+h3. Find matching streams:
+
+<pre>
+GET /stream/has/:objectRef
+</pre>
+
+h2. event
+
+h3. Create an event
+
+<pre>
+POST /event
+</pre> 
+
+h3. Update an event
+
+<pre> 
+PUT /event/:id
+</pre>
+
+h3. Delete an event
+
+<pre>
+DELETE /event/:id
+</pre>
+
+h3. Find matching events
+
+<pre>
+GET /event/find/:objectRef
+</pre> 
 
 An event should be copied for each each subscriber of the stream.
 
-h3. permission
+h2. permissions
 
-POST /permission to create a permission
+h3. Create a permission:
 
-PUT /permission/:id to update a permission
+<pre>
+POST /permission
+</pre>
 
-DELETE /permission/:id to delete a permission
+h3. Update a permission:
+
+<pre>
+PUT /permission/:id
+</pre>
+
+h3. Delete a permission 
+
+<pre>
+DELETE /permission/:id
+</pre>
 
 h2. Bulk
 
