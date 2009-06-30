@@ -2,102 +2,129 @@ This wiki covers the progress on the ShiftSpace RPC API and the JSON data format
 
 We don't specify any particular authentication scheme, however the tests that come with ShiftSpace will check to see that permissions are not compromised.
 
-h2. Objects
+h1. Objects
 
-h3. user
+h2. user
 
-   * id (string auto-generated)
-   * type = "user"
-   * userName (string)
-   * displayName (string)
-   * email (string)
-   * password (string - md5 hash)
-   * joined (date)
-   * lastSeen (date)
-   * subscriptions (array - of stream ids)
-   * preferences (schema-less object)
+* id (string auto-generated)
+* type = "user"
+* userName (string)
+* displayName (string)
+* email (string)
+* password (string - md5 hash)
+* joined (date)
+* lastSeen (date)
+* subscriptions (array - of stream ids)
+* preferences (schema-less object)
 
-h3. shift
+h2. shift
 
 A shift is a document. Shifts are generally created by spaces. Spaces are "apps" for ShiftSpace- thirdy party extensions to the ShiftSpace interface. Spaces encode modifications to websites in the form of shifts. For example, you use the Notes space to create a Note shift. This Note shift (if public) can be viewed by anyone else using the Notes Space. Because different Spaces will need to save different kinds of documents, we do not specify a schema for the content of a shift.
 
-   * id (string auto-generated)
-   * type = "shift"
-   * userId (string)
-   * href (string)
-   * domain (string)
-   * space (object)
-   ** name
-   ** version
-   * summary (string)
-   * created (date)
-   * modified (date)
-   * broken (boolean)
-   * publishData (object)
-   ** draft (boolean)
-   ** publishTime (date)
-   ** private (boolean)
-   * content (schema-less object)
+* id (string auto-generated)
+* type = "shift"
+* createdBy (string)
+* href (string)
+* domain (string)
+* space (object)
+** name
+** version
+* summary (string)
+* created (date)
+* modified (date)
+* broken (boolean)
+* publishData (object)
+** draft (boolean)
+** publishTime (date)
+** private (boolean)
+* content (schema-less object)
 
-h3. stream
+h2. stream
 
 A stream abstracts tagging, commenting, events, groups and more. For example if in ShiftSpace if you follow a user you are subscribing to that user's stream. If you leave a comment on a shift you are posting an event to that particular shift's stream. A group is simply a stream that multiple users are subscribed to. Permission objects control who can view, edit, and post events to a stream.
    
-   * id (string, auto-generated)
-   * type = "stream"
-   * displayName (string)
-   * created (date)
-   * createdBy (string, user id)
-   * private (boolean)
-   * objectRef (string, format "documentType:id")
+* id (string, auto-generated)
+* type = "stream"
+* displayName (string)
+* created (date)
+* createdBy (string, user id)
+* private (boolean)
+* objectRef (string, format "documentType:id")
 
-h3. event
+h2. event
 
 An event is something that occurred. When you tag a shift, this adds an event to the stream that represents that tag. A comment is an event on a shift's stream. If you are an educator and publish a shift to your class' group, an event referencing that shift is posted to the stream that represents your class' group.
 
-   * id (string, auto-generated)
-   * type = "event"
-   * displayString (string)
-   * streamId (string)
-   * created (date)
-   * createdBy (string, user id)
-   * objectRef (string, format "documentType:id")
+* id (string, auto-generated)
+* type = "event"
+* displayString (string)
+* streamId (string)
+* created (date)
+* createdBy (string, user id)
+* objectRef (string, format "documentType:id")
 
-h3. permission
+h2. permission
 
 This object controls who can view/post/edit to a stream.
 
-   * id
-   * type = "permission"
-   * userId (string, user id)
-   * level (integer, 0=none, 1=read, 2=write, 3=admin) 
+* id
+* type = "permission"
+* userId (string, user id)
+* level (integer, 0=none, 1=read, 2=write, 3=admin) 
 
-h2. API
+h1. API
 
 Refer to the "CouchDB HTTP Document API":http://wiki.apache.org/couchdb/HTTP_Document_API to understand the rationale.
 
+h2. user
 
-h3. user
+h3. Core User Functions
 
-h4. Core User Functions
+h4. Create a user: POST /user
 
-POST /user to create a new user, a stream with objectRef set to "user:id" should be created as well as a corresponding permission object with this user set as the admin.
+a stream with objectRef set to "user:id" should be created as well as a corresponding permission object with this user set as the admin.
 
-PUT /user/:id to update a user
+* *required parameters:* userName, email, password
+* *optional parameters:* preferences, displayName
+  
+h4. Update a user: PUT /user/:userName
 
-DELETE /user/:id to delete a user- user shift, trail, and event documents must be deleted (streams?)
+* *optional parameters:* userName, displayName, email, password, preferences.
+* *client authentication required*.
 
-POST /user/login to login a user
+h4. Delete a user: DELETE /user/:userName
 
-POST /user/logout to logout a user
+user shift, trail, and event documents must be deleted (streams?)
+
+* *client authentication required*.
+
+h4. Login a user: POST /user/login
+
+Start a user session.
+
+* *required parameters:* userName, password
+
+h4. Logout a user: POST /user/logout
+
+End a user session.
 
 GET /user/query to check to see if the user is currently logged in
 
+If there is an existing user session returns an object containing at least the userName, userId, email, and preferences. 
+
 h4. Stream User Functions   
 
-POST /user/:id/subscribe, must specifiy a streamId to subscribe to
+POST /user/:id/subscribe
 
-POST /user/:id/unsubscribe, must specify a streamId to unsubscribe from
+Subscribe a user to a stream. After the subscribing, the specified stream's events will appear when calling /user/:userName/feeds.
+
+* *required parameters:* streamId
+
+POST /user/:id/unsubscribe
+
+Unsubscribe a user from a stream. After unsubscribing, the specified stream's events will no longer appear when calling /user/:userName/feeds.
+
+* *required parameters:* streamId
 
 GET /user/:id/feeds, returns the list of events for all the streams that a user is subscribed to. 
 
