@@ -246,7 +246,7 @@ A user can only post an event to a stream for which he/she has write permissions
 
 h3. Update an event
 
-<pre> 
+<pre>
 PUT /event/:id
 </pre>
 
