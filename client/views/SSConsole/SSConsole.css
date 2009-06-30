@@ -42,6 +42,7 @@ body#SSConsoleFrameBody
 #MainTabView
 {
   background: transparent;
+  overflow: hidden;
 }
 
 #MainTabView .SSTableView

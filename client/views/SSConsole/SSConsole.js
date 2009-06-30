@@ -108,6 +108,7 @@ var SSConsole = new Class({
     if((context == window && typeof SandalphonToolMode != 'undefined') ||
        (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
     {
+      if(this.outlets().get('MainTabView')) this.initMainTabView();
       if(this.outlets().get('AllShiftsTableView')) this.setAllShiftsTableView(this.outlets().get('AllShiftsTableView'));
       if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
       if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
@@ -206,6 +207,26 @@ var SSConsole = new Class({
     tableView.setDelegate(this);
     tableView.setDatasource(this.myShiftsDatasource);
     this.myShiftsDatasource.fetch();
+  },
+
+
+  initMainTabView: function()
+  {
+    this.MainTabView = this.outlets()['MainTabView'];
+    this.MainTabView.addEvent('tabSelected', this.handleTabChanged.bind(this));
+  },
+  
+  
+  handleTabChanged: function(event)
+  {
+    if(event.tabIndex == 0)
+    {
+      this.showFilterPane();
+    }
+    else
+    {
+      this.hideFilterPane();
+    }
   },
 
 
@@ -694,5 +715,19 @@ var SSConsole = new Class({
   visibleTableView: function()
   {
     return this.tableViews().filter($msg('isVisible')).first();
+  },
+  
+  
+  showFilterPane: function()
+  {
+    this.outlets()['FilterPane'].show();
+    this.outlets()['AllShiftsTableView'].element.addClass('SSFilterPaneOpen');
+  },
+  
+  
+  hideFilterPane: function()
+  {
+    this.outlets()['FilterPane'].hide();
+    this.outlets()['AllShiftsTableView'].element.removeClass('SSFilterPaneOpen');
   }
 });
