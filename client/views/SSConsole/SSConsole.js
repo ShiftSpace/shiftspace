@@ -32,28 +32,19 @@ var SSConsole = new Class({
       Sandalphon.load('/client/compiledViews/'+SSInfo().env+'/SSConsoleMain', this.buildInterface.bind(this));
     }
 
-    // listen for login/logout events, pass in reference to self
-    // so that ShiftSpace notifies after this object's awake method has been called
-    // this is because outlets won't be set until that point
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     
-    // listen for shift events
     SSAddObserver(this, 'onShiftSave', this.refreshTableViews.bind(this));
     SSAddObserver(this, 'onShiftDelete', this.refreshTableViews.bind(this));
     SSAddObserver(this, 'onShiftHide', this.deselectShift.bind(this));
     
-    // space install event
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
     
-    // listen for events that open publish view
     SSAddObserver(this, 'userDidClickCheckboxForRowInTableView', this.userDidClickCheckboxForRowInTableView.bind(this));
 
-    // listen for global events as well
-
-    // allocate datasource for page shifts
     this.allShiftsDatasource = new SSTableViewDatasource({
       dataKey: 'shifts',
       dataUpdateKey: 'id',
@@ -62,7 +53,6 @@ var SSConsole = new Class({
       dataNormalizer: this.legacyNormalizer
     });
 
-    // allocate datasource for user shifts
     this.myShiftsDatasource = new SSTableViewDatasource({
       dataKey: 'shifts',
       dataUpdateKey: 'id',
@@ -164,13 +154,9 @@ var SSConsole = new Class({
   {
     this.setLoginHandled(true);
     
-    // empty the login form
     this.emptyLoginForm();
-    // hide the login tab
     this.outlets().get('MainTabView').hideTabByName('LoginTabView');
-    // update the datasource
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUsername());
-    // switch to the tab view
     this.outlets().get('MainTabView').selectTabByName('AllShiftsTableView');
     
     this.updateInstalledSpaces();
@@ -181,13 +167,9 @@ var SSConsole = new Class({
   {
     this.setLoginHandled(false);
     
-    // empty the login form
     this.emptyLoginForm();
-    // reveal the login tab
     this.outlets().get('MainTabView').revealTabByName('LoginTabView');
-    // update data source
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', null);
-    // refresh the main tab view
     this.outlets().get('MainTabView').refresh();
     
     this.updateInstalledSpaces();
@@ -231,17 +213,14 @@ var SSConsole = new Class({
   
   initLoginForm: function()
   {
-    // catch click
     this.outlets().get('SSLoginFormSubmit').addEvent('click', this.handleLoginFormSubmit.bind(this));
 
-    // catch enter
     this.outlets().get('SSLoginForm').addEvent('submit', function(_evt) {
       var evt = new Event(_evt);
       evt.preventDefault();
       this.handleLoginFormSubmit();
     }.bind(this));
 
-    // listen for tabSelected events so we can clear out the login form
     this.outlets().get('LoginTabView').addEvent('tabSelected', this.handleTabSelect.bind(this));
   },
   
@@ -256,7 +235,6 @@ var SSConsole = new Class({
       apiField.setProperty('value', SSInfo().server);
       spacesDirField.setProperty('value', SSInfo().spacesDir);
 
-      // add keydown event handlers on them for carraige return
       apiField.addEvent('keydown', function(_evt) {
         var evt = new Event(_evt);
         var previousValue = SSGetValue('server', SSInfo().server);
@@ -324,10 +302,8 @@ var SSConsole = new Class({
 
   initSignUpForm: function()
   {
-    // catch click
     this.outlets().get('SSSignUpFormSubmit').addEvent('click', this.handleSignUpFormSubmit.bind(this));
     
-    // catch enter
     this.outlets().get('SSLoginForm').addEvent('submit', function(_evt) {
       var evt = new Event(_evt);
       evt.preventDefault();
@@ -357,14 +333,12 @@ var SSConsole = new Class({
   showLogin: function()
   {
     if(!this.isVisible()) this.show();
-    // select the login tab view
     this.outlets().get('MainTabView').selectTabByName('LoginTabView');
   },
 
 
   initSelectLanguage: function()
   {
-    // attach events to localization switcher
     this.outlets().get('SSSelectLanguage').addEvent('change', function(_evt) {
       var evt = new Event(_evt);
       SSLoadLocalizedStrings($(evt.target).getProperty('value'), this.element.contentWindow);
@@ -404,20 +378,16 @@ var SSConsole = new Class({
       this.context = context;
       this.doc = doc;
       
-      // add the styles into the iframe
       Sandalphon.addStyle(ui.styles, context);
       
       // grab the interface, strip the outer level, we're putting the console into an iframe
       var fragment = Sandalphon.convertToFragment(ui['interface'], context).getFirst();
       
-      // place it in the frame
       $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
       $(context.document.body).grab(fragment);
       
-      // activate the iframe context: create controllers hook up outlets
       Sandalphon.activate(context);
       
-      // create the resizer
       this.initResizer();
       this.attachEvents();
       
@@ -605,7 +575,6 @@ var SSConsole = new Class({
 
     if(visibleTableView)
     {
-      // reload the table
       visibleTableView.reload();
     }
   },
