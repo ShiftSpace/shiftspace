@@ -50,12 +50,13 @@ var SSNotifierView = new Class({
   
   onSpaceMenuShow: function(spaceMenu)
   {
+    this.setSpaceMenuIsVisible(true);
   },
   
   
   onSpaceMenuHide: function(spaceMenu)
   {
-    SSLog('notifier got space menu hide event', SSLogForce);
+    this.setSpaceMenuIsVisible(false);
     if(!ShiftSpace.Console.isVisible())
     {
       this['close']();
@@ -276,12 +277,10 @@ var SSNotifierView = new Class({
       var evt = new Event(_evt);
       if(!this.spaceMenuIsVisible())
       {
-        this.setSpaceMenuIsVisible(true);
         SSPostNotification('showSpaceMenu', this);
       }
       else
       {
-        this.setSpaceMenuIsVisible(false);
         SSPostNotification('hideSpaceMenu', this);
         this['close']();
       }
