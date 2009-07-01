@@ -178,6 +178,7 @@ Parameters:
 */
 function SSInstallSpace(space)
 {
+  //SSLog('install ' + space, SSLogForce);
   if(!SSURLForSpace(space))
   {
     var url = SSInfo().server + 'spaces/' + space + '/' + space + '.js';
@@ -231,7 +232,7 @@ function SSUninstallSpace(spaceName)
   }
   else
   {
-    SSSetInstalledSpaces(installed);    
+    SSSetInstalledSpaces(installed);
   }
 
   SSClearCache(url);
