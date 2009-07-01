@@ -27,3 +27,7 @@ builder/preprocess.pyc
 builder/preprocess.pyc
 shiftspace.tmproj
 server/.DS_Store
+builds/shiftspace.dev.user.js
+config/env/dev.json
+config/env/sandalphon.json
+.DS_Store
