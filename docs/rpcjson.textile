@@ -15,6 +15,7 @@ h2. user
 * joined (date)
 * lastSeen (date)
 * subscriptions (array - of stream ids)
+* streams (array - of stream ids)
 * preferences (schema-less object)
 
 h2. shift
@@ -37,6 +38,7 @@ A shift is a document. Shifts are generally created by spaces. Spaces are "apps"
 ** draft (boolean)
 ** publishTime (date)
 ** private (boolean)
+* streams (array of stream id)
 * content (schema-less object)
 
 h2. stream
@@ -49,7 +51,7 @@ A stream abstracts tagging, commenting, events, groups and more. For example in 
 * displayName (string)
 * created (date)
 * modified (date)
-* private (boolean) - do we need this?
+* private (boolean) - handles the "anyone" concept
 * objectRef (string, format "documentType:id")
 
 h2. event
@@ -73,7 +75,7 @@ This object controls who can view/post events to a stream as well as modify perm
 * id
 * type = "permission"
 * userId (string, user id)
-* level (integer, 0=none, 1=read, 2=write, 3=admin) 
+* level (integer, 0=none, 1=read, 2=write, 3=admin, 4=owner) 
 
 h1. API
 
@@ -120,7 +122,7 @@ h3. Delete a user:
 DELETE /user/:userName
 </pre>
 
-The user's stream, events, shifts should be deleted. Streams that the user created will not be deleted. The behavior of a stream with a deleted creator is undefined (who gets admin privileges?, notify stream members of orphan status?). You should implement the proper handling behavior for each particular type of stream for your application when a user deletion occurs. 
+The user's stream, events, shifts should be deleted. Streams that the user created will not be deleted. The behavior of a stream with a deleted creator is undefined (who gets admin privileges?, notify stream members of orphan status?). You should implement the proper handling behavior for each particular type of stream for your application when a user deletion occurs.
 
 * *client authentication required*.
 
