@@ -49,6 +49,7 @@ A stream abstracts tagging, commenting, events, groups and more. For example in 
 * type = "stream"
 * createdBy (string, user id)
 * displayName (string)
+* uniqueName (string)
 * created (date)
 * modified (date)
 * private (boolean) - handles the "anyone" concept
