@@ -5,18 +5,19 @@
 // ==/Builder==
 
 var SSTag = new Class({
-
+  
   Extends: SSAbstractStream,
   name: "SSTag",
-
+  
+  
   defaults: function()
   {
     return $merge(this.parent(), {
       createStream: true
     });
   },
-
-
+  
+  
   initialize: function(tagName, options)
   {
     options = options || {};
@@ -28,27 +29,15 @@ var SSTag = new Class({
   },
   
   
-  createTag: function()
+  addTag: function(ref)
   {
     
   },
   
   
-  taggedObjects: function()
-  {
-    
-  },
-  
-
-  tagObject: function(ref)
-  {
-    
-  },
-  
-
-  unTagObject: function()
+  removeTag: function()
   {
     
   }
-
+  
 });

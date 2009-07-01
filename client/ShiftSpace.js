@@ -250,6 +250,7 @@ var ShiftSpace = new (function() {
     {
       unsafeWindow.ShiftSpace = this;
       this.sys = __sys__;
+      this.SSTag = SSTag;
     }
 
     return this;

@@ -30,9 +30,21 @@ var SSAbstractStream = new Class({
   },
   
   
+  setId: function(id)
+  {
+    this.__id = id;
+  },
+  
+  
+  id: function()
+  {
+    return this.__id;
+  },
+  
+  
   onCreate: function(json)
   {
-    console.log(json);
+    this.setId(json.data.id);
   },
   
   
@@ -54,13 +66,7 @@ var SSAbstractStream = new Class({
   },
   
   
-  create: function(name, private, callback)
-  {
-    
-  },
-  
-  
-  serverCall: function(method, callback)
+  postEvent: function(name, private, callback)
   {
     
   },
