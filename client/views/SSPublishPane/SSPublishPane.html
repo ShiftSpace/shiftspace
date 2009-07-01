@@ -5,46 +5,50 @@
        delegate: 'SSConsole'
      }"
      outlet="SSConsole">
-     <div id="SSPublishPaneHeader">
-       <label>Visibility:</label>
-			
-			<span id="SSPPVisiblePublic">
-       			<input name="ShiftStatusRadio" value="public" outlet="PublishPane" type="radio" class="SSPPradio"></input>
-	   			 <img src="/images/Console/publish-private.gif"/>
-       			<label>
-       			  Private
-       			</label>
-	   		</span>
-	   		<span id="SSPPVisiblePrivate">
-       			<input name="ShiftStatusRadio" value="private" outlet="PublishPane" type="radio" class="SSPPradio"></input>
-	   			<img src="/images/Console/publish-private.gif"/>
-       			<label>
-       			  Public
-       			</label>
-			</span>
-		
-     </div>
-     <div id="SSPublishPaneBody">
-	   <div id="SSPublishPaneTags">
-		<span class="SSPPTagsroundedCorners SSPPTagUser SSPPTagFont">@username</span>
-		<span class="SSPPTagsroundedCorners SSPPTagGroup SSPPTagFont">@groupname</span>
-		<span class="SSPPTagsroundedCorners SSPPTagTag SSPPTagFont">@tagname</span>
-		</div>
-		<input id="PublishTargets" type="text" outlet="PublishPane" class="SSPinput"></input>
-			<ul>
-       			<li><img src="/images/Console/publish-share-main.png"/></li>
-       			<li><label>Share:</label></li>
-				<li><a href="" class="SSPPTips" title="Permalink"><img src="/images/Console/publish-share-permalink.png"/></a></li>
-	   			<li><a href=""  class="SSPPTips" title="Twitter"><img src="/images/Console/publish-share-twitter.png"/></a></li>
-	   			<li><a href="" class="SSPPTips" title="Del.ico.us"><img src="/images/Console/publish-share-del.png" /></a></li>
-	   	  	 	<li><a href="" class="SSPPTips" title="Facebook"><img src="/images/Console/publish-share-facebook.png"/></a></li>
-	   	  	 	<li><a href="" class="SSPPTips" title="Digg"><img src="/images/Console/publish-share-digg.png" /></a></li>
-		</ul>
-     </div>
-     <div id="SSPublishPaneFooter">
-	   <label>Current Status: <b>Draft  </b></label>
-       <button id="DeleteShift" outlet="PublishPane" class="SSPublishPubButton">Delete</button>
-       <button id="SaveShift" outlet="PublishPane">Save</button>
-       <button id="PublishShift" outlet="PublishPane" class="SSPublishPubButton">Publish</button>
-     </div>
+     
+  <div id="SSPublishPaneHeader">
+    <label>Visibility:</label>
+
+    <span id="SSPPVisiblePublic">
+      <input name="ShiftStatusRadio" value="public" outlet="PublishPane" type="radio" class="SSPPradio"></input>
+      <img src="/images/Console/publish-private.gif"/>
+      <label>
+        Private
+      </label>
+    </span>
+    <span id="SSPPVisiblePrivate">
+      <input name="ShiftStatusRadio" value="private" outlet="PublishPane" type="radio" class="SSPPradio"></input>
+      <img src="/images/Console/publish-private.gif"/>
+      <label>
+        Public
+      </label>
+    </span>
+
+  </div>
+  
+  <div id="SSPublishPaneBody">
+    <div id="SSPublishPaneTags">
+      <span class="SSPPTagsroundedCorners SSPPTagUser SSPPTagFont">@username</span>
+      <span class="SSPPTagsroundedCorners SSPPTagGroup SSPPTagFont">@groupname</span>
+      <span class="SSPPTagsroundedCorners SSPPTagTag SSPPTagFont">@tagname</span>
+    </div>
+    <input id="PublishTargets" type="text" outlet="PublishPane" class="SSPinput"></input>
+    <ul>
+      <li><img src="/images/Console/publish-share-main.png"/></li>
+      <li><label>Share:</label></li>
+      <li><a href="" class="SSPPTips" title="Permalink"><img src="/images/Console/publish-share-permalink.png"/></a></li>
+      <li><a href=""  class="SSPPTips" title="Twitter"><img src="/images/Console/publish-share-twitter.png"/></a></li>
+      <li><a href="" class="SSPPTips" title="Del.ico.us"><img src="/images/Console/publish-share-del.png" /></a></li>
+      <li><a href="" class="SSPPTips" title="Facebook"><img src="/images/Console/publish-share-facebook.png"/></a></li>
+      <li><a href="" class="SSPPTips" title="Digg"><img src="/images/Console/publish-share-digg.png" /></a></li>
+    </ul>
+  </div>
+  
+  <div id="SSPublishPaneFooter">
+    <label>Current Status: <b>Draft  </b></label>
+    <button id="DeleteShift" outlet="PublishPane" class="SSPublishPubButton">Delete</button>
+    <button id="SaveShift" outlet="PublishPane">Save</button>
+    <button id="PublishShift" outlet="PublishPane" class="SSPublishPubButton">Publish</button>
+  </div>
+  
 </div>
