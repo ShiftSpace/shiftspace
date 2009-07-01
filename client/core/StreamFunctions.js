@@ -62,11 +62,13 @@ function SSUnsubscribeLoggedInUser(streamId, callback)
   }, callback);
 }
 
-function SSPostEventToStream(streamId, displayString, ref, hasReadStatus, callback)
+function SSPostEventToStream(streamId, displayString, createdBy, createdByName, objectRef, hasReadStatus, callback)
 {
   SSStreamCall('event.post', {
     stream_id: streamId,
     display_string: displayString,
+    created_by: createdBy,
+    created_by_name: createByName,
     object_ref: ref,
     has_read_status: hasReadStatus
   }, callback);

@@ -13,6 +13,7 @@ var SSAbstractStream = new Class({
     return {
       displayName: null,
       uniqueName: null,
+      objectRef: null,
       private: true,
       createStream: false,
     }
@@ -25,7 +26,11 @@ var SSAbstractStream = new Class({
     
     if(this.options.createStream)
     {
-      SSCreateStream(this.options.displayName, this.options.uniqueName, this.options.private, this.onCreate.bind(this));
+      SSCreateStream(this.options.displayName,
+                     this.options.uniqueName,
+                     this.options.private,
+                     this.options.objectRef,
+                     this.onCreate.bind(this));
     }
   },
   
@@ -54,21 +59,27 @@ var SSAbstractStream = new Class({
   },
   
   
-  oneFeed: function(id, callback)
+  feed: function(callback)
   {
     
   },
   
   
-  setPermission: function(id, level)
+  setPermission: function(level)
   {
     
   },
   
   
-  postEvent: function(name, private, callback)
+  postEvent: function(options)
   {
-    
+    SSPostEventToStream(this.id(),
+                        options.displayString,
+                        ShiftSpace.User.getId(),
+                        ShiftSpace.User.getUsername(),
+                        options.objectRef,
+                        options.hasReadStatus,
+                        callback);
   },
   
   

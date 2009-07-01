@@ -31,7 +31,9 @@ var SSTag = new Class({
   
   addTag: function(ref)
   {
-    
+    this.postEvent({
+      
+    });
   },
   
   
