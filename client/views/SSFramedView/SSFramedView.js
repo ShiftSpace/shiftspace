@@ -53,7 +53,10 @@ var SSFramedView = new Class({
   {
     this.ui = ui;
     this.element = new IFrame({
-      'class': this.name+'Frame'
+      'class': this.name+'Frame',
+      events: {
+        load: this.buildInterface.bind(this)
+      }
     });
     
     var frag = Sandalphon.convertToFragment(this.ui['interface']);
@@ -65,7 +68,6 @@ var SSFramedView = new Class({
     
     SSSetControllerForNode(this, this.element);
     this.element.injectInside(document.body);
-    this.element.addEvent('load', this.buildInterface.bind(this));
   },
   
   
