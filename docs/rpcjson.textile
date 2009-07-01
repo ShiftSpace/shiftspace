@@ -1,6 +1,6 @@
-This wiki covers the progress on the ShiftSpace RPC API and the JSON data format specification. ShiftSpace will be adopting CouchDB's RESTful design, though of course some operations must have "side effects." For example if a user document is deleted, all objects associated with that user (within reasonable bounds) should be deleted as well.
+This wiki covers the progress on the ShiftSpace RPC API and the JSON data format specification. ShiftSpace borrows a few ideas from the design of CouchDB's HTTP API. There are of course some difference, for example, some operations must have "side effects." For example if a user object is deleted, all objects associated with that user (within reasonable bounds) should be deleted as well.
 
-We don't specify any particular authentication scheme, however the tests that come with ShiftSpace will check to see that permissions are not compromised.
+We don't specify any particular authentication scheme, however the tests that come with ShiftSpace will check to see that object permissions are not compromised.
 
 h1. Objects
 
@@ -19,7 +19,7 @@ h2. user
 
 h2. shift
 
-A shift is a document. Shifts are generally created by spaces. Spaces are "apps" for ShiftSpace- thirdy party extensions to the ShiftSpace interface. Spaces encode modifications to websites in the form of shifts. For example, you use the Notes space to create a Note shift. This Note shift (if public) can be viewed by anyone else using the Notes Space. Because different Spaces will need to save different kinds of documents, we do not specify a schema for the content of a shift.
+A shift is a document. Shifts are generally created by spaces. Spaces are "apps" for ShiftSpace- thirdy party extensions to the ShiftSpace interface. Spaces encode modifications to websites in the form of shifts. For example, you use the Notes space to create a Note shift. This Note shift (if public) can be viewed by anyone else using the Notes Space. Because different Spaces will need to save different kinds of documents, we do not specify a schema for the content of a shift. If your are implementing the specification on top of MySQL or SQLite schema-less objects will have to opaque JSON objects encoded as strings. If you are implementing on top of CouchDB or comparable schema-less database, the content field will be transparent.
 
 * id (string auto-generated)
 * type = "shift"
@@ -41,7 +41,7 @@ A shift is a document. Shifts are generally created by spaces. Spaces are "apps"
 
 h2. stream
 
-A stream abstracts tagging, commenting, events, groups and more. For example if in ShiftSpace if you follow a user you are subscribing to that user's stream. If you leave a comment on a shift you are posting an event to that particular shift's stream. A group is simply a stream that multiple users are subscribed to. Permission objects control who can view, edit, and post events to a stream.
+A stream abstracts tagging, commenting, events, groups and more. For example in ShiftSpace if you follow a user, you are in effect subscribing to that user's stream. If you leave a comment on a shift you are posting an event to that particular shift's stream. A group is simply a stream that multiple users are subscribed to. Permission objects control who can view and post events to that stream as well as control permissions on that strema.
    
 * id (string, auto-generated)
 * type = "stream"
@@ -49,7 +49,7 @@ A stream abstracts tagging, commenting, events, groups and more. For example if 
 * displayName (string)
 * created (date)
 * modified (date)
-* private (boolean)
+* private (boolean) - do we need this?
 * objectRef (string, format "documentType:id")
 
 h2. event
@@ -68,7 +68,7 @@ An event is something that occurred. When you tag a shift, this adds an event to
 
 h2. permission
 
-This object controls who can view/post/edit to a stream.
+This object controls who can view/post events to a stream as well as modify permissions for that stream.
 
 * id
 * type = "permission"
@@ -77,7 +77,19 @@ This object controls who can view/post/edit to a stream.
 
 h1. API
 
-Refer to the "CouchDB HTTP Document API":http://wiki.apache.org/couchdb/HTTP_Document_API to understand the rationale.
+Refer to the "CouchDB HTTP Document API":http://wiki.apache.org/couchdb/HTTP_Document_API to understand the rationale. All server calls should return ack:
+
+<pre>
+{data: "ok"}
+</pre>
+
+or err:
+
+<pre>
+{error: message}
+</pre>
+
+unless otherwise noted. 
 
 h2. user
 
@@ -87,11 +99,11 @@ h3. Create a user:
 POST /user
 </pre>
 
-The server should record the time and set the joined field. In addition a stream with objectRef set to "user:id" should be created with the createdBy field set to the user's id.
+The server should record the time and set the joined field. In addition a stream with objectRef set to "user:id" and createdBy field set to the user's id should be created.
 
 * *required parameters:* userName, email, password
 * *optional parameters:* preferences, displayName
-* *returns*: a json object containing at least userName, email, and displayName.
+* *returns*: a json object containing at least userName, email, and displayName. The password field should be excluded.
 
 h3. Update a user:
 
@@ -121,6 +133,7 @@ POST /user/login
 Start a user session.
 
 * *required parameters:* userName, password
+* *returns:* the same result as a user creation call.
 
 h3. Logout a user: 
 
@@ -137,6 +150,8 @@ GET /user/query
 </pre>
 
 If there is an existing user session returns an object containing at least the userName, userId, email, and preferences. 
+
+* *returns*: same result as a user login or create call.
 
 h3. Subscribe a user to a stream
 
@@ -164,7 +179,8 @@ h3. Get a feed of all the user's subscriptions
 GET /user/:userName/feeds
 </pre>
   
-Returns the list of events for all the streams that a user is subscribed to. 
+* *optional parameters*: from (date), count (integer).
+* *returns*: an array of event objects for all streams the user is subscribed to. These are ordered by creation date.
 
 h3. Get only a specific subscription 
 
@@ -172,7 +188,8 @@ h3. Get only a specific subscription
 GET /user/:userName/feed
 </pre>
 
-* *required parameters:* streamId
+* *required parameters:* streamId.
+* *returns*: an array of event objects for only the specified stream.
 
 h2. shift
 
@@ -183,6 +200,8 @@ POST /shift to create a shift
 </pre>
 
 A corresponding stream object with an objectRef property set to "shift:id" and createdBy set to the user's id should be created.
+
+* *returns:* all shift data in addition to it's newly assigned id.
 
 h3. Update a shift:
 
@@ -208,11 +227,17 @@ h3. Create a stream
 POST /stream
 </pre>
 
+the stream objectRef must be unique (any argument against this limitation?)
+
 h3. Update a stream
 
 <pre>
 PUT /stream/:id
 </pre>
+
+Only the stream displayName may be modified after creation. Only the creator can change this value.
+
+* *client authentication required*, user attempting delete must match createdBy
 
 h3. Delete a stream
 
@@ -220,17 +245,25 @@ h3. Delete a stream
 DELETE /stream/:id
 </pre>
 
+All events on this stream will be deleted as well.
+
+* *client authentication required*, user attempting delete must match createdBy
+
 h3. Find a stream:
 
 <pre>
 GET /stream/find/:objectRef
 </pre>
 
+* *returns:* a readable stream with matching objectRef field.
+
 h3. Find matching streams:
 
 <pre>
 GET /stream/has/:objectRef
 </pre>
+
+* *returns:* an array of readable stream objects which have events with matching objectRefs. 
 
 h2. event
 
