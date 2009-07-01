@@ -159,7 +159,7 @@ h3. Subscribe a user to a stream
 POST /user/:userName/subscribe
 </pre>
 
-After subscribing, the specified stream's events will appear when calling /user/:userName/feeds. A user may only subscribe to a stream which has a permission object with userId set to his/her userId or to the value "any".
+After subscribing, the specified stream's events will appear when calling /user/:userName/feeds. A user may only subscribe to a stream which has a permission object with userId set to his/her userId or to the value "anyone".
 
 * *required parameters:* streamId
 
@@ -315,7 +315,7 @@ h3. Create a permission:
 POST /permission
 </pre>
 
-Adds a permission document to a stream. A stream cannot be read or written to by non-creators without at least one corresponding permission document. If you wish to give public read access set the userId field to "any" and set the level field to 1. There can either be one permission object with userId field set to "any" or multiple permission objects with valid userIds.
+Adds a permission document to a stream. A stream cannot be read or written to by non-creators without at least one corresponding permission document. If you wish to give public read access set the userId field to "anyone" and set the level field to 1. There can either be one permission object with userId field set to "anyone" or multiple permission objects with valid userIds.
 
 Only the creator or admins can create new permission objects for a stream.
 
