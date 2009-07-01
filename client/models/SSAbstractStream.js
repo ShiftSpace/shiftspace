@@ -101,3 +101,5 @@ var SSAbstractStream = new Class({
   }
 
 });
+
+SSAbstractStream.findStreamWithObjectRef = SSFindStreamWithObjectRef;

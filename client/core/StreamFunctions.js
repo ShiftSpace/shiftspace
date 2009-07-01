@@ -93,3 +93,7 @@ function SSStreamCall(method, params, callback)
   SSServerCall(method, params, callback);
 }
 
+function SSFindStreamWithObjectRef(objectRef)
+{
+  
+}

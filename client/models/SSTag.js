@@ -49,14 +49,22 @@ var SSTag = new Class({
   
   onAddTag: function(json)
   {
-    SSLog('onAddTag', SSLogForce);
-    SSLog(json, SSLogForce);
   },
   
   
   removeTag: function()
   {
     
+  },
+  
+  
+  onRemoveTag: function()
+  {
+    
   }
   
 });
+
+SSTag.find = function(objectRef) {
+  
+};
