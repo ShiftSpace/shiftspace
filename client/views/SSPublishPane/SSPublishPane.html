@@ -6,6 +6,7 @@
      }"
      outlet="SSConsole">
      <div id="SSPublishPaneHeader">
+	   <div id="SSPublishPaneVis">
        <label>Visibility:</label>
 			
 			<span id="SSPPVisiblePublic">
@@ -22,7 +23,7 @@
        			  Public
        			</label>
 			</span>
-		
+		</div>
      </div>
      <div id="SSPublishPaneBody">
 	   <div id="SSPublishPaneTags">
@@ -34,7 +35,7 @@
 			<ul>
        			<li><img src="/images/Console/publish-share-main.png"/></li>
        			<li><label>Share:</label></li>
-				<li><a href="" class="SSPPTips" title="Permalink"><img src="/images/Console/publish-share-permalink.png"/></a></li>
+				<li><a href="" ><img src="/images/Console/publish-share-permalink.png" class="SSPPTips" title="Permalink"/></a></li>
 	   			<li><a href=""  class="SSPPTips" title="Twitter"><img src="/images/Console/publish-share-twitter.png"/></a></li>
 	   			<li><a href="" class="SSPPTips" title="Del.ico.us"><img src="/images/Console/publish-share-del.png" /></a></li>
 	   	  	 	<li><a href="" class="SSPPTips" title="Facebook"><img src="/images/Console/publish-share-facebook.png"/></a></li>
@@ -42,9 +43,11 @@
 		</ul>
      </div>
      <div id="SSPublishPaneFooter">
+	   <div id="SSPublishPaneStatus">
 	   <label>Current Status: <b>Draft  </b></label>
        <button id="DeleteShift" outlet="PublishPane" class="SSPublishPubButton">Delete</button>
        <button id="SaveShift" outlet="PublishPane">Save</button>
        <button id="PublishShift" outlet="PublishPane" class="SSPublishPubButton">Publish</button>
+	   </div>
      </div>
 </div>

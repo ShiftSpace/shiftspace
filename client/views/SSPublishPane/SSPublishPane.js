@@ -21,7 +21,7 @@ var SSPublishPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-  },
+    },
   
   
   setDelegate: function(delegate)
@@ -84,7 +84,6 @@ var SSPublishPane = new Class({
     evt = new Event(evt);
     var shifts = this.checkedShifts();
   },
-
   
   attachEvents: function()
   {
