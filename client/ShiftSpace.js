@@ -71,15 +71,12 @@ var ShiftSpace = new (function() {
 
     */
     this.initialize = function() {
-      // paths to required ShiftSpace files
-      
       // INCLUDE PostInitDeclarations
       
       // look for install links
       SSCheckForInstallSpaceLinks();
       if(SSLocalizedStringSupport()) SSLoadLocalizedStrings("en");
       
-      // Load external scripts (pre-processing required)
       // INCLUDE PACKAGE ShiftSpaceUI
       
       ShiftSpace.Console = new SSConsole();
@@ -92,18 +89,10 @@ var ShiftSpace = new (function() {
       
       // FIXME: this should be more modular! - David 6/3/09
       SSSetInstalledSpacesDataProvider(ShiftSpaceUser);
-      
-      // Update installed spaces
       SSAddObserver(SSNotificationProxy, 'onInstalledSpacesDidChange', SSUpdateInstalledSpaces);
       
       // Set up user event handlers
       SSAddObserver(SSNotificationProxy, 'onUserLogin', function() {
-        //SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
-        // FIXME: Just make this into a onUserLogin hook - David
-        if(SSHasResource('RecentlyViewedHelpers'))
-        {
-          SSSetValue(ShiftSpace.User.getUsername() + '.recentlyViewedShifts', []);
-        }
       });
 
       SSAddObserver(SSNotificationProxy, 'onUserLogout', function() {
@@ -124,17 +113,11 @@ var ShiftSpace = new (function() {
         }
       });
 
-      // create the pin selection bounding box
       SSCreatePinSelect();
-
-      // check for page iframes
       SSCheckForPageIframes();
-
-      // Create the modal div
       SSCreateModalDiv();
       SSCreateDragDiv();
       
-      // Synch with server, 
       SSSync();
     };
     
@@ -158,16 +141,7 @@ var ShiftSpace = new (function() {
 
         if(json.data.user)
         {
-          SSLog('User is logged in', SSLogForce);
-          // Set private user variable
           ShiftSpace.User.syncData(json.data.user)
-
-          // make sure default shift status preference is set
-          //SSSetDefaultShiftStatus(SSGetPref('defaultShiftStatus', 1));
-        }
-        else
-        {
-          SSLog('Guest account', SSLogForce);
         }
         
         SSUpdateInstalledSpaces();
@@ -176,18 +150,10 @@ var ShiftSpace = new (function() {
         var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
         if(!ui.every($msg('isLoaded')))
         {
-          //SSLog('++++++++++++++++++++ not all loaded', SSLogForce);
-          //SSLog(ui.filter($msg('isNotLoaded')), SSLogForce);
           ui.each($msg('addEvent', 'load', function(obj) {
             if(ui.every($msg('isLoaded')))
             {
-              //SSLog('++++++++++++++++++++++ all loaded', SSLogForce);
               SSPostNotification("onSync");
-            }
-            else
-            {
-              //SSLog('++++++++++++++++++++++ not all loaded', SSLogForce);
-              //SSLog(ui.filter($msg('isNotLoaded')), SSLogForce);
             }
           }.bind(this)))
         }
