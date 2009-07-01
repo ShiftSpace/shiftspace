@@ -6,10 +6,10 @@
 // @dependencies      SSTableView
 // ==/Builder==
 
-var ShiftsTableView = new Class({
+var SShiftTableView = new Class({
 
   Extends: SSTableView,
-  name: "ShiftsTableView",
+  name: "SShiftTableView",
 
   initialize: function(el, options)
   {
