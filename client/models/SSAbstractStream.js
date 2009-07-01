@@ -75,11 +75,17 @@ var SSAbstractStream = new Class({
   {
     SSPostEventToStream(this.id(),
                         options.displayString,
-                        ShiftSpace.User.getId(),
-                        ShiftSpace.User.getUsername(),
+                        options.userId,
+                        options.userName,
                         options.objectRef,
                         options.hasReadStatus,
-                        callback);
+                        this.onPostEvent.bind(this));
+  },
+  
+  
+  onPostEvent: function(json)
+  {
+    
   },
   
   

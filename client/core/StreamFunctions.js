@@ -68,8 +68,8 @@ function SSPostEventToStream(streamId, displayString, createdBy, createdByName, 
     stream_id: streamId,
     display_string: displayString,
     created_by: createdBy,
-    created_by_name: createByName,
-    object_ref: ref,
+    created_by_name: createdByName,
+    object_ref: objectRef,
     has_read_status: hasReadStatus
   }, callback);
 }

@@ -11,6 +11,8 @@ h2. user
 * userName (string, must be unique)
 * displayName (string)
 * email (string)
+* bio (string)
+* url (string)
 * password (string - md5 hash)
 * joined (date)
 * lastSeen (date)

@@ -29,11 +29,28 @@ var SSTag = new Class({
   },
   
   
-  addTag: function(ref)
+  addTag: function(objectRef)
   {
     this.postEvent({
-      
-    });
+      displayString: null,
+      userId: ShiftSpace.User.getId(),
+      userName: ShiftSpace.User.getUsername(),
+      objectRef: objectRef,
+      hasReadStatus: false
+    }, this.onAddTag.bind(this));
+  },
+  
+  
+  onPostEvent: function(json)
+  {
+    this.onAddTag(json);
+  },
+  
+  
+  onAddTag: function(json)
+  {
+    SSLog('onAddTag', SSLogForce);
+    SSLog(json, SSLogForce);
   },
   
   
