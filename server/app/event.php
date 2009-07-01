@@ -73,6 +73,11 @@ class Event {
     $this->server->db->save($permission);
     return $object->get();  
   }
+
+  public function findstreambyuniquename() {
+    extract($_REQUEST);
+    return $this->server->db->row("SELECT * FROM stream WHERE private=0 AND unique_name=:unique_name", compact('unique_name'));
+  }
   
   public function post() {
     $this->logged_in();

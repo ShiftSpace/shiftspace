@@ -25,121 +25,145 @@
   
 }
 
-#SSPublishPaneHeader
-{
-    background-image:url(/images/Console/publish-top-bg.gif);
-    height:27px;
-    padding:2px 0px 0px 4px;
-    background:#e3dfdb;
-}
+/*--------------------------------------------------HEADER*/
+    #SSPublishPaneHeader
+    {
+        background-image:url(/images/Console/publish-top-bg.gif);
+        height:27px;
+        padding:3px 0px 0px 4px;
+        background:#e3dfdb;
+    }
+  
+    .SSPPPermit{
+        background-color: #fff;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        padding:4px 3px 3px 3px;
+        margin-right:2px;
+    }
+/*---------------------------------------------------BODY*/
+    #SSPublishPaneBody
+    {
+        background:#C6C1BD;
+        height:86px;
+        margin-top:0px;
+        background-image:url(/images/Console/publish-top-body.gif);
+        background-repeat:repeat-y;
+    }
+    
+    #SSPublishPaneBody a img{
+        border-style:none;
+        position:relative;
+        left:2px;
+    }
+    
+    #SSPublishPaneBody ul{
+        position:relative;
+        left:-40px;
+        
+        bottom:5px;
+    }
+    
+    #SSPublishPaneBody ul li{
+        list-style:none;
+        float:left;
+        padding-left:4px;
+    }
+    
+    .SSPinput{
+        position:relative;
+        bottom:5px;
+        background-image:url(/images/Console/publish-form-input.gif);
+        width:262px;
+        height:22px;
+        border:0px;
+        margin-left:2px;
+        padding-bottom:5px;
+        padding-top:5px;
+        padding-left:5px;
+    }
+    
 
-#SSPublishPaneBody
-{
-    background:#C6C1BD;
-    height:86px;
-    margin-top:0px;
-    padding-left:3px;
-    background-image:url(/images/Console/publish-top-body.gif);
-    background-repeat:repeat-y;
-}
-
-#SSPublishPaneFooter
-{
-    padding-top:7px;
-    height:32px;
-    background:#ffffff;
-    width:268px;
-    background-image:url(/images/Console/publish-top-footer.gif);
-}
-
-#SSPublishPaneBody a img{
-    border-style:none;
-    position:relative;
-    left:2px;
-}
-
-.SSPPradio{
-    background-image:url(/images/Console/publish-form-radio.gif);
-    width:12px;
-    height:12px;
-}
-
-.SSPinput{
-    background-image:url(/images/Console/publish-form-input.gif);
-    width:262px;
-    height:22px;
-    border:0px;
-    margin-left:2px;
-    padding-bottom:5px;
-}
-
-.SSPPBodyBorder{
-    background-image:url(/images/Console/public-innerborder-left.gif) repeat-y;
-
-}
-
-.SSBorderTop{
+    
+    .SSPPBodyBorder{
+        background-image:url(/images/Console/public-innerborder-left.gif) repeat-y;
+    
+    }
+    
+    .SSBorderTop{
+        
+        
+    }
+    .SSBorderBottom{
+        
+    }
+    
+    .SSPPTagFont{
+        font-size:10px;
+        font-weight: bold;
+    }
+    
+    .SSPPTagUser{
+        color:#f63b02;
+    
+    }
+    
+    .SSPPsharelabel{
+        padding-bottom:3px;
+    }
+    
+    .SSPPTagGroup{
+        color:#8e2327;
+    }
     
     
-}
-.SSBorderBottom{
+    #SSPublishPaneTags{
+        padding-top:5px;
+        padding-bottom:15px;
+        overflow:hidden;
+    }
     
-}
+    #SSPublishPaneBody label{
+        padding-bottom:4px;
+    }
+    
+    
+    .SSPPTagTag{
+        color:#0054a6;
+    }
+    
+    
+    .SSPPTagsroundedCorners{
+        background-color: #fff;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        padding:2px 3px 1px 3px;
+    }
+    
+    
+/*----------------------------------------------------FOOTER*/
+    #SSPublishPaneFooter
+    {
+        padding-top:7px;
+        height:32px;
+        background:#ffffff;
+        width:268px;
+        background-image:url(/images/Console/publish-top-footer.gif);
+    }
+    
+    #SaveShift{
+        display:none;
+    }
+    
+    .SSPublishPubButton{
+        background-color: #f63b02;
+        color:fff;
+        border:1px #b52b01 solid;
+        -moz-border-radius: 10px;
+        -webkit-border-radius: 10px;
+        padding:0px 5px;
+        font-weight:bold;
+    }
+    
 
-.SSPPTagFont{
-    font-size:10px;
-    font-weight: bold;
-}
-
-.SSPPTagUser{
-    color:#f63b02;
-
-}
-
-.SSPPsharelabel{
-    padding-bottom:3px;
-}
-
-.SSPPTagGroup{
-    color:#8e2327;
-}
-
-#SSPublishPaneTags{
-    padding-top:5px;
-}
-
-#SSPublishPaneBody label{
-    padding-bottom:4px;
-}
-
-#SSPublishShare{
-    padding-top:20px;
-}
-
-#
-
-.SSPPTagTag{
-    color:#0054a6;
-}
-
-#SaveShift{
-    display:none;
-}
-
-.SSPublishPubButton{
-    background-color: #f63b02;
-    color:fff;
-    border:1px #b52b01 solid;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    padding:0px 5px;
-    font-weight:bold;
-}
-
-.SSPPTagsroundedCorners{
-    background-color: #fff;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    padding:2px 3px 1px 3px;
-}
 

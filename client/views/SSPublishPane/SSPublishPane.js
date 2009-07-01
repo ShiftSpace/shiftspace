@@ -16,7 +16,7 @@ var SSPublishPane = new Class({
       multipleSelection: true
     });
   },
-
+  
 
   initialize: function(el, options)
   {
@@ -84,15 +84,15 @@ var SSPublishPane = new Class({
     evt = new Event(evt);
     var shifts = this.checkedShifts();
   },
-  
+
   
   attachEvents: function()
   {
     SSLog('attachEvents', SSLogForce);
-
     this.DeleteShift.addEvent('click', this.deleteShifts.bind(this));
     this.SaveShift.addEvent('click', this.saveShifts.bind(this));
     this.PublishShift.addEvent('click', this.publishShifts.bind(this));
   }
+
 
 });
