@@ -53,7 +53,15 @@ class Event {
     $object = new Stream_Object();
     $created_by = $this->server->user->id;
     $created_by_name = $this->server->user->username;
-    $object->set(compact('private', 'stream_name', 'created_by', 'created_by_name', 'object_ref'));    
+    
+    if ($unique_name) {
+      $num = $this->server->db->query('SELECT COUNT(*) FROM stream WHERE private=0 AND unique_name=:unique_name', compact('unique_name'))->fetch(PDO::FETCH_NUM);
+
+      if ($num[0] > 0)
+        throw new Exception("Stream already exists with this unique_name");
+    }
+    
+    $object->set(compact('private', 'stream_name', 'created_by', 'created_by_name', 'object_ref', 'unique_name'));    
     $this->server->db->save($object);
     
     $permission = new StreamPermission_Object();
@@ -63,7 +71,7 @@ class Event {
       'level' => 3));
       
     $this->server->db->save($permission);
-    return new Response($object);  
+    return $object->get();  
   }
   
   public function post() {
@@ -134,7 +142,7 @@ class Event {
   
   public function subscriptions() {
     $this->logged_in();
-    $query = "SELECT subscription.stream_id, since, private, level, stream_name 
+    $query = "SELECT subscription.stream_id, since, private, level, stream_name, object_ref, created_by, created_by_name 
       FROM stream, subscription 
       LEFT JOIN streampermission ON subscription.user_id = streampermission.user_id 
         AND subscription.stream_id = streampermission.stream_id 
