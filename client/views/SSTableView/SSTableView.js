@@ -100,8 +100,8 @@ var SSTableView = new Class({
         // clone the heading
         var columnHeading = model.clone(true);
         // grab the column definition and set the heading width to it's dimensions
-        var columnDefinition = this.columnDefinitionForIndex(idx);
-        columnHeading.setStyle('width', columnDefinition.getStyle('width'));
+        var column = this.columnForIndex(idx);
+        columnHeading.setStyle('width', column.getStyle('width'));
         // put the proper column heading title in there
         columnHeading.getElement('span.SSColumnHeadingTitle').set('text', columnTitle);
         // add it
@@ -138,7 +138,7 @@ var SSTableView = new Class({
   {
     // make the column titles refres to the column definition width - David
     this.columnHeadings().length.times(function(idx) {
-      var colWidth = this.columnDefinitionForIndex(idx).getSize().x || this.columnDefinitionForIndex(idx).getStyle('width');
+      var colWidth = this.columnForIndex(idx).getSize().x || this.columnForIndex(idx).getStyle('width');
       this.columnHeadingForIndex(idx).setStyle('width', colWidth+1);
     }.bind(this));
   },
@@ -175,7 +175,7 @@ var SSTableView = new Class({
     // make the columns resizer adjust the table as well
     resizers.length.times(function(idx) {
       resizer = resizers[idx];
-      this.columnDefinitionForIndex(idx).makeResizable({
+      this.columnForIndex(idx).makeResizable({
         handle: resizer,
         modifiers:{x:'width', y:''}
       });
@@ -394,7 +394,7 @@ var SSTableView = new Class({
   deselectRow: function(idx)
   {
     var row = this.rowForIndex(idx);
-    row.removeClass('SSActive');
+    this.unhighlightRow(idx);
     
     if(this.modelRowController()) this.modelRowController().deselect(row);
     
@@ -414,8 +414,36 @@ var SSTableView = new Class({
   deselectColumn: function(col)
   {
     var idx = this.selectedColumnIndex();
-    col.removeClass('SSActive');
+    this.unhighlightColumn(idx);
     this.columnHeadingForIndex(idx).removeClass('SSActive');
+  },
+  
+  
+  highlightColumn: function(idx)
+  {
+    var col = this.columnForIndex(idx);
+    col.addClass('SSActive');
+  },
+  
+  
+  unhighlightColumn: function(idx)
+  {
+    var col = this.columnForIndex(idx);
+    col.removeClass('SSActive');
+  },
+  
+  
+  highlightRow: function(idx)
+  {
+    var target = this.contentView.getElements(".SSRow")[idx];
+    target.addClass('SSActive');
+  },
+  
+  
+  unhighlightRow: function(idx)
+  {
+    var row = this.rowForIndex(idx);
+    row.removeClass('SSActive');
   },
 
   /*
@@ -432,8 +460,8 @@ var SSTableView = new Class({
       this.deselectAll();
     }
     
-    var target = this.contentView.getElements(".SSRow")[idx];
-    target.addClass('SSActive');
+    var target = this.rowForIndex(idx);
+    this.highlightRow(idx);
     
     if(this.delegate() && this.delegate().userSelectedRow)
     {
@@ -451,7 +479,7 @@ var SSTableView = new Class({
   selectColumn: function(idx)
   {
     this.deselectAll();
-    this.contentView.getElements("> .SSDefinition col")[idx].addClass('SSActive');
+    this.highlightColumn(idx);
     this.columnHeadingForIndex(idx).addClass('SSActive');
   },
 
@@ -494,13 +522,13 @@ var SSTableView = new Class({
 
 
   /*
-    Function: columnDefinitionForIndex
+    Function: columnForIndex
       Returns the col DOM element by index.
 
     Parameters:
       idx - an integer.
   */
-  columnDefinitionForIndex: function(idx)
+  columnForIndex: function(idx)
   {
     return this.contentView.getElements('> .SSDefinition col')[idx];
   },
@@ -547,7 +575,7 @@ var SSTableView = new Class({
     else if(!this.rowIsSelected(rowIndex))
     {
       // otherwise if not already selected, select it
-      this.selectRow(rowIndex);            
+      this.selectRow(rowIndex);
     }
 
     // notify the delegate

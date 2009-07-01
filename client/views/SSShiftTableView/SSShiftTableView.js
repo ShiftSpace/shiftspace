@@ -23,7 +23,20 @@ var SSShiftTableView = new Class({
     return this.contentView.getElements('.SSRow input:checked');
   },
   
-
+  
+  checkRow: function(idx)
+  {
+    this.hightlightRow(idx);
+    var row = this.rowForIndex(idx);
+  },
+  
+  
+  rowIndexForShiftId: function(id)
+  {
+    
+  },
+  
+  
   checkedShifts: function()
   {
     return this.element.getElements('.SSRow input.SSSelectShift[checked]').getParent('.SSRow').map(this.indexOfRow.bind(this));
