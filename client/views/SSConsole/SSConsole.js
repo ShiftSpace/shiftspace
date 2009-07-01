@@ -13,6 +13,8 @@ var SSConsole = new Class({
   
   initialize: function(el, options)
   {
+    SSLog('>>>>>>>>>>>>>> SSConsole', SSLogForce);
+    
     // only really relevant under Sandalphon
     if(typeof SandalphonToolMode == 'undefined')
     {
@@ -345,6 +347,39 @@ var SSConsole = new Class({
     }.bind(this));
   },
   
+  
+  onFrameLoad: function(ui)
+  {
+    SSLog('>>>>>>>>>>>>>>>>>>>>>>>> onFrameLoad', SSLogForce);
+    var context = this.element.contentWindow;
+    var doc = context.document;
+    
+    // under GM not wrapped, erg - David
+    if(!context.$)
+    {
+      context = new Window(context);
+      doc = new Document(context.document);
+    }
+    this.context = context;
+    this.doc = doc;
+    
+    Sandalphon.addStyle(ui.styles, context);
+    
+    // grab the interface, strip the outer level, we're putting the console into an iframe
+    var fragment = Sandalphon.convertToFragment(ui['interface'], context).getFirst();
+    
+    $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
+    $(context.document.body).grab(fragment);
+    
+    Sandalphon.activate(context);
+    
+    this.initResizer();
+    this.attachEvents();
+    
+    SSPostNotification(SSConsoleIsReadyNotification, this);
+    this.setIsLoaded(true);
+  },
+  
 
   buildInterface: function(ui)
   {
@@ -355,45 +390,16 @@ var SSConsole = new Class({
 
     // create the iframe where the console will live
     this.element = new IFrame({
-      id: 'SSConsole'
+      id: 'SSConsole',
+      events: {
+        load: this.onFrameLoad.bind(this, ui)
+      }
     });
     this.element.addClass('SSDisplayNone');
     
-    // since we're creating the frame via code we need to hook up the controller
-    // reference manually
+    // since we're creating the frame via code we need to hook up the controller reference manually
     SSSetControllerForNode(this, this.element);
     this.element.injectInside(document.body);
-
-    // finish initialization after iframe load
-    this.element.addEvent('load', function() {
-      var context = this.element.contentWindow;
-      var doc = context.document;
-      
-      // under GM not wrapped, erg - David
-      if(!context.$)
-      {
-        context = new Window(context);
-        doc = new Document(context.document);
-      }
-      this.context = context;
-      this.doc = doc;
-      
-      Sandalphon.addStyle(ui.styles, context);
-      
-      // grab the interface, strip the outer level, we're putting the console into an iframe
-      var fragment = Sandalphon.convertToFragment(ui['interface'], context).getFirst();
-      
-      $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
-      $(context.document.body).grab(fragment);
-      
-      Sandalphon.activate(context);
-      
-      this.initResizer();
-      this.attachEvents();
-      
-      SSPostNotification(SSConsoleIsReadyNotification, this);
-      this.setIsLoaded(true);
-    }.bind(this));
   },
   
   
