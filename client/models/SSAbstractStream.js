@@ -8,10 +8,31 @@ var SSAbstractStream = new Class({
   Implements: [Events, Options],
   name: "SSAbstractStream",
 
-
-  initialize: function()
+  defaults: function() 
   {
+    return {
+      displayName: null,
+      uniqueName: null,
+      private: true,
+      createStream: false,
+    }
+  },
+
+
+  initialize: function(options)
+  {
+    this.setOptions(this.defaults(), options);
     
+    if(this.options.createStream)
+    {
+      SSCreateStream(this.options.displayName, this.options.uniqueName, this.options.private, this.onCreate.bind(this));
+    }
+  },
+  
+  
+  onCreate: function(json)
+  {
+    console.log(json);
   },
   
   

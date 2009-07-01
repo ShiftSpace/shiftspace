@@ -14,13 +14,15 @@ function SSGetFeed(streamId, callback)
   SSStreamCall('event.onefeed', {stream_id:streamId}, callback);
 }
 
-function SSCreateStream(name, isPrivate, callback)
+function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, callback)
 {
   if(isPrivate == false) isPrivate = 0;
   if(isPrivate == true) isPrivate = 1;
   
   SSStreamCall('event.createstream', {
-    stream_name: name,
+    stream_name: displayName,
+    unique_name: uniqueName,
+    object_ref: objectRef,
     private: isPrivate == true
   }, callback);
 }
