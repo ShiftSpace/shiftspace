@@ -613,7 +613,6 @@ var SSTableView = new Class({
   */
   reload: function()
   {
-    // reload from the server
     if(this.datasource()) this.datasource().fetch();
   },
 
@@ -835,12 +834,6 @@ var SSTableView = new Class({
     {
       this.refresh();
     }
-  },
-  
-  // TODO: move to new class - David 7/18/09
-  checkedShifts: function()
-  {
-    return this.element.getElements('.SSRow input.SSSelectShift[checked]').getParent('.SSRow').map(this.indexOfRow.bind(this));
   }
 
 });
