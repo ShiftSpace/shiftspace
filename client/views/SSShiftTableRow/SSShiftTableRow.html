@@ -1,0 +1,32 @@
+<tr class="SSRow SSModel SSShiftTableRow" uiclass='SSShiftTableRow'>
+  <td name="selected">
+    <input class="SSSelectShift SSActionCell" 
+           type="checkbox"
+           outlet="{
+             name:'actionCell',
+             target:'.SSShiftTableRow'
+           }">
+    </input>
+  </td>
+  <td name="space">
+    <img></img>
+    <span></span>
+  </td>
+  <td name="summary">
+    <input type="text" 
+           readonly="1" 
+           uiclass="SSEditableTextCell" 
+           class="SSEditableTextCell" 
+           outlet="{
+             name:'editTextCell', 
+             target:'.SSShiftTableRow'
+           }">
+    </input>
+  </td>
+  <td name="username">
+    <a class="SSUserLink" target="new" href="#">
+      dnolen
+    </a>
+  </td>
+  <td name="created">Just created.</td>
+</tr>
