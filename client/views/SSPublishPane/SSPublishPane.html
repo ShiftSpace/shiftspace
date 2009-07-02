@@ -12,14 +12,14 @@
      <label>Visibility:</label>
 
      <span id="SSPPVisiblePublic">
-       <input name="ShiftStatusRadio" value="public" outlet="PublishPane" type="radio" class="SSPPradio"></input>
+       <input id="ShiftPublicStatusRadio" name="ShiftPublicStatusRadio" value="public" outlet="PublishPane" type="radio" class="SSPPradio"></input>
        <img src="/images/Console/publish-private.gif"/>
        <label>
          Private
        </label>
      </span>
      <span id="SSPPVisiblePrivate">
-       <input name="ShiftStatusRadio" value="private" outlet="PublishPane" type="radio" class="SSPPradio"></input>
+       <input id="ShiftPrivateStatusRadio" name="ShiftPrivateStatusRadio" value="private" outlet="PublishPane" type="radio" class="SSPPradio"></input>
        <img src="/images/Console/publish-private.gif"/>
        <label>
          Public
@@ -47,8 +47,9 @@
     </ul>
   </div>
   
-  <div id="SSPublishPaneStatus">
-    <label>Current Status: <b>Draft  </b></label>
+  <div id="SSPublishPaneFooter">
+    <div id="SSPublishPaneStatus">
+      <label>Current Status: <b>Draft  </b></label>
       <button id="DeleteShift" outlet="PublishPane" class="SSPublishPubButton">Delete</button>
       <button id="SaveShift" outlet="PublishPane">Save</button>
       <button id="PublishShift" outlet="PublishPane" class="SSPublishPubButton">Publish</button>
