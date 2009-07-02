@@ -22,7 +22,7 @@ var SSLogMessage        = 1,
     SSLogSystem         = 1 << 13;
 
 var SSLogAll = 0xfffffff;           // All bits on (if we have at most 32 types)
-var __ssloglevel__ = SSNoLogging;
+var __ssloglevel = SSNoLogging;
 
 /*
 Function: log
@@ -49,7 +49,7 @@ function SSLog(msg, type)
       messageType = 'WARNING: ';
     }
     
-    if(__ssloglevel__ == SSLogAll || (type && (__ssloglevel__ & type)) || type == SSLogForce)
+    if(__ssloglevel == SSLogAll || (type && (__ssloglevel & type)) || type == SSLogForce)
     {
       if($type(msg) != 'string')
       {
@@ -76,7 +76,7 @@ function SSLog(msg, type)
 function SSSetLogLevel(level)
 {
   SSLog('SSSetLogLevel ' + level);
-  __ssloglevel__ = level;
+  __ssloglevel = level;
 }
 
 if(typeof %%LOG_LEVEL%% != 'undefined')
