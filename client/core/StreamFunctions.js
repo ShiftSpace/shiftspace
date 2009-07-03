@@ -9,10 +9,12 @@ function SSGetAllFeeds(callback)
   SSStreamCall('event.feed', callback);
 }
 
+
 function SSGetFeed(streamId, callback)
 {
   SSStreamCall('event.onefeed', {stream_id:streamId}, callback);
 }
+
 
 function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, callback)
 {
@@ -27,6 +29,7 @@ function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, callback)
   }, callback);
 }
 
+
 function SSSetStreamPermission(streamId, userId, level, callback)
 {
   SSStreamCall('event.setstreampermissions', {
@@ -36,6 +39,7 @@ function SSSetStreamPermission(streamId, userId, level, callback)
   }, callback);
 }
 
+
 function SSFindStreams(ref, callback)
 {
   SSStreamCall('event.findstreams', {
@@ -43,10 +47,12 @@ function SSFindStreams(ref, callback)
   }, callback);
 }
 
+
 function SSSubscriptionsForLoggedInUser(callback)
 {
   SSStreamCall('event.subscriptions', null, callback);
 }
+
 
 function SSSubscribeLoggedInUser(streamId, callback)
 {
@@ -55,12 +61,14 @@ function SSSubscribeLoggedInUser(streamId, callback)
   }, callback);
 }
 
+
 function SSUnsubscribeLoggedInUser(streamId, callback)
 {
   SSStreamCall('event.unsubscribe', {
     stream_id: streamId
   }, callback);
 }
+
 
 function SSPostEventToStream(streamId, displayString, createdBy, createdByName, objectRef, hasReadStatus, callback)
 {
@@ -74,12 +82,14 @@ function SSPostEventToStream(streamId, displayString, createdBy, createdByName, 
   }, callback);
 }
 
+
 function SSMarkEventReadForLoggedInUser(eventId, callback)
 {
   SSStreamCall('event.markread', {
     event_id: eventId
   }, callback);
 }
+
 
 function SSMarkEventUneadForLoggedInUser(eventId, callback)
 {
@@ -88,12 +98,30 @@ function SSMarkEventUneadForLoggedInUser(eventId, callback)
   }, callback);
 }
 
+
+function SSDeleteEvent(eventId, callback)
+{
+  SStreamCall('event.deleteevent', {
+    event_id: eventId
+  }, callback);
+}
+
+
+function SSFindStreamsWithEvents(objectRef, callback)
+{
+  SStreamCall('event.findstreamswithevent', {
+    object_ref: objectRef
+  }, callback);
+}
+
+
 function SSStreamCall(method, params, callback)
 {
   SSServerCall(method, params, callback);
 }
 
-function SSFindStreamWithObjectRef(objectRef)
+
+function SSFindStreamsWithEvents(objectRef)
 {
   
 }

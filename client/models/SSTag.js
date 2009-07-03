@@ -52,13 +52,13 @@ var SSTag = new Class({
   },
   
   
-  removeTag: function()
+  removeTag: function(objectRef)
   {
     
   },
   
   
-  onRemoveTag: function()
+  onRemoveTag: function(json)
   {
     
   }

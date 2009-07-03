@@ -89,6 +89,19 @@ var SSAbstractStream = new Class({
   },
   
   
+  deleteEvent: function(options)
+  {
+    SSDeleteEvent(options.id,
+                  this.onDeleteEvent.bind(this))
+  },
+  
+  
+  onDeleteEvent: function(json)
+  {
+    
+  },
+  
+  
   subscribe: function(id)
   {
     
@@ -102,4 +115,4 @@ var SSAbstractStream = new Class({
 
 });
 
-SSAbstractStream.findStreamWithObjectRef = SSFindStreamWithObjectRef;
+SSAbstractStream.findStreamsWithEvents = SSFindStreamsWithEvents;
