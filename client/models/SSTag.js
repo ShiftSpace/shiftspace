@@ -13,7 +13,8 @@ var SSTag = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      createStream: true
+      createStream: true,
+      private: 0
     });
   },
   
@@ -54,17 +55,22 @@ var SSTag = new Class({
   
   removeTag: function(objectRef)
   {
-    
+    this.deleteEvent({
+      displayString: null,
+      userId: ShiftSpace.User.getId(),
+      userName: ShiftSpace.User.getUsername(),
+      objectRef: objectRef,
+      hasReadStatus: false
+    }, this.onAddTag.bind(this));
   },
   
   
   onRemoveTag: function(json)
   {
-    
   }
   
 });
 
-SSTag.find = function(objectRef) {
-  
+SSTag.find = function(objectRef, callback) {
+  SSAbstractStream.findStreamsWithEvents(objectRef, callback);
 };

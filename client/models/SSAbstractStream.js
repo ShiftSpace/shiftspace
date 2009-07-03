@@ -14,7 +14,7 @@ var SSAbstractStream = new Class({
       displayName: null,
       uniqueName: null,
       objectRef: null,
-      private: true,
+      private: 1,
       createStream: false,
     }
   },
@@ -28,8 +28,8 @@ var SSAbstractStream = new Class({
     {
       SSCreateStream(this.options.displayName,
                      this.options.uniqueName,
-                     this.options.private,
                      this.options.objectRef,
+                     this.options.private,
                      this.onCreate.bind(this));
     }
   },

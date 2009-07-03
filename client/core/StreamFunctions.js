@@ -17,15 +17,12 @@ function SSGetFeed(streamId, callback)
 
 
 function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, callback)
-{
-  if(isPrivate == false) isPrivate = 0;
-  if(isPrivate == true) isPrivate = 1;
-  
+{ 
   SSStreamCall('event.createstream', {
     stream_name: displayName,
     unique_name: uniqueName,
     object_ref: objectRef,
-    private: isPrivate == true
+    private: isPrivate
   }, callback);
 }
 
@@ -101,7 +98,7 @@ function SSMarkEventUneadForLoggedInUser(eventId, callback)
 
 function SSDeleteEvent(eventId, callback)
 {
-  SStreamCall('event.deleteevent', {
+  SSStreamCall('event.deleteevent', {
     event_id: eventId
   }, callback);
 }
@@ -109,7 +106,7 @@ function SSDeleteEvent(eventId, callback)
 
 function SSFindStreamsWithEvents(objectRef, callback)
 {
-  SStreamCall('event.findstreamswithevent', {
+  SSStreamCall('event.findstreamswithevent', {
     object_ref: objectRef
   }, callback);
 }
@@ -118,10 +115,4 @@ function SSFindStreamsWithEvents(objectRef, callback)
 function SSStreamCall(method, params, callback)
 {
   SSServerCall(method, params, callback);
-}
-
-
-function SSFindStreamsWithEvents(objectRef)
-{
-  
 }
