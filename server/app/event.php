@@ -214,6 +214,25 @@ class Event {
     
     return new Response($this->server->db->rows("SELECT * FROM stream $user_clause WHERE (stream.private = 0 $permissions_clause) AND object_ref=:object_ref", compact('object_ref')));
   }
+
+  public function findstreamswithevent() {
+    extract($_REQUEST);
+    if ($this->server->user) {
+      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND user_id = ".$this->server->user->id;
+      $permissions_clause = "OR (stream.private = 1 AND streampermission.level >= 1)";
+    }
+    else {
+      $user_clause = "";
+      $permissions_clause = "";
+    }
+    
+    return new Response($this->server->db->rows("SELECT DISTINCT stream.* FROM stream, event $user_clause WHERE event.stream_id = stream.id AND (stream.private = 0 $permissions_clause) AND event.object_ref=:object_ref", compact('object_ref')));
+  }
+  
+  public function deleteevent() {
+    extract($_REQUEST);
+    $this->server->db->query("DELETE FROM event WHERE id=:id", compact('id'));
+  }
 }
 
 ?>

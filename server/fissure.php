@@ -75,6 +75,8 @@ function method_form($httpmethod, $method, $args, $comment = '') {
 <?php method_form('post', 'event.streamsetpermission', array('stream_id', 'user_id', 'level'), 'level: 0=none, 1=read, 2=write, 3=administrator (can give permissions)'); ?>
 <?php method_form('post', 'event.findstreams', array('object_ref')); ?>
 <?php method_form('post', 'event.findevents', array('object_ref')); ?>
+<?php method_form('post', 'event.findstreamswithevent', array('object_ref')); ?>
+<?php method_form('post', 'event.deleteevent', array('id')); ?>
 <?php method_form('post', 'event.markread', array('event_id')); ?>
 <?php method_form('post', 'event.markunread', array('event_id')); ?>
 
