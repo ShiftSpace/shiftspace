@@ -73,7 +73,6 @@ body#SSConsoleFrameBody
 }
 
 #MainTabView > .SSControlView > .SSButton.SSActive{
-  height:31px;  
 }
 
 #MainTabView > .SSControlView > .SSButton div
