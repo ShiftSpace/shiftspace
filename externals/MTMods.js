@@ -251,3 +251,68 @@ Fx.CSS.implement({
     return Fx.CSS.Cache[selector] = to;
   }
 });
+
+Request.implement({
+  send: function(options){
+		if (!this.check(options)) return this;
+		this.running = true;
+
+		var type = $type(options);
+		if (type == 'string' || type == 'element') options = {data: options};
+
+		var old = this.options;
+		options = $extend({data: old.data, url: old.url, method: old.method}, options);
+		var data = options.data, url = options.url, method = options.method.toLowerCase();
+
+		switch ($type(data)){
+			case 'element': data = document.id(data).toQueryString(); break;
+			case 'object': case 'hash': data = Hash.toQueryString(data);
+		}
+
+		if (this.options.format){
+			var format = 'format=' + this.options.format;
+			data = (data) ? format + '&' + data : format;
+		}
+
+		if (this.options.emulation && !['get', 'post'].contains(method)){
+			var _method = '_method=' + method;
+			data = (data) ? _method + '&' + data : _method;
+			method = 'post';
+		}
+    
+		if (this.options.urlEncoded && method == 'post' && !this.headers.get('Content-type')){
+			var encoding = (this.options.encoding) ? '; charset=' + this.options.encoding : '';
+			this.headers.set('Content-type', 'application/x-www-form-urlencoded' + encoding);
+		}
+
+		if (this.options.noCache){
+			var noCache = 'noCache=' + new Date().getTime();
+			data = (data) ? noCache + '&' + data : noCache;
+		}
+
+		var trimPosition = url.lastIndexOf('/');
+		if (trimPosition > -1 && (trimPosition = url.indexOf('#')) > -1) url = url.substr(0, trimPosition);
+
+		if (data && method == 'get'){
+			url = url + (url.contains('?') ? '&' : '?') + data;
+			data = null;
+		}
+
+		this.xhr.open(method.toUpperCase(), url, this.options.async);
+
+		this.xhr.onreadystatechange = this.onStateChange.bind(this);
+
+		this.headers.each(function(value, key){
+			try {
+				this.xhr.setRequestHeader(key, value);
+			} catch (e){
+				this.fireEvent('exception', [key, value]);
+			}
+		}, this);
+
+		this.fireEvent('request');
+		this.xhr.send(data);
+		if (!this.options.async) this.onStateChange();
+		return this;
+	}
+});
