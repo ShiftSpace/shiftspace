@@ -6,5 +6,16 @@
 
 .SSUserLink
 {
-  font-style: italic;
+  padding: 2px 5px;
+  font-size:11px;
+  color: #4B423A;
+  text-decoration:none; 
+  background-color: #D7D1CC;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+}
+
+.SSUserLink:hover{
+  color: #FFF;
+  background-color: #5F4E44;
 }
