@@ -65,7 +65,7 @@ function SSInfo(spaceName)
   return {
     env: __env,
     server: __server,
-    spacesDir: (typeof spacesDir != 'undefined' && spacesDir) || null,
+    spacesDir: (typeof __spacesDir != 'undefined' && __spacesDir) || null,
     spaces: (spaceIndex && spaceIndex.join(', ')) || null,
     version: (typeof version != 'undefined' && version) || null
   };

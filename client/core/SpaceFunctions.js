@@ -178,10 +178,9 @@ Parameters:
 */
 function SSInstallSpace(space)
 {
-  //SSLog('install ' + space, SSLogForce);
   if(!SSURLForSpace(space))
   {
-    var url = SSInfo().server + 'spaces/' + space + '/' + space + '.js';
+    var url = SSInfo().spacesDir + '/' + space + '/' + space + '.js';
     var count = $H(SSInstalledSpaces()).getLength();
     
     SSLoadSpaceAttributes(space, function(attrs) {
