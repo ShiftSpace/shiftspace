@@ -182,7 +182,6 @@ var ShiftSpace = new (function() {
           }
         }
 
-        // run triggers
         var installed = SSInstalledSpaces();
         for(var space in installed)
         {

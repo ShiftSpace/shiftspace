@@ -45,7 +45,6 @@ function SSInfo(spaceName)
     }
     // TODO - this must be fixed, we need to cache space attributes, the only way to capture the icon for a space! - David 5/13/09
     defaults.icon = __server + 'spaces/' + spaceName + '/' + spaceName + '.png';
-    //var spaceInfo = $merge(defaults, SSSpaceForName(spaceName).attributes);
     var spaceInfo = $merge(defaults, {});
     delete spaceInfo.name; // No need to send this back
     spaceInfo.url = SSURLForSpace(spaceName);

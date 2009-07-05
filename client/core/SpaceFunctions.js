@@ -211,7 +211,6 @@ function SSInstallSpace(space)
           name:space, 
           position: count, 
           icon: space+'/'+space+'.png',
-          attrs: {},
           autolaunch: false
         };
       }
