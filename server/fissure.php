@@ -67,16 +67,18 @@ function method_form($httpmethod, $method, $args, $comment = '') {
 <?php method_form('post', 'event.subscriptions', array()); ?>
 <?php method_form('post', 'event.subscribe', array('stream_id')); ?>
 <?php method_form('post', 'event.unsubscribe', array('stream_id')); ?>
-<?php method_form('post', 'event.post', array('stream_id', 'display_string', 'object_ref', 'has_read_status')); ?>
+<?php method_form('post', 'event.post', array('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name')); ?>
 <?php method_form('post', 'event.feed', array()); ?>
 <?php method_form('post', 'event.onefeed', array('stream_id')); ?>
 <?php method_form('post', 'event.createstream', array('private', 'stream_name', 'object_ref', 'unique_name')); ?>
 <?php method_form('post', 'event.findstreambyuniquename', array('unique_name')); ?>
+<?php method_form('post', 'event.findeventbyuniquename', array('stream_id', 'unique_name')); ?>
 <?php method_form('post', 'event.streamsetpermission', array('stream_id', 'user_id', 'level'), 'level: 0=none, 1=read, 2=write, 3=administrator (can give permissions)'); ?>
 <?php method_form('post', 'event.findstreams', array('object_ref')); ?>
 <?php method_form('post', 'event.findevents', array('object_ref')); ?>
 <?php method_form('post', 'event.findstreamswithevent', array('object_ref')); ?>
 <?php method_form('post', 'event.deleteevent', array('id')); ?>
+<?php method_form('post', 'event.deleteeventbyuniquename', array('stream_id', 'unique_name')); ?>
 <?php method_form('post', 'event.markread', array('event_id')); ?>
 <?php method_form('post', 'event.markunread', array('event_id')); ?>
 

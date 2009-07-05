@@ -61,7 +61,7 @@ class Event {
         throw new Exception("Stream already exists with this unique_name");
     }
     
-    $object->set(compact('private', 'stream_name', 'created_by', 'created_by_name', 'object_ref', 'unique_name'));    
+    $object->set(compact('private', 'stream_name', 'created_by', 'created_by_name', 'object_ref', 'unique_name', 'are_object_refs_in_events_unique'));    
     $this->server->db->save($object);
     
     $permission = new StreamPermission_Object();
@@ -76,7 +76,27 @@ class Event {
 
   public function findstreambyuniquename() {
     extract($_REQUEST);
-    return $this->server->db->row("SELECT * FROM stream WHERE private=0 AND unique_name=:unique_name", compact('unique_name'));
+    
+    if ($unique_name)
+      return $this->server->db->row("SELECT * FROM stream WHERE private=0 AND unique_name=:unique_name", compact('unique_name'));
+    else
+      throw new Exception("unique_name required");
+  }
+  
+  public function findeventbyuniquename() {
+    extract($_REQUEST);
+    
+    if ($unique_name)
+      return $this->server->db->row("SELECT * FROM event WHERE stream_id=:stream_id AND unique_name=:unique_name", compact('stream_id', 'unique_name'));
+    else
+      throw new Exception("unique_name required");
+  }
+  
+  public function deleteeventbyuniquename() {
+    extract($_REQUEST);
+    
+    if ($unique_name)
+      $this->server->db->query("DELETE FROM event WHERE stream_id=:stream_id AND unique_name=:unique_name", compact('stream_id', 'unique_name'));
   }
   
   public function post() {
@@ -86,8 +106,15 @@ class Event {
     if ($this->permission($stream_id) < 2)
       throw new Error("You don't have permission for this operation.");
     
+    if ($unique_name) {
+      $num = $this->server->db->query('SELECT COUNT(*) FROM event WHERE stream_id=:stream_id AND unique_name=:unique_name', compact('stream_id', 'unique_name'))->fetch(PDO::FETCH_NUM);
+
+      if ($num[0] > 0)
+        throw new Exception("Event already exists with this unique_name");
+    }
+    
     $object = new Event_Object();
-    $object->set(compact('stream_id', 'display_string', 'object_ref', 'has_read_status'));
+    $object->set(compact('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name'));
     $object->set('created', time());
     $object->set('created_by', $this->server->user->id);
     $object->set('created_by_name', $this->server->user->username);
