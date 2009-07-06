@@ -4,7 +4,7 @@ var server = "../shiftserver";
 
 var ops = {
   '/query':                 {method:'get'},
-  '/join':                  {method:'post'},
+  '/join':                  {method:'post', json:true},
   '/login':                 {method:'post'},
   '/logout':                {method:'post'},
   '/user/update':           {method:'put', json:true},
@@ -19,7 +19,11 @@ function req(op, options)
   options.async = true;
   options.url = (server + op);
 
-  if(opData.json) options['Content-Type'] = 'application/json';
+  if(opData.json)
+  {
+    options.headers = {};
+    options.headers['Content-type'] = 'application/json';
+  }
   
   if(opData.json)
   {
@@ -64,6 +68,24 @@ function logout(next)
 {
   req('/logout', {
     onComplete: function(json) 
+    {
+      console.log(json);
+      if(next && $type(next) == 'function') next();
+    }
+  });
+}
+
+function join(next)
+{
+  req("/join", {
+    data:
+    {
+      userName: 'fakebob',
+      email: 'fakebob@gmail.com',
+      password: 'bazbaz',
+      passwordVerify: 'bazbaz'
+    },
+    onComplete: function(json)
     {
       console.log(json);
       if(next && $type(next) == 'function') next();
