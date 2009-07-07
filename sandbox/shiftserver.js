@@ -129,6 +129,7 @@ function deleteAccount(next)
   });
 }
 
+var shiftId = null;
 function createShift(next)
 {
   req({
@@ -147,6 +148,28 @@ function createShift(next)
     onComplete: function(json)
     {
       console.log(json);
+      shiftId = json.data;
+      if(next && $type(next) == 'function') next();
+    }
+  });
+}
+
+function publishShift(next)
+{
+  req({
+    url: "/publish",
+    resourceId: shiftId,
+    method: 'post',
+    json: true,
+    data: 
+    {
+      streams: [],
+      private: false
+    },
+    onComplete: function(json)
+    {
+      console.log(json);
+      shiftId = json.data;
       if(next && $type(next) == 'function') next();
     }
   });
