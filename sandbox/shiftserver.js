@@ -94,6 +94,27 @@ function join(next)
   });
 }
 
+function join2(next)
+{
+  req({
+    url: "/join",
+    method: 'post',
+    json: true,
+    data:
+    {
+      userName: 'fakejohn',
+      email: 'junk@gmail.com',
+      password: 'bazbaz',
+      passwordVerify: 'bazbaz'
+    },
+    onComplete: function(json)
+    {
+      console.log(json);
+      if(next && $type(next) == 'function') next();
+    }
+  });
+}
+
 function deleteAccount(next)
 {
   req({
