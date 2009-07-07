@@ -2,31 +2,23 @@ window.addEvent('domready', init);
 
 var server = "../shiftserver";
 
-var ops = {
-  '/query':                 {method:'get'},
-  '/join':                  {method:'post', json:true},
-  '/login':                 {method:'post'},
-  '/logout':                {method:'post'},
-  '/user/update':           {method:'put', json:true},
-  '/user/{userName}':       {method:'get'}
-}
-
-function req(op, options)
+function req(options)
 {
-  opData = ops[op];
-
-  options.method = opData.method;
   options.async = true;
-  options.url = (server + op);
+  options.url = (server + options.url);
+  options.url = (options.resourceId) ? options.url + '/' + options.resourceId : options.url
+  
+  if(options.resourceId) delete options.resourceId;
 
-  if(opData.json)
+  if(options.json)
   {
     options.headers = {};
     options.headers['Content-type'] = 'application/json';
   }
   
-  if(opData.json)
+  if(options.json)
   {
+    delete options.json;
     new Request.JSON(options).send((options.data && JSON.encode(options.data)) || null);
   }
   else
@@ -43,7 +35,9 @@ function init()
 
 function query(next)
 {
-  req('/query', {
+  req({
+    url: '/query', 
+    method: 'get',
     onComplete: function(json) 
     {
       console.log(json);
@@ -54,7 +48,9 @@ function query(next)
 
 function login(next)
 {
-  req('/login', {
+  req({
+    url: '/login',
+    method: 'post',
     data: {userName:"dnolen", password:"foobar"},
     onComplete: function(json) 
     {
@@ -66,7 +62,9 @@ function login(next)
 
 function logout(next)
 {
-  req('/logout', {
+  req({
+    url: '/logout', 
+    method: 'post',
     onComplete: function(json) 
     {
       console.log(json);
@@ -77,13 +75,53 @@ function logout(next)
 
 function join(next)
 {
-  req("/join", {
+  req({
+    url: "/join",
+    method: 'post',
+    json: true,
     data:
     {
       userName: 'fakebob',
       email: 'fakebob@gmail.com',
       password: 'bazbaz',
       passwordVerify: 'bazbaz'
+    },
+    onComplete: function(json)
+    {
+      console.log(json);
+      if(next && $type(next) == 'function') next();
+    }
+  });
+}
+
+function deleteAccount(next)
+{
+  req({
+    url: "/user/", 
+    resourceId: "fakebob",
+    method: "delete",
+    onComplete: function(json)
+    {
+      console.log(json);
+      if(next && $type(next) == 'function') next();
+    }
+  });
+}
+
+function createShift(next)
+{
+  req({
+    url: "/shift", 
+    method: 'post',
+    json: true,
+    data: 
+    {
+      space:"Highlights",
+      summary: "On the nytimes.com today",
+      content:
+      {
+        range: {}
+      }
     },
     onComplete: function(json)
     {
