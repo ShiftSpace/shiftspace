@@ -658,8 +658,6 @@ SSUnitTest.TestCase = new Class({
           testData.set('function', boundTest);
           // set complete status
           testData.set('complete', false);
-          
-          console.log(testData);
         }
       }
     }
