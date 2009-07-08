@@ -10,8 +10,8 @@
     </script>
     <script src="../externals/mootools-1.2.3-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="../externals/mootools-1.2.3.1-more.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../client/SSException.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../client/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../client/models/SSException.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../client/models/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
     <script src="SSTestRunner.js" type="text/javascript" charset="utf-8"></script>
     <script src="init.js" type="text/javascript" charset="utf-8"></script>
     <script src="../builds/shiftspace.sandalphon.js" type="text/javascript" charset="utf-8"></script>
