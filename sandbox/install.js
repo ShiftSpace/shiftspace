@@ -9,7 +9,7 @@ function compileAndLoad()
 {
   new Request({
     method: 'get',
-    url: 'install',
+    url: 'install.php',
     onComplete: function(responseText)
     {
       var json = JSON.decode(responseText);

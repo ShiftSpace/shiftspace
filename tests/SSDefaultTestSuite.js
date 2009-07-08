@@ -8,7 +8,6 @@
 var SSDefaultTestSuite = new Class({
 
   Extends: SSUnitTest.TestSuite,
-
   name: "SSDefaultTestSuite",
 
   initialize: function(options)

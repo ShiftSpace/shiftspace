@@ -5,10 +5,8 @@
 
 var NotificationTest = new Class({
   
-  name: 'NotificationTest',
-
   Extends: SSUnitTest.TestCase,
-  
+  name: 'NotificationTest',  
   
   setup: function()
   {

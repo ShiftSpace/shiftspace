@@ -65,7 +65,7 @@ body
   background-color:#EFEFEF;
   top:10px;
   right:10px;
-  height:50%;
+  height:25%;
   left:10px;
 }
 
@@ -74,8 +74,8 @@ body
   overflow-y: scroll;
   position:absolute;
   background-color:#ccc;
-  top:50%;
+  top:25%;
   right:10px;
-  height:50%;
+  height:75%;
   left:10px;
 }

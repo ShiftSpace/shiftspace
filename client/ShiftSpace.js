@@ -132,7 +132,7 @@ var ShiftSpace = new (function() {
         href: window.location.href
       };
       SSServerCall('query', params, function(json) {
-        SSLog("sync'ed", SSLogForce);
+        SSLog("sync'ed!", SSLogForce);
         if (json.error) 
         {
           console.error('Error checking for content: ' + json.error.message);
@@ -167,16 +167,44 @@ var ShiftSpace = new (function() {
         {
           for (var space in SSInstalledSpaces())
           {
-            SSLoadSpace(space);
+            try
+            {
+              SSLoadSpace(space);
+            }
+            catch(err)
+            {
+              SSLog('Error: could not load ' + space, SSLogForce);
+            }
           }
           for(var plugin in installedPlugins) 
           {
             SSLoadPlugin(plugin);
           }
         }
-        else
+
+        var installed = SSInstalledSpaces();
+        for(var space in installed)
         {
-          SSLog('not in ShiftSpaceSandBoxMode', SSLogForce);
+          var domains = installed[space].domains;
+          if(domains)
+          {
+            var host = "http://" + window.location.host;
+            var domainMatch = false;
+            for(var i = 0; i < domains.length; i++)
+            {
+              if(domains[i] == host)
+              {
+                domainMatch = true;
+                continue;
+              }
+            }
+            if(domainMatch)
+            {
+              SSLoadSpace(space, function(spaceInstance) {
+                spaceInstance.showInterface();
+              });
+            }
+          }
         }
       });
     }
@@ -251,6 +279,7 @@ var ShiftSpace = new (function() {
       unsafeWindow.ShiftSpace = this;
       this.sys = __sys__;
       this.SSTag = SSTag;
+      this.spaceForName = SSSpaceForName;
     }
 
     return this;
@@ -266,14 +295,3 @@ ShiftSpace.__externals = {
     }
   }
 };
-
-// For errors in Safari because many errors are silent in GreaseKit
-function SSDescribeException(_exception)
-{
-  var temp = [];
-  for(var prop in _exception)
-  {
-    temp.push(prop + ':' + _exception[prop]);
-  }
-  return "Exception:{ " + temp.join(', ') +" }";
-}

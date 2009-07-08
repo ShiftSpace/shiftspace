@@ -6,7 +6,6 @@
 var SandalphonFrameTest = new Class({
 
   Extends: SSUnitTest.TestCase,
-
   name: "SandalphonFrameTest",
 
   setup: function()

@@ -8,14 +8,12 @@
   },
   "files": {
     "remove": [
-      "CoreEvents",
       "PluginFunctions",
       "ShiftFunctions",
       "SpaceFunctions",
       "FullScreen",
       "RecentlyViewedHelpers",
-      "ErrorWindow",
-      "ShiftMenu"
+      "ErrorWindow"
     ],
     "replace": {
     }

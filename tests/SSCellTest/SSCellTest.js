@@ -5,9 +5,9 @@
 // ==/Builder==
 
 var SSCellTest = new Class({
-  name: "SSCellTest",
-  
+
   Extends: SSUnitTest.TestCase,
+  name: "SSCellTest",
   
   setup: function()
   {
