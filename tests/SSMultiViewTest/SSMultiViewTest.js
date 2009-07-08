@@ -5,9 +5,8 @@
 
 var SSMultiViewTest = new Class({
   
-  name: "SSMultiViewTest",
-  
   Extends: SSUnitTest.TestCase,
+  name: "SSMultiViewTest",
   
   setup: function()
   {

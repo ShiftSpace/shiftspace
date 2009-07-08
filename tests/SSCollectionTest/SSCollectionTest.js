@@ -4,10 +4,10 @@
 // ==/Builder==
 
 var SSCollectionTest = new Class({
-  name: "SSCollectionTest",
 
   Extends: SSUnitTest.TestCase,
-  
+  name: "SSCollectionTest",
+    
   setup: function()
   {
     this.collection = new SSCollection("MyCollection");

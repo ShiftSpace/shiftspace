@@ -6,8 +6,8 @@
 
 var LoginTest = new Class({
 
-  name: 'LoginTest',
   Extends: SSUnitTest.TestCase,
+  name: 'LoginTest',
   
   setup: function()
   {

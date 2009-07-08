@@ -5,9 +5,9 @@
 // ==/Builder==
 
 var SSListViewTest = new Class({
-  name: "SSListViewTest",
-  
+
   Extends: SSUnitTest.TestCase,
+  name: "SSListViewTest",
   
   setup: function()
   {
