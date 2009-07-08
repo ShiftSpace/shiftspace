@@ -1,6 +1,5 @@
 .SSTabView
 {
-  background-color:#e6e4a3;
   width: 100%;
   height: 100%;
 }
@@ -14,15 +13,12 @@
 {
   user-select: none;
   -moz-user-select: none;
-  color: #74665A;
   cursor: default;
 }
 
 .SSTabView > .SSControlView > .SSButton.SSActive
 {
   position: relative;
-  z-index:10;
-  top:1px;
 }
 
 .SSTabView > .SSContentView > .SSTabPane.SSActive
@@ -51,7 +47,6 @@
 
 .SSTabView > .SSControlView > div.SSButton:hover
 {
-  background-color: #fff;
 }
 
 /*
@@ -75,14 +70,11 @@
 .SSTabViewConsoleStyle > .SSControlView > .SSButton
 {
   float: left;
-  margin-right: 6px;
   height: 20px;
-  padding: 5px 10px;
 }
 
 .SSTabViewConsoleStyle > .SSControlView > .SSButton.SSActive
 {
-  background-color: #E6E4A3;
 }
 
 .SSTabViewConsoleStyle > .SSContentView
@@ -110,8 +102,6 @@
 
 .SSTabViewSubTabStyle > .SSControlView > .SSButton
 {
-  padding: 4px;
-  border-bottom: 1px solid;
 }
 
 .SSTabViewSubTabStyle > .SSContentView
