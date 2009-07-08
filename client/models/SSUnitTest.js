@@ -689,7 +689,7 @@ SSUnitTest.TestCase = new Class({
       catch(err)
       {
         var message = testData.get('message');
-        var newmessage = "Uncaught exception: " + err
+        var newmessage = "Uncaught exception: " + SSDescribeException(err);
         if(message)
         {
           message += ", " + newmessage;

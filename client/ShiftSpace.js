@@ -295,14 +295,3 @@ ShiftSpace.__externals = {
     }
   }
 };
-
-// For errors in Safari because many errors are silent in GreaseKit
-function SSDescribeException(_exception)
-{
-  var temp = [];
-  for(var prop in _exception)
-  {
-    temp.push(prop + ':' + _exception[prop]);
-  }
-  return "Exception:{ " + temp.join(', ') +" }";
-}
