@@ -16,7 +16,7 @@ var SSException = new Class({
   name: 'SSException',
 
   Implements: SSExceptionPrinter,
-    
+  
   initialize: function(_error)
   {
     this.theError = _error;

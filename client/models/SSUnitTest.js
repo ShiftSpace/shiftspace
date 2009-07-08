@@ -68,7 +68,7 @@ SSUnit.Base = new Class({
   
   __setDocForFunction__: function(fn, doc)
   {
-    this.__getDocs__().set($H(this).keyOf(fn), doc);
+    this.__getDocs__().set(fn.ssname, doc);
   },
   
 
@@ -658,6 +658,8 @@ SSUnitTest.TestCase = new Class({
           testData.set('function', boundTest);
           // set complete status
           testData.set('complete', false);
+          
+          console.log(testData);
         }
       }
     }
@@ -814,7 +816,7 @@ SSUnitTest.TestCase = new Class({
         message: testData.get('message') || ''
       }));
     }.bind(this));
-    
+
     // collect test case data
     this.__results.set('name', this.name);
     this.__results.set('count', this.__tests.getLength());
