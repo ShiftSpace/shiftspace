@@ -51,7 +51,21 @@ function login(next)
   req({
     url: '/login',
     method: 'post',
-    data: {userName:"dnolen", password:"foobar"},
+    data: {userName:"fakebob", password:"bazbaz"},
+    onComplete: function(json) 
+    {
+      console.log(json);
+      if(next && $type(next) == 'function') next();
+    }
+  });
+}
+
+function login2(next)
+{
+  req({
+    url: '/login',
+    method: 'post',
+    data: {userName:"fakejohn", password:"barbar"},
     onComplete: function(json) 
     {
       console.log(json);
@@ -104,8 +118,8 @@ function join2(next)
     {
       userName: 'fakejohn',
       email: 'junk@gmail.com',
-      password: 'bazbaz',
-      passwordVerify: 'bazbaz'
+      password: 'barbar',
+      passwordVerify: 'barbar'
     },
     onComplete: function(json)
     {
@@ -170,6 +184,20 @@ function publishShift(next)
     {
       console.log(json);
       shiftId = json.data;
+      if(next && $type(next) == 'function') next();
+    }
+  });
+}
+
+function follow(next)
+{
+  req({
+    url: "/follow",
+    resourceId: "fakebob",
+    method: 'post',
+    onComplete: function(json)
+    {
+      console.log(json);
       if(next && $type(next) == 'function') next();
     }
   });

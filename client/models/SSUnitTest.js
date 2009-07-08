@@ -51,7 +51,7 @@ SSUnit.Base = new Class({
   doc: function(string)
   {
     var docs = this.__getDocs__();
-    var caller = arguments.callee.caller;
+    var caller = this.doc.caller;
     this.__setDocForFunction__(caller, string);
   },
   
@@ -483,7 +483,7 @@ SSUnitTest.TestCase = new Class({
     
     // grab the remaining arguments
     var testArgs = $splat(args);
-    var caller = $pick(hook, arguments.callee.caller);
+    var caller = $pick(hook, this.assertThrows.caller);
     
     try
     {
@@ -523,7 +523,7 @@ SSUnitTest.TestCase = new Class({
   {
     if(arguments.length < 1) throw new SSUnitTest.AssertError(new Error(), 'assert expects 1 arguments.');
 
-    var caller = $pick(hook, arguments.callee.caller);
+    var caller = $pick(hook, this.assert.caller);
     
     if(value == true)
     {
@@ -540,7 +540,7 @@ SSUnitTest.TestCase = new Class({
   {
     if(arguments.length < 1) throw new SSUnitTest.AssertError(new Error(), 'assertFalse expects 1 arguments.');
 
-    var caller = $pick(hook, arguments.callee.caller);
+    var caller = $pick(hook, this.assertFalse.caller);
     
     if(value == false)
     {
@@ -578,7 +578,7 @@ SSUnitTest.TestCase = new Class({
   {
     if(arguments.length < 2) throw new SSUnitTest.AssertEqualError(new Error(), 'assertEqual expects 2 arguments.');
 
-    var caller = $pick(hook, arguments.callee.caller);
+    var caller = $pick(hook, this.assertEqual.caller);
     
     if(a == b)
     {
@@ -616,7 +616,7 @@ SSUnitTest.TestCase = new Class({
   {
     if(arguments.length < 2) throw new SSUnitTest.AssertNotEqualError(new Error(), 'assertNotEqual expects 2 arguments.');
 
-    var caller = $pick(hook, arguments.callee.caller);
+    var caller = $pick(hook, this.assertNotEqual.caller);
     
     if(a != b)
     {
@@ -642,7 +642,7 @@ SSUnitTest.TestCase = new Class({
         if(propertyName.search("test") == 0 && 
            $type(property) == 'function') 
         {
-          var theTest = property,
+          var theTest = property._origin,
               testName = propertyName;
                     
           // add it to the testing data
@@ -780,7 +780,7 @@ SSUnitTest.TestCase = new Class({
   
   startAsync: function()
   {
-    var data = this.__dataForTest__(arguments.callee.caller);
+    var data = this.__dataForTest__(this.startAsync.caller);
     data.set('async', true);
     return data.get('function');
   },
