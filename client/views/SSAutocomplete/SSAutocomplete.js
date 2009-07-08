@@ -13,10 +13,10 @@ var SSAutocomplete = new Class({
     this.parent(el, options);
     new Autocompleter.Local(el, ['Avital', 'David', 'Joe', 'Dan', 'Mushon', 'Florica', 'Justin', 'Clint', 'Alex'], {
       'minLength': 1, // We wait for at least one character
-      'overflow': true // Overflow for more entries
+      'overflow': true, // Overflow for more entries
+      'multiple': true,
+//      'separator': ' '
     });
-              
-    alert(el)
   },
 
   setValue: function(value)
