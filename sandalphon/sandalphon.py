@@ -38,6 +38,7 @@ class SandalphonCompiler:
     self.files = packages['files']
 
     self.cssFile = ''
+    self.cssFiles = []
     self.templatePattern = re.compile('<\?.+?\?>')
     self.cssImagePattern = re.compile('(?<=url\()/images/')
     self.htmlImagePattern = re.compile("(?<=src=[\"\'])/images/(?=.+?[\"\'])")
@@ -99,7 +100,8 @@ class SandalphonCompiler:
         
       # add this view's css if necessary
       if self.visitedViews.has_key(view) != True:
-        self.addCSSForHTMLPath(os.path.join(filePath, view+'.html'))
+        self.addCSS({"path":os.path.join(filePath, view+'.html'), "file":view})
+        #self.addCSSForHTMLPath(os.path.join(filePath, view+'.html'))
         self.visitedViews[view] = True
 
       return fileContents
@@ -113,6 +115,10 @@ class SandalphonCompiler:
     
   def preprocessHTMLImageUrls(self, html, imageUrl):
     return self.htmlImagePattern.sub(imageUrl, html)
+    
+    
+  def addCSS(self, fileData):
+    self.cssFiles.append(fileData)
 
 
   def addCSSForHTMLPath(self, filePath):
@@ -190,8 +196,11 @@ class SandalphonCompiler:
     viewDirectory = "../client/views/"
     
     toLoad = seen.keys()
+
     # TODO: doesn't look in custom view, we should see if it is a custom view - David 7/12/09
-    [self.addCSSForHTMLPath(os.path.join(os.path.join(viewDirectory, item), item+".css")) for item in toLoad]
+    [self.addCSS({"path": os.path.join(os.path.join(viewDirectory, item), item+".css"), "file":item})
+     for item in toLoad]
+    #[self.addCSSForHTMLPath(os.path.join(os.path.join(viewDirectory, item), item+".css")) for item in toLoad]
 
     
   def getInstruction(self, str):
@@ -246,9 +255,23 @@ class SandalphonCompiler:
     # validate it
     ElementTree.fromstring(interfaceFile)
 
-    # load any css for references found at this level
+    # load all css
     self.addCSSForUIClasses(interfaceFile)
-
+    
+    coreui = [item["path"] for item in self.cssFiles 
+              if item["file"] in self.packages['packages']['ShiftSpaceCoreUI']]
+    [self.addCSSForHTMLPath(path) for path in coreui]
+    
+    globalCSS = self.env["data"].get("GLOBAL_CSS")
+    if globalCSS:
+      cssPath = os.path.join('..', globalCSS)
+      self.addCSSForHTMLPath(cssPath)
+    
+    notcore = [item["path"] for item in self.cssFiles
+               if (not item["file"] in self.packages['packages']['ShiftSpaceCoreUI'])]
+    [self.addCSSForHTMLPath(path) for path in notcore]
+    
+    
     # output to specified directory or standard out or as json
     if self.outputDirectory != None:
       fileName, ext = os.path.splitext(os.path.basename(inputFile))
