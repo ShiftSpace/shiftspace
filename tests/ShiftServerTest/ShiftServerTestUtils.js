@@ -8,6 +8,15 @@ var AlreadyLoggedInError = "AlreadyLoggedInError";
 var AlreadyLoggedOutError = "AlreadyLoggedOutError";
 var InvalidUserNameError = "InvalidUserNameError";
 var IncorrectPasswordError = "IncorrectPasswordError";
+var UserNotLoggedInError = "UserNotLoggedInError";
+
+var NoEmailError = "NoEmailError";
+var MissingUserNameError = "MissingUserNameError";
+var ShortUserNameError = "ShortUserNameError";
+var UserNameAlreadyExistsError = "UserNameAlreadyExistsError";
+var MissingPasswordError = "MissingPasswordError";
+var MissingPasswordVerifyError = "MissingPasswordVerifyError";
+var PasswordMatchError = "PasswordMatchError";
 
 function jsonFormat(json)
 {

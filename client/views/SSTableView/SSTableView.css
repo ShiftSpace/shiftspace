@@ -143,6 +143,10 @@
   text-align:center;
 }
 
+.SSTableView > .SSScrollView > .SSContentView .SSRow td[name=created]{
+  color: #B3ADA5;
+}
+
 .SSTextCell
 {
   height: 12px;

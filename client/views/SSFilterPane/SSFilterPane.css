@@ -32,6 +32,9 @@
 #SSSearchBy
 {
   width: 80px;
+  color: #74665A;
+  background-color: #DDD7D2;
+  border: 1px solid #B3ADA5;
 }
 .SSFilterPane input:checked + label{
   font-weight:bold;
