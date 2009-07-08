@@ -3,6 +3,7 @@
      uiclass="GroupsPane"
      outlet="SSConsole">
      
+     <!-- Starts Groups TabView -->
      <div id="GroupsTabView"
           class="SSTabView SSTabViewSubTabStyle"
           uiclass="SSTabView"
@@ -13,10 +14,34 @@
             <div class="SSButton">Start New Group</div>
           </div>
 
+          <!-- Start subtabs -->
           <div class="SSContentView">
-            <div class="SSTabPane">Pane 1</div>
-            <div class="SSTabPane">Pane 2</div>
+            
+            <!-- Start Browse Groups subtab -->
+            <div id="BrowseGroups" class="SSTabPane">
+                <div id="FocusedGroup">
+                  <div id="GroupOverView">
+                      
+                  </div>
+                  <div id="GroupAction">
+                    
+                  </div>
+                </div>
+                <div id="SelectGroup">
+                </div>
+            </div>
+            <!-- End Browse Groups subtab -->
+            
+            <!-- Start Start New Group subtab -->
+            <div id="StartNewGroup" class="SSTabPane">
+              
+            </div>
+            <!-- End Start New group subtab -->
+            
           </div>
+          <!-- End subtabs -->
 
      </div>
+     <!-- End Groups TabView -->
+     
 </div>

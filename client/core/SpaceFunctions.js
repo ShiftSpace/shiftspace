@@ -14,6 +14,8 @@ function SSSpaceIsLoaded(space)
   return (SSSpaceForName(space) != null); 
 }
 
+var __loadingSpaces = [];
+
 /*
 Function: SSLoadSpace
   Loads the space's source code, executes it and stores an instance of the
@@ -25,19 +27,35 @@ Parameters:
 */
 function SSLoadSpace(space, callback)
 {
-  if(space)
+  if(__loadingSpaces.contains(space))
   {
+    SSAddObserver(SSNotificationProxy, 'onSpaceLoad', function(spaceInstance) {
+      if(spaceInstance.attributes.name == space) callback(spaceInstance);
+    });
+    return
+  }
+  
+  if(space && SSSpaceIsLoaded(space))
+  {
+    callback(SSSpaceForName(space));
+    return;
+  }
+  else if(space)
+  {
+    __loadingSpaces.push(space);
+    
     var url = SSURLForSpace(space) + space + '.js';
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
       url += '?' + new Date().getTime();
       var newSpace = new Asset.javascript(url, {
         id: space,
-        onload: function() {
+        onload: function() 
+        {
+          if(callback) callback(SSSpaceForName(space));
+          SSPostNotification("onSpaceLoad", SSSpaceForName(space));
         }
       });
-
-      if(callback) callback();
     }
     else
     {
@@ -53,7 +71,8 @@ function SSLoadSpace(space, callback)
           //throw exc;
         }
 
-        if(callback) callback();
+        if(callback) callback(SSSpaceForName(space));
+        SSPostNotification("onSpaceLoad", SSSpaceForName(space));
       });
     }
   }
@@ -178,10 +197,9 @@ Parameters:
 */
 function SSInstallSpace(space)
 {
-  //SSLog('install ' + space, SSLogForce);
   if(!SSURLForSpace(space))
   {
-    var url = SSInfo().server + 'spaces/' + space + '/' + space + '.js';
+    var url = SSInfo().spacesDir + '/' + space + '/' + space + '.js';
     var count = $H(SSInstalledSpaces()).getLength();
     
     SSLoadSpaceAttributes(space, function(attrs) {
@@ -193,7 +211,6 @@ function SSInstallSpace(space)
           name:space, 
           position: count, 
           icon: space+'/'+space+'.png',
-          attrs: {},
           autolaunch: false
         };
       }

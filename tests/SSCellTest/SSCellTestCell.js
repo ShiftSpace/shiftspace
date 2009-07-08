@@ -4,9 +4,10 @@
 // ==/Builder==
 
 var SSCellTestCell = new Class({
-  name: "SSCellTestCell",
+
   Extends: SSCell,
-  
+  name: "SSCellTestCell",
+    
   setArtworkId: function(id)
   {
     this.__artworkId = id;

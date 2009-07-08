@@ -4,10 +4,9 @@
 // ==/Builder==
 
 var SSUITestSuite = new Class({
-  
-  name: 'SSUITestSuite',
 
   Extends: SSUnitTest.TestSuite,
+  name: 'SSUITestSuite',
 
   initialize: function(options)
   {

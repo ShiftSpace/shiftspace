@@ -5,9 +5,8 @@
 
 var SSFormTest = new Class({
   
-  name: "SSFormTest",
-  
   Extends: SSUnitTest.TestCase,
+  name: "SSFormTest",
   
   setup: function()
   {

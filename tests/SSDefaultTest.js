@@ -1,13 +1,12 @@
 // ==Builder==
 // @test
-// @name        SSDefaultTest
-// @suite       SSDefaultTestSuite
+// @suite           SSDefaultTestSuite
 // ==/Builder==
 
 var TestCaseTestDivideByZeroException = new Class({
-  name: 'TestCaseTestDivideByZeroException',
   Extends:SSException,
   Implements:SSExceptionPrinter
+  name: 'TestCaseTestDivideByZeroException',
 });
 
 function TestCaseDivide(x, y)
@@ -18,9 +17,8 @@ function TestCaseDivide(x, y)
 
 var SSDefaultTest = new Class({
   
-  name: 'SSDefaultTest',
-
   Extends: SSUnitTest.TestCase,
+  name: 'SSDefaultTest',
   
   setup: function()
   {

@@ -6,10 +6,9 @@
 
 var SSDefaultTestSuperSuite = new Class({
   
-  name: 'SSDefaultTestSuperSuite',
-
   Extends: SSUnitTest.TestSuite,
-
+  name: 'SSDefaultTestSuperSuite',
+  
   initialize: function(options)
   {
     // Important!

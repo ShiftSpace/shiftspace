@@ -4,8 +4,9 @@
 // ==/Builder==
 
 var SSTabViewTest = new Class({
-  name: 'SSTabViewTest',
+
   Extends: SSUnitTest.TestCase,
+  name: 'SSTabViewTest',
 
   setup: function()
   {

@@ -1,0 +1,69 @@
+#BrowseGroups
+{
+  width: 100%;
+  height: 100%;
+}
+
+#GroupsTabView > .SSControlView
+{
+  width: 150px;
+}
+
+#GroupsTabView > .SSContentView
+{
+  left: 152px;
+}
+
+#GroupsTabView.SSTabViewSubTabStyle > .SSControlView > .SSButton 
+{
+  padding: 8px;
+}
+
+#FocusedGroup
+{
+  background-color: #cfc;
+
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+
+  width: 50%;
+}
+
+#SelectGroup
+{
+  background-color: #fcc;
+
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  bottom: 0px;
+
+  width: 50%;
+}
+
+#GroupOverView
+{
+  position: absolute;
+
+  left: 0px;
+  top: 0px;
+  right: 150px;
+  bottom: 0px;
+  
+  border-right: 1px solid #aaa;
+  background-color: #ccc;
+}
+
+#GroupAction
+{
+  position: absolute;
+  
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: 150px;
+  
+  background-color: #ccc;
+}

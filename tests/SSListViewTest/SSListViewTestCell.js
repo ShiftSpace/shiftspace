@@ -4,8 +4,9 @@
 // ==/Builder==
 
 var SSListViewTestCell = new Class({
-  name: "SSListViewTestCell",
+
   Extends: SSCell,
+  name: "SSListViewTestCell",
   
   setArtworkId: function(id)
   {

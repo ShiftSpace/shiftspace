@@ -13,7 +13,7 @@ else
 {
   foreach ($fileOrder as $f)
   {
-    system("python preprocess.py -e test -p test -i $f");
+    system("python preprocess.py -e sandalphon -p sandalphon -i $f");
     echo "\n";
   }
 }
