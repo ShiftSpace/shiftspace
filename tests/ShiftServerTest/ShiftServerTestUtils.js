@@ -22,12 +22,7 @@ var FollowError = "FollowError";
 var UserDoesNotExistError = "UserDoesNotExistError";
 var PermissionError = "PermissionError";
 
-function jsonFormat(json)
-{
-  return JSON.encode(JSON.decode(json));
-}
-
-var ack = jsonFormat({"message":"ok"});
+var ack = JSON.encode({"message":"ok"});
 
 function req(options)
 {

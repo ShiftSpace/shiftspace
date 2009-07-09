@@ -281,15 +281,122 @@ var UserCreateDeleteTest = new Class({
   },
   
   
+  testDeletePermission: function()
+  {
+    this.doc("Cannot delete account if not logged in, or not the right user.");
+    
+    var hook = this.startAsync();
+    
+    req({
+      url: '/join',
+      json: true,
+      data:
+      {
+        userName: "fakemary",
+        email: "fakemary@gmail.com",
+        password:"foobar",
+        passwordVerify:"foobar"
+      },
+      method: 'post'
+    });
+    
+    req({
+      url:'/logout',
+      method: 'post'
+    })
+    
+    req({
+      url:'/user',
+      resourceId:'fakemary',
+      emulation: false,
+      method: 'delete',
+      onComplete: function(json)
+      {
+        this.assertEqual(json.type, UserNotLoggedInError, hook);
+      }.bind(this)
+    });
+    
+    req({
+      url: '/login',
+      data:
+      {
+        userName: "fakemary",
+        password: "foobar"
+      },
+      method: 'post'
+    });
+    
+    req({
+      url:'/user',
+      resourceId:'fakemary',
+      emulation: false,
+      method: 'delete'
+    });
+    
+    this.endAsync(hook);
+  },
+  
+
+  testAdminDeletePermission: function()
+  {
+    this.doc("Can delete account if logged in as admin");
+
+    var hook = this.startAsync();
+    
+    req({
+      url: '/join',
+      json: true,
+      data:
+      {
+        userName: "fakemary",
+        email: "fakemary@gmail.com",
+        password:"foobar",
+        passwordVerify:"foobar"
+      },
+      method: 'post'
+    });
+    
+    req({
+      url:'/logout',
+      method: 'post'
+    })
+    
+    adminLogin();
+    
+    req({
+      url:'/user',
+      resourceId:'fakemary',
+      emulation: false,
+      method: 'delete',
+      onComplete: function(json)
+      {
+        this.assertEqual(JSON.encode(json), ack, hook);
+      }.bind(this)
+    });
+    
+    req({
+      url:'/logout',
+      method: 'post'
+    })
+    
+    this.endAsync(hook);
+  }/*,
+
+  
+  
   testUserStreamsExists: function()
   {
     this.doc("User public and private stream should exist after account creation.");
+    
+    this.assertEqual(true, false);
   },
   
   
   testDeleteUserContent: function()
   {
     this.doc("User's public stream, private stream, events, and shifts should be deleted");
+    
+    this.assertEqual(true, false);
   }
-  
+  */  
 });
