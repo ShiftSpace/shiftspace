@@ -189,6 +189,19 @@ function publishShift(next)
   });
 }
 
+function readShift(id)
+{
+  req({
+    url: "/shift",
+    resourceId: id,
+    method: 'get',
+    onComplete: function(json)
+    {
+      console.log(json);
+    }
+  });
+}
+
 function follow(next)
 {
   req({

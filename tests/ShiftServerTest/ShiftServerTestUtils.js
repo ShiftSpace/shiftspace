@@ -17,6 +17,10 @@ var UserNameAlreadyExistsError = "UserNameAlreadyExistsError";
 var MissingPasswordError = "MissingPasswordError";
 var MissingPasswordVerifyError = "MissingPasswordVerifyError";
 var PasswordMatchError = "PasswordMatchError";
+var FollowError = "FollowError";
+
+var UserDoesNotExistError = "UserDoesNotExistError";
+var PermissionError = "PermissionError";
 
 function jsonFormat(json)
 {
