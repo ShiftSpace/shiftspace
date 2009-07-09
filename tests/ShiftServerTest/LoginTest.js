@@ -145,7 +145,7 @@ var LoginTest = new Class({
       method: 'post',
       onComplete: function(json) 
       {
-        this.assertEqual(jsonFormat(json), jsonFormat(ack), hook);
+        this.assertEqual(JSON.encode(json), ack, hook);
       }.bind(this)
     });
     

@@ -380,17 +380,70 @@ var UserCreateDeleteTest = new Class({
     })
     
     this.endAsync(hook);
-  }/*,
-
+  },
   
   
   testUserStreamsExists: function()
   {
-    this.doc("User public and private stream should exist after account creation.");
+    this.doc("User public and private stream should exist and have the right values after account creation.");
     
-    this.assertEqual(true, false);
-  },
-  
+    var hook = this.startAsync();
+    
+    var publicStream;
+    var messageStream;
+    var userId;
+    
+    req({
+      url: '/join',
+      json: true,
+      data:
+      {
+        userName: "fakemary",
+        email: "fakemary@gmail.com",
+        password:"foobar",
+        passwordVerify:"foobar"
+      },
+      method: 'post',
+      onComplete: function(json)
+      {
+        publicStream = json.data.publicStream;
+        messageStream = json.data.messageStream;
+        userId = json.data._id;
+        
+        this.assertNotEqual(publicStream, null, hook);
+        this.assertNotEqual(messageStream, null, hook);
+      }.bind(this)
+    });
+
+    req({
+      url: '/stream',
+      resourceId: messageStream,
+      method: 'get',
+      onComplete: function(json)
+      {
+        this.assertEqual(json.data.createdBy, userId, hook)
+      }.bind(this)
+    });
+    
+    req({
+      url: '/stream',
+      resourceId: publicStream,
+      method: 'get',
+      onComplete: function(json)
+      {
+        this.assertEqual(json.data.createdBy, userId, hook)
+      }.bind(this)
+    });
+    
+    req({
+      url:'/user',
+      resourceId:'fakemary',
+      emulation: false,
+      method: 'delete'
+    });
+    
+    this.endAsync(hook);
+  }/*,
   
   testDeleteUserContent: function()
   {
