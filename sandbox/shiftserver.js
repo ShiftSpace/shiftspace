@@ -87,6 +87,46 @@ function logout(next)
   });
 }
 
+function admin(next)
+{
+  req({
+    url: "/join",
+    method: 'post',
+    json: true,
+    data:
+    {
+      userName: 'shiftspace',
+      email: 'info@shiftspace.org',
+      password: 'changetheweb',
+      passwordVerify: 'changetheweb'
+    },
+    onComplete: function(json)
+    {
+      console.log(json);
+      if(next && $type(next) == 'function') next();
+    }
+  });
+}
+
+
+function adminLogin()
+{
+  req({
+    url: "/login",
+    method: 'post',
+    data:
+    {
+      userName: 'shiftspace',
+      password: 'changetheweb'
+    },
+    onComplete: function(json)
+    {
+      console.log(json);
+    }
+  });
+}
+
+
 function join(next)
 {
   req({

@@ -53,3 +53,42 @@ function req(options)
     new Request.JSON(options).send()
   }
 }
+
+
+function admin()
+{
+  req({
+    url: "/join",
+    method: 'post',
+    json: true,
+    data:
+    {
+      userName: 'shiftspace',
+      email: 'info@shiftspace.org',
+      password: 'changetheweb',
+      passwordVerify: 'changetheweb'
+    },
+    onComplete: function(json)
+    {
+      console.log(json);
+    }
+  });
+}
+
+
+function adminLogin()
+{
+  req({
+    url: "/login",
+    method: 'post',
+    data:
+    {
+      userName: 'shiftspace',
+      password: 'changetheweb'
+    },
+    onComplete: function(json)
+    {
+      console.log(json);
+    }
+  });
+}
