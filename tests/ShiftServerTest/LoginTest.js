@@ -3,6 +3,9 @@
 // @suite             ShiftServerTest
 // @dependencies      ShiftServerTestUtils
 // ==/Builder==
+  
+var noUserName = {userName:"", password:"bazbaz"};
+var wrongPassword = {userName:"fakemary", password:"foobaz"};
 
 var LoginTest = new Class({
 
@@ -11,142 +14,65 @@ var LoginTest = new Class({
   
   setup: function()
   {
+    app.action('join', fakemary);
     logout();
   },
   
   
   tearDown: function()
   {
+    app.delete('user', 'fakemary');
   },
   
   
   testNoUserName: function()
   {
     this.doc("Error on login if missing username.");
-    
-    var hook = this.startAsync();
-
-    req({
-      url: '/login',
-      method: 'post',
-      data: {userName:"", password:"bazbaz"},
-      onComplete: function(json) 
-      {
-        this.assertEqual(json.type, InvalidUserNameError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = login(noUserName);
+    this.assertEqual(SSGetType(json), InvalidUserNameError);
+    login(fakemary);
   },
   
   
   testIncorrectPassword: function()
   {
     this.doc("Error on login if incorrect password.");
-    
-    var hook = this.startAsync();
-
-    req({
-      url: '/login',
-      method: 'post',
-      data: {userName:"fakebob", password:"bazbar"},
-      onComplete: function(json) 
-      {
-        this.assertEqual(json.type, IncorrectPasswordError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = login(wrongPassword);
+    this.assertEqual(SSGetType(json), IncorrectPasswordError);
   },
   
   
   testAlreadyLoggedIn: function()
   {
     this.doc("Error on login if already logged in.");
-    
-    var hook = this.startAsync();
-
-    req({
-      url: '/login',
-      method: 'post',
-      data: {userName:"fakebob", password:"bazbaz"},
-    });
-    
-    req({
-      url: '/login',
-      method: 'post',
-      data: {userName:"fakebob", password:"bazbaz"},
-      onComplete: function(json) 
-      {
-        this.assertEqual(json.type, AlreadyLoggedInError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    login(fakemary);
+    var json = login(fakemary);
+    this.assertEqual(SSGetType(json), AlreadyLoggedInError);
   },
   
   
   testLogoutNotLoggedIn: function()
   {
     this.doc("Error on logout if not logged in.");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/logout',
-      method: 'post',
-      onComplete: function(json) 
-      {
-        this.assertEqual(json.type, AlreadyLoggedOutError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = logout();
+    this.assertEqual(SSGetType(json), AlreadyLoggedOutError);
   },
   
   
   testValidLogin: function()
   {
     this.doc("Valid login");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/login',
-      method: 'post',
-      data: {userName:"fakebob", password:"bazbaz"},
-      onComplete: function(json) 
-      {
-        this.assertEqual(json.data.userName, "fakebob", hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = login(fakemary);
+    this.assertEqual(SSGetData(json).userName, "fakemary");
   },
   
   
   testValidLoginOut: function()
   {
     this.doc("Valid login and out");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/login',
-      method: 'post',
-      data: {userName:"fakebob", password:"bazbaz"}
-    });
-    
-    req({
-      url: '/logout',
-      method: 'post',
-      onComplete: function(json) 
-      {
-        this.assertEqual(JSON.encode(json), ack, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    login(fakemary);
+    var json = logout(fakemary);
+    this.assertEqual(JSON.encode(json), ack);
   }
 })
 

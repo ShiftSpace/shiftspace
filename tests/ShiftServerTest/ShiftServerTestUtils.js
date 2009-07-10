@@ -186,6 +186,7 @@ function adminJoin()
 
 function login(user)
 {
+  var result;
   req({
     url: "/login",
     method: 'post',
@@ -193,8 +194,13 @@ function login(user)
     {
       userName: user.userName,
       password: user.password
+    },
+    onComplete: function(json)
+    {
+      result = json;
     }
   });
+  return result;
 }
 
 function logout()
