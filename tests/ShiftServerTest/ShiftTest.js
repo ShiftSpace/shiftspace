@@ -45,26 +45,34 @@ var ShiftTest = new Class({
   testCreateNotLoggedIn: function()
   {
     this.doc("Error trying to create shift if not logged in.");
-    var shiftId = SSGetData(app.create('shift', noteShift));
     logout();
-    var json = app.read("shift", shiftId);
+    var json = app.create('shift', noteShift);
     this.assertEqual(SSGetType(json), UserNotLoggedInError);
     login(fakemary);
-  }/*,
+  },
   
   
   testRead: function()
   {
     this.doc("Read a shift.");
-    this.assertEqual(true, false);
+    var shiftId = SSGetData(app.create('shift', noteShift));
+    var data = SSGetData(app.read('shift', shiftId));
+    this.assertEqual(data.space, "Notes");
+    this.assertEqual(data.text, "Hello world!");
   },
   
 
   testDraft: function()
   {
     this.doc("A draft should not be visible to anybody but a logged in owner.");
-    this.assertEqual(true, false);
-  },
+    var shiftId = SSGetData(app.create('shift', noteShift));
+    logout();
+    app.action('join', fakedave);
+    var json = app.read('shift', shiftId);
+    this.assertEqual(SSGetType(json), PermissionError);
+    logout();
+    login(fakemary);
+  }/*,
   
   
   testPrivate: function()
