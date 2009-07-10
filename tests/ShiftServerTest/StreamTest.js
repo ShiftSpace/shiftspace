@@ -21,12 +21,38 @@ var StreamTest = new Class({
     app.action('logout');
   },
   
+  
+  testCreateNull: function()
+  {
+    this.doc("Error on stream with no data.");
+    var json = app.create('stream');
+    this.assertEqual(SSGetType(json), NoDataError);
+  },
+  
 
   testCreate: function()
   {
-    this.doc("Create a shift.");
-    var id = SSGetData(app.create('stream'));
+    this.doc("Create a stream.");
+    var id = SSGetData(app.create('stream', {displayName:"My Cool Group"}));
     this.assertNotEqual(id, null);
+  }/*,
+  
+  
+  testRead: function()
+  {
+    
+  },
+  
+  
+  testUpdate: function()
+  {
+    
+  },
+  
+  
+  testDelete: function()
+  {
+    
   },
   
   
@@ -51,6 +77,6 @@ var StreamTest = new Class({
   testSubscribePublic: function()
   {
     
-  }
+  }*/
 })
 
