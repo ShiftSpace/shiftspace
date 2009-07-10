@@ -25,6 +25,28 @@ var ResourceDoesNotExistError = "ResourceDoesNotExistError";
 
 var ack = JSON.encode({"message":"ok"});
 
+var noteShift = {
+  space: "Notes",
+  position: {x:150, y:150},
+  size: {x:200, y:200},
+  summary: "Foo!",
+  text: "Hello world!"
+};
+
+var fakeMary = {
+  userName: "fakemary",
+  email: "fakemary@gmail.com",
+  password:"foobar",
+  passwordVerify:"foobar"
+};
+
+var admin = {
+  userName: 'shiftspace',
+  email: 'info@shiftspace.org',
+  password: 'changetheweb',
+  passwordVerify: 'changetheweb'
+};
+
 function req(options)
 {
   options.async = false;
@@ -127,12 +149,14 @@ var CouchDBApp = new Class({
     return result;
   },
   
-  action: function(url)
+  action: function(url, data)
   {
     var result;
     req({
       url:'/'+url,
       method: 'post',
+      json: true,
+      data: data,
       onComplete: function(json)
       {
         result = json;
@@ -177,19 +201,4 @@ function adminLogin()
 function logout()
 {
   return app.action('logout');
-}
-
-function fakeMaryCreate()
-{
-  return app.create('join', {
-    userName: "fakemary",
-    email: "fakemary@gmail.com",
-    password:"foobar",
-    passwordVerify:"foobar"
-  });
-}
-
-function fakeMaryDelete()
-{
-  return app.delete('user', 'fakemary');
 }

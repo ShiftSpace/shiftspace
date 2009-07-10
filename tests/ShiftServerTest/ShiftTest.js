@@ -11,101 +11,34 @@ var ShiftTest = new Class({
   
   setup: function()
   {
-    fakeMaryCreate();
+    app.action('join', fakeMary);
   },
   
   
   tearDown: function()
   {
-    fakeMaryDelete();
-    logout();
+    app.delete('user', 'fakemary');
+    app.action('logout');
   },
   
 
   testCreate: function()
   {
     this.doc("Create a shift.");
-    
-    var hook = this.startAsync();
-    var shiftId;
-
-    req({
-      url:'/shift',
-      method:'post',
-      json: true,
-      data:
-      {
-        space: "Notes",
-        position: {x:150, y:150},
-        size: {x:200, y:200},
-        summary: "Foo!",
-        text: "Hello world!"
-      },
-      onComplete: function(json)
-      {
-        shiftId = SSGetData(json);
-      }.bind(this)
-    });
-    
-    req({
-      url:'/shift',
-      resourceId: shiftId,
-      method: 'get',
-      onComplete: function(json)
-      {
-        this.assertEqual(SSGetData(json)._id, shiftId, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var idA = SSGetData(app.create('shift', noteShift));
+    var idB = SSGetData(app.read('shift', idA));
+    this.assertEqual(idA, idB);
   },
 
   
   testShiftDeleteOnUserDelete: function()
   {
     this.doc("Ensure a user's shift are deleted if his account is deleted");
-    
-    var hook = this.startAsync();
-    var shiftId;
-
-    req({
-      url:'/shift',
-      method:'post',
-      json: true,
-      data:
-      {
-        space: "Notes",
-        position: {x:150, y:150},
-        size: {x:200, y:200},
-        summary: "Foo!",
-        text: "Hello world!"
-      },
-      onComplete: function(json)
-      {
-        shiftId = SSGetData(json);
-      }.bind(this)
-    });
-    
-    req({
-      url:'/user',
-      resourceId:'fakemary',
-      emulation: false,
-      method: 'delete'
-    });
-    
+    var shiftId = SSGetData(app.create('shift', noteShift));
+    app.delete('user', 'fakemary');
     adminLogin();
-    
-    req({
-      url:'/shift',
-      resourceId: shiftId,
-      method: 'get',
-      onComplete: function(json)
-      {
-        this.assertEqual(SSGetType(json), ResourceDoesNotExistError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = app.read('shift', shiftId);
+    this.assertEqual(SSGetType(json), ResourceDoesNotExistError); 
   },
   
   
