@@ -39,6 +39,7 @@ var LoginTest = new Class({
     this.doc("Error on login if incorrect password.");
     var json = login(wrongPassword);
     this.assertEqual(SSGetType(json), IncorrectPasswordError);
+    login(fakemary);
   },
   
   
@@ -56,6 +57,7 @@ var LoginTest = new Class({
     this.doc("Error on logout if not logged in.");
     var json = logout();
     this.assertEqual(SSGetType(json), AlreadyLoggedOutError);
+    login(fakemary);
   },
   
   
@@ -73,6 +75,7 @@ var LoginTest = new Class({
     login(fakemary);
     var json = logout(fakemary);
     this.assertEqual(JSON.encode(json), ack);
+    login(fakemary);
   }
 })
 
