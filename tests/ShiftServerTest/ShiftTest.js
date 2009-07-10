@@ -11,18 +11,117 @@ var ShiftTest = new Class({
   
   setup: function()
   {
+    req({
+      url: '/join',
+      json: true,
+      data:
+      {
+        userName: "fakemary",
+        email: "fakemary@gmail.com",
+        password:"foobar",
+        passwordVerify:"foobar"
+      },
+      method: 'post'
+    });
   },
   
   
   tearDown: function()
   {
+    req({
+      url:'/user',
+      resourceId:'fakemary',
+      emulation: false,
+      method: 'delete'
+    });
+    logout();
   },
   
-  
+
   testCreate: function()
   {
     this.doc("Create a shift.");
-    this.assertEqual(true, false);
+    
+    var hook = this.startAsync();
+    var shiftId;
+
+    req({
+      url:'/shift',
+      method:'post',
+      json: true,
+      data:
+      {
+        space: "Notes",
+        position: {x:150, y:150},
+        size: {x:200, y:200},
+        summary: "Foo!",
+        text: "Hello world!"
+      },
+      onComplete: function(json)
+      {
+        shiftId = SSGetData(json);
+      }.bind(this)
+    });
+    
+    req({
+      url:'/shift',
+      resourceId: shiftId,
+      method: 'get',
+      onComplete: function(json)
+      {
+        this.assertEqual(SSGetData(json)._id, shiftId, hook);
+      }.bind(this)
+    });
+    
+    this.endAsync(hook);
+  },
+
+  
+  testShiftDeleteOnUserDelete: function()
+  {
+    this.doc("Ensure a user's shift are deleted if his account is deleted");
+    
+    var hook = this.startAsync();
+    var shiftId;
+
+    req({
+      url:'/shift',
+      method:'post',
+      json: true,
+      data:
+      {
+        space: "Notes",
+        position: {x:150, y:150},
+        size: {x:200, y:200},
+        summary: "Foo!",
+        text: "Hello world!"
+      },
+      onComplete: function(json)
+      {
+        shiftId = SSGetData(json);
+      }.bind(this)
+    });
+    
+    req({
+      url:'/user',
+      resourceId:'fakemary',
+      emulation: false,
+      method: 'delete'
+    });
+    
+    adminLogin();
+    
+    req({
+      url:'/shift',
+      resourceId: shiftId,
+      method: 'get',
+      onComplete: function(json)
+      {
+        this.assertEqual(SSGetType(json), ResourceDoesNotExistError, hook);
+      }.bind(this)
+    });
+    
+    this.endAsync(hook);
   },
   
   
@@ -42,7 +141,7 @@ var ShiftTest = new Class({
   
   testUpdateNotLoggedIn: function()
   {
-    ths.doc("Error updating a shift if not logged in.");
+    this.doc("Error updating a shift if not logged in.");
     this.assertEqual(true, false);
   },
   
@@ -84,14 +183,14 @@ var ShiftTest = new Class({
   
   testPublic: function()
   {
-    test.doc("A public shift be visible to anyone.");
+    this.doc("A public shift be visible to anyone.");
     this.assertEqual(true, false);
   },
   
   
   testComment: function()
   {
-    test.doc("A comment on a shift should send a message to anyone who has commented on the shift.");
+    this.doc("A comment on a shift should send a message to anyone who has commented on the shift.");
     this.assertEqual(true, false);
   }
 })

@@ -21,7 +21,7 @@ var FollowError = "FollowError";
 
 var UserDoesNotExistError = "UserDoesNotExistError";
 var PermissionError = "PermissionError";
-var ResourceDoesNotExistsError = "ResourceDoesNotExistsError";
+var ResourceDoesNotExistError = "ResourceDoesNotExistError";
 
 var ack = JSON.encode({"message":"ok"});
 
@@ -50,6 +50,17 @@ function req(options)
   }
 }
 
+function SSGetData(json)
+{
+  return json.data;
+}
+
+
+function SSGetType(json)
+{
+  return json.type;
+}
+
 
 function admin()
 {
@@ -63,10 +74,6 @@ function admin()
       email: 'info@shiftspace.org',
       password: 'changetheweb',
       passwordVerify: 'changetheweb'
-    },
-    onComplete: function(json)
-    {
-      console.log(json);
     }
   });
 }
@@ -81,10 +88,14 @@ function adminLogin()
     {
       userName: 'shiftspace',
       password: 'changetheweb'
-    },
-    onComplete: function(json)
-    {
-      console.log(json);
     }
+  });
+}
+
+function logout()
+{
+  req({
+    url:'/logout',
+    method: 'post'
   });
 }
