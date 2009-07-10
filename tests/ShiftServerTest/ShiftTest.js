@@ -11,7 +11,7 @@ var ShiftTest = new Class({
   
   setup: function()
   {
-    app.action('join', fakeMary);
+    app.action('join', fakemary);
   },
   
   
@@ -49,7 +49,7 @@ var ShiftTest = new Class({
     logout();
     var json = app.read("shift", shiftId);
     this.assertEqual(SSGetType(json), UserNotLoggedInError);
-    login(fakeMary);
+    login(fakemary);
   }/*,
   
   

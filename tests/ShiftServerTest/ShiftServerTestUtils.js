@@ -33,7 +33,7 @@ var noteShift = {
   text: "Hello world!"
 };
 
-var fakeMary = {
+var fakemary = {
   userName: "fakemary",
   email: "fakemary@gmail.com",
   password:"foobar",
