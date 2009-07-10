@@ -443,13 +443,66 @@ var UserCreateDeleteTest = new Class({
     });
     
     this.endAsync(hook);
-  }/*,
+  },
+  
   
   testDeleteUserContent: function()
   {
     this.doc("User's public stream, private stream, events, and shifts should be deleted");
     
-    this.assertEqual(true, false);
+    var hook = this.startAsync();
+    
+    var publicStream;
+    var messageStream;
+    var userId;
+    
+    req({
+      url: '/join',
+      json: true,
+      data:
+      {
+        userName: "fakemary",
+        email: "fakemary@gmail.com",
+        password:"foobar",
+        passwordVerify:"foobar"
+      },
+      method: 'post',
+      onComplete: function(json)
+      {
+        publicStream = json.data.publicStream;
+        messageStream = json.data.messageStream;
+        userId = json.data._id;
+      }.bind(this)
+    });
+    
+    req({
+      url:'/user',
+      resourceId:'fakemary',
+      emulation: false,
+      method: 'delete'
+    });
+
+    req({
+      url: '/stream',
+      resourceId: messageStream,
+      method: 'get',
+      onComplete: function(json)
+      {
+        this.assertEqual(json.type, ResourceDoesNotExistsError, hook)
+      }.bind(this)
+    });
+    
+    req({
+      url: '/stream',
+      resourceId: publicStream,
+      method: 'get',
+      onComplete: function(json)
+      {
+        this.assertEqual(json.type, ResourceDoesNotExistsError, hook)
+      }.bind(this)
+    });
+    
+    this.endAsync(hook);
   }
-  */  
+
 });

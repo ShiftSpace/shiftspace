@@ -21,6 +21,7 @@ var FollowError = "FollowError";
 
 var UserDoesNotExistError = "UserDoesNotExistError";
 var PermissionError = "PermissionError";
+var ResourceDoesNotExistsError = "ResourceDoesNotExistsError";
 
 var ack = JSON.encode({"message":"ok"});
 
