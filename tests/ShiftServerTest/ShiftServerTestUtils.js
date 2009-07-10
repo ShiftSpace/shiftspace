@@ -28,8 +28,9 @@ var ack = JSON.encode({"message":"ok"});
 function req(options)
 {
   options.async = false;
+  options.emulation = false;
   options.url = (server + options.url);
-  options.url = (options.resourceId) ? options.url + '/' + options.resourceId : options.url
+  options.url = (options.resourceId) ? options.url + '/' + options.resourceId : options.url;
   
   if(options.resourceId) delete options.resourceId;
 
@@ -61,6 +62,87 @@ function SSGetType(json)
   return json.type;
 }
 
+
+var CouchDBApp = new Class({
+  create: function(type, data)
+  {
+    var result;
+    req({
+      url:'/'+type,
+      method: 'post',
+      data: data,
+      json: true,
+      onComplete: function(json)
+      {
+        result = json;
+      }
+    });
+    return result;
+  },
+  
+  read: function(type, id)
+  {
+    var result;
+    req({
+      url:'/'+type,
+      resourceId: id,
+      method: 'get',
+      onComplete: function(json)
+      {
+        result = json;
+      }
+    });
+    return result;
+  },
+  
+  update: function(type, id, data)
+  {
+    var result;
+    req({
+      url:'/'+type,
+      resourceId: id,
+      method: 'put',
+      data: data,
+      json: true,
+      onComplete: function(json)
+      {
+        result = json;
+      }
+    });
+    return result;
+  },
+  
+  delete: function(type, id)
+  {
+    var result;
+    req({
+      url:'/'+type,
+      resourceId: id,
+      method: 'delete',
+      onComplete: function(json)
+      {
+        result = json;
+      }
+    });
+    return result;
+  },
+  
+  action: function(url)
+  {
+    var result;
+    req({
+      url:'/'+url,
+      method: 'post',
+      onComplete: function(json)
+      {
+        result = json;
+      }
+    });
+    return result;
+  }
+});
+
+var app = new CouchDBApp();
 
 function admin()
 {
@@ -94,8 +176,20 @@ function adminLogin()
 
 function logout()
 {
-  req({
-    url:'/logout',
-    method: 'post'
+  return app.action('logout');
+}
+
+function fakeMaryCreate()
+{
+  return app.create('join', {
+    userName: "fakemary",
+    email: "fakemary@gmail.com",
+    password:"foobar",
+    passwordVerify:"foobar"
   });
+}
+
+function fakeMaryDelete()
+{
+  return app.delete('user', 'fakemary');
 }

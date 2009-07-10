@@ -11,29 +11,13 @@ var ShiftTest = new Class({
   
   setup: function()
   {
-    req({
-      url: '/join',
-      json: true,
-      data:
-      {
-        userName: "fakemary",
-        email: "fakemary@gmail.com",
-        password:"foobar",
-        passwordVerify:"foobar"
-      },
-      method: 'post'
-    });
+    fakeMaryCreate();
   },
   
   
   tearDown: function()
   {
-    req({
-      url:'/user',
-      resourceId:'fakemary',
-      emulation: false,
-      method: 'delete'
-    });
+    fakeMaryDelete();
     logout();
   },
   
@@ -128,13 +112,57 @@ var ShiftTest = new Class({
   testCreateNotLoggedIn: function()
   {
     this.doc("Error trying to create shift if not logged in.");
-    this.assertEqual(true, false);
+    
+    var hook = this.startAsync();
+
+    logout();
+    
+    req({
+      url:'/shift',
+      method:'post',
+      json: true,
+      data:
+      {
+        space: "Notes",
+        position: {x:150, y:150},
+        size: {x:200, y:200},
+        summary: "Foo!",
+        text: "Hello world!"
+      },
+      onComplete: function(json)
+      {
+        this.assertEqual(SSGetType(json), UserNotLoggedInError, hook);
+      }.bind(this)
+    });
+    
+    this.endAsync(hook);
   },
   
   
   testRead: function()
   {
     this.doc("Read a shift.");
+    this.assertEqual(true, false);
+  },
+  
+
+  testDraft: function()
+  {
+    this.doc("A draft should not be visible to anybody but a logged in owner.");
+    this.assertEqual(true, false);
+  },
+  
+  
+  testPrivate: function()
+  {
+    this.doc("A private published shift should be visible to people who have permission.");
+    this.assertEqual(true, false);
+  },
+  
+  
+  testPublic: function()
+  {
+    this.doc("A public shift be visible to anyone.");
     this.assertEqual(true, false);
   },
   
@@ -163,27 +191,6 @@ var ShiftTest = new Class({
   testDeleteNotLoggedIn: function()
   {
     this.doc("Error on deleting a shift if not logged in.");
-    this.assertEqual(true, false);
-  },
-  
-  
-  testDraft: function()
-  {
-    this.doc("A draft should not be visible to anybody but a logged in owner.");
-    this.assertEqual(true, false);
-  },
-  
-  
-  testPrivate: function()
-  {
-    this.doc("A private published shift should be visible to people who have permission.");
-    this.assertEqual(true, false);
-  },
-  
-  
-  testPublic: function()
-  {
-    this.doc("A public shift be visible to anyone.");
     this.assertEqual(true, false);
   },
   
