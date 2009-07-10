@@ -4,6 +4,17 @@
 // @dependencies      ShiftServerTestUtils
 // ==/Builder==
 
+var missingEmail = {
+  userName:"fakemary",
+  password:"foobar",
+  passwordVerify:"foobar"
+};
+
+var missingUserName = {
+  email: "fakemary@gmail.com",
+  password:"foobar",
+  passwordVerify:"foobar"
+};
 
 var UserCreateDeleteTest = new Class({
 
@@ -25,53 +36,17 @@ var UserCreateDeleteTest = new Class({
   testMissingEmail: function()
   {
     this.doc("Error on missing email");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/join',
-      json: true,
-      data:
-      {
-        userName:"fakemary",
-        password:"foobar",
-        passwordVerify:"foobar"
-      },
-      method: 'post',
-      onComplete: function(json)
-      {
-        this.assertEqual(json.type, NoEmailError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = app.action('join', missingEmail);
+    this.assertEqual(SSGetType(json), NoEmailError);
   },
   
   
   testMissingUserName: function()
   {
     this.doc("Error on missing userName");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/join',
-      json: true,
-      data:
-      {
-        email: "fakemary@gmail.com",
-        password:"foobar",
-        passwordVerify:"foobar"
-      },
-      method: 'post',
-      onComplete: function(json)
-      {
-        this.assertEqual(json.type, MissingUserNameError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
-  },
+    var json = app.action('join', missingUserName);
+    this.assertEqual(SSGetType(json), MissingUserNameError);
+  }/*,
   
 
   testShortUserName: function()
@@ -361,7 +336,7 @@ var UserCreateDeleteTest = new Class({
       method: 'post'
     })
     
-    adminLogin();
+    login(admin);
     
     req({
       url:'/user',
@@ -503,6 +478,6 @@ var UserCreateDeleteTest = new Class({
     });
     
     this.endAsync(hook);
-  }
+  }*/
 
 });

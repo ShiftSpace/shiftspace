@@ -11,10 +11,7 @@ var LoginTest = new Class({
   
   setup: function()
   {
-    req({
-      url: '/logout',
-      method: 'post'
-    });
+    logout();
   },
   
   

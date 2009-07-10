@@ -26,7 +26,7 @@ var ShiftTest = new Class({
   {
     this.doc("Create a shift.");
     var idA = SSGetData(app.create('shift', noteShift));
-    var idB = SSGetData(app.read('shift', idA));
+    var idB = SSGetData(app.read('shift', idA))._id;
     this.assertEqual(idA, idB);
   },
 
@@ -36,7 +36,7 @@ var ShiftTest = new Class({
     this.doc("Ensure a user's shift are deleted if his account is deleted");
     var shiftId = SSGetData(app.create('shift', noteShift));
     app.delete('user', 'fakemary');
-    adminLogin();
+    login(admin);
     var json = app.read('shift', shiftId);
     this.assertEqual(SSGetType(json), ResourceDoesNotExistError); 
   },
@@ -45,31 +45,12 @@ var ShiftTest = new Class({
   testCreateNotLoggedIn: function()
   {
     this.doc("Error trying to create shift if not logged in.");
-    
-    var hook = this.startAsync();
-
+    var shiftId = SSGetData(app.create('shift', noteShift));
     logout();
-    
-    req({
-      url:'/shift',
-      method:'post',
-      json: true,
-      data:
-      {
-        space: "Notes",
-        position: {x:150, y:150},
-        size: {x:200, y:200},
-        summary: "Foo!",
-        text: "Hello world!"
-      },
-      onComplete: function(json)
-      {
-        this.assertEqual(SSGetType(json), UserNotLoggedInError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
-  },
+    var json = app.read("shift", shiftId);
+    this.assertEqual(SSGetType(json), UserNotLoggedInError);
+    login(fakeMary);
+  }/*,
   
   
   testRead: function()
@@ -132,6 +113,6 @@ var ShiftTest = new Class({
   {
     this.doc("A comment on a shift should send a message to anyone who has commented on the shift.");
     this.assertEqual(true, false);
-  }
+  }*/
 })
 

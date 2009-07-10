@@ -168,7 +168,7 @@ var CouchDBApp = new Class({
 
 var app = new CouchDBApp();
 
-function admin()
+function adminJoin()
 {
   req({
     url: "/join",
@@ -184,16 +184,15 @@ function admin()
   });
 }
 
-
-function adminLogin()
+function login(user)
 {
   req({
     url: "/login",
     method: 'post',
     data:
     {
-      userName: 'shiftspace',
-      password: 'changetheweb'
+      userName: user.userName,
+      password: user.password
     }
   });
 }
