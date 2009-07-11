@@ -18,7 +18,7 @@ var StreamTest = new Class({
   tearDown: function()
   {
     app.delete('user', 'fakemary');
-    app.action('logout');
+    logout();
   },
   
   
@@ -35,6 +35,17 @@ var StreamTest = new Class({
     this.doc("Create a stream.");
     var id = SSGetData(app.create('stream', {displayName:"My Cool Group"}));
     this.assertNotEqual(id, null);
+  },
+  
+  
+  testStreamDeleteOnUserDelete: function()
+  {
+    this.doc("Delete any new empty streams on user delete.");
+    var id = SSGetData(app.create('stream', {displayName:"My Cool Group"}));
+    app.delete('user', 'fakemary');
+    login(admin);
+    var json = app.read('stream', id);
+    this.assertEqual(SSGetType(json), ResourceDoesNotExistError);
   }/*,
   
   

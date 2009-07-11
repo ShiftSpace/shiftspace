@@ -215,3 +215,17 @@ function logout()
 {
   return app.action('logout');
 }
+
+function query()
+{
+  var result;
+  req({
+    url: "/query",
+    method: "get",
+    onComplete: function(json)
+    {
+      console.log(json);
+    }
+  });
+  return result;
+}

@@ -177,7 +177,7 @@ var UserCreateDeleteTest = new Class({
         
     this.assertNotEqual(publicStream, null);
     this.assertNotEqual(messageStream, null);
-
+    
     json = app.read('stream', messageStream);
     this.assertEqual(SSGetData(json).createdBy, userId);
     json = app.read('stream', publicStream);
