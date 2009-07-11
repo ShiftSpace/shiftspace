@@ -211,7 +211,26 @@ function login(user)
   return result;
 }
 
+function join(user)
+{
+  return app.action('join', user);
+}
+
 function logout()
 {
   return app.action('logout');
+}
+
+function query()
+{
+  var result;
+  req({
+    url: "/query",
+    method: "get",
+    onComplete: function(json)
+    {
+      console.log(json);
+    }
+  });
+  return result;
 }
