@@ -24,6 +24,13 @@ var PermissionError = "PermissionError";
 var ResourceDoesNotExistError = "ResourceDoesNotExistError";
 var NoDataError = "NoDataError";
 
+var CreateEventError = "CreateEventError";
+var CreatePermissionError = "CreatePermissionError";
+
+var AlreadySubscribedError = "AlreadySubscribedError";
+var NotSubscribedError = "NotSubscribedError";
+
+
 var ack = JSON.encode({"message":"ok"});
 
 var noteShift = {

@@ -46,7 +46,33 @@ var StreamTest = new Class({
     login(admin);
     var json = app.read('stream', id);
     this.assertEqual(SSGetType(json), ResourceDoesNotExistError);
+  },
+  
+  
+  testSubscribeToPublicStream: function()
+  {
+    this.doc("A public steram can subscribed by anyone");
+    var id = SSGetData(app.create('stream', {displayName:"My Cool Group"}));
+    logout();
+    join(fakedave);
+    var json = app.action('stream/'+id+'/subscribe')
+    this.assertEqual(JSON.encode(json), ack)
+    app.delete('user', 'fakedave');
+    login(fakemary);
   }/*,
+
+  testStreamNotDeletedIfHasNonOwnerEvent: function()
+  {
+    this.doc("A stream with an event by another user should not be deleted.");
+    var id = SSGetData(app.create('stream', {
+      displayName:"My Cool Group",
+      private:"false"
+    }));
+    logout();
+    join(fakedave);
+    fake
+    app.delete('user', 'fakemary');
+  },
   
   
   testRead: function()
@@ -80,12 +106,6 @@ var StreamTest = new Class({
 
 
   testSubscribePrivate: function()
-  {
-    
-  },
-  
-  
-  testSubscribePublic: function()
   {
     
   }*/
