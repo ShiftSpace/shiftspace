@@ -211,6 +211,11 @@ function login(user)
   return result;
 }
 
+function join(user)
+{
+  return app.action('join', user);
+}
+
 function logout()
 {
   return app.action('logout');
