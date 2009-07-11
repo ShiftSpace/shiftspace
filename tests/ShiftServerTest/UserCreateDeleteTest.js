@@ -24,7 +24,7 @@ var shortUserName = {
 };
 
 var userNameTaken = {
-  userName: "fakebob",
+  userName: "fakemary",
   email: "fakemary@gmail.com",
   password:"foobar",
   passwordVerify:"foobar"
@@ -93,8 +93,12 @@ var UserCreateDeleteTest = new Class({
   testUserNameTaken: function()
   {
     this.doc("Error on user name taken.");
-    var json = app.action('join', userNameTaken);
+    join(fakemary);
+    logout();
+    var json = join(userNameTaken);
     this.assertEqual(SSGetType(json), UserNameAlreadyExistsError);
+    login(fakemary);
+    app.delete('user', 'fakemary');
   },
   
   
@@ -168,7 +172,6 @@ var UserCreateDeleteTest = new Class({
   testUserStreamsExists: function()
   {
     this.doc("User public and private stream should exist and have the right values after account creation.");
-    
     var json = app.action('join', fakemary);
     var data = SSGetData(json);
     var publicStream = data.publicStream;
@@ -190,7 +193,6 @@ var UserCreateDeleteTest = new Class({
   testDeleteUserContent: function()
   {
     this.doc("User's public stream, private stream, events, and shifts should be deleted");
-    
     var json = app.action('join', fakemary);
     var data = SSGetData(json);
     var publicStream = data.publicStream;
