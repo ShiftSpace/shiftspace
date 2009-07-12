@@ -4,6 +4,10 @@
 // @dependencies      ShiftServerTestUtils
 // ==/Builder==
 
+var groupStream = {
+  displayName:"My Cool Group"
+};
+
 var StreamTest = new Class({
 
   Extends: SSUnitTest.TestCase,
@@ -11,14 +15,14 @@ var StreamTest = new Class({
   
   setup: function()
   {
-    app.action('join', fakemary);
+    join(fakemary);
   },
   
   
   tearDown: function()
   {
     app.delete('user', 'fakemary');
-    logout();
+    logout()
   },
   
   
@@ -33,8 +37,10 @@ var StreamTest = new Class({
   testCreate: function()
   {
     this.doc("Create a stream.");
-    var id = SSGetData(app.create('stream', {displayName:"My Cool Group"}));
+    var id = SSGetData(app.create('stream', groupStream));
     this.assertNotEqual(id, null);
+    var user = SSGetData(app.read('user', 'fakemary'));
+    this.assertNotEqual(user.streams.indexOf(id), -1);
   },
   
   
@@ -49,17 +55,68 @@ var StreamTest = new Class({
   },
   
   
-  testSubscribeToPublicStream: function()
+  testSubscribePublic: function()
   {
-    this.doc("A public steram can subscribed by anyone");
-    var id = SSGetData(app.create('stream', {displayName:"My Cool Group"}));
+    this.doc("A public stream can subscribed by anyone");
+    var id = SSGetData(app.create('stream', {
+      displayName:"My Cool Group",
+      private:false
+    }));
     logout();
     join(fakedave);
     var json = app.action('stream/'+id+'/subscribe')
     this.assertEqual(JSON.encode(json), ack)
     app.delete('user', 'fakedave');
     login(fakemary);
-  }/*,
+  },
+  
+  testSubscribePrivateError: function()
+  {
+    this.doc("A private stream cannot by subscribed anyone");
+    var id = SSGetData(app.create('stream', {
+      displayName:"My Cool Group",
+      private:true
+    }));
+    logout();
+    join(fakedave);
+    var json = app.action('stream/'+id+'/subscribe')
+    this.assertEqual(SSGetType(json), PermissionError)
+    app.delete('user', 'fakedave');
+    login(fakemary);
+  },
+  
+  
+  testSubscribePrivate: function()
+  {
+    this.doc("User should be able to subscribe to a private stream for which he has permission.");
+    
+    logout();
+    var fakedavejson = SSGetData(join(fakedave));
+    logout();
+    
+    login(fakemary);
+    var id = SSGetData(app.create('stream', {
+      displayName:"My Cool Group",
+      private:true
+    }));
+    var json = app.action('stream/'+id+'/add/fakedave');
+    this.assertEqual(JSON.encode(json), ack);
+    
+    logout();
+    login(admin);
+    var perms = SSGetData(app.get('stream/'+id+'/permissions'));
+    var userIds = perms.map(function(perm) {
+      return perm['userId'];
+    });
+    this.assertNotEqual(userIds.indexOf(fakedavejson._id), -1);
+    logout();
+    
+    login(fakedave);
+    var json = app.action('stream/'+id+'/subscribe')
+    this.assertEqual(JSON.encode(json), ack)
+
+    app.delete('user', 'fakedave');
+  },/*,
 
   testStreamNotDeletedIfHasNonOwnerEvent: function()
   {
@@ -92,12 +149,6 @@ var StreamTest = new Class({
     
   },
   
-  
-  testSubscribePrivateError: function()
-  {
-    
-  },
-
   
   testGiveSubscribePerm: function()
   {

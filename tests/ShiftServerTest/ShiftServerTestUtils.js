@@ -178,6 +178,20 @@ var CouchDBApp = new Class({
       }
     });
     return result;
+  },
+  
+  get: function(url)
+  {
+    var result;
+    req({
+      url:'/'+url,
+      method: 'get',
+      onComplete: function(json)
+      {
+        result = json;
+      }
+    });
+    return result;
   }
 });
 
