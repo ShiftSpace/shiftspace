@@ -94,15 +94,18 @@ var StreamTest = new Class({
     var fakedavejson = SSGetData(join(fakedave));
     logout();
     
+    // invite fake dave
     login(fakemary);
     var id = SSGetData(app.create('stream', {
+      meta: "group",
       displayName:"My Cool Group",
       private:true
     }));
     var json = app.action('stream/'+id+'/add/fakedave');
     this.assertEqual(JSON.encode(json), ack);
-    
     logout();
+
+    // check permission exists
     login(admin);
     var perms = SSGetData(app.get('stream/'+id+'/permissions'));
     var userIds = perms.map(function(perm) {
@@ -111,11 +114,15 @@ var StreamTest = new Class({
     this.assertNotEqual(userIds.indexOf(fakedavejson._id), -1);
     logout();
     
+    // fakedave has a message and can subscribe
     login(fakedave);
-    var json = app.action('stream/'+id+'/subscribe')
+    json = SSGetData(app.get('user/fakedave/messages'));
+    this.assertEqual(json.length, 1);
+    json = app.action('stream/'+id+'/subscribe')
     this.assertEqual(JSON.encode(json), ack)
-
     app.delete('user', 'fakedave');
+    
+    login(admin);
   },/*,
 
   testStreamNotDeletedIfHasNonOwnerEvent: function()
