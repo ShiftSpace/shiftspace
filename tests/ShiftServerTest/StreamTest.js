@@ -90,6 +90,7 @@ var StreamTest = new Class({
   {
     this.doc("User should be able to subscribe to a private stream for which he has permission.");
     
+    // create fakedave
     logout();
     var fakedavejson = SSGetData(join(fakedave));
     logout();
@@ -118,25 +119,54 @@ var StreamTest = new Class({
     login(fakedave);
     json = SSGetData(app.get('user/fakedave/messages'));
     this.assertEqual(json.length, 1);
-    json = app.action('stream/'+id+'/subscribe')
-    this.assertEqual(JSON.encode(json), ack)
-    app.delete('user', 'fakedave');
+    json = app.action('stream/'+id+'/subscribe');
+    this.assertEqual(JSON.encode(json), ack);
     
+    // fakedave should have this stream in his list of streams
+    json = SSGetData(app.read('user', 'fakedave'));
+    this.assertNotEqual(json.streams.indexOf(id), -1);
+
+    logout();
+    
+    // permission should now be one
     login(admin);
-  },/*,
+    var perms = SSGetData(app.get('stream/'+id+'/permissions'));
+    var userIds = perms.map(function(perm) {
+      return perm['userId'];
+    });
+    var fakedaveperm = perms[userIds.indexOf(fakedavejson._id)]
+    this.assertEqual(fakedaveperm.level, 1);
+
+    app.delete('user', 'fakedave');
+  }/*,
 
   testStreamNotDeletedIfHasNonOwnerEvent: function()
   {
     this.doc("A stream with an event by another user should not be deleted.");
-    var id = SSGetData(app.create('stream', {
-      displayName:"My Cool Group",
-      private:"false"
-    }));
+    
+    // create fakedave
     logout();
-    join(fakedave);
-    fake
-    app.delete('user', 'fakemary');
-  },
+    var fakedavejson = SSGetData(join(fakedave));
+    logout();
+    
+    // invite fake dave
+    login(fakemary);
+    var id = SSGetData(app.create('stream', {
+      meta: "group",
+      displayName:"My Cool Group",
+      private:true
+    }));
+    var json = app.action('stream/'+id+'/add/fakedave');
+    logout();
+    
+    // subscribe fakedave
+    login(fakedave);
+    this.assertEqual(json.length, 1);
+    json = app.action('stream/'+id+'/subscribe');
+    app.delete('user', 'fakedave');
+    
+    login(admin);
+  }/*,
   
   
   testRead: function()
@@ -152,18 +182,6 @@ var StreamTest = new Class({
   
   
   testDelete: function()
-  {
-    
-  },
-  
-  
-  testGiveSubscribePerm: function()
-  {
-    
-  },
-
-
-  testSubscribePrivate: function()
   {
     
   }*/
