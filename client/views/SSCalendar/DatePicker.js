@@ -252,8 +252,7 @@ var DatePicker;
 		Implements: [Options, Events, StyleWriter],
 		options: {
 			format: "%x",
-			defaultCss: 'div.calendarHolder {height:177px;position: absolute;top: -21px !important;top: -27px;left: -3px;width: 100%;}'+
-				'div.calendarHolder table.cal {margin-right: 15px !important;margin-right: 8px;width: 205px;}'+
+			defaultCss: 'div.calendarHolder table.cal {margin-right: 15px !important;margin-right: 8px;width: 205px;}'+
 				'div.calendarHolder td {text-align:center;}'+
 				'div.calendarHolder tr.dayRow td {padding: 2px;width: 22px;cursor: pointer;}'+
 				'div.calendarHolder table.datePicker * {font-size:11px;line-height:16px;}'+
