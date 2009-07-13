@@ -25,7 +25,7 @@ var StreamTest = new Class({
     logout()
   },
   
-  
+
   testCreateNull: function()
   {
     this.doc("Error on stream with no data.");
@@ -69,6 +69,7 @@ var StreamTest = new Class({
     app.delete('user', 'fakedave');
     login(fakemary);
   },
+  
   
   testSubscribePrivateError: function()
   {
@@ -138,11 +139,12 @@ var StreamTest = new Class({
     this.assertEqual(fakedaveperm.level, 1);
 
     app.delete('user', 'fakedave');
-  }/*,
+  },
 
-  testStreamNotDeletedIfHasNonOwnerEvent: function()
+
+  testStreamSetWritePermission: function()
   {
-    this.doc("A stream with an event by another user should not be deleted.");
+    this.doc("Set a write permission on a stream.");
     
     // create fakedave
     logout();
@@ -156,34 +158,162 @@ var StreamTest = new Class({
       displayName:"My Cool Group",
       private:true
     }));
-    var json = app.action('stream/'+id+'/add/fakedave');
+    app.action('stream/'+id+'/add/fakedave');
     logout();
     
     // subscribe fakedave
     login(fakedave);
-    this.assertEqual(json.length, 1);
-    json = app.action('stream/'+id+'/subscribe');
-    app.delete('user', 'fakedave');
+    app.action('stream/'+id+'/subscribe');
+    logout();
     
+    // give fakedave write perms for the stream
+    login(fakemary);
+    setPerm(id, 'fakedave', 2);
+    logout();
+    
+    // check that the permission is set
     login(admin);
-  }/*,
-  
-  
-  testRead: function()
-  {
+    var perms = SSGetData(app.get('stream/'+id+'/permissions'));
+    var userIds = perms.map(function(perm) {
+      return perm['userId'];
+    });
+    var fakedaveperm = perms[userIds.indexOf(fakedavejson._id)]
+    this.assertEqual(fakedaveperm.level, 2);
     
+    app.delete('user', 'fakedave');
+  },
+
+
+  testStreamPost: function(attribute)
+  {
+    this.doc("Post an event to a private stream.");
+    
+    // create fakedave
+    logout();
+    var fakedavejson = SSGetData(join(fakedave));
+    logout();
+    
+    // invite fake dave
+    login(fakemary);
+    var id = SSGetData(app.create('stream', {
+      meta: "group",
+      displayName:"My Cool Group",
+      private:true
+    }));
+    app.action('stream/'+id+'/add/fakedave');
+    logout();
+    
+    // subscribe fakedave
+    login(fakedave);
+    app.action('stream/'+id+'/subscribe');
+    logout();
+    
+    // give fakedave write perms for the stream
+    login(fakemary);
+    setPerm(id, 'fakedave', 2);
+    logout();
+    
+    login(fakedave);
+    // post an event
+    var eventId = SSGetData(app.action('stream/'+id+'/post', {
+      displayString: "This is my cool event!"
+    }));
+    
+    // check that it was added
+    var events = SSGetData(app.get('stream/'+id+'/events'));
+    var eventIds = events.map(function(event) {
+      return event._id;
+    });
+    this.assertNotEqual(eventIds.indexOf(eventId), -1);
+    logout();
+
+    login(admin);
+    app.delete('user', 'fakedave');
+  },
+
+
+  testPostError: function()
+  {
+    this.doc("Error when attempting to post to a stream without proper permissions.");
+    
+    // create fakedave
+    logout();
+    var fakedavejson = SSGetData(join(fakedave));
+    logout();
+    
+    // invite fake dave
+    login(fakemary);
+    var id = SSGetData(app.create('stream', {
+      meta: "group",
+      displayName:"My Cool Group",
+      private:true
+    }));
+    app.action('stream/'+id+'/add/fakedave');
+    logout();
+    
+    // subscribe fakedave
+    login(fakedave);
+    app.action('stream/'+id+'/subscribe');
+    // post an event
+    var json = app.action('stream/'+id+'/post', {
+      displayString: "This is my cool event!"
+    });
+    this.assertEqual(SSGetType(json), PermissionError);
+    logout()
+
+    login(admin);
+    app.delete('user', 'fakedave');
   },
   
   
-  testUpdate: function()
+  testStreamPreserve: function()
   {
+    this.doc("Stream should not be deleted if someone else has an event on it.");
     
-  },
-  
-  
-  testDelete: function()
-  {
+    // create fakedave
+    logout();
+    var fakedavejson = SSGetData(join(fakedave));
+    logout();
     
-  }*/
+    // invite fake dave
+    login(fakemary);
+    var id = SSGetData(app.create('stream', {
+      meta: "group",
+      displayName:"My Cool Group",
+      private:true
+    }));
+    app.action('stream/'+id+'/add/fakedave');
+    logout();
+    
+    // subscribe fakedave
+    login(fakedave);
+    app.action('stream/'+id+'/subscribe');
+    logout();
+    
+    // give fakedave write perms for the stream
+    login(fakemary);
+    setPerm(id, 'fakedave', 2);
+    logout();
+    
+    login(fakedave);
+    // post an event
+    var eventId = SSGetData(app.action('stream/'+id+'/post', {
+      displayString: "This is my cool event!"
+    }));
+    logout();
+    
+    // delete fakemary
+    login(fakemary);
+    app.delete('user', 'fakemary');
+
+    // check that the stream still exists
+    login(admin);
+    var json = app.read("stream", id);
+    this.assertEqual(SSGetData(json).displayName, "My Cool Group");
+
+    // delete the stream
+    app.delete('stream', id);
+    app.delete('user', 'fakedave');
+  }
 })
 

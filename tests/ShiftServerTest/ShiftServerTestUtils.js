@@ -232,6 +232,26 @@ function login(user)
   return result;
 }
 
+
+function setPerm(id, userName, level)
+{
+  var result;
+  req({
+    url: "/stream/"+id+'/permission',
+    method: 'post',
+    data:
+    {
+      userName: userName,
+      level: level
+    },
+    onComplete: function(json)
+    {
+      result = json;
+    }
+  });
+  return result;
+}
+
 function join(user)
 {
   return app.action('join', user);
