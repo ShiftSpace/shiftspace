@@ -11,17 +11,17 @@ var ShiftTest = new Class({
   
   setup: function()
   {
-    app.action('join', fakemary);
+    join(fakemary);
   },
   
   
   tearDown: function()
   {
     app.delete('user', 'fakemary');
-    app.action('logout');
+    logout();
   },
   
-
+  /*
   testCreate: function()
   {
     this.doc("Create a shift.");
@@ -72,13 +72,24 @@ var ShiftTest = new Class({
     this.assertEqual(SSGetType(json), PermissionError);
     logout();
     login(fakemary);
-  }/*,
+  },
+  */
   
+  testPublish: function()
+  {
+    
+  }/*,
   
   testPrivate: function()
   {
-    this.doc("A private published shift should be visible to people who have permission.");
+    this.doc("A private published shift should be visible only to people who have permission.");
     this.assertEqual(true, false);
+    
+    var shiftId = SSGetData(app.create('shift', noteShift));
+    logout();
+    
+    join(fakedave);
+    
   },
   
   
