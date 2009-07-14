@@ -87,7 +87,7 @@ Parameters:
 */
 function SSRegisterSpace(instance) 
 {
-  var attributes;
+  var attributes = SSInstalledSpaces(instance.name);
   var spaceName = instance.attributes().name;
   SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));

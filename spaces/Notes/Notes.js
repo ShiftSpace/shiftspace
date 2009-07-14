@@ -1,17 +1,8 @@
 // Notes does need to manage the rendering order of the notes
 var NotesSpace = new Class({
 
-  name: 'NotesSpace',
-
   Extends: ShiftSpace.Space,
-
-  attributes:
-  {
-    name: 'Notes',
-    version: 0.1,
-    icon: 'Notes.png',
-    css: 'Notes.css'
-  },
+  name: 'Notes',
 
   intialize: function()
   {

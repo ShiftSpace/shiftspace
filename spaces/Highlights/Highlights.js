@@ -1,14 +1,7 @@
 var HighlightsSpace = new Class({
   
   Extends: ShiftSpace.Space,
-
-  attributes:
-  {
-    name: 'Highlights',
-    version: 0.1,
-    icon: 'Highlights.png',
-    css: 'spaces/Highlights/Highlights.css'
-  },
+  name: "Highlights",
 
 
   setup: function()

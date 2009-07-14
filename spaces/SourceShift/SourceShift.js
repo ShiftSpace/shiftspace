@@ -1,14 +1,7 @@
 var SourceShiftSpace = new Class({
 
   Extends: ShiftSpace.Space,
-
-  attributes :
-  {
-    name : 'SourceShift',
-    icon : 'SourceShift.png',
-    version : 0.1,
-    css : 'SourceShift.css'
-  },
+  name: "SourceShift",
 
 
   setup: function(options)
