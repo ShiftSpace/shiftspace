@@ -148,20 +148,26 @@ function SSIsAbsoluteURL(string)
 }
 
 
-function SSLoadDefaultSpaceAttributes()
+function SSLoadDefaultSpacesAttributes()
 {
-  var defaultSpaces;
-  __defaultSpacesList.length.times(function(i, spaceName) {
+  var defaultSpaces = {};
+  __defaultSpacesList.length.times(function(i) {
     try
     {
+      var spaceName = __defaultSpacesList[i];
       SSLoadSpaceAttributes(spaceName, function(json) {
         defaultSpaces[spaceName] = json;
         defaultSpaces[spaceName].position = i;
-        if(i == __defaultSpacesList.length) SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);
+        if(i == __defaultSpacesList.length) 
+        {
+          SSInitDefaultSpaces(defaultSpaces);
+          SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);
+        }
       });
+    }
     catch (exc)
     {
-      console.error("Error attempting to load attributes for " + spaceName);
+      console.error("Error attempting to load attributes for " + spaceName + ".");
     }
   });
 }
@@ -304,7 +310,12 @@ function SSUpdateInstalledSpaces(force)
 
 function SSInitDefaultSpaces(defaults)
 {
-  __defaultSpaces = defaults || SSGetValue('defaultSpaces', null);
+  if(defaults)
+  {
+    SSSetValue('defaultSpaces', defaults);
+  }
+
+  __defaultSpaces = defaults || SSGetValue('defaultSpaces');
 }
 
 

@@ -162,15 +162,17 @@ var ShiftSpace = new (function() {
           SSPostNotification("onSync");
         }
         
+        SSLog('SSInitDefaultSpaces', SSLogForce);
         SSInitDefaultSpaces();
         
         if(SSDefaultSpaces())
         {
+          SSLog('SSSetup', SSLogForce);
           SSSetup();
         }
         else
         {
-          SSAddObserver("onDefaultSpacesAttributesLoad", SSSetup);
+          SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
           SSLoadDefaultSpacesAttributes();
         }
       });

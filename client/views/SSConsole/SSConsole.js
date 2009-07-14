@@ -13,8 +13,6 @@ var SSConsole = new Class({
   
   initialize: function(el, options)
   {
-    SSLog('>>>>>>>>>>>>>> SSConsole', SSLogForce);
-    
     // only really relevant under Sandalphon
     if(typeof SandalphonToolMode == 'undefined')
     {
@@ -350,7 +348,6 @@ var SSConsole = new Class({
   
   onFrameLoad: function(ui)
   {
-    SSLog('>>>>>>>>>>>>>>>>>>>>>>>> onFrameLoad', SSLogForce);
     var context = this.element.contentWindow;
     var doc = context.document;
     
