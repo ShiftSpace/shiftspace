@@ -30,7 +30,7 @@ function SSLoadSpace(space, callback)
   if(__loadingSpaces.contains(space))
   {
     SSAddObserver(SSNotificationProxy, 'onSpaceLoad', function(spaceInstance) {
-      if(spaceInstance.attributes.name == space) callback(spaceInstance);
+      if(spaceInstance.attributes().name == space) callback(spaceInstance);
     });
     return
   }
@@ -87,40 +87,41 @@ Parameters:
 */
 function SSRegisterSpace(instance) 
 {
-  var spaceName = instance.attributes.name;
+  var attributes;
+  var spaceName = instance.attributes().name;
   SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
 
   var spaceDir = SSURLForSpace(spaceName);
 
-  instance.attributes.dir = spaceDir;
+  instance.attributes().dir = spaceDir;
 
-  if (!instance.attributes.icon)
+  if (!instance.attributes().icon)
   {
     var icon = SSURLForSpace(spaceName).replace('.js', '.png');
-    instance.attributes.icon = icon;
+    instance.attributes().icon = icon;
   } 
-  else if (instance.attributes.icon.indexOf('/') == -1) 
+  else if (instance.attributes().icon.indexOf('/') == -1) 
   {
-    var icon = spaceDir + instance.attributes.icon;
-    instance.attributes.icon = icon;
+    var icon = spaceDir + instance.attributes().icon;
+    instance.attributes().icon = icon;
   }
 
   // if a css file is defined in the attributes load the style
-  if (instance.attributes.css) 
+  if (instance.attributes().css) 
   {
-    if (instance.attributes.css.indexOf('/') == -1) 
+    if (instance.attributes().css.indexOf('/') == -1) 
     {
-      var css = spaceDir + instance.attributes.css;
-      instance.attributes.css = css;
+      var css = spaceDir + instance.attributes().css;
+      instance.attributes().css = css;
     }
-    setTimeout(SSLoadStyle.bind(ShiftSpace, [instance.attributes.css, instance.onCssLoad.bind(instance)]), 0);
+    setTimeout(SSLoadStyle.bind(ShiftSpace, [instance.attributes().css, instance.onCssLoad.bind(instance)]), 0);
   }
 
   // This exposes each space instance to the console
   if (typeof ShiftSpaceSandBoxMode != 'undefined') 
   {
-    ShiftSpace[instance.attributes.name + 'Space'] = instance;
+    ShiftSpace[instance.attributes().name + 'Space'] = instance;
   }
 
   if(ShiftSpace.Console)

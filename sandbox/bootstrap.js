@@ -95,33 +95,33 @@ function SSDescribeException(_exception)
 
 function SSRegisterSpace(instance) 
 {
-  var spaceName = instance.attributes.name;
+  var spaceName = instance.attributes().name;
   var spaceDir = 'spaces/' + spaceName + '/';
 
-  if (!instance.attributes.icon) 
+  if (!instance.attributes().icon) 
   {
     var icon = SSURLForSpace(spaceName).replace('.js', '.png');
-    instance.attributes.icon = icon;
+    instance.attributes().icon = icon;
   } 
-  else if (instance.attributes.icon.indexOf('/') == -1) 
+  else if (instance.attributes().icon.indexOf('/') == -1) 
   {
-    var icon = spaceDir + instance.attributes.icon;
-    instance.attributes.icon = icon;
+    var icon = spaceDir + instance.attributes().icon;
+    instance.attributes().icon = icon;
   }
 
   // if a css file is defined in the attributes load the style
-  if (instance.attributes.css) 
+  if (instance.attributes().css) 
   {
-    if (instance.attributes.css.indexOf('/') == -1) 
+    if (instance.attributes().css.indexOf('/') == -1) 
     {
-      var css = spaceDir + instance.attributes.css;
-      instance.attributes.css = css;
+      var css = spaceDir + instance.attributes().css;
+      instance.attributes().css = css;
     }
-    SSLoadStyle(instance.attributes.css, instance.onCssLoad.bind(instance));
+    SSLoadStyle(instance.attributes().css, instance.onCssLoad.bind(instance));
   }
 
   // This exposes each space instance to the console
-  ShiftSpace[instance.attributes.name + 'Space'] = instance;
+  ShiftSpace[instance.attributes().name + 'Space'] = instance;
 }
 
 function SSLoadFile(url, callback) 

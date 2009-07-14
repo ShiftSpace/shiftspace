@@ -1139,7 +1139,7 @@ var SourceShiftShift = new Class({
       scroll : 'no',
       rows : 1000,
       cols : 1000,
-      css : this.getParentSpace().attributes.css,
+      css : this.getParentSpace().attributes().css,
       onload : this.finishFrame.bind(this)
     });
     this.frame.injectInside(this.element);

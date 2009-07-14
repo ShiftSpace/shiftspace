@@ -182,6 +182,7 @@ var ShiftSpace = new (function() {
           }
         }
 
+        // automatically load a space if there is domain match
         var installed = SSInstalledSpaces();
         for(var space in installed)
         {

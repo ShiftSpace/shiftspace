@@ -494,7 +494,7 @@ var NotesShift = new Class({
   */
   buildFrame: function()
   {
-    var _css = this.getParentSpace().attributes.css;
+    var _css = this.getParentSpace().attributes().css;
 
     // create an iframe with the css already loaded
     this.frame = new ShiftSpace.Iframe({

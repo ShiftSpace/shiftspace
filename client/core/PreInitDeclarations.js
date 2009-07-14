@@ -34,61 +34,26 @@ var __defaultSpaces = {
   'Notes': 
   {
     name:'Notes', 
-    url: __spacesDir + 'Notes/', 
-    icon: __spacesDir + 'Notes/' + 'Notes.png', 
-    css: __spacesDir + 'Notes/' + 'Notes.css',
-    position:0, 
-    attrs: {},
-    autolaunch: false
+    url: __spacesDir + 'Notes/'
   },
   'ImageSwap': 
   {
     name:'ImageSwap', 
-    url: __spacesDir + 'ImageSwap/', 
-    icon: __spacesDir + 'ImageSwap/' + 'ImageSwap.png', 
-    css: __spacesDir + 'ImageSwap/' + 'ImageSwap.css',
-    position:1, 
-    attrs: {},
-    autolaunch: false
+    url: __spacesDir + 'ImageSwap/'
   },
   'Highlights': 
   {
     name:'Highlights', 
-    url: __spacesDir + 'Highlights/', 
-    icon: __spacesDir + 'Highlights/' + 'Highlights.png', 
-    css: __spacesDir + 'Highlights/' + 'Highlights.css',
-    position:2, 
-    attrs: {},
-    autolaunch: false
+    url: __spacesDir + 'Highlights/'
   },
   'SourceShift': 
   {
     name:'SourceShift', 
-    url: __spacesDir + 'SourceShift/', 
-    icon: __spacesDir + 'SourceShift/' + 'SourceShift.png',
-    css: __spacesDir + 'SourceShift/' + 'SourceShift.css',
-    position:3, 
-    attrs: {},
-    autolaunch: false
+    url: __spacesDir + 'SourceShift/'
   }
 };
 
 var installedPlugins = {};
-
-/*
-// otherwise respect existing values, servers might be different
-// for different resources
-installedPlugins = SSGetValue('installedPlugins', {
-  'Delicious': server + 'plugins/Delicious/Delicious.js',
-  'Trails': server + 'plugins/Trails/NewTrail.js',
-  'Comments': server + 'plugins/Comments/Comments.js',
-  'Twitter': server + 'plugins/Twitter/Twitter.js'
-});
-*/
-
-// installedPlugins = {
-//   'Trails' : myFiles + 'plugins/Trails/NewTrail.js'
-// };
 
 // An index of cached files, used to clear the cache when necessary
 var cache = SSGetValue('cache', []);
