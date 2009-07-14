@@ -22,8 +22,6 @@ var ShiftSpaceSpace = new Class({
   
   Implements: [Events, Options],
 
-  attributes : {},
-
   /*
     Function : initialize (private)
       Initialize the space.  Sets internala state variables as well as calls SSRegisterSpace.  Also call the subclass
@@ -42,7 +40,7 @@ var ShiftSpaceSpace = new Class({
     this.__deferredEdits = [];
 
     // if no css file, we don't need to wait for it to load
-    this.setCssLoaded(!this.attributes.css);
+    this.setCssLoaded(!this.attributes().css);
 
     // the shifts array
     this.shifts = {};
@@ -58,33 +56,27 @@ var ShiftSpaceSpace = new Class({
       SSLog('You did not specify a Shift Class for this Space.', SSLogError);
     }
 
-    // Error checking for Developers, probably should just replace with defaults
-    if(!this.attributes.name)
-    {
-      valid = false;
-      SSLog('This space does not define a name attribute.', SSLogError);
-    }
-    if(!this.attributes.icon)
-    {
-      valid = false;
-      SSLog('Error: This space does not have an icon.', SSLogError);
-    }
-
     if(valid)
     {
       if(typeof SSRegisterSpace != 'undefined')
       {
-        SSRegisterSpace(this, this.attributes);
+        SSRegisterSpace(this);
       }
     }
     else
     {
-      var name = this.attributes.name || '';
+      var name = this.attributes().name || '';
       console.error('Error: The  ' + name + ' is not valid and will not be instantiated.');
     }
     this.setup();
 
     return this;
+  },
+  
+  
+  attributes: function()
+  {
+    return SSInstalledSpaces()[this.name];
   },
 
   /*
@@ -359,7 +351,7 @@ var ShiftSpaceSpace = new Class({
   */
   getName: function()
   {
-    return this.attributes.name;
+    return this.attributes().name;
   },
 
   /*
@@ -521,7 +513,7 @@ var ShiftSpaceSpace = new Class({
 
     // fix this
     shiftJson.id = aShift.getId();
-    shiftJson.space = this.attributes.name;
+    shiftJson.space = this.attributes().name;
     shiftJson.username = ShiftSpace.User.getUsername();
 
     this.fireEvent('onShiftUpdate', shiftJson);
@@ -911,7 +903,7 @@ var ShiftSpaceSpace = new Class({
   */
   setValue: function(key, value)
   {
-    SSSetValue.safeCall(this.attributes.name + "." + key, value);
+    SSSetValue.safeCall(this.attributes().name + "." + key, value);
   },
 
   /*
@@ -925,7 +917,7 @@ var ShiftSpaceSpace = new Class({
   */
   getValue: function(key, defaultValue, callback)
   {
-    SSGetValue.safeCallWithResult(this.attributes.name + '.' + key, defaultValue, callback);
+    SSGetValue.safeCallWithResult(this.attributes().name + '.' + key, defaultValue, callback);
   },
 
   /*
@@ -1014,13 +1006,13 @@ var ShiftSpaceSpace = new Class({
   
   setPreference: function(key, value)
   {
-    ShiftSpace.User.setPreference(this.attributes.name+'.'+key, vlaue);
+    ShiftSpace.User.setPreference(this.attributes().name+'.'+key, vlaue);
   },
   
   
   getPreference: function(key, defaultValue, callback)
   {
-    ShiftSpace.User.getPreference.safeCallWithResult(this.attributes.name+'.'+key, defaultValue, callback);
+    ShiftSpace.User.getPreference.safeCallWithResult(this.attributes().name+'.'+key, defaultValue, callback);
   }
 
 });

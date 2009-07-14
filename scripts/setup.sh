@@ -46,3 +46,7 @@ python ../builder/corebuilder.py
 chmod a+w ../server/working
 chmod a+w ../client/compiledViews
 chmod a+w ../builds
+
+cd ../server
+./setup.py
+cd ../scripts

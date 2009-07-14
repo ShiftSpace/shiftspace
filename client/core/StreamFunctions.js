@@ -16,13 +16,14 @@ function SSGetFeed(streamId, callback)
 }
 
 
-function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, callback)
+function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, meta, callback)
 { 
   SSStreamCall('event.createstream', {
     stream_name: displayName,
     unique_name: uniqueName,
     object_ref: objectRef,
-    private: isPrivate
+    private: isPrivate,
+    meta: meta
   }, callback);
 }
 
@@ -33,6 +34,13 @@ function SSSetStreamPermission(streamId, userId, level, callback)
     stream_id: streamId,
     user_id: userId,
     level: level
+  }, callback);
+}
+
+
+function SSGetStreamsByMeta(meta, callback) {
+  SSStreamCall('event.getstreamsbymeta', {
+    meta: meta
   }, callback);
 }
 

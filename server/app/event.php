@@ -61,7 +61,7 @@ class Event {
         throw new Exception("Stream already exists with this unique_name");
     }
     
-    $object->set(compact('private', 'stream_name', 'created_by', 'created_by_name', 'object_ref', 'unique_name', 'are_object_refs_in_events_unique'));    
+    $object->set(compact('private', 'stream_name', 'created_by', 'created_by_name', 'object_ref', 'unique_name', 'are_object_refs_in_events_unique', 'meta'));    
     $this->server->db->save($object);
     
     $permission = new StreamPermission_Object();
@@ -72,6 +72,12 @@ class Event {
       
     $this->server->db->save($permission);
     return $object->get();  
+  }
+
+  public function getstreamsbymeta() {
+    extract($_REQUEST);
+    
+    return $this->server->db->rows("SELECT * FROM stream WHERE meta=:meta", compact('meta'));
   }
 
   public function findstreambyuniquename() {

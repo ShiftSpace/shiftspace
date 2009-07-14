@@ -6,6 +6,7 @@
 
 var __spaces = $H();
 var __focusedSpace = null;
+var __defaultSpaces = null;
 var __installedSpaces = null;
 var __installedSpacesDataProvider = null;
 
@@ -30,7 +31,7 @@ function SSLoadSpace(space, callback)
   if(__loadingSpaces.contains(space))
   {
     SSAddObserver(SSNotificationProxy, 'onSpaceLoad', function(spaceInstance) {
-      if(spaceInstance.attributes.name == space) callback(spaceInstance);
+      if(spaceInstance.attributes().name == space) callback(spaceInstance);
     });
     return
   }
@@ -87,40 +88,26 @@ Parameters:
 */
 function SSRegisterSpace(instance) 
 {
-  var spaceName = instance.attributes.name;
+  var spaceName = instance.name;
   SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
-
   var spaceDir = SSURLForSpace(spaceName);
 
-  instance.attributes.dir = spaceDir;
-
-  if (!instance.attributes.icon)
-  {
-    var icon = SSURLForSpace(spaceName).replace('.js', '.png');
-    instance.attributes.icon = icon;
-  } 
-  else if (instance.attributes.icon.indexOf('/') == -1) 
-  {
-    var icon = spaceDir + instance.attributes.icon;
-    instance.attributes.icon = icon;
-  }
-
   // if a css file is defined in the attributes load the style
-  if (instance.attributes.css) 
+  if (instance.attributes().css) 
   {
-    if (instance.attributes.css.indexOf('/') == -1) 
+    if (instance.attributes().css.indexOf('/') == -1) 
     {
-      var css = spaceDir + instance.attributes.css;
-      instance.attributes.css = css;
+      var css = spaceDir + instance.attributes().css;
+      instance.attributes().css = css;
     }
-    setTimeout(SSLoadStyle.bind(ShiftSpace, [instance.attributes.css, instance.onCssLoad.bind(instance)]), 0);
+    setTimeout(SSLoadStyle.bind(ShiftSpace, [instance.attributes().css, instance.onCssLoad.bind(instance)]), 0);
   }
 
   // This exposes each space instance to the console
   if (typeof ShiftSpaceSandBoxMode != 'undefined') 
   {
-    ShiftSpace[instance.attributes.name + 'Space'] = instance;
+    ShiftSpace[instance.attributes().name + 'Space'] = instance;
   }
 
   if(ShiftSpace.Console)
@@ -149,9 +136,35 @@ function SSRegisterSpace(instance)
   instance.addEvent('onShiftDestroy', SSUnloadShift);
 }
 
+
 function SSIsAbsoluteURL(string)
 {
   return (string.search("http://") == 0);
+}
+
+
+function SSLoadDefaultSpacesAttributes()
+{
+  var defaultSpaces = {};
+  __defaultSpacesList.length.times(function(i) {
+    try
+    {
+      var spaceName = __defaultSpacesList[i];
+      SSLoadSpaceAttributes(spaceName, function(attrs) {
+        defaultSpaces[spaceName] = attrs;
+        defaultSpaces[spaceName].position = i;
+        if(i == (__defaultSpacesList.length-1)) 
+        {
+          SSInitDefaultSpaces(defaultSpaces);
+          SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);
+        }
+      });
+    }
+    catch (exc)
+    {
+      console.error("Error attempting to load attributes for " + spaceName + ".");
+    }
+  });
 }
 
 /*
@@ -165,10 +178,24 @@ function SSLoadSpaceAttributes(space, callback)
     // check to see that the resources urls are full
     var json = JSON.decode(response.responseText);
     
+    if(!json.name)
+    {
+      throw new SSException("No name for " + json.name + " space specified.");
+    }
+    if(!json.url)
+    {
+      throw new SSException("No url for " + json.name + " space specified.");
+    }
+    
+    if (!json.icon)
+    {
+      json.icon = json.url + json.name + '.png';
+    }
+    
     // clear whitespace
-    json.url = json.url.trim();
-    json.icon = json.icon.trim();
-    json.css = json.css.trim();
+    if(json.url) json.url = json.url.trim();
+    if(json.icon) json.icon = json.icon.trim();
+    if(json.css) json.css = json.css.trim();
     
     if(!SSIsAbsoluteURL(json.url)) json.url = json.url.substitute({SPACEDIR:ShiftSpace.info().spacesDir});
     if(!SSIsAbsoluteURL(json.icon)) json.icon = json.url + json.icon;
@@ -257,25 +284,41 @@ function SSUninstallSpace(spaceName)
   SSPostNotification('onSpaceUninstall', spaceName);
 };
 
+
 function SSSetInstalledSpaces(installed)
 {
   __installedSpacesDataProvider.setInstalledSpaces(installed);
 }
+
 
 function SSInstalledSpaces()
 {
   return __installedSpaces || SSDefaultSpaces();
 }
 
+
 function SSUpdateInstalledSpaces(force)
 {
   __installedSpaces = __installedSpacesDataProvider.installedSpaces();
 }
 
+
+function SSInitDefaultSpaces(defaults)
+{
+  if(defaults)
+  {
+    SSSetValue('defaultSpaces', defaults);
+  }
+
+  __defaultSpaces = defaults || SSGetValue('defaultSpaces');
+}
+
+
 function SSDefaultSpaces()
 {
   return __defaultSpaces;
 }
+
 
 function SSURLForSpace(spaceName)
 {
@@ -489,4 +532,20 @@ function SSGetInfoForInstalledSpace(spaceName, callback)
 function SSSetInstalledSpacesDataProvider(dataProvider)
 {
   __installedSpacesDataProvider = dataProvider;
+}
+
+
+function SSInjectSpaces()
+{
+  for (var space in SSInstalledSpaces())
+  {
+    try
+    {
+      SSLoadSpace(space);
+    }
+    catch(err)
+    {
+      SSLog('Error: could not load ' + space, SSLogForce);
+    }
+  }
 }
