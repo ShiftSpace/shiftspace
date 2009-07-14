@@ -162,52 +162,52 @@ var ShiftSpace = new (function() {
           SSPostNotification("onSync");
         }
         
-        // Load all spaces and plugins immediately if in the sanbox
-        if (typeof ShiftSpaceSandBoxMode != 'undefined')
+        SSInitDefaultSpaces();
+        
+        if(SSDefaultSpaces())
         {
-          for (var space in SSInstalledSpaces())
-          {
-            try
-            {
-              SSLoadSpace(space);
-            }
-            catch(err)
-            {
-              SSLog('Error: could not load ' + space, SSLogForce);
-            }
-          }
-          for(var plugin in installedPlugins) 
-          {
-            SSLoadPlugin(plugin);
-          }
+          SSSetup();
         }
-
-        // automatically load a space if there is domain match
-        var installed = SSInstalledSpaces();
-        for(var space in installed)
+        else
         {
-          var domains = installed[space].domains;
-          if(domains)
-          {
-            var host = "http://" + window.location.host;
-            var domainMatch = false;
-            for(var i = 0; i < domains.length; i++)
-            {
-              if(domains[i] == host)
-              {
-                domainMatch = true;
-                continue;
-              }
-            }
-            if(domainMatch)
-            {
-              SSLoadSpace(space, function(spaceInstance) {
-                spaceInstance.showInterface();
-              });
-            }
-          }
+          SSAddObserver("onDefaultSpacesAttributesLoad", SSSetup);
+          SSLoadDefaultSpacesAttributes();
         }
       });
+    }
+    
+    function SSSetup()
+    {
+      if (typeof ShiftSpaceSandBoxMode != 'undefined')
+      {
+        SSInjectSpaces();
+      }
+
+      // automatically load a space if there is domain match
+      var installed = SSInstalledSpaces();
+      for(var space in installed)
+      {
+        var domains = installed[space].domains;
+        if(domains)
+        {
+          var host = "http://" + window.location.host;
+          var domainMatch = false;
+          for(var i = 0; i < domains.length; i++)
+          {
+            if(domains[i] == host)
+            {
+              domainMatch = true;
+              continue;
+            }
+          }
+          if(domainMatch)
+          {
+            SSLoadSpace(space, function(spaceInstance) {
+              spaceInstance.showInterface();
+            });
+          }
+        }
+      }
     }
 
     // TODO: write some documentation here

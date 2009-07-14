@@ -30,28 +30,7 @@ var __defaultEmailComments = 1;
 var __pluginsData = {};
 
 // Default Spaces
-var __defaultSpaces = {
-  'Notes': 
-  {
-    name:'Notes', 
-    url: __spacesDir + 'Notes/'
-  },
-  'ImageSwap': 
-  {
-    name:'ImageSwap', 
-    url: __spacesDir + 'ImageSwap/'
-  },
-  'Highlights': 
-  {
-    name:'Highlights', 
-    url: __spacesDir + 'Highlights/'
-  },
-  'SourceShift': 
-  {
-    name:'SourceShift', 
-    url: __spacesDir + 'SourceShift/'
-  }
-};
+var __defaultSpacesList = ['Notes', 'Highlights', 'ImageSwap', 'SourceShift'];
 
 var installedPlugins = {};
 

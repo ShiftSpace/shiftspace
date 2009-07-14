@@ -6,6 +6,7 @@
 
 var __spaces = $H();
 var __focusedSpace = null;
+var __defaultSpaces = null;
 var __installedSpaces = null;
 var __installedSpacesDataProvider = null;
 
@@ -140,9 +141,29 @@ function SSRegisterSpace(instance)
   instance.addEvent('onShiftDestroy', SSUnloadShift);
 }
 
+
 function SSIsAbsoluteURL(string)
 {
   return (string.search("http://") == 0);
+}
+
+
+function SSLoadDefaultSpaceAttributes()
+{
+  var defaultSpaces;
+  __defaultSpacesList.length.times(function(i, spaceName) {
+    try
+    {
+      SSLoadSpaceAttributes(spaceName, function(json) {
+        defaultSpaces[spaceName] = json;
+        defaultSpaces[spaceName].position = i;
+        if(i == __defaultSpacesList.length) SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);
+      });
+    catch (exc)
+    {
+      console.error("Error attempting to load attributes for " + spaceName);
+    }
+  });
 }
 
 /*
@@ -165,15 +186,15 @@ function SSLoadSpaceAttributes(space, callback)
       throw new SSException("No url for " + json.name + " space specified.");
     }
     
-    // clear whitespace
-    if(json.url) json.url = json.url.trim();
-    if(json.icon) json.icon = json.icon.trim();
-    if(json.css) json.css = json.css.trim();
-    
     if (!json.icon)
     {
       json.icon = json.url + json.name + '.png';
     }
+    
+    // clear whitespace
+    if(json.url) json.url = json.url.trim();
+    if(json.icon) json.icon = json.icon.trim();
+    if(json.css) json.css = json.css.trim();
     
     if(!SSIsAbsoluteURL(json.url)) json.url = json.url.substitute({SPACEDIR:ShiftSpace.info().spacesDir});
     if(!SSIsAbsoluteURL(json.icon)) json.icon = json.url + json.icon;
@@ -262,25 +283,36 @@ function SSUninstallSpace(spaceName)
   SSPostNotification('onSpaceUninstall', spaceName);
 };
 
+
 function SSSetInstalledSpaces(installed)
 {
   __installedSpacesDataProvider.setInstalledSpaces(installed);
 }
+
 
 function SSInstalledSpaces()
 {
   return __installedSpaces || SSDefaultSpaces();
 }
 
+
 function SSUpdateInstalledSpaces(force)
 {
   __installedSpaces = __installedSpacesDataProvider.installedSpaces();
 }
 
+
+function SSInitDefaultSpaces(defaults)
+{
+  __defaultSpaces = defaults || SSGetValue('defaultSpaces', null);
+}
+
+
 function SSDefaultSpaces()
 {
   return __defaultSpaces;
 }
+
 
 function SSURLForSpace(spaceName)
 {
@@ -494,4 +526,20 @@ function SSGetInfoForInstalledSpace(spaceName, callback)
 function SSSetInstalledSpacesDataProvider(dataProvider)
 {
   __installedSpacesDataProvider = dataProvider;
+}
+
+
+function SSInjectSpaces()
+{
+  for (var space in SSInstalledSpaces())
+  {
+    try
+    {
+      SSLoadSpace(space);
+    }
+    catch(err)
+    {
+      SSLog('Error: could not load ' + space, SSLogForce);
+    }
+  }
 }
