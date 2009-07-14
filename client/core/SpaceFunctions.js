@@ -88,14 +88,9 @@ Parameters:
 */
 function SSRegisterSpace(instance) 
 {
-  var attributes = SSInstalledSpaces(instance.name);
   var spaceName = instance.name;
-
   SSSetSpaceForName(instance, spaceName);
-  
-  instance.setAttributes(attributes);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
-
   var spaceDir = SSURLForSpace(spaceName);
 
   // if a css file is defined in the attributes load the style
@@ -155,10 +150,10 @@ function SSLoadDefaultSpacesAttributes()
     try
     {
       var spaceName = __defaultSpacesList[i];
-      SSLoadSpaceAttributes(spaceName, function(json) {
-        defaultSpaces[spaceName] = json;
+      SSLoadSpaceAttributes(spaceName, function(attrs) {
+        defaultSpaces[spaceName] = attrs;
         defaultSpaces[spaceName].position = i;
-        if(i == __defaultSpacesList.length) 
+        if(i == (__defaultSpacesList.length-1)) 
         {
           SSInitDefaultSpaces(defaultSpaces);
           SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);
@@ -310,6 +305,9 @@ function SSUpdateInstalledSpaces(force)
 
 function SSInitDefaultSpaces(defaults)
 {
+  SSLog('SSInitDefaultSpaces', SSLogForce);
+  SSLog(defaults, SSLogForce);
+  
   if(defaults)
   {
     SSSetValue('defaultSpaces', defaults);
