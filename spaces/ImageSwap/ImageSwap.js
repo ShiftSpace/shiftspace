@@ -3,6 +3,7 @@ var ImageSwapSpace = new Class({
   Extends: ShiftSpace.Space,
   name: "ImageSwap",
 
+
   setup : function()
   {
     // need to use a closure to prevent FF3 security problem

@@ -88,24 +88,14 @@ Parameters:
 function SSRegisterSpace(instance) 
 {
   var attributes = SSInstalledSpaces(instance.name);
-  var spaceName = instance.attributes().name;
+  var spaceName = instance.name;
+
   SSSetSpaceForName(instance, spaceName);
+  
+  instance.setAttributes(attributes);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
 
   var spaceDir = SSURLForSpace(spaceName);
-
-  instance.attributes().dir = spaceDir;
-
-  if (!instance.attributes().icon)
-  {
-    var icon = SSURLForSpace(spaceName).replace('.js', '.png');
-    instance.attributes().icon = icon;
-  } 
-  else if (instance.attributes().icon.indexOf('/') == -1) 
-  {
-    var icon = spaceDir + instance.attributes().icon;
-    instance.attributes().icon = icon;
-  }
 
   // if a css file is defined in the attributes load the style
   if (instance.attributes().css) 
@@ -166,10 +156,24 @@ function SSLoadSpaceAttributes(space, callback)
     // check to see that the resources urls are full
     var json = JSON.decode(response.responseText);
     
+    if(!json.name)
+    {
+      throw new SSException("No name for " + json.name + " space specified.");
+    }
+    if(!json.url)
+    {
+      throw new SSException("No url for " + json.name + " space specified.");
+    }
+    
     // clear whitespace
-    json.url = json.url.trim();
-    json.icon = json.icon.trim();
-    json.css = json.css.trim();
+    if(json.url) json.url = json.url.trim();
+    if(json.icon) json.icon = json.icon.trim();
+    if(json.css) json.css = json.css.trim();
+    
+    if (!json.icon)
+    {
+      json.icon = json.url + json.name + '.png';
+    }
     
     if(!SSIsAbsoluteURL(json.url)) json.url = json.url.substitute({SPACEDIR:ShiftSpace.info().spacesDir});
     if(!SSIsAbsoluteURL(json.icon)) json.icon = json.url + json.icon;

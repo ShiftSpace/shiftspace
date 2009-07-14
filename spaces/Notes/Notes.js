@@ -3,11 +3,7 @@ var NotesSpace = new Class({
 
   Extends: ShiftSpace.Space,
   name: 'Notes',
-
-  intialize: function()
-  {
-    this.parent();
-  },
+  
 
   onShiftFocus: function(shiftId)
   {

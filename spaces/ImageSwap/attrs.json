@@ -1,7 +1,7 @@
 {
   name: 'ImageSwap',
   authors: ['dphiffer', 'mushon', 'dnolen'],
-  url: '{SPACEDIR}ImageSwap/',
+  url: '{SPACEDIR}/ImageSwap/',
   icon: 'ImageSwap.png',
   css: 'ImageSwap.css',
   description: 'Swap any image on the web.',

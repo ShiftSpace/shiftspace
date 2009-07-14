@@ -1,7 +1,7 @@
 {
   name: 'SourceShift',
   authors: ['dphiffer', 'mushon', 'dnolen'],
-  url: '{SPACEDIR}SourceShift/',
+  url: '{SPACEDIR}/SourceShift/',
   icon: 'SourceShift.png',
   css: 'SourceShift.css',
   description: 'Embed arbitrary markup onto a webpage.',

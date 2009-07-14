@@ -74,15 +74,9 @@ var ShiftSpaceSpace = new Class({
   },
   
   
-  setAttributes: function(attributes)
-  {
-    this.__attributes = attributes;
-  },
-  
-
   attributes: function()
   {
-    return this.__attributes;
+    return SSInstalledSpaces()[this.name];
   },
 
   /*
