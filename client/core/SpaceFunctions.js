@@ -305,9 +305,6 @@ function SSUpdateInstalledSpaces(force)
 
 function SSInitDefaultSpaces(defaults)
 {
-  SSLog('SSInitDefaultSpaces', SSLogForce);
-  SSLog(defaults, SSLogForce);
-  
   if(defaults)
   {
     SSSetValue('defaultSpaces', defaults);
