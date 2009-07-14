@@ -30,6 +30,7 @@ var SSAbstractStream = new Class({
                      this.options.uniqueName,
                      this.options.objectRef,
                      this.options.private,
+                     this.options.meta,
                      this.onCreate.bind(this));
     }
   },
