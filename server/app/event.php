@@ -184,7 +184,7 @@ class Event {
       FROM stream, subscription 
       LEFT JOIN streampermission ON subscription.user_id = streampermission.user_id 
         AND subscription.stream_id = streampermission.stream_id 
-      WHERE stream.id = subscription.stream_id AND subscription.user_id=".$this->server->user->id;
+      WHERE stream.id = subscription.stream_id AND subscription.user_id=".$this->server->user['id'];
     return $this->server->db->rows($query);
   }
   

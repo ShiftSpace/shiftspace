@@ -13,6 +13,9 @@ var SSCalendar = new Class({
     this.parent(el, options);
     
     SSGetAllFeeds(function(feed) {
+      SSLog('xxxx')
+      SSLog(feed)
+      
       new DatePicker(this.element, {
         whens: feed.filter(function(event) {
           return event.datetime_ref
