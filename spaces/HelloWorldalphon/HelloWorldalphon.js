@@ -1,13 +1,6 @@
 var HelloWorldalphonSpace = new Class({
-  
     Extends: ShiftSpace.Space,
-    
-    attributes: {
-        name: 'HelloWorldalphon',
-        version: 0.1,
-        icon: 'HelloWorldalphon.png',
-        css:  'HelloWorldalphon.css'
-    }
+    name: "HelloWorldalphon"
 });
 
 var HelloWorldalphonShift = new Class({

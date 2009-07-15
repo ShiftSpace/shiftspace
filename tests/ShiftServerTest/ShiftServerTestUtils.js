@@ -55,6 +55,13 @@ var fakedave = {
   passwordVerify:"barfoo"
 };
 
+var fakejohn = {
+  userName: "fakejohn",
+  email: "fakejohn@gmail.com",
+  password:"bazfoo",
+  passwordVerify:"bazfoo"
+};
+
 var admin = {
   userName: 'shiftspace',
   email: 'info@shiftspace.org',
