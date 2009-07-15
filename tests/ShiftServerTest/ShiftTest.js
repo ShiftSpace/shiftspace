@@ -97,7 +97,7 @@ var ShiftTest = new Class({
     login(admin);
     app.delete('user', 'fakedave');
   },
-  */
+  
   
   testPublishPrivate: function()
   {
@@ -130,19 +130,41 @@ var ShiftTest = new Class({
     login(admin);
     app.delete('user', 'fakedave');
     app.delete('user', 'fakejohn');
-  }/*,
+  },
+  */
+
+  testComment: function()
+  {
+    this.doc("A comment on a shift should send a message to anyone who has commented on the shift.");
+    
+    var shiftId = SSGetData(app.create('shift', noteShift));
+    app.action('shift/'+shiftId+'/publish', {
+      private: false
+    });
+    logout();
+    
+    join(fakedave);
+    json = app.action('shift/'+shiftId+"/comment", {
+      text: "Hey what a cool shift!"
+    });
+    json = SSGetData(app.get('shift/'+shiftId+'/comments'));
+    this.assertEqual(json[0].content.text, "Hey what a cool shift!");
+    logout();
+    
+    login(admin);
+    app.delete('user', 'fakedave');
+  },/*
+  
+  
+  testReadPrivateComments: function()
+  {
+    
+  },
   
   
   testUnpublish: function()
   {
     this.doc("Unpublish takes the shift off any streams it's currently on.");
-  },
-  
-  
-  testPublic: function()
-  {
-    this.doc("A public shift be visible to anyone.");
-    this.assertEqual(true, false);
   },
   
   
@@ -170,13 +192,6 @@ var ShiftTest = new Class({
   testDeleteNotLoggedIn: function()
   {
     this.doc("Error on deleting a shift if not logged in.");
-    this.assertEqual(true, false);
-  },
-  
-  
-  testComment: function()
-  {
-    this.doc("A comment on a shift should send a message to anyone who has commented on the shift.");
     this.assertEqual(true, false);
   }*/
 })
