@@ -31,16 +31,15 @@
     }
   
     .SSPPPermit{
-        background-color: #fff;
         -moz-border-radius: 10px;
         -webkit-border-radius: 10px;
-        padding:4px 3px 3px 3px;
+        padding:4px 14px 1px 3px;
         margin-right:2px;
+        background:#fff;
     }
     
-    input.SSPPradio{
-        background-color: #fff;
-    }
+
+   
 /*---------------------------------------------------BODY*/
     #SSPublishPaneBody
     {
@@ -70,6 +69,7 @@
         float:left;
         padding-left:4px;
     }
+    
    #SSPublishPaneVis{
        position:relative;
        top:3px;
@@ -162,7 +162,7 @@
     
     #SSPublishPaneStatus{
         position:relative;
-        left:3px;
+        left:5px;
     }
     
     .SSPublishPubButton{

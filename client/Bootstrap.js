@@ -17,5 +17,6 @@
 // INCLUDE PACKAGE ShiftSpaceCoreUI
 
 
+// INCLUDE PACKAGE Calendar
 // INCLUDE PACKAGE Autocomplete
 

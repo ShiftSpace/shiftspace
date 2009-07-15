@@ -1,22 +1,9 @@
 // Notes does need to manage the rendering order of the notes
 var NotesSpace = new Class({
 
-  name: 'NotesSpace',
-
   Extends: ShiftSpace.Space,
-
-  attributes:
-  {
-    name: 'Notes',
-    version: 0.1,
-    icon: 'Notes.png',
-    css: 'Notes.css'
-  },
-
-  intialize: function()
-  {
-    this.parent();
-  },
+  name: 'Notes',
+  
 
   onShiftFocus: function(shiftId)
   {
@@ -494,7 +481,7 @@ var NotesShift = new Class({
   */
   buildFrame: function()
   {
-    var _css = this.getParentSpace().attributes.css;
+    var _css = this.getParentSpace().attributes().css;
 
     // create an iframe with the css already loaded
     this.frame = new ShiftSpace.Iframe({

@@ -313,7 +313,7 @@ function SSSaveNewShift(shiftJson)
     space: shiftJson.space,
     summary: shiftJson.summary,
     content: escape(JSON.encode(shiftJson)),
-    version: space.attributes.version,
+    version: space.attributes().version,
     filters: JSON.encode(filters),
   };
 
@@ -394,7 +394,7 @@ function SSSaveShift(shiftJson)
     id: shiftJson.id, // TODO: handle this in a more secure way
     summary: shiftJson.summary,
     content: escape(JSON.encode(shiftJson)), // MERGE: for 0.5 - David
-    version: space.attributes.version,
+    version: space.attributes().version,
     username: ShiftSpace.User.getUsername(),
     filters: JSON.encode(filters)
   };
@@ -403,7 +403,7 @@ function SSSaveShift(shiftJson)
   var shift = SSGetShift(shiftJson.id);
   if(shift.legacy)
   {
-    params.space = space.attributes.name;
+    params.space = space.attributes().name;
   }
 
   SSServerCall.safeCall('shift.update', params, function(json) {

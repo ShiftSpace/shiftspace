@@ -1,13 +1,8 @@
 var ImageSwapSpace = new Class({
-  Extends: ShiftSpace.Space,
 
-  attributes :
-  {
-    name : 'ImageSwap',
-    icon : 'ImageSwap.png',
-    version : 0.1,
-    css : 'ImageSwap.css'
-  },
+  Extends: ShiftSpace.Space,
+  name: "ImageSwap",
+
 
   setup : function()
   {

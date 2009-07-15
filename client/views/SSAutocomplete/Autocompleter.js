@@ -93,7 +93,7 @@ var Autocompleter = new Class({
 				'styles': {
 					'zIndex': this.options.zIndex
 				}
-			}).inject(document.body);
+			}).inject(this.element.getDocument().body);
 			this.relative = false;
 			if (this.options.relative) {
 				this.choices.inject(this.element, 'after');

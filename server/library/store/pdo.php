@@ -194,6 +194,12 @@ class PDO_Store extends Base_Store {
     return $query;
   }
   
+
+  // returns one number as a result, mainly for SELECT COUNT queries
+  public function count($sql) {
+    $a = $this->query($sql)->fetch(PDO::FETCH_NUM);
+    return $a[0];
+  }
   
   /*
     Method: prepare

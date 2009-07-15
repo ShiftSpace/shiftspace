@@ -4,6 +4,50 @@
 // @dependencies      ShiftServerTestUtils
 // ==/Builder==
 
+var missingEmail = {
+  userName:"fakemary",
+  password:"foobar",
+  passwordVerify:"foobar"
+};
+
+var missingUserName = {
+  email: "fakemary@gmail.com",
+  password:"foobar",
+  passwordVerify:"foobar"
+};
+
+var shortUserName = {
+  userName: "fake",
+  email: "fakemary@gmail.com",
+  password:"foobar",
+  passwordVerify:"foobar"
+};
+
+var userNameTaken = {
+  userName: "fakemary",
+  email: "fakemary@gmail.com",
+  password:"foobar",
+  passwordVerify:"foobar"
+};
+
+var missingPassword = {
+  userName: "fakemary",
+  email: "fakemary@gmail.com",
+  passwordVerify:"foobar"
+};
+
+var missingPasswordVerify = {
+  userName: "fakemary",
+  email: "fakemary@gmail.com",
+  password:"foobar"
+};
+
+var passwordMismatch = {
+  userName: "fakemary",
+  email: "fakemary@gmail.com",
+  password:"foobar",
+  passwordVerify:"foobaz"
+};
 
 var UserCreateDeleteTest = new Class({
 
@@ -25,199 +69,142 @@ var UserCreateDeleteTest = new Class({
   testMissingEmail: function()
   {
     this.doc("Error on missing email");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/join',
-      json: true,
-      data:
-      {
-        userName:"fakemary",
-        password:"foobar",
-        passwordVerify:"foobar"
-      },
-      method: 'post',
-      onComplete: function(json)
-      {
-        this.assertEqual(json.type, NoEmailError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = app.action('join', missingEmail);
+    this.assertEqual(SSGetType(json), NoEmailError);
   },
   
   
   testMissingUserName: function()
   {
     this.doc("Error on missing userName");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/join',
-      json: true,
-      data:
-      {
-        email: "fakemary@gmail.com",
-        password:"foobar",
-        passwordVerify:"foobar"
-      },
-      method: 'post',
-      onComplete: function(json)
-      {
-        this.assertEqual(json.type, MissingUserNameError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = app.action('join', missingUserName);
+    this.assertEqual(SSGetType(json), MissingUserNameError);
   },
   
 
   testShortUserName: function()
   {
     this.doc("Error on short user name");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/join',
-      json: true,
-      data:
-      {
-        userName: "fake",
-        email: "fakemary@gmail.com",
-        password:"foobar",
-        passwordVerify:"foobar"
-      },
-      method: 'post',
-      onComplete: function(json)
-      {
-        this.assertEqual(json.type, ShortUserNameError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = app.action('join', shortUserName);
+    this.assertEqual(SSGetType(json), ShortUserNameError);
   },
   
   
   testUserNameTaken: function()
   {
     this.doc("Error on user name taken.");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/join',
-      json: true,
-      data:
-      {
-        userName: "fakebob",
-        email: "fakemary@gmail.com",
-        password:"foobar",
-        passwordVerify:"foobar"
-      },
-      method: 'post',
-      onComplete: function(json)
-      {
-        this.assertEqual(json.type, UserNameAlreadyExistsError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    join(fakemary);
+    logout();
+    var json = join(userNameTaken);
+    this.assertEqual(SSGetType(json), UserNameAlreadyExistsError);
+    login(fakemary);
+    app.delete('user', 'fakemary');
   },
   
   
   testMissingPassword: function()
   {
     this.doc("Error on missing password");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/join',
-      json: true,
-      data:
-      {
-        userName: "fakemary",
-        email: "fakemary@gmail.com",
-        passwordVerify:"foobar"
-      },
-      method: 'post',
-      onComplete: function(json)
-      {
-        this.assertEqual(json.type, MissingPasswordError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = app.action('join', missingPassword);
+    this.assertEqual(SSGetType(json), MissingPasswordError);
   },
   
   
   testMissingPasswordVerify: function()
   {
     this.doc("Error on missing password verify");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/join',
-      json: true,
-      data:
-      {
-        userName: "fakemary",
-        email: "fakemary@gmail.com",
-        password:"foobar"
-      },
-      method: 'post',
-      onComplete: function(json)
-      {
-        this.assertEqual(json.type, MissingPasswordVerifyError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = app.action('join', missingPasswordVerify);
+    this.assertEqual(SSGetType(json), MissingPasswordVerifyError);
   },
   
   
   testPasswordMatch: function()
   {
     this.doc("Error on password/passwordVerify mismatch");
-    
-    var hook = this.startAsync();
-    
-    req({
-      url: '/join',
-      json: true,
-      data:
-      {
-        userName: "fakemary",
-        email: "fakemary@gmail.com",
-        password:"foobar",
-        passwordVerify:"foobaz"
-      },
-      method: 'post',
-      onComplete: function(json)
-      {
-        this.assertEqual(json.type, PasswordMatchError, hook);
-      }.bind(this)
-    });
-    
-    this.endAsync(hook);
+    var json = app.action('join', passwordMismatch);
+    this.assertEqual(SSGetType(json), PasswordMatchError);
   },
   
   
   testValidUser: function()
   {
     this.doc("Valid user");
-    this.assertEqual(false, true);
+    var json = app.action('join', fakemary);
+    this.assertEqual(SSGetData(json).userName, "fakemary");
+    app.delete('user', 'fakemary');
   },
   
   
   testBasicDeleteUser: function()
   {
     this.doc("Test basic deletion. Only verify the account no longer exists");
-    this.assertEqual(false, true);
-  }
+    app.action('join', fakemary);
+    app.delete('user', 'fakemary');
+    var json = app.read('user', 'fakemary');
+    this.assertEqual(SSGetType(json), UserDoesNotExistError);
+  },
   
+  
+  testDeletePermission: function()
+  {
+    this.doc("Cannot delete account if not logged in, or not the right user.");
+    app.action('join', fakemary);
+    logout();
+    var json = app.delete('user', 'fakemary');
+    this.assertEqual(SSGetType(json), UserNotLoggedInError);
+    login(fakemary);
+    app.delete('user', 'fakemary');
+  },
+  
+
+  testAdminDeletePermission: function()
+  {
+    this.doc("Can delete account if logged in as admin");
+    app.action('join', fakemary);
+    logout();
+    login(admin);
+    var json = app.delete('user', 'fakemary');
+    this.assertEqual(JSON.encode(json), ack);
+    logout();
+  },
+  
+  
+  testUserStreamsExists: function()
+  {
+    this.doc("User public and private stream should exist and have the right values after account creation.");
+    var json = app.action('join', fakemary);
+    var data = SSGetData(json);
+    var publicStream = data.publicStream;
+    var messageStream = data.messageStream;
+    var userId = data._id;
+        
+    this.assertNotEqual(publicStream, null);
+    this.assertNotEqual(messageStream, null);
+    
+    json = app.read('stream', messageStream);
+    this.assertEqual(SSGetData(json).createdBy, userId);
+    json = app.read('stream', publicStream);
+    this.assertEqual(SSGetData(json).createdBy, userId);
+    
+    app.delete('user', 'fakemary');
+  },
+  
+  
+  testDeleteUserContent: function()
+  {
+    this.doc("User's public stream, private stream, events, and shifts should be deleted");
+    var json = app.action('join', fakemary);
+    var data = SSGetData(json);
+    var publicStream = data.publicStream;
+    var messageStream = data.messageStream;
+    var userId = data._id;
+    
+    app.delete('user', 'fakemary');
+  
+    json = app.read('stream', messageStream);
+    this.assertEqual(SSGetType(json), ResourceDoesNotExistError);
+    json = app.read('stream', publicStream);
+    this.assertEqual(SSGetType(json), ResourceDoesNotExistError);
+  }
+
 });

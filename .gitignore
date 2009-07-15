@@ -10,6 +10,7 @@ sandalphon/simplejson
 builder/simplejson
 client/compiledViews
 server/app/sms.log
+server/server.ini
 
 builder/SSPackageSorter.pyc
 builds/shiftspace.sandalphon.js

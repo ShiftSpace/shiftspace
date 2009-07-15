@@ -7,16 +7,26 @@
 var SSAutocomplete = new Class({
   name: 'SSAutocomplete',
   Extends: SSView,
+  
+  defaults: function() {
+    return $merge(this.parent(), {
+      minLength: 1,
+      overflow: true,
+      multiple: true
+    })
+  },
 
   initialize: function(el, options)
   {
     this.parent(el, options);
-    new Autocompleter.Local(el, ['Avital', 'David', 'Joe', 'Dan', 'Mushon', 'Florica', 'Justin', 'Clint', 'Alex'], {
-      'minLength': 1, // We wait for at least one character
-      'overflow': true // Overflow for more entries
-    });
-              
-    alert(el)
+    
+    SSGetStreamsByMeta(this.options.streamMeta, function(result) {
+      this.tags = result.data.map(function(stream) {
+        return stream.stream_name
+      })
+      
+      new Autocompleter.Local(el, this.tags, this.options)
+    }.bind(this))    
   },
 
   setValue: function(value)

@@ -30,6 +30,7 @@ Mushon says: "Make it a Dorongle!"
 David says: "I am against smart!"
 Avital says: "Who knows what will happen by 2012?! The dinosaurs might be back!"
 Avital says: (replace any-string-in-the-world "There's no point, just use Lisp")
+Avital says: "Strict mode?! Keep the errors to yourself!"
 
 Script: shiftspace.user.js
     ShiftSpace: An Open Source layer above any webpage
@@ -50,6 +51,11 @@ Credits:
 if(typeof console != 'undefined' && console.log)
 {
   console.log('Loading ShiftSpace');
+}
+else
+{
+  var console = {};
+  console.log = function(){};
 }
 
 /*
@@ -162,51 +168,54 @@ var ShiftSpace = new (function() {
           SSPostNotification("onSync");
         }
         
-        // Load all spaces and plugins immediately if in the sanbox
-        if (typeof ShiftSpaceSandBoxMode != 'undefined')
+        SSLog('SSInitDefaultSpaces', SSLogForce);
+        SSInitDefaultSpaces();
+        
+        if(SSDefaultSpaces())
         {
-          for (var space in SSInstalledSpaces())
-          {
-            try
-            {
-              SSLoadSpace(space);
-            }
-            catch(err)
-            {
-              SSLog('Error: could not load ' + space, SSLogForce);
-            }
-          }
-          for(var plugin in installedPlugins) 
-          {
-            SSLoadPlugin(plugin);
-          }
+          SSLog('SSSetup', SSLogForce);
+          SSSetup();
         }
-
-        var installed = SSInstalledSpaces();
-        for(var space in installed)
+        else
         {
-          var domains = installed[space].domains;
-          if(domains)
-          {
-            var host = "http://" + window.location.host;
-            var domainMatch = false;
-            for(var i = 0; i < domains.length; i++)
-            {
-              if(domains[i] == host)
-              {
-                domainMatch = true;
-                continue;
-              }
-            }
-            if(domainMatch)
-            {
-              SSLoadSpace(space, function(spaceInstance) {
-                spaceInstance.showInterface();
-              });
-            }
-          }
+          SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
+          SSLoadDefaultSpacesAttributes();
         }
       });
+    }
+    
+    function SSSetup()
+    {
+      if (typeof ShiftSpaceSandBoxMode != 'undefined')
+      {
+        SSInjectSpaces();
+      }
+
+      // automatically load a space if there is domain match
+      var installed = SSInstalledSpaces();
+      for(var space in installed)
+      {
+        var domains = installed[space].domains;
+        if(domains)
+        {
+          var host = "http://" + window.location.host;
+          var domainMatch = false;
+          for(var i = 0; i < domains.length; i++)
+          {
+            if(domains[i] == host)
+            {
+              domainMatch = true;
+              continue;
+            }
+          }
+          if(domainMatch)
+          {
+            SSLoadSpace(space, function(spaceInstance) {
+              spaceInstance.showInterface();
+            });
+          }
+        }
+      }
     }
 
     // TODO: write some documentation here
