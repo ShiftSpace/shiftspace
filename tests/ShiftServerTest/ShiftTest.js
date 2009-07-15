@@ -14,14 +14,14 @@ var ShiftTest = new Class({
     join(fakemary);
   },
   
-  
+
   tearDown: function()
   {
     app.delete('user', 'fakemary');
     logout();
   },
   
-  /*
+  /*  
   testCreate: function()
   {
     this.doc("Create a shift.");
@@ -73,23 +73,69 @@ var ShiftTest = new Class({
     logout();
     login(fakemary);
   },
+
+  
+  testPublishPublic: function()
+  {
+    this.doc("Publish a shift to the public.");
+    var shiftId = SSGetData(app.create('shift', noteShift));
+    app.action('shift/'+shiftId+'/publish', {
+      private: false
+    });
+    logout();
+    app.action('join', fakedave);
+    
+    // check it's readable by all
+    var json = SSGetData(app.read('shift', shiftId));
+    this.assertEqual(json.space, "Notes");
+    
+    // check comments stream
+    json = SSGetData(app.get('shift/'+shiftId+'/comments'));
+    this.assertEqual($type(json), "array");
+    logout();
+    
+    login(admin);
+    app.delete('user', 'fakedave');
+  },
   */
   
-  testPublish: function()
-  {
-    
-  }/*,
-  
-  testPrivate: function()
+  testPublishPrivate: function()
   {
     this.doc("A private published shift should be visible only to people who have permission.");
-    this.assertEqual(true, false);
     
     var shiftId = SSGetData(app.create('shift', noteShift));
     logout();
     
     join(fakedave);
+    var json = app.read('shift', shiftId);
+    this.assertEqual(SSGetType(json), PermissionError);
+    logout();
     
+    login(fakemary);
+    app.action('shift/'+shiftId+'/publish', {
+      users: ['fakedave']
+    });
+    logout();
+    
+    login(fakedave);
+    json = SSGetData(app.read('shift', shiftId));
+    this.assertEqual(json.space, "Notes");
+    logout();
+    
+    join(fakejohn);
+    json = app.read('shift', shiftId);
+    this.assertEqual(SSGetType(json), PermissionError);
+    logout();
+    
+    login(admin);
+    app.delete('user', 'fakedave');
+    app.delete('user', 'fakejohn');
+  }/*,
+  
+  
+  testUnpublish: function()
+  {
+    this.doc("Unpublish takes the shift off any streams it's currently on.");
   },
   
   
