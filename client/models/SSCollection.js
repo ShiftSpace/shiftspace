@@ -154,6 +154,7 @@ var SSCollection = new Class({
     if(this.__isunread && !value) this.fireEvent('onCollectionFirstRead');
     this.__isunread = value;
   },
+  
   /*
     Function: isUnread 
        Returns the isUnread property of a collection. This property specifies if any of the information has been read from the collection array. 
@@ -165,6 +166,7 @@ var SSCollection = new Class({
   {
     return this.__isunread;
   },
+  
   /*
     Function: setIsReading 
       Sets the isreading property of a collection. This property specifies if the content of a collection is being read. 
@@ -176,6 +178,7 @@ var SSCollection = new Class({
   {
     this.__isreading = value;
   },
+  
   /*
     Function: isReading 
        Returns the isreading property of a collection. This property specifies if the content of a collection is being read
@@ -187,6 +190,7 @@ var SSCollection = new Class({
   {
     return this.__isreading;
   },
+  
   /*
     Function: setPlugins 
        Sets the plugin(s) to apply to a collection. Plugins are used to assign multiple actions on collections.
@@ -198,6 +202,7 @@ var SSCollection = new Class({
   {
     this.__plugins = newPlugins;
   },
+  
   /*
     Function: plugins 
        Returns the plugins all of the plugins currently applied to a collection. 
@@ -209,6 +214,7 @@ var SSCollection = new Class({
   {
     return this.__plugins;
   },
+  
   /*
     Function: pluginsForAction
       Returns all of the plugins currently applied with the specified action.
@@ -224,6 +230,7 @@ var SSCollection = new Class({
     if(!this.plugins().get(action)) this.plugins().set(action, []);
     return $A(this.plugins().get(action));
   },
+  
   /*
     Function: addPlugin
       Accepts an event and a plugin, and inserts it into the current plugins array. 
@@ -239,6 +246,7 @@ var SSCollection = new Class({
     pluginsForAction.push(plugin);
     this.plugins().set(action, pluginsForAction);
   },
+  
   /*
     Function: removePlugin
       Accepts an event and a plugin, and clears it from the current plugins array. 
@@ -253,6 +261,7 @@ var SSCollection = new Class({
     var pluginsForAction = this.pluginsForAction(action);
     this.plugins().set(action, pluginsForAction.erase(plugin));
   },
+  
   /*
     Function: clearPlugins
       Clears all of the currently set plugins for the collection.
@@ -261,6 +270,7 @@ var SSCollection = new Class({
   {
     this.setPlugins($H());
   },
+  
   /*
     Function: setDelegate
       Sets a delegate for the collection.
@@ -272,6 +282,7 @@ var SSCollection = new Class({
   {
     this.__delegate = delegate;
   },
+  
   /*
     Function: delegate
       Returns the delegate for the collection.
@@ -283,6 +294,7 @@ var SSCollection = new Class({
   {
     return this.__delegate;
   },
+  
   /*
     Function: setLoadRefresh
       Sets the loadOnRefresh property, which determines if the collection
@@ -295,6 +307,7 @@ var SSCollection = new Class({
   {
     this.__loadOnRefresh = val;
   },
+  
   /*
     Function: setLoadRefresh
       Returns whether the collection should be loaded in when refreshed. 
@@ -306,6 +319,7 @@ var SSCollection = new Class({
   {
     return this.__loadOnRefresh;
   },
+  
   /*
     Function: setName
       Sets the name of the collection 
@@ -317,6 +331,7 @@ var SSCollection = new Class({
   {
     this.__name = name;
   },
+  
   /*
     Function: name
       Returns the name of the collection 
@@ -328,6 +343,7 @@ var SSCollection = new Class({
   {
     return this.__name;
   },
+  
   /*
     Function: cleanObject
       Accepts an object, and removes any null values contained within it. 
@@ -341,6 +357,7 @@ var SSCollection = new Class({
       return value != null && value !== '';
     }).getClean();
   },
+  
   /*
     Function: cleanPayload
       Accepts an payload, and removes any null values contained within it. 
@@ -357,7 +374,6 @@ var SSCollection = new Class({
     return this.cleanObject(payload);
   },
 
-
   /*
       Function: transact
         Accepts an action, an array of options, and a compiled collection. If a bulk is not passed or is null, the collection object is cleaned and the currently set delagates are applied. 
@@ -370,7 +386,6 @@ var SSCollection = new Class({
       Returns:
         A payload object, an array of collection methods.      
   */
-  
   transact: function(action, options, bulk)
   {
     var payload = {
@@ -412,6 +427,7 @@ var SSCollection = new Class({
       return payload;
     }
   },
+  
   /*
     Function: bulkTransact
       Takes a series of methods. Incomplete implementation, does not support
@@ -433,6 +449,7 @@ var SSCollection = new Class({
       onFailure: options.onFailure
     });
   },
+  
   /*
      Function: applyPlugins
       Takes an action and a collection, and applies the currently set plugins
@@ -487,6 +504,7 @@ var SSCollection = new Class({
   {
     this.__properties = props;
   },
+  
   /*
     Function: properties
       Returns properties property of a collection. 
@@ -498,6 +516,7 @@ var SSCollection = new Class({
   {
     return this.__properties;
   },
+  
   /*
     Function: setOrderBy
       Sets the orderBy property of a collection. 
@@ -509,6 +528,7 @@ var SSCollection = new Class({
   {
     this.__orderBy = orderBy;
   },
+  
   /*
     Function: orderBy
       Returns the orderBy property of a collection. 
@@ -520,6 +540,7 @@ var SSCollection = new Class({
   {
     return this.__orderBy;
   },
+  
   /*
     Function: setRange
       Sets the range property of a collection. 
@@ -531,6 +552,7 @@ var SSCollection = new Class({
   {
     this.__range = range;
   },
+  
   /*
     Function: range
       Sets the range property of a collection. 
@@ -542,6 +564,7 @@ var SSCollection = new Class({
   {
     return this.__range;
   },
+  
   /*
     Function: setConstraints
       Sets the constraints property of a collection. 
@@ -553,6 +576,7 @@ var SSCollection = new Class({
   {
     this.__constraints = constraints;
   },
+  
   /*
     Function: constraints
       Returns the constraints property of a collection. 
@@ -564,6 +588,7 @@ var SSCollection = new Class({
   {
     return this.__constraints;
   },
+  
   /*
     Function: setArray
       Sets the array property of a collection. 
@@ -575,6 +600,7 @@ var SSCollection = new Class({
   {
     this.__array = array;
   },
+  
   /*
     Function: getArray
       Returns the array property of a collection. 
@@ -586,6 +612,7 @@ var SSCollection = new Class({
   {
     return this.__array;
   },
+  
   /*
     Function: getColumn
       Returns a coloumn in the collections array.
@@ -602,6 +629,7 @@ var SSCollection = new Class({
       return x[col];
     });
   },
+  
   /*
     Function: getColumn
       Returns a row in the collections array.
@@ -616,6 +644,7 @@ var SSCollection = new Class({
   {
     return this.__array[idx];
   },
+  
   /*
     Function: push
       Takes an object and inserts it into the collections array.
@@ -631,6 +660,7 @@ var SSCollection = new Class({
   {
     this.__array.push(object);
   },
+  
   /*
     Function: length
       Returns the length of an array, or 0 an array is not set.
@@ -644,6 +674,7 @@ var SSCollection = new Class({
     if(!this.__array) return 0;
     return this.__array.length;
   },
+  
   /*
     Function: add 
       Takes an object and adds it the the collections array.  
@@ -659,6 +690,7 @@ var SSCollection = new Class({
     this.fireEvent('onAdd');
     this.fireEvent('onChange');
   },
+  
   /*
     Function: remove
       Takes an index and removes the row from the array. 
@@ -678,6 +710,7 @@ var SSCollection = new Class({
       this.fireEvent('onChange');
     }
   },
+  
   /*
     Function: insert
       Takes an object and an index, and inserts the object into 
@@ -695,6 +728,7 @@ var SSCollection = new Class({
     this.fireEvent('onInsert', {object:obj, index:idx});
     this.fireEvent('onChange');
   },
+  
   /*
     Function: move
       Takes a fromIndex and a toIndex, and fires an onMove event 
@@ -707,6 +741,7 @@ var SSCollection = new Class({
   {
     this.fireEvent('onMove', {from:fromIndex, to:toIndex});
   },
+  
   /*
     Function: set      
       Takes an object and an index, and sets the object into the
@@ -720,6 +755,7 @@ var SSCollection = new Class({
   {
     this.__array[index] = obj;
   },
+  
   /*
     Function: loadIndex (abstract)
         NOTE: Abstract or To Be Deleted? -Justin
@@ -728,11 +764,11 @@ var SSCollection = new Class({
       index - An integer.
       count -  An integer.
   */
-  
   loadIndex: function(index, count)
   {
 
   },
+  
   /*
     Function: read
       Read from the collection. Accepts a callback. Also fires
@@ -748,7 +784,6 @@ var SSCollection = new Class({
     Returns: 
       A payload object.
   */
-  
   read: function(callback, suppressEvent)
   {
     this.setIsReading(true);
@@ -768,16 +803,17 @@ var SSCollection = new Class({
       }.bind(this)
     });
   },
+  
   /*
     Function: initializeReadFns (private)
       Creates a new readFns array, which stores the functions
       
   */
-  
   initializeReadFns: function()
   {
     this.__readFns = [];
   },
+  
   /*
     Function: addOnReadFn 
       Takes a function and adds it to the readFns array. 
@@ -786,22 +822,22 @@ var SSCollection = new Class({
       fn - A function.
       
   */
-  
   addOnReadFn: function(fn)
   {
     this.__readFns.push(fn);
   },
+  
   /*
     Function: clearOnReadFns
       Clears the readFns array.
       
   */
-  
   clearOnReadFns: function()
   {
     this.__readFns.each(function(fn){fn();});
     this.__readFns = [];
   },
+  
   /*
     Function: readIndex
       Takes an index, constraint, and callback function
@@ -811,7 +847,6 @@ var SSCollection = new Class({
       constraint - An integer. 
       callback - A function.
   */
-  
   readIndex: function(index, constraint, callback)
   {
     var theConstraint = {};
@@ -825,6 +860,7 @@ var SSCollection = new Class({
       }.bind(this)
     });
   },
+  
   /*
     Function: create 
       Creates a new set or work in the collection. Accepts an array of data to be created and an array of options. 
@@ -889,6 +925,7 @@ var SSCollection = new Class({
     }
     return -1;
   },
+  
   /*
     Function: find
       Returns the first item matching the passed in predicated:
@@ -911,6 +948,7 @@ var SSCollection = new Class({
       return this.get(index);
     }
   },
+  
   /*
     Function: delete 
       Delete from the collection. Accepts the index to be deleted in the collection.
@@ -922,7 +960,6 @@ var SSCollection = new Class({
     Returns: 
       A payload object, an array of collection methods.
   */
-  
   'delete': function(index)
   {
     return this.transact('delete', {
@@ -938,6 +975,7 @@ var SSCollection = new Class({
       }.bind(this)
     });
   },
+  
   /*
     Function: update
       Updates the collection by index. Accepts the updated array of data, the index to insert the new data, and a bulk. Inserts the new data into the Collection array at the given index.  
@@ -954,7 +992,6 @@ var SSCollection = new Class({
       updateById
       
   */
-
   update: function(data, index, bulk)
   {
     var indexConstraint = null;
@@ -972,6 +1009,7 @@ var SSCollection = new Class({
       }.bind(this)
     }, bulk);
   },
+  
   /*
     Function: updateById
       Updates the collection by id. Accepts the updated array of data, the id to insert the new data, and a bulk .....
@@ -987,7 +1025,6 @@ var SSCollection = new Class({
     See Also: 
       update
   */
-  
   updateById: function(data, id, bulk)
   {
     return this.transact('update', {
@@ -1002,6 +1039,7 @@ var SSCollection = new Class({
       }.bind(this)
     }, bulk);
   },
+  
   /*
     Function: onFailure (abstract)
       Event handler for failure.
@@ -1015,6 +1053,7 @@ var SSCollection = new Class({
   {
     
   },
+  
   /*
     Function: onRead 
       Fires the onLoad event 
@@ -1026,6 +1065,7 @@ var SSCollection = new Class({
   {
     this.fireEvent('onLoad');
   },
+  
   /*
     Function: onCreate (private)
       Called in the create function. Fires the onCreate event after create has completed. 
@@ -1037,11 +1077,11 @@ var SSCollection = new Class({
     See Also:
       create
   */
-  
   onCreate: function(data, userData)
   {
     this.fireEvent('onCreate', {data:data, userData:userData});
   },
+  
   /*
     Function: onDelete (private)
       Takes an index row in the collection and removes it from the array. Fires the onDelete event when called. 
@@ -1059,6 +1099,7 @@ var SSCollection = new Class({
     this.remove(index);
     this.fireEvent('onDelete', index);
   },
+  
   /*
     Function: onUpdate (private)
       Merges an array of data into the passed index in the collection array. Fires the onUpdate event when called. 
@@ -1072,6 +1113,7 @@ var SSCollection = new Class({
     this.__array[index] = $merge(this.__array[index], data);
     this.fireEvent('onUpdate', index);
   },
+  
   /*
     Function: byId 
       Returns a row in the collection array specified by the passed id.
@@ -1082,11 +1124,11 @@ var SSCollection = new Class({
     Returns:
        A row in the collection array.
   */
-  
   byId: function(id)
   {
     return this.find(function(x){return x.id == id;});
   },
+  
   /*
     Function: onUpdateById
       Merges an array of data into the passed id in the collection array. Fires the onUpdateById event when called.
@@ -1095,13 +1137,13 @@ var SSCollection = new Class({
       data - An array of data. 
       id - An integer.
   */
-  
   onUpdateById: function(data, id)
   {
     var index = this.byId(id);
     this.__array[index] = $merge(this.__array[index], data);
     this.fireEvent('onUpdateById', index);
   },
+  
   /*
     Function: each
       Takes a function and applies it to each row in the collection array. 
@@ -1109,7 +1151,6 @@ var SSCollection = new Class({
     Parameters:
       fn - A function. 
   */
-  
   each: function(fn)
   {
     this.__array.each(fn);
@@ -1135,6 +1176,7 @@ var SSCollection = new Class({
     }
     return result;
   },
+  
   /*
     Function: updateConstraints
       Takes an array of constraints and a value, and update the constraints array.
@@ -1147,6 +1189,7 @@ var SSCollection = new Class({
   {
     this.setConstraints($merge(this.constraints(), constraint.assoc(value)));
   },
+  
   /*
     Function: empty 
       Clears the collections array. 
@@ -1155,6 +1198,7 @@ var SSCollection = new Class({
   {
     this.setArray([]);
   },
+  
   /*
     Function: reset
       Clears the collections array and sets the unread attribute of the collection to true. 
