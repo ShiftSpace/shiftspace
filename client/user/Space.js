@@ -40,7 +40,7 @@ var ShiftSpaceSpace = new Class({
     this.__deferredEdits = [];
 
     // if no css file, we don't need to wait for it to load
-    this.setCssLoaded(!this.attributes().css);
+    this.setCssLoaded(!this.attributes() || !this.attributes().css);
 
     // the shifts array
     this.shifts = {};
