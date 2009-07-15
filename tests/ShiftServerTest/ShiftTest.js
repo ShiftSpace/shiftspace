@@ -21,7 +21,7 @@ var ShiftTest = new Class({
     logout();
   },
   
-  /*  
+
   testCreate: function()
   {
     this.doc("Create a shift.");
@@ -154,7 +154,7 @@ var ShiftTest = new Class({
     login(admin);
     app.delete('user', 'fakedave');
   },
-  */  
+
   
   testReadPrivateComments: function()
   {
@@ -182,13 +182,43 @@ var ShiftTest = new Class({
     
     login(admin);
     app.delete('user', 'fakedave');
-  }/*,
-  
+  },
+
   
   testNotify: function()
   {
     this.doc("A user on the shift comment stream notify list should get a message sent to his messageStream.");
-  },
+    
+    var shiftId = SSGetData(app.create('shift', noteShift));
+    app.action('shift/'+shiftId+'/publish', {
+      private: false
+    });
+    logout();
+    
+    join(fakedave);
+    json = SSGetData.attempt(app.action('shift/'+shiftId+'/notify'));
+    json = SSGetData.attempt(app.get('/user/fakedave'));
+    this.assertEqual(json.notify.length, 1);
+    logout();
+    
+    join(fakejohn);
+    app.action('shift/'+shiftId+"/comment", {
+      text: "Hey what a cool shift!"
+    });
+    logout();
+    
+    login(fakedave);
+    json = SSGetData.attempt(app.get('user/fakedave/messages'));
+    this.assertEqual(json[0].content.text, "Hey what a cool shift!");
+    app.action('shift/'+shiftId+'/unnotify');
+    json = SSGetData.attempt(app.get('/user/fakedave'));
+    this.assertEqual(json.notify.length, 0);
+    logout();
+    
+    login(admin);
+    app.delete('user', 'fakedave');
+    app.delete('user', 'fakejohn');
+  }/*,
   
   
   testUnpublish: function()
