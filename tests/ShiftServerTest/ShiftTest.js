@@ -21,7 +21,7 @@ var ShiftTest = new Class({
     logout();
   },
   
-  /*
+
   testCreate: function()
   {
     this.doc("Create a shift.");
@@ -57,8 +57,8 @@ var ShiftTest = new Class({
     this.doc("Read a shift.");
     var shiftId = SSGetData(app.create('shift', noteShift));
     var data = SSGetData(app.read('shift', shiftId));
-    this.assertEqual(data.space, "Notes");
-    this.assertEqual(data.text, "Hello world!");
+    this.assertEqual(data.space.name, "Notes");
+    this.assertEqual(data.content.text, "Hello world!");
   },
   
 
@@ -87,7 +87,7 @@ var ShiftTest = new Class({
     
     // check it's readable by all
     var json = SSGetData(app.read('shift', shiftId));
-    this.assertEqual(json.space, "Notes");
+    this.assertEqual(json.space.name, "Notes");
     
     // check comments stream
     json = SSGetData(app.get('shift/'+shiftId+'/comments'));
@@ -119,7 +119,7 @@ var ShiftTest = new Class({
     
     login(fakedave);
     json = SSGetData(app.read('shift', shiftId));
-    this.assertEqual(json.space, "Notes");
+    this.assertEqual(json.space.name, "Notes");
     logout();
     
     join(fakejohn);
@@ -302,7 +302,7 @@ var ShiftTest = new Class({
     app.delete('user', 'fakedave');
     // admin should be able to read
   },
-  */
+
   
   testDelete: function()
   {
@@ -323,7 +323,7 @@ var ShiftTest = new Class({
     logout();
     
     var errType = SSGetType.attempt(app.delete('shift', shiftId));
-    this.assertEqual(errType, PermissionError);
+    this.assertEqual(errType, UserNotLoggedInError);
     
     join(fakedave);
     errType = SSGetType.attempt(app.delete('shift', shiftId));
@@ -334,7 +334,7 @@ var ShiftTest = new Class({
     var json = app.delete('shift', shiftId);
     this.assertEqual(JSON.encode(json), ack);
     
-    app.delete('user', fakedave)
+    app.delete('user', 'fakedave');
   }
 })
 
