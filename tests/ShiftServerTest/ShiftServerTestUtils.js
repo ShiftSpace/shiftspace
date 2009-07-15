@@ -34,11 +34,14 @@ var NotSubscribedError = "NotSubscribedError";
 var ack = JSON.encode({"message":"ok"});
 
 var noteShift = {
-  space: "Notes",
-  position: {x:150, y:150},
-  size: {x:200, y:200},
+  space: {name:"Notes", version:"0.1"},
   summary: "Foo!",
-  text: "Hello world!"
+  href: "http://google.com/image_search",
+  content: {
+    text: "Hello world!",
+    position: {x:150, y:150},
+    size: {x:200, y:200}
+  }
 };
 
 var fakemary = {

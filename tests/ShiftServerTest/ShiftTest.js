@@ -183,7 +183,7 @@ var ShiftTest = new Class({
     login(admin);
     app.delete('user', 'fakedave');
   },
-  */
+
   
   testNotify: function()
   {
@@ -231,21 +231,28 @@ var ShiftTest = new Class({
     login(admin);
     app.delete('user', 'fakedave');
     app.delete('user', 'fakejohn');
-  }/*,
-  
-  
-  testUnpublish: function()
-  {
-    this.doc("Unpublish takes the shift off any streams it's currently on.");
-    
-    
   },
+  */
+  
+
+  testUpdate: function()
+  {
+    this.doc("Update a shift");
+    
+    var shiftId = SSGetData.attempt(app.create('shift', noteShift));
+    var json = SSGetData.attempt(app.update('shift', shiftId, {
+      content: {
+        text: "Hello world!",
+        position: {x:150, y:150},
+        size: {x:200, y:200}
+      }
+    }));
+  }/*,
   
   
   testUpdateNotLoggedIn: function()
   {
     this.doc("Error updating a shift if not logged in.");
-    this.assertEqual(true, false);
   },
   
   
