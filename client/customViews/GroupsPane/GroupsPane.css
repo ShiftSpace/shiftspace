@@ -4,6 +4,12 @@
   height: 100%;
 }
 
+#GroupsPane{
+  background:#f8f5f2;
+  border-top:4px solid #f8f5f2;
+  
+}
+
 #GroupsTabView > .SSControlView
 {
   width: 150px;
@@ -22,48 +28,66 @@
 #FocusedGroup
 {
   background-color: #cfc;
-
   position: absolute;
   top: 0px;
   left: 0px;
   bottom: 0px;
-
   width: 50%;
 }
 
 #SelectGroup
 {
   background-color: #fcc;
-
   position: absolute;
   top: 0px;
   left: 50%;
   bottom: 0px;
-
   width: 50%;
 }
 
 #GroupOverView
 {
+  -moz-box-shadow:0 0 10px #BEB9B3 inset;
   position: absolute;
-
   left: 0px;
   top: 0px;
   right: 150px;
   bottom: 0px;
-  
+  border-top:4px solid #f8f5f2;
+  border-left:4px solid #f8f5f2;
   border-right: 1px solid #aaa;
-  background-color: #ccc;
+  background-color: #e3dfdb;
+}
+
+#GroupSummary{
+  height:90px;
+  width:274px;
+  border-bottom:1px solid #c9ccc4;
+  
+}
+
+#SSGroupProperties{
+  float:left;
+  height:90px;
+  width:31px;
+  border-bottom:1px solid #c9ccc4;
+  
+}
+
+#SSGroupProperties ul li{
+  height:31px;
+  width:31px;
+  list-style:none;
+  border-right:1px solid #c9ccc4;
+  border-bottom:1px solid #c9ccc4; 
 }
 
 #GroupAction
 {
   position: absolute;
-  
   top: 0px;
   right: 0px;
   bottom: 0px;
   width: 150px;
-  
   background-color: #ccc;
 }
