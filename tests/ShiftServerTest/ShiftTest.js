@@ -131,11 +131,11 @@ var ShiftTest = new Class({
     app.delete('user', 'fakedave');
     app.delete('user', 'fakejohn');
   },
-  */
+
 
   testComment: function()
   {
-    this.doc("A comment on a shift should send a message to anyone who has commented on the shift.");
+    this.doc("Comment on a shift.");
     
     var shiftId = SSGetData(app.create('shift', noteShift));
     app.action('shift/'+shiftId+'/publish', {
@@ -153,12 +153,41 @@ var ShiftTest = new Class({
     
     login(admin);
     app.delete('user', 'fakedave');
-  },/*
-  
+  },
+  */  
   
   testReadPrivateComments: function()
   {
+    this.doc("Error if attempt to read on private should. Should work for those with permission.");
+
+    var shiftId = SSGetData(app.create('shift', noteShift));
+    logout();
     
+    join(fakedave);
+    var json = app.get('shift/' + shiftId + '/comments');
+    this.assertEqual(SSGetType(json), PermissionError);
+    logout();
+    
+    // publish the shift
+    login(fakemary);
+    app.action('shift/'+shiftId+'/publish', {
+      users: ['fakedave']
+    });
+    logout();
+    
+    login(fakedave);
+    json = SSGetData(app.get('shift/' + shiftId + '/comments'));
+    this.assertEqual($type(json), "array");
+    logout();
+    
+    login(admin);
+    app.delete('user', 'fakedave');
+  }/*,
+  
+  
+  testNotify: function()
+  {
+    this.doc("A user on the shift comment stream notify list should get a message sent to his messageStream.");
   },
   
   
