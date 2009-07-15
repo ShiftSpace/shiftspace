@@ -33,9 +33,17 @@ class Base_Server {
     foreach ($this->config->get() as $key => $value) {
       if (preg_match('/^store:(\w+)$/', $key, $matches)) {
         list(, $storeName) = $matches;
-        $this->stores[$storeName] = $value;
+
+        if (empty($this->stores[$storeName]))
+          $this->stores[$storeName] = array();
+          
+        $this->stores[$storeName] = array_merge($this->stores[$storeName], $value);
       } else if (preg_match('/^store:(\w+):(\w+)$/', $key, $matches)) {
         list(, $storeName, $table) = $matches;
+        
+        if (empty($this->stores[$storeName]))
+          $this->stores[$storeName] = array();
+          
         $this->stores[$storeName]["vars:$table"] = $value;
       }
     }

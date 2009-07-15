@@ -317,8 +317,6 @@ var DatePicker;
 				}
 				if (!d[when]) d[when] = this.selectedDates[when]||new Date();
 			}, this);
-			console.log(d)
-			console.log('---')
 			return d;
 		},
 		validDate: function(val) {
@@ -390,8 +388,6 @@ var DatePicker;
 						
 				this.getCalendar(when);
 			}, this);
-			
-			console.log(this.selectedDates)
 			
 			this.fillCalendar(this.selectedDates.start);
 			if (!this.options.showMoreThanOne) this.hideOthers();

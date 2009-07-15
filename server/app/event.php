@@ -61,7 +61,7 @@ class Event {
         throw new Exception("Stream already exists with this unique_name");
     }
     
-    $object->set(compact('private', 'stream_name', 'created_by', 'created_by_name', 'object_ref', 'unique_name', 'are_object_refs_in_events_unique', 'meta'));    
+    $object->set(compact('private', 'stream_name', 'created_by', 'created_by_name', 'object_ref', 'unique_name', 'meta'));
     $this->server->db->save($object);
     
     $permission = new StreamPermission_Object();
@@ -120,7 +120,7 @@ class Event {
     }
     
     $object = new Event_Object();
-    $object->set(compact('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name'));
+    $object->set(compact('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name', 'datetime_ref'));
     $object->set('created', time());
     $object->set('created_by', $this->server->user->id);
     $object->set('created_by_name', $this->server->user->username);
@@ -184,7 +184,7 @@ class Event {
       FROM stream, subscription 
       LEFT JOIN streampermission ON subscription.user_id = streampermission.user_id 
         AND subscription.stream_id = streampermission.stream_id 
-      WHERE stream.id = subscription.stream_id AND subscription.user_id=".$this->server->user->id;
+      WHERE stream.id = subscription.stream_id AND subscription.user_id=".$this->server->user['id'];
     return $this->server->db->rows($query);
   }
   

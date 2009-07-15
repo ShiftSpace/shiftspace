@@ -11,15 +11,16 @@
    <div id="SSPublishPaneVis">
      <label>Visibility:</label>
 
-     <span id="SSPPVisiblePublic">
-       <input id="ShiftPublicStatusRadio" name="ShiftPublicStatusRadio" value="public" outlet="PublishPane" type="radio" class="SSPPradio"></input>
+     <span id="SSPPVisiblePrivate" outlet="PublishPane">
+       <input id="ShiftPrivateStatusRadio" name="ShiftPrivateStatusRadio" value="private" outlet="PublishPane" type="radio" class="SSPPradio"></input>
        <img src="/images/Console/publish-private.gif"/>
        <label>
          Private
        </label>
      </span>
-     <span id="SSPPVisiblePrivate">
-       <input id="ShiftPrivateStatusRadio" name="ShiftPrivateStatusRadio" value="private" outlet="PublishPane" type="radio" class="SSPPradio"></input>
+     <span id="SSPPVisiblePublic" outlet="PublishPane">
+	   <span class="SSPPradio" outlet="PublishPane"/>
+       <input id="ShiftPublicStatusRadio" name="ShiftPublicStatusRadio" value="public" outlet="PublishPane" type="radio" ></input>
        <img src="/images/Console/publish-private.gif"/>
        <label>
          Public

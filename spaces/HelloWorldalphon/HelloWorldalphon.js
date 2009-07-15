@@ -1,5 +1,6 @@
 var HelloWorldalphonSpace = new Class({
-    Extends: ShiftSpace.Space
+    Extends: ShiftSpace.Space,
+    name: "HelloWorldalphon"
 });
 
 var HelloWorldalphonShift = new Class({
