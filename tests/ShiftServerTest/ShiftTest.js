@@ -21,7 +21,7 @@ var ShiftTest = new Class({
     logout();
   },
   
-
+  /*
   testCreate: function()
   {
     this.doc("Create a shift.");
@@ -183,7 +183,7 @@ var ShiftTest = new Class({
     login(admin);
     app.delete('user', 'fakedave');
   },
-
+  */
   
   testNotify: function()
   {
@@ -215,6 +215,19 @@ var ShiftTest = new Class({
     this.assertEqual(json.notify.length, 0);
     logout();
     
+    login(fakejohn)
+    app.action('shift/'+shiftId+"/comment", {
+      text: "My other comment!"
+    });
+    json = SSGetData.attempt(app.get('shift/'+shiftId+'/comments'));
+    this.assertEqual(json.length, 2);
+    logout();
+    
+    login(fakedave);
+    json = SSGetData.attempt(app.get('user/fakedave/messages'));
+    this.assertEqual(json.length, 1);
+    logout();
+    
     login(admin);
     app.delete('user', 'fakedave');
     app.delete('user', 'fakejohn');
@@ -224,6 +237,8 @@ var ShiftTest = new Class({
   testUnpublish: function()
   {
     this.doc("Unpublish takes the shift off any streams it's currently on.");
+    
+    
   },
   
   
