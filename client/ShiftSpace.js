@@ -30,6 +30,7 @@ Mushon says: "Make it a Dorongle!"
 David says: "I am against smart!"
 Avital says: "Who knows what will happen by 2012?! The dinosaurs might be back!"
 Avital says: (replace any-string-in-the-world "There's no point, just use Lisp")
+Avital says: "Strict mode?! Keep the errors to yourself!"
 
 Script: shiftspace.user.js
     ShiftSpace: An Open Source layer above any webpage
