@@ -232,7 +232,7 @@ var ShiftTest = new Class({
     app.delete('user', 'fakedave');
     app.delete('user', 'fakejohn');
   },
-  */
+
   
 
   testUpdate: function()
@@ -240,20 +240,69 @@ var ShiftTest = new Class({
     this.doc("Update a shift");
     
     var shiftId = SSGetData.attempt(app.create('shift', noteShift));
+
     var json = SSGetData.attempt(app.update('shift', shiftId, {
       content: {
-        text: "Hello world!",
-        position: {x:150, y:150},
-        size: {x:200, y:200}
+        text: "Changed the note!",
+        position: {x:500, y:400},
+        size: {x:500, y:400}
       }
     }));
-  }/*,
-  
-  
-  testUpdateNotLoggedIn: function()
-  {
-    this.doc("Error updating a shift if not logged in.");
+
+    json = SSGetData.attempt(app.read('shift', shiftId));
+    var content = json.content;
+    
+    this.assertEqual(content.text, "Changed the note!");
+    this.assertEqual(content.position.x, 500);
+    this.assertEqual(content.position.y, 400);
   },
+  */  
+  
+  testUpdatePermission: function()
+  {
+    this.doc("Error updating a shift without the proper permissions.");
+    
+    var shiftId = SSGetData.attempt(app.create('shift', noteShift));
+    logout();
+    // no logged in user
+    var errType = SSGetType.attempt(app.update('shift', shiftId, {
+      content: {
+        text: "Changed the note!",
+        position: {x:500, y:400},
+        size: {x:500, y:400}
+      }
+    }));
+    this.assertEqual(errType, UserNotLoggedInError);
+    
+    // wrong user
+    join(fakedave);
+    errType = SSGetType.attempt(app.update('shift', shiftId, {
+      content: {
+        text: "Changed the note!",
+        position: {x:500, y:400},
+        size: {x:500, y:400}
+      }
+    }));
+    this.assertEqual(errType, PermissionError);
+    logout();
+    
+    login(admin);
+    app.update('shift', shiftId, {
+      content: {
+        text: "Changed the note!",
+        position: {x:500, y:400},
+        size: {x:500, y:400}
+      }
+    });
+    var json = SSGetData.attempt(app.read('shift', shiftId));
+    var content = json.content;
+    this.assertEqual(content.text, "Changed the note!");
+    this.assertEqual(content.position.x, 500);
+    this.assertEqual(content.position.y, 400);
+    
+    app.delete('user', 'fakedave');
+    // admin should be able to read
+  }/*,
   
   
   testDelete: function()
