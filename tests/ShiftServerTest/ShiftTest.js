@@ -234,7 +234,6 @@ var ShiftTest = new Class({
   },
 
   
-
   testUpdate: function()
   {
     this.doc("Update a shift");
@@ -256,11 +255,11 @@ var ShiftTest = new Class({
     this.assertEqual(content.position.x, 500);
     this.assertEqual(content.position.y, 400);
   },
-  */  
+
   
   testUpdatePermission: function()
   {
-    this.doc("Error updating a shift without the proper permissions.");
+    this.doc("Error updating a shift without the proper permissions. Admin allowed.");
     
     var shiftId = SSGetData.attempt(app.create('shift', noteShift));
     logout();
@@ -302,27 +301,40 @@ var ShiftTest = new Class({
     
     app.delete('user', 'fakedave');
     // admin should be able to read
-  }/*,
-  
+  },
+  */
   
   testDelete: function()
   {
     this.doc("Delete a shift.");
-    this.assertEqual(true, false);
+    
+    var shiftId = SSGetData.attempt(app.create('shift', noteShift));
+    app.delete('shift', shiftId);
+    var errType = SSGetType.attempt(app.read('shift', shiftId))
+    this.assertEqual(errType, ResourceDoesNotExistError);
   },
   
   
-  testAdminDelete: function()
+  testDeletePermission: function()
   {
-    this.doc("Admin should be able to delete a shift.");
-    this.assertEqual(true, false);
-  },
-  
-  
-  testDeleteNotLoggedIn: function()
-  {
-    this.doc("Error on deleting a shift if not logged in.");
-    this.assertEqual(true, false);
-  }*/
+    this.doc("Error deleting a shift without permission. Admin allowed");
+    
+    var shiftId = SSGetData.attempt(app.create('shift', noteShift));
+    logout();
+    
+    var errType = SSGetType.attempt(app.delete('shift', shiftId));
+    this.assertEqual(errType, PermissionError);
+    
+    join(fakedave);
+    errType = SSGetType.attempt(app.delete('shift', shiftId));
+    this.assertEqual(errType, PermissionError);
+    logout();
+    
+    login(admin);
+    var json = app.delete('shift', shiftId);
+    this.assertEqual(JSON.encode(json), ack);
+    
+    app.delete('user', fakedave)
+  }
 })
 
