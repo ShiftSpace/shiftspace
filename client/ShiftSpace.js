@@ -51,6 +51,11 @@ if(typeof console != 'undefined' && console.log)
 {
   console.log('Loading ShiftSpace');
 }
+else
+{
+  var console = {};
+  console.log = function(){};
+}
 
 /*
 
