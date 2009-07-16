@@ -65,7 +65,7 @@ var UserTest = new Class({
   {
   },
   
-  /*
+
   testMissingEmail: function()
   {
     this.doc("Error on missing email");
@@ -208,7 +208,7 @@ var UserTest = new Class({
     json = app.read('stream', publicStream);
     this.assertEqual(SSGetType(json), ResourceDoesNotExistError);
   },
-  */
+
   
   testFollow: function()
   {
@@ -222,15 +222,23 @@ var UserTest = new Class({
     logout();
 
     login(fakemary);
-    var shiftId = SSGetData(app.create('shift', noteShift));
+    var shiftId = SSGetData.attempt(app.create('shift', noteShift));
     app.action('shift/'+shiftId+'/publish', {
       private: false
     });
     logout();
     
+    // follow, check feeds, then unfollow and check feeds
     login(fakejohn);
     var json = app.action('follow/fakemary');
-    json = app.get('user/fakejohn/feeds');
+    this.assertEqual(JSON.encode(json), ack);
+    json = SSGetData.attempt(app.get('user/fakejohn/feeds'));
+    this.assertEqual(json.length, 1);
+    
+    json = app.action('unfollow/fakemary');
+    this.assertEqual(JSON.encode(json), ack);
+    json = SSGetData.attempt(app.get('user/fakejohn/feeds'));
+    this.assertEqual(json.length, 0);
     logout();
     
     login(admin);
