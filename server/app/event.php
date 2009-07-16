@@ -74,10 +74,10 @@ class Event {
     return $object->get();  
   }
 
-  public function getstreamsbymeta() {
+  public function getstreams() {
     extract($_REQUEST);
     
-    return $this->server->db->rows("SELECT * FROM stream WHERE meta=:meta", compact('meta'));
+    return $this->server->db->rows("SELECT * FROM stream WHERE meta=:meta AND object_ref=:object_ref", compact('meta', 'object_ref'));
   }
 
   public function findstreambyuniquename() {
