@@ -49,10 +49,10 @@ var passwordMismatch = {
   passwordVerify:"foobaz"
 };
 
-var UserCreateDeleteTest = new Class({
+var UserTest = new Class({
 
   Extends: SSUnitTest.TestCase,
-  name: 'UserCreateDeleteTest',
+  name: 'UserTest',
   
 
   setup: function()
@@ -172,6 +172,7 @@ var UserCreateDeleteTest = new Class({
   testUserStreamsExists: function()
   {
     this.doc("User public and private stream should exist and have the right values after account creation.");
+    
     var json = app.action('join', fakemary);
     var data = SSGetData(json);
     var publicStream = data.publicStream;
@@ -193,6 +194,7 @@ var UserCreateDeleteTest = new Class({
   testDeleteUserContent: function()
   {
     this.doc("User's public stream, private stream, events, and shifts should be deleted");
+    
     var json = app.action('join', fakemary);
     var data = SSGetData(json);
     var publicStream = data.publicStream;
@@ -205,6 +207,44 @@ var UserCreateDeleteTest = new Class({
     this.assertEqual(SSGetType(json), ResourceDoesNotExistError);
     json = app.read('stream', publicStream);
     this.assertEqual(SSGetType(json), ResourceDoesNotExistError);
+  },
+
+  
+  testFollow: function()
+  {
+    this.doc("Test following other users.");
+    
+    logout();
+    join(fakemary);
+    logout();
+
+    join(fakejohn);
+    logout();
+
+    login(fakemary);
+    var shiftId = SSGetData.attempt(app.create('shift', noteShift));
+    app.action('shift/'+shiftId+'/publish', {
+      private: false
+    });
+    logout();
+    
+    // follow, check feeds, then unfollow and check feeds
+    login(fakejohn);
+    var json = app.action('follow/fakemary');
+    this.assertEqual(JSON.encode(json), ack);
+    json = SSGetData.attempt(app.get('user/fakejohn/feeds'));
+    this.assertEqual(json.length, 1);
+    
+    json = app.action('unfollow/fakemary');
+    this.assertEqual(JSON.encode(json), ack);
+    json = SSGetData.attempt(app.get('user/fakejohn/feeds'));
+    this.assertEqual(json.length, 0);
+    logout();
+    
+    login(admin);
+    app.delete('user', 'fakemary');
+    app.delete('user', 'fakejohn');
+    logout();
   }
 
 });

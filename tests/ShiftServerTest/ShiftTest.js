@@ -82,6 +82,7 @@ var ShiftTest = new Class({
     app.action('shift/'+shiftId+'/publish', {
       private: false
     });
+    // TODO: check that the shift is on the user's public stream - David 7/16/09
     logout();
     app.action('join', fakedave);
     

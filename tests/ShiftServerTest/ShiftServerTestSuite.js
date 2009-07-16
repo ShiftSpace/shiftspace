@@ -1,6 +1,6 @@
 // ==Builder==
 // @test
-// @dependencies      LoginTest, UserCreateDeleteTest, StreamTest
+// @dependencies      LoginTest, UserTest, StreamTest
 // ==/Builder==
 
 var ShiftServerTestSuite = new Class({
@@ -13,7 +13,7 @@ var ShiftServerTestSuite = new Class({
     this.parent(options);
     
     this.addTest(LoginTest);
-    this.addTest(UserCreateDeleteTest);
+    this.addTest(UserTest);
     this.addTest(StreamTest);
   }
 });
