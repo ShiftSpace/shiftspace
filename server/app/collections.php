@@ -39,7 +39,7 @@ class Collections {
         if ($first) $sql .= " AND ";
         
         if (is_string($value)) {
-          $value = mysql_real_escape_string($value);
+          $value = $this->server->db->escape($value);
           $value = "'$value'";
         }
 
@@ -161,7 +161,7 @@ class Collections {
         throw new Error("Possible hack attempt 8");
 
       if (is_string($value))
-        $value = "'".mysql_escape_string($value)."'";
+        $value = "'".$this->server->db->escape($value)."'";
 
       $value = str_replace("\\'", "''", $value);
         
@@ -204,7 +204,7 @@ class Collections {
         throw new Error("Possible hack attempt 10");
 
       if (is_string($value))
-        $value = "'".mysql_escape_string($value)."'";
+        $value = "'".$this->server->db->escape($value)."'";
         
       $value = str_replace("\\'", "''", $value);
         
