@@ -137,7 +137,7 @@ class Event {
 
     $user_id = $this->server->user['id'];
     $read = 1;
-    $object->set(compact('user_id', 'event_id', 'read'));
+    $object->set(compact('user_id', 'event_id', 'is_read'));
 
     return $object;
   }
