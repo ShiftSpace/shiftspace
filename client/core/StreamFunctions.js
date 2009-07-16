@@ -6,7 +6,7 @@
 
 function SSGetAllFeeds(callback)
 {
-  SSStreamCall('event.feed', callback);
+  SSStreamCall('event.feed', {}, callback);
 }
 
 
