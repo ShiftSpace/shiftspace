@@ -25,7 +25,7 @@ class Event {
     
     $object = new Subscription_Object();
     $object->set(Array(
-      'user_id' => $this->server->user->id,
+      'user_id' => $this->server->user['id'],
       'stream_id' => $stream_id));
       
     return $object;
@@ -42,7 +42,7 @@ class Event {
   }
   
   private function permission($stream_id) {
-    $result = $this->server->db->row("SELECT level FROM streampermission WHERE user_id=".$this->server->user->id." AND stream_id=:stream_id", compact('stream_id'));
+    $result = $this->server->db->row("SELECT level FROM streampermission WHERE user_id=".$this->server->user['id']." AND stream_id=:stream_id", compact('stream_id'));
     return $result->level;
   }
   
@@ -51,8 +51,8 @@ class Event {
     extract($_REQUEST);
     
     $object = new Stream_Object();
-    $created_by = $this->server->user->id;
-    $created_by_name = $this->server->user->username;
+    $created_by = $this->server->user['id'];
+    $created_by_name = $this->server->user['username'];
     
     if ($unique_name) {
       $num = $this->server->db->query('SELECT COUNT(*) FROM stream WHERE private=0 AND unique_name=:unique_name', compact('unique_name'))->fetch(PDO::FETCH_NUM);
@@ -66,7 +66,7 @@ class Event {
     
     $permission = new StreamPermission_Object();
     $permission->set(Array(
-      'user_id' => $this->server->user->id,
+      'user_id' => $this->server->user['id'],
       'stream_id' => $object->id,
       'level' => 3));
       
@@ -122,8 +122,8 @@ class Event {
     $object = new Event_Object();
     $object->set(compact('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name', 'datetime_ref'));
     $object->set('created', time());
-    $object->set('created_by', $this->server->user->id);
-    $object->set('created_by_name', $this->server->user->username);
+    $object->set('created_by', $this->server->user['id']);
+    $object->set('created_by_name', $this->server->user['username']);
     $this->server->db->save($object);
     
     $this->markread($object->id);
@@ -135,7 +135,7 @@ class Event {
     $this->logged_in();
     $object = new EventRead_Object();
 
-    $user_id = $this->server->user->id;
+    $user_id = $this->server->user['id'];
     $read = 1;
     $object->set(compact('user_id', 'event_id', 'read'));
 
@@ -201,7 +201,7 @@ class Event {
     if (count($values) == 0)
       return new Response(Array());
     else
-      return new Response($this->server->db->rows("SELECT * FROM stream, event LEFT JOIN eventread ON event.id = eventread.event_id AND eventread.user_id = ".$this->server->user->id." WHERE stream.id = event.stream_id AND (".implode(' OR ', $values).')'));
+      return new Response($this->server->db->rows("SELECT * FROM stream, event LEFT JOIN eventread ON event.id = eventread.event_id AND eventread.user_id = ".$this->server->user['id']." WHERE stream.id = event.stream_id AND (".implode(' OR ', $values).')'));
   }
   
   public function streamsetpermission() {
@@ -223,7 +223,7 @@ class Event {
   public function findevents() {
     extract($_REQUEST);
     if ($this->server->user) {
-      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND user_id = ".$this->server->user->id;
+      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND user_id = ".$this->server->user['id'];
       $permissions_clause = "OR (stream.private = 1 AND streampermission.level >= 1)";
     }
     else {
@@ -237,7 +237,7 @@ class Event {
   public function findstreams() {
     extract($_REQUEST);
     if ($this->server->user) {
-      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND user_id = ".$this->server->user->id;
+      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND user_id = ".$this->server->user['id'];
       $permissions_clause = "OR (stream.private = 1 AND streampermission.level >= 1)";
     }
     else {
@@ -251,7 +251,7 @@ class Event {
   public function findstreamswithevent() {
     extract($_REQUEST);
     if ($this->server->user) {
-      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND user_id = ".$this->server->user->id;
+      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND user_id = ".$this->server->user['id'];
       $permissions_clause = "OR (stream.private = 1 AND streampermission.level >= 1)";
     }
     else {

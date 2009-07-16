@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-curl http://localhost/shiftspacegit/server/index.php?method=version
+curl http://localhost/shiftspace/server/index.php?method=version
 
 #mv moma.sqlite3 moma_.sqlite3
 #rm server.ini

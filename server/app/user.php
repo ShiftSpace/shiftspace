@@ -48,8 +48,8 @@ class User {
         throw new Error("We're sorry, but your username is not compatible with the latest release of ShiftSpace. Please contact us at info@shiftspace.org so we can fix your account.");
       }
 
-      $this->server->user = $user;      
-      return new Response($user);
+      $this->server->user = get_object_vars($user);      
+      return new Response($this->server->user);
     }
   }
 
@@ -84,7 +84,7 @@ class User {
     ));
     
     $this->server->db->save($user);
-    $this->server->user = $user;
+    $this->server->user = get_object_vars($user);
 
     return new Response($this->server->user);
   }

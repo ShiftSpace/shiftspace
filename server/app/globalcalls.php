@@ -67,6 +67,13 @@ class GlobalCalls {
   }
 
   function collections_method($desc) {
+    if (strpos($desc['table'], '!') === 0) {
+      $stream_id = substr($desc['table'], 1);
+      $desc['table'] = 'event';
+      $desc['values']['stream_id'] = $stream_id;
+      $desc['constraints']['stream_id'] = $stream_id;
+    }
+    
     $method = $desc['action'];
     try {
       return $this->collections->$method($desc);

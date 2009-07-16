@@ -1,8 +1,8 @@
 echo 'moma.sqlite3 was backed up as moma.sqlite3.bak'
-cp ../../momasocialbar/moma.sqlite3 moma.sqlite3.bak
-mv ../../momasocialbar/moma.sqlite3 moma_.sqlite3
-touch ../../momasocialbar/moma.sqlite3
-chmod a+w ../../momasocialbar/moma.sqlite3
+cp shiftspace.sqlite3 shiftspace.sqlite3.bak
+mv shiftspace.sqlite3 shiftspace_.sqlite3
+touch shiftspace.sqlite3
+chmod a+w shiftspace.sqlite3
 rm -f server.ini
 
 echo 'If you are running this, you already have a new verison of server.ini, right?'

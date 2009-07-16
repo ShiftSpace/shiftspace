@@ -11,7 +11,7 @@ class Collections {
 
   function generate_join_clause($table) {
     $sql = '';
-    $joinData = $this->server->moma->joinData[$table];
+    $joinData = $this->server->db->joinData[$table];
     
     if (!empty($joinData)) {
       foreach ($joinData as $column => $joins) {
@@ -28,7 +28,7 @@ class Collections {
     $sql = '';
     
     if ($modify) {
-      $constraints['userid'] = $this->server->user['id'];
+      $constraints['user_id'] = $this->server->user['id'];
     }
     
     if (!empty($constraints)) {
@@ -58,7 +58,7 @@ class Collections {
   }
   
   function generate_all_properties($table) {
-    $joinData = $this->server->moma->joinData[$table];
+    $joinData = $this->server->db->joinData[$table];
     
     if (empty($joinData))
       return '*';
@@ -120,13 +120,13 @@ class Collections {
       
       foreach ($this->lastResult as $idRow) {
         $newsql = str_replace("'$columnIdent'", $idRow->$column, $sql);
-        $result[] = $this->server->moma->rows($newsql);
+        $result[] = $this->server->db->rows($newsql);
       }
       
       return $result;
     }  
     else {
-      $rows = $this->server->moma->rows($sql);
+      $rows = $this->server->db->rows($sql);
       $this->lastResult = $rows;
       return $rows;
     }
@@ -140,7 +140,7 @@ class Collections {
     
     $sql = "DELETE FROM $table";
     $sql .= $this->generate_where_clause($constraints, true, true);
-    $query = $this->server->moma->query($sql);
+    $query = $this->server->db->query($sql);
     return $query->rowCount();    
   }
 
@@ -174,7 +174,7 @@ class Collections {
     $sql .= implode(', ', $valuesSql);                                             
     $sql .= $this->generate_where_clause($constraints, false, $table != 'artwork');
     
-    $query = $this->server->moma->query($sql);
+    $query = $this->server->db->query($sql);
     $result = $query->rowCount();
     
     return $result;    
@@ -218,7 +218,7 @@ class Collections {
     $valuesClause = implode(', ', $valuesSql);
     $sql .= "($columns) VALUES ($valuesClause)";
     
-    $query = $this->server->moma->query($sql);
+    $query = $this->server->db->query($sql);
     return $query->insertId;    
   }
 }
