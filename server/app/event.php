@@ -51,7 +51,7 @@ class Event {
     extract($_REQUEST);
     
     $object = new Stream_Object();
-    $created_by = $this->server->user['id'];
+    $user_id = $this->server->user['id'];
     $created_by_name = $this->server->user['username'];
     
     if ($unique_name) {
@@ -61,7 +61,7 @@ class Event {
         throw new Exception("Stream already exists with this unique_name");
     }
     
-    $object->set(compact('private', 'stream_name', 'created_by', 'created_by_name', 'object_ref', 'unique_name', 'meta'));
+    $object->set(compact('private', 'stream_name', 'user_id', 'created_by_name', 'object_ref', 'unique_name', 'meta'));
     $this->server->db->save($object);
     
     $permission = new StreamPermission_Object();
@@ -122,7 +122,7 @@ class Event {
     $object = new Event_Object();
     $object->set(compact('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name', 'datetime_ref'));
     $object->set('created', time());
-    $object->set('created_by', $this->server->user['id']);
+    $object->set('user_id', $this->server->user['id']);
     $object->set('created_by_name', $this->server->user['username']);
     $this->server->db->save($object);
     
