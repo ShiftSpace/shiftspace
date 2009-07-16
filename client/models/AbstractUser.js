@@ -119,14 +119,14 @@ var AbstractUser = new Class({
   {
     SSServerCall('user.query', null, function(json) {
       if(json.data) this.syncData(json.data);
-      SSPostNotification('onUserQuery', json);
+      this.onQuery(json);
     }.bind(this));
   },
   
   
-  onQuery: function()
+  onQuery: function(json)
   {
-    
+    SSPostNotification('onUserQuery', json);
   },
   
   /*

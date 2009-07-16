@@ -38,6 +38,15 @@ function SSSetStreamPermission(streamId, userId, level, callback)
 }
 
 
+function SSGetStreams(objectRef, meta, callback)
+{
+  SSStreamCall('event.getstreams', {
+    object_ref: objectRef,
+    meta: meta
+  }, callback);
+}
+
+
 function SSGetStreamsByMeta(meta, callback) {
   SSStreamCall('event.getstreamsbymeta', {
     meta: meta
