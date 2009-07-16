@@ -9,8 +9,8 @@ class Sandbox {
   }
   
   function getvalue() {
-    $key = $_REQUEST['key'];
-    $value = $this->server->db->row("select value from sandbox where key=:key", array('key' => $key));
+    $key_ = $_REQUEST['key'];
+    $value = $this->server->db->row("select value from sandbox where key_=:key_", array('key_' => $key_));
     
     if (!empty($value))
       return $value->value;
@@ -19,14 +19,14 @@ class Sandbox {
   }
   
   function setvalue() {
-    $key = $_REQUEST['key'];
+    $key_ = $_REQUEST['key'];
     $sandboxObject = new Sandbox_Object();
     
-    $sandboxObject = $this->server->db->row("select * from sandbox where key=:key", array('key' => $key));
+    $sandboxObject = $this->server->db->row("select * from sandbox where key_=:key_", array('key_' => $key_));
     $saveObject = new Sandbox_Object();
     
     $saveObject->set(array(
-      'key' => $_REQUEST['key'],
+      'key_' => $_REQUEST['key'],
       'value' => $_REQUEST['value']
     ));
 

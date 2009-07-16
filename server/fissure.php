@@ -71,7 +71,7 @@ function method_form($httpmethod, $method, $args, $comment = '') {
 <?php method_form('post', 'event.feed', array()); ?>
 <?php method_form('post', 'event.onefeed', array('stream_id')); ?>
 <?php method_form('post', 'event.createstream', array('private', 'stream_name', 'object_ref', 'unique_name', 'meta')); ?>
-<?php method_form('post', 'event.getstreamsbymeta', array('meta')); ?>
+<?php method_form('post', 'event.getstreams', array('meta', 'object_ref')); ?>
 <?php method_form('post', 'event.findstreambyuniquename', array('unique_name')); ?>
 <?php method_form('post', 'event.findeventbyuniquename', array('stream_id', 'unique_name')); ?>
 <?php method_form('post', 'event.streamsetpermission', array('stream_id', 'user_id', 'level'), 'level: 0=none, 1=read, 2=write, 3=administrator (can give permissions)'); ?>

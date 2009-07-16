@@ -74,10 +74,10 @@ class Event {
     return $object->get();  
   }
 
-  public function getstreamsbymeta() {
+  public function getstreams() {
     extract($_REQUEST);
     
-    return $this->server->db->rows("SELECT * FROM stream WHERE meta=:meta", compact('meta'));
+    return $this->server->db->rows("SELECT * FROM stream WHERE meta=:meta AND object_ref=:object_ref", compact('meta', 'object_ref'));
   }
 
   public function findstreambyuniquename() {
@@ -137,7 +137,7 @@ class Event {
 
     $user_id = $this->server->user['id'];
     $read = 1;
-    $object->set(compact('user_id', 'event_id', 'read'));
+    $object->set(compact('user_id', 'event_id', 'is_read'));
 
     return $object;
   }
@@ -173,8 +173,8 @@ class Event {
     extract($_REQUEST);
     $this->can_read($stream_id);
     
-    $result = $this->server->db->load("stream($stream_id)");
-    $result->feed = $this->server->db->rows("SELECT * FROM stream, event WHERE event.stream_id = stream.id AND event.stream_id=:stream_id", compact('stream_id'));
+    $result = $this->server->db->load("stream($stream_id)")->get();
+    $result['feed'] = $this->server->db->rows("SELECT * FROM stream, event WHERE event.stream_id = stream.id AND event.stream_id=:stream_id", compact('stream_id'));
     return $result;
   }
   
