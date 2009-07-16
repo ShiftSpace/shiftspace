@@ -80,6 +80,66 @@ function SSCollectionsClearAllPlugins()
 // = Class Definition =
 // ====================
 
+// ====================
+// Using SSCollection =
+// ====================
+// 
+// read
+// ----
+// {
+//   "action": "read",
+//   "table": "user/shift/trail/comment",
+//   "constraints": {
+//      "user_id": 67
+//   },
+//   "properties": "*" || ["username", "summary", "modified"],
+//   "orderby": ["<" || ">", "modified"],
+//   "startIndex": 2,
+//   "range": {
+//     "startIndex": 2, // array base is 0
+//     "count": 20
+//   }
+// }
+// - returns array of results
+//  
+// delete
+// ------
+// {
+//   "action": "delete",
+//   "table": "user/shift/trail/comment",
+//   "constraints": {
+//      "user_id": 67
+//   },
+// }
+// - returns number of rows deleted
+//  
+// update
+// ------
+// {
+//   "action": "update",
+//   "table": "user/shift/trail/comment",
+//   "constraints": {
+//      "user_id": 67
+//   },
+//   "values": {
+//     "user_id": 68,
+//     "name": "Avital"
+//   }
+// }
+// - returns number of rows updated
+//  
+// create
+// ------
+// {
+//   "action": "create",
+//   "table": "user/shift/trail/comment",
+//   "values": {
+//     "name": "Avital"
+//   }
+// }
+// - returns new id
+// ====================
+
 var SSCollection = new Class({
 
   Implements: [Events, Options],
