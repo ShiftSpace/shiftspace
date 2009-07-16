@@ -120,7 +120,7 @@ class Event {
     }
     
     $object = new Event_Object();
-    $object->set(compact('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name', 'datetime_ref'));
+    $object->set(compact('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name', 'datetime_ref', 'contents'));
     $object->set('created', time());
     $object->set('user_id', $this->server->user['id']);
     $object->set('created_by_name', $this->server->user['username']);
