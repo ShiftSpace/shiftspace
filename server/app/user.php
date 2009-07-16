@@ -84,7 +84,7 @@ class User {
     ));
     
     $this->server->db->save($user);
-    $this->server->user = get_object_vars($user);
+    $this->server->user = $user->get();
 
     return new Response($this->server->user);
   }
