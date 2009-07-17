@@ -64,7 +64,7 @@ function SSFindStreams(objectRef, callback)
 function SSFindEvents(objectRef, callback)
 {
   SSStreamCall('event.findevents', {
-    object_ref: object_ref
+    object_ref: objectRef
   }, callback);
 }
 
