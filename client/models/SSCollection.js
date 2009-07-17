@@ -1163,7 +1163,7 @@ var SSCollection = new Class({
   {
     // synchronize internal
     this.remove(index);
-    this.fireEvent('onDelete', index);
+    this.fireEvent('onDelete', {data:data, index:index});
   },
   
   /*
