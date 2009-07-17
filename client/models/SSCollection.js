@@ -155,7 +155,9 @@ var SSCollection = new Class({
       orderBy: null,
       startIndex: null,
       range: null,
-      delegate: null
+      delegate: null,
+      plugins: null,
+      views: []
     }
   },
   
@@ -167,7 +169,8 @@ var SSCollection = new Class({
     if(this.options.delegate) this.setDelegate(this.options.delegate);
     
     // TODO: shouldn't allow plugins from element, need a way to prevent - David
-    this.setPlugins($H());
+    this.setViews(this.options.views);
+    this.setPlugins((this.options.plugins && $H(this.options.plugins)) || $H());
     
     this.setIsUnread(true);
 
@@ -941,6 +944,7 @@ var SSCollection = new Class({
         var newData = $merge(data, {id:theId});
         this.onCreate(newData, (options && options.userData));
         if(options && options.onCreate && $type(options.onCreate) == 'function') options.onCreate(newData);
+        this.dirtyTheViews();
       }.bind(this)
     });
   },
@@ -1029,6 +1033,7 @@ var SSCollection = new Class({
       }),
       onComplete: function(data) {
         this.onDelete(data, index);
+        this.dirtyTheViews();
       }.bind(this),
       onFailure: function(data) {
         this.onFailure('delete', data, index);
@@ -1063,6 +1068,7 @@ var SSCollection = new Class({
       constraints: $merge(this.constraints(), indexConstraint),
       onComplete: function(rx) {
         this.onUpdate(data, index);
+        this.dirtyTheViews();
       }.bind(this),
       onFailure: function(data) {
         this.onFailure('delete', data, index);
@@ -1267,6 +1273,39 @@ var SSCollection = new Class({
   {
     this.empty();
     this.setIsUnread(true);
+  },
+  
+  
+  setViews: function(views)
+  {
+    this.__views = views;
+  },
+  
+  
+  views: function()
+  {
+    return this.__views;
+  },
+  
+  
+  addView: function(view)
+  {
+    this.views().push(view);
+  },
+  
+  
+  removeView: function(view)
+  {
+    this.views().remove(view);
+  },
+  
+  
+  dirtyTheViews: function()
+  {
+    this.views().each(function(viewName) {
+      var theView = ShiftSpaceNameTable[viewName];
+      if(theView) theView.setNeedsDisplay(true);
+    });
   }
 
 });
