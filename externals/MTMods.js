@@ -46,12 +46,13 @@ var verify = function(fn) {
    }
 };
 
+// add type checking of first argument to myfn!
 var myfn = function(argA, argB) {
   console.log("Hello from myfn! argA " + argA + ", argB " + argB);
 }.decorate(verify);
 
-myfn("foo", "bar");
-myfn(2, "bar");
+myfn("foo", "bar"); // works
+myfn(2, "bar"); // throws exception!
 */
 
 Function.implement({
