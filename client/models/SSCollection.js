@@ -1033,7 +1033,7 @@ var SSCollection = new Class({
       }),
       onComplete: function(data) {
         this.onDelete(data, index);
-        ths.dirtyTheViews();
+        this.dirtyTheViews();
       }.bind(this),
       onFailure: function(data) {
         this.onFailure('delete', data, index);
