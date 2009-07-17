@@ -76,6 +76,42 @@ function SSCollectionsClearAllPlugins()
   });
 }
 
+function SSCollectionCheckRead(collectionName)
+{
+  return function(fn) {
+    return function() {
+      var args = $A(arguments);
+      var coll = SSCollectionForName(collectionName);
+      if(coll.isUnread())
+      {
+        return coll.read(fn.bind(this, [args]));
+      }
+      else
+      {
+        return fn.apply(this, args);
+      }
+    }
+  };
+}
+
+function SSCollectionCheckIsReading(collectionName)
+{
+  return function(fn) {
+    return function() {
+      var args = $A(arguments);
+      var coll = SSCollectionForName(collectionName);
+      if(coll.isUnread())
+      {
+        return coll.addOnReadFn(fn.bind(this, [args]));
+      }
+      else
+      {
+        return fn.apply(this, args);
+      }
+    }
+  };
+}
+
 // ====================
 // = Class Definition =
 // ====================
