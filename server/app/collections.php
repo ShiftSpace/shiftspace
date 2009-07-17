@@ -197,6 +197,7 @@ class Collections {
 
     $values['created'] = time();
     $values['modified'] = time();
+    $values['userid'] = $this->server->user['id'];
 
     $columns = implode(', ', array_keys($values));
     foreach ($values as $key => $value) {
