@@ -84,7 +84,7 @@ function SSCollectionCheckRead(collectionName)
       var coll = SSCollectionForName(collectionName);
       if(coll.isUnread())
       {
-        return coll.read(fn.bind(this, [args]));
+        return coll.read(fn.bind(this, args));
       }
       else
       {
@@ -102,7 +102,7 @@ function SSCollectionCheckIsReading(collectionName)
       var coll = SSCollectionForName(collectionName);
       if(coll.isUnread())
       {
-        return coll.addOnReadFn(fn.bind(this, [args]));
+        return coll.addOnReadFn(fn.bind(this, args));
       }
       else
       {
