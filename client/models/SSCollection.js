@@ -1098,6 +1098,7 @@ var SSCollection = new Class({
       constraints: $merge(this.constraints(), {id: id}),
       onComplete: function(rx) {
         this.onUpdateById(data, id);
+        this.dirtyTheViews();
       }.bind(this),
       onFailure: function(data) {
         this.onFailure('delete', data, index);
