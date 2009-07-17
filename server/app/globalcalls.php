@@ -66,12 +66,38 @@ class GlobalCalls {
     return new Response($data);
   }
 
+  function stream_expand($streamids) {
+    $new = array();
+    $newshallow = array();
+    
+    foreach ($streamids as $streamid) {
+      $stream = $this->server->db->load("stream($streamid)");
+
+      if ($stream->meta == 'superstream') {
+        $substreamevents = $this->server->db->rows("SELECT object_ref FROM event WHERE stream_id=:streamid", compact('streamid'));
+        foreach ($substreamevents as $substreamevent) {
+          $new[] = $substreamevent->object_ref;
+        }
+      }
+      else {
+        $newshallow[] = $streamid;
+      }
+      
+      if (!empty($new)) {
+        return array_merge($newshallow, $this->stream_expand($new));
+      }
+      else {
+        return $streamids;
+      }
+    }
+  }
+
   function collections_method($desc) {
     if (strpos($desc['table'], '!') === 0) {
       $stream_id = substr($desc['table'], 1);
       $desc['table'] = 'event';
       $desc['values']['stream_id'] = $stream_id;
-      $desc['constraints']['stream_id'] = $stream_id;
+      $desc['constraints']['stream_id'] = $this->stream_expand(array($stream_id));
     }
     
     $method = $desc['action'];

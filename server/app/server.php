@@ -4,6 +4,7 @@ define('SHIFTSPACE_VERSION', '0.5');
 
 class Shift_Object extends Base_Object {}
 class User_Object extends Base_Object {}
+class Stream_Object extends Base_Object {}
 
 class Server extends Base_Server {
   function main() {
