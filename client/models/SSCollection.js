@@ -855,7 +855,6 @@ var SSCollection = new Class({
       properties: this.properties(),
       orderBy: this.orderBy(),
       onComplete: function(data) {
-        data = this.applyPlugins('read', data);
         this.setArray(data);
         this.setIsUnread(false);
         this.setIsReading(false);
