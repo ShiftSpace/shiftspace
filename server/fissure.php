@@ -67,7 +67,7 @@ function method_form($httpmethod, $method, $args, $comment = '') {
 <?php method_form('post', 'event.subscriptions', array()); ?>
 <?php method_form('post', 'event.subscribe', array('stream_id')); ?>
 <?php method_form('post', 'event.unsubscribe', array('stream_id')); ?>
-<?php method_form('post', 'event.post', array('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name', 'datetime_ref', 'contents')); ?>
+<?php method_form('post', 'event.post', array('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name', 'datetime_ref', 'content_')); ?>
 <?php method_form('post', 'event.feed', array()); ?>
 <?php method_form('post', 'event.onefeed', array('stream_id')); ?>
 <?php method_form('post', 'event.createstream', array('private', 'stream_name', 'object_ref', 'unique_name', 'meta')); ?>
