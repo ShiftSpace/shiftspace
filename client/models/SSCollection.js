@@ -155,7 +155,8 @@ var SSCollection = new Class({
       orderBy: null,
       startIndex: null,
       range: null,
-      delegate: null
+      delegate: null,
+      plugins: null
     }
   },
   
@@ -167,7 +168,7 @@ var SSCollection = new Class({
     if(this.options.delegate) this.setDelegate(this.options.delegate);
     
     // TODO: shouldn't allow plugins from element, need a way to prevent - David
-    this.setPlugins($H());
+    this.setPlugins((this.options.plugins && $H(this.options.plugins)) || $H());
     
     this.setIsUnread(true);
 
