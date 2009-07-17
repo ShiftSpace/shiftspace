@@ -4,9 +4,19 @@ function ctype_alpha2($str) {
   return $str == '' || ctype_alpha($str);
 }
 
+
 class Collections {
   public function __construct($server) {
     $this->server = $server;
+  }
+
+  function esc($value) {      
+    if (is_string($value)) {
+      $value = $this->server->db->escape($value);
+      $value = "'$value'";
+    }
+        
+    return $value;
   }
 
   function generate_join_clause($table) {
@@ -37,16 +47,16 @@ class Collections {
       
       foreach ($constraints as $column => $value) {
         if ($first) $sql .= " AND ";
-        
-        if (is_string($value)) {
-          $value = $this->server->db->escape($value);
-          $value = "'$value'";
-        }
+
+        if (!is_array($value))
+          $value = array($value);
+          
+        $value = array_map($this->esc, $value);
 
         if (!ctype_alpha2(str_replace(array('.', '_'), '', $column)))
           throw new Error("Possible hack attempt 1");
           
-        $sql .= "$column = $value";
+        $sql .= "$column in (".implode(',', $value).") ";
         $first = true;
       }
     }
