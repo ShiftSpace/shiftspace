@@ -28,7 +28,7 @@ class Collections {
     $sql = '';
     
     if ($modify) {
-      $constraints['user_id'] = $this->server->user['id'];
+      $constraints['userid'] = $this->server->user['id'];
     }
     
     if (!empty($constraints)) {
