@@ -298,8 +298,6 @@ var DatePicker;
     
     getDates: function(dates, getFromInputs)
     {
-      SSLog('getDates >>>>>>>>>>>>>>>>> ', SSLogForce);
-      SSLog(this.selectedDates, SSLogForce);
       var d = {};
       if (!getFromInputs) dates = dates || this.selectedDates;
       this.whens.each(function(when) {
@@ -419,12 +417,7 @@ var DatePicker;
     onPick: function()
     {
       this.updateSelectors();
-      this.inputs.each(function(input) {
-        input.fireEvent("change");
-        input.fireEvent("blur");
-      });
       this.fireEvent('onPick');
-      if (this.options.hideCalendarOnPick) this.hide();
     },
     
     
@@ -436,7 +429,6 @@ var DatePicker;
       if (e.target.refDate) {
         var newDate = new Date(e.target.refDate);
         this.setSelectedDates(e, newDate);
-        this.updateInput();
         this.onPick();
       }
     },
