@@ -1203,7 +1203,7 @@ var SSCollection = new Class({
   {
     var index = this.byId(id);
     this.__array[index] = $merge(this.__array[index], data);
-    this.fireEvent('onUpdateById', index);
+    this.fireEvent('onUpdateById', {data:this.__array[index], index: index});
   },
   
   /*
