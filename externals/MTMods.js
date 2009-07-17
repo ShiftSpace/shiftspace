@@ -32,7 +32,7 @@ Array.implement({
 });
 
 /*
-var verify = function(fn) {
+var verify1 = function(fn) {
    return function() {
       var args = $A(arguments);
       if($type(args[0]) != "string")
@@ -41,7 +41,23 @@ var verify = function(fn) {
       }
       else
       {
-         return fn.apply(null, args);
+         console.log("verify1 decorator run")
+         return fn.apply(this, args);
+      }
+   }
+};
+
+var verify2 = function(fn) {
+   return function() {
+      var args = $A(arguments);
+      if($type(args[1]) != "string")
+      {
+         throw new Error("Second arg is not a string");
+      }
+      else
+      {
+         console.log("verify2 decorator run")
+         return fn.apply(this, args);
       }
    }
 };
@@ -49,10 +65,38 @@ var verify = function(fn) {
 // add type checking of first argument to myfn!
 var myfn = function(argA, argB) {
   console.log("Hello from myfn! argA " + argA + ", argB " + argB);
-}.decorate(verify);
+}.decorate(verify1, verify2);
+
+var MyClass = new Class({
+  name: "MyClass",
+  aMethod: function(argA, argB) {
+    console.log("Hello from myfn! argA " + argA + ", argB " + argB);
+    console.log(this.name);
+  }.decorate(verify1, verify2)
+});
+
+var instance = new MyClass();
+instance.aMethod("foo", "bar"); // works
 
 myfn("foo", "bar"); // works
-myfn(2, "bar"); // throws exception!
+
+try
+{
+  myfn(2, "bar"); // verify1 throws exception!
+}
+catch(err)
+{
+  console.log(err);
+}
+
+try
+{
+  myfn("foo", 2); // verify2 throws exception!  
+}
+catch(err)
+{
+  console.log(err);
+}
 */
 
 Function.implement({
