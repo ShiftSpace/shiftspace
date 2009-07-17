@@ -97,7 +97,7 @@ class GlobalCalls {
       $stream_id = substr($desc['table'], 1);
       $desc['table'] = 'event';
       $desc['values']['stream_id'] = $stream_id;
-      $desc['constraints']['stream_id'] = $this->stream_expand(array($stream_id));
+      $desc['constraints']['stream_id'] = !!$desc['bare'] ? $stream_id : $this->stream_expand(array($stream_id));
     }
     
     $method = $desc['action'];
