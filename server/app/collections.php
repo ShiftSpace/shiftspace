@@ -51,7 +51,7 @@ class Collections {
         if (!is_array($value))
           $value = array($value);
           
-        $value = array_map($this->esc, $value);
+        $value = array_map(array($this, esc), $value);
 
         if (!ctype_alpha2(str_replace(array('.', '_'), '', $column)))
           throw new Error("Possible hack attempt 1");
