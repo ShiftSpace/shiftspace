@@ -62,11 +62,12 @@ var verify2 = function(fn) {
    }
 };
 
-// add type checking of first argument to myfn!
+// add type checking of first and second arguments to myfn!
 var myfn = function(argA, argB) {
   console.log("Hello from myfn! argA " + argA + ", argB " + argB);
 }.decorate(verify1, verify2);
 
+// do the same for a class method
 var MyClass = new Class({
   name: "MyClass",
   aMethod: function(argA, argB) {
@@ -77,6 +78,24 @@ var MyClass = new Class({
 
 var instance = new MyClass();
 instance.aMethod("foo", "bar"); // works
+
+try
+{
+  instance.aMethod(2, "bar");
+}
+catch(err)
+{
+  console.log(err);
+}
+
+try
+{
+  instance.aMethod("foo", 2);
+}
+catch(err)
+{
+  console.log(err);
+}
 
 myfn("foo", "bar"); // works
 
