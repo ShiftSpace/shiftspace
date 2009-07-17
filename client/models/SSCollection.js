@@ -1301,8 +1301,9 @@ var SSCollection = new Class({
   
   dirtyTheViews: function()
   {
-    this.views().each(function(view) {
-      view.setNeedsDisplay(true);
+    this.views().each(function(viewName) {
+      var theView = ShiftSpaceNameTable[viewName];
+      if(theView) theView.setNeedsDisplay(true);
     });
   }
 
