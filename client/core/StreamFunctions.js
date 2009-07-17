@@ -54,10 +54,17 @@ function SSGetStreamsByMeta(meta, callback) {
 }
 
 
-function SSFindStreams(ref, callback)
+function SSFindStreams(objectRef, callback)
 {
   SSStreamCall('event.findstreams', {
-    object_ref: ref
+    object_ref: objectRef
+  }, callback);
+}
+
+function SSFindEvents(objectRef, callback)
+{
+  SSStreamCall('event.findevents', {
+    object_ref: objectRef
   }, callback);
 }
 

@@ -177,6 +177,12 @@ var SSView = new Class({
   },
   
   
+  getName: function()
+  {
+    return this.elId();
+  },
+  
+  
   elId: function()
   {
     return this.element.getProperty('id');

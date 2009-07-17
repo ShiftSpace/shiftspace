@@ -842,12 +842,11 @@ var SSCollection = new Class({
       
     Parameters:
       callback - a function.
-      suppressEvent - a boolean value.
       
     Returns: 
       A payload object.
   */
-  read: function(callback, suppressEvent)
+  read: function(callback)
   {
     this.setIsReading(true);
     this.initializeReadFns();
@@ -861,7 +860,7 @@ var SSCollection = new Class({
         this.setIsUnread(false);
         this.setIsReading(false);
         this.clearOnReadFns();
-        this.onRead(suppressEvent);
+        this.onRead(data);
         if(callback && $type(callback) == 'function') callback(data);
       }.bind(this)
     });
@@ -1123,13 +1122,10 @@ var SSCollection = new Class({
   /*
     Function: onRead 
       Fires the onLoad event 
-      
-    Parameters:
-      suppressEvent - NOTE: Not being used in the function. Is it Neccessary? - Justin 
   */  
-  onRead: function(suppressEvent)
+  onRead: function(data)
   {
-    this.fireEvent('onLoad');
+    this.fireEvent('onLoad', data);
   },
   
   /*
@@ -1163,7 +1159,7 @@ var SSCollection = new Class({
   {
     // synchronize internal
     this.remove(index);
-    this.fireEvent('onDelete', index);
+    this.fireEvent('onDelete', {data:data, index:index});
   },
   
   /*
@@ -1177,7 +1173,7 @@ var SSCollection = new Class({
   onUpdate: function(data, index)
   {
     this.__array[index] = $merge(this.__array[index], data);
-    this.fireEvent('onUpdate', index);
+    this.fireEvent('onUpdate', {data:this.__array[index], index:index});
   },
   
   /*
@@ -1207,7 +1203,7 @@ var SSCollection = new Class({
   {
     var index = this.byId(id);
     this.__array[index] = $merge(this.__array[index], data);
-    this.fireEvent('onUpdateById', index);
+    this.fireEvent('onUpdateById', {data:this.__array[index], index: index});
   },
   
   /*
