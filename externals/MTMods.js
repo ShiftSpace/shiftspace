@@ -31,6 +31,46 @@ Array.implement({
   }
 });
 
+/*
+var verify = function(fn) {
+   return function() {
+      var args = $A(arguments);
+      if($type(args[0]) != "string")
+      {
+         throw new Error("First arg is not a string");
+      }
+      else
+      {
+         return fn.apply(null, args);
+      }
+   }
+};
+
+var myfn = function(argA, argB) {
+  console.log("Hello from myfn! argA " + argA + ", argB " + argB);
+}.decorate(verify);
+
+myfn("foo", "bar");
+myfn(2, "bar");
+*/
+
+Function.implement({
+  decorate: function()
+  {
+    var decorators = $A(arguments);
+    var resultFn = this;
+    decorator = decorators.pop();
+    
+    while(decorator)
+    {
+      resultFn = decorator(resultFn);
+      decorator = decorators.pop();
+    }
+    
+    return resultFn;
+  }
+});
+
 function $msg(methodName) {
   var rest = $A(arguments).drop(1);
   return function(obj) {
