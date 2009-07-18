@@ -45,5 +45,5 @@ Element.implement({
     if ($(this).currentStyle) return $(this).currentStyle[property.camelCase()];
     var computed = $(this).getDocument().defaultView.getComputedStyle($(this), null);
     return (computed) ? computed.getPropertyValue([property.hyphenate()]) : null;
-  },
+  }
 });

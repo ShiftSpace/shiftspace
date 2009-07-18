@@ -27,7 +27,7 @@ Array.implement({
     {
       if(this[i] != ary[i]) return false;
     }
-    return true
+    return true;
   }
 });
 

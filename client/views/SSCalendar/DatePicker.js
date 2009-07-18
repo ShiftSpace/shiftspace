@@ -241,37 +241,14 @@ var DatePicker;
 (function(){
   
   DatePicker = new Class({
+    
     Implements: [Options, Events, StyleWriter],
+    
     options: {
       format: "%x",
-      defaultCss: 'div.calendarHolder table.cal {margin-right: 15px !important;margin-right: 8px;width: 205px;}'+
-        'div.calendarHolder td {text-align:center;}'+
-        'div.calendarHolder tr.dayRow td {padding: 2px;width: 22px;cursor: pointer;}'+
-        'div.calendarHolder table.datePicker * {font-size:11px;line-height:16px;}'+
-        'div.calendarHolder table.datePicker {margin: 0;padding:0 5px;float: left;}'+
-        'div.calendarHolder table.datePicker table.cal td {cursor:pointer;}'+
-        'div.calendarHolder tr.dateNav {font-weight: bold;height:22px;margin-top:8px;}'+
-        'div.calendarHolder tr.dayNames {height: 23px;}'+
-        'div.calendarHolder tr.dayNames td {color:#666;font-weight:700;border-bottom:1px solid #ddd;}'+
-        'div.calendarHolder table.datePicker tr.dayRow td:hover {background:#ccc;}'+
-        'div.calendarHolder table.datePicker tr.dayRow td {margin: 1px;}'+
-        'div.calendarHolder td.today {color:#bb0904;}'+
-        'div.calendarHolder td.otherMonthDate {border:1px solid #fff;color:#ccc;background:#f3f3f3 !important;margin: 0px !important;}'+
-        'div.calendarHolder td.selectedDate {border: 1px solid #20397b;background:#dcddef;margin: 0px !important;}'+
-        'div.calendarHolder a.leftScroll, div.calendarHolder a.rightScroll {cursor: pointer; color: #000}'+
-        'div.datePickerSW div.body {height: 160px !important;height: 149px;}'+
-        'div.datePickerSW .clearfix:after {content: ".";display: block;height: 0;clear: both;visibility: hidden;}'+
-        'div.datePickerSW .clearfix {display: inline-table;}'+
-        '* html div.datePickerSW .clearfix {height: 1%;}'+
-        'div.datePickerSW .clearfix {display: block;}',
       calendarId: false,
-      updateOnBlur: true,
-      additionalShowLinks: [],
-      showOnInputFocus: true,
       useDefaultCss: true,
-      hideCalendarOnPick: true,
-      weekStartOffset: 0,
-      showMoreThanOne: true,
+      weekStartOffset: 0
     },
     
     
@@ -279,12 +256,18 @@ var DatePicker;
     {
       this.today = new Date();
       this.setOptions(options);
-      if (this.options.useDefaultCss) this.createStyle(this.options.defaultCss, 'datePickerStyle');
 
-      this.whens = this.whens || ['start'];
-      if(this.options.whens) this.whens = this.whens.combine(this.options.when);
+      this.whens = $H({selected: ['start']});
       
+      if(this.options.whens)
+      {
+        this.whens = $merge(this.whens, this.options.whens);
+      }
+      
+      if(this.options.whenClasses) this.whenClasses = $merge(this.whenClasses, this.options.whenClasses);
+
       if (!this.calendarId) this.calendarId = "popupCalendar" + new Date().getTime();
+      
       var calendar = this.getCalendar();
       this.show()
       calendar.inject(element)
@@ -292,24 +275,26 @@ var DatePicker;
 
     
     calWidth: 280,
-    inputDates: {},
     selectedDates: {},
+    whenClasses: {selected: "selectedDate"},
     
-    
-    getDates: function(dates, getFromInputs)
+    getDates: function(dates)
     {
       var d = {};
-      if (!getFromInputs) dates = dates || this.selectedDates;
-      this.whens.each(function(when) {
-        switch($type(dates))
-        {
-          case "object":
-            if (dates) d[when] = dates[when] ? dates[when] : when;
-            break;
-          default:
-            break;
-        }
-        if (!d[when]) d[when] = this.selectedDates[when] || new Date();
+      dates = dates || this.selectedDates;
+      
+      this.whens.each(function(whens, whenType) {
+        whens.each(function(when) {
+          switch($type(dates))
+          {
+            case "object":
+              if (dates) d[when] = dates[when] ? dates[when] : when;
+              break;
+            default:
+              break;
+          }
+          if (!d[when]) d[when] = this.selectedDates[when] || new Date();
+        }, this)
       }, this);
       return d;
     },
@@ -319,7 +304,7 @@ var DatePicker;
     {
       if (!$chk(val)) return null;
       var date = Date.parse(val.trim());
-      return isNaN(date)?null:date;
+      return isNaN(date) ? null : date;
     },
     
     
@@ -342,21 +327,21 @@ var DatePicker;
         });
         var tbody = new Element('tbody').inject(cal);
         var rows = [];
-        (8).times(function(i){
+        (8).times(function(i) {
           var row = new Element('tr').inject(tbody);
-          (7).times(function(i){
+          (7).times(function(i) {
             var td = new Element('td').inject(row).set('html', '&nbsp;');
           });
         });
         var rows = tbody.getElements('tr');
         rows[0].addClass('dateNav');
         rows[1].addClass('dayNames');
-        (6).times(function(i){
+        (6).times(function(i) {
           rows[i+2].addClass('dayRow');
         });
         this.rows = rows;
         var dayCells = rows[1].getElements('td');
-        dayCells.each(function(cell, i){
+        dayCells.each(function(cell, i) {
           cell.firstChild.data = Date.getMsg('days')[(i + this.options.weekStartOffset) % 7].substring(0,3);
         }, this);
         [6,5,4,3].each(function(i){ rows[0].getElements('td')[i].dispose() });
@@ -382,9 +367,11 @@ var DatePicker;
       SSLog('>>>>>>>>>>>>>>>>>>>> DatePicker Calendar', SSLogForce);
       SSLog(dates, SSLogForce);
       
-      this.whens.each(function(when){
-        this.selectedDates[when] = when == 'start' ? this.today : new Date(when)
-        this.getCalendar(when);
+      this.whens.each(function(whens, whenType) {
+        whens.each(function(when) {
+          this.selectedDates[when] = when == 'start' ? this.today : new Date(when)
+          this.getCalendar(when);
+        }, this);
       }, this);
       
       this.fillCalendar(this.selectedDates.start);
@@ -396,7 +383,7 @@ var DatePicker;
     
     handleScroll: function(e)
     {
-      if (e.target.hasClass('rightScroll')||e.target.hasClass('leftScroll')) 
+      if (e.target.hasClass('rightScroll') || e.target.hasClass('leftScroll')) 
       {
         var newRef = e.target.hasClass('rightScroll')
           ?this.rows[2].getElement('td').refDate - Date.units.day()
@@ -426,7 +413,8 @@ var DatePicker;
       if (this.handleScroll(e)) return;
       if (!e.target.firstChild || !e.target.firstChild.data) return;
       var val = e.target.firstChild.data;
-      if (e.target.refDate) {
+      if (e.target.refDate) 
+      {
         var newDate = new Date(e.target.refDate);
         this.setSelectedDates(e, newDate);
         this.onPick();
@@ -467,19 +455,24 @@ var DatePicker;
       this.rows.each(function(row, i) {
         if (i < 2) return;
         row.getElements('td').each(function(td){
+          
           td.className = '';
           atDate = new Date(td.refDate);
           if (atDate.format("%x") == this.today.format("%x")) td.addClass('today');
-          this.whens.each(function(when){
-            var date = this.selectedDates[when];
-            if (date && atDate.format("%x") == date.format("%x")) {
-              td.addClass('selectedDate');
-              this.fireEvent('selectedDateMatch', [td, when]);
-            }
+          
+          this.whens.each(function(whens, whenType) {
+            whens.each(function(when){
+              var date = this.selectedDates[when];
+              if (date && atDate.format("%x") == date.format("%x")) 
+              {
+                td.addClass(this.whenClasses[whenType]);
+              }
+            }, this);
           }, this);
-          this.fireEvent('rowDateEvaluated', [atDate, td]);
+          
           if (atDate.getMonth() != month) td.addClass('otherMonthDate');
           atDate.setTime(atDate.getTime() + Date.units.day());
+          
         }, this);
       }, this);
     }
