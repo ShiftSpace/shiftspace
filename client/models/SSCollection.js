@@ -79,12 +79,12 @@ function SSCollectionsClearAllPlugins()
 function SSCollectionCheckRead(collectionName)
 {
   return function(fn) {
-    return function() {
+    return function decorator() {
       var args = $A(arguments);
       var coll = SSCollectionForName(collectionName);
       if(coll.isUnread())
       {
-        return coll.read(fn.bind(this, args));
+        return coll.read(decorator.rewind(this, args));
       }
       else
       {
@@ -97,12 +97,12 @@ function SSCollectionCheckRead(collectionName)
 function SSCollectionCheckIsReading(collectionName)
 {
   return function(fn) {
-    return function() {
+    return function decorator() {
       var args = $A(arguments);
       var coll = SSCollectionForName(collectionName);
       if(coll.isUnread())
       {
-        return coll.addOnReadFn(fn.bind(this, args));
+        return coll.addOnReadFn(decorator.rewind(this, args));
       }
       else
       {

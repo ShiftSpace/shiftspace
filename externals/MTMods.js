@@ -132,6 +132,11 @@ Function.implement({
     }
     
     return resultFn;
+  },
+  
+  rewind: function(bind, args)
+  {
+    return this._wrapper.bind(bind, args);
   }
 });
 
