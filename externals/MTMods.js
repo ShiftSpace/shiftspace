@@ -135,6 +135,25 @@ Function.implement({
   }
 });
 
+Class.implement({
+  wrap: function(self, key, method)
+  {
+    if (method._origin) method = method._origin;
+
+    var wrapper = function(){
+      if (method._protected && this._current == null) throw new Error('The method "' + key + '" cannot be called.');
+      var caller = this.caller, current = this._current;
+      this.caller = current; this._current = arguments.callee;
+      var result = method.apply(this, arguments);
+      this._current = current; this.caller = caller;
+      return result;
+    }.extend({_owner: self, _origin: method, _name: key});
+
+    method._wrapper = wrapper;
+    return wrapper;
+  }
+});
+
 function $msg(methodName) {
   var rest = $A(arguments).drop(1);
   return function(obj) {
