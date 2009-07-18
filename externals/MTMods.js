@@ -140,7 +140,8 @@ Function.implement({
   }
 });
 
-Class.implement({
+
+Class.extend({
   wrap: function(self, key, method)
   {
     if (method._origin) method = method._origin;
@@ -158,6 +159,7 @@ Class.implement({
     return wrapper;
   }
 });
+
 
 function $msg(methodName) {
   var rest = $A(arguments).drop(1);
