@@ -83,7 +83,7 @@ class Collections {
     }
   }
   
-  function read($desc) {
+  function read_raw($desc) {
     extract($desc);
         
     if ($properties == '*')
@@ -142,6 +142,17 @@ class Collections {
     }
   }
   
+  function read($desc) {
+    $result = $this->read_raw($desc);
+    foreach ($result as &$row) {
+      if ($row->url) {
+        $row->url_response = file_get_contents($row->url);
+      }
+    }
+
+    return $result;
+  }
+
   function delete($desc) {
     extract($desc);
 
