@@ -3,7 +3,27 @@
 class Base_Server {  
   static private $instance;
   
+  static public function fix_magic_quotes() {
+    function stripslashes_deep(&$value)
+    {
+      $value = is_array($value) ?
+               array_map('stripslashes_deep', $value) :
+               stripslashes($value);
+
+      return $value;
+    }
+
+    if (get_magic_quotes_gpc()) {
+      stripslashes_deep($_GET);
+      stripslashes_deep($_POST);
+      stripslashes_deep($_COOKIE);
+      stripslashes_deep($_REQUEST);
+    }
+  }
+
   static public function singleton($filename, $workingFilename) {
+    Server::fix_magic_quotes();
+
     $name = substr(basename($filename), 0, -4);
     $config = new Ini_Object($filename);
     
