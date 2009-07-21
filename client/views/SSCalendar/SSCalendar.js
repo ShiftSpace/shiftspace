@@ -5,8 +5,9 @@
 // ==/Builder==
 
 var SSCalendar = new Class({
-  name: 'SSCalendar',
+
   Extends: SSView,
+  name: 'SSCalendar',
   
   defaults: function()
   {
