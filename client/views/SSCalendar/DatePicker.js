@@ -265,6 +265,8 @@ var DatePicker;
       }
       
       if(this.options.whenClasses) this.whenClasses = $merge(this.whenClasses, this.options.whenClasses);
+      
+      if(this.options.delegate) this.setDelegate(this.options.delegate);
 
       if (!this.calendarId) this.calendarId = "popupCalendar" + new Date().getTime();
       
@@ -272,6 +274,19 @@ var DatePicker;
       this.show()
       calendar.inject(element)
     },
+    
+    
+    setDelegate: function(delegate)
+    {
+      this.__delegate = delegate;
+    },
+    
+    
+    delegate: function()
+    {
+      return this.__delegate;
+    },
+    
     
     calWidth: 280,
     selectedDates: {},
@@ -343,10 +358,17 @@ var DatePicker;
         (6).times(function(i) {
           rows[i+2].addClass('dayRow');
           rows[i+2].getElements('td').each(function(td) {
+            td.addClass('day');
             td.grab(new Element('span', {'class':'date'}));
             td.grab(new Element('span', {'class':'clock'}));
           });
         });
+        
+        if(this.delegate() && this.delegate().tipOtions)
+        {
+          var options = this.delegate().tipOptions();
+          new Tip(cal.getElements('.day'), options);
+        }
         
         this.rows = rows;
         var dayCells = rows[1].getElements('td');
@@ -389,8 +411,7 @@ var DatePicker;
       
       this.whens.each(function(whens, whenType) {
         whens.each(function(when) {
-          this.selectedDates[when] = when == 'start' ? this.today : new Date(when)
-          this.getCalendar(when);
+          this.selectedDates[when] = when == 'start' ? this.today : new Date(when);
         }, this);
       }, this);
       
