@@ -331,7 +331,8 @@ var DatePicker;
         (8).times(function(i) {
           var row = new Element('tr').inject(tbody);
           (7).times(function(i) {
-            var td = new Element('td').inject(row).set('html', '&nbsp;');
+            var td = new Element('td').inject(row);
+            td.set("html", "&nbsp;");
           });
         });
         
@@ -341,6 +342,10 @@ var DatePicker;
         
         (6).times(function(i) {
           rows[i+2].addClass('dayRow');
+          rows[i+2].getElements('td').each(function(td) {
+            td.grab(new Element('span', {'class':'date'}));
+            td.grab(new Element('span', {'class':'clock'}));
+          });
         });
         
         this.rows = rows;
@@ -455,7 +460,7 @@ var DatePicker;
         if (i < 2) return;
         row.getElements('td').each(function(td){
           atDate.set('hours', hours);
-          td.firstChild.data = atDate.getDate();
+          td.getElement('.date').set('text', atDate.getDate());
           td.refDate = atDate.getTime();
           atDate.setTime(atDate.getTime() + Date.units.day());
         }, this);
