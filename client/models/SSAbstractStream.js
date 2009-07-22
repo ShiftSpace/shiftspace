@@ -26,13 +26,34 @@ var SSAbstractStream = new Class({
     
     if(this.options.createStream)
     {
-      SSCreateStream(this.options.displayName,
-                     this.options.uniqueName,
-                     this.options.objectRef,
-                     this.options.private,
-                     this.options.meta,
-                     this.onCreate.bind(this));
+      this.create(options);
     }
+  },
+  
+  
+  isUnique: function(uniqueName, trueCb, falseCb)
+  {
+    SSFindStreamByUniqueName(uniqueName, function(json) {
+      if(!json.data)
+      {
+        trueCb();
+      }
+      else
+      {
+        falseCb(json.data);
+      }
+    });
+  },
+  
+  
+  create: function(options)
+  {
+    SSCreateStream(this.options.displayName,
+                   this.options.uniqueName,
+                   this.options.objectRef,
+                   this.options.private,
+                   this.options.meta,
+                   this.onCreate.bind(this));
   },
   
   

@@ -61,6 +61,13 @@ function SSFindStreams(objectRef, callback)
   }, callback);
 }
 
+function SSFindStreamByUniqueName(uniqueName, callback)
+{
+  SSStreamCall('event.findstreambyuniquename', {
+    unique_name: uniqueName
+  }, callback);
+}
+
 function SSFindEvents(objectRef, callback)
 {
   SSStreamCall('event.findevents', {

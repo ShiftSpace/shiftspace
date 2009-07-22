@@ -13,7 +13,7 @@ var SSTag = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      createStream: true,
+      createStream: false,
       private: 0
     });
   },
@@ -27,6 +27,17 @@ var SSTag = new Class({
     options.uniqueName = tagName;
     
     this.parent(options);
+    
+    this.isUnique(tagName, 
+                  this.create.bind(this, [options]), 
+                  this.notUnique.bind(this));
+  },
+  
+  
+  notUnique: function(stream)
+  {
+    this.setId(stream.id);
+    return;
   },
   
   
