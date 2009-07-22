@@ -30,15 +30,17 @@ var SSTag = new Class({
   },
   
   
-  addTag: function(objectRef)
+  addTag: function(objectRef, options)
   {
-    this.postEvent({
+    var defaults = {
       displayString: null,
       userId: ShiftSpace.User.getId(),
       userName: ShiftSpace.User.getUsername(),
       objectRef: objectRef,
       hasReadStatus: false
-    }, this.onAddTag.bind(this));
+    };
+    
+    this.postEvent($merge(defaults, options), this.onAddTag.bind(this));
   },
   
   
@@ -50,6 +52,8 @@ var SSTag = new Class({
   
   onAddTag: function(json)
   {
+    SSLog('onAddTag', SSLogForce);
+    SSLog('json', SSLogForce);
   },
   
   
@@ -67,6 +71,8 @@ var SSTag = new Class({
   
   onRemoveTag: function(json)
   {
+    SSLog('onRemoveTag', SSLogForce);
+    SSLog(json, SSLogForce);
   }
   
 });
