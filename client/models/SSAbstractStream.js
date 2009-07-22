@@ -83,7 +83,7 @@ var SSAbstractStream = new Class({
   
   feed: function(callback)
   {
-    
+    SSGetFeed(this.id(), callback);
   },
   
   
