@@ -80,7 +80,6 @@ div.calendarHolder td.otherMonthDate
 div.calendarHolder td.selectedDate 
 {
   border: 1px solid #20397b;
-  background:#dcddef;
   margin: 0px !important;
 }
 
