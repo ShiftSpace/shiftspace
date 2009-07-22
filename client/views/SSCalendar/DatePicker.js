@@ -257,11 +257,11 @@ var DatePicker;
       this.today = new Date();
       this.setOptions(options);
 
-      this.whens = $H({selected: ['start']});
+      this.whens = {selected: ['start']};
       
       if(this.options.whens)
       {
-        this.whens = $merge(this.whens, this.options.whens);
+        this.whens = $H($merge(this.whens, this.options.whens));
       }
       
       if(this.options.whenClasses) this.whenClasses = $merge(this.whenClasses, this.options.whenClasses);
@@ -363,9 +363,6 @@ var DatePicker;
     {
       this.selectedDates = {};
       var dates = this.getDates(null, true);
-      
-      SSLog('>>>>>>>>>>>>>>>>>>>> DatePicker Calendar', SSLogForce);
-      SSLog(dates, SSLogForce);
       
       this.whens.each(function(whens, whenType) {
         whens.each(function(when) {
