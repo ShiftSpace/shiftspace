@@ -272,7 +272,6 @@ var DatePicker;
       this.show()
       calendar.inject(element)
     },
-
     
     calWidth: 280,
     selectedDates: {},
@@ -327,31 +326,50 @@ var DatePicker;
         });
         var tbody = new Element('tbody').inject(cal);
         var rows = [];
+
+        // build the grid
         (8).times(function(i) {
           var row = new Element('tr').inject(tbody);
           (7).times(function(i) {
             var td = new Element('td').inject(row).set('html', '&nbsp;');
           });
         });
+        
         var rows = tbody.getElements('tr');
         rows[0].addClass('dateNav');
         rows[1].addClass('dayNames');
+        
         (6).times(function(i) {
           rows[i+2].addClass('dayRow');
         });
+        
         this.rows = rows;
         var dayCells = rows[1].getElements('td');
         dayCells.each(function(cell, i) {
           cell.firstChild.data = Date.getMsg('days')[(i + this.options.weekStartOffset) % 7].substring(0,3);
         }, this);
+
+        // remove 4 tds from the dateNav
         [6,5,4,3].each(function(i){ rows[0].getElements('td')[i].dispose() });
-        this.prevLnk = rows[0].getElement('td').setStyle('text-align', 'right');
-        this.prevLnk.adopt(new Element('a').set('html', "&lt;").addClass('rightScroll'));
-        this.month = rows[0].getElements('td')[1];
+
+        this.month = rows[0].getElements('td')[0];
+        this.month.addClass('month');
         this.month.set('colspan', 5);
-        this.nextLnk = rows[0].getElements('td')[2].setStyle('text-align', 'left');
-        this.nextLnk.adopt(new Element('a').set('html', '&gt;').addClass('leftScroll'));
+
+        this.prevLnk = rows[0].getElements('td')[1];
+        this.prevLnk.addClass('prevLnk');
+        this.prevLnk.setStyle('text-align', 'right');
+        this.rightScroll = new Element('a').set('html', "&lt;").addClass('rightScroll');
+        this.prevLnk.adopt(this.rightScroll);
+
+        this.nextLnk = rows[0].getElements('td')[2];
+        this.nextLnk.addClass('nextLnk');
+        this.nextLnk.setStyle('text-align', 'left');
+        this.leftScroll = new Element('a').set('html', '&gt;').addClass('leftScroll');
+        this.nextLnk.adopt(this.leftScroll);
+        
         cal.addEvent('click', this.clickCalendar.bind(this));
+        
         this.calendar = cal;
         this.container = new Element('div').adopt(cal).addClass('calendarHolder');
       }
@@ -382,9 +400,7 @@ var DatePicker;
     {
       if (e.target.hasClass('rightScroll') || e.target.hasClass('leftScroll')) 
       {
-        var newRef = e.target.hasClass('rightScroll')
-          ?this.rows[2].getElement('td').refDate - Date.units.day()
-          :this.rows[7].getElements('td')[6].refDate + Date.units.day();
+        var newRef = e.target.hasClass('rightScroll') ? this.rows[2].getElement('td').refDate - Date.units.day() : this.rows[7].getElements('td')[6].refDate + Date.units.day();
         this.fillCalendar(new Date(newRef));
         return true;
       }
@@ -427,11 +443,14 @@ var DatePicker;
       startDate.setDate(1);
       startDate.setTime((startDate.getTime() - (Date.units.day() * (startDate.getDay()))) + 
                         (Date.units.day() * this.options.weekStartOffset));
+                        
       var monthyr = new Element('span', {
         html: Date.getMsg('months')[date.getMonth()] + " " + date.getFullYear()
       });
-      document.id(this.rows[0].getElements('td')[1]).empty().adopt(monthyr);
+      
+      this.month.empty().adopt(monthyr);
       var atDate = startDate.clone();
+      
       this.rows.each(function(row, i){
         if (i < 2) return;
         row.getElements('td').each(function(td){
@@ -441,6 +460,7 @@ var DatePicker;
           atDate.setTime(atDate.getTime() + Date.units.day());
         }, this);
       }, this);
+      
       this.updateSelectors();
     },
     
