@@ -59,15 +59,34 @@
   border-right: 1px solid #aaa;
   background-color: #e3dfdb;
 }
+
+.SSGroupLatestItem{
+ background:#f7f5f2;
+ display:block;
+ height:28px;  
+}
+.SSGroupLatestUser{
+  background:#dcd8d5;
+  height:16px;
+  color:#4b423a;
+  padding:1px 2px;
+}
+
+.SSGroupLatestUser img{
+  float:left;
+}
 #SSGroupLatestCount{
   width: 100%;
   clear:both;
   color:#74665a;
   padding-right:4px;
-  height:24px;
+  padding-top:5px;
+  padding-left:10px;
+  height:19px;
   font-size:11px;
   display:block;
   border-bottom:1px solid #d2d0ce;
+
 }
 
 #SSGroupSummary{
@@ -99,7 +118,7 @@
 #SSGroupSummary p{
   color:#74665a;
   font-size:12px;
-  margin-top:-2px;
+  margin-top:-5px;
   line-height:18px;
 } 
 .SSGroupSummaryMore{
