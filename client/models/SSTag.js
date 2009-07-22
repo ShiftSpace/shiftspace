@@ -45,8 +45,6 @@ var SSTag = new Class({
   {
     var defaults = {
       displayString: null,
-      userId: ShiftSpace.User.getId(),
-      userName: ShiftSpace.User.getUsername(),
       objectRef: objectRef,
       hasReadStatus: false
     };
