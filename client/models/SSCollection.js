@@ -1081,10 +1081,9 @@ var SSCollection = new Class({
   {
     return this.transact('delete', {
       table: this.table(),
-      values: data,
       constraints: $merge(this.constraints(), {id: id}),
       onComplete: function(rx) {
-        this.onDeleteById(data, id);
+        this.onDeleteById(rx, id);
         this.dirtyTheViews();
       }.bind(this),
       onFailure: function(data) {
