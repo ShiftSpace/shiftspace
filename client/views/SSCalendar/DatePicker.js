@@ -364,7 +364,7 @@ var DatePicker;
           });
         });
         
-        if(this.delegate() && this.delegate().tipOtions)
+        if(this.delegate() && this.delegate().tipOptions)
         {
           var options = this.delegate().tipOptions();
           new Tip(cal.getElements('.day'), options);
