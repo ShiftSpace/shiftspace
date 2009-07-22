@@ -89,13 +89,11 @@ function req(options)
   
   if(options.json)
   {
+    options.data = JSON.encode(options.data);
     delete options.json;
-    new Request.JSON(options).send((options.data && JSON.encode(options.data)) || null);
   }
-  else
-  {
-    new Request.JSON(options).send()
-  }
+
+  new Request.JSON(options).send()
 }
 
 function SSGetData(json)

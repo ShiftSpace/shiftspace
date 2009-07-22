@@ -1,16 +1,17 @@
-// Extract an array of keys
-/*
 Hash.implement({
   extract: function(ary)
   {
     var result = $H();
     ary.each(function(key) {
-      result[key] = this[key];
-      delete this[key];
-    });
+      if(this[key])
+      {
+        result[key] = this[key];
+        delete this[key];
+      }
+    }, this);
+    return result;
   }
 });
-*/
 
 
 var ApplicationServer = new Class({
@@ -47,7 +48,8 @@ var ApplicationServer = new Class({
     return v != null;
   },
   
-  urlOrder: ['resource', 'id', 'action', 'data'],
+  
+  urlOrder: ['resource', 'id', 'action'],
   
   
   genUrl: function(parts)
@@ -62,12 +64,14 @@ var ApplicationServer = new Class({
   
   call: function(options)
   {
-    var urlParts = $H(options).extract(urlOrder);
+    var urlParts = $H(options).extract(this.urlOrder);
     
     options = $merge(options, {
       url: this.server() + this.genUrl(urlParts),
       emulation: false
     });
+    
+    console.log(this.genUrl(urlParts));
     
     if(options.json)
     {
@@ -116,5 +120,14 @@ var ApplicationServer = new Class({
     return this.call($merge(options, {method:'get'}));
   }
 
-
 });
+
+
+var confirm = promise(function (value) {
+  console.log(value);
+});
+
+/*
+var app = new ApplicationServer();
+confirm(app.post({action:"login", data:fakemary, json:true}))
+*/
