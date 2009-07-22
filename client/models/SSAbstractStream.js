@@ -101,6 +101,7 @@ var SSAbstractStream = new Class({
                         options.userName,
                         options.objectRef,
                         options.hasReadStatus,
+                        options.url,
                         this.onPostEvent.bind(this));
   },
   

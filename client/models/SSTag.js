@@ -29,7 +29,7 @@ var SSTag = new Class({
     this.parent(options);
     
     this.isUnique(tagName, 
-                  this.create.bind(this, [options]), 
+                  this.create.bind(this, [options]),
                   this.notUnique.bind(this));
   },
   
