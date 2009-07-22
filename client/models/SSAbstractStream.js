@@ -57,9 +57,20 @@ var SSAbstractStream = new Class({
   },
   
   
+  coll: function()
+  {
+    return this.__coll;
+  },
+  
+  
   setId: function(id)
   {
     this.__id = id;
+    this.__coll = new SSCollection({
+      table: "!"+this.__id,
+      orderby: [">", "created"],
+      properties: "*"
+    });
   },
   
   
@@ -83,7 +94,10 @@ var SSAbstractStream = new Class({
   
   feed: function(callback)
   {
-    SSGetFeed(this.id(), callback);
+    if(this.coll())
+    {
+      this.coll().read(callback);
+    }
   },
   
   

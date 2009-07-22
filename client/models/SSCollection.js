@@ -1076,6 +1076,29 @@ var SSCollection = new Class({
     });
   },
   
+  
+  deleteById: function(id, bulk)
+  {
+    return this.transact('delete', {
+      table: this.table(),
+      values: data,
+      constraints: $merge(this.constraints(), {id: id}),
+      onComplete: function(rx) {
+        this.onDeleteById(data, id);
+        this.dirtyTheViews();
+      }.bind(this),
+      onFailure: function(data) {
+        this.onFailure('delete', data, index);
+      }.bind(this)
+    }, bulk);
+  },
+  
+  
+  onDeleteById: function(data, id)
+  {
+    this.fireEvent('onDeleteById', {data:data, id: id});
+  },
+  
   /*
     Function: update
       Updates the collection by index. Accepts the updated array of data, the index to insert the new data, and a bulk. Inserts the new data into the Collection array at the given index.  
