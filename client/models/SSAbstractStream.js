@@ -66,7 +66,7 @@ var SSAbstractStream = new Class({
   setId: function(id)
   {
     this.__id = id;
-    this.__coll = new SSCollection({
+    this.__coll = new SSCollection("stream:"+this.__id, {
       table: "!"+this.__id,
       orderby: [">", "created"],
       properties: "*"
