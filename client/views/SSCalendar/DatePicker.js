@@ -367,7 +367,7 @@ var DatePicker;
         if(this.delegate() && this.delegate().tipOptions)
         {
           var options = this.delegate().tipOptions();
-          new Tip(cal.getElements('.day'), options);
+          new Tips(cal.getElements('.day'), options);
         }
         
         this.rows = rows;
