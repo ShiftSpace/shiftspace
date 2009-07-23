@@ -5,8 +5,10 @@
 // ==/Builder==
 
 var SSAutocomplete = new Class({
+
   name: 'SSAutocomplete',
   Extends: SSView,
+
   
   defaults: function() {
     return $merge(this.parent(), {
@@ -15,6 +17,7 @@ var SSAutocomplete = new Class({
       multiple: true
     })
   },
+
 
   initialize: function(el, options)
   {
@@ -45,4 +48,5 @@ var SSAutocomplete = new Class({
     if(this.element) return this.element.getProperty('value');
     return null;
   }
+  
 });
