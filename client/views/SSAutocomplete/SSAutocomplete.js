@@ -20,12 +20,12 @@ var SSAutocomplete = new Class({
   {
     this.parent(el, options);
     
-    SSFindStreams(this.options.streamMeta, function(result) {
+    SSFindStreams(this.options.streamMeta, null, function(result) {
       this.tags = result.data.map(function(stream) {
         return stream.stream_name
       })
       
-      new Autocompleter.Local(el, this.tags, this.options)
+      new Autocompleter.Local(el, this.tags, this.options);
     }.bind(this))    
   },
 
