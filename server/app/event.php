@@ -230,7 +230,7 @@ class Event {
   public function findstreams() {
     extract($_REQUEST);
     if ($this->server->user) {
-      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND user_id = ".$this->server->user['id'];
+      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND streampermission.user_id = ".$this->server->user['id'];
       $permissions_clause = "OR (stream.private = 1 AND streampermission.level >= 1)";
     }
     else {
