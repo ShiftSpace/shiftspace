@@ -73,12 +73,6 @@ class Event {
     return $object->get();  
   }
 
-  public function getstreams() {
-    extract($_REQUEST);
-    
-    return $this->server->db->rows("SELECT * FROM stream WHERE meta=:meta AND object_ref=:object_ref", compact('meta', 'object_ref'));
-  }
-
   public function findstreambyuniquename() {
     extract($_REQUEST);
     
@@ -244,7 +238,21 @@ class Event {
       $permissions_clause = "";
     }
     
-    return new Response($this->server->db->rows("SELECT * FROM stream $user_clause WHERE (stream.private = 0 $permissions_clause) AND object_ref=:object_ref", compact('object_ref')));
+    $options = array();
+
+    $spec_clause = '';
+
+    if (isset($meta) && $meta) {
+      $spec_clause .= " AND meta=:meta";
+      $options['meta'] = $meta;
+    }
+
+    if (isset($object_ref) && $object_ref) {
+      $spec_clause .= " AND object_ref=:object_ref";
+      $options['object_ref'] = $object_ref;
+    }
+
+    return new Response($this->server->db->rows("SELECT * FROM stream $user_clause WHERE (stream.private = 0 $permissions_clause) $spec_clause", $options));
   }
 
   public function findstreamswithevent() {
