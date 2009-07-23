@@ -24,7 +24,7 @@ var ShiftServer = new Class({
 
   join: function(userData)
   {
-    return this.post({action:"join", data:fakemary, json: true});
+    return this.post({action:"join", data:userData, json: true});
   }
 
 });
