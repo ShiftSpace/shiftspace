@@ -42,6 +42,13 @@ var SSTag = new Class({
   },
   
   
+  onCreate: function(json)
+  {
+    this.parent(json);
+    SSPostNotification('tagCreated');
+  },
+  
+  
   notUnique: function(stream)
   {
     this.setId(stream.id);

@@ -19,15 +19,21 @@ var SSAutocomplete = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    
-    SSFindStreams(this.options.streamMeta, null, function(result) {
-      this.tags = result.data.map(function(stream) {
-        return stream.stream_name
-      })
-      
-      new Autocompleter.Local(el, this.tags, this.options);
-    }.bind(this))    
+    this.getTags();
+    SSAddObserver(this, 'tagCreated', this.getTags.bind(this));
   },
+  
+  
+  getTags: function()
+  {
+    SSFindStreams("tag", null, function(result) {
+      var tags = result.data.map(function(stream) {
+        return stream.stream_name
+      });
+      this.autocompleter = new Autocompleter.Local(this.element, tags, this.options);
+    }.bind(this))
+  },
+  
 
   setValue: function(value)
   {
