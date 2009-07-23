@@ -25,7 +25,12 @@ var SSTag = new Class({
     
     options.displayName = tagName;
     options.uniqueName = tagName;
-    
+    if(options.category)
+    {
+      delete options.category;
+      options.superstream = true;
+    }
+
     this.parent(options);
     
     this.isUnique(tagName, 
@@ -41,10 +46,13 @@ var SSTag = new Class({
   },
   
   
-  addTag: function(objectRef, options)
+  addTag: function(id, resource, options)
   {
+    var objectRef = [resource, id].join(":");
+    
     var defaults = {
       displayString: null,
+      uniqueName: objectRef,
       objectRef: objectRef,
       hasReadStatus: false
     };
@@ -66,17 +74,17 @@ var SSTag = new Class({
   },
   
   
-  removeTag: function(objectRef)
+  removeTag: function(id, resource)
   {
-    this.deleteEvent({
-      displayString: null,
-      userId: ShiftSpace.User.getId(),
-      userName: ShiftSpace.User.getUsername(),
-      objectRef: objectRef,
-      hasReadStatus: false
-    }, this.onAddTag.bind(this));
+    this.deleteEventByObjectRef([resource, id].join(":"));
   },
   
+  
+  onDeleteEvent: function(json)
+  {
+    this.onRemoveTag(json);
+  },
+
   
   onRemoveTag: function(json)
   {

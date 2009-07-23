@@ -16,14 +16,15 @@ function SSGetFeed(streamId, callback)
 }
 
 
-function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, meta, callback)
+function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, meta, superStream, callback)
 { 
   SSStreamCall('event.createstream', {
     stream_name: displayName,
     unique_name: uniqueName,
     object_ref: objectRef,
     private: isPrivate,
-    meta: meta
+    meta: meta,
+    superstream: superStream
   }, callback);
 }
 
