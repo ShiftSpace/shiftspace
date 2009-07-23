@@ -18,7 +18,7 @@ var SSAutocomplete = new Class({
 
   initialize: function(el, options)
   {
-    this.parent(el, options);
+    this.parent(el, options);?
     
     SSFindStreams(this.options.streamMeta, function(result) {
       this.tags = result.data.map(function(stream) {
