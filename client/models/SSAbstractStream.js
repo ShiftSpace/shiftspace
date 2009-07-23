@@ -16,6 +16,7 @@ var SSAbstractStream = new Class({
       objectRef: null,
       private: 1,
       createStream: false,
+      superStream: false
     }
   },
 
@@ -53,6 +54,7 @@ var SSAbstractStream = new Class({
                    this.options.objectRef,
                    this.options.private,
                    this.options.meta,
+                   this.options.superStream,
                    this.onCreate.bind(this));
   },
   
@@ -112,12 +114,13 @@ var SSAbstractStream = new Class({
     if(this.coll())
     {
       var options = {
-        display_string: options.displayString,
-        user_id: options.userId,
-        user_name: options.userName,
-        object_ref: options.objectRef,
-        has_read_status: options.hasReadStatus,
-        url: url
+        display_string: _options.displayString,
+        user_id: _options.userId,
+        user_name: _options.userName,
+        object_ref: _options.objectRef,
+        has_read_status: (_options.hasReadStatus ? 1 : 0),
+        unique_name: _options.uniqueName,
+        url: _options.url
       };
       
       this.coll().create(options, this.onPostEvent.bind(this));
@@ -154,6 +157,14 @@ var SSAbstractStream = new Class({
     {
       this.coll().deleteById(id, this.onDeleteEvent.bind(this));
     }
+  },
+  
+  
+  deleteEventByObjectRef: function(objectRef)
+  {
+    SSFindEvents(objectRef, function(ary) {
+      this.deleteEvent(ary[0].id);
+    }.bind(this));
   },
   
   

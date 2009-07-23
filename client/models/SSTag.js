@@ -25,10 +25,18 @@ var SSTag = new Class({
     
     options.displayName = tagName;
     options.uniqueName = tagName;
-    
+    options.meta = "tag";
+
+    if(options.category)
+    {
+      delete options.category;
+      options.meta = "category";
+      options.superStream = true;
+    }
+
     this.parent(options);
     
-    this.isUnique(tagName, 
+    this.isUnique(tagName,
                   this.create.bind(this, [options]),
                   this.notUnique.bind(this));
   },
@@ -41,10 +49,13 @@ var SSTag = new Class({
   },
   
   
-  addTag: function(objectRef, options)
+  addTag: function(id, resource, options)
   {
+    var objectRef = (resource) ? [resource, id].join(":") : id;
+    
     var defaults = {
       displayString: null,
+      uniqueName: objectRef,
       objectRef: objectRef,
       hasReadStatus: false
     };
@@ -66,17 +77,18 @@ var SSTag = new Class({
   },
   
   
-  removeTag: function(objectRef)
+  removeTag: function(id, resource)
   {
-    this.deleteEvent({
-      displayString: null,
-      userId: ShiftSpace.User.getId(),
-      userName: ShiftSpace.User.getUsername(),
-      objectRef: objectRef,
-      hasReadStatus: false
-    }, this.onAddTag.bind(this));
+    var objectRef = (resource) ? [resource, id].join(":") : id; 
+    this.deleteEventByObjectRef(objectRef);
   },
   
+  
+  onDeleteEvent: function(json)
+  {
+    this.onRemoveTag(json);
+  },
+
   
   onRemoveTag: function(json)
   {
