@@ -54,6 +54,7 @@ var SSAbstractStream = new Class({
                    this.options.objectRef,
                    this.options.private,
                    this.options.meta,
+                   this.options.superStream,
                    this.onCreate.bind(this));
   },
   
