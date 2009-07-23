@@ -60,7 +60,7 @@ class Event {
         throw new Exception("Stream already exists with this unique_name");
     }
     
-    $object->set(compact('private', 'stream_name', 'user_id', 'created_by_name', 'object_ref', 'unique_name', 'meta'));
+    $object->set(compact('private', 'stream_name', 'user_id', 'created_by_name', 'object_ref', 'unique_name', 'meta', 'superstream'));
     $this->server->db->save($object);
     
     $permission = new StreamPermission_Object();
