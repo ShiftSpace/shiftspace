@@ -22,9 +22,9 @@ function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, meta, sup
     stream_name: displayName,
     unique_name: uniqueName,
     object_ref: objectRef,
-    private: isPrivate,
+    private: isPrivate ? 1 : 0,
     meta: meta,
-    superstream: superStream
+    superstream: superStream ? 1 : 0,
   }, callback);
 }
 
@@ -108,7 +108,7 @@ function SSPostEventToStream(streamId, displayString, createdBy, createdByName, 
     created_by_name: createdByName,
     object_ref: objectRef,
     url: url,
-    has_read_status: hasReadStatus
+    has_read_status: hasReadStatus ? 1 : 0
   }, callback);
 }
 

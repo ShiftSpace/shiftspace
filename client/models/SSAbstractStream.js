@@ -118,9 +118,9 @@ var SSAbstractStream = new Class({
         user_id: _options.userId,
         user_name: _options.userName,
         object_ref: _options.objectRef,
-        has_read_status: _options.hasReadStatus,
+        has_read_status: (_options.hasReadStatus ? 1 : 0),
         unique_name: _options.uniqueName,
-        url: url
+        url: _options.url
       };
       
       this.coll().create(options, this.onPostEvent.bind(this));

@@ -25,15 +25,18 @@ var SSTag = new Class({
     
     options.displayName = tagName;
     options.uniqueName = tagName;
+    options.meta = "tag";
+
     if(options.category)
     {
       delete options.category;
-      options.superstream = true;
+      options.meta = "category";
+      options.superStream = true;
     }
 
     this.parent(options);
     
-    this.isUnique(tagName, 
+    this.isUnique(tagName,
                   this.create.bind(this, [options]),
                   this.notUnique.bind(this));
   },
@@ -48,7 +51,7 @@ var SSTag = new Class({
   
   addTag: function(id, resource, options)
   {
-    var objectRef = [resource, id].join(":");
+    var objectRef = (resource) ? [resource, id].join(":") : id;
     
     var defaults = {
       displayString: null,
@@ -76,7 +79,8 @@ var SSTag = new Class({
   
   removeTag: function(id, resource)
   {
-    this.deleteEventByObjectRef([resource, id].join(":"));
+    var objectRef = (resource) ? [resource, id].join(":") : id; 
+    this.deleteEventByObjectRef(objectRef);
   },
   
   
