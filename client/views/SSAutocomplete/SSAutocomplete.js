@@ -20,7 +20,7 @@ var SSAutocomplete = new Class({
   {
     this.parent(el, options);
     
-    SSGetStreamsByMeta(this.options.streamMeta, function(result) {
+    SSFindStreams(this.options.streamMeta, function(result) {
       this.tags = result.data.map(function(stream) {
         return stream.stream_name
       })
