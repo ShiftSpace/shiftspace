@@ -73,7 +73,7 @@ class GlobalCalls {
     foreach ($streamids as $streamid) {
       $stream = $this->server->db->load("stream($streamid)");
 
-      if ($stream->meta == 'superstream') {
+      if ($stream->superstream) {
         $substreamevents = $this->server->db->rows("SELECT object_ref FROM event WHERE stream_id=:streamid", compact('streamid'));
         foreach ($substreamevents as $substreamevent) {
           $new[] = $substreamevent->object_ref;
