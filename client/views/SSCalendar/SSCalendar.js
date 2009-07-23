@@ -5,24 +5,20 @@
 // ==/Builder==
 
 var SSCalendar = new Class({
-  name: 'SSCalendar',
+
   Extends: SSView,
+  name: 'SSCalendar',
+  
+  defaults: function()
+  {
+    return $merge(this.parent(), {
+     displayOptions: null 
+    });
+  },
 
   initialize: function(el, options)
   {
     this.parent(el, options);
-    
-    SSGetAllFeeds(function(feed) {
-      SSLog('xxxx')
-      SSLog(feed)
-      
-      new DatePicker(this.element, {
-        whens: feed.filter(function(event) {
-          return event.datetime_ref
-        }).map(function(event) {
-          return event.datetime_ref
-        })
-      })
-    });
+    new DatePicker(this.element, this.options.displayOptions);
   }
 });

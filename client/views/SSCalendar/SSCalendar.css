@@ -1,21 +1,120 @@
-div.calendarHolder table.cal {margin-right: 15px !important;margin-right: 8px;width: 205px;}
-div.calendarHolder td {text-align:center;}
-div.calendarHolder tr.dayRow td {padding: 0px;width: 22px;cursor: pointer;}
-div.calendarHolder table.datePicker * {font-size:11px;line-height:16px;}
-div.calendarHolder table.datePicker {margin: 0;padding:0 5px;float: left;}
-div.calendarHolder table.datePicker table.cal td {cursor:pointer;}
-div.calendarHolder tr.dateNav {font-weight: bold;height:22px;margin-top:8px;}
-div.calendarHolder tr.dayNames {height: 23px;}
-div.calendarHolder tr.dayNames td {color:#666;font-weight:700;border-bottom:1px solid #ddd;}
-div.calendarHolder table.datePicker tr.dayRow td:hover {background:#ccc;}
-div.calendarHolder table.datePicker tr.dayRow td {margin: 1px;}
-div.calendarHolder td.today {color:#bb0904;}
-div.calendarHolder td.otherMonthDate {border:1px solid #fff;color:#ccc;background:#f3f3f3 !important;margin: 0px !important;}
-div.calendarHolder td.selectedDate {border: 1px solid #20397b;background:#dcddef;margin: 0px !important;}
-div.calendarHolder a.leftScroll, div.calendarHolder a.rightScroll {cursor: pointer; color: #000}
-div.datePickerSW div.body {height: 160px !important;height: 149px;}
-div.datePickerSW .clearfix:after {content: ".";display: block;height: 0;clear: both;visibility: hidden;}
-div.datePickerSW .clearfix {display: inline-table;}
-* html div.datePickerSW .clearfix {height: 1%;}
-div.datePickerSW .clearfix {display: block;}
+div.calendarHolder table.cal 
+{
+  margin-right: 15px !important;
+  margin-right: 8px;
+  width: 205px;
+}
 
+div.calendarHolder td 
+{
+  text-align:center;
+}
+
+div.calendarHolder tr.dayRow td 
+{
+  padding: 0px;
+  width: 22px;
+  cursor: pointer;
+}
+
+div.calendarHolder table.datePicker * 
+{
+  font-size:11px;
+  line-height:16px;
+}
+
+div.calendarHolder table.datePicker 
+{
+  margin: 0;
+  padding:0 5px;
+  float: left;
+}
+
+div.calendarHolder table.datePicker table.cal td 
+{
+  cursor:pointer;
+}
+
+div.calendarHolder tr.dateNav 
+{
+  font-weight: bold;
+  height:22px;
+  margin-top:8px;
+}
+
+div.calendarHolder tr.dayNames 
+{
+  height: 23px;
+}
+
+div.calendarHolder tr.dayNames td 
+{
+  color:#666;
+  font-weight:700;
+  border-bottom:1px solid #ddd;
+}
+
+div.calendarHolder table.datePicker tr.dayRow td:hover 
+{
+  background:#ccc;
+}
+
+div.calendarHolder table.datePicker tr.dayRow td 
+{
+  margin: 1px;
+}
+
+div.calendarHolder td.today 
+{
+  color:#bb0904;
+}
+
+div.calendarHolder td.otherMonthDate 
+{
+  border:1px solid #fff;
+  color:#ccc;
+  background:#f3f3f3 !important;
+  margin: 0px !important;
+}
+
+div.calendarHolder td.selectedDate 
+{
+  border: 1px solid #20397b;
+  margin: 0px !important;
+}
+
+div.calendarHolder a.leftScroll, div.calendarHolder a.rightScroll 
+{
+  cursor: pointer; 
+  color: #000
+}
+
+div.datePickerSW div.body 
+{
+  height: 160px !important;
+  height: 149px;
+}
+
+div.datePickerSW .clearfix:after 
+{
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+div.datePickerSW .clearfix 
+{
+  display: inline-table;
+}
+
+* html div.datePickerSW .clearfix 
+{
+  height: 1%;
+}
+
+div.datePickerSW .clearfix 
+{
+  display: block;
+}

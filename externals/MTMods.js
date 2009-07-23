@@ -123,7 +123,7 @@ Function.implement({
   {
     var decorators = $A(arguments);
     var resultFn = this;
-    decorator = decorators.pop();
+    var decorator = decorators.pop();
     
     while(decorator)
     {
@@ -161,12 +161,14 @@ Class.extend({
 });
 
 
-function $msg(methodName) {
+function $msg(methodName) 
+{
   var rest = $A(arguments).drop(1);
   return function(obj) {
     return obj[methodName].apply(obj, rest);
   };
-};
+}
+
 
 function $get(first, prop) {
   var args = $A(arguments);

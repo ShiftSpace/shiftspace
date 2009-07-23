@@ -13,7 +13,7 @@ var SSTag = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      createStream: true,
+      createStream: false,
       private: 0
     });
   },
@@ -27,18 +27,29 @@ var SSTag = new Class({
     options.uniqueName = tagName;
     
     this.parent(options);
+    
+    this.isUnique(tagName, 
+                  this.create.bind(this, [options]),
+                  this.notUnique.bind(this));
   },
   
   
-  addTag: function(objectRef)
+  notUnique: function(stream)
   {
-    this.postEvent({
+    this.setId(stream.id);
+    return;
+  },
+  
+  
+  addTag: function(objectRef, options)
+  {
+    var defaults = {
       displayString: null,
-      userId: ShiftSpace.User.getId(),
-      userName: ShiftSpace.User.getUsername(),
       objectRef: objectRef,
       hasReadStatus: false
-    }, this.onAddTag.bind(this));
+    };
+    
+    this.postEvent($merge(defaults, options), this.onAddTag.bind(this));
   },
   
   
@@ -50,6 +61,8 @@ var SSTag = new Class({
   
   onAddTag: function(json)
   {
+    SSLog('onAddTag', SSLogForce);
+    SSLog('json', SSLogForce);
   },
   
   
@@ -67,6 +80,8 @@ var SSTag = new Class({
   
   onRemoveTag: function(json)
   {
+    SSLog('onRemoveTag', SSLogForce);
+    SSLog(json, SSLogForce);
   }
   
 });
