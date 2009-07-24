@@ -4,6 +4,24 @@
 
 Event.Keys.shift = 16;
 
+String.implement({
+  pluralize: function()
+  {
+    return this + "s";
+  },
+  
+  unpluralize: function()
+  {
+    var chars = $A(this);
+    if(chars.getLast() == "s")
+    {
+      chars.pop();
+      return chars.join("");
+    }
+    return $A(this).join("");
+  }
+});
+
 Array.implement({
   first: function() {
     return this[0];
