@@ -4,6 +4,11 @@
 
 Event.Keys.shift = 16;
 
+function $identity(v)
+{
+  return v;
+}
+
 String.implement({
   pluralize: function()
   {
