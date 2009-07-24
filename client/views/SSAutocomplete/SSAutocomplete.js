@@ -22,8 +22,17 @@ var SSAutocomplete = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    
+    el.addEvent('keydown', this.handleKeyDown.bind(this));
     this.getTags();
     SSAddObserver(this, 'tagCreated', this.getTags.bind(this));
+  },
+  
+  
+  handleKeyDown: function(evt)
+  {
+    evt = new Event(evt);
+    if(evt.key == 'enter') this.fireEvent('onEnter', this.element.getProperty('value'));
   },
   
   
