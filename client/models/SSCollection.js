@@ -1116,7 +1116,7 @@ var SSCollection = new Class({
   },
   
   
-  onDeleteByContstraint: function(data, constraint)
+  onDeleteByConstraint: function(data, constraint)
   {
     this.fireEvent('onDeleteByConstraint', {data:data, constraint: constraint});
   },
