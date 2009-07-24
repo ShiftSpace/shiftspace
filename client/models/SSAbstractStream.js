@@ -27,7 +27,7 @@ var SSAbstractStream = new Class({
     
     if(this.options.createStream)
     {
-      this.create(options);
+      this.create();
     }
   },
   
@@ -47,7 +47,7 @@ var SSAbstractStream = new Class({
   },
   
   
-  create: function(options)
+  create: function()
   {
     SSCreateStream(this.options.displayName,
                    this.options.uniqueName,
