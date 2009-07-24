@@ -73,6 +73,7 @@ var SSAbstractStream = new Class({
       orderby: [">", "created"],
       properties: "*"
     });
+    this.fireEvent('load', this);
   },
   
   
