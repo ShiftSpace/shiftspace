@@ -23,7 +23,7 @@ var SSAutocomplete = new Class({
   {
     this.parent(el, options);
     
-    el.addEvent('keydown', this.handleKeyDown.bind(this));
+    el.addEvent('keypress', this.handleKeyDown.bind(this));
     this.getTags();
     SSAddObserver(this, 'tagCreated', this.getTags.bind(this));
   },
