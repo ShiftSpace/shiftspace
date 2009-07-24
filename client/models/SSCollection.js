@@ -1099,7 +1099,7 @@ var SSCollection = new Class({
   },
   
   
-  deleteByConstraint: function(constraint, bulk)
+  deleteByConstraint: function(constraint, callback, bulk)
   {
     return this.transact('delete', {
       table: this.table(),
@@ -1107,6 +1107,7 @@ var SSCollection = new Class({
       onComplete: function(rx) {
         this.onDeleteByConstraint(rx, constraint);
         this.dirtyTheViews();
+        if(callback && $type(callback) == 'function') callback(rx, constraint); 
       }.bind(this),
       onFailure: function(data) {
         this.onFailure('delete', data, index);
