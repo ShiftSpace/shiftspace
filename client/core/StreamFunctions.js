@@ -24,7 +24,7 @@ function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, meta, sup
     object_ref: objectRef,
     private: isPrivate ? 1 : 0,
     meta: meta,
-    superstream: superStream ? 1 : 0,
+    superstream: superStream ? 1 : 0
   }, callback);
 }
 

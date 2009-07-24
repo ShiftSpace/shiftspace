@@ -10,21 +10,30 @@ function $identity(v)
 }
 
 String.implement({
+  
+  tail: function(n)
+  {
+    return this.substring(this.length-(n || 1));
+  },
+  
+  
+  drop: function(n)
+  {
+    return this.substring(0, this.length-(n || 1));
+  },
+  
+  
   pluralize: function()
   {
     return this + "s";
   },
   
+  
   unpluralize: function()
   {
-    var chars = $A(this);
-    if(chars.getLast() == "s")
-    {
-      chars.pop();
-      return chars.join("");
-    }
-    return $A(this).join("");
+    return (this.tail() == "s") ? this.drop() : $A(this).join("");
   }
+  
 });
 
 Array.implement({
@@ -210,8 +219,17 @@ function $get(first, prop) {
   return (next == null) ? null : $get.apply(null, [next].concat(rest));
 };
 
+
 function $getf(first, prop) {
   return $get.apply(null, arguments) || $empty;
+};
+
+
+function $acc() {
+  var args = $A(arguments);
+  return function(obj) {
+    return $get.apply(null, [obj].combine(args));
+  };
 };
 
 // allows for queries on namespaced attributes
