@@ -123,7 +123,7 @@ var SSAbstractStream = new Class({
         url: _options.url
       };
       
-      this.coll().create(options, this.onPostEvent.bind(this));
+      this.coll().create(options, {onCreate:this.onPostEvent.bind(this)});
     }
   },
   
