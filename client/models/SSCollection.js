@@ -1098,6 +1098,28 @@ var SSCollection = new Class({
     this.fireEvent('onDeleteById', {data:data, id: id});
   },
   
+  
+  deleteByConstraint: function(constraint, bulk)
+  {
+    return this.transact('delete', {
+      table: this.table(),
+      constraints: $merge(this.constraints(), constraint),
+      onComplete: function(rx) {
+        this.onDeleteByConstraint(rx, constraint);
+        this.dirtyTheViews();
+      }.bind(this),
+      onFailure: function(data) {
+        this.onFailure('delete', data, index);
+      }.bind(this)
+    }, bulk);
+  },
+  
+  
+  onDeleteByContstraint: function(data, constraint)
+  {
+    this.fireEvent('onDeleteByConstraint', {data:data, constraint: constraint});
+  },
+  
   /*
     Function: update
       Updates the collection by index. Accepts the updated array of data, the index to insert the new data, and a bulk. Inserts the new data into the Collection array at the given index.  
