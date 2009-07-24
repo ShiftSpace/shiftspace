@@ -166,11 +166,33 @@ Function.implement({
     return resultFn;
   },
   
+  comp: function()
+  {
+    var fns = $A(arguments)
+    var self = this;
+    return function() {
+      var args = $A(arguments);
+      var result = self.apply(this, args);
+      var fn;
+      while(fn = fns.shift())
+      {
+        result = fn.apply(null, [result]);
+      }
+      return result;
+    }
+  },
+  
   rewind: function(bind, args)
   {
     return this._wrapper.bind(bind, args);
   }
 });
+
+
+function $element(tag, options)
+{
+  return new Element(tag, options);
+}
 
 
 Class.extend({
