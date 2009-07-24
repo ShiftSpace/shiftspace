@@ -46,13 +46,14 @@ var SSTag = new Class({
   {
     this.parent(json);
     SSPostNotification('tagCreated');
+    this.fireEvent('load', this);
   },
   
   
   notUnique: function(stream)
   {
     this.setId(stream.id);
-    return;
+    this.fireEvent('load', this);
   },
   
   
@@ -108,3 +109,8 @@ var SSTag = new Class({
 SSTag.find = function(objectRef, callback) {
   SSAbstractStream.findStreamsWithEvents(objectRef, callback);
 };
+
+SSTag.tag = function(tagName)
+{
+  return new SSTag(tagName);
+}
