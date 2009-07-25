@@ -65,27 +65,35 @@ var SSAbstractStream = new Class({
   },
   
   
-  setId: function(id)
+  setData: function(data)
   {
-    this.__id = id;
-    this.__coll = new SSCollection("stream:"+this.__id, {
-      table: "!"+this.__id,
+    this.__data = data;
+    
+    this.__coll = new SSCollection("stream:"+this.__data.id, {
+      table: "!"+this.__data.id,
       orderby: [">", "created"],
       properties: "*"
     });
+    
     this.fireEvent('load', this);
+  },
+  
+  
+  data: function()
+  {
+    return this.__data;
   },
   
   
   id: function()
   {
-    return this.__id;
+    return this.data.id;
   },
   
   
   onCreate: function(json)
   {
-    this.setId(json.data.id);
+    this.setData(json.data);
   },
   
   

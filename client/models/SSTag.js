@@ -103,6 +103,12 @@ var SSTag = new Class({
   
 });
 
+SSTag.tagClasses = ["SSTag"];
+SSTag.isTag = function(obj)
+{
+  return SSTagClasses.indefOf(obj.name) != -1;
+}
+
 SSTag.find = function(objectRef, callback) {
   SSAbstractStream.findStreamsWithEvents(objectRef, callback);
 };
