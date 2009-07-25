@@ -52,7 +52,6 @@ var SSTag = new Class({
   notUnique: function(stream)
   {
     this.setId(stream.id);
-    this.fireEvent('load', this);
   },
   
   
