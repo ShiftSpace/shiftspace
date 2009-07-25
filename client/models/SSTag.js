@@ -46,7 +46,6 @@ var SSTag = new Class({
   {
     this.parent(json);
     SSPostNotification('tagCreated');
-    this.fireEvent('load', this);
   },
   
   
