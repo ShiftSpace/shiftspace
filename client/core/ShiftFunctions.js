@@ -314,7 +314,7 @@ function SSSaveNewShift(shiftJson)
     summary: shiftJson.summary,
     content: escape(JSON.encode(shiftJson)),
     version: space.attributes().version,
-    filters: JSON.encode(filters),
+    filters: JSON.encode(filters)
   };
 
   SSServerCall.safeCall('shift.create', params, function(response) {
