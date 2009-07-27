@@ -184,7 +184,7 @@ var SSAbstractStream = new Class({
   },
   
   
-  isSuperStream function()
+  isSuperStream: function()
   {
     return this.data().superstream == 1;
   },
