@@ -98,6 +98,12 @@ var SSTag = new Class({
   {
     SSLog('onRemoveTag', SSLogForce);
     SSLog(json, SSLogForce);
+  },
+  
+  
+  isCategory: function()
+  {
+    return this.isSuperStream();
   }
   
 });

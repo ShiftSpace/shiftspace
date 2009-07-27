@@ -184,6 +184,12 @@ var SSAbstractStream = new Class({
   },
   
   
+  isSuperStream function()
+  {
+    return this.data().superstream == 1;
+  },
+  
+  
   subscribe: function(id)
   {
     
@@ -193,6 +199,36 @@ var SSAbstractStream = new Class({
   unsubscribe: function(id)
   {
     
+  },
+  
+  
+  meta: function()
+  {
+    return this.data().meta;
+  },
+  
+  
+  displayString: function()
+  {
+    return this.data().display_string;
+  },
+  
+  
+  uniqueName: function()
+  {
+    return this.data().unique_name;
+  },
+  
+  
+  streamName: function()
+  {
+    return this.data().stream_name;
+  },
+  
+  
+  objectRef: function()
+  {
+    return this.data().object_ref;
   }
 
 });
