@@ -1387,3 +1387,17 @@ var SSCollection = new Class({
   }
 
 });
+
+SSCollection.bulkTransact = function(payload, options)
+{
+  SSCollectionsCall({
+    desc: payload,
+    onComplete: function(response) {
+      var result = JSON.decode(response);
+      var data = result.data;
+      // transform the data
+      options.onComplete(data);
+    }.bind(this),
+    onFailure: options.onFailure
+  });
+};
