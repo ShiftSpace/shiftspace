@@ -51,7 +51,7 @@ var SSTag = new Class({
   
   notUnique: function(stream)
   {
-    this.setId(stream.id);
+    this.setData(stream);
   },
   
   
