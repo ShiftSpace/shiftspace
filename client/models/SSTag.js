@@ -29,7 +29,6 @@ var SSTag = new Class({
 
     if(options.category)
     {
-      delete options.category;
       options.meta = "category";
       options.superStream = true;
     }
@@ -57,7 +56,7 @@ var SSTag = new Class({
   
   addTag: function(id, resource, options)
   {
-    var objectRef = (resource) ? [resource, id].join(":") : id;
+    var objectRef = (resource && !this.options.category) ? [resource, id].join(":") : id;
     
     var defaults = {
       displayString: null,
