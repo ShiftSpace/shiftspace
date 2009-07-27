@@ -882,11 +882,11 @@ var SSCollection = new Class({
     Returns: 
       A payload object.
   */
-  read: function(callback)
+  read: function(callback, options, bulk)
   {
     this.setIsReading(true);
     this.initializeReadFns();
-    return this.transact('read', {
+    var defaults = {
       table: this.table(),
       constraints: this.constraints(),
       properties: this.properties(),
@@ -899,7 +899,9 @@ var SSCollection = new Class({
         this.onRead(data);
         if(callback && $type(callback) == 'function') callback(data);
       }.bind(this)
-    });
+    };
+    options = $merge(defaults, options);
+    return this.transact('read', options, bulk);
   },
   
   /*
