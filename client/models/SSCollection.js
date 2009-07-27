@@ -495,7 +495,8 @@ var SSCollection = new Class({
       constraints: options.constraints,
       orderby: options.orderBy,
       startIndex: options.startIndex,
-      range: options.range
+      range: options.range,
+      bare: options.bare || 0
     };
     
     if(!bulk)
