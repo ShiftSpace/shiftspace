@@ -164,7 +164,7 @@ var SSAbstractStream = new Class({
   {
     if(this.coll())
     {
-      this.coll().deleteById(id);
+      this.coll().deleteById(id, (this.isSuperStream() && {bare:1}));
     }
   },
   
