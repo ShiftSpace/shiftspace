@@ -14,7 +14,8 @@ var SSTag = new Class({
   {
     return $merge(this.parent(), {
       createStream: false,
-      private: 0
+      private: 0,
+      id: null
     });
   },
   
@@ -35,9 +36,16 @@ var SSTag = new Class({
 
     this.parent(options);
     
-    this.isUnique(tagName,
-                  this.create.bind(this, [options]),
-                  this.notUnique.bind(this));
+    if(!this.options.id)
+    {
+      this.isUnique(tagName,
+                    this.create.bind(this, [options]),
+                    this.notUnique.bind(this));
+    }
+    else
+    {
+      this.setData({id:this.options.id});
+    }
   },
   
   

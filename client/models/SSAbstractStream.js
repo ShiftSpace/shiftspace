@@ -68,14 +68,18 @@ var SSAbstractStream = new Class({
   setData: function(data)
   {
     this.__data = data;
-    
-    this.__coll = new SSCollection("stream:"+this.__data.id, {
-      table: "!"+this.__data.id,
+    this.setColl(this.__data.id);
+    this.fireEvent('load', this);
+  },
+  
+  
+  setColl: function(streamId)
+  {
+    this.__coll = new SSCollection("stream:"+streamId, {
+      table: "!"+streamId,
       orderby: [">", "created"],
       properties: "*"
-    });
-    
-    this.fireEvent('load', this);
+    });    
   },
   
   
