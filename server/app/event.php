@@ -184,7 +184,7 @@ class Event {
 
     if ($stream->superstream) {
       foreach ($result['feed'] as &$substreamevent) {
-        $substreamevent['substream'] = $this->_readtreestructure($substreamevent['object_ref'];
+        $substreamevent['substream'] = $this->_readtreestructure($substreamevent['object_ref']);
       }
     }
 
