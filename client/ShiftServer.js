@@ -4,6 +4,14 @@ var ShiftServer = new Class({
   name: "ShiftServer",
 
 
+  defaults: function()
+  {
+    return $merge(this.parent(), {
+      server: SSInf().server
+    });
+  },
+
+
   initialize: function(options)
   {
     this.parent(options);

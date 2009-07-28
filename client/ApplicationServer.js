@@ -18,9 +18,10 @@ var ApplicationServer = new Class({
   
   Implements: [Events, Options],
   
-  defaults:
-  {
-    server: "http://localhost/~davidnolen/shiftspace/shiftserver/"
+  defaults: function() {
+    return {
+      server: null
+    }
   },
   
 
