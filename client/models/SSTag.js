@@ -67,7 +67,7 @@ var SSTag = new Class({
   
   addTag: function(id, resource, options)
   {
-    var objectRef = (resource && !this.options.category) ? [resource, id].join(":") : id;
+    var objectRef = (resource && !this.isCategory()) ? [resource, id].join(":") : id;
     
     var defaults = {
       displayString: null,
