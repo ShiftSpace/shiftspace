@@ -14,7 +14,8 @@ var SSAutocomplete = new Class({
     return $merge(this.parent(), {
       minLength: 1,
       overflow: true,
-      multiple: true
+      multiple: true,
+      tags: null
     })
   },
 
@@ -38,12 +39,21 @@ var SSAutocomplete = new Class({
   
   getTags: function()
   {
-    SSFindStreams("tag", null, function(result) {
-      var tags = result.data.map(function(stream) {
-        return stream.stream_name
-      });
+    if (!this.options.tags)
+    {
+      SSFindStreams("tag", null, function(result) {
+        var tags = result.data.map(function(stream) {
+          return stream.stream_name
+        });
+        this.autocompleter = new Autocompleter.Local(this.element, tags, this.options);
+      }.bind(this))
+    }
+    else
+    {
+      var tags = this.options.tags;
+      delete this.options.tags;
       this.autocompleter = new Autocompleter.Local(this.element, tags, this.options);
-    }.bind(this))
+    }
   },
   
 
