@@ -60,7 +60,6 @@ var SSTag = new Class({
     
     var defaults = {
       displayString: null,
-      uniqueName: objectRef,
       objectRef: objectRef,
       hasReadStatus: false
     };
@@ -84,7 +83,25 @@ var SSTag = new Class({
   removeTag: function(id, resource)
   {
     var objectRef = (resource) ? [resource, id].join(":") : id; 
-    this.deleteEventByObjectRef(objectRef);
+    if(!this.isCategory())
+    {
+      // we're deleting a real event, can do it by objectRef - David
+      this.deleteEventByObjectRef(objectRef);
+    }
+    else
+    {
+      // this is a category tag (superstream), find the real event id by the stream id of the substream. - David
+      this.coll().read(function(events) {
+        SSLog('events', SSLogForce);
+        SSLog(events, SSLogForce);
+        window.dbg = events;
+        var eventToDelete = events.select(function(v) { return v.object_ref == id; });
+        SSLog('eventToDelete', SSLogForce);
+        SSLog(eventToDelete, SSLogForce);
+        this.deleteEvent(eventToDelete.id);
+        SSLog('done', SSLogForce);
+      }.bind(this), {bare:1});
+    }
   },
   
   
