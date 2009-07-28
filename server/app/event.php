@@ -171,6 +171,26 @@ class Event {
     return $result;
   }
   
+  public function readtreestructure() {
+    extract($_REQUEST);
+    return $this->_readtreestructure($stream_id);
+  }
+
+  public function _readtreestructure($stream_id) {
+    $this->can_read($stream_id);
+    
+    $result = $this->server->db->load("stream($stream_id)")->get();
+    $result['feed'] = $this->server->db->rows("SELECT * FROM stream, event WHERE event.stream_id = stream.id AND event.stream_id=:stream_id", compact('stream_id'));
+
+    if ($stream->superstream) {
+      foreach ($result['feed'] as &$substreamevent) {
+        $substreamevent['substream'] = $this->_readtreestructure($substreamevent['object_ref'];
+      }
+    }
+
+    return $result;
+  }
+  
   public function subscriptions() {
     $this->logged_in();
     $query = "SELECT subscription.stream_id, since, private, level, stream_name, object_ref, created_by, created_by_name 
@@ -258,7 +278,7 @@ class Event {
   public function findstreamswithevent() {
     extract($_REQUEST);
     if ($this->server->user) {
-      $user_clause = " LEFT JOIN streampermission ON stream.id = streampermission.stream_id AND streampermission.user_id = ".$this->server->user['id'];
+      $user_clause = " LEFT JOIN streampermission ON streampermission.stream_id = stream.id AND streampermission.user_id = ".$this->server->user['id'];
       $permissions_clause = "OR (stream.private = 1 AND streampermission.level >= 1)";
     }
     else {
@@ -266,7 +286,7 @@ class Event {
       $permissions_clause = "";
     }
     
-    return new Response($this->server->db->rows("SELECT DISTINCT stream.* FROM stream, event $user_clause WHERE event.stream_id = stream.id AND (stream.private = 0 $permissions_clause) AND event.object_ref=:object_ref", compact('object_ref')));
+    return new Response($this->server->db->rows("SELECT DISTINCT stream.* FROM event, stream $user_clause WHERE event.stream_id = stream.id AND (stream.private = 0 $permissions_clause) AND event.object_ref=:object_ref", compact('object_ref')));
   }
   
   public function deleteevent() {
