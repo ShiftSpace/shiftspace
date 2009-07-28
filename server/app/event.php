@@ -184,12 +184,14 @@ class Event {
     $this->can_read($stream_id);
     
     $result = $this->server->db->load("stream($stream_id)")->get();
-    $leaves_clause = $with_leaves ? '' : ' AND superstream=1';
-    $result['feed'] = $this->server->db->rows("SELECT * FROM event WHERE event.stream_id=:stream_id $leaves_clause", compact('stream_id'));
+    
+    if ($result['superstream'] || $with_leaves) {
+      $result['feed'] = $this->server->db->rows("SELECT * FROM event WHERE event.stream_id=:stream_id $leaves_clause", compact('stream_id'));
 
-    if ($result['superstream']) {
-      foreach ($result['feed'] as &$substreamevent) {
-        $substreamevent->substream = $this->_readtreestructure($substreamevent->object_ref);
+      if ($result['superstream']) {
+        foreach ($result['feed'] as &$substreamevent) {
+          $substreamevent->substream = $this->_readtreestructure($substreamevent->object_ref, $with_leaves);
+        }
       }
     }
 
