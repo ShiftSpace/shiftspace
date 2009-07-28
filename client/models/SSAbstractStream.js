@@ -91,7 +91,7 @@ var SSAbstractStream = new Class({
   
   id: function()
   {
-    return this.data.id;
+    return this.data().id;
   },
   
   
