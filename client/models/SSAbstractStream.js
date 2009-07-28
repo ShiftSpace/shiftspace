@@ -183,8 +183,7 @@ var SSAbstractStream = new Class({
   
   onDeleteEvent: function(evt)
   {
-    SSLog('onDeleteEvent', SSLogForce);
-    SSLog(evt, SSLogForce);
+    this.fireEvent('onDeleteEvent', evt);
   },
   
   
