@@ -71,8 +71,6 @@ var ApplicationServer = new Class({
       emulation: false
     });
     
-    console.log(this.genUrl(urlParts));
-    
     if(options.json)
     {
       if(!options.headers) options.headers = {};
