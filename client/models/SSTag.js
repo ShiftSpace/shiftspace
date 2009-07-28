@@ -44,7 +44,10 @@ var SSTag = new Class({
     }
     else
     {
-      this.setData({id:this.options.id});
+      this.setData({
+        id:options.id, 
+        superstream: (this.options.category) ? 1 : 0
+      });
     }
   },
   
