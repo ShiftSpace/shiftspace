@@ -134,3 +134,11 @@ function SSStreamCall(method, params, callback)
 {
   SSServerCall(method, params, callback);
 }
+
+
+function SSStreamStructure(streamId, callback)
+{
+  SSStreamCall('event.readtreestructure', {
+    stream_id: streamId
+  }, callback);
+}
