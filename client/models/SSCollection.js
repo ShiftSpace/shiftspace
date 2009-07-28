@@ -1088,7 +1088,7 @@ var SSCollection = new Class({
       onComplete: function(rx) {
         this.onDeleteById(rx, id);
         this.dirtyTheViews();
-        if(options.onDelete && $type(options.onDelete)) options.onDelete(rx, id);
+        if(options.onDelete && $type(options.onDelete) == 'function') options.onDelete(rx, id);
       }.bind(this),
       onFailure: function(data) {
         this.onFailure('delete', data, index);
