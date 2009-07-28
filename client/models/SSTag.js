@@ -119,8 +119,7 @@ var SSTag = new Class({
   
   onRemoveTag: function(json)
   {
-    SSLog('onRemoveTag', SSLogForce);
-    SSLog(json, SSLogForce);
+    this.fireEvent('onRemoveTag', json);
   },
   
   
