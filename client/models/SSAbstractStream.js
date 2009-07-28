@@ -168,7 +168,7 @@ var SSAbstractStream = new Class({
   {
     if(this.coll())
     {
-      var options = $merge((this.isSuperStream() && {bare:1}, {
+      var options = $merge((this.isSuperStream() && {bare:1}), {
         onDelete: this.onDeleteEvent.bind(this)
       });
       this.coll().deleteById(id, options);
