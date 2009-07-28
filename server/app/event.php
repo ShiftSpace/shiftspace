@@ -182,7 +182,7 @@ class Event {
     $result = $this->server->db->load("stream($stream_id)")->get();
     $result['feed'] = $this->server->db->rows("SELECT * FROM event WHERE event.stream_id=:stream_id", compact('stream_id'));
 
-    if ($stream->superstream) {
+    if ($result['superstream']) {
       foreach ($result['feed'] as &$substreamevent) {
         $substreamevent['substream'] = $this->_readtreestructure($substreamevent['object_ref']);
       }
