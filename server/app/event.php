@@ -180,7 +180,7 @@ class Event {
     $this->can_read($stream_id);
     
     $result = $this->server->db->load("stream($stream_id)")->get();
-    $result['feed'] = $this->server->db->rows("SELECT * FROM stream, event WHERE event.stream_id = stream.id AND event.stream_id=:stream_id", compact('stream_id'));
+    $result['feed'] = $this->server->db->rows("SELECT * FROM event WHERE event.stream_id=:stream_id", compact('stream_id'));
 
     if ($stream->superstream) {
       foreach ($result['feed'] as &$substreamevent) {
