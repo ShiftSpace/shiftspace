@@ -29,7 +29,6 @@ var SSTag = new Class({
 
     if(options.category)
     {
-      delete options.category;
       options.meta = "category";
       options.superStream = true;
     }
@@ -46,20 +45,18 @@ var SSTag = new Class({
   {
     this.parent(json);
     SSPostNotification('tagCreated');
-    this.fireEvent('load', this);
   },
   
   
   notUnique: function(stream)
   {
-    this.setId(stream.id);
-    this.fireEvent('load', this);
+    this.setData(stream);
   },
   
   
   addTag: function(id, resource, options)
   {
-    var objectRef = (resource) ? [resource, id].join(":") : id;
+    var objectRef = (resource && !this.options.category) ? [resource, id].join(":") : id;
     
     var defaults = {
       displayString: null,
@@ -80,8 +77,7 @@ var SSTag = new Class({
   
   onAddTag: function(json)
   {
-    SSLog('onAddTag', SSLogForce);
-    SSLog('json', SSLogForce);
+    this.fireEvent('onAddTag', json);
   },
   
   
@@ -102,9 +98,21 @@ var SSTag = new Class({
   {
     SSLog('onRemoveTag', SSLogForce);
     SSLog(json, SSLogForce);
+  },
+  
+  
+  isCategory: function()
+  {
+    return this.isSuperStream();
   }
   
 });
+
+SSTag.tagClasses = ["SSTag"];
+SSTag.isTag = function(obj)
+{
+  return SSTagClasses.indefOf(obj.name) != -1;
+}
 
 SSTag.find = function(objectRef, callback) {
   SSAbstractStream.findStreamsWithEvents(objectRef, callback);

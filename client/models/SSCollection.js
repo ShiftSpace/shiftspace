@@ -495,7 +495,8 @@ var SSCollection = new Class({
       constraints: options.constraints,
       orderby: options.orderBy,
       startIndex: options.startIndex,
-      range: options.range
+      range: options.range,
+      bare: options.bare || 0
     };
     
     if(!bulk)
@@ -882,11 +883,11 @@ var SSCollection = new Class({
     Returns: 
       A payload object.
   */
-  read: function(callback)
+  read: function(callback, options, bulk)
   {
     this.setIsReading(true);
     this.initializeReadFns();
-    return this.transact('read', {
+    var defaults = {
       table: this.table(),
       constraints: this.constraints(),
       properties: this.properties(),
@@ -899,7 +900,9 @@ var SSCollection = new Class({
         this.onRead(data);
         if(callback && $type(callback) == 'function') callback(data);
       }.bind(this)
-    });
+    };
+    options = $merge(defaults, options);
+    return this.transact('read', options, bulk);
   },
   
   /*
@@ -1096,6 +1099,29 @@ var SSCollection = new Class({
   onDeleteById: function(data, id)
   {
     this.fireEvent('onDeleteById', {data:data, id: id});
+  },
+  
+  
+  deleteByConstraint: function(constraint, callback, bulk)
+  {
+    return this.transact('delete', {
+      table: this.table(),
+      constraints: $merge(this.constraints(), constraint),
+      onComplete: function(rx) {
+        this.onDeleteByConstraint(rx, constraint);
+        this.dirtyTheViews();
+        if(callback && $type(callback) == 'function') callback(rx, constraint); 
+      }.bind(this),
+      onFailure: function(data) {
+        this.onFailure('delete', data, index);
+      }.bind(this)
+    }, bulk);
+  },
+  
+  
+  onDeleteByConstraint: function(data, constraint)
+  {
+    this.fireEvent('onDeleteByConstraint', {data:data, constraint: constraint});
   },
   
   /*
@@ -1364,3 +1390,17 @@ var SSCollection = new Class({
   }
 
 });
+
+SSCollection.bulkTransact = function(payload, options)
+{
+  SSCollectionsCall({
+    desc: payload,
+    onComplete: function(response) {
+      var result = JSON.decode(response);
+      var data = result.data;
+      // transform the data
+      options.onComplete(data);
+    }.bind(this),
+    onFailure: options.onFailure
+  });
+};

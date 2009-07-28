@@ -20,7 +20,7 @@ function SSCreateStream(displayName, uniqueName, objectRef, isPrivate, meta, sup
 { 
   SSStreamCall('event.createstream', {
     stream_name: displayName,
-    unique_name: uniqueName,
+    unique_name: uniqueName || "",
     object_ref: objectRef,
     private: isPrivate ? 1 : 0,
     meta: meta,

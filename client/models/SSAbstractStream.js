@@ -65,26 +65,35 @@ var SSAbstractStream = new Class({
   },
   
   
-  setId: function(id)
+  setData: function(data)
   {
-    this.__id = id;
-    this.__coll = new SSCollection("stream:"+this.__id, {
-      table: "!"+this.__id,
+    this.__data = data;
+    
+    this.__coll = new SSCollection("stream:"+this.__data.id, {
+      table: "!"+this.__data.id,
       orderby: [">", "created"],
       properties: "*"
     });
+    
+    this.fireEvent('load', this);
+  },
+  
+  
+  data: function()
+  {
+    return this.__data;
   },
   
   
   id: function()
   {
-    return this.__id;
+    return this.data.id;
   },
   
   
   onCreate: function(json)
   {
-    this.setId(json.data.id);
+    this.setData(json.data);
   },
   
   
@@ -123,7 +132,7 @@ var SSAbstractStream = new Class({
         url: _options.url
       };
       
-      this.coll().create(options, this.onPostEvent.bind(this));
+      this.coll().create(options, {onCreate:this.onPostEvent.bind(this)});
     }
   },
   
@@ -175,6 +184,12 @@ var SSAbstractStream = new Class({
   },
   
   
+  isSuperStream: function()
+  {
+    return this.data().superstream == 1;
+  },
+  
+  
   subscribe: function(id)
   {
     
@@ -184,6 +199,36 @@ var SSAbstractStream = new Class({
   unsubscribe: function(id)
   {
     
+  },
+  
+  
+  meta: function()
+  {
+    return this.data().meta;
+  },
+  
+  
+  displayString: function()
+  {
+    return this.data().display_string;
+  },
+  
+  
+  uniqueName: function()
+  {
+    return this.data().unique_name;
+  },
+  
+  
+  streamName: function()
+  {
+    return this.data().stream_name;
+  },
+  
+  
+  objectRef: function()
+  {
+    return this.data().object_ref;
   }
 
 });

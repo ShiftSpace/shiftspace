@@ -68,8 +68,8 @@ var fakejohn = {
 var admin = {
   userName: 'shiftspace',
   email: 'info@shiftspace.org',
-  password: 'changetheweb',
-  passwordVerify: 'changetheweb'
+  password: 'shiftspace',
+  passwordVerify: 'shiftspace'
 };
 
 function req(options)
