@@ -229,6 +229,12 @@ var SSAbstractStream = new Class({
   objectRef: function()
   {
     return this.data().object_ref;
+  },
+  
+  
+  structure: function(callback)
+  {
+    return SSStreamStructure(this.data().id, callback);
   }
 
 });

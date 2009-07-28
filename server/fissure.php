@@ -70,6 +70,7 @@ function method_form($httpmethod, $method, $args, $comment = '') {
 <?php method_form('post', 'event.post', array('stream_id', 'display_string', 'object_ref', 'has_read_status', 'unique_name', 'datetime_ref', 'content_')); ?>
 <?php method_form('post', 'event.feed', array()); ?>
 <?php method_form('post', 'event.onefeed', array('stream_id')); ?>
+<?php method_form('post', 'event.readtreestructure', array('stream_id', 'with_leaves')); ?>
 <?php method_form('post', 'event.createstream', array('private', 'stream_name', 'object_ref', 'unique_name', 'meta', 'superstream')); ?>
 <?php method_form('post', 'event.findstreambyuniquename', array('unique_name')); ?>
 <?php method_form('post', 'event.findeventbyuniquename', array('stream_id', 'unique_name')); ?>
