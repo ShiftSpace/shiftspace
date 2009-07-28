@@ -27,7 +27,7 @@ var ApplicationServer = new Class({
 
   initialize: function(options)
   {
-    this.setOptions(this.defaults, options);
+    this.setOptions(this.defaults(), options);
     this.setServer(this.options.server);
   },
 

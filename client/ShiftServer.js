@@ -7,7 +7,7 @@ var ShiftServer = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      server: SSInf().server
+      server: SSInfo().server+'shiftserver/'
     });
   },
 
@@ -33,6 +33,12 @@ var ShiftServer = new Class({
   join: function(userData)
   {
     return this.post({action:"join", data:userData, json: true});
+  },
+  
+  
+  query: function()
+  {
+    return this.get({action:"query"});
   }
 
 });
