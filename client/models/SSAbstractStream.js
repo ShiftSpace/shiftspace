@@ -198,7 +198,7 @@ var SSAbstractStream = new Class({
   
   onDeleteAllEvents: function(json)
   {
-    this.fireEvent('onDeleteAllEvets', json)
+    this.fireEvent('onDeleteAllEvents', json)
   },
   
   
