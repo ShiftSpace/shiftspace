@@ -33,7 +33,7 @@ var ShiftServer = new Class({
 
   join: function(userData)
   {
-    userData = userData.extract(['userName', 'email', 'password', 'passwordVerify'], true);
+    userData = $H(userData).extract(['userName', 'email', 'password', 'passwordVerify'], true);
     return this.post({action:"join", data:userData, json: true});
   },
   
@@ -45,4 +45,11 @@ var ShiftServer = new Class({
 
 });
 
+/*
+var app = new ShiftServer()
+var user = app.login(fakemary);
 
+$if(noErr(user),
+    SSPostNotification.bind(null, ['userLogin', user]),
+    showErr.bind(null, [user]));
+*/

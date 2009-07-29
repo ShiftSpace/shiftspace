@@ -130,16 +130,15 @@ var confirm = function (value) {
 }.asPromise();
 
 
-var noErrGenerator = function(cb) {
-  return function(value) {
-    if(!value.error) return value;
-    return cb(value);
-  }.asPromise();
-};
+var noErr = function(v) {
+  if(v.error) return false;
+  return v;
+}.asPromise();
 
-var noErr = noErrGenerator(function(v) {
-  alert(v.error);
-});
+
+var showErr = function(err) {
+  alert(err.error);
+}.asPromise();
 
 /*
 var app = new ApplicationServer();
