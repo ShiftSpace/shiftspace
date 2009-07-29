@@ -68,14 +68,18 @@ var SSAbstractStream = new Class({
   setData: function(data)
   {
     this.__data = data;
-    
-    this.__coll = new SSCollection("stream:"+this.__data.id, {
-      table: "!"+this.__data.id,
+    this.setColl(this.__data.id);
+    this.fireEvent('load', this);
+  },
+  
+  
+  setColl: function(streamId)
+  {
+    this.__coll = new SSCollection("stream:"+streamId, {
+      table: "!"+streamId,
       orderby: [">", "created"],
       properties: "*"
-    });
-    
-    this.fireEvent('load', this);
+    });    
   },
   
   
@@ -87,7 +91,7 @@ var SSAbstractStream = new Class({
   
   id: function()
   {
-    return this.data.id;
+    return this.data().id;
   },
   
   
@@ -164,7 +168,10 @@ var SSAbstractStream = new Class({
   {
     if(this.coll())
     {
-      this.coll().deleteById(id, this.onDeleteEvent.bind(this));
+      var options = $merge((this.isSuperStream() && {bare:1}), {
+        onDelete: this.onDeleteEvent.bind(this)
+      });
+      this.coll().deleteById(id, options);
     }
   },
   
@@ -179,8 +186,19 @@ var SSAbstractStream = new Class({
   
   onDeleteEvent: function(evt)
   {
-    SSLog('onDeleteEvent', SSLogForce);
-    SSLog(evt, SSLogForce);
+    this.fireEvent('onDeleteEvent', evt);
+  },
+  
+  
+  deleteAllEvents: function()
+  {
+    this.coll().deleteByConstraint(null, {bare:1, onDelete:this.onDeleteAllEvents.bind(this)});
+  },
+  
+  
+  onDeleteAllEvents: function(json)
+  {
+    this.fireEvent('onDeleteAllEvents', json)
   },
   
   

@@ -60,6 +60,14 @@ Array.implement({
       if(this[i] != ary[i]) return false;
     }
     return true;
+  },
+  
+  select: function(test) {
+    for(var i = 0; i < this.length; i++)
+    {
+      if(test(this[i])) return this[i];
+    }
+    return;
   }
 });
 

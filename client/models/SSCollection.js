@@ -1080,19 +1080,22 @@ var SSCollection = new Class({
   },
   
   
-  deleteById: function(id, bulk)
+  deleteById: function(id, options, bulk)
   {
-    return this.transact('delete', {
+    var defaults = {
       table: this.table(),
       constraints: $merge(this.constraints(), {id: id}),
       onComplete: function(rx) {
         this.onDeleteById(rx, id);
         this.dirtyTheViews();
+        if(options.onDelete && $type(options.onDelete) == 'function') options.onDelete(rx, id);
       }.bind(this),
       onFailure: function(data) {
         this.onFailure('delete', data, index);
       }.bind(this)
-    }, bulk);
+    };
+    options = $merge(defaults, options);
+    return this.transact('delete', options, bulk);
   },
   
   
@@ -1102,20 +1105,22 @@ var SSCollection = new Class({
   },
   
   
-  deleteByConstraint: function(constraint, callback, bulk)
+  deleteByConstraint: function(constraint, options, bulk)
   {
-    return this.transact('delete', {
+    var defaults = {
       table: this.table(),
       constraints: $merge(this.constraints(), constraint),
       onComplete: function(rx) {
         this.onDeleteByConstraint(rx, constraint);
         this.dirtyTheViews();
-        if(callback && $type(callback) == 'function') callback(rx, constraint); 
+        if(options.onDelete && $type(options.onDelete) == 'function') options.onDelete(rx, constraint); 
       }.bind(this),
       onFailure: function(data) {
         this.onFailure('delete', data, index);
       }.bind(this)
-    }, bulk);
+    };
+    options = $merge(defaults, options);
+    return this.transact('delete', options, bulk);
   },
   
   
