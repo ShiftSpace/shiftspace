@@ -13,6 +13,7 @@ var SSTag = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
+      load: true,
       createStream: false,
       private: 0,
       id: null
@@ -36,18 +37,22 @@ var SSTag = new Class({
 
     this.parent(options);
     
-    if(!this.options.id)
+    if(this.options.load)
     {
-      this.isUnique(tagName,
-                    this.create.bind(this, [options]),
-                    this.notUnique.bind(this));
-    }
-    else
-    {
-      this.setData({
-        id:options.id, 
-        superstream: (this.options.category) ? 1 : 0
-      });
+      delete this.options.load;
+      if(!this.options.id)
+      {
+        this.isUnique(tagName,
+                      this.create.bind(this, [options]),
+                      this.notUnique.bind(this));
+      }
+      else
+      {
+        this.setData({
+          id:options.id, 
+          superstream: (this.options.category) ? 1 : 0
+        });
+      }
     }
   },
   
@@ -143,4 +148,11 @@ SSTag.find = function(objectRef, callback) {
 SSTag.tag = function(tagName)
 {
   return new SSTag(tagName);
+}
+
+SSTag.withData = function(data)
+{
+  var newTag = new SSTag(null, {load:false});
+  newTag.setData(data);
+  return newTag;
 }
