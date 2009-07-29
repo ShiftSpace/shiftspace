@@ -20,6 +20,7 @@ var ShiftServer = new Class({
   
   login: function(userData)
   {
+    userData = $H(userData).extract(['userName', 'password'], true);
     return this.post({action:"login", data:userData});
   },
   
@@ -32,6 +33,7 @@ var ShiftServer = new Class({
 
   join: function(userData)
   {
+    userData = userData.extract(['userName', 'email', 'password', 'passwordVerify'], true);
     return this.post({action:"join", data:userData, json: true});
   },
   
@@ -42,3 +44,5 @@ var ShiftServer = new Class({
   }
 
 });
+
+

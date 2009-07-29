@@ -1,5 +1,5 @@
 Hash.implement({
-  extract: function(ary)
+  extract: function(ary, clean)
   {
     var result = $H();
     ary.each(function(key) {
@@ -8,7 +8,7 @@ Hash.implement({
         result[key] = this[key];
       }
     }, this);
-    return result;
+    return clean ? result.getClean() : result;
   }
 });
 
@@ -128,6 +128,18 @@ var confirm = function (value) {
   SSLog('confirm:', SSLogForce);
   SSLog(value, SSLogForce);
 }.asPromise();
+
+
+var noErrGenerator = function(cb) {
+  return function(value) {
+    if(!value.error) return value;
+    return cb(value);
+  }.asPromise();
+};
+
+var noErr = noErrGenerator(function(v) {
+  alert(v.error);
+});
 
 /*
 var app = new ApplicationServer();
