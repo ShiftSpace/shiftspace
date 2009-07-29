@@ -190,6 +190,18 @@ var SSAbstractStream = new Class({
   },
   
   
+  deleteAllEvents: function()
+  {
+    this.coll().deleteByConstraint(null, this.onDeleteAllEvents.bind(this));
+  },
+  
+  
+  onDeleteAllEvents: function(json)
+  {
+    this.fireEvent('onDeleteAllEvets', json)
+  },
+  
+  
   isSuperStream: function()
   {
     return this.data().superstream == 1;
