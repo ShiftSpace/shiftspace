@@ -32,7 +32,10 @@
   top: 0px;
   left: 0px;
   bottom: 0px;
-  width: 50%;
+  width: 430px;
+  border-right:4px solid #F8F5F2;
+  border-top:4px solid #F8F5F2;
+  -moz-box-shadow:0 0 10px #BEB9B3 inset;
 }
 
 #SelectGroup
@@ -47,7 +50,7 @@
 
 #GroupOverView
 {
-  -moz-box-shadow:0 0 10px #BEB9B3 inset;
+
   position: absolute;
   left: 0px;
   top: 0px;
@@ -65,16 +68,32 @@
  display:block;
  height:28px;  
 }
+
+.SSGroupLatestItem ul{
+  list-style:none;
+  padding:0px;
+}
+
+.SSGroupLatestItem ul li{
+  float:left;
+  margin-right:3px;
+  padding-top:5px;
+  color:#4b423a;
+}
+
 .SSGroupLatestUser{
   background:#dcd8d5;
   height:16px;
   color:#4b423a;
-  padding:1px 2px;
+  width:60px;
+  position:relative;
+  left:5px;
 }
 
 .SSGroupLatestUser img{
   float:left;
 }
+
 #SSGroupLatestCount{
   width: 100%;
   clear:both;
@@ -86,7 +105,6 @@
   font-size:11px;
   display:block;
   border-bottom:1px solid #d2d0ce;
-
 }
 
 #SSGroupSummary{
@@ -121,10 +139,10 @@
   margin-top:-5px;
   line-height:18px;
 } 
+
 .SSGroupSummaryMore{
   color:#f63b02;
   border-bottom:1px solid #e8b6a5;
-  
 }
 
 #SSGroupProperties{
@@ -160,10 +178,79 @@
 
 #GroupAction
 {
+  border-top:4px solid #f8f5f2;
   position: absolute;
   top: 0px;
   right: 0px;
   bottom: 0px;
-  width: 150px;
+  width: 120px;
+  left:310px;
   background-color: #ccc;
+  text-align:center;
+}
+
+
+#GroupActionShifts{
+  width:58px;
+  height:50px;
+  border:1px solid #c9ccc4;
+  float:left;
+  background:#e3dfdb;
+}
+
+#GroupAction h1{
+  font-size:20px;
+  color:#f63b02;
+
+}
+
+#GroupAction p{
+  font-size:12px;
+  color:#74665a;
+  margin-top:-20px;
+}
+
+
+#GroupActionUsers{
+  width:58px;
+  height:50px;
+  border:1px solid #c9ccc4;
+  float:left;
+  background:#e3dfdb;
+}
+
+#GroupActionButtons{
+  width:119px; 
+  height:126px;
+  background:#e3dfdb;
+  clear:both;
+  border-left:1px solid #c9ccc4;
+}
+
+#GroupActionButtons ul{
+  position:relative;
+  float:left;
+  left:-32px
+}
+
+#GroupActionButtons ul li{
+  list-style:none;
+  margin-top:10px;
+}
+
+.GroupActionContent{
+  position:relative;
+  top:-5px;
+}
+
+.SSGroupsActionButton{
+    background-color: #e3dfdb;
+    color:#74665a;
+    border:2px #b3ada5 solid;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    padding:0px 5px;
+    font-weight:bold;
+    font-size:10px;
+    width:100px;
 }
