@@ -192,7 +192,7 @@ var SSAbstractStream = new Class({
   
   deleteAllEvents: function()
   {
-    this.coll().deleteByConstraint(null, this.onDeleteAllEvents.bind(this));
+    this.coll().deleteByConstraint(null, {bare:1, this.onDeleteAllEvents.bind(this)});
   },
   
   
