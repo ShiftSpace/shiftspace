@@ -6,7 +6,6 @@ Hash.implement({
       if(this[key])
       {
         result[key] = this[key];
-        delete this[key];
       }
     }, this);
     return result;
@@ -66,8 +65,11 @@ var ApplicationServer = new Class({
   call: function(options)
   {
     var urlParts = $H(options).extract(this.urlOrder);
+    options = $H(options).filter(function(v, k) {
+      return !this.urlOrder.contains(k);
+    }, this);
     
-    options = $merge(options, {
+    options = $merge(options.getClean(), {
       url: this.server() + this.genUrl(urlParts),
       emulation: false
     });
@@ -122,9 +124,10 @@ var ApplicationServer = new Class({
 });
 
 
-var confirm = promise(function (value) {
-  console.log(value);
-});
+var confirm = function (value) {
+  SSLog('confirm:', SSLogForce);
+  SSLog(value, SSLogForce);
+}.asPromise();
 
 /*
 var app = new ApplicationServer();
