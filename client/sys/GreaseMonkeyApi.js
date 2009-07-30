@@ -61,15 +61,6 @@ function GM_setValue(key, value)
 }
 
 
-function GM_log(msg) 
-{
-  if (typeof console != 'undefined' && console.log) 
-  {
-    console.log(msg);
-  } 
-}
-
-
 function GM_openInTab()
 {
   return false;
