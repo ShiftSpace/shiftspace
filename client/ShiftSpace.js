@@ -125,6 +125,20 @@ var ShiftSpace = new (function() {
       SSCreateModalDiv();
       SSCreateDragDiv();
       
+      // initialize the value of default spaces for guest users
+      SSInitDefaultSpaces();
+        
+      if(SSDefaultSpaces())
+      {
+        SSSetup();
+      }
+      else
+      {
+        // first time ShiftSpace user default spaces not loaded yet
+        SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
+        SSLoadDefaultSpacesAttributes();
+      }
+      
       SSSync();
     };
     
@@ -134,27 +148,10 @@ var ShiftSpace = new (function() {
     */
     function SSSync() 
     {
-      var params = {
-        href: window.location.href
-      };
-      
       var p = app.query();
       ShiftSpace.User.syncData(p);
       SSUpdateInstalledSpaces(p);
       SSWait(p)
-
-      // initialize the value of default spaces
-      SSInitDefaultSpaces();
-        
-      if(SSDefaultSpaces())
-      {
-        SSSetup();
-      }
-      else
-      {
-        SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
-        SSLoadDefaultSpacesAttributes();
-      }
     }
     
     var SSWait = function(query)
