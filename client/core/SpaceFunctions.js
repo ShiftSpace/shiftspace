@@ -297,10 +297,10 @@ function SSInstalledSpaces()
 }
 
 
-function SSUpdateInstalledSpaces(force)
+var SSUpdateInstalledSpaces = function(user)
 {
-  __installedSpaces = __installedSpacesDataProvider.installedSpaces();
-}
+  __installedSpaces = user.installedSpaces();
+}.asPromise()
 
 
 function SSInitDefaultSpaces(defaults)

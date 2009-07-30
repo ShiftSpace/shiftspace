@@ -39,7 +39,7 @@ var AbstractUser = new Class({
     this.setUsername(data.username || null);
     this.setEmail(data.email || null);
     this.setId(data.id || null);
-  },
+  }.asPromise(),
   
   
   clearData: function()

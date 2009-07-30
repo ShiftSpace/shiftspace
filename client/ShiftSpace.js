@@ -69,7 +69,8 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE Bootstrap
-    
+    var app = new ShiftServer();
+
     /*
 
     Function: initialize
@@ -133,56 +134,47 @@ var ShiftSpace = new (function() {
     */
     function SSSync() 
     {
-      SSLog('SSSync', SSLogForce);
       var params = {
         href: window.location.href
       };
-      SSServerCall('query', params, function(json) {
-        SSLog("sync'ed!", SSLogForce);
-        if (json.error) 
-        {
-          console.error('Error checking for content: ' + json.error.message);
-          return;
-        }
+      
+      var p = app.query();
+      ShiftSpace.User.syncData(p);
+      SSUpdateInstalledSpaces(p);
+      SSWait(p)
 
-        if(json.data.user)
-        {
-          ShiftSpace.User.syncData(json.data.user)
-        }
+      // initialize the value of default spaces
+      SSInitDefaultSpaces();
         
-        SSUpdateInstalledSpaces();
-        
-        // wait for Console and Notifier
-        var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
-        if(!ui.every($msg('isLoaded')))
-        {
-          ui.each($msg('addEvent', 'load', function(obj) {
-            if(ui.every($msg('isLoaded')))
-            {
-              SSPostNotification("onSync");
-            }
-          }.bind(this)))
-        }
-        else
-        {
-          SSPostNotification("onSync");
-        }
-        
-        SSLog('SSInitDefaultSpaces', SSLogForce);
-        SSInitDefaultSpaces();
-        
-        if(SSDefaultSpaces())
-        {
-          SSLog('SSSetup', SSLogForce);
-          SSSetup();
-        }
-        else
-        {
-          SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
-          SSLoadDefaultSpacesAttributes();
-        }
-      });
+      if(SSDefaultSpaces())
+      {
+        SSSetup();
+      }
+      else
+      {
+        SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
+        SSLoadDefaultSpacesAttributes();
+      }
     }
+    
+    var SSWait = function(query)
+    {
+      // wait for console and notifier before sending onSync
+      var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
+      if(!ui.every($msg('isLoaded')))
+      {
+        ui.each($msg('addEvent', 'load', function(obj) {
+          if(ui.every($msg('isLoaded')))
+          {
+            SSPostNotification("onSync");
+          }
+        }.bind(this)))
+      }
+      else
+      {
+        SSPostNotification("onSync");
+      }
+    }.asPromise();
     
     function SSSetup()
     {
@@ -289,6 +281,7 @@ var ShiftSpace = new (function() {
       this.sys = __sys__;
       this.SSTag = SSTag;
       this.spaceForName = SSSpaceForName;
+      this.app = app;
     }
 
     return this;
