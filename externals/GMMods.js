@@ -16,6 +16,8 @@ var GM = {};
 
 GM.Request = new Class({
   
+  name: "GM.Request",
+  
   initialize: function(force)
   {
     if(!GM_log && !force)
@@ -23,13 +25,6 @@ GM.Request = new Class({
       throw Error();
     }
     this.headers = {};
-    this.__defineSetter__("onreadystatechange", this.__setonreadystatechange__.bind(this));
-  },
-
-  
-  __setonreadystatechange__ : function(fn)
-  {
-    this.onreadystatechange = fn;
   },
   
   
@@ -40,6 +35,7 @@ GM.Request = new Class({
     this.responseHeaders = responseDetails.responseHeaders;
     this.responseText = responseDetails.responseText;
     this.readyState = responseDetails.readyState;
+    if(this.onreadystatechange && $type(this.onreadystatechange) == 'function') this.onreadystatechange();
   },
   
   
