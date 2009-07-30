@@ -47,6 +47,12 @@ var ShiftServer = new Class({
   query: function()
   {
     return this.get({action:"query"});
+  },
+  
+  
+  shifts: function()
+  {
+    return this.get({action:"shifts", data:{href:window.location}});
   }
 
 });
