@@ -139,6 +139,12 @@ var ApplicationServer = new Class({
     if(v.error) return false;
     return v;
   }.asPromise(),
+  
+  
+  hasData: function(v) 
+  {
+    return (!v.message && !v.error) ? true : false;
+  }.asPromise(),
 
   
   showErr: function(err) 

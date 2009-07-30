@@ -149,7 +149,11 @@ var ShiftSpace = new (function() {
     function SSSync() 
     {
       var p = SSApp.query();
-      ShiftSpace.User.syncData(p);
+      $if(SSApp.hasData(p),
+          function() {
+            ShiftSpace.User.syncData(p);
+            SSPostNotification('onUserLogin');
+          });
       SSUpdateInstalledSpaces(p);
       SSWait(p)
     }

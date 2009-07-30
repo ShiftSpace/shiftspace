@@ -134,7 +134,7 @@ var SSNotifierView = new Class({
   {
     if(this.SSUsername)
     {
-      this.SSUsername.set('text', ShiftSpace.User.getUsername());
+      this.SSUsername.set('text', ShiftSpace.User.getUserName());
     }
     
     if(this.SSLogInOut)

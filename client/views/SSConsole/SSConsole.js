@@ -156,7 +156,7 @@ var SSConsole = new Class({
     
     this.emptyLoginForm();
     this.outlets().get('MainTabView').hideTabByName('LoginTabView');
-    if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUsername());
+    if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUserName());
     this.outlets().get('MainTabView').selectTabByName('AllShiftsTableView');
     
     this.updateInstalledSpaces();
@@ -288,7 +288,7 @@ var SSConsole = new Class({
   handleLoginFormSubmit: function()
   {
     ShiftSpaceUser.login({
-      username: this.outlets().get('SSLoginFormUsername').getProperty('value'),
+      userName: this.outlets().get('SSLoginFormUsername').getProperty('value'),
       password: this.outlets().get('SSLoginFormPassword').getProperty('value')
     }, this.loginFormSubmitCallback.bind(this));
   },
@@ -329,6 +329,7 @@ var SSConsole = new Class({
 
   signUpFormSubmitCallback: function(userData)
   {
+    this.outlets().get('MainTabView').selectTabByName('AllShiftsTableView');
   }.asPromise(),
   
   
@@ -560,7 +561,7 @@ var SSConsole = new Class({
     // in the all shifts table the user can edit only if she owns the shift
     if(args.tableView == this.allShiftsTableView)
     {
-      return (ShiftSpaceUser.getUsername() == this.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));
+      return (ShiftSpaceUser.getUserName() == this.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));
     }
 
     return true;

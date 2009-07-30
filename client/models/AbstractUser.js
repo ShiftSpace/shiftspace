@@ -28,7 +28,7 @@ var AbstractUser = new Class({
   {
     return {
       id: this.getId(),
-      username: this.getUsername(),
+      userName: this.getUserName(),
       email: this.email()
     };
   },
@@ -36,15 +36,15 @@ var AbstractUser = new Class({
   
   syncData: function(data)
   {
-    this.setUsername(data.username || null);
+    this.setUserName(data.userName || null);
     this.setEmail(data.email || null);
-    this.setId(data.id || null);
+    this.setId(data.id || data._id || null);
   }.asPromise(),
   
   
   clearData: function()
   {
-    this.__username = null;
+    this.__userName = null;
     this.__userId = null;
     this.__email = null;
   },
@@ -62,24 +62,24 @@ var AbstractUser = new Class({
   },
   
   
-  setUsername: function(username)
+  setUserName: function(userName)
   {
-    if(username != null && username != false)
+    if(userName != null && userName != false)
     {
-      this.__username = username;
+      this.__userName = userName;
     }
   },
 
   /*
-    Function: getUsername
+    Function: getUserName
       Returns the logged in user's name.
       
     Returns:
       User name as string. Returns false if there is no logged in user.
   */
-  getUsername: function() 
+  getUserName: function() 
   {
-    return (this.isLoggedIn() ? this.__username : this.defaultUserName());
+    return (this.isLoggedIn() ? this.__userName : this.defaultUserName());
   },
   
   
@@ -134,7 +134,7 @@ var AbstractUser = new Class({
       Login a user. Will probably be moved into ShiftSpace.js.
 
     Parameters:
-      credentials - object with username and password properties.
+      credentials - object with userName and password properties.
   */
   login: function(credentials) 
   {
@@ -216,12 +216,6 @@ var AbstractUser = new Class({
   onJoin: function(json)
   {
     SSPostNotification('onUserJoin', json);
-  },
-  
-  
-  onJoinError: function(json)
-  {
-    SSPostNotification('onUserJoinError', json);
   },
   
   
