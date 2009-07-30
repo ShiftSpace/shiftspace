@@ -109,7 +109,7 @@ var ApplicationServer = new Class({
   },
   
   
-  delete: function(resource, id)
+  'delete': function(resource, id)
   {
     return this.call({resource:resource, id:id, method:'delete'});
   },
