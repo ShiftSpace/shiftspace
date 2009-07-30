@@ -52,7 +52,7 @@ var ShiftServer = new Class({
   
   shifts: function()
   {
-    return this.get({action:"shifts", data:{href:window.location}});
+    return this.get({action:"shifts", data:{href:window.location.href}});
   }
 
 });
