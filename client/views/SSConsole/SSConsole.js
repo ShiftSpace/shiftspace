@@ -315,19 +315,21 @@ var SSConsole = new Class({
   handleSignUpFormSubmit: function()
   {
     var joinInput = {
-      username: this.outlets().get('SSSignUpFormUsername').getProperty('value'),
+      userName: this.outlets().get('SSSignUpFormUsername').getProperty('value'),
       email: this.outlets().get('SSSignUpFormEmail').getProperty('value'),
       password: this.outlets().get('SSSignUpFormPassword').getProperty('value'),
-      password_again: this.outlets().get('SSSignUpFormPassword').getProperty('value')
+      passwordVerify: this.outlets().get('SSSignUpFormPassword').getProperty('value')
     };
 
-    ShiftSpaceUser.join(joinInput, this.signUpFormSubmitCallback.bind(this));
+    var p = ShiftSpaceUser.join(joinInput);
+    $if(SSApp.noErr(p),
+        this.signUpFormSubmitCallback.bind(null, [p]));
   },
 
 
-  signUpFormSubmitCallback: function(response)
+  signUpFormSubmitCallback: function(userData)
   {
-  },
+  }.asPromise(),
   
   
   showLogin: function()

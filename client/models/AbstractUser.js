@@ -197,25 +197,20 @@ var AbstractUser = new Class({
   
   /*
     Function: join (private)
-      Join a new user.  Will probably be moved into ShiftSpace.js.
+      Join a new user. Returns a promise for the user's data.
+      This promise may be an error and should be handled.
   */
   join: function(userInfo) 
   {
-    SSServerCall('user.join', userInfo, function(json) {
-      if(!json['error'])
-      {
-        var data = $get(json, 'data', 'contents', 'values');
-        if(data) this.syncData(data);
-        
-        this.onJoin(json);
-        this.onLogin(json);
-      }
-      else
-      {
-        this.onJoinError(json);
-      }
-    }.bind(this));
-  },
+    var p = SSApp.join(userInfo);
+    $if(SSApp.noErr(p),
+        function() {
+          this.syncData(p);
+          this.onJoin(p);
+          this.onLogin(p);
+        });
+    return p;
+  }.asPromise(),
   
   
   onJoin: function(json)

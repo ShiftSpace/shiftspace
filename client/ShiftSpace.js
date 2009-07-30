@@ -69,7 +69,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE Bootstrap
-    var app = new ShiftServer();
+    var SSApp = new ShiftServer();
 
     /*
 
@@ -148,7 +148,7 @@ var ShiftSpace = new (function() {
     */
     function SSSync() 
     {
-      var p = app.query();
+      var p = SSApp.query();
       ShiftSpace.User.syncData(p);
       SSUpdateInstalledSpaces(p);
       SSWait(p)
@@ -278,7 +278,7 @@ var ShiftSpace = new (function() {
       this.sys = __sys__;
       this.SSTag = SSTag;
       this.spaceForName = SSSpaceForName;
-      this.app = app;
+      this.app = SSApp;
     }
 
     return this;

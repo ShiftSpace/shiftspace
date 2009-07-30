@@ -124,22 +124,26 @@ var ApplicationServer = new Class({
   get: function(options)
   {
     return this.call($merge(options, {method:'get'}));
-  }
+  },
+
+  
+  confirm: function (value) 
+  {
+    SSLog('confirm:', SSLogForce);
+    SSLog(value, SSLogForce);
+  }.asPromise(),
+
+
+  noErr: function(v) 
+  {
+    if(v.error) return false;
+    return v;
+  }.asPromise(),
+
+  
+  showErr: function(err) 
+  {
+    alert(err.error);
+  }.asPromise()
 
 });
-
-var App = ApplicationServer;
-
-App.confirm = function (value) {
-  SSLog('confirm:', SSLogForce);
-  SSLog(value, SSLogForce);
-}.asPromise();
-
-App.noErr = function(v) {
-  if(v.error) return false;
-  return v;
-}.asPromise();
-
-App.showErr = function(err) {
-  alert(err.error);
-}.asPromise();
