@@ -22,5 +22,4 @@ var GroupsPane = new Class({
   {
     this.mapOutletsToThis();
   }
-
 });
