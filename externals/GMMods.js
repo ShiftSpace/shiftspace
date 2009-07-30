@@ -28,7 +28,7 @@ GM.Request = new Class({
   },
   
   
-  __onreadystatechange: function(responseDetails)
+  __onreadystatechange__: function(responseDetails)
   {
     this.status = responseDetails.status;
     this.statusText = responseDetails.statusText;
@@ -65,7 +65,7 @@ GM.Request = new Class({
       url: this.url,
       headers: this.headers,
       data: data || this.data,
-      onreadystatechange: this.__onreadystatechange.bind(this)
+      onreadystatechange: this.__onreadystatechange__.bind(this)
     });
   }
 });
