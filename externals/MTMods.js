@@ -222,6 +222,23 @@ Class.extend({
   }
 });
 
+// path for MooTools 1.2.1 - David
+Class.extend({
+  override: function(object, name, method){
+    var parent = Class.prototyping;
+    if (parent && object[name] != parent[name]) parent = null;
+    var override = function(){
+      var previous = this.parent;
+      this.parent = parent ? parent[name] : object[name];
+      var value = method.apply(this, arguments);
+      this.parent = previous;
+      return value;
+    };
+    method._wrapper = override;
+    object[name] = override;
+  }  
+});
+
 
 function $msg(methodName) 
 {
