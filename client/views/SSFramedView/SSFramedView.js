@@ -36,18 +36,18 @@ var SSFramedView = new Class({
     if(typeof SandalphonToolMode == 'undefined')
     {
       var url = 'client/'+this.options.location+'/'+this.name+'/'+this.name+'Frame.css';
-      SSLoadFile(url, this.onStyleLoad.bind(this));
+      var p = SSLoadFile(url);
+      this.onStyleLoad(p);
     }
   },
   
   
-  onStyleLoad: function(response)
+  onStyleLoad: function(css)
   {
-    var style = response.responseText;
-    if(style) Sandalphon.addStyle(style);
+    if(css) Sandalphon.addStyle(css);
     var p = Sandalphon.load('/client/'+this.options.location+'/'+this.name+'/'+this.name);
     this.onInterfaceLoad(p);
-  },
+  }.asPromise(),
   
   
   onInterfaceLoad: function(ui) 
