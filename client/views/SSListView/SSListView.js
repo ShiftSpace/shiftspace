@@ -1236,6 +1236,7 @@ var SSListView = new Class({
     // just in case this doesn't work
     if(this.cell() && 
        this.cellNodes().length == 0 && 
+       this.data() &&
        this.data().length > 0)
     {
       this.reloadData();
