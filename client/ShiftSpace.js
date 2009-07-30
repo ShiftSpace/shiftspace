@@ -106,9 +106,7 @@ var ShiftSpace = new (function() {
         SSLog('ShiftSpace detects user logout', SSLogForce);
       });
       
-      SSLoadStyle('styles/ShiftSpace.css', function() {
-        SSCreateErrorWindow();
-      });
+      SSLoadStyle('styles/ShiftSpace.css');
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {

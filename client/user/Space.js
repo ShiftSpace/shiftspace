@@ -143,7 +143,7 @@ var ShiftSpaceSpace = new Class({
         SSShowNewShift(aShift.id);
       }.bind(this));
     }
-  },
+  }.asPromise(),
 
   /*
     Function: addDeferredNew (private)

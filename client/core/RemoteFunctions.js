@@ -170,58 +170,53 @@ Parameters:
   callback - A custom function to handle css text if you don't want to use GM_addStyle
   spaceCallback - A callback function for spaces that want to use GM_addStyle but need to be notified of CSS load.
 */
-function SSLoadStyle(url, callback, frame) 
+function SSLoadStyle(url, frame) 
 {
-  // TODO: check to see if the domain is different, if so don't mess with the url - David
-  // TODO: get rid of frame, change to context so we can use this function for iframe's as well
   var dir = url.split('/');
   dir.pop();
   dir = dir.join('/');
-  if (dir.substr(0, 7) != 'http://') {
+  if (dir.substr(0, 7) != 'http://') 
+  {
     dir = SSInfo().server + dir;
   }
 
-  SSLoadFile(url, function(rx) {
-    var css = rx.responseText;
-    // this needs to be smarter, only works on directory specific urls
-    css = css.replace(/url\(([^)]+)\)/g, 'url(' + dir + '/$1)');
+  var p = SSLoadFile(url);
+  return SSAddStyle(p, {rewriteUrls: dir, frame: frame});
+}
 
-    // if it's a frame load it into the frame
-    if(frame)
+var SSAddStyle = function(css, options)
+{
+  // this needs to be smarter, only works on directory specific urls
+  if(options.rewriteUrls) css = css.replace(/url\(([^)]+)\)/g, 'url(' + options.rewriteUrls + '/$1)');
+
+  // if it's a frame load it into the frame
+  if(options.frame)
+  {
+    var doc = frame.contentDocument;
+
+    if( doc.getElementsByTagName('head').length != 0 )
     {
-      var doc = frame.contentDocument;
-
-      if( doc.getElementsByTagName('head').length != 0 )
-      {
-        var head = doc.getElementsByTagName('head')[0];
-      }
-      else
-      {
-        // In Safari iframes don't get the head element by default - David
-        // Mootools-ize body
-        $(doc.body);
-        var head = new Element( 'head' );
-        head.injectBefore( doc.body );
-      }
-
-      var style = doc.createElement('style');
-      style.setAttribute('type', 'text/css');
-      style.appendChild(doc.createTextNode(css)); // You can not use setHTML on style elements in Safari - David
-      head.appendChild(style);
+      var head = doc.getElementsByTagName('head')[0];
     }
     else
     {
-      // FIXME: we don't want to rely on this, we can't target iframes - David
-      GM_addStyle(css);
+      // In Safari iframes don't get the head element by default - David
+      // Mootools-ize body
+      $(doc.body);
+      var head = new Element( 'head' );
+      head.injectBefore( doc.body );
     }
 
-    if (typeof callback == 'function')
-    {
-      callback();
-    }
-
-  });
-}
+    var style = doc.createElement('style');
+    style.setAttribute('type', 'text/css');
+    style.appendChild(doc.createTextNode(css)); // You can not use setHTML on style elements in Safari - David
+    head.appendChild(style);
+  }
+  else
+  {
+    GM_addStyle(css);
+  }
+}.asPromise();
 
 /*
 Function: SSLoadFile
@@ -231,7 +226,7 @@ Parameters:
   url - The URL of the target file
   callback - A function to process the file once it's loaded
 */
-function SSLoadFile(url, callback)
+var SSLoadFile = function(url)
 {
   // If the URL doesn't start with "http://", assume it's on our server
   if (url.substr(0, 7) != 'http://' &&
@@ -239,56 +234,13 @@ function SSLoadFile(url, callback)
     url = SSInfo().server + url;
   }
 
-  // Caching is implemented as a rather blunt instrument ...
-  if ((typeof __cacheFiles != 'undefined') && !__cacheFiles) 
-  {
-    // ... either append the current timestamp to the URL ...
-    var now = new Date();
-    url += (url.indexOf('?') == -1) ? '?' : '&';
-    url += now.getTime();
-  } 
-  else if((typeof __cacheFiles != 'undefined') && __cacheFiles)
-  {
-    // ... or use SSGetValue to retrieve the file's contents
-    var cached = SSGetValue('cache.' + url, false);
-
-    if (cached) 
-    {
-      if (typeof callback == 'function') 
-      {
-        callback({ responseText: cached });
-      }
-      return true;
-    }
-  }
-
   // Load the URL then execute the callback
-  GM_xmlhttpRequest({
-    'method': 'GET',
-    'url': url,
-    'onload': function(response) 
-    {
-      // Store file contents for later retrieval
-      if (typeof __cacheFiles != 'undefined' && __cacheFiles) 
-      {
-        cache.push(url);
-        SSSetValue('cache', cache);
-        SSSetValue('cache.' + url, response.responseText);
-      }
-      if (typeof callback == 'function') 
-      {
-        callback(response);
-      }
-    },
-    'onerror': function(response) 
-    {
-      SSLog("failed loadFile call, for file " + url, SSLogError);
-      if(typeof errCallback != 'undefined' && typeof errCallback == 'function') errCallback(); // FIXME: broken - David
-    }
+  return new Request({
+    method: 'GET',
+    url: url,
+    bare: true
   });
-
-  return true;
-}
+}.asPromise();
 
 /*
   Function: SSXmlHttpRequest

@@ -101,7 +101,10 @@ function SSRegisterSpace(instance)
       var css = spaceDir + instance.attributes().css;
       instance.attributes().css = css;
     }
-    setTimeout(SSLoadStyle.bind(ShiftSpace, [instance.attributes().css, instance.onCssLoad.bind(instance)]), 0);
+    setTimeout(function() {
+      var p = SSLoadStyle(instance.attributes().css);
+      instance.onCssLoad(p);
+    }, 0);
   }
 
   // This exposes each space instance to the console
