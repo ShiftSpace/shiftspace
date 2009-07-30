@@ -64,7 +64,7 @@ GM.Request = new Class({
       method: this.method,
       url: this.url,
       headers: this.headers,
-      data: data || this.data,
+      data: data,
       onreadystatechange: this.__onreadystatechange__.bind(this)
     });
   }
