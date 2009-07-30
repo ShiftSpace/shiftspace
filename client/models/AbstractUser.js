@@ -138,17 +138,14 @@ var AbstractUser = new Class({
   */
   login: function(credentials) 
   {
-    SSServerCall('user.login', credentials, function(json) {
-      if(!json['error'])
-      {
-        if(json.data) this.syncData(json.data);
-        this.onLogin(json);
-      }
-      else
-      {
-        this.onLoginError(json);
-      }
-    }.bind(this));
+    var p = SSApp.login(credentials);
+    $if(SSApp.noErr(p),
+        function() {
+          this.syncData(p);
+          this.onJoin(p);
+          this.onLogin(p);
+        }.bind(this));
+    return p;
   },
   
   
@@ -156,42 +153,27 @@ var AbstractUser = new Class({
   {
     SSPostNotification('onUserLogin', json);
   },
-  
-  
-  onLoginError: function(json)
-  {
-    SSPostNotification('onUserLoginError', json);
-  },
-  
+
+
   /*
     Function: logout (private)
       Logout a user. Will probably be moved into ShiftSpace.js.
   */
   logout: function()
   {
-    SSServerCall('user.logout', null, function(json) {
-      this.clearData();
-      if(!json['error'])
-      {
-        this.onLogout(json);
-      }
-      else
-      {
-        this.onLogoutError(json);
-      }
-    }.bind(this));
+    var p = SSApp.logout();
+    $if(SSApp.noErr(p),
+        function() {
+          this.clearData();
+          this.onLogout(p);
+        }.bind(this));
+    return p;
   },
   
   
   onLogout: function(json)
   {
     SSPostNotification('onUserLogout', json);
-  },
-  
-  
-  onLogoutError: function(json)
-  {
-    SSPostNotification('onUserLogoutError', json);
   },
   
   
@@ -208,9 +190,9 @@ var AbstractUser = new Class({
           this.syncData(p);
           this.onJoin(p);
           this.onLogin(p);
-        });
+        }.bind(this));
     return p;
-  }.asPromise(),
+  },
   
   
   onJoin: function(json)
@@ -234,10 +216,6 @@ var AbstractUser = new Class({
         if(json.data) this.syncData(json.data);
         this.onUpdate(json);
       }
-      else
-      {
-        this.onUpdateError(json);
-      }
     }.bind(this));
   },
   
@@ -245,12 +223,6 @@ var AbstractUser = new Class({
   onUpdate: function(json)
   {
     SSPostNotification('onUserUpdate', json);
-  },
-  
-  
-  onUpdateError: function(json)
-  {
-    SSPostNotification('onUserUpdateError', json);
   },
   
   
@@ -267,10 +239,6 @@ var AbstractUser = new Class({
       if(!json['error'])
       {
         this.onResetPassword(json);
-      }
-      else
-      {
-        this.onResetPasswordError(json);
       }
     });
   },

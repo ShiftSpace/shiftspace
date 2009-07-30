@@ -153,10 +153,10 @@ var ShiftSpace = new (function() {
             SSPostNotification('onUserLogin');
           });
       SSUpdateInstalledSpaces(p);
-      SSWait(p)
+      SSWaitForUI(p)
     }
     
-    var SSWait = function(query)
+    var SSWaitForUI = function(query)
     {
       // wait for console and notifier before sending onSync
       var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
