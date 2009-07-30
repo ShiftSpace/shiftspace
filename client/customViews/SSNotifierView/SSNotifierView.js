@@ -115,13 +115,6 @@ var SSNotifierView = new Class({
   
   handleSync: function()
   {
-    ShiftSpace.User.getShifts(function(shifts) {
-      if(shifts && shifts.length > 0)
-      {
-        this.SSShiftCount.set('text', shifts.length + ((shifts.length == 1) ? ' shift' : ' shifts'));
-        this.show();
-      }
-    }.bind(this));
   },
   
   
