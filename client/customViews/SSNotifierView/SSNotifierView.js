@@ -460,7 +460,7 @@ var SSNotifierView = new Class({
     this.parent(ui);
     this.element.setProperty('id', 'SSNotifier');
     this.element.addClass("SSNotifierHidden");
-  },
+  }.asPromise(),
   
   
   awake: function(context)
