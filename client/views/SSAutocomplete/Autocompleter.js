@@ -37,7 +37,7 @@ var Autocompleter = new Class({
 		emptyChoices: null,
 		visibleChoices: true,
 		className: 'autocompleter-choices',
-		zIndex: 42,
+		zIndex: 1000001,
 		delay: 400,
 		observerOptions: {},
 		fxOptions: {},
