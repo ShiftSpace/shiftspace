@@ -2,6 +2,16 @@
 // @required
 // ==/Builder==
 
+Browser.Request = function(){
+	return $try(function(){
+	  return new GM.Request();
+	}, function(){
+		return new XMLHttpRequest();
+	}, function(){
+		return new ActiveXObject('MSXML2.XMLHTTP');
+	});
+};
+
 Document.implement({
   getWindow: function(){
     return (new Window(this.defaultView || this.parentWindow));
