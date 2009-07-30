@@ -167,7 +167,9 @@ Function.implement({
     
     while(decorator)
     {
+      var temp = resultFn;
       resultFn = decorator(resultFn);
+      temp._decorator = resultFn;
       decorator = decorators.pop();
     }
     
