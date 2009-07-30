@@ -23,12 +23,27 @@ GM.Request = new Class({
       throw Error();
     }
     this.headers = {};
-    this.__defineGetter__("status", function() { return this.req.status });
-    this.__defineGetter__("responseText", function() { return this.req.responseText });
+    this.__defineSetter__("onreadystatechange", this.__setonreadystatechange__.bind(this));
+  },
+
+  
+  __setonreadystatechange__ : function(fn)
+  {
+    this.onreadystatechange = fn;
   },
   
   
-  open: function(method, url, async)
+  __onreadystatechange: function(responseDetails)
+  {
+    this.status = responseDetails.status;
+    this.statusText = responseDetails.statusText;
+    this.responseHeaders = responseDetails.responseHeaders;
+    this.responseText = responseDetails.responseText;
+    this.readyState = responseDetails.readyState;
+  },
+  
+  
+  open: function(method, url)
   {
     this.method = method;
     this.url = url;
@@ -43,18 +58,18 @@ GM.Request = new Class({
   
   getResponseHeader: function(key)
   {
-    return this.req.responseHeaders[key];
+    return this.responseHeaders[key];
   },
   
   
   send: function(data)
   {
-    this.req = GM_xmlhttpRequest({
+    GM_xmlhttpRequest({
       method: this.method,
       url: this.url,
       headers: this.headers,
       data: data || this.data,
-      onreadystatechange: this.onreadystatechange
+      onreadystatechange: this.__onreadystatechange.bind(this)
     });
   }
 });
