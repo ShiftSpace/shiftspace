@@ -29,7 +29,8 @@ var SSConsole = new Class({
     if(typeof SandalphonToolMode == 'undefined')
     {
       // load from the proper place
-      Sandalphon.load('/client/compiledViews/'+SSInfo().env+'/SSConsoleMain', this.buildInterface.bind(this));
+      var p = Sandalphon.load('/client/compiledViews/'+SSInfo().env+'/SSConsoleMain');
+      this.buildInterface(p);
     }
 
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
@@ -400,7 +401,7 @@ var SSConsole = new Class({
     // since we're creating the frame via code we need to hook up the controller reference manually
     SSSetControllerForNode(this, this.element);
     this.element.injectInside(document.body);
-  },
+  }.asPromise(),
   
   
   attachEvents: function()

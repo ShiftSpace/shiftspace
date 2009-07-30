@@ -45,7 +45,8 @@ var SSFramedView = new Class({
   {
     var style = response.responseText;
     if(style) Sandalphon.addStyle(style);
-    Sandalphon.load('/client/'+this.options.location+'/'+this.name+'/'+this.name, this.onInterfaceLoad.bind(this))
+    var p = Sandalphon.load('/client/'+this.options.location+'/'+this.name+'/'+this.name);
+    this.onInterfaceLoad(p);
   },
   
   
@@ -68,7 +69,7 @@ var SSFramedView = new Class({
     
     SSSetControllerForNode(this, this.element);
     this.element.injectInside(document.body);
-  },
+  }.asPromise(),
   
   
   contentDocument: function()

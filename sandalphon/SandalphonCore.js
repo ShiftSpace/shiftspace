@@ -140,67 +140,9 @@ var SandalphonClass = new Class({
   */
   load: function(path, callback)
   {
-    var interface;
-    var styles;
-    
-    SSLog("Sandalphon LOAD " + path, SSLogSandalphon);
-    
     var server = (SSInfo && SSInfo().server) || '..';
-
-    // load the interface file
-    if(typeof SandalphonToolMode != 'undefined')
-    {
-      var interfaceCall = new Request({
-        url: server+path+'.html',
-        method: 'get',
-        onComplete: function(responseText, responseXML)
-        {
-          SSLog("Sandalphon interface call complete");
-          interface = responseText;
-        }.bind(this),
-        onFailure: function()
-        {
-          console.error('Oops could not load that interface file');
-        }
-      });
-      
-      var stylesCall = new Request({
-        url:  server+path+'.css',
-        method: 'get',
-        onComplete: function(responseText, responseXML)
-        {
-          SSLog("Sandalphon styles call complete");
-          styles = responseText;
-        }.bind(this),
-        onFailure: function()
-        {
-          // we don't care if the interface file is missing
-          stylesCall.fireEvent('complete');
-        }
-      });
-      
-      // Group HTMl and CSS calls
-      var loadGroup = new Group(interfaceCall, stylesCall);
-      loadGroup.addEvent('complete', function() {
-        SSLog('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Sandalphon interface load complete');
-        if(callback) callback({interface:interface, styles:styles});
-      });
-      
-      // fetch
-      interfaceCall.send();
-      stylesCall.send();
-    }
-    else
-    {
-      // just use loadFile if we're running in ShiftSpace
-      SSLoadFile(path+'.html', function(rx) {
-        interface = rx.responseText;
-        SSLoadFile(path+'.css', function(rx) {
-          styles = rx.responseText;
-          if(callback) callback({interface:interface, styles:styles});
-        });
-      });
-    }
+    return new Promise({interface: SSLoadFile(server+path+'.html'),
+                        styles: SSLoadFile(server+path+'.css')});
   },
   
   /*
