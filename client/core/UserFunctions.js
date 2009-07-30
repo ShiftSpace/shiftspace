@@ -38,7 +38,7 @@ function SSUserForShift(shiftId)
 */
 function SSUserOwnsShift(shiftId)
 {
-  return (SSUserForShift(shiftId) == ShiftSpace.User.getUsername());
+  return (SSUserForShift(shiftId) == ShiftSpace.User.getUserName());
 }
 
 /*

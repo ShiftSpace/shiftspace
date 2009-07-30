@@ -319,7 +319,7 @@ var ActionMenu = new Class({
       if(selectedShifts && selectedShifts.length > 0)
       {
         var notTheLoggedInUser = function(x) {
-          return x.username != ShiftSpace.User.getUsername();        
+          return x.username != ShiftSpace.User.getUserName();        
         };
 
         var usernames = selectedShifts.filter(notTheLoggedInUser);      

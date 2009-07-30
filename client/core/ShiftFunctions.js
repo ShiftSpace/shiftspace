@@ -42,7 +42,7 @@ function SSInitShift(spaceName, options)
   var shiftJson = {
     id: tempId,
     space: spaceName,
-    username: ShiftSpace.User.getUsername(),
+    username: ShiftSpace.User.getUserName(),
     position: _position
   };
 
@@ -327,7 +327,7 @@ function SSSaveNewShift(shiftJson)
     
     var json = SSGetJsonData(response);
 
-    shiftJson.username = ShiftSpace.User.getUsername();
+    shiftJson.username = ShiftSpace.User.getUserName();
     shiftJson.created = 'Just posted';
     shiftJson.href = window.location.href;
 
@@ -395,7 +395,7 @@ function SSSaveShift(shiftJson)
     summary: shiftJson.summary,
     content: escape(JSON.encode(shiftJson)), // MERGE: for 0.5 - David
     version: space.attributes().version,
-    username: ShiftSpace.User.getUsername(),
+    username: ShiftSpace.User.getUserName(),
     filters: JSON.encode(filters)
   };
 
@@ -489,7 +489,7 @@ function SSGetPageShiftIdsForUser()
 
   if(ShiftSpace.User.isLoggedIn())
   {
-    var username = ShiftSpace.User.getUsername();
+    var username = ShiftSpace.User.getUserName();
     var allShifts = SSAllShifts();
     for(shiftId in allShifts)
     {
