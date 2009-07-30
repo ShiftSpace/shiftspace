@@ -5,6 +5,8 @@
 // INCLUDE GMMods
 // INCLUDE MTMods
 // INCLUDE PACKAGE System_
+// INCLUDE PACKAGE Promises
+// INCLUDE PACKAGE App
 // INCLUDE Base
 // INCLUDE PreInitDeclarations
 // INCLUDE PACKAGE System

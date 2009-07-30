@@ -1,3 +1,8 @@
+// ==Builder==
+// @required
+// @package           App
+// ==/Builder==
+
 Hash.implement({
   extract: function(ary, clean)
   {
@@ -123,24 +128,18 @@ var ApplicationServer = new Class({
 
 });
 
+var App = ApplicationServer;
 
-var confirm = function (value) {
+App.confirm = function (value) {
   SSLog('confirm:', SSLogForce);
   SSLog(value, SSLogForce);
 }.asPromise();
 
-
-var noErr = function(v) {
+App.noErr = function(v) {
   if(v.error) return false;
   return v;
 }.asPromise();
 
-
-var showErr = function(err) {
+App.showErr = function(err) {
   alert(err.error);
 }.asPromise();
-
-/*
-var app = new ApplicationServer();
-confirm(app.post({action:"login", data:fakemary, json:true}))
-*/

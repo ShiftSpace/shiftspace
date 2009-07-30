@@ -1,3 +1,9 @@
+// ==Builder==
+// @required
+// @package           App
+// @dependencies      ApplicationServer
+// ==/Builder==
+
 var ShiftServer = new Class({
 
   Extends: ApplicationServer,
