@@ -3,14 +3,61 @@
 // ==/Builder==
 
 Browser.Request = function(){
-	return $try(function(){
-	  return new GM.Request();
-	}, function(){
-		return new XMLHttpRequest();
-	}, function(){
-		return new ActiveXObject('MSXML2.XMLHTTP');
-	});
+  return $try(function(){
+    return new GM.Request();
+  }, function(){
+    return new XMLHttpRequest();
+  }, function(){
+    return new ActiveXObject('MSXML2.XMLHTTP');
+  });
 };
+
+var GM = {};
+
+GM.Request = new Class({
+  
+  initialize: function(force)
+  {
+    if(!GM_log && !force)
+    {
+      throw Error();
+    }
+    this.headers = {};
+    this.__defineGetter__("status", function() { return this.req.status });
+    this.__defineGetter__("responseText", function() { return this.req.responseText });
+  },
+  
+  
+  open: function(method, url, async)
+  {
+    this.method = method;
+    this.url = url;
+  },
+  
+  
+  setRequestHeader: function(key, values)
+  {
+    this.headers[key] = value;
+  },
+  
+  
+  getResponseHeader: function(key)
+  {
+    return this.req.responseHeaders[key];
+  },
+  
+  
+  send: function(data)
+  {
+    this.req = GM_xmlhttpRequest({
+      method: this.method,
+      url: this.url,
+      headers: this.headers,
+      data: data || this.data,
+      onreadystatechange: this.onreadystatechange
+    });
+  }
+});
 
 Document.implement({
   getWindow: function(){
