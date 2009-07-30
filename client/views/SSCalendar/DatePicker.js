@@ -1071,16 +1071,16 @@ var DatePicker;
         this.month.addClass('month');
         this.month.set('colspan', 5);
 
-        this.prevLnk = rows[0].getElements('td')[1];
+        this.prevLnk = rows[0].getElements('td')[2];
         this.prevLnk.addClass('prevLnk');
         this.prevLnk.setStyle('text-align', 'right');
-        this.rightScroll = new Element('a').set('html', "&lt;").addClass('rightScroll');
+        this.rightScroll = new Element('a').addClass('rightScroll');
         this.prevLnk.adopt(this.rightScroll);
 
-        this.nextLnk = rows[0].getElements('td')[2];
+        this.nextLnk = rows[0].getElements('td')[1];
         this.nextLnk.addClass('nextLnk');
         this.nextLnk.setStyle('text-align', 'left');
-        this.leftScroll = new Element('a').set('html', '&gt;').addClass('leftScroll');
+        this.leftScroll = new Element('a').addClass('leftScroll');
         this.nextLnk.adopt(this.leftScroll);
         
         cal.addEvent('click', this.clickCalendar.bind(this));
