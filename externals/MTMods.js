@@ -192,7 +192,7 @@ Function.implement({
   
   rewind: function(bind, args)
   {
-    return this._wrapper.bind(bind, args);
+    return (this._wrapper) ? this._wrapper.bind(bind, args) : this.bind(bind, args);
   }
 });
 
@@ -222,8 +222,37 @@ Class.extend({
   }
 });
 
-// path for MooTools 1.2.1 - David
+// patch for MooTools 1.2.1 - David
 Class.extend({
+  inherit: function(object, properties){
+    var caller = arguments.callee.caller;
+    for (var key in properties){
+      var override = properties[key];
+      var previous = object[key];
+      var type = $type(override);
+      if (previous && type == 'function'){
+        if (override != previous){
+          if (caller){
+            override.__parent = previous;
+            object[key] = override;
+          } else {
+            Class.override(object, key, override);
+          }
+        }
+      } else if(type == 'object'){
+        object[key] = $merge(previous, override);
+      } else {
+        object[key] = override;
+      }
+    }
+
+    if (caller) object.parent = function(){
+      return arguments.callee.caller.__parent.apply(this, arguments);
+    };
+
+    return object;
+  },
+
   override: function(object, name, method){
     var parent = Class.prototyping;
     if (parent && object[name] != parent[name]) parent = null;
