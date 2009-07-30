@@ -249,7 +249,9 @@ Class.extend({
     }
 
     if (caller) object.parent = function(){
-      return arguments.callee.caller.__parent.apply(this, arguments);
+      var caller = arguments.callee.caller;
+      var parent = (caller._decorator) ? caller._decorator.__parent : caller.__parent;
+      return parent.apply(this, arguments);
     };
 
     return object;
