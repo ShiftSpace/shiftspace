@@ -167,7 +167,9 @@ Function.implement({
     
     while(decorator)
     {
+      var temp = resultFn;
       resultFn = decorator(resultFn);
+      temp._decorator = resultFn;
       decorator = decorators.pop();
     }
     
@@ -192,7 +194,7 @@ Function.implement({
   
   rewind: function(bind, args)
   {
-    return this._wrapper.bind(bind, args);
+    return (this._wrapper) ? this._wrapper.bind(bind, args) : this.bind(bind, args);
   }
 });
 
@@ -220,6 +222,54 @@ Class.extend({
     method._wrapper = wrapper;
     return wrapper;
   }
+});
+
+// patch for MooTools 1.2.1 - David
+Class.extend({
+  inherit: function(object, properties){
+    var caller = arguments.callee.caller;
+    for (var key in properties){
+      var override = properties[key];
+      var previous = object[key];
+      var type = $type(override);
+      if (previous && type == 'function'){
+        if (override != previous){
+          if (caller){
+            override.__parent = previous;
+            object[key] = override;
+          } else {
+            Class.override(object, key, override);
+          }
+        }
+      } else if(type == 'object'){
+        object[key] = $merge(previous, override);
+      } else {
+        object[key] = override;
+      }
+    }
+
+    if (caller) object.parent = function(){
+      var caller = arguments.callee.caller;
+      var parent = (caller._decorator) ? caller._decorator.__parent : caller.__parent;
+      return parent.apply(this, arguments);
+    };
+
+    return object;
+  },
+
+  override: function(object, name, method){
+    var parent = Class.prototyping;
+    if (parent && object[name] != parent[name]) parent = null;
+    var override = function(){
+      var previous = this.parent;
+      this.parent = parent ? parent[name] : object[name];
+      var value = method.apply(this, arguments);
+      this.parent = previous;
+      return value;
+    };
+    method._wrapper = override;
+    object[name] = override;
+  }  
 });
 
 

@@ -2,7 +2,7 @@
 // @uiclass
 // @optional
 // @package           ShiftSpaceCoreUI
-// @dependencies      SSView
+// @dependencies      SSCell
 // ==/Builder==
 
 var SSListViewCell = new Class({
