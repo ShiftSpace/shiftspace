@@ -43,21 +43,34 @@ class Collections {
     
     if (!empty($constraints)) {
       $sql .= " WHERE ";
-      $first = false;
+      $first = true;
       
       foreach ($constraints as $column => $value) {
-        if ($first) $sql .= " AND ";
-
-        if (!is_array($value))
-          $value = array($value);
-          
-        $value = array_map(array($this, esc), $value);
+        if (!$first) $sql .= " AND ";
 
         if (!ctype_alpha2(str_replace(array('.', '_'), '', $column)))
           throw new Error("Possible hack attempt 1");
           
-        $sql .= "$column in (".implode(',', $value).") ";
-        $first = true;
+        if (!is_array($value))
+          $value = array($value);
+
+        $value = array_map(array($this, esc), $value);
+
+        if (isset($value['range'])) {
+          $c = array();
+
+          if ($value['range'][0] != null)
+            $c[] =  "$column >= '".$value[range][0]."'";
+
+          if ($value['range'][1] != null)
+            $c[] =  "$column < '".$value[range][1]."'";
+
+          $sql .= implode(" AND ", $c);
+        } else {
+          $sql .= "$column in (".implode(',', $value).") ";
+        }
+        
+        $first = false;
       }
     }
 
