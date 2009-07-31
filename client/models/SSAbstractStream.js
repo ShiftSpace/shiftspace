@@ -260,3 +260,9 @@ var SSAbstractStream = new Class({
 });
 
 SSAbstractStream.findStreamsWithEvents = SSFindStreamsWithEvents;
+SSAbstractStream.withData = function(data)
+{
+  var newStream = new SSAbstractStream(null, {createStream:false});
+  newStream.setData(data);
+  return newStream;
+}
