@@ -9,7 +9,7 @@ function $identity(v)
   return v;
 }
 
-unction $not(fn)
+function $not(fn)
 {
   return function() {
     return !fn.apply(this, $A(arguments));
