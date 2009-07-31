@@ -4,8 +4,24 @@
 // @package           Core
 // ==/Builder==
 
+var __shifts = $H();
 var __focusedShiftId = null; // Holds the id of the currently focused shift
 var __defaultShiftStatus = 1;
+
+function SSSetShift(id, shift)
+{
+  __shifts[id] = shift;
+}
+
+function SSGetShift(id)
+{
+  return __shifts[id];
+}
+
+function SSUninternShift(id)
+{
+  delete __shifts[id];
+}
 
 /*
 Function: SSInitShift
@@ -29,28 +45,22 @@ function SSInitShift(spaceName, options)
   }
   
   var tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
-  while (SSGetShift(tempId)) 
-  {
-    tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
-  }
-  
   var winSize = window.getSize();
   var _position = (options && options.position && {x: options.position.x, y: options.position.y }) || 
                   {x: winSize.x/2, y: winSize.y/2};
                   
-  var shiftJson = {
+  var shift = {
     id: tempId,
     space: spaceName,
     username: ShiftSpace.User.getUserName(),
     position: _position
   };
 
-  SSSetShift(tempId, shiftJson);
-
-  var noError = SSSpaceForName(spaceName).createShift(shiftJson);
+  var noError = SSSpaceForName(spaceName).createShift(shift);
   
   if(noError)
   {
+    SSSetShift(tempId, shift);
     SSShowNewShift(tempId);
   }
   else
