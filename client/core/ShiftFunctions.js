@@ -4,7 +4,6 @@
 // @package           Core
 // ==/Builder==
 
-var __loadedShifts = $H();
 var __focusedShiftId = null; // Holds the id of the currently focused shift
 var __defaultShiftStatus = 1;
 
@@ -165,18 +164,6 @@ function SSBlurShift(shiftId)
 }
 
 /*
-  Function: SSUnloadShift
-    Remove a shift from the internal array.
-
-  Parameters:
-    shiftId - a shift id.
-*/
-function SSUnloadShift(shiftId)
-{
-  delete __loadedShifts[shiftId];
-}
-
-/*
 Function: SSDeleteShift
   Deletes a shift from the server.
 
@@ -300,72 +287,40 @@ Parameters:
 See Also:
   Shift.encode
 */
-function SSSaveNewShift(shiftJson)
+function SSSaveNewShift(shift)
 {
-  var space = SSSpaceForName(shiftJson.space);
-
-  // remove the filters from the json object
-  var filters = shiftJson.filters;
-  delete shiftJson.filters;
+  var space = SSSpaceForName(shift.space);
 
   var params = {
     href: window.location.href,
-    space: shiftJson.space,
+    space: {name: shiftJson.space, version: space.attributes().version},
     summary: shiftJson.summary,
-    content: escape(JSON.encode(shiftJson)),
-    version: space.attributes().version,
-    filters: JSON.encode(filters)
+    content: shiftJson
   };
-
-  SSServerCall.safeCall('shift.create', params, function(response) {
-
-    if (response['error'])
-    {
-      console.error(json.message);
-      return;
-    }
-    
-    var json = SSGetJsonData(response);
-
-    shiftJson.username = ShiftSpace.User.getUserName();
-    shiftJson.created = 'Just posted';
-    shiftJson.href = window.location.href;
-
-    // with the real value
-    var shiftObj = space.getShift(shiftJson.id);
-    shiftObj.setId(json.id);
-
-    // unintern this id
-    SSUnloadShift(shiftJson.id);
-    // we just want to change the name, so don't delete
-    space.unintern(shiftJson.id);
-
-    if (SSFocusedShiftId() == shiftJson.id) 
-    {
-      SSSetFocusedShiftId(json.id);
-    }
-    
-    shiftJson.id = json.id;
-    shiftJson.content = JSON.encode(shiftJson);
-    
-    // intern local copy
-    SSSetShift(shiftJson.id, shiftJson);
-    // intern the space copy
-    space.intern(shiftJson.id, shiftObj);
-
-    // add and show the shift
-    if(ShiftSpace.Console)
-    {
-      ShiftSpace.Console.show();
-      ShiftSpace.Console.showShift(shiftJson.id);
-    }
-
-    // call onShiftSave
-    space.onShiftSave(shiftJson.id);
-    
-    // fire an event with the real id
-    SSPostNotification('onShiftSave', shiftJson.id);
-  });
+  
+  var p = SSApp.create('shift', params);
+  $if(SSApp.noErr(p),
+      function() {
+        var newShift = p.value();
+        var newId = newShift._id;
+        var oldId = shift._id;
+        
+        newShift.created = 'Just posted';
+        
+        var instance = space.getShift(oldId);
+        instance.setId(newId);
+        
+        SSSetFocusedShiftId(newId);
+        
+        if(ShiftSpace.Console)
+        {
+          ShiftSpace.Console.show();
+          ShiftSpace.Console.showShift(newId);
+        }
+        
+        space.onShiftSave(newId);
+        SSPostNotification('onShiftSave', newId);
+      });
 }
 
 /*
@@ -378,43 +333,27 @@ function SSSaveNewShift(shiftJson)
   See Also:
     Shift.encode
 */
-function SSSaveShift(shiftJson) 
+function SSSaveShift(shift) 
 {
-  // if new skip to SSSaveNewShift
-  if (shiftJson.id.substr(0, 8) == 'newShift') {
-    SSSaveNewShift.safeCall(shiftJson);
+  if (shift._id.substr(0, 8) == 'newShift') 
+  {
+    SSSaveNewShift(shift);
     return;
   }
 
-  var filters = shiftJson.filters;
-  delete shiftJson.filters;
-
-  var space = SSSpaceForName(shiftJson.space);
+  var space = SSSpaceForName(shift.space);
   var params = {
-    id: shiftJson.id, // TODO: handle this in a more secure way
-    summary: shiftJson.summary,
-    content: escape(JSON.encode(shiftJson)), // MERGE: for 0.5 - David
-    version: space.attributes().version,
-    username: ShiftSpace.User.getUserName(),
-    filters: JSON.encode(filters)
+    summary: shift.summary,
+    content: shift,
+    space: {name: shift.space, version: space.attributes().version}
   };
 
-  // if a legacy shift is getting updated, we should update the space name
-  var shift = SSGetShift(shiftJson.id);
-  if(shift.legacy)
-  {
-    params.space = space.attributes().name;
-  }
-
-  SSServerCall.safeCall('shift.update', params, function(json) {
-    if (json['error']) {
-      console.error(json.message);
-      return;
-    }
-    if(ShiftSpace.Console) ShiftSpace.Console.updateShift(shiftJson);
-    // call onShiftSave
-    SSSpaceForName(shiftJson.space).onShiftSave(shiftJson.id);
-  });
+  var p = SSApp.update('shift', shift._id, params);
+  $if(SSApp.noErr(p),
+      function() {
+        ShiftSpace.Console.updateShift(p);
+        SSSpaceForName(shift.space).onShiftSave(p.get('id'));
+      });
 }
 
 /*
@@ -525,25 +464,6 @@ function SSAllShiftIdsForSpace(spaceName)
 }
 
 /*
-  Function: SSGetShift
-    Returns a shift by shift id.
-
-  Parameters:
-    shiftId - a shift id.
-*/
-function SSGetShift(shiftId)
-{
-  var theShift = __loadedShifts[shiftId];
-
-  if(theShift)
-  {
-    return theShift;
-  }
-
-  return null;
-}
-
-/*
   Function: SSGetAuthorForShift
     Returns the username of the Shift owner as a string.
 
@@ -581,17 +501,6 @@ function SSGetShiftData(shiftId)
   };
 }
 
-/*
-  Function: SSSetShift
-    Update the shift properties of a shift.
-
-  Parameters:
-    shiftId - a shift id.
-*/
-function SSSetShift(shiftId, shiftData)
-{
-  __loadedShifts[shiftId] = $merge(__loadedShifts[shiftId], shiftData);
-}
 
 /*
   Function: SSLoadShift

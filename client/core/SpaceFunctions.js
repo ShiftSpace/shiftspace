@@ -135,8 +135,6 @@ function SSRegisterSpace(instance)
       ShiftSpace.Console.blurShift(shiftId);
     }
   });
-
-  instance.addEvent('onShiftDestroy', SSUnloadShift);
 }
 
 
