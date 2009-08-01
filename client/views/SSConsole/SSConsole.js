@@ -46,6 +46,7 @@ var SSConsole = new Class({
     
     SSAddObserver(this, 'userDidClickCheckboxForRowInTableView', this.userDidClickCheckboxForRowInTableView.bind(this));
 
+    /*
     this.allShiftsDatasource = new SSTableViewDatasource({
       dataKey: 'shifts',
       dataUpdateKey: 'id',
@@ -53,15 +54,7 @@ var SSConsole = new Class({
       dataProviderURL: 'shift.query',
       dataNormalizer: this.legacyNormalizer
     });
-
-    this.myShiftsDatasource = new SSTableViewDatasource({
-      dataKey: 'shifts',
-      dataUpdateKey: 'id',
-      dataUpdateURL: 'shift.update',
-      dataProviderURL: 'shift.query',
-      dataNormalizer: this.legacyNormalizer,
-      requiredProperties: ['username']
-    });
+    */
   },
   
   
@@ -100,13 +93,12 @@ var SSConsole = new Class({
        (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
     {
       if(this.outlets().get('MainTabView')) this.initMainTabView();
-      if(this.outlets().get('AllShiftsTableView'))
+      if(this.outlets().get('AllShiftsListView'))
       {
-        var AllShiftsTableView = this.outlets()['AllShiftsTableView'];
-        this.initAllShiftsTableView();
-        this.setAllShiftsTableView(AllShiftsTableView);
+        var AllShiftsListView = this.outlets()['AllShiftsListView'];
+        this.initAllShiftsListView();
+        this.setAllShiftsListView(AllShiftsListView);
       }
-      if(this.outlets().get('MyShiftsTableView')) this.setMyShiftsTableView(this.outlets().get('MyShiftsTableView'));
       if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
       if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
       if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
@@ -158,7 +150,7 @@ var SSConsole = new Class({
     this.emptyLoginForm();
     this.outlets().get('MainTabView').hideTabByName('LoginTabView');
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUserName());
-    this.outlets().get('MainTabView').selectTabByName('AllShiftsTableView');
+    this.outlets().get('MainTabView').selectTabByName('AllShiftsListView');
     
     this.updateInstalledSpaces();
   },
@@ -177,24 +169,12 @@ var SSConsole = new Class({
   },
 
 
-  setAllShiftsTableView: function(tableView)
+  setAllShiftsListView: function(tableView)
   {
     var properties = (typeof SandalphonToolMode == 'undefined' ) ? {href:window.location} : {href:server+'sandbox/index.php'};
 
-    this.allShiftsTableView = tableView;
+    this.AllShiftsListView = tableView;
     tableView.setDelegate(this);
-    tableView.setDatasource(this.allShiftsDatasource);
-    this.allShiftsDatasource.setProperties(properties);
-    this.allShiftsDatasource.fetch();
-  },
-
-
-  setMyShiftsTableView: function(tableView)
-  {
-    this.myShiftsTableView = tableView;
-    tableView.setDelegate(this);
-    tableView.setDatasource(this.myShiftsDatasource);
-    this.myShiftsDatasource.fetch();
   },
 
 
@@ -204,11 +184,11 @@ var SSConsole = new Class({
   },
   
   
-  initAllShiftsTableView: function()
+  initAllShiftsListView: function()
   {
-    this.AllShiftsTableView = this.outlets()['AllShiftsTableView'];
-    this.AllShiftsTableView.addEvent('willShow', this.showFilterPane.bind(this));
-    this.AllShiftsTableView.addEvent('hide', this.hideFilterPane.bind(this));
+    this.AllShiftsListView = this.outlets()['AllShiftsListView'];
+    this.AllShiftsListView.addEvent('willShow', this.showFilterPane.bind(this));
+    this.AllShiftsListView.addEvent('hide', this.hideFilterPane.bind(this));
   },
   
   
@@ -330,7 +310,7 @@ var SSConsole = new Class({
 
   signUpFormSubmitCallback: function(userData)
   {
-    this.outlets().get('MainTabView').selectTabByName('AllShiftsTableView');
+    this.outlets().get('MainTabView').selectTabByName('AllShiftsListView');
   }.asPromise(),
   
   
@@ -491,20 +471,19 @@ var SSConsole = new Class({
   },
 
 
-  userSelectedRow: function(args)
+  userSelectedRow: function(evt)
   {
-    var datasource = args.tableView.datasource();
-    if(args.tableView == this.allShiftsTableView)
+    if(evt.listView == this.AllShiftsListView)
     {
       // show the shift
       if(typeof SSShowShift != 'undefined') 
       {
-        var shiftId = datasource.data()[args.rowIndex].id;
-        SSShowShift(shiftId);
-        this.showShift(shiftId);
+        var id = evt.listView.data()[args.rowIndex].id;
+        SSShowShift(id);
+        this.showShift(id);
       }
     }
-    else if(args.tableView == this.myShiftsTableView)
+    else if(evt.listView == this.myShiftsTableView)
     {
       // set a variable for opening this shift on the next page if the url is different
     }
@@ -535,12 +514,11 @@ var SSConsole = new Class({
   },
   
   
-  userDeselectedRow: function(args)
+  userDeselectedRow: function(evt)
   {
-    var datasource = args.tableView.datasource();
-    if(args.tableView == this.allShiftsTableView)
+    if(evt.listView == this.AllShiftsListView)
     {
-      SSHideShift(datasource.data()[args.rowIndex].id);
+      SSHideShift(evt.listView.data()[evt.rowIndex].id);
     }
   },
 
@@ -557,12 +535,12 @@ var SSConsole = new Class({
   },
 
 
-  canEditRow: function(args)
+  canEditRow: function(evt)
   {
     // in the all shifts table the user can edit only if she owns the shift
-    if(args.tableView == this.allShiftsTableView)
+    if(evt.tableView == this.AllShiftsListView)
     {
-      return (ShiftSpaceUser.getUserName() == this.allShiftsDatasource.valueForRowColumn(args.rowIndex, 'username'));
+      return (ShiftSpaceUser.getUserName() == this.allShiftsDatasource.valueForRowColumn(evt.rowIndex, 'username'));
     }
 
     return true;
@@ -571,7 +549,7 @@ var SSConsole = new Class({
   
   getVisibleTableView: function()
   {
-    if(this.allShiftsTableView.isVisible()) return this.allShiftsTableView;
+    if(this.AllShiftsListView.isVisible()) return this.AllShiftsListView;
     if(this.myShiftsTableView.isVisible()) return this.myShiftsTableView;
   },
   
@@ -696,13 +674,13 @@ var SSConsole = new Class({
   showFilterPane: function()
   {
     this.outlets()['FilterPane'].show();
-    this.outlets()['AllShiftsTableView'].element.addClass('SSFilterPaneOpen');
+    this.outlets()['AllShiftsListView'].element.addClass('SSFilterPaneOpen');
   },
   
   
   hideFilterPane: function()
   {
     this.outlets()['FilterPane'].hide();
-    this.outlets()['AllShiftsTableView'].element.removeClass('SSFilterPaneOpen');
+    this.outlets()['AllShiftsListView'].element.removeClass('SSFilterPaneOpen');
   }
 });

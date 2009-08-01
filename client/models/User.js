@@ -54,13 +54,13 @@ var ShiftSpaceUserClass = new Class({
   
   setPreference: function(pref, value)
   {
-    SSSetValue([this.getUsername(), pref].join('.'), value);
+    SSSetValue([this.getUserName(), pref].join('.'), value);
   },
   
   
   getPreference: function(pref, defaultValue)
   {
-    return SSGetValue([this.getUsername(), pref].join('.'), defaultValue);
+    return SSGetValue([this.getUserName(), pref].join('.'), defaultValue);
   },
   
   

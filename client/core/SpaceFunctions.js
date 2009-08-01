@@ -269,7 +269,6 @@ function SSUninstallSpace(spaceName)
     SSSetInstalledSpaces(installed);
   }
 
-  // let everyone else know
   SSPostNotification('onSpaceUninstall', spaceName);
 };
 
@@ -288,7 +287,7 @@ function SSInstalledSpaces()
 
 var SSUpdateInstalledSpaces = function(user)
 {
-  __installedSpaces = user.installedSpaces();
+  __installedSpaces = ShiftSpace.User.installedSpaces();
 }.asPromise()
 
 

@@ -1,0 +1,25 @@
+<!-- Start SSTableView interface definition -->
+<ul id="AllShiftsListView"
+    class='SSListView SSTabPane SSActive SSFilterPaneOpen' 
+    uiclass="SSListView" 
+    outlet="SSConsole" 
+    options="{
+      multipleSelection:true, 
+      toggleSelection:true
+    }">
+  
+  <li uiclass='ShiftListViewCell'
+      class='SSListViewCell ShiftListViewCell'
+      options="{
+        properties: ['spaceIcon', 'userIcon', 'userName', 'summary', 'date']
+      }">
+      <span class="selected"></span>
+      <img class="spaceIcon"></img>
+      <span class="summary"></span>
+      <img class="userIcon"></img>
+      <span class="userName"></span>
+      <span class="date"></span>
+  </li>
+  
+</ul>
+<!-- End Actual Table View -->
