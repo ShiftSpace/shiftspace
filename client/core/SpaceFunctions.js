@@ -312,7 +312,15 @@ function SSResetSpaces()
 */
 function SSSpaceForName(name)
 {
-  return __spaces[name];
+  var space = __spaces[name];
+  if(space)
+  {
+    return space;
+  }
+  else
+  {
+    return SSLoadSpace(name);
+  }
 }
 
 /*
