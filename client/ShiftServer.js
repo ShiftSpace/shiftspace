@@ -13,7 +13,7 @@ var ShiftServer = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      server: SSInfo().server+'shiftserver/'
+      server: SSInfo().server+'server/'
     });
   },
 
