@@ -15,7 +15,9 @@ function SSSetShift(id, shift)
 
 function SSGetShift(id)
 {
-  return __shifts[id];
+  var shift = __shifts[id];
+  if(shift) return shift;
+  return SSLoadShift(id);
 }
 
 function SSUninternShift(id)
@@ -521,21 +523,11 @@ function SSGetShiftData(shiftId)
     shiftId - a shift id.
     callback - a callback handler.
 */
-function SSLoadShift(shiftId, callback)
+function SSLoadShift(id)
 {
-  var params = { shiftIds: shiftId };
-  SSServerCall.safeCall('shift.get', params, function(returnArray) {
-    if(returnArray.data && returnArray.data[0])
-    {
-      var shiftObj = returnArray.data[0];
-      SSSetShift(shiftObj.id, shiftObj);
-
-      if(callback && $type(callback) == 'function')
-      {
-        callback(shiftObj.id);
-      }
-    }
-  });
+  var p = SSApp.get({resource:'shift', id:id});
+  p.op(function (value) { if (value) SSSetShift(id, value); });
+  return p;
 }
 
 /*
@@ -605,89 +597,23 @@ Function: SSShowShift
   Displays a shift on the page.
 
 Parameters:
-  id - The id of the shift to display.
+  space - The space instance
+  shift - The shift data
 */
-function SSShowShift(id)
+var SSShowShift = function(space, shift)
 {
-  if(!SSShiftIsLoaded(id) && !SSIsNewShift(id))
+  var p = SSGetShift(id);
+  try
   {
-    // first make sure that is loaded
-    SSLoadShift(id, SSShowShift.bind(ShiftSpace));
-    return;
+    space.showShift(p.get('content'));
+    SSFocusShift(p.get('_id'));
+    space.onShiftShow(p.get('_id'));
   }
-  else
+  catch(err)
   {
-    try
-    {
-      // get the space and the shift
-      var shift = SSGetShift(id);
-      
-      // check to see if this is a known space
-      if (ShiftSpace.info(shift.space.name).unknown)
-      {
-        if (confirm('Would you like to install the space ' + shift.space + '?'))
-        {
-          SSInstallSpace(shift.space.name, id);
-          return;
-        }
-      }
-
-      var space = SSSpaceForShift(id);
-
-      // load the space first
-      if(!space)
-      {
-        SSLoadSpace(shift.space.name);
-        return;
-      }
-
-      // if the space is loaded check if this shift can be shown
-      if(space)
-      {
-        if(!space.canShowShift(SSGetShiftContent(id)))
-        {
-          throw new Error();
-        }
-      }
-
-      // extract the shift content
-      var shiftJson = SSGetShiftContent(id);
-      shiftJson._id = id;
-
-      // check to make sure the css is loaded first
-      if(!space.cssIsLoaded())
-      {
-        space.addDeferredShift(shiftJson);
-        return;
-      }
-
-      // wrap this in a try catch
-      if(typeof ShiftSpaceSandBoxMode == 'undefined')
-      {
-        try
-        {
-          SSSpaceForName(shift.space.name).showShift(shiftJson);
-        }
-        catch(err)
-        {
-          console.error(err);
-        }
-      }
-      else
-      {
-        // in the sandbox we just want to see the damn error
-        SSSpaceForName(shift.space.name).showShift(shiftJson);
-      }
-
-      SSFocusShift(id);
-      space.onShiftShow(id);
-    }
-    catch(err)
-    {
-      SSLog(err, SSLogForce);
-    }
+    console.error(err);
   }
-}
+}.asPromise();
 
 /*
 

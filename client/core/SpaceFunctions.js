@@ -10,9 +10,9 @@ var __defaultSpaces = null;
 var __installedSpaces = null;
 var __installedSpacesDataProvider = null;
 
-function SSSpaceIsLoaded(space)
+function SSSpaceIsLoaded(spaceName)
 {
-  return (SSSpaceForName(space) != null); 
+  return __spaces[spaceName] != null; 
 }
 
 /*
