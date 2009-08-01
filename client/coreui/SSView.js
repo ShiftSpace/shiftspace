@@ -396,8 +396,6 @@ var SSView = new Class({
   */
   hide: function()
   {
-    SSLog('hide', SSLogForce);
-    SSLog(this.element, SSLogForce);
     this.fireEvent('willHide', this);
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
