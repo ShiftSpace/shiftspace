@@ -85,6 +85,7 @@ var SSPublishPane = new Class({
     var shifts = this.checkedShifts();
   },
   
+  
   attachEvents: function()
   {
     SSLog('attachEvents', SSLogForce);

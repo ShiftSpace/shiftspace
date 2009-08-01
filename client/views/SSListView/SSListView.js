@@ -1289,6 +1289,7 @@ var SSListView = new Class({
     
     this.fireEvent('onReloadData', this);
   }.asPromise(),
+  
   /*
     Function: boundsCheck
       Tests to see if the passed index is within the bounds of the SSCollection array. Throws a SSListViewError message if the index is out of bounds. 

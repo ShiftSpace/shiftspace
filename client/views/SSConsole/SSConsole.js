@@ -83,12 +83,12 @@ var SSConsole = new Class({
        (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
     {
       if(this.outlets().get('MainTabView')) this.initMainTabView();
-      if(this.outlets().get('AllShiftsListView'))
+      if(this.AllShiftsListView)
       {
-        var AllShiftsListView = this.outlets()['AllShiftsListView'];
         var p = SSApp.get({resource:'shifts', data:{href:window.location.href}})
-        AllShiftsListView.setData(p);
-        AllShiftsListView.reloadData(p);
+        this.AllShiftsListView.setData(p);
+        this.AllShiftsListView.reloadData(p);
+        this.initAllShiftsView();
       }
       if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
       if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
@@ -141,7 +141,7 @@ var SSConsole = new Class({
     this.emptyLoginForm();
     this.outlets().get('MainTabView').hideTabByName('LoginTabView');
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUserName());
-    this.outlets().get('MainTabView').selectTabByName('AllShiftsListView');
+    this.outlets().get('MainTabView').selectTabByName('AllShiftsView');
     
     this.updateInstalledSpaces();
   },
@@ -160,26 +160,16 @@ var SSConsole = new Class({
   },
 
 
-  setAllShiftsListView: function(tableView)
-  {
-    var properties = (typeof SandalphonToolMode == 'undefined' ) ? {href:window.location} : {href:server+'sandbox/index.php'};
-
-    this.AllShiftsListView = tableView;
-    tableView.setDelegate(this);
-  },
-
-
   initMainTabView: function()
   {
     this.MainTabView = this.outlets()['MainTabView'];
   },
   
   
-  initAllShiftsListView: function()
-  {
-    this.AllShiftsListView = this.outlets()['AllShiftsListView'];
-    this.AllShiftsListView.addEvent('willShow', this.showFilterPane.bind(this));
-    this.AllShiftsListView.addEvent('hide', this.hideFilterPane.bind(this));
+  initAllShiftsView: function()
+  {                    
+    this.AllShiftsView.addEvent('willShow', this.showFilterPane.bind(this));
+    this.AllShiftsView.addEvent('hide', this.hideFilterPane.bind(this));
   },
   
   
@@ -301,7 +291,7 @@ var SSConsole = new Class({
 
   signUpFormSubmitCallback: function(userData)
   {
-    this.outlets().get('MainTabView').selectTabByName('AllShiftsListView');
+    this.outlets().get('MainTabView').selectTabByName('AllShiftsView');
   }.asPromise(),
   
   
@@ -664,14 +654,14 @@ var SSConsole = new Class({
   
   showFilterPane: function()
   {
-    this.outlets()['FilterPane'].show();
-    this.outlets()['AllShiftsListView'].element.addClass('SSFilterPaneOpen');
+    this.FilterPane.show();
+    this.AllShiftsView.element.addClass('SSFilterPaneOpen');
   },
   
   
   hideFilterPane: function()
   {
-    this.outlets()['FilterPane'].hide();
-    this.outlets()['AllShiftsListView'].element.removeClass('SSFilterPaneOpen');
+    this.FilterPane.hide();
+    this.AllShiftsView.element.removeClass('SSFilterPaneOpen');
   }
 });
