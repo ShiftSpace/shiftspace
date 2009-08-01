@@ -1360,10 +1360,16 @@ var SSListView = new Class({
   onCellClick: function(cellNode)
   {
     var index = this.cellNodes().indexOf(cellNode);
+    this.onRowClick(index);
     if(this.delegate() && this.delegate().userDidClickListItem)
     {
       this.delegate().userDidClickListItem(index);
     }
+  },
+  
+  onRowClick: function(index)
+  {
+    
   },
   
   /*
