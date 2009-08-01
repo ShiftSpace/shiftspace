@@ -50,13 +50,6 @@ var ShiftSpaceShift = new Class({
   },
   
   
-  getParentSpace: function()
-  {
-    SSLog('getParentSpace', SSLogForce);
-    SSLog(this.options, SSLogForce);
-    return SSSpaceForName(this.options.space.name);
-  },
-
   /*
     Function: setup (abstract)
       To implemented by the subclass.  All initialization of your Shift instance should happen here.

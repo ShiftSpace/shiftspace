@@ -28,7 +28,13 @@ var ShiftSpaceSpace = new Class({
   */
   initialize: function( shiftClass )
   {
+    var self = this;
+    shiftClass.implement({
+      getParentSpace: function() { return self; }
+    });
+    
     this.shiftClass = shiftClass;
+    
 
     // set the interface built flag
     this.__interfaceBuilt = false;

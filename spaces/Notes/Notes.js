@@ -33,12 +33,6 @@ var NotesShift = new Class({
   */
   setup: function(json)
   {
-    if(json.legacy)
-    {
-      json.position = {x: json.x, y: json.y};
-      json.noteText = json.content;
-    }
-
     this.noteText = (json.noteText && json.noteText.replace(/<br\/>/g, "\n")) || null;
     this.build();
     this.attachEvents();

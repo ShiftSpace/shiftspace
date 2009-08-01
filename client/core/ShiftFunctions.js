@@ -660,9 +660,6 @@ function SSShowShift(shiftId)
         return;
       }
 
-      // fix legacy content
-      shiftJson.legacy = shift.legacy;
-
       // FIXME: make into onShowShift hook - David
       if(SSHasResource('RecentlyViewedHelpers'))
       {
@@ -694,18 +691,7 @@ function SSShowShift(shiftId)
     }
     catch(err)
     {
-      var params = {id:shiftId};
-      SSServerCall.safeCall('shift.broken', params, function(result) {
-        SSLog(result);
-      });
-
-      SSShowErrorWindow(shiftId);
-
-      // probably need to do some kind of cleanup
-      if(ShiftSpace.Console) 
-      {
-        ShiftSpace.Console.hideShift(shiftId);
-      }
+      SSLog(err, SSLogForce);
     }
   }
 }
@@ -799,47 +785,7 @@ function SSSetShiftStatus(shiftId, newStatus)
 */
 function SSGetShiftContent(shiftId)
 {
-  if(!SSIsNewShift(shiftId))
-  {
-    var shift = SSGetShift(shiftId);
-    var content = unescape(shift.content);
-
-    // if it starts with a quote remove the extra quoting, became an issue when we don't preload shifts - David
-    if(content[0] == '"')
-    {
-      content = content.substr(1, content.length-2);
-    }
-
-    // replace any spurious newlines or carriage returns
-    if(content)
-    {
-      content = content.replace(/\n/g, '\\n');
-      content = content.replace(/\r/g, '\\r');
-    }
-    
-    // legacy content, strip surrounding parens
-    if(content[0] == "(")
-    {
-      content = content.substr(1, content.length-2);
-    }
-
-    var obj = null;
-    try
-    {
-      obj = JSON.decode(content);
-    }
-    catch(err)
-    {
-      SSLog('content for shift ' + shiftId +' failed to load', SSLogError);
-      throw err;
-    }
-    
-    return obj;
-  }
-  else
-  {
-    return {};
-  }
+  return SSGetShift(shiftId).content;
 }
 
 /*
