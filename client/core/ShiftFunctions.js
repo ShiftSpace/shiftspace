@@ -304,9 +304,9 @@ function SSSaveNewShift(shift)
 
   var params = {
     href: window.location.href,
-    space: {name: shiftJson.space, version: space.attributes().version},
-    summary: shiftJson.summary,
-    content: shiftJson
+    space: {name: shift.space.name, version: space.attributes().version},
+    summary: shift.summary,
+    content: shift
   };
   
   var p = SSApp.create('shift', params);
