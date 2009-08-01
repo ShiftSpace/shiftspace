@@ -638,17 +638,17 @@ var SSConsole = new Class({
   },
   
   
-  tableViews: function()
+  listViews: function()
   {
     return this.subViews().filter(function(subView) {
-      return $memberof(subView.name, 'SSTableView');
+      return $memberof(subView.name, 'SSListView');
     });
   },
   
   
-  visibleTableView: function()
+  visibleListView: function()
   {
-    return this.tableViews().filter($msg('isVisible')).first();
+    return this.listViews().filter($msg('isVisible')).first();
   },
   
   
