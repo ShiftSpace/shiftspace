@@ -19,7 +19,9 @@ var ShiftListView = new Class({
   
   onRowClick: function(idx)
   {
-    SSLog('onRowClick', SSLogForce);
+    SSLog('onRowClick ' + idx, SSLogForce);
+    SSLog(this.data()[idx], SSLogForce);
+    SSShowShift(this.data()[idx]._id);
   }
   
 });
