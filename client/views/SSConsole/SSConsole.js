@@ -45,16 +45,6 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
     
     SSAddObserver(this, 'userDidClickCheckboxForRowInTableView', this.userDidClickCheckboxForRowInTableView.bind(this));
-
-    /*
-    this.allShiftsDatasource = new SSTableViewDatasource({
-      dataKey: 'shifts',
-      dataUpdateKey: 'id',
-      dataUpdateURL: 'shift.update',
-      dataProviderURL: 'shift.query',
-      dataNormalizer: this.legacyNormalizer
-    });
-    */
   },
   
   
@@ -86,7 +76,7 @@ var SSConsole = new Class({
   
   awake: function(context)
   {
-    this.parent();
+    this.mapOutletsToThis();
     
     // in Sandalphon tool mode we're not iframed, in ShiftSpace we are
     if((context == window && typeof SandalphonToolMode != 'undefined') ||
@@ -96,8 +86,9 @@ var SSConsole = new Class({
       if(this.outlets().get('AllShiftsListView'))
       {
         var AllShiftsListView = this.outlets()['AllShiftsListView'];
-        this.initAllShiftsListView();
-        this.setAllShiftsListView(AllShiftsListView);
+        var p = SSApp.get({resource:'shifts', data:{href:window.location.href}})
+        AllShiftsListView.setData(p);
+        AllShiftsListView.reloadData(p);
       }
       if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
       if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
