@@ -151,15 +151,16 @@ var SSFocusShift = function(space, shift)
     Blurs a shift.
 
   Parameters:
-    shiftId - a shift id.
+    space - a space instance.
+    shift - a shift.
 */
-function SSBlurShift(shiftId)
+var SSBlurShift = function(space, shift)
 {
-  // create a blur event so console gets updated
-  var space = SSSpaceForShift(shiftId);
-  space.blurShift(shiftId);
-  space.onShiftBlur(shiftId);
-}
+  SSLog('SSBlurShift', SSLogForce);
+  var id = shift._id;
+  space.blurShift(id);
+  space.onShiftBlur(id);
+}.asPromise();
 
 /*
 Function: SSDeleteShift
