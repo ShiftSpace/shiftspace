@@ -267,7 +267,7 @@ ShiftSpace.__externals = {
   {
     with(ShiftSpace.__externals)
     {
-      eval(external);
+      return eval(external);
     }
   }
 };

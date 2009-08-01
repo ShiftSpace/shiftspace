@@ -15,67 +15,39 @@ function SSSpaceIsLoaded(space)
   return (SSSpaceForName(space) != null); 
 }
 
-var __loadingSpaces = [];
-
 /*
 Function: SSLoadSpace
   Loads the space's source code, executes it and stores an instance of the
   space class in the 'spaces' object
 
 Parameters:
-  space - the Space name to load
+  spaceName - the Space name to load
   callback - a callback function to run when the space is loaded.
 */
-function SSLoadSpace(space, callback)
+function SSLoadSpace(spaceName)
 {
-  if(__loadingSpaces.contains(space))
+  if(spaceName && SSSpaceIsLoaded(spaceName))
   {
-    SSAddObserver(SSNotificationProxy, 'onSpaceLoad', function(spaceInstance) {
-      if(spaceInstance.attributes().name == space) callback(spaceInstance);
-    });
-    return
+    return SSSpaceForName(spacename);
   }
-  
-  if(space && SSSpaceIsLoaded(space))
+  else if(spaceName)
   {
-    callback(SSSpaceForName(space));
-    return;
-  }
-  else if(space)
-  {
-    __loadingSpaces.push(space);
-    
-    var url = SSURLForSpace(space) + space + '.js';
-    if (typeof ShiftSpaceSandBoxMode != 'undefined')
-    {
-      url += '?' + new Date().getTime();
-      var newSpace = new Asset.javascript(url, {
-        id: space,
-        onload: function() 
-        {
-          if(callback) callback(SSSpaceForName(space));
-          SSPostNotification("onSpaceLoad", SSSpaceForName(space));
-        }
-      });
-    }
-    else
-    {
-      SSLoadFile(url, function(rx) {
-        var err;
-        try
-        {
-          ShiftSpace.__externals.evaluate(rx.responseText);
-        }
-        catch(exc)
-        {
-          console.error('Error loading ' + space + ' Space - ' + SSDescribeException(exc));
-          //throw exc;
-        }
-
-        if(callback) callback(SSSpaceForName(space));
-        SSPostNotification("onSpaceLoad", SSSpaceForName(space));
-      });
-    }
+    var url = SSURLForSpace(spaceName) + spaceName + '.js';
+    var p = SSLoadFile(url);
+    $if(SSApp.noErr(p),
+        function() {
+          try
+          {
+            var space = ShiftSpace.__externals.evaluate('(function(){'+p.value()+' return '+spaceName+';})()');
+          }
+          catch(exc)
+          {
+            console.error('Error loading ' + spaceName + ' Space - ' + SSDescribeException(exc));
+            //throw exc;
+          }
+          SSPostNotification("onSpaceLoad", space);
+        });
+    return p;
   }
 }
 
