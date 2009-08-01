@@ -247,31 +247,6 @@ var ShiftSpace = new (function() {
       return false;
     };
 
-    /*
-    Function: SSClearCache
-      Expunge previously stored files.
-
-    Parameters:
-        url - (Optional) The URL of the file to remove. If not specified, all
-              files in the cache will be deleted.
-    */
-    function SSClearCache(url) 
-    {
-      if (typeof url == 'string') 
-      {
-        // Clear a specific file from the cache
-        SSLog('Clearing ' + url + ' from cache', SSLogSystem);
-        SSSetValue('cache.' + url, 0);
-      } 
-      else 
-      {
-        // Clear all the files from the cache
-        cache.each(function(url) {
-          SSLog('Clearing ' + url + ' from cache', SSLogSystem);
-          SSSetValue('cache.' + url, 0);
-        });
-      }
-    };
 
     // In sandbox mode, expose something for easier debugging.
     if (typeof ShiftSpaceSandBoxMode != 'undefined')

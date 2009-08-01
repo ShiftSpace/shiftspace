@@ -269,7 +269,6 @@ function SSUninstallSpace(spaceName)
     SSSetInstalledSpaces(installed);
   }
 
-  SSClearCache(url);
   // let everyone else know
   SSPostNotification('onSpaceUninstall', spaceName);
 };
