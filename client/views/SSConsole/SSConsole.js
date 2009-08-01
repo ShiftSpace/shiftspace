@@ -88,6 +88,7 @@ var SSConsole = new Class({
         var p = SSApp.get({resource:'shifts', data:{href:window.location.href.split("#")[0]}})
         this.AllShiftsListView.setData(p);
         this.AllShiftsListView.reloadData(p);
+        SSAddShifts(p);
         this.initAllShiftsView();
       }
       if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();

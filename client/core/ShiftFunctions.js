@@ -17,7 +17,9 @@ function SSGetShift(id)
 {
   var shift = __shifts[id];
   if(shift) return shift;
-  return SSLoadShift(id);
+  var p = SSLoadShift(id);
+  p.op(function(value) { SSSetShift(id, value); });
+  return p;
 }
 
 function SSUninternShift(id)
@@ -91,7 +93,9 @@ var SSFocusShift = function(space, shift)
       SSGetShift(lastFocusedShift) &&
       lastFocusedShift != id)
   {
+    SSLog('SSFocusShift lastFocusedShift: ' + lastFocusedShift, SSLogForce);
     var lastSpace = SSSpaceForShift(lastFocusedShift);
+    SSLog(lastSpace, SSLogForce);
     if(lastSpace.getShift(lastFocusedShift))
     {
       lastSpace.getShift(lastFocusedShift).blur();
@@ -654,3 +658,10 @@ function SSIsNewShift(shiftId)
 {
   return (shiftId.search('newShift') != -1);
 }
+
+var SSAddShifts = function(shifts)
+{
+  shifts.each(function(shift) {
+    SSSetShift(shift._id, shift);
+  });
+}.asPromise();
