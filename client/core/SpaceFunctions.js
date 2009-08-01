@@ -359,7 +359,7 @@ function SSSpacesByPosition()
 
 function SSSpaceForPosition(index)
 {
-  return SSSpacesByPosition()[index];
+  return SSSpaceForName(SSSpacesByPosition()[index].name);
 }
 
 /*

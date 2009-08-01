@@ -132,7 +132,7 @@ var SSSpaceMenu = new Class({
   {
     if(ShiftSpace.User.isLoggedIn())
     {
-      SSInitShift(SSSpaceForPosition(data.index).name);
+      SSInitShift(SSSpaceForPosition(data.index));
     }
     else
     {

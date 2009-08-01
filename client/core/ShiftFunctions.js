@@ -32,20 +32,8 @@ Function: SSInitShift
 Parameters:
   space - The name of the Space the Shift belongs to.
 */
-function SSInitShift(spaceName, options) 
+var SSInitShift = function(space, options) 
 {
-  if(!SSSpaceIsLoaded(spaceName))
-  {
-    SSLoadSpace(spaceName, SSInitShift.bind(null, [spaceName, options]));
-    return;
-  }
-  
-  if (!SSURLForSpace(spaceName)) 
-  {
-    SSLog('Space ' + spaceName + ' does not exist.', SSLogError);
-    return;
-  }
-  
   var tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
   var winSize = window.getSize();
   var position = (options && options.position && {x: options.position.x, y: options.position.y }) || 
@@ -53,23 +41,23 @@ function SSInitShift(spaceName, options)
                   
   var shift = {
     _id: tempId,
-    space: {name: spaceName},
+    space: {name: space.name},
     username: ShiftSpace.User.getUserName(),
     content: {position: position}
   };
 
-  var noError = SSSpaceForName(spaceName).createShift(shift);
+  var noError = space.createShift(shift);
   
   if(noError)
   {
     SSSetShift(tempId, shift);
-    SSShowNewShift(tempId);
+    SSShowNewShift(space, shift);
   }
   else
   {
     console.error("There was an error creating the shift");
   }
-}
+}.asPromise();
 
 /*
   Function: SSShowNewShift
@@ -78,13 +66,13 @@ function SSInitShift(spaceName, options)
   Parameters:
     shiftId - a shift id.
 */
-function SSShowNewShift(shiftId)
+var SSShowNewShift = function(space, shift)
 {
-  var space = SSSpaceForShift(shiftId);
-  space.onShiftCreate(shiftId);
-  SSEditShift(shiftId);
-  SSFocusShift(shiftId, false);
-}
+  var id = shift._id;
+  space.onShiftCreate(id);
+  SSEditShift(space, shift);
+  SSFocusShift(space, shift);
+}.asPromise();
 
 /*
 Function: SSFocusShift
@@ -174,114 +162,56 @@ Function: SSDeleteShift
   Deletes a shift from the server.
 
 Parameters:
-  shiftId - a shift id.
+  space - a space instance.
+  shift - a shift.
 */
-function SSDeleteShift(shiftId) 
+var SSDeleteShift = function(space, shift) 
 {
-  if(SSShiftIsLoaded(shiftId))
-  {
-    var space = SSSpaceForShift(shiftId);    
-    space.deleteShift(shiftId);
-  }
-
+  var id = shift._id;
   if(SSFocusedShiftId() == shiftId)
   {
     SSSetFocusedShiftId(null);
   }
-
-  var params = {
-    id: shiftId
-  };
-
-  SSServerCall('shift.delete', params, function(json) {
-    SSLog('deleting shift', SSLogForce);
-    SSLog(json, SSLogForce);
-    if (json.error) 
-    {
-      console.error(json.message);
-      return;
-    }
-    SSPostNotification('onShiftDelete', shiftId);
-    // don't assume the space is loaded
+  var p = SSApp.delete({resource:'shift', id:shift._id});
+  p.op(function(value) { 
+    SSUninternShift(id);
     if(space) space.onShiftDelete(shiftId);
-    SSUnloadShift(shiftId);
+    SSPostNotification('onShiftDelete', id);
   });
-}
+  return p;
+}.asPromise();
 
 /*
  Function: SSEditShift
    Edit a shift.
 
  Parameters:
-   shiftId - a shift id.
+   space - a space.
+   shift - shift data
  */
-function SSEditShift(id)
+var SSEditShift = function(space, shift)
 {
- // make sure shift content is either loaded or that it is a newly created shift (thus no content)
- if(!SSShiftIsLoaded(id) && !SSIsNewShift(id))
- {
-   // first make sure that is loaded
-   SSLoadShift(id, editShift.bind(ShiftSpace));
-   return;
- }
- else
- {
-   var space = SSSpaceForShift(id);
-   var user = SSUserForShift(id);
-   var shift = SSGetShift(id);
+  var id = shift._id;
+  var user = SSUserForShift(id);
 
-   // load the space first
-   if(!space)
-   {
-     SSLoadSpace(shift.space.name, function() {
-       SSEditShift(id);
-     });
-     return;
-   }
+  if(!space.canShowShift(SSGetShiftContent(id))) return;
+  // if the user has permissions, edit the shift
+  if(SSUserCanEditShift(id))
+  {
+    var content = shift.content;
+    SSFocusSpace(space, (content && content.position) || null);
+    SSShowShift(space, shift);
 
-   // if the space is loaded check if this shift can be shown
-   if(space)
-   {
-     if(!space.canShowShift(SSGetShiftContent(id)))
-     {
-       // bail
-       return;
-     }
-   }
-
-   // add a deferred shift edit if the css is not yet loaded
-   if(space && !space.cssIsLoaded())
-   {
-     space.addDeferredEdit(id);
-     return;
-   }
-
-   // if the user has permissions, edit the shift
-   if(SSUserCanEditShift(id))
-   {
-     var shiftJson = SSGetShiftContent(id);
-
-     // show the interface
-     SSFocusSpace(space, (shiftJson && shiftJson.position) || null);
-
-     // show the shift first, this way edit and show are both atomic - David
-     SSShowShift(id);
-
-     // then edit it
-     space.editShift(id);
-     space.onShiftEdit(id);
-
-     // focus the shift
-     SSFocusShift(id);
-
-     SSPostNotification('onShiftEdit', id);
-   }
-   else
-   {
-     window.alert("You do not have permission to edit this shift.");
-   }
- }
-}
+    space.editShift(id);
+    space.onShiftEdit(id);
+    SSFocusShift(space, shift);
+    SSPostNotification('onShiftEdit', id);
+  }
+  else
+  {
+    window.alert("You do not have permission to edit this shift.");
+  }
+}.asPromise();
 
 /*
 Function: SSSaveNewShift
