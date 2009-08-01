@@ -15,12 +15,16 @@
     <li uiclass='ShiftListViewCell'
         class='SSCell ShiftListViewCell'
         options="{
-          properties: ['spaceIcon', 'userIcon', 'userName', 'summary', 'date']
+          properties: ['space', 'gravatar', 'userName', 'summary', 'date']
         }">
-        <span class="selected"></span>
+        <span class="selected">
+          <input type="checkbox"></input>
+        </span>
         <img class="spaceIcon"></img>
         <span class="summary"></span>
-        <img class="userIcon"></img>
+        <span class="gravatarContainer">
+          <img class="gravatar"></img>
+        </span>
         <span class="userName"></span>
         <span class="date"></span>
     </li>

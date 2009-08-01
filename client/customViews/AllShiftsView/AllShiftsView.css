@@ -5,4 +5,23 @@
   top: 0px;
   right: 0px;
   bottom: 0px;
+}         
+
+#AllShiftsView .ShiftListViewCell .gravatar
+{
+  width: 16px;
+  position: absolute;
+}
+
+#AllShiftsView .ShiftListViewCell img.gravatar:hover
+{
+  margin-top: -8px;
+  maring-left: -8px;
+  width: 32px;
+}
+
+#AllShiftsView .ShiftListViewCell > span:hover
+{
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
 }

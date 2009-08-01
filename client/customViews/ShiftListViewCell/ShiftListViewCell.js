@@ -31,10 +31,10 @@ var ShiftListViewCell = new Class({
   },
   
   
-  setSpaceIcon: function(icon)
+  setSpace: function(space)
   {
     var el = this.lockedElement();
-    el.getElement('.spaceIcon').setProperty('src', icon);
+    el.getElement('.spaceIcon').setProperty('src', SSInfo(space.name).icon);
   },
   
   
@@ -45,10 +45,10 @@ var ShiftListViewCell = new Class({
   },
   
   
-  setUserIcon: function(userIcon)
+  setGravatar: function(gravatar)
   {
     var el = this.lockedElement();
-    el.getElement('.userIcon').set('src', userIcon);
+    el.getElement('.gravatar').setProperty('src', gravatar);
   }
 
 });
