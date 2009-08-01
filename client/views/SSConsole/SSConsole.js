@@ -85,7 +85,7 @@ var SSConsole = new Class({
       if(this.outlets().get('MainTabView')) this.initMainTabView();
       if(this.AllShiftsListView)
       {
-        var p = SSApp.get({resource:'shifts', data:{href:window.location.href}})
+        var p = SSApp.get({resource:'shifts', data:{href:window.location.href.split("#")[0]}})
         this.AllShiftsListView.setData(p);
         this.AllShiftsListView.reloadData(p);
         this.initAllShiftsView();

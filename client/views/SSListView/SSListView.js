@@ -42,7 +42,8 @@ var SSListView = new Class({
       cellSize: null,
       filter: null,
       addAt: 'bottom',
-      leaveEditOnUpdate: false
+      leaveEditOnUpdate: false,
+      allowSelection: false
     });
   },
   
@@ -1366,8 +1367,35 @@ var SSListView = new Class({
       this.delegate().userDidClickListItem(index);
     }
   },
+
   
   onRowClick: function(index)
+  {
+    if(this.options.allowSelection)
+    {
+      var cellNode = this.cellNodeForIndex(index);
+      if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
+      if(!cellNode.hasClass('selected')) 
+      {
+        cellNode.addClass('selected');
+        this.onRowSelect(index);
+      }
+      else
+      {
+        cellNode.removeClass('selected');
+        this.onRowDeselect(index);
+      }
+    }
+  },
+
+  
+  onRowSelect: function(index)
+  {
+    
+  },
+  
+  
+  onRowDeselect: function(index)
   {
     
   },

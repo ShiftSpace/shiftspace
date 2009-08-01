@@ -17,12 +17,18 @@ var ShiftListView = new Class({
   },
   
   
-  onRowClick: function(idx)
+  onRowSelect: function(idx)
   {
-    SSLog('onRowClick ' + idx, SSLogForce);
-    SSLog(this.data()[idx], SSLogForce);
+    this.parent(idx);
     var shift = this.data()[idx];
     SSShowShift(SSSpaceForName(shift.space.name), shift);
+  },
+  
+
+  onRowDeselect: function(idx)
+  {
+    var shift = this.data()[idx];
+    SSHideShift(SSSpaceForName(shift.space.name), shift);
   }
   
 });

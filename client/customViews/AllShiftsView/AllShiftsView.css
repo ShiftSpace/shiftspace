@@ -5,7 +5,12 @@
   top: 0px;
   right: 0px;
   bottom: 0px;
-}         
+}
+
+#AllShiftsView .ShiftListViewCell.selected
+{
+  background-color: #ccc;
+}
 
 #AllShiftsView .ShiftListViewCell .gravatar
 {

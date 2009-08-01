@@ -32,6 +32,7 @@ var ShiftListViewCell = new Class({
       {
         SSPostNotification('onShiftDeselect', {listView: this.delegate(), index:idx});
       }
+      evt.stopPropagation();
     }.bind(this));
     return clone;
   },

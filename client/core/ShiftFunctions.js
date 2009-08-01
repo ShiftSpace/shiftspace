@@ -543,17 +543,16 @@ Function: SSHideShift
   Hides a shift from the page.
 
 Parameters:
-    shiftId - The ID of the shift to hide.
+    space - a space instance.
+    shift - a shift.
 
 */
-function SSHideShift(shiftId)
+var SSHideShift = function(space, shift)
 {
-  var shift = SSGetShift(shiftId);
-  var space = SSSpaceForShift(shiftId);
-
-  space.hideShift(shiftId);
-  space.onShiftHide(shiftId);
-}
+  var id = shift._id;
+  space.hideShift(id);
+  space.onShiftHide(id);
+}.asPromise();
 
 /*
   Function: SSAllShifts
