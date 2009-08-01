@@ -18,9 +18,8 @@
 */
 var ShiftSpaceSpace = new Class({
   
-  name: 'ShiftSpace.Space',
-  
   Implements: [Events, Options],
+  name: 'ShiftSpace.Space',
 
   /*
     Function : initialize (private)
@@ -375,6 +374,7 @@ var ShiftSpaceSpace = new Class({
     catch(exc)
     {
       SSLog("ERROR: Could not instantiate shift.", SSLogForce);
+      SSLog(exc, SSLogForce);
       throw exc;
     }
 

@@ -20,11 +20,11 @@ var NotesShift = new Class({
   Extends: ShiftSpace.Shift,
   name: 'NotesShift',
 
-  getDefaults: function()
+  defaults: function()
   {
-    return $merge( this.parent(), {
-      position: { x : 50, y : 50 },
-      size: { x : 200, y : 200 },
+    return $merge(this.parent(), {
+      position: {x: 50, y: 50},
+      size: {x: 200, y: 200},
       summary: ''
     });
   },

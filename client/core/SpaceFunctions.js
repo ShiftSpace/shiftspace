@@ -480,14 +480,14 @@ function SSSetFocusedSpace(newSpace)
 function SSSpaceForShift(shiftId)
 {
   var shift = SSGetShift(shiftId);
-  return SSSpaceForName(shift.space);
+  return SSSpaceForName(shift.space.name);
 }
 
 
 function SSSpaceNameForShift(shiftId)
 {
   var shift = SSGetShift(shiftId);
-  return shift.space;
+  return shift.space.name;
 }
 
 

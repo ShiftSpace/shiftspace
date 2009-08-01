@@ -51,7 +51,7 @@ function SSInitShift(spaceName, options)
                   
   var shift = {
     _id: tempId,
-    space: spaceName,
+    space: {name: spaceName},
     username: ShiftSpace.User.getUserName(),
     position: _position
   };
@@ -237,7 +237,7 @@ function SSEditShift(shiftId)
    // load the space first
    if(!space)
    {
-     SSLoadSpace(shift.space, function() {
+     SSLoadSpace(shift.space.name, function() {
        SSEditShift(shiftId);
      });
      return;
@@ -299,7 +299,7 @@ See Also:
 */
 function SSSaveNewShift(shift)
 {
-  var space = SSSpaceForName(shift.space);
+  var space = SSSpaceForName(shift.space.name);
 
   var params = {
     href: window.location.href,
@@ -351,18 +351,18 @@ function SSSaveShift(shift)
     return;
   }
 
-  var space = SSSpaceForName(shift.space);
+  var space = SSSpaceForName(shift.space.name);
   var params = {
     summary: shift.summary,
     content: shift,
-    space: {name: shift.space, version: space.attributes().version}
+    space: {name: shift.space.name, version: space.attributes().version}
   };
 
   var p = SSApp.update('shift', shift._id, params);
   $if(SSApp.noErr(p),
       function() {
         ShiftSpace.Console.updateShift(p);
-        SSSpaceForName(shift.space).onShiftSave(p.get('id'));
+        SSSpaceForName(shift.space.name).onShiftSave(p.get('id'));
       });
 }
 
@@ -416,7 +416,7 @@ function SSGetPageShifts(shiftIds)
     var cshift = SSGetShift(shiftIds[i]);
     var copy = {
       username: cshift.username,
-      space: cshift.space,
+      space: cshift.space.name,
       status: cshift.status
     };
     result.push(copy);
@@ -622,11 +622,11 @@ function SSShowShift(shiftId)
       var shift = SSGetShift(shiftId);
       
       // check to see if this is a known space
-      if (ShiftSpace.info(shift.space).unknown)
+      if (ShiftSpace.info(shift.space.name).unknown)
       {
         if (confirm('Would you like to install the space ' + shift.space + '?'))
         {
-          SSInstallSpace(shift.space, shiftId);
+          SSInstallSpace(shift.space.name, shiftId);
           return;
         }
       }
@@ -636,7 +636,7 @@ function SSShowShift(shiftId)
       // load the space first
       if(!space)
       {
-        SSLoadSpace(shift.space);
+        SSLoadSpace(shift.space.name);
         return;
       }
 
@@ -674,7 +674,7 @@ function SSShowShift(shiftId)
       {
         try
         {
-          SSSpaceForName(shift.space).showShift(shiftJson);
+          SSSpaceForName(shift.space.name).showShift(shiftJson);
         }
         catch(err)
         {
@@ -684,7 +684,7 @@ function SSShowShift(shiftId)
       else
       {
         // in the sandbox we just want to see the damn error
-        SSSpaceForName(shift.space).showShift(shiftJson);
+        SSSpaceForName(shift.space.name).showShift(shiftJson);
       }
 
       SSFocusShift(shift.id);

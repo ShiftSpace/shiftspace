@@ -24,7 +24,7 @@ var SSListViewCell = new Class({
   },
   
   
-  attachEvents: function(attribute)
+  attachEvents: function()
   {
     this.element.addEvent('click', function(_evt) {
       var evt = new Event(_evt);

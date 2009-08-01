@@ -15,10 +15,10 @@
 */
 var ShiftSpaceShift = new Class({
   
-  name: 'ShiftSpace.Shift',
   Implements: [Events, Options],
+  name: 'ShiftSpace.Shift',
 
-  getDefaults: function()
+  defaults: function()
   {
     return {};
   },
@@ -30,19 +30,16 @@ var ShiftSpaceShift = new Class({
     Parameters:
       data - The JSON object that contains the properties the shift will have.
   */
-  initialize: function(data)
+  initialize: function(data, options)
   {
-    this.setOptions(this.getDefaults(), data);
+    this.setOptions(this.defaults(), options);
 
     var id = data._id;
-    var parentSpace;
-
     this.defaults = this.options;
 
     this.setId = function(aId) {
       if(id == null || id.substr(0, 8) == 'newShift') id = aId;
     };
-
     this.getId = function() {
       return id;
     };
@@ -50,14 +47,14 @@ var ShiftSpaceShift = new Class({
     if(data._id) this.setId(data._id);
     this.setTitle(data.summary || '');
     this.setup(data);
-
-    return this;
   },
   
   
-  getParentSpace: function(attribute)
+  getParentSpace: function()
   {
-    return SSSpaceForName(this.options.space);
+    SSLog('getParentSpace', SSLogForce);
+    SSLog(this.options, SSLogForce);
+    return SSSpaceForName(this.options.space.name);
   },
 
   /*
@@ -141,8 +138,6 @@ var ShiftSpaceShift = new Class({
   */
   save: function()
   {
-    // We can use events here because if we do
-    // a Shift cannot save in their initialize method
     this.getParentSpace().updateShift(this);
     this.fireEvent('onShiftSave', this.getId());
   },

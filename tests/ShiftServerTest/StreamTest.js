@@ -184,7 +184,7 @@ var StreamTest = new Class({
   },
 
 
-  testStreamPost: function(attribute)
+  testStreamPost: function()
   {
     this.doc("Post an event to a private stream.");
     
