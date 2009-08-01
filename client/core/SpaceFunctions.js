@@ -449,10 +449,11 @@ function SSSetFocusedSpace(newSpace)
   Returns:
     The space singleton.
 */
-function SSSpaceForShift(shiftId)
+function SSSpaceForShift(id)
 {
-  var p = SSGetShift(shiftId);
-  return SSSpaceForName(p.get('space', 'name'));
+  var shift = SSGetShift(p);
+  var spaceName = (Promise.isPromise(shift)) ? p.get('space', 'name') : shift.space.name;
+  return SSSpaceForName(spaceName);
 }
 
 

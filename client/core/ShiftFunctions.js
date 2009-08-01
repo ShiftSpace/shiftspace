@@ -129,14 +129,14 @@ var SSFocusShift = function(space, shift)
         duration: 1000,
         transition: Fx.Transitions.Cubic.easeIn
       });
-
+      
       if(!window.webkit)
       {
-        scrollFx.scrollTo(pos.x-25, pos.y-25);
+        scrollFx.start(pos.x-25, pos.y-25);
       }
       else
       {
-        window.scrollTo(pos.x-25, pos.y-25);
+        window.start(pos.x-25, pos.y-25);
       }
     }
   }
