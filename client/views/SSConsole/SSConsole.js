@@ -38,8 +38,8 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     
-    SSAddObserver(this, 'onShiftSave', this.refreshTableViews.bind(this));
-    SSAddObserver(this, 'onShiftDelete', this.refreshTableViews.bind(this));
+    SSAddObserver(this, 'onShiftSave', this.refreshListViews.bind(this));
+    SSAddObserver(this, 'onShiftDelete', this.refreshListViews.bind(this));
     SSAddObserver(this, 'onShiftHide', this.deselectShift.bind(this));
     
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
@@ -528,20 +528,19 @@ var SSConsole = new Class({
   },
   
   
-  getVisibleTableView: function()
+  getVisibleListView: function()
   {
     if(this.AllShiftsListView.isVisible()) return this.AllShiftsListView;
-    if(this.myShiftsTableView.isVisible()) return this.myShiftsTableView;
   },
   
   
-  refreshTableViews: function(shiftId)
+  refreshListViews: function(shiftId)
   {
-    var visibleTableView = this.getVisibleTableView();
+    var visibleListView = this.getVisibleListView();
 
-    if(visibleTableView)
+    if(visibleListView)
     {
-      visibleTableView.reload();
+      visibleListView.reloadData();
     }
   },
   

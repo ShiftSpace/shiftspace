@@ -303,7 +303,7 @@ function SSSaveNewShift(shift)
   var space = SSSpaceForName(shift.space.name);
 
   var params = {
-    href: window.location.href,
+    href: window.location.href.split("#")[0],
     space: {name: shift.space.name, version: space.attributes().version},
     summary: shift.summary,
     content: shift
