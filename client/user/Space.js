@@ -412,6 +412,7 @@ var ShiftSpaceSpace = new Class({
       this.fireEvent('onShiftSave', shiftId);
     }.bind(this));
 
+    SSLog('adding shift', SSLogForce);
     this.shifts[newShift.getId()] = newShift;
     return this.shifts[newShift.getId()];
   },

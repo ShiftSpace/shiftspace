@@ -46,14 +46,14 @@ function SSInitShift(spaceName, options)
   
   var tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
   var winSize = window.getSize();
-  var _position = (options && options.position && {x: options.position.x, y: options.position.y }) || 
+  var position = (options && options.position && {x: options.position.x, y: options.position.y }) || 
                   {x: winSize.x/2, y: winSize.y/2};
                   
   var shift = {
     _id: tempId,
     space: {name: spaceName},
     username: ShiftSpace.User.getUserName(),
-    position: _position
+    content: {position: position}
   };
 
   var noError = SSSpaceForName(spaceName).createShift(shift);
@@ -91,16 +91,16 @@ Function: SSFocusShift
 Parameter:
   shiftId - the id of the shift.
 */
-function SSFocusShift(shiftId)
+function SSFocusShift(id)
 {
-  var shift = SSGetShift(shiftId);
-  var space = SSSpaceForShift(shiftId);
+  var shift = SSGetShift(id);
+  var space = SSSpaceForShift(id);
   var lastFocusedShift = SSFocusedShiftId();
 
   // unfocus the last shift
   if (lastFocusedShift &&
       SSGetShift(lastFocusedShift) &&
-      lastFocusedShift != shiftId)
+      lastFocusedShift != id)
   {
     var lastSpace = SSSpaceForShift(lastFocusedShift);
     if(lastSpace.getShift(lastFocusedShift))
@@ -109,17 +109,18 @@ function SSFocusShift(shiftId)
       lastSpace.orderBack(lastFocusedShift);
     }
   }
-  SSSetFocusedShiftId(shift.id);
-  space.orderFront(shift.id);
+  SSSetFocusedShiftId(id);
+  space.orderFront(id);
 
   // call
-  space.focusShift(shiftId);
-  space.onShiftFocus(shiftId);
+  space.focusShift(id);
+  space.onShiftFocus(id);
 
   // scroll the window if necessary
-  var mainView = space.mainViewForShift(shiftId);
+  var mainView = space.mainViewForShift(id);
 
-  if(mainView && !SSIsNewShift(shiftId))
+  // TODO: move the windowing logic elsewhere - David 7/31/09
+  if(mainView && !SSIsNewShift(id))
   {
     var pos = mainView.getPosition();
     var vsize = mainView.getSize();
@@ -219,26 +220,26 @@ function SSDeleteShift(shiftId)
  Parameters:
    shiftId - a shift id.
  */
-function SSEditShift(shiftId)
+function SSEditShift(id)
 {
  // make sure shift content is either loaded or that it is a newly created shift (thus no content)
- if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
+ if(!SSShiftIsLoaded(id) && !SSIsNewShift(id))
  {
    // first make sure that is loaded
-   SSLoadShift(shiftId, editShift.bind(ShiftSpace));
+   SSLoadShift(id, editShift.bind(ShiftSpace));
    return;
  }
  else
  {
-   var space = SSSpaceForShift(shiftId);
-   var user = SSUserForShift(shiftId);
-   var shift = SSGetShift(shiftId);
+   var space = SSSpaceForShift(id);
+   var user = SSUserForShift(id);
+   var shift = SSGetShift(id);
 
    // load the space first
    if(!space)
    {
      SSLoadSpace(shift.space.name, function() {
-       SSEditShift(shiftId);
+       SSEditShift(id);
      });
      return;
    }
@@ -246,7 +247,7 @@ function SSEditShift(shiftId)
    // if the space is loaded check if this shift can be shown
    if(space)
    {
-     if(!space.canShowShift(SSGetShiftContent(shiftId)))
+     if(!space.canShowShift(SSGetShiftContent(id)))
      {
        // bail
        return;
@@ -256,29 +257,29 @@ function SSEditShift(shiftId)
    // add a deferred shift edit if the css is not yet loaded
    if(space && !space.cssIsLoaded())
    {
-     space.addDeferredEdit(shiftId);
+     space.addDeferredEdit(id);
      return;
    }
 
    // if the user has permissions, edit the shift
-   if(SSUserCanEditShift(shiftId))
+   if(SSUserCanEditShift(id))
    {
-     var shiftJson = SSGetShiftContent(shiftId);
+     var shiftJson = SSGetShiftContent(id);
 
      // show the interface
      SSFocusSpace(space, (shiftJson && shiftJson.position) || null);
 
      // show the shift first, this way edit and show are both atomic - David
-     SSShowShift(shiftId);
+     SSShowShift(id);
 
      // then edit it
-     space.editShift(shiftId);
-     space.onShiftEdit(shiftId);
+     space.editShift(id);
+     space.onShiftEdit(id);
 
      // focus the shift
-     SSFocusShift(shiftId);
+     SSFocusShift(id);
 
-     SSPostNotification('onShiftEdit', shiftId);
+     SSPostNotification('onShiftEdit', id);
    }
    else
    {
@@ -604,14 +605,14 @@ Function: SSShowShift
   Displays a shift on the page.
 
 Parameters:
-  shiftId - The ID of the shift to display.
+  id - The id of the shift to display.
 */
-function SSShowShift(shiftId)
+function SSShowShift(id)
 {
-  if(!SSShiftIsLoaded(shiftId) && !SSIsNewShift(shiftId))
+  if(!SSShiftIsLoaded(id) && !SSIsNewShift(id))
   {
     // first make sure that is loaded
-    SSLoadShift(shiftId, SSShowShift.bind(ShiftSpace));
+    SSLoadShift(id, SSShowShift.bind(ShiftSpace));
     return;
   }
   else
@@ -619,19 +620,19 @@ function SSShowShift(shiftId)
     try
     {
       // get the space and the shift
-      var shift = SSGetShift(shiftId);
+      var shift = SSGetShift(id);
       
       // check to see if this is a known space
       if (ShiftSpace.info(shift.space.name).unknown)
       {
         if (confirm('Would you like to install the space ' + shift.space + '?'))
         {
-          SSInstallSpace(shift.space.name, shiftId);
+          SSInstallSpace(shift.space.name, id);
           return;
         }
       }
 
-      var space = SSSpaceForShift(shiftId);
+      var space = SSSpaceForShift(id);
 
       // load the space first
       if(!space)
@@ -643,27 +644,21 @@ function SSShowShift(shiftId)
       // if the space is loaded check if this shift can be shown
       if(space)
       {
-        if(!space.canShowShift(SSGetShiftContent(shiftId)))
+        if(!space.canShowShift(SSGetShiftContent(id)))
         {
           throw new Error();
         }
       }
 
       // extract the shift content
-      var shiftJson = SSGetShiftContent(shiftId);
-      shiftJson.id = shiftId;
+      var shiftJson = SSGetShiftContent(id);
+      shiftJson._id = id;
 
       // check to make sure the css is loaded first
       if(!space.cssIsLoaded())
       {
         space.addDeferredShift(shiftJson);
         return;
-      }
-
-      // FIXME: make into onShowShift hook - David
-      if(SSHasResource('RecentlyViewedHelpers'))
-      {
-        SSAddRecentlyViewedShift(shiftId);
       }
 
       // wrap this in a try catch
@@ -684,10 +679,8 @@ function SSShowShift(shiftId)
         SSSpaceForName(shift.space.name).showShift(shiftJson);
       }
 
-      SSFocusShift(shift.id);
-
-      // call onShiftShow
-      space.onShiftShow(shiftId);
+      SSFocusShift(id);
+      space.onShiftShow(id);
     }
     catch(err)
     {
