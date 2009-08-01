@@ -555,22 +555,13 @@ var ShiftSpaceSpace = new Class({
     }
     else
     {
-      var cShift;
-      if($type(aShift) != 'object')
-      {
-        cShift = this.shifts[aShift];
-      }
-      else
-      {
-        cShift = this.shifts[aShift._id];
-      }
+      var cShift = this.shifts[aShift._id];
 
-      if( !cShift )
+      if(!cShift)
       {
-        // add the shift if we don't have it already
         try
         {
-          this.addShift( aShift );
+          this.addShift(aShift);
         }
         catch(exc)
         {
@@ -579,9 +570,8 @@ var ShiftSpaceSpace = new Class({
         cShift = this.shifts[aShift._id];
       }
 
-      if( cShift.canShow() )
+      if(cShift.canShow())
       {
-        // blur the old shift
         if(this.getCurrentShift() &&
            cShift != this.getCurrentShift())
         {
@@ -590,24 +580,18 @@ var ShiftSpaceSpace = new Class({
 
         this.setCurrentShift(cShift);
 
-        // show the new shift and focus it
         if(!cShift.isVisible())
         {
-          // do some private show setup here, this way subclass don't have to call this.parent() in show
           cShift._show();
-          // call the actual show method
           cShift.show();
 
-          // set some state flags
           cShift.setIsVisible(true);
           cShift.setIsBeingEdited(false);
         }
 
-        // focus the shift
         cShift.onFocus();
       }
 
-      // set the currentShift
       return cShift;
     }
 

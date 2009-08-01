@@ -46,7 +46,7 @@ var ShiftSpaceShift = new Class({
 
     if(data._id) this.setId(data._id);
     this.setTitle(data.summary || '');
-    this.setup(data);
+    this.setup(data.content);
   },
   
   

@@ -93,10 +93,9 @@ Function: SSFocusShift
 Parameter:
   shiftId - the id of the shift.
 */
-function SSFocusShift(id)
+var SSFocusShift = function(space, shift)
 {
-  var shift = SSGetShift(id);
-  var space = SSSpaceForShift(id);
+  var id = shift._id;
   var lastFocusedShift = SSFocusedShiftId();
 
   // unfocus the last shift
@@ -114,7 +113,6 @@ function SSFocusShift(id)
   SSSetFocusedShiftId(id);
   space.orderFront(id);
 
-  // call
   space.focusShift(id);
   space.onShiftFocus(id);
 
@@ -126,7 +124,6 @@ function SSFocusShift(id)
   {
     var pos = mainView.getPosition();
     var vsize = mainView.getSize();
-    //var viewPort = window.getSize().viewPort; // window.getViewPort();
     var viewPort = window.getSize();
     var windowScroll = window.getScroll();
 
@@ -155,11 +152,7 @@ function SSFocusShift(id)
       }
     }
   }
-  else
-  {
-    //SSLog('+++++++++++++++++++++++++++++++++++++++ NO MAIN VIEW');
-  }
-}
+}.asPromise();
 
 /*
   Function: SSBlurShift
@@ -602,12 +595,11 @@ Parameters:
 */
 var SSShowShift = function(space, shift)
 {
-  var p = SSGetShift(id);
   try
   {
-    space.showShift(p.get('content'));
-    SSFocusShift(p.get('_id'));
-    space.onShiftShow(p.get('_id'));
+    space.showShift(shift);
+    SSFocusShift(space, shift);
+    space.onShiftShow(shift._id);
   }
   catch(err)
   {

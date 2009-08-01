@@ -21,7 +21,8 @@ var ShiftListView = new Class({
   {
     SSLog('onRowClick ' + idx, SSLogForce);
     SSLog(this.data()[idx], SSLogForce);
-    SSShowShift(this.data()[idx]._id);
+    var shift = this.data()[idx];
+    SSShowShift(SSSpaceForName(shift.space.name), shift);
   }
   
 });
