@@ -85,27 +85,21 @@ function SSRegisterSpace(instance)
     ShiftSpace[instance.attributes().name + 'Space'] = instance;
   }
 
-  if(ShiftSpace.Console)
-  {
-    instance.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
-  }
-
-  instance.addEvent('onShiftShow', function(shiftId) {
-    if(ShiftSpace.Console) ShiftSpace.Console.showShift(shiftId);
+  instance.addEvent('onShiftHide', function(id) {
+    SSPostNotification('onShiftHide', id);
   });
-  instance.addEvent('onShiftBlur', function(shiftId) {
-    SSBlurShift(shiftId);
-    if(ShiftSpace.Console) ShiftSpace.Console.blurShift(shiftId);
+  instance.addEvent('onShiftShow', function(id) {
+    SSPostNotification('onShiftShow', id);
   });
-  instance.addEvent('onShiftFocus', function(shiftId) {
-    SSFocusShift(shiftId);
-    if(ShiftSpace.Console) ShiftSpace.Console.focusShift(shiftId);
+  instance.addEvent('onShiftBlur', function(id) {
+    SSBlurShift(SSSpaceForShift(id), SSGetShift(id));
+    SSPostNotification('onShiftBlur', id);
   });
-  instance.addEvent('onShiftSave', function(shiftId) {
-    if(ShiftSpace.Console)
-    {
-      ShiftSpace.Console.blurShift(shiftId);
-    }
+  instance.addEvent('onShiftFocus', function(id) {
+    SSFocusShift(SSSpaceForShift(id), SSGetShift(id));
+    SSPostNotification('onShiftFocus', id);
+  });
+  instance.addEvent('onShiftSave', function(id) {
   });
 }
 
@@ -310,7 +304,7 @@ function SSResetSpaces()
   Returns:
     The space instance.
 */
-function SSSpaceForName(name)
+var SSSpaceForName = function(name)
 {
   var space = __spaces[name];
   if(space)
@@ -321,7 +315,7 @@ function SSSpaceForName(name)
   {
     return SSLoadSpace(name);
   }
-}
+}.asPromise();
 
 /*
   Function: SSSetSpaceForName
@@ -457,8 +451,8 @@ function SSSetFocusedSpace(newSpace)
 */
 function SSSpaceForShift(shiftId)
 {
-  var shift = SSGetShift(shiftId);
-  return SSSpaceForName(shift.space.name);
+  var p = SSGetShift(shiftId);
+  return SSSpaceForName(p.get('space', 'name'));
 }
 
 
