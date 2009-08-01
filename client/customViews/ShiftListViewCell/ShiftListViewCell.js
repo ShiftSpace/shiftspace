@@ -5,7 +5,7 @@
 // @dependencies      SSListViewCell
 // ==/Builder==
 
-var ShiftListviewCell = new Class({
+var ShiftListViewCell = new Class({
 
   Extends: SSListViewCell,
   name: "ShiftListViewCell",

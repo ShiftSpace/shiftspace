@@ -417,7 +417,7 @@ var SSListView = new Class({
   {
     this.__data = newData;
     this.setNeedsDisplay(true);
-  },
+  }.asPromise(),
     
   /*
       Function: data
