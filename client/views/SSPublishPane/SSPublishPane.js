@@ -21,6 +21,50 @@ var SSPublishPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    this.setSelectedShifts([]);
+    SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
+    SSAddObserver(this, 'onShiftDeselect', this.onShiftDeselect.bind(this));
+  },
+  
+  
+  setSelectedShifts: function(ary)
+  {
+    this.__selectedShifts = ary;
+  },
+  
+  
+  selectedShifts: function()
+  {
+    return this.__selectedShifts;
+  },
+  
+  
+  onShiftSelect: function(evt)
+  {
+    if(!this.isVisible()) this.show();
+    this.addShift(evt);
+  },
+  
+  
+  onShiftDeselect: function(evt)
+  {
+    this.removeShift(evt);
+    if(this.selectedShifts().length == 0)
+    {
+      this.hide();
+    }
+  },
+  
+  
+  addShift: function(evt)
+  {
+    this.selectedShifts().push(evt);
+  },
+  
+  
+  removeShift: function(evt)
+  {
+    this.selectedShifts().pop();
   },
   
   

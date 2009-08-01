@@ -15,7 +15,27 @@ var ShiftListViewCell = new Class({
   {
     this.parent(el, options);
   },
-
+  
+  
+  clone: function()
+  {
+    var clone = this.parent();
+    clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
+      evt = new Event(evt);
+      var li = (evt.target.get('tag') == 'li') ? evt.target : evt.target.getParent('li');
+      var idx = this.delegate().indexOfCellNode(li);
+      if(evt.target.getProperty('checked'))
+      {
+        SSPostNotification('onShiftSelect', {listView: this.delegate(), index:idx});
+      }
+      else
+      {
+        SSPostNotification('onShiftDeselect', {listView: this.delegate(), index:idx});
+      }
+    }.bind(this));
+    return clone;
+  },
+  
   
   setSummary: function(summary)
   {
