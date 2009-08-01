@@ -3,7 +3,6 @@ var NotesSpace = new Class({
 
   Extends: ShiftSpace.Space,
   name: 'Notes',
-  
 
   onShiftFocus: function(shiftId)
   {
@@ -11,55 +10,15 @@ var NotesSpace = new Class({
     {
       this.editShift(shiftId);
     }
-  },
-
-  fix: function(brokenShiftJson)
-  {
-    var fixedShift = brokenShiftJson;
-    var content = brokenShiftJson.content;
-    var noteText = content.match(/content:"[\s|\S]+?", x:/m);
-    var fixedJson;
-
-    // extract the note text
-    if(noteText && noteText.length > 0)
-    {
-      function unescapeHTML(html) {
-        var htmlNode = new ShiftSpace.Element('div');
-        htmlNode.innerHTML = html;
-        if(htmlNode.innerText)
-        return htmlNode.innerText; // IE
-        return htmlNode.textContent; // FF
-      }
-
-      var noteTextFinal = unescapeHTML(noteText[0].substr(9, noteText[0].length-14));
-
-      fixedJson = content.replace(noteText[0].substr(0, noteText[0].length-2), "");
-      // replace new lines
-      //fixedJson = fixedJson.replace(/\n/g, '');
-      // remove the summary might include HTML markup
-      fixedJson = fixedJson.replace(/, summary:"[\s|\S]+?"\}\)/, "})");
-
-      // grab the other props
-      var otherProps = Json.evaluate(fixedJson);
-    }
-
-    var currentShift = this.getCurrentShift();
-    currentShift.setProperties($merge(otherProps, {noteText: noteTextFinal}));
-
-    // show the broken shift
-    this.showShift(brokenShiftJson.id);
-    this.editShift(brokenShiftJson.id);
-
-    // save the fixed shift
-    //currentShift.save();
   }
+  
 });
+
 
 var NotesShift = new Class({
 
-  name: 'NotesShift',
-
   Extends: ShiftSpace.Shift,
+  name: 'NotesShift',
 
   getDefaults: function()
   {

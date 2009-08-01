@@ -50,7 +50,7 @@ function SSInitShift(spaceName, options)
                   {x: winSize.x/2, y: winSize.y/2};
                   
   var shift = {
-    id: tempId,
+    _id: tempId,
     space: spaceName,
     username: ShiftSpace.User.getUserName(),
     position: _position

@@ -28,13 +28,13 @@ var ShiftSpaceShift = new Class({
       Takes a json object and creates the shift.
 
     Parameters:
-      _json - The JSON object that contains the properties the shift will have.
+      data - The JSON object that contains the properties the shift will have.
   */
-  initialize: function(_json)
+  initialize: function(data)
   {
-    this.setOptions(this.getDefaults(), _json);
+    this.setOptions(this.getDefaults(), data);
 
-    var id = _json.id;
+    var id = data._id;
     var parentSpace;
 
     this.defaults = this.options;
@@ -47,9 +47,9 @@ var ShiftSpaceShift = new Class({
       return id;
     };
 
-    if(_json.id) this.setId(_json.id);
-    this.setTitle(_json.summary || '');
-    this.setup(_json);
+    if(data._id) this.setId(data._id);
+    this.setTitle(data.summary || '');
+    this.setup(data);
 
     return this;
   },

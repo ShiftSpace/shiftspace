@@ -122,9 +122,9 @@ var ShiftSpaceSpace = new Class({
 
       // load any deferred shifts
       this.__deferredShifts.each(function(aShift) {
-        if(aShift.id)
+        if(aShift._id)
         {
-          SSShowShift(aShift.id);
+          SSShowShift(aShift._id);
         }
         else
         {
@@ -140,7 +140,7 @@ var ShiftSpaceSpace = new Class({
       // load any deferred just created shifts
       this.__deferredNewShifts.each(function(aShift) {
         this.createShift(aShift);
-        SSShowNewShift(aShift.id);
+        SSShowNewShift(aShift._id);
       }.bind(this));
     }
   }.asPromise(),
@@ -425,27 +425,26 @@ var ShiftSpaceSpace = new Class({
       Create a new shift.
 
     Parameters :
-      newShiftJson - The JSON for the new shift.
+      newShift - The data for the new shift.
 
     Returns:
       The new Shift object.
   */
-  createShift: function(newShiftJson)
+  createShift: function(newShift)
   {
     if(this.cssIsLoaded())
     {
-      this.addShift(newShiftJson);
-      var _newShift = this.shifts[newShiftJson.id];
+      this.addShift(newShift);
       this.fireEvent('onCreateShift', { 
-        'space': this, 
-        'shift' : _newShift 
+        space: this, 
+        shift: newShift 
       });
-      return _newShift;
+      return newShift;
     }
     else
     {
       // we need to load these when the css is done
-      this.addDeferredNew(newShiftJson);
+      this.addDeferredNew(newShift);
     }
 
     return null;
@@ -508,15 +507,10 @@ var ShiftSpaceSpace = new Class({
   */
   updateShift: function(aShift)
   {
-    // notify other object such as the console
-    var shiftJson = aShift.encode();
-
-    // fix this
-    shiftJson.id = aShift.getId();
-    shiftJson.space = this.attributes().name;
-    shiftJson.username = ShiftSpace.User.getUserName();
-
-    this.fireEvent('onShiftUpdate', shiftJson);
+    var shift = aShift.encode();
+    shift._id = aShift.getId();
+    shift.space = {name: this.attributes().name, version: this.attributes().version};
+    this.fireEvent('onShiftUpdate', shift);
   },
 
 
@@ -561,7 +555,7 @@ var ShiftSpaceSpace = new Class({
       }
       else
       {
-        cShift = this.shifts[aShift.id];
+        cShift = this.shifts[aShift._id];
       }
 
       if( !cShift )
@@ -575,7 +569,7 @@ var ShiftSpaceSpace = new Class({
         {
           SSLog(SSDescribeException(exc));
         }
-        cShift = this.shifts[aShift.id];
+        cShift = this.shifts[aShift._id];
       }
 
       if( cShift.canShow() )
