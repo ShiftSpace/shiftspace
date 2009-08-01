@@ -26,7 +26,7 @@ var ShiftSpaceSpace = new Class({
       Initialize the space.  Sets internala state variables as well as calls SSRegisterSpace.  Also call the subclass
       setup method.
   */
-  initialize: function( shiftClass )
+  initialize: function(shiftClass)
   {
     var self = this;
     shiftClass.implement({
@@ -61,19 +61,15 @@ var ShiftSpaceSpace = new Class({
       SSLog('You did not specify a Shift Class for this Space.', SSLogError);
     }
 
-    if(valid)
-    {
-      if(typeof SSRegisterSpace != 'undefined')
-      {
-        SSRegisterSpace(this);
-      }
-    }
-    else
+    if(!valid)
     {
       var name = this.attributes().name || '';
       console.error('Error: The  ' + name + ' is not valid and will not be instantiated.');
     }
-    this.setup();
+    else
+    {
+      this.setup();
+    }
 
     return this;
   },

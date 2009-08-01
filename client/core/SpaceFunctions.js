@@ -38,7 +38,7 @@ function SSLoadSpace(spaceName)
         function() {
           try
           {
-            var space = ShiftSpace.__externals.evaluate('(function(){'+p.value()+' return '+spaceName+';})()');
+            var space = SSRegisterSpace(ShiftSpace.__externals.evaluate('(function(){'+p.value()+' return '+spaceName+';})()'));
           }
           catch(exc)
           {
@@ -101,6 +101,8 @@ function SSRegisterSpace(instance)
   });
   instance.addEvent('onShiftSave', function(id) {
   });
+  
+  return instance;
 }
 
 
