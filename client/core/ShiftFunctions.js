@@ -108,10 +108,15 @@ var SSFocusShift = function(space, shift)
   space.focusShift(id);
   space.onShiftFocus(id);
 
-  // scroll the window if necessary
+  SSScrollToShift(space, shift);
+}.asPromise();
+
+
+function SSScrollToShift(space, shift)
+{
+  var id = shift._id;
   var mainView = space.mainViewForShift(id);
 
-  // TODO: move the windowing logic elsewhere - David 7/31/09
   if(mainView && !SSIsNewShift(id))
   {
     var pos = mainView.getPosition();
@@ -144,7 +149,7 @@ var SSFocusShift = function(space, shift)
       }
     }
   }
-}.asPromise();
+}
 
 /*
   Function: SSBlurShift
