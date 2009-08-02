@@ -40,14 +40,14 @@ var SSInitShift = function(space, options)
   var winSize = window.getSize();
   var position = (options && options.position && {x: options.position.x, y: options.position.y }) || 
                   {x: winSize.x/2, y: winSize.y/2};
-                  
+  
   var shift = {
     _id: tempId,
     space: {name: space.name},
     userName: ShiftSpace.User.getUserName(),
     content: {position: position}
   };
-
+  
   var noError = space.createShift(shift);
   
   if(noError)

@@ -29,6 +29,12 @@ var ShiftListView = new Class({
   {
     var shift = this.data()[idx];
     SSHideShift(SSSpaceForName(shift.space.name), shift);
+  },
+  
+  
+  onCreate: function(id)
+  {
+    SSLog('onCreate ' + id, SSLogForce);
   }
   
 });
