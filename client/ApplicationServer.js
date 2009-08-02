@@ -33,6 +33,7 @@ var ApplicationServer = new Class({
   {
     this.setOptions(this.defaults(), options);
     this.setServer(this.options.server);
+    this.setWatchers([]);
   },
 
   
@@ -67,6 +68,29 @@ var ApplicationServer = new Class({
   },
   
   
+  setWatchers: function(watchers)
+  {
+    this.__watchers = watchers;
+  },
+  
+  
+  watchers: function()
+  {
+    return this.__watchers;
+  },
+
+  
+  addWatcher: function(watcher, resource, methods)
+  {
+    var watchers = this.watchers();
+    if(!watchers[resource]) watchers[resource] = {'create':[], 'read':[], 'update':[], 'delete':[]};
+    for(var method in methods)
+    {
+      watchers[resource][method].push(obj);
+    }
+  },
+  
+  
   call: function(options)
   {
     var urlParts = $H(options).extract(this.urlOrder);
@@ -93,7 +117,14 @@ var ApplicationServer = new Class({
   
   create: function(resource, data)
   {
-    return this.call({resource:resource, method:'post', data:data, json: true});
+    var p = this.call({resource:resource, method:'post', data:data, json: true});
+    p.op(function(value) { 
+      this.watchers()['resource']['create'].each(function(obj) {
+        obj.onCreate(value);
+      }); 
+      return value;
+    }.bind(this));
+    return p;
   },
   
   
