@@ -73,6 +73,29 @@ class Event {
     return $object->get();  
   }
 
+  public function updatestream() {
+    $this->logged_in();
+    extract($_REQUEST);
+    
+    $object = new Stream_Object();
+    $user_id = $this->server->user['id'];
+    $created_by_name = $this->server->user['username'];
+    
+    if ($this->permission($id) < 3)
+      throw new Exception("You don't have permissions for this operation.");
+
+    if ($unique_name) {
+      $num = $this->server->db->query('SELECT COUNT(*) FROM stream WHERE private=0 AND unique_name=:unique_name AND id<>:id', compact('unique_name'))->fetch(PDO::FETCH_NUM);
+
+      if ($num[0] > 0)
+        throw new Exception("Stream already exists with this unique_name");
+    }
+    
+    $object->set(compact('private', 'stream_name', 'user_id', 'created_by_name', 'object_ref', 'unique_name', 'meta', 'superstream', 'id'));
+    $this->server->db->save($object);
+    return $object->get();  
+  }
+
   public function findstreambyuniquename() {
     extract($_REQUEST);
     
