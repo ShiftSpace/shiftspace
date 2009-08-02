@@ -9,6 +9,13 @@ function $identity(v)
   return v;
 }
 
+function $not(fn)
+{
+  return function() {
+    return !fn.apply(this, $A(arguments));
+  }
+}
+
 String.implement({
   
   tail: function(n)

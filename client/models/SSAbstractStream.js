@@ -133,7 +133,9 @@ var SSAbstractStream = new Class({
         object_ref: _options.objectRef,
         has_read_status: (_options.hasReadStatus ? 1 : 0),
         unique_name: _options.uniqueName,
-        url: _options.url
+        url: _options.url,
+        meta: _options.meta,
+        href: _options.href
       };
       
       this.coll().create(options, {onCreate:this.onPostEvent.bind(this)});
@@ -258,3 +260,9 @@ var SSAbstractStream = new Class({
 });
 
 SSAbstractStream.findStreamsWithEvents = SSFindStreamsWithEvents;
+SSAbstractStream.withData = function(data)
+{
+  var newStream = new SSAbstractStream(null, {createStream:false});
+  newStream.setData(data);
+  return newStream;
+}
