@@ -197,16 +197,11 @@ var SSDeleteShift = function(shift)
 var SSEditShift = function(space, shift)
 {
   var id = shift._id;
-  var user = SSUserForShift(id);
-
-  if(!space.canShowShift(SSGetShiftContent(id))) return;
-  // if the user has permissions, edit the shift
-  if(SSUserCanEditShift(id))
+  if(SSUserCanEditShift(shift))
   {
     var content = shift.content;
     SSFocusSpace(space, (content && content.position) || null);
     SSShowShift(space, shift);
-
     space.editShift(id);
     space.onShiftEdit(id);
     SSFocusShift(space, shift);
@@ -356,33 +351,6 @@ function SSGetPageShifts(shiftIds)
   return result;
 }
 
-
-/*
-  Function: SSGetPageShiftIdsForUser
-    Gets all the shifts ids on the current page for the logged in user.
-
-  Returns:
-    An array of shift ids.
-*/
-function SSGetPageShiftIdsForUser()
-{
-  var shiftIds = [];
-
-  if(ShiftSpace.User.isLoggedIn())
-  {
-    var username = ShiftSpace.User.getUserName();
-    var allShifts = SSAllShifts();
-    for(shiftId in allShifts)
-    {
-      if(SSUserForShift(shiftId) == username)
-      {
-        shiftIds.push(shiftId);
-      }
-    }
-  }
-
-  return shiftIds;
-}
 
 /*
 Function: SSAllShiftIdsForSpace
