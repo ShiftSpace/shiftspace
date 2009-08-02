@@ -21,7 +21,7 @@ var SSPublishPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    this.setSelectedShifts([]);
+    this.setSelectedShifts($H());
     SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
     SSAddObserver(this, 'onShiftDeselect', this.onShiftDeselect.bind(this));
   },
@@ -49,22 +49,24 @@ var SSPublishPane = new Class({
   onShiftDeselect: function(evt)
   {
     this.removeShift(evt);
-    if(this.selectedShifts().length == 0)
-    {
-      this.hide();
-    }
+    if(this.selectedShifts()[evt.listView.getName()].length == 0) this.hide();
   },
   
   
   addShift: function(evt)
   {
-    this.selectedShifts().push(evt);
+    var listViewName = evt.listView.getName();
+    var selectedShifts = this.selectedShifts();
+    var listViewSelectedShifts = selectedShifts[listViewName];
+    if(!listViewSelectedShifts) selectedShifts[listViewName] = [];
+    selectedShifts[listViewName].push(evt.index);
   },
   
   
   removeShift: function(evt)
   {
-    this.selectedShifts().pop();
+    var listViewName = evt.listView.getName();
+    this.selectedShifts()[listViewName].erase(evt.index);
   },
   
   
@@ -77,18 +79,6 @@ var SSPublishPane = new Class({
   delegate: function(delegate)
   {
     return this.__delegate;
-  },
-  
-  
-  setTableView: function(tableView)
-  {
-    this.__tableView = tableView;
-  },
-  
-  
-  tableView: function()
-  {
-    return this.__tableView;
   },
   
   
@@ -108,11 +98,17 @@ var SSPublishPane = new Class({
   deleteShifts: function(evt)
   {
     evt = new Event(evt);
-    var shiftIds = this.checkedShifts();
-    var len = shiftIds.length;
-    var str = (len != 1) ? "these shifts" : "this shift";
-    if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
-    shiftIds.each(SSDeleteShift);
+    var listView = ShiftSpace.Console.visibleListView();
+    var listViewName = listView.getName();
+    var selectedShifts = this.selectedShifts()[listViewName];
+    
+    if(selectedShifts && selectedShifts.length > 0)
+    {
+      var len = selectedShifts.length;
+      var str = (len != 1) ? "these shifts" : "this shift";
+      if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
+      return new Promise(listView.get(selectedShifts).map(SSDeleteShift));
+    }
   },
   
   

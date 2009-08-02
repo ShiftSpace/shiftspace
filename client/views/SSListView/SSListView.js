@@ -760,17 +760,9 @@ var SSListView = new Class({
     Returns: 
       An array. 
   */
-  get: function(index)
+  get: function(indexOrIndices)
   {
-    this.boundsCheck(index);
-    
-    var copy = {};
-    var data = this.__get__(index);
-    for(prop in data)
-    {
-      copy[prop] = data[prop];
-    }
-    return copy;
+    return $splat(indexOrIndices).map(this.__get__.bind(this));
   },
   
   /*
