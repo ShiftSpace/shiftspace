@@ -340,22 +340,6 @@ function SSGetShifts(shiftIds, callBack, errorHandler)
   });
 }
 
-function SSGetPageShifts(shiftIds)
-{
-  var result = [];
-  for(var i = 0; i < shiftIds.length; i++)
-  {
-    var cshift = SSGetShift(shiftIds[i]);
-    var copy = {
-      username: cshift.username,
-      space: cshift.space.name,
-      status: cshift.status
-    };
-    result.push(copy);
-  }
-  return result;
-}
-
 
 /*
 Function: SSAllShiftIdsForSpace

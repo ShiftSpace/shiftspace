@@ -34,7 +34,13 @@ var ShiftListView = new Class({
   
   onCreate: function(id)
   {
-    SSLog('onCreate ' + id, SSLogForce);
+    this.refresh();
+  },
+  
+
+  onDelete: function(ack)
+  {
+    this.refresh();
   }
   
 });

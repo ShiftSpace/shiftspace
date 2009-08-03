@@ -88,7 +88,7 @@ var SSConsole = new Class({
         var p = SSApp.get({resource:'shifts', data:{href:window.location.href.split("#")[0]}})
         this.AllShiftsListView.setData(p);
         this.AllShiftsListView.reloadData(p);
-        SSApp.addWatcher(this.AllShiftsListView, 'shift', ['create']);
+        SSApp.addWatcher(this.AllShiftsListView, 'shift', ['create', 'delete', 'update']);
         SSAddShifts(p);
         this.initAllShiftsView();
       }
