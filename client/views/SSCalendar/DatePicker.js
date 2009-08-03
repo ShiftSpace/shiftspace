@@ -1114,7 +1114,7 @@ var DatePicker;
     {
       if (e.target.hasClass('rightScroll') || e.target.hasClass('leftScroll')) 
       {
-        var newRef = e.target.hasClass('rightScroll') ? this.rows[2].getElement('td').refDate - Date.units.day() : this.rows[7].getElements('td')[6].refDate + Date.units.day();
+        var newRef = e.target.hasClass('leftScroll') ? this.rows[2].getElement('td').refDate - Date.units.day() : this.rows[7].getElements('td')[6].refDate + Date.units.day();
         this.fillCalendar(new Date(newRef));
         return true;
       }
