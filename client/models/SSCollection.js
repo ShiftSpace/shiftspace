@@ -59,15 +59,19 @@ function SSCollectionForName(name)
   return SSCollections.get(name);
 }
 
+
 function SSSetCollectionForName(collection, name)
 {
   SSCollections.set(name, collection);
+  SSPostNotification('onSetCollection', {name:name, collection:collection});
 }
+
 
 function SSClearCollections()
 {
   SSCollections.empty();
 }
+
 
 function SSCollectionsClearAllPlugins()
 {
@@ -75,6 +79,7 @@ function SSCollectionsClearAllPlugins()
     coll.clearPlugins();
   });
 }
+
 
 function SSCollectionCheckRead(collectionName)
 {
