@@ -1216,7 +1216,7 @@ var SSCollection = new Class({
   onRead: function(data)
   {
     this.fireEvent('onLoad', data);
-    this.fireEvent('onRead', data);
+    this.fireEvent('onRead', [data]);
   },
   
   /*
