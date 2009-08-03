@@ -11,7 +11,7 @@ class Collections {
   }
 
   function esc($value) {      
-    if (is_string($value)) {
+    if (is_string($value) && $value != 'NOW()') {
       $value = $this->server->db->escape($value);
       $value = "'$value'";
     }
@@ -182,7 +182,7 @@ class Collections {
     extract($desc);
     $result = 0;
     
-    $values['modified'] = time();
+    $values['modified'] = 'NOW()';
 
     if (!ctype_alpha2($table))
       throw new Error("Possible hack attempt 7");
@@ -194,8 +194,7 @@ class Collections {
       if (!ctype_alpha2(str_replace(array('_', '.'), '', $key)))
         throw new Error("Possible hack attempt 8");
 
-      if (is_string($value))
-        $value = "'".$this->server->db->escape($value)."'";
+      $value = $this->esc($value);
 
       $value = str_replace("\\'", "''", $value);
         
@@ -229,8 +228,8 @@ class Collections {
 
     $valuesSql = array();
 
-    $values['created'] = time();
-    $values['modified'] = time();
+    $values['created'] = 'NOW()';
+    $values['modified'] = 'NOW()';
     $values['userid'] = $this->server->user['id'];
 
     $columns = implode(', ', array_keys($values));
@@ -238,8 +237,7 @@ class Collections {
       if (!ctype_alpha2(str_replace(array('_', '.'), '', $key)))
         throw new Error("Possible hack attempt 10");
 
-      if (is_string($value))
-        $value = "'".$this->server->db->escape($value)."'";
+      $value = $this->esc($value);
         
       $value = str_replace("\\'", "''", $value);
         
