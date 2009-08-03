@@ -316,7 +316,15 @@ class Event {
       $permissions_clause = "";
     }
     
-    return new Response($this->server->db->rows("SELECT DISTINCT stream.* FROM event, stream $user_clause WHERE event.stream_id = stream.id AND (stream.private = 0 $permissions_clause) AND event.object_ref=:object_ref", compact('object_ref')));
+    $options = compact('object_ref');
+
+    $spec_clause = "";
+    if (isset($stream_meta) && $stream_meta) {
+      $spec_clause .= " AND stream.meta=:stream_meta";
+      $options['stream_meta'] = $stream_meta;
+    }
+
+    return new Response($this->server->db->rows("SELECT DISTINCT stream.* FROM event, stream $user_clause WHERE event.stream_id = stream.id AND (stream.private = 0 $permissions_clause) AND event.object_ref=:object_ref $spec_clause", $options));
   }
   
   public function deleteevent() {
