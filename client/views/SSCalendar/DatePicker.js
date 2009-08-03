@@ -1152,7 +1152,7 @@ var DatePicker;
     fillCalendar: function (date) 
     {
       if ($type(date) == "string") date = new Date(date);
-      var startDate = (date)?new Date(date.getTime()):new Date();
+      var startDate = (date) ? new Date(date.getTime()) : new Date();
       var hours = startDate.get('hours');
       startDate.setDate(1);
       startDate.setTime((startDate.getTime() - (Date.units.day() * (startDate.getDay()))) + 
