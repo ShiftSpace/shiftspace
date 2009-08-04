@@ -21,7 +21,9 @@ var SSCalendar = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    this.setPicker(new DatePicker(this.element, this.options.displayOptions));
+    var picker = new DatePicker(this.element, this.options.displayOptions);
+    this.setPicker(picker);
+    picker.setDelegate(this);
   },
 
   
