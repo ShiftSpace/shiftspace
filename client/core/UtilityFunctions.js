@@ -177,36 +177,6 @@ function SSResourceExists(resourceName)
   return __sys__.files[resourceName] != null || __sys__.packages[resourceName] != null;
 }
 
-/*
-  Function: SSCheckForAutolaunch
-    Check for Spaces which need to be auto-launched.
-*/
-function SSCheckForAutolaunch()
-{
-  for(space in SSInstalledSpaces())
-  {
-    if(SSGetPrefForSpace(space, 'autolaunch'))
-    {
-      var ids = SSAllShiftIdsForSpace(space);
-      var spaceObject = SSSpaceForName(space);
-
-      // in the case of the web we need to load the space first
-      if(!spaceObject)
-      {
-        // load the space first
-        SSLoadSpace(space, function() {
-          ids.each(SSShowShift);
-        });
-        return;
-      }
-      else
-      {
-        // otherwise just show the puppies, this works in the sandbox
-        ids.each(SSShowShift);
-      }
-    }
-  }
-}
 
 function SSResetCore()
 {

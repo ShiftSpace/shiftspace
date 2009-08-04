@@ -342,27 +342,6 @@ function SSGetShifts(shiftIds, callBack, errorHandler)
 
 
 /*
-Function: SSAllShiftIdsForSpace
-  Returns all shift ids on the current url for a particular Space.
-
-Parameters:
-  spaceName - the name of the Space as a string.
-*/
-function SSAllShiftIdsForSpace(spaceName)
-{
-  var shiftsForSpace = [];
-  var allShifts = SSAllShifts();
-  for(shiftId in allShifts)
-  {
-    if(SSSpaceNameForShift(shiftId) == spaceName)
-    {
-      shiftsForSpace.push(shiftId);
-    }
-  }
-  return shiftsForSpace;
-}
-
-/*
   Function: SSGetAuthorForShift
     Returns the username of the Shift owner as a string.
 
@@ -375,29 +354,6 @@ function SSAllShiftIdsForSpace(spaceName)
 function SSGetAuthorForShift(shiftId)
 {
   return SSGetShift(shiftId).username;
-}
-
-/*
-Function: SSGetShiftData
-  Returns a copy of the shift data.
-
-Parameters:
-  shiftId - a shift id.
-
-Returns:
-  An copy of the shift's properties.
-*/
-function SSGetShiftData(shiftId)
-{
-  var shift = SSGetShift(shiftId);
-  return {
-    id : shift.id,
-    title : shift.summary,
-    summary: shift.summary,
-    space: shift.space,
-    href : shift.href,
-    username : shift.username
-  };
 }
 
 
@@ -449,34 +405,6 @@ function SSLoadShifts(shiftIds, callback)
   });
 }
 
-/*
-  Function: SSShiftIsLoaded
-    Check to see if the shift has it's content loaded yet.
-
-  Parameters:
-    shiftId - a shift id.
-
-  Returns:
-    a boolean value.
-*/
-function SSShiftIsLoaded(shiftId)
-{
-  return (SSGetShift(shiftId) && SSHasProperty(SSGetShift(shiftId), 'content'));
-}
-
-/*
-  Function: SSUpdateTitleOfShift
-    Tell the space to the update the title of the shift if necessary.
-
-  Parameters:
-    shiftId - a shift id.
-    title - the new title.
-*/
-function SSUpdateTitleOfShift(shiftId, title)
-{
-  SSSpaceForShift(shiftId).updateTitleOfShift(shiftId, title);
-  SSShowShift(shiftId);
-}
 
 /*
 Function: SSShowShift
@@ -551,26 +479,6 @@ function SSFocusedShiftId()
 function SSSetFocusedShiftId(newId)
 {
   __focusedShiftId = newId;
-}
-
-/*
-  Function: SSSetShiftStatus
-    Sets the shift public private status.
-
-  Parameters:
-    shiftId - a shift id.
-    newStatus - the status.
-*/
-function SSSetShiftStatus(shiftId, newStatus) 
-{
-  SSGetShift(shiftId).status = newStatus;
-  var params = {
-    id: shiftId,
-    status: newStatus
-  };
-  SSServerCall('shift.update', params, function() {
-    SSPostNotification('onShiftUpdate', shiftId);
-  });
 }
 
 

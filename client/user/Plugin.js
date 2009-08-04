@@ -211,19 +211,9 @@ var ShiftSpacePlugin = new Class({
     Returns:
       A copy of the shift's properties.
   */
-  getShift: function(shiftId)
+  getShift: function(id)
   {
-    // heh, no reason to copy now SSGetShiftData returns a copy
-    var temp = SSGetShiftData(shiftId);
-    var copy = {};
-    
-    for(var prop in temp)
-    {
-      copy[prop] = temp[prop];
-    }
-    copy.href = SSGetUrlForShift(shiftId);
-    
-    return copy;
+    return SSGetShift(id);
   },
   
   /*
@@ -252,17 +242,6 @@ var ShiftSpacePlugin = new Class({
     console.error("Error: Plugin call to getShifts failed, " + error.message);
   },
   
-  /*
-    Function: recentlyViewedShifts
-      Returns a hash of recently viewed shifts.
-    
-    Parameters:
-      callback - a function to be called when the recently viewed shifts has been returned.
-  */
-  recentlyViewedShifts: function(callback)
-  {
-    return SSGetRecentlyViewedShifts(callback);
-  },
   
   /*
     Function: delayedMenu
