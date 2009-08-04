@@ -59,15 +59,19 @@ function SSCollectionForName(name)
   return SSCollections.get(name);
 }
 
+
 function SSSetCollectionForName(collection, name)
 {
   SSCollections.set(name, collection);
+  SSPostNotification('onSetCollection', {name:name, collection:collection});
 }
+
 
 function SSClearCollections()
 {
   SSCollections.empty();
 }
+
 
 function SSCollectionsClearAllPlugins()
 {
@@ -75,6 +79,7 @@ function SSCollectionsClearAllPlugins()
     coll.clearPlugins();
   });
 }
+
 
 function SSCollectionCheckRead(collectionName)
 {
@@ -893,7 +898,7 @@ var SSCollection = new Class({
       properties: this.properties(),
       orderBy: this.orderBy(),
       onComplete: function(data) {
-        this.setArray(data);
+        if(!options.doNotUpdate) this.setArray(data);
         this.setIsUnread(false);
         this.setIsReading(false);
         this.clearOnReadFns();
@@ -1216,6 +1221,7 @@ var SSCollection = new Class({
   onRead: function(data)
   {
     this.fireEvent('onLoad', data);
+    this.fireEvent('onRead', [data]);
   },
   
   /*

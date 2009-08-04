@@ -73,6 +73,29 @@ class Event {
     return $object->get();  
   }
 
+  public function updatestream() {
+    $this->logged_in();
+    extract($_REQUEST);
+    
+    $object = new Stream_Object();
+    $user_id = $this->server->user['id'];
+    $created_by_name = $this->server->user['username'];
+    
+    if ($this->permission($id) < 3)
+      throw new Exception("You don't have permissions for this operation.");
+
+    if ($unique_name) {
+      $num = $this->server->db->query('SELECT COUNT(*) FROM stream WHERE private=0 AND unique_name=:unique_name AND id<>:id', compact('unique_name'))->fetch(PDO::FETCH_NUM);
+
+      if ($num[0] > 0)
+        throw new Exception("Stream already exists with this unique_name");
+    }
+    
+    $object->set(compact('private', 'stream_name', 'user_id', 'created_by_name', 'object_ref', 'unique_name', 'meta', 'superstream', 'id'));
+    $this->server->db->save($object);
+    return $object->get();  
+  }
+
   public function findstreambyuniquename() {
     extract($_REQUEST);
     
@@ -293,7 +316,15 @@ class Event {
       $permissions_clause = "";
     }
     
-    return new Response($this->server->db->rows("SELECT DISTINCT stream.* FROM event, stream $user_clause WHERE event.stream_id = stream.id AND (stream.private = 0 $permissions_clause) AND event.object_ref=:object_ref", compact('object_ref')));
+    $options = compact('object_ref');
+
+    $spec_clause = "";
+    if (isset($stream_meta) && $stream_meta) {
+      $spec_clause .= " AND stream.meta=:stream_meta";
+      $options['stream_meta'] = $stream_meta;
+    }
+
+    return new Response($this->server->db->rows("SELECT DISTINCT stream.* FROM event, stream $user_clause WHERE event.stream_id = stream.id AND (stream.private = 0 $permissions_clause) AND event.object_ref=:object_ref $spec_clause", $options));
   }
   
   public function deleteevent() {

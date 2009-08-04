@@ -8,6 +8,7 @@ var SSCalendar = new Class({
 
   Extends: SSView,
   name: 'SSCalendar',
+
   
   defaults: function()
   {
@@ -16,9 +17,23 @@ var SSCalendar = new Class({
     });
   },
 
+
   initialize: function(el, options)
   {
     this.parent(el, options);
-    new DatePicker(this.element, this.options.displayOptions);
+    this.setPicker(new DatePicker(this.element, this.options.displayOptions));
+  },
+
+  
+  setPicker: function(picker)
+  {
+    this.__picker = picker;
+  },
+
+  
+  picker: function()
+  {
+    return this.__picker;
   }
+  
 });

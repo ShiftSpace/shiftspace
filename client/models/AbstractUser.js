@@ -182,7 +182,7 @@ var AbstractUser = new Class({
       Join a new user. Returns a promise for the user's data.
       This promise may be an error and should be handled.
   */
-  join: function(userInfo) 
+  join: function(userInfo, callack) 
   {
     var p = SSApp.join(userInfo);
     $if(SSApp.noErr(p),
@@ -208,13 +208,14 @@ var AbstractUser = new Class({
     Parameters:
       info - info to be updated.
   */
-  update: function(info) 
+  update: function(info, callback) 
   {
     SSServerCall('user.update', info, function(json) {
       if(!json['error'])
       {
         if(json.data) this.syncData(json.data);
         this.onUpdate(json);
+        if(callback) callback(json);
       }
     }.bind(this));
   },

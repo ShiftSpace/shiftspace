@@ -24,11 +24,24 @@ var SSAbstractStream = new Class({
   initialize: function(options)
   {
     this.setOptions(this.defaults(), options);
+    this.setIsLoaded(false);
     
     if(this.options.createStream)
     {
       this.create();
     }
+  },
+  
+  
+  setIsLoaded: function(val)
+  {
+    this.__isLoaded = val;
+  },
+  
+  
+  isLoaded: function()
+  {
+    return this.__isLoaded;
   },
   
   
@@ -68,14 +81,15 @@ var SSAbstractStream = new Class({
   setData: function(data)
   {
     this.__data = data;
-    this.setColl(this.__data.id);
+    this.setColl(data.unique_name || ("stream:"+data.id), data.id);
+    this.setIsLoaded(true);
     this.fireEvent('load', this);
   },
   
   
-  setColl: function(streamId)
+  setColl: function(name, streamId)
   {
-    this.__coll = new SSCollection("stream:"+streamId, {
+    this.__coll = new SSCollection(name, {
       table: "!"+streamId,
       orderby: [">", "created"],
       properties: "*"

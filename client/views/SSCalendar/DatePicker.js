@@ -1114,7 +1114,7 @@ var DatePicker;
     {
       if (e.target.hasClass('rightScroll') || e.target.hasClass('leftScroll')) 
       {
-        var newRef = e.target.hasClass('rightScroll') ? this.rows[2].getElement('td').refDate - Date.units.day() : this.rows[7].getElements('td')[6].refDate + Date.units.day();
+        var newRef = e.target.hasClass('leftScroll') ? this.rows[2].getElement('td').refDate - Date.units.day() : this.rows[7].getElements('td')[6].refDate + Date.units.day();
         this.fillCalendar(new Date(newRef));
         return true;
       }
@@ -1152,7 +1152,7 @@ var DatePicker;
     fillCalendar: function (date) 
     {
       if ($type(date) == "string") date = new Date(date);
-      var startDate = (date)?new Date(date.getTime()):new Date();
+      var startDate = (date) ? new Date(date.getTime()) : new Date();
       var hours = startDate.get('hours');
       startDate.setDate(1);
       startDate.setTime((startDate.getTime() - (Date.units.day() * (startDate.getDay()))) + 

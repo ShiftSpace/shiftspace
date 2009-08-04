@@ -122,10 +122,11 @@ function SSDeleteEvent(eventId, callback)
 }
 
 
-function SSFindStreamsWithEvents(objectRef, callback)
+function SSFindStreamsWithEvents(objectRef, streamMeta, callback)
 {
   SSStreamCall('event.findstreamswithevent', {
-    object_ref: objectRef
+    object_ref: objectRef,
+    stream_meta: streamMeta || ''
   }, callback);
 }
 
