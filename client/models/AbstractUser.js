@@ -199,7 +199,7 @@ var AbstractUser = new Class({
     Function: join (private)
       Join a new user.  Will probably be moved into ShiftSpace.js.
   */
-  join: function(userInfo) 
+  join: function(userInfo, callack) 
   {
     SSServerCall('user.join', userInfo, function(json) {
       if(!json['error'])
@@ -209,6 +209,7 @@ var AbstractUser = new Class({
         
         this.onJoin(json);
         this.onLogin(json);
+        if(callack) callback(json);
       }
       else
       {
@@ -237,13 +238,14 @@ var AbstractUser = new Class({
     Parameters:
       info - info to be updated.
   */
-  update: function(info) 
+  update: function(info, callback) 
   {
     SSServerCall('user.update', info, function(json) {
       if(!json['error'])
       {
         if(json.data) this.syncData(json.data);
         this.onUpdate(json);
+        if(callback) callback(json);
       }
       else
       {
