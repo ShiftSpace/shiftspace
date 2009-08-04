@@ -1152,7 +1152,6 @@ var DatePicker;
     
     fillCalendar: function (date) 
     {
-      SSLog(date, SSLogForce);
       if ($type(date) == "string") date = new Date(date);
       var startDate = (date) ? new Date(date.getTime()) : new Date();
       var hours = startDate.get('hours');
