@@ -24,11 +24,24 @@ var SSAbstractStream = new Class({
   initialize: function(options)
   {
     this.setOptions(this.defaults(), options);
+    this.setIsLoaded(false);
     
     if(this.options.createStream)
     {
       this.create();
     }
+  },
+  
+  
+  setIsLoaded: function(val)
+  {
+    this.__isLoaded = val;
+  },
+  
+  
+  isLoaded: function()
+  {
+    return this.__isLoaded;
   },
   
   
@@ -69,6 +82,7 @@ var SSAbstractStream = new Class({
   {
     this.__data = data;
     this.setColl(data.unique_name || ("stream:"+data.id));
+    this.setIsLoaded(true);
     this.fireEvent('load', this);
   },
   
