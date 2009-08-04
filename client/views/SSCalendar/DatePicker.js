@@ -1116,6 +1116,7 @@ var DatePicker;
       {
         var newRef = e.target.hasClass('leftScroll') ? this.rows[2].getElement('td').refDate - Date.units.day() : this.rows[7].getElements('td')[6].refDate + Date.units.day();
         this.fillCalendar(new Date(newRef));
+        this.fireEvent('onChangeMonth');
         return true;
       }
       return false;
@@ -1151,6 +1152,7 @@ var DatePicker;
     
     fillCalendar: function (date) 
     {
+      SSLog(date, SSLogForce);
       if ($type(date) == "string") date = new Date(date);
       var startDate = (date) ? new Date(date.getTime()) : new Date();
       var hours = startDate.get('hours');
@@ -1162,6 +1164,7 @@ var DatePicker;
         html: Date.getMsg('months')[date.getMonth()] + " " + date.getFullYear()
       });
       
+      this.dateRef = date;
       this.month.empty().adopt(monthyr);
       var atDate = startDate.clone();
       
