@@ -33,7 +33,6 @@ var SSTabView = new Class({
     {
       var idx = this.indexOfTab(defaultActiveTab);
       // force selection of default tab
-      this.selectTab(idx);
       this.__selectedTab = idx;
     }
     
@@ -44,6 +43,13 @@ var SSTabView = new Class({
     }
 
     this.element.addEvent('click', this.eventDispatch.bind(this));
+  },
+  
+  
+  show: function()
+  {
+    this.parent();
+    this.selectTab(this.selectedTab());
   },
   
   
