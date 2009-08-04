@@ -289,6 +289,12 @@ function $msg(methodName)
 }
 
 
+function $implements(obj, method)
+{
+  return obj && obj[method] && $type(obj[method]) == 'function';
+}
+
+
 function $get(first, prop) {
   var args = $A(arguments);
   var rest = args.drop(2);
