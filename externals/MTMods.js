@@ -39,6 +39,13 @@ String.implement({
   unpluralize: function()
   {
     return (this.tail() == "s") ? this.drop() : $A(this).join("");
+  },
+  
+  
+  trunc: function(limit, options)
+  {
+    var tail = (options.tail === false) ? '' : (options.tail || '...');
+    return this.substring(0, limit) + tail;
   }
   
 });
