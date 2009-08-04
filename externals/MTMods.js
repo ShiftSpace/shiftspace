@@ -44,7 +44,7 @@ String.implement({
   
   trunc: function(limit, options)
   {
-    var tail = (options.tail === false) ? '' : (options.tail || '...');
+    var tail = (options && options.tail === false) ? '' : ((options && options.tail) || '...');
     return this.substring(0, limit) + tail;
   }
   
