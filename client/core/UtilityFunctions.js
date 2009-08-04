@@ -183,8 +183,3 @@ function SSResetCore()
   // reset all internal state
   __spaces = {};
 }
-
-function SSGetJsonData(json)
-{
-  return json.data.contents.values;
-}
