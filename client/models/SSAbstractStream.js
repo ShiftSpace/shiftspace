@@ -81,13 +81,13 @@ var SSAbstractStream = new Class({
   setData: function(data)
   {
     this.__data = data;
-    this.setColl(data.unique_name || ("stream:"+data.id));
+    this.setColl(data.unique_name || ("stream:"+data.id), data.id);
     this.setIsLoaded(true);
     this.fireEvent('load', this);
   },
   
   
-  setColl: function(name)
+  setColl: function(name, streamId)
   {
     this.__coll = new SSCollection(name, {
       table: "!"+streamId,
