@@ -903,7 +903,7 @@ var SSCollection = new Class({
         this.setIsReading(false);
         this.clearOnReadFns();
         this.onRead(data);
-        if(options.onRead && $type(options.onRead) == 'function') callback(data);
+        if(callback && $type(callback) == 'function') callback(data);
       }.bind(this)
     };
     options = $merge(defaults, options);
