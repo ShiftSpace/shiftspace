@@ -1302,6 +1302,7 @@ var DatePicker;
         this.setSelectedDates(e, newDate);
         this.onPick();
       }
+      SSPostNotification('onCalendarClick', e);
     },
     
     
