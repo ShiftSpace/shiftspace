@@ -346,7 +346,7 @@ var SSListView = new Class({
       break;
     }
     
-    event.stop();
+    //event.stop();
   },
 
   /*
