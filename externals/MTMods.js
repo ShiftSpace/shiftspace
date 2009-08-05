@@ -496,6 +496,13 @@ Selectors.Utils.search = function(self, expression, local){
   return items;
 };
 
+Date.implement({
+  toDay: function() 
+  {
+    return this.set('hours', 0).set('minutes', 0).set('seconds', 0).set('milliseconds', 0);
+  }
+});
+
 Fx.CSS.implement({
   search: function(selector){
     if (Fx.CSS.Cache[selector]) return Fx.CSS.Cache[selector];
