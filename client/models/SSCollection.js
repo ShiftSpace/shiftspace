@@ -1067,8 +1067,9 @@ var SSCollection = new Class({
     Returns: 
       A payload object, an array of collection methods.
   */
-  'delete': function(index)
+  'delete': function(index, callback)
   {
+    var old = this.getArray()[index];
     return this.transact('delete', {
       table: this.table(),
       constraints: $merge(this.constraints(), {
@@ -1077,6 +1078,7 @@ var SSCollection = new Class({
       onComplete: function(data) {
         this.onDelete(data, index);
         this.dirtyTheViews();
+        if($callable(callback)) callback({data:data, index:index, old:old});
       }.bind(this),
       onFailure: function(data) {
         this.onFailure('delete', data, index);
