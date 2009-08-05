@@ -1293,6 +1293,7 @@ var DatePicker;
     
     clickCalendar: function(e) 
     {
+      SSPostNotification('onCalendarClick', e);
       if (this.handleScroll(e)) return;
       if (!e.target.firstChild || !e.target.firstChild.data) return;
       var val = e.target.firstChild.data;
@@ -1302,7 +1303,6 @@ var DatePicker;
         this.setSelectedDates(e, newDate);
         this.onPick();
       }
-      SSPostNotification('onCalendarClick', e);
     },
     
     
