@@ -9,6 +9,11 @@ function $identity(v)
   return v;
 }
 
+function $callable(v)
+{
+  return v && $type(v) == 'function';
+}
+
 function $not(fn)
 {
   return function() {
@@ -502,6 +507,7 @@ Date.implement({
     return this.set('hours', 0).set('minutes', 0).set('seconds', 0).set('milliseconds', 0);
   }
 });
+
 
 Fx.CSS.implement({
   search: function(selector){
