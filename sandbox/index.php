@@ -32,7 +32,7 @@ $server = "http://{$_SERVER['HTTP_HOST']}$path/";
     <script src="../externals/jquery-1.3.2.js" type="text/javascript" charset="utf-8"></script>
     <script src="../externals/mootools-1.2.3-core.js" type="text/javascript"></script>
     <script src="../externals/mootools-1.2.3.1-more.js" type="text/javascript"></script>
-
+    <script src="../externals/persist.js" type="text/javascript" charset="utf-8"></script>
     <script src="install.js" type="text/javascript" charset="utf-8"></script>
     <script src="../client/Videobox.js" type="text/javascript"></script>
     <script src="../builds/shiftspace.sandbox.js" type="text/javascript"></script>
