@@ -18,8 +18,5 @@
 // INCLUDE PACKAGE Pinning
 // INCLUDE PACKAGE ShiftSpaceCore
 // INCLUDE PACKAGE ShiftSpaceCoreUI
-
-
-// INCLUDE PACKAGE Calendar
 // INCLUDE PACKAGE Autocomplete
 
