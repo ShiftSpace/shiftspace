@@ -7,6 +7,20 @@
   bottom: 0px;
 }
 
+#AllShiftsListView
+{
+  overflow-y: scroll;
+  width: 100%;
+  height: 100%;
+}
+
+#AllShiftsView .ShiftListViewCell
+{
+  float: left;
+  width: 100%;
+  height: 28px;
+}
+
 #AllShiftsView .ShiftListViewCell.selected
 {
   background-color: #ccc;
@@ -25,8 +39,19 @@
   width: 32px;
 }
 
-#AllShiftsView .ShiftListViewCell > span:hover
+#AllShiftsView .ShiftListViewCell > *
 {
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
+  float: left;
 }
+
+#AllShiftsView .ShiftListViewCell div.summary
+{
+  margin-left: 6px;
+  width: 150px;
+}
+
+#AllShiftsView .ShiftListViewCell div.userName
+{
+  margin-left: 20px;
+}
+
