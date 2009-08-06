@@ -9,6 +9,11 @@ function $identity(v)
   return v;
 }
 
+function $callable(v)
+{
+  return v && $type(v) == 'function';
+}
+
 function $not(fn)
 {
   return function() {
@@ -39,6 +44,13 @@ String.implement({
   unpluralize: function()
   {
     return (this.tail() == "s") ? this.drop() : $A(this).join("");
+  },
+  
+  
+  trunc: function(limit, options)
+  {
+    var tail = (options && options.tail === false) ? '' : ((options && options.tail) || '...');
+    return this.substring(0, limit) + tail;
   }
   
 });
@@ -289,6 +301,12 @@ function $msg(methodName)
 }
 
 
+function $implements(obj, method)
+{
+  return obj && obj[method] && $type(obj[method]) == 'function';
+}
+
+
 function $get(first, prop) {
   var args = $A(arguments);
   var rest = args.drop(2);
@@ -482,6 +500,14 @@ Selectors.Utils.search = function(self, expression, local){
   }
   return items;
 };
+
+Date.implement({
+  toDay: function() 
+  {
+    return this.set('hours', 0).set('minutes', 0).set('seconds', 0).set('milliseconds', 0);
+  }
+});
+
 
 Fx.CSS.implement({
   search: function(selector){
