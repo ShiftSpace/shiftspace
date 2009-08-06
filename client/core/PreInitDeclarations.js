@@ -27,5 +27,4 @@ var __defaultSpacesList = ['Notes', 'Highlights', 'ImageSwap', 'SourceShift'];
 var installedPlugins = {};
 
 // An index of cached files, used to clear the cache when necessary
-//var cache = SSGetValue('cache', []);
 var alreadyCheckedForUpdate = false;
