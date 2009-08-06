@@ -1247,7 +1247,7 @@ var DatePicker;
     },
     
     
-    show: function()
+    show: function(date)
     {
       this.selectedDates = {};
       var dates = this.getDates(null, true);
@@ -1258,7 +1258,7 @@ var DatePicker;
         }, this);
       }, this);
       
-      this.fillCalendar(this.selectedDates.start);
+      this.fillCalendar(date || this.selectedDates.start);
 
       this.fireEvent('onShow');
       return this;
@@ -1280,7 +1280,7 @@ var DatePicker;
     
     getMonth: function()
     {
-      return this.rows[2].getElement('td').refDate;
+      return new Date(this.rows[2].getElement('td').refDate);
     },
     
     
