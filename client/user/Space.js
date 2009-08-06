@@ -971,18 +971,6 @@ var ShiftSpaceSpace = new Class({
   {
     return SSIsNewShift(shiftId);
   },
-
-  /*
-    Function: xmlhttpRequest
-      A safe wrapper around GM_xmlhttpRequest.
-
-    Parameters:
-      config - object with properties as defined by GM_xmlhttpRequest.
-  */
-  xmlhttpRequest: function(config)
-  {
-    SSXmlHttpRequest.safeCall(config);
-  },
   
   
   setPreference: function(key, value)

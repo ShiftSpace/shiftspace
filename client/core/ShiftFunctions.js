@@ -330,39 +330,6 @@ function SSLoadShift(id)
   return p;
 }
 
-/*
-  Function: SSLoadShifts
-    Same as SSLoadShift except handles an array of shift id.
-
-  Parameters:
-    shiftIds - an array of shift ids.
-    callback - a callback handler.
-*/
-function SSLoadShifts(shiftIds, callback)
-{
-  // fetch a content from the network;
-  var params = {shiftIds: shiftIds.join(',')};
-  SSServerCall.safeCall('shift.get', params, function(_returnArray) {
-    var returnArray = _returnArray;
-
-    if(returnArray && returnArray.length > 0)
-    {
-      // filter out null shifts
-      returnArray = returnArray.filter(function(x) { return x != null; });
-
-      // update internal array
-      returnArray.each(function (shiftObj) {
-        SSSetShift(shiftObj.id, shiftObj);
-      });
-
-      if(callback && $type(callback) == 'function')
-      {
-        callback(returnArray);
-      }
-    }
-  });
-}
-
 
 /*
 Function: SSShowShift

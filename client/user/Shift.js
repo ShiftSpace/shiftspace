@@ -743,20 +743,5 @@ var ShiftSpaceShift = new Class({
   errorView: function(err)
   {
 
-  },
-
-  /*
-    Function: xmlhttpRequest
-      Safe version of GM_xmlhttpRequest for shifts.
-
-    Parameters:
-      config - the same type of object that should be passed to GM_xmlhttpRequest.
-
-    See Also:
-      <SSXmlHttpRequest>
-  */
-  xmlhttpRequest: function(config)
-  {
-    SSXmlHttpRequest.safeCall(config);
   }
 });

@@ -118,15 +118,3 @@ var SSLoadFile = function(url)
     bare: true
   });
 }.asPromise();
-
-/*
-  Function: SSXmlHttpRequest
-    Private version of GM_xmlHttpRequest. Implemented for public use via Space/Shift.xmlhttpRequest.
-
-  Parameters:
-    config - same JSON object as used by GM_xmlhttpRequest.
-*/
-function SSXmlHttpRequest(config) 
-{
-  GM_xmlhttpRequest(config);
-}
