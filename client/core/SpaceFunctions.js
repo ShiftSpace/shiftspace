@@ -120,7 +120,8 @@ function SSLoadDefaultSpacesAttributes()
     var spaceName = __defaultSpacesList[i];
     var p = SSLoadSpaceAttributes(spaceName);
     $if(SSApp.noErr(p),
-        function(attrs) {
+        function() {
+          var attrs = p.value();
           defaultSpaces[spaceName] = attrs;
           defaultSpaces[spaceName].position = i;
           if(i == (__defaultSpacesList.length-1)) 
@@ -141,7 +142,7 @@ Function: SSLoadSpaceAttributes
   that sits in that space's directory.
   
 Returns:
-  A Promise
+  A Promise.
 */
 function SSLoadSpaceAttributes(spaceName)
 {
