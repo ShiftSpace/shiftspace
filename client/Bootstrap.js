@@ -9,6 +9,7 @@
 // INCLUDE PACKAGE App
 // INCLUDE Base
 // INCLUDE PreInitDeclarations
+// INCLUDE GreaseMonkeyApi
 // INCLUDE PACKAGE System
 // INCLUDE PACKAGE ErrorHandling
 // INCLUDE PACKAGE Internationalization
