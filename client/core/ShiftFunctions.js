@@ -298,48 +298,6 @@ function SSSaveShift(shift)
       });
 }
 
-/*
-  Function: SSGetShifts
-    Similar to SSLoadShifts, probably should be merged.  Only used by plugins.
-
-  Parameters:
-    shiftIds - an array of shift ids.
-    callBack - a callback function.
-    errorHandler - a error handling function.
-*/
-function SSGetShifts(shiftIds, callBack, errorHandler)
-{
-  var newShiftIds = [];
-  var finalJson = {};
-
-  newShiftIds = shiftIds;
-
-  // put these together
-  var params = { shiftIds: newShiftIds.join(',') };
-
-  SSServerCall.safeCall('shift.get', params, function(json) {
-    if(json.contains(null))
-    {
-      if(errorHandler && $type(errorHandler) == 'function')
-      {
-        errorHandler({
-          type: __SSInvalidShiftIdError,
-          message: "one or more invalid shift ids to SSGetShift"
-        });
-      }
-    }
-    else
-    {
-      // should probably filter out any uncessary data
-      json.each(function(x) {
-        finalJson[x.id] = x;
-      });
-
-      if(callBack) callBack(finalJson);
-    }
-  });
-}
-
 
 /*
   Function: SSGetAuthorForShift
