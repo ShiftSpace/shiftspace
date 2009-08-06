@@ -1,12 +1,6 @@
 // ==Builder==
 // @required
-// @package           System_
 // ==/Builder==
-
-if(typeof ShiftSpaceSandboxMode != "undefined")
-{
-  SSLog('>>>>>>>>>>>>>>>>> create key storage', SSLogForce);
-}
 
 function GM_addStyle(css) 
 {
