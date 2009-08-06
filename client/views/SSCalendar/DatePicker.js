@@ -1284,9 +1284,9 @@ var DatePicker;
     },
     
     
-    setMonth: function(date)
+    setMonth: function(month)
     {
-      this.fillCalendar(date);
+      this.fillCalendar(new Date(month));
     },
     
     
