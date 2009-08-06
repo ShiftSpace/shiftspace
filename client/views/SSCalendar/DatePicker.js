@@ -1278,6 +1278,18 @@ var DatePicker;
     },
     
     
+    getMonth: function()
+    {
+      return this.rows[2].getElement('td').refDate;
+    },
+    
+    
+    setMonth: function(date)
+    {
+      this.fillCalendar(date);
+    },
+    
+    
     setSelectedDates: function(e, newDate)
     {
       this.selectedDates.start = newDate;
