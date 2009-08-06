@@ -117,10 +117,14 @@ var AbstractUser = new Class({
   
   query: function()
   {
-    SSServerCall('user.query', null, function(json) {
-      if(json.data) this.syncData(json.data);
-      this.onQuery(json);
-    }.bind(this));
+    var p = SSApp.query(credentials);
+    $if(SSApp.noErr(p),
+        function() {
+          var json = p.value();
+          this.syncData(json);
+          this.onQuery(json);
+        }.bind(this));
+    return p;
   },
   
   
@@ -141,9 +145,10 @@ var AbstractUser = new Class({
     var p = SSApp.login(credentials);
     $if(SSApp.noErr(p),
         function() {
-          this.syncData(p);
-          this.onJoin(p);
-          this.onLogin(p);
+          var json = p.value();
+          this.syncData(json);
+          this.onJoin(json);
+          this.onLogin(json);
         }.bind(this));
     return p;
   },
@@ -164,8 +169,9 @@ var AbstractUser = new Class({
     var p = SSApp.logout();
     $if(SSApp.noErr(p),
         function() {
+          var json = p.value();
           this.clearData();
-          this.onLogout(p);
+          this.onLogout(json);
         }.bind(this));
     return p;
   },
@@ -187,9 +193,10 @@ var AbstractUser = new Class({
     var p = SSApp.join(userInfo);
     $if(SSApp.noErr(p),
         function() {
-          this.syncData(p);
-          this.onJoin(p);
-          this.onLogin(p);
+          var json = p.value();
+          this.syncData(json);
+          this.onJoin(json);
+          this.onLogin(json);
         }.bind(this));
     return p;
   },
@@ -208,16 +215,16 @@ var AbstractUser = new Class({
     Parameters:
       info - info to be updated.
   */
-  update: function(info, callback) 
+  update: function(data, callback) 
   {
-    SSServerCall('user.update', info, function(json) {
-      if(!json['error'])
-      {
-        if(json.data) this.syncData(json.data);
-        this.onUpdate(json);
-        if(callback) callback(json);
-      }
-    }.bind(this));
+    var p = SSApp.update('user', this.getUserName(), data);
+    $if(SSApp.noErr(p),
+        function() {
+          var json = p.value();
+          this.syncData(json);
+          this.onUpdate(json);
+        }.bind(this));
+    return p;
   },
   
   
@@ -236,23 +243,17 @@ var AbstractUser = new Class({
   */
   resetPassword: function(info) 
   {
-    SSServerCall('user.resetPassword', info, function(json) {
-      if(!json['error'])
-      {
-        this.onResetPassword(json);
-      }
-    });
+    var p = SSApp.post({resource:'user', id:this.getUserName(), action:"resetPassword"});
+    $if(SSApp.noErr(p),
+        function() {
+          this.onResetPassword(p.value());
+        }.bind(this));
+    return p;
   },
   
   
   onResetPassword: function(json)
   {
     SSPostNotification('onUserPasswordReset', json);
-  },
-  
-  
-  onResetPasswordError: function(json)
-  {
-    SSPostNotification('onUserPasswordResetError', json);
   }
 });
