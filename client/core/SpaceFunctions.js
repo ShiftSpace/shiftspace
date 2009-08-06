@@ -114,25 +114,24 @@ function SSIsAbsoluteURL(string)
 
 function SSLoadDefaultSpacesAttributes()
 {
+  SSLog('SSLoadDefaultSpacesAttributes', SSLogForce);
   var defaultSpaces = {};
   __defaultSpacesList.length.times(function(i) {
-    try
-    {
-      var spaceName = __defaultSpacesList[i];
-      SSLoadSpaceAttributes(spaceName, function(attrs) {
-        defaultSpaces[spaceName] = attrs;
-        defaultSpaces[spaceName].position = i;
-        if(i == (__defaultSpacesList.length-1)) 
-        {
-          SSInitDefaultSpaces(defaultSpaces);
-          SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);
-        }
-      });
-    }
-    catch (exc)
-    {
-      console.error("Error attempting to load attributes for " + spaceName + ".");
-    }
+    var spaceName = __defaultSpacesList[i];
+    var p = SSLoadSpaceAttributes(spaceName);
+    $if(SSApp.noErr(p),
+        function(attrs) {
+          defaultSpaces[spaceName] = attrs;
+          defaultSpaces[spaceName].position = i;
+          if(i == (__defaultSpacesList.length-1)) 
+          {
+            SSInitDefaultSpaces(defaultSpaces);
+            SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);
+          }
+        },
+        function() {
+          SSLog("Error attempting to load attributes for " + spaceName + ".", SSLogError);
+        });
   });
 }
 
@@ -140,6 +139,9 @@ function SSLoadDefaultSpacesAttributes()
 Function: SSLoadSpaceAttributes
   Loads the attributes for the space. This is a json file named attrs.json
   that sits in that space's directory.
+  
+Returns:
+  A Promise
 */
 function SSLoadSpaceAttributes(spaceName)
 {
@@ -148,6 +150,7 @@ function SSLoadSpaceAttributes(spaceName)
                function() {
                  // check to see that the resources urls are full
                  var json = JSON.decode(p.value());
+                 SSLog(json, SSLogForce);
                  if(!json.name) throw new SSException("No name for " + json.name + " space specified.");
                  if(!json.url) throw new SSException("No url for " + json.name + " space specified.");
                  if (!json.icon) json.icon = json.url + json.name + '.png';
@@ -261,6 +264,7 @@ var SSUpdateInstalledSpaces = function(user)
 
 function SSInitDefaultSpaces(defaults)
 {
+  SSLog('SSInitDefaultSpaces', SSLogForce);
   if(defaults)
   {
     SSSetValue('defaultSpaces', defaults);
