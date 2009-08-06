@@ -144,26 +144,26 @@ Function: SSLoadSpaceAttributes
 function SSLoadSpaceAttributes(spaceName)
 {
   var p = SSLoadFile(ShiftSpace.info().spacesDir+spaceName+'/attrs.json');
-  p = $if(p,
-          function() {
-            // check to see that the resources urls are full
-            var json = p.value();
-            if(!json.name) throw new SSException("No name for " + json.name + " space specified.");
-            if(!json.url) throw new SSException("No url for " + json.name + " space specified.");
-            if (!json.icon) json.icon = json.url + json.name + '.png';
-            // clear whitespace
-            if(json.url) json.url = json.url.trim();
-            if(json.icon) json.icon = json.icon.trim();
-            if(json.css) json.css = json.css.trim();
-            // check for absolute urls
-            if(!SSIsAbsoluteURL(json.url)) json.url = json.url.substitute({SPACEDIR:ShiftSpace.info().spacesDir});
-            if(!SSIsAbsoluteURL(json.icon)) json.icon = json.url + json.icon;
-            if(!SSIsAbsoluteURL(json.css)) json.css = json.url + json.css;
-            // position default to end
-            json.position = $H(SSInstalledSpaces()).getLength();
-            return json;
-          });
-  return p;
+  var p2 = $if(p,
+               function() {
+                 // check to see that the resources urls are full
+                 var json = JSON.decode(p.value());
+                 if(!json.name) throw new SSException("No name for " + json.name + " space specified.");
+                 if(!json.url) throw new SSException("No url for " + json.name + " space specified.");
+                 if (!json.icon) json.icon = json.url + json.name + '.png';
+                 // clear whitespace
+                 if(json.url) json.url = json.url.trim();
+                 if(json.icon) json.icon = json.icon.trim();
+                 if(json.css) json.css = json.css.trim();
+                 // check for absolute urls
+                 if(!SSIsAbsoluteURL(json.url)) json.url = json.url.substitute({SPACEDIR:ShiftSpace.info().spacesDir});
+                 if(!SSIsAbsoluteURL(json.icon)) json.icon = json.url + json.icon;
+                 if(!SSIsAbsoluteURL(json.css)) json.css = json.url + json.css;
+                 // position default to end
+                 json.position = $H(SSInstalledSpaces()).getLength();
+                 return json;
+               });
+  return p2;
 }
 
 function SSGetSpaceAttributes(space)
