@@ -1280,7 +1280,7 @@ var DatePicker;
     
     getMonth: function()
     {
-      return new Date(this.rows[2].getElement('td').refDate);
+      return new Date(this.rows[3].getElement('td').refDate);
     },
     
     
