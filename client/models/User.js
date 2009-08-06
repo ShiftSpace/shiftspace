@@ -15,6 +15,7 @@ var ShiftSpaceUserClass = new Class({
   Extends: AbstractUser,
   name: "ShiftSpaceUserClass",
   
+  
   defaultUserName: function()
   {
     return "guest";
@@ -24,31 +25,6 @@ var ShiftSpaceUserClass = new Class({
   initialize: function()
   {
     this.parent();
-  },
-  
-  
-  setEmailCommentsDefault: function(newValue)
-  {
-    // setting the value, can't use zero because of PHP, GRRR - David
-    SSSetDefaultEmailComments(newValue+1);
-    
-    SSServerCall('user.update', {email_comments: newValue}, function(json) {
-      if(!json.error)
-      {
-        SSPostNotification('onUserUpdate', json)
-      }
-      else
-      {
-        SSPostNotification('onUserUpdateError', json);
-      }
-    });
-  },
-  
-  
-  getEmailCommentsDefault: function()
-  {
-    // setting the value, can't user zero because of PHP, GRRR - David
-    return (SSGetDefaultEmailComments(true)-1);
   },
   
   
