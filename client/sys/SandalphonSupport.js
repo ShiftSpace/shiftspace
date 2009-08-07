@@ -97,7 +97,7 @@ function SSIsController(object)
 
 function SSGetInlineOptions(el)
 {
-  return JSON.decode(el.getProperty('options'));
+  return JSON.decode(el.getProperty('options').replace("\n", ""));
 }
 
 var __ssappdelegate__;
