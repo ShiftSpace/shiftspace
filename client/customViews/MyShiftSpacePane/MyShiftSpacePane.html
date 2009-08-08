@@ -1,0 +1,46 @@
+<div id="MyShiftSpacePane" class="SSTabPane">
+
+  <!-- Start MyShiftSpaceTabView -->
+  <div id="MyShiftSpaceTabView"
+       class="SSTabView SSTabViewSubTabStyle"
+       uiclass="SSTabView">
+
+    <div class="SSControlView">
+      <div class="SSButton SSActive">My Shifts</div>
+      <div class="SSButton">My Comments</div>
+      <div class="SSButton">My Favorites</div>
+    </div>
+    
+    <div class="SSContentView">
+
+      <!-- Start My Shifts List View -->
+      <div class="SSTabPane">
+        <ul id="MyShiftsListView"
+            class="SSListView"
+            uiclass="ShiftListView">
+
+          <li class="SSCell ShiftListViewCell"
+              uiclass="ShiftListViewCell"
+              options="{}">
+            <div class="selected">
+              <input type="checkbox"/>
+            </div>
+            <img class="spaceIcon"></img>
+            <div class="summary"></div>
+            <div class="userName"></div>
+            <div class="date"></div>
+          </li>
+          
+        </ul>
+      </div>
+      <!-- End My Shifts List View -->
+
+      <div class="SSTabPane">My Comments</div>
+      <div class="SSTabPane">My Favorites</div>
+
+    </div>
+    
+  </div>
+  <!-- End MyShiftSpaceTabView -->
+
+</div>
