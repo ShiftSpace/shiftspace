@@ -136,7 +136,7 @@ var ApplicationServer = new Class({
   
   update: function(resource, id, data)
   {
-    return this.call({resource:resource, id:id, method:'put', data:data});
+    return this.call({resource:resource, id:id, method:'put', data:data, json: true});
   },
   
   
