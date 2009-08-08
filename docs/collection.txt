@@ -3,20 +3,16 @@ Since we have application we can have use listeners to make sure it always has c
 SSConsole.addWatcher({resource:'shift', methods:['read']}, function(v) { SSSetShift(v._id, v); });
 SSConsole.addWatcher({method:'get', action:'shifts'}, function(v) { v.each(SSSetShift.partial(null, [v._id])); });
 
-SSCollection, how should it work. SSCollection to some degree imagines that the backend is written in sequel.
-
-// collection can use multiple sources?
+// we don't really need collection anymore
+// we have a well defined concept of resources
 var ShiftCollection = new SSCollection('Shifts', {
-  routes: [
-    {
-    'read': 'shifts',
-    'create': 'shift',
-    'update': 'shift/{_id}',
-    'delete': 'shift/{_id}'
-    }
-  ],
-  startKey: foo,
-  endKey: foo,
+  routes: {
+    read: {resource: 'shifts', data:{...}},
+    create: {resource: 'shift'},
+    update: {resource: 'shift'},
+    delete: {resource: 'shift'}
+  },
+  start: 0,
   count: 25
 });
 
