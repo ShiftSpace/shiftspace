@@ -45,10 +45,10 @@ var ShiftListViewCell = new Class({
   },
   
   
-  setDate: function(date)
+  setModified: function(modified)
   {
     var el = this.lockedElement();
-    el.getElement('.date').set('text', date);
+    el.getElement('.date').set('text', modified);
   },
   
   
@@ -63,7 +63,7 @@ var ShiftListViewCell = new Class({
   {
     var el = this.lockedElement();
     el.getElement('.userName').set('text', userName);
-    if(ShiftSpace.User.isLoggedIn())
+    if(ShiftSpace.User.isLoggedIn() && ShiftSpace.User.getUserName() == userName)
     {
       el.getElement('.userName').addClass('loggedin')
     }

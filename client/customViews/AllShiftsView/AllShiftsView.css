@@ -96,6 +96,11 @@ ul#AllShiftsView li.ShiftListViewCell:hover
   -webkit-border-bottom-right-radius: 4px;
 }
 
+#AllShiftsView .ShiftListViewCell div.date
+{
+  margin-left: 6px;
+}
+
 #AllShiftsView .ShiftListViewCell div.userName:hover
 {
   color: white;
