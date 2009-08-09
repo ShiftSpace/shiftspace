@@ -63,6 +63,14 @@ var ShiftListViewCell = new Class({
   {
     var el = this.lockedElement();
     el.getElement('.userName').set('text', userName);
+    if(ShiftSpace.User.isLoggedIn())
+    {
+      el.getElement('.userName').addClass('loggedin')
+    }
+    else
+    {
+      el.getElement('.userName').removeClass('loggedin');
+    }
   },
   
   
