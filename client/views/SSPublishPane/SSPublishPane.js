@@ -27,6 +27,25 @@ var SSPublishPane = new Class({
   },
   
   
+  setCurrentListView: function(current)
+  {
+    this.__current = current.getName();
+  },
+  
+  
+  currentListView: function()
+  {
+    return this.__current;
+  },
+  
+  
+  count: function()
+  {
+    if(!this.selectedShifts()[this.currentListView()]) return 0;
+    return this.selectedShifts()[this.currentListView()].length;
+  },
+  
+  
   setSelectedShifts: function(ary)
   {
     this.__selectedShifts = ary;
