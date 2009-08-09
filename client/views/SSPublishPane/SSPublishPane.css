@@ -1,24 +1,27 @@
 .SSPublishPane
 {
   position: absolute;
-  top: 30px;
-  right: 15px;
+  top: 34px;
+  right: 19px;
   width: 268px;
   bottom: 0px;
+
   color: black;
   z-index: 2;
-  background-color: #ff0000;
-  border:3px #f8f5f2 solid;
+  border:3px #F7F2EF solid;
+
   font-family:Helvetica,Arial,Verdana, sans-serif;
   font-size:12px;
   color:#4b423a;
-  background-color: #fff;
+
   padding:4px 3px 1px 3px;
   background-color: #fff;  
-  border: 1px solid #fff;  
+
   -webkit-box-shadow: 0px 0px 10px #000;  
   -moz-box-shadow: 0px 0px 10px #aaa;
   
+  -moz-border-radius: 4px;  
+  -webkit-border-radius: 4px;
 }
 
 /*--------------------------------------------------HEADER*/
