@@ -3,7 +3,7 @@
   color: #74665A;
 }
 
-.SSTabView > .SSControlView > .SSButton.SSActive
+.SSTabView.SSTabViewConsoleStyle > .SSControlView > .SSButton.SSActive
 {
   position: relative;
   z-index:10;

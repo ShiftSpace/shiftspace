@@ -23,6 +23,7 @@
   padding-top: 4px;
 }
 
+
 #AllShiftsView .ShiftListViewCell:nth-child(2n+0)
 {
   background-color: #F8F5F2;
@@ -32,6 +33,13 @@ s}
 {
   background-color: #F0EDEB;
 }
+
+/*
+#AllShiftsView .ShiftListViewCell:nth-child(2n+1):hover
+{
+  background-color: white;
+}
+*/
 
 ul#AllShiftsView li.ShiftListViewCell:hover
 {
@@ -71,6 +79,7 @@ ul#AllShiftsView li.ShiftListViewCell:hover
 {
   margin-left: 10px;
   min-width: 500px;
+  color: #4B423A;
 }
 
 #AllShiftsView .ShiftListViewCell div.userName
