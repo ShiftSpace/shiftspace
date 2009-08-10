@@ -84,6 +84,7 @@ ul#AllShiftsView li.ShiftListViewCell:hover
 
 #AllShiftsView .ShiftListViewCell div.userName
 {
+  font-size: 10px;
   color: #4B423A;
   background-color: #D5D1CE;
   margin-left: 20px;

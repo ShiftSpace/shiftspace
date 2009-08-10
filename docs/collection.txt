@@ -5,7 +5,7 @@ SSConsole.addWatcher({method:'get', action:'shifts'}, function(v) { v.each(SSSet
 
 // we don't really need collection anymore
 // we have a well defined concept of resources
-var ShiftCollection = new SSCollection('Shifts', {
+var ShiftCollection = new SSResource('Shifts', {
   routes: {
     read: {resource: 'shifts', data:{...}},
     create: {resource: 'shift'},
