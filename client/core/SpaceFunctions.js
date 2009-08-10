@@ -114,7 +114,6 @@ function SSIsAbsoluteURL(string)
 
 function SSLoadDefaultSpacesAttributes()
 {
-  SSLog('SSLoadDefaultSpacesAttributes', SSLogForce);
   var defaultSpaces = {};
   __defaultSpacesList.length.times(function(i) {
     var spaceName = __defaultSpacesList[i];
@@ -151,7 +150,6 @@ function SSLoadSpaceAttributes(spaceName)
                function() {
                  // check to see that the resources urls are full
                  var json = JSON.decode(p.value());
-                 SSLog(json, SSLogForce);
                  if(!json.name) throw new SSException("No name for " + json.name + " space specified.");
                  if(!json.url) throw new SSException("No url for " + json.name + " space specified.");
                  if (!json.icon) json.icon = json.url + json.name + '.png';
