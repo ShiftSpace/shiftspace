@@ -45,7 +45,20 @@ var SSResource = new Class({
     if(this.options.resource) this.setResource(this.options.resource);
     if(this.options.watch) this.setWatch(this.options.watch);
     if(this.options.delegate) this.setDelegate(this.options.delegate);
+    this.setName(name);
     SSSetResourceForName(name, this);
+  },
+  
+  
+  setName: function(name)
+  {
+    this.__name = name;
+  },
+  
+  
+  getName: function()
+  {
+    return this.__name;
   },
   
   

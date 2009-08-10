@@ -36,7 +36,6 @@ var SSListView = new Class({
     return $merge(this.parent(), {
       cell: null,
       sortable: false,
-      lazy: false,
       multipleSelection: false,
       horizontal: false,
       cellSize: null,
@@ -44,10 +43,7 @@ var SSListView = new Class({
       addAt: 'bottom',
       leaveEditOnUpdate: false,
       allowSelection: false,
-      dataSource: {
-        resource: null,
-        data: {}
-      }
+      resource: null
     });
   },
   
@@ -56,7 +52,7 @@ var SSListView = new Class({
     this.parent(el, options);
     this.__cellBeingEdited = -1;
     if(this.options.filter) this.setFilter(this.options.filter);
-    if(this.options.dataSource.resource)
+    if(this.options.resource)
     {
       SSLog('Use datasource', SSLogForce);
     }
@@ -66,6 +62,34 @@ var SSListView = new Class({
     }
     this.initSortables();
     this.attachEvents();
+  },
+  
+  
+  setResource: function(resource)
+  {
+    if($type(resource) == 'string')
+    {
+      SSAddObserver(this, 'resourceSet', function(evt) {
+        if(evt.resource.getName() == resource) this.__setResource__(evt.resource);
+      }.bind(this));
+    }
+    else
+    {
+      this.__setResource__(resource);
+    }
+  },
+  
+  
+  __setResource__: function(resource)
+  {
+    resource.addView(this);
+    this.__resource = resource;
+  },
+  
+  
+  resource: function()
+  {
+    return this.__resource;
   },
   
   
