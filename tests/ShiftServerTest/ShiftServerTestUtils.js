@@ -157,7 +157,7 @@ var CouchDBApp = new Class({
     return result;
   },
   
-  delete: function(type, id)
+  'delete': function(type, id)
   {
     var result;
     req({

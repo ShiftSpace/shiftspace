@@ -5,16 +5,19 @@
 
 var __resources = $H();
 
+
 function SSResourceForName(name)
 {
   return __resources[name];
 }
+
 
 function SSSetResourceForName(name, resource)
 {
   __resources[name] = resource;
   SSPostNotification("resourceSet", {name:name, resource:resource});
 }
+
 
 var SSResource = new Class({
 
@@ -25,8 +28,8 @@ var SSResource = new Class({
   defaults: function()
   {
     return {
-      resource: {},
-      watch: [],
+      resource: null,
+      watch: null,
       delegate: null
     }
   },
@@ -34,8 +37,9 @@ var SSResource = new Class({
   
   initialize: function(name, options)
   {
+    this.setOptions(this.defaults(), options);
     if(this.options.resource) this.setResource(this.options.resource);
-    if(this.options.watch) this.setWatch(this.option.watch);
+    if(this.options.watch) this.setWatch(this.options.watch);
     if(this.options.delegate) this.setDelegate(this.options.delegate);
     SSSetResourceForName(name, this);
   },
