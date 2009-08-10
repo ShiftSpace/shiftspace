@@ -28,6 +28,7 @@ var SSResource = new Class({
   defaults: function()
   {
     return {
+      app: SSResource.app,
       resource: null,
       watch: null,
       delegate: null
@@ -38,10 +39,24 @@ var SSResource = new Class({
   initialize: function(name, options)
   {
     this.setOptions(this.defaults(), options);
+    this.setViews([]);
+    if(this.options.app) this.setApp(this.options.app);
     if(this.options.resource) this.setResource(this.options.resource);
     if(this.options.watch) this.setWatch(this.options.watch);
     if(this.options.delegate) this.setDelegate(this.options.delegate);
     SSSetResourceForName(name, this);
+  },
+  
+  
+  setApp: function(app)
+  {
+    this.__app = app;
+  },
+  
+  
+  app: function()
+  {
+    return this.__app;
   },
   
   
@@ -59,26 +74,53 @@ var SSResource = new Class({
   
   create: function(data)
   {
-    return SSApp.create(this.resource('create'), data);
+    this.dirtyTheViews();
+    return this.app().create(this.resource('create'), data);
   },
   
   
   read: function(id, options)
   {
     options = (this.delegate()) ? $merge(options, this.delegate().optionsForResource(this)) : options;
-    if(id) return SSApp.read(this.resource('read'), id);
-    return SSApp.get({resource:this.resource('read'), data:options});
+    if(id) return this.app().read(this.resource('read'), id);
+    return this.app().get({resource:this.resource('read'), data:options});
   },
   
   
   update: function(id, data)
   {
-    return SSApp.update(this.resource('update'), id, data);
+    this.dirtyTheViews();
+    return this.app().update(this.resource('update'), id, data);
   },
   
   
   'delete': function(id)
   {
-    return SSApp['delete'](this.resource('delete'), id);
+    this.dirtyTheViews();
+    return this.app()['delete'](this.resource('delete'), id);
+  },
+  
+  
+  setViews: function(views)
+  {
+    this.__views = views;
+  },
+  
+  
+  views: function()
+  {
+    return this.__views;
+  },
+  
+  
+  addView: function(view)
+  {
+    this.views().push(view);
+  },
+  
+  
+  dirtyTheViews: function()
+  {
+    this.views().each($msg('setNeedsDisplay', true));
   }
 });
