@@ -625,7 +625,8 @@ var SSListView = new Class({
   */
   get: function(indexOrIndices)
   {
-    return $splat(indexOrIndices).map(this.__get__.bind(this));
+    var result = $splat(indexOrIndices).map(this.__get__.bind(this));
+    return ($type(indexOrIndices) == "array") ? result : result[0];
   },
   
   /*

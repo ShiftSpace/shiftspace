@@ -74,18 +74,22 @@ var SSPublishPane = new Class({
   
   addShift: function(evt)
   {
+    this.setCurrentListView(evt.listView);
     var listViewName = evt.listView.getName();
     var selectedShifts = this.selectedShifts();
     var listViewSelectedShifts = selectedShifts[listViewName];
     if(!listViewSelectedShifts) selectedShifts[listViewName] = [];
     selectedShifts[listViewName].push(evt.index);
+    this.update();
   },
   
   
   removeShift: function(evt)
   {
+    this.setCurrentListView(evt.listView);
     var listViewName = evt.listView.getName();
     this.selectedShifts()[listViewName].erase(evt.index);
+    this.update();
   },
   
   
@@ -167,7 +171,30 @@ var SSPublishPane = new Class({
         this.SSPPVisiblePublic.addClass('SSPPPermit');
         SSLog('clicked private status!', SSLogForce);
     }.bind(this));
+  },
+  
+  
+  update: function()
+  {
+    if(this.count() == 1)
+    {
+      var selectedIdx = this.selectedShifts()[this.currentListView()][0];
+      var listView = ShiftSpaceNameTable[this.currentListView()];
+      var publishData = listView.get(selectedIdx).publishData;
+      this.element.getElement("#SSPublishPaneStatus label").removeClass('SSDisplayNone');
+      if(publishData.draft)
+      {
+        this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Draft');
+      }
+      else
+      {
+        this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Published');
+      }
+    }
+    else if(this.count() > 1)
+    {
+      this.element.getElement("#SSPublishPaneStatus label").addClass('SSDisplayNone');
+    }
   }
-
 
 });
