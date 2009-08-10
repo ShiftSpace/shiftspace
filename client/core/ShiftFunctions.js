@@ -161,7 +161,6 @@ function SSScrollToShift(space, shift)
 */
 var SSBlurShift = function(space, shift)
 {
-  SSLog('SSBlurShift', SSLogForce);
   var id = shift._id;
   space.blurShift(id);
   space.onShiftBlur(id);

@@ -3,6 +3,19 @@
 // @package           ShiftSpaceCore
 // ==/Builder==
 
+var __resources = $H();
+
+function SSResourceForName(name)
+{
+  return __resources[name];
+}
+
+function SSSetResourceForName(name, resource)
+{
+  __resources[name] = resource;
+  SSPostNotification("resourceSet", {name:name, resource:resource});
+}
+
 var SSResource = new Class({
 
   Implements: [Events, Options, Delegate],
@@ -24,6 +37,7 @@ var SSResource = new Class({
     if(this.options.resource) this.setResource(this.options.resource);
     if(this.options.watch) this.setWatch(this.option.watch);
     if(this.options.delegate) this.setDelegate(this.options.delegate);
+    SSSetResourceForName(name, this);
   },
   
   
