@@ -5,8 +5,9 @@
 
 var SSResource = new Class({
 
-  Implements: [Events, Options],
+  Implements: [Events, Options, Delegate],
   name: "SSResource",
+  
   
   defaults: function()
   {
@@ -20,7 +21,9 @@ var SSResource = new Class({
   
   initialize: function(name, options)
   {
-    
+    if(this.options.resource) this.setResource(this.options.resource);
+    if(this.options.watch) this.setWatch(this.option.watch);
+    if(this.options.delegate) this.setDelegate(this.options.delegate);
   },
   
   
@@ -44,6 +47,7 @@ var SSResource = new Class({
   
   read: function(id, options)
   {
+    options = (this.delegate()) ? $merge(options, this.delegate().optionsForResource(this)) : options;
     if(id) return SSApp.read(this.resource('read'), id);
     return SSApp.get({resource:this.resource('read'), data:options});
   },

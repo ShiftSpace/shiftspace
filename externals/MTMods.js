@@ -90,92 +90,11 @@ Array.implement({
   }
 });
 
-/*
-var verify1 = function(fn) {
-   return function() {
-      var args = $A(arguments);
-      if($type(args[0]) != "string")
-      {
-         throw new Error("First arg is not a string");
-      }
-      else
-      {
-         console.log("verify1 decorator run")
-         return fn.apply(this, args);
-      }
-   }
-};
-
-var verify2 = function(fn) {
-   return function() {
-      var args = $A(arguments);
-      if($type(args[1]) != "string")
-      {
-         throw new Error("Second arg is not a string");
-      }
-      else
-      {
-         console.log("verify2 decorator run")
-         return fn.apply(this, args);
-      }
-   }
-};
-
-// add type checking of first and second arguments to myfn!
-var myfn = function(argA, argB) {
-  console.log("Hello from myfn! argA " + argA + ", argB " + argB);
-}.decorate(verify1, verify2);
-
-// do the same for a class method
-var MyClass = new Class({
-  name: "MyClass",
-  aMethod: function(argA, argB) {
-    console.log("Hello from myfn! argA " + argA + ", argB " + argB);
-    console.log(this.name);
-  }.decorate(verify1, verify2)
+var Delegate = new Class({
+  __delegate: null,
+  setDelegate: function(delegate) { this.__delegate = delegate; },
+  delegate: function() { return this.__delegate; }
 });
-
-var instance = new MyClass();
-instance.aMethod("foo", "bar"); // works
-
-try
-{
-  instance.aMethod(2, "bar");
-}
-catch(err)
-{
-  console.log(err);
-}
-
-try
-{
-  instance.aMethod("foo", 2);
-}
-catch(err)
-{
-  console.log(err);
-}
-
-myfn("foo", "bar"); // works
-
-try
-{
-  myfn(2, "bar"); // verify1 throws exception!
-}
-catch(err)
-{
-  console.log(err);
-}
-
-try
-{
-  myfn("foo", 2); // verify2 throws exception!  
-}
-catch(err)
-{
-  console.log(err);
-}
-*/
 
 Function.implement({
   decorate: function()
