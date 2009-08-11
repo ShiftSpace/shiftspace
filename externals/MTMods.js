@@ -100,14 +100,14 @@ var Set = new Class({
   initialize: function(ary)
   {
     this.isset = true;
-    if(!ary.isset)
+    this.rep = {};
+    if(ary && !ary.isset)
     {
-      this.rep = {};
       ary.each(function(v) {
         this.rep[$hash(v)] = v;
       }, this);
     }
-    else
+    else if(ary)
     {
       this.rep = ary.rep;
     }
@@ -120,32 +120,52 @@ var Set = new Class({
   },
   
   
+  __put__: function(k, v)
+  {
+    this.rep[k] = v;
+  },
+  
+  
   get: function(v)
   {
-    return this[$hash(v)];
+    return this.rep[$hash(v)];
   },
   
   
   remove: function(v)
   {
-    delete this[$hash(v)];
+    delete this.rep[$hash(v)];
   },
   
   
   intersection: function(set)
   {
-    var result = [];
-    var hashed = set.map($hash);
-    $H(this.rep).getKeys().each(function(key) {
-      if(hashed.contains(key)) result[key] = this.rep[key];
+    var result = new Set();
+    set = new Set(set);
+    $H(this.rep).getValues().each(function(value) {
+      var hashed = $hash(value);
+      if(set.rep[hashed]) result.rep[hashed] = value;
     }, this);
-    return new Set(result);
+    return result;
   },
   
   
   union: function(set)
   {
-    return new Set($H($merge(this.rep, new Set(set))).getValue());
+    var result = new Set();
+    $H(this.rep).each(function(v, k) {
+      result.rep[k] = v;
+    }, this);
+    set.each(function(v) {
+      result.rep[$hash(v)] = v;
+    });
+    return result;
+  },
+  
+  
+  getValues: function()
+  {
+    return $H(this.rep).getKeys();
   },
   
   
