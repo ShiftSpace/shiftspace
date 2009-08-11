@@ -253,7 +253,7 @@ Hash.implement({
   
   isEqual: function(other)
   {
-    return JSON.encode(this.toPairs()) == JSON.encode(other.toPairs());
+    return JSON.encode(this.normalize()) == JSON.encode($H(other).normalize());
   },
   
   changeKeys: function(keyFn)
