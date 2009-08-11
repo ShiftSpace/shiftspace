@@ -103,6 +103,22 @@ Hash.implement({
   isEqual: function(other)
   {
     return JSON.encode(this.toPairs()) == JSON.encode(other.toPairs());
+  },
+  
+  changeKeys: function(keyMap)
+  {
+    var result = $H();
+    this.each(function(v, k) {
+      if(keyMap[k])
+      {
+        result[keyMap[k]] = v;
+      }
+      else
+      {
+        result[k] = v;
+      }
+    });
+    return result;
   }
 });
 
