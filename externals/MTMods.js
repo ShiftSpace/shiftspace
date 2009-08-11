@@ -9,6 +9,19 @@ function $identity(v)
   return v;
 }
 
+function $call(fn)
+{
+  if(fn && $type(fn) == 'function') fn();
+}
+
+function $apply()
+{
+  var args = $A(arguments);
+  return function(fn) {
+    return fn.apply(null, args);
+  };
+}
+
 function $callable(v)
 {
   return v && $type(v) == 'function';
