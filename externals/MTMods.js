@@ -72,13 +72,8 @@ Array.implement({
     return this.length == 0;
   },
   
-  isEqual: function(ary) {
-    if(this.length != ary.length) return false;
-    for(var i = 0; i < this.length; i++)
-    {
-      if(this[i] != ary[i]) return false;
-    }
-    return true;
+  isEqual: function(other) {
+    return JSON.encode(this) == JSON.encode(other);
   },
   
   select: function(test) {
@@ -87,6 +82,27 @@ Array.implement({
       if(test(this[i])) return this[i];
     }
     return;
+  }
+});
+
+Hash.implement({
+  toPairs: function()
+  {
+    var result = [];
+    var sortArray = [];
+    this.each(function(v, k) {
+      sortArray.push(k);
+    });
+    sortArray.sort();
+    sortArray.each(function(k) {
+      result.push([k, this[k]]);
+    }, this);
+    return result;
+  },
+  
+  isEqual: function(other)
+  {
+    return JSON.encode(this.toPairs()) == JSON.encode(other.toPairs());
   }
 });
 
