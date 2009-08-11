@@ -150,6 +150,22 @@ var Set = new Class({
   },
   
   
+  difference: function(set)
+  {
+    var result = new Set();
+    set = new Set(set);
+    $H(this.rep).getValues().each(function(value) {
+      var hashed = $hash(value);
+      if(!set.rep[hashed]) result.rep[hashed] = value;
+    }, this);
+    $H(set.rep).getValues().each(function(value) {
+      var hashed = $hash(value);
+      if(!this.rep[hashed]) result.rep[hashed] = value;
+    }, this);
+    return result;
+  },
+  
+  
   union: function(set)
   {
     var result = new Set();
