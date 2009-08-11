@@ -1,0 +1,44 @@
+// terse form
+new SSResource("AllShifts", {
+  resource: {r:'shifts'},
+  watch: ["shift c u d": SSResource.dirty],
+  delegate: "AllShiftsView"
+});
+
+// long form
+new SSResource("AllShifts", {
+  resource: {create:'shift/{id}',
+             read:'shifts',
+             update:'shift/{id}',
+             'delete':'shift/{id}'},
+  watch: [{resource:'shift', method:'create'}, SSResource.dirty,
+          {resource:'shift', method:'update'}, SSResource.dirty,
+          {resource:'shift', method:'delete'}, SSResource.dirty],
+  delegate: "AllShiftsView"
+});
+
+new SSResource("UserShifts", {
+  resource: {r:'user/{username}/shifts',
+             o:'shift/{id}'},
+  watch: ["shift c u d": SSResource.dirty],
+  delegate: "MyShiftSpacePane"
+});
+
+new SSResource("Comments", {
+  resource: {r:'shift/{id}/comments'},
+  watch: ["comment c u d": SSResource.dirty],
+  delegate: "SSConsole"
+});
+
+new SSResource("Messages", {
+  resource: {r:'user/{userName}/messages'},
+  watch: ["message c u d": SSResource.dirty],
+  delegate: "SSConsole"
+});
+
+new SSResource("Groups", {
+  resource: {r:'groups',
+             o:'groups/{shortName}'},
+  watch: ["group c u d": SSResource.dirty],
+  delegate: "GroupsPane"
+});

@@ -5,6 +5,35 @@
 
 var __resources = $H();
 
+/*
+new SSResource("AllShifts", {
+  resource: {r:'shifts'},
+  watch: ["shift c u d": SSResource.dirty],
+  delegate: "SSConsole"
+});
+
+new SSResource("Comments", {
+  resource: {r:'shift/{id}/comments'},
+  watch: ["comment c u d": SSResource.dirty],
+  delegate: "SSConsole"
+});
+
+new SSResource("Comments", {
+  resource: {r:'shift/{id}/comments'},
+  watch: ["shift c u d": SSResource.dirty],
+  delegate: "SSConsole"
+});
+
+new SSResource("Groups", {
+  resource: {r:'groups'}
+});
+
+var h = $_H(
+    {}, "value",
+    {}, "value",
+    {}, "value"
+  );
+*/
 
 function SSResourceForName(name)
 {
@@ -24,6 +53,7 @@ var SSResource = new Class({
   Implements: [Events, Options, Delegate],
   name: "SSResource",
   
+  mapKeys: {c:"create", r:"read", u:"update", d:"delete"},
   
   defaults: function()
   {
@@ -39,7 +69,6 @@ var SSResource = new Class({
   initialize: function(name, options)
   {
     this.setOptions(this.defaults(), options);
-    this.setArray([]);
     this.setViews([]);
     if(this.options.app) this.setApp(this.options.app);
     if(this.options.resource) this.setResource(this.options.resource);
@@ -62,21 +91,9 @@ var SSResource = new Class({
   },
   
   
-  setArray: function(ary)
-  {
-    this.__array = ary;
-  },
-
-  
-  array: function()
-  {
-    return this__array;
-  },
-  
-  
   get: function(idx)
   {
-    return this.array()[idx];
+    return this.read()[idx];
   },
   
   
@@ -94,6 +111,15 @@ var SSResource = new Class({
   
   setResource: function(resource)
   {
+    resource = $H(resource).changeKeys($H(this.mapKeys).asFn());
+    if(resource.o)
+    {
+      resource = $merge(['create', 'update', 'delete'].zipmap($repeat(3, resource.o)), resource);
+      delete resource.o;
+    }
+    var parts = resource.read.split("/");
+    var identifier = (parts.length > 1) ? parts[1] : "{id}";
+    resource = $H(resource).changeKeys(function(k){return [k, identifier].join("/");});
     this.__resource = resource;
   },
   
