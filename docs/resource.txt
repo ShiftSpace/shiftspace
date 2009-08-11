@@ -1,7 +1,7 @@
 // terse form
 new SSResource("AllShifts", {
   resource: {r:'shifts'},
-  watch: ["shift c u d": SSResource.dirty],
+  watch: {"shift c u d": SSResource.dirty},
   delegate: "AllShiftsView"
 });
 
