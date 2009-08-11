@@ -4,11 +4,6 @@
 
 Event.Keys.shift = 16;
 
-function $identity(v)
-{
-  return v;
-}
-
 function $callable(v)
 {
   return v && $type(v) == 'function';
