@@ -55,6 +55,18 @@ String.implement({
   
 });
 
+function $iterate(n, fn) {
+  var result = [];
+  (n).times(function() {
+    result.push(fn());
+  });
+  return result;
+};
+
+function $repeat(n, v) {
+  return $iterate(n, $lambda(v));
+};
+
 Array.implement({
   first: function() {
     return this[0];
@@ -82,6 +94,21 @@ Array.implement({
       if(test(this[i])) return this[i];
     }
     return;
+  },
+  
+  zipmap: function(vs) {
+    if($type(vs) != 'array')
+    {
+      
+    }
+    else
+    {
+      var result = {};
+      this.each(function(v, i) {
+        result[this[i]] = vs[i];
+      }, this);
+      return result;
+    }
   }
 });
 
@@ -105,13 +132,17 @@ Hash.implement({
     return JSON.encode(this.toPairs()) == JSON.encode(other.toPairs());
   },
   
-  changeKeys: function(keyMap)
+  changeKeys: function(keyFn)
   {
     var result = $H();
+    if($type(keyFn) == 'object' || $type(keyFn) == 'hash')
+    {
+      keyFn = $H(keyFn).asFn();
+    }
     this.each(function(v, k) {
-      if(keyMap[k])
+      if(keyFn(k))
       {
-        result[keyMap[k]] = v;
+        result[keyFn(k)] = v;
       }
       else
       {
@@ -119,6 +150,14 @@ Hash.implement({
       }
     });
     return result;
+  },
+  
+  asFn: function()
+  {
+    var self = this;
+    return function(k) {
+      return self[k];
+    };
   }
 });
 
