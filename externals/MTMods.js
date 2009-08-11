@@ -80,6 +80,81 @@ function $repeat(n, v) {
   return $iterate(n, $lambda(v));
 };
 
+function $normalize(v) {
+  if($type(v) == "array")
+  {
+    v = v.normalize()
+  }
+  else if(['object', 'hash'].contains($type(v)))
+  {
+    v = $H(v).normalize();
+  }
+  return v;
+}
+
+function $hash(v) {
+  return JSON.encode($normalize(v));
+};
+
+var Set = new Class({
+  initialize: function(ary)
+  {
+    this.isset = true;
+    if(!ary.isset)
+    {
+      this.rep = {};
+      ary.each(function(v) {
+        this.rep[$hash(v)] = v;
+      }, this);
+    }
+    else
+    {
+      this.rep = ary.rep;
+    }
+  },
+  
+  
+  put: function(v)
+  {
+    this.rep[$hash(v)] = v;
+  },
+  
+  
+  get: function(v)
+  {
+    return this[$hash(v)];
+  },
+  
+  
+  remove: function(v)
+  {
+    delete this[$hash(v)];
+  },
+  
+  
+  intersection: function(set)
+  {
+    var result = [];
+    var hashed = set.map($hash);
+    $H(this.rep).getKeys().each(function(key) {
+      if(hashed.contains(key)) result[key] = this.rep[key];
+    }, this);
+    return new Set(result);
+  },
+  
+  
+  union: function(set)
+  {
+    return new Set($H($merge(this.rep, new Set(set))).getValue());
+  },
+  
+  
+  toArray: function()
+  {
+    return $H(this.rep).getValues();
+  }
+});
+
 Array.implement({
   first: function() {
     return this[0];
@@ -124,13 +199,24 @@ Array.implement({
     }
   },
   
+  
   encode: function() {
     return JSON.encode(this);
+  },
+  
+  
+  normalize: function() {
+    var result = [];
+    this.each(function(v) {
+      v = $normalize(v);
+      result.push(v);
+    });
+    return result;
   }
 });
 
 Hash.implement({
-  toPairs: function()
+  normalize: function()
   {
     var result = [];
     var sortArray = [];
@@ -139,7 +225,8 @@ Hash.implement({
     });
     sortArray.sort();
     sortArray.each(function(k) {
-      result.push([k, this[k]]);
+      var v = $normalize(this[k]);
+      result.push([k, v]);
     }, this);
     return result;
   },

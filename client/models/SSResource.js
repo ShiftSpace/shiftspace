@@ -5,35 +5,6 @@
 
 var __resources = $H();
 
-/*
-new SSResource("AllShifts", {
-  resource: {r:'shifts'},
-  watch: ["shift c u d": SSResource.dirty],
-  delegate: "SSConsole"
-});
-
-new SSResource("Comments", {
-  resource: {r:'shift/{id}/comments'},
-  watch: ["comment c u d": SSResource.dirty],
-  delegate: "SSConsole"
-});
-
-new SSResource("Comments", {
-  resource: {r:'shift/{id}/comments'},
-  watch: ["shift c u d": SSResource.dirty],
-  delegate: "SSConsole"
-});
-
-new SSResource("Groups", {
-  resource: {r:'groups'}
-});
-
-var h = $_H(
-    {}, "value",
-    {}, "value",
-    {}, "value"
-  );
-*/
 
 function SSResourceForName(name)
 {
@@ -128,16 +99,23 @@ var SSResource = new Class({
   {
     if($type(watch) == 'object')
     {
-      var pair = $H(watch).toPairs().first();
+      var pair = $H(watch).normalize().first();
       var key = pair[0];
-      var fn = pair[1];
+      var fn = pair[1].bind(this);
       var parts = key.split(/\s*/);
       var methods = parts.shift();
       var resource = parts.shift();
       var action = parts.shift();
-      methods.split("").each(function(part) {
-        this.app().addWatcher({method:this.mapKeys(part), resource:resource, action:action, fn:fn});
-      }.bind(this));
+      if(methods == "_")
+      {
+        this.app().addWatcher({resource:resource, action:action, fn:fn});
+      }
+      else
+      {
+        methods.split("").each(function(part) {
+          this.app().addWatcher({method:this.mapKeys(part), resource:resource, action:action, fn:fn});
+        }.bind(this));
+      }
     }
     else if($type(watch) == 'array')
     {
@@ -208,8 +186,25 @@ var SSResource = new Class({
   },
   
   
+  setDirty: function(val)
+  {
+    this.__dirty = val;
+  },
+  
+  
+  isDirty: function()
+  {
+    return this.__dirty;
+  },
+  
+  
   dirtyTheViews: function()
   {
     this.views().each($msg('setNeedsDisplay', true));
   }
 });
+
+SSResource.dirty = function()
+{
+  this.setDirty(true);
+}
