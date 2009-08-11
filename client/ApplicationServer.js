@@ -28,7 +28,9 @@ var ApplicationServer = new Class({
     }
   },
   
-
+  eventOrder: ['method', 'resource', 'action'],
+  urlOrder: ['resource', 'id', 'action'],  
+  
   initialize: function(options)
   {
     this.setOptions(this.defaults(), options);
@@ -55,9 +57,6 @@ var ApplicationServer = new Class({
   },
   
   
-  urlOrder: ['resource', 'id', 'action'],
-  
-  
   genUrl: function(parts)
   {
     var ary = this.urlOrder.map(function(pname) {
@@ -78,16 +77,24 @@ var ApplicationServer = new Class({
   {
     return this.__watchers;
   },
-
   
-  addWatcher: function(watcher, resource, methods)
+  
+  eventSignature: function(eventSpec)
+  {
+    return this.eventOrder.map($H(eventSpec).asFn()).filter($identity).join(" ");
+  },
+
+  /*
+    Function: addWatcher
+    
+    options - {resource:x, action:y, method:z, fn:cb}
+  */
+  addWatcher: function(options)
   {
     var watchers = this.watchers();
-    if(!watchers[resource]) watchers[resource] = {'create':[], 'read':[], 'update':[], 'delete':[]};
-    methods.each(function(method) {
-      watchers[resource][method].push(watcher);
-    });
-    SSLog('addWatcher', SSLogForce);
+    var sig = this.eventSignature(options);
+    if(!watchers[sig]) watchers[resource] = [];
+    watchers[sig].push(options.fn);
   },
   
   
@@ -119,9 +126,7 @@ var ApplicationServer = new Class({
   {
     var p = this.call({resource:resource, method:'post', data:data, json: true});
     p.op(function(value) { 
-      this.watchers()[resource]['create'].each(function(obj) {
-        if(obj.onCreate && $type(obj.onCreate) == 'function') obj.onCreate(value);
-      }); 
+      this.watchers()['create '+resource].each($apply(value));
       return value;
     }.bind(this));
     return p;
@@ -130,55 +135,80 @@ var ApplicationServer = new Class({
   
   read: function(resource, id)
   {
-    return this.call({resource:resource, id:id, method:'get'});
+    var p = this.call({resource:resource, id:id, method:'get'});
+    p.op(function(value) { 
+      this.watchers()['read '+resource].each($apply(value));
+      return value;
+    }.bind(this));
+    return p;
   },
   
   
   update: function(resource, id, data)
   {
-    return this.call({resource:resource, id:id, method:'put', data:data, json: true});
+    var p = this.call({resource:resource, id:id, method:'put', data:data, json: true});
+    p.op(function(value) {
+      this.watchers()['update '+resource].each($apply(value));
+      return value;
+    }.bind(this));
+    return p;
   },
   
   
   'delete': function(resource, id)
   {
-    return this.call({resource:resource, id:id, method:'delete'});
+    var p = this.call({resource:resource, id:id, method:'delete'});
+    p.op(function(value) { 
+      this.watchers()['delete '+resource].each($apply(value));
+      return value;
+    }.bind(this));
+    return p;
   },
   
   
   post: function(options)
   {
-    return this.call($merge(options, {method:'post'}));
+    var p = this.call($merge(options, {method:'post'}));
+    p.op(function(value) { 
+      this.watchers()[resource+' '+options.action].each($apply(value));
+      return value;
+    }.bind(this));
+    return p;
   },
   
   
   get: function(options)
   {
-    return this.call($merge(options, {method:'get'}));
+    var p = this.call($merge(options, {method:'get'}));
+    p.op(function(value) { 
+      this.watchers()[resource+' '+options.action].each($apply(value));
+      return value;
+    }.bind(this));
+    return p;
   },
 
   
-  confirm: function (value) 
+  confirm: function (value)
   {
     SSLog('confirm:', SSLogForce);
     SSLog(value, SSLogForce);
   }.asPromise(),
 
 
-  noErr: function(v) 
+  noErr: function(v)
   {
     if(v.error) return false;
     return v;
   }.asPromise(),
   
   
-  hasData: function(v) 
+  hasData: function(v)
   {
     return (!v.message && !v.error) ? true : false;
   }.asPromise(),
 
   
-  showErr: function(err) 
+  showErr: function(err)
   {
     alert(err.error);
   }.asPromise()

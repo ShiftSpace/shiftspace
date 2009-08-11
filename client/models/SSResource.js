@@ -124,6 +124,28 @@ var SSResource = new Class({
   },
   
   
+  setWatch: function(watch)
+  {
+    if($type(watch) == 'object')
+    {
+      var pair = $H(watch).toPairs().first();
+      var key = pair[0];
+      var fn = pair[1];
+      var parts = key.split(/\s*/);
+      var methods = parts.shift();
+      var resource = parts.shift();
+      var action = parts.shift();
+      methods.split("").each(function(part) {
+        this.app().addWatcher({method:this.mapKeys(part), resource:resource, action:action, fn:fn});
+      }.bind(this));
+    }
+    else if($type(watch) == 'array')
+    {
+      
+    }
+  },
+  
+  
   resource: function(method)
   {
     return this.__resource[method];

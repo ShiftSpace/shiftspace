@@ -70,7 +70,7 @@ var SSListView = new Class({
     if($type(resource) == 'string')
     {
       SSAddObserver(this, 'resourceSet', function(evt) {
-        if(evt.resource.getName() == resource) this.__setResource__(evt.resource);
+        if(evt.name == resource) this.__setResource__(evt.resource);
       }.bind(this));
     }
     else
@@ -414,7 +414,14 @@ var SSListView = new Class({
   */
   data: function()
   {
-    return this.__data;
+    if(this.resource())
+    {
+      return this.resource().read();
+    }
+    else
+    {
+      return this.__data;
+    }
   },
   
   

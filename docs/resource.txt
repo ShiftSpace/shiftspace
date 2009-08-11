@@ -20,25 +20,25 @@ new SSResource("AllShifts", {
 new SSResource("UserShifts", {
   resource: {r:'user/{username}/shifts',
              o:'shift/{id}'},
-  watch: ["shift c u d": SSResource.dirty],
+  watch: {"cud shift": SSResource.dirty},
   delegate: "MyShiftSpacePane"
 });
 
 new SSResource("Comments", {
   resource: {r:'shift/{id}/comments'},
-  watch: ["comment c u d": SSResource.dirty],
+  watch: {"cud comment": SSResource.dirty},
   delegate: "SSConsole"
 });
 
 new SSResource("Messages", {
   resource: {r:'user/{userName}/messages'},
-  watch: ["message c u d": SSResource.dirty],
+  watch: {"cud message": SSResource.dirty},
   delegate: "SSConsole"
 });
 
 new SSResource("Groups", {
   resource: {r:'groups',
              o:'groups/{shortName}'},
-  watch: ["group c u d": SSResource.dirty],
+  watch: {"cud group": SSResource.dirty},
   delegate: "GroupsPane"
 });
