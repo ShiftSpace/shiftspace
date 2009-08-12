@@ -3,17 +3,8 @@
 // ==/Builder==
 
 Event.Keys.shift = 16;
-
-function $identity(v)
-{
-  return v;
-}
-
-function $call(fn)
-{
-  if(fn && $type(fn) == 'function') fn();
-}
-
+function $identity(v) { return v; }
+function $call(fn) { if(fn && $type(fn) == 'function') fn(); }
 function $apply()
 {
   var args = $A(arguments);
@@ -21,53 +12,13 @@ function $apply()
     return fn.apply(null, args);
   };
 }
-
-function $callable(v)
-{
-  return v && $type(v) == 'function';
-}
-
+function $callable(v) { return v && $type(v) == 'function'; }
 function $not(fn)
 {
   return function() {
     return !fn.apply(this, $A(arguments));
   }
 }
-
-String.implement({
-  
-  tail: function(n)
-  {
-    return this.substring(this.length-(n || 1));
-  },
-  
-  
-  drop: function(n)
-  {
-    return this.substring(0, this.length-(n || 1));
-  },
-  
-  
-  pluralize: function()
-  {
-    return this + "s";
-  },
-  
-  
-  unpluralize: function()
-  {
-    return (this.tail() == "s") ? this.drop() : $A(this).join("");
-  },
-  
-  
-  trunc: function(limit, options)
-  {
-    var tail = (options && options.tail === false) ? '' : ((options && options.tail) || '...');
-    return this.substring(0, limit) + tail;
-  }
-  
-});
-
 function $iterate(n, fn) {
   var result = [];
   (n).times(function() {
@@ -80,205 +31,37 @@ function $repeat(n, v) {
   return $iterate(n, $lambda(v));
 };
 
-function $normalize(v) {
-  if($type(v) == "array")
+String.implement({
+  tail: function(n) { return this.substring(this.length-(n || 1)); },
+  drop: function(n) { return this.substring(0, this.length-(n || 1)); },
+  pluralize: function() { return this + "s"; },
+  unpluralize: function() { return (this.tail() == "s") ? this.drop() : $A(this).join(""); },
+  trunc: function(limit, options)
   {
-    v = v.normalize()
-  }
-  else if(['object', 'hash'].contains($type(v)))
-  {
-    v = $H(v).normalize();
-  }
-  return v;
-}
-
-function $hash(v) {
-  return JSON.encode($normalize(v));
-};
-
-var Set = new Class({
-  initialize: function(ary)
-  {
-    this.isset = true;
-    this.rep = {};
-    if(ary && !ary.isset)
-    {
-      ary.each(function(v) {
-        this.rep[$hash(v)] = v;
-      }, this);
-    }
-    else if(ary)
-    {
-      this.rep = ary.rep;
-    }
-  },
-  
-  
-  put: function(v)
-  {
-    this.rep[$hash(v)] = v;
-  },
-  
-  
-  __put__: function(k, v)
-  {
-    this.rep[k] = v;
-  },
-  
-  
-  get: function(v)
-  {
-    return this.rep[$hash(v)];
-  },
-  
-  
-  remove: function(v)
-  {
-    delete this.rep[$hash(v)];
-  },
-  
-  
-  intersection: function(set)
-  {
-    var result = new Set();
-    set = new Set(set);
-    $H(this.rep).getValues().each(function(value) {
-      var hashed = $hash(value);
-      if(set.rep[hashed]) result.rep[hashed] = value;
-    }, this);
-    return result;
-  },
-  
-  
-  difference: function(set)
-  {
-    var result = new Set();
-    set = new Set(set);
-    $H(this.rep).getValues().each(function(value) {
-      var hashed = $hash(value);
-      if(!set.rep[hashed]) result.rep[hashed] = value;
-    }, this);
-    $H(set.rep).getValues().each(function(value) {
-      var hashed = $hash(value);
-      if(!this.rep[hashed]) result.rep[hashed] = value;
-    }, this);
-    return result;
-  },
-  
-  
-  union: function(set)
-  {
-    var result = new Set();
-    $H(this.rep).each(function(v, k) {
-      result.rep[k] = v;
-    }, this);
-    set.each(function(v) {
-      result.rep[$hash(v)] = v;
-    });
-    return result;
-  },
-  
-  
-  getValues: function()
-  {
-    return $H(this.rep).getKeys();
-  },
-  
-  
-  toArray: function()
-  {
-    return $H(this.rep).getValues();
+    var tail = (options && options.tail === false) ? '' : ((options && options.tail) || '...');
+    return this.substring(0, limit) + tail;
   }
 });
 
 Array.implement({
-  first: function() {
-    return this[0];
-  },
-  
-  rest: function() {
-    return this.slice(1, this.length);
-  },
-  
-  drop: function(n) {
-    return this.slice(n, this.length);
-  },
-  
-  isEmpty: function() {
-    return this.length == 0;
-  },
-  
-  isEqual: function(other) {
-    return JSON.encode(this) == JSON.encode(other);
-  },
-  
-  select: function(test) {
-    for(var i = 0; i < this.length; i++)
-    {
-      if(test(this[i])) return this[i];
-    }
-    return;
-  },
-  
-  zipmap: function(vs) {
-    if($type(vs) != 'array')
-    {
-      
-    }
-    else
-    {
-      var result = {};
-      this.each(function(v, i) {
-        result[this[i]] = vs[i];
-      }, this);
-      return result;
-    }
-  },
-  
-  
-  encode: function() {
-    return JSON.encode(this);
-  },
-  
-  
-  normalize: function() {
-    var result = [];
-    this.each(function(v) {
-      v = $normalize(v);
-      result.push(v);
-    });
+  first: function() { return this[0]; },
+  rest: function() { return this.slice(1, this.length); },
+  drop: function(n) { return this.slice(n, this.length); },
+  isEmpty: function() { return this.length == 0; },
+  select: function(test) { for(var i = 0; i < this.length; i++) if(test(this[i])) return this[i]; return; },
+  zipmap: function(vs) 
+  {
+    var result = {};
+    this.each(function(v, i) { result[this[i]] = vs[i]; }, this);
     return result;
   }
 });
 
 Hash.implement({
-  normalize: function()
-  {
-    var result = [];
-    var sortArray = [];
-    this.each(function(v, k) {
-      sortArray.push(k);
-    });
-    sortArray.sort();
-    sortArray.each(function(k) {
-      var v = $normalize(this[k]);
-      result.push([k, v]);
-    }, this);
-    return result;
-  },
-  
-  isEqual: function(other)
-  {
-    return JSON.encode(this.normalize()) == JSON.encode($H(other).normalize());
-  },
-  
   changeKeys: function(keyFn)
   {
     var result = $H();
-    if($type(keyFn) == 'object' || $type(keyFn) == 'hash')
-    {
-      keyFn = $H(keyFn).asFn();
-    }
+    if($type(keyFn) == 'object' || $type(keyFn) == 'hash') keyFn = $H(keyFn).asFn();
     this.each(function(v, k) {
       if(keyFn(k))
       {
@@ -298,11 +81,6 @@ Hash.implement({
     return function(k) {
       return self[k];
     };
-  },
-  
-  encode: function()
-  {
-    return JSON.encode(this);
   }
 });
 
@@ -315,10 +93,7 @@ var Delegate = new Class({
 Function.implement({
   decorate: function()
   {
-    var decorators = $A(arguments);
-    var resultFn = this;
-    var decorator = decorators.pop();
-    
+    var decorators = $A(arguments), resultFn = this, decorator = decorators.pop();
     while(decorator)
     {
       var temp = resultFn;
@@ -326,44 +101,28 @@ Function.implement({
       temp._decorator = resultFn;
       decorator = decorators.pop();
     }
-    
     return resultFn;
   },
   
   comp: function()
   {
-    var fns = $A(arguments)
-    var self = this;
+    var fns = $A(arguments), self = this;
     return function() {
-      var args = $A(arguments);
-      var result = self.apply(this, args);
-      var fn;
-      while(fn = fns.shift())
-      {
-        result = fn.apply(null, [result]);
-      }
+      var args = $A(arguments), result = self.apply(this, args), fn;
+      while(fn = fns.shift()) result = fn.apply(null, [result]);
       return result;
     }
   },
   
-  rewind: function(bind, args)
-  {
-    return (this._wrapper) ? this._wrapper.bind(bind, args) : this.bind(bind, args);
-  }
+  rewind: function(bind, args) { return (this._wrapper) ? this._wrapper.bind(bind, args) : this.bind(bind, args); }
 });
 
-
-function $element(tag, options)
-{
-  return new Element(tag, options);
-}
-
+function $element(tag, options) { return new Element(tag, options); }
 
 Class.extend({
   wrap: function(self, key, method)
   {
     if (method._origin) method = method._origin;
-
     var wrapper = function(){
       if (method._protected && this._current == null) throw new Error('The method "' + key + '" cannot be called.');
       var caller = this.caller, current = this._current;
@@ -372,7 +131,6 @@ Class.extend({
       this._current = current; this.caller = caller;
       return result;
     }.extend({_owner: self, _origin: method, _name: key});
-
     method._wrapper = wrapper;
     return wrapper;
   }

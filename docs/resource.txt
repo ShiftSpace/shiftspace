@@ -20,7 +20,8 @@ new SSResource("AllShifts", {
 new SSResource("UserShifts", {
   resource: {r:'user/{username}/shifts',
              o:'shift/{id}'},
-  watch: {"cud shift": SSResource.dirty},
+  watch: {"cud shift": SSResource.dirty,
+          "_ shift publish": SSResource.dirty},
   delegate: "MyShiftSpacePane"
 });
 
@@ -37,8 +38,8 @@ new SSResource("Messages", {
 });
 
 new SSResource("Groups", {
-  resource: {r:'groups',
-             o:'groups/{shortName}'},
+  identifier: "shortName",
+  resource: {r:'groups'},
   watch: {"cud group": SSResource.dirty},
   delegate: "GroupsPane"
 });

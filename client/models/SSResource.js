@@ -79,13 +79,14 @@ var SSResource = new Class({
     return this.__app;
   },
   
-  
+  // must define at least read
   setResource: function(resource)
   {
     resource = $H(resource).changeKeys($H(this.mapKeys).asFn());
+    var missing = (new Set(['create', 'update', 'delete'])).difference($H(resource).getKeys()).toArray();
     if(resource.o)
     {
-      resource = $merge(['create', 'update', 'delete'].zipmap($repeat(3, resource.o)), resource);
+      resource = $merge([missing].zipmap($repeat(3, resource.o)), resource);
       delete resource.o;
     }
     var parts = resource.read.split("/");

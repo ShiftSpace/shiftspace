@@ -125,8 +125,9 @@ var ApplicationServer = new Class({
   create: function(resource, data)
   {
     var p = this.call({resource:resource, method:'post', data:data, json: true});
-    p.op(function(value) { 
-      this.watchers()['create '+resource].each($apply(value));
+    p.op(function(value) {
+      var watchers = this.watchers()['create '+resource];
+      if(watchers) watchers.each($apply(value));
       return value;
     }.bind(this));
     return p;
@@ -136,8 +137,9 @@ var ApplicationServer = new Class({
   read: function(resource, id)
   {
     var p = this.call({resource:resource, id:id, method:'get'});
-    p.op(function(value) { 
-      this.watchers()['read '+resource].each($apply(value));
+    p.op(function(value) {
+      var watchers = this.watchers()['read '+resource];
+      if(watchers) watchers.each($apply(value));
       return value;
     }.bind(this));
     return p;
@@ -148,7 +150,8 @@ var ApplicationServer = new Class({
   {
     var p = this.call({resource:resource, id:id, method:'put', data:data, json: true});
     p.op(function(value) {
-      this.watchers()['update '+resource].each($apply(value));
+      var watchers = this.watchers()['update '+resource];
+      if(watchers) watchers.each($apply(value));
       return value;
     }.bind(this));
     return p;
@@ -159,7 +162,8 @@ var ApplicationServer = new Class({
   {
     var p = this.call({resource:resource, id:id, method:'delete'});
     p.op(function(value) { 
-      this.watchers()['delete '+resource].each($apply(value));
+      var watchers = this.watchers()['delete '+resource];
+      if(watchers) watchers.each($apply(value));
       return value;
     }.bind(this));
     return p;
@@ -170,7 +174,8 @@ var ApplicationServer = new Class({
   {
     var p = this.call($merge(options, {method:'post'}));
     p.op(function(value) { 
-      this.watchers()[resource+' '+options.action].each($apply(value));
+      var watchers = this.watchers()[options.resource+' '+options.action];
+      if(watcheres) watchers.each($apply(value));
       return value;
     }.bind(this));
     return p;
@@ -180,8 +185,9 @@ var ApplicationServer = new Class({
   get: function(options)
   {
     var p = this.call($merge(options, {method:'get'}));
-    p.op(function(value) { 
-      this.watchers()[resource+' '+options.action].each($apply(value));
+    p.op(function(value) {
+      var watchers = this.watchers()[options.resource+' '+options.action];
+      if(watchers) watchers.each($apply(value));
       return value;
     }.bind(this));
     return p;
