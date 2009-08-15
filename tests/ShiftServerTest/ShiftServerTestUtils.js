@@ -283,3 +283,16 @@ function query()
   });
   return result;
 }
+
+function createResource() {
+  return new SSResource("AllShifts", {
+    resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
+    watches: [{resource:"shift", method:"create"},
+              {resource:"shift", method:"update"},
+              {resource:"shift", method:"delete"},
+              {resource:"shift", action:"comment"},
+              {resource:"shift", action:"publish"},
+              {resource:"shift", action:"unpublish"}],
+    delegate: "SSConsole"
+  });
+}
