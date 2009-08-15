@@ -175,7 +175,7 @@ var ApplicationServer = new Class({
     var p = this.call($merge(options, {method:'post'}));
     p.op(function(value) { 
       var watchers = this.watchers()[options.resource+' '+options.action];
-      if(watcheres) watchers.each($apply(value));
+      if(watchers) watchers.each($apply(value));
       return value;
     }.bind(this));
     return p;

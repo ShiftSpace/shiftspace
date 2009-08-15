@@ -5,19 +5,16 @@
 
 var __resources = $H();
 
-
 function SSResourceForName(name)
 {
   return __resources[name];
 }
-
 
 function SSSetResourceForName(name, resource)
 {
   __resources[name] = resource;
   SSPostNotification("resourceSet", {name:name, resource:resource});
 }
-
 
 var SSResource = new Class({
 
@@ -43,7 +40,7 @@ var SSResource = new Class({
     this.setViews([]);
     if(this.options.app) this.setApp(this.options.app);
     if(this.options.resource) this.setResource(this.options.resource);
-    if(this.options.watch) this.setWatch(this.options.watch);
+    if(this.options.watches) this.setWatches(this.options.watches);
     if(this.options.delegate) this.setDelegate(this.options.delegate);
     this.setName(name);
     SSSetResourceForName(name, this);
@@ -82,52 +79,25 @@ var SSResource = new Class({
   // must define at least read
   setResource: function(resource)
   {
-    resource = $H(resource).changeKeys($H(this.mapKeys).asFn());
-    var missing = (new Set(['create', 'update', 'delete'])).difference($H(resource).getKeys()).toArray();
-    if(resource.o)
-    {
-      resource = $merge([missing].zipmap($repeat(3, resource.o)), resource);
-      delete resource.o;
-    }
-    var parts = resource.read.split("/");
-    var identifier = (parts.length > 1) ? parts[1] : "{id}";
-    resource = $H(resource).changeKeys(function(k){return [k, identifier].join("/");});
     this.__resource = resource;
-  },
-  
-  
-  setWatch: function(watch)
-  {
-    if($type(watch) == 'object')
-    {
-      var pair = $H(watch).normalize().first();
-      var key = pair[0];
-      var fn = pair[1].bind(this);
-      var parts = key.split(/\s*/);
-      var methods = parts.shift();
-      var resource = parts.shift();
-      var action = parts.shift();
-      if(methods == "_")
-      {
-        this.app().addWatcher({resource:resource, action:action, fn:fn});
-      }
-      else
-      {
-        methods.split("").each(function(part) {
-          this.app().addWatcher({method:this.mapKeys(part), resource:resource, action:action, fn:fn});
-        }.bind(this));
-      }
-    }
-    else if($type(watch) == 'array')
-    {
-      
-    }
   },
   
   
   resource: function(method)
   {
     return this.__resource[method];
+  },
+  
+  
+  setWatches: function(watch)
+  {
+    this.__watch = watch;
+  },
+  
+  
+  watches: function()
+  {
+    return this.__watch;
   },
   
   

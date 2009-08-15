@@ -19,4 +19,3 @@
 // INCLUDE PACKAGE ShiftSpaceCore
 // INCLUDE PACKAGE ShiftSpaceCoreUI
 // INCLUDE PACKAGE Autocomplete
-
