@@ -2,7 +2,7 @@
 // @required
 // ==/Builder==
 
-// INCLUDE GMMods
+// INCLUDE PACKAGE GM
 // INCLUDE MTMods
 // INCLUDE PACKAGE System_
 // INCLUDE PACKAGE Promises
