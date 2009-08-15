@@ -79,22 +79,47 @@ var ApplicationServer = new Class({
   },
   
   
-  eventSignature: function(eventSpec)
+  watchersFor: function(rsrcSpec)
   {
-    return this.eventOrder.map($H(eventSpec).asFn()).filter($identity).join(" ");
+    var hashed = $hash(rsrcSpec), watchers = this.watchers()[hashed];
+    return watchers || [];
   },
-
-  /*
-    Function: addWatcher
-    
-    options - {resource:x, action:y, method:z, fn:cb}
-  */
-  addWatcher: function(options)
+  
+  
+  addWatcher: function(rsrcSpec, watcher)
   {
-    var watchers = this.watchers();
-    var sig = this.eventSignature(options);
-    if(!watchers[sig]) watchers[resource] = [];
-    watchers[sig].push(options.fn);
+    var watchers = this.watchers(), hashed = $hash(rsrcSpec);
+    if(!watchers[hashed]) watchers[hashed] = [];
+    watchers[hashed].push(watcher);
+  },
+  
+  
+  notifyWatchers: function(rsrcSpec)
+  {
+    var resourceSpec = $H(rsrcSpec).extract(['resource', 'method'], true);
+    var watchers = this.watchersFor(resourceSpec);
+    watchers.each($msg('matchSpec'), resourceSpec);;
+    
+    if(rsrcSpec.id)
+    {
+      var idSpec = $H(rsrcSpec).extract(['resource', 'method', 'id'], true);
+      watchers = this.watchersFor(idSpec);
+      watchers.each($msg('matchSpec'), idSpec);
+    }
+    
+    if(rsrcSpec.action)
+    {
+      var actionSpec = $H(rsrcSpec).extract(['resource', 'method', 'action'], true);
+      wacthers = this.watchersFor(actionSpec);
+      watchers.each($msg('matchSpec'), actionSpec);
+    }
+    
+    if(rsrcSpec.action && rsrcSpec.id)
+    {
+      var actionIdSpec = $H(rsrcSpec).extract(['resource', 'method', 'action', 'id'], true);
+      wacthers = this.watchersFor(actionSpec);
+      watchers.each($msg('matchSpec'), actionIdSpec);
+    }
   },
   
   
@@ -126,8 +151,8 @@ var ApplicationServer = new Class({
   {
     var p = this.call({resource:resource, method:'post', data:data, json: true});
     p.op(function(value) {
-      var watchers = this.watchers()['create '+resource];
-      if(watchers) watchers.each($apply(value));
+      var rsrcSpec = {resource:'shift', method:'create'};
+      this.notifyWatchers(rsrcSpec);
       return value;
     }.bind(this));
     return p;
@@ -138,8 +163,8 @@ var ApplicationServer = new Class({
   {
     var p = this.call({resource:resource, id:id, method:'get'});
     p.op(function(value) {
-      var watchers = this.watchers()['read '+resource];
-      if(watchers) watchers.each($apply(value));
+      var readRsrcSpec = {resource:resource, method:'read', id:id};
+      this.notifyWatchers(readRsrcSpec);
       return value;
     }.bind(this));
     return p;
@@ -150,8 +175,8 @@ var ApplicationServer = new Class({
   {
     var p = this.call({resource:resource, id:id, method:'put', data:data, json: true});
     p.op(function(value) {
-      var watchers = this.watchers()['update '+resource];
-      if(watchers) watchers.each($apply(value));
+      var updateRsrcSpec = {resource:resource, method:'update', id:id};
+      this.notifyWatchers(upaateRsrcSpec);
       return value;
     }.bind(this));
     return p;
@@ -161,9 +186,9 @@ var ApplicationServer = new Class({
   'delete': function(resource, id)
   {
     var p = this.call({resource:resource, id:id, method:'delete'});
-    p.op(function(value) { 
-      var watchers = this.watchers()['delete '+resource];
-      if(watchers) watchers.each($apply(value));
+    p.op(function(value) {
+      var deleteRsrcSpec = {resource:resource, method:'delete', id:id};
+      this.notifyWatchers(deleteRsrcSpec);
       return value;
     }.bind(this));
     return p;
@@ -174,8 +199,8 @@ var ApplicationServer = new Class({
   {
     var p = this.call($merge(options, {method:'post'}));
     p.op(function(value) { 
-      var watchers = this.watchers()[options.resource+' '+options.action];
-      if(watchers) watchers.each($apply(value));
+      var postRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
+      this.notifyWatchers(postRsrcSpec);
       return value;
     }.bind(this));
     return p;
@@ -186,8 +211,8 @@ var ApplicationServer = new Class({
   {
     var p = this.call($merge(options, {method:'get'}));
     p.op(function(value) {
-      var watchers = this.watchers()[options.resource+' '+options.action];
-      if(watchers) watchers.each($apply(value));
+      var getRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
+      this.notifyWatchers(getRsrcSpec);
       return value;
     }.bind(this));
     return p;

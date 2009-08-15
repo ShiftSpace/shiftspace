@@ -21,12 +21,9 @@ var SSResource = new Class({
   Implements: [Events, Options, Delegate],
   name: "SSResource",
   
-  mapKeys: {c:"create", r:"read", u:"update", d:"delete"},
-  
   defaults: function()
   {
     return {
-      app: SSResource.app,
       resource: null,
       watch: null,
       delegate: null
@@ -38,7 +35,7 @@ var SSResource = new Class({
   {
     this.setOptions(this.defaults(), options);
     this.setViews([]);
-    if(this.options.app) this.setApp(this.options.app);
+    this.setApp(this.options.app || SSApp);
     if(this.options.resource) this.setResource(this.options.resource);
     if(this.options.watches) this.setWatches(this.options.watches);
     if(this.options.delegate) this.setDelegate(this.options.delegate);
@@ -89,15 +86,18 @@ var SSResource = new Class({
   },
   
   
-  setWatches: function(watch)
+  setWatches: function(watches)
   {
-    this.__watch = watch;
+    this.__watches = new Set(watches);
+    this.__watches.each(function(watch) {
+      this.app().addWatcher(watch, this);
+    }, this); 
   },
   
   
   watches: function()
   {
-    return this.__watch;
+    return this.__watches;
   },
   
   
@@ -172,6 +172,12 @@ var SSResource = new Class({
   dirtyTheViews: function()
   {
     this.views().each($msg('setNeedsDisplay', true));
+  },
+  
+
+  matchSpec: function(rsrcSpec)
+  {
+    
   }
 });
 
