@@ -31,12 +31,48 @@ var ApplicationServer = new Class({
   eventOrder: ['method', 'resource', 'action'],
   urlOrder: ['resource', 'id', 'action'],  
   
+  
   initialize: function(options)
   {
     this.setOptions(this.defaults(), options);
     this.setServer(this.options.server);
+    this.setCache($H());
     this.setResources($H());
     this.setWatchers($H());
+  },
+  
+  
+  setCache: function(cache)
+  {
+    this.__cache = cache;
+  },
+  
+  
+  cache: function()
+  {
+    return this.__cache;
+  },
+  
+
+  allCachedDocuments: function()
+  {
+    var merged = {};
+    var cache = this.cache();
+    for(var resourceName in cache)
+    {
+      var resource = cache[resourceName];
+      for(var document in resource)
+      {
+        merged[document] = document;
+      }
+    }
+    return merged;    
+  },
+
+
+  getDocument: function(id)
+  {
+    return this.allCachedDocuments[id];
   },
   
   
@@ -172,7 +208,7 @@ var ApplicationServer = new Class({
   }.decorate(promise),
   
   
-  create: function(resource, data)
+  create: function(resource, data, options)
   {
     var p = this.call({resource:resource, method:'post', data:data, json: true});
     p.op(function(value) {
@@ -184,7 +220,7 @@ var ApplicationServer = new Class({
   },
   
   
-  read: function(resource, id)
+  read: function(resource, id, options)
   {
     var p = this.call({resource:resource, id:id, method:'get'});
     p.op(function(value) {
@@ -196,7 +232,7 @@ var ApplicationServer = new Class({
   },
   
   
-  update: function(resource, id, data)
+  update: function(resource, id, data, options)
   {
     var p = this.call({resource:resource, id:id, method:'put', data:data, json: true});
     p.op(function(value) {
@@ -208,7 +244,7 @@ var ApplicationServer = new Class({
   },
   
   
-  'delete': function(resource, id)
+  'delete': function(resource, id, options)
   {
     var p = this.call({resource:resource, id:id, method:'delete'});
     p.op(function(value) {

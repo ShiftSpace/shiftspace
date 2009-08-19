@@ -117,7 +117,7 @@ var SSResource = new Class({
   create: function(data, options)
   {
     this.dirtyTheViews();
-    var p = this.app().create(this.getMethod('create'), data);
+    var p = this.app().create(this.getMethod('create'), data, {local:this.getName()});
     p.op(function(v) { this.fireEvent('onCreate', {resource:this, value:v}); return v; }.bind(this));
     return p;
   },
@@ -126,7 +126,7 @@ var SSResource = new Class({
   read: function(options)
   {
     options = (this.delegate()) ? $merge(options, this.delegate().optionsForResource(this)) : options;
-    var p = this.app().get({resource:this.getMethod('read'), data:options});
+    var p = this.app().get({resource:this.getMethod('read'), data:options, local:this.getName()});
     p.op(function(v) { this.fireEvent('onRead', {resource:this, value:v}); return v; }.bind(this));
     return p;
   },
@@ -136,7 +136,7 @@ var SSResource = new Class({
   {
     var oldValue = this.get(idx);
     this.dirtyTheViews();
-    var p = this.app().update(this.getMethod('update'), oldValue._id, data);
+    var p = this.app().update(this.getMethod('update'), oldValue._id, data, {local:this.getName()});
     p.op(function(v) { this.fireEvent('onUpdate', {resource:this, oldValue:oldValue, 'newValue':v}); return v; }.bind(this));
     return p;
   },
@@ -146,7 +146,7 @@ var SSResource = new Class({
   {
     var oldValue = this.get(idx);
     this.dirtyTheViews();
-    var p = this.app()['delete'](this.getMethod('delete'), oldValue._id);
+    var p = this.app()['delete'](this.getMethod('delete'), oldValue._id, {local:this.getName()});
     p.op(function(v) { this.fireEvent('onDelete', {resource:this, oldValue:v}); return v; }.bind(this));
     return p;
   },
