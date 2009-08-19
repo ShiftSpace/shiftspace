@@ -86,7 +86,17 @@ Hash.implement({
 
 var Delegate = new Class({
   __delegate: null,
-  setDelegate: function(delegate) { this.__delegate = delegate; },
+  setDelegate: function(delegate)
+  { 
+    if($type(delegate) == "string")
+    {
+      this.__delegate = ShiftSpaceNameTable[delegate];
+    }
+    else
+    {
+      this.__delegate = delegate;
+    }
+  },
   delegate: function() { return this.__delegate; }
 });
 

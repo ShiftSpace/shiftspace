@@ -40,7 +40,6 @@ var SSUnit = {};
 SSUnit.Base = new Class({
 
   Implements: [Events, Options],
-
   name: "SSUnit.Base",
 
   /*
@@ -58,36 +57,15 @@ SSUnit.Base = new Class({
   
   __getDocs__: function()
   {
-    if(!this.__docs) 
-    {
-      this.__docs = $H();
-    }
+    if(!this.__docs) this.__docs = $H();
     return this.__docs;
   },
   
   
-  __setDocForFunction__: function(fn, doc)
-  {
-    this.__getDocs__().set(fn.ssname, doc);
-  },
-  
-
-  __docForFunction__: function(fnName)
-  {
-    return this.__getDocs__().get(fnName);
-  },
-  
-  
-  __nameForFunction__: function(fn)
-  {
-    return fn.ssname;
-  },
-  
-  
-  __setNameForFunction__: function(fn, name)
-  {
-    fn.ssname = name;
-  }
+  __setDocForFunction__: function(fn, doc) { this.__getDocs__().set(fn.ssname, doc); },
+  __docForFunction__: function(fnName) { return this.__getDocs__().get(fnName); },
+  __nameForFunction__: function(fn) { return fn.ssname; },
+  __setNameForFunction__: function(fn, name) { fn.ssname = name; }
 
 });
 
@@ -100,22 +78,9 @@ SSUnit.TestIterator = new Class({
   
   Implements: [Events, Options],
   
-  setType: function(type)
-  {
-    this.__type = type;
-  },
-  
-  
-  type: function()
-  {
-    return this.__type || 'test';
-  },
-  
-  
-  setTests: function(tests)
-  {
-    this.__tests = tests;
-  },
+  setType: function(type) { this.__type = type; },
+  type: function() { return this.__type || 'test'; },
+  setTests: function(tests) { this.__tests = tests; },
   
   /*
     Function: tests

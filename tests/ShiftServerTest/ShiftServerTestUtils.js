@@ -285,6 +285,15 @@ function query()
   return result;
 }
 
+var resourceDelegate = {
+  optionsForResource: function()
+  {
+    return {
+      byHref: SSInfo().server+'/sandbox/'
+    };
+  }
+};
+
 function createResource() {
   return new SSResource("AllShifts", {
     resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
@@ -294,6 +303,26 @@ function createResource() {
               {resource:"shift", action:"comment"},
               {resource:"shift", action:"publish"},
               {resource:"shift", action:"unpublish"}],
-    delegate: "SSConsole"
+    delegate: resourceDelegate
   });
 }
+
+function createResource2() {
+  return new SSResource("MyShifts", {
+    resource: {create:'shift', read:'user/'+User.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
+    watches: [{resource:"shift", method:"create"},
+              {resource:"shift", method:"update"},
+              {resource:"shift", method:"delete"},
+              {resource:"shift", action:"comment"},
+              {resource:"shift", action:"publish"},
+              {resource:"shift", action:"unpublish"}],
+    conditions: function(shift) { return shift.userName == User.getUserName(); }
+  });
+}
+
+/*
+dispatcher(
+  {resource:"shift", method:"create"}, function() {},
+  {resource:"shift", method:""}, function() {}
+);
+*/

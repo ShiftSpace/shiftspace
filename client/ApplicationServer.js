@@ -35,7 +35,32 @@ var ApplicationServer = new Class({
   {
     this.setOptions(this.defaults(), options);
     this.setServer(this.options.server);
+    this.setResources($H());
     this.setWatchers($H());
+  },
+  
+  
+  setResources: function(resources)
+  {
+    this.__resources = resources;
+  },
+  
+  
+  resources: function()
+  {
+    return this.__resources;
+  },
+  
+  
+  addResource: function(resource)
+  {
+    this.resources()[resource.getName()] = resource;
+  },
+  
+  
+  getResource: function(name)
+  {
+    return this.resources()[name];
   },
 
   

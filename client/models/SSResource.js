@@ -44,6 +44,18 @@ var SSResource = new Class({
   },
   
   
+  setMethod: function(method, path)
+  {
+    this.resource()[method] = path;
+  },
+  
+  
+  getMethod: function(method)
+  {
+    return this.resource()[method];
+  },
+  
+  
   setName: function(name)
   {
     this.__name = name;
@@ -58,13 +70,14 @@ var SSResource = new Class({
   
   get: function(idx)
   {
-    return this.read()[idx];
+    return this.app().dataForResource(this.getName())[idx];
   },
   
   
   setApp: function(app)
   {
     this.__app = app;
+    app.addResource(this);
   },
   
   
@@ -80,9 +93,9 @@ var SSResource = new Class({
   },
   
   
-  resource: function(method)
+  resource: function()
   {
-    return this.__resource[method];
+    return this.__resource;
   },
   
   
@@ -104,7 +117,7 @@ var SSResource = new Class({
   create: function(data, options)
   {
     this.dirtyTheViews();
-    var p = this.app().create(this.resource('create'), data);
+    var p = this.app().create(this.getMethod('create'), data);
     p.op(function(v) { this.fireEvent('onCreate', {resource:this, value:v}); return v; }.bind(this));
     return p;
   },
@@ -113,7 +126,7 @@ var SSResource = new Class({
   read: function(options)
   {
     options = (this.delegate()) ? $merge(options, this.delegate().optionsForResource(this)) : options;
-    var p = this.app().get({resource:this.resource('read'), data:options});
+    var p = this.app().get({resource:this.getMethod('read'), data:options});
     p.op(function(v) { this.fireEvent('onRead', {resource:this, value:v}); return v; }.bind(this));
     return p;
   },
@@ -123,7 +136,7 @@ var SSResource = new Class({
   {
     var oldValue = this.get(idx);
     this.dirtyTheViews();
-    var p = this.app().update(this.resource('update'), oldValue._id, data);
+    var p = this.app().update(this.getMethod('update'), oldValue._id, data);
     p.op(function(v) { this.fireEvent('onUpdate', {resource:this, oldValue:oldValue, 'newValue':v}); return v; }.bind(this));
     return p;
   },
@@ -133,7 +146,7 @@ var SSResource = new Class({
   {
     var oldValue = this.get(idx);
     this.dirtyTheViews();
-    var p = this.app()['delete'](this.resource('delete'), oldValue._id);
+    var p = this.app()['delete'](this.getMethod('delete'), oldValue._id);
     p.op(function(v) { this.fireEvent('onDelete', {resource:this, oldValue:v}); return v; }.bind(this));
     return p;
   },
