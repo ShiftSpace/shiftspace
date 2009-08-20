@@ -203,8 +203,8 @@ var CouchDBApp = new Class({
   }
 });
 
-var app = new CouchDBApp();
-var SSApp = new ShiftServer();
+var SSApp;
+var app = SSApp = new ShiftServer();
 
 function adminJoin()
 {

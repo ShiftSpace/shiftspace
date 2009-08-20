@@ -36,9 +36,9 @@ var ApplicationServer = new Class({
   {
     this.setOptions(this.defaults(), options);
     this.setServer(this.options.server);
-    this.setCache($H());
-    this.setResources($H());
-    this.setWatchers($H());
+    this.setCache({});
+    this.setResources({});
+    this.setWatchers({});
   },
   
   
@@ -48,9 +48,36 @@ var ApplicationServer = new Class({
   },
   
   
-  cache: function()
+  cache: function(name)
   {
-    return this.__cache;
+    return (name) ? this.__cache[name] : this.__cache;
+  },
+  
+  
+  setDocument: function(cacheName, doc)
+  {
+    this.cache()[cacheName][doc._id] = doc;
+  },
+  
+  
+  updateCache: function(name, data, merge)
+  {
+    if(!this.cache()[name]) this.cache()[name] = {};
+    if($type(data) != 'array') data = $splat(data);
+    if(merge)
+    {
+      data.each(this.setDocument.partial(this, name));
+    }
+    else
+    {
+      this.cache()[name] = data;
+    }
+  },
+  
+  
+  deleteFromCache: function(name, id)
+  {
+    delete this.cache()[name][id];
   },
   
 
@@ -61,12 +88,13 @@ var ApplicationServer = new Class({
     for(var resourceName in cache)
     {
       var resource = cache[resourceName];
-      for(var document in resource)
+      for(var i = 0, len = resource.length; i < len; i++)
       {
-        merged[document] = document;
+        var doc = resource[i];
+        merged[doc._id] = doc;
       }
     }
-    return merged;    
+    return merged;
   },
 
 
@@ -214,6 +242,7 @@ var ApplicationServer = new Class({
     p.op(function(value) {
       var rsrcSpec = {resource:'shift', method:'create'};
       this.notifyWatchers(rsrcSpec);
+      if(options.local) this.updateCache(options.local, value);
       return value;
     }.bind(this));
     return p;
@@ -226,6 +255,7 @@ var ApplicationServer = new Class({
     p.op(function(value) {
       var readRsrcSpec = {resource:resource, method:'read', id:id};
       this.notifyWatchers(readRsrcSpec);
+      if(options.local) this.updateCache(options.local, value, true);
       return value;
     }.bind(this));
     return p;
@@ -238,6 +268,7 @@ var ApplicationServer = new Class({
     p.op(function(value) {
       var updateRsrcSpec = {resource:resource, method:'update', id:id};
       this.notifyWatchers(upaateRsrcSpec);
+      if(options.local) this.updateCache(options.local, value);
       return value;
     }.bind(this));
     return p;
@@ -250,6 +281,7 @@ var ApplicationServer = new Class({
     p.op(function(value) {
       var deleteRsrcSpec = {resource:resource, method:'delete', id:id};
       this.notifyWatchers(deleteRsrcSpec);
+      if(options.local) this.deleteLocal(options.local, id);
       return value;
     }.bind(this));
     return p;
@@ -274,6 +306,7 @@ var ApplicationServer = new Class({
     p.op(function(value) {
       var getRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
       this.notifyWatchers(getRsrcSpec);
+      if(options.local) this.updateCache(options.local, value);
       return value;
     }.bind(this));
     return p;
