@@ -46,7 +46,8 @@ String.implement({
 Array.implement({
   first: function() { return this[0]; },
   rest: function() { return this.slice(1, this.length); },
-  drop: function(n) { return this.slice(n, this.length); },
+  drop: function(n) { return this.slice(0, this.length-n); },
+  tail: function(n) { return this.slice(n, this.length); },
   isEmpty: function() { return this.length == 0; },
   select: function(test) { for(var i = 0; i < this.length; i++) if(test(this[i])) return this[i]; return; },
   zipmap: function(vs) 
