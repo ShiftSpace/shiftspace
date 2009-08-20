@@ -104,6 +104,12 @@ var ApplicationServer = new Class({
   },
   
   
+  documentForIndex: function(cacheName, idx)
+  {
+    return this.cache()[cacheName][idx];
+  },
+  
+  
   setResources: function(resources)
   {
     this.__resources = resources;

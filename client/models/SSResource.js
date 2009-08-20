@@ -26,7 +26,8 @@ var SSResource = new Class({
     return {
       resource: null,
       watch: null,
-      delegate: null
+      delegate: null,
+      sortFn: null
     }
   },
   
@@ -70,7 +71,31 @@ var SSResource = new Class({
   
   get: function(idx)
   {
-    return this.app().dataForResource(this.getName())[idx];
+    return this.app().documentForIndex(this.getName(), idx);
+  },
+  
+  
+  getLength: function()
+  {
+    return this.app().cache(this.getName()).length;
+  },
+  
+  
+  each: function(fn)
+  {
+    this.app().cache(this.getName()).each(fn);
+  },
+  
+  
+  map: function(fn)
+  {
+    return this.app().cache(this.getName()).map(fn);
+  },
+  
+  
+  filter: function(fn)
+  {
+    return this.app().cache(this.getName()).filter(fn);
   },
   
   
