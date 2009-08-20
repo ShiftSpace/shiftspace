@@ -246,10 +246,18 @@ var ApplicationServer = new Class({
   {
     var p = this.call({resource:resource, method:'post', data:data, json: true});
     p.op(function(value) {
-      var rsrcSpec = {resource:'shift', method:'create'};
-      this.notifyWatchers(rsrcSpec);
-      if(options.local) this.updateCache(options.local, value);
-      return value;
+      if(this.noErr(value))
+      {
+        var rsrcSpec = {resource:'shift', method:'create'};
+        this.notifyWatchers(rsrcSpec);
+        if(options.local) this.updateCache(options.local, value);
+        return value;
+      }
+      else
+      {
+        SSLog("Create failed", value, SSLogError);
+        return value;
+      }
     }.bind(this));
     return p;
   },
@@ -259,10 +267,18 @@ var ApplicationServer = new Class({
   {
     var p = this.call({resource:resource, id:id, method:'get'});
     p.op(function(value) {
-      var readRsrcSpec = {resource:resource, method:'read', id:id};
-      this.notifyWatchers(readRsrcSpec);
-      if(options.local) this.updateCache(options.local, value, true);
-      return value;
+      if(this.noErr(value))
+      {
+        var readRsrcSpec = {resource:resource, method:'read', id:id};
+        this.notifyWatchers(readRsrcSpec);
+        if(options.local) this.updateCache(options.local, value, true);
+        return value;
+      }
+      else
+      {
+        SSLog("Read failed", value, SSLogError);
+        return value;
+      }
     }.bind(this));
     return p;
   },
@@ -272,10 +288,18 @@ var ApplicationServer = new Class({
   {
     var p = this.call({resource:resource, id:id, method:'put', data:data, json: true});
     p.op(function(value) {
-      var updateRsrcSpec = {resource:resource, method:'update', id:id};
-      this.notifyWatchers(upaateRsrcSpec);
-      if(options.local) this.updateCache(options.local, value);
-      return value;
+      if(this.noErr(value))
+      {
+        var updateRsrcSpec = {resource:resource, method:'update', id:id};
+        this.notifyWatchers(upaateRsrcSpec);
+        if(options.local) this.updateCache(options.local, value);
+        return value;
+      }
+      else
+      {
+        SSLog("Update failed", value, SSLogError);
+        return value;
+      }
     }.bind(this));
     return p;
   },
@@ -285,10 +309,18 @@ var ApplicationServer = new Class({
   {
     var p = this.call({resource:resource, id:id, method:'delete'});
     p.op(function(value) {
-      var deleteRsrcSpec = {resource:resource, method:'delete', id:id};
-      this.notifyWatchers(deleteRsrcSpec);
-      if(options.local) this.deleteLocal(options.local, id);
-      return value;
+      if(this.noErr(value)) 
+      {
+        var deleteRsrcSpec = {resource:resource, method:'delete', id:id};
+        this.notifyWatchers(deleteRsrcSpec);
+        if(options.local) this.deleteLocal(options.local, id);
+        return value;
+      }
+      else
+      {
+        SSLog("Delete failed", value, SSLogError);
+        return value;
+      }
     }.bind(this));
     return p;
   },
@@ -297,10 +329,18 @@ var ApplicationServer = new Class({
   post: function(options)
   {
     var p = this.call($merge(options, {method:'post'}));
-    p.op(function(value) { 
-      var postRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
-      this.notifyWatchers(postRsrcSpec);
-      return value;
+    p.op(function(value) {
+      if(this.noErr(value))
+      {
+        var postRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
+        this.notifyWatchers(postRsrcSpec);
+        return value;
+      }
+      else
+      {
+        SSLog("Post failed", value, SSLogError);
+        return value;
+      }
     }.bind(this));
     return p;
   },
@@ -310,10 +350,18 @@ var ApplicationServer = new Class({
   {
     var p = this.call($merge(options, {method:'get'}));
     p.op(function(value) {
-      var getRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
-      this.notifyWatchers(getRsrcSpec);
-      if(options.local) this.updateCache(options.local, value);
-      return value;
+      if(this.noErr(value))
+      {
+        var getRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
+        this.notifyWatchers(getRsrcSpec);
+        if(options.local) this.updateCache(options.local, value);
+        return value;
+      }
+      else
+      {
+        SSLog("Get failed", value, SSLogError);
+        return value;
+      }
     }.bind(this));
     return p;
   },
@@ -326,10 +374,10 @@ var ApplicationServer = new Class({
   }.asPromise(),
 
 
-  noErr: function(v)
+  noErr: function(v, allowNull)
   {
-    if(v.error) return false;
-    return v;
+    if(allowNull === false && (v === undefined || v === null)) return false;
+    return (v && v.error) ? false : true;
   }.asPromise(),
   
   
