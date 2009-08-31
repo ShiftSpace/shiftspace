@@ -16,6 +16,12 @@ function SSSetResourceForName(name, resource)
   SSPostNotification("resourceSet", {name:name, resource:resource});
 }
 
+function SSDeleteResource(name)
+{
+  delete __resources[name];
+  //SSPostNotification("resourceDelete", {name:name});
+}
+
 var SSResource = new Class({
 
   Implements: [Events, Options, Delegate],
@@ -141,6 +147,7 @@ var SSResource = new Class({
   
   create: function(data, options)
   {
+    if(!this.getMethod('create')) { SSLog("Resource " + this.getName() + " does not support create.", SSLogError); return }
     this.dirtyTheViews();
     var p = this.app().create(this.getMethod('create'), data, {local:this.getName()});
     p.op(function(v) { this.fireEvent('onCreate', {resource:this, value:v}); return v; }.bind(this));
@@ -150,6 +157,7 @@ var SSResource = new Class({
   
   read: function(options)
   {
+    if(!this.getMethod('read')) { SSLog("Resource " + this.getName() + " does not support read.", SSLogError); return; }
     options = (this.delegate()) ? $merge(options, this.delegate().optionsForResource(this)) : options;
     var p = this.app().get({resource:this.getMethod('read'), data:options, local:this.getName()});
     p.op(function(v) { this.fireEvent('onRead', {resource:this, value:v}); return v; }.bind(this));
@@ -159,6 +167,7 @@ var SSResource = new Class({
   
   update: function(idx, data, options)
   {
+    if(!this.getMethod('update')) { SSLog("Resource " + this.getName() + " does not support update.", SSLogError); return; }
     var oldValue = this.get(idx);
     this.dirtyTheViews();
     var p = this.app().update(this.getMethod('update'), oldValue._id, data, {local:this.getName()});
@@ -169,6 +178,7 @@ var SSResource = new Class({
   
   'delete': function(idx, options)
   {
+    if(!this.getMethod('update')) { SSLog("Resource " + this.getName() + " does not support update.", SSLogError); return; }
     var oldValue = this.get(idx);
     this.dirtyTheViews();
     var p = this.app()['delete'](this.getMethod('delete'), oldValue._id, {local:this.getName()});
@@ -219,7 +229,12 @@ var SSResource = new Class({
   }
 });
 
-SSResource.dirty = function()
+SSResource.dirtyTheViews = function(rsrc)
 {
-  this.setDirty(true);
+  rsrc.dirtyTheViews(true);
+}
+
+SSResource.dispatcher = function()
+{
+  
 }

@@ -320,9 +320,33 @@ function createResource2() {
   });
 }
 
-/*
-dispatcher(
-  {resource:"shift", method:"create"}, function() {},
-  {resource:"shift", method:""}, function() {}
-);
-*/
+function createResource3() {
+  return new SSResource("MyShifts", {
+    resource: {read:'shifts'},
+    watches: [{
+                events:[{resource:"shift", method:"create"},
+                        {resource:"shift", method:"update"},
+                        {resource:"shift", method:"delete"},
+                        {resource:"shift", action:"comment"},
+                        {resource:"shift", action:"publish"},
+                        {resource:"shift", action:"unpublish"}],
+                handler: function() { this.dirtyTheViews(); }
+              }],
+    views: ["MyShiftsListView"]
+  });
+}
+
+// create and remote resources
+// this means app should store by name for events
+// and look them up
+function createResource4() {
+  return new SSResource("shift/foo/comments", {
+    resource: {read:"shift/foo/comments"},
+    watches: [{
+                events:[{resource:"comments", method:"create"},
+                        {resource:"comments", method:"update"},
+                        {resource:"comments", method:"delete"}],
+                handler: function() { this.dirtyTheViews(); }
+              }]
+  });
+}
