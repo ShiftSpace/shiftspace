@@ -41,6 +41,8 @@ var SSResource = new Class({
   initialize: function(name, options)
   {
     this.setOptions(this.defaults(), options);
+    this.setConditions({});
+    this.setHandlers({});
     this.setViews([]);
     this.setApp(this.options.app || SSApp);
     if(this.options.resource) this.setResource(this.options.resource);
@@ -48,6 +50,30 @@ var SSResource = new Class({
     if(this.options.delegate) this.setDelegate(this.options.delegate);
     this.setName(name);
     SSSetResourceForName(name, this);
+  },
+  
+  
+  setConditions: function(conditions)
+  {
+    this.__conditions = conditions;
+  },
+  
+  
+  conditions: function()
+  {
+    return this.__conditions;
+  },
+  
+  
+  setHandlers: function(handlers)
+  {
+    this.__handlers = handlers;
+  },
+  
+  
+  handlers: function()
+  {
+    return this.__handlers;
   },
   
   
@@ -134,8 +160,13 @@ var SSResource = new Class({
   {
     this.__watches = new Set(watches);
     this.__watches.each(function(watch) {
-      this.app().addWatcher(watch, this);
-    }, this); 
+      watch.events.each(function(event) { 
+        this.app().addWatcher(event, this);
+        var hashed = $hash(event);
+        if(watch.conditions) this.conditions()[hashed] = watch.conditions;
+        if(watch.handlers) this.handlers()[hashed] = watch.handlers;
+      }, this);
+    }, this);
   },
   
   
@@ -222,10 +253,23 @@ var SSResource = new Class({
     this.views().each($msg('setNeedsDisplay', true));
   },
   
-
-  matchSpec: function(rsrcSpec)
+  
+  passesConditions: function(rsrcSpec, doc)
   {
-    
+    var conditions = this.conditions()[$hash(rsrcSpec)];
+    for(var i = 0, len = conditions.length; i < len; i++) if(!conditions[i](doc)) return false;
+    return true;
+  },
+  
+
+  matchSpec: function(rsrcSpec, value)
+  {
+    SSLog('matchSpec!', rsrcSpec, value, SSLogForce);
+    if(!this.passesConditions(doc)) return;
+    var handlers = this.handlers()[rsrcSpec];
+    handlers.each(function(fn) {
+      fn.bind(this)(value);
+    }, this);
   }
 });
 

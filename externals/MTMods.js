@@ -45,7 +45,7 @@ String.implement({
 
 Array.implement({
   first: function() { return this[0]; },
-  rest: function() { return this.slice(1, this.length); },
+  rest: function(n) { return this.slice(n || 1, this.length); },
   drop: function(n) { return this.slice(0, this.length-n); },
   tail: function(n) { return this.slice(n, this.length); },
   head: function(n) { return this.slice(0, n) },
@@ -212,8 +212,9 @@ Class.extend({
 
 function $msg(methodName) 
 {
-  var rest = $A(arguments).drop(1);
+  var rest = $A(arguments).rest();
   return function(obj) {
+    SSLog("$msg", rest, SSLogForce);
     return obj[methodName].apply(obj, rest);
   };
 }

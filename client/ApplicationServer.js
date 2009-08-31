@@ -176,7 +176,7 @@ var ApplicationServer = new Class({
   
   watchersFor: function(rsrcSpec)
   {
-    var hashed = $hash(rsrcSpec), watchers = this.watchers()[hashed];
+    var watchers = this.watchers()[rsrcSpec];
     return watchers || [];
   },
   
@@ -189,31 +189,31 @@ var ApplicationServer = new Class({
   },
   
   
-  notifyWatchers: function(rsrcSpec)
+  notifyWatchers: function(rsrcSpec, value)
   {
-    var resourceSpec = $H(rsrcSpec).extract(['resource', 'method'], true);
+    var resourceSpec = $hash($H(rsrcSpec).extract(['resource', 'method'], true));
     var watchers = this.watchersFor(resourceSpec);
-    watchers.each($msg('matchSpec'), resourceSpec);;
+    watchers.each($msg('matchSpec', resourceSpec, value));
     
     if(rsrcSpec.id)
     {
-      var idSpec = $H(rsrcSpec).extract(['resource', 'method', 'id'], true);
+      var idSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'id'], true));
       watchers = this.watchersFor(idSpec);
-      watchers.each($msg('matchSpec'), idSpec);
+      watchers.each($msg('matchSpec', idSpec, value));
     }
     
     if(rsrcSpec.action)
     {
-      var actionSpec = $H(rsrcSpec).extract(['resource', 'method', 'action'], true);
-      wacthers = this.watchersFor(actionSpec);
-      watchers.each($msg('matchSpec'), actionSpec);
+      var actionSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'action'], true));
+      watchers = this.watchersFor(actionSpec);
+      watchers.each($msg('matchSpec', actionSpec, value));
     }
     
     if(rsrcSpec.action && rsrcSpec.id)
     {
-      var actionIdSpec = $H(rsrcSpec).extract(['resource', 'method', 'action', 'id'], true);
-      wacthers = this.watchersFor(actionSpec);
-      watchers.each($msg('matchSpec'), actionIdSpec);
+      var actionIdSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'action', 'id'], true));
+      watchers = this.watchersFor(actionIdSpec);
+      watchers.each($msg('matchSpec', actionIdSpec, value));
     }
   },
   
@@ -249,7 +249,7 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var rsrcSpec = {resource:'shift', method:'create'};
-        this.notifyWatchers(rsrcSpec);
+        this.notifyWatchers(rsrcSpec, value);
         if(options.local) this.updateCache(options.local, value);
         return value;
       }
@@ -270,7 +270,7 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var readRsrcSpec = {resource:resource, method:'read', id:id};
-        this.notifyWatchers(readRsrcSpec);
+        this.notifyWatchers(readRsrcSpec, value);
         if(options.local) this.updateCache(options.local, value, true);
         return value;
       }
@@ -291,7 +291,7 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var updateRsrcSpec = {resource:resource, method:'update', id:id};
-        this.notifyWatchers(upaateRsrcSpec);
+        this.notifyWatchers(upaateRsrcSpec, value);
         if(options.local) this.updateCache(options.local, value);
         return value;
       }
@@ -312,7 +312,7 @@ var ApplicationServer = new Class({
       if(this.noErr(value)) 
       {
         var deleteRsrcSpec = {resource:resource, method:'delete', id:id};
-        this.notifyWatchers(deleteRsrcSpec);
+        this.notifyWatchers(deleteRsrcSpec, value);
         if(options.local) this.deleteLocal(options.local, id);
         return value;
       }
@@ -333,7 +333,7 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var postRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
-        this.notifyWatchers(postRsrcSpec);
+        this.notifyWatchers(postRsrcSpec, value);
         return value;
       }
       else
@@ -353,7 +353,7 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var getRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
-        this.notifyWatchers(getRsrcSpec);
+        this.notifyWatchers(getRsrcSpec, value);
         if(options.local) this.updateCache(options.local, value);
         return value;
       }

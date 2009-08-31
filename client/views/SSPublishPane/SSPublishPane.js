@@ -195,6 +195,12 @@ var SSPublishPane = new Class({
     {
       this.element.getElement("#SSPublishPaneStatus label").addClass('SSDisplayNone');
     }
+  },
+  
+  
+  optionsForResource: function(resource)
+  {
+    return {};
   }
 
 });

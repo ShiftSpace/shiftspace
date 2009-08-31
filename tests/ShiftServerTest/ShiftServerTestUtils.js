@@ -297,12 +297,15 @@ var resourceDelegate = {
 function createResource() {
   return new SSResource("AllShifts", {
     resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
-    watches: [{resource:"shift", method:"create"},
-              {resource:"shift", method:"update"},
-              {resource:"shift", method:"delete"},
-              {resource:"shift", action:"comment"},
-              {resource:"shift", action:"publish"},
-              {resource:"shift", action:"unpublish"}],
+    watches: [{
+                events: [{resource:"shift", method:"create"},
+                         {resource:"shift", method:"update"},
+                         {resource:"shift", method:"delete"},
+                         {resource:"shift", action:"comment"},
+                         {resource:"shift", action:"publish"},
+                         {resource:"shift", action:"unpublish"}],
+                handlers: [function(event) { console.log("something happened!", event) ;}]
+              }],
     delegate: resourceDelegate
   });
 }
@@ -330,7 +333,7 @@ function createResource3() {
                         {resource:"shift", action:"comment"},
                         {resource:"shift", action:"publish"},
                         {resource:"shift", action:"unpublish"}],
-                handler: function() { this.dirtyTheViews(); }
+                handlers: function() { this.dirtyTheViews(); }
               }],
     views: ["MyShiftsListView"]
   });
