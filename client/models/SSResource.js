@@ -256,8 +256,9 @@ var SSResource = new Class({
   
   passesConditions: function(rsrcSpec, doc)
   {
-    var conditions = this.conditions()[$hash(rsrcSpec)];
-    for(var i = 0, len = conditions.length; i < len; i++) if(!conditions[i](doc)) return false;
+    var conditions = this.conditions()[$hash(rsrcSpec)], len = (conditions) ? conditions.length : 0;
+    if(!conditions || len == 0) return true;
+    for(var i = 0, len; i < len; i++) if(!conditions[i](doc)) return false;
     return true;
   },
   
@@ -265,7 +266,8 @@ var SSResource = new Class({
   matchSpec: function(rsrcSpec, value)
   {
     SSLog('matchSpec!', rsrcSpec, value, SSLogForce);
-    if(!this.passesConditions(doc)) return;
+    if(!this.passesConditions(value)) return;
+    SSLog('conditions passed!', SSLogForce);
     var handlers = this.handlers()[rsrcSpec];
     handlers.each(function(fn) {
       fn.bind(this)(value);
