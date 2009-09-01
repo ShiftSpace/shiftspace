@@ -891,6 +891,11 @@ var SSListView = new Class({
     this.fireEvent('onRemove', index);
   },
   
+  removeMultiple: function(indices)
+  {
+    
+  },
+  
   /*
     Function: editObject
       Accepts a cell element and allows that cell to be edited.
