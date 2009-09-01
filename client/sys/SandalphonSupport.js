@@ -88,7 +88,7 @@ function SSIsController(object)
   {
     return false;
   }
-  else if(object._genId)
+  else if(object.__genId__)
   {
     return true;
   }

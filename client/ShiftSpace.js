@@ -247,16 +247,17 @@ var ShiftSpace = new (function() {
       return false;
     };
 
-
-    // In sandbox mode, expose something for easier debugging.
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
       unsafeWindow.ShiftSpace = this;
       this.sys = __sys__;
-      this.SSTag = SSTag;
-      this.spaceForName = SSSpaceForName;
-      this.app = SSApp;
+
+      // export symbols directly to the window for debugging purposes - David
+      window.SSSpaceForName = SSSpaceForName;
+      window.SSTag = SSTag;
+      window.SSApp = SSApp;
       window.$msg = $msg;
+      window.SSControllerForNode = SSControllerForNode;
     }
 
     return this;

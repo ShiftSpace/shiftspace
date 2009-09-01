@@ -27,7 +27,7 @@ var SSView = new Class({
       Generate an object id.  Used for debugging.  The instance is indentified by this in the global
       ShiftSpaceObjects hash.
   */
-  _genId: function()
+  __genId__: function()
   {
     return (this.name+(Math.round(Math.random()*1000000+(new Date()).getMilliseconds())));
   },
@@ -51,7 +51,7 @@ var SSView = new Class({
     if(el) el.removeProperty('options');
 
     // generate an id
-    this.__id = this._genId();
+    this.__id = this.__genId__();
     this.setIsAwake(false);
     
     // add to global hash
@@ -77,16 +77,6 @@ var SSView = new Class({
         ShiftSpaceNameTable.set(this.element.getProperty('id'), this);
       }
     }
-
-    // We need to build this class via code - NOT IMPLEMENTED - David
-    /*
-    if(!this.__prebuilt__)
-    {
-      this.build();
-    }
-    */
-
-    this.__subviews__ = [];
 
     // Call setup or setupTest allowing classes to have two modes
     // For example, SSConsole lives in a IFrame under ShiftSpace
@@ -485,9 +475,36 @@ var SSView = new Class({
   },
   
   
+  superView: function()
+  {
+    var el = this.element.getParent('*[uiclass]'), superView;
+    if(el)
+    {
+      var superView = SSControllerForNode(el);
+    }
+    else
+    {
+      var ctxt = this.getContext();
+      if(ctxt && ctxt.__sscontextowner)
+      {
+        superView = ctxt.__sscontextowner;
+      }
+    }
+    return superView;
+  },
+  
+  
+  /*
+    Function: subViews
+      Returns all controller nodes which have this view as the first parent view.
+    Returns:
+      An array of SSView instances.
+  */
   subViews: function()
   {
-    return this.element.getElements('*[uiclass]').map(SSControllerForNode);
+    return this.getElements('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
+      return (controller.superView() == this);
+    }, this);
   },
   
   

@@ -339,6 +339,10 @@ var SSConsole = new Class({
       context = new Window(context);
       doc = new Document(context.document);
     }
+
+    context.__ssname = this.element.getProperty('id');
+    context.__sscontextowner = this;
+
     this.context = context;
     this.doc = doc;
     
@@ -650,7 +654,9 @@ var SSConsole = new Class({
   
   subViews: function()
   {
-    return this.context.$$('*[uiclass]').map(SSControllerForNode);
+    return this.context.$$('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
+      return (controller.superView() == this);
+    }, this);
   },
   
   
