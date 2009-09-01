@@ -405,13 +405,7 @@ var SSView = new Class({
 
   isVisible: function()
   {
-    var curElement = this.element;
-    while(curElement)
-    {
-      if(curElement.getStyle('display') == 'none') return false;
-      curElement = curElement.getParent();
-    }
-    return true;
+    return ['block', 'inline'].contains(this.element.getStyle('display'));
   },
   
   
@@ -493,6 +487,12 @@ var SSView = new Class({
   subViews: function()
   {
     return this.element.getElements('*[uiclass]').map(SSControllerForNode);
+  },
+  
+  
+  visibleSubViews: function()
+  {
+    return this.subViews().filter($msg('isVisible'));
   },
   
   
