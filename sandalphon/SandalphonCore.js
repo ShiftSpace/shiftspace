@@ -55,17 +55,11 @@ var SandalphonClass = new Class({
   convertToFragment: function(markup, ctxt)
   {
     var context = ctxt || window;
-    
-    // generate the fragment in the context
     var fragment = context.$(context.document.createElement('div'));
     fragment.set('html', markup);
-    
     // TODO: generalize to return markup that doesn't have a root node
     var markupFrag = $(fragment.getFirst().dispose());
-
-    // destroy the temporary fragment
     fragment.destroy();
-    
     return markupFrag;
   },
   
@@ -207,14 +201,9 @@ var SandalphonClass = new Class({
   */
   activate: function(ctxt)
   {
-    //SSLog('activate', SSLogForce);
-    //SSLog(ctxt, SSLogForce);
     var context = ctxt || window;
-    // First generate the outlet bindings
     this.generateOutletBindings(context);
-    // First instantiate all controllers
     this.instantiateControllers(context);
-    // Initialize all outlets
     this.bindOutlets(context);
     this.awakeObjects(context);
     if(ctxt.__sscontextowner)
@@ -248,23 +237,14 @@ var SandalphonClass = new Class({
   */
   instantiateControllers: function(ctxt)
   {
-    SSLog('instantiateControllers', SSLogSandalphon);
     var context = ctxt || window;
-    
     var views = this.contextQuery(context, '*[uiclass]');
-    
-    SSLog(views, SSLogSandalphon);  
-
-    // instantiate all objects
     views.each(function(aView) {
       var theClass = aView.getProperty('uiclass');
-      SSLog('instantiating ' + theClass, SSLogSandalphon);
       new ShiftSpaceUI[theClass](aView, {
         context: context
       });
-      SSLog('instantation complete');
     });
-    
     views.each(SSNotifyInstantiationListeners);
   },
   
@@ -303,10 +283,8 @@ var SandalphonClass = new Class({
     
     outlets.each(function(anOutlet) {
       var outletTarget, sourceName;
-      
       // grab the outlet parent id
       var outlet = anOutlet.getProperty('outlet').trim();
-      
       // if not a JSON value it's just the id
       if(outlet[0] != '{')
       {
@@ -321,14 +299,12 @@ var SandalphonClass = new Class({
         outletTarget = outletBinding.target;
         sourceName = outletBinding.name;
       }
-      
       this.outletBindings.push({
         sourceName: sourceName,
         source: anOutlet,
         targetName: outletTarget,
         context: context
       });
-      
     }.bind(this));
   },
   
@@ -340,23 +316,15 @@ var SandalphonClass = new Class({
   {
     // bind each outlet
     this.outletBindings.each(function(binding) {
-      
       // get the real window context
       var context = ($type(binding.context) == 'window' && binding.context) ||
                     ($type(binding.context) == 'element' && binding.context.getWindow()),
           sourceName = binding.sourceName,
           source = binding.source,
           targetName = binding.targetName;
-      
       // first check frame then check parent window    
       var target = context.$(targetName) || (context != window && $(targetName));
-        
-      if(!target)
-      {
-        // check for parent with matching css selector
-        target = source.getParent(targetName);
-      } 
-      
+      if(!target) target = source.getParent(targetName);
       if(!target)
       {
         // throw an exception
@@ -365,17 +333,10 @@ var SandalphonClass = new Class({
         // bail
         return;
       }
-      
       // check for a controller on the source
-      if(SSControllerForNode(source))
-      {
-        source = SSControllerForNode(source);
-      }
-      
+      if(SSControllerForNode(source)) source = SSControllerForNode(source);
       SSControllerForNode(target).addOutletWithName(sourceName, source);
     }.bind(this));
-    
-    SSLog(this.outletBindings, SSLogSandalphon);
   },
   
   /*
@@ -421,42 +382,7 @@ var SandalphonClass = new Class({
     ShiftSpaceObjects.each(function(object, objectId) {
       SSFlushNotificationQueueForObject(object);
     });
-  },
-  
-  
-  /*
-    Function: analyze
-      Determine if all the required classes for the interface are available.
-    
-    Parameters:
-      html - the interface markup as a string.
-  */
-  analyze: function(html)
-  {
-    this.fragment().set('html', html);
-    
-    var allNodes = this.fragment().getElements('*[uiclass]');
-    
-    var classes = allNodes.map(function(x){return x.getProperty('uiclass')});
-    
-    // First verify that we have a real path for each class
-    var missingClasses = false;
-    classes.each(function(x) {
-      if(!missingClasses) missingClasses = (ShiftSpaceClassPaths[x] == null && ShiftSpaceUIClassPaths[x] == null && ShiftSpaceUserClassPaths[x] == null);
-    }.bind(this));
-    
-    if(missingClasses) console.error('Error missing uiclasses.');
-    
-    if(missingClasses)
-    {
-      return false;
-    }
-    else
-    {
-      return true;
-    }
   }
-  
 });
 var Sandalphon = new SandalphonClass();
 

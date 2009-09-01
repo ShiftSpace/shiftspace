@@ -77,7 +77,7 @@ var SSConsole = new Class({
   
   show: function()
   {
-    this.element.removeClass('SSDisplayNone');
+    this.parent();
     SSPostNotification('onConsoleShow');
   },
   
@@ -655,7 +655,7 @@ var SSConsole = new Class({
   subViews: function()
   {
     return this.context.$$('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
-      return (controller.superView() == this);
+      return (controller.isAwake() && controller.superView() == this);
     }, this);
   },
   
