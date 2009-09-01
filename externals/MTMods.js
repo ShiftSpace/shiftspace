@@ -133,8 +133,12 @@ Function.implement({
   {
     var fns = $A(arguments), self = this;
     return function() {
-      var args = $A(arguments), result = self.apply(this, args), fn;
-      while(fn = fns.shift()) result = fn.apply(null, [result]);
+      var temp = $A(fns);
+      var args = $A(arguments), result = (self && $type(self) == 'function') ? self.apply(this, args) : null, fn;
+      while(fn = temp.shift())
+      {
+        result = fn.apply(null, (result && [result]) || args);
+      }
       return result;
     }
   },
