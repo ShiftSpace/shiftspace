@@ -103,7 +103,7 @@ var SSResource = new Class({
   
   setTransforms: function(transforms)
   {
-    this.__transformFn = transforms;
+    this.__transformFn = Function.comp.apply(null, transforms);
   },
   
   
