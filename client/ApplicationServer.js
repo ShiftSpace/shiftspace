@@ -284,7 +284,7 @@ var ApplicationServer = new Class({
       {
         var rsrcSpec = {resource:'shift', method:'create'};
         this.notifyWatchers(rsrcSpec, value);
-        if(options.local) this.updateCache(options.local, value);
+        if(options && options.local) this.updateCache(options.local, value);
         return value;
       }
       else
@@ -305,7 +305,7 @@ var ApplicationServer = new Class({
       {
         var readRsrcSpec = {resource:resource, method:'read', id:id};
         this.notifyWatchers(readRsrcSpec, value);
-        if(options.local) this.updateCache(options.local, value, true);
+        if(options && options.local) this.updateCache(options.local, value, true);
         return value;
       }
       else
@@ -326,7 +326,7 @@ var ApplicationServer = new Class({
       {
         var updateRsrcSpec = {resource:resource, method:'update', id:id};
         this.notifyWatchers(upaateRsrcSpec, value);
-        if(options.local) this.updateCache(options.local, value);
+        if(options && options.local) this.updateCache(options.local, value);
         return value;
       }
       else
@@ -347,7 +347,7 @@ var ApplicationServer = new Class({
       {
         var deleteRsrcSpec = {resource:resource, method:'delete', id:id};
         this.notifyWatchers(deleteRsrcSpec, value);
-        if(options.local) this.deleteLocal(options.local, id);
+        if(options && options.local) this.deleteLocal(options.local, id);
         return value;
       }
       else
@@ -360,14 +360,15 @@ var ApplicationServer = new Class({
   },
   
   
-  post: function(options)
+  post: function(postOptions, options)
   {
-    var p = this.call($merge(options, {method:'post'}));
+    var p = this.call($merge(postOptions, {method:'post'}));
     p.op(function(value) {
       if(this.noErr(value))
       {
-        var postRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
+        var postRsrcSpec = {resource:postOptions.resource, action:postOptions.action, id:postOptions.id};
         this.notifyWatchers(postRsrcSpec, value);
+        if(options && options.local) this.updateCache(options.local, value);
         return value;
       }
       else
@@ -380,15 +381,15 @@ var ApplicationServer = new Class({
   },
   
   
-  get: function(options)
+  get: function(getOptions, options)
   {
-    var p = this.call($merge(options, {method:'get'}));
+    var p = this.call($merge(getOptions, {method:'get'}));
     p.op(function(value) {
       if(this.noErr(value))
       {
-        var getRsrcSpec = {resource:options.resource, action:options.action, id:options.id};
+        var getRsrcSpec = {resource:getOptions.resource, action:getOptions.action, id:getOptions.id};
         this.notifyWatchers(getRsrcSpec, value);
-        if(options.local) this.updateCache(options.local, value);
+        if(options && options.local) this.updateCache(options.local, value);
         return value;
       }
       else

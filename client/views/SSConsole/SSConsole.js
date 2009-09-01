@@ -61,7 +61,10 @@ var SSConsole = new Class({
                            {resource:"shift", method:"delete"},
                            {resource:"shift", action:"comment"},
                            {resource:"shift", action:"publish"},
-                           {resource:"shift", action:"unpublish"}]
+                           {resource:"shift", action:"unpublish"}],
+                  handlers: [
+                    SSResource.dirtyTheViews
+                  ]
                 }],
       delegate: this.PublishPane,
       views: [this.AllShiftsListView]
@@ -72,14 +75,17 @@ var SSConsole = new Class({
   initUserResources: function()
   {
     this.myShifts = new SSResource("MyShifts", {
-      resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
+      resource: {read:'user/'+User.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
       watches: [{
                   events: [{resource:"shift", method:"create"},
                            {resource:"shift", method:"update"},
                            {resource:"shift", method:"delete"},
                            {resource:"shift", action:"comment"},
                            {resource:"shift", action:"publish"},
-                           {resource:"shift", action:"unpublish"}]
+                           {resource:"shift", action:"unpublish"}],
+                  conditions: [
+                    function(shift) { return shift.userName == User.getUserName(); }
+                  ]
                 }],
       delegate: this.PublishPane,
       views: [this.AllShiftsListView]

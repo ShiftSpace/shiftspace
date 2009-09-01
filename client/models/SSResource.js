@@ -190,19 +190,23 @@ var SSResource = new Class({
   
   create: function(data, options)
   {
-    if(!this.getMethod('create')) { SSLog("Resource " + this.getName() + " does not support create.", SSLogError); return }
-    this.dirtyTheViews();
+    if(!this.getMethod('create')) { SSLog("Resource " + this.getName() + " does not support create.", SSLogError); return; };
+    SSLog('SSResource create!', SSLogForce);
     var p = this.app().create(this.getMethod('create'), data, {local:this.getName()});
-    p.op(function(v) { this.fireEvent('onCreate', {resource:this, value:v}); return v; }.bind(this));
+    p.op(function(v) { 
+      this.dirtyTheViews();
+      this.fireEvent('onCreate', {resource:this, value:v}); 
+      return v; 
+    }.bind(this));
     return p;
   },
   
   
   read: function(options)
   {
-    if(!this.getMethod('read')) { SSLog("Resource " + this.getName() + " does not support read.", SSLogError); return; }
+    if(!this.getMethod('read')) { SSLog("Resource " + this.getName() + " does not support read.", SSLogError); return; };
     options = (this.delegate()) ? $merge(options, this.delegate().optionsForResource(this)) : options;
-    var p = this.app().get({resource:this.getMethod('read'), data:options, local:this.getName()});
+    var p = this.app().get({resource:this.getMethod('read'), data:options}, {local:this.getName()});
     p.op(function(v) { this.fireEvent('onRead', {resource:this, value:v}); return v; }.bind(this));
     return p;
   },
@@ -210,22 +214,28 @@ var SSResource = new Class({
   
   update: function(idx, data, options)
   {
-    if(!this.getMethod('update')) { SSLog("Resource " + this.getName() + " does not support update.", SSLogError); return; }
+    if(!this.getMethod('update')) { SSLog("Resource " + this.getName() + " does not support update.", SSLogError); return; };
     var oldValue = this.get(idx);
-    this.dirtyTheViews();
     var p = this.app().update(this.getMethod('update'), oldValue._id, data, {local:this.getName()});
-    p.op(function(v) { this.fireEvent('onUpdate', {resource:this, oldValue:oldValue, 'newValue':v}); return v; }.bind(this));
+    p.op(function(v) {
+      this.dirtyTheViews();
+      this.fireEvent('onUpdate', {resource:this, oldValue:oldValue, 'newValue':v}); 
+      return v; 
+    }.bind(this));
     return p;
   },
   
   
   'delete': function(idx, options)
   {
-    if(!this.getMethod('update')) { SSLog("Resource " + this.getName() + " does not support update.", SSLogError); return; }
+    if(!this.getMethod('update')) { SSLog("Resource " + this.getName() + " does not support update.", SSLogError); return; };
     var oldValue = this.get(idx);
-    this.dirtyTheViews();
     var p = this.app()['delete'](this.getMethod('delete'), oldValue._id, {local:this.getName()});
-    p.op(function(v) { this.fireEvent('onDelete', {resource:this, oldValue:v}); return v; }.bind(this));
+    p.op(function(v) {
+      this.dirtyTheViews();
+      this.fireEvent('onDelete', {resource:this, oldValue:v});
+      return v; 
+    }.bind(this));
     return p;
   },
   
@@ -271,23 +281,26 @@ var SSResource = new Class({
   
   dirtyTheViews: function()
   {
-    this.views().each($msg('setNeedsDisplay', true));
+    this.views().each(function(view) {
+      view.setNeedsDisplay(true);
+      view.__refresh__()
+    }, this);
   },
   
   
-  passesConditions: function(rsrcSpec, value)
+  passesConditions: function(rsrcSpecHashed, value)
   {
-    var conditions = this.conditions()[rsrcSpec], len = (conditions) ? conditions.length : 0;
+    var conditions = this.conditions()[rsrcSpecHashed], len = (conditions) ? conditions.length : 0;
     if(!conditions || len == 0) return true;
     for(var i = 0, len; i < len; i++) if(!conditions[i](value)) return false;
     return true;
   },
   
 
-  matchSpec: function(rsrcSpec, value)
+  matchSpec: function(rsrcSpecHashed, value)
   {
-    if(!this.passesConditions(rsrcSpec, value)) return;
-    var handlers = this.handlers()[rsrcSpec];
+    if(!this.passesConditions(rsrcSpecHashed, value)) return;
+    var handlers = this.handlers()[rsrcSpecHashed];
     handlers.each(function(fn) {
       fn.bind(this)(value);
     }, this);
@@ -299,9 +312,9 @@ SSResource.protocol = {
   "hasView": "function"
 };
 
-SSResource.dirtyTheViews = function(rsrc)
+SSResource.dirtyTheViews = function(value)
 {
-  rsrc.dirtyTheViews(true);
+  this.dirtyTheViews(true);
 }
 
 SSResource.dispatcher = function()
