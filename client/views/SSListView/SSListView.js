@@ -84,7 +84,7 @@ var SSListView = new Class({
   {
     if(!$implements(resource, SSResource.protocol))
     {
-      SSLog("Attempt to set object that does not implement SSResource.protocol on SSListView", SSLogError);
+      SSLog("Argument to SSListView.__setResource__ does not implement SSResource.protocol", SSLogError);
       throw new Error();
     }
     if(!resource.hasView(this)) resource.addView(this);
