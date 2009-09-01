@@ -38,8 +38,7 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     
-    SSAddObserver(this, 'onShiftSave', this.refreshListViews.bind(this));
-    SSAddObserver(this, 'onShiftDelete', this.refreshListViews.bind(this));
+    //SSAddObserver(this, 'onShiftDelete', this.refreshListViews.bind(this));
     SSAddObserver(this, 'onShiftHide', this.deselectShift.bind(this));
     
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));

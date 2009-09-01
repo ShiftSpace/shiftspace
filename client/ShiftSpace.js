@@ -256,6 +256,7 @@ var ShiftSpace = new (function() {
       window.SSSpaceForName = SSSpaceForName;
       window.SSTag = SSTag;
       window.SSApp = SSApp;
+      window.SSApplication = SSApplication;
       window.$msg = $msg;
       window.SSControllerForNode = SSControllerForNode;
     }

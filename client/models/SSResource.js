@@ -33,7 +33,8 @@ var SSResource = new Class({
       resource: null,
       watch: null,
       delegate: null,
-      sortFn: null
+      sort: null,
+      transform: null
     }
   },
   
@@ -168,6 +169,12 @@ var SSResource = new Class({
   },
   
   
+  data: function()
+  {
+    var raw = SSApplication().cache(this.getName());
+  },
+  
+  
   setWatches: function(watches)
   {
     this.__watches = new Set(watches);
@@ -193,7 +200,6 @@ var SSResource = new Class({
   create: function(data, options)
   {
     if(!this.getMethod('create')) { SSLog("Resource " + this.getName() + " does not support create.", SSLogError); return; };
-    SSLog('SSResource create!', SSLogForce);
     var p = this.app().create(this.getMethod('create'), data, {local:this.getName()});
     p.op(function(v) { 
       this.dirtyTheViews();
@@ -316,10 +322,5 @@ SSResource.protocol = {
 
 SSResource.dirtyTheViews = function(value)
 {
-  this.dirtyTheViews(true);
-}
-
-SSResource.dispatcher = function()
-{
-  
+  this.dirtyTheViews();
 }

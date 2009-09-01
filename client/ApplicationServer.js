@@ -48,30 +48,36 @@ var ApplicationServer = new Class({
   },
   
   
-  cache: function(name)
+  cache: function(name, asArray)
   {
-    return (name) ? this.__cache[name] : this.__cache;
+    var result = (name) ? this.__cache[name] : this.__cache;
+    if(asArray)
+    {
+      result = $H(result).getValues();
+    }
+    return result;
   },
   
   
   setDocument: function(cacheName, doc)
   {
-    this.cache()[cacheName][doc._id] = doc;
+    if(doc && doc._id)
+    {
+      SSLog('setDocument', cacheName, doc, SSLogForce);
+      var cache = this.cache();
+      if(!cache[cacheName]) cache[cacheName] = {};
+      cache[cacheName][doc._id] = doc;
+    }
   },
   
   
   updateCache: function(name, data, merge)
   {
-    if(!this.cache()[name]) this.cache()[name] = {};
+    SSLog('updateCache', name, data, merge, SSLogForce);
+    var cache = this.cache();
+    if(!cache[name] || merge === false) cache[name] = {};
     if($type(data) != 'array') data = $splat(data);
-    if(merge)
-    {
-      data.each(this.setDocument.partial(this, name));
-    }
-    else
-    {
-      this.cache()[name] = data;
-    }
+    data.each(this.setDocument.partial(this, name));
   },
   
   

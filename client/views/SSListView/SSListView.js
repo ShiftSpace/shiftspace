@@ -421,7 +421,7 @@ var SSListView = new Class({
   {
     if(this.resource())
     {
-      return SSApplication().cache(this.resource().getName());
+      return SSApplication().cache(this.resource().getName(), true);
     }
     else
     {
@@ -1059,6 +1059,7 @@ var SSListView = new Class({
   */
   refresh: function(force)
   {
+    SSLog(this.getName(), 'refresh', SSLogForce);
     this.parent();
     var hasCell = this.hasCell()
     if(!hasCell) return;
@@ -1090,6 +1091,18 @@ var SSListView = new Class({
     return newCell;
   },
   
+  
+  setResourceIsRead: function(val)
+  {
+    this.__resourceIsRead = val;
+  },
+  
+  
+  resourceIsRead: function()
+  {
+    return this.__resourceIsRead;
+  },
+  
   /*
     Function: reloadData (private)
       Called by refresh(). Checks the length of the current collection data, and clears the currently loaded collection data.  If the collection array contains data, it resizes the elements and applies set filters. If the collection is not pending, the content is displayed.
@@ -1099,14 +1112,27 @@ var SSListView = new Class({
   */
   reloadData: function()
   {
-    var resource = this.resource();
-    this.__reloadData__(resource && resource.read());
+    SSLog(this.getName(), 'reloadData', SSLogForce);
+    var resource = this.resource(), controlp;
+    if(resource && !this.resourceIsRead())
+    {
+      SSLog('not read, reading!', SSLogForce);
+      this.setResourceIsRead(true);
+      controlp = resource.read();
+    }
+    else
+    {
+      SSLog('already read!', SSLogForce);
+    }
+    this.__reloadData__(controlp);
   },
   
   
   __reloadData__: function(p)
   {
+    SSLog('__reloadData__', SSLogForce);
     var len = this.data().length;
+    SSLog(this.data(), SSLogForce);
     this.element.empty();
     if(len > 0 && this.cell())
     {
