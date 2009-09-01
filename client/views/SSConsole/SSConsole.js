@@ -45,6 +45,9 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
     
     SSAddObserver(this, 'userDidClickCheckboxForRowInTableView', this.userDidClickCheckboxForRowInTableView.bind(this));
+    
+    // since we're created programmatically we add entry manually for debugging - David
+    ShiftSpaceNameTable.SSConsole = this;
   },
   
   

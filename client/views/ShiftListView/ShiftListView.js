@@ -28,6 +28,13 @@ var ShiftListView = new Class({
   },
   
   
+  show: function()
+  {
+    this.parent();
+    SSLog('ShiftListView show!', SSLogForce);
+  },
+  
+  
   onRowSelect: function(idx)
   {
     this.parent(idx);

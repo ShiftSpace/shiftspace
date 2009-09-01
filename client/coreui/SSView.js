@@ -57,11 +57,9 @@ var SSView = new Class({
     // add to global hash
     if(ShiftSpaceObjects) ShiftSpaceObjects.set(this.__id, this);
     
-    // check if we are prebuilt
-    //this.__prebuilt__ = (el && true) || false; // NOT IMPLEMENTED - David
-    this.__ssviewcontrollers__ = [];
+    this.__ssviewcontrollers = [];
     this.__delegate = null;
-    this.__outlets__ = new Hash();
+    this.__outlets = new Hash();
     
     this.element = (el && $(el)) || (this.options.generateElement && new Element('div')) || null;
     
@@ -123,6 +121,7 @@ var SSView = new Class({
   */
   __awake__: function(context)
   {
+    /*
     var superview = this.getSuperView(context);
     if(superview) 
     {
@@ -131,6 +130,7 @@ var SSView = new Class({
         this.refreshAndFire();
       }.bind(this));
     }
+    */
   },
   
   
@@ -191,13 +191,13 @@ var SSView = new Class({
 
   setOutlets: function(newOutlets)
   {
-    this.__outlets__ = newOutlets;
+    this.__outlets = newOutlets;
   },
 
 
   outlets: function()
   {
-    return this.__outlets__;
+    return this.__outlets;
   },
 
 
@@ -355,7 +355,7 @@ var SSView = new Class({
   addControllerForNode: function(node, controllerClass)
   {
     // instantiate and store
-    this.__ssviewcontrollers__.push(new controllerClass(node));
+    this.__ssviewcontrollers.push(new controllerClass(node));
   },
 
   // will probably be refactored
@@ -368,10 +368,10 @@ var SSView = new Class({
       // clear out the storage
       SSSetControllerForNode(null, node);
 
-      if(this.__ssviewcontrollers__.contains(controller))
+      if(this.__ssviewcontrollers.contains(controller))
       {
         // remove from internal array
-        this.__ssviewcontrollers__.remove(controller);
+        this.__ssviewcontrollers.remove(controller);
       }
     }
   },
@@ -385,7 +385,7 @@ var SSView = new Class({
     this.fireEvent('willShow', this);
     this.element.addClass('SSActive');
     this.element.removeClass('SSDisplayNone');
-    if(this.isVisible() && this.needsDisplay()) this.refreshAndFire();
+    //if(this.isVisible() && this.needsDisplay()) this.refreshAndFire();
     this.fireEvent('show', this);
   },
   
@@ -443,12 +443,13 @@ var SSView = new Class({
     
   },
   
-  
+  /*
   refreshAndFire: function()
   {
     this.refresh();
     this.fireEvent('onRefresh');
   },
+  */
 
   /*
     Function: build (abstract)
