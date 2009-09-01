@@ -40,14 +40,26 @@ var SSResource = new Class({
   
   initialize: function(name, options)
   {
+    var delegate, views;
+    // NOTE: delegate is an object and we might have circular references so we deal with it first - David
+    if(options.delegate)
+    {
+      delegate = options.delegate;
+      delete options.delegate;
+    }
+    if(options.views)
+    {
+      views = options.views;
+      delete options.views;
+    }
     this.setOptions(this.defaults(), options);
     this.setConditions({});
     this.setHandlers({});
-    this.setViews([]);
-    this.setApp(this.options.app || SSApp);
+    this.setViews(views || []);
+    this.setApp(this.options.app || SSApplication());
     if(this.options.resource) this.setResource(this.options.resource);
     if(this.options.watches) this.setWatches(this.options.watches);
-    if(this.options.delegate) this.setDelegate(this.options.delegate);
+    if(delegate) this.setDelegate(delegate);
     this.setName(name);
     SSSetResourceForName(name, this);
   },
@@ -221,6 +233,9 @@ var SSResource = new Class({
   setViews: function(views)
   {
     this.__views = views;
+    views.each(function(view) {
+      view.setResource(this);
+    }, this);
   },
   
   
@@ -233,6 +248,12 @@ var SSResource = new Class({
   addView: function(view)
   {
     this.views().push(view);
+  },
+  
+  
+  hasView: function(view)
+  {
+    return !this.views().contains(view);
   },
   
   

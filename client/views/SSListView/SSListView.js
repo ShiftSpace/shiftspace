@@ -82,7 +82,7 @@ var SSListView = new Class({
   
   __setResource__: function(resource)
   {
-    resource.addView(this);
+    if(!resource.hasView(this)) resource.addView(this);
     this.__resource = resource;
   },
   
@@ -403,10 +403,10 @@ var SSListView = new Class({
     
   /*
       Function: data
-        Returns the data property. 
+        Returns the data property.
       
       Returns:
-        A javascript array row. 
+        A javascript array row.
 
       See Also:
         setData
@@ -416,7 +416,7 @@ var SSListView = new Class({
   {
     if(this.resource())
     {
-      return this.resource().read();
+      return SSApplication().cache(this.resource().getName());
     }
     else
     {
@@ -1083,9 +1083,12 @@ var SSListView = new Class({
   
   /*
     Function: reloadData (private)
-      Called by refresh(). Checks the length of the current collection data, and clears the currently loaded collection data.  If the collection array contains data, it resizes the elements and applies set filters. If the collection is not pending, the content is displayed. 
+      Called by refresh(). Checks the length of the current collection data, and clears the currently loaded collection data.  If the collection array contains data, it resizes the elements and applies set filters. If the collection is not pending, the content is displayed.
+      
+    Parameters:
+      p - for flow control you can pass a promise.
   */
-  reloadData: function()
+  reloadData: function(p)
   {
     var len = this.data().length;
     this.element.empty();

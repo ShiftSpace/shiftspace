@@ -200,7 +200,7 @@ var SSPublishPane = new Class({
   
   optionsForResource: function(resource)
   {
-    return {};
+    return {byHref:window.location.href.split("#")[0]};
   }
 
 });

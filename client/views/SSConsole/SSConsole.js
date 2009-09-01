@@ -48,6 +48,24 @@ var SSConsole = new Class({
   },
   
   
+  initResources: function()
+  {
+    this.allShifts = new SSResource("AllShifts", {
+      resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
+      watches: [{
+                  events: [{resource:"shift", method:"create"},
+                           {resource:"shift", method:"update"},
+                           {resource:"shift", method:"delete"},
+                           {resource:"shift", action:"comment"},
+                           {resource:"shift", action:"publish"},
+                           {resource:"shift", action:"unpublish"}]
+                }],
+      delegate: this.PublishPane,
+      views: [this.AllShiftsListView]
+    });
+  },
+  
+  
   isVisible: function()
   {
     return !this.element.hasClass('SSDisplayNone');
@@ -82,36 +100,28 @@ var SSConsole = new Class({
     if((context == window && typeof SandalphonToolMode != 'undefined') ||
        (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
     {
-      if(this.outlets().get('MainTabView')) this.initMainTabView();
+      // initialize the resources
+      this.initResources();
+
+      if(this.MainTabView) this.initMainTabView();
       if(this.AllShiftsListView)
       {
-        var p = SSApp.get({resource:'shifts', data:{byHref:window.location.href.split("#")[0]}})
-        this.AllShiftsListView.setData(p);
-        this.AllShiftsListView.reloadData(p);
-        /*
-        SSApp.addWatcher(this.AllShiftsListView, 'shift', ['create', 'delete', 'update']);
-        */
-        SSAddShifts(p);
         this.initAllShiftsView();
+        this.AllShiftsListView.reloadData(this.allShifts.read());
       }
-      if(this.outlets().get('SSLoginFormSubmit')) this.initLoginForm();
-      if(this.outlets().get('SSSignUpFormSubmit')) this.initSignUpForm();
-      if(this.outlets().get('SSSelectLanguage')) this.initSelectLanguage();
-      if(this.outlets().get('SSSetServers')) this.initSetServersForm();
-      if(this.outlets().get('SSInstalledSpaces')) this.initInstalledSpacesListView();
-      if(this.outlets().get('clearInstalledButton'))
+      if(this.SSLoginFormSubmit) this.initLoginForm();
+      if(this.SSSignUpFormSubmit) this.initSignUpForm();
+      if(this.SSSelectLanguage) this.initSelectLanguage();
+      if(this.SSSetServers) this.initSetServersForm();
+      if(this.SSInstalledSpaces) this.initInstalledSpacesListView();
+      if(this.clearInstalledButton)
       {
-        this.outlets().get('clearInstalledButton').addEvent('click', function(_evt) {
+        this.clearInstalledButton.addEvent('click', function(_evt) {
           var evt = new Event(_evt);
           SSUninstallAllSpaces();
         });
       }
 
-      if(this.outlets()['PublishPane'])
-      {
-        this.PublishPane = this.outlets()['PublishPane'];
-      }
-      
       if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled())
       {
         this.handleLogin();

@@ -57,11 +57,13 @@ var ShiftServer = new Class({
 
 });
 
-/*
-var app = new ShiftServer()
-var user = app.login(fakemary);
-
-$if(noErr(user),
-    SSPostNotification.bind(null, ['userLogin', user]),
-    showErr.bind(null, [user]));
-*/
+var __ssapplication = null;
+function SSSetApplication(app)
+{
+  __ssapplication = app;
+}
+function SSApplication()
+{
+  if(!__ssapplication) SSSetApplication(new ShiftServer());
+  return __ssapplication;
+}

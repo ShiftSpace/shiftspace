@@ -69,7 +69,7 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE Bootstrap
-    var SSApp = new ShiftServer();
+    var SSApp = SSApplication();
 
     /*
 
