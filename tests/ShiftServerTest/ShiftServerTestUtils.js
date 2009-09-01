@@ -44,6 +44,13 @@ var noteShift = {
   }
 };
 
+var highlightsShift = {
+  space: {name:"Highlights", version:"0.1"},
+  summary: "Bar!",
+  href: "http://google.com/image_search",
+  content: {}
+};
+
 var fakemary = {
   userName: "fakemary",
   email: "fakemary@gmail.com",
@@ -304,6 +311,9 @@ function createResource() {
                          {resource:"shift", action:"comment"},
                          {resource:"shift", action:"publish"},
                          {resource:"shift", action:"unpublish"}],
+                conditions: [
+                  function(shift) { return shift.space.name == "Highlights"; }
+                ],
                 handlers: [function(event) { console.log("something happened!", event) ;}]
               }],
     delegate: resourceDelegate
