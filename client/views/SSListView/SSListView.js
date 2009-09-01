@@ -421,7 +421,7 @@ var SSListView = new Class({
   {
     if(this.resource())
     {
-      return SSApplication().cache(this.resource().getName(), true);
+      return this.resource().data();
     }
     else
     {

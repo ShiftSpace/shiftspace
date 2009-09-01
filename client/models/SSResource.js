@@ -66,7 +66,7 @@ var SSResource = new Class({
     {
       this.setSortFn(this.sortByModified);
     }
-    if(this.options.transforms) this.setTransforms([this.convertDates].combine(this.options.transforms || []));
+    this.setTransforms([this.convertDates].combine(this.options.transforms || []));
     if(this.options.resource) this.setResource(this.options.resource);
     if(this.options.watches) this.setWatches(this.options.watches);
     if(delegate) this.setDelegate(delegate);
@@ -219,6 +219,9 @@ var SSResource = new Class({
   data: function()
   {
     var raw = SSApplication().cache(this.getName(), true);
+    raw = raw.map(this.transformFn());
+    raw = raw.sort(this.sortFn());
+    return raw;
   },
   
   
