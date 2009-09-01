@@ -29,8 +29,7 @@ var SSSpaceMenu = new Class({
   
   show: function()
   {
-    SSLog('show SSSpaceMenu', SSLogForce);
-    this.element.removeClass('SSDisplayNone');
+    this.parent();
     this.resize();
     SSPostNotification('onSpaceMenuShow', this);
   },
