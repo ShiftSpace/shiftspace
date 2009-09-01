@@ -33,8 +33,8 @@ var SSResource = new Class({
       resource: null,
       watch: null,
       delegate: null,
-      sort: null,
-      transform: null
+      sortFn: null,
+      transforms: null
     }
   },
   
@@ -58,11 +58,58 @@ var SSResource = new Class({
     this.setHandlers({});
     this.setViews(views || []);
     this.setApp(this.options.app || SSApplication());
+    if(this.options.sortFn)
+    {
+      this.setSortFn(this.options.sortFn)
+    }
+    else
+    {
+      this.setSortFn(this.sortByModified);
+    }
+    if(this.options.transforms) this.setTransforms([this.convertDates].combine(this.options.transforms || []));
     if(this.options.resource) this.setResource(this.options.resource);
     if(this.options.watches) this.setWatches(this.options.watches);
     if(delegate) this.setDelegate(delegate);
     this.setName(name);
     SSSetResourceForName(name, this);
+  },
+  
+  
+  convertDates: function(doc)
+  {
+    doc.created = Date.parse(doc.created);
+    doc.modified = Date.parse(doc.modified);
+    return doc;
+  },
+  
+  
+  sortByModified: function(a, b)
+  {
+    return a.modified < b.modified;
+  },
+  
+  
+  setSortFn: function(sortFn)
+  {
+    this.__sortFn = sortFn;
+  },
+  
+  
+  sortFn: function()
+  {
+    return this.__sortFn;
+  },
+  
+  
+  setTransforms: function(transforms)
+  {
+    this.__transformFn = transforms;
+  },
+  
+  
+  transformFn: function()
+  {
+    return this.__transformFn;
   },
   
   
@@ -171,7 +218,7 @@ var SSResource = new Class({
   
   data: function()
   {
-    var raw = SSApplication().cache(this.getName());
+    var raw = SSApplication().cache(this.getName(), true);
   },
   
   
