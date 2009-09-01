@@ -2,6 +2,7 @@
 // @test
 // ==/Builder==
 
+var SSApp = SSApplication();
 var server = "../shiftserver";
 
 var AlreadyLoggedInError = "AlreadyLoggedInError";
@@ -114,104 +115,6 @@ function SSGetType(json)
   return json.type;
 }
 
-
-var CouchDBApp = new Class({
-  create: function(type, data)
-  {
-    var result;
-    req({
-      url:'/'+type,
-      method: 'post',
-      data: data,
-      json: true,
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  },
-  
-  read: function(type, id)
-  {
-    var result;
-    req({
-      url:'/'+type,
-      resourceId: id,
-      method: 'get',
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  },
-  
-  update: function(type, id, data)
-  {
-    var result;
-    req({
-      url:'/'+type,
-      resourceId: id,
-      method: 'put',
-      data: data,
-      json: true,
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  },
-  
-  'delete': function(type, id)
-  {
-    var result;
-    req({
-      url:'/'+type,
-      resourceId: id,
-      method: 'delete',
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  },
-  
-  action: function(url, data)
-  {
-    var result;
-    req({
-      url:'/'+url,
-      method: 'post',
-      json: true,
-      data: data,
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  },
-  
-  get: function(url)
-  {
-    var result;
-    req({
-      url:'/'+url,
-      method: 'get',
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  }
-});
-
-var SSApp;
-var app = SSApp = new ShiftServer();
 
 function adminJoin()
 {

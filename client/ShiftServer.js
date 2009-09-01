@@ -58,12 +58,8 @@ var ShiftServer = new Class({
 });
 
 var __ssapplication = null;
-function SSSetApplication(app)
-{
-  __ssapplication = app;
-}
 function SSApplication()
 {
-  if(!__ssapplication) SSSetApplication(new ShiftServer());
+  if(!__ssapplication) __ssapplication = new ShiftServer();
   return __ssapplication;
 }

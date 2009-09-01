@@ -176,12 +176,18 @@ var ApplicationServer = new Class({
   
   watchersFor: function(rsrcSpec)
   {
-    var watchers = this.watchers()[rsrcSpec];
+    return this.__watchersFor__($hash(rsrcSpec));
+  },
+  
+  
+  __watchersFor__: function(rsrcSpecHashed)
+  {
+    var watchers = this.watchers()[rsrcSpecHashed];
     return watchers || [];
   },
   
   
-  addWatcher: function(rsrcSpec, watcher)
+  addWatcher: function(watcher, rsrcSpec)
   {
     var watchers = this.watchers(), hashed = $hash(rsrcSpec);
     if(!watchers[hashed]) watchers[hashed] = [];
@@ -189,30 +195,58 @@ var ApplicationServer = new Class({
   },
   
   
+  removeWatcher: function(watcher, rsrcSpec)
+  {
+    var watchers = this.watchers();
+    if(rsrcSpec)
+    {
+      watchers[$hash(rsrcSpec)].erase(watcher);
+    }
+    else
+    {
+      for(var rsrcSpec in watchers)
+      {
+        watchers[rsrcSpec].erase(watcher);
+      }
+    }
+  },
+  
+  
+  specsForWatcher: function(watcher)
+  {
+    var watchers = this.watchers(), result = [];
+    for(var rsrcSpec in watchers)
+    {
+      if(watchers[rsrcSpec].contains(watcher)) result.push(rsrcSpec);
+    }
+    return result;
+  },
+  
+  
   notifyWatchers: function(rsrcSpec, value)
   {
     var resourceSpec = $hash($H(rsrcSpec).extract(['resource', 'method'], true));
-    var watchers = this.watchersFor(resourceSpec);
+    var watchers = this.__watchersFor__(resourceSpec);
     watchers.each($msg('matchSpec', resourceSpec, value));
     
     if(rsrcSpec.id)
     {
       var idSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'id'], true));
-      watchers = this.watchersFor(idSpec);
+      watchers = this.__watchersFor__(idSpec);
       watchers.each($msg('matchSpec', idSpec, value));
     }
     
     if(rsrcSpec.action)
     {
       var actionSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'action'], true));
-      watchers = this.watchersFor(actionSpec);
+      watchers = this.__watchersFor__(actionSpec);
       watchers.each($msg('matchSpec', actionSpec, value));
     }
     
     if(rsrcSpec.action && rsrcSpec.id)
     {
       var actionIdSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'action', 'id'], true));
-      watchers = this.watchersFor(actionIdSpec);
+      watchers = this.__watchersFor__(actionIdSpec);
       watchers.each($msg('matchSpec', actionIdSpec, value));
     }
   },

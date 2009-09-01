@@ -173,7 +173,7 @@ var SSResource = new Class({
     this.__watches = new Set(watches);
     this.__watches.each(function(watch) {
       watch.events.each(function(event) { 
-        this.app().addWatcher(event, this);
+        this.app().addWatcher(this, event);
         var hashed = $hash(event);
         if(watch.conditions) this.conditions()[hashed] = watch.conditions;
         if(watch.handlers) this.handlers()[hashed] = watch.handlers;
