@@ -44,17 +44,35 @@ function SSLog()
        type == SSLogError ||
        type == SSLogWarning)
     {
-      if(type == SSLogError)
+      if(!Browser.Engine.webkit)
       {
-        console.error.apply(null, args);
-      }
-      else if(type == SSLogWarning)
-      {
-        console.warn.apply(null, args);
+        if(type == SSLogError)
+        {
+          console.error.apply(null, args);
+        }
+        else if(type == SSLogWarning)
+        {
+          console.warn.apply(null, args);
+        }
+        else
+        {
+          console.log.apply(null, args);
+        }
       }
       else
       {
-        console.log.apply(null, args);
+        if(type == SSLogError)
+        {
+          console.error(args);
+        }
+        else if(type == SSLogWarning)
+        {
+          console.warn(args);
+        }
+        else
+        {
+          console.log(args);
+        }
       }
     }
   } 
