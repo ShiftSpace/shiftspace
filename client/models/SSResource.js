@@ -155,7 +155,7 @@ var SSResource = new Class({
     return this.__app;
   },
   
-  // must define at least read
+
   setResource: function(resource)
   {
     this.__resource = resource;

@@ -69,6 +69,24 @@ var SSConsole = new Class({
   },
   
   
+  initUserResources: function()
+  {
+    this.myShifts = new SSResource("MyShifts", {
+      resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
+      watches: [{
+                  events: [{resource:"shift", method:"create"},
+                           {resource:"shift", method:"update"},
+                           {resource:"shift", method:"delete"},
+                           {resource:"shift", action:"comment"},
+                           {resource:"shift", action:"publish"},
+                           {resource:"shift", action:"unpublish"}]
+                }],
+      delegate: this.PublishPane,
+      views: [this.AllShiftsListView]
+    });    
+  },
+  
+  
   isVisible: function()
   {
     return !this.element.hasClass('SSDisplayNone');
@@ -107,11 +125,7 @@ var SSConsole = new Class({
       this.initResources();
 
       if(this.MainTabView) this.initMainTabView();
-      if(this.AllShiftsListView)
-      {
-        this.initAllShiftsView();
-        this.AllShiftsListView.reloadData(this.allShifts.read());
-      }
+      if(this.AllShiftsListView) this.initAllShiftsView();
       if(this.SSLoginFormSubmit) this.initLoginForm();
       if(this.SSSignUpFormSubmit) this.initSignUpForm();
       if(this.SSSelectLanguage) this.initSelectLanguage();
@@ -156,9 +170,9 @@ var SSConsole = new Class({
     this.setLoginHandled(true);
     
     this.emptyLoginForm();
-    this.outlets().get('MainTabView').hideTabByName('LoginTabView');
+    this.MainTabView.hideTabByName('LoginTabView');
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUserName());
-    this.outlets().get('MainTabView').selectTabByName('AllShiftsView');
+    this.MainTabView.selectTabByName('AllShiftsView');
     
     this.updateInstalledSpaces();
   },
@@ -169,9 +183,9 @@ var SSConsole = new Class({
     this.setLoginHandled(false);
     
     this.emptyLoginForm();
-    this.outlets().get('MainTabView').revealTabByName('LoginTabView');
+    this.MainTabView.revealTabByName('LoginTabView');
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', null);
-    this.outlets().get('MainTabView').refresh();
+    this.MainTabView.refresh();
     
     this.updateInstalledSpaces();
   },
@@ -179,7 +193,7 @@ var SSConsole = new Class({
 
   initMainTabView: function()
   {
-    this.MainTabView = this.outlets()['MainTabView'];
+    this.MainTabView = this.MainTabView;
   },
   
   
@@ -192,22 +206,20 @@ var SSConsole = new Class({
   
   initLoginForm: function()
   {
-    this.outlets().get('SSLoginFormSubmit').addEvent('click', this.handleLoginFormSubmit.bind(this));
-
-    this.outlets().get('SSLoginForm').addEvent('submit', function(_evt) {
+    this.SSLoginFormSubmit.addEvent('click', this.handleLoginFormSubmit.bind(this));
+    this.SSLoginForm.addEvent('submit', function(_evt) {
       var evt = new Event(_evt);
       evt.preventDefault();
       this.handleLoginFormSubmit();
     }.bind(this));
-
-    this.outlets().get('LoginTabView').addEvent('tabSelected', this.handleTabSelect.bind(this));
+    this.LoginTabView.addEvent('tabSelected', this.handleTabSelect.bind(this));
   },
   
   
   initSetServersForm: function()
   {
-    var apiField = this.outlets().get('SSSetApiURLField');
-    var spacesDirField = this.outlets().get('SSSetSpaceDirField');
+    var apiField = this.SSSetApiURLField;
+    var spacesDirField = this.SSSetSpaceDirField;
     
     if(SSInfo)
     {
@@ -237,20 +249,20 @@ var SSConsole = new Class({
 
   initInstalledSpacesListView: function()
   {
-    if(this.outlets().get('SSInstallSpace'))
+    if(this.SSInstallSpace)
     {
-      this.outlets().get('SSInstallSpace').addEvent('click', function(_evt) {
+      this.SSInstallSpace.addEvent('click', function(_evt) {
         var evt = new Event(_evt);
-        this.installSpace(this.outlets().get('SSInstallSpaceField').getProperty('value'));
+        this.installSpace(this.SSInstallSpaceField.getProperty('value'));
       }.bind(this));
     }
-    this.SSInstalledSpaces = this.outlets().get('SSInstalledSpaces');
+    this.SSInstalledSpaces = this.SSInstalledSpaces;
   },
   
   
   handleTabSelect: function(args)
   {
-    if(args.tabView == this.outlets().get('LoginTabView') && args.tabIndex == 0)
+    if(args.tabView == this.LoginTabView && args.tabIndex == 0)
     {
       this.emptyLoginForm();
     }
@@ -259,16 +271,16 @@ var SSConsole = new Class({
 
   emptyLoginForm: function()
   {
-    this.outlets().get('SSLoginFormUsername').setProperty('value', '');
-    this.outlets().get('SSLoginFormPassword').setProperty('value', '');
+    this.SSLoginFormUsername.setProperty('value', '');
+    this.SSLoginFormPassword.setProperty('value', '');
   },
 
 
   handleLoginFormSubmit: function()
   {
     ShiftSpaceUser.login({
-      userName: this.outlets().get('SSLoginFormUsername').getProperty('value'),
-      password: this.outlets().get('SSLoginFormPassword').getProperty('value')
+      userName: this.SSLoginFormUsername.getProperty('value'),
+      password: this.SSLoginFormPassword.getProperty('value')
     }, this.loginFormSubmitCallback.bind(this));
   },
 
@@ -281,9 +293,9 @@ var SSConsole = new Class({
 
   initSignUpForm: function()
   {
-    this.outlets().get('SSSignUpFormSubmit').addEvent('click', this.handleSignUpFormSubmit.bind(this));
+    this.SSSignUpFormSubmit.addEvent('click', this.handleSignUpFormSubmit.bind(this));
     
-    this.outlets().get('SSLoginForm').addEvent('submit', function(_evt) {
+    this.SSLoginForm.addEvent('submit', function(_evt) {
       var evt = new Event(_evt);
       evt.preventDefault();
       this.handleSignUpFormSubmit();
@@ -294,10 +306,10 @@ var SSConsole = new Class({
   handleSignUpFormSubmit: function()
   {
     var joinInput = {
-      userName: this.outlets().get('SSSignUpFormUsername').getProperty('value'),
-      email: this.outlets().get('SSSignUpFormEmail').getProperty('value'),
-      password: this.outlets().get('SSSignUpFormPassword').getProperty('value'),
-      passwordVerify: this.outlets().get('SSSignUpFormPassword').getProperty('value')
+      userName: this.SSSignUpFormUsername.getProperty('value'),
+      email: this.SSSignUpFormEmail.getProperty('value'),
+      password: this.SSSignUpFormPassword.getProperty('value'),
+      passwordVerify: this.SSSignUpFormPassword.getProperty('value')
     };
 
     var p = ShiftSpaceUser.join(joinInput);
@@ -308,20 +320,20 @@ var SSConsole = new Class({
 
   signUpFormSubmitCallback: function(userData)
   {
-    this.outlets().get('MainTabView').selectTabByName('AllShiftsView');
+    this.MainTabView.selectTabByName('AllShiftsView');
   }.asPromise(),
   
   
   showLogin: function()
   {
     if(!this.isVisible()) this.show();
-    this.outlets().get('MainTabView').selectTabByName('LoginTabView');
+    this.MainTabView.selectTabByName('LoginTabView');
   },
 
 
   initSelectLanguage: function()
   {
-    this.outlets().get('SSSelectLanguage').addEvent('change', function(_evt) {
+    this.SSSelectLanguage.addEvent('change', function(_evt) {
       var evt = new Event(_evt);
       SSLoadLocalizedStrings($(evt.target).getProperty('value'), this.element.contentWindow);
     }.bind(this));

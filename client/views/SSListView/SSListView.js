@@ -1062,7 +1062,7 @@ var SSListView = new Class({
     this.parent();
     var hasCell = this.hasCell()
     if(!hasCell) return;
-    if(!this.data()) return;
+    if(!this.data() && !this.resource()) return;
     if(!this.isVisible() && !force) return;
     this.reloadData();
   },
@@ -1097,7 +1097,14 @@ var SSListView = new Class({
     Parameters:
       p - for flow control you can pass a promise.
   */
-  reloadData: function(p)
+  reloadData: function()
+  {
+    var resource = this.resource();
+    this.__reloadData__(resource && resource.read());
+  },
+  
+  
+  __reloadData__: function(p)
   {
     var len = this.data().length;
     this.element.empty();
