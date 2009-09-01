@@ -214,10 +214,11 @@ function createResource() {
                          {resource:"shift", action:"comment"},
                          {resource:"shift", action:"publish"},
                          {resource:"shift", action:"unpublish"}],
-                conditions: [
-                  function(shift) { return shift.space.name == "Highlights"; }
-                ],
-                handlers: [function(event) { console.log("something happened!", event) ;}]
+                handlers: [SSResource.dirtyTheViews]
+              },
+              {
+                events: [{resource:"shift", method:"create"}],
+                handlers: [function(shift) { SSApplication().setDocument(this.getName(), shift); }]
               }],
     delegate: resourceDelegate
   });

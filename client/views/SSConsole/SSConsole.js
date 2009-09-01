@@ -56,15 +56,17 @@ var SSConsole = new Class({
     this.allShifts = new SSResource("AllShifts", {
       resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
       watches: [{
+                  events: [{resource:"shift", method:"create"}],
+                  handlers: [function(shift) { SSApplication().setDocument(this.getName(), shift); }]
+                },
+                {
                   events: [{resource:"shift", method:"create"},
                            {resource:"shift", method:"update"},
                            {resource:"shift", method:"delete"},
                            {resource:"shift", action:"comment"},
                            {resource:"shift", action:"publish"},
                            {resource:"shift", action:"unpublish"}],
-                  handlers: [
-                    SSResource.dirtyTheViews
-                  ]
+                  handlers: [SSResource.dirtyTheViews]
                 }],
       delegate: this.PublishPane,
       views: [this.AllShiftsListView]
