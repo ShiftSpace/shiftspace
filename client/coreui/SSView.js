@@ -17,7 +17,8 @@ var SSView = new Class({
     var temp = {
       context: null,
       generateElement: true,
-      suppress: false
+      suppress: false,
+      displayStyle: 'block'
     };
     return temp;
   },
@@ -373,10 +374,11 @@ var SSView = new Class({
   show: function()
   {
     this.fireEvent('willShow', this);
-    this.element.addClass('SSActive');
     this.element.removeClass('SSDisplayNone');
-    //if(this.isVisible() && this.needsDisplay()) this.refreshAndFire();
+    this.element.addClass('SSActive');
+    this.__isVisible = true;
     this.fireEvent('show', this);
+    this.subViews().each($msg('__refresh__'));
   },
   
 
@@ -389,13 +391,16 @@ var SSView = new Class({
     this.fireEvent('willHide', this);
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
+    this.__isVisible = false;
     this.fireEvent('hide', this);
   },
   
 
   isVisible: function()
   {
-    return ['block', 'inline'].contains(this.element.getStyle('display'));
+    var display = this.element.getStyle('display');
+    var size = this.element.getSize();
+    return (display && ['block', 'inline'].contains(display)) || (size.x > 0 && size.y > 0);
   },
   
   
@@ -421,6 +426,16 @@ var SSView = new Class({
     var parent = this.element.getParent('*[uiclass]');
     if(parent) return SSControllerForNode(parent);
     return null;
+  },
+  
+  
+  __refresh__: function(force)
+  {
+    if((this.isVisible() && this.needsDisplay()) || force)
+    {
+      this.refresh();
+      this.subViews().each($msg('__refresh__', force));
+    }
   },
   
 
@@ -502,8 +517,8 @@ var SSView = new Class({
   */
   subViews: function()
   {
-    return this.getElements('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
-      return (controller.superView() == this);
+    return this.element.getElements('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
+      return (controller.isAwake() && controller.superView() == this);
     }, this);
   },
   
