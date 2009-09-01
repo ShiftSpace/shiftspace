@@ -294,6 +294,11 @@ var SSResource = new Class({
   }
 });
 
+SSResource.protocol = {
+  "getName": "function",
+  "hasView": "function"
+};
+
 SSResource.dirtyTheViews = function(rsrc)
 {
   rsrc.dirtyTheViews(true);

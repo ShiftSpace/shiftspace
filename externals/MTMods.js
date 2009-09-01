@@ -220,9 +220,13 @@ function $msg(methodName)
 }
 
 
-function $implements(obj, method)
+function $implements(obj, protocol)
 {
-  return obj && obj[method] && $type(obj[method]) == 'function';
+  for(var p in protocol)
+  {
+    if(!obj[p] || $type(obj[p]) != protocol[p]) return false;
+  }
+  return true;
 }
 
 

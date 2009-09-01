@@ -424,7 +424,6 @@ var SSListView = new Class({
     }
   },
   
-  
   /*
       Function: count
          //NOTE: See TODO in function. -Justin  
