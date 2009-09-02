@@ -82,13 +82,21 @@ var SSListView = new Class({
   
   __setResource__: function(resource)
   {
-    if(!$implements(resource, SSResource.protocol))
+    if(resource === null)
     {
-      SSLog("Argument to SSListView.__setResource__ does not implement SSResource.protocol", SSLogError);
-      throw new Error();
+      this.__resource = null;
+      this.__reloadData__();
     }
-    if(!resource.hasView(this)) resource.addView(this);
-    this.__resource = resource;
+    else
+    {
+      if(!$implements(resource, SSResource.protocol))
+      {
+        SSLog("Argument to SSListView.__setResource__ does not implement SSResource.protocol", SSLogError);
+        throw new Error();
+      }
+      if(!resource.hasView(this)) resource.addView(this);
+      this.__resource = resource;
+    }
   },
   
   

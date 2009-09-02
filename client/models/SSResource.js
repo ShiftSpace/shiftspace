@@ -18,8 +18,10 @@ function SSSetResourceForName(name, resource)
 
 function SSDeleteResource(name)
 {
+  var resource = SSResourceForName(name);
+  resource.cleanup();
   delete __resources[name];
-  //SSPostNotification("resourceDelete", {name:name});
+  SSPostNotification("resourceDelete", {name:name});
 }
 
 var SSResource = new Class({
@@ -362,6 +364,20 @@ var SSResource = new Class({
     handlers.each(function(fn) {
       fn.bind(this)(value);
     }, this);
+  },
+  
+  
+  cleanup: function()
+  {
+    SSApplication().removeCache(this.getName());
+    SSApplication().removeWatcher(this);
+    this.views().each($msg('setResource', null));
+  },
+  
+  
+  dispose: function()
+  {
+    SSDeleteResource(this.getName());
   }
 });
 
@@ -373,4 +389,11 @@ SSResource.protocol = {
 SSResource.dirtyTheViews = function(value)
 {
   this.dirtyTheViews();
+}
+
+SSResource.dirtyAllViews = function(value)
+{
+  __resources.each(function(v, k) {
+    v.dirtyTheViews();
+  });
 }

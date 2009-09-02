@@ -13,7 +13,6 @@ var SSConsole = new Class({
   
   initialize: function(el, options)
   {
-    SSLog('INSTANTIATE SSCONSOLE', SSLogForce);
     // only really relevant under Sandalphon
     if(typeof SandalphonToolMode == 'undefined')
     {
@@ -38,12 +37,8 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
-    
-    //SSAddObserver(this, 'onShiftDelete', this.refreshListViews.bind(this));
     SSAddObserver(this, 'onShiftHide', this.deselectShift.bind(this));
-    
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
-    
     SSAddObserver(this, 'userDidClickCheckboxForRowInTableView', this.userDidClickCheckboxForRowInTableView.bind(this));
     
     // since we're created programmatically we add entry manually for debugging - David
@@ -99,6 +94,12 @@ var SSConsole = new Class({
   },
   
   
+  cleanupUserResources: function()
+  {
+    this.myShifts.dispose();
+  },
+  
+  
   isVisible: function()
   {
     return !this.element.hasClass('SSDisplayNone');
@@ -114,7 +115,7 @@ var SSConsole = new Class({
   
   hide: function()
   {
-    this.element.addClass('SSDisplayNone');
+    this.parent();
     SSPostNotification('onConsoleHide');
   },
   
@@ -128,14 +129,12 @@ var SSConsole = new Class({
   awake: function(context)
   {
     this.mapOutletsToThis();
-    
     // in Sandalphon tool mode we're not iframed, in ShiftSpace we are
     if((context == window && typeof SandalphonToolMode != 'undefined') ||
        (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
     {
       // initialize the resources
       this.initResources();
-
       if(this.MainTabView) this.initMainTabView();
       if(this.AllShiftsListView) this.initAllShiftsView();
       if(this.SSLoginFormSubmit) this.initLoginForm();
@@ -150,11 +149,7 @@ var SSConsole = new Class({
           SSUninstallAllSpaces();
         });
       }
-
-      if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled())
-      {
-        this.handleLogin();
-      }
+      if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled()) this.handleLogin();
     }
   },
   
@@ -577,17 +572,6 @@ var SSConsole = new Class({
   getVisibleListView: function()
   {
     if(this.AllShiftsListView.isVisible()) return this.AllShiftsListView;
-  },
-  
-  
-  refreshListViews: function(shiftId)
-  {
-    var visibleListView = this.getVisibleListView();
-
-    if(visibleListView)
-    {
-      visibleListView.reloadData();
-    }
   },
   
   

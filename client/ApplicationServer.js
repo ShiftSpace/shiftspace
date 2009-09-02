@@ -79,6 +79,12 @@ var ApplicationServer = new Class({
   },
   
   
+  removeCache: function(name)
+  {
+    delete this.cache()[name];
+  },
+  
+  
   deleteFromCache: function(name, id)
   {
     delete this.cache()[name][id];
