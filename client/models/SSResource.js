@@ -372,7 +372,7 @@ var SSResource = new Class({
   
   refresh: function()
   {
-    //SSApplication().removeCache(this.getName());
+    SSApplication().removeCache(this.getName());
     this.dirtyTheViews(true);
   }
 });

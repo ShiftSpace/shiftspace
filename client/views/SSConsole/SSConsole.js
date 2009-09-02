@@ -182,7 +182,14 @@ var SSConsole = new Class({
     this.updateInstalledSpaces();
 
     // initialize the resources
-    this.allShifts.refresh();
+    if(!this.allShifts)
+    {
+      this.initResources();
+    }
+    else
+    {
+      this.allShifts.refresh();
+    }
     this.initUserResources();
   },
 
