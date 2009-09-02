@@ -83,9 +83,10 @@ var ShiftListViewCell = new Class({
   
   setHref: function(href)
   {
+    var el = this.lockedElement();
     var url = href.substr(7, href.length);
     var parts = url.split("/");
-    el.getElement('.domain').setText('http://'+parts[0]);
+    el.getElement('.domain').set('text', 'http://'+parts[0]);
   }
 
 });

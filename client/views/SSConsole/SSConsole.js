@@ -13,6 +13,7 @@ var SSConsole = new Class({
   
   initialize: function(el, options)
   {
+    SSLog('INSTANTIATE SSCONSOLE', SSLogForce);
     // only really relevant under Sandalphon
     if(typeof SandalphonToolMode == 'undefined')
     {
@@ -75,21 +76,25 @@ var SSConsole = new Class({
   
   initUserResources: function()
   {
+    if(this.__userResourceInitialized) return;
+    this.__userResourceInitialized = true
+    
     this.myShifts = new SSResource("MyShifts", {
-      resource: {read:'user/'+User.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
       watches: [{
+                  events: [{resource:"shift", method:"create"}],
+                  handlers: [function(shift) { SSApplication().setDocument(this.getName(), shift); }]
+                },
+                {
                   events: [{resource:"shift", method:"create"},
                            {resource:"shift", method:"update"},
                            {resource:"shift", method:"delete"},
                            {resource:"shift", action:"comment"},
                            {resource:"shift", action:"publish"},
                            {resource:"shift", action:"unpublish"}],
-                  conditions: [
-                    function(shift) { return shift.userName == User.getUserName(); }
-                  ]
+                  handlers: [SSResource.dirtyTheViews]
                 }],
-      delegate: this.PublishPane,
-      views: [this.AllShiftsListView]
+      views: [this.MyShiftsListView]
     });    
   },
   
@@ -180,8 +185,10 @@ var SSConsole = new Class({
     this.MainTabView.hideTabByName('LoginTabView');
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUserName());
     this.MainTabView.selectTabByName('AllShiftsView');
-    
     this.updateInstalledSpaces();
+    
+    SSLog('++++++++++++++++++++++++++++ handleLogin', SSLogForce);
+    this.initUserResources();
   },
 
 

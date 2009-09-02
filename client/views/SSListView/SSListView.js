@@ -1059,7 +1059,6 @@ var SSListView = new Class({
   */
   refresh: function(force)
   {
-    SSLog(this.getName(), 'refresh', SSLogForce);
     this.parent();
     var hasCell = this.hasCell()
     if(!hasCell) return;
