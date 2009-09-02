@@ -97,6 +97,7 @@ var SSConsole = new Class({
   cleanupUserResources: function()
   {
     this.myShifts.dispose();
+    this.__userResourceInitialized = false;
   },
   
   

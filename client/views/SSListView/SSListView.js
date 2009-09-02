@@ -84,6 +84,7 @@ var SSListView = new Class({
   {
     if(resource === null)
     {
+      this.setResourceIsRead(false);
       this.__resource = null;
       this.__reloadData__();
     }

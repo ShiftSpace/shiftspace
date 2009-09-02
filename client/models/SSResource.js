@@ -74,6 +74,7 @@ var SSResource = new Class({
     if(delegate) this.setDelegate(delegate);
     this.setName(name);
     SSSetResourceForName(name, this);
+    this.dirtyTheViews();
   },
   
   
@@ -306,6 +307,7 @@ var SSResource = new Class({
     views.each(function(view) {
       view.setResource(this);
     }, this);
+    //this.dirtyTheViews();
   },
   
   
