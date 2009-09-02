@@ -78,6 +78,14 @@ var ShiftListViewCell = new Class({
   {
     var el = this.lockedElement();
     el.getElement('.gravatar').setProperty('src', gravatar);
+  },
+  
+  
+  setHref: function(href)
+  {
+    var url = href.substr(7, href.length);
+    var parts = url.split("/");
+    el.getElement('.domain').setText('http://'+parts[0]);
   }
 
 });

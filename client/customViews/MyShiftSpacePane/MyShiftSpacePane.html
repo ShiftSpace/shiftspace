@@ -21,13 +21,15 @@
 
           <li class="SSCell ShiftListViewCell"
               uiclass="ShiftListViewCell"
-              options="{}">
+              options="{
+                properties: ['space', 'href', 'summary', 'modified']
+              }">
             <div class="selected">
               <input type="checkbox"/>
             </div>
+            <img class="spaceIcon"></img>
             <div class="domain"></div>
             <div class="summary"></div>
-            <div class="time"></div>
             <div class="date"></div>
           </li>
           
