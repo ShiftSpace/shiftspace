@@ -1111,17 +1111,11 @@ var SSListView = new Class({
   */
   reloadData: function()
   {
-    SSLog(this.getName(), 'reloadData', SSLogForce);
     var resource = this.resource(), controlp;
     if(resource && !this.resourceIsRead())
     {
-      SSLog('not read, reading!', SSLogForce);
       this.setResourceIsRead(true);
       controlp = resource.read();
-    }
-    else
-    {
-      SSLog('already read!', SSLogForce);
     }
     this.__reloadData__(controlp);
   },
@@ -1129,9 +1123,7 @@ var SSListView = new Class({
   
   __reloadData__: function(p)
   {
-    SSLog('__reloadData__', SSLogForce);
     var len = this.data().length;
-    SSLog(this.data(), SSLogForce);
     this.element.empty();
     if(len > 0 && this.cell())
     {

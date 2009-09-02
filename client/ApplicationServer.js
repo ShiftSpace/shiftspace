@@ -63,7 +63,6 @@ var ApplicationServer = new Class({
   {
     if(doc && doc._id)
     {
-      SSLog('setDocument', cacheName, doc, SSLogForce);
       var cache = this.cache();
       if(!cache[cacheName]) cache[cacheName] = {};
       cache[cacheName][doc._id] = doc;
@@ -73,7 +72,6 @@ var ApplicationServer = new Class({
   
   updateCache: function(name, data, merge)
   {
-    SSLog('updateCache', name, data, merge, SSLogForce);
     var cache = this.cache();
     if(!cache[name] || merge === false) cache[name] = {};
     if($type(data) != 'array') data = $splat(data);
