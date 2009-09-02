@@ -1,0 +1,10 @@
+ul#MyShiftsListView
+{
+  left: 0px;
+}
+
+ul#MyShiftsListView li .domain
+{
+  margin-left: 15px;
+  font-weight: bold;
+}
