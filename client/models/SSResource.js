@@ -166,31 +166,31 @@ var SSResource = new Class({
   
   get: function(idx)
   {
-    return this.app().documentForIndex(this.getName(), idx);
+    return this.data()[idx];
   },
   
   
   getLength: function()
   {
-    return this.app().cache(this.getName()).length;
+    return this.data().length;
   },
   
   
   each: function(fn)
   {
-    this.app().cache(this.getName()).each(fn);
+    this.data().each(fn);
   },
   
   
   map: function(fn)
   {
-    return this.app().cache(this.getName()).map(fn);
+    return this.data().map(fn);
   },
   
   
   filter: function(fn)
   {
-    return this.app().cache(this.getName()).filter(fn);
+    return this.data().filter(fn);
   },
   
   
@@ -307,7 +307,6 @@ var SSResource = new Class({
     views.each(function(view) {
       view.setResource(this);
     }, this);
-    //this.dirtyTheViews();
   },
   
   
@@ -329,23 +328,11 @@ var SSResource = new Class({
   },
   
   
-  setDirty: function(val)
-  {
-    this.__dirty = val;
-  },
-  
-  
-  isDirty: function()
-  {
-    return this.__dirty;
-  },
-  
-  
-  dirtyTheViews: function()
+  dirtyTheViews: function(force)
   {
     this.views().each(function(view) {
       view.setNeedsDisplay(true);
-      view.__refresh__()
+      view.__refresh__(force);
     }, this);
   },
   
@@ -380,6 +367,13 @@ var SSResource = new Class({
   dispose: function()
   {
     SSDeleteResource(this.getName());
+  },
+  
+  
+  refresh: function()
+  {
+    //SSApplication().removeCache(this.getName());
+    this.dirtyTheViews(true);
   }
 });
 

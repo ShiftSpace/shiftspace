@@ -121,12 +121,6 @@ var SSConsole = new Class({
   },
   
   
-  handleSync: function()
-  {
-    this.updateInstalledSpaces();
-  },
-  
-  
   awake: function(context)
   {
     this.mapOutletsToThis();
@@ -134,8 +128,6 @@ var SSConsole = new Class({
     if((context == window && typeof SandalphonToolMode != 'undefined') ||
        (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
     {
-      // initialize the resources
-      this.initResources();
       if(this.MainTabView) this.initMainTabView();
       if(this.AllShiftsListView) this.initAllShiftsView();
       if(this.SSLoginFormSubmit) this.initLoginForm();
@@ -171,18 +163,26 @@ var SSConsole = new Class({
   {
     return this.__loginHandled;
   },
+  
+  
+  handleSync: function()
+  {
+    this.updateInstalledSpaces();
+    this.initResources();
+  },
 
 
   handleLogin: function()
   {
     this.setLoginHandled(true);
-    
     this.emptyLoginForm();
     this.MainTabView.hideTabByName('LoginTabView');
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUserName());
     this.MainTabView.selectTabByName('AllShiftsView');
     this.updateInstalledSpaces();
 
+    // initialize the resources
+    this.allShifts.refresh();
     this.initUserResources();
   },
 
@@ -190,13 +190,15 @@ var SSConsole = new Class({
   handleLogout: function()
   {
     this.setLoginHandled(false);
-    
     this.emptyLoginForm();
     this.MainTabView.revealTabByName('LoginTabView');
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', null);
     this.MainTabView.refresh();
-    
     this.updateInstalledSpaces();
+    
+    // cleanup resources
+    this.allShifts.refresh();
+    this.cleanupUserResources();
   },
 
 

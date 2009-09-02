@@ -433,7 +433,7 @@ var SSView = new Class({
   {
     if((this.isVisible() && this.needsDisplay()) || force)
     {
-      this.refresh();
+      this.refresh(force);
       this.subViews().each($msg('__refresh__', force));
     }
   },

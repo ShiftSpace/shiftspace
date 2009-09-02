@@ -1069,10 +1069,11 @@ var SSListView = new Class({
   refresh: function(force)
   {
     this.parent();
+    if(force && this.resource()) this.setResourceIsRead(false);
     var hasCell = this.hasCell()
     if(!hasCell) return;
     if(!this.data() && !this.resource()) return;
-    if(!this.isVisible() && !force) return;
+    if(!this.isVisible()) return;
     this.reloadData();
   },
   
