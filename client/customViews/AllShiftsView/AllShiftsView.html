@@ -15,23 +15,24 @@
     <li uiclass='ShiftListViewCell'
         class='SSCell ShiftListViewCell'
         options="{
-          properties: ['space', 'gravatar', 'userName', 'summary', 'modified']
+          properties: ['space', 'publishData', 'gravatar', 'userName', 'summary', 'modified', 'favorite', 'favoriteCount', 'commentCount']
         }">
         <div class="selected">
           <input type="checkbox"/>
         </div>
         <img class="spaceIcon"></img>
         <div class="summary"></div>
+        <div class="draft"></div>
         <div class="gravatarContainer">
           <img class="gravatar"></img>
         </div>
         <div class="userName"></div>
         <div class="date"></div>
+        <div class="comments"></div>
         <div class="favorite">
           <div class="favoriteCount"></div>
           <div class="favoriteButton"></div>
         </div>
-        <div class="comments"></div>
     </li>
   </ul>
 

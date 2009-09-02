@@ -186,8 +186,7 @@ var SSConsole = new Class({
     if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUserName());
     this.MainTabView.selectTabByName('AllShiftsView');
     this.updateInstalledSpaces();
-    
-    SSLog('++++++++++++++++++++++++++++ handleLogin', SSLogForce);
+
     this.initUserResources();
   },
 

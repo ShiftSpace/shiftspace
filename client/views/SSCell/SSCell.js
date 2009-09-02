@@ -205,7 +205,7 @@ var SSCell = new Class({
   {
     var propertyList = this.getPropertyList();
     $H(data).each(function(value, property) {
-      if(propertyList.contains(property)) this.setProperty(property, value);
+      if(propertyList.contains(property)) this.setProperty(property, value, data);
     }.bind(this));
   },
   
@@ -239,14 +239,14 @@ var SSCell = new Class({
   },
   
   
-  setProperty: function(property, value)
+  setProperty: function(property, value, data)
   {
     if(!this.isLocked()) throw new SSCellError.NoLock(new Error(), "attempt to set property " + property + " without element lock.");
     if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
     var setter = 'set'+property.capitalize();
     if(this[setter])
     {
-      this[setter](value);
+      this[setter](value, data);
     }
   },
   

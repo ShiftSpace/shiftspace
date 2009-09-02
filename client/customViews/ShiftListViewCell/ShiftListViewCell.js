@@ -45,6 +45,16 @@ var ShiftListViewCell = new Class({
   },
   
   
+  setPublishData: function(publishData, shift)
+  {
+    var el = this.lockedElement();
+    if(shift.userName == ShiftSpaceUser.getUserName())
+    {
+      el.getElement('.draft').set('text', (publishData.draft && "pri") || "pub");
+    }
+  },
+  
+  
   setModified: function(modified)
   {
     var el = this.lockedElement();
@@ -87,6 +97,27 @@ var ShiftListViewCell = new Class({
     var url = href.substr(7, href.length);
     var parts = url.split("/");
     el.getElement('.domain').set('text', 'http://'+parts[0]);
+  },
+  
+  
+  setCommentCount: function(count)
+  {
+    var el = this.lockedElement();
+    el.getElement('.comments').set('text', count);
+  },
+
+
+  setFavoriteCount: function(count)
+  {
+    var el = this.lockedElement();
+    el.getElement('.favoriteCount').set('text', count);
+  },
+  
+  
+  setFavorite: function(favorite)
+  {
+    var el = this.lockedElement();
+    el.getElement('.favoriteButton').setStyle('background-color', "#f50");
   }
 
 });

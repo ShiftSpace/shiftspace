@@ -105,8 +105,7 @@
 
 .ShiftListView
 {
-  overflow-y: scroll;
-  width: 100%;
+  overflow-y: auto;
   height: 100%;
   margin-top: 4px;
 }
@@ -120,8 +119,13 @@
 .ShiftListView .ShiftListViewCell div.summary
 {
   margin-left: 10px;
-  min-width: 500px;
+  min-width: 485px;
   color: #4B423A;
+}
+
+.ShiftListView .ShiftListViewCell div.draft
+{
+  width: 25px;
 }
 
 .ShiftListView .ShiftListViewCell
@@ -160,4 +164,16 @@ ul.ShiftListView li.ShiftListViewCell:hover
 .ShiftListView .ShiftListViewCell div.date
 {
   margin-left: 6px;
+}
+
+.ShiftListView .ShiftListViewCell div.favorite
+{
+  float: right;
+  margin-right: 20px;
+}
+
+.ShiftListView .ShiftListViewCell div.comments
+{
+  float: right;
+  margin-right: 20px;
 }
