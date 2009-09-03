@@ -11,7 +11,7 @@
   color: #4B423A;
   background-color: #DDD7D2;
   border: 1px solid #CEC9C3;
-  -moz-box-shadow: inset 0 0 8px #BEB9B3;
+  /*-moz-box-shadow: inset 0 0 8px #BEB9B3;*/
   -webkit-box-shadow: inset 0 0 8px #BEB9B3;
 }
 

@@ -18,166 +18,160 @@
   background-color: #fff;  
 
   -webkit-box-shadow: 0px 0px 10px #000;  
-  -moz-box-shadow: 0px 0px 10px #aaa;
+  /*-moz-box-shadow: 0px 0px 10px #aaa;*/
   
   -moz-border-radius: 4px;  
   -webkit-border-radius: 4px;
 }
 
 /*--------------------------------------------------HEADER*/
-    #SSPublishPaneHeader
-    {
-        background-image:url(/images/Console/publish-top-bg.gif);
-        height:27px;
-        padding:1px 0px 0px 4px;
-        
-    }
-  
-    .SSPPPermit{
-        -moz-border-radius: 10px;
-        -webkit-border-radius: 10px;
-        padding:4px 14px 1px 3px;
-        margin-right:2px;
-        background:#fff;
-    }
-    
+#SSPublishPaneHeader
+{
+  background-image:url(/images/Console/publish-top-bg.gif);
+  height:27px;
+  padding:1px 0px 0px 4px;
 
+}
+
+.SSPPPermit{
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  padding:4px 14px 1px 3px;
+  margin-right:2px;
+  background:#fff;
+}
    
 /*---------------------------------------------------BODY*/
-    #SSPublishPaneBody
-    {
-        background:#C6C1BD;
-        height:86px;
-        margin-top:0px;
-        padding-left:4px;
-        background-image:url(/images/Console/publish-top-body.gif);
-        background-repeat:repeat-y;
-    }
-    
-    #SSPublishPaneBody a img{
-        border-style:none;
-        position:relative;
-        left:2px;
-    }
-    
-    #SSPublishPaneBody ul{
-        position:relative;
-        left:-40px;
-        padding-top:3px;
-        bottom:2px;
-    }
-    
-    #SSPublishPaneBody ul li{
-        list-style:none;
-        float:left;
-        padding-left:4px;
-    }
-    
-   #SSPublishPaneVis{
-       position:relative;
-       top:3px;
-       
-   }
-    
-    .SSPinput{
-        position:relative;
-        bottom:-7px;
-        background-image:url(/images/Console/publish-form-input.gif);
-        width:262px;
-        height:22px;
-        border:0px;
-        margin-left:-2px;
-        padding-bottom:5px;
-        padding-left:0px;
-    }
-    
+#SSPublishPaneBody
+{
+  background:#C6C1BD;
+  height:86px;
+  margin-top:0px;
+  padding-left:4px;
+  background-image:url(/images/Console/publish-top-body.gif);
+  background-repeat:repeat-y;
+}
 
-    
-    .SSPPBodyBorder{
-        background-image:url(/images/Console/public-innerborder-left.gif) repeat-y;
-    
-    }
-    
-    .SSBorderTop{
-        
-        
-    }
-    .SSBorderBottom{
-        
-    }
-    
-    .SSPPTagFont{
-        font-size:10px;
-        font-weight: bold;
-    }
-    
-    .SSPPTagUser{
-        color:#f63b02;
-    
-    }
-    
-    .SSPPsharelabel{
-        padding-bottom:3px;
-    }
-    
-    .SSPPTagGroup{
-        color:#8e2327;
-    }
-    
-    
-    #SSPublishPaneTags{
-        padding-top:5px;
-        padding-bottom:15px;
-        overflow:hidden;
-    }
-    
-    #SSPublishPaneBody label{
-        padding-bottom:4px;
-    }
-    
-    
-    .SSPPTagTag{
-        color:#0054a6;
-    }
-    
-    
-    .SSPPTagsroundedCorners{
-        background-color: #fff;
-        -moz-border-radius: 10px;
-        -webkit-border-radius: 10px;
-        padding:2px 3px 1px 3px;
-    }
-    
+#SSPublishPaneBody a img{
+  border-style:none;
+  position:relative;
+  left:2px;
+}
+
+#SSPublishPaneBody ul{
+  position:relative;
+  left:-40px;
+  padding-top:3px;
+  bottom:2px;
+}
+
+#SSPublishPaneBody ul li{
+  list-style:none;
+  float:left;
+  padding-left:4px;
+}
+
+#SSPublishPaneVis{
+  position:relative;
+  top:3px;
+
+}
+
+.SSPinput{
+  position:relative;
+  bottom:-7px;
+  background-image:url(/images/Console/publish-form-input.gif);
+  width:262px;
+  height:22px;
+  border:0px;
+  margin-left:-2px;
+  padding-bottom:5px;
+  padding-left:0px;
+}
+
+
+
+.SSPPBodyBorder{
+  background-image:url(/images/Console/public-innerborder-left.gif) repeat-y;
+
+}
+
+.SSBorderTop{
+
+
+}
+.SSBorderBottom{
+
+}
+
+.SSPPTagFont{
+  font-size:10px;
+  font-weight: bold;
+}
+
+.SSPPTagUser{
+  color:#f63b02;
+
+}
+
+.SSPPsharelabel{
+  padding-bottom:3px;
+}
+
+.SSPPTagGroup{
+  color:#8e2327;
+}
+
+
+#SSPublishPaneTags{
+  padding-top:5px;
+  padding-bottom:15px;
+  overflow:hidden;
+}
+
+#SSPublishPaneBody label{
+  padding-bottom:4px;
+}
+
+
+.SSPPTagTag{
+  color:#0054a6;
+}
+
+
+.SSPPTagsroundedCorners{
+  background-color: #fff;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  padding:2px 3px 1px 3px;
+}
     
 /*----------------------------------------------------FOOTER*/
-    #SSPublishPaneFooter
-    {
-        padding-top:7px;
-        height:32px;
-        background:#ffffff;
-        width:268px;
-        background-image:url(/images/Console/publish-top-footer.gif);
-    }
-    
-    #SaveShift{
-        display:none;
-    }
-    
-    #SSPublishPaneStatus{
-        position:relative;
-        left:5px; 
-        
-    }
-    
-    .SSPublishPubButton{
-        background-color: #f63b02;
-        color:fff;
-        border:1px #b52b01 solid;
-        -moz-border-radius: 10px;
-        -webkit-border-radius: 10px;
-        padding:0px 5px;
-        font-weight:bold;
-    }
-    
+#SSPublishPaneFooter
+{
+  padding-top:7px;
+  height:32px;
+  background:#ffffff;
+  width:268px;
+  background-image:url(/images/Console/publish-top-footer.gif);
+}
 
+#SaveShift{
+  display:none;
+}
 
+#SSPublishPaneStatus{
+  position:relative;
+  left:5px; 
+
+}
+
+.SSPublishPubButton{
+  background-color: #f63b02;
+  color:fff;
+  border:1px #b52b01 solid;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  padding:0px 5px;
+  font-weight:bold;
+}
