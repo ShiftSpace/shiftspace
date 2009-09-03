@@ -37,7 +37,6 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
-    SSAddObserver(this, 'onShiftHide', this.deselectShift.bind(this));
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
     
     // since we're created programmatically we add entry manually for debugging - David
@@ -494,13 +493,7 @@ var SSConsole = new Class({
       invert: true
     });
   },
-
-
-  userClickedRow: function(args)
-  {
-    
-  },
-
+  
 
   userSelectedRow: function(evt)
   {
@@ -521,30 +514,6 @@ var SSConsole = new Class({
   },
   
   
-  showShift: function(shiftId)
-  {
-    // highlight the shift
-  },
-  
-  
-  hideShift: function(shiftId)
-  {
-    // unhighlight the shift
-  },
-  
-  
-  focusShift: function(shiftId)
-  {
-    
-  },
-  
-  
-  blurShift: function(shiftId)
-  {
-    
-  },
-  
-  
   userDeselectedRow: function(evt)
   {
     if(evt.listView == this.AllShiftsListView)
@@ -557,12 +526,6 @@ var SSConsole = new Class({
   getVisibleListView: function()
   {
     if(this.AllShiftsListView.isVisible()) return this.AllShiftsListView;
-  },
-  
-  
-  deselectShift: function(shiftId)
-  {
-    
   },
   
   
