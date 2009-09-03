@@ -184,6 +184,23 @@ ul.ShiftListView li.ShiftListViewCell:hover
   margin-right: 20px;
 }
 
+.ShiftListView .ShiftListViewCell div.favorite div
+{
+  float: left;
+}
+
+.ShiftListView .ShiftListViewCell div.favorite div.favoriteButton
+{
+  width: 18px;
+  height: 18px;
+  background-color: #ccc;
+}
+
+.ShiftListView .ShiftListViewCell div.favorite div.favoriteButton.favorited
+{
+  background-color: yellow;
+}
+
 .ShiftListView .ShiftListViewCell div.comments
 {
   float: right;

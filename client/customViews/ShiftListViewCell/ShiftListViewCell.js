@@ -117,7 +117,14 @@ var ShiftListViewCell = new Class({
   setFavorite: function(favorite)
   {
     var el = this.lockedElement();
-    el.getElement('.favoriteButton').setStyle('background-color', "#f50");
+    if(favorite)
+    {
+      el.getElement('.favoriteButton').addClass('favorited');
+    }
+    else
+    {
+      el.getElement('.favoriteButton').removeClass('favorited');
+    }
   }
 
 });
