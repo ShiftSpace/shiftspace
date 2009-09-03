@@ -93,24 +93,15 @@ var ApplicationServer = new Class({
 
   allCachedDocuments: function()
   {
-    var merged = {};
-    var cache = this.cache();
-    for(var resourceName in cache)
-    {
-      var resource = cache[resourceName];
-      for(var i = 0, len = resource.length; i < len; i++)
-      {
-        var doc = resource[i];
-        merged[doc._id] = doc;
-      }
-    }
+    var merged = {}, cache = this.cache();
+    for(var resourceName in cache) merged = $merge(merged, cache[resourceName]);
     return merged;
   },
 
 
   getDocument: function(id)
   {
-    return this.allCachedDocuments[id];
+    return this.allCachedDocuments()[id];
   },
   
   
