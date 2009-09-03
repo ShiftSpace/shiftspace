@@ -39,7 +39,6 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     SSAddObserver(this, 'onShiftHide', this.deselectShift.bind(this));
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
-    SSAddObserver(this, 'userDidClickCheckboxForRowInTableView', this.userDidClickCheckboxForRowInTableView.bind(this));
     
     // since we're created programmatically we add entry manually for debugging - David
     ShiftSpaceNameTable.SSConsole = this;
@@ -555,30 +554,6 @@ var SSConsole = new Class({
   },
 
 
-  canSelectRow: function(data)
-  {
-
-  },
-
-
-  canSelectColumn: function(data)
-  {
-
-  },
-
-
-  canEditRow: function(evt)
-  {
-    // in the all shifts table the user can edit only if she owns the shift
-    if(evt.tableView == this.AllShiftsListView)
-    {
-      return (ShiftSpaceUser.getUserName() == this.allShiftsDatasource.valueForRowColumn(evt.rowIndex, 'username'));
-    }
-
-    return true;
-  },
-  
-  
   getVisibleListView: function()
   {
     if(this.AllShiftsListView.isVisible()) return this.AllShiftsListView;
@@ -640,21 +615,6 @@ var SSConsole = new Class({
     var spaces = SSSpacesByPosition();
     var spaceToRemove = spaces[index];
     SSUninstallSpace(spaceToRemove.name);
-  },
-  
-  
-  userDidClickCheckboxForRowInTableView: function(data)
-  {
-    var checkedRows = data.tableView.checkedRows();
-    
-    if(checkedRows.length > 0)
-    {
-      this.PublishPane.show();
-    }
-    else
-    {
-      this.PublishPane.hide();
-    }
   },
   
   
