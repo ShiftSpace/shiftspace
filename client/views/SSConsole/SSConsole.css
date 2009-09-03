@@ -73,6 +73,7 @@ body#SSConsoleFrameBody
 }
 
 #MainTabView > .SSControlView > .SSButton.SSActive{
+  font-weight: bold;
 }
 
 #MainTabView > .SSControlView > .SSButton div
