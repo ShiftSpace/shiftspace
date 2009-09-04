@@ -27,16 +27,19 @@ function $iterate(n, fn)
   });
   return result;
 };
+function $arglist(fn) {
+  return fn.toString().match(/function \S*\((.*?)\)/)[1].split(',');
+}
 
 function $isnull(v) { return v === null; };
 function $notnull(v) { return v !== null; };
 
-function $arity()
+function $arity() 
 {
   var fns = $A(arguments);
   var dispatch = [];
   fns.each(function(fn) {
-    var arglist = fn.toString().match(/function \S*\((.*?)\)/)[1].split(',');
+    var arglist = $arglist(fn);
     dispatch[arglist.length] = fn;
   });
   return function () {
