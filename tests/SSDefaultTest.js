@@ -16,7 +16,6 @@ function TestCaseDivide(x, y)
 }
 
 var SSDefaultTest = new Class({
-  
   Extends: SSUnitTest.TestCase,
   name: 'SSDefaultTest',
   
@@ -25,46 +24,26 @@ var SSDefaultTest = new Class({
 
   add: $deftest(
     "Test adding two values and assert correct sum.",
-    function()
-    {
-      this.assertEqual(2+3, 5);
-    }
-  )/*,*/
+    function() { SSUnit.assertEqual(2 + 3, 5); }
+  ),
 
-  /*
   divide: $deftest(
     "Division by zero should throw TestCaseTestDivideByZeroException.",
-    function()
-    {
-      this.assertThrows(TestCaseTestDivideByZeroException, TestCaseDivide, [5, 0]);
-    }
+    function() { SSUnit.assertThrows(TestCaseTestDivideByZeroException, TestCaseDivide.bind(null, [5, 0])); }
   ),
-  */
 
-  /*
   subtract: $deftest(
     "Test substraction.",
-    function()
-    {
-      var x = 5;
-      this.assertNotEqual(x-2, 5);
-    }
+    function() { var x = 5; SSUnit.assertNotEqual(x-2, 5); }
   ),
 
   shouldFail: $deftest(
     "This test should fail",
-    function()
-    {
-      var x = 5;
-      this.assertNotEqual(x, 5);
-    }
+    function() { var x = 5; SSUnit.assertNotEqual(x, 5); }
   ),
 
   multiply: $deftest(
     "Test multiplying two values",
-    function()
-    {
-      this.assert((3*3) == 9);
-    }
-  )*/
+    function() { SSUnit.assert((3*3) == 9); }
+  )
 });
