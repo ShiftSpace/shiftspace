@@ -22,27 +22,27 @@ var SSDefaultTest = new Class({
   setup: function() {},
   tearDown: function() {},
 
-  add: $deftest(
+  add: $fixture(
     "Test adding two values and assert correct sum.",
     function() { SSUnit.assertEqual(2 + 3, 5); }
   ),
 
-  divide: $deftest(
+  divide: $fixture(
     "Division by zero should throw TestCaseTestDivideByZeroException.",
     function() { SSUnit.assertThrows(TestCaseTestDivideByZeroException, TestCaseDivide.bind(null, [5, 0])); }
   ),
 
-  subtract: $deftest(
+  subtract: $fixture(
     "Test substraction.",
     function() { var x = 5; SSUnit.assertNotEqual(x-2, 5); }
   ),
 
-  shouldFail: $deftest(
+  shouldFail: $fixture(
     "This test should fail",
     function() { var x = 5; SSUnit.assertNotEqual(x, 5); }
   ),
 
-  multiply: $deftest(
+  multiply: $fixture(
     "Test multiplying two values",
     function() { SSUnit.assert((3*3) == 9); }
   )
