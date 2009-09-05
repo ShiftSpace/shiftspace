@@ -13,3 +13,6 @@
 [submodule "externals/set"]
 	path = externals/set
 	url = git://github.com/ShiftSpace/set.git
+[submodule "externals/promises"]
+	path = externals/promises
+	url = git://github.com/ShiftSpace/promises.git
