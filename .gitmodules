@@ -10,3 +10,9 @@
 [submodule "externals/functools"]
 	path = externals/functools
 	url = git://github.com/ShiftSpace/functools.git
+[submodule "externals/promises"]
+	path = externals/promises
+	url = git://github.com/ShiftSpace/promises.git
+[submodule "externals/set"]
+	path = externals/set
+	url = git://github.com/ShiftSpace/set.git
