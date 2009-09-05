@@ -207,7 +207,6 @@ function $msg(methodName)
   };
 }
 
-
 function $implements(obj, protocol)
 {
   for(var p in protocol)
@@ -216,7 +215,6 @@ function $implements(obj, protocol)
   }
   return true;
 }
-
 
 function $get(first, prop) {
   var args = $A(arguments);

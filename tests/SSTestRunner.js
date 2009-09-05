@@ -17,15 +17,6 @@ var SSTestRunnerClass = new Class({
   
   loadTest: function(path)
   {
-    // first look for the file in the package json
-    
-    // notify if we don't find it
-    
-    // if we do find it, we need to first load any dependencies
-    
-    // look for the file in the local directory
-
-    // split the path components
     var components = path.split("/");
     var testname = components.getLast();
     var base = testname.split('.')[0];
@@ -37,44 +28,40 @@ var SSTestRunnerClass = new Class({
       {
         // reset the SSUnitTest
         SSUnitTest.reset();
-        
+
         // evaluate test
-        var result = eval(responseText);
-        
+        try
+        {
+          var result = eval(responseText);
+        }
+        catch(err)
+        {
+          console.error(err, "could not load test.");
+          return;
+        }
+
         if(result && result.error)
         {
           alert(result.error);
           return;
         }
-        
+
         // load the TestCase or TestSuite instance
         var testInstance = eval(base);
-        
-        // david, you are such a hacker.
-        // the initialize method in SSUnitTest.TestCase adds itself to the list of testcases
-        new testInstance();
-        
+        new testInstance(); // the initialize method in SSUnitTest.TestCase adds itself to the list of testcases
         $('SSTestRunnerOutput').empty();
-        
-        // run all the tests
 
-        SSUnitTest.setFormatter(new SSUnitTest.ResultFormatter.BasicDOM($('SSTestRunnerOutput')));
-        SSUnitTest.main({interactive:true});
-        
+        // run all the tests
+        var f = new SSUnitTest.ResultFormatter.BasicDOM({container:$('SSTestRunnerOutput')});
+        SSUnitTest.main({formatter:f});
+
       }.bind(this),
       onFailure: function(responseText, responseXML)
       {
         
       }.bind(this)
     }).send();
-  },
-  
-  
-  run: function()
-  {
-    
   }
-  
 });
 
 var SSTestRunner = new SSTestRunnerClass();
