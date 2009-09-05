@@ -3,72 +3,6 @@
 // ==/Builder==
 
 Event.Keys.shift = 16;
-function $identity(v) { return v; }
-function $call(fn) { if(fn && $type(fn) == 'function') fn(); }
-function $apply()
-{
-  var args = $A(arguments);
-  return function(fn) {
-    return fn.apply(null, args);
-  };
-}
-function $callable(v) { return v && $type(v) == 'function'; }
-function $not(fn) 
-{
-  return function() {
-    return !fn.apply(this, $A(arguments));
-  }
-}
-function $iterate(n, fn) 
-{
-  var result = [];
-  (n).times(function() {
-    result.push(fn());
-  });
-  return result;
-};
-function $arglist(fn) {
-  return fn.toString().match(/function \S*\((.*?)\)/)[1].split(',');
-}
-
-function $isnull(v) { return v === null; };
-function $notnull(v) { return v !== null; };
-
-function $arity() 
-{
-  var fns = $A(arguments);
-  var dispatch = [];
-  fns.each(function(fn) {
-    var arglist = $arglist(fn);
-    dispatch[arglist.length] = fn;
-  });
-  return function () {
-    var args = $A(arguments).filter($notnull);
-    return dispatch[args.length].apply(this, args);
-  }
-}
-
-var sum = $arity(
-  function(a) { return a; },
-  function(a, b) { return a + (($type(b) == 'array') ? b.first() || 0 : b); }
-);
-
-function $reduce(fn, ary) 
-{
-  ary = $A(ary);
-  var result = ary.first();
-  while(ary.length != 0) 
-  {
-    var rest = ary.rest();
-    result = fn(result, rest);
-    ary = rest;
-  }
-  return result;
-}
-
-function $repeat(n, v) {
-  return $iterate(n, $lambda(v));
-};
 
 String.implement({
   tail: function(n) { return this.substring(this.length-(n || 1)); },
@@ -79,35 +13,6 @@ String.implement({
   {
     var tail = (options && options.tail === false) ? '' : ((options && options.tail) || '...');
     return this.substring(0, limit) + tail;
-  }
-});
-
-Array.implement({
-  first: function() { return this[0]; },
-  rest: function(n) { return this.slice(n || 1, this.length); },
-  drop: function(n) { return this.slice(0, this.length-n); },
-  tail: function(n) { return this.slice(n, this.length); },
-  head: function(n) { return this.slice(0, n) },
-  isEmpty: function() { return this.length == 0; },
-  select: function(test) { for(var i = 0; i < this.length; i++) if(test(this[i])) return this[i]; return; },
-  zipmap: function(vs) 
-  {
-    var result = {};
-    this.each(function(v, i) { result[this[i]] = vs[i]; }, this);
-    return result;
-  },
-  partition: function(n)
-  {
-    if(this.length % n != 0) throw Error("The length of this array is not a multiple of " + n);
-    var result = [];
-    var ary = this;
-    while(ary.length > 0)
-    {
-      var sub = ary.head(n);
-      result.push(sub);
-      ary = ary.tail(n);
-    }
-    return result;
   }
 });
 
@@ -127,14 +32,6 @@ Hash.implement({
       }
     });
     return result;
-  },
-  
-  asFn: function()
-  {
-    var self = this;
-    return function(k) {
-      return self[k];
-    };
   }
 });
 
@@ -154,58 +51,7 @@ var Delegate = new Class({
   delegate: function() { return this.__delegate; }
 });
 
-Function.implement({
-  decorate: function() 
-  {
-    var decorators = $A(arguments), orig = resultFn = this, decorator;
-    while(decorator = decorators.pop()) resultFn = decorator(resultFn);
-    resultFn._arglist = $arglist(orig);
-    resultFn._decorated = orig;
-    return resultFn;
-  },
-  
-  comp: function()
-  {
-    var fns = $A(arguments), self = this;
-    return function() {
-      var temp = $A(fns);
-      var args = $A(arguments), result = (self && $type(self) == 'function') ? self.apply(this, args) : null, fn;
-      while(fn = temp.shift())
-      {
-        result = fn.apply(null, (result && [result]) || args);
-      }
-      return result;
-    }
-  }
-});
-
 function $element(tag, options) { return new Element(tag, options); }
-
-Class.extend({
-  wrap: function(self, key, method)
-  {
-    if (method._origin) method = method._origin;
-    var wrapper = function(){
-      if (method._protected && this._current == null) throw new Error('The method "' + key + '" cannot be called.');
-      var caller = this.caller, current = this._current;
-      this.caller = current; this._current = arguments.callee;
-      var result = method.apply(this, arguments);
-      this._current = current; this.caller = caller;
-      return result;
-    }.extend({_owner: self, _origin: method, _name: key});
-    method._wrapper = wrapper;
-    return wrapper;
-  }
-});
-
-function $msg(methodName) 
-{
-  var rest = $A(arguments).rest();
-  return function(obj) {
-    SSLog("$msg", rest, SSLogForce);
-    return obj[methodName].apply(obj, rest);
-  };
-}
 
 function $implements(obj, protocol)
 {
@@ -215,36 +61,6 @@ function $implements(obj, protocol)
   }
   return true;
 }
-
-function $get(first, prop) {
-  var args = $A(arguments);
-  var rest = args.drop(2);
-  var next;
-  
-  if(rest.length == 0) return first[prop];
-  if(['object', 'array'].contains($type(first)))
-  {
-    next = first[prop];
-  }
-  if($type(next) == 'function')
-  {
-    next = first[prop]();
-  }
-  return (next == null) ? null : $get.apply(null, [next].concat(rest));
-};
-
-
-function $getf(first, prop) {
-  return $get.apply(null, arguments) || $empty;
-};
-
-
-function $acc() {
-  var args = $A(arguments);
-  return function(obj) {
-    return $get.apply(null, [obj].combine(args));
-  };
-};
 
 // allows for queries on namespaced attributes
 Selectors.RegExps = {
