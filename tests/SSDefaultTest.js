@@ -4,8 +4,8 @@
 // ==/Builder==
 
 var TestCaseTestDivideByZeroException = new Class({
-  Extends:SSException,
-  Implements:SSExceptionPrinter,
+  Extends: SSException,
+  Implements: SSExceptionPrinter,
   name: 'TestCaseTestDivideByZeroException',
 });
 
@@ -21,7 +21,7 @@ var SSDefaultTest = new Class({
   name: 'SSDefaultTest',
   
   setup: function() {},
-  teardown: function() {},
+  tearDown: function() {},
 
   add: $deftest(
     "Test adding two values and assert correct sum.",
@@ -29,7 +29,7 @@ var SSDefaultTest = new Class({
     {
       this.assertEqual(2+3, 5);
     }
-  ),
+  )/*,*/
 
   /*
   divide: $deftest(
@@ -41,6 +41,7 @@ var SSDefaultTest = new Class({
   ),
   */
 
+  /*
   subtract: $deftest(
     "Test substraction.",
     function()
@@ -65,5 +66,5 @@ var SSDefaultTest = new Class({
     {
       this.assert((3*3) == 9);
     }
-  )
+  )*/
 });

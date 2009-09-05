@@ -47,13 +47,24 @@ var SSTestRunnerClass = new Class({
         }
 
         // load the TestCase or TestSuite instance
-        var testInstance = eval(base);
-        new testInstance(); // the initialize method in SSUnitTest.TestCase adds itself to the list of testcases
+        try
+        {
+          var testInstance = eval(base);
+        }
+        catch(err)
+        {
+          console.error(err, "could not instantiate test.");
+          return;
+        }
+        var test = new testInstance(); // the initialize method in SSUnitTest.TestCase/TestSuite adds itself to the list of testcases
+        console.log('test instance', test.name);
         $('SSTestRunnerOutput').empty();
 
         // run all the tests
         var f = new SSUnitTest.ResultFormatter.BasicDOM({container:$('SSTestRunnerOutput')});
+        console.log('running tests');
         SSUnitTest.main({formatter:f});
+        console.log('done');
 
       }.bind(this),
       onFailure: function(responseText, responseXML)

@@ -10,13 +10,11 @@
     </script>
     <script src="../externals/mootools-1.2.3-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="../externals/mootools-1.2.3.1-more.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../externals/promises/Promises.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../externals/functools/FuncTools.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../externals/ssunit/SSException.js" type="text/javascript" charset="utf-8"></script>
-    <script src="../externals/ssunit/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
     <script src="SSTestRunner.js" type="text/javascript" charset="utf-8"></script>
     <script src="init.js" type="text/javascript" charset="utf-8"></script>
     <script src="../builds/shiftspace.sandalphon.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../externals/ssunit/SSException.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../externals/ssunit/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="../styles/ShiftSpace.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     <link rel="stylesheet" href="sandalphon.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     
