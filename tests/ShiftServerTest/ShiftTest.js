@@ -13,11 +13,16 @@ var ShiftTest = new Class({
     SSApp.confirm(SSApp.logout());
     SSApp.confirm(SSApp.login(admin));
     SSApp.confirm(SSApp['delete']('user', 'fakemary'));
+    SSApp.confirm(SSApp['delete']('user', 'fakedave'));
     SSApp.confirm(SSApp.logout());
   },
 
   onComplete: function()
   {
+    SSApp.confirm(SSApp.logout());
+    SSApp.confirm(SSApp.login(admin));
+    SSApp.confirm(SSApp['delete']('user', 'fakemary'));
+    SSApp.confirm(SSApp['delete']('user', 'fakedave'));
     SSApp.confirm(SSApp.logout());
   },
 
@@ -62,7 +67,7 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.logout());
       var json = SSApp.confirm(SSApp.create('shift', noteShift));
       SSUnit.assertEqual(SSGetType(json), UserNotLoggedInError);
-      SSApp.confirm(SSApp.login(admin));
+      SSApp.confirm(SSApp.login(fakemary));
     }
   ),
   
@@ -88,34 +93,34 @@ var ShiftTest = new Class({
       var json = SSApp.confirm(SSApp.read('shift', shift._id));
       SSUnit.assertEqual(SSGetType(json), PermissionError);
       SSApp.confirm(SSApp.logout());
-      SSApp.confirm(SSApp.login(admin));
+      SSApp.confirm(SSApp.login(fakemary));
     }
-  )/*,
+  ),
 
   
-  testPublishPublic: function()
-  {
-    this.doc("Publish a shift to the public.");
-    var shiftId = SSGetData(app.create('shift', noteShift));
-    app.action('shift/'+shiftId+'/publish', {
-      private: false
-    });
-    // TODO: check that the shift is on the user's public stream - David 7/16/09
-    logout();
-    app.action('join', fakedave);
+  publishPublic: $fixture(
+    "Publish a shift to the public.",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSApp.confirm(SSApp.post({resource:'shift', id:shift._id, action:'publish', data:{private:false}, json:true}));
+
+      // TODO: check that the shift is on the user's public stream - David 7/16/09
+      SSApp.confirm(SSApp.logout());
+      SSApp.confirm(SSApp.join(fakedave));
     
-    // check it's readable by all
-    var json = SSGetData(app.read('shift', shiftId));
-    this.assertEqual(json.space.name, "Notes");
+      // check it's readable by all
+      shift = SSApp.confirm(SSApp.read('shift', shift._id));
+      SSUnit.assertEqual(shift.space.name, "Notes");
     
-    // check comments stream
-    json = SSGetData(app.get('shift/'+shiftId+'/comments'));
-    this.assertEqual($type(json), "array");
-    logout();
-    
-    login(admin);
-    app.delete('user', 'fakedave');
-  },
+      // check comments stream
+      var comments = SSApp.confirm(SSApp.get({resource:'shift', id:shift._id, action:'comments'}));
+      SSUnit.assertEqual($type(comments), "array");
+      
+      SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+      SSApp.confirm(SSApp.login(fakemary));
+    }
+  )/*,
   
   
   testPublishPrivate: function()
