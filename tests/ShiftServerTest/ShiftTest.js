@@ -330,27 +330,29 @@ var ShiftTest = new Class({
   ),*/
 
   
-  testUpdate: function()
-  {
-    this.doc("Update a shift");
-    
-    var shiftId = SSGetData.attempt(app.create('shift', noteShift));
+  update: $fixture(
+    "Update a shift",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create("shift", noteShift));
+      shift = SSApp.confirm(
+	SSApp.update("shift", shift._id, 
+	  {
+	    content: 
+	    {
+              text: "Changed the note!",
+              position: {x:500, y:400},
+              size: {x:500, y:400}
+	    }
+	  })
+      );
 
-    var json = SSGetData.attempt(app.update('shift', shiftId, {
-      content: {
-        text: "Changed the note!",
-        position: {x:500, y:400},
-        size: {x:500, y:400}
-      }
-    }));
-
-    json = SSGetData.attempt(app.read('shift', shiftId));
-    var content = json.content;
-    
-    this.assertEqual(content.text, "Changed the note!");
-    this.assertEqual(content.position.x, 500);
-    this.assertEqual(content.position.y, 400);
-  }/*,
+      var content = shift.content;
+      SSUnit.assertEqual(content.text, "Changed the note!");
+      SSUnit.assertEqual(content.position.x, 500);
+      SSUnit.assertEqual(content.position.y, 400);
+    }
+  )/*,
 
   
   testUpdatePermission: function()

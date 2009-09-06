@@ -326,7 +326,7 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var updateRsrcSpec = {resource:resource, method:'update', id:id};
-        this.notifyWatchers(upaateRsrcSpec, value);
+        this.notifyWatchers(updateRsrcSpec, value);
         if(options && options.local) this.updateCache(options.local, value);
         return value;
       }
