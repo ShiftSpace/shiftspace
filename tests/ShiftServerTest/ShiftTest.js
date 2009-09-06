@@ -18,7 +18,7 @@ var ShiftTest = new Class({
 
   onComplete: function()
   {
-    console.log('complete');
+    SSApp.confirm(SSApp.logout());
   },
 
   setup: function() 
@@ -39,51 +39,58 @@ var ShiftTest = new Class({
       var shiftB = SSApp.confirm(SSApp.read('shift', shiftA._id));
       SSUnit.assertEqual(shiftA._id, shiftB._id);
     }
+  ),
+
+  
+  shiftDeleteOnUserDelete: $fixture(
+    "Ensure a user's shift are deleted if his account is deleted",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSApp.confirm(SSApp['delete']('user', 'fakemary'));
+      SSApp.confirm(SSApp.login(admin));
+      var json = SSApp.confirm(SSApp.read('shift', shift._id));
+      SSUnit.assertEqual(SSGetType(json), ResourceDoesNotExistError);
+    }
+  ),
+  
+  
+  createNotLoggedIn: $fixture(
+    "Error trying to create shift if not logged in.",
+    function()
+    {
+      SSApp.confirm(SSApp.logout());
+      var json = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSUnit.assertEqual(SSGetType(json), UserNotLoggedInError);
+      SSApp.confirm(SSApp.login(admin));
+    }
+  ),
+  
+  
+  read: $fixture(
+    "Read a shift.",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSUnit.assertEqual(shift.space.name, "Notes");
+      SSUnit.assertEqual(shift.content.text, "Hello world!");
+    }
+  ),
+  
+
+  draft: $fixture(
+    "A draft should not be visible to anybody but a logged in owner.",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSApp.confirm(SSApp.logout());
+      SSApp.confirm(SSApp.join(fakedave));
+      var json = SSApp.confirm(SSApp.read('shift', shift._id));
+      SSUnit.assertEqual(SSGetType(json), PermissionError);
+      SSApp.confirm(SSApp.logout());
+      SSApp.confirm(SSApp.login(admin));
+    }
   )/*,
-
-  
-  testShiftDeleteOnUserDelete: function()
-  {
-    this.doc("Ensure a user's shift are deleted if his account is deleted");
-    var shiftId = SSGetData(app.create('shift', noteShift));
-    app.delete('user', 'fakemary');
-    login(admin);
-    var json = app.read('shift', shiftId);
-    this.assertEqual(SSGetType(json), ResourceDoesNotExistError); 
-  },
-  
-  
-  testCreateNotLoggedIn: function()
-  {
-    this.doc("Error trying to create shift if not logged in.");
-    logout();
-    var json = app.create('shift', noteShift);
-    this.assertEqual(SSGetType(json), UserNotLoggedInError);
-    login(fakemary);
-  },
-  
-  
-  testRead: function()
-  {
-    this.doc("Read a shift.");
-    var shiftId = SSGetData(app.create('shift', noteShift));
-    var data = SSGetData(app.read('shift', shiftId));
-    this.assertEqual(data.space.name, "Notes");
-    this.assertEqual(data.content.text, "Hello world!");
-  },
-  
-
-  testDraft: function()
-  {
-    this.doc("A draft should not be visible to anybody but a logged in owner.");
-    var shiftId = SSGetData(app.create('shift', noteShift));
-    logout();
-    app.action('join', fakedave);
-    var json = app.read('shift', shiftId);
-    this.assertEqual(SSGetType(json), PermissionError);
-    logout();
-    login(fakemary);
-  },
 
   
   testPublishPublic: function()
