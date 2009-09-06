@@ -35,7 +35,7 @@ var ShiftTest = new Class({
   {
     SSApp.confirm(SSApp['delete']('user', 'fakemary'));
   },
-  
+
   create: $fixture(
     "Create a shift.",
     function()
@@ -120,69 +120,84 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp['delete']('user', 'fakedave'));
       SSApp.confirm(SSApp.login(fakemary));
     }
+  ),
+  
+  
+  publishPrivate: $fixture(
+    "A private published shift should be visible only to people who have permission.",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSApp.confirm(SSApp.logout());
+
+      SSApp.confirm(SSApp.join(fakedave));
+      var json = SSApp.confirm(SSApp.read('shift', shift._id));
+      SSUnit.assertEqual(SSGetType(json), PermissionError);
+      SSApp.confirm(SSApp.logout());
+    
+      SSApp.confirm(SSApp.login(fakemary));
+      SSApp.confirm(
+        SSApp.post({resource:'shift', 
+                    id:shift._id, 
+                    action:'publish', 
+                    data:{users:['fakedave']},
+                    json: true})
+        );
+      SSApp.confirm(SSApp.logout());
+    
+      SSApp.confirm(SSApp.login(fakedave));
+      shift = SSApp.confirm(SSApp.read('shift', shift._id));
+      SSUnit.assertEqual(shift.space.name, "Notes");
+      SSApp.confirm(SSApp.logout());
+    
+      SSApp.confirm(SSApp.join(fakejohn));
+      json = SSApp.confirm(SSApp.read('shift', shift._id));
+      SSUnit.assertEqual(SSGetType(json), PermissionError);
+      SSApp.confirm(SSApp.logout());
+    
+      SSApp.confirm(SSApp.login(admin));
+      SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+      SSApp.confirm(SSApp['delete']('user', 'fakejohn'));
+    }
+  ),
+
+
+  testComment: $fixture(
+    "Comment on a shift.",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSApp.confirm(
+        SSApp.post({resource:'shift', 
+                    id:shift._id, 
+                    action:'publish', 
+                    data:{private:false},
+                    json: true})
+        );
+      SSApp.confirm(SSApp.logout());
+    
+      SSApp.confirm(SSApp.join(fakedave));
+      SSApp.confirm(
+        SSApp.post({resource:'shift', 
+                    id:shift._id, 
+                    action:'comment', 
+                    data:{text:"Hey what a cool shift!"},
+                    json: true})
+        );
+      var comments = SSApp.confirm(SSApp.get({resource:'shift', id:shift._id, action:'comments'}));
+      SSUnit.assertEqual(comments[0].content.text, "Hey what a cool shift!");
+      SSApp.confirm(SSApp.logout());
+    
+      SSApp.confirm(SSApp.login(fakedave));
+      SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+      SSApp.confirm(SSApp.login(fakemary));
+    }
   )/*,
-  
-  
-  testPublishPrivate: function()
-  {
-    this.doc("A private published shift should be visible only to people who have permission.");
-    
-    var shiftId = SSGetData(app.create('shift', noteShift));
-    logout();
-    
-    join(fakedave);
-    var json = app.read('shift', shiftId);
-    this.assertEqual(SSGetType(json), PermissionError);
-    logout();
-    
-    login(fakemary);
-    app.action('shift/'+shiftId+'/publish', {
-      users: ['fakedave']
-    });
-    logout();
-    
-    login(fakedave);
-    json = SSGetData(app.read('shift', shiftId));
-    this.assertEqual(json.space.name, "Notes");
-    logout();
-    
-    join(fakejohn);
-    json = app.read('shift', shiftId);
-    this.assertEqual(SSGetType(json), PermissionError);
-    logout();
-    
-    login(admin);
-    app.delete('user', 'fakedave');
-    app.delete('user', 'fakejohn');
-  },
-
-
-  testComment: function()
-  {
-    this.doc("Comment on a shift.");
-    
-    var shiftId = SSGetData(app.create('shift', noteShift));
-    app.action('shift/'+shiftId+'/publish', {
-      private: false
-    });
-    logout();
-    
-    join(fakedave);
-    json = app.action('shift/'+shiftId+"/comment", {
-      text: "Hey what a cool shift!"
-    });
-    json = SSGetData(app.get('shift/'+shiftId+'/comments'));
-    this.assertEqual(json[0].content.text, "Hey what a cool shift!");
-    logout();
-    
-    login(admin);
-    app.delete('user', 'fakedave');
-  },
 
   
   testReadPrivateComments: function()
   {
-    this.doc("Error if attempt to read on private should. Should work for those with permission.");
+    this.doc("Error if attempt to read comments on private shift. Should work for those with permission.");
 
     var shiftId = SSGetData(app.create('shift', noteShift));
     logout();
