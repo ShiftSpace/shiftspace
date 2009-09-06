@@ -14,6 +14,7 @@ var ShiftTest = new Class({
     SSApp.confirm(SSApp.login(admin));
     SSApp.confirm(SSApp['delete']('user', 'fakemary'));
     SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+    SSApp.confirm(SSApp['delete']('user', 'fakejohn'));
     SSApp.confirm(SSApp.logout());
   },
 
@@ -23,6 +24,7 @@ var ShiftTest = new Class({
     SSApp.confirm(SSApp.login(admin));
     SSApp.confirm(SSApp['delete']('user', 'fakemary'));
     SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+    SSApp.confirm(SSApp['delete']('user', 'fakejohn'));
     SSApp.confirm(SSApp.logout());
   },
 
@@ -35,7 +37,7 @@ var ShiftTest = new Class({
   {
     SSApp.confirm(SSApp['delete']('user', 'fakemary'));
   },
-
+  /*
   create: $fixture(
     "Create a shift.",
     function()
@@ -227,56 +229,105 @@ var ShiftTest = new Class({
       
       SSApp.confirm(SSApp.login(fakemary));
     }
-  )/*,
+  ),
 
   
-  testNotify: function()
-  {
-    this.doc("A user on the shift comment stream notify list should get a message sent to his messageStream.");
-    
-    var shiftId = SSGetData(app.create('shift', noteShift));
-    app.action('shift/'+shiftId+'/publish', {
-      private: false
-    });
-    logout();
-    
-    join(fakedave);
-    json = SSGetData.attempt(app.action('shift/'+shiftId+'/notify'));
-    json = SSGetData.attempt(app.get('/user/fakedave'));
-    this.assertEqual(json.notify.length, 1);
-    logout();
-    
-    join(fakejohn);
-    app.action('shift/'+shiftId+"/comment", {
-      text: "Hey what a cool shift!"
-    });
-    logout();
-    
-    login(fakedave);
-    json = SSGetData.attempt(app.get('user/fakedave/messages'));
-    this.assertEqual(json[0].content.text, "Hey what a cool shift!");
-    app.action('shift/'+shiftId+'/unnotify');
-    json = SSGetData.attempt(app.get('/user/fakedave'));
-    this.assertEqual(json.notify.length, 0);
-    logout();
-    
-    login(fakejohn)
-    app.action('shift/'+shiftId+"/comment", {
-      text: "My other comment!"
-    });
-    json = SSGetData.attempt(app.get('shift/'+shiftId+'/comments'));
-    this.assertEqual(json.length, 2);
-    logout();
-    
-    login(fakedave);
-    json = SSGetData.attempt(app.get('user/fakedave/messages'));
-    this.assertEqual(json.length, 1);
-    logout();
-    
-    login(admin);
-    app.delete('user', 'fakedave');
-    app.delete('user', 'fakejohn');
-  },
+  notify: $fixture(
+    "A user on the shift comment stream notify list should get a message sent to his messageStream.",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSApp.confirm(
+        SSApp.post({
+	  resource:'shift', 
+          id:shift._id, 
+          action:'publish', 
+          data:{private:false},
+          json: true
+	})
+      );
+      SSApp.confirm(SSApp.logout());
+      
+      console.log("joining fakedave");
+      SSApp.confirm(SSApp.join(fakedave));
+      console.log("notifying", shift);
+      SSApp.confirm(
+	SSApp.post({
+	  resource: 'shift', 
+	  id: shift._id, 
+	  action: 'notify'
+	})
+      );
+      console.log("confirming");
+      var user = SSApp.confirm(SSApp.read("user", "fakedave"));
+      // check that the user should be notified about events on the shift comment stream
+      SSUnit.assertEqual(user.notify.length, 1);
+      SSApp.confirm(SSApp.logout());
+      
+      SSApp.confirm(SSApp.join(fakejohn));
+      SSApp.confirm(
+	SSApp.post({
+	  resource: "shift",
+	  id: shift._id,
+	  action: "comment",
+	  data: {text: "Hey what a cool shift!"},
+	  json: true
+	})
+      );
+      SSApp.confirm(SSApp.logout());
+      
+      SSApp.confirm(SSApp.login(fakedave));
+      var messages = SSApp.confirm(SSApp.get({resource:"user", id:"fakedave", action:"messages"}));
+      SSUnit.assertEqual(messages[0].content.text, "Hey what a cool shift!");
+
+      SSApp.confirm(
+	SSApp.post({
+	  resource: "shift", 
+	  id: shift._id,
+	  action: "unnotify"
+	})
+      );
+      user = SSApp.confirm(SSApp.read("user", "fakedave"));
+      SSUnit.assertEqual(user.notify.length, 0);
+      SSApp.confirm(SSApp.logout());
+      
+      SSApp.confirm(SSApp.login(fakejohn));
+      SSApp.confirm(
+	SSApp.post({
+	  resource: "shift",
+	  id: shift._id,
+	  action: "comment", 
+	  data: {text: "My other comment!"},
+          json: true})
+      );
+      var comments = SSApp.confirm(
+	SSApp.get({
+	  resource: "shift",
+	  id: shift._id,
+	  action: "comments"
+	})
+      );
+      SSUnit.assertEqual(comments.length, 2);
+      SSApp.confirm(SSApp.logout());
+      
+      SSApp.confirm(SSApp.login(fakedave));
+      messages = SSApp.confirm(
+	SSApp.get({
+	  resource: "user",
+	  id: "fakedave",
+	  action: "messages"
+	})
+      );
+      SSUnit.assertEqual(messages.length, 1);
+      SSApp.confirm(SSApp.logout());
+      
+      SSApp.confirm(SSApp.login(admin));
+      SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+      SSApp.confirm(SSApp['delete']('user', 'fakejohn'));
+      SSApp.confirm(SSApp.logout());
+      SSApp.confirm(SSApp.login(fakemary));
+    }
+  ),*/
 
   
   testUpdate: function()
@@ -299,7 +350,7 @@ var ShiftTest = new Class({
     this.assertEqual(content.text, "Changed the note!");
     this.assertEqual(content.position.x, 500);
     this.assertEqual(content.position.y, 400);
-  },
+  }/*,
 
   
   testUpdatePermission: function()

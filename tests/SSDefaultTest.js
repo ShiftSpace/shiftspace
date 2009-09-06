@@ -12,7 +12,7 @@ var TestCaseTestDivideByZeroException = new Class({
 function TestCaseDivide(x, y)
 {
   if(y == 0) throw new TestCaseTestDivideByZeroException(new Error(), "Oops! Division by zero!");
-  return x/y;
+  return (x/y);
 }
 
 var SSDefaultTest = new Class({
