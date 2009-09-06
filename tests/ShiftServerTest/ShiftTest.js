@@ -5,30 +5,41 @@
 // ==/Builder==
 
 var ShiftTest = new Class({
-
   Extends: SSUnitTest.TestCase,
   name: 'ShiftTest',
-  
-  setup: function()
+
+  onStart: function()
   {
-    join(fakemary);
+    SSApp.confirm(SSApp.logout());
+    SSApp.confirm(SSApp.login(admin));
+    SSApp.confirm(SSApp['delete']('user', 'fakemary'));
+    SSApp.confirm(SSApp.logout());
   },
-  
+
+  onComplete: function()
+  {
+    console.log('complete');
+  },
+
+  setup: function() 
+  { 
+    SSApp.confirm(SSApp.join(fakemary));
+  },
 
   tearDown: function()
   {
-    app.delete('user', 'fakemary');
-    logout();
+    SSApp.confirm(SSApp['delete']('user', 'fakemary'));
   },
   
-
-  testCreate: function()
-  {
-    this.doc("Create a shift.");
-    var idA = SSGetData(app.create('shift', noteShift));
-    var idB = SSGetData(app.read('shift', idA))._id;
-    this.assertEqual(idA, idB);
-  },
+  create: $fixture(
+    "Create a shift.",
+    function()
+    {
+      var shiftA = SSApp.confirm(SSApp.create('shift', noteShift));
+      var shiftB = SSApp.confirm(SSApp.read('shift', shiftA._id));
+      SSUnit.assertEqual(shiftA._id, shiftB._id);
+    }
+  )/*,
 
   
   testShiftDeleteOnUserDelete: function()
@@ -336,6 +347,6 @@ var ShiftTest = new Class({
     this.assertEqual(JSON.encode(json), ack);
     
     app.delete('user', 'fakedave');
-  }
+  }*/
 })
 

@@ -403,7 +403,7 @@ var ApplicationServer = new Class({
   },
 
   
-  confirm: function (value) { return value; }.asPromise(),
+  confirm: function (p) { p.setAsync(true); p.realize(); return p.value(); },
   show: function(value) { SSLog('show:', value, SSLogForce); }.asPromise(),
 
 
