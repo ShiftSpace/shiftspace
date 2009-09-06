@@ -158,6 +158,8 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.login(admin));
       SSApp.confirm(SSApp['delete']('user', 'fakedave'));
       SSApp.confirm(SSApp['delete']('user', 'fakejohn'));
+      SSApp.confirm(SSApp.logout());
+      SSApp.confirm(SSApp.login(fakemary));
     }
   ),
 
