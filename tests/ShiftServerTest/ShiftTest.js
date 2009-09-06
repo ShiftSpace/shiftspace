@@ -164,7 +164,7 @@ var ShiftTest = new Class({
   ),
 
 
-  testComment: $fixture(
+  comment: $fixture(
     "Comment on a shift.",
     function()
     {
@@ -194,36 +194,40 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp['delete']('user', 'fakedave'));
       SSApp.confirm(SSApp.login(fakemary));
     }
-  )/*,
+  ),
 
   
-  testReadPrivateComments: function()
-  {
-    this.doc("Error if attempt to read comments on private shift. Should work for those with permission.");
-
-    var shiftId = SSGetData(app.create('shift', noteShift));
-    logout();
+  readPrivateComments: $fixture(
+    "Error if attempt to read comments on private shift. Should work for those with permission.",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSApp.confirm(SSApp.logout());
     
-    join(fakedave);
-    var json = app.get('shift/' + shiftId + '/comments');
-    this.assertEqual(SSGetType(json), PermissionError);
-    logout();
+      SSApp.confirm(SSApp.join(fakedave));
+      var json = SSApp.confirm(SSApp.get({resource:'shift', id:shift._id, action:'comments'}));
+      SSUnit.assertEqual(SSGetType(json), PermissionError);
+      SSApp.confirm(SSApp.logout());
     
-    // publish the shift
-    login(fakemary);
-    app.action('shift/'+shiftId+'/publish', {
-      users: ['fakedave']
-    });
-    logout();
+      // publish the shift
+      SSApp.confirm(SSApp.login(fakemary));
+      SSApp.confirm(
+        SSApp.post({resource:'shift', 
+                    id:shift._id, 
+                    action:'publish', 
+                    data:{users:['fakedave']},
+                    json: true})
+        );
+      SSApp.confirm(SSApp.logout());
     
-    login(fakedave);
-    json = SSGetData(app.get('shift/' + shiftId + '/comments'));
-    this.assertEqual($type(json), "array");
-    logout();
-    
-    login(admin);
-    app.delete('user', 'fakedave');
-  },
+      SSApp.confirm(SSApp.login(fakedave));
+      var comments = SSApp.confirm(SSApp.get({resource:'shift', id:shift._id, action:'comments'}));
+      SSUnit.assertEqual($type(comments), "array");
+      SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+      
+      SSApp.confirm(SSApp.login(fakemary));
+    }
+  )/*,
 
   
   testNotify: function()
