@@ -403,11 +403,8 @@ var ApplicationServer = new Class({
   },
 
   
-  confirm: function (value)
-  {
-    SSLog('confirm:', SSLogForce);
-    SSLog(value, SSLogForce);
-  }.asPromise(),
+  confirm: function (value) { return value; }.asPromise(),
+  show: function(value) { SSLog('show:', value, SSLogForce); }.asPromise(),
 
 
   noErr: function(v, allowNull)

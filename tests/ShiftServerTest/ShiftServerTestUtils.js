@@ -80,29 +80,6 @@ var admin = {
   passwordVerify: 'shiftspace'
 };
 
-function req(options)
-{
-  options.async = false;
-  options.emulation = false;
-  options.url = (server + options.url);
-  options.url = (options.resourceId) ? options.url + '/' + options.resourceId : options.url;
-  
-  if(options.resourceId) delete options.resourceId;
-
-  if(options.json)
-  {
-    options.headers = {};
-    options.headers['Content-type'] = 'application/json';
-  }
-  
-  if(options.json)
-  {
-    options.data = JSON.encode(options.data);
-    delete options.json;
-  }
-
-  new Request.JSON(options).send()
-}
 
 function SSGetData(json)
 {
@@ -115,85 +92,6 @@ function SSGetType(json)
   return json.type;
 }
 
-
-function adminJoin()
-{
-  req({
-    url: "/join",
-    method: 'post',
-    json: true,
-    data:
-    {
-      userName: 'shiftspace',
-      email: 'info@shiftspace.org',
-      password: 'changetheweb',
-      passwordVerify: 'changetheweb'
-    }
-  });
-}
-
-function login(user)
-{
-  var result;
-  req({
-    url: "/login",
-    method: 'post',
-    data:
-    {
-      userName: user.userName,
-      password: user.password
-    },
-    onComplete: function(json)
-    {
-      result = json;
-    }
-  });
-  return result;
-}
-
-
-function setPerm(id, userName, level)
-{
-  var result;
-  req({
-    url: "/stream/"+id+'/permission',
-    method: 'post',
-    data:
-    {
-      userName: userName,
-      level: level
-    },
-    onComplete: function(json)
-    {
-      result = json;
-    }
-  });
-  return result;
-}
-
-function join(user)
-{
-  return app.action('join', user);
-}
-
-function logout()
-{
-  return app.action('logout');
-}
-
-function query()
-{
-  var result;
-  req({
-    url: "/query",
-    method: "get",
-    onComplete: function(json)
-    {
-      console.log(json);
-    }
-  });
-  return result;
-}
 
 var resourceDelegate = {
   optionsForResource: function()
