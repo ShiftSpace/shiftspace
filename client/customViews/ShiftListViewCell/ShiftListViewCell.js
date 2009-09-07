@@ -42,7 +42,7 @@ var ShiftListViewCell = new Class({
       favoriteButton.addEvent("click", function(evt) {
 	evt = new Event(evt);
 	var target = $(evt.target), li = target.getParent("li");
-	var id = this.delegate().dataForCellNode(li)._id, p;
+	var id = this.data(li)._id, p;
 	if(!target.hasClass("favorited"))
 	{
 	  p = SSFavoriteShift(id);
@@ -57,10 +57,23 @@ var ShiftListViewCell = new Class({
       }.bind(this))
     }
 
+    var comments = clone.getElement(".comments");
+    if(comments)
+    {
+      comments.addEvent("click", function(evt) {
+	evt = new Event(evt);
+	var target = $(evt.target), li = target.getParent("li");
+	var id = this.data(li)._id, p;
+	SSLog("show comments for shift", id, SSLogForce);
+	SSPostNotification("showComments", id);
+	evt.stop();
+      }.bind(this))
+    }
+
     return clone;
   },
 
-
+  
   setUnread: function(unread)
   {
     var el = this.lockedElement();
@@ -94,8 +107,9 @@ var ShiftListViewCell = new Class({
   
   setSpace: function(space)
   {
-    var el = this.lockedElement();
-    el.getElement('.spaceIcon').setProperty('src', SSInfo(space.name).icon);
+    var el = this.lockedElement(), name = el.getElement('.spaceName'), icon = el.getElement('.spaceIcon');
+    if(name) name.set('text', space.name);
+    if(icon) icon.setProperty('src', SSInfo(space.name).icon);
   },
   
   

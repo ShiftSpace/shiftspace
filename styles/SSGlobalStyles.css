@@ -163,6 +163,11 @@ ul.ShiftListView li.ShiftListViewCell:hover
   background-color: white;
 }
 
+ul.ShiftListView li.ShiftListViewCell:hover .spaceName
+{
+  display: block;
+}
+
 .ShiftListView .ShiftListViewCell.selected
 {
   background-color: #81C49C;
@@ -171,6 +176,13 @@ ul.ShiftListView li.ShiftListViewCell:hover
 .ShiftListView .ShiftListViewCell .spaceIcon
 {
   margin-left: 10px;
+}
+
+.ShiftListView .ShiftListViewCell .spaceName
+{
+  margin-left: 10px;
+  display: none;
+  font-weight: bold;
 }
 
 .ShiftListView .ShiftListViewCell div.date
@@ -204,6 +216,9 @@ ul.ShiftListView li.ShiftListViewCell:hover
 .ShiftListView .ShiftListViewCell div.comments
 {
   float: right;
+  background-color: #ccc;
+  width: 18px;
+  height: 18px;
   margin-right: 20px;
 }
 

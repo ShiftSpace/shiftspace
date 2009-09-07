@@ -89,6 +89,7 @@ var ShiftSpace = new (function() {
       ShiftSpace.Console = new SSConsole();
       ShiftSpace.Notifier = new SSNotifierView();
       ShiftSpace.SpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
+      ShiftSpace.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
       ShiftSpace.Sandalphon = Sandalphon;
       
       // Add to look up table

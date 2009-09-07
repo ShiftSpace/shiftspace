@@ -406,7 +406,6 @@ var SSListView = new Class({
       newData - A javascript array row.
     
     See Also:
-      getData
       data
   */
   setData: function(newData)
@@ -424,7 +423,6 @@ var SSListView = new Class({
 
       See Also:
         setData
-        getData
   */
   data: function()
   {

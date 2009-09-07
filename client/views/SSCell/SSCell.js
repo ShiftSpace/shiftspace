@@ -210,14 +210,9 @@ var SSCell = new Class({
   },
   
   
-  getData: function()
+  data: function(cellNode)
   {
-    var args = $A(arguments);
-    if((args.length == 1) && (args[0] instanceof Array))
-    {
-      args = $A(args[0]);
-    }
-    return args.map(this.getProperty.bind(this)).associate(args);
+    return this.delegate().dataForCellNode(cellNode);
   },
   
   
