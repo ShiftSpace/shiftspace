@@ -22,8 +22,22 @@ var SSPublishPane = new Class({
   {
     this.parent(el, options);
     this.setSelectedShifts($H());
+    SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
+    SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
     SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
     SSAddObserver(this, 'onShiftDeselect', this.onShiftDeselect.bind(this));
+  },
+
+  
+  onShiftListViewShow: function(evt)
+  {
+    SSLog("onShiftListViewShow", evt.listView.getName(), SSLogForce);
+  },
+
+
+  onShiftListViewHide: function(evt)
+  {
+    SSLog("onShiftListViewHide", evt.listView.getName(), SSLogForce);
   },
   
   

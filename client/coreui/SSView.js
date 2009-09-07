@@ -376,11 +376,19 @@ var SSView = new Class({
     this.fireEvent('willShow', this);
     this.element.removeClass('SSDisplayNone');
     this.element.addClass('SSActive');
+    this.willShow();
     this.__isVisible = true;
     this.fireEvent('show', this);
     this.subViews().each($msg('__refresh__'));
   },
-  
+
+
+  willShow: function()
+  {
+    //SSLog("willShow", this.getName(), SSLogForce);
+    if(this.isVisible()) this.subViews().each($msg('willShow'));
+  },
+
 
   /*
     Function: hide
@@ -389,12 +397,20 @@ var SSView = new Class({
   hide: function()
   {
     this.fireEvent('willHide', this);
+    this.willHide();
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
     this.__isVisible = false;
     this.fireEvent('hide', this);
   },
   
+
+  willHide: function()
+  {
+    //SSLog("willHide", this.getName(), SSLogForce);
+    if(this.isVisible()) this.subViews().each($msg('willHide'), this);
+  },
+
 
   isVisible: function()
   {
@@ -515,10 +531,10 @@ var SSView = new Class({
     Returns:
       An array of SSView instances.
   */
-  subViews: function()
+  subViews: function(el)
   {
-    return this.element.getElements('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
-      return (controller.isAwake() && controller.superView() == this);
+    return (el || this.element).getElements('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
+      return (controller.isAwake && controller.isAwake() && controller.superView() == this);
     }, this);
   },
   

@@ -35,13 +35,6 @@ var SSTabView = new Class({
     this.element.addEvent('click', this.eventDispatch.bind(this));
   },
   
-  
-  show: function()
-  {
-    this.parent();
-  },
-  
-  
   /*
     Function: eventDispatch (private)
       Dispatches the selectTab event when tab when hit. selectTab is only called if the SSControlView class name is not null. 
@@ -256,6 +249,7 @@ var SSTabView = new Class({
         else
         {
           lastTabPane.removeClass('SSActive');
+	  this.subViews(lastTabPane).each($msg("willHide"), this);
         }
         
         this.fireEvent('tabDeselected', {tabView:this, tabIndex:this.__selectedTab});
@@ -270,7 +264,9 @@ var SSTabView = new Class({
       }
       else
       {
-        this.contentViewForIndex(idx).addClass('SSActive');
+	var node = this.contentViewForIndex(idx)
+        node.addClass('SSActive');
+	this.subViews(node).each($msg("willShow"), this);
       }
       
       // hide the tab button

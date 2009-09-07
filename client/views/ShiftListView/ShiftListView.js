@@ -28,10 +28,15 @@ var ShiftListView = new Class({
   },
   
   
-  show: function()
+  willShow: function()
   {
-    this.parent();
-    SSLog('ShiftListView show!', SSLogForce);
+    SSPostNotification("onShiftListViewShow", {listView:this});
+  },
+
+
+  willHide: function()
+  {
+    SSPostNotification("onShiftListViewHide", {listView:this});
   },
   
   
