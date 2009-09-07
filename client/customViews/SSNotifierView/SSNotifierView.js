@@ -329,7 +329,7 @@ var SSNotifierView = new Class({
     $clear(this.closeTimer);
     $clear(this.hideTimer);
     $clear(this.showTimer);
-    $clear(this.openTimer);
+    $clear(this.opneTimer);
   },
   
   

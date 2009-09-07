@@ -64,7 +64,6 @@ var ShiftListViewCell = new Class({
 	evt = new Event(evt);
 	var target = $(evt.target), li = target.getParent("li");
 	var id = this.data(li)._id, p;
-	SSLog("show comments for shift", id, SSLogForce);
 	SSPostNotification("showComments", id);
 	evt.stop();
       }.bind(this))

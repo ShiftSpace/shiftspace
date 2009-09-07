@@ -14,6 +14,25 @@ var SSCommentPane = new Class({
     this.parent(el, options);
     this.setIsOpen(false);
     this.setIsVisible(false);
+
+    SSAddObserver(this, "showComments", this['open'].bind(this));
+    SSAddObserver(this, "hideComments", this['close'].bind(this));
+  },
+
+ 
+  'open': function(shiftId)
+  {
+    SSLog("Show comments for", shiftId, SSLogForce);
+    this.element.removeClass("SSCommentPaneClosed");
+    this.element.addClass("SSCommentPaneOpen");
+  },
+
+
+  'close': function()
+  {
+    SSLog("Hide comments", SSLogForce);
+    this.element.removeClass("SSCommentPaneOpen");
+    this.element.addClass("SSCommentPaneClosed");
   },
   
   
@@ -105,6 +124,8 @@ var SSCommentPane = new Class({
   {
     var context = this.contentWindow();
     var doc = this.contentDocument();
+
+    this.SSCloseComments.addEvent("click", this['close'].bind(this));
   },
   
   

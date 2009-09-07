@@ -1,5 +1,25 @@
 <div id="SSCommentPane"
      class="SSCommentPane"
      uiclass="SSCommentPane">
-  Hello world!
+
+  <ul id="SSCommentsListView"
+       class="SSListView"
+       uiclass="SSListView">
+    <li class="SSCell"
+	uiclass="SSCell">
+    </li>
+  </ul>
+
+  <form>
+    <label>Leave a comment</label>
+    <textarea>
+    </textarea>
+
+    <label>Notify me when other people comment on this thread</label>
+    <input type="checkbox" checked="true"></input>
+
+    <input id="SSCloseComments" outlet="SSCommentPane" type="button" value="Close"></input>
+    <input type="submit" value="Submit"></input>
+  </form>
+
 </div>
