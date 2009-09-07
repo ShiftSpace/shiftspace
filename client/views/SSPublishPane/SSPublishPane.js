@@ -21,7 +21,6 @@ var SSPublishPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    this.setSelectedShifts($H());
     SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
     SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
     SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
@@ -43,7 +42,7 @@ var SSPublishPane = new Class({
   
   setCurrentListView: function(current)
   {
-    this.__current = current.getName();
+    this.__current = current;
   },
   
   
@@ -55,54 +54,22 @@ var SSPublishPane = new Class({
   
   count: function()
   {
-    if(!this.selectedShifts()[this.currentListView()]) return 0;
-    return this.selectedShifts()[this.currentListView()].length;
-  },
-  
-  
-  setSelectedShifts: function(ary)
-  {
-    this.__selectedShifts = ary;
-  },
-  
-  
-  selectedShifts: function()
-  {
-    return this.__selectedShifts;
+    return this.currentListView().checkedItemIndices().length;
   },
   
   
   onShiftSelect: function(evt)
   {
     if(!this.isVisible()) this.show();
-    this.addShift(evt);
+    this.setCurrentListView(evt.listView);
+    this.update();
   },
   
   
   onShiftDeselect: function(evt)
   {
-    this.removeShift(evt);
-    if(this.selectedShifts()[evt.listView.getName()].length == 0) this.hide();
-  },
-  
-  
-  addShift: function(evt)
-  {
     this.setCurrentListView(evt.listView);
-    var listViewName = evt.listView.getName();
-    var selectedShifts = this.selectedShifts();
-    var listViewSelectedShifts = selectedShifts[listViewName];
-    if(!listViewSelectedShifts) selectedShifts[listViewName] = [];
-    selectedShifts[listViewName].push(evt.index);
-    this.update();
-  },
-  
-  
-  removeShift: function(evt)
-  {
-    this.setCurrentListView(evt.listView);
-    var listViewName = evt.listView.getName();
-    this.selectedShifts()[listViewName].erase(evt.index);
+    if(this.count() == 0) this.hide();
     this.update();
   },
   
@@ -119,12 +86,6 @@ var SSPublishPane = new Class({
   },
   
   
-  checkedShifts: function()
-  {
-    return $getf(this, 'delegate', 'checkedShifts').bind(this.delegate())();
-  },
-  
-  
   awake: function()
   {
     this.mapOutletsToThis();
@@ -135,16 +96,15 @@ var SSPublishPane = new Class({
   deleteShifts: function(evt)
   {
     evt = new Event(evt);
-    var listView = ShiftSpace.Console.visibleListView();
-    var listViewName = listView.getName();
-    var selectedShifts = this.selectedShifts()[listViewName];
+    var selectedShifts = this.currentListView().checkedItemIds();
     
     if(selectedShifts && selectedShifts.length > 0)
     {
       var len = selectedShifts.length;
       var str = (len != 1) ? "these shifts" : "this shift";
       if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
-      return new Promise(listView.get(selectedShifts).map(SSDeleteShift));
+      var p = new Promise(selectedShifts.map(SSDeleteShift));
+      p.realize();
     }
   },
   
@@ -152,14 +112,28 @@ var SSPublishPane = new Class({
   saveShifts: function(evt)
   {
     evt = new Event(evt);
-    var shifts = this.checkedShifts();
   },
   
   
   publishShifts: function(evt)
   {
     evt = new Event(evt);
-    var shifts = this.checkedShifts();
+    var selectedShifts = this.currentListView().checkedItemIds();
+    if(selectedShifts && selectedShifts.length > 0)
+    {
+      var p = new Promise(
+	selectedShifts.map(function(id) {
+	  return SSApp.post({
+	    resource: "shift",
+	    id: id,
+	    action: "publish",
+	    data: {private: false},
+	    json: true
+	  })    
+	})
+      );
+      p.realize();
+    }
   },
   
   
@@ -192,9 +166,7 @@ var SSPublishPane = new Class({
   {
     if(this.count() == 1)
     {
-      var selectedIdx = this.selectedShifts()[this.currentListView()][0];
-      var listView = ShiftSpaceNameTable[this.currentListView()];
-      var publishData = listView.get(selectedIdx).publishData;
+      var publishData = this.currentListView().checkedItems()[0].publishData;
       this.element.getElement("#SSPublishPaneStatus label").removeClass('SSDisplayNone');
       if(publishData.draft)
       {
@@ -216,5 +188,4 @@ var SSPublishPane = new Class({
   {
     return {byHref:window.location.href.split("#")[0]};
   }
-
 });

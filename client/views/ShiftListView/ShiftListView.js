@@ -67,14 +67,25 @@ var ShiftListView = new Class({
   },
 
 
-  checkedItems: function()
+  
+  checkedItemIndices: function()
   {
     var indices = [];
     this.cellNodes().each(function(el, i) {
       if(el.getElement('input[type=checkbox]').getProperty("checked")) indices.push(i);
     });
-    var ids = indices.map(Function.comp(this.data().asFn(), $acc("_id")));
-    return ids;
+    return indices
+  },
+
+
+  checkedItems: function()
+  {
+    return this.checkedItemIndices().map(this.data().asFn());
+  },
+
+
+  checkedItemIds: function()
+  {
+    return this.checkedItemIndices().map(Function.comp(this.data().asFn(), $acc("_id")));
   }
-  
 });
