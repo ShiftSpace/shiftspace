@@ -36,6 +36,13 @@ var ShiftListViewCell = new Class({
     }.bind(this));
     return clone;
   },
+
+
+  setUnread: function(unread)
+  {
+    var el = this.lockedElement();
+    el.getElement(".unread").set("text", (unread) ? "unread" : "read");
+  },
   
   
   setSummary: function(summary)

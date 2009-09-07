@@ -34,12 +34,21 @@ var InboxPane = new Class({
   },
 
 
+  transform: function(data)
+  {
+    var content = data.content;
+    data.summary = content.text;
+    return data;
+  },
+
+
   onUserLogin: function(user)
   {
     if(this.__resourcesInitialized) return;
     this.__resourcesInitialized = true;
-    this.messages = new SSResource("MyShifts", {
+    this.messages = new SSResource("Messages", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/messages', 'delete':'event'},
+      transforms: [this.transform],
       watches: [{
                   events: [{resource:"event", action:"read"},
                            {resource:"event", action:"unread"}],
