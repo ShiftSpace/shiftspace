@@ -20,6 +20,7 @@ var ShiftListViewCell = new Class({
   clone: function()
   {
     var clone = this.parent();
+
     clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
       evt = new Event(evt);
       var li = (evt.target.get('tag') == 'li') ? evt.target : evt.target.getParent('li');
@@ -34,6 +35,24 @@ var ShiftListViewCell = new Class({
       }
       evt.stopPropagation();
     }.bind(this));
+
+    clone.getElement('.favoriteButton').addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var target = $(evt.target), li = target.getParent("li");
+      var id = this.delegate().dataForCellNode(li)._id, p;
+      if(!target.hasClass("favorited"))
+      {
+	p = SSFavoriteShift(id);
+	p.realize();
+      }
+      else
+      {
+	p = SSUnfavoriteShift(id);
+	p.realize();
+      }
+      evt.stop();
+    }.bind(this))
+
     return clone;
   },
 

@@ -456,3 +456,21 @@ var SSAddShifts = function(shifts)
     SSSetShift(shift._id, shift);
   });
 }.asPromise();
+
+function SSFavoriteShift(id)
+{
+  return SSApp.post({
+    resource: "shift",
+    id: id,
+    action: "favorite",
+  });
+}
+
+function SSUnfavoriteShift(id)
+{
+  return SSApp.post({
+    resource: "shift",
+    id: id,
+    action: "unfavorite",
+  });
+}

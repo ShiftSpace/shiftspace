@@ -1212,6 +1212,12 @@ var SSListView = new Class({
   {
     return this.indexOfNode(this.cellNodes(), cellNode);
   },
+
+
+  dataForCellNode: function(cellNode)
+  {
+    return this.data()[this.indexOfCellNode(cellNode)];
+  },
   
   /*
     Function: onCellClick 
