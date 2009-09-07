@@ -174,7 +174,7 @@ var ShiftTest = new Class({
       SSApp.confirm(
         SSApp.post({resource:'shift', 
                     id:shift._id, 
-                    action:'publish', 
+                    action:'publish',
                     data:{private:false},
                     json: true})
         );
@@ -248,9 +248,7 @@ var ShiftTest = new Class({
       );
       SSApp.confirm(SSApp.logout());
       
-      console.log("joining fakedave");
       SSApp.confirm(SSApp.join(fakedave));
-      console.log("notifying", shift);
       SSApp.confirm(
 	SSApp.post({
 	  resource: 'shift', 
@@ -258,7 +256,6 @@ var ShiftTest = new Class({
 	  action: 'notify'
 	})
       );
-      console.log("confirming");
       var user = SSApp.confirm(SSApp.read("user", "fakedave"));
       // check that the user should be notified about events on the shift comment stream
       SSUnit.assertEqual(user.notify.length, 1);

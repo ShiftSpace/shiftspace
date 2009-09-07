@@ -55,15 +55,8 @@ var UserTest = new Class({
   name: 'UserTest',
   
 
-  setup: function()
-  {
-    
-  },
-  
-
-  tearDown: function()
-  {
-  },
+  setup: function() {},
+  tearDown: function() {},
   
 
   testMissingEmail: function()
