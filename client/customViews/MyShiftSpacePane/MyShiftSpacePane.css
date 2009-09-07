@@ -1,4 +1,4 @@
-ul#MyShiftsListView
+ul#MyShiftsListView, ul#MyFavoritesListView
 {
   left: 0px;
 }

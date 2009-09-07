@@ -1,4 +1,6 @@
-<div id="MyShiftSpacePane" class="SSTabPane">
+<div id="MyShiftSpacePane" 
+     class="SSTabPane"
+     uiclass="MyShiftSpacePane">
 
   <!-- Start MyShiftSpaceTabView -->
   <div id="MyShiftSpaceTabView"
@@ -40,7 +42,34 @@
       <!-- End My Shifts List View -->
 
       <div class="SSTabPane">My Comments</div>
-      <div class="SSTabPane">My Favorites</div>
+
+      <!-- Start My Favorites View -->
+      <div class="SSTabPane">
+        <ul id="MyFavoritesListView"
+            class="SSListView ShiftListView"
+            uiclass="ShiftListView"
+            outlet="MyShiftSpacePane">
+          <li class="SSCell ShiftListViewCell"
+              uiclass="ShiftListViewCell"
+              options="{
+                properties: ['space', 'href', 'gravatar', 'userName', 'summary', 'modified', 'commentCount']
+              }">
+            <div class="selected">
+              <input type="checkbox"/>
+            </div>
+            <img class="spaceIcon"></img>
+            <div class="summary"></div>
+            <div class="gravatarContainer">
+              <img class="gravatar"></img>
+            </div>
+            <div class="userName"></div>
+            <div class="domain"></div>
+            <div class="date"></div>
+            <div class="comments"></div>
+          </li>
+        </ul>
+      </div>
+      <!-- End My Favorites View -->
 
     </div>
     
