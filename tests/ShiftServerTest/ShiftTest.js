@@ -37,7 +37,7 @@ var ShiftTest = new Class({
   {
     SSApp.confirm(SSApp['delete']('user', 'fakemary'));
   },
-  /*
+
   create: $fixture(
     "Create a shift.",
     function()
@@ -352,7 +352,7 @@ var ShiftTest = new Class({
       SSUnit.assertEqual(content.position.x, 500);
       SSUnit.assertEqual(content.position.y, 400);
     }
-  ),*/
+  ),
 
   
   updatePermission: $fixture(
@@ -413,40 +413,43 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp['delete']('user', 'fakedave'));
       SSApp.login(fakemary);
     }
-  )/*,
+  ),
 
   
-  testDelete: function()
-  {
-    this.doc("Delete a shift.");
-    
-    var shiftId = SSGetData.attempt(app.create('shift', noteShift));
-    app.delete('shift', shiftId);
-    var errType = SSGetType.attempt(app.read('shift', shiftId))
-    this.assertEqual(errType, ResourceDoesNotExistError);
-  },
+  "delete": $fixture(
+    "Delete a shift.",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSApp.confirm(SSApp['delete']('shift', shift._id));
+      var error = SSApp.confirm(SSApp.read('shift', shift._id));
+      SSUnit.assertEqual(error.type, ResourceDoesNotExistError);
+    }
+  ),
   
   
-  testDeletePermission: function()
-  {
-    this.doc("Error deleting a shift without permission. Admin allowed");
-    
-    var shiftId = SSGetData.attempt(app.create('shift', noteShift));
-    logout();
-    
-    var errType = SSGetType.attempt(app.delete('shift', shiftId));
-    this.assertEqual(errType, UserNotLoggedInError);
-    
-    join(fakedave);
-    errType = SSGetType.attempt(app.delete('shift', shiftId));
-    this.assertEqual(errType, PermissionError);
-    logout();
-    
-    login(admin);
-    var json = app.delete('shift', shiftId);
-    this.assertEqual(JSON.encode(json), ack);
-    
-    app.delete('user', 'fakedave');
-  }*/
-})
-
+  deletePermission: $fixture(
+    "Error deleting a shift without permission. Admin allowed",
+    function()
+    {
+      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSApp.confirm(SSApp.logout());
+      
+      var error = SSApp.confirm(SSApp['delete']('shift', shift._id));
+      SSUnit.assertEqual(error.type, UserNotLoggedInError);
+      
+      SSApp.confirm(SSApp.join(fakedave));
+      error = SSApp.confirm(SSApp['delete']('shift', shift._id));
+      SSUnit.assertEqual(error.type, PermissionError);
+      SSApp.confirm(SSApp.logout());
+      
+      SSApp.confirm(SSApp.login(admin));
+      var json = SSApp.confirm(SSApp['delete']('shift', shift._id));
+      SSUnit.assertEqual(JSON.encode(json), ack);
+      
+      SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+      SSApp.confirm(SSApp.logout());
+      SSApp.confirm(SSApp.login(fakemary))
+    }
+  )
+});
