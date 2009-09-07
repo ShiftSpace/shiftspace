@@ -7,18 +7,52 @@
 // ==/Builder==
 
 var InboxPane = new Class({
-
   Extends: SSView,
   name: "InboxPane",
 
   initialize: function(el, options)
   {
     this.parent(el, options);
+    if(!ShiftSpaceUser.isLoggedIn())
+    {
+      SSAddObserver(this, "onUserLogin", this.onUserLogin.bind(this));
+      SSAddObserver(this, "onUserJoin", this.onUserLogin.bind(this));
+    }
+    SSAddObserver(this, "onUserLogout", this.onUserLogout.bind(this));
   },
 
 
-  awake: function()
+  awake: function(args)
   {
     this.mapOutletsToThis();
+  },
+
+
+  afterAwake: function()
+  {
+    if(ShiftSpaceUser.isLoggedIn()) this.onUserLogin();
+  },
+
+
+  onUserLogin: function(user)
+  {
+    if(this.__resourcesInitialized) return;
+    this.__resourcesInitialized = true;
+    this.messages = new SSResource("MyShifts", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/messages', 'delete':'event'},
+      watches: [{
+                  events: [{resource:"event", action:"read"},
+                           {resource:"event", action:"unread"}],
+                  handlers: [SSResource.dirtyTheViews]
+                }],
+      views: [this.MessagesListView]
+    });
+  },
+
+
+  onUserLogout: function(json)
+  {
+    this.__resourcesInitialized = false;
+    this.messages.dispose();
   }
 });

@@ -47,11 +47,13 @@
   
   <!-- MessagesListView Start -->
   <ul id="MessagesListView"
-      class="SSListView"
-      uiclass="SSListView">
+      class="SSListView ShiftListView"
+      uiclass="ShiftListView"
+      outlet="InboxPane">
 
-    <li class="SSCell" 
-	uiclass="SSCell">
+    <li class="SSCell ShiftListViewCell" 
+	uiclass="ShiftListViewCell"
+	options="{properties:[]}">
       <div class="selected">
 	<input type="checkbox"/>
       </div>
