@@ -30,13 +30,13 @@ var SSPublishPane = new Class({
   
   onShiftListViewShow: function(evt)
   {
-    SSLog("onShiftListViewShow", evt.listView.getName(), SSLogForce);
+    //SSLog("onShiftListViewShow", evt.listView.getName(), SSLogForce);
   },
 
 
   onShiftListViewHide: function(evt)
   {
-    SSLog("onShiftListViewHide", evt.listView.getName(), SSLogForce);
+    //SSLog("onShiftListViewHide", evt.listView.getName(), SSLogForce);
   },
   
   
