@@ -224,31 +224,31 @@ var ApplicationServer = new Class({
   },
   
   
-  notifyWatchers: function(rsrcSpec, value)
+  notifyWatchers: function(rsrcSpec, value, oldValue)
   {
     var resourceSpec = $hash($H(rsrcSpec).extract(['resource', 'method'], true));
     var watchers = this.__watchersFor__(resourceSpec);
-    watchers.each($msg('matchSpec', resourceSpec, value));
+    watchers.each($msg('matchSpec', resourceSpec, value, oldValue));
     
     if(rsrcSpec.id)
     {
       var idSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'id'], true));
       watchers = this.__watchersFor__(idSpec);
-      watchers.each($msg('matchSpec', idSpec, value));
+      watchers.each($msg('matchSpec', idSpec, value, oldValue));
     }
     
     if(rsrcSpec.action)
     {
       var actionSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'action'], true));
       watchers = this.__watchersFor__(actionSpec);
-      watchers.each($msg('matchSpec', actionSpec, value));
+      watchers.each($msg('matchSpec', actionSpec, value, oldValue));
     }
     
     if(rsrcSpec.action && rsrcSpec.id)
     {
       var actionIdSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'action', 'id'], true));
       watchers = this.__watchersFor__(actionIdSpec);
-      watchers.each($msg('matchSpec', actionIdSpec, value));
+      watchers.each($msg('matchSpec', actionIdSpec, value, oldValue));
     }
   },
   
@@ -326,8 +326,9 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var updateRsrcSpec = {resource:resource, method:'update', id:id};
+	var oldValue = this.allCachedDocuments()[id];
         this.notifyWatchers(updateRsrcSpec, value);
-        if(options && options.local) this.updateCache(options.local, value);
+        if(options && options.local) this.updateCache(options.local, value, oldValue);
         return value;
       }
       else
@@ -368,8 +369,9 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var postRsrcSpec = {resource:postOptions.resource, action:postOptions.action, id:postOptions.id};
+	var oldValue = this.allCachedDocuments()[id];
         this.notifyWatchers(postRsrcSpec, value);
-        if(options && options.local) this.updateCache(options.local, value);
+        if(options && options.local) this.updateCache(options.local, value, oldValue);
         return value;
       }
       else

@@ -346,12 +346,12 @@ var SSResource = new Class({
   },
   
 
-  matchSpec: function(rsrcSpecHashed, value)
+  matchSpec: function(rsrcSpecHashed, value, oldValue)
   {
     if(!this.passesConditions(rsrcSpecHashed, value)) return;
     var handlers = this.handlers()[rsrcSpecHashed];
     handlers.each(function(fn) {
-      fn.bind(this)(value);
+      fn.bind(this)(value, oldValue, rsrcSpecHashed);
     }, this);
   },
   
