@@ -2,7 +2,8 @@
      class="SSTabPane"
      uiclass="InboxPane"
      outlet="SSConsole">
-     
+
+  <!-- MessageOptions Start -->
   <div id="MessageOptions" class="leftSideBar">
     <div>Messages to show:</div>
     
@@ -42,9 +43,28 @@
     </div>
     
   </div>
+  <!-- MessageOptions End -->
   
-  <div id="MessagesListView"
-       class="SSListView">
-  </div>
+  <!-- MessagesListView Start -->
+  <ul id="MessagesListView"
+      class="SSListView"
+      uiclass="SSListView">
+
+    <li class="SSCell" 
+	uiclass="SSCell">
+      <div class="selected">
+	<input type="checkbox"/>
+      </div>
+      <div class="read"></div>
+      <div class="displayString"></div>
+      <div class="gravatarContainer">
+        <img class="gravatar"></img>
+      </div>
+      <div class="userName"></div>
+      <div class="time"></div>
+    </li>
+
+  </ul>
+  <!-- MessagesListView End -->
   
 </div>
