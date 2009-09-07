@@ -46,6 +46,7 @@ var InboxPane = new Class({
   {
     if(this.__resourcesInitialized) return;
     this.__resourcesInitialized = true;
+
     this.messages = new SSResource("Messages", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/messages', 'delete':'event'},
       transforms: [this.transform],
