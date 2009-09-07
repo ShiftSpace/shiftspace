@@ -64,6 +64,17 @@ var ShiftListView = new Class({
   onDelete: function(ack)
   {
     this.refresh();
+  },
+
+
+  checkedItems: function()
+  {
+    var indices = [];
+    this.cellNodes().each(function(el, i) {
+      if(el.getElement('input[type=checkbox]').getProperty("checked")) indices.push(i);
+    });
+    var ids = indices.map(Function.comp(this.data().asFn(), $acc("_id")));
+    return ids;
   }
   
 });
