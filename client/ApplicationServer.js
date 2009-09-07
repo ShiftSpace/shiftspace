@@ -369,7 +369,7 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var postRsrcSpec = {resource:postOptions.resource, action:postOptions.action, id:postOptions.id};
-	var oldValue = this.allCachedDocuments()[id];
+	var oldValue = this.allCachedDocuments()[postOptions.id];
         this.notifyWatchers(postRsrcSpec, value);
         if(options && options.local) this.updateCache(options.local, value, oldValue);
         return value;

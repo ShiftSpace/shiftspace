@@ -387,6 +387,11 @@ SSResource.dirtyTheViews = function(value)
   this.dirtyTheViews();
 }
 
+SSResource.updateDoc = function(doc) 
+{ 
+  SSApplication().setDocument(this.getName(), doc); 
+}
+
 SSResource.dirtyAllViews = function(value)
 {
   __resources.each(function(v, k) {
