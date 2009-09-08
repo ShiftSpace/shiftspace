@@ -19,10 +19,23 @@ var SSCommentPane = new Class({
     SSAddObserver(this, "hideComments", this['close'].bind(this));
   },
 
+
+  setCurrentShiftId: function(id)
+  {
+    this.__shiftId = id;
+  },
+
+
+  currentShiftId: function()
+  {
+    return this.__shiftId;
+  },
+
  
   'open': function(shiftId)
   {
     SSLog("Show comments for", shiftId, SSLogForce);
+    this.setCurrentShiftId(shiftId);
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
   },
@@ -126,6 +139,15 @@ var SSCommentPane = new Class({
     var doc = this.contentDocument();
 
     this.SSCloseComments.addEvent("click", this['close'].bind(this));
+    this.SSPostComment.addEvent("click", this.postComment.bind(this));
+  },
+
+
+  postComment: function()
+  {
+    var shiftId = this.currentShiftId(), text = this.SSCommentText.getProperty("value");
+    var p = SSPostComment(shiftId, text);
+    p.realize();
   },
   
   

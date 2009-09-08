@@ -12,14 +12,13 @@
 
   <form>
     <label>Leave a comment</label>
-    <textarea>
-    </textarea>
+    <textarea id="SSCommentText" outlet="SSCommentPane"></textarea>
 
     <label>Notify me when other people comment on this thread</label>
-    <input type="checkbox" checked="true"></input>
+    <input id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
 
     <input id="SSCloseComments" outlet="SSCommentPane" type="button" value="Close"></input>
-    <input type="submit" value="Submit"></input>
+    <input id="SSPostComment" outlet="SSCommentPane" type="submit" value="Submit"></input>
   </form>
 
 </div>

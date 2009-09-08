@@ -474,3 +474,14 @@ function SSUnfavoriteShift(id)
     action: "unfavorite",
   });
 }
+
+function SSPostComment(id, text)
+{
+  return SSApp.post({
+    resource: "shift",
+    id: id,
+    action: "comment",
+    data: {text:text},
+    json: true
+  });
+}
