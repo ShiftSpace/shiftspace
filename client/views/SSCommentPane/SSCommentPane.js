@@ -171,6 +171,17 @@ var SSCommentPane = new Class({
 
     this.SSCloseComments.addEvent("click", this['close'].bind(this));
     this.SSPostComment.addEvent("click", this.postComment.bind(this));
+
+    this.SSCommentsListView.addEvent("onReloadData", this.refresh.bind(this));
+  },
+
+
+  refresh: function()
+  {
+    var size = this.contentDocument().body.getSize();
+    this.element.setStyles({
+      hieght: size.y
+    });
   },
 
 
