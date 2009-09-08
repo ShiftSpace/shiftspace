@@ -85,6 +85,13 @@ var ShiftListViewCell = new Class({
     var el = this.lockedElement();
     el.getElement('.summary').set('text', summary);
   },
+
+
+  setDisplayString: function(displayString)
+  {
+    var el = this.lockedElement();
+    el.getElement(".displayString").set('text', displayString);
+  },
   
   
   setPublishData: function(publishData, shift)

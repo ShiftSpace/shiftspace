@@ -53,10 +53,7 @@ var SSCell = new Class({
     this.attachEvents();
     this.prepareClone();
     
-    if(this.options.properties)
-    {
-      this.setPropertyList(this.options.properties);
-    }
+    this.setPropertyList(this.options.properties || []);
   },
   
   

@@ -20,6 +20,35 @@ var SSCommentPane = new Class({
   },
 
 
+  transform: function(data)
+  {
+    data.text = data.content.text;
+    data.userName = data.content.userName;
+    return data;
+  },
+
+
+  initResource: function(shiftId)
+  {
+    this.comments = new SSResource("Comments", {
+      resource: {read:'shift/'+shiftId+'/comments'},
+      transforms: [this.transform],
+      watches: [{
+                  events: [{resource:"event", action:"create"},
+                           {resource:"event", action:"delete"}],
+                  handlers: [SSResource.dirtyTheViews]
+                }],
+      views: [this.SSCommentsListView]
+    });
+  },
+
+
+  cleanupResource: function()
+  {
+    this.comments.dispose();
+  },
+  
+
   setCurrentShiftId: function(id)
   {
     this.__shiftId = id;
@@ -36,6 +65,7 @@ var SSCommentPane = new Class({
   {
     SSLog("Show comments for", shiftId, SSLogForce);
     this.setCurrentShiftId(shiftId);
+    this.initResource(shiftId);
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
   },
@@ -44,6 +74,7 @@ var SSCommentPane = new Class({
   'close': function()
   {
     SSLog("Hide comments", SSLogForce);
+    this.cleanupResource();
     this.element.removeClass("SSCommentPaneOpen");
     this.element.addClass("SSCommentPaneClosed");
   },

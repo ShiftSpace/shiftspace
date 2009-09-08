@@ -3,10 +3,18 @@
      uiclass="SSCommentPane">
 
   <ul id="SSCommentsListView"
-       class="SSListView"
-       uiclass="SSListView">
-    <li class="SSCell"
-	uiclass="SSCell">
+      class="SSListView"
+      uiclass="SSListView"
+      outlet="SSCommentPane">
+    <li class="SSCell SSCommentsListViewCell"
+	uiclass="SSCommentsListViewCell"
+	options="{
+          properties: ['userName', 'text']
+        }">
+      <div class="userName"></div>
+      <div class="gravatar"></div>
+      <div class="text"></div>
+      <div class="created"></div>
     </li>
   </ul>
 
