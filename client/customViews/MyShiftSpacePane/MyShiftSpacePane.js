@@ -34,10 +34,18 @@ var MyShiftSpacePane = new Class({
   },
 
 
-  transform: function(data)
+  favoriteTransform: function(data)
   {
     var content = data.content;
     data.summary = content.text;
+    return data;
+  },
+
+
+  commentTransform: function(data)
+  {
+    var content = data.content;
+    data.userName = contentUser.
     return data;
   },
 
@@ -49,13 +57,23 @@ var MyShiftSpacePane = new Class({
 
     this.favorites = new SSResource("Favorites", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/favorites'},
-      transforms: [this.transform],
+      transforms: [this.favoriteTransform],
       watches: [{
                   events: [{resource:"shift", action:"favorite"},
                            {resource:"shift", action:"unfavorite"}],
                   handlers: [SSResource.dirtyTheViews]
                 }],
       views: [this.MyFavoritesListView]
+    });
+
+    this.comments = new SSResource("MyComments", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/comments'},
+      transforms: [this.commentTransform],
+      watches: [{
+                  events: [{resource:"shift", action:"comment"}],
+                  handlers: [SSResource.dirtyTheViews]
+                }],
+      views: [this.MyCommentsListView]
     });
   },
 

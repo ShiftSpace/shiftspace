@@ -41,7 +41,32 @@
       </div>
       <!-- End My Shifts List View -->
 
-      <div class="SSTabPane">My Comments</div>
+      <!-- Start My Comments View -->
+      <div class="SSTabPane">
+	<ul id="MyCommentsListView"
+	    class="SSListView ShiftListView"
+	    uiclass="ShiftListView"
+	    outlet="MyShiftSpacePane">
+	  <li class="SSCell ShiftListViewCell"
+	      uiclass="ShiftListViewCell"
+	      options="{
+	        properties: ['space', 'userName', 'href', 'date']
+	      }">
+	    <div class="selected">
+              <input type="checkbox"/>
+            </div>
+            <div class="comments"></div>
+	    To
+            <img class="userName"></img>
+	    <img class="spaceIcon"></img>
+	    on
+            <div class="domain"></div>
+            <div class="summary"></div>
+            <div class="date"></div>
+	  </li>
+	</ul>
+      </div>
+      <!-- End My Comemnts View -->
 
       <!-- Start My Favorites View -->
       <div class="SSTabPane">
