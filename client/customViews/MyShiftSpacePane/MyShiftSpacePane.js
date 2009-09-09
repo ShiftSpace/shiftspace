@@ -45,7 +45,7 @@ var MyShiftSpacePane = new Class({
   commentTransform: function(data)
   {
     var content = data.content;
-    data.userName = contentUser.
+    data.userName = content.userName;
     return data;
   },
 
