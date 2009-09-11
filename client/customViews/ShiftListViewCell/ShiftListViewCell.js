@@ -148,6 +148,13 @@ var ShiftListViewCell = new Class({
     var parts = url.split("/");
     el.getElement('.domain').set('text', 'http://'+parts[0]);
   },
+
+
+  setDomain: function(domain)
+  {
+    var el = this.lockedElement();
+    el.getElement(".domain").set("text", domain);
+  },
   
   
   setCommentCount: function(count)
@@ -175,6 +182,13 @@ var ShiftListViewCell = new Class({
     {
       el.getElement('.favoriteButton').removeClass('favorited');
     }
+  },
+
+
+  setText: function(text)
+  {
+    var el = this.lockedElement();
+    el.getElement(".text").set("text", text);
   }
 
 });
