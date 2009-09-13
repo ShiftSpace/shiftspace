@@ -16,3 +16,6 @@
 [submodule "externals/promises"]
 	path = externals/promises
 	url = git://github.com/ShiftSpace/promises.git
+[submodule "server"]
+	path = server
+	url = git://github.com/ShiftSpace/shiftserver.git
