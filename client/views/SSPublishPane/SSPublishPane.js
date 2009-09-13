@@ -162,6 +162,10 @@ var SSPublishPane = new Class({
   },
   
   
+  /*
+    Function: update
+      Update the display of the shift depending on the useres selections.
+   */
   update: function()
   {
     if(this.count() == 1)
