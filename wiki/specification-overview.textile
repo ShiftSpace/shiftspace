@@ -1,0 +1,59 @@
+The ShiftSpace REST API specification is directly inspired by the CouchDB HTTP REST API. This document is intended for developers. Developers who would like to reimplement the backend atop another language and database will find this document particularly useful. In addition to this document developers should look at the ShiftServerTest suite in the repository to test the validity of their implementation.
+
+h1. Terms
+
+When we refer to the "user" we mean the logged in user. For clarity we use the capitalized for the document type even when referring to instances of that 
+
+h1. Return Types
+
+h2. Data
+
+<pre>
+{data: ... }
+</pre>
+
+h2. Ack
+
+<pre>
+{message: "ok"}
+</pre>
+
+h3. Error
+
+<pre>
+{error: messageString, type: errorTypeString}
+</pre>
+
+h1. Types
+
+[[User Spec]]
+[[Shift Spec]]
+[[Stream Spec]]
+[[Event Spec]]
+[[Permission Spec]]
+
+h1. Error Types
+
+* AlreadyLoggedInError 
+* AlreadyLoggedOutError 
+* InvalidUserNameError 
+* IncorrectPasswordError 
+* UserNotLoggedInError 
+* NoEmailError 
+* MissingUserNameError 
+* ShortUserNameError 
+* UserNameAlreadyExistsError
+* MissingPasswordError
+* MissingPasswordVerifyError
+* PasswordMatchError
+* FollowError
+* UserDoesNotExistError
+* PermissionError
+* ResourceDoesNotExistError
+* NoDataError
+* CreateEventError
+* CreatePermissionError
+* AlreadySubscribedError
+* NotSubscribedError
+* AlreadyBeingNotifiedError
+* NotBeingNotifiedError

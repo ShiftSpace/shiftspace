@@ -1,0 +1,61 @@
+Events representing the smallest unit of activity on a stream. The payload of an Event resides in the content field.
+
+h2. Schema
+
+<pre>
+{
+  "type": "event",
+  "meta": <string>,
+  "createdBy": <string>,
+  "streamId": <string>,
+  "objectRef": <string: "type:id">,
+  "uniqueName": <string>,
+  "displayString": <string>,
+  "created": <string: a utc format parseable date string>,
+  "modified": <string: a utc format parseable date string>,
+  "content": <hash-map>
+}
+</pre>
+
+*meta*: a generic field for describing the type of the event, i.e. "comment"
+*createdBy*: a user document id
+*streamId*: the stream the event belongs to.
+*objectRef*: a string that uniquely identifies another document by type and id.
+*displayString*: a user readable string describing the event.
+*created*: set at the time of the event's creation. Cannot be modified later.
+*modified*: the last time the event document was modified.
+*content*: schemaless hash-map of custom fields.
+
+h2. REST API
+
+h3. Creating an Event
+
+h4. url
+
+<pre>
+POST /event
+</pre>
+
+h3. Reading an Event
+
+h4. url
+
+<pre>
+GET /event/id
+</pre>
+
+h3. Updating an Event
+
+h4. url
+
+<pre>
+PUT /event/id
+</pre>
+
+h3. Deleting an Event
+
+h4. url
+
+<pre>
+DELETE /event/id
+</pre>
