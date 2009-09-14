@@ -43,9 +43,25 @@ h2. Schema
   "messageStream": <string>,
   "notify": <array>,
   "streams": <array>,
-  "preferences": <hash>
+  "preferences": <hash-map>
 }
 </pre>
+
+*userName*: must be at least 6 characters long. Must start with an alphabetic character. Must contain only alphanumeric characters.
+*displayName*: optional user supplied display name.
+*email*: must be a valid email address.
+*bio*: optional user supplied biographical data.
+*url*: optional user supplied url.
+*gravatar*: generated from email. Disallowed field in update calls.
+*password*: user's hashed password.
+*joined*: set by the server. Cannot be changed afterwards.
+*lastSeen*: updated when the user logs in or out.
+*publicStream*: the id of the user's public stream.
+*privateStream*: the id of the user's private stream. Used to support following.
+*messageStream*: the id of the user's inbox stream.
+*notify*: list of stream for which the user wants notifications in his/her inbox.
+*streams*: list of streams to which the user is subscribed.
+*preferences*: schemaless hash-map of the user's preferences.
 
 h2. REST API
 
@@ -107,51 +123,251 @@ ack
 
 h3. Following a user
 
+h4. url
+
+<pre>
+POST /user/userName/follow
+</pre>
+
 h3. Unfollowing a user
+
+h4. url
+
+<pre>
+POST /user/userName/unfollow
+</pre>
 
 h3. Getting a user's comments
 
+Only accessible to the user or system admin.
+
+h4. url
+
+<pre>
+GET /user/userName/comments
+</pre>
+
 h3. Getting a user's favorites
+
+Only accessible to the user or system admin.
+
+h4. url
+
+<pre>
+GET /user/userName/favorites
+</pre>
 
 h3. Getting a user's shifts
 
+Only accessible to the user or system admin.
+
+h4. url
+
+<pre>
+GET /user/userName/shifts
+</pre>
+
+h3. Getting a user's inbox
+
+Only accessible to the user or system admin.
+
+h4. url
+
+<pre>
+GET /user/userName/messages
+</pre>
+
 h1. Shifts
+
+<pre>
+{
+  "type": "shift",
+  "createdBy": <string>,
+  "userName": <string>,
+  "href": <string>,
+  "domain": <string>,
+  "space": {
+    "name": <string>,
+    "version": <string>,
+  },
+  "summary": <string>,
+  "created": <string: utc format parseable date string>,
+  "modified": <string: utc format parseable date string>,
+  "broken": <bool>,
+  "publishData": {
+    "draft": <bool>,
+    "publishTime": <string: utc format parseable date string>,
+    "private": <bool>,
+    "streams": <array: strings>
+  },
+  "content": <hash-map>
+}
+</pre>
+
+*createdBy*: a user id
+*userName*: a user name
+*href*: the url where the shift was created
+*domain*: the domain where the shift was created
+*space.name*: the name of the space
+*space.version*: the version fo the space
+*summary*: user supplied summary of the shift's content.
+*created*: creation date string. cannot be modified after shift is created.
+*modified*: the last time the shift was modified.
+*broken*: set by the system if the an exception was thrown while attempting to show the shift to a user.
+*publishData.draft*: bool specifying whether the user has published the shift.
+*publishData.private*: bool specifying whehter the publish shift is public.
+*publishData.publishTime*: time the shift was published.
+*publishData.stream*: list of stremas the shift is being published to.
+*content*: schemaless hash-map of the shift's values. Used only by the client to recreate the shift.
+
+h2. REST API
 
 h3. Create a Shift
 
+<pre>
+POST /shift
+</pre>
+
 h3. Reading Shift
+
+<pre>
+POST /shift/id
+</pre>
 
 h3. Updating a Shift
 
+<pre>
+PUT /shift/id
+</pre>
+
 h3. Deleting a Shift
+
+<pre>
+DELETE /shift/id
+</pre>
 
 h3. Commenting on a Shift
 
+<pre>
+POST /shift/id/comment
+</pre>
+
 h3. Getting the comments on a Shift
+
+<pre>
+GET /shift/id/comments
+</pre>
 
 h3. Adding a Shift comment stream to a notification list.
 
+<pre>
+POST /shift/id/notify
+</pre>
+
 h3. Removing a Shift comment stream from a notification list
+
+<pre>
+POST /shift/id/unotify
+</pre>
 
 h3. Publish a Shift
 
+<pre>
+POST /shift/id/publish
+</pre>
+
 h3. Unpublishing a Shift
+
+<pre>
+POST /shift/id/unpublish
+</pre>
 
 h3. Favoriting a Shift
 
+<pre>
+POST /shift/id/favorite
+</pre>
+
 h1. Streams
+
+h2. Schema.
+
+<pre>
+{
+  "type": "stream",
+  "meta": <string>,
+  "createdBy": <string>,
+  "displayName": <string>,
+  "uniqueName": <string>,
+  "created": <string: a utc format parseable date string>,
+  "modified": <string: a utc format parseable date string>,
+  "private": <bool>,
+  "objectRef": <string: "type:id">
+}
+</pre>
+
+*meta*: The type specified, i.e. "group"
+*createdBy*: Author of the stream.
+*displayName*: User readable string for the stream.
+*uniqueName*: Globally unique user readable string for the stream.
+*created*: created date. Cannot be modified after stream creation.
+*modified*: last modified date.
+*private*: bool whether the stream is publicly visible.
+*objectRef*: uniquely specifies a document of which the stream is about.
+
+h2. REST API
 
 h3. Creating a Stream
 
+h4. url
+
+<pre>
+POST /stream
+</pre>
+
 h3. Reading a Stream
+
+h4. url
+
+<pre>
+GET /stream/id
+</pre>
 
 h3. Updating a Stream
 
+h4. url
+
+<pre>
+PUT /stream/id
+</pre>
+
 h3. Deleting a Stream
+
+h4. url
+
+<pre>
+DELETE /stream/id
+</pre>
 
 h3. Subscribing to a Stream
 
-h3. Unsubscribing to a Stream
+The user must be logged in.
+
+h4. url
+
+<pre>
+POST /stream/id/subscribe
+</pre>
+
+h3. Unsubscribing from a Stream
+
+The user must be logged in.
+
+<pre>
+POST /stream/id/unsubscribe
+</pre>
+
+h4. url
 
 h1. Events
 
@@ -175,37 +391,143 @@ h2. Schema
 }
 </pre>
 
-*meta*: a generic field for describing the type of the event,
- i.e. "comment"
-
+*meta*: a generic field for describing the type of the event, i.e. "comment"
 *createdBy*: a user document id
-
 *streamId*: the stream the event belongs to.
-
-*objectRef*: a string that uniquely identifies another document by
- type and id.
-
+*objectRef*: a string that uniquely identifies another document by type and id.
 *displayString*: a user readable string describing the event.
-
-*created*: set at the time of the event's creation. Cannot be modified
- later.
-
+*created*: set at the time of the event's creation. Cannot be modified later.
 *modified*: the last time the event document was modified.
-
 *content*: schemaless hash-map of custom fields.
+
+h2. REST API
 
 h3. Creating an Event
 
+h4. url
+
+<pre>
+POST /event
+</pre>
+
 h3. Reading an Event
+
+h4. url
+
+<pre>
+GET /event/id
+</pre>
 
 h3. Updating an Event
 
+h4. url
+
+<pre>
+PUT /event/id
+</pre>
+
 h3. Deleting an Event
 
+h4. url
+
+<pre>
+DELETE /event/id
+</pre>
+
 h1. Permissions
+
+Permissions control access to stream which is not public.
+
+h2. Schema
+
+<pre>
+{
+  "type": "permission",
+  "created": <string: utc format parseable date string>,
+  "modified": <string: utc format parseable date string,
+  "createdBy": <string>,
+  "streamId": <string>,
+  "userId": <string>,
+  "level": 0
+}
+</pre>
+
+*level*: the following levels determine the user's access to a stream.
+
+<pre>
+0 - joinable  (can subscribe to the stream)
+1 - readable  (can read the stream)
+2 - writeable (can post to the stream)
+3 - adminable (can invite others to the stream)
+4 - owner     (can update properties of the stream 
+               as well as well delete the stream if 
+               there's no one else's content on it)
+</pre>
+
+h2. REST API
+
+h3. Creating a Permission
+
+h4. url
+
+<pre>
+POST /permission
+</pre>
+
+h3. Reading a Permission
+
+h4. url
+
+<pre>
+GET /permission/id
+</pre>
+
+h3. Updating a Permission
+
+h4. url
+
+<pre>
+PUT /permission/id
+</pre>
+
+h3. Deleting a Permission
+
+h4. url
+
+<pre>
+DELETE /permission/id
+</pre>
 
 h1. Groups
 
 Groups are constructed on top of the streams abstraction. They only add a couple of fields to the stream schema. In addition to these fields when returned, a Group document should include the total count of Shifts in a group, as well as the total count of group members. How this is to be done is an implementation detail.
+
+h2. Schema
+
+h2. REST API
+
+h3. Creating a Group
+
+<pre>
+POST /group
+</pre>
+
+h3. Reading a Group
+
+<pre>
+GET /group/shortName
+</pre>
+
+h3. Updating a Group
+
+<pre>
+PUT /group/shortName
+</pre>
+
+h3. Deleting a Group
+
+<pre>
+DELETE /group/shortName
+</pre>
 
 h1. Error Types
