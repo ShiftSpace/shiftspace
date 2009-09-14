@@ -531,3 +531,27 @@ DELETE /group/shortName
 </pre>
 
 h1. Error Types
+
+* AlreadyLoggedInError 
+* AlreadyLoggedOutError 
+* InvalidUserNameError 
+* IncorrectPasswordError 
+* UserNotLoggedInError 
+* NoEmailError 
+* MissingUserNameError 
+* ShortUserNameError 
+* UserNameAlreadyExistsError
+* MissingPasswordError
+* MissingPasswordVerifyError
+* PasswordMatchError
+* FollowError
+* UserDoesNotExistError
+* PermissionError
+* ResourceDoesNotExistError
+* NoDataError
+* CreateEventError
+* CreatePermissionError
+* AlreadySubscribedError
+* NotSubscribedError
+* AlreadyBeingNotifiedError
+* NotBeingNotifiedError
