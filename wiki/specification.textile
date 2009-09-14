@@ -1,4 +1,4 @@
-The ShiftSpace REST API specification is directly inspired by the CouchDB HTTP REST API. This document is intended for developers. Developers who would like to reimplemented the backend will find this document particularly useful. In addition to this document developers should look at the ShiftServerTest suite in the repository.
+The ShiftSpace REST API specification is directly inspired by the CouchDB HTTP REST API. This document is intended for developers. Developers who would like to reimplement the backend atop another language and database will find this document particularly useful. In addition to this document developers should look at the ShiftServerTest suite in the repository to test the validity of their implementation.
 
 h1. Return Types
 
@@ -22,7 +22,7 @@ h3. Error
 
 h1. Users
 
-The user document represents the basic means of interacting with a ShiftSpace server. Very few interesting operations can occur beyond reads without a session matching a user document in the database.
+The user document represents the basic means of interacting with a ShiftSpace server. Very few interesting operations can occur beyond reads without a session that matches a user in the database.
 
 h2. Schema
 
@@ -67,7 +67,7 @@ h2. REST API
 
 h3. Creating a user
 
-Creates a user. The request must be made with Content-Type:  application/json. In order to validate the passed in user JSON must supply *userName*, *password*, *passwordVerify*, and *email fields*.
+Creates a user. The request must be made with the header "Content-type" set to "application/json". In order to validate the JSON data must include *userName*, *password*, *passwordVerify*, and *email fields*. It is case sensitive.
 
 h4. url
 
@@ -77,11 +77,11 @@ POST /user/userName
 
 h4. parameters
 
-A JSON object that conforms the user schema.
+A JSON string that conforms the user schema.
 
 h3. Updating a user
 
-Updates a user with a JSON object containing the updated fields.
+Updates a user with a JSON string containing the updated fields.
 
 h4. url
 
@@ -91,11 +91,11 @@ PUT /user/userName
 
 h4. returns
 
-The entire updated document.
+The updated user.
 
 h3. Reading a user
 
-Read a user's data. If the user is logged or the user is the admin will return all fields with the exception of password. Otherwise this removes *email*, *publicStream*, *privateStream*, *messageStream*, *streams*, *notify*, *preferences*.
+Read a user's data. If the user is logged in or the user is running as admin this will return all fields with the exception of *password*. Unprivileged users will not see *email*, *publicStream*, *privateStream*, *messageStream*, *streams*, *notify*, *preferences*.
 
 h4. url
 
@@ -105,7 +105,7 @@ GET /user/userName
 
 h4. returns
 
-The user document.
+The user.
 
 h3. Deleting a user
 
@@ -123,13 +123,21 @@ ack
 
 h3. Following a user
 
+This subscribes the logged in user to another user's public stream.
+
 h4. url
 
 <pre>
 POST /user/userName/follow
 </pre>
 
+h4. returns
+
+The updated user.
+
 h3. Unfollowing a user
+
+This unsubscribes a user from another user's public stream.
 
 h4. url
 
@@ -137,9 +145,13 @@ h4. url
 POST /user/userName/unfollow
 </pre>
 
+h4. returns
+
+The updated user.
+
 h3. Getting a user's comments
 
-Only accessible to the user or system admin.
+Returns an array of the user's comments. Comments are returned ordered by descending from the most recent comment to least recent comment. Only accessible to the user or system admin.
 
 h4. url
 
@@ -147,9 +159,18 @@ h4. url
 GET /user/userName/comments
 </pre>
 
+h4. parameters
+
+*start* - the index to start
+*count* - the number of results to return
+
+h4. returns
+
+An array of comments.
+
 h3. Getting a user's favorites
 
-Only accessible to the user or system admin.
+Returns an array of the user's favorite shifts. Favorites are returned order descending from most recently favorited to least recently favorites. Only accessible to the user or system admin.
 
 h4. url
 
@@ -157,9 +178,18 @@ h4. url
 GET /user/userName/favorites
 </pre>
 
+h4. parameters
+
+*start* - the index to start.
+*count* - the number of results to return.
+
+h4. returns
+
+An array of shifts.
+
 h3. Getting a user's shifts
 
-Only accessible to the user or system admin.
+Returns an array of user's shifts. Shifts are returned sorted by descending from most recently modified to least recently modified. Only accessible to the user or system admin.
 
 h4. url
 
@@ -167,15 +197,24 @@ h4. url
 GET /user/userName/shifts
 </pre>
 
+h4. parameters
+
+*start* - the index to start.
+*count* - the number of results to return.
+
 h3. Getting a user's inbox
 
-Only accessible to the user or system admin.
+Returns messages in the user's inbox. Messages are returned descending from the most recent to least recent message. Only accessible to the user or system admin.
 
 h4. url
 
 <pre>
 GET /user/userName/messages
 </pre>
+
+h4. returns
+
+An array of events.
 
 h1. Shifts
 
@@ -224,71 +263,171 @@ h2. REST API
 
 h3. Create a Shift
 
+Creates a new shift for the logged in user. The *Content-type* header must be set to *application/json*.
+
 <pre>
 POST /shift
 </pre>
 
-h3. Reading Shift
+h4. parameters
+
+A JSON string that complies to the Shift schema.
+
+h4. returns
+
+The newly created shift.
+
+h3. Reading a Shift
+
+Returns the data for a shift if the user has adequate permissions to view it. In order to a view a shift the user must be running as admin, have created the shift, the shift was published to the user, or the user belongs to a stream that the shift was published to. See Also Stream, Permission.
+
+h4. url
 
 <pre>
 POST /shift/id
 </pre>
 
+h4. returns
+
+A Shift.
+
 h3. Updating a Shift
+
+Update a shift. The *Contente-type* header must be set *application/json*. The JSON string must match the schema.
+
+h4. url
 
 <pre>
 PUT /shift/id
 </pre>
 
+h4. parameters
+
+A JSON string which matches the Shift schema.
+
+h4. returns
+
+The updated shift.
+
 h3. Deleting a Shift
+
+Delete's a shift as long as there are no comments on this shift.
+
+h4. url
 
 <pre>
 DELETE /shift/id
 </pre>
 
+h4. returns
+
+ack
+
 h3. Commenting on a Shift
+
+Creates a comment on a shift for the loggedin user. The shift must be readable by the user. The *Content-type* header must be set to *application/json*.
+
+h4. url
 
 <pre>
 POST /shift/id/comment
 </pre>
 
+h4. parameters
+
+A JSON string with a text field, no other fields are allowed.
+
+h4. returns
+
+The newly created Event.
+
 h3. Getting the comments on a Shift
+
+Returns all the comment Events on the comment Stream for a shift. The user must have read permission for the shift.
+
+h4. url 
 
 <pre>
 GET /shift/id/comments
 </pre>
 
+h4. returns
+
+An array of Events.
+
 h3. Adding a Shift comment stream to a notification list.
+
+Updates the logged in user's notify array field. If the comment stream is in the user's notify array field, he/she will be sent a message (Event) to their inbox (message Stream).
+
+h4. url
 
 <pre>
 POST /shift/id/notify
 </pre>
 
+h4. returns
+
+The updated User.
+
 h3. Removing a Shift comment stream from a notification list
+
+Removes the shift's comment stream from the user's notify array field.
+
+h4. url
 
 <pre>
 POST /shift/id/unotify
 </pre>
 
+h4. returns
+
+The updated User.
+
 h3. Publish a Shift
+
+Publish a shift. Can only be done by the creator of the shift or a user running as admin. The shift can be made public (anyone can see it), or shift can be published to a stream. 
+
+h4. url
 
 <pre>
 POST /shift/id/publish
 </pre>
 
+h4. returns
+
+The updated Shift.
+
 h3. Unpublishing a Shift
+
+Unpublish a shift. Can only be done by the creator of the shift or a user running as admin. This is not possible if someone has commented on the shift.
+
+h4. url
 
 <pre>
 POST /shift/id/unpublish
 </pre>
 
+h4. returns
+
+The updated Shift.
+
 h3. Favoriting a Shift
+
+Adds a Shift to the user's list of favorites. This can only be done if the logged in user has read permissions for the Shift.
+
+h4. url
 
 <pre>
 POST /shift/id/favorite
 </pre>
 
+h4. returns
+
+ack
+
 h1. Streams
+
+The Streams abstraction is the foundation for all "collection" oriented feature in ShiftSpace. Groups, tagging, following are all built on top of stream. Access to Streams are controlled by Permissions.
 
 h2. Schema.
 
