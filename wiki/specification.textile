@@ -1,0 +1,211 @@
+The ShiftSpace REST API specification is directly inspired by the CouchDB HTTP REST API.
+
+h1. Return Types
+
+h2. Data
+
+<pre>
+{data: ... }
+</pre>
+
+h2. Ack
+
+<pre>
+{message: "ok"}
+</pre>
+
+h3. Error
+
+<pre>
+{error: messageString, type: errorTypeString}
+</pre>
+
+h1. Users
+
+The user document represents the basic means of interacting with a ShiftSpace server. Very few interesting operations can occur beyond reads without a session matching a user document in the database.
+
+h2. Schema
+
+<pre>
+{
+  "type": "user",
+  "userName": <string>,
+  "displayName": <string>,
+  "email": <string>,
+  "bio": <string>,
+  "url": <string>,
+  "gravatar": <string>,
+  "password": <string>,
+  "joined": <string: utc format parseable date string>,
+  "lastSeen": <string: utc format parseable date string>,
+  "publicStream": <string>,
+  "privateStream": <string>,
+  "messageStream": <string>,
+  "notify": <array>,
+  "streams": <array>,
+  "preferences": <hash>
+}
+</pre>
+
+h2. REST API
+
+h3. Creating a user
+
+Creates a user. The request must be made with Content-Type:  application/json. In order to validate the passed in user JSON must supply *userName*, *password*, *passwordVerify*, and *email fields*.
+
+h4. url
+
+<pre>
+POST /user/userName
+</pre>
+
+h4. parameters
+
+A JSON object that conforms the user schema.
+
+h3. Updating a user
+
+Updates a user with a JSON object containing the updated fields.
+
+h4. url
+
+<pre>
+PUT /user/userName
+</pre>
+
+h4. returns
+
+The entire updated document.
+
+h3. Reading a user
+
+Read a user's data. If the user is logged or the user is the admin will return all fields with the exception of password. Otherwise this removes *email*, *publicStream*, *privateStream*, *messageStream*, *streams*, *notify*, *preferences*.
+
+h4. url
+
+<pre>
+GET /user/userName
+</pre>
+
+h4. returns
+
+The user document.
+
+h3. Deleting a user
+
+Deleting a user should delete the user account including all of the user's comments and any shifts which are not part of a larger discussions, streams he/she created which have no other members, and events which were created by that user.
+
+h4. url
+
+<pre>
+DELETE /user/userName
+</pre>
+
+h4. returns
+
+ack
+
+h3. Following a user
+
+h3. Unfollowing a user
+
+h3. Getting a user's comments
+
+h3. Getting a user's favorites
+
+h3. Getting a user's shifts
+
+h1. Shifts
+
+h3. Create a Shift
+
+h3. Reading Shift
+
+h3. Updating a Shift
+
+h3. Deleting a Shift
+
+h3. Commenting on a Shift
+
+h3. Getting the comments on a Shift
+
+h3. Adding a Shift comment stream to a notification list.
+
+h3. Removing a Shift comment stream from a notification list
+
+h3. Publish a Shift
+
+h3. Unpublishing a Shift
+
+h3. Favoriting a Shift
+
+h1. Streams
+
+h3. Creating a Stream
+
+h3. Reading a Stream
+
+h3. Updating a Stream
+
+h3. Deleting a Stream
+
+h3. Subscribing to a Stream
+
+h3. Unsubscribing to a Stream
+
+h1. Events
+
+Events representing the smallest unit of activity on a stream. The
+payload of an even resides in the content field.
+
+h2. Schema
+
+<pre>
+{
+  "type": "event",
+  "meta": <string>,
+  "createdBy": <string>,
+  "streamId": <string>,
+  "objectRef": <string: "type:id">,
+  "uniqueName": <string>,
+  "displayString": <string>,
+  "created": <string: a utc format parseable date string>,
+  "modified": <string: a utc format parseable date string>,
+  "content": <hash-map>
+}
+</pre>
+
+*meta*: a generic field for describing the type of the event,
+ i.e. "comment"
+
+*createdBy*: a user document id
+
+*streamId*: the stream the event belongs to.
+
+*objectRef*: a string that uniquely identifies another document by
+ type and id.
+
+*displayString*: a user readable string describing the event.
+
+*created*: set at the time of the event's creation. Cannot be modified
+ later.
+
+*modified*: the last time the event document was modified.
+
+*content*: schemaless hash-map of custom fields.
+
+h3. Creating an Event
+
+h3. Reading an Event
+
+h3. Updating an Event
+
+h3. Deleting an Event
+
+h1. Permissions
+
+h1. Groups
+
+Groups are constructed on top of the streams abstraction. They only add a couple of fields to the stream schema. In addition to these fields when returned, a Group document should include the total count of Shifts in a group, as well as the total count of group members. How this is to be done is an implementation detail.
+
+h1. Error Types
