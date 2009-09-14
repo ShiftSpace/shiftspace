@@ -1,4 +1,4 @@
-The ShiftSpace REST API specification is directly inspired by the CouchDB HTTP REST API.
+The ShiftSpace REST API specification is directly inspired by the CouchDB HTTP REST API. This document is intended for developers. Developers who would like to reimplemented the backend will find this document particularly useful. In addition to this document developers should look at the ShiftServerTest suite in the repository.
 
 h1. Return Types
 
