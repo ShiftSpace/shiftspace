@@ -1,0 +1,246 @@
+Consult the following at your peril, it's under heavy editing!
+
+h2. Git
+
+In order to setup ShiftSpace you need git. We do provide tags which are simpler to deal with but at the moment there are no stable tags to speak of. We'll keep you posted on that.
+
+There are many friendly instructions on the web for installing git. We recommend the ones on GitHub.
+
+h2. Mac OS X
+
+h3. Getting shiftspace
+
+Clone the main shiftspace repository into your Sites folder on your machine by typing the following using Terminal.app
+
+<pre class="console">
+$ cd ~/Sites
+$ git clone git://github.com/ShiftSpace/shiftspace.git
+</pre>
+
+Then the run the following to create a local shiftserver branch and pull in the various git submodules required by shiftspace:
+
+<pre class="console">
+$ cd shiftspace
+$ git branch --track shiftserver origin/shiftserver
+$ git checkout shiftserver
+$ git submodule init
+$ git submodule update
+</pre>
+
+Your clone is now ready to go. 
+
+h3. Installing CouchDB on 10.5 (Leopard)
+
+We recommend that you install CouchDB 0.10 using "MacPorts":http://www.macports.org/. We also recommends that you use "Porticus":http://porticus.alittledrop.com/ if you don't want to do everything from the command line.
+
+Once you have MacPorts and Porticus installed, launch Porticus. Before proceeding be sure to run *Ports > Self Update...* and *Ports > Reload Ports*. Then select the *All Ports* folder from the drawer on the left side of the main window. In the search field in the upper right corner type *couchdb-devel*. This should filter the list of packages down to one item. Select this item, and click the *Install* button in the upper left corner of the main window. You'll see a modal sheet roll down perhaps with some options, don't select anything here, simply click the install button. This will take a long time. Be prepared to wait.
+
+If something goes wrong (which it might), try to install each of couchdb-devel's dependencies manually that failed to install. If you select couchdb-devel again, in the port description you should see the dependencies (look for *Required Libraries*) that failed will be highlighted in red. Search for each dependency and install just as you attempted with couchdb-devel. Should any of these fail you apply the same technique. Once you have successfully installed  all of the dependencies attempt to install *couchdb-devel* again. It should now work smoothly.
+
+The above is probably the biggest hurdle to getting started. Feel free to jump on our IRC channel (irc.freenode.net #shiftspace) and ask questions.
+
+Once that's done you should verify that CouchDB is installed by opening up Terminal.app and running:
+
+<pre class="console">
+$ sudo couchdb
+</pre>
+
+If you get a command not found error you probably need to update your .bash_profile to point to MacPort's bin folder. If this is the case type the following at the command line:
+
+<pre class="console">
+$ cd ~
+$ nano .bash_profile
+</pre>
+
+And add the following to your .bash_profile:
+
+<pre>
+PATH=$PATH:/opt/local/bin
+PATH=$PATH:/opt/local/
+export PATH
+</pre>
+
+Open a new terminal window and try to run couchdb again.
+
+h3. Installing CouchDB on 10.6 (Snow Leopard)
+
+Instructions should go here.
+
+h3. Dependencies
+
+Once you've confirmed that couchdb is up and running you should install the various dependencies for ShiftSpace 1.0. These are collected into the deps.zip which can be found under the Downloads tab for the shiftspace repo. Download this and unzip it wherever you like.
+
+<pre class="console">
+$ cd to/wherever/you/put/deps
+</pre>
+
+You should have 5 directories and one jar. 
+
+h3. Configuring couchdb-lucene
+
+Now that you have CouchDB up and running, you should configure couchdb-lucene. In the the deps directory you should see the *couchdb-lucene-0.4-jar-with-dependencies.jar*. Copy this file into the server directory your clone of the shiftspace repository. You should edit your CouchDB local.ini file so that CouchDB knows about coudhb-lucene. You should make the contents of your local.ini file look like the following. If you installed CouchDB with MacPorts/Porticus you can find this file under */opt/local/etc/couchdb/*.
+
+<pre>
+; CouchDB Configuration Settings
+
+; Custom settings should be made in this file. They will override settings
+; in default.ini, but unlike changes made to default.ini, this file won't be
+; overwritten on server upgrade.
+
+[couchdb]
+;max_document_size = 4294967296 ; bytes
+os_process_timeout=60000 ; 60 seconds for couchdb-lucene
+
+[httpd]
+;port = 5984
+;bind_address = 127.0.0.1
+
+[log]
+;level = debug                                                                                                      
+
+[update_notification]
+;unique notifier name=/full/path/to/exe -with "cmd line arg"
+indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftserver/couchdb-lucene-0.4-jar-with-dependencies.jar -index
+
+; To create an admin account uncomment the '[admins]' section below and add a
+; line in the format 'username = password'. When you next start CouchDB, it                                        
+; will change the password to a hash (so that your passwords don't linger                                                    
+; around in plain-text files). You can add more admin accounts with more                                                      
+; 'username = password' lines. Don't forget to restart CouchDB after                                                       
+; changing this.                                                           
+;[admins]                                                                                                               
+;admin = mysecretpassword                                                                                                      
+
+[external]
+; the following provides search, trying to figure out indexing
+fti=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftserver/couchdb-lucene-0.4-jar-with-dependencies.jar -search
+
+[httpd_db_handlers]
+_fti={couch_httpd_external, handle_external_req, <<"fti">>}
+</pre>
+
+You need to change the two lines that call into the couchdb-lucene jar so that the username portion of path actually matches your own username. If couchdb is running shut it down and start it up again to verify there were no errors. Point your browser at http://localhost:5984/_utils/ to get to Futon. Create a dummy database called test. Goto the url http://localhost:5984/test/_fit, you should see a json string that looks like the following (minus the formatting):
+
+<pre>
+{
+    "current": true,
+    "disk_size": 1909,
+    "doc_count": 4,
+    "doc_del_count": 1,
+    "fields": [
+        "summary",
+        "modified",
+        "private",
+        "draft",
+        "createdBy",
+        "created",
+        "domain",
+        "userName",
+        "streams",
+        "displayName",
+        "href"
+    ],
+    "last_modified": 1252875399000,
+    "optimized": false
+}
+</pre>
+
+h3. Python dependencies
+
+For each directory in deps you should cd into and run the following command, but install couchdb-python last!
+
+<pre class="console">
+$ sudo python setup.py install
+</pre>
+
+h3. Configuring the server
+
+Now all the Python dependencies have been installed it's time to configure the server. You should cd into server directory of your shiftspace clone.
+
+<pre class="console">
+$ cd server/scripts
+$ ./setup.sh
+</pre>
+
+You will be prompted for the url where the server will live. Generally this will be /~username/shiftspace/server. This is what you should enter unless you know what you're doing. If for some reason you make a typo, delete the config.json that was just produced with the following:
+
+<pre class="console">
+$ rm ../config.json
+</pre>
+
+Now we need to initialize the database.
+
+<pre class="console">
+$ cd ..
+$ python
+</pre>
+
+Once the interpreter has started up type the following:
+
+<pre class="console">
+>> import setup
+>> setup.init()
+>> exit()
+</pre>
+
+You should point your web browser to *http://localhost:5984/_utils* to see that the shiftspace database is there and in fact populated with design documents.
+
+You're now ready to make sure that the shiftserver can startup. In order to have it talk properly with Apache you need to setup a forward and reverse proxy. This requires that *mod_proxy* enabled. You can do this by editing your *httpd.conf* file.
+
+<pre class="console">
+$ sudo nano /etc/apache2/httpd.conf
+</pre>
+
+Search for the line:
+
+<pre>
+#LoadModule proxy_module libexec/apache2/mod_proxy.so
+</pre>
+
+Remove the # to uncomment it. You should also add the following to the end of your httpd.conf file. In the future ShiftSpace will run without needing to configure Apache, but for the time being you have to add the following:
+
+<pre>
+<VirtualHost *>
+    ServerAdmin you@yoursite.com
+    ServerName www.yoursite.com
+    ProxyPreserveHost On
+
+    DocumentRoot /Users/username/Sites/shiftserver
+
+    # this prevents the follow path from being proxied
+    ProxyPass /~username/shiftspace/server/static !
+
+    <Location /~username/shiftspace/server>
+        Order allow,deny
+        allow from all
+        ProxyPass http://localhost:8080/~username/shiftspace/server
+        ProxyPassReverse http://localhost:8080/~username/shiftspace/server
+    </Location>
+</VirtualHost>
+</pre>
+
+Replace every occurence of username with your actual username.
+
+<pre>
+sudo apachectl restart
+</pre>
+
+h3. Starting the server
+
+You can now start the ShiftSpace server. From ~/Sites/shiftspace/server type the following at the terminal:
+
+<pre class="console">
+python server.py
+</pre>
+
+You should see some output that CherryPy is starting up. In your browser goto http://localhost/~username/shiftspace/server/. Don't forget the trailing slash. You should "ShiftSpace 1.0" at that URL.
+
+Now to really verify that things are working point your browser to to http://localhost/~username/shiftspace/sandbox/. You should be able to open the ShiftSpace Console by typing the shift key plus the space key together. You should see a login tab. In the login tab there is a register sub tab. Select this. Enter your information and click submit.
+
+You should now be logged in. Open up the spaces menu in the lower left. Click on the Notes space button. You should see an empty note fade onto the page. Type some text and click the save button. You should see your new shift appear in the Console.
+
+Congratulations! You've successfully installed ShiftSpace 1.0. Please refer to the developer manual if you'd like to know more about developing spaces.
+
+h2. Linux
+
+h2. Windows
