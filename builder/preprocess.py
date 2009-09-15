@@ -26,6 +26,9 @@ class SSPreProcessor:
     ENV_NAME_REGEX = re.compile('%%ENV_NAME%%')
     VARS_REGEX = re.compile('%%VARS%%')
   
+    def __init__(self, project=None, env=None, inputFile=None, outputFile=None):
+        pass
+
     def setEnvVars(self, source):
         if self.envData != None:
             for key in self.envData['data'].keys():
@@ -223,6 +226,51 @@ class SSPreProcessor:
                 print "Error: no such main file exists. (%s)" % mainFile
         self.outFile.close()
         self.inFile.close()
+
+
+def usage():
+    print "Usage: python preprocess.py <environment definition> [<project>] [<input file>]"
+    print "  -e REQUIRED, the environment file, must be in SHIFTSPACE_DIR/config/env/"
+    print "  -h help"
+    print "  -p project, defaults to shiftspace.json, must be in SHIFTSPACE_DIR/config/proj/"
+    print "  -i input file, defaults to SHIFTSPACE_DIR/client/ShiftSpace.js"
+    print "  -o output file, if none specified, writes to standard output" 
+
+
+def main(argv):
+    proj = "shiftspace"
+    outFile = None
+    inFile = None
+    envFileOption = None
+    exportObjects = False
+    fileName = None
+    try:
+        opts, args = getopt.getopt(argv, "hp:i:o:e:x", ["environment=", "project=", "output=", "input=", "help", "project", "export"])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
+    optsDict = dict(opts)
+    if not optsDict.has_key("-e") and not optsDict.has_key("--environment"):
+        usage()
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif opt in ("-p", "--project"):
+            proj = arg
+        elif opt in ("-o", "--output"):
+            outFile = arg
+        elif opt in ("-i", "--input"):
+            inFile = arg
+        elif opt in ("-e", "--environment"):
+            envFileOption = arg
+        elif opt in ("-x", "--export"):
+            exportObjects = True
+        else:
+            assert False, "unhandled options"
+    preprocessor = SSPreProcessor(project=proj, env=env)
+    preprocessor.preprocess(input=inFile, output=outFile)
 
   
 if __name__ == "__main__":
