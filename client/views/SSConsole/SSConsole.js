@@ -29,7 +29,8 @@ var SSConsole = new Class({
     if(typeof SandalphonToolMode == 'undefined')
     {
       // load from the proper place
-      var p = Sandalphon.load('/client/compiledViews/'+SSInfo().env+'/SSConsoleMain');
+      var url = String.urlJoin('client/compiledViews/', SSInfo().env, "SSConsoleMain");
+      var p = Sandalphon.load(url);
       this.buildInterface(p);
     }
 

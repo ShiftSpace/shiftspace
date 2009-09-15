@@ -7,9 +7,13 @@ Event.Keys.shift = 16;
 (function() {
 var _urlJoin = $arity(
   function(a) { return a; },
-  function(a, b) { 
-    a = (a.tail(1) == "/") ? a : a + "/";
-    return (b.length > 0) ? a + b.first() : a;
+  function(a, b) {
+    if(b.length > 0) {
+      a = (a.tail(1) == "/") ? a : a + "/";
+      return a + b.first()
+    } else {
+      return a;
+    }
   }
 );
 String.implement({
@@ -30,7 +34,7 @@ String.implement({
   },
   urlJoin: function() {
     var args = $A(arguments);
-    args = ($type(this) == 'string') ? [this].combine(args) : args;
+    args = ($type(this) == 'string') ? [this].extend(args) : args;
     return $reduce(_urlJoin, args);
   }
 });

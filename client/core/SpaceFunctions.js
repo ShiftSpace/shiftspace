@@ -32,7 +32,7 @@ function SSLoadSpace(spaceName)
   }
   else if(spaceName)
   {
-    var url = SSURLForSpace(spaceName) + spaceName + '.js';
+    var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
     var p = SSLoadFile(url);
     $if(SSApp.noErr(p),
         function() {
@@ -58,7 +58,7 @@ Function: SSRegisterSpace
 Parameters:
   instance - A space object.
 */
-function SSRegisterSpace(instance) 
+function SSRegisterSpace(instance)
 {
   var spaceName = instance.name;
   SSSetSpaceForName(instance, spaceName);
@@ -73,10 +73,8 @@ function SSRegisterSpace(instance)
       var css = spaceDir + instance.attributes().css;
       instance.attributes().css = css;
     }
-    setTimeout(function() {
-      var p = SSLoadStyle(instance.attributes().css);
-      instance.onCssLoad(p);
-    }, 0);
+    var p = SSLoadStyle(instance.attributes().css);
+    instance.onCssLoad(p);
   }
 
   // This exposes each space instance to the console
@@ -145,22 +143,27 @@ Returns:
 */
 function SSLoadSpaceAttributes(spaceName)
 {
-  var p = SSLoadFile(ShiftSpace.info().spacesDir+spaceName+'/attrs.json');
+  var p = SSLoadFile(String.urlJoin(ShiftSpace.info().spacesDir, spaceName, 'attrs.json'));
   var p2 = $if(p,
                function() {
                  // check to see that the resources urls are full
                  var json = JSON.decode(p.value());
                  if(!json.name) throw new SSException("No name for " + json.name + " space specified.");
-                 if(!json.url) throw new SSException("No url for " + json.name + " space specified.");
-                 if (!json.icon) json.icon = json.url + json.name + '.png';
-                 // clear whitespace
                  if(json.url) json.url = json.url.trim();
+                 if(!json.url)
+		 {
+		   json.url = String.urlJoin(ShiftSpace.info().spacesDir, spaceName);
+		 }
+		 else if(!SSIsAbsoluteURL(json.url)) 
+		 {
+		   throw new SSException(spaceName + " attr.json defines url which is not absolute.");
+		 }
+                 if (!json.icon) json.icon = String.urlJoin(json.url, json.name + '.png');
+                 // clear whitespace
                  if(json.icon) json.icon = json.icon.trim();
                  if(json.css) json.css = json.css.trim();
-                 // check for absolute urls
-                 if(!SSIsAbsoluteURL(json.url)) json.url = json.url.substitute({SPACEDIR:ShiftSpace.info().spacesDir});
-                 if(!SSIsAbsoluteURL(json.icon)) json.icon = json.url + json.icon;
-                 if(!SSIsAbsoluteURL(json.css)) json.css = json.url + json.css;
+                 if(!SSIsAbsoluteURL(json.icon)) json.icon = String.urlJoin(json.url, json.icon);
+                 if(!SSIsAbsoluteURL(json.css)) json.css = String.urlJoin(json.url, json.css);
                  // position default to end
                  json.position = $H(SSInstalledSpaces()).getLength();
                  return json;
@@ -186,7 +189,7 @@ function SSInstallSpace(space)
 {
   if(!SSURLForSpace(space))
   {
-    var url = SSInfo().spacesDir + '/' + space + '/' + space + '.js';
+    var url = String.urlJoin(SSInfo().spacesDir, space, space + '.js');
     var count = $H(SSInstalledSpaces()).getLength();
     
     SSLoadSpaceAttributes(space, function(attrs) {
