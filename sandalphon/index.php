@@ -28,7 +28,7 @@
     <script src="persist.js" type="text/javascript" charset="utf-8"></script>
     <title>Sandalphon Interface Tool</title>
     <link rel="stylesheet" href="../styles/ShiftSpace.css" type="text/css" media="screen" title="no title" charset="utf-8" />
-    <link rel="stylesheet" href="sandalphon.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+    <link rel="stylesheet" href="styles.css" type="text/css" media="screen" title="no title" charset="utf-8" />
   </head>
   
   <body class="InSandalphon">
