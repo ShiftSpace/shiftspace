@@ -98,7 +98,6 @@ class SandalphonCompiler:
             # add this view's css if necessary
             if self.visitedViews.has_key(view) != True:
                 self.addCSS({"path":os.path.join(filePath, view+'.html'), "file":view})
-                #self.addCSSForHTMLPath(os.path.join(filePath, view+'.html'))
                 self.visitedViews[view] = True
             return fileContents
         else:
@@ -305,7 +304,6 @@ def main(argv):
         print "No input file\n"
         usage()
         sys.exit(2)
-    # todo throw error if this isn't there - David
     compiler = SandalphonCompiler(outputDirectory, envFile)
     compiler.compile(inputFile, jsonOutput)
 
