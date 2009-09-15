@@ -34,3 +34,4 @@ config/env/sandalphon.json
 .DS_Store
 
 lucene/*
+/shiftspace.org
