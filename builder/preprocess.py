@@ -26,8 +26,20 @@ class SSPreProcessor:
     ENV_NAME_REGEX = re.compile('%%ENV_NAME%%')
     VARS_REGEX = re.compile('%%VARS%%')
   
-    def __init__(self, project=None, env=None, inputFile=None, outputFile=None):
-        pass
+    def __init__(self, project=None, env=None, export=False):
+        if project != None:
+            self.setProject(project)
+
+    def setProject(self, project):
+        path = '../config/proj/%s.json' % (os.path.splitext(project)[0])
+        try:
+            # load project file
+            fh = open(path)
+            self.proj = json.loads(fh.read())
+            fh.close()
+        except IOError:
+            print "Error: no such project file exists. (%s)" % path
+            sys.exit(2)
 
     def setEnvVars(self, source):
         if self.envData != None:
@@ -124,6 +136,9 @@ class SSPreProcessor:
         print "  -i input file, defaults to SHIFTSPACE_DIR/client/ShiftSpace.js"
         print "  -o output file, if none specified, writes to standard output" 
   
+    def preprocess(self, input=None, output=None):
+        pass
+
     def main(self, argv):
         # defaults
         proj = "shiftspace"
@@ -239,11 +254,10 @@ def usage():
 
 def main(argv):
     proj = "shiftspace"
-    outFile = None
-    inFile = None
-    envFileOption = None
-    exportObjects = False
-    fileName = None
+    output = None
+    input = None
+    env = None
+    export = False
     try:
         opts, args = getopt.getopt(argv, "hp:i:o:e:x", ["environment=", "project=", "output=", "input=", "help", "project", "export"])
     except getopt.GetoptError:
@@ -260,16 +274,16 @@ def main(argv):
         elif opt in ("-p", "--project"):
             proj = arg
         elif opt in ("-o", "--output"):
-            outFile = arg
+            output = arg
         elif opt in ("-i", "--input"):
-            inFile = arg
+            input = arg
         elif opt in ("-e", "--environment"):
-            envFileOption = arg
+            env = arg
         elif opt in ("-x", "--export"):
-            exportObjects = True
+            export = True
         else:
             assert False, "unhandled options"
-    preprocessor = SSPreProcessor(project=proj, env=env)
+    preprocessor = SSPreProcessor(project=proj, env=env, export=export)
     preprocessor.preprocess(input=inFile, output=outFile)
 
   
