@@ -20,7 +20,7 @@ def elementHasAttribute(element, attrib, value=None):
 
 
 class SandalphonCompiler:
-    def __init__(self, packages, outputDirectory=None, env=None):
+    def __init__(self, outputDirectory=None, env=None):
         # store paths to interface files
         self.paths = {}
         self.visitedViews = {}
@@ -31,8 +31,10 @@ class SandalphonCompiler:
                 os.makedirs(self.outputDirectory)
         else:
             self.outputDirectory = outputDirectory
-        self.packages = packages
-        self.files = packages['files']
+        # load the packages json file
+        packagesJsonFile = open('../config/packages.json')
+        self.packages = json.loads(packagesJsonFile.read())
+        self.files = self.packages['files']
         self.cssFile = ''
         self.cssFiles = []
         self.templatePattern = re.compile('<\?.+?\?>')
@@ -303,11 +305,8 @@ def main(argv):
             envData = json.loads(envFile.read())
             envFile.close()
             env = {"name": envFileName, "data": envData}
-    # load the packages json file
-    packagesJsonFile = open('../config/packages.json')
-    packages = packagesJsonFile.read()
     # todo throw error if this isn't there - David
-    compiler = SandalphonCompiler(json.loads(packages), outputDirectory, env)
+    compiler = SandalphonCompiler(outputDirectory, env)
     compiler.compile(inputFile, jsonOutput)
 
 
