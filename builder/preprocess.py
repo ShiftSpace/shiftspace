@@ -29,6 +29,12 @@ class SSPreProcessor:
     def __init__(self, project=None, env=None, export=False):
         if project != None:
             self.setProject(project)
+        self.getMetaData()
+
+    def getMetaData(self):
+        fh = open('../config/packages.json')
+        self.metadata = json.loads(fh.read())
+        fh.close()
 
     def setProject(self, project):
         path = '../config/proj/%s.json' % (os.path.splitext(project)[0])
@@ -40,6 +46,20 @@ class SSPreProcessor:
         except IOError:
             print "Error: no such project file exists. (%s)" % path
             sys.exit(2)
+
+    def setEnv(self, env):
+        path = '../config/env/%s.json' % (os.path.splitext(envFileOption)[0])
+        try:
+            # load environment file
+            fh = open(path)
+            envData = json.loads(fh.read())
+            fh.close()
+            self.envData = {"name": env, "data": envData}
+        except IOError:
+            print "Error: no such environment file exists. (%s)" % envFilePath
+            sys.exit(2)
+
+        pass
 
     def setEnvVars(self, source):
         if self.envData != None:
@@ -202,7 +222,7 @@ class SSPreProcessor:
             env = json.loads(envFile.read())
             envFile.close()
             
-            self.envData = {"name": envFileOption, "data": env, "meta": metadataStr}
+            self.envData = {"name": envFileOption, "data": env}
         except IOError:
             print "Error: no such environment file exists. (%s)" % envFilePath
             sys.exit(2)
