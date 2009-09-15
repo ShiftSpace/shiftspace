@@ -4,17 +4,37 @@
 
 Event.Keys.shift = 16;
 
+(function() {
+var _urlJoin = $arity(
+  function(a) { return a; },
+  function(a, b) { 
+    a = (a.tail(1) == "/") ? a : a + "/";
+    return (b.length > 0) ? a + b.first() : a;
+  }
+);
 String.implement({
   tail: function(n) { return this.substring(this.length-(n || 1)); },
   drop: function(n) { return this.substring(0, this.length-(n || 1)); },
   pluralize: function() { return this + "s"; },
   unpluralize: function() { return (this.tail() == "s") ? this.drop() : $A(this).join(""); },
-  trunc: function(limit, options)
-  {
+  trunc: function(limit, options) {
     var tail = (options && options.tail === false) ? '' : ((options && options.tail) || '...');
     return this.substring(0, limit) + tail;
+  },
+  repeat: function(times) {
+    var result = "";
+    for(var i = 0; i < times; i++) {
+      result += this;
+    }
+    return result;
+  },
+  urlJoin: function() {
+    var args = $A(arguments);
+    args = ($type(this) == 'string') ? [this].combine(args) : args;
+    return $reduce(_urlJoin, args);
   }
 });
+})();
 
 Hash.implement({
   changeKeys: function(keyFn)
@@ -70,16 +90,6 @@ Selectors.RegExps = {
   splitter: (/\s*([+>~\s])\s*([a-zA-Z#.*:\[])/g),
   combined: (/\.([\w-]+)|\[([\w:]+)(?:([!*^$~|]?=)(["']?)([^\4]*?)\4)?\]|:([\w-]+)(?:\(["']?(.*?)?["']?\)|$)/g)
 };
-
-String.implement({
-  repeat: function(times) {
-    var result = "";
-    for(var i = 0; i < times; i++) {
-      result += this;
-    }
-    return result;
-  }
-});
 
 Function.implement({
   partial: function(bind, args) {
