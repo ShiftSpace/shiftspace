@@ -20,13 +20,23 @@ def elementHasAttribute(element, attrib, value=None):
 
 
 class SandalphonCompiler:
-    def __init__(self, outputDirectory=None, env=None):
+    def __init__(self, outputDirectory=None, envFile=None):
         # store paths to interface files
         self.paths = {}
         self.visitedViews = {}
+        # load the specified environment file
+        if envFile:
+            fh = open('../config/env/%s.json' % envFile)
+        if fh == None:
+            print "Environment file SHIFTSPACE_ROOT/config/env/%s.json does not exist" % envFileName
+            sys.exit(2)
+        else:
+            envData = json.loads(fh.read())
+            fh.close()
+            env = {"name": envFile, "data": envData}
         self.env = env
-        if env:
-            self.outputDirectory = os.path.join(outputDirectory, env["name"])
+        if self.env:
+            self.outputDirectory = os.path.join(outputDirectory, self.env["name"])
             if not os.path.exists(self.outputDirectory):
                 os.makedirs(self.outputDirectory)
         else:
@@ -271,7 +281,7 @@ def main(argv):
     jsonOutput = False
     outputDirectory = None
     inputFile = None
-    envFileName = None
+    envFile = None
     env = None
     try:
         opts, args = getopt.getopt(argv, "i:o:e:jh", ["input=", "output=", "environment=", "json", "help"])
@@ -290,23 +300,13 @@ def main(argv):
         elif opt in ("-j", "--json"):
             jsonOutput = True
         elif opt in ("-e", "--environment"):
-            envFileName = arg
+            envFile = arg
     if inputFile == None:
         print "No input file\n"
         usage()
         sys.exit(2)
-    env = None
-    if envFileName:
-        envFile = open('../config/env/%s.json' % envFileName)
-        if envFile == None:
-            print "Environment file SHIFTSPACE_ROOT/config/env/%s.json does not exist" % envFileName
-            sys.exit(2)
-        else:
-            envData = json.loads(envFile.read())
-            envFile.close()
-            env = {"name": envFileName, "data": envData}
     # todo throw error if this isn't there - David
-    compiler = SandalphonCompiler(outputDirectory, env)
+    compiler = SandalphonCompiler(outputDirectory, envFile)
     compiler.compile(inputFile, jsonOutput)
 
 
