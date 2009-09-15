@@ -17,7 +17,8 @@
     <script src="../externals/ssunit/SSUnitTest.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="../styles/ShiftSpace.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     <link rel="stylesheet" href="sandalphon.css" type="text/css" media="screen" title="no title" charset="utf-8" />
-    
+  </head>
+
   <body>
     
     <div id="SSSandalphonControls">
