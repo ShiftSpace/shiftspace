@@ -8,6 +8,7 @@ import sys
 import re
 import getopt
 import simplejson as json # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
+import StringIO
 
 
 class SSError(Exception): 
@@ -63,6 +64,7 @@ class SSPreProcessor:
             sys.exit(2)
 
     def setInputFile(self, inFile):
+        self.closeIn = True
         if inFile != None:
             try:
                 self.inFile = open(inFile)
@@ -74,7 +76,11 @@ class SSPreProcessor:
             self.inFile = open('../client/ShiftSpace.js')
     
     def setOutputFile(self, outFile):
-        if outFile != None:
+        self.closeOut = True
+        if isinstance(outFile, StringIO.StringIO):
+            self.closeOut = False
+            self.outFile = outFile
+        elif outFile != None:
             self.outFile = open(outFile, "w")
         else:
             self.outFile = sys.stdout
@@ -192,10 +198,12 @@ class SSPreProcessor:
                 fh.close()
             except IOError:
                 print "Error: no such main file exists. (%s)" % mainFile
-        self.inFile.close()
-        self.outFile.close()
-        del self.inFile
-        del self.outFile
+        if self.closeIn:
+            self.inFile.close()
+            del self.inFile
+        if self.closeOut:
+            self.outFile.close()
+            del self.outFile
 
 
 def usage():
