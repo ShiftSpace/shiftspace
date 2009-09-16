@@ -8,7 +8,7 @@ There are many friendly instructions on the web for installing git. We recommend
 
 h2. Mac OS X
 
-h3. Getting shiftspace
+h3. Getting ShiftSpace
 
 Clone the main shiftspace repository into your Sites folder on your machine by typing the following using *Terminal.app*:
 
@@ -37,11 +37,13 @@ Drop the CouchDBX application into your *Applications* folder. Double-click on t
 
 h3. Python dependencies
 
-Download the server dependencies zip "here":http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip. Put this folder into *~/Sites/shiftspace/server*. Then run the following at the terminal:
+Run the following at the terminal:
 
 <pre class="console">
 $ cd ~/Sites/shiftspace/server
-$ sudo install_deps.sh
+$ wget http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip
+$ unzip deps
+$ sudo ./install_deps.sh
 </pre>
 
 This installs all of the Python libraries the ShiftSpace backend needs to run. You might notice there is couchdb-lucene .jar as well. We'll get to that in a moment.
@@ -51,7 +53,7 @@ h3. Initializing the databse
 Now we need to initialize the database. Make sure that CouchDBX is running. Type the following into your terminal:
 
 <pre class="console">
-$ cd ~/Sites/shiftspace/server/
+$ cd ~/Sites/shiftspace/server
 $ python setup.py
 </pre>
 
@@ -61,7 +63,7 @@ You should point your web browser to *http://localhost:5984/shiftspace* to see t
 
 h3. Configuring couchdb-lucene
 
-Now that you have CouchDB up and running, you should configure couchdb-lucene. In order for Lucene to index CouchDB and provide full text search capabilities you'll need to edit your CouchDB *local.ini* file. Right click on the CouchDBX application. You'll get a new window displaying the contents of the Applciation. Drill down through *Contents/Resources/couchdbx-core/couchdb/etc/couchdb/*. Open up *local.ini* in your favorite text editor. Replace the contents with the following.
+Now that you have CouchDB up and running, you should configure couchdb-lucene. In order for Lucene to index CouchDB and provide full text search capabilities you'll need to edit your CouchDB *local.ini* file. Right click on the CouchDBX application. You'll get a new window displaying the contents of the application. Drill down through *Contents/Resources/couchdbx-core/couchdb/etc/couchdb/*. Open up *local.ini* in your favorite text editor. Replace the contents with the following.
 
 <pre>
 ; CouchDB Configuration Settings
@@ -82,7 +84,7 @@ os_process_timeout=60000 ; 60 seconds for couchdb-lucene
 ;level = debug                                                                                                      
 
 [update_notification]
-;unique notifier name=/full/path/to/exe -with "cmd line arg"
+; CHANGE THIS LINE, username should be set to your username
 indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftserver/couchdb-lucene-0.4-jar-with-dependencies.jar -index
 
 ; To create an admin account uncomment the '[admins]' section below and add a
@@ -95,7 +97,7 @@ indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java
 ;admin = mysecretpassword                                                                                                      
 
 [external]
-; the following provides search, trying to figure out indexing
+; CHANGE THIS LINE, username should be set to your username
 fti=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftserver/couchdb-lucene-0.4-jar-with-dependencies.jar -search
 
 [httpd_db_handlers]
@@ -128,12 +130,23 @@ _fti={couch_httpd_external, handle_external_req, <<"fti">>}
 }
 </pre>
 
+h3. Preparing to start the server
+
+In order for the ShiftSpace script to build properly between page refreshes the dependencies between all the JavaScript source files must be determined as well as setting the url. In the future you won't need to set the url since it should just default to *http://localhost:8080*. Until then you have to run the following in a terminal:
+
+<pre class="console">
+$ cd ~/Sites/shiftspace/scripts
+$ ./setup.sh
+</pre>
+
+When prompted, enter *http://localhost:8080*. Take note that there is no trailing slash.
+
 h3. Starting the server
 
 You can now start the ShiftSpace server. Again make sure that the CouchDBX is running. Type following into a terminal:
 
 <pre class="console">
-$ cd ~/Sites/shiftspace/server/
+$ cd ~/Sites/shiftspace/server
 $ python server.py
 </pre>
 
@@ -147,4 +160,4 @@ Congratulations! You've successfully installed ShiftSpace 1.0. Please refer to t
 
 h2. Linux
 
-h2. Windows 
+h2. Windows
