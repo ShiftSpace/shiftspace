@@ -29,6 +29,9 @@ class SSPreProcessor:
     def __init__(self, project=None, env=None, export=False):
         if project != None:
             self.setProject(project)
+        if env != None:
+            self.setEnv(env)
+        self.export = export
         self.getMetaData()
 
     def getMetaData(self):
@@ -48,7 +51,7 @@ class SSPreProcessor:
             sys.exit(2)
 
     def setEnv(self, env):
-        path = '../config/env/%s.json' % (os.path.splitext(envFileOption)[0])
+        path = '../config/env/%s.json' % (os.path.splitext(env)[0])
         try:
             # load environment file
             fh = open(path)
@@ -59,7 +62,22 @@ class SSPreProcessor:
             print "Error: no such environment file exists. (%s)" % envFilePath
             sys.exit(2)
 
-        pass
+    def setInputFile(self, inFile):
+        if inFile != None:
+            try:
+                self.inFile = open(inFile)
+                fileName = os.path.splitext(os.path.basename(inFile))[0]
+            except IOError:
+                print "Error: no such input file exist"
+                sys.exit(2)
+        else:
+            self.inFile = open('../client/ShiftSpace.js')
+    
+    def setOutputFile(self, outFile):
+        if outFile != None:
+            self.outFile = open(outFile, "w")
+        else:
+            self.outFile = sys.stdout
 
     def setEnvVars(self, source):
         if self.envData != None:
@@ -148,103 +166,18 @@ class SSPreProcessor:
         print "Error: no such package %s exists, perhaps you forgot to run corebuilder.py first?" % package
         sys.exit(2)
               
-    def usage(self):
-        print "Usage: python preprocess.py <environment definition> [<project>] [<input file>]"
-        print "  -e REQUIRED, the environment file, must be in SHIFTSPACE_DIR/config/env/"
-        print "  -h help"
-        print "  -p project, defaults to shiftspace.json, must be in SHIFTSPACE_DIR/config/proj/"
-        print "  -i input file, defaults to SHIFTSPACE_DIR/client/ShiftSpace.js"
-        print "  -o output file, if none specified, writes to standard output" 
-  
     def preprocess(self, input=None, output=None):
-        pass
-
-    def main(self, argv):
-        # defaults
-        proj = "shiftspace"
-        outFile = None
-        inFile = None
-        envFileOption = None
-        exportObjects = False
-        fileName = None
-        try:
-            opts, args = getopt.getopt(argv, "hp:i:o:e:x", ["environment=", "project=", "output=", "input=", "help", "project", "export"])
-        except getopt.GetoptError:
-            self.usage()
-            sys.exit(2)
-        # check for environment key
-        optsDict = dict(opts)
-        if not optsDict.has_key("-e") and not optsDict.has_key("--environment"):
-            self.usage()
-            sys.exit(2)
-        # parse arguments
-        for opt, arg in opts:
-            if opt in ("-h", "--help"):
-                self.usage()
-                sys.exit()
-            elif opt in ("-p", "--project"):
-                proj = arg
-            elif opt in ("-o", "--output"):
-                outFile = arg
-            elif opt in ("-i", "--input"):
-                inFile = arg
-            elif opt in ("-e", "--environment"):
-                envFileOption = arg
-            elif opt in ("-x", "--export"):
-                exportObjects = True
-            else:
-                assert False, "unhandled options"
-        # get the metadata
-        metadataJsonFile = open('../config/packages.json')
-        metadataStr = metadataJsonFile.read()
-        self.metadata = json.loads(metadataStr)
-        metadataJsonFile.close()
-        # get the input file
-        if inFile != None:
-            try:
-                self.inFile = open(inFile)
-                fileName = os.path.splitext(os.path.basename(inFile))[0]
-            except IOError:
-                print "Error: no such input file exist"
-                sys.exit(2)
-        else:
-            self.inFile = open('../client/ShiftSpace.js')
-        if outFile != None:
-            self.outFile = open(outFile, "w")
-        else:
-            self.outFile = sys.stdout
-        # load environment file
-        envFile = None
-        envFilePath = '../config/env/%s.json' % (os.path.splitext(envFileOption)[0])
-        try:
-            # load environment file
-            envFile = open(envFilePath)
-            env = json.loads(envFile.read())
-            envFile.close()
-            
-            self.envData = {"name": envFileOption, "data": env}
-        except IOError:
-            print "Error: no such environment file exists. (%s)" % envFilePath
-            sys.exit(2)
-        projFilePath = '../config/proj/%s.json' % (os.path.splitext(proj)[0])
-        try:
-            # load project file
-            projFile = open(projFilePath)
-            self.proj = json.loads(projFile.read())
-            projFile.close()
-        except IOError:
-            print "Error: no such project file exists. (%s)" % projFilePath
-            sys.exit(2)
-        # remove things not included in the project
+        self.setInputFile(input)
+        self.setOutputFile(output)
         for packageToRemove in self.proj['packages']['remove']:
             self.metadata['packages'].pop(packageToRemove)
         for fileToRemove in self.proj['files']['remove']:
             self.metadata['files'].pop(fileToRemove)
         self.envData['meta'] = json.dumps(self.metadata, sort_keys=True, indent=4)
-        preprocessed = self.preprocessFile(self.inFile, fileName)
+        preprocessed = self.preprocessFile(self.inFile, input)
         self.outFile.write(preprocessed)
         # export symbols
-        if exportObjects and len(self.metadata['exports']) > 0:
+        if self.export and len(self.metadata['exports']) > 0:
             print self.metadata['exports']
             print type(self.metadata['exports'])
             self.outFile.write('if(typeof ShiftSpace == "undefined") ShiftSpace = {};\n')
@@ -254,13 +187,15 @@ class SSPreProcessor:
         if self.proj.has_key("main"):
             mainFile = "../config/main/%s.js" % os.path.splitext(self.proj["main"])[0]
             try:
-                mainFileHandle = open(mainFile)
-                self.outFile.write(mainFileHandle.read())
-                mainFileHandle.close()
+                fh = open(mainFile)
+                self.outFile.write(fh.read())
+                fh.close()
             except IOError:
                 print "Error: no such main file exists. (%s)" % mainFile
-        self.outFile.close()
         self.inFile.close()
+        self.outFile.close()
+        del self.inFile
+        del self.outFile
 
 
 def usage():
@@ -303,10 +238,9 @@ def main(argv):
             export = True
         else:
             assert False, "unhandled options"
-    preprocessor = SSPreProcessor(project=proj, env=env, export=export)
-    preprocessor.preprocess(input=inFile, output=outFile)
+    preprocessor = SSPreProcessor(proj, env, export)
+    preprocessor.preprocess(input, output)
 
   
 if __name__ == "__main__":
-    preprocessor = SSPreProcessor()
-    preprocessor.main(sys.argv[1:])
+    main(sys.argv[1:])
