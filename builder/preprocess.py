@@ -34,6 +34,10 @@ class SSPreProcessor:
             self.setEnv(env)
         self.export = export
         self.getMetaData()
+        for packageToRemove in self.proj['packages']['remove']:
+            self.metadata['packages'].pop(packageToRemove)
+        for fileToRemove in self.proj['files']['remove']:
+            self.metadata['files'].pop(fileToRemove)
 
     def getMetaData(self):
         fh = open('../config/packages.json')
@@ -175,10 +179,6 @@ class SSPreProcessor:
     def preprocess(self, input=None, output=None):
         self.setInputFile(input)
         self.setOutputFile(output)
-        for packageToRemove in self.proj['packages']['remove']:
-            self.metadata['packages'].pop(packageToRemove)
-        for fileToRemove in self.proj['files']['remove']:
-            self.metadata['files'].pop(fileToRemove)
         self.envData['meta'] = json.dumps(self.metadata, sort_keys=True, indent=4)
         preprocessed = self.preprocessFile(self.inFile, input)
         self.outFile.write(preprocessed)
