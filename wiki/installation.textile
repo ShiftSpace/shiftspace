@@ -85,7 +85,7 @@ os_process_timeout=60000 ; 60 seconds for couchdb-lucene
 
 [update_notification]
 ; CHANGE THIS LINE, username should be set to your username
-indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftserver/couchdb-lucene-0.4-jar-with-dependencies.jar -index
+indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
 
 ; To create an admin account uncomment the '[admins]' section below and add a
 ; line in the format 'username = password'. When you next start CouchDB, it                                        
@@ -98,7 +98,7 @@ indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java
 
 [external]
 ; CHANGE THIS LINE, username should be set to your username
-fti=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftserver/couchdb-lucene-0.4-jar-with-dependencies.jar -search
+fti=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -search
 
 [httpd_db_handlers]
 _fti={couch_httpd_external, handle_external_req, <<"fti">>}
