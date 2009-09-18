@@ -22,7 +22,7 @@ var SSTestRunnerClass = new Class({
     var base = testname.split('.')[0];
     
     new Request({
-      url: "../builder/build_test.php?test=" + base,
+      url: "/test/" + base,
       method: "get",
       onComplete: function(responseText, responseXML)
       {
@@ -53,23 +53,21 @@ var SSTestRunnerClass = new Class({
         }
         catch(err)
         {
-          console.error(err, "could not instantiate test.");
+	  SSLog("Could not run test", err, SSLogError);
           return;
         }
-        var test = new testInstance(); // the initialize method in SSUnitTest.TestCase/TestSuite adds itself to the list of testcases
-        console.log('test instance', test.name);
-        $('SSTestRunnerOutput').empty();
 
-        // run all the tests
+        var test = new testInstance(); // the initialize method in SSUnitTest.TestCase/TestSuite adds itself to the list of testcases
+        SSLog("Test instance:", test.name, SSLogForce);
+        $('SSTestRunnerOutput').empty();
         var f = new SSUnitTest.ResultFormatter.BasicDOM({container:$('SSTestRunnerOutput')});
-        console.log('running tests');
+	SSLog("Running tests", SSLogForce);
         SSUnitTest.main({formatter:f});
-        console.log('done');
+	SSLog("Tests complete", SSLogForce);
 
       }.bind(this),
       onFailure: function(responseText, responseXML)
       {
-        
       }.bind(this)
     }).send();
   }
