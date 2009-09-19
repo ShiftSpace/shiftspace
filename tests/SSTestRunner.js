@@ -1,11 +1,7 @@
 var SSTestRunnerClass = new Class({
   
   Implements: [Events, Options],
-  
-  initialize: function()
-  {
-  },
-  
+  name: "SSTestRunnerClass",
   
   createMouseEventForNode: function(eventType, node)
   {
@@ -22,14 +18,12 @@ var SSTestRunnerClass = new Class({
     var base = testname.split('.')[0];
     
     new Request({
-      url: "/test/" + base,
+      url: String.urlJoin("/test", base),
       method: "get",
       onComplete: function(responseText, responseXML)
       {
-        // reset the SSUnitTest
         SSUnitTest.reset();
 
-        // evaluate test
         try
         {
           var result = eval(responseText);
@@ -46,7 +40,6 @@ var SSTestRunnerClass = new Class({
           return;
         }
 
-        // load the TestCase or TestSuite instance
         try
         {
           var testInstance = eval(base);

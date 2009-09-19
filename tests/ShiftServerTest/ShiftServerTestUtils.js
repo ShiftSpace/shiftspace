@@ -3,7 +3,6 @@
 // ==/Builder==
 
 var SSApp = SSApplication();
-var server = "../shiftserver";
 
 var AlreadyLoggedInError = "AlreadyLoggedInError";
 var AlreadyLoggedOutError = "AlreadyLoggedOutError";
@@ -97,7 +96,7 @@ var resourceDelegate = {
   optionsForResource: function()
   {
     return {
-      byHref: SSInfo().server+'/sandbox/'
+      byHref: String.urlJoin(SSInfo().server, 'sandbox/')
     };
   }
 };
