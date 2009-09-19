@@ -73,7 +73,6 @@ var ApplicationServer = new Class({
   updateCache: function(data, name)
   {
     var cache = this.cache(), name = (name) ? name : 'global';
-    SSLog("Updating cache", name, SSLogForce);
     if(!cache[name]) cache[name] = {};
     if($type(data) != 'array') data = $splat(data);
     data.each(this.setDocument.partial(this, name));
