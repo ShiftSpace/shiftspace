@@ -36,7 +36,7 @@ var ApplicationServer = new Class({
   {
     this.setOptions(this.defaults(), options);
     this.setServer(this.options.server);
-    this.setCache({});
+    this.setCache({global:{}});
     this.setResources({});
     this.setWatchers({});
   },
@@ -70,10 +70,11 @@ var ApplicationServer = new Class({
   },
   
   
-  updateCache: function(name, data, merge)
+  updateCache: function(data, name)
   {
-    var cache = this.cache();
-    if(!cache[name] || merge === false) cache[name] = {};
+    var cache = this.cache(), name = (name) ? name : 'global';
+    SSLog("Updating cache", name, SSLogForce);
+    if(!cache[name]) cache[name] = {};
     if($type(data) != 'array') data = $splat(data);
     data.each(this.setDocument.partial(this, name));
   },
@@ -85,9 +86,12 @@ var ApplicationServer = new Class({
   },
   
   
-  deleteFromCache: function(name, id)
+  deleteFromCache: function(id, name)
   {
-    delete this.cache()[name][id];
+    var caches = (name) ? [this.cache()[name]] : this.cache();
+    $H(caches).each(function(cache) {
+      delete cache[id];
+    });
   },
   
 
@@ -107,7 +111,7 @@ var ApplicationServer = new Class({
   
   documentForIndex: function(cacheName, idx)
   {
-    return this.cache()[cacheName][idx];
+    return this.cache(cacheName, true)[idx];
   },
   
   
@@ -285,7 +289,7 @@ var ApplicationServer = new Class({
       {
         var rsrcSpec = {resource:'shift', method:'create'};
         this.notifyWatchers(rsrcSpec, value);
-        if(options && options.local) this.updateCache(options.local, value);
+        this.updateCache(value, (options && options.local));
         return value;
       }
       else
@@ -306,7 +310,7 @@ var ApplicationServer = new Class({
       {
         var readRsrcSpec = {resource:resource, method:'read', id:id};
         this.notifyWatchers(readRsrcSpec, value);
-        if(options && options.local) this.updateCache(options.local, value, true);
+        this.updateCache(value, (options && options.local));
         return value;
       }
       else
@@ -328,7 +332,7 @@ var ApplicationServer = new Class({
         var updateRsrcSpec = {resource:resource, method:'update', id:id};
 	var oldValue = this.allCachedDocuments()[id];
         this.notifyWatchers(updateRsrcSpec, value);
-        if(options && options.local) this.updateCache(options.local, value, oldValue);
+        this.updateCache(value, (options && options.local));
         return value;
       }
       else
@@ -349,7 +353,7 @@ var ApplicationServer = new Class({
       {
         var deleteRsrcSpec = {resource:resource, method:'delete', id:id};
         this.notifyWatchers(deleteRsrcSpec, value);
-        if(options && options.local) this.deleteLocal(options.local, id);
+        this.deleteFromCache(id, (options && options.local));
         return value;
       }
       else
@@ -370,8 +374,8 @@ var ApplicationServer = new Class({
       {
         var postRsrcSpec = {resource:postOptions.resource, action:postOptions.action, id:postOptions.id};
 	var oldValue = this.allCachedDocuments()[postOptions.id];
-        this.notifyWatchers(postRsrcSpec, value);
-        if(options && options.local) this.updateCache(options.local, value, oldValue);
+        this.notifyWatchers(postRsrcSpec, value, oldValue);
+        this.updateCache(value, (options && options.local));
         return value;
       }
       else
@@ -392,7 +396,7 @@ var ApplicationServer = new Class({
       {
         var getRsrcSpec = {resource:getOptions.resource, action:getOptions.action, id:getOptions.id};
         this.notifyWatchers(getRsrcSpec, value);
-        if(options && options.local) this.updateCache(options.local, value);
+        this.updateCache(value, (options && options.local));
         return value;
       }
       else

@@ -229,7 +229,6 @@ See Also:
 */
 function SSSaveNewShift(shift)
 {
-  SSLog('SSSaveNewShift', SSLogForce);
   var space = SSSpaceForName(shift.space.name);
 
   var params = {
@@ -276,7 +275,7 @@ function SSSaveNewShift(shift)
 */
 function SSSaveShift(shift) 
 {
-  if (shift._id.substr(0, 8) == 'newShift') 
+  if(shift._id.substr(0, 8) == 'newShift') 
   {
     SSSaveNewShift(shift);
     return;
