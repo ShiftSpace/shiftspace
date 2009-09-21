@@ -1,0 +1,194 @@
+The user document represents the basic means of interacting with a ShiftSpace server. Very few interesting operations can occur beyond reads without a session that matches a user in the database. Admin users are useful constructs when two ShiftSpace server's need to share data or when testing the conformance of a ShiftSpace Server implementation to this specification.
+
+h2. Schema
+
+<pre>
+{
+  "type": "user",
+  "server": <bool>,
+  "userName": <string>,
+  "displayName": <string>,
+  "email": <string>,
+  "bio": <string>,
+  "url": <string>,
+  "gravatar": <string>,
+  "password": <string>,
+  "joined": <string: utc format parseable date string>,
+  "lastSeen": <string: utc format parseable date string>,
+  "publicStream": <string>,
+  "privateStream": <string>,
+  "messageStream": <string>,
+  "notify": <array>,
+  "streams": <array>,
+  "preferences": <hash-map>
+}
+</pre>
+
+*userName*: must be at least 6 characters long. Must start with an alphabetic character. Must contain only alphanumeric characters.
+*displayName*: optional user supplied display name.
+*email*: must be a valid email address.
+*bio*: optional user supplied biographical data.
+*url*: optional user supplied url.
+*gravatar*: generated from email. Disallowed field in update calls.
+*password*: user's hashed password.
+*joined*: set by the server. Cannot be changed afterwards.
+*lastSeen*: updated when the user logs in or out.
+*publicStream*: the id of the user's public stream.
+*privateStream*: the id of the user's private stream. Used to support following.
+*messageStream*: the id of the user's inbox stream.
+*notify*: list of stream for which the user wants notifications in his/her inbox.
+*streams*: list of streams to which the user is subscribed.
+*preferences*: schemaless hash-map of the user's preferences.
+
+h2. REST API
+
+h3. Creating a user
+
+Creates a user. The request must be made with the header "Content-type" set to "application/json". In order to validate the JSON data must include *userName*, *password*, *passwordVerify*, and *email fields*. It is case sensitive.
+
+h4. url
+
+<pre>
+POST /user/userName
+</pre>
+
+h4. parameters
+
+A JSON string that conforms the user schema.
+
+h3. Updating a user
+
+Updates a user with a JSON string containing the updated fields.
+
+h4. url
+
+<pre>
+PUT /user/userName
+</pre>
+
+h4. returns
+
+The updated user.
+
+h3. Reading a user
+
+Read a user's data. If the user is logged in or the user is running as admin this will return all fields with the exception of *password*. Unprivileged users will not see *email*, *publicStream*, *privateStream*, *messageStream*, *streams*, *notify*, *preferences*.
+
+h4. url
+
+<pre>
+GET /user/userName
+</pre>
+
+h4. returns
+
+The user.
+
+h3. Deleting a user
+
+Deleting a user should delete the user account including all of the user's comments and any shifts which are not part of a larger discussions, streams he/she created which have no other members, and events which were created by that user.
+
+h4. url
+
+<pre>
+DELETE /user/userName
+</pre>
+
+h4. returns
+
+ack
+
+h3. Following a user
+
+This subscribes the logged in user to another user's public stream.
+
+h4. url
+
+<pre>
+POST /user/userName/follow
+</pre>
+
+h4. returns
+
+The updated user.
+
+h3. Unfollowing a user
+
+This unsubscribes a user from another user's public stream.
+
+h4. url
+
+<pre>
+POST /user/userName/unfollow
+</pre>
+
+h4. returns
+
+The updated user.
+
+h3. Getting a user's comments
+
+Returns an array of the user's comments. Comments are returned ordered by descending from the most recent comment to least recent comment. Only accessible to the user or system admin.
+
+h4. url
+
+<pre>
+GET /user/userName/comments
+</pre>
+
+h4. parameters
+
+*start* - the index to start
+*count* - the number of results to return
+
+h4. returns
+
+An array of comments.
+
+h3. Getting a user's favorites
+
+Returns an array of the user's favorite shifts. Favorites are returned order descending from most recently favorited to least recently favorites. Only accessible to the user or system admin.
+
+h4. url
+
+<pre>
+GET /user/userName/favorites
+</pre>
+
+h4. parameters
+
+*start* - the index to start.
+*count* - the number of results to return.
+
+h4. returns
+
+An array of shifts.
+
+h3. Getting a user's shifts
+
+Returns an array of user's shifts. Shifts are returned sorted by descending from most recently modified to least recently modified. Only accessible to the user or system admin.
+
+h4. url
+
+<pre>
+GET /user/userName/shifts
+</pre>
+
+h4. parameters
+
+*start* - the index to start.
+*count* - the number of results to return.
+
+h3. Getting a user's inbox
+
+Returns messages in the user's inbox. Messages are returned descending from the most recent to least recent message. Only accessible to the user or system admin.
+
+h4. url
+
+<pre>
+GET /user/userName/messages
+</pre>
+
+h4. returns
+
+An array of events.

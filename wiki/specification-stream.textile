@@ -1,0 +1,116 @@
+The Streams abstraction is the foundation for all "collection" oriented feature in ShiftSpace. Groups, tagging, following are all built on top of stream. Access to Streams are controlled by Permissions.
+
+h2. Schema
+
+<pre>
+{
+  "type": "stream",
+  "meta": <string>,
+  "createdBy": <string>,
+  "displayName": <string>,
+  "uniqueName": <string>,
+  "created": <string: a utc format parseable date string>,
+  "modified": <string: a utc format parseable date string>,
+  "private": <bool>,
+  "objectRef": <string: "type:id">
+}
+</pre>
+
+*meta*: The type specified, i.e. "group"
+*createdBy*: Author of the stream.
+*displayName*: User readable string for the stream.
+*uniqueName*: Globally unique user readable string for the stream.
+*created*: created date. Cannot be modified after stream creation.
+*modified*: last modified date.
+*private*: bool whether the stream is publicly visible.
+*objectRef*: uniquely specifies a document of which the stream is about.
+
+h2. REST API
+
+h3. Creating a Stream
+
+Creates a new stream. The user is automatically set as the root user for the stream. Header *Content-type* must be set to *application/json*.
+
+h4. url
+
+<pre>
+POST /stream
+</pre>
+
+h4. parameters
+
+A JSON string conforming to the Stream schema.
+
+h4. returns
+
+The newly created Stream.
+
+h3. Reading a Stream
+
+Returns a Stream by id. Only allowed if the user has read access to the stream or the user is running as admin.
+
+h4. url
+
+<pre>
+GET /stream/id
+</pre>
+
+h4. returns
+
+A Stream.
+
+h3. Updating a Stream
+
+Update Stream. Header *Content-type* must be set to *application/json*.
+
+h4. url
+
+<pre>
+PUT /stream/id
+</pre>
+
+h4. parameters
+
+A JSON string conforming the mutable fields of the Stream schema.
+
+h3. Deleting a Stream
+
+Remove a Stream. This operation is not allowed if there is content created by other users on the Stream. Only the Stream owner an server admin (not stream admin) user may attempt to delete a stream.
+
+h4. url
+
+<pre>
+DELETE /stream/id
+</pre>
+
+h4. returns
+
+ack
+
+h3. Subscribing to a Stream
+
+Subscribes the logged in user to a stream. A user may do this only if there is a corresponding Permission giving at least join access to the stream. Join access can only be granted by stream admins or the stream owner.
+
+h4. url
+
+<pre>
+POST /stream/id/subscribe
+</pre>
+
+h4. returns
+
+The updated User.
+
+h3. Unsubscribing from a Stream
+
+Unsubscribes the user from a stream. The stream id will be removed from the user's streams array field.
+
+h4. url
+
+<pre>
+POST /stream/id/unsubscribe
+</pre>
+
+h4. returns
+
+The updated user.

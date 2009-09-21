@@ -96,7 +96,7 @@ var ShiftSpacePinWidget = new Class({
     // create an image and stick in it there
     this.iconImg = new SSElement('img', {
       'class': 'normal',
-      'src': server + 'images/ShiftMenu/blank.png'
+      'src': SSInfo().server + 'images/ShiftMenu/blank.png'
     });
     this.iconImg.injectInside(this.element);
 

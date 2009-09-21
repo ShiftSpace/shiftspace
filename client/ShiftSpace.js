@@ -69,7 +69,8 @@ Class: ShiftSpace
 
 var ShiftSpace = new (function() {
     // INCLUDE Bootstrap
-    
+    var SSApp = SSApplication();
+
     /*
 
     Function: initialize
@@ -88,6 +89,7 @@ var ShiftSpace = new (function() {
       ShiftSpace.Console = new SSConsole();
       ShiftSpace.Notifier = new SSNotifierView();
       ShiftSpace.SpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
+      ShiftSpace.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
       ShiftSpace.Sandalphon = Sandalphon;
       
       // Add to look up table
@@ -105,9 +107,7 @@ var ShiftSpace = new (function() {
         SSLog('ShiftSpace detects user logout', SSLogForce);
       });
       
-      SSLoadStyle('styles/ShiftSpace.css', function() {
-        SSCreateErrorWindow();
-      });
+      SSLoadStyle('styles/ShiftSpace.css');
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -124,6 +124,20 @@ var ShiftSpace = new (function() {
       SSCreateModalDiv();
       SSCreateDragDiv();
       
+      // initialize the value of default spaces for guest users
+      SSInitDefaultSpaces();
+        
+      if(SSDefaultSpaces())
+      {
+        SSSetup();
+      }
+      else
+      {
+        // first time ShiftSpace user default spaces not loaded yet
+        SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
+        SSLoadDefaultSpacesAttributes();
+      }
+      
       SSSync();
     };
     
@@ -133,56 +147,34 @@ var ShiftSpace = new (function() {
     */
     function SSSync() 
     {
-      SSLog('SSSync', SSLogForce);
-      var params = {
-        href: window.location.href
-      };
-      SSServerCall('query', params, function(json) {
-        SSLog("sync'ed!", SSLogForce);
-        if (json.error) 
-        {
-          console.error('Error checking for content: ' + json.error.message);
-          return;
-        }
-
-        if(json.data.user)
-        {
-          ShiftSpace.User.syncData(json.data.user)
-        }
-        
-        SSUpdateInstalledSpaces();
-        
-        // wait for Console and Notifier
-        var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
-        if(!ui.every($msg('isLoaded')))
-        {
-          ui.each($msg('addEvent', 'load', function(obj) {
-            if(ui.every($msg('isLoaded')))
-            {
-              SSPostNotification("onSync");
-            }
-          }.bind(this)))
-        }
-        else
-        {
-          SSPostNotification("onSync");
-        }
-        
-        SSLog('SSInitDefaultSpaces', SSLogForce);
-        SSInitDefaultSpaces();
-        
-        if(SSDefaultSpaces())
-        {
-          SSLog('SSSetup', SSLogForce);
-          SSSetup();
-        }
-        else
-        {
-          SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
-          SSLoadDefaultSpacesAttributes();
-        }
-      });
+      var p = SSApp.query();
+      $if(SSApp.hasData(p),
+          function() {
+            ShiftSpace.User.syncData(p);
+            SSPostNotification('onUserLogin');
+          });
+      SSUpdateInstalledSpaces(p);
+      SSWaitForUI(p)
     }
+    
+    var SSWaitForUI = function(query)
+    {
+      // wait for console and notifier before sending onSync
+      var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
+      if(!ui.every($msg('isLoaded')))
+      {
+        ui.each($msg('addEvent', 'load', function(obj) {
+          if(ui.every($msg('isLoaded')))
+          {
+            SSPostNotification("onSync");
+          }
+        }.bind(this)))
+      }
+      else
+      {
+        SSPostNotification("onSync");
+      }
+    }.asPromise();
     
     function SSSetup()
     {
@@ -256,39 +248,19 @@ var ShiftSpace = new (function() {
       return false;
     };
 
-    /*
-    Function: SSClearCache
-      Expunge previously stored files.
-
-    Parameters:
-        url - (Optional) The URL of the file to remove. If not specified, all
-              files in the cache will be deleted.
-    */
-    function SSClearCache(url) 
-    {
-      if (typeof url == 'string') 
-      {
-        // Clear a specific file from the cache
-        SSLog('Clearing ' + url + ' from cache', SSLogSystem);
-        SSSetValue('cache.' + url, 0);
-      } 
-      else 
-      {
-        // Clear all the files from the cache
-        cache.each(function(url) {
-          SSLog('Clearing ' + url + ' from cache', SSLogSystem);
-          SSSetValue('cache.' + url, 0);
-        });
-      }
-    };
-
-    // In sandbox mode, expose something for easier debugging.
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
     {
       unsafeWindow.ShiftSpace = this;
       this.sys = __sys__;
-      this.SSTag = SSTag;
-      this.spaceForName = SSSpaceForName;
+
+      // export symbols directly to the window for debugging purposes - David
+      window.SSSpaceForName = SSSpaceForName;
+      window.SSTag = SSTag;
+      window.SSApp = SSApp;
+      window.SSApplication = SSApplication;
+      window.SSResourceForName = SSResourceForName;
+      window.$msg = $msg;
+      window.SSControllerForNode = SSControllerForNode;
     }
 
     return this;
@@ -300,7 +272,7 @@ ShiftSpace.__externals = {
   {
     with(ShiftSpace.__externals)
     {
-      eval(external);
+      return eval(external);
     }
   }
 };

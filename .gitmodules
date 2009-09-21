@@ -1,0 +1,21 @@
+[submodule "externals/ssunit"]
+	path = externals/ssunit
+	url = git://github.com/ShiftSpace/ssunit.git
+[submodule "externals/gmmods"]
+	path = externals/gmmods
+	url = git://github.com/ShiftSpace/gmmods.git
+[submodule "externals/gmrequest"]
+	path = externals/gmrequest
+	url = git://github.com/ShiftSpace/gmrequest.git
+[submodule "externals/functools"]
+	path = externals/functools
+	url = git://github.com/ShiftSpace/functools.git
+[submodule "externals/set"]
+	path = externals/set
+	url = git://github.com/ShiftSpace/set.git
+[submodule "externals/promises"]
+	path = externals/promises
+	url = git://github.com/ShiftSpace/promises.git
+[submodule "server"]
+	path = server
+	url = git://github.com/ShiftSpace/shiftserver.git

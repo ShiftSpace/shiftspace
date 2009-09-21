@@ -2,7 +2,7 @@
 // @test
 // ==/Builder==
 
-var server = "../shiftserver";
+var SSApp = SSApplication();
 
 var AlreadyLoggedInError = "AlreadyLoggedInError";
 var AlreadyLoggedOutError = "AlreadyLoggedOutError";
@@ -44,6 +44,13 @@ var noteShift = {
   }
 };
 
+var highlightsShift = {
+  space: {name:"Highlights", version:"0.1"},
+  summary: "Bar!",
+  href: "http://google.com/image_search",
+  content: {}
+};
+
 var fakemary = {
   userName: "fakemary",
   email: "fakemary@gmail.com",
@@ -72,29 +79,6 @@ var admin = {
   passwordVerify: 'shiftspace'
 };
 
-function req(options)
-{
-  options.async = false;
-  options.emulation = false;
-  options.url = (server + options.url);
-  options.url = (options.resourceId) ? options.url + '/' + options.resourceId : options.url;
-  
-  if(options.resourceId) delete options.resourceId;
-
-  if(options.json)
-  {
-    options.headers = {};
-    options.headers['Content-type'] = 'application/json';
-  }
-  
-  if(options.json)
-  {
-    options.data = JSON.encode(options.data);
-    delete options.json;
-  }
-
-  new Request.JSON(options).send()
-}
 
 function SSGetData(json)
 {
@@ -108,178 +92,75 @@ function SSGetType(json)
 }
 
 
-var CouchDBApp = new Class({
-  create: function(type, data)
+var resourceDelegate = {
+  optionsForResource: function()
   {
-    var result;
-    req({
-      url:'/'+type,
-      method: 'post',
-      data: data,
-      json: true,
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  },
-  
-  read: function(type, id)
-  {
-    var result;
-    req({
-      url:'/'+type,
-      resourceId: id,
-      method: 'get',
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  },
-  
-  update: function(type, id, data)
-  {
-    var result;
-    req({
-      url:'/'+type,
-      resourceId: id,
-      method: 'put',
-      data: data,
-      json: true,
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  },
-  
-  delete: function(type, id)
-  {
-    var result;
-    req({
-      url:'/'+type,
-      resourceId: id,
-      method: 'delete',
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  },
-  
-  action: function(url, data)
-  {
-    var result;
-    req({
-      url:'/'+url,
-      method: 'post',
-      json: true,
-      data: data,
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
-  },
-  
-  get: function(url)
-  {
-    var result;
-    req({
-      url:'/'+url,
-      method: 'get',
-      onComplete: function(json)
-      {
-        result = json;
-      }
-    });
-    return result;
+    return {
+      byHref: String.urlJoin(SSInfo().server, 'sandbox/')
+    };
   }
-});
+};
 
-var app = new CouchDBApp();
-
-function adminJoin()
-{
-  req({
-    url: "/join",
-    method: 'post',
-    json: true,
-    data:
-    {
-      userName: 'shiftspace',
-      email: 'info@shiftspace.org',
-      password: 'changetheweb',
-      passwordVerify: 'changetheweb'
-    }
+function createResource() {
+  return new SSResource("AllShifts", {
+    resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
+    watches: [{
+                events: [{resource:"shift", method:"create"},
+                         {resource:"shift", method:"update"},
+                         {resource:"shift", method:"delete"},
+                         {resource:"shift", action:"comment"},
+                         {resource:"shift", action:"publish"},
+                         {resource:"shift", action:"unpublish"}],
+                handlers: [SSResource.dirtyTheViews]
+              },
+              {
+                events: [{resource:"shift", method:"create"}],
+                handlers: [function(shift) { SSApplication().setDocument(this.getName(), shift); }]
+              }],
+    delegate: resourceDelegate
   });
 }
 
-function login(user)
-{
-  var result;
-  req({
-    url: "/login",
-    method: 'post',
-    data:
-    {
-      userName: user.userName,
-      password: user.password
-    },
-    onComplete: function(json)
-    {
-      result = json;
-    }
+function createResource2() {
+  return new SSResource("MyShifts", {
+    resource: {create:'shift', read:'user/'+User.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
+    watches: [{resource:"shift", method:"create"},
+              {resource:"shift", method:"update"},
+              {resource:"shift", method:"delete"},
+              {resource:"shift", action:"comment"},
+              {resource:"shift", action:"publish"},
+              {resource:"shift", action:"unpublish"}],
+    conditions: function(shift) { return shift.userName == User.getUserName(); }
   });
-  return result;
 }
 
-
-function setPerm(id, userName, level)
-{
-  var result;
-  req({
-    url: "/stream/"+id+'/permission',
-    method: 'post',
-    data:
-    {
-      userName: userName,
-      level: level
-    },
-    onComplete: function(json)
-    {
-      result = json;
-    }
+function createResource3() {
+  return new SSResource("MyShifts", {
+    resource: {read:'shifts'},
+    watches: [{
+                events:[{resource:"shift", method:"create"},
+                        {resource:"shift", method:"update"},
+                        {resource:"shift", method:"delete"},
+                        {resource:"shift", action:"comment"},
+                        {resource:"shift", action:"publish"},
+                        {resource:"shift", action:"unpublish"}],
+                handlers: function() { this.dirtyTheViews(); }
+              }],
+    views: ["MyShiftsListView"]
   });
-  return result;
 }
 
-function join(user)
-{
-  return app.action('join', user);
-}
-
-function logout()
-{
-  return app.action('logout');
-}
-
-function query()
-{
-  var result;
-  req({
-    url: "/query",
-    method: "get",
-    onComplete: function(json)
-    {
-      console.log(json);
-    }
+// create and remote resources
+// this means app should store by name for events
+// and look them up
+function createResource4() {
+  return new SSResource("shift/foo/comments", {
+    resource: {read:"shift/foo/comments"},
+    watches: [{
+                events:[{resource:"comments", method:"create"},
+                        {resource:"comments", method:"update"},
+                        {resource:"comments", method:"delete"}],
+                handler: function() { this.dirtyTheViews(); }
+              }]
   });
-  return result;
 }

@@ -21,9 +21,9 @@ function setUsername(_username) {
   Returns:
     The shift author's username as a string.
 */
-function SSUserForShift(shiftId)
+function SSUserForShift(id)
 {
-  return SSGetShift(shiftId).username;
+  return SSGetShift(id).get('userName');
 }
 
 /*
@@ -36,9 +36,9 @@ function SSUserForShift(shiftId)
   Returns:
     true or false.
 */
-function SSUserOwnsShift(shiftId)
+function SSUserOwnsShift(shift)
 {
-  return (SSUserForShift(shiftId) == ShiftSpace.User.getUsername());
+  return (shift.userName == ShiftSpace.User.getUserName());
 }
 
 /*
@@ -51,8 +51,8 @@ function SSUserOwnsShift(shiftId)
   Returns:
     true or false.
 */
-function SSUserCanEditShift(shiftId)
+function SSUserCanEditShift(shift)
 {
   return (ShiftSpace.User.isLoggedIn() &&
-          SSUserOwnsShift(shiftId));
+          SSUserOwnsShift(shift));
 }

@@ -4,15 +4,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <script>
+    var ShiftSpace = {};
+  </script>
   <script src="../externals/mootools-1.2.3-core.js" type="text/javascript" charset="utf-8"></script>
   <script src="../externals/mootools-1.2.3.1-more.js" type="text/javascript" charset="utf-8"></script>
-  <script src="../externals/MTMods.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../builds/shiftspace.sandalphon.js" type="text/javascript" charset="utf-8"></script>
   <script src="../externals/promises/Promises.js" type="text/javascript" charset="utf-8"></script>
   <script src="../tests/ShiftServerTest/ShiftServerTestUtils.js" type="text/javascript" charset="utf-8"></script>
   <script src="../client/ApplicationServer.js" type="text/javascript" charset="utf-8"></script>
   <script src="../client/ShiftServer.js" type="text/javascript" charset="utf-8"></script>
-  <script type="text/javascript" charset="utf-8">
-    window.addEvent('domready', query);
+  <script>
+    var app = new ShiftServer();
   </script>
   <title>ShiftServer</title>
 

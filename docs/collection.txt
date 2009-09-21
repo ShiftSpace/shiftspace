@@ -1,0 +1,62 @@
+Since we have application we can have use listeners to make sure it always has cached shifts in a clean way.
+
+SSConsole.addWatcher({resource:'shift', methods:['read']}, function(v) { SSSetShift(v._id, v); });
+SSConsole.addWatcher({method:'get', action:'shifts'}, function(v) { v.each(SSSetShift.partial(null, [v._id])); });
+
+// we don't really need collection anymore
+// we have a well defined concept of resources
+var ShiftCollection = new SSResource('Shifts', {
+  routes: {
+    read: {resource: 'shifts', data:{...}},
+    create: {resource: 'shift'},
+    update: {resource: 'shift'},
+    delete: {resource: 'shift'}
+  },
+  start: 0,
+  count: 25
+});
+
+Shifts
+-----------------------
+read
+  user/:userName/shifts
+create
+  shift
+update
+  shift/:id
+delete
+  shift/:id
+
+Comments
+------------------------
+read
+  shift/:id/comments
+create
+  comment
+update
+  comment/:id
+delete
+  comment/:id
+  
+Groups
+-------------------------
+read
+  user/:userName/groups
+create
+  group
+update
+  group/:id
+delete
+  group/:id
+  
+Messages
+-------------------------
+read
+  user/:userName/messages
+create
+  event
+update
+  event/:id
+delete
+  event/:id
+  

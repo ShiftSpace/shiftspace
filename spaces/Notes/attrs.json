@@ -1,7 +1,6 @@
 {
   name: 'Notes',
   authors: ['dphiffer', 'mushon', 'dnolen'],
-  url: '{SPACEDIR}/Notes/',
   icon: 'Notes.png',
   css: 'Notes.css',
   description: 'Leave a sticky note.',

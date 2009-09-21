@@ -17,7 +17,7 @@
 #GroupsTabView > .SSContentView
 {
   left: 152px;
-  -moz-box-shadow:0 0 10px #BEB9B3 inset;
+  /*-moz-box-shadow:0 0 10px #BEB9B3 inset;*/
 }
 
 #GroupsTabView.SSTabViewSubTabStyle > .SSControlView > .SSButton 

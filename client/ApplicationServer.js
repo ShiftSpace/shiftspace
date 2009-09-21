@@ -1,15 +1,19 @@
+// ==Builder==
+// @required
+// @package           App
+// ==/Builder==
+
 Hash.implement({
-  extract: function(ary)
+  extract: function(ary, clean)
   {
     var result = $H();
     ary.each(function(key) {
       if(this[key])
       {
         result[key] = this[key];
-        delete this[key];
       }
     }, this);
-    return result;
+    return clean ? result.getClean() : result;
   }
 });
 
@@ -18,16 +22,119 @@ var ApplicationServer = new Class({
   
   Implements: [Events, Options],
   
-  defaults:
+  defaults: function() {
+    return {
+      server: null
+    }
+  },
+  
+  eventOrder: ['method', 'resource', 'action'],
+  urlOrder: ['resource', 'id', 'action'],  
+  
+  
+  initialize: function(options)
   {
-    server: "http://localhost/~davidnolen/shiftspace/shiftserver/"
+    this.setOptions(this.defaults(), options);
+    this.setServer(this.options.server);
+    this.setCache({global:{}});
+    this.setResources({});
+    this.setWatchers({});
+  },
+  
+  
+  setCache: function(cache)
+  {
+    this.__cache = cache;
+  },
+  
+  
+  cache: function(name, asArray)
+  {
+    var result = (name) ? this.__cache[name] : this.__cache;
+    if(asArray)
+    {
+      result = $H(result).getValues();
+    }
+    return result;
+  },
+  
+  
+  setDocument: function(cacheName, doc)
+  {
+    if(doc && doc._id)
+    {
+      var cache = this.cache();
+      if(!cache[cacheName]) cache[cacheName] = {};
+      cache[cacheName][doc._id] = doc;
+    }
+  },
+  
+  
+  updateCache: function(data, name)
+  {
+    var cache = this.cache(), name = (name) ? name : 'global';
+    if(!cache[name]) cache[name] = {};
+    if($type(data) != 'array') data = $splat(data);
+    data.each(this.setDocument.partial(this, name));
+  },
+  
+  
+  removeCache: function(name)
+  {
+    delete this.cache()[name];
+  },
+  
+  
+  deleteFromCache: function(id, name)
+  {
+    var caches = (name) ? [this.cache()[name]] : this.cache();
+    $H(caches).each(function(cache) {
+      delete cache[id];
+    });
   },
   
 
-  initialize: function(options)
+  allCachedDocuments: function()
   {
-    this.setOptions(this.defaults, options);
-    this.setServer(this.options.server);
+    var merged = {}, cache = this.cache();
+    for(var resourceName in cache) merged = $merge(merged, cache[resourceName]);
+    return merged;
+  },
+
+
+  getDocument: function(id)
+  {
+    return this.allCachedDocuments()[id];
+  },
+  
+  
+  documentForIndex: function(cacheName, idx)
+  {
+    return this.cache(cacheName, true)[idx];
+  },
+  
+  
+  setResources: function(resources)
+  {
+    this.__resources = resources;
+  },
+  
+  
+  resources: function()
+  {
+    return this.__resources;
+  },
+  
+  
+  addResource: function(resource)
+  {
+    this.resources()[resource.getName()] = resource;
+  },
+  
+  
+  getResource: function(name)
+  {
+    return this.resources()[name];
   },
 
   
@@ -49,9 +156,6 @@ var ApplicationServer = new Class({
   },
   
   
-  urlOrder: ['resource', 'id', 'action'],
-  
-  
   genUrl: function(parts)
   {
     var ary = this.urlOrder.map(function(pname) {
@@ -62,16 +166,107 @@ var ApplicationServer = new Class({
   },
   
   
+  setWatchers: function(watchers)
+  {
+    this.__watchers = watchers;
+  },
+  
+  
+  watchers: function()
+  {
+    return this.__watchers;
+  },
+  
+  
+  watchersFor: function(rsrcSpec)
+  {
+    return this.__watchersFor__($hash(rsrcSpec));
+  },
+  
+  
+  __watchersFor__: function(rsrcSpecHashed)
+  {
+    var watchers = this.watchers()[rsrcSpecHashed];
+    return watchers || [];
+  },
+  
+  
+  addWatcher: function(watcher, rsrcSpec)
+  {
+    var watchers = this.watchers(), hashed = $hash(rsrcSpec);
+    if(!watchers[hashed]) watchers[hashed] = [];
+    watchers[hashed].push(watcher);
+  },
+  
+  
+  removeWatcher: function(watcher, rsrcSpec)
+  {
+    var watchers = this.watchers();
+    if(rsrcSpec)
+    {
+      watchers[$hash(rsrcSpec)].erase(watcher);
+    }
+    else
+    {
+      for(var rsrcSpec in watchers)
+      {
+        watchers[rsrcSpec].erase(watcher);
+      }
+    }
+  },
+  
+  
+  specsForWatcher: function(watcher)
+  {
+    var watchers = this.watchers(), result = [];
+    for(var rsrcSpec in watchers)
+    {
+      if(watchers[rsrcSpec].contains(watcher)) result.push(rsrcSpec);
+    }
+    return result;
+  },
+  
+  
+  notifyWatchers: function(rsrcSpec, value, oldValue)
+  {
+    var resourceSpec = $hash($H(rsrcSpec).extract(['resource', 'method'], true));
+    var watchers = this.__watchersFor__(resourceSpec);
+    watchers.each($msg('matchSpec', resourceSpec, value, oldValue));
+    
+    if(rsrcSpec.id)
+    {
+      var idSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'id'], true));
+      watchers = this.__watchersFor__(idSpec);
+      watchers.each($msg('matchSpec', idSpec, value, oldValue));
+    }
+    
+    if(rsrcSpec.action)
+    {
+      var actionSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'action'], true));
+      watchers = this.__watchersFor__(actionSpec);
+      watchers.each($msg('matchSpec', actionSpec, value, oldValue));
+    }
+    
+    if(rsrcSpec.action && rsrcSpec.id)
+    {
+      var actionIdSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'action', 'id'], true));
+      watchers = this.__watchersFor__(actionIdSpec);
+      watchers.each($msg('matchSpec', actionIdSpec, value, oldValue));
+    }
+  },
+  
+  
   call: function(options)
   {
     var urlParts = $H(options).extract(this.urlOrder);
+    options = $H(options).filter(function(v, k) {
+      return !this.urlOrder.contains(k);
+    }, this);
     
-    options = $merge(options, {
+    options = $merge(options.getClean(), {
       url: this.server() + this.genUrl(urlParts),
       emulation: false
     });
-    
-    console.log(this.genUrl(urlParts));
     
     if(options.json)
     {
@@ -85,49 +280,154 @@ var ApplicationServer = new Class({
   }.decorate(promise),
   
   
-  create: function(resource, data)
+  create: function(resource, data, options)
   {
-    return this.call({resource:resource, method:'post', data:data, json: true});
+    var p = this.call({resource:resource, method:'post', data:data, json: true});
+    p.op(function(value) {
+      if(this.noErr(value))
+      {
+        var rsrcSpec = {resource:'shift', method:'create'};
+        this.notifyWatchers(rsrcSpec, value);
+        this.updateCache(value, (options && options.local));
+        return value;
+      }
+      else
+      {
+        SSLog("Create failed", value, SSLogError);
+        return value;
+      }
+    }.bind(this));
+    return p;
   },
   
   
-  read: function(resource, id)
+  read: function(resource, id, options)
   {
-    return this.call({resource:resource, id:id, method:'get'});
+    var p = this.call({resource:resource, id:id, method:'get'});
+    p.op(function(value) {
+      if(this.noErr(value))
+      {
+        var readRsrcSpec = {resource:resource, method:'read', id:id};
+        this.notifyWatchers(readRsrcSpec, value);
+        this.updateCache(value, (options && options.local));
+        return value;
+      }
+      else
+      {
+        SSLog("Read failed", value, SSLogError);
+        return value;
+      }
+    }.bind(this));
+    return p;
   },
   
   
-  update: function(resource, id, data)
+  update: function(resource, id, data, options)
   {
-    return this.call({resource:resource, id:id, method:'put', data:data});
+    var p = this.call({resource:resource, id:id, method:'put', data:data, json: true});
+    p.op(function(value) {
+      if(this.noErr(value))
+      {
+        var updateRsrcSpec = {resource:resource, method:'update', id:id};
+	var oldValue = this.allCachedDocuments()[id];
+        this.notifyWatchers(updateRsrcSpec, value);
+        this.updateCache(value, (options && options.local));
+        return value;
+      }
+      else
+      {
+        SSLog("Update failed", value, SSLogError);
+        return value;
+      }
+    }.bind(this));
+    return p;
   },
   
   
-  delete: function(resource, id)
+  'delete': function(resource, id, options)
   {
-    return this.call({resource:resource, id:id, method:'delete'});
+    var p = this.call({resource:resource, id:id, method:'delete'});
+    p.op(function(value) {
+      if(this.noErr(value)) 
+      {
+        var deleteRsrcSpec = {resource:resource, method:'delete', id:id};
+        this.notifyWatchers(deleteRsrcSpec, value);
+        this.deleteFromCache(id, (options && options.local));
+        return value;
+      }
+      else
+      {
+        SSLog("Delete failed", value, SSLogError);
+        return value;
+      }
+    }.bind(this));
+    return p;
   },
   
   
-  post: function(options)
+  post: function(postOptions, options)
   {
-    return this.call($merge(options, {method:'post'}));
+    var p = this.call($merge(postOptions, {method:'post'}));
+    p.op(function(value) {
+      if(this.noErr(value))
+      {
+        var postRsrcSpec = {resource:postOptions.resource, action:postOptions.action, id:postOptions.id};
+	var oldValue = this.allCachedDocuments()[postOptions.id];
+        this.notifyWatchers(postRsrcSpec, value, oldValue);
+        this.updateCache(value, (options && options.local));
+        return value;
+      }
+      else
+      {
+        SSLog("Post failed", value, SSLogError);
+        return value;
+      }
+    }.bind(this));
+    return p;
   },
   
   
-  get: function(options)
+  get: function(getOptions, options)
   {
-    return this.call($merge(options, {method:'get'}));
-  }
+    var p = this.call($merge(getOptions, {method:'get'}));
+    p.op(function(value) {
+      if(this.noErr(value))
+      {
+        var getRsrcSpec = {resource:getOptions.resource, action:getOptions.action, id:getOptions.id};
+        this.notifyWatchers(getRsrcSpec, value);
+        this.updateCache(value, (options && options.local));
+        return value;
+      }
+      else
+      {
+        SSLog("Get failed", value, SSLogError);
+        return value;
+      }
+    }.bind(this));
+    return p;
+  },
+
+  
+  confirm: function (p) { p.setAsync(true); p.realize(); return p.value(); },
+  show: function(value) { SSLog('show:', value, SSLogForce); }.asPromise(),
+
+
+  noErr: function(v, allowNull)
+  {
+    if(allowNull === false && (v === undefined || v === null)) return false;
+    return (v && v.error) ? false : true;
+  }.asPromise(),
+  
+  
+  hasData: function(v)
+  {
+    return (!v.message && !v.error) ? true : false;
+  }.asPromise(),
+
+  
+  showErr: function(err)
+  {
+    alert(err.error);
+  }.asPromise()
 
 });
-
-
-var confirm = promise(function (value) {
-  console.log(value);
-});
-
-/*
-var app = new ApplicationServer();
-confirm(app.post({action:"login", data:fakemary, json:true}))
-*/

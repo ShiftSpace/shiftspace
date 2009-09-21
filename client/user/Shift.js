@@ -15,10 +15,10 @@
 */
 var ShiftSpaceShift = new Class({
   
-  name: 'ShiftSpace.Shift',
   Implements: [Events, Options],
+  name: 'ShiftSpace.Shift',
 
-  getDefaults: function()
+  defaults: function()
   {
     return {};
   },
@@ -28,38 +28,28 @@ var ShiftSpaceShift = new Class({
       Takes a json object and creates the shift.
 
     Parameters:
-      _json - The JSON object that contains the properties the shift will have.
+      data - The JSON object that contains the properties the shift will have.
   */
-  initialize: function(_json)
+  initialize: function(data, options)
   {
-    this.setOptions(this.getDefaults(), _json);
+    this.setOptions(this.defaults(), options);
 
-    var id = _json.id;
-    var parentSpace;
-
+    var id = data._id;
     this.defaults = this.options;
 
     this.setId = function(aId) {
       if(id == null || id.substr(0, 8) == 'newShift') id = aId;
     };
-
     this.getId = function() {
       return id;
     };
 
-    if(_json.id) this.setId(_json.id);
-    this.setTitle(_json.summary || '');
-    this.setup(_json);
-
-    return this;
+    if(data._id) this.setId(data._id);
+    this.setTitle(data.summary || '');
+    this.setup(data.content);
   },
   
   
-  getParentSpace: function(attribute)
-  {
-    return SSSpaceForName(this.options.space);
-  },
-
   /*
     Function: setup (abstract)
       To implemented by the subclass.  All initialization of your Shift instance should happen here.
@@ -141,8 +131,6 @@ var ShiftSpaceShift = new Class({
   */
   save: function()
   {
-    // We can use events here because if we do
-    // a Shift cannot save in their initialize method
     this.getParentSpace().updateShift(this);
     this.fireEvent('onShiftSave', this.getId());
   },
@@ -755,20 +743,5 @@ var ShiftSpaceShift = new Class({
   errorView: function(err)
   {
 
-  },
-
-  /*
-    Function: xmlhttpRequest
-      Safe version of GM_xmlhttpRequest for shifts.
-
-    Parameters:
-      config - the same type of object that should be passed to GM_xmlhttpRequest.
-
-    See Also:
-      <SSXmlHttpRequest>
-  */
-  xmlhttpRequest: function(config)
-  {
-    SSXmlHttpRequest.safeCall(config);
   }
 });

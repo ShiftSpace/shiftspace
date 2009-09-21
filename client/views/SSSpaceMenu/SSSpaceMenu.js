@@ -29,7 +29,7 @@ var SSSpaceMenu = new Class({
   
   show: function()
   {
-    this.element.removeClass('SSDisplayNone');
+    this.parent();
     this.resize();
     SSPostNotification('onSpaceMenuShow', this);
   },
@@ -107,7 +107,7 @@ var SSSpaceMenu = new Class({
     this.parent(ui);
     this.element.setProperty('id', 'SpaceMenu');
     this.element.addClass('SSDisplayNone');
-  },
+  }.asPromise(),
   
   
   onContextActivate: function(context)
@@ -131,7 +131,7 @@ var SSSpaceMenu = new Class({
   {
     if(ShiftSpace.User.isLoggedIn())
     {
-      SSInitShift(SSSpaceForPosition(data.index).name);
+      SSInitShift(SSSpaceForPosition(data.index));
     }
     else
     {

@@ -53,10 +53,7 @@ var SSCell = new Class({
     this.attachEvents();
     this.prepareClone();
     
-    if(this.options.properties)
-    {
-      this.setPropertyList(this.options.properties);
-    }
+    this.setPropertyList(this.options.properties || []);
   },
   
   
@@ -205,19 +202,14 @@ var SSCell = new Class({
   {
     var propertyList = this.getPropertyList();
     $H(data).each(function(value, property) {
-      if(propertyList.contains(property)) this.setProperty(property, value);
+      if(propertyList.contains(property)) this.setProperty(property, value, data);
     }.bind(this));
   },
   
   
-  getData: function()
+  data: function(cellNode)
   {
-    var args = $A(arguments);
-    if((args.length == 1) && (args[0] instanceof Array))
-    {
-      args = $A(args[0]);
-    }
-    return args.map(this.getProperty.bind(this)).associate(args);
+    return this.delegate().dataForCellNode(cellNode);
   },
   
   
@@ -239,14 +231,14 @@ var SSCell = new Class({
   },
   
   
-  setProperty: function(property, value)
+  setProperty: function(property, value, data)
   {
     if(!this.isLocked()) throw new SSCellError.NoLock(new Error(), "attempt to set property " + property + " without element lock.");
     if(!this.getPropertyList().contains(property)) throw new SSCellError.NoSuchProperty(new Error(), "no such property " + property);
     var setter = 'set'+property.capitalize();
     if(this[setter])
     {
-      this[setter](value);
+      this[setter](value, data);
     }
   },
   

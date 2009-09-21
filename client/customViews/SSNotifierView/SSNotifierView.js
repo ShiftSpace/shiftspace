@@ -115,13 +115,6 @@ var SSNotifierView = new Class({
   
   handleSync: function()
   {
-    ShiftSpace.User.getShifts(function(shifts) {
-      if(shifts && shifts.length > 0)
-      {
-        this.SSShiftCount.set('text', shifts.length + ((shifts.length == 1) ? ' shift' : ' shifts'));
-        this.show();
-      }
-    }.bind(this));
   },
   
   
@@ -141,7 +134,7 @@ var SSNotifierView = new Class({
   {
     if(this.SSUsername)
     {
-      this.SSUsername.set('text', ShiftSpace.User.getUsername());
+      this.SSUsername.set('text', ShiftSpace.User.getUserName());
     }
     
     if(this.SSLogInOut)
@@ -336,7 +329,7 @@ var SSNotifierView = new Class({
     $clear(this.closeTimer);
     $clear(this.hideTimer);
     $clear(this.showTimer);
-    $clear(this.openTimer);
+    $clear(this.opneTimer);
   },
   
   
@@ -467,7 +460,7 @@ var SSNotifierView = new Class({
     this.parent(ui);
     this.element.setProperty('id', 'SSNotifier');
     this.element.addClass("SSNotifierHidden");
-  },
+  }.asPromise(),
   
   
   awake: function(context)

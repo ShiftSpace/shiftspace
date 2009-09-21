@@ -1,0 +1,22 @@
+.SSCommentPaneFrame
+{
+  position: fixed;
+  bottom: 40px;
+  right: 30px;
+  background: transparent;
+  border: none;
+  height: 200px;
+  overflow: hidden;
+  width: 200px;
+  z-index: 1000001;
+}
+
+.SSCommentPaneClosed
+{
+  height: 0px;
+}
+
+.SSCommentPaneOpen
+{
+  height: 200px;
+}

@@ -52,10 +52,9 @@ function SSClearObjects()
 
 // NOTE: we generate ids and store controller refs ourselves this is because of weird garbage collection
 // around iframes and wrappers around dom nodes when SS runs under GM - David
-function SSSetControllerForNode(controller, _node)
+function SSSetControllerForNode(controller, node)
 {
-  var node = $(_node);
-
+  node = $(node);
   // generate our own id
   node._ssgenId();
   // keep back reference
@@ -63,15 +62,14 @@ function SSSetControllerForNode(controller, _node)
 }
 
 // return the controller for a node
-function SSControllerForNode(_node)
+function SSControllerForNode(node)
 {
-  var node = $(_node);
-  
+  node = $(node);
   if(node == null)
   {
-    throw new SSSandalphonError.NoControllerForCSSId(new Error(), "No controller for element " + _node);
+    SSLog("No controller for element", node, SSLogError);
+    throw new SSSandalphonError.NoControllerForCSSId(new Error(), "No controller for element " + node);
   }
-  
   return __controllers__.get(node.getProperty('id')) ||
          (node.getProperty('uiclass') && new SSViewProxy(node)) ||
          null;
@@ -88,7 +86,7 @@ function SSIsController(object)
   {
     return false;
   }
-  else if(object._genId)
+  else if(object.__genId__)
   {
     return true;
   }

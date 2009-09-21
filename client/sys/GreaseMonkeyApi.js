@@ -1,6 +1,5 @@
 // ==Builder==
 // @required
-// @package           System_
 // ==/Builder==
 
 function GM_addStyle(css) 
@@ -25,6 +24,7 @@ function GM_addStyle(css)
   }
   else
   {
+    SSLog('add style', SSLogForce);
     var style = document.createStyleSheet();
     style.cssText = css;
   }
@@ -33,40 +33,14 @@ function GM_addStyle(css)
 
 function GM_getValue(key, defaultValue) 
 {
-  var request = new Request({
-    url: SSInfo().server + 'server/?method=sandbox.getvalue',
-    async: false,
-    method: 'post',
-    data: 
-    { 
-      key: key
-    }
-  }).send();
-  
-  var result = JSON.decode(request.response.text).data;
-  return (result != null && result) || defaultValue;
+  var value = localStorage.getItem(key);
+  return (value !== null) ? value : defaultValue;
 }
 
 
 function GM_setValue(key, value) 
 {
-  var request = new Request({
-    url: SSInfo().server + 'server/?method=sandbox.setvalue',
-    async: false,
-    method: 'post',
-    data: {key: key, value: value}
-  }).send();
-           
-  return request.response.text;
-}
-
-
-function GM_log(msg) 
-{
-  if (typeof console != 'undefined' && console.log) 
-  {
-    console.log(msg);
-  } 
+  localStorage.setItem(key, value);
 }
 
 

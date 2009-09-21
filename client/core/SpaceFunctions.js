@@ -10,12 +10,10 @@ var __defaultSpaces = null;
 var __installedSpaces = null;
 var __installedSpacesDataProvider = null;
 
-function SSSpaceIsLoaded(space)
+function SSSpaceIsLoaded(spaceName)
 {
-  return (SSSpaceForName(space) != null); 
+  return __spaces[spaceName] != null; 
 }
-
-var __loadingSpaces = [];
 
 /*
 Function: SSLoadSpace
@@ -23,59 +21,33 @@ Function: SSLoadSpace
   space class in the 'spaces' object
 
 Parameters:
-  space - the Space name to load
+  spaceName - the Space name to load
   callback - a callback function to run when the space is loaded.
 */
-function SSLoadSpace(space, callback)
+function SSLoadSpace(spaceName)
 {
-  if(__loadingSpaces.contains(space))
+  if(spaceName && SSSpaceIsLoaded(spaceName))
   {
-    SSAddObserver(SSNotificationProxy, 'onSpaceLoad', function(spaceInstance) {
-      if(spaceInstance.attributes().name == space) callback(spaceInstance);
-    });
-    return
+    return SSSpaceForName(spacename);
   }
-  
-  if(space && SSSpaceIsLoaded(space))
+  else if(spaceName)
   {
-    callback(SSSpaceForName(space));
-    return;
-  }
-  else if(space)
-  {
-    __loadingSpaces.push(space);
-    
-    var url = SSURLForSpace(space) + space + '.js';
-    if (typeof ShiftSpaceSandBoxMode != 'undefined')
-    {
-      url += '?' + new Date().getTime();
-      var newSpace = new Asset.javascript(url, {
-        id: space,
-        onload: function() 
-        {
-          if(callback) callback(SSSpaceForName(space));
-          SSPostNotification("onSpaceLoad", SSSpaceForName(space));
-        }
-      });
-    }
-    else
-    {
-      SSLoadFile(url, function(rx) {
-        var err;
-        try
-        {
-          ShiftSpace.__externals.evaluate(rx.responseText);
-        }
-        catch(exc)
-        {
-          console.error('Error loading ' + space + ' Space - ' + SSDescribeException(exc));
-          //throw exc;
-        }
-
-        if(callback) callback(SSSpaceForName(space));
-        SSPostNotification("onSpaceLoad", SSSpaceForName(space));
-      });
-    }
+    var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
+    var p = SSLoadFile(url);
+    $if(SSApp.noErr(p),
+        function() {
+          try
+          {
+            var space = SSRegisterSpace(ShiftSpace.__externals.evaluate('(function(){'+p.value()+' return '+spaceName+';})()'));
+          }
+          catch(exc)
+          {
+            console.error('Error loading ' + spaceName + ' Space - ' + SSDescribeException(exc));
+            //throw exc;
+          }
+          SSPostNotification("onSpaceLoad", space);
+        });
+    return p;
   }
 }
 
@@ -86,7 +58,7 @@ Function: SSRegisterSpace
 Parameters:
   instance - A space object.
 */
-function SSRegisterSpace(instance) 
+function SSRegisterSpace(instance)
 {
   var spaceName = instance.name;
   SSSetSpaceForName(instance, spaceName);
@@ -101,7 +73,8 @@ function SSRegisterSpace(instance)
       var css = spaceDir + instance.attributes().css;
       instance.attributes().css = css;
     }
-    setTimeout(SSLoadStyle.bind(ShiftSpace, [instance.attributes().css, instance.onCssLoad.bind(instance)]), 0);
+    var p = SSLoadStyle(instance.attributes().css);
+    instance.onCssLoad(p);
   }
 
   // This exposes each space instance to the console
@@ -110,30 +83,24 @@ function SSRegisterSpace(instance)
     ShiftSpace[instance.attributes().name + 'Space'] = instance;
   }
 
-  if(ShiftSpace.Console)
-  {
-    instance.addEvent('onShiftHide', ShiftSpace.Console.hideShift.bind(ShiftSpace.Console));
-  }
-
-  instance.addEvent('onShiftShow', function(shiftId) {
-    if(ShiftSpace.Console) ShiftSpace.Console.showShift(shiftId);
+  instance.addEvent('onShiftHide', function(id) {
+    SSPostNotification('onShiftHide', id);
   });
-  instance.addEvent('onShiftBlur', function(shiftId) {
-    SSBlurShift(shiftId);
-    if(ShiftSpace.Console) ShiftSpace.Console.blurShift(shiftId);
+  instance.addEvent('onShiftShow', function(id) {
+    SSPostNotification('onShiftShow', id);
   });
-  instance.addEvent('onShiftFocus', function(shiftId) {
-    SSFocusShift(shiftId);
-    if(ShiftSpace.Console) ShiftSpace.Console.focusShift(shiftId);
+  instance.addEvent('onShiftBlur', function(id) {
+    SSBlurShift(SSSpaceForShift(id), SSGetShift(id));
+    SSPostNotification('onShiftBlur', id);
   });
-  instance.addEvent('onShiftSave', function(shiftId) {
-    if(ShiftSpace.Console)
-    {
-      ShiftSpace.Console.blurShift(shiftId);
-    }
+  instance.addEvent('onShiftFocus', function(id) {
+    SSFocusShift(SSSpaceForShift(id), SSGetShift(id));
+    SSPostNotification('onShiftFocus', id);
   });
-
-  instance.addEvent('onShiftDestroy', SSUnloadShift);
+  instance.addEvent('onShiftSave', function(id) {
+  });
+  
+  return instance;
 }
 
 
@@ -147,23 +114,22 @@ function SSLoadDefaultSpacesAttributes()
 {
   var defaultSpaces = {};
   __defaultSpacesList.length.times(function(i) {
-    try
-    {
-      var spaceName = __defaultSpacesList[i];
-      SSLoadSpaceAttributes(spaceName, function(attrs) {
-        defaultSpaces[spaceName] = attrs;
-        defaultSpaces[spaceName].position = i;
-        if(i == (__defaultSpacesList.length-1)) 
-        {
-          SSInitDefaultSpaces(defaultSpaces);
-          SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);
-        }
-      });
-    }
-    catch (exc)
-    {
-      console.error("Error attempting to load attributes for " + spaceName + ".");
-    }
+    var spaceName = __defaultSpacesList[i];
+    var p = SSLoadSpaceAttributes(spaceName);
+    $if(SSApp.noErr(p),
+        function() {
+          var attrs = p.value();
+          defaultSpaces[spaceName] = attrs;
+          defaultSpaces[spaceName].position = i;
+          if(i == (__defaultSpacesList.length-1)) 
+          {
+            SSInitDefaultSpaces(defaultSpaces);
+            SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);
+          }
+        },
+        function() {
+          SSLog("Error attempting to load attributes for " + spaceName + ".", SSLogError);
+        });
   });
 }
 
@@ -171,41 +137,38 @@ function SSLoadDefaultSpacesAttributes()
 Function: SSLoadSpaceAttributes
   Loads the attributes for the space. This is a json file named attrs.json
   that sits in that space's directory.
+  
+Returns:
+  A Promise.
 */
-function SSLoadSpaceAttributes(space, callback)
+function SSLoadSpaceAttributes(spaceName)
 {
-  SSLoadFile(ShiftSpace.info().spacesDir+space+'/attrs.json', function(response) {
-    // check to see that the resources urls are full
-    var json = JSON.decode(response.responseText);
-    
-    if(!json.name)
-    {
-      throw new SSException("No name for " + json.name + " space specified.");
-    }
-    if(!json.url)
-    {
-      throw new SSException("No url for " + json.name + " space specified.");
-    }
-    
-    if (!json.icon)
-    {
-      json.icon = json.url + json.name + '.png';
-    }
-    
-    // clear whitespace
-    if(json.url) json.url = json.url.trim();
-    if(json.icon) json.icon = json.icon.trim();
-    if(json.css) json.css = json.css.trim();
-    
-    if(!SSIsAbsoluteURL(json.url)) json.url = json.url.substitute({SPACEDIR:ShiftSpace.info().spacesDir});
-    if(!SSIsAbsoluteURL(json.icon)) json.icon = json.url + json.icon;
-    if(!SSIsAbsoluteURL(json.css)) json.css = json.url + json.css;
-    
-    // position default to end
-    json.position = $H(SSInstalledSpaces()).getLength();
-    
-    callback(json);
-  });
+  var p = SSLoadFile(String.urlJoin(ShiftSpace.info().spacesDir, spaceName, 'attrs.json'));
+  var p2 = $if(p,
+               function() {
+                 // check to see that the resources urls are full
+                 var json = JSON.decode(p.value());
+                 if(!json.name) throw new SSException("No name for " + json.name + " space specified.");
+                 if(json.url) json.url = json.url.trim();
+                 if(!json.url)
+		 {
+		   json.url = String.urlJoin(ShiftSpace.info().spacesDir, spaceName);
+		 }
+		 else if(!SSIsAbsoluteURL(json.url)) 
+		 {
+		   throw new SSException(spaceName + " attr.json defines url which is not absolute.");
+		 }
+                 if (!json.icon) json.icon = String.urlJoin(json.url, json.name + '.png');
+                 // clear whitespace
+                 if(json.icon) json.icon = json.icon.trim();
+                 if(json.css) json.css = json.css.trim();
+                 if(!SSIsAbsoluteURL(json.icon)) json.icon = String.urlJoin(json.url, json.icon);
+                 if(!SSIsAbsoluteURL(json.css)) json.css = String.urlJoin(json.url, json.css);
+                 // position default to end
+                 json.position = $H(SSInstalledSpaces()).getLength();
+                 return json;
+               });
+  return p2;
 }
 
 function SSGetSpaceAttributes(space)
@@ -226,7 +189,7 @@ function SSInstallSpace(space)
 {
   if(!SSURLForSpace(space))
   {
-    var url = SSInfo().spacesDir + '/' + space + '/' + space + '.js';
+    var url = String.urlJoin(SSInfo().spacesDir, space, space + '.js');
     var count = $H(SSInstalledSpaces()).getLength();
     
     SSLoadSpaceAttributes(space, function(attrs) {
@@ -279,8 +242,6 @@ function SSUninstallSpace(spaceName)
     SSSetInstalledSpaces(installed);
   }
 
-  SSClearCache(url);
-  // let everyone else know
   SSPostNotification('onSpaceUninstall', spaceName);
 };
 
@@ -297,10 +258,10 @@ function SSInstalledSpaces()
 }
 
 
-function SSUpdateInstalledSpaces(force)
+var SSUpdateInstalledSpaces = function(user)
 {
-  __installedSpaces = __installedSpacesDataProvider.installedSpaces();
-}
+  __installedSpaces = ShiftSpace.User.installedSpaces();
+}.asPromise()
 
 
 function SSInitDefaultSpaces(defaults)
@@ -350,10 +311,18 @@ function SSResetSpaces()
   Returns:
     The space instance.
 */
-function SSSpaceForName(name)
+var SSSpaceForName = function(name)
 {
-  return __spaces[name];
-}
+  var space = __spaces[name];
+  if(space)
+  {
+    return space;
+  }
+  else
+  {
+    return SSLoadSpace(name);
+  }
+}.asPromise();
 
 /*
   Function: SSSetSpaceForName
@@ -391,7 +360,7 @@ function SSSpacesByPosition()
 
 function SSSpaceForPosition(index)
 {
-  return SSSpacesByPosition()[index];
+  return SSSpaceForName(SSSpacesByPosition()[index].name);
 }
 
 /*
@@ -487,17 +456,18 @@ function SSSetFocusedSpace(newSpace)
   Returns:
     The space singleton.
 */
-function SSSpaceForShift(shiftId)
+function SSSpaceForShift(id)
 {
-  var shift = SSGetShift(shiftId);
-  return SSSpaceForName(shift.space);
+  var shift = SSGetShift(id);
+  var spaceName = (Promise.isPromise(shift)) ? shift.get('space', 'name') : shift.space.name;
+  return SSSpaceForName(spaceName);
 }
 
 
 function SSSpaceNameForShift(shiftId)
 {
   var shift = SSGetShift(shiftId);
-  return shift.space;
+  return shift.space.name;
 }
 
 

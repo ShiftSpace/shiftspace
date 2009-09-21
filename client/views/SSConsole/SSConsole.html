@@ -14,7 +14,7 @@
         <div title="Inbox" class="SSLocalized">Inbox</div>
       </div>
       <div class="SSButton">
-        <div title="Following" class="SSLocalized">Following</div>
+        <div title="Following" class="SSLocalized">People</div>
       </div>
       <div class="SSButton">
         <div title="Groups" class="SSLocalized">Groups</div>
@@ -34,10 +34,10 @@
     <?path:../client/views/SSFilterPane/SSFilterPane?>
   
     <div class="SSContentView">
-      <?customView:AllShiftsTableView?>
-      <div id="MyShiftSpacePane" class="SSTabPane"></div>
-      <div id="InboxPane" class="SSTabPane"></div>
-      <div id="FollowingPane" class="SSTabPane"></div>
+      <?customView:AllShiftsView?>
+      <?customView:MyShiftSpacePane?>
+      <?customView:InboxPane?>
+      <?customView:PeoplePane?>
       <?customView:GroupsPane?>
       <?customView:SettingsTabView?>
       <?customView:LoginTabView?>

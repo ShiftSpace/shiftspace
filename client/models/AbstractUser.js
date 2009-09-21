@@ -28,7 +28,7 @@ var AbstractUser = new Class({
   {
     return {
       id: this.getId(),
-      username: this.getUsername(),
+      userName: this.getUserName(),
       email: this.email()
     };
   },
@@ -36,15 +36,15 @@ var AbstractUser = new Class({
   
   syncData: function(data)
   {
-    this.setUsername(data.username || null);
+    this.setUserName(data.userName || null);
     this.setEmail(data.email || null);
-    this.setId(data.id || null);
-  },
+    this.setId(data.id || data._id || null);
+  }.asPromise(),
   
   
   clearData: function()
   {
-    this.__username = null;
+    this.__userName = null;
     this.__userId = null;
     this.__email = null;
   },
@@ -62,24 +62,24 @@ var AbstractUser = new Class({
   },
   
   
-  setUsername: function(username)
+  setUserName: function(userName)
   {
-    if(username != null && username != false)
+    if(userName != null && userName != false)
     {
-      this.__username = username;
+      this.__userName = userName;
     }
   },
 
   /*
-    Function: getUsername
+    Function: getUserName
       Returns the logged in user's name.
       
     Returns:
       User name as string. Returns false if there is no logged in user.
   */
-  getUsername: function() 
+  getUserName: function() 
   {
-    return (this.isLoggedIn() ? this.__username : this.defaultUserName());
+    return (this.isLoggedIn() ? this.__userName : this.defaultUserName());
   },
   
   
@@ -117,10 +117,14 @@ var AbstractUser = new Class({
   
   query: function()
   {
-    SSServerCall('user.query', null, function(json) {
-      if(json.data) this.syncData(json.data);
-      this.onQuery(json);
-    }.bind(this));
+    var p = SSApp.query(credentials);
+    $if(SSApp.noErr(p),
+        function() {
+          var json = p.value();
+          this.syncData(json);
+          this.onQuery(json);
+        }.bind(this));
+    return p;
   },
   
   
@@ -134,21 +138,19 @@ var AbstractUser = new Class({
       Login a user. Will probably be moved into ShiftSpace.js.
 
     Parameters:
-      credentials - object with username and password properties.
+      credentials - object with userName and password properties.
   */
   login: function(credentials) 
   {
-    SSServerCall('user.login', credentials, function(json) {
-      if(!json['error'])
-      {
-        if(json.data) this.syncData(json.data);
-        this.onLogin(json);
-      }
-      else
-      {
-        this.onLoginError(json);
-      }
-    }.bind(this));
+    var p = SSApp.login(credentials);
+    $if(SSApp.noErr(p),
+        function() {
+          var json = p.value();
+          this.syncData(json);
+          this.onJoin(json);
+          this.onLogin(json);
+        }.bind(this));
+    return p;
   },
   
   
@@ -156,30 +158,22 @@ var AbstractUser = new Class({
   {
     SSPostNotification('onUserLogin', json);
   },
-  
-  
-  onLoginError: function(json)
-  {
-    SSPostNotification('onUserLoginError', json);
-  },
-  
+
+
   /*
     Function: logout (private)
       Logout a user. Will probably be moved into ShiftSpace.js.
   */
   logout: function()
   {
-    SSServerCall('user.logout', null, function(json) {
-      this.clearData();
-      if(!json['error'])
-      {
-        this.onLogout(json);
-      }
-      else
-      {
-        this.onLogoutError(json);
-      }
-    }.bind(this));
+    var p = SSApp.logout();
+    $if(SSApp.noErr(p),
+        function() {
+          var json = p.value();
+          this.clearData();
+          this.onLogout(json);
+        }.bind(this));
+    return p;
   },
   
   
@@ -189,45 +183,28 @@ var AbstractUser = new Class({
   },
   
   
-  onLogoutError: function(json)
-  {
-    SSPostNotification('onUserLogoutError', json);
-  },
-  
-  
   /*
     Function: join (private)
-      Join a new user.  Will probably be moved into ShiftSpace.js.
+      Join a new user. Returns a promise for the user's data.
+      This promise may be an error and should be handled.
   */
   join: function(userInfo, callack) 
   {
-    SSServerCall('user.join', userInfo, function(json) {
-      if(!json['error'])
-      {
-        var data = $get(json, 'data', 'contents', 'values');
-        if(data) this.syncData(data);
-        
-        this.onJoin(json);
-        this.onLogin(json);
-        if(callack) callback(json);
-      }
-      else
-      {
-        this.onJoinError(json);
-      }
-    }.bind(this));
+    var p = SSApp.join(userInfo);
+    $if(SSApp.noErr(p),
+        function() {
+          var json = p.value();
+          this.syncData(json);
+          this.onJoin(json);
+          this.onLogin(json);
+        }.bind(this));
+    return p;
   },
   
   
   onJoin: function(json)
   {
     SSPostNotification('onUserJoin', json);
-  },
-  
-  
-  onJoinError: function(json)
-  {
-    SSPostNotification('onUserJoinError', json);
   },
   
   
@@ -238,32 +215,22 @@ var AbstractUser = new Class({
     Parameters:
       info - info to be updated.
   */
-  update: function(info, callback) 
+  update: function(data, callback) 
   {
-    SSServerCall('user.update', info, function(json) {
-      if(!json['error'])
-      {
-        if(json.data) this.syncData(json.data);
-        this.onUpdate(json);
-        if(callback) callback(json);
-      }
-      else
-      {
-        this.onUpdateError(json);
-      }
-    }.bind(this));
+    var p = SSApp.update('user', this.getUserName(), data);
+    $if(SSApp.noErr(p),
+        function() {
+          var json = p.value();
+          this.syncData(json);
+          this.onUpdate(json);
+        }.bind(this));
+    return p;
   },
   
   
   onUpdate: function(json)
   {
     SSPostNotification('onUserUpdate', json);
-  },
-  
-  
-  onUpdateError: function(json)
-  {
-    SSPostNotification('onUserUpdateError', json);
   },
   
   
@@ -276,27 +243,17 @@ var AbstractUser = new Class({
   */
   resetPassword: function(info) 
   {
-    SSServerCall('user.resetPassword', info, function(json) {
-      if(!json['error'])
-      {
-        this.onResetPassword(json);
-      }
-      else
-      {
-        this.onResetPasswordError(json);
-      }
-    });
+    var p = SSApp.post({resource:'user', id:this.getUserName(), action:"resetPassword"});
+    $if(SSApp.noErr(p),
+        function() {
+          this.onResetPassword(p.value());
+        }.bind(this));
+    return p;
   },
   
   
   onResetPassword: function(json)
   {
     SSPostNotification('onUserPasswordReset', json);
-  },
-  
-  
-  onResetPasswordError: function(json)
-  {
-    SSPostNotification('onUserPasswordResetError', json);
   }
 });

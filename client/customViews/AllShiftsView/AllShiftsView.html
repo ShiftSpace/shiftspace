@@ -1,0 +1,40 @@
+<div id="AllShiftsView"
+     uiclass="SSView"
+     class="SSTabPane SSActive SSFilterPaneOpen"
+     outlet="SSConsole">
+
+  <ul id="AllShiftsListView"
+      class='SSListView ShiftListView' 
+      uiclass="ShiftListView" 
+      outlet="SSConsole" 
+      options="{
+        allowSelection:true,
+        multipleSelection:true
+      }">
+  
+    <li uiclass='ShiftListViewCell'
+        class='SSCell ShiftListViewCell'
+        options="{
+          properties: ['space', 'publishData', 'gravatar', 'userName', 'summary', 'modified', 'favorite', 'favoriteCount', 'commentCount']
+        }">
+        <div class="selected">
+          <input type="checkbox"/>
+        </div>
+        <img class="spaceIcon"></img>
+	<div class="spaceName"></div>
+        <div class="summary"></div>
+        <div class="draft"></div>
+        <div class="gravatarContainer">
+          <img class="gravatar"></img>
+        </div>
+        <div class="userName"></div>
+        <div class="date"></div>
+        <div class="comments"></div>
+        <div class="favorite">
+          <div class="favoriteCount"></div>
+          <div class="favoriteButton"></div>
+        </div>
+    </li>
+  </ul>
+
+</div>

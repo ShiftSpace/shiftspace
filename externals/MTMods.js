@@ -4,338 +4,87 @@
 
 Event.Keys.shift = 16;
 
-function $identity(v)
-{
-  return v;
-}
-
-function $callable(v)
-{
-  return v && $type(v) == 'function';
-}
-
-function $not(fn)
-{
-  return function() {
-    return !fn.apply(this, $A(arguments));
+(function() {
+var _urlJoin = $arity(
+  function(a) { return a; },
+  function(a, b) {
+    if(b.length > 0) {
+      a = (a.tail(1) == "/") ? a : a + "/";
+      return a + b.first()
+    } else {
+      return a;
+    }
   }
-}
-
+);
 String.implement({
-  
-  tail: function(n)
-  {
-    return this.substring(this.length-(n || 1));
-  },
-  
-  
-  drop: function(n)
-  {
-    return this.substring(0, this.length-(n || 1));
-  },
-  
-  
-  pluralize: function()
-  {
-    return this + "s";
-  },
-  
-  
-  unpluralize: function()
-  {
-    return (this.tail() == "s") ? this.drop() : $A(this).join("");
-  },
-  
-  
-  trunc: function(limit, options)
-  {
+  tail: function(n) { return this.substring(this.length-(n || 1)); },
+  drop: function(n) { return this.substring(0, this.length-(n || 1)); },
+  pluralize: function() { return this + "s"; },
+  unpluralize: function() { return (this.tail() == "s") ? this.drop() : $A(this).join(""); },
+  trunc: function(limit, options) {
     var tail = (options && options.tail === false) ? '' : ((options && options.tail) || '...');
     return this.substring(0, limit) + tail;
-  }
-  
-});
-
-Array.implement({
-  first: function() {
-    return this[0];
   },
-  
-  rest: function() {
-    return this.slice(1, this.length);
-  },
-  
-  drop: function(n) {
-    return this.slice(n, this.length);
-  },
-  
-  isEmpty: function() {
-    return this.length == 0;
-  },
-  
-  isEqual: function(ary) {
-    if(this.length != ary.length) return false;
-    for(var i = 0; i < this.length; i++)
-    {
-      if(this[i] != ary[i]) return false;
+  repeat: function(times) {
+    var result = "";
+    for(var i = 0; i < times; i++) {
+      result += this;
     }
-    return true;
+    return result;
   },
-  
-  select: function(test) {
-    for(var i = 0; i < this.length; i++)
-    {
-      if(test(this[i])) return this[i];
-    }
-    return;
+  urlJoin: function() {
+    var args = $A(arguments);
+    args = ($type(this) == 'string') ? [this].extend(args) : args;
+    return $reduce(_urlJoin, args);
   }
 });
+})();
 
-/*
-var verify1 = function(fn) {
-   return function() {
-      var args = $A(arguments);
-      if($type(args[0]) != "string")
+Hash.implement({
+  changeKeys: function(keyFn)
+  {
+    var result = $H();
+    if($type(keyFn) == 'object' || $type(keyFn) == 'hash') keyFn = $H(keyFn).asFn();
+    this.each(function(v, k) {
+      if(keyFn(k))
       {
-         throw new Error("First arg is not a string");
+        result[keyFn(k)] = v;
       }
       else
       {
-         console.log("verify1 decorator run")
-         return fn.apply(this, args);
+        result[k] = v;
       }
-   }
-};
-
-var verify2 = function(fn) {
-   return function() {
-      var args = $A(arguments);
-      if($type(args[1]) != "string")
-      {
-         throw new Error("Second arg is not a string");
-      }
-      else
-      {
-         console.log("verify2 decorator run")
-         return fn.apply(this, args);
-      }
-   }
-};
-
-// add type checking of first and second arguments to myfn!
-var myfn = function(argA, argB) {
-  console.log("Hello from myfn! argA " + argA + ", argB " + argB);
-}.decorate(verify1, verify2);
-
-// do the same for a class method
-var MyClass = new Class({
-  name: "MyClass",
-  aMethod: function(argA, argB) {
-    console.log("Hello from myfn! argA " + argA + ", argB " + argB);
-    console.log(this.name);
-  }.decorate(verify1, verify2)
+    });
+    return result;
+  }
 });
 
-var instance = new MyClass();
-instance.aMethod("foo", "bar"); // works
-
-try
-{
-  instance.aMethod(2, "bar");
-}
-catch(err)
-{
-  console.log(err);
-}
-
-try
-{
-  instance.aMethod("foo", 2);
-}
-catch(err)
-{
-  console.log(err);
-}
-
-myfn("foo", "bar"); // works
-
-try
-{
-  myfn(2, "bar"); // verify1 throws exception!
-}
-catch(err)
-{
-  console.log(err);
-}
-
-try
-{
-  myfn("foo", 2); // verify2 throws exception!  
-}
-catch(err)
-{
-  console.log(err);
-}
-*/
-
-Function.implement({
-  decorate: function()
-  {
-    var decorators = $A(arguments);
-    var resultFn = this;
-    var decorator = decorators.pop();
-    
-    while(decorator)
+var Delegate = new Class({
+  __delegate: null,
+  setDelegate: function(delegate)
+  { 
+    if($type(delegate) == "string")
     {
-      var temp = resultFn;
-      resultFn = decorator(resultFn);
-      temp._decorator = resultFn;
-      decorator = decorators.pop();
+      this.__delegate = ShiftSpaceNameTable[delegate];
     }
-    
-    return resultFn;
-  },
-  
-  comp: function()
-  {
-    var fns = $A(arguments)
-    var self = this;
-    return function() {
-      var args = $A(arguments);
-      var result = self.apply(this, args);
-      var fn;
-      while(fn = fns.shift())
-      {
-        result = fn.apply(null, [result]);
-      }
-      return result;
+    else
+    {
+      this.__delegate = delegate;
     }
   },
-  
-  rewind: function(bind, args)
-  {
-    return (this._wrapper) ? this._wrapper.bind(bind, args) : this.bind(bind, args);
-  }
+  delegate: function() { return this.__delegate; }
 });
 
+function $element(tag, options) { return new Element(tag, options); }
 
-function $element(tag, options)
+function $implements(obj, protocol)
 {
-  return new Element(tag, options);
-}
-
-
-Class.extend({
-  wrap: function(self, key, method)
+  for(var p in protocol)
   {
-    if (method._origin) method = method._origin;
-
-    var wrapper = function(){
-      if (method._protected && this._current == null) throw new Error('The method "' + key + '" cannot be called.');
-      var caller = this.caller, current = this._current;
-      this.caller = current; this._current = arguments.callee;
-      var result = method.apply(this, arguments);
-      this._current = current; this.caller = caller;
-      return result;
-    }.extend({_owner: self, _origin: method, _name: key});
-
-    method._wrapper = wrapper;
-    return wrapper;
+    if(!obj[p] || $type(obj[p]) != protocol[p]) return false;
   }
-});
-
-// patch for MooTools 1.2.1 - David
-Class.extend({
-  inherit: function(object, properties){
-    var caller = arguments.callee.caller;
-    for (var key in properties){
-      var override = properties[key];
-      var previous = object[key];
-      var type = $type(override);
-      if (previous && type == 'function'){
-        if (override != previous){
-          if (caller){
-            override.__parent = previous;
-            object[key] = override;
-          } else {
-            Class.override(object, key, override);
-          }
-        }
-      } else if(type == 'object'){
-        object[key] = $merge(previous, override);
-      } else {
-        object[key] = override;
-      }
-    }
-
-    if (caller) object.parent = function(){
-      var caller = arguments.callee.caller;
-      var parent = (caller._decorator) ? caller._decorator.__parent : caller.__parent;
-      return parent.apply(this, arguments);
-    };
-
-    return object;
-  },
-
-  override: function(object, name, method){
-    var parent = Class.prototyping;
-    if (parent && object[name] != parent[name]) parent = null;
-    var override = function(){
-      var previous = this.parent;
-      this.parent = parent ? parent[name] : object[name];
-      var value = method.apply(this, arguments);
-      this.parent = previous;
-      return value;
-    };
-    method._wrapper = override;
-    object[name] = override;
-  }  
-});
-
-
-function $msg(methodName) 
-{
-  var rest = $A(arguments).drop(1);
-  return function(obj) {
-    return obj[methodName].apply(obj, rest);
-  };
+  return true;
 }
-
-
-function $implements(obj, method)
-{
-  return obj && obj[method] && $type(obj[method]) == 'function';
-}
-
-
-function $get(first, prop) {
-  var args = $A(arguments);
-  var rest = args.drop(2);
-  var next;
-  
-  if(rest.length == 0) return first[prop];
-  if(['object', 'array'].contains($type(first)))
-  {
-    next = first[prop];
-  }
-  if($type(next) == 'function')
-  {
-    next = first[prop]();
-  }
-  return (next == null) ? null : $get.apply(null, [next].concat(rest));
-};
-
-
-function $getf(first, prop) {
-  return $get.apply(null, arguments) || $empty;
-};
-
-
-function $acc() {
-  var args = $A(arguments);
-  return function(obj) {
-    return $get.apply(null, [obj].combine(args));
-  };
-};
 
 // allows for queries on namespaced attributes
 Selectors.RegExps = {
@@ -345,16 +94,6 @@ Selectors.RegExps = {
   splitter: (/\s*([+>~\s])\s*([a-zA-Z#.*:\[])/g),
   combined: (/\.([\w-]+)|\[([\w:]+)(?:([!*^$~|]?=)(["']?)([^\4]*?)\4)?\]|:([\w-]+)(?:\(["']?(.*?)?["']?\)|$)/g)
 };
-
-String.implement({
-  repeat: function(times) {
-    var result = "";
-    for(var i = 0; i < times; i++) {
-      result += this;
-    }
-    return result;
-  }
-});
 
 Function.implement({
   partial: function(bind, args) {
@@ -540,65 +279,65 @@ Fx.CSS.implement({
 
 Request.implement({
   send: function(options){
-		if (!this.check(options)) return this;
-		this.running = true;
+    if (!this.check(options)) return this;
+    this.running = true;
 
-		var type = $type(options);
-		if (type == 'string' || type == 'element') options = {data: options};
+    var type = $type(options);
+    if (type == 'string' || type == 'element') options = {data: options};
 
-		var old = this.options;
-		options = $extend({data: old.data, url: old.url, method: old.method}, options);
-		var data = options.data, url = options.url, method = options.method.toLowerCase();
+    var old = this.options;
+    options = $extend({data: old.data, url: old.url, method: old.method}, options);
+    var data = options.data, url = options.url, method = options.method.toLowerCase();
 
-		switch ($type(data)){
-			case 'element': data = document.id(data).toQueryString(); break;
-			case 'object': case 'hash': data = Hash.toQueryString(data);
-		}
+    switch ($type(data)){
+      case 'element': data = document.id(data).toQueryString(); break;
+      case 'object': case 'hash': data = Hash.toQueryString(data);
+    }
 
-		if (this.options.format){
-			var format = 'format=' + this.options.format;
-			data = (data) ? format + '&' + data : format;
-		}
+    if (this.options.format){
+      var format = 'format=' + this.options.format;
+      data = (data) ? format + '&' + data : format;
+    }
 
-		if (this.options.emulation && !['get', 'post'].contains(method)){
-			var _method = '_method=' + method;
-			data = (data) ? _method + '&' + data : _method;
-			method = 'post';
-		}
-    
-		if (this.options.urlEncoded && method == 'post' && !this.headers.get('Content-type')){
-			var encoding = (this.options.encoding) ? '; charset=' + this.options.encoding : '';
-			this.headers.set('Content-type', 'application/x-www-form-urlencoded' + encoding);
-		}
+    if (this.options.emulation && !['get', 'post'].contains(method)){
+      var _method = '_method=' + method;
+      data = (data) ? _method + '&' + data : _method;
+      method = 'post';
+    }
 
-		if (this.options.noCache){
-			var noCache = 'noCache=' + new Date().getTime();
-			data = (data) ? noCache + '&' + data : noCache;
-		}
+    if (this.options.urlEncoded && method == 'post' && !this.headers.get('Content-type')){
+      var encoding = (this.options.encoding) ? '; charset=' + this.options.encoding : '';
+      this.headers.set('Content-type', 'application/x-www-form-urlencoded' + encoding);
+    }
 
-		var trimPosition = url.lastIndexOf('/');
-		if (trimPosition > -1 && (trimPosition = url.indexOf('#')) > -1) url = url.substr(0, trimPosition);
+    if (this.options.noCache){
+      var noCache = 'noCache=' + new Date().getTime();
+      data = (data) ? noCache + '&' + data : noCache;
+    }
 
-		if (data && method == 'get'){
-			url = url + (url.contains('?') ? '&' : '?') + data;
-			data = null;
-		}
+    var trimPosition = url.lastIndexOf('/');
+    if (trimPosition > -1 && (trimPosition = url.indexOf('#')) > -1) url = url.substr(0, trimPosition);
 
-		this.xhr.open(method.toUpperCase(), url, this.options.async);
+    if (data && method == 'get'){
+      url = url + (url.contains('?') ? '&' : '?') + data;
+      data = null;
+    }
 
-		this.xhr.onreadystatechange = this.onStateChange.bind(this);
+    this.xhr.open(method.toUpperCase(), url, this.options.async);
 
-		this.headers.each(function(value, key){
-			try {
-				this.xhr.setRequestHeader(key, value);
-			} catch (e){
-				this.fireEvent('exception', [key, value]);
-			}
-		}, this);
+    this.xhr.onreadystatechange = this.onStateChange.bind(this);
 
-		this.fireEvent('request');
-		this.xhr.send(data);
-		if (!this.options.async) this.onStateChange();
-		return this;
-	}
+    this.headers.each(function(value, key){
+      try {
+        this.xhr.setRequestHeader(key, value);
+      } catch (e){
+        this.fireEvent('exception', [key, value]);
+      }
+    }, this);
+
+    this.fireEvent('request');
+    this.xhr.send(data);
+    if (!this.options.async) this.onStateChange();
+    return this;
+  }
 });

@@ -21,6 +21,56 @@ var SSPublishPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
+    SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
+    SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
+    SSAddObserver(this, 'onShiftDeselect', this.onShiftDeselect.bind(this));
+  },
+
+  
+  onShiftListViewShow: function(evt)
+  {
+    //SSLog("onShiftListViewShow", evt.listView.getName(), SSLogForce);
+  },
+
+
+  onShiftListViewHide: function(evt)
+  {
+    //SSLog("onShiftListViewHide", evt.listView.getName(), SSLogForce);
+  },
+  
+  
+  setCurrentListView: function(current)
+  {
+    this.__current = current;
+  },
+  
+  
+  currentListView: function()
+  {
+    return this.__current;
+  },
+  
+  
+  count: function()
+  {
+    return this.currentListView().checkedItemIndices().length;
+  },
+  
+  
+  onShiftSelect: function(evt)
+  {
+    if(!this.isVisible()) this.show();
+    this.setCurrentListView(evt.listView);
+    this.update();
+  },
+  
+  
+  onShiftDeselect: function(evt)
+  {
+    this.setCurrentListView(evt.listView);
+    if(this.count() == 0) this.hide();
+    this.update();
   },
   
   
@@ -36,24 +86,6 @@ var SSPublishPane = new Class({
   },
   
   
-  setTableView: function(tableView)
-  {
-    this.__tableView = tableView;
-  },
-  
-  
-  tableView: function()
-  {
-    return this.__tableView;
-  },
-  
-  
-  checkedShifts: function()
-  {
-    return $getf(this, 'delegate', 'checkedShifts').bind(this.delegate())();
-  },
-  
-  
   awake: function()
   {
     this.mapOutletsToThis();
@@ -64,26 +96,46 @@ var SSPublishPane = new Class({
   deleteShifts: function(evt)
   {
     evt = new Event(evt);
-    var shiftIds = this.checkedShifts();
-    var len = shiftIds.length;
-    var str = (len != 1) ? "these shifts" : "this shift";
-    if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
-    shiftIds.each(SSDeleteShift);
+    var selectedShifts = this.currentListView().checkedItemIds();
+    
+    if(selectedShifts && selectedShifts.length > 0)
+    {
+      var len = selectedShifts.length;
+      var str = (len != 1) ? "these shifts" : "this shift";
+      if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
+      var p = new Promise(selectedShifts.map(SSDeleteShift));
+      p.realize();
+    }
   },
   
   
   saveShifts: function(evt)
   {
     evt = new Event(evt);
-    var shifts = this.checkedShifts();
   },
   
   
   publishShifts: function(evt)
   {
     evt = new Event(evt);
-    var shifts = this.checkedShifts();
+    var selectedShifts = this.currentListView().checkedItemIds();
+    if(selectedShifts && selectedShifts.length > 0)
+    {
+      var p = new Promise(
+	selectedShifts.map(function(id) {
+	  return SSApp.post({
+	    resource: "shift",
+	    id: id,
+	    action: "publish",
+	    data: {private: false},
+	    json: true
+	  })    
+	})
+      );
+      p.realize();
+    }
   },
+  
   
   attachEvents: function()
   {
@@ -107,7 +159,37 @@ var SSPublishPane = new Class({
         this.SSPPVisiblePublic.addClass('SSPPPermit');
         SSLog('clicked private status!', SSLogForce);
     }.bind(this));
+  },
+  
+  
+  /*
+    Function: update
+      Update the display of the shift depending on the useres selections.
+   */
+  update: function()
+  {
+    if(this.count() == 1)
+    {
+      var publishData = this.currentListView().checkedItems()[0].publishData;
+      this.element.getElement("#SSPublishPaneStatus label").removeClass('SSDisplayNone');
+      if(publishData.draft)
+      {
+        this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Draft');
+      }
+      else
+      {
+        this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Published');
+      }
+    }
+    else if(this.count() > 1)
+    {
+      this.element.getElement("#SSPublishPaneStatus label").addClass('SSDisplayNone');
+    }
+  },
+  
+  
+  optionsForResource: function(resource)
+  {
+    return {byHref:window.location.href.split("#")[0]};
   }
-
-
 });

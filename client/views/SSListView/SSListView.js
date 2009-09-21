@@ -22,7 +22,7 @@ SSListViewError.OutOfBounds = new Class({
 // ====================
   /*
     Class: SSListView
-      SSListView controls the display of Collection content within the console. 
+      SSListView controls the display of array or collections of resources within the console. 
       
   */
 
@@ -36,37 +36,74 @@ var SSListView = new Class({
     return $merge(this.parent(), {
       cell: null,
       sortable: false,
-      lazy: false,
       multipleSelection: false,
       horizontal: false,
       cellSize: null,
       filter: null,
       addAt: 'bottom',
-      leaveEditOnUpdate: false
+      leaveEditOnUpdate: false,
+      allowSelection: false,
+      resource: null
     });
   },
   
   initialize: function(el, options)
   {
     this.parent(el, options);
-    
     this.__cellBeingEdited = -1;
-    
-    this.setSuppressRefresh(false);
-    
     if(this.options.filter) this.setFilter(this.options.filter);
-    
-    if(this.options.collection)
+    if(this.options.resource)
     {
-      this.useCollection(this.options.collection);
+      SSLog('Use datasource', SSLogForce);
     }
     else
     {
       this.setData([]);
     }
-    
     this.initSortables();
     this.attachEvents();
+  },
+  
+  
+  setResource: function(resource)
+  {
+    if($type(resource) == 'string')
+    {
+      SSAddObserver(this, 'resourceSet', function(evt) {
+        if(evt.name == resource) this.__setResource__(evt.resource);
+      }.bind(this));
+    }
+    else
+    {
+      this.__setResource__(resource);
+    }
+  },
+  
+  
+  __setResource__: function(resource)
+  {
+    if(resource === null)
+    {
+      this.setResourceIsRead(false);
+      this.__resource = null;
+      this.__reloadData__();
+    }
+    else
+    {
+      if(!$implements(resource, SSResource.protocol))
+      {
+        SSLog("Argument to SSListView.__setResource__ does not implement SSResource.protocol", SSLogError);
+        throw new Error();
+      }
+      if(!resource.hasView(this)) resource.addView(this);
+      this.__resource = resource;
+    }
+  },
+  
+  
+  resource: function()
+  {
+    return this.__resource;
   },
   
   
@@ -97,18 +134,6 @@ var SSListView = new Class({
   },
   
   
-  dataIsReady: function()
-  {
-    if(this.hasCollection())
-    {
-      return (this.data() && !this.data().isUnread()) || false;
-    }
-    else
-    {
-      return true;
-    }
-  },
-
   /*
       Function: setFilter
         Sets the filter as a function.
@@ -166,35 +191,6 @@ var SSListView = new Class({
     return false;
   },
   
-  /*
-    Function: setHasCollection
-      Sets the hasCollection property.
-      
-    Parameters:
-      val - a boolean value
-      
-    See Also: 
-      hasCollection
-  */
-  setHasCollection: function(val)
-  {
-    this.__hasCollection = val;
-  },
-  
-  /*
-    Function: hasCollection
-      Returns a the boolean value of hasCollection 
-    
-    Returns:
-      A boolean value.
-      
-    See Also: 
-      setHasCollection
-  */
-  hasCollection: function()
-  {
-    return this.__hasCollection;
-  },
   
   /*
       Function: initSortables (private)
@@ -410,64 +406,34 @@ var SSListView = new Class({
       newData - A javascript array row.
     
     See Also:
-      getData
       data
   */
   setData: function(newData)
   {
     this.__data = newData;
     this.setNeedsDisplay(true);
-  },
+  }.asPromise(),
     
   /*
       Function: data
-        Returns the data property. 
+        Returns the data property.
       
       Returns:
-        A javascript array row. 
+        A javascript array row.
 
       See Also:
         setData
-        getData
   */
   data: function()
   {
-    if(this.__pendingCollection) this.checkPendingCollection();
-    return this.__data;
-  },
-  
-  
-  /*
-    Function: checkPendingCollection 
-      If a pending collection exists, delete the current one and reassign it. 
-      
-  */
-  checkPendingCollection: function()
-  {
-    var coll = SSCollectionForName(this.__pendingCollection);
-    if(coll)
+    if(this.resource())
     {
-      delete this.__pendingCollection;
-      this.__addEventsToCollection__(coll);
-      this.setData(coll);
+      return this.resource().data();
     }
-  },
-  
-  /*
-      Function: rawData
-        Returns the data property of the class.  
-      
-      Returns:
-        A row in a javascript array. 
-        
-      Note:
-        Internal is a possible future implementation. 
-   */
-  rawData: function()
-  {
-    var data = this.data();
-    if(data.internal) return data.internal();
-    return data;
+    else
+    {
+      return this.__data;
+    }
   },
   
   /*
@@ -479,8 +445,6 @@ var SSListView = new Class({
   */
   count: function()
   {
-    // TODO: not sure about the bounds checking in SSListView, this should probably be put into SSCollections - David
-    if($type(this.data().length) == 'function') return this.data().length();
     return this.data().length;
   },
   
@@ -499,7 +463,7 @@ var SSListView = new Class({
   */
   find: function(fn)
   {
-    var data = this.rawData();
+    var data = this.data();
     for(var i = 0, l = data.length; i < l; i++) if(fn(data[i])) return i;
     return -1;
   },
@@ -519,7 +483,7 @@ var SSListView = new Class({
   */
   findAll: function(fn)
   {
-    var data = this.rawData();
+    var data = this.data();
     var result = [];
     for(var i = 0, l = data.length; i < l; i++) if(fn(data[i])) result.push[1];
     return result;
@@ -575,30 +539,14 @@ var SSListView = new Class({
   add: function(newItem, options)
   {
     var animate = ((!options || options.animate == null) && true) || options.animate;
-
     var delegate = this.delegate();
     var canAdd = (delegate && delegate.canAdd && delegate.canAdd(this)) || true;
-    
     if(canAdd)
     {
-      // grab extra data, not completely sure why we need this here - David
       var addData = (delegate && delegate.dataFor && delegate.dataFor('add', this));
-      
-      if(this.hasCollection())
-      {
-        this.data()['create']($merge(newItem, addData), {
-          userData:
-          {
-            atIndex: (options && options.atIndex)
-          }
-        });
-      }
-      else
-      {
-        if(this.options.addAt == 'bottom') this.data().push(newItem);
-        if(this.options.addAt == 'top') this.data().unshift(newItem);
-        this.refresh();
-      }
+      if(this.options.addAt == 'bottom') this.data().push(newItem);
+      if(this.options.addAt == 'top') this.data().unshift(newItem);
+      this.refresh();
     }
   },
   
@@ -612,26 +560,18 @@ var SSListView = new Class({
   */
   onAdd: function(data, userData)
   {
-    // leave editing a cell if it's being edited
-    if(this.cellBeingEdited() != -1)
-    {
-      this.cancelEdit(this.cellBeingEdited(), false);
-    }
-    
+    if(this.cellBeingEdited() != -1) this.cancelEdit(this.cellBeingEdited(), false);
     var filtered = false;
     if(userData && userData.atIndex != null) filtered = this.filter(data, userData.atIndex);
-
     var delegate = this.delegate();
     var anim = (!filtered &&
                 delegate &&
                 delegate.animationFor && 
                 delegate.animationFor({action:'add', listView:this, userData:data})) || false;
-    
     if(anim)
     {
       var animData = anim();
       animData.animation(function() {
-        // refreshing content
         if(animData.cleanup)
         {
           animData.cleanup();
@@ -714,44 +654,10 @@ var SSListView = new Class({
     }
   },
   
-  /*
-      Function: insert
-        Inserts data into a cell at a specified index and refreshes collection. 
-      
-      Parameters:
-        cellData - An object.
-        index - the index of a SSCell object
-  */  
-  insert: function(cellData, index)
-  {
-    this.boundsCheck(index);
-    this.__insert__(cellData, index);
-    this.refresh();
-  },
-  
-  /*
-      Function: __insert__  (private)
-        Inserts data into a cell at a specified index.
-      
-      Parameters:
-        cellData - An object.
-        index - the index of a SSCell object. 
-  */
-  __insert__: function(cellData, index)
-  {
-    if(this.data().insert)
-    {
-      this.data().insert(cellData, index);
-    }
-    else
-    {
-      this.data().splice(index, 0, cellData);
-    }    
-  },
   
   /*
     Function: get 
-      Accepts an index of cell in a collection  and performs a boundsCheck to make sure the index is valid. Retreives the propeties of each data element, stores them in an array, and returns the array. 
+      Accepts an index of cell in a collection  and performs a boundsCheck to make sure the index is valid. Retreives the properties of each data element, stores them in an array, and returns the array. 
       
     Parameters:
       index - the index of a SSCell object. 
@@ -759,17 +665,10 @@ var SSListView = new Class({
     Returns: 
       An array. 
   */
-  get: function(index)
+  get: function(indexOrIndices)
   {
-    this.boundsCheck(index);
-    
-    var copy = {};
-    var data = this.__get__(index);
-    for(prop in data)
-    {
-      copy[prop] = data[prop];
-    }
-    return copy;
+    var result = $splat(indexOrIndices).map(this.__get__.bind(this));
+    return ($type(indexOrIndices) == "array") ? result : result[0];
   },
   
   /*
@@ -806,30 +705,19 @@ var SSListView = new Class({
   update: function(cellData, index, _noArrayUpdate)
   {
     this.boundsCheck(index);
-    
     var noArrayUpdate = _noArrayUpdate || false;
     var delegate = this.delegate();
     var canUpdate = (delegate && delegate.canUpdate && delegate.canUpdate(index)) || true;
-    
     if(canUpdate)
     {
-      if(this.hasCollection())
-      {
-        if(!noArrayUpdate) this.data().update(cellData, index);
-      }
-      else
-      {
-        if(!noArrayUpdate) this.__update__(cellData, index);
-        this.onUpdate(index);
-      }
+      if(!noArrayUpdate) this.__update__(cellData, index);
+      this.onUpdate(index);
     }
-
     if(this.options.leaveEditOnUpdate)
     {
       var canLeaveEdit = (this.canLeaveEdit && this.canLeaveEdit(index)) || true;
       if(canLeaveEdit) this.cell().leaveEdit();
     }
-    
   },
   
   /*
@@ -886,12 +774,10 @@ var SSListView = new Class({
   */
   onUpdate: function(index)
   {
-
     var delegate = this.delegate();
     var anim = (delegate && 
                 delegate.animationFor && 
                 delegate.animationFor({action:'update', listView:this, index:index})) || false;
-    
     if(anim)
     {
       anim().chain(this.refresh.bind(this));
@@ -946,27 +832,10 @@ var SSListView = new Class({
   remove: function(index)
   {
     this.boundsCheck(index);
-
     var delegate = this.delegate();
-    
     var canRemove = true;
-    if(delegate && delegate.canRemove)
-    {
-      canRemove = delegate.canRemove({listView:this, index:index});
-    } 
-
-    if(canRemove)
-    {
-      if(this.hasCollection())
-      {
-        this.data()['delete'](index);
-        return;
-      }
-      else
-      {
-        this.__remove__(index);
-      }
-    }
+    if(delegate && delegate.canRemove) canRemove = delegate.canRemove({listView:this, index:index});
+    if(canRemove) this.__remove__(index);
   },
   
   /*
@@ -1013,13 +882,7 @@ var SSListView = new Class({
     var anim = (delegate && 
                 delegate.animationFor && 
                 delegate.animationFor({action:'remove', listView:this, index:index})) || false;
-                
-    // check if we need to reset cellBeingEdited
-    if(index == this.cellBeingEdited())
-    {
-      this.setCellBeingEdited(-1);
-    }
-    
+    if(index == this.cellBeingEdited()) this.setCellBeingEdited(-1);
     if(anim)
     {
       var animData = anim();
@@ -1032,8 +895,12 @@ var SSListView = new Class({
     {
       this.refresh();
     }
-    
     this.fireEvent('onRemove', index);
+  },
+  
+  removeMultiple: function(indices)
+  {
+    
   },
   
   /*
@@ -1061,10 +928,8 @@ var SSListView = new Class({
   {
     var animate = (_animate == null && true) || _animate;
     this.boundsCheck(index);
-    
     var delegate = this.delegate();
     var canHide = (delegate && delegate.canHide && delegate.canHide(index)) || true;
-    
     if(canHide)
     { 
       var anim = (animate && delegate && delegate.animationFor && delegate.animationFor({action:'hide', listView:this, index:index})) || false;
@@ -1202,38 +1067,18 @@ var SSListView = new Class({
   refresh: function(force)
   {
     this.parent();
-    
+    if(force && this.resource()) this.setResourceIsRead(false);
     var hasCell = this.hasCell()
     if(!hasCell) return;
-    
-    // no data nothing to do
-    if(!this.data()) return;
-    
-    // collection not yet loaded nothing to do
-    if(this.__pendingCollection) return;
-    
-    // don't refresh if we're visible
-    if(!this.isVisible() && !force)
-    {
-      return;
-    }
-
-    if(this.hasCollection())
-    {
-      this.data().read(this.reloadData.bind(this));
-    }
-    else
-    {
-      this.reloadData();
-    }
+    if(!this.data() && !this.resource()) return;
+    if(!this.isVisible()) return;
+    this.reloadData();
   },
   
   
   show: function()
   {
     this.parent();
-    
-    // just in case this doesn't work
     if(this.cell() && 
        this.cellNodes().length == 0 && 
        this.data() &&
@@ -1253,42 +1098,60 @@ var SSListView = new Class({
     return newCell;
   },
   
+  
+  setResourceIsRead: function(val)
+  {
+    this.__resourceIsRead = val;
+  },
+  
+  
+  resourceIsRead: function()
+  {
+    return this.__resourceIsRead;
+  },
+  
   /*
     Function: reloadData (private)
-      Called by refresh(). Checks the length of the current collection data, and clears the currently loaded collection data.  If the collection array contains data, it resizes the elements and applies set filters. If the collection is not pending, the content is displayed. 
+      Called by refresh(). Checks the length of the current collection data, and clears the currently loaded collection data.  If the collection array contains data, it resizes the elements and applies set filters. If the collection is not pending, the content is displayed.
+      
+    Parameters:
+      p - for flow control you can pass a promise.
   */
   reloadData: function()
   {
-    // check whether collection or array
-    var len = ($type(this.data().length) == 'function' && this.data().length()) || this.data().length;
-    
-    // empty on refresh
+    var resource = this.resource(), controlp;
+    if(resource && !this.resourceIsRead())
+    {
+      this.setResourceIsRead(true);
+      controlp = resource.read();
+    }
+    this.__reloadData__(controlp);
+  },
+  
+  
+  __reloadData__: function(p)
+  {
+    var len = this.data().length;
     this.element.empty();
-    
     if(len > 0 && this.cell())
     {
       var perPage = (this.pageControl() && this.pageControl().perPage()) || len;
-      
-      // set the width programmatically if horizontal
       if(this.options.horizontal && this.options.cellSize)
       {
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
         this.element.setStyle('width', (this.options.cellSize.x*perPage)+modifer);
       }
-      
       var cells = this.data().map(this.newCellForItemData.bind(this));
       cells.each(function(cell) {
         this.element.grab(cell)
       }.bind(this));
-      
       this.setNeedsDisplay(false);
       this.initSortables();
     }
-
     if(this.pageControl()) this.pageControl().initializeInterface();
-    
     this.fireEvent('onReloadData', this);
-  },
+  }.asPromise(),
+  
   /*
     Function: boundsCheck
       Tests to see if the passed index is within the bounds of the SSCollection array. Throws a SSListViewError message if the index is out of bounds. 
@@ -1347,6 +1210,12 @@ var SSListView = new Class({
   {
     return this.indexOfNode(this.cellNodes(), cellNode);
   },
+
+
+  dataForCellNode: function(cellNode)
+  {
+    return this.data()[this.indexOfCellNode(cellNode)];
+  },
   
   /*
     Function: onCellClick 
@@ -1359,96 +1228,45 @@ var SSListView = new Class({
   onCellClick: function(cellNode)
   {
     var index = this.cellNodes().indexOf(cellNode);
+    this.onRowClick(index);
     if(this.delegate() && this.delegate().userDidClickListItem)
     {
       this.delegate().userDidClickListItem(index);
     }
   },
+
   
-  /*
-    Function: __addEventsToCollection__ (private)
-      Adds events to a collection. 
-      
-    Parameters:  
-      coll - A SSCollection object.
-  */
-  __addEventsToCollection__: function(coll)
+  onRowClick: function(index)
   {
-    coll.addEvent('onCreate', function(event) {
-      if(this.isVisible())
-      {
-        this.onAdd(event.data, event.userData);
-      }
-    }.bind(this));
-    
-    coll.addEvent('onDelete', function(index) {
-      if(this.isVisible()) 
-      {
-        this.onRemove(index);
-      }
-    }.bind(this));
-    
-    coll.addEvent('onChange', function() {
-    }.bind(this));
-    
-    coll.addEvent('onUpdate', function() {
-    }.bind(this));
-    
-    coll.addEvent('onLoad', function() {
-    }.bind(this));
-  },
-  
-  /*
-    Function: setSuppressRefresh
-      Sets the suppressRefresh property to the passed boolean. If true, it prevents a refresh from occuring.
-      
-    Parameter:
-      val - A boolean value.
-  */
-  setSuppressRefresh: function(val)
-  {
-    this.__suppressRefresh = val;
-  },
-  
-  /*
-    Function: suppressRefresh
-      Returns the supressRefresh property.
-     
-    Parameter:
-      val - A boolean value.
-      
-    Returns:
-      A boolean value
-      
-   //NOTE: function just returns a property value, no need for a "val" parameter. - Justin 
-  */
-  suppressRefresh: function(val)
-  {
-    return this.__suppressRefresh;
-  },
-  
-  /*
-    Function: useCollection 
-      Accepts a collection name and checks to see if it's valid. If the collection exists, the events and data are applied to the collection. Otherwise, it is set as a pending collection.
-      
-    Parameters: 
-      collectionName - A string, the name of a collection
-  */
-  useCollection: function(collectionName)
-  {
-    var coll = SSCollectionForName(collectionName, this);
-    this.setHasCollection(true);
-    if(coll) 
+    if(this.options.allowSelection)
     {
-      this.__addEventsToCollection__(coll);
-      this.setData(coll);
-    }
-    else
-    {
-      // not ready yet, controller loaded before collection
-      this.__pendingCollection = collectionName;
+      var cellNode = this.cellNodeForIndex(index);
+      if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
+      if(!cellNode.hasClass('selected')) 
+      {
+        cellNode.addClass('selected');
+        this.onRowSelect(index);
+      }
+      else
+      {
+        cellNode.removeClass('selected');
+        this.onRowDeselect(index);
+      }
     }
   },
+
+  
+  onRowSelect: function(index)
+  {
+    
+  },
+  
+  
+  onRowDeselect: function(index)
+  {
+    
+  },
+  
   
   /*
     Function: setCellBeingEdited

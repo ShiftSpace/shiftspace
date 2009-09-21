@@ -17,7 +17,8 @@ var SSView = new Class({
     var temp = {
       context: null,
       generateElement: true,
-      suppress: false
+      suppress: false,
+      displayStyle: 'block'
     };
     return temp;
   },
@@ -27,7 +28,7 @@ var SSView = new Class({
       Generate an object id.  Used for debugging.  The instance is indentified by this in the global
       ShiftSpaceObjects hash.
   */
-  _genId: function()
+  __genId__: function()
   {
     return (this.name+(Math.round(Math.random()*1000000+(new Date()).getMilliseconds())));
   },
@@ -51,17 +52,15 @@ var SSView = new Class({
     if(el) el.removeProperty('options');
 
     // generate an id
-    this.__id = this._genId();
+    this.__id = this.__genId__();
     this.setIsAwake(false);
     
     // add to global hash
     if(ShiftSpaceObjects) ShiftSpaceObjects.set(this.__id, this);
     
-    // check if we are prebuilt
-    //this.__prebuilt__ = (el && true) || false; // NOT IMPLEMENTED - David
-    this.__ssviewcontrollers__ = [];
+    this.__ssviewcontrollers = [];
     this.__delegate = null;
-    this.__outlets__ = new Hash();
+    this.__outlets = new Hash();
     
     this.element = (el && $(el)) || (this.options.generateElement && new Element('div')) || null;
     
@@ -79,16 +78,6 @@ var SSView = new Class({
         ShiftSpaceNameTable.set(this.element.getProperty('id'), this);
       }
     }
-
-    // We need to build this class via code - NOT IMPLEMENTED - David
-    /*
-    if(!this.__prebuilt__)
-    {
-      this.build();
-    }
-    */
-
-    this.__subviews__ = [];
 
     // Call setup or setupTest allowing classes to have two modes
     // For example, SSConsole lives in a IFrame under ShiftSpace
@@ -123,6 +112,7 @@ var SSView = new Class({
   */
   __awake__: function(context)
   {
+    /*
     var superview = this.getSuperView(context);
     if(superview) 
     {
@@ -131,6 +121,7 @@ var SSView = new Class({
         this.refreshAndFire();
       }.bind(this));
     }
+    */
   },
   
   
@@ -191,13 +182,13 @@ var SSView = new Class({
 
   setOutlets: function(newOutlets)
   {
-    this.__outlets__ = newOutlets;
+    this.__outlets = newOutlets;
   },
 
 
   outlets: function()
   {
-    return this.__outlets__;
+    return this.__outlets;
   },
 
 
@@ -355,7 +346,7 @@ var SSView = new Class({
   addControllerForNode: function(node, controllerClass)
   {
     // instantiate and store
-    this.__ssviewcontrollers__.push(new controllerClass(node));
+    this.__ssviewcontrollers.push(new controllerClass(node));
   },
 
   // will probably be refactored
@@ -368,10 +359,10 @@ var SSView = new Class({
       // clear out the storage
       SSSetControllerForNode(null, node);
 
-      if(this.__ssviewcontrollers__.contains(controller))
+      if(this.__ssviewcontrollers.contains(controller))
       {
         // remove from internal array
-        this.__ssviewcontrollers__.remove(controller);
+        this.__ssviewcontrollers.remove(controller);
       }
     }
   },
@@ -383,12 +374,21 @@ var SSView = new Class({
   show: function()
   {
     this.fireEvent('willShow', this);
-    this.element.addClass('SSActive');
     this.element.removeClass('SSDisplayNone');
-    if(this.isVisible() && this.needsDisplay()) this.refreshAndFire();
+    this.element.addClass('SSActive');
+    this.willShow();
+    this.__isVisible = true;
     this.fireEvent('show', this);
+    this.subViews().each($msg('__refresh__'));
   },
-  
+
+
+  willShow: function()
+  {
+    //SSLog("willShow", this.getName(), SSLogForce);
+    if(this.isVisible()) this.subViews().each($msg('willShow'));
+  },
+
 
   /*
     Function: hide
@@ -397,21 +397,26 @@ var SSView = new Class({
   hide: function()
   {
     this.fireEvent('willHide', this);
+    this.willHide();
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
+    this.__isVisible = false;
     this.fireEvent('hide', this);
   },
   
 
+  willHide: function()
+  {
+    //SSLog("willHide", this.getName(), SSLogForce);
+    if(this.isVisible()) this.subViews().each($msg('willHide'), this);
+  },
+
+
   isVisible: function()
   {
-    var curElement = this.element;
-    while(curElement)
-    {
-      if(curElement.getStyle('display') == 'none') return false;
-      curElement = curElement.getParent();
-    }
-    return true;
+    var display = this.element.getStyle('display');
+    var size = this.element.getSize();
+    return (display && ['block', 'inline'].contains(display)) || (size.x > 0 && size.y > 0);
   },
   
   
@@ -439,6 +444,16 @@ var SSView = new Class({
     return null;
   },
   
+  
+  __refresh__: function(force)
+  {
+    if((this.isVisible() && this.needsDisplay()) || force)
+    {
+      this.refresh(force);
+      this.subViews().each($msg('__refresh__', force));
+    }
+  },
+  
 
   /*
     Function: refresh (abstract)
@@ -449,12 +464,13 @@ var SSView = new Class({
     
   },
   
-  
+  /*
   refreshAndFire: function()
   {
     this.refresh();
     this.fireEvent('onRefresh');
   },
+  */
 
   /*
     Function: build (abstract)
@@ -490,9 +506,42 @@ var SSView = new Class({
   },
   
   
-  subViews: function()
+  superView: function()
   {
-    return this.element.getElements('*[uiclass]').map(SSControllerForNode);
+    var el = this.element.getParent('*[uiclass]'), superView;
+    if(el)
+    {
+      var superView = SSControllerForNode(el);
+    }
+    else
+    {
+      var ctxt = this.getContext();
+      if(ctxt && ctxt.__sscontextowner)
+      {
+        superView = ctxt.__sscontextowner;
+      }
+    }
+    return superView;
+  },
+  
+  
+  /*
+    Function: subViews
+      Returns all controller nodes which have this view as the first parent view.
+    Returns:
+      An array of SSView instances.
+  */
+  subViews: function(el)
+  {
+    return (el || this.element).getElements('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
+      return (controller.isAwake && controller.isAwake() && controller.superView() == this);
+    }, this);
+  },
+  
+  
+  visibleSubViews: function()
+  {
+    return this.subViews().filter($msg('isVisible'));
   },
   
   

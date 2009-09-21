@@ -33,43 +33,52 @@ Parameters:
   msg - The message to be logged in the JavaScript console.
   verbose - Force the message to be logged when not in debug mode.
 */
-function SSLog(msg, type) 
+function SSLog() 
 {
+  var type = $A(arguments).getLast();
+  var args = $A(arguments).drop(1);
   if (typeof console == 'object' && SSLog) 
   {
-    var messageType = '';
-
-    if(type == SSLogError)
+    if(__ssloglevel == SSLogAll || (type && (__ssloglevel & type)) || 
+       type == SSLogForce || 
+       type == SSLogError ||
+       type == SSLogWarning)
     {
-      messageType = 'ERROR: ';
-    }
-    
-    if(type == SSLogWarning)
-    {
-      messageType = 'WARNING: ';
-    }
-    
-    if(__ssloglevel == SSLogAll || (type && (__ssloglevel & type)) || type == SSLogForce)
-    {
-      if($type(msg) != 'string')
+      if(!Browser.Engine.webkit)
       {
-        console.log(msg);
+        if(type == SSLogError)
+        {
+          console.error.apply(null, args);
+        }
+        else if(type == SSLogWarning)
+        {
+          console.warn.apply(null, args);
+        }
+        else
+        {
+          console.log.apply(null, args);
+        }
       }
       else
       {
-        console.log(messageType + msg);
+        if(type == SSLogError)
+        {
+          console.error(args);
+        }
+        else if(type == SSLogWarning)
+        {
+          console.warn(args);
+        }
+        else
+        {
+          console.log(args);
+        }
       }
     }
   } 
   else if (typeof GM_log != 'undefined') 
   {
-    GM_log(msg);
-  } 
-  else 
-  {
-    setTimeout(function() {
-      throw(msg);
-    }, 0);
+    GM_log.apply(null, args);
   }
 }
 

@@ -5,14 +5,10 @@
 // @dependencies      SSView
 // ==/Builder==
 
-  /*
-    ====================
-    = Class Definition =
-    ====================
-    
-    Class: SSTabView
-      SSTabView controls the view and function of tabs within the console. 
-  */
+/*
+  Class: SSTabView
+    SSTabView controls the view and function of tabs within the console. 
+*/
 var SSTabView = new Class({
   
   Extends: SSView,
@@ -21,37 +17,23 @@ var SSTabView = new Class({
   initialize: function(el, options)
   {
     this.setOptions(this.defaults(), options)
-    
     this.parent(el, options);
-    
     this.__selectedTab = -1;
-    
     // check for default tab
     var defaultActiveTab = this.element.getElement('> .SSControlView > .SSButton.SSActive');
-    
+
     if(defaultActiveTab)
     {
       var idx = this.indexOfTab(defaultActiveTab);
       // force selection of default tab
+      this.selectTab(idx);
       this.__selectedTab = idx;
     }
     
     // if none select the first
-    if(this.__selectedTab == -1)
-    {
-      this.selectTab(0);
-    }
-
+    if(this.__selectedTab == -1) this.selectTab(0);
     this.element.addEvent('click', this.eventDispatch.bind(this));
   },
-  
-  
-  show: function()
-  {
-    this.parent();
-    this.selectTab(this.selectedTab());
-  },
-  
   
   /*
     Function: eventDispatch (private)
@@ -59,8 +41,6 @@ var SSTabView = new Class({
       
     Paremeters:
       evt - A DOM node event 
-
-    
   */
   eventDispatch: function(evt)
   {
@@ -92,27 +72,15 @@ var SSTabView = new Class({
     
     See Also: 
       indexOfTab
-  
   */
-  
   indexOfTabByName: function(name)
   {
     var tab = this.element.getElement('> .SSControlView #'+name);
-    
     // return tab index if we have it
-    if(tab)
-    {
-      return this.indexOfTab(tab);
-    }
-    
+    if(tab) return this.indexOfTab(tab);
     tab = this.element.getElement('> .SSContentView #'+name);
-    
     // return content view index if we have it
-    if(tab)
-    {
-      return this.indexOfContentView(tab);
-    }
-    
+    if(tab) return this.indexOfContentView(tab);
     // we couldn't find it
     return -1;
   },
@@ -129,8 +97,6 @@ var SSTabView = new Class({
       
     See Also:
       indexOfTabByName 
-      
-      
   */
   indexOfTab: function(tabButton)
   {
@@ -149,7 +115,6 @@ var SSTabView = new Class({
       
     See Also: 
       tabButtonForName
-      
   */
   tabButtonForIndex: function(idx)
   {
@@ -187,7 +152,6 @@ var SSTabView = new Class({
       
     See Also: 
       indexOfTab
-      
   */
   indexOfContentView: function(contentView)
   {
@@ -206,7 +170,6 @@ var SSTabView = new Class({
       
     See Also: 
       indexOfContentView
-      
   */
   contentViewForIndex: function(idx)
   {
@@ -244,7 +207,6 @@ var SSTabView = new Class({
     return (controller || contentView);
   },
   
-  
   /*
     Function: selectedTab
       Returns the currenlty selected tab
@@ -254,7 +216,6 @@ var SSTabView = new Class({
     
     See Also:
       SelectTab
-      
   */
   selectedTab: function()
   {
@@ -288,6 +249,7 @@ var SSTabView = new Class({
         else
         {
           lastTabPane.removeClass('SSActive');
+	  this.subViews(lastTabPane).each($msg("willHide"), this);
         }
         
         this.fireEvent('tabDeselected', {tabView:this, tabIndex:this.__selectedTab});
@@ -302,14 +264,14 @@ var SSTabView = new Class({
       }
       else
       {
-        this.contentViewForIndex(idx).addClass('SSActive');
+	var node = this.contentViewForIndex(idx)
+        node.addClass('SSActive');
+	this.subViews(node).each($msg("willShow"), this);
       }
       
       // hide the tab button
       this.tabButtonForIndex(idx).addClass('SSActive');
-      
       this.__selectedTab = idx;
-      
       this.fireEvent('tabSelected', {tabView:this, tabIndex:this.__selectedTab});
     }
     else
@@ -324,8 +286,6 @@ var SSTabView = new Class({
       
     Parameters:
       name - Name of the new tab
-      
-      
   */
   addTab: function(name)
   {
@@ -337,7 +297,6 @@ var SSTabView = new Class({
     var tabContent = new Element('div', {
       'class': 'SSTabPane'
     });
-    
     tabButton.injectInside(this.element.getElement('> .SSControlView'));
     tabContent.injectInside(this.element.getElement('> .SSContentView'));
   },
@@ -351,7 +310,6 @@ var SSTabView = new Class({
       
     Returns:
       DOM node of controller 
-
   */
   contentViewControllerForIndex: function(idx)
   {
@@ -460,14 +418,9 @@ var SSTabView = new Class({
   removeTab: function(idx)
   {
     // if removing selected tab, highlight a different tab
-    if(this.activeTab() == idx)
-    {
-      this.selectTab(0);
-    }
-    
+    if(this.activeTab() == idx) this.selectTab(0);
     // remove tab button
     this.tabButtonForIndex(idx).dispose();
-
     // Remove the controller
     var contentView = this.contentViewForIndex(idx);
     var controller = this.controllerForNode(contentView);
@@ -503,5 +456,4 @@ var SSTabView = new Class({
     // refresh the selected content view as well
     var contentView = this.selectedContentView();
   }
-  
 });

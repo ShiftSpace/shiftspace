@@ -1,0 +1,210 @@
+<pre>
+{
+  "type": "shift",
+  "createdBy": <string>,
+  "userName": <string>,
+  "href": <string>,
+  "domain": <string>,
+  "space": {
+    "name": <string>,
+    "version": <string>,
+  },
+  "summary": <string>,
+  "created": <string: utc format parseable date string>,
+  "modified": <string: utc format parseable date string>,
+  "broken": <bool>,
+  "publishData": {
+    "draft": <bool>,
+    "publishTime": <string: utc format parseable date string>,
+    "private": <bool>,
+    "streams": <array: strings>
+  },
+  "content": <hash-map>
+}
+</pre>
+
+*createdBy*: a user id
+*userName*: a user name
+*href*: the url where the shift was created
+*domain*: the domain where the shift was created
+*space.name*: the name of the space
+*space.version*: the version fo the space
+*summary*: user supplied summary of the shift's content.
+*created*: creation date string. cannot be modified after shift is created.
+*modified*: the last time the shift was modified.
+*broken*: set by the system if the an exception was thrown while attempting to show the shift to a user.
+*publishData.draft*: bool specifying whether the user has published the shift.
+*publishData.private*: bool specifying whehter the publish shift is public.
+*publishData.publishTime*: time the shift was published.
+*publishData.streams*: list of streams the shift is being published to.
+*content*: schemaless hash-map of the shift's values. Used only by the client to recreate the shift.
+
+h2. REST API
+
+h3. Create a Shift
+
+Creates a new shift for the logged in user. The *Content-type* header must be set to *application/json*.
+
+<pre>
+POST /shift
+</pre>
+
+h4. parameters
+
+A JSON string that complies to the Shift schema.
+
+h4. returns
+
+The newly created shift.
+
+h3. Reading a Shift
+
+Returns the data for a shift if the user has adequate permissions to view it. In order to a view a shift the user must be running as admin, have created the shift, the shift was published to the user, or the user belongs to a stream that the shift was published to. See Also Stream, Permission.
+
+h4. url
+
+<pre>
+POST /shift/id
+</pre>
+
+h4. returns
+
+A Shift.
+
+h3. Updating a Shift
+
+Update a shift. The *Contente-type* header must be set *application/json*. The JSON string must match the schema.
+
+h4. url
+
+<pre>
+PUT /shift/id
+</pre>
+
+h4. parameters
+
+A JSON string which matches the Shift schema.
+
+h4. returns
+
+The updated shift.
+
+h3. Deleting a Shift
+
+Delete's a shift as long as there are no comments on this shift.
+
+h4. url
+
+<pre>
+DELETE /shift/id
+</pre>
+
+h4. returns
+
+ack
+
+h3. Commenting on a Shift
+
+Creates a comment on a shift for the loggedin user. The shift must be readable by the user. The *Content-type* header must be set to *application/json*.
+
+h4. url
+
+<pre>
+POST /shift/id/comment
+</pre>
+
+h4. parameters
+
+A JSON string with a text field, no other fields are allowed.
+
+h4. returns
+
+The newly created Event.
+
+h3. Getting the comments on a Shift
+
+Returns all the comment Events on the comment Stream for a shift. The user must have read permission for the shift.
+
+h4. url 
+
+<pre>
+GET /shift/id/comments
+</pre>
+
+h4. returns
+
+An array of Events.
+
+h3. Adding a Shift comment stream to a notification list.
+
+Updates the logged in user's notify array field. If the comment stream is in the user's notify array field, he/she will be sent a message (Event) to their inbox (message Stream).
+
+h4. url
+
+<pre>
+POST /shift/id/notify
+</pre>
+
+h4. returns
+
+The updated User.
+
+h3. Removing a Shift comment stream from a notification list
+
+Removes the shift's comment stream from the user's notify array field.
+
+h4. url
+
+<pre>
+POST /shift/id/unnotify
+</pre>
+
+h4. returns
+
+The updated User.
+
+h3. Publish a Shift
+
+Publish a shift. Header *Content-type* must be set to *application/json*. Can only be done by the creator of the shift or a user running as admin. The shift can be made public (anyone can see it), or shift can be published to a stream. 
+
+h4. url
+
+<pre>
+POST /shift/id/publish
+</pre>
+
+h4. parameters
+
+A JSON string with private field or streams array field.
+
+h4. returns
+
+The updated Shift.
+
+h3. Unpublishing a Shift
+
+Unpublish a shift. Can only be done by the creator of the shift or a user running as admin. This is not possible if someone has commented on the shift.
+
+h4. url
+
+<pre>
+POST /shift/id/unpublish
+</pre>
+
+h4. returns
+
+The updated Shift.
+
+h3. Favoriting a Shift
+
+Adds a Shift to the user's list of favorites. This can only be done if the logged in user has read permissions for the Shift.
+
+h4. url
+
+<pre>
+POST /shift/id/favorite
+</pre>
+
+h4. returns
+
+ack

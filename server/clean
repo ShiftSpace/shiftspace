@@ -1,4 +1,0 @@
-#!/bin/bash
-rm -f working/server.ini working/shiftspace.sqlite3
-./setup.py
-

@@ -135,3 +135,64 @@ SSAddObserver('onUserSelectShift', function() {
 SSAddObserver('onUserDeselectShift', function() {
   SSHideShift(SSSpaceForName(spaceName), SSGetShift(shiftId));
 });
+
+// Thoughts on handling login
+
+var AbstractUser = new Class({
+  
+  syncData: function(data)
+  {
+    this.fireEvent('syncUserData', data);
+  },
+  
+  
+  query: function()
+  {
+    this.onQuery(ShiftServer.get({action:'query'}));
+  }.asPromise(),
+  
+  
+  onQuery: function(json)
+  {
+    if(json.data)
+    {
+      this.syncData(json.data);
+    }
+    SSPostNotification('onUserQuery', json);
+  }.asPromise(),
+  
+
+  login: function(credentials) 
+  {
+    this.onLogin(ShiftServer.post({action:'login', data:credentials}));
+  }.asPromise(),
+  
+
+  onLogin: function(json)
+  {
+    if(json.error)
+    {
+      SSPostNotification('onUserLoginError', json);
+    }
+    else
+    {
+      this.syncData(json);
+    }
+  }.asPromise(),
+  
+  
+  logout: function()
+  {
+    this.onLogout(ShiftServer.post({action:'logout'}));
+  },
+  
+  
+  onLogout: function(json)
+  {
+    if(json.error)
+    {
+      SSPostNotification('onUserLogoutError', json);
+    }
+  }.asPromise()
+
+});

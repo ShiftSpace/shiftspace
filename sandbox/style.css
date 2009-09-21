@@ -25,7 +25,7 @@ a
   top: 10px;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
-  -moz-box-shadow: 0px 0px 6px #A9D4BA;
+  /*-moz-box-shadow: 0px 0px 6px #A9D4BA;*/
   -webkit-box-shadow: 0px 0px 6px #A9D4BA;
   border: 2px solid grey;
   background-color: white;

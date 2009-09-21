@@ -32,3 +32,6 @@ builds/shiftspace.dev.user.js
 config/env/dev.json
 config/env/sandalphon.json
 .DS_Store
+
+lucene/*
+/shiftspace.org
