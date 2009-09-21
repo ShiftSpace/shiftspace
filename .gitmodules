@@ -18,4 +18,4 @@
 	url = git://github.com/ShiftSpace/promises.git
 [submodule "server"]
 	path = server
-	url = git://github.com/ShiftSpace/shiftserver.git
+	url = git://github.com/ShiftSpace/shiftserver
