@@ -260,7 +260,7 @@ function SSInstalledSpaces()
 }
 
 
-var SSUpdateInstalledSpaces = function(user)
+var SSUpdateInstalledSpaces = function(controlp)
 {
   __installedSpaces = ShiftSpace.User.installedSpaces();
 }.asPromise()
