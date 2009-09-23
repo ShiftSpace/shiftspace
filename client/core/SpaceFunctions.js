@@ -23,12 +23,12 @@ Function: SSLoadSpace
 Parameters:
   spaceName - the Space name to load
   callback - a callback function to run when the space is loaded.
-*/
+`*/
 function SSLoadSpace(spaceName)
 {
   if(spaceName && SSSpaceIsLoaded(spaceName))
   {
-    return SSSpaceForName(spacename);
+    return SSSpaceForName(spaceName);
   }
   else if(spaceName)
   {
@@ -191,30 +191,32 @@ function SSInstallSpace(space)
   {
     var url = String.urlJoin(SSInfo().spacesDir, space, space + '.js');
     var count = $H(SSInstalledSpaces()).getLength();
-    
-    SSLoadSpaceAttributes(space, function(attrs) {
-      // TODO: throw an error if no attributes file - David
-      if(!attrs)
-      {
-        var attrs = {
-          url:url, 
-          name:space, 
-          position: count, 
-          icon: space+'/'+space+'.png',
-          autolaunch: false
-        };
-      }
-      
-      var installed = SSInstalledSpaces();
-      installed[space] = attrs;
-      
-      SSSetInstalledSpaces(installed);
-      SSLoadSpace(space, function() {
-        alert(space + " space installed.");
-        SSPostNotification('onSpaceInstall', space);
-      });
-      
-    });
+    var p = SSLoadSpaceAttributes(space);
+    $if(p,
+	function(attrs) {
+	  // TODO: throw an error if no attributes file - David
+	  if(!attrs)
+	  {
+            var attrs = {
+              url:url, 
+              name:space, 
+              position: count, 
+              icon: space+'/'+space+'.png',
+              autolaunch: false
+            };
+	  }
+	  
+	  var installed = SSInstalledSpaces();
+	  installed[space] = attrs;
+	  
+	  SSSetInstalledSpaces(installed);
+	  var p = SSLoadSpace(space);
+	  $if(p,
+	      function() { 
+		alert(space + " space installed.");
+		SSPostNotification('onSpaceInstall', space); 
+	      });
+	});
   }
 };
 
