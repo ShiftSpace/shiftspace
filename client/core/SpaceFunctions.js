@@ -8,7 +8,6 @@ var __spaces = $H();
 var __focusedSpace = null;
 var __defaultSpaces = null;
 var __installedSpaces = null;
-var __installedSpacesDataProvider = null;
 
 function SSSpaceIsLoaded(spaceName)
 {
@@ -250,7 +249,7 @@ function SSUninstallSpace(spaceName)
 
 function SSSetInstalledSpaces(installed)
 {
-  __installedSpacesDataProvider.setInstalledSpaces(installed);
+  ShiftSpace.User.setInstalledSpaces(installed);
 }
 
 
@@ -498,12 +497,6 @@ function SSHandleInstallSpaceLink(_evt)
 function SSGetInfoForInstalledSpace(spaceName, callback)
 {
   // fetch data for the space
-}
-
-
-function SSSetInstalledSpacesDataProvider(dataProvider)
-{
-  __installedSpacesDataProvider = dataProvider;
 }
 
 

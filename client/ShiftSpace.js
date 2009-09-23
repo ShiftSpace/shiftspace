@@ -94,9 +94,7 @@ var ShiftSpace = new (function() {
       
       // Add to look up table
       ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
-      
-      // FIXME: this should be more modular! - David 6/3/09
-      SSSetInstalledSpacesDataProvider(ShiftSpaceUser);
+
       SSAddObserver(SSNotificationProxy, 'onInstalledSpacesDidChange', SSUpdateInstalledSpaces);
       
       // Set up user event handlers
@@ -122,22 +120,7 @@ var ShiftSpace = new (function() {
       SSCreatePinSelect();
       SSCheckForPageIframes();
       SSCreateModalDiv();
-      SSCreateDragDiv();
-      
-      // initialize the value of default spaces for guest users
-      SSInitDefaultSpaces();
-        
-      if(SSDefaultSpaces())
-      {
-        SSSetup();
-      }
-      else
-      {
-        // first time ShiftSpace user default spaces not loaded yet
-        SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
-        SSLoadDefaultSpacesAttributes();
-      }
-      
+      SSCreateDragDiv();      
       SSSync();
     };
     
@@ -152,7 +135,21 @@ var ShiftSpace = new (function() {
           function() {
             ShiftSpace.User.syncData(p);
             SSPostNotification('onUserLogin');
-          });
+          },
+	  function() {
+	    // initialize the value of default spaces for guest users
+	    SSInitDefaultSpaces();
+	    if(SSDefaultSpaces())
+	    {
+              SSSetup();
+	    }
+	    else
+	    {
+              // first time ShiftSpace user default spaces not loaded yet
+              SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
+              SSLoadDefaultSpacesAttributes();
+	    }
+	  });
       SSUpdateInstalledSpaces(p);
       SSWaitForUI(p)
     }
@@ -178,11 +175,6 @@ var ShiftSpace = new (function() {
     
     function SSSetup()
     {
-      if (typeof ShiftSpaceSandBoxMode != 'undefined')
-      {
-        SSInjectSpaces();
-      }
-
       // automatically load a space if there is domain match
       var installed = SSInstalledSpaces();
       for(var space in installed)
@@ -214,10 +206,7 @@ var ShiftSpace = new (function() {
     function SSCheckForUpdates()
     {
       // Only check once per page load
-      if (alreadyCheckedForUpdate) 
-      {
-        return false;
-      }
+      if(alreadyCheckedForUpdate) return false;
       alreadyCheckedForUpdate = true;
 
       var now = new Date();
