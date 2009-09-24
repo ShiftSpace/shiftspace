@@ -40,6 +40,10 @@ String.implement({
 });
 })();
 
+Array.implement({
+  isEqual: function(other) { return $hash(this) == $hash(other); }
+});
+
 Hash.implement({
   changeKeys: function(keyFn)
   {

@@ -8,7 +8,6 @@ var __spaces = $H();
 var __focusedSpace = null;
 var __defaultSpaces = null;
 var __installedSpaces = null;
-var __installedSpacesDataProvider = null;
 
 function SSSpaceIsLoaded(spaceName)
 {
@@ -23,12 +22,12 @@ Function: SSLoadSpace
 Parameters:
   spaceName - the Space name to load
   callback - a callback function to run when the space is loaded.
-*/
+`*/
 function SSLoadSpace(spaceName)
 {
   if(spaceName && SSSpaceIsLoaded(spaceName))
   {
-    return SSSpaceForName(spacename);
+    return SSSpaceForName(spaceName);
   }
   else if(spaceName)
   {
@@ -113,9 +112,11 @@ function SSIsAbsoluteURL(string)
 function SSLoadDefaultSpacesAttributes()
 {
   var defaultSpaces = {};
+  var ps = []
   __defaultSpacesList.length.times(function(i) {
     var spaceName = __defaultSpacesList[i];
     var p = SSLoadSpaceAttributes(spaceName);
+    ps.push(p);
     $if(SSApp.noErr(p),
         function() {
           var attrs = p.value();
@@ -131,6 +132,7 @@ function SSLoadDefaultSpacesAttributes()
           SSLog("Error attempting to load attributes for " + spaceName + ".", SSLogError);
         });
   });
+  return ps;
 }
 
 /*
@@ -191,30 +193,32 @@ function SSInstallSpace(space)
   {
     var url = String.urlJoin(SSInfo().spacesDir, space, space + '.js');
     var count = $H(SSInstalledSpaces()).getLength();
-    
-    SSLoadSpaceAttributes(space, function(attrs) {
-      // TODO: throw an error if no attributes file - David
-      if(!attrs)
-      {
-        var attrs = {
-          url:url, 
-          name:space, 
-          position: count, 
-          icon: space+'/'+space+'.png',
-          autolaunch: false
-        };
-      }
-      
-      var installed = SSInstalledSpaces();
-      installed[space] = attrs;
-      
-      SSSetInstalledSpaces(installed);
-      SSLoadSpace(space, function() {
-        alert(space + " space installed.");
-        SSPostNotification('onSpaceInstall', space);
-      });
-      
-    });
+    var p = SSLoadSpaceAttributes(space);
+    $if(p,
+	function(attrs) {
+	  // TODO: throw an error if no attributes file - David
+	  if(!attrs)
+	  {
+            var attrs = {
+              url:url, 
+              name:space, 
+              position: count, 
+              icon: space+'/'+space+'.png',
+              autolaunch: false
+            };
+	  }
+	  
+	  var installed = SSInstalledSpaces();
+	  installed[space] = attrs;
+	  
+	  SSSetInstalledSpaces(installed);
+	  var p = SSLoadSpace(space);
+	  $if(p,
+	      function() { 
+		alert(space + " space installed.");
+		SSPostNotification('onSpaceInstall', space); 
+	      });
+	});
   }
 };
 
@@ -248,7 +252,7 @@ function SSUninstallSpace(spaceName)
 
 function SSSetInstalledSpaces(installed)
 {
-  __installedSpacesDataProvider.setInstalledSpaces(installed);
+  ShiftSpace.User.setInstalledSpaces(installed);
 }
 
 
@@ -258,7 +262,7 @@ function SSInstalledSpaces()
 }
 
 
-var SSUpdateInstalledSpaces = function(user)
+var SSUpdateInstalledSpaces = function(controlp)
 {
   __installedSpaces = ShiftSpace.User.installedSpaces();
 }.asPromise()
@@ -266,11 +270,7 @@ var SSUpdateInstalledSpaces = function(user)
 
 function SSInitDefaultSpaces(defaults)
 {
-  if(defaults)
-  {
-    SSSetValue('defaultSpaces', defaults);
-  }
-
+  if(defaults) { SSSetValue('defaultSpaces', defaults); }
   __defaultSpaces = defaults || SSGetValue('defaultSpaces');
 }
 
@@ -496,12 +496,6 @@ function SSHandleInstallSpaceLink(_evt)
 function SSGetInfoForInstalledSpace(spaceName, callback)
 {
   // fetch data for the space
-}
-
-
-function SSSetInstalledSpacesDataProvider(dataProvider)
-{
-  __installedSpacesDataProvider = dataProvider;
 }
 
 
