@@ -112,9 +112,11 @@ function SSIsAbsoluteURL(string)
 function SSLoadDefaultSpacesAttributes()
 {
   var defaultSpaces = {};
+  var ps = []
   __defaultSpacesList.length.times(function(i) {
     var spaceName = __defaultSpacesList[i];
     var p = SSLoadSpaceAttributes(spaceName);
+    ps.push(p);
     $if(SSApp.noErr(p),
         function() {
           var attrs = p.value();
@@ -130,6 +132,7 @@ function SSLoadDefaultSpacesAttributes()
           SSLog("Error attempting to load attributes for " + spaceName + ".", SSLogError);
         });
   });
+  return ps;
 }
 
 /*
@@ -267,11 +270,7 @@ var SSUpdateInstalledSpaces = function(user)
 
 function SSInitDefaultSpaces(defaults)
 {
-  if(defaults)
-  {
-    SSSetValue('defaultSpaces', defaults);
-  }
-
+  if(defaults) { SSSetValue('defaultSpaces', defaults); }
   __defaultSpaces = defaults || SSGetValue('defaultSpaces');
 }
 

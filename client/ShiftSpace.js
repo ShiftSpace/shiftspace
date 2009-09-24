@@ -125,33 +125,35 @@ var ShiftSpace = new (function() {
     };
     
     /*
-    Function: SSSynch
+    Function: SSSync
       Synchronize with server: checks for logged in user.
     */
     function SSSync() 
     {
-      var p = SSApp.query();
-      $if(SSApp.hasData(p),
-          function() {
-            ShiftSpace.User.syncData(p);
-            SSPostNotification('onUserLogin');
-          },
-	  function() {
-	    // initialize the value of default spaces for guest users
-	    SSInitDefaultSpaces();
-	    if(SSDefaultSpaces())
-	    {
-              SSSetup();
-	    }
-	    else
-	    {
-              // first time ShiftSpace user default spaces not loaded yet
-              SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
-              SSLoadDefaultSpacesAttributes();
-	    }
-	  });
-      SSUpdateInstalledSpaces(p);
-      SSWaitForUI(p)
+      // initialize the value of default spaces for guest users
+      SSInitDefaultSpaces();
+      var p1 = SSApp.query();
+      var p2 = $if(SSApp.hasData(p1),
+		   function(userIsLoggedIn) {
+		     ShiftSpace.User.syncData(p1);
+		     SSPostNotification('onUserLogin');
+		     return true;
+		   }, true);
+      p2.op(function(value) {
+	var installed = ShiftSpace.User.installedSpaces(), ps;
+	if(installed)
+	{
+	  SSSetup();
+	}
+	else
+	{
+	  // first time ShiftSpace user default spaces not loaded yet
+	  SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
+	  ps = SSLoadDefaultSpacesAttributes();
+	}
+	SSUpdateInstalledSpaces(ps);
+      });
+      SSWaitForUI(p1);
     }
     
     var SSWaitForUI = function(query)

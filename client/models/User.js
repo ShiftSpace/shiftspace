@@ -53,7 +53,7 @@ var ShiftSpaceUserClass = new Class({
   
   installedSpaces: function()
   {
-    return this.getPreference('installed', null);
+    return this.getPreference('installed', null) || SSDefaultSpaces();
   }
 });
 
