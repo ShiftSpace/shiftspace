@@ -1,7 +1,7 @@
 // ==Builder==
 // @test
 // @suite             ShiftServerTest
-// @dependencies      ShiftServerTestUtils, ApplicationServer, SSResourceTest
+// @dependencies      ShiftServerTestUtils, ApplicationServer
 // ==/Builder==
 
 var SSResourceTest = new Class({
@@ -25,5 +25,13 @@ var SSResourceTest = new Class({
   },
 
   setup: function() {},
-  tearDown: function() {}
+  tearDown: function() {},
+
+  flow: $fixture(
+    "Test the flow of operations",
+    function()
+    {
+      SSUnit.assert(true);
+    }
+  )
 });

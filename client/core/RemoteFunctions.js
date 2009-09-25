@@ -44,8 +44,7 @@ Function: SSLoadStyle
 
 Parameters:
   url - The URL of the CSS file to load
-  callback - A custom function to handle css text if you don't want to use GM_addStyle
-  spaceCallback - A callback function for spaces that want to use GM_addStyle but need to be notified of CSS load.
+  frame - The frame where the css will be loaded.
 */
 function SSLoadStyle(url, frame) 
 {
