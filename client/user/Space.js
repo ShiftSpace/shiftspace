@@ -40,7 +40,7 @@ var ShiftSpaceSpace = new Class({
     this.__state = new Hash();
 
     // the shifts array
-    this.shifts = {};
+    this.__shifts = {};
 
     // is visible flag
     this.setIsVisible(false);
@@ -122,11 +122,11 @@ var ShiftSpaceSpace = new Class({
   {
     this.hideInterface();
 
-    for(var shift in this.shifts)
+    for(var shift in this.__shifts)
     {
-      if(this.shifts[shift].isVisible())
+      if(this.__shifts[shift].isVisible())
       {
-        this.shifts[shift].hide();
+        this.__shifts[shift].hide();
       }
     }
   },
@@ -153,9 +153,9 @@ var ShiftSpaceSpace = new Class({
   isVisible: function()
   {
     var visibleShifts = false;
-    for(var shift in this.shifts)
+    for(var shift in this.__shifts)
     {
-      if(this.shifts[shift].isVisible())
+      if(this.__shifts[shift].isVisible())
       {
         visibleShifts = true;
         continue;
@@ -191,12 +191,12 @@ var ShiftSpaceSpace = new Class({
     // remove any unsaved shifts
     var unsavedShifts = [];
 
-    for(var shift in this.shifts)
+    for(var shift in this.__shifts)
     {
       if(shift.search('newShift') != -1)
       {
-        unsavedShifts.push(this.shifts[shift]);
-        delete this.shifts[shift];
+        unsavedShifts.push(this.__shifts[shift]);
+        delete this.__shifts[shift];
       }
     }
 
@@ -293,9 +293,8 @@ var ShiftSpaceSpace = new Class({
       this.fireEvent('onShiftSave', shiftId);
     }.bind(this));
 
-    SSLog('adding shift', SSLogForce);
-    this.shifts[newShift.getId()] = newShift;
-    return this.shifts[newShift.getId()];
+    this.__shifts[newShift.getId()] = newShift;
+    return this.__shifts[newShift.getId()];
   },
 
   /*
@@ -339,22 +338,30 @@ var ShiftSpaceSpace = new Class({
   deleteShift: function(shiftId)
   {
     // destroy the shift
-    if (this.shifts[shiftId])
+    if (this.__shifts[shiftId])
     {
-      this.shifts[shiftId].destroy();
-      delete this.shifts[shiftId];
+      this.__shifts[shiftId].destroy();
+      delete this.__shifts[shiftId];
     }
     this.fireEvent('onDeleteShift', shiftId);
   },
   
   unintern: function(shiftId)
   {
-    delete this.shifts[shiftId];
+    delete this.__shifts[shiftId];
   },
   
   intern: function(shiftId, shift)
   {
-    this.shifts[shiftId] = shift;
+    this.__shifts[shiftId] = shift;
+  },
+
+  swap: function(oldId, newId)
+  {
+    var shift = this.__shifts[oldId];
+    this.unintern(oldId);
+    shift.setId(newId);
+    this.intern(newId, shift);
   },
 
   /*
@@ -366,7 +373,7 @@ var ShiftSpaceSpace = new Class({
   */
   editShift: function(shiftId)
   {
-    var theShift = this.shifts[shiftId];
+    var theShift = this.__shifts[shiftId];
 
     if(!theShift.isBeingEdited())
     {
@@ -419,7 +426,7 @@ var ShiftSpaceSpace = new Class({
   */
   showShift: function(aShift)
   {
-    var cShift = this.shifts[aShift._id];
+    var cShift = this.__shifts[aShift._id];
     if(!cShift)
     {
       try
@@ -430,7 +437,7 @@ var ShiftSpaceSpace = new Class({
       {
         SSLog(SSDescribeException(exc));
       }
-      cShift = this.shifts[aShift._id];
+      cShift = this.__shifts[aShift._id];
     }
     if(cShift.canShow())
     {
@@ -457,7 +464,7 @@ var ShiftSpaceSpace = new Class({
   */
   hideShift: function(shiftId)
   {
-    var cShift = this.shifts[shiftId];
+    var cShift = this.__shifts[shiftId];
 
     if( cShift )
     {
@@ -476,9 +483,9 @@ var ShiftSpaceSpace = new Class({
 
     // check to see if there are no visible shifts, if not, hide the space interface
     var visibleShifts = false;
-    for(var shift in this.shifts)
+    for(var shift in this.__shifts)
     {
-      if(this.shifts[shift].isVisible())
+      if(this.__shifts[shift].isVisible())
       {
         visibleShifts = true;
         continue;
@@ -497,7 +504,7 @@ var ShiftSpaceSpace = new Class({
   */
   orderFront: function(shiftId, layer)
   {
-    var mv = this.shifts[shiftId].getMainView();
+    var mv = this.__shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered'))
     {
       mv.setStyle('zIndex', 10000);
@@ -514,7 +521,7 @@ var ShiftSpaceSpace = new Class({
   */
   orderBack: function(shiftId, layer)
   {
-    var mv = this.shifts[shiftId].getMainView();
+    var mv = this.__shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered'))
     {
       mv.setStyle('zIndex', 9999);
@@ -527,7 +534,7 @@ var ShiftSpaceSpace = new Class({
   */
   setDepth: function(shiftId, depth)
   {
-    var mv = this.shifts[shiftId].getMainView();
+    var mv = this.__shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered'))
     {
       mv.setStyle('zIndex', depth);
@@ -540,10 +547,10 @@ var ShiftSpaceSpace = new Class({
   */
   regionIsObscured: function(region)
   {
-    var len = this.shifts.length;
+    var len = this.__shifts.length;
     for(var i = 0; i < len; i++ )
     {
-      var aShift = this.shifts[i];
+      var aShift = this.__shifts[i];
 
       if(aShift.mainViewIsVisible())
       {
@@ -572,7 +579,7 @@ var ShiftSpaceSpace = new Class({
   */
   setCurrentShift: function(newShift)
   {
-    this.__currentShift__ = newShift;
+    this.__currentShift = newShift;
   },
 
   /*
@@ -584,7 +591,7 @@ var ShiftSpaceSpace = new Class({
   */
   setCurrentShiftById: function(shiftId)
   {
-    this.setCurrentShift(this.shifts[shiftId]);
+    this.setCurrentShift(this.__shifts[shiftId]);
   },
 
   /*
@@ -596,7 +603,7 @@ var ShiftSpaceSpace = new Class({
   */
   getCurrentShift: function()
   {
-    return this.__currentShift__;
+    return this.__currentShift;
   },
 
   /*
@@ -608,7 +615,7 @@ var ShiftSpaceSpace = new Class({
   */
   getShift: function(shiftId)
   {
-    return this.shifts[shiftId];
+    return this.__shifts[shiftId];
   },
 
   /*
@@ -620,7 +627,7 @@ var ShiftSpaceSpace = new Class({
   */
   focusShift: function(shiftId)
   {
-    this.setCurrentShift(this.shifts[shiftId]);
+    this.setCurrentShift(this.__shifts[shiftId]);
     this.getCurrentShift().onFocus();
   },
 
@@ -633,7 +640,7 @@ var ShiftSpaceSpace = new Class({
   */
   blurShift: function(shiftId)
   {
-    var theShift = this.shifts[shiftId];
+    var theShift = this.__shifts[shiftId];
     theShift.onBlur();
     theShift.setIsBeingEdited(false);
   },
@@ -765,7 +772,7 @@ var ShiftSpaceSpace = new Class({
   */
   updateTitleOfShift: function(shiftId, title)
   {
-    this.shifts[shiftId].updateTitle(title);
+    this.__shifts[shiftId].updateTitle(title);
   },
 
   /*
@@ -780,7 +787,7 @@ var ShiftSpaceSpace = new Class({
   */
   mainViewForShift: function(shiftId)
   {
-    return this.shifts[shiftId].getMainView();
+    return this.__shifts[shiftId].getMainView();
   },
 
   /*
@@ -794,11 +801,11 @@ var ShiftSpaceSpace = new Class({
     this.__state.empty();
 
     var visibleShifts = [];
-    for(var shift in this.shifts)
+    for(var shift in this.__shifts)
     {
-      if(this.shifts[shift].isVisible())
+      if(this.__shifts[shift].isVisible())
       {
-        visibleShifts.push(this.shifts[shift]);
+        visibleShifts.push(this.__shifts[shift]);
       }
     }
     this.__state.set('visibleShifts', visibleShifts);

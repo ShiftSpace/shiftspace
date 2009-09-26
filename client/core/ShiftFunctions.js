@@ -174,7 +174,7 @@ var SSDeleteShift = function(id)
   var p = SSApp['delete']('shift', id);
   p.op(function(value) { 
     var spaceName = theShift.space.name;
-    if(SSSpaceIsLoaded(spaceName)) SSSpaceForNamespace(spaceName).onShiftDelete(id);
+    if(SSSpaceIsLoaded(spaceName)) SSSpaceForName(spaceName).onShiftDelete(id);
     SSPostNotification('onShiftDelete', id);
   });
   return p;
@@ -230,17 +230,17 @@ function SSSaveNewShift(shift)
   
   var p = SSApp.create('shift', params);
   $if(SSApp.noErr(p),
-      function(newShift) {
-        var newId = newShift._id,
+      function(noErr) {
+        var newShift = p.value(),
+	    newId = newShift._id,
             oldId = shift._id,
             instance = space.getShift(oldId);
         newShift.created = 'Just posted';
 
 	// update the global cache
 	SSApp.deleteFromCache(oldId, 'global');
-	
-	// update the space local representation
-        instance.setId(newId);
+	// swap the ids
+	space.swap(oldId, newId);
 
         SSSetFocusedShiftId(newId);
         if(ShiftSpace.Console) ShiftSpace.Console.show();

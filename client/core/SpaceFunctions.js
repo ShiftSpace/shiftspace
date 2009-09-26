@@ -95,6 +95,7 @@ function SSRegisterSpace(instance)
     SSPostNotification('onShiftBlur', id);
   });
   instance.addEvent('onShiftFocus', function(id) {
+    SSLog("onShiftFocus", id, SSLogForce);
     SSFocusShift(SSSpaceForShift(id), SSGetShift(id));
     SSPostNotification('onShiftFocus', id);
   });

@@ -49,7 +49,6 @@ var ShiftSpaceShift = new Class({
     this.setup(data.content);
   },
   
-  
   /*
     Function: setup (abstract)
       To implemented by the subclass.  All initialization of your Shift instance should happen here.
