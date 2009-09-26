@@ -29,6 +29,7 @@ Design
 --------------------------------------------------------------------------------
 
 var A = FxNode({
+  name: "A",
   Fx: aFx,
   onEnter: function() {},
   onLeave: function() {},
@@ -37,6 +38,7 @@ var A = FxNode({
 });
 
 var B = FxNode({
+  name: "B",
   Fx: bFx,
   onEnter: function() {},
   onLeave: function() {},
@@ -45,6 +47,7 @@ var B = FxNode({
 });
 
 var C = FxNode({
+  name: "C",
   Fx: bFx,
   onEnter: function() {},
   onLeave: function() {},
@@ -53,12 +56,21 @@ var C = FxNode({
 });
 
 var D = FxNode({
+  name: "D",
   Fx: cFx,
   onEnter: function() {},
   onLeave: function() {},
-  triggers: {[{type:'keyhold, key:'shift', duration:1000}, 'next'],
-  	     [{type:'notification', name:'onConsoleClose'}, 'A']}
+  triggers: {[{type:'keyhold, key:'shift', duration:1000}, 'next']
+  	     }
 });
+
+var E = FxNode({
+  name: "E",
+  onEnter: Console.open.bind(Console)
+});
+
+animGraph.start()
+animGraph.go("A")
 
 
 --------------------------------------------------------------------------------

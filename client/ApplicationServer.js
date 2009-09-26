@@ -407,27 +407,74 @@ var ApplicationServer = new Class({
     return p;
   },
 
-  
+  /*
+    Function: confirm
+      Takes a promises and forces it to realize synchronously. Useful for
+      unit testing.
+
+    Parameters:
+      p - a promise.
+    
+    Returns:
+      The actual value of the promise.
+   */
   confirm: function (p) { p.setAsync(true); p.realize(); return p.value(); },
-  show: function(value) { SSLog('show:', value, SSLogForce); }.asPromise(),
 
+  /*
+    Function: show
+      Takes a promise and prints it to the console asynchronously.
+    
+    Parameters:
+      p - a promise value.
 
+    Returns:
+      A promise.
+   */
+  show: function(v) { SSLog('show:', v, SSLogForce); }.asPromise(),
+
+  /*
+    Function: noErr
+      Check that a remote value is not an error. If the value is a JSON object
+      with an error field, it is an error. A null value is also an error. This
+      behavior can be changed with the allowNull parameters.
+
+    Parameters:
+      v - the value to check, usually a promise.
+      allowNull - bool.
+
+    Returns:
+      A promise for a boolean value, or a boolean.
+  */
   noErr: function(v, allowNull)
   {
     if(allowNull === false && (v === undefined || v === null)) return false;
     return (v && v.error) ? false : true;
   }.asPromise(),
   
-  
+  /*
+    Function: hasData
+      Check that value has data.
+    
+    Parameters:
+      A promise for JSON object or a JSON object.
+
+    Returns:
+      A promise for a boolean value or a boolean value.
+   */
   hasData: function(v)
   {
     return (!v.message && !v.error) ? true : false;
   }.asPromise(),
 
-  
+  /*
+    Function: showErr
+      Alert an error value. For debugging.
+
+    Parameters:
+      err - a promise for a error JSON object or a JSON object.
+   */
   showErr: function(err)
   {
     alert(err.error);
   }.asPromise()
-
 });

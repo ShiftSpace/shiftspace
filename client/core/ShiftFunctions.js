@@ -5,7 +5,7 @@
 // ==/Builder==
 
 var __shifts = $H();
-var __focusedShiftId = null; // Holds the id of the currently focused shift
+var __focusedShiftId = null;
 var __defaultShiftStatus = 1;
 
 function SSSetShift(id, shift)

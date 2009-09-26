@@ -16,13 +16,15 @@ function SSSpaceIsLoaded(spaceName)
 
 /*
 Function: SSLoadSpace
-  Loads the space's source code, executes it and stores an instance of the
-  space class in the 'spaces' object
+  Loads the space's source code, evals it and stores an instance of the
+  space class in __spaces by name.
 
 Parameters:
   spaceName - the Space name to load
-  callback - a callback function to run when the space is loaded.
-`*/
+
+Returns:
+  a promise or the space instance.
+*/
 function SSLoadSpace(spaceName)
 {
   if(spaceName && SSSpaceIsLoaded(spaceName))
@@ -32,12 +34,12 @@ function SSLoadSpace(spaceName)
   else if(spaceName)
   {
     var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
-    var p = SSLoadFile(url);
-    $if(SSApp.noErr(p),
+    var p1 = SSLoadFile(url);
+    var p2 = $if(SSApp.noErr(p1),
         function() {
           try
           {
-            var space = SSRegisterSpace(ShiftSpace.__externals.evaluate('(function(){'+p.value()+' return '+spaceName+';})()'));
+            var space = SSRegisterSpace(ShiftSpace.__externals.evaluate('(function(){'+p1.value()+' return '+spaceName+';})()'));
           }
           catch(exc)
           {
@@ -45,8 +47,9 @@ function SSLoadSpace(spaceName)
             //throw exc;
           }
           SSPostNotification("onSpaceLoad", space);
+	  return space;
         });
-    return p;
+    return p2;
   }
 }
 
@@ -132,7 +135,7 @@ function SSLoadDefaultSpacesAttributes()
           SSLog("Error attempting to load attributes for " + spaceName + ".", SSLogError);
         });
   });
-  return ps;
+  return new Promise(ps);
 }
 
 /*

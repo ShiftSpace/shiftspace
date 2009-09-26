@@ -191,11 +191,9 @@ var SSListView = new Class({
     return false;
   },
   
-  
   /*
-      Function: initSortables (private)
-        Called during intialize(). Creates a new sortable object.   
-  
+    Function: initSortables (private)
+      Called during intialize(). Creates a new sortable object.   
   */
   initSortables: function()
   {
@@ -551,12 +549,11 @@ var SSListView = new Class({
   },
   
   /*
-      Function: onAdd (private)
-        Callback event when a new Item is added to a collection. 
+    Function: onAdd (private)
+      Callback event when a new Item is added to a collection. 
     
-      Parameters:
-        data - A row in a javascript array.
-    
+    Parameters:
+      data - A row in a javascript array.
   */
   onAdd: function(data, userData)
   {
@@ -1303,6 +1300,14 @@ var SSListView = new Class({
     {
       this.element.empty();
     }
+  },
+
+  /*
+    Function: animate
+      Returns an animation Promise.
+   */
+  animate: function(event)
+  {
   }
   
 });
