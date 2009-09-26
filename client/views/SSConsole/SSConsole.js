@@ -500,34 +500,6 @@ var SSConsole = new Class({
   },
   
 
-  userSelectedRow: function(evt)
-  {
-    if(evt.listView == this.AllShiftsListView)
-    {
-      // show the shift
-      if(typeof SSShowShift != 'undefined') 
-      {
-        var id = evt.listView.data()[args.rowIndex].id;
-        SSShowShift(id);
-        this.showShift(id);
-      }
-    }
-    else if(evt.listView == this.myShiftsTableView)
-    {
-      // set a variable for opening this shift on the next page if the url is different
-    }
-  },
-  
-  
-  userDeselectedRow: function(evt)
-  {
-    if(evt.listView == this.AllShiftsListView)
-    {
-      SSHideShift(evt.listView.data()[evt.rowIndex].id);
-    }
-  },
-
-
   getVisibleListView: function()
   {
     if(this.AllShiftsListView.isVisible()) return this.AllShiftsListView;

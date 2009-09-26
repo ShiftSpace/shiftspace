@@ -37,16 +37,16 @@ var SSInitShift = function(space, options)
     content: {position: position}
   };
   
-  var noError = space.createShift(shift);
+  var newShift = space.createShift(shift);
   
-  if(noError)
+  if(newShift)
   {
-    SSSetShift(tempId, shift);
+    SSApp.setDocument('global', newShift);
     SSShowNewShift(space, shift);
   }
   else
   {
-    console.error("There was an error creating the shift");
+    SSLog("There was an error creating the shift", SSLogError);
   }
 }.asPromise();
 
@@ -55,7 +55,7 @@ var SSInitShift = function(space, options)
     Shows a new shift, different from showShift in that it immediately puts the shift in edit mode.
 
   Parameters:
-    shiftId - a shift id.
+    space - a space instance.
 */
 var SSShowNewShift = function(space, shift)
 {
@@ -99,12 +99,12 @@ var SSFocusShift = function(space, shift)
 }.asPromise();
 
 /*
-  Function: SSScrollToShift
-    Scroll a shift into view.
+Function: SSScrollToShift
+  Scroll a shift into view.
 
-  Parameters:
-    space - a space instance.
-    shift - a shift instance.
+Parameters:
+  space - a space instance.
+  shift - a shift instance.
 */
 function SSScrollToShift(space, shift)
 {
@@ -146,12 +146,12 @@ function SSScrollToShift(space, shift)
 }
 
 /*
-  Function: SSBlurShift
-    Blurs a shift.
+Function: SSBlurShift
+  Blurs a shift.
 
-  Parameters:
-    space - a space instance.
-    shift - a shift.
+Parameters:
+  space - a space instance.
+  shift - a shift.
 */
 var SSBlurShift = function(space, shift)
 {
@@ -169,10 +169,11 @@ Parameters:
 */
 var SSDeleteShift = function(id) 
 {
+  var theShift = SSGetShift(id);
   if(SSFocusedShiftId() == id) SSSetFocusedShiftId(null);
   var p = SSApp['delete']('shift', id);
   p.op(function(value) { 
-    var spaceName = shift.space.name;
+    var spaceName = theShift.space.name;
     if(SSSpaceIsLoaded(spaceName)) SSSpaceForNamespace(spaceName).onShiftDelete(id);
     SSPostNotification('onShiftDelete', id);
   });
@@ -180,13 +181,13 @@ var SSDeleteShift = function(id)
 }.asPromise();
 
 /*
- Function: SSEditShift
-   Edit a shift.
+Function: SSEditShift
+  Edit a shift.
 
- Parameters:
-   space - a space.
-   shift - shift data
- */
+Parameters:
+  space - a space.
+  shift - shift data
+*/
 var SSEditShift = function(space, shift)
 {
   var id = shift._id;
@@ -229,38 +230,35 @@ function SSSaveNewShift(shift)
   
   var p = SSApp.create('shift', params);
   $if(SSApp.noErr(p),
-      function() {
-        var newShift = p.value();
-        var newId = newShift._id;
-        var oldId = shift._id;
-        
+      function(newShift) {
+        var newId = newShift._id,
+            oldId = shift._id,
+            instance = space.getShift(oldId);
         newShift.created = 'Just posted';
-        
-        var instance = space.getShift(oldId);
+
+	// update the global cache
+	SSApp.deleteFromCache(oldId, 'global');
+	
+	// update the space local representation
         instance.setId(newId);
-        
+
         SSSetFocusedShiftId(newId);
-        
-        if(ShiftSpace.Console)
-        {
-          ShiftSpace.Console.show();
-          ShiftSpace.Console.showShift(newId);
-        }
-        
+        if(ShiftSpace.Console) ShiftSpace.Console.show();
+
         space.onShiftSave(newId);
         SSPostNotification('onShiftSave', newId);
       });
 }
 
 /*
-  Function: SSSaveShift
-    Saves a shift's JSON object to the server.
+Function: SSSaveShift
+  Saves a shift's JSON object to the server.
 
-  Parameters:
-    shiftJson - a shiftJson object, delivered from Shift.encode.
+Parameters:
+  shiftJson - a shiftJson object, delivered from Shift.encode.
 
-  See Also:
-    Shift.encode
+See Also:
+  Shift.encode
 */
 function SSSaveShift(shift) 
 {
@@ -286,14 +284,14 @@ function SSSaveShift(shift)
 }
 
 /*
-  Function: SSGetAuthorForShift
-    Returns the username of the Shift owner as a string.
+Function: SSGetAuthorForShift
+  Returns the username of the Shift owner as a string.
 
-  Parameters:
-    shiftId - a shift id.
+Parameters:
+  shiftId - a shift id.
 
-  Returns:
-    A user name as a string.
+Returns:
+  A user name as a string.
 */
 function SSGetAuthorForShift(shiftId)
 {
@@ -301,12 +299,12 @@ function SSGetAuthorForShift(shiftId)
 }
 
 /*
-  Function: SSLoadShift
-    Load a single shift from the network.
+Function: SSLoadShift
+  Load a single shift from the network.
 
-  Parameters:
-    shiftId - a shift id.
-    callback - a callback handler.
+Parameters:
+  shiftId - a shift id.
+  callback - a callback handler.
 */
 function SSLoadShift(id)
 {

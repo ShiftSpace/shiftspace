@@ -87,10 +87,14 @@ var ApplicationServer = new Class({
   
   deleteFromCache: function(id, name)
   {
-    var caches = (name) ? [this.cache()[name]] : this.cache();
-    $H(caches).each(function(cache) {
-      delete cache[id];
-    });
+    var caches = this.cache();
+    for(var cache in caches)
+    {
+      if((name && cache == name) || !name)
+      {
+	delete caches[cache][id]
+      }
+    }
   },
   
 
