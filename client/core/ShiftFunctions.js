@@ -8,23 +8,12 @@ var __shifts = $H();
 var __focusedShiftId = null;
 var __defaultShiftStatus = 1;
 
-function SSSetShift(id, shift)
-{
-  __shifts[id] = shift;
-}
-
 function SSGetShift(id)
 {
-  var shift = __shifts[id];
+  var shift = SSApp.getDocument(id);
   if(shift) return shift;
   var p = SSLoadShift(id);
-  p.op(function(value) { SSSetShift(id, value); });
   return p;
-}
-
-function SSUninternShift(id)
-{
-  delete __shifts[id];
 }
 
 /*
@@ -93,9 +82,7 @@ var SSFocusShift = function(space, shift)
       SSGetShift(lastFocusedShift) &&
       lastFocusedShift != id)
   {
-    SSLog('SSFocusShift lastFocusedShift: ' + lastFocusedShift, SSLogForce);
     var lastSpace = SSSpaceForShift(lastFocusedShift);
-    SSLog(lastSpace, SSLogForce);
     if(lastSpace.getShift(lastFocusedShift))
     {
       lastSpace.getShift(lastFocusedShift).blur();
@@ -111,7 +98,14 @@ var SSFocusShift = function(space, shift)
   SSScrollToShift(space, shift);
 }.asPromise();
 
+/*
+  Function: SSScrollToShift
+    Scroll a shift into view.
 
+  Parameters:
+    space - a space instance.
+    shift - a shift instance.
+*/
 function SSScrollToShift(space, shift)
 {
   var id = shift._id;
@@ -296,7 +290,6 @@ function SSSaveShift(shift)
       });
 }
 
-
 /*
   Function: SSGetAuthorForShift
     Returns the username of the Shift owner as a string.
@@ -312,7 +305,6 @@ function SSGetAuthorForShift(shiftId)
   return SSGetShift(shiftId).username;
 }
 
-
 /*
   Function: SSLoadShift
     Load a single shift from the network.
@@ -324,10 +316,8 @@ function SSGetAuthorForShift(shiftId)
 function SSLoadShift(id)
 {
   var p = SSApp.get({resource:'shift', id:id});
-  p.op(function (value) { if (value) SSSetShift(id, value); });
   return p;
 }
-
 
 /*
 Function: SSShowShift
@@ -352,14 +342,12 @@ var SSShowShift = function(space, shift)
 }.asPromise();
 
 /*
-
 Function: SSHideShift
   Hides a shift from the page.
 
 Parameters:
     space - a space instance.
     shift - a shift.
-
 */
 var SSHideShift = function(space, shift)
 {
@@ -404,7 +392,6 @@ function SSSetFocusedShiftId(newId)
   __focusedShiftId = newId;
 }
 
-
 /*
   Function: SSGetShiftContent
     Returns the actual content of shift.  The content is the actual
@@ -448,13 +435,6 @@ function SSIsNewShift(shiftId)
 {
   return (shiftId.search('newShift') != -1);
 }
-
-var SSAddShifts = function(shifts)
-{
-  shifts.each(function(shift) {
-    SSSetShift(shift._id, shift);
-  });
-}.asPromise();
 
 function SSFavoriteShift(id)
 {
