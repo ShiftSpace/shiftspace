@@ -1,0 +1,68 @@
+FxGraph & SSListViews
+================================================================================
+
+new FxGraph(A, B, C, D, E);
+
+Animations are a linked list.
+
+closed  lite  more  full
+A   ->  B ->  C ->  D -> 
+
+
+--------------------------------------------------------------------------------
+Scenario
+--------------------------------------------------------------------------------
+
+User holds down key.
+
+Animation A starts.
+
+Animation.start()
+
+User presses up key.
+
+Animation.
+
+
+--------------------------------------------------------------------------------
+Design
+--------------------------------------------------------------------------------
+
+var A = FxNode({
+  Fx: aFx,
+  onEnter: function() {},
+  onLeave: function() {},
+  triggers: {[{type:'keydown', key:'shift'}, 'next']
+  	     [{type:'keyup', key:'shift'], 'prev']}
+});
+
+var B = FxNode({
+  Fx: bFx,
+  onEnter: function() {},
+  onLeave: function() {},
+  triggers: {[{type:'keyhold, key:'shift', duration:1000}, 'next'],
+  	     [{type:'keyup', key:'shift'}, 'A']}
+});
+
+var C = FxNode({
+  Fx: bFx,
+  onEnter: function() {},
+  onLeave: function() {},
+  triggers: {[{type:'keyhold, key:'shift', duration:1000}, 'next'],
+  	     [{type:'keyup', key:'shift'}, 'A']}
+});
+
+var D = FxNode({
+  Fx: cFx,
+  onEnter: function() {},
+  onLeave: function() {},
+  triggers: {[{type:'keyhold, key:'shift', duration:1000}, 'next'],
+  	     [{type:'notification', name:'onConsoleClose'}, 'A']}
+});
+
+
+--------------------------------------------------------------------------------
+Thoughts
+--------------------------------------------------------------------------------
+
+FxGraphs can also be nodes

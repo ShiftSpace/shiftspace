@@ -355,7 +355,12 @@ var SSResource = new Class({
     }, this);
   },
   
-  
+  /*
+    Function: cleanup
+      Removes the cache associated with this resource. Remove all events
+      from the global application server assocaited with this resource.
+      Removes self from any views associated with this resource.
+   */
   cleanup: function()
   {
     SSApplication().removeCache(this.getName());
@@ -364,12 +369,22 @@ var SSResource = new Class({
   },
   
   
+  /*
+    Function: dispose
+      Calls SSDeleteResource.
+    See Also:
+      SSDeleteResource
+   */
   dispose: function()
   {
     SSDeleteResource(this.getName());
   },
   
-  
+  /*
+    Function: refresh
+      Removes the cache associated with this resource. Dirties all
+      associated views.
+   */
   refresh: function()
   {
     SSApplication().removeCache(this.getName());
