@@ -34,12 +34,13 @@ function SSLoadSpace(spaceName)
   else if(spaceName)
   {
     var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
-    var p1 = SSLoadFile(url);
-    var p2 = $if(SSApp.noErr(p1),
+    var codep = SSLoadFile(url);
+    var cssp = SSLoadStyle(SSGetSpaceAttributes(spaceName).css);
+    var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
         function() {
           try
           {
-            var space = SSRegisterSpace(ShiftSpace.__externals.evaluate('(function(){'+p1.value()+' return '+spaceName+';})()'));
+            var space = SSRegisterSpace(ShiftSpace.__externals.evaluate('(function(){'+codep.value()+' return '+spaceName+';})()'));
           }
           catch(exc)
           {
@@ -49,7 +50,7 @@ function SSLoadSpace(spaceName)
           SSPostNotification("onSpaceLoad", space);
 	  return space;
         });
-    return p2;
+    return spacep;
   }
 }
 
@@ -66,18 +67,6 @@ function SSRegisterSpace(instance)
   SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
   var spaceDir = SSURLForSpace(spaceName);
-
-  // if a css file is defined in the attributes load the style
-  if (instance.attributes().css) 
-  {
-    if (instance.attributes().css.indexOf('/') == -1) 
-    {
-      var css = spaceDir + instance.attributes().css;
-      instance.attributes().css = css;
-    }
-    var p = SSLoadStyle(instance.attributes().css);
-    instance.onCssLoad(p);
-  }
 
   // This exposes each space instance to the console
   if (typeof ShiftSpaceSandBoxMode != 'undefined') 
@@ -101,7 +90,7 @@ function SSRegisterSpace(instance)
   });
   instance.addEvent('onShiftSave', function(id) {
   });
-  
+
   return instance;
 }
 
