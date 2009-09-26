@@ -9,6 +9,16 @@ var __focusedSpace = null;
 var __defaultSpaces = null;
 var __installedSpaces = null;
 
+/*
+Function: SSSpaceIsLoaded
+  Check whether a space has actually been loaded.
+
+Parameters:
+  spaceName - a space name.
+
+Returns:
+  boolean.
+*/
 function SSSpaceIsLoaded(spaceName)
 {
   return __spaces[spaceName] != null; 
@@ -94,13 +104,29 @@ function SSRegisterSpace(instance)
   return instance;
 }
 
+/*
+Function: SSIsAbsoluteURL
+  Test a string to see if it is an absolute url.
 
+Parameters:
+  string - a string to test.
+
+Returns:
+  boolean.
+*/
 function SSIsAbsoluteURL(string)
 {
   return (string.search("http://") == 0);
 }
 
+/*
+  Function: SSLoadDefaultSpacesAttributes
+    Loads all the attrs.json files for the default spaces. Only call if this is
+    the first time ShiftSpace has been launched.
 
+  Returns:
+    An promise of promises for the attrs.json files for all the default spaces.
+*/
 function SSLoadDefaultSpacesAttributes()
 {
   var defaultSpaces = {};
@@ -165,10 +191,19 @@ function SSLoadSpaceAttributes(spaceName)
   return p2;
 }
 
-function SSGetSpaceAttributes(space)
+/*
+Function: SSGetSpaceAttributes
+  Returns the attrs.json data for the space. The space must be installed.
+
+Parameters:
+  spaceName - the space name as a string.
+
+Returns:
+  A JSON object representing a spaces attrs.json file.
+*/
+function SSGetSpaceAttributes(spaceName)
 {
-  // TODO: fix the resolution of the icon url - David
-  return SSInstalledSpaces()[space];
+  return SSInstalledSpaces()[spaceName];
 }
 
 /*
@@ -177,7 +212,7 @@ Function: SSInstallSpace
   The source URL is saved in the 'installed' object for future reference.
 
 Parameters:
-  space - The Space name to install
+  space - The name of the space to install.
 */
 function SSInstallSpace(space)
 {
@@ -241,56 +276,97 @@ function SSUninstallSpace(spaceName)
   SSPostNotification('onSpaceUninstall', spaceName);
 };
 
+/*
+Function: SSSetInstalledSpaces
+  Set the installed spaces for a user.
 
+Paramters:
+  installed - a JSON object of space attributes.
+
+See Also:
+  SSGetSpaceAttributes, SSLoadSpaceAttributes, SSLoadDefaultSpacesAttributes
+*/
 function SSSetInstalledSpaces(installed)
 {
   ShiftSpace.User.setInstalledSpaces(installed);
 }
 
+/*
+Function: SSInstalledSpaces
+  Return the JSON object of the installed spaces. Each entry
+  in the object corresponds to that space's attrs.json file.
 
+Returns:
+  A JSON object.
+*/
 function SSInstalledSpaces()
 {
   return __installedSpaces || SSDefaultSpaces();
 }
 
+/*
+Function: SSUpdateInstalledSpaces
+  Update the JSON object of installed spaces.
 
+Parameters:
+  controlp (optional) - can be executed asynchronously if passed a promise.
+*/
 var SSUpdateInstalledSpaces = function(controlp)
 {
   __installedSpaces = ShiftSpace.User.installedSpaces();
 }.asPromise()
 
+/*
+Function: SSInitDefaultSpaces
+  Initializes the list of default space attributes.
 
+Parameters:
+  defaults - a JSON object of space attributes by space name.
+*/
 function SSInitDefaultSpaces(defaults)
 {
   if(defaults) { SSSetValue('defaultSpaces', defaults); }
   __defaultSpaces = defaults || SSGetValue('defaultSpaces');
 }
 
+/*
+Function: SSDefaultSpaces
+  Returns JSON object of the default spaces attributes.
 
+Returns:
+  A JSON object of the default space attributes.
+*/
 function SSDefaultSpaces()
 {
   return __defaultSpaces;
 }
 
+/*
+Function: SSURLForSpace
+  Returns the url for a space.
 
+Parameters:
+  spaceName - a space name.
+
+Returns:
+  Returns the url of a space.
+*/
 function SSURLForSpace(spaceName)
 {
   var installed = SSInstalledSpaces();
   return (installed[spaceName] && installed[spaceName].url) || null;
 }
 
-
+/*
+Function: SSUninstallAllSpaces
+  Removes all the installed space attribute entries.
+*/
 function SSUninstallAllSpaces()
 {
   for(var spaceName in SSInstalledSpaces())
   {
     SSUninstallSpace(spaceName);
   }
-}
-
-
-function SSResetSpaces()
-{
 }
 
 /*
@@ -332,11 +408,14 @@ function SSSetSpaceForName(space, name)
   __spaces[name] = space;
 }
 
-function SSSetSpacePositions(spaceName, newpos)
-{
-  
-}
+/*
+Function: SSSpacesByPosition
+  Returns an array of the installed space attributes sorted by
+  position. Used in conjunction with SSSpacesMenu
 
+Returns:
+  An array of space attributes.
+*/
 function SSSpacesByPosition()
 {
   var spaces = SSInstalledSpaces();
@@ -350,20 +429,25 @@ function SSSpacesByPosition()
   return result;
 }
 
+/*
+Function: SSSpacesByPosition
+  Return the space attribute for the specified position. Used
+  in conjunction with SSSpacesMenu
+*/
 function SSSpaceForPosition(index)
 {
   return SSSpaceForName(SSSpacesByPosition()[index].name);
 }
 
 /*
-  Function: SSRemoveSpace
-    Removes a space from the interal instances hash.
-    
-  Parameters:
-    name - the name of the space to remove.
-    
-  Return:
-    nothing.
+Function: SSRemoveSpace
+  Removes a space from the interal instances hash.
+  
+Parameters:
+  name - the name of the space to remove.
+  
+Return:
+  nothing.
 */
 function SSRemoveSpace(name)
 {
@@ -371,11 +455,11 @@ function SSRemoveSpace(name)
 }
 
 /*
-  Function:
-    Returns the number of installed spaces.
-    
-  Returns:
-    An int.
+Function:
+  Returns the number of installed spaces.
+  
+Returns:
+  An int.
 */
 function SSSpacesCount()
 {
@@ -384,6 +468,10 @@ function SSSpacesCount()
   return length;
 }
 
+/*
+Function: SSAllSpaces
+  Return the JSON object of the attributes of all the currently installed spaces.
+*/
 function SSAllSpaces()
 {
   return __spaces;
@@ -437,7 +525,6 @@ function SSSetFocusedSpace(newSpace)
   __focusedSpace = newSpace;
 }
 
-
 /*
   Function: SSSpaceForShift
     Returns the space singleton for a shift.
@@ -455,53 +542,39 @@ function SSSpaceForShift(id)
   return SSSpaceForName(spaceName);
 }
 
-
+/*
+*/
 function SSSpaceNameForShift(shiftId)
 {
   var shift = SSGetShift(shiftId);
   return shift.space.name;
 }
 
-
+/*
+Function: SSCheckForInstallSpaceLinks
+  Check the page for links that trigger space install.
+*/
 function SSCheckForInstallSpaceLinks()
 {
   $$('.SSInstallFirstLink').setStyle('display', 'none');
-
   $$('.SSInstallSpaceLink').each(function(x) {
     x.setStyle('display', 'block');
     x.addEvent('click', SSHandleInstallSpaceLink);
   });
 }
 
+/*
+Function: SSHandleInstallSpaceLink
+  Handle user click on a space install link.
 
-function SSHandleInstallSpaceLink(_evt)
+Parameters:
+  evt - the browser click event.
+*/
+function SSHandleInstallSpaceLink(evt)
 {
-  var evt = new Event(_evt);
+  evt = new Event(_evt);
   var target = evt.target;
   var spaceName = target.getAttribute('title');
-  
   // first check for the attributes file
   SSInstallSpace(spaceName);
-}
-
-
-function SSGetInfoForInstalledSpace(spaceName, callback)
-{
-  // fetch data for the space
-}
-
-
-function SSInjectSpaces()
-{
-  for (var space in SSInstalledSpaces())
-  {
-    try
-    {
-      SSLoadSpace(space);
-    }
-    catch(err)
-    {
-      SSLog('Error: could not load ' + space, SSLogForce);
-    }
-  }
 }

@@ -171,20 +171,15 @@ Function: SSDeleteShift
   Deletes a shift from the server.
 
 Parameters:
-  shift - a shift.
+  id - a shift id
 */
-var SSDeleteShift = function(shift) 
+var SSDeleteShift = function(id) 
 {
-  var id = shift._id;
-  if(SSFocusedShiftId() == id)
-  {
-    SSSetFocusedShiftId(null);
-  }
+  if(SSFocusedShiftId() == id) SSSetFocusedShiftId(null);
   var p = SSApp['delete']('shift', id);
   p.op(function(value) { 
     var spaceName = shift.space.name;
     if(SSSpaceIsLoaded(spaceName)) SSSpaceForNamespace(spaceName).onShiftDelete(id);
-    SSUninternShift(id);
     SSPostNotification('onShiftDelete', id);
   });
   return p;
