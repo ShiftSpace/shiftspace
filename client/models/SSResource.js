@@ -5,17 +5,47 @@
 
 var __resources = $H();
 
+/*
+Function: SSResourceForName
+  Return the resource for the given name.
+
+Parameters:
+  name - a string.
+
+Returns:
+  An SSResource instance.
+*/
 function SSResourceForName(name)
 {
   return __resources[name];
 }
 
+/*
+Function: SSSetResourceForName (private)
+  Associate a resource with given name in the global __resources
+  hashmap.
+
+Parametesr:
+  name - the name of the resource.
+  resource - a SSResource instance.
+*/
 function SSSetResourceForName(name, resource)
 {
   __resources[name] = resource;
   SSPostNotification("resourceSet", {name:name, resource:resource});
 }
 
+/*
+Function: SSDeleteResource
+  Delete a resource by name. Will also clear any references to the
+  resource from the resource's application server.
+
+Parameters:
+  name - a string.
+
+See Also:
+   SSResource.dispose
+*/
 function SSDeleteResource(name)
 {
   var resource = SSResourceForName(name);
@@ -77,7 +107,17 @@ var SSResource = new Class({
     this.dirtyTheViews();
   },
   
-  
+  /*
+    Function: convertDates (private)
+      Internal transform utility. We want to convert all dates string representations
+      to Data objects. Meant to be used to read in data. Not mean to be used directly.
+    
+    Parameters:
+      doc - a document object from the server.
+    
+    Returns:
+      A transformed document.
+   */
   convertDates: function(doc)
   {
     doc.created = Date.parse(doc.created);
@@ -85,55 +125,103 @@ var SSResource = new Class({
     return doc;
   },
   
-  
+  /*
+    Function: sortByModified (private)
+      Utility sort by modified date function. Not meant to be used directly.
+   */
   sortByModified: function(a, b)
   {
     return a.modified < b.modified;
   },
   
-  
+  /*
+    Function: setSortFn (private)
+      Set the sorting function.
+
+    Parameters:
+      Takes a sort function. This should be valid sort function, the kind that
+      can be passed to Array.sort.
+   */
   setSortFn: function(sortFn)
   {
     this.__sortFn = sortFn;
   },
   
-  
+  /*
+    Function: sortFn (private)
+      Getter for the sort function.
+   */
   sortFn: function()
   {
     return this.__sortFn;
   },
   
-  
+  /*
+    Function: setTransforms (private)
+      Takes an array of sort functions and composes them into a single function.
+
+    Parameters:
+      transforms - an array of functions. Each should take and return a value.
+   */
   setTransforms: function(transforms)
   {
     this.__transformFn = Function.comp.apply(null, transforms);
   },
   
-  
+  /*
+    Function: transformFn (private)
+      Returns the composed transform function.
+
+    Returns:
+      The transform function.
+
+    See Also:
+      setTransforms
+   */
   transformFn: function()
   {
     return this.__transformFn;
   },
   
-  
+  /*
+    Function: setConditions (private)
+      Set the conditions for the resource. Each condition function should be
+      a function which takes a document and returns a boolean value.
+    
+    Parameters:
+      condition - an array of functions which take a document and return a boolean.
+   */
   setConditions: function(conditions)
   {
     this.__conditions = conditions;
   },
   
-  
+  /*
+    Function: conditions (private)
+      Returns the list of conditions for this resource.
+
+    Returns:
+      An array of functions.
+   */
   conditions: function()
   {
     return this.__conditions;
   },
   
-  
+  /*
+    Function: handlers (private)
+      Set the hash map of handlers. The map should be organized with resource specifications
+      as the keys.
+   */
   setHandlers: function(handlers)
   {
     this.__handlers = handlers;
   },
   
-  
+  /*
+    Function: handlers (private)
+      Returns the hash map of handlers.
+   */
   handlers: function()
   {
     return this.__handlers;
@@ -151,37 +239,83 @@ var SSResource = new Class({
     return this.resource()[method];
   },
   
-  
+  /*
+    Function: setName (private)
+      Set the name of this resource.
+
+    Parameters:
+      name - a string.
+   */
   setName: function(name)
   {
     this.__name = name;
   },
   
-  
+  /*
+    Function: getName
+      Return the name of this resource.
+      
+    Returns:
+      A string.
+
+    See Also:
+      SSResourceForName
+   */
   getName: function()
   {
     return this.__name;
   },
   
-  
+  /*
+    Function: get
+      Return the item at the specified index.
+
+    Parameters:
+      idx - an integer.
+
+    Returns:
+      A single document.
+   */
   get: function(idx)
   {
     return this.data()[idx];
   },
   
-  
+  /*
+    Function: getLength
+      Return the number of items managed by this resource.
+
+    Returns:
+      An integer.
+   */
   getLength: function()
   {
     return this.data().length;
   },
   
-  
+  /*
+    Function: each
+      Like Array.forEach/each. Apply a function for each item in this
+      resource's data.
+
+    Parametesr: 
+      fn - a function to be applied to each item.
+   */
   each: function(fn)
   {
     this.data().each(fn);
   },
   
-  
+  /*
+    Function: map
+      Like Array.map. Map a function over this resource's data.
+
+    Parameters:
+      fn - a function to applied to each document.
+
+    Returns:
+      A new array of items with the map function applied to each original document.
+   */
   map: function(fn)
   {
     return this.data().map(fn);
@@ -193,14 +327,29 @@ var SSResource = new Class({
     return this.data().filter(fn);
   },
   
-  
+  /*
+    Function: setApp (private)
+      Set the application server used by this resource.
+
+    Parameters:
+      app - an ApplicationServer instance.
+
+    See Also:
+      ApplicationServer
+   */
   setApp: function(app)
   {
     this.__app = app;
     app.addResource(this);
   },
   
-  
+  /*
+    Function: app
+      Return the ApplicationServer instance used by this resource.
+
+    Returns:
+      An ApplicationServer instance.
+   */
   app: function()
   {
     return this.__app;
@@ -218,7 +367,13 @@ var SSResource = new Class({
     return this.__resource;
   },
   
-  
+  /*
+    Function: data
+      Returns the data represented by this resource.
+
+    Returns:
+      An array of documents.
+   */
   data: function()
   {
     var raw = SSApplication().cache(this.getName(), true);
@@ -227,7 +382,14 @@ var SSResource = new Class({
     return raw;
   },
   
-  
+  /*
+    Function: setWatches (private)
+      Take a watch specification and creates the hash map of conditions and handlers
+      based on resource specifications.
+
+    Parameters:
+      watches - a watch specification. Consult documentation.
+   */
   setWatches: function(watches)
   {
     this.__watches = new Set(watches);
@@ -243,7 +405,10 @@ var SSResource = new Class({
     }, this);
   },
   
-  
+  /*
+    Function: watches (private)
+      Returns the watch specification for this resource. Intended for debugging only.
+   */
   watches: function()
   {
     return this.__watches;
@@ -300,7 +465,13 @@ var SSResource = new Class({
     return p;
   },
   
-  
+  /*
+    Function: setViews (private)
+      Set the views managed by this resource.
+
+    Parameters:
+      views - an array of views to manage.
+   */
   setViews: function(views)
   {
     this.__views = views;
@@ -309,25 +480,62 @@ var SSResource = new Class({
     }, this);
   },
   
-  
+  /*
+    Function: views (private)
+      Returns the list of views managed by this resource.
+
+    Returns:
+      An array of SSViews
+
+    See Also: 
+      SSView
+   */
   views: function()
   {
     return this.__views;
   },
   
-  
+  /*
+    Function: addView (private)
+      Add a view to the managed views list.
+
+    Parameter:
+      view - An instance of SSView
+
+    See Also:
+      SSView
+   */
   addView: function(view)
   {
     this.views().push(view);
   },
   
-  
+  /*
+    Function: hasView
+      Check whether this resource is managing a particular view.
+
+    Parameters:
+      view - an SSView.
+
+    Returns:
+      A boolean.
+   */
   hasView: function(view)
   {
     return !this.views().contains(view);
   },
   
-  
+  /*
+    Function: dirtyTheViews
+      Refresh all of the managed views. If the views are visible this will
+      trigger an immediate refresh. Force will force the views to refresh.
+
+    Parameters:
+      force - an optional boolean to force view refresh.
+
+    See Also:
+      SSView __refresh__
+   */
   dirtyTheViews: function(force)
   {
     this.views().each(function(view) {
@@ -336,7 +544,20 @@ var SSResource = new Class({
     }, this);
   },
   
-  
+  /*
+    Function: passesConditions (private)
+      Checks that a document passes the conditions for a particular resource specification.
+      
+    Parameters:
+      rsrcSpecHashed - a hashed resource specification.
+      value - a document.
+
+    Returns:
+      A boolean.
+
+    See Also:
+      matchSpec
+   */
   passesConditions: function(rsrcSpecHashed, value)
   {
     var conditions = this.conditions()[rsrcSpecHashed], len = (conditions) ? conditions.length : 0;
@@ -345,7 +566,19 @@ var SSResource = new Class({
     return true;
   },
   
+  /*
+    Function: matchSpec (private)
+      Not meant to be called directly. Called by SSApp on this resource. Checks to
+      see if a remove event matches any handlers for this resource.
 
+    Parameters:
+      rsrcSpecHashed - a hashed resource specification.
+      value - the current value of a document.
+      oldValue - the previous value of a document if applicable.
+
+    See Also:
+      passesConditions
+   */
   matchSpec: function(rsrcSpecHashed, value, oldValue)
   {
     if(!this.passesConditions(rsrcSpecHashed, value)) return;
@@ -368,10 +601,10 @@ var SSResource = new Class({
     this.views().each($msg('setResource', null));
   },
   
-  
   /*
     Function: dispose
       Calls SSDeleteResource.
+
     See Also:
       SSDeleteResource
    */
