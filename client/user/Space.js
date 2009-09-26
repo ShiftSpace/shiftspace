@@ -34,18 +34,10 @@ var ShiftSpaceSpace = new Class({
     });
     
     this.shiftClass = shiftClass;
-    
 
     // set the interface built flag
     this.__interfaceBuilt = false;
     this.__state = new Hash();
-
-    this.__deferredNewShifts= [];
-    this.__deferredShifts = [];
-    this.__deferredEdits = [];
-
-    // if no css file, we don't need to wait for it to load
-    this.setCssLoaded(!this.attributes() || !this.attributes().css);
 
     // the shifts array
     this.shifts = {};
@@ -108,104 +100,6 @@ var ShiftSpaceSpace = new Class({
   },
 
   /*
-    Function: onCssLoad (private)
-      Callback handler when the space's css file has loaded.  The interface is not built until after this
-      function has been called.  Also any shifts that were set to creaetd/shown/edited.
-  */
-  onCssLoad : function()
-  {
-    this.setCssLoaded(true);
-
-    if(this.__deferredContent)
-    {
-      this.showInterface();
-      this.hideInterface();
-
-      // load any deferred shifts
-      this.__deferredShifts.each(function(aShift) {
-        if(aShift._id)
-        {
-          SSShowShift(aShift._id);
-        }
-        else
-        {
-          SSShowShift(aShift);
-        }
-      }.bind(this));
-
-      // edit any deferred shifts
-      this.__deferredEdits.each(function(aShift) {
-        SSEditShift(aShift);
-      }.bind(this));
-
-      // load any deferred just created shifts
-      this.__deferredNewShifts.each(function(aShift) {
-        this.createShift(aShift);
-        SSShowNewShift(aShift._id);
-      }.bind(this));
-    }
-  }.asPromise(),
-
-  /*
-    Function: addDeferredNew (private)
-      Adds a deferred shift was just created.  This happens when a user create a shift
-      using the Menu for a space that hasn't loaded yet.
-
-    Parameters:
-      shift - shift content Javascript object.
-  */
-  addDeferredNew: function(shift)
-  {
-    this.__deferredNewShifts.push(shift);
-    this.__deferredContent = true;
-  },
-
-  /*
-    Function: addDeferredShift (private)
-      Adds a deferred shift to be show.  This happens a user attempt to view a shift
-      from <Console> for a space that hasn't loaded yet.
-
-    Parameters:
-      shiftId - a shift id.
-  */
-  addDeferredShift: function(shiftId)
-  {
-    this.__deferredShifts.push(shiftId);
-    this.__deferredContent = true;
-  },
-
-  /*
-    Function: addDeferredEdit (private)
-      Adds a deferred shift to be edited.  This happens when a user attempts to edit
-      an existing shift from the <Console>.
-
-    Parameters:
-      shiftId - a shift id.
-  */
-  addDeferredEdit: function(shiftId)
-  {
-    this.__deferredEdits.push(shiftId);
-    this.__deferredContent = true;
-  },
-
-  /*
-    Function: setCssLoaded (private)
-      A setter for the internal flag tracking whether the css for this space has loaded yet.
-  */
-  setCssLoaded: function(val)
-  {
-    this.__cssLoaded__ = val;
-  },
-
-  /*
-    Function: cssIsLoaded (private)
-  */
-  cssIsLoaded: function()
-  {
-    return this.__cssLoaded__;
-  },
-
-  /*
     Function: show (private)
       Show the space. Simple calls Space.showInterface
 
@@ -237,7 +131,6 @@ var ShiftSpaceSpace = new Class({
     }
   },
 
-
   /*
     Function: setIsVisible
       Setter for internal flag about whether the Space and/or it's shifts are visible.
@@ -249,7 +142,6 @@ var ShiftSpaceSpace = new Class({
   {
     this.__isVisible = val;
   },
-
 
   /*
     Function: isVisible
@@ -284,15 +176,8 @@ var ShiftSpaceSpace = new Class({
   {
     if(!this.interfaceIsBuilt() )
     {
-      if(this.cssIsLoaded())
-      {
-        this.buildInterface();
-        this.setInterfaceIsBuilt(true);
-      }
-      else
-      {
-        this.__deferredContent = true;
-      }
+      this.buildInterface();
+      this.setInterfaceIsBuilt(true);
     }
   },
 
@@ -435,22 +320,12 @@ var ShiftSpaceSpace = new Class({
   */
   createShift: function(newShift)
   {
-    if(this.cssIsLoaded())
-    {
-      this.addShift(newShift);
-      this.fireEvent('onCreateShift', { 
-        space: this, 
-        shift: newShift 
-      });
-      return newShift;
-    }
-    else
-    {
-      // we need to load these when the css is done
-      this.addDeferredNew(newShift);
-    }
-
-    return null;
+    this.addShift(newShift);
+    this.fireEvent('onCreateShift', { 
+      space: this, 
+      shift: newShift 
+    });
+    return newShift;
   },
 
   /*
@@ -466,10 +341,9 @@ var ShiftSpaceSpace = new Class({
     // destroy the shift
     if (this.shifts[shiftId])
     {
-        this.shifts[shiftId].destroy();
-        delete this.shifts[shiftId];
+      this.shifts[shiftId].destroy();
+      delete this.shifts[shiftId];
     }
-
     this.fireEvent('onDeleteShift', shiftId);
   },
   
@@ -545,53 +419,33 @@ var ShiftSpaceSpace = new Class({
   */
   showShift: function(aShift)
   {
-    if(!this.cssIsLoaded())
+    var cShift = this.shifts[aShift._id];
+    if(!cShift)
     {
-      this.__deferredShifts.push(aShift);
+      try
+      {
+        this.addShift(aShift);
+      }
+      catch(exc)
+      {
+        SSLog(SSDescribeException(exc));
+      }
+      cShift = this.shifts[aShift._id];
     }
-    else
+    if(cShift.canShow())
     {
-      var cShift = this.shifts[aShift._id];
-
-      if(!cShift)
+      if(this.getCurrentShift() && cShift != this.getCurrentShift()) this.getCurrentShift().onBlur();
+      this.setCurrentShift(cShift);
+      if(!cShift.isVisible())
       {
-        try
-        {
-          this.addShift(aShift);
-        }
-        catch(exc)
-        {
-          SSLog(SSDescribeException(exc));
-        }
-        cShift = this.shifts[aShift._id];
+        cShift._show();
+        cShift.show();
+        cShift.setIsVisible(true);
+        cShift.setIsBeingEdited(false);
       }
-
-      if(cShift.canShow())
-      {
-        if(this.getCurrentShift() &&
-           cShift != this.getCurrentShift())
-        {
-          this.getCurrentShift().onBlur();
-        }
-
-        this.setCurrentShift(cShift);
-
-        if(!cShift.isVisible())
-        {
-          cShift._show();
-          cShift.show();
-
-          cShift.setIsVisible(true);
-          cShift.setIsBeingEdited(false);
-        }
-
-        cShift.onFocus();
-      }
-
-      return cShift;
+      cShift.onFocus();
     }
-
-    return null;
+    return cShift;
   },
 
   /*
