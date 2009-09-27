@@ -18,6 +18,14 @@ Hash.implement({
 });
 
 
+/*
+Class: ApplicationServer
+  The main class for talking to a remote ShiftServer. This class tries to eliminate the
+  tedium of making remote requests. It leans heavily on the Promises library to eliminate
+  request management. It also manages notifying SSResource instances about the occurance
+  of calls made to the server. SSResource is the blue between local caches of server side
+  documents and the UI.
+*/
 var ApplicationServer = new Class({
   
   Implements: [Events, Options],
@@ -41,26 +49,52 @@ var ApplicationServer = new Class({
     this.setWatchers({});
   },
   
-  
+  /*
+    Function: setCache (private)
+      Set the cache hashmap.
+
+    Parameters:
+      cache - a object.
+   */
   setCache: function(cache)
   {
     this.__cache = cache;
   },
   
-  
+  /*
+    Function: cache
+      Returns a named cache or all caches. Can return the cache
+      as an unsorted array if specified.
+
+    Parameters:
+      name (optional) - the cache to return.
+      asArray - a boolean.
+
+    Returns:
+      A cache, all caches
+   */
   cache: function(name, asArray)
   {
     var result = (name) ? this.__cache[name] : this.__cache;
     if(asArray)
     {
-      result = $H(result).getValues();
+      result = (name) ? $H(result).getValues() : this.allCachedDocuments().getValues();
     }
     return result;
   },
   
-  
+  /*
+    Function: setDocument
+      Set a document in the cache. If no cache name specified will be placed in the
+      global cache.
+
+    Parameters:
+      cacheName (optional) - a string.
+      doc - a document.
+   */
   setDocument: function(cacheName, doc)
   {
+    cacheName = (cacheName) ? cacheName : 'global';
     if(doc && doc._id)
     {
       var cache = this.cache();
@@ -69,22 +103,44 @@ var ApplicationServer = new Class({
     }
   },
   
-  
-  updateCache: function(data, name)
+  /*
+    Function: updateCache (private)
+      Takes an array of documents and updates the specified cache. If
+      no cache is specified default to the global one.
+
+    Parameters:
+      docs - an arary of documents.
+      name - a string.
+   */
+  updateCache: function(docs, name)
   {
     var cache = this.cache(), name = (name) ? name : 'global';
     if(!cache[name]) cache[name] = {};
-    if($type(data) != 'array') data = $splat(data);
-    data.each(this.setDocument.partial(this, name));
+    if($type(docs) != 'array') docs = $splat(docs);
+    docs.each(this.setDocument.partial(this, name));
   },
   
-  
+  /*
+    Function: removeCache
+      Removes a cache by name.
+
+    Parameters:
+      name - a string.
+   */
   removeCache: function(name)
   {
     delete this.cache()[name];
   },
   
-  
+  /*
+    Function: deleteFromCache
+      Delete a document from the cache. If no cache name is specified will delete
+      that document from every cache.
+
+    Parameters:
+      id - document id.
+      name - a string.
+   */
   deleteFromCache: function(id, name)
   {
     var caches = this.cache();
@@ -97,7 +153,13 @@ var ApplicationServer = new Class({
     }
   },
   
-
+  /*
+    Function: allCachedDocuments
+      Returns a hash map of all the cached documents.
+    
+    Returns:
+      An object.
+   */
   allCachedDocuments: function()
   {
     var merged = {}, cache = this.cache();
@@ -105,71 +167,124 @@ var ApplicationServer = new Class({
     return merged;
   },
 
+  /*
+    Function: getDocument
+      Get a document from the cache by its id.
 
+    Parameters:
+      id - a document id.
+
+    Returns:
+      a document.
+   */
   getDocument: function(id)
   {
     return this.allCachedDocuments()[id];
   },
   
-  
-  documentForIndex: function(cacheName, idx)
-  {
-    return this.cache(cacheName, true)[idx];
-  },
-  
-  
+  /*
+    Function: setResources (private)
+      Set the hash map to store SSResource instances.
+
+    Parameters:
+      resource - a object.
+   */
   setResources: function(resources)
   {
     this.__resources = resources;
   },
   
-  
+  /*
+    Function: resources (private)
+      Returns the hash map of all SSResource instances used by this application server.
+
+    Returns:
+      A object.
+   */
   resources: function()
   {
     return this.__resources;
   },
   
-  
+
+  /*
+    Function: addResource (private)
+      Add a tracked resource. Not meant to be called directly. SSResource instances
+      add themselves.
+
+    Parameters:
+      resource - a SSResource instance.
+   */
   addResource: function(resource)
   {
     this.resources()[resource.getName()] = resource;
   },
   
-  
-  getResource: function(name)
-  {
-    return this.resources()[name];
-  },
+  /*
+    Function: setServer (private)
+      Set the server url. Not meant to be used directly. Server should be passed
+      as an option on instantiation. Consult documentation.
 
-  
+    Parameters:
+      url - a string.
+   */
   setServer: function(url)
   {
     this.__server = url;
   },
   
-  
+  /*
+    Function: server
+      Return the url used by this application server.
+
+    Returns:
+      A string.
+   */
   server: function()
   {
     return this.__server;
   },
   
+  /*
+    Function: isNull (private)
+      Utility for checking if a value is null.
+    
+    Parameters:
+      v - a JavaScript value.
 
+    Returns:
+      a boolean.
+   */
   isNull: function(v)
   {
     return v != null;
   },
   
-  
+  /*
+    Function: genUrl (private)
+      Generate the url for a server call.
+
+    Parameters:
+      parts - the parts of a url
+
+    See Also:
+      call
+   */
   genUrl: function(parts)
   {
     var ary = this.urlOrder.map(function(pname) {
       return parts[pname];
     }).filter(this.isNull);
-    
     return ary.join('/');
   },
   
-  
+  /*
+    Function: setWatchers (private)
+      Set the watchers hash map. Not meant to be called directly.
+
+    Parametesr:
+      watchers - a object.
+   */
   setWatchers: function(watchers)
   {
     this.__watchers = watchers;

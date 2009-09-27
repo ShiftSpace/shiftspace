@@ -54,6 +54,15 @@ function SSDeleteResource(name)
   SSPostNotification("resourceDelete", {name:name});
 }
 
+/*
+Class: SSResource
+  This class works with ApplicationServer to present a simple interface for
+  looking at server side data as an array of items. It is designed to work
+  closely with SSViews, in particular SSListView.
+
+See Also:
+  ApplicationServer, SSListView
+*/
 var SSResource = new Class({
 
   Implements: [Events, Options, Delegate],
