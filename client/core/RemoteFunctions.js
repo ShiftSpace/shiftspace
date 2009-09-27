@@ -104,6 +104,7 @@ var SSLoadFile = function(url)
       url.substr(0, 8) != 'https://') {
     url = String.urlJoin(SSInfo().server, url);
   }
+  SSLog("LOAD FILE:", url, SSLogRequest);
   // Load the URL then execute the callback
   return new Request({
     method: 'GET',

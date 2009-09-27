@@ -81,19 +81,27 @@ var ShiftSpace = new (function() {
       SSLog("ShiftSpace initializing", SSLogSystem);
       // INCLUDE PostInitDeclarations
       
-      // look for install links
+      SSLog("\tChecking for install links", SSLogSystem);
       SSCheckForInstallSpaceLinks();
+
+      SSLog("\tChecking localization support", SSLogSystem);
       if(SSLocalizedStringSupport()) SSLoadLocalizedStrings("en");
       
+      SSLog("\tLoading UI classes", SSLogSystem);
       // INCLUDE PACKAGE ShiftSpaceUI
-      
+      SSLog("\tInitializing UI", SSLogSystem);
+
+      SSLog("\tCreating console", SSLogSystem);
       ShiftSpace.Console = new SSConsole();
+      SSLog("\tCreating notifier view", SSLogSystem);
       ShiftSpace.Notifier = new SSNotifierView();
+      SSLog("\tCreating space menu", SSLogSystem);
       ShiftSpace.SpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
+      SSLog("\tCreating comments window", SSLogSystem);
       ShiftSpace.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
       ShiftSpace.Sandalphon = Sandalphon;
 
-      SSLog("ShiftSpace UI initialized", SSLogSystem);
+      SSLog("\tShiftSpace UI initialized", SSLogSystem);
       
       // Add to look up table
       ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
@@ -109,7 +117,7 @@ var ShiftSpace = new (function() {
       });
       
       SSLoadStyle('styles/ShiftSpace.css');
-      SSLog("Loading core styles", SSLogSystem);
+      SSLog("\tLoading core styles", SSLogSystem);
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -126,7 +134,7 @@ var ShiftSpace = new (function() {
       SSCreateModalDiv();
       SSCreateDragDiv();
 
-      SSLog("Synchronizing with server", SSLogSystem);
+      SSLog("\tSynchronizing with server", SSLogSystem);
       SSSync();
     };
     

@@ -17,7 +17,6 @@ Hash.implement({
   }
 });
 
-
 /*
 Class: ApplicationServer
   The main class for talking to a remote ShiftServer. This class tries to eliminate the
@@ -467,7 +466,8 @@ var ApplicationServer = new Class({
       options.data = JSON.encode(options.data);
       delete options.json;
     }
-    
+
+    SSLog("REQUEST:", options.url, SSLogRequest);
     return new Request(options);
   }.decorate(promise),
   

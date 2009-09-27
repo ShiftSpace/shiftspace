@@ -34,10 +34,6 @@ class SSPreProcessor:
             self.setEnv(env)
         self.export = export
         self.getMetaData()
-        for packageToRemove in self.proj['packages']['remove']:
-            self.metadata['packages'].pop(packageToRemove)
-        for fileToRemove in self.proj['files']['remove']:
-            self.metadata['files'].pop(fileToRemove)
 
     def getMetaData(self):
         fh = open('../config/packages.json')
@@ -111,7 +107,7 @@ class SSPreProcessor:
         logline2 = "\nif (SSInclude != undefined) SSLog('... complete.', SSInclude);\n"
         realName = os.path.splitext(os.path.basename(incFilename))[0]
         if realName in self.proj['files']['remove']:
-            return '// PROJECT OVERRIDE -- FILE NOT INCLUDED\n\n'
+            return '\n\n// PROJECT OVERRIDE -- FILE %s NOT INCLUDED\n\n' % realName
         if self.proj['files']['replace'].has_key(realName):
             incFilename = self.metadata['files'][realName]['path']
             return ''.join(['// PROJECT OVERRIDE -- INCLUDING ', incFilename, ' INSTEAD\n'])
@@ -126,10 +122,10 @@ class SSPreProcessor:
         source = []
         source.append('\n// === START PACKAGE [%s] ===\n' % package)
         if package in self.proj['packages']['remove']:
-            return '// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n'
+            return '\n\n// PROJECT OVERRIDE -- PACKAGE NOT INCLUDED\n\n'
         if self.proj['packages']['replace'].has_key(package):
             package = self.proj['packages']['replace'][package]
-            return '// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package
+            return '\n\n// PROJECT OVERRIDE -- INCLUDING PACKAGE %s INSTEAD\n' % package
         source.append('\nif(__sysavail__) __sysavail__.packages.push("%s");\n' % package)
         if not self.metadata['packages'].has_key(package):
             self.missingFileError(package)
@@ -159,7 +155,7 @@ class SSPreProcessor:
                                         preprocessed[end:]])
             elif fileIncludeMatch:
                 incFilename = fileIncludeMatch.group(1)
-                if not self.metadata['files'].has_key(incFilename):
+                if (not self.metadata['files'].has_key(incFilename)):
                     self.missingFileError(incFilename)
                 source = self.sourceForFile(self.metadata['files'][incFilename]['path'])
                 start = fileIncludeMatch.start()
@@ -174,6 +170,7 @@ class SSPreProcessor:
   
     def missingFileError(self, package):
         print "Error: no such package %s exists, perhaps you forgot to run corebuilder.py first?" % package
+        print json.dumps(self.metadata['files'])
         sys.exit(2)
               
     def preprocess(self, input=None, output=None):
