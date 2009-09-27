@@ -290,19 +290,44 @@ var ApplicationServer = new Class({
     this.__watchers = watchers;
   },
   
-  
+  /*
+    Function: watchers
+      Return the list of watchers.
+
+    Returns:
+      An array of watchers.
+   */
   watchers: function()
   {
     return this.__watchers;
   },
   
-  
+  /*
+    Function: watchersFor
+      Return the list of watchers for a resource specification.
+
+    Parameters:
+      rsrcSpec - a resource specification.
+
+    See Also:
+      SSResource.matchSpec
+   */
   watchersFor: function(rsrcSpec)
   {
     return this.__watchersFor__($hash(rsrcSpec));
   },
   
-  
+  /*
+    Function: __watchersFor__ (private)
+      Not meant to be called directly. Returns the list of watchers for
+      a hashed resource specfication.
+
+    Parameters:
+      rsrcSpecHashed - a hashed resource specification.
+
+    See Also:
+      watchersFor, $hash
+   */
   __watchersFor__: function(rsrcSpecHashed)
   {
     var watchers = this.watchers()[rsrcSpecHashed];
@@ -310,6 +335,17 @@ var ApplicationServer = new Class({
   },
   
   
+  /*
+    Function: addWatcher
+      Add a watcher for a resource specification.
+
+    Parameters:
+      watcher - a SSResource instance.
+      rsrcSpec - a resource specification.
+
+    See Also:
+      SSResource.matchSpec
+   */
   addWatcher: function(watcher, rsrcSpec)
   {
     var watchers = this.watchers(), hashed = $hash(rsrcSpec);
@@ -317,7 +353,14 @@ var ApplicationServer = new Class({
     watchers[hashed].push(watcher);
   },
   
-  
+  /*
+    Function: removeWatcher
+      Remove a wathcer for a resource specification.
+
+    Parameters:
+      watcher - a SSResource instance.
+      rsrcSpec - a resource specification.
+   */
   removeWatcher: function(watcher, rsrcSpec)
   {
     var watchers = this.watchers();
@@ -334,7 +377,13 @@ var ApplicationServer = new Class({
     }
   },
   
-  
+  /*
+    Function: specsForWatcher (private)
+      Returns the resource specifications for a watcher.
+   
+    Parameters:
+      watcher - a SSResource instance.
+   */
   specsForWatcher: function(watcher)
   {
     var watchers = this.watchers(), result = [];
@@ -345,7 +394,15 @@ var ApplicationServer = new Class({
     return result;
   },
   
-  
+  /*
+    Function: notifyWatchers (private)
+      Notify all watchers listening for a particular resource specification.
+
+    Parameters:
+      rsrcSpec - a resource specification.
+      value - the document value.
+      oldValue - the previous document value if applicable.
+   */
   notifyWatchers: function(rsrcSpec, value, oldValue)
   {
     var resourceSpec = $hash($H(rsrcSpec).extract(['resource', 'method'], true));
@@ -375,6 +432,22 @@ var ApplicationServer = new Class({
   },
   
   
+  /*
+    Function: call (private)
+      Main function for producing promises for requests to the server.
+    
+    Parameters:
+      options - the following options are supported
+        resource, the resource 
+	id, the id of the resource being acted upon
+	method, the url method (post, get, put, delete)
+	action, the action to take on the resource
+	data, url paramaters or json payload
+	json, whether to send data as a JSON string
+	
+    Returns:
+      A promise.
+   */
   call: function(options)
   {
     var urlParts = $H(options).extract(this.urlOrder);
@@ -398,7 +471,19 @@ var ApplicationServer = new Class({
     return new Request(options);
   }.decorate(promise),
   
-  
+  /*
+    Function: create
+      Create a new document using the specified data and resource type.
+
+    Parameters:
+      resource - the resource type
+      data - the contents of the new resource
+      options - the following options are allowed
+        local, associate the new document with a named cached.
+
+    Returns:
+      A promise for the newly created document.
+   */
   create: function(resource, data, options)
   {
     var p = this.call({resource:resource, method:'post', data:data, json: true});
@@ -419,7 +504,16 @@ var ApplicationServer = new Class({
     return p;
   },
   
-  
+  /*
+    Function: read
+      Read a resource.
+
+    Parameters:
+      resource - the resource type.
+      id - the resource id.
+      options - the following options are supported
+        local, associated the loaded document with a named cache.
+   */
   read: function(resource, id, options)
   {
     var p = this.call({resource:resource, id:id, method:'get'});
@@ -440,7 +534,20 @@ var ApplicationServer = new Class({
     return p;
   },
   
-  
+  /*
+    Function: update
+      Update a remote document.
+    
+    Paramters:
+      resource - the resource type.
+      id - the resouurce id.
+      data - the updated document.
+      options - the following option are supported
+        local, update the specified named cache, otherwise all caches are updated.
+
+    Returns:
+      A promise for the updated document.
+   */
   update: function(resource, id, data, options)
   {
     var p = this.call({resource:resource, id:id, method:'put', data:data, json: true});
@@ -462,7 +569,20 @@ var ApplicationServer = new Class({
     return p;
   },
   
-  
+  /*
+    Function:
+      Delete a document from the server.
+
+    Parameters:
+      resource - a resource type.
+      id - a resource id.
+      options - the following options are supported
+        local, delete only from a specified cache. Otherwise this document is deleted from
+	  all caches.
+
+     Returns:
+       A promise for the ack.
+   */
   'delete': function(resource, id, options)
   {
     var p = this.call({resource:resource, id:id, method:'delete'});
@@ -483,7 +603,19 @@ var ApplicationServer = new Class({
     return p;
   },
   
-  
+  /*
+    Function: post
+      A simplified way to run other actions on remote resources.
+      
+    Parameters:
+      postOptions - the following options are supported
+        resource, the resource type
+	id, a resource id
+	action, the action to take
+
+     Returns:
+       A proimse for the server return value.
+   */
   post: function(postOptions, options)
   {
     var p = this.call($merge(postOptions, {method:'post'}));
@@ -505,7 +637,19 @@ var ApplicationServer = new Class({
     return p;
   },
   
-  
+  /*
+    Function: get
+      A simplified way to make a get request to the server.
+
+    Parameters:
+      getOptions - the following options are supported
+        resource, the resource type
+	id, a resource id
+	action, the action to take
+
+    Returns:
+      A promise for the server return value.
+   */
   get: function(getOptions, options)
   {
     var p = this.call($merge(getOptions, {method:'get'}));
