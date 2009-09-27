@@ -2,20 +2,20 @@ window.addEvent('domready', initInstallButton);
 
 function initInstallButton()
 {
-  $('install').addEvent('click', compileAndLoad);
+  $('install').addEvent('click', load);
 }
 
-function compileAndLoad()
+function load()
 {
   new Request({
     method: 'get',
-    url: 'install.php',
+    url: '/build',
     onComplete: function(responseText)
     {
       var json = JSON.decode(responseText);
-      if(json.data == 'ok')
+      if(json.message == 'ok')
       {
-        window.open('../builds/shiftspace.dev.user.js');
+        window.open('/builds/shiftspace.dev.user.js');
       }
     }
   }).send();

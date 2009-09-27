@@ -66,9 +66,9 @@ Class: ShiftSpace
   <ShiftSpace.Space>, <ShiftSpace.Shift>, <ShiftSpace.Plugin> to see public
   interfaces.
 */
-
 var ShiftSpace = new (function() {
     // INCLUDE Bootstrap
+    SSLog("ShiftSpace starting up", SSLogSystem);
     var SSApp = SSApplication();
 
     /*
@@ -78,6 +78,7 @@ var ShiftSpace = new (function() {
 
     */
     this.initialize = function() {
+      SSLog("ShiftSpace initializing", SSLogSystem);
       // INCLUDE PostInitDeclarations
       
       // look for install links
@@ -91,6 +92,8 @@ var ShiftSpace = new (function() {
       ShiftSpace.SpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
       ShiftSpace.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
       ShiftSpace.Sandalphon = Sandalphon;
+
+      SSLog("ShiftSpace UI initialized", SSLogSystem);
       
       // Add to look up table
       ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
@@ -106,6 +109,7 @@ var ShiftSpace = new (function() {
       });
       
       SSLoadStyle('styles/ShiftSpace.css');
+      SSLog("Loading core styles", SSLogSystem);
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -120,7 +124,9 @@ var ShiftSpace = new (function() {
       SSCreatePinSelect();
       SSCheckForPageIframes();
       SSCreateModalDiv();
-      SSCreateDragDiv();      
+      SSCreateDragDiv();
+
+      SSLog("Synchronizing with server", SSLogSystem);
       SSSync();
     };
     
@@ -137,6 +143,7 @@ var ShiftSpace = new (function() {
 		   function(userIsLoggedIn) {
 		     ShiftSpace.User.syncData(p1);
 		     SSPostNotification('onUserLogin');
+		     SSLog("Synchronized", SSLogSystem);
 		     return true;
 		   }, true);
       p2.op(function(value) {
@@ -163,10 +170,7 @@ var ShiftSpace = new (function() {
       if(!ui.every($msg('isLoaded')))
       {
         ui.each($msg('addEvent', 'load', function(obj) {
-          if(ui.every($msg('isLoaded')))
-          {
-            SSPostNotification("onSync");
-          }
+          if(ui.every($msg('isLoaded'))) SSPostNotification("onSync");
         }.bind(this)))
       }
       else
@@ -202,6 +206,7 @@ var ShiftSpace = new (function() {
           }
         }
       }
+      SSLog("setup complete", SSLogSystem);
     }
 
     // TODO: write some documentation here

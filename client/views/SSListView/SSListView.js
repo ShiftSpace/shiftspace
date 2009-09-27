@@ -1108,11 +1108,13 @@ var SSListView = new Class({
   },
   
   /*
-    Function: reloadData (private)
-      Called by refresh(). Checks the length of the current collection data, and clears the currently loaded collection data.  If the collection array contains data, it resizes the elements and applies set filters. If the collection is not pending, the content is displayed.
-      
-    Parameters:
-      p - for flow control you can pass a promise.
+    Function: reloadData
+      Called by refresh(). Calls private  __reloadData__ which actually does
+      the work. If the list view data source is an SSResource instance will
+      call SSResource's read method which returns a promise.
+
+    See Also:
+      SSResource
   */
   reloadData: function()
   {
@@ -1125,7 +1127,14 @@ var SSListView = new Class({
     this.__reloadData__(controlp);
   },
   
-  
+  /*
+    Function: __reloadData__ (private)
+      Clears out all of the cells and reloads data directly from the
+      list view's data source. Fires 'onReloadData' data event.
+
+    Parameters:
+      p - a control promise.
+   */
   __reloadData__: function(p)
   {
     var len = this.data().length;

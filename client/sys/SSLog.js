@@ -1,6 +1,5 @@
 // ==Builder==
 // @required
-// @package           System_
 // ==/Builder==
 
 // Internal Error Logging, trust me, you don't need this - kisses ShiftSpace Core Robot
@@ -33,53 +32,64 @@ Parameters:
   msg - The message to be logged in the JavaScript console.
   verbose - Force the message to be logged when not in debug mode.
 */
-function SSLog() 
+function SSLog()
 {
   var type = $A(arguments).getLast();
-  var args = $A(arguments).drop(1);
-  if (typeof console == 'object' && SSLog) 
+  var args = $A(arguments).slice(0, arguments.length-1);
+  if(__ssloglevel == SSLogAll || (type && (__ssloglevel & type)) || 
+     type == SSLogForce || 
+     type == SSLogError ||
+     type == SSLogWarning)
   {
-    if(__ssloglevel == SSLogAll || (type && (__ssloglevel & type)) || 
-       type == SSLogForce || 
-       type == SSLogError ||
-       type == SSLogWarning)
+    if(typeof ShiftSpaceSandBoxMode != 'undefined')
     {
-      if(!Browser.Engine.webkit)
+       if(!Browser.Engine.webkit)
+       {
+         if(type == SSLogError)
+         {
+           console.error.apply(null, args);
+         }
+         else if(type == SSLogWarning)
+         {
+           console.warn.apply(null, args);
+         }
+         else
+         {
+           console.log.apply(null, args);
+         }
+       }
+       else
+       {
+         if(type == SSLogError)
+         {
+           console.error(args);
+         }
+         else if(type == SSLogWarning)
+         {
+           console.warn(args);
+         }
+         else
+         {
+           console.log(args);
+         }
+       }
+    }
+    else
+    {
+      if(type == SSLogError)
       {
-        if(type == SSLogError)
-        {
-          console.error.apply(null, args);
-        }
-        else if(type == SSLogWarning)
-        {
-          console.warn.apply(null, args);
-        }
-        else
-        {
-          console.log.apply(null, args);
-        }
+	GM_log.apply(null, ['ERROR:'].combine(args));
+      }
+      else if(type == SSLogWarning)
+      {
+	GM_log.apply(null, ['WARNING:'].combine(args));
       }
       else
       {
-        if(type == SSLogError)
-        {
-          console.error(args);
-        }
-        else if(type == SSLogWarning)
-        {
-          console.warn(args);
-        }
-        else
-        {
-          console.log(args);
-        }
+	GM_log.apply(null, args);
       }
     }
   } 
-  else if (typeof GM_log != 'undefined') 
-  {
-    GM_log.apply(null, args);
-  }
 }
 
 function SSSetLogLevel(level)

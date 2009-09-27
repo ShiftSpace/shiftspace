@@ -43,3 +43,54 @@ new SSResource("Groups", {
   watch: {"cud group": SSResource.dirty},
   delegate: "GroupsPane"
 });
+
+EUREKA!
+================================================================================
+
+this.favorites = new SSResource("Favorites", {
+  resource: {read:{resource:'user', id:ShiftSpaceUser.getUserName(), action:'favorites'}},
+  transforms: [this.favoriteTransform],
+  watches: [{
+    events: [{resource:"shift", action:"favorite"},
+             {resource:"shift", action:"unfavorite"}],
+    handlers: [SSResource.dirtyTheViews]
+  }],
+  views: [this.MyFavoritesListView]
+});
+
+// resource defines how the resource interacts with the server
+// it also defines when the resource triggers onCreate, onRead
+// onUpdate, and onDelete events. SSListViews will use these
+// for animations. Then there are the bindings which are
+// application specific customizations. These don't usually
+// require animations.
+
+// PROBLEM:
+// routes needs to be an exact match, we don't care about
+// POST shift/id/comment for example. We can't use the technique
+// we use for bindings.routes. Don't want it to be confusing.
+
+// Need a usage document ASAP.
+
+this.allShifts = new SSResource("AllShifts", {
+  routes:{  create: {resource:'shift', id:"*"},
+	      read: {resource:'shifts'},
+	    update: {resource:'shift', id:"*"},
+          'delete': {resource:'shift', id:"*"}},
+  bindings: [{
+                  match:[{resource:"shift", action:"favorite"},
+                         {resource:"shift", action:"unfavorite"},
+   			 {resource:"shift", action:"publish"},
+			 {resource:"shift", action:"unpublish"},
+			 {resource:"shift", action:"comment"}],
+               handlers: [SSResource.update]
+             }],
+  delegate: this.PublishPane,
+  views: [this.AllShiftsListView]
+});
+
+SSResource.update = function(newValue, oldValue) 
+{
+  SSApp.setDocument(doc, this.getName());
+  this.fireEvent('onUpdate', {index:this.indexOf(doc), newValue:newValue, oldValue:oldValue});
+};
