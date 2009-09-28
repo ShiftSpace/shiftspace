@@ -8,10 +8,16 @@ var HelloWorldShift = new Class({
   
   setup: function(json) {
     // set the position
+    this.element.setStyles({
+      left: json.position.x,
+      top: json.position.y
+    });
+    // add your custom events
     this.addEvents();
+    // add your interface to the page
+    $(document.body).grab(this.element);
   },
   
-  // add events here
   addEvents: function(){
     this.element.makeDraggable({
       handle: this.element,
