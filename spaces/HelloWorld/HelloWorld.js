@@ -3,23 +3,21 @@ var HelloWorldSpace = new Class({
   name: "HelloWorld"
 });
 
-var HelloWorldalphonShift = new Class({
-  
+var HelloWorldShift = new Class({
   Extends: ShiftSpace.Shift,
   
   setup: function(json) {
-    console.log("happy0");
+    // set the position
+    this.addEvents();
   },
   
-  onReady: function() {
-  },
-  
+  // add events here
   addEvents: function(){
-    $('SSHWmain').makeDraggable({
+    this.element.makeDraggable({
       handle: this.element,
       onComplete: this.save.bind(this)
     });
   }
 });
 
-var HelloWorld = new HelloWorld(HelloWorldShift);
+var HelloWorld = new HelloWorldSpace(HelloWorldShift);
