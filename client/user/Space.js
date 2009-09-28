@@ -246,17 +246,19 @@ var ShiftSpaceSpace = new Class({
       contents of the passed in Object.
 
     Parameters:
-      Takes a shift JSON object and creates and attaches event handlers.
+      aShift - shift JSON object.
+      ui (optional) - markup for the shift interface as a string.
 
     Returns:
       The internal shift instance.
   */
-  addShift: function(aShift)
+  addShift: function(aShift, ui)
   {
+    var el = (ui) ? Sandalphon.convertToFragment(ui) : null;
     // create the new shift
     try
     {
-      var newShift = new this.shiftClass(aShift);
+      var newShift = new this.shiftClass(aShift, {element: el});
     }
     catch(exc)
     {
@@ -295,7 +297,7 @@ var ShiftSpaceSpace = new Class({
 
     this.__shifts[newShift.getId()] = newShift;
     return this.__shifts[newShift.getId()];
-  },
+  }.asPromise(),
 
   /*
     Function: allocateNewShift
@@ -319,13 +321,23 @@ var ShiftSpaceSpace = new Class({
   */
   createShift: function(newShift)
   {
-    this.addShift(newShift);
-    this.fireEvent('onCreateShift', { 
-      space: this, 
-      shift: newShift 
-    });
-    return newShift;
+    var shift = this.addShift(newShift, this.shiftUI()), self = this;
+    // return the shift immediately or a promise if there's a ui
+    return (function(newShift) {
+      self.fireEvent('onCreateShift', {
+	space: self, 
+	shift: newShift
+      });
+      return newShift;
+    }.asPromise())(shift);
   },
+
+  shiftUI: function()
+  {
+    var uip, attrs = this.attributes();
+    if(attrs.shiftui) uip = SSLoadFile(attrs.url.urlJoin(attrs.shiftui));
+    return uip;
+  }.decorate(memoize),
 
   /*
     Function : deleteShift

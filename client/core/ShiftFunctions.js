@@ -37,17 +37,19 @@ var SSInitShift = function(space, options)
     content: {position: position}
   };
   
-  var newShift = space.createShift(shift);
+  var shiftInstanceP = space.createShift(shift);
   
-  if(newShift)
-  {
-    SSApp.setDocument('global', newShift);
-    SSShowNewShift(space, shift);
-  }
-  else
-  {
-    SSLog("There was an error creating the shift", SSLogError);
-  }
+  $if(shiftInstanceP,
+      function() 
+      {
+	SSApp.setDocument('global', shift);
+	SSShowNewShift(space, shift);
+      },
+      function()
+      {
+	SSLog("There was an error creating the shift", SSLogError);
+      }
+     );
 }.asPromise();
 
 /*

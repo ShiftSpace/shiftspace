@@ -33,9 +33,10 @@ var ShiftSpaceShift = new Class({
   initialize: function(data, options)
   {
     this.setOptions(this.defaults(), options);
-
+    
     var id = data._id;
     this.defaults = this.options;
+    if(this.options.element) this.element = this.options.element;
 
     this.setId = function(aId) {
       if(id == null || id.substr(0, 8) == 'newShift') id = aId;
