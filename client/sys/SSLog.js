@@ -78,15 +78,15 @@ function SSLog()
     {
       if(type == SSLogError)
       {
-	GM_log.apply(null, ['ERROR:'].combine(args));
+	GM_log(['ERROR:'].combine(args));
       }
       else if(type == SSLogWarning)
       {
-	GM_log.apply(null, ['WARNING:'].combine(args));
+	GM_log(['WARNING:'].combine(args));
       }
       else
       {
-	GM_log.apply(null, args);
+	GM_log(args);
       }
     }
   } 

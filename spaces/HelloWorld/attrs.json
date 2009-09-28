@@ -1,0 +1,9 @@
+{
+  name: 'HelloWorld',
+  authors: ['justin', 'dnolen'],
+  icon: 'HelloWorld.png',
+  css: 'HelloWorld.css',
+  description: 'HelloWorld example for ShiftSpace 1.0',
+  tooltip: 'The Fantabulous HelloWorld Space',
+  version: 0.1
+}
