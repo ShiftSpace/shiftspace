@@ -2,10 +2,9 @@ var HelloWorldSpace = Space();
 var HelloWorldShift = Shift({
   setup: function(json) {
     this.messageValue = json.message || "Hello World!";
-    this.element.setStyles({left: json.position.x, top: json.position.y});
+    this.setPosition(json.position);
     this.element.set('text', this.messageValue);
     this.addEvents();
-    $(document.body).grab(this.element);
     this.save();
   },
   
@@ -25,11 +24,10 @@ var HelloWorldShift = Shift({
   },
 
   encode: function() {
-    var pos = this.element.getPosition();
     return {
       summary: this.messageValue,
       message: this.messageValue,
-      position: pos
+      position: this.getPosition()
     };
   }
 });

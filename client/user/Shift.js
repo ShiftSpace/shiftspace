@@ -48,6 +48,12 @@ var ShiftSpaceShift = new Class({
     if(data._id) this.setId(data._id);
     this.setTitle(data.summary || '');
     this.setup(data.content);
+
+    var mv = this.getMainView();
+    if(mv && mv.getParent() == null)
+    {
+      $(document.body).grab(mv);
+    }
   },
   
   /*
@@ -170,7 +176,7 @@ var ShiftSpaceShift = new Class({
   */
   encode: function()
   {
-    return {};
+    if(this.getMainView()) return {position: this.getPosition()};
   },
 
   /*
@@ -385,8 +391,8 @@ var ShiftSpaceShift = new Class({
 
   getRegion: function()
   {
-    var pos = this.getMainView().getPos();
-    var size = this.getMainView().getSize().size;
+    var pos = this.getMainView().getPosition();
+    var size = this.getMainView().getSize();
 
     return {
       left : pos.x,
@@ -743,5 +749,32 @@ var ShiftSpaceShift = new Class({
   errorView: function(err)
   {
 
+  },
+
+  setPosition: function(pos)
+  {
+    this.getMainView().setStyles({
+      left: pos.x,
+      top: pos.y
+    });
+  },
+
+  getPosition: function(pos)
+  {
+    return this.getMainView().getPosition();
+  },
+
+  makeDraggable: function(options)
+  {
+    if(this.getMainView())
+    {
+      this.getMainView().makeDraggable(
+	$merge({onComplete:this.save.bind(this)}, options)
+      );
+    }
+    else
+    {
+      SSLog("This shift doesn't not have a main view or element", SSLogError);
+    }
   }
 });
