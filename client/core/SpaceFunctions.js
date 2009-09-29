@@ -44,18 +44,36 @@ function SSLoadSpace(spaceName)
   else if(spaceName)
   {
     var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
+    var attrs = SSGetSpaceAttributes(spaceName);
     var codep = SSLoadFile(url);
-    var cssp = SSLoadStyle(SSGetSpaceAttributes(spaceName).css);
+    var cssp = SSLoadStyle(attrs.css);
     var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
         function() {
           try
           {
-            var space = SSRegisterSpace(ShiftSpace.__externals.evaluate('(function(){'+codep.value()+' return '+spaceName+';})()'));
+	    var spacector = attrs.className || (spaceName+'Space');
+	    var shiftctor = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
+	    var ctors =  ShiftSpace.__externals.evaluate(
+	      codep.value(),
+	      [spacector, shiftctor]
+	    );
+	    if(!ctors[spacector])
+	    {
+	      throw new Exception(
+		spaceName + "Space constructor does not exist! Did you specify the proper class name in your attrs.json file?"
+	      );
+	    }
+	    if(!ctors[shiftctor])
+	    {
+	      throw new Exception(
+		spaceName + "Shift constructor does not exit! Did you specify the proper shift class name in your attrs.json file?"
+	      );
+	    }
+            var space = new ctors[spacector](ctors[shiftctor]);
           }
           catch(exc)
           {
-            console.error('Error loading ' + spaceName + ' Space - ' + SSDescribeException(exc));
-            //throw exc;
+            SSLog('Could not load ' + spaceName + ' Space - ' + SSDescribeException(exc), SSLogError);
           }
           SSPostNotification("onSpaceLoad", space);
 	  return space;

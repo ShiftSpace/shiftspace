@@ -1,8 +1,5 @@
 var HighlightsSpace = new Class({
-  
   Extends: ShiftSpace.Space,
-  name: "Highlights",
-
 
   setup: function()
   {
@@ -423,6 +420,4 @@ var HighlightsShift = new Class({
   }
 
 });
-
-var Highlights = new HighlightsSpace(HighlightsShift);
 

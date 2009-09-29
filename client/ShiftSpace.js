@@ -273,11 +273,16 @@ var ShiftSpace = new (function() {
 
 // NOTE: To keep SS extensions out of private scope - David
 ShiftSpace.__externals = {
-  evaluate: function(external, object)
+  evaluate: function(external, extract)
   {
+    var result = {};
     with(ShiftSpace.__externals)
     {
-      return eval(external);
+      eval(external);
+      extract.each(function(sym) {
+	result[sym] = eval(sym);
+      });
     }
+    return result;
   }
 };

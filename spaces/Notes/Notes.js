@@ -1,24 +1,15 @@
 // Notes does need to manage the rendering order of the notes
 var NotesSpace = new Class({
-
   Extends: ShiftSpace.Space,
-  name: 'Notes',
-
   onShiftFocus: function(shiftId)
   {
-    if(this.isNewShift(shiftId))
-    {
-      this.editShift(shiftId);
-    }
+    if(this.isNewShift(shiftId)) this.editShift(shiftId);
   }
-  
 });
 
 
 var NotesShift = new Class({
-
   Extends: ShiftSpace.Shift,
-  name: 'NotesShift',
 
   defaults: function()
   {
@@ -29,8 +20,7 @@ var NotesShift = new Class({
     });
   },
 
-  /*
-  */
+
   setup: function(json)
   {
     this.noteText = (json.noteText && json.noteText.replace(/<br\/>/g, "\n")) || null;
@@ -222,10 +212,7 @@ var NotesShift = new Class({
 
   updateText: function(_evt)
   {
-    if(this.inputArea)
-    {
-      this.noteText = $(this.inputArea).getProperty('value');
-    }
+    if(this.inputArea) this.noteText = $(this.inputArea).getProperty('value');
   },
 
 
@@ -625,7 +612,4 @@ var NotesShift = new Class({
     bottomEdge.injectInside(this.element);
     corner.injectInside(this.element);
   }
-
 });
-
-var Notes = new NotesSpace(NotesShift);
