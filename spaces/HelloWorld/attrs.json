@@ -1,6 +1,6 @@
 {
   name: 'HelloWorld',
-  authors: ['justin', 'dnolen'],
+  authors: ['justin', 'dphiffer', 'dnolen'],
   icon: 'HelloWorld.png',
   description: 'HelloWorld example for ShiftSpace 1.0',
   tooltip: 'The Fantabulous HelloWorld Space',
