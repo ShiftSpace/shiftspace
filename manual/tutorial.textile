@@ -60,18 +60,19 @@ When a user clicks on the Shift Menu to create a new Shift, the following sequen
   A JSON object with the following properties is generated:
 <pre>
 {
-  id: "newShift4928",  // A temporary ID, replaced upon saving
-  space: "HelloWorld", // The name of the space that was invoked 
-  username: "alice",   // The username of the author
-  position: {          // Page coordinates where the shift was created
-    x: 482,
-    y: 32
+  id: "newShift4928",           // A temporary ID, replaced upon saving
+  space: "HelloWorld",          // The name of the space that was invoked 
+  username: "alice",            // The username of the author
+  ...                           // many other private fields
+  content: {
+    position: { x: 482, y: 3 2} // Page coordinates where the shift was created
   }
 }
 </pre>
 </li>
 <li>The <tt>createShift</tt> method of ShiftSpace.Space is called, passing it the JSON object</li>
-<li>A new Shift object instance is created, and the <tt>setup</tt> method is passed the JSON object</li>
+<li>A new Shift object instance is created, and the <tt>setup</tt> method is passed the content field of the JSON object</li>
+</ol>
 
 h3. The space attributes file
 
@@ -90,13 +91,15 @@ Create a new text file called *attr.json* and make it look the following:
   description: 'My first space for ShiftSpace 1.0!',
   tooltip: 'The most awesome space evar!',
   version: 0.1,
-  spaceclass: 'HelloWorldSpace',
-  shiftclass: 'HelloWorldShift',
-  shiftui: "HelloWorld.html"
+  shift: { html: 'HelloWorld.html' }
 }
 </pre>
 
 This should be pretty self explanatory. One thing to note is the *shiftui* property that we've defined. In the past space developers had to define their interface by writing code. This ended up being a fairly time consuming and tedious affair. Since that time we developed a very useful system called Sandalphon which allows us to design our interfaces using only HTML and CSS. Recently we've made it possible for you to access this functionality without having to know too much about how it works.
+
+h3. Note about conventions
+
+Note that we called the space class *HelloWorldSpace* and the shift class "HelloWorldShift". This is actually somewhat important. This is a convention. Notice that we did not write it as "HelloWorld_Space". Of course you don't have to follow conventions, but the ShiftSpace runtime cannot read your mind. If you have a different name convention you would like to use you will need to specify this. If you want to use a different name for your space class specify a *className* property. For a different shift class name use *shift.className*.
 
 h3. Designing your interface with HTML and CSS
 
@@ -129,12 +132,63 @@ I know it's hard to believe but that's it. Now for our CSS file. Create a new fi
 
 h2. Installing your space
 
-The two classes you've created represent the absolute minimum amount of code required to create a new Space. To try out what you've done so far you'll need to make an object instance of your Space and install it onto your ShiftSpace client software.
+To install your space simply click on the Setting tab of the ShiftSpace Console. From there click on the Spaces subtab. You should see a list including the pre-installed spaces. Scroll down to the input field. Type in 'HelloWorld' and click the Install button. Careful, Space names are case sensitive. You should see your Space icon appear along with the name underneath the default installed Spaces.
 
-h3. Creating an object instance
+h2. Making it do something
 
-The final stage in making your HelloWorld Space code ready to load into ShiftSpace is creating an object instance of your newly created Space class. This is achieved by adding the following line of code to the bottom of your source code:
+So now what you have is a Space that, technically, satisfies all the requirements of the ShiftSpace platform. Except it doesn't actually do anything! This final section will explain how to make your HelloWorld Space actually do something.
+
+h3. Initializing the shift
+
+Let's jump back to the code to put some content on the page. Let's add a some more code into the HelloWorldShift.
 
 <pre>
-var HelloWorld = new HelloWorldSpace(HelloWorldShift);
+var HelloWorldShift = new Class({
+  Extends: ShiftSpace.Shift,
+
+  setup: function(json) {
+    this.element.setStyles({left: json.position.x, top: json.position.y});
+    $(document.body).grab(this.element);
+  }
+}
 </pre>
+
+h3. Saving the shift
+
+While the above is enough for you to see something appear, it's not enough to make the shift persist in the database. Do that you need to call the *Shift.save* method like so:
+
+<pre>
+var HelloWorldShift = new Class({
+  Extends: ShiftSpace.Shift,
+
+  setup: function(json) {
+    this.element.setStyles({left: json.position.x, top: json.position.y});
+    $(document.body).grab(this.element);
+    this.save();
+  },
+  
+  encode: function() {
+    var pos = this.element.getPosition();
+    return {
+      summary : 'A hello world shift',
+      position : pos
+    };
+  }
+}
+</pre>
+
+Note that we adde a new method - *Shift.encode*. When you call *Shift.save*, ShiftSpace calls your encode method to get values you think are worth saving. Each field that you encode will be handed back to you in *setup*. So if you save a shift, reload the page and then click it in the console, ShiftSpace will load those values you encoded and make sure they get sent back to your shift.
+
+Again *encode* like *setup* are not methods you call yourself. ShiftSpace will call these methods for you at the proper time. While this approach may seem odd at first, it really frees you up to concern yourself only with the kinds of actions and behaviors you would like your space to provide.
+
+This is all the code that is required to display your shift on the screen and persist it. Try it out, refresh your browser and select the HelloWorld space from the space menu. You should see a HelloWorld shift appear somewhere towards the center of the screen. Note that *this.element* was set to the markup that you specified in the *shift.html* field of your *attrs.json* file.
+
+h2. Enhancements
+
+You have now created a fully functional Space, albeit one that lacks any meaningful purpose. These last few steps will illustrate how you might proceed next in making this more useful to users.
+
+h3. Making it draggable
+
+h3. Changing the message
+
+h3. The finished code

@@ -3,10 +3,8 @@
 
   <div class="SSControlView">
     <div title="Installed" class="SSButton SSLocalized">Installed</div>
-    <div title="Plugins" class="SSButton SSLocalized">Plugins</div>
     <div title="Account" class="SSButton SSLocalized">Account</div>
     <div title="Account" class="SSButton SSLocalized">Language</div>
-    <div title="Account" class="SSButton SSLocalized">Developer</div>
   </div>
 
   <div class="SSContentView">
@@ -43,8 +41,7 @@
       </ul>
       <!-- End Installed Spaces List -->
     </div>
-    <div class="SSTabPane">Pane 2</div>
-    <div class="SSTabPane">Pane 3</div>
+    <div class="SSTabPane">Account</div>
     <div class="SSTabPane">
       <select id="SSSelectLanguage" outlet="SSConsole">
         <option value="en">English</option>
@@ -53,15 +50,6 @@
         <option value="sv">Swedish</option>
         <option value="ko">Korean</option>
       </select>
-    </div>
-    <div id="SSSetServers" class="SSTabPane" outlet="SSConsole">
-      <form id="SSSetServersForm">
-        <label>API:</label>
-        <input id="SSSetApiURLField" type="text" name="SSSetApiURLField" outlet="SSConsole"></input>
-        <br/>
-        <label>Spaces Directory:</label>
-        <input id="SSSetSpaceDirField" type="text" name="SSSetSpaceDirField" outlet="SSConsole"></input>
-      </form>
     </div>
   </div>
 
