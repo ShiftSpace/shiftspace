@@ -1,6 +1,5 @@
 var HelloWorldSpace = new Class({
   Extends: ShiftSpace.Space,
-  name: "HelloWorld"
 });
 
 var HelloWorldShift = new Class({
@@ -39,5 +38,3 @@ var HelloWorldShift = new Class({
     };
   }
 });
-
-var HelloWorld = new HelloWorldSpace(HelloWorldShift);
