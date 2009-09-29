@@ -1,8 +1,5 @@
-var HelloWorldSpace = new Class({Extends: ShiftSpace.Space});
-
-var HelloWorldShift = new Class({
-  Extends: ShiftSpace.Shift,
-  
+var HelloWorldSpace = Space();
+var HelloWorldShift = Shift({
   setup: function(json) {
     this.messageValue = json.message || "Hello World!";
     this.element.setStyles({left: json.position.x, top: json.position.y});

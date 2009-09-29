@@ -278,6 +278,12 @@ ShiftSpace.__externals = {
     var result = {};
     with(ShiftSpace.__externals)
     {
+      var Space = function(obj) {
+	return new Class($merge({Extends:ShiftSpace.Space}, obj));
+      };
+      var Shift = function(obj) {
+	return new Class($merge({Extends:ShiftSpace.Shift}, obj));
+      };
       eval(external);
       extract.each(function(sym) {
 	result[sym] = eval(sym);
