@@ -12,6 +12,7 @@ function SSGetShift(id)
 {
   var shift = SSApp.getDocument(id);
   if(shift) return shift;
+  SSLog("No local shift loading async", SSLogForce);
   var p = SSLoadShift(id);
   return p;
 }
@@ -326,9 +327,8 @@ var SSShowShift = function(space, shift)
 {
   try
   {
-    space.showShift(shift);
-    SSFocusShift(space, shift);
-    space.onShiftShow(shift._id);
+    var controlp = space.showShift(shift);
+    SSFocusShift(space, shift, controlp);
   }
   catch(err)
   {

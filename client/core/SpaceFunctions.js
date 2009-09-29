@@ -35,52 +35,46 @@ Parameters:
 Returns:
   a promise or the space instance.
 */
-function SSLoadSpace(spaceName)
+var SSLoadSpace = function(spaceName)
 {
-  if(spaceName && SSSpaceIsLoaded(spaceName))
-  {
-    return SSSpaceForName(spaceName);
-  }
-  else if(spaceName)
-  {
-    var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
-    var attrs = SSGetSpaceAttributes(spaceName);
-    var codep = SSLoadFile(url);
-    var cssp = SSLoadStyle(attrs.css);
-    var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
-        function() {
-          try
-          {
-	    var spacector = attrs.className || (spaceName+'Space');
-	    var shiftctor = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
-	    var ctors =  ShiftSpace.__externals.evaluate(
-	      codep.value(),
-	      [spacector, shiftctor]
-	    );
-	    if(!ctors[spacector])
-	    {
-	      throw new Exception(
-		spaceName + "Space constructor does not exist! Did you specify the proper class name in your attrs.json file?"
-	      );
-	    }
-	    if(!ctors[shiftctor])
-	    {
-	      throw new Exception(
-		spaceName + "Shift constructor does not exit! Did you specify the proper shift class name in your attrs.json file?"
-	      );
-	    }
-            var space = new ctors[spacector](ctors[shiftctor]);
-          }
-          catch(exc)
-          {
-            SSLog('Could not load ' + spaceName + ' Space - ' + SSDescribeException(exc), SSLogError);
-          }
-          SSPostNotification("onSpaceLoad", space);
-	  return space;
-        });
-    return spacep;
-  }
-}
+  var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
+  var attrs = SSGetSpaceAttributes(spaceName);
+  var codep = SSLoadFile(url);
+  var cssp = SSLoadStyle(attrs.css);
+  var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
+		   function() {
+		     try
+		     {
+		       var spacector = attrs.className || (spaceName+'Space');
+		       var shiftctor = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
+		       var ctors =  ShiftSpace.__externals.evaluate(
+			 codep.value(),
+			 [spacector, shiftctor]
+		       );
+		       if(!ctors[spacector])
+		       {
+			 throw new Exception(
+			   spaceName + "Space constructor does not exist! Did you specify the proper class name in your attrs.json file?"
+			 );
+		       }
+		       if(!ctors[shiftctor])
+		       {
+			 throw new Exception(
+			   spaceName + "Shift constructor does not exit! Did you specify the proper shift class name in your attrs.json file?"
+			 );
+		       }
+		       ctors[spacector].implement({attributes:function(){return attrs;}});
+		       var space = new ctors[spacector](ctors[shiftctor]);
+		     }
+		     catch(exc)
+		     {
+		       SSLog('Could not load ' + spaceName + ' Space - ' + SSDescribeException(exc), SSLogError);
+		     }
+		     SSPostNotification("onSpaceLoad", space);
+		     return SSRegisterSpace(space);
+		   });
+  return spacep;
+}.decorate(memoize);
 
 /*
 Function: SSRegisterSpace
@@ -556,6 +550,7 @@ function SSSetFocusedSpace(newSpace)
 */
 function SSSpaceForShift(id)
 {
+  SSLog("SSSpaceForShift", SSLogForce);
   var shift = SSGetShift(id);
   var spaceName = (Promise.isPromise(shift)) ? shift.get('space', 'name') : shift.space.name;
   return SSSpaceForName(spaceName);

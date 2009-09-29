@@ -212,7 +212,7 @@ var ShiftSpaceShift = new Class({
     this.fireEvent('onShiftDestroy', this.getId());
   },
 
-  _show: function()
+  __show__: function()
   {
 
   },
@@ -320,7 +320,7 @@ var ShiftSpaceShift = new Class({
   */
   getMainView: function()
   {
-    return this.mainView;
+    return this.mainView || this.element;
   },
 
   /*

@@ -17,7 +17,6 @@
     not the developer.  To get a better understanding of this please refer to the ShiftSpace tutorial.
 */
 var ShiftSpaceSpace = new Class({
-  
   Implements: [Events, Options],
   name: 'ShiftSpace.Space',
 
@@ -66,11 +65,6 @@ var ShiftSpaceSpace = new Class({
     return this;
   },
   
-  
-  attributes: function()
-  {
-    return SSInstalledSpaces()[this.name];
-  },
 
   /*
     Function: setup (abstract)
@@ -258,6 +252,7 @@ var ShiftSpaceSpace = new Class({
     // create the new shift
     try
     {
+      SSLog("Instantiating the shift", SSLogForce);
       var newShift = new this.shiftClass(aShift, {element: el});
     }
     catch(exc)
@@ -267,6 +262,7 @@ var ShiftSpaceSpace = new Class({
       throw exc;
     }
 
+    SSLog("Adding events to shift", SSLogForce);
     // listen for shift updates
     newShift.addEvent('onUpdate', this.updateShift.bind(this));
     // Set up events that console will listen to
@@ -296,7 +292,7 @@ var ShiftSpaceSpace = new Class({
     }.bind(this));
 
     this.__shifts[newShift.getId()] = newShift;
-    return this.__shifts[newShift.getId()];
+    return newShift;
   }.asPromise(),
 
   /*
@@ -321,6 +317,7 @@ var ShiftSpaceSpace = new Class({
   */
   createShift: function(newShift)
   {
+    SSLog("Creating a shift!", SSLogForce);
     var shift = this.addShift(newShift, this.shiftUI()), self = this;
     // return the shift immediately or a promise if there's a ui
     return (function(newShift) {
@@ -334,8 +331,8 @@ var ShiftSpaceSpace = new Class({
 
   shiftUI: function()
   {
-    var uip, attrs = this.attributes();
-    if(attrs.shiftui) uip = SSLoadFile(attrs.url.urlJoin(attrs.shiftui));
+    var uip, attrs = this.attributes(), html = $get(attrs, "shift", "html");
+    if(html) uip = SSLoadFile(attrs.url.urlJoin(html));
     return uip;
   }.decorate(memoize),
 
@@ -441,30 +438,35 @@ var ShiftSpaceSpace = new Class({
     var cShift = this.__shifts[aShift._id];
     if(!cShift)
     {
+      SSLog("No cached shift", SSLogForce);
       try
       {
-        this.addShift(aShift);
+        cShift = this.addShift(aShift, this.shiftUI());
+	SSLog("Got shift", cShift, SSLogForce);
       }
       catch(exc)
       {
         SSLog(SSDescribeException(exc));
       }
-      cShift = this.__shifts[aShift._id];
     }
-    if(cShift.canShow())
-    {
-      if(this.getCurrentShift() && cShift != this.getCurrentShift()) this.getCurrentShift().onBlur();
-      this.setCurrentShift(cShift);
-      if(!cShift.isVisible())
+    var self = this;
+    return (function(theShift) {
+      SSLog("Shift loaded", theShift, SSLogForce);
+      if(theShift.canShow())
       {
-        cShift._show();
-        cShift.show();
-        cShift.setIsVisible(true);
-        cShift.setIsBeingEdited(false);
+	if(self.getCurrentShift() && theShift != self.getCurrentShift()) self.getCurrentShift().onBlur();
+	self.setCurrentShift(theShift);
+	if(!theShift.isVisible())
+	{
+          theShift.__show__();
+          theShift.show();
+          theShift.setIsVisible(true);
+          theShift.setIsBeingEdited(false);
+	  self.onShiftShow(theShift);
+	}
+	theShift.onFocus();
       }
-      cShift.onFocus();
-    }
-    return cShift;
+    }.asPromise())(cShift);
   },
 
   /*
