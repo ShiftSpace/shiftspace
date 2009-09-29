@@ -286,7 +286,14 @@ ShiftSpace.__externals = {
       };
       eval(external);
       extract.each(function(sym) {
-	result[sym] = eval(sym);
+	try
+	{
+	  result[sym] = eval(sym);
+	}
+	catch(err)
+	{
+	  result[sym] = null;
+	}
       });
     }
     return result;

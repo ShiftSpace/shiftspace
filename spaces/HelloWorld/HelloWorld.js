@@ -1,4 +1,3 @@
-var HelloWorldSpace = Space();
 var HelloWorldShift = Shift({
   setup: function(json) {
     this.messageValue = json.message || "Hello World!";

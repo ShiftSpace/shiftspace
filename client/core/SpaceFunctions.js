@@ -45,26 +45,26 @@ var SSLoadSpace = function(spaceName)
 		   function() {
 		     try
 		     {
-		       var spacector = attrs.className || (spaceName+'Space');
-		       var shiftctor = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
+		       var spacectorName = attrs.className || (spaceName+'Space');
+		       var shiftctorName = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
 		       var ctors =  ShiftSpace.__externals.evaluate(
 			 codep.value(),
-			 [spacector, shiftctor]
+			 [spacectorName, shiftctorName]
 		       );
-		       if(!ctors[spacector])
+		       var spacector = ctors[spacectorName], shiftctor = ctors[shiftctorName];
+		       if(!spacector)
 		       {
-			 throw new Exception(
-			   spaceName + "Space constructor does not exist! Did you specify the proper class name in your attrs.json file?"
-			 );
+			 spacector = ShiftSpace.Space;
+			 SSLog("Could not find a constructor for " + spaceName + ", using default Space constructor", SSLogWarning);
 		       }
-		       if(!ctors[shiftctor])
+		       if(!shiftctor)
 		       {
 			 throw new Exception(
 			   spaceName + "Shift constructor does not exit! Did you specify the proper shift class name in your attrs.json file?"
 			 );
 		       }
-		       ctors[spacector].implement({attributes:function(){return attrs;}});
-		       var space = new ctors[spacector](ctors[shiftctor]);
+		       spacector.implement({attributes:function(){return attrs;}});
+		       var space = new spacector(shiftctor);
 		     }
 		     catch(exc)
 		     {
