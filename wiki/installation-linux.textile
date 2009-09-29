@@ -1,17 +1,5 @@
 These are instructions for Ubuntu 9.0.4. Please send us a message if you have install instructions for other version of Ubuntu or other versions of Linux.
 
-h2. Installing Git
-
-You need the latest version of Git. We recommend installing from source by downloading the tar.gz "here":http://www.git-scm.org/.
-
-h2. Installing Java
-
-ShiftSpace uses Lucene to handle full text search. Lucene is built on Java.
-
-<pre class="console">
-sudo aptitude install openjdk-6-jdk
-</pre>
-
 h2. Installing Python
 
 Ubuntu 9.0.4 comes installed with Python 2.6. However you need to install *setuptools*:
@@ -24,6 +12,18 @@ $ wget http://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c9.tar.
 $ tar -xvzf setuptools-0.6c9.tar.gz
 $ cd setuptools-0.6c9
 $ sudo python setup.py install
+</pre>
+
+h2. Installing Git
+
+You need the latest version of Git. We recommend installing from source by downloading the tar.gz "here":http://www.git-scm.org/.
+
+h2. Installing Java
+
+ShiftSpace uses Lucene to handle full text search. Lucene is built on Java.
+
+<pre class="console">
+sudo aptitude install openjdk-6-jdk
 </pre>
 
 h2. Getting ShiftSpace

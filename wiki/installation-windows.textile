@@ -1,26 +1,27 @@
-h2. Python
+These are instructions for Window XP. If you have tried this on Vista please let us know what went wrong.
 
-Python comes installed with OS X
+h2. Installing Python 2.6
+
+You should use the appropriate 2.6 installer from "here":http://www.python.org/download/. Once you've installed you need to update your path. Open the *Control Panel* via the *Start Menu*. Select the *Performance and Maintenance* icon. Then select the *System Icon*. In the window that open select the *Advanced* tab. At the bottom there is a button *Environment Variables*, click on this. In the *System Variables* group there should be an entry called *Path*. Append *;C:\Python26\* to the list, the starting semicolon here is just a delimiter. 
 
 h2. Installing Git
 
-We recommend installing the latest version of "MacPorts":http://www.macports.org/. While using the MacPorts at the command line is not difficult, using "Porticus":http://porticus.alittledrop.com/ is far simpler. Once you installed MacPorts be sure to create or edit your *.bash_profile*. This allows you to easily run programs installed by MacPorts. *.bash_profile* is invisible in the Finder because it starts with a period. Use a text editor like Coda or TextWrangler (or a terminal based text editor like Nano, Vim, or Emacs) to create this file if it doesn't exist or simply edit it. The contents should look like the following:
+Install the latest version of "msysgit":http://code.google.com/p/msysgit/. This will put a handy link on your desktop for starting up a bash shell interface. git is very popular in the open source community and most install instructions assume you are running bash or some similar command line shell. When we refer to the *terminal* we really mean the git bash shell application.
 
-<pre>
-PATH=$PATH:/opt/local/bin
-export PATH
-</pre>
+h2. Installing Java 1.6
+
+Install the latest 1.6 "Java SE Development Kit":http://java.sun.com/javase/downloads/index.jsp.
 
 h2. Getting ShiftSpace
 
-Clone the main shiftspace repository into your Sites folder on your machine by typing the following using *Terminal.app*:
+Clone the main shiftspace repository into your Sites folder on your machine by typing the following after launching terminal:
 
 <pre class="console">
-$ cd ~/Sites
+$ cd ~/Desktop
 $ git clone git://github.com/ShiftSpace/shiftspace.git
 </pre>
 
-Then the run the following to create a local shiftserver branch and pull in the various git submodules required by shiftspace:
+Then the run the following to pull in the various git submodules required by shiftspace:
 
 <pre class="console">
 $ cd shiftspace
@@ -28,37 +29,35 @@ $ git submodule init
 $ git submodule update
 </pre>
 
-Your clone is now ready to go. 
+Your clone is now ready to go.
 
-h2. Installing CouchDB on Intel Mac running 10.5 (Leopard) & 10.6 (Snow Leopard)
+h2. Installing CouchDB
 
-We recommend that you install the developer version of CouchDB 0.10 using Jan Lenhardt's prebuilt binaries - CouchDBX. You can find them "here":http://github.com/janl/couchdbx-core/downloads. For 10.5 we recommend "this one":http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-pl3-UNSTABLE.zip. For 10.6 we recommend "this one":http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-Snow-Leopard-64bit-EXERIMENTAL-RC1.zip.
+In the past installing CouchDB on Windows was a fairly arduous affair. Things have become much simpler with CouchDB 0.10. Mark Hammond now maintains a single-step installer, get it "here":http://people.apache.org/~mhammond/setup-couchdb-0.10.0a819270.exe. In order to run CouchDB you'll need to have the required C/C++ DLLs. You can get those "here":http://www.microsoft.com/downloads/details.aspx?familyid=9B2DA534-3E03-4391-8A4D-074B9F2BC1BF&displaylang=en.
 
-Drop the CouchDBX application into your *Applications* folder. Double-click on the application to start up CouchDB. Once it's started, point your browser at *http://localhost:5984/_utils/* to make sure that nothing went horribly wrong.
+Once it's done installed you should verify that nothing went wrong. You should see CouchDB in the *Start Menu* under the *Apache CouchDB* folder. Select it to startup CouchDGB. You'll see a startup window that hopefully doesn't spew out any errors.
 
-h2. Installing CouchDB on PPC Mac running 10.5 (Leopard)
-
-Use Porticus to install the couchdb-devel package.
+Point your browser at *http://localhost:5984/_utils*. You should see Futon, the GUI to CouchDB.
 
 h2. Python dependencies
 
 Run the following at the terminal:
 
 <pre class="console">
-$ cd ~/Sites/shiftspace/server
-$ wget http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip
+$ cd ~/Desktop/shiftspace/server
+$ curl -O http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip
 $ unzip deps
-$ sudo ./install_deps.sh
+$ sudo ./install_deps_win.sh
 </pre>
 
 This installs all of the Python libraries the ShiftSpace backend needs to run. You might notice there is couchdb-lucene .jar as well. We'll get to that in a moment.
 
-h2. Initializing the databse
+h2. Initializing the database
 
 Now we need to initialize the database. Make sure that CouchDBX is running. Type the following into your terminal:
 
 <pre class="console">
-$ cd ~/Sites/shiftspace/server
+$ cd ~/Desktop/shiftspace/server
 $ python setup.py
 </pre>
 
@@ -68,17 +67,7 @@ You should point your web browser to *http://localhost:5984/_utils/database.html
 
 h2. Configuring couchdb-lucene
 
-Now that you have CouchDB up and running, you should configure couchdb-lucene. In order for Lucene to index CouchDB and provide full text search capabilities you'll need to edit your CouchDB *local.ini* file. 
-
-h3. If you installed the CouchDBX Application
-
-Right click on the CouchDBX application in your Applications directory using the Finder. You'll get a new window displaying the contents of the application. Drill down through *Contents/Resources/couchdbx-core/couchdb/etc/couchdb/*. Open up *local.ini* in your favorite text editor. Replace the contents with the *local.ini* specified below.
-
-h3. If you installed CouchDB via MacPorts
-
-Open */opt/local/etc/couchdb/local.ini* in your favorite text editor. You will need to enter you admin password in order to edit this file.
-
-h3. local.ini
+Now that you have CouchDB up and running, you should configure couchdb-lucene. In order for Lucene to index CouchDB and provide full text search capabilities you'll need to edit your CouchDB *local.ini* file. This is located in C:\Program Files\Apache Software Foundation\CouchDB\etc\couchdb. Open this file in your favorite text editor and replace it's contents with the following:
 
 <pre>
 ; CouchDB Configuration Settings
@@ -99,10 +88,8 @@ os_process_timeout=60000 ; 60 seconds for couchdb-lucene
 ;level = debug                                                                                                      
 
 [update_notification]
-; CHANGE THIS LINE, username should be set to your username
-indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
-; PPC MACS USE THIS INSTEAD, username should be set to your username
-; indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
+; IMPORTANT: your path to the java executable may different
+indexer=C:\Program Files\Java\jdk1.6.0_11\bin\java -jar C:\Documents and Settings\Owner\Desktop\shiftspace\server\couchdb-lucene-0.4-jar-with-dependencies.jar -index
 
 ; To create an admin account uncomment the '[admins]' section below and add a
 ; line in the format 'username = password'. When you next start CouchDB, it                                        
@@ -114,26 +101,16 @@ indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java
 ;admin = mysecretpassword                                                                                                      
 
 [external]
-; CHANGE THIS LINE, username should be set to your username
-fti=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -search
-; PPC MACS USE THIS INSTEAD, username should be set to your username
-; fti=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -search
+; IMPORTANT: your path to the java executable may be different
+fti=C:\Program Files\Java\jdk1.6.0_11\bin\java -jar C:\Documents and Settings\Owner\Desktop\shiftspace\server\couchdb-lucene-0.4-jar-with-dependencies.jar -search
 
 [httpd_db_handlers]
 _fti={couch_httpd_external, handle_external_req, <<"fti">>}
 </pre>
 
-*IMPORTANT* You need to change the two lines that call into the couchdb-lucene jar so that the username portion of the path actually matches your own username. If CouchDBX is running shut it down and start it up again to verify there were no errors. 
+*IMPORTANT* You may need to change the two lines that call into the couchdb-lucene jar so that the java path portion of the path actually matches the location of java on your machine. If CouchDB is running shut it down and start it up again to verify there were no errors.
 
-h3. Fixing PowerPC Mac OS X installs of CouchDB
-
-The issue is explained "here":http://github.com/rnewson/couchdb-lucene/issues#issue/15. Use the Porticus GUI to disable the *jpeg*, *tiff* and *libpng*  packages. Or from the command line type the following:
-
-<pre class="console">
-$ sudo port deactivate jpeg tiff libpng
-</pre> 
-
-h3. Wrapping up
+h3. Wrapping up CouchDB configuration
 
 Point your browser at *http://localhost:5984/shiftspace/_fti*. You should see some json output like the following (it doesn't matter if it doesn't completely match).
 
@@ -166,7 +143,7 @@ h3. Preparing to start the server
 In order for the ShiftSpace script to build properly between page refreshes the dependencies between all the JavaScript source files must be determined as well as setting the url. In the future you won't need to set the url since it should just default to *http://localhost:8080*. Until then you have to run the following in a terminal:
 
 <pre class="console">
-$ cd ~/Sites/shiftspace/scripts
+$ cd ~/Desktop/shiftspace/scripts
 $ ./setup.sh
 </pre>
 
@@ -174,18 +151,12 @@ When prompted, enter *http://localhost:8080*. Take note that there is no trailin
 
 h2. Starting the server
 
-You can now start the ShiftSpace server. Again make sure that the CouchDBX is running. If you installed CouchDB via MacPorts you'll need to start it with the following:
-
-<pre class="console">
-$ sudo couchdb
-</pre>
-
-You'll be prompted for you admin password.
+You can now start the ShiftSpace server. Again make sure that the CouchDB is running.
 
 Let's start the actual ShiftSpace server. Type following into a new terminal:
 
 <pre class="console">
-$ cd ~/Sites/shiftspace/server
+$ cd ~/Desktop/shiftspace/server
 $ python server.py
 </pre>
 
@@ -199,16 +170,12 @@ Congratulations! You've successfully installed ShiftSpace 1.0. Please refer to t
 
 h2. Recap
 
-Whenever you want to hack on ShiftSpace, first start up CouchDB. If you have CouchDBX you can just double-click the application. If you installed via MacPorts:
-
-<pre class="console">
-$ sudo couchdb
-</pre>
+Whenever you want to hack on ShiftSpace, first start up CouchDB.
 
 Then type the following at a new terminal:
 
 <pre lang="console">
-$ cd ~/Sites/shiftspace/server
+$ cd ~/Desktop/shiftspace/server
 $ python server.py
 </pre>
 
