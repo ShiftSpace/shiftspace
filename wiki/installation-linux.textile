@@ -1,0 +1,175 @@
+These are instructions for Ubuntu 9.0.4. Please send us a message if you have install instructions for other version of Ubuntu or other versions of Linux.
+
+h2. Installing Git
+
+You need the latest version of Git. We recommend installing from source by downloading the tar.gz "here":http://www.git-scm.org/.
+
+h2. Installing Java
+
+ShiftSpace uses Lucene to handle full text search. Lucene is built on Java.
+
+<pre class="console">
+sudo aptitude install openjdk-6-jdk
+</pre>
+
+h2. Installing Python
+
+Ubuntu 9.0.4 comes installed with Python 2.6. However you need to install *setuptools*:
+
+<pre class="console">
+$ cd ~
+$ mkdir downloads
+$ cd downloads
+$ wget http://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c9.tar.gz#md5=3864c01d9c719c8924c455714492295e
+$ tar -xvzf setuptools-0.6c9.tar.gz
+$ cd setuptools-0.6c9
+$ sudo python setup.py install
+</pre>
+
+h2. Getting ShiftSpace
+
+From a terminal type the following:
+
+<pre class="console">
+$ cd ~
+$ git clone git://github.com/ShiftSpace/shiftspace.git
+</pre>
+
+Now we need to check out the right branch and bring in the other repositories:
+
+<pre class="console">
+$ cd shiftspace
+$ git submodule init
+$ git submodule update
+</pre>
+
+h2. Installing the dependencies
+
+Run the following at a terminal to install the ShiftSpace Python dependencies.
+
+<pre class="console">
+$ cd server
+$ wget http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip
+$ unzip deps.zip
+$ sudo ./install_deps.sh
+</pre>
+
+h2. Installing CouchDB
+
+The best way to run CouchDB on linux is to just install it via *aptitude*. These instructions were taken from Jan Van Ryswyck excellent tutorial "here":http://elegantcode.com/2009/05/30/installing-the-couchdb/.
+
+h3. Installing the Couch dependencies
+
+First install all of the dependencies:
+
+<pre class="console">
+$ sudo aptitude install automake autoconf libtool subversion-tools help2man spidermonkey-bin build-essential erlang erlang-manpages libicu38 libicu-dev libreadline5-dev checkinstall libmozjs-dev wget
+$ sudo apt-get install libcurl4-gnutls-dev
+</pre>
+
+Get the CouchDB source:
+
+<pre class="console">
+$ svn co http://svn.apache.org/repos/asf/couchdb/trunk couchdb
+</pre>
+
+Build CouchDB:
+
+<pre class="console">
+$ cd couchdb
+$ ./bootstrap
+$ ./configure --bindir=/usr/bin --sbindir=/usr/sbin --localstatedir=/var --sysconfdir=/etc
+$ make && sudo make install
+</pre>
+
+Verify that everything went okay by starting up couchdb:
+
+<pre class="console">
+$ sudo couchdb
+</pre>
+
+Launch FireFox and point the browser at http://localhost:5984/_utils/
+
+h2. Configuring CouchDB
+
+h3. Editing local.ini
+
+Edit the file /etc/couchdb/local.ini with your favorite text editor. Replace it's contents with the following:
+
+<pre>
+; CouchDB Configuration Settings
+
+; Custom settings should be made in this file. They will override settings
+; in default.ini, but unlike changes made to default.ini, this file won't be
+; overwritten on server upgrade.
+
+[couchdb]
+;max_document_size = 4294967296 ; bytes
+os_process_timeout=60000 ; 60 seconds for couchdb-lucene
+
+[httpd]
+;port = 5984
+;bind_address = 127.0.0.1
+
+[log]
+;level = debug                                                                                                      
+
+[update_notification]
+; CHANGE THIS LINE, username should be set to your username
+indexer=/usr/lib/jvm/java-6-openjdk/bin/java -jar /home/username/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
+
+; To create an admin account uncomment the '[admins]' section below and add a
+; line in the format 'username = password'. When you next start CouchDB, it                                        
+; will change the password to a hash (so that your passwords don't linger                                                    
+; around in plain-text files). You can add more admin accounts with more                                                      
+; 'username = password' lines. Don't forget to restart CouchDB after                                                       
+; changing this.                                                           
+;[admins]                                                                                                               
+;admin = mysecretpassword                                                                                                      
+
+[external]
+; CHANGE THIS LINE, username should be set to your username
+fti=/usr/lib/jvm/java-6-openjdk/bin/java -jar /home/username/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -search
+
+[httpd_db_handlers]
+_fti={couch_httpd_external, handle_external_req, <<"fti">>}
+</pre>
+
+h2. Initializing the databse
+
+Run the following at a terminal:
+
+<pre class="console">
+$ cd ~/shiftspace/server
+$ python setup.py
+</pre>
+
+This create a CouchDB database called "shiftspace" and populate it with the initial design documents.
+
+h2. Preparing to start the server
+
+In order for the ShiftSpace script to build between browser refreshes ShiftSpace needs to know the dependency relationship between all the different JS files. It also needs to know the url where ShiftSpace will be running.
+
+Run the following at a terminal:
+
+<pre class="console">
+$ cd ~/shiftspace/scripts
+$ ./setup.sh
+</pre>
+
+When prompted enter in *http://localhost:8080*. Note the lack of a trailing slash.
+
+h2. Starting the server
+
+We can finally start the server, run the following at the terminal:
+
+<pre class="console">
+$ cd ~/shiftspace/server
+$ python server.py
+</pre>
+
+Launch FireFox and point the browser at *http://localhost:8080/sandbox/*.
+
+h2. Recap
+
+Whenever you want to hack on ShiftSpace you need to first start CouchDB, then start up the builtin ShiftSpace webserver (CherryPy). At that point you point your browser at *http://localhost:8080/sandbox/* and start hacking.

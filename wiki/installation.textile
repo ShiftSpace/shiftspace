@@ -1,163 +1,18 @@
-Please let us know of any serious mistakes. 
+Please let us know of any serious mistakes. If you figure out how to install ShiftSpace on Linux, Window, or OS X 10.4 please contribute your findings here.
 
 h2. Git
 
-In order to setup ShiftSpace you need git. We do provide tags which are simpler to deal with but at the moment there are no stable tags to speak of. We'll keep you posted on that.
+For the time being in order to setup ShiftSpace you need git. We'll be providing dot releases in .zip and .tar.gz format soon. Please be patient.
 
-There are many friendly instructions on the web for installing git. We recommend the ones on GitHub.
+h2. Installation Guides
 
-h2. Mac OS X
+[[Installation: OS X]]
+[[Installation: Linux]]
+[[Installation: Windows]]
 
-h3. Getting ShiftSpace
+h2. Note for Developers
 
-Clone the main shiftspace repository into your Sites folder on your machine by typing the following using *Terminal.app*:
+Currently the best supported development environment for ShiftSpace is Firefox 3.5 with following extensions installed:
 
-<pre class="console">
-$ cd ~/Sites
-$ git clone git://github.com/ShiftSpace/shiftspace.git
-</pre>
-
-Then the run the following to create a local shiftserver branch and pull in the various git submodules required by shiftspace:
-
-<pre class="console">
-$ cd shiftspace
-$ git branch --track shiftserver origin/shiftserver
-$ git checkout shiftserver
-$ git submodule init
-$ git submodule update
-</pre>
-
-Your clone is now ready to go. 
-
-h3. Installing CouchDB on 10.5 (Leopard) & 10.6 (Snow Leopard)
-
-We recommend that you install the developer version of CouchDB 0.10 using Jan Lenhardt's prebuilt binaries - CouchDBX. You can find them "here":http://github.com/janl/couchdbx-core/downloads. For 10.5 we recommend "this one":http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-pl3-UNSTABLE.zip. For 10.6 we recommend "this one":http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-Snow-Leopard-64bit-EXERIMENTAL-RC1.zip.
-
-Drop the CouchDBX application into your *Applications* folder. Double-click on the application to start up CouchDB. Once it's started, point your browser at *http://localhost:5984/_utils/* to make sure that nothing went horribly wrong.
-
-h3. Python dependencies
-
-Run the following at the terminal:
-
-<pre class="console">
-$ cd ~/Sites/shiftspace/server
-$ wget http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip
-$ unzip deps
-$ sudo ./install_deps.sh
-</pre>
-
-This installs all of the Python libraries the ShiftSpace backend needs to run. You might notice there is couchdb-lucene .jar as well. We'll get to that in a moment.
-
-h3. Initializing the databse
-
-Now we need to initialize the database. Make sure that CouchDBX is running. Type the following into your terminal:
-
-<pre class="console">
-$ cd ~/Sites/shiftspace/server
-$ python setup.py
-</pre>
-
-You should see some output as new documents are added to the databse.
-
-You should point your web browser to *http://localhost:5984/shiftspace* to see that the shiftspace database is there and in fact populated with design documents.
-
-h3. Configuring couchdb-lucene
-
-Now that you have CouchDB up and running, you should configure couchdb-lucene. In order for Lucene to index CouchDB and provide full text search capabilities you'll need to edit your CouchDB *local.ini* file. Right click on the CouchDBX application. You'll get a new window displaying the contents of the application. Drill down through *Contents/Resources/couchdbx-core/couchdb/etc/couchdb/*. Open up *local.ini* in your favorite text editor. Replace the contents with the following.
-
-<pre>
-; CouchDB Configuration Settings
-
-; Custom settings should be made in this file. They will override settings
-; in default.ini, but unlike changes made to default.ini, this file won't be
-; overwritten on server upgrade.
-
-[couchdb]
-;max_document_size = 4294967296 ; bytes
-os_process_timeout=60000 ; 60 seconds for couchdb-lucene
-
-[httpd]
-;port = 5984
-;bind_address = 127.0.0.1
-
-[log]
-;level = debug                                                                                                      
-
-[update_notification]
-; CHANGE THIS LINE, username should be set to your username
-indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
-
-; To create an admin account uncomment the '[admins]' section below and add a
-; line in the format 'username = password'. When you next start CouchDB, it                                        
-; will change the password to a hash (so that your passwords don't linger                                                    
-; around in plain-text files). You can add more admin accounts with more                                                      
-; 'username = password' lines. Don't forget to restart CouchDB after                                                       
-; changing this.                                                           
-;[admins]                                                                                                               
-;admin = mysecretpassword                                                                                                      
-
-[external]
-; CHANGE THIS LINE, username should be set to your username
-fti=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -search
-
-[httpd_db_handlers]
-_fti={couch_httpd_external, handle_external_req, <<"fti">>}
-</pre>
-
-*IMPORTANT* You need to change the two lines that call into the couchdb-lucene jar so that the username portion of the path actually matches your own username. If CouchDBX is running shut it down and start it up again to verify there were no errors. Point your browser at *http://localhost:5984/shiftspace/_fti*. You should see some json output like the following (it doesn't matter if doesn't completely match).
-
-<pre>
-{
-    "current": true,
-    "disk_size": 1909,
-    "doc_count": 4,
-    "doc_del_count": 1,
-    "fields": [
-        "summary",
-        "modified",
-        "private",
-        "draft",
-        "createdBy",
-        "created",
-        "domain",
-        "userName",
-        "streams",
-        "displayName",
-        "href"
-    ],
-    "last_modified": 1252875399000,
-    "optimized": false
-}
-</pre>
-
-h3. Preparing to start the server
-
-In order for the ShiftSpace script to build properly between page refreshes the dependencies between all the JavaScript source files must be determined as well as setting the url. In the future you won't need to set the url since it should just default to *http://localhost:8080*. Until then you have to run the following in a terminal:
-
-<pre class="console">
-$ cd ~/Sites/shiftspace/scripts
-$ ./setup.sh
-</pre>
-
-When prompted, enter *http://localhost:8080*. Take note that there is no trailing slash.
-
-h3. Starting the server
-
-You can now start the ShiftSpace server. Again make sure that the CouchDBX is running. Type following into a terminal:
-
-<pre class="console">
-$ cd ~/Sites/shiftspace/server
-$ python server.py
-</pre>
-
-You should see some output that CherryPy is starting up. In your browser goto *http://localhost:8080/*. Don't forget the trailing slash. You should see a greeting.
-
-Now to really verify that things are working point your browser to to *http://localhost:8080/sandbox/*. Don't miss the trailing slash (we'll fix this later). You should be able to open the ShiftSpace Console by typing the shift key plus the space key together. You should see a login tab. In the login tab there is a register subtab. Select this. Enter your information and click submit (sorry the enter key doesn't work yet).
-
-You should now be logged in. Open up the Spaces menu in the lower left. Click on the Notes Space button. You should see an empty note fade onto the page. Type some text and click the save button. You should see your new shift appear in the Console.
-
-Congratulations! You've successfully installed ShiftSpace 1.0. Please refer to the developer manual if you'd like to know more about developing spaces.
-
-h2. Linux
-
-h2. Windows
+** "FireBug 1.5x.0a24":http://getfirebug.com/releases/firebug/1.5X/
+** "The latest version of GreaseMonkey":https://addons.mozilla.org/firefox/addon/748
