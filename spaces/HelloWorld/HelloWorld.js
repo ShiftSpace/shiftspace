@@ -25,7 +25,7 @@ var HelloWorldShift = new Class({
   changeMessage: function() {
     var msg = prompt("Please enter a new message:", this.messageValue);
     this.messageValue = msg;
-    this.element.set('html', msg);
+    this.element.set('text', msg);
     this.save();
   },
 
