@@ -1,0 +1,3 @@
+h1. Installation Guide
+
+This document will explain how to configure your own ShiftSpace server. This will enable you to develop your own Spaces or hack on the core platform itself. If you have any difficulties along the way, please consult one of our email discussion lists- we have one for "users":http://community.shiftspace.org/ and another for "developers":http://groups.google.com/group/ShiftSpace-dev. If you just want to install ShiftSpace (the client userscript) you don't need to follow these directions, just go to <a href="http://shiftspace.org/">ShiftSpace.org</a> and click the install button.

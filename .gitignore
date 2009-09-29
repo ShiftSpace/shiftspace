@@ -41,3 +41,5 @@ lucene/*
 /.emacs.desktop.lock
 /.emacs.desktop.lock
 /.emacs.desktop.lock
+/manual/#tutorial.html#
+/manual/test.html
