@@ -1,0 +1,6 @@
+var HelloWorldShift = Shift({
+  setup: function(json) {
+    this.setPosition(json.position);
+    this.makeDraggable();
+  }
+});
