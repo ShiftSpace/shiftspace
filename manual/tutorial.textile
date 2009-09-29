@@ -1,0 +1,26 @@
+h1. Tutorial
+
+h2. Getting started
+
+This tutorial will guide you through building what is perhaps the
+simplest Space that you can make: HelloWorld. The HelloWorld space,
+when completed, will allow you to add the words 'Hello World!' as a
+Shift to any page on the web. Potentially, anyone else who has
+ShiftSpace installed will be able to see your message if they happen
+to discover it on a page.
+
+But before we begin, make sure you're running
+"Firefox":http://mozilla.com, that you've "installed the ShiftSpace
+development environment":install.html, that you have "Greasemonkey
+enabled":http://greasespot.net and that you've installed the
+development userscript (this is available from the ShiftSpace status
+page, which might have a URL something like this:
+<tt>http://localhost/shiftspace/shiftspace.php</tt>). You also need to
+install the "Firebug extension":http://addons.mozilla.org/firefox/1843
+for Firefox. You currently need it for installing and uninstalling
+spaces (until we build a proper user interface) and it will also prove
+invaluable for debugging.
+
+Finally, point your browser at the ShiftSpace Developer Sandbox.  This
+will probably be something like
+http://localhost/~yourusername/ShiftSpaceInstallDir/sandbox/index.php.
