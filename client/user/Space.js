@@ -249,6 +249,11 @@ var ShiftSpaceSpace = new Class({
   addShift: function(aShift, ui)
   {
     var el = (ui) ? Sandalphon.convertToFragment(ui) : null;
+    if(el)
+    {
+      el.addClass("ShiftSpaceElement");
+      el.getElements('*').addClass("ShiftSpaceElement");
+    }
     // create the new shift
     try
     {
