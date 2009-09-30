@@ -1,11 +1,16 @@
+h2. Python 
+
+On 10.5 and 10.6 nothing needs to be done. If you are on 10.4 you need to install Python 2.6. We recommend doing this via Porticus. 
+
+First install the latest version of "MacPorts":http://www.macports.org/. 
+
+While using the MacPorts at the command line is not difficult, using "Porticus":http://porticus.alittledrop.com/ is far simpler. Install this as well.
+
+Once Porticus is installed launch it. Before doing anything, first run *Port > Self Update...* in the top menu. Then select the *All Ports* folder in the left nav. Then search for the *python26* package. Select it and click the *Install* button on the top left of the main window.
+
 h2. Installing Git
 
-We recommend installing the latest version of "MacPorts":http://www.macports.org/. While using the MacPorts at the command line is not difficult, using "Porticus":http://porticus.alittledrop.com/ is far simpler. Once you installed MacPorts be sure to create or edit your *.bash_profile*. This allows you to easily run programs installed by MacPorts. *.bash_profile* is invisible in the Finder because it starts with a period. Use a text editor like Coda or TextWrangler (or a terminal based text editor like Nano, Vim, or Emacs) to create this file if it doesn't exist or simply edit it. The contents should look like the following:
-
-<pre>
-PATH=$PATH:/opt/local/bin
-export PATH
-</pre>
+We recommend that you install Git 1.6.4.4 from "here":http://code.google.com/p/git-osx-installer/. If you are running on 10.4 we recommend you install the git-core package using Porticus.
 
 h2. Getting ShiftSpace
 
@@ -70,7 +75,7 @@ h3. If you installed the CouchDBX Application
 
 Right click on the CouchDBX application in your Applications directory using the Finder. You'll get a new window displaying the contents of the application. Drill down through *Contents/Resources/couchdbx-core/couchdb/etc/couchdb/*. Open up *local.ini* in your favorite text editor. Replace the contents with the *local.ini* specified below.
 
-h3. If you installed CouchDB via MacPorts
+h3. If you installed CouchDB via Porticus/MacPorts
 
 Open */opt/local/etc/couchdb/local.ini* in your favorite text editor. You will need to enter you admin password in order to edit this file.
 
