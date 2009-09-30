@@ -54,7 +54,7 @@ This installs all of the Python libraries the ShiftSpace backend needs to run. Y
 
 h2. Initializing the database
 
-Now we need to initialize the database. Make sure that CouchDBX is running. Type the following into your terminal:
+Now we need to initialize the database. Make sure that CouchDB is running. Type the following into your terminal:
 
 <pre class="console">
 $ cd ~/Desktop/shiftspace/server
@@ -67,7 +67,7 @@ You should point your web browser to *http://localhost:5984/_utils/database.html
 
 h2. Configuring couchdb-lucene
 
-Now that you have CouchDB up and running, you should configure couchdb-lucene. In order for Lucene to index CouchDB and provide full text search capabilities you'll need to edit your CouchDB *local.ini* file. This is located in C:\Program Files\Apache Software Foundation\CouchDB\etc\couchdb. Open this file in your favorite text editor and replace it's contents with the following:
+Now that you have CouchDB up and running, you should configure couchdb-lucene. In order for Lucene to index CouchDB and provide full text search capabilities you'll need to edit your CouchDB *local.ini* file. This is located in *C:\Program Files\Apache Software Foundation\CouchDB\etc\couchdb*. Open this file in your favorite text editor and replace it's contents with the following:
 
 <pre>
 ; CouchDB Configuration Settings
@@ -174,7 +174,7 @@ Whenever you want to hack on ShiftSpace, first start up CouchDB.
 
 Then type the following at a new terminal:
 
-<pre lang="console">
+<pre class="console">
 $ cd ~/Desktop/shiftspace/server
 $ python server.py
 </pre>
