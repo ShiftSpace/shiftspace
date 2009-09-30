@@ -2,6 +2,18 @@ import sys
 import os
 import shutil
 import server.server as server
+import simplejson as json
+
+
+def env(url):
+    return {
+        "SERVER": url,
+        "SPACEDIR": url + "spaces/",
+        "IMAGESDIR": url + "images/",
+        "GLOBAL_CSS": "styles/SSGlobalStyles.css",
+        "LOG_LEVEL": None,
+        }
+
 
 def processTemplate(path, outputdir, name):
     base, ext = os.path.splitext(os.path.basename(path))
@@ -16,11 +28,32 @@ def processTemplate(path, outputdir, name):
     fh.close()
 
 
-def configure():
-    print "Enter the root URL of your ShiftSpace installation (something like http://localhost/shiftspace)."
-    print "It will be saved in ../config/env/mydev.json:"
-    url = sys.stdin.readline()
+def configure(url):
+    if url[-1] != "/":
+        url = url + "/"
+    def writeEnv(name, mergedict):
+        fh = open("config/env/%s.json" % name, "w")
+        envdict = env(url)
+        envdict.update(mergedict)
+        s = json.dumps(envdict, sort_keys=True, indent=2)
+        fh.write('\n'.join([l.rstrip() for l in  s.splitlines()]))
+        fh.close()
     sys.stdin.close()
+    writeEnv("mydev", {
+            "LOG_LEVEL":"SSLogError",
+            "VARS": {
+                "ShiftSpaceSandBoxMode": True
+                }
+            })
+    writeEnv("dev", {
+            "LOG_LEVEL": "SSLogError | SSLogSystem | SSLogShift"
+            })
+    writeEnv("sandalphon", {
+            "LOG_LEVEL": "SSLogError | SSLogSandalphon",
+            "VARS": {
+                "SandalphonToolMode": True
+                }
+            })
 
 
 def compile(env):
@@ -55,7 +88,7 @@ def main(argv):
     if action in ("-h", "--help"):
         usage()
     if action == "configure":
-        configure()
+        configure(argv[1])
     if action == "installdeps":
         print "installdeps"
     elif action == "compile":
@@ -74,6 +107,7 @@ def usage():
     print
     print "Hello from Shifty! <item> is required, [item] is not."
     print "   %15s  install dependencies" % "installdeps"
+    print "   %15s  configure ShiftSpace" % "configure <url>"
     print "   %15s  update ShiftSpace source" % "compile"
     print "   %15s  initialize the database" % "initdb"
     print "   %15s  update the database" % "updatedb"
