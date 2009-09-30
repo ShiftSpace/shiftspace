@@ -1,0 +1,5 @@
+This is the wiki version of the manual that ships with ShiftSpace:
+
+[[Installation]]
+[[Tutorial]]
+[[AdvancedTopics]]

@@ -1,0 +1,1 @@
+Do not edit the contents of this folder. This is the space project template used by Shifty.

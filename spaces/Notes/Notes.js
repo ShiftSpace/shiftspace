@@ -7,7 +7,6 @@ var NotesSpace = new Class({
   }
 });
 
-
 var NotesShift = new Class({
   Extends: ShiftSpace.Shift,
 
@@ -19,7 +18,6 @@ var NotesShift = new Class({
       summary: ''
     });
   },
-
 
   setup: function(json)
   {
@@ -70,22 +68,12 @@ var NotesShift = new Class({
         });
       }
     }
-
     this.refresh();
   },
 
   // only called on broken shifts
-  setProperties: function(json)
-  {
-    this.__properties__ = json;
-  },
-
-
-  getProperties: function()
-  {
-    return this.__properties__;
-  },
-
+  setProperties: function(json) { this.__properties__ = json; },
+  getProperties: function() { return this.__properties__; },
 
   /*
     Function : attachEvents
@@ -97,11 +85,9 @@ var NotesShift = new Class({
 
     this.dragRef = this.element.makeDraggable({
       handle: this.top,
-      
       onStart: function() {
         this.fireEvent('onDragStart');
       }.bind(this),
-      
       onComplete: function() {
         this.fireEvent('onDragStop');
       }.bind(this)
@@ -115,24 +101,19 @@ var NotesShift = new Class({
 
     this.element.makeResizable({
       handle: this.resizeControl,
-      
       onStart: function() {
         this.fireEvent('onDragStart');
       }.bind(this),
-      
       onComplete: function() {
         this.fireEvent('onDragStop');
       }.bind(this),
-      
       onDrag: this.refresh.bind(this)
     });
 
     this.setFocusRegions( this.grabber, this.resizeControl );
-
     this.element.addEvent('mouseover', this.revealControls.bind(this));
     this.element.addEvent('mouseout', this.hideControls.bind(this));
   },
-
 
   /*
     Function : handleMouseEnter
@@ -149,7 +130,6 @@ var NotesShift = new Class({
     this.resizeControl.removeClass('SSHidden');
   },
 
-
   /*
     Function : handleMouseLeave
       Hide the Note controls.
@@ -165,16 +145,11 @@ var NotesShift = new Class({
     this.resizeControl.addClass('SSHidden');
   },
 
-
   /*
     Function : cancel
       Handle user cancel operation.
   */
-  cancel: function()
-  {
-    this.hide();
-  },
-
+  cancel: function() { this.hide(); },
 
   /*
     Function : encode
@@ -185,16 +160,10 @@ var NotesShift = new Class({
     // position and size
     var pos = this.element.getPosition();
     var size = this.element.getSize();
-
     // tokenize newlines for transport
     var text = this.getText();
-
     // NOTE: We need to store the actual noteText for relative pinned notes because iframe refresh issues - David
-    if(this.inputArea)
-    {
-      this.noteText = this.inputArea.getProperty('value');
-    }
-
+    if(this.inputArea) this.noteText = this.inputArea.getProperty('value');
     return {
       position: pos,
       size: size,
@@ -209,12 +178,7 @@ var NotesShift = new Class({
     };
   },
 
-
-  updateText: function(_evt)
-  {
-    if(this.inputArea) this.noteText = $(this.inputArea).getProperty('value');
-  },
-
+  updateText: function(_evt) { if(this.inputArea) this.noteText = $(this.inputArea).getProperty('value'); },
 
   update: function()
   {
@@ -229,12 +193,10 @@ var NotesShift = new Class({
     }
   },
 
-
   getText: function()
   {
     return (this.inputArea) ? this.inputArea.getProperty('value').replace(/\n/g, "<br/>") : this.noteText;
   },
-
 
   defaultTitle: function()
   {
@@ -248,7 +210,6 @@ var NotesShift = new Class({
       return "Untitled";
     }
   },
-
 
   /*
     Function : refresh
@@ -286,22 +247,14 @@ var NotesShift = new Class({
     });
   },
 
-
   show: function()
   {
     this.parent();
-
     this.update();
     this.hideEditInterface();
-
     // have to remember to unpin
-    if(this.getPinRef() && !this.isPinned())
-    {
-      // TODO: Instead of setting this over over again, should just methods to set these up once - David
-      this.pin(this.element, this.getPinRef());
-    }
+    if(this.getPinRef() && !this.isPinned()) this.pin(this.element, this.getPinRef());
   },
-
 
   edit: function()
   {
@@ -309,19 +262,12 @@ var NotesShift = new Class({
     this.showEditInterface();
   },
 
-
   hide: function()
   {
     this.parent();
     this.hideEditInterface();
-
-    // have to remember to pin
-    if(this.isPinned())
-    {
-      this.unpin();
-    }
+    if(this.isPinned()) this.unpin();
   },
-
 
   onBlur: function()
   {
@@ -330,48 +276,33 @@ var NotesShift = new Class({
     this.hideEditInterface();
   },
 
-
   showEditInterface: function()
   {
     this.saveButton.setStyle('display', '');
     this.cancelButton.setStyle('display', '');
     this.pinWidgetDiv.setStyle('display', '');
-
     if(this.inputArea)
     {
       this.inputArea.removeProperty('readonly');
       this.inputArea.setStyle('display', 'block');
     }
-
-    if(this.viewArea)
-    {
-      this.viewArea.setStyle('display', 'none');
-    }
-
+    if(this.viewArea) this.viewArea.setStyle('display', 'none');
     this.refresh();
   },
-
 
   hideEditInterface: function()
   {
     this.saveButton.setStyle('display', 'none');
     this.cancelButton.setStyle('display', 'none');
     this.pinWidgetDiv.setStyle('display', 'none');
-
     if(this.inputArea)
     {
       this.inputArea.setProperty('readonly', 1);
       this.inputArea.setStyle('display', 'none');
     }
-
-    if(this.viewArea)
-    {
-      this.viewArea.setStyle('display', 'block');
-    }
-
+    if(this.viewArea) this.viewArea.setStyle('display', 'block');
     this.refresh();
   },
-
 
   /*
     Function : build
@@ -390,7 +321,6 @@ var NotesShift = new Class({
     this.buildEdges();
     this.element.injectInside( document.body );
   },
-
 
   /*
     Function : buildTop
@@ -413,7 +343,6 @@ var NotesShift = new Class({
     this.top.injectInside(this.element);
   },
 
-
   /*
     Function : buildFrame
       Builds the frame portion of the notes shift.  We need this to allow
@@ -422,7 +351,6 @@ var NotesShift = new Class({
   buildFrame: function()
   {
     var _css = this.getParentSpace().attributes().css;
-
     // create an iframe with the css already loaded
     this.frame = new ShiftSpace.Iframe({
       'class': 'SSNoteShiftFrame',
@@ -434,10 +362,8 @@ var NotesShift = new Class({
       css: _css,
       onload: this.finishFrame.bind(this)
     });
-
     this.frame.injectInside(this.element);
   },
-
 
   /*
     Function : finishFrame
@@ -450,15 +376,8 @@ var NotesShift = new Class({
     var props = this.getProperties();
 
     // if properties from borked json grab them
-    if(props)
-    {
-      this.noteText = props.noteText;
-    }
-
-    if(this.noteText)
-    {
-      text = this.noteText;
-    }
+    if(props) this.noteText = props.noteText;
+    if(this.noteText) text = this.noteText;
 
     var notedoc = this.frame.contentDocument || this.frame.document;
     this.notedoc = notedoc;
@@ -499,13 +418,8 @@ var NotesShift = new Class({
         height: props.height
       });
     }
-
     this.update();
-
-    if(this.isBeingEdited())
-    {
-      this.edit();
-    }
+    if(this.isBeingEdited()) this.edit();
   },
 
 

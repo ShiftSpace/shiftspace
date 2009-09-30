@@ -4,9 +4,9 @@ h2. Getting started
 
 This tutorial will guide you through building what is perhaps the simplest space that you can make: HelloWorld. The HelloWorld space, when completed, will allow you to add the words 'Hello World!' as a shift to any page on the web. Potentially, anyone else who has ShiftSpace installed will be able to see your message if they happen to discover it on a page, are following, or are part of group that you published the shift to.
 
-But before we begin, make sure you're running "Firefox":http://mozilla.com, that you've "installed the ShiftSpace development environment":install.html, that you have "Greasemonkey enabled":http://greasespot.net and that you've installed the development userscript (this is available from the ShiftSpace status page, which might have a URL something like this: <tt>http://localhost/shiftspace/shiftspace.php</tt>). You also need to install the "Firebug extension":http://addons.mozilla.org/firefox/1843 for Firefox. You currently need it for installing and uninstalling spaces (until we build a proper user interface) and it will also prove invaluable for debugging.
+But before we begin, make sure you're running "Firefox":http://mozilla.com, that you've "installed the ShiftSpace development environment":install.html. You also need to install the "Firebug extension":http://addons.mozilla.org/firefox/1843 for Firefox. FireBug is a critical tool for designing your space, it allows you to easily examine and manipulate HTML and CSS "on the fly." It will also prove invaluable for debugging.
 
-Finally, point your browser at the ShiftSpace Developer Sandbox. This will probably be something like http://localhost/~yourusername/ShiftSpaceInstallDir/sandbox/index.php.
+Finally, point your browser at the ShiftSpace Developer Sandbox. This will probably be something like http://localhost/~yourusername/ShiftSpaceInstallDir/sandbox/. You should see a pretty picture of a big desert. This is where most of your development will happen. If you have installed GreaseMonkey and ShiftSpace you should make sure that ShiftSpace never launches on your development URLs, otherwise you'll get some weird interactions. Right click on the GreaseMonkey icon in the lower right corner of your browser window and select *Manage User Scripts...*. Select ShiftSpace and click the button *Add* button next to *Excluded Pages*. The default value to exclude is correct, just add it. You can now close the GreaseMonkey window and continue hacking.
 
 h3. Creating the file
 
@@ -216,7 +216,7 @@ var HelloWorldShift = new Class({
 }
 </pre>
 
-Note that we adde a new method - *Shift.encode*. When you call *Shift.save*, ShiftSpace calls your encode method to get values you think are worth saving. Each field that you encode will be handed back to you in *setup*. So if you save a shift, reload the page and then click it in the console, ShiftSpace will load those values you encoded and make sure they get sent back to your shift.
+Note that we added a new method - *Shift.encode*. When you call *Shift.save*, ShiftSpace calls your encode method to get values you think are worth saving. Each field that you encode will be handed back to you in *setup*. So if you save a shift, reload the page and then click it in the console, ShiftSpace will load those values you encoded and make sure they get sent back to your shift.
 
 Again *encode* like *setup* are not methods you call yourself. ShiftSpace will call these methods for you at the proper time. While this approach may seem odd at first, it really frees you up to concern yourself only with the kinds of actions and behaviors you would like your space to provide.
 
