@@ -199,7 +199,7 @@ class SSCoreBuilder():
     return [f for f in deps if f in packageFiles]
 
 
-  def writePackagesJSON(self, output="../config/packages.json", writeToFile=True):
+  def writePackagesJSON(self, output="config/packages.json", writeToFile=True):
     """
     Write a package json description.
     """
@@ -221,7 +221,7 @@ class SSCoreBuilder():
     else:
       print jsonString
 
-  def writeTestsJSON(self, output="../config/tests.json", writeToFile=True):
+  def writeTestsJSON(self, output="config/tests.json", writeToFile=True):
     """
     Write tests json description.
     """
@@ -334,8 +334,8 @@ def usage():
 
 
 def main(argv):
-  inputFile = "../"
-  outputDir = "../config"
+  inputFile = "."
+  outputDir = "config"
   recursive = False
 
   try:
