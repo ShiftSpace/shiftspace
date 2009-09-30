@@ -43,5 +43,7 @@ lucene/*
 /.emacs.desktop.lock
 /manual/#tutorial.html#
 /manual/test.html
+/wiki/#installation-linux.textile#
+/wiki/.#installation-linux.textile
 /builder/__init__.pyc
 /sandalphon/__init__.pyc

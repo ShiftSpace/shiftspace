@@ -8,7 +8,7 @@ Ubuntu 9.0.4 comes installed with Python 2.6. However you need to install *setup
 $ cd ~
 $ mkdir downloads
 $ cd downloads
-$ wget http://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c9.tar.gz#md5=3864c01d9c719c8924c455714492295e
+$ curl -O http://pypi.python.org/packages/source/s/setuptools/setuptools-0.6c9.tar.gz#md5=3864c01d9c719c8924c455714492295e
 $ tar -xvzf setuptools-0.6c9.tar.gz
 $ cd setuptools-0.6c9
 $ sudo python setup.py install
