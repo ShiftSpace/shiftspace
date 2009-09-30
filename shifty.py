@@ -1,6 +1,7 @@
 import sys
 import os
 import shutil
+import server.server as server
 
 def processTemplate(path, outputdir, name):
     base, ext = os.path.splitext(os.path.basename(path))
@@ -52,8 +53,8 @@ def main(argv):
         print "updatedb"
     elif action == "new":
         createSpace(argv[1])
-    elif action == "server":
-        print "server"
+    elif action == "runserver":
+        server.start()
 
 
 def usage():
@@ -64,7 +65,7 @@ def usage():
     print "   %15s  initialize the database" % "initdb"
     print "   %15s  update the database" % "updatedb"
     print "   %15s  create a new space" % "new <SpaceName>"
-    print "   %15s  start ShiftServer on the specified port" % "server [port]"
+    print "   %15s  start ShiftServer on the specified port" % "runserver [port]"
     print
 
 
