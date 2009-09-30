@@ -36,12 +36,12 @@ class SSPreProcessor:
         self.getMetaData()
 
     def getMetaData(self):
-        fh = open('../config/packages.json')
+        fh = open('config/packages.json')
         self.metadata = json.loads(fh.read())
         fh.close()
 
     def setProject(self, project):
-        path = '../config/proj/%s.json' % (os.path.splitext(project)[0])
+        path = 'config/proj/%s.json' % (os.path.splitext(project)[0])
         try:
             # load project file
             fh = open(path)
@@ -52,7 +52,7 @@ class SSPreProcessor:
             sys.exit(2)
 
     def setEnv(self, env):
-        path = '../config/env/%s.json' % (os.path.splitext(env)[0])
+        path = 'config/env/%s.json' % (os.path.splitext(env)[0])
         try:
             # load environment file
             fh = open(path)
@@ -73,7 +73,7 @@ class SSPreProcessor:
                 print "Error: no such input file exist"
                 sys.exit(2)
         else:
-            self.inFile = open('../client/ShiftSpace.js')
+            self.inFile = open('client/ShiftSpace.js')
     
     def setOutputFile(self, outFile):
         self.closeOut = True
@@ -188,7 +188,7 @@ class SSPreProcessor:
                 self.outFile.write('if(typeof %s != "undefined") ShiftSpace.%s = %s;\n' % (realName, exportName, realName))
         # load main if there is one
         if self.proj.has_key("main"):
-            mainFile = "../config/main/%s.js" % os.path.splitext(self.proj["main"])[0]
+            mainFile = "config/main/%s.js" % os.path.splitext(self.proj["main"])[0]
             try:
                 fh = open(mainFile)
                 self.outFile.write(fh.read())

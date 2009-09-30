@@ -101,7 +101,7 @@ os_process_timeout=60000 ; 60 seconds for couchdb-lucene
 
 [update_notification]
 ; CHANGE THIS LINE, username should be set to your username
-indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
+indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -Dcouchdb.url=http://127.0.0.1:5984 -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
 ; PPC MACS USE THIS INSTEAD, username should be set to your username
 ; indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
 
