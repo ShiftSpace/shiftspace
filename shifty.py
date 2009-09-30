@@ -16,6 +16,17 @@ def processTemplate(path, outputdir, name):
     fh.close()
 
 
+def configure():
+    print "Enter the root URL of your ShiftSpace installation (something like http://localhost/shiftspace)."
+    print "It will be saved in ../config/env/mydev.json:"
+    url = sys.stdin.readline()
+    sys.stdin.close()
+
+
+def compile(env):
+    pass
+
+
 def createSpace(name):
     """
     Creates a new directory in the spaces directory with the specified
@@ -43,10 +54,12 @@ def main(argv):
         sys.exit(2)
     if action in ("-h", "--help"):
         usage()
+    if action == "configure":
+        configure()
     if action == "installdeps":
         print "installdeps"
     elif action == "compile":
-        print "compile"
+        compile(argv[1])
     elif action == "initdb":
         print "initdb"
     elif action == "updatedb":
