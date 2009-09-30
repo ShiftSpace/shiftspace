@@ -21,7 +21,7 @@ At its most basic level, building a new Space involves defining two things:
 
 h3. Extending the Space class
 
-To begin, we need extend the ShiftSpace.Space class. This is a very simple operation with MooTools, which offers useful object oriented conventions√. By creating subclasses from the ShiftSpace.Space and ShiftSpace.Shift abstract base classes, you gain access to restricted ShiftSpace methods and benefit from our prewritten code. We try to do lot of heavy lifting for you. If you developed a Space prior to 1.0 please note that the subclassing syntax has changed because we are now only supporting MooTools 1.2.
+To begin, we need extend the ShiftSpace.Space class. This is a very simple operation with MooTools, which offers useful object oriented conventions. By creating subclasses from the ShiftSpace.Space and ShiftSpace.Shift abstract base classes, you gain access to restricted ShiftSpace methods and benefit from our prewritten code. We try to do lot of heavy lifting for you. If you developed a Space prior to 1.0 please note that the subclassing syntax has changed because we are now only supporting MooTools 1.2.
 
 <pre>
 var HelloWorldSpace = new Class({
@@ -30,13 +30,29 @@ var HelloWorldSpace = new Class({
 });
 </pre>
 
+After a lot of consideration we realized this is some serious boilerplate code. You have to write this everytime. So here's a shortcut.
+
+<pre>
+var HelloWorldSpace = Space();
+</pre>
+
+This code is functionally equivalent to previous one but it's a lot less typing.
+
 h3. Extending the Shift class
 
-Now we need to make a HelloWorld Shift class. To do this we need to extend the ShiftSpace.Shift class. Add the following bit of code to your file:
+Now we need to make a HelloWorld Shift class. To do this we need to extend the ShiftSpace.Shift class. Again you could write it like the following:
 
 <pre>
 var HelloWorldShift = new Class({
   Extends: ShiftSpace.Shift
+  // Your code will go here
+});
+</pre>
+
+But's simpler and easier to remember to write this:
+
+<pre>
+var HelloWorldShift = Shift({
   // Your code will go here
 });
 </pre>
@@ -136,7 +152,30 @@ To install your space simply click on the Setting tab of the ShiftSpace Console.
 
 h2. Making it do something
 
-So now what you have is a Space that, technically, satisfies all the requirements of the ShiftSpace platform. Except it doesn't actually do anything! This final section will explain how to make your HelloWorld Space actually do something.
+You're probably eager to see this space in action. Make your space code look like the following:
+
+<pre>
+var HelloWorldSpace = Space();
+var HelloWorldShift = Shift({
+  setup: function(json) {
+    this.setPosition(json.position);
+    this.makeDraggable();
+    this.save();
+  }
+});
+</pre>
+
+This is actually a fully functioning space. Refresh your browser and use the *Space Menu* to create a new HelloWorld shift. You should see it appear on the center of the screen as well as the console. That's because we called the *save* method as soon as the shift is created. 
+
+It's draggable. Move it around. Refresh the browser and click on the shift in the console. You should see it reappear in the last spot you left it.
+
+Congratulations!
+
+Now let's look at how your shift is able to magically appear on the screen and remember it's spot when you move it around.
+
+h2. Making it do something interesting
+
+So now what you have is a Space that, technically, satisfies all the requirements of the ShiftSpace platform. This final section will explain how you might start adding more interesting behaviors to your space.
 
 h3. Initializing the shift
 

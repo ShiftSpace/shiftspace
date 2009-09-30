@@ -43,14 +43,14 @@ var SSInitShift = function(space, options)
   $if(shiftInstanceP,
       function() 
       {
-	SSApp.setDocument('global', shift);
-	SSShowNewShift(space, shift);
+        SSApp.setDocument('global', shift);
+        SSShowNewShift(space, shift);
       },
       function()
       {
-	SSLog("There was an error creating the shift", SSLogError);
+        SSLog("There was an error creating the shift", SSLogError);
       }
-     );
+    );
 }.asPromise();
 
 /*
@@ -230,20 +230,20 @@ function SSSaveNewShift(shift)
     summary: shift.summary,
     content: shift
   };
-  
+
   var p = SSApp.create('shift', params);
   $if(SSApp.noErr(p),
       function(noErr) {
         var newShift = p.value(),
-	    newId = newShift._id,
-            oldId = shift._id,
-            instance = space.getShift(oldId);
+        newId = newShift._id,
+        oldId = shift._id,
+        instance = space.getShift(oldId);
         newShift.created = 'Just posted';
 
-	// update the global cache
-	SSApp.deleteFromCache(oldId, 'global');
-	// swap the ids
-	space.swap(oldId, newId);
+        // update the global cache
+        SSApp.deleteFromCache(oldId, 'global');
+        // swap the ids
+        space.swap(oldId, newId);
 
         SSSetFocusedShiftId(newId);
         if(ShiftSpace.Console) ShiftSpace.Console.show();

@@ -42,37 +42,37 @@ var SSLoadSpace = function(spaceName)
   var codep = SSLoadFile(url);
   var cssp = SSLoadStyle(attrs.css);
   var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
-		   function() {
-		     try
-		     {
-		       var spacectorName = attrs.className || (spaceName+'Space');
-		       var shiftctorName = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
-		       var ctors =  ShiftSpace.__externals.evaluate(
-			 codep.value(),
-			 [spacectorName, shiftctorName]
-		       );
-		       var spacector = ctors[spacectorName], shiftctor = ctors[shiftctorName];
-		       if(!spacector)
-		       {
-			 spacector = ShiftSpace.Space;
-			 SSLog("Could not find a constructor for " + spaceName + ", using default Space constructor", SSLogWarning);
-		       }
-		       if(!shiftctor)
-		       {
-			 throw new Exception(
-			   spaceName + "Shift constructor does not exit! Did you specify the proper shift class name in your attrs.json file?"
-			 );
-		       }
-		       spacector.implement({attributes:function(){return attrs;}});
-		       var space = new spacector(shiftctor);
-		     }
-		     catch(exc)
-		     {
-		       SSLog('Could not load ' + spaceName + ' Space - ' + SSDescribeException(exc), SSLogError);
-		     }
-		     SSPostNotification("onSpaceLoad", space);
-		     return SSRegisterSpace(space);
-		   });
+                   function() {
+                       try
+                       {
+                           var spacectorName = attrs.className || (spaceName+'Space');
+                           var shiftctorName = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
+                           var ctors =  ShiftSpace.__externals.evaluate(
+                               codep.value(),
+                               [spacectorName, shiftctorName]
+                           );
+                           var spacector = ctors[spacectorName], shiftctor = ctors[shiftctorName];
+                           if(!spacector)
+                           {
+                               spacector = ShiftSpace.Space;
+                               SSLog("Could not find a constructor for " + spaceName + ", using default Space constructor", SSLogWarning);
+                           }
+                           if(!shiftctor)
+                           {
+                               throw new Exception(
+                                   spaceName + "Shift constructor does not exit! Did you specify the proper shift class name in your attrs.json file?"
+                               );
+                           }
+                           spacector.implement({attributes:function(){return attrs;}});
+                           var space = new spacector(shiftctor);
+                       }
+                       catch(exc)
+                       {
+                           SSLog('Could not load ' + spaceName + ' Space - ' + SSDescribeException(exc), SSLogError);
+                       }
+                       SSPostNotification("onSpaceLoad", space);
+                       return SSRegisterSpace(space);
+                   });
   return spacep;
 }.decorate(memoize);
 
@@ -184,13 +184,13 @@ function SSLoadSpaceAttributes(spaceName)
                  if(!json.name) throw new SSException("No name for " + json.name + " space specified.");
                  if(json.url) json.url = json.url.trim();
                  if(!json.url)
-		 {
-		   json.url = String.urlJoin(ShiftSpace.info().spacesDir, spaceName);
-		 }
-		 else if(!SSIsAbsoluteURL(json.url)) 
-		 {
-		   throw new SSException(spaceName + " attr.json defines url which is not absolute.");
-		 }
+                 {
+                     json.url = String.urlJoin(ShiftSpace.info().spacesDir, spaceName);
+                 }
+                 else if(!SSIsAbsoluteURL(json.url)) 
+                 {
+                     throw new SSException(spaceName + " attr.json defines url which is not absolute.");
+                 }
                  if (!json.icon) json.icon = String.urlJoin(json.url, json.name + '.png');
                  // clear whitespace
                  if(json.icon) json.icon = json.icon.trim();
@@ -235,10 +235,10 @@ function SSInstallSpace(space)
     var count = $H(SSInstalledSpaces()).getLength();
     var p = SSLoadSpaceAttributes(space);
     $if(p,
-	function(attrs) {
-	  // TODO: throw an error if no attributes file - David
-	  if(!attrs)
-	  {
+        function(attrs) {
+          // TODO: throw an error if no attributes file - David
+          if(!attrs)
+          {
             var attrs = {
               url:url, 
               name:space, 
@@ -246,19 +246,17 @@ function SSInstallSpace(space)
               icon: space+'/'+space+'.png',
               autolaunch: false
             };
-	  }
-	  
-	  var installed = SSInstalledSpaces();
-	  installed[space] = attrs;
-	  
-	  SSSetInstalledSpaces(installed);
-	  var p = SSLoadSpace(space);
-	  $if(p,
-	      function() { 
-		alert(space + " space installed.");
-		SSPostNotification('onSpaceInstall', space); 
-	      });
-	});
+          }
+          var installed = SSInstalledSpaces();
+          installed[space] = attrs;
+          SSSetInstalledSpaces(installed);
+          var p = SSLoadSpace(space);
+          $if(p,
+              function() { 
+                alert(space + " space installed.");
+                SSPostNotification('onSpaceInstall', space); 
+              });
+        });
   }
 };
 

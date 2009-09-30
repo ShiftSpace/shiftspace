@@ -327,8 +327,8 @@ var ShiftSpaceSpace = new Class({
     // return the shift immediately or a promise if there's a ui
     return (function(newShift) {
       self.fireEvent('onCreateShift', {
-	space: self, 
-	shift: newShift
+        space: self, 
+        shift: newShift
       });
       return newShift;
     }.asPromise())(shift);
@@ -447,7 +447,7 @@ var ShiftSpaceSpace = new Class({
       try
       {
         cShift = this.addShift(aShift, this.shiftUI());
-	SSLog("Got shift", cShift, SSLogForce);
+        SSLog("Got shift", cShift, SSLogForce);
       }
       catch(exc)
       {
@@ -459,17 +459,17 @@ var ShiftSpaceSpace = new Class({
       SSLog("Shift loaded", theShift, SSLogForce);
       if(theShift.canShow())
       {
-	if(self.getCurrentShift() && theShift != self.getCurrentShift()) self.getCurrentShift().onBlur();
-	self.setCurrentShift(theShift);
-	if(!theShift.isVisible())
-	{
+        if(self.getCurrentShift() && theShift != self.getCurrentShift()) self.getCurrentShift().onBlur();
+        self.setCurrentShift(theShift);
+        if(!theShift.isVisible())
+        {
           theShift.__show__();
           theShift.show();
           theShift.setIsVisible(true);
           theShift.setIsBeingEdited(false);
-	  self.onShiftShow(theShift);
-	}
-	theShift.onFocus();
+          self.onShiftShow(theShift);
+        }
+        theShift.onFocus();
       }
     }.asPromise())(cShift);
   },
