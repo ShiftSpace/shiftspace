@@ -1,6 +1,6 @@
 import sys
 import os
-
+import shutil
 
 def processTemplate(path, outputdir, name):
     base, ext = os.path.splitext(os.path.basename(path))
@@ -28,6 +28,8 @@ def createSpace(name):
         os.mkdir(dirpath)
         for file in ("template.js", "template.html", "template.css", "attrs.json"):
             processTemplate(os.path.join(tmplpath, file), dirpath, name)
+        shutil.copyfile(os.path.join(tmplpath, "template.png"),
+                        os.path.join(dirpath, "%s.png" % name))
     else:
         print "Error: A space called %s already exists" % name
 
