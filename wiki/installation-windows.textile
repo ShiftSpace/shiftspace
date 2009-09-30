@@ -89,7 +89,7 @@ os_process_timeout=60000 ; 60 seconds for couchdb-lucene
 
 [update_notification]
 ; IMPORTANT: your path to the java executable may different
-indexer=C:\Program Files\Java\jdk1.6.0_11\bin\java -jar C:\Documents and Settings\Owner\Desktop\shiftspace\server\couchdb-lucene-0.4-jar-with-dependencies.jar -index
+indexer=\"C:\Program Files\Java\jdk1.6.0_11\bin\java.exe\" -jar \"C:\Documents and Settings\Owner\Desktop\shiftspace\server\couchdb-lucene-0.4-jar-with-dependencies.jar\" -index
 
 ; To create an admin account uncomment the '[admins]' section below and add a
 ; line in the format 'username = password'. When you next start CouchDB, it                                        
@@ -102,7 +102,7 @@ indexer=C:\Program Files\Java\jdk1.6.0_11\bin\java -jar C:\Documents and Setting
 
 [external]
 ; IMPORTANT: your path to the java executable may be different
-fti=C:\Program Files\Java\jdk1.6.0_11\bin\java -jar C:\Documents and Settings\Owner\Desktop\shiftspace\server\couchdb-lucene-0.4-jar-with-dependencies.jar -search
+fti=\"C:\Program Files\Java\jdk1.6.0_11\bin\java.exe\" -jar \"C:\Documents and Settings\Owner\Desktop\shiftspace\server\couchdb-lucene-0.4-jar-with-dependencies.jar\" -search
 
 [httpd_db_handlers]
 _fti={couch_httpd_external, handle_external_req, <<"fti">>}
