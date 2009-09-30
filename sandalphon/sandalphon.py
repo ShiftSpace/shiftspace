@@ -132,7 +132,9 @@ class SandalphonCompiler:
                         newCSSFileHandle = open(importPath, 'w')
                         newCSSFileHandle.write(preprocessed)
                         newCSSFileHandle.close()
-                    self.cssFile = self.cssFile + "@import url(%s);\n" % importPath.replace('../', server)
+                    # damn windows
+                    importPath = importPath.replace('../', server).replace('\\', '/')
+                    self.cssFile = self.cssFile + "@import url(%s);\n" % importPath
                 else:
                     self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
                     self.cssFile = self.cssFile + fileHandle.read()
