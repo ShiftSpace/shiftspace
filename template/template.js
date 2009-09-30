@@ -6,6 +6,6 @@ var NameSpace = Space({
 
 var NameShift = Shift({
   setup: function(json) {
-    // Your shift code goes here
+    this.setPosition(json);
   }
 });

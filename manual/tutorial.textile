@@ -8,9 +8,21 @@ But before we begin, make sure you're running "Firefox":http://mozilla.com, that
 
 Finally, point your browser at the ShiftSpace Developer Sandbox. This will probably be something like http://localhost/~yourusername/ShiftSpaceInstallDir/sandbox/. You should see a pretty picture of a big desert. This is where most of your development will happen. If you have installed GreaseMonkey and ShiftSpace you should make sure that ShiftSpace never launches on your development URLs, otherwise you'll get some weird interactions. Right click on the GreaseMonkey icon in the lower right corner of your browser window and select *Manage User Scripts...*. Select ShiftSpace and click the button *Add* button next to *Excluded Pages*. The default value to exclude is correct, just add it. You can now close the GreaseMonkey window and continue hacking.
 
-h3. Creating the file
+h2. Introducing Shifty
 
-Open the 'spaces' directory of your ShiftSpace root directory and create a folder called HelloWorld. In your HelloWorld directory, create an empty file called HelloWorld.js and copy the image HelloWorld.png from the ShiftSpace images directory into your HelloWorld directory.
+In your ShiftSpace root directory there is a python script called shifty.py. This is helper tool for running common tasks. In order to use it you have to use the terminal. On OS X this means Terminal.app. If you're on Windows you should have installed mysysgit. mysysgit comes package with with a bash shell, and we'll refer to this as the terminal. On Linux - well you definitely know what the terminal is.
+
+Open up a terminal and run the following:
+
+<pre>
+$ python shifty.py new HelloWorld
+</pre>
+
+This creates all of the file needed for space development in a folder called HelloWorld in the spaces directory where all spaces live. You could have done this by hand, but it's easy to forget what goes in what file. Using shifty.py makes this a whole lot easier.
+
+h3.  Looking at HelloWorld.js
+
+Open HelloWorld.js in the newly created HelloWorld directory. Take a look at this file for a moment. Erase its contents and let's start from scratch
 
 h2. Extending the base classes
 
@@ -30,7 +42,7 @@ var HelloWorldSpace = new Class({
 });
 </pre>
 
-After a lot of consideration we realized this is some serious boilerplate code. You have to write this everytime. So here's a shortcut.
+After a lot of consideration we realized this is some serious boilerplate code. You have to write this every time. So here's a shortcut.
 
 <pre>
 var HelloWorldSpace = Space();
@@ -96,16 +108,16 @@ Prior to 1.0, developers would put their space attributes in the class definitio
 
 We want to support a wider variety of Spaces than prior releases did. For example you might want to create a space that always automatically loads on the New York Times. Because the ShiftSpace runtime always loads Spaces lazily (that is, spaces are not loaded until a user actually tries to view, create, or edit a shift) this presents a problem. The only way for ShiftSpace to know about the capabilities of your space before loading it is for you to provide the attrs.json file.
 
-Create a new text file called *attr.json* and make it look the following:
+Open the *attrs.json* file in your HelloWorld space directory and make it look the following:
 
 <pre>
 {
   name: 'HelloWorld',
-  authors: ['yourname'],
+  authors: ['type your name'],
   icon: 'HelloWorld.png',
   css: 'HelloWorld.css',
   description: 'My first space for ShiftSpace 1.0!',
-  tooltip: 'The most awesome space evar!',
+  tooltip: 'The most awesome space evar! or something like that',
   version: 0.1,
   shift: { html: 'HelloWorld.html' }
 }
@@ -123,7 +135,7 @@ The ShiftSpace teams believes that building extensions to the browser should be 
 
 Basically you provide an html file and we'll add this as property to each shift when it get's created. This might not make much sense right now so let's see how it works.
 
-Create a new file in your space directory called *HelloWorld.html* and put the following into it:
+Open the file *HelloWorld.html* and make it look like the following:
 
 <pre>
 <div class="HelloWorldShift">
@@ -131,7 +143,7 @@ Create a new file in your space directory called *HelloWorld.html* and put the f
 </div>
 </pre>
 
-I know it's hard to believe but that's it. Now for our CSS file. Create a new file in your space directory called *HelloWorld.css* and put the following into:
+Now for our CSS file. Open *HelloWorld.css* and put the following into it:
 
 <pre>
 .HelloWorldShift
@@ -148,7 +160,7 @@ I know it's hard to believe but that's it. Now for our CSS file. Create a new fi
 
 h2. Installing your space
 
-To install your space simply click on the Setting tab of the ShiftSpace Console. From there click on the Spaces subtab. You should see a list including the pre-installed spaces. Scroll down to the input field. Type in 'HelloWorld' and click the Install button. Careful, Space names are case sensitive. You should see your Space icon appear along with the name underneath the default installed Spaces.
+To install your space simply click on the *Settings* tab of the ShiftSpace Console. From there click on the *Installed* subtab. You should see a list including the pre-installed spaces. Scroll down to the input field. Type in 'HelloWorld' and click the Install button. Careful, Space names are case sensitive. You should see your Space icon appear along with the name underneath the default installed Spaces.
 
 h2. Making it do something
 
