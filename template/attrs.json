@@ -1,6 +1,6 @@
 {
   name: "Name",
-  authors: ["YourName"],
+  authors: ["me"],
   icon: "Name.png",
   description: "Add a description (this will appear in the Installed Spaces tab in the Console)",
   tooltip: "Add a tooltip (this will appear when using the Space Menu)",
