@@ -148,26 +148,27 @@ var ShiftSpace = new (function() {
       SSInitDefaultSpaces();
       var p1 = SSApp.query();
       var p2 = $if(SSApp.hasData(p1),
-		   function(userIsLoggedIn) {
-		     ShiftSpace.User.syncData(p1);
-		     SSPostNotification('onUserLogin');
-		     SSLog("Synchronized", SSLogSystem);
-		     return true;
-		   }, true);
-      p2.op(function(value) {
-	var installed = ShiftSpace.User.installedSpaces(), ps;
-	if(installed)
-	{
-	  SSSetup();
-	}
-	else
-	{
-	  // first time ShiftSpace user default spaces not loaded yet
-	  SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
-	  ps = SSLoadDefaultSpacesAttributes();
-	}
-	SSUpdateInstalledSpaces(ps);
-      });
+                   function(userIsLoggedIn) {
+                     ShiftSpace.User.syncData(p1);
+                     SSPostNotification('onUserLogin');
+                     SSLog("Synchronized", SSLogSystem);
+                   });
+      p2.op(
+        function(value) {
+          var installed = ShiftSpace.User.installedSpaces(), ps;
+          if(installed)
+          {
+            SSSetup();
+          }
+          else
+          {
+            // first time ShiftSpace user default spaces not loaded yet
+            SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
+            ps = SSLoadDefaultSpacesAttributes();
+          }
+          SSUpdateInstalledSpaces(ps);
+        }
+      );
       SSWaitForUI(p1);
     }
     
@@ -279,21 +280,21 @@ ShiftSpace.__externals = {
     with(ShiftSpace.__externals)
     {
       var Space = function(obj) {
-	return new Class($merge({Extends:ShiftSpace.Space}, obj));
+        return new Class($merge({Extends:ShiftSpace.Space}, obj));
       };
       var Shift = function(obj) {
-	return new Class($merge({Extends:ShiftSpace.Shift}, obj));
+        return new Class($merge({Extends:ShiftSpace.Shift}, obj));
       };
       eval(external);
       extract.each(function(sym) {
-	try
-	{
-	  result[sym] = eval(sym);
-	}
-	catch(err)
-	{
-	  result[sym] = null;
-	}
+        try
+        {
+          result[sym] = eval(sym);
+        }
+        catch(err)
+        {
+          result[sym] = null;
+        }
       });
     }
     return result;
