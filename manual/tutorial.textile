@@ -2,29 +2,53 @@ h1. Tutorial
 
 h2. Getting started
 
-This tutorial will guide you through building what is perhaps the simplest space that you can make: HelloWorld. The HelloWorld space, when completed, will allow you to add the words 'Hello World!' as a shift to any page on the web. Potentially, anyone else who has ShiftSpace installed will be able to see your message if they happen to discover it on a page, are following, or are part of group that you published the shift to.
+This tutorial will guide you through building what is perhaps the simplest space that you can make: HelloWorld. The HelloWorld space, when completed, will allow you to add the words 'Hello World!' as a shift to any page on the web. Potentially, anyone else who has ShiftSpace installed will be able to see your message if they happen to discover it on a page, if they are following your activity, or are part of group that you published the shift to. They can also see without the plugin if they view it in the ShiftSpace proxy. Yet another they way they might see it is if a blog has installed it as a blog plugin.
 
-But before we begin, make sure you're running "Firefox":http://mozilla.com, that you've "installed the ShiftSpace development environment":install.html. You also need to install the "Firebug extension":http://addons.mozilla.org/firefox/1843 for Firefox. FireBug is a critical tool for designing your space, it allows you to easily examine and manipulate HTML and CSS "on the fly." It will also prove invaluable for debugging.
+But before we begin, make sure you're running "Firefox":http://mozilla.com, that you've "installed the ShiftSpace development environment":install.html, as well as "GreaseMonkey":https://addons.mozilla.org/en-US/firefox/addon/748. You also need to install a cutting edge release of the "Firebug extension":http://getfirebug.com/releases/firebug/1.5X/ for Firefox. FireBug is a critical tool for designing your space, it allows you to easily examine and manipulate HTML and CSS "on the fly." It will also prove invaluable for debugging.
 
-Finally, point your browser at the ShiftSpace Developer Sandbox. This will probably be something like "http://localhost:8080/sandbox/":http://localhost:8080/sandbox/. You should see a pretty picture of a big desert. This is where most of your development will happen. If you have installed GreaseMonkey and ShiftSpace you should make sure that ShiftSpace never launches on your development URLs, otherwise you'll get some weird interactions. Right click on the GreaseMonkey icon in the lower right corner of your browser window and select *Manage User Scripts...*. Select ShiftSpace and click the button *Add* button next to *Excluded Pages*. The default value to exclude is correct, just add it. You can now close the GreaseMonkey window and continue hacking.
+Finally, point your browser at the ShiftSpace Developer Sandbox. This will probably be something like "http://localhost:8080/sandbox/":http://localhost:8080/sandbox/. You should see a pretty picture of a big desert. This is where most of your development will happen. If you have installed GreaseMonkey and ShiftSpace you should make sure that ShiftSpace never launches on your development URLs, otherwise you'll get some weird results. Right click on the GreaseMonkey icon in the lower right corner of your browser window and select *Manage User Scripts...*. Select ShiftSpace and click the button *Add* button next to *Excluded Pages*. The default value to exclude is correct, just add it. You can now close the GreaseMonkey window and continue hacking.
 
-h2. Introducing Shifty
+h2. Using Shifty
 
-In your ShiftSpace root directory there is a python script called shifty.py. This is helper tool for running common tasks. In order to use it you have to use the terminal. On OS X this means Terminal.app. If you're on Windows you should have installed mysysgit. mysysgit comes package with with a bash shell, and we'll refer to this as the terminal. On Linux - well you definitely know what the terminal is.
+In your ShiftSpace root directory there is a python script called shifty.py. This is helper tool for running common tasks. In order to use it you have to use the terminal. On OS X this means Terminal.app. If you're on Windows you should have installed "mysysgit":http://code.google.com/p/msysgit/. mysysgit comes packaged with with a bash shell, and we'll refer to this as the terminal. On Linux - well you definitely know what the terminal is ;)
 
 Open up a terminal and run the following:
 
-<pre>
+<pre class="console">
+$ cd into/your/shiftspace/
 $ python shifty.py new HelloWorld
 </pre>
 
-This creates all of the file needed for space development in a folder called HelloWorld in the spaces directory where all spaces live. You could have done this by hand, but it's easy to forget what goes in what file. Using shifty.py makes this a whole lot easier.
+This creates all of the files needed for space development in a folder called HelloWorld in the spaces directory where all spaces live. You could have done this by hand, but it's easy to forget exactly what goes in what file. Using shifty.py makes this a whole lot easier. Open the new HelloWorld directory now and examine the contents of the file in your favorite text editor.
 
-h3.  Looking at HelloWorld.js
+Believe it or not this is a fully functioning space. Let's see it in action.
 
-Open HelloWorld.js in the newly created HelloWorld directory. Take a look at this file for a moment. Erase its contents and let's start from scratch
+h2. Installing a space
 
-h2. Extending the base classes
+If you've read over the installation instruction you know that to hack on ShiftSpace you need to start up CouchDB. If you are unsure how to do this refer to last section in the install instructions for your platform.
+
+You also need to start the built in webserver using Shifty.
+
+<pre class="console">
+$ cd into/your/shiftspace/
+$ python shifty.py runserver
+</pre>
+
+This starts up the server on port 8080. If you want to start up the server on a different port, just give the runserver command a port number that you want to use.
+
+Now point your browser to the <a target="new" href="http://localhost:8080/sandbox/">sandbox</a>. Open the console with the *shift+space* key combination. If you haven't created an account do so now (remember this is saving to your local CouchDB). If you have, just login using your username and password.
+
+Install your space by selecting the *Settings* tab of the ShiftSpace Console. From there click on the *Installed* subtab. You should see a list including the pre-installed spaces. Scroll down to the input field. Type in 'HelloWorld' and click the Install button. Careful, space names are case sensitive (we'll fix this in a future version). You should see your space icon appear along with the name underneath the default installed Spaces.
+
+Click on the *Space Menu* (first button on the lower left). Select the HelloWorld space. You should see a new orange shift appear on the page. Try dragging it around. Note that when you let go it gets saved and appears in the console.
+
+Cool. Now let's dig in and see how this works.
+
+h2. Looking at HelloWorld.js
+
+Open HelloWorld.js in the newly created HelloWorld directory. Erase its contents and let's start from scratch.
+
+h3. Extending the base classes
 
 At its most basic level, building a new Space involves defining two things:
 
@@ -42,13 +66,13 @@ var HelloWorldSpace = new Class({
 });
 </pre>
 
-After a lot of consideration we realized this is some serious boilerplate code. You have to write this every time. So here's a shortcut.
+This is using the MooTools subclassing syntax. While nice, we realized this is some serious boilerplate code. You have to write this every time. We got sick of writing it everytime. So here's a shortcut.
 
 <pre>
 var HelloWorldSpace = Space();
 </pre>
 
-This code is functionally equivalent to previous one but it's a lot less typing.
+This code is functionally equivalent to previous one but it's a lot less typing. Please not that you cannot use this shortcut generally with MooTools classes, this is a ShiftSpace-specific optimization.
 
 h3. Extending the Shift class
 
@@ -69,44 +93,25 @@ var HelloWorldShift = Shift({
 });
 </pre>
 
-Normally you won't need to create Shift instances yourself. ShiftSpace already has user interfaces and code that handles creating new shift instances automatically. The first thing you want to implement is the <tt>setup</tt> method.  You should initialize your shift instances based on the properties of the passed in JSON object.
+The first thing you want to implement is the <tt>setup</tt> method.  You should initialize your shift instances based on the properties of the passed in JSON object.
 
 <pre>
-var HelloWorldShift = new Class({
-  Extends: ShiftSpace.Shift
+var HelloWorldShift = Shift({
   setup: function(json) {
-    // More code here
+    this.setPosition(json);
+    this.makeDraggable();
+    this.save();
   }
 });
 </pre>
 
-When a user clicks on the Shift Menu to create a new Shift, the following sequence of events is initiated:
+We're back to where we were before except that HelloWorld shifts now save themselves as soon as you create them. We haven't done anything new yet, but it's good to drive home how a space really works.
 
-<ol>
-<li>The ShiftSpace controller object is invoked</li>
-<li>
-  A JSON object with the following properties is generated:
-<pre>
-{
-  id: "newShift4928",           // A temporary ID, replaced upon saving
-  space: "HelloWorld",          // The name of the space that was invoked 
-  username: "alice",            // The username of the author
-  ...                           // many other private fields
-  content: {
-    position: { x: 482, y: 3 2} // Page coordinates where the shift was created
-  }
-}
-</pre>
-</li>
-<li>The <tt>createShift</tt> method of ShiftSpace.Space is called, passing it the JSON object</li>
-<li>A new Shift object instance is created, and the <tt>setup</tt> method is passed the content field of the JSON object</li>
-</ol>
+h3. How the heck does this stuff work?
+
+You're probably asking yourself how your shift appears on the screen, there's doesn't seem to be any code that does that. To begin to get a idea of how this works we need to look at the attributes file for the HelloWorld space.
 
 h3. The space attributes file
-
-Prior to 1.0, developers would put their space attributes in the class definition. This is no longer supported and in fact your space will not properly load if you attempt to do this. In order for ShiftSpace to load you must provide a separate attr.json file in your space directory. Why?
-
-We want to support a wider variety of Spaces than prior releases did. For example you might want to create a space that always automatically loads on the New York Times. Because the ShiftSpace runtime always loads Spaces lazily (that is, spaces are not loaded until a user actually tries to view, create, or edit a shift) this presents a problem. The only way for ShiftSpace to know about the capabilities of your space before loading it is for you to provide the attrs.json file.
 
 Open the *attrs.json* file in your HelloWorld space directory and make it look the following:
 
@@ -123,15 +128,17 @@ Open the *attrs.json* file in your HelloWorld space directory and make it look t
 }
 </pre>
 
-This should be pretty self explanatory. One thing to note is the *shiftui* property that we've defined. In the past space developers had to define their interface by writing code. This ended up being a fairly time consuming and tedious affair. Since that time we developed a very useful system called Sandalphon which allows us to design our interfaces using only HTML and CSS. Recently we've made it possible for you to access this functionality without having to know too much about how it works.
+This should be pretty self explanatory. ShiftSpace loads this file <i>before</i> it loads your space. That's why you see the space icon, tooltip, description, etc. One thing to note is the *shift.html* property that we've defined. In the past space developers had to define their interface by writing code. This ended up being a fairly time consuming and tedious affair. Since that time we developed a very useful system called *Sandalphon* which allows us to design our interfaces using only HTML and CSS. Recently we've made it possible for you to access this functionality without having to be bogged down in the details about how it works.
+
+*NOTE FOR PRE-1.0 DEVELOPERS:* Prior to 1.0, developers would put their space attributes in the class definition. This is no longer supported and in fact your space will not properly load if you attempt to do this. In order for ShiftSpace to load you must provide a separate attr.json file in your space directory. Why? We want to support a wider variety of Spaces than prior releases did. For example you might want to create a space that always automatically loads on the New York Times. Because the ShiftSpace runtime always loads Spaces lazily (that is, spaces are not loaded until a user actually tries to view, create, or edit a shift) this presents a problem. The only way for ShiftSpace to know about the capabilities of your space before loading it is for you to provide the attrs.json file.
 
 h3. Note about conventions
 
-Note that we called the space class *HelloWorldSpace* and the shift class "HelloWorldShift". This is actually somewhat important. This is a convention. Notice that we did not write it as "HelloWorld_Space". Of course you don't have to follow conventions, but the ShiftSpace runtime cannot read your mind. If you have a different name convention you would like to use you will need to specify this. If you want to use a different name for your space class specify a *className* property. For a different shift class name use *shift.className*.
+Note that in *HelloWorld.js* the space class is named *HelloWorldSpace* and the shift class is named *HelloWorldShift*. This is actually somewhat important. This is a convention. Notice that we did not write it as "HelloWorld_Space". Of course you don't have to follow conventions, but the ShiftSpace runtime cannot read your mind. If you have a different naming convention you would like to use you will need to specify this. If you want to use a different name for your space class specify a *className* property. For a different shift class name use *shift.className*.
 
 h3. Designing your interface with HTML and CSS
 
-The ShiftSpace teams believes that building extensions to the browser should be "webby." To us this means HTML+CSS+JavaScript. In the past we leaned a little heavily on JavaScript. Space development now supports designing the look and feel of your interface almost entirely with HTML and CSS. For anything but the most trivial of spaces, this saves hundreds of lines of boilerplate code.
+The ShiftSpace teams believe that building extensions for a browser should be "webby." To us this means sticking with HTML+CSS+JavaScript. In the past we leaned a little heavily on JavaScript. Space development now supports designing the look and feel of your interface almost entirely with HTML and CSS. For anything but the most trivial of spaces, this saves hundreds of lines of boilerplate code.
 
 Basically you provide an html file and we'll add this as property to each shift when it get's created. This might not make much sense right now so let's see how it works.
 
@@ -139,16 +146,16 @@ Open the file *HelloWorld.html* and make it look like the following:
 
 <pre>
 <div class="HelloWorldShift">
-  HelloWorld!
+  Drag me!
 </div>
 </pre>
 
-Now for our CSS file. Open *HelloWorld.css* and put the following into it:
+Now for our CSS file. Open *HelloWorld.css* and make the font-size a little bit bigger:
 
 <pre>
 .HelloWorldShift
 {
-  font: 12px verdana sans-serif;
+  font: 32px verdana sans-serif;
   position: absolute;
   padding:  5px 10px 5px 10px;
   color: #FFF;
@@ -158,88 +165,120 @@ Now for our CSS file. Open *HelloWorld.css* and put the following into it:
 }
 </pre>
 
-h2. Installing your space
+h3. Check your work
 
-To install your space simply click on the *Settings* tab of the ShiftSpace Console. From there click on the *Installed* subtab. You should see a list including the pre-installed spaces. Scroll down to the input field. Type in 'HelloWorld' and click the Install button. Careful, Space names are case sensitive. You should see your Space icon appear along with the name underneath the default installed Spaces.
+Refresh the sandbox, and create a new HelloWorld shift. You should see that your changes have taken.
 
-h2. Making it do something
+h2. Making it do something more interesting
 
-You're probably eager to see this space in action. Make your space code look like the following:
+So now what you have is a Space that, technically, satisfies all the requirements of the ShiftSpace platform. This final section will explain how you might start adding more interesting behaviors to your space. This tutorial starts you down a path where it's much easier to understand how a space like Notes might work.
+
+h3. Understanding saving
+
+You've probably been wondering how HelloWorld can auto-magically save itself to the database. This is because all shifts have an *encode* method. By default shifts encode their position. Instead of using the default *encode* method, let's provide our own. *encode* lists every property that you want to persist. Here we want to store a summary (useful because summaries are displayed in the console) and the position of a shift.
 
 <pre>
-var HelloWorldSpace = Space();
 var HelloWorldShift = Shift({
   setup: function(json) {
     this.setPosition(json.position);
     this.makeDraggable();
     this.save();
-  }
-});
-</pre>
-
-This is actually a fully functioning space. Refresh your browser and use the *Space Menu* to create a new HelloWorld shift. You should see it appear on the center of the screen as well as the console. That's because we called the *save* method as soon as the shift is created. 
-
-It's draggable. Move it around. Refresh the browser and click on the shift in the console. You should see it reappear in the last spot you left it.
-
-Congratulations!
-
-Now let's look at how your shift is able to magically appear on the screen and remember it's spot when you move it around.
-
-h2. Making it do something interesting
-
-So now what you have is a Space that, technically, satisfies all the requirements of the ShiftSpace platform. This final section will explain how you might start adding more interesting behaviors to your space.
-
-h3. Initializing the shift
-
-Let's jump back to the code to put some content on the page. Let's add a some more code into the HelloWorldShift.
-
-<pre>
-var HelloWorldShift = new Class({
-  Extends: ShiftSpace.Shift,
-
-  setup: function(json) {
-    this.element.setStyles({left: json.position.x, top: json.position.y});
-    $(document.body).grab(this.element);
-  }
-}
-</pre>
-
-h3. Saving the shift
-
-While the above is enough for you to see something appear, it's not enough to make the shift persist in the database. Do that you need to call the *Shift.save* method like so:
-
-<pre>
-var HelloWorldShift = new Class({
-  Extends: ShiftSpace.Shift,
-
-  setup: function(json) {
-    this.element.setStyles({left: json.position.x, top: json.position.y});
-    $(document.body).grab(this.element);
-    this.save();
   },
   
   encode: function() {
-    var pos = this.element.getPosition();
     return {
-      summary : 'A hello world shift',
-      position : pos
+      summary : this.element.get('text'),
+      position : this.getPosition()
     };
   }
 }
 </pre>
 
-Note that we added a new method - *Shift.encode*. When you call *Shift.save*, ShiftSpace calls your encode method to get values you think are worth saving. Each field that you encode will be handed back to you in *setup*. So if you save a shift, reload the page and then click it in the console, ShiftSpace will load those values you encoded and make sure they get sent back to your shift.
+When you call *save* in your code, ShiftSpace calls your shifts *encode* method to figure which properties to store in the database.
 
-Again *encode* like *setup* are not methods you call yourself. ShiftSpace will call these methods for you at the proper time. While this approach may seem odd at first, it really frees you up to concern yourself only with the kinds of actions and behaviors you would like your space to provide.
+*encode* like *setup* are not methods you call yourself. ShiftSpace will call these methods for you at the proper time. While this approach may seem odd at first, it really frees you up to concern yourself only with the actions and behaviors you would like your space to provide.
 
-This is all the code that is required to display your shift on the screen and persist it. Try it out, refresh your browser and select the HelloWorld space from the space menu. You should see a HelloWorld shift appear somewhere towards the center of the screen. Note that *this.element* was set to the markup that you specified in the *shift.html* field of your *attrs.json* file.
+Notice that when saving the *summary* property, we write *this.element*. ShiftSpace automatically attaches your interface to your shift instances in the property element. Here were simply using standard MooTools functions to grab the text out of the shift's div.
+
+Test your space to make sure everything is ok.
 
 h2. Enhancements
 
-You have now created a fully functional Space, albeit one that lacks any meaningful purpose. These last few steps will illustrate how you might proceed next in making this more useful to users.
+Before moving on let's make it so that you can change the text of the shift by double clicking on it.
 
-h3. Making it draggable
+<pre>
+var HelloWorldShift = Shift({
+  setup: function(json) {
+    if(json.summary) this.element.set("text", json.summary);
+    this.setPosition(json.position);
+    this.makeDraggable();
+    this.element.addEvent("dblick", this.changeMessage.bind(this));
+    this.save();
+  },
+  
+  changeMessage: function() {
+    var text = prompt("Please enter a new message:", this.summary);
+    this.element.set("text", text);
+    this.save();
+  },
+  
+  encode: function() {
+    return {
+      summary : this.element.get("text"),
+      position : this.getPosition()
+    };
+  }
+}
+</pre>
 
-h3. Changing the message
+Wow, that made code quite a bit longer. Let's break it apart:
 
-h3. The finished code
+<pre>
+if(json.summary) this.element.set("text", json.summary);
+</pre>
+
+This means only set the value of our element to the value of json.summary if json.summary has value. For new shifts, summary is null, for HelloWorld shifts that have been saved, this has a definite value.
+
+<pre>
+this.element.addEvent("dblick", this.changeMessage.bind(this));
+</pre>
+
+This add a double click event handler to our shift. When the event occurs we want to have our *changeMessage* method called. Because of the peculiarities of JavaScript we have to bind this function to our shift. Event binding while not particularly complex is a conversation outside the scope of this tutorial. We recommend that you read on existing literature on the web on this topic.
+
+The *changeMessage* function should be quite clear. It prompts the user for some text, updates the UI, and then saves the shift.
+
+Finally the *encode* method set the value of summary to the current value of the text inside the shift's div element.s
+
+h2. The finished code
+
+<pre>
+var HelloWorldSpace = Space();
+var HelloWorldShift = Shift({
+  setup: function(json) {
+    if(json.summary) this.element.set("text", json.summary);
+    this.setPosition(json.position);
+    this.makeDraggable();
+    this.element.addEvent("dblick", this.changeMessage.bind(this));
+    this.save();
+  },
+  
+  changeMessage: function() {
+    var text = prompt("Please enter a new message:", this.summary);
+    this.element.set("text", text);
+    this.save();
+  },
+  
+  encode: function() {
+    return {
+      summary : this.element.get("text"),
+      position : this.getPosition()
+    };
+  }
+}
+</pre>
+
+h2. Debugging your space
+
+It won't be long before you run into your first bug. So might as well get familiar with the powerful tools available to you in FireBug.
+
+h2. Testing in GreaseMonkey
