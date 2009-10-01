@@ -1,10 +1,12 @@
 import sys
 import os
 import shutil
+import simplejson as json
 import server.server as server
 import builder.corebuilder as corebuilder
-import simplejson as json
-
+import sandalphon.sandalphon as sandalphon
+import builder.preprocess as preprocess
+import server.setup as setup
 
 def env(url):
     return {
@@ -57,8 +59,55 @@ def configure(url):
             })
 
 
-def build():
+def update():
     corebuilder.run()
+
+
+def build(argv):
+    input = None
+    output = None
+    env = None
+    proj = None
+    templ = None
+    gm = False
+
+    def buildUsage():
+        print "\n"
+        print "When running build you may use the following options"
+        print "    -i  input file"
+        print "    -t  template file"
+        print "    -o  output file"
+        print "    -e  environment file"
+        print "    -p  project file"
+
+    try:
+        opts, args = getopt.getopt(argv, 'i:o:e:p:t:',
+                                   ['input=', 'output=', 'environment=', 'project=', 'template='])
+    except:
+        print 'Invalid flag\n'
+        buildUsage()
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ('-i', '--input'):
+            input = arg
+        elif opt in ('-o', '--output'):
+            output = arg
+        elif opt in ('-e', '--environment'):
+            env = arg
+        elif opt in ('-p', '--project'):
+            env = arg
+        elif opt in ('-t', '--template'):
+            templ = arg
+        elif opt in ('-gm', '--greasemonkey'):
+            gm = True
+        else:
+            buildUsage()
+
+    compiler = sandalphon.SandalphonCompiler("client/compiledViews", env)
+    compiler.compile(inputFile=templ)
+    preprocessor = preprocess.SSPreProcessor(project=proj, env=env)
+    preprocesss.preprocess(input=input, output=os.path.join("builds", output))
 
 
 def createSpace(name):
@@ -92,10 +141,12 @@ def main(argv):
         configure(argv[1])
     if action == "installdeps":
         print "installdeps"
-    elif action == "build":
-        build()
+    elif action == "update":
+        update()
     elif action == "initdb":
-        print "initdb"
+        setup.init()
+    elif action == "build":
+        build(argv[2:])
     elif action == "updatedb":
         print "updatedb"
     elif action == "new":
@@ -107,13 +158,13 @@ def main(argv):
 def usage():
     print
     print "Hello from Shifty! <item> is required, [item] is not."
-    print "   %15s  install dependencies" % "installdeps"
-    print "   %15s  configure ShiftSpace" % "configure <url>"
-    print "   %15s  update ShiftSpace source and tests" % "build"
-    print "   %15s  initialize the database" % "initdb"
-    print "   %15s  update the database" % "updatedb"
-    print "   %15s  create a new space" % "new <SpaceName>"
-    print "   %15s  start ShiftServer on the specified port" % "runserver [port]"
+    print "   %16s  install dependencies" % "installdeps"
+    print "   %16s  configure ShiftSpace" % "configure <url>"
+    print "   %16s  update ShiftSpace source and tests" % "build"
+    print "   %16s  initialize the database" % "initdb"
+    print "   %16s  update the database" % "updatedb"
+    print "   %16s  create a new space" % "new <SpaceName>"
+    print "   %16s  start ShiftServer on the specified port" % "runserver [port]"
     print
 
 
