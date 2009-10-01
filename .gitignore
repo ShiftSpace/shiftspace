@@ -13,9 +13,7 @@ server/app/sms.log
 server/server.ini
 
 builder/SSPackageSorter.pyc
-builds/shiftspace.sandalphon.js
-builds/shiftspace.sandbox.js
-builds/shiftspace.user.js
+builds/*
 config/env/my_sandalphon.json
 config/env/mydev.json
 config/packages.json
@@ -47,3 +45,4 @@ lucene/*
 /wiki/.#installation-linux.textile
 /builder/__init__.pyc
 /sandalphon/__init__.pyc
+/builder/corebuilder.pyc
