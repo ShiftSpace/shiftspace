@@ -214,6 +214,7 @@ class SSCoreBuilder():
     
     # write this out to a file
     if writeToFile:
+      #print output
       fileHandle = open(output, "w")
       fileHandle.write(jsonString)
       fileHandle.close()
@@ -334,8 +335,8 @@ def usage():
 
 def run(inputDir=".", outputDir="config"):
   builder = SSCoreBuilder()
-  packagesFile = os.path.join(outputDir, '/packages.json')
-  testsFile = os.path.join(outputDir, '/tests.json')
+  packagesFile = os.path.join(outputDir, 'packages.json')
+  testsFile = os.path.join(outputDir, 'tests.json')
   builder.build(path=inputDir, recurse=True)
   builder.writePackagesJSON(output=packagesFile)
   builder.writeTestsJSON(output=testsFile)

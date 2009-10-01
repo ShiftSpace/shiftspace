@@ -1,5 +1,7 @@
 *~
 *.save
+*.pyc
+server/sessions/*
 
 momasocialbar/images
 momasocialbar/templates
@@ -46,3 +48,4 @@ lucene/*
 /builder/__init__.pyc
 /sandalphon/__init__.pyc
 /builder/corebuilder.pyc
+/server/couchdb-lucene-0.4-jar-with-dependencies.jar

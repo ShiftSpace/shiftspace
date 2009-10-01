@@ -146,7 +146,6 @@ def main(argv):
     except Error:
         usage()
         sys.exit(2)
-    print argv
     if action in ("-h", "--help"):
         usage()
     if action == "configure":
@@ -156,7 +155,6 @@ def main(argv):
     elif action == "update":
         update()
     elif action == "initdb":
-
         setup.init()
     elif action == "build":
         build(argv[1:])
@@ -173,7 +171,7 @@ def usage():
     print "Hello from Shifty! <item> is required, [item] is not."
     print "   %16s  install dependencies" % "installdeps"
     print "   %16s  configure ShiftSpace" % "configure <url>"
-    print "   %16s  update ShiftSpace source and tests" % "build"
+    print "   %16s  update ShiftSpace source and tests" % "update"
     print "   %16s  initialize the database" % "initdb"
     print "   %16s  update the database" % "updatedb"
     print "   %16s  create a new space" % "new <SpaceName>"
