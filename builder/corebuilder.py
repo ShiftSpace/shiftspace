@@ -56,7 +56,6 @@ class SSCoreBuilder():
     Parse all of the relevant files.
     """
 
-    #print "Parsing %s" % path
     fileName = os.path.basename(path)
     name = os.path.splitext(fileName)[0]
 
@@ -67,7 +66,7 @@ class SSCoreBuilder():
 
     for line in fileHandle:
       if self.BUILDER_BEGIN_PATTERN.match(line.strip()):
-        print "== %s" % name
+        #print "== %s" % name
         # we found the beginning of the header. now go parse it
         directives = self.parseDirectives(fileHandle);
 
@@ -281,7 +280,7 @@ class SSCoreBuilder():
     self.testDependencies = {}
     
     for testFile in self.tests:
-      print "Calculating test dependency: %s" % testFile
+      #print "Calculating test dependency: %s" % testFile
       metadata = self.metadata[testFile]
       self.testDependencies[testFile] = []
       
@@ -301,7 +300,7 @@ class SSCoreBuilder():
       if self.metadata[afile].has_key('export'):
         # determine the exports
         fileExports = self.metadata[afile]['export']
-        print fileExports
+        #print fileExports
         if isinstance(fileExports, bool):
           raise MissingExportDescription(self, message="No mapping value supplied to @export directive in file %s" % self.metadata[afile]['path'])
         exportMappings = dict([((len(kv) > 1 and (kv[0].strip(), kv[1].strip())) or 
