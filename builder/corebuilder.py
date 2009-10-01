@@ -333,6 +333,15 @@ def usage():
   print "  -o output directory. two files will be generated - packages.json and tests.json"
 
 
+def run(inputDir=".", outputDir="config"):
+  builder = SSCoreBuilder()
+  packagesFile = os.path.join(outputDir, '/packages.json')
+  testsFile = os.path.join(outputDir, '/tests.json')
+  builder.build(path=inputDir, recurse=True)
+  builder.writePackagesJSON(output=packagesFile)
+  builder.writeTestsJSON(output=testsFile)
+
+
 def main(argv):
   inputFile = "."
   outputDir = "config"
@@ -356,14 +365,7 @@ def main(argv):
       recursive = True
     else:
       assert False, "unhandled options"
-
-  packagesFile = outputDir + '/packages.json'
-  testsFile = outputDir + '/tests.json'
-
-  builder = SSCoreBuilder()
-  builder.build(path=inputFile, recurse=True)
-  builder.writePackagesJSON(output=packagesFile)
-  builder.writeTestsJSON(output=testsFile)
+  run()
   
   
 if __name__ == "__main__":

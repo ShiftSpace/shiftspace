@@ -2,6 +2,7 @@ import sys
 import os
 import shutil
 import server.server as server
+import builder.corebuilder as corebuilder
 import simplejson as json
 
 
@@ -56,8 +57,8 @@ def configure(url):
             })
 
 
-def compile(env):
-    pass
+def build():
+    corebuilder.run()
 
 
 def createSpace(name):
@@ -91,8 +92,8 @@ def main(argv):
         configure(argv[1])
     if action == "installdeps":
         print "installdeps"
-    elif action == "compile":
-        compile(argv[1])
+    elif action == "build":
+        build()
     elif action == "initdb":
         print "initdb"
     elif action == "updatedb":
@@ -108,7 +109,7 @@ def usage():
     print "Hello from Shifty! <item> is required, [item] is not."
     print "   %15s  install dependencies" % "installdeps"
     print "   %15s  configure ShiftSpace" % "configure <url>"
-    print "   %15s  update ShiftSpace source" % "compile"
+    print "   %15s  update ShiftSpace source and tests" % "build"
     print "   %15s  initialize the database" % "initdb"
     print "   %15s  update the database" % "updatedb"
     print "   %15s  create a new space" % "new <SpaceName>"
