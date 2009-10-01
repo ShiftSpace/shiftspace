@@ -1,6 +1,7 @@
 import sys
 import os
 import shutil
+import getopt
 import simplejson as json
 import server.server as server
 import builder.corebuilder as corebuilder
@@ -66,10 +67,9 @@ def build(argv):
     env = None
     proj = None
     templ = None
-    gm = False
 
     def buildUsage():
-        print "\n"
+        print
         print "When running build you may use the following options"
         print "    -i  input file"
         print "    -t  template file"
@@ -78,9 +78,8 @@ def build(argv):
         print "    -p  project file"
 
     try:
-        opts, args = getopt.getopt(argv, 'i:o:e:p:t:',
-                                   ['input=', 'output=', 'environment=', 'project=', 'template='])
-    except:
+        opts, args = getopt.getopt(argv, "i:o:e:p:t:", ['input=', 'output=', 'environment=', 'project=', 'template='])
+    except Exception:
         print 'Invalid flag\n'
         buildUsage()
         sys.exit(2)
@@ -93,18 +92,16 @@ def build(argv):
         elif opt in ('-e', '--environment'):
             env = arg
         elif opt in ('-p', '--project'):
-            env = arg
+            proj = arg
         elif opt in ('-t', '--template'):
             templ = arg
-        elif opt in ('-gm', '--greasemonkey'):
-            gm = True
         else:
             buildUsage()
 
     compiler = sandalphon.SandalphonCompiler("client/compiledViews", env)
     compiler.compile(inputFile=templ)
     preprocessor = preprocess.SSPreProcessor(project=proj, env=env)
-    preprocesss.preprocess(input=input, output=os.path.join("builds", output))
+    preprocessor.preprocess(input=input, output=os.path.join("builds", output))
 
 
 def processTemplate(path, outputdir, name):
@@ -149,6 +146,7 @@ def main(argv):
     except Error:
         usage()
         sys.exit(2)
+    print argv
     if action in ("-h", "--help"):
         usage()
     if action == "configure":
@@ -158,9 +156,10 @@ def main(argv):
     elif action == "update":
         update()
     elif action == "initdb":
+
         setup.init()
     elif action == "build":
-        build(argv[2:])
+        build(argv[1:])
     elif action == "updatedb":
         print "updatedb"
     elif action == "new":
