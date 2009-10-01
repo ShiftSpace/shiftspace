@@ -146,7 +146,24 @@ def createSpace(name):
 
 
 def updatedb():
+    """
+    Resync the server/views folder with the design documents
+    in the database.
+    """
     setup.loadDocs()
+
+
+def installdeps():
+    """
+    Run the dependency install scripts for the appropiate platform.
+    """
+    platform = sys.platform
+    if platform == "darwin":
+        os.system("sudo scripts/install_deps.sh")
+    elif platform == "linux2":
+        os.system("sudo scripts/install_deps.sh")
+    elif platform == "win32":
+        os.system("scripts/install_deps_win.sh")
 
 
 def main(argv):
@@ -160,7 +177,7 @@ def main(argv):
     if action == "configure":
         configure(argv[1])
     if action == "installdeps":
-        print "installdeps"
+        installdeps()
     elif action == "update":
         update()
     elif action == "initdb":
