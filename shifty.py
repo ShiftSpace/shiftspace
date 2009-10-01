@@ -3,11 +3,14 @@ import os
 import shutil
 import getopt
 import simplejson as json
-import server.server as server
+
 import builder.corebuilder as corebuilder
 import sandalphon.sandalphon as sandalphon
 import builder.preprocess as preprocess
+
+import server.server as server
 import server.setup as setup
+
 
 def env(url):
     return {
@@ -71,11 +74,13 @@ def build(argv):
     def buildUsage():
         print
         print "When running build you may use the following options"
-        print "    -i  input file"
-        print "    -t  template file"
-        print "    -o  output file"
-        print "    -e  environment file"
-        print "    -p  project file"
+        print "    -i     input file"
+        print "    -t     template file"
+        print "    -o     output file"
+        print "    -e     environment file"
+        print "    -p     project file"
+        print "    -app   build an application"
+        print
 
     try:
         opts, args = getopt.getopt(argv, "i:o:e:p:t:", ['input=', 'output=', 'environment=', 'project=', 'template='])
@@ -140,6 +145,10 @@ def createSpace(name):
         print "Error: A space called %s already exists" % name
 
 
+def updatedb():
+    setup.loadDocs()
+
+
 def main(argv):
     try:
         action = argv[0]
@@ -159,7 +168,7 @@ def main(argv):
     elif action == "build":
         build(argv[1:])
     elif action == "updatedb":
-        print "updatedb"
+        updatedb()
     elif action == "new":
         createSpace(argv[1])
     elif action == "runserver":
@@ -174,8 +183,9 @@ def usage():
     print "   %16s  update ShiftSpace source and tests" % "update"
     print "   %16s  initialize the database" % "initdb"
     print "   %16s  update the database" % "updatedb"
-    print "   %16s  create a new space" % "new <SpaceName>"
+    print "   %16s  create a new space" % "new <spacename>"
     print "   %16s  start ShiftServer on the specified port" % "runserver [port]"
+    print "   %16s  deploy an application" % "app <appname>"
     print
 
 

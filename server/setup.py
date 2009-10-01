@@ -17,6 +17,7 @@ def isJsFile(path):
     """
     return os.path.splitext(path)[1] == '.js'
 
+
 def walk(dir, op=None):
     """
     Parse a directory for view files.
@@ -35,7 +36,8 @@ def walk(dir, op=None):
             else:
                 print "dir: %s, file: %s" % (dir, path)
 
-def collectDesignDocs(viewDir="views"):
+
+def collectDesignDocs(viewDir="server/views"):
     """
     Load all CouchDB design documents, their views, validation,
     and lucene documents into an array.
@@ -70,10 +72,12 @@ def collectDesignDocs(viewDir="views"):
     walk(viewDir, collect)
     return designDocs
 
+
 def md5hash(str):
     m = md5()
     m.update(str)
     return m.hexdigest()
+
 
 adminUser = {
     "type": "user",
@@ -81,12 +85,14 @@ adminUser = {
     "password": md5hash("shiftspace")
     }
 
+
 adminDoc = {
     "type": "system",
     "ids": ["shiftspace"]
     }
 
-def loadDocs(db, createAdmin=True):
+
+def loadDocs(dbname="shiftspace", createAdmin=True):
     """
     Load all of the initial documents for the database.
     Optional create admin user for debugging. Not recommended
@@ -95,14 +101,18 @@ def loadDocs(db, createAdmin=True):
         db - the database to load the design documents into.
         createAdmin - flag to create superuser. Defaults to True.
     """
+    db = core.connect(dbname)
     docs = collectDesignDocs()
     if createAdmin:
         docs["admins"] = adminDoc
         docs["shiftspace"] = adminUser
     for k, v in docs.items():
         print "Loading %s" % k
+        old = db[k]
+        v["_rev"] = old["_rev"]
         db[k] = v
     print "Design documents loaded."
+
 
 def init(dbname="shiftspace"):
     """
@@ -118,7 +128,8 @@ def init(dbname="shiftspace"):
     else:
         print "%s database already exists." % dbname
     db = server[dbname]
-    loadDocs(db)
+    loadDocs(dbname)
+
 
 if __name__ == "__main__":
   init()

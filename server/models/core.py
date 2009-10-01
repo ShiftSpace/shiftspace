@@ -18,9 +18,9 @@ _lucene = Lucene()
 def server():
     return couchdb.client.Server("http://localhost:5984/")
 
-def connect():
+def connect(dbname="shiftspace"):
     server = couchdb.client.Server("http://localhost:5984/")
-    return server["shiftspace"]
+    return server[dbname]
 
 def lucene():
     return _lucene
