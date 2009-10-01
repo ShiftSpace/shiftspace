@@ -18,20 +18,10 @@ def env(url):
         }
 
 
-def processTemplate(path, outputdir, name):
-    base, ext = os.path.splitext(os.path.basename(path))
-    fh = open(path)
-    contents = fh.read()
-    fh.close()
-    contents = contents.replace("Name", name)
-    fbasename = (ext == ".json" and "attrs") or name
-    fname = "%s%s" % (fbasename, ext)
-    fh = open(os.path.join(outputdir, fname), "w")
-    fh.write(contents)
-    fh.close()
-
-
 def configure(url):
+    """
+    Configure ShiftSpace to be served from a particular url.
+    """
     if url[-1] != "/":
         url = url + "/"
     def writeEnv(name, mergedict):
@@ -60,10 +50,17 @@ def configure(url):
 
 
 def update():
+    """
+    Update the source file and test file indexes.
+    """
     corebuilder.run()
 
 
 def build(argv):
+    """
+    Generates the supporting HTML and CSS files as well as the
+    concatenated source.
+    """
     input = None
     output = None
     env = None
@@ -108,6 +105,23 @@ def build(argv):
     compiler.compile(inputFile=templ)
     preprocessor = preprocess.SSPreProcessor(project=proj, env=env)
     preprocesss.preprocess(input=input, output=os.path.join("builds", output))
+
+
+def processTemplate(path, outputdir, name):
+    """
+    Used by createSpace. Helper function for copying
+    over space template files.
+    """
+    base, ext = os.path.splitext(os.path.basename(path))
+    fh = open(path)
+    contents = fh.read()
+    fh.close()
+    contents = contents.replace("Name", name)
+    fbasename = (ext == ".json" and "attrs") or name
+    fname = "%s%s" % (fbasename, ext)
+    fh = open(os.path.join(outputdir, fname), "w")
+    fh.write(contents)
+    fh.close()
 
 
 def createSpace(name):
