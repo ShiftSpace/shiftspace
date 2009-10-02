@@ -44,10 +44,8 @@ h2. Python dependencies
 Run the following at the terminal:
 
 <pre class="console">
-$ cd ~/Desktop/shiftspace/server
-$ curl -O http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip
-$ unzip deps
-$ sudo ./install_deps_win.sh
+$ cd ~/Desktop/shiftspace
+$ python shifty.py installdeps
 </pre>
 
 This installs all of the Python libraries the ShiftSpace backend needs to run. You might notice there is couchdb-lucene .jar as well. We'll get to that in a moment.
@@ -57,8 +55,8 @@ h2. Initializing the database
 Now we need to initialize the database. Make sure that CouchDB is running. Type the following into your terminal:
 
 <pre class="console">
-$ cd ~/Desktop/shiftspace/server
-$ python setup.py
+$ cd ~/Desktop/shiftspace
+$ python shifty.py initdb
 </pre>
 
 You should see some output as new documents are added to the databse.
@@ -143,11 +141,9 @@ h3. Preparing to start the server
 In order for the ShiftSpace script to build properly between page refreshes the dependencies between all the JavaScript source files must be determined as well as setting the url. In the future you won't need to set the url since it should just default to *http://localhost:8080*. Until then you have to run the following in a terminal:
 
 <pre class="console">
-$ cd ~/Desktop/shiftspace/scripts
-$ ./setup.sh
+$ cd ~/Desktop/shiftspace
+$ python shifty.py configure http//localhost:8080
 </pre>
-
-When prompted, enter *http://localhost:8080*. Take note that there is no trailing slash.
 
 h2. Starting the server
 
@@ -156,8 +152,8 @@ You can now start the ShiftSpace server. Again make sure that the CouchDB is run
 Let's start the actual ShiftSpace server. Type following into a new terminal:
 
 <pre class="console">
-$ cd ~/Desktop/shiftspace/server
-$ python server.py
+$ cd ~/Desktop/shiftspace
+$ python shifty.py runserver
 </pre>
 
 You should see some output that CherryPy is starting up. In your browser goto *http://localhost:8080/*. Don't forget the trailing slash. You should see a greeting.
@@ -175,8 +171,8 @@ Whenever you want to hack on ShiftSpace, first start up CouchDB.
 Then type the following at a new terminal:
 
 <pre class="console">
-$ cd ~/Desktop/shiftspace/server
-$ python server.py
+$ cd ~/Desktop/shiftspace
+$ python shifty.py runserver
 </pre>
 
 You can then point your browser to http://localhost:8080/sandbox/, and that's all there is to it.
