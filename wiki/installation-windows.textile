@@ -176,3 +176,5 @@ $ python shifty.py runserver
 </pre>
 
 You can then point your browser to http://localhost:8080/sandbox/, and that's all there is to it.
+
+h2. Optional packages

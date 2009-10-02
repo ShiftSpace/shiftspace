@@ -173,3 +173,15 @@ Launch FireFox and point the browser at *http://localhost:8080/sandbox/*.
 h2. Recap
 
 Whenever you want to hack on ShiftSpace you need to first start CouchDB, then start up the builtin ShiftSpace webserver (CherryPy). At that point you point your browser at *http://localhost:8080/sandbox/* and start hacking.
+
+h2. Optional Packages
+
+h3. Proxy
+
+ShiftSpace comes with proxy support built right in. This is built on top of the Python *lxml* library. In order to install this you need *libxml2* and *libxslt*. Once you've installed these package you should run the following at the terminal:
+
+<pre class="console">
+$ sudo easy_install lxml
+</pre>
+
+Once you've have the dependencies installed, you should make sure the proxy actually works. Install the developer version of the ShiftSpace GreaseMonkey (you can do this by clicking the button on the upper left in the sandbox). Once installed goto a webpage of you're choosing and add a note to that page. Select the newly created shift in the console and you'll get the Publish Pane. Select the link icon, this will take you to the proxy hopefully with that shift loaded.
