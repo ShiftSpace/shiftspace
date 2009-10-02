@@ -23,9 +23,10 @@ var ShiftListViewCell = new Class({
 
     clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
       evt = new Event(evt);
-      var li = (evt.target.get('tag') == 'li') ? evt.target : evt.target.getParent('li');
+      var target = $(evt.target);
+      var li = (target.get('tag') == 'li') ? target : target.getParent('li');
       var idx = this.delegate().indexOfCellNode(li);
-      if(evt.target.getProperty('checked'))
+      if(target.getProperty('checked'))
       {
         SSPostNotification('onShiftSelect', {listView: this.delegate(), index:idx});
       }
