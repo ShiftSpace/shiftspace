@@ -66,7 +66,6 @@ var ShiftListView = new Class({
     this.refresh();
   },
 
-
   
   checkedItemIndices: function()
   {

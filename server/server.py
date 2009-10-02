@@ -78,6 +78,9 @@ class RootController:
                                 output="builds/shiftspace.dev.user.js")
         return ack
 
+    def proxy(self):
+        return "One day with proxy will live here"
+
 
 def initAppRoutes():
     d = cherrypy.dispatch.RoutesDispatcher()
@@ -98,6 +101,7 @@ def initDevRoutes():
     d.connect(name='rootTest', route='test/:test', controller=root, action='test')
     d.connect(name='rootTests', route='tests', controller=root, action='tests')
     d.connect(name='rootBuild', route='build', controller=root, action='build')
+    d.connect(name='rootProxy', route='proxy', controller=root, action='proxy')
     return d
 
 
