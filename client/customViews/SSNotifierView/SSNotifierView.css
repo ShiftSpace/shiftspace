@@ -96,7 +96,7 @@ button.ActionButton:hover
   float: left;
 }
 
-#SSToggleConsole, #SSShiftCount
+#SSSelectSpace, #SSShiftCount
 {
   margin-left: 40px;
 }
