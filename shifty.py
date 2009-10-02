@@ -174,14 +174,14 @@ def main(argv):
         sys.exit(2)
     if action in ("-h", "--help"):
         usage()
-    if action == "configure":
+    elif action == "configure":
         try:
             url = argv[1]
         except:
             usage()
             sys.exit(2)
-        configure(argv[1])
-    if action == "installdeps":
+        configure(url)
+    elif action == "installdeps":
         installdeps()
     elif action == "update":
         update()
