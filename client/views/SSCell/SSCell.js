@@ -94,20 +94,16 @@ var SSCell = new Class({
   },
   
   
-  eventDispatch: function(_event, eventType)
+  eventDispatch: function(event, eventType)
   {
-    var event = new Event(_event);
-    
-    var action = this.actionForNode(event.target);
-    
-    if(action)
-    {
-      this.runAction(action);
-    }
-    
+    event = new Event(event);
+    var target = $(event.target), action = this.actionForNode(target);
+
+    if(action) this.runAction(action);
+
     if(this.delegate() && this.delegate().onCellClick)
     {
-      var cellNode = (event.target.get('tag') == 'li' && event.target) || event.target.getParent('li');
+      var cellNode = (target.get('tag') == 'li') ? target : target.getParent('li');
       this.delegate().onCellClick(cellNode);
     }
   },

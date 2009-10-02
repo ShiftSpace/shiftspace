@@ -314,9 +314,9 @@ var SSListView = new Class({
       _event - the event issueing the function. Always a "click" event. 
       eventType - //NOTE: I'm not sure what this argument means. -Justin
   */
-  eventDispatch: function(_event, eventType)
+  eventDispatch: function(event, eventType)
   {
-    var event = new Event(_event);
+    event = new Event(event);
     var target = $(event.target);
     var type = event.type;
     
@@ -325,11 +325,11 @@ var SSListView = new Class({
       case(this.hitTest(target, 'li, > li *') != null):
         var hit = this.cachedHit();
         var cellNode = (hit.get('tag') == 'li' && hit) || hit.getParent('li');
-        
-        this.cell().lock(cellNode);
+
+        this.cell().lock($(cellNode));
         this.cell().eventDispatch(event, type);
         this.cell().unlock();
-        
+
         if(type == 'click')
         {
           this.fireEvent('onRowClick', {listView:this, index:this.indexOfCellNode(cellNode)});
@@ -1225,20 +1225,18 @@ var SSListView = new Class({
   
   /*
     Function: onCellClick 
-      Accepts a cell node and sets a userDidClickListItem delegate with the index of the passed cell node.
+      Accepts a cell node and calls onRowClick.
       
     Parameter:
       cellNode - A cell's DOM node
       
+    See Also:
+      onRowClick
   */
   onCellClick: function(cellNode)
   {
-    var index = this.cellNodes().indexOf(cellNode);
+    var index = this.indexOfNode(this.cellNodes(), cellNode);
     this.onRowClick(index);
-    if(this.delegate() && this.delegate().userDidClickListItem)
-    {
-      this.delegate().userDidClickListItem(index);
-    }
   },
 
   
