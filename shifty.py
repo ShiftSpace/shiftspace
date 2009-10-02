@@ -212,11 +212,13 @@ def main(argv):
 def usage():
     print
     print "Hello from Shifty! <item> is required, [item] is not."
+    print "   %16s  a magical dance that installs all dependencies, builds docs, and configures the server!" % "dance"
     print "   %16s  install dependencies" % "installdeps"
     print "   %16s  configure ShiftSpace" % "configure <url>"
     print "   %16s  update ShiftSpace source and tests" % "update"
     print "   %16s  initialize the database" % "initdb"
     print "   %16s  update the database" % "updatedb"
+    print "   %16s  build documentation" % "docs"
     print "   %16s  create a new space" % "new <spacename>"
     print "   %16s  start ShiftServer on the specified port" % "runserver [port]"
     print "   %16s  deploy an application" % "app <appname>"

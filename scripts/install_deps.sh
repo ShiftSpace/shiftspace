@@ -1,4 +1,10 @@
-curl -O http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip
+#!/bin/bash
+
+if [ ! -f deps.zip ]
+then
+    curl -O http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip
+fi
+
 unzip deps
 cd deps/CherryPy-3.1.2
 sudo python setup.py install
