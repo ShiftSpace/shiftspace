@@ -175,6 +175,11 @@ def main(argv):
     if action in ("-h", "--help"):
         usage()
     if action == "configure":
+        try:
+            url = argv[1]
+        except:
+            usage()
+            sys.exit(2)
         configure(argv[1])
     if action == "installdeps":
         installdeps()
@@ -187,9 +192,21 @@ def main(argv):
     elif action == "updatedb":
         updatedb()
     elif action == "new":
+        try:
+            name = argv[1]
+        except:
+            usage()
+            sys.exit(2)
         createSpace(argv[1])
     elif action == "runserver":
-        server.start()
+        try:
+            port = argv[1]
+            server.start(port=int(port))
+        except:
+            server.start()
+    else:
+        usage()
+        sys.exit(2)
 
 
 def usage():

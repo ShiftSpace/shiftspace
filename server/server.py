@@ -101,7 +101,7 @@ def initDevRoutes():
     return d
 
 
-def start(conf="default.conf"):
+def start(conf="default.conf", port=8080):
     serverroot = os.path.dirname(os.path.abspath(__file__))
     webroot = os.path.dirname(serverroot)
     config = ConfigParser.ConfigParser({'webroot':webroot,
@@ -120,7 +120,7 @@ def start(conf="default.conf"):
                 v = int(v)
             d[section][k] = v
 
-    cherrypy.config.update({'server.socket_port':8080})
+    cherrypy.config.update({'server.socket_port':port})
 
     d['/']['request.dispatch'] = initDevRoutes()
     dev = cherrypy.tree.mount(root=None, script_name='/', config=d)
