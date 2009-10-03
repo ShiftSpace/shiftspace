@@ -33,6 +33,9 @@ class RootController:
     def read(self):
         return 'The ShiftSpace 1.0 Robot says \"Hello\"'
 
+    def docs(self):
+        return serve_file(os.path.join(webroot, 'docs/index.html'))
+
     def sandbox(self):
         corebuilder.run()
         compiler = sandalphon.SandalphonCompiler("client/compiledViews", "mydev")
@@ -97,6 +100,7 @@ def initDevRoutes():
     d = cherrypy.dispatch.RoutesDispatcher()
     root = RootController()
     d.connect(name='root', route='', controller=root, action='read')
+    d.connect(name='rootDocs', route='docs', controller=root, action='docs')
     d.connect(name='rootSandbox', route='sandbox', controller=root, action='sandbox')
     d.connect(name='rootTest', route='test/:test', controller=root, action='test')
     d.connect(name='rootTests', route='tests', controller=root, action='tests')
