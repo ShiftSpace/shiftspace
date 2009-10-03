@@ -170,8 +170,7 @@ def docs():
     """
     Build all the documentation for the project.
     """
-    # check to see if coredocs and coredocsp already exist
-    os.system("./NaturalDocs-1.4/NaturalDocs -i . -o html coredocs -p coredocsp -xi externals -xi NaturalDocs-1.4 -xi builds -xi spaces")
+    os.system("./NaturalDocs-1.4/NaturalDocs -i . -o html docs -p tmp/docs -xi externals -xi NaturalDocs-1.4 -xi builds -xi spaces")
 
 
 def main(argv):
