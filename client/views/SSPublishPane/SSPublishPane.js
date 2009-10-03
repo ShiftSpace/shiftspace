@@ -6,6 +6,11 @@
 // @dependencies      SSView
 // ==/Builder==
 
+/*
+  Class: SSPublishPane
+    The publish pane class. A singleton. Listens to all ShiftListView instances
+    for selection notification.
+ */
 var SSPublishPane = new Class({
 
   Extends: SSView,
