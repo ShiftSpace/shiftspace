@@ -5,7 +5,14 @@
 // @dependencies      SandalphonCore
 // ==/Builder==
 
+/*
+  Class: SSView
+    The base class for representing JavaScript controlled user interface components
+    in ShiftSpace. A SSView instance controls an element in the DOM. This allows us
+    to abstract away the DOM and focus on the high level behavior of the component.
 
+    SSView can be considered an abstract class, tho sometimes it is useful to use directly.
+*/
 var SSView = new Class({
 
   name: 'SSView',
