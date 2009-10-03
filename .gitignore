@@ -49,3 +49,7 @@ lucene/*
 /sandalphon/__init__.pyc
 /builder/corebuilder.pyc
 /server/couchdb-lucene-0.4-jar-with-dependencies.jar
+
+NaturalDocs-1.4/*
+coredocs/*
+coredocsp/*
