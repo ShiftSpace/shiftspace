@@ -159,9 +159,9 @@ def installdeps():
     """
     platform = sys.platform
     if platform == "darwin":
-        os.system("sudo scripts/install_deps.sh")
+        os.system("scripts/install_deps.sh")
     elif platform == "linux2":
-        os.system("sudo scripts/install_deps.sh")
+        os.system("scripts/install_deps.sh")
     elif platform == "win32":
         os.system("scripts/install_deps_win.sh")
 
@@ -170,6 +170,13 @@ def docs():
     """
     Build all the documentation for the project.
     """
+    cwd = os.getcwd()
+    docpath = os.path.join(cwd, "docs")
+    if not os.path.isdir(docpath):
+        os.mkdir(docpath)
+    ndpath = os.path.join(cwd, "tmp/docs")
+    if not os.path.isdir(ndpath):
+        os.mkdir(ndpath)
     os.system("./externals/NaturalDocs-1.4/NaturalDocs -i . -o html docs -p tmp/docs -xi externals -xi NaturalDocs-1.4 -xi builds -xi spaces -xi ideas -xi tmp")
 
 
@@ -188,6 +195,8 @@ def main(argv):
             usage()
             sys.exit(2)
         configure(url)
+    elif action == "docs":
+        docs()
     elif action == "installdeps":
         installdeps()
     elif action == "update":

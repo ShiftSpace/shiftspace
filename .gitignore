@@ -50,6 +50,6 @@ lucene/*
 /builder/corebuilder.pyc
 /server/couchdb-lucene-0.4-jar-with-dependencies.jar
 
-NaturalDocs-1.4/*
-coredocs/*
-coredocsp/*
+externals/NaturalDocs-1.4/*
+docs/*
+tmp/*
