@@ -11,6 +11,7 @@ sudo python setup.py install
 cd ../CouchDB-0.6
 sudo python setup.py install
 cd ../../
-cp deps/couchdb-lucene-0.4-jar-with-dependencies.jar server/
+mv deps/couchdb-lucene-0.4-jar-with-dependencies.jar server/
+mv deps/NaturalDocs-1.4 externals/
 rm -rf deps
 rm deps.tar.gz

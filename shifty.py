@@ -170,7 +170,7 @@ def docs():
     """
     Build all the documentation for the project.
     """
-    os.system("./NaturalDocs-1.4/NaturalDocs -i . -o html docs -p tmp/docs -xi externals -xi NaturalDocs-1.4 -xi builds -xi spaces")
+    os.system("./externals/NaturalDocs-1.4/NaturalDocs -i . -o html docs -p tmp/docs -xi externals -xi NaturalDocs-1.4 -xi builds -xi spaces -xi ideas -xi tmp")
 
 
 def main(argv):
