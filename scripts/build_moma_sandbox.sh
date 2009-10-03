@@ -1,2 +1,0 @@
-python ../sandalphon/sandalphon.py -i ../momasocialbar/views/MoMAConsole/MoMAConsole.html -o ../client/compiledViews/;
-python ../builder/preprocess.py -e mydev -i ../momasocialbar/BootstrapMoMA.js -p MoMA -o ../builds/shiftspace.sandbox.js;
