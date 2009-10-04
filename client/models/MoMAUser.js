@@ -3,6 +3,10 @@
 // @package           MoMA
 // ==/Builder==
 
+/*
+  Class: MoMAUserClass
+    Class to create the MoMAUser singleton.
+*/
 var MoMAUserClass = new Class({
   
   Extends: ShiftSpaceUserClass,
