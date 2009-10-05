@@ -42,11 +42,12 @@ SSCellError.NoSuchTarget = new Class({
 
 /*
   Class: SSCell
-    Used with SSListView. The repeatable cell that populates the contents
-    of a SSListView.
+    Used with SSListView. Generally takes a model DOM node which is the cookie
+    cutter which is used to populate the list view. SSCell is also the templating
+    class of the ShiftSpace UI system. Generally you define setters so that a
+    JSON object can be mapped onto the DOM.
 */
 var SSCell = new Class({
-
   Extends: SSView,
   name: 'SSCell',
   
@@ -54,7 +55,7 @@ var SSCell = new Class({
   {
     this.parent(el, options);
     
-    this.initActions();
+    this.setActions(this.options.actions);
     this.attachEvents();
     this.prepareClone();
     
@@ -67,10 +68,16 @@ var SSCell = new Class({
     this.element.addEvent('click', this.eventDispatch.bindWithEvent(this, 'click'));
   },
   
-  
-  setProxy: function(newProxy)
+  /*
+    Function: setProxy
+      Set a proxy.
+
+    Paramaters:
+      proxy - the proxy object.
+   */
+  setProxy: function(proxy)
   {
-    this.__proxy = newProxy;
+    this.__proxy = proxy;
   },
   
   
@@ -89,23 +96,20 @@ var SSCell = new Class({
     }
   },
   
-  
-  initActions: function()
-  {
-    if(this.options.actions)
-    {
-      this.setActions(this.options.actions);
-    }
-  },
-  
-  
+  /*
+    Function: eventDispatch
+      *private*
+      Dispatch an event. You should never call this directly.
+
+    Parameters:
+      event - the browser event.
+      eventType - custom event type.
+   */
   eventDispatch: function(event, eventType)
   {
     event = new Event(event);
     var target = $(event.target), action = this.actionForNode(target);
-
     if(action) this.runAction(action);
-
     if(this.delegate() && this.delegate().onCellClick)
     {
       var cellNode = (target.get('tag') == 'li') ? target : target.getParent('li');
@@ -113,7 +117,14 @@ var SSCell = new Class({
     }
   },
   
-  
+  /*
+    Function: action
+      Takes an action JSON object and acts on it.
+
+    Parameters:
+      action - an action JSON object
+      event - a custom event type.
+   */
   runAction: function(action, event)
   {
     var target = this.getBinding(action.target);
@@ -129,7 +140,15 @@ var SSCell = new Class({
     method(this, event);
   },
   
-  
+  /*
+    Function: getBinding
+      *private*
+      Take a target specifier and resolve it to the actual object. Target specifier
+      can be "self" or of the form "id.pA.pB.pC.."
+
+    Parameters:
+      target - a target specifier.
+   */
   getBinding: function(target)
   {
     // TODO: allow getBinding to access simple properties - David
@@ -147,7 +166,17 @@ var SSCell = new Class({
     return result;
   },
   
-  
+  /*
+    Function: actionForNode
+      *private*
+      Returns the action for a particular child node.
+    
+    Parameters:
+      node - a DOM element.
+
+    Returns:
+      a function.
+   */
   actionForNode: function(node)
   {
     if(!this.lockedElement()) throw new SSCellError.NoLock(new Error(), "actionForNode called with no locked element.");
@@ -163,13 +192,27 @@ var SSCell = new Class({
     return null;
   },
   
-  
+  /*
+    Function: setActions
+      *private*
+      Set the actions for this cell.
+
+    Parameters:
+      actions - an array of actions.
+   */
   setActions: function(actions)
   {
     this.__actions = actions;
   },
   
-  
+  /*
+    Function: getActions
+      *private*
+      Returns the array of actions on the cell instance.
+
+    Returns:
+      An array of actions.
+   */
   getActions: function()
   {
     return this.__actions;
@@ -256,7 +299,18 @@ var SSCell = new Class({
     return null;
   },
   
-  
+  /*
+    Function: prepareClone
+      *private*
+      Prepares a clone. Removes the options, uiclass, and outlet attributes
+      as well as the SSCell class.
+
+    Returns:
+      a clone of the cell's model DOM element.
+
+    See Also:
+      <clone>
+   */
   prepareClone: function()
   {
     var clone = this.element.clone(true);
@@ -271,32 +325,35 @@ var SSCell = new Class({
   
   /*
     Function: clone
-      Creates a clone of the DOM model and returns it.
+      Creates a clone of the cell's model DOM element and returns it.
       
     Returns:
       A DOM node.
+      
+    See Also:
+      <prepareClone>
   */
   clone: function()
   {
     var clone = this.__modelClone.clone(true);
-    
-    if(clone.getElement('*[uiclass]'))
-    {
-      Sandalphon.activate(clone);
-    }
-    
+    if(clone.getElement('*[uiclass]')) Sandalphon.activate(clone);
     clone.addClass('SSCellClone');
-    
     return clone;
   },
   
   /*
     Function: cloneWithData
       Creates a clone, locks it, modifies it's content
-      and returns it.
+      with the passed in JSON object.
+
+    Parameters:
+      data - a JSON object.
       
     Returns:
       A DOM node.
+
+    See Also:
+      <setData>, <clone>
   */
   cloneWithData: function(data)
   {
@@ -307,7 +364,16 @@ var SSCell = new Class({
     return clone;
   },
   
-  
+  /*
+    Function: lockedElement
+      Returns the currently locked DOM element.
+
+    Returns:
+      A DOM element.
+
+    See Also:
+      <lock>, <unlock>, <isLocked>
+   */
   lockedElement: function()
   {
     return this.__lockedElement;
@@ -327,7 +393,7 @@ var SSCell = new Class({
   },
 
   /*
-    Function: lock
+    Function: unlock
       Unlock this cell.
   */
   unlock: function()
@@ -337,7 +403,7 @@ var SSCell = new Class({
 
   /*
     Function: isLocked
-      Returns the lock status of this cell.
+      Returns the lock status of the cell.
       
     Returns:
       A boolean.
@@ -347,39 +413,43 @@ var SSCell = new Class({
     return this.__lockedElement != null;
   },
 
-
+  /*
+    Function: getParentRow
+      *deprecated*
+      Used in conjunction with SSTableView which will probably get deprecated in 
+      favor of SSListView.
+   */
   getParentRow: function()
   {
-    // TODO: related to SSTableView - not sure if this should be here.
-    // probably should not because this.element is not in the DOM
     if(this.element) return this.element.getParent('.SSRow');
     return null;
   },
   
-  
+  /*
+    Function: edit
+      Put the currently locked element into edit mode. If there's an element
+      with class SSEditView in the locked element give that element the SSActive
+      class.
+   */
   edit: function()
   {
     var el = this.lockedElement();
-
-    // show the edit view
     el.addClass('SSIsBeingEdited');
     if(el.getElement('.SSEditView')) el.getElement('.SSEditView').addClass('SSActive');
   },
   
-  
+  /*
+    Function: leaveEdit
+      Remove css classes from the locked element that pertain to editing.
+   */
   leaveEdit: function()
   {
     var el = this.lockedElement();
-    
-    // let the delegate know the edits were committed
     el.removeClass('SSIsBeingEdited');
-    
     // FIXME: hmm seems hacky - David
     el.setStyles({
       width: ''
     });
-    
     if(el.getElement('.SSEditView')) el.getElement('.SSEditView').removeClass('SSActive');
   }
-
 });
