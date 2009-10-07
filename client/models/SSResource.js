@@ -518,7 +518,7 @@ var SSResource = new Class({
   addView: function(view)
   {
     this.views().push(view);
-    view.setResource(this);
+    //view.setResource(this);
   },
   
   /*
