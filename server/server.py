@@ -8,6 +8,7 @@ from cherrypy.lib.static import serve_file
 import ConfigParser
 import routes
 import email
+from mako.template import Template
 import simplejson as json
 
 import builder.corebuilder as corebuilder
