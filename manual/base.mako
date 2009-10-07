@@ -2,9 +2,10 @@
   <%
   import textile
   fh = open(filename)
-  print textile.textile(fh.read())
-  fh.close
+  result = textile.textile(fh.read())
+  fh.close()
   %>
+  ${result}
 </%def>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
