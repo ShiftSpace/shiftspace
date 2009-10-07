@@ -11,7 +11,7 @@ all = ['manual/install.mako',
        'manual/advanced.mako']
 
 
-def build(path=None):
+def build(path=None, outputFile=None):
     """
     Builds the output HTML for a page of the ShiftSpace manual.
     """
@@ -19,9 +19,10 @@ def build(path=None):
         usage()
         sys.exit(2)
     lookup = TemplateLookup(directories=['.', 'manual', 'wiki'])
-    tmpl = Template(filename='print.mako', lookup=lookup)
-    basename = os.path.splitext(path)[0]
-    fh = open("%s.html" % basename, "w")
+    tmpl = Template(filename=path, lookup=lookup)
+    if not outputFile:
+        outputFile = "%s.html" % os.path.splitext(path)[0]
+    fh = open(outputFile, "w")
     fh.write(tmpl.render())
     fh.close()
 
@@ -29,15 +30,42 @@ def build(path=None):
 def buildAll():
     for file in all:
         build(file)
-
+    
 
 def main(argv):
-    pass
+    inputFile = None
+    outputFile = None
+    doAll = False
+    
+    try:
+        opts, args = getopt.getopt(argv, "i:o:e:jh", ["input=", "output=", "help", "all"])
+    except:
+        print "Invalid flag\n"
+        usage()
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif opt in ("-i", "--input"):
+            inputFile = arg
+        elif opt in ("-o", "--output"):
+            outputFile = arg
+        elif opt in ("-a", "--all"):
+            doAll = True
+    if (not inputFile) and (not doAll):
+        print "No input file!"
+        usage()
+        sys.exit(2)
+    if doAll:
+        buildAll()
+    else:
+        build(inputFile, outputFile)
 
 
 def usage():
     print
-    print "-i input file"
+    print "-i input file, required"
     print "-o ouput file"
 
 
