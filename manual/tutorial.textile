@@ -247,7 +247,7 @@ This add a double click event handler to our shift. When the event occurs we wan
 
 The *changeMessage* function should be quite clear. It prompts the user for some text, updates the UI, and then saves the shift.
 
-Finally the *encode* method set the value of summary to the current value of the text inside the shift's div element.s
+Finally the *encode* method set the value of summary to the current value of the text inside the shift's div element.
 
 h2. The finished code
 
@@ -282,3 +282,4 @@ h2. Debugging your space
 It won't be long before you run into your first bug. So might as well get familiar with the powerful tools available to you in FireBug.
 
 h2. Testing in GreaseMonkey
+
