@@ -25,6 +25,7 @@ eventByUser= "_design/events/_view/by_user"
 allShifts = "_design/shifts/_view/all"
 shiftByHref = "_design/shifts/_view/by_href"
 shiftByUser = "_design/shifts/_view/by_user"
+shiftCountByDomain = "_design/shifts/_view/count_by_domain"
 
 favoritesByShift = "_design/favorites/_view/by_shift"
 favoritesByUser = "_design/favorites/_view/by_user"

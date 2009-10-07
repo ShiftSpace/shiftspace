@@ -43,7 +43,7 @@ def configure(url):
                 }
             })
     writeEnv("dev", {
-            "LOG_LEVEL": "SSLogError | SSLogSystem | SSLogShift"
+            "LOG_LEVEL": "SSLogError | SSLogSystem"
             })
     writeEnv("sandalphon", {
             "LOG_LEVEL": "SSLogError | SSLogSandalphon",

@@ -59,7 +59,6 @@ else
 }
 
 /*
-
 Class: ShiftSpace
   A singleton controller object that represents ShiftSpace Core. All methods
   functions and variables are private.  Please refer to the documention on <User>,
@@ -72,10 +71,8 @@ var ShiftSpace = new (function() {
     var SSApp = SSApplication();
 
     /*
-
-    Function: initialize
-    Sets up external components and loads installed spaces.
-
+      Function: initialize
+        Sets up external components and loads installed spaces.
     */
     this.initialize = function() {
       SSLog("ShiftSpace initializing", SSLogSystem);
@@ -139,10 +136,10 @@ var ShiftSpace = new (function() {
     };
     
     /*
-    Function: SSSync (private)
-      Synchronize with server: checks for logged in user.
+      Function: SSSync (private)
+        Synchronize with server: checks for logged in user.
     */
-    function SSSync() 
+    function SSSync()
     {
       // initialize the value of default spaces for guest users
       SSInitDefaultSpaces();
@@ -152,7 +149,10 @@ var ShiftSpace = new (function() {
                      ShiftSpace.User.syncData(p1);
                      SSPostNotification('onUserLogin');
                      SSLog("Synchronized", SSLogSystem);
-                   });
+                   },
+		   function(noData) {
+		     SSLog("User is not logged in", p1.value(), SSLogSystem);
+		   });
       p2.op(
         function(value) {
           var installed = ShiftSpace.User.installedSpaces(), ps;
@@ -314,3 +314,4 @@ ShiftSpace.__externals = {
     return result;
   }
 };
+
