@@ -7,6 +7,7 @@ import stream
 import event
 import permission
 
+
 def ShiftError(Exception): pass
 def ShiftSchemaConflictError(ShiftError): pass
 

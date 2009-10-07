@@ -38,18 +38,28 @@ class ShiftController(ResourceController):
                   conditions=dict(method="POST"))
         d.connect(name="shifts", route="shifts", controller=self, action="shifts",
                   conditions=dict(method="GET"))
+        d.connect(name="shiftsCount", route="shifts/count", controller=self, action="count",
+                  conditions=dict(method="GET"))
         return d
 
+    def count(self, byHref, byDomain=None, byFollowing=False, byGroups=False):
+        return self.shifts(byHref, byDomain, byFollowing, byGroups, True)
+
     @jsonencode
-    def shifts(self, byHref, byDomain=None, byFollowing=False, byGroups=False):
+    def shifts(self, byHref, byDomain=None, byFollowing=False, byGroups=False, count=False):
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
-            return data(shift.shifts(byHref, 
-                                     userId=loggedInUser.get("_id"), 
-                                     byFollowing=byFollowing, 
-                                     byGroups=byGroups))
+            allShifts = shift.shifts(byHref,
+                                     loggedInUser.get("_id"),
+                                     byFollowing,
+                                     byGroups)
         else:
-            return data(shift.shifts(byHref, None, byFollowing, byGroups))
+            allShifts = shift.shifts(byHref, None, byFollowing, byGroups)
+
+        if count:
+          return data(len(allShifts))
+        else:
+          return data(allShifts)  
 
     @jsonencode
     @loggedin

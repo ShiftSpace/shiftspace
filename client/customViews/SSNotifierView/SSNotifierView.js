@@ -32,6 +32,24 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
   },
   
+  refreshShiftCount:function()
+  {
+    this.__count = SSApp.confirm(SSApp.get({
+                                    resource:'shifts',
+                                    action:"count",
+                                    data:{
+                                      byHref: window.location.href.split("#")[0]
+                                      }
+                                    }));
+  },
+  
+  getShiftCount: function()
+  {
+    if (this.__count == undefined)
+      this.refreshShiftCount();
+      
+    return this.__count;
+  },
   
   onConsoleShow: function()
   {
@@ -120,18 +138,25 @@ var SSNotifierView = new Class({
   
   handleLogin: function()
   {
+    this.refreshShiftCount();
     this.updateControls();
   },
   
   
   handleLogout: function()
   {
+    this.refreshShiftCount();
     this.updateControls();
   },
   
   
   updateControls: function()
   {
+    if (this.SSShiftCount)
+    {
+      this.SSShiftCount.set('text', this.getShiftCount() + " shifts");
+    }
+    
     if(this.SSUsername)
     {
       this.SSUsername.set('text', ShiftSpace.User.getUserName());
@@ -300,7 +325,7 @@ var SSNotifierView = new Class({
     this.SSLogInOut.addEvent('click', function() {
       if(ShiftSpace.User.isLoggedIn())
       {
-        ShiftSpace.User.logout()
+        ShiftSpace.User.logout();
       }
       else
       {
