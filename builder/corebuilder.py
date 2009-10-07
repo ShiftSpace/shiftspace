@@ -56,7 +56,6 @@ class SSCoreBuilder():
     Parse all of the relevant files.
     """
 
-    #print "Parsing %s" % path
     fileName = os.path.basename(path)
     name = os.path.splitext(fileName)[0]
 
@@ -67,7 +66,7 @@ class SSCoreBuilder():
 
     for line in fileHandle:
       if self.BUILDER_BEGIN_PATTERN.match(line.strip()):
-        print "== %s" % name
+        #print "== %s" % name
         # we found the beginning of the header. now go parse it
         directives = self.parseDirectives(fileHandle);
 
@@ -199,7 +198,7 @@ class SSCoreBuilder():
     return [f for f in deps if f in packageFiles]
 
 
-  def writePackagesJSON(self, output="../config/packages.json", writeToFile=True):
+  def writePackagesJSON(self, output="config/packages.json", writeToFile=True):
     """
     Write a package json description.
     """
@@ -215,13 +214,14 @@ class SSCoreBuilder():
     
     # write this out to a file
     if writeToFile:
+      #print output
       fileHandle = open(output, "w")
       fileHandle.write(jsonString)
       fileHandle.close()
     else:
       print jsonString
 
-  def writeTestsJSON(self, output="../config/tests.json", writeToFile=True):
+  def writeTestsJSON(self, output="config/tests.json", writeToFile=True):
     """
     Write tests json description.
     """
@@ -281,7 +281,7 @@ class SSCoreBuilder():
     self.testDependencies = {}
     
     for testFile in self.tests:
-      print "Calculating test dependency: %s" % testFile
+      #print "Calculating test dependency: %s" % testFile
       metadata = self.metadata[testFile]
       self.testDependencies[testFile] = []
       
@@ -301,7 +301,7 @@ class SSCoreBuilder():
       if self.metadata[afile].has_key('export'):
         # determine the exports
         fileExports = self.metadata[afile]['export']
-        print fileExports
+        #print fileExports
         if isinstance(fileExports, bool):
           raise MissingExportDescription(self, message="No mapping value supplied to @export directive in file %s" % self.metadata[afile]['path'])
         exportMappings = dict([((len(kv) > 1 and (kv[0].strip(), kv[1].strip())) or 
@@ -333,9 +333,18 @@ def usage():
   print "  -o output directory. two files will be generated - packages.json and tests.json"
 
 
+def run(inputDir=".", outputDir="config"):
+  builder = SSCoreBuilder()
+  packagesFile = os.path.join(outputDir, 'packages.json')
+  testsFile = os.path.join(outputDir, 'tests.json')
+  builder.build(path=inputDir, recurse=True)
+  builder.writePackagesJSON(output=packagesFile)
+  builder.writeTestsJSON(output=testsFile)
+
+
 def main(argv):
-  inputFile = "../"
-  outputDir = "../config"
+  inputFile = "."
+  outputDir = "config"
   recursive = False
 
   try:
@@ -356,14 +365,7 @@ def main(argv):
       recursive = True
     else:
       assert False, "unhandled options"
-
-  packagesFile = outputDir + '/packages.json'
-  testsFile = outputDir + '/tests.json'
-
-  builder = SSCoreBuilder()
-  builder.build(path=inputFile, recurse=True)
-  builder.writePackagesJSON(output=packagesFile)
-  builder.writeTestsJSON(output=testsFile)
+  run()
   
   
 if __name__ == "__main__":

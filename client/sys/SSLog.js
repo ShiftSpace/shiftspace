@@ -5,32 +5,33 @@
 // Internal Error Logging, trust me, you don't need this - kisses ShiftSpace Core Robot
 var SSNoLogging = 0;
 
+/*
+  Constants: Logging levels
+    SSNoLogging - log nothing
+    SSLogError - log errors
+    SSLogWarning - log warninggs
+    SSLogRequest - log remote requests
+    SSLogForce - force logging
+    SSLogInclude - log file includes
+    SSLogSystem - system level logging
+    SSLogAll - log everything
+ */
 var SSLogMessage        = 1,
     SSLogError          = 1 << 1,
     SSLogWarning        = 1 << 2,
-    SSLogPlugin         = 1 << 3,
     SSLogRequest        = 1 << 4,
-    SSLogSpaceError     = 1 << 5,
-    SSLogShift          = 1 << 6,
-    SSLogSpace          = 1 << 7,
-    SSLogViews          = 1 << 8,
-    SSLogSandalphon     = 1 << 9,
     SSLogForce          = 1 << 10,
     SSInclude           = 1 << 11,
-    SSLogViewSystem     = 1 << 12;
     SSLogSystem         = 1 << 13;
 
 var SSLogAll = 0xfffffff;           // All bits on (if we have at most 32 types)
 var __ssloglevel = SSNoLogging;
 
 /*
-Function: log
+Function: SSLog
   Logs a message to the console, but only in debug mode or when reporting
-  errors.
-
-Parameters:
-  msg - The message to be logged in the JavaScript console.
-  verbose - Force the message to be logged when not in debug mode.
+  errors. Takes a variable list of arguments, the last of which is the type
+  of logging to done.
 */
 function SSLog()
 {
@@ -92,6 +93,13 @@ function SSLog()
   } 
 }
 
+/*
+  Function: SSSetLogLevel
+    Set the current log level. Affects all logging output.
+
+  Parameters:
+    level - a bit mask
+*/
 function SSSetLogLevel(level)
 {
   SSLog('SSSetLogLevel ' + level);

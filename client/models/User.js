@@ -7,8 +7,8 @@
 
 /*
   Class: User
-    A an object wrapping the current ShiftSpace User.  Use this class to check the user's display
-    name as well as checking if the user is logged in or out.
+    A an object wrapping the current ShiftSpace User. Handles ShiftSpace specific
+    user functionality such as setting persistent local preferences.
 */
 var ShiftSpaceUserClass = new Class({
   

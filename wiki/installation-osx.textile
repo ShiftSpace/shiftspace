@@ -1,11 +1,16 @@
+h2. Python 
+
+On 10.5 and 10.6 nothing needs to be done. If you are on 10.4 you need to install Python 2.6. We recommend doing this via Porticus. 
+
+First install the latest version of "MacPorts":http://www.macports.org/. 
+
+While using the MacPorts at the command line is not difficult, using "Porticus":http://porticus.alittledrop.com/ is far simpler. Install this as well.
+
+Once Porticus is installed launch it. Before doing anything, first run *Port > Self Update...* in the top menu. Then select the *All Ports* folder in the left nav. Then search for the *python26* package. Select it and click the *Install* button on the top left of the main window.
+
 h2. Installing Git
 
-We recommend installing the latest version of "MacPorts":http://www.macports.org/. While using the MacPorts at the command line is not difficult, using "Porticus":http://porticus.alittledrop.com/ is far simpler. Once you installed MacPorts be sure to create or edit your *.bash_profile*. This allows you to easily run programs installed by MacPorts. *.bash_profile* is invisible in the Finder because it starts with a period. Use a text editor like Coda or TextWrangler (or a terminal based text editor like Nano, Vim, or Emacs) to create this file if it doesn't exist or simply edit it. The contents should look like the following:
-
-<pre>
-PATH=$PATH:/opt/local/bin
-export PATH
-</pre>
+We recommend that you install Git 1.6.4.4 from "here":http://code.google.com/p/git-osx-installer/. If you are running on 10.4 we recommend you install the git-core package using Porticus.
 
 h2. Getting ShiftSpace
 
@@ -36,15 +41,17 @@ h2. Installing CouchDB on PPC Mac running 10.5 (Leopard)
 
 Use Porticus to install the couchdb-devel package.
 
+h2. Introducing Shifty
+
+ShiftSpace comes with a helper script called Shifty that allows to run common tasks. Shifty is directly inspired by the friendly manage.py script in Django.
+
 h2. Python dependencies
 
 Run the following at the terminal:
 
 <pre class="console">
-$ cd ~/Sites/shiftspace/server
-$ curl -O http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip
-$ unzip deps
-$ sudo ./install_deps.sh
+$ cd ~/Sites/shiftspace
+$ python shifty.py installdeps
 </pre>
 
 This installs all of the Python libraries the ShiftSpace backend needs to run. You might notice there is couchdb-lucene .jar as well. We'll get to that in a moment.
@@ -54,8 +61,8 @@ h2. Initializing the database
 Now we need to initialize the database. Make sure that CouchDBX is running. Type the following into your terminal:
 
 <pre class="console">
-$ cd ~/Sites/shiftspace/server
-$ python setup.py
+$ cd ~/Sites/shiftspace
+$ python shifty.py initdb
 </pre>
 
 You should see some output as new documents are added to the databse.
@@ -70,7 +77,7 @@ h3. If you installed the CouchDBX Application
 
 Right click on the CouchDBX application in your Applications directory using the Finder. You'll get a new window displaying the contents of the application. Drill down through *Contents/Resources/couchdbx-core/couchdb/etc/couchdb/*. Open up *local.ini* in your favorite text editor. Replace the contents with the *local.ini* specified below.
 
-h3. If you installed CouchDB via MacPorts
+h3. If you installed CouchDB via Porticus/MacPorts
 
 Open */opt/local/etc/couchdb/local.ini* in your favorite text editor. You will need to enter you admin password in order to edit this file.
 
@@ -96,7 +103,7 @@ os_process_timeout=60000 ; 60 seconds for couchdb-lucene
 
 [update_notification]
 ; CHANGE THIS LINE, username should be set to your username
-indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
+indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -Dcouchdb.url=http://127.0.0.1:5984 -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
 ; PPC MACS USE THIS INSTEAD, username should be set to your username
 ; indexer=/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home/bin/java -jar /Users/username/Sites/shiftspace/server/couchdb-lucene-0.4-jar-with-dependencies.jar -index
 
@@ -159,14 +166,12 @@ Point your browser at *http://localhost:5984/shiftspace/_fti*. You should see so
 
 h3. Preparing to start the server
 
-In order for the ShiftSpace script to build properly between page refreshes the dependencies between all the JavaScript source files must be determined as well as setting the url. In the future you won't need to set the url since it should just default to *http://localhost:8080*. Until then you have to run the following in a terminal:
+In order for the ShiftSpace script to build properly between page refreshes you must set the url where ShiftSpace will be running from.
 
 <pre class="console">
-$ cd ~/Sites/shiftspace/scripts
-$ ./setup.sh
+$ cd ~/Sites/shiftspace
+$ python shifty.py configure http://localhost:8080
 </pre>
-
-When prompted, enter *http://localhost:8080*. Take note that there is no trailing slash.
 
 h2. Starting the server
 
@@ -181,8 +186,15 @@ You'll be prompted for you admin password.
 Let's start the actual ShiftSpace server. Type following into a new terminal:
 
 <pre class="console">
-$ cd ~/Sites/shiftspace/server
-$ python server.py
+$ cd ~/Sites/shiftspace
+$ python shifty.py runserver
+</pre>
+
+This starts up the server on port 8080. If you'd like to run on another port you need to do the following:
+
+<pre class="console">
+$ python shifty.py configure http://localhost:PORT_NUMBER
+$ python shifty.py runserver PORT_NUMBER
 </pre>
 
 You should see some output that CherryPy is starting up. In your browser goto *http://localhost:8080/*. Don't forget the trailing slash. You should see a greeting.
@@ -203,9 +215,21 @@ $ sudo couchdb
 
 Then type the following at a new terminal:
 
-<pre lang="console">
-$ cd ~/Sites/shiftspace/server
-$ python server.py
+<pre class="console">
+$ cd ~/Sites/shiftspace
+$ python shifty.py runserver
 </pre>
 
 You can then point your browser to http://localhost:8080/sandbox/, and that's all there is to it.
+
+h2. Optional Packages
+
+h3. Proxy
+
+ShiftSpace comes with proxy support built right in. This is built on top of the Python *lxml* library. In order to install this you need *libxml2* and *libxslt*. On Mac OS X we recommend you install these libraries via MacPorts/Porticus. Once you've installed these package you should run the following at the terminal:
+
+<pre class="console">
+$ sudo easy_install lxml
+</pre>
+
+Once you've have the dependencies installed, you should make sure the proxy actually works. Install the developer version of the ShiftSpace GreaseMonkey (you can do this by clicking the button on the upper left in the sandbox). Once installed goto a webpage of you're choosing and add a note to that page. Select the newly created shift in the console and you'll get the Publish Pane. Select the link icon, this will take you to the proxy hopefully with that shift loaded.

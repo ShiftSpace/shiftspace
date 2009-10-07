@@ -5,9 +5,13 @@
 // @dependencies      SSView
 // ==/Builder==
 
-// ==============
-// = Exceptions =
-// ==============
+/*
+  Constants:
+    SSCellError - root SSCell exception
+    SSCellError.NoSuchProperty - no such property exists in the cell.
+    SSCellError.NoLock - attempt to operate on a node with locking the cell first.
+    SSCellError.NoSuchTarget - attempt to add a action-target with a target that does not exists.
+ */
 
 var SSCellError = SSException;
 
@@ -36,10 +40,11 @@ SSCellError.NoSuchTarget = new Class({
   name:"SSCellError.NoSuchTarget"
 });
 
-// ====================
-// = Class Definition =
-// ====================
-
+/*
+  Class: SSCell
+    Used with SSListView. The repeatable cell that populates the contents
+    of a SSListView.
+*/
 var SSCell = new Class({
 
   Extends: SSView,
@@ -94,20 +99,16 @@ var SSCell = new Class({
   },
   
   
-  eventDispatch: function(_event, eventType)
+  eventDispatch: function(event, eventType)
   {
-    var event = new Event(_event);
-    
-    var action = this.actionForNode(event.target);
-    
-    if(action)
-    {
-      this.runAction(action);
-    }
-    
+    event = new Event(event);
+    var target = $(event.target), action = this.actionForNode(target);
+
+    if(action) this.runAction(action);
+
     if(this.delegate() && this.delegate().onCellClick)
     {
-      var cellNode = (event.target.get('tag') == 'li' && event.target) || event.target.getParent('li');
+      var cellNode = (target.get('tag') == 'li') ? target : target.getParent('li');
       this.delegate().onCellClick(cellNode);
     }
   },

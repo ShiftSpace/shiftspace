@@ -1,4 +1,4 @@
-These are instructions for Ubuntu 9.0.4. Please send us a message if you have install instructions for other version of Ubuntu or other versions of Linux.
+These instructions were tested on Ubuntu 9.0.4. Please send us a message if you have install instructions for other version of Ubuntu or other versions of Linux.
 
 h2. Installing Python
 
@@ -38,20 +38,20 @@ $ git clone git://github.com/ShiftSpace/shiftspace.git
 Now we need to check out the right branch and bring in the other repositories:
 
 <pre class="console">
-$ cd shiftspace
+$ cd ~/shiftspace
 $ git submodule init
 $ git submodule update
 </pre>
+
+h2. Introducing Shifty
 
 h2. Installing the dependencies
 
 Run the following at a terminal to install the ShiftSpace Python dependencies.
 
 <pre class="console">
-$ cd server
-$ wget http://cloud.github.com/downloads/ShiftSpace/shiftspace/deps.zip
-$ unzip deps.zip
-$ sudo ./install_deps.sh
+$ cd ~/shiftspace
+$ python shifty.py installdeps
 </pre>
 
 h2. Installing CouchDB
@@ -70,6 +70,9 @@ $ sudo apt-get install libcurl4-gnutls-dev
 Get the CouchDB source:
 
 <pre class="console">
+$ cd ~
+$ mkdir src
+$ cd src
 $ svn co http://svn.apache.org/repos/asf/couchdb/trunk couchdb
 </pre>
 
@@ -140,8 +143,8 @@ h2. Initializing the databse
 Run the following at a terminal:
 
 <pre class="console">
-$ cd ~/shiftspace/server
-$ python setup.py
+$ cd ~/shiftspace
+$ python shifty.py initdb
 </pre>
 
 This create a CouchDB database called "shiftspace" and populate it with the initial design documents.
@@ -153,19 +156,16 @@ In order for the ShiftSpace script to build between browser refreshes ShiftSpace
 Run the following at a terminal:
 
 <pre class="console">
-$ cd ~/shiftspace/scripts
-$ ./setup.sh
-</pre>
-
-When prompted enter in *http://localhost:8080*. Note the lack of a trailing slash.
+$ cd ~/shiftspace
+$ python shifty.py configure http://localhost:8080</pre>
 
 h2. Starting the server
 
 We can finally start the server, run the following at the terminal:
 
 <pre class="console">
-$ cd ~/shiftspace/server
-$ python server.py
+$ cd ~/shiftspace
+$ python shifty.py runserver
 </pre>
 
 Launch FireFox and point the browser at *http://localhost:8080/sandbox/*.
@@ -173,3 +173,15 @@ Launch FireFox and point the browser at *http://localhost:8080/sandbox/*.
 h2. Recap
 
 Whenever you want to hack on ShiftSpace you need to first start CouchDB, then start up the builtin ShiftSpace webserver (CherryPy). At that point you point your browser at *http://localhost:8080/sandbox/* and start hacking.
+
+h2. Optional Packages
+
+h3. Proxy
+
+ShiftSpace comes with proxy support built right in. This is built on top of the Python *lxml* library. In order to install this you need *libxml2* and *libxslt*. Once you've installed these package you should run the following at the terminal:
+
+<pre class="console">
+$ sudo easy_install lxml
+</pre>
+
+Once you've have the dependencies installed, you should make sure the proxy actually works. Install the developer version of the ShiftSpace GreaseMonkey (you can do this by clicking the button on the upper left in the sandbox). Once installed goto a webpage of you're choosing and add a note to that page. Select the newly created shift in the console and you'll get the Publish Pane. Select the link icon, this will take you to the proxy hopefully with that shift loaded.

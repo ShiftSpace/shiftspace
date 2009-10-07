@@ -235,9 +235,9 @@ function SSSaveNewShift(shift)
   $if(SSApp.noErr(p),
       function(noErr) {
         var newShift = p.value(),
-        newId = newShift._id,
-        oldId = shift._id,
-        instance = space.getShift(oldId);
+            newId = newShift._id,
+            oldId = shift._id,
+            instance = space.getShift(oldId);
         newShift.created = 'Just posted';
 
         // update the global cache
@@ -250,6 +250,8 @@ function SSSaveNewShift(shift)
 
         space.onShiftSave(newId);
         SSPostNotification('onShiftSave', newId);
+      },
+      function(err) {
       });
 }
 
@@ -282,7 +284,10 @@ function SSSaveShift(shift)
   $if(SSApp.noErr(p),
       function() {
         SSSpaceForName(shift.space.name).onShiftSave(p.get('id'));
-      });
+      },
+      function() {
+      }
+     );
 }
 
 /*

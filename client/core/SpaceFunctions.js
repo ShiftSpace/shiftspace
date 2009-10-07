@@ -87,7 +87,9 @@ function SSRegisterSpace(instance)
 {
   var spaceName = instance.name;
   SSSetSpaceForName(instance, spaceName);
-  instance.addEvent('onShiftUpdate', SSSaveShift.bind(this));
+  instance.addEvent('onShiftUpdate', function(shift) {
+    SSSaveShift.safeCall(shift);
+  });
   var spaceDir = SSURLForSpace(spaceName);
 
   // This exposes each space instance to the console

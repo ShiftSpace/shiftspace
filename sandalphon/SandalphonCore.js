@@ -19,6 +19,12 @@ function SSAddFramedView(framedView)
   __framedViews[framedView.getId()] = framedView;
 }
 
+/*
+  Class: Sandalphon
+    A singleton class that associates JavaScript controllers with DOM nodes. Also
+    provides bindings from DOM nodes to JavaScript controller or even bindings
+    from JavaScript controller to JavaScript controller.
+*/
 var SandalphonClass = new Class({
 
   initialize: function()
@@ -385,122 +391,3 @@ var SandalphonClass = new Class({
   }
 });
 var Sandalphon = new SandalphonClass();
-
-
-var SandalphonToolClass = new Class({
-   Language: 'en',
-
-   initialize: function(storage)
-   { 
-     SSLog('Sandalphon, sister of Metatron, starting up.', SSLogSandalphon);
-     // setup the persistent storage
-     this.setStorage(storage);
-     this.initInterface();
-   },
-
-   /*
-     Function: initInterface
-       Loads the last used input paths as a convenience.
-   */
-   initInterface: function()
-   {
-     SSLog('Initializing interface', SSLogSandalphon);
-
-     this.storage().get('lastInterfaceFile', function(ok, value) {
-       if(ok && value) $('loadFileInput').setProperty('value', value);
-     });
-
-     this.attachEvents();    
-   },
-
-   
-   /*
-     Function: storage
-       Accessor method.
-
-     Returns:
-       The persistent storage object.
-   */
-   storage: function()
-   {
-     return this.__storage__;
-   },
-
-   /*
-     Function: setStorage
-       Set the persistent storage object.
-
-     Parameters:
-       storage - A persistent storage object, provided by persist.js
-   */
-   setStorage: function(storage)
-   {
-     this.__storage__ = storage;
-   },
-
-   
-   loadUI: function(ui)
-   {
-     // empty it out first
-     $('SSSandalphonContainer').empty();
-     // Add the style
-     Sandalphon.addStyle(ui.styles);
-     // load the new file
-     $('SSSandalphonContainer').set('html', ui.interface);
-     // activate the interface
-     Sandalphon.activate();
-   },
-
-   /*
-     Function: attachEvents
-       Attach the gui events for the interface.
-   */
-   attachEvents: function()
-   {
-     // attach file loading events
-     $('loadFileInput').addEvent('keyup', function(_evt) {
-       var evt = new Event(_evt);
-       if(evt.key == 'enter')
-       {
-         Sandalphon.load($('loadFileInput').getProperty('value'), this.loadUI.bind(this));
-       }
-     }.bind(this));
-
-     // attach the compile events
-     $('compileFile').addEvent('click', this.compileFile.bind(this));
-
-     // attach events to localization switcher
-     $('localizedStrings').addEvent('change', function(_evt) {
-       var evt = new Event(_evt);
-       SSLoadLocalizedStrings($('localizedStrings').getProperty('value'));
-     }.bind(this));
-   },
-   
-   /*
-      Function: compileFile
-        Tell the server to compile the file
-    */
-   compileFile: function()
-   {
-     // clear out all existing system data
-
-     // grab the filepath
-     var filepath = $('loadFileInput').getProperty('value');
-     // save for later
-     this.storage().set('lastInterfaceFile', filepath);
-
-     new Request({
-       url: "compile.php",
-       data: {"filepath":'../'+filepath+'.html'},
-       onComplete: function(responseText, responseXml)
-       {
-         var filename = filepath.split('/').getLast();
-         Sandalphon.load('client/compiledViews/'+filename, this.loadUI.bind(this));
-       }.bind(this),
-       onFailure: function(response)
-       {
-         console.error(response);
-       }
-     }).send();
-   }
-});

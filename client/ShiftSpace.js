@@ -139,7 +139,7 @@ var ShiftSpace = new (function() {
     };
     
     /*
-    Function: SSSync
+    Function: SSSync (private)
       Synchronize with server: checks for logged in user.
     */
     function SSSync() 
@@ -172,6 +172,11 @@ var ShiftSpace = new (function() {
       SSWaitForUI(p1);
     }
     
+    /*
+      Function: SSWaitForUI (private)
+        Waits for the core user interface components to initialize. Once
+	initialized posts "onSync" notification.
+     */
     var SSWaitForUI = function(query)
     {
       // wait for console and notifier before sending onSync
@@ -188,6 +193,11 @@ var ShiftSpace = new (function() {
       }
     }.asPromise();
     
+    /*
+      Function: SSSetup (private)
+        Automatically load spaces that have been set to autolaunch
+	due either to user preferences or domain settings for the space.
+     */
     function SSSetup()
     {
       // automatically load a space if there is domain match
@@ -218,7 +228,11 @@ var ShiftSpace = new (function() {
       SSLog("setup complete", SSLogSystem);
     }
 
-    // TODO: write some documentation here
+    /*
+      Function: SSCheckForUpdates (private)
+        Check to see if a new version of ShiftSpace is available. If it is
+	prompt user to install.
+     */
     function SSCheckForUpdates()
     {
       // Only check once per page load

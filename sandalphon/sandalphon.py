@@ -26,7 +26,7 @@ class SandalphonCompiler:
         self.visitedViews = {}
         # load the specified environment file
         if envFile:
-            fh = open('../config/env/%s.json' % envFile)
+            fh = open('config/env/%s.json' % envFile)
         if fh == None:
             print "Environment file SHIFTSPACE_ROOT/config/env/%s.json does not exist" % envFileName
             sys.exit(2)
@@ -42,7 +42,7 @@ class SandalphonCompiler:
         else:
             self.outputDirectory = outputDirectory
         # load the packages json file
-        packagesJsonFile = open('../config/packages.json')
+        packagesJsonFile = open('config/packages.json')
         self.packages = json.loads(packagesJsonFile.read())
         self.files = self.packages['files']
         self.cssFile = ''
@@ -56,8 +56,8 @@ class SandalphonCompiler:
         """
         Looks into views and builds the paths to the interface files
         """
-        viewsDirectory = "../client/views/"
-        customViewsDirectory = "../client/customViews/"
+        viewsDirectory = "client/views/"
+        customViewsDirectory = "client/customViews/"
         views = [f for f in os.listdir(viewsDirectory) if(f != ".svn")]
         customViews = [f for f in os.listdir(customViewsDirectory) if (f != ".svn")]
         self.paths = {}
@@ -133,7 +133,7 @@ class SandalphonCompiler:
                         newCSSFileHandle.write(preprocessed)
                         newCSSFileHandle.close()
                     # damn windows
-                    importPath = importPath.replace('../', server).replace('\\', '/')
+                    importPath = (server + importPath).replace('\\', '/')
                     self.cssFile = self.cssFile + "@import url(%s);\n" % importPath
                 else:
                     self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
@@ -174,7 +174,7 @@ class SandalphonCompiler:
         seen = {}
         for item in uiclasses:
             seen[item] = True
-        viewDirectory = "../client/views/"
+        viewDirectory = "client/views/"
         toLoad = seen.keys()
         # TODO: doesn't look in custom view, we should see if it is a custom view - David 7/12/09
         [self.addCSS({"path": os.path.join(os.path.join(viewDirectory, item), item+".css"), "file":item})
@@ -234,7 +234,7 @@ class SandalphonCompiler:
         
         globalCSS = self.env["data"].get("GLOBAL_CSS")
         if globalCSS:
-            cssPath = os.path.join('..', globalCSS)
+            cssPath = globalCSS
             self.addCSSForHTMLPath(cssPath)
 
         notcore = [item["path"] for item in self.cssFiles

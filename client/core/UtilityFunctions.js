@@ -4,7 +4,6 @@
 // @package           Core
 // ==/Builder==
 
-
 /*
 
 Function: info
@@ -176,7 +175,6 @@ function SSResourceExists(resourceName)
 {
   return __sys__.files[resourceName] != null || __sys__.packages[resourceName] != null;
 }
-
 
 function SSResetCore()
 {
