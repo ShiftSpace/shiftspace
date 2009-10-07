@@ -506,7 +506,8 @@ var SSResource = new Class({
   
   /*
     Function: addView (private)
-      Add a view to the managed views list.
+      Add a view to the managed views list. Also sets a reference
+      to this resource in the view.
 
     Parameter:
       view - An instance of SSView
@@ -517,6 +518,7 @@ var SSResource = new Class({
   addView: function(view)
   {
     this.views().push(view);
+    //view.setResource(this);
   },
   
   /*
