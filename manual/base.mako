@@ -3,6 +3,7 @@
   import textile
   fh = open(filename)
   result = textile.textile(fh.read())
+  result = "<%text>" + result + "</%text>"
   fh.close()
   %>
   ${result}
@@ -13,12 +14,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <meta http-equiv="Refresh" content="0; install"/>
     <title>The ShiftSpace Manual</title>
+    <link rel="stylesheet" href="manual.css" type="text/css" />
+    <script src="mootools.js" type="text/javascript"></script>
+    <script src="manual.js" type="text/javascript"></script>
   </head>
   <body>
-    <%include file="nav.html"/>
-    ${self.content()}
+    <div id="container">
+      <div id="top">
+        <a href="http://www.shiftspace.org/" id="logo"><img src="images/shiftspace_logo.png" class="noborder"/></a>
+        <div id="tagline">an open source layer above any website</div>
+      </div>
+      <%include file="nav.html"/>
+      <div id="main">
+	${self.content()}
+      </div>
   </body>
 </html>
 

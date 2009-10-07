@@ -7,7 +7,6 @@ def main(argv):
     input = None
     output = None
     try:
-        print argv
         opts, args = getopt.getopt(argv, "i:o:h", ["input=", "output=", "help"])
     except:
         print "\nERROR: Invalid flag"
@@ -26,8 +25,8 @@ def main(argv):
         usage()
         sys.exit(2)
     if output == None:
-        basename = os.splitext(os.file.basename(input))[0]
-        input = "%.html" % basename
+        basename = os.path.splitext(os.path.basename(input))[0]
+        output = "%s.html" % basename
     fh = open(input)
     converted = textile.textile(fh.read())
     fh.close()
