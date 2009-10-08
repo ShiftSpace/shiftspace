@@ -50,13 +50,14 @@ class RootController:
         }
         t = Template(filename="html/index.mako", lookup=lookup)
         try:
-            db = core.server()
-            db.version
+            server = core.server()
+            server.version
         except Exception:
             values["statusType"] = "err"
             values["detailsType"] = "couchdb"
             return t.render(**values)
         try:
+            db = core.connect()
             db["_design/validation"]
         except:
             values["statusType"] = "err"
