@@ -108,8 +108,12 @@ def loadDocs(dbname="shiftspace", createAdmin=True):
         docs["shiftspace"] = adminUser
     for k, v in docs.items():
         print "Loading %s" % k
-        old = db[k]
-        v["_rev"] = old["_rev"]
+        # check if there are existing design documents
+        try:
+            old = db[k]
+            v["_rev"] = old["_rev"]
+        except Exception:
+            pass
         db[k] = v
     print "Design documents loaded."
 
