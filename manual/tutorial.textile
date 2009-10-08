@@ -1,48 +1,92 @@
-h1. Tutorial
+<h1>Tutorial</h1>
 
-h2. Getting started
+<!-- Begin Getting Started -->
+<h2 id="getting-started">Getting started</h2>
 
-This tutorial will guide you through building what is perhaps the simplest space that you can make: HelloWorld. The HelloWorld space, when completed, will allow you to add the words 'Hello World!' as a shift to any page on the web. Potentially, anyone else who has ShiftSpace installed will be able to see your message if they happen to discover it on a page, if they are following your activity, or are part of group that you published the shift to. They can also see without the plugin if they view it in the ShiftSpace proxy. Yet another they way they might see it is if a blog has installed it as a blog plugin.
+<div class="content">
+    <p>
+        This tutorial will guide you through building what is perhaps the simplest space that you can make: HelloWorld. The HelloWorld space, when completed, will allow you to add the words 'Hello World!' as a shift to any page on the web. Potentially, anyone else who has ShiftSpace installed will be able to see your message if they happen to discover it on a page, if they are following your activity, or are part of group that you published the shift to. They can also see without the plugin if they view it in the ShiftSpace proxy. Yet another they way they might see it is if a blog has installed it as a blog plugin.
+    </p>
+</div>
 
-But before we begin, make sure you're running "Firefox":http://mozilla.com, that you've "installed the ShiftSpace development environment":install.html, as well as "GreaseMonkey":https://addons.mozilla.org/en-US/firefox/addon/748. You also need to install a cutting edge release of the "Firebug extension":http://getfirebug.com/releases/firebug/1.5X/ for Firefox. FireBug is a critical tool for designing your space, it allows you to easily examine and manipulate HTML and CSS "on the fly." It will also prove invaluable for debugging.
+<br />
 
-Finally, point your browser at the ShiftSpace Developer Sandbox. This will probably be something like "http://localhost:8080/sandbox/":http://localhost:8080/sandbox/. You should see a pretty picture of a big desert. This is where most of your development will happen. If you have installed GreaseMonkey and ShiftSpace you should make sure that ShiftSpace never launches on your development URLs, otherwise you'll get some weird results. Right click on the GreaseMonkey icon in the lower right corner of your browser window and select *Manage User Scripts...*. Select ShiftSpace and click the button *Add* button next to *Excluded Pages*. The default value to exclude is correct, just add it. You can now close the GreaseMonkey window and continue hacking.
+<div class="section">
+    <h3 id="before-you-start">Before you start</h3>
+    <div class="content">
+        <p>
+            But before we begin, make sure you're running <a href="http://mozilla.com">Firefox</a>, that you've <a href="install.html">installed the ShiftSpace development environment</a>, as well as <a href="https://addons.mozilla.org/en-US/firefox/addon/748">GreaseMonkey</a>. You also need to install a cutting edge release of the <a href="http://getfirebug.com/releases/firebug/1.5X/">Firebug extension</a> for Firefox. FireBug is a critical tool for designing your space, it allows you to easily examine and manipulate HTML and CSS "on the fly." It will also prove invaluable for debugging.
+        </p>
+        <p>
+            Finally, point your browser at the ShiftSpace Developer Sandbox. This will probably be something like <a target="new" href="http://localhost:8080/sandbox/">http://localhost:8080/sandbox/</a>. You should see a pretty picture of a big desert. This is where most of your development will happen. If you have installed GreaseMonkey and ShiftSpace you should make sure that ShiftSpace never launches on your development URLs, otherwise you'll get some weird results. Right click on the GreaseMonkey icon in the lower right corner of your browser window and select <b>Manage User Scripts...</b>. Select ShiftSpace and click the button <b>Add</b> button next to <b>Excluded Pages</b>. The default value to exclude is correct, just add it. You can now close the GreaseMonkey window and continue hacking.
+        </p>
+    </div>
+</div>
 
-h2. Using Shifty
+<br />
 
-In your ShiftSpace root directory there is a python script called shifty.py. This is helper tool for running common tasks. In order to use it you have to use the terminal. On OS X this means Terminal.app. If you're on Windows you should have installed "mysysgit":http://code.google.com/p/msysgit/. mysysgit comes packaged with with a bash shell, and we'll refer to this as the terminal. On Linux - well you definitely know what the terminal is ;)
-
-Open up a terminal and run the following:
-
-notextile.. <pre class="console">
+<div class="section">
+    <h3 id="using-shifty">Using Shifty</h3>
+    <div class="content">
+        <p>
+            In your ShiftSpace root directory there is a python script called shifty.py. This is helper tool for running common tasks. In order to use it you have to use the terminal. On OS X this means Terminal.app. If you're on Windows you should have installed "mysysgit":http://code.google.com/p/msysgit/. mysysgit comes packaged with with a bash shell, and we'll refer to this as the terminal. On Linux - well you definitely know what the terminal is ;)
+        </p>
+        <p>
+            Open up a terminal and run the following:
+        </p>
+        <pre class="console">
 $ cd into/your/shiftspace/
-$ python shifty.py new HelloWorld
-</pre>
+$ python shifty.py new HelloWorld</pre>
+        <p>
+            This creates all of the files needed for space development in a folder called HelloWorld in the spaces directory where all spaces live. You could have done this by hand, but it's easy to forget exactly what goes in what file. Using shifty.py makes this a whole lot easier. Open the new HelloWorld directory now and examine the contents of the file in your favorite text editor.
+        </p>
+        <p>
+            Believe it or not this is a fully functioning space. Let's see it in action.
+        </p>
+    </div>
+</div>
 
-This creates all of the files needed for space development in a folder called HelloWorld in the spaces directory where all spaces live. You could have done this by hand, but it's easy to forget exactly what goes in what file. Using shifty.py makes this a whole lot easier. Open the new HelloWorld directory now and examine the contents of the file in your favorite text editor.
+<br />
 
-Believe it or not this is a fully functioning space. Let's see it in action.
-
-h2. Installing a space
-
-If you've read over the installation instruction you know that to hack on ShiftSpace you need to start up CouchDB. If you are unsure how to do this refer to last section in the install instructions for your platform.
-
-You also need to start the built in webserver using Shifty.
-
-notextile.. <pre class="console">
+<div class="section">
+    <h3 id="installing-a-space">Installing a space</h3>
+    <div class="content">
+        <p>
+            If you've read over the installation instruction you know that to hack on ShiftSpace you need to start up CouchDB. If you are unsure how to do this refer to last section in the install instructions for your platform.
+        </p>
+        <p>
+            You also need to start the built in webserver using Shifty.
+        </p>
+        <pre class="console">
 $ cd into/your/shiftspace/
-$ python shifty.py runserver
-</pre>
+$ python shifty.py runserver</pre>
+        <p>
+            This starts up the server on port 8080. If you want to start up the server on a different port, just give the runserver command a port number that you want to use.
+        </p>
+        <p>
+            Now point your browser to the <a target="new" href="http://localhost:8080/sandbox/">sandbox</a>. Open the console with the *shift+space* key combination. If you haven't created an account do so now (remember this is saving to your local CouchDB). If you have, just login using your username and password.
+        </p>
+        <p>
+            Install your space by selecting the *Settings* tab of the ShiftSpace Console. From there click on the *Installed* subtab. You should see a list including the pre-installed spaces. Scroll down to the input field. Type in 'HelloWorld' and click the Install button. Careful, space names are case sensitive (we'll fix this in a future version). You should see your space icon appear along with the name underneath the default installed Spaces.
+        </p>
+        <p>
+            Click on the *Space Menu* (first button on the lower left). Select the HelloWorld space. You should see a new orange shift appear on the page. Try dragging it around. Note that when you let go it gets saved and appears in the console.
+        </p>
+        <p>
+            Cool. Now let's dig in and see how this works.
+        </p>
+    </div>
+</div>
 
-This starts up the server on port 8080. If you want to start up the server on a different port, just give the runserver command a port number that you want to use.
+<br />
+<!-- End Getting Started -->
 
-Now point your browser to the <a target="new" href="http://localhost:8080/sandbox/">sandbox</a>. Open the console with the *shift+space* key combination. If you haven't created an account do so now (remember this is saving to your local CouchDB). If you have, just login using your username and password.
-
-Install your space by selecting the *Settings* tab of the ShiftSpace Console. From there click on the *Installed* subtab. You should see a list including the pre-installed spaces. Scroll down to the input field. Type in 'HelloWorld' and click the Install button. Careful, space names are case sensitive (we'll fix this in a future version). You should see your space icon appear along with the name underneath the default installed Spaces.
-
-Click on the *Space Menu* (first button on the lower left). Select the HelloWorld space. You should see a new orange shift appear on the page. Try dragging it around. Note that when you let go it gets saved and appears in the console.
-
-Cool. Now let's dig in and see how this works.
+<h2 id="diving-in">Diving In</h2>
+<div class="content">
+    <p>
+        It's time to see how this stuff works
+    </p>
+</div>
 
 h2. Looking at HelloWorld.js
 
@@ -250,7 +294,6 @@ The *changeMessage* function should be quite clear. It prompts the user for some
 Finally the *encode* method set the value of summary to the current value of the text inside the shift's div element.
 
 h2. The finished code
-
 
 notextile.. <pre>
 var HelloWorldSpace = Space();
