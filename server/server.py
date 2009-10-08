@@ -3,13 +3,16 @@ import sys
 import getopt
 import time
 import StringIO
-import cherrypy
-from cherrypy.lib.static import serve_file
+import simplejson as json
 import ConfigParser
 import routes
 import email
+
 from mako.template import Template
-import simplejson as json
+from mako.lookup import TemplateLookup
+
+import cherrypy
+from cherrypy.lib.static import serve_file
 
 import builder.corebuilder as corebuilder
 import builder.preprocess as preprocess
@@ -27,17 +30,57 @@ from controllers.event import EventController
 from controllers.permission import PermissionController
 from controllers.group import GroupsController
 
+
+version = "1.0"
+lookup = TemplateLookup(directories=['html', 'manual', 'wiki'])
 serverroot = os.path.dirname(os.path.abspath(__file__))
 webroot = os.path.dirname(serverroot)
 
+
 class RootController:
-    def read(self):
-        return 'The ShiftSpace 1.0 Robot says \"Hello\"'
+    def index(self):
+        """
+        Serves the status page for developers.
+        """
+        import models.core
+        statusType = "noerr"
+        detailsType = "noerr"
+        t = Template(filename="html/index.mako", lookup=lookup)
+        try:
+            db = core.connect()
+        except Exception:
+            statusType = "err"
+            detailsType = "couchdb"
+        try:
+            db["_design/validation"]
+        except:
+            statusType = "err"
+            detailsType = "initdb"
+        values = {
+            "version": version,
+            "statusType": statusType,
+            "detailsType": detailsType
+        }
+        return t.render(**values)
 
     def docs(self):
+        """
+        For developers. Serves the documentation pages.
+        """
         return serve_file(os.path.join(webroot, 'docs/index.html'))
 
+    def manual(self):
+        """
+        For developers. Serves the manual.
+        """
+        return serve_file(os.path.join(webroot, "manual/index.html"))
+
     def sandbox(self):
+        """
+        For developers. Serves the sandbox development enviroment. Automatically cocatenates 
+        and preprocess all of CSS files and HTML files for the interface and
+        as well as all of the JavaScript before serving the page.
+        """
         corebuilder.run()
         compiler = sandalphon.SandalphonCompiler("client/compiledViews", "mydev")
         compiler.compile(inputFile="client/views/SSConsole/SSConsole.html")
@@ -47,6 +90,10 @@ class RootController:
         return serve_file(os.path.join(webroot, 'sandbox/index.html'))
 
     def test(self, test="SSDefaultTest", env="mydev"):
+        """
+        For developers. Serves the testing environment. Similar to index above but uses
+        the sandalphon env file instead of mydev.
+        """
         fh = open(os.path.join(webroot, "config/tests.json"))
         teststr = fh.read()
         tests = json.loads(teststr)
@@ -66,6 +113,9 @@ class RootController:
             return str
 
     def tests(self):
+        """
+        For developers. Serves individual tests. Adds any test dependencies if there are any.
+        """
         corebuilder.run()
         preprocessor = preprocess.SSPreProcessor(project="sandalphon", env="sandalphon", export=True)
         preprocessor.preprocess(input="sandalphon/BootstrapSandalphon.js",
@@ -74,6 +124,9 @@ class RootController:
 
     @jsonencode
     def build(self):
+        """
+        For developers. Serves the developer greasemonkey user script for deployment testing.
+        """
         corebuilder.run()
         compiler = sandalphon.SandalphonCompiler("client/compiledViews", "dev")
         compiler.compile(inputFile="client/views/SSConsole/SSConsole.html")
@@ -100,8 +153,9 @@ def initAppRoutes():
 def initDevRoutes():
     d = cherrypy.dispatch.RoutesDispatcher()
     root = RootController()
-    d.connect(name='root', route='', controller=root, action='read')
+    d.connect(name='root', route='', controller=root, action='index')
     d.connect(name='rootDocs', route='docs', controller=root, action='docs')
+    d.connect(name='rootManual', route='manual', controller=root, action='manual')
     d.connect(name='rootSandbox', route='sandbox', controller=root, action='sandbox')
     d.connect(name='rootTest', route='test/:test', controller=root, action='test')
     d.connect(name='rootTests', route='tests', controller=root, action='tests')

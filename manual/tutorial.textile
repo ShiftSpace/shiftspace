@@ -1,6 +1,6 @@
 <h1>Tutorial</h1>
 
-<!-- Begin Getting Started -->
+<!-- BEGIN GETTING STARTED -->
 <h2 id="getting-started">Getting started</h2>
 
 <div class="content">
@@ -29,7 +29,7 @@
     <h3 id="using-shifty">Using Shifty</h3>
     <div class="content">
         <p>
-            In your ShiftSpace root directory there is a python script called shifty.py. This is helper tool for running common tasks. In order to use it you have to use the terminal. On OS X this means Terminal.app. If you're on Windows you should have installed "mysysgit":http://code.google.com/p/msysgit/. mysysgit comes packaged with with a bash shell, and we'll refer to this as the terminal. On Linux - well you definitely know what the terminal is ;)
+            In your ShiftSpace root directory there is a python script called <b>shifty.py</b>. This is helper tool for running common tasks. In order to use it you have to use the terminal. On OS X this means <b>Terminal.app</b>. If you're on Windows you should have installed <a href="http://code.google.com/p/msysgit/">mysysgit</a>. mysysgit comes packaged with with a bash shell, and we'll refer to this as the terminal. On Linux - well you definitely know what the terminal is ;)
         </p>
         <p>
             Open up a terminal and run the following:
@@ -64,13 +64,13 @@ $ python shifty.py runserver</pre>
             This starts up the server on port 8080. If you want to start up the server on a different port, just give the runserver command a port number that you want to use.
         </p>
         <p>
-            Now point your browser to the <a target="new" href="http://localhost:8080/sandbox/">sandbox</a>. Open the console with the *shift+space* key combination. If you haven't created an account do so now (remember this is saving to your local CouchDB). If you have, just login using your username and password.
+            Now point your browser to the <a target="new" href="http://localhost:8080/sandbox/">sandbox</a>. Open the console with the <b>shift+space</b> key combination. If you haven't created an account do so now (remember this is saving to your local CouchDB). If you have, just login using your username and password.
         </p>
         <p>
-            Install your space by selecting the *Settings* tab of the ShiftSpace Console. From there click on the *Installed* subtab. You should see a list including the pre-installed spaces. Scroll down to the input field. Type in 'HelloWorld' and click the Install button. Careful, space names are case sensitive (we'll fix this in a future version). You should see your space icon appear along with the name underneath the default installed Spaces.
+            Install your space by selecting the <b>Settings</b> tab of the ShiftSpace Console. From there click on the <b>Installed</b> subtab. You should see a list including the pre-installed spaces. Scroll down to the input field. Type in 'HelloWorld' and click the Install button. Careful, space names are case sensitive (we'll fix this in a future version). You should see your space icon appear along with the name underneath the default installed Spaces.
         </p>
         <p>
-            Click on the *Space Menu* (first button on the lower left). Select the HelloWorld space. You should see a new orange shift appear on the page. Try dragging it around. Note that when you let go it gets saved and appears in the console.
+            Click on the <b>Space Menu</b> (first button on the lower left). Select the HelloWorld space. You should see a new orange shift appear on the page. Try dragging it around. Note that when you let go it gets saved and appears in the console.
         </p>
         <p>
             Cool. Now let's dig in and see how this works.
@@ -79,44 +79,58 @@ $ python shifty.py runserver</pre>
 </div>
 
 <br />
-<!-- End Getting Started -->
+<!-- END GETTING STARTED -->
 
+<!-- START DIVING IN -->
 <h2 id="diving-in">Diving In</h2>
 <div class="content">
     <p>
-        It's time to see how this stuff works
+        It's time to see how this stuff works. In the following section we'll dive into what a space looks like as well as how to build one from scratch.
     </p>
 </div>
 
-h2. Looking at HelloWorld.js
+<br />
 
-Open HelloWorld.js in the newly created HelloWorld directory. Erase its contents and let's start from scratch.
+<div class="section">
+    <h3 id="looking-at-helloworld">Extending the Space Class</h3>
+    <div class="content">
+        <p>
+            Open HelloWorld.js in the newly created HelloWorld directory. Erase its contents and let's start from scratch.
+        </p>
 
-h3. Extending the base classes
+        <p>
+            At its most basic level, building a new Space involves defining two things:
+        </p>
 
-At its most basic level, building a new Space involves defining two things:
+        <ul>
+            <li>The Space class itself (manage the overall UI/behavior for the Space)</li>
+            <li>A specific Shift class (manage the UI/behavior of individual shifts)</li>
+        </ul>
 
-** The Space class itself (manage the overall UI/behavior for the Space) 
-** A specific Shift class (manage the UI/behavior of individual shifts)
+        <p>
+            To begin, we need extend the ShiftSpace.Space class. This is a very simple operation with MooTools, which offers useful object oriented conventions. By creating subclasses from the ShiftSpace.Space and ShiftSpace.Shift abstract base classes, you gain access to restricted ShiftSpace methods and benefit from our prewritten code. We try to do lot of heavy lifting for you. If you developed a Space prior to 1.0 please note that the subclassing syntax has changed because we are now only supporting MooTools 1.2.
+        </p>
 
-h3. Extending the Space class
-
-To begin, we need extend the ShiftSpace.Space class. This is a very simple operation with MooTools, which offers useful object oriented conventions. By creating subclasses from the ShiftSpace.Space and ShiftSpace.Shift abstract base classes, you gain access to restricted ShiftSpace methods and benefit from our prewritten code. We try to do lot of heavy lifting for you. If you developed a Space prior to 1.0 please note that the subclassing syntax has changed because we are now only supporting MooTools 1.2.
-
-notextile.. <pre>
+        <pre>
 var HelloWorldSpace = new Class({
-  Extends: ShiftSpace.Space
-  // In a more complicated space you might have stuff here!
-});
-</pre>
+    Extends: ShiftSpace.Space
+    // In a more complicated space you might have stuff here!
+});</pre>
 
-This is using the MooTools subclassing syntax. While nice, we realized this is some serious boilerplate code. You have to write this every time. We got sick of writing it everytime. So here's a shortcut.
+        <p>
+            This is using the MooTools subclassing syntax. While nice, we realized this is some serious boilerplate code. You have to write this every time. We got sick of writing it everytime. So here's a shortcut.
+        </p>
 
-notextile.. <pre>
-var HelloWorldSpace = Space();
-</pre>
+        <pre>
+var HelloWorldSpace = Space();</pre>
 
-This code is functionally equivalent to previous one but it's a lot less typing. Please not that you cannot use this shortcut generally with MooTools classes, this is a ShiftSpace-specific optimization.
+        <p>
+            This code is functionally equivalent to previous one but it's a lot less typing. Please not that you cannot use this shortcut generally with MooTools classes, this is a ShiftSpace-specific optimization.
+        </p>
+    </div>
+</div>
+
+<br />
 
 h3. Extending the Shift class
 
