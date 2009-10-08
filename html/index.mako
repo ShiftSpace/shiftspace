@@ -5,7 +5,7 @@
    % elif type == "warn":
    <div class="error">Almost there</div>
    % elif type == "noerr":
-   <div class="good">Looking good</div>
+   <div class="good">Hey, looking good</div>
    % endif
 </%def>
 <!-- End status output -->
@@ -20,7 +20,7 @@
    <div>
        <p>Your database has not been initialized. Using a terminal, run the following commands from your ShiftSpace directory:</p>
        <pre>$ python shifty.py initdb</pre>
-       <p>To learn more about shifty.py please refer to the <a href="manual/">documentation</p></a>.
+       <p>To learn more about shifty.py please refer to the <a target="new" href="manual/">documentation</a>.</p>
    </div>
    % elif type == "noerr":
    <p class="accept">Everything appears to be running smoothly.</p>
@@ -31,7 +31,7 @@
        <embed src="images/status/awesome.swf" quality="high" pluginspage="http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash" type="application/x-shockwave-flash" width="600" height="299" wmode="transparent"></embed>
    </object>
    <div class="info">
-       <p>For information on how to extend ShiftSpace go <a target="new" href="manual/">here</a>. You can hack on ShiftSpace <a target="new" href="sandbox/">here</a>. You can find the complete documentation <a target="new" href="docs/">here</a>.</p>
+       For information on how to extend ShiftSpace go <a target="new" href="manual/">here</a>. You can hack on ShiftSpace <a target="new" href="sandbox/">here</a>. You can find the complete documentation <a target="new" href="docs/">here</a>.
    </div> 
    % endif
 </%def>

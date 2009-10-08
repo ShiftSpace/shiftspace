@@ -43,24 +43,25 @@ class RootController:
         Serves the status page for developers.
         """
         import models.core
-        statusType = "noerr"
-        detailsType = "noerr"
+        values = {
+            "version": version,
+            "statusType": "noerr",
+            "detailsType": "noerr"
+        }
         t = Template(filename="html/index.mako", lookup=lookup)
         try:
-            db = core.connect()
+            db = core.server()
+            db.version
         except Exception:
-            statusType = "err"
-            detailsType = "couchdb"
+            values["statusType"] = "err"
+            values["detailsType"] = "couchdb"
+            return t.render(**values)
         try:
             db["_design/validation"]
         except:
-            statusType = "err"
-            detailsType = "initdb"
-        values = {
-            "version": version,
-            "statusType": statusType,
-            "detailsType": detailsType
-        }
+            values["statusType"] = "err"
+            values["detailsType"] = "initdb"
+            return t.render(**values)
         return t.render(**values)
 
     def docs(self):

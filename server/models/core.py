@@ -13,17 +13,22 @@ class Lucene():
         else:
             return self.resource.get(view, **params)[1].get("rows")
 
+
 _lucene = Lucene()
+
 
 def server():
     return couchdb.client.Server("http://localhost:5984/")
+
 
 def connect(dbname="shiftspace"):
     server = couchdb.client.Server("http://localhost:5984/")
     return server[dbname]
 
+
 def lucene():
     return _lucene
+
 
 def query(view, key=None):
     db = connect()
@@ -42,11 +47,13 @@ def query(view, key=None):
         result.append(row.value)
     return result
 
+
 def single(view, key):
     db = connect()
     options = {"key": key}
     for row in db.view(view, None, **options):
         return row.value
+
 
 def update(doc):
     db = connect()
@@ -55,6 +62,7 @@ def update(doc):
     new = old.update(doc)
     db[id] = new
     return db[id]
+
 
 def validate(doc):
     theSchema = getattr(schema, doc["type"])()
