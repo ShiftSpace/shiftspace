@@ -3,7 +3,6 @@
   import textile
   fh = open(filename)
   result = textile.textile(fh.read())
-  result = "<%text>" + result + "</%text>"
   fh.close()
   %>
   ${result}

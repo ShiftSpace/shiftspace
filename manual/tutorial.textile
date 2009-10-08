@@ -14,7 +14,7 @@ In your ShiftSpace root directory there is a python script called shifty.py. Thi
 
 Open up a terminal and run the following:
 
-<pre class="console">
+notextile.. <pre class="console">
 $ cd into/your/shiftspace/
 $ python shifty.py new HelloWorld
 </pre>
@@ -29,7 +29,7 @@ If you've read over the installation instruction you know that to hack on ShiftS
 
 You also need to start the built in webserver using Shifty.
 
-<pre class="console">
+notextile.. <pre class="console">
 $ cd into/your/shiftspace/
 $ python shifty.py runserver
 </pre>
@@ -59,7 +59,7 @@ h3. Extending the Space class
 
 To begin, we need extend the ShiftSpace.Space class. This is a very simple operation with MooTools, which offers useful object oriented conventions. By creating subclasses from the ShiftSpace.Space and ShiftSpace.Shift abstract base classes, you gain access to restricted ShiftSpace methods and benefit from our prewritten code. We try to do lot of heavy lifting for you. If you developed a Space prior to 1.0 please note that the subclassing syntax has changed because we are now only supporting MooTools 1.2.
 
-<pre>
+notextile.. <pre>
 var HelloWorldSpace = new Class({
   Extends: ShiftSpace.Space
   // In a more complicated space you might have stuff here!
@@ -68,7 +68,7 @@ var HelloWorldSpace = new Class({
 
 This is using the MooTools subclassing syntax. While nice, we realized this is some serious boilerplate code. You have to write this every time. We got sick of writing it everytime. So here's a shortcut.
 
-<pre>
+notextile.. <pre>
 var HelloWorldSpace = Space();
 </pre>
 
@@ -78,7 +78,7 @@ h3. Extending the Shift class
 
 Now we need to make a HelloWorld Shift class. To do this we need to extend the ShiftSpace.Shift class. Again you could write it like the following:
 
-<pre>
+notextile.. <pre>
 var HelloWorldShift = new Class({
   Extends: ShiftSpace.Shift
   // Your code will go here
@@ -87,7 +87,7 @@ var HelloWorldShift = new Class({
 
 But's simpler and easier to remember to write this:
 
-<pre>
+notextile.. <pre>
 var HelloWorldShift = Shift({
   // Your code will go here
 });
@@ -95,7 +95,7 @@ var HelloWorldShift = Shift({
 
 The first thing you want to implement is the <tt>setup</tt> method.  You should initialize your shift instances based on the properties of the passed in JSON object.
 
-<pre>
+notextile.. <pre>
 var HelloWorldShift = Shift({
   setup: function(json) {
     this.setPosition(json);
@@ -115,7 +115,7 @@ h3. The space attributes file
 
 Open the *attrs.json* file in your HelloWorld space directory and make it look the following:
 
-<pre>
+notextile.. <pre>
 {
   name: 'HelloWorld',
   authors: ['type your name'],
@@ -144,7 +144,7 @@ Basically you provide an html file and we'll add this as property to each shift 
 
 Open the file *HelloWorld.html* and make it look like the following:
 
-<pre>
+notextile.. <pre>
 <div class="HelloWorldShift">
   Drag me!
 </div>
@@ -152,7 +152,7 @@ Open the file *HelloWorld.html* and make it look like the following:
 
 Now for our CSS file. Open *HelloWorld.css* and make the font-size a little bit bigger:
 
-<pre>
+notextile.. <pre>
 .HelloWorldShift
 {
   font: 32px verdana sans-serif;
@@ -177,7 +177,7 @@ h3. Understanding saving
 
 You've probably been wondering how HelloWorld can auto-magically save itself to the database. This is because all shifts have an *encode* method. By default shifts encode their position. Instead of using the default *encode* method, let's provide our own. *encode* lists every property that you want to persist. Here we want to store a summary (useful because summaries are displayed in the console) and the position of a shift.
 
-<pre>
+notextile.. <pre>
 var HelloWorldShift = Shift({
   setup: function(json) {
     this.setPosition(json.position);
@@ -206,7 +206,7 @@ h2. Enhancements
 
 Before moving on let's make it so that you can change the text of the shift by double clicking on it.
 
-<pre>
+notextile.. <pre>
 var HelloWorldShift = Shift({
   setup: function(json) {
     if(json.summary) this.element.set("text", json.summary);
@@ -233,13 +233,13 @@ var HelloWorldShift = Shift({
 
 Wow, that made code quite a bit longer. Let's break it apart:
 
-<pre>
+notextile.. <pre>
 if(json.summary) this.element.set("text", json.summary);
 </pre>
 
 This means only set the value of our element to the value of json.summary if json.summary has value. For new shifts, summary is null, for HelloWorld shifts that have been saved, this has a definite value.
 
-<pre>
+notextile.. <pre>
 this.element.addEvent("dblick", this.changeMessage.bind(this));
 </pre>
 
@@ -251,7 +251,8 @@ Finally the *encode* method set the value of summary to the current value of the
 
 h2. The finished code
 
-<pre>
+
+notextile.. <pre>
 var HelloWorldSpace = Space();
 var HelloWorldShift = Shift({
   setup: function(json) {
@@ -261,13 +262,13 @@ var HelloWorldShift = Shift({
     this.element.addEvent("dblick", this.changeMessage.bind(this));
     this.save();
   },
-  
+
   changeMessage: function() {
     var text = prompt("Please enter a new message:", this.summary);
     this.element.set("text", text);
     this.save();
   },
-  
+
   encode: function() {
     return {
       summary : this.element.get("text"),
