@@ -1,69 +1,130 @@
 <notextile>
 
-    <h2>Python</h2>
-    <p>On 10.5 and 10.6 nothing needs to be done. If you are on 10.4 you need to install Python 2.6. We recommend doing this via Porticus.</p>
-    <p>First install the latest version of <a href="http://www.macports.org/">MacPorts</a>.</p>
-    <p>While using the MacPorts at the command line is not difficult, using <a href="http://porticus.alittledrop.com/">Porticus</a> is far simpler. Install this as well.</p>
-    <p>Once Porticus is installed launch it. Before doing anything, first run <b>Port &gt; Self Update...</b> in the top menu. Then select the <b>All Ports</b> folder in the left nav. Then search for the <b>python26</b> package. Select it and click the <b>Install</b> button on the top left of the main window.</p>
+    <h2 id="installing-on-os-x">Installing on OS X</h2>
+    <br />
+    
+
+    <div class="section">
+	<h3>Python</h3>
+	<div class="content">
+	    <p>On 10.5 and 10.6 nothing needs to be done. If you are on 10.4 you need to install Python 2.6. We recommend doing this via Porticus.</p>
+	    <p>First install the latest version of <a href="http://www.macports.org/">MacPorts</a>.</p>
+	    <p>While using the MacPorts at the command line is not difficult, using <a href="http://porticus.alittledrop.com/">Porticus</a> is far simpler. Install this as well.</p>
+	    <p>Once Porticus is installed launch it. Before doing anything, first run <b>Port &gt; Self Update...</b> in the top menu. Then select the <b>All Ports</b> folder in the left nav. Then search for the <b>python26</b> package. Select it and click the <b>Install</b> button on the top left of the main window.</p>
+	</div>
+    </div>
+    <br />
 
 
-    <h2>Installing Git</h2>
-    <p>We recommend that you install Git 1.6.4.4 from <a href="http://code.google.com/p/git-osx-installer/">here</a>. If you are running on 10.4 we recommend you install the <b>git-core</b> package using Porticus.</p>
+    <div class="section">
+	<h3>Installing Git</h3>
+	<div class="content">
+	    <p>We recommend that you install Git 1.6.4.4 from <a href="http://code.google.com/p/git-osx-installer/">here</a>. If you are running on 10.4 we recommend you install the <b>git-core</b> package using Porticus.</p>
+	</div>
+    </div>
+    <br />
 
-
-    <h2>Getting ShiftSpace</h2>
-    <p>Clone the main shiftspace repository into your Sites folder on your machine by typing the following using <b>Terminal.app</b>:</p>
-    <pre class="console">$ cd ~/Sites
+    <div class="section">
+	<h3>Getting ShiftSpace</h3>
+	<div class="content">
+	    <p>Clone the main shiftspace repository into your Sites folder on your machine by typing the following using <b>Terminal.app</b>:</p>
+	    <pre class="console">$ cd ~/Sites
 $ git clone git://github.com/ShiftSpace/shiftspace.git</pre>
-    <p>Then the run the following to pull in the various git submodules required by ShiftSpace:</p>
-    <pre class="console">$ cd shiftspace
+	    <p>Then the run the following to pull in the various git submodules required by ShiftSpace:</p>
+	    <pre class="console">$ cd shiftspace
 $ git submodule init
 $ git submodule update</pre>
-    <p>Your clone is now ready to go.</p>
+	    <p>Your clone is now ready to go.</p>
+	</div>
+    </div>
+    <br />
 
 
-    <h2>Installing CouchDB on Intel Mac running 10.5 (Leopard) & 10.6 (Snow Leopard)</h2>
-    <p>We recommend that you install the developer version of CouchDB 0.10 using Jan Lenhardt's prebuilt binaries - CouchDBX. You can find them "here":http://github.com/janl/couchdbx-core/downloads. For 10.5 we recommend "this one":http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-pl3-UNSTABLE.zip. For 10.6 we recommend <a href="http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-Snow-Leopard-64bit-EXERIMENTAL-RC1.zip">this one</a>.</p>
-    <p>Drop the CouchDBX application into your <b>Applications</b> folder. Double-click on the application to start up CouchDB. Once it's started, point your browser at <b>http://localhost:5984/_utils/</b> to make sure that nothing went horribly wrong.</p>
+    <div class="section">
+	<h3>CouchDB 10.5 (Leopard) & 10.6 (Snow Leopard) Intel</h3>
+	<div class="content">
+	    <p>We recommend that you install the developer version of CouchDB 0.10 using Jan Lenhardt's prebuilt binaries - CouchDBX. You can find them "here":http://github.com/janl/couchdbx-core/downloads. For 10.5 we recommend "this one":http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-pl3-UNSTABLE.zip. For 10.6 we recommend <a href="http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-Snow-Leopard-64bit-EXERIMENTAL-RC1.zip">this one</a>.</p>
+	    <p>Drop the CouchDBX application into your <b>Applications</b> folder. Double-click on the application to start up CouchDB. Once it's started, point your browser at <b>http://localhost:5984/_utils/</b> to make sure that nothing went horribly wrong.</p>
+	</div>
+    </div>
+    <br />
+
+    
+    <div class="section">
+	<h3>CouchDB 10.5 (Leopard) PowerPC</h3>
+	<div class="content">
+	    <p>Use Porticus to install the couchdb-devel package.</p>
+	</div>
+    </div>
+    <br />
 
 
-    <h2>Installing CouchDB on PPC Mac running 10.5 (Leopard)</h2>
-    <p>Use Porticus to install the couchdb-devel package.</p>
+    <div class="section">
+	<h3>Introducing Shifty</h3>
+	<div class="content">
+	    <p>ShiftSpace comes with a helper script called Shifty that allows to run common tasks. Shifty is directly inspired by the friendly manage.py script in Django.</p>
+	</div>
+    </div>
+    <br />
 
 
-    <h2>Introducing Shifty</h2>
-    <p>ShiftSpace comes with a helper script called Shifty that allows to run common tasks. Shifty is directly inspired by the friendly manage.py script in Django.</p>
-
-
-    <h2>Python dependencies</h2>
-    <p>Run the following at the terminal:</p>
-    <pre class="console">$ cd ~/Sites/shiftspace
+    <div class="section">
+	<h3>Python dependencies</h3>
+	<div class="content">
+	    <p>Run the following at the terminal:</p>
+	    <pre class="console">$ cd ~/Sites/shiftspace
 $ python shifty.py installdeps</pre>
-    <p>This installs all of the Python libraries the ShiftSpace backend needs to run. You might notice there is couchdb-lucene .jar as well. We'll get to that in a moment.</p>
+	    <p>This installs all of the Python libraries the ShiftSpace backend needs to run. You might notice there is couchdb-lucene .jar as well. We'll get to that in a moment.</p>
+	</div>
+    </div>
+    <br />
 
 
-    <h2>Initializing the database</h2>
-    <p>Now we need to initialize the database. Make sure that CouchDBX is running. Type the following into your terminal:</p>
-    <pre class="console">$ cd ~/Sites/shiftspace
+    <div class="section">
+	<h3>Initializing the database</h3>
+	<div class="content">
+	    <p>Now we need to initialize the database. Make sure that CouchDBX is running. Type the following into your terminal:</p>
+	    <pre class="console">$ cd ~/Sites/shiftspace
 $ python shifty.py initdb</pre>
-    <p>You should see some output as new documents are added to the databse.</p>
-    <p>You should point your web browser to <b>http://localhost:5984/_utils/database.html?shiftspace</b> to see that the shiftspace database is there and in fact populated with design documents.</p>
+	    <p>You should see some output as new documents are added to the databse.</p>
+	    <p>You should point your web browser to <b>http://localhost:5984/_utils/database.html?shiftspace</b> to see that the shiftspace database is there and in fact populated with design documents.</p>
+	</div>
+    </div>
+    <br />
+
+    
+    <div class="section">
+	<h3>couchdb-lucene</h3>
+	<div class="content">
+	    <p>Now that you have CouchDB up and running, you should configure couchdb-lucene. In order for Lucene to index CouchDB and provide full text search capabilities you'll need to edit your CouchDB <b>local.ini</b> file.</p>
+	</div>
+    </div>
+    <br />
 
 
-    <h2>Configuring couchdb-lucene</h2>
-    <p>Now that you have CouchDB up and running, you should configure couchdb-lucene. In order for Lucene to index CouchDB and provide full text search capabilities you'll need to edit your CouchDB <b>local.ini</b> file.</p>
+    <div class="section">
+	<h3>CouchDBX</h3>
+	<div class="content">
+	    <p>Only do the following if you installed CouchDB via CouchDBX</p>
+	    <p>Right click on the CouchDBX application in your Applications directory using the Finder. You'll get a new window displaying the contents of the application. Drill down through <b>Contents/Resources/couchdbx-core/couchdb/etc/couchdb/</b>. Open up <b>local.ini</b> in your favorite text editor. Replace the contents with the <b>local.ini</b> specified below.</p>
+	</div>
+    </div>
+    <br />
 
 
-    <h3>If you installed the CouchDBX Application</h3>
-    <p>Right click on the CouchDBX application in your Applications directory using the Finder. You'll get a new window displaying the contents of the application. Drill down through <b>Contents/Resources/couchdbx-core/couchdb/etc/couchdb/</b>. Open up <b>local.ini</b> in your favorite text editor. Replace the contents with the <b>local.ini</b> specified below.</p>
+    <div class="section">
+	<h3>CouchDB via MacPorts or Porticus</h3>
+	<div class="content">
+	    <p>Only do the following if you installed CouchDB via MacPorts/Porticus</p>
+	    <p>Open <b>/opt/local/etc/couchdb/local.ini</b> in your favorite text editor. You will need to enter you admin password in order to edit this file.</p>
+	</div>
+    </div>
+    <br />
 
-
-    <h3>If you installed CouchDB via Porticus/MacPorts</h3>
-    <p>Open <b>/opt/local/etc/couchdb/local.ini</b> in your favorite text editor. You will need to enter you admin password in order to edit this file.</p>
-
-
-    <h3>local.ini</h3>
-    <pre>; CouchDB Configuration Settings
+    <div class="section">
+	<h3>local.ini</h3>
+	<div class="content">
+	    <pre>; CouchDB Configuration Settings
 
 ; Custom settings should be made in this file. They will override settings
 ; in default.ini, but unlike changes made to default.ini, this file won't be
@@ -103,17 +164,27 @@ fti=/System/Library/Frameworks/JavaVM.framework/Versions/1.6.0/Home/bin/java -ja
 
 [httpd_db_handlers]
 _fti={couch_httpd_external, handle_external_req, <<"fti">>}</pre>
-    <p><b>IMPORTANT</b> You need to change the two lines that call into the couchdb-lucene jar so that the username portion of the path actually matches your own username. If CouchDBX is running shut it down and start it up again to verify there were no errors.</p>
+	    <p><b>IMPORTANT</b> You need to change the two lines that call into the couchdb-lucene jar so that the username portion of the path actually matches your own username. If CouchDBX is running shut it down and start it up again to verify there were no errors.</p>
+	</div>
+    </div>
+    <br />
+    
+
+    <div class="section">
+	<h3>Fixing PowerPC Mac OS X installs of CouchDB</h3>
+	<div class="content">
+	    <p>The issue is explained <a href="http://github.com/rnewson/couchdb-lucene/issues#issue/">here</a>. Use the Porticus GUI to disable the <b>jpeg</b>, <b>tiff</b> and <b>libpng</b>  packages. Or from the command line type the following:</p>
+	    <pre class="console">$ sudo port deactivate jpeg tiff libpng</pre> 
+	</div>
+    </div>
+    <br />
     
     
-    <h3>Fixing PowerPC Mac OS X installs of CouchDB</h3>
-    <p>The issue is explained <a href="http://github.com/rnewson/couchdb-lucene/issues#issue/">here</a>15. Use the Porticus GUI to disable the <b>jpeg</b>, <b>tiff</b> and <b>libpng</b>  packages. Or from the command line type the following:</p>
-    <pre class="console">$ sudo port deactivate jpeg tiff libpng</pre> 
-    
-    
-    <h3>Wrapping up CouchDB configuration</h3>
-    <p>Point your browser at <b>http://localhost:5984/shiftspace/_fti</b>. You should see some json output like the following (it doesn't matter if it doesn't completely match).</p>
-   <pre>{
+    <div class="section">
+	<h3>Wrapping up CouchDB configuration</h3>
+	<div class="content">
+	    <p>Point your browser at <b>http://localhost:5984/shiftspace/_fti</b>. You should see some json output like the following (it doesn't matter if it doesn't completely match).</p>
+	    <pre>{
     "current": true,
     "disk_size": 1909,
     "doc_count": 4,
@@ -134,43 +205,68 @@ _fti={couch_httpd_external, handle_external_req, <<"fti">>}</pre>
     "last_modified": 1252875399000,
     "optimized": false
 }</pre>
+	</div>
+    </div>
+    <br />
 
 
-    <h3>Preparing to start the server</h3>
-    <p>In order for the ShiftSpace script to build properly between page refreshes you must set the url where ShiftSpace will be running from.</p>
-    <pre class="console">$ cd ~/Sites/shiftspace
+    <div class="section">
+	<h3>Preparing to start the server</h3>
+	<div class="content">
+	    <p>In order for the ShiftSpace script to build properly between page refreshes you must set the url where ShiftSpace will be running from.</p>
+	    <pre class="console">$ cd ~/Sites/shiftspace
 $ python shifty.py configure http://localhost:8080</pre>
+	</div>
+    </div>
+    <br />
 
 
-    <h2>Starting the server</h2>
-    <p>You can now start the ShiftSpace server. Again make sure that the CouchDBX is running. If you installed CouchDB via MacPorts you'll need to start it with the following:</p>
-    <pre class="console">$ sudo couchdb</pre>
-    <p>You'll be prompted for you admin password.</p>
-    <p>Let's start the actual ShiftSpace server. Type following into a new terminal:</p>
-    <pre class="console">$ cd ~/Sites/shiftspace
+    <div class="section">
+	<h3>Starting the server</h3>
+	<div class="content">
+	    <p>You can now start the ShiftSpace server. Again make sure that the CouchDBX is running. If you installed CouchDB via MacPorts you'll need to start it with the following:</p>
+	    <pre class="console">$ sudo couchdb</pre>
+	    <p>You'll be prompted for you admin password.</p>
+	    <p>Let's start the actual ShiftSpace server. Type following into a new terminal:</p>
+	    <pre class="console">$ cd ~/Sites/shiftspace
 $ python shifty.py runserver</pre>
-    <p>This starts up the server on port 8080. If you'd like to run on another port you need to do the following:</p>
-    <pre class="console">$ python shifty.py configure http://localhost:PORT_NUMBER
+	    <p>This starts up the server on port 8080. If you'd like to run on another port you need to do the following:</p>
+	    <pre class="console">$ python shifty.py configure http://localhost:PORT_NUMBER
 $ python shifty.py runserver PORT_NUMBER</pre>
-    <p>You should see some output that CherryPy is starting up. In your browser goto <b>http://localhost:8080/</b>. Don't forget the trailing slash. You should see a greeting.</p>
-    <p>Now to really verify that things are working point your browser to to <b>http://localhost:8080/sandbox/</b>. Don't miss the trailing slash (we'll fix this later). You should be able to open the ShiftSpace Console by typing the shift key plus the space key together. You should see a <b>Login</b> tab. In the login tab there is a <b>Join</b> subtab. Select this. Enter your information and click <b>submit</b> (sorry the enter key doesn't work yet).</p>
-    <p>You should now be logged in. Open up the Spaces menu in the lower left. Click on the Notes Space button. You should see an empty note fade onto the page. Type some text and click the save button. You should see your new shift appear in the Console.</p>
-    <p>Congratulations! You've successfully installed ShiftSpace 1.0. Please refer to the developer manual if you'd like to know more about developing spaces.</p>
+	    <p>You should see some output that CherryPy is starting up. In your browser goto <b>http://localhost:8080/</b>. Don't forget the trailing slash. You should see a greeting.</p>
+	    <p>Now to really verify that things are working point your browser to to <b>http://localhost:8080/sandbox/</b>. Don't miss the trailing slash (we'll fix this later). You should be able to open the ShiftSpace Console by typing the shift key plus the space key together. You should see a <b>Login</b> tab. In the login tab there is a <b>Join</b> subtab. Select this. Enter your information and click <b>submit</b> (sorry the enter key doesn't work yet).</p>
+	    <p>You should now be logged in. Open up the Spaces menu in the lower left. Click on the Notes Space button. You should see an empty note fade onto the page. Type some text and click the save button. You should see your new shift appear in the Console.</p>
+	    <p>Congratulations! You've successfully installed ShiftSpace 1.0. Please refer to the developer manual if you'd like to know more about developing spaces.</p>
+	</div>
+    </div>
+    <br />
 
-
-    <h2>Recap</h2>
-    <p>Whenever you want to hack on ShiftSpace, first start up CouchDB. If you have CouchDBX you can just double-click the application. If you installed via MacPorts:</p>
-    <pre class="console">$ sudo couchdb</pre>
-    <p>Then type the following at a new terminal:</p>
-    <pre class="console">$ cd ~/Sites/shiftspace
+    <div class="section">
+	<h3>Recap</h3>
+	<div class="content">
+	    <p>Whenever you want to hack on ShiftSpace, first start up CouchDB. If you have CouchDBX you can just double-click the application. If you installed via MacPorts:</p>
+	    <pre class="console">$ sudo couchdb</pre>
+	    <p>Then type the following at a new terminal:</p>
+	    <pre class="console">$ cd ~/Sites/shiftspace
 $ python shifty.py runserver</pre>
-    <p>You can then point your browser to <b>http://localhost:8080/sandbox/</b>, and that's all there is to it.</p>
+	    <p>You can then point your browser to <b>http://localhost:8080/sandbox/</b>, and that's all there is to it.</p>
+	</div>
+    </div>
+    <br />
 
 
     <h2>Optional Packages</h2>
-    <h3>Proxy</h3>
-    <p>ShiftSpace comes with proxy support built right in. This is built on top of the Python <b>lxml</b> library. In order to install this you need <b>libxml2</b> and <b>libxslt</b>. On Mac OS X we recommend you install these libraries via MacPorts/Porticus. Once you've installed these package you should run the following at the terminal:</p>
-    <pre class="console">$ sudo easy_install lxml</pre>
-    <p>Once you've have the dependencies installed, you should make sure the proxy actually works. Install the developer version of the ShiftSpace GreaseMonkey (you can do this by clicking the button on the upper left in the sandbox). Once installed goto a webpage of you're choosing and add a note to that page. Select the newly created shift in the console and you'll get the Publish Pane. Select the link icon, this will take you to the proxy hopefully with that shift loaded.</p>
+    <br />
+    
+
+    <div class="section">
+	<h3>Proxy</h3>
+	<div class="content">
+	    <p>ShiftSpace comes with proxy support built right in. This is built on top of the Python <b>lxml</b> library. In order to install this you need <b>libxml2</b> and <b>libxslt</b>. On Mac OS X we recommend you install these libraries via MacPorts/Porticus. Once you've installed these package you should run the following at the terminal:</p>
+	    <pre class="console">$ sudo easy_install lxml</pre>
+	    <p>Once you've have the dependencies installed, you should make sure the proxy actually works. Install the developer version of the ShiftSpace GreaseMonkey (you can do this by clicking the button on the upper left in the sandbox). Once installed goto a webpage of you're choosing and add a note to that page. Select the newly created shift in the console and you'll get the Publish Pane. Select the link icon, this will take you to the proxy hopefully with that shift loaded.</p>
+	</div>
+    </div>
+    <br />
 
 </notextile>
