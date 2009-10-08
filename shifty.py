@@ -178,6 +178,27 @@ def docs():
     if not os.path.isdir(ndpath):
         os.mkdir(ndpath)
     os.system("./externals/NaturalDocs-1.4/NaturalDocs -i . -o html docs -p tmp/docs -xi externals -xi NaturalDocs-1.4 -xi builds -xi spaces -xi ideas -xi tmp")
+    
+
+def runserver(argv):
+    """
+    Run the builtin webserver on the specified port (defaults to 8080).
+    """
+    try:
+        fh = open("config/env/mydev.json")
+    except:
+        print
+        print "ERROR: You have not specified the domain from which ShiftSpace will be served."
+        print "You should run something like the following first:"
+        print
+        print "python shifty.py configure http://locahost:8080"
+        print
+        sys.exit(2)
+    try:
+        port = argv[1]
+        server.start(port=int(port))
+    except:
+        server.start()
 
 
 def main(argv):
@@ -215,11 +236,7 @@ def main(argv):
             sys.exit(2)
         createSpace(argv[1])
     elif action == "runserver":
-        try:
-            port = argv[1]
-            server.start(port=int(port))
-        except:
-            server.start()
+        runserver(argv)
     else:
         usage()
         sys.exit(2)
