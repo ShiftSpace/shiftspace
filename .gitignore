@@ -53,3 +53,5 @@ lucene/*
 externals/NaturalDocs-1.4/*
 docs/*
 tmp/*
+
+manual/*.html

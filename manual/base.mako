@@ -6,9 +6,7 @@
     <title>The ShiftSpace Manual</title>
     <link rel="stylesheet" href="manual.css" type="text/css" />
     <script src="mootools.js" type="text/javascript"></script>
-    <!--
     <script src="manual.js" type="text/javascript"></script>
-    -->
   </head>
   <body>
     <div id="container">
