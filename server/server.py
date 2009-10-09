@@ -35,6 +35,7 @@ version = "1.0"
 lookup = TemplateLookup(directories=['html', 'manual', 'wiki'])
 serverroot = os.path.dirname(os.path.abspath(__file__))
 webroot = os.path.dirname(serverroot)
+serverport = 8080
 
 
 class RootController:
@@ -75,7 +76,7 @@ class RootController:
         """
         For developers. Serves the manual.
         """
-        raise cherrypy.HTTPRedirect("install.html")
+        raise cherrypy.HTTPRedirect("http://localhost:%s/manual/install.html" % serverport)
         return 
 
     def sandbox(self):
@@ -186,6 +187,7 @@ def start(conf="default.conf", port=8080):
                 v = int(v)
             d[section][k] = v
 
+    serverport = port
     cherrypy.config.update({'server.socket_port':port})
 
     d['/']['request.dispatch'] = initDevRoutes()
