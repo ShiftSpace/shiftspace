@@ -7,6 +7,7 @@ import simplejson as json
 import builder.corebuilder as corebuilder
 import sandalphon.sandalphon as sandalphon
 import builder.preprocess as preprocess
+import manual.build as manbuild
 
 import server.server as server
 import server.setup as setup
@@ -178,6 +179,13 @@ def docs():
     if not os.path.isdir(ndpath):
         os.mkdir(ndpath)
     os.system("./externals/NaturalDocs-1.4/NaturalDocs -i . -o html docs -p tmp/docs -xi externals -xi NaturalDocs-1.4 -xi builds -xi spaces -xi ideas -xi tmp")
+
+
+def manual():
+    """
+    Build the manual
+    """
+    manbuild.buildAll()
     
 
 def runserver(argv):
@@ -218,6 +226,8 @@ def main(argv):
         configure(url)
     elif action == "docs":
         docs()
+    elif action == "manual":
+        manual()
     elif action == "installdeps":
         installdeps()
     elif action == "update":
