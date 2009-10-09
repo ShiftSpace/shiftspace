@@ -41,6 +41,15 @@ var SSNotifierView = new Class({
                                       byHref: window.location.href.split("#")[0]
                                       }
                                     }));
+    
+    if (this.__count == undefined)
+    {
+      this.__count = 0;
+    }
+    else if (this.__count != undefined && (typeof this.__count == "object") && this.__count.data != undefined)
+    {
+      this.__count = this.__count.data;
+    }
   },
   
   getShiftCount: function()
