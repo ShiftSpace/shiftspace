@@ -1,20 +1,49 @@
 <notextile>
-    <h1>Installation</h2>
-    <h2 id="installation-guide">Installation Guides</h2>
+
+    <h1>Installation</h1>
+
+
+    <h2 id="introduction">Introduction</h2>
     <div class="content">
-	<p>We currently have installation guides of OS X, Windows XP, and Ubuntu. If you have installation instructions for other operating systems, please let us know. If you encounter errors or issues feel free to contact us.</p>
+	<p>This document will explain how to configure your own ShiftSpace server. This will enable you to develop your own Spaces or hack on the core platform itself. If you have any difficulties along the way, please consult one of our email discussion lists. We have <a href="http://groups.google.com/group/ShiftSpace">one for users</a> as well as <a href="http://groups.google.com/group/ShiftSpace-dev">one for developers</a>. If you just want to install ShiftSpace (the client userscript) you don't need to follow these directions, just go to ShiftSpace.org and click the install button.</p>
+    </div>
+    <br />
+	    
+
+    <h2 id="the-installation-guides">The Installation Guides</h2>
+    <div class="content">
+	<p>We currently have installation guides of <a href="installation-osx.html">OS X</a>, <a href="installation-windows.html">Windows XP</a>, and <a href="installation-linux.html">Ubuntu</a>. If you have installation instructions for other operating systems, please let us know. If you encounter errors or issues feel free to contact us.</p>
     </div>
     <br />
 
+
+    <h2 id="notes-for-developers">Notes for Developers</h2>
+    <div class="content">
+	<p>Currently the best supported development environment for ShiftSpace is Firefox 3.5 with following extensions installed:</p>
+	<ul>
+	    <li><a href="http://getfirebug.com/releases/firebug/1.5X/">FireBug 1.5x.0a24</a></li>
+	    <li><a href="https://addons.mozilla.org/firefox/addon/748">The latest version of GreaseMonkey</a></li>
+	</ul>
+    </div>
+    <br />
+
+
+    <h2 id="optional-installs">Optional</h2>
+    <div class="content">
+	<p>What follows are a variety of optional installs for the ShiftSpace development environment. These aren't strictly required for you start building your space but are useful for testing how your space might work out in the wild wild web.
+    </div>
+    <br />
+
+
     <div class="section">
-	<h3 id="note-for-developers">Note for Developers</h3>
+	<h3>Proxy</h3>
 	<div class="content">
-	    <p>Currently the best supported development environment for ShiftSpace is Firefox 3.5 with following extensions installed:</p>
-	    <ul>
-		<li><a href="http://getfirebug.com/releases/firebug/1.5X/">FireBug 1.5x.0a24</a></li>
-		<li><a href="https://addons.mozilla.org/firefox/addon/748">The latest version of GreaseMonkey</a></li>
-	    </ul>
+	    <p>If you would like to ensure that your space works properly under the proxy so that users who are not running the ShiftSpace plugin can see your space's shifts, you should install the proxy.</p>
+	    <p>First you need to install libxml2 and libxslt2 as appropiate for you platform. As these are well covered elsewhere we won't go over them here.</p>
+	    <p>We assume that you've already installed Python 2.4 or greater as well as <b>setuptools</b> (not required on OS X 10.5 or 10.6). If so you can run the following from a terminal:</p>
+	    <pre>$ sudo python easy_install lxml</pre>
 	</div>
     </div>
     <br />
+
 </notextile>

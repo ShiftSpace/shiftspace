@@ -6,9 +6,12 @@ from mako.lookup import TemplateLookup
 
 
 all = ['manual/install.mako',
+       'manual/installation-osx.mako',
+       'manual/installation-windows.mako',
        'manual/tutorial.mako',
-       'manual/developer.mako',
-       'manual/advanced.mako']
+       #'manual/developer.mako',
+       #'manual/advanced.mako'
+]
 
 
 def build(path=None, outputFile=None):
@@ -28,8 +31,8 @@ def build(path=None, outputFile=None):
 
 
 def buildAll():
-    for file in all:
-        build(file)
+    for template in all:
+        build(template)
     
 
 def main(argv):
@@ -38,7 +41,7 @@ def main(argv):
     doAll = False
     
     try:
-        opts, args = getopt.getopt(argv, "i:o:e:jh", ["input=", "output=", "help", "all"])
+        opts, args = getopt.getopt(argv, "i:o:ha", ["input=", "output=", "help", "all"])
     except:
         print "Invalid flag\n"
         usage()
