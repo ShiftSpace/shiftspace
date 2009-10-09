@@ -8,6 +8,7 @@ from mako.lookup import TemplateLookup
 all = ['manual/install.mako',
        'manual/installation-osx.mako',
        'manual/installation-windows.mako',
+       'manual/installation-linux.mako',
        'manual/tutorial.mako',
        #'manual/developer.mako',
        #'manual/advanced.mako'
