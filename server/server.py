@@ -75,7 +75,8 @@ class RootController:
         """
         For developers. Serves the manual.
         """
-        return serve_file(os.path.join(webroot, "manual/index.html"))
+        raise cherrypy.HTTPRedirect("install.html")
+        return 
 
     def sandbox(self):
         """
