@@ -326,7 +326,20 @@ var SSView = new Class({
     return this.__cachedHit;
   },
 
+  /*
+    Function: indexOfNode
+      This function repairs the very broken behavior of node matching under GreaseMonkey. Because
+      DOM nodes will be wrapped they will appear to be different even thought they are not. We
+      work around this by automatically generating unique CSS ids for each element and using that
+      for the match. Returns the index of the node if it is contained in the array, -1 otherwise.
 
+    Parameters:
+      elements - an array of DOM nodes.
+      node - the DOM node to match.
+     
+    Returns:
+      An integer.
+   */
   indexOfNode: function(elements, node)
   {
     elements.each($msg('_ssgenId'));
@@ -337,7 +350,6 @@ var SSView = new Class({
     }
     return -1;
   },
-
 
   /*
     Function: controllerForNode

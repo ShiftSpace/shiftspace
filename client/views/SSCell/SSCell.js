@@ -179,13 +179,14 @@ var SSCell = new Class({
    */
   actionForNode: function(node)
   {
+    SSLog("actionForNode", node, SSLogSystem);
     if(!this.lockedElement()) throw new SSCellError.NoLock(new Error(), "actionForNode called with no locked element.");
     var actions = this.getActions();
-    
+    SSLog(JSON.encode(actions), SSLogSystem);
     if(actions && actions.length > 0)
     {
       var ary = actions.filter(function(x) {
-        return this.lockedElement().getElements(x.selector).contains(node);
+	return (this.indexOfNode(this.lockedElement().getElements(x.selector), node) != -1);
       }.bind(this));
       if(ary.length > 0) return ary[0];
     }
