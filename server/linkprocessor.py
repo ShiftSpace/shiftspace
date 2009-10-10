@@ -13,5 +13,5 @@ class LinkProcessor:
 
     def get_doc(self):
         self.root.make_links_absolute(self.base_url, resolve_base_href=True)
-        html_doc = tostring(self.root)
-        return html_doc
+        #html_doc = tostring(self.root)
+        return self.root

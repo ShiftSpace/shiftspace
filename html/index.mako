@@ -31,6 +31,10 @@
        <p>The manual has not been built yet. Using a terminal, run the following commands from your ShiftSpace directory:</p>
        <pre>$ python shifty.py manual</pre>
    </div>
+   % elif type == "proxy":
+   <div>
+       <p>You don't have the necessary libraries to run the proxy. Please refer to the <a target="new" href="/manual">manual</a>.</p>
+   </div>
    % elif type == "noerr":
    <p class="accept">Everything appears to be running smoothly.</p>
    <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,28,0" width="600" height="299" title="Awesome">

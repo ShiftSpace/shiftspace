@@ -152,8 +152,12 @@ class RootController:
         return ack
 
     def proxy(self, id):
-        import models.shift as shift
-        from urllib import FancyURLopener
+        try:
+            import models.shift as shift
+            from urllib import FancyURLopener
+            from lxml.html import fromstring, tostring
+        except:
+            return self.statusPage(status="err", details="proxy")
         
         class FancyOpener(FancyURLopener):
             version = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)'
@@ -170,7 +174,9 @@ class RootController:
         linkprocessor.parse(source);
         linkprocessor.set_url(url)
         
-        return linkprocessor.get_doc()
+        dom = linkprocessor.get_doc()
+        
+        return tostring(dom)
         
         
 
