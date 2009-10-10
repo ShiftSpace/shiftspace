@@ -2,7 +2,7 @@
   <div id='SSProxyMessageLeft'>
     <a href='http://www.shiftspace.org/' id='SSProxyMessageLogo' title='visit www.shiftspace.org'></a>
     <a href='http://www.shiftspace.org/spaces/${space}/' id='SSProxyMessageSpace' title='more about this ShiftSpace feature'>
-      <img src='/spaces/${space}/{space}.png' alt='${space} icon'></img>
+      <img src='/spaces/${space}/${space}.png' alt='${space} icon'></img>
     </a>
     <div id='SSProxyMessagedescription'>
       This is a representation of a page shifted <span class='SSProxyMessageDate'>${created}</a> by ShiftSpace user, <b>${userName}</b>, using the <b>${space}</b> feature

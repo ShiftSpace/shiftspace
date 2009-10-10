@@ -152,6 +152,11 @@ class RootController:
         return ack
 
     def proxy(self, id):
+        """
+        Servers the proxy. Takes a shift id and return the original page
+        where the shift was created, injects the required Javascript and CSS
+        and recreates the shift.
+        """
         try:
             import models.shift as shift
             from urllib import FancyURLopener
@@ -164,7 +169,8 @@ class RootController:
         pageopener = FancyOpener()
         
         theShift = shift.read(id)
-        space = theShift["space"]
+        shiftId = theShift["_id"]
+        space = theShift["space"]["name"]
         url = theShift["href"]
         created = theShift["created"]
         userName = theShift["userName"]
@@ -181,10 +187,6 @@ class RootController:
         [node.drop_tree() for node in dom.cssselect("script")]
         for node in dom.cssselect("*[onload]"):
             del node.attrib['onload']
-        #add link to sandbox script
-        #add space file for shift
-        #create instance of shift
-        #load proxy message
         
         # load the scripts 
         source = tostring(dom)
@@ -192,12 +194,15 @@ class RootController:
         ctxt = {
             "server": server,
             "spacesDir": "/".join([server, "spaces"]),
+            "shiftId": shiftId,
+            "space": space,
+            "shift": json.dumps(theShift),
             }
         t = Template(filename="server/bootstrap.mako", lookup=lookup)
         source = source.replace("</head>", "%s</head>" % t.render(**ctxt))
 
-        t = Template(filename="server/proxymessage.mako", lookup=lookup)
         # load proxy message
+        t = Template(filename="server/proxymessage.mako", lookup=lookup)
         ctxt = {
             "space": space,
             "href": url,
