@@ -174,7 +174,8 @@ class RootController:
         linkprocessor.parse(source);
         linkprocessor.set_url(url)
         
-        dom = linkprocessor.get_doc()
+        dom = linkprocessor.get_dom()
+        [node.drop_tree() for node in dom.cssselect("script")]
         #add link to sandbox script
         #add space file for shift
         #create instance of shift
