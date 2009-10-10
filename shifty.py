@@ -2,15 +2,20 @@ import sys
 import os
 import shutil
 import getopt
-import simplejson as json
-
+try:
+    import simplejson as json
+except:
+    print "Could not load simplejson, please run the following first before using shifty:"
+    print "sudo python shifty.py installdeps"
 import builder.corebuilder as corebuilder
 import sandalphon.sandalphon as sandalphon
 import builder.preprocess as preprocess
 import manual.build as manbuild
-
-import server.server as server
-import server.setup as setup
+try:
+    import server.server as server
+    import server.setup as setup
+except:
+    pass
 
 
 def env(url):
