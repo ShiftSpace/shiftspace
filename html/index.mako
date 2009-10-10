@@ -20,7 +20,16 @@
    <div>
        <p>Your database has not been initialized. Using a terminal, run the following commands from your ShiftSpace directory:</p>
        <pre>$ python shifty.py initdb</pre>
-       <p>To learn more about shifty.py please refer to the <a target="new" href="manual/">documentation</a>.</p>
+   </div>
+   % elif type == "docs":
+   <div>
+       <p>The documentation has not been built yet. Using a terminal, run the following commands from your ShiftSpace directory:</p>
+       <pre>$ python shifty.py docs</pre>
+   </div>
+   % elif type == "manual":
+   <div>
+       <p>The manual has not been built yet. Using a terminal, run the following commands from your ShiftSpace directory:</p>
+       <pre>$ python shifty.py manual</pre>
    </div>
    % elif type == "noerr":
    <p class="accept">Everything appears to be running smoothly.</p>
@@ -44,7 +53,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>ShiftSpace ${version}</title>
-    <link rel="stylesheet" href="styles/status.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/status.css" type="text/css" />
     <script src="Scripts/AC_RunActiveContent.js" type="text/javascript"></script>
 </head>
 <body>

@@ -39,45 +39,53 @@ serverport = 8080
 
 
 class RootController:
+    def statusContext(self, status="noerr", details="noerr"):
+        return {
+            "version": version,
+            "statusType": status,
+            "detailsType": details
+        }
+
+    def statusPage(self, status="noerr", details="noerr"):
+        t = Template(filename="html/index.mako", lookup=lookup)
+        ctxt = self.statusContext(status, details)
+        return t.render(**ctxt)
+
     def index(self):
         """
         Serves the status page for developers.
         """
         import models.core
-        values = {
-            "version": version,
-            "statusType": "noerr",
-            "detailsType": "noerr"
-        }
         t = Template(filename="html/index.mako", lookup=lookup)
         try:
             server = core.server()
             server.version
         except Exception:
-            values["statusType"] = "err"
-            values["detailsType"] = "couchdb"
-            return t.render(**values)
+            return self.statusPage(status="err", details="couchdb")
         try:
             db = core.connect()
             db["_design/validation"]
         except:
-            values["statusType"] = "err"
-            values["detailsType"] = "initdb"
-            return t.render(**values)
-        return t.render(**values)
+            return self.statusPage(status="err", details="initdb")
+        return self.statusPage()
 
     def docs(self):
         """
         For developers. Serves the documentation pages.
         """
-        return serve_file(os.path.join(webroot, 'docs/index.html'))
+        if os.path.exists("docs"):
+            return serve_file(os.path.join(webroot, 'docs/index.html'))
+        else:
+            return self.statusPage(status="err", details="docs")
 
     def manual(self):
         """
         For developers. Serves the manual.
         """
-        raise cherrypy.HTTPRedirect("http://localhost:%s/manual/install.html" % serverport)
-        return 
+        if os.path.exists("manual/install.html"):
+            raise cherrypy.HTTPRedirect("http://localhost:%s/manual/install.html" % serverport)
+        else:
+            return self.statusPage(status="err", details="manual")
 
     def sandbox(self):
         """

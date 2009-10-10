@@ -94,3 +94,26 @@ SSResource.update = function(newValue, oldValue)
   SSApp.setDocument(doc, this.getName());
   this.fireEvent('onUpdate', {index:this.indexOf(doc), newValue:newValue, oldValue:oldValue});
 };
+
+// it's not a dispatcher, what is it?
+
+SSApp.addDispatcher(
+  "AllShifts",
+  {
+    routes:{  create: {resource:'shift', id:"*"},
+                read: {resource:'shifts'},
+              update: {resource:'shift', id:"*"},
+            'delete': {resource:'shift', id:"*"}},
+    bindings: [{
+                  match:[{resource:"shift", action:"favorite"},
+                         {resource:"shift", action:"unfavorite"},
+   			 {resource:"shift", action:"publish"},
+			 {resource:"shift", action:"unpublish"},
+			 {resource:"shift", action:"comment"}],
+               handlers: [SSResource.update]
+               }]
+  }
+);
+
+SSApp.dispatcher("AllShifts").addView(this.AllShiftsListView)
+SSApp.dispatcher("AllShifts").setDelegate(this.FilterPane)

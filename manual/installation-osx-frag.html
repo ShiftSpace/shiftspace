@@ -11,7 +11,8 @@
     <div class="section">
 	<h3 id="python">Python</h3>
 	<div class="content">
-	    <p>On 10.5 and 10.6 nothing needs to be done. If you are on 10.4 you need to install Python 2.6. We recommend doing this via Porticus.</p>
+	    <p><i>On 10.5 and 10.6 nothing needs to be done.</i></p>
+	    <p>If you are on 10.4 you need to install Python 2.6. We recommend doing this via Porticus.</p>
 	    <p>First install the latest version of <a href="http://www.macports.org/">MacPorts</a>.</p>
 	    <p>While using the MacPorts at the command line is not difficult, using <a href="http://porticus.alittledrop.com/">Porticus</a> is far simpler. Install this as well.</p>
 	    <p>Once Porticus is installed launch it. Before doing anything, first run <b>Port &gt; Self Update...</b> in the top menu. Then select the <b>All Ports</b> folder in the left nav. Then search for the <b>python26</b> package. Select it and click the <b>Install</b> button on the top left of the main window.</p>
@@ -77,7 +78,7 @@ $ python shifty.py installdeps</pre>
     <div class="section">
 	<h3 id="couchdb-intel">CouchDB on 10.5 (Leopard) & 10.6 (Snow Leopard) Intel</h3>
 	<div class="content">
-	    <p>We recommend that you install the developer version of CouchDB 0.10 using Jan Lenhardt's prebuilt binaries - CouchDBX. You can find them "here":http://github.com/janl/couchdbx-core/downloads. For 10.5 we recommend "this one":http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-pl3-UNSTABLE.zip. For 10.6 we recommend <a href="http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-Snow-Leopard-64bit-EXERIMENTAL-RC1.zip">this one</a>.</p>
+	    <p>We recommend that you install the developer version of CouchDB 0.10 using Jan Lenhardt's prebuilt binaries - CouchDBX. You can find them <a href="http://github.com/janl/couchdbx-core/downloads">here</a>. For 10.5 we recommend <a href="http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-pl3-UNSTABLE.zip">this one</a>. For 10.6 we recommend <a href="http://cloud.github.com/downloads/janl/couchdbx-core/CouchDBX-0.10.0a-R13B01-Snow-Leopard-64bit-EXERIMENTAL-RC1.zip">this one</a>.</p>
 	    <p>Drop the CouchDBX application into your <b>Applications</b> folder. Double-click on the application to start up CouchDB. Once it's started, point your browser at <b>http://localhost:5984/_utils/</b> to make sure that nothing went horribly wrong.</p>
 	</div>
     </div>
@@ -87,7 +88,7 @@ $ python shifty.py installdeps</pre>
     <div class="section">
 	<h3 id="couchdb-ppc">CouchDB on 10.4 and PowerPC</h3>
 	<div class="content">
-	    <p>Use Porticus to install the couchdb-devel package.</p>
+	    <p>Use Porticus to install the <b>couchdb-devel</b> package.</p>
 	</div>
     </div>
     <br />
@@ -118,7 +119,7 @@ $ python shifty.py initdb</pre>
     <div class="section">
 	<h3>CouchDBX</h3>
 	<div class="content">
-	    <p>Only do the following if you installed CouchDB via CouchDBX</p>
+	    <p><i>Only do the following if you installed CouchDB via CouchDBX.</i></p>
 	    <p>Right click on the CouchDBX application in your Applications directory using the Finder. You'll get a new window displaying the contents of the application. Drill down through <b>Contents/Resources/couchdbx-core/couchdb/etc/couchdb/</b>. Open up <b>local.ini</b> in your favorite text editor. Replace the contents with the <b>local.ini</b> specified below.</p>
 	</div>
     </div>
@@ -128,7 +129,7 @@ $ python shifty.py initdb</pre>
     <div class="section">
 	<h3>CouchDB via MacPorts or Porticus</h3>
 	<div class="content">
-	    <p>Only do the following if you installed CouchDB via MacPorts/Porticus</p>
+	    <p><i>Only do the following if you installed CouchDB via MacPorts/Porticus.</i></p>
 	    <p>Open <b>/opt/local/etc/couchdb/local.ini</b> in your favorite text editor. You will need to enter you admin password in order to edit this file.</p>
 	</div>
     </div>
