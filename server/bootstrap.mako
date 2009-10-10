@@ -7,7 +7,14 @@
             error: function() {}
         };
     }
-    var SSLog = function() {};
+    var SSLog = console.log;
+    var SSLogMessage,
+        SSLogError,
+        SSLogWarning,
+        SSLogRequest,
+        SSLogForce,
+        SSInclude,
+        SSLogSystem;
 </script>
 <script type="text/javascript">
     var __server = "${server}";
@@ -29,13 +36,31 @@
             };
         }
     };
+
+    function SSDescribeException(_exception)
+    {
+      var temp = [];
+      for(var prop in _exception)
+      {
+         temp.push(prop + ':' + _exception[prop]);
+      }
+      return "Exception:{ " + temp.join(', ') +" }";
+    }
 </script>
 <script type="text/javascript" src="/client/core/RemoteFunctions.js"></script>
 <script type="text/javascript" src="/client/pin/RangeCoder.js"></script>
 <script type="text/javascript" src="/client/pin/Pin.js"></script>
+<script type="text/javascript">
+    ShiftSpace.Pin = ShiftSpacePin;
+</script>
 <script type="text/javascript" src="/client/pin/PinHelpers.js"></script>
 <script type="text/javascript" src="/client/pin/PinWidget.js"></script>
 <script type="text/javascript" src="/client/helpers/ShiftSpaceElement.js"></script>
+<script type="text/javascript">
+    ShiftSpace.Element = SSElement;
+    ShiftSpace.Iframe = SSIframe;
+</script>
+<script type="text/javascript" src="/client/helpers/IframeHelpers.js"></script>
 <script type="text/javascript" src="/client/user/Space.js" charset="utf-8"></script>
 <script type="text/javascript" src="/client/user/Shift.js" charset="utf-8"></script>
 <script type="text/javascript">
@@ -43,16 +68,21 @@
     ShiftSpace.Shift = ShiftSpaceShift;
 </script>
 <script type="text/javascript" src="/spaces/${space}/${space}.js" charset="utf-8"></script>
+<script type="text/javascript">
+    ${space}Space.implement({
+        attributes: function() {
+            return ${attrs};
+        }
+    });
+</script>
 <link type="text/css" rel="stylesheet" src="/spaces/${space}/${space}.css" charset="utf-8"></script>
 <script type='text/javascript' charset='utf-8'>
     window.addEvent('domready', function() {
-        /*
         var ${space} = new ${space}Space(${space}Shift);
         var theShift = ${shift};
         theShift = $merge(theShift, {id:'${shiftId}'});
-        ${space}.setCssLoaded(true);
+        console.log(theShift);
         ${space}.showShift(theShift);
         ${space}.orderFront('${shiftId}');
-        */
     });
 </script>

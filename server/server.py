@@ -187,6 +187,11 @@ class RootController:
         [node.drop_tree() for node in dom.cssselect("script")]
         for node in dom.cssselect("*[onload]"):
             del node.attrib['onload']
+
+        # load the space attributes
+        fh = open(os.path.join("spaces", space, "attrs.json"))
+        attrs = fh.read()
+        fh.close()
         
         # load the scripts 
         source = tostring(dom)
@@ -197,6 +202,7 @@ class RootController:
             "shiftId": shiftId,
             "space": space,
             "shift": json.dumps(theShift),
+            "attrs": attrs,
             }
         t = Template(filename="server/bootstrap.mako", lookup=lookup)
         source = source.replace("</head>", "%s</head>" % t.render(**ctxt))
