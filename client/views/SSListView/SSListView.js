@@ -5,9 +5,11 @@
 // @dependencies      SSView, SSCell
 // ==/Builder==
 
-// ==============
-// = Exceptions =
-// ==============
+/*
+  Constants:
+    SSListViewError - base SSListView exception.
+    SSListViewError.OutOfBounds - thrown when trying to access items out of bounds.
+ */
 
 var SSListViewError = SSException;
 
@@ -17,15 +19,10 @@ SSListViewError.OutOfBounds = new Class({
   name:"SSListViewError.OutOfBounds"
 });
 
-// ====================
-// = Class Definition =
-// ====================
-  /*
-    Class: SSListView
-      SSListView controls the display of array or collections of resources within the console. 
-      
-  */
-
+/*
+  Class: SSListView
+  SSListView controls the display of array or collections of resources within the console. 
+*/
 var SSListView = new Class({
 
   Extends: SSView,
@@ -100,13 +97,19 @@ var SSListView = new Class({
     }
   },
   
-  
+
   resource: function()
   {
     return this.__resource;
   },
   
-  
+  /*
+    Function: hasCell
+      Check if the list view has a SSCell instance associated with it.
+ 
+    Returns:
+      boolean
+   */
   hasCell: function()
   {
     if(this.__hasCell || this.cell()) return true;
@@ -121,29 +124,39 @@ var SSListView = new Class({
     return this.__hasCell;
   },
   
-  
+  /*
+    Function: setPageControl
+      Set the page control object used by this list view.
+
+    Parameters:
+      pageControl - a page control object
+   */
   setPageControl: function(pageControl)
   {
     this.__pageControl = pageControl;
   },
   
-  
+  /*
+    Function: pageControl
+      Return the page control object used by the list view
+
+    Returns:
+      A page control object.
+   */
   pageControl: function()
   {
     return this.__pageControl;
   },
   
-  
   /*
-      Function: setFilter
-        Sets the filter as a function.
+    Function: setFilter
+      Sets the filter as a function.
       
-      Parameters: 
-        fn - A function.
+    Parameters: 
+      fn - A function.
       
-      See Also: 
-        getFilter
-        filter
+    See Also: 
+      <getFilter>, <filter>
   */  
   setFilter: function(fn)
   {
@@ -239,11 +252,11 @@ var SSListView = new Class({
   },
   
   /*
-      Function: sortStart
-        Sets the sortStart property to the index of a cell node. Determines the starting point for a sort.  
+    Function: sortStart
+      Sets the sortStart property to the index of a cell node. Determines the starting point for a sort.  
                   
-      Parameters:
-       cellNode - a cell's DOM node
+    Parameters:
+      cellNode - a cell's DOM node
   */
   sortStart: function(cellNode)
   {
@@ -299,7 +312,6 @@ var SSListView = new Class({
   /*
     Function: attatchEvents (private)
       Called by the initialize function.  Adds an event that calls eventDispatch on a click event. 
-      
   */
   attachEvents: function()
   {
@@ -339,16 +351,15 @@ var SSListView = new Class({
       default:
       break;
     }
-    
     //event.stop();
   },
 
   /*
-      Function: awake
-        If a cell has content, set the cell's content to the assigned context.
+    Function: awake
+      If a cell has content, set the cell's content to the assigned context.
       
-      Parameters:
-        context - The context a object was created for. Either a window, element, or iframe.
+    Parameters:
+      context - The context a object was created for. Either a window, element, or iframe.
   */
   awake: function(context)
   {
@@ -365,14 +376,14 @@ var SSListView = new Class({
   },
   
   /*
-      Function: setCell
-        Sets the cell object, and sets a delegate instance of the cell. 
+    Function: setCell
+      Sets the cell object, and sets a delegate instance of the cell. 
 
-      Parameters:
-        cell - A cell object.
+    Parameters:
+      cell - A cell object.
         
-      See also:
-        cell
+    See also:
+      <cell>
   */
   setCell: function(cell)
   {
@@ -382,14 +393,14 @@ var SSListView = new Class({
   },
     
   /*
-      Function: cell
-        Returns the cell object.
+    Function: cell
+      Returns the cell object.
 
-      Returns:
-        A cell ojbecct
+    Returns:
+      A cell ojbecct
         
-      See also:
-        setCell
+    See also:
+      <setCell>
   */  
   cell: function()
   {
@@ -435,11 +446,11 @@ var SSListView = new Class({
   },
   
   /*
-      Function: count
-         //NOTE: See TODO in function. -Justin  
+    Function: count
+    //NOTE: See TODO in function. -Justin  
          
-      Returns:
-        The length of a row in a Javascript array. 
+    Returns:
+      The length of a row in a Javascript array. 
   */
   count: function()
   {
@@ -447,17 +458,17 @@ var SSListView = new Class({
   },
   
   /*
-      Function: find
-        Returns a 0 if a row in a raw data array is found in a passed function, otherwise returns -1.
+    Function: find
+      Returns a 0 if a row in a raw data array is found in a passed function, otherwise returns -1.
         
-      Parameters:
-        fn - A function
+    Parameters:
+      fn - A function
         
-      Returns:
-        An integer 
+    Returns:
+      An integer 
         
-      See Also:
-        findAll
+    See Also:
+      <findAll>
   */
   find: function(fn)
   {
@@ -467,17 +478,17 @@ var SSListView = new Class({
   },
   
   /*
-      Function: findAll
-        Returns an array containing all of the found raw data rows in a passed function. 
+    Function: findAll
+      Returns an array containing all of the found raw data rows in a passed function. 
       
-      Parameters:
-        fn - A function
+    Parameters:
+      fn - A function
         
-      Returns:
-        An array
+    Returns:
+      An array
     
-      See Also:
-        find   
+    See Also:
+      <find>   
   */
   findAll: function(fn)
   {
@@ -488,16 +499,15 @@ var SSListView = new Class({
   },
   
   /*
-      Function: query
-        Accepts an index of a collection item and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
+    Function: query
+      Accepts an index of a collection item and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
       
-      Parameters:
-        index - the index of a SSCell object
-        arg   - An argument of a function. 
+    Parameters:
+      index - the index of a SSCell object
+      arg   - An argument of a function. 
         
-      Returns:
-        An string, array or null.
-        
+    Returns:
+      An string, array or null.
   */
   query: function(index, arg)
   {
@@ -527,12 +537,12 @@ var SSListView = new Class({
   },
   
   /*
-      Function: add
-        Adds an object, that is specified with the newItem argument, to a collection. The _animate argument determines if an animation occurs during function call.
+    Function: add
+      Adds an object, that is specified with the newItem argument, to a collection. The _animate argument determines if an animation occurs during function call.
         
-      Parameters:
-        newItem  - a javascript object
-        options - an object, can contain animate boolean as well as atIndex value.
+    Parameters:
+      newItem  - a javascript object
+      options - an object, can contain animate boolean as well as atIndex value.
   */
   add: function(newItem, options)
   {
@@ -651,7 +661,6 @@ var SSListView = new Class({
     }
   },
   
-  
   /*
     Function: get 
       Accepts an index of cell in a collection  and performs a boundsCheck to make sure the index is valid. Retreives the properties of each data element, stores them in an array, and returns the array. 
@@ -691,13 +700,13 @@ var SSListView = new Class({
   },
   
   /*
-      Function: update  
-        Updates a collection's content with the passed cellData at the specified index. Accepts the current data, the index of the collection to update, and whether 
+    Function: update  
+      Updates a collection's content with the passed cellData at the specified index. Accepts the current data, the index of the collection to update, and whether 
     
-      Parameters:
-        cellData - An object.
-        index - the index of a SSCell object
-        _noArrayUpdate - A boolean.
+    Parameters:
+      cellData - An object.
+      index - the index of a SSCell object
+      _noArrayUpdate - A boolean.
   */
   update: function(cellData, index, _noArrayUpdate)
   {
@@ -811,7 +820,6 @@ var SSListView = new Class({
   {
     this.data()[index] = cellData;
   },
-  
   
   /*
     Function: remove
@@ -1085,7 +1093,16 @@ var SSListView = new Class({
     }
   },
   
-  
+  /*
+    Function: newCellForItemData
+    
+    Parameters:
+      itemData - a JSON object
+      index - the index of item to make sure it's not filtered
+
+    Returns:
+      a cloned DOM node from the list view's SSCell instance
+   */
   newCellForItemData: function(itemData, index)
   {
     var filtered = this.filter(itemData, index);
@@ -1259,18 +1276,8 @@ var SSListView = new Class({
     }
   },
 
-  
-  onRowSelect: function(index)
-  {
-    
-  },
-  
-  
-  onRowDeselect: function(index)
-  {
-    
-  },
-  
+  onRowSelect: function(index) {},
+  onRowDeselect: function(index) {},
   
   /*
     Function: setCellBeingEdited
