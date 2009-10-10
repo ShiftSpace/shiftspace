@@ -1,7 +1,7 @@
 *~
 *.save
 *.pyc
-server/sessions/*
+server/sessions/session*
 
 momasocialbar/images
 momasocialbar/templates
