@@ -176,6 +176,8 @@ class RootController:
         
         dom = linkprocessor.get_dom()
         [node.drop_tree() for node in dom.cssselect("script")]
+        for node in dom.cssselect("*[onload]"):
+            del node.attrib['onload']
         #add link to sandbox script
         #add space file for shift
         #create instance of shift
