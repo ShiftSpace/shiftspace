@@ -260,7 +260,7 @@ var SSListView = new Class({
   */
   sortStart: function(cellNode)
   {
-    this.__sortStart = this.cellNodes().indexOf(cellNode);
+    this.__sortStart = this.indexOfCellNode(cellNode);
   },
   
   /*
@@ -272,7 +272,7 @@ var SSListView = new Class({
   */
   sortSort: function(cellNode)
   {
-    this.__sortCurrent = this.cellNodes().indexOf(cellNode);
+    this.__sortCurrent = this.indexOfCellNode(cellNode);
   },
   
   /*
@@ -288,7 +288,7 @@ var SSListView = new Class({
   sortComplete: function(cellNode)
   {
     this.setIsBeingSorted(false);
-    this.__sortEnd = this.cellNodes().indexOf(cellNode);
+    this.__sortEnd = this.indexOfCellNode(cellNode);
     
     this.fireEvent('onSortComplete');
     
@@ -735,7 +735,7 @@ var SSListView = new Class({
   */
   updateObject: function(sender)
   {
-    var index = this.indexOf(sender);
+    var index = this.indexOfCellNode(sender);
     this.update(this.cell().getAllData(), index);
   },
   
@@ -868,7 +868,7 @@ var SSListView = new Class({
   */
   removeObject: function(sender)
   {
-    var index = this.indexOf(sender);
+    var index = this.indexOfCellNode(sender);
     this.remove(index);
   },
   
@@ -917,7 +917,7 @@ var SSListView = new Class({
   */
   editObject: function(sender)
   {
-    var index = this.indexOf(sender);
+    var index = this.indexOfCellNode(sender);
     this.edit(index);
   },
   
@@ -968,7 +968,7 @@ var SSListView = new Class({
   */
   hideObject: function(sender)
   {
-    var index = this.indexOf(sender);
+    var index = this.indexOfCellNode(sender);
     this.hideItem(index);
   },
 
@@ -1039,7 +1039,7 @@ var SSListView = new Class({
   */
   cancelEditObject: function(sender)
   {
-    var index = this.indexOf(sender);
+    var index = this.indexOfCellNode(sender);
     this.cancelEdit(index);
   },
   
