@@ -151,8 +151,28 @@ class RootController:
                                 output="builds/shiftspace.dev.user.js")
         return ack
 
-    def proxy(self):
-        return "One day with proxy will live here"
+    def proxy(self, id):
+        import models.shift as shift
+        from urllib import FancyURLopener
+        
+        class FancyOpener(FancyURLopener):
+            version = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)'
+        pageopener = FancyOpener()
+        
+        theShift = shift.read(id)
+        url = theShift["href"]
+        
+        page = pageopener.open(url)
+        source = page.read()
+        
+        linkprocessor = LinkProcessor();
+        
+        linkprocessor.parse(source);
+        linkprocessor.set_url(url)
+        
+        return linkprocessor.get_doc()
+        
+        
 
 
 def initAppRoutes():
@@ -176,7 +196,7 @@ def initDevRoutes():
     d.connect(name='rootTest', route='test/:test', controller=root, action='test')
     d.connect(name='rootTests', route='tests', controller=root, action='tests')
     d.connect(name='rootBuild', route='build', controller=root, action='build')
-    d.connect(name='rootProxy', route='proxy', controller=root, action='proxy')
+    d.connect(name='rootProxy', route='proxy/:id', controller=root, action='proxy')
     return d
 
 
