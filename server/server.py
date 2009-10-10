@@ -29,6 +29,10 @@ from controllers.stream import StreamController
 from controllers.event import EventController
 from controllers.permission import PermissionController
 from controllers.group import GroupsController
+try:
+    from linkprocessor import LinkProcessor
+except:
+    print "Could not load LinkProcessor"
 
 
 version = "1.0"
