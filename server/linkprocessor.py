@@ -11,7 +11,7 @@ class LinkProcessor:
         print current_dir_url
         self.base_url = current_dir_url
 
-    def get_doc(self):
+    def get_dom(self):
         self.root.make_links_absolute(self.base_url, resolve_base_href=True)
         #html_doc = tostring(self.root)
         return self.root
