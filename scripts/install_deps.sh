@@ -16,5 +16,6 @@ sudo python setup.py install
 cd ../../
 mv deps/couchdb-lucene-0.4-jar-with-dependencies.jar ../server/
 mv deps/NaturalDocs-1.4 ../externals/
+chmod u+x ../externals/NaturalDocs-1.4/NaturalDocs
 rm -rf deps
 rm deps.tar.gz
