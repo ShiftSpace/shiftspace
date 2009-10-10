@@ -1,0 +1,216 @@
+<notextile>
+
+    <h1 id="installing-on-windows">Installing on Windows</h1>
+    <br />
+
+
+    <h2 id="prepare">Preparing your environment></h2>
+    <br />
+
+
+    <div class="section">
+	<h3 id="python">Installing Python 2.6</h3>
+	<div class="content">
+	    <p>You should use the appropriate 2.6 installer from "here":http://www.python.org/download/. Once you've installed you need to update your path. Open the <b>Control Panel</b> via the <b>Start Menu</b>. Select the <b>Performance and Maintenance</b> icon. Then select the <b>System Icon</b>. In the window that open select the <b>Advanced</b> tab. At the bottom there is a button <b>Environment Variables</b>, click on this. In the <b>System Variables</b> group there should be an entry called <b>Path</b>. Append <b>;C:\Python26\</b> to the list, the starting semicolon here is just a delimiter.</p>
+	</div>
+    </div>
+    <br />
+
+
+    <div class="section">
+	<h3 id="git">Git</h3>
+	<div class="content">
+	    <p>Install the latest version of "msysgit":http://code.google.com/p/msysgit/. This will put a handy link on your desktop for starting up a bash shell interface. git is very popular in the open source community and most install instructions assume you are running bash or some similar command line shell. When we refer to the <b>terminal</b> we really mean the git bash shell application.</p>
+	</div>
+    </div> 
+    <br />
+
+
+    <div class="section">
+	<h3 id="java">Java 1.6</h3>
+	<div class="content">
+	    <p>Install the latest 1.6 <a href="http://java.sun.com/javase/downloads/index.jsp">Java SE Development Kit</a>.</p>
+	</div>
+    </div>
+    <br />
+
+    
+    <h2 id="getting-the-source">Getting the source</h2>
+    <br />
+
+
+    <div class="section">
+	<h3 id="getting-shiftspace">Getting ShiftSpace</h3>
+	<div class="content">
+	    <p>Clone the main shiftspace repository into your Sites folder on your machine by typing the following after launching terminal:</p>
+	    <pre class="console">$ cd ~/Desktop
+$ git clone git://github.com/ShiftSpace/shiftspace.git</pre>
+	    <p>Then the run the following to pull in the various git submodules required by shiftspace:</p>
+	    <pre class="console">$ cd shiftspace
+$ git submodule init
+$ git submodule update</pre>
+	    <p>Your clone is now ready to go.</p>
+	</div>
+    </div>
+    <br />
+
+
+    <div class="section">
+	<h3 id="deps">Python dependencies</h3>
+	<div class="content">
+	    <p>Run the following at the terminal:</p>
+	    <pre class="console">$ cd ~/Desktop/shiftspace
+$ python shifty.py installdeps</pre>
+	    <p>This installs all of the Python libraries the ShiftSpace backend needs to run. You might notice there is couchdb-lucene .jar as well. We'll get to that in a moment.</p>
+	</div>
+    </div> 
+    <br />
+
+
+    <h2 id="couchdb">Installing and configuring CouchDB</h2>
+    <br />
+
+
+    <div class="section">
+	<h3 id="getting-couchdb">Getting CouchDB</h3>
+	<div class="content">
+	    <p>In the past installing CouchDB on Windows was a fairly arduous affair. Things have become much simpler with CouchDB 0.10. Mark Hammond now maintains a single-step installer, get it "here":http://people.apache.org/~mhammond/setup-couchdb-0.10.0a819270.exe. In order to run CouchDB you'll need to have the required C/C++ DLLs. You can get those "here":http://www.microsoft.com/downloads/details.aspx?familyid=9B2DA534-3E03-4391-8A4D-074B9F2BC1BF&displaylang=en.</p>
+	    <p>Once it's done installed you should verify that nothing went wrong. You should see CouchDB in the <b>Start Menu</b> under the <b>Apache CouchDB</b> folder. Select it to startup CouchDGB. You'll see a startup window that hopefully doesn't spew out any errors.</p>
+	    </p>Point your browser at <b>http://localhost:5984/_utils</b>. You should see Futon, the GUI to CouchDB.</p>
+	</div>
+    </div> 
+    <br />
+
+    
+    <div class="section">
+	<h3 id="initdb">Initializing the database</h3>
+	<div class="content">
+	    <p>Now we need to initialize the database. Make sure that CouchDB is running. Type the following into your terminal:</p>
+	    <pre class="console">$ cd ~/Desktop/shiftspace
+$ python shifty.py initdb</pre>
+	    <p>You should see some output as new documents are added to the databse.</p>
+	    <p>You should point your web browser to <b>http://localhost:5984/_utils/database.html?shiftspace</b> to see that the shiftspace database is there and in fact populated with design documents.</p>
+	</div>
+    </div>
+    <br />
+
+
+    <div class="section">
+	<h3 id="couchdbconf">Configuring couchdb-lucene</h3>
+	<div class="content">
+	    <p>Now that you have CouchDB up and running, you should configure couchdb-lucene. In order for Lucene to index CouchDB and provide full text search capabilities you'll need to edit your CouchDB <b>local.ini</b> file. This is located in <b>C:\Program Files\Apache Software Foundation\CouchDB\etc\couchdb</b>. Open this file in your favorite text editor and replace it's contents with the following:</p>
+	    <pre>; CouchDB Configuration Settings
+
+; Custom settings should be made in this file. They will override settings
+; in default.ini, but unlike changes made to default.ini, this file won't be
+; overwritten on server upgrade.
+
+[couchdb]
+;max_document_size = 4294967296 ; bytes
+os_process_timeout=60000 ; 60 seconds for couchdb-lucene
+
+[httpd]
+;port = 5984
+;bind_address = 127.0.0.1
+
+[log]
+;level = debug                                                                                                      
+
+[update_notification]
+; IMPORTANT: your path to the java executable may different
+indexer=\"C:\Program Files\Java\jdk1.6.0_11\bin\java.exe\" -jar \"C:\Documents and Settings\Owner\Desktop\shiftspace\server\couchdb-lucene-0.4-jar-with-dependencies.jar\" -index
+
+; To create an admin account uncomment the '[admins]' section below and add a
+; line in the format 'username = password'. When you next start CouchDB, it                                        
+; will change the password to a hash (so that your passwords don't linger                                                    
+; around in plain-text files). You can add more admin accounts with more                                                      
+; 'username = password' lines. Don't forget to restart CouchDB after                                                       
+; changing this.                                                           
+;[admins]                                                                                                               
+;admin = mysecretpassword                                                                                                      
+
+[external]
+; IMPORTANT: your path to the java executable may be different
+fti=\"C:\Program Files\Java\jdk1.6.0_11\bin\java.exe\" -jar \"C:\Documents and Settings\Owner\Desktop\shiftspace\server\couchdb-lucene-0.4-jar-with-dependencies.jar\" -search
+
+[httpd_db_handlers]
+_fti={couch_httpd_external, handle_external_req, <<"fti">>}</pre>
+	    <p><b>IMPORTANT</b> You may need to change the two lines that call into the couchdb-lucene jar so that the java path portion of the path actually matches the location of java on your machine. If CouchDB is running shut it down and start it up again to verify there were no errors.</p>
+	</div>
+    </div>
+    <br />
+
+    
+    <div class="section">
+	<h3 id="couchdbwrap">Wrapping up CouchDB configuration</h3>
+	<div class="content">
+	    <p>Point your browser at <b>http://localhost:5984/shiftspace/_fti</b>. You should see some json output like the following (it doesn't matter if it doesn't completely match).</p>
+	    <pre>{
+    "current": true,
+    "disk_size": 1909,
+    "doc_count": 4,
+    "doc_del_count": 1,
+    "fields": [
+        "summary",
+        "modified",
+        "private",
+        "draft",
+        "createdBy",
+        "created",
+        "domain",
+        "userName",
+        "streams",
+        "displayName",
+        "href"
+    ],
+    "last_modified": 1252875399000,
+    "optimized": false
+}</pre>
+	</div>
+    </div>
+    <br />
+
+    
+    <h2 id="running-shiftspace">Running ShiftSpace</h2>
+    <br />
+
+    <div class="section">
+	<h3 id="prepare">Preparing to start the server</h3>
+	<div class="content">
+	    <p>In order for the ShiftSpace script to build properly between page refreshes the dependencies between all the JavaScript source files must be determined as well as setting the url. In the future you won't need to set the url since it should just default to <b>http://localhost:8080</b>. Until then you have to run the following in a terminal:</p>
+	    <pre class="console">$ cd ~/Desktop/shiftspace
+$ python shifty.py configure http//localhost:8080</pre>
+	</div>
+    </div>
+    <br />
+
+
+    <div class="section">
+	<h3 id="serverprep">Starting the server</h3>
+	<div class="content">
+	    <p>You can now start the ShiftSpace server. Again make sure that the CouchDB is running.</p>
+	    <p>Let's start the actual ShiftSpace server. Type following into a new terminal:</p>
+	    <pre class="console">$ cd ~/Desktop/shiftspace
+$ python shifty.py runserver</pre>
+	    <p>You should see some output that CherryPy is starting up. In your browser goto <b>http://localhost:8080/</b>. Don't forget the trailing slash. You should see a greeting.</p>
+	    <p>Now to really verify that things are working point your browser to to <b>http://localhost:8080/sandbox/</b>. Don't miss the trailing slash (we'll fix this later). You should be able to open the ShiftSpace Console by typing the shift key plus the space key together. You should see a <b>Login</b> tab. In the login tab there is a <b>Join</b> subtab. Select this. Enter your information and click <b>submit</b> (sorry the enter key doesn't work yet).</p>
+	    <p>You should now be logged in. Open up the Spaces menu in the lower left. Click on the Notes Space button. You should see an empty note fade onto the page. Type some text and click the save button. You should see your new shift appear in the Console.</p>
+	    <p>Congratulations! You've successfully installed ShiftSpace 1.0. Please refer to the developer manual if you'd like to know more about developing spaces.</p>
+	</div>
+    </div> 
+    <br />
+
+
+    <div class="section">
+	<h3 id="recap">Recap</h3>
+	<div class="content">
+	    <p>Whenever you want to hack on ShiftSpace, first start up CouchDB.</p>
+	    <p>Then type the following at a new terminal:</p>
+	    <pre class="console">$ cd ~/Desktop/shiftspace
+$ python shifty.py runserver</pre>
+	    <p>You can then point your browser to http://localhost:8080/sandbox/, and that's all there is to it.</p>
+	</div>
+    </div>
+    <br />
+
+</notextile>

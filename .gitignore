@@ -52,6 +52,9 @@ lucene/*
 
 externals/NaturalDocs-1.4/*
 docs/*
-tmp/*
-
-manual/*.html
+tmp/*/manual/install.html
+/manual/install.html
+/manual/installation-linux.html
+/manual/installation-osx.html
+/manual/installation-windows.html
+tmp/docs
