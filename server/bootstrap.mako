@@ -38,6 +38,10 @@
 <script type="text/javascript" src="/client/helpers/ShiftSpaceElement.js"></script>
 <script type="text/javascript" src="/client/user/Space.js" charset="utf-8"></script>
 <script type="text/javascript" src="/client/user/Shift.js" charset="utf-8"></script>
+<script type="text/javascript">
+    ShiftSpace.Space = ShiftSpaceSpace;
+    ShiftSpace.Shift = ShiftSpaceShift;
+</script>
 <script type="text/javascript" src="/spaces/${space}/${space}.js" charset="utf-8"></script>
 <link type="text/css" rel="stylesheet" src="/spaces/${space}/${space}.css" charset="utf-8"></script>
 <script type='text/javascript' charset='utf-8'>
