@@ -164,7 +164,10 @@ class RootController:
         pageopener = FancyOpener()
         
         theShift = shift.read(id)
+        space = theShift["space"]
         url = theShift["href"]
+        created = theShift["created"]
+        userName = theShift["userName"]
         
         page = pageopener.open(url)
         source = page.read()
@@ -182,9 +185,27 @@ class RootController:
         #add space file for shift
         #create instance of shift
         #load proxy message
-        return tostring(dom)
         
-        
+        # load the scripts 
+        source = tostring(dom)
+        server = "http://localhost:%s" % serverport
+        ctxt = {
+            "server": server,
+            "spacesDir": "/".join([server, "spaces"]),
+            }
+        t = Template(filename="server/bootstrap.mako", lookup=lookup)
+        source = source.replace("</head>", "%s</head>" % t.render(**ctxt))
+
+        t = Template(filename="server/proxymessage.mako", lookup=lookup)
+        # load proxy message
+        ctxt = {
+            "space": space,
+            "href": url,
+            "created": created,
+            "userName": userName,
+            }
+        source = source.replace("</body>", "%s</body>" % t.render(**ctxt))
+        return source
 
 
 def initAppRoutes():
