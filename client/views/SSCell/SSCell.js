@@ -7,7 +7,7 @@
 
 /*
   Constants:
-    SSCellError - root SSCell exception
+    SSCellError - base SSCell exception
     SSCellError.NoSuchProperty - no such property exists in the cell.
     SSCellError.NoLock - attempt to operate on a node with locking the cell first.
     SSCellError.NoSuchTarget - attempt to add a action-target with a target that does not exists.
