@@ -175,7 +175,10 @@ class RootController:
         linkprocessor.set_url(url)
         
         dom = linkprocessor.get_doc()
-        
+        #add link to sandbox script
+        #add space file for shift
+        #create instance of shift
+        #load proxy message
         return tostring(dom)
         
         
