@@ -7,7 +7,7 @@ class LinkProcessor:
 
     def set_url(self, url):
         patt = re.compile(r"(.+\/)(.+$)?")
-        current_dir_url = re.match(patt, url, re.I).groups()[0]
+        current_dir_url = re.match(patt, url).groups()[0]
         print current_dir_url
         self.base_url = current_dir_url
 
