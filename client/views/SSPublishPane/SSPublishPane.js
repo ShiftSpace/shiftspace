@@ -10,7 +10,7 @@
   Class: SSPublishPane
     The publish pane class. A singleton. Listens to all ShiftListView instances
     for selection notification.
- */
+*/
 var SSPublishPane = new Class({
 
   Extends: SSView,
@@ -164,6 +164,7 @@ var SSPublishPane = new Class({
         this.SSPPVisiblePublic.addClass('SSPPPermit');
         SSLog('clicked private status!', SSLogForce);
     }.bind(this));
+    this.ShiftPermalink.addEvent("click", this.showProxy.bind(this));
   },
   
   
@@ -196,5 +197,12 @@ var SSPublishPane = new Class({
   optionsForResource: function(resource)
   {
     return {byHref:window.location.href.split("#")[0]};
+  },
+
+
+  showProxy: function(evt)
+  {
+    var selectedShifts = this.currentListView().checkedItemIds();
+    window.open(ShiftSpace.info().server.urlJoin("proxy", selectedShifts[0]));
   }
 });
