@@ -1,9 +1,9 @@
 {
-  name: 'ImageSwap',
-  authors: ['dphiffer', 'mushon', 'dnolen'],
-  icon: 'ImageSwap.png',
-  css: 'ImageSwap.css',
-  description: 'Swap any image on the web.',
-  tooltip: 'Swap any image on the web.',
-  version: 0.1
+  "name": "ImageSwap",
+  "authors": ["dphiffer", "mushon", "dnolen"],
+  "icon": "ImageSwap.png",
+  "css": "ImageSwap.css",
+  "description": "Swap any image on the web.",
+  "tooltip": "Swap any image on the web.",
+  "version": "0.1"
 }

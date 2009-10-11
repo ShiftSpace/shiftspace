@@ -151,7 +151,20 @@ class RootController:
                                 output="builds/shiftspace.dev.user.js")
         return ack
 
+    def absolutify(self, attrs):
+        space = attrs["name"]
+        for k, v in attrs.items():
+            if k in ["css", "html", "icon"]:
+                if v.find("http://") != 0:
+                    attrs[k] = "http://localhost:%s/spaces/%s/%s" % (serverport, space, v)
+        return attrs
+
     def proxy(self, id):
+        """
+        Servers the proxy. Takes a shift id and return the original page
+        where the shift was created, injects the required Javascript and CSS
+        and recreates the shift.
+        """
         try:
             import models.shift as shift
             from urllib import FancyURLopener
@@ -164,7 +177,11 @@ class RootController:
         pageopener = FancyOpener()
         
         theShift = shift.read(id)
+        shiftId = theShift["_id"]
+        space = theShift["space"]["name"]
         url = theShift["href"]
+        created = theShift["created"]
+        userName = theShift["userName"]
         
         page = pageopener.open(url)
         source = page.read()
@@ -176,13 +193,39 @@ class RootController:
         
         dom = linkprocessor.get_dom()
         [node.drop_tree() for node in dom.cssselect("script")]
-        #add link to sandbox script
-        #add space file for shift
-        #create instance of shift
-        #load proxy message
-        return tostring(dom)
+        for node in dom.cssselect("*[onload]"):
+            del node.attrib['onload']
+
+        # load the space attributes
+        fh = open(os.path.join("spaces", space, "attrs.json"))
+        attrs = fh.read()
+        fh.close()
+        attrs = self.absolutify(json.loads(attrs))
         
-        
+        # load the scripts 
+        source = tostring(dom)
+        server = "http://localhost:%s" % serverport
+        ctxt = {
+            "server": server,
+            "spacesDir": "/".join([server, "spaces"]),
+            "shiftId": shiftId,
+            "space": space,
+            "shift": json.dumps(theShift),
+            "attrs": json.dumps(attrs),
+            }
+        t = Template(filename="server/bootstrap.mako", lookup=lookup)
+        source = source.replace("</head>", "%s</head>" % t.render(**ctxt))
+
+        # load proxy message
+        t = Template(filename="server/proxymessage.mako", lookup=lookup)
+        ctxt = {
+            "space": space,
+            "href": url,
+            "created": created,
+            "userName": userName,
+            }
+        source = source.replace("</body>", "%s</body>" % t.render(**ctxt))
+        return source
 
 
 def initAppRoutes():

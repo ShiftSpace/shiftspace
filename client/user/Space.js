@@ -411,7 +411,6 @@ var ShiftSpaceSpace = new Class({
     this.fireEvent('onShiftUpdate', shift);
   },
 
-
   /*
     Function: canShowShift (abstract)
       Check if the shift json can be shown.  This method returns true unless you override it.
@@ -426,7 +425,6 @@ var ShiftSpaceSpace = new Class({
   {
     return true;
   },
-
 
   /*
     Function : showShift

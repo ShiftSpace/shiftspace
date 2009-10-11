@@ -106,11 +106,17 @@ function SSSetLogLevel(level)
   __ssloglevel = level;
 }
 
-if(typeof %%LOG_LEVEL%% != 'undefined')
+try
 {
-  SSSetLogLevel(%%LOG_LEVEL%%);
+  if(typeof %%LOG_LEVEL%% != 'undefined')
+  {
+    SSSetLogLevel(%%LOG_LEVEL%%);
+  }
+  else
+  {
+    throw new Error("Bailing: No such logging level %%LOG_LEVEL%%, please fix the config/env/%%ENV_NAME%%.json file.");
+  }
 }
-else
+catch(err)
 {
-  throw new Error("Bailing: No such logging level %%LOG_LEVEL%%, please fix the config/env/%%ENV_NAME%%.json file.");
 }
