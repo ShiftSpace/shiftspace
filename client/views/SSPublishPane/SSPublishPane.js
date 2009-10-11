@@ -164,7 +164,7 @@ var SSPublishPane = new Class({
         this.SSPPVisiblePublic.addClass('SSPPPermit');
         SSLog('clicked private status!', SSLogForce);
     }.bind(this));
-    this.ShiftPermalink.addEvent("click", this.showProxy.bind(this));
+    if(this.ShiftPermalink) this.ShiftPermalink.addEvent("click", this.showProxy.bind(this));
   },
   
   

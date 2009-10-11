@@ -161,19 +161,20 @@ class RootController:
 
     def proxy(self, id):
         """
-        Servers the proxy. Takes a shift id and return the original page
+        Serves the proxy. Takes a shift id and returns the original page
         where the shift was created, injects the required Javascript and CSS
-        and recreates the shift.
+        and recreates the shift. All scripts and onload handlers are removed
+        from the original page to prevent interference with shift loading.
         """
         try:
             import models.shift as shift
-            from urllib import FancyURLopener
+            from urllib import FancyURLopener, urlcleanup
             from lxml.html import fromstring, tostring
         except:
             return self.statusPage(status="err", details="proxy")
         
         class FancyOpener(FancyURLopener):
-            version = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)'
+            version = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; en-US; rv:1.9.0.1) Gecko/2008070206 Firefox/3.0.1"
         pageopener = FancyOpener()
         
         theShift = shift.read(id)
@@ -183,6 +184,8 @@ class RootController:
         created = theShift["created"]
         userName = theShift["userName"]
         
+        # clear the urllib cache
+        urlcleanup()
         page = pageopener.open(url)
         source = page.read()
         
