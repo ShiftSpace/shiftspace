@@ -60,6 +60,11 @@ function SSInfo(spaceName)
     }
   }
 
+  if(typeof __env == 'undefined')
+  {
+    var __env = null;
+  }
+
   return {
     env: __env,
     server: __server,

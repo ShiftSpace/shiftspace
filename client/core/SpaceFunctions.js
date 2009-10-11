@@ -40,7 +40,11 @@ var SSLoadSpace = function(spaceName)
   var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
   var attrs = SSGetSpaceAttributes(spaceName);
   var codep = SSLoadFile(url);
-  var cssp = SSLoadStyle(attrs.css);
+  var cssp;
+  if(!$(document.head).getElement(["#",spaceName,"Css"].join("")))
+  {
+    cssp = SSLoadStyle(attrs.css);
+  }
   var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
                    function() {
                        try

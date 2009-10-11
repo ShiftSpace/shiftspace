@@ -151,6 +151,14 @@ class RootController:
                                 output="builds/shiftspace.dev.user.js")
         return ack
 
+    def absolutify(self, attrs):
+        space = attrs["name"]
+        for k, v in attrs.items():
+            if k in ["css", "html", "icon"]:
+                if v.find("http://") != 0:
+                    attrs[k] = "http://localhost:%s/spaces/%s/%s" % (serverport, space, v)
+        return attrs
+
     def proxy(self, id):
         """
         Servers the proxy. Takes a shift id and return the original page
@@ -192,6 +200,7 @@ class RootController:
         fh = open(os.path.join("spaces", space, "attrs.json"))
         attrs = fh.read()
         fh.close()
+        attrs = self.absolutify(json.loads(attrs))
         
         # load the scripts 
         source = tostring(dom)
@@ -202,7 +211,7 @@ class RootController:
             "shiftId": shiftId,
             "space": space,
             "shift": json.dumps(theShift),
-            "attrs": attrs,
+            "attrs": json.dumps(attrs),
             }
         t = Template(filename="server/bootstrap.mako", lookup=lookup)
         source = source.replace("</head>", "%s</head>" % t.render(**ctxt))

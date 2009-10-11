@@ -47,6 +47,10 @@
       return "Exception:{ " + temp.join(', ') +" }";
     }
 </script>
+<script type="text/javascript" src="/client/core/UtilityFunctions.js"></script>
+<script type="text/javascript">
+    ShiftSpace.info = SSInfo;
+</script>
 <script type="text/javascript" src="/client/core/RemoteFunctions.js"></script>
 <script type="text/javascript" src="/client/pin/RangeCoder.js"></script>
 <script type="text/javascript" src="/client/pin/Pin.js"></script>
@@ -75,10 +79,11 @@
         }
     });
 </script>
-<link type="text/css" rel="stylesheet" src="/spaces/${space}/${space}.css" charset="utf-8"></script>
+<link id="NotesCss" type="text/css" rel="stylesheet" href="/spaces/${space}/${space}.css" charset="utf-8"></script>
 <script type='text/javascript' charset='utf-8'>
+    var ${space};
     window.addEvent('domready', function() {
-        var ${space} = new ${space}Space(${space}Shift);
+        ${space} = new ${space}Space(${space}Shift);
         var theShift = ${shift};
         theShift = $merge(theShift, {id:'${shiftId}'});
         console.log(theShift);
