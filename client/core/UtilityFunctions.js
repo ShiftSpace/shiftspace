@@ -30,6 +30,7 @@ Returns:
 */
 function SSInfo(spaceName) 
 {
+  // DELETE - superseded by attrs.json - David 10/10/09
   if (spaceName) 
   {
     var defaults = {
@@ -60,18 +61,14 @@ function SSInfo(spaceName)
     }
   }
 
-  if(typeof __env == 'undefined')
-  {
-    var __env = null;
-  }
-
-  return {
-    env: __env,
+  var info =  {
     server: __server,
     spacesDir: (typeof __spacesDir != 'undefined' && __spacesDir) || null,
     spaces: (spaceIndex && spaceIndex.join(', ')) || null,
     version: (typeof version != 'undefined' && version) || null
   };
+
+  return (typeof ShiftSpaceProxyMode == 'undefined') ? $merge(info, {env: __env}) : info;
 };
 
 // ===============================

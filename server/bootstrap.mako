@@ -1,6 +1,7 @@
 <link type="text/css" rel="stylesheet" href="/styles/ShiftSpace.css"></link>
 <link type="text/css" rel="stylesheet" href="/styles/SSProxyMessage.css"></link>
 <script type="text/javascript">
+    var ShiftSpaceProxyMode = true;
     if(!window.console) {
         window.console = {
             log: function() {},

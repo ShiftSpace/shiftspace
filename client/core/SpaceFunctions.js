@@ -40,42 +40,42 @@ var SSLoadSpace = function(spaceName)
   var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
   var attrs = SSGetSpaceAttributes(spaceName);
   var codep = SSLoadFile(url);
-  var cssp;
+  var cssp = {data:1}; // horrible hack - David
   if(!$(document.head).getElement(["#",spaceName,"Css"].join("")))
   {
     cssp = SSLoadStyle(attrs.css);
   }
   var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
                    function() {
-                       try
+                     try
+                     {
+                       var spacectorName = attrs.className || (spaceName+'Space');
+                       var shiftctorName = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
+                       var ctors =  ShiftSpace.__externals.evaluate(
+                         codep.value(),
+                         [spacectorName, shiftctorName]
+                       );
+                       var spacector = ctors[spacectorName], shiftctor = ctors[shiftctorName];
+                       if(!spacector)
                        {
-                           var spacectorName = attrs.className || (spaceName+'Space');
-                           var shiftctorName = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
-                           var ctors =  ShiftSpace.__externals.evaluate(
-                               codep.value(),
-                               [spacectorName, shiftctorName]
-                           );
-                           var spacector = ctors[spacectorName], shiftctor = ctors[shiftctorName];
-                           if(!spacector)
-                           {
-                               spacector = ShiftSpace.Space;
-                               SSLog("Could not find a constructor for " + spaceName + ", using default Space constructor", SSLogWarning);
-                           }
-                           if(!shiftctor)
-                           {
-                               throw new Exception(
-                                   spaceName + "Shift constructor does not exit! Did you specify the proper shift class name in your attrs.json file?"
-                               );
-                           }
-                           spacector.implement({attributes:function(){return attrs;}});
-                           var space = new spacector(shiftctor);
+                         spacector = ShiftSpace.Space;
+                         SSLog("Could not find a constructor for " + spaceName + ", using default Space constructor", SSLogWarning);
                        }
-                       catch(exc)
+                       if(!shiftctor)
                        {
-                           SSLog('Could not load ' + spaceName + ' Space - ' + SSDescribeException(exc), SSLogError);
+                         throw new Exception(
+                           spaceName + "Shift constructor does not exit! Did you specify the proper shift class name in your attrs.json file?"
+                         );
                        }
-                       SSPostNotification("onSpaceLoad", space);
-                       return SSRegisterSpace(space);
+                       spacector.implement({attributes:function(){return attrs;}});
+                       var space = new spacector(shiftctor);
+                     }
+                     catch(exc)
+                     {
+                       SSLog('Could not load ' + spaceName + ' Space - ' + SSDescribeException(exc), SSLogError);
+                     }
+                     SSPostNotification("onSpaceLoad", space);
+                     return SSRegisterSpace(space);
                    });
   return spacep;
 }.decorate(memoize);
