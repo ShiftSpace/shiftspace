@@ -35,8 +35,10 @@ var SSConsole = new Class({
     }
 
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
+    SSAddObserver(this, 'onUserLoginFailed', this.handleLoginFailed.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
+    SSAddObserver(this, 'onUserJoinFailed', this.handleJoinFailed.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
     
@@ -294,11 +296,13 @@ var SSConsole = new Class({
   {
     this.SSLoginFormUsername.setProperty('value', '');
     this.SSLoginFormPassword.setProperty('value', '');
+    this.SSLoginFormMessage.set('text', '');
   },
 
 
   handleLoginFormSubmit: function()
   {
+    this.SSLoginFormMessage.set('text', '');
     ShiftSpaceUser.login({
       userName: this.SSLoginFormUsername.getProperty('value'),
       password: this.SSLoginFormPassword.getProperty('value')
@@ -311,12 +315,20 @@ var SSConsole = new Class({
     this.fireEvent('onUserLogin');
   },
 
+  handleLoginFailed: function(err)
+  {
+    this.SSLoginFormMessage.set('text', err.error);
+  },
+  
+  handleJoinFailed: function(err)
+  {
+    this.SSSignUpFormMessage.set('text', err.error);
+  },
 
   initSignUpForm: function()
   {
     this.SSSignUpFormSubmit.addEvent('click', this.handleSignUpFormSubmit.bind(this));
-    
-    this.SSLoginForm.addEvent('submit', function(_evt) {
+    this.SSSignUpForm.addEvent('submit', function(_evt) {
       var evt = new Event(_evt);
       evt.preventDefault();
       this.handleSignUpFormSubmit();
@@ -326,11 +338,12 @@ var SSConsole = new Class({
 
   handleSignUpFormSubmit: function()
   {
+    this.SSSignUpFormMessage.set('text', '');
     var joinInput = {
       userName: this.SSSignUpFormUsername.getProperty('value'),
       email: this.SSSignUpFormEmail.getProperty('value'),
       password: this.SSSignUpFormPassword.getProperty('value'),
-      passwordVerify: this.SSSignUpFormPassword.getProperty('value')
+      passwordVerify: this.SSSignUpFormConfirmPassword.getProperty('value')
     };
 
     var p = ShiftSpaceUser.join(joinInput);

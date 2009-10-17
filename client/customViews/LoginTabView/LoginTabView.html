@@ -22,6 +22,8 @@
         </label>
         <input id="SSLoginFormPassword" type="password" outlet="SSConsole"></input>
         
+        <span id="SSLoginFormMessage" class="SSLocalized" outlet="SSConsole"></span>
+        
         <input id="SSLoginFormSubmit" class="SSLocalized" title="Login" type="button" value="Login" outlet="SSConsole"></input>
         
         <!-- Hidden submit button -->
@@ -33,7 +35,7 @@
 
     <!-- The Sign up Pane -->
     <div class="SSTabPane">
-      <form id="SSSignUpForm" class="LoginTabViewForm">
+      <form id="SSSignUpForm" class="LoginTabViewForm" outlet="SSConsole">
         
         <fieldset>
           <label title="User Name" class="SSLocalized">
@@ -59,8 +61,13 @@
           <input id="SSSignUpFormConfirmPassword" type="password" outlet="SSConsole"></input>
         </fieldset>
         
-        <input id="SSSignUpFormSubmit" class="SSLocalized" type="button" title="Sign Up" value="Submit" outlet="SSConsole"></input>
+        <div style="clear:both">
+        <span id="SSSignUpFormMessage" class="SSLocalized" outlet="SSConsole"></span>
         
+        <input id="SSSignUpFormSubmit" class="SSLocalized" type="button" title="Sign Up" value="Submit" outlet="SSConsole"></input>
+        <!-- Hidden submit button -->
+        <input style="display: none" type="submit"></input>
+        </div>
       </form>
     </div>
     <!-- End Login Pane -->
