@@ -35,13 +35,25 @@ var SSPublishPane = new Class({
   
   onShiftListViewShow: function(evt)
   {
-    //SSLog("onShiftListViewShow", evt.listView.getName(), SSLogForce);
+    SSLog("onShiftListViewShow ", evt.listView.getName(), SSLogForce);
+    var listView = evt.listView;
+    if(listView.checkedItems().length > 0)
+    {
+      this.setCurrentListView(listView);
+      this.update();
+      this.show();
+    }
   },
 
 
   onShiftListViewHide: function(evt)
   {
-    //SSLog("onShiftListViewHide", evt.listView.getName(), SSLogForce);
+    SSLog("onShiftListViewHide ", evt.listView.getName(), SSLogForce);
+    var listView = evt.listView;
+    if(listView == this.currentListView())
+    {
+      this.hide();
+    }
   },
   
   
@@ -144,7 +156,6 @@ var SSPublishPane = new Class({
   
   attachEvents: function()
   {
-    SSLog('attachEvents', SSLogForce);
     this.DeleteShift.addEvent('click', this.deleteShifts.bind(this));
     this.SaveShift.addEvent('click', this.saveShifts.bind(this));
     this.PublishShift.addEvent('click', this.publishShifts.bind(this));
