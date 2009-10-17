@@ -311,11 +311,12 @@ var AbstractUser = new Class({
           this.onJoin(json);
           SSPostNotification('onUserJoin', json);
           this.onLogin(json);
-          SSPostNotification('onLogin', json);
+          SSPostNotification('onUserLogin', json);
         }.bind(this),
         function() {
           var err = p.value();
           this.onJoinError(err);
+          SSPostNotification('onUserJoinFailed', err);
           SSLog(err, SSLogError);
         }.bind(this));
     return p;
