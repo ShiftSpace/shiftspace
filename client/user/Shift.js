@@ -746,11 +746,19 @@ var ShiftSpaceShift = new Class({
     // TODO: Show the failed view, if this shift can't be shown
   },
 
+
   errorView: function(err)
   {
 
   },
 
+  /*
+    Function: setPosition
+      Convenience function for setting the position of the main view of the shift.
+
+    Parmeters:
+      pos - a JSON object, {"x": int, "y": int}
+   */
   setPosition: function(pos)
   {
     this.getMainView().setStyles({
@@ -759,11 +767,26 @@ var ShiftSpaceShift = new Class({
     });
   },
 
-  getPosition: function(pos)
+  /*
+    Function: getPosition
+      Convenience function for getting the position of the main view of the shift.
+
+    Returns:
+      A JSON object, {"x": int, "y": int}
+   */
+  getPosition: function()
   {
     return this.getMainView().getPosition();
   },
 
+  /*
+    Function: makeDraggable
+      Convenience function for making an the main view of the shift draggable. Refer
+      to the MooTools documentation for Element.makeDraggable
+
+    Parameters:
+      options - same as the options for Element.makeDraggable
+   */
   makeDraggable: function(options)
   {
     if(this.getMainView())
@@ -776,5 +799,19 @@ var ShiftSpaceShift = new Class({
     {
       SSLog("This shift doesn't not have a main view or element", SSLogError);
     }
+  },
+
+  /*
+    Function: xmlHttpRequest
+      Make a remote request from the shift. The url must be defined in the space's
+      attrs.json file. Refer to the MooTools Request documentation for usage.
+
+    Parameters:
+      options - refer to the MooTools request documentation for a description.
+   */
+  xmlHttpRequest: function(options)
+  {
+    var req = new Request(options), url = options.url;
+    if(this.getParentSpace().attributes().permissions.contains(url)) req.send.safeCall();
   }
 });

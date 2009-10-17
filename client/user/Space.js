@@ -850,16 +850,42 @@ var ShiftSpaceSpace = new Class({
     return SSIsNewShift(shiftId);
   },
   
-  
+  /*
+    Function: setPreference
+      Set a preference for the space.
+
+    Parameters:
+      key - the string key to store the value under.
+      value - the value to store.
+   */
   setPreference: function(key, value)
   {
     ShiftSpace.User.setPreference(this.attributes().name+'.'+key, vlaue);
   },
   
-  
+  /*
+    Function: getPreference
+      Get a preference for a space.
+
+    Parameters:
+      key - the string 
+   */
   getPreference: function(key, defaultValue, callback)
   {
     ShiftSpace.User.getPreference.safeCallWithResult(this.attributes().name+'.'+key, defaultValue, callback);
-  }
+  },
 
+  /*
+    Function: xmlHttpRequest
+      Make a remote request from a space. The url must be defined in the space's
+      attrs.json file. Refer to the MooTools Request documentation for usage.
+
+    Parameters:
+      options - refer to the MooTools documentation for a description.
+   */
+  xmlHttpRequest: function(options)
+  {
+    var req = new Request(options), url = options.url;
+    if(this.getParentSpace().attributes().permissions.contains(url)) req.send.safeCall();
+  }
 });
