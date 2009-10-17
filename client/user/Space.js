@@ -894,7 +894,7 @@ var ShiftSpaceSpace = new Class({
         url = options.url;
     if(attrs.permissions.contains(url))
     {
-      req.send.safeCall();
+      req.send.bind(req).safeCall();
     }
     else
     {

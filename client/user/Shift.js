@@ -816,8 +816,7 @@ var ShiftSpaceShift = new Class({
         url = options.url;
     if(attrs.permissions.contains(url))
     {
-      SSLog("Making request from shift", SSLogSystem);
-      req.send.safeCall();
+      req.send.bind(req).safeCall();
     }
     else
     {
