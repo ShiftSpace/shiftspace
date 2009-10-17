@@ -42,7 +42,8 @@ function SSLog()
      type == SSLogError ||
      type == SSLogWarning)
   {
-    if(typeof ShiftSpaceSandBoxMode != 'undefined')
+    if(typeof ShiftSpaceSandBoxMode != 'undefined' ||
+       typeof SandalphonToolMode != 'undefined')
     {
        if(!Browser.Engine.webkit)
        {

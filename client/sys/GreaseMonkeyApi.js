@@ -2,7 +2,6 @@
 // @required
 // ==/Builder==
 
-var GM_log = console.log;
 
 function GM_addStyle(css) 
 {
