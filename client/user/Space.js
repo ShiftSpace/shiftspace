@@ -55,7 +55,7 @@ var ShiftSpaceSpace = new Class({
     if(!valid)
     {
       var name = this.attributes().name || '';
-      console.error('Error: The  ' + name + ' is not valid and will not be instantiated.');
+      SSLog('The  ' + name + ' is not valid and will not be instantiated.', SSLogError);
     }
     else
     {
@@ -495,7 +495,7 @@ var ShiftSpaceSpace = new Class({
     }
     else
     {
-      console.error( "Shift " + shiftId + " does not exist in this the " + this.getName() + " space." );
+      SSLog("Shift " + shiftId + " does not exist in this the " + this.getName() + " space.", SSLogError);
     }
 
     // check to see if there are no visible shifts, if not, hide the space interface

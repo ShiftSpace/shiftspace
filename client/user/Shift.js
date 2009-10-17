@@ -282,7 +282,7 @@ var ShiftSpaceShift = new Class({
     }
     else
     {
-      console.error('Error: Attempt to set mainView to null.');
+      SSLog('Error: Attempt to set mainView to null.', SSLogError);
     }
   },
 

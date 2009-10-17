@@ -336,7 +336,7 @@ var SSShowShift = function(space, shift)
   }
   catch(err)
   {
-    console.error(err);
+    SSLog(err, SSLogError);
   }
 }.asPromise();
 

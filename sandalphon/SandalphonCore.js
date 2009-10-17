@@ -116,7 +116,7 @@ var SandalphonClass = new Class({
       {
         if(responseText == "")
         {
-          console.error('No resource at path: ' + path);
+          SSLog('No resource at path: ' + path, SSLogError);
           throw new SSSandalphonError.NoSuchResource(new Error(), "No resource at path:" + path);
         }
         
@@ -334,8 +334,8 @@ var SandalphonClass = new Class({
       if(!target)
       {
         // throw an exception
-        console.error('Error: Sandalphon bindOutlets, binding target does not exist! ' + targetName);
-        console.error(source);
+        SSLog('Sandalphon bindOutlets, binding target does not exist! ' + targetName, SSLogError);
+        SSLog(source, SSLogError);
         // bail
         return;
       }
