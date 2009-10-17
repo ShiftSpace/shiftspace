@@ -113,7 +113,7 @@ var SSCell = new Class({
     if(this.delegate() && this.delegate().onCellClick)
     {
       var cellNode = (target.get('tag') == 'li') ? target : target.getParent('li');
-      this.delegate().onCellClick(cellNode);
+      if(cellNode) this.delegate().onCellClick(cellNode);
     }
   },
   
