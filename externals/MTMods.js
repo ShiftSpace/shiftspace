@@ -5,6 +5,7 @@
 Event.Keys.shift = 16;
 
 (function() {
+
 var _urlJoin = $arity(
   function(a) { return a; },
   function(a, b) {
@@ -16,6 +17,7 @@ var _urlJoin = $arity(
     }
   }
 );
+
 String.implement({
   tail: function(n) { return this.substring(this.length-(n || 1)); },
   drop: function(n) { return this.substring(0, this.length-(n || 1)); },
@@ -36,8 +38,15 @@ String.implement({
     var args = $A(arguments);
     args = ($type(this) == 'string') ? [this].extend(args) : args;
     return $reduce(_urlJoin, args);
+  },
+  domain: function() {
+    var trimmed = this.trim(), idx = trimmed.search("http://");
+    idx = (idx == -1) ? 0 : 7;
+    var first = trimmed.substr(idx, trimmed.length).split("/").first();
+    return "http://"+first;
   }
 });
+
 })();
 
 Array.implement({
