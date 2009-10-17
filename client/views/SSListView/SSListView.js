@@ -735,7 +735,7 @@ var SSListView = new Class({
   */
   updateObject: function(sender)
   {
-    var index = this.indexOfCellNode(sender);
+    var index = this.indexOf(sender);
     this.update(this.cell().getAllData(), index);
   },
   
@@ -836,6 +836,7 @@ var SSListView = new Class({
   // TODO: animation support
   remove: function(index)
   {
+    SSLog("remove", index, SSLogForce);
     this.boundsCheck(index);
     var delegate = this.delegate();
     var canRemove = true;
@@ -852,6 +853,7 @@ var SSListView = new Class({
   */
   __remove__: function(index)
   {
+    SSLog("__remove__", index, SSLogForce);
     this.data().splice(index, 1);
     this.refresh(true);
   },
@@ -868,7 +870,8 @@ var SSListView = new Class({
   */
   removeObject: function(sender)
   {
-    var index = this.indexOfCellNode(sender);
+    SSLog("removeObject", sender, SSLogForce);
+    var index = this.indexOf(sender);
     this.remove(index);
   },
   
@@ -917,7 +920,7 @@ var SSListView = new Class({
   */
   editObject: function(sender)
   {
-    var index = this.indexOfCellNode(sender);
+    var index = this.indexOf(sender);
     this.edit(index);
   },
   
@@ -968,7 +971,7 @@ var SSListView = new Class({
   */
   hideObject: function(sender)
   {
-    var index = this.indexOfCellNode(sender);
+    var index = this.indexOf(sender);
     this.hideItem(index);
   },
 
@@ -1039,7 +1042,7 @@ var SSListView = new Class({
   */
   cancelEditObject: function(sender)
   {
-    var index = this.indexOfCellNode(sender);
+    var index = this.indexOf(sender);
     this.cancelEdit(index);
   },
   

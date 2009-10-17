@@ -860,7 +860,7 @@ var ShiftSpaceSpace = new Class({
    */
   setPreference: function(key, value)
   {
-    ShiftSpace.User.setPreference(this.attributes().name+'.'+key, vlaue);
+    ShiftSpace.User.setPreference(this.attributes().name+'.'+key, value);
   },
   
   /*
@@ -872,7 +872,11 @@ var ShiftSpaceSpace = new Class({
    */
   getPreference: function(key, defaultValue, callback)
   {
-    ShiftSpace.User.getPreference.safeCallWithResult(this.attributes().name+'.'+key, defaultValue, callback);
+    ShiftSpace.User.getPreference.safeCallWithResult(
+      this.attributes().name+'.'+key,
+      defaultValue,
+      callback
+    );
   },
 
   /*
@@ -885,7 +889,16 @@ var ShiftSpaceSpace = new Class({
    */
   xmlHttpRequest: function(options)
   {
-    var req = new Request(options), url = options.url;
-    if(this.getParentSpace().attributes().permissions.contains(url)) req.send.safeCall();
+    var attrs = this.attributes(),
+        req = new Request(options),
+        url = options.url;
+    if(attrs.permissions.contains(url))
+    {
+      req.send.safeCall();
+    }
+    else
+    {
+      SSLog([url, "not declared in attrs.json permissions list for", attrs.name, "space."].join(""), SSLogError);
+    }
   }
 });

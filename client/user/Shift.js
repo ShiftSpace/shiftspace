@@ -811,7 +811,17 @@ var ShiftSpaceShift = new Class({
    */
   xmlHttpRequest: function(options)
   {
-    var req = new Request(options), url = options.url;
-    if(this.getParentSpace().attributes().permissions.contains(url)) req.send.safeCall();
+    var attrs = this.getParentSpace().attributes(),
+        req = new Request(options),
+        url = options.url;
+    if(attrs.permissions.contains(url))
+    {
+      SSLog("Making request from shift", SSLogSystem);
+      req.send.safeCall();
+    }
+    else
+    {
+      SSLog([url, "not declared in attrs.json permissions list for", attrs.name, "space."].join(" "), SSLogError);
+    }
   }
 });
