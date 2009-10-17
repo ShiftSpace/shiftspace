@@ -2,6 +2,8 @@
 // @required
 // ==/Builder==
 
+var GM_log = console.log;
+
 function GM_addStyle(css) 
 {
   if (document.getElementsByTagName('head').length != 0) 

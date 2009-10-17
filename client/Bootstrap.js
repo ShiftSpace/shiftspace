@@ -3,6 +3,7 @@
 // ==/Builder==
 
 // INCLUDE Vars
+// INCLUDE GreaseMonkeyApi
 // INCLUDE SSLog
 // INCLUDE PACKAGE GM
 // INCLUDE PACKAGE Utils
@@ -13,7 +14,6 @@
 // INCLUDE PACKAGE App
 // INCLUDE Base
 // INCLUDE PreInitDeclarations
-// INCLUDE GreaseMonkeyApi
 // INCLUDE PACKAGE System
 // INCLUDE PACKAGE ErrorHandling
 // INCLUDE PACKAGE Internationalization
