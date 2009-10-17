@@ -35,6 +35,7 @@ var SSConsole = new Class({
     }
 
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
+    SSAddObserver(this, 'onUserLoginFailed', this.handleLoginFailed.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
@@ -294,11 +295,13 @@ var SSConsole = new Class({
   {
     this.SSLoginFormUsername.setProperty('value', '');
     this.SSLoginFormPassword.setProperty('value', '');
+    this.SSLoginFormMessage.set('text', '');
   },
 
 
   handleLoginFormSubmit: function()
   {
+    this.SSLoginFormMessage.set('text', '');
     ShiftSpaceUser.login({
       userName: this.SSLoginFormUsername.getProperty('value'),
       password: this.SSLoginFormPassword.getProperty('value')
@@ -311,6 +314,10 @@ var SSConsole = new Class({
     this.fireEvent('onUserLogin');
   },
 
+  handleLoginFailed: function(err)
+  {
+    this.SSLoginFormMessage.set('text', err.error);
+  },
 
   initSignUpForm: function()
   {

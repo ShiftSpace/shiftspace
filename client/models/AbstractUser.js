@@ -223,6 +223,7 @@ var AbstractUser = new Class({
         function() {
           var err = p.value();
           this.onLoginError(err);
+          SSPostNotification('onUserLoginFailed', err);
           SSLog(err, SSLogError);
         }.bind(this));
     return p;
