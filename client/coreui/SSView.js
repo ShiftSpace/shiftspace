@@ -488,15 +488,12 @@ var SSView = new Class({
    */
   isVisible: function()
   {
-    var display = this.element.getStyle('display');
-    var size = this.element.getSize();
-    var node = this.element;
-    if(display == 'none') return false;
-    while(node.getParent())
+    var display, size = this.element.getSize(), node = this.element;
+    while(node)
     {
-      node = node.getParent();
       display = node.getStyle('display');
       if(display == 'none') break;
+      node = node.getParent();
     }
     return (display && display != 'none') || false;
   },
