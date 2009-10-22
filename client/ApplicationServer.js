@@ -147,7 +147,7 @@ var ApplicationServer = new Class({
     {
       if((name && cache == name) || !name)
       {
-	delete caches[cache][id]
+        delete caches[cache][id]
       }
     }
   },
@@ -438,12 +438,12 @@ var ApplicationServer = new Class({
     Parameters:
       options - the following options are supported
         resource, the resource 
-	id, the id of the resource being acted upon
-	method, the url method (post, get, put, delete)
-	action, the action to take on the resource
-	data, url paramaters or json payload
-	json, whether to send data as a JSON string
-	
+        id, the id of the resource being acted upon
+        method, the url method (post, get, put, delete)
+        action, the action to take on the resource
+        data, url paramaters or json payload
+        json, whether to send data as a JSON string
+
     Returns:
       A promise.
    */
@@ -555,7 +555,7 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var updateRsrcSpec = {resource:resource, method:'update', id:id};
-	var oldValue = this.allCachedDocuments()[id];
+        var oldValue = this.allCachedDocuments()[id];
         this.notifyWatchers(updateRsrcSpec, value);
         this.updateCache(value, (options && options.local));
         return value;
@@ -578,7 +578,7 @@ var ApplicationServer = new Class({
       id - a resource id.
       options - the following options are supported
         local, delete only from a specified cache. Otherwise this document is deleted from
-	  all caches.
+        all caches.
 
      Returns:
        A promise for the ack.
@@ -610,8 +610,8 @@ var ApplicationServer = new Class({
     Parameters:
       postOptions - the following options are supported
         resource, the resource type
-	id, a resource id
-	action, the action to take
+        id, a resource id
+        action, the action to take
 
      Returns:
        A proimse for the server return value.
@@ -623,7 +623,7 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var postRsrcSpec = {resource:postOptions.resource, action:postOptions.action, id:postOptions.id};
-	var oldValue = this.allCachedDocuments()[postOptions.id];
+        var oldValue = this.allCachedDocuments()[postOptions.id];
         this.notifyWatchers(postRsrcSpec, value, oldValue);
         this.updateCache(value, (options && options.local));
         return value;
@@ -644,8 +644,8 @@ var ApplicationServer = new Class({
     Parameters:
       getOptions - the following options are supported
         resource, the resource type
-	id, a resource id
-	action, the action to take
+        id, a resource id
+        action, the action to take
 
     Returns:
       A promise for the server return value.
