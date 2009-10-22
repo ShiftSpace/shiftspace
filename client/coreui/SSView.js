@@ -438,8 +438,9 @@ var SSView = new Class({
     this.element.removeClass('SSDisplayNone');
     this.element.addClass('SSActive');
     this.willShow();
-    this.__isVisible = true;
     this.fireEvent('show', this);
+    
+    this.__refresh__();
     this.subViews().each($msg('__refresh__'));
   },
 
@@ -464,7 +465,6 @@ var SSView = new Class({
     this.willHide();
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
-    this.__isVisible = false;
     this.fireEvent('hide', this);
   },
   
@@ -490,7 +490,15 @@ var SSView = new Class({
   {
     var display = this.element.getStyle('display');
     var size = this.element.getSize();
-    return (display && ['block', 'inline'].contains(display)) || (size.x > 0 && size.y > 0);
+    var node = this.element;
+    if(display == 'none') return false;
+    while(node.getParent())
+    {
+      node = node.getParent();
+      display = node.getStyle('display');
+      if(display == 'none') break;
+    }
+    return (display && display != 'none') || false;
   },
   
   /*
@@ -634,9 +642,9 @@ var SSView = new Class({
     Function: visibleSubViews
       Only returns the controllers which are visible to the user.
    */
-  visibleSubViews: function()
+  visibleSubViews: function(el)
   {
-    return this.subViews().filter($msg('isVisible'));
+    return this.subViews(el).filter($msg('isVisible'));
   },
   
   /*

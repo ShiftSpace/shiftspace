@@ -249,7 +249,7 @@ var SSTabView = new Class({
         else
         {
           lastTabPane.removeClass('SSActive');
-	  this.subViews(lastTabPane).each($msg("willHide"), this);
+          this.subViews(lastTabPane).each($msg("willHide"), this);
         }
         
         this.fireEvent('tabDeselected', {tabView:this, tabIndex:this.__selectedTab});
@@ -264,9 +264,9 @@ var SSTabView = new Class({
       }
       else
       {
-	var node = this.contentViewForIndex(idx)
+        var node = this.contentViewForIndex(idx)
         node.addClass('SSActive');
-	this.subViews(node).each($msg("willShow"), this);
+        this.visibleSubViews(node).each(Function.comp($msg('willShow'), $msg('__refresh__')));
       }
       
       // hide the tab button

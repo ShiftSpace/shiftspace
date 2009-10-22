@@ -836,7 +836,6 @@ var SSListView = new Class({
   // TODO: animation support
   remove: function(index)
   {
-    SSLog("remove", index, SSLogForce);
     this.boundsCheck(index);
     var delegate = this.delegate();
     var canRemove = true;
@@ -853,7 +852,6 @@ var SSListView = new Class({
   */
   __remove__: function(index)
   {
-    SSLog("__remove__", index, SSLogForce);
     this.data().splice(index, 1);
     this.refresh(true);
   },
@@ -870,7 +868,6 @@ var SSListView = new Class({
   */
   removeObject: function(sender)
   {
-    SSLog("removeObject", sender, SSLogForce);
     var index = this.indexOf(sender);
     this.remove(index);
   },
