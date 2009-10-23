@@ -29,10 +29,6 @@ from controllers.stream import StreamController
 from controllers.event import EventController
 from controllers.permission import PermissionController
 from controllers.group import GroupsController
-try:
-    from linkprocessor import LinkProcessor
-except:
-    print "Could not load LinkProcessor"
 
 
 version = "1.0"
@@ -170,6 +166,7 @@ class RootController:
             import models.shift as shift
             from urllib import FancyURLopener, urlcleanup
             from lxml.html import fromstring, tostring
+            from linkprocessor import LinkProcessor
         except:
             return self.statusPage(status="err", details="proxy")
         
