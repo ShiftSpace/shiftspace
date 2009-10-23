@@ -225,13 +225,22 @@ var SSListView = new Class({
         snap: 4,
         revert: true,
         opacity: 0.5,
-        onStart: function(cellNode) {
+        onStart: function(cellNode) 
+        {
           this.setIsBeingSorted(true);
           this.__sortables.clone.addClass('Clone');
           this.sortStart(cellNode);
         }.bind(this),
         onSort: this.sortSort.bind(this),
-        onComplete: this.sortComplete.bind(this)
+        onComplete: this.sortComplete.bind(this),
+        onEnter: function()
+        {
+          
+        },
+        onLeave: function()
+        {
+          
+        }
       };
       
       if(this.options.handle) options.handle = this.options.handle;

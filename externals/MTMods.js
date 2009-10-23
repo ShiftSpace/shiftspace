@@ -18,15 +18,21 @@ var _urlJoin = $arity(
   }
 );
 
+
 String.implement({
   tail: function(n) { return this.substring(this.length-(n || 1)); },
+
   drop: function(n) { return this.substring(0, this.length-(n || 1)); },
+
   pluralize: function() { return this + "s"; },
+
   unpluralize: function() { return (this.tail() == "s") ? this.drop() : $A(this).join(""); },
+
   trunc: function(limit, options) {
     var tail = (options && options.tail === false) ? '' : ((options && options.tail) || '...');
     return this.substring(0, limit) + tail;
   },
+
   repeat: function(times) {
     var result = "";
     for(var i = 0; i < times; i++) {
@@ -34,11 +40,13 @@ String.implement({
     }
     return result;
   },
+
   urlJoin: function() {
     var args = $A(arguments);
     args = ($type(this) == 'string') ? [this].extend(args) : args;
     return $reduce(_urlJoin, args);
   },
+
   domain: function() {
     var trimmed = this.trim(), idx = trimmed.search("http://");
     idx = (idx == -1) ? 0 : 7;
@@ -49,22 +57,20 @@ String.implement({
 
 })();
 
+
 Array.implement({
   isEqual: function(other) { return $hash(this) == $hash(other); }
 });
 
+
 Hash.implement({
-  changeKeys: function(keyFn)
-  {
+  changeKeys: function(keyFn) {
     var result = $H();
     if($type(keyFn) == 'object' || $type(keyFn) == 'hash') keyFn = $H(keyFn).asFn();
     this.each(function(v, k) {
-      if(keyFn(k))
-      {
+      if(keyFn(k)) {
         result[keyFn(k)] = v;
-      }
-      else
-      {
+      } else {
         result[k] = v;
       }
     });
@@ -72,28 +78,26 @@ Hash.implement({
   }
 });
 
+
 var Delegate = new Class({
   __delegate: null,
-  setDelegate: function(delegate)
-  { 
-    if($type(delegate) == "string")
-    {
+  setDelegate: function(delegate) {
+    if($type(delegate) == "string") {
       this.__delegate = ShiftSpaceNameTable[delegate];
-    }
-    else
-    {
+    } else {
       this.__delegate = delegate;
     }
   },
   delegate: function() { return this.__delegate; }
 });
 
+
 function $element(tag, options) { return new Element(tag, options); }
+
 
 function $implements(obj, protocol)
 {
-  for(var p in protocol)
-  {
+  for(var p in protocol) {
     if(!obj[p] || $type(obj[p]) != protocol[p]) return false;
   }
   return true;
@@ -108,6 +112,7 @@ Selectors.RegExps = {
   combined: (/\.([\w-]+)|\[([\w:]+)(?:([!*^$~|]?=)(["']?)([^\4]*?)\4)?\]|:([\w-]+)(?:\(["']?(.*?)?["']?\)|$)/g)
 };
 
+
 Function.implement({
   partial: function(bind, args) {
     var self = this;
@@ -118,40 +123,41 @@ Function.implement({
   }
 });
 
+
 function $id(node)
 {
   return node._ssgenId();
 }
 
+
 Element.implement({
-  _ssgenId: function()
-  {
+  _ssgenId: function() {
     var id = this.getProperty('id');
-    if(!id)
-    {
+    if(!id) {
       id = Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
       this.setProperty('id', 'generatedId_'+id);
     }
     return id;
   },
-  _getElement: function(sel)
-  {
+
+  _getElement: function(sel) {
     this._ssgenId();
     return (new Document(this.ownerDocument)).getWindow().$$('#' + this.getProperty('id') + ' ' + sel)[0];
   },
-  _getElements: function(sel)
-  {
+
+  _getElements: function(sel) {
     this._ssgenId();
     return (new Document(this.ownerDocument)).getWindow().$$('#' + this.getProperty('id') + ' ' + sel);
   },
-  isEqual: function(node)
-  {
+  
+  isEqual: function(node) {
     var id = this.getProperty('id');
     var oid = node.getProperty('id');
     return (this == node) || 
            (id && oid && (id == oid));
   }
 });
+
 
 var IFrame = new Native({
 
@@ -185,14 +191,16 @@ var IFrame = new Native({
 
 });
 
+
 Selectors.Utils.genId = function(self){
   var id = self.getProperty('id');
-  if(!id){
+  if(!id) {
     id = 'genId'+Math.round(Math.random()*1000000+(new Date()).getMilliseconds());
     self.setProperty('id', id);
   }
   return id;
 };
+
 
 Selectors.Utils.search = function(self, expression, local){
   var splitters = [];
@@ -205,11 +213,9 @@ Selectors.Utils.search = function(self, expression, local){
   // allows .getElement('> selector') and .getElements('> selector')
   selectors = selectors.filter(function(selector) { return (selector != '');});
   
-  
   if(splitters.length == selectors.length){
     return self.getWindow().$$('#'+this.genId(self)+' '+expression);
   }
-  
 
   var items, match, filtered, item;
 
@@ -253,9 +259,9 @@ Selectors.Utils.search = function(self, expression, local){
   return items;
 };
 
+
 Date.implement({
-  toDay: function() 
-  {
+  toDay: function() {
     return this.set('hours', 0).set('minutes', 0).set('seconds', 0).set('milliseconds', 0);
   }
 });
@@ -289,6 +295,7 @@ Fx.CSS.implement({
     return Fx.CSS.Cache[selector] = to;
   }
 });
+
 
 Request.implement({
   send: function(options){
@@ -352,5 +359,82 @@ Request.implement({
     this.xhr.send(data);
     if (!this.options.async) this.onStateChange();
     return this;
+  }
+});
+
+
+Drag.Move.implement({
+  checkAgainst: function(el, i){
+    el = (this.positions) ? this.positions[i] : el.getCoordinates();
+    var now = this.mouse.now;
+    var inside = (now.x > el.left && now.x < el.right && now.y < el.bottom && now.y > el.top);
+    SSLog("inside " + JSON.encode(el) + " " + inside, SSLogForce);
+    return inside;
+  },
+  
+  checkDroppables: function(){
+    var overed = this.droppables.filter(this.checkAgainst, this).getLast();
+    if (this.overed != overed) {
+      SSLog("this.overed:", this.overed, " overed:", overed, SSLogForce);
+      if (this.overed && overed && this.overed.isEqual(overed)) return;
+      if (this.overed)
+      {
+        SSLog("leave", SSLogForce);
+        this.fireEvent('leave', [this.element, this.overed]);
+      }
+      if (overed)
+      {
+        SSLog("enter", SSLogForce);
+        this.fireEvent('enter', [this.element, overed]);
+      }
+      this.overed = overed;
+    } else {
+      if(this.overed && overed) SSLog("No event! ", this.overed.id, " ", overed.id, SSLogForce);
+    }
+  }
+});
+
+/*
+erase: function(item){
+	for (var i = this.length; i--; i){
+		if (this[i] === item) this.splice(i, 1);
+	}
+	return this;
+}
+*/
+
+Sortables.implement({
+  getDroppables: function(){
+    function erase(ary, element) {
+      for (var i = ary.length; i--; i){
+        if (ary[i].isEqual(element)) ary.splice(i, 1);
+      }
+      return ary;
+    }
+    var droppables = this.list.getChildren();
+    if (!this.options.constrain) droppables = erase(this.lists.concat(droppables), this.list);
+    return erase(erase(droppables, this.clone), this.element);
+  },
+
+  insert: function(dragging, element){
+    SSLog('insert', SSLogForce);
+    var where = 'inside';
+    // use our special contains check
+    function contains(nodes, node) {
+      SSLog(nodes, node, SSLogForce);
+      if(!nodes) return false;
+      nodes.each($msg("_ssgenId"));
+      return nodes.some(node.isEqual.bind(node));
+    }
+    if (contains(this.lists, element)){
+      this.list = element;
+      this.drag.droppables = this.getDroppables();
+    } else {
+      where = contains(this.element.getAllPrevious(), element) ? 'before' : 'after';
+    }
+    SSLog("injecting ", element, " ", where, SSLogForce);
+    this.element.inject(element, where);
+    SSLog("SORT", SSLogForce);
+    this.fireEvent('sort', [this.element, this.clone]);
   }
 });
