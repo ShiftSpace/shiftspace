@@ -27,6 +27,12 @@ var SSSpaceMenu = new Class({
   },
   
   
+  awake: function(context)
+  {
+    this.mapOutletsToThis();
+  },
+  
+  
   show: function()
   {
     this.parent();
@@ -37,15 +43,14 @@ var SSSpaceMenu = new Class({
   
   resize: function()
   {
-    var context = this.contentWindow();
-    var body = context.$(this.contentDocument().body);
+    var body = this.contentWindow().$(this.contentDocument().body);
     var ul = $(this.contentWindow().$('SpaceMenuList'));
     
     if(ul)
     {
-      SSLog('resize space menu ' + ul.getSize().y, SSLogForce);
+      var n = ul.getElements('li').length;
       this.element.setStyles({
-        height: ul.getSize().y + 4
+        height: (n * 31) + 7
       });
     }
   },
