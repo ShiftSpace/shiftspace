@@ -249,6 +249,7 @@ function SSSaveNewShift(shift)
         if(ShiftSpace.Console) ShiftSpace.Console.show();
 
         space.onShiftSave(newId);
+        SSPostNotification('onNewShiftSave', newId);
         SSPostNotification('onShiftSave', newId);
       },
       function(err) {

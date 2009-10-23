@@ -25,6 +25,8 @@ var ShiftListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    
+    SSAddObserver(this, 'onNewShiftSave', this.onCreate.bind(this));
   },
   
   
@@ -58,9 +60,16 @@ var ShiftListView = new Class({
   onCreate: function(id)
   {
     this.refresh();
+    if(this.isVisible())
+    {
+      var idx = this.find(function(x) { return x._id == id; });
+      this.cell().lock(this.cellNodeForIndex(idx));
+      this.cell().check();
+      this.cell().unlock();
+    }
   },
   
-
+  
   onDelete: function(ack)
   {
     this.refresh();

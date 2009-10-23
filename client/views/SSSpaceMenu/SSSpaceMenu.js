@@ -4,6 +4,10 @@
 // @dependencies      SSFramedView
 // ==/Builder==
 
+/*
+  Class: SSSpaceMenu
+    The space menu that allows the users to select which space to run.
+*/
 var SSSpaceMenu = new Class({
   
   Extends: SSFramedView,
@@ -40,7 +44,12 @@ var SSSpaceMenu = new Class({
     SSPostNotification('onSpaceMenuShow', this);
   },
   
-  
+  /*
+    Function: resize
+      *private*
+      Resizes the space menu based on the number of installed spaces. Called
+      on show and when the user install or uninstalls a space.
+  */
   resize: function()
   {
     var body = this.contentWindow().$(this.contentDocument().body);
@@ -77,7 +86,14 @@ var SSSpaceMenu = new Class({
   {
   },
   
-  
+  /*
+    Function: onSpaceSort
+      *private*
+      Handles updating the internal list of installed spaces.
+      
+    See All:
+      SSSetInstalledSpaces, SSInstalledSpaces
+  */
   onSpaceSort: function()
   {
     var spaces = SSInstalledSpaces();
@@ -132,7 +148,15 @@ var SSSpaceMenu = new Class({
     this.element.addEvent("mouseleave", this.hide.bind(this));
   },
   
-  
+  /*
+    Function: newShift
+      *private*
+      Call into the ShiftSpace Core to create a new shift based on the user's
+      selection.
+      
+    Parameters:
+      index - the index of the space the user selected.
+  */
   newShift: function(data)
   {
     if(ShiftSpace.User.isLoggedIn())

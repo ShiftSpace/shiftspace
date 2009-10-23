@@ -61,6 +61,15 @@ var SSCell = new Class({
     
     this.setPropertyList(this.options.properties || []);
   },
+
+  /*
+    Function: index
+      Return the index of the currently locked element.
+  */
+  index: function()
+  {
+    return this.delegate().indexOfCellNode(this.lockedElement());
+  },
   
   
   attachEvents: function()

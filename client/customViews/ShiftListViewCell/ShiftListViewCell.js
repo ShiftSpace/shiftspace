@@ -17,6 +17,22 @@ var ShiftListViewCell = new Class({
   },
   
   
+  check: function()
+  {
+    var el = this.lockedElement(), idx = this.index();
+    el.getElement('input[type=checkbox]').setProperty('checked', true);
+    SSPostNotification('onShiftSelect', {listView: this.delegate(), index:idx});
+  },
+  
+  
+  uncheck: function()
+  {
+    var el = this.lockedElement(), idx = this.index();
+    el.getElement('input[type=checkbox]').setProperty('checked', false);
+    SSPostNotification('onShiftDeselect', {listView: this.delegate(), index:idx});
+  },
+  
+  
   clone: function()
   {
     var clone = this.parent();
@@ -41,20 +57,20 @@ var ShiftListViewCell = new Class({
     if(favoriteButton)
     {
       favoriteButton.addEvent("click", function(evt) {
-	evt = new Event(evt);
-	var target = $(evt.target), li = target.getParent("li");
-	var id = this.data(li)._id, p;
-	if(!target.hasClass("favorited"))
-	{
-	  p = SSFavoriteShift(id);
-	  p.realize();
-	}
-	else
-	{
-	  p = SSUnfavoriteShift(id);
-	  p.realize();
-	}
-	evt.stop();
+        evt = new Event(evt);
+        var target = $(evt.target), li = target.getParent("li");
+        var id = this.data(li)._id, p;
+        if(!target.hasClass("favorited"))
+        {
+          p = SSFavoriteShift(id);
+          p.realize();
+        }
+        else
+        {
+          p = SSUnfavoriteShift(id);
+          p.realize();
+        }
+        evt.stop();
       }.bind(this))
     }
 
@@ -62,11 +78,11 @@ var ShiftListViewCell = new Class({
     if(comments)
     {
       comments.addEvent("click", function(evt) {
-	evt = new Event(evt);
-	var target = $(evt.target), li = target.getParent("li");
-	var id = this.data(li)._id, p;
-	SSPostNotification("showComments", id);
-	evt.stop();
+        evt = new Event(evt);
+        var target = $(evt.target), li = target.getParent("li");
+        var id = this.data(li)._id, p;
+        SSPostNotification("showComments", id);
+        evt.stop();
       }.bind(this))
     }
 
