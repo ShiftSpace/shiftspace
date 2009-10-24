@@ -41,8 +41,6 @@ var NotesShift = new Class({
 
     this.manageElement(this.element);
     this.refresh();
-    
-    //SSLog("--- SETTING UP NOTE ---",SSLogSystem);
 
     // check to see if this note is pinned
     if(ShiftSpace.Pin.isValidRef(json.pinRef))
