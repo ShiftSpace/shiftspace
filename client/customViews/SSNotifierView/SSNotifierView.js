@@ -19,6 +19,7 @@ var SSNotifierView = new Class({
     
     this.setIsAnimating(false);
     this.setShiftIsDown(false);
+    this.refreshShiftCount();
     
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
