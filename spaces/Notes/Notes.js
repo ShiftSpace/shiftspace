@@ -24,12 +24,15 @@ var NotesShift = new Class({
     this.noteText = (json.noteText && json.noteText.replace(/<br\/>/g, "\n")) || null;
     this.build();
     this.attachEvents();
-
+    
     this.element.setStyles({
       width: this.defaults.size.x,
-      height: this.defaults.size.y
+      height: this.defaults.size.y,
+      left: this.defaults.position.x,
+      top: this.defaults.position.y,
+      position: 'absolute'
     });
-
+    
     this.element.set('tween', {
       duration: 300,
       transition: Fx.Transitions.Cubic.easeIn
@@ -38,6 +41,8 @@ var NotesShift = new Class({
 
     this.manageElement(this.element);
     this.refresh();
+    
+    //SSLog("--- SETTING UP NOTE ---",SSLogSystem);
 
     // check to see if this note is pinned
     if(ShiftSpace.Pin.isValidRef(json.pinRef))
@@ -48,13 +53,21 @@ var NotesShift = new Class({
     {
       // otherwise set the position of the note to the mouse
       // or the last saved absolute position
-      if(json.position)
+      if(this.isNewShift())
+      {
+        this.element.setStyles({
+          left: window.getScroll().x + (window.getWidth() - this.defaults.size.x) / 2,
+          top: window.getScroll().y + (window.getHeight() - this.defaults.size.y) / 2
+        });
+      }
+      else if(json.position)
       {
         this.element.setStyles({
           left: json.position.x,
           top: json.position.y
         });
       }
+
       // oops fix borked note sizes
       if(json.size && json.size.scroll)
       {
