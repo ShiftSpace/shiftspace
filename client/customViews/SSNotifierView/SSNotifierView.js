@@ -34,13 +34,15 @@ var SSNotifierView = new Class({
   
   refreshShiftCount:function()
   {
-    this.__count = SSApp.confirm(SSApp.get({
-                                    resource:'shifts',
-                                    action:"count",
-                                    data:{
-                                      byHref: window.location.href.split("#")[0]
-                                      }
-                                    }));
+    this.__count = SSApp.confirm(
+      SSApp.get({
+        resource:'shifts',
+        action:"count",
+        data:{
+          byHref: window.location.href.split("#")[0]
+        }
+      })
+    );
     
     if (this.__count == undefined)
     {
@@ -54,11 +56,10 @@ var SSNotifierView = new Class({
   
   getShiftCount: function()
   {
-    if (this.__count == undefined)
-      this.refreshShiftCount();
-      
+    if (this.__count == undefined) this.refreshShiftCount();
     return this.__count;
   },
+  
   
   onConsoleShow: function()
   {
@@ -161,15 +162,8 @@ var SSNotifierView = new Class({
   
   updateControls: function()
   {
-    if (this.SSShiftCount)
-    {
-      this.SSShiftCount.set('text', this.getShiftCount() + " shifts");
-    }
-    
-    if(this.SSUsername)
-    {
-      this.SSUsername.set('text', ShiftSpace.User.getUserName());
-    }
+    if (this.SSShiftCount) this.SSShiftCount.set('text', this.getShiftCount() + " shifts");
+    if (this.SSUsername) this.SSUsername.set('text', ShiftSpace.User.getUserName());
     
     if(this.SSLogInOut)
     {
