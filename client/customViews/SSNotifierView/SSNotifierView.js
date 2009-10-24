@@ -19,6 +19,7 @@ var SSNotifierView = new Class({
     
     this.setIsAnimating(false);
     this.setShiftIsDown(false);
+    this.refreshShiftCount();
     
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
@@ -66,6 +67,7 @@ var SSNotifierView = new Class({
     this.clearTimers();
     this.show(false);
     this['open'](false);
+    this.SSToggleConsole.set('text', "Close Console");
   },
   
   
@@ -73,6 +75,7 @@ var SSNotifierView = new Class({
   {
     this.clearTimers();
     this['close']();
+    this.SSToggleConsole.set('text', "Open Console");
   },
   
   
