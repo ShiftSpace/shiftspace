@@ -16,3 +16,6 @@
 [submodule "externals/promises"]
 	path = externals/promises
 	url = git://github.com/ShiftSpace/promises.git
+[submodule "externals/fxgraph"]
+	path = externals/fxgraph
+	url = git://github.com/ShiftSpace/fxgraph.git
