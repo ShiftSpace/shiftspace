@@ -18,6 +18,7 @@ var SSNotifierView = new Class({
     this.spaceMenuIsVisible(false);
     
     this.refreshShiftCount();
+    this.initGraph();
     
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
@@ -29,6 +30,68 @@ var SSNotifierView = new Class({
     
     SSAddObserver(this, 'onSpaceMenuShow', this.onSpaceMenuShow.bind(this));
     SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
+  },
+  
+  
+  initGraph: function() {
+    this.graph = new Fx.Graph(this.element, {
+      controller: this,
+      duration: 400,
+      transition: Fx.Transitions.Cubic.easeIn,
+      graph: {
+        SSNotifierHidden: {
+          first: true,
+          next: 'SSNotifierHasShifts',
+          selector: '.SSNotifierHidden',
+          events: [
+            {type: 'mouseover', state: 'SSNotifierOpen', flag: 'mouse'},
+            {type: 'mouseout', state: 'SSNotifierHidden', direction:'previous', unflag: 'mouse', condition: {not: ['shift']}},
+            {type: 'shiftdown', direction: 'next', flag: 'shift', condition: {not: ['mouse']}},
+            {type: 'shiftup', state: 'SSNotifierHidden', direction: 'previous', unflag: 'shift', condition: {not: ['mouse']}}
+          ]
+        },
+        SSNotifierHasShifts: {
+          previous: 'SSNotifierHidden',
+          next: 'SSNotifierShowDetails',
+          selector: '.SSNotifierHasShifts',
+          hold: {duration: 1000},
+          events: [
+            {type: 'mouseover', state: 'SSNotifierOpen', flag: 'mouse'},
+            {type: 'mouseout', state: 'SSNotiferHasShifts', direction:'previous', unflag: 'mouse', condition: {not: ['shift']}},
+            {type: 'shiftdown', direction: 'next', flag: 'shift', condition: {not: ['mouse']}},
+            {type: 'shiftup', state: 'SSNotiferHasShifts', direction: 'previous', unflag: 'shift', condition: {not: ['mouse']}}
+          ]
+        },
+        SSNotifierShowDetails: {
+          previous: 'SSNotifierHasShifts',
+          next: 'SSNotifierOpen',
+          selector: '.SSNotifierShowDetails',
+          hold: {duration: 1000},
+          events: [
+            {type: 'mouseover', direction: 'next', flag: 'mouse'},
+            {type: 'mouseout', state: 'SSNotifierHasShifts', direction:'previous', unflag: 'mouse', condition: {not: ['shift']}},
+            {type: 'shiftdown', direction: 'next', flag: 'shift', condition: {not: ['mouse']}},
+            {type: 'shiftup', direction: 'previous', unflag: 'shift', condition: {not: ['mouse']}}
+          ]
+        },
+        SSNotifierOpen: {
+          last: true,
+          previous: 'SSNotifierShowDetails',
+          selector: '.SSNotifierOpen',
+          events: [
+            {type: 'showmenu', flag:'menu'},
+            {type: 'hidemenu', unflag:'menu'},
+            {type: 'showconsole', flag:'console'},
+            {type: 'hideconsole', unflag:'console'},
+            {type: 'mouseover', flag:'mouse'},
+            {type: 'mouseout', state: 'SSNotifierHasShifts', direction: 'previous', unflag:'mouse', condition: {not: ['shift', 'menu', 'console']}},
+            {type: 'shiftdown', flag:'shift'},
+            {type: 'shiftup', state: 'SSNotifierHasShifts', direction: 'previous', unflag:'shift', condition: {not: ['mouse']}},
+            {type: 'reset', state: 'SSNotifierHasShifts', direction: 'previous'}
+          ]
+        }
+      }
+    });
   },
   
   
