@@ -17,8 +17,6 @@ var SSNotifierView = new Class({
     this.setIsVisible(false);
     this.spaceMenuIsVisible(false);
     
-    this.setIsAnimating(false);
-    this.setShiftIsDown(false);
     this.refreshShiftCount();
     
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
@@ -33,6 +31,7 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
   },
   
+  
   refreshShiftCount:function()
   {
     this.__count = SSApp.confirm(
@@ -45,15 +44,17 @@ var SSNotifierView = new Class({
       })
     );
     
-    if (this.__count == undefined)
+    var count = $get(this, '__count', 'data');
+    if (!count)
     {
       this.__count = 0;
     }
-    else if (this.__count != undefined && (typeof this.__count == "object") && this.__count.data != undefined)
+    else
     {
-      this.__count = this.__count.data;
+      this.__count = count;
     }
   },
+  
   
   getShiftCount: function()
   {
@@ -64,7 +65,6 @@ var SSNotifierView = new Class({
   
   onConsoleShow: function()
   {
-    this.clearTimers();
     this.show(false);
     this['open'](false);
     this.SSToggleConsole.set('text', "Close Console");
@@ -73,7 +73,6 @@ var SSNotifierView = new Class({
   
   onConsoleHide: function()
   {
-    this.clearTimers();
     this['close']();
     this.SSToggleConsole.set('text', "Open Console");
   },
@@ -97,7 +96,7 @@ var SSNotifierView = new Class({
   
   show: function(animate)
   {
-    if(animate == false)
+    if(animate === false)
     {
       this.showComplete();
     }
@@ -126,21 +125,10 @@ var SSNotifierView = new Class({
   },
   
   
-  hide: function(animate)
+  hide: function()
   {
     if(ShiftSpace.Console.isVisible()) return;
     this.hideFx.start(".SSNotifierHidden");
-  },
-  
-  
-  hideComplete: function()
-  {
-    this.element.setStyles({
-      left: ""
-    });
-    this.element.removeClass("SSNotifierVisible");
-    this.element.addClass("SSNotifierHidden");
-    this.setIsVisible(false);
   },
   
   
@@ -203,66 +191,6 @@ var SSNotifierView = new Class({
   isOpen: function()
   {
     return this.__isOpen;
-  },
-  
-  
-  setIsOpening: function(val)
-  {
-    this.__isOpening = val;
-  },
-  
-  
-  isOpening: function()
-  {
-    return this.__isOpening;
-  },
-  
-  
-  setIsClosing: function(val)
-  {
-    this.__isClosing = val;
-  },
-  
-  
-  isClosing: function()
-  {
-    return this.__isClosing;
-  },
-  
-  
-  setIsShowing: function(val)
-  {
-    this.__isShowing = val;
-  },
-  
-  
-  isShowing: function()
-  {
-    return this.__isShowing;
-  },
-  
-
-  setIsHiding: function(val)
-  {
-    this.__isHiding = val;
-  },
-  
-  
-  isHiding: function()
-  {
-    return this.__isHiding;
-  },
-
-
-  setIsAnimating: function(val)
-  {
-    this.__isAnimating = val;
-  },
-  
-  
-  isAnimating: function()
-  {
-    return this.__isAnimating;
   },
   
   
@@ -355,120 +283,23 @@ var SSNotifierView = new Class({
   },
   
   
-  clearTimers: function(evt)
-  {
-    $clear(this.closeTimer);
-    $clear(this.hideTimer);
-    $clear(this.showTimer);
-    $clear(this.opneTimer);
-  },
-  
-  
   handleKeyDown: function(evt)
   {
-    this.setShiftIsDown(true);
-    this.clearTimers();
-    
-    if(!this.isAnimating())
-    {
-      if(!this.isVisible())
-      {
-        this.showTimer = function() {
-          this.show();
-          this.openTimer = function() {
-            this['open']();
-          }.delay(2000, this);
-        }.delay(500, this);
-      }
-      else if(this.isVisible() && !this.isOpen())
-      {
-        this.openTimer = function() {
-          this['open']();
-        }.delay(500, this)
-      }
-    }
   },
   
   
   handleKeyUp: function(evt)
-  {
-    this.setShiftIsDown(false);
-    this.clearTimers();
-
-    if(!this.isAnimating())
-    {
-      if(this.isOpen())
-      {
-        this['close']();
-      }
-      else if(this.isVisible())
-      {
-        this.hide();
-      }
-    }
+  { 
   },
   
   
   'open': function(animate)
   {
-    this.openTime = new Date();
-    this.clearTimers();
-
-    if(animate == false)
-    {
-      this.openComplete();
-    }
-    else if(!this.isOpen() && !this.isAnimating())
-    {
-      this.openFx.start('width', window.getSize().x);
-    }
-  },
-  
-  
-  openComplete: function()
-  {
-    this.element.addClass('SSNotifierOpen');
-    this.element.setStyle('width', null);
-    this.SSNotifierControlsView.addClass('Open');
-    this.showControls();
-    this.setIsOpen(true);
   },
   
   
   'close': function(animate)
   {
-    var now = new Date();
-    this.clearTimers();
-    
-    if(ShiftSpace.Console.isVisible() || this.spaceMenuIsVisible()) return;
-    
-    if(this.isOpen() && !this.isAnimating())
-    {
-      var delta = now.getTime() - this.openTime.getTime();
-    
-      if(delta >= 3000)
-      {
-        this.setIsOpen(false);
-        this.closeFx.start('width', 200);
-      }
-      else
-      {
-        $clear(this.closeTimer);
-        this.closeTimer = this.close.delay(3000-delta, this);
-      }
-    }
-  },
-  
-  
-  startClose: function()
-  {
-    this.SSNotifierControlsView.removeClass('Open');
-  },
-  
-  
-  closeComplete: function()
-  {
-    this.setIsOpen(false);
   },
   
   
@@ -523,75 +354,6 @@ var SSNotifierView = new Class({
   
   initAnimations: function()
   {
-    this.showFx = new Fx.Morph(this.element, {
-      duration: 300,
-      transition: Fx.Transitions.Cubic.easeOut,
-      onStart: function()
-      {
-        this.setIsAnimating(true);
-      }.bind(this),
-      onComplete: function()
-      {
-        this.setIsAnimating(false);
-        this.showComplete();
-        if(!this.shiftIsDown())
-        {
-          this.hideTimer = this.hide.delay(3000, this);
-        }
-      }.bind(this)
-    });
-    
-    this.hideFx = new Fx.Morph(this.element, {
-      duration: 300,
-      transition: Fx.Transitions.Cubic.easeOut,
-      onStart: function()
-      {
-        this.setIsAnimating(true);
-      }.bind(this),
-      onComplete: function()
-      {
-        this.setIsAnimating(false);
-        this.hideComplete();
-      }.bind(this)
-    });
-    
-    this.openFx = new Fx.Tween(this.element, {
-      duration: 300,
-      transition: Fx.Transitions.Cubic.easeOut,
-      onStart: function()
-      {
-        this.setIsAnimating(true);
-      }.bind(this),
-      onComplete: function()
-      {
-        this.setIsAnimating(false);
-        this.openComplete();
-      }.bind(this)
-    });
-    
-    this.closeFx = new Fx.Tween(this.element, {
-      duration: 300, 
-      transition: Fx.Transitions.Cubic.easeOut,
-      onStart: function()
-      {
-        this.setIsAnimating(true);
-        this.hideControls();
-        this.element.setStyles({
-          width: window.getSize().x
-        });
-        this.startClose();
-        this.element.removeClass('SSNotifierOpen');
-      }.bind(this),
-      onComplete: function()
-      {
-        this.setIsAnimating(false);
-        this.closeComplete();
-        if(!this.shiftIsDown())
-        {
-          this.hideTimer = this.hide.delay(3000, this);
-        }
-      }.bind(this)
-    });
   },
   
   
