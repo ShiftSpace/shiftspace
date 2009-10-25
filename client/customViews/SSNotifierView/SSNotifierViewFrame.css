@@ -6,26 +6,27 @@
   border: none;
   height: 44px;
   overflow: hidden;
-  width: 200px;
+  width: 40px;
   z-index: 1000001;
+}
+
+.SSNotifierHidden
+{
+  left: -40px;
+}
+
+.SSNotifierHasShifts
+{
+  left: 0px;
+  width: 40px;
+}
+
+.SSNotifierShowDetails
+{
+  width: 200px;
 }
 
 .SSNotifierOpen
 {
   width: 100%;
-}
-
-.SSNotifierClosed
-{
-  width: 200px;
-}
-
-.SSNotifierHidden
-{
-  left: -200px;
-}
-
-.SSNotifierVisible
-{
-  left: 0px;
 }
