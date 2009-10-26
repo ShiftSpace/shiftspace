@@ -93,6 +93,13 @@ class RootController:
         and preprocess all of CSS files and HTML files for the interface and
         as well as all of the JavaScript before serving the page.
         """
+        import models.core
+        t = Template(filename="html/index.mako", lookup=lookup)
+        try:
+            server = core.server()
+            server.version
+        except Exception:
+            return self.statusPage(status="err", details="couchdb")
         corebuilder.run()
         compiler = sandalphon.SandalphonCompiler("client/compiledViews", "mydev")
         compiler.compile(inputFile="client/views/SSConsole/SSConsole.html")

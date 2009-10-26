@@ -92,7 +92,7 @@ var SSNotifierView = new Class({
             el.addClass('SSNotifierOpen'); 
             this.showControls(); 
           }.bind(this),
-          onExit: function(el, fxgraph) { 
+          onExit: function(el, fxgraph) {
             el.removeClass('SSNotifierOpen'); 
             this.hideControls(); 
             el.setStyle('width', window.getSize().x);
@@ -105,8 +105,7 @@ var SSNotifierView = new Class({
             {type: 'mouseover', flag:'mouse'},
             {type: 'mouseout', state: 'SSNotifierHasShifts', direction: 'previous', unflag:'mouse', condition: {not: ['shift', 'menu', 'console']}},
             {type: 'shiftdown', flag:'shift'},
-            {type: 'shiftup', state: 'SSNotifierHasShifts', direction: 'previous', unflag:'shift', condition: {not: ['mouse']}},
-            {type: 'reset', state: 'SSNotifierHasShifts', direction: 'previous'}
+            {type: 'shiftup', state: 'SSNotifierHasShifts', direction: 'previous', unflag:'shift', condition: {not: ['mouse', 'menu', 'console']}}
           ]
         }
       }
@@ -159,6 +158,9 @@ var SSNotifierView = new Class({
   
   onConsoleShow: function()
   {
+    this.graph.cancel(true);
+    this.graph.setState('SSNotifierOpen', false);
+    
     this.fireEvent('showconsole');
     this.SSToggleConsole.set('text', "Close Console");
   },
