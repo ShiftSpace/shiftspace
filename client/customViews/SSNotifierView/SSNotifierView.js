@@ -32,7 +32,7 @@ var SSNotifierView = new Class({
   initGraph: function() {
     this.graph = new Fx.Graph(this.element, {
       controller: this,
-      duration: 400,
+      duration: 300,
       transition: Fx.Transitions.Cubic.easeIn,
       graph: {
         SSNotifierHidden: {
@@ -42,7 +42,7 @@ var SSNotifierView = new Class({
           events: [
             {type: 'mouseover', state: 'SSNotifierOpen', flag: 'mouse'},
             {type: 'mouseout', state: 'SSNotifierHidden', direction:'previous', unflag: 'mouse', condition: {not: ['shift']}},
-            {type: 'shiftdown', state: 'SSNotifierShowDetails', direction: 'next', flag: 'shift', condition: {not: ['mouse']}},
+            {type: 'shiftdown', direction: 'next', flag: 'shift', condition: {not: ['mouse']}},
             {type: 'shiftup', state: 'SSNotifierHidden', direction: 'previous', unflag: 'shift', condition: {not: ['mouse']}}
           ]
         },
@@ -50,19 +50,18 @@ var SSNotifierView = new Class({
           previous: 'SSNotifierHidden',
           next: 'SSNotifierShowDetails',
           selector: '.SSNotifierHasShifts',
-          hold: {duration: 1000, condition: {not: [['shift', 'mouse'], 'previous']}},
+          hold: {duration: 500},
           events: [
             {type: 'mouseover', state: 'SSNotifierOpen', flag: 'mouse'},
-            {type: 'mouseout', state: 'SSNotiferHasShifts', direction:'previous', unflag: 'mouse', condition: {not: ['shift']}},
+            {type: 'mouseout', state: 'SSNotifierHidden', direction:'previous', unflag: 'mouse', condition: {not: ['shift']}},
             {type: 'shiftdown', direction: 'next', flag: 'shift', condition: {not: ['mouse']}},
-            {type: 'shiftup', state: 'SSNotiferHasShifts', direction: 'previous', unflag: 'shift', condition: {not: ['mouse']}}
+            {type: 'shiftup', state: 'SSNotifierHidden', direction: 'previous', unflag: 'shift', condition: {not: ['mouse']}}
           ]
         },
         SSNotifierShowDetails: {
           previous: 'SSNotifierHasShifts',
           next: 'SSNotifierOpen',
           selector: '.SSNotifierShowDetails',
-          onStart: function(el) { el.addClass('SSNotifierHasShifts'); },
           hold: {duration: 1000},
           events: [
             {type: 'mouseover', direction: 'next', flag: 'mouse'},
@@ -74,7 +73,13 @@ var SSNotifierView = new Class({
         SSNotifierOpen: {
           last: true,
           previous: 'SSNotifierShowDetails',
-          selector: '.SSNotifierOpen',
+          styles: function() { return { width:window.getSize().x }; },
+          onComplete: function(el, fxgraph) { el.addClass('SSNotifierOpen'); this.showControls(); }.bind(this),
+          onExit: function(el, fxgraph) { 
+            el.removeClass('SSNotifierOpen'); 
+            this.hideControls(); 
+            el.setStyle('width', window.getSize().x);
+          }.bind(this),
           events: [
             {type: 'showmenu', flag:'menu'},
             {type: 'hidemenu', unflag:'menu'},
@@ -98,7 +103,7 @@ var SSNotifierView = new Class({
   */
   refreshShiftCount:function()
   {
-    // TODO: make asyn - David 10/26/09
+    // TODO: make async - David 10/26/09
     this.__count = SSApp.confirm(
       SSApp.get({
         resource:'shifts',
