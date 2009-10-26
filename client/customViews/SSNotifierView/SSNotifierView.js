@@ -62,6 +62,7 @@ var SSNotifierView = new Class({
           previous: 'SSNotifierHasShifts',
           next: 'SSNotifierOpen',
           selector: '.SSNotifierShowDetails',
+          onStart: function(el) { el.addClass('SSNotifierHasShifts'); },
           hold: {duration: 1000},
           events: [
             {type: 'mouseover', direction: 'next', flag: 'mouse'},
@@ -241,16 +242,8 @@ var SSNotifierView = new Class({
     var context = this.contentWindow();
     var doc = this.contentDocument();
     
-    context.$(doc.body).addEvent('mouseenter', function(evt) {
-      this['open']();
-    }.bind(this));
-    
-    context.$(doc.body).addEvent('mouseleave', function() {
-      if(!this.shiftIsDown())
-      {
-        this['close']();
-      }
-    }.bind(this));
+    context.$(doc.body).addEvent('mouseenter', this.fireEvent.bind(this, ['mouseover']));
+    context.$(doc.body).addEvent('mouseleave', this.fireEvent.bind(this, ['mouseout']));
     
     this.attachConsoleEvents();
     this.attachKeyEvents();
