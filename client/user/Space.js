@@ -339,7 +339,7 @@ var ShiftSpaceSpace = new Class({
     var uip, attrs = this.attributes(), html = $get(attrs, "shift", "html");
     if(html) uip = SSLoadFile(attrs.url.urlJoin(html));
     return uip;
-  }.decorate(memoize),
+  }.decorate(Function.memoize),
 
   /*
     Function : deleteShift

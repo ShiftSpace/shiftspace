@@ -73,7 +73,7 @@ var SSNotifierView = new Class({
         SSNotifierOpen: {
           last: true,
           previous: 'SSNotifierShowDetails',
-          styles: function() { return { width:window.getSize().x }; },
+          styles: function() { return { width: window.getSize().x }; },
           onComplete: function(el, fxgraph) { el.addClass('SSNotifierOpen'); this.showControls(); }.bind(this),
           onExit: function(el, fxgraph) { 
             el.removeClass('SSNotifierOpen'); 

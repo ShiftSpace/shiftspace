@@ -94,6 +94,6 @@ var ShiftListView = new Class({
 
   checkedItemIds: function()
   {
-    return this.checkedItemIndices().map(Function.comp(this.data().asFn(), $acc("_id")));
+    return this.checkedItemIndices().map(Function.comp(this.data().asFn(), Function.acc("_id")));
   }
 });

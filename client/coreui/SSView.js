@@ -320,7 +320,7 @@ var SSView = new Class({
     cands = $splat(cands);
     var len = cands.length;
     if(len == 0) return null;
-    cands.each($msg('_ssgenId'));
+    cands.each(Function.msg('_ssgenId'));
     for(var i = 0; i < len; i++) { if(cands[i].isEqual(node)) return true; }
     return false;
   },
@@ -406,7 +406,7 @@ var SSView = new Class({
    */
   indexOfNode: function(elements, node)
   {
-    elements.each($msg('_ssgenId'));
+    elements.each(Function.msg('_ssgenId'));
     var len = elements.length;
     for(var i = 0; i < len; i++)
     {
@@ -441,7 +441,7 @@ var SSView = new Class({
     this.fireEvent('show', this);
     
     this.__refresh__();
-    this.subViews().each($msg('__refresh__'));
+    this.subViews().each(Function.msg('__refresh__'));
   },
 
   /*
@@ -452,7 +452,7 @@ var SSView = new Class({
    */
   willShow: function()
   {
-    if(this.isVisible()) this.subViews().each($msg('willShow'));
+    if(this.isVisible()) this.subViews().each(Function.msg('willShow'));
   },
 
   /*
@@ -476,7 +476,7 @@ var SSView = new Class({
    */
   willHide: function()
   {
-    if(this.isVisible()) this.subViews().each($msg('willHide'), this);
+    if(this.isVisible()) this.subViews().each(Function.msg('willHide'), this);
   },
 
   /*
@@ -535,7 +535,7 @@ var SSView = new Class({
     if((this.isVisible() && this.needsDisplay()) || force)
     {
       this.refresh(force);
-      this.subViews().each($msg('__refresh__', force));
+      this.subViews().each(Function.msg('__refresh__', force));
     }
   },
 
@@ -641,7 +641,7 @@ var SSView = new Class({
    */
   visibleSubViews: function(el)
   {
-    return this.subViews(el).filter($msg('isVisible'));
+    return this.subViews(el).filter(Function.msg('isVisible'));
   },
   
   /*

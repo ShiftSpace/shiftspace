@@ -181,10 +181,10 @@ var ShiftSpace = new (function() {
     {
       // wait for console and notifier before sending onSync
       var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
-      if(!ui.every($msg('isLoaded')))
+      if(!ui.every(Function.msg('isLoaded')))
       {
-        ui.each($msg('addEvent', 'load', function(obj) {
-          if(ui.every($msg('isLoaded'))) SSPostNotification("onSync");
+        ui.each(Function.msg('addEvent', 'load', function(obj) {
+          if(ui.every(Function.msg('isLoaded'))) SSPostNotification("onSync");
         }.bind(this)))
       }
       else
@@ -278,7 +278,7 @@ var ShiftSpace = new (function() {
       window.SSApp = SSApp;
       window.SSApplication = SSApplication;
       window.SSResourceForName = SSResourceForName;
-      window.$msg = $msg;
+      window.Function.msg = Function.msg;
       window.SSControllerForNode = SSControllerForNode;
       window.Sandalphon = Sandalphon;
     }

@@ -609,7 +609,7 @@ var SSResource = new Class({
   {
     SSApplication().removeCache(this.getName());
     SSApplication().removeWatcher(this);
-    this.views().each($msg('setResource', null));
+    this.views().each(Function.msg('setResource', null));
   },
   
   /*

@@ -6,7 +6,7 @@ Event.Keys.shift = 16;
 
 (function() {
 
-var _urlJoin = $arity(
+var _urlJoin = Function.dispatch(
   function(a) { return a; },
   function(a, b) {
     if(b.length > 0) {
@@ -44,7 +44,7 @@ String.implement({
   urlJoin: function() {
     var args = $A(arguments);
     args = ($type(this) == 'string') ? [this].extend(args) : args;
-    return $reduce(_urlJoin, args);
+    return _urlJoin.reduce(args);
   },
 
   domain: function() {
@@ -423,7 +423,7 @@ Sortables.implement({
     function contains(nodes, node) {
       SSLog(nodes, node, SSLogForce);
       if(!nodes) return false;
-      nodes.each($msg("_ssgenId"));
+      nodes.each(Function.msg("_ssgenId"));
       return nodes.some(node.isEqual.bind(node));
     }
     if (contains(this.lists, element)){

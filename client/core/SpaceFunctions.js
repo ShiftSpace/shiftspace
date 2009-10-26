@@ -78,7 +78,7 @@ var SSLoadSpace = function(spaceName)
                      return SSRegisterSpace(space);
                    });
   return spacep;
-}.decorate(memoize);
+}.decorate(Function.memoize);
 
 /*
 Function: SSRegisterSpace

@@ -406,27 +406,27 @@ var ApplicationServer = new Class({
   {
     var resourceSpec = $hash($H(rsrcSpec).extract(['resource', 'method'], true));
     var watchers = this.__watchersFor__(resourceSpec);
-    watchers.each($msg('matchSpec', resourceSpec, value, oldValue));
+    watchers.each(Function.msg('matchSpec', resourceSpec, value, oldValue));
     
     if(rsrcSpec.id)
     {
       var idSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'id'], true));
       watchers = this.__watchersFor__(idSpec);
-      watchers.each($msg('matchSpec', idSpec, value, oldValue));
+      watchers.each(Function.msg('matchSpec', idSpec, value, oldValue));
     }
     
     if(rsrcSpec.action)
     {
       var actionSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'action'], true));
       watchers = this.__watchersFor__(actionSpec);
-      watchers.each($msg('matchSpec', actionSpec, value, oldValue));
+      watchers.each(Function.msg('matchSpec', actionSpec, value, oldValue));
     }
     
     if(rsrcSpec.action && rsrcSpec.id)
     {
       var actionIdSpec = $hash($H(rsrcSpec).extract(['resource', 'method', 'action', 'id'], true));
       watchers = this.__watchersFor__(actionIdSpec);
-      watchers.each($msg('matchSpec', actionIdSpec, value, oldValue));
+      watchers.each(Function.msg('matchSpec', actionIdSpec, value, oldValue));
     }
   },
   

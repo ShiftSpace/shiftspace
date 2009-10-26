@@ -602,7 +602,7 @@ var SSConsole = new Class({
   
   visibleListView: function()
   {
-    return this.listViews().filter($msg('isVisible')).first();
+    return this.listViews().filter(Function.msg('isVisible')).first();
   },
   
   
