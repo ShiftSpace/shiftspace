@@ -13,23 +13,19 @@ var SSNotifierView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    this.setIsOpen(false);
-    this.setIsVisible(false);
-    this.spaceMenuIsVisible(false);
     
     this.refreshShiftCount();
-    this.initGraph();
     
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
-    
+
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
-    
+
     SSAddObserver(this, 'onConsoleShow', this.onConsoleShow.bind(this));
     SSAddObserver(this, 'onConsoleHide', this.onConsoleHide.bind(this));
     
-    SSAddObserver(this, 'onSpaceMenuShow', this.onSpaceMenuShow.bind(this));
-    SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
+    SSAddObserver(this, 'onSpaceMenuShow', this.fireEvent.bind(this, ['showmenu']));
+    SSAddObserver(this, 'onSpaceMenuHide', this.fireEvent.bind(this, ['hidemenu']));
   },
   
   
@@ -46,7 +42,7 @@ var SSNotifierView = new Class({
           events: [
             {type: 'mouseover', state: 'SSNotifierOpen', flag: 'mouse'},
             {type: 'mouseout', state: 'SSNotifierHidden', direction:'previous', unflag: 'mouse', condition: {not: ['shift']}},
-            {type: 'shiftdown', direction: 'next', flag: 'shift', condition: {not: ['mouse']}},
+            {type: 'shiftdown', state: 'SSNotifierShowDetails', direction: 'next', flag: 'shift', condition: {not: ['mouse']}},
             {type: 'shiftup', state: 'SSNotifierHidden', direction: 'previous', unflag: 'shift', condition: {not: ['mouse']}}
           ]
         },
@@ -54,7 +50,7 @@ var SSNotifierView = new Class({
           previous: 'SSNotifierHidden',
           next: 'SSNotifierShowDetails',
           selector: '.SSNotifierHasShifts',
-          hold: {duration: 1000},
+          hold: {duration: 1000, condition: {not: [['shift', 'mouse'], 'previous']}},
           events: [
             {type: 'mouseover', state: 'SSNotifierOpen', flag: 'mouse'},
             {type: 'mouseout', state: 'SSNotiferHasShifts', direction:'previous', unflag: 'mouse', condition: {not: ['shift']}},
@@ -94,9 +90,14 @@ var SSNotifierView = new Class({
     });
   },
   
-  
+  /*
+    Function: refreshShiftCount
+      *private*
+      Refreshes the shift count from the server.
+  */
   refreshShiftCount:function()
   {
+    // TODO: make asyn - David 10/26/09
     this.__count = SSApp.confirm(
       SSApp.get({
         resource:'shifts',
@@ -118,7 +119,14 @@ var SSNotifierView = new Class({
     }
   },
   
-  
+  /*
+    Function: getShiftCount
+      *private*
+      Return the shift count.
+      
+    Returns:
+      An integer.
+  */
   getShiftCount: function()
   {
     if (this.__count == undefined) this.refreshShiftCount();
@@ -128,46 +136,36 @@ var SSNotifierView = new Class({
   
   onConsoleShow: function()
   {
-    this.show(false);
-    this['open'](false);
+    this.fireEvent('showconsole');
     this.SSToggleConsole.set('text', "Close Console");
   },
   
   
   onConsoleHide: function()
   {
-    this['close']();
+    this.fireEvent('hideconsole');
     this.SSToggleConsole.set('text', "Open Console");
   },
   
-  
-  onSpaceMenuShow: function(spaceMenu)
-  {
-    this.setSpaceMenuIsVisible(true);
-  },
-  
-  
-  onSpaceMenuHide: function(spaceMenu)
-  {
-    this.setSpaceMenuIsVisible(false);
-    if(!ShiftSpace.Console.isVisible())
-    {
-      this['close']();
-    }
-  },
-  
-  
+  /*
+    Function: show
+      Show the notifier. Simply shows the ShiftSpace logo notifying
+      the user that there are shifts.
+      
+    Parameters:
+      animate - boolean, whether to animate to the 
+  */
   show: function(animate)
   {
     if(animate === false)
     {
-      this.showComplete();
+      this.graph.setState("SSNotifierOpen", false);
     }
     else
     {
-      if(this.showFx)
+      if(this.isLoaded())
       {
-        if(!this.isVisible()) this.showFx.start(".SSNotifierVisible");
+        if(!this.isVisible()) this.setState('SSNotifierShowDetails');
       }
       else
       {
@@ -176,22 +174,23 @@ var SSNotifierView = new Class({
     }
   },
   
-  
-  showComplete: function()
-  {
-    this.element.setStyles({
-      left: ""
-    });
-    this.element.removeClass("SSNotifierHidden");
-    this.element.addClass("SSNotifierVisible");
-    this.setIsVisible(true);
-  },
-  
-  
+  /*
+    Function: hide
+      Hide the notifier.
+  */
   hide: function()
   {
     if(ShiftSpace.Console.isVisible()) return;
-    this.hideFx.start(".SSNotifierHidden");
+  },
+  
+  
+  'open': function(animate)
+  {
+  },
+  
+  
+  'close': function(animate)
+  {
   },
   
   
@@ -213,7 +212,11 @@ var SSNotifierView = new Class({
     this.updateControls();
   },
   
-  
+  /*
+    Function: updateControls
+      *private*
+      Update the controls in the notifier view.
+  */
   updateControls: function()
   {
     if (this.SSShiftCount) this.SSShiftCount.set('text', this.getShiftCount() + " shifts");
@@ -230,42 +233,6 @@ var SSNotifierView = new Class({
         this.SSLogInOut.set('text', 'Login');
       }
     }
-  },
-  
-  
-  setIsVisible: function(val)
-  {
-    this.__visible = val;
-  },
-  
-  
-  isVisible: function()
-  {
-    return this.__visible;
-  },
-  
-  
-  setIsOpen: function(val)
-  {
-    this.__isOpen = val;
-  },
-  
-  
-  isOpen: function()
-  {
-    return this.__isOpen;
-  },
-  
-  
-  setSpaceMenuIsVisible: function(val)
-  {
-    this.__spaceMenuIsVisible = val;
-  },
-  
-  
-  spaceMenuIsVisible: function()
-  {
-    return this.__spaceMenuIsVisible;
   },
   
   
@@ -336,33 +303,13 @@ var SSNotifierView = new Class({
   {
     SSAddEvent('keyup', function(_evt) {
       var evt = new Event(_evt);
-      if(evt.key == 'shift') this.handleKeyUp(evt);
+      if(evt.key == 'shift') this.fireEvent('shiftup');
     }.bind(this));
 
     SSAddEvent('keydown', function(_evt) {
       var evt = new Event(_evt);
-      if(evt.key == 'shift') this.handleKeyDown(evt);
+      if(evt.key == 'shift') this.fireEvent('shiftdown');
     }.bind(this));    
-  },
-  
-  
-  handleKeyDown: function(evt)
-  {
-  },
-  
-  
-  handleKeyUp: function(evt)
-  { 
-  },
-  
-  
-  'open': function(animate)
-  {
-  },
-  
-  
-  'close': function(animate)
-  {
   },
   
   
@@ -403,34 +350,14 @@ var SSNotifierView = new Class({
   },
   
   
-  setShiftIsDown: function(val)
-  {
-    this.__shiftIsDown = val;
-  },
-  
-  
-  shiftIsDown: function()
-  {
-    return this.__shiftIsDown;
-  },
-  
-  
-  initAnimations: function()
-  {
-  },
-  
-  
   buildInterface: function()
   {
     this.parent();
-
     this.contentWindow().$$(".SSNotifierSubView").setStyles({
       "background-image": "url("+SSInfo().server+"images/shiftspace_icon.png)"
     });
-    
-    this.initAnimations();
     this.attachEvents();
-    
+    this.initGraph();
     SSPostNotification('onNotifierLoad', this);
     this.setIsLoaded(true);
   },
