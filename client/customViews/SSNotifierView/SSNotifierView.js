@@ -24,8 +24,22 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onConsoleShow', this.onConsoleShow.bind(this));
     SSAddObserver(this, 'onConsoleHide', this.onConsoleHide.bind(this));
     
-    SSAddObserver(this, 'onSpaceMenuShow', this.fireEvent.bind(this, ['showmenu']));
-    SSAddObserver(this, 'onSpaceMenuHide', this.fireEvent.bind(this, ['hidemenu']));
+    SSAddObserver(this, 'onSpaceMenuShow', this.onSpaceMenuShow.bind(this));
+    SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
+  },
+  
+  
+  onSpaceMenuShow: function()
+  {
+    this.__menuVisible = true;
+    this.fireEvent('showmenu');
+  },
+  
+  
+  onSpaceMenuHide: function()
+  {
+    this.__menuVisible = false
+    this.fireEvent('hidemenu');
   },
   
   
@@ -74,7 +88,10 @@ var SSNotifierView = new Class({
           last: true,
           previous: 'SSNotifierShowDetails',
           styles: function() { return { width: window.getSize().x }; },
-          onComplete: function(el, fxgraph) { el.addClass('SSNotifierOpen'); this.showControls(); }.bind(this),
+          onComplete: function(el, fxgraph) { 
+            el.addClass('SSNotifierOpen'); 
+            this.showControls(); 
+          }.bind(this),
           onExit: function(el, fxgraph) { 
             el.removeClass('SSNotifierOpen'); 
             this.hideControls(); 
@@ -255,7 +272,7 @@ var SSNotifierView = new Class({
     
     this.SSSelectSpace.addEvent('click', function(_evt) {
       var evt = new Event(_evt);
-      if(!this.spaceMenuIsVisible())
+      if(!this.__menuVisible)
       {
         SSPostNotification('showSpaceMenu', this);
       }
@@ -314,6 +331,7 @@ var SSNotifierView = new Class({
   showControls: function()
   {
     this.contentWindow().$$('.SSNotifierSubView').removeClass('SSActive');
+    this.contentWindow().$('SSNotifierControlsView').addClass('Open');
     this.SSNotifierControlsView.addClass('SSActive');
   },
   
@@ -321,6 +339,7 @@ var SSNotifierView = new Class({
   hideControls: function()
   {
     this.contentWindow().$$('.SSNotifierSubView').removeClass('SSActive');
+    this.contentWindow().$('SSNotifierControlsView').removeClass('Open');
     this.SSNotifierDefaultView.addClass('SSActive');
   },
   

@@ -50,6 +50,9 @@
 #SSNotifierControlsView.Open
 {
   right: -4px;
+  -moz-border-radius: none;
+  -webkit-border-radius: none;
+  border-right: 0px;
 }
 
 .SSNotifierSubView button
