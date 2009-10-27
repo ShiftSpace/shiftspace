@@ -22,7 +22,7 @@ var MyShiftSpacePane = new Class({
   },
 
 
-  awake: function(args)
+  awake: function()
   {
     this.mapOutletsToThis();
   },
