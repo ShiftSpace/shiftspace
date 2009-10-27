@@ -13,32 +13,15 @@ var SSConsole = new Class({
   
   initialize: function(el, options)
   {
-    // only really relevant under Sandalphon
-    if(typeof SandalphonToolMode == 'undefined')
-    {
-      this.parent(el, options);
-    }
-    else
-    {
-      this.parent(el, $merge(options, {
-        generateElement: false
-      }));
-    }
+    this.parent(el, options);
 
-    // if not tool mode, we load the interface ourselve
-    if(typeof SandalphonToolMode == 'undefined')
-    {
-      // load from the proper place
-      var url = String.urlJoin('client/compiledViews/', SSInfo().env, "SSConsoleMain");
-      var p = Sandalphon.load(url);
-      this.buildInterface(p);
-    }
+    var url = String.urlJoin('client/compiledViews/', SSInfo().env, "SSConsoleMain");
+    var p = Sandalphon.load(url);
+    this.buildInterface(p);
 
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onSync', this.handleSync.bind(this));
-    SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
     
     // since we're created programmatically we add entry manually for debugging - David
     ShiftSpaceNameTable.SSConsole = this;
@@ -70,23 +53,9 @@ var SSConsole = new Class({
     this.mapOutletsToThis();
     if(context == this.element.contentWindow)
     {
-      this.initMainTabView();
-      this.initSelectLanguage();
-      this.initInstalledSpacesListView();
-      this.clearInstalledButton.addEvent('click', function(evt) {
-        evt = new Event(evt);
-        SSUninstallAllSpaces();
-      });
       this.MainTabView.addEvent('tabSelected', function(evt) {
-        
       });
     }
-  },
-  
-  
-  handleSync: function()
-  {
-    this.updateInstalledSpaces();
   },
 
 
@@ -94,7 +63,6 @@ var SSConsole = new Class({
   {
     this.MainTabView.hideTabByName('LoginTabView');
     this.MainTabView.selectTabByName('AllShiftsView');
-    this.updateInstalledSpaces();
     if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
   },
 
@@ -103,42 +71,13 @@ var SSConsole = new Class({
   {
     this.MainTabView.revealTabByName('LoginTabView');
     this.MainTabView.refresh();
-    this.updateInstalledSpaces();
   },
 
 
-  initMainTabView: function()
-  {
-    this.MainTabView = this.MainTabView;
-  },
-
-
-  initInstalledSpacesListView: function()
-  {
-    if(this.SSInstallSpace)
-    {
-      this.SSInstallSpace.addEvent('click', function(evt) {
-        evt = new Event(evt);
-        this.installSpace(this.SSInstallSpaceField.getProperty('value'));
-      }.bind(this));
-    }
-    this.SSInstalledSpaces = this.SSInstalledSpaces;
-  },
-  
-  
   showLogin: function()
   {
     if(!this.isVisible()) this.show();
     this.MainTabView.selectTabByName('LoginTabView');
-  },
-
-
-  initSelectLanguage: function()
-  {
-    this.SSSelectLanguage.addEvent('change', function(evt) {
-      evt = new Event(evt);
-      SSLoadLocalizedStrings($(evt.target).getProperty('value'), this.element.contentWindow);
-    }.bind(this));
   },
   
   
@@ -279,58 +218,6 @@ var SSConsole = new Class({
       modifiers: {x:'', y:'height'},
       invert: true
     });
-  },
-  
-  
-  canRemove: function(sender)
-  {
-    var canRemove = false;
-    switch(sender.listView)
-    {
-      case this.SSInstalledSpaces:
-        this.uninstallSpace(sender.index);
-        canRemove = true;
-        break;
-      default:
-        SSLog('No matching list view', SSLogForce);
-        break;
-    }
-    
-    return canRemove;
-  },
-  
-  
-  installSpace:function(spaceName)
-  {
-    SSInstallSpace(spaceName);
-  },
-  
-  
-  onSpaceInstall: function()
-  {
-    this.updateInstalledSpaces();
-    this.refreshInstalledSpaces();
-  },
-  
-  
-  updateInstalledSpaces: function()
-  {
-    this.SSInstalledSpaces.setData(SSSpacesByPosition());
-    this.SSInstalledSpaces.refresh();
-  },
-  
-  
-  refreshInstalledSpaces: function()
-  {
-    this.SSInstalledSpaces.refresh(true);
-  },
-  
-  
-  uninstallSpace:function(index)
-  {
-    var spaces = SSSpacesByPosition();
-    var spaceToRemove = spaces[index];
-    SSUninstallSpace(spaceToRemove.name);
   },
   
   

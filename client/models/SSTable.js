@@ -548,6 +548,7 @@ var SSTable = new Class({
    */
   dirtyTheViews: function(force)
   {
+    SSLog("dirtyTheViews", SSLogForce);
     this.views().each(function(view) {
       view.setNeedsDisplay(true);
       view.__refresh__(force);
@@ -645,9 +646,14 @@ SSTable.dirtyTheViews = function(value)
   this.dirtyTheViews();
 }
 
-SSTable.updateDoc = function(doc) 
+SSTable.updateViews = function(newValue, oldValue)
+{
+  this.updateViews(newValue, oldValue);
+}
+
+SSTable.updateDoc = function(doc)
 { 
-  SSApplication().setDocument(this.getName(), doc); 
+  SSApplication().setDocument(this.getName(), doc);
 }
 
 SSTable.dirtyAllViews = function(value)
