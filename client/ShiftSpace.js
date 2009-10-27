@@ -150,9 +150,9 @@ var ShiftSpace = new (function() {
                      SSPostNotification('onUserLogin');
                      SSLog("Synchronized", SSLogSystem);
                    },
-		   function(noData) {
-		     SSLog("User is not logged in", p1.value(), SSLogSystem);
-		   });
+                   function(noData) {
+                     SSLog("User is not logged in", p1.value(), SSLogSystem);
+                   });
       p2.op(
         function(value) {
           var installed = ShiftSpace.User.installedSpaces(), ps;
@@ -175,7 +175,7 @@ var ShiftSpace = new (function() {
     /*
       Function: SSWaitForUI (private)
         Waits for the core user interface components to initialize. Once
-	initialized posts "onSync" notification.
+        initialized posts "onSync" notification.
      */
     var SSWaitForUI = function(query)
     {
@@ -196,7 +196,7 @@ var ShiftSpace = new (function() {
     /*
       Function: SSSetup (private)
         Automatically load spaces that have been set to autolaunch
-	due either to user preferences or domain settings for the space.
+        due either to user preferences or domain settings for the space.
      */
     function SSSetup()
     {
@@ -231,7 +231,7 @@ var ShiftSpace = new (function() {
     /*
       Function: SSCheckForUpdates (private)
         Check to see if a new version of ShiftSpace is available. If it is
-	prompt user to install.
+        prompt user to install.
      */
     function SSCheckForUpdates()
     {
