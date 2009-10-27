@@ -23,6 +23,7 @@ var ShiftServer = new Class({
     __ssapplication = this;
     this.parent(options);
     SSAddObserver(this, 'onUserLogin', this.onLogin.bind(this));
+    SSAddObserver(this, 'onUserJoin', this.onLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.onLogout.bind(this));
     SSAddObserver(this, 'onUserQuery', this.onQuery.bind(this));
   },
