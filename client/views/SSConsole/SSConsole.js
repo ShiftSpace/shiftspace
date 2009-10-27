@@ -35,10 +35,8 @@ var SSConsole = new Class({
     }
 
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserLoginFailed', this.handleLoginFailed.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserJoinFailed', this.handleJoinFailed.bind(this));
     SSAddObserver(this, 'onSync', this.handleSync.bind(this));
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
     
@@ -73,8 +71,6 @@ var SSConsole = new Class({
     if(context == this.element.contentWindow)
     {
       if(this.MainTabView) this.initMainTabView();
-      if(this.SSLoginFormSubmit) this.initLoginForm();
-      if(this.SSSignUpFormSubmit) this.initSignUpForm();
       if(this.SSSelectLanguage) this.initSelectLanguage();
       if(this.SSInstalledSpaces) this.initInstalledSpacesListView();
       if(this.clearInstalledButton)
@@ -84,26 +80,7 @@ var SSConsole = new Class({
           SSUninstallAllSpaces();
         });
       }
-      if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled()) this.handleLogin();
     }
-  },
-  
-  
-  onContextActivate: function(context)
-  {
-    
-  },
-  
-  
-  setLoginHandled: function(value)
-  {
-    this.__loginHandled = value;
-  },
-  
-  
-  loginHandled: function()
-  {
-    return this.__loginHandled;
   },
   
   
@@ -115,8 +92,6 @@ var SSConsole = new Class({
 
   handleLogin: function()
   {
-    this.setLoginHandled(true);
-    this.emptyLoginForm();
     this.MainTabView.hideTabByName('LoginTabView');
     this.MainTabView.selectTabByName('AllShiftsView');
     this.updateInstalledSpaces();
@@ -126,8 +101,6 @@ var SSConsole = new Class({
 
   handleLogout: function()
   {
-    this.setLoginHandled(false);
-    this.emptyLoginForm();
     this.MainTabView.revealTabByName('LoginTabView');
     this.MainTabView.refresh();
     this.updateInstalledSpaces();
@@ -137,18 +110,6 @@ var SSConsole = new Class({
   initMainTabView: function()
   {
     this.MainTabView = this.MainTabView;
-  },
-  
-  
-  initLoginForm: function()
-  {
-    this.SSLoginFormSubmit.addEvent('click', this.handleLoginFormSubmit.bind(this));
-    this.SSLoginForm.addEvent('submit', function(_evt) {
-      var evt = new Event(_evt);
-      evt.preventDefault();
-      this.handleLoginFormSubmit();
-    }.bind(this));
-    this.LoginTabView.addEvent('tabSelected', this.handleTabSelect.bind(this));
   },
 
 
@@ -163,84 +124,6 @@ var SSConsole = new Class({
     }
     this.SSInstalledSpaces = this.SSInstalledSpaces;
   },
-  
-  
-  handleTabSelect: function(args)
-  {
-    if(args.tabView == this.LoginTabView && args.tabIndex == 0)
-    {
-      this.emptyLoginForm();
-    }
-  },
-
-
-  emptyLoginForm: function()
-  {
-    this.SSLoginFormUsername.setProperty('value', '');
-    this.SSLoginFormPassword.setProperty('value', '');
-    this.SSLoginFormMessage.set('text', '');
-  },
-
-
-  handleLoginFormSubmit: function()
-  {
-    this.SSLoginFormMessage.set('text', '');
-    ShiftSpaceUser.login({
-      userName: this.SSLoginFormUsername.getProperty('value'),
-      password: this.SSLoginFormPassword.getProperty('value')
-    }, this.loginFormSubmitCallback.bind(this));
-  },
-
-
-  loginFormSubmitCallback: function(response)
-  {
-    this.fireEvent('onUserLogin');
-  },
-
-
-  handleLoginFailed: function(err)
-  {
-    this.SSLoginFormMessage.set('text', err.error);
-  },
-
-  
-  handleJoinFailed: function(err)
-  {
-    this.SSSignUpFormMessage.set('text', err.error);
-  },
-
-
-  initSignUpForm: function()
-  {
-    this.SSSignUpFormSubmit.addEvent('click', this.handleSignUpFormSubmit.bind(this));
-    this.SSSignUpForm.addEvent('submit', function(_evt) {
-      var evt = new Event(_evt);
-      evt.preventDefault();
-      this.handleSignUpFormSubmit();
-    }.bind(this));
-  },
-
-
-  handleSignUpFormSubmit: function()
-  {
-    this.SSSignUpFormMessage.set('text', '');
-    var joinInput = {
-      userName: this.SSSignUpFormUsername.getProperty('value'),
-      email: this.SSSignUpFormEmail.getProperty('value'),
-      password: this.SSSignUpFormPassword.getProperty('value'),
-      passwordVerify: this.SSSignUpFormConfirmPassword.getProperty('value')
-    };
-
-    var p = ShiftSpaceUser.join(joinInput);
-    $if(SSApp.noErr(p),
-        this.signUpFormSubmitCallback.bind(null, [p]));
-  },
-
-
-  signUpFormSubmitCallback: function(userData)
-  {
-    this.MainTabView.selectTabByName('AllShiftsView');
-  }.asPromise(),
   
   
   showLogin: function()

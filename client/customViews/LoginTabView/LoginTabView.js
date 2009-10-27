@@ -3,11 +3,11 @@
 // @customView
 // @optional
 // @package           ShiftSpaceUI
-// @dependencies      SSView
+// @dependencies      SSTabView
 // ==/Builder==
 
 var LoginTabView = new Class({
-  Extends: SSView,
+  Extends: SSTabView,
   name: "LoginTabView",
 
   initialize: function(el, options)
@@ -17,19 +17,124 @@ var LoginTabView = new Class({
     {
       SSAddObserver(this, "onSync", this.onSync.bind(this));
       SSAddObserver(this, "onUserLogin", this.onLogin.bind(this));
+      SSAddObserver(this, 'onUserLoginFailed', this.handleLoginFailed.bind(this));
+      SSAddObserver(this, "onUserLogout", this.onLogout.bind(this));
+      SSAddObserver(this, 'onUserJoinFailed', this.handleJoinFailed.bind(this));
     }
   },
   
 
-  awake: function(args)
+  awake: function()
   {
     this.mapOutletsToThis();
+    this.initLoginForm();
+    this.initSignUpForm();
+    if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled()) this.handleLogin();
   },
 
 
   afterAwake: function()
   {
   },
+  
+  
+  show: function()
+  {
+    this.parent();
+    this.emptyLoginForm();
+  },
+  
+  
+  setLoginHandled: function(value)
+  {
+    this.__loginHandled = value;
+  },
+  
+  
+  loginHandled: function()
+  {
+    return this.__loginHandled;
+  },
+  
+  
+  initLoginForm: function()
+  {
+    this.SSLoginFormSubmit.addEvent('click', this.handleLoginFormSubmit.bind(this));
+    this.SSLoginForm.addEvent('submit', function(_evt) {
+      var evt = new Event(_evt);
+      evt.preventDefault();
+      this.handleLoginFormSubmit();
+    }.bind(this));
+  },
+  
+  
+  emptyLoginForm: function()
+  {
+    this.SSLoginFormUsername.setProperty('value', '');
+    this.SSLoginFormPassword.setProperty('value', '');
+    this.SSLoginFormMessage.set('text', '');
+  },
+
+
+  handleLoginFormSubmit: function()
+  {
+    this.SSLoginFormMessage.set('text', '');
+    ShiftSpaceUser.login({
+      userName: this.SSLoginFormUsername.getProperty('value'),
+      password: this.SSLoginFormPassword.getProperty('value')
+    }, this.loginFormSubmitCallback.bind(this));
+  },
+
+
+  loginFormSubmitCallback: function(response)
+  {
+    this.fireEvent('onUserLogin');
+  },
+
+
+  handleLoginFailed: function(err)
+  {
+    this.SSLoginFormMessage.set('text', err.error);
+  },
+
+  
+  handleJoinFailed: function(err)
+  {
+    this.SSSignUpFormMessage.set('text', err.error);
+  },
+
+
+  initSignUpForm: function()
+  {
+    this.SSSignUpFormSubmit.addEvent('click', this.handleSignUpFormSubmit.bind(this));
+    this.SSSignUpForm.addEvent('submit', function(_evt) {
+      var evt = new Event(_evt);
+      evt.preventDefault();
+      this.handleSignUpFormSubmit();
+    }.bind(this));
+  },
+
+
+  handleSignUpFormSubmit: function()
+  {
+    this.SSSignUpFormMessage.set('text', '');
+    var joinInput = {
+      userName: this.SSSignUpFormUsername.getProperty('value'),
+      email: this.SSSignUpFormEmail.getProperty('value'),
+      password: this.SSSignUpFormPassword.getProperty('value'),
+      passwordVerify: this.SSSignUpFormConfirmPassword.getProperty('value')
+    };
+
+    var p = ShiftSpaceUser.join(joinInput);
+    $if(SSApp.noErr(p),
+        this.signUpFormSubmitCallback.bind(null, [p]));
+  },
+
+
+  signUpFormSubmitCallback: function(userData)
+  {
+    this.MainTabView.selectTabByName('AllShiftsView');
+  }.asPromise(),
   
 
   onSync: function()
@@ -39,5 +144,14 @@ var LoginTabView = new Class({
   
   onLogin: function()
   {
+    this.setLoginHandled(true);
+    this.emptyLoginForm();
+  },
+  
+  
+  onLogout: function()
+  {
+    this.setLoginHandled(false);
+    this.emptyLoginForm();
   }
 });
