@@ -480,13 +480,11 @@ var SSTable = new Class({
 
     Parameters:
       views - an array of views to manage.
-   */
+  */
   setViews: function(views)
   {
     this.__views = views;
-    views.each(function(view) {
-      view.setResource(this);
-    }, this);
+    views.each(this.addView.bind(this));
   },
   
   /*
@@ -498,7 +496,7 @@ var SSTable = new Class({
 
     See Also: 
       SSView
-   */
+  */
   views: function()
   {
     return this.__views;
@@ -517,8 +515,9 @@ var SSTable = new Class({
    */
   addView: function(view)
   {
+    if(this.views().contains(view)) return;
     this.views().push(view);
-    //view.setResource(this);
+    view.setResource(this);
   },
   
   /*
