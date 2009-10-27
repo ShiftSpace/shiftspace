@@ -517,7 +517,7 @@ var SSTable = new Class({
   {
     if(this.views().contains(view)) return;
     this.views().push(view);
-    view.setResource(this);
+    view.setTable(this);
   },
   
   /*
@@ -609,7 +609,7 @@ var SSTable = new Class({
   {
     SSApplication().removeCache(this.getName());
     SSApplication().removeWatcher(this);
-    this.views().each(Function.msg('setResource', null));
+    this.views().each(Function.msg('setTable', null));
   },
   
   /*

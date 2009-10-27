@@ -44,7 +44,7 @@ var ApplicationServer = new Class({
     this.setOptions(this.defaults(), options);
     this.setServer(this.options.server);
     this.setCache({global:{}});
-    this.setResources({});
+    this.setTables({});
     this.setWatchers({});
     this.initTables();
     this.fireEvent('tableInit');
@@ -192,13 +192,13 @@ var ApplicationServer = new Class({
   },
   
   /*
-    Function: setResources (private)
+    Function: setTables (private)
       Set the hash map to store SSTable instances.
 
     Parameters:
       resource - a object.
    */
-  setResources: function(resources)
+  setTables: function(resources)
   {
     this.__resources = resources;
   },

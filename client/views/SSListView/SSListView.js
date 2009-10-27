@@ -21,7 +21,7 @@ SSListViewError.OutOfBounds = new Class({
 
 /*
   Class: SSListView
-  SSListView controls the display of array or collections of resources within the console. 
+  SSListView controls the display of an array or a SSTable (as an array) within the console.
 */
 var SSListView = new Class({
 
@@ -40,7 +40,7 @@ var SSListView = new Class({
       addAt: 'bottom',
       leaveEditOnUpdate: false,
       allowSelection: false,
-      resource: null
+      table: null
     });
   },
   
@@ -48,10 +48,11 @@ var SSListView = new Class({
   {
     this.parent(el, options);
     this.__cellBeingEdited = -1;
+    this.cellStates = {};
     if(this.options.filter) this.setFilter(this.options.filter);
-    if(this.options.resource)
+    if(this.options.table)
     {
-      SSLog('Use datasource', SSLogForce);
+      SSLog('Use table', SSLogForce);
     }
     else
     {
@@ -61,46 +62,77 @@ var SSListView = new Class({
     this.attachEvents();
   },
   
-  
-  setResource: function(resource)
+  /*
+    Function: setState
+      Set the internal list view state of a document. This way state
+      can be preserved between updates without polluting the actuall
+      data as well avoiding issues with order.
+      
+    Parameters:
+      id - a document id.
+      key - a string.
+      v - a value.
+  */
+  setState: function(id, key, v)
   {
-    if($type(resource) == 'string')
+    if(!this.cellStates[id]) this.cellStates[id] = {};
+    this.cellStates[id][key] = v;
+  },
+  
+  /*
+    Function: setTable
+      Set the table which will provide data to this list view.
+      
+    Parameters:
+      table - a <SSTable> instance.
+  */
+  setTable: function(table)
+  {
+    if($type(table) == 'string')
     {
-      SSAddObserver(this, 'resourceSet', function(evt) {
-        if(evt.name == resource) this.__setResource__(evt.resource);
+      SSAddObserver(this, 'tableSet', function(evt) {
+        if(evt.name == table) this.__setTable__(evt.table);
       }.bind(this));
     }
     else
     {
-      this.__setResource__(resource);
+      this.__setTable__(table);
     }
   },
   
+  /*
   
-  __setResource__: function(resource)
+  */
+  __setTable__: function(table)
   {
-    if(resource === null)
+    if(table === null)
     {
-      this.setResourceIsRead(false);
-      this.__resource = null;
+      this.setTableIsRead(false);
+      this.__table = null;
       this.__reloadData__();
     }
     else
     {
-      if(!$implements(resource, SSTable.protocol))
+      if(!$implements(table, SSTable.protocol))
       {
-        SSLog("Argument to SSListView.__setResource__ does not implement SSTable.protocol", SSLogError);
+        SSLog("Argument to SSListView.__setTable__ does not implement SSTable.protocol", SSLogError);
         throw new Error();
       }
-      if(!resource.hasView(this)) resource.addView(this);
-      this.__resource = resource;
+      if(!table.hasView(this)) table.addView(this);
+      this.__table = table;
     }
   },
   
-
-  resource: function()
+  /*
+    Function: table
+      Return the table that provides data to this list view.
+      
+    Returns:
+      <SSTable>
+  */
+  table: function()
   {
-    return this.__resource;
+    return this.__table;
   },
   
   /*
@@ -444,9 +476,9 @@ var SSListView = new Class({
   */
   data: function()
   {
-    if(this.resource())
+    if(this.table())
     {
-      return this.resource().data();
+      return this.table().data();
     }
     else
     {
@@ -1076,10 +1108,10 @@ var SSListView = new Class({
   refresh: function(force)
   {
     this.parent();
-    if(force && this.resource()) this.setResourceIsRead(false);
+    if(force && this.table()) this.setTableIsRead(false);
     var hasCell = this.hasCell()
     if(!hasCell) return;
-    if(!this.data() && !this.resource()) return;
+    if(!this.data() && !this.table()) return;
     if(!this.isVisible()) return;
     this.reloadData();
   },
@@ -1117,15 +1149,15 @@ var SSListView = new Class({
   },
   
   
-  setResourceIsRead: function(val)
+  setTableIsRead: function(val)
   {
-    this.__resourceIsRead = val;
+    this.__tableIsRead = val;
   },
   
   
-  resourceIsRead: function()
+  tableIsRead: function()
   {
-    return this.__resourceIsRead;
+    return this.__tableIsRead;
   },
   
   /*
@@ -1139,11 +1171,11 @@ var SSListView = new Class({
   */
   reloadData: function()
   {
-    var resource = this.resource(), controlp;
-    if(resource && !this.resourceIsRead())
+    var table = this.table(), controlp;
+    if(table && !this.tableIsRead())
     {
-      this.setResourceIsRead(true);
-      controlp = resource.read();
+      this.setTableIsRead(true);
+      controlp = table.read();
     }
     this.__reloadData__(controlp);
   },
