@@ -206,7 +206,7 @@ var SSListView = new Class({
   
   /*
     Function: initSortables (private)
-      Called during intialize(). Creates a new sortable object.   
+      Called during intialize(). Creates a new sortable object.
   */
   initSortables: function()
   {
@@ -262,7 +262,7 @@ var SSListView = new Class({
   
   /*
     Function: sortStart
-      Sets the sortStart property to the index of a cell node. Determines the starting point for a sort.  
+      Sets the sortStart property to the index of a cell node. Determines the starting point for a sort.
                   
     Parameters:
       cellNode - a cell's DOM node
@@ -630,8 +630,6 @@ var SSListView = new Class({
   edit: function(index, _animate)
   {
     var animate = (_animate == null && true) || _animate;
-    this.boundsCheck(index);
-    
     var delegate = this.delegate();
     var canEdit = (delegate && delegate.canEdit && delegate.canEdit(index)) || true;
     
@@ -672,7 +670,8 @@ var SSListView = new Class({
   
   /*
     Function: get 
-      Accepts an index of cell in a collection  and performs a boundsCheck to make sure the index is valid. Retreives the properties of each data element, stores them in an array, and returns the array. 
+      Accepts an index of cell in a collection. Retreives the properties of each 
+      data element, stores them in an array, and returns the array. 
       
     Parameters:
       index - the index of a SSCell object. 
@@ -719,7 +718,6 @@ var SSListView = new Class({
   */
   update: function(cellData, index, _noArrayUpdate)
   {
-    this.boundsCheck(index);
     var noArrayUpdate = _noArrayUpdate || false;
     var delegate = this.delegate();
     var canUpdate = (delegate && delegate.canUpdate && delegate.canUpdate(index)) || true;
@@ -813,7 +811,6 @@ var SSListView = new Class({
   */
   set: function(cellData, index)
   {
-    this.boundsCheck(index);
     this.__set__(cellData, index);
   },
   
@@ -845,7 +842,6 @@ var SSListView = new Class({
   // TODO: animation support
   remove: function(index)
   {
-    this.boundsCheck(index);
     var delegate = this.delegate();
     var canRemove = true;
     if(delegate && delegate.canRemove) canRemove = delegate.canRemove({listView:this, index:index});
@@ -941,7 +937,6 @@ var SSListView = new Class({
   hideItem: function(index, _animate)
   {
     var animate = (_animate == null && true) || _animate;
-    this.boundsCheck(index);
     var delegate = this.delegate();
     var canHide = (delegate && delegate.canHide && delegate.canHide(index)) || true;
     if(canHide)
@@ -1163,6 +1158,7 @@ var SSListView = new Class({
    */
   __reloadData__: function(p)
   {
+    SSLog("reload!", SSLogForce);
     var len = this.data().length;
     this.element.empty();
     if(len > 0 && this.cell())
@@ -1175,26 +1171,14 @@ var SSListView = new Class({
       }
       var cells = this.data().map(this.newCellForItemData.bind(this));
       cells.each(function(cell) {
-        this.element.grab(cell)
-      }.bind(this));
+        this.element.grab(cell);
+      }, this);
       this.setNeedsDisplay(false);
       this.initSortables();
     }
     if(this.pageControl()) this.pageControl().initializeInterface();
     this.fireEvent('onReloadData', this);
   }.asPromise(),
-  
-  /*
-    Function: boundsCheck
-      Tests to see if the passed index is within the bounds of the SSCollection array. Throws a SSListViewError message if the index is out of bounds. 
-    
-    Parameters:
-      index - the index of a SSCell object 
-  */
-  boundsCheck: function(index)
-  {
-    if(index < 0 || index >= this.count()) throw new SSListViewError.OutOfBounds(new Error(), index + " index is out bounds.");
-  },
   
   /*
     Function: cellNodeForIndex
