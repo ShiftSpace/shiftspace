@@ -9,6 +9,7 @@ var ShiftServer = new Class({
   Extends: ApplicationServer,
   name: "ShiftServer",
 
+  getId: function() { return this.name; },
 
   defaults: function()
   {
@@ -16,11 +17,113 @@ var ShiftServer = new Class({
       server: SSInfo().server+'server/'
     });
   },
-
-
-  initialize: function(options)
-  {
+  
+  
+  initialize: function(options) {
+    __ssapplication = this;
     this.parent(options);
+    SSAddObserver(this, 'onUserLogin', this.onLogin.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.onLogout.bind(this));
+    SSAddObserver(this, 'onUserQuery', this.onQuery.bind(this));
+  },
+  
+  
+  initTables: function()
+  {
+    new SSTable("AllShifts", {
+      resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
+      watches: [
+        {
+          events: [
+            {resource:"shift", method:"create"},
+            {resource:"shift", action:"favorite"},
+            {resource:"shift", action:"unfavorite"}
+          ],
+          handlers: [
+            function(shift) { SSApplication().setDocument(this.getName(), shift); }
+          ]
+        },
+        {
+          events: [
+            {resource:"shift", method:"create"},
+            {resource:"shift", method:"update"},
+            {resource:"shift", method:"delete"},
+            {resource:"shift", action:"comment"},
+            {resource:"shift", action:"publish"},
+            {resource:"shift", action:"unpublish"},
+            {resource:"shift", action:"favorite"},
+            {resource:"shift", action:"unfavorite"}
+          ],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+  },
+  
+  
+  favoriteTransform: function(data)
+  {
+    var content = data.content;
+    data.summary = content.text;
+    return data;
+  },
+
+
+  commentTransform: function(data)
+  {
+    var content = data.content;
+    data.userName = content.user.userName;
+    data.space = content.shift.space;
+    data.href = content.href;
+    data.domain = content.domain;
+    data.text = content.text;
+    return data;
+  },
+  
+  
+  initUserTables: function()
+  {
+    new SSTable("MyShifts", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
+      watches: [
+        {
+          events: [{resource:"shift", method:"create"}],
+          handlers: [function(shift) { SSApplication().setDocument(this.getName(), shift); }]
+        },
+        {
+          events: [{resource:"shift", method:"create"},
+                   {resource:"shift", method:"update"},
+                   {resource:"shift", method:"delete"},
+                   {resource:"shift", action:"comment"},
+                   {resource:"shift", action:"publish"},
+                   {resource:"shift", action:"unpublish"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
+    new SSTable("Favorites", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/favorites'},
+      transforms: [this.favoriteTransform],
+      watches: [
+        {
+          events: [{resource:"shift", action:"favorite"},
+                   {resource:"shift", action:"unfavorite"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
+    new SSTable("MyComments", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/comments'},
+      transforms: [this.commentTransform],
+      watches: [
+        {
+          events: [{resource:"shift", action:"comment"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
   },
 
   
@@ -30,10 +133,22 @@ var ShiftServer = new Class({
     return this.post({action:"login", data:userData});
   },
   
+  
+  onLogin: function()
+  {
+    this.initUserTables();
+  },
+  
 
   logout: function()
   {
     return this.post({action:"logout"});
+  },
+  
+  
+  onLogout: function()
+  {
+    
   },
   
 
@@ -44,9 +159,21 @@ var ShiftServer = new Class({
   },
   
   
+  onJoin: function()
+  {
+    
+  },
+  
+  
   query: function()
   {
     return this.get({action:"query"});
+  },
+  
+  
+  onQuery: function()
+  {
+    
   },
   
   
@@ -60,6 +187,6 @@ var ShiftServer = new Class({
 var __ssapplication = null;
 function SSApplication()
 {
-  if(!__ssapplication) __ssapplication = new ShiftServer();
+  if(!__ssapplication) return new ShiftServer();
   return __ssapplication;
 }

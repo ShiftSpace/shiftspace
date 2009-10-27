@@ -47,65 +47,6 @@ var SSConsole = new Class({
   },
   
   
-  initResources: function()
-  {
-    this.allShifts = new SSTable("AllShifts", {
-      resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
-      watches: [{
-                  events: [{resource:"shift", method:"create"},
-			   {resource:"shift", action:"favorite"},
-			   {resource:"shift", action:"unfavorite"}],
-                  handlers: [function(shift) { SSApplication().setDocument(this.getName(), shift); }]
-                },
-                {
-                  events: [{resource:"shift", method:"create"},
-                           {resource:"shift", method:"update"},
-                           {resource:"shift", method:"delete"},
-                           {resource:"shift", action:"comment"},
-                           {resource:"shift", action:"publish"},
-                           {resource:"shift", action:"unpublish"},
-			   {resource:"shift", action:"favorite"},
-			   {resource:"shift", action:"unfavorite"}],
-                  handlers: [SSTable.dirtyTheViews]
-                }],
-      delegate: this.PublishPane,
-      views: [this.AllShiftsListView]
-    });
-  },
-  
-  
-  initUserResources: function()
-  {
-    if(this.__userResourceInitialized) return;
-    this.__userResourceInitialized = true
-    
-    this.myShifts = new SSTable("MyShifts", {
-      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
-      watches: [{
-                  events: [{resource:"shift", method:"create"}],
-                  handlers: [function(shift) { SSApplication().setDocument(this.getName(), shift); }]
-                },
-                {
-                  events: [{resource:"shift", method:"create"},
-                           {resource:"shift", method:"update"},
-                           {resource:"shift", method:"delete"},
-                           {resource:"shift", action:"comment"},
-                           {resource:"shift", action:"publish"},
-                           {resource:"shift", action:"unpublish"}],
-                  handlers: [SSTable.dirtyTheViews]
-                }],
-      views: [this.MyShiftsListView]
-    });    
-  },
-  
-  
-  cleanupUserResources: function()
-  {
-    this.myShifts.dispose();
-    this.__userResourceInitialized = false;
-  },
-  
-  
   isVisible: function()
   {
     return !this.element.hasClass('SSDisplayNone');
@@ -134,11 +75,9 @@ var SSConsole = new Class({
        (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
     {
       if(this.MainTabView) this.initMainTabView();
-      if(this.AllShiftsListView) this.initAllShiftsView();
       if(this.SSLoginFormSubmit) this.initLoginForm();
       if(this.SSSignUpFormSubmit) this.initSignUpForm();
       if(this.SSSelectLanguage) this.initSelectLanguage();
-      if(this.SSSetServers) this.initSetServersForm();
       if(this.SSInstalledSpaces) this.initInstalledSpacesListView();
       if(this.clearInstalledButton)
       {
@@ -173,7 +112,6 @@ var SSConsole = new Class({
   handleSync: function()
   {
     this.updateInstalledSpaces();
-    this.initResources();
   },
 
 
@@ -182,20 +120,9 @@ var SSConsole = new Class({
     this.setLoginHandled(true);
     this.emptyLoginForm();
     this.MainTabView.hideTabByName('LoginTabView');
-    if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', ShiftSpaceUser.getUserName());
     this.MainTabView.selectTabByName('AllShiftsView');
     this.updateInstalledSpaces();
-
-    // initialize the resources
-    if(!this.allShifts)
-    {
-      this.initResources();
-    }
-    else
-    {
-      this.allShifts.refresh();
-    }
-    this.initUserResources();
+    if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
   },
 
 
@@ -204,26 +131,14 @@ var SSConsole = new Class({
     this.setLoginHandled(false);
     this.emptyLoginForm();
     this.MainTabView.revealTabByName('LoginTabView');
-    if(this.myShiftsDatasource) this.myShiftsDatasource.setProperty('username', null);
     this.MainTabView.refresh();
     this.updateInstalledSpaces();
-    
-    // cleanup resources
-    this.allShifts.refresh();
-    this.cleanupUserResources();
   },
 
 
   initMainTabView: function()
   {
     this.MainTabView = this.MainTabView;
-  },
-  
-  
-  initAllShiftsView: function()
-  {                    
-    this.AllShiftsView.addEvent('willShow', this.showFilterPane.bind(this));
-    this.AllShiftsView.addEvent('hide', this.hideFilterPane.bind(this));
   },
   
   
@@ -236,37 +151,6 @@ var SSConsole = new Class({
       this.handleLoginFormSubmit();
     }.bind(this));
     this.LoginTabView.addEvent('tabSelected', this.handleTabSelect.bind(this));
-  },
-  
-  
-  initSetServersForm: function()
-  {
-    var apiField = this.SSSetApiURLField;
-    var spacesDirField = this.SSSetSpaceDirField;
-    
-    if(SSInfo)
-    {
-      apiField.setProperty('value', SSInfo().server);
-      spacesDirField.setProperty('value', SSInfo().spacesDir);
-
-      apiField.addEvent('keydown', function(_evt) {
-        var evt = new Event(_evt);
-        var previousValue = SSGetValue('server', SSInfo().server);
-        if(evt.key == 'enter')
-        {
-          SSLog('Update the api variable. prev: ' + previousValue);
-        }
-      }.bind(this));
-
-      spacesDirField.addEvent('keydown', function(_evt) {
-        var evt = new Event(_evt);
-        var previousValue = SSGetValue('spacesDir', SSInfo().spacesDir);
-        if(evt.key == 'enter')
-        {
-          SSLog('Update the space dir variable. prev:' + previousValue);
-        }
-      }.bind(this));
-    }
   },
 
 
@@ -315,15 +199,18 @@ var SSConsole = new Class({
     this.fireEvent('onUserLogin');
   },
 
+
   handleLoginFailed: function(err)
   {
     this.SSLoginFormMessage.set('text', err.error);
   },
+
   
   handleJoinFailed: function(err)
   {
     this.SSSignUpFormMessage.set('text', err.error);
   },
+
 
   initSignUpForm: function()
   {
@@ -512,12 +399,6 @@ var SSConsole = new Class({
     });
   },
   
-
-  getVisibleListView: function()
-  {
-    if(this.AllShiftsListView.isVisible()) return this.AllShiftsListView;
-  },
-  
   
   canRemove: function(sender)
   {
@@ -571,51 +452,10 @@ var SSConsole = new Class({
   },
   
   
-  checkedShifts: function()
-  {
-    var tv = this.visibleTableView();
-    if(tv)
-    {
-      var indices = tv.checkedShifts();
-      return indices.map(function(idx) {
-        return this.allShiftsDatasource.rowForIndex(idx)['id'];
-      }.bind(this));
-    }
-  },
-  
-  
   subViews: function()
   {
     return this.context.$$('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
       return (controller.isAwake() && controller.superView() == this);
     }, this);
-  },
-  
-  
-  listViews: function()
-  {
-    return this.subViews().filter(function(subView) {
-      return $memberof(subView.name, 'SSListView');
-    });
-  },
-  
-  
-  visibleListView: function()
-  {
-    return this.listViews().filter(Function.msg('isVisible')).first();
-  },
-  
-  
-  showFilterPane: function()
-  {
-    this.FilterPane.show();
-    this.AllShiftsView.element.addClass('SSFilterPaneOpen');
-  },
-  
-  
-  hideFilterPane: function()
-  {
-    this.FilterPane.hide();
-    this.AllShiftsView.element.removeClass('SSFilterPaneOpen');
   }
 });

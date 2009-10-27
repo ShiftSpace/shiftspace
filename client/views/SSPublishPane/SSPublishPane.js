@@ -35,7 +35,6 @@ var SSPublishPane = new Class({
   
   onShiftListViewShow: function(evt)
   {
-    SSLog("onShiftListViewShow ", evt.listView.getName(), SSLogForce);
     var listView = evt.listView;
     if(listView.checkedItems().length > 0)
     {
@@ -48,7 +47,6 @@ var SSPublishPane = new Class({
 
   onShiftListViewHide: function(evt)
   {
-    SSLog("onShiftListViewHide ", evt.listView.getName(), SSLogForce);
     var listView = evt.listView;
     if(listView == this.currentListView())
     {

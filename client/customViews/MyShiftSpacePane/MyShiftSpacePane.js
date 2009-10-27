@@ -34,51 +34,11 @@ var MyShiftSpacePane = new Class({
   },
 
 
-  favoriteTransform: function(data)
-  {
-    var content = data.content;
-    data.summary = content.text;
-    return data;
-  },
-
-
-  commentTransform: function(data)
-  {
-    var content = data.content;
-    data.userName = content.user.userName;
-    data.space = content.shift.space;
-    data.href = content.href;
-    data.domain = content.domain;
-    data.text = content.text;
-    return data;
-  },
-
-
   onUserLogin: function(user)
   {
-    if(this.__resourcesInitialized) return;
-    this.__resourcesInitialized = true;
-
-    this.favorites = new SSTable("Favorites", {
-      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/favorites'},
-      transforms: [this.favoriteTransform],
-      watches: [{
-                  events: [{resource:"shift", action:"favorite"},
-                           {resource:"shift", action:"unfavorite"}],
-                  handlers: [SSTable.dirtyTheViews]
-                }],
-      views: [this.MyFavoritesListView]
-    });
-
-    this.comments = new SSTable("MyComments", {
-      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/comments'},
-      transforms: [this.commentTransform],
-      watches: [{
-                  events: [{resource:"shift", action:"comment"}],
-                  handlers: [SSTable.dirtyTheViews]
-                }],
-      views: [this.MyCommentsListView]
-    });
+    SSTableForName("MyShifts").addView(this.MyShiftsListView);
+    SSTableForName("Favorites").addView(this.MyFavoritesListView);
+    SSTableForName("MyComments").addView(this.MyCommentsListView);
   },
 
 

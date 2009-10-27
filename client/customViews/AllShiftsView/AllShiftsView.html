@@ -1,12 +1,12 @@
 <div id="AllShiftsView"
-     uiclass="SSView"
+     uiclass="AllShiftsView"
      class="SSTabPane SSActive SSFilterPaneOpen"
      outlet="SSConsole">
 
   <ul id="AllShiftsListView"
       class='SSListView ShiftListView' 
       uiclass="ShiftListView" 
-      outlet="SSConsole" 
+      outlet="AllShiftsView" 
       options="{
         allowSelection:true,
         multipleSelection:true
@@ -21,18 +21,18 @@
           <input type="checkbox"/>
         </div>
         <img class="spaceIcon"></img>
-	<div class="spaceName"></div>
+        <div class="spaceName"></div>
         <div class="summary"></div>
         <div class="draft"></div>
         <div class="gravatarContainer">
-          <img class="gravatar"></img>
+            <img class="gravatar"></img>
         </div>
         <div class="userName"></div>
         <div class="date"></div>
         <div class="comments"></div>
         <div class="favorite">
-          <div class="favoriteCount"></div>
-          <div class="favoriteButton"></div>
+            <div class="favoriteCount"></div>
+            <div class="favoriteButton"></div>
         </div>
     </li>
   </ul>
