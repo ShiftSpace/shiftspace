@@ -49,7 +49,7 @@ var SSConsole = new Class({
   
   initResources: function()
   {
-    this.allShifts = new SSResource("AllShifts", {
+    this.allShifts = new SSTable("AllShifts", {
       resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
       watches: [{
                   events: [{resource:"shift", method:"create"},
@@ -66,7 +66,7 @@ var SSConsole = new Class({
                            {resource:"shift", action:"unpublish"},
 			   {resource:"shift", action:"favorite"},
 			   {resource:"shift", action:"unfavorite"}],
-                  handlers: [SSResource.dirtyTheViews]
+                  handlers: [SSTable.dirtyTheViews]
                 }],
       delegate: this.PublishPane,
       views: [this.AllShiftsListView]
@@ -79,7 +79,7 @@ var SSConsole = new Class({
     if(this.__userResourceInitialized) return;
     this.__userResourceInitialized = true
     
-    this.myShifts = new SSResource("MyShifts", {
+    this.myShifts = new SSTable("MyShifts", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
       watches: [{
                   events: [{resource:"shift", method:"create"}],
@@ -92,7 +92,7 @@ var SSConsole = new Class({
                            {resource:"shift", action:"comment"},
                            {resource:"shift", action:"publish"},
                            {resource:"shift", action:"unpublish"}],
-                  handlers: [SSResource.dirtyTheViews]
+                  handlers: [SSTable.dirtyTheViews]
                 }],
       views: [this.MyShiftsListView]
     });    

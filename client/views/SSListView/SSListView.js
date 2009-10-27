@@ -87,9 +87,9 @@ var SSListView = new Class({
     }
     else
     {
-      if(!$implements(resource, SSResource.protocol))
+      if(!$implements(resource, SSTable.protocol))
       {
-        SSLog("Argument to SSListView.__setResource__ does not implement SSResource.protocol", SSLogError);
+        SSLog("Argument to SSListView.__setResource__ does not implement SSTable.protocol", SSLogError);
         throw new Error();
       }
       if(!resource.hasView(this)) resource.addView(this);
@@ -1136,11 +1136,11 @@ var SSListView = new Class({
   /*
     Function: reloadData
       Called by refresh(). Calls private  __reloadData__ which actually does
-      the work. If the list view data source is an SSResource instance will
-      call SSResource's read method which returns a promise.
+      the work. If the list view data source is an SSTable instance will
+      call SSTable's read method which returns a promise.
 
     See Also:
-      SSResource
+      SSTable
   */
   reloadData: function()
   {

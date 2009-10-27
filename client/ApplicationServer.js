@@ -21,8 +21,8 @@ Hash.implement({
 Class: ApplicationServer
   The main class for talking to a remote ShiftServer. This class tries to eliminate the
   tedium of making remote requests. It leans heavily on the Promises library to eliminate
-  request management. It also manages notifying SSResource instances about the occurance
-  of calls made to the server. SSResource is the blue between local caches of server side
+  request management. It also manages notifying SSTable instances about the occurance
+  of calls made to the server. SSTable is the blue between local caches of server side
   documents and the UI.
 */
 var ApplicationServer = new Class({
@@ -183,7 +183,7 @@ var ApplicationServer = new Class({
   
   /*
     Function: setResources (private)
-      Set the hash map to store SSResource instances.
+      Set the hash map to store SSTable instances.
 
     Parameters:
       resource - a object.
@@ -195,7 +195,7 @@ var ApplicationServer = new Class({
   
   /*
     Function: resources (private)
-      Returns the hash map of all SSResource instances used by this application server.
+      Returns the hash map of all SSTable instances used by this application server.
 
     Returns:
       A object.
@@ -208,11 +208,11 @@ var ApplicationServer = new Class({
 
   /*
     Function: addResource (private)
-      Add a tracked resource. Not meant to be called directly. SSResource instances
+      Add a tracked resource. Not meant to be called directly. SSTable instances
       add themselves.
 
     Parameters:
-      resource - a SSResource instance.
+      resource - a SSTable instance.
    */
   addResource: function(resource)
   {
@@ -309,7 +309,7 @@ var ApplicationServer = new Class({
       rsrcSpec - a resource specification.
 
     See Also:
-      SSResource.matchSpec
+      SSTable.matchSpec
    */
   watchersFor: function(rsrcSpec)
   {
@@ -339,11 +339,11 @@ var ApplicationServer = new Class({
       Add a watcher for a resource specification.
 
     Parameters:
-      watcher - a SSResource instance.
+      watcher - a SSTable instance.
       rsrcSpec - a resource specification.
 
     See Also:
-      SSResource.matchSpec
+      SSTable.matchSpec
    */
   addWatcher: function(watcher, rsrcSpec)
   {
@@ -357,7 +357,7 @@ var ApplicationServer = new Class({
       Remove a wathcer for a resource specification.
 
     Parameters:
-      watcher - a SSResource instance.
+      watcher - a SSTable instance.
       rsrcSpec - a resource specification.
    */
   removeWatcher: function(watcher, rsrcSpec)
@@ -381,7 +381,7 @@ var ApplicationServer = new Class({
       Returns the resource specifications for a watcher.
    
     Parameters:
-      watcher - a SSResource instance.
+      watcher - a SSTable instance.
    */
   specsForWatcher: function(watcher)
   {

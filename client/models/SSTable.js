@@ -6,37 +6,37 @@
 var __resources = $H();
 
 /*
-Function: SSResourceForName
+Function: SSTableForName
   Return the resource for the given name.
 
 Parameters:
   name - a string.
 
 Returns:
-  An SSResource instance.
+  An SSTable instance.
 */
-function SSResourceForName(name)
+function SSTableForName(name)
 {
   return __resources[name];
 }
 
 /*
-Function: SSSetResourceForName (private)
+Function: SSSetTableForName (private)
   Associate a resource with given name in the global __resources
   hashmap.
 
 Parametesr:
   name - the name of the resource.
-  resource - a SSResource instance.
+  resource - a SSTable instance.
 */
-function SSSetResourceForName(name, resource)
+function SSSetTableForName(name, resource)
 {
   __resources[name] = resource;
-  SSPostNotification("resourceSet", {name:name, resource:resource});
+  SSPostNotification("tableSet", {name:name, resource:resource});
 }
 
 /*
-Function: SSDeleteResource
+Function: SSDeleteTable
   Delete a resource by name. Will also clear any references to the
   resource from the resource's application server.
 
@@ -44,18 +44,18 @@ Parameters:
   name - a string.
 
 See Also:
-   SSResource.dispose
+   SSTable.dispose
 */
-function SSDeleteResource(name)
+function SSDeleteTable(name)
 {
-  var resource = SSResourceForName(name);
+  var resource = SSTableForName(name);
   resource.cleanup();
   delete __resources[name];
-  SSPostNotification("resourceDelete", {name:name});
+  SSPostNotification("tableDelete", {name:name});
 }
 
 /*
-Class: SSResource
+Class: SSTable
   This class works with ApplicationServer to present a simple interface for
   looking at server side data as an array of items. It is designed to work
   closely with SSViews, in particular SSListView.
@@ -63,10 +63,10 @@ Class: SSResource
 See Also:
   ApplicationServer, SSListView
 */
-var SSResource = new Class({
+var SSTable = new Class({
 
   Implements: [Events, Options, Delegate],
-  name: "SSResource",
+  name: "SSTable",
   
   defaults: function()
   {
@@ -112,7 +112,7 @@ var SSResource = new Class({
     if(this.options.watches) this.setWatches(this.options.watches);
     if(delegate) this.setDelegate(delegate);
     this.setName(name);
-    SSSetResourceForName(name, this);
+    SSSetTableForName(name, this);
     this.dirtyTheViews();
   },
   
@@ -268,7 +268,7 @@ var SSResource = new Class({
       A string.
 
     See Also:
-      SSResourceForName
+      SSTableForName
    */
   getName: function()
   {
@@ -614,14 +614,14 @@ var SSResource = new Class({
   
   /*
     Function: dispose
-      Calls SSDeleteResource.
+      Calls SSDeleteTable.
 
     See Also:
-      SSDeleteResource
+      SSDeleteTable
    */
   dispose: function()
   {
-    SSDeleteResource(this.getName());
+    SSDeleteTable(this.getName());
   },
   
   /*
@@ -636,22 +636,22 @@ var SSResource = new Class({
   }
 });
 
-SSResource.protocol = {
+SSTable.protocol = {
   "getName": "function",
   "hasView": "function"
 };
 
-SSResource.dirtyTheViews = function(value)
+SSTable.dirtyTheViews = function(value)
 {
   this.dirtyTheViews();
 }
 
-SSResource.updateDoc = function(doc) 
+SSTable.updateDoc = function(doc) 
 { 
   SSApplication().setDocument(this.getName(), doc); 
 }
 
-SSResource.dirtyAllViews = function(value)
+SSTable.dirtyAllViews = function(value)
 {
   __resources.each(function(v, k) {
     v.dirtyTheViews();

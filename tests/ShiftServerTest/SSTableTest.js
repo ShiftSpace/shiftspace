@@ -4,9 +4,9 @@
 // @dependencies      ShiftServerTestUtils, ApplicationServer
 // ==/Builder==
 
-var SSResourceTest = new Class({
+var SSTableTest = new Class({
   Extends: SSUnitTest.TestCase,
-  name: 'SSResourceTest',
+  name: 'SSTableTest',
 
   onStart: function()
   {

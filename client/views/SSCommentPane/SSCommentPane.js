@@ -30,13 +30,13 @@ var SSCommentPane = new Class({
 
   initResource: function(shiftId)
   {
-    this.comments = new SSResource("Comments", {
+    this.comments = new SSTable("Comments", {
       resource: {read:'shift/'+shiftId+'/comments'},
       transforms: [this.transform],
       watches: [{
                   events: [{resource:"event", action:"create"},
                            {resource:"event", action:"delete"}],
-                  handlers: [SSResource.dirtyTheViews]
+                  handlers: [SSTable.dirtyTheViews]
                 }],
       views: [this.SSCommentsListView]
     });

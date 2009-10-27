@@ -47,13 +47,13 @@ var InboxPane = new Class({
     if(this.__resourcesInitialized) return;
     this.__resourcesInitialized = true;
 
-    this.messages = new SSResource("Messages", {
+    this.messages = new SSTable("Messages", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/messages', 'delete':'event'},
       transforms: [this.transform],
       watches: [{
                   events: [{resource:"event", action:"read"},
                            {resource:"event", action:"unread"}],
-                  handlers: [SSResource.dirtyTheViews]
+                  handlers: [SSTable.dirtyTheViews]
                 }],
       views: [this.MessagesListView]
     });

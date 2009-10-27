@@ -102,7 +102,7 @@ var resourceDelegate = {
 };
 
 function createResource() {
-  return new SSResource("AllShifts", {
+  return new SSTable("AllShifts", {
     resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
     watches: [{
                 events: [{resource:"shift", method:"create"},
@@ -111,7 +111,7 @@ function createResource() {
                          {resource:"shift", action:"comment"},
                          {resource:"shift", action:"publish"},
                          {resource:"shift", action:"unpublish"}],
-                handlers: [SSResource.dirtyTheViews]
+                handlers: [SSTable.dirtyTheViews]
               },
               {
                 events: [{resource:"shift", method:"create"}],
@@ -122,7 +122,7 @@ function createResource() {
 }
 
 function createResource2() {
-  return new SSResource("MyShifts", {
+  return new SSTable("MyShifts", {
     resource: {create:'shift', read:'user/'+User.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
     watches: [{resource:"shift", method:"create"},
               {resource:"shift", method:"update"},
@@ -135,7 +135,7 @@ function createResource2() {
 }
 
 function createResource3() {
-  return new SSResource("MyShifts", {
+  return new SSTable("MyShifts", {
     resource: {read:'shifts'},
     watches: [{
                 events:[{resource:"shift", method:"create"},
@@ -154,7 +154,7 @@ function createResource3() {
 // this means app should store by name for events
 // and look them up
 function createResource4() {
-  return new SSResource("shift/foo/comments", {
+  return new SSTable("shift/foo/comments", {
     resource: {read:"shift/foo/comments"},
     watches: [{
                 events:[{resource:"comments", method:"create"},

@@ -59,23 +59,23 @@ var MyShiftSpacePane = new Class({
     if(this.__resourcesInitialized) return;
     this.__resourcesInitialized = true;
 
-    this.favorites = new SSResource("Favorites", {
+    this.favorites = new SSTable("Favorites", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/favorites'},
       transforms: [this.favoriteTransform],
       watches: [{
                   events: [{resource:"shift", action:"favorite"},
                            {resource:"shift", action:"unfavorite"}],
-                  handlers: [SSResource.dirtyTheViews]
+                  handlers: [SSTable.dirtyTheViews]
                 }],
       views: [this.MyFavoritesListView]
     });
 
-    this.comments = new SSResource("MyComments", {
+    this.comments = new SSTable("MyComments", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/comments'},
       transforms: [this.commentTransform],
       watches: [{
                   events: [{resource:"shift", action:"comment"}],
-                  handlers: [SSResource.dirtyTheViews]
+                  handlers: [SSTable.dirtyTheViews]
                 }],
       views: [this.MyCommentsListView]
     });

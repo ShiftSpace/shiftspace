@@ -271,7 +271,6 @@ var SSNotifierView = new Class({
       else
       {
         SSPostNotification('hideSpaceMenu', this);
-        this['close']();
       }
     }.bind(this));
   },
