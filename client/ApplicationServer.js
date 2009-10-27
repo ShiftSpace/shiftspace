@@ -46,7 +46,17 @@ var ApplicationServer = new Class({
     this.setCache({global:{}});
     this.setResources({});
     this.setWatchers({});
+    this.initTables();
+    this.fireEvent('tableInit');
   },
+  
+  /*
+    Function: initTables
+      *abstract*
+      To be overriden by subclasses. By convention you should
+      define all of your clientside tables here.
+  */
+  initTables: function() {},
   
   /*
     Function: setCache (private)
