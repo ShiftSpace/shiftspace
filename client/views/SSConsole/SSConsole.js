@@ -70,9 +70,7 @@ var SSConsole = new Class({
   awake: function(context)
   {
     this.mapOutletsToThis();
-    // in Sandalphon tool mode we're not iframed, in ShiftSpace we are
-    if((context == window && typeof SandalphonToolMode != 'undefined') ||
-       (context == this.element.contentWindow && typeof SandalphonToolMode == 'undefined'))
+    if(context == this.element.contentWindow)
     {
       if(this.MainTabView) this.initMainTabView();
       if(this.SSLoginFormSubmit) this.initLoginForm();
