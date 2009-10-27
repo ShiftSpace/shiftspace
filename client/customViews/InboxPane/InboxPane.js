@@ -34,35 +34,13 @@ var InboxPane = new Class({
   },
 
 
-  transform: function(data)
-  {
-    var content = data.content;
-    data.summary = content.text;
-    return data;
-  },
-
-
   onUserLogin: function(user)
   {
-    if(this.__resourcesInitialized) return;
-    this.__resourcesInitialized = true;
-
-    this.messages = new SSTable("Messages", {
-      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/messages', 'delete':'event'},
-      transforms: [this.transform],
-      watches: [{
-                  events: [{resource:"event", action:"read"},
-                           {resource:"event", action:"unread"}],
-                  handlers: [SSTable.dirtyTheViews]
-                }],
-      views: [this.MessagesListView]
-    });
+    SSTableForName("Messages").addView(this.MessagesListView);
   },
 
 
   onUserLogout: function(json)
   {
-    this.__resourcesInitialized = false;
-    this.messages.dispose();
   }
 });

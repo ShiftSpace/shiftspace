@@ -82,6 +82,14 @@ var ShiftServer = new Class({
   },
   
   
+  messageTransform: function(data)
+  {
+    var content = data.content;
+    data.summary = content.text;
+    return data;
+  },
+  
+  
   initUserTables: function()
   {
     new SSTable("MyShifts", {
@@ -121,6 +129,18 @@ var ShiftServer = new Class({
       watches: [
         {
           events: [{resource:"shift", action:"comment"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+    
+    new SSTable("Messages", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/messages', 'delete':'event'},
+      transforms: [this.messageTransform],
+      watches: [
+        {
+          events: [{resource:"event", action:"read"},
+                   {resource:"event", action:"unread"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]

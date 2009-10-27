@@ -44,7 +44,5 @@ var MyShiftSpacePane = new Class({
 
   onUserLogout: function(json)
   {
-    this.__resourcesInitialized = false;
-    this.favorites.dispose();
   }
 });
