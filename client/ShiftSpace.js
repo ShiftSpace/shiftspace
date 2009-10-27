@@ -281,6 +281,7 @@ var ShiftSpace = new (function() {
       window.Function.msg = Function.msg;
       window.SSControllerForNode = SSControllerForNode;
       window.Sandalphon = Sandalphon;
+      window._ = _;
     }
 
     return this;

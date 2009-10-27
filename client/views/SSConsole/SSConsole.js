@@ -253,26 +253,27 @@ var SSConsole = new Class({
   
   initResizer: function()
   {
-    // place the resizer above the thing
     var resizer = new SSElement('div', {
-      'id': 'SSConsoleResizer'
+        id: 'SSConsoleResizer',
+        styles: {
+          position: 'fixed',
+          bottom: 220,
+          cursor: 'ns-resize',
+          height: 10,
+          left: 10,
+          right: 10,
+          'z-index': 1000004
+        }
     });
     $(document.body).grab(resizer);
-    
+
     resizer.makeDraggable({
       modifiers: {x:'', y:'bottom'},
       invert: true,
-      onStart: function()
-      {
-        SSAddDragDiv();
-      },
-      onComplete: function()
-      {
-        SSRemoveDragDiv();
-      }
+      onStart: SSAddDragDiv,
+      onComplete: SSRemoveDragDiv
     });
-
-    // make the console resizeable
+    
     this.element.makeResizable({
       handle: resizer,
       modifiers: {x:'', y:'height'},

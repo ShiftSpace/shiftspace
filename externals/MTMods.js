@@ -368,40 +368,26 @@ Drag.Move.implement({
     el = (this.positions) ? this.positions[i] : el.getCoordinates();
     var now = this.mouse.now;
     var inside = (now.x > el.left && now.x < el.right && now.y < el.bottom && now.y > el.top);
-    SSLog("inside " + JSON.encode(el) + " " + inside, SSLogForce);
     return inside;
   },
   
   checkDroppables: function(){
     var overed = this.droppables.filter(this.checkAgainst, this).getLast();
     if (this.overed != overed) {
-      SSLog("this.overed:", this.overed, " overed:", overed, SSLogForce);
       if (this.overed && overed && this.overed.isEqual(overed)) return;
       if (this.overed)
       {
-        SSLog("leave", SSLogForce);
         this.fireEvent('leave', [this.element, this.overed]);
       }
       if (overed)
       {
-        SSLog("enter", SSLogForce);
         this.fireEvent('enter', [this.element, overed]);
       }
       this.overed = overed;
-    } else {
-      if(this.overed && overed) SSLog("No event! ", this.overed.id, " ", overed.id, SSLogForce);
     }
   }
 });
 
-/*
-erase: function(item){
-	for (var i = this.length; i--; i){
-		if (this[i] === item) this.splice(i, 1);
-	}
-	return this;
-}
-*/
 
 Sortables.implement({
   getDroppables: function(){
