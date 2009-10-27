@@ -19,11 +19,6 @@ var AllShiftsView = new Class({
       SSAddObserver(this, "onUserLogin", this.onLogin.bind(this));
     }
   },
-  
-
-  initAllShiftsView: function()
-  {
-  },
 
 
   awake: function(args)
