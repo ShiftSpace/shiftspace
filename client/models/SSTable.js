@@ -440,7 +440,7 @@ var SSTable = new Class({
   read: function(options)
   {
     if(!this.getMethod('read')) { SSLog("Resource " + this.getName() + " does not support read.", SSLogError); return; };
-    options = (this.delegate()) ? $merge(options, this.delegate().optionsForResource(this)) : options;
+    options = (this.delegate()) ? $merge(options, this.delegate().optionsForTable(this)) : options;
     var p = this.app().get({resource:this.getMethod('read'), data:options}, {local:this.getName()});
     p.op(function(v) { this.fireEvent('onRead', {resource:this, value:v}); return v; }.bind(this));
     return p;

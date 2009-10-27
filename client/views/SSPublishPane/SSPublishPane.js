@@ -201,12 +201,6 @@ var SSPublishPane = new Class({
       this.element.getElement("#SSPublishPaneStatus label").addClass('SSDisplayNone');
     }
   },
-  
-  
-  optionsForResource: function(resource)
-  {
-    return {byHref:window.location.href.split("#")[0]};
-  },
 
 
   showProxy: function(evt)

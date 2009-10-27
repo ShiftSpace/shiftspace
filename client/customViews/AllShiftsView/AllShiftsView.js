@@ -16,6 +16,7 @@ var AllShiftsView = new Class({
     if(!ShiftSpaceUser.isLoggedIn())
     {
       SSAddObserver(this, "onSync", this.onSync.bind(this));
+      SSAddObserver(this, "onUserLogin", this.onLogin.bind(this));
     }
   },
   
@@ -33,10 +34,17 @@ var AllShiftsView = new Class({
 
   afterAwake: function()
   {
+    SSTableForName("AllShifts").setDelegate(ShiftSpaceNameTable.FilterPane);
   },
   
 
-  onSync: function(user)
+  onSync: function()
+  {
+    SSTableForName("AllShifts").addView(this.AllShiftsListView);
+  },
+  
+  
+  onLogin: function()
   {
     SSTableForName("AllShifts").addView(this.AllShiftsListView);
   }

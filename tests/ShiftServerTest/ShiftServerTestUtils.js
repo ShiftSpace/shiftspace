@@ -93,7 +93,7 @@ function SSGetType(json)
 
 
 var resourceDelegate = {
-  optionsForResource: function()
+  optionsForTable: function()
   {
     return {
       byHref: String.urlJoin(SSInfo().server, 'sandbox/')
