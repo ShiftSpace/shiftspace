@@ -47,6 +47,11 @@
   -webkit-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;
 }
 
+#SSNotifierControlsView
+{
+  overflow: hidden;
+}
+
 #SSNotifierControlsView.Open
 {
   right: -4px;

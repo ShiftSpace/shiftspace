@@ -67,9 +67,9 @@ var SSNotifierView = new Class({
           hold: {duration: 500},
           events: [
             {type: 'mouseover', state: 'SSNotifierOpen', flag: 'mouse'},
-            {type: 'mouseout', state: 'SSNotifierHidden', direction:'previous', unflag: 'mouse', condition: {not: ['shift']}},
+            {type: 'mouseout', state: 'SSNotifierHasShifts', direction:'previous', unflag: 'mouse', condition: {not: ['shift']}},
             {type: 'shiftdown', direction: 'next', flag: 'shift', condition: {not: ['mouse']}},
-            {type: 'shiftup', state: 'SSNotifierHidden', direction: 'previous', unflag: 'shift', condition: {not: ['mouse']}}
+            {type: 'shiftup', state: 'SSNotifierHasShifts', direction: 'previous', unflag: 'shift', condition: {not: ['mouse']}}
           ]
         },
         SSNotifierShowDetails: {
@@ -206,16 +206,6 @@ var SSNotifierView = new Class({
   hide: function()
   {
     if(ShiftSpace.Console.isVisible()) return;
-  },
-  
-  
-  'open': function(animate)
-  {
-  },
-  
-  
-  'close': function(animate)
-  {
   },
   
   
