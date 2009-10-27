@@ -60,8 +60,8 @@ var LoginTabView = new Class({
   initLoginForm: function()
   {
     this.SSLoginFormSubmit.addEvent('click', this.handleLoginFormSubmit.bind(this));
-    this.SSLoginForm.addEvent('submit', function(_evt) {
-      var evt = new Event(_evt);
+    this.SSLoginForm.addEvent('submit', function(evt) {
+      evt = new Event(evt);
       evt.preventDefault();
       this.handleLoginFormSubmit();
     }.bind(this));
@@ -107,8 +107,8 @@ var LoginTabView = new Class({
   initSignUpForm: function()
   {
     this.SSSignUpFormSubmit.addEvent('click', this.handleSignUpFormSubmit.bind(this));
-    this.SSSignUpForm.addEvent('submit', function(_evt) {
-      var evt = new Event(_evt);
+    this.SSSignUpForm.addEvent('submit', function(evt) {
+      evt = new Event(evt);
       evt.preventDefault();
       this.handleSignUpFormSubmit();
     }.bind(this));

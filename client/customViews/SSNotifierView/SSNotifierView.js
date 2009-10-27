@@ -263,8 +263,8 @@ var SSNotifierView = new Class({
     this.attachConsoleEvents();
     this.attachKeyEvents();
     
-    this.SSSelectSpace.addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
+    this.SSSelectSpace.addEvent('click', function(evt) {
+      evt = new Event(evt);
       if(!this.__menuVisible)
       {
         SSPostNotification('showSpaceMenu', this);
@@ -279,8 +279,8 @@ var SSNotifierView = new Class({
   
   attachConsoleEvents: function()
   {
-    this.SSToggleConsole.addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
+    this.SSToggleConsole.addEvent('click', function(evt) {
+      evt = new Event(evt);
       if(ShiftSpace.Console.isVisible())
       {
         this.SSToggleConsole.set('text', "Open Console");
@@ -308,15 +308,15 @@ var SSNotifierView = new Class({
   
   attachKeyEvents: function()
   {
-    SSAddEvent('keyup', function(_evt) {
-      var evt = new Event(_evt);
+    SSAddEvent('keyup', function(evt) {
+      evt = new Event(evt);
       if(evt.key == 'shift') this.fireEvent('shiftup');
     }.bind(this));
 
-    SSAddEvent('keydown', function(_evt) {
-      var evt = new Event(_evt);
+    SSAddEvent('keydown', function(evt) {
+      evt = new Event(evt);
       if(evt.key == 'shift') this.fireEvent('shiftdown');
-    }.bind(this));    
+    }.bind(this));
   },
   
   

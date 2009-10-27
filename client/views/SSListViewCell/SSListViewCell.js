@@ -6,9 +6,7 @@
 // ==/Builder==
 
 var SSListViewCell = new Class({
-
   Extends: SSCell,
-
   name: "SSListViewCell",
 
   initialize: function(el, options)
@@ -26,14 +24,12 @@ var SSListViewCell = new Class({
   
   attachEvents: function()
   {
-    this.element.addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
+    this.element.addEvent('click', function(evt) {
+      evt = new Event(evt);
       if(this.parentController.canSelect(this))
       {
         this.parentController.selectByNode(this);
       }
     }.bind(this));
   }
-  
-
 });

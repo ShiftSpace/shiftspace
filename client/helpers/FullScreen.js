@@ -130,8 +130,8 @@ function SSCreateModalDiv()
     id: "SSModalDiv"
   });
   
-  __modalDiv__.addEvent('click', function(_evt) {
-    var evt = new Event(_evt);
+  __modalDiv__.addEvent('click', function(evt) {
+    evt = new Event(evt);
     // TODO: deal with modal delegates here - David
   });
 }

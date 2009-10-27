@@ -590,7 +590,7 @@ Parameters:
 */
 function SSHandleInstallSpaceLink(evt)
 {
-  evt = new Event(_evt);
+  evt = new Event(evt);
   var target = evt.target;
   var spaceName = target.getAttribute('title');
   // first check for the attributes file

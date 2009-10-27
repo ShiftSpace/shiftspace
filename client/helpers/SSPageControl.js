@@ -164,13 +164,13 @@ var SSPageControl = new Class({
   
   attachEvents: function()
   {
-    this.element.getElement('.previous').addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
+    this.element.getElement('.previous').addEvent('click', function(evt) {
+      evt = new Event(evt);
       if(this.currentPage() > 0) this.setCurrentPage(this.currentPage()-1);
     }.bind(this));
     
-    this.element.getElement('.next').addEvent('click', function(_evt) {
-      var evt = new Event(_evt);
+    this.element.getElement('.next').addEvent('click', function(evt) {
+      evt = new Event(evt);
       if((this.currentPage()+1) < this.numPages()) this.setCurrentPage(this.currentPage()+1);
     }.bind(this));
   },
@@ -204,8 +204,8 @@ var SSPageControl = new Class({
         x.getNext().removeClass('SSDisplayNone');
         // set up the click event
         x.removeEvents('click');
-        x.addEvent('click', function(_evt) {
-          var evt = new Event(_evt);
+        x.addEvent('click', function(evt) {
+          evt = new Event(evt);
           this.setCurrentPage(idx);
         }.bind(this));
       }

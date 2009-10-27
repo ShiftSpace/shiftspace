@@ -73,8 +73,8 @@ var SSConsole = new Class({
       this.initMainTabView();
       this.initSelectLanguage();
       this.initInstalledSpacesListView();
-      this.clearInstalledButton.addEvent('click', function(_evt) {
-        var evt = new Event(_evt);
+      this.clearInstalledButton.addEvent('click', function(evt) {
+        evt = new Event(evt);
         SSUninstallAllSpaces();
       });
       this.MainTabView.addEvent('tabSelected', function(evt) {
@@ -117,8 +117,8 @@ var SSConsole = new Class({
   {
     if(this.SSInstallSpace)
     {
-      this.SSInstallSpace.addEvent('click', function(_evt) {
-        var evt = new Event(_evt);
+      this.SSInstallSpace.addEvent('click', function(evt) {
+        evt = new Event(evt);
         this.installSpace(this.SSInstallSpaceField.getProperty('value'));
       }.bind(this));
     }
@@ -135,8 +135,8 @@ var SSConsole = new Class({
 
   initSelectLanguage: function()
   {
-    this.SSSelectLanguage.addEvent('change', function(_evt) {
-      var evt = new Event(_evt);
+    this.SSSelectLanguage.addEvent('change', function(evt) {
+      evt = new Event(evt);
       SSLoadLocalizedStrings($(evt.target).getProperty('value'), this.element.contentWindow);
     }.bind(this));
   },
