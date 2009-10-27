@@ -58,3 +58,5 @@ tmp/*/manual/install.html
 /manual/installation-osx.html
 /manual/installation-windows.html
 tmp/docs
+
+ideas/*
