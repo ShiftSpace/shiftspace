@@ -70,16 +70,16 @@ var SSConsole = new Class({
     this.mapOutletsToThis();
     if(context == this.element.contentWindow)
     {
-      if(this.MainTabView) this.initMainTabView();
-      if(this.SSSelectLanguage) this.initSelectLanguage();
-      if(this.SSInstalledSpaces) this.initInstalledSpacesListView();
-      if(this.clearInstalledButton)
-      {
-        this.clearInstalledButton.addEvent('click', function(_evt) {
-          var evt = new Event(_evt);
-          SSUninstallAllSpaces();
-        });
-      }
+      this.initMainTabView();
+      this.initSelectLanguage();
+      this.initInstalledSpacesListView();
+      this.clearInstalledButton.addEvent('click', function(_evt) {
+        var evt = new Event(_evt);
+        SSUninstallAllSpaces();
+      });
+      this.MainTabView.addEvent('tabSelected', function(evt) {
+        
+      });
     }
   },
   
@@ -259,7 +259,7 @@ var SSConsole = new Class({
           position: 'fixed',
           bottom: 220,
           cursor: 'ns-resize',
-          height: 10,
+          height: 5,
           left: 10,
           right: 10,
           'z-index': 1000004
