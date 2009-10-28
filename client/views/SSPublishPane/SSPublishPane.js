@@ -118,7 +118,10 @@ var SSPublishPane = new Class({
       var len = selectedShifts.length;
       var str = (len != 1) ? "these shifts" : "this shift";
       if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
+      var indices = this.currentListView().checkedItemIndices();
+      this.currentListView().uncheck(indices);
       var p = new Promise(selectedShifts.map(SSDeleteShift));
+      p.op(this.hide.bind(this));
       p.realize();
     }
   },

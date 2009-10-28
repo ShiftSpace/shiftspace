@@ -501,8 +501,8 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var rsrcSpec = {resource:'shift', method:'create'};
-        this.notifyWatchers(rsrcSpec, value);
         this.updateCache(value, (options && options.local));
+        this.notifyWatchers(rsrcSpec, value);
         return value;
       }
       else
@@ -531,8 +531,8 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var readRsrcSpec = {resource:resource, method:'read', id:id};
-        this.notifyWatchers(readRsrcSpec, value);
         this.updateCache(value, (options && options.local));
+        this.notifyWatchers(readRsrcSpec, value);
         return value;
       }
       else
@@ -566,8 +566,8 @@ var ApplicationServer = new Class({
       {
         var updateRsrcSpec = {resource:resource, method:'update', id:id};
         var oldValue = this.allCachedDocuments()[id];
-        this.notifyWatchers(updateRsrcSpec, value);
         this.updateCache(value, (options && options.local));
+        this.notifyWatchers(updateRsrcSpec, value, oldValue);
         return value;
       }
       else
@@ -595,13 +595,14 @@ var ApplicationServer = new Class({
    */
   'delete': function(resource, id, options)
   {
+    SSLog("ApplicationServer delete", SSLogForce);
     var p = this.call({resource:resource, id:id, method:'delete'});
     p.op(function(value) {
       if(this.noErr(value)) 
       {
         var deleteRsrcSpec = {resource:resource, method:'delete', id:id};
-        this.notifyWatchers(deleteRsrcSpec, value);
         this.deleteFromCache(id, (options && options.local));
+        this.notifyWatchers(deleteRsrcSpec, value);
         return value;
       }
       else
@@ -634,8 +635,8 @@ var ApplicationServer = new Class({
       {
         var postRsrcSpec = {resource:postOptions.resource, action:postOptions.action, id:postOptions.id};
         var oldValue = this.allCachedDocuments()[postOptions.id];
-        this.notifyWatchers(postRsrcSpec, value, oldValue);
         this.updateCache(value, (options && options.local));
+        this.notifyWatchers(postRsrcSpec, value, oldValue);
         return value;
       }
       else
@@ -667,8 +668,8 @@ var ApplicationServer = new Class({
       if(this.noErr(value))
       {
         var getRsrcSpec = {resource:getOptions.resource, action:getOptions.action, id:getOptions.id};
-        this.notifyWatchers(getRsrcSpec, value);
         this.updateCache(value, (options && options.local));
+        this.notifyWatchers(getRsrcSpec, value);
         return value;
       }
       else

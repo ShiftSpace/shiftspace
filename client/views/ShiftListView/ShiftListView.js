@@ -74,7 +74,33 @@ var ShiftListView = new Class({
   {
     this.refresh();
   },
-
+  
+  
+  check: function(indices)
+  {
+    indices = $splat(indices);
+    var cell = this.cell();
+    indices.each(function(idx, i) {
+      var cellNode = this.cellNodeForIndex(idx);
+      cell.lock(cellNode);
+      cell.check();
+      cell.unlock();
+    }, this);
+  },
+  
+  
+  uncheck: function(indices)
+  {
+    var indices = $splat(indices);
+    var cell = this.cell();
+    indices.each(function(idx, i) {
+      var cellNode = this.cellNodeForIndex(idx);
+      cell.lock(cellNode);
+      cell.uncheck();
+      cell.unlock();
+    }, this);
+  },
+  
   
   checkedItemIndices: function()
   {
