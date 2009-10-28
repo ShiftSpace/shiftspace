@@ -121,7 +121,6 @@ var SSNotifierView = new Class({
   */
   refreshShiftCount:function()
   {
-    // TODO: make async - David 10/26/09
     var  p = SSApp.get({
       resource:'shifts',
       action:"count",

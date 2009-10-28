@@ -27,6 +27,7 @@ shiftByHref = "_design/shifts/_view/by_href"
 shiftByUser = "_design/shifts/_view/by_user"
 shiftCountByDomain = "_design/shifts/_view/count_by_domain"
 
+allFavorites = "_design/favorites/_view/all"
 favoritesByShift = "_design/favorites/_view/by_shift"
 favoritesByUser = "_design/favorites/_view/by_user"
 
@@ -34,6 +35,7 @@ allGroups = "_design/groups/_view/all"
 groupByShortName = "_design/groups/_view/by_short_name"
 
 commentsByUser = "_design/comments/_view/by_user"
+countByShift = "_design/comments/_view/count_by_shift"
 
 statsCount = "_design/stats/_view/count"
 
