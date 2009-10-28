@@ -25,6 +25,8 @@ var SSNotifierView = new Class({
     
     SSAddObserver(this, 'onSpaceMenuShow', this.onSpaceMenuShow.bind(this));
     SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
+    
+    SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
   },
   
   
@@ -37,10 +39,24 @@ var SSNotifierView = new Class({
   
   onSpaceMenuHide: function()
   {
-    this.__menuVisible = false
+    this.__menuVisible = false;
     this.fireEvent('hidemenu');
   },
   
+  
+  onNewShiftSave: function()
+  {
+    if (this.__count !== null || this.__count !== undefined)
+    {
+      this.__count++;
+      this.updateCounter();
+    }
+  },
+  
+  updateCounter: function()
+  {
+    if (this.SSShiftCount) this.SSShiftCount.set('text', this.__count + " shifts");
+  },
   
   initGraph: function() {
     this.graph = new Fx.Graph(this.element, {
@@ -119,10 +135,9 @@ var SSNotifierView = new Class({
       *private*
       Refreshes the shift count from the server.
   */
-  refreshShiftCount:function()
+  refreshShiftCount: function()
   {
-    // TODO: make async - David 10/26/09
-    var  p = SSApp.get({
+    var p = SSApp.get({
       resource:'shifts',
       action:"count",
       data:{
@@ -130,7 +145,7 @@ var SSNotifierView = new Class({
       }
     });
     
-    this.updateCounter(p);
+    this.updateShiftCount(p);
   },
   
   onConsoleShow: function()
@@ -224,16 +239,16 @@ var SSNotifierView = new Class({
       }
     }
   },
-  
+
   /*
-    Function: updateCounter
+    Function: updateShiftCount
       *private*
       Update the shift counter in the notifier view.
   */
-  updateCounter: function(countp)
+  updateShiftCount: function(countp)
   {
     this.__count = countp;
-    if (this.SSShiftCount) this.SSShiftCount.set('text', countp + " shifts");
+    this.updateCounter();
   }.asPromise(),
   
   attachEvents: function()
