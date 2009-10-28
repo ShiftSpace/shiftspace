@@ -68,7 +68,7 @@ var SSLoadSpace = function(spaceName)
                          );
                        }
                        spacector.implement({attributes:function(){return attrs;}});
-                       var space = new spacector(shiftctor);
+                       var space = __spaces[spaceName] = new spacector(shiftctor);
                      }
                      catch(exc)
                      {
@@ -78,7 +78,7 @@ var SSLoadSpace = function(spaceName)
                      return SSRegisterSpace(space);
                    });
   return spacep;
-}.decorate(Function.memoize);
+}.decorate(promise, Function.memoize);
 
 /*
 Function: SSRegisterSpace
@@ -191,11 +191,11 @@ function SSLoadSpaceAttributes(spaceName)
                  if(json.url) json.url = json.url.trim();
                  if(!json.url)
                  {
-                     json.url = String.urlJoin(ShiftSpace.info().spacesDir, spaceName);
+                   json.url = String.urlJoin(ShiftSpace.info().spacesDir, spaceName);
                  }
-                 else if(!SSIsAbsoluteURL(json.url)) 
+                 else if(!SSIsAbsoluteURL(json.url))
                  {
-                     throw new SSException(spaceName + " attr.json defines url which is not absolute.");
+                   throw new SSException(spaceName + " attr.json defines url which is not absolute.");
                  }
                  if (!json.icon) json.icon = String.urlJoin(json.url, json.name + '.png');
                  // clear whitespace
@@ -407,23 +407,7 @@ var SSSpaceForName = function(name)
   {
     return SSLoadSpace(name);
   }
-}.asPromise();
-
-/*
-  Function: SSSetSpaceForName
-    Set the space instance for a name.
-    
-  Parameters:
-    space - a space instance.
-    name - the name of the space.
-    
-  Returns:
-    nothing
-*/
-function SSSetSpaceForName(space, name)
-{
-  __spaces[name] = space;
-}
+};
 
 /*
 Function: SSSpacesByPosition

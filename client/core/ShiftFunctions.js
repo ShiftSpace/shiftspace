@@ -172,12 +172,16 @@ Parameters:
 */
 var SSDeleteShift = function(id) 
 {
-  var theShift = SSGetShift(id);
+  var theShift = SSGetShift(id), spaceName = theShift.space.name;
   if(SSFocusedShiftId() == id) SSSetFocusedShiftId(null);
   var p = SSApp['delete']('shift', id);
   p.op(function(value) { 
-    var spaceName = theShift.space.name;
-    if(SSSpaceIsLoaded(spaceName)) SSSpaceForName(spaceName).onShiftDelete(id);
+    if(SSSpaceIsLoaded(spaceName))
+    {
+      var space = SSSpaceForName(spaceName);
+      space.deleteShift(id);
+      space.onShiftDelete(id);
+    }
     SSPostNotification('onShiftDelete', id);
   });
   return p;
