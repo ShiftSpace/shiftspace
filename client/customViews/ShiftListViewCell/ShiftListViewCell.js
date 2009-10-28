@@ -111,7 +111,9 @@ var ShiftListViewCell = new Class({
       favoriteButton.addEvent("click", function(evt) {
         evt = new Event(evt);
         var target = $(evt.target), li = target.getParent("li");
-        var id = this.data(li)._id, p;
+        this.lock(li);
+        var id = this.data()._id, p;
+        this.unlock();
         if(!target.hasClass("favorited"))
         {
           p = SSFavoriteShift(id);
@@ -132,7 +134,9 @@ var ShiftListViewCell = new Class({
       comments.addEvent("click", function(evt) {
         evt = new Event(evt);
         var target = $(evt.target), li = target.getParent("li");
-        var id = this.data(li)._id, p;
+        this.lock(li);
+        var id = this.data()._id, p;
+        this.unlock();
         SSPostNotification("showComments", id);
         evt.stop();
       }.bind(this))
