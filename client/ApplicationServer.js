@@ -595,7 +595,6 @@ var ApplicationServer = new Class({
    */
   'delete': function(resource, id, options)
   {
-    SSLog("ApplicationServer delete", SSLogForce);
     var p = this.call({resource:resource, id:id, method:'delete'});
     p.op(function(value) {
       if(this.noErr(value)) 

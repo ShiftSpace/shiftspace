@@ -113,7 +113,6 @@ function SSRegisterSpace(instance)
     SSPostNotification('onShiftBlur', id);
   });
   instance.addEvent('onShiftFocus', function(id) {
-    SSLog("onShiftFocus", id, SSLogForce);
     SSFocusShift(SSSpaceForShift(id), SSGetShift(id));
     SSPostNotification('onShiftFocus', id);
   });
@@ -538,7 +537,6 @@ function SSSetFocusedSpace(newSpace)
 */
 function SSSpaceForShift(id)
 {
-  SSLog("SSSpaceForShift", SSLogForce);
   var shift = SSGetShift(id);
   var spaceName = (Promise.isPromise(shift)) ? shift.get('space', 'name') : shift.space.name;
   return SSSpaceForName(spaceName);
