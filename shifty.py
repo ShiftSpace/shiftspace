@@ -145,6 +145,8 @@ def createSpace(name):
             processTemplate(os.path.join(tmplpath, file), dirpath, name)
         shutil.copyfile(os.path.join(tmplpath, "template.png"),
                         os.path.join(dirpath, "%s.png" % name))
+        shutil.copytree(os.path.join(tmplpath, "lib"),
+                        os.path.join(dirpath, "lib"))
     else:
         print "Error: A space called %s already exists" % name
 
