@@ -185,6 +185,7 @@ function SSLoadSpaceAttributes(spaceName)
                function() {
                  // check to see that the resources urls are full
                  var json = JSON.decode(p.value());
+                 if(json.error) return json;
                  if(!json.name) throw new SSException("No name for " + json.name + " space specified.");
                  if(json.url) json.url = json.url.trim();
                  if(!json.url)
@@ -238,14 +239,14 @@ function SSInstallSpace(space)
     var url = String.urlJoin(SSInfo().spacesDir, space, space + '.js');
     var count = $H(SSInstalledSpaces()).getLength();
     var p = SSLoadSpaceAttributes(space);
-    $if(p,
-        function(attrs) {
-          // TODO: throw an error if no attributes file - David
+    $if(SSApp.noErr(p),
+        function(noErr) {
+          var attrs = p.value();
           if(!attrs)
           {
             var attrs = {
-              url:url, 
-              name:space, 
+              url: url, 
+              name: space, 
               position: count, 
               icon: space+'/'+space+'.png',
               autolaunch: false
@@ -254,12 +255,15 @@ function SSInstallSpace(space)
           var installed = SSInstalledSpaces();
           installed[space] = attrs;
           SSSetInstalledSpaces(installed);
-          var p = SSLoadSpace(space);
-          $if(p,
+          var p2 = SSLoadSpace(space);
+          $if(p2,
               function() { 
                 alert(space + " space installed.");
                 SSPostNotification('onSpaceInstall', space); 
               });
+        },
+        function(err) {
+          alert("Oops! No space called " + space + " exists.");
         });
   }
 };

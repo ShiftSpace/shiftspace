@@ -29,3 +29,5 @@ NotSubscribedError = "NotSubscribedError"
 
 AlreadyBeingNotifiedError = "AlreadyBeingNotifiedError"
 NotBeingNotifiedError = "NotBeingNotifiedError"
+
+SpaceDoesNotExistError = "SpaceDoesNotExistError"

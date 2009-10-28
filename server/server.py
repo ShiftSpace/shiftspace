@@ -68,6 +68,13 @@ class RootController:
         except:
             return self.statusPage(status="err", details="initdb")
         return self.statusPage()
+        
+    def attrs(self, space):
+        try:
+            f = serve_file(os.path.join(webroot, 'spaces/%s/attrs.json' % space))
+            return f
+        except:
+            return json.dumps(error("No space called %s exists" % space, SpaceDoesNotExistError))
 
     def docs(self):
         """
@@ -257,6 +264,7 @@ def initDevRoutes():
     d.connect(name='rootTests', route='tests', controller=root, action='tests')
     d.connect(name='rootBuild', route='build', controller=root, action='build')
     d.connect(name='rootProxy', route='proxy/:id', controller=root, action='proxy')
+    d.connect(name='rootAttrs', route='spaces/:space/attrs.json', controller=root, action='attrs')
     return d
 
 
