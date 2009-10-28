@@ -33,7 +33,7 @@ var SSInitShift = function(space, options)
   
   var shift = {
     _id: tempId,
-    space: {name: space.name},
+    space: {name: space.attributes().name},
     userName: ShiftSpace.User.getUserName(),
     content: {position: position}
   };

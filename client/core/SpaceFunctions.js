@@ -90,7 +90,6 @@ Parameters:
 function SSRegisterSpace(instance)
 {
   var spaceName = instance.name;
-  SSSetSpaceForName(instance, spaceName);
   instance.addEvent('onShiftUpdate', function(shift) {
     SSSaveShift.safeCall(shift);
   });
