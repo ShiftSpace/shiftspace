@@ -55,7 +55,10 @@ var SSNotifierView = new Class({
   
   updateCounter: function()
   {
-    if (this.SSShiftCount) this.SSShiftCount.set('text', this.__count + " shifts");
+    //TODO: pluralization should be handled more smartly - 10/28/09 by ljxia
+    var text = this.__count + " shift";
+    if (this.__count > 1) text += 's';
+    if (this.SSShiftCount) this.SSShiftCount.set('text', text);
   },
   
   initGraph: function() {
