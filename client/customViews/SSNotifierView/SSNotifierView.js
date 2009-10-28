@@ -96,7 +96,10 @@ var SSNotifierView = new Class({
           onExit: function(el, fxgraph) {
             el.removeClass('SSNotifierOpen'); 
             this.hideControls(); 
-            el.setStyle('width', window.getSize().x);
+            el.setStyles({
+              width: window.getSize().x,
+              left: 0
+            });
           }.bind(this),
           events: [
             {type: 'showmenu', flag:'menu'},

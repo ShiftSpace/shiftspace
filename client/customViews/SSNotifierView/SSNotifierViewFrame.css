@@ -23,10 +23,12 @@
 
 .SSNotifierShowDetails
 {
+  left: 0px;
   width: 200px;
 }
 
 .SSNotifierOpen
 {
+  left: 0px;
   width: 100%;
 }
