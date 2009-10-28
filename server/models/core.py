@@ -71,6 +71,25 @@ def single(view, key):
         return row.value
 
 
+def fetch(db="shiftspace", view=None, keys=None):
+    if view == None:
+        view = "_all_docs"
+    resource = couchdb.client.Resource(None, 'http://localhost:5984/%s' % db)
+    params = {"include_docs":True}
+    content = json.dumps({"keys":keys})
+    headers = {"Content-Type":"application/json"}
+    rows = resource.post(path=view, headers=headers, content=content, **params)[1]['rows']
+    print rows
+    result = []
+    for row in rows:
+        if row.get('value'):
+            del row['value']
+            result.append(row)
+        else:
+            result.append(None)
+    return result
+
+
 def update(doc):
     """
     Convenience function for updating a document. Takes the new
