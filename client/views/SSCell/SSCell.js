@@ -259,9 +259,10 @@ var SSCell = new Class({
   },
   
   
-  data: function(cellNode)
+  data: function()
   {
-    return this.delegate().dataForCellNode(cellNode);
+    if(!this.isLocked()) throw new SSCellError.NoLock(new Error(), "attempt to get data without element lock.");
+    return this.delegate().dataForIndex(this.index());
   },
   
   

@@ -48,7 +48,7 @@ var SSListView = new Class({
   {
     this.parent(el, options);
     this.__cellBeingEdited = -1;
-    this.cellStates = {};
+    this.__cellStates = {};
     if(this.options.filter) this.setFilter(this.options.filter);
     if(this.options.table)
     {
@@ -64,9 +64,9 @@ var SSListView = new Class({
   
   /*
     Function: setState
-      Set the internal list view state of a document. This way state
-      can be preserved between updates without polluting the actuall
-      data as well avoiding issues with order.
+      Set the internal list view state of a cell. This way state
+      can be preserved between updates without polluting the actual
+      data as well avoiding issues with sorting.
       
     Parameters:
       id - a document id.
@@ -75,8 +75,54 @@ var SSListView = new Class({
   */
   setState: function(id, key, v)
   {
-    if(!this.cellStates[id]) this.cellStates[id] = {};
-    this.cellStates[id][key] = v;
+    SSLog("setState", SSLogForce);
+    if(!this.__cellStates[id]) this.__cellStates[id] = {};
+    this.__cellStates[id][key] = v;
+  },
+  
+  /*
+    Function: getState
+      Return the view state of a cell.
+      
+    Parameters:
+      id - a document id.
+      key - a string.
+
+    Returns:
+      A value.
+  */
+  getState: function(id, key)
+  {
+    return $get(this.__cellStates, id, key);
+  },
+  
+  /*
+    Function: removeState
+      Remove a state for a cell.
+      
+    Parmeters:
+      id - a document id.
+      key - the key to delete.
+  */
+  removeState: function(id, key)
+  {
+    delete this.__cellStates[id][key];
+  },
+  
+  /*
+    Function: states
+      Return the current cell states.
+      
+    Parameters:
+      
+      
+    Returns:
+      A hash or an array
+  */
+  states: function(asArray)
+  {
+    if(asArray !== true) return this.__cellStates;
+    return this.data().map(Function.comp(Function.acc("_id"), this.__cellStates.asFn()));
   },
   
   /*
@@ -1143,7 +1189,6 @@ var SSListView = new Class({
   {
     var filtered = this.filter(itemData, index);
     var newCell = this.cell().cloneWithData(itemData);
-    if(itemData.id) newCell.store('refid', itemData.id);
     if(filtered) newCell.addClass('SSDisplayNone');
     return newCell;
   },
@@ -1190,10 +1235,9 @@ var SSListView = new Class({
    */
   __reloadData__: function(p)
   {
-    SSLog("reload!", SSLogForce);
-    var len = this.data().length;
+    var len = this.data().length, cell = this.cell();
     this.element.empty();
-    if(len > 0 && this.cell())
+    if(len > 0 && cell)
     {
       var perPage = (this.pageControl() && this.pageControl().perPage()) || len;
       if(this.options.horizontal && this.options.cellSize)
@@ -1201,9 +1245,16 @@ var SSListView = new Class({
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
         this.element.setStyle('width', (this.options.cellSize.x*perPage)+modifer);
       }
-      var cells = this.data().map(this.newCellForItemData.bind(this));
-      cells.each(function(cell) {
-        this.element.grab(cell);
+      this.data().each(function(data) {
+        var cellNode = this.newCellForItemData(data);
+        this.element.grab(cellNode);
+        var restore = this.__cellStates[data._id];
+        if(restore)
+        {
+          cell.lock(cellNode);
+          $H(restore).each(Function.exec);
+          cell.unlock();
+        }
       }, this);
       this.setNeedsDisplay(false);
       this.initSortables();
@@ -1259,7 +1310,31 @@ var SSListView = new Class({
     return this.indexOfNode(this.cellNodes(), cellNode);
   },
 
+  /*
+    Function: dataForIndex
+      Return the data for the specified index.
+      
+    Parameters:
+      idx - an integer.
+      
+    Returns:
+      A value.
+  */
+  dataForIndex: function(idx)
+  {
+    return this.data()[idx];
+  },
 
+  /*
+    Function: dataForCellNode
+      Return the data for a particular cell node.
+      
+    Parameters:
+      cellNode - an element.
+      
+    Returns:
+      A value.
+  */
   dataForCellNode: function(cellNode)
   {
     return this.data()[this.indexOfCellNode(cellNode)];

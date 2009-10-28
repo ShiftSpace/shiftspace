@@ -16,19 +16,67 @@ var ShiftListViewCell = new Class({
     this.parent(el, options);
   },
   
-  
-  check: function()
+  /*
+    Function: check
+      Check the ShiftListViewCell. Suppresses the ShiftListViewCell.onCheck
+      call if passed with a restore parameter set to true. This is used when the
+      owning <SSListView> refreshes.
+      
+    Parameters:
+      restore - boolean
+  */
+  check: function(restore)
   {
-    var el = this.lockedElement(), idx = this.index();
+    var el = this.lockedElement();
     el.getElement('input[type=checkbox]').setProperty('checked', true);
+    if(restore !== true) this.onCheck();
+  },
+  
+  /*
+    Function: onCheck
+      *private*
+      Call's setState on the owning <SSListView>. Posts an onShiftSelect
+      notification.
+
+    See Also:
+      <PublishPane>
+  */
+  onCheck: function()
+  {
+    var idx = this.index(), data = this.data();
+    this.delegate().setState(data._id, 'checked', this.check.bind(this, [true]));
     SSPostNotification('onShiftSelect', {listView: this.delegate(), index:idx});
   },
   
-  
-  uncheck: function()
+  /*
+    Function: uncheck
+      Uncheck the ShiftListViewCell. Suppresses the ShiftListViewCell.onCheck
+      call if passed with restore parameter set to true. This is used when the
+      owning <SSListView> refreshes.
+      
+    Parameters:
+      restore - boolean
+  */
+  uncheck: function(restore)
   {
-    var el = this.lockedElement(), idx = this.index();
+    var el = this.lockedElement();
     el.getElement('input[type=checkbox]').setProperty('checked', false);
+    if(restore !== true) this.onUncheck();
+  },
+  
+  /*
+    function: onUncheck
+      *private*
+      Call's remoteState on the owning <SSListView>. Posts an onShiftDeselect
+      notification.
+      
+    See Also:
+      <PublishPane>
+  */
+  onUncheck: function()
+  {
+    var idx = this.index(), data = this.data();
+    this.delegate().removeState(data._id, 'checked');
     SSPostNotification('onShiftDeselect', {listView: this.delegate(), index:idx});
   },
   
@@ -44,11 +92,15 @@ var ShiftListViewCell = new Class({
       var idx = this.delegate().indexOfCellNode(li);
       if(target.getProperty('checked'))
       {
-        SSPostNotification('onShiftSelect', {listView: this.delegate(), index:idx});
+        this.lock(li);
+        this.onCheck();
+        this.unlock();
       }
       else
       {
-        SSPostNotification('onShiftDeselect', {listView: this.delegate(), index:idx});
+        this.lock(li);
+        this.onUncheck();
+        this.unlock();
       }
       evt.stopPropagation();
     }.bind(this));

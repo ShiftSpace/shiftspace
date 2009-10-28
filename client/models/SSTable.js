@@ -548,7 +548,6 @@ var SSTable = new Class({
    */
   dirtyTheViews: function(force)
   {
-    SSLog("dirtyTheViews", SSLogForce);
     this.views().each(function(view) {
       view.setNeedsDisplay(true);
       view.__refresh__(force);
