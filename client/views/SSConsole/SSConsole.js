@@ -22,6 +22,7 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
+    SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
     
     // since we're created programmatically we add entry manually for debugging - David
     ShiftSpaceNameTable.SSConsole = this;
@@ -71,6 +72,12 @@ var SSConsole = new Class({
   {
     this.MainTabView.revealTabByName('LoginTabView');
     this.MainTabView.refresh();
+  },
+  
+  
+  onNewShiftSave: function()
+  {
+    this.MainTabView.selectTabByName('AllShiftsView');
   },
 
 
