@@ -28,7 +28,7 @@ var SSCommentPane = new Class({
   },
 
 
-  initResource: function(shiftId)
+  initTable: function(shiftId)
   {
     this.comments = new SSTable("Comments", {
       resource: {read:'shift/'+shiftId+'/comments'},
@@ -65,7 +65,7 @@ var SSCommentPane = new Class({
   {
     SSLog("Show comments for", shiftId, SSLogForce);
     this.setCurrentShiftId(shiftId);
-    this.initResource(shiftId);
+    this.initTable(shiftId);
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
   },
@@ -101,66 +101,6 @@ var SSCommentPane = new Class({
   isOpen: function()
   {
     return this.__isOpen;
-  },
-  
-  
-  setIsOpening: function(val)
-  {
-    this.__isOpening = val;
-  },
-  
-  
-  isOpening: function()
-  {
-    return this.__isOpening;
-  },
-  
-  
-  setIsClosing: function(val)
-  {
-    this.__isClosing = val;
-  },
-  
-  
-  isClosing: function()
-  {
-    return this.__isClosing;
-  },
-  
-  
-  setIsShowing: function(val)
-  {
-    this.__isShowing = val;
-  },
-  
-  
-  isShowing: function()
-  {
-    return this.__isShowing;
-  },
-  
-
-  setIsHiding: function(val)
-  {
-    this.__isHiding = val;
-  },
-  
-  
-  isHiding: function()
-  {
-    return this.__isHiding;
-  },
-
-
-  setIsAnimating: function(val)
-  {
-    this.__isAnimating = val;
-  },
-  
-  
-  isAnimating: function()
-  {
-    return this.__isAnimating;
   },
   
   
@@ -215,18 +155,10 @@ var SSCommentPane = new Class({
   },
   
   
-  initAnimations: function()
-  {
-  },
-  
-  
   buildInterface: function()
   {
     this.parent();
-
-    this.initAnimations();
     this.attachEvents();
-    
     SSPostNotification('onCommentsLoad', this);
     this.setIsLoaded(true);
   },
