@@ -71,15 +71,21 @@ def single(view, key):
         return row.value
 
 
-def fetch(db="shiftspace", view=None, keys=None):
-    if view == None:
-        view = "_all_docs"
+def fetch(db="shiftspace", view="_all_docs", keys=None):
+    """
+    Fetch multiple documents from the database. Useful when
+    joins are necessary and making multiple requests to the db
+    is an undesirable performance hit.
+    
+    Paramters:
+        db - defaults to 'shiftspace'
+        view - defaults to  '_all_docs'
+    """
     resource = couchdb.client.Resource(None, 'http://localhost:5984/%s' % db)
     params = {"include_docs":True}
     content = json.dumps({"keys":keys})
     headers = {"Content-Type":"application/json"}
     rows = resource.post(path=view, headers=headers, content=content, **params)[1]['rows']
-    print rows
     result = []
     for row in rows:
         if row.get('value'):
