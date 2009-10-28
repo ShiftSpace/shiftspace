@@ -257,17 +257,13 @@ var ShiftSpaceSpace = new Class({
     // create the new shift
     try
     {
-      SSLog("Instantiating the shift", SSLogForce);
       var newShift = new this.shiftClass(aShift, {element: el});
     }
     catch(exc)
     {
-      SSLog("ERROR: Could not instantiate shift.", SSLogForce);
-      SSLog(exc, SSLogForce);
       throw exc;
     }
 
-    SSLog("Adding events to shift", SSLogForce);
     // listen for shift updates
     newShift.addEvent('onUpdate', this.updateShift.bind(this));
     // Set up events that console will listen to
@@ -322,7 +318,6 @@ var ShiftSpaceSpace = new Class({
   */
   createShift: function(newShift)
   {
-    SSLog("Creating a shift!", SSLogForce);
     var shift = this.addShift(newShift, this.shiftUI()), self = this;
     // return the shift immediately or a promise if there's a ui
     return (function(newShift) {
@@ -441,11 +436,9 @@ var ShiftSpaceSpace = new Class({
     var cShift = this.__shifts[aShift._id];
     if(!cShift)
     {
-      SSLog("No cached shift", SSLogForce);
       try
       {
         cShift = this.addShift(aShift, this.shiftUI());
-        SSLog("Got shift", cShift, SSLogForce);
       }
       catch(exc)
       {
@@ -454,7 +447,6 @@ var ShiftSpaceSpace = new Class({
     }
     var self = this;
     return (function(theShift) {
-      SSLog("Shift loaded", theShift, SSLogForce);
       if(theShift.canShow())
       {
         if(self.getCurrentShift() && theShift != self.getCurrentShift()) self.getCurrentShift().onBlur();
