@@ -13,11 +13,8 @@ var AllShiftsView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    if(!ShiftSpaceUser.isLoggedIn())
-    {
-      SSAddObserver(this, "onSync", this.onSync.bind(this));
-      SSAddObserver(this, "onUserLogin", this.onLogin.bind(this));
-    }
+    SSAddObserver(this, "onSync", this.onSync.bind(this));
+    SSAddObserver(this, "onUserLogin", this.onLogin.bind(this));
   },
 
 

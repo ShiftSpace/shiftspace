@@ -13,14 +13,11 @@ var LoginTabView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    if(!ShiftSpaceUser.isLoggedIn())
-    {
-      SSAddObserver(this, "onSync", this.onSync.bind(this));
-      SSAddObserver(this, "onUserLogin", this.onLogin.bind(this));
-      SSAddObserver(this, 'onUserLoginFailed', this.handleLoginFailed.bind(this));
-      SSAddObserver(this, "onUserLogout", this.onLogout.bind(this));
-      SSAddObserver(this, 'onUserJoinFailed', this.handleJoinFailed.bind(this));
-    }
+    SSAddObserver(this, "onSync", this.onSync.bind(this));
+    SSAddObserver(this, "onUserLogin", this.onLogin.bind(this));
+    SSAddObserver(this, 'onUserLoginFailed', this.handleLoginFailed.bind(this));
+    SSAddObserver(this, "onUserLogout", this.onLogout.bind(this));
+    SSAddObserver(this, 'onUserJoinFailed', this.handleJoinFailed.bind(this));
   },
   
 
@@ -29,12 +26,12 @@ var LoginTabView = new Class({
     this.mapOutletsToThis();
     this.initLoginForm();
     this.initSignUpForm();
-    if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled()) this.handleLogin();
   },
 
 
   afterAwake: function()
   {
+    if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled()) this.handleLogin();
   },
   
   
