@@ -180,7 +180,7 @@ Returns:
 */
 function SSLoadSpaceAttributes(spaceName)
 {
-  var p = SSLoadFile(String.urlJoin(ShiftSpace.info().spacesDir, spaceName, 'attrs.json'));
+  var p = SSLoadFile(String.urlJoin(ShiftSpace.info().spacesDir, spaceName, 'attrs'));
   var p2 = $if(p,
                function() {
                  // check to see that the resources urls are full

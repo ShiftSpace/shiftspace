@@ -7,6 +7,7 @@ import simplejson as json
 import ConfigParser
 import routes
 import email
+import setup
 
 from mako.template import Template
 from mako.lookup import TemplateLookup
@@ -69,11 +70,33 @@ class RootController:
             return self.statusPage(status="err", details="initdb")
         return self.statusPage()
         
+    def walk(self, fdir, d):
+        files = os.listdir(fdir)
+        for afile in files:
+            path = os.path.join(fdir, afile)
+            if os.path.isdir(path):
+                d[afile] = self.walk(path, {})
+            elif os.path.isfile(path):
+                fh = open(path)
+                d[afile] = fh.read()
+                fh.close()
+        return d
+        
     def attrs(self, space):
         try:
-            f = serve_file(os.path.join(webroot, 'spaces/%s/attrs.json' % space))
-            return f
-        except:
+            spacePath = os.path.join(webroot, 'spaces', space)
+            attrsPath = os.path.join(spacePath, 'attrs.json')
+            fh = open(attrsPath)
+            attrs = json.loads(fh.read())
+            fh.close()
+            if attrs.get("lib"):
+                libPath = os.path.join(spacePath, attrs["lib"])
+                attrs["lib"] = self.walk(libPath, {})
+                return json.dumps(attrs)
+            else:
+                f = serve_file(path)
+                return f
+        except error:
             return json.dumps(error("No space called %s exists" % space, SpaceDoesNotExistError))
 
     def docs(self):
@@ -126,7 +149,7 @@ class RootController:
         fh.close()
         fileOrder = tests['dependencies'].get(test)
         if fileOrder == None:
-            return "Error: %s does not exists, perhaps you need to run setup.sh" % test
+            return "Error: %s does not exists." % test
         else:
             out = StringIO.StringIO()
             preprocessor = preprocess.SSPreProcessor(project="sandalphon", env="sandalphon")
@@ -264,7 +287,7 @@ def initDevRoutes():
     d.connect(name='rootTests', route='tests', controller=root, action='tests')
     d.connect(name='rootBuild', route='build', controller=root, action='build')
     d.connect(name='rootProxy', route='proxy/:id', controller=root, action='proxy')
-    d.connect(name='rootAttrs', route='spaces/:space/attrs.json', controller=root, action='attrs')
+    d.connect(name='rootAttrs', route='spaces/:space/attrs', controller=root, action='attrs')
     return d
 
 
