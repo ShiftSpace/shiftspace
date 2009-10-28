@@ -94,6 +94,7 @@ def shift():
         "created": None,
         "modified": None,
         "broken": False,
+        "commentStream": None,
         "publishData": {
             "draft": True,
             "publishTime": None,

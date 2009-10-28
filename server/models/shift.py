@@ -18,24 +18,31 @@ def ref(id):
 # Utilities
 # ==============================================================================
 
+def join(shift, userId=None):
+    id = shift["_id"]
+    if userId:
+        shift["favorite"] = isFavorited(id, userId)
+    #shift["favoriteCount"] = favoriteCount(id)
+    #streamId = commentStream(id)
+    #if streamId:
+    #    shift["commentCount"] = len(event.eventsForStream(streamId))
+    creator = user.readById(shift["createdBy"])
+    gravatar = creator.get("gravatar")
+    #if gravatar != None:
+    #    shift["gravatar"] = gravatar
+    return shift
+    
+def newJoin(shifts, userId=None):
+    if type(data) != list:
+        shifts = [shifts]
+    ids = [shift['_id'] for shift in shifts]
+    pass
+    
 def joinData(data, userId=None):
-    def join(shift):
-        id = shift["_id"]
-        if userId:
-            shift["favorite"] = isFavorited(id, userId)
-        shift["favoriteCount"] = favoriteCount(id)
-        streamId = commentStream(id)
-        if streamId:
-            shift["commentCount"] = len(event.eventsForStream(streamId))
-        creator = user.readById(shift["createdBy"])
-        gravatar = creator.get("gravatar")
-        if gravatar != None:
-            shift["gravatar"] = gravatar
-        return shift
     if type(data) == list:
-        data = [join(item) for item in data]
+        data = [join(item, userId) for item in data]
     else:
-        data = join(data)
+        data = join(data, userId)
     return data
 
 @simple_decorator
@@ -326,6 +333,7 @@ def createCommentStream(id):
             "objectRef": ref(id),
             "createdBy": theShift["createdBy"]
             })
+    the
     return commentStream["_id"]
 
 # ==============================================================================

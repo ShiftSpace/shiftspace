@@ -8,6 +8,9 @@ class Lucene():
         self.resource = couchdb.client.Resource(None, "http://localhost:5984/shiftspace/_fti/lucene")
   
     def search(self, view, debug=False, **params):
+        """
+        Runs a full text search on the db.
+        """
         if debug:
             return self.resource.get(view, **params)[1]
         else:
@@ -18,30 +21,40 @@ _lucene = Lucene()
 
 
 def server():
+    """
+    Returns a CouchDB server.
+    """
     return couchdb.client.Server("http://localhost:5984/")
 
 
 def connect(dbname="shiftspace"):
+    """
+    Connects to the database. Defaults to "shiftspace".
+    """
     server = couchdb.client.Server("http://localhost:5984/")
     return server[dbname]
 
 
 def lucene():
+    """
+    Return the Lucene instance.
+    """
     return _lucene
 
 
-def query(view, key=None):
+def query(view, key=None, keys=None):
+    """
+    Query the database. Can access a single key or an
+    array of keys.
+    """
     db = connect()
-
     rows = None
     options = None
-
     if key:
         options = {"key": key}
         rows = db.view(view, None, **options)
     else:
         rows = db.view(view)
-
     result = []
     for row in rows:
         result.append(row.value)
@@ -49,6 +62,9 @@ def query(view, key=None):
 
 
 def single(view, key):
+    """
+    Convenience functions for accessing a single key.
+    """
     db = connect()
     options = {"key": key}
     for row in db.view(view, None, **options):
@@ -56,6 +72,10 @@ def single(view, key):
 
 
 def update(doc):
+    """
+    Convenience function for updating a document. Takes the new
+    document, attempts to update and returns the new value.
+    """
     db = connect()
     id = doc["_id"]
     old = db[id]
@@ -65,6 +85,9 @@ def update(doc):
 
 
 def validate(doc):
+    """
+    Validate a document. Might get deprecated.
+    """
     theSchema = getattr(schema, doc["type"])()
     schemaKeys = theSchema.keys()
     docKeys = doc.keys()
