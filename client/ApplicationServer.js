@@ -113,12 +113,33 @@ var ApplicationServer = new Class({
   },
   
   /*
+    Function: updateDocument
+      Takes a document and updates all instances of that
+      document in the cache.
+      
+    Parameters:
+      doc - a document. Must have _id property.
+      
+    Returns:
+      The document.
+  */
+  updateDocument: function(doc)
+  {
+    if(!doc._id) return doc;
+    $H(this.cache()).each(function(cache, name) {
+      if(cache[doc._id]) cache[doc._id] = doc;
+    }, this);
+    return doc;
+  },
+  
+  /*
     Function: updateCache (private)
-      Takes an array of documents and updates the specified cache. If
-      no cache is specified default to the global one.
+      Takes an array of documents adds them to the specified
+      cache. If none specified, documents are placed in the
+      global cache.
 
     Parameters:
-      docs - an arary of documents.
+      docs - an array of documents.
       name - a string.
    */
   updateCache: function(docs, name)
@@ -566,7 +587,7 @@ var ApplicationServer = new Class({
       {
         var updateRsrcSpec = {resource:resource, method:'update', id:id};
         var oldValue = this.allCachedDocuments()[id];
-        this.updateCache(value, (options && options.local));
+        this.updateDocument(value);
         this.notifyWatchers(updateRsrcSpec, value, oldValue);
         return value;
       }
@@ -634,7 +655,7 @@ var ApplicationServer = new Class({
       {
         var postRsrcSpec = {resource:postOptions.resource, action:postOptions.action, id:postOptions.id};
         var oldValue = this.allCachedDocuments()[postOptions.id];
-        this.updateCache(value, (options && options.local));
+        this.updateDocument(value);
         this.notifyWatchers(postRsrcSpec, value, oldValue);
         return value;
       }

@@ -123,13 +123,12 @@ class ShiftController(ResourceController):
     @shiftType
     @loggedin
     def publish(self, id):
-        # NOTE: should mabye take publishData url parameter - David 9/5/2009
+        # NOTE: should maybe take publishData url parameter - David 9/5/2009
         loggedInUser = helper.getLoggedInUser()
         publishData = json.loads(helper.getRequestBody())
         theShift = shift.read(id)
         if loggedInUser and shift.canPublish(id, loggedInUser['_id']):
-            shift.publish(id, publishData)
-            return ack
+            return data(shift.publish(id, publishData))
         else:
             return error("Operation not permitted. You don't have permission to publish this shift.", PermissionError)
 
@@ -141,8 +140,7 @@ class ShiftController(ResourceController):
         loggedInUser = helper.getLoggedInUser()
         theShift = shift.read(id)
         if loggedInUser and shift.canUnpublish(id, loggedInUser['_id']):
-            shift.unpublish(id)
-            return ack
+            return data(shift.unpublish(id))
         else:
             return error("Operation not permitted. You don't have permission to publish this shift.", PermissionError)
 

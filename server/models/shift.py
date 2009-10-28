@@ -13,6 +13,36 @@ def ShiftSchemaConflictError(ShiftError): pass
 
 def ref(id): 
     return "shift:"+id
+    
+# ==============================================================================
+# Utilities
+# ==============================================================================
+
+def joinData(data, userId=None):
+    def join(shift):
+        id = shift["_id"]
+        if userId:
+            shift["favorite"] = isFavorited(id, userId)
+        shift["favoriteCount"] = favoriteCount(id)
+        streamId = commentStream(id)
+        if streamId:
+            shift["commentCount"] = len(event.eventsForStream(streamId))
+        creator = user.readById(shift["createdBy"])
+        gravatar = creator.get("gravatar")
+        if gravatar != None:
+            shift["gravatar"] = gravatar
+        return shift
+    if type(data) == list:
+        data = [join(item) for item in data]
+    else:
+        data = join(data)
+    return data
+
+@simple_decorator
+def joindecorator(func):
+    def afn(*args, **kwargs):
+        return joinData(func(*args, **kwargs), userId=kwargs.get("userId"))
+    return afn
 
 # ==============================================================================
 # CRUD
@@ -252,6 +282,7 @@ def publish(id, publishData):
     theShift["publishData"] = newData
     theShift["publishData"]["draft"] = False
     db[id] = theShift
+    return joinData(db[id], userId)
 
 def unpublish(id):
     """
@@ -261,8 +292,10 @@ def unpublish(id):
     """
     db = core.connect()
     theShift = db[id]
+    userId = theShift["createdBy"]
     theShift["publishData"]["draft"] = True
     db[id] = theShift
+    return joinData(db[id], userId)
 
 # ==============================================================================
 # Comments
@@ -328,36 +361,6 @@ def unfavorite(id, userId):
 
 def favoriteCount(id):
     return core.single(schema.favoritesByShift, id) or 0
-
-# ==============================================================================
-# Utilities
-# ==============================================================================
-
-def joinData(data, userId=None):
-    def join(shift):
-        id = shift["_id"]
-        if userId:
-            shift["favorite"] = isFavorited(id, userId)
-        shift["favoriteCount"] = favoriteCount(id)
-        streamId = commentStream(id)
-        if streamId:
-            shift["commentCount"] = len(event.eventsForStream(streamId))
-        creator = user.readById(shift["createdBy"])
-        gravatar = creator.get("gravatar")
-        if gravatar != None:
-            shift["gravatar"] = gravatar
-        return shift
-    if type(data) == list:
-        data = [join(item) for item in data]
-    else:
-        data = join(data)
-    return data
-
-@simple_decorator
-def joindecorator(func):
-    def afn(*args, **kwargs):
-        return joinData(func(*args, **kwargs), userId=kwargs.get("userId"))
-    return afn
 
 @joindecorator
 def byUser(id, userId=None):
