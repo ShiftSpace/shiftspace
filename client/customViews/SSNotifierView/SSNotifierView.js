@@ -14,8 +14,6 @@ var SSNotifierView = new Class({
   {
     this.parent(el, options);
     
-    this.refreshShiftCount();
-    
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
@@ -124,41 +122,16 @@ var SSNotifierView = new Class({
   refreshShiftCount:function()
   {
     // TODO: make async - David 10/26/09
-    this.__count = SSApp.confirm(
-      SSApp.get({
-        resource:'shifts',
-        action:"count",
-        data:{
-          byHref: window.location.href.split("#")[0]
-        }
-      })
-    );
+    var  p = SSApp.get({
+      resource:'shifts',
+      action:"count",
+      data:{
+        byHref: window.location.href.split("#")[0]
+      }
+    });
     
-    var count = $get(this, '__count', 'data');
-    if (!count)
-    {
-      this.__count = 0;
-    }
-    else
-    {
-      this.__count = count;
-    }
+    this.updateCounter(p);
   },
-  
-  /*
-    Function: getShiftCount
-      *private*
-      Return the shift count.
-      
-    Returns:
-      An integer.
-  */
-  getShiftCount: function()
-  {
-    if (this.__count == undefined) this.refreshShiftCount();
-    return this.__count;
-  },
-  
   
   onConsoleShow: function()
   {
@@ -220,14 +193,12 @@ var SSNotifierView = new Class({
   
   handleLogin: function()
   {
-    this.refreshShiftCount();
     this.updateControls();
   },
   
   
   handleLogout: function()
   {
-    this.refreshShiftCount();
     this.updateControls();
   },
   
@@ -238,7 +209,7 @@ var SSNotifierView = new Class({
   */
   updateControls: function()
   {
-    if (this.SSShiftCount) this.SSShiftCount.set('text', this.getShiftCount() + " shifts");
+    this.refreshShiftCount();
     if (this.SSUsername) this.SSUsername.set('text', ShiftSpace.User.getUserName());
     
     if(this.SSLogInOut)
@@ -254,6 +225,16 @@ var SSNotifierView = new Class({
     }
   },
   
+  /*
+    Function: updateCounter
+      *private*
+      Update the shift counter in the notifier view.
+  */
+  updateCounter: function(countp)
+  {
+    this.__count = countp;
+    if (this.SSShiftCount) this.SSShiftCount.set('text', countp + " shifts");
+  }.asPromise(),
   
   attachEvents: function()
   {
