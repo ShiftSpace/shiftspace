@@ -71,6 +71,9 @@ class RootController:
         return self.statusPage()
         
     def walk(self, fdir, d):
+        """
+        Used by attrs.
+        """
         files = os.listdir(fdir)
         for afile in files:
             path = os.path.join(fdir, afile)
@@ -83,6 +86,12 @@ class RootController:
         return d
         
     def attrs(self, space):
+        """
+        Return the attrs.json file for a space. If the attrs.json
+        file specifies a lib property, walk that directory and return
+        the contents of the lib directory as strings in the returned
+        JSON.
+        """
         try:
             spacePath = os.path.join(webroot, 'spaces', space)
             attrsPath = os.path.join(spacePath, 'attrs.json')
@@ -266,6 +275,9 @@ class RootController:
 
 
 def initAppRoutes():
+    """
+    Initialize the actual application routes.
+    """
     d = cherrypy.dispatch.RoutesDispatcher()
     user = UserController(d)
     shift = ShiftController(d)
@@ -277,6 +289,9 @@ def initAppRoutes():
 
 
 def initDevRoutes():
+    """
+    Initialize developments routes, attrs.json and proxy routes as well.
+    """
     d = cherrypy.dispatch.RoutesDispatcher()
     root = RootController()
     d.connect(name='root', route='', controller=root, action='index')
@@ -292,6 +307,9 @@ def initDevRoutes():
 
 
 def start(conf="default.conf", port=8080):
+    """
+    Starts the server using default.conf and port 8080.
+    """
     serverroot = os.path.dirname(os.path.abspath(__file__))
     webroot = os.path.dirname(serverroot)
     config = ConfigParser.ConfigParser({'webroot':webroot,

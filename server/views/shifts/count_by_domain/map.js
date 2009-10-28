@@ -2,6 +2,6 @@ function (doc)
 {
   if(doc.type == "shift")
   {
-    emit(doc.domain, doc);
+    emit(doc.domain, 1);
   }
 }
