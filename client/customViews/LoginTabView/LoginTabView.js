@@ -90,6 +90,12 @@ var LoginTabView = new Class({
   {
     this.fireEvent('onUserLogin');
   },
+  
+  
+  handleLogin: function()
+  {
+    
+  },
 
 
   handleLoginFailed: function(err)
