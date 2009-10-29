@@ -27,32 +27,36 @@ function SSLocalizedStringSupport()
   Parameters:
     string - a string.
     table - which localized string table to look at, for a example a table from a space.
+    lang - required if looking up localization strings from spaces.
     
   Returns:
     A string.
 */
-function SSLocalizedString(string, table)
+var SSLocalizedString = function(string, lang, table)
 {
   table = table || 'global';
   if(SSLocalizedStringSupport())
   {
-    var r = $get(__localizedStrings, table, string) || string;
+    // check global table
+    var r = $get(__localizedStrings, table, string);
     if(r) return r;
+    // check the spaces
     for(t in __localizedStrings)
     {
       if(t != table)
       {
-        r = $get(__localizedStrings, t, string);
+        r = $get(__localizedStrings, t, lang, string);
         if(r) return r;
       }
     }
+    // no match just return string
     return string;
   }
   else
   {
     return string;
   }
-}
+}.decorate(Function.memoize);
 
 /*
   Function: SSLoadLocalizedStrings
@@ -96,11 +100,11 @@ function SSUpdateStrings(strings, lang, context)
     if(node.get('tag') == 'input' && 
        node.getProperty('type') == 'button')
     {
-      node.setProperty('value', strings[originalText] || SSLocalizedString(originalText));
+      node.setProperty('value', strings[originalText] || SSLocalizedString(originalText, lang));
     }
     else
     {
-      node.set('text', strings[originalText] || SSLocalizedString(originalText));
+      node.set('text', strings[originalText] || SSLocalizedString(originalText, lang));
     }
   }, this);
 }

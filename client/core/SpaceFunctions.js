@@ -89,16 +89,20 @@ Parameters:
 */
 function SSRegisterSpace(instance)
 {
-  var spaceName = instance.name;
+  var spaceName = instance.attributes().name;
   instance.addEvent('onShiftUpdate', function(shift) {
     SSSaveShift.safeCall(shift);
   });
   var spaceDir = SSURLForSpace(spaceName);
 
-  // This exposes each space instance to the console
-  if (typeof ShiftSpaceSandBoxMode != 'undefined') 
+  if(typeof ShiftSpaceSandBoxMode != 'undefined') 
   {
-    ShiftSpace[instance.attributes().name + 'Space'] = instance;
+    ShiftSpace[spaceName + 'Space'] = instance;
+  }
+  
+  if(instance.attributes().lang)
+  {
+    __localizedStrings[spaceName] = JSON.decode(lang);
   }
 
   instance.addEvent('onShiftHide', function(id) {
