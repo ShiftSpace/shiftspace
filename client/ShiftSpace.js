@@ -283,6 +283,7 @@ var ShiftSpace = new (function() {
       window.Sandalphon = Sandalphon;
       window._ = _;
       window.__spaces = __spaces;
+      window.__localizedStrings = __localizedStrings;
     }
 
     return this;

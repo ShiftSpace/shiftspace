@@ -100,10 +100,7 @@ function SSRegisterSpace(instance)
     ShiftSpace[spaceName + 'Space'] = instance;
   }
   
-  if(instance.attributes().lang)
-  {
-    __localizedStrings[spaceName] = JSON.decode(lang);
-  }
+  __localizedStrings[spaceName] = instance.attributes().lang;
 
   instance.addEvent('onShiftHide', function(id) {
     SSPostNotification('onShiftHide', id);
