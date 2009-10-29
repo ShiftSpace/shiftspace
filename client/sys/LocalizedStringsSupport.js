@@ -36,7 +36,17 @@ function SSLocalizedString(string, table)
   table = table || 'global';
   if(SSLocalizedStringSupport())
   {
-    return $get(__localizedStrings, table, string) || string;
+    var r = $get(__localizedStrings, table, string) || string;
+    if(r) return r;
+    for(t in __localizedStrings)
+    {
+      if(t != table)
+      {
+        r = $get(__localizedStrings, t, string);
+        if(r) return r;
+      }
+    }
+    return string;
   }
   else
   {
@@ -74,7 +84,9 @@ function SSLoadLocalizedStrings(lang, context)
     Update all the elements with a il8n property in the specified context.
     
   Parameters:
-    strings - 
+    strings - a dictionary of string conversions.
+    lang - the lang code.
+    context - the browser context to update, window/element.
 */
 function SSUpdateStrings(strings, lang, context)
 {
