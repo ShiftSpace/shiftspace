@@ -95,8 +95,8 @@ function SSLoadLocalizedStrings(lang, context)
 function SSUpdateStrings(strings, lang, context)
 {
   if(!context.$$) context = new Window(context);
-  context.$$("*[il8n]").each(function(node) {
-    var originalText = node.getProperty('il8n');
+  context.$$("*[l18n]").each(function(node) {
+    var originalText = node.getProperty('l18n');
     if(node.get('tag') == 'input' && 
        node.getProperty('type') == 'button')
     {
