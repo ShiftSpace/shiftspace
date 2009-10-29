@@ -5,6 +5,7 @@
 // ==/Builder==
 
 var __sslang = null;
+var __localizedStrings = {'global': {}};
 
 /*
   Function: SSLocalizedStringSupport
@@ -24,15 +25,23 @@ function SSLocalizedStringSupport()
     current dictionary.
     
   Parameters:
-    string - a string
+    string - a string.
+    table - which localized string table to look at, for a example a table from a space.
     
   Returns:
     A string.
 */
-function SSLocalizedString(string)
+function SSLocalizedString(string, table)
 {
-  if(SSLocalizedStringSupport() && ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
-  return string;
+  table = table || 'global';
+  if(SSLocalizedStringSupport())
+  {
+    return $get(__localizedStrings, table, string) || string;
+  }
+  else
+  {
+    return string;
+  }
 }
 
 /*
@@ -52,7 +61,7 @@ function SSLoadLocalizedStrings(lang, context)
         strings = JSON.decode(strings);
         if(lang != __sslang)
         {
-          ShiftSpace.localizedStrings = strings;
+          __localizedStrings.global = strings;
           SSUpdateStrings(strings, lang, context);
           SSPostNotification('onLocalizationChanged', {strings:strings, lang:lang});
         }
@@ -75,11 +84,11 @@ function SSUpdateStrings(strings, lang, context)
     if(node.get('tag') == 'input' && 
        node.getProperty('type') == 'button')
     {
-      node.setProperty('value', SSLocalizedString(originalText));
+      node.setProperty('value', strings[originalText] || SSLocalizedString(originalText));
     }
     else
     {
-      node.set('text', SSLocalizedString(originalText));
+      node.set('text', strings[originalText] || SSLocalizedString(originalText));
     }
   }, this);
 }
