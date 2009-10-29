@@ -28,6 +28,10 @@ def toDict(kvs):
 
 
 def joinData(shifts, userId=None):
+    """
+    Relatively quick data join function. Makes use
+    of multidocument fetch.
+    """
     if type(shifts) != list:
         shifts = [shifts]
     ids = [shift['_id'] for shift in shifts]

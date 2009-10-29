@@ -233,5 +233,10 @@ var SSConsole = new Class({
     return this.context.$$('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
       return (controller.isAwake() && controller.superView() == this);
     }, this);
+  },
+  
+  
+  localizationChanged: function(strings, lang, context) {
+    SSUpdateStrings(strings, lang, this.context);
   }
 });

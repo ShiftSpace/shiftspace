@@ -58,6 +58,7 @@ var SettingsTabView = new Class({
   {
     this.SSSelectLanguage.addEvent('change', function(evt) {
       evt = new Event(evt);
+      SSLog("change language", SSLogForce);
       SSLoadLocalizedStrings($(evt.target).getProperty('value'));
     }.bind(this));
   },
