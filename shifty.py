@@ -2,18 +2,33 @@ import sys
 import os
 import shutil
 import getopt
+
+def bail(missing):
+    print "Missing %s. Please run the following first before attempting to use shifty features:" % missing
+    print "sudo python shifty.py installdeps"
+    sys.exit(2)
+    
+try:
+    import simplejson as json
+except:
+    bail("simplejson")
+    
+import builder.preprocess as preprocess
 import builder.corebuilder as corebuilder
 import sandalphon.sandalphon as sandalphon
-import builder.preprocess as preprocess
 
-#try:
-import simplejson as json
-import manual.build as manbuild
-import server.server as server
-import server.setup as setup
-#except:
-#    print "Please run the following first before attempting to use shifty features:"
-#    print "sudo python shifty.py installdeps"
+try:
+    import manual.build as manbuild
+except:
+    bail("mako")
+try:
+    import server.setup as setup
+except:
+    bail("couchdb-python")
+try:
+    import server.server as server
+except:
+    bail("cherrypy")
 
 
 def env(url):
