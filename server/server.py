@@ -85,6 +85,23 @@ class RootController:
                 fh.close()
         return d
         
+    def langwalk(self, fdir, d):
+        """
+        Used by attrs.
+        """
+        # redundant refactor later - David 10/28/09
+        files = os.listdir(fdir)
+        for afile in files:
+            path = os.path.join(fdir, afile)
+            if os.path.isdir(path):
+                d[afile] = self.walk(path, {})
+            elif os.path.isfile(path):
+                fh = open(path)
+                name = os.path.splitext(os.path.basename(afile))[0]
+                d[name] = json.loads(fh.read())
+                fh.close()
+        return d
+        
     def attrs(self, space):
         """
         Return the attrs.json file for a space. If the attrs.json
@@ -98,9 +115,16 @@ class RootController:
             fh = open(attrsPath)
             attrs = json.loads(fh.read())
             fh.close()
+            liborlang = False
             if attrs.get("lib"):
+                liborlang = True
                 libPath = os.path.join(spacePath, attrs["lib"])
                 attrs["lib"] = self.walk(libPath, {})
+            if attrs.get("lang"):
+                liborlang = True
+                langPath = os.path.join(spacePath, attrs["lang"])
+                attrs["lang"] = self.langwalk(langPath, {})
+            if liborlang:
                 return json.dumps(attrs)
             else:
                 f = serve_file(path)
