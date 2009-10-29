@@ -156,18 +156,6 @@ function SSRemoveDragDiv()
   __dragDiv__ = __dragDiv__.dispose();
 }
 
-function SSLocalizedStringSupport()
-{
-  return (typeof __sslang != 'undefined');
-}
-
-// Localized String Support
-function SSLocalizedString(string)
-{
-  if(SSLocalizedStringSupport() && ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
-  return string;
-}
-
 function SSHasResource(resourceName)
 {
   return __sysavail__.files.contains(resourceName) || __sysavail__.packages.contains(resourceName);

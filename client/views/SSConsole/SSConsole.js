@@ -23,6 +23,7 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
+    SSAddObserver(this, 'onLocalizationChanged', this.localizationChanged.bind(this));
     
     // since we're created programmatically we add entry manually for debugging - David
     ShiftSpaceNameTable.SSConsole = this;
@@ -236,7 +237,7 @@ var SSConsole = new Class({
   },
   
   
-  localizationChanged: function(strings, lang, context) {
-    SSUpdateStrings(strings, lang, this.context);
+  localizationChanged: function(evt) {
+    SSUpdateStrings(evt.strings, evt.lang, this.context);
   }
 });
