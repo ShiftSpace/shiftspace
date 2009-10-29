@@ -6,6 +6,7 @@ import user
 import stream
 import event
 import permission
+from itertools import repeat
 
 
 def ShiftError(Exception): pass
@@ -18,46 +19,43 @@ def ref(id):
 # Utilities
 # ==============================================================================
 
-def join(shift, userId=None):
-    id = shift["_id"]
-    if userId:
-        shift["favorite"] = isFavorited(id, userId)
-    shift["favoriteCount"] = favoriteCount(id)
-    streamId = commentStream(id)
-    if streamId:
-        shift["commentCount"] = len(event.eventsForStream(streamId))
-    creator = user.readById(shift["createdBy"])
-    gravatar = creator.get("gravatar")
-    if gravatar != None:
-        shift["gravatar"] = gravatar
-    return shift
-    
+
+def toDict(kvs):
+    result = {}
+    for kv in kvs:
+        result[kv['key']] = kv['value']
+    return result
+
+
 def joinData(shifts, userId=None):
     if type(shifts) != list:
         shifts = [shifts]
     ids = [shift['_id'] for shift in shifts]
     favIds = ["favorite:%s:%s" % (userId, shiftId) for shiftId in ids]
-    print favIds
-    print userId
-    isFavorited = [((favorite and True) or False) for favorite in core.fetch(view=schema.allFavorites, keys=favIds)]
-    faveCounts = [(count or 0) for count in core.fetch(view=schema.favoritesByShift, keys=ids, reduce=True)]
-    commentCount = [(count or 0) for count in core.fetch(view=schema.countByShift, keys=ids, reduce=True)]
+
+    # favorited by user
+    isFavorited = [(favorite and True) for favorite in core.fetch(keys=favIds)]
+
+    # favorite totals
+    favd = toDict(core.fetch(view=schema.favoritesByShift, keys=ids, reduce=True))
+    favCounts = [(favd.get(aid) or 0) for aid in ids]
+    
+    # comment totals
+    ccd = toDict(core.fetch(view=schema.countByShift, keys=ids, reduce=True))
+    commentCounts = [(ccd.get(aid) or 0) for aid in ids]
+
+    # gravatar
     userIds = [shift['createdBy'] for shift in shifts]
-    gravatars = [(user.get("gravatar") or None) for user in core.fetch(view=schema.allUsers, keys=userIds)]
+    gravatars = [user["gravatar"] for user in core.fetch(view=schema.allUsers, keys=userIds)]
+
     for i in range(len(shifts)):
         shifts[i]["favorite"] = isFavorited[i]
-        shifts[i]["commentCount"] = commentCount[i]
+        shifts[i]["favoriteCount"] = favCounts[i]
+        shifts[i]["commentCount"] = commentCounts[i]
         shifts[i]["gravatar"] = gravatars[i]
+    
     return shifts
 
-"""
-def joinData(data, userId=None):
-    if type(data) == list:
-        data = [join(item, userId) for item in data]
-    else:
-        data = join(data, userId)
-    return data
-"""
 
 @simple_decorator
 def joindecorator(func):

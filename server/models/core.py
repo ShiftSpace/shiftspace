@@ -71,7 +71,7 @@ def single(view, key):
         return row.value
 
 
-def fetch(db="shiftspace", view="_all_docs", keys=None, vreduce=False):
+def fetch(db="shiftspace", view="_all_docs", keys=None, reduce=False):
     """
     Fetch multiple documents from the database. Useful when
     joins are necessary and making multiple requests to the db
@@ -81,18 +81,23 @@ def fetch(db="shiftspace", view="_all_docs", keys=None, vreduce=False):
         db - defaults to 'shiftspace'
         view - defaults to  '_all_docs'
     """
-    resource = couchdb.client.Resource(None, 'http://localhost:5984/%s/%s' % (db, view))
-    params = {}
-    if vreduce != True
+    uri = 'http://localhost:5984/%s/%s' % (db, view)
+    resource = couchdb.client.Resource(None, uri)
+    params = None
+    if reduce != True:
         params = {"include_docs":True}
+    else:
+        params = {"group":True}
     content = json.dumps({"keys":keys})
     headers = {"Content-Type":"application/json"}
     rows = resource.post(headers=headers, content=content, **params)[1]['rows']
     result = []
     for row in rows:
         if row.get('value'):
-            del row['value']
-            result.append(row)
+            if not reduce:
+                result.append(row['doc'])
+            else:
+                result.append(row)
         else:
             result.append(None)
     return result

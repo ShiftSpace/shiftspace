@@ -6,14 +6,14 @@ import builder.corebuilder as corebuilder
 import sandalphon.sandalphon as sandalphon
 import builder.preprocess as preprocess
 
-try:
-    import simplejson as json
-    import manual.build as manbuild
-    import server.server as server
-    import server.setup as setup
-except:
-    print "Please run the following first before attempting to use shifty features:"
-    print "sudo python shifty.py installdeps"
+#try:
+import simplejson as json
+import manual.build as manbuild
+import server.server as server
+import server.setup as setup
+#except:
+#    print "Please run the following first before attempting to use shifty features:"
+#    print "sudo python shifty.py installdeps"
 
 
 def env(url):
