@@ -49,6 +49,7 @@ var ShiftListView = new Class({
   onScrollBottom: function()
   {
     SSLog("onScrollBottom", SSLogForce);
+    this.__reloadData__(this.table().read({start:this.count()}));
   },
   
   

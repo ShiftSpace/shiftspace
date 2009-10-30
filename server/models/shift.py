@@ -415,7 +415,7 @@ def byHref(href, userId=None):
     return shifts
 
 @joindecorator
-def shifts(byHref, userId=None, byFollowing=False, byGroups=False, start=0, perPage=25):
+def shifts(byHref, userId=None, byFollowing=False, byGroups=False, start=0, limit=25):
     """
     Returns a list of shifts based on whether
         1. href
@@ -448,6 +448,6 @@ def shifts(byHref, userId=None, byFollowing=False, byGroups=False, start=0, perP
         # TODO: make sure streams cannot be manipulated from client - David
         queryString = queryString + ((" OR (draft:false%s)" % ((len(streams) > 0 and (" AND streams:%s" % streams)) or "")))
     queryString = queryString + ")"
-    rows = lucene.search("shifts", q=queryString, sort="\modified", skip=start, limit=perPage)
+    rows = lucene.search("shifts", q=queryString, sort="\modified", skip=start, limit=limit)
     shifts = [db[row["id"]] for row in rows]
     return shifts

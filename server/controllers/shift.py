@@ -43,23 +43,27 @@ class ShiftController(ResourceController):
         return d
 
     def count(self, byHref, byDomain=None, byFollowing=False, byGroups=False):
-        return self.shifts(byHref, byDomain, byFollowing, byGroups, True)
+        return self.shifts(byHref=byHref, 
+                           byDomain=byDomain, 
+                           byFollowing=byFollowing, 
+                           byGroups=byGroups, 
+                           count=True)
 
     @jsonencode
-    def shifts(self, byHref, byDomain=None, byFollowing=False, byGroups=False, count=False):
+    def shifts(self, byHref, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, count=False):
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
-            allShifts = shift.shifts(byHref,
-                                     loggedInUser.get("_id"),
-                                     byFollowing,
-                                     byGroups)
-        else:
-            allShifts = shift.shifts(byHref, None, byFollowing, byGroups)
-
+            userId = loggedInUser.get("_id")
+        allShifts = shift.shifts(byHref=byHref,
+                                 userId=loggedInUser.get("_id"),
+                                 byFollowing=byFollowing,
+                                 byGroups=byGroups,
+                                 start=start,
+                                 limit=limit)
         if count:
           return data(len(allShifts))
         else:
-          return data(allShifts)  
+          return data(allShifts)
 
     @jsonencode
     @loggedin
