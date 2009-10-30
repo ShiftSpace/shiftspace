@@ -82,10 +82,10 @@ var ApplicationServer = new Class({
     Returns:
       A cache, all caches
    */
-  cache: function(name, asArray)
+  cache: function(name, options)
   {
     var result = (name) ? this.__cache[name] : this.__cache;
-    if(asArray)
+    if($get(options, 'asArray'))
     {
       result = (name) ? $H(result).getValues() : this.allCachedDocuments().getValues();
     }
