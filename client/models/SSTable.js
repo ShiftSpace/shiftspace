@@ -385,10 +385,14 @@ var SSTable = new Class({
    */
   data: function()
   {
-    var raw = SSApplication().cache(this.getName(), {asArray:true});
-    raw = raw.map(this.transformFn());
-    raw = raw.sort(this.sortFn());
-    return raw;
+    return SSApplication().cache(
+      this.getName(), 
+      {
+        asArray: true, 
+        transform: this.transformFn(),
+        sort: this.sortFn()
+      }
+    );
   },
   
   /*

@@ -85,10 +85,12 @@ var ApplicationServer = new Class({
   cache: function(name, options)
   {
     var result = (name) ? this.__cache[name] : this.__cache;
-    if($get(options, 'asArray'))
-    {
-      result = (name) ? $H(result).getValues() : this.allCachedDocuments().getValues();
-    }
+    var asArray = $get(options, 'asArray'), 
+        transform = $get(options, 'transform'),
+        sort = $get(options, 'sort');
+    if(asArray) result = (name) ? $H(result).getValues() : this.allCachedDocuments().getValues();
+    if(transform) result = result.map(transform);
+    if(sort) result = result.sort(sort);
     return result;
   },
   
