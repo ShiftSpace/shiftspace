@@ -1423,5 +1423,4 @@ var SSListView = new Class({
   animate: function(event)
   {
   }
-  
 });

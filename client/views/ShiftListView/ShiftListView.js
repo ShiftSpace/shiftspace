@@ -25,8 +25,30 @@ var ShiftListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    
+    el.addEvent('scroll', this.onScroll.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onCreate.bind(this));
+  },
+  
+  
+  onScroll: function(evt)
+  {
+    var scroll = this.element.getScroll(),
+        scrollSize = this.element.getScrollSize(),
+        size = this.element.getSize();
+    if(scroll.y == 0) this.onScrollTop();
+    if(scrollSize.y == (scroll.y + size.y)) this.onScrollBottom();
+  },
+  
+  
+  onScrollTop: function()
+  {
+    SSLog("onScrollTop", SSLogForce);
+  },
+  
+  
+  onScrollBottom: function()
+  {
+    SSLog("onScrollBottom", SSLogForce);
   },
   
   
