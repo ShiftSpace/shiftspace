@@ -274,16 +274,11 @@ var ShiftSpace = new (function() {
 
       // export symbols directly to the window for debugging purposes - David
       window.SSSpaceForName = SSSpaceForName;
-      window.SSTag = SSTag;
       window.SSApp = SSApp;
       window.SSApplication = SSApplication;
       window.SSTableForName = SSTableForName;
-      window.Function.msg = Function.msg;
       window.SSControllerForNode = SSControllerForNode;
       window.Sandalphon = Sandalphon;
-      window._ = _;
-      window.__spaces = __spaces;
-      window.__localizedStrings = __localizedStrings;
     }
 
     return this;
