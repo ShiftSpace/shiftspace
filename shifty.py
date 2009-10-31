@@ -3,15 +3,12 @@ import os
 import shutil
 import getopt
 
-def bail(missing):
-    print "Missing %s. Please run the following first before attempting to use shifty features:" % missing
-    print "sudo python shifty.py installdeps"
-    sys.exit(2)
+missing = []
     
 try:
     import simplejson as json
 except:
-    bail("simplejson")
+    missing.append("simplejson")
     
 import builder.preprocess as preprocess
 import builder.corebuilder as corebuilder
@@ -20,15 +17,21 @@ import sandalphon.sandalphon as sandalphon
 try:
     import manual.build as manbuild
 except:
-    bail("mako")
+    missing.append("mako")
 try:
     import server.setup as setup
 except:
-    bail("couchdb-python")
+    missing.append("couchdb-python")
 try:
     import server.server as server
 except:
-    bail("cherrypy")
+    missing.append("cherrypy")
+
+
+def bail(missinglibs):
+    print "Missing %s. Please run the following first before attempting to use shifty features:" % missinglibs
+    print "sudo python shifty.py installdeps"
+    sys.exit(2)
 
 
 def nightly():
@@ -248,8 +251,12 @@ def main(argv):
     except Error:
         usage()
         sys.exit(2)
+    if len(missing) > 0 and action != "nightly":
+        bail(", ".join(missing))
     if action in ("-h", "--help"):
         usage()
+    else if action == "nightly":
+        nightly()
     elif action == "configure":
         try:
             url = argv[1]
