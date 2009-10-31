@@ -32,7 +32,9 @@ def joinData(shifts, userId=None):
     Relatively quick data join function. Makes use
     of multidocument fetch.
     """
+    single = False
     if type(shifts) != list:
+        single = True
         shifts = [shifts]
     ids = [shift['_id'] for shift in shifts]
     favIds = ["favorite:%s:%s" % (userId, shiftId) for shiftId in ids]
@@ -58,7 +60,10 @@ def joinData(shifts, userId=None):
         shifts[i]["commentCount"] = commentCounts[i]
         shifts[i]["gravatar"] = gravatars[i]
     
-    return shifts
+    if single:
+        return shifts[0]
+    else:
+        return shifts
 
 
 @simple_decorator
