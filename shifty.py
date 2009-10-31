@@ -41,7 +41,7 @@ def nightly():
     os.system("git submodule init")
     os.system("git submodule update")
     os.system("scripts/clean_git.sh")
-    if not os.exists("tmp/deps"):
+    if not os.path.exists("tmp/deps"):
         os.system("scripts/download_deps.sh")
 
 
@@ -195,12 +195,14 @@ def installdeps():
     Run the dependency install scripts for the appropiate platform.
     """
     platform = sys.platform
+    os.system("scripts/download_deps.sh")
     if platform == "darwin":
         os.system("scripts/install_deps.sh")
     elif platform == "linux2":
         os.system("scripts/install_deps.sh")
     elif platform == "win32":
         os.system("scripts/install_deps_win.sh")
+    os.system("scripts/clean.sh")
 
 
 def docs():

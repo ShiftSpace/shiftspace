@@ -1,4 +1,4 @@
-./download_deps.sh
+cd tmp
 cd deps/CherryPy-3.1.2
 python setup.py install
 cd ../Routes-1.10.3
@@ -15,4 +15,3 @@ cd ../../
 mv deps/couchdb-lucene-0.4-jar-with-dependencies.jar ../server/
 mv deps/NaturalDocs-1.4 ../externals/
 chmod u+x ../externals/NaturalDocs-1.4/NaturalDocs
-./clean.sh
