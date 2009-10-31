@@ -61,6 +61,7 @@ def configure(url):
     """
     if url[-1] != "/":
         url = url + "/"
+    url = url.strip()
     def writeEnv(name, mergedict):
         fh = open("config/env/%s.json" % name, "w")
         envdict = env(url)
