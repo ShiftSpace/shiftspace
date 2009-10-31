@@ -255,7 +255,7 @@ def main(argv):
         bail(", ".join(missing))
     if action in ("-h", "--help"):
         usage()
-    else if action == "nightly":
+    elif action == "nightly":
         nightly()
     elif action == "configure":
         try:
