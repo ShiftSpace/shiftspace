@@ -52,10 +52,11 @@ class ShiftController(ResourceController):
     @jsonencode
     def shifts(self, byHref, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, count=False):
         loggedInUser = helper.getLoggedInUser()
+        userId = None
         if loggedInUser:
             userId = loggedInUser.get("_id")
         allShifts = shift.shifts(byHref=byHref,
-                                 userId=loggedInUser.get("_id"),
+                                 userId=userId,
                                  byFollowing=byFollowing,
                                  byGroups=byGroups,
                                  start=start,

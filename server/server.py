@@ -127,7 +127,7 @@ class RootController:
             if liborlang:
                 return json.dumps(attrs)
             else:
-                f = serve_file(path)
+                f = serve_file(attrsPath)
                 return f
         except error:
             return json.dumps(error("No space called %s exists" % space, SpaceDoesNotExistError))
