@@ -1,5 +1,5 @@
 rm -rf .git
-rm -rt .git*
+rm -rf .git*
 rm -rf externals/functools/.git
 rm -rf externals/functools/.git*
 rm -rf externals/fxgraphs/.git
