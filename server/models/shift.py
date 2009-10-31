@@ -349,7 +349,6 @@ def createCommentStream(id):
             "objectRef": ref(id),
             "createdBy": theShift["createdBy"]
             })
-    the
     return commentStream["_id"]
 
 # ==============================================================================
@@ -391,7 +390,7 @@ def byUser(id, userId=None):
     return core.query(schema.shiftByUser, id)
 
 @joindecorator
-def byUserName(userName, userId=None):
+def byUserName(userName, userId=None, start=None, end=None, limit=25):
     """
     Return the list of shifts a user has created.
     Parameters:

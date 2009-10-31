@@ -31,6 +31,17 @@ except:
     bail("cherrypy")
 
 
+def nightly():
+    """
+    Used to build the nightlies.
+    """
+    os.system("git submodule init")
+    os.system("git submodule update")
+    os.system("scripts/clean_git.sh")
+    if not os.exists("tmp/deps"):
+        os.system("scripts/download_deps.sh")
+
+
 def env(url):
     return {
         "SERVER": url,

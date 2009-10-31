@@ -1,0 +1,16 @@
+rm -rf .git
+rm -rt .git*
+rm -rf externals/functools/.git
+rm -rf externals/functools/.git*
+rm -rf externals/fxgraphs/.git
+rm -rf externals/fxgraphs/.git*
+rm -rf externals/gmmods/.git
+rm -rf externals/gmmods/.git*
+rm -rf externals/gmrequest/.git
+rm -rf externals/gmrequest/.git*
+rm -rf externals/promises/.git
+rm -rf externals/promises/.git*
+rm -rf externals/set/.git
+rm -rf externals/set/.git*
+rm -rf externals/ssunit/.git
+rm -rf externals/ssunit/.git*

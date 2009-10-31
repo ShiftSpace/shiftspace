@@ -235,7 +235,7 @@ class UserController(ResourceController):
     @jsonencode
     @exists
     @loggedin
-    def shifts(self, userName):
+    def shifts(self, userName, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
         userId = loggedInUser["_id"]
         if user.isAdmin(userId) or user.idForName(userName) == userId:

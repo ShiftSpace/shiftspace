@@ -38,7 +38,7 @@ var noteShift = {
   summary: "Foo!",
   href: "http://google.com/image_search",
   content: {
-    text: "Hello world!",
+    noteText: "Foo!",
     position: {x:150, y:150},
     size: {x:200, y:200}
   }
