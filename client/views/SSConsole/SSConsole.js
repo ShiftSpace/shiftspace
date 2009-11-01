@@ -213,11 +213,12 @@ var SSConsole = new Class({
         }
     });
     $(document.body).grab(resizer);
+    
+    resizer.addEvent('mousedown', SSAddDragDiv);
 
     resizer.makeDraggable({
       modifiers: {x:'', y:'bottom'},
       invert: true,
-      onStart: SSAddDragDiv,
       onComplete: SSRemoveDragDiv
     });
     

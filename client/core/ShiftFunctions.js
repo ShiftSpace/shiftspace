@@ -291,8 +291,7 @@ function SSSaveShift(shift)
         SSSpaceForName(shift.space.name).onShiftSave(p.get('id'));
       },
       function() {
-      }
-     );
+      });
 }
 
 /*
