@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @package           ShiftSpaceCore
 // @dependencies      SSTag
 // ==/Builder==

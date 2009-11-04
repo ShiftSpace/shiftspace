@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // @package           System
 // @dependencies      SandalphonCore
 // ==/Builder==

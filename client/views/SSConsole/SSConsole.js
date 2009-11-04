@@ -1,6 +1,5 @@
 // ==Builder==
 // @uiclass
-// @optional
 // @package           ShiftSpaceUI
 // ==/Builder==
 

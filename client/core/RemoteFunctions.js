@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              RemoteFunctions
 // @package           Core
 // ==/Builder==

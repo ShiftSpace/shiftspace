@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // ==/Builder==
 
 var __server = '%%SERVER%%';

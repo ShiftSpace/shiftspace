@@ -1,6 +1,5 @@
 // ==Builder==
 // @uiclass
-// @customView
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSFramedView
 // ==/Builder==

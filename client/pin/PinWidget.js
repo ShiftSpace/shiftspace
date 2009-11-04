@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @export            ShiftSpacePinWidget as PinWidget
 // @name              PinWidget
 // @package           Pinning

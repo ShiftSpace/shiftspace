@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // @name	            SSViewProxy
 // @package           System
 // @dependencies      SandalphonSupport

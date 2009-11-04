@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // @uiclass
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSView

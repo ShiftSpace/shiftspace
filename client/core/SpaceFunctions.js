@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              SpaceFunctions
 // @package           Core
 // ==/Builder==

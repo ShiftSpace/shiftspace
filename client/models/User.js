@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @export            ShiftSpaceUser as User
 // @package           ShiftSpaceCore
 // @dependencies      AbstractUser

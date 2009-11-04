@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              ShiftFunctions
 // @package           Core
 // ==/Builder==

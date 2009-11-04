@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              IframeHelpers
 // @package           UtilitiesExtras
 // @dependences       Element

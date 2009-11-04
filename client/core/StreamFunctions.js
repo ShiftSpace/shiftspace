@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // @package           Core
 // @dependencies      RemoteFunctions
 // ==/Builder==

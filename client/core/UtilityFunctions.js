@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              UtilityFunctions
 // @package           Core
 // ==/Builder==
