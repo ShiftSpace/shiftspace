@@ -19,3 +19,6 @@
 [submodule "externals/fxgraph"]
 	path = externals/fxgraph
 	url = git://github.com/ShiftSpace/fxgraph.git
+[submodule "externals/rounded-image"]
+	path = externals/rounded-image
+	url = git://github.com/ShiftSpace/rounded-image.git
