@@ -105,7 +105,6 @@ class UserController(ResourceController):
         else:
             return data(user.read(userName).copy())
 
-
     @jsonencode
     @exists
     @loggedin
