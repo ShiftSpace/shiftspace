@@ -148,6 +148,6 @@ var ShiftListView = new Class({
   
   onReloadData: function()
   {
-    SSLog("Add rounded images!", SSLogForce);
+    RoundedImage.init(null, this.element);
   }
 });
