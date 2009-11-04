@@ -110,7 +110,6 @@ Parameters:
 function SSScrollToShift(space, shiftId)
 {
   var mainView = space.mainViewForShift(shiftId);
-
   if(mainView && !SSIsNewShift(shiftId))
   {
     var pos = mainView.getPosition();
