@@ -1254,13 +1254,32 @@ var SSListView = new Class({
           $H(restore).each(Function.exec);
           cell.unlock();
         }
+        this.onAddCellNode(cellNode);
       }, this);
       this.setNeedsDisplay(false);
       this.initSortables();
     }
     if(this.pageControl()) this.pageControl().initializeInterface();
     this.fireEvent('onReloadData', this);
+    this.onReloadData();
   }.asPromise(),
+  
+  /*
+    Function: onReloadData
+      *abstract*
+      Called when list view reloads data. Subclasses can implement to add new behaviors.
+  */
+  onReloadData: function() {},
+  
+  /*
+    Function: onAddCellNode
+      *abstract*
+      Called each time a list item is added during the __reloadData__ phase.
+      
+    Parameters:
+      cellNode - a DOM Element.
+  */
+  onAddCellNode: function(cellNode) {},
   
   /*
     Function: cellNodeForIndex

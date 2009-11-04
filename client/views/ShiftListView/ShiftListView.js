@@ -143,5 +143,11 @@ var ShiftListView = new Class({
   checkedItemIds: function()
   {
     return this.checkedItemIndices().map(Function.comp(this.data().asFn(), Function.acc("_id")));
+  },
+  
+  
+  onReloadData: function()
+  {
+    SSLog("Add rounded images!", SSLogForce);
   }
 });
