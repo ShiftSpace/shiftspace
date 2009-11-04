@@ -64,7 +64,7 @@ var SSShowNewShift = function(space, shift)
   var id = shift._id;
   space.onShiftCreate(id);
   SSEditShift(space, shift);
-  SSFocusShift(space, shift);
+  SSFocusShift(space, id);
 }.asPromise();
 
 /*
@@ -72,17 +72,17 @@ Function: SSFocusShift
   Focuses a shift.
 
 Parameter:
-  shiftId - the id of the shift.
+  space - a space instance.
+  shiftId - a shift id.
 */
-var SSFocusShift = function(space, shift)
+var SSFocusShift = function(space, shiftId)
 {
-  var id = shift._id;
   var lastFocusedShift = SSFocusedShiftId();
 
   // unfocus the last shift
   if (lastFocusedShift &&
       SSGetShift(lastFocusedShift) &&
-      lastFocusedShift != id)
+      lastFocusedShift != shiftId)
   {
     var lastSpace = SSSpaceForShift(lastFocusedShift);
     if(lastSpace.getShift(lastFocusedShift))
@@ -91,13 +91,13 @@ var SSFocusShift = function(space, shift)
       lastSpace.orderBack(lastFocusedShift);
     }
   }
-  SSSetFocusedShiftId(id);
-  space.orderFront(id);
+  SSSetFocusedShiftId(shiftId);
+  space.orderFront(shiftId);
 
-  space.focusShift(id);
-  space.onShiftFocus(id);
+  space.focusShift(shiftId);
+  space.onShiftFocus(shiftId);
 
-  SSScrollToShift(space, shift);
+  SSScrollToShift(space, shiftId);
 }.asPromise();
 
 /*
@@ -106,14 +106,13 @@ Function: SSScrollToShift
 
 Parameters:
   space - a space instance.
-  shift - a shift instance.
+  shiftId - a shift id.
 */
-function SSScrollToShift(space, shift)
+function SSScrollToShift(space, shiftId)
 {
-  var id = shift._id;
-  var mainView = space.mainViewForShift(id);
+  var mainView = space.mainViewForShift(shiftId);
 
-  if(mainView && !SSIsNewShift(id))
+  if(mainView && !SSIsNewShift(shiftId))
   {
     var pos = mainView.getPosition();
     var vsize = mainView.getSize();
@@ -204,7 +203,7 @@ var SSEditShift = function(space, shift)
     SSShowShift(space, shift);
     space.editShift(id);
     space.onShiftEdit(id);
-    SSFocusShift(space, shift);
+    SSFocusShift(space, id);
     SSPostNotification('onShiftEdit', id);
   }
   else
@@ -336,7 +335,7 @@ var SSShowShift = function(space, shiftId)
   try
   {
     var controlp = space.showShift(shift);
-    SSFocusShift(space, shift, controlp);
+    SSFocusShift(space, shiftId, controlp);
   }
   catch(err)
   {
