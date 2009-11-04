@@ -139,7 +139,6 @@ class UserController(ResourceController):
 
     @jsonencode
     def query(self):
-
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
             return loggedInUser
