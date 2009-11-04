@@ -252,6 +252,11 @@ var SSNotifierView = new Class({
   {
     this.__count = countp;
     this.updateCounter();
+    
+    if (this.__count > 0 && this.graph.state != "SSNotifierOpen")
+    {
+      this.graph.setState('SSNotifierHasShifts', true, 'previous');
+    }
   }.asPromise(),
   
   attachEvents: function()
