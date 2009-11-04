@@ -128,11 +128,16 @@
   margin-top: 2px;
 }
 
+.ShiftListView .ShiftListViewCell div.summaryContainer
+{
+  min-width: 485px;
+  color: #4B423A;
+}
+
 .ShiftListView .ShiftListViewCell div.summary
 {
   margin-left: 10px;
-  min-width: 485px;
-  color: #4B423A;
+  display:inline-block;
 }
 
 .ShiftListView .ShiftListViewCell div.draft
@@ -165,7 +170,7 @@ ul.ShiftListView li.ShiftListViewCell:hover
 
 ul.ShiftListView li.ShiftListViewCell:hover .spaceName
 {
-  display: block;
+  display: inline;
 }
 
 .ShiftListView .ShiftListViewCell.selected

@@ -1,4 +1,10 @@
 {
+    "AllShiftsView": "client/views/AllShiftsView", 
+    "GroupsPane": "client/views/GroupsPane", 
+    "InboxPane": "client/views/InboxPane", 
+    "LoginTabView": "client/views/LoginTabView", 
+    "MyShiftSpacePane": "client/views/MyShiftSpacePane", 
+    "PeoplePane": "client/views/PeoplePane", 
     "SSAutocomplete": "client/views/SSAutocomplete", 
     "SSCell": "client/views/SSCell", 
     "SSCommentPane": "client/views/SSCommentPane", 
@@ -7,12 +13,16 @@
     "SSFilterPane": "client/views/SSFilterPane", 
     "SSForm": "client/views/SSForm", 
     "SSFramedView": "client/views/SSFramedView", 
+    "SSInstalledSpaceCell": "client/views/SSInstalledSpaceCell", 
     "SSListView": "client/views/SSListView", 
     "SSListViewCell": "client/views/SSListViewCell", 
     "SSMultiView": "client/views/SSMultiView", 
+    "SSNotifierView": "client/views/SSNotifierView", 
     "SSPublishPane": "client/views/SSPublishPane", 
     "SSSpaceMenu": "client/views/SSSpaceMenu", 
     "SSSpaceMenuListCell": "client/views/SSSpaceMenuListCell", 
     "SSTabView": "client/views/SSTabView", 
-    "ShiftListView": "client/views/ShiftListView"
+    "SettingsTabView": "client/views/SettingsTabView", 
+    "ShiftListView": "client/views/ShiftListView", 
+    "ShiftListViewCell": "client/views/ShiftListViewCell"
 }
