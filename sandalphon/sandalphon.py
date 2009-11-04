@@ -108,17 +108,17 @@ class SandalphonCompiler:
       
     def preprocessHTMLImageUrls(self, html, imageUrl):
         return self.htmlImagePattern.sub(imageUrl, html)
-      
+    
     def addCSS(self, fileData):
         self.cssFiles.append(fileData)
-  
+    
     def addCSSForHTMLPath(self, filePath):
         """
         Appends the contents of the specified css file to self.cssFile.
         """
         cssPath = os.path.splitext(filePath)[0]+".css"
         basename = os.path.basename(cssPath)
-        # load the css file
+        # load the css file.
         try:
             fileHandle = open(cssPath)
             if fileHandle != None:
@@ -141,7 +141,7 @@ class SandalphonCompiler:
             fileHandle.close()
         except IOError:
             pass
-              
+    
     def uiclassDeps(self, uiclass, result=[]):
         """
         Returns all uiclass superclasses fo a uiclass.
@@ -156,7 +156,7 @@ class SandalphonCompiler:
                     result.append(dep)
                     self.uiclassDeps(dep, result)
         return result
-      
+    
     def addCSSForUIClasses(self, interfaceFile):
         """
         Loads an uiclass css that hasn't already been included.
@@ -179,7 +179,7 @@ class SandalphonCompiler:
         # TODO: doesn't look in custom view, we should see if it is a custom view - David 7/12/09
         [self.addCSS({"path": os.path.join(os.path.join(viewDirectory, item), item+".css"), "file":item})
          for item in toLoad]
-      
+    
     def getInstruction(self, str):
         """
         Takes a raw template instruction and returns a tuple holding the instruction name and it's parameter.
@@ -187,7 +187,7 @@ class SandalphonCompiler:
         temp = str[2:len(str)-2]
         temp = temp.split(':')
         return (temp[0], temp[1])
-      
+    
     def handleInstruction(self, instruction, file):
         """
         Takes an instruction tuple and the contents of the file as a string. Returns the file post instruction.
@@ -202,7 +202,7 @@ class SandalphonCompiler:
             os.path.dirname(instruction[1]))
             return self.templatePattern.sub(theView, file, 1)
         return file
-  
+    
     def compile(self, inputFile=None, jsonOutput=False):
         """
         Compile an interface file down to its parts
@@ -227,7 +227,7 @@ class SandalphonCompiler:
         ElementTree.fromstring(interfaceFile)
         # load all css
         self.addCSSForUIClasses(interfaceFile)
-
+        
         coreui = [item["path"] for item in self.cssFiles 
                   if item["file"] in self.packages['packages']['ShiftSpaceCoreUI']]
         [self.addCSSForHTMLPath(path) for path in coreui]
@@ -236,10 +236,10 @@ class SandalphonCompiler:
         if globalCSS:
             cssPath = globalCSS
             self.addCSSForHTMLPath(cssPath)
-
+        
         notcore = [item["path"] for item in self.cssFiles
                    if (not item["file"] in self.packages['packages']['ShiftSpaceCoreUI'])]
-
+        
         [self.addCSSForHTMLPath(path) for path in notcore]
         # output to specified directory or standard out or as json
         if self.outputDirectory != None:

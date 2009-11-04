@@ -429,16 +429,16 @@ var ShiftSpaceSpace = new Class({
       shiftId - The JSON representing the shift to show.
 
     Returns :
-      An _ACTUAL_ Shift object, _NOT_ an id.
+      An _ACTUAL_ Shift JSON, _NOT_ an Shift id.
   */
   showShift: function(aShift)
   {
-    var cShift = this.__shifts[aShift._id];
+    var cShift = this.__shifts[aShift._id]; // check for a real shift instance
     if(!cShift)
     {
       try
       {
-        cShift = this.addShift(aShift, this.shiftUI());
+        cShift = this.addShift(aShift, this.shiftUI()); // create a real shift instance
       }
       catch(exc)
       {
@@ -457,7 +457,7 @@ var ShiftSpaceSpace = new Class({
           theShift.show();
           theShift.setIsVisible(true);
           theShift.setIsBeingEdited(false);
-          self.onShiftShow(theShift);
+          self.onShiftShow(theShift.getId());
         }
         theShift.onFocus();
       }
