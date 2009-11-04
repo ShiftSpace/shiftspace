@@ -14,7 +14,7 @@ var SSFramedView = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      location: 'customViews'
+      location: 'views'
     });
   },
   

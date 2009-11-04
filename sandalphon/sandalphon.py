@@ -56,22 +56,10 @@ class SandalphonCompiler:
         """
         Looks into views and builds the paths to the interface files
         """
-        viewsDirectory = "client/views/"
-        customViewsDirectory = "client/customViews/"
-        views = [f for f in os.listdir(viewsDirectory) if(f != ".svn")]
-        customViews = [f for f in os.listdir(customViewsDirectory) if (f != ".svn")]
-        self.paths = {}
-        # These are bundle directories, .js .css .html
-        for f in views:
-            parts = os.path.splitext(f)
-            base = parts[0]
-            self.paths[base] = os.path.join(viewsDirectory, f)
-        # These are not, need to look only for the html file, about to change
-        for f in customViews:
-            parts = os.path.splitext(f)
-            base = parts[0]
-            self.paths[base] = os.path.join(customViewsDirectory, base)
-  
+        fh = open("config/views.json")
+        self.paths = json.loads(fh.read())
+        fh.close()
+    
     def validateMarkup(self, markup):
         """
         Make sure the passed in markup checks out.
@@ -82,14 +70,11 @@ class SandalphonCompiler:
             raise xml.parsers.expat.ExpatError
         pass
   
-    def loadView(self, view, path=None):
+    def loadView(self, view):
         """
         Load a views a view and returns it.
         """
-        if path == None:
-            filePath = self.paths[view]
-        else:
-            filePath = path
+        filePath = self.paths.get(view)
         if filePath != None:
             htmlPath = os.path.join(filePath, view+'.html')
             fileHandle = open(htmlPath)
@@ -192,16 +177,11 @@ class SandalphonCompiler:
         """
         Takes an instruction tuple and the contents of the file as a string. Returns the file post instruction.
         """
-        if instruction[0] == "customView":
-            # load this view, will need match that view as well
-            theView = self.loadView(instruction[1])
-            # replace the match
+        if instruction[0] == "view":
+            theView = self.loadView(os.path.basename(instruction[1]))
             return self.templatePattern.sub(theView, file, 1)
-        elif instruction[0] == "path":
-            theView = self.loadView(os.path.basename(instruction[1]),
-            os.path.dirname(instruction[1]))
-            return self.templatePattern.sub(theView, file, 1)
-        return file
+        else:
+            raise Exception("Instruction %s not recognized" % instruction)
     
     def compile(self, inputFile=None, jsonOutput=False):
         """
