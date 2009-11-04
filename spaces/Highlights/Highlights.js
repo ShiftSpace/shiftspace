@@ -354,11 +354,14 @@ var HighlightsShift = new Class({
 
   encode: function()
   {
-    //tokenize newline char with __newline__
-    for(var i=0; i<this.ranges.length; i++)
+    if (this.ranges)
     {
-      this.ranges[i].origText = this.tokenizeNewline(this.ranges[i].origText);
-      this.ranges[i].ancestorOrigTextContent = this.tokenizeNewline(this.ranges[i].ancestorOrigTextContent);
+      //tokenize newline char with __newline__
+      for(var i=0; i<this.ranges.length; i++)
+      {
+        this.ranges[i].origText = this.tokenizeNewline(this.ranges[i].origText);
+        this.ranges[i].ancestorOrigTextContent = this.tokenizeNewline(this.ranges[i].ancestorOrigTextContent);
+      }
     }
 
     return {
