@@ -251,7 +251,19 @@ class SSCoreBuilder():
                                        for kv in [s.split(" as ") for s in fileExports]])
                 self.exports.update(exportMappings)
     
-    def build(self, path, recurse=False):
+    def collectViews(self, viewsDir="client/views"):
+        """
+        Create a JSON index of all available views.
+        """
+        viewsDict = {}
+        views = [f for f in os.listdir(viewsDir) if os.path.isdir(os.path.join(viewsDir, f))]
+        for view in views:
+            viewsDict[view] = os.path.join(viewsDir, view)
+        fh = open("config/views.json", "w")
+        fh.write(json.dumps(viewsDict, sort_keys=True, indent=4))
+        fh.close()
+    
+    def build(self, path, recurse=False, viewsDir="client/views"):
         """
         Creates all the internal data structures and sorts all found packages.
         """
@@ -260,6 +272,7 @@ class SSCoreBuilder():
         self.sortPackages()
         self.calculateTestDependencies()
         self.collectExports()
+        self.collectViews(viewsDir)
 
 
 def usage():
