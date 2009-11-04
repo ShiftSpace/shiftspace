@@ -245,6 +245,10 @@ class RootController:
         pageopener = FancyOpener()
         
         theShift = shift.read(id)
+        
+        if theShift['type'] != 'shift':
+            return self.statusPage(status="err", details="proxyperm")
+        
         shiftId = theShift["_id"]
         space = theShift["space"]["name"]
         url = theShift["href"]
