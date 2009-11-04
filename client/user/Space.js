@@ -425,7 +425,7 @@ var ShiftSpaceSpace = new Class({
       Show a shift.  If a corresponding internal instance does not exist it will be created.
 
     Parameters :
-      shiftId - The JSON representing the shift to show.
+      aShift - The JSON representing the shift to show.
 
     Returns :
       An _ACTUAL_ Shift JSON, _NOT_ an Shift id.

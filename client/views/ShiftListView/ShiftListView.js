@@ -68,7 +68,7 @@ var ShiftListView = new Class({
   {
     this.parent(idx);
     var shift = this.data()[idx];
-    SSShowShift(SSSpaceForName(shift.space.name), shift);
+    SSShowShift(SSSpaceForName(shift.space.name), shift._id);
   },
   
 

@@ -327,11 +327,12 @@ Function: SSShowShift
   Displays a shift on the page.
 
 Parameters:
-  space - The space instance
-  shift - The shift data
+  space - The space instance.
+  shiftId - The shift id.
 */
-var SSShowShift = function(space, shift)
+var SSShowShift = function(space, shiftId)
 {
+  var shift = SSGetShift(shiftId);
   try
   {
     var controlp = space.showShift(shift);
