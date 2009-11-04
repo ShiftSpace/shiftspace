@@ -218,7 +218,7 @@ Function: SSSaveNewShift
   Creates a new entry for the shift on the server.
 
 Parameters:
-  shiftJson - a shift json object, delivered from Shift.encode
+  shift - a shift JSON object, delivered from Shift.encode
 
 See Also:
   Shift.encode
@@ -264,7 +264,7 @@ Function: SSSaveShift
   Saves a shift's JSON object to the server.
 
 Parameters:
-  shiftJson - a shiftJson object, delivered from Shift.encode.
+  shift - a shift JSON object, delivered from Shift.encode.
 
 See Also:
   Shift.encode
