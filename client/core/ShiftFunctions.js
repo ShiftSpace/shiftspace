@@ -11,7 +11,6 @@ function SSGetShift(id)
 {
   var shift = SSApp.getDocument(id);
   if(shift) return shift;
-  SSLog("No local shift loading async", SSLogForce);
   var p = SSLoadShift(id);
   return p;
 }
@@ -63,7 +62,7 @@ var SSShowNewShift = function(space, shift)
 {
   var id = shift._id;
   space.onShiftCreate(id);
-  SSEditShift(space, shift);
+  SSEditShift(space, id);
   SSFocusShift(space, id);
 }.asPromise();
 
@@ -152,13 +151,12 @@ Function: SSBlurShift
 
 Parameters:
   space - a space instance.
-  shift - a shift.
+  shiftId - a shift id.
 */
-var SSBlurShift = function(space, shift)
+var SSBlurShift = function(space, shiftId)
 {
-  var id = shift._id;
-  space.blurShift(id);
-  space.onShiftBlur(id);
+  space.blurShift(shiftId);
+  space.onShiftBlur(shiftId);
 }.asPromise();
 
 /*
@@ -190,21 +188,21 @@ Function: SSEditShift
   Edit a shift.
 
 Parameters:
-  space - a space.
-  shift - shift data
+  space - a space instance.
+  shiftId - a shift id.
 */
-var SSEditShift = function(space, shift)
+var SSEditShift = function(space, shiftId)
 {
-  var id = shift._id;
+  var shift = SSGetShift(shiftId);
   if(SSUserCanEditShift(shift))
   {
     var content = shift.content;
     SSFocusSpace(space, (content && content.position) || null);
-    SSShowShift(space, shift);
-    space.editShift(id);
-    space.onShiftEdit(id);
-    SSFocusShift(space, id);
-    SSPostNotification('onShiftEdit', id);
+    SSShowShift(space, shiftId);
+    space.editShift(shiftId);
+    space.onShiftEdit(shiftId);
+    SSFocusShift(space, shiftId);
+    SSPostNotification('onShiftEdit', shiftId);
   }
   else
   {

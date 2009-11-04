@@ -108,7 +108,7 @@ function SSRegisterSpace(instance)
     SSPostNotification('onShiftShow', id);
   });
   instance.addEvent('onShiftBlur', function(id) {
-    SSBlurShift(SSSpaceForShift(id), SSGetShift(id));
+    SSBlurShift(SSSpaceForShift(id), id);
     SSPostNotification('onShiftBlur', id);
   });
   instance.addEvent('onShiftFocus', function(id) {
