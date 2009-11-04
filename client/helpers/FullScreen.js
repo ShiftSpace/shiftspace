@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              FullScreen
 // @package           UtilitiesExtras
 // @dependencies      ShiftSpaceElement

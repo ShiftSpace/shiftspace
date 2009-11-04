@@ -44,18 +44,13 @@ def exists(func):
     def existsFn(*args, **kwargs):
         db = core.connect()
         instance = args[0]
-
         primaryKey = getattr(instance, "primaryKey")()
         id = kwargs[primaryKey]
-
         resolver = None
-        
         if hasattr(instance, "resolveResource"):
             resolver = getattr(instance, "resolveResource")
-
         if resolver:
             id = resolver(id)
-
         if (not id) or (not db.get(id)):
             errorStr = ""
             errorType = ""

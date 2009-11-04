@@ -60,3 +60,4 @@ tmp/*/manual/install.html
 tmp/docs
 
 ideas/*
+config/views.json

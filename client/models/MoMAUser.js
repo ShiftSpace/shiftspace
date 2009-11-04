@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @package           MoMA
 // ==/Builder==
 

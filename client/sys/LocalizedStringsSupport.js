@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // @name              LocalizedStringsSupport
 // @package           Internationalization
 // ==/Builder==

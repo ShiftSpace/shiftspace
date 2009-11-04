@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              PersistenceFunctions
 // @package           Core
 // ==/Builder==

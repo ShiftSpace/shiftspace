@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // ==/Builder==
 
 %%VARS%%

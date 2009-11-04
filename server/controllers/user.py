@@ -105,7 +105,6 @@ class UserController(ResourceController):
         else:
             return data(user.read(userName).copy())
 
-
     @jsonencode
     @exists
     @loggedin
@@ -139,7 +138,6 @@ class UserController(ResourceController):
 
     @jsonencode
     def query(self):
-
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
             return loggedInUser

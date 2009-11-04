@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              SpaceFunctions
 // @package           Core
 // ==/Builder==
@@ -109,11 +108,11 @@ function SSRegisterSpace(instance)
     SSPostNotification('onShiftShow', id);
   });
   instance.addEvent('onShiftBlur', function(id) {
-    SSBlurShift(SSSpaceForShift(id), SSGetShift(id));
+    SSBlurShift(SSSpaceForShift(id), id);
     SSPostNotification('onShiftBlur', id);
   });
   instance.addEvent('onShiftFocus', function(id) {
-    SSFocusShift(SSSpaceForShift(id), SSGetShift(id));
+    SSFocusShift(SSSpaceForShift(id), id);
     SSPostNotification('onShiftFocus', id);
   });
   instance.addEvent('onShiftSave', function(id) {

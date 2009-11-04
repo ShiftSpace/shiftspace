@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // ==/Builder==
 
 // NOTE: This will be preprocessed by preprocess.py and replaced with the proper

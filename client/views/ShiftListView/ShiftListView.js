@@ -1,6 +1,5 @@
 // ==Builder==
 // @uiclass
-// @optional
 // @package           ShiftSpaceUI
 // @dependencies      SSListView
 // ==/Builder==
@@ -69,14 +68,14 @@ var ShiftListView = new Class({
   {
     this.parent(idx);
     var shift = this.data()[idx];
-    SSShowShift(SSSpaceForName(shift.space.name), shift);
+    SSShowShift(SSSpaceForName(shift.space.name), shift._id);
   },
   
 
   onRowDeselect: function(idx)
   {
     var shift = this.data()[idx];
-    SSHideShift(SSSpaceForName(shift.space.name), shift);
+    SSHideShift(SSSpaceForName(shift.space.name), shift._id);
   },
   
   

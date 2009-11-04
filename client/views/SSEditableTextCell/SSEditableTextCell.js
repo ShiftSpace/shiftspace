@@ -1,6 +1,5 @@
 // ==Builder==
 // @uiclass
-// @required
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSCell
 // ==/Builder==
