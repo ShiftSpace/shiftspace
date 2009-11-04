@@ -327,8 +327,8 @@ Function: SSShowShift
   Displays a shift on the page.
 
 Parameters:
-  space - The space instance.
-  shiftId - The shift id.
+  space - a space instance.
+  shiftId - a shift id.
 */
 var SSShowShift = function(space, shiftId)
 {
@@ -350,13 +350,12 @@ Function: SSHideShift
 
 Parameters:
     space - a space instance.
-    shift - a shift.
+    shiftId - a shift id.
 */
-var SSHideShift = function(space, shift)
+var SSHideShift = function(space, shiftId)
 {
-  var id = shift._id;
-  space.hideShift(id);
-  space.onShiftHide(id);
+  space.hideShift(shiftId);
+  space.onShiftHide(shiftId);
 }.asPromise();
 
 /*

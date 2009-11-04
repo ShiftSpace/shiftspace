@@ -75,7 +75,7 @@ var ShiftListView = new Class({
   onRowDeselect: function(idx)
   {
     var shift = this.data()[idx];
-    SSHideShift(SSSpaceForName(shift.space.name), shift);
+    SSHideShift(SSSpaceForName(shift.space.name), shift._id);
   },
   
   
