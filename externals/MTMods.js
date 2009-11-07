@@ -268,13 +268,13 @@ Date.implement({
 
 
 Fx.CSS.implement({
-  search: function(selector){
+  search: function(selector, doc){
     if (Fx.CSS.Cache[selector]) return Fx.CSS.Cache[selector];
     var to = {};
     
     function extract(sheet, j){
       var href = sheet.href;
-      if (href && href.contains('://') && !href.contains(document.domain)) return;
+      if (href && href.contains('://') && !href.contains((doc || document).domain)) return;
       var rules = sheet.rules || sheet.cssRules;
       if(sheet.imports) Array.each(sheet.imports, extract);
       Array.each(rules, function(rule, i){
@@ -291,7 +291,7 @@ Fx.CSS.implement({
         });
       });
     }
-    Array.each(document.styleSheets, extract);
+    Array.each((doc || document).styleSheets, extract);
     return Fx.CSS.Cache[selector] = to;
   }
 });
