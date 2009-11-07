@@ -27,13 +27,14 @@
   background-color: inherit;
   height: 20px;
   padding: 5px 10px;
-  border-top: 3px solid #D4E7DA;
+/*  border-top: 3px solid #D4E7DA;
   border-left: 3px solid #D4E7DA;
   border-right: 3px solid #D4E7DA;
   -moz-border-radius-topleft: 6px;
   -webkit-border-top-left-radius: 6px;
   -moz-border-radius-topright: 6px;
-  -webkit-border-top-right-radius: 6px;
+  -webkit-border-top-right-radius: 6px;*/
+  margin-right: -12px;
 }
 
 .SSTabViewConsoleStyle > .SSControlView > .SSButton.SSActive
@@ -45,19 +46,19 @@
 {
   clear: both;
   position: absolute;
-  top: 31px;
+  top: 55px;
   left: 0px;
   right: 0px;
   bottom: 0px;
-  border-style: solid;
-  border-width: 3px 3px 0px 3px;
-  border-color: #D4E7DA;
-  -moz-border-radius-topleft: 6px;
+  /*border-style: solid;*/
+  /*border-width: 3px 3px 0px 3px;*/
+  /*border-color: #D4E7DA;*/
+/*  -moz-border-radius-topleft: 6px;
   -webkit-border-top-left-radius: 6px;
   -moz-border-radius-topright: 6px;
-  -webkit-border-top-right-radius: 6px;
+  -webkit-border-top-right-radius: 6px;*/
   /*-moz-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;*/
-  -webkit-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;
+  /*-webkit-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;*/
   background-color:#F7F2EF;
 }
 
@@ -128,16 +129,11 @@
   margin-top: 2px;
 }
 
-.ShiftListView .ShiftListViewCell div.summaryContainer
-{
-  min-width: 485px;
-  color: #4B423A;
-}
-
 .ShiftListView .ShiftListViewCell div.summary
 {
   margin-left: 10px;
-  display:inline-block;
+  min-width: 485px;
+  color: #4B423A;
 }
 
 .ShiftListView .ShiftListViewCell div.draft
@@ -170,7 +166,7 @@ ul.ShiftListView li.ShiftListViewCell:hover
 
 ul.ShiftListView li.ShiftListViewCell:hover .spaceName
 {
-  display: inline;
+  display: block;
 }
 
 .ShiftListView .ShiftListViewCell.selected
@@ -261,4 +257,141 @@ ul.ShiftListView li.ShiftListViewCell:hover .spaceName
 .leftSideBar input:checked + label
 {
   font-weight:bold;
+}
+
+
+
+/*====================================================
+====Button Styles
+using !important is garbagey garbage 
+======================================================*/
+
+#MainTabView > .SSControlView > .SSButton div{
+  padding-right: 18px !important;
+  background-image: url(/images/right_tab.png);
+  background-repeat: no-repeat;
+  background-position: right 0;
+  background-color: transparent !important;
+  text-indent: -7px;
+  text-align: center;
+}
+#MainTabView > .SSControlView > .SSButton.SSActive div{
+  background-image: url(/images/right_tab_active.png);
+  background-position: right -1px;
+}
+#MainTabView > .SSControlView > .SSButton{
+  padding-left: 18px !important;
+  background-image: url(/images/left_tab.png);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-color: transparent !important;
+}
+#MainTabView > .SSControlView > .SSButton.SSActive{
+  height: 48px !important;
+  background-image: url(/images/left_tab_active.png);
+  background-position: left -1px;
+}
+.SSTabViewConsoleStyle > .SSControlView{
+  top: 13px;
+}
+#MainTabView > .SSControlView > .SSButton:first-child{
+  background-image: url(/images/left_tab_first.png);
+  height: 50px;
+}
+#MainTabView > .SSControlView > .SSButton.SSActive:first-child{
+  background-image: url(/images/left_tab_active_first.png);  
+}
+/*====================================================
+====Console Styles
+======================================================*/
+
+.SSTabViewConsoleStyle > .SSContentView {
+  top: 48px !important;
+  padding-top: 50px;
+  background-image: url(/images/console_left.png);
+  background-repeat: no-repeat;
+  background-color: transparent !important;
+  
+}
+
+.SSFilterPane{
+  left: 16px !important;
+}
+
+.ShiftListView{
+  top: 14px !important;
+}
+
+/*====================================================
+====Shifts
+======================================================*/
+ul.ShiftListView li.ShiftListViewCell{
+  height: 27px;
+  border-bottom: 1px solid #BBB4AF;
+}
+
+ul.ShiftListView li.ShiftListViewCell:hover{
+  background-color: #A1C49C;
+  height: 26px;
+  border: 1px #68A07E solid;
+}
+
+.ShiftListView .ShiftListViewCell div.draft{
+  width: 100px;
+  text-align: right;
+  background-repeat: repeat-y;
+}
+
+ul.ShiftListView li.ShiftListViewCell:hover div.draft{
+  background-image: url(/images/green_fade_bg.png);
+}
+
+.ShiftListView .ShiftListViewCell:nth-child(odd) div.draft{
+  background-image: url(/images/gray_fade_bg.png);
+}
+
+.ShiftListView .ShiftListViewCell:nth-child(even) div.draft{
+  background-image: url(/images/white_fade_bg.png);
+}
+
+/*====================================================
+====Moved
+======================================================*/
+#MainTabView > .SSControlView > .SSButton div
+{
+  background-color: #F7F2EF;
+  height: 20px; 
+  padding: 5px 10px;
+  /*added 16px on top padding*/
+  padding-top: 21px;
+}
+
+.SSTabViewConsoleStyle > .SSContentView {
+  background-color:transparent !important;
+  background-image:url(http://localhost:8080/images/console_left.png);
+  background-repeat:no-repeat;
+  padding-top:50px;
+  top:48px !important;
+}
+
+.SSTabViewConsoleStyle > .SSControlView {
+  top:13px;
+}
+
+.SSTabViewConsoleStyle > .SSControlView {
+  height:46px;
+  left:0;
+  position:absolute;
+  right:0;
+  top:0;
+}
+
+#SSConsoleFrameBody #MainTabView.SSTabView {
+  bottom:0;
+  height:auto;
+  left:10px;
+  position:absolute;
+  right:10px;
+  top:4px;
+  width:auto;
 }
