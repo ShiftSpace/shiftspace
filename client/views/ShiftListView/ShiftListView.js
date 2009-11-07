@@ -148,6 +148,6 @@ var ShiftListView = new Class({
   
   onReloadData: function()
   {
-    RoundedImage.init(null, this.element);
+    RoundedImage.init("#AllShiftsListView .ShiftListViewCell img.gravatar", new Window(this.element.getWindow()));
   }
 });
