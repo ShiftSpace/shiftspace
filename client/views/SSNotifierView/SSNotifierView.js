@@ -105,12 +105,14 @@ var SSNotifierView = new Class({
           last: true,
           previous: 'SSNotifierShowDetails',
           styles: function() { return { width: window.getSize().x }; },
-          onComplete: function(el, fxgraph) { 
-            el.addClass('SSNotifierOpen'); 
+          onComplete: function(el, fxgraph) {
+            // this is called when we enter the final state
+            el.addClass('SSNotifierOpen');
             this.showControls(); 
           }.bind(this),
           onExit: function(el, fxgraph) {
-            el.removeClass('SSNotifierOpen'); 
+            // this is called when we leave the final state
+            el.removeClass('SSNotifierOpen');
             this.hideControls(); 
             el.setStyles({
               width: window.getSize().x,
@@ -153,7 +155,7 @@ var SSNotifierView = new Class({
   onConsoleShow: function()
   {
     this.graph.cancel(true);
-    this.graph.setState('SSNotifierOpen', false);
+    this.graph.setState('SSNotifierOpen', {animate:false});
     
     this.fireEvent('showconsole');
     this.SSToggleConsole.set('text', "Close Console");
@@ -178,7 +180,7 @@ var SSNotifierView = new Class({
   {
     if(animate === false)
     {
-      this.graph.setState("SSNotifierOpen", false);
+      this.graph.setState("SSNotifierOpen", {animate:false});
     }
     else
     {
@@ -254,7 +256,8 @@ var SSNotifierView = new Class({
     
     if (this.__count > 0 && this.graph.state != "SSNotifierOpen")
     {
-      this.graph.setState('SSNotifierHasShifts', true, 'previous');
+      SSLog("show", SSLogForce);
+      this.graph.setState('SSNotifierHasShifts', {animate:true, direction:'previous', hold:{duration:3000}});
     }
   }.asPromise(),
   
