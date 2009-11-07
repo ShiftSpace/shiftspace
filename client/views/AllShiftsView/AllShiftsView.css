@@ -3,7 +3,7 @@
   left: 166px;
 }
 
-#AllShiftsListView .ShiftListViewCell .gravatar
+#AllShiftsListView .ShiftListViewCell img.gravatar
 {
   width: 16px;
   position: absolute;
