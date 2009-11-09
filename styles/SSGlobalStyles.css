@@ -107,173 +107,179 @@
   margin-top: 4px;
 }
 
-.ShiftListView .ShiftListViewCell > *
-{
-  float: left;
-  margin-top: 2px;
-}
+  .ShiftListView .ShiftListViewCell
+  {
+    float: left;
+    width: 100%;
+    height: 28px;
+    padding-top: 4px;
+  }
+  
+    .ShiftListView .ShiftListViewCell > *
+    {
+      float: left;
+      margin-top: 2px;
+    }
+    
+    .ShiftListView .ShiftListViewCell .spaceName
+    {
+      margin-left: 10px;
+      display: none;
+      font-weight: bold;
+    }
+    
+    ul.ShiftListView li.ShiftListViewCell:hover .spaceName
+    {
+      display: inline;
+    }
+    
+    .ShiftListView .ShiftListViewCell div.summaryContainer
+    {
+      min-width: 485px;
+      color: #4B423A;
+    }
 
-.ShiftListView .ShiftListViewCell div.summary
-{
-  margin-left: 10px;
-  min-width: 485px;
-  color: #4B423A;
-}
+    .ShiftListView .ShiftListViewCell div.summary
+    {
+      margin-left: 10px;
+      display: inline-block;
+      color: #4B423A;
+    }
+    
+    .ShiftListView .ShiftListViewCell div.status
+    {
+      margin-top: 4px;
+      width: 18px;
+      height: 20px;
+      background-repeat: no-repeat;
+    }
 
-.ShiftListView .ShiftListViewCell div.status
-{
-  margin-top: 4px;
-  width: 18px;
-  height: 20px;
-  background-repeat: no-repeat;
-}
+    .ShiftListView .ShiftListViewCell div.status.private
+    {
+      background-image:url(/images/Console/publish-private.gif);
+    }
 
-.ShiftListView .ShiftListViewCell div.status.private
-{
-  background-image:url(/images/Console/publish-private.gif);
-}
+    .ShiftListView .ShiftListViewCell div.status.public
+    {
+      background-image:url(/images/Console/publish-public.gif);
+    }
 
-.ShiftListView .ShiftListViewCell div.status.public
-{
-  background-image:url(/images/Console/publish-public.gif);
-}
+    .ShiftListView .ShiftListViewCell:nth-child(2n+0)
+    {
+      background-color: #F8F5F2;
+    }
 
-.ShiftListView .ShiftListViewCell
-{
-  float: left;
-  width: 100%;
-  height: 28px;
-  padding-top: 4px;
-}
+    .ShiftListView .ShiftListViewCell:nth-child(2n+1)
+    {
+      background-color: #F0EDEB;
+    }
 
-.ShiftListView .ShiftListViewCell:nth-child(2n+0)
-{
-  background-color: #F8F5F2;
-}
+    ul.ShiftListView li.ShiftListViewCell:hover
+    {
+      background-color: white;
+      z-index: 2;
+    }
 
-.ShiftListView .ShiftListViewCell:nth-child(2n+1)
-{
-  background-color: #F0EDEB;
-}
+    .ShiftListView .ShiftListViewCell.selected
+    {
+      background-color: #81C49C;
+    }
 
-ul.ShiftListView li.ShiftListViewCell:hover
-{
-  background-color: white;
-  z-index: 2;
-}
+    .ShiftListView .ShiftListViewCell .spaceIcon
+    {
+      margin-left: 10px;
+    }
 
-ul.ShiftListView li.ShiftListViewCell:hover .spaceName
-{
-  display: block;
-}
+    .ShiftListView .ShiftListViewCell .user > *
+    {
+      float: left;
+    }
 
-.ShiftListView .ShiftListViewCell.selected
-{
-  background-color: #81C49C;
-}
+    .ShiftListView .ShiftListViewCell .gravatar
+    {
+      position: relative;
+      width: 16px;
+      -moz-border-radius: 4px 0px 0px 4px;
+      -webkit-border-top-left-radius: 4px;
+      -webkit-border-bottom-left-radius: 4px;
+    }
 
-.ShiftListView .ShiftListViewCell .spaceIcon
-{
-  margin-left: 10px;
-}
+    .ShiftListView .ShiftListViewCell canvas.gravatar:hover, .ShiftListView .ShiftListViewCell img.gravatar:hover
+    {
+      top: -8px;
+      margin-left: -8px;
+      width: 32px;
+      height: 32px;
+      -moz-border-radius: 4px;
+      -webkit-border-radius: 4px;
+    }
 
-.ShiftListView .ShiftListViewCell .spaceName
-{
-  margin-left: 10px;
-  display: none;
-  font-weight: bold;
-}
+    .ShiftListView .ShiftListViewCell div.userName
+    {
+      font-size: 10px;
+      color: #4B423A;
+      background-color: #D5D1CE;
+      background-color: #ccc;
+      padding-top: 1px;
+      padding-left: 4px;
+      padding-right: 4px;
+      height: 16px;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      border-sizing: border-box;
+      -moz-border-radius-topright: 4px;
+      -webkit-border-top-right-radius: 4px;
+      -moz-border-radius-bottomright: 4px;
+      -webkit-border-bottom-right-radius: 4px;
+    }
 
-.ShiftListView .ShiftListViewCell .user > *
-{
-  float: left;
-}
+    .ShiftListView .ShiftListViewCell div.userName:hover
+    {
+      color: white;
+      background-color: #746559;
+    }
 
-.ShiftListView .ShiftListViewCell .gravatar
-{
-  position: relative;
-  width: 16px;
-  -moz-border-radius: 4px 0px 0px 4px;
-  -webkit-border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 4px;
-}
+    .ShiftListView .ShiftListViewCell div.userName.loggedin
+    {
+      font-weight: bold;
+    }
 
-.ShiftListView .ShiftListViewCell canvas.gravatar:hover, .ShiftListView .ShiftListViewCell img.gravatar:hover
-{
-  top: -8px;
-  margin-left: -8px;
-  width: 32px;
-  height: 32px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-}
+    .ShiftListView .ShiftListViewCell div.date
+    {
+      margin-left: 6px;
+    }
 
-.ShiftListView .ShiftListViewCell div.userName
-{
-  font-size: 10px;
-  color: #4B423A;
-  background-color: #D5D1CE;
-  background-color: #ccc;
-  padding-top: 1px;
-  padding-left: 4px;
-  padding-right: 4px;
-  height: 16px;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  border-sizing: border-box;
-  -moz-border-radius-topright: 4px;
-  -webkit-border-top-right-radius: 4px;
-  -moz-border-radius-bottomright: 4px;
-  -webkit-border-bottom-right-radius: 4px;
-}
+    .ShiftListView .ShiftListViewCell div.favorite
+    {
+      float: right;
+      margin-right: 20px;
+    }
 
-.ShiftListView .ShiftListViewCell div.userName:hover
-{
-  color: white;
-  background-color: #746559;
-}
+    .ShiftListView .ShiftListViewCell div.favorite div
+    {
+      float: left;
+    }
 
-.ShiftListView .ShiftListViewCell div.userName.loggedin
-{
-  font-weight: bold;
-}
+    .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton
+    {
+      width: 18px;
+      height: 18px;
+      background-color: #ccc;
+    }
 
-.ShiftListView .ShiftListViewCell div.date
-{
-  margin-left: 6px;
-}
+    .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton.favorited
+    {
+      background-color: yellow;
+    }
 
-.ShiftListView .ShiftListViewCell div.favorite
-{
-  float: right;
-  margin-right: 20px;
-}
-
-.ShiftListView .ShiftListViewCell div.favorite div
-{
-  float: left;
-}
-
-.ShiftListView .ShiftListViewCell div.favorite div.favoriteButton
-{
-  width: 18px;
-  height: 18px;
-  background-color: #ccc;
-}
-
-.ShiftListView .ShiftListViewCell div.favorite div.favoriteButton.favorited
-{
-  background-color: yellow;
-}
-
-.ShiftListView .ShiftListViewCell div.comments
-{
-  float: right;
-  background-color: #ccc;
-  width: 18px;
-  height: 18px;
-  margin-right: 20px;
-}
+    .ShiftListView .ShiftListViewCell div.comments
+    {
+      float: right;
+      background-color: #ccc;
+      width: 18px;
+      height: 18px;
+      margin-right: 20px;
+    }
 
 /* Sidebars */
 
