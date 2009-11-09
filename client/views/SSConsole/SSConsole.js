@@ -14,7 +14,7 @@ var SSConsole = new Class({
   {
     this.parent(el, options);
 
-    var url = String.urlJoin('client/compiledViews/', SSInfo().env, "SSConsoleMain");
+    var url = String.urlJoin('builds/compiledViews/', SSInfo().env, "SSConsoleMain");
     var p = Sandalphon.load(url);
     this.buildInterface(p);
 

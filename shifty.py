@@ -138,7 +138,7 @@ def build(argv):
         else:
             buildUsage()
 
-    compiler = sandalphon.SandalphonCompiler("client/compiledViews", env)
+    compiler = sandalphon.SandalphonCompiler("builds/compiledViews", env)
     compiler.compile(inputFile=templ)
     preprocessor = preprocess.SSPreProcessor(project=proj, env=env)
     preprocessor.preprocess(input=input, output=os.path.join("builds", output))
