@@ -1237,10 +1237,11 @@ var SSListView = new Class({
     Parameters:
       p - a control promise.
    */
-  __reloadData__: function(p)
+  __reloadData__: function(p, startIndex)
   {
-    var len = this.data().length, cell = this.cell();
-    this.element.empty();
+    SSLog("__reloadData__ startIndex:", startIndex, SSLogForce);
+    var theData = this.data(), len = theData.length, cell = this.cell();
+    if(!$type(startIndex)) this.element.empty();
     if(len > 0 && cell)
     {
       var perPage = (this.pageControl() && this.pageControl().perPage()) || len;
@@ -1249,7 +1250,7 @@ var SSListView = new Class({
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
         this.element.setStyle('width', (this.options.cellSize.x*perPage)+modifer);
       }
-      this.data().each(function(data) {
+      theData.slice(startIndex || 0, len).each(function(data) {
         var cellNode = this.newCellForItemData(data);
         this.element.grab(cellNode);
         var restore = this.__cellStates[data._id];
