@@ -140,9 +140,22 @@
   display:inline-block;
 }
 
-.ShiftListView .ShiftListViewCell div.draft
+.ShiftListView .ShiftListViewCell div.status
 {
-  width: 25px;
+  margin-top: 4px;
+  width: 18px;
+  height: 20px;
+  background-repeat: no-repeat;
+}
+
+.ShiftListView .ShiftListViewCell div.status.private
+{
+  background-image:url(/images/Console/publish-private.gif);
+}
+
+.ShiftListView .ShiftListViewCell div.status.public
+{
+  background-image:url(/images/Console/publish-public.gif);
 }
 
 .ShiftListView .ShiftListViewCell

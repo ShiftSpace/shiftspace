@@ -171,7 +171,7 @@ var ShiftListViewCell = new Class({
     var el = this.lockedElement();
     if(shift.userName == ShiftSpaceUser.getUserName())
     {
-      el.getElement('.draft').set('text', (publishData.draft && "pri") || "pub");
+      el.getElement('.status').addClass((publishData.draft && "private") || "public");
     }
   },
   
