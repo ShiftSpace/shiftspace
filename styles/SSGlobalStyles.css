@@ -65,10 +65,10 @@
 .SSTabViewSubTabStyle > .SSControlView
 {
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 18px;
+  left: 12px;
   bottom: 0px;
-  width: 149px;
+  width: 137px;
   border-right: solid 1px #000;
 }
 
@@ -280,9 +280,9 @@ ul.ShiftListView li.ShiftListViewCell:hover .spaceName
 .leftSideBar
 {
   position: absolute;
-  left: 4px;
+  left: 16px;
   width: 160px;
-  top: 4px;
+  top: 18px;
   bottom: 0px;
   z-index: 2;
   color: #4B423A;
