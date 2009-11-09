@@ -166,6 +166,7 @@
 ul.ShiftListView li.ShiftListViewCell:hover
 {
   background-color: white;
+  z-index: 2;
 }
 
 ul.ShiftListView li.ShiftListViewCell:hover .spaceName
@@ -187,6 +188,41 @@ ul.ShiftListView li.ShiftListViewCell:hover .spaceName
 {
   margin-left: 10px;
   display: none;
+  font-weight: bold;
+}
+
+.ShiftListView .ShiftListViewCell .user > *
+{
+  float: left;
+}
+
+.ShiftListView .ShiftListViewCell div.userName
+{
+  font-size: 10px;
+  color: #4B423A;
+  background-color: #D5D1CE;
+  background-color: #ccc;
+  padding-top: 1px;
+  padding-left: 4px;
+  padding-right: 4px;
+  height: 16px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border-sizing: border-box;
+  -moz-border-radius-topright: 4px;
+  -webkit-border-top-right-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+}
+
+.ShiftListView .ShiftListViewCell div.userName:hover
+{
+  color: white;
+  background-color: #746559;
+}
+
+.ShiftListView .ShiftListViewCell div.userName.loggedin
+{
   font-weight: bold;
 }
 
