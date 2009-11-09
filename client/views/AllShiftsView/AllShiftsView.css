@@ -8,10 +8,15 @@
   font-size: 10px;
   color: #4B423A;
   background-color: #D5D1CE;
-  margin-left: 20px;
+  /*margin-left: 20px;*/
   background-color: #ccc;
-  padding: 2px;
+  padding-top: 1px;
+  padding-left: 4px;
   padding-right: 4px;
+  height: 16px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border-sizing: border-box;
   -moz-border-radius-topright: 4px;
   -webkit-border-top-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
