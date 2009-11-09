@@ -488,7 +488,11 @@ table.SSErrorWindowShiftStatus
   display: block;
 }
 
-.ShiftListView .ShiftListViewCell img.gravatar
+/* The following are here so we don't need to look at iFrame styles
+   to read out the values. This is to support the rounded images when
+   running under Firefox, - David */
+
+.ShiftListView .ShiftListViewCell .gravatar
 {
   width: 16px;
   position: absolute;
@@ -497,7 +501,7 @@ table.SSErrorWindowShiftStatus
   -webkit-border-bottom-left-radius: 4px;
 }
 
-.ShiftListView .ShiftListViewCell img.gravatar:hover
+.ShiftListView .ShiftListViewCell .gravatar:hover
 {
   margin-top: -8px;
   margin-left: -8px;

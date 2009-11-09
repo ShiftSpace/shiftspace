@@ -196,6 +196,25 @@ ul.ShiftListView li.ShiftListViewCell:hover .spaceName
   float: left;
 }
 
+.ShiftListView .ShiftListViewCell .gravatar
+{
+  position: relative;
+  width: 16px;
+  -moz-border-radius: 4px 0px 0px 4px;
+  -webkit-border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+}
+
+.ShiftListView .ShiftListViewCell canvas.gravatar:hover, .ShiftListView .ShiftListViewCell img.gravatar:hover
+{
+  top: -8px;
+  margin-left: -8px;
+  width: 32px;
+  height: 32px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+}
+
 .ShiftListView .ShiftListViewCell div.userName
 {
   font-size: 10px;
