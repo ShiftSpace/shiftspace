@@ -39,7 +39,8 @@ var SSListView = new Class({
       addAt: 'bottom',
       leaveEditOnUpdate: false,
       allowSelection: false,
-      table: null
+      table: null,
+      scrollEvents: false
     });
   },
   
@@ -56,6 +57,10 @@ var SSListView = new Class({
     else
     {
       this.setData([]);
+    }
+    if(this.options.scrollEvents)
+    {
+      el.addEvent('scroll', this.onScroll.bind(this));
     }
     this.initSortables();
     this.attachEvents();
@@ -1440,5 +1445,34 @@ var SSListView = new Class({
    */
   animate: function(event)
   {
-  }
+  },
+  
+  /*
+    Function: onScroll
+      *private*
+      Called on scroll event if the list view was created with the scrollEvents
+      initialize option set to true.
+  */
+  onScroll: function()
+  {
+    var scroll = this.element.getScroll(),
+        scrollSize = this.element.getScrollSize(),
+        size = this.element.getSize();
+    if(scroll.y == 0) this.onScrollTop();
+    if(scrollSize.y == (scroll.y + size.y)) this.onScrollBottom();
+  },
+  
+  /*
+    Function: onScrollTop
+      *abstract*
+      Called when the list view is scrolled to the top.
+  */
+  onScrollTop: function(evt) {},
+  
+  /*
+    Function: onScrollBottom
+      *abstract*
+      Called when the list view is scrolle to the bottom.
+  */
+  onScrollBottom: function(evt) {}
 });

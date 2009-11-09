@@ -43,26 +43,26 @@
 
       <!-- Start My Comments View -->
       <div class="SSTabPane">
-	<ul id="MyCommentsListView"
-	    class="SSListView ShiftListView"
-	    uiclass="ShiftListView"
-	    outlet="MyShiftSpacePane">
-	  <li class="SSCell ShiftListViewCell"
-	      uiclass="ShiftListViewCell"
-	      options="{
-	        properties: ['space', 'userName', 'text', 'href', 'date', 'domain']
-	      }">
-	    <div class="selected">
+        <ul id="MyCommentsListView"
+            class="SSListView ShiftListView"
+            uiclass="ShiftListView"
+            outlet="MyShiftSpacePane">
+          <li class="SSCell ShiftListViewCell"
+            uiclass="ShiftListViewCell"
+            options="{
+              properties: ['space', 'userName', 'text', 'href', 'date', 'domain']
+            }">
+            <div class="selected">
               <input type="checkbox"/>
             </div>
             <div class="comments"></div>
             <div>To <span class="userName"></span></div>
-	    <img class="spaceIcon"></img>
-	    <div>on <span class="domain"></span></div>
+            <img class="spaceIcon"></img>
+            <div>on <span class="domain"></span></div>
             <div class="text"></div>
             <div class="date"></div>
-	  </li>
-	</ul>
+          </li>
+        </ul>
       </div>
       <!-- End My Comemnts View -->
 
@@ -82,10 +82,12 @@
             </div>
             <img class="spaceIcon"></img>
             <div class="summary"></div>
-            <div class="gravatarContainer">
-              <img class="gravatar"></img>
+            <div class="user">
+              <div class="gravatarContainer">
+                <img class="rounded-image gravatar"></img>
+              </div>
+              <div class="userName"></div>
             </div>
-            <div class="userName"></div>
             <div class="domain"></div>
             <div class="date"></div>
             <div class="comments"></div>
