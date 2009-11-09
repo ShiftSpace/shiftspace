@@ -3,25 +3,6 @@
   left: 166px;
 }
 
-#AllShiftsListView .ShiftListViewCell img.gravatar
-{
-  width: 16px;
-  position: absolute;
-  -moz-border-radius: 4px 0px 0px 4px;
-  -webkit-border-top-left-radius: 4px;
-  -webkit-border-bottom-left-radius: 4px;
-}
-
-#AllShiftsListView .ShiftListViewCell img.gravatar:hover
-{
-  margin-top: -8px;
-  margin-left: -8px;
-  width: 32px;
-  height: 32px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-}
-
 #AllShiftsListView .ShiftListViewCell div.userName
 {
   font-size: 10px;

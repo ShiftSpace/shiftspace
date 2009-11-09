@@ -113,7 +113,13 @@ var ShiftSpace = new (function() {
         SSLog('ShiftSpace detects user logout', SSLogForce);
       });
       
-      SSLoadStyle('styles/ShiftSpace.css');
+      var __mainCssLoaded = false;
+      var p = SSLoadStyle('styles/ShiftSpace.css');
+      p.op(function(v) {
+        SSLog("onMainCssLoad", SSLogForce);
+        __mainCssLoaded = true;
+        SSPostNotification('onMainCssLoad');
+      });
       SSLog("\tLoading core styles", SSLogSystem);
       
       // hide all pinWidget menus on window click

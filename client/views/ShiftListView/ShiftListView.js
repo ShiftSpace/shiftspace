@@ -148,6 +148,15 @@ var ShiftListView = new Class({
   
   onReloadData: function()
   {
-    RoundedImage.init("#AllShiftsListView .ShiftListViewCell img.gravatar", new Window(this.element.getWindow()));
+    if(!__mainCssLoaded)
+    {
+      SSAddObserver(this, 'onMainCssLoad', function() {
+        RoundedImage.init(".ShiftListView .ShiftListViewCell img.gravatar", new Window(this.element.getWindow()), document);
+      });
+    }
+    else
+    {
+      RoundedImage.init(".ShiftListView .ShiftListViewCell img.gravatar", new Window(this.element.getWindow()), document);
+    }
   }
 });
