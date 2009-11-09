@@ -23,5 +23,9 @@ ul#SSInstalledSpaces
 div#SSInstalledSpacesTabPane
 {
   overflow-y: scroll;
-  height: 100%;
+  position: absolute;
+  top: 14px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
 }

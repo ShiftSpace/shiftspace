@@ -79,7 +79,6 @@ var SSListView = new Class({
   */
   setState: function(id, key, v)
   {
-    SSLog("setState", SSLogForce);
     if(!this.__cellStates[id]) this.__cellStates[id] = {};
     this.__cellStates[id][key] = v;
   },
@@ -1239,7 +1238,6 @@ var SSListView = new Class({
    */
   __reloadData__: function(p, startIndex)
   {
-    SSLog("__reloadData__ startIndex:", startIndex, SSLogForce);
     var theData = this.data(), len = theData.length, cell = this.cell();
     if(!$type(startIndex)) this.element.empty();
     if(len > 0 && cell)

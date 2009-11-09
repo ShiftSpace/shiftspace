@@ -116,7 +116,6 @@ var ShiftSpace = new (function() {
       var __mainCssLoaded = false;
       var p = SSLoadStyle('styles/ShiftSpace.css');
       p.op(function(v) {
-        SSLog("onMainCssLoad", SSLogForce);
         __mainCssLoaded = true;
         SSPostNotification('onMainCssLoad');
       });
