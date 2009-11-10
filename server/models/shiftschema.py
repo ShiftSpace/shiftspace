@@ -9,6 +9,10 @@ import server.utils.utils as utils
 import core
 
 
+class ShiftError(Exception): pass
+class NoAuthorError(ShiftError): pass
+
+
 @simple_decorator
 def joindecorator(func):
     def afn(*args, **kwargs):

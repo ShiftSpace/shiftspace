@@ -1,6 +1,8 @@
 from couchdb.schema import *
 from couchdb.schema import View
 
+class SSDocumentError(Exception): pass
+class AttemptToSetTypeError(SSDocumentError): pass
 
 class SSDocument(Document):
     def __init__(self, *args, **kwargs):
