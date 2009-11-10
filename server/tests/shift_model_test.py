@@ -13,6 +13,12 @@ fakeMary = {
     "displayName": "fakemary"
 }
 
+shiftspace = {
+    "type": "user",
+    "userName": "shiftspace",
+    "email": "info@shiftspace.org"
+    }
+
 def shiftJson():
     return {
         "source": "local",
@@ -52,6 +58,11 @@ class Crud(unittest.TestCase):
     def tearDown(self):
         db = core.connect()
         del db[self.tempUser]
+
+
+class Utilities(unittest.TestCase):
+    def testJoinData():
+        pass
 
 if __name__ == "__main__":
     unittest.main()

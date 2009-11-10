@@ -15,6 +15,9 @@ import core
 
 class ShiftError(Exception): pass
 class NoAuthorError(ShiftError): pass
+class NoSpaceError(ShiftError): pass
+class NoHrefError(ShiftError): pass
+class NoContentError(ShiftError): pass
 
 # ==============================================================================
 # Utilities
