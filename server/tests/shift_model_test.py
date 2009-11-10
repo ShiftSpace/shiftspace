@@ -15,6 +15,7 @@ fakeMary = {
 def shiftJson():
     return {
         "source": "local",
+        "href": "http://google.com/images",
         "space": {
             "name":"Notes",
             "version": "0.1"
@@ -28,8 +29,8 @@ class Crud(unittest.TestCase):
 
     def testCreate(self):
         json = shiftJson()
-        shiftJson["createdBy"] = self.tempUser
-        theShift = Shift.create(**shiftJson)
+        json["createdBy"] = self.tempUser
+        theShift = Shift.create(**json)
         self.assertEqual(theShift.type, "shift")
         self.assertEqual(theShift.createdBy, self.tempUser)
         self.assertNotEqual(theShift.created, None)

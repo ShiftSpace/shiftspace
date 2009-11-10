@@ -6,11 +6,25 @@ from ssdocschema import SSDocument
 
 from server.utils.decorators import *
 import server.utils.utils as utils
+import schema
 import core
 
+# ==============================================================================
+# Errors
+# =============================================================================
 
 class ShiftError(Exception): pass
 class NoAuthorError(ShiftError): pass
+
+# ==============================================================================
+# Utilities
+# ==============================================================================
+
+def toDict(kvs):
+    result = {}
+    for kv in kvs:
+        result[kv['key']] = kv['value']
+    return result
 
 
 @simple_decorator
@@ -19,6 +33,10 @@ def joindecorator(func):
         return Shift.joinData(func(*args, **kwargs), userId=kwargs.get("userId"))
     return afn
 
+
+# ==============================================================================
+# Shift Model
+# ==============================================================================
 
 class Shift(SSDocument):
     """
@@ -111,7 +129,8 @@ class Shift(SSDocument):
         commentCounts = [(ccd.get(aid) or 0) for aid in ids]
 
         userIds = [shift['createdBy'] for shift in shifts]
-        gravatars = [user["gravatar"] for user in core.fetch(view=schema.allUsers, keys=userIds)]
+        gravatars = [((user and user.get("gravatar")) or "images/default_user.png")
+                     for user in core.fetch(keys=userIds)]
 
         for i in range(len(shifts)):
             shifts[i]["favorite"] = isFavorited[i]
