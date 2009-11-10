@@ -1,4 +1,5 @@
 import unittest
+import datetime
 import server.models.core as core
 from server.models.shiftschema import *
 
@@ -34,9 +35,13 @@ class Crud(unittest.TestCase):
         self.assertEqual(theShift.type, "shift")
         self.assertEqual(theShift.createdBy, self.tempUser)
         self.assertNotEqual(theShift.created, None)
-        self.assertNotEqual(type(theShift.created), datetime.datetime)
+        self.assertEqual(type(theShift.created), datetime)
         self.assertNotEqual(theShift.modified, None)
-        self.assertEqual(type(theShift.modified), datetime.datetime)
+        self.assertEqual(type(theShift.modified), datetime)
+        self.assertEqual(theShift.domain, "http://google.com")
+        self.assertEqual(theShift.source, "local")
+        db = core.connect()
+        del db[theShift.id]
 
     def testUpdate(self):
         pass
@@ -48,6 +53,5 @@ class Crud(unittest.TestCase):
         db = core.connect()
         del db[self.tempUser]
 
-
-if __name__ == "main":
+if __name__ == "__main__":
     unittest.main()

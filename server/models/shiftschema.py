@@ -33,7 +33,6 @@ def joindecorator(func):
         return Shift.joinData(func(*args, **kwargs), userId=kwargs.get("userId"))
     return afn
 
-
 # ==============================================================================
 # Shift Model
 # ==============================================================================
@@ -144,7 +143,7 @@ class Shift(SSDocument):
             return shifts
 
     @classmethod
-    def create(cls, shiftJson):
+    def create(cls, **shiftJson):
         """
         Create a shift in the database.
         Parameters:
