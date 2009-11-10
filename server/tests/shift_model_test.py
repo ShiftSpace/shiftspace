@@ -32,32 +32,25 @@ def shiftJson():
 class Crud(unittest.TestCase):
     def setUp(self):
         db = core.connect()
-        self.tempUser = db.create(fakeMary)
+        self.tempUser = User.create(fakeMary)
 
     def testCreate(self):
         json = shiftJson()
-        json["createdBy"] = self.tempUser
-        theShift = Shift.create(**json)
+        theShift = Shift.create(json, userId=self.tempUser.id)
         self.assertEqual(theShift.type, "shift")
-        self.assertEqual(theShift.createdBy, self.tempUser)
+        self.assertEqual(theShift.createdBy, self.tempUser.id)
         self.assertNotEqual(theShift.created, None)
         self.assertEqual(type(theShift.created), datetime)
         self.assertNotEqual(theShift.modified, None)
         self.assertEqual(type(theShift.modified), datetime)
         self.assertEqual(theShift.domain, "http://google.com")
         self.assertEqual(theShift.source, "local")
-        db = core.connect()
+        db = core.connect(User.private(self.tempUser.id))
         del db[theShift.id]
-
-    def testUpdate(self):
-        pass
-
-    def testDelete(self):
-        pass
 
     def tearDown(self):
         db = core.connect()
-        del db[self.tempUser]
+        User.delete(self.tempUser.userName)
 
 
 class Utilities(unittest.TestCase):

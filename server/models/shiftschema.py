@@ -8,6 +8,7 @@ from server.utils.decorators import *
 import server.utils.utils as utils
 import schema
 import core
+from userschema import *
 
 # ==============================================================================
 # Errors
@@ -82,26 +83,29 @@ class Shift(SSDocument):
     # Views
     # ========================================
 
-    all = View("shifts",
-               "function (doc) {            \
-                  if(doc.type == 'shift') { \
-                    emit(doc._id, doc);     \
-                  }                         \
-                }")
+    all = View(
+        "shifts",
+        "function (doc) {            \
+           if(doc.type == 'shift') { \
+             emit(doc._id, doc);     \
+           }                         \
+         }")
 
-    by_domain = View("shifts",
-                     "function (doc) {             \
-                        if(doc.type == 'shift') {  \
-                          emit(doc.domain, doc);   \
-                        }                          \
-                      }")
+    by_domain = View(
+        "shifts",
+        "function (doc) {             \
+           if(doc.type == 'shift') {  \
+             emit(doc.domain, doc);   \
+           }                          \
+         }")
 
-    by_href = View("shifts",
-                   "function(doc) {                \
-                      if(doc.type == 'shift') {    \
-                        emit(doc.href, doc);       \
-                      }                            \
-                    }")
+    by_href = View(
+        "shifts",
+        "function(doc) {             \
+           if(doc.type == 'shift') { \
+             emit(doc.href, doc);    \
+           }                         \
+         }")
 
     # ========================================
     # CRUD
@@ -149,7 +153,7 @@ class Shift(SSDocument):
             return shifts
 
     @classmethod
-    def create(cls, **shiftJson):
+    def create(cls, shiftJson, userId):
         """
         Create a shift in the database.
         Parameters:
@@ -157,30 +161,34 @@ class Shift(SSDocument):
         Returns:
             The id of the new shift (string).
         """
-        userId = newShift.createdBy()
-        db = core.connect(dbname="user_%s/private")
+        db = core.connect(User.private(userId))
+        if not shiftJson.get("createdBy"):
+            shiftJson["createdBy"] = userId
         newShift = Shift(**shiftJson)
         newShift.domain = utils.domain(shiftJson["href"])
         newShift.store(db)
         return Shift.joinData(newShift, newShift.createdBy)
 
     @classmethod
-    def read(cls, id, dbname="shiftspace"):
+    def read(cls, id, userId=None):
         """
         Get a specific shift. First tries the master database
         then tries the user's private database.
         Parameters:
             id - a shift id.
-            dbname - the database to read from. Should be user-id/feed or shiftspace.
+            userId - a userId. If not supplied tries to read shift from master database.
         Returns:
             a dictionary of the shift's data.
         """
-        db = core.connect(dbname)
+        db = core.connect()
         theShift = Shift.load(db, id)
+        if not theShift:
+            db = core.connect(User.private(userId))
+            theShift = Shift.load(db, id)
         return Shift.joinData(theShift, theShift.createdBy)
 
     @classmethod
-    def update(cls, id, fields):
+    def update(cls, id, fields, userId):
         """
         Class method for updating a shift.
         
@@ -188,8 +196,9 @@ class Shift(SSDocument):
           id - the id of the shift
           fields - the fields to update. Allowed fields are
             summary, broken, and content.
+          userId - a userId.
         """
-        db = core.connect()
+        db = core.connect(User.private(userId))
         theShift = Shift.load(db, id)
         if newdoc.get("summary"):
             theShift.summary = theShift.content["summary"] = newdoc.get("summary")
@@ -198,16 +207,16 @@ class Shift(SSDocument):
         if newdoc.get("content"):
             theShift.content = newdoc.get("content")
         theShift.modified = datetime.now()
+        # update the user/private
         theShift.store(db)
-        # update the public copy, if public
+        # update user/public if public
         if not theShift.publishData.private:
-            public = core.connect("user_%s/public" % theShift.createdBy)
+            public = core.connect(User.public(theShift.createdBy))
             theShift.store(public)
-        # update groups that shift is published to, will be replicated back
-        # to private
+        # update groups & users that shift is published to
         for stream in theShift.streams:
             if stream.type == "user":
-                private = core.connect("user_%s/private", streamd.id)
+                private = core.connect(User.private(streamd.id))
                 theShift.store(private)
             elif stream.type == "group":
                 Group.update(theShift)
