@@ -1,6 +1,9 @@
+from datetime import datetime
 from couchdb.schema import *
 from couchdb.schema import View
-from datetime import datetime
+
+from ssdocschema import SSDocument
+
 from server.utils.decorators import *
 import server.utils.utils as utils
 import core
@@ -13,7 +16,7 @@ def joindecorator(func):
     return afn
 
 
-class Shift(Document):
+class Shift(SSDocument):
     """
     The Shift document. A shift is a piece of JSON data used
     by spaces (applications) to recreate a user's modification
@@ -58,6 +61,20 @@ class Shift(Document):
                     emit(doc._id, doc);     \
                   }                         \
                 }")
+
+    by_domain = View("shifts",
+                     "function (doc) {             \
+                        if(doc.type == 'shift') {  \
+                          emit(doc.domain, doc);   \
+                        }                          \
+                      }")
+
+    by_href = View("shifts",
+                   "function(doc) {                \
+                      if(doc.type == 'shift') {    \
+                        emit(doc.href, doc);       \
+                      }                            \
+                    }")
 
     # ========================================
     # CRUD
@@ -105,6 +122,13 @@ class Shift(Document):
 
     @classmethod
     def create(cls, shiftJson):
+        """
+        Create a shift in the database.
+        Parameters:
+            shiftJson - the new data for the shift.
+        Returns:
+            The id of the new shift (string).
+        """
         db = core.connect()
         newShift = Shift(**shiftJson)
         newShift.domain = utils.domain(shiftJson["href"])
@@ -113,6 +137,13 @@ class Shift(Document):
 
     @classmethod
     def read(cls, id):
+        """
+        Get a specific shift.
+        Parameters:
+            id - a shift id.
+        Returns:
+            a dictionary of the shift's data.
+        """
         db = core.connect()
         theShift = Shift.load(db, id)
         return Shift.joinData(theShift, theShift.createdBy)
@@ -141,10 +172,22 @@ class Shift(Document):
 
     @classmethod
     def delete(cls, id):
+        """
+        Delete a shift from the database.
+        Parameters:
+            id - a shift id.
+        """
         db = core.connect()
         del db[id]
 
+    # ========================================
+    # Instance Methods
+    # ========================================
+
     def toDict(self):
+        """
+        Convenience for turning Document into a dictionary.
+        """
         dict(self.items())
 
     # ========================================
@@ -216,5 +259,22 @@ class Shift(Document):
     @classmethod
     def isPrivate(cls, id):
         pass
+
+    # ========================================
+    # Publishing
+    # ========================================
+
     
+    # ========================================
+    # Comments
+    # ========================================
+
     
+    # ========================================
+    # Favoriting
+    # ========================================
+
+    
+    # ========================================
+    # Lists & Filtering
+    # ========================================
