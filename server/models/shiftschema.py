@@ -8,7 +8,7 @@ from server.utils.decorators import *
 import server.utils.utils as utils
 import schema
 import core
-from userschema import *
+from ssuserschema import *
 
 # ==============================================================================
 # Errors
@@ -121,7 +121,6 @@ class Shift(SSDocument):
           shifts - a single shift or a list of shifts.
           userId - a user id.
         """
-        print "%s %s %s" % (cls, shifts, userId)
         single = False
         if type(shifts) != list:
             single = True
@@ -161,7 +160,7 @@ class Shift(SSDocument):
         Returns:
             The id of the new shift (string).
         """
-        db = core.connect(User.private(userId))
+        db = core.connect(SSUser.private(userId))
         if not shiftJson.get("createdBy"):
             shiftJson["createdBy"] = userId
         newShift = Shift(**shiftJson)
@@ -183,7 +182,7 @@ class Shift(SSDocument):
         db = core.connect()
         theShift = Shift.load(db, id)
         if not theShift:
-            db = core.connect(User.private(userId))
+            db = core.connect(SSUser.private(userId))
             theShift = Shift.load(db, id)
         return Shift.joinData(theShift, theShift.createdBy)
 
@@ -198,7 +197,7 @@ class Shift(SSDocument):
             summary, broken, and content.
           userId - a userId.
         """
-        db = core.connect(User.private(userId))
+        db = core.connect(SSUser.private(userId))
         theShift = Shift.load(db, id)
         if newdoc.get("summary"):
             theShift.summary = theShift.content["summary"] = newdoc.get("summary")
@@ -211,12 +210,12 @@ class Shift(SSDocument):
         theShift.store(db)
         # update user/public if public
         if not theShift.publishData.private:
-            public = core.connect(User.public(theShift.createdBy))
+            public = core.connect(SSUser.public(theShift.createdBy))
             theShift.store(public)
         # update groups & users that shift is published to
         for stream in theShift.streams:
             if stream.type == "user":
-                private = core.connect(User.private(streamd.id))
+                private = core.connect(SSUser.private(streamd.id))
                 theShift.store(private)
             elif stream.type == "group":
                 Group.update(theShift)
@@ -262,13 +261,13 @@ class Shift(SSDocument):
         """
         db = core.connect()
         theShift = Shift.load(id)
-        if User.isAdmin(userId):
+        if SSUser.isAdmin(userId):
             return True
         if theShift.createdBy == userId:
             return True
         if theShift.publishData.draft:
             return False
-        theUser = User.load(userId)
+        theUser = SSUser.load(userId)
         if not theShift.publishData.private:
             return True
         if theUser.privateStream in theShift.publishData.streams:
@@ -290,7 +289,7 @@ class Shift(SSDocument):
         """
         db = core.connect()
         theShift = db[id]
-        return User.isAdmin(userId) or (userId == theShift.createdBy)
+        return SSUser.isAdmin(userId) or (userId == theShift.createdBy)
 
     @classmethod
     def canPublish(cls, id, userId):
@@ -337,19 +336,19 @@ class Shift(SSDocument):
             allowed = list(set(allowedStreams).intersection(set(publishStreams)))
             # add any private user streams this shift is directed to
             if publishData.get("users"):
-                allowed.extend([User.privateStream(User.idForName(userName)) 
+                allowed.extend([SSUser.privateStream(SSUser.idForName(userName)) 
                                 for userName in publishData["users"]
-                                if User.read(userName)])
+                                if SSUser.read(userName)])
                 del publishData["users"]
             # add streams this user can post to
             allowed.extend([astream for astream in publishStreams
                             if Stream.canPost(astream, userId)])
         else:
-            allowed.append(User.publicStream(userId))
+            allowed.append(SSUser.publicStream(userId))
         # TODO: commentStreams should use the permission of the streams the shift has been published to. -David 7/14/09
         if not commentStream(id):
             streamId = Shift.createCommentStream(id)
-            User.addNotification(userId, streamId)
+            SSUser.addNotification(userId, streamId)
         # remove duplicates
         theShift.publishData.streams = list(set(allowed))
         if publishData.get("private"):
