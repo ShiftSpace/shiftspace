@@ -109,6 +109,14 @@ class BasicOperations(unittest.TestCase):
         theShift = Shift.load(core.connect(SSUser.public(self.fakemary)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
 
+    def testPublishToUser(self):
+        json = shiftJson()
+        newShift = Shift.create(self.fakemary, json)
+        publishData = {
+            "streams": [User.private(self.fakejohn)]
+            }
+        Shift.publish(self.fakemary, newShift.id, publishData)
+
     def tearDown(self):
         db = core.connect()
         SSUser.delete(self.fakemary)

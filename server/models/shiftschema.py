@@ -341,13 +341,14 @@ class Shift(SSDocument):
     # ========================================
 
     @classmethod
-    def publish(cls, userId, id, publishData=None):
+    def publish(cls, userId, id, publishData=None, server="http://www.shiftspace.org/api/"):
         """
         Set draft status of a shift to false. Sync publishData field.
         If the shift is private only publish to the streams that
         the user has access. If the shift is publich publish it to
         any of the public non-user streams. Creates the comment stream
         if it doesn't already exist.
+        
         Parameters:
             id - a shift id.
             publishData - a dictionary holding the publish options.
@@ -375,10 +376,16 @@ class Shift(SSDocument):
         """
         theShift.publishData.private = isPrivate
         theShift.publishData.draft = False
+        
+        # publish a copy of the shift to all user-x/private, user-y/private ...
+        # POST for new, PUT for existing
 
-        print dict(theShift.items())
+        # publish a copy to group/x, group/y, ...
+        # POST for new, PUT for existing
 
         if not isPrivate:
+            # NOTE: if running P2P, the user/public will be replicated
+            # to the master db - David
             pubCopy = dict(theShift.items())
             del pubCopy["_rev"]
             db = core.connect(SSUser.public(userId))
