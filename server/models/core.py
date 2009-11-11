@@ -94,7 +94,7 @@ def fetch(db="shiftspace", view="_all_docs", keys=None, reduce=False):
     result = []
     for row in rows:
         if row.get('value'):
-            if not reduce:
+            if not reduce and row.get('doc'):
                 result.append(row['doc'])
             else:
                 result.append(row)
