@@ -3,6 +3,7 @@ import datetime
 import server.models.core as core
 from server.models.shiftschema import *
 from server.models.ssuserschema import *
+from server.models.groupschema import *
 
 
 fakemary = {
@@ -34,7 +35,7 @@ class BasicOperations(unittest.TestCase):
     def testGroupDb(self):
         json = groupJson()
         json["createdBy"] = self.fakemary
-        newGroup = Group(json)
+        newGroup = Group.create(json)
         self.assertEqual(Group.db(newGroup.id), "group_%s" % newGroup.id)
 
     def tearDown(self):

@@ -253,32 +253,6 @@ class Shift(SSDocument):
     # Instance Methods
     # ========================================
 
-    def copyTo(self, db):
-        """
-        Create a copy of this shift in another database.
-        Stop gap until we can replicate single documents
-        either via special API or filtered replication.
-        Parameters:
-          db - the name of a database to copy to
-        """
-        copy = self.toDict()
-        del copy["_rev"]
-        db.create(copy)
-
-    def updateIn(self, db):
-        """
-        Update this the instance of this document in
-        another db. Stop gap until we can replicate
-        single documents either via special API or filtered
-        replication.
-        Parameters:
-          db - the name of a database to copy to
-        """
-        old = db[self.id]
-        copy = self.toDict()
-        copy["_rev"] = old["_rev"]
-        db[self.id] = copy
-
     def deleteInstance(self):
         """
         Convenience for deleting Shift instances.

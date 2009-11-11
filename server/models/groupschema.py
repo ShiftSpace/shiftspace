@@ -13,6 +13,7 @@ from ssuserschema import *
 
 class Group(SSDocument):
     
+    type = TextField(default="group")
     shortName = TextField()
     longName = TextField()
     tagLine = TextField()
@@ -43,6 +44,7 @@ class Group(SSDocument):
     # Database
     # ========================================
 
+    @classmethod
     def db(cls, groupId):
         return "group_%s" % groupId
 
@@ -63,7 +65,7 @@ class Group(SSDocument):
     # ========================================
 
     @classmethod
-    def create(cls, userId, groupJson):
+    def create(cls, groupJson):
         """
         Create a group.
         Parameters:
@@ -71,18 +73,17 @@ class Group(SSDocument):
             groupJson - a group json document.
         """
         # create the group metadata
+        newGroup = Group(**groupJson)
         groupJson["source"] = {
             "server": core.serverName(),
             "database": Group.db(newGroup.id),
             }
-        newGroup = Group(**groupJson)
         # create the root permission for this group
         # create the group db
         server = core.server()
         server.create(Group.db(newGroup.id))
         # copy the group metadata to the db
-        groupdb = core.connect(Group.db(newGroup.id))
-        groupdb.create(groupJson)
+        newGroup.copyTo(core.connect(Group.db(newGroup.id)))
         
     @classmethod
     def read(cls, id):

@@ -26,12 +26,12 @@ class SSUser(User):
         return "user_%s/inbox" % userId
 
     @classmethod
-    def messages(cls, userId):
-        return "user_%s/messages" % userId
-
-    @classmethod
     def feed(cls, userId):
         return "user_%s/feed" % userId
+
+    @classmethod
+    def messages(cls, userId):
+        return "user_%s/messages" % userId
 
     # ========================================
     # CRUD
@@ -91,6 +91,8 @@ class SSUser(User):
         del server[SSUser.public(id)]
         del server[SSUser.private(id)]
         del server[SSUser.inbox(id)]
+        del server[SSUser.feed(id)]
+        del server[SSUser.messages(id)]
         # delete the user doc
         db = core.connect()
         del db[id]
