@@ -409,7 +409,7 @@ class Shift(SSDocument):
         theShift.publishData.draft = False
         
         # publish or update a copy of the shift to all user-x/private, user-y/private ...
-        newUserStreams = [] 
+        newUserStreams = []
         if publishData.get("streams"):
             newUserStreams = [s for s in publishData.get("streams") if s.split("_")[0] == "user"]
         oldUserStreams = [s for s in oldPublishData.get("streams") if s.split("_")[0] == "user"]
@@ -432,13 +432,17 @@ class Shift(SSDocument):
         for stream in newGroupStreams:
             theShift.copyTo(core.connect(stream))
 
-        # copy to user/public, replicate to the master db
+        # create in user/public, delete from user/private
+        # replicate to user/feed and to user/shiftspace
         if not isPrivate:
             publicdb = core.connect(SSUser.public(userId))
             if Shift.load(publicdb, theShift.id):
                 theShift.updateIn(publicdb)
             else:
                 theShift.copyTo(publicdb)
+                privatedb = core.connect(SSUser.private(userId))
+                del privatedb[theShift.id]
+            core.replicate(SSUser.public(userId), SSUser.private(userId))
             core.replicate(SSUser.public(userId))
 
         return Shift.joinData(theShift, userId)

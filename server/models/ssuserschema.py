@@ -24,6 +24,14 @@ class SSUser(User):
     def inbox(cls, userId):
         return "user_%s/inbox" % userId
 
+    @classmethod
+    def messages(cls, userId):
+        return "user_%s/messages" % userId
+
+    @classmethod
+    def feed(cls, userId):
+        return "user_%s/feed" % userId
+
     # ========================================
     # CRUD
     # ========================================
@@ -45,11 +53,15 @@ class SSUser(User):
             userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % utils.md5hash(userJson["email"])
         newUser = SSUser(**userJson)
         newUser.store(db)
-        # user's public shifts, will be replicated to shiftspace
+        # user's public shifts, will be replicated to shiftspace and user/feed
         server.create(SSUser.public(newUser.id))
         # all of the user's shifts as well as subscribed content
         server.create(SSUser.private(newUser.id))
         # all of the user's messages
+        server.create(SSUser.messages(newUser.id))
+        # the user's feed, merged from user/public and user/feed
+        server.create(SSUser.feed(newUser.id))
+        # the user's inbox of direct shifts
         server.create(SSUser.inbox(newUser.id))
         return newUser
 
