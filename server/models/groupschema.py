@@ -22,17 +22,37 @@ class Group(SSDocument):
     # Views
     # ========================================
 
+    by_short_name = View(
+        "groups",
+        "function(doc) {               \
+           if(doc.type == 'group') {   \
+             emit(doc.shortName, doc); \
+           }                           \
+         }")
+
+    by_long_name = View(
+        "groups",
+        "function(doc) {               \
+           if(doc.type == 'group') {   \
+             emit(doc.longName, doc);  \
+           }                           \
+         }")
+
     # ========================================
     # Database
     # ========================================
 
     @classmethod
-    def shortName(cls, shortName):
-        pass
-
+    def byShortName(cls, shortName):
+        result = list(Group.by_shortName(core.connect(), key=shortName))
+        if result and len(result) > 0:
+            return "group_%s" % result[0]
+ 
     @classmethod
-    def longName(cls, longName):
-        pass
+    def byLongName(cls, longName):
+        result = list(Group.by_longName(core.connect(), key=longName))
+        if result and len(result) > 0:
+            return "group_%s" % result[0]
 
     # ========================================
     # Crud
