@@ -432,9 +432,8 @@ class Shift(SSDocument):
         for stream in newGroupStreams:
             theShift.copyTo(core.connect(stream))
 
+        # copy to user/public, replicate to the master db
         if not isPrivate:
-            # NOTE: if running P2P, the user/public will be replicated
-            # to the master db - David
             publicdb = core.connect(SSUser.public(userId))
             if Shift.load(publicdb, theShift.id):
                 theShift.updateIn(publicdb)

@@ -108,6 +108,8 @@ class BasicOperations(unittest.TestCase):
         Shift.publish(self.fakemary, newShift.id, {"private":False})
         theShift = Shift.load(core.connect(SSUser.public(self.fakemary)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
+        theShift = Shift.load(core.connect(), newShift.id)
+        self.assertEqual(theShift.summary, newShift.summary)
 
     def testPublishToUser(self):
         json = shiftJson()
