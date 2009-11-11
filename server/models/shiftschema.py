@@ -191,7 +191,7 @@ class Shift(SSDocument):
         return Shift.joinData(newShift, newShift.createdBy)
 
     @classmethod
-    def read(cls, id, userId=None):
+    def read(cls, userId, id):
         """
         Get a specific shift. First tries the master database
         then tries the user's private database.
@@ -206,6 +206,8 @@ class Shift(SSDocument):
         if not theShift and userId:
             db = core.connect(SSUser.private(userId))
             theShift = Shift.load(db, id)
+        if not theShift:
+            return
         return Shift.joinData(theShift, theShift.createdBy)
 
     @classmethod
@@ -256,6 +258,10 @@ class Shift(SSDocument):
     # ========================================
     # Instance Methods
     # ========================================
+
+    def deleteInstance(self):
+        if self.id:
+            Shift.delete(self.createdBy, self.id)
 
     def toDict(self):
         """

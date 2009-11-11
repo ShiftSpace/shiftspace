@@ -50,7 +50,7 @@ class BasicOperations(unittest.TestCase):
     def testRead(self):
         json = shiftJson()
         newShift = Shift.create(self.tempUser.id, json)
-        theShift = Shift.read(newShift.id, userId=self.tempUser.id)
+        theShift = Shift.read(self.tempUser.id, newShift.id)
         self.assertEqual(theShift.source.server, newShift.source.server)
         self.assertEqual(theShift.source.database, newShift.source.database)
         self.assertEqual(theShift.createdBy, self.tempUser.id)
@@ -61,8 +61,15 @@ class BasicOperations(unittest.TestCase):
         json = shiftJson()
         newShift = Shift.create(self.tempUser.id, json)
         Shift.update(self.tempUser.id, newShift.id, {"summary":"changed!"})
-        theShift = Shift.read(newShift.id, self.tempUser.id)
+        theShift = Shift.read(self.tempUser.id, newShift.id)
         self.assertEqual(theShift.summary, "changed!")
+
+    def testDelete(self):
+        json = shiftJson()
+        newShift = Shift.create(self.tempUser.id, json)
+        Shift.delete(self.tempUser.id, newShift.id)
+        theShift = Shift.read(self.tempUser.id, newShift.id)
+        self.assertEqual(theShift, None)
 
     def testJoinData(self):
         json = shiftJson()
