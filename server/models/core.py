@@ -116,6 +116,13 @@ def update(doc):
     return db[id]
 
 
+def replicate(source, target="shiftspace"):
+    resource = couchdb.client.Resource(None, 'http://localhost:5984/_replicate')
+    content = json.dumps({"source":source, "target":target})
+    headers = {"Content-Type":"application/json"}
+    resource.post(headers=headers, content=content)
+
+
 def validate(doc):
     """
     Validate a document. Might get deprecated.

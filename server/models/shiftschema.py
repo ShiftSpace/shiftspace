@@ -435,7 +435,12 @@ class Shift(SSDocument):
         if not isPrivate:
             # NOTE: if running P2P, the user/public will be replicated
             # to the master db - David
-            theShift.copyTo(core.connect(SSUser.public(userId)))
+            publicdb = core.connect(SSUser.public(userId))
+            if Shift.load(publicdb, theShift.id):
+                theShift.updateIn(publicdb)
+            else:
+                theShift.copyTo(publicdb)
+            core.replicate(SSUser.public(userId))
 
         return Shift.joinData(theShift, userId)
     
