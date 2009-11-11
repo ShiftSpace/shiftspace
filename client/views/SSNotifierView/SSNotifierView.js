@@ -164,7 +164,7 @@ var SSNotifierView = new Class({
     }
     else
     {
-      this.SSShowMessage.hide();
+      this.SSMessage.hide();
     }
   },
   
@@ -282,13 +282,12 @@ var SSNotifierView = new Class({
   {
     if (countp.length > 0)
     {
-      this.SSShowMessage.show();
+      this.SSMessage.show();
       this.SSShowMessage.set('text',countp.length);
     }
     else
     {
-      alert('no message');
-      this.SSShowMessage.hide();
+      this.SSMessage.hide();
     }
     
   }.asPromise(),
