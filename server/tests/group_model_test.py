@@ -12,13 +12,16 @@ fakemary = {
         "last": "Mary"
         },
     "email": "info@shiftspace.org",
-    "displayName": "fakemary"
+    "displayName": "fakemary",
 }
 
-foogroup = {
-    longName: "FooBar Fans"
-    shortName: "fbf"
-}
+def groupJson():
+    return {
+        "longName": "FooBar Fans",
+        "shortName": "fbf",
+        "tagLine": "A really cool group for fans of foo!",
+        "url": "http://foobar.org",
+        }
 
 
 class BasicOperations(unittest.TestCase):
@@ -29,6 +32,7 @@ class BasicOperations(unittest.TestCase):
         self.root = SSUser.read("shiftspace").id
 
     def testCreate(self):
+        json = groupJson()
         
 
     def tearDown(self):
