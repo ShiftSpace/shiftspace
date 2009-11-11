@@ -1,3 +1,4 @@
+import unittest
 import sys
 import os
 import shutil
@@ -226,7 +227,20 @@ def manual():
     Build the manual
     """
     manbuild.buildAll()
-    
+
+
+def tests(toRun):
+    """
+    Run all the unit tests.
+    """
+    if toRun == "all" or "shift" in toRun:
+        import server.tests.shift_model_test
+        suite = unittest.TestLoader().loadTestsFromTestCase(server.tests.shift_model_test.BasicOperations)
+    if toRun == "all" or "group" in toRun:
+        import server.tests.group_model_test
+        suite = unittest.TestLoader().loadTestsFromTestCase(server.tests.group_model_test.BasicOperations)
+    unittest.TextTestRunner(verbosity=2).run(suite)
+
 
 def runserver(argv):
     """
@@ -282,6 +296,11 @@ def main(argv):
         build(argv[1:])
     elif action == "updatedb":
         updatedb()
+    elif action == "tests":
+        toRun = "all"
+        if len(argv) > 1:
+            toRun = [str.strip() for str in argv[1:]]
+        tests(toRun)
     elif action == "new":
         try:
             name = argv[1]
@@ -310,6 +329,8 @@ def usage():
     print "   %16s  create a new space" % "new <spacename>"
     print "   %16s  start ShiftServer on the specified port" % "runserver [port]"
     print "   %16s  deploy an application" % "app <appname>"
+    print "   %16s  run unit tests" % "tests"
+    print "   %16s  make a nightly" % "nightly"
     print
 
 

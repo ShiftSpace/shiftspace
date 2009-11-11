@@ -302,7 +302,6 @@ def publish(id, publishData):
     if not commentStream(id):
         streamId = createCommentStream(id)
         user.addNotification(userId, streamId)
-        
     # remove duplicates
     publishData["streams"] = list(set(allowed))
     newData = theShift["publishData"]

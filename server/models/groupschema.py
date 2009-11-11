@@ -12,11 +12,13 @@ from ssuserschema import *
 
 
 class Group(SSDocument):
-
-    source = DictField(Schema.build(
-            server = TextField(),
-            database = TextField()
-            ))
+    
+    type = TextField(default="group")
+    shortName = TextField()
+    longName = TextField()
+    tagLine = TextField()
+    url = TextField()
+    visible = BooleanField(default=True)
 
     # ========================================
     # Views
@@ -63,25 +65,45 @@ class Group(SSDocument):
     # ========================================
 
     @classmethod
-    def create(cls, userId, groupJson):
+    def create(cls, groupJson):
+        """
+        Create a group.
+        Parameters:
+            userId - a user id.
+            groupJson - a group json document.
+        """
         # create the group metadata
         newGroup = Group(**groupJson)
         newGroup.source.server = core.serverName()
-        newGroup.source.database = Group.db(newGroup.id)
+        newGroup.source.database =  Group.db(newGroup.id)
+        # save the group metadata to the master db
+        newGroup.store(core.connect())
         # create the root permission for this group
+
         # create the group db
         server = core.server()
         server.create(Group.db(newGroup.id))
         # copy the group metadata to the db
+        newGroup.copyTo(core.connect(Group.db(newGroup.id)))
+        return newGroup
         
-
     @classmethod
-    def read(cls, json):
+    def read(cls, id):
         pass
 
     @classmethod
-    def update(cls, json):
+    def update(cls, id):
         pass
+
+    @classmethod
+    def delete(cls, id):
+        """
+        Delete the group.
+        Parameters:
+            id - a group id.
+        """
+        server = core.server()
+        del server[Group.db(id)]
 
     @classmethod
     def addShift(cls, userId, shift):
@@ -92,4 +114,12 @@ class Group(SSDocument):
     def updateShift(cls, userId, shift):
         # replicate to all subscribers
         pass
+
+    # ========================================
+    # Instance Methods
+    # ========================================
+
+    def deleteInstance(self):
+        server = core.server()
+        del server[Group.db(self.id)]
 
