@@ -13,9 +13,26 @@ from ssuserschema import *
 
 class Group(SSDocument):
 
+    source = DictField(Schema.build(
+            server = TextField(),
+            database = TextField()
+            ))
+
     # ========================================
     # Views
     # ========================================
+
+    # ========================================
+    # Database
+    # ========================================
+
+    @classmethod
+    def shortName(cls, shortName):
+        pass
+
+    @classmethod
+    def longName(cls, longName):
+        pass
 
     # ========================================
     # Crud
