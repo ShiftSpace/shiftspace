@@ -260,12 +260,6 @@ class Shift(SSDocument):
         if self.id:
             Shift.delete(self.createdBy, self.id)
 
-    def toDict(self):
-        """
-        Convenience for turning Document into a dictionary.
-        """
-        return dict(self.items())
-
     # ========================================
     # Validation
     # ========================================

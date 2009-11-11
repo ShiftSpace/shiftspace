@@ -65,5 +65,11 @@ class SSDocument(Document):
         copy["_rev"] = old["_rev"]
         db[self.id] = copy
 
+    def toDict(self):
+        """
+        Convenience for turning Document into a dictionary.
+        """
+        return dict(self.items())
+
 
 

@@ -74,16 +74,18 @@ class Group(SSDocument):
         """
         # create the group metadata
         newGroup = Group(**groupJson)
-        groupJson["source"] = {
-            "server": core.serverName(),
-            "database": Group.db(newGroup.id),
-            }
+        newGroup.source.server = core.serverName()
+        newGroup.source.database =  Group.db(newGroup.id)
+        # save the group metadata to the master db
+        newGroup.store(core.connect())
         # create the root permission for this group
+
         # create the group db
         server = core.server()
         server.create(Group.db(newGroup.id))
         # copy the group metadata to the db
         newGroup.copyTo(core.connect(Group.db(newGroup.id)))
+        return newGroup
         
     @classmethod
     def read(cls, id):
@@ -112,4 +114,12 @@ class Group(SSDocument):
     def updateShift(cls, userId, shift):
         # replicate to all subscribers
         pass
+
+    # ========================================
+    # Instance Methods
+    # ========================================
+
+    def deleteInstance(self):
+        server = core.server()
+        del server[Group.db(self.id)]
 
