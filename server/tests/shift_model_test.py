@@ -36,7 +36,7 @@ class BasicOperations(unittest.TestCase):
 
     def testCreate(self):
         json = shiftJson()
-        theShift = Shift.create(json, userId=self.tempUser.id)
+        theShift = Shift.create(self.tempUser.id, json)
         self.assertEqual(theShift.type, "shift")
         self.assertEqual(theShift.createdBy, self.tempUser.id)
         self.assertNotEqual(theShift.created, None)
@@ -49,7 +49,7 @@ class BasicOperations(unittest.TestCase):
 
     def testRead(self):
         json = shiftJson()
-        newShift = Shift.create(json, userId=self.tempUser.id)
+        newShift = Shift.create(self.tempUser.id, json)
         theShift = Shift.read(newShift.id, userId=self.tempUser.id)
         self.assertEqual(theShift.source.server, newShift.source.server)
         self.assertEqual(theShift.source.database, newShift.source.database)
@@ -59,21 +59,20 @@ class BasicOperations(unittest.TestCase):
 
     def testUpdate(self):
         json = shiftJson()
-        pass
+        newShift = Shift.create(self.tempUser.id, json)
+        Shift.update(self.tempUser.id, newShift.id, {"summary":"changed!"})
+        theShift = Shift.read(newShift.id, self.tempUser.id)
+        self.assertEqual(theShift.summary, "changed!")
 
     def testJoinData(self):
         json = shiftJson()
-        newShift = Shift.create(json, userId=self.tempUser.id)
+        newShift = Shift.create(self.tempUser.id, json)
         self.assertNotEqual(newShift["gravatar"], None)
 
     def tearDown(self):
         db = core.connect()
         SSUser.delete(self.tempUser.userName)
 
-
-class Utilities(unittest.TestCase):
-    def testJoinData():
-        pass
 
 if __name__ == "__main__":
     unittest.main()
