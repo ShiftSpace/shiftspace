@@ -8,12 +8,11 @@ missing = []
     
 try:
     import simplejson as json
+    import builder.preprocess as preprocess
+    import builder.corebuilder as corebuilder
+    import sandalphon.sandalphon as sandalphon
 except:
     missing.append("simplejson")
-    
-import builder.preprocess as preprocess
-import builder.corebuilder as corebuilder
-import sandalphon.sandalphon as sandalphon
 
 try:
     import manual.build as manbuild
