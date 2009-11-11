@@ -413,7 +413,7 @@ class Shift(SSDocument):
         if publishData.get("streams"):
             newUserStreams = [s for s in publishData.get("streams") if s.split("_")[0] == "user"]
         oldUserStreams = [s for s in oldPublishData.get("streams") if s.split("_")[0] == "user"]
-        newUserStreams = list(set(oldUserStreams).difference(set(newUserStreams)))
+        newUserStreams = list(set(newUserStreams).difference(set(oldUserStreams)))
 
         for stream in oldUserStreams:
             theShift.updateIn(core.connect(stream))
@@ -425,11 +425,11 @@ class Shift(SSDocument):
         if publishData.get("streams"):
             newGroupStreams = [s for s in publishData.get("streams") if s.split("_")[0] == "group"]
         oldGroupStreams = [s for s in oldPublishData.get("streams") if s.split("_")[0] == "group"]
-        newGroupStreams = list(set(oldGroupStreams).difference(set(newGroupStreams)))
+        newGroupStreams = list(set(newGroupStreams).difference(set(oldGroupStreams)))
         
         for stream in oldGroupStreams:
             theShift.updateIn(core.connect(stream))
-        for stream in newUserStreams:
+        for stream in newGroupStreams:
             theShift.copyTo(core.connect(stream))
 
         if not isPrivate:
