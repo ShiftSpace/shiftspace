@@ -109,15 +109,15 @@ class BasicOperations(unittest.TestCase):
         theShift = Shift.load(core.connect(SSUser.public(self.fakemary)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
 
-    """
     def testPublishToUser(self):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)
         publishData = {
-            "streams": [User.private(self.fakejohn)]
+            "streams": [SSUser.private(self.fakejohn)]
             }
         Shift.publish(self.fakemary, newShift.id, publishData)
-    """
+        theShift = Shift.load(core.connect(SSUser.private(self.fakejohn)), newShift.id)
+        self.assertEqual(theShift.summary, newShift.summary)
 
     def tearDown(self):
         db = core.connect()

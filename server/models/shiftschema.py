@@ -9,6 +9,7 @@ import server.utils.utils as utils
 import schema
 import core
 from ssuserschema import *
+from permschema import *
 
 # ==============================================================================
 # Errors
@@ -259,7 +260,36 @@ class Shift(SSDocument):
     # Instance Methods
     # ========================================
 
+    def copyTo(self, db):
+        """
+        Create a copy of this shift in another database.
+        Stop gap until we can replicate single documents
+        either via special API or filtered replication.
+        Parameters:
+          db - the name of a database to copy to
+        """
+        copy = self.toDict()
+        del copy["_rev"]
+        db.create(copy)
+
+    def updateIn(self, db):
+        """
+        Update this the instance of this document in
+        another db. Stop gap until we can replicate
+        single documents either via special API or filtered
+        replication.
+        Parameters:
+          db - the name of a database to copy to
+        """
+        old = db[self.id]
+        copy = self.toDict()
+        copy["_rev"] = old["_rev"]
+        db[self.id] = copy
+
     def deleteInstance(self):
+        """
+        Convenience for deleting Shift instances.
+        """
         if self.id:
             Shift.delete(self.createdBy, self.id)
 
@@ -267,7 +297,7 @@ class Shift(SSDocument):
         """
         Convenience for turning Document into a dictionary.
         """
-        dict(self.items())
+        return dict(self.items())
 
     # ========================================
     # Validation
@@ -378,24 +408,34 @@ class Shift(SSDocument):
         theShift.publishData.private = isPrivate
         theShift.publishData.draft = False
         
-        # publish a copy of the shift to all user-x/private, user-y/private ...
+        # publish or update a copy of the shift to all user-x/private, user-y/private ...
         newUserStreams = [] 
         if publishData.get("streams"):
             newUserStreams = [s for s in publishData.get("streams") if s.split("_")[0] == "user"]
         oldUserStreams = [s for s in oldPublishData.get("streams") if s.split("_")[0] == "user"]
         newUserStreams = list(set(oldUserStreams).difference(set(newUserStreams)))
-        # POST for new, PUT for existing
 
-        # publish a copy to group/x, group/y, ...
-        # POST for new, PUT for existing
+        for stream in oldUserStreams:
+            theShift.updateIn(core.connect(stream))
+        for stream in newUserStreams:
+            theShift.copyTo(core.connect(stream))
+
+        # publish or update a copy to group/x, group/y, ...
+        newGroupStreams = []
+        if publishData.get("streams"):
+            newGroupStreams = [s for s in publishData.get("streams") if s.split("_")[0] == "group"]
+        oldGroupStreams = [s for s in oldPublishData.get("streams") if s.split("_")[0] == "group"]
+        newGroupStreams = list(set(oldGroupStreams).difference(set(newGroupStreams)))
+        
+        for stream in oldGroupStreams:
+            theShift.updateIn(core.connect(stream))
+        for stream in newUserStreams:
+            theShift.copyTo(core.connect(stream))
 
         if not isPrivate:
             # NOTE: if running P2P, the user/public will be replicated
             # to the master db - David
-            pubCopy = dict(theShift.items())
-            del pubCopy["_rev"]
-            db = core.connect(SSUser.public(userId))
-            db.create(pubCopy)
+            theShift.copyTo(core.connect(SSUser.public(userId)))
 
         return Shift.joinData(theShift, userId)
     
