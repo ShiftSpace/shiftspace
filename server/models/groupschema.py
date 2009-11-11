@@ -12,11 +12,10 @@ from ssuserschema import *
 
 
 class Group(SSDocument):
-
-    source = DictField(Schema.build(
-            server = TextField(),
-            database = TextField()
-            ))
+    
+    shortName = TextField()
+    longName = TextField()
+    description = TextField()
 
     # ========================================
     # Views

@@ -10,7 +10,7 @@ import schema
 import core
 
 # ==============================================================================
-# Uesr Model
+# User Model
 # ==============================================================================
 
 class User(SSDocument):
@@ -34,8 +34,6 @@ class User(SSDocument):
     url = TextField()
     gravatar = TextField()
     password = TextField()
-    joined = DateTimeField(default=datetime.now())
-    lastSeen = DateTimeField(default=datetime.now())
     streams = ListField(TextField())
     preferences = DictField()
 

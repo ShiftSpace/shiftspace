@@ -55,11 +55,6 @@ class Shift(SSDocument):
     # ========================================
 
     type = TextField(default="shift")
-    source = DictField(Schema.build(
-            server = TextField(),
-            database = TextField()
-            ))
-    createdBy = TextField()
     userName = TextField()
     href = TextField()
     domain = TextField()
@@ -68,8 +63,6 @@ class Shift(SSDocument):
             version = TextField()
             ))
     summary = TextField()
-    created = DateTimeField(default=datetime.now())
-    modified = DateTimeField(default=datetime.now())
     broken = BooleanField(default=False)
     commentStream = TextField()
     publishData = DictField(Schema.build(
