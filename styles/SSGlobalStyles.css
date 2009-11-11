@@ -156,12 +156,12 @@
 
     .ShiftListView .ShiftListViewCell div.status.private
     {
-      background-image:url(/images/Console/publish-private.gif);
     }
 
     .ShiftListView .ShiftListViewCell div.status.public
     {
-      background-image:url(/images/Console/publish-public.gif);
+      background-image:url(/images/Console/publicicon.png);
+      background-position:-8 -8;
     }
 
     .ShiftListView .ShiftListViewCell:nth-child(2n+0)
@@ -237,6 +237,10 @@
     {
       color: white;
       background-color: #746559;
+      padding-right:12px;
+      background-image:url(/images/Console/arrow_light.png);
+      background-position:right;
+      background-repeat:no-repeat;
     }
 
     .ShiftListView .ShiftListViewCell div.userName.loggedin
@@ -252,7 +256,7 @@
     .ShiftListView .ShiftListViewCell div.favorite
     {
       float: right;
-      margin-right: 20px;
+      margin-right: 0px;
     }
 
     .ShiftListView .ShiftListViewCell div.favorite div
@@ -264,21 +268,38 @@
     {
       width: 18px;
       height: 18px;
-      background-color: #ccc;
+      /*background-color: #ccc;*/
+      background-image: url(/images/Console/favoritestar.png);
+      background-repeat: no-repeat;
+      background-position:-8 -8;
+      margin-left:5px;
+      cursor:pointer;
     }
-
-    .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton.favorited
+    
+    .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton:hover, .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton.favorited
     {
-      background-color: yellow;
+      background-image: url(/images/Console/favoritestar_highlight.png);
+      background-repeat: no-repeat;
     }
 
     .ShiftListView .ShiftListViewCell div.comments
     {
       float: right;
-      background-color: #ccc;
-      width: 18px;
-      height: 18px;
-      margin-right: 20px;
+      width:30px;
+      height:30px;
+      margin-right:20px;
+      margin-top:-5px;
+      padding-top:8px;
+      text-align:center;
+      background-image:url(/images/Console/commentballoon.png);
+      background-repeat: no-repeat;
+      cursor:pointer;
+    }
+    
+    .ShiftListView .ShiftListViewCell div.comments.hasComment
+    {
+      background-image:url(/images/Console/commentballoon_highlight.png);
+      color:#F8F5F2;
     }
 
 /* Sidebars */
@@ -412,7 +433,8 @@ ul.ShiftListView li.ShiftListViewCell{
 ul.ShiftListView li.ShiftListViewCell:hover{
   background-color: #A1C49C;
   height: 26px;
-  border: 1px #68A07E solid;
+  border-top: 1px #68A07E solid;
+  border-bottom: 1px #68A07E solid;
 }
 
 .ShiftListView .ShiftListViewCell div.draft{
