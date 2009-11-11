@@ -83,7 +83,7 @@ class Shift(SSDocument):
     content = DictField()    
             
     # ========================================
-    # Views
+    # CouchDB Views
     # ========================================
 
     all = View(
@@ -108,6 +108,25 @@ class Shift(SSDocument):
            if(doc.type == 'shift') { \
              emit(doc.href, doc);    \
            }                         \
+         }")
+
+    by_user = View(
+        "shifts",
+        "function(doc) {               \
+           if(doc.type == 'shift') {   \
+             emit(doc.createdBy, doc); \
+           }                           \
+        }")
+
+    count_by_domain = View(
+        "shifts",
+        "function(doc) {             \
+           if(doc.type == 'shift') { \
+             emit(doc.domain, 1);    \
+           }                         \
+         }",
+        "function(keys, values, rereduce) { \
+           return sum(values);              \
          }")
 
     # ========================================
@@ -459,17 +478,20 @@ class Shift(SSDocument):
     # Favoriting
     # ========================================
 
+    @classmethod
     def favoriteId(id, userId):
         """
         Return the favorite id for a shift and user.
         """
         return "favorite:%s:%s" % (userId, id)
 
+    @classmethod
     def isFavorited(id, userId=None):
         db = core.connect()
         favId = Shift.favoriteId(id, userId)
         return db.get(favId) != None
     
+    @classmethod
     def favorite(id, userId):
         db = core.connect()
         if (not Shift.canRead(id, userId)) or Shift.isFavorited(id, userId):
@@ -483,6 +505,7 @@ class Shift(SSDocument):
         db = core.connect(User.private(userId))
         return Shift.joinData(Shift.load(db, id), userId)
     
+    @classmethod
     def unfavorite(id, userId):
         db = core.connect()
         if (not Shift.canRead(id, userId)) or (not Shift.isFavorited(id, userId)):
@@ -490,9 +513,67 @@ class Shift(SSDocument):
         del db[Shift.favoriteId(id, userId)]
         return Shift.joinData(db[id], userId)
     
+    @classmethod
     def favoriteCount(id):
         return len(Favorite.by_shift(key=id)) or 0
     
     # ========================================
-    # Lists & Filtering
+    # List & Filtering Support
     # ========================================
+
+    @classmethod
+    def byUserName(userName, userId=None, start=None, end=None, limit=25):
+        """
+        Return the list of shifts a user has created.
+        Parameters:
+            userName - a user name.
+            userId - id of the user requesting the data (for joins).
+            start - the start index or key.
+            end - the end index or key.
+            limit - number of results to return.
+        Returns:
+            A list of the user's shifts.
+        """
+        id = User.read(userName).id
+        db = core.connect(User.private(userId))
+        return Shift.by_user(db, id, limit=limit)
+
+    @joindecorator
+    def shifts(byHref, userId=None, byFollowing=False, byGroups=False, start=0, limit=25):
+        """
+        Returns a list of shifts based on whether
+            1. href
+            3. By public streams specified user is following. 
+            4. By groups streams specified user is following.
+        Parameters:
+            byHref - a url
+            byDomain - a url string
+            byFollowing - a user id
+            byGroups - a user id
+        Returns:
+            A list of shifts that match the specifications.
+        """
+        db = core.connect()
+        # NOTE: to prevent errors on a newly created DB - David 9/11/09
+        if core.single(schema.statsCount, "shift") == None:
+            return []
+        lucene = core.lucene()
+        # TODO: validate byHref - David
+        queryString = "href:\"%s\" AND ((draft:false AND private:false)" % byHref
+        if userId:
+            queryString = queryString + " OR createdBy:%s" % userId
+            streams = ""
+            if byFollowing:
+                following = User.followStreams(userId)
+                streams = streams + " ".join(following)
+            if byGroups:
+                groups = User.groupStreams(userId)
+                streams = streams + " ".join(groups)
+            # TODO: make sure streams cannot be manipulated from client - David
+            queryString = queryString + ((" OR (draft:false%s)" % ((len(streams) > 0 and (" AND streams:%s" % streams)) or "")))
+        queryString = queryString + ")"
+        rows = lucene.search("shifts", q=queryString, sort="\modified", skip=start, limit=limit)
+        shifts = [db[row["id"]] for row in rows]
+        return shifts
+
+
