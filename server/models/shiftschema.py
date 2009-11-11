@@ -355,6 +355,7 @@ class Shift(SSDocument):
         """
         db = core.connect(SSUser.private(userId))
         theShift = Shift.load(db, id)
+        oldPublishData = dict(theShift.items())["publishData"]
         allowed = []
 
         isPrivate = True
@@ -378,6 +379,11 @@ class Shift(SSDocument):
         theShift.publishData.draft = False
         
         # publish a copy of the shift to all user-x/private, user-y/private ...
+        newUserStreams = [] 
+        if publishData.get("streams"):
+            newUserStreams = [s for s in publishData.get("streams") if s.split("_")[0] == "user"]
+        oldUserStreams = [s for s in oldPublishData.get("streams") if s.split("_")[0] == "user"]
+        newUserStreams = list(set(oldUserStreams).difference(set(newUserStreams)))
         # POST for new, PUT for existing
 
         # publish a copy to group/x, group/y, ...
