@@ -18,7 +18,10 @@ fakeMary = {
 
 def shiftJson():
     return {
-        "source": "local",
+        "source": {
+            "server":"http://localhost:5984/",
+            "database":"shiftspace"
+            },
         "href": "http://google.com/images",
         "space": {
             "name":"Notes",
@@ -41,7 +44,6 @@ class BasicOperations(unittest.TestCase):
         self.assertNotEqual(theShift.modified, None)
         self.assertEqual(type(theShift.modified), datetime)
         self.assertEqual(theShift.domain, "http://google.com")
-        self.assertEqual(theShift.source, "local")
         db = core.connect(SSUser.private(self.tempUser.id))
         del db[theShift.id]
 
@@ -49,15 +51,20 @@ class BasicOperations(unittest.TestCase):
         json = shiftJson()
         newShift = Shift.create(json, userId=self.tempUser.id)
         theShift = Shift.read(newShift.id, userId=self.tempUser.id)
-        self.assertEqual(theShift.source, newShift.source)
+        self.assertEqual(theShift.source.server, newShift.source.server)
+        self.assertEqual(theShift.source.database, newShift.source.database)
         self.assertEqual(theShift.createdBy, self.tempUser.id)
         db = core.connect(SSUser.private(self.tempUser.id))
         del db[theShift.id]
 
+    def testUpdate(self):
+        json = shiftJson()
+        pass
+
     def testJoinData(self):
         json = shiftJson()
         newShift = Shift.create(json, userId=self.tempUser.id)
-        #self.assertNotEqual(newShift.get("gravatar"), None)
+        self.assertNotEqual(newShift["gravatar"], None)
 
     def tearDown(self):
         db = core.connect()

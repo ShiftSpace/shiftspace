@@ -54,7 +54,10 @@ class Shift(SSDocument):
     # ========================================
 
     type = TextField(default="shift")
-    source = TextField()
+    source = DictField(Schema.build(
+            server = TextField(),
+            database = TextField()
+            ))
     createdBy = TextField()
     userName = TextField()
     href = TextField()
@@ -246,7 +249,7 @@ class Shift(SSDocument):
     # ========================================
 
     @classmethod
-    def canUpdate(cls, id, userId):
+    def canRead(cls, id, userId):
         """
         Check if a user can read a shift. The user must have
         either:
@@ -259,24 +262,38 @@ class Shift(SSDocument):
         Returns:
             bool.
         """
-        db = core.connect()
-        theShift = Shift.load(id)
+        db = core.connect(User.private(userId))
+        theShift = Shift.load(db, id)
         if SSUser.isAdmin(userId):
             return True
         if theShift.createdBy == userId:
             return True
         if theShift.publishData.draft:
             return False
-        theUser = SSUser.load(userId)
         if not theShift.publishData.private:
             return True
+        theUser = SSUser.load(core.connect(), userId)
         if theUser.privateStream in theShift.publishData.streams:
             return True
         shiftStreams = theShift.publishData.streams
         readableStreams = Permission.readableStreams(userId)
         allowed = set(shiftStreams).intersection(readableStreams)
         return len(allowed) > 0
-
+    
+    @classmethod
+    def canUpdate(id, userId):
+        """
+        Check where a user can update a shift.
+        Parameters:
+            id - a shift id.
+            userId - a user id.
+        Returns:
+            bool.
+        """
+        db = core.connect(User.private(userId))
+        theShift = Shift.load(id, db)
+        return (userId == theShift.createdBy) or User.isAdmin(userId)
+    
     @classmethod
     def canDelete(cls, id, userId):
         """
@@ -287,35 +304,84 @@ class Shift(SSDocument):
         Returns:
             bool.
         """
-        db = core.connect()
-        theShift = db[id]
+        db = core.connect(User.private(userId))
+        theShift = Shift.load(db, id)
         return SSUser.isAdmin(userId) or (userId == theShift.createdBy)
-
+                          
     @classmethod
     def canPublish(cls, id, userId):
-        pass
+        """
+        Check where a user can unpublish a shift.
+        Parameters:
+            id - a shift id.
+            userId - a user id.
+        Returns:
+            bool.
+        """
+        db = core.connect(User.private(userId))
+        theShift = Shift.load(db, id)
+        return (userId == theShift.createdBy) or User.isAdmin(userId)
 
     @classmethod
     def canUnpublish(cls, id, userId):
-        pass
+        """
+        Check where a user can unpublish a shift.
+        Parameters:
+            id - a shift id.
+            userId - a user id.
+        Returns:
+            bool.
+        """
+        db = core.connect(User.private(userId))
+        theShift = Shift.load(db, id)
+        return (userId == theShift.createdBy) or User.isAdmin(userId)
 
     @classmethod
     def canComment(cls, id, userId):
-        pass
+        """
+        Check if the user can comment on a shift. Allowed if:
+            1. Shift is public.
+            2. If the shift was published to a stream that the user has permissions on.
+        """
+        db = core.connect(User.private(userId))
+        theShift = Shift.load(db, id)
+        if not theShift.publishData.private:
+          return True
+        # ignore private streams
+        shiftStreams = [astream for astream in theShift.publishData.streams
+                        if not Stream.isUserPrivateStream(astream)]
+        writeable = Permission.writeableStreams(userId)
+        allowed = set(shiftStreams).intersection(writeable)
+        return len(allowed) > 0
 
     @classmethod
     def isPublic(cls, id):
-        pass
+        """
+        Check where a shift is public.
+        Parameters:
+            id - a shift id.
+        Returns:
+            bool.
+        """
+        return Shift.load(core.connect, id) != None
 
     @classmethod
     def isPrivate(cls, id):
-        pass
+        """
+        Check whether a shift is private.
+        Parameters:
+            id - a shift id.
+        Returns:
+            bool.
+        """
+        return not Shift.isPublic(id)
 
     # ========================================
     # Publishing
     # ========================================
 
-    def publish(id, publishData, dbname="shiftspace"):
+    @classmethod
+    def publish(id, publishData, userId):
         """
         Set draft status of a shift to false. Sync publishData field.
         If the shift is private only publish to the streams that
@@ -326,9 +392,8 @@ class Shift(SSDocument):
             id - a shift id.
             publishData - a dictionary holding the publish options.
         """
-        theShift = Shift.load(dbname, id)
-        userId = db[theShif.createdBy]
-        db = core.connect("user_%s/private" % userId)
+        db = core.connect(User.private(userId))
+        theShift = Shift.load(db, id)
         allowed = []
         publishStreams = publishData.get("streams") or []
         if (publishData.get("private") == True) or (publishData.get("private") == None and Shift.isPrivate(id)):
@@ -360,10 +425,73 @@ class Shift(SSDocument):
     # ========================================
     # Comments
     # ========================================
+
+    @classmethod
+    def commentStream(id):
+        """
+        Return the comment stream id for the specified shift.
+        Parameters:
+            id - a shift id.
+        """
+        result = list(Stream.commentStream(key=id))
+        if result and len(result) > 0:
+            return result[0].id
+        else:
+            return None
     
+    @classmethod
+    def createCommentStream(id, streamId):
+        """
+        Create a comment stream for a shift if it doesn't already exist.
+        Parameters:
+            id - a shift id.
+        """
+        db = core.connect(Stream.group(streamId))
+        theShift = Shift.load(db, id)
+        commentStream = Stream.create(db, {
+                "meta": "comments",
+                "objectRef": ref(id),
+                "createdBy": theShift.createdBy
+                })
+        return commentStream["_id"]
+
     # ========================================
     # Favoriting
     # ========================================
+
+    def favoriteId(id, userId):
+        """
+        Return the favorite id for a shift and user.
+        """
+        return "favorite:%s:%s" % (userId, id)
+
+    def isFavorited(id, userId=None):
+        db = core.connect()
+        favId = Shift.favoriteId(id, userId)
+        return db.get(favId) != None
+    
+    def favorite(id, userId):
+        db = core.connect()
+        if (not Shift.canRead(id, userId)) or Shift.isFavorited(id, userId):
+            return
+        fav = {
+            "created": utils.utctime(),
+            "createdBy": userId,
+            "type": "favorite"
+            }
+        db[favoriteId(id, userId)] = fav
+        db = core.connect(User.private(userId))
+        return Shift.joinData(Shift.load(db, id), userId)
+    
+    def unfavorite(id, userId):
+        db = core.connect()
+        if (not Shift.canRead(id, userId)) or (not Shift.isFavorited(id, userId)):
+            return
+        del db[Shift.favoriteId(id, userId)]
+        return Shift.joinData(db[id], userId)
+    
+    def favoriteCount(id):
+        return len(Favorite.by_shift(key=id)) or 0
     
     # ========================================
     # Lists & Filtering
