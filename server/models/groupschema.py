@@ -42,26 +42,37 @@ class Group(SSDocument):
     # Database
     # ========================================
 
+    def db(cls, groupId):
+        return "group_%s" % groupId
+
     @classmethod
-    def byShortName(cls, shortName):
+    def byShortName(cls, shortName, absolute=False):
         result = list(Group.by_shortName(core.connect(), key=shortName))
         if result and len(result) > 0:
-            return "group_%s" % result[0]
+            return "%s/group_%s" % ((result[0].source.server or ''), result[0].id)
  
     @classmethod
-    def byLongName(cls, longName):
+    def byLongName(cls, longName, absolute=False):
         result = list(Group.by_longName(core.connect(), key=longName))
         if result and len(result) > 0:
-            return "group_%s" % result[0]
+            return "%s/group_%s" % ((result[0].source.server or ''), result[0].id)
 
     # ========================================
     # Crud
     # ========================================
 
     @classmethod
-    def create(cls, json):
-        pass
-
+    def create(cls, userId, groupJson):
+        # create the group metadata
+        newGroup = Group(**groupJson)
+        newGroup.source.server = core.serverName()
+        newGroup.source.database = Group.db(newGroup.id)
+        # create the root permission for this group
+        # create the group db
+        server = core.server()
+        server.create(Group.db(newGroup.id))
+        # copy the group metadata to the db
+        
     @classmethod
     def read(cls, json):
         pass

@@ -20,6 +20,15 @@ class Lucene():
 _lucene = Lucene()
 
 
+def serverName():
+    """
+    Return the servername. Used to assign source fields in documents.
+    This way clients can resolve the location of the source to replicate
+    to and from.
+    """
+    return ""
+
+
 def server():
     """
     Returns a CouchDB server.

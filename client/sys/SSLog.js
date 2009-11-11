@@ -41,8 +41,8 @@ function SSLog()
      type == SSLogError ||
      type == SSLogWarning)
   {
-    if(typeof ShiftSpaceSandBoxMode != 'undefined' ||
-       typeof SandalphonToolMode != 'undefined')
+    if((typeof ShiftSpaceSandBoxMode != 'undefined' || typeof SandalphonToolMode != 'undefined') && 
+        typeof console != 'undefined' && console.log)
     {
        if(!Browser.Engine.webkit)
        {
@@ -75,19 +75,19 @@ function SSLog()
          }
        }
     }
-    else
+    else if(typeof GM_log != 'undefined')
     {
       if(type == SSLogError)
       {
-	GM_log(['ERROR:'].combine(args));
+        GM_log(['ERROR:'].combine(args));
       }
       else if(type == SSLogWarning)
       {
-	GM_log(['WARNING:'].combine(args));
+        GM_log(['WARNING:'].combine(args));
       }
       else
       {
-	GM_log(args);
+        GM_log(args);
       }
     }
   } 
