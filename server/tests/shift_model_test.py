@@ -67,7 +67,13 @@ class BasicOperations(unittest.TestCase):
     def testDelete(self):
         json = shiftJson()
         newShift = Shift.create(self.tempUser.id, json)
+        self.assertNotEqual(newShift, None)
         Shift.delete(self.tempUser.id, newShift.id)
+        theShift = Shift.read(self.tempUser.id, newShift.id)
+        self.assertEqual(theShift, None)
+        newShift = Shift.create(self.tempUser.id, json)
+        self.assertNotEqual(newShift, None)
+        newShift.deleteInstance()
         theShift = Shift.read(self.tempUser.id, newShift.id)
         self.assertEqual(theShift, None)
 
