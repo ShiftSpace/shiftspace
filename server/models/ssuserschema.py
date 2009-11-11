@@ -8,6 +8,7 @@ import schema
 import core
 
 class SSUser(User):
+
     # ========================================
     # Database
     #========================================

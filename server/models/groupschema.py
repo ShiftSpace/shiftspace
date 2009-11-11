@@ -64,23 +64,43 @@ class Group(SSDocument):
 
     @classmethod
     def create(cls, userId, groupJson):
+        """
+        Create a group.
+        Parameters:
+            userId - a user id.
+            groupJson - a group json document.
+        """
         # create the group metadata
+        groupJson["source"] = {
+            "server": core.serverName(),
+            "database": Group.db(newGroup.id),
+            }
         newGroup = Group(**groupJson)
-        newGroup.source.server = core.serverName()
-        newGroup.source.database = Group.db(newGroup.id)
         # create the root permission for this group
         # create the group db
         server = core.server()
         server.create(Group.db(newGroup.id))
         # copy the group metadata to the db
+        groupdb = core.connect(Group.db(newGroup.id))
+        groupdb.create(groupJson)
         
     @classmethod
-    def read(cls, json):
+    def read(cls, id):
         pass
 
     @classmethod
-    def update(cls, json):
+    def update(cls, id):
         pass
+
+    @classmethod
+    def delete(cls, id):
+        """
+        Delete the group.
+        Parameters:
+            id - a group id.
+        """
+        server = core.server()
+        del server[Group.db(id)]
 
     @classmethod
     def addShift(cls, userId, shift):

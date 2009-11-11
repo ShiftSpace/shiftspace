@@ -229,12 +229,15 @@ def manual():
     manbuild.buildAll()
 
 
-def tests():
+def tests(toRun):
     """
     Run all the unit tests.
     """
     import server.tests.shift_model_test
-    suite = unittest.TestLoader().loadTestsFromTestCase(server.tests.shift_model_test.BasicOperations)
+    if toRun == "all" or "shift" in toRun:
+        suite = unittest.TestLoader().loadTestsFromTestCase(server.tests.shift_model_test.BasicOperations)
+    if toRun == "all" or "group" in toRun:
+        suite = unittest.TestLoader().loadTestsFromTestCase(server.tests.group_model_test.BasicOperations)
     unittest.TextTestRunner(verbosity=2).run(suite)
 
 
@@ -293,7 +296,10 @@ def main(argv):
     elif action == "updatedb":
         updatedb()
     elif action == "tests":
-        tests()
+        toRun = "all"
+        if len(argv) > 1:
+            toRun = [str.strip() for str in argv[1:]]
+        tests(toRun)
     elif action == "new":
         try:
             name = argv[1]

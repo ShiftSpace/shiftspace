@@ -31,9 +31,11 @@ class BasicOperations(unittest.TestCase):
         self.fakemary = SSUser.create(fakemary).id
         self.root = SSUser.read("shiftspace").id
 
-    def testCreate(self):
+    def testGroupDb(self):
         json = groupJson()
-        
+        json["createdBy"] = self.fakemary
+        newGroup = Group(json)
+        self.assertEqual(Group.db(newGroup.id), "group_%s" % newGroup.id)
 
     def tearDown(self):
         db = core.connect()
