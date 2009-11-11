@@ -79,7 +79,7 @@ class Group(SSDocument):
         # save the group metadata to the master db
         newGroup.store(core.connect())
         # create the root permission for this group
-
+        
         # create the group db
         server = core.server()
         server.create(Group.db(newGroup.id))
