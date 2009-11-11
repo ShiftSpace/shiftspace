@@ -15,7 +15,9 @@ class Group(SSDocument):
     
     shortName = TextField()
     longName = TextField()
-    description = TextField()
+    tagLine = TextField()
+    url = TextField()
+    visible = BooleanField(default=True)
 
     # ========================================
     # Views
