@@ -211,7 +211,7 @@ var HelloWorldSpace = new Class({
         if(json.summary) this.element.set("text", json.summary);
         this.setPosition(json.position);
         this.makeDraggable();
-        this.element.addEvent("dblick", this.changeMessage.bind(this));
+        this.element.addEvent("dblclick", this.changeMessage.bind(this));
         this.save();
     },
   
@@ -227,7 +227,7 @@ var HelloWorldSpace = new Class({
             position : this.getPosition()
         };
     }
-}</pre>
+});</pre>
 	<p>Wow, that made code quite a bit longer. Let's break it apart:</p>
 	<pre>if(json.summary) this.element.set("text", json.summary);</pre>
 	<p>This means only set the value of our element to the value of json.summary if json.summary has value. For new shifts, summary is null, for HelloWorld shifts that have been saved, this has a definite value.</p>
@@ -264,7 +264,7 @@ var HelloWorldShift = Shift({
             position : this.getPosition()
         };
     }
-}</pre>
+});</pre>
     </div>
 </div>
 <br />
