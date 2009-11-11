@@ -102,6 +102,13 @@ class BasicOperations(unittest.TestCase):
         self.assertTrue(not Shift.canModify(self.fakejohn, newShift.id))
         self.assertTrue(Shift.canModify(self.root, newShift.id))
 
+    def testBasicPublish(self):
+        json = shiftJson()
+        newShift = Shift.create(self.fakemary, json)
+        Shift.publish(self.fakemary, newShift.id, {"private":False})
+        theShift = Shift.load(core.connect(SSUser.public(self.fakemary)), newShift.id)
+        self.assertEqual(theShift.summary, newShift.summary)
+
     def tearDown(self):
         db = core.connect()
         SSUser.delete(self.fakemary)
