@@ -272,106 +272,41 @@ class Shift(SSDocument):
     # ========================================
     # Validation
     # ========================================
-
+    
     @classmethod
-    def canRead(cls, id, userId):
+    def canModify(cls, userId, id):
         """
-        Check if a user can read a shift. The user must have
-        either:
-            1. Created the shift
-            2. The shift must be published and public
-            3. If the user is subscribed to a stream the shift is on.
-            4. If the shift is published to the user's private stream.
+        Check where a user can modify a shift. This includes
+        updating, deleting, publishing, and unpublishing.
         Parameters:
+            userId - a user id, used to look up the shift.
             id - a shift id.
         Returns:
             bool.
         """
-        db = core.connect(SSUser.private(userId))
-        theShift = Shift.load(db, id)
         if SSUser.isAdmin(userId):
             return True
-        if theShift.createdBy == userId:
-            return True
-        if theShift.publishData.draft:
-            return False
-        if not theShift.publishData.private:
-            return True
-        theUser = SSUser.load(core.connect(), userId)
-        if theUser.privateStream in theShift.publishData.streams:
-            return True
-        shiftStreams = theShift.publishData.streams
-        readableStreams = Permission.readableStreams(userId)
-        allowed = set(shiftStreams).intersection(readableStreams)
-        return len(allowed) > 0
-    
-    @classmethod
-    def canUpdate(cls, id, userId):
-        """
-        Check where a user can update a shift.
-        Parameters:
-            id - a shift id.
-            userId - a user id.
-        Returns:
-            bool.
-        """
-        db = core.connect(SSUser.private(userId))
-        theShift = Shift.load(id, db)
-        return (userId == theShift.createdBy) or SSUser.isAdmin(userId)
-    
-    @classmethod
-    def canDelete(cls, id, userId):
-        """
-        Check where a user can update a shift.
-        Parameters:
-            id - a shift id.
-            userId - a user id.
-        Returns:
-            bool.
-        """
         db = core.connect(SSUser.private(userId))
         theShift = Shift.load(db, id)
-        return SSUser.isAdmin(userId) or (userId == theShift.createdBy)
-                          
-    @classmethod
-    def canPublish(cls, id, userId):
-        """
-        Check where a user can unpublish a shift.
-        Parameters:
-            id - a shift id.
-            userId - a user id.
-        Returns:
-            bool.
-        """
-        db = core.connect(SSUser.private(userId))
-        theShift = Shift.load(db, id)
-        return (userId == theShift.createdBy) or SSUser.isAdmin(userId)
+        return theShift and (theShift.createdBy == userId)
 
     @classmethod
-    def canUnpublish(cls, id, userId):
-        """
-        Check where a user can unpublish a shift.
-        Parameters:
-            id - a shift id.
-            userId - a user id.
-        Returns:
-            bool.
-        """
-        db = core.connect(SSUser.private(userId))
-        theShift = Shift.load(db, id)
-        return (userId == theShift.createdBy) or SSUser.isAdmin(userId)
-
-    @classmethod
-    def canComment(cls, id, userId):
+    def canComment(cls, userId, id):
         """
         Check if the user can comment on a shift. Allowed if:
             1. Shift is public.
             2. If the shift was published to a stream that the user has permissions on.
+            3. Running as admin.
+        Parameters:
+            userId - a user id.
+            id - a shift id.
         """
+        if SSUser.isAdmin(userId):
+            return True
         db = core.connect(SSUser.private(userId))
         theShift = Shift.load(db, id)
         if not theShift.publishData.private:
-          return True
+            return True
         # ignore private streams
         shiftStreams = [astream for astream in theShift.publishData.streams
                         if not Stream.isUserPrivateStream(astream)]
@@ -585,5 +520,3 @@ class Shift(SSDocument):
         rows = lucene.search("shifts", q=queryString, sort="\modified", skip=start, limit=limit)
         shifts = [db[row["id"]] for row in rows]
         return shifts
-
-

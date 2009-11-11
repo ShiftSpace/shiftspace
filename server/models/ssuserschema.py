@@ -54,14 +54,13 @@ class SSUser(User):
         return newUser
 
     @classmethod
-    def read(cls, userName):
-        db = core.connect()
-        return list(SSUser.by_name(db, key=userName))[0]
+    def read(cls, id):
+        return User.load(core.connect(), id)
 
     @classmethod
-    def update(cls, userName, fields):
+    def update(cls, id, fields):
         db = core.connect()
-        theUser = SSUser.read(userName)
+        theUser = SSUser.read(id)
         if fields.get("bio"):
             theUser.bio = fields.get("bio")
         if fields.get("url"):
@@ -69,18 +68,30 @@ class SSUser(User):
         if fields.get("displayName"):
             theUser.displayName = fields.get("displayName")
         theUser.store(db)
-        return tehUser
+        return theUser
 
     @classmethod
-    def delete(cls, userName):
+    def delete(cls, id):
         server = core.server()
-        theUser = SSUser.read(userName)
+        theUser = SSUser.read(id)
         # delete the user's db
-        del server[SSUser.public(theUser.id)]
-        del server[SSUser.private(theUser.id)]
-        del server[SSUser.inbox(theUser.id)]
+        del server[SSUser.public(id)]
+        del server[SSUser.private(id)]
+        del server[SSUser.inbox(id)]
         # delete the user doc
         db = core.connect()
-        del db[theUser.id]
+        del db[id]
+
+    # ========================================
+    # Validation
+    # ========================================
+
+    @classmethod
+    def isAdmin(cls, id):
+        if not id:
+            return False
+        db = core.connect()
+        admins = db["admins"]
+        return id in admins["ids"]
 
 
