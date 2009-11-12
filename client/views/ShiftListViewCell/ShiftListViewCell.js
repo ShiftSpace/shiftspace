@@ -231,15 +231,22 @@ var ShiftListViewCell = new Class({
   
   setCommentCount: function(count)
   {
-    var el = this.lockedElement();
-    el.getElement('.comments').set('text', count);
+    var el = this.lockedElement(); 
+    if (count > 0)
+    {
+      el.getElement('.comments').set('text', count);
+      el.getElement('.comments').addClass('hasComment');
+    }
   },
 
 
   setFavoriteCount: function(count)
   {
     var el = this.lockedElement();
-    el.getElement('.favoriteCount').set('text', count);
+    if (count > 0)
+    {
+      el.getElement('.favoriteCount').set('text', count);
+    }
   },
   
   

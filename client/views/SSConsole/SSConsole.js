@@ -87,6 +87,12 @@ var SSConsole = new Class({
     this.MainTabView.selectTabByName('LoginTabView');
   },
   
+  showInbox: function()
+  {
+    if(!this.isVisible()) this.show();
+    this.MainTabView.selectTabByName('InboxPane');
+  },
+  
   
   onFrameLoad: function(ui)
   {

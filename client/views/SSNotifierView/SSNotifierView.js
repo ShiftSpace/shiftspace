@@ -59,7 +59,7 @@ var SSNotifierView = new Class({
     if (this.__count > 1) text += 's';
     if (this.SSShiftCount) this.SSShiftCount.set('text', text);
   },
-  
+    
   initGraph: function() {
     this.graph = new Fx.Graph(this.element, {
       controller: this,
@@ -152,6 +152,22 @@ var SSNotifierView = new Class({
     this.updateShiftCount(p);
   },
   
+  refreshMessageCount: function()
+  {
+    if (ShiftSpace.User.isLoggedIn())
+    {
+      var p = SSApp.get({
+        resource:'user/'+ShiftSpaceUser.getUserName()+'/messages'
+      });
+      
+      this.updateMessageCount(p);
+    }
+    else
+    {
+      this.SSMessage.hide();
+    }
+  },
+  
   onConsoleShow: function()
   {
     this.graph.cancel(true);
@@ -229,6 +245,7 @@ var SSNotifierView = new Class({
   updateControls: function()
   {
     this.refreshShiftCount();
+    this.refreshMessageCount();
     if (this.SSUsername) this.SSUsername.set('text', ShiftSpace.User.getUserName());
     
     if(this.SSLogInOut)
@@ -253,12 +270,26 @@ var SSNotifierView = new Class({
   {
     this.__count = countp;
     this.updateCounter();
+    SSLog(this.graph.state(), SSLogForce);
     
-    if (this.__count > 0 && this.graph.state != "SSNotifierOpen")
+    if (this.__count > 0 && this.graph.state() != "SSNotifierOpen")
     {
-      SSLog("show", SSLogForce);
       this.graph.setState('SSNotifierHasShifts', {animate:true, direction:'previous', hold:{duration:3000}});
     }
+  }.asPromise(),
+  
+  updateMessageCount: function(countp)
+  {
+    if (countp.length > 0)
+    {
+      this.SSMessage.show();
+      this.SSShowMessage.set('text',countp.length);
+    }
+    else
+    {
+      this.SSMessage.hide();
+    }
+    
   }.asPromise(),
   
   attachEvents: function()
@@ -311,6 +342,10 @@ var SSNotifierView = new Class({
       {
         ShiftSpace.Console.showLogin();
       }
+    }.bind(this));
+    
+    this.SSMessage.addEvent('click',function() {
+      ShiftSpace.Console.showInbox();
     }.bind(this));
   },
   

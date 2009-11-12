@@ -79,9 +79,13 @@ button.ActionButton
   
   border: 1px solid #ccc;
   
-  padding-left: 5px;
+  padding-left:25px;
+  /*
   width: 110px;
   text-align: right;
+  */
+  background-position:0 -2;
+  background-repeat:no-repeat;
 }
 
 button.ActionButton:hover
@@ -107,6 +111,18 @@ button.ActionButton:hover
 #SSSelectSpace, #SSShiftCount
 {
   margin-left: 40px;
+}
+
+button#SSSelectSpace
+{
+  background-image:url(/images/Console/crosshair.png);
+  background-position:0 -3;
+}
+
+button#SSToggleConsole
+{
+  background-image:url(/images/Console/consoleclose.png); 
+  padding-left:27px;
 }
 
 #SSShiftCount
@@ -136,4 +152,30 @@ button.ActionButton:hover
   float: right;
   margin-top: 8px;
   margin-right: 10px;
+  border:none;
+}
+
+#SSMessage
+{
+  background:url(/images/Console/message.png) no-repeat;
+  width:30px;
+  height:30px;
+  float:left;
+  margin-top:3px;
+  cursor:pointer;
+}
+
+#SSShowMessage
+{
+  background-color:#F63B02;
+  border:medium none;
+  color:#FFFFFF;
+  font-size:9px;
+  margin-left:19px;
+  margin-top:0;
+  padding:0;
+  position:absolute;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  cursor:pointer;
 }
