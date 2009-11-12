@@ -16,7 +16,7 @@ from ssuserschema import *
 
 class PermissionError(Exception): pass
 class MissingCreatorError(PermissionError): pass
-class MissingStreamError(PermissionError): pass
+class MissingGroupError(PermissionError): pass
 class CreateEventPermissionError(PermissionError): pass
 class PermissionAlreadyExistsError(PermissionError): pass
 
@@ -31,7 +31,7 @@ class Permission(SSDocument):
     # ========================================
 
     type = TextField(default="permission")
-    streamId = TextField()
+    groupId = TextField()
     userId = TextField()
     level = IntegerField()
 
@@ -41,22 +41,34 @@ class Permission(SSDocument):
 
     all = View(
         "permissions",
-        "function(doc) { \
+        "function(doc) {                  \
+           if(doc.type == 'permission') { \
+             emit(doc._id, doc);          \
+           }                              \
          }")
 
     by_user = View(
         "permissions",
-        "function (doc) { \
+        "function (doc) {                 \
+           if(doc.type == 'permission') { \
+             emit(doc.userId, doc);       \
+           }                              \
          }")
 
     by_group = View(
         "permissions",
-        "function (doc) { \
+        "function (doc) {                 \
+           if(doc.type == 'permission') { \
+             emit(doc.groupId, doc);      \
+           }                              \
          }")
 
-    by_user_and_stream = View(
+    by_user_and_group = View(
         "permissions",
-        "function (doc) { \
+        "function (doc) {                           \
+           if(doc.type == 'permission') {           \
+             emit([doc.userId, doc.groupId], doc);  \
+           }                                        \
          }")
     
     # ========================================
@@ -64,41 +76,82 @@ class Permission(SSDocument):
     # ========================================
     
     @classmethod
-    def create(cls, userId, streamId, json):
+    def create(cls, userId, groupId, json):
         """
         Create will fail if:
             1. No userId specified.
-            2. No streamId specified.
-            3. Attempting to create a permission for a user on a stream if a permission
-               for that user on that stream already exists.
+            2. No groupId specified.
+            3. Attempting to create a permission for a user on a group if a permission
+               for that user on that group already exists.
         Parameters:
             userId - id of the user creating the permission.
-            streamId - a stream id.
+            groupId - a group id.
             json - dictionary containing the permission data.
         Returns:
             the new Permission document.
         """
         db = core.connect()
-        if not streamId:
-            raise MissingStreamError
+        if not groupId:
+            raise MissingGroupError
         if not userId:
             raise MissingCreatorError
-        if Persmision.permissionForUser(userId, streamId):
+        if Persmision.permissionForUser(userId, groupId):
             raise PermissionAlreadyExistsError
         allowed = User.isAdmin(userId)
         if not allowed:
-            allowed = Group.isOwner(streamId, userId)
+            allowed = Group.isOwner(groupId, userId)
         if not allowed:
-            adminable = Permission.adminStreams(userId)
-            allowed = streamId in adminable
+            adminable = Permission.adminGroups(userId)
+            allowed = groupId in adminable
         if not allowed:
             raise CreateEventPermissionError
         newPermission = Permission(**json)
-        newPermission["type"] = "permission"
-        id = db.create(newPermission)
-        return db[id]
+        newPermission.store(db)
+        return newPermission
 
     @classmethod
-    def writeableStreams(cls, userId):
+    def read(cls, id):
+        return Permission.load(core.connect(), id)
+
+    @classmethod
+    def update(cls, id, level):
+        db = core.connect()
+        perm = Permission.load(db, id)
+        perm.level = level
+        perm.store(db)
+        return perm
+
+    @classmethod
+    def updateForUser(cls, userId, groupId, level):
+        db = core.connect()
+        perm = list(Permission.by_user_and_group(db, key=[userId, groupId]))[0]
+        perm.level = level
+        perm.store(db)
+        return perm
+
+    @classmethod
+    def delete(cls, id):
+        db = core.connect()
+        del db[id]
+
+    # ========================================
+    # Utilities
+    # ========================================
+
+    @classmethod
+    def permissionForUser(cls, userId, groupId):
+        """
+        Returns the permission for a particular group.
+        Parameters:
+            userId - a user id.
+            groupId - a group id.
+        Returns:
+            A permission document.
+        """
+        db = core.connect()
+        return list(Permission.by_user_and_group(db, key=[userId, groupId]))[0]
+
+    @classmethod
+    def writeableGroups(cls, userId):
         return []
 
