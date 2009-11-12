@@ -75,6 +75,7 @@ class Group(SSDocument):
             groupJson - a group json document.
         """
         from server.models.permschema import Permission
+        groupJson["createdBy"] = userId
         # create the group metadata
         newGroup = Group(**groupJson)
         newGroup.source.server = core.serverName()

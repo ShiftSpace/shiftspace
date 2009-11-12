@@ -79,39 +79,39 @@ class Permission(SSDocument):
          }"
         )
 
-    by_adminable = View(
+    by_joinable = View(
         "permissions",
-        "function (doc) {                                                   \
-           if(doc.type == 'permission') {                                   \
-              emit([doc.userId, doc.groupId, doc.level >= 3], doc.groupId); \
-           }                                                                \
-         }"
-        )
-
-    by_writeable = View(
-        "permissions",
-        "function (doc) {                                     \
-           if(doc.type == 'permission') {                     \
-              emit([doc.userId, doc.level > 1], doc.groupId); \
-           }                                                  \
+        "function (doc) {                                   \
+           if(doc.type == 'permission' && doc.level == 0) { \
+              emit(doc.userId, doc.groupId);                \
+           }                                                \
          }"
         )
 
     by_readable = View(
         "permissions",
-        "function (doc) {                                     \
-           if(doc.type == 'permission') {                     \
-              emit([doc.userId, doc.level > 0], doc.groupId); \
-           }                                                  \
+        "function (doc) {                                  \
+           if(doc.type == 'permission' && doc.level > 0) { \
+              emit(doc.userId, doc.groupId);               \
+           }                                               \
          }"
         )
 
-    by_joinable = View(
+    by_writeable = View(
         "permissions",
-        "function (doc) {                                      \
-           if(doc.type == 'permission') {                      \
-              emit([doc.userId, doc.level == 0], doc.groupId); \
-           }                                                   \
+        "function (doc) {                                  \
+           if(doc.type == 'permission' && doc.level > 1) { \
+              emit(doc.userId, doc.groupId);               \
+           }                                               \
+         }"
+        )
+
+    by_adminable = View(
+        "permissions",
+        "function (doc) {                                  \
+           if(doc.type == 'permission' && doc.level >=3) { \
+              emit(doc.userId, doc.groupId);               \
+           }                                               \
          }"
         )
     
@@ -137,6 +137,10 @@ class Permission(SSDocument):
         from server.models.ssuserschema import SSUser
         from server.models.groupschema import Group
 
+        # Multimethods would be really nice right now - David
+        if type(userId) == SSUser:
+            userId = userId.id
+
         db = core.connect()
         if not groupId:
             raise MissingGroupError
@@ -146,9 +150,9 @@ class Permission(SSDocument):
             raise PermissionAlreadyExistsError
         allowed = SSUser.isAdmin(userId)
         if not allowed:
-            allowed = Group.isOwner(groupId, userId)
+            allowed = Group.isOwner(userId, groupId)
         if not allowed:
-            adminable = [row.value in Permission.by_adminable(userId).rows]
+            adminable = [row.value for row in Permission.by_adminable(db, key=userId).rows]
             allowed = groupId in adminable
         if not allowed:
             raise CreateEventPermissionError
