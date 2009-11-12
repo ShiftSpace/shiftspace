@@ -108,6 +108,23 @@ class Group(SSDocument):
         server = core.server()
         del server[Group.db(id)]
 
+    # ========================================
+    # Validation
+    # ========================================
+
+    @classmethod
+    def isOwner(cls, userId, groupId):
+        theGroup = Group.load(core.connect(), groupId)
+        return userId == theGroup.createdBy
+
+    @classmethod
+    def isAdmin(cls, userId, groupId):
+        return len( Permission.by_user_group_level(core.connect(), key=[userId, groupId, 3])) > 0
+
+    # ========================================
+    # Group operations
+    # ========================================
+
     @classmethod
     def addShift(cls, userId, shift):
         """

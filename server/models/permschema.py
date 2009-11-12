@@ -70,6 +70,15 @@ class Permission(SSDocument):
              emit([doc.userId, doc.groupId], doc);  \
            }                                        \
          }")
+
+    by_user_group_level = View(
+        "permissions",
+        "function (doc) {                                      \
+           if(doc.type == 'permission') {                      \
+              emit([doc.userId, doc.groupId, doc.level], doc); \
+           }                                                   \
+         }"
+        )
     
     # ========================================
     # CRUD
@@ -95,7 +104,7 @@ class Permission(SSDocument):
             raise MissingGroupError
         if not userId:
             raise MissingCreatorError
-        if Persmision.permissionForUser(userId, groupId):
+        if Permission.permissionForUser(userId, groupId):
             raise PermissionAlreadyExistsError
         allowed = User.isAdmin(userId)
         if not allowed:
@@ -154,4 +163,3 @@ class Permission(SSDocument):
     @classmethod
     def writeableGroups(cls, userId):
         return []
-
