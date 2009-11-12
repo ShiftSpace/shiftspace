@@ -96,8 +96,9 @@
   position: absolute;
   left: 166px;
   top: 0px;
-  right: 0px;
+  right: 6px;
   bottom: 0px;
+  border:1px solid #DDD7D2; /*TODO: use image for gradient border*/
 }
 
 .ShiftListView
@@ -148,9 +149,10 @@
     
     .ShiftListView .ShiftListViewCell div.status
     {
-      margin-top: 4px;
-      width: 18px;
-      height: 20px;
+      margin-top: -3px;
+      margin-right:2px;
+      width: 22px;
+      height: 26px;
       background-repeat: no-repeat;
     }
 
@@ -161,7 +163,7 @@
     .ShiftListView .ShiftListViewCell div.status.public
     {
       background-image:url(/images/Console/publicicon.png);
-      background-position:-8 -8;
+/*      background-position:-8 -8;*/
     }
 
     .ShiftListView .ShiftListViewCell:nth-child(2n+0)
@@ -231,6 +233,7 @@
       -webkit-border-top-right-radius: 4px;
       -moz-border-radius-bottomright: 4px;
       -webkit-border-bottom-right-radius: 4px;
+      cursor:pointer;
     }
 
     .ShiftListView .ShiftListViewCell div.userName:hover
@@ -269,36 +272,42 @@
       width: 18px;
       height: 18px;
       /*background-color: #ccc;*/
-      background-image: url(/images/Console/favoritestar.png);
+      background-image: url(/images/Console/stars.png);
       background-repeat: no-repeat;
-      background-position:-8 -8;
+      background-position:0 -52;
       margin-left:5px;
+      margin-top:-3px;
       cursor:pointer;
     }
     
-    .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton:hover, .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton.favorited
+    
+    ul.ShiftListView li.ShiftListViewCell:hover div.favorite div.favoriteButton
     {
-      background-image: url(/images/Console/favoritestar_highlight.png);
-      background-repeat: no-repeat;
+      background-position:0 -26;
+    }
+    
+    ul.ShiftListView li.ShiftListViewCell:hover div.favorite div.favoriteButton:hover, 
+    ul.ShiftListView li.ShiftListViewCell div.favorite div.favoriteButton.favorited
+    {
+      background-position:0 0;
     }
 
     .ShiftListView .ShiftListViewCell div.comments
     {
       float: right;
       width:30px;
-      height:30px;
+      height:20px;
       margin-right:20px;
-      margin-top:-5px;
-      padding-top:8px;
+      margin-top:-2px;
+      padding-top:6px;
       text-align:center;
-      background-image:url(/images/Console/commentballoon.png);
-      background-repeat: no-repeat;
+      background:url(/images/Console/commentballoon.png) no-repeat;
       cursor:pointer;
     }
     
     .ShiftListView .ShiftListViewCell div.comments.hasComment
     {
-      background-image:url(/images/Console/commentballoon_highlight.png);
+      background-position:0 -26;
       color:#F8F5F2;
     }
 
@@ -426,7 +435,8 @@ using !important is garbagey garbage
 ====Shifts
 ======================================================*/
 ul.ShiftListView li.ShiftListViewCell{
-  height: 27px;
+  height: 26px;
+  border-top: 1px solid #F0EDEB;
   border-bottom: 1px solid #BBB4AF;
 }
 

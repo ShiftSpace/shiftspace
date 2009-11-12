@@ -115,14 +115,20 @@ button.ActionButton:hover
 
 button#SSSelectSpace
 {
-  background-image:url(/images/Console/crosshair.png);
-  background-position:0 -3;
+  background-image:url(/images/Console/plus.png);
+  background-position:0 -2;
 }
 
 button#SSToggleConsole
 {
-  background-image:url(/images/Console/consoleclose.png); 
+  background-image:url(/images/Console/console.png); 
+  background-position:0 -27;
   padding-left:27px;
+}
+
+button#SSToggleConsole.open
+{
+  background-position:0 -1;
 }
 
 #SSShiftCount
@@ -137,7 +143,7 @@ button#SSToggleConsole
   font-size: 12px;
   float: right;
   margin-top: 2px;
-  margin-right: 8px;
+  margin-right: 2px;
   height: 100%;
   line-height: 30px;
 }
@@ -150,9 +156,19 @@ button#SSToggleConsole
 #SSLogInOut
 {
   float: right;
-  margin-top: 8px;
-  margin-right: 10px;
   border:none;
+  text-indent:-9999px;
+  width:28px;
+  height:26px;
+  background:url(/images/Console/login.png) no-repeat 0 -26px;
+  cursor:pointer;
+  margin-top:5px;
+  margin-right:5px;
+}
+
+#SSLogInOut:hover
+{
+  background-position:0 0px;
 }
 
 #SSMessage

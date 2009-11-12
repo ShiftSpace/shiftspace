@@ -174,6 +174,7 @@ var SSNotifierView = new Class({
     this.graph.setState('SSNotifierOpen', {animate:false});
     
     this.fireEvent('showconsole');
+    this.SSToggleConsole.addClass('open');
     this.SSToggleConsole.set('text', "Close Console");
   },
   
@@ -181,6 +182,7 @@ var SSNotifierView = new Class({
   onConsoleHide: function()
   {
     this.fireEvent('hideconsole');
+    this.SSToggleConsole.removeClass('open');
     this.SSToggleConsole.set('text', "Open Console");
   },
   
@@ -323,11 +325,13 @@ var SSNotifierView = new Class({
       evt = new Event(evt);
       if(ShiftSpace.Console.isVisible())
       {
+        this.SSToggleConsole.removeClass('open');
         this.SSToggleConsole.set('text', "Open Console");
         ShiftSpace.Console.hide();
       }
       else
       {
+        this.SSToggleConsole.addClass('open');
         this.SSToggleConsole.set('text', "Close Console");
         ShiftSpace.Console.show();
       }

@@ -70,6 +70,7 @@ body#SSConsoleFrameBody
   height: 28px;
   overflow-y: visible;
   padding: 0px;
+  cursor:pointer;
 }
 
 #MainTabView > .SSControlView > .SSButton.SSActive{
