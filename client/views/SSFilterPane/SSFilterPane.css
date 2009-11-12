@@ -41,3 +41,10 @@
 {
   font-weight:bold;
 }
+
+#FilterPane{
+  width: 144px;
+  height: 148px;
+  top: 52px;
+  left: 15px;
+}
