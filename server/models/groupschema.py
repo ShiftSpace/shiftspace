@@ -10,6 +10,9 @@ import schema
 import core
 from ssuserschema import *
 
+# ==============================================================================
+# Group Model
+# ==============================================================================
 
 class Group(SSDocument):
     
@@ -61,7 +64,7 @@ class Group(SSDocument):
             return "%s/group_%s" % ((result[0].source.server or ''), result[0].id)
 
     # ========================================
-    # Crud
+    # CRUD
     # ========================================
 
     @classmethod
@@ -107,12 +110,24 @@ class Group(SSDocument):
 
     @classmethod
     def addShift(cls, userId, shift):
+        """
+        Add a shift to a group. Triggers replication to all
+        user/private of all non-peer members. Peers will get
+        the changes at synchronization time.
+        Parameters:
+            userId - a user id.
+            shift - a Shift Document.
+        """
         # replicate to all subscribers
         pass
 
     @classmethod
     def updateShift(cls, userId, shift):
         # replicate to all subscribers
+        pass
+
+    @classmethod
+    def deleteShift(cls, userId, shift):
         pass
 
     # ========================================

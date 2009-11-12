@@ -23,6 +23,7 @@ class User(SSDocument):
     # ========================================
 
     type = TextField(default="user")
+    peer = BooleanField(default=False)
     userName = TextField()
     displayName = TextField()
     fullName = DictField(Schema.build(
