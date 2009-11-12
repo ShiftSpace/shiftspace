@@ -483,10 +483,7 @@ class Shift(SSDocument):
     @classmethod
     def favoriteCount(cls, id):
         db = core.connect()
-        rows = Favorite.by_shift(db, key=id, group=True).rows
-        if rows and len(rows) > 0:
-            return rows[0].value
-        return 0
+        return core.value(Favorite.by_shift(db, key=id, group=True)) || 0
     
     # ========================================
     # List & Filtering Support

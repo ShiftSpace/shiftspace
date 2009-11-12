@@ -9,6 +9,7 @@ import server.utils.utils as utils
 import schema
 import core
 from ssuserschema import *
+from groupschema import *
 
 # ==============================================================================
 # Errors
@@ -77,6 +78,24 @@ class Permission(SSDocument):
            if(doc.type == 'permission') {                      \
               emit([doc.userId, doc.groupId, doc.level], doc); \
            }                                                   \
+         }"
+        )
+
+    by_writeable = View(
+        "permissions",
+        "function (doc) {                             \
+           if(doc.type == 'permission') {             \
+              emit([doc.userId, doc.level > 1], doc); \
+           }                                          \
+         }"
+        )
+
+    by_readable = View(
+        "permissions",
+        "function (doc) {                             \
+           if(doc.type == 'permission') {             \
+              emit([doc.userId, doc.level > 0], doc); \
+           }                                          \
          }"
         )
     

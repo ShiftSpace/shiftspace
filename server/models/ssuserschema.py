@@ -71,6 +71,10 @@ class SSUser(User):
         return User.load(core.connect(), id)
 
     @classmethod
+    def readByName(cls, userName):
+        return core.value(SSUser.by_name(core.connect(), key=userName))
+
+    @classmethod
     def update(cls, id, fields):
         db = core.connect()
         theUser = SSUser.read(id)
@@ -87,7 +91,7 @@ class SSUser(User):
     def delete(cls, id):
         server = core.server()
         theUser = SSUser.read(id)
-        # delete the user's db
+        # delete the user's dbs
         del server[SSUser.public(id)]
         del server[SSUser.private(id)]
         del server[SSUser.inbox(id)]

@@ -70,6 +70,11 @@ def query(view, key=None, keys=None):
     return result
 
 
+def value(results):
+    if results.rows and len(results.rows) > 0:
+        return results.rows[0].value
+
+
 def single(view, key):
     """
     Convenience functions for accessing a single key.
