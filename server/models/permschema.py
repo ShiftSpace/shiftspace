@@ -7,11 +7,7 @@ import server.utils.utils as utils
 import schema
 import core
 
-from server.models.ssdocschema import *
-from server.models.ssuserschema import *
-from server.models.groupschema import *
-
-print SSUser
+from server.models.ssdocschema import SSDocument
 
 # ==============================================================================
 # Errors
@@ -83,21 +79,39 @@ class Permission(SSDocument):
          }"
         )
 
+    by_adminable = View(
+        "permissions",
+        "function (doc) {                                                   \
+           if(doc.type == 'permission') {                                   \
+              emit([doc.userId, doc.groupId, doc.level >= 3], doc.groupId); \
+           }                                                                \
+         }"
+        )
+
     by_writeable = View(
         "permissions",
-        "function (doc) {                             \
-           if(doc.type == 'permission') {             \
-              emit([doc.userId, doc.level > 1], doc); \
-           }                                          \
+        "function (doc) {                                     \
+           if(doc.type == 'permission') {                     \
+              emit([doc.userId, doc.level > 1], doc.groupId); \
+           }                                                  \
          }"
         )
 
     by_readable = View(
         "permissions",
-        "function (doc) {                             \
-           if(doc.type == 'permission') {             \
-              emit([doc.userId, doc.level > 0], doc); \
-           }                                          \
+        "function (doc) {                                     \
+           if(doc.type == 'permission') {                     \
+              emit([doc.userId, doc.level > 0], doc.groupId); \
+           }                                                  \
+         }"
+        )
+
+    by_joinable = View(
+        "permissions",
+        "function (doc) {                                      \
+           if(doc.type == 'permission') {                      \
+              emit([doc.userId, doc.level == 0], doc.groupId); \
+           }                                                   \
          }"
         )
     
@@ -120,6 +134,9 @@ class Permission(SSDocument):
         Returns:
             the new Permission document.
         """
+        from server.models.ssuserschema import SSUser
+        from server.models.groupschema import Group
+
         db = core.connect()
         if not groupId:
             raise MissingGroupError
@@ -131,7 +148,7 @@ class Permission(SSDocument):
         if not allowed:
             allowed = Group.isOwner(groupId, userId)
         if not allowed:
-            adminable = Permission.adminGroups(userId)
+            adminable = [row.value in Permission.by_adminable(userId).rows]
             allowed = groupId in adminable
         if not allowed:
             raise CreateEventPermissionError

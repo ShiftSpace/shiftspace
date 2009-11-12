@@ -7,9 +7,7 @@ import server.utils.utils as utils
 import schema
 import core
 
-from server.models.ssdocschema import *
-from server.models.ssuserschema import *
-from server.models.permschema import *
+from server.models.ssdocschema import SSDocument
 
 # ==============================================================================
 # Group Model
@@ -76,6 +74,7 @@ class Group(SSDocument):
             userId - a user id.
             groupJson - a group json document.
         """
+        from server.models.permschema import Permission
         # create the group metadata
         newGroup = Group(**groupJson)
         newGroup.source.server = core.serverName()

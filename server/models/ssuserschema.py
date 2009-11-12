@@ -5,9 +5,7 @@ import server.utils.utils as utils
 import schema
 import core
 
-from server.models.userschema import *
-from server.models.groupschema import *
-from server.models.permschema import *
+from server.models.userschema import User
 
 # ==============================================================================
 # SSUser Model
