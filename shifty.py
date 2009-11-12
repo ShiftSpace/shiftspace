@@ -266,32 +266,8 @@ def runserver(argv):
 def shell():
     """
     Launch the shell with the models loaded. Useful for testing.
-    The following code taken from Django :)
     """
-    from server.models.ssuserschema import SSUser
-    from server.models.shiftschema import Shift
-    from server.models.groupschema import Group
-    from server.models.permschema import Permission
-
-    import code
-    imported_objects = {}
-    try: 
-        import readline
-    except ImportError:
-        pass
-    else:
-        import rlcompleter
-        readline.set_completer(rlcompleter.Completer(imported_objects).complete)
-        readline.parse_and_bind("tab:complete")
-
-    pythonrc = os.environ.get("PYTHONSTARTUP") 
-    if pythonrc and os.path.isfile(pythonrc): 
-        try: 
-            execfile(pythonrc) 
-        except NameError: 
-            pass
-    import user
-    code.interact(local=imported_objects)
+    os.system("python -i shell.py")
 
 
 def main(argv):
