@@ -2,14 +2,16 @@ from datetime import datetime
 from couchdb.schema import *
 from couchdb.schema import View
 
-from ssdocschema import SSDocument
-
 from server.utils.decorators import *
 import server.utils.utils as utils
 import schema
 import core
-from ssuserschema import *
-from groupschema import *
+
+from server.models.ssdocschema import *
+from server.models.ssuserschema import *
+from server.models.groupschema import *
+
+print SSUser
 
 # ==============================================================================
 # Errors
@@ -104,7 +106,7 @@ class Permission(SSDocument):
     # ========================================
     
     @classmethod
-    def create(cls, userId, groupId, json):
+    def create(cls, userId, groupId, level):
         """
         Create will fail if:
             1. No userId specified.
@@ -125,7 +127,7 @@ class Permission(SSDocument):
             raise MissingCreatorError
         if Permission.permissionForUser(userId, groupId):
             raise PermissionAlreadyExistsError
-        allowed = User.isAdmin(userId)
+        allowed = SSUser.isAdmin(userId)
         if not allowed:
             allowed = Group.isOwner(groupId, userId)
         if not allowed:
@@ -133,6 +135,11 @@ class Permission(SSDocument):
             allowed = groupId in adminable
         if not allowed:
             raise CreateEventPermissionError
+        json = {
+            "userId": userId,
+            "groupId": groupId,
+            "level": level
+            }
         newPermission = Permission(**json)
         newPermission.store(db)
         return newPermission
@@ -177,7 +184,7 @@ class Permission(SSDocument):
             A permission document.
         """
         db = core.connect()
-        return list(Permission.by_user_and_group(db, key=[userId, groupId]))[0]
+        return core.value(Permission.by_user_and_group(db, key=[userId, groupId]))
 
     @classmethod
     def writeableGroups(cls, userId):

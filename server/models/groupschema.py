@@ -2,14 +2,14 @@ from datetime import datetime
 from couchdb.schema import *
 from couchdb.schema import View
 
-from ssdocschema import SSDocument
-
 from server.utils.decorators import *
 import server.utils.utils as utils
 import schema
 import core
-from ssuserschema import *
-from permschema import *
+
+from server.models.ssdocschema import *
+from server.models.ssuserschema import *
+from server.models.permschema import *
 
 # ==============================================================================
 # Group Model
@@ -83,11 +83,7 @@ class Group(SSDocument):
         # save the group metadata to the master db
         newGroup.store(core.connect())
         # create the root permission for this group
-        Permission.create({
-                "groupId": newGroup.id,
-                "userId": userId,
-                "level": 4
-                })
+        Permission.create(userId, newGroup.id, level=4)
         # create the group db
         server = core.server()
         server.create(Group.db(newGroup.id))

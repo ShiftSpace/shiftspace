@@ -1,11 +1,17 @@
 from couchdb.schema import View
 
-from userschema import User
-
 from server.utils.decorators import *
 import server.utils.utils as utils
 import schema
 import core
+
+from server.models.userschema import *
+from server.models.groupschema import *
+from server.models.permschema import *
+
+# ==============================================================================
+# SSUser Model
+# ==============================================================================
 
 class SSUser(User):
 
