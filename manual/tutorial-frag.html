@@ -114,7 +114,7 @@ var HelloWorldSpace = new Class({
 <div class="section">
     <h3 id="the-space-attributes-files">The space attributes file</h3>
     <div class="content">
-	<p>Open the *attrs.json* file in your HelloWorld space directory and make it look the following:</p>
+	<p>Open the <b>attrs.json</b> file in your HelloWorld space directory and make it look the following:</p>
 	<pre>{
     name: 'HelloWorld',
     authors: ['type your name'],
@@ -125,7 +125,7 @@ var HelloWorldSpace = new Class({
     version: 0.1,
     shift: { html: 'HelloWorld.html' }
 }</pre>
-	<p>This should be pretty self explanatory. ShiftSpace loads this file <i>before</i> it loads your space. That's why you see the space icon, tooltip, description, etc. One thing to note is the *shift.html* property that we've defined. In the past space developers had to define their interface by writing code. This ended up being a fairly time consuming and tedious affair. Since that time we developed a very useful system called *Sandalphon* which allows us to design our interfaces using only HTML and CSS. Recently we've made it possible for you to access this functionality without having to be bogged down in the details about how it works.</p>
+	<p>This should be pretty self explanatory. ShiftSpace loads this file <i>before</i> it loads your space. That's why you see the space icon, tooltip, description, etc. One thing to note is the <b>shift.html</b> property that we've defined. In the past space developers had to define their interface by writing code. This ended up being a fairly time consuming and tedious affair. Since that time we developed a very useful system called <b>Sandalphon</b> which allows us to design our interfaces using only HTML and CSS. Recently we've made it possible for you to access this functionality without having to be bogged down in the details about how it works.</p>
 	<p><b>NOTE FOR PRE-1.0 DEVELOPERS:</b> Prior to 1.0, developers would put their space attributes in the class definition. This is no longer supported and in fact your space will not properly load if you attempt to do this. In order for ShiftSpace to load you must provide a separate attr.json file in your space directory. Why? We want to support a wider variety of Spaces than prior releases did. For example you might want to create a space that always automatically loads on the New York Times. Because the ShiftSpace runtime always loads Spaces lazily (that is, spaces are not loaded until a user actually tries to view, create, or edit a shift) this presents a problem. The only way for ShiftSpace to know about the capabilities of your space before loading it is for you to provide the attrs.json file.</p>
     </div>
 </div>
@@ -134,7 +134,7 @@ var HelloWorldSpace = new Class({
 <div class="section">
     <h3 id="note-about-conventions">Note about conventions</h3>
     <div class="content">
-	<p>Note that in *HelloWorld.js* the space class is named *HelloWorldSpace* and the shift class is named *HelloWorldShift*. This is actually somewhat important. This is a convention. Notice that we did not write it as "HelloWorld_Space". Of course you don't have to follow conventions, but the ShiftSpace runtime cannot read your mind. If you have a different naming convention you would like to use you will need to specify this. If you want to use a different name for your space class specify a *className* property. For a different shift class name use *shift.className*.</p>
+	<p>Note that in <b>HelloWorld.js</b> the space class is named <b>HelloWorldSpace</b> and the shift class is named <b>HelloWorldShift</b>. This is actually somewhat important. This is a convention. Notice that we did not write it as "HelloWorld_Space". Of course you don't have to follow conventions, but the ShiftSpace runtime cannot read your mind. If you have a different naming convention you would like to use you will need to specify this. If you want to use a different name for your space class specify a <b>className</b> property. For a different shift class name use <b>shift.className</b>.</p>
     </div>
 </div>
 <br />
@@ -152,9 +152,9 @@ var HelloWorldSpace = new Class({
     <div class="content">
 	<p>The ShiftSpace teams believe that building extensions for a browser should be "webby." To us this means sticking with HTML+CSS+JavaScript. In the past we leaned a little heavily on JavaScript. Space development now supports designing the look and feel of your interface almost entirely with HTML and CSS. For anything but the most trivial of spaces, this saves hundreds of lines of boilerplate code.</p>
 	<p>Basically you provide an html file and we'll add this as property to each shift when it get's created. This might not make much sense right now so let's see how it works.</p>
-	<p>Open the file *HelloWorld.html* and make it look like the following:</p>
+	<p>Open the file <b>HelloWorld.html</b> and make it look like the following:</p>
 	<pre>&lt;div class=&quot;HelloWorldShift&quot;&gt;<br/>    Drag me!<br/>&lt;/div&gt;</pre>
-	<p>Now for our CSS file. Open *HelloWorld.css* and make the font-size a little bit bigger:</p>
+	<p>Now for our CSS file. Open <b>HelloWorld.css</b> and make the font-size a little bit bigger:</p>
 	<pre>.HelloWorldShift {
     font: 32px verdana sans-serif;
     position: absolute;
@@ -179,7 +179,7 @@ var HelloWorldSpace = new Class({
 <div class="section">
     <h3 id="understanding-saving">Understanding saving</h3>
     <div class="content">
-	<p>You've probably been wondering how HelloWorld can auto-magically save itself to the database. This is because all shifts have an *encode* method. By default shifts encode their position. Instead of using the default *encode* method, let's provide our own. *encode* lists every property that you want to persist. Here we want to store a summary (useful because summaries are displayed in the console) and the position of a shift.</p>
+	<p>You've probably been wondering how HelloWorld can auto-magically save itself to the database. This is because all shifts have an <b>encode</b>. By default shifts encode their position. Instead of using the default <b>encode</b> method, let's provide our own. <b>encode</b> lists every property that you want to persist. Here we want to store a summary (useful because summaries are displayed in the console) and the position of a shift.</p>
 	<pre>var HelloWorldShift = Shift({
     setup: function(json) {
         this.setPosition(json.position);
@@ -232,9 +232,9 @@ var HelloWorldSpace = new Class({
 	<pre>if(json.summary) this.element.set("text", json.summary);</pre>
 	<p>This means only set the value of our element to the value of json.summary if json.summary has value. For new shifts, summary is null, for HelloWorld shifts that have been saved, this has a definite value.</p>
 	<pre>this.element.addEvent("dblick", this.changeMessage.bind(this));</pre>
-	<p>This add a double click event handler to our shift. When the event occurs we want to have our *changeMessage* method called. Because of the peculiarities of JavaScript we have to bind this function to our shift. Event binding while not particularly complex is a conversation outside the scope of this tutorial. We recommend that you read on existing literature on the web on this topic.</p>
+	<p>This add a double click event handler to our shift. When the event occurs we want to have our <b>changeMessage</b> method called. Because of the peculiarities of JavaScript we have to bind this function to our shift. Event binding while not particularly complex is a conversation outside the scope of this tutorial. We recommend that you read on existing literature on the web on this topic.</p>
 	<p>The <b>changeMessage</b> function should be quite clear. It prompts the user for some text, updates the UI, and then saves the shift.</p>
-	<p>Finally the *encode* method set the value of summary to the current value of the text inside the shift's div element.</p>
+	<p>Finally the <b>encode</b> method set the value of summary to the current value of the text inside the shift's div element.</p>
     </div>
 </div>
 <br />
