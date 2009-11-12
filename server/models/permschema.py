@@ -140,6 +140,8 @@ class Permission(SSDocument):
         # Multimethods would be really nice right now - David
         if type(userId) == SSUser:
             userId = userId.id
+        if type(userId) == dict:
+            userId = userId["_id"]
 
         db = core.connect()
         if not groupId:

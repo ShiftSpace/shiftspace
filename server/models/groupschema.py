@@ -83,10 +83,13 @@ class Group(SSDocument):
             groupJson - a group json document.
         """
         from server.models.permschema import Permission
+        from server.models.ssuserschema import SSUser
 
         # Multimethods would be really nice right now - David
         if type(userId) == SSUser:
             userId = userId.id
+        if type(userId) == dict:
+            userId = userId["_id"]
 
         groupJson["createdBy"] = userId
         # create the group metadata
