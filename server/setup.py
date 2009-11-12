@@ -4,7 +4,6 @@ try:
     from hashlib import md5
 except ImportError:
     from md5 import new as md5
-import models.core as core
 
 
 def isJsFile(path):
@@ -101,6 +100,8 @@ def loadDocs(dbname="shiftspace", createAdmin=True):
         db - the database to load the design documents into.
         createAdmin - flag to create superuser. Defaults to True.
     """
+    import models.core as core
+
     db = core.connect(dbname)
     docs = collectDesignDocs()
     if createAdmin:
@@ -115,6 +116,22 @@ def loadDocs(dbname="shiftspace", createAdmin=True):
         except Exception:
             pass
         db[k] = v
+
+    from couchdb.design import ViewDefinition
+    import models.core as core
+    from models.ssuserschema import SSUser
+    from models.shiftschema import Shift
+    from models.groupschema import Group
+    from models.permschema import Permission
+    db = core.connect()
+    for cls in [SSUser, Shift, Group, Permission]:
+        attrs = dir(cls)
+        for attr in attrs:
+            rattr = getattr(cls, attr)
+            t = type(rattr)
+            if t == ViewDefinition:
+                rattr.sync(db)
+
     print "Design documents loaded."
 
 
@@ -125,6 +142,8 @@ def init(dbname="shiftspace"):
     Parameters:
         dbname - the name of the database to use.
     """
+    import models.core as core
+
     server = core.server()
     if not server.__contains__(dbname):
         print "Creating database %s." % dbname

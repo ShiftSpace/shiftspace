@@ -26,6 +26,14 @@ class Group(SSDocument):
     # Views
     # ========================================
 
+    all = View(
+        "groups",
+        "function(doc) {               \
+           if(doc.type == 'group') {   \
+             emit(doc._id, doc);       \
+           }                           \
+         }")
+
     by_short_name = View(
         "groups",
         "function(doc) {               \
@@ -75,6 +83,11 @@ class Group(SSDocument):
             groupJson - a group json document.
         """
         from server.models.permschema import Permission
+
+        # Multimethods would be really nice right now - David
+        if type(userId) == SSUser:
+            userId = userId.id
+
         groupJson["createdBy"] = userId
         # create the group metadata
         newGroup = Group(**groupJson)

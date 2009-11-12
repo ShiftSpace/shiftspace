@@ -18,10 +18,10 @@ try:
     import manual.build as manbuild
 except:
     missing.append("mako")
-try:
-    import server.setup as setup
-except:
-    missing.append("couchdb-python")
+#try:
+import server.setup as setup
+#except:
+#    missing.append("couchdb-python")
 try:
     import server.server as server
 except:
@@ -189,23 +189,7 @@ def updatedb():
     Resync the server/views folder with the design documents
     in the database.
     """
-    # old way
     setup.loadDocs()
-    # new way
-    from couchdb.design import ViewDefinition
-    from server.models import core
-    from server.models.ssuserschema import SSUser
-    from server.models.shiftschema import Shift
-    from server.models.groupschema import Group
-    from server.models.permschema import Permission
-    db = core.connect()
-    for cls in [SSUser, Shift, Group, Permission]:
-        attrs = dir(cls)
-        for attr in attrs:
-            rattr = getattr(cls, attr)
-            t = type(rattr)
-            if t == ViewDefinition:
-                rattr.sync(db)
 
 
 def installdeps():
