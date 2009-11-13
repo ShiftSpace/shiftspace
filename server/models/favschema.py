@@ -25,10 +25,10 @@ class Favorite(SSDocument):
 
     by_user_and_created = View(
         "favorites",
-        "function(doc) {                           \
-           if(doc.type == 'favorite') {            \
-             emit([doc.userId, doc.created], doc); \
-           }                                       \
+        "function(doc) {                                   \
+           if(doc.type == 'favorite') {                    \
+             emit([doc.userId, doc.created], doc.shiftId); \
+           }                                               \
          }"
         )
 
@@ -55,11 +55,11 @@ class Favorite(SSDocument):
         """
         if not Favorite.isFavorited(userId, shiftId):
             db = core.connect()
-            json = {
-                "userId": userId,
-                "shiftId": shiftId,
-                }
-            newFavorite = Favorite(id=Favorite.makeId(userId, shiftId), **json)
+            newFavorite = Favorite(
+                userId = userId,
+                shiftId = shiftId,
+                )
+            newFavorite.id = Favorite.makeId(userId, shiftId)
             newFavorite.store(db)
             return newFavorite
 
@@ -90,16 +90,13 @@ class Favorite(SSDocument):
         return core.value(Favorite.count_by_shift(db, key=shiftId))
 
     @classmethod
-    def forUser(cls, userId, start=None, end=None, descending=True, limit=25):
+    def forUser(cls, userId, start=None, end=None, descending=False, limit=25):
+        options = {}
         if not start:
             start = [userId]
+        if not end:
             end = [userId, {}]
-        options = {
-            "startKey": start
-            }
-        if end:
-            options["endKey"] = end
-        else:
-            options["limit"] = limit
         options["descending"] = descending
-        return core.objects(Favorite.by_user_and_created(core.connect(), **options))
+        options["limit"] = limit
+        results = Favorite.by_user_and_created(core.connect(), **options)
+        return core.values(results[start:end])

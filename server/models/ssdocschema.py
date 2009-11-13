@@ -28,12 +28,12 @@ class SSDocument(Document):
     # Initializer
     # ========================================
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         # type is always specified by the class
         # cannot be set from the client
         if kwargs.get("type"):
             raise AttemptToSetTypeError("Error: Attempt to set document type.")
-        super(Document, self).__init__(*args, **kwargs)
+        super(Document, self).__init__(**kwargs)
 
     # ========================================
     # Class Methods
