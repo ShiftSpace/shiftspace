@@ -4,7 +4,6 @@ import server.models.core as core
 
 from server.models.shiftschema import *
 from server.models.ssuserschema import *
-from server.models.groupschema import *
 from server.models.commentschema import *
 from server.models.messageschema import *
 from server.tests.dummy_data import *

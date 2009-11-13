@@ -233,16 +233,21 @@ def tests(toRun):
     """
     Run all the unit tests.
     """
+    suites = []
     if toRun == "all" or "shift" in toRun:
         import server.tests.shift_model_test
-        suite = unittest.TestLoader().loadTestsFromTestCase(server.tests.shift_model_test.BasicOperations)
+        suites.append(unittest.TestLoader().loadTestsFromTestCase(server.tests.shift_model_test.BasicOperations))
     if toRun == "all" or "group" in toRun:
         import server.tests.group_model_test
-        suite = unittest.TestLoader().loadTestsFromTestCase(server.tests.group_model_test.BasicOperations)
+        suites.append(unittest.TestLoader().loadTestsFromTestCase(server.tests.group_model_test.BasicOperations))
     if toRun == "all" or "comment" in toRun:
         import server.tests.comment_model_test
-        suite = unittest.TestLoader().loadTestsFromTestCase(server.tests.comment_model_test.BasicOperations)
-    unittest.TextTestRunner(verbosity=2).run(suite)
+        suites.append(unittest.TestLoader().loadTestsFromTestCase(server.tests.comment_model_test.BasicOperations))
+    if toRun == "all" or "favorite" in toRun:
+        import server.tests.favorite_model_test
+        suites.append(unittest.TestLoader().loadTestsFromTestCase(server.tests.favorite_model_test.BasicOperations))
+    for suite in suites:
+        unittest.TextTestRunner(verbosity=2).run(suite)
 
 
 def runserver(argv):

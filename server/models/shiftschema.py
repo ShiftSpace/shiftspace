@@ -185,7 +185,7 @@ class Shift(SSDocument):
             single = True
             shifts = [shifts]
         ids = [shift['_id'] for shift in shifts]
-        favIds = [Favorite.id(userId, shiftId) for shiftId in ids]
+        favIds = [Favorite.makeId(userId, shiftId) for shiftId in ids]
 
         isFavorited = [(favorite and True) for favorite in core.fetch(keys=favIds)]
 
