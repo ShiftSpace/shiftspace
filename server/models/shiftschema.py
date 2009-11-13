@@ -179,6 +179,8 @@ class Shift(SSDocument):
         newShift = Shift(**shiftJson)
         newShift.domain = utils.domain(shiftJson["href"])
         newShift.store(db)
+        # replicate to the user's feed
+        core.replicate(SSUser.private(userId), SSUser.feed(userId))
         return Shift.joinData(newShift, newShift.createdBy)
 
     @classmethod
@@ -212,8 +214,17 @@ class Shift(SSDocument):
             summary, broken, and content.
           userId - a userId.
         """
+        publicShift = False
+
+        # check user/public and user/private for the shift
         db = core.connect(SSUser.private(userId))
         theShift = Shift.load(db, id)
+        if not theShift:
+            db = core.connect(SSUser.public(userId))
+            theShift = Shift.load(db, id)
+            if theShift:
+                publicShift = True
+
         if fields.get("summary"):
             theShift.summary = theShift.content["summary"] = fields.get("summary")
         if fields.get("broken"):
@@ -221,12 +232,15 @@ class Shift(SSDocument):
         if fields.get("content"):
             theShift.content = fields.get("content")
         theShift.modified = datetime.now()
-        # update the user/private
+
+        # update the correct db
         theShift.store(db)
-        # update user/public if public
-        if not theShift.publishData.private:
-            public = core.connect(SSUser.public(theShift.createdBy))
-            theShift.store(public)
+        # replicate back to the feed
+        if publicShift:
+            core.replicate(SSUser.public(userId), SSUser.feed(userId))
+        else:
+            core.replicate(SSUser.private(userId), SSUser.feed(userId))
+
         # update groups & users that shift is published to
         for db in theShift.publishData.dbs:
             dbtype, dbid = db.split("_")
@@ -235,6 +249,7 @@ class Shift(SSDocument):
                 theShift.store(inbox)
             elif dbtype == "group":
                 Group.updateShift(dbid, theShift)
+
         return Shift.joinData(theShift, theShift.createdBy)
 
     @classmethod
@@ -408,7 +423,7 @@ class Shift(SSDocument):
                 theShift.copyTo(publicdb)
                 privatedb = core.connect(SSUser.private(userId))
                 del privatedb[theShift.id]
-            core.replicate(SSUser.public(userId), SSUser.private(userId))
+            core.replicate(SSUser.public(userId), SSUser.feed(userId))
             core.replicate(SSUser.public(userId))
 
         return Shift.joinData(theShift, userId)

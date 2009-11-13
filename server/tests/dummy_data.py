@@ -18,6 +18,16 @@ fakejohn = {
     "displayName": "fakejohn"
 }
 
+fakebob = {
+    "userName": "fakebob",
+    "fullName": {
+        "first":"Fake",
+        "last": "Bob"
+        },
+    "email": "info@shiftspace.org",
+    "displayName": "fakebob"
+}
+
 def shiftJson():
     return {
         "source": {
@@ -28,6 +38,11 @@ def shiftJson():
         "space": {
             "name":"Notes",
             "version": "0.1"
+            },
+        "summary": "A really cool shift!",
+        "content": {
+            "position": {"x":100, "y":200},
+            "text": "A really cool note!"
             }
         }
 
