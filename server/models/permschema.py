@@ -64,10 +64,10 @@ class Permission(SSDocument):
 
     all_members = View(
         "permissions",
-        "function (doc) {                   \
-           if(doc.type == 'permission') {   \
-             emit(doc.groupId, doc.userId); \
-           }                                \
+        "function (doc) {                                  \
+           if(doc.type == 'permission' && doc.level > 0) { \
+             emit(doc.groupId, doc.userId);                \
+           }                                               \
          }"
         )
 
@@ -117,10 +117,10 @@ class Permission(SSDocument):
 
     by_adminable = View(
         "permissions",
-        "function (doc) {                                  \
-           if(doc.type == 'permission' && doc.level >=3) { \
-              emit(doc.userId, doc.groupId);               \
-           }                                               \
+        "function (doc) {                                   \
+           if(doc.type == 'permission' && doc.level >= 3) { \
+              emit(doc.userId, doc.groupId);                \
+           }                                                \
          }"
         )
     # ========================================
@@ -220,5 +220,22 @@ class Permission(SSDocument):
     # ========================================
 
     @classmethod
-    def writeableGroups(cls, userId):
-        return []
+    def joinable(cls, userId):
+        db = core.connect()
+        return core.values(Permission.by_joinable(db, key=userId))
+
+    @classmethod
+    def readable(cls, userId):
+        db = core.connect()
+        return core.values(Permission.by_readable(db, key=userId))
+
+    @classmethod
+    def writeable(cls, userId):
+        db = core.connect()
+        return core.values(Permission.by_writeable(db, key=userId))
+
+    @classmethod
+    def adminable(cls, userId):
+        db = core.connect()
+        return core.values(Permission.by_adminable(db, key=userId))
+

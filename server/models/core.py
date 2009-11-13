@@ -78,6 +78,14 @@ def value(results):
         return results.rows[0].value
 
 
+def values(results):
+    """
+    Shortcut for getting only the values of the results.
+    """
+    if results.rows and len(results.rows) > 0:
+        return [row.value for row in results.rows]
+
+
 def object(results):
     """
     Shortcut for getting a single object.

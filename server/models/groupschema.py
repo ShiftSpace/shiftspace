@@ -10,6 +10,13 @@ import core
 from server.models.ssdocschema import SSDocument
 
 # ==============================================================================
+# Error
+# ==============================================================================
+
+class GroupError(Exception): pass
+class NotAMemberError(GroupError): pass
+
+# ==============================================================================
 # Group Model
 # ==============================================================================
 
@@ -154,6 +161,11 @@ class Group(SSDocument):
         thePermission = Permission.readByUserAndGroup(userId, groupId)
         return thePermission and thePermission.level >= 3
 
+    @classmethod
+    def isMember(cls, userId, groupId):
+        thePermission = Permission.readByUserAndGroup(userId, groupId)
+        return thePermission and Permission.level > 0
+
     # ========================================
     # Group operations
     # ========================================
@@ -191,7 +203,7 @@ class Group(SSDocument):
             thePermission.store(db)
 
     @classmethod
-    def addShift(cls, userId, shift):
+    def addShift(cls, groupId, shift):
         """
         Add a shift to a group. Triggers replication to all
         user/private of all non-peer members. Peers will get
@@ -200,8 +212,15 @@ class Group(SSDocument):
             userId - a user id.
             shift - a Shift Document.
         """
-        # replicate to all subscribers
-        pass
+        if Group.isMember(shift.createdBy):
+            grpdb = Group.db(groupId)
+            [core.replicate(grpdb, "user_%s/feed" % id) for id in Group.members(groupId)]
+        else:
+            from server.models.ssuserschema import SSUser
+            db = core.connect()
+            theUser = SSUser.read(shift.createdBy)
+            theGroup = Group.load(db, groupId)
+            raise NotAMemberError("%s is not a member of %s" % (theUser.userName, theGroup.longName))
 
     @classmethod
     def updateShift(cls, userId, shift):

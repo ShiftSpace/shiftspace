@@ -1,9 +1,10 @@
 import unittest
 import datetime
 import server.models.core as core
+
 from server.models.shiftschema import *
 from server.models.ssuserschema import *
-
+from server.tests.dummy_data import *
 
 fakemary = {
     "userName": "fakemary",
@@ -126,10 +127,13 @@ class BasicOperations(unittest.TestCase):
     def testPublishToGroup(self):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)
-        grp = Group.create(
+        newGroup = Group.create(self.fakemary, groupJson())
+        newPerm = Permission.create("shiftspace", newGroup.id, self.fakejohn, level=1)
         publishData = {
-            "streams": [Group.readByShortName("fbf")]
+            "streams": [Group.db(newGroup.id)]
             }
+        Shift.publish(self.fakemary, newShift.id, publishData)
+        newGroup.deleteInstance()
 
     def tearDown(self):
         db = core.connect()
