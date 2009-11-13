@@ -18,7 +18,6 @@ class Comment(SSDocument):
     type = TextField(default="comment")
     shiftId = TextField()
     text = TextField()
-    replyTo = TextField() # if we decide to implement threading
 
     # ========================================
     # Views
@@ -60,6 +59,11 @@ class Comment(SSDocument):
     
     @classmethod
     def db(cls, shiftId):
+        """
+        Returns the string for a comment database.
+        Parameters:
+           shiftId - a shift id.
+        """
         return "comment_%s" % shiftId
 
     # ========================================
@@ -67,7 +71,7 @@ class Comment(SSDocument):
     # ========================================
 
     @classmethod
-    def create(cls, userId, shiftId, text, replyTo=None):
+    def create(cls, userId, shiftId, text, subscribe=False):
         """
         Creates a comment on a shift. If the comment database
         for the shift does not exist it will be created. Will
@@ -75,6 +79,10 @@ class Comment(SSDocument):
         database so accurate comment counts can be generated.
         In addition a comment will trigger a message to all
         subscribed users, this will be sent to user_x/messages.
+        Parameters:
+            userId - a user id.
+            shiftId - a shift id.
+            text - the textual content of the comment.
         """
         from server.models.ssuserschema import SSUser
         from server.models.shiftschema import Shift
@@ -105,12 +113,15 @@ class Comment(SSDocument):
             Comment.all_subscribed.sync(db)
             Comment.subscribe(theShift.createdBy, shiftId)
 
+        # subscribe the user making the comment
+        if subscribe:
+            Comment.subscribe(userId, shiftId)
+
         # create comment and comment stub
         json = {
             "createdBy": userId,
             "shiftId": shiftId,
             "text": text,
-            "replyTo": replyTo,
             }
 
         stub = {
@@ -133,7 +144,7 @@ class Comment(SSDocument):
             json = {
                 "fromId": "shiftspace",
                 "toId": subscriber,
-                "text": "%s justed commented on %s shift!" % (theUser.userName, astr),
+                "text": "%s just commented on %s shift!" % (theUser.userName, astr),
                 "meta": "comment"
                 }
             Message.create(**json)
@@ -141,17 +152,29 @@ class Comment(SSDocument):
         return newComment
 
     @classmethod
-    def read(cls, id):
-        pass
-
-    @classmethod
-    def update(cls, id):
-        pass
+    def read(cls, shiftId, id):
+        """
+        Read the contents of a single comment.
+        """
+        db = core.connect(Comment.db(shiftId))
+        return Commment.load(db, id)
 
     @classmethod
     def delete(cls, shiftId, id):
+        """
+        Delete a single comment.
+        """
         db = core.connect(Comment.db(shiftId))
         del db[id]
+
+    @classmethod
+    def deleteThread(cls, shiftId):
+        """
+        Deletes the entire thread.
+        """
+        server = core.server()
+        # TODO - use bulk API to delete all comment stubs - David
+        del server[Comment.db(shiftId)]
 
     # ========================================
     # Instance Methods
@@ -225,6 +248,7 @@ class Comment(SSDocument):
         if not Comment.isSubscribed(userId, shiftId):
             db.create({
                 "_id": "user:%s" % userId,
+                "shiftId": shiftId,
                 "type": "subscription",
                 "userId": userId,
                 })

@@ -37,17 +37,32 @@ class BasicOperations(unittest.TestCase):
         messages = Message.forUser(self.fakemary)
         self.assertEqual(len(messages), 1)
         newComment.deleteInstance(newShift.id, newComment.id)
+        # delete the thread
+        Comment.deleteThread(newShift.id)
     """
-
 
     def testSubscribe(self):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)
         Shift.publish(self.fakemary, newShift.id, {"private":False})
 
-        newComment = Comment.create(self.fakejohn, newShift.id, "1st comment!")
-        # test that the user could actually subscribe
+        newComment = Comment.create(
+            self.fakejohn,
+            newShift.id,
+            "1st comment!",
+            subscribe=True
+            )
 
+        # check that shift author is subscribed
+        subscribers = Comment.subscribers(newShift.id)
+        self.assertTrue(self.fakemary in subscribers)
+        # check that commenter is subscribed
+        self.assertTrue(self.fakejohn in subscribers)
+        # check that there is a message in shift author message db
+        messages = Message.forUser(self.fakemary)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].text, "fakemary just commented on your shift!")
+        Comment.deleteThread(newShift.id)
 
     def tearDown(self):
         db = core.connect()

@@ -20,6 +20,7 @@ class Message(SSDocument):
     toId = TextField()
     text = TextField()
     read = BooleanField(default=False)
+    meta = TextField()
 
     # ========================================
     # Views
@@ -46,13 +47,18 @@ class Message(SSDocument):
         System messages are store in the messages database. Local
         inboxes are merges of messages and user_x/messages.
         """
-        db = core.connect(SSUser.messages(to))
+        from server.models.ssuserschema import SSUser
+
+        db = core.connect(SSUser.messages(toId))
         json = {
             "fromId": fromId,
             "toId": toId,
             "text": text,
+            "meta": meta,
             }
         newMessage = Message(**json)
+        newMessage.store(db)
+        return newMessage
 
     @classmethod
     def markRead(cls, userId, id, value=True):
