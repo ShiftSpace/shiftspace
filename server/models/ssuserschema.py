@@ -96,7 +96,7 @@ class SSUser(User):
 
     @classmethod
     def read(cls, id):
-        return User.load(core.connect(), id)
+        return cls.load(core.connect(), id)
 
     @classmethod
     def readByName(cls, userName):
@@ -153,15 +153,15 @@ class SSUser(User):
     def follow(cls, id, otherId):
         db = core.connect()
         theUser = SSUser.load(db, id)
-        otherDb = SSUser.public(otherId)
-        if not (otherDb in theUser.following):
-            theUser.following.append(otherDb)
+        if not (otherId in theUser.following):
+            theUser.following.append(otherId)
+        theUser.store(db)
 
     @classmethod
     def unfollow(cls, id, otherId):
         db = core.connect()
         theUser = SSUser.load(db, id)
-        otherDb = SSUser.public(otherId)
-        theUser.following.remove(otherDb)
+        theUser.following.remove(otherId)
+        theUser.store(db)
 
 

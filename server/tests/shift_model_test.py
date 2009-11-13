@@ -91,6 +91,21 @@ class BasicOperations(unittest.TestCase):
         theShift = Shift.load(core.connect(SSUser.private(self.fakemary)), newShift.id)
         self.assertEqual(theShift, None)
 
+    def testPublishFollower(self):
+        json = shiftJson()
+        newShift = Shift.create(self.fakemary, json)
+        SSUser.follow(self.fakejohn, self.fakemary)
+        fakejohn = SSUser.read(self.fakejohn)
+        # should be in the list of people fakejohn is following
+        self.assertTrue(self.fakemary in fakejohn.following)
+        # should be in the list of fakemary's followers
+        followers = SSUser.followers(self.fakemary)
+        self.assertTrue(self.fakejohn in followers)
+        Shift.publish(self.fakemary, newShift.id, {"private":False})
+        # should exist in user/feed db
+        theShift = Shift.load(core.connect(SSUser.feed(self.fakejohn)), newShift.id)
+        self.assertEqual(theShift.summary, newShift.summary)
+
     def testPublishToUser(self):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)
