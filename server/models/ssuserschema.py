@@ -1,3 +1,4 @@
+from couchdb.schema import *
 from couchdb.schema import View
 
 from server.utils.decorators import *
@@ -12,6 +13,23 @@ from server.models.userschema import User
 # ==============================================================================
 
 class SSUser(User):
+
+    following = ListField(TextField())
+
+    # ========================================
+    # Views
+    # ========================================
+
+    all_followers = View(
+        "users",
+        "function(doc) {                                             \
+           if(doc.type == 'user') {                                  \
+              var following = doc.following;                         \
+              for(var i = 0, len = following.length; i < len; i++) { \
+                emit(following[i], doc._id);                         \
+              }                                                      \
+           }                                                         \
+        }")
 
     # ========================================
     # Database
@@ -122,5 +140,28 @@ class SSUser(User):
         db = core.connect()
         admins = db["admins"]
         return id in admins["ids"]
+
+    # ========================================
+    # Follow
+    # ========================================
+
+    @classmethod
+    def followers(cls, id):
+        return core.values(SSUser.all_followers(core.connect(), key=id))
+
+    @classmethod
+    def follow(cls, id, otherId):
+        db = core.connect()
+        theUser = SSUser.load(db, id)
+        otherDb = SSUser.public(otherId)
+        if not (otherDb in theUser.following):
+            theUser.following.append(otherDb)
+
+    @classmethod
+    def unfollow(cls, id, otherId):
+        db = core.connect()
+        theUser = SSUser.load(db, id)
+        otherDb = SSUser.public(otherId)
+        theUser.following.remove(otherDb)
 
 

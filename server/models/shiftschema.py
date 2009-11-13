@@ -250,7 +250,11 @@ class Shift(SSDocument):
     @classmethod
     def update(cls, userId, id, fields):
         """
-        Class method for updating a shift.
+        Class method for updating a shift. Attempts to read
+        first from user/private and then user/public. Updates
+        the shift there, then replicates back into user/feed.
+        Also updates any user_x/inbox and group_x that the
+        shift has been published to.
         
         Parameters:
           id - the id of the shift
@@ -292,6 +296,7 @@ class Shift(SSDocument):
                 inbox = core.connect(SSUser.inbox(dbid))
                 theShift.store(inbox)
             elif dbtype == "group":
+                from server.models.groupschema import Group
                 Group.updateShift(dbid, theShift)
 
         return Shift.joinData(theShift, theShift.createdBy)
