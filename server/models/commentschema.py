@@ -114,7 +114,7 @@ class Comment(SSDocument):
             Comment.subscribe(theShift.createdBy, shiftId)
 
         # subscribe the user making the comment
-        if subscribe:
+        if not Comment.isSubscribed(userId, shiftId) and subscribe:
             Comment.subscribe(userId, shiftId)
 
         # create comment and comment stub
@@ -137,17 +137,19 @@ class Comment(SSDocument):
         subscribers = Comment.subscribers(shiftId)
 
         # send each subscriber a message
-        for subscriber in subscribers:
+        if len(subscribers) > 0:
             # TODO: needs to be optimized with a fast join - David
-            theUser = SSUser.load(db, subscriber)
-            astr = ((subscriber == theShift.createdBy) and "your") or ("%s's" % shiftAuthor.userName)
-            json = {
-                "fromId": "shiftspace",
-                "toId": subscriber,
-                "text": "%s just commented on %s shift!" % (theUser.userName, astr),
-                "meta": "comment"
-                }
-            Message.create(**json)
+            theUser = SSUser.load(db, userId)
+            for subscriber in subscribers:
+                if subscriber != userId:
+                    astr = ((subscriber == theShift.createdBy) and "your") or ("%s's" % shiftAuthor.userName)
+                    json = {
+                        "fromId": "shiftspace",
+                        "toId": subscriber,
+                        "text": "%s just commented on %s shift!" % (theUser.userName, astr),
+                        "meta": "comment"
+                        }
+                    Message.create(**json)
 
         return newComment
 
@@ -254,7 +256,7 @@ class Comment(SSDocument):
                 })
 
     @classmethod
-    def unsubscribe(cls, shiftId):
+    def unsubscribe(cls, userId, shiftId):
         db = core.connect(Comment.db(shiftId))
         if Comment.isSubscribed(userId, shiftId):
             del db["user:%s" % userId]
