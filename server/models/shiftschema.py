@@ -475,6 +475,10 @@ class Shift(SSDocument):
             core.replicate(SSUser.public(userId), SSUser.feed(userId))
             core.replicate(SSUser.public(userId))
 
+        # TODO: don't replicate to follower user_x/feeds that are not peers - David
+        followers = SSUser.followers(userId)
+        [core.replicate(SSUser.public(userId), follower) for follower in followers]
+
         return Shift.joinData(theShift, userId)
     
     # ========================================

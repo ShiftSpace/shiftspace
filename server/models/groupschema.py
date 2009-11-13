@@ -222,6 +222,7 @@ class Group(SSDocument):
         if Group.isMember(shift.createdBy, groupId):
             grpdb = Group.db(groupId)
             shift.copyTo(core.connect(grpdb))
+            # TODO: only replicate into user_x/feeds that are not peer - David
             [core.replicate(grpdb, "user_%s/feed" % id) for id in Group.members(groupId)]
         else:
             from server.models.ssuserschema import SSUser
@@ -243,6 +244,7 @@ class Group(SSDocument):
         if Group.isMember(shift.createdBy, groupId):
             grpdb = Group.db(groupId)
             shift.updateIn(core.connect(grpdb))
+            # TODO: only replicate into user_x/feeds that are not peer - David
             [core.replicate(grpdb, "user_%s/feed" % id) for id in Group.members(groupId)]
         else:
             from server.models.ssuserschema import SSUser
