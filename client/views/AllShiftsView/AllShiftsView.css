@@ -2,3 +2,36 @@
 {
   left: 166px;
 }
+
+.ShiftListView{
+  top: 1px;
+}
+
+ul.ShiftListView li.ShiftListViewCell{
+  height: 27px;
+  border-bottom: 1px solid #BBB4AF;
+}
+
+ul.ShiftListView li.ShiftListViewCell:hover{
+  background-color: #A1C49C;
+  height: 26px;
+  border: 1px #68A07E solid;
+}
+
+.ShiftListView .ShiftListViewCell div.draft{
+  width: 100px;
+  text-align: right;
+  background-repeat: repeat-y;
+}
+
+ul.ShiftListView li.ShiftListViewCell:hover div.draft{
+  background-image: url(/images/green_fade_bg.png);
+}
+
+.ShiftListView .ShiftListViewCell:nth-child(odd) div.draft{
+  background-image: url(/images/gray_fade_bg.png);
+}
+
+.ShiftListView .ShiftListViewCell:nth-child(even) div.draft{
+  background-image: url(/images/white_fade_bg.png);
+}
