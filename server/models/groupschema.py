@@ -59,16 +59,16 @@ class Group(SSDocument):
         return "group_%s" % groupId
 
     @classmethod
-    def byShortName(cls, shortName, absolute=False):
-        result = list(Group.by_shortName(core.connect(), key=shortName))
-        if result and len(result) > 0:
-            return "%s/group_%s" % ((result[0].source.server or ''), result[0].id)
+    def dbShortName(cls, shortName, absolute=False):
+        result = core.object(Group.by_short_name(core.connect(), key=shortName))
+        if result:
+            return "%s/group_%s" % ((result.source.server or ''), result.id)
  
     @classmethod
-    def byLongName(cls, longName, absolute=False):
-        result = list(Group.by_longName(core.connect(), key=longName))
-        if result and len(result) > 0:
-            return "%s/group_%s" % ((result[0].source.server or ''), result[0].id)
+    def dbLongName(cls, longName, absolute=False):
+        result = core.object(Group.by_long_name(core.connect(), key=longName))
+        if result:
+            return "%s/group_%s" % ((result.source.server or ''), result.id)
 
     # ========================================
     # CRUD
@@ -109,11 +109,17 @@ class Group(SSDocument):
         
     @classmethod
     def read(cls, id):
-        return Permission.load(core.connect(), id)
+        return Group.load(core.connect(), id)
 
     @classmethod
-    def readByUserAndGroup(cls, userId, groupId):
-        return core.value(Permission.by_user_and_group(core.connect(), key=[userId, groupId]))
+    def readByShortName(cls, shortName):
+        db = core.connect()
+        return core.object(Group.by_short_name(db, key=shortName))
+
+    @classmethod
+    def readByLongName(cls, longName):
+        db = core.connect()
+        return core.object(Group.by_long_name(db, key=longName))
 
     @classmethod
     def update(cls, id):
@@ -122,12 +128,17 @@ class Group(SSDocument):
     @classmethod
     def delete(cls, id):
         """
-        Delete the group.
+        Delete the group. Will probably not allow this
+        once there's other peoples content in a gruop,
+        but useful for debugging.
         Parameters:
             id - a group id.
         """
         server = core.server()
+        # delete the metadata
+        # delete the group database
         del server[Group.db(id)]
+        # delete all permissions
 
     # ========================================
     # Validation
@@ -168,12 +179,16 @@ class Group(SSDocument):
             thePermission.store(db)
 
     @classmethod
-    def setPrivilege(cls, userId, groupId, otherId, level):
+    def setPrivilege(cls, userId, groupId, level):
         """
         Set the privilege of a group member. Can only be
         set if the user has joined the group.
         """
-        pass
+        thePermission = Permission.readByUserAndGroup(userID, groupId)
+        if thePermission and level > 0:
+            db = core.connect()
+            thePermission.level = level
+            thePermission.store(db)
 
     @classmethod
     def addShift(cls, userId, shift):
@@ -197,6 +212,12 @@ class Group(SSDocument):
     def deleteShift(cls, userId, shift):
         pass
 
+    @classmethod
+    def members(cls, groupId):
+        from server.models.permschema import Permission
+        db = core.connect()
+        return [row.value for row in Permission.all_members(db, key=groupId).rows]
+
     # ========================================
     # Instance Methods
     # ========================================
@@ -204,4 +225,3 @@ class Group(SSDocument):
     def deleteInstance(self):
         server = core.server()
         del server[Group.db(self.id)]
-

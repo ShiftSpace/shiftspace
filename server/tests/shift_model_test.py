@@ -126,8 +126,9 @@ class BasicOperations(unittest.TestCase):
     def testPublishToGroup(self):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)
+        grp = Group.create(
         publishData = {
-            
+            "streams": [Group.readByShortName("fbf")]
             }
 
     def tearDown(self):

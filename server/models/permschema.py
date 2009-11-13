@@ -62,6 +62,15 @@ class Permission(SSDocument):
            }                              \
          }")
 
+    all_members = View(
+        "permissions",
+        "function (doc) {                   \
+           if(doc.type == 'permission') {   \
+             emit(doc.groupId, doc.userId); \
+           }                                \
+         }"
+        )
+
     by_user_and_group = View(
         "permissions",
         "function (doc) {                           \

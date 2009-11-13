@@ -39,6 +39,13 @@ class SSDocument(Document):
     # Instance Methods
     # ========================================
 
+    def deleteInstance(self, db=None):
+        """
+        Delete the instance.
+        """
+        db = db or core.connect()
+        del db[self.id]
+
     def copyTo(self, db):
         """
         Create a copy of this shift in another database.
