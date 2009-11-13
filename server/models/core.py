@@ -100,7 +100,7 @@ def objects(results):
     """
     Shortcut for getting rows as objects.
     """
-    if results.rows and len(results.row) > 0:
+    if results.rows and len(results.rows) > 0:
         return list(results)
     else:
         return []

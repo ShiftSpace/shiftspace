@@ -240,7 +240,7 @@ class Shift(SSDocument):
     @classmethod
     def delete(cls, userId, id):
         """
-        Delete a shift from the database.
+        Delete a shift from the user/private database.
         Parameters:
             id - a shift id.
         """

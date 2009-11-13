@@ -133,7 +133,7 @@ class Group(SSDocument):
         pass
 
     @classmethod
-    def delete(cls, id):
+    def delete(cls, *args, **kwargs):
         """
         Delete the group. Will probably not allow this
         once there's other peoples content in a gruop,
@@ -141,11 +141,17 @@ class Group(SSDocument):
         Parameters:
             id - a group id.
         """
+        from server.models.permschema import Permission
+        id = args[0]
         server = core.server()
         # delete the metadata
+        db = core.connect()
+        del db[id]
         # delete the group database
         del server[Group.db(id)]
         # delete all permissions
+        [perm.deleteInstance()
+         for perm in core.objects(Permission.by_group(core.connect(), key=id))]
 
     # ========================================
     # Validation
@@ -254,11 +260,3 @@ class Group(SSDocument):
         from server.models.permschema import Permission
         db = core.connect()
         return [row.value for row in Permission.all_members(db, key=groupId).rows]
-
-    # ========================================
-    # Instance Methods
-    # ========================================
-
-    def deleteInstance(self):
-        server = core.server()
-        del server[Group.db(self.id)]

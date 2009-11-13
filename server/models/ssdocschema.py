@@ -36,15 +36,27 @@ class SSDocument(Document):
         super(Document, self).__init__(*args, **kwargs)
 
     # ========================================
-    # Instance Methods
+    # Class Methods
     # ========================================
 
-    def deleteInstance(self, db=None):
+    @classmethod
+    def delete(cls, *args, **kwargs):
         """
         Delete the instance.
         """
         db = db or core.connect()
-        del db[self.id]
+        del db[kwargs["id"]]
+
+    # ========================================
+    # Instance Methods
+    # ========================================
+
+    def deleteInstance(self, *args, **kwargs):
+        """
+        Delete the instance.
+        """
+        if self.id:
+            self.__class__.delete(self.id)
 
     def copyTo(self, db):
         """
