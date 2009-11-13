@@ -16,8 +16,8 @@ from ssdocschema import SSDocument
 class Message(SSDocument):
 
     type = TextField(default="message")
-    from = TextField()
-    to = TextField()
+    fromId = TextField()
+    toId = TextField()
     text = TextField()
     read = BooleanField(default=False)
 
@@ -39,7 +39,7 @@ class Message(SSDocument):
     # ========================================
 
     @classmethod
-    def create(cls, from, to, text):
+    def create(cls, fromId, toId, text, meta="generic"):
         """
         Create a message from a user to another. The message
         can come from "shiftspace" which represents a system message.
@@ -48,8 +48,8 @@ class Message(SSDocument):
         """
         db = core.connect(SSUser.messages(to))
         json = {
-            "from": from,
-            "to": to,
+            "fromId": fromId,
+            "toId": toId,
             "text": text,
             }
         newMessage = Message(**json)
@@ -79,5 +79,6 @@ class Message(SSDocument):
 
     @classmethod
     def forUser(cls, userId, start=None, end=None, limit=25):
+        from server.models.ssuserschema import SSUser
         db = core.connect(SSUser.messages(userId))
         return core.objects(Message.by_created(db, limit=limit))

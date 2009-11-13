@@ -239,6 +239,9 @@ def tests(toRun):
     if toRun == "all" or "group" in toRun:
         import server.tests.group_model_test
         suite = unittest.TestLoader().loadTestsFromTestCase(server.tests.group_model_test.BasicOperations)
+    if toRun == "all" or "comment" in toRun:
+        import server.tests.comment_model_test
+        suite = unittest.TestLoader().loadTestsFromTestCase(server.tests.comment_model_test.BasicOperations)
     unittest.TextTestRunner(verbosity=2).run(suite)
 
 

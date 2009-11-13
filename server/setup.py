@@ -123,8 +123,10 @@ def loadDocs(dbname="shiftspace", createAdmin=True):
     from models.shiftschema import Shift
     from models.groupschema import Group
     from models.permschema import Permission
+    from models.commentschema import Comment
+    from models.favschema import Favorite
     db = core.connect()
-    for cls in [SSUser, Shift, Group, Permission]:
+    for cls in [SSUser, Shift, Group, Permission, Comment, Favorite]:
         attrs = dir(cls)
         for attr in attrs:
             rattr = getattr(cls, attr)

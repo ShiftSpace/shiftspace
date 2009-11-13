@@ -178,12 +178,14 @@ class Shift(SSDocument):
           shifts - a single shift or a list of shifts.
           userId - a user id.
         """
+        from server.models.favschema import Favorite
+
         single = False
         if type(shifts) != list:
             single = True
             shifts = [shifts]
         ids = [shift['_id'] for shift in shifts]
-        favIds = [Shift.favoriteId(userId, shiftId) for shiftId in ids]
+        favIds = [Favorite.id(userId, shiftId) for shiftId in ids]
 
         isFavorited = [(favorite and True) for favorite in core.fetch(keys=favIds)]
 
@@ -315,6 +317,12 @@ class Shift(SSDocument):
     # Instance Methods
     # ========================================
 
+    def publishIds(self):
+        """
+        Return the list of ids the shift was published to.
+        """
+        return [db.split("_")[1].split("/")[0] for db in self.publishData.dbs]
+
     def deleteInstance(self):
         """
         Convenience for deleting Shift instances.
@@ -422,12 +430,7 @@ class Shift(SSDocument):
         if (publishData and isPrivate and len(publishDbs) > 0):
             allowedGroups = Permission.writeable(userId)
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
-        # create the shift comment dbx
-        """
-        if not Shift.commentStream(id):
-            streamId = Shift.createCommentStream(id=id)
-            SSUser.addNotification(userId, streamId)
-        """
+
         theShift.publishData.private = isPrivate
         theShift.publishData.draft = False
         
@@ -480,83 +483,6 @@ class Shift(SSDocument):
         [core.replicate(SSUser.public(userId), SSUser.feed(follower)) for follower in followers]
 
         return Shift.joinData(theShift, userId)
-    
-    # ========================================
-    # Comments
-    # ========================================
-
-    @classmethod
-    def commentStream(cls, id):
-        """
-        Return the comment stream id for the specified shift.
-        Parameters:
-            id - a shift id.
-        """
-        result = list(Stream.commentStream(key=id))
-        if result and len(result) > 0:
-            return result[0].id
-        else:
-            return None
-    
-    @classmethod
-    def createCommentStream(cls, id, streamId):
-        """
-        Create a comment stream for a shift if it doesn't already exist.
-        Parameters:
-            id - a shift id.
-        """
-        db = core.connect(Stream.group(streamId))
-        theShift = Shift.load(db, id)
-        commentStream = Stream.create(db, {
-                "meta": "comments",
-                "objectRef": ref(id),
-                "createdBy": theShift.createdBy
-                })
-        return commentStream["_id"]
-
-    # ========================================
-    # Favoriting
-    # ========================================
-
-    @classmethod
-    def favoriteId(cls, id, userId):
-        """
-        Return the favorite id for a shift and user.
-        """
-        return "favorite:%s:%s" % (userId, id)
-
-    @classmethod
-    def isFavorited(cls, id, userId=None):
-        db = core.connect()
-        favId = Shift.favoriteId(id, userId)
-        return db.get(favId) != None
-    
-    @classmethod
-    def favorite(cls, id, userId):
-        db = core.connect()
-        if (not Shift.canRead(id, userId)) or Shift.isFavorited(id, userId):
-            return
-        fav = {
-            "created": utils.utctime(),
-            "createdBy": userId,
-            "type": "favorite"
-            }
-        db[favoriteId(id, userId)] = fav
-        db = core.connect(SSUser.private(userId))
-        return Shift.joinData(Shift.load(db, id), userId)
-    
-    @classmethod
-    def unfavorite(cls, id, userId):
-        db = core.connect()
-        if (not Shift.canRead(id, userId)) or (not Shift.isFavorited(id, userId)):
-            return
-        del db[Shift.favoriteId(id, userId)]
-        return Shift.joinData(db[id], userId)
-    
-    @classmethod
-    def favoriteCount(cls, id):
-        db = core.connect()
-        return core.value(Favorite.by_shift(db, key=id, group=True)) or 0
     
     # ========================================
     # List & Filtering Support

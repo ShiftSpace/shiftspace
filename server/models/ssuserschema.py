@@ -66,9 +66,10 @@ class SSUser(User):
         databases (user/public, user/private, user/inbox)
         to allow for peer-to-peer distribution.
         Parameters:
-          userJson - a dictionary of fields and their values.
+            userJson - a dictionary of fields and their values.
         """
         from server.models.shiftschema import Shift
+        from server.models.messageschema import Message
 
         server = core.server()
         db = core.connect()
@@ -78,6 +79,7 @@ class SSUser(User):
             userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % utils.md5hash(userJson["email"])
         newUser = SSUser(**userJson)
         newUser.store(db)
+
         # user's public shifts, will be replicated to shiftspace and user/feed
         server.create(SSUser.public(newUser.id))
         # all of the user's shifts as well as subscribed content
@@ -86,12 +88,16 @@ class SSUser(User):
         server.create(SSUser.messages(newUser.id))
         # the user's feed, merged from user/public and user/feed
         server.create(SSUser.feed(newUser.id))
+        # the user's inbox of direct shifts
+        server.create(SSUser.inbox(newUser.id))
+
+        # sync views
         Shift.by_href_and_created.sync(server[SSUser.feed(newUser.id)])
         Shift.by_domain_and_created.sync(server[SSUser.feed(newUser.id)])
         Shift.by_group_and_created.sync(server[SSUser.feed(newUser.id)])
         Shift.by_follow_and_created.sync(server[SSUser.feed(newUser.id)])
-        # the user's inbox of direct shifts
-        server.create(SSUser.inbox(newUser.id))
+        Message.by_created.sync(server[SSUser.messages(newUser.id)])
+
         return newUser
 
     @classmethod

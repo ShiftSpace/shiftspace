@@ -76,26 +76,69 @@ class Comment(SSDocument):
         In addition a comment will trigger a message to all
         subscribed users, this will be sent to user_x/messages.
         """
+        from server.models.ssuserschema import SSUser
+        from server.models.shiftschema import Shift
+        from server.models.messageschema import Message
+
+        # first try the public feed
+        theShift = Shift.load(core.connect(), shiftId)
+
+        # then try the user's feed
+        if not theShift:
+            theShift = Shift.load(core.connect(SSUser.feed(userId)), shiftId)
+
+        shiftAuthor = SSUser.load(core.connect(), theShift.createdBy)
+
         server = core.server()
+
+        # create the comment db if necessary        
+        dbexists = True
         if not Comment.hasThread(shiftId):
             server.create(Comment.db(shiftId))
+            dbexists = False
+
+        # get the db
         db = core.connect(Comment.db(shiftId))
+
+        # if db just created, sync the views and subscribe shift author
+        if not dbexists:
+            Comment.all_subscribed.sync(db)
+            Comment.subscribe(theShift.createdBy, shiftId)
+
+        # create comment and comment stub
         json = {
             "createdBy": userId,
             "shiftId": shiftId,
             "text": text,
             "replyTo": replyTo,
             }
+
         stub = {
             "type":"comment-stub",
             "shiftId": shiftId,
             }
+
         newComment = Comment(**json)
+        newComment.store(db)
         db = core.connect()
         db.create(stub) 
 
         subscribers = Comment.subscribers(shiftId)
+
         # send each subscriber a message
+        for subscriber in subscribers:
+            # TODO: needs to be optimized with a fast join - David
+            theUser = SSUser.load(db, subscriber)
+            astr = ((subscriber == theShift.createdBy) and "your") or ("%s's" % shiftAuthor.userName)
+            json = {
+                "fromId": "shiftspace",
+                "toId": subscriber,
+                "text": "%s justed commented on %s shift!" % (theUser.userName, astr),
+                "meta": "comment"
+                }
+            Message.create(**json)
+
+        return newComment
 
     @classmethod
     def read(cls, id):
@@ -106,12 +149,48 @@ class Comment(SSDocument):
         pass
 
     @classmethod
-    def delete(cls, id):
-        pass
+    def delete(cls, shiftId, id):
+        db = core.connect(Comment.db(shiftId))
+        del db[id]
+
+    # ========================================
+    # Instance Methods
+    # ========================================
+
+    def deleteInstance(self, shiftId, id):
+        Comment.delete(shiftId, id)
+
+    # ========================================
+    # Validation
+    # ========================================
+
+    @classmethod
+    def canComment(cls, userId, shiftId):
+        """
+        Returns whether the user can comment on the shift.
+        Take careful note that the second parameter is NOT
+        a shift id. Rather it is a Shift Document. This is
+        because we cannot know where the shift might be living.
+        We assume that the user was able to somehow access
+        the shift.
+        """
+        from server.models.permschema import Permission
+        theShift = Shift.load(core.connect(SSUser.feed(userId)), shiftId)
+        ids = theShift.publishIds()
+        if userId in ids:
+            return True
+        readable = Permission.readable(userId)
+        allowed = set(readable).intersection(set(ids))
+        return len(allowed) > 0
 
     # ========================================
     # Utilities
     # ========================================
+    
+    @classmethod
+    def count(cls, shiftId):
+        db = core.connect()
+        return core.value(Comment.count_by_shift(db, key=shiftId))
 
     @classmethod
     def forShift(cls, shiftId, start=None, end=None, limit=25):
@@ -120,7 +199,11 @@ class Comment(SSDocument):
 
     @classmethod
     def hasThread(cls, shiftId):
-        return core.server().get(Comment.db(shiftId))
+        try:
+            core.server()[Comment.db(shiftId)]
+            return True
+        except Exception:
+            return False
 
     @classmethod
     def subscribers(cls, shiftId):
@@ -140,11 +223,11 @@ class Comment(SSDocument):
     def subscribe(cls, userId, shiftId):
         db = core.connect(Comment.db(shiftId))
         if not Comment.isSubscribed(userId, shiftId):
-            db.create(
+            db.create({
                 "_id": "user:%s" % userId,
                 "type": "subscription",
                 "userId": userId,
-                )
+                })
 
     @classmethod
     def unsubscribe(cls, shiftId):
