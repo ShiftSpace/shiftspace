@@ -157,7 +157,7 @@ class Permission(SSDocument):
             raise MissingGroupError
         if not userId:
             raise MissingCreatorError
-        if Permission.permissionForUser(otherId, groupId):
+        if Permission.readByUserAndGroup(otherId, groupId):
             raise PermissionAlreadyExistsError
         allowed = SSUser.isAdmin(userId)
         if not allowed:

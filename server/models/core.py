@@ -84,6 +84,8 @@ def values(results):
     """
     if results.rows and len(results.rows) > 0:
         return [row.value for row in results.rows]
+    else:
+        return []
 
 
 def object(results):
@@ -100,6 +102,8 @@ def objects(results):
     """
     if results.rows and len(results.row) > 0:
         return list(results)
+    else:
+        return []
 
 
 def single(view, key):

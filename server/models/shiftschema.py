@@ -335,7 +335,7 @@ class Shift(SSDocument):
         Set draft status of a shift to false. Sync publishData field.
         If the shift is private only publish to the dbs that
         the user has access. If the shift is publich publish it to
-        any of the public non-user dbs. Creates the comment stream
+        any of the public non-user dbs. Creates the comment db
         if it doesn't already exist.
         
         Parameters:
@@ -358,7 +358,7 @@ class Shift(SSDocument):
         if (publishData and isPrivate and len(publishDbs) > 0):
             allowedGroups = Permission.writeable(userId)
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
-        # TODO: commentStreams should use the permission of the streams the shift has been published to. -David 7/14/09
+        # create the shift comment dbx
         """
         if not Shift.commentStream(id):
             streamId = Shift.createCommentStream(id=id)
@@ -377,7 +377,7 @@ class Shift(SSDocument):
         # update target user inboxes
         for db in oldUserDbs:
             theShift.updateIn(core.connect(db))
-        for db in newUserStreams:
+        for db in newUserDbs:
             theShift.copyTo(core.connect(db))
 
         # publish or update a copy to group/x, group/y, ...

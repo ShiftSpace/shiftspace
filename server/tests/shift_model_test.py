@@ -4,6 +4,7 @@ import server.models.core as core
 
 from server.models.shiftschema import *
 from server.models.ssuserschema import *
+from server.models.groupschema import *
 from server.tests.dummy_data import *
 
 fakemary = {
@@ -118,7 +119,7 @@ class BasicOperations(unittest.TestCase):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)
         publishData = {
-            "streams": [SSUser.inbox(self.fakejohn)]
+            "dbs": [SSUser.inbox(self.fakejohn)]
             }
         Shift.publish(self.fakemary, newShift.id, publishData)
         theShift = Shift.load(core.connect(SSUser.inbox(self.fakejohn)), newShift.id)
@@ -130,7 +131,7 @@ class BasicOperations(unittest.TestCase):
         newGroup = Group.create(self.fakemary, groupJson())
         newPerm = Permission.create("shiftspace", newGroup.id, self.fakejohn, level=1)
         publishData = {
-            "streams": [Group.db(newGroup.id)]
+            "dbs": [Group.db(newGroup.id)]
             }
         Shift.publish(self.fakemary, newShift.id, publishData)
         theShift = core.connect(SSUser.feed(self.fakejohn))
