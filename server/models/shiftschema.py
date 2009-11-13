@@ -481,6 +481,14 @@ class Shift(SSDocument):
         # TODO: don't replicate to follower user_x/feeds that are not peers - David
         followers = SSUser.followers(userId)
         [core.replicate(SSUser.public(userId), SSUser.feed(follower)) for follower in followers]
+        
+        # if draft false, copy to master database, we need it there
+        # for general queries about what's available on pages
+        db = core.connect()
+        if not db.get(shiftId):
+            theShift.copyTo(db)
+        else:
+            theShift.updateIn(db)
 
         return Shift.joinData(theShift, userId)
     
@@ -504,6 +512,13 @@ class Shift(SSDocument):
         id = SSUser.read(userName).id
         db = core.connect(SSUser.private(userId))
         return Shift.by_user(db, id, limit=limit)
+
+    """
+    @classmethod
+    def shiftsByHref(cls, userId, start=None, end=None, limit=25):
+        db = core.connect(User.feed(userId))
+        return Shift.joinData(
+    """
 
     @classmethod
     def shiftsFromPeople(cls, userId, start=None, end=None, limit=25):
