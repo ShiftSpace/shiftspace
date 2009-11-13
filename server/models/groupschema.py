@@ -214,6 +214,7 @@ class Group(SSDocument):
         """
         if Group.isMember(shift.createdBy):
             grpdb = Group.db(groupId)
+            shift.copyTo(core.connect(grpdb))
             [core.replicate(grpdb, "user_%s/feed" % id) for id in Group.members(groupId)]
         else:
             from server.models.ssuserschema import SSUser
@@ -224,8 +225,24 @@ class Group(SSDocument):
 
     @classmethod
     def updateShift(cls, userId, shift):
-        # replicate to all subscribers
-        pass
+        """
+        Update a shift in a group. Trigger replication
+        to all user/private of all non-peer members. Peers
+        will get the changes at synchronization time.
+        Parameters:
+            userId - a user id.
+            shift - a Shift Document.
+        """
+        if Group.isMember(shift.createdBy):
+            grpdb = Group.db(groupId)
+            shift.updateIn(core.connect(grpdb))
+            [core.replicate(grpdb, "user_%s/feed" % id) for id in Group.members(groupId)]
+        else:
+            from server.models.ssuserschema import SSUser
+            db = core.connect()
+            theUser = SSUser.read(shift.createdBy)
+            theGroup = Group.load(db, groupId)
+            raise NotAMemberError("%s is not a member of %s" % (theUser.userName, theGroup.longName))
 
     @classmethod
     def deleteShift(cls, userId, shift):

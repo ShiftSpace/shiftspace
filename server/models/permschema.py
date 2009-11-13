@@ -222,20 +222,20 @@ class Permission(SSDocument):
     @classmethod
     def joinable(cls, userId):
         db = core.connect()
-        return core.values(Permission.by_joinable(db, key=userId))
+        return ["group_%s" % id for id in core.values(Permission.by_joinable(db, key=userId))]
 
     @classmethod
     def readable(cls, userId):
         db = core.connect()
-        return core.values(Permission.by_readable(db, key=userId))
+        return ["group_%s" % id for id in core.values(Permission.by_readable(db, key=userId))]
 
     @classmethod
     def writeable(cls, userId):
         db = core.connect()
-        return core.values(Permission.by_writeable(db, key=userId))
+        return ["group_%s" % id for id in core.values(Permission.by_writeable(db, key=userId))]
 
     @classmethod
     def adminable(cls, userId):
         db = core.connect()
-        return core.values(Permission.by_adminable(db, key=userId))
+        return ["group_%s" % id for id in core.values(Permission.by_adminable(db, key=userId))]
 

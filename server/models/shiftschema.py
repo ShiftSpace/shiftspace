@@ -69,10 +69,7 @@ class Shift(SSDocument):
             draft = BooleanField(default=True),
             private = BooleanField(default=True),
             publishTime = DateTimeField(),
-            streams = ListField(DictField(Schema.build(
-                        type = TextField(),
-                        id = TextField()
-                        )))
+            dbs = ListField(TextField())
             ))
     content = DictField()    
             
@@ -231,12 +228,13 @@ class Shift(SSDocument):
             public = core.connect(SSUser.public(theShift.createdBy))
             theShift.store(public)
         # update groups & users that shift is published to
-        for stream in theShift.publishData.streams:
-            if stream.type == "user":
-                private = core.connect(SSUser.private(streamd.id))
-                theShift.store(private)
-            elif stream.type == "group":
-                Group.update(theShift)
+        for db in theShift.publishData.dbs:
+            dbtype, dbid = db.split("_")
+            if dbtype == "user":
+                inbox = core.connect(SSUser.inbox(dbid))
+                theShift.store(inbox)
+            elif dbtype == "group":
+                Group.updateShift(dbid, theShift)
         return Shift.joinData(theShift, theShift.createdBy)
 
     @classmethod
@@ -298,7 +296,7 @@ class Shift(SSDocument):
         theShift = Shift.load(db, id)
         if not theShift.publishData.private:
             return True
-        # ignore private streams
+        # ignore private dbs
         shiftStreams = [astream for astream in theShift.publishData.streams
                         if not Stream.isUserPrivateStream(astream)]
         writeable = Permission.writeableStreams(userId)
@@ -335,9 +333,9 @@ class Shift(SSDocument):
     def publish(cls, userId, id, publishData=None, server="http://www.shiftspace.org/api/"):
         """
         Set draft status of a shift to false. Sync publishData field.
-        If the shift is private only publish to the streams that
+        If the shift is private only publish to the dbs that
         the user has access. If the shift is publich publish it to
-        any of the public non-user streams. Creates the comment stream
+        any of the public non-user dbs. Creates the comment stream
         if it doesn't already exist.
         
         Parameters:
@@ -355,11 +353,11 @@ class Shift(SSDocument):
         else:
             isPrivate = Shift.isPrivate(id)
 
-        publishStreams = (publishData and publishData.get("streams")) or []
+        publishDbs = (publishData and publishData.get("dbs")) or []
 
-        if (publishData and isPrivate and len(publishStreams) > 0):
-            allowedStreams = Permission.writeableStreams(userId)
-            allowed = list(set(allowedStreams).intersection(set(publishStreams)))
+        if (publishData and isPrivate and len(publishDbs) > 0):
+            allowedGroups = Permission.writeable(userId)
+            allowed = list(set(allowedGroups).intersection(set(publishDbs)))
         # TODO: commentStreams should use the permission of the streams the shift has been published to. -David 7/14/09
         """
         if not Shift.commentStream(id):
@@ -370,28 +368,33 @@ class Shift(SSDocument):
         theShift.publishData.draft = False
         
         # publish or update a copy of the shift to all user-x/private, user-y/private ...
-        newUserStreams = []
-        if publishData.get("streams"):
-            newUserStreams = [s for s in publishData.get("streams") if s.split("_")[0] == "user"]
-        oldUserStreams = [s for s in oldPublishData.get("streams") if s.split("_")[0] == "user"]
-        newUserStreams = list(set(newUserStreams).difference(set(oldUserStreams)))
+        newUserDbs = []
+        if publishData.get("dbs"):
+            newUserDbs = [s for s in publishData.get("dbs") if s.split("_")[0] == "user"]
+        oldUserDbs = [s for s in oldPublishData.get("dbs") if s.split("_")[0] == "user"]
+        newUserDbs = list(set(newUserDbs).difference(set(oldUserDbs)))
 
-        for stream in oldUserStreams:
-            theShift.updateIn(core.connect(stream))
-        for stream in newUserStreams:
-            theShift.copyTo(core.connect(stream))
+        # update target user inboxes
+        for db in oldUserDbs:
+            theShift.updateIn(core.connect(db))
+        for db in newUserStreams:
+            theShift.copyTo(core.connect(db))
 
         # publish or update a copy to group/x, group/y, ...
-        newGroupStreams = []
-        if publishData.get("streams"):
-            newGroupStreams = [s for s in publishData.get("streams") if s.split("_")[0] == "group"]
-        oldGroupStreams = [s for s in oldPublishData.get("streams") if s.split("_")[0] == "group"]
-        newGroupStreams = list(set(newGroupStreams).difference(set(oldGroupStreams)))
+        newGroupDbs = []
+        if publishData.get("dbs"):
+            newGroupDbs = [s for s in publishData.get("dbs") if s.split("_")[0] == "group"]
+        oldGroupDbs = [s for s in oldPublishData.get("dbs") if s.split("_")[0] == "group"]
+        newGroupDbs = list(set(newGroupDbs).difference(set(oldGroupDbs)))
         
-        for stream in oldGroupStreams:
-            theShift.updateIn(core.connect(stream))
-        for stream in newGroupStreams:
-            theShift.copyTo(core.connect(stream))
+        # update group dbs
+        for db in oldGroupDbs:
+            dbtype, dbid = db.split("_")
+            Group.updateShift(dbid, theShift)
+        for db in newGroupDbs:
+            # NOTE - do we need to delete from user/private? - David 11/12/09
+            dbtype, dbid = db.split("_")
+            Group.addShift(dbid, theShift)
 
         # create in user/public, delete from user/private
         # replicate to user/feed and to user/shiftspace

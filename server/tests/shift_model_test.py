@@ -133,6 +133,8 @@ class BasicOperations(unittest.TestCase):
             "streams": [Group.db(newGroup.id)]
             }
         Shift.publish(self.fakemary, newShift.id, publishData)
+        theShift = core.connect(SSUser.feed(self.fakejohn))
+        self.assertEqual(theShift.summary, newShift.summary)
         newGroup.deleteInstance()
 
     def tearDown(self):
