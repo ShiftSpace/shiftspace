@@ -109,6 +109,34 @@ class Shift(SSDocument):
            }                                                 \
          }")
 
+    by_group_and_created = View(
+        "shifts",
+        "function(doc) {                                      \
+           if(doc.type == 'shift') {                          \
+             var dbs = doc.publishData.dbs;                   \
+             for(var i = 0, len = dbs.length; i < len; i++) { \
+                var db = dbs[i], typeAndId = db.split('_');   \
+                if(typeAndId[0] == 'group') {                 \
+                  emit([Date.parse(doc.created), db], doc);   \
+                }                                             \
+             }                                                \
+           }                                                  \
+         }")
+
+    by_follow_and_created = View(
+        "shifts",
+        "function(doc) {                                      \
+           if(doc.type == 'shift') {                          \
+             var dbs = doc.publishData.dbs;                   \
+             for(var i = 0, len = dbs.length; i < len; i++) { \
+                var db = dbs[i], typeAndId = db.split('_');   \
+                if(typeAndId[0] == 'user') {                  \
+                  emit([Date.parse(doc.created), db], doc);   \
+                }                                             \
+             }                                                \
+           }                                                  \
+         }")
+
     by_user = View(
         "shifts",
         "function(doc) {               \

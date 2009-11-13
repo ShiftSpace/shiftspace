@@ -50,6 +50,8 @@ class SSUser(User):
         Parameters:
           userJson - a dictionary of fields and their values.
         """
+        from server.models.shiftschema import Shift
+
         server = core.server()
         db = core.connect()
         if userJson.get("passwordVerify"):
@@ -66,6 +68,10 @@ class SSUser(User):
         server.create(SSUser.messages(newUser.id))
         # the user's feed, merged from user/public and user/feed
         server.create(SSUser.feed(newUser.id))
+        Shift.by_href_and_created.sync(server[SSUser.feed(newUser.id)])
+        Shift.by_domain_and_created.sync(server[SSUser.feed(newUser.id)])
+        Shift.by_group_and_created.sync(server[SSUser.feed(newUser.id)])
+        Shift.by_follow_and_created.sync(server[SSUser.feed(newUser.id)])
         # the user's inbox of direct shifts
         server.create(SSUser.inbox(newUser.id))
         return newUser
