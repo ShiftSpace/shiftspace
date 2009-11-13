@@ -46,6 +46,7 @@ class BasicOperations(unittest.TestCase):
         Shift.publish(self.fakemary, newShift.id, {"private":False})
 
         newComment = Comment.create(self.fakejohn, newShift.id, "1st comment!")
+        # test that the user could actually subscribe
 
 
     def tearDown(self):
