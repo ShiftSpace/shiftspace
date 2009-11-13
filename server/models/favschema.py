@@ -32,7 +32,7 @@ class Favorite(SSDocument):
          }"
         )
 
-    by_shift = View(
+    count_by_shift = View(
         "favorites",
         "function(doc) {                \
            if(doc.type == 'favorite') { \
@@ -51,21 +51,29 @@ class Favorite(SSDocument):
     @classmethod
     def create(cls, userId, shiftId):
         """
+        Favorite a shift.
         """
-        pass
+        db = core.connect()
+        favId = Favrotie.id(userId, shiftId)
+        if not db.get(favId):
+            db.create({
+                    "_id": Favorite.id(userId, shiftId),
+                    "type": "favorite"
+                    })
 
     @classmethod
-    def read(cls, id):
-        pass
-
-    @classmethod
-    def update(cls, id):
-        pass
-
-    @classmethod
-    def delete(cls, id):
-        pass
+    def delete(cls, userId, shiftId):
+        """
+        Delete a favorite.
+        """
+        db = core.connect()
+        del db[Favorite.id(userId, shiftId)]
 
     # ========================================
     # Utilities
     # ========================================
+        
+    @classmethod
+    def id(cls, userId, shiftId):
+        return "user:%s:%s" % (userId, shiftId)
+        
