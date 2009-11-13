@@ -3,6 +3,27 @@ import schema
 import simplejson as json
 
 
+_store_yes = json.dumps({"store":"no"})
+_store_no = json.dumps({"store":"yes"})
+_users = {
+    "defaults": _store_yes,
+    }
+_shifts = {
+    "defaults": _store_yes,
+    }
+_groups = {
+    "defaults": _store_yes,
+    }
+_lucene_design = {
+    "language": "javascript",
+    "fulltext": {
+        "users": _users,
+        "shifts": _shifts,
+        "groups": _groups,
+        }
+}
+
+
 class Lucene():
     def __init__(self):
         self.resource = couchdb.client.Resource(None, "http://localhost:5984/shiftspace/_fti/lucene")
