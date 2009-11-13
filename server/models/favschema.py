@@ -25,10 +25,10 @@ class Favorite(SSDocument):
 
     by_user_and_created = View(
         "favorites",
-        "function(doc) {                                   \
-           if(doc.type == 'favorite') {                    \
-             emit([doc.userId, doc.created], doc.shiftId); \
-           }                                               \
+        "function(doc) {                           \
+           if(doc.type == 'favorite') {            \
+             emit([doc.userId, doc.created], doc); \
+           }                                       \
          }"
         )
 
@@ -87,7 +87,7 @@ class Favorite(SSDocument):
     @classmethod
     def count(cls, shiftId):
         db = core.connect()
-        return core.value(Favorite.count_by_shift(db, key=shiftId))
+        return core.value(Favorite.count_by_shift(db, key=shiftId)) or 0
 
     @classmethod
     def forUser(cls, userId, start=None, end=None, descending=False, limit=25):
@@ -96,7 +96,9 @@ class Favorite(SSDocument):
             start = [userId]
         if not end:
             end = [userId, {}]
-        options["descending"] = descending
         options["limit"] = limit
         results = Favorite.by_user_and_created(core.connect(), **options)
-        return core.values(results[start:end])
+        favs = core.objects(results[start:end])
+        if descending:
+            favs.reverse()
+        return favs
