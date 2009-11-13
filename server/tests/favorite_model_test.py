@@ -34,6 +34,7 @@ class BasicOperations(unittest.TestCase):
         # favorite count for that shift should be 1
         count = Favorite.count(newShift.id)
         self.assertEqual(count, 1)
+        Favorite.delete(self.fakejohn, newShift.id)
 
     def testUnfavorite(self):
         json = shiftJson()
@@ -61,12 +62,12 @@ class BasicOperations(unittest.TestCase):
         Favorite.create(self.fakejohn, newShift1.id)
         Favorite.create(self.fakejohn, newShift2.id)
         Favorite.create(self.fakejohn, newShift3.id)
-        # reverse
-        favorites = Favorite.forUser(self.fakejohn, descending=True)
-        self.assertEqual(favorites[0].shiftId, newShift3.id)
         # limit
         favorites = Favorite.forUser(self.fakejohn, limit=2)
         self.assertEqual(len(favorites), 2)
+        Favorite.delete(self.fakejohn, newShift1.id)
+        Favorite.delete(self.fakejohn, newShift2.id)
+        Favorite.delete(self.fakejohn, newShift3.id)
 
     def tearDown(self):
         db = core.connect()
