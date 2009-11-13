@@ -54,8 +54,6 @@
 .SSTabViewSubTabStyle > .SSControlView
 {
   position: absolute;
-  top: 18px;
-  left: 12px;
   bottom: 0px;
   width: 137px;
   border-right: solid 1px #000;
@@ -305,9 +303,7 @@
 .leftSideBar
 {
   position: absolute;
-  left: 16px;
   width: 160px;
-  top: 18px;
   bottom: 0px;
   z-index: 2;
   color: #4B423A;
