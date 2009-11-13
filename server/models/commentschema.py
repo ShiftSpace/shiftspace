@@ -24,6 +24,15 @@ class Comment(SSDocument):
     # Views
     # ========================================
 
+    by_created = View(
+        "comments",
+        "function(doc) {               \
+           if(doc.type == 'comment') { \
+             emit(doc.created, doc);   \
+           }                           \
+         }"
+        )
+
     all_subscribed = View(
         "comments",
         "function(doc) {                    \
@@ -103,6 +112,11 @@ class Comment(SSDocument):
     # ========================================
     # Utilities
     # ========================================
+
+    @classmethod
+    def forShift(cls, shiftId, start=None, end=None, limit=25):
+        db = core.connect(Comment.db(shiftId))
+        return core.objects(Comment.by_created(db, limit=limit))
 
     @classmethod
     def hasThread(cls, shiftId):
