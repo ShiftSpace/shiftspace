@@ -85,20 +85,28 @@ class Shift(SSDocument):
            }                         \
          }")
 
-    by_domain = View(
+    by_created = View(
         "shifts",
-        "function (doc) {             \
-           if(doc.type == 'shift') {  \
-             emit(doc.domain, doc);   \
-           }                          \
+        "function (doc) {                        \
+           if(doc.type == 'shift') {             \
+             emit(Date.parse(doc.created), doc); \
+           }                                     \
          }")
 
-    by_href = View(
+    by_domain_and_created = View(
         "shifts",
-        "function(doc) {             \
-           if(doc.type == 'shift') { \
-             emit(doc.href, doc);    \
-           }                         \
+        "function (doc) {                                      \
+           if(doc.type == 'shift') {                           \
+             emit([doc.domain, Date.parse(doc.created)], doc); \
+           }                                                   \
+         }")
+
+    by_href_and_created = View(
+        "shifts",
+        "function(doc) {                                     \
+           if(doc.type == 'shift') {                         \
+             emit([doc.href, Date.parse(doc.created)], doc); \
+           }                                                 \
          }")
 
     by_user = View(
