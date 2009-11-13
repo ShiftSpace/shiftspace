@@ -389,9 +389,11 @@ class Shift(SSDocument):
         
         # update group dbs
         for db in oldGroupDbs:
+            from server.models.groupschema import Group
             dbtype, dbid = db.split("_")
             Group.updateShift(dbid, theShift)
         for db in newGroupDbs:
+            from server.models.groupschema import Group
             # NOTE - do we need to delete from user/private? - David 11/12/09
             dbtype, dbid = db.split("_")
             Group.addShift(dbid, theShift)

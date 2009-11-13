@@ -134,7 +134,8 @@ class BasicOperations(unittest.TestCase):
             "dbs": [Group.db(newGroup.id)]
             }
         Shift.publish(self.fakemary, newShift.id, publishData)
-        theShift = core.connect(SSUser.feed(self.fakejohn))
+        db = core.connect(SSUser.feed(self.fakejohn))
+        theShift = Shift.load(db, newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         newGroup.deleteInstance()
 

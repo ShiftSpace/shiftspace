@@ -163,6 +163,7 @@ class Group(SSDocument):
 
     @classmethod
     def isMember(cls, userId, groupId):
+        from server.models.permschema import Permission
         thePermission = Permission.readByUserAndGroup(userId, groupId)
         return thePermission and Permission.level > 0
 
@@ -212,7 +213,7 @@ class Group(SSDocument):
             userId - a user id.
             shift - a Shift Document.
         """
-        if Group.isMember(shift.createdBy):
+        if Group.isMember(shift.createdBy, groupId):
             grpdb = Group.db(groupId)
             shift.copyTo(core.connect(grpdb))
             [core.replicate(grpdb, "user_%s/feed" % id) for id in Group.members(groupId)]
@@ -233,7 +234,7 @@ class Group(SSDocument):
             userId - a user id.
             shift - a Shift Document.
         """
-        if Group.isMember(shift.createdBy):
+        if Group.isMember(shift.createdBy, groupId):
             grpdb = Group.db(groupId)
             shift.updateIn(core.connect(grpdb))
             [core.replicate(grpdb, "user_%s/feed" % id) for id in Group.members(groupId)]
