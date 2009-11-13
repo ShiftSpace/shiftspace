@@ -95,18 +95,26 @@ class Shift(SSDocument):
 
     by_domain_and_created = View(
         "shifts",
-        "function (doc) {                                      \
-           if(doc.type == 'shift') {                           \
-             emit([doc.domain, doc.created], doc);             \
-           }                                                   \
+        "function (doc) {                          \
+           if(doc.type == 'shift') {               \
+             emit([doc.domain, doc.created], doc); \
+           }                                       \
          }")
 
     by_href_and_created = View(
         "shifts",
-        "function(doc) {                                     \
-           if(doc.type == 'shift') {                         \
-             emit([doc.href, doc.created], doc);             \
-           }                                                 \
+        "function(doc) {                         \
+           if(doc.type == 'shift') {             \
+             emit([doc.href, doc.created], doc); \
+           }                                     \
+         }")
+
+    by_user_and_created = View(
+        "shifts",
+        "function(doc) {                             \
+           if(doc.type == 'shift') {                 \
+             emit([doc.createdBy, doc.created], doc); \
+           }                                         \
          }")
 
     by_group_and_created = View(
@@ -561,6 +569,26 @@ class Shift(SSDocument):
         id = SSUser.read(userName).id
         db = core.connect(SSUser.private(userId))
         return Shift.by_user(db, id, limit=limit)
+
+    @classmethod
+    def shiftsFromPeople(cls, userId, start=None, end=None, limit=25):
+        db = core.connect(User.feed(userId))
+        return Shift.joinData(core.values(Shift.by_follow_and_created(db, limit=limit), userId))
+
+    @classmethod
+    def shiftsFromGroups(cls, userId, start=None, end=None, limit=25):
+        db = core.connect(User.feed(userId))
+        return Shift.joinData(core.values(Shift.by_group_and_created(db, limit=limit), userId))
+
+    @classmethod
+    def favorites(cls, userId, start=None, end=None, limit=25):
+        db = core.connect(User.feed(userId))
+        return Shift.joinData(core.values(Favorite.by_user(db, limit=limit), userId))
+
+    @classmethod
+    def all(cls, userId, start=None, end=None, limit=25):
+        db = core.connect(User.feed(userId))
+        return Shift.joinData(core.values(Shift.by_user_and_created(db, limit=limit), userId))
 
     @joindecorator
     def shifts(cls, byHref, userId=None, byFollowing=False, byGroups=False, start=0, limit=25):
