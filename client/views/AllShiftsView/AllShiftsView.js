@@ -24,7 +24,7 @@ var AllShiftsView = new Class({
 
   afterAwake: function()
   {
-    SSTableForName("AllShifts").setDelegate(ShiftSpaceNameTable.FilterPane);
+    //SSTableForName("AllShifts").setDelegate(ShiftSpaceNameTable.FilterPane);
   },
   
 
