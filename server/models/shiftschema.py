@@ -89,7 +89,7 @@ class Shift(SSDocument):
         "shifts",
         "function (doc) {                        \
            if(doc.type == 'shift') {             \
-             emit(Date.parse(doc.created), doc); \
+             emit(doc.created, doc);             \
            }                                     \
          }")
 
@@ -97,7 +97,7 @@ class Shift(SSDocument):
         "shifts",
         "function (doc) {                                      \
            if(doc.type == 'shift') {                           \
-             emit([doc.domain, Date.parse(doc.created)], doc); \
+             emit([doc.domain, doc.created], doc);             \
            }                                                   \
          }")
 
@@ -105,7 +105,7 @@ class Shift(SSDocument):
         "shifts",
         "function(doc) {                                     \
            if(doc.type == 'shift') {                         \
-             emit([doc.href, Date.parse(doc.created)], doc); \
+             emit([doc.href, doc.created], doc);             \
            }                                                 \
          }")
 
@@ -117,7 +117,7 @@ class Shift(SSDocument):
              for(var i = 0, len = dbs.length; i < len; i++) { \
                 var db = dbs[i], typeAndId = db.split('_');   \
                 if(typeAndId[0] == 'group') {                 \
-                  emit([Date.parse(doc.created), db], doc);   \
+                  emit([doc.created, db], doc);               \
                 }                                             \
              }                                                \
            }                                                  \
@@ -131,7 +131,7 @@ class Shift(SSDocument):
              for(var i = 0, len = dbs.length; i < len; i++) { \
                 var db = dbs[i], typeAndId = db.split('_');   \
                 if(typeAndId[0] == 'user') {                  \
-                  emit([Date.parse(doc.created), db], doc);   \
+                  emit([doc.created, db], doc);               \
                 }                                             \
              }                                                \
            }                                                  \
