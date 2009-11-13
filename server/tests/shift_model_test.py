@@ -123,6 +123,13 @@ class BasicOperations(unittest.TestCase):
         theShift = Shift.load(core.connect(SSUser.inbox(self.fakejohn)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
 
+    def testPublishToGroup(self):
+        json = shiftJson()
+        newShift = Shift.create(self.fakemary, json)
+        publishData = {
+            
+            }
+
     def tearDown(self):
         db = core.connect()
         SSUser.delete(self.fakemary)

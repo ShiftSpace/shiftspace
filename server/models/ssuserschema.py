@@ -76,7 +76,7 @@ class SSUser(User):
 
     @classmethod
     def readByName(cls, userName):
-        return core.value(SSUser.by_name(core.connect(), key=userName))
+        return core.object(SSUser.by_name(core.connect(), key=userName))
 
     @classmethod
     def update(cls, id, fields):

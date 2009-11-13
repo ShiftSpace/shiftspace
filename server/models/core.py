@@ -71,8 +71,27 @@ def query(view, key=None, keys=None):
 
 
 def value(results):
+    """
+    Shortcut for getting a single raw result.
+    """
     if results.rows and len(results.rows) > 0:
         return results.rows[0].value
+
+
+def object(results):
+    """
+    Shortcut for getting a single object.
+    """
+    if results.rows and len(results.rows) > 0:
+        return list(results)[0]
+
+
+def objects(results):
+    """
+    Shortcut for getting rows as objects.
+    """
+    if results.rows and len(results.row) > 0:
+        return list(results)
 
 
 def single(view, key):

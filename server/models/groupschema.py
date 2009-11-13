@@ -99,7 +99,7 @@ class Group(SSDocument):
         # save the group metadata to the master db
         newGroup.store(core.connect())
         # create the root permission for this group
-        Permission.create(userId, newGroup.id, level=4)
+        Permission.create(userId, newGroup.id, userId, level=4)
         # create the group db
         server = core.server()
         server.create(Group.db(newGroup.id))
@@ -109,7 +109,11 @@ class Group(SSDocument):
         
     @classmethod
     def read(cls, id):
-        pass
+        return Permission.load(core.connect(), id)
+
+    @classmethod
+    def readByUserAndGroup(cls, userId, groupId):
+        return core.value(Permission.by_user_and_group(core.connect(), key=[userId, groupId]))
 
     @classmethod
     def update(cls, id):
@@ -136,11 +140,40 @@ class Group(SSDocument):
 
     @classmethod
     def isAdmin(cls, userId, groupId):
-        return len(Permission.by_user_group_level(core.connect(), key=[userId, groupId, 3])) > 0
+        thePermission = Permission.readByUserAndGroup(userId, groupId)
+        return thePermission and thePermission.level >= 3
 
     # ========================================
     # Group operations
     # ========================================
+
+    @classmethod
+    def inviteUser(cls, userId, groupId, otherId):
+        """
+        Add a user to a group. Creates a permission for that user.
+        """
+        from server.models.permschema import Permission
+        Permission.create(userId, groupId, otherId, 0)
+
+    @classmethod
+    def join(cls, userId, groupId):
+        """
+        If the user can join the group, update their status
+        to allow reads.
+        """
+        thePermission = Permission.readByUserAndGroup(userId, groupId)
+        if thePermission and thePermission.level == 0:
+            db = core.connect()
+            thePermission.level = 1
+            thePermission.store(db)
+
+    @classmethod
+    def setPrivilege(cls, userId, groupId, otherId, level):
+        """
+        Set the privilege of a group member. Can only be
+        set if the user has joined the group.
+        """
+        pass
 
     @classmethod
     def addShift(cls, userId, shift):

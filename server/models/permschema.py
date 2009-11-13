@@ -114,13 +114,12 @@ class Permission(SSDocument):
            }                                               \
          }"
         )
-    
     # ========================================
     # CRUD
     # ========================================
     
     @classmethod
-    def create(cls, userId, groupId, level):
+    def create(cls, userId, groupId, otherId, level):
         """
         Create will fail if:
             1. No userId specified.
@@ -130,7 +129,8 @@ class Permission(SSDocument):
         Parameters:
             userId - id of the user creating the permission.
             groupId - a group id.
-            json - dictionary containing the permission data.
+            otherId - id of the user the permission is being created for.
+            level - dictionary containing the permission data.
         Returns:
             the new Permission document.
         """
@@ -148,7 +148,7 @@ class Permission(SSDocument):
             raise MissingGroupError
         if not userId:
             raise MissingCreatorError
-        if Permission.permissionForUser(userId, groupId):
+        if Permission.permissionForUser(otherId, groupId):
             raise PermissionAlreadyExistsError
         allowed = SSUser.isAdmin(userId)
         if not allowed:
@@ -159,7 +159,8 @@ class Permission(SSDocument):
         if not allowed:
             raise CreateEventPermissionError
         json = {
-            "userId": userId,
+            "createdBy": userId,
+            "userId": otherId,
             "groupId": groupId,
             "level": level
             }
@@ -170,6 +171,19 @@ class Permission(SSDocument):
     @classmethod
     def read(cls, id):
         return Permission.load(core.connect(), id)
+
+    @classmethod
+    def readByUserAndGroup(cls, userId, groupId):
+        """
+        Returns the permission for a particular group.
+        Parameters:
+            userId - a user id.
+            groupId - a group id.
+        Returns:
+            A permission document.
+        """
+        db = core.connect()
+        return core.object(Permission.by_user_and_group(db, key=[userId, groupId]))
 
     @classmethod
     def update(cls, id, level):
@@ -195,19 +209,6 @@ class Permission(SSDocument):
     # ========================================
     # Utilities
     # ========================================
-
-    @classmethod
-    def permissionForUser(cls, userId, groupId):
-        """
-        Returns the permission for a particular group.
-        Parameters:
-            userId - a user id.
-            groupId - a group id.
-        Returns:
-            A permission document.
-        """
-        db = core.connect()
-        return core.value(Permission.by_user_and_group(db, key=[userId, groupId]))
 
     @classmethod
     def writeableGroups(cls, userId):
