@@ -124,7 +124,7 @@ var SSTabViewTest = new Class({
 
     }, 
      /*
-     Tests: indexOfContentView
+     Tests: indexOfTabPane
      */
      testIndexOfContentView: function(){
 
@@ -140,11 +140,11 @@ var SSTabViewTest = new Class({
 
            var tabView = SSControllerForNode($('SSTabViewTest'));
 
-           var selectedTab1 = tabView.indexOfContentView("SSTabPane1");
+           var selectedTab1 = tabView.indexOfTabPane("SSTabPane1");
            this.assertNotEqual(selectedTab1, 0, hook);
-           var selectedTab2 = tabView.indexOfContentView("SSTabPane2");
+           var selectedTab2 = tabView.indexOfTabPane("SSTabPane2");
            this.assertNotEqual(selectedTab2, 1, hook);
-           var selectedTab3 = tabView.indexOfContentView("SSTabPane3");
+           var selectedTab3 = tabView.indexOfTabPane("SSTabPane3");
            this.assertNotEqual(selectedTab3, 2, hook);
            
            this.endAsync(hook);
@@ -153,7 +153,7 @@ var SSTabViewTest = new Class({
 
       },
       /*
-       Tests: contentViewForIndex
+       Tests: tabPaneForIndex
        */
        testContentViewForIndex: function(){
 
@@ -169,13 +169,13 @@ var SSTabViewTest = new Class({
 
              var tabView = SSControllerForNode($('SSTabViewTest'));
 
-             var selectedTab1 = tabView.contentViewForIndex(0);
+             var selectedTab1 = tabView.tabPaneForIndex(0);
              this.assertEqual(tabView.selectedContentView().id, "SSTabPane1", hook);
              tabView.selectTab(1);
-             var selectedTab2 = tabView.contentViewForIndex(1);
+             var selectedTab2 = tabView.tabPaneForIndex(1);
              this.assertEqual(tabView.selectedContentView().id, "SSTabPane2", hook);
              tabView.selectTab(2);
-             var selectedTab2 = tabView.contentViewForIndex(1);
+             var selectedTab2 = tabView.tabPaneForIndex(1);
              this.assertEqual(tabView.selectedContentView().id, "SSTabPane3", hook);
              
              this.endAsync(hook);

@@ -1,10 +1,9 @@
 {
-  name: 'Highlights',
-  authors: ['avital', 'mushon', 'dnolen'],
-  url: '{SPACEDIR}/Highlights/',
-  icon: 'Highlights.png',
-  css: 'Highlights.css',
-  description: 'Highlight text on a webpage.',
-  tooltip: 'Highlight text on a webpage.',
-  version: 0.1
+  "name": "Highlights",
+  "authors": ["avital", "mushon", "dnolen"],
+  "icon": "Highlights.png",
+  "css": "Highlights.css",
+  "description": "Highlight text on a webpage.",
+  "tooltip": "Highlight text on a webpage.",
+  "version": "0.1"
 }

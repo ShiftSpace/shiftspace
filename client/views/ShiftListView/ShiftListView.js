@@ -1,6 +1,5 @@
 // ==Builder==
 // @uiclass
-// @optional
 // @package           ShiftSpaceUI
 // @dependencies      SSListView
 // ==/Builder==
@@ -17,7 +16,8 @@ var ShiftListView = new Class({
       byHref: true,
       byDomain: false,
       byFollowing: false,
-      byGroups: false
+      byGroups: false,
+      scrollEvents: true
     });
   },
 
@@ -25,6 +25,16 @@ var ShiftListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    SSAddObserver(this, 'onNewShiftSave', this.onCreate.bind(this));
+  },
+  
+  
+  onScrollTop: function() {},
+  
+  
+  onScrollBottom: function()
+  {
+    this.__reloadData__(this.table().read({start:this.count()}), this.count());
   },
   
   
@@ -44,29 +54,61 @@ var ShiftListView = new Class({
   {
     this.parent(idx);
     var shift = this.data()[idx];
-    SSShowShift(SSSpaceForName(shift.space.name), shift);
+    SSShowShift(SSSpaceForName(shift.space.name), shift._id);
   },
   
 
   onRowDeselect: function(idx)
   {
     var shift = this.data()[idx];
-    SSHideShift(SSSpaceForName(shift.space.name), shift);
+    SSHideShift(SSSpaceForName(shift.space.name), shift._id);
   },
   
   
   onCreate: function(id)
   {
     this.refresh();
+    if(this.isVisible())
+    {
+      var idx = this.find(function(x) { return x._id == id; });
+      this.cell().lock(this.cellNodeForIndex(idx));
+      this.cell().check();
+      this.cell().unlock();
+    }
   },
   
-
+  
   onDelete: function(ack)
   {
     this.refresh();
   },
-
-
+  
+  
+  check: function(indices)
+  {
+    indices = $splat(indices);
+    var cell = this.cell();
+    indices.each(function(idx, i) {
+      var cellNode = this.cellNodeForIndex(idx);
+      cell.lock(cellNode);
+      cell.check();
+      cell.unlock();
+    }, this);
+  },
+  
+  
+  uncheck: function(indices)
+  {
+    var indices = $splat(indices);
+    var cell = this.cell();
+    indices.each(function(idx, i) {
+      var cellNode = this.cellNodeForIndex(idx);
+      cell.lock(cellNode);
+      cell.uncheck();
+      cell.unlock();
+    }, this);
+  },
+  
   
   checkedItemIndices: function()
   {
@@ -86,6 +128,21 @@ var ShiftListView = new Class({
 
   checkedItemIds: function()
   {
-    return this.checkedItemIndices().map(Function.comp(this.data().asFn(), $acc("_id")));
+    return this.checkedItemIndices().map(Function.comp(this.data().asFn(), Function.acc("_id")));
+  },
+  
+  
+  onReloadData: function()
+  {
+    if(!__mainCssLoaded)
+    {
+      SSAddObserver(this, 'onMainCssLoad', function() {
+        RoundedImage.init(".ShiftListView .ShiftListViewCell .gravatar", new Window(this.element.getWindow()), document);
+      });
+    }
+    else
+    {
+      RoundedImage.init(".ShiftListView .ShiftListViewCell .gravatar", new Window(this.element.getWindow()), document);
+    }
   }
 });

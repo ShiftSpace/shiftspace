@@ -1,11 +1,14 @@
 // ==Builder==
 // @uiclass
-// @customView
-// @optional
 // @package           ShiftSpaceUI
 // @dependencies      SSView
 // ==/Builder==
 
+/*
+  Class: SSPublishPane
+    The publish pane class. A singleton. Listens to all ShiftListView instances
+    for selection notification.
+*/
 var SSPublishPane = new Class({
 
   Extends: SSView,
@@ -30,13 +33,23 @@ var SSPublishPane = new Class({
   
   onShiftListViewShow: function(evt)
   {
-    //SSLog("onShiftListViewShow", evt.listView.getName(), SSLogForce);
+    var listView = evt.listView;
+    if(listView.checkedItems().length > 0)
+    {
+      this.setCurrentListView(listView);
+      this.update();
+      this.show();
+    }
   },
 
 
   onShiftListViewHide: function(evt)
   {
-    //SSLog("onShiftListViewHide", evt.listView.getName(), SSLogForce);
+    var listView = evt.listView;
+    if(listView == this.currentListView())
+    {
+      this.hide();
+    }
   },
   
   
@@ -103,7 +116,10 @@ var SSPublishPane = new Class({
       var len = selectedShifts.length;
       var str = (len != 1) ? "these shifts" : "this shift";
       if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
+      var indices = this.currentListView().checkedItemIndices();
+      this.currentListView().uncheck(indices);
       var p = new Promise(selectedShifts.map(SSDeleteShift));
+      p.op(this.hide.bind(this));
       p.realize();
     }
   },
@@ -122,15 +138,15 @@ var SSPublishPane = new Class({
     if(selectedShifts && selectedShifts.length > 0)
     {
       var p = new Promise(
-	selectedShifts.map(function(id) {
-	  return SSApp.post({
-	    resource: "shift",
-	    id: id,
-	    action: "publish",
-	    data: {private: false},
-	    json: true
-	  })    
-	})
+        selectedShifts.map(function(id) {
+          return SSApp.post({
+            resource: "shift",
+            id: id,
+            action: "publish",
+            data: {private: false},
+            json: true
+          })    
+        })
       );
       p.realize();
     }
@@ -139,26 +155,26 @@ var SSPublishPane = new Class({
   
   attachEvents: function()
   {
-    SSLog('attachEvents', SSLogForce);
     this.DeleteShift.addEvent('click', this.deleteShifts.bind(this));
     this.SaveShift.addEvent('click', this.saveShifts.bind(this));
     this.PublishShift.addEvent('click', this.publishShifts.bind(this));
-    this.ShiftPrivateStatusRadio.addEvent('click', function(_evt){ 
-        var evt = new Event(_evt);
-        if(this.SSPPVisiblePublic.hasClass('SSPPPermit')){
-            this.SSPPVisiblePublic.removeClass('SSPPPermit');
-        }
-        this.SSPPVisiblePrivate.addClass('SSPPPermit');
-        SSLog('clicked public status!',SSLogForce);
+    this.ShiftPrivateStatusRadio.addEvent('click', function(evt){ 
+      evt = new Event(evt);
+      if(this.SSPPVisiblePublic.hasClass('SSPPPermit')){
+        this.SSPPVisiblePublic.removeClass('SSPPPermit');
+      }
+      this.SSPPVisiblePrivate.addClass('SSPPPermit');
+      SSLog('clicked public status!',SSLogForce);
     }.bind(this));
-    this.ShiftPublicStatusRadio.addEvent('click', function(_evt) {
-        var evt = new Event(_evt);
-        if(this.SSPPVisiblePrivate.hasClass('SSPPPermit')){
-            this.SSPPVisiblePrivate.removeClass('SSPPPermit');
-        }
-        this.SSPPVisiblePublic.addClass('SSPPPermit');
-        SSLog('clicked private status!', SSLogForce);
+    this.ShiftPublicStatusRadio.addEvent('click', function(evt) {
+      evt = new Event(evt);
+      if(this.SSPPVisiblePrivate.hasClass('SSPPPermit')){
+        this.SSPPVisiblePrivate.removeClass('SSPPPermit');
+      }
+      this.SSPPVisiblePublic.addClass('SSPPPermit');
+      SSLog('clicked private status!', SSLogForce);
     }.bind(this));
+    if(this.ShiftPermalink) this.ShiftPermalink.addEvent("click", this.showProxy.bind(this));
   },
   
   
@@ -186,10 +202,11 @@ var SSPublishPane = new Class({
       this.element.getElement("#SSPublishPaneStatus label").addClass('SSDisplayNone');
     }
   },
-  
-  
-  optionsForResource: function(resource)
+
+
+  showProxy: function(evt)
   {
-    return {byHref:window.location.href.split("#")[0]};
+    var selectedShifts = this.currentListView().checkedItemIds();
+    window.open(ShiftSpace.info().server.urlJoin("proxy", selectedShifts[0]));
   }
 });

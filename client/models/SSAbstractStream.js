@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @package           ShiftSpaceCore
 // ==/Builder==
 
@@ -80,10 +79,13 @@ var SSAbstractStream = new Class({
   
   setData: function(data)
   {
-    this.__data = data;
-    this.setColl(data.unique_name || ("stream:"+data.id), data.id);
-    this.setIsLoaded(true);
-    this.fireEvent('load', this);
+    if(data)
+    {
+      this.__data = data;
+      this.setColl(data.unique_name || ("stream:"+data.id), data.id);
+      this.setIsLoaded(true);
+      this.fireEvent('load', this);
+    }
   },
   
   

@@ -1,16 +1,21 @@
 // ==Builder==
 // @uiclass
-// @required
 // @package           ShiftSpaceCoreUI
 // @dependencies      SandalphonCore
 // ==/Builder==
 
+/*
+  Class: SSView
+    The base class for representing JavaScript controlled user interface components
+    in ShiftSpace. A SSView instance controls an element in the DOM. This allows us
+    to abstract away the DOM and focus on the high level behavior of the component.
 
+    SSView can be considered an abstract class, tho sometimes it is useful to use directly.
+*/
 var SSView = new Class({
 
-  name: 'SSView',
-
   Implements: [Events, Options],
+  name: 'SSView',
   
   defaults: function()
   {
@@ -58,7 +63,6 @@ var SSView = new Class({
     // add to global hash
     if(ShiftSpaceObjects) ShiftSpaceObjects.set(this.__id, this);
     
-    this.__ssviewcontrollers = [];
     this.__delegate = null;
     this.__outlets = new Hash();
     
@@ -66,9 +70,6 @@ var SSView = new Class({
     
     if(this.element)
     {
-      // NOTE: the following breaks tables, so we should avoid it for now - David
-      //this.element.setProperty('class', 'ShiftSpaceElement '+this.element.getProperty('class'));
-
       // store a back reference to this class
       SSSetControllerForNode(this, this.element);
 
@@ -99,9 +100,13 @@ var SSView = new Class({
     return this.options.context;
   },
   
-  
+  /*
+    Function: setup
+      *abstract*
+      Abstract function for initialization if you do not wish to customize
+      initialization via initialize.
+   */
   setup: function() {},
-  
   
   /*
     __awake__ (private):
@@ -112,19 +117,15 @@ var SSView = new Class({
   */
   __awake__: function(context)
   {
-    /*
-    var superview = this.getSuperView(context);
-    if(superview) 
-    {
-      superview.addEvent('onRefresh', function() {
-        if(!this.needsDisplay()) return;
-        this.refreshAndFire();
-      }.bind(this));
-    }
-    */
   },
   
-  
+  /*
+    Function: beforeAwake
+       Called before the view is sent awake.
+    
+    Parameters:
+       context - the context where this view was instantiated.
+   */
   beforeAwake: function(context)
   {
     if(this.options.delegate)
@@ -132,7 +133,6 @@ var SSView = new Class({
       this.setDelegate(SSControllerForNode($(this.options.delegate)));
     }
   },
-  
   
   /*
     Function: awake
@@ -142,18 +142,30 @@ var SSView = new Class({
   {
   },
   
-  
+  /*
+    Function: setIsAwake
+      *private*
+      Flag for setting awake state.
+
+    Parameters:
+      val - a boolean.
+   */
   setIsAwake: function(val)
   {
     this.__isAwake__ = val;
   },
   
-  
+  /*
+    Function: isAwake
+      Returns whether this view has recieved awake from Sandalphon.
+
+    Returns:
+      A boolean.
+   */
   isAwake: function()
   {
     return this.__isAwake__;
   },
-
 
   /*
     Function: getId
@@ -167,53 +179,100 @@ var SSView = new Class({
     return this.__id;
   },
   
-  
+  /*
+    Function: getName
+      Return the name of this view. The name is generally set by the
+      CSS id of the element that this view controls.
+
+    Returns:
+      A string.
+   */
   getName: function()
   {
     return this.elId();
   },
   
-  
+  /*
+    Function: elId
+      Return the CSS id of the element that this view controls.
+
+    Returns:
+      A string.
+   */
   elId: function()
   {
     return this.element.getProperty('id');
   },
 
-
+  /*
+    Function: setOutlets
+      *private*
+      Set the outlets hashmap (MooTools Hash or Object) of the view.
+      
+    Parameters:
+      newOutlets - a hash map.
+   */
   setOutlets: function(newOutlets)
   {
     this.__outlets = newOutlets;
   },
 
+  /*
+    Function: outlets
+      Returns the outlets hashmap (MooTools Hash or Object) of the view.
 
+    Returns:
+      MooTools Hash or Object.
+   */
   outlets: function()
   {
     return this.__outlets;
   },
 
+  /*
+    Function: addOutlet
+      *private*
+      Takes an element and adds an outlet to that element, or if the element
+      has a controller (SSView), to that controller. Uses the element's CSS
+      id for the outlet name if name not given. Not called directly,
+      handled by Sandalphon.
 
-  addOutlet: function(element)
+    Parameters:
+      element - a HTML DOM element
+      name - a name to use for the outlet
+   */
+  addOutlet: function(element, name)
   {
-    var outletKey = element.getProperty('outlet');
-    // check if there is a controller
-    var controller = this.controllerForNode(element);
-    this.outlets().set(element.getProperty('id'), (controller || element));
+    var outletKey = element.getProperty('outlet'), controller = this.controllerForNode(element);
+    this.outlets().set(element.getProperty('id') || name, (controller || element));
   },
 
+  /*
+    Function: addOutletWithName
+      *private*
+      Add an outlet to controller with the specified name. Not called directly,
+      handled by Sandalphon.
 
-  addOutletWithName: function(name, outlet)
+    Parameters:
+      name - a string
+      controller - a SSView or SSView subclass.
+   */
+  addOutletWithName: function(name, controller)
   {
-    this.outlets().set(name, outlet);
+    this.outlets().set(name, controller);
   },
-  
-  
+
+  /*
+    Function: mapOutletsToThis
+      Convenience function for mapping outlets to this view. Properties will be
+      added to the view matching the outlet name.
+   */
   mapOutletsToThis: function()
   {
     this.outlets().each(function(object, name){ 
       this[name] = object;
     }.bind(this));
   },
-
 
   /*
     Function: setDelegate
@@ -236,37 +295,46 @@ var SSView = new Class({
     return this.__delegate;
   },
 
+  /*
+    Function: eventDispatch
+      *abstract* *private*
+      Event dispatching function.
 
-  eventDispatch: function(evt)
+    Parameters:
+      evt - the browser event.
+
+    See Also:
+      <SSCell>, <SSListView>
+   */
+  eventDispatch: function(evt) {},
+
+  /*
+    Function: checkForMatch
+      *private*
+      Check to see if the node matches any of the nodes in a list of
+      candidates.
+   */
+  checkForMatch: function(cands, node)
   {
-    
-  },
-
-
-  checkForMatch: function(_cands, node)
-  {
-    if(_cands.length == 0) return null;
-
-    var cands = (_cands instanceof Array && _cands) || [_cands];
-    cands.each($msg('_ssgenId'));
-
+    cands = $splat(cands);
     var len = cands.length;
-    for(var i = 0; i < len; i++)
-    {
-      if(cands[i].isEqual(node)) return true;
-    }
-
+    if(len == 0) return null;
+    cands.each(Function.msg('_ssgenId'));
+    for(var i = 0; i < len; i++) { if(cands[i].isEqual(node)) return true; }
     return false;
   },
 
-
   /*
     Function: hitTest
+      *private*
       Matches a target to see if it occured in an element pointed to by the selector test.
 
     Parameters:
       target - the HTML node where the event originated.
       selectorOfTest - the CSS selector to match against.
+
+    See Also:
+      <eventDispatch>, <SSCell>, <SSListView>
   */
   hitTest: function(target, selectorOfTest)
   {
@@ -296,11 +364,12 @@ var SSView = new Class({
 
   /*
     Function: setCachedHit
+      *private*
       Used in conjunction with hitTest.  This is because hitTest may be slow, so you shouldn't have to call it twice.
       If there was a successful hit you should get it from cachedHit instead of calling hitTest again.
 
     See Also:
-      hitTest, cachedHit
+      <hitTest>, <cachedHit>
   */
   setCachedHit: function(node)
   {
@@ -309,6 +378,7 @@ var SSView = new Class({
 
   /*
     Function: cachedHit
+      *private*
       Returns the hit match that was acquired in hitTest.
 
     Returns:
@@ -319,10 +389,23 @@ var SSView = new Class({
     return this.__cachedHit;
   },
 
+  /*
+    Function: indexOfNode
+      This function repairs the very broken behavior of node matching under GreaseMonkey. Because
+      DOM nodes will be wrapped they will appear to be different even thought they are not. We
+      work around this by automatically generating unique CSS ids for each element and using that
+      for the match. Returns the index of the node if it is contained in the array, -1 otherwise.
 
+    Parameters:
+      elements - an array of DOM nodes.
+      node - the DOM node to match.
+     
+    Returns:
+      An integer.
+   */
   indexOfNode: function(elements, node)
   {
-    elements.each($msg('_ssgenId'));
+    elements.each(Function.msg('_ssgenId'));
     var len = elements.length;
     for(var i = 0; i < len; i++)
     {
@@ -331,40 +414,17 @@ var SSView = new Class({
     return -1;
   },
 
-
   /*
     Function: controllerForNode
       Returns the view controller JS instance for an HTML Element.
+      
+    Parameters:
+      node - a HTML DOM element.
   */
   controllerForNode: function(node)
   {
     // return the storage property
     return SSControllerForNode(node);
-  },
-
-  // will probably be refactored
-  addControllerForNode: function(node, controllerClass)
-  {
-    // instantiate and store
-    this.__ssviewcontrollers.push(new controllerClass(node));
-  },
-
-  // will probably be refactored
-  removeControllerForNode: function(node)
-  {
-    // get the controller
-    var controller = SSControllerForNode(node);
-    if(controller)
-    {
-      // clear out the storage
-      SSSetControllerForNode(null, node);
-
-      if(this.__ssviewcontrollers.contains(controller))
-      {
-        // remove from internal array
-        this.__ssviewcontrollers.remove(controller);
-      }
-    }
   },
 
   /*
@@ -377,18 +437,22 @@ var SSView = new Class({
     this.element.removeClass('SSDisplayNone');
     this.element.addClass('SSActive');
     this.willShow();
-    this.__isVisible = true;
     this.fireEvent('show', this);
-    this.subViews().each($msg('__refresh__'));
+    
+    this.__refresh__();
+    this.subViews().each(Function.msg('__refresh__'));
   },
 
-
+  /*
+    Function: willShow
+      Called before the view is actually shown. If you want to customize
+      this behavior remember to call this.parent() from your implementation
+      of willShow.
+   */
   willShow: function()
   {
-    //SSLog("willShow", this.getName(), SSLogForce);
-    if(this.isVisible()) this.subViews().each($msg('willShow'));
+    if(this.isVisible()) this.subViews().each(Function.msg('willShow'));
   },
-
 
   /*
     Function: hide
@@ -400,26 +464,46 @@ var SSView = new Class({
     this.willHide();
     this.element.removeClass('SSActive');
     this.element.addClass('SSDisplayNone');
-    this.__isVisible = false;
     this.fireEvent('hide', this);
   },
   
-
+  /*
+    Function: willHide
+      Called before the view is actually hidden. If you want to customize
+      this behavior remember to call this.parent() from your implementation
+      of willHide.
+   */
   willHide: function()
   {
-    //SSLog("willHide", this.getName(), SSLogForce);
-    if(this.isVisible()) this.subViews().each($msg('willHide'), this);
+    if(this.isVisible()) this.subViews().each(Function.msg('willHide'), this);
   },
 
+  /*
+    Function: isVisible
+      Returns whether the view is currently visible.
 
+    Returns:
+      A boolean.
+   */
   isVisible: function()
   {
-    var display = this.element.getStyle('display');
-    var size = this.element.getSize();
-    return (display && ['block', 'inline'].contains(display)) || (size.x > 0 && size.y > 0);
+    var display, size = this.element.getSize(), node = this.element;
+    while(node)
+    {
+      display = node.getStyle('display');
+      if(display == 'none') break;
+      node = node.getParent();
+    }
+    return (display && display != 'none') || false;
   },
   
-  
+  /*
+    Function: isHidden
+      Returns whether the view is currently hidden.
+
+    Returns:
+      A boolean.
+   */
   isHidden: function()
   {
     return !this.isVisible();
@@ -436,76 +520,88 @@ var SSView = new Class({
     delete this;
   },
   
-  
-  getSuperView: function(context)
-  {
-    var parent = this.element.getParent('*[uiclass]');
-    if(parent) return SSControllerForNode(parent);
-    return null;
-  },
-  
-  
+  /*
+    Function: __refresh__
+      *private*
+      Private function for refreshing the view. Should not be called.
+      Call refresh instead.
+      
+    See Also:
+      <refresh>
+   */
   __refresh__: function(force)
   {
     if((this.isVisible() && this.needsDisplay()) || force)
     {
       this.refresh(force);
-      this.subViews().each($msg('__refresh__', force));
+      this.subViews().each(Function.msg('__refresh__', force));
     }
   },
-  
 
   /*
-    Function: refresh (abstract)
+    Function: refresh
+      *abstract*
       To be implemented by subclasses.
   */
-  refresh: function()
-  {
-    
-  },
+  refresh: function() {},
   
   /*
-  refreshAndFire: function()
-  {
-    this.refresh();
-    this.fireEvent('onRefresh');
-  },
+    Function: build
+      *abstract* *deprecated*
+      To be implemented by subclasses. Your user interface should be built
+      here. In ShiftSpace 1.0 this is largely unecessary because of Sandalphon.
+      This function should be considered deprecated.
   */
-
+  build: function() {},
+  
   /*
-    Function: build (abstract)
-      To be implemented by subclasses.
-  */
-  build: function()
-  {
+    Function: setNeedsDisplay
+      Flag for setting whether this view is need of a refresh. If the view
+      is visible this will cause a refresh right away. If the view is not
+      visible the view will be refreshed when the user views it.
 
-  },
+    Parameters:
+      val - a boolean, generally true
+   */
+  setNeedsDisplay: function(val) { this.__needsDisplay = val; },
   
-  
-  setNeedsDisplay: function(val)
-  {
-    this.__needsDisplay = val;
-  },
-  
-  
+  /*
+    Function: needsDisplay
+      Return the needsDisplay status of this view.
+
+    Returns:
+      A boolean.
+   */
   needsDisplay: function()
   {
     return this.__needsDisplay;
   },
 
+  /*
+    Function: localizationChanged
+      Called on the view when the localization has changed.
 
-  localizationChanged: function(newLocalization)
-  {
-    SSLog('localizationChanged');
-  },
+    Parameters:
+      newLocalization - the new language.
+   */
+  localizationChanged: function(newLocalization) { SSLog('localizationChanged'); },
   
+  /*
+    Function: onContextActivate
+      Called when the context (Window) to which this view belongs has finished
+      being activated.
+   */
+  onContextActivate: function(ctxt) { },
   
-  onContextActivate: function(ctxt)
-  {
-    
-  },
-  
-  
+  /*
+    Function: superView
+      Returns the controller just above this view in the view hierarchy. Note
+      that this means non-SSView controller DOM elements may sit between this
+      view and it's superview.
+
+    Returns:
+      A SSView
+   */
   superView: function()
   {
     var el = this.element.getParent('*[uiclass]'), superView;
@@ -524,10 +620,10 @@ var SSView = new Class({
     return superView;
   },
   
-  
   /*
     Function: subViews
-      Returns all controller nodes which have this view as the first parent view.
+      Returns all controllers which have this view as the first parent view.
+
     Returns:
       An array of SSView instances.
   */
@@ -538,26 +634,47 @@ var SSView = new Class({
     }, this);
   },
   
-  
-  visibleSubViews: function()
+  /*
+    Function: visibleSubViews
+      Only returns the controllers which are visible to the user.
+   */
+  visibleSubViews: function(el)
   {
-    return this.subViews().filter($msg('isVisible'));
+    return this.subViews(el).filter(Function.msg('isVisible'));
   },
   
-  
+  /*
+    Function: setIsLoaded
+      Set the isLoaded flag.
+
+    Parameters:
+      val - a boolean.
+   */
   setIsLoaded: function(val)
   {
     this.__isLoaded = val;
     if(val) this.fireEvent('load', this);
   },
   
-  
+  /*
+    Function: isLoaded
+      Return the value of the isLoaded flag.
+
+    Returns:
+      A boolean.
+   */
   isLoaded: function()
   {
     return this.__isLoaded;
   },
   
-  
+  /*
+    Function: isNotLoaded
+      Complement of isLoaded.
+
+    Returns:
+      A boolean.
+   */
   isNotLoaded: function()
   {
     return !this.isLoaded();

@@ -1,6 +1,6 @@
 // ==Builder==
-// @required
 // ==/Builder==
+
 
 function GM_addStyle(css) 
 {

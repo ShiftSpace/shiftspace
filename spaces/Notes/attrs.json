@@ -1,10 +1,9 @@
 {
-  name: 'Notes',
-  authors: ['dphiffer', 'mushon', 'dnolen'],
-  url: '{SPACEDIR}/Notes/',
-  icon: 'Notes.png',
-  css: 'Notes.css',
-  description: 'Leave a sticky note.',
-  tooltip: 'Leave a sticky note.',
-  version: 0.1
+  "name": "Notes",
+  "authors": ["dphiffer", "mushon", "dnolen"],
+  "icon": "Notes.png",
+  "description": "Leave a sticky note.",
+  "tooltip": "Leave a sticky note on any website.",
+  "css": "Notes.css",
+  "version": "0.1"
 }

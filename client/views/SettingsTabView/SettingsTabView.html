@@ -1,0 +1,56 @@
+<!-- Start Settings subtab view -->
+<div id="SettingsTabView"
+     class="SSTabView SSTabViewSubTabStyle SSTabPane"
+     uiclass="SettingsTabView">
+
+  <div class="SSControlView">
+    <div title="Installed" class="SSButton SSLocalized">Installed</div>
+    <div title="Account" class="SSButton SSLocalized">Account</div>
+    <div title="Account" class="SSButton SSLocalized">Language</div>
+  </div>
+
+  <div class="SSContentView">
+    <div id="SSInstalledSpacesTabPane" class="SSTabPane">
+      <label>Add A Space:</label>
+      <input id="SSInstallSpaceField" name="SSInstallSpaceField" type="text" value="Name of Space" outlet="SettingsTabView"></input>
+      <input id="SSInstallSpace" name="SSInstallSpace" type="button" value="Install" outlet="SettingsTabView"></input>
+      <input id="clearInstalledButton" type="button" name="clearInstalledButton" value="Reset Spaces" outlet="SettingsTabView"></input>
+      <!-- Installed Spaces List -->
+      <ul id="SSInstalledSpaces" 
+          class="SSListView" 
+          uiclass="SSListView"
+          outlet="SettingsTabView">
+        <li class="SSCell SSInstalledSpaceCell" 
+            uiclass="SSInstalledSpaceCell"
+            options="{
+              properties: ['name', 'icon', 'autolaunch'],
+              actions: [
+                {
+                  selector: '.uninstall',
+                  target: 'SSInstalledSpaces',
+                  method: 'removeObject'
+                }
+              ]
+            }">
+          <img></img>
+          <span class="name"></span>
+          <span class="autolaunch"></span>
+          <input class="uninstall" type="button" value="Uninstall"></input>
+        </li>
+      </ul>
+      <!-- End Installed Spaces List -->
+    </div>
+    <div class="SSTabPane">Account</div>
+    <div class="SSTabPane">
+      <select id="SSSelectLanguage" outlet="SettingsTabView">
+        <option value="en">English</option>
+        <option value="fr">French</option>
+        <option value="de">German</option>
+        <option value="sv">Swedish</option>
+        <option value="ko">Korean</option>
+      </select>
+    </div>
+  </div>
+
+</div>
+<!-- end setting subtab view -->

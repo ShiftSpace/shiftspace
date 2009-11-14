@@ -1,0 +1,74 @@
+<div id="AllShiftsView"
+     uiclass="AllShiftsView"
+     class="SSTabPane SSActive SSFilterPaneOpen"
+     outlet="SSConsole">
+
+  <!-- Start AllShiftsTabView -->
+  <div id="AllShiftsTabView"
+       class="SSTabView SSTabViewSubTabStyle"
+       uiclass="SSTabView">
+
+    <div class="SSControlView">
+      <div class="SSButton SSActive">On This Page</div>
+      <div class="SSButton">From People</div>
+      <div class="SSButton">From Groups</div>
+    </div>
+    
+    <!-- Start Control View -->
+    <div class="SSContentView">
+      <!-- Start AllShiftsListView Tab -->
+      <div class="SSTabPane">
+        <ul id="AllShiftsListView"
+            class='SSListView ShiftListView' 
+            uiclass="ShiftListView" 
+            outlet="AllShiftsView" 
+            options="{
+              allowSelection:true,
+              multipleSelection:true
+            }">
+
+          <li uiclass='ShiftListViewCell'
+              class='SSCell ShiftListViewCell'
+              options="{
+                properties: ['space', 'publishData', 'gravatar', 'userName', 'summary', 'modified', 'favorite', 'favoriteCount', 'commentCount']
+              }">
+              <div class="selected">
+                <input type="checkbox"/>
+              </div>
+              <img class="spaceIcon"></img>
+              <div class="summaryContainer">
+                <div class="spaceName"></div>
+                <div class="summary"></div>
+              </div>
+              <div class="status"></div>
+              <div class="user">
+                <div class="gravatarContainer">
+                    <img class="rounded-image gravatar" width="16" height="16"></img>
+                </div>
+                <div class="userName"></div>
+              </div>
+              <div class="date"></div>
+              <div class="comments"></div>
+              <div class="favorite">
+                  <div class="favoriteCount"></div>
+                  <div class="favoriteButton"></div>
+              </div>
+          </li>
+        </ul>
+      </div>
+      <!-- End AllShiftsListView Tab -->
+      
+      <div class="SSTabPane">
+        From People You Follow
+      </div>
+      
+      <div class="SSTabPane">
+        From Your Groups
+      </div>
+      
+    </div>
+    <!-- End Control View -->
+  </div>
+  <!-- End AllShiftsTabView -->
+
+</div>

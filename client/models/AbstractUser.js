@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @package           ShiftSpaceCore
 // ==/Builder==
 
@@ -8,22 +7,23 @@
     Base class for representing users.
 */
 var AbstractUser = new Class({
-  
   Implements: Events,
   name: 'AbstractUser',
   
-  defaultUserName: function()
-  {
-    return "";
-  },
+  /*
+    Function: defaultUserName
+      *abstract*
+      Convenience function for displaying a username when not logged in. For
+      example, this funtion could return "guest".
+  */
+  defaultUserName: function() { return ""; },
+  initialize: function() { this.clearData(); },
   
-  
-  initialize: function()
-  {
-    this.clearData();
-  },
-  
-  
+  /*
+    Function: data
+      *private*
+      Returns all the fields for the current user.
+  */
   data: function()
   {
     return {
@@ -33,7 +33,18 @@ var AbstractUser = new Class({
     };
   },
   
-  
+  /*
+    Function: syncData
+      *private*
+      Synchronize data from a JSON object with the user's fields. If you override this you should
+      probably call parent.
+      
+    Parameters:
+      data - a JSON object.
+      
+    See Also:
+      <query>
+  */
   syncData: function(data)
   {
     this.setUserName(data.userName || null);
@@ -41,7 +52,11 @@ var AbstractUser = new Class({
     this.setId(data.id || data._id || null);
   }.asPromise(),
   
-  
+  /*
+    Function: clearData
+      *private*
+      Clears all the user's fields. Called when the user logs out.
+  */
   clearData: function()
   {
     this.__userName = null;
@@ -49,25 +64,49 @@ var AbstractUser = new Class({
     this.__email = null;
   },
   
-  
+  /*
+    Function: setId
+      *private*
+      Set the id of the user.
+      
+    Parameters:
+      id - a string.
+      
+    See Also:
+      <syncData>
+  */
   setId: function(id)
   {
     this.__userId = id;
   },
   
-  
+  /*
+    Function: getId
+      *private*
+      Getter for the user's id.
+      
+    Returns:
+      The user's id.
+      
+    See Also:
+      <data>
+  */
   getId: function()
   {
     return this.__userId;
   },
   
-  
+  /*
+    Function: userName
+      *private*
+      Set the username. Should not be called directly.
+      
+    Parameters:
+      userName - the user name as a string.
+  */
   setUserName: function(userName)
   {
-    if(userName != null && userName != false)
-    {
-      this.__userName = userName;
-    }
+    if(userName != null && userName != false) this.__userName = userName;
   },
 
   /*
@@ -82,25 +121,30 @@ var AbstractUser = new Class({
     return (this.isLoggedIn() ? this.__userName : this.defaultUserName());
   },
   
-  
+  /*
+    Function: setEmail
+      *private*
+      Setter for the user's email property. Should not be called directly.
+
+    Parameters:
+      email - a string.
+  */
   setEmail: function(email)
   {
-    if(email != '' && email != 'NULL' && email != null)
-    {
-      this.__email = email;
-    }
-    else
-    {
-      this.__email = '';
-    }
+    this.__email = (email != '' && email != 'NULL' && email != null) ? email : '';
   },
   
-  
+  /*
+    Function: email
+      Returns the user's email.
+      
+    Returns:
+      A string.
+  */
   email: function()
   {
     return this.__email;
   },
-  
   
   /*
     Function: isLoggedIn
@@ -109,12 +153,19 @@ var AbstractUser = new Class({
     Returns:
       A boolean.
   */
-  isLoggedIn: function(showErrorAlert) 
+  isLoggedIn: function() 
   {
     return (this.getId() != null);
   },
   
-  
+  /*
+    Function: query
+      Query for a session. Returns a promise for the currently logged in user's data 
+      as a JSON object.
+      
+    See Also:
+      <syncData>, <onQuery>
+  */
   query: function()
   {
     var p = SSApp.query(credentials);
@@ -123,22 +174,40 @@ var AbstractUser = new Class({
           var json = p.value();
           this.syncData(json);
           this.onQuery(json);
+          SSPostNotification('onUserQuery', json);
+        }.bind(this),
+        function() {
+          var err = p.value();
+          this.onQueryError(err);
+          SSLog(err, SSLogError);
         }.bind(this));
     return p;
   },
   
-  
-  onQuery: function(json)
-  {
-    SSPostNotification('onUserQuery', json);
-  },
+  /*
+    Function: onQuery
+      *abstract*
+      Called when the the query is made.
+  */
+  onQuery: function(json) {},
   
   /*
-    Function: login (private)
+    Function: onQueryError
+      *abstract*
+      Called when there was an error in the query.
+  */
+  onQueryError: function(json) {},
+  
+  /*
+    Function: login
+      *private*
       Login a user. Will probably be moved into ShiftSpace.js.
 
     Parameters:
       credentials - object with userName and password properties.
+      
+    Returns:
+      A promise.
   */
   login: function(credentials) 
   {
@@ -147,21 +216,41 @@ var AbstractUser = new Class({
         function() {
           var json = p.value();
           this.syncData(json);
-          this.onJoin(json);
           this.onLogin(json);
+          SSPostNotification('onUserLogin', json);
+        }.bind(this),
+        function() {
+          var err = p.value();
+          this.onLoginError(err);
+          SSPostNotification('onUserLoginFailed', err);
+          SSLog(err, SSLogError);
         }.bind(this));
     return p;
   },
   
+  /*
+    Function: onLogin
+      *abstract*
+      Called on successful login.
+      
+    Parameters:
+      json - a JSON object containing the user's data.
+  */
+  onLogin: function(json) {},
   
-  onLogin: function(json)
-  {
-    SSPostNotification('onUserLogin', json);
-  },
-
+  /*
+    Function: onLoginError 
+      *abstract*
+      Called on failed login.
+      
+    Parameters:
+      err - the JSON error object.
+  */
+  onLoginError: function(err) {},
 
   /*
-    Function: logout (private)
+    Function: logout
+      *private*
       Logout a user. Will probably be moved into ShiftSpace.js.
   */
   logout: function()
@@ -172,23 +261,46 @@ var AbstractUser = new Class({
           var json = p.value();
           this.clearData();
           this.onLogout(json);
+          SSPostNotification('onUserLogout', json);
+        }.bind(this),
+        function() {
+          var err = p.value();
+          this.onLogoutError(err);
+          SSLog(err, SSLogError);
         }.bind(this));
     return p;
   },
   
-  
-  onLogout: function(json)
-  {
-    SSPostNotification('onUserLogout', json);
-  },
-  
+  /*
+    Function: onLogout
+      *abstract*
+      Called when the user is successfully logged out.
+      
+    Parameters:
+      ack - a JSON object representing acknowledgement.
+  */
+  onLogout: function(ack) {},
   
   /*
-    Function: join (private)
-      Join a new user. Returns a promise for the user's data.
-      This promise may be an error and should be handled.
+    Function: onLogoutError
+      *abstract*
+      Called when error occurs on logout attempt.
+
+    Parameters:
+      err - a JSON error object.
   */
-  join: function(userInfo, callack) 
+  onLogoutError: function(err) {},
+  
+  /*
+    Function: join
+      *private*
+      Join a new user. Returns a promise for the user's data if login successful.
+      Implicitly logins in the user.
+    
+    Parameters:
+      userInfo - a JSON object containing the user's data.
+  */
+  join: function(userInfo) 
   {
     var p = SSApp.join(userInfo);
     $if(SSApp.noErr(p),
@@ -196,17 +308,38 @@ var AbstractUser = new Class({
           var json = p.value();
           this.syncData(json);
           this.onJoin(json);
+          SSPostNotification('onUserJoin', json);
           this.onLogin(json);
+          SSPostNotification('onUserLogin', json);
+        }.bind(this),
+        function() {
+          var err = p.value();
+          this.onJoinError(err);
+          SSPostNotification('onUserJoinFailed', err);
+          SSLog(err, SSLogError);
         }.bind(this));
     return p;
   },
   
+  /*
+    Function: onJoin
+      *abstract*
+      Called on a successful user join.
+      
+    Parameters:
+      json - a JSON object of the user's data.
+  */
+  onJoin: function(json) {},
   
-  onJoin: function(json)
-  {
-    SSPostNotification('onUserJoin', json);
-  },
-  
+  /*
+    Function: onJoinError
+      *abstract*
+      Called on unsuccessful join attempt.
+      
+    Parameters:
+      err - the JSON error object.
+  */
+  onJoinError: function(err) {},
   
   /*
     Function: update
@@ -215,7 +348,7 @@ var AbstractUser = new Class({
     Parameters:
       info - info to be updated.
   */
-  update: function(data, callback) 
+  update: function(data) 
   {
     var p = SSApp.update('user', this.getUserName(), data);
     $if(SSApp.noErr(p),
@@ -223,37 +356,78 @@ var AbstractUser = new Class({
           var json = p.value();
           this.syncData(json);
           this.onUpdate(json);
+          SSPostNotification('onUserUpdate', json);
+        }.bind(this),
+        function() {
+          var err = p.value();
+          this.onUpdateError(err);
+          SSLog(err, SSLogError);
         }.bind(this));
     return p;
   },
   
-  
-  onUpdate: function(json)
-  {
-    SSPostNotification('onUserUpdate', json);
-  },
-  
+  /*
+    Function: onUpdate 
+      *abstract*
+      Called when the user has been successfully updated.
+      
+    Parameters:
+      json - the user's data.
+  */
+  onUpdate: function(json) {},
   
   /*
-    Function: resetPassword (private)
+    Function: onUpdateError
+      *abstract*
+      Called when a user update fails.
+      
+    Parameters:
+      err - the error JSON object.
+  */
+  onUpdateError: function(err) {},
+  
+  /*
+    Function: resetPassword
+      *private*
       Reset a user's password
       
     Parameters:
       info - ?
   */
-  resetPassword: function(info) 
+  resetPassword: function(userName) 
   {
-    var p = SSApp.post({resource:'user', id:this.getUserName(), action:"resetPassword"});
+    var p = SSApp.post({resource:'user', id:userName, action:"resetPassword"});
     $if(SSApp.noErr(p),
         function() {
-          this.onResetPassword(p.value());
+          var ack = p.value();
+          this.onResetPassword(ack);
+          SSPostNotification('onUserPasswordReset', ack);
+        }.bind(this),
+        function() {
+          var err = p.value();
+          this.onResetPasswordError(err);
+          SSLog(err, SSLogError);
         }.bind(this));
     return p;
   },
   
+  /*
+    Function: onResetPassword
+      *abstract*
+      Called on successful password reset.
+      
+    Parameters:
+      ack - acknowledgement JSON object.
+  */
+  onResetPassword: function(ack) {},
   
-  onResetPassword: function(json)
-  {
-    SSPostNotification('onUserPasswordReset', json);
-  }
+  /*
+    Function: onResetPasswordError
+      *abstract*
+      Called on failed password reset.
+      
+    Parameters:
+      err - a error JSON object.
+  */
+  onResetPasswordError: function(err) {}
 });

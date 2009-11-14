@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional          
 // @name              PinHelpers
 // @package           Pinning
 // @dependencies      Pin

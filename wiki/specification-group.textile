@@ -1,0 +1,29 @@
+Groups are constructed on top of the streams abstraction. They only add a couple of fields to the stream schema. In addition to these fields when returned, a Group document should include the total count of Shifts in a group, as well as the total count of group members. How this is to be done is an implementation detail.
+
+h2. Schema
+
+h2. REST API
+
+h3. Creating a Group
+
+<pre>
+POST /group
+</pre>
+
+h3. Reading a Group
+
+<pre>
+GET /group/shortName
+</pre>
+
+h3. Updating a Group
+
+<pre>
+PUT /group/shortName
+</pre>
+
+h3. Deleting a Group
+
+<pre>
+DELETE /group/shortName
+</pre>

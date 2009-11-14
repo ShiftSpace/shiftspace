@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              PluginFunctions
 // @package           Core
 // ==/Builder==

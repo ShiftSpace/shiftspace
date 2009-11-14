@@ -1,10 +1,9 @@
 {
-  name: 'SourceShift',
-  authors: ['dphiffer', 'mushon', 'dnolen'],
-  url: '{SPACEDIR}/SourceShift/',
-  icon: 'SourceShift.png',
-  css: 'SourceShift.css',
-  description: 'Embed arbitrary markup onto a webpage.',
-  tooltip: 'Embed arbitrary markup onto a webpage.',
-  version: 0.1
+  "name": "SourceShift",
+  "authors": ["dphiffer", "mushon", "dnolen"],
+  "icon": "SourceShift.png",
+  "css": "SourceShift.css",
+  "description": "Embed arbitrary markup onto a webpage.",
+  "tooltip": "Embed arbitrary markup onto a webpage.",
+  "version": "0.1"
 }

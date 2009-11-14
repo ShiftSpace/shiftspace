@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // @export            SSElement as Element, SSIframe as Iframe, SSInput as Input
 // @package           System
 // ==/Builder==

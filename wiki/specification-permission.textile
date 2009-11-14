@@ -1,0 +1,61 @@
+Permissions control access to stream which is not public.
+
+h2. Schema
+
+<pre>
+{
+  "type": "permission",
+  "created": <string: utc format parseable date string>,
+  "modified": <string: utc format parseable date string,
+  "createdBy": <string>,
+  "streamId": <string>,
+  "userId": <string>,
+  "level": 0
+}
+</pre>
+
+*level*: the following levels determine the user's access to a stream.
+
+<pre>
+0 - joinable  (can subscribe to the stream)
+1 - readable  (can read the stream)
+2 - writeable (can post to the stream)
+3 - adminable (can invite others to the stream)
+4 - owner     (can update properties of the stream 
+               as well as well delete the stream if 
+               there's no one else's content on it)
+</pre>
+
+h2. REST API
+
+h3. Creating a Permission
+
+h4. url
+
+<pre>
+POST /permission
+</pre>
+
+h3. Reading a Permission
+
+h4. url
+
+<pre>
+GET /permission/id
+</pre>
+
+h3. Updating a Permission
+
+h4. url
+
+<pre>
+PUT /permission/id
+</pre>
+
+h3. Deleting a Permission
+
+h4. url
+
+<pre>
+DELETE /permission/id
+</pre>

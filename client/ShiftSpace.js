@@ -6,7 +6,7 @@
 // @exclude        http://metatron.shiftspace.org/api/sandbox/*
 // @exclude        http://shiftspace.org/api/sandbox/*
 // @exclude        http://www.shiftspace.org/api/sandbox/*
-// @exclude        %%SERVER%%sandbox/*
+// @exclude        %%SERVER%%*
 // @require        %%SERVER%%externals/mootools-1.2.3-core.js
 // @require        %%SERVER%%externals/mootools-1.2.3.1-more.js
 // @require        %%SERVER%%externals/Videobox.js
@@ -59,44 +59,50 @@ else
 }
 
 /*
-
 Class: ShiftSpace
   A singleton controller object that represents ShiftSpace Core. All methods
   functions and variables are private.  Please refer to the documention on <User>,
   <ShiftSpace.Space>, <ShiftSpace.Shift>, <ShiftSpace.Plugin> to see public
   interfaces.
 */
-
 var ShiftSpace = new (function() {
     // INCLUDE Bootstrap
+    SSLog("ShiftSpace starting up", SSLogSystem);
     var SSApp = SSApplication();
 
     /*
-
-    Function: initialize
-    Sets up external components and loads installed spaces.
-
+      Function: initialize
+        Sets up external components and loads installed spaces.
     */
     this.initialize = function() {
+      SSLog("ShiftSpace initializing", SSLogSystem);
       // INCLUDE PostInitDeclarations
       
-      // look for install links
+      SSLog("\tChecking for install links", SSLogSystem);
       SSCheckForInstallSpaceLinks();
+
+      SSLog("\tChecking localization support", SSLogSystem);
       if(SSLocalizedStringSupport()) SSLoadLocalizedStrings("en");
       
+      SSLog("\tLoading UI classes", SSLogSystem);
       // INCLUDE PACKAGE ShiftSpaceUI
-      
+      SSLog("\tInitializing UI", SSLogSystem);
+
+      SSLog("\tCreating console", SSLogSystem);
       ShiftSpace.Console = new SSConsole();
+      SSLog("\tCreating notifier view", SSLogSystem);
       ShiftSpace.Notifier = new SSNotifierView();
+      SSLog("\tCreating space menu", SSLogSystem);
       ShiftSpace.SpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
+      SSLog("\tCreating comments window", SSLogSystem);
       ShiftSpace.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
       ShiftSpace.Sandalphon = Sandalphon;
+
+      SSLog("\tShiftSpace UI initialized", SSLogSystem);
       
       // Add to look up table
       ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
-      
-      // FIXME: this should be more modular! - David 6/3/09
-      SSSetInstalledSpacesDataProvider(ShiftSpaceUser);
+
       SSAddObserver(SSNotificationProxy, 'onInstalledSpacesDidChange', SSUpdateInstalledSpaces);
       
       // Set up user event handlers
@@ -107,7 +113,13 @@ var ShiftSpace = new (function() {
         SSLog('ShiftSpace detects user logout', SSLogForce);
       });
       
-      SSLoadStyle('styles/ShiftSpace.css');
+      var __mainCssLoaded = false;
+      var p = SSLoadStyle('styles/ShiftSpace.css');
+      p.op(function(v) {
+        __mainCssLoaded = true;
+        SSPostNotification('onMainCssLoad');
+      });
+      SSLog("\tLoading core styles", SSLogSystem);
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -123,51 +135,61 @@ var ShiftSpace = new (function() {
       SSCheckForPageIframes();
       SSCreateModalDiv();
       SSCreateDragDiv();
-      
-      // initialize the value of default spaces for guest users
-      SSInitDefaultSpaces();
-        
-      if(SSDefaultSpaces())
-      {
-        SSSetup();
-      }
-      else
-      {
-        // first time ShiftSpace user default spaces not loaded yet
-        SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
-        SSLoadDefaultSpacesAttributes();
-      }
-      
+
+      SSLog("\tSynchronizing with server", SSLogSystem);
       SSSync();
     };
     
     /*
-    Function: SSSynch
-      Synchronize with server: checks for logged in user.
+      Function: SSSync (private)
+        Synchronize with server: checks for logged in user.
     */
-    function SSSync() 
+    function SSSync()
     {
-      var p = SSApp.query();
-      $if(SSApp.hasData(p),
-          function() {
-            ShiftSpace.User.syncData(p);
-            SSPostNotification('onUserLogin');
-          });
-      SSUpdateInstalledSpaces(p);
-      SSWaitForUI(p)
+      // initialize the value of default spaces for guest users
+      SSInitDefaultSpaces();
+      var p1 = SSApp.query();
+      var p2 = $if(SSApp.hasData(p1),
+                   function(userIsLoggedIn) {
+                     ShiftSpace.User.syncData(p1);
+                     SSPostNotification('onUserLogin');
+                     SSLog("Synchronized", SSLogSystem);
+                   },
+                   function(noData) {
+                     SSLog("User is not logged in", p1.value(), SSLogSystem);
+                   });
+      p2.op(
+        function(value) {
+          var installed = ShiftSpace.User.installedSpaces(), ps;
+          if(installed)
+          {
+            SSSetup();
+          }
+          else
+          {
+            // first time ShiftSpace user default spaces not loaded yet
+            SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
+            ps = SSLoadDefaultSpacesAttributes();
+          }
+          SSUpdateInstalledSpaces(ps);
+        }
+      );
+      SSWaitForUI(p1);
     }
     
+    /*
+      Function: SSWaitForUI (private)
+        Waits for the core user interface components to initialize. Once
+        initialized posts "onSync" notification.
+     */
     var SSWaitForUI = function(query)
     {
       // wait for console and notifier before sending onSync
       var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
-      if(!ui.every($msg('isLoaded')))
+      if(!ui.every(Function.msg('isLoaded')))
       {
-        ui.each($msg('addEvent', 'load', function(obj) {
-          if(ui.every($msg('isLoaded')))
-          {
-            SSPostNotification("onSync");
-          }
+        ui.each(Function.msg('addEvent', 'load', function(obj) {
+          if(ui.every(Function.msg('isLoaded'))) SSPostNotification("onSync");
         }.bind(this)))
       }
       else
@@ -176,13 +198,13 @@ var ShiftSpace = new (function() {
       }
     }.asPromise();
     
+    /*
+      Function: SSSetup (private)
+        Automatically load spaces that have been set to autolaunch
+        due either to user preferences or domain settings for the space.
+     */
     function SSSetup()
     {
-      if (typeof ShiftSpaceSandBoxMode != 'undefined')
-      {
-        SSInjectSpaces();
-      }
-
       // automatically load a space if there is domain match
       var installed = SSInstalledSpaces();
       for(var space in installed)
@@ -208,16 +230,18 @@ var ShiftSpace = new (function() {
           }
         }
       }
+      SSLog("setup complete", SSLogSystem);
     }
 
-    // TODO: write some documentation here
+    /*
+      Function: SSCheckForUpdates (private)
+        Check to see if a new version of ShiftSpace is available. If it is
+        prompt user to install.
+     */
     function SSCheckForUpdates()
     {
       // Only check once per page load
-      if (alreadyCheckedForUpdate) 
-      {
-        return false;
-      }
+      if(alreadyCheckedForUpdate) return false;
       alreadyCheckedForUpdate = true;
 
       var now = new Date();
@@ -255,12 +279,11 @@ var ShiftSpace = new (function() {
 
       // export symbols directly to the window for debugging purposes - David
       window.SSSpaceForName = SSSpaceForName;
-      window.SSTag = SSTag;
       window.SSApp = SSApp;
       window.SSApplication = SSApplication;
-      window.SSResourceForName = SSResourceForName;
-      window.$msg = $msg;
+      window.SSTableForName = SSTableForName;
       window.SSControllerForNode = SSControllerForNode;
+      window.Sandalphon = Sandalphon;
     }
 
     return this;
@@ -268,11 +291,30 @@ var ShiftSpace = new (function() {
 
 // NOTE: To keep SS extensions out of private scope - David
 ShiftSpace.__externals = {
-  evaluate: function(external, object)
+  evaluate: function(external, extract)
   {
+    var result = {};
     with(ShiftSpace.__externals)
     {
-      return eval(external);
+      var Space = function(obj) {
+        return new Class($merge({Extends:ShiftSpace.Space}, obj));
+      };
+      var Shift = function(obj) {
+        return new Class($merge({Extends:ShiftSpace.Shift}, obj));
+      };
+      eval(external);
+      extract.each(function(sym) {
+        try
+        {
+          result[sym] = eval(sym);
+        }
+        catch(err)
+        {
+          result[sym] = null;
+        }
+      });
     }
+    return result;
   }
 };
+

@@ -1,0 +1,7 @@
+h1. JavaScript
+
+No tabs, only spaces. Indentation should be 2 spaces. Feel free to use either the "K&R Style":http://en.wikipedia.org/wiki/Indent_style#K.26R_style or the "Horstmann Style":http://en.wikipedia.org/wiki/Indent_style#Horstmann_style of indentation.
+
+h1. Python
+
+Because white space is relevant for visualizing structure in Python use 4 spaces for identation.

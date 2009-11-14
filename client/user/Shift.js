@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // @export            ShiftSpaceShift as Shift
 // @package           ShiftSpaceCore
 // ==/Builder==
@@ -33,9 +32,10 @@ var ShiftSpaceShift = new Class({
   initialize: function(data, options)
   {
     this.setOptions(this.defaults(), options);
-
+    
     var id = data._id;
     this.defaults = this.options;
+    if(this.options.element) this.element = this.options.element;
 
     this.setId = function(aId) {
       if(id == null || id.substr(0, 8) == 'newShift') id = aId;
@@ -47,8 +47,13 @@ var ShiftSpaceShift = new Class({
     if(data._id) this.setId(data._id);
     this.setTitle(data.summary || '');
     this.setup(data.content);
+
+    var mv = this.getMainView();
+    if(mv && mv.getParent() == null)
+    {
+      $(document.body).grab(mv);
+    }
   },
-  
   
   /*
     Function: setup (abstract)
@@ -170,7 +175,7 @@ var ShiftSpaceShift = new Class({
   */
   encode: function()
   {
-    return {};
+    if(this.getMainView()) return {position: this.getPosition()};
   },
 
   /*
@@ -212,7 +217,7 @@ var ShiftSpaceShift = new Class({
     this.fireEvent('onShiftDestroy', this.getId());
   },
 
-  _show: function()
+  __show__: function()
   {
 
   },
@@ -276,7 +281,7 @@ var ShiftSpaceShift = new Class({
     }
     else
     {
-      console.error('Error: Attempt to set mainView to null.');
+      SSLog('Error: Attempt to set mainView to null.', SSLogError);
     }
   },
 
@@ -320,7 +325,7 @@ var ShiftSpaceShift = new Class({
   */
   getMainView: function()
   {
-    return this.mainView;
+    return this.mainView || this.element;
   },
 
   /*
@@ -385,8 +390,8 @@ var ShiftSpaceShift = new Class({
 
   getRegion: function()
   {
-    var pos = this.getMainView().getPos();
-    var size = this.getMainView().getSize().size;
+    var pos = this.getMainView().getPosition();
+    var size = this.getMainView().getSize();
 
     return {
       left : pos.x,
@@ -740,8 +745,81 @@ var ShiftSpaceShift = new Class({
     // TODO: Show the failed view, if this shift can't be shown
   },
 
+
   errorView: function(err)
   {
 
+  },
+
+  /*
+    Function: setPosition
+      Convenience function for setting the position of the main view of the shift.
+
+    Parmeters:
+      pos - a JSON object, {"x": int, "y": int}
+   */
+  setPosition: function(pos)
+  {
+    this.getMainView().setStyles({
+      left: pos.x,
+      top: pos.y
+    });
+  },
+
+  /*
+    Function: getPosition
+      Convenience function for getting the position of the main view of the shift.
+
+    Returns:
+      A JSON object, {"x": int, "y": int}
+   */
+  getPosition: function()
+  {
+    return this.getMainView().getPosition();
+  },
+
+  /*
+    Function: makeDraggable
+      Convenience function for making an the main view of the shift draggable. Refer
+      to the MooTools documentation for Element.makeDraggable
+
+    Parameters:
+      options - same as the options for Element.makeDraggable
+   */
+  makeDraggable: function(options)
+  {
+    if(this.getMainView())
+    {
+      this.getMainView().makeDraggable(
+	$merge({onComplete:this.save.bind(this)}, options)
+      );
+    }
+    else
+    {
+      SSLog("This shift doesn't not have a main view or element", SSLogError);
+    }
+  },
+
+  /*
+    Function: xmlHttpRequest
+      Make a remote request from the shift. The url must be defined in the space's
+      attrs.json file. Refer to the MooTools Request documentation for usage.
+
+    Parameters:
+      options - refer to the MooTools request documentation for a description.
+   */
+  xmlHttpRequest: function(options)
+  {
+    var attrs = this.getParentSpace().attributes(),
+        req = new Request(options),
+        url = options.url;
+    if(attrs.permissions.contains(url))
+    {
+      req.send.bind(req).safeCall();
+    }
+    else
+    {
+      SSLog([url, "not declared in attrs.json permissions list for", attrs.name, "space."].join(" "), SSLogError);
+    }
   }
 });

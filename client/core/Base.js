@@ -1,9 +1,5 @@
 // ==Builder==
-// @required
 // ==/Builder==
-
-// any environment specific vars
-%%VARS%%
 
 var __server = '%%SERVER%%';
 var __env = '%%ENV_NAME%%';

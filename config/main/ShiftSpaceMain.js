@@ -2,7 +2,7 @@ if(self == top)
 {
   try
   {
-    console.log('starting up');
+    GM_log('We are top level, starting up');
     ShiftSpace.initialize();
   }
   catch(exc)

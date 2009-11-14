@@ -1,6 +1,0 @@
-If for some reason you don't see the markup update on refresh you have a error in your HTML markup. Use a W3C validator to see where things have gone wrong. The most likely sources of error:
-
-1. Opening tag without closing tag.
-2. Orphaned closing tag.
-3. No space between attribtes -> attrA="foo"attrB="bar"
-4. Unicode character in markup.

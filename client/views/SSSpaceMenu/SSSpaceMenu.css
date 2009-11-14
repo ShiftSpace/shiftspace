@@ -38,7 +38,10 @@ ul#SpaceMenuList
 /* TODO: support grab icon in all browsers - David 6/27/09 */
 ul#SpaceMenuList li
 {
-  width: 160px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  
+  width: 100%;
   padding: 2px;
   float: left;
   cursor: -moz-grab;
@@ -49,6 +52,7 @@ ul#SpaceMenuList li
   -webkit-border-radius: 4px;
   border: 1px solid #ccc;
   margin-bottom: 1px;
+  height: 30px;
 }
 
 ul#SpaceMenuList li:hover

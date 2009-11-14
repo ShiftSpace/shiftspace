@@ -1,0 +1,18 @@
+Please let us know of any serious mistakes. If you figure out how to install ShiftSpace on Linux, Window, or OS X 10.4 please contribute your findings here.
+
+h2. Git
+
+For the time being in order to setup ShiftSpace you need git. We'll be providing dot releases in .zip and .tar.gz format soon. Please be patient.
+
+h2. Installation Guides
+
+[[Installation: OS X]]
+[[Installation: Linux]]
+[[Installation: Windows]]
+
+h2. Note for Developers
+
+Currently the best supported development environment for ShiftSpace is Firefox 3.5 with following extensions installed:
+
+** "FireBug 1.5x.0a24":http://getfirebug.com/releases/firebug/1.5X/
+** "The latest version of GreaseMonkey":https://addons.mozilla.org/firefox/addon/748

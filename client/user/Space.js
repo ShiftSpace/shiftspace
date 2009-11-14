@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // @export            ShiftSpaceSpace as Space
 // @package           ShiftSpaceCore
 // ==/Builder==
@@ -17,7 +16,6 @@
     not the developer.  To get a better understanding of this please refer to the ShiftSpace tutorial.
 */
 var ShiftSpaceSpace = new Class({
-  
   Implements: [Events, Options],
   name: 'ShiftSpace.Space',
 
@@ -34,21 +32,13 @@ var ShiftSpaceSpace = new Class({
     });
     
     this.shiftClass = shiftClass;
-    
 
     // set the interface built flag
     this.__interfaceBuilt = false;
     this.__state = new Hash();
 
-    this.__deferredNewShifts= [];
-    this.__deferredShifts = [];
-    this.__deferredEdits = [];
-
-    // if no css file, we don't need to wait for it to load
-    this.setCssLoaded(!this.attributes() || !this.attributes().css);
-
     // the shifts array
-    this.shifts = {};
+    this.__shifts = {};
 
     // is visible flag
     this.setIsVisible(false);
@@ -64,7 +54,7 @@ var ShiftSpaceSpace = new Class({
     if(!valid)
     {
       var name = this.attributes().name || '';
-      console.error('Error: The  ' + name + ' is not valid and will not be instantiated.');
+      SSLog('The  ' + name + ' is not valid and will not be instantiated.', SSLogError);
     }
     else
     {
@@ -74,11 +64,6 @@ var ShiftSpaceSpace = new Class({
     return this;
   },
   
-  
-  attributes: function()
-  {
-    return SSInstalledSpaces()[this.name];
-  },
 
   /*
     Function: setup (abstract)
@@ -108,104 +93,6 @@ var ShiftSpaceSpace = new Class({
   },
 
   /*
-    Function: onCssLoad (private)
-      Callback handler when the space's css file has loaded.  The interface is not built until after this
-      function has been called.  Also any shifts that were set to creaetd/shown/edited.
-  */
-  onCssLoad : function()
-  {
-    this.setCssLoaded(true);
-
-    if(this.__deferredContent)
-    {
-      this.showInterface();
-      this.hideInterface();
-
-      // load any deferred shifts
-      this.__deferredShifts.each(function(aShift) {
-        if(aShift._id)
-        {
-          SSShowShift(aShift._id);
-        }
-        else
-        {
-          SSShowShift(aShift);
-        }
-      }.bind(this));
-
-      // edit any deferred shifts
-      this.__deferredEdits.each(function(aShift) {
-        SSEditShift(aShift);
-      }.bind(this));
-
-      // load any deferred just created shifts
-      this.__deferredNewShifts.each(function(aShift) {
-        this.createShift(aShift);
-        SSShowNewShift(aShift._id);
-      }.bind(this));
-    }
-  }.asPromise(),
-
-  /*
-    Function: addDeferredNew (private)
-      Adds a deferred shift was just created.  This happens when a user create a shift
-      using the Menu for a space that hasn't loaded yet.
-
-    Parameters:
-      shift - shift content Javascript object.
-  */
-  addDeferredNew: function(shift)
-  {
-    this.__deferredNewShifts.push(shift);
-    this.__deferredContent = true;
-  },
-
-  /*
-    Function: addDeferredShift (private)
-      Adds a deferred shift to be show.  This happens a user attempt to view a shift
-      from <Console> for a space that hasn't loaded yet.
-
-    Parameters:
-      shiftId - a shift id.
-  */
-  addDeferredShift: function(shiftId)
-  {
-    this.__deferredShifts.push(shiftId);
-    this.__deferredContent = true;
-  },
-
-  /*
-    Function: addDeferredEdit (private)
-      Adds a deferred shift to be edited.  This happens when a user attempts to edit
-      an existing shift from the <Console>.
-
-    Parameters:
-      shiftId - a shift id.
-  */
-  addDeferredEdit: function(shiftId)
-  {
-    this.__deferredEdits.push(shiftId);
-    this.__deferredContent = true;
-  },
-
-  /*
-    Function: setCssLoaded (private)
-      A setter for the internal flag tracking whether the css for this space has loaded yet.
-  */
-  setCssLoaded: function(val)
-  {
-    this.__cssLoaded__ = val;
-  },
-
-  /*
-    Function: cssIsLoaded (private)
-  */
-  cssIsLoaded: function()
-  {
-    return this.__cssLoaded__;
-  },
-
-  /*
     Function: show (private)
       Show the space. Simple calls Space.showInterface
 
@@ -228,15 +115,14 @@ var ShiftSpaceSpace = new Class({
   {
     this.hideInterface();
 
-    for(var shift in this.shifts)
+    for(var shift in this.__shifts)
     {
-      if(this.shifts[shift].isVisible())
+      if(this.__shifts[shift].isVisible())
       {
-        this.shifts[shift].hide();
+        this.__shifts[shift].hide();
       }
     }
   },
-
 
   /*
     Function: setIsVisible
@@ -250,7 +136,6 @@ var ShiftSpaceSpace = new Class({
     this.__isVisible = val;
   },
 
-
   /*
     Function: isVisible
       Returns value of internal flag about wheter the Space's interface or any of its shifts are visible.
@@ -261,9 +146,9 @@ var ShiftSpaceSpace = new Class({
   isVisible: function()
   {
     var visibleShifts = false;
-    for(var shift in this.shifts)
+    for(var shift in this.__shifts)
     {
-      if(this.shifts[shift].isVisible())
+      if(this.__shifts[shift].isVisible())
       {
         visibleShifts = true;
         continue;
@@ -284,15 +169,8 @@ var ShiftSpaceSpace = new Class({
   {
     if(!this.interfaceIsBuilt() )
     {
-      if(this.cssIsLoaded())
-      {
-        this.buildInterface();
-        this.setInterfaceIsBuilt(true);
-      }
-      else
-      {
-        this.__deferredContent = true;
-      }
+      this.buildInterface();
+      this.setInterfaceIsBuilt(true);
     }
   },
 
@@ -306,12 +184,12 @@ var ShiftSpaceSpace = new Class({
     // remove any unsaved shifts
     var unsavedShifts = [];
 
-    for(var shift in this.shifts)
+    for(var shift in this.__shifts)
     {
       if(shift.search('newShift') != -1)
       {
-        unsavedShifts.push(this.shifts[shift]);
-        delete this.shifts[shift];
+        unsavedShifts.push(this.__shifts[shift]);
+        delete this.__shifts[shift];
       }
     }
 
@@ -361,22 +239,27 @@ var ShiftSpaceSpace = new Class({
       contents of the passed in Object.
 
     Parameters:
-      Takes a shift JSON object and creates and attaches event handlers.
+      aShift - shift JSON object.
+      ui (optional) - markup for the shift interface as a string.
 
     Returns:
       The internal shift instance.
   */
-  addShift: function(aShift)
+  addShift: function(aShift, ui)
   {
+    var el = (ui) ? Sandalphon.convertToFragment(ui) : null;
+    if(el)
+    {
+      el.addClass("ShiftSpaceElement");
+      el.getElements('*').addClass("ShiftSpaceElement");
+    }
     // create the new shift
     try
     {
-      var newShift = new this.shiftClass(aShift);
+      var newShift = new this.shiftClass(aShift, {element: el});
     }
     catch(exc)
     {
-      SSLog("ERROR: Could not instantiate shift.", SSLogForce);
-      SSLog(exc, SSLogForce);
       throw exc;
     }
 
@@ -408,10 +291,9 @@ var ShiftSpaceSpace = new Class({
       this.fireEvent('onShiftSave', shiftId);
     }.bind(this));
 
-    SSLog('adding shift', SSLogForce);
-    this.shifts[newShift.getId()] = newShift;
-    return this.shifts[newShift.getId()];
-  },
+    this.__shifts[newShift.getId()] = newShift;
+    return newShift;
+  }.asPromise(),
 
   /*
     Function: allocateNewShift
@@ -435,23 +317,23 @@ var ShiftSpaceSpace = new Class({
   */
   createShift: function(newShift)
   {
-    if(this.cssIsLoaded())
-    {
-      this.addShift(newShift);
-      this.fireEvent('onCreateShift', { 
-        space: this, 
-        shift: newShift 
+    var shift = this.addShift(newShift, this.shiftUI()), self = this;
+    // return the shift immediately or a promise if there's a ui
+    return (function(newShift) {
+      self.fireEvent('onCreateShift', {
+        space: self, 
+        shift: newShift
       });
       return newShift;
-    }
-    else
-    {
-      // we need to load these when the css is done
-      this.addDeferredNew(newShift);
-    }
-
-    return null;
+    }.asPromise())(shift);
   },
+
+  shiftUI: function()
+  {
+    var uip, attrs = this.attributes(), html = $get(attrs, "shift", "html");
+    if(html) uip = SSLoadFile(attrs.url.urlJoin(html));
+    return uip;
+  }.decorate(Function.memoize),
 
   /*
     Function : deleteShift
@@ -464,23 +346,30 @@ var ShiftSpaceSpace = new Class({
   deleteShift: function(shiftId)
   {
     // destroy the shift
-    if (this.shifts[shiftId])
+    if (this.__shifts[shiftId])
     {
-        this.shifts[shiftId].destroy();
-        delete this.shifts[shiftId];
+      this.__shifts[shiftId].destroy();
+      delete this.__shifts[shiftId];
     }
-
     this.fireEvent('onDeleteShift', shiftId);
   },
   
   unintern: function(shiftId)
   {
-    delete this.shifts[shiftId];
+    delete this.__shifts[shiftId];
   },
   
   intern: function(shiftId, shift)
   {
-    this.shifts[shiftId] = shift;
+    this.__shifts[shiftId] = shift;
+  },
+
+  swap: function(oldId, newId)
+  {
+    var shift = this.__shifts[oldId];
+    this.unintern(oldId);
+    shift.setId(newId);
+    this.intern(newId, shift);
   },
 
   /*
@@ -492,7 +381,7 @@ var ShiftSpaceSpace = new Class({
   */
   editShift: function(shiftId)
   {
-    var theShift = this.shifts[shiftId];
+    var theShift = this.__shifts[shiftId];
 
     if(!theShift.isBeingEdited())
     {
@@ -516,7 +405,6 @@ var ShiftSpaceSpace = new Class({
     this.fireEvent('onShiftUpdate', shift);
   },
 
-
   /*
     Function: canShowShift (abstract)
       Check if the shift json can be shown.  This method returns true unless you override it.
@@ -532,66 +420,47 @@ var ShiftSpaceSpace = new Class({
     return true;
   },
 
-
   /*
     Function : showShift
       Show a shift.  If a corresponding internal instance does not exist it will be created.
 
     Parameters :
-      shiftId - The JSON representing the shift to show.
+      aShift - The JSON representing the shift to show.
 
     Returns :
-      An _ACTUAL_ Shift object, _NOT_ an id.
+      An _ACTUAL_ Shift JSON, _NOT_ an Shift id.
   */
   showShift: function(aShift)
   {
-    if(!this.cssIsLoaded())
+    var cShift = this.__shifts[aShift._id]; // check for a real shift instance
+    if(!cShift)
     {
-      this.__deferredShifts.push(aShift);
-    }
-    else
-    {
-      var cShift = this.shifts[aShift._id];
-
-      if(!cShift)
+      try
       {
-        try
-        {
-          this.addShift(aShift);
-        }
-        catch(exc)
-        {
-          SSLog(SSDescribeException(exc));
-        }
-        cShift = this.shifts[aShift._id];
+        cShift = this.addShift(aShift, this.shiftUI()); // create a real shift instance
       }
-
-      if(cShift.canShow())
+      catch(exc)
       {
-        if(this.getCurrentShift() &&
-           cShift != this.getCurrentShift())
-        {
-          this.getCurrentShift().onBlur();
-        }
-
-        this.setCurrentShift(cShift);
-
-        if(!cShift.isVisible())
-        {
-          cShift._show();
-          cShift.show();
-
-          cShift.setIsVisible(true);
-          cShift.setIsBeingEdited(false);
-        }
-
-        cShift.onFocus();
+        SSLog(SSDescribeException(exc));
       }
-
-      return cShift;
     }
-
-    return null;
+    var self = this;
+    return (function(theShift) {
+      if(theShift.canShow())
+      {
+        if(self.getCurrentShift() && theShift != self.getCurrentShift()) self.getCurrentShift().onBlur();
+        self.setCurrentShift(theShift);
+        if(!theShift.isVisible())
+        {
+          theShift.__show__();
+          theShift.show();
+          theShift.setIsVisible(true);
+          theShift.setIsBeingEdited(false);
+          self.onShiftShow(theShift.getId());
+        }
+        theShift.onFocus();
+      }
+    }.asPromise())(cShift);
   },
 
   /*
@@ -603,7 +472,7 @@ var ShiftSpaceSpace = new Class({
   */
   hideShift: function(shiftId)
   {
-    var cShift = this.shifts[shiftId];
+    var cShift = this.__shifts[shiftId];
 
     if( cShift )
     {
@@ -617,14 +486,14 @@ var ShiftSpaceSpace = new Class({
     }
     else
     {
-      console.error( "Shift " + shiftId + " does not exist in this the " + this.getName() + " space." );
+      SSLog("Shift " + shiftId + " does not exist in this the " + this.getName() + " space.", SSLogError);
     }
 
     // check to see if there are no visible shifts, if not, hide the space interface
     var visibleShifts = false;
-    for(var shift in this.shifts)
+    for(var shift in this.__shifts)
     {
-      if(this.shifts[shift].isVisible())
+      if(this.__shifts[shift].isVisible())
       {
         visibleShifts = true;
         continue;
@@ -643,7 +512,7 @@ var ShiftSpaceSpace = new Class({
   */
   orderFront: function(shiftId, layer)
   {
-    var mv = this.shifts[shiftId].getMainView();
+    var mv = this.__shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered'))
     {
       mv.setStyle('zIndex', 10000);
@@ -660,7 +529,7 @@ var ShiftSpaceSpace = new Class({
   */
   orderBack: function(shiftId, layer)
   {
-    var mv = this.shifts[shiftId].getMainView();
+    var mv = this.__shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered'))
     {
       mv.setStyle('zIndex', 9999);
@@ -673,7 +542,7 @@ var ShiftSpaceSpace = new Class({
   */
   setDepth: function(shiftId, depth)
   {
-    var mv = this.shifts[shiftId].getMainView();
+    var mv = this.__shifts[shiftId].getMainView();
     if(mv && !mv.hasClass('SSUnordered'))
     {
       mv.setStyle('zIndex', depth);
@@ -686,10 +555,10 @@ var ShiftSpaceSpace = new Class({
   */
   regionIsObscured: function(region)
   {
-    var len = this.shifts.length;
+    var len = this.__shifts.length;
     for(var i = 0; i < len; i++ )
     {
-      var aShift = this.shifts[i];
+      var aShift = this.__shifts[i];
 
       if(aShift.mainViewIsVisible())
       {
@@ -718,7 +587,7 @@ var ShiftSpaceSpace = new Class({
   */
   setCurrentShift: function(newShift)
   {
-    this.__currentShift__ = newShift;
+    this.__currentShift = newShift;
   },
 
   /*
@@ -730,7 +599,7 @@ var ShiftSpaceSpace = new Class({
   */
   setCurrentShiftById: function(shiftId)
   {
-    this.setCurrentShift(this.shifts[shiftId]);
+    this.setCurrentShift(this.__shifts[shiftId]);
   },
 
   /*
@@ -742,7 +611,7 @@ var ShiftSpaceSpace = new Class({
   */
   getCurrentShift: function()
   {
-    return this.__currentShift__;
+    return this.__currentShift;
   },
 
   /*
@@ -754,7 +623,7 @@ var ShiftSpaceSpace = new Class({
   */
   getShift: function(shiftId)
   {
-    return this.shifts[shiftId];
+    return this.__shifts[shiftId];
   },
 
   /*
@@ -766,7 +635,7 @@ var ShiftSpaceSpace = new Class({
   */
   focusShift: function(shiftId)
   {
-    this.setCurrentShift(this.shifts[shiftId]);
+    this.setCurrentShift(this.__shifts[shiftId]);
     this.getCurrentShift().onFocus();
   },
 
@@ -779,7 +648,7 @@ var ShiftSpaceSpace = new Class({
   */
   blurShift: function(shiftId)
   {
-    var theShift = this.shifts[shiftId];
+    var theShift = this.__shifts[shiftId];
     theShift.onBlur();
     theShift.setIsBeingEdited(false);
   },
@@ -911,7 +780,7 @@ var ShiftSpaceSpace = new Class({
   */
   updateTitleOfShift: function(shiftId, title)
   {
-    this.shifts[shiftId].updateTitle(title);
+    this.__shifts[shiftId].updateTitle(title);
   },
 
   /*
@@ -926,7 +795,7 @@ var ShiftSpaceSpace = new Class({
   */
   mainViewForShift: function(shiftId)
   {
-    return this.shifts[shiftId].getMainView();
+    return this.__shifts[shiftId].getMainView();
   },
 
   /*
@@ -940,11 +809,11 @@ var ShiftSpaceSpace = new Class({
     this.__state.empty();
 
     var visibleShifts = [];
-    for(var shift in this.shifts)
+    for(var shift in this.__shifts)
     {
-      if(this.shifts[shift].isVisible())
+      if(this.__shifts[shift].isVisible())
       {
-        visibleShifts.push(this.shifts[shift]);
+        visibleShifts.push(this.__shifts[shift]);
       }
     }
     this.__state.set('visibleShifts', visibleShifts);
@@ -972,16 +841,55 @@ var ShiftSpaceSpace = new Class({
     return SSIsNewShift(shiftId);
   },
   
-  
+  /*
+    Function: setPreference
+      Set a preference for the space.
+
+    Parameters:
+      key - the string key to store the value under.
+      value - the value to store.
+   */
   setPreference: function(key, value)
   {
-    ShiftSpace.User.setPreference(this.attributes().name+'.'+key, vlaue);
+    ShiftSpace.User.setPreference(this.attributes().name+'.'+key, value);
   },
   
-  
+  /*
+    Function: getPreference
+      Get a preference for a space.
+
+    Parameters:
+      key - the string 
+   */
   getPreference: function(key, defaultValue, callback)
   {
-    ShiftSpace.User.getPreference.safeCallWithResult(this.attributes().name+'.'+key, defaultValue, callback);
-  }
+    ShiftSpace.User.getPreference.safeCallWithResult(
+      this.attributes().name+'.'+key,
+      defaultValue,
+      callback
+    );
+  },
 
+  /*
+    Function: xmlHttpRequest
+      Make a remote request from a space. The url must be defined in the space's
+      attrs.json file. Refer to the MooTools Request documentation for usage.
+
+    Parameters:
+      options - refer to the MooTools documentation for a description.
+   */
+  xmlHttpRequest: function(options)
+  {
+    var attrs = this.attributes(),
+        req = new Request(options),
+        url = options.url;
+    if(attrs.permissions.contains(url))
+    {
+      req.send.bind(req).safeCall();
+    }
+    else
+    {
+      SSLog([url, "not declared in attrs.json permissions list for", attrs.name, "space."].join(""), SSLogError);
+    }
+  }
 });

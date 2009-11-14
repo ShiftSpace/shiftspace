@@ -5,48 +5,48 @@
     <div class="SSControlView">
       <!-- The tab buttons -->
       <div class="SSButton SSActive">
-        <div title="Shifts" class="SSLocalized">Shifts</div>
+        <div title="Shifts" l18n="Shifts">Shifts</div>
       </div>
       <div class="SSButton">
-        <div title="Inbox" class="SSLocalized">My</div>
+        <div title="Inbox" l18n="My">My</div>
       </div>
       <div class="SSButton">
-        <div title="Inbox" class="SSLocalized">Inbox</div>
+        <div title="Inbox" l18n="Inbox">Messages</div>
       </div>
       <div class="SSButton">
-        <div title="Following" class="SSLocalized">People</div>
+        <div title="Following" l18n="People">People</div>
       </div>
       <div class="SSButton">
-        <div title="Groups" class="SSLocalized">Groups</div>
+        <div title="Groups" l18n="Groups">Groups</div>
       </div>
       <div class="SSButton">
-        <div title="Settings" class="SSLocalized">Settings</div>
+        <div title="Settings" l18n="Settings">Settings</div>
       </div>
       <div class="SSButton">
-        <div title="Login" class="SSLocalized">Login</div>
+        <div title="Login" l18n="Login">Login</div>
       </div>
       <div class="SSButton">
-        <div title="Welcome" class="SSLocalized">Welcome</div>
+        <div title="Welcome" l18n="Welcome">Welcome</div>
       </div>
       <!-- End tab buttons -->
     </div>
     
-    <?path:../client/views/SSFilterPane/SSFilterPane?>
-  
     <div class="SSContentView">
-      <?customView:AllShiftsView?>
-      <?customView:MyShiftSpacePane?>
-      <?customView:InboxPane?>
-      <?customView:PeoplePane?>
-      <?customView:GroupsPane?>
-      <?customView:SettingsTabView?>
-      <?customView:LoginTabView?>
+      <div id="SSLeftCorner"></div><div id="SSTopEdge"></div><div id="SSRightCorner"></div>
+      <div id="SSLeftEdge"></div><div id="SSRightEdge"></div>
+      <?view:AllShiftsView?>
+      <?view:MyShiftSpacePane?>
+      <?view:InboxPane?>
+      <?view:PeoplePane?>
+      <?view:GroupsPane?>
+      <?view:SettingsTabView?>
+      <?view:LoginTabView?>
       <div id="WelcomePane" class="SSTabPane">
         Welcome
       </div>
     </div>
     
-    <?path:../client/views/SSPublishPane/SSPublishPane?>
+    <?view:SSPublishPane?>
   
   </div>
   

@@ -1,8 +1,5 @@
 var ImageSwapSpace = new Class({
-
   Extends: ShiftSpace.Space,
-  name: "ImageSwap",
-
 
   setup : function()
   {
@@ -606,5 +603,3 @@ var ImageSwapShift = new Class({
   }
 
 });
-
-var ImageSwap = new ImageSwapSpace(ImageSwapShift);

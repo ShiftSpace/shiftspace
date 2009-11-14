@@ -1,7 +1,15 @@
-.SSTabView
-{
-  width: 100%;
-  height: 100%;
+#MainTabView{
+  left: 0;
+} 
+
+#SSConsoleFrameBody #MainTabView.SSTabView {
+  bottom:0;
+  height:auto;
+  left:10px;
+  position:absolute;
+  right:10px;
+  top:4px;
+  width:auto;
 }
 
 .SSTabView > .SSControlView
@@ -61,10 +69,10 @@
 .SSTabViewConsoleStyle > .SSControlView
 {
   position: absolute;
-  top: 0px;
+  top: 1px;
   right: 0px;
   left: 0px;
-  height: 30px;
+  height: 46px;
 }
 
 .SSTabViewConsoleStyle > .SSControlView > .SSButton
@@ -81,10 +89,12 @@
 {
   clear: both;
   position: absolute;
-  top: 31px;
-  left: 0px;
-  right: 0px;
+  top: 48px;
+  left: 12px;
+  right: 12px;
   bottom: 0px;
+  padding-top: 50px;
+  background-color:#F7F2EF;
 }
 
 /*

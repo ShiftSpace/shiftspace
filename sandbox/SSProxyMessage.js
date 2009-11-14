@@ -13,11 +13,8 @@ function SSProxyMessageInit()
   $('SSProxyMessage').addEvent('mouseenter', function(_evt) {
     if(!SSProxyMessageIsVisible && !SSProxyMessageIsAnimating)
     {
-      // show it
       SSProxyMessageIsVisible = true;
       SSProxyMessageShow();
-      
-      // prepare the next hide
       if(SSProxyMessageTimeout) clearTimeout(SSProxyMessageTimeout);
       SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 5000);
     }
@@ -27,7 +24,6 @@ function SSProxyMessageInit()
     var evt = new Event(_evt);
     if(SSProxyMessageIsVisible && !SSProxyMessageIsAnimating)
     {
-      // prepare the next hide
       if(SSProxyMessageTimeout) clearTimeout(SSProxyMessageTimeout);
       SSProxyMessageTimeout = setTimeout(SSProxyMessageHide, 5000);
     }
@@ -36,41 +32,26 @@ function SSProxyMessageInit()
 
 function SSProxyMessageShow()
 {
-  var showFx = $('SSProxyMessage').effects({
+  $('SSProxyMessage').set('tween', {
     duration: 500, 
     transition: Fx.Transitions.Cubic.easeOut,
-    onStart: function()
-    {
-      SSProxyMessageIsAnimating = true;
-    },
-    onComplete: function()
-    {
-      SSProxyMessageIsAnimating = false;
-    }
+    onStart: function() { SSProxyMessageIsAnimating = true; },
+    onComplete: function() { SSProxyMessageIsAnimating = false; }
   });
-  
-  showFx.start({
-    right: [-503, 0]
-  });
+  $("SSProxyMessage").tween('right', [-503, 0]);
 }
 
 function SSProxyMessageHide()
 {
-  var hideFx = $('SSProxyMessage').effects({
+  $('SSProxyMessage').set('tween', {
     duration: 500,
     transition: Fx.Transitions.Cubic.easeOut,
-    onStart: function()
-    {
-      SSProxyMessageIsAnimating = true;
-    },
+    onStart: function() { SSProxyMessageIsAnimating = true; },
     onComplete: function()
     {
       SSProxyMessageIsAnimating = false;
       SSProxyMessageIsVisible = false;
     }
   });
-  
-  hideFx.start({
-    right: [0, -503]
-  });
+  $("SSProxyMessage").tween('right', [0, -503]);
 }

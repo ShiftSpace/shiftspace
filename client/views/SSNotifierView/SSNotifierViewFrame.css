@@ -1,0 +1,34 @@
+.SSNotifierViewFrame
+{
+  position: fixed;
+  bottom: 0px;
+  background: transparent;
+  border: none;
+  height: 44px;
+  overflow: hidden;
+  width: 40px;
+  z-index: 1000001;
+}
+
+.SSNotifierHidden
+{
+  left: -40px;
+}
+
+.SSNotifierHasShifts
+{
+  left: 0px;
+  width: 40px;
+}
+
+.SSNotifierShowDetails
+{
+  left: 0px;
+  width: 200px;
+}
+
+.SSNotifierOpen
+{
+  left: 0px;
+  width: 100%;
+}

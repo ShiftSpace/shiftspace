@@ -20,45 +20,19 @@
 }
 
 
-.SSTabViewConsoleStyle > .SSControlView > .SSButton
+#MainTabView > .SSControlView > .SSButton
 {
   float: left;
+  height: 44px !important;
   margin-right: 6px;
   background-color: inherit;
-  height: 20px;
   padding: 5px 10px;
-  border-top: 3px solid #D4E7DA;
-  border-left: 3px solid #D4E7DA;
-  border-right: 3px solid #D4E7DA;
-  -moz-border-radius-topleft: 6px;
-  -webkit-border-top-left-radius: 6px;
-  -moz-border-radius-topright: 6px;
-  -webkit-border-top-right-radius: 6px;
+  margin-right: -12px;
 }
 
 .SSTabViewConsoleStyle > .SSControlView > .SSButton.SSActive
 {
   background-color: #E6E4A3;
-}
-
-.SSTabViewConsoleStyle > .SSContentView
-{
-  clear: both;
-  position: absolute;
-  top: 31px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  border-style: solid;
-  border-width: 3px 3px 0px 3px;
-  border-color: #D4E7DA;
-  -moz-border-radius-topleft: 6px;
-  -webkit-border-top-left-radius: 6px;
-  -moz-border-radius-topright: 6px;
-  -webkit-border-top-right-radius: 6px;
-  /*-moz-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;*/
-  -webkit-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;
-  background-color:#F7F2EF;
 }
 
 /*
@@ -80,10 +54,8 @@
 .SSTabViewSubTabStyle > .SSControlView
 {
   position: absolute;
-  top: 0px;
-  left: 0px;
   bottom: 0px;
-  width: 149px;
+  width: 137px;
   border-right: solid 1px #000;
 }
 
@@ -108,11 +80,11 @@
 
 .ShiftListView
 {
-  position: absolute;
-  left: 166px;
+  /*position: absolute;*/
   top: 0px;
-  right: 0px;
+  right: 6px;
   bottom: 0px;
+  border:1px solid #DDD7D2; /*TODO: use image for gradient border*/
 }
 
 .ShiftListView
@@ -122,120 +94,220 @@
   margin-top: 4px;
 }
 
-.ShiftListView .ShiftListViewCell > *
-{
-  float: left;
-  margin-top: 2px;
-}
+  .ShiftListView .ShiftListViewCell
+  {
+    float: left;
+    width: 100%;
+    height: 28px;
+    padding-top: 4px;
+  }
+  
+    .ShiftListView .ShiftListViewCell > *
+    {
+      float: left;
+      margin-top: 2px;
+    }
+    
+    .ShiftListView .ShiftListViewCell .spaceName
+    {
+      margin-left: 10px;
+      display: none;
+      font-weight: bold;
+    }
+    
+    ul.ShiftListView li.ShiftListViewCell:hover .spaceName
+    {
+      display: inline;
+    }
+    
+    .ShiftListView .ShiftListViewCell div.summaryContainer
+    {
+      min-width: 485px;
+      color: #4B423A;
+    }
 
-.ShiftListView .ShiftListViewCell div.summary
-{
-  margin-left: 10px;
-  min-width: 485px;
-  color: #4B423A;
-}
+    .ShiftListView .ShiftListViewCell div.summary
+    {
+      margin-left: 10px;
+      display: inline-block;
+      color: #4B423A;
+    }
+    
+    .ShiftListView .ShiftListViewCell div.status
+    {
+      margin-top: -3px;
+      margin-right:2px;
+      width: 22px;
+      height: 26px;
+      background-repeat: no-repeat;
+    }
 
-.ShiftListView .ShiftListViewCell div.draft
-{
-  width: 25px;
-}
+    .ShiftListView .ShiftListViewCell div.status.private
+    {
+    }
 
-.ShiftListView .ShiftListViewCell
-{
-  float: left;
-  width: 100%;
-  height: 28px;
-  padding-top: 4px;
-}
+    .ShiftListView .ShiftListViewCell div.status.public
+    {
+      background-image:url(/images/Console/publicicon.png);
+/*      background-position:-8 -8;*/
+    }
 
-.ShiftListView .ShiftListViewCell:nth-child(2n+0)
-{
-  background-color: #F8F5F2;
-}
+    .ShiftListView .ShiftListViewCell:nth-child(2n+0)
+    {
+      background-color: #F8F5F2;
+    }
 
-.ShiftListView .ShiftListViewCell:nth-child(2n+1)
-{
-  background-color: #F0EDEB;
-}
+    .ShiftListView .ShiftListViewCell:nth-child(2n+1)
+    {
+      background-color: #F0EDEB;
+    }
 
-ul.ShiftListView li.ShiftListViewCell:hover
-{
-  background-color: white;
-}
+    ul.ShiftListView li.ShiftListViewCell:hover
+    {
+      background-color: white;
+      z-index: 2;
+    }
 
-ul.ShiftListView li.ShiftListViewCell:hover .spaceName
-{
-  display: block;
-}
+    .ShiftListView .ShiftListViewCell.selected
+    {
+      background-color: #81C49C;
+    }
 
-.ShiftListView .ShiftListViewCell.selected
-{
-  background-color: #81C49C;
-}
+    .ShiftListView .ShiftListViewCell .spaceIcon
+    {
+      margin-left: 10px;
+    }
 
-.ShiftListView .ShiftListViewCell .spaceIcon
-{
-  margin-left: 10px;
-}
+    .ShiftListView .ShiftListViewCell .user > *
+    {
+      float: left;
+    }
 
-.ShiftListView .ShiftListViewCell .spaceName
-{
-  margin-left: 10px;
-  display: none;
-  font-weight: bold;
-}
+    .ShiftListView .ShiftListViewCell .gravatar
+    {
+      position: relative;
+      width: 16px;
+      -moz-border-radius: 4px 0px 0px 4px;
+      -webkit-border-top-left-radius: 4px;
+      -webkit-border-bottom-left-radius: 4px;
+    }
 
-.ShiftListView .ShiftListViewCell div.date
-{
-  margin-left: 6px;
-}
+    .ShiftListView .ShiftListViewCell canvas.gravatar:hover, .ShiftListView .ShiftListViewCell img.gravatar:hover
+    {
+      top: -8px;
+      margin-left: -8px;
+      width: 32px;
+      height: 32px;
+      -moz-border-radius: 4px;
+      -webkit-border-radius: 4px;
+    }
 
-.ShiftListView .ShiftListViewCell div.favorite
-{
-  float: right;
-  margin-right: 20px;
-}
+    .ShiftListView .ShiftListViewCell div.userName
+    {
+      font-size: 10px;
+      color: #4B423A;
+      background-color: #D5D1CE;
+      background-color: #ccc;
+      padding-top: 1px;
+      padding-left: 4px;
+      padding-right: 4px;
+      height: 16px;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      border-sizing: border-box;
+      -moz-border-radius-topright: 4px;
+      -webkit-border-top-right-radius: 4px;
+      -moz-border-radius-bottomright: 4px;
+      -webkit-border-bottom-right-radius: 4px;
+      cursor:pointer;
+    }
 
-.ShiftListView .ShiftListViewCell div.favorite div
-{
-  float: left;
-}
+    .ShiftListView .ShiftListViewCell div.userName:hover
+    {
+      color: white;
+      background-color: #746559;
+      padding-right:12px;
+      background-image:url(/images/Console/arrow_light.png);
+      background-position:right;
+      background-repeat:no-repeat;
+    }
 
-.ShiftListView .ShiftListViewCell div.favorite div.favoriteButton
-{
-  width: 18px;
-  height: 18px;
-  background-color: #ccc;
-}
+    .ShiftListView .ShiftListViewCell div.userName.loggedin
+    {
+      font-weight: bold;
+    }
 
-.ShiftListView .ShiftListViewCell div.favorite div.favoriteButton.favorited
-{
-  background-color: yellow;
-}
+    .ShiftListView .ShiftListViewCell div.date
+    {
+      margin-left: 6px;
+    }
 
-.ShiftListView .ShiftListViewCell div.comments
-{
-  float: right;
-  background-color: #ccc;
-  width: 18px;
-  height: 18px;
-  margin-right: 20px;
-}
+    .ShiftListView .ShiftListViewCell div.favorite
+    {
+      float: right;
+      margin-right: 0px;
+    }
+
+    .ShiftListView .ShiftListViewCell div.favorite div
+    {
+      float: left;
+    }
+
+    .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton
+    {
+      width: 18px;
+      height: 18px;
+      /*background-color: #ccc;*/
+      background-image: url(/images/Console/stars.png);
+      background-repeat: no-repeat;
+      background-position:0 -52;
+      margin-left:5px;
+      margin-top:-3px;
+      cursor:pointer;
+    }
+    
+    
+    ul.ShiftListView li.ShiftListViewCell:hover div.favorite div.favoriteButton
+    {
+      background-position:0 -26;
+    }
+    
+    ul.ShiftListView li.ShiftListViewCell:hover div.favorite div.favoriteButton:hover, 
+    ul.ShiftListView li.ShiftListViewCell div.favorite div.favoriteButton.favorited
+    {
+      background-position:0 0;
+    }
+
+    .ShiftListView .ShiftListViewCell div.comments
+    {
+      float: right;
+      width:30px;
+      height:20px;
+      margin-right:20px;
+      margin-top:-2px;
+      padding-top:6px;
+      text-align:center;
+      background:url(/images/Console/commentballoon.png) no-repeat;
+      cursor:pointer;
+    }
+    
+    .ShiftListView .ShiftListViewCell div.comments.hasComment
+    {
+      background-position:0 -26;
+      color:#F8F5F2;
+    }
 
 /* Sidebars */
 
 .leftSideBar
 {
   position: absolute;
-  left: 4px;
   width: 160px;
-  top: 4px;
   bottom: 0px;
   z-index: 2;
   color: #4B423A;
   background-color: #DDD7D2;
   border: 1px solid #CEC9C3;
-  /*-moz-box-shadow: inset 0 0 8px #BEB9B3;*/
   -webkit-box-shadow: inset 0 0 8px #BEB9B3;
 }
 

@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              ErrorWindow
 // @package           ErrorHandling
 // @dependencies      ShiftSpaceElement

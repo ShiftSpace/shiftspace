@@ -1,2 +1,3 @@
- #!/bin/sh
-rm -f ../server/working/server.ini ../server/working/shiftspace.sqlite3
+cd tmp
+rm -rf deps
+rm deps.tar.gz

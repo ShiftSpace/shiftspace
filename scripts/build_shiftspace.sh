@@ -1,1 +1,0 @@
-python ../builder/preprocess.py -e deploy -i ../client/ShiftSpace.js -o ../builds/shiftspace.user.js;

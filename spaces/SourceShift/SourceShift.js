@@ -1,8 +1,5 @@
 var SourceShiftSpace = new Class({
-
   Extends: ShiftSpace.Space,
-  name: "SourceShift",
-
 
   setup: function(options)
   {
@@ -612,7 +609,6 @@ var SourceShiftSpace = new Class({
 });
 
 var SourceShiftShift = new Class({
-  
   Extends: ShiftSpace.Shift,
 
   setup: function(json)
@@ -1410,5 +1406,3 @@ var SourceShiftShift = new Class({
   }
 
 });
-
-var SourceShift = new SourceShiftSpace(SourceShiftShift);

@@ -1,5 +1,4 @@
 // ==Builder==
-// @optional
 // @name              RemoteFunctions
 // @package           Core
 // ==/Builder==
@@ -44,19 +43,14 @@ Function: SSLoadStyle
 
 Parameters:
   url - The URL of the CSS file to load
-  callback - A custom function to handle css text if you don't want to use GM_addStyle
-  spaceCallback - A callback function for spaces that want to use GM_addStyle but need to be notified of CSS load.
+  frame - The frame where the css will be loaded.
 */
 function SSLoadStyle(url, frame) 
 {
   var dir = url.split('/');
   dir.pop();
   dir = dir.join('/');
-  if (dir.substr(0, 7) != 'http://') 
-  {
-    dir = SSInfo().server + dir;
-  }
-
+  if (dir.substr(0, 7) != 'http://') dir = SSInfo().server + dir;
   var p = SSLoadFile(url);
   return SSAddStyle(p, {rewriteUrls: dir, frame: frame});
 }
@@ -65,7 +59,6 @@ var SSAddStyle = function(css, options)
 {
   // this needs to be smarter, only works on directory specific urls
   if(options.rewriteUrls) css = css.replace(/url\(([^)]+)\)/g, 'url(' + options.rewriteUrls + '/$1)');
-
   // if it's a frame load it into the frame
   if(options.frame)
   {
@@ -108,9 +101,9 @@ var SSLoadFile = function(url)
   // If the URL doesn't start with "http://", assume it's on our server
   if (url.substr(0, 7) != 'http://' &&
       url.substr(0, 8) != 'https://') {
-    url = SSInfo().server + url;
+    url = String.urlJoin(SSInfo().server, url);
   }
-
+  SSLog("LOAD FILE:", url, SSLogRequest);
   // Load the URL then execute the callback
   return new Request({
     method: 'GET',

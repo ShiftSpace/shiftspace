@@ -1,5 +1,7 @@
 *~
 *.save
+*.pyc
+server/sessions/session*
 
 momasocialbar/images
 momasocialbar/templates
@@ -13,9 +15,7 @@ server/app/sms.log
 server/server.ini
 
 builder/SSPackageSorter.pyc
-builds/shiftspace.sandalphon.js
-builds/shiftspace.sandbox.js
-builds/shiftspace.user.js
+builds/*
 config/env/my_sandalphon.json
 config/env/mydev.json
 config/packages.json
@@ -34,3 +34,30 @@ config/env/sandalphon.json
 .DS_Store
 
 lucene/*
+/shiftspace.org
+/.emacs.desktop
+/.emacs.desktop.lock
+/.emacs.desktop.lock
+/.emacs.desktop.lock
+/.emacs.desktop.lock
+/.emacs.desktop.lock
+/manual/#tutorial.html#
+/manual/test.html
+/wiki/#installation-linux.textile#
+/wiki/.#installation-linux.textile
+/builder/__init__.pyc
+/sandalphon/__init__.pyc
+/builder/corebuilder.pyc
+/server/couchdb-lucene-0.4-jar-with-dependencies.jar
+
+externals/NaturalDocs-1.4/*
+docs/*
+tmp/*/manual/install.html
+/manual/install.html
+/manual/installation-linux.html
+/manual/installation-osx.html
+/manual/installation-windows.html
+tmp/docs
+
+ideas/*
+config/views.json

@@ -1,98 +1,122 @@
 // ==Builder==
-// @required
-// @package           System_
 // ==/Builder==
 
 // Internal Error Logging, trust me, you don't need this - kisses ShiftSpace Core Robot
 var SSNoLogging = 0;
 
+/*
+  Constants: Logging levels
+    SSNoLogging - log nothing
+    SSLogError - log errors
+    SSLogWarning - log warninggs
+    SSLogRequest - log remote requests
+    SSLogForce - force logging
+    SSLogInclude - log file includes
+    SSLogSystem - system level logging
+    SSLogAll - log everything
+ */
 var SSLogMessage        = 1,
     SSLogError          = 1 << 1,
     SSLogWarning        = 1 << 2,
-    SSLogPlugin         = 1 << 3,
-    SSLogServerCall     = 1 << 4,
-    SSLogSpaceError     = 1 << 5,
-    SSLogShift          = 1 << 6,
-    SSLogSpace          = 1 << 7,
-    SSLogViews          = 1 << 8,
-    SSLogSandalphon     = 1 << 9,
+    SSLogRequest        = 1 << 4,
     SSLogForce          = 1 << 10,
     SSInclude           = 1 << 11,
-    SSLogViewSystem     = 1 << 12;
     SSLogSystem         = 1 << 13;
 
 var SSLogAll = 0xfffffff;           // All bits on (if we have at most 32 types)
 var __ssloglevel = SSNoLogging;
 
 /*
-Function: log
+Function: SSLog
   Logs a message to the console, but only in debug mode or when reporting
-  errors.
-
-Parameters:
-  msg - The message to be logged in the JavaScript console.
-  verbose - Force the message to be logged when not in debug mode.
+  errors. Takes a variable list of arguments, the last of which is the type
+  of logging to done.
 */
-function SSLog() 
+function SSLog()
 {
   var type = $A(arguments).getLast();
-  var args = $A(arguments).drop(1);
-  if (typeof console == 'object' && SSLog) 
+  var args = $A(arguments).slice(0, arguments.length-1);
+  if(__ssloglevel == SSLogAll || (type && (__ssloglevel & type)) || 
+     type == SSLogForce || 
+     type == SSLogError ||
+     type == SSLogWarning)
   {
-    if(__ssloglevel == SSLogAll || (type && (__ssloglevel & type)) || 
-       type == SSLogForce || 
-       type == SSLogError ||
-       type == SSLogWarning)
+    if((typeof ShiftSpaceSandBoxMode != 'undefined' || typeof SandalphonToolMode != 'undefined') && 
+        typeof console != 'undefined' && console.log)
     {
-      if(!Browser.Engine.webkit)
+       if(!Browser.Engine.webkit)
+       {
+         if(type == SSLogError)
+         {
+           console.error.apply(null, args);
+         }
+         else if(type == SSLogWarning)
+         {
+           console.warn.apply(null, args);
+         }
+         else
+         {
+           console.log.apply(null, args);
+         }
+       }
+       else
+       {
+         if(type == SSLogError)
+         {
+           console.error(args);
+         }
+         else if(type == SSLogWarning)
+         {
+           console.warn(args);
+         }
+         else
+         {
+           console.log(args);
+         }
+       }
+    }
+    else if(typeof GM_log != 'undefined')
+    {
+      if(type == SSLogError)
       {
-        if(type == SSLogError)
-        {
-          console.error.apply(null, args);
-        }
-        else if(type == SSLogWarning)
-        {
-          console.warn.apply(null, args);
-        }
-        else
-        {
-          console.log.apply(null, args);
-        }
+        GM_log(['ERROR:'].combine(args));
+      }
+      else if(type == SSLogWarning)
+      {
+        GM_log(['WARNING:'].combine(args));
       }
       else
       {
-        if(type == SSLogError)
-        {
-          console.error(args);
-        }
-        else if(type == SSLogWarning)
-        {
-          console.warn(args);
-        }
-        else
-        {
-          console.log(args);
-        }
+        GM_log(args);
       }
     }
   } 
-  else if (typeof GM_log != 'undefined') 
-  {
-    GM_log.apply(null, args);
-  }
 }
 
+/*
+  Function: SSSetLogLevel
+    Set the current log level. Affects all logging output.
+
+  Parameters:
+    level - a bit mask
+*/
 function SSSetLogLevel(level)
 {
   SSLog('SSSetLogLevel ' + level);
   __ssloglevel = level;
 }
 
-if(typeof %%LOG_LEVEL%% != 'undefined')
+try
 {
-  SSSetLogLevel(%%LOG_LEVEL%%);
+  if(typeof %%LOG_LEVEL%% != 'undefined')
+  {
+    SSSetLogLevel(%%LOG_LEVEL%%);
+  }
+  else
+  {
+    throw new Error("Bailing: No such logging level %%LOG_LEVEL%%, please fix the config/env/%%ENV_NAME%%.json file.");
+  }
 }
-else
+catch(err)
 {
-  throw new Error("Bailing: No such logging level %%LOG_LEVEL%%, please fix the config/env/%%ENV_NAME%%.json file.");
 }

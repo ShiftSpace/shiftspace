@@ -85,39 +85,6 @@ body > #SSConsole
   z-index: 1000000;
 }
 
-#SSConsoleResizer
-{
-  position: fixed;
-  /*background-color:red;*/
-  bottom:180px;
-  cursor:ns-resize;
-  height:10px;
-  left:10px;
-  right:10px;
-}
-
-#SSConsoleResizeMask
-{
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  z-index: 1000001;
-  cursor: ns-resize;
-}
-
-.SSConsoleNotifier
-{
-  z-index: 1000003;
-  position: fixed;
-  bottom: -32px;
-  left: 31px;
-  background: transparent url(../images/Console/notifier-bg.png) no-repeat;
-  width: 30px;
-  height: 32px;
-}
-
 /*
   Iframe Cover stuff
 */
@@ -347,202 +314,10 @@ div.SSPinMenuTopItem:hover .SSRight
   height: 20px;
 }
 
-/* Global ShiftSpace Menu Styles */
-
-.SSMenu
-{
-  z-index:1000;
-  color: black;
-  width: 150px;
-  overflow: visible;
-  position: absolute;
-}
-
-.SSMenu div .SSLeft
-{
-  width: 122px;
-  padding-left: 8px;
-}
-
-.SSMenu div .SSRight
-{
-  width: 8px;
-  font-family: verdana;
-}
-
-.SSMenuItem
-{
-  clear: both;
-  font-size: 11px;
-}
-
-.SSMenuItem div
-{
-  float: left;
-}
-
-.SSMenu li div span
-{
-  padding-left: 10px;  
-}
-
-.SSMenuItem div span
-{
-  line-height: 220%;
-}
-
-.SSMenuTopItem div span
-{
-  line-height: 220%;
-}
-
-.SSMenuBottomItem div span
-{
-  line-height: 200%;
-}
-
-.SSMenuItem .SSLeft
-{
-  background-image: url(../images/ShiftMenu/middle-left.png);
-  background-repeat: repeat-x;
-  height: 20px;
-}
-
-div.SSMenuItem:hover .SSLeft
-{
-  background-image: url(../images/ShiftMenu/middle-left-hover.png);
-  background-repeat: repeat-x;
-  height: 20px;
-}
-
-.SSMenuItem .SSRight
-{
-  background-image: url(../images/ShiftMenu/middle-right.png);
-  background-repeat: no-repeat;
-  height: 20px;
-}
-
-div.SSMenuItem:hover .SSRight
-{
-  background-image: url(../images/ShiftMenu/middle-right-hover.png);
-  background-repeat: no-repeat;
-  height: 20px;
-}
-
-.SSMenuBottomItem
-{
-  clear: both;
-  font-size: 11px;
-}
-
-.SSMenuBottomItem div
-{
-  float: left;
-}
-
-.SSMenuBottomItem .SSLeft
-{
-  background-image: url(../images/ShiftMenu/bottom-left.png);
-  background-repeat: repeat-x;
-  height: 20px;
-}
-
-div.SSMenuBottomItem:hover .SSLeft
-{
-  background-image: url(../images/ShiftMenu/bottom-left-hover.png);
-  background-repeat: repeat-x;
-  height: 20px;
-}
-
-.SSMenuBottomItem .SSRight
-{
-  background-image: url(../images/ShiftMenu/bottom-right.png);
-  background-repeat: repeat-x;
-  height: 20px;
-}
-
-div.SSMenuBottomItem:hover .SSRight
-{
-  background-image: url(../images/ShiftMenu/bottom-right-hover.png);
-  background-repeat: repeat-x;
-  height: 20px;
-}
-
-.SSMenuTopItem
-{
-  clear: both;
-  font-size: 11px;
-}
-
-.SSMenuTopItem div
-{
-  float: left;
-}
-
-.SSMenuTopItem .SSLeft
-{
-  background-image: url(../images/ShiftMenu/top-left.png);
-  background-repeat: repeat-x;
-  height: 20px;
-}
-
-div.SSMenuTopItem:hover .SSLeft
-{
-  background-image: url(../images/ShiftMenu/top-left-hover.png);
-  background-repeat: repeat-x;
-  height: 20px;
-}
-
-.SSMenuTopItem .SSRight
-{
-  background-image: url(../images/ShiftMenu/top-right.png);
-  background-repeat: repeat-x;
-  height: 20px;
-}
-
-div.SSMenuTopItem:hover .SSRight
-{
-  background-image: url(../images/ShiftMenu/top-right-hover.png);
-  background-repeat: repeat-x;
-  height: 20px;
-}
-
-.SSDisabledMenuItem
-{
-  opacity: 0.5;
-}
-
 .SSPinWidgetButton
 {
   width: 19px;
   height: 19px;
-}
-
-/* Console Plugin Menu */
-
-#SSConsolePluginMenu
-{
-  z-index:1000002;
-  position: fixed;
-}
-
-#SSConsolePluginMenuTab
-{
-  position: fixed;
-  width: 25px;
-  height: 22px;
-  background: transparent url(../images/ShiftMenu/menu-bg-reverse-shadowed.png);
-  z-index:1000003;
-}
-
-.SSPluginMenuTabIcon
-{
- width: 100%;
- height: 100%;
- margin-left: 3px;
- background: transparent;
- background-repeat: no-repeat;
- background-position: 3px 3px;
 }
 
 /* Error Window */
@@ -711,4 +486,27 @@ table.SSErrorWindowShiftStatus
 .SSMessage.SSVisible
 {
   display: block;
+}
+
+/* The following are here so we don't need to look at iFrame styles
+   to read out the values. This is to support the rounded images when
+   running under Firefox, - David */
+
+.ShiftListView .ShiftListViewCell .gravatar
+{
+  width: 16px;
+  position: absolute;
+  -moz-border-radius: 4px 0px 0px 4px;
+  -webkit-border-top-left-radius: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+}
+
+.ShiftListView .ShiftListViewCell .gravatar:hover
+{
+  margin-top: -8px;
+  margin-left: -8px;
+  width: 32px;
+  height: 32px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
 }

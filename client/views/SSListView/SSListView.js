@@ -1,13 +1,14 @@
 // ==Builder==
 // @uiclass
-// @optional
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSView, SSCell
 // ==/Builder==
 
-// ==============
-// = Exceptions =
-// ==============
+/*
+  Constants:
+    SSListViewError - base SSListView exception.
+    SSListViewError.OutOfBounds - thrown when trying to access items out of bounds.
+ */
 
 var SSListViewError = SSException;
 
@@ -17,15 +18,10 @@ SSListViewError.OutOfBounds = new Class({
   name:"SSListViewError.OutOfBounds"
 });
 
-// ====================
-// = Class Definition =
-// ====================
-  /*
-    Class: SSListView
-      SSListView controls the display of array or collections of resources within the console. 
-      
-  */
-
+/*
+  Class: SSListView
+  SSListView controls the display of an array or a SSTable (as an array) within the console.
+*/
 var SSListView = new Class({
 
   Extends: SSView,
@@ -43,7 +39,8 @@ var SSListView = new Class({
       addAt: 'bottom',
       leaveEditOnUpdate: false,
       allowSelection: false,
-      resource: null
+      table: null,
+      scrollEvents: false
     });
   },
   
@@ -51,62 +48,149 @@ var SSListView = new Class({
   {
     this.parent(el, options);
     this.__cellBeingEdited = -1;
+    this.__cellStates = {};
     if(this.options.filter) this.setFilter(this.options.filter);
-    if(this.options.resource)
+    if(this.options.table)
     {
-      SSLog('Use datasource', SSLogForce);
+      SSLog('Use table', SSLogForce);
     }
     else
     {
       this.setData([]);
     }
+    if(this.options.scrollEvents)
+    {
+      el.addEvent('scroll', this.onScroll.bind(this));
+    }
     this.initSortables();
     this.attachEvents();
   },
   
-  
-  setResource: function(resource)
+  /*
+    Function: setState
+      Set the internal list view state of a cell. This way state
+      can be preserved between updates without polluting the actual
+      data as well avoiding issues with sorting.
+      
+    Parameters:
+      id - a document id.
+      key - a string.
+      v - a value.
+  */
+  setState: function(id, key, v)
   {
-    if($type(resource) == 'string')
+    if(!this.__cellStates[id]) this.__cellStates[id] = {};
+    this.__cellStates[id][key] = v;
+  },
+  
+  /*
+    Function: getState
+      Return the view state of a cell.
+      
+    Parameters:
+      id - a document id.
+      key - a string.
+
+    Returns:
+      A value.
+  */
+  getState: function(id, key)
+  {
+    return $get(this.__cellStates, id, key);
+  },
+  
+  /*
+    Function: removeState
+      Remove a state for a cell.
+      
+    Parmeters:
+      id - a document id.
+      key - the key to delete.
+  */
+  removeState: function(id, key)
+  {
+    delete this.__cellStates[id][key];
+  },
+  
+  /*
+    Function: states
+      Return the current cell states.
+      
+    Parameters:
+      
+      
+    Returns:
+      A hash or an array
+  */
+  states: function(asArray)
+  {
+    if(asArray !== true) return this.__cellStates;
+    return this.data().map(Function.comp(Function.acc("_id"), this.__cellStates.asFn()));
+  },
+  
+  /*
+    Function: setTable
+      Set the table which will provide data to this list view.
+      
+    Parameters:
+      table - a <SSTable> instance.
+  */
+  setTable: function(table)
+  {
+    if($type(table) == 'string')
     {
-      SSAddObserver(this, 'resourceSet', function(evt) {
-        if(evt.name == resource) this.__setResource__(evt.resource);
+      SSAddObserver(this, 'tableSet', function(evt) {
+        if(evt.name == table) this.__setTable__(evt.table);
       }.bind(this));
     }
     else
     {
-      this.__setResource__(resource);
+      this.__setTable__(table);
     }
   },
   
+  /*
   
-  __setResource__: function(resource)
+  */
+  __setTable__: function(table)
   {
-    if(resource === null)
+    if(table === null)
     {
-      this.setResourceIsRead(false);
-      this.__resource = null;
+      this.setTableIsRead(false);
+      this.__table = null;
       this.__reloadData__();
     }
     else
     {
-      if(!$implements(resource, SSResource.protocol))
+      if(!$implements(table, SSTable.protocol))
       {
-        SSLog("Argument to SSListView.__setResource__ does not implement SSResource.protocol", SSLogError);
+        SSLog("Argument to SSListView.__setTable__ does not implement SSTable.protocol", SSLogError);
         throw new Error();
       }
-      if(!resource.hasView(this)) resource.addView(this);
-      this.__resource = resource;
+      if(!table.hasView(this)) table.addView(this);
+      this.__table = table;
     }
   },
   
-  
-  resource: function()
+  /*
+    Function: table
+      Return the table that provides data to this list view.
+      
+    Returns:
+      <SSTable>
+  */
+  table: function()
   {
-    return this.__resource;
+    return this.__table;
   },
   
-  
+  /*
+    Function: hasCell
+      Check if the list view has a SSCell instance associated with it.
+ 
+    Returns:
+      boolean
+   */
   hasCell: function()
   {
     if(this.__hasCell || this.cell()) return true;
@@ -121,29 +205,39 @@ var SSListView = new Class({
     return this.__hasCell;
   },
   
-  
+  /*
+    Function: setPageControl
+      Set the page control object used by this list view.
+
+    Parameters:
+      pageControl - a page control object
+   */
   setPageControl: function(pageControl)
   {
     this.__pageControl = pageControl;
   },
   
-  
+  /*
+    Function: pageControl
+      Return the page control object used by the list view
+
+    Returns:
+      A page control object.
+   */
   pageControl: function()
   {
     return this.__pageControl;
   },
   
-  
   /*
-      Function: setFilter
-        Sets the filter as a function.
+    Function: setFilter
+      Sets the filter as a function.
       
-      Parameters: 
-        fn - A function.
+    Parameters: 
+      fn - A function.
       
-      See Also: 
-        getFilter
-        filter
+    See Also: 
+      <getFilter>, <filter>
   */  
   setFilter: function(fn)
   {
@@ -191,11 +285,9 @@ var SSListView = new Class({
     return false;
   },
   
-  
   /*
-      Function: initSortables (private)
-        Called during intialize(). Creates a new sortable object.   
-  
+    Function: initSortables (private)
+      Called during intialize(). Creates a new sortable object.
   */
   initSortables: function()
   {
@@ -214,13 +306,22 @@ var SSListView = new Class({
         snap: 4,
         revert: true,
         opacity: 0.5,
-        onStart: function(cellNode) {
+        onStart: function(cellNode) 
+        {
           this.setIsBeingSorted(true);
           this.__sortables.clone.addClass('Clone');
           this.sortStart(cellNode);
         }.bind(this),
         onSort: this.sortSort.bind(this),
-        onComplete: this.sortComplete.bind(this)
+        onComplete: this.sortComplete.bind(this),
+        onEnter: function()
+        {
+          
+        },
+        onLeave: function()
+        {
+          
+        }
       };
       
       if(this.options.handle) options.handle = this.options.handle;
@@ -241,15 +342,15 @@ var SSListView = new Class({
   },
   
   /*
-      Function: sortStart
-        Sets the sortStart property to the index of a cell node. Determines the starting point for a sort.  
+    Function: sortStart
+      Sets the sortStart property to the index of a cell node. Determines the starting point for a sort.
                   
-      Parameters:
-       cellNode - a cell's DOM node
+    Parameters:
+      cellNode - a cell's DOM node
   */
   sortStart: function(cellNode)
   {
-    this.__sortStart = this.cellNodes().indexOf(cellNode);
+    this.__sortStart = this.indexOfCellNode(cellNode);
   },
   
   /*
@@ -261,7 +362,7 @@ var SSListView = new Class({
   */
   sortSort: function(cellNode)
   {
-    this.__sortCurrent = this.cellNodes().indexOf(cellNode);
+    this.__sortCurrent = this.indexOfCellNode(cellNode);
   },
   
   /*
@@ -277,7 +378,7 @@ var SSListView = new Class({
   sortComplete: function(cellNode)
   {
     this.setIsBeingSorted(false);
-    this.__sortEnd = this.cellNodes().indexOf(cellNode);
+    this.__sortEnd = this.indexOfCellNode(cellNode);
     
     this.fireEvent('onSortComplete');
     
@@ -301,7 +402,6 @@ var SSListView = new Class({
   /*
     Function: attatchEvents (private)
       Called by the initialize function.  Adds an event that calls eventDispatch on a click event. 
-      
   */
   attachEvents: function()
   {
@@ -316,9 +416,9 @@ var SSListView = new Class({
       _event - the event issueing the function. Always a "click" event. 
       eventType - //NOTE: I'm not sure what this argument means. -Justin
   */
-  eventDispatch: function(_event, eventType)
+  eventDispatch: function(event, eventType)
   {
-    var event = new Event(_event);
+    event = new Event(event);
     var target = $(event.target);
     var type = event.type;
     
@@ -327,11 +427,11 @@ var SSListView = new Class({
       case(this.hitTest(target, 'li, > li *') != null):
         var hit = this.cachedHit();
         var cellNode = (hit.get('tag') == 'li' && hit) || hit.getParent('li');
-        
-        this.cell().lock(cellNode);
+
+        this.cell().lock($(cellNode));
         this.cell().eventDispatch(event, type);
         this.cell().unlock();
-        
+
         if(type == 'click')
         {
           this.fireEvent('onRowClick', {listView:this, index:this.indexOfCellNode(cellNode)});
@@ -341,16 +441,15 @@ var SSListView = new Class({
       default:
       break;
     }
-    
     //event.stop();
   },
 
   /*
-      Function: awake
-        If a cell has content, set the cell's content to the assigned context.
+    Function: awake
+      If a cell has content, set the cell's content to the assigned context.
       
-      Parameters:
-        context - The context a object was created for. Either a window, element, or iframe.
+    Parameters:
+      context - The context a object was created for. Either a window, element, or iframe.
   */
   awake: function(context)
   {
@@ -367,14 +466,14 @@ var SSListView = new Class({
   },
   
   /*
-      Function: setCell
-        Sets the cell object, and sets a delegate instance of the cell. 
+    Function: setCell
+      Sets the cell object, and sets a delegate instance of the cell. 
 
-      Parameters:
-        cell - A cell object.
+    Parameters:
+      cell - A cell object.
         
-      See also:
-        cell
+    See also:
+      <cell>
   */
   setCell: function(cell)
   {
@@ -384,14 +483,14 @@ var SSListView = new Class({
   },
     
   /*
-      Function: cell
-        Returns the cell object.
+    Function: cell
+      Returns the cell object.
 
-      Returns:
-        A cell ojbecct
+    Returns:
+      A cell ojbecct
         
-      See also:
-        setCell
+    See also:
+      <setCell>
   */  
   cell: function()
   {
@@ -426,9 +525,9 @@ var SSListView = new Class({
   */
   data: function()
   {
-    if(this.resource())
+    if(this.table())
     {
-      return this.resource().data();
+      return this.table().data();
     }
     else
     {
@@ -437,11 +536,11 @@ var SSListView = new Class({
   },
   
   /*
-      Function: count
-         //NOTE: See TODO in function. -Justin  
+    Function: count
+    //NOTE: See TODO in function. -Justin  
          
-      Returns:
-        The length of a row in a Javascript array. 
+    Returns:
+      The length of a row in a Javascript array. 
   */
   count: function()
   {
@@ -449,17 +548,17 @@ var SSListView = new Class({
   },
   
   /*
-      Function: find
-        Returns a 0 if a row in a raw data array is found in a passed function, otherwise returns -1.
+    Function: find
+      Returns a 0 if a row in a raw data array is found in a passed function, otherwise returns -1.
         
-      Parameters:
-        fn - A function
+    Parameters:
+      fn - A function
         
-      Returns:
-        An integer 
+    Returns:
+      An integer 
         
-      See Also:
-        findAll
+    See Also:
+      <findAll>
   */
   find: function(fn)
   {
@@ -469,17 +568,17 @@ var SSListView = new Class({
   },
   
   /*
-      Function: findAll
-        Returns an array containing all of the found raw data rows in a passed function. 
+    Function: findAll
+      Returns an array containing all of the found raw data rows in a passed function. 
       
-      Parameters:
-        fn - A function
+    Parameters:
+      fn - A function
         
-      Returns:
-        An array
+    Returns:
+      An array
     
-      See Also:
-        find   
+    See Also:
+      <find>   
   */
   findAll: function(fn)
   {
@@ -490,16 +589,15 @@ var SSListView = new Class({
   },
   
   /*
-      Function: query
-        Accepts an index of a collection item and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
+    Function: query
+      Accepts an index of a collection item and argument to search for in a function. Returns the argument value(s) in a string or array, othewise returns null. 
       
-      Parameters:
-        index - the index of a SSCell object
-        arg   - An argument of a function. 
+    Parameters:
+      index - the index of a SSCell object
+      arg   - An argument of a function. 
         
-      Returns:
-        An string, array or null.
-        
+    Returns:
+      An string, array or null.
   */
   query: function(index, arg)
   {
@@ -529,12 +627,12 @@ var SSListView = new Class({
   },
   
   /*
-      Function: add
-        Adds an object, that is specified with the newItem argument, to a collection. The _animate argument determines if an animation occurs during function call.
+    Function: add
+      Adds an object, that is specified with the newItem argument, to a collection. The _animate argument determines if an animation occurs during function call.
         
-      Parameters:
-        newItem  - a javascript object
-        options - an object, can contain animate boolean as well as atIndex value.
+    Parameters:
+      newItem  - a javascript object
+      options - an object, can contain animate boolean as well as atIndex value.
   */
   add: function(newItem, options)
   {
@@ -551,12 +649,11 @@ var SSListView = new Class({
   },
   
   /*
-      Function: onAdd (private)
-        Callback event when a new Item is added to a collection. 
+    Function: onAdd (private)
+      Callback event when a new Item is added to a collection. 
     
-      Parameters:
-        data - A row in a javascript array.
-    
+    Parameters:
+      data - A row in a javascript array.
   */
   onAdd: function(data, userData)
   {
@@ -614,8 +711,6 @@ var SSListView = new Class({
   edit: function(index, _animate)
   {
     var animate = (_animate == null && true) || _animate;
-    this.boundsCheck(index);
-    
     var delegate = this.delegate();
     var canEdit = (delegate && delegate.canEdit && delegate.canEdit(index)) || true;
     
@@ -654,10 +749,10 @@ var SSListView = new Class({
     }
   },
   
-  
   /*
     Function: get 
-      Accepts an index of cell in a collection  and performs a boundsCheck to make sure the index is valid. Retreives the properties of each data element, stores them in an array, and returns the array. 
+      Accepts an index of cell in a collection. Retreives the properties of each 
+      data element, stores them in an array, and returns the array. 
       
     Parameters:
       index - the index of a SSCell object. 
@@ -694,17 +789,16 @@ var SSListView = new Class({
   },
   
   /*
-      Function: update  
-        Updates a collection's content with the passed cellData at the specified index. Accepts the current data, the index of the collection to update, and whether 
+    Function: update  
+      Updates a collection's content with the passed cellData at the specified index. Accepts the current data, the index of the collection to update, and whether 
     
-      Parameters:
-        cellData - An object.
-        index - the index of a SSCell object
-        _noArrayUpdate - A boolean.
+    Parameters:
+      cellData - An object.
+      index - the index of a SSCell object
+      _noArrayUpdate - A boolean.
   */
   update: function(cellData, index, _noArrayUpdate)
   {
-    this.boundsCheck(index);
     var noArrayUpdate = _noArrayUpdate || false;
     var delegate = this.delegate();
     var canUpdate = (delegate && delegate.canUpdate && delegate.canUpdate(index)) || true;
@@ -798,7 +892,6 @@ var SSListView = new Class({
   */
   set: function(cellData, index)
   {
-    this.boundsCheck(index);
     this.__set__(cellData, index);
   },
   
@@ -815,7 +908,6 @@ var SSListView = new Class({
     this.data()[index] = cellData;
   },
   
-  
   /*
     Function: remove
       Accepts an cell index, and removes the cell from the collection
@@ -831,7 +923,6 @@ var SSListView = new Class({
   // TODO: animation support
   remove: function(index)
   {
-    this.boundsCheck(index);
     var delegate = this.delegate();
     var canRemove = true;
     if(delegate && delegate.canRemove) canRemove = delegate.canRemove({listView:this, index:index});
@@ -927,7 +1018,6 @@ var SSListView = new Class({
   hideItem: function(index, _animate)
   {
     var animate = (_animate == null && true) || _animate;
-    this.boundsCheck(index);
     var delegate = this.delegate();
     var canHide = (delegate && delegate.canHide && delegate.canHide(index)) || true;
     if(canHide)
@@ -1067,10 +1157,10 @@ var SSListView = new Class({
   refresh: function(force)
   {
     this.parent();
-    if(force && this.resource()) this.setResourceIsRead(false);
+    if(force && this.table()) this.setTableIsRead(false);
     var hasCell = this.hasCell()
     if(!hasCell) return;
-    if(!this.data() && !this.resource()) return;
+    if(!this.data() && !this.table()) return;
     if(!this.isVisible()) return;
     this.reloadData();
   },
@@ -1088,52 +1178,69 @@ var SSListView = new Class({
     }
   },
   
-  
+  /*
+    Function: newCellForItemData
+    
+    Parameters:
+      itemData - a JSON object
+      index - the index of item to make sure it's not filtered
+
+    Returns:
+      a cloned DOM node from the list view's SSCell instance
+   */
   newCellForItemData: function(itemData, index)
   {
     var filtered = this.filter(itemData, index);
     var newCell = this.cell().cloneWithData(itemData);
-    if(itemData.id) newCell.store('refid', itemData.id);
     if(filtered) newCell.addClass('SSDisplayNone');
     return newCell;
   },
   
   
-  setResourceIsRead: function(val)
+  setTableIsRead: function(val)
   {
-    this.__resourceIsRead = val;
+    this.__tableIsRead = val;
   },
   
   
-  resourceIsRead: function()
+  tableIsRead: function()
   {
-    return this.__resourceIsRead;
+    return this.__tableIsRead;
   },
   
   /*
-    Function: reloadData (private)
-      Called by refresh(). Checks the length of the current collection data, and clears the currently loaded collection data.  If the collection array contains data, it resizes the elements and applies set filters. If the collection is not pending, the content is displayed.
-      
-    Parameters:
-      p - for flow control you can pass a promise.
+    Function: reloadData
+      Called by refresh(). Calls private  __reloadData__ which actually does
+      the work. If the list view data source is an SSTable instance will
+      call SSTable's read method which returns a promise.
+
+    See Also:
+      SSTable
   */
   reloadData: function()
   {
-    var resource = this.resource(), controlp;
-    if(resource && !this.resourceIsRead())
+    var table = this.table(), controlp;
+    if(table && !this.tableIsRead())
     {
-      this.setResourceIsRead(true);
-      controlp = resource.read();
+      this.setTableIsRead(true);
+      controlp = table.read();
     }
     this.__reloadData__(controlp);
   },
   
-  
-  __reloadData__: function(p)
+  /*
+    Function: __reloadData__ (private)
+      Clears out all of the cells and reloads data directly from the
+      list view's data source. Fires 'onReloadData' data event.
+
+    Parameters:
+      p - a control promise.
+   */
+  __reloadData__: function(p, startIndex)
   {
-    var len = this.data().length;
-    this.element.empty();
-    if(len > 0 && this.cell())
+    var theData = this.data(), len = theData.length, cell = this.cell();
+    if(!$type(startIndex)) this.element.empty();
+    if(len > 0 && cell)
     {
       var perPage = (this.pageControl() && this.pageControl().perPage()) || len;
       if(this.options.horizontal && this.options.cellSize)
@@ -1141,28 +1248,42 @@ var SSListView = new Class({
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
         this.element.setStyle('width', (this.options.cellSize.x*perPage)+modifer);
       }
-      var cells = this.data().map(this.newCellForItemData.bind(this));
-      cells.each(function(cell) {
-        this.element.grab(cell)
-      }.bind(this));
+      theData.slice(startIndex || 0, len).each(function(data) {
+        var cellNode = this.newCellForItemData(data);
+        this.element.grab(cellNode);
+        var restore = this.__cellStates[data._id];
+        if(restore)
+        {
+          cell.lock(cellNode);
+          $H(restore).each(Function.exec);
+          cell.unlock();
+        }
+        this.onAddCellNode(cellNode);
+      }, this);
       this.setNeedsDisplay(false);
       this.initSortables();
     }
     if(this.pageControl()) this.pageControl().initializeInterface();
     this.fireEvent('onReloadData', this);
+    this.onReloadData();
   }.asPromise(),
   
   /*
-    Function: boundsCheck
-      Tests to see if the passed index is within the bounds of the SSCollection array. Throws a SSListViewError message if the index is out of bounds. 
-    
-    Parameters:
-      index - the index of a SSCell object 
+    Function: onReloadData
+      *abstract*
+      Called when list view reloads data. Subclasses can implement to add new behaviors.
   */
-  boundsCheck: function(index)
-  {
-    if(index < 0 || index >= this.count()) throw new SSListViewError.OutOfBounds(new Error(), index + " index is out bounds.");
-  },
+  onReloadData: function() {},
+  
+  /*
+    Function: onAddCellNode
+      *abstract*
+      Called each time a list item is added during the __reloadData__ phase.
+      
+    Parameters:
+      cellNode - a DOM Element.
+  */
+  onAddCellNode: function(cellNode) {},
   
   /*
     Function: cellNodeForIndex
@@ -1211,7 +1332,31 @@ var SSListView = new Class({
     return this.indexOfNode(this.cellNodes(), cellNode);
   },
 
+  /*
+    Function: dataForIndex
+      Return the data for the specified index.
+      
+    Parameters:
+      idx - an integer.
+      
+    Returns:
+      A value.
+  */
+  dataForIndex: function(idx)
+  {
+    return this.data()[idx];
+  },
 
+  /*
+    Function: dataForCellNode
+      Return the data for a particular cell node.
+      
+    Parameters:
+      cellNode - an element.
+      
+    Returns:
+      A value.
+  */
   dataForCellNode: function(cellNode)
   {
     return this.data()[this.indexOfCellNode(cellNode)];
@@ -1219,20 +1364,18 @@ var SSListView = new Class({
   
   /*
     Function: onCellClick 
-      Accepts a cell node and sets a userDidClickListItem delegate with the index of the passed cell node.
+      Accepts a cell node and calls onRowClick.
       
     Parameter:
       cellNode - A cell's DOM node
       
+    See Also:
+      onRowClick
   */
   onCellClick: function(cellNode)
   {
-    var index = this.cellNodes().indexOf(cellNode);
+    var index = this.indexOfNode(this.cellNodes(), cellNode);
     this.onRowClick(index);
-    if(this.delegate() && this.delegate().userDidClickListItem)
-    {
-      this.delegate().userDidClickListItem(index);
-    }
   },
 
   
@@ -1255,18 +1398,8 @@ var SSListView = new Class({
     }
   },
 
-  
-  onRowSelect: function(index)
-  {
-    
-  },
-  
-  
-  onRowDeselect: function(index)
-  {
-    
-  },
-  
+  onRowSelect: function(index) {},
+  onRowDeselect: function(index) {},
   
   /*
     Function: setCellBeingEdited
@@ -1303,6 +1436,42 @@ var SSListView = new Class({
     {
       this.element.empty();
     }
-  }
+  },
+
+  /*
+    Function: animate
+      Returns an animation Promise.
+   */
+  animate: function(event)
+  {
+  },
   
+  /*
+    Function: onScroll
+      *private*
+      Called on scroll event if the list view was created with the scrollEvents
+      initialize option set to true.
+  */
+  onScroll: function()
+  {
+    var scroll = this.element.getScroll(),
+        scrollSize = this.element.getScrollSize(),
+        size = this.element.getSize();
+    if(scroll.y == 0) this.onScrollTop();
+    if(scrollSize.y == (scroll.y + size.y)) this.onScrollBottom();
+  },
+  
+  /*
+    Function: onScrollTop
+      *abstract*
+      Called when the list view is scrolled to the top.
+  */
+  onScrollTop: function(evt) {},
+  
+  /*
+    Function: onScrollBottom
+      *abstract*
+      Called when the list view is scrolle to the bottom.
+  */
+  onScrollBottom: function(evt) {}
 });

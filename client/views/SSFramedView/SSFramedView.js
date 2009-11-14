@@ -1,6 +1,5 @@
 // ==Builder==
 // @uiclass
-// @required
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSView
 // ==/Builder==
@@ -14,7 +13,7 @@ var SSFramedView = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      location: 'customViews'
+      location: 'views'
     });
   },
   
@@ -35,7 +34,7 @@ var SSFramedView = new Class({
 
     if(typeof SandalphonToolMode == 'undefined')
     {
-      var url = 'client/'+this.options.location+'/'+this.name+'/'+this.name+'Frame.css';
+      var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css');
       var p = SSLoadFile(url);
       this.onStyleLoad(p);
     }
@@ -45,7 +44,8 @@ var SSFramedView = new Class({
   onStyleLoad: function(css)
   {
     if(css) Sandalphon.addStyle(css);
-    var p = Sandalphon.load('/client/'+this.options.location+'/'+this.name+'/'+this.name);
+    var url = String.urlJoin('client', this.options.location, this.name, this.name);
+    var p = Sandalphon.load(url);
     this.onInterfaceLoad(p);
   }.asPromise(),
   

@@ -1,5 +1,4 @@
 // ==Builder==
-// @required
 // @package           System
 // @dependencies      SandalphonCore
 // ==/Builder==
@@ -95,7 +94,8 @@ function SSIsController(object)
 
 function SSGetInlineOptions(el)
 {
-  return JSON.decode(el.getProperty('options'));
+  var options = el.getProperty('options');
+  return (options) ? JSON.decode(options.replace("\n", "")) : {};
 }
 
 var __ssappdelegate__;

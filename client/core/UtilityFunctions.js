@@ -1,9 +1,7 @@
 // ==Builder==
-// @optional
 // @name              UtilityFunctions
 // @package           Core
 // ==/Builder==
-
 
 /*
 
@@ -31,6 +29,7 @@ Returns:
 */
 function SSInfo(spaceName) 
 {
+  // DELETE - superseded by attrs.json - David 10/10/09
   if (spaceName) 
   {
     var defaults = {
@@ -61,13 +60,14 @@ function SSInfo(spaceName)
     }
   }
 
-  return {
-    env: __env,
+  var info =  {
     server: __server,
     spacesDir: (typeof __spacesDir != 'undefined' && __spacesDir) || null,
     spaces: (spaceIndex && spaceIndex.join(', ')) || null,
     version: (typeof version != 'undefined' && version) || null
   };
+
+  return (typeof ShiftSpaceProxyMode == 'undefined') ? $merge(info, {env: __env}) : info;
 };
 
 // ===============================
@@ -155,18 +155,6 @@ function SSRemoveDragDiv()
   __dragDiv__ = __dragDiv__.dispose();
 }
 
-function SSLocalizedStringSupport()
-{
-  return (typeof __sslang != 'undefined');
-}
-
-// Localized String Support
-function SSLocalizedString(string)
-{
-  if(SSLocalizedStringSupport() && ShiftSpace.localizedStrings[string]) return ShiftSpace.localizedStrings[string];
-  return string;
-}
-
 function SSHasResource(resourceName)
 {
   return __sysavail__.files.contains(resourceName) || __sysavail__.packages.contains(resourceName);
@@ -176,7 +164,6 @@ function SSResourceExists(resourceName)
 {
   return __sys__.files[resourceName] != null || __sys__.packages[resourceName] != null;
 }
-
 
 function SSResetCore()
 {
