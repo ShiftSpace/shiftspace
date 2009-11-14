@@ -7,9 +7,34 @@ _store_yes = json.dumps({"store":"no"})
 _store_no = json.dumps({"store":"yes"})
 _users = {
     "defaults": _store_yes,
+    "index": "function(doc) {                                      \
+                if(doc.type == 'user') {                           \
+                  var ret = new Document();                        \
+                  ret.add(doc.userName, {field:'userName'});       \
+                  ret.add(doc.displayName, {field:'displayName'}); \
+                  return ret;                                      \
+                }                                                  \
+                return null;                                       \
+              }"
     }
 _shifts = {
     "defaults": _store_yes,
+    "index": "function(doc) {                                                    \
+                if(doc.type == 'shift') {                                        \
+                  var ret = new Document();                                      \
+                  ret.add(doc.createdBy, {field:'createdBy'});                   \
+                  ret.add(doc.summary, {field:'summary'});                       \
+                  ret.add(doc.href, {field:'href'});                             \
+                  ret.add(doc.domain, {field:'domain'});                         \
+                  ret.add(doc.publishData.streams.join(' '), {field:'streams'}); \
+                  ret.add(doc.publishData['private'], {field:'private'});        \
+                  ret.add(doc.publishData.draft, {field:'draft'});               \
+                  ret.add(Date.parse(doc.created), {field:'created'});           \
+                  ret.add(Date.parse(doc.modified), {field:'modified'});         \
+                  return ret;                                                    \
+                }                                                                \
+                return null;                                                     \
+              }"
     }
 _groups = {
     "defaults": _store_yes,
@@ -27,7 +52,7 @@ _lucene_design = {
 class Lucene():
     def __init__(self):
         self.resource = couchdb.client.Resource(None, "http://localhost:5984/shiftspace/_fti/lucene")
-  
+
     def search(self, view, debug=False, **params):
         """
         Runs a full text search on the db.
@@ -142,7 +167,7 @@ def fetch(db="shiftspace", view="_all_docs", keys=None, reduce=False):
     Fetch multiple documents from the database. Useful when
     joins are necessary and making multiple requests to the db
     is an undesirable performance hit.
-    
+
     Paramters:
         db - defaults to 'shiftspace'
         view - defaults to  '_all_docs'
