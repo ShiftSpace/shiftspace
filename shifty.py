@@ -100,12 +100,12 @@ def build(argv):
     Generates the supporting HTML and CSS files as well as the
     concatenated source.
     """
-    input = None
-    output = None
-    env = None
-    proj = None
-    templ = None
-
+    input = "client/ShiftSpace.js"
+    output = "builds/shiftspace.sandbox.js"
+    env = "mydev"
+    proj = "sandbox"
+    templ = "client/views/SSConsole/SSConsole.html"
+    
     def buildUsage():
         print
         print "When running build you may use the following options"
@@ -337,6 +337,7 @@ def usage():
     print "Hello from Shifty! <item> is required, [item] is not."
     print "   %16s  a magical dance that installs all dependencies, builds docs, and configures the server!" % "dance"
     print "   %16s  install dependencies" % "installdeps"
+    print "   %16s  build a shiftspace script" % "build"
     print "   %16s  configure ShiftSpace" % "configure <url>"
     print "   %16s  update ShiftSpace source and tests" % "update"
     print "   %16s  initialize the database" % "initdb"
