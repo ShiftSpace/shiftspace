@@ -64,17 +64,18 @@ _lucene_design = {
 
 
 class Lucene():
-    def __init__(self):
-        self.resource = couchdb.client.Resource(None, "http://localhost:5984/shiftspace/_fti/lucene")
 
-    def search(self, view, debug=False, **params):
+    def search(self, view, debug=False, dbname="shiftspace/master", **params):
         """
         Runs a full text search on the db.
         """
+        import urllib
+        uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(dbname)
+        resource = couchdb.client.Resource(None, uri)
         if debug:
-            return self.resource.get(view, **params)[1]
+            return resource.get(view, **params)[1]
         else:
-            return self.resource.get(view, **params)[1].get("rows")
+            return resource.get(view, **params)[1].get("rows")
 
 
 _lucene = Lucene()
