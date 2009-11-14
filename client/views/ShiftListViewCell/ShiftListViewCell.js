@@ -109,7 +109,7 @@ var ShiftListViewCell = new Class({
     }
     else
     {
-      lockCheckBox.dispose();
+      lockCheckBox.hide();
     }
 
     var favoriteButton = clone.getElement('.favoriteButton');
