@@ -189,6 +189,7 @@
 #MainTabView > .SSControlView > .SSButton.SSActive div{
   background-image: url(/images/right_tab_active.png);
   background-position: right -1px;
+  background-repeat: no-repeat;
 }
 
 #MainTabView > .SSControlView > .SSButton{
@@ -206,6 +207,7 @@
   height: 48px !important;
   background-image: url(/images/left_tab_active.png);
   background-position: left -1px;
+  background-repeat: no-repeat;
 }
 
 #MainTabView > .SSControlView > .SSButton:first-child{
@@ -216,7 +218,8 @@
 
 #MainTabView > .SSControlView > .SSButton.SSActive:first-child{
   background-image: url(/images/left_tab_active_first.png);
-  height: 46px !important;  
+  height: 46px !important;
+  background-repeat: no-repeat;  
 }
 
 #MainTabView > .SSControlView > .SSButton:nth-child(3){

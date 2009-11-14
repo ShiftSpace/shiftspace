@@ -85,6 +85,7 @@
   right: 6px;
   bottom: 0px;
   border:1px solid #DDD7D2; /*TODO: use image for gradient border*/
+  border-top: none;
 }
 
 .ShiftListView

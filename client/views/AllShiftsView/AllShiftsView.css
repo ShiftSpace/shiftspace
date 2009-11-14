@@ -9,13 +9,25 @@
 
 ul.ShiftListView li.ShiftListViewCell{
   height: 27px;
-  border-bottom: 1px solid #BBB4AF;
+  border-top: 1px solid #BBB4AF;
 }
 
 ul.ShiftListView li.ShiftListViewCell:hover{
   background-color: #A1C49C;
   height: 26px;
-  /*border: 1px #68A07E solid;*/
+  border-top-color: #6aa07e;
+}
+
+ul.ShiftListView li.ShiftListViewCell:hover+li{
+  border-top-color: #6aa07e;   
+}
+
+ul.ShiftListView li.ShiftListViewCell:last-child{
+  border-bottom: 1px solid #BBB4AF;
+}
+
+ul.ShiftListView li.ShiftListViewCell:last-child:hover{
+  border-bottom-color: #6aa07e;
 }
 
 .ShiftListView .ShiftListViewCell div.draft{
