@@ -92,16 +92,12 @@ class SSUser(User):
         server.create(SSUser.inbox(newUser.id))
 
         # sync views
+        Shift.by_user_and_created.sync(server[SSUser.feed(newUser.id)])
         Shift.by_href_and_created.sync(server[SSUser.feed(newUser.id)])
         Shift.by_domain_and_created.sync(server[SSUser.feed(newUser.id)])
         Shift.by_group_and_created.sync(server[SSUser.feed(newUser.id)])
         Shift.by_follow_and_created.sync(server[SSUser.feed(newUser.id)])
         Message.by_created.sync(server[SSUser.messages(newUser.id)])
-
-        # put the lucene full text search into the user's feed
-        # FIXME: will need to change this later - David
-        db = core.connect(SSUser.feed(newUser.id))
-        db["_design/lucene"] = core._lucene_design
 
         return newUser
 

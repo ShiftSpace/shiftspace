@@ -90,15 +90,10 @@ class Favorite(SSDocument):
         return core.value(Favorite.count_by_shift(db, key=shiftId)) or 0
 
     @classmethod
-    def forUser(cls, userId, start=None, end=None, descending=False, limit=25):
-        options = {}
+    def forUser(cls, userId, start=None, end=None, limit=25):
         if not start:
             start = [userId]
         if not end:
             end = [userId, {}]
-        options["limit"] = limit
-        results = Favorite.by_user_and_created(core.connect(), **options)
-        favs = core.objects(results[start:end])
-        if descending:
-            favs.reverse()
-        return favs
+        results = Favorite.by_user_and_created(core.connect(), limit=limit)
+        return core.objects(results[start:end])

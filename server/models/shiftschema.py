@@ -497,21 +497,24 @@ class Shift(SSDocument):
     # ========================================
 
     @classmethod
-    def byUserName(cls, userName, userId=None, start=None, end=None, limit=25):
+    def forUser(cls, userId, start=None, end=None, limit=25):
         """
         Return the list of shifts a user has created.
         Parameters:
-            userName - a user name.
-            userId - id of the user requesting the data (for joins).
+            userId - id of the user requesting the data.
             start - the start index or key.
             end - the end index or key.
             limit - number of results to return.
         Returns:
             A list of the user's shifts.
         """
-        id = SSUser.read(userName).id
-        db = core.connect(SSUser.private(userId))
-        return Shift.by_user(db, id, limit=limit)
+        db = core.connect(SSUser.feed(userId))
+        if not start:
+            start = [userId]
+        if not end:
+            end = [userId, {}]
+        results = Shift.by_user_and_created(db, limit=limit)
+        return core.objects(results[start:end])
 
     """
     @classmethod
