@@ -101,7 +101,7 @@ def build(argv):
     concatenated source.
     """
     input = "client/ShiftSpace.js"
-    output = "builds/shiftspace.sandbox.js"
+    output = "shiftspace.sandbox.js"
     env = "mydev"
     proj = "sandbox"
     templ = "client/views/SSConsole/SSConsole.html"
