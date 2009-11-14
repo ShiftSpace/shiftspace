@@ -137,7 +137,8 @@ def build(argv):
             templ = arg
         else:
             buildUsage()
-
+    
+    corebuilder.run()
     compiler = sandalphon.SandalphonCompiler("builds/compiledViews", env)
     compiler.compile(inputFile=templ)
     preprocessor = preprocess.SSPreProcessor(project=proj, env=env)
