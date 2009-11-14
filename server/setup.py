@@ -150,6 +150,10 @@ def init(dbname="shiftspace"):
     if not server.__contains__(dbname):
         print "Creating database %s." % dbname
         server.create(dbname)
+        server.create("shiftspace/master")
+        server.create("shiftspace/public")
+        server.create("shiftspace/shared")
+        server.create("shiftspace/messages")
     else:
         print "%s database already exists." % dbname
     db = server[dbname]
