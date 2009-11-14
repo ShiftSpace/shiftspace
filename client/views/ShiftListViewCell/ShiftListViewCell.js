@@ -84,25 +84,33 @@ var ShiftListViewCell = new Class({
   {
     var clone = this.parent();
 
-    clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
-      evt = new Event(evt);
-      var target = $(evt.target);
-      var li = (target.get('tag') == 'li') ? target : target.getParent('li');
-      var idx = this.delegate().indexOfCellNode(li);
-      if(target.getProperty('checked'))
-      {
-        this.lock(li);
-        this.onCheck();
-        this.unlock();
-      }
-      else
-      {
-        this.lock(li);
-        this.onUncheck();
-        this.unlock();
-      }
-      evt.stopPropagation();
-    }.bind(this));
+    var lockCheckBox = clone.getElement('.selected');
+    if(ShiftSpace.User.isLoggedIn()) //TODO: should also check if current user is the owner of the shift?
+    {   
+      clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
+        evt = new Event(evt);
+        var target = $(evt.target);
+        var li = (target.get('tag') == 'li') ? target : target.getParent('li');
+        var idx = this.delegate().indexOfCellNode(li);
+        if(target.getProperty('checked'))
+        {
+          this.lock(li);
+          this.onCheck();
+          this.unlock();
+        }
+        else
+        {
+          this.lock(li);
+          this.onUncheck();
+          this.unlock();
+        }
+        evt.stopPropagation();
+      }.bind(this));
+    }
+    else
+    {
+      lockCheckBox.dispose();
+    }
 
     var favoriteButton = clone.getElement('.favoriteButton');
     if(favoriteButton)
