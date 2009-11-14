@@ -20,11 +20,17 @@ var AllShiftsView = new Class({
   {
     this.mapOutletsToThis();
   },
+  
+  
+  optionsForTable: function(resource)
+  {
+    return {byHref:window.location.href.split("#")[0]};
+  },
 
 
   afterAwake: function()
   {
-    //SSTableForName("AllShifts").setDelegate(ShiftSpaceNameTable.FilterPane);
+    SSTableForName("AllShifts").setDelegate(this);
   },
   
 
