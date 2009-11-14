@@ -23,15 +23,19 @@ class ShiftServer {
     $this->shift->server = $this;
     $this->mapper = $this->initRoutes();
 
+    if($this->requestPath() == '/') {
+        echo "ShiftSpace 1.0";
+        return;
+    }
+    
     $request = $this->mapper->match($this->requestPath());
     $controller = $request['controller'];
     $method = $request['action'];
-		
-    if($this->user->isLoggedIn || $method == "read")
-      {
-	echo $this->$controller->$method($request);
-      } else {
-      echo "{error:\"Operation not permitted. You are not logged in.\", type:\"UserNotLoggedInError\"}";
+
+    if($this->user->isLoggedIn || $method == "read") {
+        echo $this->$controller->$method($request);
+    } else {
+        echo "{error:\"Operation not permitted. You are not logged in.\", type:\"UserNotLoggedInError\"}";
     }
   }
 	
