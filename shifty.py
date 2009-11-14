@@ -284,7 +284,7 @@ def main(argv):
     except Error:
         usage()
         sys.exit(2)
-    if len(missing) > 0 and action != "nightly" and action != "installdeps":
+    if len(missing) > 0 and action != "nightly" and action != "installdeps" and action != "build":
         bail(", ".join(missing))
     if action in ("-h", "--help"):
         usage()
