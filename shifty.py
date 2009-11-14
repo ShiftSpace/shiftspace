@@ -18,10 +18,10 @@ try:
     import manual.build as manbuild
 except:
     missing.append("mako")
-#try:
-import server.setup as setup
-#except:
-#    missing.append("couchdb-python")
+try:
+    import server.setup as setup
+except:
+    missing.append("couchdb-python")
 try:
     import server.server as server
 except:
@@ -100,12 +100,12 @@ def build(argv):
     Generates the supporting HTML and CSS files as well as the
     concatenated source.
     """
-    input = None
-    output = None
-    env = None
-    proj = None
-    templ = None
-
+    input = "client/ShiftSpace.js"
+    output = "shiftspace.sandbox.js"
+    env = "mydev"
+    proj = "sandbox"
+    templ = "client/views/SSConsole/SSConsole.html"
+    
     def buildUsage():
         print
         print "When running build you may use the following options"
@@ -137,7 +137,8 @@ def build(argv):
             templ = arg
         else:
             buildUsage()
-
+    
+    corebuilder.run()
     compiler = sandalphon.SandalphonCompiler("builds/compiledViews", env)
     compiler.compile(inputFile=templ)
     preprocessor = preprocess.SSPreProcessor(project=proj, env=env)
@@ -278,13 +279,25 @@ def shell():
     os.system("python -i shell.py")
 
 
+def shiftpress():
+    """
+    Create the server .htaccess file
+    """
+    cdir = os.getcwd()
+    cdir = os.path.join(cdir, "server")
+    htaccess = ("Options +FollowSymLinks\nRewriteEngine On\nRewriteBase %s\nRewriteRule (.*) index.php\n" % cdir)
+    fh = open(os.path.join(cdir, ".htaccess"), "w")
+    fh.write(htaccess)
+    fh.close()
+
+
 def main(argv):
     try:
         action = argv[0]
     except Error:
         usage()
         sys.exit(2)
-    if len(missing) > 0 and action != "nightly" and action != "installdeps":
+    if len(missing) > 0 and (not (action in ["nightly", "installdeps", "build", "configure"])):
         bail(", ".join(missing))
     if action in ("-h", "--help"):
         usage()
@@ -311,6 +324,8 @@ def main(argv):
         build(argv[1:])
     elif action == "updatedb":
         updatedb()
+    elif action == "shiftpress":
+        shiftpress()
     elif action == "tests":
         toRun = "all"
         if len(argv) > 1:
@@ -337,7 +352,9 @@ def usage():
     print "Hello from Shifty! <item> is required, [item] is not."
     print "   %16s  a magical dance that installs all dependencies, builds docs, and configures the server!" % "dance"
     print "   %16s  install dependencies" % "installdeps"
+    print "   %16s  build a shiftspace script" % "build"
     print "   %16s  configure ShiftSpace" % "configure <url>"
+    print "   %16s  configure ShiftPress" % "shiftpress"
     print "   %16s  update ShiftSpace source and tests" % "update"
     print "   %16s  initialize the database" % "initdb"
     print "   %16s  update the database" % "updatedb"
