@@ -18,10 +18,10 @@ try:
     import manual.build as manbuild
 except:
     missing.append("mako")
-#try:
-import server.setup as setup
-#except:
-#    missing.append("couchdb-python")
+try:
+    import server.setup as setup
+except:
+    missing.append("couchdb-python")
 try:
     import server.server as server
 except:
