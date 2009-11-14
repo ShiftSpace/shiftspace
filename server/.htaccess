@@ -1,0 +1,4 @@
+Options +FollowSymLinks
+RewriteEngine On
+RewriteBase /~clintnewsom/wordpress-ss-lite/wp-content/plugins/shiftpress/server
+RewriteRule (.*) index.php
