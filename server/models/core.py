@@ -96,7 +96,7 @@ def server():
     return couchdb.client.Server("http://localhost:5984/")
 
 
-def connect(dbname="shiftspace"):
+def connect(dbname="shiftspace/master"):
     """
     Connects to the database. Defaults to "shiftspace".
     """
@@ -176,7 +176,7 @@ def single(view, key):
         return row.value
 
 
-def fetch(db="shiftspace", view="_all_docs", keys=None, reduce=False):
+def fetch(db="shiftspace/master", view="_all_docs", keys=None, reduce=False):
     """
     Fetch multiple documents from the database. Useful when
     joins are necessary and making multiple requests to the db
@@ -186,7 +186,8 @@ def fetch(db="shiftspace", view="_all_docs", keys=None, reduce=False):
         db - defaults to 'shiftspace'
         view - defaults to  '_all_docs'
     """
-    uri = 'http://localhost:5984/%s/%s' % (db, view)
+    import urllib
+    uri = 'http://localhost:5984/%s/%s' % (urllib.quote_plus(db), view)
     resource = couchdb.client.Resource(None, uri)
     params = None
     if reduce != True:
@@ -221,7 +222,7 @@ def update(doc):
     return db[id]
 
 
-def replicate(source, target="shiftspace"):
+def replicate(source, target="shiftspace/master"):
     resource = couchdb.client.Resource(None, 'http://localhost:5984/_replicate')
     content = json.dumps({"source":source, "target":target})
     headers = {"Content-Type":"application/json"}

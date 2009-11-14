@@ -91,7 +91,7 @@ adminDoc = {
     }
 
 
-def loadDocs(dbname="shiftspace", createAdmin=True):
+def loadDocs(dbname="shiftspace/master", createAdmin=True):
     """
     Load all of the initial documents for the database.
     Optional create admin user for debugging. Not recommended
@@ -137,7 +137,7 @@ def loadDocs(dbname="shiftspace", createAdmin=True):
     print "Design documents loaded."
 
 
-def init(dbname="shiftspace"):
+def init(dbname="shiftspace/master"):
     """
     Initialize the shiftspace database. Defaults to
     shiftspace for the database name.
@@ -150,7 +150,6 @@ def init(dbname="shiftspace"):
     if not server.__contains__(dbname):
         print "Creating database %s." % dbname
         server.create(dbname)
-        server.create("shiftspace/master")
         server.create("shiftspace/public")
         server.create("shiftspace/shared")
         server.create("shiftspace/messages")
