@@ -5,6 +5,7 @@ import simplejson as json
 
 _store_yes = json.dumps({"store":"no"})
 _store_no = json.dumps({"store":"yes"})
+
 _users = {
     "defaults": _store_yes,
     "index": "function(doc) {                                      \
@@ -17,6 +18,7 @@ _users = {
                 return null;                                       \
               }"
     }
+
 _shifts = {
     "defaults": _store_yes,
     "index": "function(doc) {                                                    \
@@ -36,9 +38,21 @@ _shifts = {
                 return null;                                                     \
               }"
     }
+
 _groups = {
     "defaults": _store_yes,
+    "index": "function(doc) {                                      \
+                if(doc.type == 'stream' && doc.meta == 'group') {  \
+                  var ret = new Document();                        \
+                  ret.add(doc.displayName, {field:'displayName'}); \
+                  ret.add(doc.shortName, {field:'shortName'});     \
+                  ret.add(doc.description, {field:'description'}); \
+                  return ret;                                      \
+                }                                                  \
+                return null;                                       \
+              }"
     }
+
 _lucene_design = {
     "language": "javascript",
     "fulltext": {
