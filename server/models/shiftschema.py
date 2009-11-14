@@ -431,12 +431,13 @@ class Shift(SSDocument):
             allowedGroups = Permission.writeable(userId)
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
 
+        # upate the private setting, the shift is no longer draft
         theShift.publishData.private = isPrivate
         theShift.publishData.draft = False
         
         # publish or update a copy of the shift to all user-x/private, user-y/private ...
         newUserDbs = []
-        if publishData.get("dbs"):
+        if publishData and publishData.get("dbs"):
             newUserDbs = [s for s in publishData.get("dbs") if s.split("_")[0] == "user"]
         oldUserDbs = [s for s in oldPublishData.get("dbs") if s.split("_")[0] == "user"]
         newUserDbs = list(set(newUserDbs).difference(set(oldUserDbs)))
@@ -449,7 +450,7 @@ class Shift(SSDocument):
 
         # publish or update a copy to group/x, group/y, ...
         newGroupDbs = []
-        if publishData.get("dbs"):
+        if publishData and publishData.get("dbs"):
             newGroupDbs = [s for s in publishData.get("dbs") if s.split("_")[0] == "group"]
         oldGroupDbs = [s for s in oldPublishData.get("dbs") if s.split("_")[0] == "group"]
         newGroupDbs = list(set(newGroupDbs).difference(set(oldGroupDbs)))
@@ -483,9 +484,9 @@ class Shift(SSDocument):
         [core.replicate(SSUser.public(userId), SSUser.feed(follower)) for follower in followers]
         
         # if draft false, copy to master database, we need it there
-        # for general queries about what's available on pages
+        # for general queries about what's available on pages - David
         db = core.connect()
-        if not db.get(shiftId):
+        if not db.get(id):
             theShift.copyTo(db)
         else:
             theShift.updateIn(db)
