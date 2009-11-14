@@ -279,6 +279,18 @@ def shell():
     os.system("python -i shell.py")
 
 
+def shiftpress():
+    """
+    Create the server .htaccess file
+    """
+    cdir = os.getcwd()
+    cdir = os.path.join(cdir, "server")
+    htaccess = ("Options +FollowSymLinks\nRewriteEngine On\nRewriteBase %s\nRewriteRule (.*) index.php\n" % cdir)
+    fh = open(os.path.join(cdir, ".htaccess"), "w")
+    fh.write(htaccess)
+    fh.close()
+
+
 def main(argv):
     try:
         action = argv[0]
@@ -312,6 +324,8 @@ def main(argv):
         build(argv[1:])
     elif action == "updatedb":
         updatedb()
+    elif action == "shiftpress":
+        shiftpress()
     elif action == "tests":
         toRun = "all"
         if len(argv) > 1:
@@ -340,6 +354,7 @@ def usage():
     print "   %16s  install dependencies" % "installdeps"
     print "   %16s  build a shiftspace script" % "build"
     print "   %16s  configure ShiftSpace" % "configure <url>"
+    print "   %16s  configure ShiftPress" % "shiftpress"
     print "   %16s  update ShiftSpace source and tests" % "update"
     print "   %16s  initialize the database" % "initdb"
     print "   %16s  update the database" % "updatedb"
