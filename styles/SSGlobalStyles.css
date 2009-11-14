@@ -123,7 +123,6 @@
     
     .ShiftListView .ShiftListViewCell div.summaryContainer
     {
-      min-width: 485px;
       color: #4B423A;
     }
 
@@ -136,10 +135,10 @@
     
     .ShiftListView .ShiftListViewCell div.status
     {
-      margin-top: -3px;
       margin-right:2px;
       width: 22px;
-      height: 26px;
+      /*height: 26px;*/
+      height: 100%;
       background-repeat: no-repeat;
     }
 
@@ -151,6 +150,7 @@
     {
       background-image:url(/images/Console/publicicon.png);
 /*      background-position:-8 -8;*/
+      background-position: 0 -4px;
     }
 
     .ShiftListView .ShiftListViewCell:nth-child(2n+0)

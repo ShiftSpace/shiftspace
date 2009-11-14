@@ -14,7 +14,6 @@ ul.ShiftListView li.ShiftListViewCell{
 
 ul.ShiftListView li.ShiftListViewCell:hover{
   background-color: #A1C49C;
-  height: 26px;
   border-top-color: #6aa07e;
 }
 
@@ -46,4 +45,14 @@ ul.ShiftListView li.ShiftListViewCell:hover div.draft{
 
 .ShiftListView .ShiftListViewCell:nth-child(even) div.draft{
   background-image: url(/images/white_fade_bg.png);
+}
+
+.ShiftListView li.ShiftListViewCell .userDateMeta{
+  height: 24px;
+  position: absolute;
+  right: 150px;
+}
+
+.ShiftListView li.ShiftListViewCell .userDateMeta *{
+  float: left;
 }
