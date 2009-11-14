@@ -15,7 +15,7 @@ ul.ShiftListView li.ShiftListViewCell{
 ul.ShiftListView li.ShiftListViewCell:hover{
   background-color: #A1C49C;
   height: 26px;
-  border: 1px #68A07E solid;
+  /*border: 1px #68A07E solid;*/
 }
 
 .ShiftListView .ShiftListViewCell div.draft{
