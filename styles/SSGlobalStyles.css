@@ -173,6 +173,10 @@
       background-color: #81C49C;
     }
 
+    .ShiftListView .ShiftListViewCell .selected
+    {
+      width:14px;
+    }
     .ShiftListView .ShiftListViewCell .spaceIcon
     {
       margin-left: 10px;

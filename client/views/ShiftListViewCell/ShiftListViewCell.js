@@ -185,7 +185,7 @@ var ShiftListViewCell = new Class({
     {
       //unbind the click event on checkbox and hide it
       el.getElement('input[type=checkbox]').removeEvents('click');
-      el.getElement('.selected').hide();
+      el.getElement('input[type=checkbox]').hide();
     }
   },
   
