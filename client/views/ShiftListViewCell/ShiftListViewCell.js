@@ -85,7 +85,7 @@ var ShiftListViewCell = new Class({
     var clone = this.parent();
 
     var lockCheckBox = clone.getElement('.selected');
-    if(ShiftSpace.User.isLoggedIn()) //TODO: should also check if current user is the owner of the shift?
+    if(ShiftSpace.User.isLoggedIn())
     {   
       clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
         evt = new Event(evt);
@@ -180,6 +180,12 @@ var ShiftListViewCell = new Class({
     if(shift.userName == ShiftSpaceUser.getUserName())
     {
       el.getElement('.status').addClass((publishData.draft && "private") || "public");
+    }
+    else
+    {
+      //unbind the click event on checkbox and hide it
+      el.getElement('input[type=checkbox]').removeEvents('click');
+      el.getElement('.selected').hide();
     }
   },
   
