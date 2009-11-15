@@ -104,15 +104,31 @@
 .SSTabViewSubTabStyle > .SSControlView
 {
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 5px;
+  left: 3px;
   bottom: 0px;
   width: 125px;
+  background-color: #E3DFD8;
 }
 
 .SSTabViewSubTabStyle > .SSControlView > .SSButton
 {
+  /*border-width: 1px 0 1px 0;
+  border: #C9CCC4 solid;*/
+  border-bottom: 1px solid #C9CCC4;
 }
+
+.SSTabViewSubTabStyle > .SSControlView > .SSButton:first-child{
+  border-top: none;  
+}
+
+.SSTabViewSubTabStyle > .SSControlView > .SSButton.SSActive{
+  background-color: #F7F2EF;
+  color: #F63B02;
+  border-bottom-color: #C9CCC4;
+}
+
+
 
 .SSTabViewSubTabStyle > .SSContentView
 {
@@ -122,3 +138,4 @@
   right: 0px;
   bottom: 0px;
 }
+
