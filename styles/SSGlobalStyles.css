@@ -173,6 +173,10 @@
       background-color: #81C49C;
     }
 
+    .ShiftListView .ShiftListViewCell .selected
+    {
+      width:14px;
+    }
     .ShiftListView .ShiftListViewCell .spaceIcon
     {
       margin-left: 10px;
@@ -253,6 +257,11 @@
       float: left;
     }
 
+    .ShiftListView .ShiftListViewCell div.favorite div.favoriteCount
+    {
+      margin-top:2px;
+    }
+    
     .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton
     {
       width: 18px;

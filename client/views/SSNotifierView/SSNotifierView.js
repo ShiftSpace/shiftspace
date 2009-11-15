@@ -272,7 +272,6 @@ var SSNotifierView = new Class({
   {
     this.__count = countp;
     this.updateCounter();
-    SSLog(this.graph.state(), SSLogForce);
     
     if (this.__count > 0 && this.graph.state() != "SSNotifierOpen")
     {
