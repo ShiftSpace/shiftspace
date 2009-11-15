@@ -11,17 +11,33 @@ class ShiftController {
     //create a shift in the database.
     $data = flatten(json_decode(file_get_contents("php://input"), true));
     extract($data);
-    $query = $this->db->prepare("INSERT INTO shift (createdBy, href, space_name, space_version, 
-						    summary, created, modified, 
-						    publishData_publishTime, content) 
-						    VALUES (:createdBy, :href, :space_name, 
-							    :space_version, :summary, :created, 
-							    :modified, :publishData_publishTime, 
-							    :content )");
-    $query->execute(array(':createdBy' => $createdBy, ':href'=> $href, ':space_name'=> $space_name, 
-			  ':space_version'=> $space_version, ':summary'=> $summary, 
-			  ':created'=>$created, ':modified'=>$modified,								
-			  ':publishData_publishTime'=>$publishdData_publishTime, ':content'=>$content));					
+    $query = $this->db->prepare("INSERT INTO shift (createdBy,
+                                                    href,
+                                                    space_name,
+                                                    space_version,
+                                                    summary,
+                                                    created,
+                                                    modified,
+                                                    publishData_publishTime,
+                                                    content)
+                                 VALUES (:createdBy,
+                                         :href,
+                                         :space_name,
+                                         :space_version,
+                                         :summary,
+                                         :created,
+                                         :modified,
+                                         :publishData_publishTime,
+                                         :content )");
+    $query->execute(array(':createdBy' => $createdBy,
+                          ':href'=> $href,
+                          ':space_name'=> $space_name,
+                          ':space_version'=> $space_version,
+                          ':summary'=> $summary,
+                          ':created'=>$created,
+                          ':modified'=>$modified,
+                          ':publishData_publishTime'=>$publishdData_publishTime, 
+                          ':content'=>$content));
     $id = $this->db->lastInsertId();
     return json_encode($this->_read($id));
   }
@@ -43,25 +59,29 @@ class ShiftController {
     extract($request);
     $data = flatten(json_decode(file_get_contents("php://input"), true));
     extract($data);
-    $query = $this->db->prepare("UPDATE shift 
-				 SET createdBy=:createdBy, 
-				     href=:href, 
-				     space_name=:space_name, 
-				     space_version=:space_version, 
-				     summary=:summary, 
-				     created=:created, 
-				     modified=:modified,  
-				     publishData_draft=:publishData_draft, 
-				     publishData_publishTime=:publishData_publishTime, 
-				     content=:content
-				     WHERE id=:id");
-    $query->execute(array(':createdBy' => $createdBy, ':href'=> $href, ':space_name'=> $space_name, 
-			  ':space_version'=> $space_version, ':summary'=> $summary, 
-			  ':created'=>$created, ':modified'=>$modified, 
-			  ':publishData_draft'=>$publishData_draft, 								
-			  ':publishData_publishTime'=>$publishdData_publishTime, 
-			  ':content'=>$content, ":id"=>$id));	
-    return json_encode($this->_read($id));					 
+    $query = $this->db->prepare("UPDATE shift
+                                 SET createdBy=:createdBy,
+                                     href=:href,
+                                     space_name=:space_name,
+                                     space_version=:space_version,
+                                     summary=:summary,
+                                     created=:created,
+                                     modified=:modified,
+                                     publishData_draft=:publishData_draft,
+                                     publishData_publishTime=:publishData_publishTime,
+                                     content=:content
+                                 WHERE id=:id");
+    $query->execute(array(':createdBy' => $createdBy,
+                          ':href'=> $href,
+                          ':space_name'=> $space_name,
+                          ':space_version'=> $space_version,
+                          ':summary'=> $summary,
+                          ':created'=>$created,
+                          ':modified'=>$modified,
+                          ':publishData_draft'=>$publishData_draft,
+                          ':publishData_publishTime'=>$publishdData_publishTime,
+                          ':content'=>$content, ":id"=>$id));
+    return json_encode($this->_read($id));
   }
  
   public function delete($request) {  
@@ -78,9 +98,7 @@ class ShiftController {
      any of the public non-user streams. Creates the comment stream
      if it doesn't already exist.*/
     extract($request);
-    $query = $this->db->prepare("UPDATE shift 
-				 SET publishData_draft = 0
-				 WHERE id = :id");
+    $query = $this->db->prepare("UPDATE shift SET publishData_draft = 0 WHERE id = :id");
     $query->execute(array(':id'=>$id ));
     echo "yes";
   }
@@ -88,9 +106,7 @@ class ShiftController {
   public function unpublish($request) {
     // Set the draft status of a shift back to True
     extract($request);
-    $query = $this->db->prepare("UPDATE shift 
-				 SET publishData_draft = 1
-				 WHERE id = :id");
+    $query = $this->db->prepare("UPDATE shift SET publishData_draft = 1 WHERE id = :id");
     $query->execute(array(':id'=>$id));
   }
 }

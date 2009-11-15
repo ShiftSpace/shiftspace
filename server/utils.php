@@ -10,13 +10,13 @@ function flatten($input) {
       $nextKey = "";
       $values = flatten($value);
       foreach ($values as $k => $v) {
-	$flattened[$key. "_" .$k] = $v;
+        $flattened[$key. "_" .$k] = $v;
       }
     } else {
       if($key == 'content') {
-	$flattened[$key] = json_encode($value);
+        $flattened[$key] = json_encode($value);
       } else {
-	$flattened[$key] = $value;
+        $flattened[$key] = $value;
       }
     }
   }
@@ -30,20 +30,20 @@ function unflatten ($input) {
     if(count($parts) > 1) {
       $current = &$result;
       for($i = 0; $i < count($parts)-1; $i++) {
-	$subkey = $parts[$i];
-	$temp = array();
-	if(!isset($current[$subkey])) {
-	  $current[$subkey] = $temp;
-	  $current = &$current[$subkey];
-	} else {
-	  $current = &$current[$subkey];
-	}
-	$subkey = $parts[$i+1];
+        $subkey = $parts[$i];
+        $temp = array();
+        if(!isset($current[$subkey])) {
+          $current[$subkey] = $temp;
+          $current = &$current[$subkey];
+        } else {
+          $current = &$current[$subkey];
+        }
+        $subkey = $parts[$i+1];
       }
       $current[$subkey] = $value;
     } else {
       $result[$key] = $value;
-    }	
+    }
   }
   return $result;
 }

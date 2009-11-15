@@ -38,35 +38,35 @@ class ShiftServer {
         echo "{error:\"Operation not permitted. You are not logged in.\", type:\"UserNotLoggedInError\"}";
     }
   }
-	
+
   public function requestPath() {
     //pass the request path to Routes. All parameters 
     //following the "server" directory are sent to the URI. 
     return substr_replace(strstr($_SERVER['REQUEST_URI'], "server"), "", 0, 6);
   }
-	
+
   public function initRoutes() {
     //Manage routing of URIs and actions. 
     $m = new Horde_Routes_Mapper();
     $m->environ = $_SERVER;
     $m->connect('shiftCreate', 'shift', array( 'controller' => 'shift', 
-					       'action'     => 'create',
-					       'conditions' => array("method" => array("POST"))));
+                                               'action'     => 'create',
+                                               'conditions' => array("method" => array("POST"))));
     $m->connect('shiftRead', 'shift/:id', array( 'controller' => 'shift', 
-						 'action'     => 'read',
-						 'conditions' => array("method" => array("GET"))));
+                                                 'action'     => 'read',
+                                                 'conditions' => array("method" => array("GET"))));
     $m->connect('shiftUpdate', 'shift/:id', array( 'controller' => 'shift', 
-						   'action'     => 'update',
-						   'conditions' => array("method" => array("PUT"))));
+                                                   'action'     => 'update',
+                                                   'conditions' => array("method" => array("PUT"))));
     $m->connect('shiftDelete', 'shift/:id', array( 'controller' => 'shift',
-						   'action' 	=> 'delete',
-						   'conditions' => array("method"=>array("DELETE"))));
+                                                   'action'     => 'delete',
+                                                   'conditions' => array("method"=>array("DELETE"))));
     $m->connect('shiftPublish', 'shift/:id/publish', array( 'controller'=> 'shift',
-							    'action' 	=> 'publish',
-							    'conditions'=> array("method"=>array("POST"))));
+                                                            'action'    => 'publish',
+                                                            'conditions'=> array("method"=>array("POST"))));
     $m->connect('shiftUnPublish', 'shift/:id/unpublish', array( 'controller' => 'shift',
-								'action' 	   => 'unpublish',
-								'conditions' => array("method"=>array("POST"))));
+                                                                'action'     => 'unpublish',
+                                                                'conditions' => array("method"=>array("POST"))));
     return $m;
   }
 }
