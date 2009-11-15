@@ -8,8 +8,12 @@
 }
 
 ul.ShiftListView li.ShiftListViewCell{
-  height: 27px;
+  position: relative;
+  height: 26px;
   border-top: 1px solid #BBB4AF;
+  line-height: 26px;
+  padding: 0;
+  vertical-align: middle;
 }
 
 ul.ShiftListView li.ShiftListViewCell:hover{
@@ -27,6 +31,10 @@ ul.ShiftListView li.ShiftListViewCell:last-child{
 
 ul.ShiftListView li.ShiftListViewCell:last-child:hover{
   border-bottom-color: #6aa07e;
+}
+
+ul.ShiftListView li.ShiftListViewCell input{
+  vertical-align: middle;  
 }
 
 .ShiftListView .ShiftListViewCell div.draft{
@@ -48,11 +56,17 @@ ul.ShiftListView li.ShiftListViewCell:hover div.draft{
 }
 
 .ShiftListView li.ShiftListViewCell .userDateMeta{
-  height: 24px;
+  height: 26px;
+  line-height: 26px;
   position: absolute;
   right: 150px;
+  top: 0px;
 }
 
 .ShiftListView li.ShiftListViewCell .userDateMeta *{
   float: left;
+}
+
+.ShiftListView li.ShiftListViewCell .user{
+  margin-top: 4px;  
 }
