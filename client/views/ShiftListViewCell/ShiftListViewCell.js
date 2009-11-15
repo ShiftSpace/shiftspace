@@ -84,25 +84,33 @@ var ShiftListViewCell = new Class({
   {
     var clone = this.parent();
 
-    clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
-      evt = new Event(evt);
-      var target = $(evt.target);
-      var li = (target.get('tag') == 'li') ? target : target.getParent('li');
-      var idx = this.delegate().indexOfCellNode(li);
-      if(target.getProperty('checked'))
-      {
-        this.lock(li);
-        this.onCheck();
-        this.unlock();
-      }
-      else
-      {
-        this.lock(li);
-        this.onUncheck();
-        this.unlock();
-      }
-      evt.stopPropagation();
-    }.bind(this));
+    var lockCheckBox = clone.getElement('.selected');
+    if(ShiftSpace.User.isLoggedIn())
+    {   
+      clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
+        evt = new Event(evt);
+        var target = $(evt.target);
+        var li = (target.get('tag') == 'li') ? target : target.getParent('li');
+        var idx = this.delegate().indexOfCellNode(li);
+        if(target.getProperty('checked'))
+        {
+          this.lock(li);
+          this.onCheck();
+          this.unlock();
+        }
+        else
+        {
+          this.lock(li);
+          this.onUncheck();
+          this.unlock();
+        }
+        evt.stopPropagation();
+      }.bind(this));
+    }
+    else
+    {
+      lockCheckBox.hide();
+    }
 
     var favoriteButton = clone.getElement('.favoriteButton');
     if(favoriteButton)
@@ -172,6 +180,12 @@ var ShiftListViewCell = new Class({
     if(shift.userName == ShiftSpaceUser.getUserName())
     {
       el.getElement('.status').addClass((publishData.draft && "private") || "public");
+    }
+    else
+    {
+      //unbind the click event on checkbox and hide it
+      el.getElement('input[type=checkbox]').removeEvents('click');
+      el.getElement('input[type=checkbox]').hide();
     }
   },
   

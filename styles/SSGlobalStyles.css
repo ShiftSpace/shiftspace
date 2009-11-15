@@ -16,7 +16,7 @@
 
 .SSTabView > .SSControlView > div.SSButton:hover
 {
-  background-color: #fff;
+  /*background-color: #fff;*/
 }
 
 
@@ -42,8 +42,8 @@
 .SSTabViewSubTabStyle > .SSControlView > .SSButton
 {
   text-align: center;
-  height: 20px;
-  line-height: 20px;
+  height: 26px;
+  line-height: 28px;
 }
 
 .SSTabViewSubTabStyle > .SSControlView > .SSButton.SSActive
@@ -55,21 +55,19 @@
 {
   position: absolute;
   bottom: 0px;
-  width: 137px;
-  border-right: solid 1px #000;
+  width: 148px;
+  color: #F63B02;
 }
 
 .SSTabViewSubTabStyle > .SSControlView > .SSButton
 {
-  padding: 4px;
-  border-bottom: 1px solid;
 }
 
 .SSTabViewSubTabStyle > .SSContentView
 {
   position: absolute;
   top: 0px;
-  left: 150px;
+  left: 162px;
   right: 0px;
   bottom: 0px;
 }
@@ -85,6 +83,7 @@
   right: 6px;
   bottom: 0px;
   border:1px solid #DDD7D2; /*TODO: use image for gradient border*/
+  border-top: none;
 }
 
 .ShiftListView
@@ -98,18 +97,20 @@
   {
     float: left;
     width: 100%;
-    height: 28px;
-    padding-top: 4px;
+/*    height: 28px;
+    padding-top: 4px;*/
   }
   
     .ShiftListView .ShiftListViewCell > *
     {
-      float: left;
-      margin-top: 2px;
+      /*float: left;*/
+      /*margin-top: 2px;*/
     }
     
     .ShiftListView .ShiftListViewCell .spaceName
     {
+      height: 26px;
+      line-height: 26px;
       margin-left: 10px;
       display: none;
       font-weight: bold;
@@ -122,12 +123,14 @@
     
     .ShiftListView .ShiftListViewCell div.summaryContainer
     {
-      min-width: 485px;
       color: #4B423A;
+      margin: 0;
     }
 
     .ShiftListView .ShiftListViewCell div.summary
     {
+      height: 26px;
+      line-height: 26px;
       margin-left: 10px;
       display: inline-block;
       color: #4B423A;
@@ -135,10 +138,11 @@
     
     .ShiftListView .ShiftListViewCell div.status
     {
-      margin-top: -3px;
       margin-right:2px;
       width: 22px;
+      /*height: 26px;*/
       height: 26px;
+      line-height: 26px;
       background-repeat: no-repeat;
     }
 
@@ -150,16 +154,17 @@
     {
       background-image:url(/images/Console/publicicon.png);
 /*      background-position:-8 -8;*/
+      background-position: 0 -1px;
     }
 
     .ShiftListView .ShiftListViewCell:nth-child(2n+0)
     {
-      background-color: #F8F5F2;
+      background-color: #F7F2EF;
     }
 
     .ShiftListView .ShiftListViewCell:nth-child(2n+1)
     {
-      background-color: #F0EDEB;
+      background-color: #E3DFD8;
     }
 
     ul.ShiftListView li.ShiftListViewCell:hover
@@ -173,11 +178,20 @@
       background-color: #81C49C;
     }
 
+    .ShiftListView .ShiftListViewCell .selected
+    {
+      width:14px;
+    }
     .ShiftListView .ShiftListViewCell .spaceIcon
     {
       margin-left: 10px;
+      vertical-align: middle;
     }
-
+    
+    .ShiftListView .ShiftListViewCell .summary{
+      margin-left: 10px;
+    }
+    
     .ShiftListView .ShiftListViewCell .user > *
     {
       float: left;
@@ -212,6 +226,8 @@
       padding-left: 4px;
       padding-right: 4px;
       height: 16px;
+      /*margin-top: 5px;*/
+      line-height: 12px;
       -moz-box-sizing: border-box;
       -webkit-box-sizing: border-box;
       border-sizing: border-box;
@@ -253,16 +269,20 @@
       float: left;
     }
 
+    .ShiftListView .ShiftListViewCell div.favorite div.favoriteCount
+    {
+      margin-top:2px;
+    }
+    
     .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton
     {
       width: 18px;
-      height: 18px;
+      height: 26px;
       /*background-color: #ccc;*/
       background-image: url(/images/Console/stars.png);
       background-repeat: no-repeat;
       background-position:0 -52;
       margin-left:5px;
-      margin-top:-3px;
       cursor:pointer;
     }
     
@@ -282,10 +302,8 @@
     {
       float: right;
       width:30px;
-      height:20px;
+      height:26px;
       margin-right:20px;
-      margin-top:-2px;
-      padding-top:6px;
       text-align:center;
       background:url(/images/Console/commentballoon.png) no-repeat;
       cursor:pointer;
