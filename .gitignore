@@ -60,4 +60,7 @@ tmp/*/manual/install.html
 tmp/docs
 
 ideas/*
-config/views.json
+config/views.json/server/.htaccess
+/config/views.json
+/server/.htaccess
+/test.py

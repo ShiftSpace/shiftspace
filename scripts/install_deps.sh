@@ -3,7 +3,7 @@ cd deps/CherryPy-3.1.2
 sudo python setup.py install
 cd ../Routes-1.10.3
 sudo python setup.py install
-cd ../httplib2-0.4.0
+cd ../httplib2-dev
 sudo python setup.py install
 cd ../simplejson-2.0.9
 sudo python setup.py install
