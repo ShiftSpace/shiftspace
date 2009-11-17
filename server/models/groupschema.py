@@ -10,7 +10,7 @@ import core
 from server.models.ssdocschema import SSDocument
 
 # ==============================================================================
-# Error
+# Errors
 # ==============================================================================
 
 class GroupError(Exception): pass
@@ -22,6 +22,10 @@ class NotAMemberError(GroupError): pass
 
 class Group(SSDocument):
     
+    # ========================================
+    # Fields
+    # ========================================
+
     type = TextField(default="group")
     shortName = TextField()
     longName = TextField()
@@ -78,7 +82,7 @@ class Group(SSDocument):
             return "%s/group/%s" % ((result.source.server or ''), result.id)
 
     # ========================================
-    # CRUD
+    # Class Methods
     # ========================================
 
     @classmethod
@@ -128,12 +132,15 @@ class Group(SSDocument):
         db = core.connect()
         return core.object(Group.by_long_name(db, key=longName))
 
-    @classmethod
-    def update(cls, id):
+    # ========================================
+    # Instance Methods
+    # ========================================
+
+    def update(self, id):
         pass
 
-    @classmethod
-    def delete(cls, *args, **kwargs):
+
+    def delete(self):
         """
         Delete the group. Will probably not allow this
         once there's other peoples content in a gruop,
@@ -142,75 +149,52 @@ class Group(SSDocument):
             id - a group id.
         """
         from server.models.permschema import Permission
-        id = args[0]
         server = core.server()
         # delete the metadata
         db = core.connect()
-        del db[id]
+        del db[self.id]
         # delete the group database
-        del server[Group.db(id)]
+        del server[Group.db(self.id)]
         # delete all permissions
-        [perm.deleteInstance()
-         for perm in core.objects(Permission.by_group(core.connect(), key=id))]
-
-    # ========================================
-    # Validation
-    # ========================================
-
-    @classmethod
-    def isOwner(cls, userId, groupId):
-        theGroup = Group.load(core.connect(), groupId)
-        return userId == theGroup.createdBy
-
-    @classmethod
-    def isAdmin(cls, userId, groupId):
-        thePermission = Permission.readByUserAndGroup(userId, groupId)
-        return thePermission and thePermission.level >= 3
-
-    @classmethod
-    def isMember(cls, userId, groupId):
-        from server.models.permschema import Permission
-        thePermission = Permission.readByUserAndGroup(userId, groupId)
-        return thePermission and Permission.level > 0
+        [perm.deleteInstance() for perm in core.objects(Permission.by_group(core.connect(), key=self.id))]
 
     # ========================================
     # Group operations
     # ========================================
 
-    @classmethod
-    def inviteUser(cls, userId, groupId, otherId):
+    def inviteUser(self, aUser, otherUser):
         """
         Add a user to a group. Creates a permission for that user.
         """
         from server.models.permschema import Permission
-        Permission.create(userId, groupId, otherId, 0)
+        Permission.create(aUser, self.id, otherUser, 0)
 
-    @classmethod
-    def join(cls, userId, groupId):
+
+    def join(self, aUser):
         """
         If the user can join the group, update their status
         to allow reads.
         """
-        thePermission = Permission.readByUserAndGroup(userId, groupId)
+        thePermission = Permission.readByUserAndGroup(aUser.id, group.id)
         if thePermission and thePermission.level == 0:
             db = core.connect()
             thePermission.level = 1
             thePermission.store(db)
 
-    @classmethod
-    def setPrivilege(cls, userId, groupId, level):
+
+    def setPrivilege(self, aUser, level):
         """
         Set the privilege of a group member. Can only be
         set if the user has joined the group.
         """
-        thePermission = Permission.readByUserAndGroup(userID, groupId)
+        thePermission = Permission.readByUserAndGroup(aUser.id, self.id)
         if thePermission and level > 0:
             db = core.connect()
             thePermission.level = level
             thePermission.store(db)
 
-    @classmethod
-    def addShift(cls, groupId, shift):
+
+    def addShift(self, aShift):
         """
         Add a shift to a group. Triggers replication to all
         user/private of all non-peer members. Peers will get

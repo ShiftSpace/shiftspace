@@ -179,6 +179,22 @@ class SSUser(User):
         return self.id in admins["ids"]
 
 
+    def isOwnerOf(self, aGroup):
+        return userId == aGroup.createdBy
+
+
+    def isAdminOf(self, aGroup):
+        from server.models.permschema import Permission
+        thePermission = Permission.readByUserAndGroup(self.id, aGroup.id)
+        return thePermission and thePermission.level >= 3
+
+
+    def isMember(self, aGroup):
+        from server.models.permschema import Permission
+        thePermission = Permission.readByUserAndGroup(self.id, aGroup.id)
+        return thePermission and Permission.level > 0
+
+
     def canReadFull(self, other):
         return (self.id == other.id) or self.isAdmin()
 
