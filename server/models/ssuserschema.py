@@ -171,30 +171,6 @@ class SSUser(User):
     # Validation
     # ========================================
 
-    def isAdmin(self):
-        if not self.id:
-            return False
-        db = core.connect()
-        admins = db["admins"]
-        return self.id in admins["ids"]
-
-
-    def isOwnerOf(self, aGroup):
-        return userId == aGroup.createdBy
-
-
-    def isAdminOf(self, aGroup):
-        from server.models.permschema import Permission
-        thePermission = Permission.readByUserAndGroup(self.id, aGroup.id)
-        return thePermission and thePermission.level >= 3
-
-
-    def isMember(self, aGroup):
-        from server.models.permschema import Permission
-        thePermission = Permission.readByUserAndGroup(self.id, aGroup.id)
-        return thePermission and Permission.level > 0
-
-
     def canReadFull(self, other):
         return (self.id == other.id) or self.isAdmin()
 
@@ -215,6 +191,30 @@ class SSUser(User):
         writeable = self.writeable()
         allowed = set(shiftDbs).intersection(writeable)
         return len(allowed) > 0
+
+
+    def isAdmin(self):
+        if not self.id:
+            return False
+        db = core.connect()
+        admins = db["admins"]
+        return self.id in admins["ids"]
+
+
+    def isOwnerOf(self, aGroup):
+        return userId == aGroup.createdBy
+
+
+    def isAdminOf(self, aGroup):
+        from server.models.permschema import Permission
+        thePermission = Permission.readByUserAndGroup(self.id, aGroup.id)
+        return thePermission and thePermission.level >= 3
+
+
+    def isMemberOf(self, aGroup):
+        from server.models.permschema import Permission
+        thePermission = Permission.readByUserAndGroup(self.id, aGroup.id)
+        return thePermission and Permission.level > 0
 
     # ========================================
     # DBs

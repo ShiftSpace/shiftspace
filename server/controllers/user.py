@@ -145,6 +145,7 @@ class UserController(ResourceController):
             if not theUser:
                 return error("Invalid user name.", InvalidUserNameError)
             if theUser and (theUser.password == md5hash(password)):
+                helper.setLoggedInUser(theUser.id)
                 theUser.updateLastSeen()
                 return data(theUser.toDict())
             else:
