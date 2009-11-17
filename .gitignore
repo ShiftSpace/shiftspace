@@ -64,3 +64,4 @@ config/views.json/server/.htaccess
 /config/views.json
 /server/.htaccess
 /test.py
+/config/conf.json
