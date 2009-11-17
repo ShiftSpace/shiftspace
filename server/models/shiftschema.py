@@ -305,11 +305,10 @@ class Shift(SSDocument):
         db = core.connect(SSUser.private(self.createdBy))
         if db.get(id):
             del db[id]
-            return
-        db = core.connect(SSUser.public(self.createdBy))
-        if db.get(id):
-            del db[id]
-            return
+        else:
+            db = core.connect(SSUser.public(self.createdBy))
+            if db.get(id):
+                del db[id]
 
 
     def publishIds(self):
@@ -439,6 +438,37 @@ class Shift(SSDocument):
             self.updateIn(db)
 
         return Shift.joinData(self, userId)
+
+    # ========================================
+    # Comments
+    # ========================================
+
+    def commentCount(self):
+        db = core.connect()
+        return core.value(Comment.count_by_shift(db, key=self.id))
+
+
+    def comments(self, start=None, end=None, limit=25):
+        db = core.connect(Comment.db(self.id))
+        return core.objects(Comment.by_created(db, limit=limit))
+
+
+    def hasThread(self):
+        try:
+            core.server()[Comment.db(self.id)]
+            return True
+        except Exception:
+            return False
+
+
+    def subscribers(self):
+        db = core.connect(Comment.db(self.id))
+        return core.values(Comment.all_subscribed(db))
+
+
+    def favoriteCount(self):
+        db = core.connect()
+        return core.value(Favorite.count_by_shift(db, key=self.id)) or 0
     
     # ========================================
     # List & Filtering Support

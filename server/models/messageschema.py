@@ -15,6 +15,10 @@ from ssdocschema import SSDocument
 
 class Message(SSDocument):
 
+    # ========================================
+    # Fields
+    # ========================================
+
     type = TextField(default="message")
     fromId = TextField()
     toId = TextField()
@@ -36,7 +40,7 @@ class Message(SSDocument):
         )
 
     # ========================================
-    # CRUD
+    # Class Methods
     # ========================================
 
     @classmethod
@@ -60,31 +64,26 @@ class Message(SSDocument):
         newMessage.store(db)
         return newMessage
 
-    @classmethod
-    def markRead(cls, userId, id, value=True):
+    # ========================================
+    # Instance Methods
+    # ========================================
+
+    def markRead(self, value=True):
         """
         Mark a message as read.
         """
-        db = core.connect(SSUser.messages(userId))
-        theMessage = Message.load(db, id)
-        theMessage.read = value
-        theMessage.store(db)
-        return theMessage
+        db = core.connect(SSUser.messages(self.toId))
+        self.read = value
+        self.store(db)
+        return self
 
-    @classmethod
-    def delete(cls, userId, id):
+
+    def delete(self, id):
         """
         Delete a message.
         """
-        db = core.connect(SSUser.messages(userId))
+        db = core.connect(SSUser.messages(self.toId))
         del db[id]
 
-    # ========================================
-    # Utilities
-    # ========================================
 
-    @classmethod
-    def forUser(cls, userId, start=None, end=None, limit=25):
-        from server.models.ssuserschema import SSUser
-        db = core.connect(SSUser.messages(userId))
-        return core.objects(Message.by_created(db, limit=limit))
+

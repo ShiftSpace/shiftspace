@@ -74,26 +74,7 @@ class Favorite(SSDocument):
     # ========================================
     # Utilities
     # ========================================
-
-    @classmethod
-    def isFavorited(cls, userId, shiftId):
-        db = core.connect()
-        return db.get(Favorite.makeId(userId, shiftId))
         
     @classmethod
     def makeId(cls, userId, shiftId):
         return "user:%s:%s" % (userId, shiftId)
-
-    @classmethod
-    def count(cls, shiftId):
-        db = core.connect()
-        return core.value(Favorite.count_by_shift(db, key=shiftId)) or 0
-
-    @classmethod
-    def forUser(cls, userId, start=None, end=None, limit=25):
-        if not start:
-            start = [userId]
-        if not end:
-            end = [userId, {}]
-        results = Favorite.by_user_and_created(core.connect(), limit=limit)
-        return core.objects(results[start:end])

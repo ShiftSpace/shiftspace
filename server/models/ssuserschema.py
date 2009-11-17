@@ -14,6 +14,10 @@ from server.models.userschema import User
 
 class SSUser(User):
 
+    # ========================================
+    # Fields
+    # ========================================
+
     following = ListField(TextField())
 
     # ========================================
@@ -33,27 +37,32 @@ class SSUser(User):
 
     # ========================================
     # Class Methods
-    #========================================
+    # ========================================
 
     @classmethod
     def private(cls, userId):
         return "user/%s/private" % userId
 
+
     @classmethod
     def public(cls, userId):
         return "user/%s/public" % userId
+
 
     @classmethod
     def inbox(cls, userId):
         return "user/%s/inbox" % userId
 
+
     @classmethod
     def feed(cls, userId):
         return "user/%s/feed" % userId
 
+
     @classmethod
     def messages(cls, userId):
         return "user/%s/messages" % userId
+
 
     @classmethod
     def create(cls, userJson):
@@ -97,9 +106,11 @@ class SSUser(User):
 
         return newUser
 
+
     @classmethod
     def read(cls, id):
         return cls.load(core.connect(), id)
+
 
     @classmethod
     def readByName(cls, userName):
@@ -120,11 +131,13 @@ class SSUser(User):
         self.store(db)
         return self
 
+
     def updateLastSeen(self):
         from datetime import datetime
         self.lastSeen = datetime.now()
         self.store(core.connect())
         return self
+
 
     def delete(self):
         if self.id == "shiftspace":
@@ -142,6 +155,7 @@ class SSUser(User):
         # delete the user doc
         db = core.connect()
         del db[self.id]
+
 
     def toDict(self, full=False):
         userDict = super(SSUser, self).toDict()
@@ -164,8 +178,10 @@ class SSUser(User):
         admins = db["admins"]
         return self.id in admins["ids"]
 
+
     def canReadFull(self, other):
         return (self.id == other.id) or self.isAdmin()
+
 
     def canModify(self, other):
         if isinstance(other, SSUser): 
@@ -173,14 +189,15 @@ class SSUser(User):
         elif isinstance(other, Shift):
             return other.createdBy == self.id or self.isAdmin()
 
+
     def canComment(self, theShift):
         if self.isAdmin():
             return True
         if not theShift.isPublic():
             return False
-        shiftStreams = [db for db in theShift.publishData.dbs if not SSUser.isUserPrivate(db)]
+        shiftDbs = [db for db in theShift.publishData.dbs if not SSUser.isUserPrivate(db)]
         writeable = self.writeable()
-        allowed = set(shiftStreams).intersection(writeable)
+        allowed = set(shiftDbs).intersection(writeable)
         return len(allowed) > 0
 
     # ========================================
@@ -190,11 +207,14 @@ class SSUser(User):
     def joinable(self):
         pass
 
+
     def readable(self):
         pass
 
+
     def writeable(self):
         pass
+
 
     def adminable(self):
         pass
@@ -203,17 +223,31 @@ class SSUser(User):
     # Data
     # ========================================
 
+    def isFavorite(self, aShift):
+        db = core.connect()
+        return db.get(Favorite.makeId(self.id, aShift.id))
+
+
     def messages(self, start=None, end=None, limit=25):
         pass
+
 
     def shifts(self, start=None, end=None, limit=25):
         pass
 
+
     def feed(self, start=None, end=None, limit=25):
         pass
 
+
     def favorites(self, start=None, end=None, limit=25):
-        pass
+        if not start:
+            start = [userId]
+        if not end:
+            end = [userId, {}]
+        results = Favorite.by_user_and_created(core.connect(), limit=limit)
+        return core.objects(results[start:end])
+
 
     def comments(self, start=None, end=None, limit=25):
         pass
@@ -225,15 +259,43 @@ class SSUser(User):
     def followers(self, start=None, end=None, limit=25):
         return core.values(SSUser.all_followers(core.connect(), key=self.id))
 
+
     def follow(self, other):
         db = core.connect()
         if not (other.id in self.following):
             self.following.append(otherId)
         self.store(db)
 
+
     def unfollow(cls, other):
         db = core.connect()
         self.following.remove(other.id)
         self.store(db)
+
+    # ========================================
+    # Utilities
+    # ========================================
+
+    def isSubscribed(aShift):
+        db = core.connect(Comment.db(aShift.id))
+        return db.get("user:%s" % self.id) != None
+
+
+    def subscribe(aShift):
+        db = core.connect(Comment.db(shiftId))
+        if not self.isSubscribed(shiftId):
+            db.create({
+                "_id": "user:%s" % self.id,
+                "shiftId": aShift.id,
+                "type": "subscription",
+                "userId": self.id,
+                })
+
+
+    def unsubscribe(aShift):
+        db = core.connect(Comment.db(aShift.id))
+        if self.isSubscribed(aShift.id):
+            del db["user:%s" % self.id]
+
 
 
