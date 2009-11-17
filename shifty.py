@@ -207,9 +207,9 @@ def updatedb():
     setup.loadDocs()
 
 
-def resetdb():
+def deletedbs():
     """
-    Reset the databases. The database path must have been set
+    Delete the databases, the database path must have been set
     first for this to work.
     """
     from server.models import core
@@ -234,13 +234,27 @@ def resetdb():
     conf = json.loads(fh.read())
     if conf.get("dbpath"):
         userdbdir = os.path.join(conf["dbpath"], "user")
-        for file in os.listdir(userdbdir):
-            filepath = os.path.join(userdbdir, file)
-            if os.path.isdir(filepath):
-                os.rmdir(filepath)
-        os.rmdir(userdbdir)
-        os.rmdir(os.path.join(conf["dbpath"], "group"))
-        os.rmdir(os.path.join(conf["dbpath"], "shiftspace"))
+        if os.path.exists(userdbdir):
+            for file in os.listdir(userdbdir):
+                filepath = os.path.join(userdbdir, file)
+                if os.path.isdir(filepath):
+                    os.rmdir(filepath)
+            os.rmdir(userdbdir)
+        grpdbdir = os.path.join(conf["dbpath"], "group")
+        if os.path.exists(grpdbdir):
+            os.rmdir(grpdbdir)
+        ssdbdir = os.path.join(conf["dbpath"], "shiftspace")
+        if os.path.exists(ssdbdir):
+            os.rmdir(ssdbdir)
+
+
+def resetdb():
+    """
+    Delete all the databases and recreate them. The database path
+    must be set for this to work.
+    """
+    deletedbs()
+    setup.init()
 
 
 def setdbpath(path):
