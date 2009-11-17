@@ -128,12 +128,15 @@ class SSUser(User):
             return
         server = core.server()
         theUser = SSUser.read(id)
-        # delete the user's dbs
-        del server[SSUser.public(id)]
-        del server[SSUser.private(id)]
-        del server[SSUser.inbox(id)]
-        del server[SSUser.feed(id)]
-        del server[SSUser.messages(id)]
+        # delete the user's dbs (won't work with old style users)
+        try:
+            del server[SSUser.public(id)]
+            del server[SSUser.private(id)]
+            del server[SSUser.inbox(id)]
+            del server[SSUser.feed(id)]
+            del server[SSUser.messages(id)]
+        except Exception:
+            pass
         # delete the user doc
         db = core.connect()
         del db[id]
