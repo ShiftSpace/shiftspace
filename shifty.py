@@ -207,6 +207,55 @@ def updatedb():
     setup.loadDocs()
 
 
+def resetdb():
+    """
+    Reset the databases. The database path must have been set
+    first for this to work.
+    """
+    from server.models import core
+    from server.models.ssuserschema import SSUser
+    from server.models.groupschema import Group
+
+    # delete all core dbs and user and group dbs
+    server = core.server()
+    [group.deleteInstance() for group in core.objects(Group.all(core.connect()))]
+    [user.deleteInstance() for user in core.objects(SSUser.all(core.connect()))]
+    del server["shiftspace/public"]
+    del server["shiftspace/shared"]
+    del server["shiftspace/messages"]
+    del server["shiftspace/master"]
+    #[comment.deleteInstance() for comment in core.object(Comment.all(core.connect()))]
+    # cleanup, remove any empty folders (left from deleted users
+    try:
+        fh = open("config/conf.json")
+    except:
+        print "config/conf.json does not exist. Set the path the database first."
+        sys.exit(2)
+    conf = json.loads(fh.read())
+    if conf.get("dbpath"):
+        userdbdir = os.path.join(conf["dbpath"], "user")
+        for file in os.listdir(userdbdir):
+            filepath = os.path.join(userdbdir, file)
+            if os.path.isdir(filepath):
+                os.rmdir(filepath)
+        os.rmdir(userdbdir)
+        os.rmdir(os.path.join(conf["dbpath"], "group"))
+        os.rmdir(os.path.join(conf["dbpath"], "shiftspace"))
+
+
+def setdbpath(path):
+    """
+    Set the path to where the database actually lives. Required
+    for database reset operations.
+    """
+    fh = open("config/conf.json", "w")
+    conf = {
+        "dbpath": path
+        }
+    fh.write(json.dumps(conf, indent=4))
+    fh.close()
+
+
 def installdeps():
     """
     Run the dependency install scripts for the appropiate platform.
@@ -326,6 +375,15 @@ def main(argv):
         build(argv[1:])
     elif action == "updatedb":
         updatedb()
+    elif action == "resetdb":
+        resetdb()
+    elif action == "setdbpath":
+        try:
+            url = argv[1]
+        except:
+            usage()
+            sys.exit(2)
+        setdbpath(url)
     elif action == "shiftpress":
         try:
             url = argv[1]
@@ -358,18 +416,26 @@ def usage():
     print
     print "Hello from Shifty! <item> is required, [item] is not."
     print "   %16s  a magical dance that installs all dependencies, builds docs, and configures the server!" % "dance"
+    print
     print "   %16s  install dependencies" % "installdeps"
     print "   %16s  build a shiftspace script" % "build"
+    print
     print "   %16s  configure ShiftSpace" % "configure <url>"
     print "   %16s  configure ShiftPress" % "shiftpress <url>"
+    print
     print "   %16s  update ShiftSpace source and tests" % "update"
     print "   %16s  initialize the database" % "initdb"
     print "   %16s  update the database" % "updatedb"
+    print "   %16s  reset the database (delete and recreate)" % "resetdb"
+    print "   %16s  set the database path" % "setdbpath <path>"
+    print
     print "   %16s  build/update the core documentation" % "docs"
     print "   %16s  build/update the manual" % "manual"
+    print
     print "   %16s  create a new space" % "new <spacename>"
     print "   %16s  start ShiftServer on the specified port" % "runserver [port]"
     print "   %16s  deploy an application" % "app <appname>"
+    print
     print "   %16s  run unit tests" % "tests"
     print "   %16s  make a nightly" % "nightly"
     print

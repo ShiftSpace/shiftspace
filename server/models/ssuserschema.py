@@ -124,6 +124,8 @@ class SSUser(User):
 
     @classmethod
     def delete(cls, id):
+        if id == "shiftspace":
+            return
         server = core.server()
         theUser = SSUser.read(id)
         # delete the user's dbs
