@@ -42,6 +42,14 @@ class User(SSDocument):
     # Views
     # ========================================
 
+    all = View(
+        "users",
+        "function(doc) {            \
+           if(doc.type == 'user') { \
+             emit(doc._id, doc);    \
+           }                        \
+         }")
+
     by_name = View(
         "users",
         "function(doc) {              \

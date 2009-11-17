@@ -63,19 +63,19 @@ class Group(SSDocument):
 
     @classmethod
     def db(cls, groupId):
-        return "group_%s" % groupId
+        return "group/%s" % groupId
 
     @classmethod
     def dbShortName(cls, shortName, absolute=False):
         result = core.object(Group.by_short_name(core.connect(), key=shortName))
         if result:
-            return "%s/group_%s" % ((result.source.server or ''), result.id)
+            return "%s/group/%s" % ((result.source.server or ''), result.id)
  
     @classmethod
     def dbLongName(cls, longName, absolute=False):
         result = core.object(Group.by_long_name(core.connect(), key=longName))
         if result:
-            return "%s/group_%s" % ((result.source.server or ''), result.id)
+            return "%s/group/%s" % ((result.source.server or ''), result.id)
 
     # ========================================
     # CRUD
@@ -219,13 +219,13 @@ class Group(SSDocument):
             userId - a user id.
             shift - a Shift Document.
         """
+        from server.models.ssuserschema import SSUser
         if Group.isMember(shift.createdBy, groupId):
             grpdb = Group.db(groupId)
             shift.copyTo(core.connect(grpdb))
-            # TODO: only replicate into user_x/feeds that are not peer - David
-            [core.replicate(grpdb, "user_%s/feed" % id) for id in Group.members(groupId)]
+            # TODO: only replicate into user/x/feeds that are not peer - David
+            [core.replicate(grpdb, SSUser.feed(id)) for id in Group.members(groupId)]
         else:
-            from server.models.ssuserschema import SSUser
             db = core.connect()
             theUser = SSUser.read(shift.createdBy)
             theGroup = Group.load(db, groupId)
@@ -241,13 +241,14 @@ class Group(SSDocument):
             userId - a user id.
             shift - a Shift Document.
         """
+        from server.models.ssuserschema import SSUser
         if Group.isMember(shift.createdBy, groupId):
+            from server.model.ssuserschema import SSUser
             grpdb = Group.db(groupId)
             shift.updateIn(core.connect(grpdb))
             # TODO: only replicate into user_x/feeds that are not peer - David
-            [core.replicate(grpdb, "user_%s/feed" % id) for id in Group.members(groupId)]
+            [core.replicate(grpdb, SSUser.feed(id)) for id in Group.members(groupId)]
         else:
-            from server.models.ssuserschema import SSUser
             db = core.connect()
             theUser = SSUser.read(shift.createdBy)
             theGroup = Group.load(db, groupId)

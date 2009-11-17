@@ -17,7 +17,7 @@ class BasicOperations(unittest.TestCase):
         json = groupJson()
         json["createdBy"] = self.fakemary
         newGroup = Group.create(json)
-        self.assertEqual(Group.db(newGroup.id), "group_%s" % newGroup.id)
+        self.assertEqual(Group.db(newGroup.id), "group/%s" % newGroup.id)
         newGroup.deleteInstance()
 
     def tearDown(self):

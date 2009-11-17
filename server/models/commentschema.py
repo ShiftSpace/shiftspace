@@ -64,7 +64,7 @@ class Comment(SSDocument):
         Parameters:
            shiftId - a shift id.
         """
-        return "comment_%s" % shiftId
+        return "comment/%s" % shiftId
 
     # ========================================
     # CRUD

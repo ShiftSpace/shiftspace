@@ -221,21 +221,25 @@ class Permission(SSDocument):
 
     @classmethod
     def joinable(cls, userId):
+        from server.models.groupschema import Group
         db = core.connect()
-        return ["group_%s" % id for id in core.values(Permission.by_joinable(db, key=userId))]
+        return [Group.db(id) for id in core.values(Permission.by_joinable(db, key=userId))]
 
     @classmethod
     def readable(cls, userId):
+        from server.models.groupschema import Group
         db = core.connect()
-        return ["group_%s" % id for id in core.values(Permission.by_readable(db, key=userId))]
+        return [Group.db(id) for id in core.values(Permission.by_readable(db, key=userId))]
 
     @classmethod
     def writeable(cls, userId):
+        from server.models.groupschema import Group
         db = core.connect()
-        return ["group_%s" % id for id in core.values(Permission.by_writeable(db, key=userId))]
+        return [Group.db(id) for id in core.values(Permission.by_writeable(db, key=userId))]
 
     @classmethod
     def adminable(cls, userId):
+        from server.models.groupschema import Group
         db = core.connect()
-        return ["group_%s" % id for id in core.values(Permission.by_adminable(db, key=userId))]
+        return [Group.db(id) for id in core.values(Permission.by_adminable(db, key=userId))]
 

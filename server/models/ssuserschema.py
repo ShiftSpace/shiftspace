@@ -37,23 +37,23 @@ class SSUser(User):
 
     @classmethod
     def private(cls, userId):
-        return "user_%s/private" % userId
+        return "user/%s/private" % userId
 
     @classmethod
     def public(cls, userId):
-        return "user_%s/public" % userId
+        return "user/%s/public" % userId
 
     @classmethod
     def inbox(cls, userId):
-        return "user_%s/inbox" % userId
+        return "user/%s/inbox" % userId
 
     @classmethod
     def feed(cls, userId):
-        return "user_%s/feed" % userId
+        return "user/%s/feed" % userId
 
     @classmethod
     def messages(cls, userId):
-        return "user_%s/messages" % userId
+        return "user/%s/messages" % userId
 
     # ========================================
     # CRUD
