@@ -3,6 +3,7 @@ function(doc) {
     var ret = new Document();
     ret.add(doc.createdBy, {field:"createdBy"});
     ret.add(doc.href, {field:"href"});
+    ret.add(doc.summary, {field:"summary"});
     ret.add(doc.domain, {field:"domain"});
     ret.add(doc.publishData.streams.join(" "), {field:"streams"});
     ret.add(doc.publishData['private'], {field:"private"});

@@ -1,5 +1,5 @@
 function(doc) {
-  if(doc.type == 'stream' && doc.meta == 'group') {
+  if(doc.type == 'group') {
     var ret = new Document();
     ret.add(doc.displayName, {field:"displayName"});
     ret.add(doc.shortName, {field:"shortName"});

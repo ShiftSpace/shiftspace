@@ -1,3 +1,3 @@
 {
-  "store":"no"
+  "store":"yes"
 }
