@@ -293,7 +293,7 @@ class Shift(SSDocument):
 
         # update groups & users that shift is published to
         for db in theShift.publishData.dbs:
-            dbtype, dbid = db.split("_")
+            dbtype, dbid = db.split("/")
             if dbtype == "user":
                 inbox = core.connect(SSUser.inbox(dbid))
                 theShift.store(inbox)
@@ -321,7 +321,7 @@ class Shift(SSDocument):
         """
         Return the list of ids the shift was published to.
         """
-        return [db.split("_")[1].split("/")[0] for db in self.publishData.dbs]
+        return [db.split("/")[1].split("/")[0] for db in self.publishData.dbs]
 
     def deleteInstance(self):
         """
@@ -438,8 +438,8 @@ class Shift(SSDocument):
         # publish or update a copy of the shift to all user-x/private, user-y/private ...
         newUserDbs = []
         if publishData and publishData.get("dbs"):
-            newUserDbs = [s for s in publishData.get("dbs") if s.split("_")[0] == "user"]
-        oldUserDbs = [s for s in oldPublishData.get("dbs") if s.split("_")[0] == "user"]
+            newUserDbs = [s for s in publishData.get("dbs") if s.split("/")[0] == "user"]
+        oldUserDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "user"]
         newUserDbs = list(set(newUserDbs).difference(set(oldUserDbs)))
 
         # update target user inboxes
@@ -451,19 +451,19 @@ class Shift(SSDocument):
         # publish or update a copy to group/x, group/y, ...
         newGroupDbs = []
         if publishData and publishData.get("dbs"):
-            newGroupDbs = [s for s in publishData.get("dbs") if s.split("_")[0] == "group"]
-        oldGroupDbs = [s for s in oldPublishData.get("dbs") if s.split("_")[0] == "group"]
+            newGroupDbs = [s for s in publishData.get("dbs") if s.split("/")[0] == "group"]
+        oldGroupDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "group"]
         newGroupDbs = list(set(newGroupDbs).difference(set(oldGroupDbs)))
         
         # update group dbs
         for db in oldGroupDbs:
             from server.models.groupschema import Group
-            dbtype, dbid = db.split("_")
+            dbtype, dbid = db.split("/")
             Group.updateShift(dbid, theShift)
         for db in newGroupDbs:
             from server.models.groupschema import Group
             # NOTE - do we need to delete from user/private? - David 11/12/09
-            dbtype, dbid = db.split("_")
+            dbtype, dbid = db.split("/")
             Group.addShift(dbid, theShift)
 
         # create in user/public, delete from user/private
