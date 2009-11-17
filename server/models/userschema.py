@@ -30,6 +30,7 @@ class User(SSDocument):
             first = TextField(),
             last = TextField()
             ))
+    lastSeen = DateTimeField(default=datetime.now())
     email = TextField()
     bio = TextField()
     url = TextField()
@@ -57,3 +58,13 @@ class User(SSDocument):
              emit(doc.userName, doc); \
            }                          \
          }")
+
+    # ========================================
+    # Validation
+    # ========================================
+
+    @classmethod
+    def uniqueName(cls, name):
+        return core.value(SSUser.by_name(core.connect(), key=name)) == None
+
+

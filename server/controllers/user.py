@@ -47,8 +47,8 @@ class UserController(ResourceController):
         return "userName"
 
     def resolveResource(self, userName):
-        theUser = user.read(userName)
-        return (theUser and theUser["_id"])
+        theUser = SSUser.readByName(userName)
+        return (theUser and theUser.id)
 
     def resourceDoesNotExistString(self, userName):
         return "User %s does not exist" % userName
@@ -64,7 +64,7 @@ class UserController(ResourceController):
             return (False, "Please enter a user name.", MissingUserNameError)
         if len(userName) < 6:
             return (False, "Your user name should be at least 6 characters long.", ShortUserNameError)
-        if not user.nameIsUnique(userName):
+        if not SSUser.uniqueName(userName):
             return (False, "That user name is taken, please choose another.", UserNameAlreadyExistsError)
         if not data.get("password"):
             return (False, "Please supply a password.", MissingPasswordError)
@@ -76,44 +76,40 @@ class UserController(ResourceController):
 
     @jsonencode
     def join(self):
-        loggedInUser = helper.getLoggedInUser()
+        loggedInUser = SSUser.read(helper.getLoggedInUser())
         if loggedInUser:
             return error("You are logged in. You cannot create an account.", AlreadyLoggedInError)
-
         theData = json.loads(helper.getRequestBody())
-
         valid, msg, errType = self.isValid(theData)
         result = None
         if valid:
-            theUser = SSUser.create(theData).toDict()
-            helper.setLoggedInUser(theUser)
-            return data(theUser)
+            theUser = SSUser.create(theData)
+            helper.setLoggedInUser(theUser.id)
+            return data(theUser.toDict())
         else:
             return error(msg, errType)
 
     @jsonencode
     @exists
     def read(self, userName):
-        if not user.read(userName):
+        theUser = SSUser.readByName(userName):
+        if not theUser:
             return error("User %s does not exist" % userName, UserDoesNotExistError)
-        loggedInUser = helper.getLoggedInUser()
-        if loggedInUser and user.canReadFull(user.idForName(userName), loggedInUser["_id"]):
-            return data(user.readFull(userName).copy())
-        else:
-            return data(user.read(userName).copy())
+        loggedInUser = SSUser.read(helper.getLoggedInUser())
+        canReadFull = loggedInUser.canReadFull(theUser)
+        return data(theUser.toDict((loggedInUser and canReadFull)))
 
     @jsonencode
     @exists
     @loggedin
     def update(self, userName):
-        if not user.read(userName):
+        theUser = SSUser.readByName(userName)
+        if not theUser:
             return error("User %s does not exist" % userName, UserDoesNotExistError)
-        loggedInUser = helper.getLoggedInUser()
-        if loggedInUser and user.canUpdate(user.idForName(userName),
-                                           loggedInUser["_id"]):
+        loggedInUser = SSUser.read(helper.getLoggedInUser())
+        if loggedInUser and loggedInUser.canModify(theUser):
             theData = json.loads(helper.getRequestBody())
-            theData["_id"] = user.idForName(userName)
-            return data(user.update(theData))
+            return data(theUser.update(theData).toDict())
         else:
             return error("Operation not permitted. You don't have permission to update this account.")
 
@@ -121,14 +117,14 @@ class UserController(ResourceController):
     @exists
     @loggedin
     def delete(self, userName):
-        if not user.read(userName):
+        theUser = SSUser.readByName(userName)
+        if not theUser
             return error("User %s does not exist" % userName, UserDoesNotExistError)
-        loggedInUser = helper.getLoggedInUser()
-        if loggedInUser and user.canDelete(user.idForName(userName),
-                                           loggedInUser["_id"]):
-            if user.idForName(userName) == loggedInUser["_id"]:
+        loggedInUser = SSUser.read(helper.getLoggedInUser())
+        if loggedInUser and loggedInUser.canModify(theUser):
+            if theUser.id == loggedInUser.id:
                 helper.setLoggedInUser(None)
-            user.delete(userName)
+            theUser.delete()
             return ack
         else:
             return error("Operation not permitted. You don't have permission to delete this account.")
@@ -137,23 +133,20 @@ class UserController(ResourceController):
     def query(self):
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
-            return loggedInUser
+            return data(SSLoad.read(loggedInUser).toDict())
         else:
-            return message("No logged in user")
+            return message("No logged in user.")
 
     @jsonencode
     def login(self, userName, password):
         loggedInUser = helper.getLoggedInUser()
         if not loggedInUser:
-            theUser = user.readFull(userName)
-
+            theUser = SSUser.readByName(userName)
             if not theUser:
                 return error("Invalid user name.", InvalidUserNameError)
-
-            if theUser and (theUser['password'] == md5hash(password)):
-                helper.setLoggedInUser(theUser)
-                user.updateLastSeen(userName)
-                return data(theUser)
+            if theUser and (theUser.password == md5hash(password)):
+                theUser.updateLastSeen()
+                return data(theUser.toDict())
             else:
                 return error("Incorrect password.", IncorrectPasswordError)
         else:
@@ -163,7 +156,8 @@ class UserController(ResourceController):
     def logout(self):
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
-            user.updateLastSeen(loggedInUser["userName"])
+            theUser = SSUser.read(loggedInUser)
+            theUser.updateLastSeen()
             helper.setLoggedInUser(None)
             return ack
         else:
@@ -183,79 +177,66 @@ class UserController(ResourceController):
     @exists
     @loggedin
     def follow(self, userName):
-        loggedInUser = helper.getLoggedInUser()
-        follower = loggedInUser["_id"]
-        followed = user.idForName(userName)
-        if follower == followed:
+        theUser = SSUser.read(helper.getLoggedInUser())
+        followed = SSUser.readByName(userName)
+        if theUser.id == followed.id:
             return error("You cannot follow yourself.", FollowError)
         else:
-            user.follow(follower, followed)
+            theUser.follow(followed)
             return ack
 
     @jsonencode
     @exists
     @loggedin
     def unfollow(self, userName):
-        loggedInUser = helper.getLoggedInUser()
-        follower = loggedInUser["_id"]
+        theUser = SSUser.read(helper.getLoggedInUser())
         followed = user.idForName(userName)
-        if follower == followed:
+        if theUser.id == followed.id:
             return error("You cannot unfollow yourself.", FollowError)
         else:
-            user.unfollow(follower, followed)
+            theUser.unfollow(followed)
             return ack
 
     @jsonencode
     @exists
     @loggedin
-    def messages(self, userName):
-        loggedInUser = helper.getLoggedInUser()
-        messageStream = user.messageStream(user.idForName(userName))
-        if stream.canRead(messageStream, loggedInUser["_id"]):
-            return data(event.joinData(event.eventsForStream(messageStream)))
+    def messages(self, userName, start=None, end=None, limit=25):
+        loggedInUser = SSUser.read(helper.getLoggedInUser())
+        theUser = SSUser.readByName(userName)
+        if loggedInUser.id == theUser.id or loggedInUser.isAdmin():
+            return data(theUser.messages(start=start, end=end, limit=limit))
         else:
             return error("You do not have permission to view this user's messages.", PermissionError)
 
     @jsonencode
     @exists
     @loggedin
-    def feeds(self, userName):
-        loggedInUser = helper.getLoggedInUser()
-        userId = loggedInUser["_id"]
-        if user.isAdmin(userId) or user.idForName(userName) == userId:
-            return data(user.feeds(userId))
-        else:
-            return error("You don't have permission to view this feed.", PermissionError)
-
-    @jsonencode
-    @exists
-    @loggedin
     def shifts(self, userName, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
-        userId = loggedInUser["_id"]
-        if user.isAdmin(userId) or user.idForName(userName) == userId:
-            return data(shift.byUserName(userName))
+        theUser = SSUser.readByName(userName)
+        if loggedInUser.id == theUser.id or loggedInUser.isAdmin():
+            return data(theUser.shifts(start=start, end=end, limit=limit))
         else:
             return error("You don't have permission to view this user's shifts.", PermissionError)
 
     @jsonencode
     @exists
     @loggedin
-    def favorites(self, userName):
+    def favorites(self, userName, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
-        userId = loggedInUser["_id"]
-        if user.isAdmin(userId) or user.idForName(userName) == userId:
-            return data(user.favorites(userId))
+        theUser = SSUser.readByName(userName)
+        if loggedInUser.id == theUser.id or loggedInUser.isAdmin():
+            return data(theUser.favorites(start=start, end=end, limit=limit))
         else:
             return error("You don't have permission to view this user's favorite shifts.", PermissionError)
 
     @jsonencode
     @exists
     @loggedin
-    def comments(self, userName):
+    def comments(self, userName, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
-        userId = loggedInUser["_id"]
-        if user.isAdmin(userId) or user.idForName(userName) == userId:
-            return data(user.comments(userId))
+        theUser = SSUser.readByName(userName)
+        if loggedInUser.id == theUser.id or loggedInUser.isAdmin()
+            return data(theUser.comments(userId, start=start, end=end, limit=limit))
         else:
             return error("You don't have permission to view this user's comments.", PermissionError)

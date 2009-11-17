@@ -32,7 +32,7 @@ class SSUser(User):
         }")
 
     # ========================================
-    # Database
+    # Class Methods
     #========================================
 
     @classmethod
@@ -55,10 +55,6 @@ class SSUser(User):
     def messages(cls, userId):
         return "user/%s/messages" % userId
 
-    # ========================================
-    # CRUD
-    # ========================================
-    
     @classmethod
     def create(cls, userJson):
         """
@@ -109,71 +105,103 @@ class SSUser(User):
     def readByName(cls, userName):
         return core.object(SSUser.by_name(core.connect(), key=userName))
 
-    @classmethod
-    def update(cls, id, fields):
-        db = core.connect()
-        theUser = SSUser.read(id)
-        if fields.get("bio"):
-            theUser.bio = fields.get("bio")
-        if fields.get("url"):
-            theUser.bio = fields.get("bio")
-        if fields.get("displayName"):
-            theUser.displayName = fields.get("displayName")
-        theUser.store(db)
-        return theUser
+    # ========================================
+    # Instance Methods
+    # ========================================
 
-    @classmethod
-    def delete(cls, id):
-        if id == "shiftspace":
+    def update(self, fields):
+        db = core.connect()
+        if fields.get("bio"):
+            self.bio = fields.get("bio")
+        if fields.get("url"):
+            self.bio = fields.get("bio")
+        if fields.get("displayName"):
+            self.displayName = fields.get("displayName")
+        self.store(db)
+        return self
+
+    def updateLastSeen(self):
+        from datetime import datetime
+        self.lastSeen = datetime.now()
+        self.store(core.connect())
+        return self
+
+    def delete(self):
+        if self.id == "shiftspace":
             return
         server = core.server()
-        theUser = SSUser.read(id)
         # delete the user's dbs (won't work with old style users)
         try:
-            del server[SSUser.public(id)]
-            del server[SSUser.private(id)]
-            del server[SSUser.inbox(id)]
-            del server[SSUser.feed(id)]
-            del server[SSUser.messages(id)]
+            del server[SSUser.public(self.id)]
+            del server[SSUser.private(self.id)]
+            del server[SSUser.inbox(self.id)]
+            del server[SSUser.feed(self.id)]
+            del server[SSUser.messages(self.id)]
         except Exception:
             pass
         # delete the user doc
         db = core.connect()
-        del db[id]
+        del db[self.id]
+
+    def toDict(self, full=False):
+        userDict = super(SSUser, self).toDict()
+        if not full:
+            del userDict["password"]
+            del userDict["email"]
+            del userDict["fullName"]
+            del userDict["streams"]
+            del userDict["preferences"]
+        return userDict
 
     # ========================================
     # Validation
     # ========================================
 
-    @classmethod
-    def isAdmin(cls, id):
-        if not id:
+    def isAdmin(self):
+        if not self.id:
             return False
         db = core.connect()
         admins = db["admins"]
-        return id in admins["ids"]
+        return self.id in admins["ids"]
+
+    def canReadFull(self, other):
+        return (self.id == other.id) or self.isAdmin()
+
+    def canModify(self, other):
+        return (self.id == other.id) or self.isAdmin()
+
+    # ========================================
+    # Data
+    # ========================================
+
+    def messages(self, start=None, end=None, limit=25):
+        pass
+
+    def shifts(self, start=None, end=None, limit=25):
+        pass
+
+    def favorites(self, start=None, end=None, limit=25):
+        pass
+
+    def comments(self, start=None, end=None, limit=25):
+        pass
 
     # ========================================
     # Follow
     # ========================================
 
-    @classmethod
-    def followers(cls, id):
-        return core.values(SSUser.all_followers(core.connect(), key=id))
+    def followers(self):
+        return core.values(SSUser.all_followers(core.connect(), key=self.id))
 
-    @classmethod
-    def follow(cls, id, otherId):
+    def follow(self, other):
         db = core.connect()
-        theUser = SSUser.load(db, id)
-        if not (otherId in theUser.following):
-            theUser.following.append(otherId)
-        theUser.store(db)
+        if not (other.id in self.following):
+            self.following.append(otherId)
+        self.store(db)
 
-    @classmethod
-    def unfollow(cls, id, otherId):
+    def unfollow(cls, other):
         db = core.connect()
-        theUser = SSUser.load(db, id)
-        theUser.following.remove(otherId)
-        theUser.store(db)
+        self.following.remove(other.id)
+        self.store(db)
 
 
