@@ -7,6 +7,7 @@ from server.models import shift
 from server.models import stream
 from server.models import event
 from server.models import permission
+from server.models.ssuserschema import SSUser
 from resource import *
 
 
@@ -84,10 +85,7 @@ class UserController(ResourceController):
         valid, msg, errType = self.isValid(theData)
         result = None
         if valid:
-            theData["password"] = md5hash(theData["password"])
-            del theData["passwordVerify"]
-            theData["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % md5hash(theData["email"])
-            theUser = user.create(theData)
+            theUser = SSUser.create(theData).toDict()
             helper.setLoggedInUser(theUser)
             return data(theUser)
         else:
@@ -99,8 +97,7 @@ class UserController(ResourceController):
         if not user.read(userName):
             return error("User %s does not exist" % userName, UserDoesNotExistError)
         loggedInUser = helper.getLoggedInUser()
-        if loggedInUser and user.canReadFull(user.idForName(userName),
-                                             loggedInUser["_id"]):
+        if loggedInUser and user.canReadFull(user.idForName(userName), loggedInUser["_id"]):
             return data(user.readFull(userName).copy())
         else:
             return data(user.read(userName).copy())
