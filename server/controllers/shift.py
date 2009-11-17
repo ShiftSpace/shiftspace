@@ -7,6 +7,7 @@ from server.models import shift
 from server.models import stream
 from server.models import event
 from server.models import permission
+from server.models.shiftschema import Shift
 from resource import *
 
 
@@ -55,7 +56,7 @@ class ShiftController(ResourceController):
         userId = None
         if loggedInUser:
             userId = loggedInUser.get("_id")
-        allShifts = shift.shifts(byHref=byHref,
+        allShifts = Shift.shifts(byHref=byHref,
                                  userId=userId,
                                  byFollowing=byFollowing,
                                  byGroups=byGroups,
