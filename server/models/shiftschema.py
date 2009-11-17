@@ -165,7 +165,7 @@ class Shift(SSDocument):
          }")
 
     # ========================================
-    # CRUD
+    # Class Methods
     # ========================================
 
     @classmethod
@@ -211,7 +211,7 @@ class Shift(SSDocument):
             return shifts
 
     @classmethod
-    def create(cls, userId, shiftJson):
+    def create(cls, shiftJson):
         """
         Create a shift in the database.
         Parameters:
@@ -219,18 +219,16 @@ class Shift(SSDocument):
         Returns:
             The id of the new shift (string).
         """
-        db = core.connect(SSUser.private(userId))
-        if not shiftJson.get("createdBy"):
-            shiftJson["createdBy"] = userId
         newShift = Shift(**shiftJson)
-        newShift.domain = utils.domain(shiftJson["href"])
+        createdBy = newShift.createdBy
+        db = core.connect(SSUser.private(createdBy))
+        newShift.domain = utils.domain(newShift.href)
         newShift.store(db)
-        # replicate to the user's feed
-        core.replicate(SSUser.private(userId), SSUser.feed(userId))
+        core.replicate(SSUser.private(createdBy), SSUser.feed(createdBy))
         return Shift.joinData(newShift, newShift.createdBy)
 
     @classmethod
-    def read(cls, userId, id):
+    def read(cls, id, userId):
         """
         Get a specific shift. First tries the master database
         then tries the user's private database.
@@ -240,7 +238,7 @@ class Shift(SSDocument):
         Returns:
             a dictionary of the shift's data.
         """
-        db = core.connect()
+        db = core.connect(SSUser.public(userId))
         theShift = Shift.load(db, id)
         if not theShift and userId:
             db = core.connect(SSUser.private(userId))
@@ -249,8 +247,11 @@ class Shift(SSDocument):
             return
         return Shift.joinData(theShift, theShift.createdBy)
 
-    @classmethod
-    def update(cls, userId, id, fields):
+    # ========================================
+    # Instance methods
+    # ========================================
+
+    def update(self, fields):
         """
         Class method for updating a shift. Attempts to read
         first from user/private and then user/public. Updates
@@ -264,58 +265,52 @@ class Shift(SSDocument):
             summary, broken, and content.
           userId - a userId.
         """
-        publicShift = False
-
-        # check user/public and user/private for the shift
-        db = core.connect(SSUser.private(userId))
-        theShift = Shift.load(db, id)
-        if not theShift:
-            db = core.connect(SSUser.public(userId))
-            theShift = Shift.load(db, id)
-            if theShift:
-                publicShift = True
-
-        if fields.get("summary"):
-            theShift.summary = theShift.content["summary"] = fields.get("summary")
-        if fields.get("broken"):
-            theShift.broken = fields.get("broken")
         if fields.get("content"):
-            theShift.content = fields.get("content")
-        theShift.modified = datetime.now()
+            self.content = fields.get("content")
+        if fields.get("summary"):
+            self.summary = self.content["summary"] = fields.get("summary")
+        if fields.get("broken"):
+            self.broken = fields.get("broken")
+        self.modified = datetime.now()
 
-        # update the correct db
-        theShift.store(db)
-        # replicate back to the feed
+        if self.publishData.private:
+            db = core.connect(SSUser.private(self.createdBy))
+        else:
+            db = core.connect(SSUser.public(self.createdBy))
+        self.store(db)
+
         if publicShift:
             core.replicate(SSUser.public(userId), SSUser.feed(userId))
         else:
             core.replicate(SSUser.private(userId), SSUser.feed(userId))
 
-        # update groups & users that shift is published to
         for db in theShift.publishData.dbs:
             dbtype, dbid = db.split("/")
             if dbtype == "user":
                 inbox = core.connect(SSUser.inbox(dbid))
-                theShift.store(inbox)
+                self.store(inbox)
             elif dbtype == "group":
                 from server.models.groupschema import Group
-                Group.updateShift(dbid, theShift)
+                Group.read(dbid).updateShift(self)
 
-        return Shift.joinData(theShift, theShift.createdBy)
+        return Shift.joinData(self, theShift.createdBy)
 
-    @classmethod
-    def delete(cls, userId, id):
+
+    def delete(self):
         """
         Delete a shift from the user/private database.
         Parameters:
             id - a shift id.
         """
-        db = core.connect(SSUser.private(userId))
-        del db[id]
+        db = core.connect(SSUser.private(self.createdBy))
+        if db.get(id):
+            del db[id]
+            return
+        db = core.connect(SSUser.public(self.createdBy))
+        if db.get(id):
+            del db[id]
+            return
 
-    # ========================================
-    # Instance Methods
-    # ========================================
 
     def publishIds(self):
         """
@@ -323,60 +318,11 @@ class Shift(SSDocument):
         """
         return [db.split("/")[1].split("/")[0] for db in self.publishData.dbs]
 
-    def deleteInstance(self):
-        """
-        Convenience for deleting Shift instances.
-        """
-        if self.id:
-            Shift.delete(self.createdBy, self.id)
-
     # ========================================
     # Validation
     # ========================================
     
-    @classmethod
-    def canModify(cls, userId, id):
-        """
-        Check where a user can modify a shift. This includes
-        updating, deleting, publishing, and unpublishing.
-        Parameters:
-            userId - a user id, used to look up the shift.
-            id - a shift id.
-        Returns:
-            bool.
-        """
-        if SSUser.isAdmin(userId):
-            return True
-        db = core.connect(SSUser.private(userId))
-        theShift = Shift.load(db, id)
-        return theShift and (theShift.createdBy == userId)
-
-    @classmethod
-    def canComment(cls, userId, id):
-        """
-        Check if the user can comment on a shift. Allowed if:
-            1. Shift is public.
-            2. If the shift was published to a stream that the user has permissions on.
-            3. Running as admin.
-        Parameters:
-            userId - a user id.
-            id - a shift id.
-        """
-        if SSUser.isAdmin(userId):
-            return True
-        db = core.connect(SSUser.private(userId))
-        theShift = Shift.load(db, id)
-        if not theShift.publishData.private:
-            return True
-        # ignore private dbs
-        shiftStreams = [astream for astream in theShift.publishData.streams
-                        if not Stream.isUserPrivateStream(astream)]
-        writeable = Permission.writeableStreams(userId)
-        allowed = set(shiftStreams).intersection(writeable)
-        return len(allowed) > 0
-
-    @classmethod
-    def isPublic(cls, id):
+    def isPublic(self):
         """
         Check where a shift is public.
         Parameters:
@@ -384,10 +330,10 @@ class Shift(SSDocument):
         Returns:
             bool.
         """
-        return Shift.load(core.connect(), id) != None
+        return not self.publishData.private
 
-    @classmethod
-    def isPrivate(cls, id):
+
+    def isPrivate(self, id):
         """
         Check whether a shift is private.
         Parameters:
@@ -395,14 +341,13 @@ class Shift(SSDocument):
         Returns:
             bool.
         """
-        return not Shift.isPublic(id)
+        return self.publishData.private
 
     # ========================================
     # Publishing
     # ========================================
 
-    @classmethod
-    def publish(cls, userId, id, publishData=None, server="http://www.shiftspace.org/api/"):
+    def publish(self, publishData=None, server="http://www.shiftspace.org/api/"):
         """
         Set draft status of a shift to false. Sync publishData field.
         If the shift is private only publish to the dbs that
@@ -414,21 +359,21 @@ class Shift(SSDocument):
             id - a shift id.
             publishData - a dictionary holding the publish options.
         """
-        db = core.connect(SSUser.private(userId))
-        theShift = Shift.load(db, id)
-        oldPublishData = dict(theShift.items())["publishData"]
+        db = core.connect(SSUser.private(self.createdBy))
+        author = SSUser.read(self.createdBy)
+        oldPublishData = dict(self.items())["publishData"]
         allowed = []
 
         isPrivate = True
         if publishData and publishData.get("private") != None:
             isPrivate = publishData.get("private")
         else:
-            isPrivate = Shift.isPrivate(id)
+            isPrivate = self.isPrivate()
 
         publishDbs = (publishData and publishData.get("dbs")) or []
 
         if (publishData and isPrivate and len(publishDbs) > 0):
-            allowedGroups = Permission.writeable(userId)
+            allowedGroups = author.writeable()
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
 
         # upate the private setting, the shift is no longer draft
@@ -444,9 +389,9 @@ class Shift(SSDocument):
 
         # update target user inboxes
         for db in oldUserDbs:
-            theShift.updateIn(core.connect(db))
+            self.updateIn(core.connect(db))
         for db in newUserDbs:
-            theShift.copyTo(core.connect(db))
+            self.copyTo(core.connect(db))
 
         # publish or update a copy to group/x, group/y, ...
         newGroupDbs = []
@@ -459,92 +404,48 @@ class Shift(SSDocument):
         for db in oldGroupDbs:
             from server.models.groupschema import Group
             dbtype, dbid = db.split("/")
-            Group.updateShift(dbid, theShift)
+            theGroup = Group.read(dbid)
+            theGroup.updateShift(theShift)
         for db in newGroupDbs:
             from server.models.groupschema import Group
             # NOTE - do we need to delete from user/private? - David 11/12/09
             dbtype, dbid = db.split("/")
-            Group.addShift(dbid, theShift)
+            theGroup = Group.read(dbid)
+            theGroup.addShift(theShift)
 
         # create in user/public, delete from user/private
         # replicate to user/feed and to user/shiftspace
         if not isPrivate:
-            publicdb = core.connect(SSUser.public(userId))
-            if Shift.load(publicdb, theShift.id):
-                theShift.updateIn(publicdb)
+            publicdb = core.connect(SSUser.public(self.createdBy))
+            if Shift.load(publicdb, self.id):
+                self.updateIn(publicdb)
             else:
-                theShift.copyTo(publicdb)
-                privatedb = core.connect(SSUser.private(userId))
+                self.copyTo(publicdb)
+                privatedb = core.connect(SSUser.private(self.createdBy))
                 del privatedb[theShift.id]
-            core.replicate(SSUser.public(userId), SSUser.feed(userId))
-            core.replicate(SSUser.public(userId))
+            core.replicate(SSUser.public(self.createdBy), SSUser.feed(self.createdBy))
+            core.replicate(SSUser.public(self.createdBy))
 
         # TODO: don't replicate to follower user_x/feeds that are not peers - David
-        followers = SSUser.followers(userId)
+        followers = author.followers()
         [core.replicate(SSUser.public(userId), SSUser.feed(follower)) for follower in followers]
         
         # if draft false, copy to master database, we need it there
         # for general queries about what's available on pages - David
         db = core.connect()
-        if not db.get(id):
-            theShift.copyTo(db)
+        if not db.get(self.id):
+            self.copyTo(db)
         else:
-            theShift.updateIn(db)
+            self.updateIn(db)
 
-        return Shift.joinData(theShift, userId)
+        return Shift.joinData(self, userId)
     
     # ========================================
     # List & Filtering Support
     # ========================================
 
+    #@joindecorator
     @classmethod
-    def forUser(cls, userId, start=None, end=None, limit=25):
-        """
-        Return the list of shifts a user has created.
-        Parameters:
-            userId - id of the user requesting the data.
-            start - the start index or key.
-            end - the end index or key.
-            limit - number of results to return.
-        Returns:
-            A list of the user's shifts.
-        """
-        db = core.connect(SSUser.feed(userId))
-        if not start:
-            start = [userId]
-        if not end:
-            end = [userId, {}]
-        results = Shift.by_user_and_created(db, limit=limit)
-        return core.objects(results[start:end])
-
-    """
-    @classmethod
-    def shiftsByHref(cls, userId, start=None, end=None, limit=25):
-        db = core.connect(User.feed(userId))
-        return Shift.joinData(
-    """
-
-    @classmethod
-    def shiftsFromPeople(cls, userId, start=None, end=None, limit=25):
-        db = core.connect(User.feed(userId))
-        return Shift.joinData(core.values(Shift.by_follow_and_created(db, limit=limit), userId))
-
-    @classmethod
-    def shiftsFromGroups(cls, userId, start=None, end=None, limit=25):
-        db = core.connect(User.feed(userId))
-        return Shift.joinData(core.values(Shift.by_group_and_created(db, limit=limit), userId))
-
-    @classmethod
-    def favorites(cls, userId, start=None, end=None, limit=25):
-        db = core.connect(User.feed(userId))
-        return Shift.joinData(core.values(Favorite.by_user(db, limit=limit), userId))
-
-    @classmethod
-    def all(cls, userId, start=None, end=None, limit=25):
-        db = core.connect(User.feed(userId))
-        return Shift.joinData(core.values(Shift.by_user_and_created(db, limit=limit), userId))
-
-    @joindecorator
     def shifts(cls, byHref, userId=None, byFollowing=False, byGroups=False, start=0, limit=25):
         """
         Returns a list of shifts based on whether
@@ -559,25 +460,34 @@ class Shift(SSDocument):
         Returns:
             A list of shifts that match the specifications.
         """
+        print "Connect to db"
         db = core.connect()
         # NOTE: to prevent errors on a newly created DB - David 9/11/09
+        """
         if core.single(Stats.count, "shift") == None:
             return []
+        """
+        print "Connect to lucene"
         lucene = core.lucene()
         # TODO: validate byHref - David
         queryString = "href:\"%s\" AND ((draft:false AND private:false)" % byHref
         if userId:
             queryString = queryString + " OR createdBy:%s" % userId
             streams = ""
+            #Need to fix this, a lot has changed
+            """
             if byFollowing:
                 following = User.followStreams(userId)
                 streams = streams + " ".join(following)
             if byGroups:
-                groups = User.groupStreams(userId)
+                groups = User.groupStrems(userId)
                 streams = streams + " ".join(groups)
+            """
             # TODO: make sure streams cannot be manipulated from client - David
             queryString = queryString + ((" OR (draft:false%s)" % ((len(streams) > 0 and (" AND streams:%s" % streams)) or "")))
         queryString = queryString + ")"
         rows = lucene.search("shifts", q=queryString, sort="\modified", skip=start, limit=limit)
+        print "WTF!"
+        # super slow, multidoc fetch instead
         shifts = [db[row["id"]] for row in rows]
         return shifts

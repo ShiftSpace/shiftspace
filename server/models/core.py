@@ -71,6 +71,8 @@ class Lucene():
         """
         import urllib
         uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(dbname)
+        print "=================================================="
+        print uri
         resource = couchdb.client.Resource(None, uri)
         if debug:
             return resource.get(view, **params)[1]

@@ -168,7 +168,36 @@ class SSUser(User):
         return (self.id == other.id) or self.isAdmin()
 
     def canModify(self, other):
-        return (self.id == other.id) or self.isAdmin()
+        if isinstance(other, SSUser): 
+            return (self.id == other.id) or self.isAdmin()
+        elif isinstance(other, Shift):
+            return other.createdBy == self.id or self.isAdmin()
+
+    def canComment(self, theShift):
+        if self.isAdmin():
+            return True
+        if not theShift.isPublic():
+            return False
+        shiftStreams = [db for db in theShift.publishData.dbs if not SSUser.isUserPrivate(db)]
+        writeable = self.writeable()
+        allowed = set(shiftStreams).intersection(writeable)
+        return len(allowed) > 0
+
+    # ========================================
+    # DBs
+    # ========================================
+
+    def joinable(self):
+        pass
+
+    def readable(self):
+        pass
+
+    def writeable(self):
+        pass
+
+    def adminable(self):
+        pass
 
     # ========================================
     # Data
@@ -178,6 +207,9 @@ class SSUser(User):
         pass
 
     def shifts(self, start=None, end=None, limit=25):
+        pass
+
+    def feed(self, start=None, end=None, limit=25):
         pass
 
     def favorites(self, start=None, end=None, limit=25):
@@ -190,7 +222,7 @@ class SSUser(User):
     # Follow
     # ========================================
 
-    def followers(self):
+    def followers(self, start=None, end=None, limit=25):
         return core.values(SSUser.all_followers(core.connect(), key=self.id))
 
     def follow(self, other):
