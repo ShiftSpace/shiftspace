@@ -11,25 +11,29 @@ try:
     import builder.preprocess as preprocess
     import builder.corebuilder as corebuilder
     import sandalphon.sandalphon as sandalphon
-except:
+except Exception as err:
+    print err
     missing.append("simplejson")
 
 try:
     import manual.build as manbuild
-except:
+except Exception as err:
+    print err
     missing.append("mako")
 try:
     import server.setup as setup
-except:
+except Exception as err:
+    print err
     missing.append("couchdb-python")
 try:
     import server.server as server
-except:
+except Exception as err:
+    print err
     missing.append("cherrypy")
 
 
 def bail(missinglibs):
-    print "Missing %s. Please run the following first before attempting to use shifty features:" % missinglibs
+    print "Perhaps missing %s? Please run the following first before attempting to use shifty features:" % missinglibs
     print "sudo python shifty.py installdeps"
     sys.exit(2)
 
