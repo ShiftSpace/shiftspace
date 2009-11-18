@@ -191,7 +191,7 @@ class UserController(ResourceController):
     @loggedin
     def unfollow(self, userName):
         theUser = SSUser.read(helper.getLoggedInUser())
-        followed = user.idForName(userName)
+        followed = SSUser.readByName(userName)
         if theUser.id == followed.id:
             return error("You cannot unfollow yourself.", FollowError)
         else:
