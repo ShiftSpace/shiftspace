@@ -36,10 +36,11 @@ class BasicOperations(unittest.TestCase):
         messages = self.fakemary.messages()
         self.assertEqual(len(messages), 1)
         # delete the comment
+        # TODO: separate fixture - David
         newComment.delete()
         # delete the thread
         newShift.deleteThread()
-    """
+
     def testSubscribe(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -79,7 +80,7 @@ class BasicOperations(unittest.TestCase):
             subscribe=True
             )
         # subscribe fakejohn
-        Comment.subscribe(self.fakejohn.id, newShift.id)
+        self.fakejohn.subscribe(newShift)
         # another user makes another comment
         newComment = Comment.create(
             self.fakebob.id,
@@ -87,27 +88,27 @@ class BasicOperations(unittest.TestCase):
             "2nd comment!"
             )
         # check that fakejohn has one message
-        messages = Message.forUser(self.fakejohn)
+        messages = self.fakejohn.messages()
         self.assertEqual(len(messages), 1)
         self.assertEqual(messages[0].text, "fakebob just commented on fakemary's shift!")
         # unsubscribe fakejohn
-        Comment.unsubscribe(self.fakejohn.id, newShift.id)
+        self.fakejohn.unsubscribe(newShift)
         newComment = Comment.create(
             self.fakebob.id,
             newShift.id,
             "3rd comment!"
             )
         # check that fakejohn still only has one message
-        messages = Message.forUser(self.fakejohn)
+        messages = self.fakejohn.messages()
         self.assertEqual(len(messages), 1)
         # check that fakemary has two messages
-        messages = Message.forUser(self.fakemary)
+        messages = self.fakemary.messages()
         self.assertEqual(len(messages), 3)
         # check that fakebob has no messages
-        messages = Message.forUser(self.fakebob)
+        messages = self.fakebob.messages()
         self.assertEqual(len(messages), 0)
-        Comment.deleteThread(newShift.id)
-    """
+        newShift.deleteThread()
+
     def tearDown(self):
         db = core.connect()
         SSUser.delete(self.fakemary)

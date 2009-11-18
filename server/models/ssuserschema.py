@@ -321,7 +321,7 @@ class SSUser(User):
     def unsubscribe(self, aShift):
         from server.models.commentschema import Comment
         db = core.connect(Comment.db(aShift.id))
-        if self.isSubscribed(aShift.id):
+        if self.isSubscribed(aShift):
             del db["user:%s" % self.id]
 
 
