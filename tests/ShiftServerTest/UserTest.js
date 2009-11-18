@@ -102,7 +102,7 @@ var UserTest = new Class({
     }
   ),
   
-  /*
+
   missingPassword: $fixture(
     "Error on missing password",
     function()
@@ -122,7 +122,7 @@ var UserTest = new Class({
     }
   ),
   
-  
+
   passwordMatch: $fixture(
     "Error on password/passwordVerify mismatch",
     function()
@@ -132,30 +132,30 @@ var UserTest = new Class({
     }
   ),
   
-  
+
   validUser: $fixture(
     "Valid user",
     function()
     {
       var json = SSApp.confirm(SSApp.join(fakemary));
-      SSUnit.assertEqual(SSGetData(json).userName, "fakemary");
-      SSApp.delete('user', 'fakemary');
+      SSUnit.assertEqual(json.userName, "fakemary");
+      SSApp.confirm(SSApp.delete('user', 'fakemary'));
     }
   ),
   
-  
+
   basicDeleteUser: $fixture(
     "Test basic deletion. Only verify the account no longer exists",
     function()
     {
       SSApp.confirm(SSApp.join(fakemary));
-      SSApp.delete('user', 'fakemary');
+      SSApp.confirm(SSApp.delete('user', 'fakemary'));
       var json = SSApp.confirm(SSApp.read('user', 'fakemary'));
       SSUnit.assertEqual(SSGetType(json), UserDoesNotExistError);
     }
   ),
   
-  
+
   deletePermission: $fixture(
     "Cannot delete account if not logged in, or not the right user.",
     function()
@@ -183,7 +183,7 @@ var UserTest = new Class({
     }
   ),
   
-  
+  /*  
   follow: $fixture(
     "Test following other users.",
     function()
