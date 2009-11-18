@@ -9,9 +9,6 @@ class AttemptToSetTypeError(SSDocumentError): pass
 
 
 class SSDocument(Document):
-    """
-    Base document for ShiftSpace.
-    """
 
     # ========================================
     # Fields
@@ -41,34 +38,16 @@ class SSDocument(Document):
     # ========================================
 
     def delete(self, db=None):
-        """
-        Delete the instance.
-        """
         db = db or core.connect()
         del db[self.id]
 
     def copyTo(self, dbname):
-        """
-        Create a copy of this shift in another database.
-        Stop gap until we can replicate single documents
-        either via special API or filtered replication.
-        Parameters:
-          dbname - the name of a database to copy to
-        """
         db = core.connect(dbname)
         copy = self.toDict()
         del copy["_rev"]
         db.create(copy)
 
     def updateIn(self, dbname):
-        """
-        Update this the instance of this document in
-        another db. Stop gap until we can replicate
-        single documents either via special API or filtered
-        replication.
-        Parameters:
-          dbname - the name of a database to copy to
-        """
         db = core.connect(dbname)
         old = db[self.id]
         copy = self.toDict()
@@ -76,9 +55,6 @@ class SSDocument(Document):
         db[self.id] = copy
 
     def toDict(self):
-        """
-        Convenience for turning Document into a dictionary.
-        """
         return dict(self.items())
 
 

@@ -129,50 +129,36 @@ class Permission(SSDocument):
     
     @classmethod
     def create(cls, userId, groupId, otherId, level):
-        """
-        Create will fail if:
-            1. No userId specified.
-            2. No groupId specified.
-            3. Attempting to create a permission for a user on a group if a permission
-               for that user on that group already exists.
-        Parameters:
-            userId - id of the user creating the permission.
-            groupId - a group id.
-            otherId - id of the user the permission is being created for.
-            level - dictionary containing the permission data.
-        Returns:
-            the new Permission document.
-        """
         from server.models.ssuserschema import SSUser
         from server.models.groupschema import Group
-
-        # Multimethods would be really nice right now - David
-        if type(userId) == SSUser:
-            userId = userId.id
-        if type(userId) == dict:
-            userId = userId["_id"]
 
         db = core.connect()
         if not groupId:
             raise MissingGroupError
         if not userId:
             raise MissingCreatorError
-        if Permission.readByUserAndGroup(otherId, groupId):
+        if Permission.readByUserAndGroup(otherI, groupId):
             raise PermissionAlreadyExistsError
-        allowed = SSUser.isAdmin(userId)
-        if not allowed:
-            allowed = Group.isOwner(userId, groupId)
+
         if not allowed:
             adminable = [row.value for row in Permission.by_adminable(db, key=userId).rows]
             allowed = groupId in adminable
         if not allowed:
+            theUser = SSUser.read(userId)
+            allowed = theUser.isAdmin()
+        if not allowed:
+            theGroup = Group.read(groupId)
+            allowed = theUser.isOwnerOf(theGroup)
+        if not allowed:
             raise CreateEventPermissionError
+
         json = {
             "createdBy": userId,
             "userId": otherId,
             "groupId": groupId,
             "level": level
             }
+
         newPermission = Permission(**json)
         newPermission.store(db)
         return newPermission
@@ -183,37 +169,30 @@ class Permission(SSDocument):
 
     @classmethod
     def readByUserAndGroup(cls, userId, groupId):
-        """
-        Returns the permission for a particular group.
-        Parameters:
-            userId - a user id.
-            groupId - a group id.
-        Returns:
-            A permission document.
-        """
         db = core.connect()
         return core.object(Permission.by_user_and_group(db, key=[userId, groupId]))
 
     @classmethod
-    def update(cls, id, level):
-        db = core.connect()
-        perm = Permission.load(db, id)
-        perm.level = level
-        perm.store(db)
-        return perm
-
-    @classmethod
     def updateForUser(cls, userId, groupId, level):
         db = core.connect()
-        perm = list(Permission.by_user_and_group(db, key=[userId, groupId]))[0]
+        perm = core.value(Permission.by_user_and_group(db, key=[userId, groupId]))
         perm.level = level
         perm.store(db)
         return perm
 
-    @classmethod
-    def delete(cls, id):
+    # ========================================
+    # Instance Methods
+    # ========================================
+
+    def update(self, id, level):
+        self.level = level
+        self.store(core.connect())
+        return self
+
+
+    def delete(self):
         db = core.connect()
-        del db[id]
+        del db[self.id]
 
     # ========================================
     # Utilities

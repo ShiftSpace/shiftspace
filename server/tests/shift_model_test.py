@@ -110,7 +110,7 @@ class BasicOperations(unittest.TestCase):
         # should exist in user/feed db
         theShift = Shift.load(core.connect(SSUser.feedDb(self.fakejohn.id)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-    """
+
     def testPublishToUser(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -125,8 +125,11 @@ class BasicOperations(unittest.TestCase):
     """
     def testPublishToGroup(self):
         json = shiftJson()
-        newShift = Shift.create(self.fakemary, json)
-        newGroup = Group.create(self.fakemary, groupJson())
+        json["createdBy"] = self.fakemary.id
+        newShift = Shift.create(json)
+        json = groupJson()
+        json["createdBy"] = self.fakemary.id
+        newGroup = Group.create(json)
         newPerm = Permission.create("shiftspace", newGroup.id, self.fakejohn, level=1)
         publishData = {
             "dbs": [Group.db(newGroup.id)]
@@ -137,7 +140,7 @@ class BasicOperations(unittest.TestCase):
         theShift = Shift.load(db, newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         newGroup.deleteInstance()
-
+    """
     def testPublishToGroupAndUser(self):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)

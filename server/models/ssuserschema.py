@@ -203,7 +203,7 @@ class SSUser(User):
 
 
     def isOwnerOf(self, aGroup):
-        return userId == aGroup.createdBy
+        return self.id == aGroup.createdBy
 
 
     def isAdminOf(self, aGroup):
@@ -223,22 +223,22 @@ class SSUser(User):
 
     def joinable(self):
         from server.models.permschema import Permission
-        return core.valuess(Permission.by_joinable(core.connect()))
+        return Permission.joinable(self.id)
 
 
     def readable(self):
         from server.models.permschema import Permission
-        return core.values(Permission.by_readable(core.connect()))
+        return Permission.readable(self.id)
 
 
     def writeable(self):
         from server.models.permschema import Permission
-        return core.values(Permission.by_writeable(core.connect()))
+        return Permission.writeable(self.id)
 
 
     def adminable(self):
         from server.models.permschema import Permission
-        return core.values(Permission.by_adminable(core.connect()))
+        return Permission.adminable(self.id)
 
     # ========================================
     # Data

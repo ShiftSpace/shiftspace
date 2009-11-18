@@ -86,23 +86,12 @@ class Group(SSDocument):
     # ========================================
 
     @classmethod
-    def create(cls, userId, groupJson):
-        """
-        Create a group.
-        Parameters:
-            userId - a user id.
-            groupJson - a group json document.
-        """
+    def create(cls, groupJson):
         from server.models.permschema import Permission
         from server.models.ssuserschema import SSUser
 
-        # Multimethods would be really nice right now - David
-        if type(userId) == SSUser:
-            userId = userId.id
-        if type(userId) == dict:
-            userId = userId["_id"]
+        userId = groupJson["createdBy"]
 
-        groupJson["createdBy"] = userId
         # create the group metadata
         newGroup = Group(**groupJson)
         newGroup.source.server = core.serverName()
@@ -115,7 +104,7 @@ class Group(SSDocument):
         server = core.server()
         server.create(Group.db(newGroup.id))
         # copy the group metadata to the db
-        newGroup.copyTo(core.connect(Group.db(newGroup.id)))
+        newGroup.copyTo(Group.db(newGroup.id))
         return newGroup
         
     @classmethod
@@ -141,13 +130,6 @@ class Group(SSDocument):
 
 
     def delete(self):
-        """
-        Delete the group. Will probably not allow this
-        once there's other peoples content in a gruop,
-        but useful for debugging.
-        Parameters:
-            id - a group id.
-        """
         from server.models.permschema import Permission
         server = core.server()
         # delete the metadata
@@ -156,25 +138,18 @@ class Group(SSDocument):
         # delete the group database
         del server[Group.db(self.id)]
         # delete all permissions
-        [perm.deleteInstance() for perm in core.objects(Permission.by_group(core.connect(), key=self.id))]
+        [perm.delete() for perm in core.objects(Permission.by_group(core.connect(), key=self.id))]
 
     # ========================================
     # Group operations
     # ========================================
 
     def inviteUser(self, aUser, otherUser):
-        """
-        Add a user to a group. Creates a permission for that user.
-        """
         from server.models.permschema import Permission
-        Permission.create(aUser, self.id, otherUser, 0)
+        Permission.create(aUser.id, self.id, otherUser.id, 0)
 
 
     def join(self, aUser):
-        """
-        If the user can join the group, update their status
-        to allow reads.
-        """
         thePermission = Permission.readByUserAndGroup(aUser.id, group.id)
         if thePermission and thePermission.level == 0:
             db = core.connect()
@@ -183,10 +158,6 @@ class Group(SSDocument):
 
 
     def setPrivilege(self, aUser, level):
-        """
-        Set the privilege of a group member. Can only be
-        set if the user has joined the group.
-        """
         thePermission = Permission.readByUserAndGroup(aUser.id, self.id)
         if thePermission and level > 0:
             db = core.connect()
@@ -195,14 +166,6 @@ class Group(SSDocument):
 
 
     def addShift(self, aShift):
-        """
-        Add a shift to a group. Triggers replication to all
-        user/private of all non-peer members. Peers will get
-        the changes at synchronization time.
-        Parameters:
-            userId - a user id.
-            shift - a Shift Document.
-        """
         from server.models.ssuserschema import SSUser
         if Group.isMember(shift.createdBy, groupId):
             grpdb = Group.db(groupId)
@@ -215,28 +178,19 @@ class Group(SSDocument):
             theGroup = Group.load(db, groupId)
             raise NotAMemberError("%s is not a member of %s" % (theUser.userName, theGroup.longName))
 
-    @classmethod
-    def updateShift(cls, userId, shift):
-        """
-        Update a shift in a group. Trigger replication
-        to all user/private of all non-peer members. Peers
-        will get the changes at synchronization time.
-        Parameters:
-            userId - a user id.
-            shift - a Shift Document.
-        """
+
+    def updateShift(self, shift):
         from server.models.ssuserschema import SSUser
-        if Group.isMember(shift.createdBy, groupId):
+        author = SSUser.read(shift.createdBy)
+        if author.isMember(self):
             from server.model.ssuserschema import SSUser
-            grpdb = Group.db(groupId)
-            shift.updateIn(core.connect(grpdb))
+            grpdb = Group.db(self.id)
+            shift.updateIn(grpdb)
             # TODO: only replicate into user_x/feeds that are not peer - David
-            [core.replicate(grpdb, SSUser.feedDb(id)) for id in Group.members(groupId)]
+            [core.replicate(grpdb, SSUser.feedDb(id)) for id in self.members()]
         else:
             db = core.connect()
-            theUser = SSUser.read(shift.createdBy)
-            theGroup = Group.load(db, groupId)
-            raise NotAMemberError("%s is not a member of %s" % (theUser.userName, theGroup.longName))
+            raise NotAMemberError("%s is not a member of %s" % (author.userName, self.longName))
 
     @classmethod
     def deleteShift(cls, userId, shift):

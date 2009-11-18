@@ -43,12 +43,6 @@ def joindecorator(func):
 # ==============================================================================
 
 class Shift(SSDocument):
-    """
-    The Shift document. A shift is a piece of JSON data used
-    by spaces (applications) to recreate a user's modification
-    to a page. Refer to the API specification for more detailed
-    imformation about the usage of different fields.
-    """
 
     # ========================================
     # Fields
@@ -170,14 +164,6 @@ class Shift(SSDocument):
 
     @classmethod
     def joinData(cls, shifts, userId=None):
-        """
-        Relatively quick data join function. Makes use
-        of multidocument fetch.
-        
-        Parameters:
-          shifts - a single shift or a list of shifts.
-          userId - a user id.
-        """
         from server.models.favschema import Favorite
 
         single = False
@@ -212,13 +198,6 @@ class Shift(SSDocument):
 
     @classmethod
     def create(cls, shiftJson):
-        """
-        Create a shift in the database.
-        Parameters:
-            shiftJson - the new data for the shift.
-        Returns:
-            The id of the new shift (string).
-        """
         newShift = Shift(**shiftJson)
         createdBy = newShift.createdBy
         db = core.connect(SSUser.privateDb(createdBy))
@@ -229,15 +208,6 @@ class Shift(SSDocument):
 
     @classmethod
     def read(cls, id, userId):
-        """
-        Get a specific shift. First tries the master database
-        then tries the user's private database.
-        Parameters:
-            id - a shift id.
-            userId - a userId. If not supplied tries to read shift from master database.
-        Returns:
-            a dictionary of the shift's data.
-        """
         db = core.connect(SSUser.publicDb(userId))
         theShift = Shift.load(db, id)
         if not theShift and userId:
@@ -252,17 +222,6 @@ class Shift(SSDocument):
     # ========================================
 
     def update(self, fields):
-        """
-        Class method for updating a shift. Attempts to read
-        first from user/private and then user/public. Updates
-        the shift there, then replicates back into user/feed.
-        Also updates any user_x/inbox and group_x that the
-        shift has been published to.
-        
-        Parameters:
-          fields - the fields to update. Allowed fields are
-            summary, broken, and content.
-        """
         if fields.get("content"):
             self.content = fields.get("content")
         if fields.get("summary"):
@@ -295,11 +254,6 @@ class Shift(SSDocument):
 
 
     def delete(self):
-        """
-        Delete a shift from the user/private database.
-        Parameters:
-            id - a shift id.
-        """
         db = core.connect(SSUser.privateDb(self.createdBy))
         if db.get(self.id):
             del db[self.id]
@@ -310,9 +264,6 @@ class Shift(SSDocument):
 
 
     def publishIds(self):
-        """
-        Return the list of ids the shift was published to.
-        """
         return [db.split("/")[1].split("/")[0] for db in self.publishData.dbs]
 
     # ========================================
@@ -320,24 +271,10 @@ class Shift(SSDocument):
     # ========================================
     
     def isPublic(self):
-        """
-        Check where a shift is public.
-        Parameters:
-            id - a shift id.
-        Returns:
-            bool.
-        """
         return not self.publishData.private
 
 
     def isPrivate(self):
-        """
-        Check whether a shift is private.
-        Parameters:
-            id - a shift id.
-        Returns:
-            bool.
-        """
         return self.publishData.private
 
     # ========================================
@@ -345,18 +282,6 @@ class Shift(SSDocument):
     # ========================================
 
     def publish(self, publishData=None, server="http://www.shiftspace.org/api/"):
-        """
-        Set draft status of a shift to false. Sync publishData field.
-        If the shift is private only publish to the dbs that
-        the user has access. If the shift is publich publish it to
-        any of the public non-user dbs. Creates the comment db
-        if it doesn't already exist.
-        
-        Parameters:
-            id - a shift id.
-            publishData - a dictionary holding the publish options.
-            server - NOT IMPLEMENTED
-        """
         db = core.connect(SSUser.privateDb(self.createdBy))
         author = SSUser.read(self.createdBy)
         oldPublishData = dict(self.items())["publishData"]
@@ -489,20 +414,6 @@ class Shift(SSDocument):
     #@joindecorator
     @classmethod
     def shifts(cls, byHref, userId=None, byFollowing=False, byGroups=False, start=0, limit=25):
-        """
-        Returns a list of shifts based on whether
-            1. href
-            3. By public streams specified user is following. 
-            4. By groups streams specified user is following.
-        Parameters:
-            byHref - a url
-            byDomain - a url string
-            byFollowing - a user id
-            byGroups - a user id
-        Returns:
-            A list of shifts that match the specifications.
-        """
-        print "Connect to db"
         db = core.connect()
         # NOTE: to prevent errors on a newly created DB - David 9/11/09
         """
