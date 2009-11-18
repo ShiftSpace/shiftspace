@@ -58,7 +58,7 @@ var UserTest = new Class({
   setup: function() {},
   tearDown: function() {},
   
-  /*
+
   missingEmail: $fixture(
     "Missing email.",
     function()
@@ -182,7 +182,7 @@ var UserTest = new Class({
       SSApp.confirm(SSApp.logout());
     }
   ),
-  */
+
 
   follow: $fixture(
     "Test following other users.",
@@ -229,12 +229,10 @@ var UserTest = new Class({
       SSApp.confirm(SSApp.logout());
       
       // cleanup
-      /*
       SSApp.confirm(SSApp.login(admin));
       SSApp.confirm(SSApp.delete('user', 'fakemary'));
       SSApp.confirm(SSApp.delete('user', 'fakejohn'));
       SSApp.confirm(SSApp.logout());
-      */
     }
   )
 

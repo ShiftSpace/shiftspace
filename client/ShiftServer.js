@@ -149,8 +149,7 @@ var ShiftServer = new Class({
   
   login: function(userData)
   {
-    userData = $H(userData).extract(['userName', 'password'], true);
-    return this.post({action:"login", data:userData});
+    return this.post({action:"login", data:{userName:userData.userName, password:userData.password}});
   },
   
   
