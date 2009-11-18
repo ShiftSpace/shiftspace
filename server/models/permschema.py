@@ -137,12 +137,11 @@ class Permission(SSDocument):
             raise MissingGroupError
         if not userId:
             raise MissingCreatorError
-        if Permission.readByUserAndGroup(otherI, groupId):
+        if Permission.readByUserAndGroup(otherId, groupId):
             raise PermissionAlreadyExistsError
 
-        if not allowed:
-            adminable = [row.value for row in Permission.by_adminable(db, key=userId).rows]
-            allowed = groupId in adminable
+        adminable = [row.value for row in Permission.by_adminable(db, key=userId).rows]
+        allowed = groupId in adminable
         if not allowed:
             theUser = SSUser.read(userId)
             allowed = theUser.isAdmin()

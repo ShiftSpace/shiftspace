@@ -130,16 +130,16 @@ class BasicOperations(unittest.TestCase):
         json = groupJson()
         json["createdBy"] = self.fakemary.id
         newGroup = Group.create(json)
-        newPerm = Permission.create("shiftspace", newGroup.id, self.fakejohn, level=1)
+        newPerm = Permission.create("shiftspace", newGroup.id, self.fakejohn.id, level=1)
         publishData = {
             "dbs": [Group.db(newGroup.id)]
             }
-        Shift.publish(self.fakemary, newShift.id, publishData)
+        newShift.publish(publishData)
         # should exists in subscriber's feed
-        db = core.connect(SSUser.feedDb(self.fakejohn))
+        db = core.connect(SSUser.feedDb(self.fakejohn.id))
         theShift = Shift.load(db, newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-        newGroup.deleteInstance()
+        newGroup.delete()
     """
     def testPublishToGroupAndUser(self):
         json = shiftJson()

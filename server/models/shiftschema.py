@@ -300,6 +300,7 @@ class Shift(SSDocument):
         # get the list of dbs the user is actually allowed to publish to
         allowed = []
         if (publishData and isPrivate and len(publishDbs) > 0):
+            from server.models.groupschema import Group
             allowedGroups = [Group.db(id) for id in author.writeable()]
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
 
