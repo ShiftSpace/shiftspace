@@ -176,6 +176,7 @@ class SSUser(User):
 
 
     def canModify(self, other):
+        from server.models.shiftschema import Shift
         if isinstance(other, SSUser): 
             return (self.id == other.id) or self.isAdmin()
         elif isinstance(other, Shift):

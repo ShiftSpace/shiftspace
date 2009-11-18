@@ -355,20 +355,25 @@ class Shift(SSDocument):
         Parameters:
             id - a shift id.
             publishData - a dictionary holding the publish options.
+            server - NOT IMPLEMENTED
         """
         db = core.connect(SSUser.privateDb(self.createdBy))
         author = SSUser.read(self.createdBy)
         oldPublishData = dict(self.items())["publishData"]
         allowed = []
 
+        # get the private status
         isPrivate = True
         if publishData and publishData.get("private") != None:
             isPrivate = publishData.get("private")
         else:
             isPrivate = self.isPrivate()
 
+        # get the dbs being published to
         publishDbs = (publishData and publishData.get("dbs")) or []
 
+        # get the list of dbs the user is actually allowed to publish to
+        allowed = []
         if (publishData and isPrivate and len(publishDbs) > 0):
             allowedGroups = author.writeable()
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
@@ -378,9 +383,7 @@ class Shift(SSDocument):
         theShift.publishData.draft = False
         
         # publish or update a copy of the shift to all user-x/private, user-y/private ...
-        newUserDbs = []
-        if publishData and publishData.get("dbs"):
-            newUserDbs = [s for s in publishData.get("dbs") if s.split("/")[0] == "user"]
+        newUserDbs = [s for s in allowed if s.split("/")[0] == "user"]
         oldUserDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "user"]
         newUserDbs = list(set(newUserDbs).difference(set(oldUserDbs)))
 
@@ -391,24 +394,13 @@ class Shift(SSDocument):
             self.copyTo(core.connect(db))
 
         # publish or update a copy to group/x, group/y, ...
-        newGroupDbs = []
-        if publishData and publishData.get("dbs"):
-            newGroupDbs = [s for s in publishData.get("dbs") if s.split("/")[0] == "group"]
+        newGroupDbs = [s for s in allowed if s.split("/")[0] == "group"]
         oldGroupDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "group"]
         newGroupDbs = list(set(newGroupDbs).difference(set(oldGroupDbs)))
         
-        # update group dbs
-        for db in oldGroupDbs:
-            from server.models.groupschema import Group
-            dbtype, dbid = db.split("/")
-            theGroup = Group.read(dbid)
-            theGroup.updateShift(theShift)
-        for db in newGroupDbs:
-            from server.models.groupschema import Group
-            # NOTE - do we need to delete from user/private? - David 11/12/09
-            dbtype, dbid = db.split("/")
-            theGroup = Group.read(dbid)
-            theGroup.addShift(theShift)
+        # update/add to group dbs
+        self.updateInGroups(oldGroupDbs)
+        self.addToGroups(newGroupDbs)
 
         # create in user/public, delete from user/private
         # replicate to user/feed and to user/shiftspace
@@ -422,20 +414,43 @@ class Shift(SSDocument):
                 del privatedb[theShift.id]
             core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(self.createdBy))
             core.replicate(SSUser.publicDb(self.createdBy))
+            self.copyOrUpdate("shiftspace/public")
 
         # TODO: don't replicate to follower user_x/feeds that are not peers - David
         followers = author.followers()
         [core.replicate(SSUser.publicDb(userId), SSUser.feedDb(follower)) for follower in followers]
         
-        # if draft false, copy to master database, we need it there
+        # copy to shiftspace/shared, we need it there
         # for general queries about what's available on pages - David
-        db = core.connect()
+        self.copyOrUpdateTo("shiftspace/shared")
+        return Shift.joinData(self, userId)
+
+
+    def copyOrUpdate(self, dbname):
+        db = core.connect(dbname)
         if not db.get(self.id):
             self.copyTo(db)
         else:
             self.updateIn(db)
 
-        return Shift.joinData(self, userId)
+
+    def addToGroups(self, groupDbs):
+        from server.models.groupschema import Group
+        for db in groupDbs:
+            # NOTE - do we need to delete from user/private? - David 11/12/09
+            dbtype, dbid = db.split("/")
+            theGroup = Group.read(dbid)
+            theGroup.addShift(theShift)
+
+    
+    def updateInGroups(self, groupDbs):
+        from server.models.groupschema import Group
+        # update group dbs
+        for db in groupDbs:
+            dbtype, dbid = db.split("/")
+            theGroup = Group.read(dbid)
+            theGroup.updateShift(theShift)
+
 
     # ========================================
     # Comments

@@ -46,27 +46,29 @@ class SSDocument(Document):
         db = db or core.connect()
         del db[self.id]
 
-    def copyTo(self, db):
+    def copyTo(self, dbname):
         """
         Create a copy of this shift in another database.
         Stop gap until we can replicate single documents
         either via special API or filtered replication.
         Parameters:
-          db - the name of a database to copy to
+          dbname - the name of a database to copy to
         """
+        db = core.connect(dbname)
         copy = self.toDict()
         del copy["_rev"]
         db.create(copy)
 
-    def updateIn(self, db):
+    def updateIn(self, dbname):
         """
         Update this the instance of this document in
         another db. Stop gap until we can replicate
         single documents either via special API or filtered
         replication.
         Parameters:
-          db - the name of a database to copy to
+          dbname - the name of a database to copy to
         """
+        db = core.connect(dbname)
         old = db[self.id]
         copy = self.toDict()
         copy["_rev"] = old["_rev"]

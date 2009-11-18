@@ -17,6 +17,7 @@ class BasicOperations(unittest.TestCase):
         self.fakebob = SSUser.create(fakebob)
         self.root = SSUser.read("shiftspace")
 
+    """
     def testCreate(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -61,28 +62,33 @@ class BasicOperations(unittest.TestCase):
         theShift = Shift.read(newShift.id, self.fakemary.id)
         self.assertEqual(theShift, None)
 
-    """
     def testJoinData(self):
         json = shiftJson()
-        newShift = Shift.create(self.fakemary, json)
+        json["createdBy"] = self.fakemary.id
+        newShift = Shift.create(json)
+        # gravatar not a real property, added via Shift.joinData
         self.assertNotEqual(newShift["gravatar"], None)
+
 
     def testCanModify(self):
         json = shiftJson()
-        newShift = Shift.create(self.fakemary, json)
-        self.assertTrue(Shift.canModify(self.fakemary, newShift.id))
-        self.assertTrue(not Shift.canModify(self.fakejohn, newShift.id))
-        self.assertTrue(Shift.canModify(self.root, newShift.id))
+        json["createdBy"] = self.fakemary.id
+        newShift = Shift.create(json)
+        self.assertTrue(self.fakemary.canModify(newShift))
+        self.assertTrue(not self.fakejohn.canModify(newShift))
+        self.assertTrue(self.root.canModify(newShift))
+    """
 
     def testBasicPublish(self):
         json = shiftJson()
-        newShift = Shift.create(self.fakemary, json)
-        Shift.publish(self.fakemary, newShift.id, {"private":False})
+        json["createdBy"] = self.fakemary.id
+        newShift = Shift.create(json)
+        newShift.publish({"private":False})
         # should exist in user/public db
         theShift = Shift.load(core.connect(SSUser.publicDb(self.fakemary)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-        # should exist in master db 
-        theShift = Shift.load(core.connect(), newShift.id)
+        # should exist in master/public db 
+        theShift = Shift.load(core.connect("shitspace/public"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         # should exist in user/feed db
         theShift = Shift.load(core.connect(SSUser.feedDb(self.fakemary)), newShift.id)
@@ -91,6 +97,7 @@ class BasicOperations(unittest.TestCase):
         theShift = Shift.load(core.connect(SSUser.privateDb(self.fakemary)), newShift.id)
         self.assertEqual(theShift, None)
 
+    """
     def testPublishFollower(self):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)
