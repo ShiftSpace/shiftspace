@@ -251,7 +251,7 @@ class SSUser(User):
 
     def messages(self, start=None, end=None, limit=25):
         from server.models.messageschema import Message
-        return core.objects(Message.by_created(core.connect(SSUser.messagesDb(self.id)), limit=25))
+        return core.objects(Message.by_created(core.connect(SSUser.messagesDb(self.id)), limit=limit))
 
 
     def shifts(self, start=None, end=None, limit=25):
@@ -259,7 +259,13 @@ class SSUser(User):
 
 
     def feed(self, start=None, end=None, limit=25):
-        pass
+        from server.models.shiftschema import Shift
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Shift.by_user_and_created(core.connect(SSUser.feedDb(self.id)), limit=limit)
+        return core.objects(results[start:end])
 
 
     def favorites(self, start=None, end=None, limit=25):

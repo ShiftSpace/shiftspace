@@ -29,7 +29,7 @@ class UserController(ResourceController):
                   conditions=dict(method="DELETE"))
         d.connect(name="userMessages", route="user/:userName/messages", controller=self, action="messages",
                   conditions=dict(method="GET"))
-        d.connect(name="userFeeds", route="user/:userName/feeds", controller=self, action="feeds",
+        d.connect(name="userFeed", route="user/:userName/feed", controller=self, action="feed",
                   conditions=dict(method="GET"))
         d.connect(name="userShifts", route="user/:userName/shifts", controller=self, action="shifts",
                   conditions=dict(method="GET"))
@@ -203,9 +203,10 @@ class UserController(ResourceController):
     @loggedin
     def messages(self, userName, start=None, end=None, limit=25):
         loggedInUser = SSUser.read(helper.getLoggedInUser())
-        theUser = SSUser.readByName(userName)
-        if loggedInUser.id == theUser.id or loggedInUser.isAdmin():
-            return data(theUser.messages(start=start, end=end, limit=limit))
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser == otherUser.id or loggedInUser.isAdmin():
+            return data(otherUser.messages(start=start, end=end, limit=limit))
         else:
             return error("You do not have permission to view this user's messages.", PermissionError)
 
@@ -214,20 +215,34 @@ class UserController(ResourceController):
     @loggedin
     def shifts(self, userName, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
-        theUser = SSUser.readByName(userName)
-        if loggedInUser.id == theUser.id or loggedInUser.isAdmin():
-            return data(theUser.shifts(start=start, end=end, limit=limit))
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser == otherUser.id or theUser.isAdmin():
+            return data(otherUser.shifts(start=start, end=end, limit=limit))
         else:
             return error("You don't have permission to view this user's shifts.", PermissionError)
+            
+    @jsonencode
+    @exists
+    @loggedin
+    def feed(self, userName, start=None, end=None, limit=25):
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser == otherUser.id or theUser.isAdmin():
+            return data(otherUser.feed(start=start, end=end, limit=limit))
+        else:
+            return error("You don't have permission to view this user's feed.", PermissionError)
 
     @jsonencode
     @exists
     @loggedin
     def favorites(self, userName, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
-        theUser = SSUser.readByName(userName)
-        if loggedInUser.id == theUser.id or loggedInUser.isAdmin():
-            return data(theUser.favorites(start=start, end=end, limit=limit))
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser == otherUser.id or theUser.isAdmin():
+            return data(otherUser.favorites(start=start, end=end, limit=limit))
         else:
             return error("You don't have permission to view this user's favorite shifts.", PermissionError)
 
@@ -236,8 +251,9 @@ class UserController(ResourceController):
     @loggedin
     def comments(self, userName, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
-        theUser = SSUser.readByName(userName)
-        if loggedInUser.id == theUser.id or loggedInUser.isAdmin():
-            return data(theUser.comments(userId, start=start, end=end, limit=limit))
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser == otherUser.id or theUser.isAdmin():
+            return data(otherUser.comments(userId, start=start, end=end, limit=limit))
         else:
             return error("You don't have permission to view this user's comments.", PermissionError)

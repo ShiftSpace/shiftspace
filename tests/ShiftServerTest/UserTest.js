@@ -58,7 +58,7 @@ var UserTest = new Class({
   setup: function() {},
   tearDown: function() {},
   
-
+  /*
   missingEmail: $fixture(
     "Missing email.",
     function()
@@ -182,8 +182,8 @@ var UserTest = new Class({
       SSApp.confirm(SSApp.logout());
     }
   ),
-  
-  /*  
+  */
+
   follow: $fixture(
     "Test following other users.",
     function()
@@ -191,21 +191,21 @@ var UserTest = new Class({
       SSApp.confirm(SSApp.logout());
       SSApp.confirm(SSApp.join(fakemary));
       SSApp.confirm(SSApp.logout());
-
+      
       SSApp.confirm(SSApp.join(fakejohn));
       SSApp.confirm(SSApp.logout());
-
+      
       SSApp.confirm(SSApp.login(fakemary));
-      var shiftId = SSGetData.attempt(SSApp.confirm(SSApp.create('shift', noteShift)));
-      SSApp.confirm(SSApp.confirm(SSApp.post({
+      var theShift = SSApp.confirm(SSApp.create('shift', noteShift));
+      SSApp.confirm(SSApp.post({
         resource: 'shift',
-        id: shiftId,
+        id: theShift._id,
         action: 'publish',
         data: {private: false},
         json: true
-      })));
+      }));
       SSApp.confirm(SSApp.logout());
-
+      
       // follow, check feeds, then unfollow and check feeds
       SSApp.confirm(SSApp.login(fakejohn));
       var json = SSApp.confirm(SSApp.post({
@@ -216,10 +216,10 @@ var UserTest = new Class({
       json = SSGetData.attempt(SSApp.confirm(SSApp.get({
         resource: 'user',
         id: 'fakejohn',
-        action: 'feeds'
+        action: 'feed'
       })));
       SSUnit.assertEqual(json.length, 1);
-    
+      
       json = SSApp.confirm(SSApp.post({
         resource: 'unfollow',
         id:'fakemary'
@@ -228,16 +228,16 @@ var UserTest = new Class({
       json = SSGetData.attempt(SSApp.confirm(SSAapp.get({
         resource:'user',
         id:'fakejohn',
-        action:'feeds'
+        action:'feed'
       })));
       SSUnit.assertEqual(json.length, 0);
       SSApp.confirm(SSApp.logout());
-    
+      
       SSApp.confirm(SSApp.login(admin));
       SSApp.confirm(SSApp.delete('user', 'fakemary'));
       SSApp.confirm(SSApp.delete('user', 'fakejohn'));
       SSApp.confirm(SSApp.logout());
     }
   )
-  */
+
 });

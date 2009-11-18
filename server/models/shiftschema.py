@@ -348,7 +348,10 @@ class Shift(SSDocument):
         # for general queries about what's available on pages - David
         self.copyOrUpdateTo("shiftspace/shared")
         return Shift.joinData(self, self.createdBy)
-
+        
+    def unpublish(self):
+        # TODO: need to figure out if we want to support this - David 11/18/09
+        pass
 
     def copyOrUpdateTo(self, dbname):
         db = core.connect(dbname)

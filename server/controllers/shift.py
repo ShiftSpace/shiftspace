@@ -128,33 +128,24 @@ class ShiftController(ResourceController):
             return error("Operation not permitted. You don't have permission to delete this shift.", PermissionError)
 
     @jsonencode
-    @exists
-    @shiftType
     @loggedin
     def publish(self, id):
-        from server.models.ssuserschema import SSUser
         # NOTE: should maybe take publishData url parameter - David 9/5/2009
         loggedInUser = helper.getLoggedInUser()
+        theShift = Shift.read(id, loggedInUser)
+        if not theShift or theShift.type != 'shift':
+            return error("Resource does not exist.", ResourceDoesNotExistError)
         publishData = json.loads(helper.getRequestBody())
-        theShift = Shift.read(id)
-        theUser = SSUser.read(loggedInUser)
-        if theUser.canModify(theShift):
-            return data(shift.publish(id, publishData))
-        else:
-            return error("Operation not permitted. You don't have permission to publish this shift.", PermissionError)
+        return data(theShift.publish(publishData).toDict())
 
     @jsonencode
-    @exists
-    @shiftType
     @loggedin
     def unpublish(self, id):
         loggedInUser = helper.getLoggedInUser()
-        theShift = shift.read(id)
-        if loggedInUser and shift.canUnpublish(id, loggedInUser['_id']):
-            return data(shift.unpublish(id))
-        else:
-            return error("Operation not permitted. You don't have permission to publish this shift.", PermissionError)
-
+        theShift = shift.read(id, loggedInUser)
+        if not theShift or theShift.type != 'shift':
+            return error("Resource does not exist", ResourceDoesNotExistError)
+        return data(theShift.unpublish().toDict())
 
     @jsonencode
     @exists
