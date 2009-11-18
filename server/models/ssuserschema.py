@@ -263,6 +263,7 @@ class SSUser(User):
 
 
     def favorites(self, start=None, end=None, limit=25):
+        from server.models.favschema import Favorite
         if not start:
             start = [self.id]
         if not end:

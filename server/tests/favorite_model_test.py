@@ -28,14 +28,14 @@ class BasicOperations(unittest.TestCase):
         # favorite count for that shift should be 1
         count = newShift.favoriteCount()
         self.assertEqual(count, 1)
-        Favorite.create(self.fakejohn.id, newShift.id)
+        newFavorite = Favorite.create(self.fakejohn.id, newShift.id)
         favorites = self.fakejohn.favorites()
         # user should have 1 favorite
         self.assertEqual(len(favorites), 1)
         # favorite count for that shift should be 1
         count = newShift.favoriteCount()
         self.assertEqual(count, 1)
-        Favorite.delete(self.fakejohn, newShift.id)
+        newFavorite.delete()
     """
     def testUnfavorite(self):
         json = shiftJson()
