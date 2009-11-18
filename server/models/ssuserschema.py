@@ -43,26 +43,21 @@ class SSUser(User):
     def privateDb(cls, userId):
         return "user/%s/private" % userId
 
-
     @classmethod
     def publicDb(cls, userId):
         return "user/%s/public" % userId
-
 
     @classmethod
     def inboxDb(cls, userId):
         return "user/%s/inbox" % userId
 
-
     @classmethod
     def feedDb(cls, userId):
         return "user/%s/feed" % userId
 
-
     @classmethod
     def messagesDb(cls, userId):
         return "user/%s/messages" % userId
-
 
     @classmethod
     def create(cls, userJson):
@@ -106,11 +101,9 @@ class SSUser(User):
 
         return newUser
 
-
     @classmethod
     def read(cls, id):
         return cls.load(core.connect(), id)
-
 
     @classmethod
     def readByName(cls, userName):
