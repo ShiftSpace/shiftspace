@@ -140,9 +140,6 @@ class Group(SSDocument):
         # delete all permissions
         [perm.delete() for perm in core.objects(Permission.by_group(core.connect(), key=self.id))]
 
-    # ========================================
-    # Group operations
-    # ========================================
 
     def inviteUser(self, aUser, otherUser):
         from server.models.permschema import Permission
@@ -167,37 +164,36 @@ class Group(SSDocument):
 
     def addShift(self, aShift):
         from server.models.ssuserschema import SSUser
-        if Group.isMember(shift.createdBy, groupId):
-            grpdb = Group.db(groupId)
-            shift.copyTo(core.connect(grpdb))
+        author = SSUser.read(aShift.createdBy)
+        if author.isMemberOf(self):
+            grpdb = Group.db(self.id)
+            aShift.copyTo(grpdb)
             # TODO: only replicate into user/x/feeds that are not peer - David
-            [core.replicate(grpdb, SSUser.feedDb(id)) for id in Group.members(groupId)]
+            [core.replicate(grpdb, SSUser.feedDb(id)) for id in self.members()]
         else:
             db = core.connect()
-            theUser = SSUser.read(shift.createdBy)
-            theGroup = Group.load(db, groupId)
-            raise NotAMemberError("%s is not a member of %s" % (theUser.userName, theGroup.longName))
+            raise NotAMemberError("%s is not a member of %s" % (author.userName, self.longName))
 
 
-    def updateShift(self, shift):
+    def updateShift(self, aShift):
         from server.models.ssuserschema import SSUser
-        author = SSUser.read(shift.createdBy)
+        author = SSUser.read(aShift.createdBy)
         if author.isMember(self):
-            from server.model.ssuserschema import SSUser
             grpdb = Group.db(self.id)
-            shift.updateIn(grpdb)
+            aShift.updateIn(grpdb)
             # TODO: only replicate into user_x/feeds that are not peer - David
             [core.replicate(grpdb, SSUser.feedDb(id)) for id in self.members()]
         else:
             db = core.connect()
             raise NotAMemberError("%s is not a member of %s" % (author.userName, self.longName))
 
-    @classmethod
-    def deleteShift(cls, userId, shift):
-        pass
 
-    @classmethod
-    def members(cls, groupId):
+    def deleteShift(self, aShift):
+        db = core.connect(Group.db(self.id))
+        del db[aShift.id]
+
+
+    def members(self):
         from server.models.permschema import Permission
         db = core.connect()
-        return [row.value for row in Permission.all_members(db, key=groupId).rows]
+        return [row.value for row in Permission.all_members(db, key=self.id).rows]

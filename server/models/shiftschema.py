@@ -301,7 +301,7 @@ class Shift(SSDocument):
         allowed = []
         if (publishData and isPrivate and len(publishDbs) > 0):
             from server.models.groupschema import Group
-            allowedGroups = [Group.db(id) for id in author.writeable()]
+            allowedGroups = author.writeable()
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
 
         # upate the private setting, the shift is no longer draft
@@ -314,10 +314,8 @@ class Shift(SSDocument):
         newUserDbs = list(set(newUserDbs).difference(set(oldUserDbs)))
 
         # update target user inboxes
-        for db in oldUserDbs:
-            self.updateIn(db)
-        for db in newUserDbs:
-            self.copyTo(db)
+        [self.udpateIn(db) for db in oldUserDbs]
+        [self.copyTo(Db) for db in newUserDbs]
 
         # publish or update a copy to group/x, group/y, ...
         newGroupDbs = [s for s in allowed if s.split("/")[0] == "group"]
@@ -361,20 +359,19 @@ class Shift(SSDocument):
 
     def addToGroups(self, groupDbs):
         from server.models.groupschema import Group
+        # NOTE - do we need to delete from user/private? - David 11/12/09
         for db in groupDbs:
-            # NOTE - do we need to delete from user/private? - David 11/12/09
             dbtype, dbid = db.split("/")
             theGroup = Group.read(dbid)
-            theGroup.addShift(theShift)
+            theGroup.addShift(self)
 
     
     def updateInGroups(self, groupDbs):
         from server.models.groupschema import Group
-        # update group dbs
         for db in groupDbs:
             dbtype, dbid = db.split("/")
             theGroup = Group.read(dbid)
-            theGroup.updateShift(theShift)
+            theGroup.updateShift(self)
 
 
     # ========================================

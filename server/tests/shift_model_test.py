@@ -130,12 +130,18 @@ class BasicOperations(unittest.TestCase):
         json = groupJson()
         json["createdBy"] = self.fakemary.id
         newGroup = Group.create(json)
+        # make sure fakemary owns the group
+        newPerm = Permission.readByUserAndGroup(self.fakemary.id, newGroup.id)
+        self.assertTrue(newPerm.level == 4)
+        # create read permission for fakejohn
         newPerm = Permission.create("shiftspace", newGroup.id, self.fakejohn.id, level=1)
+        fakejohn = SSUser.read(self.fakejohn.id)
+        self.assertTrue(Group.db(newGroup.id) in fakejohn.readable())
         publishData = {
             "dbs": [Group.db(newGroup.id)]
             }
         newShift.publish(publishData)
-        # should exists in subscriber's feed
+        # should exists in fakejohn's feed
         db = core.connect(SSUser.feedDb(self.fakejohn.id))
         theShift = Shift.load(db, newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
@@ -158,13 +164,14 @@ class BasicOperations(unittest.TestCase):
         # should exist in user's inbox
         theShift = Shift.load(core.connect(SSUser.inboxDb(self.fakebob)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
+    """
 
     def tearDown(self):
         db = core.connect()
         self.fakemary.delete()
         self.fakejohn.delete()
         self.fakebob.delete()
-    """
+
 
 if __name__ == "__main__":
     unittest.main()
