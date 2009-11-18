@@ -328,6 +328,7 @@ class Shift(SSDocument):
 
         # create in user/public, delete from user/private
         # replicate to user/feed and to shiftspace/public
+        # replicate shiftspace/public to shiftspace/shared
         if not isPrivate:
             publicdb = SSUser.publicDb(self.createdBy)
             if Shift.load(core.connect(publicdb), self.id):
@@ -373,35 +374,47 @@ class Shift(SSDocument):
             theGroup = Group.read(dbid)
             theGroup.updateShift(self)
 
-
     # ========================================
     # Comments
     # ========================================
 
     def commentCount(self):
+        from server.models.commentschema import Comment
         db = core.connect()
         return core.value(Comment.count_by_shift(db, key=self.id))
 
 
     def comments(self, start=None, end=None, limit=25):
+        from server.models.commentschema import Comment
         db = core.connect(Comment.db(self.id))
         return core.objects(Comment.by_created(db, limit=limit))
 
 
     def hasThread(self):
+        from server.models.commentschema import Comment
         try:
-            core.server()[Comment.db(self.id)]
-            return True
+            server = core.server()
+            thread = server[Comment.db(self.id)]
+            return thread != None
         except Exception:
             return False
 
 
+    def deleteThread(self):
+        from server.models.commentschema import Comment
+        server = core.server()
+        # TODO - use bulk API to delete all comment stubs - David
+        del server[Comment.db(self.id)]
+
+
     def subscribers(self):
+        from server.models.commentschema import Comment
         db = core.connect(Comment.db(self.id))
         return core.values(Comment.all_subscribed(db))
 
 
     def favoriteCount(self):
+        from server.models.favschema import Favorite
         db = core.connect()
         return core.value(Favorite.count_by_shift(db, key=self.id)) or 0
     

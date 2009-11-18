@@ -250,7 +250,8 @@ class SSUser(User):
 
 
     def messages(self, start=None, end=None, limit=25):
-        pass
+        from server.models.messageschema import Message
+        return core.objects(Message.by_created(core.connect(SSUser.messagesDb(self.id)), limit=25))
 
 
     def shifts(self, start=None, end=None, limit=25):
@@ -289,7 +290,7 @@ class SSUser(User):
         return self
 
 
-    def unfollow(cls, other):
+    def unfollow(self, other):
         db = core.connect()
         self.following.remove(other.id)
         self.store(db)
@@ -299,14 +300,16 @@ class SSUser(User):
     # Comment Subscription
     # ========================================
 
-    def isSubscribed(aShift):
+    def isSubscribed(self, aShift):
+        from server.models.commentschema import Comment
         db = core.connect(Comment.db(aShift.id))
         return db.get("user:%s" % self.id) != None
 
 
-    def subscribe(aShift):
-        db = core.connect(Comment.db(shiftId))
-        if not self.isSubscribed(shiftId):
+    def subscribe(self, aShift):
+        from server.models.commentschema import Comment
+        db = core.connect(Comment.db(aShift.id))
+        if not self.isSubscribed(aShift):
             db.create({
                 "_id": "user:%s" % self.id,
                 "shiftId": aShift.id,
@@ -315,7 +318,8 @@ class SSUser(User):
                 })
 
 
-    def unsubscribe(aShift):
+    def unsubscribe(self, aShift):
+        from server.models.commentschema import Comment
         db = core.connect(Comment.db(aShift.id))
         if self.isSubscribed(aShift.id):
             del db["user:%s" % self.id]
