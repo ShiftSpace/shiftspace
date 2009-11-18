@@ -86,7 +86,7 @@ class ShiftController(ResourceController):
         loggedInUser = helper.getLoggedInUser()
         theUser = SSUser.read(loggedInUser)
         theShift = Shift.read(id, loggedInUser)
-        if theUser.canRead(theShift):
+        if theShift and theUser.canRead(theShift):
             return data(theShift.toDict())
         else:
             return error("Operation not permitted. You don't have permission to view this shift.", PermissionError)

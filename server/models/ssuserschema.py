@@ -177,7 +177,9 @@ class SSUser(User):
         if self.isAdmin():
             return True
         dbs = aShift.publishData.dbs
-        return list(set(self.readable()).intersection(set(dbs))) > 0
+        if list(set(self.readable()).intersection(set(dbs))) > 0:
+            return True
+        return ("user/%s" % self.id) in aShift.publishData.dbs
 
 
     def canModify(self, other):

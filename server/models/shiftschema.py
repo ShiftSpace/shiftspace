@@ -63,7 +63,7 @@ class Shift(SSDocument):
             draft = BooleanField(default=True),
             private = BooleanField(default=True),
             publishTime = DateTimeField(),
-            dbs = ListField(TextField())
+            dbs = ListField(TextField())            # take the form of user/id or group/id
             ))
     content = DictField()    
             
@@ -210,9 +210,8 @@ class Shift(SSDocument):
     def read(cls, id, userId=None):
         theShift = None
         # first try to load from shared timeline
-        if not userId:
-            theShift = Shift.load(core.connect("shiftspace/shared"), id)
-        else:
+        theShift = Shift.load(core.connect("shiftspace/shared"), id)
+        if not theShift and userId:
             # then try the user public
             db = core.connect(SSUser.publicDb(userId))
             theShift = Shift.load(db, id)
@@ -227,34 +226,40 @@ class Shift(SSDocument):
     # Instance methods
     # ========================================
 
-    def update(self, fields):
+    def update(self, fields, updateDbs=True):
         if fields.get("content"):
             self.content = fields.get("content")
         if fields.get("summary"):
             self.summary = self.content["summary"] = fields.get("summary")
         if fields.get("broken"):
             self.broken = fields.get("broken")
+        if fields.get("dbs"):
+            self.dbs = list(set(self.dbs.extend(fields.get("dbs"))))
         self.modified = datetime.now()
 
+        # update the correct user db
         if self.publishData.private:
             db = core.connect(SSUser.privateDb(self.createdBy))
         else:
             db = core.connect(SSUser.publicDb(self.createdBy))
         self.store(db)
 
+        # replicate to user's feed db
         if self.publishData.private:
             core.replicate(SSUser.privateDb(self.createdBy), SSUser.feedDb(self.createdBy))
         else:
             core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(self.createdBy))
 
-        for db in self.publishData.dbs:
-            dbtype, dbid = db.split("/")
-            if dbtype == "user":
-                inbox = core.connect(SSUser.inboxDb(dbid))
-                self.store(inbox)
-            elif dbtype == "group":
-                from server.models.groupschema import Group
-                Group.read(dbid).updateShift(self)
+        # update followers and groups
+        if updateDbs:
+            for db in self.publishData.dbs:
+                dbtype, dbid = db.split("/")
+                # TODO: write to inbox if user is peer - David 11/18/09
+                if dbtype == "user":
+                    self.updateTo(SSUser.feedDb(dbid))
+                elif dbtype == "group":
+                    from server.models.groupschema import Group
+                    Group.read(dbid).updateShift(self)
 
         return Shift.joinData(self, self.createdBy)
 
@@ -318,15 +323,18 @@ class Shift(SSDocument):
         newUserDbs = [s for s in publishDbs if s.split("/")[0] == "user"]
         oldUserDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "user"]
         newUserDbs = list(set(newUserDbs).difference(set(oldUserDbs)))
+        self.publishData.dbs.extend(newUserDbs)
 
-        # update target user inboxes
-        [self.udpateIn(db) for db in oldUserDbs]
-        [self.copyTo(db) for db in newUserDbs]
+        # update target user feeds
+        # TODO: target inbox if the user is a peer - David 11/18/09
+        [self.updateIn("%s/feed" % db) for db in oldUserDbs]
+        [self.copyTo("%s/feed" % db) for db in newUserDbs]
 
         # publish or update a copy to group/x, group/y, ...
         newGroupDbs = [s for s in allowed if s.split("/")[0] == "group"]
         oldGroupDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "group"]
         newGroupDbs = list(set(newGroupDbs).difference(set(oldGroupDbs)))
+        self.publishData.dbs.extend(newGroupDbs)
         
         # update/add to group dbs
         self.updateInGroups(oldGroupDbs)
@@ -352,7 +360,13 @@ class Shift(SSDocument):
         
         # copy to shiftspace/shared, we need it there
         # for general queries about what's available on pages - David
-        self.copyOrUpdateTo("shiftspace/shared")
+        if not isPrivate:
+            core.replicate("shiftspace/public", "shiftspace/shared")
+        else:
+            self.copyOrUpdateTo("shiftspace/shared")
+        
+        # update the actual shift, don't trigger a dbs update, we've already done that
+        self.update({"dbs":newUserDbs.extend(newGroupDbs)}, updateDbs=False)
         return Shift.joinData(self, self.createdBy)
         
     def unpublish(self):
