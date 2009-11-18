@@ -85,16 +85,16 @@ class BasicOperations(unittest.TestCase):
         newShift = Shift.create(json)
         newShift.publish({"private":False})
         # should exist in user/public db
-        theShift = Shift.load(core.connect(SSUser.publicDb(self.fakemary)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.publicDb(self.fakemary.id)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         # should exist in master/public db 
-        theShift = Shift.load(core.connect("shitspace/public"), newShift.id)
+        theShift = Shift.load(core.connect("shiftspace/public"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         # should exist in user/feed db
-        theShift = Shift.load(core.connect(SSUser.feedDb(self.fakemary)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.feedDb(self.fakemary.id)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         # should _not_ exist in user/private db
-        theShift = Shift.load(core.connect(SSUser.privateDb(self.fakemary)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.privateDb(self.fakemary.id)), newShift.id)
         self.assertEqual(theShift, None)
 
     """

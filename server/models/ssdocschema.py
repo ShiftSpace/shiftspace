@@ -1,6 +1,7 @@
 from datetime import datetime
 from couchdb.schema import *
 from couchdb.schema import View
+from server.models import core
 
 
 class SSDocumentError(Exception): pass

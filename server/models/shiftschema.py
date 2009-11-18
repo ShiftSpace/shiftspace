@@ -379,8 +379,8 @@ class Shift(SSDocument):
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
 
         # upate the private setting, the shift is no longer draft
-        theShift.publishData.private = isPrivate
-        theShift.publishData.draft = False
+        self.publishData.private = isPrivate
+        self.publishData.draft = False
         
         # publish or update a copy of the shift to all user-x/private, user-y/private ...
         newUserDbs = [s for s in allowed if s.split("/")[0] == "user"]
@@ -403,18 +403,17 @@ class Shift(SSDocument):
         self.addToGroups(newGroupDbs)
 
         # create in user/public, delete from user/private
-        # replicate to user/feed and to user/shiftspace
+        # replicate to user/feed and to shiftspace/public
         if not isPrivate:
-            publicdb = core.connect(SSUser.publicDb(self.createdBy))
-            if Shift.load(publicdb, self.id):
+            publicdb = SSUser.publicDb(self.createdBy)
+            if Shift.load(core.connect(publicdb), self.id):
                 self.updateIn(publicdb)
             else:
                 self.copyTo(publicdb)
                 privatedb = core.connect(SSUser.privateDb(self.createdBy))
-                del privatedb[theShift.id]
+                del privatedb[self.id]
             core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(self.createdBy))
-            core.replicate(SSUser.publicDb(self.createdBy))
-            self.copyOrUpdate("shiftspace/public")
+            core.replicate(SSUser.publicDb(self.createdBy), "shiftspace/public")
 
         # TODO: don't replicate to follower user_x/feeds that are not peers - David
         followers = author.followers()
@@ -423,15 +422,15 @@ class Shift(SSDocument):
         # copy to shiftspace/shared, we need it there
         # for general queries about what's available on pages - David
         self.copyOrUpdateTo("shiftspace/shared")
-        return Shift.joinData(self, userId)
+        return Shift.joinData(self, self.createdBy)
 
 
-    def copyOrUpdate(self, dbname):
+    def copyOrUpdateTo(self, dbname):
         db = core.connect(dbname)
         if not db.get(self.id):
-            self.copyTo(db)
+            self.copyTo(dbname)
         else:
-            self.updateIn(db)
+            self.updateIn(dbname)
 
 
     def addToGroups(self, groupDbs):
