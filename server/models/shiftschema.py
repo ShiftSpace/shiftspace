@@ -315,7 +315,7 @@ class Shift(SSDocument):
 
         # update target user inboxes
         [self.udpateIn(db) for db in oldUserDbs]
-        [self.copyTo(Db) for db in newUserDbs]
+        [self.copyTo(db) for db in newUserDbs]
 
         # publish or update a copy to group/x, group/y, ...
         newGroupDbs = [s for s in allowed if s.split("/")[0] == "group"]

@@ -17,7 +17,6 @@ class BasicOperations(unittest.TestCase):
         self.fakebob = SSUser.create(fakebob)
         self.root = SSUser.read("shiftspace")
 
-    """
     def testCreate(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -122,7 +121,7 @@ class BasicOperations(unittest.TestCase):
         # should exist in user inbox
         theShift = Shift.load(core.connect(SSUser.inboxDb(self.fakejohn.id)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-    """
+
     def testPublishToGroup(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -146,25 +145,27 @@ class BasicOperations(unittest.TestCase):
         theShift = Shift.load(db, newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         newGroup.delete()
-    """
+
     def testPublishToGroupAndUser(self):
         json = shiftJson()
-        newShift = Shift.create(self.fakemary, json)
-        newGroup = Group.create(self.fakemary, groupJson())
-        newPerm = Permission.create("shiftspace", newGroup.id, self.fakejohn, level=1)
+        json["createdBy"] = self.fakemary.id
+        newShift = Shift.create(json)
+        json = groupJson()
+        json["createdBy"] = self.fakemary.id
+        newGroup = Group.create(json)
+        newPerm = Permission.create("shiftspace", newGroup.id, self.fakejohn.id, level=1)
         publishData = {
-            "dbs": [Group.db(newGroup.id), SSUser.inboxDb(self.fakebob)]
+            "dbs": [Group.db(newGroup.id), SSUser.inboxDb(self.fakebob.id)]
             }
-        Shift.publish(self.fakemary, newShift.id, publishData)
+        newShift.publish(publishData)
         # should exist in subscriber's feed
-        db = core.connect(SSUser.feedDb(self.fakejohn))
+        db = core.connect(SSUser.feedDb(self.fakejohn.id))
         theShift = Shift.load(db, newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-        newGroup.deleteInstance()
+        newGroup.delete()
         # should exist in user's inbox
-        theShift = Shift.load(core.connect(SSUser.inboxDb(self.fakebob)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.inboxDb(self.fakebob.id)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-    """
 
     def tearDown(self):
         db = core.connect()
