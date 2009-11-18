@@ -40,27 +40,27 @@ class SSUser(User):
     # ========================================
 
     @classmethod
-    def private(cls, userId):
+    def privateDb(cls, userId):
         return "user/%s/private" % userId
 
 
     @classmethod
-    def public(cls, userId):
+    def publicDb(cls, userId):
         return "user/%s/public" % userId
 
 
     @classmethod
-    def inbox(cls, userId):
+    def inboxDb(cls, userId):
         return "user/%s/inbox" % userId
 
 
     @classmethod
-    def feed(cls, userId):
+    def feedDb(cls, userId):
         return "user/%s/feed" % userId
 
 
     @classmethod
-    def messages(cls, userId):
+    def messagesDb(cls, userId):
         return "user/%s/messages" % userId
 
 
@@ -86,23 +86,23 @@ class SSUser(User):
         newUser.store(db)
 
         # user's public shifts, will be replicated to shiftspace and user/feed
-        server.create(SSUser.public(newUser.id))
+        server.create(SSUser.publicDb(newUser.id))
         # all of the user's shifts as well as subscribed content
-        server.create(SSUser.private(newUser.id))
+        server.create(SSUser.privateDb(newUser.id))
         # all of the user's messages
-        server.create(SSUser.messages(newUser.id))
+        server.create(SSUser.messagesDb(newUser.id))
         # the user's feed, merged from user/public and user/feed
-        server.create(SSUser.feed(newUser.id))
+        server.create(SSUser.feedDb(newUser.id))
         # the user's inbox of direct shifts
-        server.create(SSUser.inbox(newUser.id))
+        server.create(SSUser.inboxDb(newUser.id))
 
         # sync views
-        Shift.by_user_and_created.sync(server[SSUser.feed(newUser.id)])
-        Shift.by_href_and_created.sync(server[SSUser.feed(newUser.id)])
-        Shift.by_domain_and_created.sync(server[SSUser.feed(newUser.id)])
-        Shift.by_group_and_created.sync(server[SSUser.feed(newUser.id)])
-        Shift.by_follow_and_created.sync(server[SSUser.feed(newUser.id)])
-        Message.by_created.sync(server[SSUser.messages(newUser.id)])
+        Shift.by_user_and_created.sync(server[SSUser.feedDb(newUser.id)])
+        Shift.by_href_and_created.sync(server[SSUser.feedDb(newUser.id)])
+        Shift.by_domain_and_created.sync(server[SSUser.feedDb(newUser.id)])
+        Shift.by_group_and_created.sync(server[SSUser.feedDb(newUser.id)])
+        Shift.by_follow_and_created.sync(server[SSUser.feedDb(newUser.id)])
+        Message.by_created.sync(server[SSUser.messagesDb(newUser.id)])
 
         return newUser
 
@@ -145,11 +145,11 @@ class SSUser(User):
         server = core.server()
         # delete the user's dbs (won't work with old style users)
         try:
-            del server[SSUser.public(self.id)]
-            del server[SSUser.private(self.id)]
-            del server[SSUser.inbox(self.id)]
-            del server[SSUser.feed(self.id)]
-            del server[SSUser.messages(self.id)]
+            del server[SSUser.publicDb(self.id)]
+            del server[SSUser.privateDb(self.id)]
+            del server[SSUser.inboxDb(self.id)]
+            del server[SSUser.feedDb(self.id)]
+            del server[SSUser.messagesDb(self.id)]
         except Exception:
             pass
         # delete the user doc
@@ -289,7 +289,7 @@ class SSUser(User):
         self.store(db)
 
     # ========================================
-    # Utilities
+    # Comment Subscription
     # ========================================
 
     def isSubscribed(aShift):

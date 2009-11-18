@@ -53,7 +53,7 @@ class Message(SSDocument):
         """
         from server.models.ssuserschema import SSUser
 
-        db = core.connect(SSUser.messages(toId))
+        db = core.connect(SSUser.messagesDb(toId))
         json = {
             "fromId": fromId,
             "toId": toId,
@@ -72,7 +72,7 @@ class Message(SSDocument):
         """
         Mark a message as read.
         """
-        db = core.connect(SSUser.messages(self.toId))
+        db = core.connect(SSUser.messagesDb(self.toId))
         self.read = value
         self.store(db)
         return self
@@ -82,7 +82,7 @@ class Message(SSDocument):
         """
         Delete a message.
         """
-        db = core.connect(SSUser.messages(self.toId))
+        db = core.connect(SSUser.messagesDb(self.toId))
         del db[id]
 
 

@@ -208,7 +208,7 @@ class Group(SSDocument):
             grpdb = Group.db(groupId)
             shift.copyTo(core.connect(grpdb))
             # TODO: only replicate into user/x/feeds that are not peer - David
-            [core.replicate(grpdb, SSUser.feed(id)) for id in Group.members(groupId)]
+            [core.replicate(grpdb, SSUser.feedDb(id)) for id in Group.members(groupId)]
         else:
             db = core.connect()
             theUser = SSUser.read(shift.createdBy)
@@ -231,7 +231,7 @@ class Group(SSDocument):
             grpdb = Group.db(groupId)
             shift.updateIn(core.connect(grpdb))
             # TODO: only replicate into user_x/feeds that are not peer - David
-            [core.replicate(grpdb, SSUser.feed(id)) for id in Group.members(groupId)]
+            [core.replicate(grpdb, SSUser.feedDb(id)) for id in Group.members(groupId)]
         else:
             db = core.connect()
             theUser = SSUser.read(shift.createdBy)

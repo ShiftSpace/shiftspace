@@ -91,7 +91,7 @@ class Comment(SSDocument):
         theShift = Shift.load(core.connect(), shiftId)
         # then try the user's feed
         if not theShift:
-            theShift = Shift.load(core.connect(SSUser.feed(userId)), shiftId)
+            theShift = Shift.load(core.connect(SSUser.feedDb(userId)), shiftId)
         shiftAuthor = SSUser.load(core.connect(), theShift.createdBy)
         server = core.server()
         # create the comment db if necessary        

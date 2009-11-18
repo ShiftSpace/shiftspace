@@ -222,8 +222,8 @@ def deletedbs():
 
     # delete all core dbs and user and group dbs
     server = core.server()
-    [group.deleteInstance() for group in core.objects(Group.all(core.connect()))]
-    [user.deleteInstance() for user in core.objects(SSUser.all(core.connect()))]
+    [group.delete() for group in core.objects(Group.all(core.connect()))]
+    [user.delete() for user in core.objects(SSUser.all(core.connect()))]
     del server["shiftspace/public"]
     del server["shiftspace/shared"]
     del server["shiftspace/messages"]

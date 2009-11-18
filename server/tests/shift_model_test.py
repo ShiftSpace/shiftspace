@@ -12,54 +12,58 @@ class BasicOperations(unittest.TestCase):
 
     def setUp(self):
         db = core.connect()
-        self.fakemary = SSUser.create(fakemary).id
-        self.fakejohn = SSUser.create(fakejohn).id
-        self.fakebob = SSUser.create(fakebob).id
-        self.root = SSUser.read("shiftspace").id
+        self.fakemary = SSUser.create(fakemary)
+        self.fakejohn = SSUser.create(fakejohn)
+        self.fakebob = SSUser.create(fakebob)
+        self.root = SSUser.read("shiftspace")
 
     def testCreate(self):
         json = shiftJson()
-        theShift = Shift.create(self.fakemary, json)
+        json["createdBy"] = self.fakemary.id
+        theShift = Shift.create(json)
         self.assertEqual(theShift.type, "shift")
-        self.assertEqual(theShift.createdBy, self.fakemary)
+        self.assertEqual(theShift.createdBy, self.fakemary.id)
         self.assertNotEqual(theShift.created, None)
         self.assertEqual(type(theShift.created), datetime)
         self.assertNotEqual(theShift.modified, None)
         self.assertEqual(type(theShift.modified), datetime)
         self.assertEqual(theShift.domain, "http://google.com")
-        db = core.connect(SSUser.private(self.fakemary))
+        db = core.connect(SSUser.privateDb(self.fakemary.id))
         del db[theShift.id]
 
     def testRead(self):
         json = shiftJson()
-        newShift = Shift.create(self.fakemary, json)
-        theShift = Shift.read(self.fakemary, newShift.id)
+        json["createdBy"] = self.fakemary.id
+        newShift = Shift.create(json)
+        theShift = Shift.read(newShift.id, self.fakemary.id)
         self.assertEqual(theShift.source.server, newShift.source.server)
         self.assertEqual(theShift.source.database, newShift.source.database)
-        self.assertEqual(theShift.createdBy, self.fakemary)
-        db = core.connect(SSUser.private(self.fakemary))
+        self.assertEqual(theShift.createdBy, self.fakemary.id)
+        db = core.connect(SSUser.privateDb(self.fakemary.id))
         del db[theShift.id]
 
     def testUpdate(self):
         json = shiftJson()
-        newShift = Shift.create(self.fakemary, json)
-        Shift.update(self.fakemary, newShift.id, {"summary":"changed!"})
-        theShift = Shift.read(self.fakemary, newShift.id)
+        json["createdBy"] = self.fakemary.id
+        newShift = Shift.create(json)
+        newShift.update({"summary":"changed!"})
+        theShift = Shift.read(newShift.id, self.fakemary.id)
         self.assertEqual(theShift.summary, "changed!")
-        db = core.connect(SSUser.private(self.fakemary))
+        db = core.connect(SSUser.privateDb(self.fakemary.id))
         del db[theShift.id]
 
     def testDelete(self):
         json = shiftJson()
-        newShift = Shift.create(self.fakemary, json)
+        json["createdBy"] = self.fakemary.id
+        newShift = Shift.create(json)
         self.assertNotEqual(newShift, None)
-        Shift.delete(self.fakemary, newShift.id)
-        theShift = Shift.read(self.fakemary, newShift.id)
+        Shift.delete(self.fakemary.id, newShift.id)
+        theShift = Shift.read(self.fakemary.id, newShift.id)
         self.assertEqual(theShift, None)
-        newShift = Shift.create(self.fakemary, json)
+        newShift = Shift.create(self.fakemary.id, json)
         self.assertNotEqual(newShift, None)
         newShift.deleteInstance()
-        theShift = Shift.read(self.fakemary, newShift.id)
+        theShift = Shift.read(self.fakemary.id, newShift.id)
         self.assertEqual(theShift, None)
 
     def testJoinData(self):
@@ -79,16 +83,16 @@ class BasicOperations(unittest.TestCase):
         newShift = Shift.create(self.fakemary, json)
         Shift.publish(self.fakemary, newShift.id, {"private":False})
         # should exist in user/public db
-        theShift = Shift.load(core.connect(SSUser.public(self.fakemary)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.publicDb(self.fakemary)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         # should exist in master db 
         theShift = Shift.load(core.connect(), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         # should exist in user/feed db
-        theShift = Shift.load(core.connect(SSUser.feed(self.fakemary)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.feedDb(self.fakemary)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         # should _not_ exist in user/private db
-        theShift = Shift.load(core.connect(SSUser.private(self.fakemary)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.privateDb(self.fakemary)), newShift.id)
         self.assertEqual(theShift, None)
 
     def testPublishFollower(self):
@@ -103,18 +107,18 @@ class BasicOperations(unittest.TestCase):
         self.assertTrue(self.fakejohn in followers)
         Shift.publish(self.fakemary, newShift.id, {"private":False})
         # should exist in user/feed db
-        theShift = Shift.load(core.connect(SSUser.feed(self.fakejohn)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.feedDb(self.fakejohn)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
 
     def testPublishToUser(self):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)
         publishData = {
-            "dbs": [SSUser.inbox(self.fakejohn)]
+            "dbs": [SSUser.inboxDb(self.fakejohn)]
             }
         Shift.publish(self.fakemary, newShift.id, publishData)
         # should exist in user inbox
-        theShift = Shift.load(core.connect(SSUser.inbox(self.fakejohn)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.inboxDb(self.fakejohn)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
 
     def testPublishToGroup(self):
@@ -127,7 +131,7 @@ class BasicOperations(unittest.TestCase):
             }
         Shift.publish(self.fakemary, newShift.id, publishData)
         # should exists in subscriber's feed
-        db = core.connect(SSUser.feed(self.fakejohn))
+        db = core.connect(SSUser.feedDb(self.fakejohn))
         theShift = Shift.load(db, newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         newGroup.deleteInstance()
@@ -138,23 +142,23 @@ class BasicOperations(unittest.TestCase):
         newGroup = Group.create(self.fakemary, groupJson())
         newPerm = Permission.create("shiftspace", newGroup.id, self.fakejohn, level=1)
         publishData = {
-            "dbs": [Group.db(newGroup.id), SSUser.inbox(self.fakebob)]
+            "dbs": [Group.db(newGroup.id), SSUser.inboxDb(self.fakebob)]
             }
         Shift.publish(self.fakemary, newShift.id, publishData)
         # should exist in subscriber's feed
-        db = core.connect(SSUser.feed(self.fakejohn))
+        db = core.connect(SSUser.feedDb(self.fakejohn))
         theShift = Shift.load(db, newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         newGroup.deleteInstance()
         # should exist in user's inbox
-        theShift = Shift.load(core.connect(SSUser.inbox(self.fakebob)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.inboxDb(self.fakebob)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
 
     def tearDown(self):
         db = core.connect()
-        SSUser.delete(self.fakemary)
-        SSUser.delete(self.fakejohn)
-        SSUser.delete(self.fakebob)
+        self.fakemary.delete()
+        self.fakejohn.delete()
+        self.fakebob.delete()
 
 
 if __name__ == "__main__":

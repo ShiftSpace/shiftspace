@@ -221,10 +221,10 @@ class Shift(SSDocument):
         """
         newShift = Shift(**shiftJson)
         createdBy = newShift.createdBy
-        db = core.connect(SSUser.private(createdBy))
+        db = core.connect(SSUser.privateDb(createdBy))
         newShift.domain = utils.domain(newShift.href)
         newShift.store(db)
-        core.replicate(SSUser.private(createdBy), SSUser.feed(createdBy))
+        core.replicate(SSUser.privateDb(createdBy), SSUser.feedDb(createdBy))
         return Shift.joinData(newShift, newShift.createdBy)
 
     @classmethod
@@ -238,10 +238,10 @@ class Shift(SSDocument):
         Returns:
             a dictionary of the shift's data.
         """
-        db = core.connect(SSUser.public(userId))
+        db = core.connect(SSUser.publicDb(userId))
         theShift = Shift.load(db, id)
         if not theShift and userId:
-            db = core.connect(SSUser.private(userId))
+            db = core.connect(SSUser.privateDb(userId))
             theShift = Shift.load(db, id)
         if not theShift:
             return
@@ -274,20 +274,20 @@ class Shift(SSDocument):
         self.modified = datetime.now()
 
         if self.publishData.private:
-            db = core.connect(SSUser.private(self.createdBy))
+            db = core.connect(SSUser.privateDb(self.createdBy))
         else:
-            db = core.connect(SSUser.public(self.createdBy))
+            db = core.connect(SSUser.publicDb(self.createdBy))
         self.store(db)
 
         if publicShift:
-            core.replicate(SSUser.public(userId), SSUser.feed(userId))
+            core.replicate(SSUser.publicDb(userId), SSUser.feedDb(userId))
         else:
-            core.replicate(SSUser.private(userId), SSUser.feed(userId))
+            core.replicate(SSUser.privateDb(userId), SSUser.feedDb(userId))
 
         for db in theShift.publishData.dbs:
             dbtype, dbid = db.split("/")
             if dbtype == "user":
-                inbox = core.connect(SSUser.inbox(dbid))
+                inbox = core.connect(SSUser.inboxDb(dbid))
                 self.store(inbox)
             elif dbtype == "group":
                 from server.models.groupschema import Group
@@ -302,11 +302,11 @@ class Shift(SSDocument):
         Parameters:
             id - a shift id.
         """
-        db = core.connect(SSUser.private(self.createdBy))
+        db = core.connect(SSUser.privateDb(self.createdBy))
         if db.get(id):
             del db[id]
         else:
-            db = core.connect(SSUser.public(self.createdBy))
+            db = core.connect(SSUser.publicDb(self.createdBy))
             if db.get(id):
                 del db[id]
 
@@ -358,7 +358,7 @@ class Shift(SSDocument):
             id - a shift id.
             publishData - a dictionary holding the publish options.
         """
-        db = core.connect(SSUser.private(self.createdBy))
+        db = core.connect(SSUser.privateDb(self.createdBy))
         author = SSUser.read(self.createdBy)
         oldPublishData = dict(self.items())["publishData"]
         allowed = []
@@ -415,19 +415,19 @@ class Shift(SSDocument):
         # create in user/public, delete from user/private
         # replicate to user/feed and to user/shiftspace
         if not isPrivate:
-            publicdb = core.connect(SSUser.public(self.createdBy))
+            publicdb = core.connect(SSUser.publicDb(self.createdBy))
             if Shift.load(publicdb, self.id):
                 self.updateIn(publicdb)
             else:
                 self.copyTo(publicdb)
-                privatedb = core.connect(SSUser.private(self.createdBy))
+                privatedb = core.connect(SSUser.privateDb(self.createdBy))
                 del privatedb[theShift.id]
-            core.replicate(SSUser.public(self.createdBy), SSUser.feed(self.createdBy))
-            core.replicate(SSUser.public(self.createdBy))
+            core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(self.createdBy))
+            core.replicate(SSUser.publicDb(self.createdBy))
 
         # TODO: don't replicate to follower user_x/feeds that are not peers - David
         followers = author.followers()
-        [core.replicate(SSUser.public(userId), SSUser.feed(follower)) for follower in followers]
+        [core.replicate(SSUser.publicDb(userId), SSUser.feedDb(follower)) for follower in followers]
         
         # if draft false, copy to master database, we need it there
         # for general queries about what's available on pages - David

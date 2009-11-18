@@ -92,7 +92,7 @@ class UserController(ResourceController):
     @jsonencode
     @exists
     def read(self, userName):
-        theUser = SSUser.readByName(userName):
+        theUser = SSUser.readByName(userName)
         if not theUser:
             return error("User %s does not exist" % userName, UserDoesNotExistError)
         loggedInUser = SSUser.read(helper.getLoggedInUser())
@@ -118,7 +118,7 @@ class UserController(ResourceController):
     @loggedin
     def delete(self, userName):
         theUser = SSUser.readByName(userName)
-        if not theUser
+        if not theUser:
             return error("User %s does not exist" % userName, UserDoesNotExistError)
         loggedInUser = SSUser.read(helper.getLoggedInUser())
         if loggedInUser and loggedInUser.canModify(theUser):
@@ -237,7 +237,7 @@ class UserController(ResourceController):
     def comments(self, userName, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
         theUser = SSUser.readByName(userName)
-        if loggedInUser.id == theUser.id or loggedInUser.isAdmin()
+        if loggedInUser.id == theUser.id or loggedInUser.isAdmin():
             return data(theUser.comments(userId, start=start, end=end, limit=limit))
         else:
             return error("You don't have permission to view this user's comments.", PermissionError)
