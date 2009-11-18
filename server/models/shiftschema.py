@@ -330,7 +330,7 @@ class Shift(SSDocument):
         return not self.publishData.private
 
 
-    def isPrivate(self, id):
+    def isPrivate(self):
         """
         Check whether a shift is private.
         Parameters:
@@ -375,7 +375,7 @@ class Shift(SSDocument):
         # get the list of dbs the user is actually allowed to publish to
         allowed = []
         if (publishData and isPrivate and len(publishDbs) > 0):
-            allowedGroups = author.writeable()
+            allowedGroups = [Group.db(id) for id in author.writeable()]
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
 
         # upate the private setting, the shift is no longer draft
@@ -383,15 +383,15 @@ class Shift(SSDocument):
         self.publishData.draft = False
         
         # publish or update a copy of the shift to all user-x/private, user-y/private ...
-        newUserDbs = [s for s in allowed if s.split("/")[0] == "user"]
+        newUserDbs = [s for s in publishDbs if s.split("/")[0] == "user"]
         oldUserDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "user"]
         newUserDbs = list(set(newUserDbs).difference(set(oldUserDbs)))
 
         # update target user inboxes
         for db in oldUserDbs:
-            self.updateIn(core.connect(db))
+            self.updateIn(db)
         for db in newUserDbs:
-            self.copyTo(core.connect(db))
+            self.copyTo(db)
 
         # publish or update a copy to group/x, group/y, ...
         newGroupDbs = [s for s in allowed if s.split("/")[0] == "group"]

@@ -69,7 +69,6 @@ class BasicOperations(unittest.TestCase):
         # gravatar not a real property, added via Shift.joinData
         self.assertNotEqual(newShift["gravatar"], None)
 
-
     def testCanModify(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -77,7 +76,6 @@ class BasicOperations(unittest.TestCase):
         self.assertTrue(self.fakemary.canModify(newShift))
         self.assertTrue(not self.fakejohn.canModify(newShift))
         self.assertTrue(self.root.canModify(newShift))
-
 
     def testBasicPublish(self):
         json = shiftJson()
@@ -96,7 +94,6 @@ class BasicOperations(unittest.TestCase):
         # should _not_ exist in user/private db
         theShift = Shift.load(core.connect(SSUser.privateDb(self.fakemary.id)), newShift.id)
         self.assertEqual(theShift, None)
-    """
 
     def testPublishToFollowers(self):
         json = shiftJson()
@@ -113,19 +110,19 @@ class BasicOperations(unittest.TestCase):
         # should exist in user/feed db
         theShift = Shift.load(core.connect(SSUser.feedDb(self.fakejohn.id)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-
     """
     def testPublishToUser(self):
         json = shiftJson()
-        newShift = Shift.create(self.fakemary, json)
+        json["createdBy"] = self.fakemary.id
+        newShift = Shift.create(json)
         publishData = {
-            "dbs": [SSUser.inboxDb(self.fakejohn)]
+            "dbs": [SSUser.inboxDb(self.fakejohn.id)]
             }
-        Shift.publish(self.fakemary, newShift.id, publishData)
+        newShift.publish(publishData)
         # should exist in user inbox
-        theShift = Shift.load(core.connect(SSUser.inboxDb(self.fakejohn)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.inboxDb(self.fakejohn.id)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-
+    """
     def testPublishToGroup(self):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)

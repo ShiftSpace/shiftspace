@@ -222,19 +222,23 @@ class SSUser(User):
     # ========================================
 
     def joinable(self):
-        pass
+        from server.models.permschema import Permission
+        return core.valuess(Permission.by_joinable(core.connect()))
 
 
     def readable(self):
-        pass
+        from server.models.permschema import Permission
+        return core.values(Permission.by_readable(core.connect()))
 
 
     def writeable(self):
-        pass
+        from server.models.permschema import Permission
+        return core.values(Permission.by_writeable(core.connect()))
 
 
     def adminable(self):
-        pass
+        from server.models.permschema import Permission
+        return core.values(Permission.by_adminable(core.connect()))
 
     # ========================================
     # Data
