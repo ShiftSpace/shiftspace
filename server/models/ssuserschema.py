@@ -168,18 +168,20 @@ class SSUser(User):
     def canReadFull(self, other):
         return (self.id == other.id) or self.isAdmin()
 
-    
+
     def canRead(self, aShift):
+        dbs = aShift.publishData.dbs
+        if not aShift.publishData.private:
+            return True
         if self.id == aShift.createdBy:
             return True
-        if aShift.publishData.private:
-            return False
-        if self.isAdmin():
+        if ("user/%s" % self.id) in dbs:
             return True
-        dbs = aShift.publishData.dbs
-        if list(set(self.readable()).intersection(set(dbs))) > 0:
+        if len(list(set(self.readable()).intersection(set(dbs)))) > 0:
             return True
-        return ("user/%s" % self.id) in aShift.publishData.dbs
+        if self.isAdmin() and len(dbs) > 0:
+            return True
+        return False
 
 
     def canModify(self, other):
@@ -298,7 +300,15 @@ class SSUser(User):
 
     def isFavorite(self, aShift):
         db = core.connect("shiftspace/shared")
-        return db.get(Favorite.makeId(self.id, aShift.id))
+        return Favorite.isFavorite(self.id, aShift.id)
+        
+    def favorite(self, aShift):
+        Favorite.create(self.id, aShift.id)
+        return Shift.joinData(Shift.read(aShift.id), self.id)
+        
+    def unfavorite(self, aShift):
+        Favorite.readByUserAndShift(self.id, aShift.id).delete()
+        return Shift.joinData(Shift.read(aShift.id), self.id)
 
     # ========================================
     # Follow

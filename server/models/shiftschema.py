@@ -215,9 +215,17 @@ class Shift(SSDocument):
             # then try the user public
             db = core.connect(SSUser.publicDb(userId))
             theShift = Shift.load(db, id)
-            # then user private
-            if not theShift and userId:
+            if not theShift:
+                # then user private
                 db = core.connect(SSUser.privateDb(userId))
+                theShift = Shift.load(db, id)
+            if not theShift:
+                # then user feed
+                db = core.connect(SSUser.feedDb(userId))
+                theShift = Shift.load(db, id)
+            if not theShift:
+                # then the inbox
+                db = core.connect(SSUser.inboxDb(userId))
                 theShift = Shift.load(db, id)
         if theShift:
             return Shift.joinData(theShift, theShift.createdBy)
