@@ -417,7 +417,7 @@ class Shift(SSDocument):
 
         # TODO: don't replicate to follower user_x/feeds that are not peers - David
         followers = author.followers()
-        [core.replicate(SSUser.publicDb(userId), SSUser.feedDb(follower)) for follower in followers]
+        [core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(follower)) for follower in followers]
         
         # copy to shiftspace/shared, we need it there
         # for general queries about what's available on pages - David

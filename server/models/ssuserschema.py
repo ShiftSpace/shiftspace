@@ -280,14 +280,16 @@ class SSUser(User):
     def follow(self, other):
         db = core.connect()
         if not (other.id in self.following):
-            self.following.append(otherId)
+            self.following.append(other.id)
         self.store(db)
+        return self
 
 
     def unfollow(cls, other):
         db = core.connect()
         self.following.remove(other.id)
         self.store(db)
+        return self
 
     # ========================================
     # Comment Subscription

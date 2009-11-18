@@ -77,7 +77,7 @@ class BasicOperations(unittest.TestCase):
         self.assertTrue(self.fakemary.canModify(newShift))
         self.assertTrue(not self.fakejohn.canModify(newShift))
         self.assertTrue(self.root.canModify(newShift))
-    """
+
 
     def testBasicPublish(self):
         json = shiftJson()
@@ -96,23 +96,25 @@ class BasicOperations(unittest.TestCase):
         # should _not_ exist in user/private db
         theShift = Shift.load(core.connect(SSUser.privateDb(self.fakemary.id)), newShift.id)
         self.assertEqual(theShift, None)
-
     """
-    def testPublishFollower(self):
+
+    def testPublishToFollowers(self):
         json = shiftJson()
-        newShift = Shift.create(self.fakemary, json)
-        SSUser.follow(self.fakejohn, self.fakemary)
-        fakejohn = SSUser.read(self.fakejohn)
+        json["createdBy"] = self.fakemary.id
+        newShift = Shift.create(json)
+        self.fakejohn.follow(self.fakemary)
+        fakejohn = SSUser.read(self.fakejohn.id)
         # should be in the list of people fakejohn is following
-        self.assertTrue(self.fakemary in fakejohn.following)
+        self.assertTrue(self.fakemary.id in fakejohn.following)
         # should be in the list of fakemary's followers
-        followers = SSUser.followers(self.fakemary)
-        self.assertTrue(self.fakejohn in followers)
-        Shift.publish(self.fakemary, newShift.id, {"private":False})
+        followers = self.fakemary.followers()
+        self.assertTrue(self.fakejohn.id in followers)
+        newShift.publish({"private":False})
         # should exist in user/feed db
-        theShift = Shift.load(core.connect(SSUser.feedDb(self.fakejohn)), newShift.id)
+        theShift = Shift.load(core.connect(SSUser.feedDb(self.fakejohn.id)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
 
+    """
     def testPublishToUser(self):
         json = shiftJson()
         newShift = Shift.create(self.fakemary, json)
