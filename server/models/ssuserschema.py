@@ -245,7 +245,7 @@ class SSUser(User):
     # ========================================
 
     def isFavorite(self, aShift):
-        db = core.connect()
+        db = core.connect("shiftspace/shared")
         return db.get(Favorite.makeId(self.id, aShift.id))
 
 
@@ -264,10 +264,10 @@ class SSUser(User):
 
     def favorites(self, start=None, end=None, limit=25):
         if not start:
-            start = [userId]
+            start = [self.id]
         if not end:
-            end = [userId, {}]
-        results = Favorite.by_user_and_created(core.connect(), limit=limit)
+            end = [self.id, {}]
+        results = Favorite.by_user_and_created(core.connect("shiftspace/shared"), limit=limit)
         return core.objects(results[start:end])
 
 

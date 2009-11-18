@@ -15,6 +15,10 @@ from ssdocschema import SSDocument
 
 class Favorite(SSDocument):
 
+    # ========================================
+    # Fields
+    # ========================================
+
     type = TextField(default="favorite")
     userId = TextField()
     shiftId = TextField()
@@ -45,7 +49,7 @@ class Favorite(SSDocument):
         )
 
     # ========================================
-    # CRUD
+    # Class Methods
     # ========================================
 
     @classmethod
@@ -53,8 +57,8 @@ class Favorite(SSDocument):
         """
         Favorite a shift.
         """
-        if not Favorite.isFavorited(userId, shiftId):
-            db = core.connect()
+        if not Favorite.isFavorite(userId, shiftId):
+            db = core.connect("shiftspace/shared")
             newFavorite = Favorite(
                 userId = userId,
                 shiftId = shiftId,
@@ -64,17 +68,23 @@ class Favorite(SSDocument):
             return newFavorite
 
     @classmethod
-    def delete(cls, userId, shiftId):
+    def makeId(cls, userId, shiftId):
+        return "user:%s:%s" % (userId, shiftId)
+
+    @classmethod
+    def isFavorite(userId, shiftId):
+        db = core.connect("shiftspace/shared")
+        return db.get(Favorite.makeId(self.id, aShift.id))
+
+    # ========================================
+    # Instance Methods
+    # ========================================
+
+    def delete(self):
         """
         Delete a favorite.
         """
-        db = core.connect()
-        del db[Favorite.makeId(userId, shiftId)]
+        db = core.connect("shiftspace/shared")
+        del db[Favorite.makeId(self.userId, self.shiftId)]
 
-    # ========================================
-    # Utilities
-    # ========================================
         
-    @classmethod
-    def makeId(cls, userId, shiftId):
-        return "user:%s:%s" % (userId, shiftId)

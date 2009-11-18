@@ -148,10 +148,16 @@ def init(dbname="shiftspace/master"):
 
     server = core.server()
     if not server.__contains__(dbname):
+        from models.favschema import Favorite
         print "Creating database %s." % dbname
         server.create(dbname)
         server.create("shiftspace/public")
         server.create("shiftspace/shared")
+
+        shared = core.connect("shiftspace/shared")
+        Favorite.by_user_and_created.sync(shared)
+        Favorite.count_by_shift.sync(shared)
+
         server.create("shiftspace/messages")
     else:
         print "%s database already exists." % dbname

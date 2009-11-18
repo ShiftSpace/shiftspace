@@ -99,16 +99,18 @@ class Comment(SSDocument):
             "shiftId": shiftId,
             "text": text,
             }
-
         stub = {
-            "type":"comment-stub",
+            "type":"commentstub",
             "shiftId": shiftId,
             }
         newComment = Comment(**json)
         newComment.store(db)
-        db = core.connect()
-        db.create(stub) 
+        db = core.connect("shiftspace/shared")
+        db["commentstub:%s" % newComment.id] = stub
         subscribers = theShift.subscribers()
+        # make a private copy
+        # TODO: need to think about the implications here - David
+        newComment.copyTo(SSUser.privateDb(theUser))
         # send each subscriber a message
         if len(subscribers) > 0:
             # TODO: needs to be optimized with a fast join - David
@@ -144,6 +146,8 @@ class Comment(SSDocument):
         """
         db = core.connect(Comment.db(self.shiftId))
         del db[self.id]
+        db = core.connect("shiftspace/shared")
+        del db["commentstub:%s" % self.id]
 
 
 

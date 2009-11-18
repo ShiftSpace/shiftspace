@@ -415,7 +415,7 @@ class Shift(SSDocument):
 
     def favoriteCount(self):
         from server.models.favschema import Favorite
-        db = core.connect()
+        db = core.connect("shiftspace/shared")
         return core.value(Favorite.count_by_shift(db, key=self.id)) or 0
     
     # ========================================
