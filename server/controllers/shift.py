@@ -74,10 +74,9 @@ class ShiftController(ResourceController):
         jsonData = helper.getRequestBody()
         if jsonData != "":
             theData = json.loads(jsonData)
-            id = loggedInUser.get("_id")
+            id = loggedInUser
             theData['createdBy'] = id
-            theData['userName'] = user.nameForId(id)
-            return data(shift.create(theData))
+            return data(Shift.create(theData).toDict())
         else:
             return error("No data for shift.", NoDataError)
 
@@ -85,27 +84,29 @@ class ShiftController(ResourceController):
     @exists
     @shiftType
     def read(self, id):
-        allowed = shift.isPublic(id)
-        if not allowed:
-            loggedInUser = helper.getLoggedInUser()
-            if loggedInUser and shift.canRead(id, loggedInUser.get("_id")):
-                return data(shift.read(id))
-            else:
-                return error("Operation not permitted. You don't have permission to view this shift.", PermissionError)
+        from server.models.ssuserschema import SSUser
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        theShift = Shift.read(id)
+        if theUser.canRead(theShift):
+            return data(theShift.toDict())
         else:
-            return data(shift.read(id))
+            return error("Operation not permitted. You don't have permission to view this shift.", PermissionError)
 
     @jsonencode
     @exists
     @shiftType
     @loggedin
     def update(self, id):
+        from server.models.ssuserschema import SSUser
         loggedInUser = helper.getLoggedInUser()
         jsonData = helper.getRequestBody()
         if jsonData != "":
+            theShift = Shift.read(id)
             shiftData = json.loads(jsonData)
-            if shift.canUpdate(id, loggedInUser['_id']):
-                return data(shift.update(id, shiftData))
+            theUser = SSUser.load(loggedInUser)
+            if theUser.canModify(theShift):
+                return data(theShift.update(shiftData).toDict())
             else:
                 return error("Operation not permitted. You don't have permission to update this shift.", PermissionError)
         else:
@@ -116,10 +117,12 @@ class ShiftController(ResourceController):
     @shiftType
     @loggedin
     def delete(self, id):
+        from server.models.ssuserschema import SSUser
         loggedInUser = helper.getLoggedInUser()
-        theShift = shift.read(id)
-        if loggedInUser and shift.canDelete(id, loggedInUser['_id']):
-            shift.delete(id)
+        theUser = SSUser.read(loggedInUser)
+        theShift = Shift.read(id)
+        if theUser.canModify(theShift):
+            theShift.delete()
             return ack
         else:
             return error("Operation not permitted. You don't have permission to delete this shift.", PermissionError)
@@ -129,11 +132,13 @@ class ShiftController(ResourceController):
     @shiftType
     @loggedin
     def publish(self, id):
+        from server.models.ssuserschema import SSUser
         # NOTE: should maybe take publishData url parameter - David 9/5/2009
         loggedInUser = helper.getLoggedInUser()
         publishData = json.loads(helper.getRequestBody())
-        theShift = shift.read(id)
-        if loggedInUser and shift.canPublish(id, loggedInUser['_id']):
+        theShift = Shift.read(id)
+        theUser = SSUser.read(loggedInUser)
+        if theUser.canModify(theShift):
             return data(shift.publish(id, publishData))
         else:
             return error("Operation not permitted. You don't have permission to publish this shift.", PermissionError)

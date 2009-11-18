@@ -167,6 +167,14 @@ class SSUser(User):
     def canReadFull(self, other):
         return (self.id == other.id) or self.isAdmin()
 
+    
+    def canRead(self, aShift):
+        if not aShift.publishData.private:
+            return True
+        else:
+            dbs = aShift.publishData.dbs
+            return list(set(self.readable()).intersection(set(dbs))) > 0
+
 
     def canModify(self, other):
         from server.models.shiftschema import Shift
