@@ -230,7 +230,7 @@ class UserController(ResourceController):
         theUser = SSUser.read(loggedInUser)
         otherUser = SSUser.readByName(userName)
         if loggedInUser == otherUser.id or theUser.isAdmin():
-            return data(otherUser.feed(start=start, end=end, limit=limit))
+            return data([shift.toDict() for shift in otherUser.feed(start=start, end=end, limit=limit, userId=theUser.id)])
         else:
             return error("You don't have permission to view this user's feed.", PermissionError)
 

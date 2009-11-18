@@ -199,6 +199,11 @@ var UserTest = new Class({
         resource: 'follow',
         id: 'fakemary'
       }));
+      var theUser = SSApp.confirm(SSApp.get({
+        resource: 'user',
+        id: 'fakejohn'
+      }));
+      SSUnit.assertEqual(theUser.following.length, 1);
       SSApp.confirm(SSApp.logout());
       
       // fakemary create shift
@@ -224,10 +229,12 @@ var UserTest = new Class({
       SSApp.confirm(SSApp.logout());
       
       // cleanup
+      /*
       SSApp.confirm(SSApp.login(admin));
       SSApp.confirm(SSApp.delete('user', 'fakemary'));
       SSApp.confirm(SSApp.delete('user', 'fakejohn'));
       SSApp.confirm(SSApp.logout());
+      */
     }
   )
 

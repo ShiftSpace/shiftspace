@@ -94,6 +94,7 @@ class SSUser(User):
         server.create(SSUser.inboxDb(newUser.id))
 
         # sync views
+        Shift.by_created.sync(server[SSUser.feedDb(newUser.id)])
         Shift.by_user_and_created.sync(server[SSUser.feedDb(newUser.id)])
         Shift.by_href_and_created.sync(server[SSUser.feedDb(newUser.id)])
         Shift.by_domain_and_created.sync(server[SSUser.feedDb(newUser.id)])
@@ -261,14 +262,16 @@ class SSUser(User):
         pass
 
 
-    def feed(self, start=None, end=None, limit=25):
+    def feed(self, start=None, end=None, limit=25, userId=None):
         from server.models.shiftschema import Shift
-        if not start:
-            start = [self.id]
-        if not end:
-            end = [self.id, {}]
-        results = Shift.by_user_and_created(core.connect(SSUser.feedDb(self.id)), limit=limit)
-        return core.objects(results[start:end])
+        results = Shift.by_created(core.connect(SSUser.feedDb(self.id)), limit=limit)
+        if start and not end:
+            return core.objects(results[start:])
+        if not start and end:
+            return core.objects(results[:end])
+        if start and end:
+            return core.objects(results[start:end])
+        return Shift.joinData(core.objects(results[start:end]), userId)
 
 
     def favorites(self, start=None, end=None, limit=25):
