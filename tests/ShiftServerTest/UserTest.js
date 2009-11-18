@@ -68,16 +68,16 @@ var UserTest = new Class({
     }
   ),
   
-  
+
   missingUserName: $fixture(
     "Error on missing userName",
     function()
     {
-      var json = SSApp.confirm(SApp.join(missingUserName));
+      var json = SSApp.confirm(SSApp.join(missingUserName));
       SSUnit.assertEqual(SSGetType(json), MissingUserNameError);
     }
   ),
-  
+
 
   shortUserName: $fixture(
     "Error on short user name",
@@ -88,7 +88,7 @@ var UserTest = new Class({
     }
   ),
   
-  
+
   userNameTaken: $fixture(
     "Error on user name taken.",
     function()
@@ -102,7 +102,7 @@ var UserTest = new Class({
     }
   ),
   
-  
+  /*
   missingPassword: $fixture(
     "Error on missing password",
     function()
@@ -112,7 +112,7 @@ var UserTest = new Class({
     }
   ),
   
-  
+
   missingPasswordVerify: $fixture(
     "Error on missing password verify",
     function()
@@ -198,37 +198,37 @@ var UserTest = new Class({
       SSApp.confirm(SSApp.login(fakemary));
       var shiftId = SSGetData.attempt(SSApp.confirm(SSApp.create('shift', noteShift)));
       SSApp.confirm(SSApp.confirm(SSApp.post({
-	resource: 'shift',
-	id: shiftId,
-	action: 'publish',
-	data: {private: false},
-	json: true
+        resource: 'shift',
+        id: shiftId,
+        action: 'publish',
+        data: {private: false},
+        json: true
       })));
       SSApp.confirm(SSApp.logout());
 
       // follow, check feeds, then unfollow and check feeds
       SSApp.confirm(SSApp.login(fakejohn));
       var json = SSApp.confirm(SSApp.post({
-	resource: 'follow',
-	id: 'fakemary'
+        resource: 'follow',
+        id: 'fakemary'
       }));
       SSUnit.assertEqual(JSON.encode(json), ack);
       json = SSGetData.attempt(SSApp.confirm(SSApp.get({
-	resource: 'user',
-	id: 'fakejohn',
-	action: 'feeds'
+        resource: 'user',
+        id: 'fakejohn',
+        action: 'feeds'
       })));
       SSUnit.assertEqual(json.length, 1);
     
       json = SSApp.confirm(SSApp.post({
-	resource: 'unfollow',
-	id:'fakemary'
+        resource: 'unfollow',
+        id:'fakemary'
       }));
       SSUnit.assertEqual(JSON.encode(json), ack);
       json = SSGetData.attempt(SSApp.confirm(SSAapp.get({
-	resource:'user',
-	id:'fakejohn',
-	action:'feeds'
+        resource:'user',
+        id:'fakejohn',
+        action:'feeds'
       })));
       SSUnit.assertEqual(json.length, 0);
       SSApp.confirm(SSApp.logout());
@@ -239,5 +239,5 @@ var UserTest = new Class({
       SSApp.confirm(SSApp.logout());
     }
   )
-
+  */
 });
