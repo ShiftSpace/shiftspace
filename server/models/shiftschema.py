@@ -207,15 +207,21 @@ class Shift(SSDocument):
         return Shift.joinData(newShift, newShift.createdBy)
 
     @classmethod
-    def read(cls, id, userId):
-        db = core.connect(SSUser.publicDb(userId))
-        theShift = Shift.load(db, id)
-        if not theShift and userId:
-            db = core.connect(SSUser.privateDb(userId))
+    def read(cls, id, userId=None):
+        theShift = None
+        # first try to load from shared timeline
+        if not userId:
+            theShift = Shift.load(core.connect("shiftspace/shared"), id)
+        else:
+            # then try the user public
+            db = core.connect(SSUser.publicDb(userId))
             theShift = Shift.load(db, id)
-        if not theShift:
-            return
-        return Shift.joinData(theShift, theShift.createdBy)
+            # then user private
+            if not theShift and userId:
+                db = core.connect(SSUser.privateDb(userId))
+                theShift = Shift.load(db, id)
+        if theShift:
+            return Shift.joinData(theShift, theShift.createdBy)
 
     # ========================================
     # Instance methods

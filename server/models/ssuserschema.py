@@ -170,11 +170,14 @@ class SSUser(User):
 
     
     def canRead(self, aShift):
-        if not aShift.publishData.private:
+        if self.id == aShift.createdBy:
             return True
-        else:
-            dbs = aShift.publishData.dbs
-            return list(set(self.readable()).intersection(set(dbs))) > 0
+        if aShift.publishData.private:
+            return False
+        if self.isAdmin():
+            return True
+        dbs = aShift.publishData.dbs
+        return list(set(self.readable()).intersection(set(dbs))) > 0
 
 
     def canModify(self, other):

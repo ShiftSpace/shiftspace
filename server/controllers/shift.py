@@ -81,13 +81,11 @@ class ShiftController(ResourceController):
             return error("No data for shift.", NoDataError)
 
     @jsonencode
-    @exists
-    @shiftType
     def read(self, id):
         from server.models.ssuserschema import SSUser
         loggedInUser = helper.getLoggedInUser()
         theUser = SSUser.read(loggedInUser)
-        theShift = Shift.read(id)
+        theShift = Shift.read(id, loggedInUser)
         if theUser.canRead(theShift):
             return data(theShift.toDict())
         else:
