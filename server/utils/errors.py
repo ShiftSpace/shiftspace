@@ -1,6 +1,8 @@
 # Error types
 # =============================================================================
 
+ResourceTypeError = "ResourceTypeError"
+
 AlreadyLoggedInError = "AlreadyLoggedInError"
 AlreadyLoggedOutError = "AlreadyLoggedOutError"
 InvalidUserNameError = "InvalidUserNameError"

@@ -26,7 +26,7 @@ def verifyDecoratorGenerator(type):
             db = core.connect()
             rid = kwargs["id"]
             if db[rid]["type"] != type:
-                return returnTypes.error("Resource %s is not of type %s" % (rid, type))
+                return returnTypes.error("Resource %s is not of type %s" % (rid, type), ResourceTypeError)
             return func(*args, **kwargs)
         return verifyFn
     return verifyDecorator
