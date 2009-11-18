@@ -76,7 +76,7 @@ class UserController(ResourceController):
 
     @jsonencode
     def join(self):
-        loggedInUser = SSUser.read(helper.getLoggedInUser())
+        loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
             return error("You are logged in. You cannot create an account.", AlreadyLoggedInError)
         theData = json.loads(helper.getRequestBody())

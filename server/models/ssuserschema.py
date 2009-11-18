@@ -75,6 +75,7 @@ class SSUser(User):
         db = core.connect()
         if userJson.get("passwordVerify"):
             del userJson["passwordVerify"]
+        userJson['password'] = utils.md5hash(userJson['password'])
         if userJson.get("email"):
             userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % utils.md5hash(userJson["email"])
         newUser = SSUser(**userJson)

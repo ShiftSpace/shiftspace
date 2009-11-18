@@ -65,6 +65,6 @@ class User(SSDocument):
 
     @classmethod
     def uniqueName(cls, name):
-        return core.value(SSUser.by_name(core.connect(), key=name)) == None
+        return core.value(User.by_name(core.connect(), key=name)) == None
 
 
