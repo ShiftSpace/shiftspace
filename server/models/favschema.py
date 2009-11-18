@@ -66,7 +66,7 @@ class Favorite(SSDocument):
                 )
             newFavorite.id = Favorite.makeId(userId, shiftId)
             newFavorite.store(db)
-            return fav
+            return newFavorite
         return fav
 
     @classmethod
