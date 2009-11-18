@@ -98,7 +98,7 @@ var UserTest = new Class({
       var json = SSApp.confirm(SSApp.join(userNameTaken));
       SSUnit.assertEqual(SSGetType(json), UserNameAlreadyExistsError);
       SSApp.confirm(SSApp.login(fakemary));
-      SSApp.confirm(SSApp.delete('user', 'fakemary'));
+      SSApp.confirm(SSApp['delete']('user', 'fakemary'));
     }
   ),
   
@@ -139,7 +139,7 @@ var UserTest = new Class({
     {
       var json = SSApp.confirm(SSApp.join(fakemary));
       SSUnit.assertEqual(json.userName, "fakemary");
-      SSApp.confirm(SSApp.delete('user', 'fakemary'));
+      SSApp.confirm(SSApp['delete']('user', 'fakemary'));
     }
   ),
   
@@ -149,7 +149,7 @@ var UserTest = new Class({
     function()
     {
       SSApp.confirm(SSApp.join(fakemary));
-      SSApp.confirm(SSApp.delete('user', 'fakemary'));
+      SSApp.confirm(SSApp['delete']('user', 'fakemary'));
       var json = SSApp.confirm(SSApp.read('user', 'fakemary'));
       SSUnit.assertEqual(SSGetType(json), UserDoesNotExistError);
     }
@@ -162,10 +162,10 @@ var UserTest = new Class({
     {
       SSApp.confirm(SSApp.join(fakemary));
       SSApp.confirm(SSApp.logout());
-      var json = SSApp.confirm(SSApp.delete('user', 'fakemary'));
+      var json = SSApp.confirm(SSApp['delete']('user', 'fakemary'));
       SSUnit.assertEqual(SSGetType(json), UserNotLoggedInError);
       SSApp.confirm(SSApp.login(fakemary));
-      SSApp.confirm(SSApp.delete('user', 'fakemary'));
+      SSApp.confirm(SSApp['delete']('user', 'fakemary'));
     }
   ),
   
@@ -177,7 +177,7 @@ var UserTest = new Class({
       SSApp.confirm(SSApp.join(fakemary));
       SSApp.confirm(SSApp.logout());
       SSApp.confirm(SSApp.login(admin));
-      var json = SSApp.confirm(SSApp.delete('user', 'fakemary'));
+      var json = SSApp.confirm(SSApp['delete']('user', 'fakemary'));
       SSUnit.assertEqual(JSON.encode(json), ack);
       SSApp.confirm(SSApp.logout());
     }
@@ -230,8 +230,8 @@ var UserTest = new Class({
       
       // cleanup
       SSApp.confirm(SSApp.login(admin));
-      SSApp.confirm(SSApp.delete('user', 'fakemary'));
-      SSApp.confirm(SSApp.delete('user', 'fakejohn'));
+      SSApp.confirm(SSApp['delete']('user', 'fakemary'));
+      SSApp.confirm(SSApp['delete']('user', 'fakejohn'));
       SSApp.confirm(SSApp.logout());
     }
   )

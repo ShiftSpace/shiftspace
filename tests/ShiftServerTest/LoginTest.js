@@ -21,7 +21,7 @@ var LoginTest = new Class({
   
   tearDown: function()
   {
-    SSApp.confirm(SSApp.delete('user', 'fakemary'));
+    SSApp.confirm(SSApp['delete']('user', 'fakemary'));
   },
   
   
