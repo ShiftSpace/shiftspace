@@ -260,10 +260,8 @@ class Shift(SSDocument):
         shift has been published to.
         
         Parameters:
-          id - the id of the shift
           fields - the fields to update. Allowed fields are
             summary, broken, and content.
-          userId - a userId.
         """
         if fields.get("content"):
             self.content = fields.get("content")
@@ -279,12 +277,12 @@ class Shift(SSDocument):
             db = core.connect(SSUser.publicDb(self.createdBy))
         self.store(db)
 
-        if publicShift:
-            core.replicate(SSUser.publicDb(userId), SSUser.feedDb(userId))
+        if self.publishData.private:
+            core.replicate(SSUser.privateDb(self.createdBy), SSUser.feedDb(self.createdBy))
         else:
-            core.replicate(SSUser.privateDb(userId), SSUser.feedDb(userId))
+            core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(self.createdBy))
 
-        for db in theShift.publishData.dbs:
+        for db in self.publishData.dbs:
             dbtype, dbid = db.split("/")
             if dbtype == "user":
                 inbox = core.connect(SSUser.inboxDb(dbid))
@@ -293,7 +291,7 @@ class Shift(SSDocument):
                 from server.models.groupschema import Group
                 Group.read(dbid).updateShift(self)
 
-        return Shift.joinData(self, theShift.createdBy)
+        return Shift.joinData(self, self.createdBy)
 
 
     def delete(self):
@@ -303,12 +301,12 @@ class Shift(SSDocument):
             id - a shift id.
         """
         db = core.connect(SSUser.privateDb(self.createdBy))
-        if db.get(id):
-            del db[id]
+        if db.get(self.id):
+            del db[self.id]
         else:
             db = core.connect(SSUser.publicDb(self.createdBy))
-            if db.get(id):
-                del db[id]
+            if db.get(self.id):
+                del db[self.id]
 
 
     def publishIds(self):
