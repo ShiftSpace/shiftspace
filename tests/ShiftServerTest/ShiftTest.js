@@ -48,7 +48,7 @@ var ShiftTest = new Class({
     }
   ),
 
-  
+
   shiftDeleteOnUserDelete: $fixture(
     "Ensure a user's shift are deleted if his account is deleted",
     function()
@@ -59,7 +59,7 @@ var ShiftTest = new Class({
       var json = SSApp.confirm(SSApp.read('shift', shift._id));
       SSUnit.assertEqual(SSGetType(json), ResourceDoesNotExistError);
     }
-  ),
+  )/*,
   
   
   createNotLoggedIn: $fixture(
@@ -449,4 +449,5 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.login(fakemary))
     }
   )
+   */
 });

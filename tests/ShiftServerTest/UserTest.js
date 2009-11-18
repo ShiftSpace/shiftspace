@@ -59,185 +59,185 @@ var UserTest = new Class({
   tearDown: function() {},
   
 
-  testMissingEmail: function()
-  {
-    this.doc("Error on missing email");
-    var json = app.action('join', missingEmail);
-    this.assertEqual(SSGetType(json), NoEmailError);
-  },
+  missingEmail: $fixture(
+    "Missing email.",
+    function()
+    {
+      var json = SSApp.confirm(SSApp.join(missingEmail));
+      SSUnit.assertEqual(SSGetType(json), NoEmailError);
+    }
+  ),
   
   
-  testMissingUserName: function()
-  {
-    this.doc("Error on missing userName");
-    var json = app.action('join', missingUserName);
-    this.assertEqual(SSGetType(json), MissingUserNameError);
-  },
-  
-
-  testShortUserName: function()
-  {
-    this.doc("Error on short user name");
-    var json = app.action('join', shortUserName);
-    this.assertEqual(SSGetType(json), ShortUserNameError);
-  },
-  
-  
-  testUserNameTaken: function()
-  {
-    this.doc("Error on user name taken.");
-    join(fakemary);
-    logout();
-    var json = join(userNameTaken);
-    this.assertEqual(SSGetType(json), UserNameAlreadyExistsError);
-    login(fakemary);
-    app.delete('user', 'fakemary');
-  },
-  
-  
-  testMissingPassword: function()
-  {
-    this.doc("Error on missing password");
-    var json = app.action('join', missingPassword);
-    this.assertEqual(SSGetType(json), MissingPasswordError);
-  },
-  
-  
-  testMissingPasswordVerify: function()
-  {
-    this.doc("Error on missing password verify");
-    var json = app.action('join', missingPasswordVerify);
-    this.assertEqual(SSGetType(json), MissingPasswordVerifyError);
-  },
-  
-  
-  testPasswordMatch: function()
-  {
-    this.doc("Error on password/passwordVerify mismatch");
-    var json = app.action('join', passwordMismatch);
-    this.assertEqual(SSGetType(json), PasswordMatchError);
-  },
-  
-  
-  testValidUser: function()
-  {
-    this.doc("Valid user");
-    var json = app.action('join', fakemary);
-    this.assertEqual(SSGetData(json).userName, "fakemary");
-    app.delete('user', 'fakemary');
-  },
-  
-  
-  testBasicDeleteUser: function()
-  {
-    this.doc("Test basic deletion. Only verify the account no longer exists");
-    app.action('join', fakemary);
-    app.delete('user', 'fakemary');
-    var json = app.read('user', 'fakemary');
-    this.assertEqual(SSGetType(json), UserDoesNotExistError);
-  },
-  
-  
-  testDeletePermission: function()
-  {
-    this.doc("Cannot delete account if not logged in, or not the right user.");
-    app.action('join', fakemary);
-    logout();
-    var json = app.delete('user', 'fakemary');
-    this.assertEqual(SSGetType(json), UserNotLoggedInError);
-    login(fakemary);
-    app.delete('user', 'fakemary');
-  },
+  missingUserName: $fixture(
+    "Error on missing userName",
+    function()
+    {
+      var json = SSApp.confirm(SApp.join(missingUserName));
+      SSUnit.assertEqual(SSGetType(json), MissingUserNameError);
+    }
+  ),
   
 
-  testAdminDeletePermission: function()
-  {
-    this.doc("Can delete account if logged in as admin");
-    app.action('join', fakemary);
-    logout();
-    login(admin);
-    var json = app.delete('user', 'fakemary');
-    this.assertEqual(JSON.encode(json), ack);
-    logout();
-  },
+  shortUserName: $fixture(
+    "Error on short user name",
+    function()
+    {
+      var json = SSApp.confirm(SSApp.join(shortUserName));
+      SSUnit.assertEqual(SSGetType(json), ShortUserNameError);
+    }
+  ),
   
   
-  testUserStreamsExists: function()
-  {
-    this.doc("User public and private stream should exist and have the right values after account creation.");
-    
-    var json = app.action('join', fakemary);
-    var data = SSGetData(json);
-    var publicStream = data.publicStream;
-    var messageStream = data.messageStream;
-    var userId = data._id;
-        
-    this.assertNotEqual(publicStream, null);
-    this.assertNotEqual(messageStream, null);
-    
-    json = app.read('stream', messageStream);
-    this.assertEqual(SSGetData(json).createdBy, userId);
-    json = app.read('stream', publicStream);
-    this.assertEqual(SSGetData(json).createdBy, userId);
-    
-    app.delete('user', 'fakemary');
-  },
+  userNameTaken: $fixture(
+    "Error on user name taken.",
+    function()
+    {
+      SSApp.confirm(SSApp.join(fakemary));
+      SSApp.confirm(SSApp.logout());
+      var json = SSApp.confirm(SSApp.join(userNameTaken));
+      SSUnit.assertEqual(SSGetType(json), UserNameAlreadyExistsError);
+      SSApp.confirm(SSApp.login(fakemary));
+      SSApp.confirm(SSApp.delete('user', 'fakemary'));
+    }
+  ),
   
   
-  testDeleteUserContent: function()
-  {
-    this.doc("User's public stream, private stream, events, and shifts should be deleted");
-    
-    var json = app.action('join', fakemary);
-    var data = SSGetData(json);
-    var publicStream = data.publicStream;
-    var messageStream = data.messageStream;
-    var userId = data._id;
-    
-    app.delete('user', 'fakemary');
+  missingPassword: $fixture(
+    "Error on missing password",
+    function()
+    {
+      var json = SSApp.confirm(SSApp.join(missingPassword));
+      SSUnit.assertEqual(SSGetType(json), MissingPasswordError);
+    }
+  ),
   
-    json = app.read('stream', messageStream);
-    this.assertEqual(SSGetType(json), ResourceDoesNotExistError);
-    json = app.read('stream', publicStream);
-    this.assertEqual(SSGetType(json), ResourceDoesNotExistError);
-  },
+  
+  missingPasswordVerify: $fixture(
+    "Error on missing password verify",
+    function()
+    {
+      var json = SSApp.confirm(SSApp.join(missingPasswordVerify));
+      SSUnit.assertEqual(SSGetType(json), MissingPasswordVerifyError);
+    }
+  ),
+  
+  
+  passwordMatch: $fixture(
+    "Error on password/passwordVerify mismatch",
+    function()
+    {
+      var json = SSApp.confirm(SSApp.join(passwordMismatch));
+      SSUnit.assertEqual(SSGetType(json), PasswordMatchError);
+    }
+  ),
+  
+  
+  validUser: $fixture(
+    "Valid user",
+    function()
+    {
+      var json = SSApp.confirm(SSApp.join(fakemary));
+      SSUnit.assertEqual(SSGetData(json).userName, "fakemary");
+      SSApp.delete('user', 'fakemary');
+    }
+  ),
+  
+  
+  basicDeleteUser: $fixture(
+    "Test basic deletion. Only verify the account no longer exists",
+    function()
+    {
+      SSApp.confirm(SSApp.join(fakemary));
+      SSApp.delete('user', 'fakemary');
+      var json = SSApp.confirm(SSApp.read('user', 'fakemary'));
+      SSUnit.assertEqual(SSGetType(json), UserDoesNotExistError);
+    }
+  ),
+  
+  
+  deletePermission: $fixture(
+    "Cannot delete account if not logged in, or not the right user.",
+    function()
+    {
+      SSApp.confirm(SSApp.join(fakemary));
+      SSApp.confirm(SSApp.logout());
+      var json = SSApp.confirm(SSApp.delete('user', 'fakemary'));
+      SSUnit.assertEqual(SSGetType(json), UserNotLoggedInError);
+      SSApp.confirm(SSApp.login(fakemary));
+      SSApp.confirm(SSApp.delete('user', 'fakemary'));
+    }
+  ),
+  
 
+  adminDeletePermission: $fixture(
+    "Can delete account if logged in as admin",
+    function()
+    {
+      SSApp.confirm(SSApp.join(fakemary));
+      SSApp.confirm(SSApp.logout());
+      SSApp.confirm(SSApp.login(admin));
+      var json = SSApp.confirm(SSApp.delete('user', 'fakemary'));
+      SSUnit.assertEqual(JSON.encode(json), ack);
+      SSApp.confirm(SSApp.logout());
+    }
+  ),
   
-  testFollow: function()
-  {
-    this.doc("Test following other users.");
-    
-    logout();
-    join(fakemary);
-    logout();
+  
+  follow: $fixture(
+    "Test following other users.",
+    function()
+    {
+      SSApp.confirm(SSApp.logout());
+      SSApp.confirm(SSApp.join(fakemary));
+      SSApp.confirm(SSApp.logout());
 
-    join(fakejohn);
-    logout();
+      SSApp.confirm(SSApp.join(fakejohn));
+      SSApp.confirm(SSApp.logout());
 
-    login(fakemary);
-    var shiftId = SSGetData.attempt(app.create('shift', noteShift));
-    app.action('shift/'+shiftId+'/publish', {
-      private: false
-    });
-    logout();
+      SSApp.confirm(SSApp.login(fakemary));
+      var shiftId = SSGetData.attempt(SSApp.confirm(SSApp.create('shift', noteShift)));
+      SSApp.confirm(SSApp.confirm(SSApp.post({
+	resource: 'shift',
+	id: shiftId,
+	action: 'publish',
+	data: {private: false},
+	json: true
+      })));
+      SSApp.confirm(SSApp.logout());
+
+      // follow, check feeds, then unfollow and check feeds
+      SSApp.confirm(SSApp.login(fakejohn));
+      var json = SSApp.confirm(SSApp.post({
+	resource: 'follow',
+	id: 'fakemary'
+      }));
+      SSUnit.assertEqual(JSON.encode(json), ack);
+      json = SSGetData.attempt(SSApp.confirm(SSApp.get({
+	resource: 'user',
+	id: 'fakejohn',
+	action: 'feeds'
+      })));
+      SSUnit.assertEqual(json.length, 1);
     
-    // follow, check feeds, then unfollow and check feeds
-    login(fakejohn);
-    var json = app.action('follow/fakemary');
-    this.assertEqual(JSON.encode(json), ack);
-    json = SSGetData.attempt(app.get('user/fakejohn/feeds'));
-    this.assertEqual(json.length, 1);
+      json = SSApp.confirm(SSApp.post({
+	resource: 'unfollow',
+	id:'fakemary'
+      }));
+      SSUnit.assertEqual(JSON.encode(json), ack);
+      json = SSGetData.attempt(SSApp.confirm(SSAapp.get({
+	resource:'user',
+	id:'fakejohn',
+	action:'feeds'
+      })));
+      SSUnit.assertEqual(json.length, 0);
+      SSApp.confirm(SSApp.logout());
     
-    json = app.action('unfollow/fakemary');
-    this.assertEqual(JSON.encode(json), ack);
-    json = SSGetData.attempt(app.get('user/fakejohn/feeds'));
-    this.assertEqual(json.length, 0);
-    logout();
-    
-    login(admin);
-    app.delete('user', 'fakemary');
-    app.delete('user', 'fakejohn');
-    logout();
-  }
+      SSApp.confirm(SSApp.login(admin));
+      SSApp.confirm(SSApp.delete('user', 'fakemary'));
+      SSApp.confirm(SSApp.delete('user', 'fakejohn'));
+      SSApp.confirm(SSApp.logout());
+    }
+  )
 
 });

@@ -153,11 +153,9 @@ class SSUser(User):
     def toDict(self, full=False):
         userDict = super(SSUser, self).toDict()
         if not full:
-            del userDict["password"]
-            del userDict["email"]
-            del userDict["fullName"]
-            del userDict["streams"]
-            del userDict["preferences"]
+            for key in ["password", "email", "fullName", "dbs", "preferences"]:
+                if userDict.get(key):
+                    del userDict[key]
         return userDict
 
     # ========================================
