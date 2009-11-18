@@ -241,17 +241,19 @@ class SSUser(User):
         return Permission.adminable(self.id)
 
     # ========================================
-    # Data
+    # Paged Views
     # ========================================
-
-    def isFavorite(self, aShift):
-        db = core.connect("shiftspace/shared")
-        return db.get(Favorite.makeId(self.id, aShift.id))
-
-
+    
     def messages(self, start=None, end=None, limit=25):
         from server.models.messageschema import Message
-        return core.objects(Message.by_created(core.connect(SSUser.messagesDb(self.id)), limit=limit))
+        results = Message.by_created(core.connect(SSUser.messagesDb(self.id)), limit=limit)
+        if start and not end:
+            return core.objects(results[start:])
+        if not start and end:
+            return core.objects(results[:end])
+        if start and end:
+            return core.objects(results[start:end])
+        return core.objects(results)
 
 
     def shifts(self, start=None, end=None, limit=25):
@@ -280,6 +282,14 @@ class SSUser(User):
 
     def comments(self, start=None, end=None, limit=25):
         pass
+        
+    # ========================================
+    # Favorites
+    # ========================================
+
+    def isFavorite(self, aShift):
+        db = core.connect("shiftspace/shared")
+        return db.get(Favorite.makeId(self.id, aShift.id))
 
     # ========================================
     # Follow

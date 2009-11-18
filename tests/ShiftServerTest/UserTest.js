@@ -192,9 +192,16 @@ var UserTest = new Class({
       SSApp.confirm(SSApp.join(fakemary));
       SSApp.confirm(SSApp.logout());
       
+      // fakejohn follow fakemary
       SSApp.confirm(SSApp.join(fakejohn));
+      SSApp.confirm(SSApp.login(fakejohn));
+      var json = SSApp.confirm(SSApp.post({
+        resource: 'follow',
+        id: 'fakemary'
+      }));
       SSApp.confirm(SSApp.logout());
       
+      // fakemary create shift
       SSApp.confirm(SSApp.login(fakemary));
       var theShift = SSApp.confirm(SSApp.create('shift', noteShift));
       SSApp.confirm(SSApp.post({
@@ -206,33 +213,17 @@ var UserTest = new Class({
       }));
       SSApp.confirm(SSApp.logout());
       
-      // follow, check feeds, then unfollow and check feeds
+      // check fakejohn's feed 
       SSApp.confirm(SSApp.login(fakejohn));
-      var json = SSApp.confirm(SSApp.post({
-        resource: 'follow',
-        id: 'fakemary'
-      }));
-      SSUnit.assertEqual(JSON.encode(json), ack);
-      json = SSGetData.attempt(SSApp.confirm(SSApp.get({
+      var feed = SSApp.confirm(SSApp.get({
         resource: 'user',
         id: 'fakejohn',
         action: 'feed'
-      })));
-      SSUnit.assertEqual(json.length, 1);
-      
-      json = SSApp.confirm(SSApp.post({
-        resource: 'unfollow',
-        id:'fakemary'
       }));
-      SSUnit.assertEqual(JSON.encode(json), ack);
-      json = SSGetData.attempt(SSApp.confirm(SSAapp.get({
-        resource:'user',
-        id:'fakejohn',
-        action:'feed'
-      })));
-      SSUnit.assertEqual(json.length, 0);
+      SSUnit.assertEqual(feed.length, 1);
       SSApp.confirm(SSApp.logout());
       
+      // cleanup
       SSApp.confirm(SSApp.login(admin));
       SSApp.confirm(SSApp.delete('user', 'fakemary'));
       SSApp.confirm(SSApp.delete('user', 'fakejohn'));
