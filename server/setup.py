@@ -167,5 +167,28 @@ def init(dbname="shiftspace/master"):
     loadDocs(dbname)
 
 
+def sync():
+    from models.user import SSUser
+    from models.shift import Shift
+    from models.group import Group
+    from models.permission import Permission
+    from models.comment import Comment
+    from models.favorite import Favorite
+
+    # master
+    master = core.connect("shiftspace/master")
+    SSUser.all.sync(master)
+    SSUser.by_name.sync(master)
+    SSUser.all_followers.sync(master)
+
+    # shared
+    shared = core.connect("shiftspace/shared")
+    Shift.all.sync(shared)
+    Shift.by_user_and_created.sync(shared)
+    Comment.count_by_shift.sync(shared)
+    Favorite.by_user_and_created.sync(shared)
+    Favorite.count_by_shift.sync(shared)
+    
+
 if __name__ == "__main__":
   init()

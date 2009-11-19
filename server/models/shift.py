@@ -115,7 +115,7 @@ class Shift(SSDocument):
            if(doc.type == 'shift') {                          \
              var dbs = doc.publishData.dbs;                   \
              for(var i = 0, len = dbs.length; i < len; i++) { \
-                var db = dbs[i], typeAndId = db.split('_');   \
+                var db = dbs[i], typeAndId = db.split('/');   \
                 if(typeAndId[0] == 'group') {                 \
                   emit([doc.created, db], doc);               \
                 }                                             \
@@ -129,7 +129,7 @@ class Shift(SSDocument):
            if(doc.type == 'shift') {                          \
              var dbs = doc.publishData.dbs;                   \
              for(var i = 0, len = dbs.length; i < len; i++) { \
-                var db = dbs[i], typeAndId = db.split('_');   \
+                var db = dbs[i], typeAndId = db.split('/');   \
                 if(typeAndId[0] == 'user') {                  \
                   emit([doc.created, db], doc);               \
                 }                                             \
