@@ -6,8 +6,8 @@ from server.utils.decorators import *
 import server.utils.utils as utils
 import core
 
-from server.models.ssdocschema import *
-from server.models.ssuserschema import *
+from server.models.ssdoc import SSDocument
+from server.models.ssuser import *
 
 # ==============================================================================
 # Errors
@@ -162,7 +162,7 @@ class Shift(SSDocument):
 
     @classmethod
     def joinData(cls, shifts, userId=None):
-        from server.models.favschema import Favorite
+        from server.models.favorite import Favorite
 
         single = False
         if type(shifts) != list:
@@ -264,7 +264,7 @@ class Shift(SSDocument):
                 if dbtype == "user":
                     self.updateTo(SSUser.feedDb(dbid))
                 elif dbtype == "group":
-                    from server.models.groupschema import Group
+                    from server.models.group import Group
                     Group.read(dbid).updateShift(self)
 
         return Shift.joinData(self, self.createdBy)
@@ -324,7 +324,7 @@ class Shift(SSDocument):
         # get the list of dbs the user is actually allowed to publish to
         allowed = []
         if (publishData and isPrivate and len(publishDbs) > 0):
-            from server.models.groupschema import Group
+            from server.models.group import Group
             allowedGroups = author.writeable()
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
 
@@ -403,7 +403,7 @@ class Shift(SSDocument):
 
 
     def addToGroups(self, groupDbs):
-        from server.models.groupschema import Group
+        from server.models.group import Group
         # NOTE - do we need to delete from user/private? - David 11/12/09
         for db in groupDbs:
             dbtype, dbid = db.split("/")
@@ -412,7 +412,7 @@ class Shift(SSDocument):
 
     
     def updateInGroups(self, groupDbs):
-        from server.models.groupschema import Group
+        from server.models.group import Group
         for db in groupDbs:
             dbtype, dbid = db.split("/")
             theGroup = Group.read(dbid)
@@ -423,19 +423,19 @@ class Shift(SSDocument):
     # ========================================
 
     def commentCount(self):
-        from server.models.commentschema import Comment
+        from server.models.comment import Comment
         db = core.connect("shiftspace/shared")
         return core.value(Comment.count_by_shift(db, key=self.id))
 
 
     def comments(self, start=None, end=None, limit=25):
-        from server.models.commentschema import Comment
+        from server.models.comment import Comment
         db = core.connect(Comment.db(self.id))
         return core.objects(Comment.by_created(db, limit=limit))
 
 
     def hasThread(self):
-        from server.models.commentschema import Comment
+        from server.models.comment import Comment
         try:
             server = core.server()
             thread = server[Comment.db(self.id)]
@@ -445,20 +445,20 @@ class Shift(SSDocument):
 
 
     def deleteThread(self):
-        from server.models.commentschema import Comment
+        from server.models.comment import Comment
         server = core.server()
         # TODO - use bulk API to delete all comment stubs - David
         del server[Comment.db(self.id)]
 
 
     def subscribers(self):
-        from server.models.commentschema import Comment
+        from server.models.comment import Comment
         db = core.connect(Comment.db(self.id))
         return core.values(Comment.all_subscribed(db))
 
 
     def favoriteCount(self):
-        from server.models.favschema import Favorite
+        from server.models.favorite import Favorite
         db = core.connect("shiftspace/shared")
         return core.value(Favorite.count_by_shift(db, key=self.id)) or 0
     

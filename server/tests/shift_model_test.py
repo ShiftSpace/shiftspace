@@ -2,9 +2,9 @@ import unittest
 import datetime
 import server.models.core as core
 
-from server.models.shiftschema import *
-from server.models.ssuserschema import *
-from server.models.groupschema import *
+from server.models.shift import *
+from server.models.ssuser import *
+from server.models.group import Group import *
 from server.tests.dummy_data import *
 
 

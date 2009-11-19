@@ -2,7 +2,7 @@ from server.utils.utils import *
 from server.utils.errors import *
 from server.utils.decorators import *
 from server.utils.returnTypes import *
-from server.models.ssuserschema import SSUser
+from server.models.ssuser import SSUser
 from resource import *
 
 

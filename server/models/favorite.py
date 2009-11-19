@@ -6,7 +6,7 @@ from server.utils.decorators import *
 import server.utils.utils as utils
 import core
 
-from ssdocschema import SSDocument
+from ssdoc import SSDocument
 
 # ==============================================================================
 # Favorite Model

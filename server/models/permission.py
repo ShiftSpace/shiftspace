@@ -6,7 +6,7 @@ from server.utils.decorators import *
 import server.utils.utils as utils
 import core
 
-from server.models.ssdocschema import SSDocument
+from server.models.ssdoc import SSDocument SSDocument
 
 # ==============================================================================
 # Errors
@@ -128,8 +128,8 @@ class Permission(SSDocument):
     
     @classmethod
     def create(cls, userId, groupId, otherId, level):
-        from server.models.ssuserschema import SSUser
-        from server.models.groupschema import Group
+        from server.models.ssuser import SSUser
+        from server.models.group import Group
 
         db = core.connect()
         if not groupId:
@@ -198,25 +198,25 @@ class Permission(SSDocument):
 
     @classmethod
     def joinable(cls, userId):
-        from server.models.groupschema import Group
+        from server.models.group import Group
         db = core.connect()
         return [Group.db(id) for id in core.values(Permission.by_joinable(db, key=userId))]
 
     @classmethod
     def readable(cls, userId):
-        from server.models.groupschema import Group
+        from server.models.group import Group
         db = core.connect()
         return [Group.db(id) for id in core.values(Permission.by_readable(db, key=userId))]
 
     @classmethod
     def writeable(cls, userId):
-        from server.models.groupschema import Group
+        from server.models.group import Group
         db = core.connect()
         return [Group.db(id) for id in core.values(Permission.by_writeable(db, key=userId))]
 
     @classmethod
     def adminable(cls, userId):
-        from server.models.groupschema import Group
+        from server.models.group import Group
         db = core.connect()
         return [Group.db(id) for id in core.values(Permission.by_adminable(db, key=userId))]
 

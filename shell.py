@@ -1,8 +1,8 @@
 from server.tests.dummy_data import *
-from server.models.ssuserschema import *
-from server.models.shiftschema import *
-from server.models.groupschema import *
-from server.models.permschema import *
-from server.models.favschema import *
-from server.models.commentschema import *
+from server.models.ssuser import *
+from server.models.shift import *
+from server.models.group import Group import *
+from server.models.permission import *
+from server.models.favorite import *
+from server.models.comment import Comment import *
 db = core.connect()

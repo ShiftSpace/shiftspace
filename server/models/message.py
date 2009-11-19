@@ -6,7 +6,7 @@ from server.utils.decorators import *
 import server.utils.utils as utils
 import core
 
-from ssdocschema import SSDocument
+from ssdoc import SSDocument
 
 # ==============================================================================
 # Message Model
@@ -50,7 +50,7 @@ class Message(SSDocument):
         System messages are store in the messages database. Local
         inboxes are merges of messages and user_x/messages.
         """
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
 
         db = core.connect(SSUser.messagesDb(toId))
         json = {

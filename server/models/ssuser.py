@@ -5,7 +5,7 @@ from server.utils.decorators import *
 import server.utils.utils as utils
 import core
 
-from server.models.userschema import User
+from server.models.user import User
 
 # ==============================================================================
 # SSUser Model
@@ -71,8 +71,8 @@ class SSUser(User):
         Parameters:
             userJson - a dictionary of fields and their values.
         """
-        from server.models.shiftschema import Shift
-        from server.models.messageschema import Message
+        from server.models.shift import Shift
+        from server.models.message import Message
 
         server = core.server()
         db = core.connect()
@@ -188,7 +188,7 @@ class SSUser(User):
 
 
     def canModify(self, other):
-        from server.models.shiftschema import Shift
+        from server.models.shift import Shift
         if isinstance(other, SSUser): 
             return (self.id == other.id) or self.isAdmin()
         elif isinstance(other, Shift):
@@ -219,13 +219,13 @@ class SSUser(User):
 
 
     def isAdminOf(self, aGroup):
-        from server.models.permschema import Permission
+        from server.models.permission import Permission
         thePermission = Permission.readByUserAndGroup(self.id, aGroup.id)
         return thePermission and thePermission.level >= 3
 
 
     def isMemberOf(self, aGroup):
-        from server.models.permschema import Permission
+        from server.models.permission import Permission
         thePermission = Permission.readByUserAndGroup(self.id, aGroup.id)
         return thePermission and Permission.level > 0
 
@@ -234,22 +234,22 @@ class SSUser(User):
     # ========================================
 
     def joinable(self):
-        from server.models.permschema import Permission
+        from server.models.permission import Permission
         return Permission.joinable(self.id)
 
 
     def readable(self):
-        from server.models.permschema import Permission
+        from server.models.permission import Permission
         return Permission.readable(self.id)
 
 
     def writeable(self):
-        from server.models.permschema import Permission
+        from server.models.permission import Permission
         return Permission.writeable(self.id)
 
 
     def adminable(self):
-        from server.models.permschema import Permission
+        from server.models.permission import Permission
         return Permission.adminable(self.id)
 
     # ========================================
@@ -257,7 +257,7 @@ class SSUser(User):
     # ========================================
     
     def messages(self, start=None, end=None, limit=25):
-        from server.models.messageschema import Message
+        from server.models.message import Message
         results = Message.by_created(core.connect(SSUser.messagesDb(self.id)), limit=limit)
         if start and not end:
             return core.objects(results[start:])
@@ -273,7 +273,7 @@ class SSUser(User):
 
 
     def feed(self, start=None, end=None, limit=25, userId=None):
-        from server.models.shiftschema import Shift
+        from server.models.shift import Shift
         results = Shift.by_created(core.connect(SSUser.feedDb(self.id)), limit=limit)
         if start and not end:
             return core.objects(results[start:])
@@ -285,7 +285,7 @@ class SSUser(User):
 
 
     def favorites(self, start=None, end=None, limit=25):
-        from server.models.favschema import Favorite
+        from server.models.favorite import Favorite
         if not start:
             start = [self.id]
         if not end:
@@ -340,13 +340,13 @@ class SSUser(User):
     # ========================================
 
     def isSubscribed(self, aShift):
-        from server.models.commentschema import Comment
+        from server.models.comment import Comment
         db = core.connect(Comment.db(aShift.id))
         return db.get("user:%s" % self.id) != None
 
 
     def subscribe(self, aShift):
-        from server.models.commentschema import Comment
+        from server.models.comment import Comment
         db = core.connect(Comment.db(aShift.id))
         if not self.isSubscribed(aShift):
             db.create({
@@ -358,7 +358,7 @@ class SSUser(User):
 
 
     def unsubscribe(self, aShift):
-        from server.models.commentschema import Comment
+        from server.models.comment import Comment
         db = core.connect(Comment.db(aShift.id))
         if self.isSubscribed(aShift):
             del db["user:%s" % self.id]

@@ -6,7 +6,7 @@ from server.utils.decorators import *
 import server.utils.utils as utils
 import core
 
-from ssdocschema import SSDocument
+from ssdoc import SSDocument
 
 # ==============================================================================
 # Comment Model
@@ -70,9 +70,9 @@ class Comment(SSDocument):
 
     @classmethod
     def create(cls, userId, shiftId, text, subscribe=False):
-        from server.models.ssuserschema import SSUser
-        from server.models.shiftschema import Shift
-        from server.models.messageschema import Message
+        from server.models.ssuser import SSUser
+        from server.models.shift import Shift
+        from server.models.message import Message
         # first try the public feed
         theShift = Shift.load(core.connect("shiftspace/shared"), shiftId)
         shiftAuthor = SSUser.load(core.connect(), theShift.createdBy)

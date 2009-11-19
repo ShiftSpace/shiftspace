@@ -2,7 +2,7 @@ from server.utils.utils import *
 from server.utils.errors import *
 from server.utils.decorators import *
 from server.utils.returnTypes import *
-from server.models.shiftschema import Shift
+from server.models.shift import Shift
 from resource import *
 
 
@@ -77,7 +77,7 @@ class ShiftController(ResourceController):
 
     @jsonencode
     def read(self, id):
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         loggedInUser = helper.getLoggedInUser()
         theUser = SSUser.read(loggedInUser)
         theShift = Shift.read(id, loggedInUser)
@@ -92,7 +92,7 @@ class ShiftController(ResourceController):
     @jsonencode
     @loggedin
     def update(self, id):
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         loggedInUser = helper.getLoggedInUser()
         jsonData = helper.getRequestBody()
         if jsonData != "":
@@ -101,7 +101,7 @@ class ShiftController(ResourceController):
                 return error("Resource does not exist.", ResourceDoesNotExistError)
             if theShift.type != "shift":
                 return error("Resource is not of type shift", ResourceTypeError)
-            from server.models.ssuserschema import SSUser
+            from server.models.ssuser import SSUser
             shiftData = json.loads(jsonData)
             theUser = SSUser.read(loggedInUser)
             if theUser.canModify(theShift):
@@ -114,14 +114,14 @@ class ShiftController(ResourceController):
     @jsonencode
     @loggedin
     def delete(self, id):
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         loggedInUser = helper.getLoggedInUser()
         theShift = Shift.read(id, loggedInUser)
         if not theShift:
             return error("Resource does not exist.", ResourceDoesNotExistError)
         if theShift.type != "shift":
             return error("Resource is not of type shift", ResourceTypeError)
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
         if theUser.canModify(theShift):
             theShift.delete()
@@ -162,7 +162,7 @@ class ShiftController(ResourceController):
             return error("Resource does not exist.", ResourceDoesNotExistError)
         if theShift.type != "shift":
             return error("Resource is not of type shift", ResourceTypeError)
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
         if theUser.canRead(theShift):
             return data(theUser.favorite(theShift).toDict())
@@ -178,7 +178,7 @@ class ShiftController(ResourceController):
             return error("Resource does not exist.", ResourceDoesNotExistError)
         if theShift.type != "shift":
             return error("Resource is not of type shift", ResourceTypeError)
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
         if shift.isPublic(id) or (shift.canRead(id, loggedInId)):
             return data(theUser.unfavorite(theShift).toDict())
@@ -193,7 +193,7 @@ class ShiftController(ResourceController):
             return error("Resource does not exist.", ResourceDoesNotExistError)
         if theShift.type != "shift":
             return error("Resource is not of type shift", ResourceTypeError)
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
         if theShift.isPublic() or theUser.canRead(theShift):
             return data([comment.toDict() for comment in theShift.comments(start=start, end=end, limit=limit)])
@@ -211,11 +211,11 @@ class ShiftController(ResourceController):
                 return error("Resource does not exist.", ResourceDoesNotExistError)
             if theShift.type != "shift":
                 return error("Resource is not of type shift", ResourceTypeError)
-            from server.models.ssuserschema import SSUser
+            from server.models.ssuser import SSUser
             theUser = SSUser.read(loggedInUser)
             theData = json.loads(jsonData)
             if theUser.canRead(theShift):
-                from server.models.commentschema import Comment
+                from server.models.comment import Comment
                 Comment.create(theUser.id, theShift.id, theData["text"], theData.get("subscribe") or False)
                 return ack
             else:
@@ -232,7 +232,7 @@ class ShiftController(ResourceController):
             return error("Resource does not exist.", ResourceDoesNotExistError)
         if theShift.type != "shift":
             return error("Resource is not of type shift", ResourceTypeError)
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
         if theUser.canRead(theShift):
             if not theUser.isSubscribed(theShift):
@@ -252,7 +252,7 @@ class ShiftController(ResourceController):
             return error("Resource does not exist.", ResourceDoesNotExistError)
         if theShift.type != "shift":
             return error("Resource is not of type shift", ResourceTypeError)
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
         if theUser.canRead(theShift):
             if theUser.isSubscribed(theShift):

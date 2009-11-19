@@ -119,12 +119,12 @@ def loadDocs(dbname="shiftspace/master", createAdmin=True):
 
     from couchdb.design import ViewDefinition
     import models.core as core
-    from models.ssuserschema import SSUser
-    from models.shiftschema import Shift
-    from models.groupschema import Group
-    from models.permschema import Permission
-    from models.commentschema import Comment
-    from models.favschema import Favorite
+    from models.ssuser import SSUser
+    from models.shift import Shift
+    from models.group import Group
+    from models.permission import Permission
+    from models.comment import Comment
+    from models.favorite import Favorite
     db = core.connect()
     for cls in [SSUser, Shift, Group, Permission, Comment, Favorite]:
         attrs = dir(cls)
@@ -148,8 +148,8 @@ def init(dbname="shiftspace/master"):
 
     server = core.server()
     if not server.__contains__(dbname):
-        from models.commentschema import Comment
-        from models.favschema import Favorite
+        from models.comment import Comment
+        from models.favorite import Favorite
         print "Creating database %s." % dbname
         server.create(dbname)
         server.create("shiftspace/public")

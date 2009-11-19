@@ -217,8 +217,8 @@ def deletedbs():
     first for this to work.
     """
     from server.models import core
-    from server.models.ssuserschema import SSUser
-    from server.models.groupschema import Group
+    from server.models.ssuser import SSUser
+    from server.models.group import Group
 
     # delete all core dbs and user and group dbs
     server = core.server()

@@ -6,7 +6,7 @@ from server.utils.decorators import *
 import server.utils.utils as utils
 import core
 
-from server.models.ssdocschema import SSDocument
+from server.models.ssdoc import SSDocument SSDocument
 
 # ==============================================================================
 # Errors
@@ -86,8 +86,8 @@ class Group(SSDocument):
 
     @classmethod
     def create(cls, groupJson):
-        from server.models.permschema import Permission
-        from server.models.ssuserschema import SSUser
+        from server.models.permission import Permission
+        from server.models.ssuser import SSUser
 
         userId = groupJson["createdBy"]
 
@@ -129,7 +129,7 @@ class Group(SSDocument):
 
 
     def delete(self):
-        from server.models.permschema import Permission
+        from server.models.permission import Permission
         server = core.server()
         # delete the metadata
         db = core.connect()
@@ -141,7 +141,7 @@ class Group(SSDocument):
 
 
     def inviteUser(self, aUser, otherUser):
-        from server.models.permschema import Permission
+        from server.models.permission import Permission
         Permission.create(aUser.id, self.id, otherUser.id, 0)
 
 
@@ -162,7 +162,7 @@ class Group(SSDocument):
 
 
     def addShift(self, aShift):
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         author = SSUser.read(aShift.createdBy)
         if author.isMemberOf(self):
             grpdb = Group.db(self.id)
@@ -175,7 +175,7 @@ class Group(SSDocument):
 
 
     def updateShift(self, aShift):
-        from server.models.ssuserschema import SSUser
+        from server.models.ssuser import SSUser
         author = SSUser.read(aShift.createdBy)
         if author.isMember(self):
             grpdb = Group.db(self.id)
@@ -193,6 +193,6 @@ class Group(SSDocument):
 
 
     def members(self):
-        from server.models.permschema import Permission
+        from server.models.permission import Permission
         db = core.connect()
         return [row.value for row in Permission.all_members(db, key=self.id).rows]
