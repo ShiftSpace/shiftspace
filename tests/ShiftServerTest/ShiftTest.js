@@ -152,31 +152,35 @@ var ShiftTest = new Class({
     }
   ),
 
-  */  
+
   comment: $fixture(
     "Comment on a shift.",
     function()
     {
       var shift = SSApp.confirm(SSApp.create('shift', noteShift));
       SSApp.confirm(
-        SSApp.post({resource:'shift', 
-                    id:shift._id, 
-                    action:'publish',
-                    data:{private:false},
-                    json: true})
-        );
+        SSApp.post({
+          resource:'shift', 
+          id:shift._id, 
+          action:'publish',
+          data:{private:false},
+          json: true
+        })
+      );
       SSApp.confirm(SSApp.logout());
     
       SSApp.confirm(SSApp.join(fakedave));
       SSApp.confirm(
-        SSApp.post({resource:'shift', 
-                    id:shift._id, 
-                    action:'comment', 
-                    data:{text:"Hey what a cool shift!"},
-                    json: true})
-        );
+        SSApp.post({
+          resource:'shift', 
+          id:shift._id, 
+          action:'comment', 
+          data:{text:"Hey what a cool shift!"},
+          json: true
+        })
+      );
       var comments = SSApp.confirm(SSApp.get({resource:'shift', id:shift._id, action:'comments'}));
-      SSUnit.assertEqual(comments[0].content.text, "Hey what a cool shift!");
+      SSUnit.assertEqual(comments[0].text, "Hey what a cool shift!");
       SSApp.confirm(SSApp.logout());
     
       SSApp.confirm(SSApp.login(fakedave));
@@ -184,41 +188,60 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
-  /*
+  */
   
   readPrivateComments: $fixture(
-    "Error if attempt to read comments on private shift. Should work for those with permission.",
+    "Error if attempt to read comments on private shift. Should work for those with permission on a shared shift.",
     function()
     {
       var shift = SSApp.confirm(SSApp.create('shift', noteShift));
       SSApp.confirm(SSApp.logout());
-    
-      SSApp.confirm(SSApp.join(fakedave));
+      
+      // comment thread doesn't exist
+      var fakedaveJson = SSApp.confirm(SSApp.join(fakedave));
       var json = SSApp.confirm(SSApp.get({resource:'shift', id:shift._id, action:'comments'}));
-      SSUnit.assertEqual(SSGetType(json), PermissionError);
+      SSUnit.assertEqual(SSGetType(json), ResourceDoesNotExistError);
       SSApp.confirm(SSApp.logout());
-    
+      
       // publish the shift
       SSApp.confirm(SSApp.login(fakemary));
       SSApp.confirm(
-        SSApp.post({resource:'shift', 
-                    id:shift._id, 
-                    action:'publish', 
-                    data:{users:['fakedave']},
-                    json: true})
-        );
+        SSApp.post({
+          resource:'shift', 
+          id:shift._id, 
+          action:'publish', 
+          data:{dbs:['user/'+fakedaveJson._id]},
+          json: true
+        })
+      );
       SSApp.confirm(SSApp.logout());
-    
+      
+      // leave a comment, read the comments
       SSApp.confirm(SSApp.login(fakedave));
+      SSApp.confirm(
+        SSApp.post({
+          resource:'shift', 
+          id:shift._id, 
+          action:'comment', 
+          data:{text:"Hey what a cool shift!"},
+          json: true
+        })
+      );
       var comments = SSApp.confirm(SSApp.get({resource:'shift', id:shift._id, action:'comments'}));
       SSUnit.assertEqual($type(comments), "array");
       SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+      
+      // not permitted
+      SSApp.confirm(SSApp.join(fakejohn));
+      var json = SSApp.confirm(SSApp.get({resource:'shift', id:shift._id, action:'comments'}));
+      SSUnit.assertEqual(SSGetType(json), PermissionError);
+      SSApp.confirm(SSApp['delete']('user', 'fakejohn'));
       
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
 
-  
+  /* 
   notify: $fixture(
     "A user on the shift comment stream notify list should get a message sent to his messageStream.",
     function()
@@ -226,22 +249,22 @@ var ShiftTest = new Class({
       var shift = SSApp.confirm(SSApp.create('shift', noteShift));
       SSApp.confirm(
         SSApp.post({
-	  resource:'shift', 
+          resource:'shift', 
           id:shift._id, 
           action:'publish', 
           data:{private:false},
           json: true
-	})
+        })
       );
       SSApp.confirm(SSApp.logout());
       
       SSApp.confirm(SSApp.join(fakedave));
       SSApp.confirm(
-	SSApp.post({
-	  resource: 'shift', 
-	  id: shift._id, 
-	  action: 'notify'
-	})
+        SSApp.post({
+          resource: 'shift', 
+          id: shift._id, 
+          action: 'notify'
+        })
       );
       var user = SSApp.confirm(SSApp.read("user", "fakedave"));
       // check that the user should be notified about events on the shift comment stream
@@ -250,13 +273,13 @@ var ShiftTest = new Class({
       
       SSApp.confirm(SSApp.join(fakejohn));
       SSApp.confirm(
-	SSApp.post({
-	  resource: "shift",
-	  id: shift._id,
-	  action: "comment",
-	  data: {text: "Hey what a cool shift!"},
-	  json: true
-	})
+        SSApp.post({
+          resource: "shift",
+          id: shift._id,
+          action: "comment",
+          data: {text: "Hey what a cool shift!"},
+          json: true
+        })
       );
       SSApp.confirm(SSApp.logout());
       
@@ -265,11 +288,11 @@ var ShiftTest = new Class({
       SSUnit.assertEqual(messages[0].content.text, "Hey what a cool shift!");
 
       SSApp.confirm(
-	SSApp.post({
-	  resource: "shift", 
-	  id: shift._id,
-	  action: "unnotify"
-	})
+        SSApp.post({
+          resource: "shift", 
+          id: shift._id,
+          action: "unnotify"
+        })
       );
       user = SSApp.confirm(SSApp.read("user", "fakedave"));
       SSUnit.assertEqual(user.notify.length, 0);
@@ -277,30 +300,30 @@ var ShiftTest = new Class({
       
       SSApp.confirm(SSApp.login(fakejohn));
       SSApp.confirm(
-	SSApp.post({
-	  resource: "shift",
-	  id: shift._id,
-	  action: "comment", 
-	  data: {text: "My other comment!"},
-          json: true})
+      SSApp.post({
+        resource: "shift",
+        id: shift._id,
+        action: "comment", 
+        data: {text: "My other comment!"},
+        json: true})
       );
       var comments = SSApp.confirm(
-	SSApp.get({
-	  resource: "shift",
-	  id: shift._id,
-	  action: "comments"
-	})
+        SSApp.get({
+          resource: "shift",
+          id: shift._id,
+          action: "comments"
+        })
       );
       SSUnit.assertEqual(comments.length, 2);
       SSApp.confirm(SSApp.logout());
       
       SSApp.confirm(SSApp.login(fakedave));
       messages = SSApp.confirm(
-	SSApp.get({
-	  resource: "user",
-	  id: "fakedave",
-	  action: "messages"
-	})
+        SSApp.get({
+          resource: "user",
+          id: "fakedave",
+          action: "messages"
+        })
       );
       SSUnit.assertEqual(messages.length, 1);
       SSApp.confirm(SSApp.logout());
@@ -320,15 +343,14 @@ var ShiftTest = new Class({
     {
       var shift = SSApp.confirm(SSApp.create("shift", noteShift));
       shift = SSApp.confirm(
-	SSApp.update("shift", shift._id, 
-	  {
-	    content: 
-	    {
+        SSApp.update("shift", shift._id, {
+            content: {
               text: "Changed the note!",
               position: {x:500, y:400},
               size: {x:500, y:400}
-	    }
-	  })
+            }
+          }
+        )
       );
 
       var content = shift.content;
@@ -348,45 +370,46 @@ var ShiftTest = new Class({
 
       // no logged in user
       var error = SSApp.confirm(
-	SSApp.update('shift', shift._id,
-          {
-	    content: 
-	    {
+        SSApp.update('shift', shift._id, {
+            content: {
               text: "Changed the note!",
               position: {x:500, y:400},
               size: {x:500, y:400}
-	    }
-	  })
+            }
+          }
+        )
       );
       SSUnit.assertEqual(error.type, UserNotLoggedInError);
       
       // wrong user
       SSApp.confirm(SSApp.join(fakedave));
       error = SSApp.confirm(
-	SSApp.update('shift', shift._id,
+        SSApp.update('shift', shift._id,
           {
-	    content: 
-	    {
+            content: 
+            {
               text: "Changed the note!",
               position: {x:500, y:400},
               size: {x:500, y:400}
-	    }
-	  })
+            }
+          }
+        )
       );
       SSUnit.assertEqual(error.type, PermissionError);
       SSApp.confirm(SSApp.logout());
       
       SSApp.confirm(SSApp.login(admin));
       SSApp.confirm(
-	SSApp.update('shift', shift._id, 
+        SSApp.update('shift', shift._id, 
           {
-	    content:
-	    {
+            content:
+            {
               text: "Changed the note!",
               position: {x:500, y:400},
               size: {x:500, y:400}
-	    }
-	  })
+            }
+          }
+        )
       );
       var shift = SSApp.confirm(SSApp.read('shift', shift._id));
       var content = shift.content;
