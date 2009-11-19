@@ -304,7 +304,11 @@ class Shift(SSDocument):
     # ========================================
 
     def publish(self, publishData=None, server="http://www.shiftspace.org/api/"):
+        if publishData == None:
+            return self
+
         db = core.connect(SSUser.privateDb(self.createdBy))
+        dbs = []
         author = SSUser.read(self.createdBy)
         oldPublishData = dict(self.items())["publishData"]
         allowed = []
@@ -335,14 +339,16 @@ class Shift(SSDocument):
         oldUserDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "user"]
         newUserDbs = list(set(newUserDbs).difference(set(oldUserDbs)))
         if newUserDbs and len(newUserDbs) > 0:
-            self.publishData.dbs = list(set(self.publishData.dbs.extend(newUserDbs)))
+            dbs = list(set(newUserDbs))
         
         # publish or update a copy to group/x, group/y, ...
         newGroupDbs = [s for s in allowed if s.split("/")[0] == "group"]
         oldGroupDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "group"]
         newGroupDbs = list(set(newGroupDbs).difference(set(oldGroupDbs)))
         if newGroupDbs and len(newGroupDbs) > 0:
-            self.publishData.dbs = list(set(self.publishData.dbs.extend(newGroupDbs)))
+            dbs.extend(list(set(newGroupDbs)))
+
+        self.publishData.dbs = dbs
 
         # update target user feeds
         # TODO: target inbox if the user is a peer - David 11/18/09
@@ -366,8 +372,12 @@ class Shift(SSDocument):
                 del privatedb[self.id]
             core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(self.createdBy))
             core.replicate(SSUser.publicDb(self.createdBy), "shiftspace/public")
+        else:
+            privatedb = SSUser.privateDb(self.createdBy)
+            self.store(core.connect(privatedb))
+            core.replicate(privatedb, SSUser.feedDb(self.createdBy))
 
-        # TODO: don't replicate to follower user_x/feeds that are not peers - David
+        # TODO: replicate to user/inbox for peers - David 11/18/09
         followers = author.followers()
         [core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(follower)) for follower in followers]
         

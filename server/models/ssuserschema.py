@@ -38,6 +38,10 @@ class SSUser(User):
     # ========================================
     # Class Methods
     # ========================================
+    
+    @classmethod
+    def db(cls, userId):
+        return "user/%s" % userId
 
     @classmethod
     def privateDb(cls, userId):
