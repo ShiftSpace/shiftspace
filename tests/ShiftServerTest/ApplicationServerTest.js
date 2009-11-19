@@ -55,15 +55,15 @@ var ApplicationServerTest = new Class({
     function()
     {
       var shift = SSApp.confirm(SSApp.create('shift', noteShift));
-      shift = SSApp.confirm(SSApp.update('shift', shift._id,
-					 {
-					   content:
-					   {
-					     text: "Changed the note!",
-					     position: {x:150, y:150},
-					     size: {x:200, y:200}
-					   }
-					 }));
+      shift = SSApp.confirm(
+        SSApp.update('shift', shift._id, {
+          content: {
+            text: "Changed the note!",
+            position: {x:150, y:150},
+            size: {x:200, y:200}
+          }
+        })
+      );
       var cached = SSApp.getDocument(shift._id);
       SSUnit.assert(cached);
       SSUnit.assertEqual(cached.content.text, "Changed the note!");
@@ -96,15 +96,17 @@ var ApplicationServerTest = new Class({
     function()
     {
       var shift = SSApp.confirm(SSApp.create('shift', noteShift, {local:'mylist'}));
-      shift = SSApp.confirm(SSApp.update('shift', shift._id,
-					 {
-					   content:
-					   {
-					     text: "Changed the note!",
-					     position: {x:150, y:150},
-					     size: {x:200, y:200}
-					   }
-					 }, {local:'mylist'}));
+      shift = SSApp.confirm(
+        SSApp.update('shift', shift._id, {
+            content: {
+              text: "Changed the note!",
+              position: {x:150, y:150},
+              size: {x:200, y:200}
+            }
+          }, 
+          {local:'mylist'}
+        )
+      );
       var cached = SSApp.cache('mylist')[shift._id];
       SSUnit.assert(cached);
       SSUnit.assertEqual(cached.content.text, "Changed the note!");

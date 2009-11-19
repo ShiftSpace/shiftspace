@@ -34,11 +34,11 @@ var PromisesTest = new Class({
       var hook = SSUnit.startAsync();
       var p1 = SSApp.query();
       var p2 = $if(p1,
-		   function(value) {
-		     SSUnit.assert(true, hook);
-		   });
+                   function(value) {
+                     SSUnit.assert(true, hook);
+                   });
       p2.op(function(value) {
-	SSUnit.endAsync(hook);	
+        SSUnit.endAsync(hook);
       });
     }
   )
