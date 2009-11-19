@@ -202,11 +202,11 @@ class UserController(ResourceController):
     @exists
     @loggedin
     def messages(self, userName, start=None, end=None, limit=25):
-        loggedInUser = SSUser.read(helper.getLoggedInUser())
+        loggedInUser = helper.getLoggedInUser()
         theUser = SSUser.read(loggedInUser)
         otherUser = SSUser.readByName(userName)
-        if loggedInUser == otherUser.id or loggedInUser.isAdmin():
-            return data(otherUser.messages(start=start, end=end, limit=limit))
+        if loggedInUser == otherUser.id or theUser.isAdmin():
+            return data([message.toDict() for message in otherUser.messages(start=start, end=end, limit=limit)])
         else:
             return error("You do not have permission to view this user's messages.", PermissionError)
 

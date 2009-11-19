@@ -241,7 +241,7 @@ class ShiftController(ResourceController):
                 theUser.subscribe(theShift)
                 return ack
             else:
-                return error("You are already getting notification from this stream", AlreadyBeingNotifiedError)
+                return error("You are already getting notifications for this comment thread.", AlreadyBeingNotifiedError)
         else:
             return error("Operation not permitted. You don't have permission to be notified of events on this stream.", PermissionError)
 
@@ -261,6 +261,6 @@ class ShiftController(ResourceController):
                 theUser.unsubscribe(theShift)
                 return ack
             else:
-                return error("You are not getting notification from this stream.", NotBeingNotifiedError)
+                return error("You are not getting notification from this comment thread.", NotBeingNotifiedError)
         else:
             return error("Operation not permitted. You don't have permission to be notified of events on this stream.", PermissionError)

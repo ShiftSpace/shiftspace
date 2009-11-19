@@ -126,12 +126,14 @@ var ShiftTest = new Class({
       
       SSApp.confirm(SSApp.login(fakemary));
       SSApp.confirm(
-        SSApp.post({resource:'shift', 
-                    id:shift._id, 
-                    action:'publish', 
-                    data:{dbs:['user/'+fakedaveJson._id]},
-                    json: true})
-        );
+        SSApp.post({
+          resource:'shift', 
+          id:shift._id, 
+          action:'publish', 
+          data:{dbs:['user/'+fakedaveJson._id]},
+          json: true
+        })
+      );
       SSApp.confirm(SSApp.logout());
       
       SSApp.confirm(SSApp.login(fakedave));
@@ -188,7 +190,7 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
-  */
+  
   
   readPrivateComments: $fixture(
     "Error if attempt to read comments on private shift. Should work for those with permission on a shared shift.",
@@ -240,10 +242,10 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
+  */
 
-  /* 
   notify: $fixture(
-    "A user on the shift comment stream notify list should get a message sent to his messageStream.",
+    "A user subscribed to a shift comment thread should get a message sent to his/her messages inbox.",
     function()
     {
       var shift = SSApp.confirm(SSApp.create('shift', noteShift));
@@ -258,35 +260,41 @@ var ShiftTest = new Class({
       );
       SSApp.confirm(SSApp.logout());
       
+      // make comment #1
       SSApp.confirm(SSApp.join(fakedave));
       SSApp.confirm(
         SSApp.post({
-          resource: 'shift', 
-          id: shift._id, 
-          action: 'notify'
+          resource: "shift",
+          id: shift._id,
+          action: "comment",
+          data: { text: "Hey what a cool shift foo!", subscribe:true },
+          json: true
         })
       );
-      var user = SSApp.confirm(SSApp.read("user", "fakedave"));
-      // check that the user should be notified about events on the shift comment stream
-      SSUnit.assertEqual(user.notify.length, 1);
       SSApp.confirm(SSApp.logout());
       
+      // make comment #2
       SSApp.confirm(SSApp.join(fakejohn));
       SSApp.confirm(
         SSApp.post({
           resource: "shift",
           id: shift._id,
           action: "comment",
-          data: {text: "Hey what a cool shift!"},
+          data: { text: "Hey what a cool shift bar!", subscribe:true },
           json: true
         })
       );
       SSApp.confirm(SSApp.logout());
       
-      SSApp.confirm(SSApp.login(fakedave));
-      var messages = SSApp.confirm(SSApp.get({resource:"user", id:"fakedave", action:"messages"}));
-      SSUnit.assertEqual(messages[0].content.text, "Hey what a cool shift!");
+      // check fakemary received 2 messages
+      SSApp.confirm(SSApp.login(fakemary));
+      var messages = SSApp.confirm(SSApp.get({resource:"user", id:"fakemary", action:"messages"}));
+      SSUnit.assertEqual(messages[0].text, "fakejohn just commented on your shift!");
+      SSUnit.assertEqual(messages.length, 2);
+      SSApp.confirm(SSApp.logout());
 
+      // unsubscribe fakedave from the thread
+      SSApp.confirm(SSApp.login(fakedave));
       SSApp.confirm(
         SSApp.post({
           resource: "shift", 
@@ -294,29 +302,22 @@ var ShiftTest = new Class({
           action: "unnotify"
         })
       );
-      user = SSApp.confirm(SSApp.read("user", "fakedave"));
-      SSUnit.assertEqual(user.notify.length, 0);
       SSApp.confirm(SSApp.logout());
       
+      // comment #3
       SSApp.confirm(SSApp.login(fakejohn));
       SSApp.confirm(
-      SSApp.post({
-        resource: "shift",
-        id: shift._id,
-        action: "comment", 
-        data: {text: "My other comment!"},
-        json: true})
-      );
-      var comments = SSApp.confirm(
-        SSApp.get({
+        SSApp.post({
           resource: "shift",
           id: shift._id,
-          action: "comments"
+          action: "comment", 
+          data: {text: "My other comment!"},
+          json: true
         })
       );
-      SSUnit.assertEqual(comments.length, 2);
       SSApp.confirm(SSApp.logout());
       
+      // first comment should only have 1 message from the thread
       SSApp.confirm(SSApp.login(fakedave));
       messages = SSApp.confirm(
         SSApp.get({
@@ -328,6 +329,7 @@ var ShiftTest = new Class({
       SSUnit.assertEqual(messages.length, 1);
       SSApp.confirm(SSApp.logout());
       
+      // cleanup
       SSApp.confirm(SSApp.login(admin));
       SSApp.confirm(SSApp['delete']('user', 'fakedave'));
       SSApp.confirm(SSApp['delete']('user', 'fakejohn'));
@@ -335,7 +337,7 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
-
+  /*
   
   update: $fixture(
     "Update a shift",
