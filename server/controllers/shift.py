@@ -188,7 +188,6 @@ class ShiftController(ResourceController):
             return error("Operation not permitted. You don't have permission to unfavorite this shift.", PermissionError)
 
     @jsonencode
-    @exists
     def comments(self, id, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
         theShift = Shift.read(id)
@@ -199,7 +198,7 @@ class ShiftController(ResourceController):
         from server.models.ssuserschema import SSUser
         theUser = SSUser.read(loggedInUser)
         if theShift.isPublic() or theUser.canRead(theShift):
-            return data(theShift.comments(start=start, end=end, limit=limit))
+            return data([comment.toDict() for comment in theShift.comments(start=start, end=end, limit=limit)])
         else:
             return error("Operation not permitted. You don't have permission to view comments on this shift.", PermissionError)
 

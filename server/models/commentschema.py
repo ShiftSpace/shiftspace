@@ -48,7 +48,7 @@ class Comment(SSDocument):
     count_by_shift = View(
         "comments",
         "function(doc) {                    \
-           if(doc.type == 'comment-stub') { \
+           if(doc.type == 'commentstub') { \
              emit(doc.shiftId, 1);          \
            }                                \
          }",
@@ -88,6 +88,7 @@ class Comment(SSDocument):
         db = core.connect(Comment.db(shiftId))
         # if db just created, sync the views and subscribe shift author
         if not dbexists:
+            Comment.by_created.sync(db)
             Comment.all_subscribed.sync(db)
             shiftAuthor.subscribe(theShift)
         # subscribe the user making the comment
@@ -109,8 +110,8 @@ class Comment(SSDocument):
         db["commentstub:%s" % newComment.id] = stub
         subscribers = theShift.subscribers()
         # make a private copy
-        # TODO: need to think about the implications here - David
-        newComment.copyTo(SSUser.privateDb(theUser))
+        # TODO: need to think about the implications of a private copy here - David
+        newComment.copyTo(SSUser.privateDb(theUser.id))
         # send each subscriber a message
         if len(subscribers) > 0:
             # TODO: needs to be optimized with a fast join - David
