@@ -89,7 +89,10 @@ class ShiftController(ResourceController):
         if theShift and theUser.canRead(theShift):
             return data(theShift.toDict())
         else:
-            return error("Operation not permitted. You don't have permission to view this shift. %s" % theShift, PermissionError)
+            if not theShift:
+                return error("Resource does not exist.", ResourceDoesNotExistError)
+            else:
+                return error("Operation not permitted. You don't have permission to view this shift. %s" % theShift, PermissionError)
 
     @jsonencode
     @loggedin
@@ -118,7 +121,7 @@ class ShiftController(ResourceController):
     def delete(self, id):
         from server.models.ssuserschema import SSUser
         loggedInUser = helper.getLoggedInUser()
-        theShift = Shift.read(id)
+        theShift = Shift.read(id, loggedInUser)
         if not theShift:
             return error("Resource does not exist.", ResourceDoesNotExistError)
         if theShift.type != "shift":
@@ -148,7 +151,7 @@ class ShiftController(ResourceController):
     @loggedin
     def unpublish(self, id):
         loggedInUser = helper.getLoggedInUser()
-        theShift = Shift.read(id)
+        theShift = Shift.read(id, loggedInUser)
         if not theShift:
             return error("Resource does not exist.", ResourceDoesNotExistError)
         if theShift.type != "shift":
