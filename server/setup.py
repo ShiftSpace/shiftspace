@@ -148,6 +148,7 @@ def init(dbname="shiftspace/master"):
 
     server = core.server()
     if not server.__contains__(dbname):
+        from models.commentschema import Comment
         from models.favschema import Favorite
         print "Creating database %s." % dbname
         server.create(dbname)
@@ -155,6 +156,7 @@ def init(dbname="shiftspace/master"):
         server.create("shiftspace/shared")
 
         shared = core.connect("shiftspace/shared")
+        Comment.count_by_shift.sync(shared)
         Favorite.by_user_and_created.sync(shared)
         Favorite.count_by_shift.sync(shared)
 

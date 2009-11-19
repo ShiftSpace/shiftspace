@@ -424,7 +424,7 @@ class Shift(SSDocument):
 
     def commentCount(self):
         from server.models.commentschema import Comment
-        db = core.connect()
+        db = core.connect("shiftspace/shared")
         return core.value(Comment.count_by_shift(db, key=self.id))
 
 
