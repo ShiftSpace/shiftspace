@@ -1,5 +1,4 @@
 import couchdb.client
-import schema
 import simplejson as json
 
 
@@ -231,14 +230,3 @@ def replicate(source, target="shiftspace/master"):
     headers = {"Content-Type":"application/json"}
     resource.post(headers=headers, content=content)
 
-
-def validate(doc):
-    """
-    Validate a document. Might get deprecated.
-    """
-    theSchema = getattr(schema, doc["type"])()
-    schemaKeys = theSchema.keys()
-    docKeys = doc.keys()
-    print schemaKeys
-    print docKeys
-    return set(docKeys).issubset(set(schemaKeys))

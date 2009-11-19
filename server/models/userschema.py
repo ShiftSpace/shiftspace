@@ -6,7 +6,6 @@ from ssdocschema import SSDocument
 
 from server.utils.decorators import *
 import server.utils.utils as utils
-import schema
 import core
 
 # ==============================================================================

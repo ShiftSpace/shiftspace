@@ -4,12 +4,10 @@ from couchdb.schema import View
 
 from server.utils.decorators import *
 import server.utils.utils as utils
-import schema
 import core
 
 from server.models.ssdocschema import *
 from server.models.ssuserschema import *
-from server.models.permschema import *
 
 # ==============================================================================
 # Errors
@@ -390,9 +388,11 @@ class Shift(SSDocument):
         
         return Shift.joinData(self, self.createdBy)
         
+
     def unpublish(self):
         # TODO: need to figure out if we want to support this - David 11/18/09
         pass
+
 
     def copyOrUpdateTo(self, dbname):
         db = core.connect(dbname)

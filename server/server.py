@@ -26,9 +26,6 @@ from utils.returnTypes import *
 
 from controllers.user import UserController
 from controllers.shift import ShiftController
-from controllers.stream import StreamController
-from controllers.event import EventController
-from controllers.permission import PermissionController
 from controllers.group import GroupsController
 
 
@@ -309,9 +306,6 @@ def initAppRoutes():
     d = cherrypy.dispatch.RoutesDispatcher()
     user = UserController(d)
     shift = ShiftController(d)
-    stream = StreamController(d)
-    event = EventController(d)
-    permission = PermissionController(d)
     group = GroupsController(d)
     return d
 

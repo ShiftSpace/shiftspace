@@ -2,12 +2,6 @@ from server.utils.utils import *
 from server.utils.errors import *
 from server.utils.decorators import *
 from server.utils.returnTypes import *
-from server.models import user
-from server.models import shift
-from server.models import stream
-from server.models import event
-from server.models import permission
-from server.models import group
 from resource import *
 
 

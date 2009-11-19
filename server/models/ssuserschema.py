@@ -3,7 +3,6 @@ from couchdb.schema import View
 
 from server.utils.decorators import *
 import server.utils.utils as utils
-import schema
 import core
 
 from server.models.userschema import User

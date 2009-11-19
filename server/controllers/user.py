@@ -2,11 +2,6 @@ from server.utils.utils import *
 from server.utils.errors import *
 from server.utils.decorators import *
 from server.utils.returnTypes import *
-from server.models import user
-from server.models import shift
-from server.models import stream
-from server.models import event
-from server.models import permission
 from server.models.ssuserschema import SSUser
 from resource import *
 
@@ -133,7 +128,7 @@ class UserController(ResourceController):
     def query(self):
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
-            return data(SSLoad.read(loggedInUser).toDict())
+            return data(SSUser.read(loggedInUser).toDict())
         else:
             return message("No logged in user.")
 
