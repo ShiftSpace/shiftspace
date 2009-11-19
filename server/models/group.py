@@ -6,7 +6,7 @@ from server.utils.decorators import *
 import server.utils.utils as utils
 import core
 
-from server.models.ssdoc import SSDocument SSDocument
+from server.models.ssdoc import SSDocument
 
 # ==============================================================================
 # Errors
