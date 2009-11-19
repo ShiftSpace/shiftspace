@@ -280,6 +280,9 @@ class Shift(SSDocument):
             db = core.connect(SSUser.publicDb(self.createdBy))
             if db.get(self.id):
                 del db[self.id]
+        db = core.connect(SSUser.feedDb(self.createdBy))
+        if db.get(self.id):
+            del db[self.id]
 
 
     def publishIds(self):
@@ -331,19 +334,21 @@ class Shift(SSDocument):
         newUserDbs = [s for s in publishDbs if s.split("/")[0] == "user"]
         oldUserDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "user"]
         newUserDbs = list(set(newUserDbs).difference(set(oldUserDbs)))
-        self.publishData.dbs.extend(newUserDbs)
+        if newUserDbs and len(newUserDbs) > 0:
+            self.publishData.dbs = list(set(self.publishData.dbs.extend(newUserDbs)))
+        
+        # publish or update a copy to group/x, group/y, ...
+        newGroupDbs = [s for s in allowed if s.split("/")[0] == "group"]
+        oldGroupDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "group"]
+        newGroupDbs = list(set(newGroupDbs).difference(set(oldGroupDbs)))
+        if newGroupDbs and len(newGroupDbs) > 0:
+            self.publishData.dbs = list(set(self.publishData.dbs.extend(newGroupDbs)))
 
         # update target user feeds
         # TODO: target inbox if the user is a peer - David 11/18/09
         [self.updateIn("%s/feed" % db) for db in oldUserDbs]
         [self.copyTo("%s/feed" % db) for db in newUserDbs]
-
-        # publish or update a copy to group/x, group/y, ...
-        newGroupDbs = [s for s in allowed if s.split("/")[0] == "group"]
-        oldGroupDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "group"]
-        newGroupDbs = list(set(newGroupDbs).difference(set(oldGroupDbs)))
-        self.publishData.dbs.extend(newGroupDbs)
-        
+            
         # update/add to group dbs
         self.updateInGroups(oldGroupDbs)
         self.addToGroups(newGroupDbs)
@@ -373,8 +378,6 @@ class Shift(SSDocument):
         else:
             self.copyOrUpdateTo("shiftspace/shared")
         
-        # update the actual shift, don't trigger a dbs update, we've already done that
-        self.update({"dbs":newUserDbs.extend(newGroupDbs)}, updateDbs=False)
         return Shift.joinData(self, self.createdBy)
         
     def unpublish(self):

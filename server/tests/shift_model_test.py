@@ -16,7 +16,7 @@ class BasicOperations(unittest.TestCase):
         self.fakejohn = SSUser.create(fakejohn)
         self.fakebob = SSUser.create(fakebob)
         self.root = SSUser.read("shiftspace")
-
+    """
     def testCreate(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -51,7 +51,7 @@ class BasicOperations(unittest.TestCase):
         self.assertEqual(theShift.summary, "changed!")
         db = core.connect(SSUser.privateDb(self.fakemary.id))
         del db[theShift.id]
-
+    """
     def testDelete(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -60,7 +60,7 @@ class BasicOperations(unittest.TestCase):
         newShift.delete()
         theShift = Shift.read(newShift.id, self.fakemary.id)
         self.assertEqual(theShift, None)
-
+    """
     def testJoinData(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -166,7 +166,7 @@ class BasicOperations(unittest.TestCase):
         # should exist in user's inbox
         theShift = Shift.load(core.connect(SSUser.inboxDb(self.fakebob.id)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-
+    """
     def tearDown(self):
         db = core.connect()
         self.fakemary.delete()

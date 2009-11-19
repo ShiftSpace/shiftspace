@@ -8,6 +8,7 @@ var ShiftTest = new Class({
   Extends: SSUnitTest.TestCase,
   name: 'ShiftTest',
 
+
   onStart: function()
   {
     SSApp.confirm(SSApp.logout());
@@ -17,6 +18,7 @@ var ShiftTest = new Class({
     SSApp.confirm(SSApp['delete']('user', 'fakejohn'));
     SSApp.confirm(SSApp.logout());
   },
+
 
   onComplete: function()
   {
@@ -28,16 +30,19 @@ var ShiftTest = new Class({
     SSApp.confirm(SSApp.logout());
   },
 
+
   setup: function() 
   { 
     SSApp.confirm(SSApp.join(fakemary));
   },
+
 
   tearDown: function()
   {
     SSApp.confirm(SSApp['delete']('user', 'fakemary'));
   },
 
+  /*
   create: $fixture(
     "Create a shift.",
     function()
@@ -48,19 +53,6 @@ var ShiftTest = new Class({
     }
   ),
 
-
-  shiftDeleteOnUserDelete: $fixture(
-    "Ensure a user's shift are deleted if his account is deleted",
-    function()
-    {
-      var shift = SSApp.confirm(SSApp.create('shift', noteShift));
-      SSApp.confirm(SSApp['delete']('user', 'fakemary'));
-      SSApp.confirm(SSApp.login(admin));
-      var json = SSApp.confirm(SSApp.read('shift', shift._id));
-      SSUnit.assertEqual(SSGetType(json), ResourceDoesNotExistError);
-    }
-  )/*,
-  
   
   createNotLoggedIn: $fixture(
     "Error trying to create shift if not logged in.",
@@ -72,18 +64,18 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
-  
-  
+
+
   read: $fixture(
     "Read a shift.",
     function()
     {
       var shift = SSApp.confirm(SSApp.create('shift', noteShift));
       SSUnit.assertEqual(shift.space.name, "Notes");
-      SSUnit.assertEqual(shift.content.text, "Hello world!");
+      SSUnit.assertEqual(shift.content.noteText, "Foo!");
     }
   ),
-  
+
 
   draft: $fixture(
     "A draft should not be visible to anybody but a logged in owner.",
@@ -99,64 +91,59 @@ var ShiftTest = new Class({
     }
   ),
 
-  
+
   publishPublic: $fixture(
     "Publish a shift to the public.",
     function()
     {
       var shift = SSApp.confirm(SSApp.create('shift', noteShift));
       SSApp.confirm(SSApp.post({resource:'shift', id:shift._id, action:'publish', data:{private:false}, json:true}));
-
-      // TODO: check that the shift is on the user's public stream - David 7/16/09
+      
       SSApp.confirm(SSApp.logout());
       SSApp.confirm(SSApp.join(fakedave));
-    
+      
       // check it's readable by all
       shift = SSApp.confirm(SSApp.read('shift', shift._id));
       SSUnit.assertEqual(shift.space.name, "Notes");
-    
-      // check comments stream
-      var comments = SSApp.confirm(SSApp.get({resource:'shift', id:shift._id, action:'comments'}));
-      SSUnit.assertEqual($type(comments), "array");
       
       SSApp.confirm(SSApp['delete']('user', 'fakedave'));
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
-  
-  
+
+
   publishPrivate: $fixture(
     "A private published shift should be visible only to people who have permission.",
     function()
     {
       var shift = SSApp.confirm(SSApp.create('shift', noteShift));
       SSApp.confirm(SSApp.logout());
-
-      SSApp.confirm(SSApp.join(fakedave));
+      
+      var fakedaveJson = SSApp.confirm(SSApp.join(fakedave));
       var json = SSApp.confirm(SSApp.read('shift', shift._id));
       SSUnit.assertEqual(SSGetType(json), PermissionError);
       SSApp.confirm(SSApp.logout());
-    
+      
       SSApp.confirm(SSApp.login(fakemary));
       SSApp.confirm(
         SSApp.post({resource:'shift', 
                     id:shift._id, 
                     action:'publish', 
-                    data:{users:['fakedave']},
+                    data:{dbs:['user/'+fakedaveJson._id]},
                     json: true})
         );
       SSApp.confirm(SSApp.logout());
-    
+      
       SSApp.confirm(SSApp.login(fakedave));
       shift = SSApp.confirm(SSApp.read('shift', shift._id));
       SSUnit.assertEqual(shift.space.name, "Notes");
       SSApp.confirm(SSApp.logout());
-    
+      
       SSApp.confirm(SSApp.join(fakejohn));
       json = SSApp.confirm(SSApp.read('shift', shift._id));
       SSUnit.assertEqual(SSGetType(json), PermissionError);
       SSApp.confirm(SSApp.logout());
-    
+      
       SSApp.confirm(SSApp.login(admin));
       SSApp.confirm(SSApp['delete']('user', 'fakedave'));
       SSApp.confirm(SSApp['delete']('user', 'fakejohn'));
@@ -165,7 +152,7 @@ var ShiftTest = new Class({
     }
   ),
 
-
+  */  
   comment: $fixture(
     "Comment on a shift.",
     function()
@@ -197,7 +184,7 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
-
+  /*
   
   readPrivateComments: $fixture(
     "Error if attempt to read comments on private shift. Should work for those with permission.",

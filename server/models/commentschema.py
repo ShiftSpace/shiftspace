@@ -79,7 +79,7 @@ class Comment(SSDocument):
         shiftAuthor = SSUser.load(core.connect(), theShift.createdBy)
         theUser = SSUser.load(core.connect(), userId)
         server = core.server()
-        # create the comment db if necessary        
+        # create the comment db if necessary
         dbexists = True
         if not theShift.hasThread():
             server.create(Comment.db(shiftId))

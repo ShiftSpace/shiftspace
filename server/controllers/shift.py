@@ -89,11 +89,9 @@ class ShiftController(ResourceController):
         if theShift and theUser.canRead(theShift):
             return data(theShift.toDict())
         else:
-            return error("Operation not permitted. You don't have permission to view this shift.", PermissionError)
+            return error("Operation not permitted. You don't have permission to view this shift. %s" % theShift, PermissionError)
 
     @jsonencode
-    @exists
-    @shiftType
     @loggedin
     def update(self, id):
         from server.models.ssuserschema import SSUser
@@ -101,6 +99,11 @@ class ShiftController(ResourceController):
         jsonData = helper.getRequestBody()
         if jsonData != "":
             theShift = Shift.read(id)
+            if not theShift:
+                return error("Resource does not exist.", ResourceDoesNotExistError)
+            if theShift.type != "shift":
+                return error("Resource is not of type shift", ResourceTypeError)
+            from server.models.ssuserschema import SSUser
             shiftData = json.loads(jsonData)
             theUser = SSUser.load(loggedInUser)
             if theUser.canModify(theShift):
@@ -111,14 +114,17 @@ class ShiftController(ResourceController):
             return error("No data for shift.", NoDataError)
 
     @jsonencode
-    @exists
-    @shiftType
     @loggedin
     def delete(self, id):
         from server.models.ssuserschema import SSUser
         loggedInUser = helper.getLoggedInUser()
-        theUser = SSUser.read(loggedInUser)
         theShift = Shift.read(id)
+        if not theShift:
+            return error("Resource does not exist.", ResourceDoesNotExistError)
+        if theShift.type != "shift":
+            return error("Resource is not of type shift", ResourceTypeError)
+        from server.models.ssuserschema import SSUser
+        theUser = SSUser.read(loggedInUser)
         if theUser.canModify(theShift):
             theShift.delete()
             return ack
@@ -131,8 +137,10 @@ class ShiftController(ResourceController):
         # NOTE: should maybe take publishData url parameter - David 9/5/2009
         loggedInUser = helper.getLoggedInUser()
         theShift = Shift.read(id, loggedInUser)
-        if not theShift or theShift.type != 'shift':
+        if not theShift:
             return error("Resource does not exist.", ResourceDoesNotExistError)
+        if theShift.type != "shift":
+            return error("Resource is not of type shift", ResourceTypeError)
         publishData = json.loads(helper.getRequestBody())
         return data(theShift.publish(publishData).toDict())
 
@@ -140,67 +148,78 @@ class ShiftController(ResourceController):
     @loggedin
     def unpublish(self, id):
         loggedInUser = helper.getLoggedInUser()
-        theShift = shift.read(id, loggedInUser)
-        if not theShift or theShift.type != 'shift':
-            return error("Resource does not exist", ResourceDoesNotExistError)
+        theShift = Shift.read(id)
+        if not theShift:
+            return error("Resource does not exist.", ResourceDoesNotExistError)
+        if theShift.type != "shift":
+            return error("Resource is not of type shift", ResourceTypeError)
         return data(theShift.unpublish().toDict())
 
     @jsonencode
-    @exists
-    @shiftType
+    @loggedin
     def favorite(self, id):
         loggedInUser = helper.getLoggedInUser()
-        loggedInId = loggedInUser["_id"]
-        if shift.isPublic(id) or (shift.canRead(id, loggedInId)):
-            return data(shift.favorite(id, loggedInId))
+        theShift = Shift.read(id)
+        if not theShift:
+            return error("Resource does not exist.", ResourceDoesNotExistError)
+        if theShift.type != "shift":
+            return error("Resource is not of type shift", ResourceTypeError)
+        from server.models.ssuserschema import SSUser
+        theUser = SSUser.read(loggedInUser)
+        if theUser.canRead(theShift):
+            return data(theUser.favorite(theShift).toDict())
         else:
             return error("Operation not permitted. You don't have permission to favorite this shift.", PermissionError)
 
     @jsonencode
-    @exists
-    @shiftType
+    @loggedin
     def unfavorite(self, id):
         loggedInUser = helper.getLoggedInUser()
-        loggedInId = loggedInUser["_id"]
+        theShift = Shift.read(id)
+        if not theShift:
+            return error("Resource does not exist.", ResourceDoesNotExistError)
+        if theShift.type != "shift":
+            return error("Resource is not of type shift", ResourceTypeError)
+        from server.models.ssuserschema import SSUser
+        theUser = SSUser.read(loggedInUser)
         if shift.isPublic(id) or (shift.canRead(id, loggedInId)):
-            return data(shift.unfavorite(id, loggedInId))
+            return data(theUser.unfavorite(theShift).toDict())
         else:
             return error("Operation not permitted. You don't have permission to unfavorite this shift.", PermissionError)
 
     @jsonencode
     @exists
-    @shiftType
-    def comments(self, id):
+    def comments(self, id, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
-        if shift.isPublic(id) or (shift.canRead(id, loggedInUser["_id"])):
-            return data(event.eventsForStream(shift.commentStream(id)))
+        theShift = Shift.read(id)
+        if not theShift:
+            return error("Resource does not exist.", ResourceDoesNotExistError)
+        if theShift.type != "shift":
+            return error("Resource is not of type shift", ResourceTypeError)
+        from server.models.ssuserschema import SSUser
+        theUser = SSUser.read(loggedInUser)
+        if theShift.isPublic() or theUser.canRead(theShift):
+            return data(theShift.comments(start=start, end=end, limit=limit))
         else:
             return error("Operation not permitted. You don't have permission to view comments on this shift.", PermissionError)
 
     @jsonencode
-    @exists
-    @shiftType
     @loggedin
     def comment(self, id):
         loggedInUser = helper.getLoggedInUser()
         jsonData = helper.getRequestBody()
         if jsonData != "":
+            theShift = Shift.read(id)
+            if not theShift:
+                return error("Resource does not exist.", ResourceDoesNotExistError)
+            if theShift.type != "shift":
+                return error("Resource is not of type shift", ResourceTypeError)
+            from server.models.ssuserschema import SSUser
+            theUser = SSUser.read(loggedInUser)
             theData = json.loads(jsonData)
-            if shift.canComment(id, loggedInUser["_id"]):
-                theUser = user.readById(loggedInUser["_id"])
-                theShift = shift.read(id)
-                event.create({
-                        "meta": "comment",
-                        "objectRef": "shift:%s" % id,
-                        "streamId": shift.commentStream(id),
-                        "displayString": "%s just commented on your %s on %s" % (theUser["userName"], theShift["space"]["name"], theShift["href"]),
-                        "createdBy": loggedInUser["_id"],
-                        "content": {
-                            "href": theShift["href"],
-                            "domain": theShift["domain"],
-                            "text": theData["text"]
-                            }
-                        })
+            if theUser.canRead(theShift):
+                from server.models.commentschema import Comment
+                Comment.create(theUser.id, theShift.id, theData["text"], theData.get("subscribe") or False)
                 return ack
             else:
                 return error("Operation not permitted. You don't have permission to comment on this shift.", PermissionError)
@@ -208,15 +227,19 @@ class ShiftController(ResourceController):
             return error("No data for comment.", NoDataError)
 
     @jsonencode
-    @exists
-    @shiftType
     @loggedin
     def notify(self, id):
         loggedInUser = helper.getLoggedInUser()
-        userId = loggedInUser["_id"]
-        if shift.canRead(id, userId):
-            if (not shift.commentStream(id) in user.readById(userId)["notify"]):
-                user.addNotification(userId, shift.commentStream(id))
+        theShift = Shift.read(id)
+        if not theShift:
+            return error("Resource does not exist.", ResourceDoesNotExistError)
+        if theShift.type != "shift":
+            return error("Resource is not of type shift", ResourceTypeError)
+        from server.models.ssuserschema import SSUser
+        theUser = SSUser.read(loggedInUser)
+        if theUser.canRead(theShift):
+            if not theUser.isSubscribed(theShift):
+                theUser.subscribe(theShift)
                 return ack
             else:
                 return error("You are already getting notification from this stream", AlreadyBeingNotifiedError)
@@ -224,14 +247,21 @@ class ShiftController(ResourceController):
             return error("Operation not permitted. You don't have permission to be notified of events on this stream.", PermissionError)
 
     @jsonencode
-    @exists
-    @shiftType
     @loggedin
     def unnotify(self, id):
         loggedInUser = helper.getLoggedInUser()
-        userId = loggedInUser["_id"]
-        if shift.commentStream(id) in user.readById(userId)["notify"]:
-            user.removeNotification(userId, id)
-            return ack
+        theShift = Shift.read(id)
+        if not theShift:
+            return error("Resource does not exist.", ResourceDoesNotExistError)
+        if theShift.type != "shift":
+            return error("Resource is not of type shift", ResourceTypeError)
+        from server.models.ssuserschema import SSUser
+        theUser = SSUser.read(loggedInUser)
+        if theUser.canRead(theShift):
+            if theUser.isSubscribed(theShift):
+                theUser.unsubscribe(theShift)
+                return ack
+            else:
+                return error("You are not getting notification from this stream.", NotBeingNotifiedError)
         else:
-            return error("You are not getting notification from this stream.", NotBeingNotifiedError)
+            return error("Operation not permitted. You don't have permission to be notified of events on this stream.", PermissionError)
