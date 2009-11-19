@@ -98,14 +98,14 @@ class ShiftController(ResourceController):
         loggedInUser = helper.getLoggedInUser()
         jsonData = helper.getRequestBody()
         if jsonData != "":
-            theShift = Shift.read(id)
+            theShift = Shift.read(id, loggedInUser)
             if not theShift:
                 return error("Resource does not exist.", ResourceDoesNotExistError)
             if theShift.type != "shift":
                 return error("Resource is not of type shift", ResourceTypeError)
             from server.models.ssuserschema import SSUser
             shiftData = json.loads(jsonData)
-            theUser = SSUser.load(loggedInUser)
+            theUser = SSUser.read(loggedInUser)
             if theUser.canModify(theShift):
                 return data(theShift.update(shiftData).toDict())
             else:

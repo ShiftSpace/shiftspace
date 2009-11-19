@@ -242,7 +242,7 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
-  */
+
 
   notify: $fixture(
     "A user subscribed to a shift comment thread should get a message sent to his/her messages inbox.",
@@ -337,7 +337,7 @@ var ShiftTest = new Class({
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
-  /*
+  */
   
   update: $fixture(
     "Update a shift",
@@ -347,21 +347,20 @@ var ShiftTest = new Class({
       shift = SSApp.confirm(
         SSApp.update("shift", shift._id, {
             content: {
-              text: "Changed the note!",
+              noteText: "Changed the note!",
               position: {x:500, y:400},
               size: {x:500, y:400}
             }
           }
         )
       );
-
       var content = shift.content;
-      SSUnit.assertEqual(content.text, "Changed the note!");
+      SSUnit.assertEqual(content.noteText, "Changed the note!");
       SSUnit.assertEqual(content.position.x, 500);
       SSUnit.assertEqual(content.position.y, 400);
     }
   ),
-
+  /*
   
   updatePermission: $fixture(
     "Error updating a shift without the proper permissions. Admin allowed.",
