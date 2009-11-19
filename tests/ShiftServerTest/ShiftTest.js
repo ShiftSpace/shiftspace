@@ -81,12 +81,25 @@ var ShiftTest = new Class({
     "A draft should not be visible to anybody but a logged in owner.",
     function()
     {
+      // a private draft shift cannot be operated on at all without being
+      // logged-in this is because it takes two keys to look up a private 
+      // shift (the user id AND the shift id), this is why we don't have permission
+      // fixtures modifications attempted on drafts, unauthorized access
+      // on private draft shift always results in ResourceDoesNotExistError
+      // while unauthorized access on shifts which are not draft
+      // (and thus in shiftspace/shared) result in PermissionError
+      // - David 11/18/09
       var shift = SSApp.confirm(SSApp.create('shift', noteShift));
+      var aShift = SSApp.confirm(SSApp.read('shift', shift._id));
+      SSUnit.assertEqual(shift._id, aShift._id);
       SSApp.confirm(SSApp.logout());
+      
+      // unauthorized individual
       SSApp.confirm(SSApp.join(fakedave));
       var json = SSApp.confirm(SSApp.read('shift', shift._id));
-      SSUnit.assertEqual(SSGetType(json), PermissionError);
-      SSApp.confirm(SSApp.logout());
+      SSUnit.assertEqual(SSGetType(json), ResourceDoesNotExistError);
+      SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+      
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
@@ -98,15 +111,14 @@ var ShiftTest = new Class({
     {
       var shift = SSApp.confirm(SSApp.create('shift', noteShift));
       SSApp.confirm(SSApp.post({resource:'shift', id:shift._id, action:'publish', data:{private:false}, json:true}));
-      
       SSApp.confirm(SSApp.logout());
+
       SSApp.confirm(SSApp.join(fakedave));
-      
       // check it's readable by all
       shift = SSApp.confirm(SSApp.read('shift', shift._id));
       SSUnit.assertEqual(shift.space.name, "Notes");
-      
       SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
@@ -121,7 +133,7 @@ var ShiftTest = new Class({
       
       var fakedaveJson = SSApp.confirm(SSApp.join(fakedave));
       var json = SSApp.confirm(SSApp.read('shift', shift._id));
-      SSUnit.assertEqual(SSGetType(json), PermissionError);
+      SSUnit.assertEqual(SSGetType(json), ResourceDoesNotExistError); // It's truly private, noone can see it
       SSApp.confirm(SSApp.logout());
       
       SSApp.confirm(SSApp.login(fakemary));
@@ -143,7 +155,7 @@ var ShiftTest = new Class({
       
       SSApp.confirm(SSApp.join(fakejohn));
       json = SSApp.confirm(SSApp.read('shift', shift._id));
-      SSUnit.assertEqual(SSGetType(json), PermissionError);
+      SSUnit.assertEqual(SSGetType(json), PermissionError); // It's published, now we can check for permission errors
       SSApp.confirm(SSApp.logout());
       
       SSApp.confirm(SSApp.login(admin));
@@ -183,15 +195,13 @@ var ShiftTest = new Class({
       );
       var comments = SSApp.confirm(SSApp.get({resource:'shift', id:shift._id, action:'comments'}));
       SSUnit.assertEqual(comments[0].text, "Hey what a cool shift!");
-      SSApp.confirm(SSApp.logout());
-    
-      SSApp.confirm(SSApp.login(fakedave));
       SSApp.confirm(SSApp['delete']('user', 'fakedave'));
+
       SSApp.confirm(SSApp.login(fakemary));
     }
   ),
-  
-  
+
+
   readPrivateComments: $fixture(
     "Error if attempt to read comments on private shift. Should work for those with permission on a shared shift.",
     function()
@@ -289,7 +299,6 @@ var ShiftTest = new Class({
       // check fakemary received 2 messages
       SSApp.confirm(SSApp.login(fakemary));
       var messages = SSApp.confirm(SSApp.get({resource:"user", id:"fakemary", action:"messages"}));
-      SSUnit.assertEqual(messages[0].text, "fakejohn just commented on your shift!");
       SSUnit.assertEqual(messages.length, 2);
       SSApp.confirm(SSApp.logout());
 
@@ -372,5 +381,6 @@ var ShiftTest = new Class({
       SSUnit.assertEqual(error.type, ResourceDoesNotExistError);
     }
   )
+
 
 });
