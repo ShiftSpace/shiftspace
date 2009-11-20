@@ -40,8 +40,14 @@ class Lucene():
                       ret.add(doc.publishData.dbs.join(' '), {field:'dbs'});  \
                       ret.add(doc.publishData['private'], {field:'private'}); \
                       ret.add(doc.publishData.draft, {field:'draft'});        \
-                      ret.add(Date.parse(doc.created), {field:'created'});    \
-                      ret.add(Date.parse(doc.modified), {field:'modified'});  \
+                      var dt = doc.created.substr(0, doc.created.length-1).split('T'); \
+                      var d = dt[0].split('-'); \
+                      var t = dt[1].split(':'); \
+                      ret.add(Date.UTC.apply(null, d.concat(t)), {field:'created'}); \
+                      dt = doc.modified.substr(0, doc.modified.length-1).split('T'); \
+                      d = dt[0].split('-'); \
+                      t = dt[1].split(':'); \
+                      ret.add(Date.UTC.apply(null, d.concat(t)), {field:'modified'}); \
                       return ret;                                             \
                     }                                                         \
                     return null;                                              \
