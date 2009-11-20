@@ -12,14 +12,14 @@ __docformat__ = 'restructuredtext en'
 
 class LuceneDefinition(object):
 
-    def __init__(self, design, name, defaults="{\"store\":\"yes\"}", index_fun,
+    def __init__(self, design, name, defaults_json="{\"store\":\"yes\"}", index_fun=None,
                  language='javascript', wrapper=None, **defaults):
         if design.startswith('_design/'):
             design = design[8:]
         self.design = design
         self.name = name
-        self.defaults = dedent(defaults.lstrip('\n'))
-        self.index_fun = dedent(reduce_fun.lstrip('\n'))
+        self.defaults_json = dedent(defaults_json.lstrip('\n'))
+        self.index_fun = dedent(index_fun.lstrip('\n'))
         self.language = language
         self.wrapper = wrapper
         self.defaults = defaults
@@ -51,19 +51,17 @@ class LuceneDefinition(object):
             orig_doc = deepcopy(doc)
             languages = set()
 
-            missing = list(doc.get('views', {}).keys())
+            missing = list(doc.get('fulltext', {}).keys())
             for view in views:
-                funcs = {'map': view.map_fun}
-                if view.reduce_fun:
-                    funcs['reduce'] = view.reduce_fun
-                doc.setdefault('views', {})[view.name] = funcs
+                fti_json = {'defaults': view.defaults_json, 'index': view.index_fun}
+                doc.setdefault('fulltext', {})[view.name] = fti_json
                 languages.add(view.language)
                 if view.name in missing:
                     missing.remove(view.name)
 
             if remove_missing and missing:
                 for name in missing:
-                    del doc['views'][name]
+                    del doc['fulltext'][name]
             elif missing and 'language' in doc:
                 languages.add(doc['language'])
 
