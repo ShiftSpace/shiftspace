@@ -20,12 +20,14 @@ class Lucene():
                     if(doc.type == 'user') {                           \
                       var ret = new Document();                        \
                       ret.add(doc.userName, {field:'userName'});       \
-                      ret.add(doc.displayName, {field:'displayName'}); \
+                      ret.add(doc.email, {field:'email'});             \
+                      if (doc.displayName) ret.add(doc.displayName, {field:'displayname'}); \
                       return ret;                                      \
                     }                                                  \
                     return null;                                       \
                   }"
                              )
+
 
     shifts = LuceneDefinition("lucene", "shifts", index_fun = "               \
                   function(doc) {                                             \
@@ -48,7 +50,7 @@ class Lucene():
 
     groups = LuceneDefinition("lucene", "groups", index_fun = "        \
                   function(doc) {                                      \
-                    if(doc.type == 'stream' && doc.meta == 'group') {  \
+                    if(doc.type == 'group') {                          \
                       var ret = new Document();                        \
                       ret.add(doc.displayName, {field:'displayName'}); \
                       ret.add(doc.shortName, {field:'shortName'});     \
@@ -58,6 +60,7 @@ class Lucene():
                     return null;                                       \
                   }"
         )
+
 
     def search(self, view, debug=False, dbname="shiftspace/master", **params):
         """

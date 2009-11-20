@@ -12,7 +12,7 @@ __docformat__ = 'restructuredtext en'
 
 class LuceneDefinition(object):
 
-    def __init__(self, design, name, defaults_json="{\"store\":\"yes\"}", index_fun=None,
+    def __init__(self, design, name, defaults_json="{'store':'yes'}", index_fun=None,
                  language='javascript', wrapper=None, **defaults):
         if design.startswith('_design/'):
             design = design[8:]

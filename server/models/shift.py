@@ -40,7 +40,6 @@ class Shift(SSDocument):
     # ========================================
 
     type = TextField(default="shift")
-    userName = TextField()
     href = TextField()
     domain = TextField()
     space = DictField(Schema.build(
@@ -49,7 +48,6 @@ class Shift(SSDocument):
             ))
     summary = TextField()
     broken = BooleanField(default=False)
-    commentStream = TextField()
     publishData = DictField(Schema.build(
             draft = BooleanField(default=True),
             private = BooleanField(default=True),
