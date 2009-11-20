@@ -1299,7 +1299,7 @@ var SSListView = new Class({
   
   /*
     Function: indexOf
-      Returns the index of a SSCell objet that contains the passed object. If the object is not found in a SSCell, it returns -1.
+      Returns the index of a SSCell object that contains the passed object. If the object is not found in a SSCell, it returns -1.
     
     Parameters:
       object - An object.
@@ -1384,22 +1384,46 @@ var SSListView = new Class({
     if(this.options.allowSelection)
     {
       var cellNode = this.cellNodeForIndex(index);
-      if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
       if(!cellNode.hasClass('selected')) 
       {
-        cellNode.addClass('selected');
+        this.selectRow(index);
         this.onRowSelect(index);
       }
       else
       {
-        cellNode.removeClass('selected');
+        this.deselectRow(index);
         this.onRowDeselect(index);
       }
     }
   },
 
   onRowSelect: function(index) {},
+  selectRow: function(index)
+  {
+    var cellNode = this.cellNodeForIndex(index);
+    if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
+    if(!cellNode.hasClass('selected')) 
+    {
+      cellNode.addClass('selected');
+    }
+  },
+  
   onRowDeselect: function(index) {},
+  deselectRow: function(index)
+  {
+    var cellNode = this.cellNodeForIndex(index);
+    if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
+    if(cellNode.hasClass('selected')) 
+    {
+      cellNode.removeClass('selected');
+    }
+  },
+  
+  
+  selectedRows: function()
+  {
+    return this.element.getElements("> li.selected").map(this.indexOfCellNode.bind(this))
+  },
   
   /*
     Function: setCellBeingEdited
