@@ -1,5 +1,6 @@
 import couchdb.client
 from couchdb.design import ViewDefinition
+from server.couchdb.lucene_design import LuceneDefinition
 import simplejson as json
 
 _local = False
@@ -8,64 +9,55 @@ _local_id = None
 _store_yes = json.dumps({"store":"no"})
 _store_no = json.dumps({"store":"yes"})
 
-_users = {
-    "defaults": _store_yes,
-    "index": "function(doc) {                                      \
-                if(doc.type == 'user') {                           \
-                  var ret = new Document();                        \
-                  ret.add(doc.userName, {field:'userName'});       \
-                  ret.add(doc.displayName, {field:'displayName'}); \
-                  return ret;                                      \
-                }                                                  \
-                return null;                                       \
-              }"
-    }
-
-_shifts = {
-    "defaults": _store_yes,
-    "index": "function(doc) {                                                    \
-                if(doc.type == 'shift') {                                        \
-                  var ret = new Document();                                      \
-                  ret.add(doc.createdBy, {field:'createdBy'});                   \
-                  ret.add(doc.summary, {field:'summary'});                       \
-                  ret.add(doc.href, {field:'href'});                             \
-                  ret.add(doc.domain, {field:'domain'});                         \
-                  ret.add(doc.publishData.streams.join(' '), {field:'streams'}); \
-                  ret.add(doc.publishData['private'], {field:'private'});        \
-                  ret.add(doc.publishData.draft, {field:'draft'});               \
-                  ret.add(Date.parse(doc.created), {field:'created'});           \
-                  ret.add(Date.parse(doc.modified), {field:'modified'});         \
-                  return ret;                                                    \
-                }                                                                \
-                return null;                                                     \
-              }"
-    }
-
-_groups = {
-    "defaults": _store_yes,
-    "index": "function(doc) {                                      \
-                if(doc.type == 'stream' && doc.meta == 'group') {  \
-                  var ret = new Document();                        \
-                  ret.add(doc.displayName, {field:'displayName'}); \
-                  ret.add(doc.shortName, {field:'shortName'});     \
-                  ret.add(doc.description, {field:'description'}); \
-                  return ret;                                      \
-                }                                                  \
-                return null;                                       \
-              }"
-    }
-
-_lucene_design = {
-    "language": "javascript",
-    "fulltext": {
-        "users": _users,
-        "shifts": _shifts,
-        "groups": _groups,
-        }
-}
-
+# ==============================================================================
+# Lucene
+# ==============================================================================
 
 class Lucene():
+
+    users = LuceneDefinition("lucene", "users", index_fun = "          \
+                  function(doc) {                                      \
+                    if(doc.type == 'user') {                           \
+                      var ret = new Document();                        \
+                      ret.add(doc.userName, {field:'userName'});       \
+                      ret.add(doc.displayName, {field:'displayName'}); \
+                      return ret;                                      \
+                    }                                                  \
+                    return null;                                       \
+                  }"
+                             )
+
+    shifts = LuceneDefinition("lucene", "shifts", index_fun = "               \
+                  function(doc) {                                             \
+                    if(doc.type == 'shift') {                                 \
+                      var ret = new Document();                               \
+                      ret.add(doc.createdBy, {field:'createdBy'});            \
+                      ret.add(doc.summary, {field:'summary'});                \
+                      ret.add(doc.href, {field:'href'});                      \
+                      ret.add(doc.domain, {field:'domain'});                  \
+                      ret.add(doc.publishData.dbs.join(' '), {field:'dbs'});  \
+                      ret.add(doc.publishData['private'], {field:'private'}); \
+                      ret.add(doc.publishData.draft, {field:'draft'});        \
+                      ret.add(Date.parse(doc.created), {field:'created'});    \
+                      ret.add(Date.parse(doc.modified), {field:'modified'});  \
+                      return ret;                                             \
+                    }                                                         \
+                    return null;                                              \
+                  }"
+                              )
+
+    groups = LuceneDefinition("lucene", "groups", index_fun = "        \
+                  function(doc) {                                      \
+                    if(doc.type == 'stream' && doc.meta == 'group') {  \
+                      var ret = new Document();                        \
+                      ret.add(doc.displayName, {field:'displayName'}); \
+                      ret.add(doc.shortName, {field:'shortName'});     \
+                      ret.add(doc.description, {field:'description'}); \
+                      return ret;                                      \
+                    }                                                  \
+                    return null;                                       \
+                  }"
+        )
 
     def search(self, view, debug=False, dbname="shiftspace/master", **params):
         """
@@ -79,9 +71,11 @@ class Lucene():
         else:
             return resource.get(view, **params)[1].get("rows")
 
-
 _lucene = Lucene()
 
+# ==============================================================================
+# Functions
+# ==============================================================================
 
 def serverName():
     """
@@ -112,25 +106,6 @@ def lucene():
     Return the Lucene instance.
     """
     return _lucene
-
-
-def query(view, key=None, keys=None):
-    """
-    Query the database. Can access a single key or an
-    array of keys.
-    """
-    db = connect()
-    rows = None
-    options = None
-    if key:
-        options = {"key": key}
-        rows = db.view(view, None, **options)
-    else:
-        rows = db.view(view)
-    result = []
-    for row in rows:
-        result.append(row.value)
-    return result
 
 
 def value(results):
@@ -167,16 +142,6 @@ def objects(results):
         return list(results)
     else:
         return []
-
-
-def single(view, key):
-    """
-    Convenience functions for accessing a single key.
-    """
-    db = connect()
-    options = {"key": key}
-    for row in db.view(view, None, **options):
-        return row.value
 
 
 def toDict(kvs):
@@ -233,19 +198,6 @@ def fetch(db=None, view=None, keys=None):
     else:
         kvs = toDict(rows)
         return [((kvs.get(key) and kvs.get(key)["value"]) or None) for key in keys]
-
-
-def update(doc):
-    """
-    Convenience function for updating a document. Takes the new
-    document, attempts to update and returns the new value.
-    """
-    db = connect()
-    id = doc["_id"]
-    old = db[id]
-    new = old.update(doc)
-    db[id] = new
-    return db[id]
 
 
 def replicate(source, target="shiftspace/master"):
