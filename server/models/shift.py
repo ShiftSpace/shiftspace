@@ -171,7 +171,7 @@ class Shift(SSDocument):
         isFavorited = core.fetch(db, keys=favIds)
         favCounts = core.fetch(db, view=Favorite.count_by_shift, keys=ids)
         commentCounts = core.fetch(db, view=Comment.count_by_shift, keys=ids)
-        userIds = [shift.createdBy for shift in shifts]
+        userIds = [shift["createdBy"] for shift in shifts]
         users = core.fetch(keys=userIds)
 
         for i in range(len(shifts)):
@@ -461,34 +461,23 @@ class Shift(SSDocument):
 
     #@joindecorator
     @classmethod
-    def shifts(cls, byHref, userId=None, byFollowing=False, byGroups=False, start=0, limit=25):
+    def shifts(cls, user, byHref, byFollowing=False, byGroups=False, start=0, limit=25):
         db = core.connect()
         # NOTE: to prevent errors on a newly created DB - David 9/11/09
         """
         if core.single(Stats.count, "shift") == None:
             return []
         """
-        print "Connect to lucene"
         lucene = core.lucene()
-        # TODO: validate byHref - David
         queryString = "href:\"%s\" AND ((draft:false AND private:false)" % byHref
-        if userId:
-            queryString = queryString + " OR createdBy:%s" % userId
-            streams = ""
-            #Need to fix this, a lot has changed
-            """
-            if byFollowing:
-                following = User.followStreams(userId)
-                streams = streams + " ".join(following)
-            if byGroups:
-                groups = User.groupStrems(userId)
-                streams = streams + " ".join(groups)
-            """
-            # TODO: make sure streams cannot be manipulated from client - David
-            queryString = queryString + ((" OR (draft:false%s)" % ((len(streams) > 0 and (" AND streams:%s" % streams)) or "")))
+        if user:
+            queryString = queryString + " OR createdBy:%s" % user.id
+            dbs = user.readable()
+            dbs.append(SSUser.db(user.id))
+            dbsStr = " ".join(dbs)
+            queryString = queryString + ((" OR (draft:false%s)" % ((len(dbs) > 0 and (" AND dbs:%s" % dbsStr)) or "")))
         queryString = queryString + ")"
-        rows = lucene.search("shifts", q=queryString, sort="\modified", skip=start, limit=limit)
-        print "WTF!"
-        # super slow, multidoc fetch instead
-        shifts = [db[row["id"]] for row in rows]
-        return shifts
+        db = core.connect("shiftspace/shared")
+        rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
+        shifts = [row["doc"] for row in rows]
+        return Shift.joinData(shifts, user.id)

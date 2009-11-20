@@ -60,6 +60,11 @@ def sync():
     SSUser.all.sync(master)
     SSUser.by_name.sync(master)
     SSUser.all_followers.sync(master)
+    Permission.by_user.sync(master)
+    Permission.by_joinable.sync(master)
+    Permission.by_readable.sync(master)
+    Permission.by_writeable.sync(master)
+    Permission.by_adminable.sync(master)
     Lucene.users.sync(master)
     #Lucene.groups.sync(master)
     # shared

@@ -61,18 +61,16 @@ class Lucene():
                   }"
         )
 
-
-    def search(self, view, debug=False, dbname="shiftspace/master", **params):
+    def search(self, db, view, **params):
         """
         Runs a full text search on the db.
         """
         import urllib
-        uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(dbname)
+        if db == None:
+            connect("shiftspace/master")
+        uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(db.name)
         resource = couchdb.client.Resource(None, uri)
-        if debug:
-            return resource.get(view, **params)[1]
-        else:
-            return resource.get(view, **params)[1].get("rows")
+        return resource.get(view, **params)[1].get("rows")
 
 _lucene = Lucene()
 

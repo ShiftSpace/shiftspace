@@ -47,12 +47,14 @@ class ShiftController(ResourceController):
 
     @jsonencode
     def shifts(self, byHref, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, count=False):
+        from server.models.ssuser import SSUser
         loggedInUser = helper.getLoggedInUser()
-        userId = None
         if loggedInUser:
-            userId = loggedInUser.get("_id")
-        allShifts = Shift.shifts(byHref=byHref,
-                                 userId=userId,
+            theUser = SSUser.read(loggedInUser)
+        else:
+            theUser = None
+        allShifts = Shift.shifts(user=theUser,
+                                 byHref=byHref,
                                  byFollowing=byFollowing,
                                  byGroups=byGroups,
                                  start=start,
