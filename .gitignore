@@ -65,3 +65,4 @@ config/views.json/server/.htaccess
 /server/.htaccess
 /test.py
 /config/conf.json
+/TAGS
