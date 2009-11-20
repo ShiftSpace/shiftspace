@@ -295,6 +295,7 @@ class SSUser(User):
 
 
     def comments(self, start=None, end=None, limit=25):
+        from server.models.comment import Comment
         pass
         
     # ========================================
