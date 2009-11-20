@@ -198,7 +198,7 @@ def fetch(db=None, view=None, keys=None):
     """
     import urllib
     if db == None:
-        db = core.connect()
+        db = connect()
 
     reduce = False
     if isinstance(view, ViewDefinition):

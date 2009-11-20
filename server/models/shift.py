@@ -159,9 +159,9 @@ class Shift(SSDocument):
         from server.models.comment import Comment
         
         if core._local:
-            db = "user/%s" % core._local_id
+            db = core.conect("user/%s" % core._local_id)
         else:
-            db = "shiftspace/shared"
+            db = core.connect("shiftspace/shared")
             
         single = False
         if type(shifts) != list:
@@ -173,7 +173,7 @@ class Shift(SSDocument):
         isFavorited = core.fetch(db, keys=favIds)
         favCounts = core.fetch(db, view=Favorite.count_by_shift, keys=ids)
         commentCounts = core.fetch(db, view=Comment.count_by_shift, keys=ids)
-        userIds = [shifts.createdBy for shift in shifts]
+        userIds = [shift.createdBy for shift in shifts]
         users = core.fetch(keys=userIds)
 
         for i in range(len(shifts)):
