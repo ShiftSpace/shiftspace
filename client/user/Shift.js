@@ -729,6 +729,11 @@ var ShiftSpaceShift = new Class({
   {
     return SSGetAuthorForShift(this.getId());
   },
+  
+  getAuthorName: function()
+  {
+    return SSGetAuthorNameForShift(this.getId());
+  },
 
   /*
     Function: build (abstract)

@@ -301,7 +301,12 @@ Returns:
 */
 function SSGetAuthorForShift(shiftId)
 {
-  return SSGetShift(shiftId).username;
+  return SSGetShift(shiftId)._id;
+}
+
+function SSGetAuthorNameForShift(shiftId)
+{
+  return SSGetShift(shiftId).userName;
 }
 
 /*
