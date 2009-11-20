@@ -168,25 +168,20 @@ class Shift(SSDocument):
             single = True
             shifts = [shifts]
         ids = [shift['_id'] for shift in shifts]
+
         favIds = [Favorite.makeId(userId, shiftId) for shiftId in ids]
-
-        isFavorited = [(favorite and True) for favorite in core.fetch(keys=favIds)]
-
-        favd = toDict(core.fetch(db=db, view=Favorite.count_by_shift, keys=ids, reduce=True))
-        favCounts = [(favd.get(aid) or 0) for aid in ids]
-
-        ccd = toDict(core.fetch(db=db, view=Comment.count_by_shift, keys=ids, reduce=True))
-        commentCounts = [(ccd.get(aid) or 0) for aid in ids]
-
-        userIds = [shift['createdBy'] for shift in shifts]
-        gravatars = [((user and user.get("gravatar")) or "images/default_user.png")
-                     for user in core.fetch(keys=userIds)]
+        isFavorited = core.fetch(db, keys=favIds)
+        favCounts = core.fetch(db, view=Favorite.count_by_shift, keys=ids)
+        commentCounts = core.fetch(db, view=Comment.count_by_shift, keys=ids)
+        userIds = [shifts.createdBy for shift in shifts]
+        users = core.fetch(keys=userIds)
 
         for i in range(len(shifts)):
-            shifts[i]["favorite"] = isFavorited[i]
+            shifts[i]["favorite"] = (isFavorited[i] != None)
             shifts[i]["favoriteCount"] = favCounts[i]
             shifts[i]["commentCount"] = commentCounts[i]
-            shifts[i]["gravatar"] = gravatars[i]
+            shifts[i]["gravatar"] = (users[i]["gravatar"] or "images/default.png")
+            shifts[i]["userName"] = users[i]["userName"]
 
         if single:
             return shifts[0]
