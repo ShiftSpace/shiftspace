@@ -644,6 +644,8 @@ var ApplicationServer = new Class({
         resource, the resource type
         id, a resource id
         action, the action to take
+        data, a JSON object representing the data
+        json, flag to send data as Content-Type application/json
 
      Returns:
        A proimse for the server return value.

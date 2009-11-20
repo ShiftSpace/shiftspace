@@ -11,25 +11,29 @@ try:
     import builder.preprocess as preprocess
     import builder.corebuilder as corebuilder
     import sandalphon.sandalphon as sandalphon
-except:
+except Exception as err:
+    print err
     missing.append("simplejson")
 
 try:
     import manual.build as manbuild
-except:
+except Exception as err:
+    print err
     missing.append("mako")
 try:
     import server.setup as setup
-except:
+except Exception as err:
+    print err
     missing.append("couchdb-python")
 try:
     import server.server as server
-except:
+except Exception as err:
+    print err
     missing.append("cherrypy")
 
 
 def bail(missinglibs):
-    print "Missing %s. Please run the following first before attempting to use shifty features:" % missinglibs
+    print "Perhaps missing %s? Please run the following first before attempting to use shifty features:" % missinglibs
     print "sudo python shifty.py installdeps"
     sys.exit(2)
 
@@ -204,7 +208,70 @@ def updatedb():
     Resync the server/views folder with the design documents
     in the database.
     """
-    setup.loadDocs()
+    setup.sync()
+
+
+def deletedbs():
+    """
+    Delete the databases, the database path must have been set
+    first for this to work.
+    """
+    from server.models import core
+    from server.models.ssuser import SSUser
+    from server.models.group import Group
+
+    # delete all core dbs and user and group dbs
+    server = core.server()
+    [group.delete() for group in core.objects(Group.all(core.connect()))]
+    [user.delete() for user in core.objects(SSUser.all(core.connect()))]
+    del server["shiftspace/public"]
+    del server["shiftspace/shared"]
+    del server["shiftspace/messages"]
+    del server["shiftspace/master"]
+    #[comment.deleteInstance() for comment in core.object(Comment.all(core.connect()))]
+    # cleanup, remove any empty folders (left from deleted users
+    try:
+        fh = open("config/conf.json")
+    except:
+        print "config/conf.json does not exist. Set the path the database first."
+        sys.exit(2)
+    conf = json.loads(fh.read())
+    if conf.get("dbpath"):
+        userdbdir = os.path.join(conf["dbpath"], "user")
+        if os.path.exists(userdbdir):
+            for file in os.listdir(userdbdir):
+                filepath = os.path.join(userdbdir, file)
+                if os.path.isdir(filepath):
+                    os.rmdir(filepath)
+            os.rmdir(userdbdir)
+        grpdbdir = os.path.join(conf["dbpath"], "group")
+        if os.path.exists(grpdbdir):
+            os.rmdir(grpdbdir)
+        ssdbdir = os.path.join(conf["dbpath"], "shiftspace")
+        if os.path.exists(ssdbdir):
+            os.rmdir(ssdbdir)
+
+
+def resetdb():
+    """
+    Delete all the databases and recreate them. The database path
+    must be set for this to work.
+    """
+    deletedbs()
+    setup.init()
+
+
+def setdbpath(path):
+    """
+    Set the path to where the database actually lives. Required
+    for database reset operations.
+    """
+    fh = open("config/conf.json", "w")
+    conf = {
+        "dbpath": path
+        }
+    fh.write(json.dumps(conf, indent=4))
+    fh.close()
 
 
 def installdeps():
@@ -326,6 +393,15 @@ def main(argv):
         build(argv[1:])
     elif action == "updatedb":
         updatedb()
+    elif action == "resetdb":
+        resetdb()
+    elif action == "setdbpath":
+        try:
+            url = argv[1]
+        except:
+            usage()
+            sys.exit(2)
+        setdbpath(url)
     elif action == "shiftpress":
         try:
             url = argv[1]
@@ -358,18 +434,26 @@ def usage():
     print
     print "Hello from Shifty! <item> is required, [item] is not."
     print "   %16s  a magical dance that installs all dependencies, builds docs, and configures the server!" % "dance"
+    print
     print "   %16s  install dependencies" % "installdeps"
     print "   %16s  build a shiftspace script" % "build"
+    print
     print "   %16s  configure ShiftSpace" % "configure <url>"
     print "   %16s  configure ShiftPress" % "shiftpress <url>"
+    print
     print "   %16s  update ShiftSpace source and tests" % "update"
     print "   %16s  initialize the database" % "initdb"
     print "   %16s  update the database" % "updatedb"
+    print "   %16s  reset the database (delete and recreate)" % "resetdb"
+    print "   %16s  set the database path" % "setdbpath <path>"
+    print
     print "   %16s  build/update the core documentation" % "docs"
     print "   %16s  build/update the manual" % "manual"
+    print
     print "   %16s  create a new space" % "new <spacename>"
     print "   %16s  start ShiftServer on the specified port" % "runserver [port]"
     print "   %16s  deploy an application" % "app <appname>"
+    print
     print "   %16s  run unit tests" % "tests"
     print "   %16s  make a nightly" % "nightly"
     print

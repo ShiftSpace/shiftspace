@@ -8,10 +8,10 @@ var groupStream = {
   displayName:"My Cool Group"
 };
 
-var StreamTest = new Class({
+var GroupTest = new Class({
 
   Extends: SSUnitTest.TestCase,
-  name: 'StreamTest',
+  name: 'GroupTest',
   
   setup: function()
   {

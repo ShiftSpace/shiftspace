@@ -14,69 +14,81 @@ var LoginTest = new Class({
   
   setup: function()
   {
-    app.action('join', fakemary);
-    logout();
+    SSApp.confirm(SSApp.join(fakemary));
+    SSApp.confirm(SSApp.logout());
   },
   
   
   tearDown: function()
   {
-    app.delete('user', 'fakemary');
+    SSApp.confirm(SSApp['delete']('user', 'fakemary'));
   },
   
   
-  testNoUserName: function()
-  {
-    this.doc("Error on login if missing username.");
-    var json = login(noUserName);
-    this.assertEqual(SSGetType(json), InvalidUserNameError);
-    login(fakemary);
-  },
+  noUserName: $fixture(
+    "Error on login if missing username.",
+    function()
+    {
+      var json = SSApp.confirm(SSApp.login(noUserName));
+      SSUnit.assertEqual(SSGetType(json), InvalidUserNameError);
+      SSApp.confirm(SSApp.login(fakemary));
+    }
+  ),
+
+
+  incorrectPassword: $fixture(
+    "Error on login if incorrect password.",
+    function()
+    {
+      var json = SSApp.confirm(SSApp.login(wrongPassword));
+      SSUnit.assertEqual(SSGetType(json), IncorrectPasswordError);
+      SSApp.confirm(SSApp.login(fakemary));
+    }
+  ),
   
+
+  alreadyLoggedIn: $fixture(
+    "Error on login if already logged in.",
+    function()
+    {
+      SSApp.confirm(SSApp.login(fakemary));
+      var json = SSApp.confirm(SSApp.login(fakemary));
+      SSUnit.assertEqual(SSGetType(json), AlreadyLoggedInError);
+    }
+  ),
   
-  testIncorrectPassword: function()
-  {
-    this.doc("Error on login if incorrect password.");
-    var json = login(wrongPassword);
-    this.assertEqual(SSGetType(json), IncorrectPasswordError);
-    login(fakemary);
-  },
+
+  logoutNotLoggedIn: $fixture(
+    "Error on logout if not logged in.",
+    function()
+    {
+      var json = SSApp.confirm(SSApp.logout());
+      SSUnit.assertEqual(SSGetType(json), AlreadyLoggedOutError);
+      SSApp.confirm(SSApp.login(fakemary));
+    }
+  ),
   
+
+  validLogin: $fixture(
+    "Valid login",
+    function()
+    {
+      var json = SSApp.confirm(SSApp.login(fakemary));
+      SSUnit.assertEqual(json.userName, "fakemary");
+    }
+  ),
   
-  testAlreadyLoggedIn: function()
-  {
-    this.doc("Error on login if already logged in.");
-    login(fakemary);
-    var json = login(fakemary);
-    this.assertEqual(SSGetType(json), AlreadyLoggedInError);
-  },
-  
-  
-  testLogoutNotLoggedIn: function()
-  {
-    this.doc("Error on logout if not logged in.");
-    var json = logout();
-    this.assertEqual(SSGetType(json), AlreadyLoggedOutError);
-    login(fakemary);
-  },
-  
-  
-  testValidLogin: function()
-  {
-    this.doc("Valid login");
-    var json = login(fakemary);
-    this.assertEqual(SSGetData(json).userName, "fakemary");
-  },
-  
-  
-  testValidLoginOut: function()
-  {
-    this.doc("Valid login and out");
-    login(fakemary);
-    var json = logout(fakemary);
-    this.assertEqual(JSON.encode(json), ack);
-    login(fakemary);
-  }
+
+  validLoginOut: $fixture(
+    "Valid login and out",
+    function()
+    {
+      SSApp.confirm(SSApp.login(fakemary));
+      var json = SSApp.confirm(SSApp.logout(fakemary));
+      SSUnit.assertEqual(JSON.encode(json), ack);
+      SSApp.confirm(SSApp.login(fakemary));
+    }
+  )
 })
 
   
