@@ -208,7 +208,7 @@ def updatedb():
     Resync the server/views folder with the design documents
     in the database.
     """
-    setup.loadDocs()
+    setup.sync()
 
 
 def deletedbs():
