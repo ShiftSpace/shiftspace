@@ -302,14 +302,19 @@ class SSUser(User):
     # ========================================
 
     def isFavorite(self, aShift):
+        from server.models.favorite import Favorite
         db = core.connect("shiftspace/shared")
         return Favorite.isFavorite(self.id, aShift.id)
         
     def favorite(self, aShift):
+        from server.models.favorite import Favorite
+        from server.models.shift import Shift
         Favorite.create(self.id, aShift.id)
         return Shift.joinData(Shift.read(aShift.id), self.id)
         
     def unfavorite(self, aShift):
+        from server.models.favorite import Favorite
+        from server.models.shift import Shift
         Favorite.readByUserAndShift(self.id, aShift.id).delete()
         return Shift.joinData(Shift.read(aShift.id), self.id)
 

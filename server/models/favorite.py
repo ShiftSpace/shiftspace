@@ -92,5 +92,3 @@ class Favorite(SSDocument):
         """
         db = core.connect("shiftspace/shared")
         del db[Favorite.makeId(self.userId, self.shiftId)]
-
-        
