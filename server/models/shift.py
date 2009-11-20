@@ -23,13 +23,6 @@ class NoContentError(ShiftError): pass
 # Utilities
 # ==============================================================================
 
-def toDict(kvs):
-    result = {}
-    for kv in kvs:
-        result[kv['key']] = kv['value']
-    return result
-
-
 @simple_decorator
 def joindecorator(func):
     def afn(*args, **kwargs):
@@ -163,7 +156,13 @@ class Shift(SSDocument):
     @classmethod
     def joinData(cls, shifts, userId=None):
         from server.models.favorite import Favorite
-
+        from server.models.comment import Comment
+        
+        if core._local:
+            db = "user/%s" % core._local_id
+        else:
+            db = "shiftspace/shared"
+            
         single = False
         if type(shifts) != list:
             single = True
@@ -173,10 +172,10 @@ class Shift(SSDocument):
 
         isFavorited = [(favorite and True) for favorite in core.fetch(keys=favIds)]
 
-        favd = toDict(core.fetch(view=schema.favoritesByShift, keys=ids, reduce=True))
+        favd = toDict(core.fetch(db=db, view=Favorite.count_by_shift, keys=ids, reduce=True))
         favCounts = [(favd.get(aid) or 0) for aid in ids]
 
-        ccd = toDict(core.fetch(view=schema.countByShift, keys=ids, reduce=True))
+        ccd = toDict(core.fetch(db=db, view=Comment.count_by_shift, keys=ids, reduce=True))
         commentCounts = [(ccd.get(aid) or 0) for aid in ids]
 
         userIds = [shift['createdBy'] for shift in shifts]

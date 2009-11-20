@@ -1,6 +1,9 @@
 import couchdb.client
+from couchdb.design import ViewDefinition
 import simplejson as json
 
+_local = False
+_local_id = None
 
 _store_yes = json.dumps({"store":"no"})
 _store_no = json.dumps({"store":"yes"})
@@ -70,8 +73,6 @@ class Lucene():
         """
         import urllib
         uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(dbname)
-        print "=================================================="
-        print uri
         resource = couchdb.client.Resource(None, uri)
         if debug:
             return resource.get(view, **params)[1]
@@ -178,7 +179,14 @@ def single(view, key):
         return row.value
 
 
-def fetch(db="shiftspace/master", view="_all_docs", keys=None, reduce=False):
+def toDict(kvs):
+    result = {}
+    for kv in kvs:
+        result[kv['key']] = {"value":kv['value']}
+    return result
+
+
+def fetch(db=None, view=None, keys=None):
     """
     Fetch multiple documents from the database. Useful when
     joins are necessary and making multiple requests to the db
@@ -189,26 +197,42 @@ def fetch(db="shiftspace/master", view="_all_docs", keys=None, reduce=False):
         view - defaults to  '_all_docs'
     """
     import urllib
-    uri = 'http://localhost:5984/%s/%s' % (urllib.quote_plus(db), view)
+    if db == None:
+        db = core.connect()
+
+    reduce = False
+    if isinstance(view, ViewDefinition):
+        viewpath = "/".join(["_design", view.design, "_view", view.name])
+        reduce = (view.reduce_fun != None)
+    else:
+        viewpath = "_all_docs"
+
+    uri = 'http://localhost:5984/%s/%s' % (urllib.quote_plus(db.name), viewpath)
     resource = couchdb.client.Resource(None, uri)
+
     params = None
     if reduce != True:
         params = {"include_docs":True}
     else:
         params = {"group":True}
+
     content = json.dumps({"keys":keys})
     headers = {"Content-Type":"application/json"}
-    rows = resource.post(headers=headers, content=content, **params)[1]['rows']
-    result = []
-    for row in rows:
-        if row.get('value'):
-            if not reduce and row.get('doc'):
+
+    resp, data = resource.post(headers=headers, content=content, **params)
+    rows = data["rows"]
+
+    if viewpath == "_all_docs":
+        result = []
+        for row in rows:
+            if row.get('value'):
                 result.append(row['doc'])
             else:
-                result.append(row)
-        else:
-            result.append(None)
-    return result
+                result.append(None)
+        return result
+    else:
+        kvs = toDict(rows)
+        return [((kvs.get(key) and kvs.get(key)["value"]) or None) for key in keys]
 
 
 def update(doc):

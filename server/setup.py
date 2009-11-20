@@ -63,6 +63,7 @@ def sync():
     shared = core.connect("shiftspace/shared")
     Shift.all.sync(shared)
     Shift.by_user_and_created.sync(shared)
+    Shift.count_by_domain.sync(shared)
     Comment.count_by_shift.sync(shared)
     Favorite.by_user_and_created.sync(shared)
     Favorite.count_by_shift.sync(shared)
