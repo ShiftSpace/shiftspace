@@ -201,6 +201,12 @@ var ShiftSpaceShift = new Class({
   {
     return true;
   },
+  
+  
+  canEdit: function()
+  {
+    return SSUserCanEditShift(this.getId());
+  },
 
   /*
     Function: destroy
@@ -796,7 +802,7 @@ var ShiftSpaceShift = new Class({
     if(this.getMainView())
     {
       this.getMainView().makeDraggable(
-	$merge({onComplete:this.save.bind(this)}, options)
+        $merge({onComplete:this.save.bind(this)}, options)
       );
     }
     else
