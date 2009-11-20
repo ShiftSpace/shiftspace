@@ -194,6 +194,7 @@ class Shift(SSDocument):
         newShift.domain = utils.domain(newShift.href)
         newShift.store(db)
         core.replicate(SSUser.privateDb(createdBy), SSUser.feedDb(createdBy))
+        core.replicate(SSUser.privateDb(createdBy), "shiftspace/shared")
         return Shift.joinData(newShift, newShift.createdBy)
 
     @classmethod
