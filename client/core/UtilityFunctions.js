@@ -137,22 +137,23 @@ function SSImplementsProtocol(protocol, object)
   return {'result': result, 'missing': missing};
 }
 
-var __dragDiv__;
+var __dragDiv;
 function SSCreateDragDiv()
 {
-  __dragDiv__ = new ShiftSpace.Element('div', {
+  __dragDiv = new ShiftSpace.Element('div', {
     id: 'SSDragDiv'
   });
+  __dragDiv.addEvent('mouseup', SSRemoveDragDiv);
 }
 
 function SSAddDragDiv()
 {
-  $(document.body).grab(__dragDiv__);
+  $(document.body).grab(__dragDiv);
 }
 
 function SSRemoveDragDiv()
 {
-  __dragDiv__ = __dragDiv__.dispose();
+  __dragDiv = __dragDiv.dispose();
 }
 
 function SSHasResource(resourceName)
