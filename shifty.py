@@ -8,25 +8,25 @@ missing = []
     
 try:
     import simplejson as json
-except Exception as err:
+except Exception, err:
     missing.append("simplejson")
 try:
     import builder.preprocess as preprocess
     import builder.corebuilder as corebuilder
     import sandalphon.sandalphon as sandalphon
-except Exceptions as err:
+except Exceptions, err:
     print err
 try:
     import manual.build as manbuild
-except Exception as err:
+except Exception, err:
     missing.append("mako")
 try:
     import server.setup as setup
-except Exception as err:
+except Exception, err:
     missing.append("couchdb-python")
 try:
     import server.server as server
-except Exception as err:
+except Exception, err:
     missing.append("cherrypy")
 
 

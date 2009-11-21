@@ -118,7 +118,7 @@
     
     ul.ShiftListView li.ShiftListViewCell:hover .spaceName
     {
-      display: inline;
+      /*display: inline;*/
     }
     
     .ShiftListView .ShiftListViewCell div.summaryContainer
@@ -169,13 +169,17 @@
 
     ul.ShiftListView li.ShiftListViewCell:hover
     {
-      background-color: white;
+      background-color: #FFF;
       z-index: 2;
     }
 
     .ShiftListView .ShiftListViewCell.selected
     {
       background-color: #81C49C;
+    }
+    
+    ul.ShiftListView li.ShiftListViewCell:hover .date{
+      color: #74665A;
     }
 
     .ShiftListView .ShiftListViewCell .selected
@@ -256,6 +260,12 @@
     .ShiftListView .ShiftListViewCell div.date
     {
       margin-left: 6px;
+      color: #B3ADA5;
+    }
+    
+    .ShiftListView .ShiftListViewCell.selected div.date,
+    .ShiftListView li.ShiftListViewCell.selected:hover div.date{
+      color: #FFF;
     }
 
     .ShiftListView .ShiftListViewCell div.favorite
@@ -303,7 +313,6 @@
       float: right;
       width:30px;
       height:26px;
-      margin-right:20px;
       text-align:center;
       background:url(/images/Console/commentballoon.png) no-repeat;
       cursor:pointer;
