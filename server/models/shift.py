@@ -7,7 +7,6 @@ import server.utils.utils as utils
 import core
 
 from server.models.ssdoc import SSDocument
-from server.models.ssuser import *
 
 # ==============================================================================
 # Errors
@@ -24,7 +23,7 @@ class NoContentError(ShiftError): pass
 # ==============================================================================
 
 @simple_decorator
-def joindecorator(func):
+def shift_join(func):
     def afn(*args, **kwargs):
         return Shift.joinData(func(*args, **kwargs), userId=kwargs.get("userId"))
     return afn
@@ -190,6 +189,7 @@ class Shift(SSDocument):
 
     @classmethod
     def create(cls, shiftJson):
+        from server.models.ssuser import SSUser
         newShift = Shift(**utils.clean(shiftJson))
         createdBy = newShift.createdBy
         db = core.connect(SSUser.privateDb(createdBy))
@@ -201,6 +201,7 @@ class Shift(SSDocument):
 
     @classmethod
     def read(cls, id, userId=None):
+        from server.models.ssuser import SSUser
         theShift = None
         # first try to load from shared timeline
         theShift = Shift.load(core.connect("shiftspace/shared"), id)
@@ -228,6 +229,8 @@ class Shift(SSDocument):
     # ========================================
 
     def update(self, fields, updateDbs=True):
+        from server.models.ssuser import SSUser
+        
         if fields.get("content"):
             self.content = fields.get("content")
         if fields.get("summary"):
@@ -266,6 +269,7 @@ class Shift(SSDocument):
 
 
     def delete(self):
+        from server.models.ssuser import SSUser
         db = core.connect(SSUser.privateDb(self.createdBy))
         if db.get(self.id):
             del db[self.id]
@@ -297,6 +301,8 @@ class Shift(SSDocument):
     # ========================================
 
     def publish(self, publishData=None, server="http://www.shiftspace.org/api/"):
+        from server.models.ssuser import SSUser
+        
         if publishData == None:
             return self
 
@@ -463,6 +469,8 @@ class Shift(SSDocument):
 
     @classmethod
     def shifts(cls, user, byHref, byFollowing=False, byGroups=False, start=0, limit=25):
+        from server.models.ssuser import SSUser
+        
         db = core.connect()
         lucene = core.lucene()
         queryString = "href:\"%s\" AND ((draft:false AND private:false)" % byHref
