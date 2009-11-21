@@ -103,7 +103,7 @@ class Comment(SSDocument):
             "type":"commentstub",
             "shiftId": shiftId,
             }
-        newComment = Comment(**json)
+        newComment = Comment(**utils.clean(json))
         newComment.store(db)
         db = core.connect("shiftspace/shared")
         db["commentstub:%s" % newComment.id] = stub
@@ -123,7 +123,7 @@ class Comment(SSDocument):
                         "text": "%s just commented on %s shift!" % (theUser.userName, astr),
                         "meta": "comment"
                         }
-                    Message.create(**json)
+                    Message.create(**utils.clean(json))
 
         return newComment
 

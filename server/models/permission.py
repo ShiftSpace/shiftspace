@@ -157,7 +157,7 @@ class Permission(SSDocument):
             "level": level
             }
 
-        newPermission = Permission(**json)
+        newPermission = Permission(**utils.clean(json))
         newPermission.store(db)
         return newPermission
 

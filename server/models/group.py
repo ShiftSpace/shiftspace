@@ -92,7 +92,7 @@ class Group(SSDocument):
         userId = groupJson["createdBy"]
 
         # create the group metadata
-        newGroup = Group(**groupJson)
+        newGroup = Group(**utils.clean(groupJson))
         newGroup.source.server = core.serverName()
         newGroup.source.database =  Group.db(newGroup.id)
         # save the group metadata to the master db

@@ -82,7 +82,7 @@ class SSUser(User):
             userJson['password'] = utils.md5hash(userJson['password'])
         if userJson.get("email"):
             userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % utils.md5hash(userJson["email"])
-        newUser = SSUser(**userJson)
+        newUser = SSUser(**utils.clean(userJson))
         newUser.store(db)
 
         # user's public shifts, will be replicated to shiftspace and user/feed

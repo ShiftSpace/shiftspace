@@ -46,6 +46,14 @@ def import_path(fullpath):
     del sys.path[-1]
     return module
 
+
+def clean(d):
+    result = {}
+    for k, v in d.items():
+        result[str(k)] = v
+    return result
+
+
 # adapted from http://evaisse.com/post/93417709/python-pretty-date-function
 def pretty_date(t=False):
     """

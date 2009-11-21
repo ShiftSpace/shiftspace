@@ -59,7 +59,7 @@ class Message(SSDocument):
             "text": text,
             "meta": meta,
             }
-        newMessage = Message(**json)
+        newMessage = Message(**utils.clean(json))
         newMessage.store(db)
         return newMessage
 
