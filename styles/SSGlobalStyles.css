@@ -118,7 +118,7 @@
     
     ul.ShiftListView li.ShiftListViewCell:hover .spaceName
     {
-      display: inline;
+      /*display: inline;*/
     }
     
     .ShiftListView .ShiftListViewCell div.summaryContainer
