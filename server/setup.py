@@ -73,6 +73,7 @@ def sync():
     Shift.by_user_and_created.sync(shared)
     Shift.count_by_domain.sync(shared)
     Comment.count_by_shift.sync(shared)
+    Comment.by_user_and_created.sync(shared)
     Favorite.by_user_and_created.sync(shared)
     Favorite.count_by_shift.sync(shared)
     Lucene.shifts.sync(shared)

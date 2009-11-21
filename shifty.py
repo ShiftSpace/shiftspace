@@ -19,14 +19,17 @@ except Exceptions, err:
 try:
     import manual.build as manbuild
 except Exception, err:
+    print err
     missing.append("mako")
 try:
     import server.setup as setup
 except Exception, err:
+    print err
     missing.append("couchdb-python")
 try:
     import server.server as server
 except Exception, err:
+    print err
     missing.append("cherrypy")
 
 

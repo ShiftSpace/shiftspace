@@ -35,6 +35,15 @@ class Comment(SSDocument):
          }"
         )
 
+    by_user_and_created = View(
+        "comments",
+        "function(doc) {               \
+           if(doc.type == 'comment') { \
+             emit([doc.createdBy, doc.created], doc); \
+           }                           \
+         }"
+        )
+
     all_subscribed = View(
         "comments",
         "function(doc) {                    \

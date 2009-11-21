@@ -292,20 +292,22 @@ class SSUser(User):
             return core.objects(results[start:end])
         return Shift.joinData(core.objects(results[start:end]), self.id)
 
-
+    @shift_join
     def favorites(self, start=None, end=None, limit=25):
         from server.models.favorite import Favorite
+        db = core.connect("shiftspace/shared")
         if not start:
             start = [self.id]
         if not end:
             end = [self.id, {}]
-        results = Favorite.by_user_and_created(core.connect("shiftspace/shared"), limit=limit)
-        return core.objects(results[start:end])
+        results = Favorite.by_user_and_created(db, limit=limit)
+        favs = core.objects(results[start:end])
+        return core.fetch(db, keys=[fav.shiftId for fav in favs])
 
 
     def comments(self, start=None, end=None, limit=25):
         from server.models.comment import Comment
-        pass
+        db = core.connect("shiftspace/shared")
         
     # ========================================
     # Favorites
