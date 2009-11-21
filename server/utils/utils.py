@@ -59,6 +59,8 @@ def import_path(fullpath):
 def clean(d):
     result = {}
     for k, v in d.items():
+        if type(v) == dict:
+            v = clean(v)
         result[str(k)] = v
     return result
 
