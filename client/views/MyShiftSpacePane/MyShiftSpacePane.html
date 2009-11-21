@@ -58,9 +58,11 @@
             options="{
               properties: ['space', 'userName', 'text', 'href', 'date', 'domain']
             }">
-            <div class="selected">
-              <input type="checkbox"/>
-            </div>
+            <div class="shiftMeta">
+              <span class="selected">
+                <input type="checkbox"/>
+              </span>
+             </div>
             <div class="comments"></div>
             <div>To <span class="userName"></span></div>
             <img class="spaceIcon"></img>
@@ -83,11 +85,16 @@
               options="{
                 properties: ['space', 'href', 'gravatar', 'userName', 'summary', 'modified', 'commentCount']
               }">
-            <div class="selected">
-              <input type="checkbox"/>
+            <div class="shiftMeta">
+              <span class="selected">
+                <input type="checkbox"/>
+              </span>
+              <img class="spaceIcon"></img>
+              
+              <span class="summaryContainer">
+                <span class="summary"></span>
+              </span>
             </div>
-            <img class="spaceIcon"></img>
-            <div class="summary"></div>
             <div class="user">
               <div class="gravatarContainer">
                   <img class="rounded-image gravatar" width="16" height="16"></img>
