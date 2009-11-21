@@ -461,15 +461,9 @@ class Shift(SSDocument):
     # List & Filtering Support
     # ========================================
 
-    #@joindecorator
     @classmethod
     def shifts(cls, user, byHref, byFollowing=False, byGroups=False, start=0, limit=25):
         db = core.connect()
-        # NOTE: to prevent errors on a newly created DB - David 9/11/09
-        """
-        if core.single(Stats.count, "shift") == None:
-            return []
-        """
         lucene = core.lucene()
         queryString = "href:\"%s\" AND ((draft:false AND private:false)" % byHref
         if user:
@@ -480,6 +474,9 @@ class Shift(SSDocument):
             queryString = queryString + ((" OR (draft:false%s)" % ((len(dbs) > 0 and (" AND dbs:%s" % dbsStr)) or "")))
         queryString = queryString + ")"
         db = core.connect("shiftspace/shared")
-        rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
+        try:
+            rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
+        except:
+            return []
         shifts = [row["doc"] for row in rows]
-        return Shift.joinData(shifts, user.id)
+        return Shift.joinData(shifts, ((user and user.id) or None))
