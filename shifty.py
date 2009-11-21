@@ -8,7 +8,7 @@ missing = []
     
 try:
     import simplejson as json
-except Exception as err:
+except Exception, err:
     missing.append("simplejson")
 try:
     import builder.preprocess as preprocess
