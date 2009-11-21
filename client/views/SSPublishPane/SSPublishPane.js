@@ -1,7 +1,7 @@
 // ==Builder==
 // @uiclass
 // @package           ShiftSpaceUI
-// @dependencies      SSView
+// @dependencies      SSFramedView
 // ==/Builder==
 
 /*
@@ -11,7 +11,7 @@
 */
 var SSPublishPane = new Class({
 
-  Extends: SSView,
+  Extends: SSFramedView,
   name: "SSPublishPane",
 
   defaults: function() {
@@ -20,7 +20,7 @@ var SSPublishPane = new Class({
     });
   },
   
-
+  
   initialize: function(el, options)
   {
     this.parent(el, options);
@@ -29,7 +29,7 @@ var SSPublishPane = new Class({
     SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
     SSAddObserver(this, 'onShiftDeselect', this.onShiftDeselect.bind(this));
   },
-
+  
   
   onShiftListViewShow: function(evt)
   {
@@ -98,13 +98,6 @@ var SSPublishPane = new Class({
     return this.__delegate;
   },
   
-  
-  awake: function()
-  {
-    this.mapOutletsToThis();
-    this.attachEvents();
-  },
-
   
   deleteShifts: function(evt)
   {
@@ -208,5 +201,37 @@ var SSPublishPane = new Class({
   {
     var selectedShifts = this.currentListView().checkedItemIds();
     window.open(ShiftSpace.info().server.urlJoin("proxy", selectedShifts[0]));
+  },
+  
+  /* SSFramedView Stuff ============================ */
+  
+  awake: function() {},
+  
+  
+  onInterfaceLoad: function(ui)
+  {
+    this.parent(ui);
+    // TODO: Not super intuitive need someway to specify this automatically - David
+    this.element.setProperty('id', 'SSPublishPane');
+    this.element.addClass("SSDisplayNone");
+  }.asPromise(),
+  
+  
+  onContextActivate: function(context)
+  {
+    if(context == this.element.contentWindow)
+    {
+      this.mapOutletsToThis();
+      this.attachEvents();
+    }
+  },
+  
+  
+  buildInterface: function()
+  {
+    this.parent();
+    this.attachEvents();
+    SSPostNotification('onPublishPaneLoad', this);
+    this.setIsLoaded(true);
   }
 });
