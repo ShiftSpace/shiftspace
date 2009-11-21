@@ -13,6 +13,7 @@ ul.ShiftListView li.ShiftListViewCell{
   border-top: 1px solid #BBB4AF;
   line-height: 26px;
   padding: 0;
+  overflow: hidden;
   vertical-align: middle;
 }
 
@@ -61,6 +62,12 @@ ul.ShiftListView li.ShiftListViewCell:hover div.draft{
   position: absolute;
   right: 150px;
   top: 0px;
+}
+
+.ShiftListView li.ShiftListViewCell div.shiftMeta{
+  height: 26px;
+  line-height: 26px;
+  padding-right: 320px;
 }
 
 .ShiftListView li.ShiftListViewCell .userDateMeta *{
