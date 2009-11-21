@@ -190,10 +190,10 @@ var ShiftListViewCell = new Class({
   },
   
   
-  setModified: function(modified)
+  setModifiedStr: function(modifiedStr)
   {
     var el = this.lockedElement();
-    el.getElement('.date').set('text', modified);
+    el.getElement('.date').set('text', modifiedStr);
   },
   
   

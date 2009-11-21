@@ -180,6 +180,8 @@ class Shift(SSDocument):
             shifts[i]["commentCount"] = commentCounts[i]
             shifts[i]["gravatar"] = (users[i]["gravatar"] or "images/default.png")
             shifts[i]["userName"] = users[i]["userName"]
+            shifts[i]["createdStr"] = utils.pretty_date(utils.futcstr(shifts[i]["created"]))
+            shifts[i]["modifiedStr"] = utils.pretty_date(utils.futcstr(shifts[i]["modified"]))
 
         if single:
             return shifts[0]

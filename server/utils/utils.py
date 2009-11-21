@@ -31,6 +31,15 @@ def genrefn(pre):
 def utctime():
   return datetime.datetime.strftime(datetime.datetime.utcnow(), "%a, %d %b %Y %H:%M:%S")
 
+def futcstr(dstr):
+    dt, _, us = dstr.partition(".")
+    dt = datetime.datetime.strptime(dt.rstrip("Z"), "%Y-%m-%dT%H:%M:%S")
+    if us != '':
+        us = int(us.rstrip("Z"), 10)
+    else:
+        us = 0
+    return dt + datetime.timedelta(microseconds=us)
+
 # taken from http://stackoverflow.com/questions/72852/how-to-do-relative-imports-in-python
 # unnecessary in Python >= 2.6
 def import_path(fullpath):

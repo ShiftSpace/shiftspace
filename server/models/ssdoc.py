@@ -15,7 +15,7 @@ class SSDocument(Document):
     # Fields
     # ========================================
 
-    createdBy = TextField()    
+    createdBy = TextField()
     source = DictField(Schema.build(
             server = TextField(),
             database = TextField()
