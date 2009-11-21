@@ -64,7 +64,7 @@ ul#SpaceMenuList li:hover
   font-weight: bold;
 }
 
-ul#SpaceMenuList li.Clone
+ul#SpaceMenuList li.DragClone
 {
   margin: 0;
   cursor: -moz-grabbing;
