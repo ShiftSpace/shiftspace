@@ -12,23 +12,19 @@ try:
     import builder.corebuilder as corebuilder
     import sandalphon.sandalphon as sandalphon
 except Exception as err:
-    print err
     missing.append("simplejson")
 
 try:
     import manual.build as manbuild
 except Exception as err:
-    print err
     missing.append("mako")
 try:
     import server.setup as setup
 except Exception as err:
-    print err
     missing.append("couchdb-python")
 try:
     import server.server as server
 except Exception as err:
-    print err
     missing.append("cherrypy")
 
 
