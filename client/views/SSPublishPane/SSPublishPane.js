@@ -29,7 +29,7 @@ var SSPublishPane = new Class({
     SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
     SSAddObserver(this, 'onShiftDeselect', this.onShiftDeselect.bind(this));
   },
-
+  
   
   onShiftListViewShow: function(evt)
   {
@@ -207,12 +207,13 @@ var SSPublishPane = new Class({
   
   awake: function() {},
   
+  
   onInterfaceLoad: function(ui)
   {
     this.parent(ui);
     // TODO: Not super intuitive need someway to specify this automatically - David
     this.element.setProperty('id', 'SSPublishPane');
-    this.element.addClass("SSPublishPaneClosed");
+    this.element.addClass("SSDisplayNone");
   }.asPromise(),
   
   
