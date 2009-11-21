@@ -26,7 +26,6 @@ ul#SpaceMenuList
   
   border: #dfebe1 solid;
   border-width: 3px 3px 0px 3px;
-/*  border:none;*/
   
   -moz-border-radius-topright: 6px;
   -webkit-border-top-right-radius: 6px;
@@ -65,11 +64,11 @@ ul#SpaceMenuList li:hover
   font-weight: bold;
 }
 
-/*ul#SpaceMenuList li.Clone
+ul#SpaceMenuList li.Clone
 {
   margin: 0;
   cursor: -moz-grabbing;
-}*/
+}
 
 ul#SpaceMenuList li > img, ul#SpaceMenuList li > span
 {
