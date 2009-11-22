@@ -81,7 +81,6 @@ def pretty_date(t=False):
         diff = now - datetime.datetime.fromtimestamp(t)
     elif not time:
         diff = now - now
-    print type(time)
     second_diff = diff.seconds
     day_diff = diff.days
 

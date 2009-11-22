@@ -19,7 +19,6 @@ except Exceptions, err:
 try:
     import manual.build as manbuild
 except Exception, err:
-    print err
     missing.append("mako")
 try:
     import server.setup as setup

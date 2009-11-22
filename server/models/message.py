@@ -55,13 +55,12 @@ class Message(SSDocument):
 
         for i in range(len(messages)):
             if (userIds[i]):
-              if (userIds[i] == 'shiftspace'):
-                messages[i]["gravatar"] = "images/default.png"
-                messages[i]["userName"] = 'ShiftSpace'
-              else:
-                messages[i]["gravatar"] = (users[i]["gravatar"] or "images/default.png")
-                messages[i]["userName"] = users[i]["userName"]
-                
+                if (userIds[i] == 'shiftspace'):
+                    messages[i]["gravatar"] = "images/default.png"
+                    messages[i]["userName"] = 'ShiftSpace'
+                else:
+                    messages[i]["gravatar"] = (users[i]["gravatar"] or "images/default.png")
+                    messages[i]["userName"] = users[i]["userName"]
             messages[i]["modifiedStr"] = utils.pretty_date(utils.futcstr(messages[i]["modified"]))
 
         if single:
@@ -110,6 +109,3 @@ class Message(SSDocument):
         """
         db = core.connect(SSUser.messagesDb(self.toId))
         del db[id]
-
-
-
