@@ -433,7 +433,6 @@ def main(argv):
 def usage():
     print
     print "Hello from Shifty! <item> is required, [item] is not."
-    print "   %16s  a magical dance that installs all dependencies, builds docs, and configures the server!" % "dance"
     print
     print "   %16s  install dependencies" % "installdeps"
     print "   %16s  build a shiftspace script" % "build"
