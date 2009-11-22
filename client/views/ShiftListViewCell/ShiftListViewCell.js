@@ -154,7 +154,14 @@ var ShiftListViewCell = new Class({
   setRead: function(read)
   {
     var el = this.lockedElement();
-    el.getElement(".read").set("text", (read) ? "read" : "unread");
+    if (read)
+    {
+      el.removeClass("unread");
+    }
+    else
+    {
+      el.addClass("unread");
+    }
   },
   
   setSummary: function(summary)

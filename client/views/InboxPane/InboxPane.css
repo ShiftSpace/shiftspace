@@ -2,3 +2,8 @@
 {
   float: left;
 }
+
+ul.ShiftListView li.ShiftListViewCell div.messageMeta
+{
+  padding:4px;
+}
