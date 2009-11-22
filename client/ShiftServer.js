@@ -59,27 +59,8 @@ var ShiftServer = new Class({
       ]
     });
   },
-  
-  
-  favoriteTransform: function(data)
-  {
-    var content = data.content;
-    data.summary = content.text;
-    return data;
-  },
 
 
-  commentTransform: function(data)
-  {
-    var content = data.content;
-    data.userName = content.user.userName;
-    data.space = content.shift.space;
-    data.href = content.href;
-    data.domain = content.domain;
-    data.text = content.text;
-    return data;
-  },
-  
   initUserTables: function()
   {
     new SSTable("MyShifts", {
@@ -103,7 +84,6 @@ var ShiftServer = new Class({
 
     new SSTable("Favorites", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/favorites'},
-      transforms: [this.favoriteTransform],
       watches: [
         {
           events: [{resource:"shift", action:"favorite"},
@@ -115,7 +95,6 @@ var ShiftServer = new Class({
 
     new SSTable("MyComments", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/comments'},
-      transforms: [this.commentTransform],
       watches: [
         {
           events: [{resource:"shift", action:"comment"}],
