@@ -280,7 +280,7 @@ class SSUser(User):
             return core.objects(results[start:end])
         return core.objects(results)
 
-
+    @shift_join
     def feed(self, start=None, end=None, limit=25):
         from server.models.shift import Shift
         results = Shift.by_created(core.connect(SSUser.feedDb(self.id)), limit=limit)
@@ -290,7 +290,7 @@ class SSUser(User):
             return core.objects(results[:end])
         if start and end:
             return core.objects(results[start:end])
-        return Shift.joinData(core.objects(results[start:end]), self.id)
+        return core.objects(results[start:end])
 
     @shift_join
     def favorites(self, start=None, end=None, limit=25):
@@ -313,6 +313,7 @@ class SSUser(User):
         if not end:
             end = [self.id, {}]
         results = Comment.by_user_and_created(db, limit=limit)
+        return core.objects(results[start:end])
         
     # ========================================
     # Favorites

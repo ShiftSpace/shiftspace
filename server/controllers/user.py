@@ -249,6 +249,6 @@ class UserController(ResourceController):
         theUser = SSUser.read(loggedInUser)
         otherUser = SSUser.readByName(userName)
         if loggedInUser == otherUser.id or theUser.isAdmin():
-            return data(otherUser.comments(userId, start=start, end=end, limit=limit))
+            return data([comment.toDict() for comment in otherUser.comments(start=start, end=end, limit=limit)])
         else:
             return error("You don't have permission to view this user's comments.", PermissionError)

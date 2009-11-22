@@ -20,6 +20,7 @@ class Comment(SSDocument):
 
     type = TextField(default="comment")
     shiftId = TextField()
+    shiftAuthor = TextField()
     text = TextField()
 
     # ========================================
@@ -34,7 +35,7 @@ class Comment(SSDocument):
            }                           \
          }"
         )
-
+    
     by_user_and_created = View(
         "comments",
         "function(doc) {               \
@@ -56,7 +57,7 @@ class Comment(SSDocument):
     count_by_shift = View(
         "comments",
         "function(doc) {                    \
-           if(doc.type == 'commentstub') { \
+           if(doc.type == 'comment') { \
              emit(doc.shiftId, 1);          \
            }                                \
          }",
@@ -76,6 +77,32 @@ class Comment(SSDocument):
     # ========================================
     # Class Methods
     # ========================================
+    
+    @classmethod
+    def joinData(cls, comments):
+        single = False
+        if type(comments) != list:
+            single = True
+            comments = [comments]
+
+        authorIds = [comments["shiftAuthor"] for comment in comments]
+        shiftIds = [comments["shiftId"] for comment in comments]
+
+        authors = core.fetch(keys=authorIds)
+        shifts = core.fetch(core.connect("shiftspace/shared"), keys=shiftIds)
+
+        for i in range(len(comments)):
+            if (authors[i]):
+                comments[i]["userName"] = authors[i]["userName"]
+            comments[i]["createdStr"] = utils.pretty_date(utils.futcstr(comments[i]["created"]))
+            comments[i]["space"] = shifts[i]["space"]
+            comments[i]["href"] = shifts[i]["href"]
+            comments[i]["domain"] = shifts[i]["domain"]
+
+        if single:
+            return comments[0]
+        else:
+            return comments
 
     @classmethod
     def create(cls, userId, shiftId, text, subscribe=False):
@@ -106,16 +133,11 @@ class Comment(SSDocument):
         json = {
             "createdBy": userId,
             "shiftId": shiftId,
+            "shiftAuthor": theShift.createdBy,
             "text": text,
-            }
-        stub = {
-            "type":"commentstub",
-            "shiftId": shiftId,
             }
         newComment = Comment(**utils.clean(json))
         newComment.store(db)
-        db = core.connect("shiftspace/shared")
-        db["commentstub:%s" % newComment.id] = stub
         subscribers = theShift.subscribers()
         # make a private copy
         # TODO: need to think about the implications of a private copy here - David
@@ -153,10 +175,15 @@ class Comment(SSDocument):
         """
         Delete a single comment.
         """
+        from server.models.ssuser import SSUser
+        db = core.connect(SSUser.privateDb(self.createdBy))
+        try:
+            del db[self.id]
+        except:
+            pass
         db = core.connect(Comment.db(self.shiftId))
-        del db[self.id]
-        db = core.connect("shiftspace/shared")
-        del db["commentstub:%s" % self.id]
-
-
-
+        try:
+            del db[self.id]
+        except:
+            pass
+        core.replicate(Comment.db(self.shiftId), "shiftspace/shared")
