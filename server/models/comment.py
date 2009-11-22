@@ -127,7 +127,7 @@ class Comment(SSDocument):
                 if subscriber != userId:
                     astr = ((subscriber == theShift.createdBy) and "your") or ("%s's" % shiftAuthor.userName)
                     json = {
-                        "fromId": "shiftspace",
+                        "fromId": userId,
                         "toId": subscriber,
                         "text": "%s just commented on %s shift!" % (theUser.userName, astr),
                         "meta": "comment"

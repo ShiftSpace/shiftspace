@@ -266,7 +266,7 @@ class SSUser(User):
             return core.objects(results[:end])
         if start and end:
             return core.objects(results[start:end])
-        return core.objects(results)
+        return Message.joinData(core.objects(results))
 
     @shift_join
     def shifts(self, start=None, end=None, limit=25):

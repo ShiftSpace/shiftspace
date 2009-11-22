@@ -101,6 +101,11 @@
     padding-top: 4px;*/
   }
   
+  ul.ShiftListView li.ShiftListViewCell input
+  {
+    vertical-align:middle;
+  }
+  
     .ShiftListView .ShiftListViewCell > *
     {
       /*float: left;*/
@@ -322,6 +327,25 @@
     {
       background-position:0 -26;
       color:#F8F5F2;
+    }
+    
+    .ShiftListView .ShiftListViewCell.unread div
+    {
+      font-weight:bold;
+    }
+    
+    .ShiftListView li.ShiftListViewCell div.read
+    {
+      width:12px;
+      height:12px;
+      margin:8px 4px;
+      overflow:hidden;
+      background:url(/images/Console/read.png) no-repeat;
+    }
+    
+    .ShiftListView li.ShiftListViewCell.unread div.read
+    {
+      background:url(/images/Console/unread.png) no-repeat;
     }
 
 /* Sidebars */
