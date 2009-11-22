@@ -9,4 +9,15 @@ from server.models.favorite import Favorite
 from server.models.comment import Comment
 from server.couchdb.lucene_design import LuceneDefinition
 
+def reload_models():
+    import server
+    for m in [server.models.ssuser, 
+              server.models.shift, 
+              server.models.group, 
+              server.models.permission, 
+              server.models.favorite, 
+              server.models.comment, 
+              server.couchdb.lucene_design]:
+        reload(m)
+
 db = core.connect()

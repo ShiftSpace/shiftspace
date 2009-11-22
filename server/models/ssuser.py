@@ -367,7 +367,6 @@ class SSUser(User):
         db = core.connect(Comment.db(aShift.id))
         return db.get("user:%s" % self.id) != None
 
-
     def subscribe(self, aShift):
         from server.models.comment import Comment
         db = core.connect(Comment.db(aShift.id))
@@ -379,12 +378,9 @@ class SSUser(User):
                 "userId": self.id,
                 })
 
-
     def unsubscribe(self, aShift):
         from server.models.comment import Comment
         db = core.connect(Comment.db(aShift.id))
         if self.isSubscribed(aShift):
             del db["user:%s" % self.id]
-
-
 
