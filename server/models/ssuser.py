@@ -308,6 +308,11 @@ class SSUser(User):
     def comments(self, start=None, end=None, limit=25):
         from server.models.comment import Comment
         db = core.connect("shiftspace/shared")
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Comment.by_user_and_created(db, limit=limit)
         
     # ========================================
     # Favorites

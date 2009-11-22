@@ -133,9 +133,9 @@ class Comment(SSDocument):
                         "meta": "comment"
                         }
                     Message.create(**utils.clean(json))
-
+        # TODO: don't replicate if peer - David 11/21/09
+        core.replicate(Comment.db(shiftId), "shiftspace/shared")
         return newComment
-
 
     @classmethod
     def read(cls, shiftId, id):
