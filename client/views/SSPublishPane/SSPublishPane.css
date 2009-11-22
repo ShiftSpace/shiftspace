@@ -5,16 +5,14 @@
   right: 19px;
   width: 268px;
   bottom: 0px;
-
   color: black;
   z-index: 2;
-  border:3px #F7F2EF solid;
-
+  /* border:3px #F7F2EF solid; */
   font-family:Helvetica,Arial,Verdana, sans-serif;
   font-size:12px;
   color:#4b423a;
 
-  padding:4px 3px 1px 3px;
+  /* padding:4px 3px 1px 3px; */
   background-color: #fff;  
 
   -webkit-box-shadow: 0px 0px 10px #000;  
@@ -24,12 +22,25 @@
   -webkit-border-radius: 4px;
 }
 
+#PaneDrag
+{
+  background:url(/images/Pane/SSPaneHeader.png) no-repeat;	
+  width: 380px;
+  height: 15px;
+}
+
+.PaneBody
+{
+  width: 340px;
+  background:url(/images/Pane/SSPaneBg.png);
+  padding: 0 20px;
+}
+
 /*--------------------------------------------------HEADER*/
 #SSPublishPaneHeader
 {
-  background-image:url(/images/Console/publish-top-bg.gif);
+  /* background-image:url(/images/Pane/publish-top-bg.gif); */
   height:27px;
-  padding:1px 0px 0px 4px;
 
 }
 
@@ -42,13 +53,21 @@
 }
    
 /*---------------------------------------------------BODY*/
+.SSPublishPaneFrameBody
+{
+  /* background:#f8f5f2; */
+  /* background-image:url(/images/Pane/SSPublishPaneBg.png); */
+  font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
+  margin: 0;
+}
+
 #SSPublishPaneBody
 {
   background:#C6C1BD;
   height:86px;
   margin-top:0px;
   padding-left:4px;
-  background-image:url(/images/Console/publish-top-body.gif);
+  background-image:url(/images/Pane/publish-top-body.gif);
   background-repeat:repeat-y;
 }
 
@@ -80,9 +99,9 @@
 .SSPinput{
   position:relative;
   bottom:-7px;
-  background-image:url(/images/Console/publish-form-input.gif);
-  width:262px;
-  height:22px;
+  background-image:url(/images/Pane/publish-form-input.gif);
+  width:334px;
+  height:30px;
   border:0px;
   margin-left:-2px;
   padding-bottom:5px;
@@ -153,7 +172,7 @@
   height:32px;
   background:#ffffff;
   width:268px;
-  background-image:url(/images/Console/publish-top-footer.gif);
+  background-image:url(/images/Pane/publish-top-footer.gif);
 }
 
 #SaveShift{

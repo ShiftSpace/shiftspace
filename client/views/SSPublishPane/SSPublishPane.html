@@ -1,56 +1,63 @@
 <div id="SSPublishPane" 
      class="SSPublishPane SSDisplayNone"
      uiclass="SSPublishPane">
+  
+  <div id="PaneDrag">
+  
+  </div>
      
-  <div id="SSPublishPaneHeader">
-
-   <div id="SSPublishPaneVis">
-     <label>Visibility:</label>
-
-     <span id="SSPPVisiblePrivate" outlet="SSPublishPane">
-       <input id="ShiftPrivateStatusRadio" name="ShiftPrivateStatusRadio" value="private" outlet="SSPublishPane" type="radio" class="SSPPradio"></input>
-       <img src="/images/Console/publish-private.gif"/>
-       <label>
-         Private
-       </label>
-     </span>
-     <span id="SSPPVisiblePublic" outlet="SSPublishPane">
-	   <span class="SSPPradio" outlet="SSPublishPane"/>
-       <input id="ShiftPublicStatusRadio" name="ShiftPublicStatusRadio" value="public" outlet="SSPublishPane" type="radio" ></input>
-       <img src="/images/Console/publish-public.gif"/>
-       <label>
-         Public
-       </label>
-     </span>
-   </div>
-
-  </div>
-  
-  <div id="SSPublishPaneBody">
-    <div id="SSPublishPaneTags">
-      <span class="SSPPTagsroundedCorners SSPPTagUser SSPPTagFont">@username</span>
-      <span class="SSPPTagsroundedCorners SSPPTagGroup SSPPTagFont">&amp;groupname</span>
-      <span class="SSPPTagsroundedCorners SSPPTagTag SSPPTagFont">#tagname</span>
-    </div>
-    <input id="PublishTargets" type="text" outlet="SSPublishPane" class="SSPinput"></input>
-    <ul>
-      <li><img src="/images/Console/publish-share-main.png"/></li>
-      <li><label>Share:</label></li>
-      <li><a id="ShiftPermalink" class="SSPPTips" outlet="SSPublishPane" title="Permalink"><img src="/images/Console/publish-share-permalink.png"/></a></li>
-      <li><a class="SSPPTips" title="Twitter"><img src="/images/Console/publish-share-twitter.png"/></a></li>
-      <li><a class="SSPPTips" title="Del.ico.us"><img src="/images/Console/publish-share-del.png" /></a></li>
-      <li><a class="SSPPTips" title="Facebook"><img src="/images/Console/publish-share-facebook.png"/></a></li>
-      <li><a class="SSPPTips" title="Digg"><img src="/images/Console/publish-share-digg.png" /></a></li>
-    </ul>
-  </div>
-  
-  <div id="SSPublishPaneFooter">
-    <div id="SSPublishPaneStatus">
-      <label>Current Status: <b>Draft  </b></label>
-      <button id="DeleteShift" outlet="SSPublishPane" class="SSPublishPubButton">Delete</button>
-      <button id="SaveShift" outlet="SSPublishPane">Save</button>
-      <button id="PublishShift" outlet="SSPublishPane" class="SSPublishPubButton">Publish</button>
-    </div>
-  </div>
-  
+  <div class="PaneBody">
+	  <div id="SSPublishPaneHeader">
+	
+	   <div id="SSPublishPaneVis">
+	     <label>Visibility:</label>
+	
+	     <span id="SSPPVisiblePrivate" outlet="SSPublishPane">
+	       <input id="ShiftPrivateStatusRadio" name="ShiftPrivateStatusRadio" value="private" outlet="SSPublishPane" type="radio" class="SSPPradio"></input>
+	       <img src="/images/Pane/publish-private.gif"/>
+	       <label>
+	         Private
+	       </label>
+	     </span>
+	     <span id="SSPPVisiblePublic" outlet="SSPublishPane">
+		   <span class="SSPPradio" outlet="SSPublishPane"/>
+	       <input id="ShiftPublicStatusRadio" name="ShiftPublicStatusRadio" value="public" outlet="SSPublishPane" type="radio" ></input>
+	       <img src="/images/Pane/publish-public.gif"/>
+	       <label>
+	         Public
+	       </label>
+	     </span>
+	   </div>
+	
+	  </div>
+	  
+	  <div id="SSPublishPaneBody">
+	    <div id="SSPublishPaneTags">
+	      <span class="SSPPTagsroundedCorners SSPPTagUser SSPPTagFont">@username</span>
+	      <span class="SSPPTagsroundedCorners SSPPTagGroup SSPPTagFont">&amp;groupname</span>
+	      <span class="SSPPTagsroundedCorners SSPPTagTag SSPPTagFont">#tagname</span>
+	    </div>
+	    <input id="PublishTargets" type="text" outlet="SSPublishPane" class="SSPinput"></input>
+	    <button id="AddTag" class="SSPublishAddTag" outlet="SSPublishPane">Add</button>
+	    <ul>
+	      <li><img src="/images/Pane/publish-share-main.png"/></li>
+	      <li><label>Share:</label></li>
+	      <li><a id="ShiftPermalink" class="SSPPTips" outlet="SSPublishPane" title="Permalink"><img src="/images/Pane/publish-share-permalink.png"/></a></li>
+	      <li><a class="SSPPTips" title="Twitter"><img src="/images/Pane/publish-share-twitter.png"/></a></li>
+	      <li><a class="SSPPTips" title="Del.ico.us"><img src="/images/Pane/publish-share-del.png" /></a></li>
+	      <li><a class="SSPPTips" title="Facebook"><img src="/images/Pane/publish-share-facebook.png"/></a></li>
+	      <li><a class="SSPPTips" title="Digg"><img src="/images/Pane/publish-share-digg.png" /></a></li>
+	    </ul>
+	  </div>
+	  
+	  <div id="SSPublishPaneFooter">
+	    <div id="SSPublishPaneStatus">
+	      <label>Current Status: <b>Draft  </b></label>
+	      <button id="DeleteShift" outlet="SSPublishPane" class="SSPublishPubButton">Delete</button>
+	      <button id="SaveShift" outlet="SSPublishPane">Save</button>
+	      <button id="PublishShift" outlet="SSPublishPane" class="SSPublishPubButton">Publish</button>
+	    </div>
+	  </div>
+	</div>
+	  
 </div>

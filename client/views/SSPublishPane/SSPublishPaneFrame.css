@@ -3,9 +3,10 @@
   position: fixed;
   right: 50px;
   bottom: 0px;
-  width: 200px;
-  height: 200px;
+  width: 380px;
+  height: 300px;
   z-index: 1000004;
+  /* border: 0; */
 }
 
 .SSPublishPaneClosed
