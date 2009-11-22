@@ -431,6 +431,8 @@ class Shift(SSDocument):
 
     def comments(self, start=None, end=None, limit=25):
         from server.models.comment import Comment
+        if not self.hasThread():
+            return []
         db = core.connect(Comment.db(self.id))
         return core.objects(Comment.by_created(db, limit=limit))
 
@@ -470,7 +472,6 @@ class Shift(SSDocument):
     @classmethod
     def shifts(cls, user, byHref, byFollowing=False, byGroups=False, start=0, limit=25):
         from server.models.ssuser import SSUser
-        
         db = core.connect()
         lucene = core.lucene()
         queryString = "href:\"%s\" AND ((draft:false AND private:false)" % byHref
