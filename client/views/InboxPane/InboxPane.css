@@ -1,0 +1,4 @@
+#MessagesListView li > *
+{
+  float: left;
+}

@@ -80,15 +80,6 @@ var ShiftServer = new Class({
     return data;
   },
   
-  
-  messageTransform: function(data)
-  {
-    var content = data.content;
-    data.summary = content.text;
-    return data;
-  },
-  
-  
   initUserTables: function()
   {
     new SSTable("MyShifts", {
@@ -135,7 +126,6 @@ var ShiftServer = new Class({
     
     new SSTable("Messages", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/messages', 'delete':'event'},
-      transforms: [this.messageTransform],
       watches: [
         {
           events: [{resource:"event", action:"read"},

@@ -151,6 +151,11 @@ var ShiftListViewCell = new Class({
     el.getElement(".unread").set("text", (unread) ? "unread" : "read");
   },
   
+  setRead: function(read)
+  {
+    var el = this.lockedElement();
+    el.getElement(".read").set("text", (read) ? "read" : "unread");
+  },
   
   setSummary: function(summary)
   {
@@ -181,8 +186,7 @@ var ShiftListViewCell = new Class({
     var el = this.lockedElement();
     el.getElement('.date').set('text', modifiedStr);
   },
-  
-  
+
   setSpace: function(space)
   {
     var el = this.lockedElement(), name = el.getElement('.spaceName'), icon = el.getElement('.spaceIcon');
