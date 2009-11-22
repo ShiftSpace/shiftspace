@@ -8,25 +8,25 @@ missing = []
     
 try:
     import simplejson as json
-except Exception as err:
+except Exception, err:
     missing.append("simplejson")
 try:
     import builder.preprocess as preprocess
     import builder.corebuilder as corebuilder
     import sandalphon.sandalphon as sandalphon
-except Exceptions as err:
+except Exceptions, err:
     print err
 try:
     import manual.build as manbuild
-except Exception as err:
+except Exception, err:
     missing.append("mako")
 try:
     import server.setup as setup
-except Exception as err:
+except Exception, err:
     missing.append("couchdb-python")
 try:
     import server.server as server
-except Exception as err:
+except Exception, err:
     missing.append("cherrypy")
 
 
@@ -108,7 +108,7 @@ def update():
     """
     Update the source file and test file indexes.
     """
-    corebuilder.run()
+    os.system("scripts/update_submodules.sh")
 
 
 def build(argv):
@@ -364,7 +364,7 @@ def main(argv):
     except Error:
         usage()
         sys.exit(2)
-    if len(missing) > 0 and (not (action in ["nightly", "installdeps", "build", "configure", "shiftpress"])):
+    if len(missing) > 0 and (not (action in ["nightly", "installdeps", "build", "configure", "shiftpress", ""])):
         bail(", ".join(missing))
     if action in ("-h", "--help"):
         usage()
@@ -439,7 +439,7 @@ def usage():
     print "   %16s  configure ShiftSpace" % "configure <url>"
     print "   %16s  configure ShiftPress" % "shiftpress <url>"
     print
-    print "   %16s  update ShiftSpace source and tests" % "update"
+    print "   %16s  simpler way of keeping project submodules up-to-date" % "update"
     print "   %16s  initialize the database" % "initdb"
     print "   %16s  update the database" % "updatedb"
     print "   %16s  reset the database (delete and recreate)" % "resetdb"

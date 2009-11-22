@@ -213,7 +213,7 @@ class UserController(ResourceController):
         theUser = SSUser.read(loggedInUser)
         otherUser = SSUser.readByName(userName)
         if loggedInUser == otherUser.id or theUser.isAdmin():
-            return data(otherUser.shifts(start=start, end=end, limit=limit))
+            return data([shift.toDict() for shift in otherUser.shifts(start=start, end=end, limit=limit)])
         else:
             return error("You don't have permission to view this user's shifts.", PermissionError)
             

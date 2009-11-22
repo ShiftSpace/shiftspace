@@ -6,6 +6,7 @@ import server.utils.utils as utils
 import core
 
 from server.models.user import User
+from server.models.shift import shift_join
 
 # ==============================================================================
 # SSUser Model
@@ -267,12 +268,20 @@ class SSUser(User):
             return core.objects(results[start:end])
         return Message.joinData(core.objects(results))
 
-
+    @shift_join
     def shifts(self, start=None, end=None, limit=25):
-        pass
+        from server.models.shift import Shift
+        results = Shift.by_user_and_created(core.connect("shiftspace/shared"), limit=limit)
+        if start and not end:
+            return core.objects(results[start:])
+        if not start and end:
+            return core.objects(results[:end])
+        if start and end:
+            return core.objects(results[start:end])
+        return core.objects(results)
 
 
-    def feed(self, start=None, end=None, limit=25, userId=None):
+    def feed(self, start=None, end=None, limit=25):
         from server.models.shift import Shift
         results = Shift.by_created(core.connect(SSUser.feedDb(self.id)), limit=limit)
         if start and not end:
@@ -281,7 +290,7 @@ class SSUser(User):
             return core.objects(results[:end])
         if start and end:
             return core.objects(results[start:end])
-        return Shift.joinData(core.objects(results[start:end]), userId)
+        return Shift.joinData(core.objects(results[start:end]), self.id)
 
 
     def favorites(self, start=None, end=None, limit=25):
