@@ -237,6 +237,8 @@ class Shift(SSDocument):
             db = SSUser.privateDb(self.createdBy)
         else:
             db = SSUser.publicDb(self.createdBy)
+        
+        self.store(core.connect(db))
         core.replicate(db, "shiftspace/shared")
         
         # update followers and groups
