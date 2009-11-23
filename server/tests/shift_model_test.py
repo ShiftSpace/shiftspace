@@ -87,8 +87,8 @@ class BasicOperations(unittest.TestCase):
         # should exist in master/public db 
         theShift = Shift.load(core.connect("shiftspace/public"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-        # should exist in user/feed db
-        theShift = Shift.load(core.connect(SSUser.feedDb(self.fakemary.id)), newShift.id)
+        # should exist in shiftspace/shared db
+        theShift = Shift.load(core.connect("shiftspace/shared"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         # should _not_ exist in user/private db
         theShift = Shift.load(core.connect(SSUser.privateDb(self.fakemary.id)), newShift.id)
@@ -106,8 +106,8 @@ class BasicOperations(unittest.TestCase):
         followers = self.fakemary.followers()
         self.assertTrue(self.fakejohn.id in followers)
         newShift.publish({"private":False})
-        # should exist in user/feed db
-        theShift = Shift.load(core.connect(SSUser.feedDb(self.fakejohn.id)), newShift.id)
+        # should exist in shiftspace/shared db
+        theShift = Shift.load(core.connect("shiftspace/shared"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
 
     def testPublishToUser(self):
@@ -120,7 +120,7 @@ class BasicOperations(unittest.TestCase):
         newShift.publish(publishData)
         # should exist in user feed
         # TODO: in inbox if peer - David 11/18/09
-        theShift = Shift.load(core.connect(SSUser.feedDb(self.fakejohn.id)), newShift.id)
+        theShift = Shift.load(core.connect("shiftspace/shared"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
 
     def testPublishToGroup(self):
@@ -141,8 +141,8 @@ class BasicOperations(unittest.TestCase):
             "dbs": [Group.db(newGroup.id)]
             }
         newShift.publish(publishData)
-        # should exists in fakejohn's feed
-        db = core.connect(SSUser.feedDb(self.fakejohn.id))
+        # should exists in shiftspace/shared
+        db = core.connect("shiftspace/shared")
         theShift = Shift.load(db, newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         newGroup.delete()
@@ -160,13 +160,13 @@ class BasicOperations(unittest.TestCase):
             }
         newShift.publish(publishData)
         # should exist in subscriber's feed
-        db = core.connect(SSUser.feedDb(self.fakejohn.id))
+        db = core.connect("shiftspace/shared")
         theShift = Shift.load(db, newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
         newGroup.delete()
-        # should exist in user's feed
+        # should exist in shiftspace/shared
         # TODO: inbox if user is peer - David 11/18/09
-        theShift = Shift.load(core.connect(SSUser.feedDb(self.fakebob.id)), newShift.id)
+        theShift = Shift.load(core.connect("shiftspace/shared"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
 
     def tearDown(self):

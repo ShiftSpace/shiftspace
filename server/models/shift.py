@@ -195,7 +195,6 @@ class Shift(SSDocument):
         db = core.connect(SSUser.privateDb(createdBy))
         newShift.domain = utils.domain(newShift.href)
         newShift.store(db)
-        core.replicate(SSUser.privateDb(createdBy), SSUser.feedDb(createdBy))
         core.replicate(SSUser.privateDb(createdBy), "shiftspace/shared")
         return Shift.joinData(newShift, newShift.createdBy)
 
@@ -212,14 +211,6 @@ class Shift(SSDocument):
             if not theShift:
                 # then user private
                 db = core.connect(SSUser.privateDb(userId))
-                theShift = Shift.load(db, id)
-            if not theShift:
-                # then user feed
-                db = core.connect(SSUser.feedDb(userId))
-                theShift = Shift.load(db, id)
-            if not theShift:
-                # then the inbox
-                db = core.connect(SSUser.inboxDb(userId))
                 theShift = Shift.load(db, id)
         if theShift:
             return Shift.joinData(theShift, theShift.createdBy)
@@ -240,28 +231,19 @@ class Shift(SSDocument):
         if fields.get("dbs"):
             self.dbs = list(set(self.dbs.extend(fields.get("dbs"))))
         self.modified = datetime.now()
-
+        
         # update the correct user db
         if self.publishData.private:
-            db = core.connect(SSUser.privateDb(self.createdBy))
+            db = SSUser.privateDb(self.createdBy)
         else:
-            db = core.connect(SSUser.publicDb(self.createdBy))
-        self.store(db)
-
-        # replicate to user's feed db
-        if self.publishData.private:
-            core.replicate(SSUser.privateDb(self.createdBy), SSUser.feedDb(self.createdBy))
-        else:
-            core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(self.createdBy))
-
+            db = SSUser.publicDb(self.createdBy)
+        core.replicate(db, "shiftspace/shared")
+        
         # update followers and groups
         if updateDbs:
             for db in self.publishData.dbs:
                 dbtype, dbid = db.split("/")
-                # TODO: write to inbox if user is peer - David 11/18/09
-                if dbtype == "user":
-                    self.updateTo(SSUser.feedDb(dbid))
-                elif dbtype == "group":
+                if dbtype == "group":
                     from server.models.group import Group
                     Group.read(dbid).updateShift(self)
 
@@ -277,9 +259,7 @@ class Shift(SSDocument):
             db = core.connect(SSUser.publicDb(self.createdBy))
             if db.get(self.id):
                 del db[self.id]
-        db = core.connect(SSUser.feedDb(self.createdBy))
-        if db.get(self.id):
-            del db[self.id]
+        core.replicate(db.name, "shiftspace/shared")
 
 
     def publishIds(self):
@@ -369,23 +349,12 @@ class Shift(SSDocument):
                 self.copyTo(publicdb)
                 privatedb = core.connect(SSUser.privateDb(self.createdBy))
                 del privatedb[self.id]
-            core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(self.createdBy))
             core.replicate(SSUser.publicDb(self.createdBy), "shiftspace/public")
+            core.replicate("shiftspace/public", "shiftspace/shared")
         else:
             privatedb = SSUser.privateDb(self.createdBy)
             self.store(core.connect(privatedb))
-            core.replicate(privatedb, SSUser.feedDb(self.createdBy))
-
-        # TODO: replicate to user/inbox for peers - David 11/18/09
-        followers = author.followers()
-        [core.replicate(SSUser.publicDb(self.createdBy), SSUser.feedDb(follower)) for follower in followers]
-        
-        # copy to shiftspace/shared, we need it there
-        # for general queries about what's available on pages - David
-        if not isPrivate:
-            core.replicate("shiftspace/public", "shiftspace/shared")
-        else:
-            self.copyOrUpdateTo("shiftspace/shared")
+            core.replicate(privatedb, "shiftspace/shared")
         
         return Shift.joinData(self, self.createdBy)
         

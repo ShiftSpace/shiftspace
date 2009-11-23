@@ -93,18 +93,8 @@ class SSUser(User):
         server.create(SSUser.privateDb(newUser.id))
         # all of the user's messages
         server.create(SSUser.messagesDb(newUser.id))
-        # the user's feed, merged from user/public and user/feed
-        server.create(SSUser.feedDb(newUser.id))
-        # the user's inbox of direct shifts
-        server.create(SSUser.inboxDb(newUser.id))
 
         # sync views
-        Shift.by_created.sync(server[SSUser.feedDb(newUser.id)])
-        Shift.by_user_and_created.sync(server[SSUser.feedDb(newUser.id)])
-        Shift.by_href_and_created.sync(server[SSUser.feedDb(newUser.id)])
-        Shift.by_domain_and_created.sync(server[SSUser.feedDb(newUser.id)])
-        Shift.by_group_and_created.sync(server[SSUser.feedDb(newUser.id)])
-        Shift.by_follow_and_created.sync(server[SSUser.feedDb(newUser.id)])
         Message.by_created.sync(server[SSUser.messagesDb(newUser.id)])
 
         return newUser
@@ -283,6 +273,8 @@ class SSUser(User):
 
     @shift_join
     def feed(self, start=None, end=None, limit=25):
+        # NOT IMPLEMENTED: will have to wait until we get to the point where
+        # we're writing p2p code - David
         from server.models.shift import Shift
         results = Shift.by_created(core.connect(SSUser.feedDb(self.id)), limit=limit)
         if start and not end:
