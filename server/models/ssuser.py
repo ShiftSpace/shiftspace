@@ -7,6 +7,7 @@ import core
 
 from server.models.user import User
 from server.models.shift import shift_join
+from server.models.comment import comment_join
 
 # ==============================================================================
 # SSUser Model
@@ -304,7 +305,7 @@ class SSUser(User):
         favs = core.objects(results[start:end])
         return core.fetch(db, keys=[fav.shiftId for fav in favs])
 
-
+    @comment_join
     def comments(self, start=None, end=None, limit=25):
         from server.models.comment import Comment
         db = core.connect("shiftspace/shared")

@@ -85,6 +85,7 @@ var SandalphonClass = new Class({
   
   /*
     Function: compileAndLoad
+      *deprecated*
       Takes a path to a Sandalphon resource (a .html and .css file with the same name)
       Returns via the callback an object which has two properties, 'interface' and 'styles'.
       'styles' can be added to the document via Sandalphon.addStyle. 'interface' is
@@ -130,6 +131,9 @@ var SandalphonClass = new Class({
     
     Parameters:
       path - a file path as string. This path should be absolute from the root ShiftSpace directory.
+      
+    Returns:
+      A promise for the html and css of the interface file.
   */
   load: function(path)
   {

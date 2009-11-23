@@ -9,6 +9,16 @@ import core
 from ssdoc import SSDocument
 
 # ==============================================================================
+# Utilities
+# ==============================================================================
+
+@simple_decorator
+def comment_join(func):
+    def afn(*args, **kwargs):
+        return Comment.joinData(func(*args, **kwargs))
+    return afn
+
+# ==============================================================================
 # Comment Model
 # ==============================================================================
 
@@ -85,8 +95,8 @@ class Comment(SSDocument):
             single = True
             comments = [comments]
 
-        authorIds = [comments["shiftAuthor"] for comment in comments]
-        shiftIds = [comments["shiftId"] for comment in comments]
+        authorIds = [comment["shiftAuthor"] for comment in comments]
+        shiftIds = [comment["shiftId"] for comment in comments]
 
         authors = core.fetch(keys=authorIds)
         shifts = core.fetch(core.connect("shiftspace/shared"), keys=shiftIds)
