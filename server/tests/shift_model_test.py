@@ -24,9 +24,9 @@ class BasicOperations(unittest.TestCase):
         self.assertEqual(theShift.type, "shift")
         self.assertEqual(theShift.createdBy, self.fakemary.id)
         self.assertNotEqual(theShift.created, None)
-        self.assertEqual(type(theShift.created), datetime)
+        self.assertEqual(type(theShift.created), datetime.datetime)
         self.assertNotEqual(theShift.modified, None)
-        self.assertEqual(type(theShift.modified), datetime)
+        self.assertEqual(type(theShift.modified), datetime.datetime)
         self.assertEqual(theShift.domain, "http://google.com")
         db = core.connect(SSUser.privateDb(self.fakemary.id))
         del db[theShift.id]
