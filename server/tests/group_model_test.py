@@ -7,6 +7,7 @@ from server.models.ssuser import SSUser
 from server.models.group import Group
 from server.tests.dummy_data import *
 
+
 class BasicOperations(unittest.TestCase):
 
     def setUp(self):
