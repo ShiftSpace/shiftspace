@@ -40,7 +40,8 @@ class BasicOperations(unittest.TestCase):
         newComment.delete()
         # delete the thread
         newShift.deleteThread()
-
+    
+    
     def testSubscribe(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -108,7 +109,8 @@ class BasicOperations(unittest.TestCase):
         messages = self.fakebob.messages()
         self.assertEqual(len(messages), 0)
         newShift.deleteThread()
-
+    
+    
     def tearDown(self):
         db = core.connect()
         SSUser.delete(self.fakemary)

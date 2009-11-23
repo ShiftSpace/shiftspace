@@ -45,15 +45,6 @@ class Comment(SSDocument):
            }                           \
          }"
         )
-    
-    by_user_and_created = View(
-        "comments",
-        "function(doc) {               \
-           if(doc.type == 'comment') { \
-             emit([doc.createdBy, doc.created], doc); \
-           }                           \
-         }"
-        )
 
     all_subscribed = View(
         "comments",
@@ -63,9 +54,18 @@ class Comment(SSDocument):
            }                                \
          }"
         )
+        
+    by_user_and_created = View(
+        "comments_shared",
+        "function(doc) {               \
+           if(doc.type == 'comment') { \
+             emit([doc.createdBy, doc.created], doc); \
+           }                           \
+         }"
+        )
 
     count_by_shift = View(
-        "comments",
+        "comments_shared",
         "function(doc) {                    \
            if(doc.type == 'comment') { \
              emit(doc.shiftId, 1);          \

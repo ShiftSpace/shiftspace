@@ -55,31 +55,39 @@ def sync():
     from models.comment import Comment
     from models.favorite import Favorite
     Lucene = core.lucene()
-    # master
+
+    # master ---------------------------------
     master = core.connect("shiftspace/master")
+
     SSUser.all.sync(master)
     SSUser.by_name.sync(master)
     SSUser.all_followers.sync(master)
+
     Permission.by_user.sync(master)
     Permission.by_joinable.sync(master)
     Permission.by_readable.sync(master)
     Permission.by_writeable.sync(master)
     Permission.by_adminable.sync(master)
+
     Lucene.users.sync(master)
-    #Lucene.groups.sync(master)
-    # shared
+    
+    # shared ---------------------------------
     shared = core.connect("shiftspace/shared")
+
     Shift.all.sync(shared)
     Shift.by_user_and_created.sync(shared)
     Shift.count_by_domain.sync(shared)
+    
     Comment.count_by_shift.sync(shared)
     Comment.by_user_and_created.sync(shared)
+    
     Favorite.by_user_and_created.sync(shared)
     Favorite.count_by_shift.sync(shared)
-    Lucene.shifts.sync(shared)
-
-    print "Databases sync'ed"
     
+    Lucene.shifts.sync(shared)
+    
+    print "Databases sync'ed"
+
 
 if __name__ == "__main__":
   init()
