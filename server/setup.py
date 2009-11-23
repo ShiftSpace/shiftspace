@@ -46,7 +46,7 @@ def init(dbname="shiftspace/master"):
     sync()
 
 
-def sync():
+def sync(createAdmin=True):
     import models.core as core
     from models.ssuser import SSUser
     from models.shift import Shift
@@ -58,6 +58,10 @@ def sync():
 
     # master ---------------------------------
     master = core.connect("shiftspace/master")
+    
+    if createAdmin:
+        master["admins"] = adminDoc
+        master["shiftspace"] = adminUser
 
     SSUser.all.sync(master)
     SSUser.by_name.sync(master)
