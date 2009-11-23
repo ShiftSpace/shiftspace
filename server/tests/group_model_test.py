@@ -1,9 +1,10 @@
 import unittest
 import datetime
 import server.models.core as core
-from server.models.shift import *
-from server.models.ssuser import *
-from server.models.group import Group import *
+
+from server.models.shift import Shift
+from server.models.ssuser import SSUser
+from server.models.group import Group
 
 
 class BasicOperations(unittest.TestCase):

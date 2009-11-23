@@ -2,10 +2,10 @@ import unittest
 import datetime
 import server.models.core as core
 
-from server.models.shift import *
-from server.models.ssuser import *
-from server.models.comment import Comment import *
-from server.models.message import *
+from server.models.shift import Shift
+from server.models.ssuser import SSUser
+from server.models.comment import Comment
+from server.models.message import Message
 from server.tests.dummy_data import *
 
 
