@@ -287,40 +287,33 @@ class Shift(SSDocument):
         
         if publishData == None:
             return self
-
+        
         db = core.connect(SSUser.privateDb(self.createdBy))
         dbs = []
         author = SSUser.read(self.createdBy)
         oldPublishData = dict(self.items())["publishData"]
         allowed = []
-
+        
         # get the private status
         isPrivate = True
         if publishData and publishData.get("private") != None:
             isPrivate = publishData.get("private")
         else:
             isPrivate = self.isPrivate()
-
+        
         # get the dbs being published to
         publishDbs = (publishData and publishData.get("dbs")) or []
-
+        
         # get the list of dbs the user is actually allowed to publish to
         allowed = []
         if (publishData and isPrivate and len(publishDbs) > 0):
             from server.models.group import Group
             allowedGroups = author.writeable()
             allowed = list(set(allowedGroups).intersection(set(publishDbs)))
-
+        
         # upate the private setting, the shift is no longer draft
         self.publishData.private = isPrivate
         self.publishData.draft = False
-        
-        # publish or update a copy of the shift to all user-x/private, user-y/private ...
-        newUserDbs = [s for s in publishDbs if s.split("/")[0] == "user"]
-        oldUserDbs = [s for s in oldPublishData.get("dbs") if s.split("/")[0] == "user"]
-        newUserDbs = list(set(newUserDbs).difference(set(oldUserDbs)))
-        if newUserDbs and len(newUserDbs) > 0:
-            dbs = list(set(newUserDbs))
         
         # publish or update a copy to group/x, group/y, ...
         newGroupDbs = [s for s in allowed if s.split("/")[0] == "group"]
@@ -328,18 +321,13 @@ class Shift(SSDocument):
         newGroupDbs = list(set(newGroupDbs).difference(set(oldGroupDbs)))
         if newGroupDbs and len(newGroupDbs) > 0:
             dbs.extend(list(set(newGroupDbs)))
-
+        
         self.publishData.dbs = dbs
-
-        # update target user feeds
-        # TODO: target inbox if the user is a peer - David 11/18/09
-        [self.updateIn("%s/feed" % db) for db in oldUserDbs]
-        [self.copyTo("%s/feed" % db) for db in newUserDbs]
-            
+        
         # update/add to group dbs
         self.updateInGroups(oldGroupDbs)
         self.addToGroups(newGroupDbs)
-
+        
         # create in user/public, delete from user/private
         # replicate to user/feed and to shiftspace/public
         # replicate shiftspace/public to shiftspace/shared

@@ -59,7 +59,7 @@ def sync(createAdmin=True):
     # master ---------------------------------
     master = core.connect("shiftspace/master")
     
-    if createAdmin:
+    if createAdmin and not master.get("admins"):
         master["admins"] = adminDoc
         master["shiftspace"] = adminUser
 
@@ -68,6 +68,8 @@ def sync(createAdmin=True):
     SSUser.all_followers.sync(master)
 
     Permission.by_user.sync(master)
+    Permission.by_group.sync(master)
+    Permission.by_user_and_group.sync(master)
     Permission.by_joinable.sync(master)
     Permission.by_readable.sync(master)
     Permission.by_writeable.sync(master)

@@ -5,6 +5,7 @@ import server.models.core as core
 from server.models.shift import Shift
 from server.models.ssuser import SSUser
 from server.models.group import Group
+from server.models.permission import Permission
 from server.tests.dummy_data import *
 
 
