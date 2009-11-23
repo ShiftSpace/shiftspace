@@ -167,7 +167,6 @@ class Group(SSDocument):
         if author.isMemberOf(self):
             grpdb = Group.db(self.id)
             aShift.copyTo(grpdb)
-            core.replicate(grpdb, "shiftspace/shared")
         else:
             db = core.connect()
             raise NotAMemberError("%s is not a member of %s" % (author.userName, self.longName))
@@ -179,7 +178,6 @@ class Group(SSDocument):
         if author.isMember(self):
             grpdb = Group.db(self.id)
             aShift.updateIn(grpdb)
-            core.replicate(grpdb, "shiftspace/shared")
         else:
             db = core.connect()
             raise NotAMemberError("%s is not a member of %s" % (author.userName, self.longName))
