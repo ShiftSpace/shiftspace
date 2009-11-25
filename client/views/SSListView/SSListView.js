@@ -109,7 +109,7 @@ var SSListView = new Class({
   */
   removeState: function(id, key)
   {
-    delete this.__cellStates[id][key];
+    if($get(this.__cellStates, id, key)) delete this.__cellStates[id][key];
   },
   
   /*
