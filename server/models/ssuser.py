@@ -262,14 +262,13 @@ class SSUser(User):
     @shift_join
     def shifts(self, start=None, end=None, limit=25):
         from server.models.shift import Shift
-        results = Shift.by_user_and_created(core.connect("shiftspace/shared"), limit=limit)
-        if start and not end:
-            return core.objects(results[start:])
-        if not start and end:
-            return core.objects(results[:end])
-        if start and end:
-            return core.objects(results[start:end])
-        return core.objects(results)
+        db = core.connect("shiftspace/shared")
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Shift.by_user_and_created(db, limit=limit)
+        return core.objects(results[start:end])
 
     @shift_join
     def feed(self, start=None, end=None, limit=25):
