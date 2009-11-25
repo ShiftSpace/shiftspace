@@ -181,7 +181,7 @@ var SSPublishPane = new Class({
     {
       var publishData = this.currentListView().checkedItems()[0].publishData;
       this.element.getElement("#SSPublishPaneStatus label").removeClass('SSDisplayNone');
-      if(publishData.draft)
+      if(publishData !== undefined && publishData.draft)
       {
         this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Draft');
       }
