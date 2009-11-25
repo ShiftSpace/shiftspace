@@ -66,3 +66,5 @@ config/views.json/server/.htaccess
 /test.py
 /config/conf.json
 /TAGS
+/client/views/SSListView/.emacs.desktop
+/client/views/SSListView/.emacs.desktop.lock

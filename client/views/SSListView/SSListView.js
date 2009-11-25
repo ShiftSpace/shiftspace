@@ -584,7 +584,7 @@ var SSListView = new Class({
   {
     var data = this.data();
     var result = [];
-    for(var i = 0, l = data.length; i < l; i++) if(fn(data[i])) result.push[1];
+    for(var i = 0, l = data.length; i < l; i++) if(fn(data[i])) result.push(data[i]);
     return result;
   },
   
@@ -1158,7 +1158,7 @@ var SSListView = new Class({
   {
     this.parent();
     if(force && this.table()) this.setTableIsRead(false);
-    var hasCell = this.hasCell()
+    var hasCell = this.hasCell();
     if(!hasCell) return;
     if(!this.data() && !this.table()) return;
     if(!this.isVisible()) return;
@@ -1422,7 +1422,7 @@ var SSListView = new Class({
   
   selectedRows: function()
   {
-    return this.element.getElements("> li.selected").map(this.indexOfCellNode.bind(this))
+    return this.element.getElements("> li.selected").map(this.indexOfCellNode.bind(this));
   },
   
   /*
