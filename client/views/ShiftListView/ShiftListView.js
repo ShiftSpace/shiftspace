@@ -27,6 +27,7 @@ var ShiftListView = new Class({
     this.parent(el, options);
     SSAddObserver(this, 'onNewShiftSave', this.onCreate.bind(this));
     SSAddObserver(this, 'onShiftHide', this.onHide.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.uncheckAll.bind(this));
   },
   
   
@@ -111,7 +112,7 @@ var ShiftListView = new Class({
   
   uncheck: function(indices)
   {
-    var indices = $splat(indices);
+    indices = $splat(indices);
     var cell = this.cell();
     indices.each(function(idx, i) {
       var cellNode = this.cellNodeForIndex(idx);
@@ -119,6 +120,12 @@ var ShiftListView = new Class({
       cell.uncheck();
       cell.unlock();
     }, this);
+  },
+
+
+  uncheckAll: function()
+  {
+    this.uncheck(this.checkedItemIndices());
   },
   
   
@@ -128,7 +135,7 @@ var ShiftListView = new Class({
     this.cellNodes().each(function(el, i) {
       if(el.getElement('input[type=checkbox]').getProperty("checked")) indices.push(i);
     });
-    return indices
+    return indices;
   },
 
 
