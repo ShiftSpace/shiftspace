@@ -69,3 +69,6 @@ config/views.json/server/.htaccess
 /client/views/SSListView/.emacs.desktop
 /client/views/SSListView/.emacs.desktop.lock
 /.ropeproject/config.py
+/.ropeproject/globalnames
+/.ropeproject/history
+/.ropeproject/objectdb
