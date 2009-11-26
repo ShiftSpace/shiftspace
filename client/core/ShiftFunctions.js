@@ -330,18 +330,24 @@ Function: SSShowShift
 Parameters:
   space - a space instance.
   shiftId - a shift id.
+
+Returns:
+  true if shift succesfully shown, false if error occured.
 */
 var SSShowShift = function(space, shiftId)
 {
+  if(!space) return false;
   var shift = SSGetShift(shiftId);
   try
   {
     var controlp = space.showShift(shift);
     SSFocusShift(space, shiftId, controlp);
+    return true;
   }
   catch(err)
   {
     SSLog(err, SSLogError);
+    return false;
   }
 }.asPromise();
 

@@ -38,6 +38,20 @@ var SSLoadSpace = function(spaceName)
 {
   var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
   var attrs = SSGetSpaceAttributes(spaceName);
+
+  if(!attrs)
+  {
+    if(confirm("You have not installed " + spaceName + " would you like to install it now?"))
+    {
+      // try again after installing the space first
+      SSLoadSpace(SSInstallSpace(spaceName));
+    }
+    else
+    {
+      return Function.nomemo;
+    }
+  }
+
   var codep = SSLoadFile(url);
   var cssp = {data:1}; // horrible hack - David
   if(!$(document.head).getElement(["#",spaceName,"Css"].join("")))
@@ -265,6 +279,7 @@ function SSInstallSpace(space)
         function(err) {
           alert("Oops! No space called " + space + " exists.");
         });
+    return p;
   }
 };
 

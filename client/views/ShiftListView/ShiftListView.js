@@ -56,7 +56,8 @@ var ShiftListView = new Class({
   {
     this.parent(idx);
     var shift = this.data()[idx];
-    SSShowShift(SSSpaceForName(shift.space.name), shift._id);
+    var noErr = SSShowShift(SSSpaceForName(shift.space.name), shift._id);
+    if(!noErr) this.deselectRow(idx);
   },
   
 
