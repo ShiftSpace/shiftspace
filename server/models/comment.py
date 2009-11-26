@@ -100,11 +100,13 @@ class Comment(SSDocument):
 
         authors = core.fetch(keys=authorIds)
         shifts = core.fetch(core.connect("shiftspace/shared"), keys=shiftIds)
-
+        commentCounts = core.fetch(core.connect("shiftspace/shared"), view=Comment.count_by_shift, keys=shiftIds)
+        
         for i in range(len(comments)):
             if (authors[i]):
                 comments[i]["userName"] = authors[i]["userName"]
             comments[i]["createdStr"] = utils.pretty_date(utils.futcstr(comments[i]["created"]))
+            comments[i]["commentCount"] = commentCounts[i]
             comments[i]["space"] = shifts[i]["space"]
             comments[i]["href"] = shifts[i]["href"]
             comments[i]["domain"] = shifts[i]["domain"]

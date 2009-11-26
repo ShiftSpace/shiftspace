@@ -3,8 +3,44 @@ ul#MyShiftsListView, ul#MyFavoritesListView, ul#MyCommentsListView
   left: 0px;
 }
 
-ul#MyShiftsListView li .domain
+#MyShiftSpacePane ul.ShiftListView li.ShiftListViewCell .summary
 {
-  margin-left: 15px;
-  font-weight: bold;
+  color:#74665A;
+}
+
+#MyShiftSpacePane ul.ShiftListView li.ShiftListViewCell .selected
+{
+}
+
+#MyShiftSpacePane ul.ShiftListView li.ShiftListViewCell .domain a
+{
+  color:#B0A99C;
+  border-bottom:1px solid #B0A99C;
+  text-decoration:none;
+  font-weight:thin;
+}
+
+#MyShiftSpacePane ul.ShiftListView li.ShiftListViewCell > div
+{
+  display:inline;
+}
+
+#MyShiftSpacePane ul#MyCommentsListView li.ShiftListViewCell .username,
+#MyShiftSpacePane ul#MyCommentsListView li.ShiftListViewCell .domain
+{
+  font-weight:bold;
+}
+
+#MyShiftSpacePane ul#MyCommentsListView li.ShiftListViewCell .comments
+{
+  display:inline-block;
+  clear:both;
+  float:none;
+  vertical-align:middle;
+}
+
+
+#MyShiftSpacePane ul#MyCommentsListView .ShiftListViewCell .spaceIcon
+{
+  margin-left:0;
 }

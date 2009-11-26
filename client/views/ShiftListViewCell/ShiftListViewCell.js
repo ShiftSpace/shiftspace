@@ -187,6 +187,11 @@ var ShiftListViewCell = new Class({
     }
   },
   
+  setCreatedStr: function(createdStr)
+  {
+    var el = this.lockedElement();
+    el.getElement('.date').set('text', createdStr);
+  },
   
   setModifiedStr: function(modifiedStr)
   {
@@ -229,7 +234,9 @@ var ShiftListViewCell = new Class({
     var el = this.lockedElement();
     var url = href.substr(7, href.length);
     var parts = url.split("/");
-    el.getElement('.domain').set('text', 'http://'+parts[0]);
+    
+    var link = new Element('a', {'href':href,'html':parts[0],'class':'domain'});
+    link.inject(el.getElement(".domain"));
   },
 
 
