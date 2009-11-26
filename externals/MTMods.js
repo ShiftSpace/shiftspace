@@ -20,6 +20,7 @@ var _urlJoin = Function.dispatch(
 
 
 String.implement({
+
   tail: function(n) { return this.substring(this.length-(n || 1)); },
 
   drop: function(n) { return this.substring(0, this.length-(n || 1)); },
@@ -59,6 +60,8 @@ String.implement({
 
 
 Array.implement({
+  str: function() { return this.join(""); },
+
   isEqual: function(other) { return $hash(this) == $hash(other); }
 });
 

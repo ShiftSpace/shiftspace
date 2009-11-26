@@ -136,7 +136,7 @@ var SSPublishPane = new Class({
             resource: "shift",
             id: id,
             action: "publish",
-            data: {private: false},
+            data: { private: false },
             json: true
           })    
         })

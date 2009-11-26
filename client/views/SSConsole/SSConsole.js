@@ -10,6 +10,7 @@ var SSConsole = new Class({
   Extends: SSView,
   name: 'SSConsole',
   
+
   initialize: function(el, options)
   {
     this.parent(el, options);
@@ -23,9 +24,6 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
     SSAddObserver(this, 'onLocalizationChanged', this.localizationChanged.bind(this));
-    
-    // since we're created programmatically we add entry manually for debugging - David
-    ShiftSpaceNameTable.SSConsole = this;
   },
   
   

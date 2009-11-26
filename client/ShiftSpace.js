@@ -89,15 +89,15 @@ var ShiftSpace = new (function() {
       SSLog("\tInitializing UI", SSLogSystem);
 
       SSLog("\tCreating console", SSLogSystem);
-      ShiftSpace.Console = new SSConsole();
+      ShiftSpace.Console = ShiftSpaceNameTable.SSConsole = new SSConsole();
       SSLog("\tCreating notifier view", SSLogSystem);
-      ShiftSpace.Notifier = new SSNotifierView();
+      ShiftSpace.Notifier = ShiftSpaceNameTable.Notifier = new SSNotifierView();
       SSLog("\tCreating space menu", SSLogSystem);
-      ShiftSpace.SpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
+      ShiftSpace.SpaceMenu = ShiftSpaceNameTable.SSSpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
       SSLog("\tCreating comments window", SSLogSystem);
-      ShiftSpace.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
+      ShiftSpace.Comments = ShiftSpaceNameTable.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
       SSLog("\tCreating publish window", SSLogSystem);
-      ShiftSpace.PublishPane = new SSPublishPane(null, {location:'views'});
+      ShiftSpace.PublishPane = ShiftSpaceNameTable.PublishPane = new SSPublishPane(null, {location:'views'});
       ShiftSpace.Sandalphon = Sandalphon;
 
       SSLog("\tShiftSpace UI initialized", SSLogSystem);
