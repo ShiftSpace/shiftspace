@@ -44,12 +44,11 @@ var SSLoadSpace = function(spaceName)
     if(confirm("You have not installed " + spaceName + " would you like to install it now?"))
     {
       // try again after installing the space first
-      SSLoadSpace(SSInstallSpace(spaceName));
+      SSInstallSpace(spaceName).fn(function(p) {
+        SSLoadSpace(spaceName);
+      });
     }
-    else
-    {
-      return Function.nomemo;
-    }
+    return Function.nomemo;
   }
 
   var codep = SSLoadFile(url);
