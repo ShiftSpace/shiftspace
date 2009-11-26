@@ -68,3 +68,4 @@ config/views.json/server/.htaccess
 /TAGS
 /client/views/SSListView/.emacs.desktop
 /client/views/SSListView/.emacs.desktop.lock
+/.ropeproject/config.py
