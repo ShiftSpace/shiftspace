@@ -191,14 +191,33 @@ var ShiftSpace = new (function() {
       if(!ui.every(Function.msg('isLoaded')))
       {
         ui.each(Function.msg('addEvent', 'load', function(obj) {
-          if(ui.every(Function.msg('isLoaded'))) SSPostNotification("onSync");
-        }.bind(this)))
+          if(ui.every(Function.msg('isLoaded')))
+          {
+            SSPostNotification("onSync");
+            if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
+          }
+        }.bind(this)));
       }
       else
       {
         SSPostNotification("onSync");
       }
     }.asPromise();
+
+
+    function SSCheckHash()
+    {
+      var hash = $A(window.location.hash).tail(1).str();
+      var kvs = hash.split("&").map(function(str) { var parts = str.split("="); return [parts[0], JSON.decode(parts[1])]; });
+      var ops = kvs.hash();
+      if(ops["open"])
+      {
+        ops["open"].each(Function.comp(
+          ShiftSpaceNameTable.asFn(),
+          Function.msg("show")
+        ));
+      }
+    }
     
     /*
       Function: SSSetup (private)
