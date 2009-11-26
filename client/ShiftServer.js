@@ -3,6 +3,14 @@
 // @dependencies      ApplicationServer
 // ==/Builder==
 
+var __ssapplication = null;
+
+function SSApplication()
+{
+  if(!__ssapplication) return new ShiftServer();
+  return __ssapplication;
+}
+
 var ShiftServer = new Class({
 
   Extends: ApplicationServer,
@@ -171,10 +179,3 @@ var ShiftServer = new Class({
   }
 
 });
-
-var __ssapplication = null;
-function SSApplication()
-{
-  if(!__ssapplication) return new ShiftServer();
-  return __ssapplication;
-}
