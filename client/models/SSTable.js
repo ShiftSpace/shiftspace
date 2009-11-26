@@ -48,9 +48,9 @@ See Also:
 function SSDeleteTable(name)
 {
   var resource = SSTableForName(name);
-  resource.cleanup();
-  delete __resources[name];
-  SSPostNotification("tableDelete", {name:name});
+  if(resource) resource.cleanup();
+  if(__resources[name]) delete __resources[name];
+  if(resource) SSPostNotification("tableDelete", {name:name});
 }
 
 /*
@@ -75,7 +75,7 @@ var SSTable = new Class({
       delegate: null,
       sortFn: null,
       transforms: null
-    }
+    };
   },
   
   
@@ -100,7 +100,7 @@ var SSTable = new Class({
     this.setApp(this.options.app || SSApplication());
     if(this.options.sortFn)
     {
-      this.setSortFn(this.options.sortFn)
+      this.setSortFn(this.options.sortFn);
     }
     else
     {
@@ -521,6 +521,7 @@ var SSTable = new Class({
     if(this.views().contains(view)) return;
     this.views().push(view);
     view.setTable(this);
+    view.setNeedsDisplay(true);
   },
   
   /*

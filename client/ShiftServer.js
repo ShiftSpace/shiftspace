@@ -28,7 +28,9 @@ var ShiftServer = new Class({
   
   initialize: function(options) {
     __ssapplication = this;
+
     this.parent(options);
+
     SSAddObserver(this, 'onUserLogin', this.onLogin.bind(this));
     SSAddObserver(this, 'onUserJoin', this.onLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.onLogout.bind(this));
@@ -126,7 +128,10 @@ var ShiftServer = new Class({
   
   login: function(userData)
   {
-    return this.post({action:"login", data:{userName:userData.userName, password:userData.password}});
+    return this.post({
+      action:"login",
+      data:{userName:userData.userName, password:userData.password}
+    });
   },
   
   
@@ -144,7 +149,8 @@ var ShiftServer = new Class({
   
   onLogout: function()
   {
-    
+    // wipe out tables
+    ["MyShifts", "MyComments", "Favorites", "Messages"].each(SSDeleteTable);
   },
   
 
