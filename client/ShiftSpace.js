@@ -204,7 +204,11 @@ var ShiftSpace = new (function() {
       }
     }.asPromise();
 
-
+    /*
+      Function: SSCheckHash
+        Check the window location hash for operations that make life easiers as a developer
+        and a designer.
+    */
     function SSCheckHash()
     {
       var hash = $A(window.location.hash).tail(1).str();
@@ -216,6 +220,10 @@ var ShiftSpace = new (function() {
           ShiftSpaceNameTable.asFn(),
           Function.msg("show")
         ));
+      }
+      if(ops["tab"])
+      {
+        ShiftSpaceNameTable.MainTabView.selectTabByName(ops["tab"]);
       }
     }
     
