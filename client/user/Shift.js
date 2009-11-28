@@ -176,6 +176,7 @@ var ShiftSpaceShift = new Class({
   encode: function()
   {
     if(this.getMainView()) return {position: this.getPosition()};
+    return {};
   },
 
   /*
