@@ -122,14 +122,32 @@ var SSPublishPane = new Class({
   {
     evt = new Event(evt);
   },
-  
-  
+
+
+  isGroup: function(str)
+  {
+    return str[0] == '&';
+  },
+
+
+  isUser: function(str)
+  {
+    return str[0] == '@';
+  },
+
+
   publishShifts: function(evt)
   {
     evt = new Event(evt);
     var selectedShifts = this.currentListView().checkedItemIds();
+    var targets = this.PublishTargets.getProperty("value").split(" ").map(String.trim);
+    var groups = targets.filter(this.isGroup).map(String.pop);
+    var users = targets.filter(this.isUser).map(String.pop);
+    SSLog("groups:", groups, SSLogForce);
+    SSLog("users:", users, SSLogForce);
     if(selectedShifts && selectedShifts.length > 0)
     {
+      /*
       var p = new Promise(
         selectedShifts.map(function(id) {
           return SSApp.post({
@@ -142,6 +160,7 @@ var SSPublishPane = new Class({
         })
       );
       p.realize();
+      */
     }
   },
   
@@ -230,7 +249,6 @@ var SSPublishPane = new Class({
   buildInterface: function()
   {
     this.parent();
-    this.attachEvents();
     SSPostNotification('onPublishPaneLoad', this);
     this.setIsLoaded(true);
   }
