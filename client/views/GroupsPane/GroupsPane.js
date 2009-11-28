@@ -25,9 +25,13 @@ var GroupsPane = new Class({
 
   attachEvents: function()
   {
-    this.CreateGroup.addEvent("click", function(evt) {
-      evt = new Event(evt);
-      SSLog("Create a group!", SSLogForce);
-    });
+    this.CreateGroupButton.addEvent("click", this.createGroup.bind(this));
+  },
+
+  
+  createGroup: function()
+  {
+    var p = SSApp.create("group", formToHash(this.GroupForm));
+    p.realize();
   }
 });
