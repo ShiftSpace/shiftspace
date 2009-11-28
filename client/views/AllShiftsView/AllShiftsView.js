@@ -42,7 +42,7 @@ var AllShiftsView = new Class({
   afterAwake: function()
   {
     SSTableForName("AllShifts").setDelegate(this);
-    SSTableForName("FollowShifts").setDelegate(this);
+    if(SSTableForName("FollowShifts")) SSTableForName("FollowShifts").setDelegate(this);
   },
   
 
@@ -61,6 +61,6 @@ var AllShiftsView = new Class({
   initListViews: function()
   {
     SSTableForName("AllShifts").addView(this.AllShiftsListView);
-    SSTableForName("FollowShifts").addView(this.FollowShiftsListView);
+    if(SSTableForName("FollowShifts")) SSTableForName("FollowShifts").addView(this.FollowShiftsListView);
   }
 });
