@@ -453,5 +453,12 @@ class Shift(SSDocument):
                 rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
             except:
                 return []
+        elif byGroup:
+            queryString = "dbs:%s" % [Group.db(group) for group in user.readable()]
+            print queryString
+            try:
+                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
+            except:
+                return []
         shifts = [row["doc"] for row in rows]
         return Shift.joinData(shifts, ((user and user.id) or None))

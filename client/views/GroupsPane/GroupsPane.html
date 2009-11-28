@@ -110,21 +110,27 @@
 
       <!-- Start Start New Group subtab -->
       <div id="StartNewGroup" class="SSTabPane">
-	<div id="NewGroupInfo">
-	  <form>
-	    <label>Group Name:</label>
-	    <input type="text"></input>
-	    <label>Group Short Name:</label>
-	    <input type="text"></input>
-	    <label>Description:</label>
-	    <textarea></textarea>
-	    <input type="submit" value="Create Group"></input>
-	  </form>
-	</div>
-	<div id="AddGroupUsers">
-	  <input id="AddUserField" name="AddUserField" type="text" value="Type a user name"></input>
-	  <input id="AddUserButton" name="AddUserButton" type="button" value="Add User"></input>
-	</div>
+	  <div id="NewGroupInfo">
+	      <form>
+                  <div>
+	              <label>Group Name:</label>
+	              <input type="text"></input>
+                  </div>
+                  <div>
+	              <label>Group Short Name:</label>
+	              <input type="text"></input>
+                  </div>
+                  <div>
+	              <label>Description:</label>
+	              <textarea></textarea>
+                  </div>
+	          <input id="CreateGroup" type="button" value="Create Group" outlet="GroupsPane"></input>
+	      </form>
+	  </div>
+	  <div id="AddGroupUsers">
+	      <input id="AddUserField" name="AddUserField" type="text" value="Type a user name"></input>
+	      <input id="AddUserButton" name="AddUserButton" type="button" value="Add User"></input>
+	  </div>
       </div>
       <!-- End Start New group subtab -->
 
