@@ -429,22 +429,29 @@ class Shift(SSDocument):
     # ========================================
 
     @classmethod
-    def shifts(cls, user, byHref, byFollowing=False, byGroups=False, start=0, limit=25):
+    def shifts(cls, user, byHref=None, byFollowing=False, byGroups=False, start=0, limit=25):
         from server.models.ssuser import SSUser
-        db = core.connect()
-        lucene = core.lucene()
-        queryString = "href:\"%s\" AND ((draft:false AND private:false)" % byHref
-        if user:
-            queryString = queryString + " OR createdBy:%s" % user.id
-            dbs = user.readable()
-            dbs.append(SSUser.db(user.id))
-            dbsStr = " ".join(dbs)
-            queryString = queryString + ((" OR (draft:false%s)" % ((len(dbs) > 0 and (" AND dbs:%s" % dbsStr)) or "")))
-        queryString = queryString + ")"
         db = core.connect("shiftspace/shared")
-        try:
-            rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
-        except:
-            return []
+        lucene = core.lucene()
+        if byHref:
+            queryString = "href:\"%s\" AND ((draft:false AND private:false)" % byHref
+            if user:
+                queryString = queryString + " OR createdBy:%s" % user.id
+                dbs = user.readable()
+                dbs.append(SSUser.db(user.id))
+                dbsStr = " ".join(dbs)
+                queryString = queryString + ((" OR (draft:false%s)" % ((len(dbs) > 0 and (" AND dbs:%s" % dbsStr)) or "")))
+            queryString = queryString + ")"
+            try:
+                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
+            except:
+                return []
+        elif byFollowing:
+            queryString = "(draft:false AND private:false AND createdBy:%s) OR dbs:%s" % (" ".join(user.following), SSUser.db(user.id))
+            print queryString
+            try:
+                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
+            except:
+                return []
         shifts = [row["doc"] for row in rows]
         return Shift.joinData(shifts, ((user and user.id) or None))
