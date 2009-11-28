@@ -3,21 +3,36 @@
      uiclass="PeoplePane"
      outlet="SSConsole">
      
-  <div id="PeopleTabView" 
-       class="SSTabView SSTabViewSubTabStyle"
-       uiclass="SSTabView"
-       outlet="PeoplePane">
+    <div id="PeopleTabView" 
+         class="SSTabView SSTabViewSubTabStyle"
+         uiclass="SSTabView"
+         outlet="PeoplePane">
 
-    <div class="SSControlView">
-      <div class="SSButton SSActive">Following<span class="count"></span></div>
-      <div class="SSButton">Followers<span class="count"></span></div>
+       
+        <div class="SSControlView">
+            <div class="SSButton SSActive">Following<span class="count"></span></div>
+            <div class="SSButton">Followers<span class="count"></span></div>
+            <div class="SSButton">Search For Users<span class="count"></span></div>
+        </div>
+
+        <!-- START Content View -->
+        <div class="SSContentView">
+            <!-- START Following Tab Pane -->
+            <div class="SSTabPane">
+                <ul uiclass="SSListView"
+                    class="SSListView PeopleListView">
+                    <li uiclass="SSCell"
+                        class="SSCell">
+                    </li>
+                </ul>
+            </div>
+            <!-- END Following Tab Pane -->
+
+            <div class="SSTabPane">Followers</div>
+            <div class="SSTabPane">Search For Users</div>
+        </div>
+        <!-- END Content View -->
+
     </div>
-
-    <div class="SSContentView">
-      <div class="SSTabPane">Following</div>
-      <div class="SSTabPane">Followers</div>
-    </div>
-
-  </div>
 
 </div>

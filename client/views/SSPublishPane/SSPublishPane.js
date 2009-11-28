@@ -232,7 +232,7 @@ var SSPublishPane = new Class({
       }
       if(publishData.private)
       {
-        this.SSPPVisiblePrivate.setProperty("checked", true);
+        this.ShiftPrivateStatusRadio.setProperty("checked", true);
       }
       if(publishData.targets && publishData.targets.length > 0)
       {
