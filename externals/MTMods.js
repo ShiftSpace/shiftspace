@@ -427,3 +427,13 @@ Sortables.implement({
     this.fireEvent('sort', [this.element, this.clone]);
   }
 });
+
+
+function formToHash(formEl)
+{
+  var inputs = formEl.getElements("input[name]"), result = $H();
+  inputs.each(function(input) {
+    result[input.getProperty("name")] = input.getProperty("value");
+  });
+  return result;
+}

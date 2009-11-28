@@ -50,6 +50,7 @@ var SSConsole = new Class({
   awake: function(context)
   {
     this.mapOutletsToThis();
+    
     if(context == this.element.contentWindow)
     {
       this.MainTabView.addEvent('tabSelected', function(evt) {
@@ -59,6 +60,7 @@ var SSConsole = new Class({
     this.updateTabs();
   },
   
+
   updateTabs: function()
   {
     if (ShiftSpaceUser.isLoggedIn())
@@ -85,7 +87,6 @@ var SSConsole = new Class({
   handleLogin: function()
   {
     this.updateTabs();   
-    
     this.MainTabView.selectTabByName('AllShiftsView');
     if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
     if(SSTableForName("MyShifts")) SSTableForName("MyShifts").refresh();
@@ -112,6 +113,7 @@ var SSConsole = new Class({
     if(!this.isVisible()) this.show();
     this.MainTabView.selectTabByName('LoginTabView');
   },
+
   
   showInbox: function()
   {
