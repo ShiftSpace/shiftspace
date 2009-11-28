@@ -254,7 +254,7 @@ var SSNotifierView = new Class({
     {
       if(ShiftSpace.User.isLoggedIn())
       {
-        this.SSLogInOut.set('text', 'Logout')
+        this.SSLogInOut.set('text', 'Logout');
       }
       else
       {
@@ -273,7 +273,7 @@ var SSNotifierView = new Class({
     this.__count = countp;
     this.updateCounter();
     
-    if (this.__count > 0 && this.graph.state() != "SSNotifierOpen")
+    if (this.__count > 0 && this.graph && this.graph.state() != "SSNotifierOpen")
     {
       this.graph.setState('SSNotifierHasShifts', {animate:true, direction:'previous', hold:{duration:3000}});
     }
