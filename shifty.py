@@ -48,6 +48,7 @@ def nightly():
     if not os.path.exists("tmp/deps"):
         os.system("scripts/download_deps.sh")
     os.system("rm tmp/deps.tar.gz")
+    os.system("scripts/clean_py.sh")
 
 
 def env(url):
