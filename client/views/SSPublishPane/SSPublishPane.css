@@ -1,3 +1,7 @@
+button:hover{
+	cursor: pointer;
+}
+
 .SSPublishPane
 {
   position: absolute;
@@ -206,7 +210,6 @@ form .SSRadioButton label{
   padding-bottom:4px;
 }
 
-
 .SSPPTagTag{
   color:#0054a6;
 }
@@ -217,6 +220,11 @@ form .SSRadioButton label{
   -webkit-border-radius: 10px;
   padding:2px 5px 3px;
 }
+
+span.SSPPTagsroundedCorners:hover{
+  padding-right: 20px;
+  background: #fff url(/images/Pane/publish-del-tag.png) no-repeat scroll right 2px;
+}
     
 /*----------------------------------------------------FOOTER*/
 #SSPublishPaneFooter
@@ -225,10 +233,11 @@ form .SSRadioButton label{
   background:#ffffff;
   background-image:url(/images/Pane/publish-top-footer.gif);
   height: 15px;
+  font-size: 12px;
 }
 
 #SaveShift{
-  display:none;
+  /* display:none; */
 }
 
 #SSPublishPaneStatus{
@@ -248,9 +257,31 @@ form .SSRadioButton label{
 .SSPublishPubButton{
   background-color: #f63b02;
   color:fff;
-  border:1px #b52b01 solid;
+  border:2px #b52b01 solid;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  padding:1px 15px;
+  padding:0 5px;
   font-weight:bold;
+}
+
+.hide{
+	display: none;
+}
+
+.SSMinorButton{
+	background: none;
+	border: 0;
+	color: #f63b02;
+	text-decoration: underline;
+  padding:0 5px;
+}
+
+.SSInactiveButton{
+	background: none;
+  border:2px #f63b02 solid;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  padding:0 5px;
+  font-weight:bold;
+	color: #f63b02;
 }
