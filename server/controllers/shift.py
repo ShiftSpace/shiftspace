@@ -142,6 +142,21 @@ class ShiftController(ResourceController):
         if theShift.type != "shift":
             return error("Resource is not of type shift", ResourceTypeError)
         publishData = json.loads(helper.getRequestBody())
+        # convert targets to actual database references
+        if publishData.get("targets"):
+            from server.models.group import Group
+            from server.models.ssuser import SSUser
+            targets = publishData["targets"]
+            del publishData["targets"]
+            shortNames = [target[1:] for target in targets if target[0] == "&"]
+            groupIds = Group.shortNamesToIds(shortNames)
+            userNames = [target[1:] for target in targets if target[0] == "@"]
+            userIds = SSUser.namesToIds(userNames)
+            dbs = [Group.db(groupId) for groupId in groupIds]
+            dbs.extend([SSUser.db(userId) for uesrId in userIds])
+            publishData["dbs"] = dbs
+        print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+        print publishData
         return data(theShift.publish(publishData).toDict())
 
     @jsonencode
