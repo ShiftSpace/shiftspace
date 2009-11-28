@@ -139,14 +139,37 @@ var SSPublishPane = new Class({
   publishShifts: function(evt)
   {
     evt = new Event(evt);
+
     var selectedShifts = this.currentListView().checkedItemIds();
-    var targets = this.PublishTargets.getProperty("value").split(" ").map(String.trim);
-    var groups = targets.filter(this.isGroup).map(String.pop);
-    var users = targets.filter(this.isUser).map(String.pop);
-    SSLog("groups:", groups, SSLogForce);
-    SSLog("users:", users, SSLogForce);
+    var publishData = {};
+
     if(selectedShifts && selectedShifts.length > 0)
     {
+      var status = $A(this.StatusForm.ShiftStatusRadio).filter(function(radio) {
+        return $(radio).getProperty("checked");
+      }.bind(this));
+
+      if(status.length > 0)
+      {
+        var status = status[0].getProperty("value");
+        SSLog(status, SSLogForce);
+        SSLog(targets, SSLogForce);
+        if(status == "public")
+        {
+          publishData.private = false;
+        }
+        else if(status == "private")
+        {
+          var targets = this.PublishTargets.getProperty("value").split(" ").map(String.trim).filter(Function.not(Function.eq("")));
+          if(targets.length == 0)
+          {
+            alert("Please specify which user or group you wish to publish to.");
+            return;
+          }
+          publishData.target = targets;
+        }
+      }
+
       /*
       var p = new Promise(
         selectedShifts.map(function(id) {
@@ -154,7 +177,7 @@ var SSPublishPane = new Class({
             resource: "shift",
             id: id,
             action: "publish",
-            data: { private: false },
+            data: publishData,
             json: true
           })    
         })
@@ -170,6 +193,7 @@ var SSPublishPane = new Class({
     this.DeleteShift.addEvent('click', this.deleteShifts.bind(this));
     this.SaveShift.addEvent('click', this.saveShifts.bind(this));
     this.PublishShift.addEvent('click', this.publishShifts.bind(this));
+
     this.ShiftPrivateStatusRadio.addEvent('click', function(evt){ 
       evt = new Event(evt);
       if(this.SSPPVisiblePublic.hasClass('SSPPPermit')){
@@ -178,6 +202,7 @@ var SSPublishPane = new Class({
       this.SSPPVisiblePrivate.addClass('SSPPPermit');
       SSLog('clicked public status!',SSLogForce);
     }.bind(this));
+
     this.ShiftPublicStatusRadio.addEvent('click', function(evt) {
       evt = new Event(evt);
       if(this.SSPPVisiblePrivate.hasClass('SSPPPermit')){
@@ -186,6 +211,7 @@ var SSPublishPane = new Class({
       this.SSPPVisiblePublic.addClass('SSPPPermit');
       SSLog('clicked private status!', SSLogForce);
     }.bind(this));
+
     if(this.ShiftPermalink) this.ShiftPermalink.addEvent("click", this.showProxy.bind(this));
   },
   
