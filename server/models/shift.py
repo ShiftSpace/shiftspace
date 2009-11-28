@@ -460,7 +460,7 @@ class Shift(SSDocument):
                 rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
             except:
                 return []
-        elif byGroup:
+        elif byGroups:
             queryString = "dbs:%s" % [Group.db(group) for group in user.readable()]
             print queryString
             try:
