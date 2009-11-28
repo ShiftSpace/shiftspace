@@ -19,17 +19,38 @@
         <div class="SSContentView">
             <!-- START Following Tab Pane -->
             <div class="SSTabPane">
-                <ul uiclass="SSListView"
+                <ul id="FollowingListView"
+                    uiclass="SSListView"
                     class="SSListView PeopleListView">
                     <li uiclass="SSCell"
                         class="SSCell">
+                        <span class="gravatar"></span>
+                        <span class="userName"></span>
+                        <span class="fullName"></span>
                     </li>
                 </ul>
             </div>
             <!-- END Following Tab Pane -->
 
-            <div class="SSTabPane">Followers</div>
+            <!-- START Followers Tab Pane -->
+            <div class="SSTabPane">
+                <ul id="FollowersListView"
+                    uiclass="SSListView"
+                    class="SSListView PeopleListView">
+                    <li uiclass="SSCell"
+                        class="SSCell">
+                        <span class="gravatar"></span>
+                        <span class="userName"></span>
+                        <span class="fullName"></span>
+                    </li>
+                </ul>
+            </div>
+            <!-- END Followers Tab Pane -->
+
+            <!-- START Search For Users Tab Pane -->
             <div class="SSTabPane">Search For Users</div>
+            <!-- END Search For Users Tab Pane -->
+
         </div>
         <!-- END Content View -->
 
