@@ -230,6 +230,14 @@ var SSPublishPane = new Class({
       {
         this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Published');
       }
+      if(publishData.private)
+      {
+        this.SSPPVisiblePrivate.setProperty("checked", true);
+      }
+      if(publishData.targets && publishData.targets.length > 0)
+      {
+        this.PublishTargets.setProperty("value", publishData.targets.join(" "));
+      }
     }
     else if(this.count() > 1)
     {

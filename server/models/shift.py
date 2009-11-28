@@ -51,11 +51,12 @@ class Shift(SSDocument):
             draft = BooleanField(default=True),
             private = BooleanField(default=True),
             publishTime = DateTimeField(),
-            dbs = ListField(TextField())            # take the form of user/id or group/id
+            dbs = ListField(TextField()),           # take the form of user/id or group/id
+            targets = ListField(TextField()),       # human readable version of dbs
             ))
     # TODO: figure out how we are going to handle this 11/28/09
     #tags = ListField(TextField())
-    content = DictField()    
+    content = DictField()
             
     # ========================================
     # CouchDB Views
@@ -330,6 +331,10 @@ class Shift(SSDocument):
             dbs.extend(list(set(newUserDbs)))
 
         self.publishData.dbs = dbs
+        # store the human readable version
+        targets = publishData.get("targets")
+        if targets:
+            self.publishData.targets = targets
 
         # update/add to group dbs
         self.updateInGroups(oldGroupDbs)
