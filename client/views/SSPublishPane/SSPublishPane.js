@@ -197,6 +197,9 @@ var SSPublishPane = new Class({
       }
       this.SSPPVisiblePrivate.addClass('SSPPPermit');
       SSLog('clicked public status!',SSLogForce);
+      
+      //trying something:
+	    
     }.bind(this));
 
     this.ShiftPublicStatusRadio.addEvent('click', function(evt) {
@@ -206,6 +209,9 @@ var SSPublishPane = new Class({
       }
       this.SSPPVisiblePublic.addClass('SSPPPermit');
       SSLog('clicked private status!', SSLogForce);
+      
+      //trying something:
+	    
     }.bind(this));
 
     if(this.ShiftPermalink) this.ShiftPermalink.addEvent("click", this.showProxy.bind(this));

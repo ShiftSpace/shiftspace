@@ -22,6 +22,21 @@
   -webkit-border-radius: 4px;
 }
 
+button#SSClosePane{
+	height: 16px;
+	width: 16px;
+	text-indent: -3000px;
+	border: 0;
+	background: url(/images/Pane/SSPaneClose.png) no-repeat;
+	position: absolute;
+	top:13px;
+	right: 13px;
+}
+
+button#SSClosePane:hover{
+	background-position: bottom;
+}
+
 #PaneDrag
 {
   background:url(/images/Pane/SSPaneHeader.png) no-repeat;	
@@ -33,22 +48,21 @@
 {
   width: 340px;
   background:url(/images/Pane/SSPaneBg.png);
-  padding: 0 20px;
+  padding: 5px 20px 0;
 }
 
 /*--------------------------------------------------HEADER*/
 #SSPublishPaneHeader
 {
   /* background-image:url(/images/Pane/publish-top-bg.gif); */
-  height:27px;
-
+  height:17px;
+	background: #e3dfdb;
+	padding: 5px;
 }
 
 .SSPPPermit{
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  padding:4px 14px 1px 3px;
-  margin-right:2px;
   background:#fff;
 }
    
@@ -58,17 +72,46 @@
   /* background:#f8f5f2; */
   /* background-image:url(/images/Pane/SSPublishPaneBg.png); */
   font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
+  color:#74665A;
+  font-size: 13px;
   margin: 0;
 }
 
 #SSPublishPaneBody
 {
   background:#C6C1BD;
-  height:86px;
+  /* height:86px; */
   margin-top:0px;
   padding-left:4px;
   background-image:url(/images/Pane/publish-top-body.gif);
   background-repeat:repeat-y;
+  clear: both;
+}
+
+#SSPublishPaneVis h4{
+	margin: 0 5px 0 0;
+	float: left;
+}
+
+form#StatusForm{
+	
+}
+
+form .SSRadioButton{
+  padding:2px 6px 2px 0;
+  margin-right:2px;
+}
+
+form .SSRadioButton label{
+  padding-left:18px;
+}
+
+#SSPPVisiblePrivate label{
+	background: url(/images/Pane/publish-private.png) no-repeat scroll 0px center;
+}
+
+#SSPPVisiblePublic label{
+	background: url(/images/Pane/publish-public.png) no-repeat scroll 0px center;
 }
 
 #SSPublishPaneBody a img{
@@ -91,9 +134,7 @@
 }
 
 #SSPublishPaneVis{
-  position:relative;
-  top:3px;
-
+	
 }
 
 .SSPinput{
@@ -104,11 +145,24 @@
   height:30px;
   border:0px;
   margin-left:-2px;
-  padding-bottom:5px;
-  padding-left:0px;
+  padding:6px;
+  font-size: 14px;
 }
 
+#SSPublishPaneBody button#Addtag{
+	background:transparent url(/images/Pane/publish-form-button.gif) center center no-repeat;
+	border:0 none;
+	margin-top:8px;
+	padding:6px 10px;
+	position:absolute;
+	right:25px;
+	text-indent:-2000px;
+}
 
+#SSPublishPaneBody p#TagTip{
+	margin: 5px 0 0;
+	padding: 5px 0;
+}
 
 .SSPPBodyBorder{
   background-image:url(/images/Console/public-innerborder-left.gif) repeat-y;
@@ -124,7 +178,7 @@
 }
 
 .SSPPTagFont{
-  font-size:10px;
+  font-size:11px;
   font-weight: bold;
 }
 
@@ -144,7 +198,7 @@
 
 #SSPublishPaneTags{
   padding-top:5px;
-  padding-bottom:15px;
+  padding-bottom:3px;
   overflow:hidden;
 }
 
@@ -157,22 +211,20 @@
   color:#0054a6;
 }
 
-
 .SSPPTagsroundedCorners{
   background-color: #fff;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  padding:2px 3px 1px 3px;
+  padding:2px 5px 3px;
 }
     
 /*----------------------------------------------------FOOTER*/
 #SSPublishPaneFooter
 {
-  padding-top:7px;
-  height:32px;
+  padding:4px 0 11px;
   background:#ffffff;
-  width:268px;
   background-image:url(/images/Pane/publish-top-footer.gif);
+  height: 15px;
 }
 
 #SaveShift{
@@ -181,8 +233,16 @@
 
 #SSPublishPaneStatus{
   position:relative;
-  left:5px; 
+  padding:0 5px; 
+}
 
+#SSPublishPaneStatus label{
+	float: left;
+	padding: 2px 0;
+}
+
+#SSPublishPaneStatus #SSPublishButtons{
+	float: right;
 }
 
 .SSPublishPubButton{
@@ -191,6 +251,6 @@
   border:1px #b52b01 solid;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  padding:0px 5px;
+  padding:1px 15px;
   font-weight:bold;
 }
