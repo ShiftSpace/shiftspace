@@ -30,11 +30,11 @@ var AllShiftsView = new Class({
     }
     if(table == SSTableForName("FollowShifts"))
     {
-      return {byFollow:true};
+      return {byFollowing:true};
     }
     if(table == SSTableForName("GroupShifts"))
     {
-      return {byFollow:true};
+      return {byGroups:true};
     }
   },
 

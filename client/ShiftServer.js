@@ -73,6 +73,20 @@ var ShiftServer = new Class({
 
   initUserTables: function()
   {
+    new SSTable("FollowShifts", {
+      resource: {read:"shifts"},
+      watches: [
+        {
+          events: [
+            {resource:"shift", action:"favorite"},
+            {resource:"shift", action:"unfavorite"},
+            {resource:"shift", action:"comment"}
+          ],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
     new SSTable("MyShifts", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
       watches: [
