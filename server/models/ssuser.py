@@ -350,6 +350,10 @@ class SSUser(User):
         self.store(db)
         return self
 
+
+    def followDbs(self):
+        return [SSUser.db(user) for user in self.following]
+
     # ========================================
     # Comment Subscription
     # ========================================
