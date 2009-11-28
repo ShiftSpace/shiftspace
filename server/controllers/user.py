@@ -196,6 +196,30 @@ class UserController(ResourceController):
     @jsonencode
     @exists
     @loggedin
+    def following(self, userName, start=None, end=None, limit=25):
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser.id == otherUser.id or theUser.isAdmin():
+            return data([user.toDict for user in otherUser.followingIds(start=start, end=end, limit=limi)])
+        else:
+            return error("You don't have permission to see who this person is following.", PermissionError)
+
+    @jsonencode
+    @exists
+    @loggedin
+    def followers(self, userName, start=None, end=None, limit=25):
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser.id == otherUser.id or theUser.isAdmin():
+            return data([user.toDict for user in otherUser.followers(start=start, end=end, limit=limi)])
+        else:
+            return error("You don't have permission to see this person's followers.", PermissionError)
+
+    @jsonencode
+    @exists
+    @loggedin
     def messages(self, userName, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
         theUser = SSUser.read(loggedInUser)
