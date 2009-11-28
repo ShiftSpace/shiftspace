@@ -152,8 +152,6 @@ var SSPublishPane = new Class({
       if(status.length > 0)
       {
         var status = status[0].getProperty("value");
-        SSLog(status, SSLogForce);
-        SSLog(targets, SSLogForce);
         if(status == "public")
         {
           publishData.private = false;
@@ -166,11 +164,10 @@ var SSPublishPane = new Class({
             alert("Please specify which user or group you wish to publish to.");
             return;
           }
-          publishData.target = targets;
+          publishData.targets = targets;
         }
       }
 
-      /*
       var p = new Promise(
         selectedShifts.map(function(id) {
           return SSApp.post({
@@ -179,11 +176,10 @@ var SSPublishPane = new Class({
             action: "publish",
             data: publishData,
             json: true
-          })    
+          });
         })
       );
       p.realize();
-      */
     }
   },
   

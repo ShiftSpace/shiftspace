@@ -153,10 +153,8 @@ class ShiftController(ResourceController):
             userNames = [target[1:] for target in targets if target[0] == "@"]
             userIds = SSUser.namesToIds(userNames)
             dbs = [Group.db(groupId) for groupId in groupIds]
-            dbs.extend([SSUser.db(userId) for uesrId in userIds])
+            dbs.extend([SSUser.db(userId) for userId in userIds])
             publishData["dbs"] = dbs
-        print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-        print publishData
         return data(theShift.publish(publishData).toDict())
 
     @jsonencode

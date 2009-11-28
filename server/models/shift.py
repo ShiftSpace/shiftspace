@@ -305,7 +305,7 @@ class Shift(SSDocument):
         
         # get the dbs being published to
         publishDbs = (publishData and publishData.get("dbs")) or []
-        
+
         # get the list of dbs the user is actually allowed to publish to
         allowed = []
         if (publishData and isPrivate and len(publishDbs) > 0):
@@ -323,9 +323,14 @@ class Shift(SSDocument):
         newGroupDbs = list(set(newGroupDbs).difference(set(oldGroupDbs)))
         if newGroupDbs and len(newGroupDbs) > 0:
             dbs.extend(list(set(newGroupDbs)))
-        
+
+        # publish to any user we haven't published to before
+        newUserDbs = [s for s in publishDbs if s.split("/")[0] == "user"]
+        if newUserDbs and len(newUserDbs) > 0:
+            dbs.extend(list(set(newUserDbs)))
+
         self.publishData.dbs = dbs
-        
+
         # update/add to group dbs
         self.updateInGroups(oldGroupDbs)
         self.addToGroups(newGroupDbs)
