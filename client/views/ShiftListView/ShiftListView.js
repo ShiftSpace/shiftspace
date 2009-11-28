@@ -154,6 +154,7 @@ var ShiftListView = new Class({
   
   onReloadData: function()
   {
+    // we need to wait until the styles for the rounded images are loaded
     if(!__mainCssLoaded)
     {
       SSAddObserver(this, 'onMainCssLoad', function() {

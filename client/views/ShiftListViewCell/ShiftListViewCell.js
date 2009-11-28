@@ -59,7 +59,6 @@ var ShiftListViewCell = new Class({
   uncheck: function(restore)
   {
     var el = this.lockedElement();
-    SSLog("unchecked, restore:", restore, SSLogForce);
     el.getElement('input[type=checkbox]').setProperty('checked', false);
     if(restore !== true) this.onUncheck();
   },
