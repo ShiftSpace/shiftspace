@@ -67,6 +67,10 @@ def sync(createAdmin=True):
     SSUser.by_name.sync(master)
     SSUser.all_followers.sync(master)
 
+    Group.all.sync(master)
+    Group.by_short_name.sync(master)
+    Group.by_long_name.sync(master)
+
     Permission.by_user.sync(master)
     Permission.by_group.sync(master)
     Permission.by_user_and_group.sync(master)

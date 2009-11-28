@@ -53,6 +53,8 @@ class Shift(SSDocument):
             publishTime = DateTimeField(),
             dbs = ListField(TextField())            # take the form of user/id or group/id
             ))
+    # TODO: figure out how we are going to handle this 11/28/09
+    #tags = ListField(TextField())
     content = DictField()    
             
     # ========================================

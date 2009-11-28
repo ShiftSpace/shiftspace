@@ -120,6 +120,10 @@ class Group(SSDocument):
         db = core.connect()
         return core.object(Group.by_long_name(db, key=longName))
 
+    @classmethod
+    def shortNamesToIds(cls, shortNames):
+        return [group["_id"] for group in core.fetch(view=Group.by_short_name, keys=shortNames)]
+
     # ========================================
     # Instance Methods
     # ========================================
