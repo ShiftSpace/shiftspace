@@ -46,7 +46,7 @@ class ShiftController(ResourceController):
                            count=True)
 
     @jsonencode
-    def shifts(self, byHref, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, count=False):
+    def shifts(self, byHref=None, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, count=False):
         from server.models.ssuser import SSUser
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
