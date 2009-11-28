@@ -22,9 +22,20 @@ var AllShiftsView = new Class({
   },
   
   
-  optionsForTable: function(resource)
+  optionsForTable: function(table)
   {
-    return {byHref:window.location.href.split("#")[0]};
+    if(table == SSTableForName("AllShifts"))
+    {
+      return {byHref:window.location.href.split("#")[0]};
+    }
+    if(table == SSTableForName("FollowShifts"))
+    {
+      return {byFollow:true};
+    }
+    if(table == SSTableForName("GroupShifts"))
+    {
+      return {byFollow:true};
+    }
   },
 
 
