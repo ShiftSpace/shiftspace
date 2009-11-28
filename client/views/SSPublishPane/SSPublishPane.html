@@ -1,4 +1,4 @@
-<div id="SSPublishPane" 
+	<div id="SSPublishPane" 
      class="SSPublishPane SSDisplayNone"
      uiclass="SSPublishPane">
   
@@ -7,28 +7,25 @@
   </div>
      
   <div class="PaneBody">
+	
+    <button id="SSClosePane" outlet="SSPublishPane">X</button>
+  
 	  <div id="SSPublishPaneHeader">
 	
 	   <div id="SSPublishPaneVis">
-	     <label>Visibility:</label>
+	     <h4>Visibility:</h4>
 	
-             <form id="StatusForm" outlet="SSPublishPane">
-	         <span id="SSPPVisiblePrivate" outlet="SSPublishPane">
-	             <input id="ShiftPrivateStatusRadio" name="ShiftStatusRadio" value="private" outlet="SSPublishPane" type="radio" class="SSPPradio"></input>
-	             <img src="/images/Pane/publish-private.gif"/>
-	             <label>
-	                 Private
-	             </label>
+       <form id="StatusForm" outlet="SSPublishPane">
+	         <span id="SSPPVisiblePrivate" outlet="SSPublishPane" class="SSRadioButton">
+             <input id="ShiftPrivateStatusRadio" name="ShiftStatusRadio" value="private" outlet="SSPublishPane" type="radio" class="SSPPradio"></input>
+             <label>Private</label>
 	         </span>
-	         <span id="SSPPVisiblePublic" outlet="SSPublishPane">
-		     <span class="SSPPradio" outlet="SSPublishPane"/>
+	         <span id="SSPPVisiblePublic" outlet="SSPublishPane" class="SSRadioButton">
+				     <!-- <span class="SSPPradio" outlet="SSPublishPane"/> -->
 	             <input id="ShiftPublicStatusRadio" name="ShiftStatusRadio" value="public" outlet="SSPublishPane" type="radio" ></input>
-	             <img src="/images/Pane/publish-public.gif"/>
-	             <label>
-	                 Public
-	             </label>
+	             <label>Public</label>
 	         </span>
-             </form>
+       </form>
 	   </div>
 	
 	  </div>
@@ -41,6 +38,8 @@
 	    </div>
 	    <input id="PublishTargets" type="text" outlet="SSPublishPane" class="SSPinput"></input>
 	    <button id="AddTag" class="SSPublishAddTag" outlet="SSPublishPane">Add</button>
+	    <p id="TagTip"><strong>@users</strong> or <strong>&groups</strong> will be notified of this shift</p>
+<!--
 	    <ul>
 	      <li><img src="/images/Pane/publish-share-main.png"/></li>
 	      <li><label>Share:</label></li>
@@ -50,14 +49,17 @@
 	      <li><a class="SSPPTips" title="Facebook"><img src="/images/Pane/publish-share-facebook.png"/></a></li>
 	      <li><a class="SSPPTips" title="Digg"><img src="/images/Pane/publish-share-digg.png" /></a></li>
 	    </ul>
+-->
 	  </div>
 	  
 	  <div id="SSPublishPaneFooter">
 	    <div id="SSPublishPaneStatus">
 	      <label>Current Status: <b>Draft  </b></label>
-	      <button id="DeleteShift" outlet="SSPublishPane" class="SSPublishPubButton">Delete</button>
-	      <button id="SaveShift" outlet="SSPublishPane">Save</button>
-	      <button id="PublishShift" outlet="SSPublishPane" class="SSPublishPubButton">Publish</button>
+	      <div id="SSPublishButtons">
+		      <button id="DeleteShift" outlet="SSPublishPane" class="SSPublishPubButton">Delete</button>
+		      <button id="SaveShift" outlet="SSPublishPane">Save</button>
+		      <button id="PublishShift" outlet="SSPublishPane" class="SSPublishPubButton">Publish</button>
+		    </div>
 	    </div>
 	  </div>
 	</div>
