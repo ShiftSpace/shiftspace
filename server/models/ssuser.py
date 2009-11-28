@@ -107,6 +107,11 @@ class SSUser(User):
     def readByName(cls, userName):
         return core.object(SSUser.by_name(core.connect(), key=userName))
 
+    @classmethod
+    def namesToIds(cls, names):
+        return [user["_id"] for user in
+                core.fetch(view=SSUser.by_name, keys=names) if user and user.get("_id")]
+
     # ========================================
     # Instance Methods
     # ========================================
