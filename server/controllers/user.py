@@ -36,6 +36,11 @@ class UserController(ResourceController):
                   conditions=dict(method="POST"))
         d.connect(name="userUnfollow", route="unfollow/:userName", controller=self, action="unfollow",
                   conditions=dict(method="POST"))
+        d.connect(name="userFollowing", route="user/:userName/following", controller=self, action="following",
+                  conditions=dict(method="GET"))
+        d.connect(name="userFollowers", route="user/:userName/followers", controller=self, action="followers",
+                  conditions=dict(method="GET"))
+
         return d
 
     def primaryKey(self):
@@ -192,6 +197,30 @@ class UserController(ResourceController):
         else:
             theUser.unfollow(followed)
             return ack
+
+    @jsonencode
+    @exists
+    @loggedin
+    def following(self, userName, start=None, end=None, limit=25):
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser == otherUser.id or theUser.isAdmin():
+            return data(otherUser.following(start=start, end=end, limit=limit))
+        else:
+            return error("You do not have permission to view who this user is following.", PermissionError)
+
+    @jsonencode
+    @exists
+    @loggedin
+    def followers(self, userName, start=None, end=None, limit=25):
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser == otherUser.id or theUser.isAdmin():
+            return data(otherUser.followers(start=start, end=end, limit=limit))
+        else:
+            return error("You do not have permission to view who this user's followers.", PermissionError)
 
     @jsonencode
     @exists
