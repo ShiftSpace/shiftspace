@@ -54,6 +54,7 @@ def sync(createAdmin=True):
     from models.permission import Permission
     from models.comment import Comment
     from models.favorite import Favorite
+    from models.follow import Follow
     Lucene = core.lucene()
 
     # master ---------------------------------
@@ -66,6 +67,9 @@ def sync(createAdmin=True):
     SSUser.all.sync(master)
     SSUser.by_name.sync(master)
     SSUser.all_followers.sync(master)
+
+    Follow.following_by_created.sync(master)
+    Follow.followers_by_created.sync(master)
 
     Group.all.sync(master)
     Group.by_short_name.sync(master)

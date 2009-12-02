@@ -102,7 +102,7 @@ class BasicOperations(unittest.TestCase):
         self.fakejohn.follow(self.fakemary)
         fakejohn = SSUser.read(self.fakejohn.id)
         # should be in the list of people fakejohn is following
-        self.assertTrue(self.fakemary.id in fakejohn.following)
+        self.assertTrue(self.fakemary.id in fakejohn.following())
         # should be in the list of fakemary's followers
         followers = self.fakemary.followers()
         self.assertTrue(self.fakejohn.id in followers)

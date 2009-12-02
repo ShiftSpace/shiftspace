@@ -57,16 +57,16 @@ class Favorite(SSDocument):
         Favorite a shift.
         """
         fav = Favorite.readByUserAndShift(userId, shiftId)
-        if fav == None:
-            db = core.connect("shiftspace/shared")
-            newFavorite = Favorite(
-                userId = userId,
-                shiftId = shiftId,
-                )
-            newFavorite.id = Favorite.makeId(userId, shiftId)
-            newFavorite.store(db)
-            return newFavorite
-        return fav
+        if fav:
+            return fav
+        db = core.connect("shiftspace/shared")
+        newFavorite = Favorite(
+            userId = userId,
+            shiftId = shiftId,
+            )
+        newFavorite.id = Favorite.makeId(userId, shiftId)
+        newFavorite.store(db)
+        return newFavorite
 
     @classmethod
     def readByUserAndShift(cls, userId, shiftId):

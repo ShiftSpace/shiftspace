@@ -212,8 +212,12 @@ var ShiftSpace = new (function() {
     function SSCheckHash()
     {
       var hash = $A(window.location.hash).tail(1).str();
-      var kvs = hash.split("&").map(function(str) { var parts = str.split("="); return [parts[0], JSON.decode(parts[1])]; });
+      var kvs = hash.split("&").map(function(str) {
+        var parts = str.split("=");
+        return [parts[0], JSON.decode(parts[1])];
+      });
       var ops = kvs.hash();
+
       if(ops["open"])
       {
         ops["open"].each(Function.comp(
@@ -221,6 +225,7 @@ var ShiftSpace = new (function() {
           Function.msg("show")
         ));
       }
+
       if(ops["tab"])
       {
         ShiftSpaceNameTable.MainTabView.selectTabByName(ops["tab"]);

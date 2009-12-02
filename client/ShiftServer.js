@@ -164,7 +164,7 @@ var ShiftServer = new Class({
   onLogout: function()
   {
     // wipe out tables
-    ["MyShifts", "MyComments", "Favorites", "Messages"].each(SSDeleteTable);
+    ["FollowShifts", "MyShifts", "MyComments", "Favorites", "Messages"].each(SSDeleteTable);
   },
   
 
