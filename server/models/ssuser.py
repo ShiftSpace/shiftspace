@@ -322,7 +322,7 @@ class SSUser(User):
             start = [self.id]
         if not end:
             end = [self.id, {}]
-        results = Follow.following_by_created(core.connect(), key=self.id)
+        results = Follow.following_by_created(core.connect(), limit=limit)
         return core.values(results[start:end])
 
     def followers(self, start=None, end=None, limit=25):
@@ -331,7 +331,7 @@ class SSUser(User):
             start = [self.id]
         if not end:
             end = [self.id, {}]
-        results = Follow.followers_by_created(core.connect(), key=self.id)
+        results = Follow.followers_by_created(core.connect(), limit=limit)
         return core.values(results[start:end])
 
     def follow(self, other):

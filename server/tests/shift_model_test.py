@@ -18,6 +18,7 @@ class BasicOperations(unittest.TestCase):
         self.fakebob = SSUser.create(fakebob)
         self.root = SSUser.read("shiftspace")
 
+
     def testCreate(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -95,6 +96,7 @@ class BasicOperations(unittest.TestCase):
         theShift = Shift.load(core.connect(SSUser.privateDb(self.fakemary.id)), newShift.id)
         self.assertEqual(theShift, None)
 
+
     def testPublishToFollowers(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -110,6 +112,7 @@ class BasicOperations(unittest.TestCase):
         # should exist in shiftspace/shared db
         theShift = Shift.load(core.connect("shiftspace/shared"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
+
 
     def testPublishToUser(self):
         json = shiftJson()
