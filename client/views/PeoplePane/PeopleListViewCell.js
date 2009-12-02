@@ -32,7 +32,8 @@ var PeopleListViewCell = new Class({
 
   setFullName: function(fullName)
   {
-    el.getElement(".fullName").set("text", fullName);
+    var el = this.lockedElement();
+    el.getElement(".fullName").set("text", [fullName.first, fullName.last].join(" "));
   }
 
 });
