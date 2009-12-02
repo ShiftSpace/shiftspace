@@ -93,11 +93,3 @@ class Follow(SSDocument):
 
     def delete(self):
         del db[Follow.makeId(self.follower, self.followee)]
-        
-
-                    
-        
-
-    
-        
-        
