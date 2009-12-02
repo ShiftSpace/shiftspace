@@ -6,7 +6,10 @@ class UserController {
   }
 
   public function isLoggedIn() {
-    return true;
+  	// this should actually reflect the log-in
+  	
+  	
+    return false;
   }
 }
 ?>

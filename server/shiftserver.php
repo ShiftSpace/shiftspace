@@ -31,11 +31,13 @@ class ShiftServer {
     $request = $this->mapper->match($this->requestPath());
     $controller = $request['controller'];
     $method = $request['action'];
-
-    if($this->user->isLoggedIn || $method == "read") {
+	if($controller == "server") {
+		echo $this->user->showThis();
+	
+	} else if($this->user->isLoggedIn() || $method == "read") {
         echo $this->$controller->$method($request);
-    } else {
-        echo "{error:\"Operation not permitted. You are not logged in.\", type:\"UserNotLoggedInError\"}";
+	} else {
+   	    echo "{error:\"Operation not permitted. You are not logged in.\", type:\"UserNotLoggedInError\"}";
     }
   }
 
@@ -49,6 +51,10 @@ class ShiftServer {
     //Manage routing of URIs and actions. 
     $m = new Horde_Routes_Mapper();
     $m->environ = $_SERVER;
+    $m->connect('serverQuery', 'query', array(	'controller' => 'server',
+    											'action' => 'query',
+    											'conditions' => array("method" => array("GET"))));
+    
     $m->connect('shiftCreate', 'shift', array( 'controller' => 'shift', 
                                                'action'     => 'create',
                                                'conditions' => array("method" => array("POST"))));
