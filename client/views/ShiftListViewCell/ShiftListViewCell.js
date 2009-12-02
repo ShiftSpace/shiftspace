@@ -75,7 +75,7 @@ var ShiftListViewCell = new Class({
   onUncheck: function()
   {
     var idx = this.index(), data = this.data();
-    this.delegate().removeState(data._id, 'checked');
+    if(data) this.delegate().removeState(data._id, 'checked');
     SSPostNotification('onShiftDeselect', {listView: this.delegate(), index:idx});
   },
   
@@ -84,33 +84,25 @@ var ShiftListViewCell = new Class({
   {
     var clone = this.parent();
 
-    var lockCheckBox = clone.getElement('.selected');
-    if(ShiftSpace.User.isLoggedIn())
-    {   
-      clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
-        evt = new Event(evt);
-        var target = $(evt.target);
-        var li = (target.get('tag') == 'li') ? target : target.getParent('li');
-        var idx = this.delegate().indexOfCellNode(li);
-        if(target.getProperty('checked'))
-        {
-          this.lock(li);
-          this.onCheck();
-          this.unlock();
-        }
-        else
-        {
-          this.lock(li);
-          this.onUncheck();
-          this.unlock();
-        }
-        evt.stopPropagation();
-      }.bind(this));
-    }
-    else
-    {
-      lockCheckBox.hide();
-    }
+    clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
+      evt = new Event(evt);
+      var target = $(evt.target);
+      var li = (target.get('tag') == 'li') ? target : target.getParent('li');
+      var idx = this.delegate().indexOfCellNode(li);
+      if(target.getProperty('checked'))
+      {
+        this.lock(li);
+        this.onCheck();
+        this.unlock();
+      }
+      else
+      {
+        this.lock(li);
+        this.onUncheck();
+        this.unlock();
+      }
+      evt.stopPropagation();
+    }.bind(this));
 
     var favoriteButton = clone.getElement('.favoriteButton');
     if(favoriteButton)
@@ -159,6 +151,18 @@ var ShiftListViewCell = new Class({
     el.getElement(".unread").set("text", (unread) ? "unread" : "read");
   },
   
+  setRead: function(read)
+  {
+    var el = this.lockedElement();
+    if (read)
+    {
+      el.removeClass("unread");
+    }
+    else
+    {
+      el.addClass("unread");
+    }
+  },
   
   setSummary: function(summary)
   {
@@ -181,22 +185,20 @@ var ShiftListViewCell = new Class({
     {
       el.getElement('.status').addClass((publishData.draft && "private") || "public");
     }
-    else
-    {
-      //unbind the click event on checkbox and hide it
-      el.getElement('input[type=checkbox]').removeEvents('click');
-      el.getElement('input[type=checkbox]').hide();
-    }
   },
   
-  
-  setModified: function(modified)
+  setCreatedStr: function(createdStr)
   {
     var el = this.lockedElement();
-    el.getElement('.date').set('text', modified);
+    el.getElement('.date').set('text', createdStr);
   },
   
-  
+  setModifiedStr: function(modifiedStr)
+  {
+    var el = this.lockedElement();
+    el.getElement('.date').set('text', modifiedStr);
+  },
+
   setSpace: function(space)
   {
     var el = this.lockedElement(), name = el.getElement('.spaceName'), icon = el.getElement('.spaceIcon');
@@ -232,7 +234,9 @@ var ShiftListViewCell = new Class({
     var el = this.lockedElement();
     var url = href.substr(7, href.length);
     var parts = url.split("/");
-    el.getElement('.domain').set('text', 'http://'+parts[0]);
+    
+    var link = new Element('a', {'href':href,'html':parts[0],'class':'domain'});
+    link.inject(el.getElement(".domain"));
   },
 
 

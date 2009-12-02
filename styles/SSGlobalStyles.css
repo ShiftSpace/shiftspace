@@ -101,6 +101,11 @@
     padding-top: 4px;*/
   }
   
+  ul.ShiftListView li.ShiftListViewCell input
+  {
+    vertical-align:middle;
+  }
+  
     .ShiftListView .ShiftListViewCell > *
     {
       /*float: left;*/
@@ -118,7 +123,7 @@
     
     ul.ShiftListView li.ShiftListViewCell:hover .spaceName
     {
-      display: inline;
+      /*display: inline;*/
     }
     
     .ShiftListView .ShiftListViewCell div.summaryContainer
@@ -169,13 +174,17 @@
 
     ul.ShiftListView li.ShiftListViewCell:hover
     {
-      background-color: white;
+      background-color: #FFF;
       z-index: 2;
     }
 
     .ShiftListView .ShiftListViewCell.selected
     {
       background-color: #81C49C;
+    }
+    
+    ul.ShiftListView li.ShiftListViewCell:hover .date{
+      color: #74665A;
     }
 
     .ShiftListView .ShiftListViewCell .selected
@@ -256,6 +265,12 @@
     .ShiftListView .ShiftListViewCell div.date
     {
       margin-left: 6px;
+      color: #B3ADA5;
+    }
+    
+    .ShiftListView .ShiftListViewCell.selected div.date,
+    .ShiftListView li.ShiftListViewCell.selected:hover div.date{
+      color: #FFF;
     }
 
     .ShiftListView .ShiftListViewCell div.favorite
@@ -271,7 +286,6 @@
 
     .ShiftListView .ShiftListViewCell div.favorite div.favoriteCount
     {
-      margin-top:2px;
     }
     
     .ShiftListView .ShiftListViewCell div.favorite div.favoriteButton
@@ -303,7 +317,6 @@
       float: right;
       width:30px;
       height:26px;
-      margin-right:20px;
       text-align:center;
       background:url(/images/Console/commentballoon.png) no-repeat;
       cursor:pointer;
@@ -313,6 +326,25 @@
     {
       background-position:0 -26;
       color:#F8F5F2;
+    }
+    
+    .ShiftListView .ShiftListViewCell.unread div
+    {
+      font-weight:bold;
+    }
+    
+    .ShiftListView li.ShiftListViewCell div.read
+    {
+      width:12px;
+      height:12px;
+      margin:8px 4px;
+      overflow:hidden;
+      background:url(/images/Console/read.png) no-repeat;
+    }
+    
+    .ShiftListView li.ShiftListViewCell.unread div.read
+    {
+      background:url(/images/Console/unread.png) no-repeat;
     }
 
 /* Sidebars */

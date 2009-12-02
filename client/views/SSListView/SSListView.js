@@ -109,7 +109,7 @@ var SSListView = new Class({
   */
   removeState: function(id, key)
   {
-    delete this.__cellStates[id][key];
+    if($get(this.__cellStates, id, key)) delete this.__cellStates[id][key];
   },
   
   /*
@@ -309,7 +309,7 @@ var SSListView = new Class({
         onStart: function(cellNode) 
         {
           this.setIsBeingSorted(true);
-          this.__sortables.clone.addClass('Clone');
+          this.__sortables.clone.addClass('DragClone');
           this.sortStart(cellNode);
         }.bind(this),
         onSort: this.sortSort.bind(this),
@@ -584,7 +584,7 @@ var SSListView = new Class({
   {
     var data = this.data();
     var result = [];
-    for(var i = 0, l = data.length; i < l; i++) if(fn(data[i])) result.push[1];
+    for(var i = 0, l = data.length; i < l; i++) if(fn(data[i])) result.push(data[i]);
     return result;
   },
   
@@ -1158,7 +1158,7 @@ var SSListView = new Class({
   {
     this.parent();
     if(force && this.table()) this.setTableIsRead(false);
-    var hasCell = this.hasCell()
+    var hasCell = this.hasCell();
     if(!hasCell) return;
     if(!this.data() && !this.table()) return;
     if(!this.isVisible()) return;
@@ -1299,7 +1299,7 @@ var SSListView = new Class({
   
   /*
     Function: indexOf
-      Returns the index of a SSCell objet that contains the passed object. If the object is not found in a SSCell, it returns -1.
+      Returns the index of a SSCell object that contains the passed object. If the object is not found in a SSCell, it returns -1.
     
     Parameters:
       object - An object.
@@ -1384,22 +1384,46 @@ var SSListView = new Class({
     if(this.options.allowSelection)
     {
       var cellNode = this.cellNodeForIndex(index);
-      if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
       if(!cellNode.hasClass('selected')) 
       {
-        cellNode.addClass('selected');
+        this.selectRow(index);
         this.onRowSelect(index);
       }
       else
       {
-        cellNode.removeClass('selected');
+        this.deselectRow(index);
         this.onRowDeselect(index);
       }
     }
   },
 
   onRowSelect: function(index) {},
+  selectRow: function(index)
+  {
+    var cellNode = this.cellNodeForIndex(index);
+    if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
+    if(!cellNode.hasClass('selected')) 
+    {
+      cellNode.addClass('selected');
+    }
+  },
+  
   onRowDeselect: function(index) {},
+  deselectRow: function(index)
+  {
+    var cellNode = this.cellNodeForIndex(index);
+    if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
+    if(cellNode.hasClass('selected')) 
+    {
+      cellNode.removeClass('selected');
+    }
+  },
+  
+  
+  selectedRows: function()
+  {
+    return this.element.getElements("> li.selected").map(this.indexOfCellNode.bind(this));
+  },
   
   /*
     Function: setCellBeingEdited

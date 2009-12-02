@@ -25,16 +25,19 @@
           <li class="SSCell ShiftListViewCell"
               uiclass="ShiftListViewCell"
               options="{
-                properties: ['space', 'href', 'summary', 'modified', 'commentCount']
+                properties: ['space', 'href', 'summary', 'modifiedStr', 'commentCount']
               }">
-            <div class="selected">
-              <input type="checkbox"/>
-            </div>
-            <img class="spaceIcon"></img>
-            <div class="domain"></div>
-            <div class="summary"></div>
-            <div class="date"></div>
-            <div class="comments"></div>
+              <span class="selected">
+                  <input type="checkbox"/>
+              </span>
+              <img class="spaceIcon"></img>
+              <div class="summaryContainer">
+                  <span class="summary"></span>
+                  /
+                  <span class="domain"></span>
+              </div>
+              <div class="date"></div>
+              <div class="comments"></div>
           </li>
           
         </ul>
@@ -50,13 +53,13 @@
           <li class="SSCell ShiftListViewCell"
             uiclass="ShiftListViewCell"
             options="{
-              properties: ['space', 'userName', 'text', 'href', 'date', 'domain']
+              properties: ['space', 'userName', 'text', 'href', 'createdStr', 'commentCount']
             }">
-            <div class="selected">
-              <input type="checkbox"/>
-            </div>
+            <span class="selected">
+                <input type="checkbox"/>
+            </span>
             <div class="comments"></div>
-            <div>To <span class="userName"></span></div>
+            <div>To <span class="userName"></span>'s</div>
             <img class="spaceIcon"></img>
             <div>on <span class="domain"></span></div>
             <div class="text"></div>
@@ -75,22 +78,34 @@
           <li class="SSCell ShiftListViewCell"
               uiclass="ShiftListViewCell"
               options="{
-                properties: ['space', 'href', 'gravatar', 'userName', 'summary', 'modified', 'commentCount']
+                properties: ['space', 'href', 'gravatar', 'userName', 'summary', 'modifiedStr', 'commentCount','favoriteCount']
               }">
-            <div class="selected">
-              <input type="checkbox"/>
-            </div>
-            <img class="spaceIcon"></img>
-            <div class="summary"></div>
-            <div class="user">
-              <div class="gravatarContainer">
-                  <img class="rounded-image gravatar" width="16" height="16"></img>
-              </div>
-              <div class="userName"></div>
-            </div>
-            <div class="domain"></div>
-            <div class="date"></div>
-            <div class="comments"></div>
+              <div class="shiftMeta">
+                  <span class="selected">
+                    <input type="checkbox"/>
+                  </span>
+                  <img class="spaceIcon"></img>
+                  <span class="summaryContainer">
+                    <span class="spaceName"></span>
+                    <span class="summary"></span>
+                  </span>
+                  <span class="domain"></span>
+                </div>
+                <div class="userDateMeta">
+                  <div class="status"></div>
+                  <div class="user">
+                    <div class="gravatarContainer">
+                        <img class="rounded-image gravatar" width="16" height="16"></img>
+                    </div>
+                    <div class="userName"></div>
+                  </div>
+                  <div class="date"></div>
+                </div>
+                <div class="comments"></div>
+                <div class="favorite">
+                    <div class="favoriteCount"></div>
+                    <div class="favoriteButton favorited"></div>
+                </div>
           </li>
         </ul>
       </div>

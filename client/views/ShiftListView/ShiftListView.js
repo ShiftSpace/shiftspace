@@ -26,6 +26,8 @@ var ShiftListView = new Class({
   {
     this.parent(el, options);
     SSAddObserver(this, 'onNewShiftSave', this.onCreate.bind(this));
+    SSAddObserver(this, 'onShiftHide', this.onHide.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.uncheckAll.bind(this));
   },
   
   
@@ -54,7 +56,8 @@ var ShiftListView = new Class({
   {
     this.parent(idx);
     var shift = this.data()[idx];
-    SSShowShift(SSSpaceForName(shift.space.name), shift._id);
+    var noErr = SSShowShift(SSSpaceForName(shift.space.name), shift._id);
+    if(!noErr) this.deselectRow(idx);
   },
   
 
@@ -74,6 +77,17 @@ var ShiftListView = new Class({
       this.cell().lock(this.cellNodeForIndex(idx));
       this.cell().check();
       this.cell().unlock();
+    }
+  },
+  
+  
+  onHide: function(id)
+  {
+    var idx = this.find(function(x) { return x._id == id; });
+    if(idx != -1)
+    {
+      this.deselectRow(idx);
+      this.uncheck($splat(idx));
     }
   },
   
@@ -99,7 +113,7 @@ var ShiftListView = new Class({
   
   uncheck: function(indices)
   {
-    var indices = $splat(indices);
+    indices = $splat(indices);
     var cell = this.cell();
     indices.each(function(idx, i) {
       var cellNode = this.cellNodeForIndex(idx);
@@ -107,6 +121,12 @@ var ShiftListView = new Class({
       cell.uncheck();
       cell.unlock();
     }, this);
+  },
+
+
+  uncheckAll: function()
+  {
+    this.uncheck(this.checkedItemIndices());
   },
   
   
@@ -116,7 +136,7 @@ var ShiftListView = new Class({
     this.cellNodes().each(function(el, i) {
       if(el.getElement('input[type=checkbox]').getProperty("checked")) indices.push(i);
     });
-    return indices
+    return indices;
   },
 
 
@@ -134,6 +154,7 @@ var ShiftListView = new Class({
   
   onReloadData: function()
   {
+    // we need to wait until the styles for the rounded images are loaded
     if(!__mainCssLoaded)
     {
       SSAddObserver(this, 'onMainCssLoad', function() {

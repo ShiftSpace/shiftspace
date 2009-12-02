@@ -6,33 +6,14 @@ import server.utils.utils as utils
 import core
 
 from server.models.user import User
+from server.models.shift import shift_join
+from server.models.comment import comment_join
 
 # ==============================================================================
 # SSUser Model
 # ==============================================================================
 
 class SSUser(User):
-
-    # ========================================
-    # Fields
-    # ========================================
-
-    following = ListField(TextField())
-
-    # ========================================
-    # Views
-    # ========================================
-
-    all_followers = View(
-        "users",
-        "function(doc) {                                             \
-           if(doc.type == 'user') {                                  \
-              var following = doc.following;                         \
-              for(var i = 0, len = following.length; i < len; i++) { \
-                emit(following[i], doc._id);                         \
-              }                                                      \
-           }                                                         \
-        }")
 
     # ========================================
     # Class Methods
@@ -82,7 +63,7 @@ class SSUser(User):
             userJson['password'] = utils.md5hash(userJson['password'])
         if userJson.get("email"):
             userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % utils.md5hash(userJson["email"])
-        newUser = SSUser(**userJson)
+        newUser = SSUser(**utils.clean(userJson))
         newUser.store(db)
 
         # user's public shifts, will be replicated to shiftspace and user/feed
@@ -91,18 +72,8 @@ class SSUser(User):
         server.create(SSUser.privateDb(newUser.id))
         # all of the user's messages
         server.create(SSUser.messagesDb(newUser.id))
-        # the user's feed, merged from user/public and user/feed
-        server.create(SSUser.feedDb(newUser.id))
-        # the user's inbox of direct shifts
-        server.create(SSUser.inboxDb(newUser.id))
 
         # sync views
-        Shift.by_created.sync(server[SSUser.feedDb(newUser.id)])
-        Shift.by_user_and_created.sync(server[SSUser.feedDb(newUser.id)])
-        Shift.by_href_and_created.sync(server[SSUser.feedDb(newUser.id)])
-        Shift.by_domain_and_created.sync(server[SSUser.feedDb(newUser.id)])
-        Shift.by_group_and_created.sync(server[SSUser.feedDb(newUser.id)])
-        Shift.by_follow_and_created.sync(server[SSUser.feedDb(newUser.id)])
         Message.by_created.sync(server[SSUser.messagesDb(newUser.id)])
 
         return newUser
@@ -114,6 +85,11 @@ class SSUser(User):
     @classmethod
     def readByName(cls, userName):
         return core.object(SSUser.by_name(core.connect(), key=userName))
+
+    @classmethod
+    def namesToIds(cls, names):
+        return [user["_id"] for user in
+                core.fetch(view=SSUser.by_name, keys=names) if user and user.get("_id")]
 
     # ========================================
     # Instance Methods
@@ -265,14 +241,23 @@ class SSUser(User):
             return core.objects(results[:end])
         if start and end:
             return core.objects(results[start:end])
-        return core.objects(results)
+        return Message.joinData(core.objects(results))
 
-
+    @shift_join
     def shifts(self, start=None, end=None, limit=25):
-        pass
+        from server.models.shift import Shift
+        db = core.connect("shiftspace/shared")
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Shift.by_user_and_created(db, limit=limit)
+        return core.objects(results[start:end])
 
-
-    def feed(self, start=None, end=None, limit=25, userId=None):
+    @shift_join
+    def feed(self, start=None, end=None, limit=25):
+        # NOT IMPLEMENTED: will have to wait until we get to the point where
+        # we're writing p2p code - David
         from server.models.shift import Shift
         results = Shift.by_created(core.connect(SSUser.feedDb(self.id)), limit=limit)
         if start and not end:
@@ -281,21 +266,30 @@ class SSUser(User):
             return core.objects(results[:end])
         if start and end:
             return core.objects(results[start:end])
-        return Shift.joinData(core.objects(results[start:end]), userId)
+        return core.objects(results[start:end])
 
-
+    @shift_join
     def favorites(self, start=None, end=None, limit=25):
         from server.models.favorite import Favorite
+        db = core.connect("shiftspace/shared")
         if not start:
             start = [self.id]
         if not end:
             end = [self.id, {}]
-        results = Favorite.by_user_and_created(core.connect("shiftspace/shared"), limit=limit)
-        return core.objects(results[start:end])
+        results = Favorite.by_user_and_created(db, limit=limit)
+        favs = core.objects(results[start:end])
+        return core.fetch(db, keys=[fav.shiftId for fav in favs])
 
-
+    @comment_join
     def comments(self, start=None, end=None, limit=25):
-        pass
+        from server.models.comment import Comment
+        db = core.connect("shiftspace/shared")
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Comment.by_user_and_created(db, limit=limit)
+        return core.objects(results[start:end])
         
     # ========================================
     # Favorites
@@ -322,23 +316,39 @@ class SSUser(User):
     # Follow
     # ========================================
 
-    def followers(self, start=None, end=None, limit=25):
-        return core.values(SSUser.all_followers(core.connect(), key=self.id))
+    def following(self, start=None, end=None, limit=25):
+        from server.models.follow import Follow
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Follow.following_by_created(core.connect(), limit=limit)
+        userIds = core.values(results[start:end])
+        return core.fetch(keys=userIds)
 
+    def followers(self, start=None, end=None, limit=25):
+        from server.models.follow import Follow
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Follow.followers_by_created(core.connect(), limit=limit)
+        userIds = core.values(results[start:end])
+        return core.fetch(keys=userIds)
 
     def follow(self, other):
-        db = core.connect()
-        if not (other.id in self.following):
-            self.following.append(other.id)
-        self.store(db)
+        from server.models.follow import Follow
+        Follow.create(self.id, other.id)
         return self
-
 
     def unfollow(self, other):
-        db = core.connect()
-        self.following.remove(other.id)
-        self.store(db)
+        from server.models.follow import Follow
+        follow = Follow.read(self.id, other.id)
+        follow.delete()
         return self
+
+    def followDbs(self):
+        return [SSUser.db(user) for user in self.following()]
 
     # ========================================
     # Comment Subscription
@@ -348,7 +358,6 @@ class SSUser(User):
         from server.models.comment import Comment
         db = core.connect(Comment.db(aShift.id))
         return db.get("user:%s" % self.id) != None
-
 
     def subscribe(self, aShift):
         from server.models.comment import Comment
@@ -361,12 +370,9 @@ class SSUser(User):
                 "userId": self.id,
                 })
 
-
     def unsubscribe(self, aShift):
         from server.models.comment import Comment
         db = core.connect(Comment.db(aShift.id))
         if self.isSubscribed(aShift):
             del db["user:%s" % self.id]
-
-
 

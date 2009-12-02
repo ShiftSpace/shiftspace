@@ -22,26 +22,45 @@ var AllShiftsView = new Class({
   },
   
   
-  optionsForTable: function(resource)
+  optionsForTable: function(table)
   {
-    return {byHref:window.location.href.split("#")[0]};
+    if(table == SSTableForName("AllShifts"))
+    {
+      return {byHref:window.location.href.split("#")[0]};
+    }
+    if(table == SSTableForName("FollowShifts"))
+    {
+      return {byFollowing:true};
+    }
+    if(table == SSTableForName("GroupShifts"))
+    {
+      return {byGroups:true};
+    }
   },
 
 
   afterAwake: function()
   {
     SSTableForName("AllShifts").setDelegate(this);
+    if(SSTableForName("FollowShifts")) SSTableForName("FollowShifts").setDelegate(this);
   },
   
 
   onSync: function()
   {
-    SSTableForName("AllShifts").addView(this.AllShiftsListView);
+    this.initListViews();
   },
   
   
   onLogin: function()
   {
+    this.initListViews();
+  },
+
+
+  initListViews: function()
+  {
     SSTableForName("AllShifts").addView(this.AllShiftsListView);
+    if(SSTableForName("FollowShifts")) SSTableForName("FollowShifts").addView(this.FollowShiftsListView);
   }
 });

@@ -89,13 +89,15 @@ var ShiftSpace = new (function() {
       SSLog("\tInitializing UI", SSLogSystem);
 
       SSLog("\tCreating console", SSLogSystem);
-      ShiftSpace.Console = new SSConsole();
+      ShiftSpace.Console = ShiftSpaceNameTable.SSConsole = new SSConsole();
       SSLog("\tCreating notifier view", SSLogSystem);
-      ShiftSpace.Notifier = new SSNotifierView();
+      ShiftSpace.Notifier = ShiftSpaceNameTable.Notifier = new SSNotifierView();
       SSLog("\tCreating space menu", SSLogSystem);
-      ShiftSpace.SpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
+      ShiftSpace.SpaceMenu = ShiftSpaceNameTable.SSSpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
       SSLog("\tCreating comments window", SSLogSystem);
-      ShiftSpace.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
+      ShiftSpace.Comments = ShiftSpaceNameTable.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
+      SSLog("\tCreating publish window", SSLogSystem);
+      ShiftSpace.PublishPane = ShiftSpaceNameTable.PublishPane = new SSPublishPane(null, {location:'views'});
       ShiftSpace.Sandalphon = Sandalphon;
 
       SSLog("\tShiftSpace UI initialized", SSLogSystem);
@@ -185,18 +187,50 @@ var ShiftSpace = new (function() {
     var SSWaitForUI = function(query)
     {
       // wait for console and notifier before sending onSync
-      var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu];
+      var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu, ShiftSpace.PublishPane];
       if(!ui.every(Function.msg('isLoaded')))
       {
         ui.each(Function.msg('addEvent', 'load', function(obj) {
-          if(ui.every(Function.msg('isLoaded'))) SSPostNotification("onSync");
-        }.bind(this)))
+          if(ui.every(Function.msg('isLoaded')))
+          {
+            SSPostNotification("onSync");
+            if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
+          }
+        }.bind(this)));
       }
       else
       {
         SSPostNotification("onSync");
       }
     }.asPromise();
+
+    /*
+      Function: SSCheckHash
+        Check the window location hash for operations that make life easiers as a developer
+        and a designer.
+    */
+    function SSCheckHash()
+    {
+      var hash = $A(window.location.hash).tail(1).str();
+      var kvs = hash.split("&").map(function(str) {
+        var parts = str.split("=");
+        return [parts[0], JSON.decode(parts[1])];
+      });
+      var ops = kvs.hash();
+
+      if(ops["open"])
+      {
+        ops["open"].each(Function.comp(
+          ShiftSpaceNameTable.asFn(),
+          Function.msg("show")
+        ));
+      }
+
+      if(ops["tab"])
+      {
+        ShiftSpaceNameTable.MainTabView.selectTabByName(ops["tab"]);
+      }
+    }
     
     /*
       Function: SSSetup (private)

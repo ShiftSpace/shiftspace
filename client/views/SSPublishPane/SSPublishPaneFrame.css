@@ -1,0 +1,20 @@
+#SSPublishPane
+{
+  position: fixed;
+  right: 50px;
+  bottom: 0px;
+  width: 380px;
+  height: 200px;
+  z-index: 1000000;
+  border: 0;
+  overflow: hidden;
+}
+
+.SSPPOpen{
+	height: 87px;
+}
+
+.SSPublishPaneClosed
+{
+  display: none;
+}

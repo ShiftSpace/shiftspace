@@ -35,9 +35,9 @@ function SSUserForShift(id)
   Returns:
     true or false.
 */
-function SSUserOwnsShift(shift)
+function SSUserOwnsShift(id)
 {
-  return (shift.userName == ShiftSpace.User.getUserName());
+  return (SSGetShift(id).createdBy == ShiftSpace.User.getId());
 }
 
 /*
@@ -50,8 +50,7 @@ function SSUserOwnsShift(shift)
   Returns:
     true or false.
 */
-function SSUserCanEditShift(shift)
+function SSUserCanEditShift(id)
 {
-  return (ShiftSpace.User.isLoggedIn() &&
-          SSUserOwnsShift(shift));
+  return (ShiftSpace.User.isLoggedIn() && SSUserOwnsShift(id));
 }

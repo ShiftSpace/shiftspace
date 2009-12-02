@@ -66,3 +66,9 @@ config/views.json/server/.htaccess
 /test.py
 /config/conf.json
 /TAGS
+/client/views/SSListView/.emacs.desktop
+/client/views/SSListView/.emacs.desktop.lock
+/.ropeproject/config.py
+/.ropeproject/globalnames
+/.ropeproject/history
+/.ropeproject/objectdb

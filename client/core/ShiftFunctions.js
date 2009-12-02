@@ -193,7 +193,7 @@ Parameters:
 var SSEditShift = function(space, shiftId)
 {
   var shift = SSGetShift(shiftId);
-  if(SSUserCanEditShift(shift))
+  if(SSUserCanEditShift(shift) || SSIsNewShift(shiftId))
   {
     var content = shift.content;
     SSFocusSpace(space, (content && content.position) || null);
@@ -301,7 +301,12 @@ Returns:
 */
 function SSGetAuthorForShift(shiftId)
 {
-  return SSGetShift(shiftId).username;
+  return SSGetShift(shiftId)._id;
+}
+
+function SSGetAuthorNameForShift(shiftId)
+{
+  return SSGetShift(shiftId).userName;
 }
 
 /*
@@ -325,18 +330,24 @@ Function: SSShowShift
 Parameters:
   space - a space instance.
   shiftId - a shift id.
+
+Returns:
+  true if shift succesfully shown, false if error occured.
 */
 var SSShowShift = function(space, shiftId)
 {
+  if(!space) return false;
   var shift = SSGetShift(shiftId);
   try
   {
     var controlp = space.showShift(shift);
     SSFocusShift(space, shiftId, controlp);
+    return true;
   }
   catch(err)
   {
     SSLog(err, SSLogError);
+    return false;
   }
 }.asPromise();
 

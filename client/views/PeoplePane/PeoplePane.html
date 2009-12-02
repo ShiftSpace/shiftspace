@@ -3,21 +3,65 @@
      uiclass="PeoplePane"
      outlet="SSConsole">
      
-  <div id="PeopleTabView" 
-       class="SSTabView SSTabViewSubTabStyle"
-       uiclass="SSTabView"
-       outlet="PeoplePane">
+    <div id="PeopleTabView" 
+         class="SSTabView SSTabViewSubTabStyle"
+         uiclass="SSTabView"
+         outlet="PeoplePane">
 
-    <div class="SSControlView">
-      <div class="SSButton SSActive">Following<span class="count"></span></div>
-      <div class="SSButton">Followers<span class="count"></span></div>
+       
+        <div class="SSControlView">
+            <div class="SSButton SSActive">Following<span class="count"></span></div>
+            <div class="SSButton">Followers<span class="count"></span></div>
+            <div class="SSButton">Search For Users<span class="count"></span></div>
+        </div>
+
+        <!-- START Content View -->
+        <div class="SSContentView">
+            <!-- START Following Tab Pane -->
+            <div class="SSTabPane">
+                <ul id="FollowingListView"
+                    uiclass="SSListView"
+                    class="SSListView PeopleListView"
+                    outlet="PeoplePane">
+                    <li uiclass="PeopleListViewCell"
+                        class="SSCell PeopleListViewCell"
+                        options="{
+                          properties: ['gravatar', 'userName', 'fullName']
+                        }">
+                        <span class="gravatar"><img></img></span>
+                        <span class="userName"></span>
+                        <span class="fullName"></span>
+                    </li>
+                </ul>
+            </div>
+            <!-- END Following Tab Pane -->
+
+            <!-- START Followers Tab Pane -->
+            <div class="SSTabPane">
+                <ul id="FollowersListView"
+                    uiclass="SSListView"
+                    class="SSListView PeopleListView"
+                    outlet="PeoplePane">
+                    <li uiclass="PeopleListViewCell"
+                        class="SSCell PeopleListViewCell"
+                        options="{
+                          properties: ['gravatar', 'userName', 'fullName']
+                        }">
+                        <span class="gravatar"><img></img></span>
+                        <span class="userName"></span>
+                        <span class="fullName"></span>
+                    </li>
+                </ul>
+            </div>
+            <!-- END Followers Tab Pane -->
+
+            <!-- START Search For Users Tab Pane -->
+            <div class="SSTabPane">Search For Users</div>
+            <!-- END Search For Users Tab Pane -->
+
+        </div>
+        <!-- END Content View -->
+
     </div>
-
-    <div class="SSContentView">
-      <div class="SSTabPane">Following</div>
-      <div class="SSTabPane">Followers</div>
-    </div>
-
-  </div>
 
 </div>

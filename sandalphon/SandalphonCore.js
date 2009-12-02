@@ -12,13 +12,6 @@ SSSandalphonError.NoSuchResource = new Class({
   name: "SSSandalphonError.NoSuchResource"
 });
 
-var __framedViews = $H();
-
-function SSAddFramedView(framedView)
-{
-  __framedViews[framedView.getId()] = framedView;
-}
-
 /*
   Class: Sandalphon
     A singleton class that associates JavaScript controllers with DOM nodes. Also
@@ -92,6 +85,7 @@ var SandalphonClass = new Class({
   
   /*
     Function: compileAndLoad
+      *deprecated*
       Takes a path to a Sandalphon resource (a .html and .css file with the same name)
       Returns via the callback an object which has two properties, 'interface' and 'styles'.
       'styles' can be added to the document via Sandalphon.addStyle. 'interface' is
@@ -132,13 +126,16 @@ var SandalphonClass = new Class({
   
 
   /*
-    Function: loadFile
+    Function: load
       Loads an interface file from the speficied path, does not compile.
     
     Parameters:
       path - a file path as string. This path should be absolute from the root ShiftSpace directory.
+      
+    Returns:
+      A promise for the html and css of the interface file.
   */
-  load: function(path, callback)
+  load: function(path)
   {
     var server = (SSInfo && SSInfo().server) || '..';
     return new Promise({interface: SSLoadFile(String.urlJoin(server, path+'.html')),

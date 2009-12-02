@@ -254,7 +254,7 @@ var SSNotifierView = new Class({
     {
       if(ShiftSpace.User.isLoggedIn())
       {
-        this.SSLogInOut.set('text', 'Logout')
+        this.SSLogInOut.set('text', 'Logout');
       }
       else
       {
@@ -273,7 +273,7 @@ var SSNotifierView = new Class({
     this.__count = countp;
     this.updateCounter();
     
-    if (this.__count > 0 && this.graph.state() != "SSNotifierOpen")
+    if (this.__count > 0 && this.graph && this.graph.state() != "SSNotifierOpen")
     {
       this.graph.setState('SSNotifierHasShifts', {animate:true, direction:'previous', hold:{duration:3000}});
     }
@@ -281,16 +281,18 @@ var SSNotifierView = new Class({
   
   updateMessageCount: function(countp)
   {
-    if (countp.length > 0)
+    if(this.SSMessage)
     {
-      this.SSMessage.show();
-      this.SSShowMessage.set('text',countp.length);
+      if (countp.length > 0)
+      {
+        this.SSMessage.show();
+        this.SSShowMessage.set('text',countp.length);
+      }
+      else
+      {
+        this.SSMessage.hide();
+      }
     }
-    else
-    {
-      this.SSMessage.hide();
-    }
-    
   }.asPromise(),
   
   attachEvents: function()

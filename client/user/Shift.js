@@ -176,6 +176,7 @@ var ShiftSpaceShift = new Class({
   encode: function()
   {
     if(this.getMainView()) return {position: this.getPosition()};
+    return {};
   },
 
   /*
@@ -200,6 +201,12 @@ var ShiftSpaceShift = new Class({
   canHide: function()
   {
     return true;
+  },
+  
+  
+  canEdit: function()
+  {
+    return SSUserCanEditShift(this.getId());
   },
 
   /*
@@ -729,6 +736,11 @@ var ShiftSpaceShift = new Class({
   {
     return SSGetAuthorForShift(this.getId());
   },
+  
+  getAuthorName: function()
+  {
+    return SSGetAuthorNameForShift(this.getId());
+  },
 
   /*
     Function: build (abstract)
@@ -791,7 +803,7 @@ var ShiftSpaceShift = new Class({
     if(this.getMainView())
     {
       this.getMainView().makeDraggable(
-	$merge({onComplete:this.save.bind(this)}, options)
+        $merge({onComplete:this.save.bind(this)}, options)
       );
     }
     else

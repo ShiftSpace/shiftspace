@@ -20,6 +20,9 @@ var _urlJoin = Function.dispatch(
 
 
 String.implement({
+
+  pop: function() { return this.substring(1, this.length); },
+
   tail: function(n) { return this.substring(this.length-(n || 1)); },
 
   drop: function(n) { return this.substring(0, this.length-(n || 1)); },
@@ -59,6 +62,8 @@ String.implement({
 
 
 Array.implement({
+  str: function() { return this.join(""); },
+
   isEqual: function(other) { return $hash(this) == $hash(other); }
 });
 
@@ -424,3 +429,13 @@ Sortables.implement({
     this.fireEvent('sort', [this.element, this.clone]);
   }
 });
+
+
+function formToHash(formEl)
+{
+  var inputs = formEl.getElements("input[name]"), result = $H();
+  inputs.each(function(input) {
+    result[input.getProperty("name")] = input.getProperty("value");
+  });
+  return result;
+}

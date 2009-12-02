@@ -2,6 +2,7 @@ from datetime import datetime
 from couchdb.schema import *
 from couchdb.schema import View
 from server.models import core
+import server.utils.utils as utils 
 
 
 class SSDocumentError(Exception): pass
@@ -14,7 +15,7 @@ class SSDocument(Document):
     # Fields
     # ========================================
 
-    createdBy = TextField()    
+    createdBy = TextField()
     source = DictField(Schema.build(
             server = TextField(),
             database = TextField()
@@ -31,7 +32,7 @@ class SSDocument(Document):
         # cannot be set from the client
         if kwargs.get("type"):
             raise AttemptToSetTypeError("Error: Attempt to set document type.")
-        super(Document, self).__init__(**kwargs)
+        super(Document, self).__init__(**utils.clean(kwargs))
 
     # ========================================
     # Instance Methods

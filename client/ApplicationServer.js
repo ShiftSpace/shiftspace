@@ -31,7 +31,7 @@ var ApplicationServer = new Class({
   defaults: function() {
     return {
       server: null
-    }
+    };
   },
   
   eventOrder: ['method', 'resource', 'action'],
@@ -179,7 +179,7 @@ var ApplicationServer = new Class({
     {
       if((name && cache == name) || !name)
       {
-        delete caches[cache][id]
+        delete caches[cache][id];
       }
     }
   },

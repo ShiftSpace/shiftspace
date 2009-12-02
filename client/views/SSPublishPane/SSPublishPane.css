@@ -1,3 +1,7 @@
+button:hover{
+	cursor: pointer;
+}
+
 .SSPublishPane
 {
   position: absolute;
@@ -5,16 +9,14 @@
   right: 19px;
   width: 268px;
   bottom: 0px;
-
   color: black;
   z-index: 2;
-  border:3px #F7F2EF solid;
-
+  /* border:3px #F7F2EF solid; */
   font-family:Helvetica,Arial,Verdana, sans-serif;
   font-size:12px;
   color:#4b423a;
 
-  padding:4px 3px 1px 3px;
+  /* padding:4px 3px 1px 3px; */
   background-color: #fff;  
 
   -webkit-box-shadow: 0px 0px 10px #000;  
@@ -24,32 +26,96 @@
   -webkit-border-radius: 4px;
 }
 
+button#SSClosePane{
+	height: 16px;
+	width: 16px;
+	text-indent: -3000px;
+	border: 0;
+	background: url(/images/Pane/SSPaneClose.png) no-repeat;
+	position: absolute;
+	top:13px;
+	right: 13px;
+}
+
+button#SSClosePane:hover{
+	background-position: bottom;
+}
+
+#PaneDrag
+{
+  background:url(/images/Pane/SSPaneHeader.png) no-repeat;	
+  width: 380px;
+  height: 15px;
+}
+
+.PaneBody
+{
+  width: 340px;
+  background:url(/images/Pane/SSPaneBg.png);
+  padding: 5px 20px 0;
+}
+
 /*--------------------------------------------------HEADER*/
 #SSPublishPaneHeader
 {
-  background-image:url(/images/Console/publish-top-bg.gif);
-  height:27px;
-  padding:1px 0px 0px 4px;
-
+  /* background-image:url(/images/Pane/publish-top-bg.gif); */
+  height:17px;
+	background: #e3dfdb;
+	padding: 5px;
 }
 
 .SSPPPermit{
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  padding:4px 14px 1px 3px;
-  margin-right:2px;
   background:#fff;
 }
    
 /*---------------------------------------------------BODY*/
+.SSPublishPaneFrameBody
+{
+  /* background:#f8f5f2; */
+  /* background-image:url(/images/Pane/SSPublishPaneBg.png); */
+  font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
+  color:#74665A;
+  font-size: 13px;
+  margin: 0;
+}
+
 #SSPublishPaneBody
 {
   background:#C6C1BD;
-  height:86px;
+  /* height:86px; */
   margin-top:0px;
   padding-left:4px;
-  background-image:url(/images/Console/publish-top-body.gif);
+  background-image:url(/images/Pane/publish-top-body.gif);
   background-repeat:repeat-y;
+  clear: both;
+}
+
+#SSPublishPaneVis h4{
+	margin: 0 5px 0 0;
+	float: left;
+}
+
+form#StatusForm{
+	
+}
+
+form .SSRadioButton{
+  padding:2px 6px 2px 0;
+  margin-right:2px;
+}
+
+form .SSRadioButton label{
+  padding-left:18px;
+}
+
+#SSPPVisiblePrivate label{
+	background: url(/images/Pane/publish-private.png) no-repeat scroll 0px center;
+}
+
+#SSPPVisiblePublic label{
+	background: url(/images/Pane/publish-public.png) no-repeat scroll 0px center;
 }
 
 #SSPublishPaneBody a img{
@@ -72,24 +138,35 @@
 }
 
 #SSPublishPaneVis{
-  position:relative;
-  top:3px;
-
+	
 }
 
 .SSPinput{
   position:relative;
   bottom:-7px;
-  background-image:url(/images/Console/publish-form-input.gif);
-  width:262px;
-  height:22px;
+  background-image:url(/images/Pane/publish-form-input.gif);
+  width:334px;
+  height:30px;
   border:0px;
   margin-left:-2px;
-  padding-bottom:5px;
-  padding-left:0px;
+  padding:6px;
+  font-size: 14px;
 }
 
+#SSPublishPaneBody button#Addtag{
+	background:transparent url(/images/Pane/publish-form-button.gif) center center no-repeat;
+	border:0 none;
+	margin-top:8px;
+	padding:6px 10px;
+	position:absolute;
+	right:25px;
+	text-indent:-2000px;
+}
 
+#SSPublishPaneBody p#TagTip{
+	margin: 5px 0 0;
+	padding: 5px 0;
+}
 
 .SSPPBodyBorder{
   background-image:url(/images/Console/public-innerborder-left.gif) repeat-y;
@@ -105,7 +182,7 @@
 }
 
 .SSPPTagFont{
-  font-size:10px;
+  font-size:11px;
   font-weight: bold;
 }
 
@@ -125,7 +202,7 @@
 
 #SSPublishPaneTags{
   padding-top:5px;
-  padding-bottom:15px;
+  padding-bottom:3px;
   overflow:hidden;
 }
 
@@ -133,45 +210,78 @@
   padding-bottom:4px;
 }
 
-
 .SSPPTagTag{
   color:#0054a6;
 }
-
 
 .SSPPTagsroundedCorners{
   background-color: #fff;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  padding:2px 3px 1px 3px;
+  padding:2px 5px 3px;
+}
+
+span.SSPPTagsroundedCorners:hover{
+  padding-right: 20px;
+  background: #fff url(/images/Pane/publish-del-tag.png) no-repeat scroll right 2px;
 }
     
 /*----------------------------------------------------FOOTER*/
 #SSPublishPaneFooter
 {
-  padding-top:7px;
-  height:32px;
+  padding:4px 0 11px;
   background:#ffffff;
-  width:268px;
-  background-image:url(/images/Console/publish-top-footer.gif);
+  background-image:url(/images/Pane/publish-top-footer.gif);
+  height: 15px;
+  font-size: 12px;
 }
 
 #SaveShift{
-  display:none;
+  /* display:none; */
 }
 
 #SSPublishPaneStatus{
   position:relative;
-  left:5px; 
+  padding:0 5px; 
+}
 
+#SSPublishPaneStatus label{
+	float: left;
+	padding: 2px 0;
+}
+
+#SSPublishPaneStatus #SSPublishButtons{
+	float: right;
 }
 
 .SSPublishPubButton{
   background-color: #f63b02;
   color:fff;
-  border:1px #b52b01 solid;
+  border:2px #b52b01 solid;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
-  padding:0px 5px;
+  padding:0 5px;
   font-weight:bold;
+}
+
+.hide{
+	display: none;
+}
+
+.SSMinorButton{
+	background: none;
+	border: 0;
+	color: #f63b02;
+	text-decoration: underline;
+  padding:0 5px;
+}
+
+.SSInactiveButton{
+	background: none;
+  border:2px #f63b02 solid;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  padding:0 5px;
+  font-weight:bold;
+	color: #f63b02;
 }

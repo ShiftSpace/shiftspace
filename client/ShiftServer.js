@@ -3,6 +3,14 @@
 // @dependencies      ApplicationServer
 // ==/Builder==
 
+var __ssapplication = null;
+
+function SSApplication()
+{
+  if(!__ssapplication) return new ShiftServer();
+  return __ssapplication;
+}
+
 var ShiftServer = new Class({
 
   Extends: ApplicationServer,
@@ -20,7 +28,9 @@ var ShiftServer = new Class({
   
   initialize: function(options) {
     __ssapplication = this;
+
     this.parent(options);
+
     SSAddObserver(this, 'onUserLogin', this.onLogin.bind(this));
     SSAddObserver(this, 'onUserJoin', this.onLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.onLogout.bind(this));
@@ -59,38 +69,24 @@ var ShiftServer = new Class({
       ]
     });
   },
-  
-  
-  favoriteTransform: function(data)
-  {
-    var content = data.content;
-    data.summary = content.text;
-    return data;
-  },
 
 
-  commentTransform: function(data)
-  {
-    var content = data.content;
-    data.userName = content.user.userName;
-    data.space = content.shift.space;
-    data.href = content.href;
-    data.domain = content.domain;
-    data.text = content.text;
-    return data;
-  },
-  
-  
-  messageTransform: function(data)
-  {
-    var content = data.content;
-    data.summary = content.text;
-    return data;
-  },
-  
-  
   initUserTables: function()
   {
+    new SSTable("FollowShifts", {
+      resource: {read:"shifts"},
+      watches: [
+        {
+          events: [
+            {resource:"shift", action:"favorite"},
+            {resource:"shift", action:"unfavorite"},
+            {resource:"shift", action:"comment"}
+          ],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
     new SSTable("MyShifts", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
       watches: [
@@ -112,7 +108,6 @@ var ShiftServer = new Class({
 
     new SSTable("Favorites", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/favorites'},
-      transforms: [this.favoriteTransform],
       watches: [
         {
           events: [{resource:"shift", action:"favorite"},
@@ -124,7 +119,6 @@ var ShiftServer = new Class({
 
     new SSTable("MyComments", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/comments'},
-      transforms: [this.commentTransform],
       watches: [
         {
           events: [{resource:"shift", action:"comment"}],
@@ -135,11 +129,32 @@ var ShiftServer = new Class({
     
     new SSTable("Messages", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/messages', 'delete':'event'},
-      transforms: [this.messageTransform],
       watches: [
         {
           events: [{resource:"event", action:"read"},
                    {resource:"event", action:"unread"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
+    new SSTable("Following", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/following'},
+      watches: [
+        {
+          events: [{resource:"event", action:"follow"},
+                   {resource:"event", action:"unfollow"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
+    new SSTable("Followers", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/followers'},
+      watches: [
+        {
+          events: [{resource:"event", action:"follow"},
+                   {resource:"event", action:"unfollow"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]
@@ -149,7 +164,10 @@ var ShiftServer = new Class({
   
   login: function(userData)
   {
-    return this.post({action:"login", data:{userName:userData.userName, password:userData.password}});
+    return this.post({
+      action:"login",
+      data:{userName:userData.userName, password:userData.password}
+    });
   },
   
   
@@ -167,7 +185,14 @@ var ShiftServer = new Class({
   
   onLogout: function()
   {
-    
+    // wipe out tables
+    ["FollowShifts",
+     "MyShifts",
+     "MyComments",
+     "Favorites",
+     "Messages",
+     "Following",
+     "Followers"].each(SSDeleteTable);
   },
   
 
@@ -202,10 +227,3 @@ var ShiftServer = new Class({
   }
 
 });
-
-var __ssapplication = null;
-function SSApplication()
-{
-  if(!__ssapplication) return new ShiftServer();
-  return __ssapplication;
-}

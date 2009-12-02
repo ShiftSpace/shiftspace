@@ -19,5 +19,19 @@ var GroupsPane = new Class({
   awake: function()
   {
     this.mapOutletsToThis();
+    this.attachEvents();
+  },
+
+
+  attachEvents: function()
+  {
+    this.CreateGroupButton.addEvent("click", this.createGroup.bind(this));
+  },
+
+  
+  createGroup: function()
+  {
+    var p = SSApp.create("group", formToHash(this.GroupForm));
+    p.realize();
   }
 });

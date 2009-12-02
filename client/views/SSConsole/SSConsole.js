@@ -10,6 +10,7 @@ var SSConsole = new Class({
   Extends: SSView,
   name: 'SSConsole',
   
+
   initialize: function(el, options)
   {
     this.parent(el, options);
@@ -17,15 +18,12 @@ var SSConsole = new Class({
     var url = String.urlJoin('builds/compiledViews/', SSInfo().env, "SSConsoleMain");
     var p = Sandalphon.load(url);
     this.buildInterface(p);
-
+    
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
     SSAddObserver(this, 'onLocalizationChanged', this.localizationChanged.bind(this));
-    
-    // since we're created programmatically we add entry manually for debugging - David
-    ShiftSpaceNameTable.SSConsole = this;
   },
   
   
@@ -52,26 +50,55 @@ var SSConsole = new Class({
   awake: function(context)
   {
     this.mapOutletsToThis();
+    
     if(context == this.element.contentWindow)
     {
       this.MainTabView.addEvent('tabSelected', function(evt) {
       });
+    }
+    
+    this.updateTabs();
+  },
+  
+
+  updateTabs: function()
+  {
+    if (ShiftSpaceUser.isLoggedIn())
+    {
+      this.MainTabView.hideTabByName('LoginTabView');
+
+      this.MainTabView.revealTabByName('MyShiftSpacePane');
+      this.MainTabView.revealTabByName('PeoplePane');
+      this.MainTabView.revealTabByName('GroupsPane');
+      this.MainTabView.revealTabByName('InboxPane');
+    }
+    else
+    {
+      this.MainTabView.revealTabByName('LoginTabView');
+
+      this.MainTabView.hideTabByName('MyShiftSpacePane');
+      this.MainTabView.hideTabByName('PeoplePane');
+      this.MainTabView.hideTabByName('GroupsPane');
+      this.MainTabView.hideTabByName('InboxPane');
     }
   },
 
 
   handleLogin: function()
   {
-    this.MainTabView.hideTabByName('LoginTabView');
+    this.updateTabs();   
     this.MainTabView.selectTabByName('AllShiftsView');
     if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
+    if(SSTableForName("MyShifts")) SSTableForName("MyShifts").refresh();
   },
 
 
   handleLogout: function()
   {
-    this.MainTabView.revealTabByName('LoginTabView');
+    this.updateTabs();
+    this.MainTabView.selectTabByName('AllShiftsView');
     this.MainTabView.refresh();
+    if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
   },
   
   
@@ -86,6 +113,7 @@ var SSConsole = new Class({
     if(!this.isVisible()) this.show();
     this.MainTabView.selectTabByName('LoginTabView');
   },
+
   
   showInbox: function()
   {
