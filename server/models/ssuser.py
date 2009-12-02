@@ -16,27 +16,6 @@ from server.models.comment import comment_join
 class SSUser(User):
 
     # ========================================
-    # Fields
-    # ========================================
-
-    following = ListField(TextField())
-
-    # ========================================
-    # Views
-    # ========================================
-
-    all_followers = View(
-        "users",
-        "function(doc) {                                             \
-           if(doc.type == 'user') {                                  \
-              var following = doc.following;                         \
-              for(var i = 0, len = following.length; i < len; i++) { \
-                emit(following[i], doc._id);                         \
-              }                                                      \
-           }                                                         \
-        }")
-
-    # ========================================
     # Class Methods
     # ========================================
     
@@ -337,27 +316,37 @@ class SSUser(User):
     # Follow
     # ========================================
 
-    def followers(self, start=None, end=None, limit=25):
-        return core.values(SSUser.all_followers(core.connect(), key=self.id))
+    def following(self, start=None, end=None, limit=25):
+        from server.models.follow import Follow
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Follow.following_by_created(core.connect(), limit=limit)
+        return core.values(results[start:end])
 
+    def followers(self, start=None, end=None, limit=25):
+        from server.models.follow import Follow
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Follow.followers_by_created(core.connect(), limit=limit)
+        return core.values(results[start:end])
 
     def follow(self, other):
-        db = core.connect()
-        if not (other.id in self.following):
-            self.following.append(other.id)
-        self.store(db)
+        from server.models.follow import Follow
+        Follow.create(self.id, other.id)
         return self
-
 
     def unfollow(self, other):
-        db = core.connect()
-        self.following.remove(other.id)
-        self.store(db)
+        from server.models.follow import Follow
+        follow = Follow.read(self.id, other.id)
+        follow.delete()
         return self
 
-
     def followDbs(self):
-        return [SSUser.db(user) for user in self.following]
+        return [SSUser.db(user) for user in self.following()]
 
     # ========================================
     # Comment Subscription

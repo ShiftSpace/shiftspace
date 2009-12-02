@@ -7,6 +7,7 @@ from server.models.group import Group
 from server.models.permission import Permission
 from server.models.favorite import Favorite
 from server.models.comment import Comment
+from server.models.follow import Follow
 from server.couchdb.lucene_design import LuceneDefinition
 
 def reload_models():
