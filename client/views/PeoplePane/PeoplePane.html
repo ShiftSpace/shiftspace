@@ -22,10 +22,13 @@
                 <ul id="FollowingListView"
                     uiclass="SSListView"
                     class="SSListView PeopleListView"
-                    outlet="PeoplePane">
-                    <li uiclass="SSCell"
-                        class="SSCell">
-                        <span class="gravatar"></span>
+                    outlet="PeoplePane"
+                    options="{
+                      properties: ['gravatar', 'userName', 'fullName']
+                    }">
+                    <li uiclass="PeopleListViewCell"
+                        class="PeopleListViewCell">
+                        <span class="gravatar"><img></img></span>
                         <span class="userName"></span>
                         <span class="fullName"></span>
                     </li>
@@ -38,10 +41,13 @@
                 <ul id="FollowersListView"
                     uiclass="SSListView"
                     class="SSListView PeopleListView"
-                    outlet="PeoplePane">
-                    <li uiclass="SSCell"
-                        class="SSCell">
-                        <span class="gravatar"></span>
+                    outlet="PeoplePane"
+                    options="{
+                      properties: ['gravatar', 'userName', 'fullName']
+                    }">
+                    <li uiclass="PeopleListViewCell"
+                        class="PeopleListViewCell">
+                        <span class="gravatar"><img></img></span>
                         <span class="userName"></span>
                         <span class="fullName"></span>
                     </li>
