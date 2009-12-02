@@ -137,6 +137,28 @@ var ShiftServer = new Class({
         }
       ]
     });
+
+    new SSTable("Following", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/following'},
+      watches: [
+        {
+          events: [{resource:"event", action:"follow"},
+                   {resource:"event", action:"unfollow"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
+    new SSTable("Followers", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/followers'},
+      watches: [
+        {
+          events: [{resource:"event", action:"follow"},
+                   {resource:"event", action:"unfollow"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
   },
 
   
@@ -164,7 +186,13 @@ var ShiftServer = new Class({
   onLogout: function()
   {
     // wipe out tables
-    ["FollowShifts", "MyShifts", "MyComments", "Favorites", "Messages"].each(SSDeleteTable);
+    ["FollowShifts",
+     "MyShifts",
+     "MyComments",
+     "Favorites",
+     "Messages",
+     "Following",
+     "Followers"].each(SSDeleteTable);
   },
   
 
