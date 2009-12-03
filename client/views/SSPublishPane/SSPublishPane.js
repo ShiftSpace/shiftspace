@@ -11,7 +11,7 @@
 */
 var SSPublishPane = new Class({
 
-  Extends: SSFramedView,
+  Extends: SSView,
   name: "SSPublishPane",
 
   defaults: function() {
@@ -266,34 +266,11 @@ var SSPublishPane = new Class({
     window.open(ShiftSpace.info().server.urlJoin("proxy", selectedShifts[0]));
   },
   
-  /* SSFramedView Stuff ============================ */
-  
-  awake: function() {},
-  
-  
-  onInterfaceLoad: function(ui)
+
+  awake: function()
   {
-    this.parent(ui);
-    // TODO: Not super intuitive need someway to specify this automatically - David
-    this.element.setProperty('id', 'SSPublishPane');
-    this.element.addClass("SSDisplayNone");
-  }.asPromise(),
-  
-  
-  onContextActivate: function(context)
-  {
-    if(context == this.element.contentWindow)
-    {
-      this.mapOutletsToThis();
-      this.attachEvents();
-    }
-  },
-  
-  
-  buildInterface: function()
-  {
-    this.parent();
-    SSPostNotification('onPublishPaneLoad', this);
-    this.setIsLoaded(true);
+    this.mapOutletsToThis();
+    this.attachEvents();
   }
+
 });

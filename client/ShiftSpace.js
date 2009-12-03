@@ -96,8 +96,8 @@ var ShiftSpace = new (function() {
       ShiftSpace.SpaceMenu = ShiftSpaceNameTable.SSSpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
       SSLog("\tCreating comments window", SSLogSystem);
       ShiftSpace.Comments = ShiftSpaceNameTable.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
-      SSLog("\tCreating publish window", SSLogSystem);
-      ShiftSpace.PublishPane = ShiftSpaceNameTable.PublishPane = new SSPublishPane(null, {location:'views'});
+      //ShiftSpace.PublishPane = ShiftSpaceNameTable.PublishPane = new SSPublishPane(null, {location:'views'});
+      ShiftSpace.SSConsoleWindow = ShiftSpaceNameTable.SSConsoleWindow = new SSConsoleWindow(null, {location:'views'});
       ShiftSpace.Sandalphon = Sandalphon;
 
       SSLog("\tShiftSpace UI initialized", SSLogSystem);
@@ -187,7 +187,7 @@ var ShiftSpace = new (function() {
     var SSWaitForUI = function(query)
     {
       // wait for console and notifier before sending onSync
-      var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu, ShiftSpace.PublishPane];
+      var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu, ShiftSpace.SSConsoleWindow];
       if(!ui.every(Function.msg('isLoaded')))
       {
         ui.each(Function.msg('addEvent', 'load', function(obj) {

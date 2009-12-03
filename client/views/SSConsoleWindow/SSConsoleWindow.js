@@ -24,6 +24,7 @@ var SSConsoleWindow = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    SSLog("Creating console window!", SSLogForce);
   },
   
 
