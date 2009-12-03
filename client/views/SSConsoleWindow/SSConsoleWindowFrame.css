@@ -1,4 +1,4 @@
-#SSPublishPane
+#SSConsoleWindow
 {
   position: fixed;
   right: 50px;
@@ -10,11 +10,7 @@
   overflow: hidden;
 }
 
-.SSPPOpen{
-   height: 87px;
-}
-
-.SSPublishPaneClosed
+.SSConsoleWindowOpen
 {
-  display: none;
+   height: 87px;
 }
