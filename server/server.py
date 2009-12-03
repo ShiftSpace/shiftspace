@@ -161,8 +161,12 @@ class RootController:
         except Exception:
             return self.statusPage(status="err", details="couchdb")
         corebuilder.run()
+        # TODO: Fix the SandalphonCompiler to be mroe functional in design
+        # maintaining state stucks - David 12/2/09
         compiler = sandalphon.SandalphonCompiler("builds/compiledViews", "mydev")
         compiler.compile(inputFile="client/views/SSConsole/SSConsole.html")
+        compiler = sandalphon.SandalphonCompiler("builds/compiledViews", "mydev")
+        compiler.compile(inputFile="client/views/SSConsoleWindow/SSConsoleWindow.html")
         preprocessor = preprocess.SSPreProcessor(project="sandbox", env="mydev")
         preprocessor.preprocess(input="client/ShiftSpace.js",
                                 output="builds/shiftspace.sandbox.js")
