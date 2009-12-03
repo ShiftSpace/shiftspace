@@ -71,7 +71,7 @@ var SandalphonClass = new Class({
   */
   fragment: function()
   {
-    return this.__fragment__;
+    return this.__fragment;
   },
   
   /*
@@ -80,7 +80,7 @@ var SandalphonClass = new Class({
   */
   setFragment: function(frag)
   {
-    this.__fragment__ = frag;
+    this.__fragment = frag;
   },
   
   /*
@@ -115,7 +115,7 @@ var SandalphonClass = new Class({
         }
         
         var escapedUI = JSON.decode(responseText);
-        callback({interface:unescape(escapedUI.interface), styles:unescape(escapedUI.styles)});
+        callback({"interface":unescape(escapedUI.interface), styles:unescape(escapedUI.styles)});
       },
       onFailure: function(responseText, responseXml)
       {
@@ -138,7 +138,7 @@ var SandalphonClass = new Class({
   load: function(path)
   {
     var server = (SSInfo && SSInfo().server) || '..';
-    return new Promise({interface: SSLoadFile(String.urlJoin(server, path+'.html')),
+    return new Promise({"interface": SSLoadFile(String.urlJoin(server, path+'.html')),
                         styles: SSLoadFile(String.urlJoin(server, path+'.css'))});
   },
   
@@ -224,9 +224,9 @@ var SandalphonClass = new Class({
       controller - a Javascript controller object, generally SSView or a subclass.
       interface - a string of valid HTML markup.
   */
-  associate: function(controller, interface)
+  associate: function(controller, interfaceMarkup)
   {
-    controller.element = Sandalphon.convertToFragment(interface);
+    controller.element = Sandalphon.convertToFragment(interfaceMarkup);
     SSSetControllerForNode(controller, controller.element);
     return controller.element;
   },
