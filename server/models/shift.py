@@ -51,11 +51,12 @@ class Shift(SSDocument):
             draft = BooleanField(default=True),
             private = BooleanField(default=True),
             publishTime = DateTimeField(),
-            dbs = ListField(TextField())            # take the form of user/id or group/id
+            dbs = ListField(TextField()),           # take the form of user/id or group/id
+            targets = ListField(TextField()),       # human readable version of dbs
             ))
     # TODO: figure out how we are going to handle this 11/28/09
     #tags = ListField(TextField())
-    content = DictField()    
+    content = DictField()
             
     # ========================================
     # CouchDB Views
@@ -330,6 +331,10 @@ class Shift(SSDocument):
             dbs.extend(list(set(newUserDbs)))
 
         self.publishData.dbs = dbs
+        # store the human readable version
+        targets = publishData.get("targets")
+        if targets:
+            self.publishData.targets = targets
 
         # update/add to group dbs
         self.updateInGroups(oldGroupDbs)
@@ -454,7 +459,12 @@ class Shift(SSDocument):
             except:
                 return []
         elif byFollowing:
-            queryString = "(draft:false AND private:false AND createdBy:%s) OR dbs:%s" % (" ".join(user.following), SSUser.db(user.id))
+            from server.models.follow import Follow
+            # FIXME: impossible to make this scale in a simple way for many followers w/o p2p - David 12/2/09
+            # when p2p we can tag the shift as a follow shift when we get it
+            results = Follow.following_by_created(core.connect())
+            following = " ".join(core.values(results[[user.id]:[user.id, {}]]))
+            queryString = "(draft:false AND private:false AND createdBy:%s) OR dbs:%s" % (following, SSUser.db(user.id))
             print queryString
             try:
                 rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)

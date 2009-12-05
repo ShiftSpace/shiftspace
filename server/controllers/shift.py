@@ -147,7 +147,6 @@ class ShiftController(ResourceController):
             from server.models.group import Group
             from server.models.ssuser import SSUser
             targets = publishData["targets"]
-            del publishData["targets"]
             shortNames = [target[1:] for target in targets if target[0] == "&"]
             groupIds = Group.shortNamesToIds(shortNames)
             userNames = [target[1:] for target in targets if target[0] == "@"]

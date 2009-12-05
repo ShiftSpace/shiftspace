@@ -179,7 +179,7 @@ class Group(SSDocument):
     def updateShift(self, aShift):
         from server.models.ssuser import SSUser
         author = SSUser.read(aShift.createdBy)
-        if author.isMember(self):
+        if author.isMemberOf(self):
             grpdb = Group.db(self.id)
             aShift.updateIn(grpdb)
         else:

@@ -281,16 +281,18 @@ var SSNotifierView = new Class({
   
   updateMessageCount: function(countp)
   {
-    if (countp.length > 0)
+    if(this.SSMessage)
     {
-      this.SSMessage.show();
-      this.SSShowMessage.set('text',countp.length);
+      if (countp.length > 0)
+      {
+        this.SSMessage.show();
+        this.SSShowMessage.set('text',countp.length);
+      }
+      else
+      {
+        this.SSMessage.hide();
+      }
     }
-    else
-    {
-      this.SSMessage.hide();
-    }
-    
   }.asPromise(),
   
   attachEvents: function()

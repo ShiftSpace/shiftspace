@@ -1,3 +1,2 @@
-cd tmp
-rm -rf deps
-rm deps.tar.gz
+rm -rf tmp/deps
+rm tmp/deps.tar.gz

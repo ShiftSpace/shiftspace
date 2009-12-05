@@ -227,6 +227,10 @@ var SSPublishPane = new Class({
     if(this.count() == 1)
     {
       var publishData = this.currentListView().checkedItems()[0].publishData;
+
+      // clear out the publish targets data
+      this.PublishTargets.setProperty("value", "");
+      
       this.element.getElement("#SSPublishPaneStatus label").removeClass('SSDisplayNone');
       if(publishData !== undefined && publishData.draft)
       {
@@ -235,6 +239,18 @@ var SSPublishPane = new Class({
       else
       {
         this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Published');
+      }
+      if(publishData.private)
+      {
+        this.ShiftPrivateStatusRadio.setProperty("checked", true);
+      }
+      else
+      {
+        this.ShiftPublicStatusRadio.setProperty("checked", true);
+      }
+      if(publishData.targets && publishData.targets.length > 0)
+      {
+        this.PublishTargets.setProperty("value", publishData.targets.join(" "));
       }
     }
     else if(this.count() > 1)

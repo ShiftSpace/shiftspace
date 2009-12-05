@@ -48,6 +48,7 @@ def nightly():
     if not os.path.exists("tmp/deps"):
         os.system("scripts/download_deps.sh")
     os.system("rm tmp/deps.tar.gz")
+    os.system("scripts/clean_py.sh")
 
 
 def env(url):
@@ -111,6 +112,7 @@ def update():
     Update the source file and test file indexes.
     """
     os.system("scripts/update_submodules.sh")
+    updatedb()
 
 
 def build(argv):
