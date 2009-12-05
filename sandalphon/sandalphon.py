@@ -54,7 +54,7 @@ class SandalphonCompiler:
 
     def getPaths(self):
         """
-        Looks into views and builds the paths to the interface files
+        Looks into views.json and builds the paths to the interface files
         """
         fh = open("config/views.json")
         self.paths = json.loads(fh.read())
@@ -103,7 +103,7 @@ class SandalphonCompiler:
         """
         cssPath = os.path.splitext(filePath)[0]+".css"
         basename = os.path.basename(cssPath)
-        # load the css file.
+        # load the css file
         try:
             fileHandle = open(cssPath)
             if fileHandle != None:
@@ -117,7 +117,7 @@ class SandalphonCompiler:
                         newCSSFileHandle = open(importPath, 'w')
                         newCSSFileHandle.write(preprocessed)
                         newCSSFileHandle.close()
-                    # damn windows
+                    # damn Windows
                     importPath = (server + importPath).replace('\\', '/')
                     self.cssFile = self.cssFile + "@import url(%s);\n" % importPath
                 else:
@@ -144,12 +144,10 @@ class SandalphonCompiler:
     
     def addCSSForUIClasses(self, interfaceFile):
         """
-        Loads an uiclass css that hasn't already been included.
+        Loads any uiclass css that hasn't already been included.
         """
-        # parse this file
         element = ElementTree.fromstring(interfaceFile)
         uiclasses = [el.get('uiclass') for el in element.findall(".//*") if elementHasAttribute(el, "uiclass")]
-        # check the root element as well
         if elementHasAttribute(element, "uiclass"):
             uiclasses.append(element.get('uiclass'))
         depuiclasses = []
@@ -157,13 +155,14 @@ class SandalphonCompiler:
             depuiclasses.extend(self.uiclassDeps(uiclass))
         uiclasses.extend(depuiclasses)
         seen = {}
-        for item in uiclasses:
-            seen[item] = True
+        for uiclass in uiclasses:
+            seen[uiclass] = True
         viewDirectory = "client/views/"
         toLoad = seen.keys()
-        # TODO: doesn't look in custom view, we should see if it is a custom view - David 7/12/09
-        [self.addCSS({"path": os.path.join(os.path.join(viewDirectory, item), item+".css"), "file":item})
-         for item in toLoad]
+        [self.addCSS({"path": os.path.join(os.path.join(viewDirectory, uiclass),
+                                           uiclass+".css"),
+                      "file":uiclass})
+         for uiclass in toLoad]
     
     def getInstruction(self, str):
         """
@@ -208,19 +207,22 @@ class SandalphonCompiler:
         # load all css
         self.addCSSForUIClasses(interfaceFile)
         
+        # add css for all the ui classes first
         coreui = [item["path"] for item in self.cssFiles 
                   if item["file"] in self.packages['packages']['ShiftSpaceCoreUI']]
         [self.addCSSForHTMLPath(path) for path in coreui]
         
+        # output the global css file if it exists
         globalCSS = self.env["data"].get("GLOBAL_CSS")
         if globalCSS:
             cssPath = globalCSS
             self.addCSSForHTMLPath(cssPath)
         
+        # out the rest of the css files
         notcore = [item["path"] for item in self.cssFiles
                    if (not item["file"] in self.packages['packages']['ShiftSpaceCoreUI'])]
-        
         [self.addCSSForHTMLPath(path) for path in notcore]
+
         # output to specified directory or standard out or as json
         if self.outputDirectory != None:
             fileName, ext = os.path.splitext(os.path.basename(inputFile))
