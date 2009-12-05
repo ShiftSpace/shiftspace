@@ -93,7 +93,7 @@ class SandalphonCompiler:
     def preprocessHtmlImageUrls(self, html, imageUrl):
         return self.htmlImagePattern.sub(imageUrl, html)
     
-    def addCssForHtmlPath(self, filePath):
+    def addCssForHtmlPath(self, filePath, outputDirectory=None):
         """
         Appends the contents of the specified css file to self.cssFile.
         """
@@ -238,14 +238,20 @@ class SandalphonCompiler:
             fileHandle.write(self.cssFile)
             fileHandle.close()
         elif jsonOutput == True:
-            outputJsonDict = {}
-            outputJsonDict['interface'] = urllib.quote(interfaceFile)
-            outputJsonDict['styles'] = urllib.quote(self.cssFile)
-            print json.dumps(outputJsonDict, indent=4)
+            self.outputJson(interfaceFile, self.cssFile)
         else:
             print interfaceFile
             print "\n"
             print self.cssFile
+
+    def output(self, dir, name, interfaceFile, imagesUrl):
+        pass
+
+    def outputJson(self, interfaceFile, cssFile):
+        outputJsonDict = {}
+        outputJsonDict['interface'] = urllib.quote(interfaceFile)
+        outputJsonDict['styles'] = urllib.quote(self.cssFile)
+        print json.dumps(outputJsonDict, indent=4)
 
 
 def usage():
