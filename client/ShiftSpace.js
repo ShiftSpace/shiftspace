@@ -42,7 +42,8 @@ License:
 
 Credits:
     - Created by Mushon Zer-Aviv, Dan Phiffer, Avital Oliver, David Buchbut,
-      David Nolen and Joe Moore
+      David Nolen, Joe Moore, Justin Blinder, Xia Liangjie, Harlo Holmes,
+      Clint Newsom, Jaqi Vigil, Alan Schaffer
     - Thanks to Clay Shirky, Johan Sundstrom, Eric Heitzman, Jakob Hilden,
       _why, Aaron Boodman and Nancy Hechinger
 
