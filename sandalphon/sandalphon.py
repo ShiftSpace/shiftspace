@@ -194,7 +194,7 @@ class SandalphonCompiler:
         result.extend(notcore)
         return result
 
-    def compile(self, inputFile=None, jsonOutput=False):
+    def compile(self, inputFile=None, env=None, jsonOutput=False):
         """
         Compile an interface file down to its parts
         """
@@ -237,6 +237,7 @@ class SandalphonCompiler:
             fileHandle = open(cssFilePath, "w")
             fileHandle.write(self.cssFile)
             fileHandle.close()
+            #self.output(interfaceFile, cssFile, fileName, outputDirectory, env=env)
         elif jsonOutput == True:
             self.outputJson(interfaceFile, self.cssFile)
         else:
@@ -244,8 +245,19 @@ class SandalphonCompiler:
             print "\n"
             print self.cssFile
 
-    def output(self, dir, name, interfaceFile, imagesUrl):
-        pass
+    def output(self, interfaceFile, cssFile, name, dir, env=None):
+        fullPath = os.path.join(dir, name+"Main.html")
+        fileHandle = open(fullPath, "w")
+        if env:
+            imagesUrl = env["data"].get("IMAGESDIR")
+            if imagesUrl:
+                interfaceFile = self.preprocessHtmlImageUrls(interfaceFile, imagesUrl)
+        fileHandle.write(interfaceFile)
+        fileHandle.close()
+        cssFilePath = os.path.join(self.outputDirectory, fileName+"Main.css")
+        fileHandle = open(cssFilePath, "w")
+        fileHandle.write(cssFile)
+        fileHandle.close()
 
     def outputJson(self, interfaceFile, cssFile):
         outputJsonDict = {}
@@ -294,7 +306,7 @@ def main(argv):
         usage()
         sys.exit(2)
     compiler = SandalphonCompiler(outputDirectory, envFile)
-    compiler.compile(inputFile, jsonOutput)
+    compiler.compile(inputFile, jsonOutput=jsonOutput)
 
 
 if __name__ == "__main__":
