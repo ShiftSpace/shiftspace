@@ -46,7 +46,6 @@ class SandalphonCompiler:
         self.packages = json.loads(packagesJsonFile.read())
         self.files = self.packages['files']
         self.cssFile = ''
-        self.cssFiles = []
         self.templatePattern = re.compile('<\?.+?\?>')
         self.cssImagePattern = re.compile('(?<=url\()/images/')
         self.htmlImagePattern = re.compile("(?<=src=[\"\'])/images/(?=.+?[\"\'])")
@@ -70,7 +69,7 @@ class SandalphonCompiler:
             raise xml.parsers.expat.ExpatError
         pass
   
-    def loadView(self, view):
+    def loadView(self, view, cssFiles):
         """
         Load a views a view and returns it.
         """
@@ -82,22 +81,19 @@ class SandalphonCompiler:
             fileHandle.close()
             # add this view's css if necessary
             if self.visitedViews.has_key(view) != True:
-                self.addCSS({"path":os.path.join(filePath, view+'.html'), "file":view})
+                cssFiles.append({"path":os.path.join(filePath, view+'.html'), "file":view})
                 self.visitedViews[view] = True
-            return fileContents
+            return (fileContents, cssFiles)
         else:
             return None
     
-    def preprocessCSSImageUrls(self, css, imageUrl):
+    def preprocessCssImageUrls(self, css, imageUrl):
         return self.cssImagePattern.sub(imageUrl, css)
       
-    def preprocessHTMLImageUrls(self, html, imageUrl):
+    def preprocessHtmlImageUrls(self, html, imageUrl):
         return self.htmlImagePattern.sub(imageUrl, html)
     
-    def addCSS(self, fileData):
-        self.cssFiles.append(fileData)
-    
-    def addCSSForHTMLPath(self, filePath):
+    def addCssForHtmlPath(self, filePath):
         """
         Appends the contents of the specified css file to self.cssFile.
         """
@@ -112,7 +108,7 @@ class SandalphonCompiler:
                     importPath = "%sclient/%s" % (server, cssPath)
                     imageUrl = self.env["data"].get("IMAGESDIR")
                     if imageUrl:
-                        preprocessed = self.preprocessCSSImageUrls(fileHandle.read(), imageUrl)
+                        preprocessed = self.preprocessCssImageUrls(fileHandle.read(), imageUrl)
                         importPath = os.path.join(self.outputDirectory, basename)
                         newCSSFileHandle = open(importPath, 'w')
                         newCSSFileHandle.write(preprocessed)
@@ -126,6 +122,9 @@ class SandalphonCompiler:
             fileHandle.close()
         except IOError:
             pass
+
+    def addCssForHtmlPaths(self, paths):
+        [self.addCssForHtmlPath(path) for path in paths]
     
     def uiclassDeps(self, uiclass, result=[]):
         """
@@ -142,7 +141,7 @@ class SandalphonCompiler:
                     self.uiclassDeps(dep, result)
         return result
     
-    def addCSSForUIClasses(self, interfaceFile):
+    def cssForUiClasses(self, interfaceFile):
         """
         Loads any uiclass css that hasn't already been included.
         """
@@ -159,10 +158,10 @@ class SandalphonCompiler:
             seen[uiclass] = True
         viewDirectory = "client/views/"
         toLoad = seen.keys()
-        [self.addCSS({"path": os.path.join(os.path.join(viewDirectory, uiclass),
-                                           uiclass+".css"),
-                      "file":uiclass})
-         for uiclass in toLoad]
+        return [{"path": os.path.join(os.path.join(viewDirectory, uiclass),
+                                      uiclass+".css"),
+                 "file":uiclass}
+                for uiclass in toLoad]
     
     def getInstruction(self, str):
         """
@@ -172,56 +171,56 @@ class SandalphonCompiler:
         temp = temp.split(':')
         return (temp[0], temp[1])
     
-    def handleInstruction(self, instruction, file):
+    def handleInstruction(self, instruction, file, cssFiles):
         """
         Takes an instruction tuple and the contents of the file as a string. Returns the file post instruction.
         """
         if instruction[0] == "view":
-            theView = self.loadView(os.path.basename(instruction[1]))
-            return self.templatePattern.sub(theView, file, 1)
+            theView, cssFiles = self.loadView(os.path.basename(instruction[1]), cssFiles)
+            return (self.templatePattern.sub(theView, file, 1), cssFiles)
         else:
             raise Exception("Instruction %s not recognized" % instruction)
     
+    def sortedCss(self, cssFiles):
+        result = []
+        coreui = [item["path"] for item in cssFiles 
+                  if item["file"] in self.packages['packages']['ShiftSpaceCoreUI']]
+        result.extend(coreui)
+        globalCSS = self.env["data"].get("GLOBAL_CSS")
+        if globalCSS:
+            result.append(globalCSS)
+        notcore = [item["path"] for item in cssFiles
+                   if (not item["file"] in self.packages['packages']['ShiftSpaceCoreUI'])]
+        result.extend(notcore)
+        return result
+
     def compile(self, inputFile=None, jsonOutput=False):
         """
         Compile an interface file down to its parts
         """
+        cssFiles = []
         # First regex any dependent files into a master view
         # Parse the file at the path
         fileHandle = open(inputFile)
         interfaceFile = fileHandle.read()
         fileHandle.close()
         # add the css for the main file at this path
-        self.addCSSForHTMLPath(inputFile)
+        self.addCssForHtmlPath(inputFile)
         hasCustomViews = True
         while hasCustomViews:
             match = self.templatePattern.search(interfaceFile)
             if match:
                 span = match.span()
                 instruction = self.getInstruction(interfaceFile[span[0]:span[1]])
-                interfaceFile = self.handleInstruction(instruction, interfaceFile)
+                interfaceFile, cssFiles = self.handleInstruction(instruction, interfaceFile, cssFiles)
             else:
                 hasCustomViews = False
         # validate it
         ElementTree.fromstring(interfaceFile)
-        # load all css
-        self.addCSSForUIClasses(interfaceFile)
-        
-        # add css for all the ui classes first
-        coreui = [item["path"] for item in self.cssFiles 
-                  if item["file"] in self.packages['packages']['ShiftSpaceCoreUI']]
-        [self.addCSSForHTMLPath(path) for path in coreui]
-        
-        # output the global css file if it exists
-        globalCSS = self.env["data"].get("GLOBAL_CSS")
-        if globalCSS:
-            cssPath = globalCSS
-            self.addCSSForHTMLPath(cssPath)
-        
-        # out the rest of the css files
-        notcore = [item["path"] for item in self.cssFiles
-                   if (not item["file"] in self.packages['packages']['ShiftSpaceCoreUI'])]
-        [self.addCSSForHTMLPath(path) for path in notcore]
+
+        # load in the other css files (dependencies, global, etc.)
+        cssFiles.extend(self.cssForUiClasses(interfaceFile))
+        [self.addCssForHtmlPath(path) for path in self.sortedCss(cssFiles)]
 
         # output to specified directory or standard out or as json
         if self.outputDirectory != None:
@@ -231,7 +230,7 @@ class SandalphonCompiler:
             if self.env:
                 imagesUrl = self.env["data"].get("IMAGESDIR")
                 if imagesUrl:
-                    interfaceFile = self.preprocessHTMLImageUrls(interfaceFile, imagesUrl)
+                    interfaceFile = self.preprocessHtmlImageUrls(interfaceFile, imagesUrl)
             fileHandle.write(interfaceFile)
             fileHandle.close()
             cssFilePath = os.path.join(self.outputDirectory, fileName+"Main.css")
