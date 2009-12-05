@@ -23,7 +23,6 @@ class SandalphonCompiler:
     def __init__(self, outputDirectory=None, envFile=None):
         # store paths to interface files
         self.paths = {}
-        self.visitedViews = {}
         # load the specified environment file
         if envFile:
             fh = open('config/env/%s.json' % envFile)
@@ -79,10 +78,7 @@ class SandalphonCompiler:
             fileHandle = open(htmlPath)
             fileContents = fileHandle.read()
             fileHandle.close()
-            # add this view's css if necessary
-            if self.visitedViews.has_key(view) != True:
-                cssFiles.append({"path":os.path.join(filePath, view+'.html'), "file":view})
-                self.visitedViews[view] = True
+            cssFiles[view] = {"path":os.path.join(filePath, view+'.html'), "file":view}
             return (fileContents, cssFiles)
         else:
             return None
@@ -158,10 +154,12 @@ class SandalphonCompiler:
             seen[uiclass] = True
         viewDirectory = "client/views/"
         toLoad = seen.keys()
-        return [{"path": os.path.join(os.path.join(viewDirectory, uiclass),
-                                      uiclass+".css"),
-                 "file":uiclass}
-                for uiclass in toLoad]
+        result = {}
+        for uiclass in toLoad:
+            result[uiclass] = {"path": os.path.join(os.path.join(viewDirectory, uiclass),
+                                                    uiclass+".css"),
+                               "file":uiclass}
+        return result
     
     def getInstruction(self, str):
         """
@@ -182,14 +180,15 @@ class SandalphonCompiler:
             raise Exception("Instruction %s not recognized" % instruction)
     
     def sortedCss(self, cssFiles):
+        files = cssFiles.values()
         result = []
-        coreui = [item["path"] for item in cssFiles 
+        coreui = [item["path"] for item in files 
                   if item["file"] in self.packages['packages']['ShiftSpaceCoreUI']]
         result.extend(coreui)
         globalCSS = self.env["data"].get("GLOBAL_CSS")
         if globalCSS:
             result.append(globalCSS)
-        notcore = [item["path"] for item in cssFiles
+        notcore = [item["path"] for item in files
                    if (not item["file"] in self.packages['packages']['ShiftSpaceCoreUI'])]
         result.extend(notcore)
         return result
@@ -198,7 +197,7 @@ class SandalphonCompiler:
         """
         Compile an interface file down to its parts
         """
-        cssFiles = []
+        cssFiles = {}
         # First regex any dependent files into a master view
         # Parse the file at the path
         fileHandle = open(inputFile)
@@ -219,7 +218,7 @@ class SandalphonCompiler:
         ElementTree.fromstring(interfaceFile)
 
         # load in the other css files (dependencies, global, etc.)
-        cssFiles.extend(self.cssForUiClasses(interfaceFile))
+        cssFiles.update(self.cssForUiClasses(interfaceFile))
         [self.addCssForHtmlPath(path) for path in self.sortedCss(cssFiles)]
 
         # output to specified directory or standard out or as json
