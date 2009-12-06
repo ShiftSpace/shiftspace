@@ -90,7 +90,15 @@ var ShiftSpace = new (function() {
       SSLog("\tInitializing UI", SSLogSystem);
 
       SSLog("\tCreating console", SSLogSystem);
-      ShiftSpace.Console = ShiftSpaceNameTable.SSConsole = new SSConsole();
+      /*
+      var uip = SSLoadFile("client/ShiftSpace.html");
+      function(uimarkup) {
+        var frag = Sandalphon.convertToFragment(uimarkup);
+        $(document.body).grab(frag);
+        Sandalphon.activate(frag);
+      }.asPromise()(uip)
+      */
+      ShiftSpace.Console = ShiftSpaceNameTable.SSConsole = new SSConsole(null, {path:String.urlJoin('builds/compiledViews', SSInfo().env)});
       SSLog("\tCreating notifier view", SSLogSystem);
       ShiftSpace.Notifier = ShiftSpaceNameTable.Notifier = new SSNotifierView();
       SSLog("\tCreating space menu", SSLogSystem);
