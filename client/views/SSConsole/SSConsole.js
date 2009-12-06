@@ -47,20 +47,6 @@ var SSConsole = new Class({
   },
   
   
-  awake: function(context)
-  {
-    this.mapOutletsToThis();
-    
-    if(context == this.element.contentWindow)
-    {
-      this.MainTabView.addEvent('tabSelected', function(evt) {
-      });
-    }
-    
-    this.updateTabs();
-  },
-  
-
   updateTabs: function()
   {
     if (ShiftSpaceUser.isLoggedIn())
@@ -120,64 +106,6 @@ var SSConsole = new Class({
     if(!this.isVisible()) this.show();
     this.MainTabView.selectTabByName('InboxPane');
   },
-  
-  
-  onFrameLoad: function(ui)
-  {
-    var context = this.element.contentWindow;
-    var doc = context.document;
-    
-    // under GM not wrapped, erg - David
-    if(!context.$)
-    {
-      context = new Window(context);
-      doc = new Document(context.document);
-    }
-
-    context.__ssname = this.element.getProperty('id');
-    context.__sscontextowner = this;
-
-    this.context = context;
-    this.doc = doc;
-    
-    Sandalphon.addStyle(ui.styles, context);
-    
-    // grab the interface, strip the outer level, we're putting the console into an iframe
-    var fragment = Sandalphon.convertToFragment(ui['interface'], context).getFirst();
-    
-    $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
-    $(context.document.body).grab(fragment);
-    
-    Sandalphon.activate(context);
-    
-    this.initResizer();
-    this.attachEvents();
-    
-    SSPostNotification(SSConsoleIsReadyNotification, this);
-    this.setIsLoaded(true);
-  },
-  
-
-  buildInterface: function(ui)
-  {
-    if($('SSConsole'))
-    {
-      throw new Error("Ooops it looks an instace of ShiftSpace is already running. Please turn off Greasemonkey or leave this page.");
-    }
-
-    // create the iframe where the console will live
-    this.element = new IFrame({
-      id: 'SSConsole',
-      events: {
-        load: this.onFrameLoad.bind(this, ui)
-      }
-    });
-    this.element.addClass('SSDisplayNone');
-    
-    // since we're creating the frame via code we need to hook up the controller reference manually
-    SSSetControllerForNode(this, this.element);
-    this.element.injectInside(document.body);
-  }.asPromise(),
   
   
   attachEvents: function()
@@ -271,7 +199,83 @@ var SSConsole = new Class({
   },
   
   
-  localizationChanged: function(evt) {
+  localizationChanged: function(evt)
+  {
     SSUpdateStrings(evt.strings, evt.lang, this.context);
-  }
+  },
+
+
+  /* SSFramedView Stuff ---------------------------------------- */
+
+  awake: function(context)
+  {
+    this.mapOutletsToThis();
+    
+    if(context == this.element.contentWindow)
+    {
+      this.MainTabView.addEvent('tabSelected', function(evt) {
+      });
+    }
+    
+    this.updateTabs();
+  },
+
+
+  onFrameLoad: function(ui)
+  {
+    var context = this.element.contentWindow;
+    var doc = context.document;
+    
+    // under GM not wrapped, erg - David
+    if(!context.$)
+    {
+      context = new Window(context);
+      doc = new Document(context.document);
+    }
+
+    context.__ssname = this.element.getProperty('id');
+    context.__sscontextowner = this;
+
+    this.context = context;
+    this.doc = doc;
+    
+    Sandalphon.addStyle(ui.styles, context);
+    
+    // grab the interface, strip the outer level, we're putting the console into an iframe
+    var fragment = Sandalphon.convertToFragment(ui['interface'], context).getFirst();
+    
+    $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
+    $(context.document.body).grab(fragment);
+    
+    Sandalphon.activate(context);
+    
+    this.initResizer();
+    this.attachEvents();
+    
+    SSPostNotification(SSConsoleIsReadyNotification, this);
+    this.setIsLoaded(true);
+  },
+  
+
+  buildInterface: function(ui)
+  {
+    if($('SSConsole'))
+    {
+      throw new Error("Ooops it looks an instace of ShiftSpace is already running. Please turn off Greasemonkey or leave this page.");
+    }
+
+    // create the iframe where the console will live
+    this.element = new IFrame({
+      id: 'SSConsole',
+      events: {
+        load: this.onFrameLoad.bind(this, ui)
+      }
+    });
+    this.element.addClass('SSDisplayNone');
+    
+    // since we're creating the frame via code we need to hook up the controller reference manually
+    SSSetControllerForNode(this, this.element);
+    this.element.injectInside(document.body);
+  }.asPromise()
+
 });

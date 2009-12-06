@@ -15,6 +15,8 @@ var SSCommentPane = new Class({
     this.setIsOpen(false);
     this.setIsVisible(false);
 
+    SSLog("initialize SSCommentPane", SSLogForce);
+    
     SSAddObserver(this, "showComments", this['open'].bind(this));
     SSAddObserver(this, "hideComments", this['close'].bind(this));
   },
@@ -124,6 +126,12 @@ var SSCommentPane = new Class({
   },
   
   
+  localizationChanged: function()
+  {
+  },
+
+  /* SSFramedView Stuff ---------------------------------------- */
+  
   onInterfaceLoad: function(ui)
   {
     this.parent(ui);
@@ -152,10 +160,6 @@ var SSCommentPane = new Class({
     this.attachEvents();
     SSPostNotification('onCommentsLoad', this);
     this.setIsLoaded(true);
-  },
-  
-  
-  localizationChanged: function()
-  {
   }
+
 });
