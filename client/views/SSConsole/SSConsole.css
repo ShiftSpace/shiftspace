@@ -54,7 +54,7 @@
 
 /*==================================================*/
 
-#SSConsole, #SSConsoleFrameBody
+#SSConsole, .SSConsoleFrameBody
 {
   font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
   font-size: 12px;
@@ -67,7 +67,7 @@
   background-image: url(/images/foo/bar);
 }
 
-#SSConsoleFrameBody #MainTabView.SSTabView
+.SSConsoleFrameBody #MainTabView.SSTabView
 {
   position: absolute;
   
@@ -165,7 +165,7 @@
   border: 1px solid red;
 }
 
-#SSConsole.FilterPaneOpen #MainTabView > .SSContentView, #SSConsoleFrameBody.FilterPaneOpen #MainTabView > .SSContentView
+#SSConsole.FilterPaneOpen #MainTabView > .SSContentView, .SSConsoleFrameBody.FilterPaneOpen #MainTabView > .SSContentView
 {
   left: 140px;
 }
