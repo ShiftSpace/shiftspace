@@ -16,12 +16,6 @@ var SSConsole = new Class({
   {
     this.parent(el, options);
 
-    /*
-    var url = String.urlJoin('builds/compiledViews/', SSInfo().env, "SSConsoleMain");
-    var p = Sandalphon.load(url);
-    this.buildInterface(p);
-    */
-    
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
