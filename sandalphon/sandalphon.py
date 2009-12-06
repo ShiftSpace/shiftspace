@@ -124,8 +124,10 @@ class SandalphonCompiler:
         if elementHasAttribute(element, "uiclass"):
             uiclasses.append(element.get('uiclass'))
         depuiclasses = []
+        deps = {}
         for uiclass in uiclasses:
-            depuiclasses.extend(self.uiclassDeps(uiclass))
+            deps[uiclass] = self.uiclassDeps(uiclass)
+            depuiclasses.extend(deps[uiclass])
         uiclasses.extend(depuiclasses)
         seen = {}
         for uiclass in uiclasses:
@@ -133,10 +135,10 @@ class SandalphonCompiler:
         viewDirectory = "client/views/"
         toLoad = seen.keys()
         result = {}
-        for uiclass in toLoad:
-            result[uiclass] = {"path": os.path.join(os.path.join(viewDirectory, uiclass),
-                                                    uiclass+".css"),
-                               "file":uiclass}
+        for name in toLoad:
+            result[name] = {"path": os.path.join(os.path.join(viewDirectory, name),
+                                                    name+".css"),
+                            "file":name}
         return result
     
     def getInstruction(self, str):

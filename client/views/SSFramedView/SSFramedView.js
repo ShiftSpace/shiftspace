@@ -61,13 +61,19 @@ var SSFramedView = new Class({
   
   onInterfaceLoad: function(ui) 
   {
+    var generateElement = false;
     this.ui = ui;
-    this.element = new IFrame({
-      'class': this.name+'Frame',
-      events: {
-        load: this.buildInterface.bind(this)
-      }
-    });
+
+    if(!this.element)
+    {
+      generateElement = true;
+      this.element = new IFrame({
+        'class': this.name+'Frame',
+        events: {
+          load: this.buildInterface.bind(this)
+        }
+      });
+    }
     
     var frag = Sandalphon.convertToFragment(this.ui['interface']);
     var id = frag.getProperty('id');
@@ -75,9 +81,16 @@ var SSFramedView = new Class({
     {
       this.element.setProperty('id', id);
     }
-    
     SSSetControllerForNode(this, this.element);
-    this.element.injectInside(document.body);
+
+    if(generateElement)
+    {
+      this.element.injectInside(document.body);
+    }
+    else
+    {
+      this.buildInterface();
+    }
   }.asPromise(),
   
   
