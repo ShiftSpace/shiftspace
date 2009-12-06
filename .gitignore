@@ -72,3 +72,4 @@ config/views.json/server/.htaccess
 /.ropeproject/globalnames
 /.ropeproject/history
 /.ropeproject/objectdb
+/todo.org
