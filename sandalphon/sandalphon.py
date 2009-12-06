@@ -20,31 +20,11 @@ def elementHasAttribute(element, attrib, value=None):
 
 
 class SandalphonCompiler:
-    def __init__(self, outputDirectory=None, envFile=None):
-        # store paths to interface files
+    def __init__(self):
         self.paths = {}
-        # load the specified environment file
-        if envFile:
-            fh = open('config/env/%s.json' % envFile)
-        if fh == None:
-            print "Environment file SHIFTSPACE_ROOT/config/env/%s.json does not exist" % envFileName
-            sys.exit(2)
-        else:
-            envData = json.loads(fh.read())
-            fh.close()
-            env = {"name": envFile, "data": envData}
-        self.env = env
-        if self.env:
-            self.outputDirectory = os.path.join(outputDirectory, self.env["name"])
-            if not os.path.exists(self.outputDirectory):
-                os.makedirs(self.outputDirectory)
-        else:
-            self.outputDirectory = outputDirectory
-        # load the packages json file
         packagesJsonFile = open('config/packages.json')
         self.packages = json.loads(packagesJsonFile.read())
         self.files = self.packages['files']
-        self.cssFile = ''
         self.templatePattern = re.compile('<\?.+?\?>')
         self.cssImagePattern = re.compile('(?<=url\()/images/')
         self.htmlImagePattern = re.compile("(?<=src=[\"\'])/images/(?=.+?[\"\'])")
@@ -89,7 +69,7 @@ class SandalphonCompiler:
     def preprocessHtmlImageUrls(self, html, imageUrl):
         return self.htmlImagePattern.sub(imageUrl, html)
     
-    def addCssForHtmlPath(self, filePath, outputDirectory=None):
+    def addCssForHtmlPath(self, filePath, cssFile, outDir, env):
         """
         Appends the contents of the specified css file to self.cssFile.
         """
@@ -99,29 +79,27 @@ class SandalphonCompiler:
         try:
             fileHandle = open(cssPath)
             if fileHandle != None:
-                if self.env:
-                    server = self.env["data"]["SERVER"]
+                if env:
+                    server = env["data"]["SERVER"]
                     importPath = "%sclient/%s" % (server, cssPath)
-                    imageUrl = self.env["data"].get("IMAGESDIR")
+                    imageUrl = env["data"].get("IMAGESDIR")
                     if imageUrl:
                         preprocessed = self.preprocessCssImageUrls(fileHandle.read(), imageUrl)
-                        importPath = os.path.join(self.outputDirectory, basename)
+                        importPath = os.path.join(outDir, basename)
                         newCSSFileHandle = open(importPath, 'w')
                         newCSSFileHandle.write(preprocessed)
                         newCSSFileHandle.close()
                     # damn Windows
                     importPath = (server + importPath).replace('\\', '/')
-                    self.cssFile = self.cssFile + "@import url(%s);\n" % importPath
+                    cssFile = cssFile + "@import url(%s);\n" % importPath
                 else:
-                    self.cssFile = self.cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
-                    self.cssFile = self.cssFile + fileHandle.read()
+                    cssFile = cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
+                    cssFile = cssFile + fileHandle.read()
             fileHandle.close()
+            return cssFile
         except IOError:
-            pass
+            return cssFile
 
-    def addCssForHtmlPaths(self, paths):
-        [self.addCssForHtmlPath(path) for path in paths]
-    
     def uiclassDeps(self, uiclass, result=[]):
         """
         Returns all uiclass superclasses fo a uiclass.
@@ -179,13 +157,13 @@ class SandalphonCompiler:
         else:
             raise Exception("Instruction %s not recognized" % instruction)
     
-    def sortedCss(self, cssFiles):
+    def sortedCss(self, cssFiles, env):
         files = cssFiles.values()
         result = []
         coreui = [item["path"] for item in files 
                   if item["file"] in self.packages['packages']['ShiftSpaceCoreUI']]
         result.extend(coreui)
-        globalCSS = self.env["data"].get("GLOBAL_CSS")
+        globalCSS = env["data"].get("GLOBAL_CSS")
         if globalCSS:
             result.append(globalCSS)
         notcore = [item["path"] for item in files
@@ -193,18 +171,43 @@ class SandalphonCompiler:
         result.extend(notcore)
         return result
 
-    def compile(self, inputFile=None, env=None, jsonOutput=False):
+    def loadEnvironment(self, envFile, outDir=None):
+        env = None
+        envDir = None
+        if envFile:
+            fh = open('config/env/%s.json' % envFile)
+            if fh == None:
+                print "Environment file SHIFTSPACE_ROOT/config/env/%s.json does not exist" % envFileName
+                sys.exit(2)
+            else:
+                envData = json.loads(fh.read())
+                fh.close()
+                env = {"name": envFile, "data": envData}
+                if outDir:
+                    envDir = os.path.join(outDir, env["name"])
+                    if not os.path.exists(envDir):
+                        os.makedirs(envDir)
+        return (env, envDir)
+
+    def compile(self, inputFile=None, outDir=None, envFile=None, jsonOutput=False):
         """
         Compile an interface file down to its parts
         """
-        cssFiles = {}
+        # load the specified environment file
+        env, envDir = self.loadEnvironment(envFile, outDir)
+        if envDir:
+            outDir = envDir
+
+        cssFile = ''  # accumulator for css concatenation
+        cssFiles = {} # holds the list of css files to load
+
         # First regex any dependent files into a master view
         # Parse the file at the path
         fileHandle = open(inputFile)
         interfaceFile = fileHandle.read()
         fileHandle.close()
         # add the css for the main file at this path
-        self.addCssForHtmlPath(inputFile)
+        cssFile = self.addCssForHtmlPath(inputFile, cssFile, outDir, env)
         hasCustomViews = True
         while hasCustomViews:
             match = self.templatePattern.search(interfaceFile)
@@ -219,33 +222,23 @@ class SandalphonCompiler:
 
         # load in the other css files (dependencies, global, etc.)
         cssFiles.update(self.cssForUiClasses(interfaceFile))
-        [self.addCssForHtmlPath(path) for path in self.sortedCss(cssFiles)]
+        for path in self.sortedCss(cssFiles, env):
+            cssFile = self.addCssForHtmlPath(path, cssFile, outDir, env)
 
         # output to specified directory or standard out or as json
-        if self.outputDirectory != None:
-            fileName, ext = os.path.splitext(os.path.basename(inputFile))
-            fullPath = os.path.join(self.outputDirectory, fileName+"Main.html")
-            fileHandle = open(fullPath, "w")
-            if self.env:
-                imagesUrl = self.env["data"].get("IMAGESDIR")
-                if imagesUrl:
-                    interfaceFile = self.preprocessHtmlImageUrls(interfaceFile, imagesUrl)
-            fileHandle.write(interfaceFile)
-            fileHandle.close()
-            cssFilePath = os.path.join(self.outputDirectory, fileName+"Main.css")
-            fileHandle = open(cssFilePath, "w")
-            fileHandle.write(self.cssFile)
-            fileHandle.close()
-            #self.output(interfaceFile, cssFile, fileName, outputDirectory, env=env)
+        if outDir != None:
+            basename = os.path.basename(inputFile)
+            name, ext = os.path.splitext(basename)
+            self.output(interfaceFile, cssFile, name, outDir, env=env)
         elif jsonOutput == True:
             self.outputJson(interfaceFile, self.cssFile)
         else:
             print interfaceFile
             print "\n"
-            print self.cssFile
+            print cssFile
 
-    def output(self, interfaceFile, cssFile, name, dir, env=None):
-        fullPath = os.path.join(dir, name+"Main.html")
+    def output(self, interfaceFile, cssFile, name, outDir, env=None):
+        fullPath = os.path.join(outDir, name+"Main.html")
         fileHandle = open(fullPath, "w")
         if env:
             imagesUrl = env["data"].get("IMAGESDIR")
@@ -253,7 +246,7 @@ class SandalphonCompiler:
                 interfaceFile = self.preprocessHtmlImageUrls(interfaceFile, imagesUrl)
         fileHandle.write(interfaceFile)
         fileHandle.close()
-        cssFilePath = os.path.join(self.outputDirectory, fileName+"Main.css")
+        cssFilePath = os.path.join(outDir, name+"Main.css")
         fileHandle = open(cssFilePath, "w")
         fileHandle.write(cssFile)
         fileHandle.close()
@@ -304,8 +297,11 @@ def main(argv):
         print "No input file\n"
         usage()
         sys.exit(2)
-    compiler = SandalphonCompiler(outputDirectory, envFile)
-    compiler.compile(inputFile, jsonOutput=jsonOutput)
+    compiler = SandalphonCompiler()
+    compiler.compile(inputFile,
+                     outDir=outputDirectory,
+                     envFile=envFile,
+                     jsonOutput=jsonOutput)
 
 
 if __name__ == "__main__":

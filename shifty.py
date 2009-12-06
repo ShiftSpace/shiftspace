@@ -14,7 +14,7 @@ try:
     import builder.preprocess as preprocess
     import builder.corebuilder as corebuilder
     import sandalphon.sandalphon as sandalphon
-except Exceptions, err:
+except Exception, err:
     print err
 try:
     import manual.build as manbuild
@@ -159,8 +159,10 @@ def build(argv):
             buildUsage()
     
     corebuilder.run()
-    compiler = sandalphon.SandalphonCompiler("builds/compiledViews", env)
-    compiler.compile(inputFile=templ)
+    compiler = sandalphon.SandalphonCompiler()
+    compiler.compile(inputFile=templ,
+                     outDir="builds/compiledViews",
+                     envFile=env)
     preprocessor = preprocess.SSPreProcessor(project=proj, env=env)
     preprocessor.preprocess(input=input, output=os.path.join("builds", output))
 

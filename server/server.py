@@ -163,10 +163,13 @@ class RootController:
         corebuilder.run()
         # TODO: Fix the SandalphonCompiler to be mroe functional in design
         # maintaining state stucks - David 12/2/09
-        compiler = sandalphon.SandalphonCompiler("builds/compiledViews", "mydev")
-        compiler.compile(inputFile="client/views/SSConsole/SSConsole.html")
-        compiler = sandalphon.SandalphonCompiler("builds/compiledViews", "mydev")
-        compiler.compile(inputFile="client/views/SSConsoleWindow/SSConsoleWindow.html")
+        compiler = sandalphon.SandalphonCompiler()
+        compiler.compile(inputFile="client/views/SSConsole/SSConsole.html",
+                         outDir="builds/compiledViews",
+                         envFile="mydev")
+        compiler.compile(inputFile="client/views/SSConsoleWindow/SSConsoleWindow.html",
+                         outDir="builds/compiledViews",
+                         envFile="mydev")
         preprocessor = preprocess.SSPreProcessor(project="sandbox", env="mydev")
         preprocessor.preprocess(input="client/ShiftSpace.js",
                                 output="builds/shiftspace.sandbox.js")
@@ -211,8 +214,10 @@ class RootController:
         For developers. Serves the developer greasemonkey user script for deployment testing.
         """
         corebuilder.run()
-        compiler = sandalphon.SandalphonCompiler("builds/compiledViews", "dev")
-        compiler.compile(inputFile="client/views/SSConsole/SSConsole.html")
+        compiler = sandalphon.SandalphonCompiler()
+        compiler.compile(inputFile="client/views/SSConsole/SSConsole.html",
+                         outDir="builds/compiledViews",
+                         envFile="dev")
         preprocessor = preprocess.SSPreProcessor(project="shiftspace", env="dev")
         preprocessor.preprocess(input="client/ShiftSpace.js",
                                 output="builds/shiftspace.dev.user.js")
