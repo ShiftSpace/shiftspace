@@ -205,6 +205,7 @@ var SSConsole = new Class({
 
   awake: function(context)
   {
+    this.mapOutletsToThis();
   },
 
 
@@ -212,7 +213,6 @@ var SSConsole = new Class({
   {
     if(context == this.element.contentWindow)
     {
-      this.mapOutletsToThis();
       if(context == this.element.contentWindow)
       {
         this.MainTabView.addEvent('tabSelected', function(evt) {
