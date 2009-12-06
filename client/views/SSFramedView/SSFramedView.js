@@ -93,12 +93,6 @@ var SSFramedView = new Class({
   },
   
   
-  forwardEvents: function()
-  {
-    
-  },
-  
-  
   buildInterface: function()
   {
     var context = this.contentWindow();
