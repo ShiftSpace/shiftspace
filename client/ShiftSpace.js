@@ -165,6 +165,7 @@ var ShiftSpace = new (function() {
             ps = SSLoadDefaultSpacesAttributes();
           }
           SSUpdateInstalledSpaces(ps);
+          return value;
         }
       );
       SSWaitForUI(p1, uip);
