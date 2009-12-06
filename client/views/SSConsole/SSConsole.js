@@ -234,7 +234,6 @@ var SSConsole = new Class({
   buildInterface: function()
   {
     this.parent();
-    this.attachEvents();
     this.initResizer();
     this.attachEvents();
     SSPostNotification(SSConsoleIsReadyNotification, this);

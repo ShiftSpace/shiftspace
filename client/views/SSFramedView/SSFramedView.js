@@ -103,6 +103,7 @@ var SSFramedView = new Class({
       evt = new Event(evt);
       SSFireEvent('keyup', evt);
     });
+
     context.addEvent('keydown', function(evt) {
       evt = new Event(evt);
       SSFireEvent('keydown', evt); 
