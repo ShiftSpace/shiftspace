@@ -136,8 +136,12 @@ class SandalphonCompiler:
         toLoad = seen.keys()
         result = {}
         for name in toLoad:
+            if self.files[name].get("framedView"):
+                fileName = name + "Frame"
+            else:
+                fileName = name
             result[name] = {"path": os.path.join(os.path.join(viewDirectory, name),
-                                                    name+".css"),
+                                                 fileName+".css"),
                             "file":name}
         return result
     
@@ -157,7 +161,11 @@ class SandalphonCompiler:
             theView, cssFiles = self.loadView(os.path.basename(instruction[1]), cssFiles)
             return (self.templatePattern.sub(theView, file, 1), cssFiles)
         elif instruction[0] == "framedView":
-            framedView = '<iframe id="%s" class="%s" uiclass="%s" options="{path:\'%s\'}"></iframe>' % (instruction[1], instruction[1], instruction[1], outDir)
+            if len(instruction) > 2:
+                id = instruction[2]
+            else:
+                id = instruction[1]
+            framedView = '<iframe id="%s" class="%sFrame" uiclass="%s" options="{path:\'%s\'}"></iframe>' % (id, instruction[1], instruction[1], outDir)
             path = self.paths.get(instruction[1])
             dirName, envFile = os.path.split(outDir)
             # process the content of the framed view
