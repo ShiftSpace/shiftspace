@@ -13,7 +13,8 @@ var SSFramedView = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      location: 'views'
+      location: 'views',
+      path: null
     });
   },
   
@@ -34,7 +35,15 @@ var SSFramedView = new Class({
 
     if(typeof SandalphonToolMode == 'undefined')
     {
-      var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css');
+      var url;
+      if(this.options.path)
+      {
+        url = this.options.path;
+      }
+      else
+      {
+        url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css');
+      }
       var p = SSLoadFile(url);
       this.onStyleLoad(p);
     }
@@ -44,7 +53,15 @@ var SSFramedView = new Class({
   onStyleLoad: function(css)
   {
     if(css) Sandalphon.addStyle(css);
-    var url = String.urlJoin('client', this.options.location, this.name, this.name);
+    var url;
+    if(this.options.path)
+    {
+      url = this.options.path;
+    }
+    else
+    {
+      url = String.urlJoin('client', this.options.location, this.name, this.name);      
+    }
     var p = Sandalphon.load(url);
     this.onInterfaceLoad(p);
   }.asPromise(),
