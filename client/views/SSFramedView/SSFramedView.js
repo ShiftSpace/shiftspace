@@ -35,15 +35,7 @@ var SSFramedView = new Class({
 
     if(typeof SandalphonToolMode == 'undefined')
     {
-      var url;
-      if(this.options.path)
-      {
-        url = this.options.path;
-      }
-      else
-      {
-        url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css');
-      }
+      var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css');
       var p = SSLoadFile(url);
       this.onStyleLoad(p);
     }
@@ -56,7 +48,7 @@ var SSFramedView = new Class({
     var url;
     if(this.options.path)
     {
-      url = this.options.path;
+      url = String.urlJoin(this.options.path, this.name+'Main');
     }
     else
     {

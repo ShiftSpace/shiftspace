@@ -147,13 +147,23 @@ class SandalphonCompiler:
         temp = temp.split(':')
         return (temp[0], temp[1])
     
-    def handleInstruction(self, instruction, file, cssFiles):
+    def handleInstruction(self, instruction, file, cssFiles, outDir):
         """
         Takes an instruction tuple and the contents of the file as a string. Returns the file post instruction.
         """
         if instruction[0] == "view":
             theView, cssFiles = self.loadView(os.path.basename(instruction[1]), cssFiles)
             return (self.templatePattern.sub(theView, file, 1), cssFiles)
+        elif instruction[0] == "framedView":
+            framedView = '<iframe id="%s" class="%s" uiclass="%s" options="{path:\'%s\'}"></iframe>' % (instruction[1], instruction[1], instruction[1], outDir)
+            path = self.paths.get(instruction[1])
+            dirName, envFile = os.path.split(outDir)
+            # process the content of the framed view
+            inputFile = "%s/%s.html" % (path, instruction[1])
+            self.compile(inputFile=inputFile,
+                         outDir=dirName,
+                         envFile=envFile)
+            return (self.templatePattern.sub(framedView, file, 1), cssFiles)
         else:
             raise Exception("Instruction %s not recognized" % instruction)
     
@@ -189,7 +199,7 @@ class SandalphonCompiler:
                         os.makedirs(envDir)
         return (env, envDir)
 
-    def compile(self, inputFile=None, outDir=None, envFile=None, jsonOutput=False):
+    def compile(self, inputFile=None, outDir="builds/compiledViews", envFile="mydev", jsonOutput=False):
         """
         Compile an interface file down to its parts
         """
@@ -214,7 +224,7 @@ class SandalphonCompiler:
             if match:
                 span = match.span()
                 instruction = self.getInstruction(interfaceFile[span[0]:span[1]])
-                interfaceFile, cssFiles = self.handleInstruction(instruction, interfaceFile, cssFiles)
+                interfaceFile, cssFiles = self.handleInstruction(instruction, interfaceFile, cssFiles, outDir)
             else:
                 hasCustomViews = False
         # validate it

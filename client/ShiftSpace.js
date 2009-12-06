@@ -96,8 +96,6 @@ var ShiftSpace = new (function() {
       SSLog("\tCreating space menu", SSLogSystem);
       ShiftSpace.SpaceMenu = ShiftSpaceNameTable.SSSpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
       SSLog("\tCreating comments window", SSLogSystem);
-      ShiftSpace.Comments = ShiftSpaceNameTable.Comments = new SSCommentPane(null, {location:'views'}); // annoying we to fix this - David 9/7/09
-      //ShiftSpace.PublishPane = ShiftSpaceNameTable.PublishPane = new SSPublishPane(null, {location:'views'});
       ShiftSpace.SSConsoleWindow = ShiftSpaceNameTable.SSConsoleWindow = new SSConsoleWindow(null, {location:'views'});
       ShiftSpace.Sandalphon = Sandalphon;
 
