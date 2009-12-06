@@ -90,38 +90,7 @@ var ShiftSpace = new (function() {
       SSLog("\tInitializing UI", SSLogSystem);
 
       SSLog("\tCreating console", SSLogSystem);
-      /*
-      var uip = SSLoadFile("client/ShiftSpace.html");
-      function(uimarkup) {
-        var frag = Sandalphon.convertToFragment(uimarkup);
-        $(document.body).grab(frag);
-        Sandalphon.activate(frag);
-      }.asPromise()(uip)
-      */
-      ShiftSpace.Console = ShiftSpaceNameTable.SSConsole = new SSConsole(null, {path:String.urlJoin('builds/compiledViews', SSInfo().env)});
-      SSLog("\tCreating notifier view", SSLogSystem);
-      ShiftSpace.Notifier = ShiftSpaceNameTable.Notifier = new SSNotifierView();
-      SSLog("\tCreating space menu", SSLogSystem);
-      ShiftSpace.SpaceMenu = ShiftSpaceNameTable.SSSpaceMenu = new SSSpaceMenu(null, {location:'views'}); // we need to say it lives in client/views - David
-      SSLog("\tCreating comments window", SSLogSystem);
-      ShiftSpace.SSConsoleWindow = ShiftSpaceNameTable.SSConsoleWindow = new SSConsoleWindow(null, {location:'views'});
-      ShiftSpace.Sandalphon = Sandalphon;
 
-      SSLog("\tShiftSpace UI initialized", SSLogSystem);
-      
-      // Add to look up table
-      ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
-
-      SSAddObserver(SSNotificationProxy, 'onInstalledSpacesDidChange', SSUpdateInstalledSpaces);
-      
-      // Set up user event handlers
-      SSAddObserver(SSNotificationProxy, 'onUserLogin', function() {
-      });
-
-      SSAddObserver(SSNotificationProxy, 'onUserLogout', function() {
-        SSLog('ShiftSpace detects user logout', SSLogForce);
-      });
-      
       var __mainCssLoaded = false;
       var p = SSLoadStyle('styles/ShiftSpace.css');
       p.op(function(v) {
@@ -129,6 +98,30 @@ var ShiftSpace = new (function() {
         SSPostNotification('onMainCssLoad');
       });
       SSLog("\tLoading core styles", SSLogSystem);
+
+      var uip = Sandalphon.load(String.urlJoin("builds/compiledViews", SSInfo().env, "ShiftSpaceMain"));
+
+      (function(ui) {
+        Sandalphon.addStyle(ui.styles);
+        var frag = Sandalphon.convertToFragment(ui.interface);
+        $(document.body).grab(frag);
+
+        Sandalphon.activate(frag);
+
+        ShiftSpace.Console = ShiftSpaceNameTable.SSConsole = SSControllerForNode("SSConsole");
+        ShiftSpace.Notifier = ShiftSpaceNameTable.Notifier = SSControllerForNode("SSNotifier");
+        ShiftSpace.SpaceMenu = ShiftSpaceNameTable.SSSpaceMenu = SSControllerForNode("SpaceMenu");
+        ShiftSpace.SSConsoleWindow = ShiftSpaceNameTable.SSConsoleWindow = SSControllerForNode("SSConsoleWindow");
+
+        SSLog("\tShiftSpace UI initialized", SSLogSystem);
+      }.asPromise())(uip);
+
+      ShiftSpace.Sandalphon = Sandalphon;
+      
+      // Add to look up table
+      ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
+
+      SSAddObserver(SSNotificationProxy, 'onInstalledSpacesDidChange', SSUpdateInstalledSpaces);
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -146,28 +139,19 @@ var ShiftSpace = new (function() {
       SSCreateDragDiv();
 
       SSLog("\tSynchronizing with server", SSLogSystem);
-      SSSync();
+      SSSync(uip);
     };
     
     /*
       Function: SSSync (private)
         Synchronize with server: checks for logged in user.
     */
-    function SSSync()
+    function SSSync(uip)
     {
       // initialize the value of default spaces for guest users
       SSInitDefaultSpaces();
       var p1 = SSApp.query();
-      var p2 = $if(SSApp.hasData(p1),
-                   function(userIsLoggedIn) {
-                     ShiftSpace.User.syncData(p1);
-                     SSPostNotification('onUserLogin');
-                     SSLog("Synchronized", SSLogSystem);
-                   },
-                   function(noData) {
-                     SSLog("User is not logged in", p1.value(), SSLogSystem);
-                   });
-      p2.op(
+      p1.op(
         function(value) {
           var installed = ShiftSpace.User.installedSpaces(), ps;
           if(installed)
@@ -183,7 +167,7 @@ var ShiftSpace = new (function() {
           SSUpdateInstalledSpaces(ps);
         }
       );
-      SSWaitForUI(p1);
+      SSWaitForUI(p1, uip);
     }
     
     /*
@@ -191,7 +175,7 @@ var ShiftSpace = new (function() {
         Waits for the core user interface components to initialize. Once
         initialized posts "onSync" notification.
      */
-    var SSWaitForUI = function(query)
+    var SSWaitForUI = function(userData, uip)
     {
       // wait for console and notifier before sending onSync
       var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu, ShiftSpace.SSConsoleWindow];
@@ -201,6 +185,16 @@ var ShiftSpace = new (function() {
           if(ui.every(Function.msg('isLoaded')))
           {
             SSPostNotification("onSync");
+            if(userData)
+            {
+              ShiftSpace.User.syncData(userData);
+              SSPostNotification('onUserLogin');
+              SSLog("Synchronized", SSLogSystem);
+            }
+            else
+            {
+              SSLog("User is not logged in", userData, SSLogSystem);
+            }
             if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
           }
         }.bind(this)));

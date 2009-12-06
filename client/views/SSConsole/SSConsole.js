@@ -17,6 +17,8 @@ var SSConsole = new Class({
   {
     this.parent(el, options);
 
+    SSLog("Create console", SSLogForce);
+
     SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
     SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
     SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
@@ -206,6 +208,7 @@ var SSConsole = new Class({
 
   awake: function(context)
   {
+    SSLog("SSConsole awake", SSLogForce);
     this.mapOutletsToThis();
   },
 
@@ -214,11 +217,8 @@ var SSConsole = new Class({
   {
     if(context == this.element.contentWindow)
     {
-      if(context == this.element.contentWindow)
-      {
-        this.MainTabView.addEvent('tabSelected', function(evt) {
-        });
-      }
+      this.mapOutletsToThis();
+      this.MainTabView.addEvent('tabSelected', function(evt) {});
       this.updateTabs();
     }
   },
@@ -236,8 +236,8 @@ var SSConsole = new Class({
     this.parent();
     this.initResizer();
     this.attachEvents();
-    SSPostNotification(SSConsoleIsReadyNotification, this);
     this.setIsLoaded(true);
+    SSPostNotification(SSConsoleIsReadyNotification, this);
   }
 
 });
