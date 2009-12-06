@@ -42,8 +42,6 @@ var SSConsoleWindow = new Class({
   onInterfaceLoad: function(ui)
   {
     this.parent(ui);
-    // TODO: Not super intuitive need someway to specify this automatically - David
-    this.element.setProperty('id', 'SSConsoleWindow');
     this.element.addClass("SSDisplayNone");
   }.asPromise(),
   

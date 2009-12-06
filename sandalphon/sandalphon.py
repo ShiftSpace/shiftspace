@@ -150,8 +150,7 @@ class SandalphonCompiler:
         Takes a raw template instruction and returns a tuple holding the instruction name and it's parameter.
         """
         temp = str[2:len(str)-2]
-        temp = temp.split(':')
-        return (temp[0], temp[1])
+        return temp.split(':')
     
     def handleInstruction(self, instruction, file, cssFiles, outDir):
         """

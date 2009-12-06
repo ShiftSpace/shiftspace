@@ -386,10 +386,16 @@ var SSNotifierView = new Class({
   },
   
   
+  localizationChanged: function()
+  {
+    
+  },
+  
+  /* SSFramedView Stuff ---------------------------------------- */
+
   onInterfaceLoad: function(ui)
   {
     this.parent(ui);
-    this.element.setProperty('id', 'SSNotifier');
     this.element.addClass("SSNotifierHidden");
   }.asPromise(),
   
@@ -419,11 +425,7 @@ var SSNotifierView = new Class({
     this.initGraph();
     SSPostNotification('onNotifierLoad', this);
     this.setIsLoaded(true);
-  },
-  
-  
-  localizationChanged: function()
-  {
-    
+    SSLog("+++++++++++++++++++++ SSNotifier loaded", SSLogForce);
   }
+
 });

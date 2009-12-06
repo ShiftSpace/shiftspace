@@ -81,10 +81,10 @@ var SSFramedView = new Class({
     {
       this.element.setProperty('id', id);
     }
-    SSSetControllerForNode(this, this.element);
 
     if(generateElement)
     {
+      SSSetControllerForNode(this, this.element);
       this.element.injectInside(document.body);
     }
     else
