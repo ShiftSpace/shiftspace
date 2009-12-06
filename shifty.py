@@ -124,7 +124,7 @@ def build(argv):
     output = "shiftspace.sandbox.js"
     env = "mydev"
     proj = "sandbox"
-    templ = "client/views/SSConsole/SSConsole.html"
+    templ = "client/ShiftSpace.html"
     
     def buildUsage():
         print
