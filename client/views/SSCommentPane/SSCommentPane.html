@@ -1,32 +1,35 @@
 <div id="SSCommentPane"
-     class="SSCommentPane"
-     uiclass="SSCommentPane">
+     class="SSSubView SSCommentPane"
+     uiclass="SSCommentPane"
+     options="{
+       delegate: 'SSConsoleWindow'
+     }">
 
-  <ul id="SSCommentsListView"
-      class="SSListView"
-      uiclass="SSListView"
-      outlet="SSCommentPane">
-    <li class="SSCell SSCommentsListViewCell"
-        uiclass="SSCommentsListViewCell"
-        options="{
-          properties: ['userName', 'text']
-        }">
-      <div class="userName"></div>
-      <div class="gravatar"></div>
-      <div class="text"></div>
-      <div class="created"></div>
-    </li>
-  </ul>
+    <ul id="SSCommentsListView"
+        class="SSListView"
+        uiclass="SSListView"
+        outlet="SSCommentPane">
+        <li class="SSCell SSCommentsListViewCell"
+            uiclass="SSCommentsListViewCell"
+            options="{
+              properties: ['userName', 'text']
+            }">
+            <div class="userName"></div>
+            <div class="gravatar"></div>
+            <div class="text"></div>
+            <div class="created"></div>
+        </li>
+    </ul>
 
-  <form>
-    <label>Leave a comment</label>
-    <textarea id="SSCommentText" outlet="SSCommentPane"></textarea>
+    <form>
+        <label>Leave a comment</label>
+        <textarea id="SSCommentText" outlet="SSCommentPane"></textarea>
 
-    <label>Notify me when other people comment on this thread</label>
-    <input id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
+        <label>Notify me when other people comment on this thread</label>
+        <input id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
 
-    <input id="SSCloseComments" outlet="SSCommentPane" type="button" value="Close"></input>
-    <input id="SSPostComment" outlet="SSCommentPane" type="submit" value="Submit"></input>
-  </form>
+        <input id="SSCloseComments" outlet="SSCommentPane" type="button" value="Close"></input>
+        <input id="SSPostComment" outlet="SSCommentPane" type="submit" value="Submit"></input>
+    </form>
 
 </div>

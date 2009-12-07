@@ -1,24 +1,20 @@
 // ==Builder==
 // @uiclass
 // @package           ShiftSpaceCoreUI
-// @dependencies      SSFramedView
+// @dependencies      SSView
 // ==/Builder==
 
 var SSCommentPane = new Class({
   
-  Extends: SSFramedView,
+  Extends: SSView,
   name: 'SSCommentPane',
 
   initialize: function(el, options)
   {
     this.parent(el, options);
-    this.setIsOpen(false);
-    this.setIsVisible(false);
-
-    SSLog("initialize SSCommentPane", SSLogForce);
     
-    SSAddObserver(this, "showComments", this['open'].bind(this));
-    SSAddObserver(this, "hideComments", this['close'].bind(this));
+    SSAddObserver(this, "showComments", this.showThread.bind(this));
+    SSAddObserver(this, "hideComments", this.hide.bind(this));
   },
 
 
@@ -53,68 +49,29 @@ var SSCommentPane = new Class({
   },
   
   
-  'open': function(shiftId)
+  showThread: function(shiftId)
   {
+    this.delegate().show();
+    this.multiView().showViewByName(this.name);
     this.initTable(shiftId);
     SSTableForName("Comments").addView(this.SSCommentsListView);
-    this.show();
     this.setCurrentShiftId(shiftId);
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
   },
 
 
-  'close': function()
+  hide: function()
   {
-    this.hide();
+    this.parent();
     this.cleanupResource();
-    this.element.removeClass("SSCommentPaneOpen");
-    this.element.addClass("SSCommentPaneClosed");
-  },
-  
-  
-  setIsVisible: function(val)
-  {
-    this.__visible = val;
-  },
-  
-  
-  isVisible: function()
-  {
-    return this.__visible;
-  },
-  
-  
-  setIsOpen: function(val)
-  {
-    this.__isOpen = val;
-  },
-  
-  
-  isOpen: function()
-  {
-    return this.__isOpen;
   },
   
   
   attachEvents: function()
   {
-    var context = this.contentWindow();
-    var doc = this.contentDocument();
-
-    this.SSCloseComments.addEvent("click", this['close'].bind(this));
     this.SSPostComment.addEvent("click", this.postComment.bind(this));
-
     this.SSCommentsListView.addEvent("onReloadData", this.refresh.bind(this));
-  },
-
-
-  refresh: function()
-  {
-    var size = this.contentDocument().body.getSize();
-    this.element.setStyles({
-      hieght: size.y
-    });
   },
 
 
@@ -130,36 +87,10 @@ var SSCommentPane = new Class({
   {
   },
 
-  /* SSFramedView Stuff ---------------------------------------- */
-  
-  onInterfaceLoad: function(ui)
-  {
-    this.parent(ui);
-    this.element.setProperty('id', 'SSCommentPane');
-    this.element.addClass("SSCommentPaneClosed");
-  }.asPromise(),
-  
-  
-  awake: function(context)
-  {
-  },
-  
-  
-  onContextActivate: function(context)
-  {
-    if(context == this.element.contentWindow)
-    {
-      this.mapOutletsToThis();
-    }
-  },
-  
-  
-  buildInterface: function()
-  {
-    this.parent();
-    this.attachEvents();
-    SSPostNotification('onCommentsLoad', this);
-    this.setIsLoaded(true);
-  }
 
+  awake: function()
+  {
+    this.mapOutletsToThis();
+    this.attachEvents();
+  }
 });

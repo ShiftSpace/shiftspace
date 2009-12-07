@@ -54,6 +54,18 @@ var SSMultiView = new Class({
       });
     }
   },
+
+
+  awake: function()
+  {
+    // FIXME: confusing between this and SSView.subViews() - David 12/6/09
+    var svs = this.getSubViews(), self = this;
+    svs.each(function(sv) {
+      sv.multiView = function() {
+        return self;
+      };
+    });
+  },
   
   
   hide: function()
@@ -176,7 +188,6 @@ var SSMultiView = new Class({
   
   showViewByName: function(name)
   {
-    SSLog('showViewByName ' + name, SSLogForce);
     if(!this.element.getElementById(name))
     {
       throw new SSMultiViewError.NoSuchSubView(new Error(), this.element.getProperty('id') + "'s controller has no subview with name " + name + ".");

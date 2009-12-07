@@ -41,7 +41,6 @@ var SSPublishPane = new Class({
   hide: function()
   {
     this.parent();
-    SSLog("SSPublishPane hide", SSLogForce);
   },
 
 
