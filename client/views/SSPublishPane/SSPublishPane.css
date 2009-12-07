@@ -15,36 +15,6 @@ button:hover{
    font-size: 12px;
    color: #4b423a;
    -webkit-box-shadow: 0px 0px 10px #000;  
-  /*-moz-box-shadow: 0px 0px 10px #aaa;*/
-}
-
-button#SSClosePane{
-   height: 16px;
-   width: 16px;
-   text-indent: -3000px;
-   border: 0;
-   background: url(/images/Pane/SSPaneClose.png) no-repeat;
-   position: absolute;
-   top:13px;
-   right: 13px;
-}
-
-button#SSClosePane:hover{
-   background-position: bottom;
-}
-
-#PaneDrag
-{
-   background:url(/images/Pane/SSPaneHeader.png) no-repeat;	
-   width: 380px;
-   height: 15px;
-}
-
-.PaneBody
-{
-   width: 340px;
-   background:url(/images/Pane/SSPaneBg.png);
-   padding: 5px 20px 0;
 }
 
 /*--------------------------------------------------HEADER*/

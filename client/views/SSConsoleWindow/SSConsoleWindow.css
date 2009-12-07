@@ -1,0 +1,33 @@
+.SSConsoleWindowBody
+{
+}
+
+button#SSConsoleWindowClose
+{
+   height: 16px;
+   width: 16px;
+   text-indent: -3000px;
+   border: 0;
+   background: url(/images/Pane/SSPaneClose.png) no-repeat;
+   position: absolute;
+   top:13px;
+   right: 13px;
+}
+
+button#SSConsoleWindowClose:hover{
+   background-position: bottom;
+}
+
+#SSConsoleWindowDrag
+{
+   background:url(/images/Pane/SSPaneHeader.png) no-repeat;	
+   width: 380px;
+   height: 15px;
+}
+
+.SSConsoleWindowBody
+{
+   width: 340px;
+   background:url(/images/Pane/SSPaneBg.png);
+   padding: 5px 20px 0;
+}

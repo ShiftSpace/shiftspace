@@ -150,7 +150,9 @@ var SSListView = new Class({
   },
   
   /*
-  
+    Function: __setTable__
+      *private*
+      Private setter for table property.  
   */
   __setTable__: function(table)
   {
