@@ -21,6 +21,29 @@ var PeoplePane = new Class({
   awake: function()
   {
     this.mapOutletsToThis();
+    this.FollowingListView.addEvent("onRowClick", this.handleRowClick.bind(this));
+  },
+
+
+  hide: function()
+  {
+    this.parent();
+    var cw = ShiftSpace.SSConsoleWindow;
+    if(cw.isVisible())
+    {
+      cw.hide();
+    }
+  },
+
+
+  handleRowClick: function(evt)
+  {
+    if(evt.listView == this.FollowingListView)
+    {
+      var cw = ShiftSpace.SSConsoleWindow;
+      cw.SSConsoleWindowMultiView.showViewByName("PeopleDetailView");
+      cw.show();
+    }
   },
 
 
