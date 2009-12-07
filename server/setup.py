@@ -65,6 +65,7 @@ def sync(createAdmin=True):
         master["shiftspace"] = adminUser
 
     SSUser.all.sync(master)
+    SSUser.all_by_joined.sync(master)
     SSUser.by_name.sync(master)
 
     Follow.following_by_created.sync(master)

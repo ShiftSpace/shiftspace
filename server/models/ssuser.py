@@ -63,7 +63,7 @@ class SSUser(User):
             userJson['password'] = utils.md5hash(userJson['password'])
         if userJson.get("email"):
             hashedEmail = utils.md5hash(userJson["email"])
-            userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % hashedEmail)
+            userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % hashedEmail
             userJson["gravatarLarge"] = "http://www.gravatar.com/avatar/%s?s=60" % hashedEmail
         newUser = SSUser(**utils.clean(userJson))
         newUser.store(db)
@@ -326,7 +326,10 @@ class SSUser(User):
             end = [self.id, {}]
         results = Follow.following_by_created(core.connect(), limit=limit)
         userIds = core.values(results[start:end])
-        return core.fetch(keys=userIds)
+        users = core.fetch(keys=userIds)
+        for user in users:
+            user["following"] = True
+        return users
 
     def followers(self, start=None, end=None, limit=25):
         from server.models.follow import Follow

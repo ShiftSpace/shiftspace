@@ -32,13 +32,15 @@ class UserController(ResourceController):
                   conditions=dict(method="GET"))
         d.connect(name="userComments", route="user/:userName/comments", controller=self, action="comments",
                   conditions=dict(method="GET"))
-        d.connect(name="userFollow", route="follow/:userName", controller=self, action="follow",
+        d.connect(name="userFollow", route="user/:userName/follow", controller=self, action="follow",
                   conditions=dict(method="POST"))
-        d.connect(name="userUnfollow", route="unfollow/:userName", controller=self, action="unfollow",
+        d.connect(name="userUnfollow", route="user/:userName/unfollow", controller=self, action="unfollow",
                   conditions=dict(method="POST"))
         d.connect(name="userFollowing", route="user/:userName/following", controller=self, action="following",
                   conditions=dict(method="GET"))
         d.connect(name="userFollowers", route="user/:userName/followers", controller=self, action="followers",
+                  conditions=dict(method="GET"))
+        d.connect(name="users", route="users", controller=self, action="users",
                   conditions=dict(method="GET"))
 
         return d
@@ -281,3 +283,7 @@ class UserController(ResourceController):
             return data([comment.toDict() for comment in otherUser.comments(start=start, end=end, limit=limit)])
         else:
             return error("You don't have permission to view this user's comments.", PermissionError)
+
+    @jsonencode
+    def users(self, start=None, end=None, limit=25):
+        return data([user.toDict() for user in SSUser.users(start, end, limit)])

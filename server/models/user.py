@@ -50,6 +50,14 @@ class User(SSDocument):
            }                        \
          }")
 
+    all_by_joined = View(
+        "users",
+        "function(doc) {            \
+           if(doc.type == 'user') { \
+             emit([doc.created], doc);    \
+           }                        \
+         }")
+
     by_name = View(
         "users",
         "function(doc) {              \
@@ -57,6 +65,21 @@ class User(SSDocument):
              emit(doc.userName, doc); \
            }                          \
          }")
+
+    # ========================================
+    # Class Methods
+    # ========================================
+
+    @classmethod
+    def users(cls, start=None, end=None, limit=25):
+        results = User.all_by_joined(core.connect(), limit=25)
+        if start and not end:
+            return core.objects(results[start:])
+        if not start and end:
+            return core.objects(results[:end])
+        if start and end:
+            return core.objects(results[start:end])
+        return core.objects(results[start:end])
 
     # ========================================
     # Validation

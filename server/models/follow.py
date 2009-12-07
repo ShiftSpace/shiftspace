@@ -92,4 +92,5 @@ class Follow(SSDocument):
     # ========================================
 
     def delete(self):
+        db = core.connect()
         del db[Follow.makeId(self.follower, self.followee)]
