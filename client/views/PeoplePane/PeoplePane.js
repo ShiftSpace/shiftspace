@@ -21,7 +21,11 @@ var PeoplePane = new Class({
   awake: function()
   {
     this.mapOutletsToThis();
-    this.FollowingListView.addEvent("onRowClick", this.handleRowClick.bind(this));
+    [this.FollowingListView,
+     this.FollowersListView,
+     this.SearchUsersListView].each(function(lv) {
+       lv.addEvent("onRowClick", this.handleRowClick.bind(this));
+     }, this);
   },
 
 
@@ -38,13 +42,10 @@ var PeoplePane = new Class({
 
   handleRowClick: function(evt)
   {
-    if(evt.listView == this.FollowingListView)
-    {
-      var cw = ShiftSpace.SSConsoleWindow;
-      cw.SSConsoleWindowMultiView.showViewByName("PeopleDetailView");
-      cw.show();
-      ShiftSpaceNameTable.PeopleDetailView.showUser(evt.data);
-    }
+    var cw = ShiftSpace.SSConsoleWindow;
+    cw.SSConsoleWindowMultiView.showViewByName("PeopleDetailView");
+    cw.show();
+    ShiftSpaceNameTable.PeopleDetailView.showUser(evt.data);
   },
 
 
