@@ -24,6 +24,7 @@ var SSPublishPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
     SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
     SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
@@ -31,16 +32,16 @@ var SSPublishPane = new Class({
   },
   
   
-  show: function()
+  'open': function()
   {
-    this.parent();
     this.delegate().show();
+    this.multiView().showViewByName(this.name);
   },
 
 
-  hide: function()
+  'close': function()
   {
-    this.parent();
+    this.delegate().hide();
   },
 
 
@@ -51,7 +52,7 @@ var SSPublishPane = new Class({
     {
       this.setCurrentListView(listView);
       this.update();
-      this.show();
+      this['open']();
     }
   },
 
@@ -61,7 +62,7 @@ var SSPublishPane = new Class({
     var listView = evt.listView;
     if(listView == this.currentListView())
     {
-      this.hide();
+      this['close']();
     }
   },
   
@@ -86,7 +87,7 @@ var SSPublishPane = new Class({
   
   onShiftSelect: function(evt)
   {
-    if(!this.isVisible()) this.show();
+    if(!this.isVisible()) this['open']();
     this.setCurrentListView(evt.listView);
     this.update();
   },
@@ -95,7 +96,7 @@ var SSPublishPane = new Class({
   onShiftDeselect: function(evt)
   {
     this.setCurrentListView(evt.listView);
-    if(this.count() == 0) this.hide();
+    if(this.count() == 0) this['close']();
     this.update();
   },
   
@@ -125,7 +126,7 @@ var SSPublishPane = new Class({
       var indices = this.currentListView().checkedItemIndices();
       this.currentListView().uncheck(indices);
       var p = new Promise(selectedShifts.map(SSDeleteShift));
-      p.op(this.hide.bind(this));
+      p.op(this['close'].bind(this));
       p.realize();
     }
   },

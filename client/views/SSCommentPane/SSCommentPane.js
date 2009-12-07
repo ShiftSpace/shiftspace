@@ -13,8 +13,8 @@ var SSCommentPane = new Class({
   {
     this.parent(el, options);
     
-    SSAddObserver(this, "showComments", this.showThread.bind(this));
-    SSAddObserver(this, "hideComments", this.hide.bind(this));
+    SSAddObserver(this, "showComments", this['open'].bind(this));
+    SSAddObserver(this, "hideComments", this['close'].bind(this));
   },
 
 
@@ -31,7 +31,7 @@ var SSCommentPane = new Class({
   },
 
 
-  cleanupResource: function()
+  cleanupTable: function()
   {
     this.comments.dispose();
   },
@@ -49,7 +49,7 @@ var SSCommentPane = new Class({
   },
   
   
-  showThread: function(shiftId)
+  'open': function(shiftId)
   {
     this.delegate().show();
     this.multiView().showViewByName(this.name);
@@ -61,10 +61,10 @@ var SSCommentPane = new Class({
   },
 
 
-  hide: function()
+  'close': function()
   {
-    this.parent();
-    this.cleanupResource();
+    this.cleanupTable();
+    this.delegate().hide();
   },
   
   
