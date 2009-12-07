@@ -44,6 +44,14 @@ class Group(SSDocument):
            }                           \
          }")
 
+    by_visible_and_created = View(
+        "groups",
+        "function(doc) {               \
+           if(doc.type == 'group' && doc.visible) {   \
+             emit(doc.created, doc);       \
+           }                           \
+         }")
+
     by_short_name = View(
         "groups",
         "function(doc) {               \

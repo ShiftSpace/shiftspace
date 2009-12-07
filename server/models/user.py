@@ -54,7 +54,7 @@ class User(SSDocument):
         "users",
         "function(doc) {            \
            if(doc.type == 'user') { \
-             emit([doc.created], doc);    \
+             emit(doc.created, doc);    \
            }                        \
          }")
 
