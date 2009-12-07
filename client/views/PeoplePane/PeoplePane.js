@@ -43,6 +43,7 @@ var PeoplePane = new Class({
       var cw = ShiftSpace.SSConsoleWindow;
       cw.SSConsoleWindowMultiView.showViewByName("PeopleDetailView");
       cw.show();
+      ShiftSpaceNameTable.PeopleDetailView.showUser(evt.data);
     }
   },
 

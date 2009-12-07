@@ -30,6 +30,7 @@ var SSConsoleWindow = new Class({
 
   attachEvents: function()
   {
+    this.SSConsoleWindowClose.addEvent("click", this.hide.bind(this));
   },
   
   
@@ -58,6 +59,7 @@ var SSConsoleWindow = new Class({
   buildInterface: function()
   {
     this.parent();
+    this.attachEvents();
     SSPostNotification('onConsoleWindowLoad', this);
     this.setIsLoaded(true);
   }
