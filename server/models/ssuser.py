@@ -62,7 +62,9 @@ class SSUser(User):
         if userJson.get("password"):
             userJson['password'] = utils.md5hash(userJson['password'])
         if userJson.get("email"):
-            userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % utils.md5hash(userJson["email"])
+            hashedEmail = utils.md5hash(userJson["email"])
+            userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % hashedEmail)
+            userJson["gravatarLarge"] = "http://www.gravatar.com/avatar/%s?s=60" % hashedEmail
         newUser = SSUser(**utils.clean(userJson))
         newUser.store(db)
 

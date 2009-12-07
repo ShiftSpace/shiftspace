@@ -436,7 +436,12 @@ var SSListView = new Class({
 
         if(type == 'click')
         {
-          this.fireEvent('onRowClick', {listView:this, index:this.indexOfCellNode(cellNode)});
+          var idx  = this.indexOfCellNode(cellNode);
+          this.fireEvent('onRowClick', {
+            listView: this,
+            index: idx,
+            data: this.dataForIndex(idx)
+          });
         }
       break;
       
