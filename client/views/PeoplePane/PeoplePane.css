@@ -1,4 +1,13 @@
-ul#FollowingListView, ul#FollowersListView
+ul#FollowingListView, ul#FollowersListView, ul#SearchUsersListView
 {
-   list-style: none
+   list-style: none;
+   height: 100%;
+   overflow-y: scroll;
+   margin: 0px;
+}
+
+li.PeopleListViewCell
+{
+   float: left;
+   width: 33%;
 }

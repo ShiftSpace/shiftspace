@@ -56,7 +56,22 @@
             <!-- END Followers Tab Pane -->
 
             <!-- START Search For Users Tab Pane -->
-            <div class="SSTabPane">Search For Users</div>
+            <div class="SSTabPane">
+                <ul id="SearchUsersListView"
+                    uiclass="SSListView"
+                    class="SSListView PeopleListView"
+                    outlet="PeoplePane">
+                    <li uiclass="PeopleListViewCell"
+                        class="SSCell PeopleListViewCell"
+                        options="{
+                          properties: ['gravatar', 'userName', 'fullName']
+                        }">
+                        <span class="gravatar"><img></img></span>
+                        <span class="userName"></span>
+                        <span class="fullName"></span>
+                    </li>
+                </ul>
+            </div>
             <!-- END Search For Users Tab Pane -->
 
         </div>

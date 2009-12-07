@@ -58,6 +58,7 @@ var PeoplePane = new Class({
   {
     SSTableForName("Following").addView(this.FollowingListView);
     SSTableForName("Followers").addView(this.FollowersListView);
+    SSTableForName("Users").addView(this.SearchUsersListView);
   },
 
 
