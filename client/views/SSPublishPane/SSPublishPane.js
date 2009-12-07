@@ -31,6 +31,20 @@ var SSPublishPane = new Class({
   },
   
   
+  show: function()
+  {
+    this.parent();
+    this.delegate().show();
+  },
+
+
+  hide: function()
+  {
+    this.parent();
+    SSLog("SSPublishPane hide", SSLogForce);
+  },
+
+
   onShiftListViewShow: function(evt)
   {
     var listView = evt.listView;
