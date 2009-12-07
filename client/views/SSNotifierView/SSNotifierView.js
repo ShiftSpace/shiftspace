@@ -425,7 +425,6 @@ var SSNotifierView = new Class({
     this.initGraph();
     SSPostNotification('onNotifierLoad', this);
     this.setIsLoaded(true);
-    SSLog("+++++++++++++++++++++ SSNotifier loaded", SSLogForce);
   }
 
 });
