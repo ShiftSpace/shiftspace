@@ -4,14 +4,22 @@ require_once('user.php');
 
 class WPUserController extends UserController {
   public function __construct() {   
-    // call into WP to see if there is a session store it here
+	global $current_user;
+	$userData;
     if($this->isLoggedIn()) {
-    	$userData = wp_get_current_user();
-    	
+    	$this->userData = array(
+	    					"userName" => $current_user->display_name,
+	    					"_id" => $current_user->ID,
+	    					"userLevel" => $current_user->user_level
+	    					);
+	   	$this->userData = json_encode($this->userData);
+    } else {
+    	$this->userData = "not logged in.";
+    
     }
   }
   
-  public function showThis() {
+  public function matchUser() {
   	return $this->userData;
   }
   

@@ -32,7 +32,7 @@ class ShiftServer {
     $controller = $request['controller'];
     $method = $request['action'];
 	if($controller == "server") {
-		echo $this->user->showThis();
+		echo $this->user->matchUser();
 	
 	} else if($this->user->isLoggedIn() || $method == "read") {
         echo $this->$controller->$method($request);
