@@ -51,18 +51,7 @@ var GroupDetailView = new Class({
   {
     this.open();
     this.currentGroup = groupData;
-
-    ['shortName',
-     'longName',
-     'url',
-     'shiftCount',
-     'adminCount',
-     'memberCount'].each(function(prop) {
-       if(groupData[prop])
-       {
-         this.element.getElement("."+prop).set("text", groupData[prop]);
-       }
-    }, this);
+    SSTemplate(this.element, groupData);
   }
 
 });

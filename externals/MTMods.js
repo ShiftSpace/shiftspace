@@ -448,6 +448,7 @@ function SSTemplate(el, props)
     {
       attr = "value";
     }
-    el.getElement("."+key).set(attr, value);
+    var target = el.getElement("."+key);
+    if(target) target.set(attr, value);
   }, this);
 }
