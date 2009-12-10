@@ -144,8 +144,13 @@ class SSUser(User):
 
 
     def info(self):
+        from server.models.follow import Follow
+        result = {}
+        # TODO: use the bulk API - David 12/10/09
         # return the follower count
+        result["followerCount"] = Follow.follower_count(key=self.id)
         # return the following count
+        result["followingCount"] = Follow.following_count(key=self.id)
         # return the publish shift count
         pass
 

@@ -138,6 +138,20 @@ class Shift(SSDocument):
            }                           \
         }")
 
+    count_by_user_and_published = View(
+        "shifts",
+        "function(doc) {             \
+           if(doc.type == 'shift' && \
+              (doc.publishData.dbs.length > 0 || \
+               doc.publishData.private == false)) { \
+             emit(doc.createdBy, 1); \
+           }                         \
+         }",
+        "function(keys, values, rereduce) { \
+           return sum(values);              \
+         }"
+        )
+
     count_by_domain = View(
         "shifts",
         "function(doc) {             \
