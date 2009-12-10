@@ -431,7 +431,7 @@ Sortables.implement({
 });
 
 
-function formToHash(formEl)
+function SSFormToHash(formEl)
 {
   var inputs = formEl.getElements("input[name]"), result = $H();
   inputs.each(function(input) {
