@@ -9,6 +9,7 @@ var GroupDetailView = new Class({
   Extends: SSView,
   name: "GroupDetailView",
 
+
   initialize: function(el, options)
   {
     this.parent(el, options);
@@ -41,5 +42,6 @@ var GroupDetailView = new Class({
     this.element.getElement(".gravatarLarge").setProperty("src", userData.gravatarLarge);
     this.toggleFollowButtons(userData.following);
   }
+
 });
 
