@@ -23,6 +23,15 @@ var GroupsPane = new Class({
   {
     this.mapOutletsToThis();
     this.attachEvents();
+    [this.GroupsListView].each(function(lv) {
+      lv.addEvent("onRowClick", this.handleRowClick.bind(this));
+    }, this);
+  },
+
+
+  handleRowClick: function(evt)
+  {
+    SSPostNotification("onShowGroup", evt.data);
   },
 
 

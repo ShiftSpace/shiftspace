@@ -13,6 +13,21 @@ var GroupDetailView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
+    SSAddObserver(this, "onShowGroup", this.showGroup.bind(this));
+  },
+
+
+  'open': function()
+  {
+    this.delegate().show();
+    this.multiView().showViewByName(this.name);
+  },
+
+
+  'close': function()
+  {
+    this.delegate().hide();
   },
 
 
@@ -28,19 +43,22 @@ var GroupDetailView = new Class({
   },
 
 
-  showGroup: function(userData)
+  showGroup: function(groupData)
   {
-    this.currentUser = userData;
+    this.open();
+    this.currentGroup = groupData;
+
     ['shortName',
      'longName',
      'url',
      'shiftCount',
      'adminCount',
      'memberCount'].each(function(prop) {
-       this.element.getElement("."+prop).set("text", userData[prop]);
+       if(groupData[prop])
+       {
+         this.element.getElement("."+prop).set("text", groupData[prop]);
+       }
     }, this);
-    this.element.getElement(".gravatarLarge").setProperty("src", userData.gravatarLarge);
-    this.toggleFollowButtons(userData.following);
   }
 
 });
