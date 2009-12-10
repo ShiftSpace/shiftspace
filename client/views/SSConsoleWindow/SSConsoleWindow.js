@@ -61,6 +61,20 @@ var SSConsoleWindow = new Class({
   },
 
 
+  sendFront: function()
+  {
+    this.element.removeClass("SSConsoleWindowBack");
+    this.element.addClass("SSConsoleWindowFront");
+  },
+
+
+  sendBack: function()
+  {
+    this.element.removeClass("SSConsoleWindowFront");
+    this.element.addClass("SSConsoleWindowBack");
+  },
+
+
   attachEvents: function()
   {
     this.SSConsoleWindowClose.addEvent("click", this.hide.bind(this));
@@ -76,6 +90,7 @@ var SSConsoleWindow = new Class({
   {
     this.parent(ui);
     this.element.addClass("SSDisplayNone");
+    this.element.addClass("SSConsoleWindowFront");
   }.asPromise(),
   
   

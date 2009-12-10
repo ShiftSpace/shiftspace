@@ -5,7 +5,7 @@
   bottom: 0px;
   width: 380px;
   height: 200px;
-  z-index: 1000000;
+
   border: 0;
   overflow: hidden;
 }
@@ -13,4 +13,14 @@
 .SSConsoleWindowOpen
 {
    height: 87px;
+}
+
+.SSConsoleWindowFront
+{
+   z-index: 1000000;
+}
+
+.SSConsoleWindowBack
+{
+   z-index: 999999;
 }
