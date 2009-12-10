@@ -19,6 +19,7 @@ var CreateGroupView = new Class({
     }.bind(this));
 
     SSAddObserver(this, "onCreateGroup", this['open'].bind(this));
+    SSAddObserver(this, "onCreateGroupHide", this['close'].bind(this));
   },
 
 

@@ -52,7 +52,11 @@ var GroupsPane = new Class({
   {
     if(evt.tabIndex == 2)
     {
-      SSPostNotification("onCreateGroup");
+      SSPostNotification("onCreateGroup", this);
+    }
+    else if(evt.tabIndex != 2)
+    {
+      SSPostNotification("onCreateGroupHide", this);
     }
   },
 
