@@ -31,6 +31,12 @@ var CreateGroupView = new Class({
   },
 
 
+  clearForm: function()
+  {
+    // clear all text forms
+  },
+
+
   createGroup: function()
   {
     this.open();
@@ -39,12 +45,13 @@ var CreateGroupView = new Class({
 
   attachEvents: function()
   {
-    
+    this.CancelCreateGroup.addEvent('click', this['close'].bind(this));
   },
 
 
   awake: function()
   {
+    this.mapOutletsToThis();
     this.attachEvents();
   }
 
