@@ -157,10 +157,12 @@ var SSMultiView = new Class({
       throw new SSMultiViewError.OutOfBounds(new Error(), "index of view out of bounds.");
     }
     
+    var oldIndex = this.getIndexOfCurrentView();
+    if(oldIndex == idx) return;
+
     // hide the old view
     var el = this.getRawCurrentView();
-    var controller = SSControllerForNode(el);
-    var oldIndex = this.getIndexOfCurrentView();
+    var controller = SSControllerForNode(el);    
     if(controller)
     {
       controller.hide();
