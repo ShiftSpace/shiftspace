@@ -40,6 +40,8 @@ class UserController(ResourceController):
                   conditions=dict(method="GET"))
         d.connect(name="userFollowers", route="user/:userName/followers", controller=self, action="followers",
                   conditions=dict(method="GET"))
+        d.connect(name="userGroups", route="user/:userName/groups", controller=self, action="groups",
+                  conditions=dict(method="GET"))
         d.connect(name="users", route="users", controller=self, action="users",
                   conditions=dict(method="GET"))
 
@@ -283,6 +285,18 @@ class UserController(ResourceController):
             return data([comment.toDict() for comment in otherUser.comments(start=start, end=end, limit=limit)])
         else:
             return error("You don't have permission to view this user's comments.", PermissionError)
+    
+    @jsonencode
+    @exists
+    @loggedin
+    def groups(self, userName, start=None, end=None, limit=25):
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser == otherUser.id or theUser.isAdmin():
+            return data([group.toDict() for group in otherUser.groups(start=start, end=end, limit=limit)])
+        else:
+            return error("You don't have permission to view this user's groups.", PermissionError)
 
     @jsonencode
     def users(self, start=None, end=None, limit=25):

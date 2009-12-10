@@ -79,6 +79,7 @@ def sync(createAdmin=True):
     Permission.by_user.sync(master)
     Permission.by_group.sync(master)
     Permission.by_user_and_group.sync(master)
+    Permission.readable_by_user_and_created.sync(master)
     Permission.by_joinable.sync(master)
     Permission.by_readable.sync(master)
     Permission.by_writeable.sync(master)

@@ -245,6 +245,16 @@ class SSUser(User):
             return core.objects(results[start:end])
         return Message.joinData(core.objects(results))
 
+    def groups(self, start=None, end=None, limit=25):
+        from server.models.permission import Permission
+        db = core.connect()
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Permission.readable_by_user_and_created(db, limit=limit)
+        return Permission.joinData(core.objects(results[start:end]))
+
     @shift_join
     def shifts(self, start=None, end=None, limit=25):
         from server.models.shift import Shift
