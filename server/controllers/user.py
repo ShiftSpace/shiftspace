@@ -42,6 +42,8 @@ class UserController(ResourceController):
                   conditions=dict(method="GET"))
         d.connect(name="userGroups", route="user/:userName/groups", controller=self, action="groups",
                   conditions=dict(method="GET"))
+        d.connect(name="userInfo", route="user/:userName/info", controller=self, action="info",
+                  conditions=dict(method="GET"))
         d.connect(name="users", route="users", controller=self, action="users",
                   conditions=dict(method="GET"))
 
@@ -297,6 +299,12 @@ class UserController(ResourceController):
             return data([group.toDict() for group in otherUser.groups(start=start, end=end, limit=limit)])
         else:
             return error("You don't have permission to view this user's groups.", PermissionError)
+
+    @jsonencode
+    @exists
+    def info(self, userName):
+        theUser = SSUser.readByName(userName)
+        return data(theUser.info())
 
     @jsonencode
     def users(self, start=None, end=None, limit=25):

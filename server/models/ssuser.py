@@ -142,6 +142,13 @@ class SSUser(User):
                     del userDict[key]
         return userDict
 
+
+    def info(self):
+        # return the follower count
+        # return the following count
+        # return the publish shift count
+        pass
+
     # ========================================
     # Validation
     # ========================================

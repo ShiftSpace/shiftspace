@@ -69,7 +69,9 @@ def sync(createAdmin=True):
     SSUser.by_name.sync(master)
 
     Follow.following_by_created.sync(master)
+    Follow.following_count.sync(master)
     Follow.followers_by_created.sync(master)
+    Follow.followers_count.sync(master)
 
     Group.all.sync(master)
     Group.by_short_name.sync(master)
