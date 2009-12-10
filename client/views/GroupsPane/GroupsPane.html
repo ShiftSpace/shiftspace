@@ -30,7 +30,10 @@
                     class="SSListView PeopleListView"
                     outlet="GroupsPane">
                     <li uiclass="GroupListViewCell"
-                        class="SSCell GroupListViewCell">
+                        class="SSCell GroupListViewCell"
+                        options="{
+                          properties: ['shortName', 'longName']
+                        }">
                         <span class="shortName"></span>
                         <span class="longName"></span>
                     </li>

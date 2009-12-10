@@ -170,6 +170,17 @@ var ShiftServer = new Class({
         }
       ]
     });
+
+    new SSTable("Groups", {
+      resource: {read:'groups'},
+      watches: [
+        {
+          events: [{resource:"group", action:"create"},
+                   {resource:"group", action:"update"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
   },
 
   
@@ -204,7 +215,8 @@ var ShiftServer = new Class({
      "Messages",
      "Following",
      "Followers",
-     "Users"].each(SSDeleteTable);
+     "Users",
+     "Groups"].each(SSDeleteTable);
   },
   
 

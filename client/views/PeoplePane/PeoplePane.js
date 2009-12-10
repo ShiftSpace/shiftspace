@@ -12,6 +12,7 @@ var PeoplePane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     SSAddObserver(this, "onUserLogin", this.onUserLogin.bind(this));
     SSAddObserver(this, "onUserJoin", this.onUserLogin.bind(this));
     SSAddObserver(this, "onUserLogout", this.onUserLogout.bind(this));

@@ -13,6 +13,9 @@ var GroupsPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
+    SSAddObserver(this, "onUserLogin", this.onUserLogin.bind(this));
+    SSAddObserver(this, "onUserJoin", this.onUserLogin.bind(this));
   },
 
 
@@ -33,9 +36,14 @@ var GroupsPane = new Class({
   {
     if(evt.tabIndex == 2)
     {
-      SSLog("create group!", SSLogForce);
       SSPostNotification("onCreateGroup");
     }
+  },
+
+
+  onUserLogin: function()
+  {
+    SSTableForName("Groups").addView(this.GroupsListView);
   }
 
 });

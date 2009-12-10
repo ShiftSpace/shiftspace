@@ -347,6 +347,22 @@
       background:url(/images/Console/unread.png) no-repeat;
     }
 
+/* Global 3-Column List View Styles */
+
+ul#FollowingListView, ul#FollowersListView, ul#SearchUsersListView, ul#GroupsListView
+{
+   list-style: none;
+   height: 100%;
+   overflow-y: scroll;
+   margin: 0px;
+}
+
+li.PeopleListViewCell, li.GroupListViewCell
+{
+   float: left;
+   width: 33%;
+}
+
 /* Sidebars */
 
 .leftSideBar
