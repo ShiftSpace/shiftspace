@@ -52,6 +52,14 @@ var GroupDetailView = new Class({
     this.open();
     this.currentGroup = groupData;
     SSTemplate(this.element, groupData);
+    if(groupData.level > 0)
+    {
+      this.element.getElement(".join").addClass("SSDisplayNone");
+    }
+    else
+    {
+      this.element.getElement(".join").removeClass("SSDisplayNone");
+    }
   }
 
 });
