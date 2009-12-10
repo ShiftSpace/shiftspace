@@ -145,14 +145,15 @@ class SSUser(User):
 
     def info(self):
         from server.models.follow import Follow
-        result = {}
+        from server.models.shift import Shift
         # TODO: use the bulk API - David 12/10/09
-        # return the follower count
-        result["followerCount"] = Follow.follower_count(key=self.id)
-        # return the following count
-        result["followingCount"] = Follow.following_count(key=self.id)
-        # return the publish shift count
-        pass
+        result = {}
+        db = core.connect()
+        shared = core.connect("shiftspace/shared")
+        result["followerCount"] = core.value(Follow.followers_count(db, key=self.id)) or 0
+        result["followingCount"] = core.value(Follow.following_count(db, key=self.id)) or 0
+        result["publishedShiftCount"] = core.value(Shift.count_by_user_and_published(shared, key=self.id)) or 0
+        return result
 
     # ========================================
     # Validation
