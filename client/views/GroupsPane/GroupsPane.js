@@ -56,7 +56,7 @@ var GroupsPane = new Class({
     }
     else if(evt.tabIndex != 2)
     {
-      SSPostNotification("onCreateGroupHide", this);
+      SSPostNotification("onEditGroupHide", this);
     }
   },
 

@@ -26,10 +26,11 @@
                     <li uiclass="GroupListViewCell"
                         class="SSCell GroupListViewCell"
                         options="{
-                          properties: ['shortName', 'longName']
+                          properties: ['shortName', 'longName', 'level']
                         }">
                         <span class="shortName"></span>
                         <span class="longName"></span>
+                        <button class="settings SSDisplayNone">Settings</button>
                     </li>
                 </ul>
             </div>
@@ -44,10 +45,11 @@
                     <li uiclass="GroupListViewCell"
                         class="SSCell GroupListViewCell"
                         options="{
-                          properties: ['shortName', 'longName']
+                          properties: ['shortName', 'longName', 'level']
                         }">
                         <span class="shortName"></span>
                         <span class="longName"></span>
+                        <button class="settings SSDisplayNone">Settings</button>
                     </li>
                 </ul>
             </div>
@@ -57,27 +59,6 @@
             <div id="StartNewGroup"
                  class="SSTabPane"
                  outlet="GroupsPane">
-	        <div id="NewGroupInfo">
-	            <form id="GroupForm" outlet="GroupsPane">
-                        <div>
-	                    <label>Group Name:</label>
-	                    <input name="longName" type="text"></input>
-                        </div>
-                        <div>
-	                    <label>Group Short Name:</label>
-	                    <input name="shortName" type="text"></input>
-                        </div>
-                        <div>
-	                    <label>Description:</label>
-	                    <textarea name="tagLine"></textarea>
-                        </div>
-	                <input id="CreateGroupButton" type="button" value="Create Group" outlet="GroupsPane"></input>
-	            </form>
-	        </div>
-	        <div id="AddGroupUsers">
-	            <input id="AddUserField" name="AddUserField" type="text" value="Type a user name"></input>
-	            <input id="AddUserButton" name="AddUserButton" type="button" value="Add User"></input>
-	        </div>
             </div>
             <!-- End Start New group subtab -->
 

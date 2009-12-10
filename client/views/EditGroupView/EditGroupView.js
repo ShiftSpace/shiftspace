@@ -4,10 +4,10 @@
 // @dependencies      SSView
 // ==/Builder==
 
-var CreateGroupView = new Class({
+var EditGroupView = new Class({
 
   Extends: SSView,
-  name: "CreateGroupView",
+  name: "EditGroupView",
 
 
   initialize: function(el, options)
@@ -19,7 +19,7 @@ var CreateGroupView = new Class({
     }.bind(this));
 
     SSAddObserver(this, "onCreateGroup", this['open'].bind(this));
-    SSAddObserver(this, "onCreateGroupHide", this['close'].bind(this));
+    SSAddObserver(this, "onEditGroupHide", this['close'].bind(this));
   },
 
 
@@ -60,7 +60,7 @@ var CreateGroupView = new Class({
   attachEvents: function()
   {
     this.CreateGroup.addEvent("click", this.createGroup.bind(this));
-    this.CancelCreateGroup.addEvent('click', this['close'].bind(this));
+    this.CancelAction.addEvent('click', this['close'].bind(this));
   },
 
 

@@ -19,7 +19,7 @@ var GroupListViewCell = new Class({
   setShortName: function(shortName)
   {
     var el = this.lockedElement();
-    el.getElement('.shortName').setProperty("src", shortName);
+    el.getElement('.shortName').setProperty("text", shortName);
   },
 
 
@@ -27,6 +27,20 @@ var GroupListViewCell = new Class({
   {
     var el = this.lockedElement();
     el.getElement(".longName").set("text", longName);
+  },
+
+
+  setLevel: function(level)
+  {
+    var el = this.lockedElement();
+    if(level > 2)
+    {
+      el.getElement(".settings").removeClass("SSDisplayNone");
+    }
+    else
+    {
+      el.getElement(".settings").addClass("SSDisplayNone");
+    }
   }
 
 });

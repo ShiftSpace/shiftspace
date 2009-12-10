@@ -361,6 +361,18 @@ li.PeopleListViewCell, li.GroupListViewCell
 {
    float: left;
    width: 33%;
+   border-right: 1px solid #ccc;
+   border-bottom: 1px solid #ccc;
+}
+
+li.GroupListViewCell .shortName
+{
+   font-weight: bold;
+}
+
+li.GroupListViewCell .settings
+{
+   background-color: #aaa;
 }
 
 /* Sidebars */

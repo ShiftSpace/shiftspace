@@ -1,13 +1,14 @@
-<div id="CreateGroupView"
+<div id="EditGroupView"
      class="SSSubView"
-     uiclass="CreateGroupView"
+     uiclass="EditGroupView"
      options="{
        delegate:'SSConsoleWindow'
      }">
 
     <h>Start A New Group</h>
+    <h>Edit Group</h>
 
-    <form id="GroupForm" outlet="CreateGroupView">
+    <form id="GroupForm" outlet="EditGroupView">
         <label>Group Name<span>*</span>:</label>
         <input type="text" name="longName"></input>
 
@@ -34,8 +35,9 @@
     </ul>
 
     <div>
-        <button id="InviteUsers" outlet="CreateGroupView">Invite User</button>
-        <button id="CancelCreateGroup" outlet="CreateGroupView">Cancel</button>
-        <button id="CreateGroup" outlet="CreateGroupView">Create</button>
+        <button id="InviteUsers" outlet="EditGroupView">Invite User</button>
+        <button id="CancelAction" outlet="EditGroupView">Cancel</button>
+        <button id="CreateGroup" outlet="EditGroupView">Create</button>
+        <button id="SaveGroup" outlet="EditGroupView">Save</button>
     </div>
 </div>
