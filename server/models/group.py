@@ -132,6 +132,17 @@ class Group(SSDocument):
     def shortNamesToIds(cls, shortNames):
         return [group["_id"] for group in core.fetch(view=Group.by_short_name, keys=shortNames)]
 
+    @classmethod
+    def groups(cls, start=None, end=None, limit=25):
+        results = Group.by_visible_and_created(core.connect(), limit=25)
+        if start and not end:
+            return core.objects(results[start:])
+        if not start and end:
+            return core.objects(results[:end])
+        if start and end:
+            return core.objects(results[start:end])
+        return core.objects(results[start:end])
+
     # ========================================
     # Instance Methods
     # ========================================
