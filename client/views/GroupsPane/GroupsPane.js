@@ -30,7 +30,7 @@ var GroupsPane = new Class({
   {
     this.mapOutletsToThis();
     this.attachEvents();
-    [this.GroupsListView].each(function(lv) {
+    [this.GroupsListView, this.MyGroupsListView].each(function(lv) {
       lv.addEvent("onRowClick", this.handleRowClick.bind(this));
     }, this);
   },
@@ -64,6 +64,7 @@ var GroupsPane = new Class({
   onUserLogin: function()
   {
     SSTableForName("Groups").addView(this.GroupsListView);
+    SSTableForName("MyGroups").addView(this.MyGroupsListView);
   }
 
 });

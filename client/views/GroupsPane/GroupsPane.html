@@ -18,8 +18,20 @@
         <!-- Start subtabs -->
         <div class="SSContentView">
             <!-- START Your Groups subtab -->
-            <div id="YourGroups" class="SSTabPane">
-                Your Groups
+            <div id="MyGroups" class="SSTabPane">
+                <ul id="MyGroupsListView"
+                    uiclass="SSListView"
+                    class="SSListView PeopleListView"
+                    outlet="GroupsPane">
+                    <li uiclass="GroupListViewCell"
+                        class="SSCell GroupListViewCell"
+                        options="{
+                          properties: ['shortName', 'longName']
+                        }">
+                        <span class="shortName"></span>
+                        <span class="longName"></span>
+                    </li>
+                </ul>
             </div>
             <!-- END Your Groups subtab -->
 

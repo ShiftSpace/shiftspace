@@ -181,6 +181,17 @@ var ShiftServer = new Class({
         }
       ]
     });
+
+    new SSTable("MyGroups", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/groups'},
+      watches: [
+        {
+          events: [{resource:"group", action:"create"},
+                   {resource:"group", action:"update"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
   },
 
   
@@ -207,7 +218,7 @@ var ShiftServer = new Class({
   
   onLogout: function()
   {
-    // wipe out tables
+    // wipe out user specific tables
     ["FollowShifts",
      "MyShifts",
      "MyComments",
@@ -216,7 +227,8 @@ var ShiftServer = new Class({
      "Following",
      "Followers",
      "Users",
-     "Groups"].each(SSDeleteTable);
+     "Groups",
+     "MyGroups"].each(SSDeleteTable);
   },
   
 
