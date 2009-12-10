@@ -1,0 +1,36 @@
+<div id="CreateGroupView"
+     class="SSSubView"
+     uiclass="CreateGroupView"
+     options="{
+       delegate:'SSConsoleWindow'
+     }">
+
+    <h>Start A New Group</h>
+
+    <form>
+        <label>Group Name<span>*</span>:</label>
+        <input type="text" name="longName"></input>
+
+        <label>Group Handle<span>*</span>(keep it short):</label>
+        <input type="text" name="shortName"></input>
+
+        <label>Tag Line<span>*</span>:</label>
+        <input type="text" name="tagLine"></input>
+        
+        <label>URL:</label>
+        <input type="text" name="url"></input>
+    </form>
+
+    <div class="userCount">
+        <span class="adminCount"></span> Admins + <span class="memberCount"></span> Members (click to edit)
+    </div>
+
+    <ul id="GroupMemberListView"
+        class="SSListView"
+        uiclass="SSListView">
+        <li class="SSCell"
+            uiclass="SSCell">
+        </li>
+    </ul>
+
+</div>

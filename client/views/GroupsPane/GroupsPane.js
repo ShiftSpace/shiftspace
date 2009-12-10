@@ -34,6 +34,7 @@ var GroupsPane = new Class({
   {
     if(evt.tabIndex == 2)
     {
+      SSLog("create group!", SSLogForce);
       SSPostNotification("onCreateGroup");
     }
   },
