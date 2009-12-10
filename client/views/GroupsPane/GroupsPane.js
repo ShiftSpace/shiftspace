@@ -26,6 +26,16 @@ var GroupsPane = new Class({
   attachEvents: function()
   {
     this.CreateGroupButton.addEvent("click", this.createGroup.bind(this));
+    this.GroupsTabView.addEvent("tabSelected", this.onTabSelect.bind(this));
+  },
+
+
+  onTabSelect: function(evt)
+  {
+    if(evt.tabIndex == 2)
+    {
+      SSLog("Show groups window!", SSLogForce);
+    }
   },
 
   

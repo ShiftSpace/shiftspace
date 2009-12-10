@@ -5,6 +5,7 @@
 // ==/Builder==
 
 var PeopleDetailView = new Class({
+
   Extends: SSView,
   name: "PeopleDetailView",
 
