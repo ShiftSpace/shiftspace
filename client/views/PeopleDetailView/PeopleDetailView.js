@@ -23,21 +23,17 @@ var PeopleDetailView = new Class({
   attachEvents: function()
   {
     this.element.getElement(".follow").addEvent("click", function() {
-      var controlp = SSApp.post({
-        "resource":"user",
-        "id":this.currentUser.userName,
-        "action":"follow"
-      });
-      this.toggleFollowButtons(true, controlp);
+      this.toggleFollowButtons(
+        true,
+        SSFollowUser(this.currentUser.userName)
+      );
     }.bind(this));
 
     this.element.getElement(".unfollow").addEvent("click", function() {
-      var controlp = SSApp.post({
-        "resource":"user",
-        "id":this.currentUser.userName,
-        "action":"unfollow"
-      });
-      this.toggleFollowButtons(false, controlp);
+      this.toggleFollowButtons(
+        false,
+        SSUnfollowUser(this.currentUser.userName)
+      );
     }.bind(this));
   },
 

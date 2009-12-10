@@ -54,3 +54,23 @@ function SSUserCanEditShift(id)
 {
   return (ShiftSpace.User.isLoggedIn() && SSUserOwnsShift(id));
 }
+
+
+function SSFollowUser(userName)
+{
+  return SSApp.post({
+    "resource": "user",
+    "id": userName,
+    "action":"follow"
+  });
+}
+
+
+function SSUnfollowUser(userName)
+{
+  return SSApp.post({
+    "resource": "user",
+    "id": userName,
+    "action": "unfollow"
+  });
+}
