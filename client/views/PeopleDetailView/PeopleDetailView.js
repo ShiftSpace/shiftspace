@@ -59,12 +59,8 @@ var PeopleDetailView = new Class({
   {
     this.open();
     this.currentUser = userData;
-    ['userName',
-     'bio',
-     'url'].each(function(prop) {
-       this.element.getElement("."+prop).set("text", userData[prop]);
-    }, this);
     this.element.getElement(".gravatarLarge").setProperty("src", userData.gravatarLarge);
+    SSTemplate(this.element, $H(userData).erase("gravatarLarge"));
     this.toggleFollowButtons(userData.following);
     this.showUserInfo(SSUserInfo(userData.userName));
   },
