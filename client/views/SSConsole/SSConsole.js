@@ -171,6 +171,7 @@ var SSConsole = new Class({
           'z-index': 1000004
         }
     });
+
     $(document.body).grab(resizer);
     
     resizer.addEvent('mousedown', SSAddDragDiv);

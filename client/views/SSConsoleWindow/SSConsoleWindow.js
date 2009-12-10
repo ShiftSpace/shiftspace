@@ -28,6 +28,39 @@ var SSConsoleWindow = new Class({
   },
   
 
+  initResizer: function()
+  {
+    var resizer = new SSElement('div', {
+        id: 'SSConsoleWindowResizer',
+        styles: {
+          position: 'fixed',
+          bottom: 178,
+          cursor: 'ns-resize',
+          height: 5,
+          right: 80,
+          width: 320,
+          'z-index': 1000004
+        }
+    });
+
+    $(document.body).grab(resizer);
+
+    resizer.addEvent('mousedown', SSAddDragDiv);
+    
+    resizer.makeDraggable({
+      modifiers: {x:'', y:'bottom'},
+      invert: true,
+      onComplete: SSRemoveDragDiv
+    });
+
+    this.element.makeResizable({
+      handle: resizer,
+      modifiers: {x:'', y:'height'},
+      invert: true
+    });
+  },
+
+
   attachEvents: function()
   {
     this.SSConsoleWindowClose.addEvent("click", this.hide.bind(this));
@@ -59,6 +92,7 @@ var SSConsoleWindow = new Class({
   buildInterface: function()
   {
     this.parent();
+    this.initResizer();
     this.attachEvents();
     SSPostNotification('onConsoleWindowLoad', this);
     this.setIsLoaded(true);

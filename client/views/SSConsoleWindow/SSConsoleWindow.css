@@ -1,7 +1,3 @@
-.SSConsoleWindowBody
-{
-}
-
 button#SSConsoleWindowClose
 {
    height: 16px;
@@ -27,6 +23,7 @@ button#SSConsoleWindowClose:hover{
 
 .SSConsoleWindowBody
 {
+   height: 100%;
    width: 340px;
    background:url(/images/Pane/SSPaneBg.png);
    padding: 5px 20px 0;
