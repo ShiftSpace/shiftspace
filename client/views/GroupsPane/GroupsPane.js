@@ -25,7 +25,6 @@ var GroupsPane = new Class({
 
   attachEvents: function()
   {
-    this.CreateGroupButton.addEvent("click", this.createGroup.bind(this));
     this.GroupsTabView.addEvent("tabSelected", this.onTabSelect.bind(this));
   },
 
@@ -37,12 +36,6 @@ var GroupsPane = new Class({
       SSLog("create group!", SSLogForce);
       SSPostNotification("onCreateGroup");
     }
-  },
-
-  
-  createGroup: function()
-  {
-    var p = SSApp.create("group", formToHash(this.GroupForm));
-    p.realize();
   }
+
 });

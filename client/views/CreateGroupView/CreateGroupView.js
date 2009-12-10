@@ -14,12 +14,13 @@ var CreateGroupView = new Class({
   {
     this.parent(el, options);
 
-    SSAddObserver(this, "onCreateGroup", this.createGroup.bind(this));
+    SSAddObserver(this, "onCreateGroup", this['open'].bind(this));
   },
 
 
   'open': function()
   {
+    this.clearForm();
     this.delegate().show();
     this.multiView().showViewByName(this.name);
   },
@@ -33,18 +34,27 @@ var CreateGroupView = new Class({
 
   clearForm: function()
   {
-    // clear all text forms
+    this.element.getElements("input[type=text]").setProperty("value", "");
   },
 
 
   createGroup: function()
   {
-    this.open();
+    var formData = SSFormToHash(this.GroupForm);
+    var p = SSCreateGroup(formData);
+    this.onCreateGroup(p);
   },
+
+
+  onCreateGroup: function(p)
+  {
+    SSLog("Group created!", SSLogForce);
+  }.asPromise(),
 
 
   attachEvents: function()
   {
+    this.CreateGroup.addEvent("click", this.createGroup.bind(this));
     this.CancelCreateGroup.addEvent('click', this['close'].bind(this));
   },
 
