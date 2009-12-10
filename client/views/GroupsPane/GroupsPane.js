@@ -38,9 +38,15 @@ var GroupsPane = new Class({
 
   handleRowClick: function(evt)
   {
-    SSPostNotification("onShowGroup", evt.data);
+    if(!evt.handled) SSPostNotification("onShowGroup", evt.data);
   },
 
+
+  editGroup: function(sender, evt)
+  {
+    SSLog(sender, evt, SSLogForce);
+  },
+  
 
   attachEvents: function()
   {
