@@ -12,12 +12,28 @@ var PeopleDetailView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
+    SSAddObserver(this, 'onShowUser', this.showUser.bind(this));
+    SSAddObserver(this, 'onHideUser', this['close'].bind(this));
   },
 
 
   awake: function()
   {
     this.attachEvents();
+  },
+
+
+  'open': function()
+  {
+    this.delegate().show();
+    this.multiView().showViewByName(this.name);
+  },
+
+
+  'close': function()
+  {
+    this.delegate().hide();
   },
 
 
@@ -41,6 +57,7 @@ var PeopleDetailView = new Class({
 
   showUser: function(userData)
   {
+    this.open();
     this.currentUser = userData;
     ['userName',
      'bio',
