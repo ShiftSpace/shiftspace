@@ -74,3 +74,9 @@ function SSUnfollowUser(userName)
     "action": "unfollow"
   });
 }
+
+
+function SSCreateGroup(groupData)
+{
+  return SSApp.create("group", groupData);
+}
