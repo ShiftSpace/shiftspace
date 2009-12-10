@@ -14,6 +14,10 @@ var CreateGroupView = new Class({
   {
     this.parent(el, options);
 
+    SSAddObserver(this, "onGroupsPaneHide", function() {
+      if(this.isVisible()) this['close']();
+    }.bind(this));
+
     SSAddObserver(this, "onCreateGroup", this['open'].bind(this));
   },
 

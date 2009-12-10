@@ -19,6 +19,13 @@ var GroupsPane = new Class({
   },
 
 
+  hide: function()
+  {
+    this.parent();
+    SSPostNotification("onGroupsPaneHide", this);
+  },
+
+
   awake: function()
   {
     this.mapOutletsToThis();

@@ -14,6 +14,10 @@ var GroupDetailView = new Class({
   {
     this.parent(el, options);
 
+    SSAddObserver(this, "onGroupsPaneHide", function() {
+      if(this.isVisible()) this['close']();
+    }.bind(this));
+    
     SSAddObserver(this, "onShowGroup", this.showGroup.bind(this));
   },
 
