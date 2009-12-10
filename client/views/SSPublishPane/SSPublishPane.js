@@ -32,6 +32,17 @@ var SSPublishPane = new Class({
   },
   
   
+  willHide: function()
+  {
+    var lv = this.currentListView();
+    if(lv)
+    {
+      lv.uncheckAll(true);
+      this.setCurrentListView(null);
+    }
+  },
+  
+
   'open': function()
   {
     this.delegate().show();
@@ -63,6 +74,7 @@ var SSPublishPane = new Class({
     if(listView == this.currentListView())
     {
       this['close']();
+      this.setCurrentListView(null);
     }
   },
   
