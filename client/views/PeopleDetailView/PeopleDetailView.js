@@ -61,15 +61,19 @@ var PeopleDetailView = new Class({
     this.currentUser = userData;
     ['userName',
      'bio',
-     'url',
-     'followerCount',
-     'followingCount',
-     'shiftCount'].each(function(prop) {
+     'url'].each(function(prop) {
        this.element.getElement("."+prop).set("text", userData[prop]);
     }, this);
     this.element.getElement(".gravatarLarge").setProperty("src", userData.gravatarLarge);
     this.toggleFollowButtons(userData.following);
+    this.showUserInfo(SSUserInfo(userData.userName));
   },
+
+
+  showUserInfo: function(info)
+  {
+    SSTemplate(this.element, info);
+  }.asPromise(),
 
 
   toggleFollowButtons: function(isFollowing)

@@ -439,3 +439,15 @@ function SSFormToHash(formEl)
   });
   return result;
 }
+
+function SSTemplate(el, props)
+{
+  $H(props).each(function(value, key) {
+    var attr = "text";
+    if(el.get('tag') == "input" && el.getProperty("type") == "text")
+    {
+      attr = "value";
+    }
+    el.getElement("."+key).set(attr, value);
+  }, this);
+}

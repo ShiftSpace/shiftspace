@@ -76,6 +76,16 @@ function SSUnfollowUser(userName)
 }
 
 
+function SSUserInfo(userName)
+{
+  return SSApp.get({
+    resource: 'user',
+    id: userName,
+    action: 'info'
+  });
+}
+
+
 function SSCreateGroup(groupData)
 {
   return SSApp.create("group", groupData);
