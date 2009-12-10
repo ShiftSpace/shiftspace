@@ -38,7 +38,6 @@ var SSPublishPane = new Class({
     if(lv)
     {
       lv.uncheckAll(true);
-      this.setCurrentListView(null);
     }
   },
   
