@@ -18,14 +18,14 @@ var EditGroupView = new Class({
       if(this.isVisible()) this['close']();
     }.bind(this));
 
-    SSAddObserver(this, "onCreateGroup", this['open'].bind(this));
+    SSAddObserver(this, "onCreateGroup", this.presentCreateForm.bind(this));
+    SSAddObserver(this, "onEditGroup", this.presentEditForm.bind(this));
     SSAddObserver(this, "onEditGroupHide", this['close'].bind(this));
   },
 
 
   'open': function()
   {
-    this.clearForm();
     this.delegate().show();
     this.multiView().showViewByName(this.name);
   },
@@ -40,6 +40,28 @@ var EditGroupView = new Class({
   clearForm: function()
   {
     this.element.getElements("input[type=text]").setProperty("value", "");
+  },
+
+
+  presentCreateForm: function()
+  {
+    this.clearForm();
+    if(!this.isVisible()) this['open']();
+    this.CreateTitle.removeClass("SSDisplayNone");
+    this.EditTitle.addClass("SSDisplayNone");
+    this.CreateTitle.removeClass("SSDisplayNone");
+    this.SaveGroup.addClass("SSDisplayNone");
+  },
+
+
+  presentEditForm: function()
+  {
+    this.clearForm();
+    if(!this.isVisible()) this['open']();
+    this.EditTitle.removeClass("SSDisplayNone");
+    this.CreateTitle.addClass("SSDisplayNone");
+    this.SaveGroup.removeClass("SSDisplayNone");
+    this.CreateTitle.addClass("SSDisplayNone");
   },
 
 

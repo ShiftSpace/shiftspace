@@ -44,7 +44,7 @@ var GroupsPane = new Class({
 
   editGroup: function(sender, evt)
   {
-    SSLog(sender, evt, SSLogForce);
+    SSPostNotification("onEditGroup", evt.data);
   },
   
 
