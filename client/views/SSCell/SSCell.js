@@ -117,12 +117,12 @@ var SSCell = new Class({
   {
     event = new Event(event);
     var target = $(event.target), action = this.actionForNode(target);
-    if(action) this.runAction(action);
-    if(this.delegate() && this.delegate().onCellClick)
+    if(action)
     {
-      var cellNode = (target.get('tag') == 'li') ? target : target.getParent('li');
-      if(cellNode) this.delegate().onCellClick(cellNode);
+      this.runAction(action);
+      return true;
     }
+    return false;
   },
   
   /*
@@ -144,8 +144,11 @@ var SSCell = new Class({
     {
       throw (new SSCellError.NoSuchTarget(new Error(), "target " + target + " does not exist."));
     }
-    
-    method(this, event);
+    method(this, {
+      listView: this.delegate(),
+      data: this.delegate().dataForCellNode(this.lockedElement()),
+      event: event
+    });
   },
   
   /*

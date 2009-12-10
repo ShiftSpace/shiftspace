@@ -431,24 +431,27 @@ var SSListView = new Class({
         var cellNode = (hit.get('tag') == 'li' && hit) || hit.getParent('li');
 
         this.cell().lock($(cellNode));
-        this.cell().eventDispatch(event, type);
+        var handled =this.cell().eventDispatch(event, type);
         this.cell().unlock();
 
         if(type == 'click')
         {
-          var idx  = this.indexOfCellNode(cellNode);
-          this.fireEvent('onRowClick', {
-            listView: this,
-            index: idx,
-            data: this.dataForIndex(idx)
-          });
+          var idx = this.indexOfCellNode(cellNode),
+              evt = {
+                listView: this,
+                index: idx,
+                data: this.dataForIndex(idx),
+                handled: handled
+              };
+          
+          this.fireEvent('onRowClick', evt);
+          if(!handled) this.onRowClick(evt);
         }
       break;
       
       default:
       break;
     }
-    //event.stop();
   },
 
   /*
@@ -1386,20 +1389,20 @@ var SSListView = new Class({
   },
 
   
-  onRowClick: function(index)
+  onRowClick: function(evt)
   {
     if(this.options.allowSelection)
     {
-      var cellNode = this.cellNodeForIndex(index);
+      var cellNode = this.cellNodeForIndex(evt.index);
       if(!cellNode.hasClass('selected')) 
       {
-        this.selectRow(index);
-        this.onRowSelect(index);
+        this.selectRow(evt.index);
+        this.onRowSelect(evt.index);
       }
       else
       {
-        this.deselectRow(index);
-        this.onRowDeselect(index);
+        this.deselectRow(evt.index);
+        this.onRowDeselect(evt.index);
       }
     }
   },
