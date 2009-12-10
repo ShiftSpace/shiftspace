@@ -34,6 +34,7 @@ class User(SSDocument):
     bio = TextField()
     url = TextField()
     gravatar = TextField()
+    gravatarLarge = TextField()
     password = TextField()
     streams = ListField(TextField())
     preferences = DictField()
