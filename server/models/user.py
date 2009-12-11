@@ -72,15 +72,30 @@ class User(SSDocument):
     # ========================================
 
     @classmethod
-    def users(cls, start=None, end=None, limit=25):
+    def users(cls, start=None, end=None, limit=25, groupId=None):
         results = User.all_by_joined(core.connect(), limit=25)
         if start and not end:
-            return core.objects(results[start:])
-        if not start and end:
-            return core.objects(results[:end])
-        if start and end:
-            return core.objects(results[start:end])
-        return core.objects(results[start:end])
+            users = core.objects(results[start:])
+        elif not start and end:
+            users = core.objects(results[:end])
+        elif start and end:
+            users = core.objects(results[start:end])
+        else:
+            users = core.objects(results)
+        if groupId:
+            from server.models.permission import Permission
+            keys = [[user.id, groupId] for user in users]
+            isMembers = core.fetch(
+                core.connect(),
+                view=Permission.is_member,
+                keys=keys
+                )
+            for i in range(len(users)):
+                if isMembers[i]:
+                    users[i]["member"] = True
+                else:
+                    users[i]["member"] = False
+        return users
 
     # ========================================
     # Validation

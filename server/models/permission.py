@@ -87,6 +87,15 @@ class Permission(SSDocument):
          }"
         )
 
+    is_member = View(
+        "permissions",
+        "function (doc) {                                  \
+           if(doc.type == 'permission' && doc.level > 0) { \
+              emit([doc.userId, doc.groupId], true);       \
+           }                                               \
+         }"
+        )
+
     readable_by_user_and_created = View(
         "permissions",
         "function (doc) {                                      \
