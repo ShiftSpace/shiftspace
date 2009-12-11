@@ -307,5 +307,5 @@ class UserController(ResourceController):
         return data(theUser.info())
 
     @jsonencode
-    def users(self, start=None, end=None, limit=25):
-        return data([user.toDict() for user in SSUser.users(start, end, limit)])
+    def users(self, start=None, end=None, limit=25, groupId=None):
+        return data([user.toDict() for user in SSUser.users(start, end, limit, groupId)])

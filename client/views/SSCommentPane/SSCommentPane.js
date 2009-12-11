@@ -51,10 +51,10 @@ var SSCommentPane = new Class({
   
   'open': function(shiftId)
   {
-    this.delegate().show();
-    this.multiView().showViewByName(this.name);
     this.initTable(shiftId);
     SSTableForName("Comments").addView(this.SSCommentsListView);
+    this.delegate().show();
+    this.multiView().showViewByName(this.name);
     this.setCurrentShiftId(shiftId);
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
