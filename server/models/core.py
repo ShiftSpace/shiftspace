@@ -204,7 +204,8 @@ def fetch(db=None, view=None, keys=None):
     if viewpath == "_all_docs":
         result = []
         for row in rows:
-            if row.get('value'):
+            value = row.get('value')
+            if value and not value.get("deleted"):
                 result.append(row['doc'])
             else:
                 result.append(None)
