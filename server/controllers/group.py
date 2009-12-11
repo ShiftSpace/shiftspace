@@ -48,4 +48,6 @@ class GroupsController(ResourceController):
 
     @jsonencode
     def groups(self, start=None, end=None, limit=25):
-        return data([group.toDict() for group in Group.groups(start, end, limit)])
+        loggedInUser = helper.getLoggedInUser()
+        return data([group.toDict() for group in
+                     Group.groups(start, end, limit, userId=loggedInUser)])
