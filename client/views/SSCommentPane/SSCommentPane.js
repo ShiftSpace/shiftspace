@@ -33,8 +33,11 @@ var SSCommentPane = new Class({
 
   cleanupTable: function()
   {
-    if(this.comments) this.comments.dispose();
-    this.comments = null;
+    if(this.comments)
+    {
+      this.comments.dispose();
+      this.comments = null;
+    }
   },
   
 
@@ -52,6 +55,7 @@ var SSCommentPane = new Class({
   
   'open': function(shiftId)
   {
+    this.cleanupTable();
     this.initTable(shiftId);
     SSTableForName("Comments").addView(this.SSCommentsListView);
     
@@ -69,12 +73,6 @@ var SSCommentPane = new Class({
   },
 
 
-  willHide: function()
-  {
-    this.cleanupTable();
-  },
-
-  
   attachEvents: function()
   {
     this.SSPostComment.addEvent("click", this.postComment.bind(this));

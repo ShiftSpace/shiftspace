@@ -47,7 +47,8 @@ var ShiftServer = new Class({
           events: [
             {resource:"shift", method:"create"},
             {resource:"shift", action:"favorite"},
-            {resource:"shift", action:"unfavorite"}
+            {resource:"shift", action:"unfavorite"},
+            {resource:"shift", action:"comment"}
           ],
           handlers: [
             function(shift) { SSApplication().setDocument(this.getName(), shift); }
