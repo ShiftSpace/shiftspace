@@ -132,8 +132,8 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/messages', 'delete':'event'},
       watches: [
         {
-          events: [{resource:"event", action:"read"},
-                   {resource:"event", action:"unread"}],
+          events: [{resource:"message", action:"read"},
+                   {resource:"message", action:"unread"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]
@@ -143,8 +143,8 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/following'},
       watches: [
         {
-          events: [{resource:"event", action:"follow"},
-                   {resource:"event", action:"unfollow"}],
+          events: [{resource:"user", action:"follow"},
+                   {resource:"user", action:"unfollow"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]
@@ -154,8 +154,8 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/followers'},
       watches: [
         {
-          events: [{resource:"event", action:"follow"},
-                   {resource:"event", action:"unfollow"}],
+          events: [{resource:"user", action:"follow"},
+                   {resource:"user", action:"unfollow"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]
@@ -165,8 +165,8 @@ var ShiftServer = new Class({
       resource: {read:'users'},
       watches: [
         {
-          events: [{resource:"event", action:"follow"},
-                   {resource:"event", action:"unfollow"}],
+          events: [{resource:"user", action:"follow"},
+                   {resource:"user", action:"unfollow"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]
@@ -176,8 +176,8 @@ var ShiftServer = new Class({
       resource: {read:'groups'},
       watches: [
         {
-          events: [{resource:"group", action:"create"},
-                   {resource:"group", action:"update"}],
+          events: [{resource:"group", method:"create"},
+                   {resource:"group", method:"update"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]
@@ -187,8 +187,8 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/groups'},
       watches: [
         {
-          events: [{resource:"group", action:"create"},
-                   {resource:"group", action:"update"}],
+          events: [{resource:"group", method:"create"},
+                   {resource:"group", method:"update"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]

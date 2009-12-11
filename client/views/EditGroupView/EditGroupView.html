@@ -9,17 +9,30 @@
     <h id="EditTitle" outlet="EditGroupView">Edit Group</h>
 
     <form id="GroupForm" outlet="EditGroupView">
-        <label>Group Name<span>*</span>:</label>
-        <input type="text" name="longName"></input>
+        <div>
+            <label>Group Name<span>*</span>:</label>
+            <input type="text" name="longName"></input>
+        </div>
 
-        <label>Group Handle<span>*</span>(keep it short):</label>
-        <input type="text" name="shortName"></input>
+        <div>
+            <label>Group Handle<span>*</span>(keep it short):</label>
+            <input type="text" name="shortName"></input>
+        </div>
 
-        <label>Tag Line<span>*</span>:</label>
-        <input type="text" name="tagLine"></input>
+        <div>
+            <label>Tag Line<span>*</span>:</label>
+            <input type="text" name="tagLine"></input>
+        </div>
         
-        <label>URL:</label>
-        <input type="text" name="url"></input>
+        <div>
+            <label>URL:</label>
+            <input type="text" name="url"></input>
+        </div>
+
+        <div>
+            <label>Is visible to people who have not been invited:</label>
+            <input type="checkbox" name="isVisible" checked="true"></input>
+        </div>
     </form>
 
     <div class="userCount">
