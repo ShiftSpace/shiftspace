@@ -349,7 +349,7 @@
 
 /* Global 3-Column List View Styles */
 
-ul#FollowingListView, ul#FollowersListView, ul#SearchUsersListView, ul#GroupsListView, ul#MyGroupsListView
+ul#FollowingListView, ul#FollowersListView, ul#SearchUsersListView, ul#GroupsListView, ul#MyGroupsListView, ul#InviteUsersListView
 {
    list-style: none;
    height: 100%;

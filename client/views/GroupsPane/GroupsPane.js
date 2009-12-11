@@ -71,6 +71,7 @@ var GroupsPane = new Class({
   {
     SSTableForName("Groups").addView(this.GroupsListView);
     SSTableForName("MyGroups").addView(this.MyGroupsListView);
+    SSTableForName("Users").addView(this.InviteUsersListView);
   }
 
 });

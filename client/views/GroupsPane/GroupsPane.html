@@ -73,6 +73,21 @@
             <div id="StartNewGroup"
                  class="SSTabPane"
                  outlet="GroupsPane">
+                <ul id="InviteUsersListView"
+                    uiclass="SSListView"
+                    class="SSListView PeopleListView"
+                    outlet="GroupsPane">
+                    <li uiclass="PeopleListViewCell"
+                        class="SSCell PeopleListViewCell"
+                        options="{
+                          properties: ['gravatar', 'userName', 'fullName']
+                        }">
+                        <span class="gravatar"><img></img></span>
+                        <span class="userName"></span>
+                        <span class="fullName"></span>
+                        <input type="checkbox" class="isMember"></input>
+                    </li>
+                </ul>
             </div>
             <!-- End Start New group subtab -->
 
