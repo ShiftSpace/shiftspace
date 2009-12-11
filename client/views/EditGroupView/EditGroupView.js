@@ -83,6 +83,11 @@ var EditGroupView = new Class({
   {
     this.CreateGroup.addEvent("click", this.createGroup.bind(this));
     this.CancelAction.addEvent('click', this['close'].bind(this));
+    this.InviteUsers.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      this.delegate().sendBack();
+      evt.stop();
+    }.bind(this));
   },
 
 
