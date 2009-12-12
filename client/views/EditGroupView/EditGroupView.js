@@ -54,7 +54,7 @@ var EditGroupView = new Class({
   },
 
 
-  presentEditForm: function()
+  presentEditForm: function(groupData)
   {
     this.clearForm();
     if(!this.isVisible()) this['open']();
@@ -62,6 +62,7 @@ var EditGroupView = new Class({
     this.CreateTitle.addClass("SSDisplayNone");
     this.SaveGroup.removeClass("SSDisplayNone");
     this.CreateTitle.addClass("SSDisplayNone");
+    SSTemplate(this.GroupForm, groupData);
   },
 
 

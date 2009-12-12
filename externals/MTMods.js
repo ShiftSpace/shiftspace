@@ -443,12 +443,23 @@ function SSFormToHash(formEl)
 function SSTemplate(el, props)
 {
   $H(props).each(function(value, key) {
-    var attr = "text";
-    if(el.get('tag') == "input" && el.getProperty("type") == "text")
+    var attr = "text",
+        target = el.getElement("."+key);
+    if(!target) return;
+    if(target.get('tag') == "input")
     {
-      attr = "value";
+      switch(el.getProperty("type"))
+      {
+        case "text":
+           attr = "value";
+           break;
+        case "checkbox":
+           attr = "checked";
+           break;
+        default:
+           attr = "value";
+      }
     }
-    var target = el.getElement("."+key);
     if(target) target.set(attr, value);
   }, this);
 }
