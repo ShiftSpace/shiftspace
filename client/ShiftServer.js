@@ -203,6 +203,10 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/groups'},
       watches: [
         {
+          events: [{resource:"group", method:"create"}],
+          handlers: [function(group) { SSApplication().setDocument(this.getName(), group); }]
+        },
+        {
           events: [{resource:"group", method:"create"},
                    {resource:"group", method:"update"}],
           handlers: [SSTable.dirtyTheViews]
