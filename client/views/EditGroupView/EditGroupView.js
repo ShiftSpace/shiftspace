@@ -139,7 +139,7 @@ var EditGroupView = new Class({
 
   removeUser: function(user)
   {
-    this.user.remove(user._id);
+    this.users.erase(user._id);
   }
 
 });

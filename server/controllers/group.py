@@ -15,7 +15,7 @@ class GroupsController(ResourceController):
                   conditions=dict(method="GET"))
         d.connect(name="groups", route="groups", controller=self, action="groups",
                   conditions=dict(method="GET"))
-        d.connect(name="groupInviteUsers", route="group/:id/inviteusers", controller="self", action="inviteUsers",
+        d.connect(name="groupInviteUsers", route="group/:id/inviteusers", controller=self, action="inviteUsers",
                   conditions=dict(method="POST"))
         return d
 

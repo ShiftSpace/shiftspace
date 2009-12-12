@@ -99,7 +99,7 @@ function SSInviteUsersToGroup(groupId, userIds)
     id: groupId,
     action: 'inviteusers',
     data: {
-      users: userIds
+      users: JSON.encode(userIds)
     }
   });
 }
