@@ -24,6 +24,18 @@ var EditGroupView = new Class({
   },
 
 
+  setCurrentGroup: function(group)
+  {
+    this.__currentGroup = group;
+  },
+
+
+  currentGroup: function()
+  {
+    return this.__currentGroup;
+  },
+
+
   'open': function()
   {
     this.delegate().show();
@@ -56,12 +68,13 @@ var EditGroupView = new Class({
 
   presentEditForm: function(groupData)
   {
+    this.setCurrentGroup(groupData);
     this.clearForm();
     if(!this.isVisible()) this['open']();
     this.EditTitle.removeClass("SSDisplayNone");
     this.CreateTitle.addClass("SSDisplayNone");
     this.SaveGroup.removeClass("SSDisplayNone");
-    this.CreateTitle.addClass("SSDisplayNone");
+    this.CreateGroup.addClass("SSDisplayNone");
     SSTemplate(this.GroupForm, groupData);
   },
 
@@ -88,6 +101,7 @@ var EditGroupView = new Class({
       evt = new Event(evt);
       this.delegate().sendBack();
       evt.stop();
+      SSPostNotification("onAddUsers", this.currentGroup());
     }.bind(this));
   },
 

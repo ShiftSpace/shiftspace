@@ -61,6 +61,13 @@ var SSConsoleWindow = new Class({
   },
 
 
+  hide: function()
+  {
+    this.parent();
+    this.sendFront();
+  },
+
+
   sendFront: function()
   {
     this.__isBack = false;

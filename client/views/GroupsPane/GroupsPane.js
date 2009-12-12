@@ -16,12 +16,14 @@ var GroupsPane = new Class({
 
     SSAddObserver(this, "onUserLogin", this.onUserLogin.bind(this));
     SSAddObserver(this, "onUserJoin", this.onUserLogin.bind(this));
+    SSAddObserver(this, "onAddUsers", this.onAddUsers.bind(this));
   },
 
 
   hide: function()
   {
     this.parent();
+    this.__addUserMode = false;
     SSPostNotification("onGroupsPaneHide", this);
   },
 
@@ -56,12 +58,14 @@ var GroupsPane = new Class({
 
   onTabSelect: function(evt)
   {
-    if(evt.tabIndex == 2)
+    if(evt.tabIndex == 2 && !this.__addUserMode)
     {
       SSPostNotification("onCreateGroup", this);
     }
     else if(evt.tabIndex != 2)
     {
+      this.__addUserMode = false;
+      // TODO: warn user they are in add user mode - David
       SSPostNotification("onEditGroupHide", this);
     }
   },
@@ -72,6 +76,12 @@ var GroupsPane = new Class({
     SSTableForName("Groups").addView(this.GroupsListView);
     SSTableForName("MyGroups").addView(this.MyGroupsListView);
     SSTableForName("Users").addView(this.InviteUsersListView);
-  }
+  },
 
+
+  onAddUsers: function(group)
+  {
+    this.__addUserMode = true;
+    this.GroupsTabView.selectTab(2);
+  }
 });
