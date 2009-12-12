@@ -224,7 +224,16 @@ var ShiftSpace = new (function() {
       {
         ops["open"].each(Function.comp(
           ShiftSpaceNameTable.asFn(),
-          Function.msg("show")
+          function(view) {
+            if(view['open'])
+            {
+              view['open']();
+            }
+            else
+            {
+              view.show();
+            }
+          }
         ));
       }
 
