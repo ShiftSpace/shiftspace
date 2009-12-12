@@ -67,7 +67,7 @@
 {
   position: absolute;
   top: 0px;
-  left: 162px;
+  left: 158px;
   right: 0px;
   bottom: 0px;
 }
@@ -76,18 +76,14 @@
   Global Shift list view styles
 */
 
-.ShiftListView
+.ShiftListView, .PeopleListView
 {
   /*position: absolute;*/
   top: 0px;
-  right: 6px;
+/*  right: 6px;*/
   bottom: 0px;
   border:1px solid #DDD7D2; /*TODO: use image for gradient border*/
   border-top: none;
-}
-
-.ShiftListView
-{
   overflow-y: auto;
   height: 100%;
   margin-top: 4px;
@@ -355,12 +351,14 @@ ul#FollowingListView, ul#FollowersListView, ul#SearchUsersListView, ul#GroupsLis
    height: 100%;
    overflow-y: scroll;
    margin: 0px;
+   margin-top:4px;
 }
 
 li.PeopleListViewCell, li.GroupListViewCell
 {
    float: left;
    height: 28px;
+   line-height:28px;
    width: 33%;
    border-right: 1px solid #ccc;
    border-bottom: 1px solid #ccc;

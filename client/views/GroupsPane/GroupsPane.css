@@ -1,9 +1,5 @@
 #BrowseGroups
 {
-  position: absolute;
-  top: 6px;
-  width: 100%;
-  height: 100%;
 }
 
 #GroupsPane{
@@ -11,12 +7,12 @@
 
 #GroupsTabView > .SSControlView
 {
-  width: 150px;
+/*  width: 150px; */
 }
 
-#GroupsTabView > .SSContentView
+#GroupsTabView > .SSContentView 
 {
-  left: 152px;
+/*  left: 152px;*/
 }
 
 #FocusedGroup
@@ -348,4 +344,22 @@
 
 .groupItemStatsUsers{
   clear:both;
+}
+
+li.GroupListViewCell .shortName,
+li.GroupListViewCell .longName
+{
+  margin:0 5px;
+}
+
+li.GroupListViewCell .settings
+{
+  width:18px;
+  height:18px;
+  border:none;
+  text-indent:-9999px;
+  background:url(/images/Console/setting.png) 3px 3px no-repeat;
+  margin:6px;
+  float:right;
+  cursor:pointer;
 }
