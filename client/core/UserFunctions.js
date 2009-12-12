@@ -90,3 +90,16 @@ function SSCreateGroup(groupData)
 {
   return SSApp.create("group", groupData);
 }
+
+
+function SSInviteUsersToGroup(groupId, userIds)
+{
+  return SSApp.post({
+    resource: 'group',
+    id: groupId,
+    action: 'inviteusers',
+    data: {
+      users: userIds
+    }
+  });
+}

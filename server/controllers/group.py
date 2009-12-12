@@ -15,6 +15,8 @@ class GroupsController(ResourceController):
                   conditions=dict(method="GET"))
         d.connect(name="groups", route="groups", controller=self, action="groups",
                   conditions=dict(method="GET"))
+        d.connect(name="groupInviteUsers", route="group/:id/inviteusers", controller="self", action="inviteUsers",
+                  conditions=dict(method="POST"))
         return d
 
     @jsonencode
@@ -34,7 +36,8 @@ class GroupsController(ResourceController):
     @exists
     def read(self, id):
         # return only public groups
-        return data(groups.inGroup(int(id)))
+        theGroup = Group.read(id)
+        return data(theGroup.toDict())
 
     @jsonencode
     @exists
@@ -51,3 +54,18 @@ class GroupsController(ResourceController):
         loggedInUser = helper.getLoggedInUser()
         return data([group.toDict() for group in
                      Group.groups(start, end, limit, userId=loggedInUser)])
+
+    @jsonencode
+    @exists
+    @loggedin
+    def inviteUsers(self, id, users):
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        theGroup = Group.read(id)
+        if theUser.isAdminOf(theGroup):
+            users = json.loads(users)
+            for userId in users:
+                Group.inviteUser(userId)
+            return data(theGroup.toDict())
+        else:
+            return error("Operation not permitted. You don't have permission to modify this group", PermissionError)

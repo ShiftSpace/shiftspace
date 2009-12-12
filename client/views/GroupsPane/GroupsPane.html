@@ -80,7 +80,14 @@
                     <li uiclass="PeopleListViewCell"
                         class="SSCell PeopleListViewCell"
                         options="{
-                          properties: ['gravatar', 'userName', 'fullName']
+                          properties: ['gravatar', 'userName', 'fullName'],
+                          actions: [
+                            {
+                              selector: '.checkbox',
+                              target: 'EditGroupView',
+                              method: 'addRemoveUser'
+                            }
+                          ]
                         }">
                         <span class="gravatar"><img width="22"></img></span>
                         <span class="userName"></span>
