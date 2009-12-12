@@ -111,6 +111,14 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/favorites'},
       watches: [
         {
+          events: [{resource:"shift", action:"favorite"}],
+          handlers: [function(shift) { SSApplication().setDocument(this.getName(), shift); }]
+        },
+        {
+          events: [{resource:"shift", action:"unfavorite"}],
+          handlers: [function(shift) { SSApplication().deleteFromCache(shift._id, this.getName()); }]
+        },
+        {
           events: [{resource:"shift", action:"favorite"},
                    {resource:"shift", action:"unfavorite"}],
           handlers: [SSTable.dirtyTheViews]
