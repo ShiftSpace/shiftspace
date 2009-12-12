@@ -366,6 +366,18 @@ li.PeopleListViewCell, li.GroupListViewCell
    border-bottom: 1px solid #ccc;
 }
 
+li.PeopleListViewCell > span, li.GroupListViewCell > span
+{
+   float: left;
+   height: 100%;
+}
+
+li.PeopleListViewCell .userName
+{
+   line-height: 28px;
+   margin-left: 8px;
+}
+
 li.PeopleListViewCell img, li.GroupListViewCell img
 {
    margin-left: 3px;
