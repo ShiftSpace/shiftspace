@@ -194,7 +194,7 @@ class ShiftController(ResourceController):
             return error("Resource is not of type shift", ResourceTypeError)
         from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
-        if shift.isPublic(id) or (shift.canRead(id, loggedInId)):
+        if theUser.canRead(theShift):
             return data(theUser.unfavorite(theShift).toDict())
         else:
             return error("Operation not permitted. You don't have permission to unfavorite this shift.", PermissionError)
