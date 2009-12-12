@@ -227,21 +227,3 @@ span.SSPPTagsroundedCorners:hover{
 .hide{
    display: none;
 }
-
-.SSMinorButton{
-   background: none;
-   border: 0;
-   color: #f63b02;
-   text-decoration: underline;
-   padding:0 5px;
-}
-
-.SSInactiveButton{
-   background: none;
-   border:2px #f63b02 solid;
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   padding:0 5px;
-   font-weight:bold;
-   color: #f63b02;
-}

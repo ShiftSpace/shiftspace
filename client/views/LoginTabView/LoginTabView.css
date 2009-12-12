@@ -6,22 +6,89 @@
 
 #LoginTabView .SSTabPane form
 {
-  margin-top: 10px;
-  margin-left: 10px;
+  border:1px solid #C9CCC4;
+	margin-left:10px;
+	margin-top: 5px;
+	padding:5px 0 33px 10px;
+	width:440px;
+	height: 100px;
+}
+
+#LoginTabView #SSLoginForm{
+	height: 50px;
 }
 
 .LoginTabViewForm input
 {
   display: block;
+  margin: 0 10px 10px 0;
+  width: 210px;
 }
 
 .LoginTabViewForm label
 {
   display: block;
+	padding-top:4px;
+}
+
+.LoginTabViewForm input#SSLocalized
+{
+	width: 80px;
+	float: right;
+}
+
+#SSLoginForm div{
+	float: left;
+}
+
+.LoginTabViewForm #SSLoginFormForgot
+{
+	float: left;
+	width: 210px;
+	margin-right: 10px;
+}
+
+#LoginTabView .SSTabPane #SSForgottenPasswordForm
+{
+	width: 220px;
+	height: 65px;
+}
+
+#LoginTabView .SSTabPane #SSForgottenPasswordForm div
+{
+	width: 200px;
+	margin-bottom: 4px;
+}
+
+.LoginTabViewForm #SSLoginFormSubmit,
+.LoginTabViewForm #SSSignUpFormSubmit,
+.LoginTabViewForm #SSForgottenPasswordFormSubmit
+{
+	float: right;
+	width: 100px;
+}
+
+.LoginTabViewForm #SSSignUpFormSubmit{
+	margin-right: 10px;
+}
+
+.LoginTabViewForm #SSLoginFormForgot{
+	float: left;
+}
+
+.LoginTabViewForm .label
+{
+	padding-top: 4px;
+}
+
+#SSSignUpForm input{
+	margin-right: 0;
 }
 
 #SSSignUpForm fieldset
 {
   border: none;
   float: left;
+  padding: 0;
+  margin: 0 10px 0 0;
 }
