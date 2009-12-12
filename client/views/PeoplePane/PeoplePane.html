@@ -2,7 +2,7 @@
      class="SSTabPane PeoplePane"
      uiclass="PeoplePane"
      outlet="SSConsole">
-     
+                                   
     <div id="PeopleTabView" 
          class="SSTabView SSTabViewSubTabStyle"
          uiclass="SSTabView"
@@ -10,8 +10,8 @@
 
        
         <div class="SSControlView">
-            <div class="SSButton SSActive">Following<span class="count"></span></div>
-            <div class="SSButton">Followers<span class="count"></span></div>
+            <div class="SSButton SSActive">Following<span class="followingCount"></span></div>
+            <div class="SSButton">Followers<span class="followerCount"></span></div>
             <div class="SSButton">Search For Users<span class="count"></span></div>
         </div>
 
@@ -28,7 +28,7 @@
                         options="{
                           properties: ['gravatar', 'userName', 'fullName']
                         }">
-                        <span class="gravatar"><img></img></span>
+                        <span class="gravatar"><img width="22"></img></span>
                         <span class="userName"></span>
                         <span class="fullName"></span>
                     </li>
@@ -43,11 +43,11 @@
                     class="SSListView PeopleListView"
                     outlet="PeoplePane">
                     <li uiclass="PeopleListViewCell"
-                        class="SSCell PeopleListViewCell"
+                  class="SSCell PeopleListViewCell"
                         options="{
                           properties: ['gravatar', 'userName', 'fullName']
                         }">
-                        <span class="gravatar"><img></img></span>
+                        <span class="gravatar"><img width="22"></img></span>
                         <span class="userName"></span>
                         <span class="fullName"></span>
                     </li>
@@ -66,7 +66,7 @@
                         options="{
                           properties: ['gravatar', 'userName', 'fullName']
                         }">
-                        <span class="gravatar"><img></img></span>
+                        <span class="gravatar"><img width="22"></img></span>
                         <span class="userName"></span>
                         <span class="fullName"></span>
                     </li>

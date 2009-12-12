@@ -360,9 +360,26 @@ ul#FollowingListView, ul#FollowersListView, ul#SearchUsersListView, ul#GroupsLis
 li.PeopleListViewCell, li.GroupListViewCell
 {
    float: left;
+   height: 28px;
    width: 33%;
    border-right: 1px solid #ccc;
    border-bottom: 1px solid #ccc;
+}
+
+li.PeopleListViewCell img, li.GroupListViewCell img
+{
+   margin-left: 3px;
+   margin-top: 3px;
+}
+
+li.PeopleListViewCell:nth-child(6n+1), li.GroupListViewCell:nth-child(6n+1), li.PeopleListViewCell:nth-child(6n+2), li.GroupListViewCell:nth-child(6n+2), li.PeopleListViewCell:nth-child(6n+3), li.GroupListViewCell:nth-child(6n+3)
+{
+   background-color: #E3DFD8;
+}
+
+li.PeopleListViewCell:nth-child(6n+4), li.GroupListViewCell:nth-child(6n+4), li.PeopleListViewCell:nth-child(6n+5), li.GroupListViewCell:nth-child(6n+5), li.PeopleListViewCell:nth-child(6n+6), li.GroupListViewCell:nth-child(6n+6)
+{
+   background-color: #F7F2EF;
 }
 
 li.GroupListViewCell .shortName
