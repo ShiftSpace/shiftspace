@@ -65,6 +65,7 @@ var GroupsPane = new Class({
     else if(evt.tabIndex != 2)
     {
       this.__addUserMode = false;
+      this.InviteUsersListView.element.removeClass("Invite");
       // TODO: warn user they are in add user mode - David
       SSPostNotification("onEditGroupHide", this);
     }
@@ -83,5 +84,6 @@ var GroupsPane = new Class({
   {
     this.__addUserMode = true;
     this.GroupsTabView.selectTab(2);
+    this.InviteUsersListView.element.addClass("Invite");
   }
 });

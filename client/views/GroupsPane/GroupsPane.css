@@ -1,9 +1,9 @@
 #BrowseGroups
 {
-  position: absolute;
-  top: 6px;
-  width: 100%;
-  height: 100%;
+   position: absolute;
+   top: 6px;
+   width: 100%;
+   height: 100%;
 }
 
 #GroupsPane{
@@ -11,341 +11,349 @@
 
 #GroupsTabView > .SSControlView
 {
-  width: 150px;
+   width: 150px;
 }
 
 #GroupsTabView > .SSContentView
 {
-  left: 152px;
+   left: 152px;
+}
+
+ul#InviteUsersListView.Invite input[type=checkbox]
+{
+   display: block
+}
+
+ul#InviteUsersListView input[type=checkbox]
+{
+   display: none;
 }
 
 #FocusedGroup
 {
-  background-color: #cfc;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  bottom: 0px;
-  width: 430px;
-  border-right:4px solid #F8F5F2;
-  border-top:4px solid #F8F5F2;
+   background-color: #cfc;
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   bottom: 0px;
+   width: 430px;
+   border-right:4px solid #F8F5F2;
+   border-top:4px solid #F8F5F2;
 }
 
 #SelectGroup
 {
-  background-color: #fcc;
-  position: absolute;
-  top: 0px;
-  left: 430px;
-  bottom: 0px;
-  width: 65%;
-  border-top:8px solid #F8F5F2;
-  border-right:4px solid #F8F5F2;
-  border-left:4px solid #F8F5F2;
-  background:#f7f5f2;
+   background-color: #fcc;
+   position: absolute;
+   top: 0px;
+   left: 430px;
+   bottom: 0px;
+   width: 65%;
+   border-top:8px solid #F8F5F2;
+   border-right:4px solid #F8F5F2;
+   border-left:4px solid #F8F5F2;
+   background:#f7f5f2;
 }
 
 #GroupOverView
 {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  width:306px;
-  right: 150px;
-  bottom: 0px;
-  border-top:4px solid #f8f5f2;
-  border-left:4px solid #f8f5f2;
-  border-right: 1px solid #aaa;
-  background-color: #e3dfdb;
+   position: absolute;
+   left: 0px;
+   top: 0px;
+   width:306px;
+   right: 150px;
+   bottom: 0px;
+   border-top:4px solid #f8f5f2;
+   border-left:4px solid #f8f5f2;
+   border-right: 1px solid #aaa;
+   background-color: #e3dfdb;
 }
 
 .SSGroupLatestItem{
- background:#f7f5f2;
- display:block;
- height:28px;  
+   background:#f7f5f2;
+   display:block;
+   height:28px;  
 }
 
 .SSGroupLatestItem ul{
-  list-style:none;
-  padding:0px;
+   list-style:none;
+   padding:0px;
 }
 
 .SSGroupLatestItem ul li{
-  float:left;
-  margin-right:3px;
-  padding-top:5px;
-  color:#4b423a;
+   float:left;
+   margin-right:3px;
+   padding-top:5px;
+   color:#4b423a;
 }
 
 .SSGroupLatestUser{
-  background:#dcd8d5;
-  height:16px;
-  color:#4b423a;
-  width:60px;
-  position:relative;
-  left:5px;
+   background:#dcd8d5;
+   height:16px;
+   color:#4b423a;
+   width:60px;
+   position:relative;
+   left:5px;
 }
 
 .SSGroupLatestUser img{
-  float:left;
+   float:left;
 }
 
 #SSGroupLatestCount{
-  width: 100%;
-  clear:both;
-  color:#74665a;
-  padding-right:4px;
-  padding-top:5px;
-  padding-left:10px;
-  height:19px;
-  font-size:11px;
-  display:block;
-  border-bottom:1px solid #d2d0ce;
+   width: 100%;
+   clear:both;
+   color:#74665a;
+   padding-right:4px;
+   padding-top:5px;
+   padding-left:10px;
+   height:19px;
+   font-size:11px;
+   display:block;
+   border-bottom:1px solid #d2d0ce;
 }
 
 #SSGroupSummary{
-  height:75px;
-  border-bottom:1px solid #c9ccc4;
-  position:relative;
-  left:8px;
-  width:288px;
-  padding:5px 10px 12px 0px;
-  font-family:helvetica;
+   height:75px;
+   border-bottom:1px solid #c9ccc4;
+   position:relative;
+   left:8px;
+   width:288px;
+   padding:5px 10px 12px 0px;
+   font-family:helvetica;
 }
 
 #SSGroupSummary h1{
-  font-size:14px;
-  font-weight:bold;
+   font-size:14px;
+   font-weight:bold;
 }
 
 .SSGroupSummaryName{
-  color:#f63b02;
-  text-transform:capitalize;
+   color:#f63b02;
+   text-transform:capitalize;
 }
 
 .SSGroupSummaryShort{
-  color:#74665a;
-  text-transform:lowercase;
-  
+   color:#74665a;
+   text-transform:lowercase;
+   
 }
 
 #SSGroupSummary p{
-  color:#74665a;
-  font-size:12px;
-  margin-top:-5px;
-  line-height:18px;
+   color:#74665a;
+   font-size:12px;
+   margin-top:-5px;
+   line-height:18px;
 } 
 
 .SSGroupSummaryMore{
-  color:#f63b02;
-  border-bottom:1px solid #e8b6a5;
+   color:#f63b02;
+   border-bottom:1px solid #e8b6a5;
 }
 
 #SSGroupProperties{
-  float:left;
-  height:92px;
-  width:31px;
-  border-bottom:1px solid #c9ccc4;
-  
+   float:left;
+   height:92px;
+   width:31px;
+   border-bottom:1px solid #c9ccc4;
+   
 }
 
 #SSGroupProperties ul{
-  width:32px;
-  height:90px;
-  padding:0px;
-  margin:0px;
+   width:32px;
+   height:90px;
+   padding:0px;
+   margin:0px;
 }
 
 #SSGroupProperties ul li{
-  position:relative;
-  width:30px;
-  height:30px;
-  text-align:center;
-  list-style:none;
-  border-right:1px solid #c9ccc4;
-  border-bottom:1px solid #c9ccc4; 
+   position:relative;
+   width:30px;
+   height:30px;
+   text-align:center;
+   list-style:none;
+   border-right:1px solid #c9ccc4;
+   border-bottom:1px solid #c9ccc4; 
 }
 
 #SSGroupProperties ul li img{
-  position:relative;
-  top:6px;
-  left:2px;
+   position:relative;
+   top:6px;
+   left:2px;
 }
 
 #GroupAction
 {
-  border-top:4px solid #f8f5f2;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  width: 120px;
-  left:310px;
-  background-color: #ccc;
-  text-align:center;
+   border-top:4px solid #f8f5f2;
+   position: absolute;
+   top: 0px;
+   right: 0px;
+   bottom: 0px;
+   width: 120px;
+   left:310px;
+   background-color: #ccc;
+   text-align:center;
 }
 
 
 #GroupActionShifts{
-  width:58px;
-  height:50px;
-  border:1px solid #c9ccc4;
-  float:left;
-  background:#e3dfdb;
+   width:58px;
+   height:50px;
+   border:1px solid #c9ccc4;
+   float:left;
+   background:#e3dfdb;
 }
 
 #GroupAction h1{
-  font-size:20px;
-  color:#f63b02;
+   font-size:20px;
+   color:#f63b02;
 
 }
 
 #GroupAction p{
-  font-size:12px;
-  color:#74665a;
-  margin-top:-20px;
+   font-size:12px;
+   color:#74665a;
+   margin-top:-20px;
 }
 
 
 #GroupActionUsers{
-  width:58px;
-  height:50px;
-  border:1px solid #c9ccc4;
-  float:left;
-  background:#e3dfdb;
+   width:58px;
+   height:50px;
+   border:1px solid #c9ccc4;
+   float:left;
+   background:#e3dfdb;
 }
 
 #GroupActionButtons{
-  width:119px; 
-  height:126px;
-  background:#e3dfdb;
-  clear:both;
-  border-left:1px solid #c9ccc4;
+   width:119px; 
+   height:126px;
+   background:#e3dfdb;
+   clear:both;
+   border-left:1px solid #c9ccc4;
 }
 
 #GroupActionButtons ul{
-  position:relative;
-  float:left;
-  left:-32px
+   position:relative;
+   float:left;
+   left:-32px
 }
 
 #GroupActionButtons ul li{
-  list-style:none;
-  margin-top:10px;
+   list-style:none;
+   margin-top:10px;
 }
 
 .GroupActionContent{
-  position:relative;
-  top:-5px;
+   position:relative;
+   top:-5px;
 }
 
 .SSGroupsActionButton{
-    background-color: #e3dfdb;
-    color:#74665a;
-    border:2px #b3ada5 solid;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    padding:0px 5px;
-    font-weight:bold;
-    font-size:10px;
-    width:100px;
+   background-color: #e3dfdb;
+   color:#74665a;
+   border:2px #b3ada5 solid;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   padding:0px 5px;
+   font-weight:bold;
+   font-size:10px;
+   width:100px;
 }
 
 #SelectGroupList{
-  width:100%;
-  height:80%;
-  background:#ddd;
-  overflow:auto;
-  background:#f7f5f2;
-  padding:2px 3px;
-  
+   width:100%;
+   height:80%;
+   background:#ddd;
+   overflow:auto;
+   background:#f7f5f2;
+   padding:2px 3px;
+   
 }
 
 #SelectGroupList > .item{
-  border:1px solid #e3dfdb;
-  background:#f7f5f2;
-  height:30px;
-  width:99%;
-  margin-bottom:5px;
-  
+   border:1px solid #e3dfdb;
+   background:#f7f5f2;
+   height:30px;
+   width:99%;
+   margin-bottom:5px;
+   
 }
 
 #SelectGroupFilter{
-  width:100%;
-  height:33px;
+   width:100%;
+   height:33px;
    background:#fff;
    border-top:1px solid #c9ccc4;
-  clear:both;
+   clear:both;
 }
 
 #SelectGroupFilter > .filter_button{
-      background-color: #f63b02;
-      color:fff;
-      border:1px #b52b01 solid;
-      -moz-border-radius: 10px;
-      -webkit-border-radius: 10px;
-      padding:0px 5px;
-      font-weight:bold;
+   background-color: #f63b02;
+   color:fff;
+   border:1px #b52b01 solid;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   padding:0px 5px;
+   font-weight:bold;
 }
 
 .groupItemPermission{
-  float:left;
-  width:30px;
-  height:30px;
-  border-right:1px solid #e3dfdb;
+   float:left;
+   width:30px;
+   height:30px;
+   border-right:1px solid #e3dfdb;
 }
 .groupItemPermission  public{
-  background:url('images/Console/publish-public.gif') no-repeat;
+   background:url('images/Console/publish-public.gif') no-repeat;
 }
 
 .groupItemContent{
-  float:left;
-  border-right:1px solid #e3dfdb;
-  height:30px;
-  width:87%;
+   float:left;
+   border-right:1px solid #e3dfdb;
+   height:30px;
+   width:87%;
 }
 
 .groupItemContent h1{
-  font-size:11px;
-  color:#F63B02;
-  text-transform:uppercase;
-  float:left;
-  padding:0;
+   font-size:11px;
+   color:#F63B02;
+   text-transform:uppercase;
+   float:left;
+   padding:0;
    margin:0;
-  
-  
 }
+
 .groupItemContent h2{
-  font-size:11px;
-  color:#74665A;
-  text-transform:lowercase;
-  float:left;
-  padding-left:4px;
+   font-size:11px;
+   color:#74665A;
+   text-transform:lowercase;
+   float:left;
+   padding-left:4px;
    margin:0;
-  
-  
 }
+
 .groupItemContent p{
-  font-size:11px;
-  color:#74665A;
-  margin-top:-5px;
-  clear:both;
-  padding:0;
-  margin:0;
-  
+   font-size:11px;
+   color:#74665A;
+   margin-top:-5px;
+   clear:both;
+   padding:0;
+   margin:0;
+   
 }
 .groupItemStats{
-  float:right;
-  width:70px;
-  color:#c5c0ba;
-  font-size:10px;
-  text-align:center;
+   float:right;
+   width:70px;
+   color:#c5c0ba;
+   font-size:10px;
+   text-align:center;
 }
 
 .groupItemStatsShifts{
-  border-bottom:1px solid #e3dfdb;
+   border-bottom:1px solid #e3dfdb;
 }
 
 .groupItemStatsUsers{
-  clear:both;
+   clear:both;
 }
