@@ -119,7 +119,7 @@ var SSCell = new Class({
     var target = $(event.target), action = this.actionForNode(target);
     if(action)
     {
-      this.runAction(action);
+      this.runAction(action, event, target);
       return true;
     }
     return false;
@@ -133,7 +133,7 @@ var SSCell = new Class({
       action - an action JSON object
       event - a custom event type.
    */
-  runAction: function(action, event)
+  runAction: function(action, event, node)
   {
     var target = this.getBinding(action.target);
     var method = (target && target[action.method] && target[action.method].bind(target)) || 
@@ -145,7 +145,9 @@ var SSCell = new Class({
       throw (new SSCellError.NoSuchTarget(new Error(), "target " + target + " does not exist."));
     }
     method(this, {
+      action: action,
       listView: this.delegate(),
+      target: node,
       data: this.delegate().dataForCellNode(this.lockedElement()),
       event: event
     });
