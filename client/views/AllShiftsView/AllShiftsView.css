@@ -23,8 +23,9 @@ ul.ShiftListView li.ShiftListViewCell:hover{
 
 ul.ShiftListView li.ShiftListViewCell.selected:hover,
 ul.ShiftListView li.ShiftListViewCell.selected{
-  background-color: #81C49C;
-  border-top-color: #6aa07e;
+  background-color: #C7C3B6;
+  border-top-color: #89867d;
+  color:#464540;
 }
 
 ul.ShiftListView li.ShiftListViewCell.selected:hover+li{
@@ -33,7 +34,7 @@ ul.ShiftListView li.ShiftListViewCell.selected:hover+li{
 
 ul.ShiftListView li.ShiftListViewCell.selected:hover+li,
 ul.ShiftListView li.ShiftListViewCell.selected+li{
-  border-top-color: #6aa07e;   
+  border-top-color: #89867d;   
 }
 
 ul.ShiftListView li.ShiftListViewCell:last-child{
@@ -72,6 +73,7 @@ ul.ShiftListView li.ShiftListViewCell:hover div.draft{
   position: absolute;
   right: 150px;
   top: 0px;
+  font-size: 11px;
 }
 
 .ShiftListView li.ShiftListViewCell div.shiftMeta{
@@ -87,5 +89,5 @@ ul.ShiftListView li.ShiftListViewCell:hover div.draft{
 }
 
 .ShiftListView li.ShiftListViewCell .user{
-  margin-top: 4px;  
+  margin-top: 5px;  
 }

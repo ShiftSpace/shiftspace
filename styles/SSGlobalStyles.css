@@ -169,7 +169,7 @@
 
     .ShiftListView .ShiftListViewCell:nth-child(2n+1)
     {
-      background-color: #E3DFD8;
+      background-color: #f0edeb;
     }
 
     ul.ShiftListView li.ShiftListViewCell:hover
@@ -227,10 +227,8 @@
 
     .ShiftListView .ShiftListViewCell div.userName
     {
-      font-size: 10px;
       color: #4B423A;
-      background-color: #D5D1CE;
-      background-color: #ccc;
+      background-color: #dedad6;
       padding-top: 1px;
       padding-left: 4px;
       padding-right: 4px;
@@ -435,4 +433,39 @@ li.GroupListViewCell .settings
 .leftSideBar input:checked + label
 {
   font-weight:bold;
+}
+
+/* Buttons **************************************/
+
+
+.SSMinorButton{
+   background: none;
+   border: 0;
+   color: #f63b02;
+   text-decoration: underline;
+   padding:0 5px;
+}
+
+.SSInactiveButton{
+   background: none;
+   border:2px #f63b02 solid;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   padding:0 5px;
+   font-weight:bold;
+   color: #f63b02;
+}
+
+.SSMajorButton{
+   background-color: #f63b02;
+   color:fff;
+   border:2px #b52b01 solid;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   padding:0 5px;
+   font-weight:bold;
+}
+
+.hide{
+   display: none;
 }
