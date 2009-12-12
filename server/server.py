@@ -62,7 +62,7 @@ class RootController:
             return self.statusPage(status="err", details="couchdb")
         try:
             db = core.connect()
-            db["_design/validation"]
+            db["_design/users"]
         except:
             return self.statusPage(status="err", details="initdb")
         return self.statusPage()
