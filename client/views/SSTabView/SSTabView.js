@@ -275,7 +275,7 @@ var SSTabView = new Class({
       }
       else
       {
-        var node = this.tabPaneForIndex(idx)
+        var node = this.tabPaneForIndex(idx);
         node.addClass('SSActive');
         this.visibleSubViews(node).each(Function.comp(Function.msg('willShow'), Function.msg('__refresh__')));
       }

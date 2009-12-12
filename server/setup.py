@@ -65,18 +65,24 @@ def sync(createAdmin=True):
         master["shiftspace"] = adminUser
 
     SSUser.all.sync(master)
+    SSUser.all_by_joined.sync(master)
     SSUser.by_name.sync(master)
 
     Follow.following_by_created.sync(master)
+    Follow.following_count.sync(master)
     Follow.followers_by_created.sync(master)
+    Follow.followers_count.sync(master)
 
     Group.all.sync(master)
     Group.by_short_name.sync(master)
     Group.by_long_name.sync(master)
+    Group.by_visible_and_created.sync(master)
 
     Permission.by_user.sync(master)
     Permission.by_group.sync(master)
+    Permission.is_member.sync(master)
     Permission.by_user_and_group.sync(master)
+    Permission.readable_by_user_and_created.sync(master)
     Permission.by_joinable.sync(master)
     Permission.by_readable.sync(master)
     Permission.by_writeable.sync(master)
@@ -89,6 +95,7 @@ def sync(createAdmin=True):
 
     Shift.all.sync(shared)
     Shift.by_user_and_created.sync(shared)
+    Shift.count_by_user_and_published.sync(shared)
     Shift.count_by_domain.sync(shared)
     
     Comment.count_by_shift.sync(shared)

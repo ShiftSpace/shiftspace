@@ -1,0 +1,26 @@
+#SSConsoleWindow
+{
+  position: fixed;
+  right: 50px;
+  bottom: 0px;
+  width: 380px;
+  height: 200px;
+
+  border: 0;
+  overflow: hidden;
+}
+
+.SSConsoleWindowOpen
+{
+   height: 87px;
+}
+
+.SSConsoleWindowFront
+{
+   z-index: 1000000;
+}
+
+.SSConsoleWindowBack
+{
+   z-index: 999999;
+}

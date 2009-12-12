@@ -35,6 +35,18 @@ class Follow(SSDocument):
          }"
         )
 
+    following_count = View(
+        "follow",
+        "function(doc) {              \
+           if(doc.type == 'follow') { \
+             emit(doc.follower, 1);   \
+           }                          \
+         }",
+        "function(keys, values, rereduce) { \
+           return sum(values);              \
+        }"
+        )
+
     following_by_created = View(
         "follow",
         "function(doc) {                                      \
@@ -50,7 +62,19 @@ class Follow(SSDocument):
            if(doc.type == 'follow') {         \
              emit(doc.followee, doc.follower) \
            }                                  \
-         }"                           
+         }"
+        )
+
+    followers_count = View(
+        "follow",
+        "function(doc) {              \
+           if(doc.type == 'follow') { \
+             emit(doc.followee, 1)    \
+           }                          \
+         }",
+        "function(keys, values, rereduce) { \
+           return sum(values);              \
+        }"
         )
 
     followers_by_created = View(
@@ -92,12 +116,5 @@ class Follow(SSDocument):
     # ========================================
 
     def delete(self):
+        db = core.connect()
         del db[Follow.makeId(self.follower, self.followee)]
-        
-
-                    
-        
-
-    
-        
-        

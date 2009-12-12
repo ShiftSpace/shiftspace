@@ -87,6 +87,24 @@ class Permission(SSDocument):
          }"
         )
 
+    is_member = View(
+        "permissions",
+        "function (doc) {                                  \
+           if(doc.type == 'permission' && doc.level > 0) { \
+              emit([doc.userId, doc.groupId], true);       \
+           }                                               \
+         }"
+        )
+
+    readable_by_user_and_created = View(
+        "permissions",
+        "function (doc) {                                      \
+           if(doc.type == 'permission' && doc.level > 0) {     \
+              emit([doc.userId, doc.created, doc.level], doc); \
+           }                                                   \
+         }"
+        )
+
     by_joinable = View(
         "permissions",
         "function (doc) {                                   \
@@ -126,6 +144,16 @@ class Permission(SSDocument):
     # CRUD
     # ========================================
     
+    @classmethod
+    def joinData(cls, permissions, userId=None):
+        from server.models.group import Group
+        groupIds = [permission.groupId for permission in permissions]
+        groups = core.fetch(keys=groupIds)
+        for i in range(len(permissions)):
+            permissions[i]["shortName"] = groups[i]["shortName"]
+            permissions[i]["longName"] = groups[i]["longName"]
+        return permissions
+
     @classmethod
     def create(cls, userId, groupId, otherId, level):
         from server.models.ssuser import SSUser

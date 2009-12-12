@@ -62,7 +62,9 @@ class SSUser(User):
         if userJson.get("password"):
             userJson['password'] = utils.md5hash(userJson['password'])
         if userJson.get("email"):
-            userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % utils.md5hash(userJson["email"])
+            hashedEmail = utils.md5hash(userJson["email"])
+            userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % hashedEmail
+            userJson["gravatarLarge"] = "http://www.gravatar.com/avatar/%s?s=60" % hashedEmail
         newUser = SSUser(**utils.clean(userJson))
         newUser.store(db)
 
@@ -139,6 +141,19 @@ class SSUser(User):
                 if userDict.get(key):
                     del userDict[key]
         return userDict
+
+
+    def info(self):
+        from server.models.follow import Follow
+        from server.models.shift import Shift
+        # TODO: use the bulk API - David 12/10/09
+        result = {}
+        db = core.connect()
+        shared = core.connect("shiftspace/shared")
+        result["followerCount"] = core.value(Follow.followers_count(db, key=self.id)) or 0
+        result["followingCount"] = core.value(Follow.following_count(db, key=self.id)) or 0
+        result["publishedShiftCount"] = core.value(Shift.count_by_user_and_published(shared, key=self.id)) or 0
+        return result
 
     # ========================================
     # Validation
@@ -243,6 +258,16 @@ class SSUser(User):
             return core.objects(results[start:end])
         return Message.joinData(core.objects(results))
 
+    def groups(self, start=None, end=None, limit=25):
+        from server.models.permission import Permission
+        db = core.connect()
+        if not start:
+            start = [self.id]
+        if not end:
+            end = [self.id, {}]
+        results = Permission.readable_by_user_and_created(db, limit=limit)
+        return Permission.joinData(core.objects(results[start:end]))
+
     @shift_join
     def shifts(self, start=None, end=None, limit=25):
         from server.models.shift import Shift
@@ -324,7 +349,10 @@ class SSUser(User):
             end = [self.id, {}]
         results = Follow.following_by_created(core.connect(), limit=limit)
         userIds = core.values(results[start:end])
-        return core.fetch(keys=userIds)
+        users = core.fetch(keys=userIds)
+        for user in users:
+            user["following"] = True
+        return users
 
     def followers(self, start=None, end=None, limit=25):
         from server.models.follow import Follow

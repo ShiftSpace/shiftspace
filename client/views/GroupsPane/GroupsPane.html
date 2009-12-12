@@ -3,141 +3,98 @@
      uiclass="GroupsPane"
      outlet="SSConsole">
 
-  <!-- Starts Groups TabView -->
-  <div id="GroupsTabView"
-       class="SSTabView SSTabViewSubTabStyle"
-       uiclass="SSTabView"
-       outlet="GroupsPane">
+    <!-- Starts Groups TabView -->
+    <div id="GroupsTabView"
+         class="SSTabView SSTabViewSubTabStyle"
+         uiclass="SSTabView"
+         outlet="GroupsPane">
 
-    <div class="SSControlView">
-      <div class="SSButton SSActive">Browse Groups</div>
-      <div class="SSButton">Start New Group</div>
-    </div>
+        <div class="SSControlView">
+            <div class="SSButton SSActive">Your Groups</div>
+            <div class="SSButton">Browse Groups</div>
+            <div class="SSButton">Start New Group</div>
+        </div>
 
-    <!-- Start subtabs -->
-    <div class="SSContentView">
-
-      <!-- Start Browse Groups subtab -->
-      <div id="BrowseGroups" class="SSTabPane">
-        <div id="FocusedGroup">
-          <div id="GroupOverView">
-            <div id="SSGroupProperties">
-              <ul>
-                <li><img src="/images/Console/groups-private.gif"/></li>
-                <li><img src="/images/Console/groups-userimg.gif"/></li>
-                <li><img src="/images/Console/groups-perm.gif"/></li>
-              </ul>
-
-            </div>
-
-            <div id="SSGroupSummary">
-              <h1><span  class="SSGroupSummaryName">New Media Research Studio</span>
-                <span class="SSGroupSummaryShort"> (&amp;nmrs)</span>
-              </h1>
-              <p>Research Tools &amp; Media Environments I NYU class I Fall 2009. This group is used by the students in NYU's New Media Research <span class="SSGroupSummaryMore">more...</span></p>
-            </div>
-            <span id="SSGroupLatestCount">LATEST SHIFTS / <b>400 Total</b></span>
-            <div id="SSGroupLatestShifts">
-              <span class="SSGroupLatestItem">
-                <ul>
-                  <li>
-                    <div class="SSGroupLatestUser"><img src="/images/Console/groups-userimgflorica.gif"/> florica</div>
-                  </li>
-                  <li>
-                    <img src="/images/Console/groups-recent-shift.gif"/>
-                  </li>
-                  <li>
-                    Here is some interesting information.
-                  </li>
+        <!-- Start subtabs -->
+        <div class="SSContentView">
+            <!-- START Your Groups subtab -->
+            <div id="MyGroups" class="SSTabPane">
+                <ul id="MyGroupsListView"
+                    uiclass="SSListView"
+                    class="SSListView PeopleListView"
+                    outlet="GroupsPane">
+                    <li uiclass="GroupListViewCell"
+                        class="SSCell GroupListViewCell"
+                        options="{
+                          properties: ['shortName', 'longName', 'level'],
+                          actions: [
+                            {
+                              selector: '.settings',
+                              target: 'GroupsPane',
+                              method: 'editGroup'
+                            }
+                          ]
+                        }">
+                        <span class="shortName"></span>
+                        <span class="longName"></span>
+                        <button class="settings SSDisplayNone">Settings</button>
+                    </li>
                 </ul>
+            </div>
+            <!-- END Your Groups subtab -->
 
-              </span>
+            <!-- Start Browse Groups subtab -->
+            <div id="BrowseGroups" class="SSTabPane">
+                <ul id="GroupsListView"
+                    uiclass="SSListView"
+                    class="SSListView PeopleListView"
+                    outlet="GroupsPane">
+                    <li uiclass="GroupListViewCell"
+                        class="SSCell GroupListViewCell"
+                        options="{
+                          properties: ['shortName', 'longName', 'level'],
+                          actions: [
+                            {
+                              selector: '.settings',
+                              target: 'GroupsPane',
+                              method: 'editGroup'
+                            }
+                          ]
+                        }">
+                        <span class="shortName"></span>
+                        <span class="longName"></span>
+                        <button class="settings SSDisplayNone">Settings</button>
+                    </li>
+                </ul>
             </div>
-          </div>
-          <div id="GroupAction">
-            <div id="GroupActionShifts">
-              <span class="GroupActionContent">
-                <h1>
-                  400
-                </h1>
-                <p>Shifts</p>
-              </span>
+            <!-- End Browse Groups subtab -->
+
+            <!-- Start Start New Group subtab -->
+            <div id="StartNewGroup"
+                 class="SSTabPane"
+                 outlet="GroupsPane">
+                <ul id="InviteUsersListView"
+                    uiclass="SSListView"
+                    class="SSListView PeopleListView"
+                    outlet="GroupsPane">
+                    <li uiclass="PeopleListViewCell"
+                        class="SSCell PeopleListViewCell"
+                        options="{
+                          properties: ['gravatar', 'userName', 'fullName']
+                        }">
+                        <span class="gravatar"><img width="22"></img></span>
+                        <span class="userName"></span>
+                        <span class="fullName"></span>
+                        <input type="checkbox" class="isMember"></input>
+                    </li>
+                </ul>
             </div>
-            <div id="GroupActionUsers">
-              <span class="GroupActionContent">
-                <h1>
-                  23
-                </h1>
-                <p>Users</p>
-              </span>
-            </div>
-            <div id="GroupActionButtons">
-              <ul>
-                <li> <button id="LeaveGroup" outlet="GroupsPane" class="SSGroupsActionButton">Leave Group</button></li>
-                <li> <button id="InviteFriend" outlet="GroupsPane" class="SSGroupsActionButton">Invite a Friend</button></li>
-                <li> <button id="MessageGroup" outlet="GroupsPane" class="SSGroupsActionButton">Message Group</button></li>
-              </ul>
-            </div>
-          </div>
+            <!-- End Start New group subtab -->
+
         </div>
-        <div id="SelectGroup">
-			<div id="SelectGroupList">
-				<div class="item">
-					<span class="groupItemPermission public"></span>
-					<div class="groupItemContent">
-						<h1>New Media Research Studio</h1><h2>(&amp;NMRS)</h2>
-						<p>Research Tools and Media Environments</p>
-					</div>
-					<div class="groupItemStats">
-						<div class="groupItemStatsShifts">400 Shifts</div>
-						<div class="groupItemStatsUsers">23 Users</div>
-					</div>
-				</div>
-				<div class="item">
-
-				</div>
-				<div class="item">
-
-				</div>
-			</div>
-			<div id="SelectGroupFilter">
-			
-				<button id="SaveShift" class="SSPublishPubButton">Filter</button>
-			</div>
-        </div>
-      </div>
-      <!-- End Browse Groups subtab -->
-
-      <!-- Start Start New Group subtab -->
-      <div id="StartNewGroup" class="SSTabPane">
-	  <div id="NewGroupInfo">
-	      <form id="GroupForm" outlet="GroupsPane">
-                  <div>
-	              <label>Group Name:</label>
-	              <input name="longName" type="text"></input>
-                  </div>
-                  <div>
-	              <label>Group Short Name:</label>
-	              <input name="shortName" type="text"></input>
-                  </div>
-                  <div>
-	              <label>Description:</label>
-	              <textarea name="tagLine"></textarea>
-                  </div>
-	          <input id="CreateGroupButton" type="button" value="Create Group" outlet="GroupsPane"></input>
-	      </form>
-	  </div>
-	  <div id="AddGroupUsers">
-	      <input id="AddUserField" name="AddUserField" type="text" value="Type a user name"></input>
-	      <input id="AddUserButton" name="AddUserButton" type="button" value="Add User"></input>
-	  </div>
-      </div>
-      <!-- End Start New group subtab -->
+        <!-- End subtabs -->
 
     </div>
-    <!-- End subtabs -->
-
-  </div>
-  <!-- End Groups TabView -->
+    <!-- End Groups TabView -->
 
 </div>

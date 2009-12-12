@@ -151,10 +151,17 @@ def objects(results):
         return []
 
 
+def toStr(v):
+    if isinstance(v, basestring):
+        return v
+    else:
+        return json.dumps(v)
+
+
 def toDict(kvs):
     result = {}
     for kv in kvs:
-        result[kv['key']] = {"value":kv['value']}
+        result[toStr(kv['key'])] = {"value":kv['value']}
     return result
 
 
@@ -197,14 +204,19 @@ def fetch(db=None, view=None, keys=None):
     if viewpath == "_all_docs":
         result = []
         for row in rows:
-            if row.get('value'):
+            value = row.get('value')
+            if value and not value.get("deleted"):
                 result.append(row['doc'])
             else:
                 result.append(None)
         return result
     else:
         kvs = toDict(rows)
-        return [((kvs.get(key) and kvs.get(key)["value"]) or None) for key in keys]
+        result = []
+        for key in keys:
+            key = toStr(key)
+            result.append((kvs.get(key) and kvs.get(key)["value"]) or None)
+        return result
 
 
 def replicate(source, target="shiftspace/master"):

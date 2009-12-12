@@ -161,8 +161,10 @@ class RootController:
         except Exception:
             return self.statusPage(status="err", details="couchdb")
         corebuilder.run()
-        compiler = sandalphon.SandalphonCompiler("builds/compiledViews", "mydev")
-        compiler.compile(inputFile="client/views/SSConsole/SSConsole.html")
+        compiler = sandalphon.SandalphonCompiler()
+        compiler.compile(inputFile="client/ShiftSpace.html",
+                         outDir="builds/compiledViews",
+                         envFile="mydev")
         preprocessor = preprocess.SSPreProcessor(project="sandbox", env="mydev")
         preprocessor.preprocess(input="client/ShiftSpace.js",
                                 output="builds/shiftspace.sandbox.js")
@@ -207,8 +209,10 @@ class RootController:
         For developers. Serves the developer greasemonkey user script for deployment testing.
         """
         corebuilder.run()
-        compiler = sandalphon.SandalphonCompiler("builds/compiledViews", "dev")
-        compiler.compile(inputFile="client/views/SSConsole/SSConsole.html")
+        compiler = sandalphon.SandalphonCompiler()
+        compiler.compile(inputFile="client/ShiftSpace.html",
+                         outDir="builds/compiledViews",
+                         envFile="dev")
         preprocessor = preprocess.SSPreProcessor(project="shiftspace", env="dev")
         preprocessor.preprocess(input="client/ShiftSpace.js",
                                 output="builds/shiftspace.dev.user.js")

@@ -450,7 +450,7 @@ function SSFavoriteShift(id)
   return SSApp.post({
     resource: "shift",
     id: id,
-    action: "favorite",
+    action: "favorite"
   });
 }
 
@@ -459,7 +459,7 @@ function SSUnfavoriteShift(id)
   return SSApp.post({
     resource: "shift",
     id: id,
-    action: "unfavorite",
+    action: "unfavorite"
   });
 }
 

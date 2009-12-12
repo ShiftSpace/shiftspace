@@ -194,7 +194,7 @@ class ShiftController(ResourceController):
             return error("Resource is not of type shift", ResourceTypeError)
         from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
-        if shift.isPublic(id) or (shift.canRead(id, loggedInId)):
+        if theUser.canRead(theShift):
             return data(theUser.unfavorite(theShift).toDict())
         else:
             return error("Operation not permitted. You don't have permission to unfavorite this shift.", PermissionError)
@@ -231,7 +231,7 @@ class ShiftController(ResourceController):
             if theUser.canRead(theShift):
                 from server.models.comment import Comment
                 Comment.create(theUser.id, theShift.id, theData["text"], theData.get("subscribe") or False)
-                return ack
+                return data(Shift.read(theShift.id, theUser.id).toDict())
             else:
                 return error("Operation not permitted. You don't have permission to comment on this shift.", PermissionError)
         else:

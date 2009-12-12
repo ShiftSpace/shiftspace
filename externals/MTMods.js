@@ -431,11 +431,35 @@ Sortables.implement({
 });
 
 
-function formToHash(formEl)
+function SSFormToHash(formEl)
 {
   var inputs = formEl.getElements("input[name]"), result = $H();
   inputs.each(function(input) {
     result[input.getProperty("name")] = input.getProperty("value");
   });
   return result;
+}
+
+function SSTemplate(el, props)
+{
+  $H(props).each(function(value, key) {
+    var attr = "text",
+        target = el.getElement("."+key);
+    if(!target) return;
+    if(target.get('tag') == "input")
+    {
+      switch(el.getProperty("type"))
+      {
+        case "text":
+           attr = "value";
+           break;
+        case "checkbox":
+           attr = "checked";
+           break;
+        default:
+           attr = "value";
+      }
+    }
+    if(target) target.set(attr, value);
+  }, this);
 }

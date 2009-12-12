@@ -44,6 +44,14 @@ class Group(SSDocument):
            }                           \
          }")
 
+    by_visible_and_created = View(
+        "groups",
+        "function(doc) {               \
+           if(doc.type == 'group' && doc.visible) {   \
+             emit(doc.created, doc);       \
+           }                           \
+         }")
+
     by_short_name = View(
         "groups",
         "function(doc) {               \
@@ -63,6 +71,17 @@ class Group(SSDocument):
     # ========================================
     # Database
     # ========================================
+
+    @classmethod
+    def joinData(cls, groups, userId=None):
+        from server.models.permission import Permission
+        db = core.connect()
+        keys = [[userId, group.id] for group in groups]
+        perms = core.fetch(db, view=Permission.by_user_and_group, keys=keys)
+        for i in range(len(groups)):
+            if perms[i]:
+                groups[i]["level"] = perms[i]["level"]
+        return groups
 
     @classmethod
     def db(cls, groupId):
@@ -123,6 +142,18 @@ class Group(SSDocument):
     @classmethod
     def shortNamesToIds(cls, shortNames):
         return [group["_id"] for group in core.fetch(view=Group.by_short_name, keys=shortNames)]
+
+    @classmethod
+    def groups(cls, start=None, end=None, limit=25, userId=None):
+        results = Group.by_visible_and_created(core.connect(), limit=25)
+        if start and not end:
+            return Group.joinData(core.objects(results[start:]), userId)
+        if not start and end:
+            return Group.joinData(core.objects(results[:end]), userId)
+        if start and end:
+            print "%s ======================================== " % start
+            return Group.joinData(core.objects(results[start:end]), userId)
+        return Group.joinData(core.objects(results), userId)
 
     # ========================================
     # Instance Methods

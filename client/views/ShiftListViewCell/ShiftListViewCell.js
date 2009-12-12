@@ -124,7 +124,7 @@ var ShiftListViewCell = new Class({
           p.realize();
         }
         evt.stop();
-      }.bind(this))
+      }.bind(this));
     }
 
     var comments = clone.getElement(".comments");
@@ -138,7 +138,7 @@ var ShiftListViewCell = new Class({
         this.unlock();
         SSPostNotification("showComments", id);
         evt.stop();
-      }.bind(this))
+      }.bind(this));
     }
 
     return clone;
@@ -150,6 +150,7 @@ var ShiftListViewCell = new Class({
     var el = this.lockedElement();
     el.getElement(".unread").set("text", (unread) ? "unread" : "read");
   },
+
   
   setRead: function(read)
   {
@@ -163,6 +164,7 @@ var ShiftListViewCell = new Class({
       el.addClass("unread");
     }
   },
+
   
   setSummary: function(summary)
   {
@@ -187,17 +189,20 @@ var ShiftListViewCell = new Class({
     }
   },
   
+
   setCreatedStr: function(createdStr)
   {
     var el = this.lockedElement();
     el.getElement('.date').set('text', createdStr);
   },
   
+
   setModifiedStr: function(modifiedStr)
   {
     var el = this.lockedElement();
     el.getElement('.date').set('text', modifiedStr);
   },
+
 
   setSpace: function(space)
   {

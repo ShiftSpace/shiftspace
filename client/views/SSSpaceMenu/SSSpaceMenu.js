@@ -1,5 +1,6 @@
 // ==Builder==
 // @uiclass
+// @framedView
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSFramedView
 // ==/Builder==
@@ -126,7 +127,6 @@ var SSSpaceMenu = new Class({
   onInterfaceLoad: function(ui)
   {
     this.parent(ui);
-    this.element.setProperty('id', 'SpaceMenu');
     this.element.addClass('SSDisplayNone');
   }.asPromise(),
   

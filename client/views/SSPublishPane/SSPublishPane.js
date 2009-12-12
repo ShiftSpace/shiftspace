@@ -11,7 +11,7 @@
 */
 var SSPublishPane = new Class({
 
-  Extends: SSFramedView,
+  Extends: SSView,
   name: "SSPublishPane",
 
   defaults: function() {
@@ -24,6 +24,7 @@ var SSPublishPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
     SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
     SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
@@ -31,6 +32,29 @@ var SSPublishPane = new Class({
   },
   
   
+  willHide: function()
+  {
+    var lv = this.currentListView();
+    if(lv)
+    {
+      lv.uncheckAll(true);
+    }
+  },
+  
+
+  'open': function()
+  {
+    this.delegate().show();
+    this.multiView().showViewByName(this.name);
+  },
+
+
+  'close': function()
+  {
+    this.delegate().hide();
+  },
+
+
   onShiftListViewShow: function(evt)
   {
     var listView = evt.listView;
@@ -38,7 +62,7 @@ var SSPublishPane = new Class({
     {
       this.setCurrentListView(listView);
       this.update();
-      this.show();
+      this['open']();
     }
   },
 
@@ -48,7 +72,8 @@ var SSPublishPane = new Class({
     var listView = evt.listView;
     if(listView == this.currentListView())
     {
-      this.hide();
+      this['close']();
+      this.setCurrentListView(null);
     }
   },
   
@@ -73,7 +98,7 @@ var SSPublishPane = new Class({
   
   onShiftSelect: function(evt)
   {
-    if(!this.isVisible()) this.show();
+    if(!this.isVisible()) this['open']();
     this.setCurrentListView(evt.listView);
     this.update();
   },
@@ -82,7 +107,7 @@ var SSPublishPane = new Class({
   onShiftDeselect: function(evt)
   {
     this.setCurrentListView(evt.listView);
-    if(this.count() == 0) this.hide();
+    if(this.count() == 0) this['close']();
     this.update();
   },
   
@@ -112,7 +137,7 @@ var SSPublishPane = new Class({
       var indices = this.currentListView().checkedItemIndices();
       this.currentListView().uncheck(indices);
       var p = new Promise(selectedShifts.map(SSDeleteShift));
-      p.op(this.hide.bind(this));
+      p.op(this['close'].bind(this));
       p.realize();
     }
   },
@@ -266,34 +291,11 @@ var SSPublishPane = new Class({
     window.open(ShiftSpace.info().server.urlJoin("proxy", selectedShifts[0]));
   },
   
-  /* SSFramedView Stuff ============================ */
-  
-  awake: function() {},
-  
-  
-  onInterfaceLoad: function(ui)
+
+  awake: function()
   {
-    this.parent(ui);
-    // TODO: Not super intuitive need someway to specify this automatically - David
-    this.element.setProperty('id', 'SSPublishPane');
-    this.element.addClass("SSDisplayNone");
-  }.asPromise(),
-  
-  
-  onContextActivate: function(context)
-  {
-    if(context == this.element.contentWindow)
-    {
-      this.mapOutletsToThis();
-      this.attachEvents();
-    }
-  },
-  
-  
-  buildInterface: function()
-  {
-    this.parent();
-    SSPostNotification('onPublishPaneLoad', this);
-    this.setIsLoaded(true);
+    this.mapOutletsToThis();
+    this.attachEvents();
   }
+
 });

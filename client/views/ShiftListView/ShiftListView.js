@@ -25,6 +25,7 @@ var ShiftListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     SSAddObserver(this, 'onNewShiftSave', this.onCreate.bind(this));
     SSAddObserver(this, 'onShiftHide', this.onHide.bind(this));
     SSAddObserver(this, 'onUserLogout', this.uncheckAll.bind(this));
@@ -111,22 +112,22 @@ var ShiftListView = new Class({
   },
   
   
-  uncheck: function(indices)
+  uncheck: function(indices, noEvent)
   {
     indices = $splat(indices);
     var cell = this.cell();
     indices.each(function(idx, i) {
       var cellNode = this.cellNodeForIndex(idx);
       cell.lock(cellNode);
-      cell.uncheck();
+      cell.uncheck(noEvent);
       cell.unlock();
     }, this);
   },
 
 
-  uncheckAll: function()
+  uncheckAll: function(noEvent)
   {
-    this.uncheck(this.checkedItemIndices());
+    this.uncheck(this.checkedItemIndices(), noEvent);
   },
   
   

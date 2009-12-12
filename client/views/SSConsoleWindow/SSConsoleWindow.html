@@ -1,0 +1,23 @@
+<div id="SSConsoleWindow"
+     class="SSConsoleWindow SSDisplayNone"
+     uiclass="SSConsoleWindow">
+
+    <div id="SSConsoleWindowDrag"></div>
+
+    <!-- START SSConsoleWindowMultiView -->
+    <div class="SSConsoleWindowBody">
+        <button id="SSConsoleWindowClose" outlet="SSConsoleWindow">X</button>
+        <div id="SSConsoleWindowMultiView"
+             class="SSMultiView"
+             uiclass="SSMultiView"
+             outlet="SSConsoleWindow">
+            <?view:SSPublishPane?>
+            <?view:PeopleDetailView?>
+            <?view:GroupDetailView?>
+            <?view:EditGroupView?>
+            <?view:SSCommentPane?>
+        </div>
+    </div>
+    <!-- END SSConsoleWindowMultiView -->
+
+</div>

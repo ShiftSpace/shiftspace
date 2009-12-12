@@ -1,14 +1,12 @@
 #BrowseGroups
 {
   position: absolute;
-  top: 12px;
+  top: 6px;
   width: 100%;
   height: 100%;
 }
 
 #GroupsPane{
-  background:#f8f5f2;
-  border-top:4px solid #f8f5f2;
 }
 
 #GroupsTabView > .SSControlView
@@ -19,12 +17,6 @@
 #GroupsTabView > .SSContentView
 {
   left: 152px;
-  /*-moz-box-shadow:0 0 10px #BEB9B3 inset;*/
-}
-
-#GroupsTabView.SSTabViewSubTabStyle > .SSControlView > .SSButton 
-{
-  padding: 8px;
 }
 
 #FocusedGroup
@@ -55,7 +47,6 @@
 
 #GroupOverView
 {
-
   position: absolute;
   left: 0px;
   top: 0px;

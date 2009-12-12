@@ -34,6 +34,7 @@ class User(SSDocument):
     bio = TextField()
     url = TextField()
     gravatar = TextField()
+    gravatarLarge = TextField()
     password = TextField()
     streams = ListField(TextField())
     preferences = DictField()
@@ -50,6 +51,14 @@ class User(SSDocument):
            }                        \
          }")
 
+    all_by_joined = View(
+        "users",
+        "function(doc) {            \
+           if(doc.type == 'user') { \
+             emit(doc.created, doc);    \
+           }                        \
+         }")
+
     by_name = View(
         "users",
         "function(doc) {              \
@@ -57,6 +66,36 @@ class User(SSDocument):
              emit(doc.userName, doc); \
            }                          \
          }")
+
+    # ========================================
+    # Class Methods
+    # ========================================
+
+    @classmethod
+    def users(cls, start=None, end=None, limit=25, groupId=None):
+        results = User.all_by_joined(core.connect(), limit=25)
+        if start and not end:
+            users = core.objects(results[start:])
+        elif not start and end:
+            users = core.objects(results[:end])
+        elif start and end:
+            users = core.objects(results[start:end])
+        else:
+            users = core.objects(results)
+        if groupId:
+            from server.models.permission import Permission
+            keys = [[user.id, groupId] for user in users]
+            isMembers = core.fetch(
+                core.connect(),
+                view=Permission.is_member,
+                keys=keys
+                )
+            for i in range(len(users)):
+                if isMembers[i]:
+                    users[i]["member"] = True
+                else:
+                    users[i]["member"] = False
+        return users
 
     # ========================================
     # Validation

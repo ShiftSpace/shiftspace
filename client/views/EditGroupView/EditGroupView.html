@@ -1,0 +1,56 @@
+<div id="EditGroupView"
+     class="SSSubView"
+     uiclass="EditGroupView"
+     options="{
+       delegate:'SSConsoleWindow'
+     }">
+
+    <h id="CreateTitle" outlet="EditGroupView">Start A New Group</h>
+    <h id="EditTitle" outlet="EditGroupView">Edit Group</h>
+
+    <form id="GroupForm" outlet="EditGroupView">
+        <div>
+            <label>Group Name<span>*</span>:</label>
+            <input class="longName" type="text" name="longName"></input>
+        </div>
+
+        <div>
+            <label>Group Handle<span>*</span>(keep it short):</label>
+            <input class="shortName" type="text" name="shortName"></input>
+        </div>
+
+        <div>
+            <label>Tag Line<span>*</span>:</label>
+            <input class="tagLine" type="text" name="tagLine"></input>
+        </div>
+        
+        <div>
+            <label>URL:</label>
+            <input class="url" type="text" name="url"></input>
+        </div>
+
+        <div>
+            <label>Is visible to people who have not been invited:</label>
+            <input class="visible" type="checkbox" name="isVisible" checked="true"></input>
+        </div>
+    </form>
+
+    <div class="userCount">
+        <span class="adminCount"></span> Admins + <span class="memberCount"></span> Members (click to edit)
+    </div>
+
+    <ul id="GroupMemberListView"
+        class="SSListView"
+        uiclass="SSListView">
+        <li class="SSCell"
+            uiclass="SSCell">
+        </li>
+    </ul>
+
+    <div>
+        <button id="InviteUsers" outlet="EditGroupView">Invite User</button>
+        <button id="CancelAction" outlet="EditGroupView">Cancel</button>
+        <button id="CreateGroup" outlet="EditGroupView">Create</button>
+        <button id="SaveGroup" outlet="EditGroupView">Save</button>
+    </div>
+</div>

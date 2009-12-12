@@ -13,7 +13,8 @@ var SSFramedView = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      location: 'views'
+      location: 'views',
+      path: null
     });
   },
   
@@ -44,7 +45,15 @@ var SSFramedView = new Class({
   onStyleLoad: function(css)
   {
     if(css) Sandalphon.addStyle(css);
-    var url = String.urlJoin('client', this.options.location, this.name, this.name);
+    var url;
+    if(this.options.path)
+    {
+      url = String.urlJoin(this.options.path, this.name+'Main');
+    }
+    else
+    {
+      url = String.urlJoin('client', this.options.location, this.name, this.name);      
+    }
     var p = Sandalphon.load(url);
     this.onInterfaceLoad(p);
   }.asPromise(),
@@ -52,13 +61,19 @@ var SSFramedView = new Class({
   
   onInterfaceLoad: function(ui) 
   {
+    var generateElement = false;
     this.ui = ui;
-    this.element = new IFrame({
-      'class': this.name+'Frame',
-      events: {
-        load: this.buildInterface.bind(this)
-      }
-    });
+
+    if(!this.element)
+    {
+      generateElement = true;
+      this.element = new IFrame({
+        'class': this.name+'Frame',
+        events: {
+          load: this.buildInterface.bind(this)
+        }
+      });
+    }
     
     var frag = Sandalphon.convertToFragment(this.ui['interface']);
     var id = frag.getProperty('id');
@@ -66,9 +81,16 @@ var SSFramedView = new Class({
     {
       this.element.setProperty('id', id);
     }
-    
-    SSSetControllerForNode(this, this.element);
-    this.element.injectInside(document.body);
+
+    if(generateElement)
+    {
+      SSSetControllerForNode(this, this.element);
+      this.element.injectInside(document.body);
+    }
+    else
+    {
+      this.buildInterface();
+    }
   }.asPromise(),
   
   
@@ -84,12 +106,6 @@ var SSFramedView = new Class({
   },
   
   
-  forwardEvents: function()
-  {
-    
-  },
-  
-  
   buildInterface: function()
   {
     var context = this.contentWindow();
@@ -100,6 +116,7 @@ var SSFramedView = new Class({
       evt = new Event(evt);
       SSFireEvent('keyup', evt);
     });
+
     context.addEvent('keydown', function(evt) {
       evt = new Event(evt);
       SSFireEvent('keydown', evt); 

@@ -12,7 +12,8 @@ from server.couchdb.lucene_design import LuceneDefinition
 
 def reload_models():
     import server
-    for m in [server.models.ssuser, 
+    for m in [server.models.core,
+              server.models.ssuser, 
               server.models.shift, 
               server.models.group, 
               server.models.permission, 

@@ -54,6 +54,18 @@ var SSMultiView = new Class({
       });
     }
   },
+
+
+  awake: function()
+  {
+    // FIXME: confusing between this and SSView.subViews() - David 12/6/09
+    var svs = this.getSubViews(), self = this;
+    svs.each(function(sv) {
+      sv.multiView = function() {
+        return self;
+      };
+    });
+  },
   
   
   hide: function()
@@ -145,10 +157,12 @@ var SSMultiView = new Class({
       throw new SSMultiViewError.OutOfBounds(new Error(), "index of view out of bounds.");
     }
     
+    var oldIndex = this.getIndexOfCurrentView();
+    if(oldIndex == idx) return;
+
     // hide the old view
     var el = this.getRawCurrentView();
-    var controller = SSControllerForNode(el);
-    var oldIndex = this.getIndexOfCurrentView();
+    var controller = SSControllerForNode(el);    
     if(controller)
     {
       controller.hide();
@@ -176,7 +190,6 @@ var SSMultiView = new Class({
   
   showViewByName: function(name)
   {
-    SSLog('showViewByName ' + name, SSLogForce);
     if(!this.element.getElementById(name))
     {
       throw new SSMultiViewError.NoSuchSubView(new Error(), this.element.getProperty('id') + "'s controller has no subview with name " + name + ".");
