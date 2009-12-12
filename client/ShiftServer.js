@@ -151,6 +151,14 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/following'},
       watches: [
         {
+          events: [{resource:"user", action:"follow"}],
+          handlers: [function(user) { SSApplication().setDocument(this.getName(), user); }]
+        },
+        {
+          events: [{resource:"user", action:"unfollow"}],
+          handlers: [function(user) { SSApplication().deleteFromCache(user._id, this.getName()); }]
+        },
+        {
           events: [{resource:"user", action:"follow"},
                    {resource:"user", action:"unfollow"}],
           handlers: [SSTable.dirtyTheViews]

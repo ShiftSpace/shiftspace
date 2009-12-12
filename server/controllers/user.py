@@ -190,7 +190,7 @@ class UserController(ResourceController):
             return error("You cannot follow yourself.", FollowError)
         else:
             theUser.follow(followed)
-            return ack
+            return data(followed.toDict())
 
     @jsonencode
     @exists
@@ -202,7 +202,7 @@ class UserController(ResourceController):
             return error("You cannot unfollow yourself.", FollowError)
         else:
             theUser.unfollow(followed)
-            return ack
+            return data(followed.toDict())
 
     @jsonencode
     @exists
