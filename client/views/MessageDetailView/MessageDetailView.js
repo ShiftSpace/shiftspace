@@ -20,6 +20,7 @@ var MessageDetailView = new Class({
 
   showMessage: function(message)
   {
+    this.setCurrentMessage(message);
     switch(message.meta)
     {
       case 'comment':
@@ -74,7 +75,7 @@ var MessageDetailView = new Class({
   },
   
   
-  setCurrentmessage: function(currentMessage)
+  setCurrentMessage: function(currentMessage)
   {
     this.__currentMessage = currentMessage;
   }

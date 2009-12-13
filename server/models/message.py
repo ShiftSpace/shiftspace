@@ -71,7 +71,7 @@ class Message(SSDocument):
             return messages
 
     @classmethod
-    def create(cls, fromId, toId, title, text, meta="generic"):
+    def create(cls, fromId, toId, title, text, meta="generic", content=None):
         """
         Create a message from a user to another. The message
         can come from "shiftspace" which represents a system message.
@@ -87,6 +87,7 @@ class Message(SSDocument):
             "title": text,
             "text": text,
             "meta": meta,
+            "content": content or {}
             }
         newMessage = Message(**utils.clean(json))
         newMessage.store(db)
