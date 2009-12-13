@@ -225,26 +225,42 @@ class Permission(SSDocument):
     # ========================================
 
     @classmethod
-    def joinable(cls, userId):
+    def joinable(cls, userId, dbname=True):
         from server.models.group import Group
         db = core.connect()
-        return [Group.db(id) for id in core.values(Permission.by_joinable(db, key=userId))]
+        ids = core.values(Permission.by_joinable(db, key=userId))
+        if dbname:
+            return [Group.db(id) for id in ids]
+        else:
+            return ids
 
     @classmethod
-    def readable(cls, userId):
+    def readable(cls, userId, dbname=True):
         from server.models.group import Group
         db = core.connect()
-        return [Group.db(id) for id in core.values(Permission.by_readable(db, key=userId))]
+        ids = core.values(Permission.by_readable(db, key=userId))
+        if dbname:
+            return [Group.db(id) for id in ids]
+        else:
+            return ids
 
     @classmethod
-    def writeable(cls, userId):
+    def writeable(cls, userId, dbname=True):
         from server.models.group import Group
         db = core.connect()
-        return [Group.db(id) for id in core.values(Permission.by_writeable(db, key=userId))]
+        ids = core.values(Permission.by_writeable(db, key=userId))
+        if dbname:
+            return [Group.db(id) for id in ids]
+        else:
+            return ids
 
     @classmethod
-    def adminable(cls, userId):
+    def adminable(cls, userId, dbname=True):
         from server.models.group import Group
         db = core.connect()
-        return [Group.db(id) for id in core.values(Permission.by_adminable(db, key=userId))]
+        ids = core.values(Permission.by_adminable(db, key=userId))
+        if dbname:
+            return [Group.db(id) for id in ids]
+        else:
+            return ids
 

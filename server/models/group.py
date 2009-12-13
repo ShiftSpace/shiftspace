@@ -177,7 +177,15 @@ class Group(SSDocument):
 
     def inviteUser(self, aUser, otherUser):
         from server.models.permission import Permission
+        from server.models.message import Message
         Permission.create(aUser.id, self.id, otherUser.id, 0)
+        json = {
+            "fromId": aUser.id,
+            "toId": otherUser.id,
+            "text": "%s invited you to join the group %s!" % (aUser.userName, self.longName),
+            "meta": "invite"
+            }
+        Message.create(**json)
 
 
     def join(self, aUser):
