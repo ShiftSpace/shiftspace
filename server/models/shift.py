@@ -466,11 +466,12 @@ class Shift(SSDocument):
                 dbs = user.readable()
                 dbs.append(SSUser.db(user.id))
                 dbsStr = " ".join(dbs)
-                queryString = queryString + ((" OR (draft:false%s)" % ((len(dbs) > 0 and (" AND dbs:%s" % dbsStr)) or "")))
+                queryString = queryString + ((" OR (draft:false%s)" % ((len(dbs) > 0 and (" AND dbs:(%s)" % dbsStr)) or "")))
             queryString = queryString + ")"
             try:
                 rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
-            except:
+            except Exception, err:
+                print err
                 return []
         elif byFollowing:
             from server.models.follow import Follow
@@ -478,18 +479,20 @@ class Shift(SSDocument):
             # when p2p we can tag the shift as a follow shift when we get it
             results = Follow.following_by_created(core.connect())
             following = " ".join(core.values(results[[user.id]:[user.id, {}]]))
-            queryString = "(draft:false AND private:false AND createdBy:%s) OR dbs:%s" % (following, SSUser.db(user.id))
+            queryString = "(draft:false AND private:false AND createdBy:(%s)) OR dbs:(%s)" % (following, SSUser.db(user.id))
             print queryString
             try:
                 rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
-            except:
+            except Exception, err:
+                print err
                 return []
         elif byGroups:
             queryString = "dbs:%s" % [Group.db(group) for group in user.readable()]
             print queryString
             try:
                 rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
-            except:
+            except Exception, err:
+                print err
                 return []
         shifts = [row["doc"] for row in rows]
         return Shift.joinData(shifts, ((user and user.id) or None))
