@@ -20,7 +20,7 @@ var MessageDetailView = new Class({
 
   showMessage: function(message)
   {
-    
+    this.open();
   },
 
 

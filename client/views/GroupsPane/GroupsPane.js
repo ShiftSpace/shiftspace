@@ -32,9 +32,6 @@ var GroupsPane = new Class({
   {
     this.mapOutletsToThis();
     this.attachEvents();
-    [this.GroupsListView, this.MyGroupsListView].each(function(lv) {
-      lv.addEvent("onRowClick", this.handleRowClick.bind(this));
-    }, this);
   },
 
 
@@ -52,6 +49,9 @@ var GroupsPane = new Class({
 
   attachEvents: function()
   {
+    [this.GroupsListView, this.MyGroupsListView].each(function(lv) {
+      lv.addEvent("onRowClick", this.handleRowClick.bind(this));
+    }, this);
     this.GroupsTabView.addEvent("tabSelected", this.onTabSelect.bind(this));
   },
 

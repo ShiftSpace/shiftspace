@@ -20,6 +20,19 @@ var InboxPane = new Class({
   awake: function(args)
   {
     this.mapOutletsToThis();
+    this.attachEvents();
+  },
+
+
+  attachEvents: function()
+  {
+    this.MessagesListView.addEvent("onRowClick", this.handleRowClick.bind(this));
+  },
+
+
+  handleRowClick: function(evt)
+  {
+    if(!evt.handled) SSPostNotification("onShowMessage", evt.data);
   },
 
 
