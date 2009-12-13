@@ -2,11 +2,42 @@
      class="SSSubView"
      uiclass="MessageDetailView"
      options="{
-       delegate:'SSConsoleWindow'
-     }">
+              delegate:'SSConsoleWindow'
+              }">
 
     <div>
-        Message Detail View
+        <div class="header">
+            <div>
+                <label>Sender:</label>
+                <span class="user"></span>
+                <span class="createdStr"></span>
+            </div>
+
+            <div>
+                <label>Title:</label>
+                <span class="title"></span>
+            </div>
+        </div>
+
+        <div class="body SSMultiView"
+             uiclass="SSMultiView">
+            <div class="SSSubView SSActive">
+                <button>Join</button>
+                <button>Details</button>
+            </div>
+            <div class="SSSubView">
+                Broken Shift
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div>
+                <button class="previous">Previous</button>
+            </div>
+            <div>
+                <button class="next">Next</button>
+            </div>            
+        </div>
     </div>
 
 </div>
