@@ -20,6 +20,17 @@ var MessageDetailView = new Class({
 
   showMessage: function(message)
   {
+    switch(message.meta)
+    {
+      case 'comment':
+        this.MessageBodyMultiView.showViewByName("CommentSubView");
+        break;
+      case 'invite':
+        this.MessageBodyMultiView.showViewByName("InviteSubView");
+        break;
+      default:
+        break;
+    }
     this.open();
   },
 
@@ -39,7 +50,14 @@ var MessageDetailView = new Class({
 
   attachEvents: function()
   {
-    
+    this.MDVJoinGroup.addEvent("click", function(evt) {
+      var p = SSJoinGroup(this.currentMessage().content._id);
+      p.realize();
+    }.bind(this));
+
+    this.MDVGroupDetails.addEvent("click", function(evt) {
+      //SSPostNotification("onShowGroup", SSGroupInfo(this.currentMessage().content._id));
+    }.bind(this));
   },
 
 
