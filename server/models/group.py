@@ -151,7 +151,6 @@ class Group(SSDocument):
         if not start and end:
             return Group.joinData(core.objects(results[:end]), userId)
         if start and end:
-            print "%s ======================================== " % start
             return Group.joinData(core.objects(results[start:end]), userId)
         return Group.joinData(core.objects(results), userId)
 
@@ -183,7 +182,10 @@ class Group(SSDocument):
             "fromId": aUser.id,
             "toId": otherUser.id,
             "text": "%s invited you to join the group %s!" % (aUser.userName, self.longName),
-            "meta": "invite"
+            "meta": "invite",
+            "content": {
+                "_id": self.id
+                }
             }
         Message.create(**json)
 

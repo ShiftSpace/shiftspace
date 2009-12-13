@@ -24,6 +24,7 @@ class Message(SSDocument):
     text = TextField()
     read = BooleanField(default=False)
     meta = TextField()
+    content = DictField()
 
     # ========================================
     # Views
