@@ -1,4 +1,4 @@
-from server.utils.utils import *
+import server.utils.utils as utils
 from server.utils.errors import *
 from server.utils.decorators import *
 from server.utils.returnTypes import *
@@ -59,13 +59,15 @@ class GroupsController(ResourceController):
     @exists
     @loggedin
     def inviteUsers(self, id, users):
+        from server.models.ssuser import SSUser
         loggedInUser = helper.getLoggedInUser()
-        theUser = SSUser.read(loggedInUser)
+        groupAdmin = SSUser.read(loggedInUser)
         theGroup = Group.read(id)
-        if theUser.isAdminOf(theGroup):
-            users = json.loads(users)
-            for userId in users:
-                Group.inviteUser(userId)
+        if groupAdmin.isAdminOf(theGroup):
+            db = core.connect()
+            users = SSUser.all(db, keys=json.loads(users))
+            for user in users:
+                groupAdmin.inviteUser(theGroup, user)
             return data(theGroup.toDict())
         else:
             return error("Operation not permitted. You don't have permission to modify this group", PermissionError)

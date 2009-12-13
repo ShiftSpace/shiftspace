@@ -404,3 +404,10 @@ class SSUser(User):
         if self.isSubscribed(aShift):
             del db["user:%s" % self.id]
 
+    # ========================================
+    # Groups
+    # ========================================
+
+    def inviteUser(self, group, user):
+        return group.inviteUser(self, user)
+
