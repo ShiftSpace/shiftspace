@@ -419,7 +419,7 @@ class Shift(SSDocument):
         if not self.hasThread():
             return []
         db = core.connect(Comment.db(self.id))
-        return core.objects(Comment.by_created(db, limit=limit))
+        return Comment.joinData(core.objects(Comment.by_created(db, limit=limit)))
 
 
     def hasThread(self):

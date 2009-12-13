@@ -11,12 +11,12 @@
 
 #GroupsTabView > .SSControlView
 {
-   width: 150px;
+/*  width: 150px; */
 }
 
-#GroupsTabView > .SSContentView
+#GroupsTabView > .SSContentView 
 {
-   left: 152px;
+/*  left: 152px;*/
 }
 
 ul#InviteUsersListView.Invite input[type=checkbox]
@@ -355,5 +355,23 @@ ul#InviteUsersListView input[type=checkbox]
 }
 
 .groupItemStatsUsers{
-   clear:both;
+  clear:both;
+}
+
+li.GroupListViewCell .shortName,
+li.GroupListViewCell .longName
+{
+  margin:0 5px;
+}
+
+li.GroupListViewCell .settings
+{
+  width:18px;
+  height:18px;
+  border:none;
+  text-indent:-9999px;
+  background:url(/images/Console/setting.png) 3px 3px no-repeat;
+  margin:6px;
+  float:right;
+  cursor:pointer;
 }
