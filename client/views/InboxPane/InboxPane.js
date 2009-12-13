@@ -24,6 +24,13 @@ var InboxPane = new Class({
   },
 
 
+  hide: function()
+  {
+    this.parent();
+    SSPostNotification("onHideMessage");
+  },
+
+
   attachEvents: function()
   {
     this.MessagesListView.addEvent("onRowClick", this.handleRowClick.bind(this));

@@ -88,7 +88,14 @@ class Message(SSDocument):
             }
         newMessage = Message(**utils.clean(json))
         newMessage.store(db)
+        # replicate the message to shiftspace/shared
+        # so that we can get user messages and system
+        # messages
         return newMessage
+
+    @classmethod
+    def read(cls, id, userId=None):
+        pass
 
     # ========================================
     # Instance Methods
@@ -99,9 +106,14 @@ class Message(SSDocument):
         Mark a message as read.
         """
         db = core.connect(SSUser.messagesDb(self.toId))
+        # TODO: all messages are unread, if a message is read we create document signifying that
         self.read = value
         self.store(db)
         return self
+
+
+    def isRead(self):
+        pass
 
 
     def delete(self, id):
