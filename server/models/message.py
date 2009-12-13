@@ -21,6 +21,7 @@ class Message(SSDocument):
     type = TextField(default="message")
     fromId = TextField()
     toId = TextField()
+    title = TextField()
     text = TextField()
     read = BooleanField(default=False)
     meta = TextField()
@@ -70,7 +71,7 @@ class Message(SSDocument):
             return messages
 
     @classmethod
-    def create(cls, fromId, toId, text, meta="generic"):
+    def create(cls, fromId, toId, title, text, meta="generic"):
         """
         Create a message from a user to another. The message
         can come from "shiftspace" which represents a system message.
@@ -83,6 +84,7 @@ class Message(SSDocument):
         json = {
             "fromId": fromId,
             "toId": toId,
+            "title": text,
             "text": text,
             "meta": meta,
             }

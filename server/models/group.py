@@ -181,6 +181,7 @@ class Group(SSDocument):
         json = {
             "fromId": aUser.id,
             "toId": otherUser.id,
+            "title": "%s invited you to join the group %s!" % (aUser.userName, self.longName),
             "text": "%s invited you to join the group %s!" % (aUser.userName, self.longName),
             "meta": "invite",
             "content": {

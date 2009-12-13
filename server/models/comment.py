@@ -163,6 +163,7 @@ class Comment(SSDocument):
                     json = {
                         "fromId": userId,
                         "toId": subscriber,
+                        "title": "%s just commented on %s shift!" % (theUser.userName, astr),
                         "text": "%s just commented on %s shift!" % (theUser.userName, astr),
                         "meta": "comment"
                         }
