@@ -186,6 +186,12 @@ class SSUser(User):
             return other.createdBy == self.id or self.isAdmin()
 
 
+    def canJoin(self, group):
+        from server.models.permission import Permission
+        perm = Permission.readByUserAndGroup(self.id, group.id)
+        return (perm and perm.level == 0)
+
+
     def canComment(self, theShift):
         if self.isAdmin():
             return True
@@ -410,4 +416,7 @@ class SSUser(User):
 
     def inviteUser(self, group, user):
         return group.inviteUser(self, user)
+
+    def join(self, group):
+        group.join(self)
 

@@ -103,3 +103,12 @@ function SSInviteUsersToGroup(groupId, userIds)
     }
   });
 }
+
+function SSJoinGroup(groupId)
+{
+  return SSApp.post({
+    resource: 'group',
+    id: groupId,
+    action: 'join'
+  });
+}

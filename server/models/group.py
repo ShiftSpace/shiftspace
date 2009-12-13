@@ -189,7 +189,8 @@ class Group(SSDocument):
 
 
     def join(self, aUser):
-        thePermission = Permission.readByUserAndGroup(aUser.id, group.id)
+        from server.models.permission import Permission
+        thePermission = Permission.readByUserAndGroup(aUser.id, self.id)
         if thePermission and thePermission.level == 0:
             db = core.connect()
             thePermission.level = 1

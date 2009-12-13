@@ -37,12 +37,22 @@ var GroupDetailView = new Class({
 
   attachEvents: function()
   {
-    
+    this.JoinGroup.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      this.onJoinGroup(SSJoinGroup(this.currentGroup._id));
+    }.bind(this));
   },
+
+
+  onJoinGroup: function(group)
+  {
+    SSLog("onJoinGroup", SSLogForce);
+  }.asPromise(),
 
 
   awake: function()
   {
+    this.mapOutletsToThis();
     this.attachEvents();
   },
 

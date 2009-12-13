@@ -17,6 +17,8 @@ class GroupsController(ResourceController):
                   conditions=dict(method="GET"))
         d.connect(name="groupInviteUsers", route="group/:id/inviteusers", controller=self, action="inviteUsers",
                   conditions=dict(method="POST"))
+        d.connect(name="groupJoin", route="group/:id/join", controller=self, action="join",
+                  conditions=dict(method="POST"))
         return d
 
     @jsonencode
@@ -71,3 +73,19 @@ class GroupsController(ResourceController):
             return data(theGroup.toDict())
         else:
             return error("Operation not permitted. You don't have permission to modify this group", PermissionError)
+
+    @jsonencode
+    @exists
+    @loggedin
+    def join(self, id):
+        from server.models.ssuser import SSUser
+        theGroup = Group.read(id)
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        if theUser.canJoin(theGroup):
+            theUser.join(theGroup)
+            return data(theGroup.toDict())
+        else:
+            return error("Operation not permitted. You don't have permission to join this group.", PermissionError)
+
+    # leave
