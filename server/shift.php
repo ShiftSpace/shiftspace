@@ -9,8 +9,13 @@ class ShiftController {
  
   public function create($request) {
     //create a shift in the database.
+	global $current_user;
     $data = flatten(json_decode(file_get_contents("php://input"), true));
     extract($data);
+    
+    $createdBy = $current_user->ID;
+    $created = date("m/d/y : H:i:s",time());
+
     $query = $this->db->prepare("INSERT INTO shift (createdBy,
                                                     href,
                                                     space_name,
@@ -38,6 +43,7 @@ class ShiftController {
                           ':modified'=>$modified,
                           ':publishData_publishTime'=>$publishdData_publishTime, 
                           ':content'=>$content));
+    
     $id = $this->db->lastInsertId();
     return json_encode($this->_read($id));
   }
@@ -59,6 +65,7 @@ class ShiftController {
     extract($request);
     $data = flatten(json_decode(file_get_contents("php://input"), true));
     extract($data);
+    
     $query = $this->db->prepare("UPDATE shift
                                  SET createdBy=:createdBy,
                                      href=:href,
