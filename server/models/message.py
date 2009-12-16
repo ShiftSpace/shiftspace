@@ -114,6 +114,7 @@ class Message(SSDocument):
                 }
         else:
             del db[Message.makeReadId(self.id, self.toId)]
+        core.replicate(SSUser.messageDb(self.toId), "shiftspace/shared")
         return self
 
 
