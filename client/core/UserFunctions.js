@@ -112,3 +112,23 @@ function SSJoinGroup(groupId)
     action: 'join'
   });
 }
+
+
+function SSMarkMessageRead(messageId)
+{
+  return SSApp.post({
+    resource: 'message',
+    id: messageId,
+    action: 'read'
+  });
+}
+
+
+function SSMarkMessageUnread(messageId)
+{
+  return SSApp.post({
+    resource: 'message',
+    id: messageId,
+    action: 'unread'
+  });
+}

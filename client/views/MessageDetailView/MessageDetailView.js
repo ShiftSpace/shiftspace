@@ -17,6 +17,18 @@ var MessageDetailView = new Class({
     SSAddObserver(this, 'onHideMessage', this['close'].bind(this));
   },
 
+  
+  currentMessage: function()
+  {
+    return this.__currentMessage;
+  },
+  
+  
+  setCurrentMessage: function(currentMessage)
+  {
+    this.__currentMessage = currentMessage;
+  },
+
 
   showMessage: function(message)
   {
@@ -66,18 +78,5 @@ var MessageDetailView = new Class({
   {
     this.mapOutletsToThis();
     this.attachEvents();
-  },
-
-
-  currentMessage: function()
-  {
-    return this.__currentMessage;
-  },
-  
-  
-  setCurrentMessage: function(currentMessage)
-  {
-    this.__currentMessage = currentMessage;
   }
-
 });

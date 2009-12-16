@@ -43,6 +43,14 @@ class GroupsController(ResourceController):
 
     @jsonencode
     @exists
+    def info(self, id):
+        # TODO: bulk call - David 12/13/2009
+        # get member count
+        # get admin count
+        pass
+
+    @jsonencode
+    @exists
     def update(self, id):
         pass
 
