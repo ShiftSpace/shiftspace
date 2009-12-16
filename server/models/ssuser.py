@@ -256,13 +256,16 @@ class SSUser(User):
     def messages(self, start=None, end=None, limit=25):
         from server.models.message import Message
         results = Message.by_created(core.connect(SSUser.messagesDb(self.id)), limit=limit)
+        messages = []
         if start and not end:
-            return core.objects(results[start:])
-        if not start and end:
-            return core.objects(results[:end])
-        if start and end:
-            return core.objects(results[start:end])
-        return Message.joinData(core.objects(results))
+            messages = core.objects(results[start:])
+        elif not start and end:
+            message = core.objects(results[:end])
+        elif start and end:
+            messages = core.objects(results[start:end])
+        else:
+            messages = core.objects(results)
+        return Message.joinData(messages, userId=self.id)
 
     def groups(self, start=None, end=None, limit=25):
         from server.models.permission import Permission

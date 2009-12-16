@@ -23,7 +23,6 @@ class Message(SSDocument):
     toId = TextField()
     title = TextField()
     text = TextField()
-    read = BooleanField(default=False)
     meta = TextField()
     content = DictField()
 
@@ -45,15 +44,20 @@ class Message(SSDocument):
     # ========================================
     
     @classmethod
-    def joinData(cls, messages):
+    def joinData(cls, messages, userId=None):
         single = False
         if type(messages) != list:
             single = True
             messages = [messages]
-        ids = [message['_id'] for message in messages]
+
+        ids = [message["_id"] for message in messages]
 
         userIds = [message["fromId"] for message in messages]
         users = core.fetch(keys=userIds)
+
+        if userId:
+            readStatuses = core.fetch(db=core.connect("shiftspace/shared"),
+                                      keys=[Message.makeReadId(id, userId) for id in ids])
 
         for i in range(len(messages)):
             if (userIds[i]):
@@ -64,6 +68,8 @@ class Message(SSDocument):
                     messages[i]["gravatar"] = (users[i]["gravatar"] or "images/default.png")
                     messages[i]["userName"] = users[i]["userName"]
             messages[i]["modifiedStr"] = utils.pretty_date(utils.futcstr(messages[i]["modified"]))
+            if userId:
+                messages[i]["read"] = (readStatuses[i] != None)
 
         if single:
             return messages[0]
@@ -72,14 +78,7 @@ class Message(SSDocument):
 
     @classmethod
     def create(cls, fromId, toId, title, text, meta="generic", content=None):
-        """
-        Create a message from a user to another. The message
-        can come from "shiftspace" which represents a system message.
-        System messages are store in the messages database. Local
-        inboxes are merges of messages and user_x/messages.
-        """
         from server.models.ssuser import SSUser
-
         db = core.connect(SSUser.messagesDb(toId))
         json = {
             "fromId": fromId,
@@ -91,37 +90,38 @@ class Message(SSDocument):
             }
         newMessage = Message(**utils.clean(json))
         newMessage.store(db)
-        # replicate the message to shiftspace/shared
-        # so that we can get user messages and system
-        # messages
+        core.replicate(SSUser.messageDb(toId), "shiftspace/shared")
         return newMessage
 
     @classmethod
     def read(cls, id, userId=None):
         pass
 
+    @classmethod
+    def makeReadId(cls, msgId, userId):
+        return "message:%s:%s" % (userId, msgId)
+    
     # ========================================
     # Instance Methods
     # ========================================
 
     def markRead(self, value=True):
-        """
-        Mark a message as read.
-        """
         db = core.connect(SSUser.messagesDb(self.toId))
-        # TODO: all messages are unread, if a message is read we create document signifying that
-        self.read = value
-        self.store(db)
+        if value:
+            db[Message.makeReadId(self.id, self.toId)] = {
+                msgId: self.id,
+                toId: self.toId
+                }
+        else:
+            del db[Message.makeReadId(self.id, self.toId)]
         return self
 
 
     def isRead(self):
-        pass
+        db = core.connect("shiftspace/shared")
+        return db.get(Message.makeReadId(self.id, self.toId)) != None
 
 
     def delete(self, id):
-        """
-        Delete a message.
-        """
         db = core.connect(SSUser.messagesDb(self.toId))
         del db[id]
