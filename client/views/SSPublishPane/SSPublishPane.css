@@ -213,17 +213,3 @@ span.SSPPTagsroundedCorners:hover{
 #SSPublishPaneStatus #SSPublishButtons{
    float: right;
 }
-
-.SSPublishPubButton{
-   background-color: #f63b02;
-   color:fff;
-   border:2px #b52b01 solid;
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   padding:0 5px;
-   font-weight:bold;
-}
-
-.hide{
-   display: none;
-}
