@@ -41,6 +41,9 @@ var MessageDetailView = new Class({
       case 'invite':
         this.MessageBodyMultiView.showViewByName("InviteSubView");
         break;
+      case 'follow':
+        this.MessageBodyMultiView.showViewByName("FollowSubView");
+        break;
       default:
         break;
     }
