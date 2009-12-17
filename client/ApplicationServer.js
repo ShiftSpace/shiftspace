@@ -145,7 +145,8 @@ var ApplicationServer = new Class({
    */
   updateCache: function(docs, name)
   {
-    var cache = this.cache(), name = (name) ? name : 'global';
+    var cache = this.cache();
+    name = (name) ? name : 'global';
     if(!cache[name]) cache[name] = {};
     if($type(docs) != 'array') docs = $splat(docs);
     docs.each(this.setDocument.partial(this, name));
@@ -522,7 +523,7 @@ var ApplicationServer = new Class({
     p.op(function(value) {
       if(this.noErr(value))
       {
-        var rsrcSpec = {resource:'shift', method:'create'};
+        var rsrcSpec = {resource:resource, method:'create'};
         this.updateCache(value, (options && options.local));
         this.notifyWatchers(rsrcSpec, value);
         return value;
