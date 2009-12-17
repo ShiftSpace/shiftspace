@@ -40,15 +40,17 @@ var PeopleDetailView = new Class({
   attachEvents: function()
   {
     this.element.getElement(".follow").addEvent("click", function() {
-      this.toggleFollowButtons(
+      this.update(
+        true,
         true,
         SSFollowUser(this.currentUser.userName)
       );
     }.bind(this));
 
     this.element.getElement(".unfollow").addEvent("click", function() {
-      this.toggleFollowButtons(
+      this.update(
         false,
+        true,
         SSUnfollowUser(this.currentUser.userName)
       );
     }.bind(this));
@@ -61,7 +63,7 @@ var PeopleDetailView = new Class({
     this.currentUser = userData;
     this.element.getElement(".gravatarLarge").setProperty("src", userData.gravatarLarge);
     SSTemplate(this.element, $H(userData).erase("gravatarLarge"));
-    this.toggleFollowButtons(userData.following);
+    this.update(userData.following, false);
     this.showUserInfo(SSUserInfo(userData.userName));
   },
 
@@ -72,17 +74,19 @@ var PeopleDetailView = new Class({
   }.asPromise(),
 
 
-  toggleFollowButtons: function(isFollowing)
+  update: function(isFollowing, postNotification)
   {
     if(isFollowing)
     {
       this.element.getElement(".follow").addClass("SSDisplayNone");
       this.element.getElement(".unfollow").removeClass("SSDisplayNone");
+      if(postNotification) SSPostNotification("onFollow");
     }
     else
     {
       this.element.getElement(".follow").removeClass("SSDisplayNone");
       this.element.getElement(".unfollow").addClass("SSDisplayNone");
+      if(postNotification) SSPostNotification("onUnfollow");
     }
   }.asPromise()
 });

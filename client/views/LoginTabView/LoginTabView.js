@@ -134,7 +134,7 @@ var LoginTabView = new Class({
 
   signUpFormSubmitCallback: function(userData)
   {
-    this.MainTabView.selectTabByName('AllShiftsView');
+    //SSPostNotification("onSignUp");
   }.asPromise(),
   
 

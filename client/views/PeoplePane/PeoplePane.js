@@ -16,6 +16,13 @@ var PeoplePane = new Class({
     SSAddObserver(this, "onUserLogin", this.onUserLogin.bind(this));
     SSAddObserver(this, "onUserJoin", this.onUserLogin.bind(this));
     SSAddObserver(this, "onUserLogout", this.onUserLogout.bind(this));
+
+    SSAddObserver(this, "onFollow", function() {
+      this.showCounts(SSUserInfo(ShiftSpaceUser.getUserName()));
+    }.bind(this));
+    SSAddObserver(this, "onUnfollow", function() {
+      this.showCounts(SSUserInfo(ShiftSpaceUser.getUserName()));
+    }.bind(this));
   },
 
 
