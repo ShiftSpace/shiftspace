@@ -375,12 +375,12 @@ class SSUser(User):
 
     def follow(self, other):
         from server.models.follow import Follow
-        Follow.create(self.id, other.id)
+        Follow.create(self, other)
         return self
 
     def unfollow(self, other):
         from server.models.follow import Follow
-        follow = Follow.read(self.id, other.id)
+        follow = Follow.read(self, other)
         follow.delete()
         return self
 

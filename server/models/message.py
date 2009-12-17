@@ -90,7 +90,7 @@ class Message(SSDocument):
             }
         newMessage = Message(**utils.clean(json))
         newMessage.store(db)
-        core.replicate(SSUser.messageDb(toId), "shiftspace/shared")
+        core.replicate(SSUser.messagesDb(toId), "shiftspace/shared")
         return newMessage
 
     @classmethod
