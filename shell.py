@@ -8,6 +8,7 @@ from server.models.permission import Permission
 from server.models.favorite import Favorite
 from server.models.comment import Comment
 from server.models.follow import Follow
+from server.models.message import Message
 from server.couchdb.lucene_design import LuceneDefinition
 
 def reload_models():
@@ -18,7 +19,8 @@ def reload_models():
               server.models.group, 
               server.models.permission, 
               server.models.favorite, 
-              server.models.comment, 
+              server.models.comment,
+              server.models.message,
               server.couchdb.lucene_design]:
         reload(m)
 

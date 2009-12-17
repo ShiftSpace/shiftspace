@@ -8,7 +8,7 @@ from server.models.message import Message
 
 
 class MessageController(ResourceController):
-    def routes(self, id):
+    def routes(self, d):
         d.connect(name="messageCreate", route="message", controller=self, action="create",
                   conditions=dict(method="POST"))
         d.connect(name="messageRead", route="message/:id/read", controller=self, action="markRead",
@@ -30,10 +30,22 @@ class MessageController(ResourceController):
     @exists
     @loggedin
     def markRead(self, id):
-        pass
+        loggedInUser = helper.getLoggedInUser()
+        theMessage = Message.read(id, userId=loggedInUserId)
+        if theMessage != None:
+            theMessage.markRead(True)
+            return data(Message.read(id, loggedInUser).toDict())
+        else:
+            return error("Operation not permitted. You don't have permission to mark that message", PermissionError)
 
     @jsonencode
     @exists
     @loggedin
     def markUnread(self, id):
-        pass
+        loggedInUser = helper.getLoggedInUser()
+        theMessage = Message.read(id, userId=loggedInUserId)
+        if theMessage != None:
+            theMessage.markRead(False)
+            return data(Message.read(id, loggedInUser).toDict())
+        else:
+            return error("Operation not permitted. You don't have permission to mark that message", PermissionError)

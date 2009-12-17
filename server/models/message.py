@@ -95,7 +95,12 @@ class Message(SSDocument):
 
     @classmethod
     def read(cls, id, userId=None):
-        pass
+        db = core.connect("shiftspace/shared")
+        theMessage = Message.load(db, id)
+        if theMessage == None and userId:
+            db = core.connect(SSUser.messagesDb(userId))
+            theMessage = Message.load(db, id)
+        return Message.joinData(theMessage, userId)
 
     @classmethod
     def makeReadId(cls, msgId, userId):
@@ -106,15 +111,17 @@ class Message(SSDocument):
     # ========================================
 
     def markRead(self, value=True):
+        from server.models.ssuser import SSUser
         db = core.connect(SSUser.messagesDb(self.toId))
         if value:
-            db[Message.makeReadId(self.id, self.toId)] = {
-                msgId: self.id,
-                toId: self.toId
-                }
+            if not self.isRead():
+                db[Message.makeReadId(self.id, self.toId)] = {
+                    "msgId": self.id,
+                    "toId": self.toId
+                    }
         else:
             del db[Message.makeReadId(self.id, self.toId)]
-        core.replicate(SSUser.messageDb(self.toId), "shiftspace/shared")
+        core.replicate(SSUser.messagesDb(self.toId), "shiftspace/shared")
         return self
 
 

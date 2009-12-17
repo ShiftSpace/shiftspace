@@ -27,6 +27,7 @@ from utils.returnTypes import *
 from controllers.user import UserController
 from controllers.shift import ShiftController
 from controllers.group import GroupsController
+from controllers.message import MessageController
 
 
 version = "1.0"
@@ -308,9 +309,10 @@ def initAppRoutes():
     Initialize the actual application routes.
     """
     d = cherrypy.dispatch.RoutesDispatcher()
-    user = UserController(d)
-    shift = ShiftController(d)
-    group = GroupsController(d)
+    UserController(d)
+    ShiftController(d)
+    GroupsController(d)
+    MessageController(d)
     return d
 
 
