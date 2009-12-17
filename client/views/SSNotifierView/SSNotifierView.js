@@ -27,6 +27,10 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
     
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
+
+    SSAddObserver(this, 'onMessageRead', function() {
+      this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
+    }.bind(this));
   },
   
   
@@ -157,11 +161,7 @@ var SSNotifierView = new Class({
   {
     if (ShiftSpace.User.isLoggedIn())
     {
-      var p = SSApp.get({
-        resource:'user/'+ShiftSpaceUser.getUserName()+'/messages'
-      });
-      
-      this.updateMessageCount(p);
+      this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
     }
     else
     {
@@ -169,6 +169,7 @@ var SSNotifierView = new Class({
     }
   },
   
+
   onConsoleShow: function()
   {
     this.graph.cancel(true);
@@ -280,14 +281,15 @@ var SSNotifierView = new Class({
     }
   }.asPromise(),
   
-  updateMessageCount: function(countp)
+
+  updateMessageCount: function(count)
   {
     if(this.SSMessage)
     {
-      if (countp.length > 0)
+      if (count > 0)
       {
         this.SSMessage.show();
-        this.SSShowMessage.set('text',countp.length);
+        this.SSShowMessage.set('text', count);
       }
       else
       {
@@ -296,6 +298,7 @@ var SSNotifierView = new Class({
     }
   }.asPromise(),
   
+
   attachEvents: function()
   {
     var context = this.contentWindow();

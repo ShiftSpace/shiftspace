@@ -71,7 +71,7 @@ class Message(SSDocument):
            if(doc.type == 'message-read') { \
              emit(doc.toId, 1);             \
            }                                \
-         }"
+         }",
         "function(keys, values, rereduce) { \
            return sum(values);              \
          }"

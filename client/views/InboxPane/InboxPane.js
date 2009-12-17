@@ -11,6 +11,7 @@ var InboxPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     SSAddObserver(this, "onUserLogin", this.onUserLogin.bind(this));
     SSAddObserver(this, "onUserJoin", this.onUserLogin.bind(this));
     SSAddObserver(this, "onUserLogout", this.onUserLogout.bind(this));
@@ -45,6 +46,7 @@ var InboxPane = new Class({
       {
         var p = SSMarkMessageRead(evt.data._id);
         p.realize();
+        SSPostNotification("onMessageRead");
       }
       SSPostNotification("onShowMessage", evt.data);
     }

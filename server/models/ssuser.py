@@ -433,5 +433,6 @@ class SSUser(User):
         syscount = core.value(Message.system_count(db)) or 0
         tocount = core.value(Message.count_by_user(db)) or 0
         readcount = core.value(Message.read_count_by_user(db)) or 0
+        print "syscount %s, tocount %s, readcount %s" % (syscount, tocount, readcount)
         return (syscount+tocount)-readcount
 

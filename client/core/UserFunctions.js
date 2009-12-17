@@ -86,6 +86,16 @@ function SSUserInfo(userName)
 }
 
 
+function SSUserUnreadCount(userName)
+{
+  return SSApp.get({
+    resource: 'user',
+    id: userName,
+    action: 'unreadcount'
+  });
+}
+
+
 function SSCreateGroup(groupData)
 {
   return SSApp.create("group", groupData);

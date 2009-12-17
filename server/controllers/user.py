@@ -24,6 +24,8 @@ class UserController(ResourceController):
                   conditions=dict(method="DELETE"))
         d.connect(name="userMessages", route="user/:userName/messages", controller=self, action="messages",
                   conditions=dict(method="GET"))
+        d.connect(name="userUnreadCount", route="user/:userName/unreadcount", controller=self, action="unreadCount",
+                  conditions=dict(method="GET"))
         d.connect(name="userFeed", route="user/:userName/feed", controller=self, action="feed",
                   conditions=dict(method="GET"))
         d.connect(name="userShifts", route="user/:userName/shifts", controller=self, action="shifts",
@@ -239,6 +241,18 @@ class UserController(ResourceController):
             return data([message.toDict() for message in otherUser.messages(start=start, end=end, limit=limit)])
         else:
             return error("You do not have permission to view this user's messages.", PermissionError)
+
+    @jsonencode
+    @exists
+    @loggedin
+    def unreadCount(self, userName):
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        otherUser = SSUser.readByName(userName)
+        if loggedInUser == otherUser.id or theUser.isAdmin():
+            return data(theUser.unreadCount())
+        else:
+            return error("You do not have permission to view this user's unread count.", PermissionError)
 
     @jsonencode
     @exists
