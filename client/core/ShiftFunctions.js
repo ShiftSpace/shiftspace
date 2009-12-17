@@ -230,12 +230,17 @@ function SSSaveNewShift(shift)
     content: shift
   };
 
+  // remove _id and space from shift
+  // TODO: might want to refactor this to be a little less hacky - David
+  var oldId = shift._id;
+  delete shift._id;
+  delete shift.space;
+
   var p = SSApp.create('shift', params);
   $if(SSApp.noErr(p),
       function(noErr) {
         var newShift = p.value(),
             newId = newShift._id,
-            oldId = shift._id,
             instance = space.getShift(oldId);
         newShift.created = 'Just posted';
 
@@ -280,6 +285,11 @@ function SSSaveShift(shift)
     space: {name: shift.space.name, version: space.attributes().version}
   };
 
+  // remove _id and space from shift
+  // TODO: might want to refactor this to be a little less hacky - David
+  delete shift._id;
+  delete shift.space;
+
   var p = SSApp.update('shift', shift._id, params);
   $if(SSApp.noErr(p),
       function() {
@@ -287,6 +297,9 @@ function SSSaveShift(shift)
       },
       function() {
       });
+}
+function SSSaveShiftById(shiftId)
+{
 }
 
 /*

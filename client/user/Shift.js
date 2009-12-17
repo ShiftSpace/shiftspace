@@ -137,6 +137,7 @@ var ShiftSpaceShift = new Class({
   save: function()
   {
     this.getParentSpace().updateShift(this);
+    // TODO: confusing, onShiftSave triggers a dead code path - David
     this.fireEvent('onShiftSave', this.getId());
   },
 
