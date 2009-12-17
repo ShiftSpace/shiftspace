@@ -55,6 +55,7 @@ def sync(createAdmin=True):
     from models.comment import Comment
     from models.favorite import Favorite
     from models.follow import Follow
+    from models.message import Message
     Lucene = core.lucene()
 
     # master ---------------------------------
@@ -93,6 +94,10 @@ def sync(createAdmin=True):
     # shared ---------------------------------
     shared = core.connect("shiftspace/shared")
 
+    Message.count_by_user.sync(shared)
+    Message.system_count.sync(shared)
+    Message.read_count_by_user.sync(shared)
+    
     Shift.all.sync(shared)
     Shift.by_user_and_created.sync(shared)
     Shift.count_by_user_and_published.sync(shared)

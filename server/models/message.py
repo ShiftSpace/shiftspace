@@ -39,6 +39,42 @@ class Message(SSDocument):
          }"
         )
 
+    count_by_user = View(
+        "messages",
+        "function(doc) {               \
+           if(doc.type == 'message') { \
+             emit(doc.toId, 1);        \
+           }                           \
+         }",
+        "function(keys, values, rereduce) { \
+           return sum(values);              \
+         }"
+        )
+
+    system_count = View(
+        "messages",
+        "function(doc) {               \
+           if(doc.type == 'message' && doc.fromId == 'shiftspace') { \
+             emit(doc.fromId, 1);      \
+           }                           \
+         }",
+        "function(keys, values, rereduce) { \
+           return sum(values);              \
+         }"
+        )
+
+    read_count_by_user = View(
+        "messages",
+        "function(doc) {                    \
+           if(doc.type == 'message-read') { \
+             emit(doc.toId, 1);             \
+           }                                \
+         }"
+        "function(keys, values, rereduce) { \
+           return sum(values);              \
+         }"
+        )
+
     # ========================================
     # Class Methods
     # ========================================
@@ -116,8 +152,9 @@ class Message(SSDocument):
         if value:
             if not self.isRead():
                 db[Message.makeReadId(self.id, self.toId)] = {
+                    "type": "message-read",
                     "msgId": self.id,
-                    "toId": self.toId
+                    "toId": self.toId,
                     }
         else:
             del db[Message.makeReadId(self.id, self.toId)]

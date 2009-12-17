@@ -41,8 +41,11 @@ var InboxPane = new Class({
   {
     if(!evt.handled)
     {
-      var p = SSMarkMessageRead(evt.data._id);
-      p.realize();
+      if(!evt.data.read)
+      {
+        var p = SSMarkMessageRead(evt.data._id);
+        p.realize();
+      }
       SSPostNotification("onShowMessage", evt.data);
     }
   },

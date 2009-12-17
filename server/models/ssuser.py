@@ -423,3 +423,10 @@ class SSUser(User):
     def join(self, group):
         group.join(self)
 
+    # ========================================
+    # Messages
+    # ========================================
+
+    def unreadCount(self):
+        pass
+
