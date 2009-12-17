@@ -73,7 +73,7 @@ class ShiftController(ResourceController):
             theData = json.loads(jsonData)
             id = loggedInUser
             theData['createdBy'] = id
-            return data(Shift.create(theData).toDict())
+            return data(Shift.create(theData))
         else:
             return error("No data for shift.", NoDataError)
 
@@ -84,7 +84,7 @@ class ShiftController(ResourceController):
         theUser = SSUser.read(loggedInUser)
         theShift = Shift.read(id, loggedInUser)
         if theShift and theUser.canRead(theShift):
-            return data(theShift.toDict())
+            return data(theShift)
         else:
             if not theShift:
                 return error("Resource does not exist.", ResourceDoesNotExistError)
@@ -107,7 +107,7 @@ class ShiftController(ResourceController):
             shiftData = json.loads(jsonData)
             theUser = SSUser.read(loggedInUser)
             if theUser.canModify(theShift):
-                return data(theShift.update(shiftData).toDict())
+                return data(theShift.update(shiftData))
             else:
                 return error("Operation not permitted. You don't have permission to update this shift.", PermissionError)
         else:
@@ -154,7 +154,7 @@ class ShiftController(ResourceController):
             dbs = [Group.db(groupId) for groupId in groupIds]
             dbs.extend([SSUser.db(userId) for userId in userIds])
             publishData["dbs"] = dbs
-        return data(theShift.publish(publishData).toDict())
+        return data(theShift.publish(publishData))
 
     @jsonencode
     @loggedin
@@ -165,7 +165,7 @@ class ShiftController(ResourceController):
             return error("Resource does not exist.", ResourceDoesNotExistError)
         if theShift.type != "shift":
             return error("Resource is not of type shift", ResourceTypeError)
-        return data(theShift.unpublish().toDict())
+        return data(theShift.unpublish())
 
     @jsonencode
     @loggedin
@@ -179,7 +179,7 @@ class ShiftController(ResourceController):
         from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
         if theUser.canRead(theShift):
-            return data(theUser.favorite(theShift).toDict())
+            return data(theUser.favorite(theShift))
         else:
             return error("Operation not permitted. You don't have permission to favorite this shift.", PermissionError)
 
@@ -195,7 +195,7 @@ class ShiftController(ResourceController):
         from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
         if theUser.canRead(theShift):
-            return data(theUser.unfavorite(theShift).toDict())
+            return data(theUser.unfavorite(theShift))
         else:
             return error("Operation not permitted. You don't have permission to unfavorite this shift.", PermissionError)
 
@@ -210,7 +210,7 @@ class ShiftController(ResourceController):
         from server.models.ssuser import SSUser
         theUser = SSUser.read(loggedInUser)
         if theShift.isPublic() or theUser.canRead(theShift):
-            return data([comment.toDict() for comment in theShift.comments(start=start, end=end, limit=limit)])
+            return data(theShift.comments(start=start, end=end, limit=limit))
         else:
             return error("Operation not permitted. You don't have permission to view comments on this shift.", PermissionError)
 
@@ -231,7 +231,7 @@ class ShiftController(ResourceController):
             if theUser.canRead(theShift):
                 from server.models.comment import Comment
                 Comment.create(theUser.id, theShift.id, theData["text"], theData.get("subscribe") or False)
-                return data(Shift.read(theShift.id, theUser.id).toDict())
+                return data(Shift.read(theShift.id, theUser.id))
             else:
                 return error("Operation not permitted. You don't have permission to comment on this shift.", PermissionError)
         else:

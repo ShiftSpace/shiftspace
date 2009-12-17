@@ -93,7 +93,7 @@ class UserController(ResourceController):
         if valid:
             theUser = SSUser.create(theData)
             helper.setLoggedInUser(theUser.id)
-            return data(theUser.toDict())
+            return data(theUser)
         else:
             return error(msg, errType)
 
@@ -117,7 +117,7 @@ class UserController(ResourceController):
         loggedInUser = SSUser.read(helper.getLoggedInUser())
         if loggedInUser and loggedInUser.canModify(theUser):
             theData = json.loads(helper.getRequestBody())
-            return data(theUser.update(theData).toDict())
+            return data(theUser.update(theData))
         else:
             return error("Operation not permitted. You don't have permission to update this account.")
 
@@ -141,7 +141,7 @@ class UserController(ResourceController):
     def query(self):
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
-            return data(SSUser.read(loggedInUser).toDict())
+            return data(SSUser.read(loggedInUser))
         else:
             return message("No logged in user.")
 
@@ -155,7 +155,7 @@ class UserController(ResourceController):
             if theUser and (theUser.password == md5hash(password)):
                 helper.setLoggedInUser(theUser.id)
                 theUser.updateLastSeen()
-                return data(theUser.toDict())
+                return data(theUser)
             else:
                 return error("Incorrect password.", IncorrectPasswordError)
         else:
@@ -192,7 +192,7 @@ class UserController(ResourceController):
             return error("You cannot follow yourself.", FollowError)
         else:
             theUser.follow(followed)
-            return data(followed.toDict())
+            return data(followed)
 
     @jsonencode
     @exists
@@ -204,7 +204,7 @@ class UserController(ResourceController):
             return error("You cannot unfollow yourself.", FollowError)
         else:
             theUser.unfollow(followed)
-            return data(followed.toDict())
+            return data(followed)
 
     @jsonencode
     @exists
@@ -238,7 +238,7 @@ class UserController(ResourceController):
         theUser = SSUser.read(loggedInUser)
         otherUser = SSUser.readByName(userName)
         if loggedInUser == otherUser.id or theUser.isAdmin():
-            return data([message.toDict() for message in otherUser.messages(start=start, end=end, limit=limit)])
+            return data(otherUser.messages(start=start, end=end, limit=limit))
         else:
             return error("You do not have permission to view this user's messages.", PermissionError)
 
@@ -262,7 +262,7 @@ class UserController(ResourceController):
         theUser = SSUser.read(loggedInUser)
         otherUser = SSUser.readByName(userName)
         if loggedInUser == otherUser.id or theUser.isAdmin():
-            return data([shift.toDict() for shift in otherUser.shifts(start=start, end=end, limit=limit)])
+            return data(otherUser.shifts(start=start, end=end, limit=limit))
         else:
             return error("You don't have permission to view this user's shifts.", PermissionError)
             
@@ -274,7 +274,7 @@ class UserController(ResourceController):
         theUser = SSUser.read(loggedInUser)
         otherUser = SSUser.readByName(userName)
         if loggedInUser == otherUser.id or theUser.isAdmin():
-            return data([shift.toDict() for shift in otherUser.feed(start=start, end=end, limit=limit, userId=theUser.id)])
+            return data(otherUser.feed(start=start, end=end, limit=limit, userId=theUser.id))
         else:
             return error("You don't have permission to view this user's feed.", PermissionError)
 
@@ -298,7 +298,7 @@ class UserController(ResourceController):
         theUser = SSUser.read(loggedInUser)
         otherUser = SSUser.readByName(userName)
         if loggedInUser == otherUser.id or theUser.isAdmin():
-            return data([comment.toDict() for comment in otherUser.comments(start=start, end=end, limit=limit)])
+            return data(otherUser.comments(start=start, end=end, limit=limit))
         else:
             return error("You don't have permission to view this user's comments.", PermissionError)
     
@@ -310,7 +310,7 @@ class UserController(ResourceController):
         theUser = SSUser.read(loggedInUser)
         otherUser = SSUser.readByName(userName)
         if loggedInUser == otherUser.id or theUser.isAdmin():
-            return data([group.toDict() for group in otherUser.groups(start=start, end=end, limit=limit)])
+            return data(otherUser.groups(start=start, end=end, limit=limit))
         else:
             return error("You don't have permission to view this user's groups.", PermissionError)
 
@@ -322,4 +322,4 @@ class UserController(ResourceController):
 
     @jsonencode
     def users(self, start=None, end=None, limit=25, groupId=None):
-        return data([user.toDict() for user in SSUser.users(start, end, limit, groupId)])
+        return data(SSUser.users(start, end, limit, groupId))

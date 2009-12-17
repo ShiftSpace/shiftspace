@@ -29,7 +29,7 @@ class GroupsController(ResourceController):
         if jsonData != "":
             theData = json.loads(jsonData)
             theData['createdBy'] = loggedInUser
-            return data(Group.create(theData).toDict())
+            return data(Group.create(theData))
         else:
             return error("No data for group.", NoDataError)
         pass
@@ -39,7 +39,7 @@ class GroupsController(ResourceController):
     def read(self, id):
         # return only public groups
         theGroup = Group.read(id)
-        return data(theGroup.toDict())
+        return data(theGroup)
 
     @jsonencode
     @exists
@@ -62,8 +62,7 @@ class GroupsController(ResourceController):
     @jsonencode
     def groups(self, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
-        return data([group.toDict() for group in
-                     Group.groups(start, end, limit, userId=loggedInUser)])
+        return data(Group.groups(start, end, limit, userId=loggedInUser))
 
     @jsonencode
     @exists
@@ -78,7 +77,7 @@ class GroupsController(ResourceController):
             users = SSUser.all(db, keys=json.loads(users))
             for user in users:
                 groupAdmin.inviteUser(theGroup, user)
-            return data(theGroup.toDict())
+            return data(theGroup)
         else:
             return error("Operation not permitted. You don't have permission to modify this group", PermissionError)
 
@@ -92,7 +91,7 @@ class GroupsController(ResourceController):
         theUser = SSUser.read(loggedInUser)
         if theUser.canJoin(theGroup):
             theUser.join(theGroup)
-            return data(theGroup.toDict())
+            return data(theGroup)
         else:
             return error("Operation not permitted. You don't have permission to join this group.", PermissionError)
 
