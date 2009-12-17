@@ -428,5 +428,10 @@ class SSUser(User):
     # ========================================
 
     def unreadCount(self):
-        pass
+        from server.models.message import Message
+        db = core.connect("shiftspace/shared")
+        syscount = core.value(Message.system_count(db)) or 0
+        tocount = core.value(Message.count_by_user(db)) or 0
+        readcount = core.value(Message.read_count_by_user(db)) or 0
+        return (syscount+tocount)-readcount
 

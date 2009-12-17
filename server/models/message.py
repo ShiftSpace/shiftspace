@@ -54,7 +54,9 @@ class Message(SSDocument):
     system_count = View(
         "messages",
         "function(doc) {               \
-           if(doc.type == 'message' && doc.fromId == 'shiftspace') { \
+           if(doc.type == 'message' && \
+              doc.fromId == 'shiftspace' && \
+              doc.meta == 'system') {  \
              emit(doc.fromId, 1);      \
            }                           \
          }",
