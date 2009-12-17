@@ -33,6 +33,7 @@ var MessageDetailView = new Class({
   showMessage: function(message)
   {
     this.setCurrentMessage(message);
+    SSTemplate(this.element.getElement(".header"), message);
     switch(message.meta)
     {
       case 'comment':
@@ -47,6 +48,7 @@ var MessageDetailView = new Class({
       default:
         break;
     }
+    SSTemplate(this.element.getElement(".body div.SSSubView.SSActive"), message);
     this.open();
   },
 
