@@ -39,7 +39,12 @@ var InboxPane = new Class({
 
   handleRowClick: function(evt)
   {
-    if(!evt.handled) SSPostNotification("onShowMessage", evt.data);
+    if(!evt.handled)
+    {
+      var p = SSMarkMessageRead(evt.data._id);
+      p.realize();
+      SSPostNotification("onShowMessage", evt.data);
+    }
   },
 
 
