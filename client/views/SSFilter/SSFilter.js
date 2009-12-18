@@ -4,10 +4,10 @@
 // @dependencies      SSView
 // ==/Builder==
 
-var SSFilterPane = new Class({
+var SSFilter = new Class({
 
   Extends: SSView,
-  name: "SSFilterPane",
+  name: "SSFilter",
 
   initialize: function(el, options)
   {
@@ -19,28 +19,11 @@ var SSFilterPane = new Class({
   
   onShiftListViewShow: function(evt)
   {
-    if(evt.listView.getName() == "AllShiftsListView")
-    {
-      this.show();
-    }
-    else
-    {
-      this.hide();
-    }
   },
 
 
   onShiftListViewHide: function(evt)
   {
-    if(evt.listView.getName() == "AllShiftsListView")
-    {
-      this.hide();
-    }
-  },
-
-  
-  optionsForTable: function(resource)
-  {
-    return {byHref:window.location.href.split("#")[0]};
   }
+
 });
