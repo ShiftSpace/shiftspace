@@ -146,6 +146,15 @@ var SSPublishPane = new Class({
   saveShifts: function(evt)
   {
     evt = new Event(evt);
+    var selectedShifts = this.currentListView().checkedItemIds();
+
+    if(selectedShifts && selectedShifts.length > 0)
+    {
+      SSLog(selectedShifts, SSLogForce);
+      selectedShifts.each(function(id) {
+        SSPostNotification("saveShift", id);
+      }.bind(this));
+    }
   },
 
 

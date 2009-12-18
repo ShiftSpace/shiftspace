@@ -289,10 +289,11 @@ function SSSaveShift(shift)
 
   // remove _id and space from shift
   // TODO: might want to refactor this to be a little less hacky - David
+  var id = shift._id;
   delete shift._id;
   delete shift.space;
 
-  var p = SSApp.update('shift', shift._id, params);
+  var p = SSApp.update('shift', id, params);
   $if(SSApp.noErr(p),
       function() {
         SSSpaceForName(shift.space.name).onShiftSave(p.get('id'));
