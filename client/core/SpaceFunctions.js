@@ -554,8 +554,8 @@ function SSSetFocusedSpace(newSpace)
 */
 function SSSpaceForShift(id)
 {
-  var shift = SSGetShift(id);
-  var spaceName = (Promise.isPromise(shift)) ? shift.get('space', 'name') : shift.space.name;
+  var shift = SSGetShift(id),
+      spaceName = (Promise.isPromise(shift)) ? shift.get('space', 'name') : shift.space.name;
   return SSSpaceForName(spaceName);
 }
 
