@@ -51,6 +51,12 @@ var AllShiftsView = new Class({
   },
 
 
+  showUser: function(sender, evt)
+  {
+    SSPostNotification("onShowUser", evt.data);
+  },
+
+
   initListViews: function()
   {
     SSTableForName("AllShifts").addView(this.AllShiftsListView);
