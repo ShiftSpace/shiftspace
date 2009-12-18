@@ -193,13 +193,15 @@ Parameters:
 var SSEditShift = function(space, shiftId)
 {
   var shift = SSGetShift(shiftId);
-  if(SSUserCanEditShift(shift) || SSIsNewShift(shiftId))
+  if(SSUserCanEditShift(shiftId) || SSIsNewShift(shiftId))
   {
     var content = shift.content;
     SSFocusSpace(space, (content && content.position) || null);
     SSShowShift(space, shiftId);
+
     space.editShift(shiftId);
     space.onShiftEdit(shiftId);
+
     SSFocusShift(space, shiftId);
     SSPostNotification('onShiftEdit', shiftId);
   }
