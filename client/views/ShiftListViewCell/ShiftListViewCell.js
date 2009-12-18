@@ -44,7 +44,8 @@ var ShiftListViewCell = new Class({
   {
     var idx = this.index(), data = this.data();
     this.delegate().setState(data._id, 'checked', this.check.bind(this, [true]));
-    SSPostNotification('onShiftSelect', {listView: this.delegate(), index:idx});
+    this.delegate().onCheck({index: idx, data: data});
+    SSPostNotification('onShiftSelect', {listView: this.delegate(), index: idx, data: data});
   },
   
   /*
@@ -58,9 +59,9 @@ var ShiftListViewCell = new Class({
   */
   uncheck: function(restore)
   {
-    var el = this.lockedElement();
+    var el = this.lockedElement(), index = this.index(), data = this.data();
     el.getElement('input[type=checkbox]').setProperty('checked', false);
-    if(restore !== true) this.onUncheck();
+    if(restore !== true) this.onUncheck({index: index, data: data});
   },
   
   /*
@@ -76,6 +77,7 @@ var ShiftListViewCell = new Class({
   {
     var idx = this.index(), data = this.data();
     if(data) this.delegate().removeState(data._id, 'checked');
+    this.delegate().onUncheck({index: idx, data: data});
     SSPostNotification('onShiftDeselect', {listView: this.delegate(), index:idx});
   },
   
