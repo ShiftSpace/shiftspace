@@ -131,8 +131,8 @@ var SSPublishPane = new Class({
     
     if(selectedShifts && selectedShifts.length > 0)
     {
-      var len = selectedShifts.length;
-      var str = (len != 1) ? "these shifts" : "this shift";
+      var len = selectedShifts.length,
+          str = (len != 1) ? "these shifts" : "this shift";
       if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
       var indices = this.currentListView().checkedItemIndices();
       this.currentListView().uncheck(indices);

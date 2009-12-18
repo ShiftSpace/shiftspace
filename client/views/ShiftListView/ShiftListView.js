@@ -27,6 +27,7 @@ var ShiftListView = new Class({
     this.parent(el, options);
 
     SSAddObserver(this, 'onNewShiftSave', this.onCreate.bind(this));
+    SSAddObserver(this, 'onShiftShow', this.onShow.bind(this));
     SSAddObserver(this, 'onShiftHide', this.onHide.bind(this));
     SSAddObserver(this, 'onUserLogout', this.uncheckAll.bind(this));
   },
@@ -82,13 +83,22 @@ var ShiftListView = new Class({
   },
   
   
+  onShow: function(id)
+  {
+    var idx = this.find(function(x) { return x._id == id; });
+    if(idx != -1)
+    {
+      this.selectRow(idx);
+    }
+  },
+
+
   onHide: function(id)
   {
     var idx = this.find(function(x) { return x._id == id; });
     if(idx != -1)
     {
       this.deselectRow(idx);
-      this.uncheck($splat(idx));
     }
   },
   
@@ -111,6 +121,16 @@ var ShiftListView = new Class({
     }, this);
   },
   
+
+  onCheck: function(evt)
+  {
+    var id = evt.data._id;
+    if(SSUserCanEditShift(id))
+    {
+      SSEditShift(SSSpaceForShift(id), id);
+    }
+  },
+
   
   uncheck: function(indices, noEvent)
   {
@@ -122,6 +142,15 @@ var ShiftListView = new Class({
       cell.uncheck(noEvent);
       cell.unlock();
     }, this);
+  },
+
+
+  onUncheck: function(evt)
+  {
+    SSLog("onUncheck", SSLogForce);
+    var id = evt.data._id;
+    // leave edit mode
+    SSShowShift(SSSpaceForShift(id), id);
   },
 
 
