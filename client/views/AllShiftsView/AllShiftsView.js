@@ -19,6 +19,29 @@ var AllShiftsView = new Class({
   awake: function(args)
   {
     this.mapOutletsToThis();
+    this.attachEvents();
+  },
+
+
+  attachEvents: function()
+  {
+    this.AllShiftsTabView.addEvent("tabSelected", this.onTabSelect.bind(this));
+  },
+
+
+  hide: function()
+  {
+    SSPostNotification("onHideUser");
+    this.parent();
+  },
+  
+
+  onTabSelect: function(evt)
+  {
+    if(evt.tabIndex != 0)
+    {
+      SSPostNotification("onHideUser");
+    }
   },
   
   
