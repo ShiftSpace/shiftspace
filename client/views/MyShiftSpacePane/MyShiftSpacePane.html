@@ -17,6 +17,20 @@
 
       <!-- Start My Shifts List View -->
       <div class="SSTabPane">
+
+          <div id="SSFilter"
+               class="SSFilter"
+               uiclass="SSFilter">
+              <label>Filter by:</label>
+              <select>
+                  <option value="spaceName">Space</option>
+                  <option value="title">Title</option>
+                  <option value="tag">Tag</option>
+              </select>
+              <input id="SSFilterQuery" type="text" outlet="SSFilter"></input>
+              <div class="toggle"></div>
+          </div>
+
         <ul id="MyShiftsListView"
             class="SSListView ShiftListView"
             uiclass="ShiftListView"

@@ -277,16 +277,30 @@ class SSUser(User):
         results = Permission.readable_by_user_and_created(db, limit=limit)
         return Permission.joinData(core.objects(results[start:end]))
 
-    @shift_join
-    def shifts(self, start=None, end=None, limit=25):
+
+    def shifts(self, start=None, end=None, limit=25, filter=False, query=None):
         from server.models.shift import Shift
         db = core.connect("shiftspace/shared")
-        if not start:
-            start = [self.id]
-        if not end:
-            end = [self.id, {}]
-        results = Shift.by_user_and_created(db, limit=limit)
-        return core.objects(results[start:end])
+        if not filter:
+            if not start:
+                start = [self.id]
+            if not end:
+                end = [self.id, {}]
+            results = Shift.by_user_and_created(db, limit=limit)
+            return Shift.joinData(core.objects(results[start:end]))
+        else:
+            lucene = core.lucene()
+            queryString = "createdBy:%s" % self.id
+            if query and (query.keys() in ['title', 'summary', 'tag']):
+                queryString = queryString + core.dictToQuery(query)
+            try:
+                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort=queryField)
+            except Exception, err:
+                print err
+                return []
+            shifts = [row["doc"] for row in rows]
+            return Shift.joinData(shifts, self.id)
+
 
     @shift_join
     def feed(self, start=None, end=None, limit=25):

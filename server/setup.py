@@ -111,7 +111,7 @@ def sync(createAdmin=True):
     
     Lucene.shifts.sync(shared)
     Lucene.groups.sync(shared)
-    Lucene.messages.sync(shared)o
+    Lucene.messages.sync(shared)
     Lucene.comments.sync(shared)
     
     print "Databases sync'ed"
