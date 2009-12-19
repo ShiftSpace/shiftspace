@@ -72,9 +72,22 @@ class Lucene():
                     if(doc.type == 'message') {                       \
                       var ret = new Document();                       \
                       ret.add(doc.fromId, {field:'from'});            \
+                      ret.add(doc.toId, {field:'to'});                \
                       ret.add(doc.title, {field:'title'});            \
                       ret.add(doc.text, {field:'text'});              \
                       ret.add(doc.meta, {field:'meta'});              \
+                      return ret;                                     \
+                    }                                                 \
+                    return null;                                      \
+                  }"
+        )
+
+    comments = LuceneDefinition("lucene", "comments", index_fun = "   \
+                  function(doc) {                                     \
+                    if(doc.type == 'comment') {                       \
+                      var ret = new Document();                       \
+                      ret.add(doc.shiftAuthor, {field:'shiftAuthor'});\
+                      ret.add(doc.text, {field:'text'});              \
                       return ret;                                     \
                     }                                                 \
                     return null;                                      \
@@ -127,6 +140,10 @@ def lucene():
     Return the Lucene instance.
     """
     return _lucene
+
+
+def dictToQuery(d):
+    return " AND ".join(["%s:%s" % (k, v) for k, v in d.items()])
 
 
 def value(results):

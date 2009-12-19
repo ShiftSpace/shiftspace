@@ -110,6 +110,9 @@ def sync(createAdmin=True):
     Favorite.count_by_shift.sync(shared)
     
     Lucene.shifts.sync(shared)
+    Lucene.groups.sync(shared)
+    Lucene.messages.sync(shared)o
+    Lucene.comments.sync(shared)
     
     print "Databases sync'ed"
 
