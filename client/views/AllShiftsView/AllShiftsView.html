@@ -20,6 +20,20 @@
             <!-- START AllShiftsListView Tab -->
             <div class="SSTabPane">
 
+                <div id="SSFilter"
+                     class="SSFilter"
+                     uiclass="SSFilter">
+                    <label>Filter by:</label>
+                    <select>
+                        <option>User name</option>
+                        <option>Space</option>
+                        <option>Title</option>
+                        <option>Tag</option>
+                    </select>
+                    <input id="SSFilterQuery" type="text" outlet="SSFilter"></input>
+                    <div class="toggle"></div>
+                </div>
+
                 <ul id="AllShiftsListView"
                     class='SSListView ShiftListView' 
                     uiclass="ShiftListView" 

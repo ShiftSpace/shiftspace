@@ -67,6 +67,20 @@ class Lucene():
                   }"
         )
 
+    messages = LuceneDefinition("lucene", "messages", index_fun = "   \
+                  function(doc) {                                     \
+                    if(doc.type == 'message') {                       \
+                      var ret = new Document();                       \
+                      ret.add(doc.fromId, {field:'from'});            \
+                      ret.add(doc.title, {field:'title'});            \
+                      ret.add(doc.text, {field:'text'});              \
+                      ret.add(doc.meta, {field:'meta'});              \
+                      return ret;                                     \
+                    }                                                 \
+                    return null;                                      \
+                  }"
+        )
+
     def search(self, db, view, **params):
         """
         Runs a full text search on the db.
