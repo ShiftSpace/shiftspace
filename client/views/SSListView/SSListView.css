@@ -18,3 +18,15 @@
 {
   display: block;
 }
+
+.SSListViewFilterToggle
+{
+   position: absolute;
+   top: 0px;
+   width: 16px;
+   height: 6px;
+   left: 50%;
+   background-color: red;
+   margin-left: -8px;
+   z-index: 3;
+}

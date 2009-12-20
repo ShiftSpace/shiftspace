@@ -15,6 +15,20 @@ var SSFilter = new Class({
 
     SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
     SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
+    SSAddObserver(this, "onToggleFilter", this.toggle.bind(this));
+  },
+
+
+  toggle: function()
+  {
+    if(this.isVisible())
+    {
+      this.hide();
+    }
+    else
+    {
+      this.show();
+    }
   },
   
   

@@ -79,12 +79,18 @@ var SSListView = new Class({
     this.__filterable = filterable;
     if(filterable)
     {
-      SSLog("Filterable create drop down!", SSLogForce);
       var toggleFilter = new Element("div", {
         "class": "SSListViewFilterToggle"
       });
+      toggleFilter.addEvent("click", this.toggleFilter.bind(this));
       this.element.grab(toggleFilter);
     }
+  },
+
+
+  toggleFilter: function()
+  {
+    SSPostNotification("onToggleFilter", {listView:this});
   },
 
   
