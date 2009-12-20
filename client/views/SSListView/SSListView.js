@@ -79,11 +79,10 @@ var SSListView = new Class({
     this.__filterable = filterable;
     if(filterable)
     {
-      var toggleFilter = new Element("div", {
-        "class": "SSListViewFilterToggle"
-      });
-      toggleFilter.addEvent("click", this.toggleFilter.bind(this));
+      var toggleFilter = $(this.element.getDocument().createElement("div"));
       this.element.grab(toggleFilter);
+      toggleFilter.addClass("SSListViewFilterToggle");
+      toggleFilter.addEvent("click", this.toggleFilter.bind(this));
     }
   },
 

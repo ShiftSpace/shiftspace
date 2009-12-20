@@ -19,15 +19,15 @@ var SSFilter = new Class({
   },
 
 
-  toggle: function()
+  toggle: function(evt)
   {
     if(this.isVisible())
     {
-      this.hide();
+      this.hide(evt);
     }
     else
     {
-      this.show();
+      this.show(evt);
     }
   },
   
@@ -43,9 +43,18 @@ var SSFilter = new Class({
   },
 
 
+  show: function(evt)
+  {
+    this.parent();
+    if(this.element.getParent() != null) this.element.dispose();
+    this.element.inject(evt.listView.element, "before");
+  },
+
+
   hide: function()
   {
     this.parent();
+    this.element.dispose();
     var lv = this.currentListView();
     if(lv)
     {
