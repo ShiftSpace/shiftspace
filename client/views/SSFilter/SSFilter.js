@@ -9,6 +9,18 @@ var SSFilter = new Class({
   Extends: SSView,
   name: "SSFilter",
 
+
+  filterMap:
+  {
+    spaceName: "Space Name",
+    userName: "User Name",
+    summary: "Summary",
+    href: "URL",
+    tag: "Tag",
+    group: "Group"
+  },
+  
+
   initialize: function(el, options)
   {
     this.parent(el, options);
