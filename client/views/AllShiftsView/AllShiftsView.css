@@ -13,7 +13,7 @@ ul.ShiftListView li.ShiftListViewCell{
   border-top: 1px solid #BBB4AF;
   line-height: 26px;
   padding: 0;
-  overflow: hidden;
+  overflow: visible; /* DO NOT CHANGE - for user icons - David */
   vertical-align: middle;
 }
 
