@@ -23,10 +23,12 @@ var SSFilter = new Class({
   {
     if(this.isVisible())
     {
+      this.setCurrentListView(null);
       this.hide(evt);
     }
     else
     {
+      this.setCurrentListView(evt.listView);
       this.show(evt);
     }
   },
@@ -127,7 +129,6 @@ var SSFilter = new Class({
 
   fetch: function()
   {
-
     var type = this.SSFilterBy.get("value"),
         value = this.SSFilterQuery.get("value").trim(),
         table = this.currentListView().table(),
@@ -138,8 +139,10 @@ var SSFilter = new Class({
     query = {};
     query[type] = value;
 
+    var params = $merge(table.optionsForTable(), {filter: true, query: JSON.encode(query)});
+
     // REFACTOR: a bit on the hacky side, but I just want to get it working - David
-    var datap = SSApp.getUrl(url, {filter: true, query: JSON.encode(query)});
+    var datap = SSApp.getUrl(url, params);
     this.currentListView().setFilterMode(true);
     var controlp = this.currentListView().setData(datap);
     this.currentListView().__reloadData__(controlp);
