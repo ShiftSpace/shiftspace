@@ -459,6 +459,7 @@ class Shift(SSDocument):
         from server.models.ssuser import SSUser
         db = core.connect("shiftspace/shared")
         lucene = core.lucene()
+        
         if byHref:
             queryString = "href:\"%s\" AND ((draft:false AND private:false)" % byHref
             if user:
@@ -468,11 +469,6 @@ class Shift(SSDocument):
                 dbsStr = " ".join(dbs)
                 queryString = queryString + ((" OR (draft:false%s)" % ((len(dbs) > 0 and (" AND dbs:(%s)" % dbsStr)) or "")))
             queryString = queryString + ")"
-            try:
-                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
-            except Exception, err:
-                print err
-                return []
         elif byFollowing:
             from server.models.follow import Follow
             # FIXME: impossible to make this scale in a simple way for many followers w/o p2p - David 12/2/09
@@ -480,19 +476,15 @@ class Shift(SSDocument):
             results = Follow.following_by_created(core.connect())
             following = " ".join(core.values(results[[user.id]:[user.id, {}]]))
             queryString = "(draft:false AND private:false AND createdBy:(%s)) OR dbs:(%s)" % (following, SSUser.db(user.id))
-            print queryString
-            try:
-                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
-            except Exception, err:
-                print err
-                return []
         elif byGroups:
             queryString = "dbs:%s" % [Group.db(group) for group in user.readable()]
-            print queryString
-            try:
-                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
-            except Exception, err:
-                print err
-                return []
+
+        print queryString
+        try:
+            rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
+        except Exception, err:
+            print err
+            return []
+
         shifts = [row["doc"] for row in rows]
         return Shift.joinData(shifts, ((user and user.id) or None))
