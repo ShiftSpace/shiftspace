@@ -29,9 +29,22 @@ var SSFilter = new Class({
   },
 
 
+  hide: function()
+  {
+    this.parent();
+    var lv = this.currentListView();
+    if(lv)
+    {
+      lv.setFilterMode(false);
+      lv.reloadData();
+    }
+  },
+
+
   attachEvents: function()
   {
     this.SSFilterQuery.addEvent("keyup", this.handleKey.bind(this));
+    this.SSFilterBy.addEvent("change", this.fetch.bind(this));
   },
 
 
@@ -50,7 +63,7 @@ var SSFilter = new Class({
   handleKey: function(evt)
   {
     evt = new Event(evt);
-    // TODO: ignore non-character keys - David
+    // TODO: ignore non-character keys (shift, option, command, control) - David
     $clear(this.currentTimer());
     var query = this.SSFilterQuery.get("value").trim();
     if(query != "")
@@ -60,6 +73,7 @@ var SSFilter = new Class({
     else
     {
       this.currentListView().setFilterMode(false);
+      this.currentListView().reloadData();
     }
   },
 
@@ -90,16 +104,19 @@ var SSFilter = new Class({
 
   fetch: function()
   {
+
     var type = this.SSFilterBy.get("value"),
-        value = this.SSFilterQuery.get("value"),
+        value = this.SSFilterQuery.get("value").trim(),
         table = this.currentListView().table(),
         url = table.resource().read;
 
+    if(!value) return;
+
     query = {};
     query[type] = value;
-    var datap = SSApp.getUrl(url, {filter: true, query: JSON.encode(query)});
 
     // REFACTOR: a bit on the hacky side, but I just want to get it working - David
+    var datap = SSApp.getUrl(url, {filter: true, query: JSON.encode(query)});
     this.currentListView().setFilterMode(true);
     var controlp = this.currentListView().setData(datap);
     this.currentListView().__reloadData__(controlp);

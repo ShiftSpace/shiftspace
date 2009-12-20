@@ -1262,7 +1262,6 @@ var SSListView = new Class({
   __reloadData__: function(p, startIndex)
   {
     var theData = this.data(), len = theData.length, cell = this.cell();
-    SSLog("__reloadData__", theData, SSLogForce);
     if(!$type(startIndex)) this.element.empty();
     if(len > 0 && cell)
     {

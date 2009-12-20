@@ -144,7 +144,7 @@ def lucene():
 
 
 def dictToQuery(d):
-    return " AND ".join(["%s:%s" % (k, v) for k, v in d.items()])
+    return " AND ".join(['%s:%s*' % (k, v) for k, v in d.items()])
 
 
 def value(results):
