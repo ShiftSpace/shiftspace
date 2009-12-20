@@ -65,12 +65,29 @@ var AllShiftsView = new Class({
   onSync: function()
   {
     this.initListViews();
+    this.updateTabs();
   },
   
   
   onLogin: function()
   {
     this.initListViews();
+    this.updateTabs();
+  },
+
+
+  updateTabs: function()
+  {
+    if(ShiftSpaceUser.isLoggedIn())
+    {
+      this.AllShiftsTabView.revealTabByName("ByPeopleTab");
+      this.AllShiftsTabView.revealTabByName("ByGroupsTab");
+    }
+    else
+    {
+      this.AllShiftsTabView.hideTabByName("ByPeopleTab");
+      this.AllShiftsTabView.hideTabByName("ByGroupsTab");
+    }
   },
 
 
