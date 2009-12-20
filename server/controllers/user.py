@@ -257,12 +257,18 @@ class UserController(ResourceController):
     @jsonencode
     @exists
     @loggedin
-    def shifts(self, userName, start=None, end=None, limit=25):
+    def shifts(self, userName, start=None, end=None, limit=25, filter=False, query=None):
         loggedInUser = helper.getLoggedInUser()
         theUser = SSUser.read(loggedInUser)
         otherUser = SSUser.readByName(userName)
+        if query != None:
+            query = json.loads(query)
         if loggedInUser == otherUser.id or theUser.isAdmin():
-            return data(otherUser.shifts(start=start, end=end, limit=limit))
+            return data(otherUser.shifts(start=start,
+                                         end=end,
+                                         limit=limit,
+                                         filter=filter,
+                                         query=query))
         else:
             return error("You don't have permission to view this user's shifts.", PermissionError)
             

@@ -706,6 +706,26 @@ var ApplicationServer = new Class({
   },
 
   /*
+    Function: getUrl
+      Simple function for getting sending a GET request for a url.
+
+    Parameters:
+      url - the url.
+      data - any url parameters.
+
+    Returns:
+      A promise.
+  */
+  getUrl: function(url, data)
+  {
+    return new Request({
+      method: "get",
+      url: String.urlJoin("/server", url),
+      data: data
+    });
+  }.asPromise(),
+
+  /*
     Function: confirm
       Takes a promises and forces it to realize synchronously. Useful for
       unit testing.

@@ -20,11 +20,15 @@
 
           <div id="SSFilter"
                class="SSFilter"
-               uiclass="SSFilter">
+               uiclass="SSFilter"
+               options="{
+                 listView: 'MyShiftsListView'
+               }">
               <label>Filter by:</label>
-              <select>
-                  <option value="spaceName">Space</option>
-                  <option value="title">Title</option>
+              <select id="SSFilterBy"
+                      outlet="SSFilter">
+                  <option value="spaceName">Space Name</option>
+                  <option value="title">Summary</option>
                   <option value="tag">Tag</option>
               </select>
               <input id="SSFilterQuery" type="text" outlet="SSFilter"></input>

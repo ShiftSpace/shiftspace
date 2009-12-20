@@ -12,6 +12,7 @@ var SSFilter = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
     SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
   },
@@ -21,6 +22,10 @@ var SSFilter = new Class({
   {
     this.mapOutletsToThis();
     this.attachEvents();
+    if(this.options.listView)
+    {
+      this.setCurrentListView(ShiftSpaceNameTable[this.options.listView]);
+    }
   },
 
 
@@ -77,9 +82,15 @@ var SSFilter = new Class({
 
   fetch: function()
   {
-    // how to know what content a paginated view fetches?
-    // needs to be part of the table probably
-    SSLog("Fetch", this.SSFilterQuery.get("value"), SSLogForce);
+    var type = this.SSFilterBy.get("value"),
+        value = this.SSFilterQuery.get("value"),
+        table = this.currentListView().table(),
+        url = table.resource().read;
+    query = {};
+    query[type] = value;
+    var p = SSApp.getUrl(url, {filter: true, query: JSON.encode(query)});
+    this.currentListView().setData(p);
+    // how to know which call to make?
   },
   
 

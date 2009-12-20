@@ -291,10 +291,13 @@ class SSUser(User):
         else:
             lucene = core.lucene()
             queryString = "createdBy:%s" % self.id
-            if query and (query.keys() in ['title', 'summary', 'tag']):
-                queryString = queryString + core.dictToQuery(query)
+            theFilter = core.dictToQuery(query)
+            if theFilter:
+                queryString = queryString + " AND " + theFilter
             try:
-                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort=queryField)
+                print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+                print queryString
+                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort=("\\"+query.keys()[-1]))
             except Exception, err:
                 print err
                 return []
