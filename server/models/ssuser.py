@@ -297,7 +297,7 @@ class SSUser(User):
             try:
                 print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
                 print queryString
-                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort=("\\"+query.keys()[-1]))
+                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified")
             except Exception, err:
                 print err
                 return []

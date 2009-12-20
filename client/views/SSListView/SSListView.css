@@ -23,10 +23,10 @@
 {
    position: absolute;
    top: 0px;
-   width: 16px;
-   height: 6px;
+   width: 18px;
+   height: 8px;
    left: 50%;
-   background-color: red;
-   margin-left: -8px;
+   background-color: #777;
+   margin-left: -9px;
    z-index: 3;
 }
