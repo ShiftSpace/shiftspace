@@ -464,7 +464,7 @@ class Shift(SSDocument):
         
         if byHref or byDomain:
             if byHref:
-                queryString = "href:\"%s\"" % byHref
+                queryString = "hrefExact:\"%s_HREF_EXACT\"" % byHref
             elif byDomain:
                 queryString = "domain:\"%s\""% byDomain
             queryString = queryString + " AND ((draft:false AND private:false)"

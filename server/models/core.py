@@ -37,6 +37,7 @@ class Lucene():
                       ret.add(doc.space.name, {field:'spaceName'});           \
                       if (doc.summary) ret.add(doc.summary, {field:'summary'}); \
                       ret.add(doc.href, {field:'href'});                      \
+                      ret.add(doc.href+'_HREF_EXACT', {field:'hrefExact'});   \
                       ret.add(doc.domain, {field:'domain'});                  \
                       ret.add(doc.publishData.dbs.join(' '), {field:'dbs'});  \
                       ret.add(doc.publishData['private'], {field:'private'}); \
