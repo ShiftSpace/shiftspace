@@ -76,6 +76,12 @@ function SSUnfollowUser(userName)
 }
 
 
+function SSGetUser(userName)
+{
+  return SSApp.read('user', userName);
+}
+
+
 function SSUserInfo(userName)
 {
   return SSApp.get({

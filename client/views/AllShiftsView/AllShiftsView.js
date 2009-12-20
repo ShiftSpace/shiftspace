@@ -76,7 +76,7 @@ var AllShiftsView = new Class({
 
   showUser: function(sender, evt)
   {
-    SSPostNotification("onShowUser", evt.data);
+    SSPostNotification("onShowUser", SSGetUser(evt.data.userName));
   },
 
 
