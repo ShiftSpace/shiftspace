@@ -52,7 +52,15 @@ var SSFilter = new Class({
     evt = new Event(evt);
     // TODO: ignore non-character keys - David
     $clear(this.currentTimer());
-    this.setCurrentTimer(this.fetch.delay(1000, this));
+    var query = this.SSFilterQuery.get("value").trim();
+    if(query != "")
+    {
+      this.setCurrentTimer(this.fetch.delay(1000, this));
+    }
+    else
+    {
+      this.currentListView().setFilterMode(false);
+    }
   },
 
 
@@ -86,11 +94,15 @@ var SSFilter = new Class({
         value = this.SSFilterQuery.get("value"),
         table = this.currentListView().table(),
         url = table.resource().read;
+
     query = {};
     query[type] = value;
-    var p = SSApp.getUrl(url, {filter: true, query: JSON.encode(query)});
-    this.currentListView().setData(p);
-    // how to know which call to make?
+    var datap = SSApp.getUrl(url, {filter: true, query: JSON.encode(query)});
+
+    // REFACTOR: a bit on the hacky side, but I just want to get it working - David
+    this.currentListView().setFilterMode(true);
+    var controlp = this.currentListView().setData(datap);
+    this.currentListView().__reloadData__(controlp);
   },
   
 

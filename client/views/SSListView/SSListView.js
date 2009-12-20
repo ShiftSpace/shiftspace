@@ -507,6 +507,19 @@ var SSListView = new Class({
     return this.__cell;
   },
 
+
+  filterMode: function()
+  {
+    return this.__filterMode;
+  },
+  
+  
+  setFilterMode: function(filterMode)
+  {
+    this.__filterMode = filterMode;
+  },
+
+
   /*
     Function: setData
       Sets the data property of the class. 
@@ -535,7 +548,7 @@ var SSListView = new Class({
   */
   data: function()
   {
-    if(this.table())
+    if(this.table() && !this.filterMode())
     {
       return this.table().data();
     }
@@ -1249,6 +1262,7 @@ var SSListView = new Class({
   __reloadData__: function(p, startIndex)
   {
     var theData = this.data(), len = theData.length, cell = this.cell();
+    SSLog("__reloadData__", theData, SSLogForce);
     if(!$type(startIndex)) this.element.empty();
     if(len > 0 && cell)
     {
