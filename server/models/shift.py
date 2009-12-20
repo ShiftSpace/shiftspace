@@ -455,7 +455,7 @@ class Shift(SSDocument):
     # ========================================
 
     @classmethod
-    def shifts(cls, user, byHref=None, byFollowing=False, byGroups=False, start=0, limit=25):
+    def shifts(cls, user, byHref=None, byFollowing=False, byGroups=False, start=0, limit=25, filter=False, query=None):
         from server.models.ssuser import SSUser
         db = core.connect("shiftspace/shared")
         lucene = core.lucene()

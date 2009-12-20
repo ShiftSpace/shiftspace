@@ -46,7 +46,7 @@ class ShiftController(ResourceController):
                            count=True)
 
     @jsonencode
-    def shifts(self, byHref=None, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, count=False):
+    def shifts(self, byHref=None, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, count=False, filter=False, query=None):
         from server.models.ssuser import SSUser
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
@@ -58,7 +58,9 @@ class ShiftController(ResourceController):
                                  byFollowing=byFollowing,
                                  byGroups=byGroups,
                                  start=start,
-                                 limit=limit)
+                                 limit=limit,
+                                 filter=filter,
+                                 query=query)
         if count:
           return data(len(allShifts))
         else:
