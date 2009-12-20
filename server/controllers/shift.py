@@ -57,6 +57,7 @@ class ShiftController(ResourceController):
             query = json.loads(query)
         allShifts = Shift.shifts(user=theUser,
                                  byHref=byHref,
+                                 byDomain=byDomain,
                                  byFollowing=byFollowing,
                                  byGroups=byGroups,
                                  start=start,

@@ -455,13 +455,19 @@ class Shift(SSDocument):
     # ========================================
 
     @classmethod
-    def shifts(cls, user, byHref=None, byFollowing=False, byGroups=False, start=0, limit=25, filter=False, query=None):
+    def shifts(cls, user, byHref=None, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, filter=False, query=None):
         from server.models.ssuser import SSUser
         db = core.connect("shiftspace/shared")
         lucene = core.lucene()
         
-        if byHref:
-            queryString = "href:\"%s\" AND ((draft:false AND private:false)" % byHref
+        # TODO: validate all fields - David
+        
+        if byHref or byDomain:
+            if byHref:
+                queryString = "href:\"%s\"" % byHref
+            elif byDomain:
+                queryString = "domain:\"%s\""% byDomain
+            queryString = queryString + " AND ((draft:false AND private:false)"
             if user:
                 queryString = queryString + " OR createdBy:%s" % user.id
                 dbs = user.readable()

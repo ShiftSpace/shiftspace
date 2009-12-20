@@ -60,6 +60,10 @@ var AllShiftsView = new Class({
     {
       return {byGroups:true};
     }
+    if(table == SSTableForName("DomainShifts"))
+    {
+      return {byDomain:window.location.host};
+    }
   },
 
 
@@ -108,6 +112,8 @@ var AllShiftsView = new Class({
   {
     SSTableForName("AllShifts").addView(this.AllShiftsListView);
     SSTableForName("AllShifts").setDelegate(this);
+    SSTableForName("DomainShifts").addView(this.DomainShiftsListView);
+    SSTableForName("DomainShifts").setDelegate(this);    
     if(SSTableForName("FollowShifts"))
     {
       SSTableForName("FollowShifts").addView(this.FollowShiftsListView);

@@ -69,6 +69,36 @@ var ShiftServer = new Class({
         }
       ]
     });
+
+    new SSTable("DomainShifts", {
+      resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
+      watches: [
+        {
+          events: [
+            {resource:"shift", method:"create"},
+            {resource:"shift", action:"favorite"},
+            {resource:"shift", action:"unfavorite"},
+            {resource:"shift", action:"comment"}
+          ],
+          handlers: [
+            function(shift) { SSApplication().setDocument(this.getName(), shift); }
+          ]
+        },
+        {
+          events: [
+            {resource:"shift", method:"create"},
+            {resource:"shift", method:"update"},
+            {resource:"shift", method:"delete"},
+            {resource:"shift", action:"comment"},
+            {resource:"shift", action:"publish"},
+            {resource:"shift", action:"unpublish"},
+            {resource:"shift", action:"favorite"},
+            {resource:"shift", action:"unfavorite"}
+          ],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
   },
 
 
