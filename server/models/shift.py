@@ -479,6 +479,9 @@ class Shift(SSDocument):
         elif byGroups:
             queryString = "dbs:%s" % [Group.db(group) for group in user.readable()]
 
+        if filter:
+            queryString = queryString + " AND " + core.dictToQuery(query)
+
         print queryString
         try:
             rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)

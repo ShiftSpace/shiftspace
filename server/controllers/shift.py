@@ -53,6 +53,8 @@ class ShiftController(ResourceController):
             theUser = SSUser.read(loggedInUser)
         else:
             theUser = None
+        if query != None:
+            query = json.loads(query)
         allShifts = Shift.shifts(user=theUser,
                                  byHref=byHref,
                                  byFollowing=byFollowing,
