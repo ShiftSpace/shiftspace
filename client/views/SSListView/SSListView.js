@@ -50,6 +50,7 @@ var SSListView = new Class({
     this.__cellBeingEdited = -1;
     this.__cellStates = {};
     if(this.options.filter) this.setFilter(this.options.filter);
+    if(this.options.filterable) this.setFilterable(this.options.filterable);
     if(this.options.table)
     {
       SSLog('Use table', SSLogForce);
@@ -65,6 +66,27 @@ var SSListView = new Class({
     this.initSortables();
     this.attachEvents();
   },
+
+
+  filterable: function()
+  {
+    return this.__filterable;
+  },
+  
+  
+  setFilterable: function(filterable)
+  {
+    this.__filterable = filterable;
+    if(filterable)
+    {
+      SSLog("Filterable create drop down!", SSLogForce);
+      var toggleFilter = new Element("div", {
+        "class": "SSListViewFilterToggle"
+      });
+      this.element.grab(toggleFilter);
+    }
+  },
+
   
   /*
     Function: setState
@@ -267,7 +289,7 @@ var SSListView = new Class({
       Returns true if the filter is set. 
       
     Parameters: 
-      data - a row in a javascript array. //NOTE:The name data is a bit ambigious. rowData maybe? -Jusitn
+      data - a row in a javascript array. //NOTE:The name data is a bit ambigious. rowData maybe? -Justin
         
     Returns:
       A boolean value
@@ -1262,7 +1284,10 @@ var SSListView = new Class({
   __reloadData__: function(p, startIndex)
   {
     var theData = this.data(), len = theData.length, cell = this.cell();
-    if(!$type(startIndex)) this.element.empty();
+    if(!$type(startIndex))
+    {
+      this.element.getElements("li").destroy();
+    }
     if(len > 0 && cell)
     {
       var perPage = (this.pageControl() && this.pageControl().perPage()) || len;
@@ -1481,7 +1506,7 @@ var SSListView = new Class({
     this.parent(value);
     if(value && this.element && this.cell() && !this.isVisible())
     {
-      this.element.empty();
+      this.element.getElements("li").destroy();
     }
   },
 
