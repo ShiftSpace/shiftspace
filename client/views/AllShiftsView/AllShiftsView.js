@@ -13,6 +13,7 @@ var AllShiftsView = new Class({
     this.parent(el, options);
     SSAddObserver(this, "onSync", this.onSync.bind(this));
     SSAddObserver(this, "onUserLogin", this.onLogin.bind(this));
+    SSAddObserver(this, "onUserLogout", this.onLogin.bind(this));
   },
 
 
@@ -72,6 +73,12 @@ var AllShiftsView = new Class({
   onLogin: function()
   {
     this.initListViews();
+    this.updateTabs();
+  },
+
+
+  onLogout: function()
+  {
     this.updateTabs();
   },
 
