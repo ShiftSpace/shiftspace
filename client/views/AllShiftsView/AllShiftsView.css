@@ -72,6 +72,7 @@ ul.ShiftListView li.ShiftListViewCell:hover div.draft{
   line-height: 26px;
   position: absolute;
   right: 150px;
+  width: 200px;
   top: 0px;
   font-size: 11px;
 }
