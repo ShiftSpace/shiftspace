@@ -459,7 +459,7 @@ class Shift(SSDocument):
         from server.models.ssuser import SSUser
         db = core.connect("shiftspace/shared")
         lucene = core.lucene()
-        
+        queryString = ""
         # TODO: validate all fields - David
         
         if byHref or byDomain:

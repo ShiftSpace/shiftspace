@@ -78,9 +78,10 @@ class RootController:
             if os.path.isdir(path):
                 d[afile] = self.walk(path, {})
             elif os.path.isfile(path):
-                fh = open(path)
-                d[afile] = fh.read()
-                fh.close()
+                if os.path.splitext(path)[1] in ['.js', '.json', '.txt', '.html', '.css']:
+                    fh = open(path)
+                    d[afile] = fh.read()
+                    fh.close()
         return d
         
     def langwalk(self, fdir, d):
