@@ -94,6 +94,19 @@ var SSConsoleWindow = new Class({
   },
   
   
+  tall: function()
+  {
+    this.element.removeClass("SSConsoleWindowShort");
+    this.element.addClass("SSConsoleWindowTall");
+  },
+
+
+  "short": function()
+  {
+    this.element.removeClass("SSConsoleWindowTall");
+    this.element.addClass("SSConsoleWindowShort");
+  },
+
   /* SSFramedView Stuff ============================ */
   
   awake: function() {},

@@ -59,6 +59,7 @@ var SSCommentPane = new Class({
     this.initTable(shiftId);
     SSTableForName("Comments").addView(this.SSCommentsListView);
     
+    this.delegate().tall();
     this.delegate().show();
     this.multiView().showViewByName(this.name);
     this.setCurrentShiftId(shiftId);

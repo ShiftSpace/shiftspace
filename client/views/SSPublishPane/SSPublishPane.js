@@ -44,6 +44,7 @@ var SSPublishPane = new Class({
 
   'open': function()
   {
+    this.delegate().short();
     this.delegate().show();
     this.multiView().showViewByName(this.name);
   },

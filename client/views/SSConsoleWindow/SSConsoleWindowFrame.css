@@ -4,7 +4,6 @@
   right: 50px;
   bottom: 0px;
   width: 380px;
-  height: 200px;
 
   border: 0;
   overflow: hidden;
@@ -13,6 +12,16 @@
 .SSConsoleWindowOpen
 {
    height: 87px;
+}
+
+.SSConsoleWindowTall
+{
+   height: 300px;
+}
+
+.SSConsoleWindowShort
+{
+   height: 200px;
 }
 
 .SSConsoleWindowFront

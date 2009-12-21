@@ -26,6 +26,7 @@ var PeopleDetailView = new Class({
 
   'open': function()
   {
+    this.delegate().tall();
     this.delegate().show();
     this.multiView().showViewByName(this.name);
   },
