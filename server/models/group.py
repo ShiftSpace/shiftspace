@@ -239,3 +239,9 @@ class Group(SSDocument):
         from server.models.permission import Permission
         db = core.connect()
         return [row.value for row in Permission.all_members(db, key=self.id).rows]
+
+
+    def admins(self):
+        from server.models.permission import Permission
+        db = core.connect()
+        return [row.value for row in Permission.admins(db, key=self.id).rows]

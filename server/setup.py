@@ -79,6 +79,8 @@ def sync(createAdmin=True):
     Group.by_long_name.sync(master)
     Group.by_visible_and_created.sync(master)
 
+    Permission.all_members.sync(master)
+    Permission.admins.sync(master)
     Permission.by_user.sync(master)
     Permission.by_group.sync(master)
     Permission.is_member.sync(master)

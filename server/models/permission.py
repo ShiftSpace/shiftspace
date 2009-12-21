@@ -70,6 +70,15 @@ class Permission(SSDocument):
          }"
         )
 
+    admins = View(
+        "permissions",
+        "function (doc) {                                  \
+           if(doc.type == 'permission' && doc.level > 2) { \
+             emit(doc.groupId, doc.userId);                \
+           }                                               \
+         }"
+        )
+
     by_user_and_group = View(
         "permissions",
         "function (doc) {                           \
