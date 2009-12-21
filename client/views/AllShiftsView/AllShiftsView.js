@@ -119,5 +119,10 @@ var AllShiftsView = new Class({
       SSTableForName("FollowShifts").addView(this.FollowShiftsListView);
       SSTableForName("FollowShifts").setDelegate(this);
     }
+    if(SSTableForName("GroupShifts"))
+    {
+      SSTableForName("GroupShifts").addView(this.GroupShiftsListView);
+      SSTableForName("GroupShifts").setDelegate(this);
+    }
   }
 });
