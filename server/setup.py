@@ -80,7 +80,9 @@ def sync(createAdmin=True):
     Group.by_visible_and_created.sync(master)
 
     Permission.all_members.sync(master)
+    Permission.member_count.sync(master)
     Permission.admins.sync(master)
+    Permission.admin_count.sync(master)
     Permission.by_user.sync(master)
     Permission.by_group.sync(master)
     Permission.is_member.sync(master)
