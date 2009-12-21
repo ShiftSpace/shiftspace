@@ -70,8 +70,8 @@ class UserController(ResourceController):
         userName = data.get("userName")
         if not userName:
             return (False, "Please enter a user name.", MissingUserNameError)
-        if len(userName) < 6:
-            return (False, "Your user name should be at least 6 characters long.", ShortUserNameError)
+        if len(userName) < 0:
+            return (False, "Your user name should be at least 1 character long.", ShortUserNameError)
         if not SSUser.uniqueName(userName):
             return (False, "That user name is taken, please choose another.", UserNameAlreadyExistsError)
         if not data.get("password"):
@@ -88,6 +88,8 @@ class UserController(ResourceController):
         if loggedInUser:
             return error("You are logged in. You cannot create an account.", AlreadyLoggedInError)
         theData = json.loads(helper.getRequestBody())
+        if theData.get("userName"):
+            theData["userName"] = theData["userName"].strip()
         valid, msg, errType = self.isValid(theData)
         result = None
         if valid:
