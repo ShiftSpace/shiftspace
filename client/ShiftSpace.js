@@ -48,7 +48,7 @@ Credits:
       _why, Aaron Boodman and Nancy Hechinger
 
 */
-
+// git hook test
 if(typeof console != 'undefined' && console.log)
 {
   console.log('Loading ShiftSpace');
