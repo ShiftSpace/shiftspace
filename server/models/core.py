@@ -129,6 +129,14 @@ def server():
     return couchdb.client.Server("http://localhost:5984/")
 
 
+def test():
+    try:
+        theServer = server()
+        theServer.version
+        return True
+    except:
+        return False
+
 def connect(dbname="shiftspace/master"):
     """
     Connects to the database. Defaults to "shiftspace".

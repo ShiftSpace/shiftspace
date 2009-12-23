@@ -212,7 +212,15 @@ def updatedb():
     Resync the server/views folder with the design documents
     in the database.
     """
-    setup.sync()
+    if core.test():
+        setup.sync()
+    else:
+        print
+        print "CouchDB is not running, please start it and run the following again:"
+        print
+        print "    python shifty.py update"
+        print
+        sys.exit(2)
 
 
 def deletedbs():

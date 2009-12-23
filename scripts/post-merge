@@ -1,0 +1,3 @@
+#!/bin/sh
+# copy this file into the .git/hooks in your checkout directory
+python shifty.py update
