@@ -11,6 +11,7 @@ var AllShiftsView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     SSAddObserver(this, "onSync", this.onSync.bind(this));
     SSAddObserver(this, "onUserLogin", this.onLogin.bind(this));
     SSAddObserver(this, "onUserLogout", this.onLogin.bind(this));
