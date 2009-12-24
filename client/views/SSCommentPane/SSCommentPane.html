@@ -23,13 +23,20 @@
 
     <form>
         <label>Leave a comment</label>
-        <textarea id="SSCommentText" outlet="SSCommentPane"></textarea>
 
-        <label>Notify me when other people comment on this thread</label>
-        <input id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
+        <div>
+            <textarea id="SSCommentText" outlet="SSCommentPane"></textarea>
+        </div>
 
-        <input id="SSCloseComments" outlet="SSCommentPane" type="button" value="Close"></input>
-        <input id="SSPostComment" outlet="SSCommentPane" type="submit" value="Submit"></input>
+        <div>
+            <label>Notify me when other people comment on this thread</label>
+            <input id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
+        </div>
+
+        <div>
+            <button id="SSCloseComments" outlet="SSCommentPane" type="button">Close</button>
+            <button id="SSPostComment" outlet="SSCommentPane" type="submit">Post Comment</button>
+        </div>
     </form>
 
 </div>

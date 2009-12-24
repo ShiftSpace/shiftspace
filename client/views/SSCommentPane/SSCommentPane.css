@@ -5,3 +5,13 @@
    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
    font-size: 13px;
 }
+
+.SSCommentsListViewCell
+{
+   list-style: none;
+}
+
+.SSCommentsListViewCell .userName
+{
+   font-weight: bold;
+}
