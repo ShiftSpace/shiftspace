@@ -196,7 +196,7 @@ class Group(SSDocument):
         thePermission = Permission.readByUserAndGroup(aUser.id, self.id)
         if thePermission and thePermission.level == 0:
             db = core.connect()
-            thePermission.level = 1
+            thePermission.level = 2
             thePermission.store(db)
 
 
