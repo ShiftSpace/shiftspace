@@ -484,7 +484,7 @@ class Shift(SSDocument):
             queryString = "(draft:false AND private:false AND createdBy:(%s)) OR dbs:(%s)" % (following, SSUser.db(user.id))
         elif byGroups:
             from server.models.group import Group
-            queryString = "dbs:%s" % [Group.db(group) for group in user.readable()]
+            queryString = "dbs:(%s)" % " ".join(user.readable())
         if filter:
             queryString = queryString + " AND " + core.dictToQuery(query)
 
