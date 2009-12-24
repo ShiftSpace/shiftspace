@@ -25,6 +25,14 @@ var SSConsoleWindow = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
+    SSAddObserver(this, "onUserLogout", this.onLogout.bind(this));
+  },
+
+
+  onLogout: function()
+  {
+    this.hide();
   },
   
 
