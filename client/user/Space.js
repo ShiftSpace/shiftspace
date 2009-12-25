@@ -576,35 +576,6 @@ var ShiftSpaceSpace = new Class({
   },
 
   /*
-    Function: regionIsObscured
-      Not yet implemented.
-  */
-  regionIsObscured: function(region)
-  {
-    var len = this.__shifts.length;
-    for(var i = 0; i < len; i++ )
-    {
-      var aShift = this.__shifts[i];
-
-      if(aShift.mainViewIsVisible())
-      {
-        var sregion = aShift.getRegion();
-
-        // check to see if any point of the region falls within this shift
-        if ( !( sregion.left > region.right
-            || sregion.right < region.left
-            || sregion.top > region.bottom
-            || sregion.bottom < region.top
-            ) )
-        {
-          return true;
-        }
-      }
-    }
-    return false;
-  },
-
-  /*
     Function: setCurrentShift (private)
       Set the current shift object.
 
