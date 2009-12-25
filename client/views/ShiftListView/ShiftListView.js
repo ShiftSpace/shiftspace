@@ -13,10 +13,6 @@ var ShiftListView = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      byHref: true,
-      byDomain: false,
-      byFollowing: false,
-      byGroups: false,
       scrollEvents: true
     });
   },
