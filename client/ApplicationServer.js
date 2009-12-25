@@ -720,7 +720,7 @@ var ApplicationServer = new Class({
   {
     return new Request({
       method: "get",
-      url: String.urlJoin("/server", url),
+      url: String.urlJoin(this.server(), url),
       data: data
     });
   }.asPromise(),
