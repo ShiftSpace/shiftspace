@@ -225,16 +225,12 @@ var SSPublishPane = new Class({
     this.SaveShift.addEvent('click', this.saveShifts.bind(this));
     this.ChooseVisibility.addEvent('click', this.publishShifts.bind(this));
 
-    this.ShiftPrivateStatusRadio.addEvent('click', function(evt){ 
+    this.ShiftPrivateStatusRadio.addEvent('click', function(evt){
       evt = new Event(evt);
       if(this.SSPPVisiblePublic.hasClass('SSPPPermit')){
         this.SSPPVisiblePublic.removeClass('SSPPPermit');
       }
       this.SSPPVisiblePrivate.addClass('SSPPPermit');
-      SSLog('clicked public status!',SSLogForce);
-      
-      //trying something:
-	    
     }.bind(this));
 
     this.ShiftPublicStatusRadio.addEvent('click', function(evt) {
@@ -243,10 +239,6 @@ var SSPublishPane = new Class({
         this.SSPPVisiblePrivate.removeClass('SSPPPermit');
       }
       this.SSPPVisiblePublic.addClass('SSPPPermit');
-      SSLog('clicked private status!', SSLogForce);
-      
-      //trying something:
-	    
     }.bind(this));
 
     if(this.ShiftPermalink) this.ShiftPermalink.addEvent("click", this.showProxy.bind(this));
