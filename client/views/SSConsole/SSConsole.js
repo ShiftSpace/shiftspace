@@ -159,7 +159,7 @@ var SSConsole = new Class({
   
   initResizer: function()
   {
-    var resizer = new SSElement('div', {
+    this.resizer = new SSElement('div', {
         id: 'SSConsoleResizer',
         styles: {
           position: 'fixed',
@@ -172,18 +172,18 @@ var SSConsole = new Class({
         }
     });
 
-    $(document.body).grab(resizer);
+    $(document.body).grab(this.resizer);
     
-    resizer.addEvent('mousedown', SSAddDragDiv);
+    this.resizer.addEvent('mousedown', SSAddDragDiv);
 
-    resizer.makeDraggable({
+    this.resizer.makeDraggable({
       modifiers: {x:'', y:'bottom'},
       invert: true,
       onComplete: SSRemoveDragDiv
     });
     
     this.element.makeResizable({
-      handle: resizer,
+      handle: this.resizer,
       modifiers: {x:'', y:'height'},
       invert: true
     });

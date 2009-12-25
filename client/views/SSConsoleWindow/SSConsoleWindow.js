@@ -38,7 +38,7 @@ var SSConsoleWindow = new Class({
 
   initResizer: function()
   {
-    var resizer = new SSElement('div', {
+    this.resizer = new SSElement('div', {
         id: 'SSConsoleWindowResizer',
         styles: {
           position: 'fixed',
@@ -51,18 +51,18 @@ var SSConsoleWindow = new Class({
         }
     });
 
-    $(document.body).grab(resizer);
+    $(document.body).grab(this.resizer);
 
-    resizer.addEvent('mousedown', SSAddDragDiv);
+    this.resizer.addEvent('mousedown', SSAddDragDiv);
     
-    resizer.makeDraggable({
+    this.resizer.makeDraggable({
       modifiers: {x:'', y:'bottom'},
       invert: true,
       onComplete: SSRemoveDragDiv
     });
 
     this.element.makeResizable({
-      handle: resizer,
+      handle: this.resizer,
       modifiers: {x:'', y:'height'},
       invert: true
     });
@@ -71,6 +71,7 @@ var SSConsoleWindow = new Class({
 
   hide: function()
   {
+    SSLog("hide console window", SSLogForce);
     this.parent();
     this.sendFront();
   },
@@ -106,6 +107,11 @@ var SSConsoleWindow = new Class({
   {
     this.element.removeClass("SSConsoleWindowShort");
     this.element.addClass("SSConsoleWindowTall");
+    this.resizer.removeClass("SSConsoleWindowResizerShort");
+    this.resizer.addClass("SSConsoleWindowResizerTall");
+    this.resizer.setStyles({
+      bottom: ''
+    });
   },
 
 
@@ -113,6 +119,11 @@ var SSConsoleWindow = new Class({
   {
     this.element.removeClass("SSConsoleWindowTall");
     this.element.addClass("SSConsoleWindowShort");
+    this.resizer.removeClass("SSConsoleWindowResizerTall");
+    this.resizer.addClass("SSConsoleWindowResizerShort");
+    this.resizer.setStyles({
+      bottom: ''
+    });
   },
 
   /* SSFramedView Stuff ============================ */
