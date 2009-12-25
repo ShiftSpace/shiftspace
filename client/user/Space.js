@@ -612,15 +612,34 @@ var ShiftSpaceSpace = new Class({
   },
 
   /*
-    Fuction: getShift
+    Function: getShift
       Returns a shift instance from the internal hash.
 
     Parameters:
       shiftId - a shift id.
+
+    Returns:
+      A Shift instance.
   */
   getShift: function(shiftId)
   {
     return this.__shifts[shiftId];
+  },
+
+  /*
+    Function: hasShift
+      Return boolean whether the space has loaded this
+      a particular shift.
+
+    Parameters:
+      shiftId - a shift id.
+
+    Returns:
+      A boolean value.
+  */
+  hasShift: function(shiftId)
+  {
+    return this.getShift(shiftId) != null;
   },
 
   /*
