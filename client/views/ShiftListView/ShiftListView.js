@@ -148,9 +148,7 @@ var ShiftListView = new Class({
   onUncheck: function(evt)
   {
     var id = evt.data._id;
-    // leave edit mode
-    // REFACTOR: we should have a specific SSLeaveEditShift function - David
-    SSShowShift(SSSpaceForShift(id), id);
+    SSLeaveEditShift(SSSpaceForShift(id), id);
   },
 
 

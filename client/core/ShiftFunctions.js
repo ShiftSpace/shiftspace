@@ -211,6 +211,16 @@ var SSEditShift = function(space, shiftId)
   }
 }.asPromise();
 
+
+var SSLeaveEditShift = function(space, shiftId)
+{
+  var shift = SSGetShift(shiftId);
+  if(!Promise.isPromise(shift) && space.hasShift(shiftId))
+  {
+    SSShowShift(space, shiftId);
+  }
+}.asPromise();
+
 /*
 Function: SSSaveNewShift
   Creates a new entry for the shift on the server.
