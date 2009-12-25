@@ -180,16 +180,16 @@ var SSPublishPane = new Class({
 
     if(selectedShifts && selectedShifts.length > 0)
     {
-      var status = $A(this.StatusForm.ShiftStatusRadio).filter(function(radio) {
+      var status = this.StatusForm.getElements("input[type=radio]").filter(function(radio) {
         return $(radio).getProperty("checked");
       }.bind(this));
 
       if(status.length > 0)
       {
-        var status = status[0].getProperty("value");
+        status = status[0].getProperty("value");
         if(status == "public")
         {
-          publishData.private = false;
+          publishData['private'] = false;
         }
         else if(status == "private")
         {
