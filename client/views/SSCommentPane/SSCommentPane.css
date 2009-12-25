@@ -6,6 +6,11 @@
    font-size: 13px;
 }
 
+#CommentPaneForm textarea
+{
+   width: 330px;
+}
+
 .SSCommentsListViewCell
 {
    list-style: none;

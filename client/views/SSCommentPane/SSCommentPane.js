@@ -23,8 +23,8 @@ var SSCommentPane = new Class({
     this.comments = new SSTable("Comments", {
       resource: {read:'shift/'+shiftId+'/comments'},
       watches: [{
-                  events: [{resource:"event", action:"create"},
-                           {resource:"event", action:"delete"}],
+                  events: [{resource:"shift", action:"comment"},
+                           {resource:"comment", method:"delete"}],
                   handlers: [SSTable.dirtyTheViews]
                 }]
     });
@@ -63,6 +63,7 @@ var SSCommentPane = new Class({
     this.delegate().show();
     this.multiView().showViewByName(this.name);
     this.setCurrentShiftId(shiftId);
+    
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
   },
@@ -85,8 +86,15 @@ var SSCommentPane = new Class({
   {
     var shiftId = this.currentShiftId(), text = this.SSCommentText.getProperty("value");
     var p = SSPostComment(shiftId, text);
-    p.realize();
+    this.update(p);
   },
+
+
+  update: function()
+  {
+    this.element.getElement("textarea").set("value", "");
+    this.SSCommentsListView.refresh(true);
+  }.asPromise(),
   
   
   localizationChanged: function()
