@@ -109,6 +109,15 @@ var AllShiftsView = new Class({
   },
 
 
+  openShift: function(sender, evt)
+  {
+    var id = evt.data._id,
+        href = evt.data.href;
+    SSSetValue("__currentShift", {id: evt.data._id, href: href});
+    window.open(evt.data.href);
+  },
+
+
   initListViews: function()
   {
     SSTableForName("AllShifts").addView(this.AllShiftsListView);

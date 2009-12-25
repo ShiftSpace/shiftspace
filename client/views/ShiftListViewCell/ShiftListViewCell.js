@@ -220,7 +220,7 @@ var ShiftListViewCell = new Class({
     el.getElement('.userName').set('text', userName);
     if(ShiftSpace.User.isLoggedIn() && ShiftSpace.User.getUserName() == userName)
     {
-      el.getElement('.userName').addClass('loggedin')
+      el.getElement('.userName').addClass('loggedin');
     }
     else
     {
@@ -238,19 +238,27 @@ var ShiftListViewCell = new Class({
   
   setHref: function(href)
   {
-    var el = this.lockedElement();
-    var url = href.substr(7, href.length);
-    var parts = url.split("/");
-    
-    var link = new Element('a', {'href':href,'html':parts[0],'class':'domain'});
-    link.inject(el.getElement(".domain"));
+    var el = this.lockedElement(),
+        url = href.substr(7, href.length),
+        parts = url.split("/"),
+        hrefEl = el.getElement(".href a"),
+        domainEl = el.getElement(".domain a");
+    if(hrefEl)
+    {
+      hrefEl.set("rel", href);
+      hrefEl.set("text", href);
+    }
+    if(domainEl)
+    {
+      domainEl.set("rel", href);
+    }
   },
 
 
   setDomain: function(domain)
   {
     var el = this.lockedElement();
-    el.getElement(".domain").set("text", domain);
+    el.getElement(".domain a").set("text", domain);
   },
   
   

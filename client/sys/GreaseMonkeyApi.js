@@ -24,7 +24,6 @@ function GM_addStyle(css)
   }
   else
   {
-    SSLog('add style', SSLogForce);
     var style = document.createStyleSheet();
     style.cssText = css;
   }

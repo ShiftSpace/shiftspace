@@ -198,6 +198,7 @@ var ShiftSpace = new (function() {
             }
             if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
           }
+          SSCheckForCurrentShift();
         }.bind(this)));
       }
       else
@@ -205,6 +206,18 @@ var ShiftSpace = new (function() {
         SSPostNotification("onSync");
       }
     }.asPromise();
+
+
+    function SSCheckForCurrentShift()
+    {
+      var currentShift = SSGetValue("__currentShift");
+      if(currentShift && window.location.href == currentShift.href)
+      {
+        SSSetValue("__currentShift", null);
+        SSLog("showing shift", currentShift.id, SSLogForce);
+        SSShowShift(SSSpaceForShift(currentShift.id), currentShift.id);
+      }
+    }
 
     /*
       Function: SSCheckHash

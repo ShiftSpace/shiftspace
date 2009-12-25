@@ -15,7 +15,7 @@ var SSTabView = new Class({
     
   initialize: function(el, options)
   {
-    this.setOptions(this.defaults(), options)
+    this.setOptions(this.defaults(), options);
     this.parent(el, options);
     this.__selectedTab = -1;
     // check for default tab
