@@ -354,19 +354,23 @@ class Shift(SSDocument):
         self.updateInGroups(oldGroupDbs)
         self.addToGroups(newGroupDbs)
         
+        # if public shift
         # create in user/public, delete from user/private
-        # replicate to user/feed and to shiftspace/public
         # replicate shiftspace/public to shiftspace/shared
         if not isPrivate:
             publicdb = SSUser.publicDb(self.createdBy)
             if Shift.load(core.connect(publicdb), self.id):
                 self.updateIn(publicdb)
             else:
+                # TODO: copyTo should probably just be store - David
                 self.copyTo(publicdb)
                 privatedb = core.connect(SSUser.privateDb(self.createdBy))
                 del privatedb[self.id]
-            core.replicate(SSUser.publicDb(self.createdBy), "shiftspace/public")
-            core.replicate("shiftspace/public", "shiftspace/shared")
+            # TODO: check that we have to force it - David
+            db = core.connect(publicdb)
+            newShift = db[self.id]
+            core.replicate(publicdb, "shiftspace/public")
+            core.replicate(publicdb, "shiftspace/shared")
         else:
             privatedb = SSUser.privateDb(self.createdBy)
             self.store(core.connect(privatedb))
