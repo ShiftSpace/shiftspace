@@ -2,98 +2,85 @@
      class="SSTabView SSTabViewSubTabStyle SSTabPane" 
      uiclass="LoginTabView" 
      outlet="SSConsole">
-  
-  <div class="SSControlView">
-    <div title="Login" class="SSButton SSActive SSLocalized">Login</div>
-    <div title="Sign Up" class="SSButton SSLocalized">Sign Up</div>
-    <div title="Password" class="SSButton SSLocalized">Password</div>
-  </div>
-
-  <!-- Start Content View -->
-  <div class="SSContentView" autoresize="1">
-    <!-- The Login Pane -->
-    <div class="SSTabPane">
-      <form id="SSLoginForm" class="LoginTabViewForm" outlet="LoginTabView">
-
-        <div>
-	        <label title="User Name" class="SSLocalized">
-	          User Name
-	        </label>
-	        <input id="SSLoginFormUsername" type="text" outlet="LoginTabView"></input>
-				</div>
-				
-				<div>        
-	        <label title="Password" class="SSLocalized">
-	          Password
-	        </label>
-	        <input id="SSLoginFormPassword" type="password" outlet="LoginTabView"></input>
-				</div>
-				        
-        <span id="SSLoginFormMessage" class="SSLocalized" outlet="LoginTabView"></span>
-				        
-        <span id="SSLoginFormForgot" class="SSLocalized" outlet="LoginTabView">
-        	<a href="#" class="SSMinorButton">Forgot my password</a>
-        </span>
-        
-        <input id="SSLoginFormSubmit" class="SSLocalized SSMajorButton" title="Login" type="button" value="Login" outlet="LoginTabView"></input>
-        
-        <!-- Hidden submit button -->
-        <input style="display: none" type="submit"></input>
-        
-      </form>
+    
+    <div class="SSControlView">
+        <div title="Login" class="SSButton SSActive SSLocalized">Login</div>
+        <div title="Sign Up" class="SSButton SSLocalized">Sign Up</div>
+        <div title="Password" class="SSButton SSLocalized">Password</div>
     </div>
-    <!-- End Login Pane -->
 
-    <!-- The Sign up Pane -->
-    <div class="SSTabPane">
-      <form id="SSSignUpForm" class="LoginTabViewForm" outlet="LoginTabView">
-        
-        <fieldset>
-          <label title="User Name" class="SSLocalized">
-            User Name
-          </label>
-          <input id="SSSignUpFormUsername" type="text" outlet="LoginTabView"></input>
-        
-          <label title="Email Address" class="SSLocalized">
-            Email Address
-          </label>
-          <input id="SSSignUpFormEmail" type="text" outlet="LoginTabView"></input>
-        </fieldset>
-        
-        <fieldset>
-          <label title="Password" class="SSLocalized">
-            Password
-          </label>
-          <input id="SSSignUpFormPassword" type="password" outlet="LoginTabView"></input>
-        
-          <label title="Confirm Password" class="SSLocalized">
-            Confirm Password
-          </label>
-          <input id="SSSignUpFormConfirmPassword" type="password" outlet="LoginTabView"></input>
-        </fieldset>
-        
-        <div style="clear:both">
-        <span id="SSSignUpFormMessage" class="SSLocalized" outlet="LoginTabView"></span>
-        
-        <input id="SSSignUpFormSubmit" class="SSLocalized SSMajorButton" type="button" title="Sign Up" value="Submit" outlet="LoginTabView"></input>
-        <!-- Hidden submit button -->
-        <input style="display: none" type="submit"></input>
+    <!-- Start Content View -->
+    <div class="SSContentView" autoresize="1">
+        <!-- The Login Pane -->
+        <div class="SSTabPane">
+            <form id="SSLoginForm" class="LoginTabViewForm" outlet="LoginTabView">
+                <div>
+	            <label title="User Name" class="SSLocalized">
+	                User Name
+	            </label>
+	            <input id="SSLoginFormUsername" type="text" outlet="LoginTabView"></input>
+		</div>
+		<div>        
+	            <label title="Password" class="SSLocalized">
+	                Password
+	            </label>
+	            <input id="SSLoginFormPassword" type="password" outlet="LoginTabView"></input>
+		</div>
+                <span id="SSLoginFormMessage" class="SSLocalized" outlet="LoginTabView"></span>
+                <span id="SSLoginFormForgot" class="SSLocalized" outlet="LoginTabView">
+        	    <a href="#" class="SSMinorButton">Forgot my password</a>
+                </span>
+                <input id="SSLoginFormSubmit" class="SSLocalized SSMajorButton" title="Login" type="button" value="Login" outlet="LoginTabView"></input>
+                <!-- Hidden submit button -->
+                <input style="display: none" type="submit"></input>
+            </form>
         </div>
-      </form>
-    </div>
-    <!-- End Login Pane -->
+        <!-- End Login Pane -->
 
-    <!-- Start Password Pane -->
-    <div class="SSTabPane">
-      <form id="SSForgottenPasswordForm" class="LoginTabViewForm">
-        <div>Forgot your password?<br/> Enter your email or username:</div>
-        <input id="SSForgottenPasswordFormEmail" type="text" outlet="LoginTabView"></input>
-        <input id="SSForgottenPasswordFormSubmit" class="SSMajorButton SSLocalized" type="button" title="Submit" value="Submit" outlet="LoginTabView"></input>
-      </form>
-    </div>
-    <!-- End Password Pane -->
+        <!-- The Sign up Pane -->
+        <div class="SSTabPane">
+            <form id="SSSignUpForm" class="LoginTabViewForm" outlet="LoginTabView">
+                <fieldset>
+                    <label title="User Name" class="SSLocalized">
+                        User Name
+                    </label>
+                    <input id="SSSignUpFormUsername" type="text" outlet="LoginTabView"></input>
+                    <label title="Email Address" class="SSLocalized">
+                        Email Address
+                    </label>
+                    <input id="SSSignUpFormEmail" type="text" outlet="LoginTabView"></input>
+                </fieldset>
+                <fieldset>
+                    <label title="Password" class="SSLocalized">
+                        Password
+                    </label>
+                    <input id="SSSignUpFormPassword" type="password" outlet="LoginTabView"></input>
+                    <label title="Confirm Password" class="SSLocalized">
+                        Confirm Password
+                    </label>
+                    <input id="SSSignUpFormConfirmPassword" type="password" outlet="LoginTabView"></input>
+                </fieldset>
+                <div style="clear:both">
+                    <span id="SSSignUpFormMessage" class="SSLocalized" outlet="LoginTabView"></span>
+                    <input id="SSSignUpFormSubmit" class="SSLocalized SSMajorButton" type="button" title="Sign Up" value="Submit" outlet="LoginTabView"></input>
+                    <!-- Hidden submit button -->
+                    <input style="display: none" type="submit"></input>
+                </div>
+            </form>
+        </div>
+        <!-- End Login Pane -->
 
-  </div>
-  <!-- End Content View -->
+        <!-- Start Password Pane -->
+        <div class="SSTabPane">
+            <form id="SSForgottenPasswordForm" class="LoginTabViewForm">
+                <div>Forgot your password?<br/> Enter your email or username:</div>
+                <input id="SSForgottenPasswordFormEmail" type="text" outlet="LoginTabView"></input>
+                <input id="SSForgottenPasswordFormSubmit" class="SSMajorButton SSLocalized" type="button" title="Submit" value="Submit" outlet="LoginTabView"></input>
+            </form>
+        </div>
+        <!-- End Password Pane -->
+
+    </div>
+    <!-- End Content View -->
 
 </div>
