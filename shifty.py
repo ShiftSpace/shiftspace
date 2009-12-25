@@ -212,6 +212,7 @@ def updatedb():
     Resync the server/views folder with the design documents
     in the database.
     """
+    from server.models import core
     if core.test():
         setup.sync()
     else:
