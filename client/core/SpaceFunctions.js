@@ -423,7 +423,7 @@ var SSSpaceForName = function(name)
   {
     return SSLoadSpace(name);
   }
-};
+}.asPromise();
 
 /*
 Function: SSSpacesByPosition
