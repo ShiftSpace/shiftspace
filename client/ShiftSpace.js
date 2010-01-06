@@ -66,6 +66,7 @@ Class: ShiftSpace
   <ShiftSpace.Space>, <ShiftSpace.Shift>, <ShiftSpace.Plugin> to see public
   interfaces.
 */
+var __root = this;
 var ShiftSpace = new (function() {
     // INCLUDE Bootstrap
     SSLog("ShiftSpace starting up", SSLogSystem);
@@ -334,14 +335,17 @@ var ShiftSpace = new (function() {
     {
       unsafeWindow.ShiftSpace = this;
       this.sys = __sys__;
-
       // export symbols directly to the window for debugging purposes - David
-      window.SSSpaceForName = SSSpaceForName;
-      window.SSApp = SSApp;
-      window.SSApplication = SSApplication;
-      window.SSTableForName = SSTableForName;
-      window.SSControllerForNode = SSControllerForNode;
-      window.Sandalphon = Sandalphon;
+      ['SSSpaceForName',
+       'SSApp',
+       'SSApplication',
+       'SSTableForName',
+       'SSControllerForNode',
+       'Sandalphon',
+       'SSInstalledSpaces',
+       ].each(function(sym) {
+         unsafeWindow[sym] = eval(sym);
+       });
     }
 
     return this;
