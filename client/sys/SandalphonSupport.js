@@ -7,7 +7,6 @@ var SSSandalphonError = SSException;
 
 SSSandalphonError.NoControllerForCSSId = new Class({
   Extends: SSSandalphonError,
-  Implements: SSExceptionPrinter,
   name: "SSSandalphonError.NoSuchSubView"
 });
 

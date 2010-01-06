@@ -14,30 +14,13 @@
 
 var SSCellError = SSException;
 
-SSCellError.NoSuchProperty = new Class({
-  Extends: SSCellError,
-  Implements: SSExceptionPrinter,
-  name:"SSCellError.NoSuchProperty"
-});
-
-SSCellError.NoLock = new Class({
-  Extends: SSCellError,
-  Implements: SSExceptionPrinter,
-  name:"SSCellError.NoLock"
-});
-
-// DELETE
-SSCellError.MissingAccessor = new Class({
-  Extends: SSCellError,
-  Implements: SSExceptionPrinter,
-  name:"SSCellError.MissingAccessor"
-});
-
-SSCellError.NoSuchTarget = new Class({
-  Extends: SSCellError,
-  Implements: SSExceptionPrinter,
-  name:"SSCellError.NoSuchTarget"
-});
+SSError(SSCellError, SSCellError, [
+  "NoSuchProperty",
+  "NoLock",
+  "MissingAccessor",
+  "NoSuchTarget",
+  "NoMethodForAction"
+]);
 
 /*
   Class: SSCell
@@ -136,6 +119,12 @@ var SSCell = new Class({
   runAction: function(action, event, node)
   {
     var target = this.getBinding(action.target);
+
+    if(!action.method)
+    {
+      throw (new SSCellError.NoMethodForAction(new Error(), "action does not define a method."));
+    }
+
     var method = (target && target[action.method] && target[action.method].bind(target)) || 
                  (action.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [action.method])) ||
                  null;
@@ -144,6 +133,7 @@ var SSCell = new Class({
     {
       throw (new SSCellError.NoSuchTarget(new Error(), "target " + target + " does not exist."));
     }
+    
     method(this, {
       action: action,
       listView: this.delegate(),
