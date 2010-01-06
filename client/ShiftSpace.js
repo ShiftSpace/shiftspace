@@ -167,7 +167,6 @@ var ShiftSpace = new (function() {
             SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
             ps = SSLoadDefaultSpacesAttributes();
           }
-          SSUpdateInstalledSpaces(ps);
           return value;
         }
       );
@@ -199,6 +198,8 @@ var ShiftSpace = new (function() {
             {
               SSLog("User is not logged in", userData, SSLogSystem);
             }
+            SSLog("Update installed spaces", SSLogForce);
+            SSUpdateInstalledSpaces();
             if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
           }
           SSCheckForCurrentShift();
