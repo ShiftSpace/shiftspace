@@ -123,6 +123,8 @@ var ShiftSpace = new (function() {
       ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
 
       SSAddObserver(SSNotificationProxy, 'onInstalledSpacesDidChange', SSUpdateInstalledSpaces);
+      SSAddObserver(SSNotificationProxy, 'onUserLogin', SSUpdateInstalledSpaces);
+      SSAddObserver(SSNotificationProxy, 'onUserLogout', SSUpdateInstalledSpaces);
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
