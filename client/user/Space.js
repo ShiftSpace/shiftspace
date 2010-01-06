@@ -907,5 +907,11 @@ var ShiftSpaceSpace = new Class({
     {
       SSLog([url, "not declared in attrs.json permissions list for", attrs.name, "space."].join(""), SSLogError);
     }
+  },
+
+
+  getUserName: function()
+  {
+    return ShiftSpace.User.getUserName();
   }
 });
