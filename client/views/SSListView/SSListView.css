@@ -2,11 +2,30 @@
 {
   padding: 0px;
   position: relative;
+	background: url(/images/Console/content-shadow.png);
 }
 
 .SSListView > .SSCell
 {
   display: none;
+}
+
+li.SSListViewCell,
+li.ShiftListViewCell,
+li.PeopleListViewCell,
+li.GroupListViewCell
+{
+  background-image: url(/images/Console/content-shadow.png);
+  background-repeat: repeat-y;
+  background-position: 0 -10px;
+}
+
+li.SSListViewCell:first-child,
+li.ShiftListViewCell:first-child,
+li.PeopleListViewCell:first-child,
+li.GroupListViewCell:first-child
+{
+  background-position: 0 0;
 }
 
 .SSListView.HorizontalListView > li.SSListViewCell
@@ -23,10 +42,10 @@
 {
    position: absolute;
    top: 0px;
-   width: 60px;
-   height: 6px;
    left: 50%;
-   background-color: #777;
-   margin-left: -30px;
+   margin-left: -35px;
    z-index: 3;
+   background: url(/images/Console/filter-handle.png) no-repeat center top;
+   width: 70px;
+   height: 10px;
 }

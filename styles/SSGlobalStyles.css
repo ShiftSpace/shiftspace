@@ -1,3 +1,69 @@
+/* Basic Element Styles =================================== */
+
+
+/* Form Elements ============================================== */
+
+input[type='text']
+{
+	background: #f7f5f2 url(/images/input.text.png);
+	border: #b3ada5 solid 1px;
+	color:#464540;
+	padding:2px 3px;
+}
+
+/* These cannot be done in CSS and will have to happen in JS: */
+input[type='checkbox']
+{
+	background: url(images/checkbox.png);
+	background-position: top center;
+}
+
+input[type='checkbox']:hover
+{
+	background-position: center center;
+}
+
+input[type='checkbox']:checked
+{
+	background-position: bottom center;
+}
+
+/* Buttons ============================================== */
+
+.SSMinorButton{
+   background: none;
+   border: 0;
+   color: #f63b02;
+   text-decoration: underline;
+   padding:0 5px;
+}
+
+.SSInactiveButton{
+   background: none;
+   border:2px #f63b02 solid;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   padding:0 5px;
+   font-weight:bold;
+   color: #f63b02;
+}
+
+.SSMajorButton{
+   background-color: #f63b02;
+   color:fff;
+   border:2px #b52b01 solid;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   padding:0 5px;
+   font-weight:bold;
+}
+
+.hide{
+   display: none;
+}
+
+/* More Styles ============================================= */
+
 .SSTabView > .SSControlView > .SSButton
 {
   color: #74665A;
@@ -431,39 +497,4 @@ li.GroupListViewCell .settings
 .leftSideBar input:checked + label
 {
   font-weight:bold;
-}
-
-/* Buttons **************************************/
-
-
-.SSMinorButton{
-   background: none;
-   border: 0;
-   color: #f63b02;
-   text-decoration: underline;
-   padding:0 5px;
-}
-
-.SSInactiveButton{
-   background: none;
-   border:2px #f63b02 solid;
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   padding:0 5px;
-   font-weight:bold;
-   color: #f63b02;
-}
-
-.SSMajorButton{
-   background-color: #f63b02;
-   color:fff;
-   border:2px #b52b01 solid;
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   padding:0 5px;
-   font-weight:bold;
-}
-
-.hide{
-   display: none;
 }
