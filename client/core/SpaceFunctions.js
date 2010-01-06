@@ -160,7 +160,7 @@ function SSIsAbsoluteURL(string)
 function SSLoadDefaultSpacesAttributes()
 {
   var defaultSpaces = {};
-  var ps = []
+  var ps = [];
   __defaultSpacesList.length.times(function(i) {
     var spaceName = __defaultSpacesList[i];
     var p = SSLoadSpaceAttributes(spaceName);
@@ -347,7 +347,7 @@ Parameters:
 var SSUpdateInstalledSpaces = function(controlp)
 {
   __installedSpaces = ShiftSpace.User.installedSpaces();
-}.asPromise()
+}.asPromise();
 
 /*
 Function: SSInitDefaultSpaces
