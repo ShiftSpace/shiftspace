@@ -51,7 +51,7 @@ var SSCommentsListViewCell = new Class({
     el.getElement('.userName').set('text', userName);
     if(ShiftSpace.User.isLoggedIn() && ShiftSpace.User.getUserName() == userName)
     {
-      el.getElement('.userName').addClass('loggedin')
+      el.getElement('.userName').addClass('loggedin');
     }
     else
     {
