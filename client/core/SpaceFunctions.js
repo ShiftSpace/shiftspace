@@ -103,7 +103,7 @@ function SSRegisterSpace(instance)
 {
   var spaceName = instance.attributes().name;
   instance.addEvent('onShiftUpdate', function(shift) {
-    SSSaveShift.safeCall(shift);
+    SSSaveShift.safeCall(null, shift);
   });
   var spaceDir = SSURLForSpace(spaceName);
 

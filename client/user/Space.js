@@ -769,7 +769,7 @@ var ShiftSpaceSpace = new Class({
   */
   setValue: function(key, value)
   {
-    SSSetValue.safeCall(this.attributes().name + "." + key, value);
+    SSSetValue.safeCall(null, this.attributes().name + "." + key, value);
   },
 
   /*
@@ -783,7 +783,12 @@ var ShiftSpaceSpace = new Class({
   */
   getValue: function(key, defaultValue, callback)
   {
-    SSGetValue.safeCallWithResult(this.attributes().name + '.' + key, defaultValue, callback);
+    SSGetValue.safeCall(
+      null,
+      this.attributes().name + '.' + key,
+      defaultValue,
+      callback
+    );
   },
 
   /*
@@ -879,7 +884,8 @@ var ShiftSpaceSpace = new Class({
    */
   getPreference: function(key, defaultValue, callback)
   {
-    ShiftSpace.User.getPreference.safeCallWithResult(
+    ShiftSpace.User.getPreference.safeCall(
+      ShiftSpace.User,
       this.attributes().name+'.'+key,
       defaultValue,
       callback
