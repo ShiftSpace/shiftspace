@@ -20,6 +20,16 @@ ul#SSInstalledSpaces
   list-style-type: none;
 }
 
+ul#SSInstalledSpaces li
+{
+   width: 50%;
+   float: left;
+   border-left: 2px solid #ccc;
+   border-bottom: 2px solid #ccc;
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+}
+
 div#SSInstalledSpacesTabPane
 {
   overflow-y: scroll;
