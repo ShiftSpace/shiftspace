@@ -97,14 +97,17 @@ class Comment(SSDocument):
 
         authorIds = [comment["shiftAuthor"] for comment in comments]
         shiftIds = [comment["shiftId"] for comment in comments]
+        userIds = [comment["createdBy"] for comment in comments]
 
+        users = core.fetch(keys=userIds)
         authors = core.fetch(keys=authorIds)
         shifts = core.fetch(core.connect("shiftspace/shared"), keys=shiftIds)
         commentCounts = core.fetch(core.connect("shiftspace/shared"), view=Comment.count_by_shift, keys=shiftIds)
         
         for i in range(len(comments)):
             if (authors[i]):
-                comments[i]["userName"] = authors[i]["userName"]
+                comments[i]["authorName"] = authors[i]["userName"]
+            comments[i]["userName"] = users[i]["userName"]
             comments[i]["createdStr"] = utils.pretty_date(utils.futcstr(comments[i]["created"]))
             comments[i]["commentCount"] = commentCounts[i]
             comments[i]["space"] = shifts[i]["space"]
