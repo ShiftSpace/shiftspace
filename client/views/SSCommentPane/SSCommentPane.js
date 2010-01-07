@@ -64,16 +64,8 @@ var SSCommentPane = new Class({
     this.multiView().showViewByName(this.name);
     this.setCurrentShiftId(shift._id);
 
-    if(ShiftSpace.User.isLoggedIn())
-    {
-      this.element.getElement("#CommentPaneForm").removeClass("SSDisplayNone");
-      this.element.getElement("#CommentPaneForm .userName").set("text", ShiftSpace.User.getUserName());
-    }
-    else
-    {
-      this.element.getElement("#CommentPaneForm").addClass("SSDisplayNone");
-    }
-    
+    this.update(shift);
+
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
   },
@@ -100,10 +92,29 @@ var SSCommentPane = new Class({
   },
 
 
-  update: function()
+  update: function(shift)
   {
     this.element.getElement("textarea").set("value", "");
     this.SSCommentsListView.refresh(true);
+
+    if(ShiftSpace.User.isLoggedIn())
+    {
+      this.element.getElement("#CommentPaneForm").removeClass("SSDisplayNone");
+      this.element.getElement("#CommentPaneForm .userName").set("text", ShiftSpace.User.getUserName());
+    }
+    else
+    {
+      this.element.getElement("#CommentPaneForm").addClass("SSDisplayNone");
+    }
+    
+    if(shift)
+    {
+      var attrsp = SSGetSpaceAttributes(shift.space.name);
+      (function(attrs) {
+        this.element.getElement("#SSCommentShift .spaceIcon").set("src", attrs.icon);
+      }.asPromise().bind(this))(attrsp);
+      SSTemplate(this.element.getElement("#SSCommentShift"), shift);
+    }
   }.asPromise(),
   
   

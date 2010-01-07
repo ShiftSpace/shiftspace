@@ -460,6 +460,10 @@ function SSTemplate(el, props)
            attr = "value";
       }
     }
+    if(target.get('tag') == "img")
+    {
+      attr = "src";
+    }
     if(target) target.set(attr, value);
   }, this);
 }

@@ -30,14 +30,6 @@ var SSCommentsListViewCell = new Class({
   },
 
   
-  setSpace: function(space)
-  {
-    var el = this.lockedElement(),
-        attrs = SSGetSpaceAttributes(space.name);
-    el.getElement(".spaceIcon").set("src", attrs.icon);
-  },
-  
-
   setModified: function(modified)
   {
     var el = this.lockedElement();

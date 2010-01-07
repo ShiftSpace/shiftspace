@@ -108,6 +108,7 @@ class Comment(SSDocument):
             if (authors[i]):
                 comments[i]["authorName"] = authors[i]["userName"]
             comments[i]["userName"] = users[i]["userName"]
+            comments[i]["gravatar"] = users[i]["gravatar"]
             comments[i]["createdStr"] = utils.pretty_date(utils.futcstr(comments[i]["created"]))
             comments[i]["commentCount"] = commentCounts[i]
             comments[i]["space"] = shifts[i]["space"]
