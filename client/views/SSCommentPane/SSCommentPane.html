@@ -5,6 +5,10 @@
        delegate: 'SSConsoleWindow'
      }">
 
+    <div id="SSCommentHeader">
+        <span class="count">1 comment to</span>:
+    </div>
+    
     <ul id="SSCommentsListView"
         class="SSListView"
         uiclass="SSListView"
@@ -12,26 +16,29 @@
         <li class="SSCell SSCommentsListViewCell"
             uiclass="SSCommentsListViewCell"
             options="{
-              properties: ['userName', 'text']
+              properties: ['userName', 'text', 'gravatar', 'space']
             }">
-            <div class="userName"></div>
-            <div class="gravatar"></div>
+            <img class="spaceIcon"></img>
+            <div class="user">
+                <div class="gravatarContainer">
+                    <img class="rounded-image gravatar" width="16" height="16"></img>
+                </div>
+                <div class="userName"></div>
+            </div>
             <div class="text"></div>
             <div class="created"></div>
         </li>
     </ul>
 
     <div id="CommentPaneForm">
-        <label>Leave a comment</label>
+        <label id="SSCommentPrompt">Hey <span class="userName">guest</span>, post a comment:</label>
         <div>
             <textarea id="SSCommentText" outlet="SSCommentPane"></textarea>
         </div>
         <div>
-            <label>Notify me when other people comment on this thread</label>
             <input id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
-        </div>
-        <div>
-            <button id="SSCloseComments" outlet="SSCommentPane">Close</button>
+            <label id="SSCommentNotify">Inform me of new comments</label>
+            <button id="SSCloseComments" outlet="SSCommentPane">Cancel</button>
             <button id="SSPostComment" outlet="SSCommentPane">Post Comment</button>
         </div>
     </div>
