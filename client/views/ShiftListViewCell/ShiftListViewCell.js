@@ -136,9 +136,9 @@ var ShiftListViewCell = new Class({
         evt = new Event(evt);
         var target = $(evt.target), li = target.getParent("li");
         this.lock(li);
-        var id = this.data()._id, p;
+        var data = this.data(), p;
         this.unlock();
-        SSPostNotification("showComments", id);
+        SSPostNotification("showComments", data);
         evt.stop();
       }.bind(this));
     }

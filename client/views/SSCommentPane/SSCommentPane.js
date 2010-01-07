@@ -53,16 +53,26 @@ var SSCommentPane = new Class({
   },
   
   
-  'open': function(shiftId)
+  'open': function(shift)
   {
     this.cleanupTable();
-    this.initTable(shiftId);
+    this.initTable(shift._id);
     SSTableForName("Comments").addView(this.SSCommentsListView);
     
     this.delegate().tall();
     this.delegate().show();
     this.multiView().showViewByName(this.name);
-    this.setCurrentShiftId(shiftId);
+    this.setCurrentShiftId(shift._id);
+
+    if(ShiftSpace.User.isLoggedIn())
+    {
+      this.element.getElement("#CommentPaneForm").removeClass("SSDisplayNone");
+      this.element.getElement("#CommentPaneForm .userName").set("text", ShiftSpace.User.getUserName());
+    }
+    else
+    {
+      this.element.getElement("#CommentPaneForm").addClass("SSDisplayNone");
+    }
     
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
