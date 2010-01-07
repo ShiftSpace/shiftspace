@@ -129,5 +129,11 @@ var SettingsTabView = new Class({
   {
     var spaces = SSSpacesByPosition(), spaceToRemove = spaces[index];
     SSUninstallSpace(spaceToRemove.name);
+  },
+
+
+  showSpaceSettings: function(sender, data)
+  {
+    SSPostNotification("onShowSpaceSettings", data);
   }
 });
