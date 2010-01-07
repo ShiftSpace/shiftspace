@@ -339,7 +339,7 @@ var SSCell = new Class({
     See Also:
       <prepareClone>
   */
-  clone: function()
+  clone: function(index)
   {
     var clone = this.__modelClone.clone(true);
     if(clone.getElement('*[uiclass]')) Sandalphon.activate(clone);
@@ -361,7 +361,7 @@ var SSCell = new Class({
     See Also:
       <setData>, <clone>
   */
-  cloneWithData: function(data)
+  cloneWithData: function(data, index)
   {
     var clone = this.clone();
     this.lock(clone);

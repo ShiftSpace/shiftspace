@@ -32,6 +32,12 @@
    font-size: 16px;
 }
 
+ul#SSCommentsListView
+{
+   height: 150px;
+   overflow-y: scroll;
+}
+
 ul#SSCommentsListView img.spaceIcon
 {
    display: none;
