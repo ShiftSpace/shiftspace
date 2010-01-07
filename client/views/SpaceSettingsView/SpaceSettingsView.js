@@ -12,7 +12,6 @@ var SpaceSettingsView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    SSLog("init SpaceSettingsView", SSLogForce);
     SSAddObserver(this, "onShowSpaceSettings", this.showSpaceSettings.bind(this));
   },
 
@@ -25,6 +24,7 @@ var SpaceSettingsView = new Class({
 
   'open': function()
   {
+    this.delegate().tall();
     this.delegate().show();
     this.multiView().showViewByName(this.name);
   },
