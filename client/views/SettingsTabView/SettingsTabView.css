@@ -29,3 +29,14 @@ div#SSInstalledSpacesTabPane
   right: 0px;
   bottom: 0px;
 }
+
+#PreferencesTab .col, #InterfaceTab .col
+{
+   float: left;
+   width: 50%;
+}
+
+#InterfaceTab input[type=text]
+{
+   width: 50px;
+}
