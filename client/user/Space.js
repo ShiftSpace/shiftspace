@@ -468,7 +468,7 @@ var ShiftSpaceSpace = new Class({
       }
       catch(exc)
       {
-        SSLog(SSDescribeException(exc));
+        SSLog(exc);
       }
     }
     var self = this;

@@ -118,14 +118,8 @@ var SSCell = new Class({
    */
   runAction: function(action, event, node)
   {
-    var target = this.getBinding(action.target);
-
-    if(!action.method)
-    {
-      throw (new SSCellError.NoMethodForAction(new Error(), "action does not define a method."));
-    }
-
-    var method = (target && target[action.method] && target[action.method].bind(target)) || 
+    var target = this.getBinding(action.target),
+        method = (target && target[action.method] && target[action.method].bind(target)) || 
                  (action.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [action.method])) ||
                  null;
                   
@@ -193,6 +187,14 @@ var SSCell = new Class({
     }
     return null;
   },
+
+
+  validateActions: function(actions)
+  {
+    return actions.every(function(action) {
+      return action.method != null;
+    });
+  },
   
   /*
     Function: setActions
@@ -204,6 +206,7 @@ var SSCell = new Class({
    */
   setActions: function(actions)
   {
+    if(actions && !this.validateActions(actions)) throw new SSCellError.NoMethodForAction(new Error(), "No method for action");
     this.__actions = actions;
   },
   

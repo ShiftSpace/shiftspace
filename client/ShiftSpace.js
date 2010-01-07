@@ -347,7 +347,8 @@ var ShiftSpace = new (function() {
        'Sandalphon',
        'SSInstalledSpaces',
        'SSGetSpaceAttributes',
-       'SSCellError'
+       'SSCellError',
+       'SSException'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);
        });
