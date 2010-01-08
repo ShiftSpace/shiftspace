@@ -3,29 +3,29 @@
 
 /* Form Elements ============================================== */
 
-input[type='text']
+input[type=text], input[type=password]
 {
-	background: #f7f5f2 url(/images/input.text.png);
-	border: #b3ada5 solid 1px;
-	color:#464540;
-	padding:2px 3px;
+   background: #f7f5f2 url(/images/input.text.png);
+   border: #b3ada5 solid 1px;
+   color:#464540;
+   padding:2px 3px;
 }
 
 /* These cannot be done in CSS and will have to happen in JS: */
-input[type='checkbox']
+input[type=checkbox]
 {
-	background: url(images/checkbox.png);
-	background-position: top center;
+   background: url(images/checkbox.png);
+   background-position: top center;
 }
 
-input[type='checkbox']:hover
+input[type=checkbox]:hover
 {
-	background-position: center center;
+   background-position: center center;
 }
 
-input[type='checkbox']:checked
+input[type=checkbox]:checked
 {
-	background-position: bottom center;
+   background-position: bottom center;
 }
 
 /* Buttons ============================================== */
