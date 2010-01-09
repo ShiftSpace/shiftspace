@@ -366,7 +366,7 @@ class Shift(SSDocument):
                 self.copyTo(publicdb)
                 privatedb = core.connect(SSUser.privateDb(self.createdBy))
                 del privatedb[self.id]
-            # TODO: check that we have to force it - David
+            # TODO: check that we have to force it in order to have it ready for replication - David
             db = core.connect(publicdb)
             newShift = db[self.id]
             core.replicate(publicdb, "shiftspace/public")
