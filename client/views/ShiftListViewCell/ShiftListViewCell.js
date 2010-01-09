@@ -251,7 +251,7 @@ var ShiftListViewCell = new Class({
 
     if(domainEl)
     {
-      if(href == window.location.href)
+      if(href == window.location.href && this.options.hideSameDomain)
       {
         domainEl.addClass("SSDisplayNone");
       }
