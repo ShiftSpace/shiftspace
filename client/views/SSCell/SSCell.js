@@ -150,6 +150,7 @@ var SSCell = new Class({
   {
     // TODO: allow getBinding to access simple properties - David
     if(target == 'self') return this;
+    if(target == 'delegate') return this.delegate();
     
     var parts = target.split('.');
     var base = ShiftSpaceNameTable[parts.shift()];
