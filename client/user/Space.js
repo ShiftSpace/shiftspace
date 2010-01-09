@@ -919,5 +919,11 @@ var ShiftSpaceSpace = new Class({
   getUserName: function()
   {
     return ShiftSpace.User.getUserName();
+  },
+
+
+  getUserId: function()
+  {
+    return ShiftSpace.User.getId();
   }
 });
