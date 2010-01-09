@@ -144,15 +144,21 @@ input[type=checkbox]:checked
 
 .ShiftListView, .PeopleListView
 {
-  /*position: absolute;*/
-   top: 0px;
-/*  right: 6px;*/
+   position: absolute;
+   top: 4px;
    bottom: 0px;
+   left: 0px;
+   right: 0px;
+   list-style: none;
    border:1px solid #DDD7D2; /*TODO: use image for gradient border*/
    border-top: none;
    overflow-y: auto;
-   height: 100%;
-   margin-top: 4px;
+   margin: 0px;
+}
+
+.ShiftListView.SSFilter
+{
+   top: 30px;
 }
 
 .ShiftListView .ShiftListViewCell

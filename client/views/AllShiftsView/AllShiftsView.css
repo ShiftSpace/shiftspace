@@ -3,10 +3,6 @@
   left: 166px;
 }
 
-.ShiftListView{
-  top: 1px;
-}
-
 ul.ShiftListView li.ShiftListViewCell{
   position: relative;
   height: 26px;
