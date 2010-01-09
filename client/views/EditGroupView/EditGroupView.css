@@ -1,6 +1,6 @@
 #EditGroupView
 {
-    color: #76554A;
+    color: #74665A;
     font-family: Helvetica,Arial,Verdana,sans-serif;
     font-size: 12px; 
 }
@@ -8,7 +8,7 @@
 #EditGroupView > #CreateTitle
 {
     font-size: 15px;
-    color: #F63B02
+    color: #F63B02;
 }
 
 #EditGroupView form
@@ -53,4 +53,52 @@
 #EditGroupView form input.shortName
 {
     width: 156px;
+}
+
+#EditGroupView .userCount
+{
+    padding-left: 2px;
+    font-size: 15px;
+}
+
+#EditGroupView #InviteUsers
+{
+    color: 74665A;
+    border: 2px solid #B3ADA5;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+#EditGroupView #CancelAction
+{
+    float: right;
+    color: #D7D1DC;
+    background-color: inherit;
+    text-decoration: underline;
+    border: none;
+}
+
+#EditGroupView #CancelAction span
+{
+    color: #74665A;
+}
+
+#EditGroupView #CreateGroup
+{
+    float: right;
+    margin-left: 4px;
+    color: #F63B02;
+    border: 2px solid #B3ADA5;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+
+#EditGroupView #SaveGroup
+{
+    float: right;
+    margin-left: 4px;
+    color: #F63B02;
+    border: 2px solid #B3ADA5;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
 }
