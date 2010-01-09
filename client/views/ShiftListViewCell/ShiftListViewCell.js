@@ -10,6 +10,14 @@ var ShiftListViewCell = new Class({
   name: "ShiftListViewCell",
   
   
+  defaults: function()
+  {
+    return $merge(this.parent(), {
+      hideSameDomain: true
+    });
+  },
+
+
   initialize: function(el, options)
   {
     this.parent(el, options);
