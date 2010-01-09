@@ -51,7 +51,9 @@ class SSDocument(Document):
         db = core.connect(dbname)
         copy = self.toDict()
         del copy["_rev"]
-        db.create(copy)
+        theId = copy["_id"]
+        del copy["_id"]
+        db[theId] = copy
 
     def updateIn(self, dbname):
         db = core.connect(dbname)
