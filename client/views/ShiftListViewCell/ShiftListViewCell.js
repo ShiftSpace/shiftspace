@@ -239,26 +239,31 @@ var ShiftListViewCell = new Class({
   setHref: function(href)
   {
     var el = this.lockedElement(),
-        url = href.substr(7, href.length),
-        parts = url.split("/"),
-        hrefEl = el.getElement(".href a"),
         domainEl = el.getElement(".domain a");
-    if(hrefEl)
-    {
-      hrefEl.set("rel", href);
-      hrefEl.set("text", href);
-    }
+
     if(domainEl)
     {
-      domainEl.set("rel", href);
+      if(href == window.location.href)
+      {
+        domainEl.addClass("SSDisplayNone");
+      }
+      else
+      {
+        domainEl.set("title", href);
+      }
     }
   },
 
 
   setDomain: function(domain)
   {
-    var el = this.lockedElement();
-    el.getElement(".domain a").set("text", domain);
+    var el = this.lockedElement(),
+        domainEl = el.getElement(".domain a");
+
+    if(domainEl)
+    {
+      domainEl.set("text", domain);
+    }
   },
   
   

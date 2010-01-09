@@ -20,7 +20,6 @@ var _urlJoin = Function.dispatch(
 
 
 String.implement({
-
   pop: function() { return this.substring(1, this.length); },
 
   tail: function(n) { return this.substring(this.length-(n || 1)); },

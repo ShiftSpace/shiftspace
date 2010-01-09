@@ -71,7 +71,6 @@ var SSConsoleWindow = new Class({
 
   hide: function()
   {
-    SSLog("hide console window", SSLogForce);
     this.parent();
     this.sendFront();
   },

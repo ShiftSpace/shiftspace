@@ -65,6 +65,7 @@ var AllShiftsView = new Class({
     {
       return {byDomain:window.location.host};
     }
+    return null;
   },
 
 

@@ -189,5 +189,14 @@ var ShiftListView = new Class({
     {
       RoundedImage.init(".ShiftListView .ShiftListViewCell .gravatar", new Window(this.element.getWindow()), document);
     }
+  },
+
+
+  openShift: function(sender, evt)
+  {
+    var id = evt.data._id,
+        href = evt.data.href;
+    SSSetValue("__currentShift", {id: evt.data._id, href: href});
+    window.open(evt.data.href);
   }
 });
