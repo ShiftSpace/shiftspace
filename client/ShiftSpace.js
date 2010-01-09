@@ -199,7 +199,8 @@ var ShiftSpace = new (function() {
               SSLog("User is not logged in", userData, SSLogSystem);
             }
             SSLog("Update installed spaces", SSLogForce);
-            SSUpdateInstalledSpaces();
+            var p = SSUpdateInstalledSpaces();
+            SSCheckForDebugSpaces(p);
             if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
           }
           SSCheckForCurrentShift();
@@ -209,6 +210,18 @@ var ShiftSpace = new (function() {
       {
         SSPostNotification("onSync");
       }
+    }.asPromise();
+
+
+    var SSCheckForDebugSpaces = function(controlp)
+    {
+      SSLog("SSCheckForDebugSpaces", SSLogForce);
+      var installed = SSInstalledSpaces();
+      SSLog(installed, SSLogForce);
+      $H(installed).each(function(space) {
+        var key = [ShiftSpace.User.getUserName(), space.name, "debug"].join("."),
+            debug = SSGetValue(key);
+      });
     }.asPromise();
 
 
