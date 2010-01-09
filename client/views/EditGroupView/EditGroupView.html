@@ -5,32 +5,32 @@
        delegate:'SSConsoleWindow'
      }">
 
-    <h id="CreateTitle" outlet="EditGroupView">Start A New Group</h>
-    <h id="EditTitle" outlet="EditGroupView">Edit Group</h>
+    <h2 id="CreateTitle" outlet="EditGroupView">Start A New Group</h2>
+    <h2 id="EditTitle" outlet="EditGroupView">Edit Group</h2>
 
     <form id="GroupForm" outlet="EditGroupView">
         <div>
-            <label>Group Name<span>*</span>:</label>
+            <label><strong>Group Name</strong><span>*</span>:</label>
             <input class="longName" type="text" name="longName"></input>
         </div>
 
         <div>
-            <label>Group Handle<span>*</span>(keep it short):</label>
+            <label><strong>Group Handle</strong><span>*</span>(keep it short):</label>
             <input class="shortName" type="text" name="shortName"></input>
         </div>
 
         <div>
-            <label>Tag Line<span>*</span>:</label>
+            <label><strong>Tag Line</strong><span>*</span>:</label>
             <input class="tagLine" type="text" name="tagLine"></input>
         </div>
         
         <div>
-            <label>URL:</label>
+            <label><strong>URL</strong>:</label>
             <input class="url" type="text" name="url"></input>
         </div>
 
         <div>
-            <label>Is visible to people who have not been invited:</label>
+            <label><strong>Is visible to people who have not been invited</strong>:</label>
             <input class="visible" type="checkbox" name="isVisible" checked="true"></input>
         </div>
     </form>

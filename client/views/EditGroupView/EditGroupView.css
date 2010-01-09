@@ -1,0 +1,56 @@
+#EditGroupView
+{
+    color: #76554A;
+    font-family: Helvetica,Arial,Verdana,sans-serif;
+    font-size: 12px; 
+}
+
+#EditGroupView > #CreateTitle
+{
+    font-size: 15px;
+    color: #F63B02
+}
+
+#EditGroupView form
+{
+    background-color: #E3DFDB;
+}
+
+#EditGroupView form label
+{
+    display: block;
+    color:  #74665A;
+}
+
+#EditGroupView form label span{
+    font-weight: normal;
+    color: #F63B02;
+}
+
+#EditGroupView form  input[type="checkbox"]
+{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: auto;
+    
+}
+
+#EditGroupView form div
+{
+    position: relative;
+    heigth: 20px;
+    line-height: 20px;
+    padding: 0px 4px;
+}
+
+#EditGroupView form input
+{
+    display: block;
+    width: 100%;
+}
+
+#EditGroupView form input.shortName
+{
+    width: 156px;
+}
