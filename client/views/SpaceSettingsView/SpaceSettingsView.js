@@ -9,6 +9,7 @@ var SpaceSettingsView = new Class({
   Extends: SSView,
   name: "SpaceSettingsView",
 
+
   initialize: function(el, options)
   {
     this.parent(el, options);
@@ -16,8 +17,21 @@ var SpaceSettingsView = new Class({
   },
 
 
+  setCurrentSpace: function(space)
+  {
+    this.__space = space;
+  },
+
+
+  currentSpace: function()
+  {
+    return this.__space;
+  },
+
+
   showSpaceSettings: function(space)
   {
+    this.setCurrentSpace(space.data);
     this.open();
   },
 
@@ -38,7 +52,18 @@ var SpaceSettingsView = new Class({
 
   attachEvents: function()
   {
-    
+    this.SSDebugSpace.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var target = $(evt.target);
+      if(target.get("checked"))
+      {
+        ShiftSpace.User.setPreference(this.currentSpace().name+".debug", true);
+      }
+      else
+      {
+        ShiftSpace.User.removePreference(this.currentSpace().name+".debug");
+      }
+    }.bind(this));
   },
 
 
