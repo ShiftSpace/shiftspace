@@ -33,6 +33,7 @@ def init(dbname="shiftspace/master"):
         dbname - the name of the database to use.
     """
     import models.core as core
+    os.system("scripts/clear_sessions.sh")
     server = core.server()
     if not server.__contains__(dbname):
         print "Creating databases."
