@@ -442,7 +442,6 @@ ul#FollowingListView, ul#FollowersListView, ul#SearchUsersListView, ul#GroupsLis
    height: 100%;
    overflow-y: scroll;
    margin: 0px;
-   margin-top:4px;
 }
 
 li.PeopleListViewCell, li.GroupListViewCell
