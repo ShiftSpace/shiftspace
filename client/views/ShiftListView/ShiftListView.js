@@ -68,19 +68,18 @@ var ShiftListView = new Class({
   
   onCreate: function(id)
   {
+    if(!this.isVisible()) return;
     this.refresh();
-    if(this.isVisible())
-    {
-      var idx = this.find(function(x) { return x._id == id; });
-      this.cell().lock(this.cellNodeForIndex(idx));
-      this.cell().check();
-      this.cell().unlock();
-    }
+    var idx = this.find(function(x) { return x._id == id; });
+    this.cell().lock(this.cellNodeForIndex(idx));
+    this.cell().check();
+    this.cell().unlock();
   },
   
   
   onShow: function(id)
   {
+    if(!this.isVisible()) return;
     var idx = this.find(function(x) { return x._id == id; });
     if(idx != -1)
     {
@@ -91,6 +90,7 @@ var ShiftListView = new Class({
 
   onHide: function(id)
   {
+    if(!this.isVisible()) return;
     var idx = this.find(function(x) { return x._id == id; });
     if(idx != -1)
     {
@@ -150,6 +150,7 @@ var ShiftListView = new Class({
 
   uncheckAll: function(noEvent)
   {
+    if(!this.isVisible()) return;
     this.uncheck(this.checkedItemIndices(), noEvent);
   },
   
