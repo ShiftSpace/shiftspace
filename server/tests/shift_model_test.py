@@ -18,7 +18,7 @@ class BasicOperations(unittest.TestCase):
         self.fakebob = SSUser.create(fakebob)
         self.root = SSUser.read("shiftspace")
 
-
+    """
     def testCreate(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -77,6 +77,7 @@ class BasicOperations(unittest.TestCase):
         self.assertTrue(self.fakemary.canModify(newShift))
         self.assertTrue(not self.fakejohn.canModify(newShift))
         self.assertTrue(self.root.canModify(newShift))
+    """
 
     def testBasicPublish(self):
         json = shiftJson()
@@ -86,17 +87,23 @@ class BasicOperations(unittest.TestCase):
         # should exist in user/public db
         theShift = Shift.load(core.connect(SSUser.publicDb(self.fakemary.id)), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
-        # should exist in master/public db 
+        self.assertTrue(not theShift.publishData.draft)
+        self.assertTrue(not theShift.publishData.private)
+        # should exist in shiftspace/public db 
         theShift = Shift.load(core.connect("shiftspace/public"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
+        self.assertTrue(not theShift.publishData.draft)
+        self.assertTrue(not theShift.publishData.private)
         # should exist in shiftspace/shared db
         theShift = Shift.load(core.connect("shiftspace/shared"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
+        self.assertTrue(not theShift.publishData.draft)
+        self.assertTrue(not theShift.publishData.private)
         # should _not_ exist in user/private db
         theShift = Shift.load(core.connect(SSUser.privateDb(self.fakemary.id)), newShift.id)
         self.assertEqual(theShift, None)
 
-
+    """
     def testPublishToFollowers(self):
         json = shiftJson()
         json["createdBy"] = self.fakemary.id
@@ -172,6 +179,7 @@ class BasicOperations(unittest.TestCase):
         # TODO: inbox if user is peer - David 11/18/09
         theShift = Shift.load(core.connect("shiftspace/shared"), newShift.id)
         self.assertEqual(theShift.summary, newShift.summary)
+    """
 
     def tearDown(self):
         db = core.connect()
