@@ -299,7 +299,7 @@ class Shift(SSDocument):
     # Publishing
     # ========================================
 
-    def publish(self, publishData=None, server="http://www.shiftspace.org/api/"):
+    def publish(self, publishData=None):
         from server.models.ssuser import SSUser
         
         if publishData == None:
