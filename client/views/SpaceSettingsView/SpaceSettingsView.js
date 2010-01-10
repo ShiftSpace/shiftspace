@@ -33,6 +33,7 @@ var SpaceSettingsView = new Class({
   {
     this.setCurrentSpace(space.data);
     this.open();
+    this.update();
   },
 
 
@@ -47,6 +48,21 @@ var SpaceSettingsView = new Class({
   'close': function()
   {
     this.delegate().hide();
+  },
+
+
+  update: function()
+  {
+    var spaceName = this.currentSpace().name;
+    this.SpaceSettingsSpaceName.set("text", spaceName);
+    if(SSSpaceIsInDebugMode(spaceName))
+    {
+      this.SSDebugSpace.set("checked", true);
+    }
+    else
+    {
+      this.SSDebugSpace.set("checked", false);
+    }
   },
 
 

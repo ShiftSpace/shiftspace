@@ -34,7 +34,7 @@ Parameters:
 Returns:
   a promise or the space instance.
 */
-var SSLoadSpace = function(spaceName)
+var SSLoadSpace = function(spaceName, inline)
 {
   var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
   var attrs = SSGetSpaceAttributes(spaceName);
@@ -52,22 +52,35 @@ var SSLoadSpace = function(spaceName)
   }
 
   var codep = SSLoadFile(url);
+  if(inline && typeof ShiftSpaceSandBoxMode != "undefined")
+  {
+    codep = new Promise(new DelayedAsset("javascript", url));
+  }
   var cssp = {data:1}; // horrible hack - David
   if(!$(document.head).getElement(["#",spaceName,"Css"].join("")))
   {
     cssp = SSLoadStyle(attrs.css);
   }
+
   var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
                    function() {
                      try
                      {
-                       var spacectorName = attrs.className || (spaceName+'Space');
-                       var shiftctorName = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
-                       var ctors =  ShiftSpace.__externals.evaluate(
-                         codep.value(),
-                         [spacectorName, shiftctorName]
-                       );
-                       var spacector = ctors[spacectorName], shiftctor = ctors[shiftctorName];
+                       var spacectorName = attrs.className || (spaceName+'Space'),
+                           shiftctorName = $get(attrs, 'shift', 'className') || (spaceName+'Shift'),
+                           ctors;
+                       if(inline && typeof ShiftSpaceSandBoxMode != "undefined")
+                       {
+                         ctors = {};
+                         ctors[spacectorName] = eval(spacectorName);
+                         ctors[shiftctorName] = eval(shiftctorName);
+                       }
+                       else
+                       {
+                         ctors = ShiftSpace.__externals.evaluate(codep.value(), [spacectorName, shiftctorName]);
+                       }
+                       var spacector = ctors[spacectorName],
+                           shiftctor = ctors[shiftctorName];
                        if(!spacector)
                        {
                          spacector = ShiftSpace.Space;
@@ -594,4 +607,9 @@ function SSHandleInstallSpaceLink(evt)
   var spaceName = target.getAttribute('title');
   // first check for the attributes file
   SSInstallSpace(spaceName);
+}
+
+function SSSpaceIsInDebugMode(spaceName)
+{
+  return ShiftSpace.User.getPreference([spaceName, "debug"].join(".")) || false;
 }

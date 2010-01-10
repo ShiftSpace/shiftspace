@@ -215,12 +215,15 @@ var ShiftSpace = new (function() {
 
     var SSCheckForDebugSpaces = function(controlp)
     {
-      SSLog("SSCheckForDebugSpaces", SSLogForce);
       var installed = SSInstalledSpaces();
-      SSLog(installed, SSLogForce);
       $H(installed).each(function(space) {
         var key = [ShiftSpace.User.getUserName(), space.name, "debug"].join("."),
             debug = SSGetValue(key);
+        if(debug)
+        {
+          SSLog("Load", space.name, "in debug mode", SSLogForce);
+          SSLoadSpace(space.name, true);
+        }
       });
     }.asPromise();
 
@@ -361,7 +364,9 @@ var ShiftSpace = new (function() {
        'SSInstalledSpaces',
        'SSGetSpaceAttributes',
        'SSCellError',
-       'SSException'
+       'SSException',
+       'DelayedAsset',
+       'SSSpaceIsInDebugMode'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);
        });
