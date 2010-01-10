@@ -148,7 +148,7 @@ input[type=checkbox]:checked
    top: 4px;
    bottom: 0px;
    left: 0px;
-   right: 0px;
+   right: 4px;
    list-style: none;
    border:1px solid #DDD7D2; /*TODO: use image for gradient border*/
    border-top: none;
