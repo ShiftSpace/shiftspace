@@ -75,11 +75,13 @@ var SSSpaceMenu = new Class({
   
   handleLogin: function()
   {
+    this.update();
   },
   
   
   handleLogout: function()
   {
+    this.update();
   },
   
   
