@@ -76,7 +76,7 @@ var SSLoadSpace = function(spaceName)
                        if(!shiftctor)
                        {
                          throw new Exception(
-                           spaceName + "Shift constructor does not exit! Did you specify the proper shift class name in your attrs.json file?"
+                           spaceName + "Shift constructor does not exist! Did you specify the proper shift class name in your attrs.json file?"
                          );
                        }
                        spacector.implement({attributes:function(){return attrs;}});

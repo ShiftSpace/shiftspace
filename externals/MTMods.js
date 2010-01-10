@@ -11,7 +11,7 @@ var _urlJoin = Function.dispatch(
   function(a, b) {
     if(b.length > 0) {
       a = (a.tail(1) == "/") ? a : a + "/";
-      return a + b.first()
+      return a + b.first();
     } else {
       return a;
     }
@@ -476,7 +476,7 @@ var DelayedAsset = new Class({
   initialize: function(type, source, properties) {
     this.type = type;
     this.source = source;
-    this.properties = properties;
+    this.properties = properties || {};
   },
 
   load: function() {
