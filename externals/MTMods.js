@@ -471,6 +471,7 @@ function SSTemplate(el, props)
 
 var DelayedAsset = new Class({
   Implements: Events,
+  name: "DelayedAsset",
   
   initialize: function(type, source, properties) {
     this.type = type;
