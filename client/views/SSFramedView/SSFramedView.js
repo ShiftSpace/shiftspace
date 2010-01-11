@@ -14,21 +14,62 @@ var SSFramedView = new Class({
   {
     return $merge(this.parent(), {
       location: 'views',
-      path: null,
-      delayed: false
+      path: null
     });
+  },
+
+
+  delayed: function()
+  {
+    return this.__delay;
   },
   
   
+  setDelayed: function(delay)
+  {
+    this.__delay = delay;
+  },
+
+  
   initialize: function(el, options)
-  { 
+  {
+    var delayed = false;
+    if(el.get("tag") != "iframe")
+    {
+      delayed = true;
+    }
+    
     this.parent(el, $merge(options, {
       generateElement: false
     }));
 
     var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css'),
-      p = SSLoadFile(url);
-    this.onStyleLoad(p);
+        p = SSLoadFile(url);
+    if(!delayed)
+    {
+      this.onStyleLoad(p);
+    }
+    else
+    {
+      this.setDelayed(p);
+    }
+  },
+
+
+  finish: function()
+  {
+    if(!this.delayed())
+    {
+      throw new Error("Not a delayed SSFramedView");
+    }
+    var iframe = new Element("iframe", {
+      id: this.element.get("id"),
+      "class": this.element.get("class")
+    });
+    iframe.replaces(this.element);
+    this.element = iframe;
+    SSSetControllerForNode(this, this.element);
+    this.onStyleLoad(this.delayed());
   },
   
   
