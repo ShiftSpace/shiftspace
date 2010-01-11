@@ -353,7 +353,8 @@ var ShiftSpace = new (function() {
        'SSCellError',
        'SSException',
        'DelayedAsset',
-       'SSSpaceIsInDebugMode'
+       'SSSpaceIsInDebugMode',
+       '__controllers'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);
        });
