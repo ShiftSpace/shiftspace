@@ -185,6 +185,8 @@ class Permission(SSDocument):
         for i in range(len(permissions)):
             permissions[i]["shortName"] = groups[i]["shortName"]
             permissions[i]["longName"] = groups[i]["longName"]
+            permissions[i]["tagLine"] = groups[i]["tagLine"]
+            permissions[i]["url"] = groups[i]["url"]
         return permissions
 
     @classmethod
