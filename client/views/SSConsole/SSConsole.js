@@ -25,29 +25,30 @@ var SSConsole = new Class({
   },
   
   
-  isVisible: function()
-  {
-    return !this.element.hasClass('SSDisplayNone');
-  },
-  
-  
   show: function()
   {
-    this.parent();
+    SSLog("SSConsole show", SSLogForce);
+    var success = this.parent();
+    if(!success) return false;
+    this.update();
     SSPostNotification('onConsoleShow');
+    return true;
   },
   
   
   hide: function()
   {
-    this.parent();
+    SSLog("SSConsole hide", SSLogForce);
+    var success = this.parent();
+    if(!success) return false;
     SSPostNotification('onConsoleHide');
+    return true;
   },
   
   
   updateTabs: function()
   {
-    if (ShiftSpaceUser.isLoggedIn())
+    if(ShiftSpaceUser.isLoggedIn())
     {
       this.MainTabView.hideTabByName('LoginTabView');
 
@@ -70,19 +71,35 @@ var SSConsole = new Class({
 
   handleLogin: function()
   {
-    this.updateTabs();   
-    this.MainTabView.selectTabByName('AllShiftsView');
-    if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
-    if(SSTableForName("MyShifts")) SSTableForName("MyShifts").refresh();
+    this.update();
   },
 
 
   handleLogout: function()
   {
-    this.updateTabs();
-    this.MainTabView.selectTabByName('AllShiftsView');
-    this.MainTabView.refresh();
-    if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
+    this.update();
+  },
+
+
+  update: function()
+  {
+    if(this.isLoaded())
+    {
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        this.updateTabs();   
+        this.MainTabView.selectTabByName('AllShiftsView');
+        if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
+        if(SSTableForName("MyShifts")) SSTableForName("MyShifts").refresh();
+      }
+      else
+      {
+        this.updateTabs();
+        this.MainTabView.selectTabByName('AllShiftsView');
+        this.MainTabView.refresh();
+        if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
+      }
+    }
   },
   
   
@@ -200,6 +217,7 @@ var SSConsole = new Class({
   
   localizationChanged: function(evt)
   {
+    if(this.delayed()) return;
     SSUpdateStrings(evt.strings, evt.lang, this.contentWindow());
   },
 

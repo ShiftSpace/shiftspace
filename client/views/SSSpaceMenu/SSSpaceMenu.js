@@ -40,7 +40,9 @@ var SSSpaceMenu = new Class({
   
   show: function()
   {
-    this.parent();
+    var success = this.parent();
+    if(!success) return;
+    SSLog(this.element.hasClass("SSDisplayNone"), SSLogForce);
     this.resize();
     SSPostNotification('onSpaceMenuShow', this);
   },
@@ -175,12 +177,13 @@ var SSSpaceMenu = new Class({
   
   update: function()
   {
-    var spaces = SSSpacesByPosition();
-
-    this.SpaceMenuList.setData(spaces);
-    this.SpaceMenuList.refresh();
-
-    if(this.isVisible()) this.resize();
+    if(this.isLoaded())
+    {
+      var spaces = SSSpacesByPosition();
+      this.SpaceMenuList.setData(spaces);
+      this.SpaceMenuList.refresh();
+      if(this.isVisible()) this.resize();
+    }
   },
 
   
