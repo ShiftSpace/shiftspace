@@ -71,16 +71,20 @@ class GroupsController(ResourceController):
     @jsonencode
     @exists
     def info(self, id):
+        from server.models.ssuser import SSUser
         # TODO: bulk call - David 12/13/2009
         theGroup = Group.read(id)
         memberCount = theGroup.memberCount()
         adminCount = theGroup.adminCount()
         shiftCount = theGroup.shiftCount()
-        return data({
+        info = {
             "memberCount": memberCount,
             "adminCount": adminCount,
             "shiftCount": shiftCount
-            })
+            }
+        theUser = SSUser.read(helper.getLoggedInUser())
+        info["isAdmin"] = theUser.isAdminOf(theGroup)
+        return data(info)
 
     @jsonencode
     @exists
