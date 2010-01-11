@@ -79,7 +79,7 @@ class SandalphonCompiler:
         try:
             fileHandle = open(cssPath)
             if fileHandle != None:
-                if env:
+                if env and (env["data"].get("DEPLOY") == None or env["data"].get("DEPLOY") == False):
                     server = env["data"]["SERVER"]
                     importPath = "%sclient/%s" % (server, cssPath)
                     imageUrl = env["data"].get("IMAGESDIR")
@@ -294,7 +294,6 @@ def main(argv):
     inputFile = None
     envFile = None
     env = None
-    deploy = False
     try:
         opts, args = getopt.getopt(argv, "i:o:e:jh", ["input=", "output=", "environment=", "json", "help"])
     except:
@@ -311,8 +310,6 @@ def main(argv):
             outputDirectory = arg
         elif opt in ("-j", "--json"):
             jsonOutput = True
-        elif opt in ("-d", "--deploy"):
-            deploy = True
         elif opt in ("-e", "--environment"):
             envFile = arg
     if inputFile == None:
@@ -323,8 +320,8 @@ def main(argv):
     compiler.compile(inputFile,
                      outDir=outputDirectory,
                      envFile=envFile,
-                     jsonOutput=jsonOutput,
-                     deploy=deploy)
+                     jsonOutput=jsonOutput)
+
 
 
 if __name__ == "__main__":
