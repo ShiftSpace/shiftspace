@@ -487,7 +487,8 @@ var SSView = new Class({
    */
   isVisible: function()
   {
-    var display, size = this.element.getSize(), node = this.element;
+    var display,
+        node = this.element;
     while(node)
     {
       display = node.getStyle('display');
@@ -607,7 +608,7 @@ var SSView = new Class({
     var el = this.element.getParent('*[uiclass]'), superView;
     if(el)
     {
-      var superView = SSControllerForNode(el);
+      superView = SSControllerForNode(el);
     }
     else
     {
