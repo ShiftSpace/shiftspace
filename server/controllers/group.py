@@ -17,6 +17,8 @@ class GroupsController(ResourceController):
                   conditions=dict(method="PUT"))
         d.connect(name="groupInfo", route="group/:id/info", controller=self, action="info",
                   conditions=dict(method="GET"))
+        d.connect(name="groupMembers", route="group/:id/members", controller=self, action="members",
+                  conditions=dict(method="GET"))
         d.connect(name="groups", route="groups", controller=self, action="groups",
                   conditions=dict(method="GET"))
         d.connect(name="groupInviteUsers", route="group/:id/inviteusers", controller=self, action="inviteUsers",
@@ -46,20 +48,6 @@ class GroupsController(ResourceController):
 
     @jsonencode
     @exists
-    def info(self, id):
-        # TODO: bulk call - David 12/13/2009
-        theGroup = Group.read(id)
-        memberCount = theGroup.memberCount()
-        adminCount = theGroup.adminCount()
-        shiftCount = theGroup.shiftCount()
-        return data({
-            "memberCount": memberCount,
-            "adminCount": adminCount,
-            "shiftCount": shiftCount
-            })
-
-    @jsonencode
-    @exists
     def update(self, id):
         from server.models.ssuser import SSUser
         loggedInUser = helper.getLoggedInUser()
@@ -79,6 +67,32 @@ class GroupsController(ResourceController):
     @exists
     def delete(self, id):
         pass
+
+    @jsonencode
+    @exists
+    def info(self, id):
+        # TODO: bulk call - David 12/13/2009
+        theGroup = Group.read(id)
+        memberCount = theGroup.memberCount()
+        adminCount = theGroup.adminCount()
+        shiftCount = theGroup.shiftCount()
+        return data({
+            "memberCount": memberCount,
+            "adminCount": adminCount,
+            "shiftCount": shiftCount
+            })
+
+    @jsonencode
+    @exists
+    def members(self, id):
+        from server.models.ssuser import SSUser
+        theGroup = Group.read(id)
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        if theUser.isAdminOf(theGroup):
+            return data(theGroup.members())
+        else:
+            return error("You don't have permission to view this groups members", PermissionError)
 
     @jsonencode
     def groups(self, start=None, end=None, limit=25):

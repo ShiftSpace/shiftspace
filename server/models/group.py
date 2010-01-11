@@ -265,7 +265,7 @@ class Group(SSDocument):
     def members(self):
         from server.models.permission import Permission
         db = core.connect()
-        return [row.value for row in Permission.all_members(db, key=self.id).rows]
+        return core.fetch(core.connect(), keys=[row.value for row in Permission.all_members(db, key=self.id).rows])
 
 
     def memberCount(self):
