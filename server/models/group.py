@@ -68,6 +68,23 @@ class Group(SSDocument):
            }                           \
          }")
 
+    shift_count = View(
+        "groups",
+        "function(doc) {                                      \
+           if(doc.type == 'shift') {                          \
+             var dbs = doc.publishData.dbs;                   \
+             for(var i = 0, len = dbs.length; i < len; i++) { \
+                var db = dbs[i], typeAndId = db.split('/');   \
+                if(typeAndId[0] == 'group') {                 \
+                  emit(typeAndId[1], 1);                      \
+                }                                             \
+             }                                                \
+           }                                                  \
+        }",
+        "function(keys, values, rereduce) {                   \
+           return sum(values);                                \
+        }")
+
     # ========================================
     # Database
     # ========================================
@@ -267,3 +284,8 @@ class Group(SSDocument):
         from server.models.permission import Permission
         db = core.connect()
         return core.value(Permission.admin_count(db, key=self.id))
+
+
+    def shiftCount(self):
+        db = core.connect("shiftspace/shared")
+        return core.value(Group.shift_count(db, key=self.id)) or 0

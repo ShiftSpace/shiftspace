@@ -78,6 +78,12 @@ var GroupDetailView = new Class({
   update: function(groupInfo)
   {
     SSTemplate(this.DetailGroupUserCount, groupInfo);
+    var str = "shift";
+    if(groupInfo.shiftCount != 1)
+    {
+      str += "s";
+    }
+    this.element.getElement(".shiftCount").set("text", groupInfo.shiftCount + " " + str);
   }.asPromise()
 });
 

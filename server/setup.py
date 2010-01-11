@@ -107,6 +107,8 @@ def sync(createAdmin=True):
     Shift.by_user_and_created.sync(shared)
     Shift.count_by_user_and_published.sync(shared)
     Shift.count_by_domain.sync(shared)
+
+    Group.shift_count.sync(shared)
     
     Comment.count_by_shift.sync(shared)
     Comment.by_user_and_created.sync(shared)

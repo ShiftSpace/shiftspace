@@ -51,7 +51,12 @@ class GroupsController(ResourceController):
         theGroup = Group.read(id)
         memberCount = theGroup.memberCount()
         adminCount = theGroup.adminCount()
-        return data({"memberCount": memberCount, "adminCount": adminCount})
+        shiftCount = theGroup.shiftCount()
+        return data({
+            "memberCount": memberCount,
+            "adminCount": adminCount,
+            "shiftCount": shiftCount
+            })
 
     @jsonencode
     @exists
