@@ -97,13 +97,13 @@ function SSGetInlineOptions(el)
   return (options) ? JSON.decode(options.replace("\n", "")) : {};
 }
 
-var __ssappdelegate__;
+var __sappdelegate;
 function SSSetAppDelegate(delegate)
 {
-  __ssappdelegate__ = delegate;
+  __sappdelegate = delegate;
 }
 
 function SSAppDelegate()
 {
-  return __ssappdelegate__;
+  return __sappdelegate;
 }
