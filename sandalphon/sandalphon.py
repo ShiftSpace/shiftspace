@@ -94,7 +94,12 @@ class SandalphonCompiler:
                     cssFile = cssFile + "@import url(%s);\n" % importPath
                 else:
                     cssFile = cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
-                    cssFile = cssFile + fileHandle.read()
+                    css = fileHandle.read()
+                    if env:
+                        imageUrl = env["data"].get("IMAGESDIR")
+                        if imageUrl:
+                            css = self.preprocessCssImageUrls(css, imageUrl)
+                    cssFile = cssFile + css
             fileHandle.close()
             return cssFile
         except IOError:
