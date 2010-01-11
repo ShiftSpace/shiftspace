@@ -181,35 +181,22 @@ var ShiftSpace = new (function() {
     var SSWaitForUI = function(userData, uip)
     {
       // wait for console and notifier before sending onSync
-      var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu, ShiftSpace.SSConsoleWindow];
-      if(!ui.every(Function.msg('isLoaded')))
+      if(userData)
       {
-        ui.each(Function.msg('addEvent', 'load', function(obj) {
-          if(ui.every(Function.msg('isLoaded')))
-          {
-            SSPostNotification("onSync");
-            if(userData)
-            {
-              ShiftSpace.User.syncData(userData);
-              SSPostNotification('onUserLogin');
-              SSLog("Synchronized", SSLogSystem);
-            }
-            else
-            {
-              SSLog("User is not logged in", userData, SSLogSystem);
-            }
-            SSLog("Update installed spaces", SSLogForce);
-            var p = SSUpdateInstalledSpaces();
-            SSCheckForDebugSpaces(p);
-            if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
-          }
-          SSCheckForCurrentShift();
-        }.bind(this)));
+        ShiftSpace.User.syncData(userData);
+        SSPostNotification('onUserLogin');
+        SSLog("Synchronized", SSLogSystem);
       }
       else
       {
-        SSPostNotification("onSync");
+        SSLog("User is not logged in", userData, SSLogSystem);
       }
+      var p = SSUpdateInstalledSpaces();
+      SSCheckForDebugSpaces(p);
+      if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
+      SSCheckForCurrentShift();
+      SSPostNotification("onSync");
+      //ShiftSpace.Notifier.finish();
     }.asPromise();
 
 
