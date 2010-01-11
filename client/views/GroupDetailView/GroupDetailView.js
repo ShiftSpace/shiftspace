@@ -71,7 +71,13 @@ var GroupDetailView = new Class({
     {
       this.element.getElement(".join").removeClass("SSDisplayNone");
     }
-  }
+    this.update(SSGroupInfo(groupData.groupId));
+  },
 
+
+  update: function(groupInfo)
+  {
+    SSTemplate(this.DetailGroupUserCount, groupInfo);
+  }.asPromise()
 });
 
