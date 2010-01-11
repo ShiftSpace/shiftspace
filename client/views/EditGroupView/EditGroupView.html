@@ -41,11 +41,16 @@
 
     <ul id="GroupMemberListView"
         class="SSListView"
-        uiclass="SSListView">
-        <li class="SSCell"
-            uiclass="SSCell">
-            <span class="gravatar"></span>
-            <span calss="userName"></span>
+        uiclass="SSListView"
+        outlet="EditGroupView">
+        <li class="SSCell MemberListViewCell"
+            uiclass="MemberListViewCell">
+            <div class="user">
+                <span class="gravatarContainer">
+                    <img class="rounded-image gravatar" width="16" height="16"></img>
+                </span>
+                <span class="userName"></span>
+            </div>
         </li>
     </ul>
 

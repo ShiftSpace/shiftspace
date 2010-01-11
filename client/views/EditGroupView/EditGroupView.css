@@ -105,3 +105,13 @@
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
 }
+
+#GroupMemberListView
+{
+   list-style: none;
+}
+
+.MemberListViewCell
+{
+   display: inline;
+}

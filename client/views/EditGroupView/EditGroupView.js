@@ -73,8 +73,11 @@ var EditGroupView = new Class({
   presentEditForm: function(groupData)
   {
     this.setCurrentGroup(groupData);
+    this.cleanupTable();
+    this.initTable(groupData.groupId);
+    SSTableForName("Members").addView(this.GroupMemberListView);
     this.clearForm();
-    this.users = [];
+    this.users = []; // for holding users to add to the group
     if(!this.isVisible()) this['open']();
     this.EditTitle.removeClass("SSDisplayNone");
     this.CreateTitle.addClass("SSDisplayNone");
@@ -164,6 +167,24 @@ var EditGroupView = new Class({
   removeUser: function(user)
   {
     this.users.erase(user._id);
-  }
+  },
 
+
+  initTable: function(groupId)
+  {
+    this.members = new SSTable("Members", {
+      resource: {read:['group', groupId, 'members'].join("/")},
+      watches: []
+    });
+  },
+  
+
+  cleanupTable: function()
+  {
+    if(this.members)
+    {
+      this.members.dispose();
+      this.members = null;
+    }
+  }
 });
