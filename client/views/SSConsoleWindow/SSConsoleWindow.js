@@ -108,6 +108,9 @@ var SSConsoleWindow = new Class({
     this.element.addClass("SSConsoleWindowTall");
     this.resizer.removeClass("SSConsoleWindowResizerShort");
     this.resizer.addClass("SSConsoleWindowResizerTall");
+    this.element.setStyles({
+      height: ''
+    });
     this.resizer.setStyles({
       bottom: ''
     });
@@ -120,6 +123,9 @@ var SSConsoleWindow = new Class({
     this.element.addClass("SSConsoleWindowShort");
     this.resizer.removeClass("SSConsoleWindowResizerTall");
     this.resizer.addClass("SSConsoleWindowResizerShort");
+    this.element.setStyles({
+      height: ''
+    });
     this.resizer.setStyles({
       bottom: ''
     });
