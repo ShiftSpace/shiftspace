@@ -38,6 +38,18 @@ var EditGroupView = new Class({
     return this.__currentGroup;
   },
 
+  
+  groupInfo: function()
+  {
+    return this.__groupInfo;
+  },
+  
+  
+  setGroupInfo: function(groupInfo)
+  {
+    this.__groupInfo = groupInfo;
+  },
+  
 
   'open': function()
   {
@@ -93,6 +105,7 @@ var EditGroupView = new Class({
 
   update: function(groupInfo)
   {
+    this.setGroupInfo(groupInfo);
     SSTemplate(this.GroupUserCount, groupInfo);
   }.asPromise(),
 
@@ -125,7 +138,6 @@ var EditGroupView = new Class({
     }.bind(this));
     
     this.SaveGroup.addEvent('click', function(evt) {
-      SSLog("save group", SSLogForce);
       evt = new Event(evt);
       var groupId = this.currentGroup().groupId,
           formData = SSFormToHash(this.GroupForm),
@@ -183,7 +195,18 @@ var EditGroupView = new Class({
   editMember: function(sender, evt)
   {
     var editMemberEl = this.element.getElement("#EditGroupMember"),
-        templData = $H(evt.data);
+        templData = $H(evt.data),
+        groupInfo = this.groupInfo();
+    if(groupInfo.isAdmin && evt.data._id != ShiftSpace.User.getId())
+    {
+      this.MakeMemberAdmin.removeClass("SSDisplayNone");
+      this.BlockMember.removeClass("SSDisplayNone");
+    }
+    else
+    {
+      this.MakeMemberAdmin.addClass("SSDisplayNone");
+      this.BlockMember.addClass("SSDisplayNone");
+    }
     this.element.getElement("#GroupMemberListViewContainer").addClass("SSDisplayNone");
     editMemberEl.removeClass("SSDisplayNone");
     templData.erase("gravatar");

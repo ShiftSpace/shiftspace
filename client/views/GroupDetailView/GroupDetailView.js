@@ -84,6 +84,16 @@ var GroupDetailView = new Class({
       str += "s";
     }
     this.element.getElement(".shiftCount").set("text", groupInfo.shiftCount + " " + str);
+    if(groupInfo.isAdmin)
+    {
+      this.DetailInviteUsers.removeClass("SSDisplayNone");
+      this.DetailGroupSettings.removeClass("SSDisplayNone");
+    }
+    else
+    {
+      this.DetailInviteUsers.addClass("SSDisplayNone");
+      this.DetailGroupSettings.addClass("SSDisplayNone");
+    }
   }.asPromise()
 });
 
