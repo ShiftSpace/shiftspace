@@ -19,6 +19,8 @@ class GroupsController(ResourceController):
                   conditions=dict(method="GET"))
         d.connect(name="groupMembers", route="group/:id/members", controller=self, action="members",
                   conditions=dict(method="GET"))
+        d.connect(name="groupMakeAdmin", route="group/:id/makeadmin", controller=self, action="makeAdmin",
+                  conditions=dict(method="POST"))
         d.connect(name="groups", route="groups", controller=self, action="groups",
                   conditions=dict(method="GET"))
         d.connect(name="groupInviteUsers", route="group/:id/inviteusers", controller=self, action="inviteUsers",
@@ -97,6 +99,19 @@ class GroupsController(ResourceController):
             return data(theGroup.members())
         else:
             return error("You don't have permission to view this groups members", PermissionError)
+
+    @jsonencode
+    @exists
+    def makeAdmin(self, id, userId):
+        from server.models.ssuser import SSUser
+        theGroup = Group.read(id)
+        theUser = SSUser.read(helper.getLoggedInUser())
+        if theUser.isAdminOf(theGroup):
+            otherUser = SSUser.read(userId)
+            theGroup.setPrivilege(otherUser, 3)
+            return ack
+        else:
+            return error("You don't have permission to promote members of this group to admin.", PermissionError)
 
     @jsonencode
     def groups(self, start=None, end=None, limit=25):

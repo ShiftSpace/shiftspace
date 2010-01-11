@@ -228,6 +228,7 @@ class Group(SSDocument):
 
 
     def setPrivilege(self, aUser, level):
+        from server.models.permission import Permission
         thePermission = Permission.readByUserAndGroup(aUser.id, self.id)
         if thePermission and level > 0:
             db = core.connect()

@@ -27,6 +27,18 @@ var EditGroupView = new Class({
   },
 
 
+  currentUser: function()
+  {
+    return this.__currentUser;
+  },
+  
+  
+  setCurrentUser: function(currentUser)
+  {
+    this.__currentUser = currentUser;
+  },
+  
+
   setCurrentGroup: function(group)
   {
     this.__currentGroup = group;
@@ -151,6 +163,12 @@ var EditGroupView = new Class({
       this.EditGroupMember.addClass("SSDisplayNone");
       this.GroupMemberListViewContainer.removeClass("SSDisplayNone");
     }.bind(this));
+
+    this.MakeMemberAdmin.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var p = SSMakeMemberAdmin(this.currentGroup().groupId, this.currentUser()._id);
+      p.realize();
+    }.bind(this));
   },
 
 
@@ -194,6 +212,7 @@ var EditGroupView = new Class({
 
   editMember: function(sender, evt)
   {
+    this.setCurrentUser(evt.data);
     var editMemberEl = this.element.getElement("#EditGroupMember"),
         templData = $H(evt.data),
         groupInfo = this.groupInfo();

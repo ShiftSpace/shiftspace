@@ -124,6 +124,19 @@ function SSUpdateGroup(groupId, data)
 }
 
 
+function SSMakeMemberAdmin(groupId, userId)
+{
+  return SSApp.post({
+    resource: 'group',
+    id: groupId,
+    action: 'makeadmin',
+    data: {
+      userId: userId
+    }
+  });
+}
+
+
 function SSInviteUsersToGroup(groupId, userIds)
 {
   return SSApp.post({
