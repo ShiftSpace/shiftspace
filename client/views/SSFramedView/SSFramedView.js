@@ -62,13 +62,6 @@ var SSFramedView = new Class({
     {
       throw new Error("Not a delayed SSFramedView");
     }
-    this.__delayediframe = new Element("iframe", {
-      id: this.element.get("id"),
-      "class": this.element.get("class"),
-      events: {
-        load: this.buildInterface.bind(this)
-      }
-    });
     return this.onStyleLoad(this.delayed());
   },
   
@@ -130,37 +123,39 @@ var SSFramedView = new Class({
     var generateElement = false;
     this.ui = ui;
 
-    if(!this.element)
+    if(!this.element || this.delayed())
     {
       generateElement = true;
+      if(this.delayed()) this.oldElement = this.element;
       this.element = new IFrame({
         'class': this.name+'Frame',
         events: {
           load: this.buildInterface.bind(this)
         }
       });
+      if(this.delayed()) this.element.set("id", this.oldElement.get("id"));
     }
     
-    if(this.__delayediframe)
-    {
-      this.__delayediframe.replaces(this.element);
-      this.element = this.__delayediframe;
-      SSSetControllerForNode(this, this.element);
-    }
-
     var frag = Sandalphon.convertToFragment(this.ui['interface']),
-
         id = frag.getProperty('id');
     
-    if(id)
+    if(id && !this.delayed())
     {
       this.element.setProperty('id', id);
     }
 
     if(generateElement)
     {
+      if(!this.delayed())
+      {
+        this.element.injectInside(document.body);
+      }
+      else
+      {
+        this.element.replaces(this.oldElement);
+        delete this.oldElement;
+      }
       SSSetControllerForNode(this, this.element);
-      this.element.injectInside(document.body);
     }
     else
     {
