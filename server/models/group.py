@@ -241,7 +241,19 @@ class Group(SSDocument):
         return [row.value for row in Permission.all_members(db, key=self.id).rows]
 
 
+    def memberCount(self):
+        from server.models.permission import Permission
+        db = core.connect()
+        return core.value(Permission.member_count(db, key=self.id))
+
+
     def admins(self):
         from server.models.permission import Permission
         db = core.connect()
         return [row.value for row in Permission.admins(db, key=self.id).rows]
+
+
+    def adminCount(self):
+        from server.models.permission import Permission
+        db = core.connect()
+        return core.value(Permission.admin_count(db, key=self.id))

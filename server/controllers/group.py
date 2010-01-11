@@ -13,6 +13,8 @@ class GroupsController(ResourceController):
                   conditions=dict(method="POST"))
         d.connect(name="groupRead", route="group/:id", controller=self, action="read",
                   conditions=dict(method="GET"))
+        d.connect(name="groupInfo", route="group/:id/info", controller=self, action="info",
+                  conditions=dict(method="GET"))
         d.connect(name="groups", route="groups", controller=self, action="groups",
                   conditions=dict(method="GET"))
         d.connect(name="groupInviteUsers", route="group/:id/inviteusers", controller=self, action="inviteUsers",
@@ -32,7 +34,6 @@ class GroupsController(ResourceController):
             return data(Group.create(theData))
         else:
             return error("No data for group.", NoDataError)
-        pass
 
     @jsonencode
     @exists
@@ -45,9 +46,10 @@ class GroupsController(ResourceController):
     @exists
     def info(self, id):
         # TODO: bulk call - David 12/13/2009
-        # get member count
-        # get admin count
-        pass
+        theGroup = Group.read(id)
+        memberCount = theGroup.memberCount()
+        adminCount = theGroup.adminCount()
+        return data({"memberCount": memberCount, "adminCount": adminCount})
 
     @jsonencode
     @exists

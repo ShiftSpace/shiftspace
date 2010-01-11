@@ -108,6 +108,16 @@ function SSCreateGroup(groupData)
 }
 
 
+function SSGroupInfo(groupId)
+{
+  return SSApp.get({
+    resource: 'group',
+    id: groupId,
+    action: 'info'
+  });
+}
+
+
 function SSInviteUsersToGroup(groupId, userIds)
 {
   return SSApp.post({

@@ -81,7 +81,15 @@ var EditGroupView = new Class({
     this.SaveGroup.removeClass("SSDisplayNone");
     this.CreateGroup.addClass("SSDisplayNone");
     SSTemplate(this.GroupForm, groupData);
+    this.update(SSGroupInfo(groupData.groupId));
+
   },
+
+
+  update: function(groupInfo)
+  {
+    SSTemplate(this.GroupUserCount, groupInfo);
+  }.asPromise(),
 
 
   createGroup: function()
