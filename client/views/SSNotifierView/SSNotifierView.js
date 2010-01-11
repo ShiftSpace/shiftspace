@@ -275,6 +275,8 @@ var SSNotifierView = new Class({
   */
   updateShiftCount: function(countp)
   {
+    if(countp > 0 && this.delayed()) this.finish();
+    
     this.__count = countp;
     this.updateCounter();
     
