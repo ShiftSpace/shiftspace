@@ -36,8 +36,8 @@ var SSFramedView = new Class({
 
     if(typeof SandalphonToolMode == 'undefined')
     {
-      var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css');
-      var p = SSLoadFile(url);
+      var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css'),
+          p = SSLoadFile(url);
       this.onStyleLoad(p);
     }
   },
@@ -76,8 +76,9 @@ var SSFramedView = new Class({
       });
     }
     
-    var frag = Sandalphon.convertToFragment(this.ui['interface']);
-    var id = frag.getProperty('id');
+    var frag = Sandalphon.convertToFragment(this.ui['interface']),
+        id = frag.getProperty('id');
+    
     if(id)
     {
       this.element.setProperty('id', id);
@@ -109,8 +110,8 @@ var SSFramedView = new Class({
   
   buildInterface: function()
   {
-    var context = this.contentWindow();
-    var doc = this.contentDocument();
+    var context = this.contentWindow(),
+        doc = this.contentDocument();
     
     // forward key up and down events to parent window
     context.addEvent('keyup', function(evt) {
