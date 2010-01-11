@@ -69,9 +69,43 @@ var SSFramedView = new Class({
     iframe.replaces(this.element);
     this.element = iframe;
     SSSetControllerForNode(this, this.element);
-    this.onStyleLoad(this.delayed());
+    return this.onStyleLoad(this.delayed());
   },
   
+
+  show: function()
+  {
+    if(this.delayed())
+    {
+      this.finish();
+      this.addEvent("load", this.show.bind(this));
+      return false;
+    }
+    this.parent();
+    return true;
+  },
+
+
+  hide: function()
+  {
+    if(this.delayed())
+    {
+      return false;
+    }
+    else
+    {
+      this.parent();
+      return true;
+    }
+  },
+
+
+  isVisible: function()
+  {
+    if(this.delayed()) return false;
+    return this.parent();
+  },
+
   
   onStyleLoad: function(css)
   {
@@ -174,6 +208,7 @@ var SSFramedView = new Class({
     $(doc.body).adopt.apply($(doc.body), children);
     
     Sandalphon.activate(context);
+    this.setDelayed(false);
   },
   
   
