@@ -85,7 +85,6 @@ var EditGroupView = new Class({
     this.CreateGroup.addClass("SSDisplayNone");
     SSTemplate(this.GroupForm, groupData);
     this.update(SSGroupInfo(groupData.groupId));
-
   },
 
 
@@ -129,6 +128,12 @@ var EditGroupView = new Class({
           p = SSUpdateGroup(this.currentGroup().groupId, formData);
       this.onUpdateGroup(p);
     }.bind(this));
+
+    this.CloseEditMember.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      this.EditGroupMember.addClass("SSDisplayNone");
+      this.GroupMemberListViewContainer.removeClass("SSDisplayNone");
+    }.bind(this));
   },
 
 
@@ -167,6 +172,19 @@ var EditGroupView = new Class({
   removeUser: function(user)
   {
     this.users.erase(user._id);
+  },
+
+
+  editMember: function(sender, evt)
+  {
+    var editMemberEl = this.element.getElement("#EditGroupMember"),
+        templData = $H(evt.data);
+    this.element.getElement("#GroupMemberListViewContainer").addClass("SSDisplayNone");
+    editMemberEl.removeClass("SSDisplayNone");
+    templData.erase("gravatar");
+    templData.erase("fullName");
+    SSTemplate(editMemberEl, templData);
+    editMemberEl.getElement(".gravatar").set("src", evt.data.gravatar);
   },
 
 

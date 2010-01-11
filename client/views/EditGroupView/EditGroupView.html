@@ -39,25 +39,39 @@
         <span class="adminCount"></span> Admins + <span class="memberCount"></span> Members (click to edit)
     </div>
 
-    <ul id="GroupMemberListView"
-        class="SSListView"
-        uiclass="SSListView"
-        outlet="EditGroupView">
-        <li class="SSCell MemberListViewCell"
-            uiclass="MemberListViewCell">
-            <div class="user">
-                <span class="gravatarContainer">
-                    <img class="rounded-image gravatar" width="16" height="16"></img>
-                </span>
-                <span class="userName"></span>
-            </div>
-        </li>
-    </ul>
+    <div id="GroupMemberListViewContainer" outlet="EditGroupView">
+        <ul id="GroupMemberListView"
+            class="SSListView"
+            uiclass="SSListView"
+            outlet="EditGroupView">
+            <li class="SSCell MemberListViewCell"
+                uiclass="MemberListViewCell"
+                options="{
+                  properties: ['gravatar', 'userName'],
+                  actions: [
+                    {
+                      selector: '.gravatar, .userName',
+                      method: 'editMember',
+                      target: 'EditGroupView'
+                    }
+                  ]
+                }">
+                <div class="user">
+                    <span class="gravatarContainer">
+                        <img class="rounded-image gravatar" width="16" height="16"></img>
+                    </span>
+                    <span class="userName"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
 
-    <div id="EditGroupMember" class="SSDisplayNone">
-        <div class="close"></div>
+    <div id="EditGroupMember" class="SSDisplayNone" outlet="EditGroupView">
+        <div id="CloseEditMember" outlet="EditGroupView">X</div>
         <div>
-            <span class="gravatar"></span>
+            <span>
+                <img class="gravatar"></img>
+            </span>
             <span class="userName"></span>
             <span class="fullName"></span>
         </div>

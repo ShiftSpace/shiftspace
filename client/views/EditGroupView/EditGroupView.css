@@ -106,12 +106,25 @@
     -webkit-border-radius: 10px;
 }
 
+#GroupMemberListViewContainer
+{
+   height: 125px;
+}
+
 #GroupMemberListView
 {
    list-style: none;
+   min-height: 125px;
+   background-color: #eee;
 }
 
 .MemberListViewCell
 {
    display: inline;
+}
+
+#EditGroupMember
+{
+   height: 125px;
+   background-color: #eee;
 }
