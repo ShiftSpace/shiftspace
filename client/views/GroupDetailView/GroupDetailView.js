@@ -22,6 +22,18 @@ var GroupDetailView = new Class({
   },
 
 
+  currentGroup: function()
+  {
+    return this.__currentGroup;
+  },
+  
+  
+  setCurrentGroup: function(currentGroup)
+  {
+    this.__currentGroup = currentGroup;
+  },
+
+
   'open': function()
   {
     this.delegate().tall();
@@ -40,7 +52,12 @@ var GroupDetailView = new Class({
   {
     this.JoinGroup.addEvent("click", function(evt) {
       evt = new Event(evt);
-      this.onJoinGroup(SSJoinGroup(this.currentGroup._id));
+      this.onJoinGroup(SSJoinGroup(this.currentGroup()._id));
+    }.bind(this));
+
+    this.DetailGroupSettings.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      SSPostNotification("onEditGroup", this.currentGroup());
     }.bind(this));
   },
 
@@ -61,7 +78,7 @@ var GroupDetailView = new Class({
   showGroup: function(groupData)
   {
     this.open();
-    this.currentGroup = groupData;
+    this.setCurrentGroup(groupData);
     SSTemplate(this.element, groupData);
     if(groupData.level > 0)
     {
