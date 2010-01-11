@@ -14,6 +14,7 @@ var EditGroupView = new Class({
   {
     this.parent(el, options);
 
+    // for holding users to be added to the group
     this.users = [];
 
     SSAddObserver(this, "onGroupsPaneHide", function() {
@@ -77,7 +78,7 @@ var EditGroupView = new Class({
     this.initTable(groupData.groupId);
     SSTableForName("Members").addView(this.GroupMemberListView);
     this.clearForm();
-    this.users = []; // for holding users to add to the group
+    this.users = [];
     if(!this.isVisible()) this['open']();
     this.EditTitle.removeClass("SSDisplayNone");
     this.CreateTitle.addClass("SSDisplayNone");
