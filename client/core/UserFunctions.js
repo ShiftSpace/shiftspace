@@ -118,6 +118,12 @@ function SSGroupInfo(groupId)
 }
 
 
+function SSUpdateGroup(groupId, data)
+{
+  return SSApp.update('group', groupId, data);
+}
+
+
 function SSInviteUsersToGroup(groupId, userIds)
 {
   return SSApp.post({

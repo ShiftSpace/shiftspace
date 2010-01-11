@@ -237,7 +237,6 @@ class Shift(SSDocument):
 
     def update(self, fields, updateDbs=True):
         from server.models.ssuser import SSUser
-        
         if fields.get("content"):
             self.content = fields.get("content")
         if fields.get("summary"):

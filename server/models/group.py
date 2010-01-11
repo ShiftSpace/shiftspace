@@ -158,8 +158,18 @@ class Group(SSDocument):
     # Instance Methods
     # ========================================
 
-    def update(self, id):
-        pass
+    def update(self, fields):
+        if fields.get("longName"):
+            self.longName = fields.get("longName")
+        if fields.get("shortName"):
+            self.shortName = fields.get("shortName")
+        if fields.get("tagLine"):
+            self.tagLine = fields.get("tagLine")
+        if fields.get("url"):
+            self.url = fields.get("url")
+        self.modified = datetime.now()
+        self.store(core.connect())
+        return self
 
 
     def delete(self):

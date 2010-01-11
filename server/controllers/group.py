@@ -13,6 +13,8 @@ class GroupsController(ResourceController):
                   conditions=dict(method="POST"))
         d.connect(name="groupRead", route="group/:id", controller=self, action="read",
                   conditions=dict(method="GET"))
+        d.connect(name="groupUpdate", route="group/:id", controller=self, action="update",
+                  conditions=dict(method="PUT"))
         d.connect(name="groupInfo", route="group/:id/info", controller=self, action="info",
                   conditions=dict(method="GET"))
         d.connect(name="groups", route="groups", controller=self, action="groups",
@@ -54,7 +56,19 @@ class GroupsController(ResourceController):
     @jsonencode
     @exists
     def update(self, id):
-        pass
+        from server.models.ssuser import SSUser
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        theGroup = Group.read(id)
+        jsonData = helper.getRequestBody()
+        if jsonData != "":
+            if theUser.isAdminOf(theGroup):
+                groupData = json.loads(jsonData)
+                return data(theGroup.update(groupData))
+            else:
+                return error("You don't have permission to update this group", PermissionError)
+        else:
+            return error("No data for group.", NoDataError)
 
     @jsonencode
     @exists

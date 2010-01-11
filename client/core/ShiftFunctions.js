@@ -290,16 +290,14 @@ function SSSaveShift(shift)
     return;
   }
 
-  var space = SSSpaceForName(shift.space.name);
-  var params = {
-    summary: shift.summary,
-    content: shift,
-    space: {name: shift.space.name, version: space.attributes().version}
-  };
-
-  // remove _id and space from shift
-  // TODO: might want to refactor this to be a little less hacky - David
-  var id = shift._id;
+  var space = SSSpaceForName(shift.space.name),
+      params = {
+        summary: shift.summary,
+        content: shift,
+        space: {name: shift.space.name, version: space.attributes().version}
+      },
+      id = shift._id;
+  
   delete shift._id;
   delete shift.space;
 

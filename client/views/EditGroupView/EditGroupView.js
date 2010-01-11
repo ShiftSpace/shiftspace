@@ -94,8 +94,8 @@ var EditGroupView = new Class({
 
   createGroup: function()
   {
-    var formData = SSFormToHash(this.GroupForm);
-    var p = SSCreateGroup(formData);
+    var formData = SSFormToHash(this.GroupForm),
+        p = SSCreateGroup(formData);
     this.onCreateGroup(p);
   },
 
@@ -111,13 +111,28 @@ var EditGroupView = new Class({
   {
     this.CreateGroup.addEvent("click", this.createGroup.bind(this));
     this.CancelAction.addEvent('click', this['close'].bind(this));
+
     this.InviteUsers.addEvent("click", function(evt) {
       evt = new Event(evt);
       this.delegate().sendBack();
       evt.stop();
       SSPostNotification("onAddUsers", this.currentGroup());
     }.bind(this));
+    
+    this.SaveGroup.addEvent('click', function(evt) {
+      SSLog("save group", SSLogForce);
+      evt = new Event(evt);
+      var formData = SSFormToHash(this.GroupForm),
+          p = SSUpdateGroup(this.currentGroup().groupId, formData);
+      this.onUpdateGroup(p);
+    }.bind(this));
   },
+
+
+  onUpdateGroup: function(group)
+  {
+    
+  }.asPromise(),
 
 
   awake: function()
