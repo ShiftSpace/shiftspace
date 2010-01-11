@@ -22,24 +22,13 @@ var SSFramedView = new Class({
   
   initialize: function(el, options)
   { 
-    // Check for Sandalphon Mode
-    if(typeof SandalphonToolMode == 'undefined')
-    {
-      this.parent(el, options);
-    }
-    else
-    {
-      this.parent(el, $merge(options, {
-        generateElement: false
-      }));
-    }
+    this.parent(el, $merge(options, {
+      generateElement: false
+    }));
 
-    if(typeof SandalphonToolMode == 'undefined')
-    {
-      var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css'),
-          p = SSLoadFile(url);
-      this.onStyleLoad(p);
-    }
+    var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css'),
+      p = SSLoadFile(url);
+    this.onStyleLoad(p);
   },
   
   
