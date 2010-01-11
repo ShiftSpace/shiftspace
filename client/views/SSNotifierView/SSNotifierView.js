@@ -159,13 +159,16 @@ var SSNotifierView = new Class({
   
   refreshMessageCount: function()
   {
-    if (ShiftSpace.User.isLoggedIn())
+    if(this.isLoaded())
     {
-      this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
-    }
-    else
-    {
-      this.SSMessage.hide();
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
+      }
+      else
+      {
+        this.SSMessage.hide();
+      }
     }
   },
   
