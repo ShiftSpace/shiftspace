@@ -44,8 +44,30 @@
         uiclass="SSListView">
         <li class="SSCell"
             uiclass="SSCell">
+            <span class="gravatar"></span>
+            <span calss="userName"></span>
         </li>
     </ul>
+
+    <div id="EditGroupMember" class="SSDisplayNone">
+        <div class="close"></div>
+        <div>
+            <span class="gravatar"></span>
+            <span class="userName"></span>
+            <span class="fullName"></span>
+        </div>
+        <div>
+            Member since <span class="createdStr"></span>
+        </div>
+        <div>
+            <span class="shiftCount"></span> in group
+        </div>
+        <div>
+            <button>View Shifts</button>
+            <button>Make Admin</button>
+            <button>Block User</button>
+        </div>
+    </div>
 
     <div>
         <button id="InviteUsers" outlet="EditGroupView">Invite User</button>
