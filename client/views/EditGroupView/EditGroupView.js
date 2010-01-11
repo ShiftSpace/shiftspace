@@ -61,6 +61,7 @@ var EditGroupView = new Class({
 
   presentCreateForm: function()
   {
+    this.__mode = "create";
     this.clearForm();
     this.users = [];
     if(!this.isVisible()) this['open']();
@@ -73,6 +74,7 @@ var EditGroupView = new Class({
 
   presentEditForm: function(groupData)
   {
+    this.__mode = "edit";
     this.setCurrentGroup(groupData);
     this.cleanupTable();
     this.initTable(groupData.groupId);
@@ -119,15 +121,17 @@ var EditGroupView = new Class({
       evt = new Event(evt);
       this.delegate().sendBack();
       evt.stop();
-      SSPostNotification("onAddUsers", this.currentGroup());
+      SSPostNotification("onAddUsers", {group: this.currentGroup(), mode:this.__mode});
     }.bind(this));
     
     this.SaveGroup.addEvent('click', function(evt) {
       SSLog("save group", SSLogForce);
       evt = new Event(evt);
-      var formData = SSFormToHash(this.GroupForm),
-          p = SSUpdateGroup(this.currentGroup().groupId, formData);
-      this.onUpdateGroup(p);
+      var groupId = this.currentGroup().groupId,
+          formData = SSFormToHash(this.GroupForm),
+          p1 = SSUpdateGroup(groupId, formData),
+          p2 = SSInviteUsersToGroup(groupId, this.users);
+      this.onUpdateGroup(p1, p2);
     }.bind(this));
 
     this.CloseEditMember.addEvent("click", function(evt) {

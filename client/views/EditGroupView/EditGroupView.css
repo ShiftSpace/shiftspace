@@ -121,6 +121,8 @@
 .MemberListViewCell
 {
    display: inline;
+   float: left;
+   margin-right: 4px;
 }
 
 #EditGroupMember

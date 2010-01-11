@@ -80,10 +80,20 @@ var GroupsPane = new Class({
   },
 
 
-  onAddUsers: function(group)
+  onAddUsers: function(evt)
   {
     this.__addUserMode = true;
     this.GroupsTabView.selectTab(2);
     this.InviteUsersListView.element.addClass("Invite");
+
+    var tabButton =  this.GroupsTabView.tabButtonForIndex(2);
+    if(evt.mode == 'edit')
+    {
+      tabButton.set("text", "Add Users");
+    }
+    else
+    {
+      tabButton.set("text", "Start New Group");
+    }
   }
 });
