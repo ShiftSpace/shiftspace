@@ -62,13 +62,13 @@ var SSFramedView = new Class({
     {
       throw new Error("Not a delayed SSFramedView");
     }
-    var iframe = new Element("iframe", {
+    this.__delayediframe = new Element("iframe", {
       id: this.element.get("id"),
-      "class": this.element.get("class")
+      "class": this.element.get("class"),
+      events: {
+        load: this.buildInterface.bind(this)
+      }
     });
-    iframe.replaces(this.element);
-    this.element = iframe;
-    SSSetControllerForNode(this, this.element);
     return this.onStyleLoad(this.delayed());
   },
   
@@ -81,6 +81,7 @@ var SSFramedView = new Class({
       this.addEvent("load", this.show.bind(this));
       return false;
     }
+    //SSLog("SSFramedView show", SSLogForce);
     this.parent();
     return true;
   },
@@ -140,7 +141,15 @@ var SSFramedView = new Class({
       });
     }
     
+    if(this.__delayediframe)
+    {
+      this.__delayediframe.replaces(this.element);
+      this.element = this.__delayediframe;
+      SSSetControllerForNode(this, this.element);
+    }
+
     var frag = Sandalphon.convertToFragment(this.ui['interface']),
+
         id = frag.getProperty('id');
     
     if(id)
