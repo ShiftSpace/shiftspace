@@ -208,7 +208,7 @@ class SandalphonCompiler:
                         os.makedirs(envDir)
         return (env, envDir)
 
-    def compile(self, inputFile=None, outDir="builds/compiledViews", envFile="mydev", jsonOutput=False):
+    def compile(self, inputFile=None, outDir="builds/compiledViews", envFile="mydev", jsonOutput=False, deploy=False):
         """
         Compile an interface file down to its parts
         """
@@ -294,6 +294,7 @@ def main(argv):
     inputFile = None
     envFile = None
     env = None
+    deploy = False
     try:
         opts, args = getopt.getopt(argv, "i:o:e:jh", ["input=", "output=", "environment=", "json", "help"])
     except:
@@ -310,6 +311,8 @@ def main(argv):
             outputDirectory = arg
         elif opt in ("-j", "--json"):
             jsonOutput = True
+        elif opt in ("-d", "--deploy"):
+            deploy = True
         elif opt in ("-e", "--environment"):
             envFile = arg
     if inputFile == None:
@@ -320,7 +323,8 @@ def main(argv):
     compiler.compile(inputFile,
                      outDir=outputDirectory,
                      envFile=envFile,
-                     jsonOutput=jsonOutput)
+                     jsonOutput=jsonOutput,
+                     deploy=deploy)
 
 
 if __name__ == "__main__":
