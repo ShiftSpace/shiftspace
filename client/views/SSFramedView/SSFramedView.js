@@ -14,7 +14,8 @@ var SSFramedView = new Class({
   {
     return $merge(this.parent(), {
       location: 'views',
-      path: null
+      path: null,
+      delayed: false
     });
   },
   
