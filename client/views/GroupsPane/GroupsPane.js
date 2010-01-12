@@ -14,9 +14,16 @@ var GroupsPane = new Class({
   {
     this.parent(el, options);
 
-    SSAddObserver(this, "onUserLogin", this.onUserLogin.bind(this));
-    SSAddObserver(this, "onUserJoin", this.onUserLogin.bind(this));
+    SSAddObserver(this, "onUserLogin", this.initListViews.bind(this));
+    SSAddObserver(this, "onUserJoin", this.initListViews.bind(this));
     SSAddObserver(this, "onAddUsers", this.onAddUsers.bind(this));
+  },
+
+
+  show: function()
+  {
+    if(!this.__listViewsInitialized) this.initListViews();
+    this.parent();
   },
 
 
@@ -72,7 +79,7 @@ var GroupsPane = new Class({
   },
 
 
-  onUserLogin: function()
+  initListViews: function()
   {
     SSTableForName("Groups").addView(this.GroupsListView);
     SSTableForName("MyGroups").addView(this.MyGroupsListView);
