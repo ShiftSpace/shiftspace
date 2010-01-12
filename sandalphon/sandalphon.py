@@ -169,7 +169,7 @@ class SandalphonCompiler:
                 id = instruction[2]
             else:
                 id = instruction[1]
-            framedView = '<div id="%s" class="%sFrame" uiclass="%s" options="{path:\'%s\'}"></div>' % (id, instruction[1], instruction[1], outDir)
+            framedView = '<div id="%s" class="%sFrame SSDisplayNone" uiclass="%s" options="{path:\'%s\'}"></div>' % (id, instruction[1], instruction[1], outDir)
             path = self.paths.get(instruction[1])
             dirName, envFile = os.path.split(outDir)
             # process the content of the framed view
