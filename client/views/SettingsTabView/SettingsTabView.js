@@ -33,6 +33,7 @@ var SettingsTabView = new Class({
 
   afterAwake: function()
   {
+    this.parent();
     // NOTE - can't use options because Sandalphon doesn't yet support adding delegates
     // which come from inside an iframe - David 10/27/09
     this.SSInstalledSpaces.setDelegate(this);
