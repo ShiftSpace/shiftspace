@@ -32,6 +32,12 @@ var SSFramedView = new Class({
   },
   
   
+  isVisible: function()
+  {
+    return this.parent() && this.isLoaded();
+  },
+  
+
   onStyleLoad: function(css)
   {
     if(css) Sandalphon.addStyle(css);

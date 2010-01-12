@@ -23,13 +23,7 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
     SSAddObserver(this, 'onLocalizationChanged', this.localizationChanged.bind(this));
   },
-  
-  
-  isVisible: function()
-  {
-    return !this.element.hasClass('SSDisplayNone');
-  },
-  
+
   
   show: function()
   {
