@@ -36,17 +36,8 @@ var SSSpaceMenu = new Class({
   
   show: function()
   {
-    var success = this.parent();
-    if(!success) return;
-    if(!this.__shown)
-    {
-      this.__shown = true;
-      this.update();
-    }
-    else
-    {
-      this.resize();
-    }
+    this.parent();
+    this.resize();
     SSPostNotification('onSpaceMenuShow', this);
   },
   
