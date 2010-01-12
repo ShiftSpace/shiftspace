@@ -180,6 +180,7 @@ var ShiftListView = new Class({
   onReloadData: function()
   {
     // we need to wait until the styles for the rounded images are loaded
+    /*
     if(!__mainCssLoaded)
     {
       SSAddObserver(this, 'onMainCssLoad', function() {
@@ -190,6 +191,7 @@ var ShiftListView = new Class({
     {
       RoundedImage.init(".ShiftListView .ShiftListViewCell .gravatar", new Window(this.element.getWindow()), document);
     }
+    */
   },
 
 
