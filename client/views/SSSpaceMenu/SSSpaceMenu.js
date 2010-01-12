@@ -19,16 +19,12 @@ var SSSpaceMenu = new Class({
   {
     this.parent(el, options);
 
-    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
-    
+    SSAddObserver(this, 'onUserLogin', this.update.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.update.bind(this));
     SSAddObserver(this, 'onSpaceInstall', this.update.bind(this));
     SSAddObserver(this, 'onSpaceUninstall', this.update.bind(this));
-    
     SSAddObserver(this, 'showSpaceMenu', this.show.bind(this));
     SSAddObserver(this, 'hideSpaceMenu', this.hide.bind(this));
-    
-    SSAddObserver(this, 'onSync', this.handleSync.bind(this));
   },
   
   
@@ -72,22 +68,6 @@ var SSSpaceMenu = new Class({
     SSPostNotification('onSpaceMenuHide', this);
   },
   
-  
-  handleLogin: function()
-  {
-    this.update();
-  },
-  
-  
-  handleLogout: function()
-  {
-    this.update();
-  },
-  
-  
-  handleSync: function()
-  {
-  },
   
   /*
     Function: onSpaceSort
