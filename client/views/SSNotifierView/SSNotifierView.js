@@ -25,6 +25,8 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onMessageRead', function() {
       this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
     }.bind(this));
+
+    this.attachFinishKeyEvents();
   },
   
   
@@ -339,18 +341,49 @@ var SSNotifierView = new Class({
       ShiftSpace.Console.showInbox();
     }.bind(this));
   },
+
+
+  attachFinishKeyEvents: function()
+  {
+    SSAddEvent('keydown', function(evt) {
+      evt = new Event(evt);
+      if(evt.key == 'shift' && this.delayed())
+      {
+        this.addEvent("load", function() {
+          this.fireEvent("shiftdown");
+        }.bind(this));
+        this.finish();
+      }
+    }.bind(this));
+  },
   
   
   attachKeyEvents: function()
   {
     SSAddEvent('keyup', function(evt) {
       evt = new Event(evt);
-      if(evt.key == 'shift') this.fireEvent('shiftup');
+      if(evt.key == 'shift')
+      {
+        if(this.delayed())
+        {
+          SSLog("finish", SSLogForce);
+          this.finish();
+        }
+        this.fireEvent('shiftup');
+      }
     }.bind(this));
 
     SSAddEvent('keydown', function(evt) {
       evt = new Event(evt);
-      if(evt.key == 'shift') this.fireEvent('shiftdown');
+      if(evt.key == 'shift')
+      {
+        if(this.delayed())
+        {
+          SSLog("finish", SSLogForce);
+          this.finish();
+        }
+        this.fireEvent('shiftdown');
+      }
     }.bind(this));
   },
   
