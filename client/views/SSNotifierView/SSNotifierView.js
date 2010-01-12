@@ -14,20 +14,14 @@ var SSNotifierView = new Class({
   {
     this.parent(el, options);
     
-    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
-
-    SSAddObserver(this, 'onSync', this.handleSync.bind(this));
-
+    SSAddObserver(this, 'onUserLogin', this.update.bind(this));
+    SSAddObserver(this, 'onUserJoin', this.update.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.update.bind(this));
     SSAddObserver(this, 'onConsoleShow', this.onConsoleShow.bind(this));
     SSAddObserver(this, 'onConsoleHide', this.onConsoleHide.bind(this));
-    
     SSAddObserver(this, 'onSpaceMenuShow', this.onSpaceMenuShow.bind(this));
     SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
-    
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
-
     SSAddObserver(this, 'onMessageRead', function() {
       this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
     }.bind(this));
@@ -227,29 +221,12 @@ var SSNotifierView = new Class({
     if(ShiftSpace.Console.isVisible()) return;
   },
   
-  
-  handleSync: function()
-  {
-  },
-  
-  
-  handleLogin: function()
-  {
-    this.updateControls();
-  },
-  
-  
-  handleLogout: function()
-  {
-    this.updateControls();
-  },
-  
   /*
-    Function: updateControls
+    Function: update
       *private*
       Update the controls in the notifier view.
   */
-  updateControls: function()
+  update: function()
   {
     this.refreshShiftCount();
     this.refreshMessageCount();
@@ -418,7 +395,7 @@ var SSNotifierView = new Class({
     if(context == this.element.contentWindow)
     {
       this.mapOutletsToThis();
-      this.updateControls();
+      this.update();
     }
   },
   

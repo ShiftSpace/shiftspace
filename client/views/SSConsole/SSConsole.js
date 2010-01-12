@@ -17,32 +17,28 @@ var SSConsole = new Class({
   {
     this.parent(el, options);
 
-    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
-    SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
+    SSAddObserver(this, 'onUserLogin', this.update.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.update.bind(this));
+    SSAddObserver(this, 'onUserJoin', this.update.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
     SSAddObserver(this, 'onLocalizationChanged', this.localizationChanged.bind(this));
   },
-  
+
   
   show: function()
   {
     SSLog("SSConsole show", SSLogForce);
-    var success = this.parent();
-    if(!success) return false;
+    this.parent();
     this.update();
     SSPostNotification('onConsoleShow');
-    return true;
   },
   
   
   hide: function()
   {
     SSLog("SSConsole hide", SSLogForce);
-    var success = this.parent();
-    if(!success) return false;
+    this.parent();
     SSPostNotification('onConsoleHide');
-    return true;
   },
   
   
@@ -66,18 +62,6 @@ var SSConsole = new Class({
       this.MainTabView.hideTabByName('GroupsPane');
       this.MainTabView.hideTabByName('InboxPane');
     }
-  },
-
-
-  handleLogin: function()
-  {
-    this.update();
-  },
-
-
-  handleLogout: function()
-  {
-    this.update();
   },
 
 

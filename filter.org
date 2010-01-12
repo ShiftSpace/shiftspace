@@ -1,0 +1,30 @@
+Dealing with filters
+
+* Shifts Tab
+** On This Page
+   just add the additional bit of the query to server.controllers.shift.shift
+** From People
+   same as above
+** From Groups
+   same as above
+* My § Tab
+** My Shifts
+   simple lucene, call into shifts _fti with q=createdBy:loggedInUserId
+** My Comments
+   call into comments _fti with q=createdBy:loggedInUserId
+** My Favorites
+   Won't support at launch
+* Inbox
+** Call into messages _fti where q=to:loggedInUserId
+* People Tab
+** Following
+   Won't support at launch
+** Followers
+   Won't support at launch
+** Browse
+   call into users _fti
+* Groups Tab
+** Your Groups
+   Won't support at launch
+** Browse Groups
+   call into groups _fti

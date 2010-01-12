@@ -68,39 +68,22 @@ var SSFramedView = new Class({
 
   show: function()
   {
-    if(this.delayed())
-    {
-      this.finish();
-      this.addEvent("load", this.show.bind(this));
-      return false;
-    }
-    //SSLog("SSFramedView show", SSLogForce);
     this.parent();
-    return true;
   },
 
 
   hide: function()
   {
-    if(this.delayed())
-    {
-      return false;
-    }
-    else
-    {
-      this.parent();
-      return true;
-    }
+    this.parent();
   },
 
 
   isVisible: function()
   {
-    if(this.delayed()) return false;
-    return this.parent();
+    return this.parent() && this.isLoaded();
   },
-
   
+
   onStyleLoad: function(css)
   {
     if(css) Sandalphon.addStyle(css);
@@ -220,5 +203,4 @@ var SSFramedView = new Class({
   {
     return this.contentWindow().$$('*[uiclass]').map(SSControllerForNode);
   }
-  
 });
