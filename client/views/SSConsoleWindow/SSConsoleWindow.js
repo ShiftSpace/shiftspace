@@ -25,8 +25,10 @@ var SSConsoleWindow = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-
     SSAddObserver(this, "onUserLogout", this.onLogout.bind(this));
+    SSAddObserver(this, "onConsoleShow", function() {
+      if(this.delayed()) this.finish();
+    }.bind(this));
   },
 
 
@@ -67,6 +69,12 @@ var SSConsoleWindow = new Class({
       invert: true
     });
   },
+
+
+  show: function()
+  {
+    this.parent();
+  }.decorate(ssfv_ensure),
 
 
   hide: function()
