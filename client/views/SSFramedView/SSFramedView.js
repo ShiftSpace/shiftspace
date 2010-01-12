@@ -4,6 +4,31 @@
 // @dependencies      SSView
 // ==/Builder==
 
+
+function ssfv_ensure(fn) {
+  return function decorator() {
+    var args = arguments;
+    if(this.delayed())
+    {
+      this.addEvent("load", function() {
+        var temp = this._current;
+        this._current = decorator._wrapper;
+        fn.apply(this, args);
+        this._current = temp;
+      }.bind(this));
+      this.finish();
+    }
+    else
+    {
+      var temp = this._current;
+      this._current = decorator._wrapper;
+      fn.apply(this, args);
+      this._current = temp;
+    }
+  };
+};
+
+
 var SSFramedView = new Class({
   
   Extends: SSView,
@@ -58,6 +83,7 @@ var SSFramedView = new Class({
 
   finish: function()
   {
+    SSLog("finish!", SSLogForce);
     if(!this.delayed())
     {
       throw new Error("Not a delayed SSFramedView");

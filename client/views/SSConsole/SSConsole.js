@@ -31,7 +31,7 @@ var SSConsole = new Class({
     this.parent();
     this.update();
     SSPostNotification('onConsoleShow');
-  },
+  }.decorate(ssfv_ensure),
   
   
   hide: function()
@@ -239,5 +239,4 @@ var SSConsole = new Class({
     this.setIsLoaded(true);
     SSPostNotification(SSConsoleIsReadyNotification, this);
   }
-
 });

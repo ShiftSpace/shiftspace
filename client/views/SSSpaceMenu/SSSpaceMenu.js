@@ -37,9 +37,10 @@ var SSSpaceMenu = new Class({
   show: function()
   {
     this.parent();
-    this.resize();
+    SSLog("SSSpaceMenu show!", SSLogForce);
+    this.update();
     SSPostNotification('onSpaceMenuShow', this);
-  },
+  }.decorate(ssfv_ensure),
   
   /*
     Function: resize
