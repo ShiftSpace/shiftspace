@@ -32,7 +32,7 @@ var SSConsoleWindow = new Class({
 
   onLogout: function()
   {
-    this.hide();
+    if(this.isVisible()) this.hide();
   },
   
 
