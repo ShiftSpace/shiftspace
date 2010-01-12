@@ -34,7 +34,7 @@ var SSNotifierView = new Class({
   {
     this.__menuVisible = true;
     this.fireEvent('showmenu');
-  },
+  }.decorate(ssfv_ensure),
   
   
   onSpaceMenuHide: function()
@@ -355,6 +355,39 @@ var SSNotifierView = new Class({
         this.finish();
       }
     }.bind(this));
+
+    SSAddEvent('keydown', this.handleKeyDown.bind(this));
+    SSAddEvent('keyup', this.handleKeyUp.bind(this));
+  },
+
+
+  handleKeyDown: function(evt)
+  {
+    evt = new Event(evt);
+    if(evt.key == 'shift')
+    {
+      this.shiftDownTime = $time();
+      this.shiftDown = true;
+    }
+  },
+  
+  
+  handleKeyUp: function(evt)
+  {
+    evt = new Event(evt);
+    if(this.shiftDown)
+    {
+      var delta = $time() - this.shiftDownTime;
+    }
+    if(evt.key == 'shift') this.shiftDown = false;
+    if(this.shiftDown && 
+       evt.key == 'space' &&
+       delta >= 300)
+    {
+      SSPostNotification("toggleConsole");
+      evt.preventDefault();
+      evt.stop();
+    }
   },
   
   

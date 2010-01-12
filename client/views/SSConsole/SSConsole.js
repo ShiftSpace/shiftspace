@@ -22,6 +22,7 @@ var SSConsole = new Class({
     SSAddObserver(this, 'onUserJoin', this.update.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
     SSAddObserver(this, 'onLocalizationChanged', this.localizationChanged.bind(this));
+    SSAddObserver(this, 'toggleConsole', this.toggle.bind(this));
   },
 
   
@@ -42,6 +43,19 @@ var SSConsole = new Class({
   },
   
   
+  toggle: function()
+  {
+    if(this.isVisible())
+    {
+      this.hide();
+    }
+    else
+    {
+      this.show();
+    }
+  },
+  
+
   updateTabs: function()
   {
     if(ShiftSpaceUser.isLoggedIn())
@@ -104,57 +118,6 @@ var SSConsole = new Class({
   {
     if(!this.isVisible()) this.show();
     this.MainTabView.selectTabByName('InboxPane');
-  },
-  
-  
-  attachEvents: function()
-  {
-    SSAddEvent('keydown', this.handleKeyDown.bind(this));
-    SSAddEvent('keyup', this.handleKeyUp.bind(this));
-  },
-  
-  
-  handleKeyDown: function(evt)
-  {
-    evt = new Event(evt);
-    if(evt.key == 'shift')
-    {
-      this.shiftDownTime = $time();
-      this.shiftDown = true;
-    }
-  },
-  
-  
-  handleKeyUp: function(evt)
-  {
-    evt = new Event(evt);
-    
-    if(this.shiftDown)
-    {
-      var now = $time();
-      var delta = now - this.shiftDownTime;
-    }
-    
-    if(evt.key == 'shift')
-    {
-      this.shiftDown = false;
-    }
-    
-    if(this.shiftDown && 
-       evt.key == 'space' &&
-       delta >= 300)
-    {
-      if(!this.isVisible())
-      {
-        this.show();
-      }
-      else
-      {
-        this.hide();
-      }
-      evt.preventDefault();
-      evt.stop();
-    }
   },
   
   
@@ -235,7 +198,6 @@ var SSConsole = new Class({
   {
     this.parent();
     this.initResizer();
-    this.attachEvents();
     this.setIsLoaded(true);
     SSPostNotification(SSConsoleIsReadyNotification, this);
   }
