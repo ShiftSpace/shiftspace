@@ -49,49 +49,23 @@ var SSView = new Class({
   {
     // we are new and we are dirty
     this.setNeedsDisplay(true);
-    
-    // get the options first
     this.setOptions(this.defaults(), $merge((el && SSGetInlineOptions(el)) || {}, options));
-    
-    // remove them
     if(el) el.removeProperty('options');
-
-    // generate an id
     this.__id = this.__genId__();
     this.setIsAwake(false);
-    
-    // add to global hash
     if(ShiftSpaceObjects) ShiftSpaceObjects.set(this.__id, this);
-    
     this.__delegate = null;
     this.__outlets = new Hash();
-    
     this.element = (el && $(el)) || (this.options.generateElement && new Element('div')) || null;
-    
     if(this.element)
     {
-      // store a back reference to this class
       SSSetControllerForNode(this, this.element);
-
-      // add to global name look up dictionary
       if(ShiftSpaceNameTable && this.element.getProperty('id').search('generatedId') == -1)
       {
         ShiftSpaceNameTable.set(this.element.getProperty('id'), this);
       }
     }
-
-    // Call setup or setupTest allowing classes to have two modes
-    // For example, SSConsole lives in a IFrame under ShiftSpace
-    // but not under the interface tool.
-    if(typeof SandalphonToolMode != 'undefined' && this.setupTest)
-    {
-      this.setupTest();
-    }
-    else
-    {
-      this.setup();
-    }
-    
+    this.setup();
   },
   
   
@@ -339,6 +313,7 @@ var SSView = new Class({
   hitTest: function(target, selectorOfTest)
   {
     var parts = selectorOfTest.split(',');
+
     if(parts.length > 1)
     {
       return parts.map(function(selector) {
@@ -346,8 +321,8 @@ var SSView = new Class({
       }.bind(this)).flatten().clean()[0];
     }
 
-    var node = $(target);
-    var matches = this.element.getElements(selectorOfTest);
+    var node = $(target),
+        matches = this.element.getElements(selectorOfTest);
     
     while(node && node != this.element)
     {
@@ -438,7 +413,6 @@ var SSView = new Class({
     this.element.addClass('SSActive');
     this.willShow();
     this.fireEvent('show', this);
-    
     this.__refresh__();
     this.subViews().each(Function.msg('__refresh__'));
   },
@@ -487,7 +461,9 @@ var SSView = new Class({
    */
   isVisible: function()
   {
-    var display, size = this.element.getSize(), node = this.element;
+    var display,
+        size = this.element.getSize(),
+        node = this.element;
     while(node)
     {
       display = node.getStyle('display');
@@ -604,10 +580,11 @@ var SSView = new Class({
    */
   superView: function()
   {
-    var el = this.element.getParent('*[uiclass]'), superView;
+    var el = this.element.getParent('*[uiclass]'),
+        superView;
     if(el)
     {
-      var superView = SSControllerForNode(el);
+      superView = SSControllerForNode(el);
     }
     else
     {
@@ -679,5 +656,4 @@ var SSView = new Class({
   {
     return !this.isLoaded();
   }
-
 });
