@@ -117,6 +117,7 @@ var SSView = new Class({
   */
   __awake__: function(context)
   {
+    this.fireEvent("onAwake", {view: this, context: context});
   },
   
   /*
