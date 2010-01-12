@@ -14,7 +14,7 @@ var AllShiftsView = new Class({
 
     SSAddObserver(this, "onSync", this.onSync.bind(this));
     SSAddObserver(this, "onUserLogin", this.onLogin.bind(this));
-    SSAddObserver(this, "onUserLogout", this.onLogin.bind(this));
+    SSAddObserver(this, "onUserLogout", this.onLogout.bind(this));
   },
 
 
@@ -28,6 +28,13 @@ var AllShiftsView = new Class({
   attachEvents: function()
   {
     this.AllShiftsTabView.addEvent("tabSelected", this.onTabSelect.bind(this));
+  },
+
+
+  show: function()
+  {
+    if(!this.__listViewsInitialized) this.initListViews();
+    this.parent();
   },
 
 
@@ -135,5 +142,6 @@ var AllShiftsView = new Class({
       SSTableForName("GroupShifts").addView(this.GroupShiftsListView);
       SSTableForName("GroupShifts").setDelegate(this);
     }
+    this.__listViewsInitialized = true;
   }
 });
