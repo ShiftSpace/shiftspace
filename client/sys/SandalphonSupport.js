@@ -68,7 +68,7 @@ function SSControllerForNode(node)
     SSLog("No controller for element", node, SSLogError);
     throw new SSSandalphonError.NoControllerForCSSId(new Error(), "No controller for element " + node);
   }
-  return __controllers__.get(node.getProperty('id')) || null;
+  return __controllers.get(node.getProperty('id')) || null;
 }
 
 function SSControllerOrNode(object)
