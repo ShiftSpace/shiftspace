@@ -28,7 +28,7 @@ var SSConsole = new Class({
   
   show: function()
   {
-    SSLog("SSConsole show", SSLogForce);
+    if(this.isVisible()) return;
     this.parent();
     this.update();
     SSPostNotification('onConsoleShow');
@@ -37,7 +37,6 @@ var SSConsole = new Class({
   
   hide: function()
   {
-    SSLog("SSConsole hide", SSLogForce);
     this.parent();
     SSPostNotification('onConsoleHide');
   },
