@@ -1,0 +1,103 @@
+
+
+/* Header ======================================= */
+
+* {
+    font-family: "Helvetica",Helvetica Neue,Arial,Verdana,sans-serif;
+}
+
+div.header div.top{
+    border-top: 1px #b3ada5 solid;
+    border-left: 1px #b3ada5 solid;
+    border-right: 1px #b3ada5 solid;
+    background-color:#e3dfdb;
+    padding: 6px;
+}
+div.top label{
+    margin-left:6px;
+   font-size:12px;
+}
+div.top span.userName{
+    font-size:12px;
+    -moz-border-radius-bottomright:4px;
+    -moz-border-radius-topright:4px;
+    -moz-box-sizing:border-box;
+    background-color:#f8f5f2;
+    cursor:pointer;
+    height:16px;
+    line-height:12px;
+    padding-left:4px;
+    padding-right:4px;
+    padding-top:1px;
+}
+div.top span.createdStr{
+    color:#74665a;
+    margin-left:6px;
+    font-size: 11px;
+}
+
+
+
+div.header div.bottom{
+    border: 1px #b3ada5 solid;
+    background-color:#e3dfdb;
+    /*padding-left:28px;*/
+    padding-top: 6px;
+    padding-bottom: 6px;
+
+}
+div.bottom label{
+    display:block;
+    float:left;
+    font-size:12px;
+    text-align:right;
+    width:54px;    
+}
+div.bottom span.title{
+    display:block;
+    font-size:12px;
+    font-weight:bold;
+    margin-left:58px;
+    margin-right:20px;
+    width:260px;    
+}
+
+/* message ======================================= */
+
+div#MessageBodyMultiView{
+    margin-top:4px;
+    margin-bottom:4px;
+    padding-top:8px;
+    padding-left:6px;
+    padding-right:6px;
+    padding-bottom:8px;
+    border: 1px #b3ada5 solid;
+    background-color:#fcfcfc;
+    
+} 
+
+div#InviteSubView div.text{
+    font-size:12px;
+}
+
+
+
+/* down option buttons ======================================= */
+
+
+button.previous{
+    padding-left:10px;
+    margin-left:0px;
+    background:transparent url(http://localhost:8080/images/Console/arrow_prew.png) no-repeat scroll 0px 3px;
+    border:0;
+    color:#f63b02;
+
+}
+button.next{
+    padding-right:10px;
+    background:transparent url(http://localhost:8080/images/Console/arrow_next.png) no-repeat scroll 36px 3px;
+    border:0;
+    color:#f63b02;
+    float:right;
+}
+
