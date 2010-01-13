@@ -82,9 +82,9 @@ var SSTabView = new Class({
   */
   indexOfTabByName: function(name)
   {
-    var tab = this.element.getElement('> .SSControlView #'+name);
+    var tab = this.element.getElement('> .SSControlView #'+name+".SSButton");
     if(tab) return this.indexOfTab(tab);
-    tab = this.element.getElement('> .SSContentView #'+name);
+    tab = this.element.getElement('> .SSContentView #'+name+".SSTabPane");
     if(tab) return this.indexOfTabPane(tab);
     return -1;
   },

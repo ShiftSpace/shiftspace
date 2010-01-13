@@ -11,11 +11,18 @@ var SettingsTabView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-    SSAddObserver(this, "onSync", this.onSync.bind(this));
-    SSAddObserver(this, "onUserLogin", this.onUserLogin.bind(this));
-    SSAddObserver(this, "onUserJoin", this.onUserLogin.bind(this));
+    SSAddObserver(this, "onSync", this.update.bind(this));
+    SSAddObserver(this, "onUserLogin", this.update.bind(this));
+    SSAddObserver(this, "onUserLogout", this.update.bind(this));
+    SSAddObserver(this, "onUserJoin", this.update.bind(this));
     SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
-    SSAddObserver(this, "onUserLogout", this.onUserLogout.bind(this));
+  },
+
+
+  show: function()
+  {
+    this.parent();
+    this.update();
   },
 
 
@@ -37,19 +44,23 @@ var SettingsTabView = new Class({
     // NOTE - can't use options because Sandalphon doesn't yet support adding delegates
     // which come from inside an iframe - David 10/27/09
     this.SSInstalledSpaces.setDelegate(this);
-    if(ShiftSpaceUser.isLoggedIn()) this.onUserLogin();
+    if(ShiftSpaceUser.isLoggedIn()) this.update();
   },
 
 
-  onUserLogin: function(user)
+  update: function()
   {
     this.updateInstalledSpaces();
-  },
-
-
-  onUserLogout: function(json)
-  {
-    this.updateInstalledSpaces();
+    if(ShiftSpace.User.isLoggedIn())
+    {
+      this.revealTabByName("PreferencesTab");
+      this.revealTabByName("AccountTab");
+    }
+    else
+    {
+      this.hideTabByName("PreferencesTab");
+      this.hideTabByName("AccountTab");
+    }
   },
   
   
@@ -73,12 +84,6 @@ var SettingsTabView = new Class({
       }.bind(this));
     }
     this.SSInstalledSpaces = this.SSInstalledSpaces;
-  },
-  
-  
-  onSync: function()
-  {
-    this.updateInstalledSpaces();
   },
   
   
