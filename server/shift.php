@@ -6,14 +6,19 @@ class ShiftController {
     $filename = dirname(__FILE__) . '/shiftspace.sqlite3';
     $this->db = new PDO("sqlite://$filename");
   }
- 
+   
   public function create($request) {
     //create a shift in the database.
 	global $current_user;
+	
+	$post_vars = get_posts();
+	$post_id = $post_vars[0]->ID;
+		
     $data = flatten(json_decode(file_get_contents("php://input"), true));
     extract($data);
     
-    $createdBy = $current_user->ID;
+
+    $createdBy = $current_user->display_name;
     $created = date("m/d/y : H:i:s",time());
 
     $query = $this->db->prepare("INSERT INTO shift (createdBy,
@@ -45,6 +50,14 @@ class ShiftController {
                           ':content'=>$content));
     
     $id = $this->db->lastInsertId();
+    
+    
+    $insert_data = array('comment_post_ID' => $post_id,
+    					 'comment_author' => $createdBy,
+    					 'comment_content' => $content,
+    					 'comment_type' => "shiftpress");
+    $comment_id = wp_insert_comment($insert_data);
+        
     return json_encode($this->_read($id));
   }
  
