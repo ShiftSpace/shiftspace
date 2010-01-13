@@ -9,17 +9,18 @@ class ShiftController {
    
   public function create($request) {
     //create a shift in the database.
-	global $current_user;
+    global $current_user;
 	
-	$post_vars = get_posts();
-	$post_id = $post_vars[0]->ID;
+    $post_vars = get_posts();
+    $post_id = $post_vars[0]->ID;
 		
     $data = flatten(json_decode(file_get_contents("php://input"), true));
     extract($data);
     
-
-    $createdBy = $current_user->display_name;
-    $created = date("m/d/y : H:i:s",time());
+    $createdBy = intval($current_user->ID);
+    $created = date("m/d/y : H:i:s", time());
+    $modified = $created;
+    $publishData_publishTime = $created;
 
     $query = $this->db->prepare("INSERT INTO shift (createdBy,
                                                     href,
@@ -39,26 +40,34 @@ class ShiftController {
                                          :modified,
                                          :publishData_publishTime,
                                          :content )");
-    $query->execute(array(':createdBy' => $createdBy,
-                          ':href'=> $href,
-                          ':space_name'=> $space_name,
-                          ':space_version'=> $space_version,
-                          ':summary'=> $summary,
-                          ':created'=>$created,
-                          ':modified'=>$modified,
-                          ':publishData_publishTime'=>$publishdData_publishTime, 
-                          ':content'=>$content));
+
+    $theShift = array(':createdBy' => $createdBy,
+                      ':href' => $href,
+                      ':space_name'=> $space_name,
+                      ':space_version'=> $space_version,
+                      ':summary '=> $summary,
+                      ':created' => $created,
+                      ':modified' => $modified,
+                      ':publishData_publishTime' => $publishData_publishTime, 
+                      ':content' => $content);
+
+    //echo var_dump($theShift);
+    
+    $query->execute($theShift);
     
     $id = $this->db->lastInsertId();
     
-    
-    $insert_data = array('comment_post_ID' => $post_id,
-    					 'comment_author' => $createdBy,
-    					 'comment_content' => $content,
-    					 'comment_type' => "shiftpress");
-    $comment_id = wp_insert_comment($insert_data);
-        
-    return json_encode($this->_read($id));
+    if($id) {
+      $insert_data = array('comment_post_ID' => $post_id,
+                           'comment_author' => $createdBy,
+                           'comment_content' => "<a rel='shift:$space_name:$id'>$summary</a>",
+                           'comment_type' => "shiftpress");
+      $comment_id = wp_insert_comment($insert_data);
+      return json_encode($this->_read($id));
+    } else {
+      return json_encode(array('error' => 'Database error, could not save shift',
+                               'type' => 'DatabaseError'));
+    }
   }
  
   public function read($request) {
