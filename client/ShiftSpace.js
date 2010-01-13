@@ -195,8 +195,8 @@ var ShiftSpace = new (function() {
       SSCheckForDebugSpaces(p);
       if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
       SSCheckForCurrentShift();
+      SSCheckForShiftLinks();
       SSPostNotification("onSync");
-      //ShiftSpace.Notifier.finish();
     }.asPromise();
 
 
@@ -297,6 +297,23 @@ var ShiftSpace = new (function() {
       }
       SSLog("setup complete", SSLogSystem);
     }
+
+
+    function SSCheckForShiftLinks()
+    {
+      var links = $$('a[rel^=shift]');
+      links.addEvent("click", function(evt) {
+        evt = new Event(evt);
+        var parts = evt.target.get("rel").split(":");
+        if(parts.length > 2)
+        {
+          var spaceName = parts[1],
+              shiftId = parts[2];
+          SSShowShift(SSSpaceForName(spaceName), shiftId);
+        }
+      });
+    }
+                      
 
     /*
       Function: SSCheckForUpdates (private)
