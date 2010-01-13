@@ -152,6 +152,7 @@ var SSNotifierView = new Class({
     
     this.updateShiftCount(p);
   },
+
   
   refreshMessageCount: function()
   {
@@ -172,8 +173,7 @@ var SSNotifierView = new Class({
   onConsoleShow: function()
   {
     this.graph.cancel(true);
-    this.graph.setState('SSNotifierOpen', {animate:false});
-    
+    this.show(false);
     this.fireEvent('showconsole');
     this.SSToggleConsole.addClass('open');
     this.SSToggleConsole.set('text', "Close Console");
@@ -212,6 +212,7 @@ var SSNotifierView = new Class({
         SSAddObserver(this, 'onNotifierLoad', this.show.bind(this));
       }
     }
+    this.update();
   },
   
   /*
