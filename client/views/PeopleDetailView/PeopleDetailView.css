@@ -75,7 +75,8 @@
     padding-top: 10px;
 }
 
-#PeopleDetailView .unfollow
+#PeopleDetailView .unfollow,
+#PeopleDetailView .follow
 {
     -moz-border-radius: 10px;
     border: 2px solid #B3ADA5;
