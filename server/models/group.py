@@ -68,6 +68,23 @@ class Group(SSDocument):
            }                           \
          }")
 
+    shift_count = View(
+        "groups",
+        "function(doc) {                                      \
+           if(doc.type == 'shift') {                          \
+             var dbs = doc.publishData.dbs;                   \
+             for(var i = 0, len = dbs.length; i < len; i++) { \
+                var db = dbs[i], typeAndId = db.split('/');   \
+                if(typeAndId[0] == 'group') {                 \
+                  emit(typeAndId[1], 1);                      \
+                }                                             \
+             }                                                \
+           }                                                  \
+        }",
+        "function(keys, values, rereduce) {                   \
+           return sum(values);                                \
+        }")
+
     # ========================================
     # Database
     # ========================================
@@ -158,8 +175,18 @@ class Group(SSDocument):
     # Instance Methods
     # ========================================
 
-    def update(self, id):
-        pass
+    def update(self, fields):
+        if fields.get("longName"):
+            self.longName = fields.get("longName")
+        if fields.get("shortName"):
+            self.shortName = fields.get("shortName")
+        if fields.get("tagLine"):
+            self.tagLine = fields.get("tagLine")
+        if fields.get("url"):
+            self.url = fields.get("url")
+        self.modified = datetime.now()
+        self.store(core.connect())
+        return self
 
 
     def delete(self):
@@ -196,11 +223,12 @@ class Group(SSDocument):
         thePermission = Permission.readByUserAndGroup(aUser.id, self.id)
         if thePermission and thePermission.level == 0:
             db = core.connect()
-            thePermission.level = 1
+            thePermission.level = 2
             thePermission.store(db)
 
 
     def setPrivilege(self, aUser, level):
+        from server.models.permission import Permission
         thePermission = Permission.readByUserAndGroup(aUser.id, self.id)
         if thePermission and level > 0:
             db = core.connect()
@@ -238,4 +266,27 @@ class Group(SSDocument):
     def members(self):
         from server.models.permission import Permission
         db = core.connect()
-        return [row.value for row in Permission.all_members(db, key=self.id).rows]
+        return core.fetch(core.connect(), keys=[row.value for row in Permission.all_members(db, key=self.id).rows])
+
+
+    def memberCount(self):
+        from server.models.permission import Permission
+        db = core.connect()
+        return core.value(Permission.member_count(db, key=self.id))
+
+
+    def admins(self):
+        from server.models.permission import Permission
+        db = core.connect()
+        return [row.value for row in Permission.admins(db, key=self.id).rows]
+
+
+    def adminCount(self):
+        from server.models.permission import Permission
+        db = core.connect()
+        return core.value(Permission.admin_count(db, key=self.id))
+
+
+    def shiftCount(self):
+        db = core.connect("shiftspace/shared")
+        return core.value(Group.shift_count(db, key=self.id)) or 0

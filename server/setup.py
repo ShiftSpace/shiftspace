@@ -33,6 +33,7 @@ def init(dbname="shiftspace/master"):
         dbname - the name of the database to use.
     """
     import models.core as core
+    os.system("scripts/clear_sessions.sh")
     server = core.server()
     if not server.__contains__(dbname):
         print "Creating databases."
@@ -79,6 +80,10 @@ def sync(createAdmin=True):
     Group.by_long_name.sync(master)
     Group.by_visible_and_created.sync(master)
 
+    Permission.all_members.sync(master)
+    Permission.member_count.sync(master)
+    Permission.admins.sync(master)
+    Permission.admin_count.sync(master)
     Permission.by_user.sync(master)
     Permission.by_group.sync(master)
     Permission.is_member.sync(master)
@@ -102,6 +107,8 @@ def sync(createAdmin=True):
     Shift.by_user_and_created.sync(shared)
     Shift.count_by_user_and_published.sync(shared)
     Shift.count_by_domain.sync(shared)
+
+    Group.shift_count.sync(shared)
     
     Comment.count_by_shift.sync(shared)
     Comment.by_user_and_created.sync(shared)

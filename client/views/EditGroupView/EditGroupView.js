@@ -14,6 +14,7 @@ var EditGroupView = new Class({
   {
     this.parent(el, options);
 
+    // for holding users to be added to the group
     this.users = [];
 
     SSAddObserver(this, "onGroupsPaneHide", function() {
@@ -26,6 +27,18 @@ var EditGroupView = new Class({
   },
 
 
+  currentUser: function()
+  {
+    return this.__currentUser;
+  },
+  
+  
+  setCurrentUser: function(currentUser)
+  {
+    this.__currentUser = currentUser;
+  },
+  
+
   setCurrentGroup: function(group)
   {
     this.__currentGroup = group;
@@ -37,6 +50,18 @@ var EditGroupView = new Class({
     return this.__currentGroup;
   },
 
+  
+  groupInfo: function()
+  {
+    return this.__groupInfo;
+  },
+  
+  
+  setGroupInfo: function(groupInfo)
+  {
+    this.__groupInfo = groupInfo;
+  },
+  
 
   'open': function()
   {
@@ -60,6 +85,7 @@ var EditGroupView = new Class({
 
   presentCreateForm: function()
   {
+    this.__mode = "create";
     this.clearForm();
     this.users = [];
     if(!this.isVisible()) this['open']();
@@ -72,7 +98,11 @@ var EditGroupView = new Class({
 
   presentEditForm: function(groupData)
   {
+    this.__mode = "edit";
     this.setCurrentGroup(groupData);
+    this.cleanupTable();
+    this.initTable(groupData.groupId);
+    SSTableForName("Members").addView(this.GroupMemberListView);
     this.clearForm();
     this.users = [];
     if(!this.isVisible()) this['open']();
@@ -81,13 +111,21 @@ var EditGroupView = new Class({
     this.SaveGroup.removeClass("SSDisplayNone");
     this.CreateGroup.addClass("SSDisplayNone");
     SSTemplate(this.GroupForm, groupData);
+    this.update(SSGroupInfo(groupData.groupId));
   },
+
+
+  update: function(groupInfo)
+  {
+    this.setGroupInfo(groupInfo);
+    SSTemplate(this.GroupUserCount, groupInfo);
+  }.asPromise(),
 
 
   createGroup: function()
   {
-    var formData = SSFormToHash(this.GroupForm);
-    var p = SSCreateGroup(formData);
+    var formData = SSFormToHash(this.GroupForm),
+        p = SSCreateGroup(formData);
     this.onCreateGroup(p);
   },
 
@@ -103,13 +141,41 @@ var EditGroupView = new Class({
   {
     this.CreateGroup.addEvent("click", this.createGroup.bind(this));
     this.CancelAction.addEvent('click', this['close'].bind(this));
+
     this.InviteUsers.addEvent("click", function(evt) {
       evt = new Event(evt);
       this.delegate().sendBack();
       evt.stop();
-      SSPostNotification("onAddUsers", this.currentGroup());
+      SSPostNotification("onAddUsers", {group: this.currentGroup(), mode:this.__mode});
+    }.bind(this));
+    
+    this.SaveGroup.addEvent('click', function(evt) {
+      evt = new Event(evt);
+      var groupId = this.currentGroup().groupId,
+          formData = SSFormToHash(this.GroupForm),
+          p1 = SSUpdateGroup(groupId, formData),
+          p2 = SSInviteUsersToGroup(groupId, this.users);
+      this.onUpdateGroup(p1, p2);
+    }.bind(this));
+
+    this.CloseEditMember.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      this.EditGroupMember.addClass("SSDisplayNone");
+      this.GroupMemberListViewContainer.removeClass("SSDisplayNone");
+    }.bind(this));
+
+    this.MakeMemberAdmin.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var p = SSMakeMemberAdmin(this.currentGroup().groupId, this.currentUser()._id);
+      p.realize();
     }.bind(this));
   },
+
+
+  onUpdateGroup: function(group)
+  {
+    
+  }.asPromise(),
 
 
   awake: function()
@@ -141,6 +207,49 @@ var EditGroupView = new Class({
   removeUser: function(user)
   {
     this.users.erase(user._id);
-  }
+  },
 
+
+  editMember: function(sender, evt)
+  {
+    this.setCurrentUser(evt.data);
+    var editMemberEl = this.element.getElement("#EditGroupMember"),
+        templData = $H(evt.data),
+        groupInfo = this.groupInfo();
+    if(groupInfo.isAdmin && evt.data._id != ShiftSpace.User.getId())
+    {
+      this.MakeMemberAdmin.removeClass("SSDisplayNone");
+      this.BlockMember.removeClass("SSDisplayNone");
+    }
+    else
+    {
+      this.MakeMemberAdmin.addClass("SSDisplayNone");
+      this.BlockMember.addClass("SSDisplayNone");
+    }
+    this.element.getElement("#GroupMemberListViewContainer").addClass("SSDisplayNone");
+    editMemberEl.removeClass("SSDisplayNone");
+    templData.erase("gravatar");
+    templData.erase("fullName");
+    SSTemplate(editMemberEl, templData);
+    editMemberEl.getElement(".gravatar").set("src", evt.data.gravatar);
+  },
+
+
+  initTable: function(groupId)
+  {
+    this.members = new SSTable("Members", {
+      resource: {read:['group', groupId, 'members'].join("/")},
+      watches: []
+    });
+  },
+  
+
+  cleanupTable: function()
+  {
+    if(this.members)
+    {
+      this.members.dispose();
+      this.members = null;
+    }
+  }
 });

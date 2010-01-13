@@ -75,3 +75,5 @@ config/views.json/server/.htaccess
 /todo.org
 /client/views/CreateGroupView/.#CreateGroupView.css
 /client/views/CreateGroupView/#CreateGroupView.css#
+
+spaces/Easy

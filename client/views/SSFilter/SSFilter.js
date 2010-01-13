@@ -135,7 +135,9 @@ var SSFilter = new Class({
   
   setCurrentListView: function(currentListView)
   {
+    if(this.__currentListView) this.__currentListView.element.removeClass("SSFilter");
     this.__currentListView = currentListView;
+    if(currentListView) currentListView.element.addClass("SSFilter");
   },
 
 

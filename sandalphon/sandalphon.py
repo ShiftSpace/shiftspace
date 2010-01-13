@@ -79,7 +79,7 @@ class SandalphonCompiler:
         try:
             fileHandle = open(cssPath)
             if fileHandle != None:
-                if env:
+                if env and (env["data"].get("DEPLOY") == None or env["data"].get("DEPLOY") == False):
                     server = env["data"]["SERVER"]
                     importPath = "%sclient/%s" % (server, cssPath)
                     imageUrl = env["data"].get("IMAGESDIR")
@@ -94,7 +94,12 @@ class SandalphonCompiler:
                     cssFile = cssFile + "@import url(%s);\n" % importPath
                 else:
                     cssFile = cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
-                    cssFile = cssFile + fileHandle.read()
+                    css = fileHandle.read()
+                    if env:
+                        imageUrl = env["data"].get("IMAGESDIR")
+                        if imageUrl:
+                            css = self.preprocessCssImageUrls(css, imageUrl)
+                    cssFile = cssFile + css
             fileHandle.close()
             return cssFile
         except IOError:
@@ -164,7 +169,7 @@ class SandalphonCompiler:
                 id = instruction[2]
             else:
                 id = instruction[1]
-            framedView = '<iframe id="%s" class="%sFrame" uiclass="%s" options="{path:\'%s\'}"></iframe>' % (id, instruction[1], instruction[1], outDir)
+            framedView = '<div id="%s" class="%sFrame SSDisplayNone" uiclass="%s" options="{path:\'%s\'}"></div>' % (id, instruction[1], instruction[1], outDir)
             path = self.paths.get(instruction[1])
             dirName, envFile = os.path.split(outDir)
             # process the content of the framed view
@@ -208,7 +213,7 @@ class SandalphonCompiler:
                         os.makedirs(envDir)
         return (env, envDir)
 
-    def compile(self, inputFile=None, outDir="builds/compiledViews", envFile="mydev", jsonOutput=False):
+    def compile(self, inputFile=None, outDir="builds/compiledViews", envFile="mydev", jsonOutput=False, deploy=False):
         """
         Compile an interface file down to its parts
         """
@@ -321,6 +326,7 @@ def main(argv):
                      outDir=outputDirectory,
                      envFile=envFile,
                      jsonOutput=jsonOutput)
+
 
 
 if __name__ == "__main__":

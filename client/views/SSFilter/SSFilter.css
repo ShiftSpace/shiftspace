@@ -1,6 +1,9 @@
 #SSFilter
 {
-   margin-top: 1px;
+   height: 18px;
+   margin-top: 4px;
+   margin-right: 4px;
    padding: 4px;
-   background-color: #ccc;
+   background: url(/images/Console/filter-grad.png);
+   margin-bottom: -5px;
 }

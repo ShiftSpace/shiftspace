@@ -13,6 +13,14 @@ class GroupsController(ResourceController):
                   conditions=dict(method="POST"))
         d.connect(name="groupRead", route="group/:id", controller=self, action="read",
                   conditions=dict(method="GET"))
+        d.connect(name="groupUpdate", route="group/:id", controller=self, action="update",
+                  conditions=dict(method="PUT"))
+        d.connect(name="groupInfo", route="group/:id/info", controller=self, action="info",
+                  conditions=dict(method="GET"))
+        d.connect(name="groupMembers", route="group/:id/members", controller=self, action="members",
+                  conditions=dict(method="GET"))
+        d.connect(name="groupMakeAdmin", route="group/:id/makeadmin", controller=self, action="makeAdmin",
+                  conditions=dict(method="POST"))
         d.connect(name="groups", route="groups", controller=self, action="groups",
                   conditions=dict(method="GET"))
         d.connect(name="groupInviteUsers", route="group/:id/inviteusers", controller=self, action="inviteUsers",
@@ -32,7 +40,6 @@ class GroupsController(ResourceController):
             return data(Group.create(theData))
         else:
             return error("No data for group.", NoDataError)
-        pass
 
     @jsonencode
     @exists
@@ -43,21 +50,68 @@ class GroupsController(ResourceController):
 
     @jsonencode
     @exists
-    def info(self, id):
-        # TODO: bulk call - David 12/13/2009
-        # get member count
-        # get admin count
-        pass
-
-    @jsonencode
-    @exists
     def update(self, id):
-        pass
+        from server.models.ssuser import SSUser
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        theGroup = Group.read(id)
+        jsonData = helper.getRequestBody()
+        if jsonData != "":
+            if theUser.isAdminOf(theGroup):
+                groupData = json.loads(jsonData)
+                return data(theGroup.update(groupData))
+            else:
+                return error("You don't have permission to update this group", PermissionError)
+        else:
+            return error("No data for group.", NoDataError)
 
     @jsonencode
     @exists
     def delete(self, id):
         pass
+
+    @jsonencode
+    @exists
+    def info(self, id):
+        from server.models.ssuser import SSUser
+        # TODO: bulk call - David 12/13/2009
+        theGroup = Group.read(id)
+        memberCount = theGroup.memberCount()
+        adminCount = theGroup.adminCount()
+        shiftCount = theGroup.shiftCount()
+        info = {
+            "memberCount": memberCount,
+            "adminCount": adminCount,
+            "shiftCount": shiftCount
+            }
+        theUser = SSUser.read(helper.getLoggedInUser())
+        info["isAdmin"] = theUser.isAdminOf(theGroup)
+        return data(info)
+
+    @jsonencode
+    @exists
+    def members(self, id):
+        from server.models.ssuser import SSUser
+        theGroup = Group.read(id)
+        loggedInUser = helper.getLoggedInUser()
+        theUser = SSUser.read(loggedInUser)
+        if theUser.isAdminOf(theGroup):
+            return data(theGroup.members())
+        else:
+            return error("You don't have permission to view this groups members", PermissionError)
+
+    @jsonencode
+    @exists
+    def makeAdmin(self, id, userId):
+        from server.models.ssuser import SSUser
+        theGroup = Group.read(id)
+        theUser = SSUser.read(helper.getLoggedInUser())
+        if theUser.isAdminOf(theGroup):
+            otherUser = SSUser.read(userId)
+            theGroup.setPrivilege(otherUser, 3)
+            return ack
+        else:
+            return error("You don't have permission to promote members of this group to admin.", PermissionError)
 
     @jsonencode
     def groups(self, start=None, end=None, limit=25):

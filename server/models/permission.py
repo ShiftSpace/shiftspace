@@ -70,6 +70,39 @@ class Permission(SSDocument):
          }"
         )
 
+    member_count = View(
+        "permissions",
+        "function (doc) {                                  \
+           if(doc.type == 'permission' && doc.level > 0) { \
+             emit(doc.groupId, 1);                         \
+           }                                               \
+         }",
+        "function (keys, values, rereduce) { \
+           return sum(values);               \
+         }"
+        )
+
+    admins = View(
+        "permissions",
+        "function (doc) {                                  \
+           if(doc.type == 'permission' && doc.level > 2) { \
+             emit(doc.groupId, doc.userId);                \
+           }                                               \
+         }"
+        )
+
+    admin_count = View(
+        "permissions",
+        "function (doc) {                                  \
+           if(doc.type == 'permission' && doc.level > 2) { \
+             emit(doc.groupId, 1);                         \
+           }                                               \
+         }",
+        "function (keys, values, rereduce) { \
+           return sum(values);               \
+         }"
+        )
+
     by_user_and_group = View(
         "permissions",
         "function (doc) {                           \
@@ -152,6 +185,8 @@ class Permission(SSDocument):
         for i in range(len(permissions)):
             permissions[i]["shortName"] = groups[i]["shortName"]
             permissions[i]["longName"] = groups[i]["longName"]
+            permissions[i]["tagLine"] = groups[i]["tagLine"]
+            permissions[i]["url"] = groups[i]["url"]
         return permissions
 
     @classmethod

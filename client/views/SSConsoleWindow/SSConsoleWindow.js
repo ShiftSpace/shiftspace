@@ -25,12 +25,22 @@ var SSConsoleWindow = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+    SSAddObserver(this, "onUserLogout", this.onLogout.bind(this));
+    SSAddObserver(this, "onConsoleShow", function() {
+      if(this.delayed()) this.finish();
+    }.bind(this));
+  },
+
+
+  onLogout: function()
+  {
+    if(this.isVisible()) this.hide();
   },
   
 
   initResizer: function()
   {
-    var resizer = new SSElement('div', {
+    this.resizer = new SSElement('div', {
         id: 'SSConsoleWindowResizer',
         styles: {
           position: 'fixed',
@@ -43,22 +53,28 @@ var SSConsoleWindow = new Class({
         }
     });
 
-    $(document.body).grab(resizer);
+    $(document.body).grab(this.resizer);
 
-    resizer.addEvent('mousedown', SSAddDragDiv);
+    this.resizer.addEvent('mousedown', SSAddDragDiv);
     
-    resizer.makeDraggable({
+    this.resizer.makeDraggable({
       modifiers: {x:'', y:'bottom'},
       invert: true,
       onComplete: SSRemoveDragDiv
     });
 
     this.element.makeResizable({
-      handle: resizer,
+      handle: this.resizer,
       modifiers: {x:'', y:'height'},
       invert: true
     });
   },
+
+
+  show: function()
+  {
+    this.parent();
+  }.decorate(ssfv_ensure),
 
 
   hide: function()
@@ -98,6 +114,14 @@ var SSConsoleWindow = new Class({
   {
     this.element.removeClass("SSConsoleWindowShort");
     this.element.addClass("SSConsoleWindowTall");
+    this.resizer.removeClass("SSConsoleWindowResizerShort");
+    this.resizer.addClass("SSConsoleWindowResizerTall");
+    this.element.setStyles({
+      height: ''
+    });
+    this.resizer.setStyles({
+      bottom: ''
+    });
   },
 
 
@@ -105,6 +129,14 @@ var SSConsoleWindow = new Class({
   {
     this.element.removeClass("SSConsoleWindowTall");
     this.element.addClass("SSConsoleWindowShort");
+    this.resizer.removeClass("SSConsoleWindowResizerTall");
+    this.resizer.addClass("SSConsoleWindowResizerShort");
+    this.element.setStyles({
+      height: ''
+    });
+    this.resizer.setStyles({
+      bottom: ''
+    });
   },
 
   /* SSFramedView Stuff ============================ */

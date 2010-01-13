@@ -29,6 +29,7 @@ var LoginTabView = new Class({
 
   afterAwake: function()
   {
+    this.parent();
     if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled()) this.handleLogin();
   },
   

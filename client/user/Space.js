@@ -468,7 +468,7 @@ var ShiftSpaceSpace = new Class({
       }
       catch(exc)
       {
-        SSLog(SSDescribeException(exc));
+        SSLog(exc);
       }
     }
     var self = this;
@@ -576,35 +576,6 @@ var ShiftSpaceSpace = new Class({
   },
 
   /*
-    Function: regionIsObscured
-      Not yet implemented.
-  */
-  regionIsObscured: function(region)
-  {
-    var len = this.__shifts.length;
-    for(var i = 0; i < len; i++ )
-    {
-      var aShift = this.__shifts[i];
-
-      if(aShift.mainViewIsVisible())
-      {
-        var sregion = aShift.getRegion();
-
-        // check to see if any point of the region falls within this shift
-        if ( !( sregion.left > region.right
-            || sregion.right < region.left
-            || sregion.top > region.bottom
-            || sregion.bottom < region.top
-            ) )
-        {
-          return true;
-        }
-      }
-    }
-    return false;
-  },
-
-  /*
     Function: setCurrentShift (private)
       Set the current shift object.
 
@@ -641,15 +612,34 @@ var ShiftSpaceSpace = new Class({
   },
 
   /*
-    Fuction: getShift
+    Function: getShift
       Returns a shift instance from the internal hash.
 
     Parameters:
       shiftId - a shift id.
+
+    Returns:
+      A Shift instance.
   */
   getShift: function(shiftId)
   {
     return this.__shifts[shiftId];
+  },
+
+  /*
+    Function: hasShift
+      Return boolean whether the space has loaded this
+      a particular shift.
+
+    Parameters:
+      shiftId - a shift id.
+
+    Returns:
+      A boolean value.
+  */
+  hasShift: function(shiftId)
+  {
+    return this.getShift(shiftId) != null;
   },
 
   /*
@@ -779,7 +769,7 @@ var ShiftSpaceSpace = new Class({
   */
   setValue: function(key, value)
   {
-    SSSetValue.safeCall(this.attributes().name + "." + key, value);
+    SSSetValue.safeCall(null, this.attributes().name + "." + key, value);
   },
 
   /*
@@ -793,7 +783,12 @@ var ShiftSpaceSpace = new Class({
   */
   getValue: function(key, defaultValue, callback)
   {
-    SSGetValue.safeCallWithResult(this.attributes().name + '.' + key, defaultValue, callback);
+    SSGetValue.safeCall(
+      null,
+      this.attributes().name + '.' + key,
+      defaultValue,
+      callback
+    );
   },
 
   /*
@@ -889,7 +884,8 @@ var ShiftSpaceSpace = new Class({
    */
   getPreference: function(key, defaultValue, callback)
   {
-    ShiftSpace.User.getPreference.safeCallWithResult(
+    ShiftSpace.User.getPreference.safeCall(
+      ShiftSpace.User,
       this.attributes().name+'.'+key,
       defaultValue,
       callback
@@ -917,5 +913,17 @@ var ShiftSpaceSpace = new Class({
     {
       SSLog([url, "not declared in attrs.json permissions list for", attrs.name, "space."].join(""), SSLogError);
     }
+  },
+
+
+  getUserName: function()
+  {
+    return ShiftSpace.User.getUserName();
+  },
+
+
+  getUserId: function()
+  {
+    return ShiftSpace.User.getId();
   }
 });

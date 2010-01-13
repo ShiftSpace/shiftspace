@@ -66,6 +66,7 @@ Class: ShiftSpace
   <ShiftSpace.Space>, <ShiftSpace.Shift>, <ShiftSpace.Plugin> to see public
   interfaces.
 */
+var __root = this;
 var ShiftSpace = new (function() {
     // INCLUDE Bootstrap
     SSLog("ShiftSpace starting up", SSLogSystem);
@@ -122,6 +123,8 @@ var ShiftSpace = new (function() {
       ShiftSpaceObjects.ShiftSpace = SSNotificationProxy;
 
       SSAddObserver(SSNotificationProxy, 'onInstalledSpacesDidChange', SSUpdateInstalledSpaces);
+      SSAddObserver(SSNotificationProxy, 'onUserLogin', SSUpdateInstalledSpaces);
+      SSAddObserver(SSNotificationProxy, 'onUserLogout', SSUpdateInstalledSpaces);
       
       // hide all pinWidget menus on window click
       window.addEvent('click', function() {
@@ -164,7 +167,6 @@ var ShiftSpace = new (function() {
             SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
             ps = SSLoadDefaultSpacesAttributes();
           }
-          SSUpdateInstalledSpaces(ps);
           return value;
         }
       );
@@ -179,32 +181,50 @@ var ShiftSpace = new (function() {
     var SSWaitForUI = function(userData, uip)
     {
       // wait for console and notifier before sending onSync
-      var ui = [ShiftSpace.Console, ShiftSpace.Notifier, ShiftSpace.SpaceMenu, ShiftSpace.SSConsoleWindow];
-      if(!ui.every(Function.msg('isLoaded')))
+      if(userData)
       {
-        ui.each(Function.msg('addEvent', 'load', function(obj) {
-          if(ui.every(Function.msg('isLoaded')))
-          {
-            SSPostNotification("onSync");
-            if(userData)
-            {
-              ShiftSpace.User.syncData(userData);
-              SSPostNotification('onUserLogin');
-              SSLog("Synchronized", SSLogSystem);
-            }
-            else
-            {
-              SSLog("User is not logged in", userData, SSLogSystem);
-            }
-            if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
-          }
-        }.bind(this)));
+        ShiftSpace.User.syncData(userData);
+        SSPostNotification('onUserLogin');
+        SSLog("Synchronized", SSLogSystem);
       }
       else
       {
-        SSPostNotification("onSync");
+        SSLog("User is not logged in", userData, SSLogSystem);
       }
+      var p = SSUpdateInstalledSpaces();
+      SSCheckForDebugSpaces(p);
+      if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
+      SSCheckForCurrentShift();
+      SSPostNotification("onSync");
+      //ShiftSpace.Notifier.finish();
     }.asPromise();
+
+
+    var SSCheckForDebugSpaces = function(controlp)
+    {
+      var installed = SSInstalledSpaces();
+      $H(installed).each(function(space) {
+        var key = [ShiftSpace.User.getUserName(), space.name, "debug"].join("."),
+            debug = SSGetValue(key);
+        if(debug)
+        {
+          SSLog("Load", space.name, "in debug mode", SSLogForce);
+          SSLoadSpace(space.name, true);
+        }
+      });
+    }.asPromise();
+
+
+    function SSCheckForCurrentShift()
+    {
+      var currentShift = SSGetValue("__currentShift");
+      if(currentShift && window.location.href == currentShift.href)
+      {
+        SSSetValue("__currentShift", null);
+        SSLog("showing shift", currentShift.id, SSLogForce);
+        SSShowShift(SSSpaceForShift(currentShift.id), currentShift.id);
+      }
+    }
 
     /*
       Function: SSCheckHash
@@ -321,14 +341,23 @@ var ShiftSpace = new (function() {
     {
       unsafeWindow.ShiftSpace = this;
       this.sys = __sys__;
-
       // export symbols directly to the window for debugging purposes - David
-      window.SSSpaceForName = SSSpaceForName;
-      window.SSApp = SSApp;
-      window.SSApplication = SSApplication;
-      window.SSTableForName = SSTableForName;
-      window.SSControllerForNode = SSControllerForNode;
-      window.Sandalphon = Sandalphon;
+      ['SSSpaceForName',
+       'SSApp',
+       'SSApplication',
+       'SSTableForName',
+       'SSControllerForNode',
+       'Sandalphon',
+       'SSInstalledSpaces',
+       'SSGetSpaceAttributes',
+       'SSCellError',
+       'SSException',
+       'DelayedAsset',
+       'SSSpaceIsInDebugMode',
+       '__controllers'
+       ].each(function(sym) {
+         unsafeWindow[sym] = eval(sym);
+       });
     }
 
     return this;

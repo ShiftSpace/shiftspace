@@ -218,10 +218,7 @@ class Shift(SSDocument):
     @classmethod
     def read(cls, id, userId=None):
         from server.models.ssuser import SSUser
-        theShift = None
-        # first try to load from shared timeline
-        theShift = Shift.load(core.connect("shiftspace/shared"), id)
-        if not theShift and userId:
+        if userId != None:
             # then try the user public
             db = core.connect(SSUser.publicDb(userId))
             theShift = Shift.load(db, id)
@@ -229,6 +226,8 @@ class Shift(SSDocument):
                 # then user private
                 db = core.connect(SSUser.privateDb(userId))
                 theShift = Shift.load(db, id)
+        else:
+            theShift = Shift.load(core.connect("shiftspace/shared"), id)
         if theShift:
             return Shift.joinData(theShift, theShift.createdBy)
 
@@ -238,7 +237,6 @@ class Shift(SSDocument):
 
     def update(self, fields, updateDbs=True):
         from server.models.ssuser import SSUser
-        
         if fields.get("content"):
             self.content = fields.get("content")
         if fields.get("summary"):
@@ -299,7 +297,7 @@ class Shift(SSDocument):
     # Publishing
     # ========================================
 
-    def publish(self, publishData=None, server="http://www.shiftspace.org/api/"):
+    def publish(self, publishData=None):
         from server.models.ssuser import SSUser
         
         if publishData == None:
@@ -354,19 +352,25 @@ class Shift(SSDocument):
         self.updateInGroups(oldGroupDbs)
         self.addToGroups(newGroupDbs)
         
+        # if public shift
         # create in user/public, delete from user/private
-        # replicate to user/feed and to shiftspace/public
         # replicate shiftspace/public to shiftspace/shared
         if not isPrivate:
             publicdb = SSUser.publicDb(self.createdBy)
             if Shift.load(core.connect(publicdb), self.id):
                 self.updateIn(publicdb)
             else:
+                # TODO: copyTo should probably just be store - David
                 self.copyTo(publicdb)
                 privatedb = core.connect(SSUser.privateDb(self.createdBy))
                 del privatedb[self.id]
-            core.replicate(SSUser.publicDb(self.createdBy), "shiftspace/public")
-            core.replicate("shiftspace/public", "shiftspace/shared")
+                # we need to delete the private copy out of shiftspace/shared
+                shared = core.connect("shiftspace/shared")
+                del shared[self.id]
+            # TODO: check that we have to force it in order to have it ready for replication - David
+            db = core.connect(publicdb)
+            core.replicate(publicdb, "shiftspace/public")
+            core.replicate(publicdb, "shiftspace/shared")
         else:
             privatedb = SSUser.privateDb(self.createdBy)
             self.store(core.connect(privatedb))
@@ -484,7 +488,7 @@ class Shift(SSDocument):
             queryString = "(draft:false AND private:false AND createdBy:(%s)) OR dbs:(%s)" % (following, SSUser.db(user.id))
         elif byGroups:
             from server.models.group import Group
-            queryString = "dbs:%s" % [Group.db(group) for group in user.readable()]
+            queryString = "dbs:(%s)" % " ".join(user.readable())
         if filter:
             queryString = queryString + " AND " + core.dictToQuery(query)
 

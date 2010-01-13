@@ -6,20 +6,22 @@
      }">
 
     <div>
-        <div class="longName"></div>
-        <div class="shortName"></div>
+        <div>
+            <span class="longName"></span> (&amp;<span class="shortName"></span>)
+        </div>
+        <div class="tagLine"></div>
         <div class="url"></div>
     </div>
 
     <div>
         <button id="JoinGroup" outlet="GroupDetailView" class="join">Join Group</button>
-        <button class="invite">Invite Users</button>
-        <button class="settings">Settings</button>
+        <button id="DetailInviteUsers" class="invite" outlet="GroupDetailView">Invite Users</button>
+        <button id="DetailGroupSettings" class="settings" outlet="GroupDetailView">Settings</button>
     </div>
 
     <div>
         <div class="shiftCount"></div>
-        <div class="userCount">
+        <div id="DetailGroupUserCount" class="userCount" outlet="GroupDetailView">
             <span class="adminCount"></span> Admins
             <span class="memberCount"></span> Members
         </div>

@@ -108,6 +108,35 @@ function SSCreateGroup(groupData)
 }
 
 
+function SSGroupInfo(groupId)
+{
+  return SSApp.get({
+    resource: 'group',
+    id: groupId,
+    action: 'info'
+  });
+}
+
+
+function SSUpdateGroup(groupId, data)
+{
+  return SSApp.update('group', groupId, data);
+}
+
+
+function SSMakeMemberAdmin(groupId, userId)
+{
+  return SSApp.post({
+    resource: 'group',
+    id: groupId,
+    action: 'makeadmin',
+    data: {
+      userId: userId
+    }
+  });
+}
+
+
 function SSInviteUsersToGroup(groupId, userIds)
 {
   return SSApp.post({

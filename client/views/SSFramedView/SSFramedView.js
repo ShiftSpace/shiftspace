@@ -4,6 +4,31 @@
 // @dependencies      SSView
 // ==/Builder==
 
+
+function ssfv_ensure(fn) {
+  return function decorator() {
+    var args = arguments;
+    if(this.delayed())
+    {
+      this.addEvent("load", function() {
+        var temp = this._current;
+        this._current = decorator._wrapper;
+        fn.apply(this, args);
+        this._current = temp;
+      }.bind(this));
+      this.finish();
+    }
+    else
+    {
+      var temp = this._current;
+      this._current = decorator._wrapper;
+      fn.apply(this, args);
+      this._current = temp;
+    }
+  };
+};
+
+
 var SSFramedView = new Class({
   
   Extends: SSView,
@@ -17,31 +42,74 @@ var SSFramedView = new Class({
       path: null
     });
   },
-  
-  
-  initialize: function(el, options)
-  { 
-    // Check for Sandalphon Mode
-    if(typeof SandalphonToolMode == 'undefined')
-    {
-      this.parent(el, options);
-    }
-    else
-    {
-      this.parent(el, $merge(options, {
-        generateElement: false
-      }));
-    }
 
-    if(typeof SandalphonToolMode == 'undefined')
-    {
-      var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css');
-      var p = SSLoadFile(url);
-      this.onStyleLoad(p);
-    }
+
+  delayed: function()
+  {
+    return this.__delay;
   },
   
   
+  setDelayed: function(delay)
+  {
+    this.__delay = delay;
+  },
+
+  
+  initialize: function(el, options)
+  {
+    var delayed = false;
+    if(el.get("tag") != "iframe")
+    {
+      delayed = true;
+    }
+    
+    this.parent(el, $merge(options, {
+      generateElement: false
+    }));
+
+    var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css'),
+        p = SSLoadFile(url);
+    if(!delayed)
+    {
+      this.onStyleLoad(p);
+    }
+    else
+    {
+      this.setDelayed(p);
+    }
+  },
+
+
+  finish: function()
+  {
+    SSLog("finish!", SSLogForce);
+    if(!this.delayed())
+    {
+      throw new Error("Not a delayed SSFramedView");
+    }
+    return this.onStyleLoad(this.delayed());
+  },
+  
+
+  show: function()
+  {
+    this.parent();
+  },
+
+
+  hide: function()
+  {
+    this.parent();
+  },
+
+
+  isVisible: function()
+  {
+    return this.parent() && this.isLoaded();
+  },
+  
+
   onStyleLoad: function(css)
   {
     if(css) Sandalphon.addStyle(css);
@@ -64,28 +132,39 @@ var SSFramedView = new Class({
     var generateElement = false;
     this.ui = ui;
 
-    if(!this.element)
+    if(!this.element || this.delayed())
     {
       generateElement = true;
+      if(this.delayed()) this.oldElement = this.element;
       this.element = new IFrame({
         'class': this.name+'Frame',
         events: {
           load: this.buildInterface.bind(this)
         }
       });
+      if(this.delayed()) this.element.set("id", this.oldElement.get("id"));
     }
     
-    var frag = Sandalphon.convertToFragment(this.ui['interface']);
-    var id = frag.getProperty('id');
-    if(id)
+    var frag = Sandalphon.convertToFragment(this.ui['interface']),
+        id = frag.getProperty('id');
+    
+    if(id && !this.delayed())
     {
       this.element.setProperty('id', id);
     }
 
     if(generateElement)
     {
+      if(!this.delayed())
+      {
+        this.element.injectInside(document.body);
+      }
+      else
+      {
+        this.element.replaces(this.oldElement);
+        delete this.oldElement;
+      }
       SSSetControllerForNode(this, this.element);
-      this.element.injectInside(document.body);
     }
     else
     {
@@ -108,8 +187,8 @@ var SSFramedView = new Class({
   
   buildInterface: function()
   {
-    var context = this.contentWindow();
-    var doc = this.contentDocument();
+    var context = this.contentWindow(),
+        doc = this.contentDocument();
     
     // forward key up and down events to parent window
     context.addEvent('keyup', function(evt) {
@@ -142,6 +221,7 @@ var SSFramedView = new Class({
     $(doc.body).adopt.apply($(doc.body), children);
     
     Sandalphon.activate(context);
+    this.setDelayed(false);
   },
   
   
@@ -149,5 +229,4 @@ var SSFramedView = new Class({
   {
     return this.contentWindow().$$('*[uiclass]').map(SSControllerForNode);
   }
-  
 });

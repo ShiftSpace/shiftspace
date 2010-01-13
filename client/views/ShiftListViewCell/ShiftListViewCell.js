@@ -10,6 +10,14 @@ var ShiftListViewCell = new Class({
   name: "ShiftListViewCell",
   
   
+  defaults: function()
+  {
+    return $merge(this.parent(), {
+      hideSameDomain: true
+    });
+  },
+
+
   initialize: function(el, options)
   {
     this.parent(el, options);
@@ -136,9 +144,9 @@ var ShiftListViewCell = new Class({
         evt = new Event(evt);
         var target = $(evt.target), li = target.getParent("li");
         this.lock(li);
-        var id = this.data()._id, p;
+        var data = this.data(), p;
         this.unlock();
-        SSPostNotification("showComments", id);
+        SSPostNotification("showComments", data);
         evt.stop();
       }.bind(this));
     }
@@ -220,7 +228,7 @@ var ShiftListViewCell = new Class({
     el.getElement('.userName').set('text', userName);
     if(ShiftSpace.User.isLoggedIn() && ShiftSpace.User.getUserName() == userName)
     {
-      el.getElement('.userName').addClass('loggedin')
+      el.getElement('.userName').addClass('loggedin');
     }
     else
     {
@@ -238,19 +246,32 @@ var ShiftListViewCell = new Class({
   
   setHref: function(href)
   {
-    var el = this.lockedElement();
-    var url = href.substr(7, href.length);
-    var parts = url.split("/");
-    
-    var link = new Element('a', {'href':href,'html':parts[0],'class':'domain'});
-    link.inject(el.getElement(".domain"));
+    var el = this.lockedElement(),
+        domainEl = el.getElement(".domain a");
+
+    if(domainEl)
+    {
+      if(href == window.location.href && this.options.hideSameDomain)
+      {
+        domainEl.addClass("SSDisplayNone");
+      }
+      else
+      {
+        domainEl.set("title", href);
+      }
+    }
   },
 
 
   setDomain: function(domain)
   {
-    var el = this.lockedElement();
-    el.getElement(".domain").set("text", domain);
+    var el = this.lockedElement(),
+        domainEl = el.getElement(".domain a");
+
+    if(domainEl)
+    {
+      domainEl.set("text", domain);
+    }
   },
   
   

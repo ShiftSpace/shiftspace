@@ -61,8 +61,9 @@ var ShiftSpaceUserClass = new Class({
     Function: removePreference
       Remove a user's preference.
    */
-  removePreference: function()
+  removePreference: function(pref)
   {
+    SSSetValue([this.getUserName(), pref].join('.'), null);
   },
   
   /*

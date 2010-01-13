@@ -151,13 +151,21 @@ class ShiftController(ResourceController):
         if publishData.get("targets"):
             from server.models.group import Group
             from server.models.ssuser import SSUser
+            theUser = SSUser.read(loggedInUser)
             targets = publishData["targets"]
+            # convert short names to group ids
             shortNames = [target[1:] for target in targets if target[0] == "&"]
             groupIds = Group.shortNamesToIds(shortNames)
+            # convert user name to user ids
             userNames = [target[1:] for target in targets if target[0] == "@"]
             userIds = SSUser.namesToIds(userNames)
+            # create list of dbs being published to
             dbs = [Group.db(groupId) for groupId in groupIds]
             dbs.extend([SSUser.db(userId) for userId in userIds])
+            # validate
+            writeable = theUser.writeable()
+            if set(writeable) != set(dbs):
+                return error("Operation not permitted. You don't have permission to publish to some of these gruops", PermissionError)
             publishData["dbs"] = dbs
         return data(theShift.publish(publishData))
 

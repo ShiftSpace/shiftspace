@@ -5,3 +5,46 @@
    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
    font-size: 13px;
 }
+
+#CommentPaneForm textarea
+{
+   width: 330px;
+}
+
+.SSCommentsListViewCell
+{
+   list-style: none;
+}
+
+.SSCommentsListViewCell .userName
+{
+   font-weight: bold;
+}
+
+#SSCommentNotify
+{
+   font-size: 11px;
+}
+
+#SSCommentPrompt, #SSCommentHeader
+{
+   font-weight: bold;
+   font-size: 16px;
+}
+
+ul#SSCommentsListView
+{
+   height: 150px;
+   overflow-y: scroll;
+}
+
+ul#SSCommentsListView img.spaceIcon
+{
+   display: none;
+}
+
+ul#SSCommentsListView li:first-child img.spaceIcon
+{
+   display: block;
+}
+

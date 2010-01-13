@@ -13,10 +13,6 @@ var ShiftListView = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      byHref: true,
-      byDomain: false,
-      byFollowing: false,
-      byGroups: false,
       scrollEvents: true
     });
   },
@@ -72,19 +68,18 @@ var ShiftListView = new Class({
   
   onCreate: function(id)
   {
+    if(!this.isVisible()) return;
     this.refresh();
-    if(this.isVisible())
-    {
-      var idx = this.find(function(x) { return x._id == id; });
-      this.cell().lock(this.cellNodeForIndex(idx));
-      this.cell().check();
-      this.cell().unlock();
-    }
+    var idx = this.find(function(x) { return x._id == id; });
+    this.cell().lock(this.cellNodeForIndex(idx));
+    this.cell().check();
+    this.cell().unlock();
   },
   
   
   onShow: function(id)
   {
+    if(!this.isVisible()) return;
     var idx = this.find(function(x) { return x._id == id; });
     if(idx != -1)
     {
@@ -95,6 +90,7 @@ var ShiftListView = new Class({
 
   onHide: function(id)
   {
+    if(!this.isVisible()) return;
     var idx = this.find(function(x) { return x._id == id; });
     if(idx != -1)
     {
@@ -148,14 +144,13 @@ var ShiftListView = new Class({
   onUncheck: function(evt)
   {
     var id = evt.data._id;
-    // leave edit mode
-    // REFACTOR: we should have a specific SSLeaveEditShift function - David
-    SSShowShift(SSSpaceForShift(id), id);
+    SSLeaveEditShift(SSSpaceForShift(id), id);
   },
 
 
   uncheckAll: function(noEvent)
   {
+    if(!this.isVisible()) return;
     this.uncheck(this.checkedItemIndices(), noEvent);
   },
   
@@ -185,6 +180,7 @@ var ShiftListView = new Class({
   onReloadData: function()
   {
     // we need to wait until the styles for the rounded images are loaded
+    /*
     if(!__mainCssLoaded)
     {
       SSAddObserver(this, 'onMainCssLoad', function() {
@@ -195,5 +191,15 @@ var ShiftListView = new Class({
     {
       RoundedImage.init(".ShiftListView .ShiftListViewCell .gravatar", new Window(this.element.getWindow()), document);
     }
+    */
+  },
+
+
+  openShift: function(sender, evt)
+  {
+    var id = evt.data._id,
+        href = evt.data.href;
+    SSSetValue("__currentShift", {id: evt.data._id, href: href});
+    window.open(evt.data.href);
   }
 });

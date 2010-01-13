@@ -19,9 +19,19 @@
    height: 300px;
 }
 
+.SSConsoleWindowResizerTall
+{
+   bottom: 278px;
+}
+
 .SSConsoleWindowShort
 {
    height: 200px;
+}
+
+.SSConsoleWindowResizerShort
+{
+   bottom: 178px;
 }
 
 .SSConsoleWindowFront

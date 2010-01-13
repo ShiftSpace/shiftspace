@@ -1,0 +1,18 @@
+Filtering
+================================================================================
+
+fortunately maps right to resources
+
+Messages
+----------------------------------------
+type:message toId:loggedInUserId
+
+
+Groups
+----------------------------------------
+type:group
+
+
+Shift
+----------------------------------------
+type:shift

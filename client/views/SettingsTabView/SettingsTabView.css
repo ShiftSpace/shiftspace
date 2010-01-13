@@ -20,6 +20,16 @@ ul#SSInstalledSpaces
   list-style-type: none;
 }
 
+ul#SSInstalledSpaces li
+{
+   width: 50%;
+   float: left;
+   border-left: 2px solid #ccc;
+   border-bottom: 2px solid #ccc;
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+}
+
 div#SSInstalledSpacesTabPane
 {
   overflow-y: scroll;
@@ -28,4 +38,15 @@ div#SSInstalledSpacesTabPane
   left: 0px;
   right: 0px;
   bottom: 0px;
+}
+
+#PreferencesTab .col, #InterfaceTab .col
+{
+   float: left;
+   width: 50%;
+}
+
+#InterfaceTab input[type=text]
+{
+   width: 50px;
 }

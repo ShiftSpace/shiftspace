@@ -12,8 +12,8 @@ button#SSConsoleWindowClose
    border: 0;
    background: url(/images/Pane/SSPaneClose.png) no-repeat;
    position: absolute;
-   top:13px;
-   right: 13px;
+   top: 20px;
+   right: 4px;
 }
 
 button#SSConsoleWindowClose:hover{

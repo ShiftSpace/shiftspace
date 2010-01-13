@@ -14,23 +14,19 @@ var SSNotifierView = new Class({
   {
     this.parent(el, options);
     
-    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
-
-    SSAddObserver(this, 'onSync', this.handleSync.bind(this));
-
+    SSAddObserver(this, 'onUserLogin', this.update.bind(this));
+    SSAddObserver(this, 'onUserJoin', this.update.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.update.bind(this));
     SSAddObserver(this, 'onConsoleShow', this.onConsoleShow.bind(this));
     SSAddObserver(this, 'onConsoleHide', this.onConsoleHide.bind(this));
-    
     SSAddObserver(this, 'onSpaceMenuShow', this.onSpaceMenuShow.bind(this));
     SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
-    
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
-
     SSAddObserver(this, 'onMessageRead', function() {
       this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
     }.bind(this));
+
+    this.attachFinishKeyEvents();
   },
   
   
@@ -38,7 +34,7 @@ var SSNotifierView = new Class({
   {
     this.__menuVisible = true;
     this.fireEvent('showmenu');
-  },
+  }.decorate(ssfv_ensure),
   
   
   onSpaceMenuHide: function()
@@ -159,13 +155,16 @@ var SSNotifierView = new Class({
   
   refreshMessageCount: function()
   {
-    if (ShiftSpace.User.isLoggedIn())
+    if(this.isLoaded())
     {
-      this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
-    }
-    else
-    {
-      this.SSMessage.hide();
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
+      }
+      else
+      {
+        this.SSMessage.hide();
+      }
     }
   },
   
@@ -224,29 +223,12 @@ var SSNotifierView = new Class({
     if(ShiftSpace.Console.isVisible()) return;
   },
   
-  
-  handleSync: function()
-  {
-  },
-  
-  
-  handleLogin: function()
-  {
-    this.updateControls();
-  },
-  
-  
-  handleLogout: function()
-  {
-    this.updateControls();
-  },
-  
   /*
-    Function: updateControls
+    Function: update
       *private*
       Update the controls in the notifier view.
   */
-  updateControls: function()
+  update: function()
   {
     this.refreshShiftCount();
     this.refreshMessageCount();
@@ -272,6 +254,8 @@ var SSNotifierView = new Class({
   */
   updateShiftCount: function(countp)
   {
+    if(countp > 0 && this.delayed()) this.finish();
+    
     this.__count = countp;
     this.updateCounter();
     
@@ -357,18 +341,82 @@ var SSNotifierView = new Class({
       ShiftSpace.Console.showInbox();
     }.bind(this));
   },
+
+
+  attachFinishKeyEvents: function()
+  {
+    SSAddEvent('keydown', function(evt) {
+      evt = new Event(evt);
+      if(evt.key == 'shift' && this.delayed())
+      {
+        this.addEvent("load", function() {
+          this.fireEvent("shiftdown");
+        }.bind(this));
+        this.finish();
+      }
+    }.bind(this));
+
+    SSAddEvent('keydown', this.handleKeyDown.bind(this));
+    SSAddEvent('keyup', this.handleKeyUp.bind(this));
+  },
+
+
+  handleKeyDown: function(evt)
+  {
+    evt = new Event(evt);
+    if(evt.key == 'shift')
+    {
+      this.shiftDownTime = $time();
+      this.shiftDown = true;
+    }
+  },
+  
+  
+  handleKeyUp: function(evt)
+  {
+    evt = new Event(evt);
+    if(this.shiftDown)
+    {
+      var delta = $time() - this.shiftDownTime;
+    }
+    if(evt.key == 'shift') this.shiftDown = false;
+    if(this.shiftDown && 
+       evt.key == 'space' &&
+       delta >= 300)
+    {
+      SSPostNotification("toggleConsole");
+      evt.preventDefault();
+      evt.stop();
+    }
+  },
   
   
   attachKeyEvents: function()
   {
     SSAddEvent('keyup', function(evt) {
       evt = new Event(evt);
-      if(evt.key == 'shift') this.fireEvent('shiftup');
+      if(evt.key == 'shift')
+      {
+        if(this.delayed())
+        {
+          SSLog("finish", SSLogForce);
+          this.finish();
+        }
+        this.fireEvent('shiftup');
+      }
     }.bind(this));
 
     SSAddEvent('keydown', function(evt) {
       evt = new Event(evt);
-      if(evt.key == 'shift') this.fireEvent('shiftdown');
+      if(evt.key == 'shift')
+      {
+        if(this.delayed())
+        {
+          SSLog("finish", SSLogForce);
+          this.finish();
+        }
+        this.fireEvent('shiftdown');
+      }
     }.bind(this));
   },
   
@@ -413,7 +461,7 @@ var SSNotifierView = new Class({
     if(context == this.element.contentWindow)
     {
       this.mapOutletsToThis();
-      this.updateControls();
+      this.update();
     }
   },
   

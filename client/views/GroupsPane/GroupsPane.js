@@ -14,9 +14,16 @@ var GroupsPane = new Class({
   {
     this.parent(el, options);
 
-    SSAddObserver(this, "onUserLogin", this.onUserLogin.bind(this));
-    SSAddObserver(this, "onUserJoin", this.onUserLogin.bind(this));
+    SSAddObserver(this, "onUserLogin", this.initListViews.bind(this));
+    SSAddObserver(this, "onUserJoin", this.initListViews.bind(this));
     SSAddObserver(this, "onAddUsers", this.onAddUsers.bind(this));
+  },
+
+
+  show: function()
+  {
+    if(!this.__listViewsInitialized) this.initListViews();
+    this.parent();
   },
 
 
@@ -72,7 +79,7 @@ var GroupsPane = new Class({
   },
 
 
-  onUserLogin: function()
+  initListViews: function()
   {
     SSTableForName("Groups").addView(this.GroupsListView);
     SSTableForName("MyGroups").addView(this.MyGroupsListView);
@@ -80,10 +87,20 @@ var GroupsPane = new Class({
   },
 
 
-  onAddUsers: function(group)
+  onAddUsers: function(evt)
   {
     this.__addUserMode = true;
     this.GroupsTabView.selectTab(2);
     this.InviteUsersListView.element.addClass("Invite");
+
+    var tabButton =  this.GroupsTabView.tabButtonForIndex(2);
+    if(evt.mode == 'edit')
+    {
+      tabButton.set("text", "Add Users");
+    }
+    else
+    {
+      tabButton.set("text", "Start New Group");
+    }
   }
 });

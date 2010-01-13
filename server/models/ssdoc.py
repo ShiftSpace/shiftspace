@@ -20,16 +20,25 @@ class SSDocument(Document):
             server = TextField(),
             database = TextField()
             ))
-    created = DateTimeField(default=datetime.now())
-    modified = DateTimeField(default=datetime.now())
+    created = DateTimeField()
+    modified = DateTimeField()
 
     # ========================================
     # Initializer
     # ========================================
 
     def __init__(self, **kwargs):
-        super(Document, self).__init__(**utils.clean(kwargs))
+        Document.__init__(self, **kwargs)
 
+    def store(self, db):
+        now = datetime.now()
+        if not self.id:
+            self.created = now
+            self.modified = now
+        else:
+            self.modified = now
+        Document.store(self, db)
+        
     # ========================================
     # Instance Methods
     # ========================================
@@ -42,7 +51,9 @@ class SSDocument(Document):
         db = core.connect(dbname)
         copy = self.toDict()
         del copy["_rev"]
-        db.create(copy)
+        theId = copy["_id"]
+        del copy["_id"]
+        db[theId] = copy
 
     def updateIn(self, dbname):
         db = core.connect(dbname)

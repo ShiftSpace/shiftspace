@@ -5,52 +5,93 @@
        delegate:'SSConsoleWindow'
      }">
 
-    <h id="CreateTitle" outlet="EditGroupView">Start A New Group</h>
-    <h id="EditTitle" outlet="EditGroupView">Edit Group</h>
+    <h2 id="CreateTitle" outlet="EditGroupView">Start A New Group</h2>
+    <h2 id="EditTitle" outlet="EditGroupView">Update Group Settings</h2>
 
     <form id="GroupForm" outlet="EditGroupView">
         <div>
-            <label>Group Name<span>*</span>:</label>
+            <label><strong>Group Name</strong><span>*</span>:</label>
             <input class="longName" type="text" name="longName"></input>
         </div>
 
         <div>
-            <label>Group Handle<span>*</span>(keep it short):</label>
+            <label><strong>Group Handle</strong><span>*</span>(keep it short):</label>
             <input class="shortName" type="text" name="shortName"></input>
         </div>
 
         <div>
-            <label>Tag Line<span>*</span>:</label>
+            <label><strong>Tag Line</strong><span>*</span>:</label>
             <input class="tagLine" type="text" name="tagLine"></input>
         </div>
         
         <div>
-            <label>URL:</label>
+            <label><strong>URL</strong>:</label>
             <input class="url" type="text" name="url"></input>
         </div>
 
         <div>
-            <label>Is visible to people who have not been invited:</label>
+            <label><strong>Is visible to people who have not been invited</strong>:</label>
             <input class="visible" type="checkbox" name="isVisible" checked="true"></input>
         </div>
     </form>
 
-    <div class="userCount">
+    <div id="GroupUserCount" class="userCount" outlet="EditGroupView">
         <span class="adminCount"></span> Admins + <span class="memberCount"></span> Members (click to edit)
     </div>
 
-    <ul id="GroupMemberListView"
-        class="SSListView"
-        uiclass="SSListView">
-        <li class="SSCell"
-            uiclass="SSCell">
-        </li>
-    </ul>
+    <div id="GroupMemberListViewContainer" outlet="EditGroupView">
+        <ul id="GroupMemberListView"
+            class="SSListView"
+            uiclass="SSListView"
+            outlet="EditGroupView">
+            <li class="SSCell MemberListViewCell"
+                uiclass="MemberListViewCell"
+                options="{
+                  properties: ['gravatar', 'userName'],
+                  actions: [
+                    {
+                      selector: '.gravatar, .userName',
+                      method: 'editMember',
+                      target: 'EditGroupView'
+                    }
+                  ]
+                }">
+                <div class="user">
+                    <span class="gravatarContainer">
+                        <img class="rounded-image gravatar" width="16" height="16"></img>
+                    </span>
+                    <span class="userName"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div id="EditGroupMember" class="SSDisplayNone" outlet="EditGroupView">
+        <div id="CloseEditMember" outlet="EditGroupView">X</div>
+        <div>
+            <span>
+                <img class="gravatar"></img>
+            </span>
+            <span class="userName"></span>
+            <span class="fullName"></span>
+        </div>
+        <div>
+            Member since <span class="createdStr"></span>
+        </div>
+        <div>
+            <span class="shiftCount"></span> in group
+        </div>
+        <div>
+            <button id="ViewMemberShifts" outlet="EditGroupView">View Shifts</button>
+            <button id="MakeMemberAdmin" outlet="EditGroupView">Make Admin</button>
+            <button id="BlockMember" outlet="EditGroupView">Block User</button>
+        </div>
+    </div>
 
     <div>
-        <button id="InviteUsers" outlet="EditGroupView">Invite User</button>
-        <button id="CancelAction" outlet="EditGroupView">Cancel</button>
-        <button id="CreateGroup" outlet="EditGroupView">Create</button>
+        <button id="InviteUsers" outlet="EditGroupView">Invite Users</button>
         <button id="SaveGroup" outlet="EditGroupView">Save</button>
+        <button id="CreateGroup" outlet="EditGroupView">Create Group</button>
+        <button id="CancelAction" outlet="EditGroupView"><span>Cancel</span></button>
     </div>
 </div>

@@ -7,7 +7,6 @@ var SSSandalphonError = SSException;
 
 SSSandalphonError.NoControllerForCSSId = new Class({
   Extends: SSSandalphonError,
-  Implements: SSExceptionPrinter,
   name: "SSSandalphonError.NoSuchSubView"
 });
 
@@ -36,11 +35,11 @@ function SSNotifyInstantiationListeners(element)
   }
 }
 
-var __controllers__ = $H();
+var __controllers = $H();
 
 function SSClearControllersTable()
 {
-  __controllers__ = $H();
+  __controllers = $H();
 }
 
 function SSClearObjects()
@@ -57,7 +56,7 @@ function SSSetControllerForNode(controller, node)
   // generate our own id
   node._ssgenId();
   // keep back reference
-  __controllers__.set(node.getProperty('id'), controller);
+  __controllers.set(node.getProperty('id'), controller);
 }
 
 // return the controller for a node
@@ -69,9 +68,7 @@ function SSControllerForNode(node)
     SSLog("No controller for element", node, SSLogError);
     throw new SSSandalphonError.NoControllerForCSSId(new Error(), "No controller for element " + node);
   }
-  return __controllers__.get(node.getProperty('id')) ||
-         (node.getProperty('uiclass') && new SSViewProxy(node)) ||
-         null;
+  return __controllers.get(node.getProperty('id')) || null;
 }
 
 function SSControllerOrNode(object)
@@ -98,13 +95,13 @@ function SSGetInlineOptions(el)
   return (options) ? JSON.decode(options.replace("\n", "")) : {};
 }
 
-var __ssappdelegate__;
+var __sappdelegate;
 function SSSetAppDelegate(delegate)
 {
-  __ssappdelegate__ = delegate;
+  __sappdelegate = delegate;
 }
 
 function SSAppDelegate()
 {
-  return __ssappdelegate__;
+  return __sappdelegate;
 }

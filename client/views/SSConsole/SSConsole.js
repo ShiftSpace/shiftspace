@@ -17,25 +17,22 @@ var SSConsole = new Class({
   {
     this.parent(el, options);
 
-    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
-    SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
+    SSAddObserver(this, 'onUserLogin', this.update.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.update.bind(this));
+    SSAddObserver(this, 'onUserJoin', this.update.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
     SSAddObserver(this, 'onLocalizationChanged', this.localizationChanged.bind(this));
+    SSAddObserver(this, 'toggleConsole', this.toggle.bind(this));
   },
-  
-  
-  isVisible: function()
-  {
-    return !this.element.hasClass('SSDisplayNone');
-  },
-  
+
   
   show: function()
   {
+    if(this.isVisible()) return;
     this.parent();
+    this.update();
     SSPostNotification('onConsoleShow');
-  },
+  }.decorate(ssfv_ensure),
   
   
   hide: function()
@@ -45,9 +42,22 @@ var SSConsole = new Class({
   },
   
   
+  toggle: function()
+  {
+    if(this.isVisible())
+    {
+      this.hide();
+    }
+    else
+    {
+      this.show();
+    }
+  },
+  
+
   updateTabs: function()
   {
-    if (ShiftSpaceUser.isLoggedIn())
+    if(ShiftSpaceUser.isLoggedIn())
     {
       this.MainTabView.hideTabByName('LoginTabView');
 
@@ -68,21 +78,25 @@ var SSConsole = new Class({
   },
 
 
-  handleLogin: function()
+  update: function()
   {
-    this.updateTabs();   
-    this.MainTabView.selectTabByName('AllShiftsView');
-    if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
-    if(SSTableForName("MyShifts")) SSTableForName("MyShifts").refresh();
-  },
-
-
-  handleLogout: function()
-  {
-    this.updateTabs();
-    this.MainTabView.selectTabByName('AllShiftsView');
-    this.MainTabView.refresh();
-    if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
+    if(this.isLoaded())
+    {
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        this.updateTabs();   
+        this.MainTabView.selectTabByName('AllShiftsView');
+        if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
+        if(SSTableForName("MyShifts")) SSTableForName("MyShifts").refresh();
+      }
+      else
+      {
+        this.updateTabs();
+        this.MainTabView.selectTabByName('AllShiftsView');
+        this.MainTabView.refresh();
+        if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
+      }
+    }
   },
   
   
@@ -106,60 +120,9 @@ var SSConsole = new Class({
   },
   
   
-  attachEvents: function()
-  {
-    SSAddEvent('keydown', this.handleKeyDown.bind(this));
-    SSAddEvent('keyup', this.handleKeyUp.bind(this));
-  },
-  
-  
-  handleKeyDown: function(evt)
-  {
-    evt = new Event(evt);
-    if(evt.key == 'shift')
-    {
-      this.shiftDownTime = $time();
-      this.shiftDown = true;
-    }
-  },
-  
-  
-  handleKeyUp: function(evt)
-  {
-    evt = new Event(evt);
-    
-    if(this.shiftDown)
-    {
-      var now = $time();
-      var delta = now - this.shiftDownTime;
-    }
-    
-    if(evt.key == 'shift')
-    {
-      this.shiftDown = false;
-    }
-    
-    if(this.shiftDown && 
-       evt.key == 'space' &&
-       delta >= 300)
-    {
-      if(!this.isVisible())
-      {
-        this.show();
-      }
-      else
-      {
-        this.hide();
-      }
-      evt.preventDefault();
-      evt.stop();
-    }
-  },
-  
-  
   initResizer: function()
   {
-    var resizer = new SSElement('div', {
+    this.resizer = new SSElement('div', {
         id: 'SSConsoleResizer',
         styles: {
           position: 'fixed',
@@ -172,18 +135,18 @@ var SSConsole = new Class({
         }
     });
 
-    $(document.body).grab(resizer);
+    $(document.body).grab(this.resizer);
     
-    resizer.addEvent('mousedown', SSAddDragDiv);
+    this.resizer.addEvent('mousedown', SSAddDragDiv);
 
-    resizer.makeDraggable({
+    this.resizer.makeDraggable({
       modifiers: {x:'', y:'bottom'},
       invert: true,
       onComplete: SSRemoveDragDiv
     });
     
     this.element.makeResizable({
-      handle: resizer,
+      handle: this.resizer,
       modifiers: {x:'', y:'height'},
       invert: true
     });
@@ -200,6 +163,7 @@ var SSConsole = new Class({
   
   localizationChanged: function(evt)
   {
+    if(this.delayed()) return;
     SSUpdateStrings(evt.strings, evt.lang, this.contentWindow());
   },
 
@@ -233,9 +197,7 @@ var SSConsole = new Class({
   {
     this.parent();
     this.initResizer();
-    this.attachEvents();
     this.setIsLoaded(true);
     SSPostNotification(SSConsoleIsReadyNotification, this);
   }
-
 });

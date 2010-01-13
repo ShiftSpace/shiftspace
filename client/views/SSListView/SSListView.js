@@ -14,7 +14,6 @@ var SSListViewError = SSException;
 
 SSListViewError.OutOfBounds = new Class({
   Extends: SSListViewError,
-  Implements: SSExceptionPrinter,
   name:"SSListViewError.OutOfBounds"
 });
 
@@ -1240,8 +1239,8 @@ var SSListView = new Class({
    */
   newCellForItemData: function(itemData, index)
   {
-    var filtered = this.filter(itemData, index);
-    var newCell = this.cell().cloneWithData(itemData);
+    var filtered = this.filter(itemData, index),
+        newCell = this.cell().cloneWithData(itemData, index);
     if(filtered) newCell.addClass('SSDisplayNone');
     return newCell;
   },
@@ -1301,8 +1300,8 @@ var SSListView = new Class({
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
         this.element.setStyle('width', (this.options.cellSize.x*perPage)+modifer);
       }
-      theData.slice(startIndex || 0, len).each(function(data) {
-        var cellNode = this.newCellForItemData(data);
+      theData.slice(startIndex || 0, len).each(function(data, i) {
+        var cellNode = this.newCellForItemData(data, i);
         this.element.grab(cellNode);
         var restore = this.__cellStates[data._id];
         if(restore)

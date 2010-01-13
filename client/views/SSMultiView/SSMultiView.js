@@ -12,13 +12,11 @@ var SSMultiViewError = SSException;
 
 SSMultiViewError.NoSuchSubView = new Class({
   Extends: SSMultiViewError,
-  Implements: SSExceptionPrinter,
   name: "SSMultiViewError.NoSuchSubView"
 });
 
 SSMultiViewError.OutOfBounds = new Class({
   Extends: SSMultiViewError,
-  Implements: SSExceptionPrinter,
   name: "SSMultiViewError.OutOfBounds"
 });
 
@@ -194,7 +192,7 @@ var SSMultiView = new Class({
     {
       throw new SSMultiViewError.NoSuchSubView(new Error(), this.element.getProperty('id') + "'s controller has no subview with name " + name + ".");
     }
-    this.showView(this.getRawSubViews().indexOf(this.element.getElement('> #'+name)));
+    this.showView(this.indexOfNode(this.getRawSubViews(), this.element.getElement('> #'+name)));
   }
 
 });

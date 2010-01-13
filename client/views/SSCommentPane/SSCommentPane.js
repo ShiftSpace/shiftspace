@@ -23,8 +23,8 @@ var SSCommentPane = new Class({
     this.comments = new SSTable("Comments", {
       resource: {read:'shift/'+shiftId+'/comments'},
       watches: [{
-                  events: [{resource:"event", action:"create"},
-                           {resource:"event", action:"delete"}],
+                  events: [{resource:"shift", action:"comment"},
+                           {resource:"comment", method:"delete"}],
                   handlers: [SSTable.dirtyTheViews]
                 }]
     });
@@ -53,16 +53,19 @@ var SSCommentPane = new Class({
   },
   
   
-  'open': function(shiftId)
+  'open': function(shift)
   {
     this.cleanupTable();
-    this.initTable(shiftId);
+    this.initTable(shift._id);
     SSTableForName("Comments").addView(this.SSCommentsListView);
     
     this.delegate().tall();
     this.delegate().show();
     this.multiView().showViewByName(this.name);
-    this.setCurrentShiftId(shiftId);
+    this.setCurrentShiftId(shift._id);
+
+    this.update(shift);
+
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
   },
@@ -85,8 +88,34 @@ var SSCommentPane = new Class({
   {
     var shiftId = this.currentShiftId(), text = this.SSCommentText.getProperty("value");
     var p = SSPostComment(shiftId, text);
-    p.realize();
+    this.update(p);
   },
+
+
+  update: function(shift)
+  {
+    this.element.getElement("textarea").set("value", "");
+    this.SSCommentsListView.refresh(true);
+
+    if(ShiftSpace.User.isLoggedIn())
+    {
+      this.element.getElement("#CommentPaneForm").removeClass("SSDisplayNone");
+      this.element.getElement("#CommentPaneForm .userName").set("text", ShiftSpace.User.getUserName());
+    }
+    else
+    {
+      this.element.getElement("#CommentPaneForm").addClass("SSDisplayNone");
+    }
+    
+    if(shift)
+    {
+      var attrsp = SSGetSpaceAttributes(shift.space.name);
+      (function(attrs) {
+        this.element.getElement("#SSCommentShift .spaceIcon").set("src", attrs.icon);
+      }.asPromise().bind(this))(attrsp);
+      SSTemplate(this.element.getElement("#SSCommentShift"), shift);
+    }
+  }.asPromise(),
   
   
   localizationChanged: function()

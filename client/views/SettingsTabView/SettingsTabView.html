@@ -3,54 +3,118 @@
      class="SSTabView SSTabViewSubTabStyle SSTabPane"
      uiclass="SettingsTabView">
 
-  <div class="SSControlView">
-    <div title="Installed" class="SSButton SSLocalized">Installed</div>
-    <div title="Account" class="SSButton SSLocalized">Account</div>
-    <div title="Account" class="SSButton SSLocalized">Language</div>
-  </div>
+    <div class="SSControlView">
+        <div title="Preferences" class="SSButton SSLocalized SSActive">Preferences</div>
+        <div title="Interface" class="SSButton SSLocalized">Interface</div>
+        <div title="Spaces" class="SSButton SSLocalized">Spaces</div>
+        <div title="Account" class="SSButton SSLocalized">Account</div>
+    </div>
 
-  <div class="SSContentView">
-    <div id="SSInstalledSpacesTabPane" class="SSTabPane">
-      <label>Add A Space:</label>
-      <input id="SSInstallSpaceField" name="SSInstallSpaceField" type="text" value="Name of Space" outlet="SettingsTabView"></input>
-      <input id="SSInstallSpace" name="SSInstallSpace" type="button" value="Install" outlet="SettingsTabView"></input>
-      <input id="clearInstalledButton" type="button" name="clearInstalledButton" value="Reset Spaces" outlet="SettingsTabView"></input>
-      <!-- Installed Spaces List -->
-      <ul id="SSInstalledSpaces" 
-          class="SSListView" 
-          uiclass="SSListView"
-          outlet="SettingsTabView">
-        <li class="SSCell SSInstalledSpaceCell" 
-            uiclass="SSInstalledSpaceCell"
-            options="{
-              properties: ['name', 'icon', 'autolaunch'],
-              actions: [
-                {
-                  selector: '.uninstall',
-                  target: 'SSInstalledSpaces',
-                  method: 'removeObject'
-                }
-              ]
-            }">
-          <img></img>
-          <span class="name"></span>
-          <span class="autolaunch"></span>
-          <input class="uninstall" type="button" value="Uninstall"></input>
-        </li>
-      </ul>
-      <!-- End Installed Spaces List -->
+    <div class="SSContentView">
+
+        <div id="PreferencesTab" class="SSTabPane">
+            <div class="col">
+                <h3>Notifications &amp; Publishing</h3>
+                <div>
+                    <input type="checkbox"></input>
+                    <label>Email me my messages [ <a>edit notifications</a> ] </label>
+                </div>
+                <div>
+                    <input type="checkbox"></input>
+                    <label>Create a secret proxy link to my private shifts</label>
+                </div>
+            </div>
+            <div class="col">
+                <h3>Server Settings</h3>
+                <div>
+                    <label>Server Address:</label>
+                    <input type="text"></input>
+                </div>
+                <div>
+                    <input type="checkbox"></input>
+                    <label>Allow my content to be distributed between servers</label>
+                </div>
+            </div>
+            
+            <select id="SSSelectLanguage" outlet="SettingsTabView" class="SSDisplayNone">
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="sv">Swedish</option>
+                <option value="ko">Korean</option>
+            </select>
+        </div>
+
+        <div id="InterfaceTab" class="SSTabPane">
+            <div class="col">
+                <h3>Launch keys</h3>
+                <div>
+                    <input type="checkbox"></input>
+                    <label>
+                        Use the <input type="text">Shift</input> key to launch the notifier
+                    </label>
+                </div>
+                <div>
+                    <input type="checkbox" name=""></input>
+                    <label>
+                        Use the <input type="text">Shift</input> + <input type="text">Space Bar</input> keys to launch the console.
+                    </label>
+                </div> 
+            </div>
+            <div class="col">
+                <h3>"Use a Space" menu</h3>
+                <div>
+                    <input type="radio" name="SpaceMenuPref" value="auto"></input>
+                    <label>Last used space appears closest to the mouse (at the bottom)</label>
+                </div>
+                <div>
+                    <input type="radio" name="SpaceMenuPref" value="manual"></input>
+                    <label>Use drag &amp; drop to re-arrange the button manually</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="SSInstalledSpacesTabPane" class="SSTabPane">
+            <label>Add A Space:</label>
+            <input id="SSInstallSpaceField" name="SSInstallSpaceField" type="text" value="Name of Space" outlet="SettingsTabView"></input>
+            <input id="SSInstallSpace" name="SSInstallSpace" type="button" value="Install" outlet="SettingsTabView"></input>
+            <input id="clearInstalledButton" type="button" name="clearInstalledButton" value="Reset Spaces" outlet="SettingsTabView"></input>
+            <!-- Installed Spaces List -->
+            <ul id="SSInstalledSpaces" 
+                class="SSListView" 
+                uiclass="SSListView"
+                outlet="SettingsTabView">
+                <li class="SSCell SSInstalledSpaceCell" 
+                    uiclass="SSInstalledSpaceCell"
+                    options="{
+                      properties: ['name', 'icon', 'autolaunch'],
+                      actions: [
+                        {
+                          selector: '.uninstall',
+                          target: 'SSInstalledSpaces',
+                          method: 'removeObject'
+                        },
+                        {
+                          selector: '.spaceSettings',
+                          target: 'SettingsTabView',
+                          method: 'showSpaceSettings'
+                        }
+                      ]
+                    }">
+                    <img></img>
+                    <span class="name"></span>
+                    <span class="autolaunch"></span>
+                    <input class="uninstall" type="button" value="Uninstall"></input>
+                    <button class="spaceSettings">Settings</button>
+                </li>
+            </ul>
+            <!-- End Installed Spaces List -->
+        </div>
+
+        <div class="SSTabPane">
+            Account
+        </div>
     </div>
-    <div class="SSTabPane">Account</div>
-    <div class="SSTabPane">
-      <select id="SSSelectLanguage" outlet="SettingsTabView">
-        <option value="en">English</option>
-        <option value="fr">French</option>
-        <option value="de">German</option>
-        <option value="sv">Swedish</option>
-        <option value="ko">Korean</option>
-      </select>
-    </div>
-  </div>
 
 </div>
 <!-- end setting subtab view -->
