@@ -1,4 +1,83 @@
 #PeopleDetailView
 {
-   height: 100%
+    position: relative;
+    height: 100%;
+    font-family: Helvetica,Arial,Verdana,sans-serif;
+}
+
+.FollowedUserBio
+{
+    width: 273px;
+    height: 69px;
+    padding-left: 68px;
+    border: 1px solid #BDADA5;
+    background-color: #E4DFDB;
+}
+
+.FollowedUserBio *
+{
+    float: left;
+}
+
+.FollowedUserBio img
+{
+    position: absolute;
+    top: 1px;
+    left: 1px;
+}
+
+
+.FollowedUserBio .username
+{
+    color:#F63B02;
+    font-size:15px;
+    height:36px;
+    line-height:36px;
+    margin:0;    
+}
+
+.FollowedUserBio bio,
+.FollowedUserBio url
+{
+
+}
+
+.FollowedUserStats
+{
+    color: 74665A;
+    background-color: #F1EDEB;
+}
+
+.FollowedUserStats span
+{
+    height: 18px;
+    line-height: 18px;
+    padding-left: 4px;
+    font-weight: bold;
+}
+
+.FollowedUserStats div
+{
+    height: 22px;
+    line-height: 22px;
+    border-top: 1px #C8CDC4 solid;
+}
+
+.FollowedUserStats div:last-child
+{
+    border-bottom: 1px #C8CDC4 solid;
+}
+
+
+#PeopleDetailView .FollowedUserButtons
+{
+    height: 30px;
+    padding-top: 10px;
+}
+
+#PeopleDetailView .unfollow
+{
+    -moz-border-radius: 10px;
+    border: 2px solid #B3ADA5;
+    color: #74665A;
 }
