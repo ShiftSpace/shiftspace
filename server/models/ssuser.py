@@ -62,7 +62,9 @@ class SSUser(User):
         if userJson.get("password"):
             userJson['password'] = utils.md5hash(userJson['password'])
         if userJson.get("email"):
-            userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % utils.md5hash(userJson["email"])
+            hashedEmail = utils.md5hash(userJson["email"])
+            userJson["gravatar"] = "http://www.gravatar.com/avatar/%s?s=32" % hashedEmail
+            userJson["gravatarLarge"] = "http://www.gravatar.com/avatar/%s?s=60" % hashedEmail
         newUser = SSUser(**utils.clean(userJson))
         newUser.store(db)
 
@@ -140,6 +142,19 @@ class SSUser(User):
                     del userDict[key]
         return userDict
 
+
+    def info(self):
+        from server.models.follow import Follow
+        from server.models.shift import Shift
+        # TODO: use the bulk API - David 12/10/09
+        result = {}
+        db = core.connect()
+        shared = core.connect("shiftspace/shared")
+        result["followerCount"] = core.value(Follow.followers_count(db, key=self.id)) or 0
+        result["followingCount"] = core.value(Follow.following_count(db, key=self.id)) or 0
+        result["publishedShiftCount"] = core.value(Shift.count_by_user_and_published(shared, key=self.id)) or 0
+        return result
+
     # ========================================
     # Validation
     # ========================================
@@ -169,6 +184,12 @@ class SSUser(User):
             return (self.id == other.id) or self.isAdmin()
         elif isinstance(other, Shift):
             return other.createdBy == self.id or self.isAdmin()
+
+
+    def canJoin(self, group):
+        from server.models.permission import Permission
+        perm = Permission.readByUserAndGroup(self.id, group.id)
+        return (perm and perm.level == 0)
 
 
     def canComment(self, theShift):
@@ -235,24 +256,54 @@ class SSUser(User):
     def messages(self, start=None, end=None, limit=25):
         from server.models.message import Message
         results = Message.by_created(core.connect(SSUser.messagesDb(self.id)), limit=limit)
+        messages = []
         if start and not end:
-            return core.objects(results[start:])
-        if not start and end:
-            return core.objects(results[:end])
-        if start and end:
-            return core.objects(results[start:end])
-        return Message.joinData(core.objects(results))
+            messages = core.objects(results[start:])
+        elif not start and end:
+            message = core.objects(results[:end])
+        elif start and end:
+            messages = core.objects(results[start:end])
+        else:
+            messages = core.objects(results)
+        return Message.joinData(messages, userId=self.id)
 
-    @shift_join
-    def shifts(self, start=None, end=None, limit=25):
-        from server.models.shift import Shift
-        db = core.connect("shiftspace/shared")
+    def groups(self, start=None, end=None, limit=25):
+        from server.models.permission import Permission
+        db = core.connect()
         if not start:
             start = [self.id]
         if not end:
             end = [self.id, {}]
-        results = Shift.by_user_and_created(db, limit=limit)
-        return core.objects(results[start:end])
+        results = Permission.readable_by_user_and_created(db, limit=limit)
+        return Permission.joinData(core.objects(results[start:end]))
+
+
+    def shifts(self, start=None, end=None, limit=25, filter=False, query=None):
+        from server.models.shift import Shift
+        db = core.connect("shiftspace/shared")
+        if not filter:
+            if not start:
+                start = [self.id]
+            if not end:
+                end = [self.id, {}]
+            results = Shift.by_user_and_created(db, limit=limit)
+            return Shift.joinData(core.objects(results[start:end]))
+        else:
+            lucene = core.lucene()
+            queryString = "createdBy:%s" % self.id
+            theFilter = core.dictToQuery(query)
+            if theFilter:
+                queryString = queryString + " AND " + theFilter
+            try:
+                print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+                print queryString
+                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified")
+            except Exception, err:
+                print err
+                return []
+            shifts = [row["doc"] for row in rows]
+            return Shift.joinData(shifts, self.id)
+
 
     @shift_join
     def feed(self, start=None, end=None, limit=25):
@@ -324,7 +375,10 @@ class SSUser(User):
             end = [self.id, {}]
         results = Follow.following_by_created(core.connect(), limit=limit)
         userIds = core.values(results[start:end])
-        return core.fetch(keys=userIds)
+        users = core.fetch(keys=userIds)
+        for user in users:
+            user["following"] = True
+        return users
 
     def followers(self, start=None, end=None, limit=25):
         from server.models.follow import Follow
@@ -338,12 +392,12 @@ class SSUser(User):
 
     def follow(self, other):
         from server.models.follow import Follow
-        Follow.create(self.id, other.id)
+        Follow.create(self, other)
         return self
 
     def unfollow(self, other):
         from server.models.follow import Follow
-        follow = Follow.read(self.id, other.id)
+        follow = Follow.read(self, other)
         follow.delete()
         return self
 
@@ -375,4 +429,26 @@ class SSUser(User):
         db = core.connect(Comment.db(aShift.id))
         if self.isSubscribed(aShift):
             del db["user:%s" % self.id]
+
+    # ========================================
+    # Groups
+    # ========================================
+
+    def inviteUser(self, group, user):
+        return group.inviteUser(self, user)
+
+    def join(self, group):
+        group.join(self)
+
+    # ========================================
+    # Messages
+    # ========================================
+
+    def unreadCount(self):
+        from server.models.message import Message
+        db = core.connect("shiftspace/shared")
+        syscount = core.value(Message.system_count(db, key=self.id)) or 0
+        tocount = core.value(Message.count_by_user(db, key=self.id)) or 0
+        readcount = core.value(Message.read_count_by_user(db, key=self.id)) or 0
+        return (syscount+tocount)-readcount
 

@@ -72,3 +72,8 @@ config/views.json/server/.htaccess
 /.ropeproject/globalnames
 /.ropeproject/history
 /.ropeproject/objectdb
+/todo.org
+/client/views/CreateGroupView/.#CreateGroupView.css
+/client/views/CreateGroupView/#CreateGroupView.css#
+
+spaces/Easy

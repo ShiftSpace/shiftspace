@@ -16,9 +16,10 @@ var SSCommentsListViewCell = new Class({
   },
   
   
-  clone: function()
+  cloneWithData: function(data, index)
   {
-    var clone = this.parent();
+    var clone = this.parent(data, index);
+    clone.getElement(".index").set("text", index+1);
     return clone;
   },
 
@@ -43,12 +44,19 @@ var SSCommentsListViewCell = new Class({
     el.getElement('.userName').set('text', userName);
     if(ShiftSpace.User.isLoggedIn() && ShiftSpace.User.getUserName() == userName)
     {
-      el.getElement('.userName').addClass('loggedin')
+      el.getElement('.userName').addClass('loggedin');
     }
     else
     {
       el.getElement('.userName').removeClass('loggedin');
     }
+  },
+
+
+  setCreatedStr: function(createdStr)
+  {
+    var el = this.lockedElement();
+    el.getElement(".createdStr").set("text", createdStr);
   },
   
   

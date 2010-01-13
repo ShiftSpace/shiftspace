@@ -34,7 +34,7 @@ Parameters:
 Returns:
   a promise or the space instance.
 */
-var SSLoadSpace = function(spaceName)
+var SSLoadSpace = function(spaceName, inline)
 {
   var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
   var attrs = SSGetSpaceAttributes(spaceName);
@@ -52,22 +52,35 @@ var SSLoadSpace = function(spaceName)
   }
 
   var codep = SSLoadFile(url);
+  if(inline && typeof ShiftSpaceSandBoxMode != "undefined")
+  {
+    codep = new Promise(new DelayedAsset("javascript", url));
+  }
   var cssp = {data:1}; // horrible hack - David
   if(!$(document.head).getElement(["#",spaceName,"Css"].join("")))
   {
     cssp = SSLoadStyle(attrs.css);
   }
+
   var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
                    function() {
                      try
                      {
-                       var spacectorName = attrs.className || (spaceName+'Space');
-                       var shiftctorName = $get(attrs, 'shift', 'className') || (spaceName+'Shift');
-                       var ctors =  ShiftSpace.__externals.evaluate(
-                         codep.value(),
-                         [spacectorName, shiftctorName]
-                       );
-                       var spacector = ctors[spacectorName], shiftctor = ctors[shiftctorName];
+                       var spacectorName = attrs.className || (spaceName+'Space'),
+                           shiftctorName = $get(attrs, 'shift', 'className') || (spaceName+'Shift'),
+                           ctors;
+                       if(inline && typeof ShiftSpaceSandBoxMode != "undefined")
+                       {
+                         ctors = {};
+                         ctors[spacectorName] = eval(spacectorName);
+                         ctors[shiftctorName] = eval(shiftctorName);
+                       }
+                       else
+                       {
+                         ctors = ShiftSpace.__externals.evaluate(codep.value(), [spacectorName, shiftctorName]);
+                       }
+                       var spacector = ctors[spacectorName],
+                           shiftctor = ctors[shiftctorName];
                        if(!spacector)
                        {
                          spacector = ShiftSpace.Space;
@@ -76,7 +89,7 @@ var SSLoadSpace = function(spaceName)
                        if(!shiftctor)
                        {
                          throw new Exception(
-                           spaceName + "Shift constructor does not exit! Did you specify the proper shift class name in your attrs.json file?"
+                           spaceName + "Shift constructor does not exist! Did you specify the proper shift class name in your attrs.json file?"
                          );
                        }
                        spacector.implement({attributes:function(){return attrs;}});
@@ -103,7 +116,7 @@ function SSRegisterSpace(instance)
 {
   var spaceName = instance.attributes().name;
   instance.addEvent('onShiftUpdate', function(shift) {
-    SSSaveShift.safeCall(shift);
+    SSSaveShift.safeCall(null, shift);
   });
   var spaceDir = SSURLForSpace(spaceName);
 
@@ -160,7 +173,7 @@ function SSIsAbsoluteURL(string)
 function SSLoadDefaultSpacesAttributes()
 {
   var defaultSpaces = {};
-  var ps = []
+  var ps = [];
   __defaultSpacesList.length.times(function(i) {
     var spaceName = __defaultSpacesList[i];
     var p = SSLoadSpaceAttributes(spaceName);
@@ -347,7 +360,7 @@ Parameters:
 var SSUpdateInstalledSpaces = function(controlp)
 {
   __installedSpaces = ShiftSpace.User.installedSpaces();
-}.asPromise()
+}.asPromise();
 
 /*
 Function: SSInitDefaultSpaces
@@ -423,7 +436,7 @@ var SSSpaceForName = function(name)
   {
     return SSLoadSpace(name);
   }
-};
+}.asPromise();
 
 /*
 Function: SSSpacesByPosition
@@ -554,8 +567,8 @@ function SSSetFocusedSpace(newSpace)
 */
 function SSSpaceForShift(id)
 {
-  var shift = SSGetShift(id);
-  var spaceName = (Promise.isPromise(shift)) ? shift.get('space', 'name') : shift.space.name;
+  var shift = SSGetShift(id),
+      spaceName = (Promise.isPromise(shift)) ? shift.get('space', 'name') : shift.space.name;
   return SSSpaceForName(spaceName);
 }
 
@@ -594,4 +607,9 @@ function SSHandleInstallSpaceLink(evt)
   var spaceName = target.getAttribute('title');
   // first check for the attributes file
   SSInstallSpace(spaceName);
+}
+
+function SSSpaceIsInDebugMode(spaceName)
+{
+  return ShiftSpace.User.getPreference([spaceName, "debug"].join(".")) || false;
 }

@@ -1,0 +1,10 @@
+.SSConsoleFrame
+{
+  position: fixed;
+  height: 220px;
+  left: 0px;
+  bottom: 40px;
+  width: 100%;
+  border: 0px;
+  z-index: 1000000;
+}

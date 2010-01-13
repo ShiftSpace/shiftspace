@@ -1,5 +1,6 @@
 // ==Builder==
 // @uiclass
+// @framedView
 // @package           ShiftSpaceCoreUI
 // @dependencies      SSFramedView
 // ==/Builder==
@@ -18,16 +19,12 @@ var SSSpaceMenu = new Class({
   {
     this.parent(el, options);
 
-    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
-    
+    SSAddObserver(this, 'onUserLogin', this.update.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.update.bind(this));
     SSAddObserver(this, 'onSpaceInstall', this.update.bind(this));
     SSAddObserver(this, 'onSpaceUninstall', this.update.bind(this));
-    
     SSAddObserver(this, 'showSpaceMenu', this.show.bind(this));
     SSAddObserver(this, 'hideSpaceMenu', this.hide.bind(this));
-    
-    SSAddObserver(this, 'onSync', this.handleSync.bind(this));
   },
   
   
@@ -40,9 +37,10 @@ var SSSpaceMenu = new Class({
   show: function()
   {
     this.parent();
-    this.resize();
+    SSLog("SSSpaceMenu show!", SSLogForce);
+    this.update();
     SSPostNotification('onSpaceMenuShow', this);
-  },
+  }.decorate(ssfv_ensure),
   
   /*
     Function: resize
@@ -52,8 +50,8 @@ var SSSpaceMenu = new Class({
   */
   resize: function()
   {
-    var body = this.contentWindow().$(this.contentDocument().body);
-    var ul = $(this.contentWindow().$('SpaceMenuList'));
+    var body = this.contentWindow().$(this.contentDocument().body),
+        ul = $(this.contentWindow().$('SpaceMenuList'));
     
     if(ul)
     {
@@ -71,20 +69,6 @@ var SSSpaceMenu = new Class({
     SSPostNotification('onSpaceMenuHide', this);
   },
   
-  
-  handleLogin: function()
-  {
-  },
-  
-  
-  handleLogout: function()
-  {
-  },
-  
-  
-  handleSync: function()
-  {
-  },
   
   /*
     Function: onSpaceSort
@@ -126,7 +110,6 @@ var SSSpaceMenu = new Class({
   onInterfaceLoad: function(ui)
   {
     this.parent(ui);
-    this.element.setProperty('id', 'SpaceMenu');
     this.element.addClass('SSDisplayNone');
   }.asPromise(),
   
@@ -173,12 +156,16 @@ var SSSpaceMenu = new Class({
   
   update: function()
   {
-    var spaces = SSSpacesByPosition();
-
-    this.SpaceMenuList.setData(spaces);
-    this.SpaceMenuList.refresh();
-
-    if(this.isVisible()) this.resize();
+    if(this.isLoaded())
+    {
+      var spaces = SSSpacesByPosition();
+      this.SpaceMenuList.setData(spaces);
+      this.SpaceMenuList.refresh();
+      if(this.isVisible())
+      {
+        this.resize();
+      }
+    }
   },
 
   

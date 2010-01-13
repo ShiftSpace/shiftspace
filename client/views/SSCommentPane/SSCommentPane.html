@@ -1,32 +1,58 @@
 <div id="SSCommentPane"
-     class="SSCommentPane"
-     uiclass="SSCommentPane">
+     class="SSSubView SSCommentPane"
+     uiclass="SSCommentPane"
+     options="{
+       delegate: 'SSConsoleWindow'
+     }">
 
-  <ul id="SSCommentsListView"
-      class="SSListView"
-      uiclass="SSListView"
-      outlet="SSCommentPane">
-    <li class="SSCell SSCommentsListViewCell"
-        uiclass="SSCommentsListViewCell"
-        options="{
-          properties: ['userName', 'text']
-        }">
-      <div class="userName"></div>
-      <div class="gravatar"></div>
-      <div class="text"></div>
-      <div class="created"></div>
-    </li>
-  </ul>
+    <div id="SSCommentHeader">
+        <span class="count">1 comment to</span>:
+    </div>
+    
+    <div id="SSCommentShift">
+        <img class="spaceIcon"></img>
+        <div class="user">
+            <div class="gravatarContainer">
+                <img class="rounded-image gravatar" width="16" height="16"></img>
+            </div>
+            <div class="userName"></div>
+        </div>
+        <div class="summary"></div>
+        <div class="createdStr"></div>
+    </div>
 
-  <form>
-    <label>Leave a comment</label>
-    <textarea id="SSCommentText" outlet="SSCommentPane"></textarea>
+    <ul id="SSCommentsListView"
+        class="SSListView"
+        uiclass="SSListView"
+        outlet="SSCommentPane">
+        <li class="SSCell SSCommentsListViewCell"
+            uiclass="SSCommentsListViewCell"
+            options="{
+              properties: ['userName', 'text', 'gravatar', 'createdStr']
+            }">
+            <div class="text"></div>
+            <div><span class="index"></span>.</div>
+            <div class="user">
+                <div class="gravatarContainer">
+                    <img class="rounded-image gravatar" width="16" height="16"></img>
+                </div>
+                <div class="userName"></div>
+            </div>
+            <div class="createdStr"></div>
+        </li>
+    </ul>
 
-    <label>Notify me when other people comment on this thread</label>
-    <input id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
-
-    <input id="SSCloseComments" outlet="SSCommentPane" type="button" value="Close"></input>
-    <input id="SSPostComment" outlet="SSCommentPane" type="submit" value="Submit"></input>
-  </form>
+    <div id="CommentPaneForm">
+        <label id="SSCommentPrompt">Hey <span class="userName">guest</span>, post a comment:</label>
+        <div>
+            <textarea id="SSCommentText" outlet="SSCommentPane"></textarea>
+        </div>
+        <div>
+            <input id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
+            <label id="SSCommentNotify">Inform me of new comments</label>
+            <button id="SSCloseComments" outlet="SSCommentPane">Cancel</button>
+            <button id="SSPostComment" outlet="SSCommentPane">Post Comment</button>
+        </div>
+    </div>
 
 </div>

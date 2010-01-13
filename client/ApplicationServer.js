@@ -145,7 +145,8 @@ var ApplicationServer = new Class({
    */
   updateCache: function(docs, name)
   {
-    var cache = this.cache(), name = (name) ? name : 'global';
+    var cache = this.cache();
+    name = (name) ? name : 'global';
     if(!cache[name]) cache[name] = {};
     if($type(docs) != 'array') docs = $splat(docs);
     docs.each(this.setDocument.partial(this, name));
@@ -522,7 +523,7 @@ var ApplicationServer = new Class({
     p.op(function(value) {
       if(this.noErr(value))
       {
-        var rsrcSpec = {resource:'shift', method:'create'};
+        var rsrcSpec = {resource:resource, method:'create'};
         this.updateCache(value, (options && options.local));
         this.notifyWatchers(rsrcSpec, value);
         return value;
@@ -703,6 +704,26 @@ var ApplicationServer = new Class({
     }.bind(this));
     return p;
   },
+
+  /*
+    Function: getUrl
+      Simple function for getting sending a GET request for a url.
+
+    Parameters:
+      url - the url.
+      data - any url parameters.
+
+    Returns:
+      A promise.
+  */
+  getUrl: function(url, data)
+  {
+    return new Request({
+      method: "get",
+      url: String.urlJoin(this.server(), url),
+      data: data
+    });
+  }.asPromise(),
 
   /*
     Function: confirm

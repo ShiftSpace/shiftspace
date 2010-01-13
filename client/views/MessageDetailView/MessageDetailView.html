@@ -1,0 +1,57 @@
+<div id="MessageDetailView"
+     class="SSSubView"
+     uiclass="MessageDetailView"
+     options="{
+       delegate:'SSConsoleWindow'
+     }">
+
+    <div>
+        <div class="header">
+            <div>
+                <label>Sender:</label>
+                <span class="userName"></span>
+                <span class="createdStr"></span>
+            </div>
+
+            <div>
+                <label>Title:</label>
+                <span class="title"></span>
+            </div>
+        </div>
+
+        <div id="MessageBodyMultiView"
+             class="body SSMultiView"
+             uiclass="SSMultiView"
+             outlet="MessageDetailView">
+
+            <div id="InviteSubView" class="SSSubView SSActive">
+                <div class="text"></div>
+                <button id="MDVJoinGroup" outlet="MessageDetailView">Join</button>
+                <button id="MDVGroupDetails" outlet="MessageDetailView">Details</button>
+            </div>
+
+            <div id="BrokenShiftSubView" class="SSSubView">
+                <div class="text"></div>
+            </div>
+
+            <div id="CommentSubView" class="SSSubView">
+                <div class="text"></div>
+            </div>
+
+            <div id="FollowSubView" class="SSSubView">
+                <div class="text"></div>
+            </div>
+
+        </div>
+        
+        <div class="footer">
+            <div>
+                <button class="previous">Previous</button>
+            </div>
+            <div>
+                <button class="next">Next</button>
+            </div>            
+        </div>
+    </div>
+
+</div>

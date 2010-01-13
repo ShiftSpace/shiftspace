@@ -11,7 +11,7 @@
 */
 var SSPublishPane = new Class({
 
-  Extends: SSFramedView,
+  Extends: SSView,
   name: "SSPublishPane",
 
   defaults: function() {
@@ -24,6 +24,7 @@ var SSPublishPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
     SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
     SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
@@ -31,6 +32,30 @@ var SSPublishPane = new Class({
   },
   
   
+  willHide: function()
+  {
+    var lv = this.currentListView();
+    if(lv)
+    {
+      lv.uncheckAll(true);
+    }
+  },
+  
+
+  'open': function()
+  {
+    this.delegate().short();
+    this.delegate().show();
+    this.multiView().showViewByName(this.name);
+  },
+
+
+  'close': function()
+  {
+    this.delegate().hide();
+  },
+
+
   onShiftListViewShow: function(evt)
   {
     var listView = evt.listView;
@@ -38,7 +63,7 @@ var SSPublishPane = new Class({
     {
       this.setCurrentListView(listView);
       this.update();
-      this.show();
+      this['open']();
     }
   },
 
@@ -48,7 +73,8 @@ var SSPublishPane = new Class({
     var listView = evt.listView;
     if(listView == this.currentListView())
     {
-      this.hide();
+      this['close']();
+      this.setCurrentListView(null);
     }
   },
   
@@ -73,7 +99,7 @@ var SSPublishPane = new Class({
   
   onShiftSelect: function(evt)
   {
-    if(!this.isVisible()) this.show();
+    if(!this.isVisible()) this['open']();
     this.setCurrentListView(evt.listView);
     this.update();
   },
@@ -82,7 +108,7 @@ var SSPublishPane = new Class({
   onShiftDeselect: function(evt)
   {
     this.setCurrentListView(evt.listView);
-    if(this.count() == 0) this.hide();
+    if(this.count() == 0) this['close']();
     this.update();
   },
   
@@ -106,13 +132,13 @@ var SSPublishPane = new Class({
     
     if(selectedShifts && selectedShifts.length > 0)
     {
-      var len = selectedShifts.length;
-      var str = (len != 1) ? "these shifts" : "this shift";
+      var len = selectedShifts.length,
+          str = (len != 1) ? "these shifts" : "this shift";
       if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
       var indices = this.currentListView().checkedItemIndices();
       this.currentListView().uncheck(indices);
       var p = new Promise(selectedShifts.map(SSDeleteShift));
-      p.op(this.hide.bind(this));
+      p.op(this['close'].bind(this));
       p.realize();
     }
   },
@@ -121,6 +147,15 @@ var SSPublishPane = new Class({
   saveShifts: function(evt)
   {
     evt = new Event(evt);
+    var selectedShifts = this.currentListView().checkedItemIds();
+
+    if(selectedShifts && selectedShifts.length > 0)
+    {
+      SSLog(selectedShifts, SSLogForce);
+      selectedShifts.each(function(id) {
+        SSPostNotification("saveShift", id);
+      }.bind(this));
+    }
   },
 
 
@@ -145,16 +180,16 @@ var SSPublishPane = new Class({
 
     if(selectedShifts && selectedShifts.length > 0)
     {
-      var status = $A(this.StatusForm.ShiftStatusRadio).filter(function(radio) {
+      var status = this.StatusForm.getElements("input[type=radio]").filter(function(radio) {
         return $(radio).getProperty("checked");
       }.bind(this));
 
       if(status.length > 0)
       {
-        var status = status[0].getProperty("value");
+        status = status[0].getProperty("value");
         if(status == "public")
         {
-          publishData.private = false;
+          publishData['private'] = false;
         }
         else if(status == "private")
         {
@@ -188,18 +223,14 @@ var SSPublishPane = new Class({
   {
     this.DeleteShift.addEvent('click', this.deleteShifts.bind(this));
     this.SaveShift.addEvent('click', this.saveShifts.bind(this));
-    this.PublishShift.addEvent('click', this.publishShifts.bind(this));
+    this.ChooseVisibility.addEvent('click', this.publishShifts.bind(this));
 
-    this.ShiftPrivateStatusRadio.addEvent('click', function(evt){ 
+    this.ShiftPrivateStatusRadio.addEvent('click', function(evt){
       evt = new Event(evt);
       if(this.SSPPVisiblePublic.hasClass('SSPPPermit')){
         this.SSPPVisiblePublic.removeClass('SSPPPermit');
       }
       this.SSPPVisiblePrivate.addClass('SSPPPermit');
-      SSLog('clicked public status!',SSLogForce);
-      
-      //trying something:
-	    
     }.bind(this));
 
     this.ShiftPublicStatusRadio.addEvent('click', function(evt) {
@@ -208,10 +239,6 @@ var SSPublishPane = new Class({
         this.SSPPVisiblePrivate.removeClass('SSPPPermit');
       }
       this.SSPPVisiblePublic.addClass('SSPPPermit');
-      SSLog('clicked private status!', SSLogForce);
-      
-      //trying something:
-	    
     }.bind(this));
 
     if(this.ShiftPermalink) this.ShiftPermalink.addEvent("click", this.showProxy.bind(this));
@@ -266,34 +293,11 @@ var SSPublishPane = new Class({
     window.open(ShiftSpace.info().server.urlJoin("proxy", selectedShifts[0]));
   },
   
-  /* SSFramedView Stuff ============================ */
-  
-  awake: function() {},
-  
-  
-  onInterfaceLoad: function(ui)
+
+  awake: function()
   {
-    this.parent(ui);
-    // TODO: Not super intuitive need someway to specify this automatically - David
-    this.element.setProperty('id', 'SSPublishPane');
-    this.element.addClass("SSDisplayNone");
-  }.asPromise(),
-  
-  
-  onContextActivate: function(context)
-  {
-    if(context == this.element.contentWindow)
-    {
-      this.mapOutletsToThis();
-      this.attachEvents();
-    }
-  },
-  
-  
-  buildInterface: function()
-  {
-    this.parent();
-    SSPostNotification('onPublishPaneLoad', this);
-    this.setIsLoaded(true);
+    this.mapOutletsToThis();
+    this.attachEvents();
   }
+
 });

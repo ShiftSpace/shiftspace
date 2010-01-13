@@ -29,6 +29,7 @@ var LoginTabView = new Class({
 
   afterAwake: function()
   {
+    this.parent();
     if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled()) this.handleLogin();
   },
   
@@ -134,7 +135,7 @@ var LoginTabView = new Class({
 
   signUpFormSubmitCallback: function(userData)
   {
-    this.MainTabView.selectTabByName('AllShiftsView');
+    //SSPostNotification("onSignUp");
   }.asPromise(),
   
 

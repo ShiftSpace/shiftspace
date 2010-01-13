@@ -11,6 +11,7 @@ var InboxPane = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     SSAddObserver(this, "onUserLogin", this.onUserLogin.bind(this));
     SSAddObserver(this, "onUserJoin", this.onUserLogin.bind(this));
     SSAddObserver(this, "onUserLogout", this.onUserLogout.bind(this));
@@ -20,6 +21,35 @@ var InboxPane = new Class({
   awake: function(args)
   {
     this.mapOutletsToThis();
+    this.attachEvents();
+  },
+
+
+  hide: function()
+  {
+    this.parent();
+    SSPostNotification("onHideMessage");
+  },
+
+
+  attachEvents: function()
+  {
+    this.MessagesListView.addEvent("onRowClick", this.handleRowClick.bind(this));
+  },
+
+
+  handleRowClick: function(evt)
+  {
+    if(!evt.handled)
+    {
+      if(!evt.data.read)
+      {
+        var p = SSMarkMessageRead(evt.data._id);
+        p.realize();
+        SSPostNotification("onMessageRead");
+      }
+      SSPostNotification("onShowMessage", evt.data);
+    }
   },
 
 

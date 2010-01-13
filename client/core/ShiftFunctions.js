@@ -193,19 +193,31 @@ Parameters:
 var SSEditShift = function(space, shiftId)
 {
   var shift = SSGetShift(shiftId);
-  if(SSUserCanEditShift(shift) || SSIsNewShift(shiftId))
+  if(SSUserCanEditShift(shiftId) || SSIsNewShift(shiftId))
   {
     var content = shift.content;
     SSFocusSpace(space, (content && content.position) || null);
     SSShowShift(space, shiftId);
+
     space.editShift(shiftId);
     space.onShiftEdit(shiftId);
+
     SSFocusShift(space, shiftId);
     SSPostNotification('onShiftEdit', shiftId);
   }
   else
   {
     window.alert("You do not have permission to edit this shift.");
+  }
+}.asPromise();
+
+
+var SSLeaveEditShift = function(space, shiftId)
+{
+  var shift = SSGetShift(shiftId);
+  if(!Promise.isPromise(shift) && space.hasShift(shiftId))
+  {
+    SSShowShift(space, shiftId);
   }
 }.asPromise();
 
@@ -230,12 +242,17 @@ function SSSaveNewShift(shift)
     content: shift
   };
 
+  // remove _id and space from shift
+  // TODO: might want to refactor this to be a little less hacky - David
+  var oldId = shift._id;
+  delete shift._id;
+  delete shift.space;
+
   var p = SSApp.create('shift', params);
   $if(SSApp.noErr(p),
       function(noErr) {
         var newShift = p.value(),
             newId = newShift._id,
-            oldId = shift._id,
             instance = space.getShift(oldId);
         newShift.created = 'Just posted';
 
@@ -273,20 +290,27 @@ function SSSaveShift(shift)
     return;
   }
 
-  var space = SSSpaceForName(shift.space.name);
-  var params = {
-    summary: shift.summary,
-    content: shift,
-    space: {name: shift.space.name, version: space.attributes().version}
-  };
+  var space = SSSpaceForName(shift.space.name),
+      params = {
+        summary: shift.summary,
+        content: shift,
+        space: {name: shift.space.name, version: space.attributes().version}
+      },
+      id = shift._id;
+  
+  delete shift._id;
+  delete shift.space;
 
-  var p = SSApp.update('shift', shift._id, params);
+  var p = SSApp.update('shift', id, params);
   $if(SSApp.noErr(p),
       function() {
         SSSpaceForName(shift.space.name).onShiftSave(p.get('id'));
       },
       function() {
       });
+}
+function SSSaveShiftById(shiftId)
+{
 }
 
 /*
@@ -450,7 +474,7 @@ function SSFavoriteShift(id)
   return SSApp.post({
     resource: "shift",
     id: id,
-    action: "favorite",
+    action: "favorite"
   });
 }
 
@@ -459,7 +483,7 @@ function SSUnfavoriteShift(id)
   return SSApp.post({
     resource: "shift",
     id: id,
-    action: "unfavorite",
+    action: "unfavorite"
   });
 }
 

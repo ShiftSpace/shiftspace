@@ -14,7 +14,6 @@ var SSListViewError = SSException;
 
 SSListViewError.OutOfBounds = new Class({
   Extends: SSListViewError,
-  Implements: SSExceptionPrinter,
   name:"SSListViewError.OutOfBounds"
 });
 
@@ -50,6 +49,7 @@ var SSListView = new Class({
     this.__cellBeingEdited = -1;
     this.__cellStates = {};
     if(this.options.filter) this.setFilter(this.options.filter);
+    if(this.options.filterable) this.setFilterable(this.options.filterable);
     if(this.options.table)
     {
       SSLog('Use table', SSLogForce);
@@ -65,6 +65,32 @@ var SSListView = new Class({
     this.initSortables();
     this.attachEvents();
   },
+
+
+  filterable: function()
+  {
+    return this.__filterable;
+  },
+  
+  
+  setFilterable: function(filterable)
+  {
+    this.__filterable = filterable;
+    if(filterable)
+    {
+      var toggleFilter = $(this.element.getDocument().createElement("div"));
+      this.element.grab(toggleFilter);
+      toggleFilter.addClass("SSListViewFilterToggle");
+      toggleFilter.addEvent("click", this.toggleFilter.bind(this));
+    }
+  },
+
+
+  toggleFilter: function()
+  {
+    SSPostNotification("onToggleFilter", {listView:this});
+  },
+
   
   /*
     Function: setState
@@ -150,7 +176,9 @@ var SSListView = new Class({
   },
   
   /*
-  
+    Function: __setTable__
+      *private*
+      Private setter for table property.  
   */
   __setTable__: function(table)
   {
@@ -265,7 +293,7 @@ var SSListView = new Class({
       Returns true if the filter is set. 
       
     Parameters: 
-      data - a row in a javascript array. //NOTE:The name data is a bit ambigious. rowData maybe? -Jusitn
+      data - a row in a javascript array. //NOTE:The name data is a bit ambigious. rowData maybe? -Justin
         
     Returns:
       A boolean value
@@ -429,19 +457,27 @@ var SSListView = new Class({
         var cellNode = (hit.get('tag') == 'li' && hit) || hit.getParent('li');
 
         this.cell().lock($(cellNode));
-        this.cell().eventDispatch(event, type);
+        var handled =this.cell().eventDispatch(event, type);
         this.cell().unlock();
 
         if(type == 'click')
         {
-          this.fireEvent('onRowClick', {listView:this, index:this.indexOfCellNode(cellNode)});
+          var idx = this.indexOfCellNode(cellNode),
+              evt = {
+                listView: this,
+                index: idx,
+                data: this.dataForIndex(idx),
+                handled: handled
+              };
+          
+          this.fireEvent('onRowClick', evt);
+          if(!handled) this.onRowClick(evt);
         }
       break;
       
       default:
       break;
     }
-    //event.stop();
   },
 
   /*
@@ -497,6 +533,19 @@ var SSListView = new Class({
     return this.__cell;
   },
 
+
+  filterMode: function()
+  {
+    return this.__filterMode;
+  },
+  
+  
+  setFilterMode: function(filterMode)
+  {
+    this.__filterMode = filterMode;
+  },
+
+
   /*
     Function: setData
       Sets the data property of the class. 
@@ -525,7 +574,7 @@ var SSListView = new Class({
   */
   data: function()
   {
-    if(this.table())
+    if(this.table() && !this.filterMode())
     {
       return this.table().data();
     }
@@ -1190,8 +1239,8 @@ var SSListView = new Class({
    */
   newCellForItemData: function(itemData, index)
   {
-    var filtered = this.filter(itemData, index);
-    var newCell = this.cell().cloneWithData(itemData);
+    var filtered = this.filter(itemData, index),
+        newCell = this.cell().cloneWithData(itemData, index);
     if(filtered) newCell.addClass('SSDisplayNone');
     return newCell;
   },
@@ -1239,7 +1288,10 @@ var SSListView = new Class({
   __reloadData__: function(p, startIndex)
   {
     var theData = this.data(), len = theData.length, cell = this.cell();
-    if(!$type(startIndex)) this.element.empty();
+    if(!$type(startIndex))
+    {
+      this.element.getElements("li").destroy();
+    }
     if(len > 0 && cell)
     {
       var perPage = (this.pageControl() && this.pageControl().perPage()) || len;
@@ -1248,8 +1300,8 @@ var SSListView = new Class({
         var modifer = (this.options.cellModifier && this.options.cellModifier.x) || 0;
         this.element.setStyle('width', (this.options.cellSize.x*perPage)+modifer);
       }
-      theData.slice(startIndex || 0, len).each(function(data) {
-        var cellNode = this.newCellForItemData(data);
+      theData.slice(startIndex || 0, len).each(function(data, i) {
+        var cellNode = this.newCellForItemData(data, i);
         this.element.grab(cellNode);
         var restore = this.__cellStates[data._id];
         if(restore)
@@ -1379,20 +1431,20 @@ var SSListView = new Class({
   },
 
   
-  onRowClick: function(index)
+  onRowClick: function(evt)
   {
     if(this.options.allowSelection)
     {
-      var cellNode = this.cellNodeForIndex(index);
+      var cellNode = this.cellNodeForIndex(evt.index);
       if(!cellNode.hasClass('selected')) 
       {
-        this.selectRow(index);
-        this.onRowSelect(index);
+        this.selectRow(evt.index);
+        this.onRowSelect(evt.index);
       }
       else
       {
-        this.deselectRow(index);
-        this.onRowDeselect(index);
+        this.deselectRow(evt.index);
+        this.onRowDeselect(evt.index);
       }
     }
   },
@@ -1458,7 +1510,7 @@ var SSListView = new Class({
     this.parent(value);
     if(value && this.element && this.cell() && !this.isVisible())
     {
-      this.element.empty();
+      this.element.getElements("li").destroy();
     }
   },
 

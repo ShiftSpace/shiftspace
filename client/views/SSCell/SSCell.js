@@ -14,30 +14,13 @@
 
 var SSCellError = SSException;
 
-SSCellError.NoSuchProperty = new Class({
-  Extends: SSCellError,
-  Implements: SSExceptionPrinter,
-  name:"SSCellError.NoSuchProperty"
-});
-
-SSCellError.NoLock = new Class({
-  Extends: SSCellError,
-  Implements: SSExceptionPrinter,
-  name:"SSCellError.NoLock"
-});
-
-// DELETE
-SSCellError.MissingAccessor = new Class({
-  Extends: SSCellError,
-  Implements: SSExceptionPrinter,
-  name:"SSCellError.MissingAccessor"
-});
-
-SSCellError.NoSuchTarget = new Class({
-  Extends: SSCellError,
-  Implements: SSExceptionPrinter,
-  name:"SSCellError.NoSuchTarget"
-});
+SSError(SSCellError, SSCellError, [
+  "NoSuchProperty",
+  "NoLock",
+  "MissingAccessor",
+  "NoSuchTarget",
+  "NoMethodForAction"
+]);
 
 /*
   Class: SSCell
@@ -117,12 +100,12 @@ var SSCell = new Class({
   {
     event = new Event(event);
     var target = $(event.target), action = this.actionForNode(target);
-    if(action) this.runAction(action);
-    if(this.delegate() && this.delegate().onCellClick)
+    if(action)
     {
-      var cellNode = (target.get('tag') == 'li') ? target : target.getParent('li');
-      if(cellNode) this.delegate().onCellClick(cellNode);
+      this.runAction(action, event, target);
+      return true;
     }
+    return false;
   },
   
   /*
@@ -133,10 +116,10 @@ var SSCell = new Class({
       action - an action JSON object
       event - a custom event type.
    */
-  runAction: function(action, event)
+  runAction: function(action, event, node)
   {
-    var target = this.getBinding(action.target);
-    var method = (target && target[action.method] && target[action.method].bind(target)) || 
+    var target = this.getBinding(action.target),
+        method = (target && target[action.method] && target[action.method].bind(target)) || 
                  (action.target == 'SSProxiedTarget' && this.forwardToProxy.bind(this, [action.method])) ||
                  null;
                   
@@ -145,7 +128,13 @@ var SSCell = new Class({
       throw (new SSCellError.NoSuchTarget(new Error(), "target " + target + " does not exist."));
     }
     
-    method(this, event);
+    method(this, {
+      action: action,
+      listView: this.delegate(),
+      target: node,
+      data: this.delegate().dataForCellNode(this.lockedElement()),
+      event: event
+    });
   },
   
   /*
@@ -161,6 +150,7 @@ var SSCell = new Class({
   {
     // TODO: allow getBinding to access simple properties - David
     if(target == 'self') return this;
+    if(target == 'delegate') return this.delegate();
     
     var parts = target.split('.');
     var base = ShiftSpaceNameTable[parts.shift()];
@@ -198,6 +188,14 @@ var SSCell = new Class({
     }
     return null;
   },
+
+
+  validateActions: function(actions)
+  {
+    return actions.every(function(action) {
+      return action.method != null;
+    });
+  },
   
   /*
     Function: setActions
@@ -209,6 +207,7 @@ var SSCell = new Class({
    */
   setActions: function(actions)
   {
+    if(actions && !this.validateActions(actions)) throw new SSCellError.NoMethodForAction(new Error(), "No method for action");
     this.__actions = actions;
   },
   
@@ -341,7 +340,7 @@ var SSCell = new Class({
     See Also:
       <prepareClone>
   */
-  clone: function()
+  clone: function(index)
   {
     var clone = this.__modelClone.clone(true);
     if(clone.getElement('*[uiclass]')) Sandalphon.activate(clone);
@@ -363,7 +362,7 @@ var SSCell = new Class({
     See Also:
       <setData>, <clone>
   */
-  cloneWithData: function(data)
+  cloneWithData: function(data, index)
   {
     var clone = this.clone();
     this.lock(clone);

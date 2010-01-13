@@ -1,20 +1,18 @@
 // ==Builder==
 // @uiclass
 // @package           ShiftSpaceCoreUI
-// @dependencies      SSFramedView
+// @dependencies      SSView
 // ==/Builder==
 
 var SSCommentPane = new Class({
   
-  Extends: SSFramedView,
+  Extends: SSView,
   name: 'SSCommentPane',
 
   initialize: function(el, options)
   {
     this.parent(el, options);
-    this.setIsOpen(false);
-    this.setIsVisible(false);
-
+    
     SSAddObserver(this, "showComments", this['open'].bind(this));
     SSAddObserver(this, "hideComments", this['close'].bind(this));
   },
@@ -25,17 +23,21 @@ var SSCommentPane = new Class({
     this.comments = new SSTable("Comments", {
       resource: {read:'shift/'+shiftId+'/comments'},
       watches: [{
-                  events: [{resource:"event", action:"create"},
-                           {resource:"event", action:"delete"}],
+                  events: [{resource:"shift", action:"comment"},
+                           {resource:"comment", method:"delete"}],
                   handlers: [SSTable.dirtyTheViews]
                 }]
     });
   },
 
 
-  cleanupResource: function()
+  cleanupTable: function()
   {
-    this.comments.dispose();
+    if(this.comments)
+    {
+      this.comments.dispose();
+      this.comments = null;
+    }
   },
   
 
@@ -51,12 +53,19 @@ var SSCommentPane = new Class({
   },
   
   
-  'open': function(shiftId)
+  'open': function(shift)
   {
-    this.initTable(shiftId);
+    this.cleanupTable();
+    this.initTable(shift._id);
     SSTableForName("Comments").addView(this.SSCommentsListView);
-    this.show();
-    this.setCurrentShiftId(shiftId);
+    
+    this.delegate().tall();
+    this.delegate().show();
+    this.multiView().showViewByName(this.name);
+    this.setCurrentShiftId(shift._id);
+
+    this.update(shift);
+
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
   },
@@ -64,55 +73,14 @@ var SSCommentPane = new Class({
 
   'close': function()
   {
-    this.hide();
-    this.cleanupResource();
-    this.element.removeClass("SSCommentPaneOpen");
-    this.element.addClass("SSCommentPaneClosed");
+    this.delegate().hide();
   },
-  
-  
-  setIsVisible: function(val)
-  {
-    this.__visible = val;
-  },
-  
-  
-  isVisible: function()
-  {
-    return this.__visible;
-  },
-  
-  
-  setIsOpen: function(val)
-  {
-    this.__isOpen = val;
-  },
-  
-  
-  isOpen: function()
-  {
-    return this.__isOpen;
-  },
-  
-  
+
+
   attachEvents: function()
   {
-    var context = this.contentWindow();
-    var doc = this.contentDocument();
-
-    this.SSCloseComments.addEvent("click", this['close'].bind(this));
     this.SSPostComment.addEvent("click", this.postComment.bind(this));
-
     this.SSCommentsListView.addEvent("onReloadData", this.refresh.bind(this));
-  },
-
-
-  refresh: function()
-  {
-    var size = this.contentDocument().body.getSize();
-    this.element.setStyles({
-      hieght: size.y
-    });
   },
 
 
@@ -120,42 +88,44 @@ var SSCommentPane = new Class({
   {
     var shiftId = this.currentShiftId(), text = this.SSCommentText.getProperty("value");
     var p = SSPostComment(shiftId, text);
-    p.realize();
+    this.update(p);
   },
-  
-  
-  onInterfaceLoad: function(ui)
+
+
+  update: function(shift)
   {
-    this.parent(ui);
-    this.element.setProperty('id', 'SSCommentPane');
-    this.element.addClass("SSCommentPaneClosed");
-  }.asPromise(),
-  
-  
-  awake: function(context)
-  {
-  },
-  
-  
-  onContextActivate: function(context)
-  {
-    if(context == this.element.contentWindow)
+    this.element.getElement("textarea").set("value", "");
+    this.SSCommentsListView.refresh(true);
+
+    if(ShiftSpace.User.isLoggedIn())
     {
-      this.mapOutletsToThis();
+      this.element.getElement("#CommentPaneForm").removeClass("SSDisplayNone");
+      this.element.getElement("#CommentPaneForm .userName").set("text", ShiftSpace.User.getUserName());
     }
-  },
-  
-  
-  buildInterface: function()
-  {
-    this.parent();
-    this.attachEvents();
-    SSPostNotification('onCommentsLoad', this);
-    this.setIsLoaded(true);
-  },
+    else
+    {
+      this.element.getElement("#CommentPaneForm").addClass("SSDisplayNone");
+    }
+    
+    if(shift)
+    {
+      var attrsp = SSGetSpaceAttributes(shift.space.name);
+      (function(attrs) {
+        this.element.getElement("#SSCommentShift .spaceIcon").set("src", attrs.icon);
+      }.asPromise().bind(this))(attrsp);
+      SSTemplate(this.element.getElement("#SSCommentShift"), shift);
+    }
+  }.asPromise(),
   
   
   localizationChanged: function()
   {
+  },
+
+
+  awake: function()
+  {
+    this.mapOutletsToThis();
+    this.attachEvents();
   }
 });

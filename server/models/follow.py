@@ -35,6 +35,18 @@ class Follow(SSDocument):
          }"
         )
 
+    following_count = View(
+        "follow",
+        "function(doc) {              \
+           if(doc.type == 'follow') { \
+             emit(doc.follower, 1);   \
+           }                          \
+         }",
+        "function(keys, values, rereduce) { \
+           return sum(values);              \
+        }"
+        )
+
     following_by_created = View(
         "follow",
         "function(doc) {                                      \
@@ -50,7 +62,19 @@ class Follow(SSDocument):
            if(doc.type == 'follow') {         \
              emit(doc.followee, doc.follower) \
            }                                  \
-         }"                           
+         }"
+        )
+
+    followers_count = View(
+        "follow",
+        "function(doc) {              \
+           if(doc.type == 'follow') { \
+             emit(doc.followee, 1)    \
+           }                          \
+         }",
+        "function(keys, values, rereduce) { \
+           return sum(values);              \
+        }"
         )
 
     followers_by_created = View(
@@ -67,37 +91,42 @@ class Follow(SSDocument):
     # ========================================
 
     @classmethod
-    def makeId(cls, follower, followee):
-        return "follow:%s:%s" % (follower, followee)
+    def makeId(cls, followerId, followeeId):
+        return "follow:%s:%s" % (followerId, followeeId)
 
     @classmethod
     def create(cls, follower, followee):
+        from server.models.message import Message
         existing = Follow.read(follower, followee)
         if existing:
             return existing
         newFollow = Follow(
-            follower = follower,
-            followee = followee,
+            follower = follower.id,
+            followee = followee.id,
             )
-        newFollow.id = Follow.makeId(follower, followee)
+        newFollow.id = Follow.makeId(follower.id, followee.id)
         newFollow.store(core.connect())
+        json = {
+            "fromId": "shiftspace",
+            "toId": followee.id,
+            "title": "%s has started following your shifts!" % (follower.userName),
+            "text": "%s has started following your shifts!" % (follower.userName),
+            "meta": "follow",
+            "content": {
+                "followerId": follower.id
+                }
+            }
+        Message.create(**json)
         return newFollow
 
     @classmethod
     def read(cls, follower, followee):
-        return Follow.load(core.connect(), Follow.makeId(follower, followee))
+        return Follow.load(core.connect(), Follow.makeId(follower.id, followee.id))
 
     # ========================================
     # Instance Methods
     # ========================================
 
     def delete(self):
+        db = core.connect()
         del db[Follow.makeId(self.follower, self.followee)]
-        
-
-                    
-        
-
-    
-        
-        

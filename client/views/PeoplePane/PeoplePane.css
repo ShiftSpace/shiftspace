@@ -1,4 +1,4 @@
-ul#FollowingListView, ul#FollowersListView
+li.PeopleListViewCell .userName
 {
-   list-style: none
+   font-weight: bold;
 }

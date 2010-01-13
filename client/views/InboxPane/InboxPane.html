@@ -3,82 +3,80 @@
      uiclass="InboxPane"
      outlet="SSConsole">
 
-
-  <div class="SSTabViewSubTabStyle">
-     
-  <!-- MessageOptions Start -->
-  <div id="MessageOptions" class="SSControlView">
-    <div>Messages to show:</div>
-    
-    <div>
-      <input type="checkbox" checked="true"></input>
-      <label>Direct messages</label>
-    </div>
-    
-    <div>
-      <input type="checkbox"></input>
-      <label>Commented shifts</label>
-    </div>
-    
-    <div>
-      <input type="checkbox"></input>
-      <label>Broken shifts</label>
-    </div>
-    
-    <div>
-      <input type="checkbox"></input>
-      <label>Follow Notices</label>
-    </div>
-    
-    <div>
-      <input type="checkbox"></input>
-      <label>System alerts</label>
-    </div>
-    
-    <div>
-      <input type="checkbox"></input>
-      <label>ShiftSpace news</label>
-    </div>
-    
-    <div>
-      <input type="checkbox"></input>
-      <label>Group invites</label>
-    </div>
-    
-  </div>
-  <!-- MessageOptions End -->
-  
-  <!-- MessagesListView Start -->
-  <ul id="MessagesListView"
-      class="SSListView ShiftListView SSContentView"
-      uiclass="ShiftListView"
-      outlet="InboxPane">
-
-    <li class="SSCell ShiftListViewCell" 
-	uiclass="ShiftListViewCell"
-	options="{properties:['read', 'gravatar', 'userName', 'text','modifiedStr']}">
-    
-    <div class="messageMeta">
-        <div class="selected">
-            <input type="checkbox"/>
+    <!-- MessageOptions Start -->
+    <div id="MessageOptions">
+        <div>Messages to show:</div>
+        
+        <div>
+            <input type="checkbox" checked="true"></input>
+            <label>Direct messages</label>
+        </div>
+        
+        <div>
+            <input type="checkbox"></input>
+            <label>Commented shifts</label>
+        </div>
+        
+        <div>
+            <input type="checkbox"></input>
+            <label>Broken shifts</label>
+        </div>
+        
+        <div>
+            <input type="checkbox"></input>
+            <label>Follow Notices</label>
+        </div>
+        
+        <div>
+            <input type="checkbox"></input>
+            <label>System alerts</label>
+        </div>
+        
+        <div>
+            <input type="checkbox"></input>
+            <label>ShiftSpace news</label>
+        </div>
+        
+        <div>
+            <input type="checkbox"></input>
+            <label>Group invites</label>
         </div>
         
     </div>
-      <div class="read"></div>
-    <div class="text"></div>
-    <div class="userDateMeta">
-        <div class="user">
-            <div class="gravatarContainer">
-                <img class="rounded-image gravatar" width="16" height="16"></img>
-            </div>
-            <div class="userName"></div>
-        </div>
-        <div class="date"></div>
-    </div>
-    </li>
+    <!-- MessageOptions End -->
+    
+    <!-- MessagesListView Start -->
+    <div id="MessagesListViewContainer">
+        <ul id="MessagesListView"
+            class="SSListView ShiftListView SSContentView"
+            uiclass="ShiftListView"
+            outlet="InboxPane">
 
-  </ul>
-  <!-- MessagesListView End -->
-  
-  </div>
+            <li class="SSCell ShiftListViewCell" 
+	        uiclass="ShiftListViewCell"
+	        options="{
+                  properties:['read', 'gravatar', 'userName', 'text', 'modifiedStr']
+                }">
+                <div class="messageMeta">
+                    <div class="selected">
+                        <input type="checkbox"></input>
+                    </div>
+                </div>
+                <div class="read"></div>
+                <div class="text"></div>
+                <div class="userDateMeta">
+                    <div class="user">
+                        <div class="gravatarContainer">
+                            <img class="rounded-image gravatar" width="16" height="16"></img>
+                        </div>
+                        <div class="userName"></div>
+                    </div>
+                    <div class="date"></div>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+    <!-- MessagesListView End -->
+    
 </div>

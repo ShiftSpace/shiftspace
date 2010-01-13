@@ -95,7 +95,7 @@ function SSRemoveObserver(object, name, sender)
     data - data to be sent to the observer.
     sender - the sender of the notification, must implement getId.
 */
-function SSPostNotification(name, data, sender)
+var SSPostNotification = function(name, data, sender)
 {
   var notificationName = (sender != null) ? (name+':'+sender.getId()) : name;
   var observers = SSGetObservers(notificationName);
@@ -117,7 +117,7 @@ function SSPostNotification(name, data, sender)
       }
     });
   }
-}
+}.asPromise();
 
 /*
   Function: SSAddToNotificationQueue

@@ -13,10 +13,6 @@ var ShiftListView = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      byHref: true,
-      byDomain: false,
-      byFollowing: false,
-      byGroups: false,
       scrollEvents: true
     });
   },
@@ -25,7 +21,9 @@ var ShiftListView = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
+
     SSAddObserver(this, 'onNewShiftSave', this.onCreate.bind(this));
+    SSAddObserver(this, 'onShiftShow', this.onShow.bind(this));
     SSAddObserver(this, 'onShiftHide', this.onHide.bind(this));
     SSAddObserver(this, 'onUserLogout', this.uncheckAll.bind(this));
   },
@@ -70,24 +68,33 @@ var ShiftListView = new Class({
   
   onCreate: function(id)
   {
+    if(!this.isVisible()) return;
     this.refresh();
-    if(this.isVisible())
-    {
-      var idx = this.find(function(x) { return x._id == id; });
-      this.cell().lock(this.cellNodeForIndex(idx));
-      this.cell().check();
-      this.cell().unlock();
-    }
+    var idx = this.find(function(x) { return x._id == id; });
+    this.cell().lock(this.cellNodeForIndex(idx));
+    this.cell().check();
+    this.cell().unlock();
   },
   
   
+  onShow: function(id)
+  {
+    if(!this.isVisible()) return;
+    var idx = this.find(function(x) { return x._id == id; });
+    if(idx != -1)
+    {
+      this.selectRow(idx);
+    }
+  },
+
+
   onHide: function(id)
   {
+    if(!this.isVisible()) return;
     var idx = this.find(function(x) { return x._id == id; });
     if(idx != -1)
     {
       this.deselectRow(idx);
-      this.uncheck($splat(idx));
     }
   },
   
@@ -110,23 +117,41 @@ var ShiftListView = new Class({
     }, this);
   },
   
+
+  onCheck: function(evt)
+  {
+    var id = evt.data._id;
+    if(SSUserCanEditShift(id))
+    {
+      SSEditShift(SSSpaceForShift(id), id);
+    }
+  },
+
   
-  uncheck: function(indices)
+  uncheck: function(indices, noEvent)
   {
     indices = $splat(indices);
     var cell = this.cell();
     indices.each(function(idx, i) {
       var cellNode = this.cellNodeForIndex(idx);
       cell.lock(cellNode);
-      cell.uncheck();
+      cell.uncheck(noEvent);
       cell.unlock();
     }, this);
   },
 
 
-  uncheckAll: function()
+  onUncheck: function(evt)
   {
-    this.uncheck(this.checkedItemIndices());
+    var id = evt.data._id;
+    SSLeaveEditShift(SSSpaceForShift(id), id);
+  },
+
+
+  uncheckAll: function(noEvent)
+  {
+    if(!this.isVisible()) return;
+    this.uncheck(this.checkedItemIndices(), noEvent);
   },
   
   
@@ -155,6 +180,7 @@ var ShiftListView = new Class({
   onReloadData: function()
   {
     // we need to wait until the styles for the rounded images are loaded
+    /*
     if(!__mainCssLoaded)
     {
       SSAddObserver(this, 'onMainCssLoad', function() {
@@ -165,5 +191,15 @@ var ShiftListView = new Class({
     {
       RoundedImage.init(".ShiftListView .ShiftListViewCell .gravatar", new Window(this.element.getWindow()), document);
     }
+    */
+  },
+
+
+  openShift: function(sender, evt)
+  {
+    var id = evt.data._id,
+        href = evt.data.href;
+    SSSetValue("__currentShift", {id: evt.data._id, href: href});
+    window.open(evt.data.href);
   }
 });

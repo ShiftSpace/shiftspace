@@ -5,8 +5,7 @@
 
 var TestCaseTestDivideByZeroException = new Class({
   Extends: SSException,
-  Implements: SSExceptionPrinter,
-  name: 'TestCaseTestDivideByZeroException',
+  name: 'TestCaseTestDivideByZeroException'
 });
 
 function TestCaseDivide(x, y)

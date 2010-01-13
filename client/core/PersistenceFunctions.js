@@ -53,4 +53,5 @@ function SSGetValue(key, defaultValue, callback)
   {
     return result;
   }
-}
+  return null;
+};

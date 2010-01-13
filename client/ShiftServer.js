@@ -47,7 +47,38 @@ var ShiftServer = new Class({
           events: [
             {resource:"shift", method:"create"},
             {resource:"shift", action:"favorite"},
+            {resource:"shift", action:"unfavorite"},
+            {resource:"shift", action:"comment"}
+          ],
+          handlers: [
+            function(shift) { SSApplication().setDocument(this.getName(), shift); }
+          ]
+        },
+        {
+          events: [
+            {resource:"shift", method:"create"},
+            {resource:"shift", method:"update"},
+            {resource:"shift", method:"delete"},
+            {resource:"shift", action:"comment"},
+            {resource:"shift", action:"publish"},
+            {resource:"shift", action:"unpublish"},
+            {resource:"shift", action:"favorite"},
             {resource:"shift", action:"unfavorite"}
+          ],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
+    new SSTable("DomainShifts", {
+      resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
+      watches: [
+        {
+          events: [
+            {resource:"shift", method:"create"},
+            {resource:"shift", action:"favorite"},
+            {resource:"shift", action:"unfavorite"},
+            {resource:"shift", action:"comment"}
           ],
           handlers: [
             function(shift) { SSApplication().setDocument(this.getName(), shift); }
@@ -87,6 +118,20 @@ var ShiftServer = new Class({
       ]
     });
 
+    new SSTable("GroupShifts", {
+      resource: {read:"shifts"},
+      watches: [
+        {
+          events: [
+            {resource:"shift", action:"favorite"},
+            {resource:"shift", action:"unfavorite"},
+            {resource:"shift", action:"comment"}
+          ],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
     new SSTable("MyShifts", {
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/shifts', update:'shift', 'delete':'shift'},
       watches: [
@@ -110,6 +155,14 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/favorites'},
       watches: [
         {
+          events: [{resource:"shift", action:"favorite"}],
+          handlers: [function(shift) { SSApplication().setDocument(this.getName(), shift); }]
+        },
+        {
+          events: [{resource:"shift", action:"unfavorite"}],
+          handlers: [function(shift) { SSApplication().deleteFromCache(shift._id, this.getName()); }]
+        },
+        {
           events: [{resource:"shift", action:"favorite"},
                    {resource:"shift", action:"unfavorite"}],
           handlers: [SSTable.dirtyTheViews]
@@ -131,8 +184,8 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/messages', 'delete':'event'},
       watches: [
         {
-          events: [{resource:"event", action:"read"},
-                   {resource:"event", action:"unread"}],
+          events: [{resource:"message", action:"read"},
+                   {resource:"message", action:"unread"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]
@@ -142,8 +195,16 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/following'},
       watches: [
         {
-          events: [{resource:"event", action:"follow"},
-                   {resource:"event", action:"unfollow"}],
+          events: [{resource:"user", action:"follow"}],
+          handlers: [function(user) { SSApplication().setDocument(this.getName(), user); }]
+        },
+        {
+          events: [{resource:"user", action:"unfollow"}],
+          handlers: [function(user) { SSApplication().deleteFromCache(user._id, this.getName()); }]
+        },
+        {
+          events: [{resource:"user", action:"follow"},
+                   {resource:"user", action:"unfollow"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]
@@ -153,8 +214,45 @@ var ShiftServer = new Class({
       resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/followers'},
       watches: [
         {
-          events: [{resource:"event", action:"follow"},
-                   {resource:"event", action:"unfollow"}],
+          events: [{resource:"user", action:"follow"},
+                   {resource:"user", action:"unfollow"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
+    new SSTable("Users", {
+      resource: {read:'users'},
+      watches: [
+        {
+          events: [{resource:"user", action:"follow"},
+                   {resource:"user", action:"unfollow"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
+    new SSTable("Groups", {
+      resource: {read:'groups'},
+      watches: [
+        {
+          events: [{resource:"group", method:"create"},
+                   {resource:"group", method:"update"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
+    });
+
+    new SSTable("MyGroups", {
+      resource: {read:'user/'+ShiftSpaceUser.getUserName()+'/groups'},
+      watches: [
+        {
+          events: [{resource:"group", method:"create"}],
+          handlers: [function(group) { SSApplication().setDocument(this.getName(), group); }]
+        },
+        {
+          events: [{resource:"group", method:"create"},
+                   {resource:"group", method:"update"}],
           handlers: [SSTable.dirtyTheViews]
         }
       ]
@@ -185,14 +283,18 @@ var ShiftServer = new Class({
   
   onLogout: function()
   {
-    // wipe out tables
+    // wipe out user specific tables
     ["FollowShifts",
+     "GroupShifts",
      "MyShifts",
      "MyComments",
      "Favorites",
      "Messages",
      "Following",
-     "Followers"].each(SSDeleteTable);
+     "Followers",
+     "Users",
+     "Groups",
+     "MyGroups"].each(SSDeleteTable);
   },
   
 

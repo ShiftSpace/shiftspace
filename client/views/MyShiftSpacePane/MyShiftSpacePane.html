@@ -17,15 +17,45 @@
 
       <!-- Start My Shifts List View -->
       <div class="SSTabPane">
+
+          <div id="SSFilter"
+               class="SSFilter"
+               uiclass="SSFilter"
+               options="{
+                 listView: 'MyShiftsListView'
+               }">
+              <label>Filter by:</label>
+              <select id="SSFilterBy"
+                      outlet="SSFilter">
+                  <option value="summary">Summary</option>
+                  <option value="href">URL</option>
+                  <option value="tag">Tag</option>
+                  <option value="spaceName">Space Name</option>
+              </select>
+              <input id="SSFilterQuery" type="text" outlet="SSFilter"></input>
+              <div class="toggle"></div>
+          </div>
+
         <ul id="MyShiftsListView"
             class="SSListView ShiftListView"
             uiclass="ShiftListView"
-            outlet="MyShiftSpacePane">
+            outlet="MyShiftSpacePane"
+            options="{
+              filterable: true
+            }">
 
           <li class="SSCell ShiftListViewCell"
               uiclass="ShiftListViewCell"
               options="{
-                properties: ['space', 'href', 'summary', 'modifiedStr', 'commentCount']
+                hideSameDomain: false,
+                properties: ['space', 'href', 'domain', 'summary', 'modifiedStr', 'commentCount'],
+                actions: [              
+                  {
+                    selector: '.domain a',
+                    target: 'AllShiftsView',
+                    method: 'openShift'
+                  }
+                ]
               }">
               <span class="selected">
                   <input type="checkbox"/>
@@ -34,7 +64,9 @@
               <div class="summaryContainer">
                   <span class="summary"></span>
                   /
-                  <span class="domain"></span>
+                  <span class="domain">
+                      <a></a>
+                  </span>
               </div>
               <div class="date"></div>
               <div class="comments"></div>

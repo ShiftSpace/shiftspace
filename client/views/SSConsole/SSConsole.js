@@ -1,13 +1,15 @@
 // ==Builder==
 // @uiclass
+// @framedView
 // @package           ShiftSpaceUI
+// @dependencies      SSFramedView
 // ==/Builder==
 
 var SSConsoleIsReadyNotification = 'SSConsoleIsReadyNotification';
 
 var SSConsole = new Class({
 
-  Extends: SSView,
+  Extends: SSFramedView,
   name: 'SSConsole',
   
 
@@ -15,29 +17,22 @@ var SSConsole = new Class({
   {
     this.parent(el, options);
 
-    var url = String.urlJoin('builds/compiledViews/', SSInfo().env, "SSConsoleMain");
-    var p = Sandalphon.load(url);
-    this.buildInterface(p);
-    
-    SSAddObserver(this, 'onUserLogin', this.handleLogin.bind(this));
-    SSAddObserver(this, 'onUserLogout', this.handleLogout.bind(this));
-    SSAddObserver(this, 'onUserJoin', this.handleLogin.bind(this));
+    SSAddObserver(this, 'onUserLogin', this.update.bind(this));
+    SSAddObserver(this, 'onUserLogout', this.update.bind(this));
+    SSAddObserver(this, 'onUserJoin', this.update.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
     SSAddObserver(this, 'onLocalizationChanged', this.localizationChanged.bind(this));
+    SSAddObserver(this, 'toggleConsole', this.toggle.bind(this));
   },
-  
-  
-  isVisible: function()
-  {
-    return !this.element.hasClass('SSDisplayNone');
-  },
-  
+
   
   show: function()
   {
+    if(this.isVisible()) return;
     this.parent();
+    this.update();
     SSPostNotification('onConsoleShow');
-  },
+  }.decorate(ssfv_ensure),
   
   
   hide: function()
@@ -47,23 +42,22 @@ var SSConsole = new Class({
   },
   
   
-  awake: function(context)
+  toggle: function()
   {
-    this.mapOutletsToThis();
-    
-    if(context == this.element.contentWindow)
+    if(this.isVisible())
     {
-      this.MainTabView.addEvent('tabSelected', function(evt) {
-      });
+      this.hide();
     }
-    
-    this.updateTabs();
+    else
+    {
+      this.show();
+    }
   },
   
 
   updateTabs: function()
   {
-    if (ShiftSpaceUser.isLoggedIn())
+    if(ShiftSpaceUser.isLoggedIn())
     {
       this.MainTabView.hideTabByName('LoginTabView');
 
@@ -84,21 +78,25 @@ var SSConsole = new Class({
   },
 
 
-  handleLogin: function()
+  update: function()
   {
-    this.updateTabs();   
-    this.MainTabView.selectTabByName('AllShiftsView');
-    if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
-    if(SSTableForName("MyShifts")) SSTableForName("MyShifts").refresh();
-  },
-
-
-  handleLogout: function()
-  {
-    this.updateTabs();
-    this.MainTabView.selectTabByName('AllShiftsView');
-    this.MainTabView.refresh();
-    if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
+    if(this.isLoaded())
+    {
+      if(ShiftSpace.User.isLoggedIn())
+      {
+        this.updateTabs();   
+        this.MainTabView.selectTabByName('AllShiftsView');
+        if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
+        if(SSTableForName("MyShifts")) SSTableForName("MyShifts").refresh();
+      }
+      else
+      {
+        this.updateTabs();
+        this.MainTabView.selectTabByName('AllShiftsView');
+        this.MainTabView.refresh();
+        if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
+      }
+    }
   },
   
   
@@ -122,118 +120,9 @@ var SSConsole = new Class({
   },
   
   
-  onFrameLoad: function(ui)
-  {
-    var context = this.element.contentWindow;
-    var doc = context.document;
-    
-    // under GM not wrapped, erg - David
-    if(!context.$)
-    {
-      context = new Window(context);
-      doc = new Document(context.document);
-    }
-
-    context.__ssname = this.element.getProperty('id');
-    context.__sscontextowner = this;
-
-    this.context = context;
-    this.doc = doc;
-    
-    Sandalphon.addStyle(ui.styles, context);
-    
-    // grab the interface, strip the outer level, we're putting the console into an iframe
-    var fragment = Sandalphon.convertToFragment(ui['interface'], context).getFirst();
-    
-    $(context.document.body).setProperty('id', 'SSConsoleFrameBody');
-    $(context.document.body).grab(fragment);
-    
-    Sandalphon.activate(context);
-    
-    this.initResizer();
-    this.attachEvents();
-    
-    SSPostNotification(SSConsoleIsReadyNotification, this);
-    this.setIsLoaded(true);
-  },
-  
-
-  buildInterface: function(ui)
-  {
-    if($('SSConsole'))
-    {
-      throw new Error("Ooops it looks an instace of ShiftSpace is already running. Please turn off Greasemonkey or leave this page.");
-    }
-
-    // create the iframe where the console will live
-    this.element = new IFrame({
-      id: 'SSConsole',
-      events: {
-        load: this.onFrameLoad.bind(this, ui)
-      }
-    });
-    this.element.addClass('SSDisplayNone');
-    
-    // since we're creating the frame via code we need to hook up the controller reference manually
-    SSSetControllerForNode(this, this.element);
-    this.element.injectInside(document.body);
-  }.asPromise(),
-  
-  
-  attachEvents: function()
-  {
-    SSAddEvent('keydown', this.handleKeyDown.bind(this));
-    SSAddEvent('keyup', this.handleKeyUp.bind(this));
-  },
-  
-  
-  handleKeyDown: function(evt)
-  {
-    evt = new Event(evt);
-    if(evt.key == 'shift')
-    {
-      this.shiftDownTime = $time();
-      this.shiftDown = true;
-    }
-  },
-  
-  
-  handleKeyUp: function(evt)
-  {
-    evt = new Event(evt);
-    
-    if(this.shiftDown)
-    {
-      var now = $time();
-      var delta = now - this.shiftDownTime;
-    }
-    
-    if(evt.key == 'shift')
-    {
-      this.shiftDown = false;
-    }
-    
-    if(this.shiftDown && 
-       evt.key == 'space' &&
-       delta >= 300)
-    {
-      if(!this.isVisible())
-      {
-        this.show();
-      }
-      else
-      {
-        this.hide();
-      }
-      evt.preventDefault();
-      evt.stop();
-    }
-  },
-  
-  
   initResizer: function()
   {
-    var resizer = new SSElement('div', {
+    this.resizer = new SSElement('div', {
         id: 'SSConsoleResizer',
         styles: {
           position: 'fixed',
@@ -245,18 +134,19 @@ var SSConsole = new Class({
           'z-index': 1000004
         }
     });
-    $(document.body).grab(resizer);
-    
-    resizer.addEvent('mousedown', SSAddDragDiv);
 
-    resizer.makeDraggable({
+    $(document.body).grab(this.resizer);
+    
+    this.resizer.addEvent('mousedown', SSAddDragDiv);
+
+    this.resizer.makeDraggable({
       modifiers: {x:'', y:'bottom'},
       invert: true,
       onComplete: SSRemoveDragDiv
     });
     
     this.element.makeResizable({
-      handle: resizer,
+      handle: this.resizer,
       modifiers: {x:'', y:'height'},
       invert: true
     });
@@ -265,13 +155,49 @@ var SSConsole = new Class({
   
   subViews: function()
   {
-    return this.context.$$('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
+    return this.contentWindow().$$('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
       return (controller.isAwake() && controller.superView() == this);
     }, this);
   },
   
   
-  localizationChanged: function(evt) {
-    SSUpdateStrings(evt.strings, evt.lang, this.context);
+  localizationChanged: function(evt)
+  {
+    if(this.delayed()) return;
+    SSUpdateStrings(evt.strings, evt.lang, this.contentWindow());
+  },
+
+  /* SSFramedView Stuff ---------------------------------------- */
+
+  awake: function(context)
+  {
+    this.mapOutletsToThis();
+  },
+
+
+  onContextActivate: function(context)
+  {
+    if(context == this.element.contentWindow)
+    {
+      this.mapOutletsToThis();
+      this.MainTabView.addEvent('tabSelected', function(evt) {});
+      this.updateTabs();
+    }
+  },
+
+
+  onInterfaceLoad: function(ui)
+  {
+    this.parent(ui);
+    this.element.addClass('SSDisplayNone');
+  }.asPromise(),
+
+
+  buildInterface: function()
+  {
+    this.parent();
+    this.initResizer();
+    this.setIsLoaded(true);
+    SSPostNotification(SSConsoleIsReadyNotification, this);
   }
 });

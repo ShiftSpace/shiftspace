@@ -1,0 +1,1 @@
+rm server/sessions/session*

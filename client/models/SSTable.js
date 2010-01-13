@@ -636,6 +636,13 @@ var SSTable = new Class({
   {
     SSApplication().removeCache(this.getName());
     this.dirtyTheViews(true);
+  },
+
+
+  optionsForTable: function()
+  {
+    var delegate = this.delegate();
+    return (delegate && delegate.optionsForTable && delegate.optionsForTable(this)) || {};
   }
 });
 

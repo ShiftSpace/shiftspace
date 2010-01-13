@@ -137,6 +137,7 @@ var ShiftSpaceShift = new Class({
   save: function()
   {
     this.getParentSpace().updateShift(this);
+    // TODO: confusing, onShiftSave triggers a dead code path - David
     this.fireEvent('onShiftSave', this.getId());
   },
 
@@ -833,5 +834,17 @@ var ShiftSpaceShift = new Class({
     {
       SSLog([url, "not declared in attrs.json permissions list for", attrs.name, "space."].join(" "), SSLogError);
     }
+  },
+
+
+  getUserName: function()
+  {
+    return ShiftSpace.User.getUserName();
+  },
+
+
+  getUserId: function()
+  {
+    return ShiftSpace.User.getId();
   }
 });

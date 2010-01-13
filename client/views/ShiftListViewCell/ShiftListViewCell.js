@@ -10,6 +10,14 @@ var ShiftListViewCell = new Class({
   name: "ShiftListViewCell",
   
   
+  defaults: function()
+  {
+    return $merge(this.parent(), {
+      hideSameDomain: true
+    });
+  },
+
+
   initialize: function(el, options)
   {
     this.parent(el, options);
@@ -44,7 +52,8 @@ var ShiftListViewCell = new Class({
   {
     var idx = this.index(), data = this.data();
     this.delegate().setState(data._id, 'checked', this.check.bind(this, [true]));
-    SSPostNotification('onShiftSelect', {listView: this.delegate(), index:idx});
+    this.delegate().onCheck({index: idx, data: data});
+    SSPostNotification('onShiftSelect', {listView: this.delegate(), index: idx, data: data});
   },
   
   /*
@@ -58,9 +67,9 @@ var ShiftListViewCell = new Class({
   */
   uncheck: function(restore)
   {
-    var el = this.lockedElement();
+    var el = this.lockedElement(), index = this.index(), data = this.data();
     el.getElement('input[type=checkbox]').setProperty('checked', false);
-    if(restore !== true) this.onUncheck();
+    if(restore !== true) this.onUncheck({index: index, data: data});
   },
   
   /*
@@ -76,6 +85,7 @@ var ShiftListViewCell = new Class({
   {
     var idx = this.index(), data = this.data();
     if(data) this.delegate().removeState(data._id, 'checked');
+    this.delegate().onUncheck({index: idx, data: data});
     SSPostNotification('onShiftDeselect', {listView: this.delegate(), index:idx});
   },
   
@@ -124,7 +134,7 @@ var ShiftListViewCell = new Class({
           p.realize();
         }
         evt.stop();
-      }.bind(this))
+      }.bind(this));
     }
 
     var comments = clone.getElement(".comments");
@@ -134,11 +144,11 @@ var ShiftListViewCell = new Class({
         evt = new Event(evt);
         var target = $(evt.target), li = target.getParent("li");
         this.lock(li);
-        var id = this.data()._id, p;
+        var data = this.data(), p;
         this.unlock();
-        SSPostNotification("showComments", id);
+        SSPostNotification("showComments", data);
         evt.stop();
-      }.bind(this))
+      }.bind(this));
     }
 
     return clone;
@@ -150,6 +160,7 @@ var ShiftListViewCell = new Class({
     var el = this.lockedElement();
     el.getElement(".unread").set("text", (unread) ? "unread" : "read");
   },
+
   
   setRead: function(read)
   {
@@ -163,6 +174,7 @@ var ShiftListViewCell = new Class({
       el.addClass("unread");
     }
   },
+
   
   setSummary: function(summary)
   {
@@ -187,17 +199,20 @@ var ShiftListViewCell = new Class({
     }
   },
   
+
   setCreatedStr: function(createdStr)
   {
     var el = this.lockedElement();
     el.getElement('.date').set('text', createdStr);
   },
   
+
   setModifiedStr: function(modifiedStr)
   {
     var el = this.lockedElement();
     el.getElement('.date').set('text', modifiedStr);
   },
+
 
   setSpace: function(space)
   {
@@ -213,7 +228,7 @@ var ShiftListViewCell = new Class({
     el.getElement('.userName').set('text', userName);
     if(ShiftSpace.User.isLoggedIn() && ShiftSpace.User.getUserName() == userName)
     {
-      el.getElement('.userName').addClass('loggedin')
+      el.getElement('.userName').addClass('loggedin');
     }
     else
     {
@@ -231,19 +246,32 @@ var ShiftListViewCell = new Class({
   
   setHref: function(href)
   {
-    var el = this.lockedElement();
-    var url = href.substr(7, href.length);
-    var parts = url.split("/");
-    
-    var link = new Element('a', {'href':href,'html':parts[0],'class':'domain'});
-    link.inject(el.getElement(".domain"));
+    var el = this.lockedElement(),
+        domainEl = el.getElement(".domain a");
+
+    if(domainEl)
+    {
+      if(href == window.location.href && this.options.hideSameDomain)
+      {
+        domainEl.addClass("SSDisplayNone");
+      }
+      else
+      {
+        domainEl.set("title", href);
+      }
+    }
   },
 
 
   setDomain: function(domain)
   {
-    var el = this.lockedElement();
-    el.getElement(".domain").set("text", domain);
+    var el = this.lockedElement(),
+        domainEl = el.getElement(".domain a");
+
+    if(domainEl)
+    {
+      domainEl.set("text", domain);
+    }
   },
   
   

@@ -74,23 +74,27 @@ function SSInfo(spaceName)
 // = Function Prototype Helpers  =
 // ===============================
 
-// This won't work for GM_getValue of course - David
 Function.prototype.safeCall = function() {
-  var self = this, args = [], len = arguments.length;
-  for(var i = 0; i < len; i++) args.push(arguments[i]);
+  var bind = $A(arguments).first(),
+      args = $A(arguments).rest(),
+      self = this;
   setTimeout(function() {
-    return self.apply(null, args);
+    return self.apply(bind, args);
   }, 0);
 };
 
-// Work around for GM_getValue - David
+/*
+  Function: Function.prototype.safeCallWithResult
+    You only need to use this if the function you're calling
+    doesn't already return a value via callback.
+*/
 Function.prototype.safeCallWithResult = function() {
-  var self = this, args = [], len = arguments.length;
-  for(var i = 0; i < len-1; i++) args.push(arguments[i]);
-  // the last argument is the callback
-  var callback = arguments[len-1];
+  var bind = $A(arguments).first(),
+      callback = $A(arguments).second(),
+      args = $A(arguments).rest(2),
+      self = this;
   setTimeout(function() {
-    callback(self.apply(null, args));
+    callback(self.apply(bind, args));
   }, 0);
 };
 
