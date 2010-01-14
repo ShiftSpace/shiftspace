@@ -83,8 +83,8 @@ var ApplicationServer = new Class({
    */
   cache: function(name, options)
   {
-    var result = (name) ? this.__cache[name] : this.__cache;
-    var asArray = $get(options, 'asArray'), 
+    var result = (name) ? this.__cache[name] : this.__cache,
+        asArray = $get(options, 'asArray'), 
         transform = $get(options, 'transform'),
         sort = $get(options, 'sort');
     if(asArray) result = (name) ? $H(result).getValues() : this.allCachedDocuments().getValues();
@@ -437,8 +437,8 @@ var ApplicationServer = new Class({
    */
   notifyWatchers: function(rsrcSpec, value, oldValue)
   {
-    var resourceSpec = $hash($H(rsrcSpec).extract(['resource', 'method'], true));
-    var watchers = this.__watchersFor__(resourceSpec);
+    var resourceSpec = $hash($H(rsrcSpec).extract(['resource', 'method'], true)),
+        watchers = this.__watchersFor__(resourceSpec);
     watchers.each(Function.msg('matchSpec', resourceSpec, value, oldValue));
     
     if(rsrcSpec.id)
