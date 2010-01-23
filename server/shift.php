@@ -31,7 +31,7 @@ class ShiftController {
                                created,
                                modified,
                                content)
-                VALUES ('$createdBy_userID',
+                VALUES ('$createdBy',
                         '$href',
                         '$space_name',
                         '$space_version',
