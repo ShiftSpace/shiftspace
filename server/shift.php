@@ -17,8 +17,8 @@ class ShiftController {
     $data = flatten(json_decode(file_get_contents("php://input"), true));
     extract($data);
     
-    $createdBy = $current_user->display_name;
-    $createdBy_userID = $current_user->ID;
+    $createdBy = $current_user->ID;
+    $createdBy_displayName = $current_user->display_name;
     
     $created = date("Y/m/d H:i:s", time());
     $modified = $created;
@@ -45,10 +45,10 @@ class ShiftController {
 
     if($id) {
       $insert_data = array('comment_post_ID' => $post_id,
-                           'comment_author' => $createdBy,
+                           'comment_author' => $createdBy_displayName,
                            'comment_content' => "<a rel='shift:$space_name:$id'>$summary</a>",
                            'comment_type' => "shiftpress",
-                           'user_id' => $createdBy_userID);
+                           'user_id' => $createdBy);
       $comment_id = wp_insert_comment($insert_data);
       return json_encode($this->_read($id));
     } else {
