@@ -325,7 +325,7 @@ Returns:
 */
 function SSGetAuthorForShift(shiftId)
 {
-  return SSGetShift(shiftId)._id;
+  return SSGetShift(shiftId).createdBy;
 }
 
 function SSGetAuthorNameForShift(shiftId)
