@@ -57,7 +57,10 @@ class ShiftController {
   public function read($request) {
     //get a specific shift.
     extract($request);
-    return json_encode($this->_read($id));
+    $shift = $this->_read($id);
+    $shift["_id"] = $shift["id"];
+    unset($shift["id"]);
+    return json_encode($shift);
   }
 
   private function _read($id) {
