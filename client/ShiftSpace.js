@@ -309,7 +309,7 @@ var ShiftSpace = new (function() {
         {
           var spaceName = parts[1],
               shiftId = parts[2];
-          SSShowShift(SSSpaceForName(spaceName), shiftId);
+          SSShowShift(SSSpaceForName(spaceName), shiftId, SSGetShift(shiftId));
         }
       });
     }
