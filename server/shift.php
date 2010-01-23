@@ -60,6 +60,7 @@ class ShiftController {
     $shift = $this->_read($id);
     $shift["_id"] = $shift["id"];
     unset($shift["id"]);
+    $shift["content"] = json_decode($shift["content"]);
     return json_encode(data($shift));
   }
 
