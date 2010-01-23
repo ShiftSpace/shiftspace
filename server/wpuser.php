@@ -14,7 +14,7 @@ class WPUserController extends UserController {
                               );
       $this->userData = json_encode($this->userData);
     } else {
-      $this->userData = "{message:'not logged in.'}";
+      $this->userData = "{\"message\":\"not logged in.\"}";
     
     }
   }
