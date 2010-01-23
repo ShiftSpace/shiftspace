@@ -325,7 +325,14 @@ Returns:
 */
 function SSGetAuthorForShift(shiftId)
 {
-  return SSGetShift(shiftId).createdBy;
+  if(SSIsNewShift(shiftId))
+  {
+    return ShiftSpace.User.getId();
+  }
+  else
+  {
+    return SSGetShift(shiftId).createdBy;
+  }
 }
 
 function SSGetAuthorNameForShift(shiftId)
