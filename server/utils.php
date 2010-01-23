@@ -3,6 +3,18 @@
 Utils for Shiftspace-lite. 
 */
 
+function data($data) {
+  return array("data"=>$data);
+}
+
+function message($message) {
+  return array("message"=>$message);
+}
+
+function ack($message) {
+  return array("data"=>"ok");
+}
+
 function flatten($input) {
   $flattened = array();
   foreach ($input as $key => $value) {
