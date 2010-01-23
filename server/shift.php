@@ -17,46 +17,30 @@ class ShiftController {
     $data = flatten(json_decode(file_get_contents("php://input"), true));
     extract($data);
     
-    $createdBy = intval($current_user->ID);
-    $created = date("m/d/y : H:i:s", time());
+    $createdBy = $current_user->ID;
+    $created = date("Y/m/d H:i:s", time());
     $modified = $created;
-    $publishData_publishTime = $created;
 
-    $query = $this->db->prepare("INSERT INTO shift (createdBy,
-                                                    href,
-                                                    space_name,
-                                                    space_version,
-                                                    summary,
-                                                    created,
-                                                    modified,
-                                                    publishData_publishTime,
-                                                    content)
-                                 VALUES (:createdBy,
-                                         :href,
-                                         :space_name,
-                                         :space_version,
-                                         :summary,
-                                         :created,
-                                         :modified,
-                                         :publishData_publishTime,
-                                         :content )");
+    $sql = "INSERT INTO shift (createdBy,
+                               href,
+                               space_name,
+                               space_version,
+                               summary,
+                               created,
+                               modified,
+                               content)
+                VALUES ('$createdBy',
+                        '$href',
+                        '$space_name',
+                        '$space_version',
+                        '$summary',
+                        '$created',
+                        '$modified',
+                        '$content')";
 
-    $theShift = array(':createdBy' => $createdBy,
-                      ':href' => $href,
-                      ':space_name'=> $space_name,
-                      ':space_version'=> $space_version,
-                      ':summary '=> $summary,
-                      ':created' => $created,
-                      ':modified' => $modified,
-                      ':publishData_publishTime' => $publishData_publishTime, 
-                      ':content' => $content);
-
-    //echo var_dump($theShift);
-    
-    $query->execute($theShift);
-    
+    $this->db->query($sql);
     $id = $this->db->lastInsertId();
-    
+
     if($id) {
       $insert_data = array('comment_post_ID' => $post_id,
                            'comment_author' => $createdBy,
