@@ -31,13 +31,18 @@ class ShiftServer {
     $request = $this->mapper->match($this->requestPath());
     $controller = $request['controller'];
     $method = $request['action'];
-	if($controller == "server") {
-		echo $this->user->matchUser();
-	
-	} else if($this->user->isLoggedIn() || $method == "read") {
+
+    if($controller == "server") {
+      echo $this->user->matchUser();
+    } else if($this->user->isLoggedIn() || $method == "read") {
+      if(property_exists($this, $controller) &&
+         property_exists($this->$controller, $method)) {
         echo $this->$controller->$method($request);
-	} else {
-   	    echo "{error:\"Operation not permitted. You are not logged in.\", type:\"UserNotLoggedInError\"}";
+      } else {
+        echo "{message:\"No method for route.\"}";
+      }
+    } else {
+      echo "{error:\"Operation not permitted. You are not logged in.\", type:\"UserNotLoggedInError\"}";
     }
   }
 
