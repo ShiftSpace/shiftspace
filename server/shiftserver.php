@@ -36,7 +36,7 @@ class ShiftServer {
       echo $this->user->matchUser();
     } else if($this->user->isLoggedIn() || $method == "read") {
       if(property_exists($this, $controller) &&
-         property_exists($this->$controller, $method)) {
+         method_exists($this->$controller, $method)) {
         echo $this->$controller->$method($request);
       } else {
         echo "{message:\"No method for route.\"}";
@@ -56,10 +56,9 @@ class ShiftServer {
     //Manage routing of URIs and actions. 
     $m = new Horde_Routes_Mapper();
     $m->environ = $_SERVER;
-    $m->connect('serverQuery', 'query', array(	'controller' => 'server',
-    											'action' => 'query',
-    											'conditions' => array("method" => array("GET"))));
-    
+    $m->connect('serverQuery', 'query', array( 'controller' => 'server',
+                                               'action' => 'query',
+                                               'conditions' => array("method" => array("GET"))));
     $m->connect('shiftCreate', 'shift', array( 'controller' => 'shift', 
                                                'action'     => 'create',
                                                'conditions' => array("method" => array("POST"))));
