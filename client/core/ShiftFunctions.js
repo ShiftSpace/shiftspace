@@ -64,6 +64,7 @@ var SSShowNewShift = function(space, shift)
   space.onShiftCreate(id);
   SSEditShift(space, id);
   SSFocusShift(space, id);
+  SSPostNotification("onNewShiftShow", id);
 }.asPromise();
 
 /*
