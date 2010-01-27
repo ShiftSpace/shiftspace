@@ -465,6 +465,18 @@ var SSNotifierView = new Class({
       this.update();
     }
   },
+
+
+  showQuickPane: function()
+  {
+    this.SSQuickPane.removeClass("SSDisplayNone");
+  },
+
+
+  hideQuickPane: function()
+  {
+    this.SSQuickPane.addClass("SSDisplayNone");
+  },
   
   
   buildInterface: function()
