@@ -1,0 +1,56 @@
+#GroupDetailView 
+{
+  color: #74665A;  
+}
+
+#GroupDetailView > div
+{
+  padding: 4px;
+}  
+
+
+#GroupDetailView > div:first-child
+{
+  background-color: #E3DFDB;
+
+}
+
+#GroupDetailView .longName
+{
+  color: #F63B02;
+}
+
+#GroupDetailView .shortName
+{
+  color: #74665A;  
+}
+
+#GroupDetailView button
+{
+  -moz-border-radius:10px 10px 10px 10px;
+  border:2px solid #B3ADA5;
+  color:#74665A;
+}
+
+#GroupDetailView .buttonsUI
+{
+  height: 24px;
+  line-height: 24px;  
+}
+
+.DetailGroupShiftCount,
+.userCount
+{
+  padding-left: 4px;
+  height: 24px;
+  line-height: 24px;
+  border-top: 1px solid #C9CCC4;
+  background-color: #F1EDEB;
+}
+
+.shiftCount,
+.adminCount,
+.memberCount
+{
+  font-weight: bold;
+}
