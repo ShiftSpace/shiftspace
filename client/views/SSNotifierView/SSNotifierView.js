@@ -26,6 +26,7 @@ var SSNotifierView = new Class({
       this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
     }.bind(this));
     SSAddObserver(this, 'onNewShiftShow', this.showQuickPane.bind(this));
+    SSAddObserver(this, 'onShiftSave', this.hideQuickPane.bind(this));
     SSAddObserver(this, 'onShiftDestroy', this.hideQuickPane.bind(this));
 
     this.attachFinishKeyEvents();
