@@ -416,6 +416,12 @@ var ShiftSpaceSpace = new Class({
     }
   },
 
+  saveCurrentShift: function()
+  {
+    var cshift = this.getCurrentShift();
+    if(cshift) this.updateShift(cshift);
+  },
+
   /*
     Function: updateShift
       Update a shift.  Implicity calls the SSUpdateShift in Core to update the ShiftSpace DB.
