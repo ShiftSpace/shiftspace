@@ -293,9 +293,13 @@ var SSNotifierView = new Class({
     
     context.$(doc.body).addEvent('mouseenter', this.fireEvent.bind(this, ['mouseover']));
     context.$(doc.body).addEvent('mouseleave', this.fireEvent.bind(this, ['mouseout']));
+
+    /* Main Key Events */
     
     this.attachConsoleEvents();
     this.attachKeyEvents();
+
+    /* Space Menu */
     
     this.SSSelectSpace.addEvent('click', function(evt) {
       evt = new Event(evt);
@@ -307,6 +311,14 @@ var SSNotifierView = new Class({
       {
         SSPostNotification('hideSpaceMenu', this);
       }
+    }.bind(this));
+
+    /* Quick Pane Events */
+
+    this.SSQPSave.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var space = SSFocusedSpace();
+      if(space) space.saveCurrentShift();
     }.bind(this));
   },
   
