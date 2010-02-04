@@ -234,14 +234,18 @@ See Also:
 */
 function SSSaveNewShift(shift)
 {
-  var space = SSSpaceForName(shift.space.name);
+  var space = SSSpaceForName(shift.space.name),
+      params = {
+        href: window.location.href.split("#")[0],
+        space: {
+          name: shift.space.name,
+          version: space.attributes().version
+        },
+        summary: shift.summary,
+        content: shift
+      };
 
-  var params = {
-    href: window.location.href.split("#")[0],
-    space: {name: shift.space.name, version: space.attributes().version},
-    summary: shift.summary,
-    content: shift
-  };
+  SSLog("SSSaveNewShift", SSLogForce);
 
   // remove _id and space from shift
   // TODO: might want to refactor this to be a little less hacky - David
@@ -255,14 +259,14 @@ function SSSaveNewShift(shift)
         var newShift = p.value(),
             newId = newShift._id,
             instance = space.getShift(oldId);
+        
         newShift.created = 'Just posted';
-
-        // update the global cache
         SSApp.deleteFromCache(oldId, 'global');
-        // swap the ids
         space.swap(oldId, newId);
 
         SSSetFocusedShiftId(newId);
+
+        
         if(ShiftSpace.Console) ShiftSpace.Console.show();
 
         space.onShiftSave(newId);
