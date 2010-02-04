@@ -335,7 +335,7 @@ def initDevRoutes():
     return d
 
 
-def start(conf="default.conf", port=8080):
+def start(site_conf=None, app_conf="default.conf", port=8080):
     """
     Starts the server using default.conf and port 8080.
     """
@@ -343,7 +343,7 @@ def start(conf="default.conf", port=8080):
     webroot = os.path.dirname(serverroot)
     config = ConfigParser.ConfigParser({'webroot':webroot,
                                         'serverroot':serverroot})
-    fh = open(os.path.join(serverroot, conf))
+    fh = open(os.path.join(serverroot, app_conf))
     config.readfp(fh)
     fh.close()
 
@@ -357,26 +357,29 @@ def start(conf="default.conf", port=8080):
                 v = int(v)
             d[section][k] = v
 
-    serverport = port
     cherrypy.config.update({'server.socket_port':port})
 
     d['/']['request.dispatch'] = initDevRoutes()
-    dev = cherrypy.tree.mount(root=None, script_name='/', config=d)
+    cherrypy.tree.mount(root=None, script_name='/', config=d)
 
     d['/']['request.dispatch'] = initAppRoutes()
-    app = cherrypy.tree.mount(root=None, script_name='/server', config=d)
+    cherrypy.tree.mount(root=None, script_name='/server', config=d)
 
     cherrypy.quickstart()
 
 
 def usage():
-    print 'You may only pass in a configuration file to load via the -f flag.'
+    print
+    print '\t-s --site\tspecify a site wide configuration'
+    print '\t-a --app \tspecify application configuration'
+    print
 
 
 def parseArgs(argv):
-    conf = 'default.conf'
+    app = 'default.conf'
+    site = None
     try:
-        opts, args = getopt.getopt(argv, 'f:h', ['file='])
+        opts, args = getopt.getopt(argv, 's:a:h', ['site=', 'app='])
     except:
         print 'Invalid flag\n'
         usage()
@@ -385,9 +388,11 @@ def parseArgs(argv):
         if opt in ('-h', '--help'):
             usage()
             sys.exit()
-        elif opt in ('-f', '--file'):
-            conf = arg
-    start(conf)
+        elif opt in ('-s', '--site'):
+            site = arg
+        elif opt in ('-a', '--app'):
+            app = arg
+    start(site_conf=site, app_conf=app)
 
 
 if __name__ == '__main__':
