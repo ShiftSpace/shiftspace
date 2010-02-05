@@ -28,12 +28,16 @@
 		</div>
                 <span id="SSLoginFormMessage" class="SSLocalized" outlet="LoginTabView"></span>
                 <span id="SSLoginFormForgot" class="SSLocalized" outlet="LoginTabView">
-        	    <a href="#" class="SSMinorButton">Forgot my password</a>
+		        	    <a href="#" class="SSMinorButton">Forgot my password</a>
                 </span>
                 <input id="SSLoginFormSubmit" class="SSLocalized SSMajorButton" title="Login" type="button" value="Login" outlet="LoginTabView"></input>
                 <!-- Hidden submit button -->
                 <input style="display: none" type="submit"></input>
             </form>
+  	            <span class="SSOpenid Signup">
+		            	You can also login with your <a href="#"><img src="/images/Console/login-openid.gif" alt="OpenID"/></a>
+		            </span>
+
         </div>
         <!-- End Login Pane -->
 
@@ -60,7 +64,11 @@
                     </label>
                     <input id="SSSignUpFormConfirmPassword" type="password" outlet="LoginTabView"></input>
                 </fieldset>
-                <div style="clear:both">
+                
+		            <div class="SSOpenid Register">
+		            	Or register using your <a href="#"><img src="/images/Console/login-openid.gif" alt="OpenID"/></a>
+		            </div>
+                <div>
                     <span id="SSSignUpFormMessage" class="SSLocalized" outlet="LoginTabView"></span>
                     <input id="SSSignUpFormSubmit" class="SSLocalized SSMajorButton" type="button" title="Sign Up" value="Submit" outlet="LoginTabView"></input>
                     <!-- Hidden submit button -->
