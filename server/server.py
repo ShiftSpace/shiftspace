@@ -376,8 +376,8 @@ def wsgiStart(siteConf="site.conf", appConf="apache.conf"):
         appConf = os.path.join(SERVER_ROOT, appConf)
     cherrypy.config.update(siteConf)
     config = loadConfig(appConf)
-    config['/']['request.dispatch'] = initRoutes()
-    application = cherrypy.Application(None, script_name='/server', config=config)
+    config['/']['request.dispatch'] = initAppRoutes()
+    serverapp = cherrypy.Application(None, script_name='/server', config=config)
 
 
 def usage():
