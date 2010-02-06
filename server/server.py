@@ -375,7 +375,8 @@ def start(appConf="default.conf", port=8080):
     d = cherrypy.dispatch.RoutesDispatcher()
     config['/']['request.dispatch'] = initDevRoutes(initRootRoutes(d))
     cherrypy.tree.mount(root=None, script_name='/', config=config)
-    config['/']['request.dispatch'] = initAppRoutes()
+    d = cherrypy.dispatch.RoutesDispatcher()
+    config['/']['request.dispatch'] = initAppRoutes(d)
     cherrypy.tree.mount(root=None, script_name='/server', config=config)
     cherrypy.quickstart()
 
