@@ -32,8 +32,8 @@ from controllers.message import MessageController
 
 version = "1.0"
 lookup = TemplateLookup(directories=['html', 'manual', 'wiki'])
-serverroot = os.path.dirname(os.path.abspath(__file__))
-webroot = os.path.dirname(serverroot)
+SERVER_ROOT = os.path.dirname(os.path.abspath(__file__))
+WEB_ROOT = os.path.dirname(SERVER_ROOT)
 serverport = 8080
 
 
@@ -109,7 +109,7 @@ class RootController:
         JSON.
         """
         try:
-            spacePath = os.path.join(webroot, 'spaces', space)
+            spacePath = os.path.join(WEB_ROOT, 'spaces', space)
             attrsPath = os.path.join(spacePath, 'attrs.json')
             fh = open(attrsPath)
             attrs = json.loads(fh.read())
@@ -136,7 +136,7 @@ class RootController:
         For developers. Serves the documentation pages.
         """
         if os.path.exists("docs"):
-            return serve_file(os.path.join(webroot, 'docs/index.html'))
+            return serve_file(os.path.join(WEB_ROOT, 'docs/index.html'))
         else:
             return self.statusPage(status="err", details="docs")
 
@@ -170,14 +170,14 @@ class RootController:
         preprocessor = preprocess.SSPreProcessor(project="sandbox", env="mydev")
         preprocessor.preprocess(input="client/ShiftSpace.js",
                                 output="builds/shiftspace.sandbox.js")
-        return serve_file(os.path.join(webroot, 'sandbox/index.html'))
+        return serve_file(os.path.join(WEB_ROOT, 'sandbox/index.html'))
 
     def test(self, test="SSDefaultTest", env="mydev"):
         """
         For developers. Serves the testing environment. Similar to index above but uses
         the sandalphon env file instead of mydev.
         """
-        fh = open(os.path.join(webroot, "config/tests.json"))
+        fh = open(os.path.join(WEB_ROOT, "config/tests.json"))
         teststr = fh.read()
         tests = json.loads(teststr)
         fh.close()
@@ -203,7 +203,7 @@ class RootController:
         preprocessor = preprocess.SSPreProcessor(project="sandalphon", env="sandalphon", export=True)
         preprocessor.preprocess(input="sandalphon/BootstrapSandalphon.js",
                                 output="builds/shiftspace.sandalphon.js")
-        return serve_file(os.path.join(webroot, 'tests/index.html'))
+        return serve_file(os.path.join(WEB_ROOT, 'tests/index.html'))
 
     @jsonencode
     def build(self):
@@ -336,10 +336,8 @@ def initDevRoutes():
 
 
 def loadConfig(fileName="default.conf"):
-    serverroot = os.path.dirname(os.path.abspath(__file__))
-    webroot = os.path.dirname(serverroot)
-    config = ConfigParser.ConfigParser({'webroot':webroot, 'serverroot':serverroot})
-    fh = open(os.path.join(serverroot, fileName))
+    config = ConfigParser.ConfigParser({'WEB_ROOT':WEB_ROOT, 'SERVER_ROOT':SERVER_ROOT})
+    fh = open(os.path.join(SERVER_ROOT, fileName))
     config.readfp(fh)
     fh.close()
     d = {}
@@ -373,9 +371,9 @@ def wsgiStart(siteConf="site.conf", appConf="apache.conf"):
     """
     #TODO: needs to be more general and really support file configuration. - David 2/6/10
     if not os.path.isabs(siteConf):
-        siteConf = os.path.join(ROOT_PATH, siteConf)
+        siteConf = os.path.join(SERVER_ROOT, siteConf)
     if not os.path.isabs(appConf):
-        appConf = os.path.join(ROOT_PATH, appConf)
+        appConf = os.path.join(SERVER_ROOT, appConf)
     cherrypy.config.update(siteConf)
     config = loadConfig(appConf)
     config['/']['request.dispatch'] = initRoutes()
