@@ -38,6 +38,16 @@ serverport = 8080
 
 
 class RootController:
+    def routes(self, d):
+        d.connect(name='root', route='', controller=self, action='index')
+        d.connect(name='rootDocs', route='docs', controller=self, action='docs')
+        d.connect(name='rootManual', route='manual', controller=self, action='manual')
+        d.connect(name='rootSandbox', route='sandbox', controller=self, action='sandbox')
+        d.connect(name='rootTest', route='test/:test', controller=self, action='test')
+        d.connect(name='rootTests', route='tests', controller=self, action='tests')
+        d.connect(name='rootBuild', route='build', controller=self, action='build')
+        return d
+
     def statusContext(self, status="noerr", details="noerr"):
         return {
             "version": version,
@@ -67,69 +77,6 @@ class RootController:
         except:
             return self.statusPage(status="err", details="initdb")
         return self.statusPage()
-        
-    def walk(self, fdir, d):
-        """
-        Used by attrs.
-        """
-        files = os.listdir(fdir)
-        for afile in files:
-            path = os.path.join(fdir, afile)
-            if os.path.isdir(path):
-                d[afile] = self.walk(path, {})
-            elif os.path.isfile(path):
-                if os.path.splitext(path)[1] in ['.js', '.json', '.txt', '.html', '.css']:
-                    fh = open(path)
-                    d[afile] = fh.read()
-                    fh.close()
-        return d
-        
-    def langwalk(self, fdir, d):
-        """
-        Used by attrs.
-        """
-        # redundant refactor later - David 10/28/09
-        files = os.listdir(fdir)
-        for afile in files:
-            path = os.path.join(fdir, afile)
-            if os.path.isdir(path):
-                d[afile] = self.walk(path, {})
-            elif os.path.isfile(path):
-                fh = open(path)
-                name = os.path.splitext(os.path.basename(afile))[0]
-                d[name] = json.loads(fh.read())
-                fh.close()
-        return d
-        
-    def attrs(self, space):
-        """
-        Return the attrs.json file for a space. If the attrs.json
-        file specifies a lib property, walk that directory and return
-        the contents of the lib directory as strings in the returned
-        JSON.
-        """
-        try:
-            spacePath = os.path.join(WEB_ROOT, 'spaces', space)
-            attrsPath = os.path.join(spacePath, 'attrs.json')
-            fh = open(attrsPath)
-            attrs = json.loads(fh.read())
-            fh.close()
-            liborlang = False
-            if attrs.get("lib"):
-                liborlang = True
-                libPath = os.path.join(spacePath, attrs["lib"])
-                attrs["lib"] = self.walk(libPath, {})
-            if attrs.get("lang"):
-                liborlang = True
-                langPath = os.path.join(spacePath, attrs["lang"])
-                attrs["lang"] = self.langwalk(langPath, {})
-            if liborlang:
-                return json.dumps(attrs)
-            else:
-                f = serve_file(attrsPath)
-                return f
-        except error:
-            return json.dumps(error("No space called %s exists" % space, SpaceDoesNotExistError))
 
     def docs(self):
         """
@@ -219,6 +166,76 @@ class RootController:
         preprocessor.preprocess(input="client/ShiftSpace.js",
                                 output="builds/shiftspace.dev.user.js")
         return ack
+
+
+class ServerController:
+    def routes(self, d):
+        d.connect(name='rootProxy', route='proxy/:id', controller=self, action='proxy')
+        d.connect(name='rootAttrs', route='spaces/:space/attrs', controller=self, action='attrs')
+        return d
+        
+    def walk(self, fdir, d):
+        """
+        Used by attrs.
+        """
+        files = os.listdir(fdir)
+        for afile in files:
+            path = os.path.join(fdir, afile)
+            if os.path.isdir(path):
+                d[afile] = self.walk(path, {})
+            elif os.path.isfile(path):
+                if os.path.splitext(path)[1] in ['.js', '.json', '.txt', '.html', '.css']:
+                    fh = open(path)
+                    d[afile] = fh.read()
+                    fh.close()
+        return d
+        
+    def langwalk(self, fdir, d):
+        """
+        Used by attrs.
+        """
+        # redundant refactor later - David 10/28/09
+        files = os.listdir(fdir)
+        for afile in files:
+            path = os.path.join(fdir, afile)
+            if os.path.isdir(path):
+                d[afile] = self.walk(path, {})
+            elif os.path.isfile(path):
+                fh = open(path)
+                name = os.path.splitext(os.path.basename(afile))[0]
+                d[name] = json.loads(fh.read())
+                fh.close()
+        return d
+        
+    def attrs(self, space):
+        """
+        Return the attrs.json file for a space. If the attrs.json
+        file specifies a lib property, walk that directory and return
+        the contents of the lib directory as strings in the returned
+        JSON.
+        """
+        try:
+            spacePath = os.path.join(WEB_ROOT, 'spaces', space)
+            attrsPath = os.path.join(spacePath, 'attrs.json')
+            fh = open(attrsPath)
+            attrs = json.loads(fh.read())
+            fh.close()
+            liborlang = False
+            if attrs.get("lib"):
+                liborlang = True
+                libPath = os.path.join(spacePath, attrs["lib"])
+                attrs["lib"] = self.walk(libPath, {})
+            if attrs.get("lang"):
+                liborlang = True
+                langPath = os.path.join(spacePath, attrs["lang"])
+                attrs["lang"] = self.langwalk(langPath, {})
+            if liborlang:
+                return json.dumps(attrs)
+            else:
+                f = serve_file(attrsPath)
+                return f
+        except error:
+            return json.dumps(error("No space called %s exists" % space, SpaceDoesNotExistError))
 
     def absolutify(self, attrs):
         space = attrs["name"]
@@ -310,6 +327,8 @@ def initAppRoutes():
     Initialize the actual application routes.
     """
     d = cherrypy.dispatch.RoutesDispatcher()
+    s = ServerController()
+    d = s.routes(d)
     UserController(d)
     ShiftController(d)
     GroupsController(d)
@@ -322,17 +341,8 @@ def initDevRoutes():
     Initialize developments routes, attrs.json and proxy routes as well.
     """
     d = cherrypy.dispatch.RoutesDispatcher()
-    root = RootController()
-    d.connect(name='root', route='', controller=root, action='index')
-    d.connect(name='rootDocs', route='docs', controller=root, action='docs')
-    d.connect(name='rootManual', route='manual', controller=root, action='manual')
-    d.connect(name='rootSandbox', route='sandbox', controller=root, action='sandbox')
-    d.connect(name='rootTest', route='test/:test', controller=root, action='test')
-    d.connect(name='rootTests', route='tests', controller=root, action='tests')
-    d.connect(name='rootBuild', route='build', controller=root, action='build')
-    d.connect(name='rootProxy', route='proxy/:id', controller=root, action='proxy')
-    d.connect(name='rootAttrs', route='spaces/:space/attrs', controller=root, action='attrs')
-    return d
+    r = RootController()
+    return r.routes(d)
 
 
 def loadConfig(fileName="default.conf"):
