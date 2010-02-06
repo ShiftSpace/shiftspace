@@ -335,20 +335,14 @@ def initDevRoutes():
     return d
 
 
-def start(site_conf=None, app_conf="default.conf", port=8080):
-    """
-    Starts the server using default.conf and port 8080.
-    """
+def loadConfig(fileName="default.conf"):
     serverroot = os.path.dirname(os.path.abspath(__file__))
     webroot = os.path.dirname(serverroot)
-    config = ConfigParser.ConfigParser({'webroot':webroot,
-                                        'serverroot':serverroot})
-    fh = open(os.path.join(serverroot, app_conf))
+    config = ConfigParser.ConfigParser({'webroot':webroot, 'serverroot':serverroot})
+    fh = open(os.path.join(serverroot, fileName))
     config.readfp(fh)
     fh.close()
-
     d = {}
-
     for section in config.sections():
         for k, v in config.items(section):
             if d.get(section) == None:
@@ -356,16 +350,32 @@ def start(site_conf=None, app_conf="default.conf", port=8080):
             if k == 'tools.sessions.timeout':
                 v = int(v)
             d[section][k] = v
+    return d
 
+
+def start(appConf="default.conf", port=8080):
+    """
+    Starts the server using default.conf and port 8080.
+    """
+    #TODO: needs to be more general and really support file configuration. - David 2/6/10
     cherrypy.config.update({'server.socket_port':port})
-
-    d['/']['request.dispatch'] = initDevRoutes()
-    cherrypy.tree.mount(root=None, script_name='/', config=d)
-
-    d['/']['request.dispatch'] = initAppRoutes()
-    cherrypy.tree.mount(root=None, script_name='/server', config=d)
-
+    config = loadConfig(appConf)
+    config['/']['request.dispatch'] = initDevRoutes()
+    cherrypy.tree.mount(root=None, script_name='/', config=config)
+    config['/']['request.dispatch'] = initAppRoutes()
+    cherrypy.tree.mount(root=None, script_name='/server', config=config)
     cherrypy.quickstart()
+
+
+def wsgiStart(appConf="apache.conf"):
+    """
+    Used when running ShiftSpace with Apache + mod_wsgi
+    """
+    #TODO: needs to be more general and really support file configuration. - David 2/6/10
+    cherrypy.config.update(os.path.join(ROOT_PATH, 'site.conf'))
+    config = loadConfig(appConf)
+    config['/']['request.dispatch'] = initRoutes()
+    application = cherrypy.Application(None, script_name='/server', config=config)
 
 
 def usage():
