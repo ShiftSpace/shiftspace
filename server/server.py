@@ -37,7 +37,7 @@ WEB_ROOT = os.path.dirname(SERVER_ROOT)
 serverport = 8080
 
 
-class RootController:
+class DevController:
     def routes(self, d):
         d.connect(name='root', route='', controller=self, action='index')
         d.connect(name='rootDocs', route='docs', controller=self, action='docs')
@@ -168,7 +168,7 @@ class RootController:
         return ack
 
 
-class ServerController:
+class RootController:
     def routes(self, d):
         d.connect(name='rootProxy', route='proxy/:id', controller=self, action='proxy')
         d.connect(name='rootAttrs', route='spaces/:space/attrs', controller=self, action='attrs')
@@ -322,13 +322,18 @@ class ServerController:
         return source
 
 
-def initAppRoutes():
+def initRootRoutes(d):
+    """
+    Initialize the root routes.
+    """
+    s = RootController()
+    return s.routes(d)
+
+
+def initAppRoutes(d):
     """
     Initialize the actual application routes.
     """
-    d = cherrypy.dispatch.RoutesDispatcher()
-    s = ServerController()
-    d = s.routes(d)
     UserController(d)
     ShiftController(d)
     GroupsController(d)
@@ -336,12 +341,11 @@ def initAppRoutes():
     return d
 
 
-def initDevRoutes():
+def initDevRoutes(d):
     """
     Initialize developments routes, attrs.json and proxy routes as well.
     """
-    d = cherrypy.dispatch.RoutesDispatcher()
-    r = RootController()
+    r = DevController()
     return r.routes(d)
 
 
@@ -368,7 +372,8 @@ def start(appConf="default.conf", port=8080):
     #TODO: needs to be more general and really support file configuration. - David 2/6/10
     cherrypy.config.update({'server.socket_port':port})
     config = loadConfig(appConf)
-    config['/']['request.dispatch'] = initDevRoutes()
+    d = cherrypy.dispatch.RoutesDispatcher()
+    config['/']['request.dispatch'] = initDevRoutes(initRootRoutes(d))
     cherrypy.tree.mount(root=None, script_name='/', config=config)
     config['/']['request.dispatch'] = initAppRoutes()
     cherrypy.tree.mount(root=None, script_name='/server', config=config)
@@ -386,7 +391,8 @@ def wsgiStart(siteConf="site.conf", appConf="apache.conf"):
         appConf = os.path.join(SERVER_ROOT, appConf)
     cherrypy.config.update(siteConf)
     config = loadConfig(appConf)
-    config['/']['request.dispatch'] = initAppRoutes()
+    d = cherrypy.dispatch.RoutesDispatcher()
+    config['/']['request.dispatch'] = initAppRoutes(d)
     serverapp = cherrypy.Application(None, script_name='/server', config=config)
 
 
