@@ -26,7 +26,7 @@ body
 {
   margin-top: 10px;
   margin-left: 10px;
-  font-family: helvetica;
+  font-family: Helvetica Neue, Helvetica;
   font-size: 12px;
 }
 
@@ -45,7 +45,7 @@ body
 #SSSandalphonControls span
 {
   float: right;
-  font-family: helvetica;
+  font-family: Helvetica Neue, Helvetica;
   color: #752f05;
   font-size: 24px;
 }

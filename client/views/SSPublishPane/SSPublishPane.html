@@ -6,31 +6,46 @@
      }">
     
     <div id="SSPublishPaneHeader">
-	<div id="SSPublishPaneVis">
-	    <h4>Visibility:</h4>
-            <form id="StatusForm" outlet="SSPublishPane">
-	        <span id="SSPPVisiblePrivate" outlet="SSPublishPane" class="SSRadioButton">
-                    <input id="ShiftPrivateStatusRadio" name="ShiftStatusRadio" value="private" outlet="SSPublishPane" type="radio" class="SSPPradio"></input>
-                    <label>Private</label>
-	        </span>
-	        <span id="SSPPVisiblePublic" outlet="SSPublishPane" class="SSRadioButton">
-		    <!-- <span class="SSPPradio" outlet="SSPublishPane"/> -->
-	            <input id="ShiftPublicStatusRadio" name="ShiftStatusRadio" value="public" outlet="SSPublishPane" type="radio" ></input>
-	            <label>Public</label>
-	        </span>
-            </form>
-	</div>
-    </div>
+    	
+    	<div id="SSPublishPaneEdit" class="hide">
+				<button id="DeleteShift" outlet="SSPublishPane" class="SSButton5">Delete</button>
+				<button id="EditShift" outlet="SSPublishPane" class="SSButton2">Edit</button>
+			</div>
+    
+			<div id="SSPublishPaneVis">
+			    <!-- <h4>Visibility:</h4> -->
+		        <form id="StatusForm" outlet="SSPublishPane">
+			        
+        	    <label class="SSStatus SSPPVisPrivate"><strong>Private shift</strong> shared with 2 users and 1 group</label>
+
+			        
+			        <span id="SSPPVisiblePrivate" outlet="SSPublishPane" class="SSRadioButton hide">
+		                    <input id="ShiftPrivateStatusRadio" name="ShiftStatusRadio" value="private" outlet="SSPublishPane" type="radio" class="SSPPradio"></input>
+		                    <label>Private</label>
+			        </span>
+			        <span id="SSPPVisiblePublic" outlet="SSPublishPane" class="SSRadioButton hide">
+			            <input id="ShiftPublicStatusRadio" name="ShiftStatusRadio" value="public" outlet="SSPublishPane" type="radio" ></input>
+			            <label>Public</label>
+			        </span>
+
+		        </form>
+			</div>
+	
+	  </div>
     
     <div id="SSPublishPaneBody">
-	<div id="SSPublishPaneTags">
-	    <span class="SSPPTagsroundedCorners SSPPTagUser SSPPTagFont">@username</span>
-	    <span class="SSPPTagsroundedCorners SSPPTagGroup SSPPTagFont">&amp;groupname</span>
-	    <span class="SSPPTagsroundedCorners SSPPTagTag SSPPTagFont">#tagname</span>
-	</div>
-	<input id="PublishTargets" type="text" outlet="SSPublishPane" class="SSPinput"></input>
-	<button id="AddTag" class="SSPublishAddTag" outlet="SSPublishPane">Add</button>
-	<p id="TagTip"><strong>@users</strong> or <strong>&amp;groups</strong> will be notified of this shift</p>
+			<input id="PublishTargets" type="text" outlet="SSPublishPane" class="SSPinput TextHint" value="@username, &amp;groupame, #tag"></input>
+			<button id="AddTag" class="SSPublishAddTag" outlet="SSPublishPane">Add</button>
+			<p id="TagTip">
+				<span>Share this shift selectively with <strong>@users</strong> and <strong>&amp;groups</strong></span>
+				<span class="hide"><strong>@users</strong> and <strong>&amp;groups</strong> will be notified of this shift</span>
+			</p>
+			
+			<div id="SSPublishPaneTags">
+			    <span class="SSPPTagsroundedCorners SSPPTagUser SSPPTag">@username<span class="SSPPTagDelete"></span></span>
+			    <span class="SSPPTagsroundedCorners SSPPTagGroup SSPPTag">&amp;groupname<span class="SSPPTagDelete"></span></span>
+			    <span class="SSPPTagsroundedCorners SSPPTagTag SSPPTag">#tagname<span class="SSPPTagDelete"></span></span>
+			</div>
         <!--
         <ul>
             <li><img src="/images/Pane/publish-share-main.png"/></li>
@@ -44,18 +59,23 @@
         -->
     </div>
     
+			<div id="SSPPVisibleEverybody" outlet="SSPublishPane" class="SSRadioButton">
+				<input type="checkbox" id="generatedId_91941"></input>
+				<label>Publish to everybody</label>
+      </div>
+
+    
     <div id="SSPublishPaneFooter">
-	<div id="SSPublishPaneStatus">
-	    <label>Status: <b>Draft</b></label>
-	    <div id="SSPublishButtons">
-		<button id="DeleteShift" outlet="SSPublishPane" class="SSMinorButton">Delete</button>
-		<button id="SaveShift" outlet="SSPublishPane" class="SSMinorButton">Save</button>
-		<button id="ChooseVisibility" outlet="SSPublishPane" class="SSInactiveButton">Choose Visibility</button>
-                <!--
-		<button id="PublishShift" outlet="SSPublishPane" class="SSPublishPubButton SSMajorButton hide">Publish</button>
-                -->
-	    </div>
-	</div>
+			<div id="SSPublishPaneStatus">	
+					<button id="LinkPane" outlet="SSPublishPane" class="SSButton6">Get secret link</button>
+			    <div id="SSPublishButtons">
+						<button id="SaveShift" outlet="SSPublishPane" class="SSButton5">Cancel</button>
+						<button id="ChooseVisibility" outlet="SSPublishPane" class="SSButton1">Update Visibility</button>
+				                <!--
+						<button id="PublishShift" outlet="SSPublishPane" class="SSPublishPubButton SSButton1 hide">Publish</button>
+				                -->
+			    </div>
+			</div>
     </div>
     
 </div>
