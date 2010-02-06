@@ -4,7 +4,8 @@
   overflow-y: scroll;
 }
 
-#LoginTabView .SSTabPane form
+#LoginTabView .SSTabPane form,
+.SSOpenid.Signup
 {
   border:1px solid #C9CCC4;
 	margin-left:10px;
@@ -15,7 +16,34 @@
 }
 
 #LoginTabView #SSLoginForm{
-	height: 50px;
+	height: 45px;
+	
+}
+
+.SSOpenid.Signup
+{
+	display:block;
+	height:auto;
+	margin-top:-13px;
+	padding:5px 10px 2px;
+	text-align:right;
+	width:430px;
+}
+
+.SSOpenid.Register
+{
+	float: left;
+}
+
+.SSOpenid a
+{
+	vertical-align:sub;
+	margin-left:2px;
+}
+
+.SSOpenid a img
+{
+	border: 0;
 }
 
 .LoginTabViewForm input

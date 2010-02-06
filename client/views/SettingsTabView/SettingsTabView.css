@@ -46,7 +46,12 @@ div#SSInstalledSpacesTabPane
    width: 50%;
 }
 
+#PreferencesTab .col div, #InterfaceTab .col div
+{
+   margin-bottom: 5px;
+}
+
 #InterfaceTab input[type=text]
 {
-   width: 50px;
+   width: 80px;
 }
