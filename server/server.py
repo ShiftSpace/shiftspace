@@ -170,9 +170,13 @@ class DevController:
 
 class RootController:
     def routes(self, d):
+        d.connect(name='root', route='/', controller=self, action='index')
         d.connect(name='rootProxy', route='proxy/:id', controller=self, action='proxy')
         d.connect(name='rootAttrs', route='spaces/:space/attrs', controller=self, action='attrs')
         return d
+    
+    def index(self):
+        return "ShiftSpace Server 1.0"
         
     def walk(self, fdir, d):
         """
@@ -381,7 +385,7 @@ def start(appConf="default.conf", port=8080):
     cherrypy.quickstart()
 
 
-def wsgiStart(siteConf="site.conf", appConf="apache.conf"):
+def wsgiRoot(siteConf="site.conf", appConf="apache.conf"):
     """
     Used when running ShiftSpace with Apache + mod_wsgi
     """
@@ -393,8 +397,23 @@ def wsgiStart(siteConf="site.conf", appConf="apache.conf"):
     cherrypy.config.update(siteConf)
     config = loadConfig(appConf)
     d = cherrypy.dispatch.RoutesDispatcher()
+    config['/']['request.dispatch'] = initRootRoutes(d)
+    return cherrypy.Application(None, script_name='/shiftspace', config=config)
+
+
+def wsgiApp(siteConf="site.conf", appConf="apache.conf"):
+    """
+    Used when running ShiftSpace with Apache + mod_wsgi
+    """
+    if not os.path.isabs(siteConf):
+        siteConf = os.path.join(SERVER_ROOT, siteConf)
+    if not os.path.isabs(appConf):
+        appConf = os.path.join(SERVER_ROOT, appConf)
+    cherrypy.config.update(siteConf)
+    config = loadConfig(appConf)
+    d = cherrypy.dispatch.RoutesDispatcher()
     config['/']['request.dispatch'] = initAppRoutes(d)
-    serverapp = cherrypy.Application(None, script_name='/server', config=config)
+    return cherrypy.Application(None, script_name='/shiftspace/server', config=config)
 
 
 def usage():
