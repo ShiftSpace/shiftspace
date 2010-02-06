@@ -14,7 +14,8 @@ div.header div.top{
     padding: 6px;
 }
 div.top label{
-    margin-left:6px;
+    color:#4B423A;
+    margin-left:2px;
    font-size:12px;
 }
 div.top span.userName{
@@ -48,13 +49,15 @@ div.header div.bottom{
 }
 div.bottom label{
     display:block;
+    color:#4B423A;
     float:left;
     font-size:12px;
     text-align:right;
-    width:54px;    
+    width:50px;    
 }
 div.bottom span.title{
     display:block;
+    color:#554C45;
     font-size:12px;
     font-weight:bold;
     margin-left:58px;
@@ -80,6 +83,10 @@ div#InviteSubView div.text{
     font-size:12px;
 }
 
+div#FollowSubView div.text{
+    font-size:12px;
+    color: #2a2520;
+}
 
 
 /* down option buttons ======================================= */
