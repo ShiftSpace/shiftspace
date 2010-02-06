@@ -367,12 +367,16 @@ def start(appConf="default.conf", port=8080):
     cherrypy.quickstart()
 
 
-def wsgiStart(appConf="apache.conf"):
+def wsgiStart(siteConf="site.conf", appConf="apache.conf"):
     """
     Used when running ShiftSpace with Apache + mod_wsgi
     """
     #TODO: needs to be more general and really support file configuration. - David 2/6/10
-    cherrypy.config.update(os.path.join(ROOT_PATH, 'site.conf'))
+    if not os.path.isabs(siteConf):
+        siteConf = os.path.join(ROOT_PATH, siteConf)
+    if not os.path.isabs(appConf):
+        appConf = os.path.join(ROOT_PATH, appConf)
+    cherrypy.config.update(siteConf)
     config = loadConfig(appConf)
     config['/']['request.dispatch'] = initRoutes()
     application = cherrypy.Application(None, script_name='/server', config=config)
