@@ -113,7 +113,7 @@ form .SSRadioButton label,
 }
 
 .SSPinput{
-   background-image:url("http://localhost:8080/images/Pane/publish-form-input.gif");
+  background-image:url("http://localhost:8080/images/Pane/publish-form-input.gif");
 	border:0 none;
 	font-size:14px;
 	height:28px;
