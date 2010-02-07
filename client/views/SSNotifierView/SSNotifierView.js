@@ -26,8 +26,9 @@ var SSNotifierView = new Class({
       this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
     }.bind(this));
     SSAddObserver(this, 'onNewShiftShow', this.showQuickPane.bind(this));
-    SSAddObserver(this, 'onShiftSave', this.hideQuickPane.bind(this));
     SSAddObserver(this, 'onShiftDestroy', this.hideQuickPane.bind(this));
+    SSAddObserver(this, 'onPublishPaneOpen', this.showQuickEditPane.bind(this));
+    SSAddObserver(this, 'onPublishPaneClose', this.hideQuickEditPane.bind(this));
 
     this.attachFinishKeyEvents();
   },
@@ -493,6 +494,18 @@ var SSNotifierView = new Class({
     this.SSQuickPane.addClass("SSDisplayNone");
   },
   
+
+  showQuickEditPane: function()
+  {
+    this.SSQuickEditPane.removeClass("SSDisplayNone");
+  },
+
+
+  hideQuickEditPane: function()
+  {
+    this.SSQuickEditPane.addClass("SSDisplayNone");
+  },
+
   
   buildInterface: function()
   {
