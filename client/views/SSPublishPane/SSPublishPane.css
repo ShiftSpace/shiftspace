@@ -11,7 +11,7 @@ button:hover{
 {
    color: black;
    z-index: 2;
-   font-family: Helvetica,Arial,Verdana, sans-serif;
+   font-family: Helvetica Neue, Helvetica,Arial,Verdana, sans-serif;
    font-size: 12px;
    color: #4b423a;
    -webkit-box-shadow: 0px 0px 10px #000;  
@@ -50,15 +50,17 @@ button:hover{
    background-image:url(/images/Pane/publish-top-body.gif);
    background-repeat:repeat-y;
    clear: both;
+   min-height: 109px;
 }
 
-#SSPublishPaneVis h4{
+#SSPublishPane h4{
    margin: 0 5px 0 0;
    float: left;
+   padding-top:4px;
 }
 
 form#StatusForm{
-   
+   padding:4px 0;
 }
 
 form .SSRadioButton{
@@ -66,16 +68,21 @@ form .SSRadioButton{
    margin-right:2px;
 }
 
-form .SSRadioButton label{
+form .SSRadioButton label,
+#SSPublishPaneVis .SSStatus{
    padding-left:18px;
+   padding-top:1px;
+   font-size:12px;
 }
 
-#SSPPVisiblePrivate label{
-   background: url(/images/Pane/publish-private.png) no-repeat scroll 0px center;
+#SSPPVisiblePrivate label,
+.SSPPVisPrivate{
+   background: url(/images/Pane/publish-private.png) no-repeat scroll 0 -2px;
 }
 
-#SSPPVisiblePublic label{
-   background: url(/images/Pane/publish-public.png) no-repeat scroll 0px center;
+#SSPPVisiblePublic label,
+.SSPPVisPublic{
+   background: url(/images/Pane/publish-public.png) no-repeat scroll 0 -2px;
 }
 
 #SSPublishPaneBody a img{
@@ -101,30 +108,41 @@ form .SSRadioButton label{
    
 }
 
+#SSPublishPaneVis .SSStatus{
+	padding: 
+}
+
 .SSPinput{
-   position:relative;
-   bottom:-7px;
-   background-image:url(/images/Pane/publish-form-input.gif);
-   width:334px;
-   height:30px;
-   border:0px;
-   margin-left:-2px;
-   padding:6px;
-   font-size: 14px;
+   background-image:url("http://localhost:8080/images/Pane/publish-form-input.gif");
+	border:0 none;
+	font-size:14px;
+	height:28px;
+	margin:5px 0 0 0;
+	padding:6px;
+	position:relative;
+	width:332px;
+}
+
+.SSPinput.TextHint{
+	color: #b3ada5;
+}
+
+.SSPinput.TextInput{
+	color: #464540;
 }
 
 #SSPublishPaneBody button#Addtag{
    background:transparent url(/images/Pane/publish-form-button.gif) center center no-repeat;
    border:0 none;
-   margin-top:8px;
-   padding:6px 10px;
+   margin-top:5px;
+   padding:7px 10px;
    position:absolute;
-   right:25px;
+   right:17px;
    text-indent:-2000px;
 }
 
 #SSPublishPaneBody p#TagTip{
-   margin: 5px 0 0;
+   margin: 0;
    padding: 5px 0;
 }
 
@@ -141,9 +159,13 @@ form .SSRadioButton label{
 
 }
 
-.SSPPTagFont{
+.SSPPTag{
    font-size:11px;
    font-weight: bold;
+}
+
+.SSPPTag .SSPPTagDelete{
+	
 }
 
 .SSPPTagUser{
@@ -186,18 +208,30 @@ span.SSPPTagsroundedCorners:hover{
    background: #fff url(/images/Pane/publish-del-tag.png) no-repeat scroll right 2px;
 }
 
+#SSPPVisibleEverybody{
+	background: #B3ADA5;
+	bottom: 0;
+	padding: 3px 0
+}
+
 /*----------------------------------------------------FOOTER*/
 #SSPublishPaneFooter
 {
-   padding:4px 0 11px;
+   padding:6px 0 11px;
    background:#ffffff;
    background-image:url(/images/Pane/publish-top-footer.gif);
    height: 15px;
    font-size: 12px;
 }
 
-#SaveShift{
-  /* display:none; */
+#LinkPane{
+	background: url(/images/Pane/link.png) no-repeat scroll 0 2px;
+	padding: 4px 0 0 17px;
+}
+
+#SaveShift,
+#ChooseVisibility{
+	/* float: left; */
 }
 
 #SSPublishPaneStatus{
@@ -206,8 +240,7 @@ span.SSPPTagsroundedCorners:hover{
 }
 
 #SSPublishPaneStatus label{
-   float: left;
-   padding: 2px 0;
+   padding: 5px 0;
 }
 
 #SSPublishPaneStatus #SSPublishButtons{

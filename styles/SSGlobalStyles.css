@@ -30,39 +30,80 @@ input[type=checkbox]:checked
 
 /* Buttons ============================================== */
 
-.SSMinorButton{
+
+.SSButton6:hover,
+.SSButton5:hover,
+.SSButton4:hover,
+.SSButton3:hover,
+.SSButton2:hover,
+.SSButton1:hover{
+	cursor: pointer;
+}
+
+.SSButton6{
+   background: none;
+   border: 0;
+   text-decoration: underline;
+   padding:1px 5px 0 4px;
+   font-size: 11px;
+   font-weight: normal;
+   text-align: left;
+   color: #4B423A;
+   text-decoration: none;
+}
+
+.SSButton5{
    background: none;
    border: 0;
    color: #f63b02;
    text-decoration: underline;
-   padding:0 5px;
+   padding:1px 5px 0 4px;
+   font-size: 11px;
+   font-weight: bold;
 }
 
-.SSInactiveButton{
+.SSButton3{
+   background: none;
+   border:2px #74665A solid;
+   -moz-border-radius: 10px;
+   -webkit-border-radius: 10px;
+   padding:1px 5px 0 4px;
+   font-weight:bold;
+   color: #74665A;
+}
+
+.SSButton2{
    background: none;
    border:2px #f63b02 solid;
    -moz-border-radius: 10px;
    -webkit-border-radius: 10px;
-   padding:0 5px;
+   padding:1px 5px 0 4px;
    font-weight:bold;
    color: #f63b02;
 }
 
-.SSMajorButton{
+.SSButton1{
    background-color: #f63b02;
    color:fff;
    border:2px #b52b01 solid;
    -moz-border-radius: 10px;
    -webkit-border-radius: 10px;
-   padding:0 5px;
+   padding:1px 5px 0 4px;
    font-weight:bold;
 }
+
+/* States ============================================= */
+
+.SSStatus{
+	font-size: 11px;
+	color: #4B423A;
+}
+
+/* More Styles ============================================= */
 
 .hide{
    display: none;
 }
-
-/* More Styles ============================================= */
 
 .SSTabView > .SSControlView > .SSButton
 {

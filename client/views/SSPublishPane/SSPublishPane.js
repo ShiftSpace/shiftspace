@@ -47,12 +47,14 @@ var SSPublishPane = new Class({
     this.delegate().short();
     this.delegate().show();
     this.multiView().showViewByName(this.name);
+    SSPostNotification("onPublishPaneOpen");
   },
 
 
   'close': function()
   {
     this.delegate().hide();
+    SSPostNotification("onPublishPaneClose");
   },
 
 
@@ -257,7 +259,8 @@ var SSPublishPane = new Class({
 
       // clear out the publish targets data
       this.PublishTargets.setProperty("value", "");
-      
+
+      /*
       this.element.getElement("#SSPublishPaneStatus label").removeClass('SSDisplayNone');
       if(publishData !== undefined && publishData.draft)
       {
@@ -267,6 +270,8 @@ var SSPublishPane = new Class({
       {
         this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Published');
       }
+      */
+      
       if(publishData.private)
       {
         this.ShiftPrivateStatusRadio.setProperty("checked", true);

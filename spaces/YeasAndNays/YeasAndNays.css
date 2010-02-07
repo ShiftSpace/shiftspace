@@ -10,7 +10,7 @@
 }
 
 #YAN_main{
-    font-family: Helvetica, Verdana, Arial, sans-serif;
+    font-family: Helvetica Neue, Helvetica, Verdana, Arial, sans-serif;
     font-weight: bold;
     font: 16px;
 	padding: 5px 10px 5px 10px;
@@ -20,7 +20,7 @@
 
 /* form field style */
 .SSYeasAndNaysShiftInput{
-	font-family: Helvetica, Verdana, Arial, sans-serif;
+	font-family: Helvetica Neue, Helvetica, Verdana, Arial, sans-serif;
 	margin-left: 0px;
 	margin-bottom: 3px;
 	margin-right: 5px;
@@ -52,7 +52,7 @@
 
 #YAN_Select{
 	
-	font-family: Helvetica, Verdana, Arial, sans-serif;
+	font-family: Helvetica Neue, Helvetica, Verdana, Arial, sans-serif;
 	font-size: 16px;
 	font-weight: bold;
 	padding: 3px;
@@ -68,7 +68,7 @@
 .SSYeasAndNaysOption{
 	font-weight: bold;
 	font-size: 14px;
-	font-family: Helvetica, Verdana, Arial, sans-serif;
+	font-family: Helvetica Neue, Helvetica, Verdana, Arial, sans-serif;
 	padding: 3px 0px 3px 0px;
 }
 
