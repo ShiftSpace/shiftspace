@@ -112,7 +112,15 @@
         </div>
 
         <div id="AccountTab" class="SSTabPane">
-            Account
+            <form id="AccountDetails" outlet="SettingsTabView">
+                <label>Url:</label>
+                <input class="url" name="url" type="text"></input>
+                <label>Full Name:</label>
+                <input class="fullName" name="fullName" type="text"></input>
+                <label>Bio:</label>
+                <textarea class="bio" name="bio"></textarea>
+                <button id="UpdateAccountDetails" outlet="SettingsTabView">Update</button>
+            </form>
         </div>
     </div>
 
