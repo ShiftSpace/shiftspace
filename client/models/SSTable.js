@@ -98,6 +98,7 @@ var SSTable = new Class({
     this.setHandlers({});
     this.setViews(views || []);
     this.setApp(this.options.app || SSApplication());
+    this.setMerge(this.options.merge);
     if(this.options.sortFn)
     {
       this.setSortFn(this.options.sortFn);
@@ -133,6 +134,19 @@ var SSTable = new Class({
     return doc;
   },
   
+
+  merge: function()
+  {
+    return this.__merge;
+  },
+  
+  
+  setMerge: function(merge)
+  {
+    this.__merge = merge;
+  },
+
+
   /*
     Function: sortByModified (private)
       Utility sort by modified date function. Not meant to be used directly.
@@ -382,12 +396,13 @@ var SSTable = new Class({
     Returns:
       An array of documents.
    */
-  data: function()
+  data: function(asArray)
   {
     return SSApplication().cache(
       this.getName(), 
       {
-        asArray: true, 
+        merge: this.merge(),
+        asArray: (asArray === false) ? false : true, 
         transform: this.transformFn(),
         sort: this.sortFn()
       }
