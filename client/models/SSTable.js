@@ -669,21 +669,21 @@ SSTable.protocol = {
 SSTable.dirtyTheViews = function(value)
 {
   this.dirtyTheViews();
-}
+};
 
 SSTable.updateViews = function(newValue, oldValue)
 {
   this.updateViews(newValue, oldValue);
-}
+};
 
 SSTable.updateDoc = function(doc)
 { 
   SSApplication().setDocument(this.getName(), doc);
-}
+};
 
 SSTable.dirtyAllViews = function(value)
 {
   __resources.each(function(v, k) {
     v.dirtyTheViews();
   });
-}
+};
