@@ -204,9 +204,9 @@ var SandalphonClass = new Class({
   activate: function(ctxt)
   {
     var context = ctxt || window;
-    this.generateOutletBindings(context);
+        bindings = this.generateOutletBindings(context);
     this.instantiateControllers(context);
-    this.bindOutlets(context);
+    this.bindOutlets(bindings);
     this.awakeObjects(context);
     if(ctxt.__sscontextowner)
     {
@@ -280,10 +280,10 @@ var SandalphonClass = new Class({
   generateOutletBindings: function(ctxt)
   {
     // grab the right context, grab all outlets
-    var context = ctxt || window;
-    var outlets = this.contextQuery(context, '*[outlet]');
+    var context = ctxt || window,
+        outlets = this.contextQuery(context, '*[outlet]');
     
-    outlets.each(function(anOutlet) {
+    return outlets.map(function(anOutlet) {
       var outletTarget, sourceName;
       // grab the outlet parent id
       var outlet = anOutlet.getProperty('outlet').trim();
@@ -301,12 +301,12 @@ var SandalphonClass = new Class({
         outletTarget = outletBinding.target;
         sourceName = outletBinding.name;
       }
-      this.outletBindings.push({
+      return {
         sourceName: sourceName,
         source: anOutlet,
         targetName: outletTarget,
         context: context
-      });
+      };
     }.bind(this));
   },
   
@@ -314,10 +314,10 @@ var SandalphonClass = new Class({
     bindOutlets:
       Binds all controllers and/or elements to the target controller.
   */
-  bindOutlets: function()
+  bindOutlets: function(bindings)
   {
     // bind each outlet
-    this.outletBindings.each(function(binding) {
+    bindings.each(function(binding) {
       // get the real window context
       var context = ($type(binding.context) == 'window' && binding.context) ||
                     ($type(binding.context) == 'element' && binding.context.getWindow()),
