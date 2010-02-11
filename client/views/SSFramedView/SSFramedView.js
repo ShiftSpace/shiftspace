@@ -105,6 +105,8 @@ var SSFramedView = new Class({
   */
   finish: function()
   {
+    if(this.__isFinishing) return;
+    this.__isFinishing = true;
     if(!this.delayed())
     {
       throw new Error("Not a delayed SSFramedView");

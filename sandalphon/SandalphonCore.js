@@ -23,7 +23,6 @@ var SandalphonClass = new Class({
   {
     // for analyzing fragments of markup
     this.setFragment(new Element('div'));
-    this.outletBindings = [];
   },
   
   /*
@@ -34,7 +33,6 @@ var SandalphonClass = new Class({
   */
   reset: function()
   {
-    this.outletBindings = [];
     SSClearControllersTable();
     SSClearObjects();
   },
