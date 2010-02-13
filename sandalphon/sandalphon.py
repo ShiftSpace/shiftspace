@@ -82,7 +82,7 @@ class SandalphonCompiler:
                 if env and (env["data"].get("DEPLOY") == None or env["data"].get("DEPLOY") == False):
                     server = env["data"]["SERVER"]
                     importPath = "%sclient/%s" % (server, cssPath)
-                    imageUrl = env["data"].get("IMAGESDIR")
+                    imageUrl = env["data"].get("IMAGES_PATH")
                     if imageUrl:
                         preprocessed = self.preprocessCssImageUrls(fileHandle.read(), imageUrl)
                         importPath = os.path.join(outDir, basename)
@@ -96,7 +96,7 @@ class SandalphonCompiler:
                     cssFile = cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
                     css = fileHandle.read()
                     if env:
-                        imageUrl = env["data"].get("IMAGESDIR")
+                        imageUrl = env["data"].get("IMAGES_PATH")
                         if imageUrl:
                             css = self.preprocessCssImageUrls(css, imageUrl)
                     cssFile = cssFile + css
@@ -265,7 +265,7 @@ class SandalphonCompiler:
         fullPath = os.path.join(outDir, name+"Main.html")
         fileHandle = open(fullPath, "w")
         if env:
-            imagesUrl = env["data"].get("IMAGESDIR")
+            imagesUrl = env["data"].get("IMAGES_PATH")
             if imagesUrl:
                 interfaceFile = self.preprocessHtmlImageUrls(interfaceFile, imagesUrl)
         fileHandle.write(interfaceFile)

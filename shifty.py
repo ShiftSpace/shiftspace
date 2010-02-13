@@ -55,7 +55,7 @@ def env(url):
     return {
         "SERVER": url,
         "SPACES_PATH": url + "spaces/",
-        "IMAGESDIR": url + "images/",
+        "IMAGES_PATH": url + "images/",
         "GLOBAL_CSS": "styles/SSGlobalStyles.css",
         "LOG_LEVEL": None,
         }
