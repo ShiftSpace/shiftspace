@@ -134,7 +134,7 @@ var SandalphonClass = new Class({
   */
   load: function(path)
   {
-    var server = (SSInfo && SSInfo().server) || '..';
+    var server = (SSInfo && SSInfo().mediaPath) || '..';
     return new Promise({"interface": SSLoadFile(String.urlJoin(server, path+'.html')),
                         styles: SSLoadFile(String.urlJoin(server, path+'.css'))});
   },
