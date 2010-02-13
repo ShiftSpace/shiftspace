@@ -6,6 +6,7 @@
 
 var __spacesPath = '%%SPACES_PATH%%';
 var __mediaPath = '%%MEDIA_PATH%%';
+var __imagesPath = '%%IMAGES_PATH%%';
 
 SSLog('SERVER: ' + __server, SSLogForce);
 SSLog('SPACES_PATH: ' + __spacesPath, SSLogForce);

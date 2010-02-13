@@ -511,7 +511,7 @@ var SSNotifierView = new Class({
   {
     this.parent();
     this.contentWindow().$$(".SSNotifierSubView").setStyles({
-      "background-image": "url("+SSInfo().server+"images/shiftspace_icon.png)"
+      "background-image": "url("+String.urlJoin(SSInfo().imagesPath, "shiftspace_icon.png")+")"
     });
     this.attachEvents();
     this.initGraph();
