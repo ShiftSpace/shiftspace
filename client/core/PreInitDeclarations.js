@@ -4,7 +4,8 @@
 // NOTE: This will be preprocessed by preprocess.py and replaced with the proper
 // servers
 
-var __spacesDir = '%%SPACEDIR%%';
+var __spacesDir = '%%SPACES_PATH%%';
+var __mediaDir = '%%MEDIA_PATH%%';
 
 SSLog('SERVER: ' + __server, SSLogForce);
 SSLog('SPACESDIR: ' + __spacesDir, SSLogForce);

@@ -54,7 +54,7 @@ def nightly():
 def env(url):
     return {
         "SERVER": url,
-        "SPACEDIR": url + "spaces/",
+        "SPACES_PATH": url + "spaces/",
         "IMAGESDIR": url + "images/",
         "GLOBAL_CSS": "styles/SSGlobalStyles.css",
         "LOG_LEVEL": None,
