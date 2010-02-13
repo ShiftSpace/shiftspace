@@ -80,8 +80,8 @@ class SandalphonCompiler:
             fileHandle = open(cssPath)
             if fileHandle != None:
                 if env and (env["data"].get("DEPLOY") == None or env["data"].get("DEPLOY") == False):
-                    server = env["data"]["SERVER"]
-                    importPath = "%sclient/%s" % (server, cssPath)
+                    mediaPath = env["data"]["MEDIA_PATH"]
+                    importPath = "%sclient/%s" % (mediaPath, cssPath)
                     imageUrl = env["data"].get("IMAGES_PATH")
                     if imageUrl:
                         preprocessed = self.preprocessCssImageUrls(fileHandle.read(), imageUrl)
@@ -90,7 +90,7 @@ class SandalphonCompiler:
                         newCSSFileHandle.write(preprocessed)
                         newCSSFileHandle.close()
                     # damn Windows
-                    importPath = (server + importPath).replace('\\', '/')
+                    importPath = (mediaPath + importPath).replace('\\', '/')
                     cssFile = cssFile + "@import url(%s);\n" % importPath
                 else:
                     cssFile = cssFile + "\n\n/*========== " + cssPath + " ==========*/\n\n"
