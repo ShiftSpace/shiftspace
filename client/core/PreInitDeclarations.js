@@ -4,11 +4,11 @@
 // NOTE: This will be preprocessed by preprocess.py and replaced with the proper
 // servers
 
-var __spacesDir = '%%SPACES_PATH%%';
-var __mediaDir = '%%MEDIA_PATH%%';
+var __spacesPath = '%%SPACES_PATH%%';
+var __mediaPath = '%%MEDIA_PATH%%';
 
 SSLog('SERVER: ' + __server, SSLogForce);
-SSLog('SPACESDIR: ' + __spacesDir, SSLogForce);
+SSLog('SPACES_PATH: ' + __spacesPath, SSLogForce);
 
 var version = '1.0';
 

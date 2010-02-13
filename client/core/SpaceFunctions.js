@@ -206,7 +206,7 @@ Returns:
 */
 function SSLoadSpaceAttributes(spaceName)
 {
-  var p = SSLoadFile(String.urlJoin(ShiftSpace.info().spacesDir, spaceName, 'attrs'));
+  var p = SSLoadFile(String.urlJoin(ShiftSpace.info().spacesPath, spaceName, 'attrs'));
   var p2 = $if(p,
                function() {
                  // check to see that the resources urls are full
@@ -216,7 +216,7 @@ function SSLoadSpaceAttributes(spaceName)
                  if(json.url) json.url = json.url.trim();
                  if(!json.url)
                  {
-                   json.url = String.urlJoin(ShiftSpace.info().spacesDir, spaceName);
+                   json.url = String.urlJoin(ShiftSpace.info().spacesPath, spaceName);
                  }
                  else if(!SSIsAbsoluteURL(json.url))
                  {
@@ -262,7 +262,7 @@ function SSInstallSpace(space)
 {
   if(!SSURLForSpace(space))
   {
-    var url = String.urlJoin(SSInfo().spacesDir, space, space + '.js');
+    var url = String.urlJoin(SSInfo().spacesPath, space, space + '.js');
     var count = $H(SSInstalledSpaces()).getLength();
     var p = SSLoadSpaceAttributes(space);
     $if(SSApp.noErr(p),

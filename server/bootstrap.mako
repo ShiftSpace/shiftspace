@@ -19,7 +19,7 @@
 </script>
 <script type="text/javascript">
     var __server = "${server}";
-    var __spacesDir = "${spacesDir}";
+    var __spacesPath = "${spacesPath}";
 </script>
 <script type="text/javascript" src="/externals/mootools-1.2.3-core.js"></script>
 <script type="text/javascript" src="/externals/mootools-1.2.3.1-more.js"></script>

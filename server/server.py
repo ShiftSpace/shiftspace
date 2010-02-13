@@ -284,7 +284,7 @@ class RootController:
         server = "http://localhost:%s" % serverport
         ctxt = {
             "server": server,
-            "spacesDir": "/".join([server, "spaces"]),
+            "spacesPath": "/".join([server, "spaces"]),
             "shiftId": shiftId,
             "space": space,
             "shift": json.dumps(theShift),

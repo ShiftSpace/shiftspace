@@ -62,7 +62,7 @@ function SSInfo(spaceName)
 
   var info =  {
     server: __server,
-    spacesDir: (typeof __spacesDir != 'undefined' && __spacesDir) || null,
+    spacesPath: (typeof __spacesPath != 'undefined' && __spacesPath) || null,
     spaces: (spaceIndex && spaceIndex.join(', ')) || null,
     version: (typeof version != 'undefined' && version) || null
   };
