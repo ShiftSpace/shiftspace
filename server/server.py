@@ -385,11 +385,10 @@ def start(appConf="default.conf", port=8080):
     cherrypy.quickstart()
 
 
-def wsgiRoot(siteConf="site.conf", appConf="apache.conf"):
+def startWsgi(siteConf="site.conf", appConf="apache.conf"):
     """
     Used when running ShiftSpace with Apache + mod_wsgi
     """
-    #TODO: needs to be more general and really support file configuration. - David 2/6/10
     if not os.path.isabs(siteConf):
         siteConf = os.path.join(SERVER_ROOT, siteConf)
     if not os.path.isabs(appConf):
@@ -398,22 +397,11 @@ def wsgiRoot(siteConf="site.conf", appConf="apache.conf"):
     config = loadConfig(appConf)
     d = cherrypy.dispatch.RoutesDispatcher()
     config['/']['request.dispatch'] = initRootRoutes(d)
-    return cherrypy.Application(None, script_name='/shiftspace', config=config)
-
-
-def wsgiApp(siteConf="site.conf", appConf="apache.conf"):
-    """
-    Used when running ShiftSpace with Apache + mod_wsgi
-    """
-    if not os.path.isabs(siteConf):
-        siteConf = os.path.join(SERVER_ROOT, siteConf)
-    if not os.path.isabs(appConf):
-        appConf = os.path.join(SERVER_ROOT, appConf)
-    cherrypy.config.update(siteConf)
-    config = loadConfig(appConf)
+    cherrypy.tree.mount(root=None, script_name='/shiftspace', config=config)
     d = cherrypy.dispatch.RoutesDispatcher()
     config['/']['request.dispatch'] = initAppRoutes(d)
-    return cherrypy.Application(None, script_name='/shiftspace/server', config=config)
+    cherrypy.tree.mount(root=None, script_name='/shiftspace/server', config=config)
+    return cherrypy.tree
 
 
 def usage():
