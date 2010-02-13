@@ -7,30 +7,36 @@
 
 .FollowedUserBio
 {
-    width: 273px;
-    height: 69px;
-    padding-left: 68px;
+    /*width: 273px;*/
+    min-height:66px;
+    padding-bottom:4px;
+    padding-left:70px;
     border: 1px solid #BDADA5;
     background-color: #E4DFDB;
 }
 
 .FollowedUserBio *
 {
-    float: left;
+   /* float: left; */ 
+}
+
+.FollowedUserBio .userNames
+{
+    height:34px;
 }
 
 .FollowedUserBio img
 {
     border:2px solid #B5B0A8;
-    height:65px;
+    height:68px;
     left:1px;
     position:absolute;
     top:1px;
-    width:65px;
+    width:67px;
 }
 
 
-.FollowedUserBio .username
+.FollowedUserBio .userName
 {
     color:#F63B02;
     font-size:15px;
@@ -39,7 +45,7 @@
     margin-left:8px;
 }
 
-.FollowedUserBio .userHandle
+.FollowedUserBio .fullName
 {
     color:#786A5F;
     font-size:15px;
@@ -48,13 +54,32 @@
     margin-top:10px;
 }
 
-.FollowedUserBio .bio,
+.FollowedUserBio .bio
+{
+    background-image:url("http://localhost:8080/images/Console/info.gif");
+    background-position:0 0;
+    background-repeat:no-repeat;
+    color:#786A5F;
+    font-size:12px;
+    min-height:16px;
+    margin-left:5px;
+    margin-top:-5px;
+    padding-left:18px;
+    padding-top:3px;
+}
+
 .FollowedUserBio .url
 {
+    background-image:url("http://localhost:8080/images/Console/groups-perm.gif");
+    background-position:0 0;
+    background-repeat:no-repeat;
+    color:#786A5F;
     font-size:12px;
-    color:#786a5f;
-    margin-left:-31px;
-    margin-top:35px;
+    min-height:17px;
+    margin-left:5px;
+    margin-top:0px;
+    padding-left:18px;
+    padding-top:3px;
 }
 
 .FollowedUserStats
