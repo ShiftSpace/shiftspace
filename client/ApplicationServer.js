@@ -86,10 +86,19 @@ var ApplicationServer = new Class({
     var result = (name) ? this.__cache[name] : this.__cache,
         asArray = $get(options, 'asArray'), 
         transform = $get(options, 'transform'),
-        sort = $get(options, 'sort');
+        sort = $get(options, 'sort'),
+        merge = $get(options, 'merge');
+    if(merge)
+    {
+      result = $merge(result, $H(this.__cache[merge.cache || 'global']).filter(merge.filter || $identity).getClean());
+    }
     if(asArray) result = (name) ? $H(result).getValues() : this.allCachedDocuments().getValues();
-    if(transform) result = result.map(transform);
-    if(sort) result = result.sort(sort);
+    if(transform)
+    {
+      if(!asArray) result = $H(result);
+      result = result.map(transform);
+    }
+    if(asArray && sort) result = result.sort(sort);
     return result;
   },
   

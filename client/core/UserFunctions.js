@@ -82,6 +82,12 @@ function SSGetUser(userName)
 }
 
 
+function SSUpdateUser(fields)
+{
+  return SSApp.update('user', ShiftSpace.User.getUserName(), fields);
+}
+
+
 function SSUserInfo(userName)
 {
   return SSApp.get({

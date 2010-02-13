@@ -433,7 +433,7 @@ Sortables.implement({
 
 function SSFormToHash(formEl)
 {
-  var inputs = formEl.getElements("input[name]"), result = $H();
+  var inputs = formEl.getElements("input[name], textarea[name]"), result = $H();
   inputs.each(function(input) {
     result[input.getProperty("name")] = input.getProperty("value");
   });

@@ -122,7 +122,7 @@ var SSConsoleWindow = new Class({
     this.resizer.setStyles({
       bottom: ''
     });
-  },
+  }.decorate(ssfv_ensure),
 
 
   "short": function()
@@ -137,7 +137,7 @@ var SSConsoleWindow = new Class({
     this.resizer.setStyles({
       bottom: ''
     });
-  },
+  }.decorate(ssfv_ensure),
 
   /* SSFramedView Stuff ============================ */
   

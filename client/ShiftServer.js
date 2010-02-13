@@ -38,9 +38,16 @@ var ShiftServer = new Class({
   },
   
   
+  shiftFilter: function(v, k, hash)
+  {
+    return v.type == "shift";
+  },
+  
+
   initTables: function()
   {
     new SSTable("AllShifts", {
+      merge: {cache:'global', filter: this.shiftFilter},
       resource: {create:'shift', read:'shifts', update:'shift', 'delete':'shift'},
       watches: [
         {

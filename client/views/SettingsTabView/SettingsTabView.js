@@ -35,17 +35,57 @@ var SettingsTabView = new Class({
       evt = new Event(evt);
       SSUninstallAllSpaces();
     });
+    this.attachEvents();
   },
 
 
+  // FIXME: After awake gets called twice - David 2/6/10
   afterAwake: function()
   {
+    SSLog("after awake settings tab view");
     this.parent();
     // NOTE - can't use options because Sandalphon doesn't yet support adding delegates
     // which come from inside an iframe - David 10/27/09
     this.SSInstalledSpaces.setDelegate(this);
     if(ShiftSpaceUser.isLoggedIn()) this.update();
   },
+
+
+  attachEvents: function()
+  {
+    SSLog("attachEvents settings tab view", SSLogForce);
+    this.UpdateAccountDetails.addEvent("click", this.updateUser.bind(this));
+    // overide submit
+    this.AccountDetails.addEvent("submit", function(evt) {
+      evt = new Event(evt);
+      evt.stop();
+    }.bind(this));
+    this.addEvent("tabSelected", function(evt) {
+      if(evt.tabIndex == 3)
+      {
+        this.showUserDetails(SSGetUser(ShiftSpace.User.getUserName()));
+      }
+    }.bind(this));
+  },
+
+
+  updateUser: function()
+  {
+    var userData = SSFormToHash(this.AccountDetails),
+        parts = userData.fullName.split(" ").map(String.trim);
+    userData.fullName = {
+      first: parts[0],
+      last: parts[1]
+    };
+    SSUpdateUser(userData).realize();
+  },
+
+
+  showUserDetails: function(user)
+  {
+    user.fullName = [user.fullName.first || '', user.fullName.last || ''].join(" ");
+    SSTemplate(this.AccountDetails, user);
+  }.asPromise(),
 
 
   update: function()

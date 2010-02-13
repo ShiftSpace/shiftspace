@@ -225,7 +225,7 @@ var ShiftSpace = new (function() {
         SSShowShift(SSSpaceForShift(currentShift.id), currentShift.id);
       }
     }
-
+  
     /*
       Function: SSCheckHash
         Check the window location hash for operations that make life easiers as a developer
@@ -233,12 +233,12 @@ var ShiftSpace = new (function() {
     */
     function SSCheckHash()
     {
-      var hash = $A(window.location.hash).tail(1).str();
-      var kvs = hash.split("&").map(function(str) {
-        var parts = str.split("=");
-        return [parts[0], JSON.decode(parts[1])];
-      });
-      var ops = kvs.hash();
+      var hash = $A(window.location.hash).tail(1).str(),
+          kvs = hash.split("&").map(function(str) {
+            var parts = str.split("=");
+            return [parts[0], JSON.decode(parts[1])];
+          }),
+          ops = kvs.hash();
 
       if(ops["open"])
       {
@@ -259,7 +259,16 @@ var ShiftSpace = new (function() {
 
       if(ops["tab"])
       {
-        ShiftSpaceNameTable.MainTabView.selectTabByName(ops["tab"]);
+        if(!ShiftSpace.Console.isLoaded())
+        {
+          ShiftSpace.Console.addEvent("load", function() {
+            ShiftSpaceNameTable.MainTabView.selectTabByName(ops["tab"]);
+          });
+        }
+        else
+        {
+          ShiftSpaceNameTable.MainTabView.selectTabByName(ops["tab"]);
+        }
       }
     }
     

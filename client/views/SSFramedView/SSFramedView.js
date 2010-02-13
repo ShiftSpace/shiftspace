@@ -5,6 +5,11 @@
 // ==/Builder==
 
 
+// this is a work around for framed views
+// so that they don't create their iframes
+// until they are actually shown for the
+// very first time
+
 function ssfv_ensure(fn) {
   return function decorator() {
     var args = arguments;
@@ -44,18 +49,6 @@ var SSFramedView = new Class({
   },
 
 
-  delayed: function()
-  {
-    return this.__delay;
-  },
-  
-  
-  setDelayed: function(delay)
-  {
-    this.__delay = delay;
-  },
-
-  
   initialize: function(el, options)
   {
     var delayed = false;
@@ -80,10 +73,40 @@ var SSFramedView = new Class({
     }
   },
 
+  /*
+    Function: delayed
+      Getter for the delayed property.
+  */
+  delayed: function()
+  {
+    return this.__delay;
+  },
+  
+  /*
+    Function: setDelayed
+      *private*
+      Private setter for the delayed property.
 
+    See Also:
+      finish, delayed
+  */
+  setDelayed: function(delay)
+  {
+    this.__delay = delay;
+  },
+
+  /*
+    Function: finish
+      Triggers a delayd SSFramedView to actually load
+      it's content.
+
+    Returns:
+      A promise.
+  */
   finish: function()
   {
-    SSLog("finish!", SSLogForce);
+    if(this.__isFinishing) return;
+    this.__isFinishing = true;
     if(!this.delayed())
     {
       throw new Error("Not a delayed SSFramedView");

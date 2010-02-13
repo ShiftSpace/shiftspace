@@ -98,13 +98,16 @@ class SSUser(User):
     # ========================================
 
     def update(self, fields):
+        fields = utils.clean(fields)
         db = core.connect()
         if fields.get("bio"):
             self.bio = fields.get("bio")
         if fields.get("url"):
-            self.bio = fields.get("bio")
+            self.url = fields.get("url")
         if fields.get("displayName"):
             self.displayName = fields.get("displayName")
+        if fields.get("fullName"):
+            self.fullName = fields.get("fullName")
         self.store(db)
         return self
 
