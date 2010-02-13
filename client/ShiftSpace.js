@@ -7,9 +7,9 @@
 // @exclude        http://shiftspace.org/api/sandbox/*
 // @exclude        http://www.shiftspace.org/api/sandbox/*
 // @exclude        %%SERVER%%*
-// @require        %%SERVER%%externals/mootools-1.2.3-core.js
-// @require        %%SERVER%%externals/mootools-1.2.3.1-more.js
-// @require        %%SERVER%%externals/Videobox.js
+// @require        %%MEDIA_PATH%%externals/mootools-1.2.3-core.js
+// @require        %%MEDIA_PATH%%externals/mootools-1.2.3.1-more.js
+// @require        %%MEDIA_PATH%%externals/Videobox.js
 // ==/UserScript==
 
 /*
