@@ -1,4 +1,0 @@
-* ShiftSpace Items
-** TODO : Optimized SSConsole calls all the methods for it's subviews
-   that is, it tries to load all of it's list view's contents right away
-
