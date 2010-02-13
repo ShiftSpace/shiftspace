@@ -62,6 +62,7 @@ function SSInfo(spaceName)
 
   var info =  {
     server: __server,
+    mediaPath: __mediaPath,
     spacesPath: (typeof __spacesPath != 'undefined' && __spacesPath) || null,
     spaces: (spaceIndex && spaceIndex.join(', ')) || null,
     version: (typeof version != 'undefined' && version) || null
