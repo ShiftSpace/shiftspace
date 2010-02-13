@@ -50,7 +50,7 @@ function SSLoadStyle(url, frame)
   var dir = url.split('/');
   dir.pop();
   dir = dir.join('/');
-  if (dir.substr(0, 7) != 'http://') dir = SSInfo().server + dir;
+  if (dir.substr(0, 7) != 'http://') dir = SSInfo().mediaPath + dir;
   var p = SSLoadFile(url);
   return SSAddStyle(p, {rewriteUrls: dir, frame: frame});
 }
@@ -101,7 +101,7 @@ var SSLoadFile = function(url)
   // If the URL doesn't start with "http://", assume it's on our server
   if (url.substr(0, 7) != 'http://' &&
       url.substr(0, 8) != 'https://') {
-    url = String.urlJoin(SSInfo().server, url);
+    url = String.urlJoin(SSInfo().mediaPath, url);
   }
   SSLog("LOAD FILE:", url, SSLogRequest);
   // Load the URL then execute the callback
