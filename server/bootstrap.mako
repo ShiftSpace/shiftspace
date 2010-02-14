@@ -54,6 +54,9 @@
 </script>
 <script type="text/javascript" src="/client/core/RemoteFunctions.js"></script>
 <script type="text/javascript" src="/client/pin/RangeCoder.js"></script>
+<script type="text/javascript">
+    ShiftSpace.RangeCoder = RangeCoder;
+</script>
 <script type="text/javascript" src="/client/pin/Pin.js"></script>
 <script type="text/javascript">
     ShiftSpace.Pin = ShiftSpacePin;
