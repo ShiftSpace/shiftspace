@@ -309,7 +309,7 @@ class RootController:
             "spacesPath": "/".join([server, "spaces"]),
             "shiftId": shiftId,
             "space": space,
-            "shift": json.dumps(theShift),
+            "shift": json.dumps(theShift.toDict()),
             "attrs": json.dumps(attrs),
             }
         t = Template(filename="server/bootstrap.mako", lookup=lookup)
