@@ -243,7 +243,7 @@ var SSPublishPane = new Class({
       this.SSPPVisiblePublic.addClass('SSPPPermit');
     }.bind(this));
 
-    if(this.ShiftPermalink) this.ShiftPermalink.addEvent("click", this.showProxy.bind(this));
+    if(this.SecretLink) this.SecretLink.addEvent("click", this.showProxy.bind(this));
   },
   
   

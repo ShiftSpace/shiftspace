@@ -4,150 +4,150 @@
 }
 
 button:hover{
-   cursor: pointer;
+  cursor: pointer;
 }
 
 .SSPublishPane
 {
-   color: black;
-   z-index: 2;
-   font-family: Helvetica Neue, Helvetica,Arial,Verdana, sans-serif;
-   font-size: 12px;
-   color: #4b423a;
-   -webkit-box-shadow: 0px 0px 10px #000;  
+  color: black;
+  z-index: 2;
+  font-family: Helvetica Neue, Helvetica,Arial,Verdana, sans-serif;
+  font-size: 12px;
+  color: #4b423a;
+  -webkit-box-shadow: 0px 0px 10px #000;  
 }
 
 /*--------------------------------------------------HEADER*/
 #SSPublishPaneHeader
 {
   /* background-image:url(/images/Pane/publish-top-bg.gif); */
-   height:17px;
-   background: #e3dfdb;
-   padding: 5px;
+  height:17px;
+  background: #e3dfdb;
+  padding: 5px;
 }
 
 .SSPPPermit{
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   background:#fff;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  background:#fff;
 }
 
 /*---------------------------------------------------BODY*/
 .SSPublishPaneFrameBody
 {
-   font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
-   color:#74665A;
-   font-size: 13px;
-   margin: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, Verdana, sans-serif;
+  color:#74665A;
+  font-size: 13px;
+  margin: 0;
 }
 
 #SSPublishPaneBody
 {
-   background:#C6C1BD;
+  background:#C6C1BD;
   /* height:86px; */
-   margin-top:0px;
-   padding-left:4px;
-   background-image:url(/images/Pane/publish-top-body.gif);
-   background-repeat:repeat-y;
-   clear: both;
-   min-height: 109px;
+  margin-top:0px;
+  padding-left:4px;
+  background-image:url(/images/Pane/publish-top-body.gif);
+  background-repeat:repeat-y;
+  clear: both;
+  min-height: 109px;
 }
 
 #SSPublishPane h4{
-   margin: 0 5px 0 0;
-   float: left;
-   padding-top:4px;
+  margin: 0 5px 0 0;
+  float: left;
+  padding-top:4px;
 }
 
 form#StatusForm{
-   padding:4px 0;
+  padding:4px 0;
 }
 
 form .SSRadioButton{
-   padding:2px 6px 2px 0;
-   margin-right:2px;
+  padding:2px 6px 2px 0;
+  margin-right:2px;
 }
 
 form .SSRadioButton label,
 #SSPublishPaneVis .SSStatus{
-   padding-left:18px;
-   padding-top:1px;
-   font-size:12px;
+  padding-left:18px;
+  padding-top:1px;
+  font-size:12px;
 }
 
 #SSPPVisiblePrivate label,
 .SSPPVisPrivate{
-   background: url(/images/Pane/publish-private.png) no-repeat scroll 0 -2px;
+  background: url(/images/Pane/publish-private.png) no-repeat scroll 0 -2px;
 }
 
 #SSPPVisiblePublic label,
 .SSPPVisPublic{
-   background: url(/images/Pane/publish-public.png) no-repeat scroll 0 -2px;
+  background: url(/images/Pane/publish-public.png) no-repeat scroll 0 -2px;
 }
 
 #SSPublishPaneBody a img{
-   border-style:none;
-   position:relative;
-   left:2px;
+  border-style:none;
+  position:relative;
+  left:2px;
 }
 
 #SSPublishPaneBody ul{
-   position:relative;
-   left:-40px;
-   padding-top:3px;
-   bottom:2px;
+  position:relative;
+  left:-40px;
+  padding-top:3px;
+  bottom:2px;
 }
 
 #SSPublishPaneBody ul li{
-   list-style:none;
-   float:left;
-   padding-left:4px;
+  list-style:none;
+  float:left;
+  padding-left:4px;
 }
 
 #SSPublishPaneVis{
-   
+  
 }
 
 #SSPublishPaneVis .SSStatus{
-	padding: 
+  padding: 
 }
 
 .SSPinput{
   background-image:url("http://localhost:8080/images/Pane/publish-form-input.gif");
-	border:0 none;
-	font-size:14px;
-	height:28px;
-	margin:5px 0 0 0;
-	padding:6px;
-	position:relative;
-	width:332px;
+  border:0 none;
+  font-size:14px;
+  height:28px;
+  margin:5px 0 0 0;
+  padding:6px;
+  position:relative;
+  width:332px;
 }
 
 .SSPinput.TextHint{
-	color: #b3ada5;
+  color: #b3ada5;
 }
 
 .SSPinput.TextInput{
-	color: #464540;
+  color: #464540;
 }
 
 #SSPublishPaneBody button#Addtag{
-   background:transparent url(/images/Pane/publish-form-button.gif) center center no-repeat;
-   border:0 none;
-   margin-top:5px;
-   padding:7px 10px;
-   position:absolute;
-   right:17px;
-   text-indent:-2000px;
+  background:transparent url(/images/Pane/publish-form-button.gif) center center no-repeat;
+  border:0 none;
+  margin-top:5px;
+  padding:7px 10px;
+  position:absolute;
+  right:17px;
+  text-indent:-2000px;
 }
 
 #SSPublishPaneBody p#TagTip{
-   margin: 0;
-   padding: 5px 0;
+  margin: 0;
+  padding: 5px 0;
 }
 
 .SSPPBodyBorder{
-   background-image:url(/images/Console/public-innerborder-left.gif) repeat-y;
+  background-image:url(/images/Console/public-innerborder-left.gif) repeat-y;
 
 }
 
@@ -160,89 +160,89 @@ form .SSRadioButton label,
 }
 
 .SSPPTag{
-   font-size:11px;
-   font-weight: bold;
+  font-size:11px;
+  font-weight: bold;
 }
 
 .SSPPTag .SSPPTagDelete{
-	
+  
 }
 
 .SSPPTagUser{
-   color:#f63b02;
+  color:#f63b02;
 
 }
 
 .SSPPsharelabel{
-   padding-bottom:3px;
+  padding-bottom:3px;
 }
 
 .SSPPTagGroup{
-   color:#8e2327;
+  color:#8e2327;
 }
 
 
 #SSPublishPaneTags{
-   padding-top:5px;
-   padding-bottom:3px;
-   overflow:hidden;
+  padding-top:5px;
+  padding-bottom:3px;
+  overflow:hidden;
 }
 
 #SSPublishPaneBody label{
-   padding-bottom:4px;
+  padding-bottom:4px;
 }
 
 .SSPPTagTag{
-   color:#0054a6;
+  color:#0054a6;
 }
 
 .SSPPTagsroundedCorners{
-   background-color: #fff;
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   padding:2px 5px 3px;
+  background-color: #fff;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  padding:2px 5px 3px;
 }
 
 span.SSPPTagsroundedCorners:hover{
-   padding-right: 20px;
-   background: #fff url(/images/Pane/publish-del-tag.png) no-repeat scroll right 2px;
+  padding-right: 20px;
+  background: #fff url(/images/Pane/publish-del-tag.png) no-repeat scroll right 2px;
 }
 
 #SSPPVisibleEverybody{
-	background: #B3ADA5;
-	bottom: 0;
-	padding: 3px 0
+  background: #B3ADA5;
+  bottom: 0;
+  padding: 3px 0
 }
 
 /*----------------------------------------------------FOOTER*/
 #SSPublishPaneFooter
 {
-   padding:6px 0 11px;
-   background:#ffffff;
-   background-image:url(/images/Pane/publish-top-footer.gif);
-   height: 15px;
-   font-size: 12px;
+  padding:6px 0 11px;
+  background:#ffffff;
+  background-image:url(/images/Pane/publish-top-footer.gif);
+  height: 15px;
+  font-size: 12px;
 }
 
-#LinkPane{
-	background: url(/images/Pane/link.png) no-repeat scroll 0 2px;
-	padding: 4px 0 0 17px;
+#SecretLink{
+  background: url(/images/Pane/link.png) no-repeat scroll 0 2px;
+  padding: 4px 0 0 17px;
 }
 
 #SaveShift,
 #ChooseVisibility{
-	/* float: left; */
+/* float: left; */
 }
 
 #SSPublishPaneStatus{
-   position:relative;
-   padding:0 5px; 
+  position:relative;
+  padding:0 5px; 
 }
 
 #SSPublishPaneStatus label{
-   padding: 5px 0;
+  padding: 5px 0;
 }
 
 #SSPublishPaneStatus #SSPublishButtons{
-   float: right;
+  float: right;
 }

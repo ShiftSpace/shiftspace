@@ -257,7 +257,7 @@ class RootController:
         from the original page to prevent interference with shift loading.
         """
         try:
-            import models.shift as shift
+            from models.shift import Shift
             from urllib import FancyURLopener, urlcleanup
             from lxml.html import fromstring, tostring
             from linkprocessor import LinkProcessor
