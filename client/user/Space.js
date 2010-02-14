@@ -61,7 +61,7 @@ var ShiftSpaceSpace = new Class({
       this.setup();
     }
 
-    SSAddObserver(this, "saveShift", this.__saveShift__.bind(this));
+    if(typeof SSAddObserver != 'undefined') SSAddObserver(this, "saveShift", this.__saveShift__.bind(this));
 
     return this;
   },
