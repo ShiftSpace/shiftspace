@@ -31,9 +31,10 @@ from controllers.message import MessageController
 
 
 version = "1.0"
-lookup = TemplateLookup(directories=['html', 'manual', 'wiki'])
-SERVER_ROOT = os.path.dirname(os.path.abspath(__file__))
-WEB_ROOT = os.path.dirname(SERVER_ROOT)
+SERVER_ROOT = os.path.dirname(os.path.abspath(__file__)) # directory this file lives in
+WEB_ROOT = os.path.dirname(SERVER_ROOT) # one directory up, where docs, manual, spaces, etc are
+_template_dirs = [os.path.join(WEB_ROOT, adir) for adir in ['html', 'manual', 'wiki']]
+lookup = TemplateLookup(directories=_template_dirs)
 serverport = 8080
 
 
@@ -295,7 +296,7 @@ class RootController:
             del node.attrib['onload']
 
         # load the space attributes
-        fh = open(os.path.join("spaces", space, "attrs.json"))
+        fh = open(os.path.join(WEB_ROOT, "spaces", space, "attrs.json"))
         attrs = fh.read()
         fh.close()
         attrs = self.absolutify(json.loads(attrs))
