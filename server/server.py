@@ -312,11 +312,11 @@ class RootController:
             "shift": json.dumps(theShift.toDict()),
             "attrs": json.dumps(attrs),
             }
-        t = Template(filename="server/bootstrap.mako", lookup=lookup)
+        t = Template(filename=os.path.join(WEB_ROOT, "server/bootstrap.mako"), lookup=lookup)
         source = source.replace("</head>", "%s</head>" % t.render(**ctxt))
 
         # load proxy message
-        t = Template(filename="server/proxymessage.mako", lookup=lookup)
+        t = Template(filename=os.path.join(WEB_ROOT, "server/proxymessage.mako"), lookup=lookup)
         ctxt = {
             "space": space,
             "href": url,
