@@ -206,7 +206,7 @@ Returns:
 */
 function SSLoadSpaceAttributes(spaceName)
 {
-  var p = SSLoadFile(String.urlJoin(ShiftSpace.info().spacesPath, spaceName, 'attrs'));
+  var p = SSLoadFile(String.urlJoin(ShiftSpace.info().server, 'spaces', spaceName, 'attrs'));
   var p2 = $if(p,
                function() {
                  // check to see that the resources urls are full
@@ -293,6 +293,7 @@ function SSInstallSpace(space)
         });
     return p;
   }
+  return null;
 };
 
 /*
