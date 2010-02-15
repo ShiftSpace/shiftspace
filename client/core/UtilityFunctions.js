@@ -163,7 +163,7 @@ function SSAddDragDiv()
 
 function SSRemoveDragDiv()
 {
-  __dragDiv = __dragDiv.dispose();
+  if(__dragDiv && $(__dragDiv).getParent()) __dragDiv = $(__dragDiv).dispose();
 }
 
 function SSHasResource(resourceName)
