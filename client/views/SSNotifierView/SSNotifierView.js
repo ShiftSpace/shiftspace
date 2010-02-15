@@ -322,6 +322,10 @@ var SSNotifierView = new Class({
       var space = SSFocusedSpace();
       if(space) space.saveCurrentShift();
     }.bind(this));
+
+    this.SSQPDelete.addEvent("click", function(evt) {
+      evt = new Event(evt);
+    }.bind(this));
   },
   
   
