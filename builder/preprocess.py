@@ -5,6 +5,7 @@
 
 import os
 import sys
+import commands
 import re
 import getopt
 import simplejson as json # need to install simplejson from here http://pypi.python.org/pypi/simplejson/
@@ -26,6 +27,7 @@ class SSPreProcessor:
     SYSTEM_TABLE_REGEX = re.compile('%%SYSTEM_TABLE%%')
     ENV_NAME_REGEX = re.compile('%%ENV_NAME%%')
     VARS_REGEX = re.compile('%%VARS%%')
+    BUILD_REGEX = re.compile('%%BUILD%%');
   
     def __init__(self, project=None, env=None, export=False):
         if project != None:
@@ -97,6 +99,8 @@ class SSPreProcessor:
             if self.envData['data'].has_key("VARS"):
                 envVars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
             source = self.VARS_REGEX.sub(envVars, source)
+            status, revid = commands.getstatusoutput("git rev-parse HEAD")
+            source = self.BUILD_REGEX.sub(revid, source)
         return source
   
     def sourceForFile(self, incFilename):
