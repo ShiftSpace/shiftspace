@@ -212,6 +212,7 @@ class Group(SSDocument):
             "text": "%s invited you to join the group %s!" % (aUser.userName, self.longName),
             "meta": "invite",
             "content": {
+                "type": "group",
                 "_id": self.id
                 }
             }

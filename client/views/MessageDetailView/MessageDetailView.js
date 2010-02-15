@@ -45,6 +45,8 @@ var MessageDetailView = new Class({
       case 'follow':
         this.MessageBodyMultiView.showViewByName("FollowSubView");
         break;
+      case 'share':
+        this.MessageBodyMultiView.showViewByName("ShareSubView");
       default:
         break;
     }
@@ -76,6 +78,15 @@ var MessageDetailView = new Class({
 
     this.MDVGroupDetails.addEvent("click", function(evt) {
       //SSPostNotification("onShowGroup", SSGroupInfo(this.currentMessage().content._id));
+    }.bind(this));
+
+    this.MDVShowShift.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var data = this.currentMessage().content,
+          id = data._id,
+          href = data.href;
+      SSSetValue("__currentShift", {id: id, href: href});
+      window.open(href);
     }.bind(this));
   },
 

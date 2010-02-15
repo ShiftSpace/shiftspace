@@ -297,6 +297,28 @@ class Shift(SSDocument):
     # Publishing
     # ========================================
 
+    def shareWith(self, userIds):
+        from server.models.message import Message
+        from server.models.ssuser import SSUser
+        users = core.fetch(keys=userIds)
+        userName = SSUser.read(self.createdBy).userName
+        for user in users:
+            json = {
+                "fromId": self.createdBy,
+                "toId": user["_id"],
+                "title": "%s has shared a shift with you!" % userName,
+                "text": "%s has shared a shift titled '%s' with you!" % (userName, self.summary),
+                "meta": "share",
+                "content": {
+                    "type": "shift",
+                    "_id": self.id,
+                    "href": self.href,
+                    "summary": self.summary
+                    }
+            }
+            Message.create(**json)
+
+
     def publish(self, publishData=None):
         from server.models.ssuser import SSUser
         
@@ -340,7 +362,9 @@ class Shift(SSDocument):
         # publish to any user we haven't published to before
         newUserDbs = [s for s in publishDbs if s.split("/")[0] == "user"]
         if newUserDbs and len(newUserDbs) > 0:
-            dbs.extend(list(set(newUserDbs)))
+            userDbs = list(set(newUserDbs))
+            dbs.extend(userDbs)
+            self.shareWith([s.split("/")[1] for s in userDbs])
 
         self.publishData.dbs = dbs
         # store the human readable version
