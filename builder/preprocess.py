@@ -27,8 +27,10 @@ class SSPreProcessor:
     SYSTEM_TABLE_REGEX = re.compile('%%SYSTEM_TABLE%%')
     ENV_NAME_REGEX = re.compile('%%ENV_NAME%%')
     VARS_REGEX = re.compile('%%VARS%%')
-    BUILD_REGEX = re.compile('%%BUILD%%');
+    BUILD_REGEX = re.compile('%%BUILD%%')
+    NAME_REGEX = re.compile('%%NAME%%')
   
+
     def __init__(self, project=None, env=None, export=False):
         if project != None:
             self.setProject(project)
@@ -37,10 +39,12 @@ class SSPreProcessor:
         self.export = export
         self.getMetaData()
 
+
     def getMetaData(self):
         fh = open('config/packages.json')
         self.metadata = json.loads(fh.read())
         fh.close()
+
 
     def setProject(self, project):
         path = 'config/proj/%s.json' % (os.path.splitext(project)[0])
@@ -52,6 +56,7 @@ class SSPreProcessor:
         except IOError:
             print "Error: no such project file exists. (%s)" % path
             sys.exit(2)
+
 
     def setEnv(self, env):
         path = 'config/env/%s.json' % (os.path.splitext(env)[0])
@@ -65,6 +70,7 @@ class SSPreProcessor:
             print "Error: no such environment file exists. (%s)" % envFilePath
             sys.exit(2)
 
+
     def setInputFile(self, inFile):
         self.closeIn = True
         if inFile != None:
@@ -77,6 +83,7 @@ class SSPreProcessor:
         else:
             self.inFile = open('client/ShiftSpace.js')
     
+
     def setOutputFile(self, outFile):
         self.closeOut = True
         if isinstance(outFile, StringIO.StringIO):
@@ -86,6 +93,7 @@ class SSPreProcessor:
             self.outFile = open(outFile, "w")
         else:
             self.outFile = sys.stdout
+
 
     def setEnvVars(self, source):
         if self.envData != None:
@@ -100,8 +108,10 @@ class SSPreProcessor:
                 envVars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
             source = self.VARS_REGEX.sub(envVars, source)
             source = self.BUILD_REGEX.sub(self.revid, source)
+            source = self.NAME_REGEX.sub(self.scriptName, source)
         return source
   
+
     def sourceForFile(self, incFilename):
         flen = len(incFilename)
         logline1 = ''.join(["\nif (SSInclude != undefined) SSLog('Including ", incFilename, "...', SSInclude);\n"])
@@ -121,6 +131,7 @@ class SSPreProcessor:
             uiclass = ("\nif(typeof ShiftSpaceUI != 'undefined') ShiftSpaceUI.%s = %s;\n" % (realName, realName))
         return ''.join([logline1, prefix, sourceFile.read(), postfix, logline2, sysavail, uiclass])
       
+
     def sourceForPackage(self, package):
         source = []
         source.append('\n// === START PACKAGE [%s] ===\n' % package)
@@ -138,6 +149,7 @@ class SSPreProcessor:
         source.append('\n// === END PACKAGE [%s] ===\n\n' % package)
         return ''.join(source)
   
+
     def preprocessFile(self, file, fileName):
         preprocessed = file.read()  
         # recursively include source for packages and files
@@ -171,28 +183,34 @@ class SSPreProcessor:
         preprocessed = self.setEnvVars(preprocessed)
         return preprocessed
   
+
     def missingFileError(self, package):
         print "Error: no such package %s exists, perhaps you forgot to run corebuilder.py first?" % package
         print json.dumps(self.metadata['files'])
         sys.exit(2)
               
+
     def preprocess(self, input=None, output=None):
         status, revid = commands.getstatusoutput("git rev-parse HEAD")
         self.revid = revid
+
+        self.scriptName = os.path.basename(output)
         # store metadata abut this build
         fh = open("builds/meta.json", "w")
         try:
             buildMeta = json.loads(fh.read())
         except IOError:
             buildMeta = {} 
-        buildMeta[os.path.basename(output)] = revid
+        buildMeta[self.scriptName] = revid
         fh.write(json.dumps(buildMeta, sort_keys=True, indent=4))
         fh.close()
+
         self.setInputFile(input)
         self.setOutputFile(output)
         self.envData['meta'] = json.dumps(self.metadata, sort_keys=True, indent=4)
         preprocessed = self.preprocessFile(self.inFile, input)
         self.outFile.write(preprocessed)
+
         # export symbols
         if self.export and len(self.metadata['exports']) > 0:
             print self.metadata['exports']
@@ -200,6 +218,7 @@ class SSPreProcessor:
             self.outFile.write('if(typeof ShiftSpace == "undefined") ShiftSpace = {};\n')
             for realName, exportName in self.metadata['exports'].iteritems():
                 self.outFile.write('if(typeof %s != "undefined") ShiftSpace.%s = %s;\n' % (realName, exportName, realName))
+
         # load main if there is one
         if self.proj.has_key("main"):
             mainFile = "config/main/%s.js" % os.path.splitext(self.proj["main"])[0]

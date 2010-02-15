@@ -67,7 +67,10 @@ function SSInfo(spaceName)
     spacesPath: (typeof __spacesPath != 'undefined' && __spacesPath) || null,
     spaces: (spaceIndex && spaceIndex.join(', ')) || null,
     version: (typeof version != 'undefined' && version) || null,
-    bulid: __build
+    build: {
+      name: __name,
+      rev: __build
+    }
   };
 
   return (typeof ShiftSpaceProxyMode == 'undefined') ? $merge(info, {env: __env}) : info;

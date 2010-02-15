@@ -8,6 +8,7 @@ var __spacesPath = '%%SPACES_PATH%%';
 var __mediaPath = '%%MEDIA_PATH%%';
 var __imagesPath = '%%IMAGES_PATH%%';
 var __build = '%%BUILD%%';
+var __name = '%%NAME%%';
 
 SSLog('SERVER: ' + __server, SSLogForce);
 SSLog('SPACES_PATH: ' + __spacesPath, SSLogForce);
