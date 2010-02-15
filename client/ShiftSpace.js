@@ -153,6 +153,7 @@ var ShiftSpace = new (function() {
     */
     function SSSync(uip)
     {
+      SSLog("SSync", SSLogSystem);
       // initialize the value of default spaces for guest users
       SSInitDefaultSpaces();
       var p1 = SSApp.query();
@@ -161,12 +162,14 @@ var ShiftSpace = new (function() {
           var installed = ShiftSpace.User.installedSpaces(), ps;
           if(installed)
           {
+            SSLog("Installed spaces:", JSON.encode(installed), SSLogSystem);
             SSSetup();
           }
           else
           {
             // first time ShiftSpace user default spaces not loaded yet
             SSAddObserver(SSNotificationProxy, "onDefaultSpacesAttributesLoad", SSSetup);
+            SSLog("No installed spaces loading defaults", SSLogSystem);
             ps = SSLoadDefaultSpacesAttributes();
           }
           return value;

@@ -181,6 +181,7 @@ function SSLoadDefaultSpacesAttributes()
     $if(SSApp.noErr(p),
         function() {
           var attrs = p.value();
+          SSLog("Loaded attributes for", spaceName, SSLogSystem);
           defaultSpaces[spaceName] = attrs;
           defaultSpaces[spaceName].position = i;
           if(i == (__defaultSpacesList.length-1)) 
@@ -206,7 +207,9 @@ Returns:
 */
 function SSLoadSpaceAttributes(spaceName)
 {
-  var p = SSLoadFile(String.urlJoin(ShiftSpace.info().server, 'spaces', spaceName, 'attrs'));
+  var url = String.urlJoin(ShiftSpace.info().server, 'spaces', spaceName, 'attrs'),
+      p = SSLoadFile(url);
+  SSLog("Load", spaceName, "attributes from", url, SSLogSystem);
   var p2 = $if(p,
                function() {
                  // check to see that the resources urls are full
@@ -305,6 +308,7 @@ Parameters:
 */
 function SSUninstallSpace(spaceName) 
 {
+  SSLog("SSUninstallSpace", spaceName, SSLogSystem);
   var url = SSURLForSpace(spaceName);
   SSRemoveSpace(spaceName);
   var installed = SSInstalledSpaces();
@@ -313,10 +317,13 @@ function SSUninstallSpace(spaceName)
 
   if($H(installed).getLength() == 0)
   {
+    SSLog("Setting installed spaces to null", SSLogSystem);
     SSSetInstalledSpaces(null);
+    SSLog("installed check", JSON.encode(SSInstalledSpaces()), SSLogForce);
   }
   else
   {
+    SSLog("Setting installed spaces to", JSON.encode(installed), SSLogSystem);
     SSSetInstalledSpaces(installed);
   }
 
@@ -372,7 +379,7 @@ Parameters:
 */
 function SSInitDefaultSpaces(defaults)
 {
-  if(defaults) { SSSetValue('defaultSpaces', defaults); }
+  if(defaults !== undefined) { SSSetValue('defaultSpaces', defaults); }
   __defaultSpaces = defaults || SSGetValue('defaultSpaces');
 }
 
@@ -410,6 +417,7 @@ Function: SSUninstallAllSpaces
 */
 function SSUninstallAllSpaces()
 {
+  SSLog("SSUninstallAllSpaces", SSLogSystem);
   for(var spaceName in SSInstalledSpaces())
   {
     SSUninstallSpace(spaceName);
@@ -482,6 +490,7 @@ Return:
 */
 function SSRemoveSpace(name)
 {
+  SSLog("SSRemoveSpace", name, SSLogSystem);
   delete __spaces[name];
 }
 

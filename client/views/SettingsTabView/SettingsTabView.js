@@ -15,7 +15,8 @@ var SettingsTabView = new Class({
     SSAddObserver(this, "onUserLogin", this.update.bind(this));
     SSAddObserver(this, "onUserLogout", this.update.bind(this));
     SSAddObserver(this, "onUserJoin", this.update.bind(this));
-    SSAddObserver(this, 'onSpaceInstall', this.onSpaceInstall.bind(this));
+    SSAddObserver(this, 'onSpaceInstall', this.onSpacesChange.bind(this));
+    SSAddObserver(this, 'onSpaceUninstall', this.onSpacesChange.bind(this));
   },
 
 
@@ -33,6 +34,7 @@ var SettingsTabView = new Class({
     this.initInstalledSpacesListView();
     this.clearInstalledButton.addEvent('click', function(evt) {
       evt = new Event(evt);
+      SSInitDefaultSpaces(null);
       SSUninstallAllSpaces();
     });
     this.attachEvents();
@@ -133,7 +135,7 @@ var SettingsTabView = new Class({
   },
   
   
-  onSpaceInstall: function()
+  onSpacesChange: function()
   {
     this.updateInstalledSpaces();
     this.refreshInstalledSpaces();
