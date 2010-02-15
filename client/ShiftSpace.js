@@ -143,6 +143,8 @@ var ShiftSpace = new (function() {
 
       SSLog("\tSynchronizing with server", SSLogSystem);
       SSSync(uip);
+
+      if(typeof ShiftSpaceSandBoxMode == 'undefined') SSCheckForUpdates();
     };
     
     /*
@@ -314,36 +316,25 @@ var ShiftSpace = new (function() {
      */
     function SSCheckForUpdates()
     {
-      // Only check once per page load
-      if(alreadyCheckedForUpdate) return false;
-      alreadyCheckedForUpdate = true;
-
-      var now = new Date();
-      var lastUpdate = SSGetValue('lastCheckedForUpdate', now.getTime());
-
-      // Only check every 24 hours
-      if (lastUpdate - now.getTime() > 86400)
-      {
-        SSSetValue('lastCheckedForUpdate', now.getTime());
-
-        GM_xmlhttpRequest({
-          method: 'POST',
-          url: SSInfo().server + 'server/?method=version',
-          onload: function(rx)
+      new Request({
+        method: 'get',
+        url: String.urlJoin(SSInfo().server, 'rev?name=' + SSInfo().build.name),
+        onSuccess: function(responseText, responseXml)
+        {
+          var v = JSON.decode(responseText);
+          if (v.data != SSInfo().build.rev)
           {
-            if (rx.responseText != version)
+            if(confirm('There is a new build of ShiftSpace available. Would you like to update now?'))
             {
-              if (confirm('There is a new version of ShiftSpace available. Would you like to update now?'))
-              {
-                window.location = 'http://www.shiftspace.org/api/shiftspace?method=shiftspace.user.js';
-              }
+              window.location = String.urlJoin(SSInfo().mediaPath, "builds", SSInfo().build.name);
             }
           }
-        });
-
-        return true;
-      }
-      return false;
+          else
+          {
+            SSLog("Build is up to date", SSLogForce);
+          }
+        }
+      }).send();
     };
 
     if (typeof ShiftSpaceSandBoxMode != 'undefined')
@@ -364,6 +355,7 @@ var ShiftSpace = new (function() {
        'DelayedAsset',
        'SSSpaceIsInDebugMode',
        'SSInfo',
+       'SSCheckForUpdates',
        '__controllers'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);
