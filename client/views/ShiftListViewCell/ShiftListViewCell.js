@@ -317,4 +317,3 @@ var ShiftListViewCell = new Class({
   }
 
 });
-

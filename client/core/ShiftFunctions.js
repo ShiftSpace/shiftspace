@@ -247,6 +247,8 @@ function SSSaveNewShift(shift)
 
   SSLog("SSSaveNewShift", SSLogForce);
 
+  // TODO: check to see if the user is shifting a top level domain
+
   // remove _id and space from shift
   // TODO: might want to refactor this to be a little less hacky - David
   var oldId = shift._id;

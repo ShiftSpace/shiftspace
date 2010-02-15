@@ -121,8 +121,8 @@ var AllShiftsView = new Class({
   {
     var id = evt.data._id,
         href = evt.data.href;
-    SSSetValue("__currentShift", {id: evt.data._id, href: href});
-    window.open(evt.data.href);
+    SSSetValue("__currentShift", {id: id, href: href});
+    window.open(href);
   },
 
 
