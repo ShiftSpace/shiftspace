@@ -155,7 +155,6 @@ class ShiftController(ResourceController):
             targets = publishData["targets"]
             # convert short names to group ids
             shortNames = [target[1:] for target in targets if target[0] == "&"]
-            print "shortNames %s" % shortNames
             groupIds = Group.shortNamesToIds(shortNames)
             # convert user name to user ids
             userNames = [target[1:] for target in targets if target[0] == "@"]
@@ -164,7 +163,6 @@ class ShiftController(ResourceController):
             dbs = [Group.db(groupId) for groupId in groupIds]
             # validate groups
             writeable = theUser.writeable()
-            print "%s is subset of %s %s" % (set(dbs), set(writeable), set(dbs).issubset(set(writeable)))
             if not set(dbs).issubset(set(writeable)):
                 return error("Operation not permitted. You don't have permission to publish to some of these groups", PermissionError)
             # TODO: validate against blocked users - David 2/15/10
