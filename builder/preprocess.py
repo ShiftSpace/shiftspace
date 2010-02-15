@@ -99,8 +99,7 @@ class SSPreProcessor:
             if self.envData['data'].has_key("VARS"):
                 envVars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
             source = self.VARS_REGEX.sub(envVars, source)
-            status, revid = commands.getstatusoutput("git rev-parse HEAD")
-            source = self.BUILD_REGEX.sub(revid, source)
+            source = self.BUILD_REGEX.sub(self.revid, source)
         return source
   
     def sourceForFile(self, incFilename):
@@ -178,6 +177,17 @@ class SSPreProcessor:
         sys.exit(2)
               
     def preprocess(self, input=None, output=None):
+        status, revid = commands.getstatusoutput("git rev-parse HEAD")
+        self.revid = revid
+        # store metadata abut this build
+        fh = open("builds/meta.json", "w")
+        try:
+            buildMeta = json.loads(fh.read())
+        except IOError:
+            buildMeta = {} 
+        buildMeta[os.path.basename(output)] = revid
+        fh.write(json.dumps(buildMeta, sort_keys=True, indent=4))
+        fh.close()
         self.setInputFile(input)
         self.setOutputFile(output)
         self.envData['meta'] = json.dumps(self.metadata, sort_keys=True, indent=4)

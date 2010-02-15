@@ -174,10 +174,21 @@ class RootController:
         d.connect(name='root', route='/', controller=self, action='index')
         d.connect(name='rootProxy', route='proxy/:id', controller=self, action='proxy')
         d.connect(name='rootAttrs', route='spaces/:space/attrs', controller=self, action='attrs')
+        d.connect(name='rootRev', route='rev', controller=self, action='rev')
         return d
     
     def index(self):
         return "ShiftSpace Server 1.0"
+
+    def rev(self, name):
+        fh = open(os.path.join(WEB_ROOT, "builds/meta.json"))
+        meta = json.loads(fh.read())
+        fh.close()
+        rev = meta.get(name)
+        if rev:
+            return json.dumps({"data":rev})
+        else:
+            return json.dumps({"message":"unknown"});
         
     def walk(self, fdir, d):
         """
