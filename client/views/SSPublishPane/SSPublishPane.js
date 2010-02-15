@@ -182,27 +182,21 @@ var SSPublishPane = new Class({
 
     if(selectedShifts && selectedShifts.length > 0)
     {
-      var status = this.StatusForm.getElements("input[type=radio]").filter(function(radio) {
-        return $(radio).getProperty("checked");
-      }.bind(this));
+      var isPublic = this.PublicCheckbox.getProperty("checked");
 
-      if(status.length > 0)
+      if(isPublic)
       {
-        status = status[0].getProperty("value");
-        if(status == "public")
+        publishData['private'] = false;
+      }
+      else
+      {
+        var targets = this.PublishTargets.getProperty("value").split(" ").map(String.trim).filter(Function.not(Function.eq("")));
+        if(targets.length == 0)
         {
-          publishData['private'] = false;
+          alert("Please specify which user or group you wish to publish to.");
+          return;
         }
-        else if(status == "private")
-        {
-          var targets = this.PublishTargets.getProperty("value").split(" ").map(String.trim).filter(Function.not(Function.eq("")));
-          if(targets.length == 0)
-          {
-            alert("Please specify which user or group you wish to publish to.");
-            return;
-          }
-          publishData.targets = targets;
-        }
+        publishData.targets = targets;
       }
 
       var p = new Promise(
