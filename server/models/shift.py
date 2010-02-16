@@ -227,10 +227,13 @@ class Shift(SSDocument):
                 # then user private
                 db = core.connect(SSUser.privateDb(userId))
                 theShift = Shift.load(db, id)
+        else:
+            db = core.connect("shiftspace/public")
+            theShift = Shift.load(db, id)
         if userId and not theShift:
+            theUser = SSUser.read(userId)
             aShift = Shift.load(core.connect("shiftspace/shared"), id)
-            dbs = [s.split("/")[1] for s in aShift.publishData.dbs]
-            if userId in dbs:
+            if theUser.canRead(aShift):
                 theShift = aShift
         if proxy:
             theShift = Shift.load(core.connect("shiftspace/shared"), id)
