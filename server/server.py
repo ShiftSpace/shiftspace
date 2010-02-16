@@ -280,7 +280,7 @@ class RootController:
             version = "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.5; en-US; rv:1.9.0.1) Gecko/2008070206 Firefox/3.0.1"
         pageopener = FancyOpener()
         
-        theShift = Shift.read(id)
+        theShift = Shift.read(id, proxy=True)
         
         if theShift['type'] != 'shift':
             return self.statusPage(status="err", details="proxyperm")
