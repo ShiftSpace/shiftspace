@@ -238,14 +238,20 @@ ul.ShiftListView li.ShiftListViewCell:hover .spaceName
 .ShiftListView .ShiftListViewCell div.summaryContainer,
 .ShiftListView .ShiftListViewCell span.summaryContainer
 {
+  color: #4B423A;
+  margin: 0px;
+}
+
+.ShiftListView .ShiftListViewCell span.wrapper
+{
+  /*
   position: absolute;
   bottom: 0px;
   left: 55px;
   right: 50px;
   top: 0px;
   overflow: hidden;
-  color: #4B423A;
-  margin: 0px;
+  */
 }
 
 .ShiftListView .ShiftListViewCell div.summary

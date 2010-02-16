@@ -241,7 +241,7 @@ function SSSaveNewShift(shift)
           name: shift.space.name,
           version: space.attributes().version
         },
-        summary: shift.summary,
+        summary: shift.summary.trunc(75),
         content: shift
       };
 
@@ -313,7 +313,7 @@ function SSSaveShift(shift)
 
   var space = SSSpaceForName(shift.space.name),
       params = {
-        summary: shift.summary,
+        summary: shift.summary.trunc(75),
         content: shift,
         space: {name: shift.space.name, version: space.attributes().version}
       },

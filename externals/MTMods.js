@@ -33,7 +33,11 @@ String.implement({
 
   trunc: function(limit, options) {
     var tail = (options && options.tail === false) ? '' : ((options && options.tail) || '...');
-    return this.substring(0, limit) + tail;
+    if(this.length > limit) {
+      return this.substring(0, limit-(tail.length)) + tail;
+    } else {
+      return this;
+    }
   },
 
   repeat: function(times) {
