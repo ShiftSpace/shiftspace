@@ -216,20 +216,24 @@ class Shift(SSDocument):
         return Shift.joinData(newShift, newShift.createdBy)
 
     @classmethod
-    def read(cls, id, userId=None):
+    def read(cls, id, userId=None, proxy=False):
         from server.models.ssuser import SSUser
+        theShift = None
         # then try the user public
-        db = core.connect(SSUser.publicDb(userId))
-        theShift = Shift.load(db, id)
-        if not theShift:
-            # then user private
-            db = core.connect(SSUser.privateDb(userId))
+        if userId:
+            db = core.connect(SSUser.publicDb(userId))
             theShift = Shift.load(db, id)
-        if not theShift:
+            if not theShift:
+                # then user private
+                db = core.connect(SSUser.privateDb(userId))
+                theShift = Shift.load(db, id)
+        if userId and not theShift:
             aShift = Shift.load(core.connect("shiftspace/shared"), id)
             dbs = [s.split("/")[1] for s in aShift.publishData.dbs]
             if userId in dbs:
                 theShift = aShift
+        if proxy:
+            theShift = Shift.load(core.connect("shiftspace/shared"), id)
         if theShift:
             return Shift.joinData(theShift, theShift.createdBy)
 
