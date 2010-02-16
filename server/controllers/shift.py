@@ -216,7 +216,7 @@ class ShiftController(ResourceController):
     @jsonencode
     def comments(self, id, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
-        theShift = Shift.read(id)
+        theShift = Shift.read(id, userId=loggedInUser)
         if not theShift:
             return error("Resource does not exist.", ResourceDoesNotExistError)
         if theShift.type != "shift":
@@ -234,9 +234,9 @@ class ShiftController(ResourceController):
         loggedInUser = helper.getLoggedInUser()
         jsonData = helper.getRequestBody()
         if jsonData != "":
-            theShift = Shift.read(id)
+            theShift = Shift.read(id, userId=loggedInUser)
             if not theShift:
-                return error("Resource does not exist.", ResourceDoesNotExistError)
+                return error("Shift does not exist.", ResourceDoesNotExistError)
             if theShift.type != "shift":
                 return error("Resource is not of type shift", ResourceTypeError)
             from server.models.ssuser import SSUser
