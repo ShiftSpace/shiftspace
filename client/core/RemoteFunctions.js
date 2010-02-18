@@ -57,6 +57,7 @@ function SSLoadStyle(url, frame)
 
 var SSAddStyle = function(css, options)
 {
+  if(!css) return null;
   // this needs to be smarter, only works on directory specific urls
   if(options.rewriteUrls) css = css.replace(/url\(([^)]+)\)/g, 'url(' + options.rewriteUrls + '/$1)');
   // if it's a frame load it into the frame
