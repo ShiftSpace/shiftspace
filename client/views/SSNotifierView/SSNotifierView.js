@@ -223,8 +223,13 @@ var SSNotifierView = new Class({
     Function: hide
       Hide the notifier.
   */
-  hide: function()
+  hide: function(animate)
   {
+    if(animate === false)
+    {
+      this.graph.cancel(true);
+      this.graph.setState('SSNotifierHidden', {animate:false, stop:true});
+    }
     if(ShiftSpace.Console.isVisible()) return;
   },
   
@@ -389,6 +394,14 @@ var SSNotifierView = new Class({
     {
       this.shiftDownTime = $time();
       this.shiftDown = true;
+    }
+    else
+    {
+      if(this.shiftDown && evt.key != 'space')
+      {
+        this.shiftDown = false;
+        this.hide(false);
+      }
     }
   },
   
