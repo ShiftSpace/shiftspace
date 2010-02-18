@@ -1,12 +1,6 @@
 
-var CutupsSpace = ShiftSpace.Space.extend({
-  attributes: {
-    name: 'Cutups',
-    icon: 'Cutups.png', 
-    version: 0.2,
-    css: 'spaces/Cutups/Cutups.css'
-  },
-  
+var CutupsSpace = new Class({
+  Extends: ShiftSpace.Space,    
   setup: function(){
     //window.visibleShifts = this.visibleShifts;
   },
@@ -217,7 +211,8 @@ var CutupsSpace = ShiftSpace.Space.extend({
   
 });
 
-var CutupsShift = ShiftSpace.Shift.extend({
+var CutupsShift = new Class({
+    Extends: ShiftSpace.Shift,
     setup: function(json){
       var space = this.getParentSpace();
       
@@ -374,7 +369,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
     attachWidgetButtonEvents: function(){
       var space = this.getParentSpace();
       var self = this;
-      space.SSCutupChunkAmount.setText("1");//reset chunk amount gui display to 1
+      space.SSCutupChunkAmount.set("text", "1");//reset chunk amount gui display to 1
       space.SSCutupButtonCutup.addEvent("mousedown",function(){
           self.fireCutup(); 
       });
@@ -434,10 +429,10 @@ var CutupsShift = ShiftSpace.Shift.extend({
       
       if(amount < 20){
         amount = amount + 1;
-        space.SSCutupChunkAmount.setText(amount);
+        space.SSCutupChunkAmount.set("text", amount);
       }else{
         amount = 1;
-        space.SSCutupChunkAmount.setText(amount);
+        space.SSCutupChunkAmount.set("text", amount);
       }
       this.setWordChunkSize(amount);
     },    
@@ -454,10 +449,10 @@ var CutupsShift = ShiftSpace.Shift.extend({
       
       if(amount > 1){
         amount = amount - 1;
-        space.SSCutupChunkAmount.setText(amount);
+        space.SSCutupChunkAmount.set("text", amount);
       }else{
         amount = 20;
-        space.SSCutupChunkAmount.setText(amount);
+        space.SSCutupChunkAmount.set("text", amount);
       }
       
       this.setWordChunkSize(amount);
@@ -669,7 +664,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
         for ( var i=0,l=0; i < xPathResult2.snapshotLength; i++ ){
           //if node is not empty and nodes parent is not a script tag
           if(!xPathResult2.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult2.snapshotItem(i))){
-            $(xPathResult2.snapshotItem(i)).setHTML(ref.cutupsArray[l].join(""));
+            $(xPathResult2.snapshotItem(i)).set("html", ref.cutupsArray[l].join(""));
             l++
           }
         }
@@ -726,7 +721,7 @@ var CutupsShift = ShiftSpace.Shift.extend({
         if(!xPathResult.snapshotItem(i).textContent.match(/^\s+$/) && this.isValidCutupTextNode(xPathResult.snapshotItem(i))){
           //word chunk spans inserted with regex so must use setHTML
           if($chk(this.cutupTextArray[l])){
-            $(xPathResult.snapshotItem(i)).setHTML(this.cutupTextArray[l].join(""));
+            $(xPathResult.snapshotItem(i)).set("html", this.cutupTextArray[l].join(""));
             l++
           }else{
             break;
@@ -741,9 +736,9 @@ var CutupsShift = ShiftSpace.Shift.extend({
         var trans = 1.0;
         function fade(){
           if(trans > 0.2){       
-            trans = trans - 0.1;
-            $ES('span.SSCut',snapshotNodes.snapshotItem(i)).setStyle('outline','thin solid rgba(167,8,4,' + trans + ')');
-            setTimeout(fade,50);
+            // trans = trans - 0.1;
+            // $ES('span.SSCut',snapshotNodes.snapshotItem(i)).setStyle('outline','thin solid rgba(167,8,4,' + trans + ')');
+            // setTimeout(fade,50);
           }
           else
           {
@@ -766,4 +761,3 @@ var CutupsShift = ShiftSpace.Shift.extend({
 // separate forms jumbled together.
 // -Geothe
 
-var Cutups = new CutupsSpace(CutupsShift);
