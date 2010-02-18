@@ -98,7 +98,8 @@ var ShiftSpaceShift = new Class({
   */
   isNewShift: function()
   {
-    return SSIsNewShift(this.getId());
+    if(typeof SSIsNewShift != 'undefined') return SSIsNewShift(this.getId());
+    return false;
   },
 
   /*
