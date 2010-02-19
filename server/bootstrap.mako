@@ -29,7 +29,6 @@
 <script type="text/javascript" src="/externals/promises/Promises.js"></script>
 <script type="text/javascript" src="/externals/MTMods.js"></script>
 <script type="text/javascript" src="/externals/SSProxyMessage.js"></script>
-<script type="text/javascript" src="/client/sys/SSLog.js"></script>
 <script type="text/javascript" src="/client/sys/GreaseMonkeyApi.js"></script>
 <script type="text/javascript">
     var ShiftSpace = {
