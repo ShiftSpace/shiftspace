@@ -105,7 +105,7 @@ class Lucene():
             connect("shiftspace/master")
         uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(db.name)
         resource = couchdb.client.Resource(None, uri)
-        return resource.get(view, **params)[1].get("rows")
+        return json.loads(resource.get(view, **params)[1]).get("rows")
 
 _lucene = Lucene()
 
