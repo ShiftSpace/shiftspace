@@ -351,6 +351,10 @@ def runserver(argv):
     Run the builtin webserver on the specified port (defaults to 8080).
     """
     try:
+        os.system("server/couchdb-lucene/bin/run&")
+    except:
+        pass
+    try:
         fh = open("config/env/mydev.json")
     except:
         print
