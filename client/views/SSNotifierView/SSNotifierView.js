@@ -30,7 +30,23 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onPublishPaneOpen', this.showQuickEditPane.bind(this));
     SSAddObserver(this, 'onPublishPaneClose', this.hideQuickEditPane.bind(this));
 
+    this.watchFocusBlur();
+
     this.attachFinishKeyEvents();
+  },
+
+
+  watchFocusBlur: function()
+  {
+    $$('input').addEvent("focus", function(evt) {
+      SSLog("input focused", SSLogForce);
+      this.__focusedInput = true;
+    }.bind(this));
+
+    $$('input').addEvent("blur", function(evt) {
+      SSLog("input blurred", SSLogForce);
+      this.__focusedInput = false;
+    }.bind(this));
   },
   
   
@@ -369,11 +385,15 @@ var SSNotifierView = new Class({
   },
 
 
+  // The following is for the fact that we want key events to trigger
+  // the actual loading of the shiftspace notifier
   attachFinishKeyEvents: function()
   {
     SSAddEvent('keydown', function(evt) {
       evt = new Event(evt);
-      if(evt.key == 'shift' && this.delayed())
+      if(evt.key == 'shift' &&
+         this.delayed() &&
+         !this.__focusedInput)
       {
         this.addEvent("load", function() {
           this.fireEvent("shiftdown");
@@ -390,18 +410,37 @@ var SSNotifierView = new Class({
   handleKeyDown: function(evt)
   {
     evt = new Event(evt);
-    if(evt.key == 'shift')
+    if(!this.__focusedInput)
     {
-      this.shiftDownTime = $time();
-      this.shiftDown = true;
-    }
-    else
-    {
-      if(this.shiftDown && evt.key != 'space')
+      if(evt.key == 'shift')
       {
-        this.shiftDown = false;
-        this.hide(false);
+        this.shiftDownTime = $time();
+        this.shiftDown = true;
       }
+      else
+      {
+        if(this.shiftDown && evt.key != 'space')
+        {
+          this.shiftDown = false;
+          this.hide(false);
+        }
+      }
+    }
+
+    // prevent scrolling browser
+    // on spacebar if we detect
+    // attempt to invoke console
+    if(this.shiftDown)
+    {
+      var delta = $time() - this.shiftDownTime;
+    }
+    if(this.shiftDown && 
+       evt.key == 'space' &&
+       delta >= 300 &&
+       !this.__focusedInput)
+    {
+      evt.stop();
+      evt.preventDefault();
     }
   },
   
@@ -416,11 +455,12 @@ var SSNotifierView = new Class({
     if(evt.key == 'shift') this.shiftDown = false;
     if(this.shiftDown && 
        evt.key == 'space' &&
-       delta >= 300)
+       delta >= 300 &&
+       !this.__focusedInput)
     {
       SSPostNotification("toggleConsole");
-      evt.preventDefault();
       evt.stop();
+      evt.preventDefault();
     }
   },
   
@@ -442,7 +482,7 @@ var SSNotifierView = new Class({
 
     SSAddEvent('keydown', function(evt) {
       evt = new Event(evt);
-      if(evt.key == 'shift')
+      if(evt.key == 'shift' && !this.__focusedInput)
       {
         if(this.delayed())
         {
