@@ -45,6 +45,7 @@ class ShiftController(ResourceController):
                            byGroups=byGroups, 
                            count=True)
 
+    @db_session
     @jsonencode
     def shifts(self, byHref=None, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, count=False, filter=False, query=None):
         from server.models.ssuser import SSUser

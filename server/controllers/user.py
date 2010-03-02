@@ -139,6 +139,7 @@ class UserController(ResourceController):
         else:
             return error("Operation not permitted. You don't have permission to delete this account.")
 
+    @db_session
     @jsonencode
     def query(self):
         loggedInUser = helper.getLoggedInUser()
