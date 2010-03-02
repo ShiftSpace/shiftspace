@@ -105,8 +105,7 @@ class Lucene():
         if db == None:
             connect("shiftspace/master")
         uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(db.name)
-        http = httplib2.Http(timeout=10)
-        resource = couchdb.client.Resource(http, uri)
+        resource = couchdb.client.Resource(db.resource.http, uri)
         return json.loads(resource.get(view, **params)[1]).get("rows")
 
 _lucene = Lucene()
@@ -230,8 +229,7 @@ def fetch(db=None, view=None, keys=None):
         viewpath = "_all_docs"
 
     uri = 'http://localhost:5984/%s/%s' % (urllib.quote_plus(db.name), viewpath)
-    http = httplib2.Http(timeout=10)
-    resource = couchdb.client.Resource(http, uri)
+    resource = couchdb.client.Resource(db.resource.http, uri)
 
     params = None
     if reduce != True:
