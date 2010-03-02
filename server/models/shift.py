@@ -462,7 +462,7 @@ class Shift(SSDocument):
     def hasThread(self):
         from server.models.comment import Comment
         try:
-            server = core.server()
+            server = core.sharedServer()
             thread = server[Comment.db(self.id)]
             return thread != None
         except Exception:
@@ -471,7 +471,7 @@ class Shift(SSDocument):
 
     def deleteThread(self):
         from server.models.comment import Comment
-        server = core.server()
+        server = core.sharedServer()
         # TODO - use bulk API to delete all comment stubs - David
         del server[Comment.db(self.id)]
 

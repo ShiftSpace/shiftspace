@@ -18,11 +18,13 @@ class MessageController(ResourceController):
         d.connect(name="messageMarkUnread", route="message/:id/unread", controller=self, action="markUnread",
                   conditions=dict(method="POST"))
 
+    @db_session
     @jsonencode
     @loggedin
     def create(self):
         pass
 
+    @db_session
     @jsonencode
     @loggedin
     def read(self, id):
@@ -33,11 +35,13 @@ class MessageController(ResourceController):
         else:
             return error("Operation not permitted. You don't have permission to read this message.", PermissionError)
 
+    @db_session
     @jsonencode
     @loggedin
     def delete(self):
         pass
 
+    @db_session
     @jsonencode
     @loggedin
     def markRead(self, id):
@@ -49,6 +53,7 @@ class MessageController(ResourceController):
         else:
             return error("Operation not permitted. You don't have permission to mark that message", PermissionError)
 
+    @db_session
     @jsonencode
     @loggedin
     def markUnread(self, id):

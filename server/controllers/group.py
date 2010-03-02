@@ -29,6 +29,7 @@ class GroupsController(ResourceController):
                   conditions=dict(method="POST"))
         return d
 
+    @db_session
     @jsonencode
     @loggedin
     def create(self):
@@ -41,6 +42,7 @@ class GroupsController(ResourceController):
         else:
             return error("No data for group.", NoDataError)
 
+    @db_session
     @jsonencode
     @exists
     def read(self, id):
@@ -48,6 +50,7 @@ class GroupsController(ResourceController):
         theGroup = Group.read(id)
         return data(theGroup)
 
+    @db_session
     @jsonencode
     @exists
     def update(self, id):
@@ -65,11 +68,13 @@ class GroupsController(ResourceController):
         else:
             return error("No data for group.", NoDataError)
 
+    @db_session
     @jsonencode
     @exists
     def delete(self, id):
         pass
 
+    @db_session
     @jsonencode
     @exists
     def info(self, id):
@@ -88,6 +93,7 @@ class GroupsController(ResourceController):
         info["isAdmin"] = theUser.isAdminOf(theGroup)
         return data(info)
 
+    @db_session
     @jsonencode
     @exists
     def members(self, id):
@@ -100,6 +106,7 @@ class GroupsController(ResourceController):
         else:
             return error("You don't have permission to view this groups members", PermissionError)
 
+    @db_session
     @jsonencode
     @exists
     def makeAdmin(self, id, userId):
@@ -113,11 +120,13 @@ class GroupsController(ResourceController):
         else:
             return error("You don't have permission to promote members of this group to admin.", PermissionError)
 
+    @db_session
     @jsonencode
     def groups(self, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
         return data(Group.groups(start, end, limit, userId=loggedInUser))
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -135,6 +144,7 @@ class GroupsController(ResourceController):
         else:
             return error("Operation not permitted. You don't have permission to modify this group", PermissionError)
 
+    @db_session
     @jsonencode
     @exists
     @loggedin

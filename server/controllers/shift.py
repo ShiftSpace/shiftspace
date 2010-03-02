@@ -45,6 +45,7 @@ class ShiftController(ResourceController):
                            byGroups=byGroups, 
                            count=True)
 
+    @db_session
     @jsonencode
     def shifts(self, byHref=None, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, count=False, filter=False, query=None):
         from server.models.ssuser import SSUser
@@ -69,6 +70,7 @@ class ShiftController(ResourceController):
         else:
           return data(allShifts)
 
+    @db_session
     @jsonencode
     @loggedin
     def create(self):
@@ -82,6 +84,7 @@ class ShiftController(ResourceController):
         else:
             return error("No data for shift.", NoDataError)
 
+    @db_session
     @jsonencode
     def read(self, id):
         from server.models.ssuser import SSUser
@@ -96,6 +99,7 @@ class ShiftController(ResourceController):
             else:
                 return error("Operation not permitted. You don't have permission to view this shift. %s" % theShift, PermissionError)
 
+    @db_session
     @jsonencode
     @loggedin
     def update(self, id):
@@ -118,6 +122,7 @@ class ShiftController(ResourceController):
         else:
             return error("No data for shift.", NoDataError)
 
+    @db_session
     @jsonencode
     @loggedin
     def delete(self, id):
@@ -136,6 +141,7 @@ class ShiftController(ResourceController):
         else:
             return error("Operation not permitted. You don't have permission to delete this shift.", PermissionError)
 
+    @db_session
     @jsonencode
     @loggedin
     def publish(self, id):
@@ -170,6 +176,7 @@ class ShiftController(ResourceController):
             publishData["dbs"] = dbs
         return data(theShift.publish(publishData))
 
+    @db_session
     @jsonencode
     @loggedin
     def unpublish(self, id):
@@ -181,6 +188,7 @@ class ShiftController(ResourceController):
             return error("Resource is not of type shift", ResourceTypeError)
         return data(theShift.unpublish())
 
+    @db_session
     @jsonencode
     @loggedin
     def favorite(self, id):
@@ -197,6 +205,7 @@ class ShiftController(ResourceController):
         else:
             return error("Operation not permitted. You don't have permission to favorite this shift.", PermissionError)
 
+    @db_session
     @jsonencode
     @loggedin
     def unfavorite(self, id):
@@ -213,6 +222,7 @@ class ShiftController(ResourceController):
         else:
             return error("Operation not permitted. You don't have permission to unfavorite this shift.", PermissionError)
 
+    @db_session
     @jsonencode
     def comments(self, id, start=None, end=None, limit=25):
         loggedInUser = helper.getLoggedInUser()
@@ -228,6 +238,7 @@ class ShiftController(ResourceController):
         else:
             return error("Operation not permitted. You don't have permission to view comments on this shift.", PermissionError)
 
+    @db_session
     @jsonencode
     @loggedin
     def comment(self, id):
@@ -251,6 +262,7 @@ class ShiftController(ResourceController):
         else:
             return error("No data for comment.", NoDataError)
 
+    @db_session
     @jsonencode
     @loggedin
     def notify(self, id):
@@ -271,6 +283,7 @@ class ShiftController(ResourceController):
         else:
             return error("Operation not permitted. You don't have permission to be notified of events on this stream.", PermissionError)
 
+    @db_session
     @jsonencode
     @loggedin
     def unnotify(self, id):

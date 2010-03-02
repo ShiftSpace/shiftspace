@@ -19,3 +19,12 @@ def jsonencode(func):
     def afn(*args, **kwargs):
         return json.dumps(func(*args, **kwargs))
     return afn
+
+@simple_decorator
+def db_session(func):
+    def afn(*args, **kwargs):
+        result = func(*args, **kwargs)
+        server = core.sharedServer()
+        [c.close() for c in server.resource.http.connections.values()]
+        return result
+    return afn

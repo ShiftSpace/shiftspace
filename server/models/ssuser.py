@@ -55,7 +55,7 @@ class SSUser(User):
         from server.models.shift import Shift
         from server.models.message import Message
 
-        server = core.server()
+        server = core.sharedServer()
         db = core.connect()
         if userJson.get("passwordVerify"):
             del userJson["passwordVerify"]
@@ -122,7 +122,7 @@ class SSUser(User):
     def delete(self):
         if self.id == "shiftspace":
             return
-        server = core.server()
+        server = core.sharedServer()
         # delete the user's dbs (won't work with old style users)
         try:
             del server[SSUser.publicDb(self.id)]

@@ -34,7 +34,7 @@ def init(dbname="shiftspace/master"):
     """
     import models.core as core
     os.system("scripts/clear_sessions.sh")
-    server = core.server()
+    server = core.sharedServer()
     if not server.__contains__(dbname):
         print "Creating databases."
         server.create(dbname)

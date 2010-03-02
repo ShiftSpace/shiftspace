@@ -123,26 +123,31 @@ def serverName():
     return ""
 
 
-def server():
+__server = None
+def sharedServer(url="http://localhost:5984/", timeout=10):
     """
     Returns a CouchDB server.
     """
-    return couchdb.client.Server("http://localhost:5984/", timeout=10)
+    global __server
+    if __server == None:
+        __server = couchdb.client.Server(url, timeout=timeout)
+    return __server
 
 
 def test():
     try:
-        theServer = server()
+        theServer = sharedServer()
         theServer.version
         return True
     except:
         return False
 
+
 def connect(dbname="shiftspace/master"):
     """
     Connects to the database. Defaults to "shiftspace".
     """
-    server = couchdb.client.Server("http://localhost:5984/", timeout=10)
+    server = sharedServer("http://localhost:5984/")
     return server[dbname]
 
 
@@ -262,8 +267,8 @@ def fetch(db=None, view=None, keys=None):
 
 
 def replicate(source, target="shiftspace/master"):
-    http = httplib2.Http(timeout=10)
-    resource = couchdb.client.Resource(http, 'http://localhost:5984/_replicate')
+    server = sharedServer()
+    resource = couchdb.client.Resource(server.resource.http, 'http://localhost:5984/_replicate')
     content = json.dumps({"source":source, "target":target})
     headers = {"Content-Type":"application/json"}
     resource.post(headers=headers, content=content)

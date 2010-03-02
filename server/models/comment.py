@@ -129,7 +129,7 @@ class Comment(SSDocument):
         theShift = Shift.load(core.connect("shiftspace/shared"), shiftId)
         shiftAuthor = SSUser.load(core.connect(), theShift.createdBy)
         theUser = SSUser.load(core.connect(), userId)
-        server = core.server()
+        server = core.sharedServer()
         # create the comment db if necessary
         dbexists = True
         if not theShift.hasThread():
