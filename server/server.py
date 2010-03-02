@@ -68,7 +68,7 @@ class DevController:
         import models.core
         t = Template(filename="html/index.mako", lookup=lookup)
         try:
-            server = core.server()
+            server = core.sharedServer()
             server.version
         except Exception:
             return self.statusPage(status="err", details="couchdb")
@@ -106,7 +106,7 @@ class DevController:
         import models.core
         t = Template(filename="html/index.mako", lookup=lookup)
         try:
-            server = core.server()
+            server = core.sharedServer()
             server.version
         except Exception:
             return self.statusPage(status="err", details="couchdb")
