@@ -124,13 +124,13 @@ def serverName():
 
 
 __server = None
-def sharedServer(url="http://localhost:5984/", timeout=10):
+def sharedServer(url="http://localhost:5984/"):
     """
     Returns a CouchDB server.
     """
     global __server
     if __server == None:
-        __server = couchdb.client.Server(url, timeout=timeout)
+        __server = couchdb.client.Server(url)
     return __server
 
 
@@ -147,7 +147,7 @@ def connect(dbname="shiftspace/master"):
     """
     Connects to the database. Defaults to "shiftspace".
     """
-    server = sharedServer("http://localhost:5984/", timeout=10)
+    server = sharedServer("http://localhost:5984/")
     return server[dbname]
 
 
