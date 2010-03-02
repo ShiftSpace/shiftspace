@@ -124,13 +124,13 @@ def serverName():
 
 
 __server = None
-def sharedServer(url="http://localhost:5984/"):
+def sharedServer(url="http://localhost:5984/", timeout=10):
     """
     Returns a CouchDB server.
     """
     global __server
     if __server == None:
-        __server = couchdb.client.Server(url)
+        __server = couchdb.client.Server(url, timeout=timeout)
     return __server
 
 
