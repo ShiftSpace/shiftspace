@@ -82,6 +82,7 @@ class UserController(ResourceController):
             return (False, "Passwords do not match.", PasswordMatchError)
         return (True, data, None)
 
+    @db_session
     @jsonencode
     def join(self):
         loggedInUser = helper.getLoggedInUser()
@@ -99,6 +100,7 @@ class UserController(ResourceController):
         else:
             return error(msg, errType)
 
+    @db_session
     @jsonencode
     @exists
     def read(self, userName):
@@ -109,6 +111,7 @@ class UserController(ResourceController):
         canReadFull = loggedInUser.canReadFull(theUser)
         return data(theUser.toDict((loggedInUser and canReadFull)))
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -123,6 +126,7 @@ class UserController(ResourceController):
         else:
             return error("Operation not permitted. You don't have permission to update this account.")
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -148,6 +152,7 @@ class UserController(ResourceController):
         else:
             return message("No logged in user.")
 
+    @db_session
     @jsonencode
     def login(self, userName, password):
         loggedInUser = helper.getLoggedInUser()
@@ -165,6 +170,7 @@ class UserController(ResourceController):
         else:
             return error("Already logged in.", AlreadyLoggedInError)
 
+    @db_session
     @jsonencode
     def logout(self):
         loggedInUser = helper.getLoggedInUser()
@@ -176,6 +182,7 @@ class UserController(ResourceController):
         else:
             return error("No user logged in.", AlreadyLoggedOutError)
 
+    @db_session
     @jsonencode
     @exists
     def resetPassword(self, userName):
@@ -186,6 +193,7 @@ class UserController(ResourceController):
         else:
             return error("No user logged in.", UserNotLoggedInError)
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -198,6 +206,7 @@ class UserController(ResourceController):
             theUser.follow(followed)
             return data(followed)
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -210,6 +219,7 @@ class UserController(ResourceController):
             theUser.unfollow(followed)
             return data(followed)
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -222,6 +232,7 @@ class UserController(ResourceController):
         else:
             return error("You do not have permission to view who this user is following.", PermissionError)
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -234,6 +245,7 @@ class UserController(ResourceController):
         else:
             return error("You do not have permission to view who this user's followers.", PermissionError)
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -246,6 +258,7 @@ class UserController(ResourceController):
         else:
             return error("You do not have permission to view this user's messages.", PermissionError)
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -258,6 +271,7 @@ class UserController(ResourceController):
         else:
             return error("You do not have permission to view this user's unread count.", PermissionError)
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -275,7 +289,8 @@ class UserController(ResourceController):
                                          query=query))
         else:
             return error("You don't have permission to view this user's shifts.", PermissionError)
-            
+
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -288,6 +303,7 @@ class UserController(ResourceController):
         else:
             return error("You don't have permission to view this user's feed.", PermissionError)
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -300,6 +316,7 @@ class UserController(ResourceController):
         else:
             return error("You don't have permission to view this user's favorite shifts.", PermissionError)
 
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -312,6 +329,7 @@ class UserController(ResourceController):
         else:
             return error("You don't have permission to view this user's comments.", PermissionError)
     
+    @db_session
     @jsonencode
     @exists
     @loggedin
@@ -324,12 +342,14 @@ class UserController(ResourceController):
         else:
             return error("You don't have permission to view this user's groups.", PermissionError)
 
+    @db_session
     @jsonencode
     @exists
     def info(self, userName):
         theUser = SSUser.readByName(userName)
         return data(theUser.info())
 
+    @db_session
     @jsonencode
     def users(self, start=None, end=None, limit=25, groupId=None):
         return data(SSUser.users(start, end, limit, groupId))
