@@ -261,6 +261,7 @@ class RootController:
                     attrs[k] = "http://localhost:%s/spaces/%s/%s" % (serverport, space, v)
         return attrs
 
+    @db_session
     def proxy(self, id):
         """
         Serves the proxy. Takes a shift id and returns the original page
