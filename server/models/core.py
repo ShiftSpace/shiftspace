@@ -126,7 +126,7 @@ def server():
     """
     Returns a CouchDB server.
     """
-    return couchdb.client.Server("http://localhost:5984/")
+    return couchdb.client.Server("http://localhost:5984/", timeout=10)
 
 
 def test():
@@ -141,7 +141,7 @@ def connect(dbname="shiftspace/master"):
     """
     Connects to the database. Defaults to "shiftspace".
     """
-    server = couchdb.client.Server("http://localhost:5984/")
+    server = couchdb.client.Server("http://localhost:5984/", timeout=10)
     return server[dbname]
 
 
