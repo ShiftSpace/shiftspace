@@ -2,6 +2,7 @@ import couchdb.client
 from couchdb.design import ViewDefinition
 from server.couchdb.lucene_design import LuceneDefinition
 import simplejson as json
+import httplib2
 
 _local = False
 _local_id = None
@@ -104,7 +105,8 @@ class Lucene():
         if db == None:
             connect("shiftspace/master")
         uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(db.name)
-        resource = couchdb.client.Resource(None, uri)
+        http = httplib2.Http(timeout=10)
+        resource = couchdb.client.Resource(http, uri)
         return json.loads(resource.get(view, **params)[1]).get("rows")
 
 _lucene = Lucene()
@@ -228,7 +230,8 @@ def fetch(db=None, view=None, keys=None):
         viewpath = "_all_docs"
 
     uri = 'http://localhost:5984/%s/%s' % (urllib.quote_plus(db.name), viewpath)
-    resource = couchdb.client.Resource(None, uri)
+    http = httplib2.Http(timeout=10)
+    resource = couchdb.client.Resource(http, uri)
 
     params = None
     if reduce != True:
@@ -261,7 +264,8 @@ def fetch(db=None, view=None, keys=None):
 
 
 def replicate(source, target="shiftspace/master"):
-    resource = couchdb.client.Resource(None, 'http://localhost:5984/_replicate')
+    http = httplib2.Http(timeout=10)
+    resource = couchdb.client.Resource(http, 'http://localhost:5984/_replicate')
     content = json.dumps({"source":source, "target":target})
     headers = {"Content-Type":"application/json"}
     resource.post(headers=headers, content=content)
