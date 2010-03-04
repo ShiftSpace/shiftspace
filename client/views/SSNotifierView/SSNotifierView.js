@@ -38,12 +38,12 @@ var SSNotifierView = new Class({
 
   watchFocusBlur: function()
   {
-    $$('input').addEvent("focus", function(evt) {
+    $$('input, textarea').addEvent("focus", function(evt) {
       SSLog("input focused", SSLogForce);
       this.__focusedInput = true;
     }.bind(this));
 
-    $$('input').addEvent("blur", function(evt) {
+    $$('input, textarea').addEvent("blur", function(evt) {
       SSLog("input blurred", SSLogForce);
       this.__focusedInput = false;
     }.bind(this));
