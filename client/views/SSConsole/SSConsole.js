@@ -96,6 +96,17 @@ var SSConsole = new Class({
         this.MainTabView.refresh();
         if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
       }
+
+      if(!this.isUpToDate())
+      {
+        SSLog("not up to date", SSLogForce);
+        this.showUpdateTab();
+      }
+      else
+      {
+        SSLog("up to date", SSLogForce);
+        this.hideUpdateTab();
+      }
     }
   },
   
@@ -117,6 +128,31 @@ var SSConsole = new Class({
   {
     if(!this.isVisible()) this.show();
     this.MainTabView.selectTabByName('InboxPane');
+  },
+
+
+  setUpToDate: function(v)
+  {
+    this.__notUpToDate = v;
+  },
+
+
+  isUpToDate: function()
+  {
+    return this.__notUpToDate;
+  },
+
+
+  showUpdateTab: function(args)
+  {
+    this.SSUpdateLink.set("href", String.urlJoin(SSInfo().mediaPath, "builds", SSInfo().build.name));
+    this.MainTabView.revealTabByName("UpdatePane");
+  },
+
+  
+  hideUpdateTab: function(args)
+  {
+    this.MainTabView.hideTabByName("UpdatePane");
   },
   
   
