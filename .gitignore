@@ -2,6 +2,7 @@
 *.save
 *.pyc
 server/sessions/session*
+server/couchdb-lucene
 
 momasocialbar/images
 momasocialbar/templates

@@ -136,7 +136,7 @@ class Group(SSDocument):
         # create the root permission for this group
         Permission.create(userId, newGroup.id, userId, level=4)
         # create the group db
-        server = core.server()
+        server = core.sharedServer()
         server.create(Group.db(newGroup.id))
         # copy the group metadata to the db
         newGroup.copyTo(Group.db(newGroup.id))
@@ -191,7 +191,7 @@ class Group(SSDocument):
 
     def delete(self):
         from server.models.permission import Permission
-        server = core.server()
+        server = core.sharedServer()
         # delete the metadata
         db = core.connect()
         del db[self.id]

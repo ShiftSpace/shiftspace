@@ -346,6 +346,14 @@ def tests(toRun):
         unittest.TextTestRunner(verbosity=2).run(suite)
 
 
+def runlucene():
+    try:
+        os.system("server/couchdb-lucene/bin/run&")
+        pass
+    except:
+        pass
+
+
 def runserver(argv):
     """
     Run the builtin webserver on the specified port (defaults to 8080).
@@ -436,7 +444,13 @@ def main(argv):
             sys.exit(2)
         createSpace(argv[1])
     elif action == "runserver":
+        print
+        print "Make sure that you start lucene as well with:"
+        print "\tpython shift.py runlucene"
+        print
         runserver(argv)
+    elif action == "runlucene":
+        runlucene()
     elif action == "shell":
         shell()
     else:

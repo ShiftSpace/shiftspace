@@ -23,6 +23,7 @@
 </script>
 <script type="text/javascript" src="/externals/mootools-1.2.3-core.js"></script>
 <script type="text/javascript" src="/externals/mootools-1.2.3.1-more.js"></script>
+<script type="text/javascript" src="/externals/mootools-1.2.3.1-more.js"></script>
 <script type="text/javascript" src="/externals/functools/FuncTools.js"></script>
 <script type="text/javascript" src="/externals/set/Set.js"></script>
 <script type="text/javascript" src="/externals/promises/Promises.js"></script>

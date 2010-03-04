@@ -2,6 +2,7 @@ import couchdb.client
 from couchdb.design import ViewDefinition
 from server.couchdb.lucene_design import LuceneDefinition
 import simplejson as json
+import httplib2
 
 _local = False
 _local_id = None
@@ -104,8 +105,8 @@ class Lucene():
         if db == None:
             connect("shiftspace/master")
         uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(db.name)
-        resource = couchdb.client.Resource(None, uri)
-        return resource.get(view, **params)[1].get("rows")
+        resource = couchdb.client.Resource(db.resource.http, uri)
+        return json.loads(resource.get(view, **params)[1]).get("rows")
 
 _lucene = Lucene()
 
@@ -122,26 +123,31 @@ def serverName():
     return ""
 
 
-def server():
+__server = None
+def sharedServer(url="http://localhost:5984/", timeout=10):
     """
     Returns a CouchDB server.
     """
-    return couchdb.client.Server("http://localhost:5984/")
+    global __server
+    if __server == None:
+        __server = couchdb.client.Server(url, timeout=timeout)
+    return __server
 
 
 def test():
     try:
-        theServer = server()
+        theServer = sharedServer()
         theServer.version
         return True
     except:
         return False
 
+
 def connect(dbname="shiftspace/master"):
     """
     Connects to the database. Defaults to "shiftspace".
     """
-    server = couchdb.client.Server("http://localhost:5984/")
+    server = sharedServer("http://localhost:5984/")
     return server[dbname]
 
 
@@ -228,7 +234,7 @@ def fetch(db=None, view=None, keys=None):
         viewpath = "_all_docs"
 
     uri = 'http://localhost:5984/%s/%s' % (urllib.quote_plus(db.name), viewpath)
-    resource = couchdb.client.Resource(None, uri)
+    resource = couchdb.client.Resource(db.resource.http, uri)
 
     params = None
     if reduce != True:
@@ -261,7 +267,8 @@ def fetch(db=None, view=None, keys=None):
 
 
 def replicate(source, target="shiftspace/master"):
-    resource = couchdb.client.Resource(None, 'http://localhost:5984/_replicate')
+    server = sharedServer()
+    resource = couchdb.client.Resource(server.resource.http, 'http://localhost:5984/_replicate')
     content = json.dumps({"source":source, "target":target})
     headers = {"Content-Type":"application/json"}
     resource.post(headers=headers, content=content)
