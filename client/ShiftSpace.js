@@ -143,8 +143,6 @@ var ShiftSpace = new (function() {
 
       SSLog("\tSynchronizing with server", SSLogSystem);
       SSSync(uip);
-
-      if(typeof ShiftSpaceSandBoxMode == 'undefined') SSCheckForUpdates();
     };
     
     /*
@@ -185,6 +183,15 @@ var ShiftSpace = new (function() {
      */
     var SSWaitForUI = function(userData, uip)
     {
+      SSLog("Checking for updates", SSLogSystem);
+      if(typeof ShiftSpaceSandBoxMode == 'undefined')
+      {
+        SSCheckForUpdates();
+      }
+      else
+      {
+        ShiftSpace.Console.setUpToDate(true);
+      }
       // wait for console and notifier before sending onSync
       if(userData)
       {
@@ -201,7 +208,6 @@ var ShiftSpace = new (function() {
       if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
       SSCheckForCurrentShift();
       SSPostNotification("onSync");
-      //ShiftSpace.Notifier.finish();
     }.asPromise();
 
 
@@ -327,14 +333,13 @@ var ShiftSpace = new (function() {
           var v = JSON.decode(responseText);
           if (v.data != SSInfo().build.rev)
           {
-            if(confirm('There is a new build of ShiftSpace available. Would you like to update now?'))
-            {
-              window.location = String.urlJoin(SSInfo().mediaPath, "builds", SSInfo().build.name);
-            }
+            SSLog("Build is not up-to-date", SSLogSystem);
+            ShiftSpace.Console.setUpToDate(false);
           }
           else
           {
-            SSLog("Build is up to date", SSLogForce);
+            SSLog("Build is up-to-date", SSLogSystem);
+            ShiftSpace.Console.setUpToDate(true);
           }
         }
       }).send();

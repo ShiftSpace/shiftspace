@@ -26,6 +26,9 @@
       <div class="SSButton">
         <div title="Login" l18n="Login">Login</div>
       </div>
+      <div class="SSButton">
+        <div title="Update" l18n="Login">Update</div>
+      </div>
       <!-- End tab buttons -->
     </div>
     
@@ -39,7 +42,10 @@
       <?view:GroupsPane?>
       <?view:SettingsTabView?>
       <?view:LoginTabView?>
-    </div>
+      <div id="UpdatePane" class="SSTabPane">
+          <a target="new" id="SSUpdateLink" outlet="SSConsole">Please update your ShiftSpace user script</a>
+      </div>
+  </div>
     
   </div>
   
