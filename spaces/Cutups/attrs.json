@@ -1,0 +1,9 @@
+{
+  "name": "Cutups",
+  "authors": ["jmoore"],
+  "icon": "Cutups.png",
+  "description": "Cutups are for everyone",
+  "tooltip": "Cutup any webpage",
+  "css": "Cutups.css",
+  "version": "0.1"
+}
