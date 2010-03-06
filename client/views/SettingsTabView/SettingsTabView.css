@@ -51,7 +51,7 @@ div#SSInstalledSpacesTabPane
    margin-bottom: 5px;
 }
 
-#InterfaceTab input[type=text]
+#InterfaceTab input.SSInputField[type=text]
 {
    width: 80px;
 }
