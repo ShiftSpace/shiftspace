@@ -375,6 +375,18 @@ def runserver(argv):
         server.start()
 
 
+def installSpace(space):
+    """
+    Installs a space's attributes into the database.
+    """
+    from server.models import core
+    fh = open(os.path.join("spaces", space, "attrs.json"))
+    data = json.loads(fh.read())
+    data["type"] = "space"
+    db = core.connect()
+    db.create(data)
+
+
 def shell():
     """
     Launch the shell with the models loaded. Useful for testing.
@@ -417,6 +429,8 @@ def main(argv):
         updatedb()
     elif action == "resetdb":
         resetdb()
+    elif action == "install":
+        installSpace(argv[1])
     elif action == "setdbpath":
         try:
             url = argv[1]
