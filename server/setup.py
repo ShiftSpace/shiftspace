@@ -1,4 +1,6 @@
 import os
+from couchdb.design import ViewDefinition
+
 try:
     # Python 2.5+
     from hashlib import md5
@@ -65,6 +67,14 @@ def sync(createAdmin=True):
     if createAdmin and not master.get("admins"):
         master["admins"] = adminDoc
         master["shiftspace"] = adminUser
+
+    Spaces = ViewDefinition('spaces', 'by_name', '''
+       function(doc) {             
+         if(doc.type == "space") { 
+           emit(doc.name, doc);    
+         }                         
+       }''')
+    Spaces.sync(master)
 
     SSUser.all.sync(master)
     SSUser.all_by_joined.sync(master)
