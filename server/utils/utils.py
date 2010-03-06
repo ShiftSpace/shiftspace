@@ -138,20 +138,14 @@ except Exception, err:
     print err
     pass
     
-def sanitize(d):
+def sanitize(d, key="summary"):
     """
-    HTML sanitize all the string values in a python
-    dictionary.
+    HTML sanitize a specific field in a dict. Defaults to summary.
     """
     if cleaner == None:
         return d
-    for k, v in d.items():
-        if type(v) == str:
-            if k == 'summary':
-                print "summary cleaner"
-                d[k] = summary_cleaner.clean_html(v)
-            else:
-                d[k] = cleaner.clean_html(v)
-        elif type(v) == dict:
-            d[k] = sanitize(v)
+    if key == "summary" and d.get("summary"):
+        d[key] = summary_cleaner.clean_html(d[key])
+    elif d.get("key"):
+        d[key] = cleaner.clean_html(d[key])
     return d

@@ -207,7 +207,7 @@ class Shift(SSDocument):
     @classmethod
     def create(cls, shiftJson):
         from server.models.ssuser import SSUser
-        newShift = Shift(**utils.clean(shiftJson))
+        newShift = Shift(**utils.sanitize(utils.clean(shiftJson)))
         createdBy = newShift.createdBy
         db = core.connect(SSUser.privateDb(createdBy))
         newShift.domain = utils.domain(newShift.href)
