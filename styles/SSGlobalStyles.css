@@ -3,7 +3,7 @@
 
 /* Form Elements ============================================== */
 
-input[type=text], input[type=password]
+input[type=text].SSInputField, input.SSInputField[type=password]
 {
    background: #f7f5f2 url(/images/input.text.png);
    border: #b3ada5 solid 1px;
@@ -12,18 +12,18 @@ input[type=text], input[type=password]
 }
 
 /* These cannot be done in CSS and will have to happen in JS: */
-input[type=checkbox]
+input.SSInputField[type=checkbox]
 {
    background: url(images/checkbox.png);
    background-position: top center;
 }
 
-input[type=checkbox]:hover
+input.SSInputField[type=checkbox]:hover
 {
    background-position: center center;
 }
 
-input[type=checkbox]:checked
+input.SSInputField[type=checkbox]:checked
 {
    background-position: bottom center;
 }
@@ -210,7 +210,7 @@ input[type=checkbox]:checked
     padding-top: 4px;*/
 }
 
-ul.ShiftListView li.ShiftListViewCell input
+ul.ShiftListView li.ShiftListViewCell input.SSInputField
 {
    vertical-align:middle;
 }
@@ -574,7 +574,7 @@ li.GroupListViewCell .settings
   margin-left: 4px;
 }
 
-.leftSideBar input:checked + label
+.leftSideBar input.SSInputField:checked + label
 {
   font-weight:bold;
 }

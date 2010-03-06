@@ -159,7 +159,7 @@ var ShiftListView = new Class({
   {
     var indices = [];
     this.cellNodes().each(function(el, i) {
-      if(el.getElement('input[type=checkbox]').getProperty("checked")) indices.push(i);
+      if(el.getElement('input.SSInputField[type=checkbox]').getProperty("checked")) indices.push(i);
     });
     return indices;
   },

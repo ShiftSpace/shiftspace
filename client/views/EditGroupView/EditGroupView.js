@@ -79,7 +79,7 @@ var EditGroupView = new Class({
 
   clearForm: function()
   {
-    this.element.getElements("input[type=text]").setProperty("value", "");
+    this.element.getElements("input.SSInputField[type=text]").setProperty("value", "");
   },
 
 

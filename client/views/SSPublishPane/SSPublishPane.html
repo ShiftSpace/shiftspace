@@ -20,11 +20,11 @@
 
 		
 		<span id="SSPPVisiblePrivate" outlet="SSPublishPane" class="SSRadioButton hide">
-		    <input id="ShiftPrivateStatusRadio" name="ShiftStatusRadio" value="private" outlet="SSPublishPane" type="radio" class="SSPPradio"></input>
+		    <input id="ShiftPrivateStatusRadio" name="ShiftStatusRadio" value="private" outlet="SSPublishPane" type="radio" class="SSInputField SSPPradio"></input>
 		    <label>Private</label>
 		</span>
 		<span id="SSPPVisiblePublic" outlet="SSPublishPane" class="SSRadioButton hide">
-		    <input id="ShiftPublicStatusRadio" name="ShiftStatusRadio" value="public" outlet="SSPublishPane" type="radio" ></input>
+		    <input class="SSInputField" id="ShiftPublicStatusRadio" name="ShiftStatusRadio" value="public" outlet="SSPublishPane" type="radio" ></input>
 		    <label>Public</label>
 		</span>
 
@@ -34,7 +34,7 @@
     </div>
     
     <div id="SSPublishPaneBody">
-	<input id="PublishTargets" type="text" outlet="SSPublishPane" class="SSPinput TextHint" value="@username, &amp;groupame, #tag"></input>
+	<input id="PublishTargets" type="text" outlet="SSPublishPane" class="SSInputField SSPinput TextHint" value="@username, &amp;groupame, #tag"></input>
 	<button id="AddTag" class="SSPublishAddTag" outlet="SSPublishPane">Add</button>
 	<p id="TagTip">
 	    <span>Share this shift selectively with <strong>@users</strong> and <strong>&amp;groups</strong></span>
@@ -60,7 +60,7 @@
     </div>
     
     <div id="SSPPVisibleEverybody" outlet="SSPublishPane" class="SSRadioButton">
-	<input id="PublicCheckbox" outlet="SSPublishPane" type="checkbox"></input>
+	<input class="SSInputField" id="PublicCheckbox" outlet="SSPublishPane" type="checkbox"></input>
 	<label>Publish to everybody</label>
     </div>
 

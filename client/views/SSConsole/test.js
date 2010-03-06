@@ -9,7 +9,7 @@ if(SandalphonTool)
     myFrame.addEvent('load', function() {
       console.log(this.contentWindow);
       console.log(this.contentWindow.$);
-      this.contentWindow.$(this.contentWindow.document.body).set('html', "<input type='button' value='Cool!' id='cool' outlet='SSConsole'></input>");
+      this.contentWindow.$(this.contentWindow.document.body).set('html', "<input class='SSInputField' type='button' value='Cool!' id='cool' outlet='SSConsole'></input>");
       Sandalphon.initializeOutlets(this.contentWindow);
     });
     myFrame.injectInside(welcomePane);
