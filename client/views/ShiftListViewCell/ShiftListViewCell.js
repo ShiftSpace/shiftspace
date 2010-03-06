@@ -35,7 +35,7 @@ var ShiftListViewCell = new Class({
   check: function(restore)
   {
     var el = this.lockedElement();
-    el.getElement('input[type=checkbox]').setProperty('checked', true);
+    el.getElement('input.SSInputField[type=checkbox]').setProperty('checked', true);
     if(restore !== true) this.onCheck();
   },
   
@@ -68,7 +68,7 @@ var ShiftListViewCell = new Class({
   uncheck: function(restore)
   {
     var el = this.lockedElement(), index = this.index(), data = this.data();
-    el.getElement('input[type=checkbox]').setProperty('checked', false);
+    el.getElement('input.SSInputField[type=checkbox]').setProperty('checked', false);
     if(restore !== true) this.onUncheck({index: index, data: data});
   },
   
@@ -94,7 +94,7 @@ var ShiftListViewCell = new Class({
   {
     var clone = this.parent();
 
-    clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
+    clone.getElement('input.SSInputField[type=checkbox]').addEvent('click', function(evt) {
       evt = new Event(evt);
       var target = $(evt.target);
       var li = (target.get('tag') == 'li') ? target : target.getParent('li');
