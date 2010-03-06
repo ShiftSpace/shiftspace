@@ -245,7 +245,7 @@ class SandalphonCompiler:
         try:
             ElementTree.fromstring(interfaceFile)
         except Exception, err:
-            fh = open("tmp/error.html")
+            fh = open("tmp/error.html", "w")
             fh.write(interfaceFile)
             fh.close()
             raise err
