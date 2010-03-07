@@ -179,7 +179,7 @@ var ShiftListViewCell = new Class({
   setSummary: function(summary)
   {
     var el = this.lockedElement();
-    el.getElement('.summary').set('text', summary);
+    el.getElement('.summary').set('html', summary);
   },
 
 

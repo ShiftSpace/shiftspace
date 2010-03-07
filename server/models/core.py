@@ -1,6 +1,6 @@
 import couchdb.client
 from couchdb.design import ViewDefinition
-from server.couchdb.lucene_design import LuceneDefinition
+from server.lucene.lucene_design import LuceneDefinition
 import simplejson as json
 import httplib2
 

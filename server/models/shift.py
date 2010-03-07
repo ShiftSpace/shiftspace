@@ -22,6 +22,22 @@ class NoContentError(ShiftError): pass
 # Utilities
 # ==============================================================================
 
+def sanitizeShift(shift):
+    """
+    Sanitize a shift. Will also sanitize the shift summary.
+    Reads the space attrs out of the data or defaults to
+    just sanitizing the summary.
+    """
+    from server.models import core
+    master = core.connect()
+    attrs = master[shift["space"]["name"]]
+    filters = attrs.get("sanitize") or []
+    filters.append("summary")
+    for k in filters:
+        utils.sanitize(shift, k)
+    return shift
+
+
 @simple_decorator
 def shift_join(func):
     def afn(*args, **kwargs):
@@ -64,104 +80,115 @@ class Shift(SSDocument):
 
     all = View(
         "shifts",
-        "function (doc) {            \
-           if(doc.type == 'shift') { \
-             emit(doc._id, doc);     \
-           }                         \
-         }")
+        '''
+        function (doc) {           
+          if(doc.type == "shift") { 
+            emit(doc._id, doc);     
+          }                         
+        }''')
 
     by_created = View(
         "shifts",
-        "function (doc) {                        \
-           if(doc.type == 'shift') {             \
-             emit(doc.created, doc);             \
-           }                                     \
-         }")
+        '''
+        function (doc) {           
+          if(doc.type == "shift") {
+            emit(doc.created, doc);
+          }                         
+        }''')
 
     by_domain_and_created = View(
         "shifts",
-        "function (doc) {                          \
-           if(doc.type == 'shift') {               \
-             emit([doc.domain, doc.created], doc); \
-           }                                       \
-         }")
+        '''
+        function (doc) {            
+          if(doc.type == "shift") {
+            emit([doc.domain, doc.created], doc);
+          }
+        }''')
 
     by_href_and_created = View(
         "shifts",
-        "function(doc) {                         \
-           if(doc.type == 'shift') {             \
-             emit([doc.href, doc.created], doc); \
-           }                                     \
-         }")
+        '''
+        function(doc) {                         
+          if(doc.type == "shift") {            
+             emit([doc.href, doc.created], doc);
+          }                                    
+        }''')
 
     by_user_and_created = View(
         "shifts",
-        "function(doc) {                             \
-           if(doc.type == 'shift') {                 \
-             emit([doc.createdBy, doc.created], doc); \
-           }                                         \
-         }")
+        '''
+        function(doc) {
+          if(doc.type == "shift") {
+            emit([doc.createdBy, doc.created], doc);
+          }
+        }''')
 
     by_group_and_created = View(
         "shifts",
-        "function(doc) {                                      \
-           if(doc.type == 'shift') {                          \
-             var dbs = doc.publishData.dbs;                   \
-             for(var i = 0, len = dbs.length; i < len; i++) { \
-                var db = dbs[i], typeAndId = db.split('/');   \
-                if(typeAndId[0] == 'group') {                 \
-                  emit([doc.created, db], doc);               \
-                }                                             \
-             }                                                \
-           }                                                  \
-         }")
+        '''
+        function(doc) {
+          if(doc.type == "shift") {
+            var dbs = doc.publishData.dbs;
+            for(var i = 0, len = dbs.length; i < len; i++) {
+              var db = dbs[i], typeAndId = db.split("/");
+              if(typeAndId[0] == "group") {
+                emit([doc.created, db], doc);
+              }
+            }
+          }
+        }''')
 
     by_follow_and_created = View(
         "shifts",
-        "function(doc) {                                      \
-           if(doc.type == 'shift') {                          \
-             var dbs = doc.publishData.dbs;                   \
-             for(var i = 0, len = dbs.length; i < len; i++) { \
-                var db = dbs[i], typeAndId = db.split('/');   \
-                if(typeAndId[0] == 'user') {                  \
-                  emit([doc.created, db], doc);               \
-                }                                             \
-             }                                                \
-           }                                                  \
-         }")
+        '''
+        function(doc) {
+          if(doc.type == "shift") {
+            var dbs = doc.publishData.dbs;
+            for(var i = 0, len = dbs.length; i < len; i++) {
+              var db = dbs[i], typeAndId = db.split("/");
+              if(typeAndId[0] == "user") {
+                emit([doc.created, db], doc);
+              }
+            }
+          }
+         }''')
 
     by_user = View(
         "shifts",
-        "function(doc) {               \
-           if(doc.type == 'shift') {   \
-             emit(doc.createdBy, doc); \
-           }                           \
-        }")
+        '''
+        function(doc) {
+          if(doc.type == "shift") {
+            emit(doc.createdBy, doc);
+          }
+        }''')
 
     count_by_user_and_published = View(
         "shifts",
-        "function(doc) {             \
-           if(doc.type == 'shift' && \
-              (doc.publishData.dbs.length > 0 || \
-               doc.publishData.private == false)) { \
-             emit(doc.createdBy, 1); \
-           }                         \
-         }",
-        "function(keys, values, rereduce) { \
-           return sum(values);              \
-         }"
-        )
+        '''
+        function(doc) {
+          if(doc.type == "shift" &&
+             (doc.publishData.dbs.length > 0 ||
+              doc.publishData.private == false)) {
+             emit(doc.createdBy, 1);
+          }
+        }''',
+        '''
+        function(keys, values, rereduce) {
+          return sum(values);
+        }''')
 
     count_by_domain = View(
         "shifts",
-        "function(doc) {             \
-           if(doc.type == 'shift') { \
-             emit(doc.domain, 1);    \
-           }                         \
-         }",
-        "function(keys, values, rereduce) { \
-           return sum(values);              \
-         }")
+        '''
+        function(doc) {
+          if(doc.type == "shift") {
+            emit(doc.domain, 1);
+          }
+        }''',
+        '''
+        function(keys, values, rereduce) {
+          return sum(values);
+        }''')
 
     # ========================================
     # Class Methods
@@ -207,7 +234,9 @@ class Shift(SSDocument):
     @classmethod
     def create(cls, shiftJson):
         from server.models.ssuser import SSUser
-        newShift = Shift(**utils.clean(shiftJson))
+        cleaned = utils.clean(shiftJson)
+        sanitized = sanitizeShift(cleaned)
+        newShift = Shift(**sanitized)
         createdBy = newShift.createdBy
         db = core.connect(SSUser.privateDb(createdBy))
         newShift.domain = utils.domain(newShift.href)

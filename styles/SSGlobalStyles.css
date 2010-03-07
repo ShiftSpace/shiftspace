@@ -327,8 +327,12 @@ ul.ShiftListView li.ShiftListViewCell:hover .date{
    vertical-align: middle;
 }
 
-.ShiftListView .ShiftListViewCell .summary{
+.ShiftListView .ShiftListViewCell .summary {
    margin-left: 10px;
+}
+
+.ShiftListView .ShiftListViewCell .summary p {
+   display: inline;
 }
 
 ul.ShiftListView li.ShiftListViewCell .domain a
