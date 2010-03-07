@@ -22,6 +22,22 @@ class NoContentError(ShiftError): pass
 # Utilities
 # ==============================================================================
 
+def sanitizeShift(shift):
+    """
+    Sanitize a shift. Will also sanitize the shift summary.
+    Reads the space attrs out of the data or defaults to
+    just sanitizing the summary.
+    """
+    from server.models import core
+    master = core.connect()
+    attrs = master[shift["space"]["name"]]
+    filters = attrs.get("sanitize") or []
+    filters.append("summary")
+    for k in filters:
+        utils.sanitize(shift, k)
+    return shift
+
+
 @simple_decorator
 def shift_join(func):
     def afn(*args, **kwargs):
@@ -218,7 +234,6 @@ class Shift(SSDocument):
     @classmethod
     def create(cls, shiftJson):
         from server.models.ssuser import SSUser
-        from server.utils.utils import sanitizeShift
         cleaned = utils.clean(shiftJson)
         sanitized = sanitizeShift(cleaned)
         newShift = Shift(**sanitized)
