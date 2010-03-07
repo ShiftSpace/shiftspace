@@ -138,6 +138,7 @@ except Exception, err:
     print err
     pass
     
+
 def sanitize(d, key="summary"):
     """
     HTML sanitize a specific field in a dict. Defaults to summary.
@@ -149,3 +150,18 @@ def sanitize(d, key="summary"):
     elif d.get("key"):
         d[key] = cleaner.clean_html(d[key])
     return d
+
+
+def sanitizeShift(shift):
+    """
+    Sanitize a shift. Will also sanitize the shift summary.
+    Reads the space attrs out of the data or defaults to
+    just sanitizing the summary.
+    """
+    master = core.connect()
+    attrs = master[shift.space.name]
+    filters = attrs.get("sanitize") or []
+    filters.append("summary")
+    for k in filters:
+        sanitize(shift, k)
+    return shift
