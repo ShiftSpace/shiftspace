@@ -384,7 +384,7 @@ def installSpace(space):
     data = json.loads(fh.read())
     data["type"] = "space"
     db = core.connect()
-    db.create(data)
+    db[space] = data
 
 
 def shell():
