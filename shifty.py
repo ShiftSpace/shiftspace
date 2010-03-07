@@ -379,12 +379,7 @@ def installSpace(space):
     """
     Installs a space's attributes into the database.
     """
-    from server.models import core
-    fh = open(os.path.join("spaces", space, "attrs.json"))
-    data = json.loads(fh.read())
-    data["type"] = "space"
-    db = core.connect()
-    db[space] = data
+    setup.installSpace(space)
 
 
 def shell():
