@@ -207,8 +207,7 @@ var SSPublishPane = new Class({
   
   attachEvents: function()
   {
-    this.DeleteShift.addEvent('click', this.deleteShifts.bind(this));
-    this.SaveShift.addEvent('click', this.saveShifts.bind(this));
+    this.Cancel.addEvent("click", this['close'].bind(this));
     this.ChooseVisibility.addEvent('click', this.publishShifts.bind(this));
 
     this.ShiftPrivateStatusRadio.addEvent('click', function(evt){

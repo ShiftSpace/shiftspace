@@ -31,8 +31,6 @@ var SSNotifierView = new Class({
     }.bind(this));
     SSAddObserver(this, 'onNewShiftShow', this.onNewShiftShow.bind(this));
     SSAddObserver(this, 'onShiftDestroy', this.hideQuickPane.bind(this));
-    SSAddObserver(this, 'onPublishPaneOpen', this.showQuickEditPane.bind(this));
-    SSAddObserver(this, 'onPublishPaneClose', this.hideQuickEditPane.bind(this));
 
     this.watchFocusBlur();
 
