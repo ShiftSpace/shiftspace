@@ -22,6 +22,8 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onSpaceMenuShow', this.onSpaceMenuShow.bind(this));
     SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
+    SSAddObserver(this, 'onShiftEdit', this.onShiftEdit.bind(this));
+    SSAddObserver(this, 'onShiftLeaveEdit', this.onShiftLeaveEdit.bind(this));
     SSAddObserver(this, 'onMessageRead', function() {
       this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
     }.bind(this));
@@ -75,6 +77,18 @@ var SSNotifierView = new Class({
     this.SSQPDelete.removeClass("SSDisplayNone");
   },
   
+
+  onShiftEdit: function()
+  {
+    this.fireEvent('edit');
+  },
+
+
+  onShiftLeaveEdit: function()
+  {
+    this.fireEvent("leaveedit");
+  },
+
 
   updateCounter: function()
   {
@@ -149,10 +163,12 @@ var SSNotifierView = new Class({
             {type: 'hidemenu', unflag:'menu'},
             {type: 'showconsole', flag:'console'},
             {type: 'hideconsole', unflag:'console'},
+            {type: 'edit', flag: 'edit'},
+            {type: 'leaveedit', unflag: 'edit'},
             {type: 'mouseover', flag:'mouse'},
-            {type: 'mouseout', state: 'SSNotifierHasShifts', unflag:'mouse', condition: {not: ['shift', 'menu', 'console']}},
+            {type: 'mouseout', state: 'SSNotifierHasShifts', unflag:'mouse', condition: {not: ['shift', 'menu', 'console', 'edit']}},
             {type: 'shiftdown', flag:'shift'},
-            {type: 'shiftup', state: 'SSNotifierHasShifts', unflag:'shift', condition: {not: ['mouse', 'menu', 'console']}}
+            {type: 'shiftup', state: 'SSNotifierHasShifts', unflag:'shift', condition: {not: ['mouse', 'menu', 'console', 'edit']}}
           ]
         }
       }
@@ -245,7 +261,8 @@ var SSNotifierView = new Class({
   */
   hide: function(animate)
   {
-    if(ShiftSpace.Console.isVisible()) return;
+    SSLog("hide", SSLogForce);
+    if(ShiftSpace.Console.isVisible() || SSShiftBeingEdited() != null) return;
     if(animate === false)
     {
       this.graph.cancel(true);
