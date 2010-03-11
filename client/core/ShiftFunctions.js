@@ -268,26 +268,10 @@ function SSSaveNewShift(shift)
 
         SSSetFocusedShiftId(newId);
         
-        if(ShiftSpace.Console) ShiftSpace.Console.show();
-
         space.onShiftSave(newId);
 
-        // delay sending notifications if the console is not
-        // visible this means the console is being opened for the
-        // first time
-        if(!ShiftSpace.Console.isLoaded())
-        {
-          ShiftSpace.Console.addEvent("load", function() {
-            SSLog("Console loaded! sending notifications", SSLogForce);
-            SSPostNotification('onNewShiftSave', newId);
-            SSPostNotification('onShiftSave', newId);
-          });
-        }
-        else
-        {
-          SSPostNotification('onNewShiftSave', newId);
-          SSPostNotification('onShiftSave', newId);
-        }
+        SSPostNotification('onNewShiftSave', newId);
+        SSPostNotification('onShiftSave', newId);
       },
       function(err) {
       });

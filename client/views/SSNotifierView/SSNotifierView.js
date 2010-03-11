@@ -25,7 +25,7 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onMessageRead', function() {
       this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
     }.bind(this));
-    SSAddObserver(this, 'onNewShiftShow', this.showQuickPane.bind(this));
+    SSAddObserver(this, 'onNewShiftShow', this.onNewShiftShow.bind(this));
     SSAddObserver(this, 'onShiftDestroy', this.hideQuickPane.bind(this));
     SSAddObserver(this, 'onPublishPaneOpen', this.showQuickEditPane.bind(this));
     SSAddObserver(this, 'onPublishPaneClose', this.hideQuickEditPane.bind(this));
@@ -71,8 +71,11 @@ var SSNotifierView = new Class({
       this.__count++;
       this.updateCounter();
     }
+    this.SSQPStatus.set("text", "saved private draft");
+    this.SSQPDelete.removeClass("SSDisplayNone");
   },
   
+
   updateCounter: function()
   {
     //TODO: pluralization should be handled more smartly - 10/28/09 by ljxia
@@ -81,6 +84,7 @@ var SSNotifierView = new Class({
     if (this.SSShiftCount) this.SSShiftCount.set('text', text);
   },
     
+
   initGraph: function() {
     this.graph = new Fx.Graph(this.element, {
       controller: this,
@@ -346,6 +350,7 @@ var SSNotifierView = new Class({
 
     this.SSQPDelete.addEvent("click", function(evt) {
       evt = new Event(evt);
+      // delete the shift
     }.bind(this));
   },
   
@@ -539,6 +544,15 @@ var SSNotifierView = new Class({
       this.mapOutletsToThis();
       this.update();
     }
+  },
+
+
+  onNewShiftShow: function(id, status)
+  {
+    this.showQuickPane();
+    this.SSQPStatus.set("text", status || "unsaved");
+    SSLog("hide delete button", SSLogForce);
+    this.SSQPDelete.addClass("SSDisplayNone");
   },
 
 
