@@ -92,14 +92,28 @@ var SSNotifierView = new Class({
   },
 
 
+  currentListView: function()
+  {
+    return this.__currentListView;
+  },
+  
+  
+  setCurrentListView: function(currentListView)
+  {
+    this.__currentListView = currentListView;
+  },
+
+
   onShiftCheck: function(evt)
   {
     this.hideQuickPane();
     this.showQuickEditPane();
     var listView = evt.listView;
+    this.setCurrentListView(listView);
     if(listView.checkedItems().length > 1)
     {
       this.SSQEPEdit.addClass("SSDisplayNone");
+      this.SSQEPShare.addClass("SSDisplayNone");
     }
   },
 
@@ -107,6 +121,7 @@ var SSNotifierView = new Class({
   onShiftUncheck: function(evt)
   {
     var listView = evt.listView;
+    this.setCurrentListView(listView);
     if(listView.checkedItems().length == 0)
     {
       this.hideQuickEditPane();
@@ -114,6 +129,7 @@ var SSNotifierView = new Class({
     if(listView.checkedItems().length == 1)
     {
       this.SSQEPEdit.removeClass("SSDisplayNone");
+      this.SSQEPShare.removeClass("SSDisplayNone");
     }
   },
 
@@ -396,6 +412,23 @@ var SSNotifierView = new Class({
     this.SSQPDelete.addEvent("click", function(evt) {
       evt = new Event(evt);
       // delete the shift
+    }.bind(this));
+
+    /* Quick Edit Pane Events */
+
+    this.SSQEPEdit.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      
+    }.bind(this));
+
+    this.SSQEPShare.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      SSPostNotification("onShiftShare", this.currentListView().checkedItems()[0]);
+    }.bind(this));
+
+    this.SSQEPDelete.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      
     }.bind(this));
   },
   

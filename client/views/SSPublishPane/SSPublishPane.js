@@ -25,8 +25,16 @@ var SSPublishPane = new Class({
   {
     this.parent(el, options);
 
+    SSAddObserver(this, "onShiftShare", this.onShiftShare.bind(this));
     SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
     SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
+  },
+
+
+  onShiftShare: function(shift)
+  {
+    this['open']();
+    this.update(shift);
   },
   
   
@@ -96,23 +104,7 @@ var SSPublishPane = new Class({
     return this.currentListView().checkedItemIndices().length;
   },
   
-  
-  onShiftCheck: function(evt)
-  {
-    if(!this.isVisible()) this['open']();
-    this.setCurrentListView(evt.listView);
-    this.update();
-  },
-  
-  
-  onShiftUncheck: function(evt)
-  {
-    this.setCurrentListView(evt.listView);
-    if(this.count() == 0) this['close']();
-    this.update();
-  },
-  
-  
+
   setDelegate: function(delegate)
   {
     this.__delegate = delegate;
@@ -243,43 +235,21 @@ var SSPublishPane = new Class({
     Function: update
       Update the display of the shift depending on the useres selections.
    */
-  update: function()
+  update: function(shift)
   {
-    if(this.count() == 1)
+    var publishData = shift.publishData;
+    this.PublishTargets.setProperty("value", "");
+    if(publishData.private)
     {
-      var publishData = this.currentListView().checkedItems()[0].publishData;
-
-      // clear out the publish targets data
-      this.PublishTargets.setProperty("value", "");
-
-      /*
-      this.element.getElement("#SSPublishPaneStatus label").removeClass('SSDisplayNone');
-      if(publishData !== undefined && publishData.draft)
-      {
-        this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Draft');
-      }
-      else
-      {
-        this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Published');
-      }
-      */
-      
-      if(publishData.private)
-      {
-        this.ShiftPrivateStatusRadio.setProperty("checked", true);
-      }
-      else
-      {
-        this.ShiftPublicStatusRadio.setProperty("checked", true);
-      }
-      if(publishData.targets && publishData.targets.length > 0)
-      {
-        this.PublishTargets.setProperty("value", publishData.targets.join(" "));
-      }
+      this.ShiftPrivateStatusRadio.setProperty("checked", true);
     }
-    else if(this.count() > 1)
+    else
     {
-      this.element.getElement("#SSPublishPaneStatus label").addClass('SSDisplayNone');
+      this.ShiftPublicStatusRadio.setProperty("checked", true);
+    }
+    if(publishData.targets && publishData.targets.length > 0)
+    {
+      this.PublishTargets.setProperty("value", publishData.targets.join(" "));
     }
   },
 
