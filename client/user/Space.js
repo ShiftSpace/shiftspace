@@ -168,6 +168,12 @@ var ShiftSpaceSpace = new Class({
     return this.__isVisible || visibleShifts;
   },
 
+  shiftIsVisible: function(id)
+  {
+    var shift = this.__shifts[id];
+    return shift && shift.isVisible();
+  },
+
   /*
     Function: showInterface
       Show the space interface.  This can be overriden if necessary but you must remember to call this.parent()
@@ -393,11 +399,21 @@ var ShiftSpaceSpace = new Class({
   editShift: function(shiftId)
   {
     var theShift = this.__shifts[shiftId];
-
     if(!theShift.isBeingEdited())
     {
       theShift.setIsBeingEdited(true);
       theShift.edit();
+    }
+  },
+
+
+  leaveEditShift: function(shiftId)
+  {
+    var theShift = this.__shifts[shiftId];
+    if(theShift.isBeingEdited())
+    {
+      theShift.setIsBeingEdited(false);
+      theShift.leaveEdit();
     }
   },
 
