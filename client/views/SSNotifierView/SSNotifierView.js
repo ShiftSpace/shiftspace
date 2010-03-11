@@ -427,7 +427,8 @@ var SSNotifierView = new Class({
 
     this.SSQEPDelete.addEvent("click", function(evt) {
       evt = new Event(evt);
-      
+      var ids = this.currentListView().checkedItemIds();
+      ids.each($comp(SSDeleteShift, $msg('realize')));
     }.bind(this));
   },
   
