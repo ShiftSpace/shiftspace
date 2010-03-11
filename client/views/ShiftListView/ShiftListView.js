@@ -71,9 +71,7 @@ var ShiftListView = new Class({
     if(!this.isVisible()) return;
     this.refresh();
     var idx = this.find(function(x) { return x._id == id; });
-    this.cell().lock(this.cellNodeForIndex(idx));
-    this.cell().check();
-    this.cell().unlock();
+    this.selectRow(idx);
   },
   
   
