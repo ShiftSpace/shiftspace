@@ -416,7 +416,8 @@ var SSNotifierView = new Class({
 
     this.SSQEPEdit.addEvent("click", function(evt) {
       evt = new Event(evt);
-      
+      var id = this.currentListView().checkedItemIds()[0];
+      SSEditShift(SSSpaceForShift(id), id);
     }.bind(this));
 
     this.SSQEPShare.addEvent("click", function(evt) {
