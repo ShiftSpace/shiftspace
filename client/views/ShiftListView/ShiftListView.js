@@ -119,10 +119,12 @@ var ShiftListView = new Class({
   onCheck: function(evt)
   {
     var id = evt.data._id;
+    /*
     if(SSUserCanEditShift(id))
     {
       SSEditShift(SSSpaceForShift(id), id);
     }
+    */
   },
 
   

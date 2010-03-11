@@ -27,8 +27,8 @@ var SSPublishPane = new Class({
 
     SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
     SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
-    SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
-    SSAddObserver(this, 'onShiftDeselect', this.onShiftDeselect.bind(this));
+    SSAddObserver(this, "onShiftCheck", this.onShiftCheck.bind(this));
+    SSAddObserver(this, 'onShiftUncheck', this.onShiftUncheck.bind(this));
   },
   
   
@@ -99,7 +99,7 @@ var SSPublishPane = new Class({
   },
   
   
-  onShiftSelect: function(evt)
+  onShiftCheck: function(evt)
   {
     if(!this.isVisible()) this['open']();
     this.setCurrentListView(evt.listView);
@@ -107,7 +107,7 @@ var SSPublishPane = new Class({
   },
   
   
-  onShiftDeselect: function(evt)
+  onShiftUncheck: function(evt)
   {
     this.setCurrentListView(evt.listView);
     if(this.count() == 0) this['close']();
