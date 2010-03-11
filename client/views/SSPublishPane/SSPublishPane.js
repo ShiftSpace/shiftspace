@@ -27,8 +27,6 @@ var SSPublishPane = new Class({
 
     SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
     SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
-    SSAddObserver(this, "onShiftCheck", this.onShiftCheck.bind(this));
-    SSAddObserver(this, 'onShiftUncheck', this.onShiftUncheck.bind(this));
   },
   
   

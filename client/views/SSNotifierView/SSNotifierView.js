@@ -24,6 +24,8 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
     SSAddObserver(this, 'onShiftEdit', this.onShiftEdit.bind(this));
     SSAddObserver(this, 'onShiftLeaveEdit', this.onShiftLeaveEdit.bind(this));
+    SSAddObserver(this, 'onShiftCheck', this.onShiftCheck.bind(this));
+    SSAddObserver(this, 'onShiftUncheck', this.onShiftUncheck.bind(this));
     SSAddObserver(this, 'onMessageRead', function() {
       this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
     }.bind(this));
@@ -87,6 +89,32 @@ var SSNotifierView = new Class({
   onShiftLeaveEdit: function()
   {
     this.fireEvent("leaveedit");
+  },
+
+
+  onShiftCheck: function(evt)
+  {
+    this.hideQuickPane();
+    this.showQuickEditPane();
+    var listView = evt.listView;
+    if(listView.checkedItems().length > 1)
+    {
+      this.SSQEPEdit.addClass("SSDisplayNone");
+    }
+  },
+
+
+  onShiftUncheck: function(evt)
+  {
+    var listView = evt.listView;
+    if(listView.checkedItems().length == 0)
+    {
+      this.hideQuickEditPane();
+    }
+    if(listView.checkedItems().length == 1)
+    {
+      this.SSQEPEdit.removeClass("SSDisplayNone");
+    }
   },
 
 
