@@ -194,6 +194,7 @@ Parameters:
 var SSEditShift = function(space, shiftId)
 {
   var shift = SSGetShift(shiftId);
+  SSSetShiftBeingEdited(shiftId);
   if(SSUserCanEditShift(shiftId) || SSIsNewShift(shiftId))
   {
     var content = shift.content;
@@ -213,14 +214,31 @@ var SSEditShift = function(space, shiftId)
 }.asPromise();
 
 
-var SSLeaveEditShift = function(space, shiftId)
+function SSLeaveEditShift(space, shiftId)
 {
   var shift = SSGetShift(shiftId);
-  if(!Promise.isPromise(shift) && space.hasShift(shiftId))
+  if(space &&
+     !Promise.isPromise(space),
+     space.hasShift(shiftId) &&
+     space.shiftIsVisible(shiftId))
   {
     SSShowShift(space, shiftId);
   }
-}.asPromise();
+  SSPostNotification('onShiftLeaveEdit', shiftId);
+  SSSetShiftBeingEdited(null);
+}
+
+
+var __shiftBeingEditing = null;
+function SSSetShiftBeingEdited(shiftId)
+{
+  __shiftBeingEditing = shiftId;
+}
+
+function SSShiftBeingEdited()
+{
+  return __shiftBeingEditing;
+}
 
 /*
 Function: SSSaveNewShift
