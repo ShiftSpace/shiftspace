@@ -268,6 +268,12 @@ var NotesShift = new Class({
     this.showEditInterface();
   },
 
+  leaveEdit: function()
+  {
+    this.parent();
+    this.show();
+  },
+
   hide: function()
   {
     this.parent();
