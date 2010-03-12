@@ -113,7 +113,7 @@ var SSConsole = new Class({
   
   onNewShiftSave: function()
   {
-    this.MainTabView.selectTabByName('AllShiftsView');
+    if(this.isLoaded()) this.MainTabView.selectTabByName('AllShiftsView');
   },
 
 

@@ -42,7 +42,7 @@ var ShiftListViewCell = new Class({
   /*
     Function: onCheck
       *private*
-      Call's setState on the owning <SSListView>. Posts an onShiftSelect
+      Call's setState on the owning <SSListView>. Posts an onShiftCheck
       notification.
 
     See Also:
@@ -53,7 +53,7 @@ var ShiftListViewCell = new Class({
     var idx = this.index(), data = this.data();
     this.delegate().setState(data._id, 'checked', this.check.bind(this, [true]));
     this.delegate().onCheck({index: idx, data: data});
-    SSPostNotification('onShiftSelect', {listView: this.delegate(), index: idx, data: data});
+    SSPostNotification('onShiftCheck', {listView: this.delegate(), index: idx, data: data});
   },
   
   /*
@@ -75,7 +75,7 @@ var ShiftListViewCell = new Class({
   /*
     function: onUncheck
       *private*
-      Call's remoteState on the owning <SSListView>. Posts an onShiftDeselect
+      Call's remoteState on the owning <SSListView>. Posts an onShiftUncheck
       notification.
       
     See Also:
@@ -86,7 +86,7 @@ var ShiftListViewCell = new Class({
     var idx = this.index(), data = this.data();
     if(data) this.delegate().removeState(data._id, 'checked');
     this.delegate().onUncheck({index: idx, data: data});
-    SSPostNotification('onShiftDeselect', {listView: this.delegate(), index:idx});
+    SSPostNotification('onShiftUncheck', {listView: this.delegate(), index:idx});
   },
   
   

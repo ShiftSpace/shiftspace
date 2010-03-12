@@ -130,6 +130,12 @@ var ShiftSpaceShift = new Class({
     this.setIsBeingEdited(true);
   },
 
+  
+  leaveEdit: function()
+  {
+    this.setIsBeingEdited(false);
+  },
+
   /*
     Function: save
       Fires the onUpdate event for anyone who is listening. Passes a ref to this object as
