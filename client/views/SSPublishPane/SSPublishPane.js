@@ -238,6 +238,7 @@ var SSPublishPane = new Class({
   {
     var publishData = shift.publishData;
     this.PublishTargets.setProperty("value", "");
+    this.__currentShiftId = shift._id;
     if(publishData.private)
     {
       this.ShiftPrivateStatusRadio.setProperty("checked", true);
@@ -255,8 +256,7 @@ var SSPublishPane = new Class({
 
   showProxy: function(evt)
   {
-    var selectedShifts = this.currentListView().checkedItemIds();
-    window.open(ShiftSpace.info().server.urlJoin("proxy", selectedShifts[0]));
+    window.open(ShiftSpace.info().server.urlJoin("proxy", this.__currentShiftId));
   },
   
 
