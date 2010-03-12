@@ -407,6 +407,20 @@ var SSNotifierView = new Class({
       if(space) space.saveCurrentShift();
     }.bind(this));
 
+    this.SSQPCancel.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var id = this.currentListView().checkedItemIds()[0];
+      if(SSIsNewShift(id))
+      {
+      }
+      else
+      {
+        SSLeaveEditShift(SSSpaceForShift(id), id);
+        this.hideQuickPane();
+        this.showQuickEditPane();
+      }
+    }.bind(this));
+
     this.SSQPDelete.addEvent("click", function(evt) {
       evt = new Event(evt);
       // delete the shift
@@ -418,6 +432,8 @@ var SSNotifierView = new Class({
       evt = new Event(evt);
       var id = this.currentListView().checkedItemIds()[0];
       SSEditShift(SSSpaceForShift(id), id);
+      this.hideQuickEditPane();
+      this.showQuickPane(SSGetShift(id));
     }.bind(this));
 
     this.SSQEPShare.addEvent("click", function(evt) {
@@ -627,17 +643,26 @@ var SSNotifierView = new Class({
 
   onNewShiftShow: function(id, status)
   {
-    this.showQuickPane();
-    this.SSQPStatus.set("text", status || "unsaved");
-    SSLog("hide delete button", SSLogForce);
-    this.SSQPDelete.addClass("SSDisplayNone");
+    this.showQuickPane(SSGetShift(id));
   },
 
 
-  showQuickPane: function()
+  showQuickPane: function(shift)
   {
     this.SSQuickPane.removeClass("SSDisplayNone");
-  },
+    if(SSIsNewShift(shift._id))
+    {
+      this.SSQPStatus.set("text", status || "unsaved");
+      this.SSQPDelete.addClass("SSDisplayNone");
+    }
+    else
+    {
+      this.SSQPStatus.set("text", status || "unsaved {status}".substitute({
+        status: (shift.publishData['private']) ? "private shift" : "public shift"
+      }));
+      this.SSQPDelete.removeClass("SSDisplayNone");
+    }
+  }.asPromise(),
 
 
   hideQuickPane: function()
