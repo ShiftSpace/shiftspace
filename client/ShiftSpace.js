@@ -229,7 +229,7 @@ var ShiftSpace = new (function() {
       var installed = SSInstalledSpaces();
       $H(installed).each(function(space) {
         var key = [ShiftSpace.User.getUserName(), space.name, "autolaunch"].join("."),
-            autolaunch = SSGetValue(key);
+            autolaunch = SSGetValue(key) || space.autolaunch;
         if(autolaunch)
         {
           SSLog("Load", space.name, "autolaunch flag set", SSLogForce);
