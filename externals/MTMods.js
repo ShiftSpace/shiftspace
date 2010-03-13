@@ -517,4 +517,7 @@ var DelayedAsset = new Class({
 });
 
 var $msg = Function.msg;
+var $not = Function.not;
+var $eq = Function.eq;
 var $comp = Function.comp;
+var $acc = Function.acc;
