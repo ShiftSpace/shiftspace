@@ -233,9 +233,17 @@ var ShiftSpace = new (function() {
         if(autolaunch)
         {
           SSLog("Load", space.name, "autolaunch flag set", SSLogForce);
-          SSLoadSpace(space.name, true);
+          var spacep = SSLoadSpace(space.name);
+              shiftsp = SSAllShiftsForSpace(space.name, window.location.href);
+          SSShowAllShiftsForSpace(spacep, shiftsp);
         }
       });
+    }.asPromise();
+
+
+    var SSShowAllShiftsForSpace = function(space, shifts)
+    {
+      shifts.map($acc("_id")).each(SSShowShift.partial(null, space));
     }.asPromise();
 
 
@@ -378,6 +386,7 @@ var ShiftSpace = new (function() {
        'SSInfo',
        'SSCheckForUpdates',
        'SSShiftBeingEdited',
+       'SSAllShiftsForSpace',
        '__controllers'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);
