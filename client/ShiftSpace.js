@@ -228,8 +228,7 @@ var ShiftSpace = new (function() {
     {
       var installed = SSInstalledSpaces();
       $H(installed).each(function(space) {
-        var key = [ShiftSpace.User.getUserName(), space.name, "autolaunch"].join("."),
-            autolaunch = SSGetValue(key) || space.autolaunch;
+        var autolaunch = SSSpaceShouldAutolaunch(space.name);
         if(autolaunch)
         {
           SSLog("Load", space.name, "autolaunch flag set", SSLogForce);
@@ -387,6 +386,7 @@ var ShiftSpace = new (function() {
        'SSCheckForUpdates',
        'SSShiftBeingEdited',
        'SSAllShiftsForSpace',
+       'SSSpaceShouldAutolaunch',
        '__controllers'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);

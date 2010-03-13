@@ -98,7 +98,7 @@ var SpaceSettingsView = new Class({
       }
       else
       {
-        ShiftSpace.User.removePreference(this.currentSpace().name+".autolaunch");
+        ShiftSpace.User.setPreference(this.currentSpace().name+".autolaunch", false);
       }
     }.bind(this));
   },
