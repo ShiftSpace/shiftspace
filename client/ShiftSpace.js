@@ -202,6 +202,7 @@ var ShiftSpace = new (function() {
       }
       var p = SSUpdateInstalledSpaces();
       SSCheckForDebugSpaces(p);
+      SSCheckForAutolaunchSpaces(p);
       if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
       SSCheckForCurrentShift();
       SSPostNotification("onSync");
@@ -217,6 +218,21 @@ var ShiftSpace = new (function() {
         if(debug)
         {
           SSLog("Load", space.name, "in debug mode", SSLogForce);
+          SSLoadSpace(space.name, true);
+        }
+      });
+    }.asPromise();
+
+
+    var SSCheckForAutolaunchSpaces = function(controlp)
+    {
+      var installed = SSInstalledSpaces();
+      $H(installed).each(function(space) {
+        var key = [ShiftSpace.User.getUserName(), space.name, "autolaunch"].join("."),
+            autolaunch = SSGetValue(key);
+        if(autolaunch)
+        {
+          SSLog("Load", space.name, "autolaunch flag set", SSLogForce);
           SSLoadSpace(space.name, true);
         }
       });
@@ -361,6 +377,7 @@ var ShiftSpace = new (function() {
        'SSSpaceIsInDebugMode',
        'SSInfo',
        'SSCheckForUpdates',
+       'SSShiftBeingEdited',
        '__controllers'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);

@@ -63,6 +63,14 @@ var SpaceSettingsView = new Class({
     {
       this.SSDebugSpace.set("checked", false);
     }
+    if(SSSpaceShouldAutolaunch(spaceName))
+    {
+      this.SSAutolaunch.set("checked", true);
+    }
+    else
+    {
+      this.SSAutolaunch.set("checked", false);
+    }
   },
 
 
@@ -78,6 +86,19 @@ var SpaceSettingsView = new Class({
       else
       {
         ShiftSpace.User.removePreference(this.currentSpace().name+".debug");
+      }
+    }.bind(this));
+
+    this.SSAutolaunch.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var target = $(evt.target);
+      if(target.get("checked"))
+      {
+        ShiftSpace.User.setPreference(this.currentSpace().name+".autolaunch", true);
+      }
+      else
+      {
+        ShiftSpace.User.removePreference(this.currentSpace().name+".autolaunch");
       }
     }.bind(this));
   },
