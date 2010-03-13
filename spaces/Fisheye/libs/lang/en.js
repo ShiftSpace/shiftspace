@@ -1,5 +1,6 @@
 
 var displayTextEnglish = {
+	languageKey : "en",
 	languageName : "English",
 	source : "source",
 	submitter : "submitttter",
