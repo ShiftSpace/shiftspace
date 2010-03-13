@@ -63,7 +63,7 @@ var SSAddStyle = function(css, options)
   // if it's a frame load it into the frame
   if(options.frame)
   {
-    var doc = frame.contentDocument;
+    var doc = options.frame.contentDocument;
 
     if( doc.getElementsByTagName('head').length != 0 )
     {
