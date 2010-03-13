@@ -144,7 +144,7 @@ var SSIframe = new Class({
           // load the css
           if(this.css)
           {
-            SSLoadStyle(this.css, null, this.frame);
+            SSLoadStyle(this.css, this.frame);
           }
           _cb();
         }.bind(this, loadCallBack)

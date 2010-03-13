@@ -1,13 +1,13 @@
 
 // Our Space class - refs to our code, icon, and css
-var FisheyeSpace = new Class({
-	Extends: ShiftSpace.Space,
-	attributes: {
-		name: 'Fisheye',
-		icon: 'Fisheye.png',
-		css : 'Fisheye.css'
-	}
-});
+//var FisheyeSpace = new Class({
+	//Extends: ShiftSpace.Space,
+	//attributes: {
+		//name: 'Fisheye',
+		//icon: 'Fisheye.png',
+		//css : 'Fisheye.css'
+	//}
+//});
 
 
 var wrapSetHTML =  function(el, html) {
@@ -85,36 +85,75 @@ var FisheyeCriticismRenderClass = new Class({
     },
 
     renderCategory: function(that, isEdit, container) {
-	var someBox = new ShiftSpace.Element('div', {'class':'FisheyeCategory'});
+	//var someBox = new ShiftSpace.Element('div', {'class':'FisheyeCategory'});
 	var categoryText = that.criticismCategoryGetName (that.categoryType);
 
 	if (isEdit) {
-	    someBox.appendText("[ " + categoryText + " ]");
-	    someBox.addEvent('click', that.changeCategory.bind(that));
-	}
-	else
-	    someBox.appendText(categoryText);
+	    var someBox = new ShiftSpace.Element('div', {'class':'FisheyeEditableText'});
+	    someBox.setStyles({ 'class': 'FisheyeEditableText', });
 
-	someBox.injectInside(container);
+	    that.someList = new ShiftSpace.Element('select', 
+		{'class':'FisheyeEditableText',
+		 'name':'mylist'}
+	    );
+	    for (var key in that.criticismCategories) {
+	      var someOption = new ShiftSpace.Element('option', {'value':key});
+	      someOption.setStyles({
+		  'color': 'white',
+		  'background-color': that.criticismCategoryGetColor(key),
+	      });
+	      someOption.appendText(key + " : " + that.criticismCategoryGetName(key));
+	      someOption.injectInside(that.someList);
+            }
+	    that.someList.value = that.categoryType;
+	    that.someList.addEvent('change', function(){
+		    var w = this.someList.selectedIndex;
+		    var key = this.someList.options[w].value;
+		    this.setCategory(key);
+		}.bind(that));
+	    that.someList.injectInside(container);
+
+	    //someBox.appendText("[ " + categoryText + " ]");
+	    //someBox.addEvent('click', that.changeCategory.bind(that));
+	    //someBox.injectInside(container);
+	}
+	else {
+	    var someBox = new ShiftSpace.Element('div', {'class':'FisheyeCategory'});
+	    someBox.appendText(categoryText);
+	    someBox.injectInside(container);
+	}
+
+	//someBox.injectInside(container);
     },
+
+    simpleSummaryEdit: true,
 
     // Render the summary, the main text body of popup
     // in edit mode, render an entry box
-    renderSummary: function(that) {
-	if (that.mode == that.MODE_EDIT) {
-	    // create an iframe with the css already loaded
-	    that.summaryFrame = new ShiftSpace.Iframe({
-	      'class' : 'FisheyeNoteShiftFrame',
-	      scroll : 'no',
-	      rows : 4,
-	      cols : 25,
-	      wrap : 'hard',
-	      css : that.getParentSpace().attributes.css,
-	      border : 'medium double #C4C87C' ,
-	      onload : that.finishFrame.bind(that)
-	    });
-	    that.summaryFrame.injectInside(that.editBox);
+    renderSummary: function(that, isEdit, de) {
+        that.log("RENDER SUMMARY CALLED");
+	if (isEdit) {
+	    that.log("RENDER SUMMARY IN EDIT MODE");
+	    if (this.simpleSummaryEdit) {
+	        that.log("RENDER SUMMARY SIMPLE IN EDIT MODE");
+		that.buildInputArea();
+		that.inputArea.injectInside(that.editBox);
+	    } else {
+		// create an iframe with the css already loaded
+		that.summaryFrame = new ShiftSpace.Iframe({
+		  'class' : 'FisheyeEditableText',
+		  scroll : 'no',
+		  rows : 4,
+		  cols : 25,
+		  wrap : 'hard',
+		  css : that.getParentSpace().attributes.css,
+		  border : 'medium double #C4C87C' ,
+		  onload : that.finishFrame.bind(that)
+		});
+		that.summaryFrame.injectInside(that.editBox);
+	    }
 	} else {
+	    that.log("RENDER SUMMARY DISPLAY MODE");
 	    var sBox = new ShiftSpace.Element ('div', {'class':'FisheyeSummary'});
 	    sBox.appendText(that.summaryText);
 	    sBox.injectInside (that.detailsBox);
@@ -126,26 +165,34 @@ var FisheyeCriticismRenderClass = new Class({
 		'padding':  '0px 5px 10px 5px',
 	});
 	criticismLinkBox.injectInside(container);
-	aBox = new ShiftSpace.Element('div', {'class':'FisheyeDisplayItem'});
-	aBox.setStyles({ 'font-weight': 'bold', });
 	if (isEdit) {
-	    aBox.appendText("  [" + that.criticismLink + "]");
+	    aBox = new ShiftSpace.Element('div', {'class':'FisheyeEditableText'});
+	    aBox.setStyles({ 'font-weight': 'bold', });
+	    aBox.appendText(that.criticismLink);
 	    aBox.addEvent('click', that.changeCriticismLink.bind(that));
+	    aBox.injectInside(criticismLinkBox);
 	} else {
+	    aBox = new ShiftSpace.Element('div', {'class':'FisheyeDisplayItem'});
+	    aBox.setStyles({ 'font-weight': 'bold', });
 	    aLink = this.createLink (that.criticismLink, "[" + that.getText('read') + "]", aBox);
+	    aBox.injectInside(criticismLinkBox);
 	}
-	aBox.injectInside(criticismLinkBox);
     },
 
     renderSource: function(that, target) {
 	var sb = makeDisplayItem();
 	name = that.criticismSourceGetName (that.sourceCode);
-	sb.appendText(that.getText('source') + ": " + name + " [" + that.getText('ignore') + "]");
-	sb.addEvent('click', function(){
+	//sb.appendText(that.getText('source') + ": " + name + " [" + that.getText('ignore') + "]");
+	sb.appendText(that.getText('source') + ": " + name + " ");
+	var ignoreButton = new ShiftSpace.Element('span', { 'class' : 'FisheyeActiveText' });
+	//ignoreButton.appendText("[ignore this source]");
+	ignoreButton.appendText("[" + that.getText('ignore') + that.getText('source') + "]");
+	ignoreButton.addEvent('click', function(){
 	    this.settings.hiddenSources[this.sourceCode] = true;
 	    this.saveSettings();
 	    this.rebuild();
 	}.bind (that));
+	ignoreButton.injectInside(sb);
 	sb.injectInside(target);
     },
 
@@ -187,15 +234,19 @@ var displayTextEnglish = {
 	settingsIgnoredAuthors : "Ignored authors",
 	settingsNoneIgnored : "none ignored",
 	clickToRestore : "(click to restore)",
-	ignore : "ignore",
+	ignore : "ignore this ",
 	read : "Read",
 	rangeWarning : "You need to select some page content first!",
 	save : "Save",
 	cancel : "Cancel",
 	done : "Done",
-	lockPos : "Lock Pos To Sel Text",
+	lockPos : "Embed after selected text",
 	defaultText : "This claim is false because...",
 	language : "Language",
+	editLink : 'Set link to source supporting your comment:',
+	editType : 'Make sure type is set correctly:',
+	editSummary : 'Summarize the criticism here:',
+	editEmbed : 'Embed into text: select some text and press the button below.  Shift will be set to embed after the selected text.',
 };
 
 var displayLanguages = {
@@ -209,6 +260,8 @@ var FisheyeShift = new Class({
     /*
 	 Categories Static Data
     */
+
+
 
     criticismCategories: {
     			// Hard Failure - red
@@ -327,7 +380,7 @@ var FisheyeShift = new Class({
 		var di = makeDisplayItem(that.editBox);
 		makeButton(that.getText('save'), di, this.onSave.bind(that));
 		makeButton(that.getText('cancel'), di, this.onCancel.bind(that));
-		makeButton(that.getText('lockPos'), di, this.onRange.bind(that));
+		//makeButton(that.getText('lockPos'), di, this.onRange.bind(that));
 	    },
 	  },
 	2: {'name'	: 'Settings',
@@ -357,7 +410,7 @@ var FisheyeShift = new Class({
 			else if (el.hasAttribute('fisheyeFunc'))
 			    that[el.getAttribute("fisheyeFunc")](el);
 			else if (el.hasAttribute('fisheyeUserName'))
-			    el.firstChild.nodeValue = that.getUsername();
+			    el.firstChild.nodeValue = that.getUserName();
 		    }
 		} else {
 		    that.settingsBox = makeNoteBox(container);
@@ -377,13 +430,18 @@ var FisheyeShift = new Class({
 	    },
 	    fillBody	: function(that, container) {
 		that.helpBox = makeNoteBox(container);
-		that.helpBox.appendText("This is some help text"); // XXX
+		that.helpBox.appendText("."); // XXX
+		var br = new ShiftSpace.Element('br');
+		br.injectInside(that.helpBox);
+	        aLink = that.renderClass.createLink ("http://fisheye.ffem.org/help.html", "click here to view help on website", that.helpBox);
 	    },
 	  },
     },
 
 
+    // XXX: deprecated: remove
     loadJavascripts	: function(path, dir, callback) {
+	this.log("loadJavascripts with path '" + path + "'");
 	if (this.xmlhttpRequest === undefined)
 	  return false;
 	url=feRoot + dir + "/" + path;
@@ -463,6 +521,7 @@ var FisheyeShift = new Class({
 	this.renderClass.renderIcon(this, oSpan);
 	oSpan.addEvent('mouseover', this.onMouseIn.bind(this));
 	if (this.posRange) {
+	  this.log("renderRange: has posRange ");
 	  if (this.posRange.insertNode) {
 	      oSpan.style.display = "inline";
 	      this.posRange.insertNode(oSpan);
@@ -471,13 +530,16 @@ var FisheyeShift = new Class({
 	      this.log("tried to render invalid range");
 	  }
 	} else {
+	  this.log("renderRange: did not have posRange ");
+	    // XXX: restore
 	    oSpan.setStyles({
 	      'position': 'absolute',
-	      left : this.json.position.x,
-	      top : this.json.position.y
+	      left : 0, //this.json.position.x,
+	      top : 0, //this.json.position.y
 	    });
             oSpan.injectInside(document.body);
         }
+        this.log("renderRange: done ");
     },
 
 
@@ -485,6 +547,7 @@ var FisheyeShift = new Class({
 
 	// Load shift data from JSON
 	this.haveSaved = json.haveSaved || 0;  // TODO: only on initial load?
+        this.log("loadStoredData: this.haveSaved '" + this.haveSaved + "' from json.haveSaved '" + json.haveSaved + "'");
 	this.criticismLink = json.criticismLink || "http://a.org/some.html";
 	this.summaryText = json.summaryText || this.getText('defaultText');
 	this.categoryType = json.categoryType || 0;
@@ -499,17 +562,37 @@ var FisheyeShift = new Class({
 
 
     /*
-	 Initialize - when a particular annotation is created or loaded
+	 Setup - when a particular annotation is created or loaded
     */
 
-    initialize: function(json) {
+    setup: function(json) {
         this.parent(json);
+        this.log("FISHEYE setup called with json: ");
+	this.dumpObj(json);
 
 	// Store initialize data in case we want to reload
 	this.json = json;
 
 	this.loadSettings();
+	// XXX: then get rid of this next line once above is reinstated
+        // this.gotSettings({});
     },
+
+// XXX: use these standard hooks
+//  show: function()
+ // {
+    //this.parent();
+    //this.update();
+    //this.hideEditInterface();
+    //// have to remember to unpin
+    //if(this.getPinRef() && !this.isPinned()) this.pin(this.element, this.getPinRef());
+  //},
+//
+  //edit: function()
+  //{
+    //this.parent();
+    //this.showEditInterface();
+  //},
 
     continueInitialize: function() {
 
@@ -527,31 +610,90 @@ var FisheyeShift = new Class({
 	this.MODE_EDIT = 1;
 	this.mode = this.MODE_DISPLAY;
 
+	if (this.shouldIgnoreShift()) {
+	  this.log("continueInitialize: ignoring shift");
+	  // XXX: should register with the summary panel, panel should say 'N ignored'
+	  return;
+	} else {
+	  this.log("continueInitialize: NOT ignoring shift");
+	}
+
         this.build(this.json);
 
 	this.rebuildLock();
-	
-	this.loadJavascripts("languages.js", "lang", function(thisLang){
-		if (thisLang)
-		    displayLanguages[thisLang.languageKey] = thisLang;
-	}.bind(this));
 
-	this.loadJavascripts("sources.js", "sources", function(thisSource){
-		if (thisSource) {
-		    this.criticismCategories[thisSource.key] = {
-			    'name':thisSource.name, 
-			    'color':thisSource.color, 
-			    'renderClass':thisSource.renderClass, };
-		    this.log("loaded source " + thisSource.key + ":" + thisSource.name);
-		    if (this.categoryType == thisSource.key)
-			this.renderClass = this.refreshRenderClass();
-		}
-	}.bind(this));
+	languages = this.getParentSpace().attributes().lib.lang
+        //this.log("LANGUAGES:");
+        //this.dumpObj(languages);
+	for (var key in languages) {
+	  this.log("LANGUAGE " + key);
+	  //this.log("" + key + " : " + someObj[key]);
+	  if (key != "languages.js") { // XXX: file is deprecated, remove
+	    thisLang = eval(languages[key]);
+		// TODO: stronger validation of languages
+	    if (thisLang.languageKey === undefined) {
+	      this.log ("BAD LANGUAGE " + key);
+	      this.log ("BAD LANGUAGE " + key);
+	      this.log ("BAD LANGUAGE " + key);
+	    } else {
+	      displayLanguages[thisLang.languageKey] = thisLang;
+	      this.log ("added language " + thisLang.languageKey);
+	    }
+	  } else {
+	    this.log ("IGNORING LANGUAGES.JS");
+	  }
+	}
+
+	sources = this.getParentSpace().attributes().lib.sources
+	for (var key in sources) {
+	  if (key != "sources.js") { // XXX
+	    this.log("source key " + key);
+	    thisSource = eval(sources[key]);
+	    if (thisSource) {
+		this.criticismCategories[thisSource.key] = {
+			'name':thisSource.name, 
+			'color':thisSource.color, 
+			'renderClass':thisSource.renderClass, };
+		this.log("loaded source " + thisSource.key + ":" + thisSource.name);
+		if (this.categoryType == thisSource.key)
+		    this.renderClass = this.refreshRenderClass();
+	    }
+	  } else {
+	    this.log("IGNORING SOURCES.JS");
+	  }
+	}
+
+        // XXX: restore
+	if (false) {
+		this.loadJavascripts("languages.js", "lang", function(thisLang){
+			if (thisLang)
+			    displayLanguages[thisLang.languageKey] = thisLang;
+		}.bind(this));
+
+		this.loadJavascripts("sources.js", "sources", function(thisSource){
+			if (thisSource) {
+			    this.criticismCategories[thisSource.key] = {
+				    'name':thisSource.name, 
+				    'color':thisSource.color, 
+				    'renderClass':thisSource.renderClass, };
+			    this.log("loaded source " + thisSource.key + ":" + thisSource.name);
+			    if (this.categoryType == thisSource.key)
+				this.renderClass = this.refreshRenderClass();
+			}
+		}.bind(this));
+        }
 	this.rebuildUnlock();
 
-	this.getWebPage(feRoot + "layout/settings.html", function(response) {
-		this.settingsLayout = response.responseText;
-	}.bind(this));
+        // XXX: restore
+        this.log("trying to get settingsLayout...");
+	this.settingsLayout = this.getParentSpace().attributes().lib.layout["settings.html"]
+        //this.log("got SETTINGS LAYOUT '" + this.settingsLayout + "'");
+
+	if (false) { // XXX: remove
+		this.getWebPage(feRoot + "layout/settings.html", function(response) {
+			this.settingsLayout = response.responseText;
+		}.bind(this));
+	}
 
 	if (!this.haveSaved)
 	    this.setMode (this.MODE_EDIT);
@@ -576,7 +718,7 @@ var FisheyeShift = new Class({
 	this.submitterBox = new ShiftSpace.Element('div', {
 		'class' : 'FisheyeDisplayItem',
 	});
-        this.submitterBox.appendText(this.getText('submitter') + ": " + this.shiftAuthor());
+        this.submitterBox.appendText(this.getText('submitter') + ": " + this.getAuthorName());
 	if (this.canIgnore()) {
 	  this.submitterIgnore= new ShiftSpace.Element('div', {
 		  'class' : 'FisheyeInlineActiveText',
@@ -584,6 +726,7 @@ var FisheyeShift = new Class({
 	  this.submitterIgnore.appendText("[" + this.getText('ignore') + "]");
 	  this.submitterIgnore.addEvent('click', function(){
 	      this.settings.hiddenAuthors[this.shiftAuthor()] = true;
+	      this.settings.hiddenAuthorNames[this.shiftAuthor()] = this.getAuthorName();
 	      this.saveSettings();
 	      this.rebuild();
 	  }.bind (that));
@@ -610,6 +753,16 @@ var FisheyeShift = new Class({
 	return FisheyeDefaultRenderClass;
     },
 
+    shouldIgnoreShift: function() {
+	if (this.settings.hiddenAuthors[this.shiftAuthor()]) {
+	    this.log("HIDING because shiftAuthor is in hidden list");
+	    return true;
+	} else {
+	    this.log("NOT HIDING because shiftAuthor is not in hidden list");
+	    return false;
+	}
+    },
+
     // Fills the main element with all the GUI content
     fillElement: function(container) {
 
@@ -624,33 +777,53 @@ var FisheyeShift = new Class({
 	    || this.settings.hiddenSources[this.sourceCode]) 
 	    return;
 */
-	if (this.settings.hiddenAuthors[this.shiftAuthor()]) 
+	// XXX: deprecate
+	if (this.shouldIgnoreShift())
 	    return;
 
 	this.refreshStyle(this.element);
 
 	// Render icon into top of element
-	this.renderClass.renderIcon(this, container);
+        //this.handleBar = new ShiftSpace.Element ('div', {'class':'FisheyeHandleBar'});
+	//this.handleBar.appendText('yomama');
+        this.handleBar = new ShiftSpace.Element ('div');
+        this.handleBar.injectInside(this.element);
+	this.renderClass.renderIcon(this, this.handleBar);
 
 	// Display and edit modes are rendered in parallel,
 	// relying on renderClass so that plugins (eg NewsTrust)
 	// can accept and display special data
 	if (this.mode == this.MODE_DISPLAY || this.mode == this.MODE_EDIT) {
 	    var isEdit = (this.mode == this.MODE_EDIT) ? true : false;
+	    var de = isEdit ? this.editBox : this.detailsBox;
 
 	    if (isEdit) {
 		this.editBox = makeNoteBox(container);
+		this.editBox.setStyles({ width : 300, });
+		var de = this.editBox;
+		de.appendText(this.getText('editLink'));
+		this.renderClass.renderLinkBox(this, isEdit, de);
+	        new ShiftSpace.Element ('div', {'class':'FisheyeSpacer'}).injectInside(de);
+		de.appendText(this.getText('editType'));
+		this.renderClass.renderCategory(this, isEdit, de);
+	        new ShiftSpace.Element ('div', {'class':'FisheyeSpacer'}).injectInside(de);
+	        de.appendText(this.getText('editSummary'));
+		this.renderClass.renderSummary(this, isEdit, de);
+	        new ShiftSpace.Element ('div', {'class':'FisheyeSpacer'}).injectInside(de);
+		de.appendText(this.getText('editEmbed'));
+		new ShiftSpace.Element('br').injectInside(de);
+		makeButton(this.getText('lockPos'), de, this.modes[this.mode].onRange.bind(this));
+	        new ShiftSpace.Element ('div', {'class':'FisheyeSpacer'}).injectInside(de);
 	    } else {
-		this.detailsBox = makeNoteBox();
+		this.detailsBox = makeNoteBox(container);
 		if (this.mode != this.MODE_DISPLAY || !this.shown)
 		    this.detailsBox.addClass('FisheyeHidden');
-		this.detailsBox.injectInside(container);
+		var de = this.detailsBox;
+		this.renderClass.renderCategory(this, isEdit, de);
+		this.renderClass.renderSummary(this, isEdit, de);
+		this.renderClass.renderLinkBox(this, isEdit, de);
 	    }
 
-	    var de = isEdit ? this.editBox : this.detailsBox;
-	    this.renderClass.renderCategory(this, isEdit, de);
-	    this.renderClass.renderSummary(this);
-	    this.renderClass.renderLinkBox(this, isEdit, de);
 	    this.fillSubmitter(this);
 	    if (!isEdit) {
 		this.renderClass.renderSource(this, de);
@@ -668,7 +841,7 @@ var FisheyeShift = new Class({
 	    this.buttonBox = makeDisplayItem();
 	    for (var key in this.modes) {
 		if (key == this.MODE_DISPLAY) {}
-		else if (key == this.MODE_EDIT && !this.canEdit()) {} 
+		else if (key == this.MODE_EDIT && !this.myCanEdit()) {} 
 		else {
 		  var eb = makeButton(this.modeGetName(key), this.buttonBox);
 		  eb.addEvent('click', this.setMode.bind(this, key));
@@ -680,13 +853,24 @@ var FisheyeShift = new Class({
 	}
     },
 
-    canEdit: function() {
-	return this.loggedIn() && (this.getUsername() == this.shiftAuthor());
+	// XXX: temp debug wrapper, remove
+    myCanEdit: function() {
+	this.log( "myCanEdit: this.shiftAuthor() " + this.shiftAuthor() + " this.getUserId() " + this.getUserId() + " this.canEdit() " + this.canEdit());
+	return this.canEdit();
     },
+
+    //canEdit: function() {
+	//// XXX: restore
+	//return true;
+	//this.log("canEdit this.getUserName " + this.getUserName() + " shiftAuthor " + this.shiftAuthor());
+	//return this.loggedIn() && (this.getUserName() == this.shiftAuthor());
+    //},
 
     // Don't allow the user to ignore themself
     canIgnore: function() {
-	return (this.shiftAuthor() != this.getUsername());
+	// TODO: doesn't work.  dump both.
+	this.log( "CAN_IGNORE shiftAuthor " + this.shiftAuthor() + " getUserId " + this.getUserId());
+	return (this.shiftAuthor() != this.getUserId());
     },
 
     loggedIn : function() {
@@ -694,6 +878,7 @@ var FisheyeShift = new Class({
     },
 
     shiftAuthor : function() {
+      // XXX: getAuthor() doesn't work anymore?  'undefined' displayed in GUI
       return this.getAuthor();
     },
 
@@ -704,8 +889,8 @@ var FisheyeShift = new Class({
 	return false;
     },
 
-    getUsername : function() {
-        return ShiftSpace.User.getUsername();
+    getUserName : function() {
+        return ShiftSpace.User.getUserName();
     },
 
 
@@ -750,9 +935,11 @@ var FisheyeShift = new Class({
 	var hadIgnoredUser = false;
 	for (var key in this.settings.hiddenAuthors) {
 	    if (this.settings.hiddenAuthors[key]) {
-		var someBox = makeTextBox (container, key);
+	        label = this.settings.hiddenAuthorNames[key]
+		var someBox = makeTextBox (container, label);
 		someBox.addEvent('click', function(key){
 		    this.settings.hiddenAuthors[key] = false;  // show source
+		    // Note: don't bother cleaning up authorNames
 		    this.rebuild();
 		}.bind (this, key));
 		hadIgnoredUser = true;
@@ -785,11 +972,14 @@ var FisheyeShift = new Class({
 	// initialize height
 	this.element.style.zIndex=1;
 
-	this.element.setStyles({
-	  'position': 'absolute',
-	  left : json.position.x,
-	  top : json.position.y
-	});
+	// XXX: restore
+	//this.element.setStyles({
+	  //'position': 'absolute',
+	  //left : json.position.x,
+	  //top : json.position.y
+	//});
+        // XXX: is this the correct new method?
+	this.setPosition(json);
 
 	if (json.posRef) {
 	    this.posRef = json.posRef;
@@ -798,6 +988,7 @@ var FisheyeShift = new Class({
 	    this.posRange = ShiftSpace.RangeCoder.toRange (json.posRef);
 	}
 
+	this.log("calling renderRange from line 808");
 	this.renderRange(this.posRange);
 
 	this.fillElement(this.element);
@@ -858,7 +1049,7 @@ var FisheyeShift = new Class({
 
 
     saveSettings: function() {
-	this.getParentSpace().setPref('settings', this.settings);
+	this.getParentSpace().setPreference('settings', this.settings);
     },
 
     gotSettings: function(settings) {
@@ -869,17 +1060,20 @@ var FisheyeShift = new Class({
 	    this.settings.hiddenSources = {};
 	if (!this.settings.hiddenAuthors)
 	    this.settings.hiddenAuthors = {};
+	if (!this.settings.hiddenAuthorNames)
+	    this.settings.hiddenAuthorNames = {};
 	this.continueInitialize();
     },
 
     loadSettings: function() {
-          this.getParentSpace().getPref('settings', {}, this.gotSettings.bind(this)); 
+          // XXX: use new standard this.getParentSpace().getPref('settings', {}, this.gotSettings.bind(this)); 
+          this.getParentSpace().getPreference('settings', {}, this.gotSettings.bind(this)); 
     },
 
     setCategory: function(idx) {
 	this.categoryType = idx;
 	this.renderClass = this.refreshRenderClass();
-	this.summaryText = this.inputArea.value;
+	this.summaryText = this.inputArea.value; // XXX: edit merge: was this removed?
 	this.rebuild();
 	FisheyeConsole.updateConsole();
     },
@@ -894,12 +1088,30 @@ var FisheyeShift = new Class({
 	    this.setCategory(msg);
     },
 
+    maybeTypeFromLink: function(link) {
+	// Clean up link  TODO: strip leading whitespace
+	if (link.indexOf("http://") == 0) {
+	  this.log("string starts with http://");
+	  link = link.substring(7);
+	}
+	for (var key in this.criticismCategories) {
+	  var cat = this.criticismCategories[key];
+	  var host = cat.host;
+	  this.log("checking link " + link + " against key " + key + " host " + host);
+	  //this.dumpObj(this.criticismCategories[key]);
+	  if (link.indexOf(host) == 0) {
+	    this.setCategory(key);
+	  }
+	}
+    },
+
     changeCriticismLink: function() {
 	var msg = prompt(this.renderClass.changeLinkPrompt, this.criticismLink);
 	if (msg) {
 	    this.criticismLink = msg;
 	    this.sourceCode = this.criticismSourceFromLink(msg);
-	    this.summaryText = this.inputArea.value;
+	    this.maybeTypeFromLink(msg);
+	    //this.summaryText = this.inputArea.value; // XXX: editmerge: was this removed?
 	    this.rebuild();
 	}
     },
@@ -914,15 +1126,16 @@ var FisheyeShift = new Class({
 	  return;
         }
 
-	if (newMode == this.MODE_EDIT && !this.canEdit()) {
-          alert('Sorry, you cannot edit shift created by user ' + this.shiftAuthor());
+	if (newMode == this.MODE_EDIT && !this.myCanEdit()) {
+	// XXX: in a perfect world this case would never occur
+          alert('SoRRY, you cannot edit shift created by user ' + this.getAuthorName());
 	  return;
         }
 
 	this.mode = newMode;
 	this.rebuild();
 	if (this.mode == this.MODE_EDIT)
-	    this.element.makeDraggable();
+	    this.element.makeDraggable({handle: this.handleBar});
     },
 
 
@@ -1010,7 +1223,22 @@ var FisheyeShift = new Class({
 	}.bind(this));
     },
 
+    buildInputArea : function()
+    {
+	//this.inputArea = new ShiftSpace.Element('textarea', {
+	this.inputArea = new ShiftSpace.Element('textarea', {
+	    'class' : 'FisheyeNoteShiftTextAreaSimple',
+	    'rows' : 8,
+	    'value' : this.summaryText
+	});
+	this.inputArea.focus(); // XXX: necessary?  harmful?
+	this.inputArea.addEvent('mousedown', function() {
+	   this.fireEvent('onFocus', this);
+	}.bind(this));
+    },
+
     getWebPage: function(url, callback, onerror) {
+	this.log("getWebPage with url '" + url + "'");
 	if (!onerror)
 	  onerror = function() {};
         this.xmlhttpRequest({
@@ -1024,7 +1252,7 @@ var FisheyeShift = new Class({
 
 // ?? Register our Space class, passing the Shift class definition
 // platform will need to instantiatiate and hook into us
-var Fisheye = new FisheyeSpace(FisheyeShift);
+//var Fisheye = new FisheyeSpace(FisheyeShift);
 
 
 
@@ -1166,4 +1394,23 @@ in general, having both embedded icon and full flying interface is wierd
 
 manageElement on two elements?
 
+
+how to show space settings without having a shift?
+  example: there is one shift on page, author is in ignore list, impossible to edit ignore list
+
+F is bold/not bold or different font between placeholder / opened
+
+edit -> cancel -> mouseover no longer works?
+
+layout of edit screen: summary box size & scrolling behaviour
+ mouse out events from link rollover cause shift hide (hard to hit edit button)
+
 */
+
+
+// XXX: ignore list: store original user name
+
+// to start server:
+
+// sudo /opt/local/bin/couchdb 
+// cd ~/Sites/shiftspace; python shifty.py runserver
