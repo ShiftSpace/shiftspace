@@ -1,0 +1,12 @@
+{
+  "name": "Fisheye",
+  "authors": ["Geoff Matters"],
+  "icon": "Fisheye.png",
+  "description": "A streamlined tool for online media criticism.  Easily embed link to critiques, analysis, and supporting information into news articles and opinion posts.  While reading online, see a wide variety of problems people have flagged.",
+  "tooltip": "Embedded media criticism",
+  "css": "Fisheye.css",
+  "lib": "libs",
+  "version": "0.1",
+  "shift": { "unused": "DummyString" }
+}
+
