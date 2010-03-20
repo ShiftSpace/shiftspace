@@ -172,7 +172,8 @@ class DevController:
 class RootController:
     def routes(self, d):
         d.connect(name='root', route='/', controller=self, action='index')
-        d.connect(name='rootProxy', route='proxy/:id', controller=self, action='proxy')
+        d.connect(name='rootUnsafeProxy', route='unsafe-proxy/:id', controller=self, action='unsafeProxy')
+        d.connect(name='rootSafeProxy', route='safe-proxy/:id', controller=self, action='safeProxy')
         d.connect(name='rootAttrs', route='spaces/:space/attrs', controller=self, action='attrs')
         d.connect(name='rootRev', route='rev', controller=self, action='rev')
         return d
@@ -262,7 +263,7 @@ class RootController:
         return attrs
 
     @db_session
-    def proxy(self, id):
+    def unsafeProxy(self, id):
         """
         Serves the proxy. Takes a shift id and returns the original page
         where the shift was created, injects the required Javascript and CSS
@@ -337,6 +338,9 @@ class RootController:
             }
         source = source.replace("</body>", "%s</body>" % t.render(**ctxt))
         return source
+
+    def safeProxy(self, id):
+        pass
 
 
 def initRootRoutes(d):
