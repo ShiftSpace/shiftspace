@@ -87,6 +87,20 @@ var SSPublishPane = new Class({
   },
   
   
+  setCurrentShift: function()
+  {
+    return this.__setCurrentShift;
+  },
+  
+  
+  setSetCurrentShift: function(setCurrentShift)
+  {
+    this.__setCurrentShift = setCurrentShift;
+  },
+  
+  
+
+
   setCurrentListView: function(current)
   {
     this.__current = current;
@@ -96,12 +110,6 @@ var SSPublishPane = new Class({
   currentListView: function()
   {
     return this.__current;
-  },
-  
-  
-  count: function()
-  {
-    return this.currentListView().checkedItemIndices().length;
   },
   
 
@@ -116,40 +124,6 @@ var SSPublishPane = new Class({
     return this.__delegate;
   },
   
-  
-  deleteShifts: function(evt)
-  {
-    evt = new Event(evt);
-    var selectedShifts = this.currentListView().checkedItemIds();
-    
-    if(selectedShifts && selectedShifts.length > 0)
-    {
-      var len = selectedShifts.length,
-          str = (len != 1) ? "these shifts" : "this shift";
-      if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
-      var indices = this.currentListView().checkedItemIndices();
-      this.currentListView().uncheck(indices);
-      var p = new Promise(selectedShifts.map(SSDeleteShift));
-      p.op(this['close'].bind(this));
-      p.realize();
-    }
-  },
-  
-  
-  saveShifts: function(evt)
-  {
-    evt = new Event(evt);
-    var selectedShifts = this.currentListView().checkedItemIds();
-
-    if(selectedShifts && selectedShifts.length > 0)
-    {
-      SSLog(selectedShifts, SSLogForce);
-      selectedShifts.each(function(id) {
-        SSPostNotification("saveShift", id);
-      }.bind(this));
-    }
-  },
-
 
   isGroup: function(str)
   {
@@ -167,8 +141,8 @@ var SSPublishPane = new Class({
   {
     evt = new Event(evt);
 
-    var selectedShifts = this.currentListView().checkedItemIds();
-    var publishData = {};
+    var selectedShifts = this.currentListView().checkedItemIds(),
+        publishData = {};
 
     if(selectedShifts && selectedShifts.length > 0)
     {
@@ -256,7 +230,7 @@ var SSPublishPane = new Class({
   showProxy: function(evt)
   {
     var selectedShifts = this.currentListView().checkedItemIds();
-    window.open(ShiftSpace.info().server.urlJoin("proxy", selectedShifts[0]));
+    window.open(ShiftSpace.info().server.urlJoin("unsafe-proxy", selectedShifts[0]));
   },
   
 
@@ -265,5 +239,4 @@ var SSPublishPane = new Class({
     this.mapOutletsToThis();
     this.attachEvents();
   }
-
 });
