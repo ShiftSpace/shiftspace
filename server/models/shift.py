@@ -521,7 +521,7 @@ class Shift(SSDocument):
     # ========================================
 
     @classmethod
-    def shifts(cls, user, byHref=None, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, filter=False, query=None):
+    def shifts(cls, user, byHref=None, byDomain=None, byFollowing=False, byGroups=False, bySpace=None, start=0, limit=25, filter=False, query=None, all=False):
         from server.models.ssuser import SSUser
         db = core.connect("shiftspace/shared")
         lucene = core.lucene()
@@ -533,6 +533,8 @@ class Shift(SSDocument):
                 queryString = "hrefExact:\"%s_HREF_EXACT\"" % byHref
             elif byDomain:
                 queryString = "domain:\"%s\""% byDomain
+            if bySpace:
+                queryString = queryString + " spaceName:" + bySpace
             queryString = queryString + " AND ((draft:false AND private:false)"
             if user:
                 queryString = queryString + " OR createdBy:%s" % user.id
@@ -556,7 +558,10 @@ class Shift(SSDocument):
 
         print queryString
         try:
-            rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
+            if all:
+                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified")
+            else:
+                rows = lucene.search(db, "shifts", q=queryString, include_docs=True, sort="\modified", skip=start, limit=limit)
         except Exception, err:
             print err
             return []

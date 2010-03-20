@@ -616,3 +616,16 @@ function SSSpaceIsInDebugMode(spaceName)
 {
   return ShiftSpace.User.getPreference([spaceName, "debug"].join(".")) || false;
 }
+
+function SSSpaceShouldAutolaunch(spaceName)
+{
+  var pref = ShiftSpace.User.getPreference([spaceName, "autolaunch"].join("."));
+  if(pref == null)
+  {
+    return SSGetSpaceAttributes(spaceName).autolaunch;
+  }
+  else
+  {
+    return pref;
+  }
+}

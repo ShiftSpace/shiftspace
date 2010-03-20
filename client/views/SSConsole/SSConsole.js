@@ -257,12 +257,14 @@ var SSConsole = new Class({
     if(context == this.element.contentWindow)
     {
       this.mapOutletsToThis();
-      this.MainTabView.addEvent('tabSelected', function(evt) {});
+      this.MainTabView.addEvent('tabSelected', function(evt) {
+        
+      }.bind(this));
       this.updateTabs();
     }
   },
 
-
+  
   onInterfaceLoad: function(ui)
   {
     this.parent(ui);

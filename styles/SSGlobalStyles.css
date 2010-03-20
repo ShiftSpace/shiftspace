@@ -353,7 +353,14 @@ ul.ShiftListView li.ShiftListViewCell .domain
    float: left;
 }
 
-.ShiftListView .ShiftListViewCell .gravatar
+.gravatarContainer > *
+{
+   float: left;
+}
+
+.ShiftListView .ShiftListViewCell .gravatar,
+#SSCommentShift .gravatar,
+#SSCommentsListView .gravatar
 {
    position: relative;
    width: 16px;
@@ -362,7 +369,9 @@ ul.ShiftListView li.ShiftListViewCell .domain
    -webkit-border-bottom-left-radius: 4px;
 }
 
-.ShiftListView .ShiftListViewCell canvas.gravatar:hover, .ShiftListView .ShiftListViewCell img.gravatar:hover
+.ShiftListView .ShiftListViewCell canvas.gravatar:hover,
+.ShiftListView .ShiftListViewCell img.gravatar:hover,
+
 {
    top: -8px;
    margin-left: -8px;
@@ -372,7 +381,10 @@ ul.ShiftListView li.ShiftListViewCell .domain
    -webkit-border-radius: 4px;
 }
 
-.ShiftListView .ShiftListViewCell div.userName
+.ShiftListView .ShiftListViewCell div.userName,
+#SSCommentShift .userName,
+#SSCommentsListView .userName
+
 {
    color: #4B423A;
    background-color: #dedad6;
@@ -407,7 +419,9 @@ ul.ShiftListView li.ShiftListViewCell .domain
    font-weight: bold;
 }
 
-.ShiftListView .ShiftListViewCell div.date
+.ShiftListView .ShiftListViewCell div.date,
+#SSCommentShift .user .createdStr,
+#SSCommentsListView .createdStr
 {
    margin-left: 6px;
    color: #B3ADA5;

@@ -527,3 +527,15 @@ function SSPostComment(id, text)
     json: true
   });
 }
+
+function SSAllShiftsForSpace(spaceName, href)
+{
+  return SSApp.get({
+    resource: "shifts",
+    data: {
+      byHref: href,
+      bySpace: spaceName,
+      all: true
+    }
+  });
+}
