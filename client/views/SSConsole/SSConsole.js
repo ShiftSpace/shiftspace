@@ -131,12 +131,25 @@ var SSConsole = new Class({
   },
 
 
+  /*
+    Function: setUpToDate
+      Set the flag for whether the ShitSpace userscript is up-to-date.
+
+    Parameters:
+      v - a boolean.
+  */
   setUpToDate: function(v)
   {
     this.__notUpToDate = v;
   },
 
+  /*
+    Function: isUpToDate
+      Check whether the ShiftSpace userscript is up-to-date or not.
 
+    Returns:
+      A boolean.
+  */
   isUpToDate: function()
   {
     return this.__notUpToDate;
@@ -188,15 +201,43 @@ var SSConsole = new Class({
     });
   },
   
-  
+  /*
+    Function: subViews
+      Returns an array of all SSViews that have the console as the super
+      view.
+
+    Returns:
+      An array of <SSView> instances.
+  */
   subViews: function()
   {
+    if(!this.isLoaded()) return [];
     return this.contentWindow().$$('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
       return (controller.isAwake() && controller.superView() == this);
     }, this);
   },
-  
-  
+
+  /*
+    Function: visibleListView
+      Returns the visible list view.
+
+    Returns:
+      <SSListView>
+  */
+  visibleListView: function()
+  {
+    return this.allVisibleViews(null, $memberof.curry(null, _, 'ShiftListView'))[0];
+  },
+
+  /*
+    Function: localizationChanged
+      *private*
+      Called when the user changes the localization of the interface. This
+      should not be called directly.
+
+    Parameters:
+      evt - the localization change event.
+  */
   localizationChanged: function(evt)
   {
     if(this.delayed()) return;
