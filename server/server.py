@@ -341,12 +341,13 @@ class RootController:
 
     @db_session
     def safeProxy(self, id):
+        from models.shift import Shift
         t = Template(filename=os.path.join(WEB_ROOT, "html/proxy.mako"), lookup=lookup)
         theShift = Shift.read(id, proxy=True)
-        if theShift['type'] != 'shift':
+        if theShift == None or theShift['type'] != 'shift':
             return self.statusPage(status="err", details="proxyperm")
         ctxt = {
-            "href": theShift.href
+            "src": "/unsafe-proxy/%s" % id
              }
         return t.render(**ctxt)
 

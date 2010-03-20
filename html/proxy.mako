@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/styles/proxy.css" type="text/css" />
 </head>
 <body>
-    <iframe id="unsafe-frame" href="${href}">
+    <iframe id="unsafe-frame" src="${src}">
     </ifram>
 </body>
 </html>
