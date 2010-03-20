@@ -18,9 +18,8 @@ var __sysavail__ = {
 var __membermemo = {};
 function $memberof(_subclass, superclass)
 {
-  if(_subclass == superclass) return true;
-  
   var subclass = ($type(_subclass) == 'object' && _subclass.name) || _subclass;
+  if(subclass == superclass) return true;
   var tag = subclass+':'+superclass;
   
   // check memo
