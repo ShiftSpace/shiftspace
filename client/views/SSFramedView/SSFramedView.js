@@ -73,15 +73,21 @@ var SSFramedView = new Class({
       generateElement: false
     }));
 
-    var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css'),
-        p = SSLoadFile(url);
-    if(!delayed)
+    if(!this.options.preloaded)
     {
-      this.onStyleLoad(p);
+      var url = String.urlJoin('client', this.options.location, this.name, this.name+'Frame.css'),
+          p = SSLoadFile(url);
+      if(!delayed)
+      {
+        this.onStyleLoad(p);
+      }
+      else
+      {
+        this.setDelayed(p);
+      }
     }
     else
     {
-      this.setDelayed(p);
     }
   },
 

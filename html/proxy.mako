@@ -7,15 +7,14 @@
     <title>ShiftSpace Proxy</title>
     <link rel="stylesheet" href="/styles/proxy.css" type="text/css" />
     <link rel="stylesheet" href="/styles/ShiftSpace.css" type="text/css" />
-    <link rel="stylesheet" href="/styles/SSGlobalStyles.css" type="text/css" />
-    <link rel="stylesheet" href="/builds/compiledViews/mydev/SSConsoleMain.css" type="text/css" />
+    <script src="/externals/mootools-1.2.3-core.js" type="text/javascript"></script>
+    <script src="/externals/mootools-1.2.3.1-more.js" type="text/javascript"></script>
+    <script src="/builds/shiftspace.sandbox.js" type="text/javascript"></script>
 </head>
 <body>
     <iframe id="unsafe-frame" src="${src}">
     </iframe>
-    <div id="ShiftSpace">
-        ${SSConsole}
-    </div>
+    <div id="mask"></div>
 </body>
 </html>
 <!-- End the actual page -->
