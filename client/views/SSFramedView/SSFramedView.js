@@ -44,11 +44,23 @@ var SSFramedView = new Class({
   {
     return $merge(this.parent(), {
       location: 'views',
-      path: null
+      path: null,
+      preloaded: false
     });
   },
 
+  /*
+     Function: initialize
+       Initial the framed view with a DOM element. Valid options:
+         location - where the ui markup for this framed view lives.
+           Defaults to 'views'.
+         preloaded - the ui and styles for this framed view do not
+           need to be loaded. Defaults to false.
 
+     Parameters:
+       el - a DOM element. Should be div or an iframe element.
+       options - a list of options
+   */
   initialize: function(el, options)
   {
     var delayed = false;
@@ -105,11 +117,12 @@ var SSFramedView = new Class({
   */
   finish: function()
   {
-    if(this.__isFinishing) return;
+    if(this.__isFinishing) return null;
     this.__isFinishing = true;
     if(!this.delayed())
     {
       throw new Error("Not a delayed SSFramedView");
+      return null;
     }
     return this.onStyleLoad(this.delayed());
   },
@@ -132,7 +145,14 @@ var SSFramedView = new Class({
     return this.parent() && this.isLoaded();
   },
   
+  /*
+    Function: onStyleLoad
+      Called when the style for the framed view has loaded. If you
+      implement this in a subclass you must call this.parent().
 
+    Parameters:
+      css - the css for this framed view. 
+  */
   onStyleLoad: function(css)
   {
     if(css) Sandalphon.addStyle(css);
@@ -149,7 +169,14 @@ var SSFramedView = new Class({
     this.onInterfaceLoad(p);
   }.asPromise(),
   
-  
+  /*
+     Function: onInterfaceLoad
+       Called when the ui markup has been loaded for this framed view.
+       If you implement this in a subclass you must call this.parent().
+
+     Parameters:
+       ui - the markup for the framed view.
+   */
   onInterfaceLoad: function(ui) 
   {
     var generateElement = false;
@@ -195,19 +222,37 @@ var SSFramedView = new Class({
     }
   }.asPromise(),
   
-  
+  /*
+    Function: contentDocument
+      Return the Document object of the framed view.
+
+    Returns:
+      A Document.
+  */
   contentDocument: function()
   {
     return new Document(this.element.contentDocument);
   },
   
-  
+  /*
+    Function: contentWindow
+      Return the Window object of the framed view.
+
+    Returns:
+      A Window.
+  */
   contentWindow: function()
   {
     return new Window(this.element.contentWindow);
   },
   
-  
+  /*
+     Function: buildInterface
+       Called when the markup, styles, and frame have been loaded.
+       Calls Sandalphon.activate on the contents on the framed view
+       instantiating all uiclasses. If you implement this method in
+       a subclass you must call this.parent()
+   */
   buildInterface: function()
   {
     var context = this.contentWindow(),
@@ -247,7 +292,13 @@ var SSFramedView = new Class({
     this.setDelayed(false);
   },
   
-  
+  /*
+     Function: subViews
+       Returns an array of this framed views subviews.
+
+     Returns:
+       An array of SSView instances.
+   */
   subViews: function()
   {
     return this.contentWindow().$$('*[uiclass]').map(SSControllerForNode);
