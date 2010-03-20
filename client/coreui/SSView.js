@@ -601,6 +601,9 @@ var SSView = new Class({
     Function: subViews
       Returns all controllers which have this view as the first parent view.
 
+    Parameters:
+      el - optional element. If passed will use that to look for elements instead.
+
     Returns:
       An array of SSView instances.
   */
