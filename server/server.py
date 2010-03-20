@@ -339,8 +339,16 @@ class RootController:
         source = source.replace("</body>", "%s</body>" % t.render(**ctxt))
         return source
 
+    @db_session
     def safeProxy(self, id):
-        pass
+        t = Template(filename=os.path.join(WEB_ROOT, "html/proxy.mako"), lookup=lookup)
+        theShift = Shift.read(id, proxy=True)
+        if theShift['type'] != 'shift':
+            return self.statusPage(status="err", details="proxyperm")
+        ctxt = {
+            "href": theShift.href
+             }
+        return t.render(**ctxt)
 
 
 def initRootRoutes(d):
