@@ -361,7 +361,12 @@ var ShiftSpace = new (function() {
        'SSSpaceIsInDebugMode',
        'SSInfo',
        'SSCheckForUpdates',
-       '__controllers'
+       '__controllers',
+       '$memberof',
+       '$msg',
+       '$comp',
+       '_',
+       '__sys__'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);
        });
