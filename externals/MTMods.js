@@ -518,3 +518,4 @@ var DelayedAsset = new Class({
 
 var $msg = Function.msg;
 var $comp = Function.comp;
+var _ = Function._;
