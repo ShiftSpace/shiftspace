@@ -6,10 +6,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>ShiftSpace Proxy</title>
     <link rel="stylesheet" href="/styles/proxy.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/ShiftSpace.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/SSGlobalStyles.css" type="text/css" />
+    <link rel="stylesheet" href="/builds/compiledViews/mydev/SSConsoleMain.css" type="text/css" />
 </head>
 <body>
     <iframe id="unsafe-frame" src="${src}">
-    </ifram>
+    </iframe>
+    <div id="ShiftSpace">
+        ${SSConsole}
+    </div>
 </body>
 </html>
 <!-- End the actual page -->

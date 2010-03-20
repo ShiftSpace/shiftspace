@@ -339,6 +339,9 @@ class RootController:
         source = source.replace("</body>", "%s</body>" % t.render(**ctxt))
         return source
 
+    def garden(self, id):
+        pass
+
     @db_session
     def safeProxy(self, id):
         from models.shift import Shift
@@ -346,8 +349,12 @@ class RootController:
         theShift = Shift.read(id, proxy=True)
         if theShift == None or theShift['type'] != 'shift':
             return self.statusPage(status="err", details="proxyperm")
+        fh = open(os.path.join(WEB_ROOT, "builds/compiledViews/mydev/SSConsoleMain.html"))
+        SSConsole = fh.read()
+        fh.close()
         ctxt = {
-            "src": "/unsafe-proxy/%s" % id
+            "src": "/unsafe-proxy/%s" % id,
+            "SSConsole": SSConsole
              }
         return t.render(**ctxt)
 
