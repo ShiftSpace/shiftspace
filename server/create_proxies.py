@@ -15,15 +15,22 @@ def readJsonFile(filename):
     fh.close()
     return result
 
+def writeFile(data, filename):
+    fh = open(os.path.join(WEB_ROOT, filename), "w")
+    fh.write(data)
+    fh.close()
+
 def main():
     meta = readJsonFile("config/proxy/space.json")
     env = readJsonFile("config/env/mydev.json")
     ctxt = {
-        "methods": meta["methods"],
+        "methods": meta["methods"][:-1],
+        "last": meta["methods"][-1],
         "server": env["SERVER"]
         }
     t = Template(filename=os.path.join(WEB_ROOT, "config/proxy/space.mako"))
-    print t.render(**ctxt)
+    spaceJs = t.render(**ctxt)
+    writeFile(spaceJs, "builds/SpaceProxy.js")
 
 def usage():
     pass
