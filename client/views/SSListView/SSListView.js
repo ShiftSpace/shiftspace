@@ -560,7 +560,7 @@ var SSListView = new Class({
   {
     this.__data = newData;
     this.setNeedsDisplay(true);
-  }.asPromise(),
+  }.future(),
     
   /*
       Function: data
@@ -1318,7 +1318,7 @@ var SSListView = new Class({
     if(this.pageControl()) this.pageControl().initializeInterface();
     this.fireEvent('onReloadData', this);
     this.onReloadData();
-  }.asPromise(),
+  }.future(),
   
   /*
     Function: onReloadData

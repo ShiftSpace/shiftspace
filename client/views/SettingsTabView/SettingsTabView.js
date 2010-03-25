@@ -85,7 +85,7 @@ var SettingsTabView = new Class({
   {
     user.fullName = [user.fullName.first || '', user.fullName.last || ''].join(" ");
     SSTemplate(this.AccountDetails, user);
-  }.asPromise(),
+  }.future(),
 
 
   update: function()

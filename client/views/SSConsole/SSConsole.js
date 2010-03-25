@@ -269,7 +269,7 @@ var SSConsole = new Class({
   {
     this.parent(ui);
     this.element.addClass('SSDisplayNone');
-  }.asPromise(),
+  }.future(),
 
 
   buildInterface: function()

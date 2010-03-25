@@ -363,7 +363,7 @@ Parameters:
 var SSUpdateInstalledSpaces = function(controlp)
 {
   __installedSpaces = ShiftSpace.User.installedSpaces();
-}.asPromise();
+}.future();
 
 /*
 Function: SSInitDefaultSpaces
@@ -439,7 +439,7 @@ var SSSpaceForName = function(name)
   {
     return SSLoadSpace(name);
   }
-}.asPromise();
+}.future();
 
 /*
 Function: SSSpacesByPosition

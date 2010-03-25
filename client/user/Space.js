@@ -310,7 +310,7 @@ var ShiftSpaceSpace = new Class({
 
     this.__shifts[newShift.getId()] = newShift;
     return newShift;
-  }.asPromise(),
+  }.future(),
 
   /*
     Function: allocateNewShift
@@ -342,7 +342,7 @@ var ShiftSpaceSpace = new Class({
         shift: newShift
       });
       return newShift;
-    }.asPromise())(shift);
+    }.future())(shift);
   },
 
   shiftUI: function()
@@ -508,7 +508,7 @@ var ShiftSpaceSpace = new Class({
 
         theShift.onFocus();
       }
-    }.asPromise())(cShift);
+    }.future())(cShift);
   },
 
   /*

@@ -173,7 +173,7 @@ var SSFramedView = new Class({
     }
     var p = Sandalphon.load(url);
     this.onInterfaceLoad(p);
-  }.asPromise(),
+  }.future(),
   
   /*
      Function: onInterfaceLoad
@@ -226,7 +226,7 @@ var SSFramedView = new Class({
     {
       this.buildInterface();
     }
-  }.asPromise(),
+  }.future(),
   
   /*
     Function: contentDocument

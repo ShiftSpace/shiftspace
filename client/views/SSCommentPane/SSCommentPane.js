@@ -112,10 +112,10 @@ var SSCommentPane = new Class({
       var attrsp = SSGetSpaceAttributes(shift.space.name);
       (function(attrs) {
         this.element.getElement("#SSCommentShift .spaceIcon").set("src", attrs.icon);
-      }.asPromise().bind(this))(attrsp);
+      }.future().bind(this))(attrsp);
       SSTemplate(this.element.getElement("#SSCommentShift"), shift);
     }
-  }.asPromise(),
+  }.future(),
   
   
   localizationChanged: function()

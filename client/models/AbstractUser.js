@@ -50,7 +50,7 @@ var AbstractUser = new Class({
     this.setUserName(data.userName || null);
     this.setEmail(data.email || null);
     this.setId(data.id || data._id || null);
-  }.asPromise(),
+  }.future(),
   
   /*
     Function: clearData

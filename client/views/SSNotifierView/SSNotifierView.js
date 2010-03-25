@@ -352,7 +352,7 @@ var SSNotifierView = new Class({
     {
       this.graph.setState('SSNotifierHasShifts', {animate:true, direction:'previous', hold:{duration:3000}});
     }
-  }.asPromise(),
+  }.future(),
   
 
   updateMessageCount: function(count)
@@ -369,7 +369,7 @@ var SSNotifierView = new Class({
         this.SSMessage.hide();
       }
     }
-  }.asPromise(),
+  }.future(),
   
 
   attachEvents: function()
@@ -623,7 +623,7 @@ var SSNotifierView = new Class({
   {
     this.parent(ui);
     this.element.addClass("SSNotifierHidden");
-  }.asPromise(),
+  }.future(),
   
   
   awake: function(context)
@@ -652,17 +652,20 @@ var SSNotifierView = new Class({
     this.SSQuickPane.removeClass("SSDisplayNone");
     if(SSIsNewShift(shift._id))
     {
-      this.SSQPStatus.set("text", status || "unsaved");
+      this.SSQPStatus.set("text", "unsaved");
       this.SSQPDelete.addClass("SSDisplayNone");
     }
     else
     {
-      this.SSQPStatus.set("text", status || "unsaved {status}".substitute({
-        status: (shift.publishData['private']) ? "private shift" : "public shift"
+      var isPrivate = shift.publishData['private'],
+          draft = (shift.publishData.draft && isPrivate) ? "draft" : "shift",
+          status = (isPrivate) ? "private {draft}" : "public {draft}";
+      this.SSQPStatus.set("text", "unsaved {status}".substitute({
+        status: status.substitute({draft: draft})
       }));
       this.SSQPDelete.removeClass("SSDisplayNone");
     }
-  }.asPromise(),
+  }.future(),
 
 
   hideQuickPane: function()

@@ -72,7 +72,7 @@ var PeopleDetailView = new Class({
   showUserInfo: function(info)
   {
     SSTemplate(this.element, info);
-  }.asPromise(),
+  }.future(),
 
 
   update: function(isFollowing, postNotification)
@@ -89,6 +89,6 @@ var PeopleDetailView = new Class({
       this.element.getElement(".unfollow").addClass("SSDisplayNone");
       if(postNotification) SSPostNotification("onUnfollow");
     }
-  }.asPromise()
+  }.future()
 });
 

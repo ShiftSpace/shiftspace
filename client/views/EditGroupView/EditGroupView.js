@@ -119,7 +119,7 @@ var EditGroupView = new Class({
   {
     this.setGroupInfo(groupInfo);
     SSTemplate(this.GroupUserCount, groupInfo);
-  }.asPromise(),
+  }.future(),
 
 
   createGroup: function()
@@ -134,7 +134,7 @@ var EditGroupView = new Class({
   {
     var p = SSInviteUsersToGroup(group._id, this.users);
     p.realize();
-  }.asPromise(),
+  }.future(),
 
 
   attachEvents: function()
@@ -175,7 +175,7 @@ var EditGroupView = new Class({
   onUpdateGroup: function(group)
   {
     
-  }.asPromise(),
+  }.future(),
 
 
   awake: function()

@@ -136,7 +136,7 @@ var LoginTabView = new Class({
   signUpFormSubmitCallback: function(userData)
   {
     //SSPostNotification("onSignUp");
-  }.asPromise(),
+  }.future(),
   
 
   onSync: function()
