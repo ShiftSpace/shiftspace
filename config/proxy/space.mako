@@ -5,12 +5,10 @@ var Space = new Class({
      this.target = $('proxy-frame').contentWindow;
   },
 
-  % for method in methods
+  % for method in methods:
   ${method} : function () {
-     this.target.postMessage("call", JSON.encode({
-       method: "${method}",
-       args: $A(arguments)
-     });
+     var data = {method: "${method}", args: $A(arguments)};
+     this.target.postMessage(JSON.encode(data), "${server}/safe-proxy");
   },
   % endfor
 });
