@@ -112,7 +112,6 @@ def update():
     """
     Update the source file and test file indexes.
     """
-    os.system("scripts/update_submodules.sh")
     updatedb()
 
 
