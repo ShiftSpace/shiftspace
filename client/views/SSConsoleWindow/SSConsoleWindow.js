@@ -149,7 +149,7 @@ var SSConsoleWindow = new Class({
     this.parent(ui);
     this.element.addClass("SSDisplayNone");
     this.element.addClass("SSConsoleWindowFront");
-  }.asPromise(),
+  }.future(),
   
   
   onContextActivate: function(context)

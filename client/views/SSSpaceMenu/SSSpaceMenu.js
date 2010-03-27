@@ -111,7 +111,7 @@ var SSSpaceMenu = new Class({
   {
     this.parent(ui);
     this.element.addClass('SSDisplayNone');
-  }.asPromise(),
+  }.future(),
   
   
   onContextActivate: function(context)

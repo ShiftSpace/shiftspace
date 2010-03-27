@@ -294,7 +294,7 @@ var SSView = new Class({
     cands = $splat(cands);
     var len = cands.length;
     if(len == 0) return null;
-    cands.each(Function.msg('_ssgenId'));
+    cands.each($msg('_ssgenId'));
     for(var i = 0; i < len; i++) { if(cands[i].isEqual(node)) return true; }
     return false;
   },
@@ -381,7 +381,7 @@ var SSView = new Class({
    */
   indexOfNode: function(elements, node)
   {
-    elements.each(Function.msg('_ssgenId'));
+    elements.each($msg('_ssgenId'));
     var len = elements.length;
     for(var i = 0; i < len; i++)
     {
@@ -415,7 +415,7 @@ var SSView = new Class({
     this.willShow();
     this.fireEvent('show', this);
     this.__refresh__();
-    this.subViews().each(Function.msg('__refresh__'));
+    this.subViews().each($msg('__refresh__'));
   },
 
   /*
@@ -426,7 +426,7 @@ var SSView = new Class({
    */
   willShow: function()
   {
-    if(this.isVisible()) this.subViews().each(Function.msg('willShow'));
+    if(this.isVisible()) this.subViews().each($msg('willShow'));
   },
 
   /*
@@ -450,7 +450,7 @@ var SSView = new Class({
    */
   willHide: function()
   {
-    if(this.isVisible()) this.subViews().each(Function.msg('willHide'), this);
+    if(this.isVisible()) this.subViews().each($msg('willHide'), this);
   },
 
   /*
@@ -510,7 +510,7 @@ var SSView = new Class({
     if((this.isVisible() && this.needsDisplay()) || force)
     {
       this.refresh(force);
-      this.subViews().each(Function.msg('__refresh__', force));
+      this.subViews().each($msg('__refresh__', force));
     }
   },
 
@@ -596,28 +596,73 @@ var SSView = new Class({
     }
     return superView;
   },
+
+  /*
+    Function: allViews
+      Returns all descendent views.
+
+    Parameters:
+      el - an element to grab views from. Useful in the case of iframes.
+      filter - a filter to apply to the result.
+
+    Returns:
+      An array of <SSView> instances.
+  */
+  allViews: function(el, filter)
+  {
+    var xs = (el || this.element).getElements('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
+      return (controller.isAwake && controller.isAwake());
+    }, this);
+    if($type(filter) == 'function') xs = xs.filter(filter);
+    return xs;
+  },
+
+  /*
+    Function: allVisible
+      Returns all visible descendent views.
+
+    Parameters:
+      el - an element to get views from. Useful in the case of iframes.
+      filter - a filter to apply to the result.
+
+    Returns:
+      An array of <SSView> instances.
+  */
+  allVisibleViews: function(el, filter)
+  {
+    var xs = this.allViews(el).filter($msg('isVisible'));
+    if($type(filter) == 'function') xs = xs.filter(filter);
+    return xs;
+  },
   
   /*
     Function: subViews
-      Returns all controllers which have this view as the first parent view.
+      Returns all controllers which have this view as the super view.
+
+    Parameters:
+      el - optional element. If passed will use that to look for elements instead.
 
     Returns:
       An array of SSView instances.
   */
-  subViews: function(el)
+  subViews: function(el, filter)
   {
-    return (el || this.element).getElements('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
+    var xs = (el || this.element).getElements('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
       return (controller.isAwake && controller.isAwake() && controller.superView() == this);
     }, this);
+    if($type(filter) == 'function') xs = xs.filter(filter);
+    return xs;
   },
-  
+
   /*
     Function: visibleSubViews
       Only returns the controllers which are visible to the user.
    */
-  visibleSubViews: function(el)
+  visibleSubViews: function(el, filter)
   {
-    return this.subViews(el).filter(Function.msg('isVisible'));
+    var xs = this.subViews(el).filter($msg('isVisible'));
+    if($type(filter) == 'function') xs = xs.filter(filter);
+    return xs;
   },
   
   /*

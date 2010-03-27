@@ -49,7 +49,7 @@ var SSInitShift = function(space, options)
         SSLog("There was an error creating the shift", SSLogError);
       }
     );
-}.asPromise();
+}.future();
 
 /*
   Function: SSShowNewShift
@@ -65,7 +65,7 @@ var SSShowNewShift = function(space, shift)
   SSEditShift(space, id);
   SSFocusShift(space, id);
   SSPostNotification("onNewShiftShow", id);
-}.asPromise();
+}.future();
 
 /*
 Function: SSFocusShift
@@ -98,7 +98,7 @@ var SSFocusShift = function(space, shiftId)
   space.onShiftFocus(shiftId);
 
   SSScrollToShift(space, shiftId);
-}.asPromise();
+}.future();
 
 /*
 Function: SSScrollToShift
@@ -157,7 +157,7 @@ var SSBlurShift = function(space, shiftId)
 {
   space.blurShift(shiftId);
   space.onShiftBlur(shiftId);
-}.asPromise();
+}.future();
 
 /*
 Function: SSDeleteShift
@@ -181,7 +181,7 @@ var SSDeleteShift = function(id)
     SSPostNotification('onShiftDelete', id);
   });
   return p;
-}.asPromise();
+}.future();
 
 /*
 Function: SSEditShift
@@ -211,7 +211,7 @@ var SSEditShift = function(space, shiftId)
   {
     window.alert("You do not have permission to edit this shift.");
   }
-}.asPromise();
+}.future();
 
 
 function SSLeaveEditShift(space, shiftId)
@@ -403,7 +403,7 @@ var SSShowShift = function(space, shiftId)
     SSLog(err, SSLogError);
     return false;
   }
-}.asPromise();
+}.future();
 
 /*
 Function: SSHideShift
@@ -417,7 +417,7 @@ var SSHideShift = function(space, shiftId)
 {
   space.hideShift(shiftId);
   space.onShiftHide(shiftId);
-}.asPromise();
+}.future();
 
 /*
   Function: SSAllShifts

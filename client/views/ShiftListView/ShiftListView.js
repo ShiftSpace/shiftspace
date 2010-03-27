@@ -40,13 +40,13 @@ var ShiftListView = new Class({
   
   willShow: function()
   {
-    SSPostNotification("onShiftListViewShow", {listView:this});
+    SSPostNotification("onShiftListViewWillShow", {listView:this});
   },
 
 
   willHide: function()
   {
-    SSPostNotification("onShiftListViewHide", {listView:this});
+    SSPostNotification("onShiftListViewWillHide", {listView:this});
   },
   
   

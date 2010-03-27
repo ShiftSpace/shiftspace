@@ -67,7 +67,7 @@ var PeoplePane = new Class({
     {
       followerEl.set("text", "");
     }
-  }.asPromise(),
+  }.future(),
 
 
   hide: function()

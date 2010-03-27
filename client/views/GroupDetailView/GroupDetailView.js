@@ -65,7 +65,7 @@ var GroupDetailView = new Class({
   onJoinGroup: function(group)
   {
     SSLog("onJoinGroup", SSLogForce);
-  }.asPromise(),
+  }.future(),
 
 
   awake: function()
@@ -111,6 +111,6 @@ var GroupDetailView = new Class({
       this.DetailInviteUsers.addClass("SSDisplayNone");
       this.DetailGroupSettings.addClass("SSDisplayNone");
     }
-  }.asPromise()
+  }.future()
 });
 

@@ -117,7 +117,7 @@ var SSPostNotification = function(name, data, sender)
       }
     });
   }
-}.asPromise();
+}.future();
 
 /*
   Function: SSAddToNotificationQueue

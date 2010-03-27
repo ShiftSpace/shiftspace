@@ -732,7 +732,7 @@ var ApplicationServer = new Class({
       url: String.urlJoin(this.server(), url),
       data: data
     });
-  }.asPromise(),
+  }.future(),
 
   /*
     Function: confirm
@@ -757,7 +757,7 @@ var ApplicationServer = new Class({
     Returns:
       A promise.
    */
-  show: function(v) { SSLog('show:', v, SSLogForce); }.asPromise(),
+  show: function(v) { SSLog('show:', v, SSLogForce); }.future(),
 
   /*
     Function: noErr
@@ -776,7 +776,7 @@ var ApplicationServer = new Class({
   {
     if(allowNull === false && (v === undefined || v === null)) return false;
     return (v && v.error) ? false : true;
-  }.asPromise(),
+  }.future(),
   
   /*
     Function: hasData
@@ -791,7 +791,7 @@ var ApplicationServer = new Class({
   hasData: function(v)
   {
     return (!v.message && !v.error) ? true : false;
-  }.asPromise(),
+  }.future(),
 
   /*
     Function: showErr
@@ -803,5 +803,5 @@ var ApplicationServer = new Class({
   showErr: function(err)
   {
     alert(err.error);
-  }.asPromise()
+  }.future()
 });

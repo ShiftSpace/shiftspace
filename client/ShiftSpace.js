@@ -115,7 +115,7 @@ var ShiftSpace = new (function() {
         ShiftSpace.SSConsoleWindow = ShiftSpaceNameTable.SSConsoleWindow = SSControllerForNode("SSConsoleWindow");
 
         SSLog("\tShiftSpace UI initialized", SSLogSystem);
-      }.asPromise())(uip);
+      }.future())(uip);
 
       ShiftSpace.Sandalphon = Sandalphon;
       
@@ -209,7 +209,7 @@ var ShiftSpace = new (function() {
       if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
       SSCheckForCurrentShift();
       SSPostNotification("onSync");
-    }.asPromise();
+    }.future();
 
 
     var SSCheckForDebugSpaces = function(controlp)
@@ -224,7 +224,7 @@ var ShiftSpace = new (function() {
           SSLoadSpace(space.name, true);
         }
       });
-    }.asPromise();
+    }.future();
 
 
     var SSCheckForAutolaunchSpaces = function(controlp)
@@ -240,13 +240,13 @@ var ShiftSpace = new (function() {
           SSShowAllShiftsForSpace(spacep, shiftsp);
         }
       });
-    }.asPromise();
+    }.future();
 
 
     var SSShowAllShiftsForSpace = function(space, shifts)
     {
       shifts.map($acc("_id")).each(SSShowShift.partial(null, space));
-    }.asPromise();
+    }.future();
 
 
     function SSCheckForCurrentShift()
@@ -302,6 +302,21 @@ var ShiftSpace = new (function() {
         else
         {
           ShiftSpaceNameTable.MainTabView.selectTabByName(ops["tab"]);
+        }
+      }
+
+      if(ops["window"])
+      {
+        if(!ShiftSpace.SSConsoleWindow.isLoaded())
+        {
+          ShiftSpace.SSConsoleWindow.finish();
+          ShiftSpace.SSConsoleWindow.addEvent("load", function() {
+            ShiftSpaceNameTable[ops["window"]]['open']();
+          });
+        }
+        else
+        {
+          ShiftSpaceNameTable[ops["window"]]['open']();
         }
       }
     }
@@ -387,10 +402,15 @@ var ShiftSpace = new (function() {
        'SSSpaceIsInDebugMode',
        'SSInfo',
        'SSCheckForUpdates',
+       '__controllers',
+       '$memberof',
+       '$msg',
+       '$comp',
+       '_',
+       '__sys__',
        'SSShiftBeingEdited',
        'SSAllShiftsForSpace',
-       'SSSpaceShouldAutolaunch',
-       '__controllers'
+       'SSSpaceShouldAutolaunch'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);
        });

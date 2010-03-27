@@ -87,7 +87,7 @@ var SSAddStyle = function(css, options)
   {
     GM_addStyle(css);
   }
-}.asPromise();
+}.future();
 
 /*
 Function: SSLoadFile
@@ -118,4 +118,4 @@ var SSLoadFile = function(url)
   {
     return null;
   }
-}.asPromise();
+}.future();

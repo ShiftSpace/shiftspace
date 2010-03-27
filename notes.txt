@@ -1,0 +1,66 @@
+Proxy Ideas
+================================================================================
+
+We could provide a Space proxy object. Would also need to provide a class
+that can load spaces into the Garden.
+
+
+ShiftSpace -> SpaceProxy
+  setIsVisible
+  showInterface
+  hideInterface
+  onShiftSave
+  swap
+  deleteShift
+  onShiftDelete
+  editShift
+  onShiftEdit
+  blurShift
+  onShiftBlur
+  orderFront
+  createShift
+  attributes
+  getShift
+  focusShift
+  onShiftFocus
+
+Space -> ShiftSpaceProxy
+  SSInitShift
+  SSLoadFile (move)
+  SSSetValue
+  SSGetValue
+  SSIsNewShift
+  ShiftSpace.User.setPreference
+  ShiftSpace.User.getPreference
+  ShiftSpace.User.getUserName (security considerations)
+  ShiftSpace.User.getId (security considerations)
+
+Shift -> ShiftSpaceProxy
+  SSIsNewShift
+  SSUserCanEditShift
+  SSGetAuthorForShift (security considerations)
+  SSGetAuthorNameForShift (security consideratios)
+  
+
+Spaces would be proxies. When calling the methods they would call into the
+unsafe window with post messgae. On the other side an receiving proxy
+object listens forwarding the messages to the object.
+
+
+ShiftSpace -> send proxy -> receive proxy -> Space
+
+
+Autogeneration / Bridging
+================================================================================
+
+Can we autogenerate the proxies on both sides. If this was Lisp it would be
+considerably easier.
+
+Bridge file. Method name and signature.
+
+{
+  class: 'Space',
+  methods: [
+    {name: 'createShift', arglist: ['newShift']}
+  ]
+}

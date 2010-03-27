@@ -56,15 +56,15 @@ var SSCommentPane = new Class({
   'open': function(shift)
   {
     this.cleanupTable();
-    this.initTable(shift._id);
-    SSTableForName("Comments").addView(this.SSCommentsListView);
+    if(shift) this.initTable(shift._id);
+    if(SSTableForName("Comments")) SSTableForName("Comments").addView(this.SSCommentsListView);
     
     this.delegate().tall();
     this.delegate().show();
     this.multiView().showViewByName(this.name);
-    this.setCurrentShiftId(shift._id);
+    if(shift) this.setCurrentShiftId(shift._id);
 
-    this.update(shift);
+    if(shift) this.update(shift);
 
     this.element.removeClass("SSCommentPaneClosed");
     this.element.addClass("SSCommentPaneOpen");
@@ -112,10 +112,10 @@ var SSCommentPane = new Class({
       var attrsp = SSGetSpaceAttributes(shift.space.name);
       (function(attrs) {
         this.element.getElement("#SSCommentShift .spaceIcon").set("src", attrs.icon);
-      }.asPromise().bind(this))(attrsp);
+      }.future().bind(this))(attrsp);
       SSTemplate(this.element.getElement("#SSCommentShift"), shift);
     }
-  }.asPromise(),
+  }.future(),
   
   
   localizationChanged: function()
