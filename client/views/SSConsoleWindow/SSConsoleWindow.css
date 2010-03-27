@@ -35,3 +35,13 @@ button#SSConsoleWindowClose:hover{
    background:url(/images/Pane/SSPaneBg.png);
    padding: 5px 20px 0;
 }
+
+h2#CreateTitle,
+h2#EditTitle {
+   line-height: 24px;
+   margin: 0;
+   font-size: 15px;
+   color: #F63B02;
+   padding: 0 4px;
+}
+

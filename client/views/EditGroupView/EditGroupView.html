@@ -21,7 +21,7 @@
 
         <div>
             <label><strong>Tag Line</strong><span>*</span>:</label>
-            <input class="SSInputField tagLine" type="text" name="tagLine"></input>
+            <textarea class="SSTextArea tagLine" name="tagLine"></textarea>
         </div>
         
         <div>
@@ -30,8 +30,8 @@
         </div>
 
         <div>
-            <label><strong>Is visible to people who have not been invited</strong>:</label>
             <input class="SSInputField visible" type="checkbox" name="isVisible" checked="true"></input>
+            <label>All users can find and apply to this group</label>
         </div>
     </form>
 
@@ -88,10 +88,10 @@
         </div>
     </div>
 
-    <div>
-        <button id="InviteUsers" outlet="EditGroupView">Invite Users</button>
-        <button id="SaveGroup" outlet="EditGroupView">Save</button>
-        <button id="CreateGroup" outlet="EditGroupView">Create Group</button>
-        <button id="CancelAction" outlet="EditGroupView"><span>Cancel</span></button>
+    <div class="panelButtons">
+        <button id="InviteUsers" class="SSButton3" outlet="EditGroupView">Invite Users</button>
+        <button id="SaveGroup" class="SSButton2" outlet="EditGroupView">Save</button>
+        <button id="CreateGroup" class="SSButton2" outlet="EditGroupView">Create Group</button>
+        <button id="CancelAction" class="SSButton5" outlet="EditGroupView"><span>Cancel</span></button>
     </div>
 </div>
