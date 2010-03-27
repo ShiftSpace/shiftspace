@@ -3,7 +3,7 @@ li.SSInstalledSpaceCell
    width: 100%;
 }
 
-li.SSInstalledSpaceCell:hover
+ul#SSInstalledSpaces > li.SSInstalledSpaceCell:hover
 {
    background-color: white;
 }
