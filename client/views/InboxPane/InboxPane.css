@@ -8,18 +8,9 @@ ul.ShiftListView li.ShiftListViewCell div.messageMeta
    padding:4px;
 }
 
-#MessageOptions
-{
-   left: 6px;
-   position: absolute;
-   top: 4px;
-   width: 158px;
-}
-
 #MessagesListViewContainer
 {
    bottom: 0px;
-   left: 158px;
    position: absolute;
    right: 0px;
    height: 100%;
