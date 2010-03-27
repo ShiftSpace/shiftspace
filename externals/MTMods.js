@@ -444,7 +444,7 @@ function SSFormToHash(formEl)
   return result;
 }
 
-function SSTemplate(el, props)
+function SSTemplate(el, props, htmls)
 {
   $H(props).each(function(value, key) {
     var attr = "text",
@@ -467,6 +467,10 @@ function SSTemplate(el, props)
     if(target.get('tag') == "img")
     {
       attr = "src";
+    }
+    if(htmls.contains(key))
+    {
+      attr = "html";
     }
     if(target) target.set(attr, value);
   }, this);

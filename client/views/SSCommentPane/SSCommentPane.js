@@ -113,7 +113,7 @@ var SSCommentPane = new Class({
       (function(attrs) {
         this.element.getElement("#SSCommentShift .spaceIcon").set("src", attrs.icon);
       }.future().bind(this))(attrsp);
-      SSTemplate(this.element.getElement("#SSCommentShift"), shift);
+      SSTemplate(this.element.getElement("#SSCommentShift"), shift, ['summary']);
     }
   }.future(),
   
