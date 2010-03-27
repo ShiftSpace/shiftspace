@@ -85,3 +85,24 @@ div#SSInstalledSpacesTabPane
 {
    float: right;
 }
+
+ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+1)
+{
+   background-color: #F7F2EF;
+}
+
+ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+2)
+{
+   background-color: #f0edeb;
+}
+
+ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+3)
+{
+   background-color: #f0edeb;
+
+}
+
+ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+4)
+{
+   background-color: #F7F2EF;
+}
