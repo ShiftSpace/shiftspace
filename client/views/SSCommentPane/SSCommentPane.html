@@ -34,8 +34,9 @@
               properties: ['userName', 'text', 'gravatar', 'createdStr']
             }">
             <div class="text"></div>
-            <div><span class="index"></span>.</div>
+            
             <div class="user">
+                <span class="index"></span>
                 <div class="gravatarContainer">
                     <img class="rounded-image gravatar" width="16" height="16"></img>
                 </div>
@@ -45,7 +46,7 @@
         </li>
     </ul>
 
-    <div id="CommentPaneForm">
+    <div id="CommentPaneForm" class="PaneForm">
         <label id="SSCommentPrompt">Hey <span class="userName">guest</span>, post a comment:</label>
         <div>
             <textarea id="SSCommentText" outlet="SSCommentPane"></textarea>
@@ -54,7 +55,7 @@
             <input class="SSInputField" id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
             <label id="SSCommentNotify">Inform me of new comments</label>
             <button id="SSCloseComments" outlet="SSCommentPane">Cancel</button>
-            <button id="SSPostComment" outlet="SSCommentPane">Post Comment</button>
+            <button id="SSPostComment" outlet="SSCommentPane">Submit</button>
         </div>
     </div>
 

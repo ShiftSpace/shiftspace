@@ -1,6 +1,6 @@
 #SSCommentPane
 {
-   background-color: white;
+   background-color: WhiteSmoke;
    height: 100%;
    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
    font-size: 13px;
@@ -9,6 +9,9 @@
 #CommentPaneForm textarea
 {
    width: 330px;
+   border: solid 1px;
+   color:#CFCAC4;
+   margin-bottom:7px;
 }
 
 .SSCommentsListViewCell
@@ -18,12 +21,13 @@
 
 .SSCommentsListViewCell .userName
 {
-   font-weight: bold;
+   
 }
 
 #SSCommentNotify
 {
    font-size: 11px;
+   color:#74665a;
 }
 
 #SSCommentPrompt, #SSCommentHeader
@@ -31,6 +35,10 @@
    font-weight: bold;
    font-size: 16px;
    color:#74665A;
+   padding-bottom:3px;
+   padding-left:6px;
+   padding-right:0;
+   padding-top:5px;
 }
 #DgreyBox{
    border: 2px solid #cfcac4;
@@ -38,28 +46,51 @@
    padding: 2px;
    min-height:38px;
 }
+.index{
+   float:left;
+   margin-left:-15px;
+   
+}
+
+.text{
+   border: 1px solid #cfcac4;
+   padding: 6px;
+   min-height:38px;
+   font-size:13px;
+   font-weight:lighter;
+   margin-bottom:6px;
+   color:#4b423a;
+   line-height:14px;
+}
+
 .spaceIcon{
    padding:8px;
    margin-right:5px;
    border: 2px solid #c7c3b6;
    float: left;
    background-color: #FFFFFF;
-   
 }
 .summary{
    color:#4B423A;
    font-size:15px;
 }
-.user{  
+.user{
+   margin-bottom:6px;
+   margin-left:25px;
+   margin-top:5px;
 }
 .gravatarContainer{
-  float:left;  
+   float:left;
 }
 .userName{
  float:left;  
 }
 .createdStr{
-   
+   color:#B3ADA5;
+   font-size:11px;
+   margin-left:6px;
+   padding-top:5px;
+   padding-left:50px;
 }
 
 .SSListView
@@ -82,4 +113,26 @@ ul#SSCommentsListView li:first-child img.spaceIcon
 {
    display: block;
 }
+.PaneForm{
+   border-top-color:#CFCAC4;
+   border-top-style:solid;
+   border-top-width:1px;
+   margin-top:8px;
+   padding-top:5px;
+   padding-left:5px;
+}
 
+#SSCloseComments{
+   background:none;
+   color:#74665A;
+   text-decoration:underline;
+   font-size:12px;
+}
+#SSPostComment{
+   color:#74665A;
+   font-size:12px;
+   border: solid 2px #b3ada5;
+   -moz-border-radius:10px;
+   width:100px;
+   font-weight:bold;
+}
