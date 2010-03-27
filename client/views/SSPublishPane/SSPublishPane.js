@@ -25,19 +25,26 @@ var SSPublishPane = new Class({
   {
     this.parent(el, options);
 
-    SSAddObserver(this, "onShiftListViewShow", this.onShiftListViewShow.bind(this));
-    SSAddObserver(this, "onShiftListViewHide", this.onShiftListViewHide.bind(this));
-    SSAddObserver(this, "onShiftSelect", this.onShiftSelect.bind(this));
-    SSAddObserver(this, 'onShiftDeselect', this.onShiftDeselect.bind(this));
+    SSAddObserver(this, "onShiftShare", this.onShiftShare.bind(this));
+    SSAddObserver(this, "onShiftCheck", this.onShiftCheck.bind(this));
+    SSAddObserver(this, "onShiftListViewWillHide", this.onShiftListViewWillHide.bind(this));
   },
-  
-  
-  willHide: function()
+
+
+  onShiftShare: function(shift)
   {
-    var lv = this.currentListView();
-    if(lv)
+    this['open']();
+    this.update(shift);
+  },
+
+
+  onShiftCheck: function(evt)
+  {
+    var lv = evt.listView,
+        xs = lv.checkedItems();
+    if(xs.length > 1)
     {
-      lv.uncheckAll(true);
+      this['close']();
     }
   },
   
@@ -56,65 +63,26 @@ var SSPublishPane = new Class({
     this.delegate().hide();
     SSPostNotification("onPublishPaneClose");
   },
+  
+
+  onShiftListViewWillHide: function(evt)
+  {
+    this['close']();
+  },
+  
+  
+  currentShiftId: function()
+  {
+    return this.__currentShiftId;
+  },
+  
+  
+  setCurrentShiftId: function(currentShiftId)
+  {
+    this.__currentShiftId = currentShiftId;
+  },
 
 
-  onShiftListViewShow: function(evt)
-  {
-    var listView = evt.listView;
-    if(listView.checkedItems().length > 0)
-    {
-      this.setCurrentListView(listView);
-      this.update();
-      this['open']();
-    }
-  },
-
-
-  onShiftListViewHide: function(evt)
-  {
-    var listView = evt.listView;
-    if(listView == this.currentListView())
-    {
-      this['close']();
-      this.setCurrentListView(null);
-    }
-  },
-  
-  
-  setCurrentListView: function(current)
-  {
-    this.__current = current;
-  },
-  
-  
-  currentListView: function()
-  {
-    return this.__current;
-  },
-  
-  
-  count: function()
-  {
-    return this.currentListView().checkedItemIndices().length;
-  },
-  
-  
-  onShiftSelect: function(evt)
-  {
-    if(!this.isVisible()) this['open']();
-    this.setCurrentListView(evt.listView);
-    this.update();
-  },
-  
-  
-  onShiftDeselect: function(evt)
-  {
-    this.setCurrentListView(evt.listView);
-    if(this.count() == 0) this['close']();
-    this.update();
-  },
-  
-  
   setDelegate: function(delegate)
   {
     this.__delegate = delegate;
@@ -126,170 +94,114 @@ var SSPublishPane = new Class({
     return this.__delegate;
   },
   
-  
-  deleteShifts: function(evt)
-  {
-    evt = new Event(evt);
-    var selectedShifts = this.currentListView().checkedItemIds();
-    
-    if(selectedShifts && selectedShifts.length > 0)
-    {
-      var len = selectedShifts.length,
-          str = (len != 1) ? "these shifts" : "this shift";
-      if(!confirm("Are you sure you want to delete " + str + "? There is no undo")) return;
-      var indices = this.currentListView().checkedItemIndices();
-      this.currentListView().uncheck(indices);
-      var p = new Promise(selectedShifts.map(SSDeleteShift));
-      p.op(this['close'].bind(this));
-      p.realize();
-    }
-  },
-  
-  
-  saveShifts: function(evt)
-  {
-    evt = new Event(evt);
-    var selectedShifts = this.currentListView().checkedItemIds();
+  /*
+    Function: isGroup
+      *private*
+      Check if a string is a group string. For auto-completion
+      of publish input field.
 
-    if(selectedShifts && selectedShifts.length > 0)
-    {
-      SSLog(selectedShifts, SSLogForce);
-      selectedShifts.each(function(id) {
-        SSPostNotification("saveShift", id);
-      }.bind(this));
-    }
-  },
+    Parameters:
+      str - a string
 
-
+    Returns:
+      A boolean.   
+  */
   isGroup: function(str)
   {
     return str[0] == '&';
   },
 
+  /*
+    Function: isUser
+      *private*
+      Check if a string is a user string. For auto-completion
+      of publish input field.
 
+    Parameters:
+      str - a string
+
+    Returns:
+      A boolean.
+  */
   isUser: function(str)
   {
     return str[0] == '@';
   },
 
-
-  publishShifts: function(evt)
+  /*
+     Function: publishShift
+       Publishes the currently selected shift.
+  */
+  publishShift: function(evt)
   {
     evt = new Event(evt);
+    var publishData = {},
+        shiftId = this.currentShiftId(),
+        isPublic = this.PublicCheckbox.getProperty("checked");
 
-    var selectedShifts = this.currentListView().checkedItemIds();
-    var publishData = {};
-
-    if(selectedShifts && selectedShifts.length > 0)
+    if(isPublic)
     {
-      var isPublic = this.PublicCheckbox.getProperty("checked");
-
-      if(isPublic)
-      {
-        publishData['private'] = false;
-      }
-      else
-      {
-        var targets = this.PublishTargets.getProperty("value").split(" ").map(String.trim).filter(Function.not(Function.eq("")));
-        if(targets.length == 0)
-        {
-          alert("Please specify which user or group you wish to publish to.");
-          return;
-        }
-        publishData.targets = targets;
-      }
-
-      var p = new Promise(
-        selectedShifts.map(function(id) {
-          return SSApp.post({
-            resource: "shift",
-            id: id,
-            action: "publish",
-            data: publishData,
-            json: true
-          });
-        })
-      );
-      p.realize();
+      publishData['private'] = false;
     }
+    else
+    {
+      var targets = this.PublishTargets.getProperty("value").split(" ").map(String.trim).filter($not($eq("")));
+      if(targets.length == 0)
+      {
+        alert("Please specify which user or group you wish to publish to.");
+        return;
+      }
+      publishData.targets = targets;
+    }
+
+    var p = SSApp.post({
+      resource: "shift",
+      id: shiftId,
+      action: "publish",
+      data: publishData,
+      json: true
+    });
+    p.realize();
   },
   
   
   attachEvents: function()
   {
-    this.DeleteShift.addEvent('click', this.deleteShifts.bind(this));
-    this.SaveShift.addEvent('click', this.saveShifts.bind(this));
-    this.ChooseVisibility.addEvent('click', this.publishShifts.bind(this));
-
-    this.ShiftPrivateStatusRadio.addEvent('click', function(evt){
-      evt = new Event(evt);
-      if(this.SSPPVisiblePublic.hasClass('SSPPPermit')){
-        this.SSPPVisiblePublic.removeClass('SSPPPermit');
-      }
-      this.SSPPVisiblePrivate.addClass('SSPPPermit');
-    }.bind(this));
-
-    this.ShiftPublicStatusRadio.addEvent('click', function(evt) {
-      evt = new Event(evt);
-      if(this.SSPPVisiblePrivate.hasClass('SSPPPermit')){
-        this.SSPPVisiblePrivate.removeClass('SSPPPermit');
-      }
-      this.SSPPVisiblePublic.addClass('SSPPPermit');
-    }.bind(this));
-
+    this.Cancel.addEvent("click", this['close'].bind(this));
+    this.ChooseVisibility.addEvent('click', this.publishShift.bind(this));
     if(this.SecretLink) this.SecretLink.addEvent("click", this.showProxy.bind(this));
   },
-  
   
   /*
     Function: update
       Update the display of the shift depending on the useres selections.
    */
-  update: function()
+  update: function(shift)
   {
-    if(this.count() == 1)
+    var publishData = shift.publishData;
+    this.PublishTargets.setProperty("value", "");
+    this.setCurrentShiftId(shift._id);
+    if(publishData['private'])
     {
-      var publishData = this.currentListView().checkedItems()[0].publishData;
-
-      // clear out the publish targets data
-      this.PublishTargets.setProperty("value", "");
-
-      /*
-      this.element.getElement("#SSPublishPaneStatus label").removeClass('SSDisplayNone');
-      if(publishData !== undefined && publishData.draft)
-      {
-        this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Draft');
-      }
-      else
-      {
-        this.element.getElement("#SSPublishPaneStatus label b").set('text', 'Published');
-      }
-      */
-      
-      if(publishData.private)
-      {
-        this.ShiftPrivateStatusRadio.setProperty("checked", true);
-      }
-      else
-      {
-        this.ShiftPublicStatusRadio.setProperty("checked", true);
-      }
-      if(publishData.targets && publishData.targets.length > 0)
-      {
-        this.PublishTargets.setProperty("value", publishData.targets.join(" "));
-      }
+      this.PublicCheckbox.setProperty("checked", false);
     }
-    else if(this.count() > 1)
+    else
     {
-      this.element.getElement("#SSPublishPaneStatus label").addClass('SSDisplayNone');
+      this.PublicCheckbox.setProperty("checked", true);
+    }
+    if(publishData.targets && publishData.targets.length > 0)
+    {
+      this.PublishTargets.setProperty("value", publishData.targets.join(" "));
     }
   },
 
-
+  /*
+    Function: showProxy
+      Opens the proxy page.
+  */
   showProxy: function(evt)
   {
-    var selectedShifts = this.currentListView().checkedItemIds();
-    window.open(ShiftSpace.info().server.urlJoin("proxy", selectedShifts[0]));
+    window.open(ShiftSpace.info().server.urlJoin("unsafe-proxy", this.currentShiftId()));
   },
   
 
@@ -298,5 +210,4 @@ var SSPublishPane = new Class({
     this.mapOutletsToThis();
     this.attachEvents();
   }
-
 });

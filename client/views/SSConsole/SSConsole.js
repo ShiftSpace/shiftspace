@@ -96,13 +96,24 @@ var SSConsole = new Class({
         this.MainTabView.refresh();
         if(SSTableForName("AllShifts")) SSTableForName("AllShifts").refresh();
       }
+
+      if(!this.isUpToDate())
+      {
+        SSLog("not up to date", SSLogForce);
+        this.showUpdateTab();
+      }
+      else
+      {
+        SSLog("up to date", SSLogForce);
+        this.hideUpdateTab();
+      }
     }
   },
   
   
   onNewShiftSave: function()
   {
-    this.MainTabView.selectTabByName('AllShiftsView');
+    if(this.isLoaded()) this.MainTabView.selectTabByName('AllShiftsView');
   },
 
 
@@ -117,6 +128,44 @@ var SSConsole = new Class({
   {
     if(!this.isVisible()) this.show();
     this.MainTabView.selectTabByName('InboxPane');
+  },
+
+
+  /*
+    Function: setUpToDate
+      Set the flag for whether the ShitSpace userscript is up-to-date.
+
+    Parameters:
+      v - a boolean.
+  */
+  setUpToDate: function(v)
+  {
+    this.__notUpToDate = v;
+  },
+
+  /*
+    Function: isUpToDate
+      Check whether the ShiftSpace userscript is up-to-date or not.
+
+    Returns:
+      A boolean.
+  */
+  isUpToDate: function()
+  {
+    return this.__notUpToDate;
+  },
+
+
+  showUpdateTab: function(args)
+  {
+    this.SSUpdateLink.set("href", String.urlJoin(SSInfo().mediaPath, "builds", SSInfo().build.name));
+    this.MainTabView.revealTabByName("UpdatePane");
+  },
+
+  
+  hideUpdateTab: function(args)
+  {
+    this.MainTabView.hideTabByName("UpdatePane");
   },
   
   
@@ -152,15 +201,43 @@ var SSConsole = new Class({
     });
   },
   
-  
+  /*
+    Function: subViews
+      Returns an array of all SSViews that have the console as the super
+      view.
+
+    Returns:
+      An array of <SSView> instances.
+  */
   subViews: function()
   {
+    if(!this.isLoaded()) return [];
     return this.contentWindow().$$('*[uiclass]').map(SSControllerForNode).filter(function(controller) {
       return (controller.isAwake() && controller.superView() == this);
     }, this);
   },
-  
-  
+
+  /*
+    Function: visibleListView
+      Returns the visible list view.
+
+    Returns:
+      <SSListView>
+  */
+  visibleListView: function()
+  {
+    return this.allVisibleViews(null, $memberof.curry(null, _, 'ShiftListView'))[0];
+  },
+
+  /*
+    Function: localizationChanged
+      *private*
+      Called when the user changes the localization of the interface. This
+      should not be called directly.
+
+    Parameters:
+      evt - the localization change event.
+  */
   localizationChanged: function(evt)
   {
     if(this.delayed()) return;
@@ -180,17 +257,19 @@ var SSConsole = new Class({
     if(context == this.element.contentWindow)
     {
       this.mapOutletsToThis();
-      this.MainTabView.addEvent('tabSelected', function(evt) {});
+      this.MainTabView.addEvent('tabSelected', function(evt) {
+        
+      }.bind(this));
       this.updateTabs();
     }
   },
 
-
+  
   onInterfaceLoad: function(ui)
   {
     this.parent(ui);
     this.element.addClass('SSDisplayNone');
-  }.asPromise(),
+  }.future(),
 
 
   buildInterface: function()

@@ -112,7 +112,6 @@ def update():
     """
     Update the source file and test file indexes.
     """
-    os.system("scripts/update_submodules.sh")
     updatedb()
 
 
@@ -375,6 +374,13 @@ def runserver(argv):
         server.start()
 
 
+def installSpace(space):
+    """
+    Installs a space's attributes into the database.
+    """
+    setup.installSpace(space)
+
+
 def shell():
     """
     Launch the shell with the models loaded. Useful for testing.
@@ -417,6 +423,8 @@ def main(argv):
         updatedb()
     elif action == "resetdb":
         resetdb()
+    elif action == "install":
+        installSpace(argv[1])
     elif action == "setdbpath":
         try:
             url = argv[1]

@@ -18,12 +18,12 @@
 /*  left: 152px;*/
 }
 
-ul#InviteUsersListView.Invite input[type=checkbox]
+ul#InviteUsersListView.Invite input.SSInputField[type=checkbox]
 {
    display: block
 }
 
-ul#InviteUsersListView input[type=checkbox]
+ul#InviteUsersListView input.SSInputField[type=checkbox]
 {
    display: none;
 }

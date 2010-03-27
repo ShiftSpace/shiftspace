@@ -41,7 +41,7 @@ ul.ShiftListView li.ShiftListViewCell:last-child:hover{
   /*border-bottom-color: #6aa07e;*/
 }
 
-ul.ShiftListView li.ShiftListViewCell input{
+ul.ShiftListView li.ShiftListViewCell input.SSInputField{
   vertical-align: middle;  
 }
 

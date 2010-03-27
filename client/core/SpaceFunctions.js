@@ -129,6 +129,7 @@ function SSRegisterSpace(instance)
 
   instance.addEvent('onShiftHide', function(id) {
     SSPostNotification('onShiftHide', id);
+    SSLeaveEditShift(SSSpaceForShift(id), id);
   });
   instance.addEvent('onShiftShow', function(id) {
     SSPostNotification('onShiftShow', id);
@@ -136,6 +137,7 @@ function SSRegisterSpace(instance)
   instance.addEvent('onShiftBlur', function(id) {
     SSBlurShift(SSSpaceForShift(id), id);
     SSPostNotification('onShiftBlur', id);
+    SSLeaveEditShift(SSSpaceForShift(id), id);
   });
   instance.addEvent('onShiftFocus', function(id) {
     SSFocusShift(SSSpaceForShift(id), id);
@@ -361,7 +363,7 @@ Parameters:
 var SSUpdateInstalledSpaces = function(controlp)
 {
   __installedSpaces = ShiftSpace.User.installedSpaces();
-}.asPromise();
+}.future();
 
 /*
 Function: SSInitDefaultSpaces
@@ -437,7 +439,7 @@ var SSSpaceForName = function(name)
   {
     return SSLoadSpace(name);
   }
-}.asPromise();
+}.future();
 
 /*
 Function: SSSpacesByPosition
@@ -613,4 +615,17 @@ function SSHandleInstallSpaceLink(evt)
 function SSSpaceIsInDebugMode(spaceName)
 {
   return ShiftSpace.User.getPreference([spaceName, "debug"].join(".")) || false;
+}
+
+function SSSpaceShouldAutolaunch(spaceName)
+{
+  var pref = ShiftSpace.User.getPreference([spaceName, "autolaunch"].join("."));
+  if(pref == null)
+  {
+    return SSGetSpaceAttributes(spaceName).autolaunch;
+  }
+  else
+  {
+    return pref;
+  }
 }

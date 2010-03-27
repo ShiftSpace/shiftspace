@@ -22,13 +22,15 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onSpaceMenuShow', this.onSpaceMenuShow.bind(this));
     SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
+    SSAddObserver(this, 'onShiftEdit', this.onShiftEdit.bind(this));
+    SSAddObserver(this, 'onShiftLeaveEdit', this.onShiftLeaveEdit.bind(this));
+    SSAddObserver(this, 'onShiftCheck', this.onShiftCheck.bind(this));
+    SSAddObserver(this, 'onShiftUncheck', this.onShiftUncheck.bind(this));
     SSAddObserver(this, 'onMessageRead', function() {
       this.updateMessageCount(SSUserUnreadCount(ShiftSpace.User.getUserName()));
     }.bind(this));
-    SSAddObserver(this, 'onNewShiftShow', this.showQuickPane.bind(this));
+    SSAddObserver(this, 'onNewShiftShow', this.onNewShiftShow.bind(this));
     SSAddObserver(this, 'onShiftDestroy', this.hideQuickPane.bind(this));
-    SSAddObserver(this, 'onPublishPaneOpen', this.showQuickEditPane.bind(this));
-    SSAddObserver(this, 'onPublishPaneClose', this.hideQuickEditPane.bind(this));
 
     this.watchFocusBlur();
 
@@ -38,12 +40,12 @@ var SSNotifierView = new Class({
 
   watchFocusBlur: function()
   {
-    $$('input').addEvent("focus", function(evt) {
+    $$('input, textarea').addEvent("focus", function(evt) {
       SSLog("input focused", SSLogForce);
       this.__focusedInput = true;
     }.bind(this));
 
-    $$('input').addEvent("blur", function(evt) {
+    $$('input, textarea').addEvent("blur", function(evt) {
       SSLog("input blurred", SSLogForce);
       this.__focusedInput = false;
     }.bind(this));
@@ -71,8 +73,65 @@ var SSNotifierView = new Class({
       this.__count++;
       this.updateCounter();
     }
+    this.SSQPStatus.set("text", "saved private draft");
+    this.SSQPDelete.removeClass("SSDisplayNone");
   },
   
+
+  onShiftEdit: function()
+  {
+    this.fireEvent('edit');
+  },
+
+
+  onShiftLeaveEdit: function()
+  {
+    this.fireEvent("leaveedit");
+  },
+
+
+  currentListView: function()
+  {
+    return this.__currentListView;
+  },
+  
+  
+  setCurrentListView: function(currentListView)
+  {
+    this.__currentListView = currentListView;
+  },
+
+
+  onShiftCheck: function(evt)
+  {
+    this.hideQuickPane();
+    this.showQuickEditPane();
+    var listView = evt.listView;
+    this.setCurrentListView(listView);
+    if(listView.checkedItems().length > 1)
+    {
+      this.SSQEPEdit.addClass("SSDisplayNone");
+      this.SSQEPShare.addClass("SSDisplayNone");
+    }
+  },
+
+
+  onShiftUncheck: function(evt)
+  {
+    var listView = evt.listView;
+    this.setCurrentListView(listView);
+    if(listView.checkedItems().length == 0)
+    {
+      this.hideQuickEditPane();
+    }
+    if(listView.checkedItems().length == 1)
+    {
+      this.SSQEPEdit.removeClass("SSDisplayNone");
+      this.SSQEPShare.removeClass("SSDisplayNone");
+    }
+  },
+
+
   updateCounter: function()
   {
     //TODO: pluralization should be handled more smartly - 10/28/09 by ljxia
@@ -81,6 +140,7 @@ var SSNotifierView = new Class({
     if (this.SSShiftCount) this.SSShiftCount.set('text', text);
   },
     
+
   initGraph: function() {
     this.graph = new Fx.Graph(this.element, {
       controller: this,
@@ -145,10 +205,12 @@ var SSNotifierView = new Class({
             {type: 'hidemenu', unflag:'menu'},
             {type: 'showconsole', flag:'console'},
             {type: 'hideconsole', unflag:'console'},
+            {type: 'edit', flag: 'edit'},
+            {type: 'leaveedit', unflag: 'edit'},
             {type: 'mouseover', flag:'mouse'},
-            {type: 'mouseout', state: 'SSNotifierHasShifts', unflag:'mouse', condition: {not: ['shift', 'menu', 'console']}},
+            {type: 'mouseout', state: 'SSNotifierHasShifts', unflag:'mouse', condition: {not: ['shift', 'menu', 'console', 'edit']}},
             {type: 'shiftdown', flag:'shift'},
-            {type: 'shiftup', state: 'SSNotifierHasShifts', unflag:'shift', condition: {not: ['mouse', 'menu', 'console']}}
+            {type: 'shiftup', state: 'SSNotifierHasShifts', unflag:'shift', condition: {not: ['mouse', 'menu', 'console', 'edit']}}
           ]
         }
       }
@@ -241,7 +303,8 @@ var SSNotifierView = new Class({
   */
   hide: function(animate)
   {
-    if(ShiftSpace.Console.isVisible()) return;
+    SSLog("hide", SSLogForce);
+    if(ShiftSpace.Console.isVisible() || SSShiftBeingEdited() != null) return;
     if(animate === false)
     {
       this.graph.cancel(true);
@@ -289,7 +352,7 @@ var SSNotifierView = new Class({
     {
       this.graph.setState('SSNotifierHasShifts', {animate:true, direction:'previous', hold:{duration:3000}});
     }
-  }.asPromise(),
+  }.future(),
   
 
   updateMessageCount: function(count)
@@ -306,7 +369,7 @@ var SSNotifierView = new Class({
         this.SSMessage.hide();
       }
     }
-  }.asPromise(),
+  }.future(),
   
 
   attachEvents: function()
@@ -344,8 +407,44 @@ var SSNotifierView = new Class({
       if(space) space.saveCurrentShift();
     }.bind(this));
 
+    this.SSQPCancel.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var id = this.currentListView().checkedItemIds()[0];
+      if(SSIsNewShift(id))
+      {
+      }
+      else
+      {
+        SSLeaveEditShift(SSSpaceForShift(id), id);
+        this.hideQuickPane();
+        this.showQuickEditPane();
+      }
+    }.bind(this));
+
     this.SSQPDelete.addEvent("click", function(evt) {
       evt = new Event(evt);
+      // delete the shift
+    }.bind(this));
+
+    /* Quick Edit Pane Events */
+
+    this.SSQEPEdit.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var id = this.currentListView().checkedItemIds()[0];
+      SSEditShift(SSSpaceForShift(id), id);
+      this.hideQuickEditPane();
+      this.showQuickPane(SSGetShift(id));
+    }.bind(this));
+
+    this.SSQEPShare.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      SSPostNotification("onShiftShare", this.currentListView().checkedItems()[0]);
+    }.bind(this));
+
+    this.SSQEPDelete.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var ids = this.currentListView().checkedItemIds();
+      ids.each($comp(SSDeleteShift, $msg('realize')));
     }.bind(this));
   },
   
@@ -524,7 +623,7 @@ var SSNotifierView = new Class({
   {
     this.parent(ui);
     this.element.addClass("SSNotifierHidden");
-  }.asPromise(),
+  }.future(),
   
   
   awake: function(context)
@@ -542,10 +641,31 @@ var SSNotifierView = new Class({
   },
 
 
-  showQuickPane: function()
+  onNewShiftShow: function(id, status)
+  {
+    this.showQuickPane(SSGetShift(id));
+  },
+
+
+  showQuickPane: function(shift)
   {
     this.SSQuickPane.removeClass("SSDisplayNone");
-  },
+    if(SSIsNewShift(shift._id))
+    {
+      this.SSQPStatus.set("text", "unsaved");
+      this.SSQPDelete.addClass("SSDisplayNone");
+    }
+    else
+    {
+      var isPrivate = shift.publishData['private'],
+          draft = (shift.publishData.draft && isPrivate) ? "draft" : "shift",
+          status = (isPrivate) ? "private {draft}" : "public {draft}";
+      this.SSQPStatus.set("text", "unsaved {status}".substitute({
+        status: status.substitute({draft: draft})
+      }));
+      this.SSQPDelete.removeClass("SSDisplayNone");
+    }
+  }.future(),
 
 
   hideQuickPane: function()

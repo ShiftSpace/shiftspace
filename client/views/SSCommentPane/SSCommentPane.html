@@ -10,15 +10,18 @@
     </div>
     
     <div id="SSCommentShift">
-        <img class="spaceIcon"></img>
+        <div id="DgreyBox">
+            <img class="spaceIcon"></img>
+            <div class="summary"></div>
+        </div>
         <div class="user">
             <div class="gravatarContainer">
                 <img class="rounded-image gravatar" width="16" height="16"></img>
+                <div class="userName"></div>
             </div>
-            <div class="userName"></div>
+                
+                <div class="createdStr"></div>
         </div>
-        <div class="summary"></div>
-        <div class="createdStr"></div>
     </div>
 
     <ul id="SSCommentsListView"
@@ -48,7 +51,7 @@
             <textarea id="SSCommentText" outlet="SSCommentPane"></textarea>
         </div>
         <div>
-            <input id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
+            <input class="SSInputField" id="SSNotify" type="checkbox" checked="true" outlet="SSCommentPane"></input>
             <label id="SSCommentNotify">Inform me of new comments</label>
             <button id="SSCloseComments" outlet="SSCommentPane">Cancel</button>
             <button id="SSPostComment" outlet="SSCommentPane">Post Comment</button>

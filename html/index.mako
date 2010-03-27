@@ -62,7 +62,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>ShiftSpace ${version}</title>
     <link rel="stylesheet" href="/styles/status.css" type="text/css" />
-    <script src="Scripts/AC_RunActiveContent.js" type="text/javascript"></script>
 </head>
 <body>
     <div id="main">

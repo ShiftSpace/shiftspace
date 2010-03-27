@@ -40,13 +40,13 @@ var ShiftListView = new Class({
   
   willShow: function()
   {
-    SSPostNotification("onShiftListViewShow", {listView:this});
+    SSPostNotification("onShiftListViewWillShow", {listView:this});
   },
 
 
   willHide: function()
   {
-    SSPostNotification("onShiftListViewHide", {listView:this});
+    SSPostNotification("onShiftListViewWillHide", {listView:this});
   },
   
   
@@ -71,9 +71,7 @@ var ShiftListView = new Class({
     if(!this.isVisible()) return;
     this.refresh();
     var idx = this.find(function(x) { return x._id == id; });
-    this.cell().lock(this.cellNodeForIndex(idx));
-    this.cell().check();
-    this.cell().unlock();
+    this.selectRow(idx);
   },
   
   
@@ -121,10 +119,12 @@ var ShiftListView = new Class({
   onCheck: function(evt)
   {
     var id = evt.data._id;
+    /*
     if(SSUserCanEditShift(id))
     {
       SSEditShift(SSSpaceForShift(id), id);
     }
+    */
   },
 
   
@@ -159,7 +159,7 @@ var ShiftListView = new Class({
   {
     var indices = [];
     this.cellNodes().each(function(el, i) {
-      if(el.getElement('input[type=checkbox]').getProperty("checked")) indices.push(i);
+      if(el.getElement('input.SSInputField[type=checkbox]').getProperty("checked")) indices.push(i);
     });
     return indices;
   },

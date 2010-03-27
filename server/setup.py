@@ -1,4 +1,6 @@
 import os
+from couchdb.design import ViewDefinition
+
 try:
     # Python 2.5+
     from hashlib import md5
@@ -47,6 +49,31 @@ def init(dbname="shiftspace/master"):
     sync()
 
 
+def installSpace(space):
+    from models import core
+    import simplejson as json
+    fh = open(os.path.join("spaces", space, "attrs.json"))
+    data = json.loads(fh.read())
+    data["type"] = "space"
+    db = core.connect()
+    if db.get(space):
+        del db[space]
+    db[space] = data
+
+
+DEFAULT_SPACES = (
+    "Notes",
+    "Highlights",
+    "SourceShift",
+    "ImageSwap",
+    )
+
+
+def installDefaultSpaces():
+    for space in DEFAULT_SPACES:
+        installSpace(space)
+
+
 def sync(createAdmin=True):
     import models.core as core
     from models.ssuser import SSUser
@@ -65,6 +92,16 @@ def sync(createAdmin=True):
     if createAdmin and not master.get("admins"):
         master["admins"] = adminDoc
         master["shiftspace"] = adminUser
+
+    installDefaultSpaces()
+
+    Spaces = ViewDefinition('spaces', 'by_name', '''
+       function(doc) {             
+         if(doc.type == "space") { 
+           emit(doc.name, doc);    
+         }                         
+       }''')
+    Spaces.sync(master)
 
     SSUser.all.sync(master)
     SSUser.all_by_joined.sync(master)

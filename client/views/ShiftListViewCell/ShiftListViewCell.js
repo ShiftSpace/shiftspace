@@ -35,14 +35,14 @@ var ShiftListViewCell = new Class({
   check: function(restore)
   {
     var el = this.lockedElement();
-    el.getElement('input[type=checkbox]').setProperty('checked', true);
+    el.getElement('input.SSInputField[type=checkbox]').setProperty('checked', true);
     if(restore !== true) this.onCheck();
   },
   
   /*
     Function: onCheck
       *private*
-      Call's setState on the owning <SSListView>. Posts an onShiftSelect
+      Call's setState on the owning <SSListView>. Posts an onShiftCheck
       notification.
 
     See Also:
@@ -53,7 +53,7 @@ var ShiftListViewCell = new Class({
     var idx = this.index(), data = this.data();
     this.delegate().setState(data._id, 'checked', this.check.bind(this, [true]));
     this.delegate().onCheck({index: idx, data: data});
-    SSPostNotification('onShiftSelect', {listView: this.delegate(), index: idx, data: data});
+    SSPostNotification('onShiftCheck', {listView: this.delegate(), index: idx, data: data});
   },
   
   /*
@@ -68,14 +68,14 @@ var ShiftListViewCell = new Class({
   uncheck: function(restore)
   {
     var el = this.lockedElement(), index = this.index(), data = this.data();
-    el.getElement('input[type=checkbox]').setProperty('checked', false);
+    el.getElement('input.SSInputField[type=checkbox]').setProperty('checked', false);
     if(restore !== true) this.onUncheck({index: index, data: data});
   },
   
   /*
     function: onUncheck
       *private*
-      Call's remoteState on the owning <SSListView>. Posts an onShiftDeselect
+      Call's remoteState on the owning <SSListView>. Posts an onShiftUncheck
       notification.
       
     See Also:
@@ -86,7 +86,7 @@ var ShiftListViewCell = new Class({
     var idx = this.index(), data = this.data();
     if(data) this.delegate().removeState(data._id, 'checked');
     this.delegate().onUncheck({index: idx, data: data});
-    SSPostNotification('onShiftDeselect', {listView: this.delegate(), index:idx});
+    SSPostNotification('onShiftUncheck', {listView: this.delegate(), index:idx});
   },
   
   
@@ -94,7 +94,7 @@ var ShiftListViewCell = new Class({
   {
     var clone = this.parent();
 
-    clone.getElement('input[type=checkbox]').addEvent('click', function(evt) {
+    clone.getElement('input.SSInputField[type=checkbox]').addEvent('click', function(evt) {
       evt = new Event(evt);
       var target = $(evt.target);
       var li = (target.get('tag') == 'li') ? target : target.getParent('li');
@@ -179,7 +179,7 @@ var ShiftListViewCell = new Class({
   setSummary: function(summary)
   {
     var el = this.lockedElement();
-    el.getElement('.summary').set('text', summary);
+    el.getElement('.summary').set('html', summary);
   },
 
 

@@ -242,7 +242,13 @@ class SandalphonCompiler:
             else:
                 hasCustomViews = False
         # validate it
-        ElementTree.fromstring(interfaceFile)
+        try:
+            ElementTree.fromstring(interfaceFile)
+        except Exception, err:
+            fh = open("tmp/error.html", "w")
+            fh.write(interfaceFile)
+            fh.close()
+            raise err
 
         # load in the other css files (dependencies, global, etc.)
         cssFiles.update(self.cssForUiClasses(interfaceFile))

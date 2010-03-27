@@ -75,12 +75,12 @@ div.SSNoteShiftCloseButton:active
 body#SSNoteShiftFrameBody
 {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0px;
+  left: 0px;
   overflow: hidden;
   bottom: 0px;
   right: 0px;
-  margin: 0;
+  margin: 0px;
 }
 
 .SSNoteShiftTextArea
@@ -90,12 +90,12 @@ body#SSNoteShiftFrameBody
   background : transparent;
   position: absolute;
   border : none;
-  padding : 0 4px 4px 4px;
+  padding : 0px 4px 4px 4px;
 
   left: 4px;
   right: 4px;
-  top: 0;
-  bottom: 0;
+  top: 0px;
+  bottom: 0px;
   
   width: 100%;
   height: 100%;
@@ -111,12 +111,12 @@ body#SSNoteShiftFrameBody
   background : transparent;
   position: absolute;
   border : none;
-  padding : 0 4px 4px 4px;
+  padding : 0px 4px 4px 4px;
 
   left: 4px;
   right: 4px;
-  top: 0;
-  bottom: 0;
+  top: 0px;
+  bottom: 0px;
   
   /* width: 100%; */
   height: 100%;
@@ -127,18 +127,21 @@ body#SSNoteShiftFrameBody
 
 /* Styles for the bottom of the Note Shift ------------------ */
 
-.SSPinWidget{
-	margin-left: 10px;
+.SSPinWidget
+{
+   margin-left: 10px;
 }
 
-.SSNoteShiftButtonDiv{
-	text-align: right;
-	padding: 0 8px 0px 25px;
-	float: right;
+.SSNoteShiftButtonDiv
+{
+   text-align: right;
+   padding: 0px 8px 0px 25px;
+   float: right;
 }
 
-.SSNoteShiftBottom {
-	padding-bottom: 20px;
+.SSNoteShiftBottom
+{
+   padding-bottom: 20px;
 }
 
 .SSNoteShiftBottom input[type="button"]
@@ -155,13 +158,15 @@ body#SSNoteShiftFrameBody
   text-decoration: none;
 }
 
-.SSNoteShiftBottom input[type="button"]:hover{
+.SSNoteShiftBottom input[type="button"]:hover
+{
   color: #706357;
   border: 1px solid #776929;
   text-decoration: none;
 }
 
-.SSNoteShiftBottom input[type="button"]:active {
+.SSNoteShiftBottom input[type="button"]:active
+{
   border: 1px solid #776929;
   text-decoration: none;
 }

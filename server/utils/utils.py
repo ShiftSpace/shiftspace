@@ -2,6 +2,12 @@ import os
 import sys
 import time
 import datetime
+
+try:
+    from lxml.html.clean import Cleaner
+except:
+    pass
+
 try:
     # Python 2.5+
     from hashlib import md5
@@ -109,3 +115,38 @@ def pretty_date(t=False):
     if day_diff < 365:
         return str(day_diff/30) + " months ago"
     return str(day_diff/365) + " years ago"
+
+
+# ------------------------------------------------------------------------------
+# Cleaning Utilities
+
+cleaner = None
+summary_cleaner = None
+try:
+    cleaner = Cleaner(style=True,
+                      embedded=False,
+                      safe_attrs_only=True,
+                      remove_unknown_tags=False,
+                      allow_tags=['a', 'abbr', 'acronym', 'em', 'i', 'blockquote'
+                                  'cite', 'code', 'del', 'q', 'strike', 'strong'])
+    summary_cleaner = Cleaner(style=True,
+                              embedded=False,
+                              safe_attrs_only=True,
+                              remove_tags=['a'],
+                              allow_tags=[])
+except Exception, err:
+    print err
+    pass
+    
+
+def sanitize(d, key="summary"):
+    """
+    HTML sanitize a specific field in a dict. Defaults to summary.
+    """
+    if cleaner == None:
+        return d
+    if key == "summary" and d.get("summary"):
+        d[key] = summary_cleaner.clean_html(d[key])
+    elif d.get("key"):
+        d[key] = cleaner.clean_html(d[key])
+    return d

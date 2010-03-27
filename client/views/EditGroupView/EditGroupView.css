@@ -30,7 +30,7 @@
     color: #F63B02;
 }
 
-#EditGroupView form  input[type="checkbox"]
+#EditGroupView form  input.SSInputField[type="checkbox"]
 {
     position: absolute;
     right: 0;

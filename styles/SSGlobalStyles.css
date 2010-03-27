@@ -3,7 +3,7 @@
 
 /* Form Elements ============================================== */
 
-input[type=text], input[type=password]
+input[type=text].SSInputField, input.SSInputField[type=password]
 {
    background: #f7f5f2 url(/images/input.text.png);
    border: #b3ada5 solid 1px;
@@ -12,18 +12,18 @@ input[type=text], input[type=password]
 }
 
 /* These cannot be done in CSS and will have to happen in JS: */
-input[type=checkbox]
+input.SSInputField[type=checkbox]
 {
    background: url(images/checkbox.png);
    background-position: top center;
 }
 
-input[type=checkbox]:hover
+input.SSInputField[type=checkbox]:hover
 {
    background-position: center center;
 }
 
-input[type=checkbox]:checked
+input.SSInputField[type=checkbox]:checked
 {
    background-position: bottom center;
 }
@@ -210,7 +210,7 @@ input[type=checkbox]:checked
     padding-top: 4px;*/
 }
 
-ul.ShiftListView li.ShiftListViewCell input
+ul.ShiftListView li.ShiftListViewCell input.SSInputField
 {
    vertical-align:middle;
 }
@@ -327,8 +327,12 @@ ul.ShiftListView li.ShiftListViewCell:hover .date{
    vertical-align: middle;
 }
 
-.ShiftListView .ShiftListViewCell .summary{
+.ShiftListView .ShiftListViewCell .summary {
    margin-left: 10px;
+}
+
+.ShiftListView .ShiftListViewCell .summary p {
+   display: inline;
 }
 
 ul.ShiftListView li.ShiftListViewCell .domain a
@@ -349,7 +353,14 @@ ul.ShiftListView li.ShiftListViewCell .domain
    float: left;
 }
 
-.ShiftListView .ShiftListViewCell .gravatar
+.gravatarContainer > *
+{
+   float: left;
+}
+
+.ShiftListView .ShiftListViewCell .gravatar,
+#SSCommentShift .gravatar,
+#SSCommentsListView .gravatar
 {
    position: relative;
    width: 16px;
@@ -358,7 +369,9 @@ ul.ShiftListView li.ShiftListViewCell .domain
    -webkit-border-bottom-left-radius: 4px;
 }
 
-.ShiftListView .ShiftListViewCell canvas.gravatar:hover, .ShiftListView .ShiftListViewCell img.gravatar:hover
+.ShiftListView .ShiftListViewCell canvas.gravatar:hover,
+.ShiftListView .ShiftListViewCell img.gravatar:hover,
+
 {
    top: -8px;
    margin-left: -8px;
@@ -368,7 +381,10 @@ ul.ShiftListView li.ShiftListViewCell .domain
    -webkit-border-radius: 4px;
 }
 
-.ShiftListView .ShiftListViewCell div.userName
+.ShiftListView .ShiftListViewCell div.userName,
+#SSCommentShift .userName,
+#SSCommentsListView .userName
+
 {
    color: #4B423A;
    background-color: #dedad6;
@@ -403,7 +419,9 @@ ul.ShiftListView li.ShiftListViewCell .domain
    font-weight: bold;
 }
 
-.ShiftListView .ShiftListViewCell div.date
+.ShiftListView .ShiftListViewCell div.date,
+#SSCommentShift .user .createdStr,
+#SSCommentsListView .createdStr
 {
    margin-left: 6px;
    color: #B3ADA5;
@@ -574,7 +592,7 @@ li.GroupListViewCell .settings
   margin-left: 4px;
 }
 
-.leftSideBar input:checked + label
+.leftSideBar input.SSInputField:checked + label
 {
   font-weight:bold;
 }

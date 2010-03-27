@@ -180,12 +180,7 @@ var NotesShift = new Class({
       size: size,
       noteText: text,
       summary: this.getTitle(),
-      pinRef: this.getEncodablePinRef(),
-      filters:
-      {
-        noteText: 'html',
-        summary: 'html'
-      }
+      pinRef: this.getEncodablePinRef()
     };
   },
 
@@ -271,6 +266,12 @@ var NotesShift = new Class({
   {
     this.parent();
     this.showEditInterface();
+  },
+
+  leaveEdit: function()
+  {
+    this.parent();
+    this.show();
   },
 
   hide: function()

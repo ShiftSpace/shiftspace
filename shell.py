@@ -9,7 +9,7 @@ from server.models.favorite import Favorite
 from server.models.comment import Comment
 from server.models.follow import Follow
 from server.models.message import Message
-from server.couchdb.lucene_design import LuceneDefinition
+from server.lucene.lucene_design import LuceneDefinition
 
 def reload_models():
     import server
@@ -21,7 +21,7 @@ def reload_models():
               server.models.favorite, 
               server.models.comment,
               server.models.message,
-              server.couchdb.lucene_design]:
+              server.lucene.lucene_design]:
         reload(m)
 
 db = core.connect()

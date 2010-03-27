@@ -49,7 +49,7 @@ var SSInitShift = function(space, options)
         SSLog("There was an error creating the shift", SSLogError);
       }
     );
-}.asPromise();
+}.future();
 
 /*
   Function: SSShowNewShift
@@ -65,7 +65,7 @@ var SSShowNewShift = function(space, shift)
   SSEditShift(space, id);
   SSFocusShift(space, id);
   SSPostNotification("onNewShiftShow", id);
-}.asPromise();
+}.future();
 
 /*
 Function: SSFocusShift
@@ -98,7 +98,7 @@ var SSFocusShift = function(space, shiftId)
   space.onShiftFocus(shiftId);
 
   SSScrollToShift(space, shiftId);
-}.asPromise();
+}.future();
 
 /*
 Function: SSScrollToShift
@@ -157,7 +157,7 @@ var SSBlurShift = function(space, shiftId)
 {
   space.blurShift(shiftId);
   space.onShiftBlur(shiftId);
-}.asPromise();
+}.future();
 
 /*
 Function: SSDeleteShift
@@ -181,7 +181,7 @@ var SSDeleteShift = function(id)
     SSPostNotification('onShiftDelete', id);
   });
   return p;
-}.asPromise();
+}.future();
 
 /*
 Function: SSEditShift
@@ -194,6 +194,7 @@ Parameters:
 var SSEditShift = function(space, shiftId)
 {
   var shift = SSGetShift(shiftId);
+  SSSetShiftBeingEdited(shiftId);
   if(SSUserCanEditShift(shiftId) || SSIsNewShift(shiftId))
   {
     var content = shift.content;
@@ -210,17 +211,34 @@ var SSEditShift = function(space, shiftId)
   {
     window.alert("You do not have permission to edit this shift.");
   }
-}.asPromise();
+}.future();
 
 
-var SSLeaveEditShift = function(space, shiftId)
+function SSLeaveEditShift(space, shiftId)
 {
   var shift = SSGetShift(shiftId);
-  if(!Promise.isPromise(shift) && space.hasShift(shiftId))
+  if(space &&
+     !Promise.isPromise(space),
+     space.hasShift(shiftId) &&
+     space.shiftIsVisible(shiftId))
   {
     SSShowShift(space, shiftId);
   }
-}.asPromise();
+  SSPostNotification('onShiftLeaveEdit', shiftId);
+  SSSetShiftBeingEdited(null);
+}
+
+
+var __shiftBeingEditing = null;
+function SSSetShiftBeingEdited(shiftId)
+{
+  __shiftBeingEditing = shiftId;
+}
+
+function SSShiftBeingEdited()
+{
+  return __shiftBeingEditing;
+}
 
 /*
 Function: SSSaveNewShift
@@ -268,26 +286,10 @@ function SSSaveNewShift(shift)
 
         SSSetFocusedShiftId(newId);
         
-        if(ShiftSpace.Console) ShiftSpace.Console.show();
-
         space.onShiftSave(newId);
 
-        // delay sending notifications if the console is not
-        // visible this means the console is being opened for the
-        // first time
-        if(!ShiftSpace.Console.isLoaded())
-        {
-          ShiftSpace.Console.addEvent("load", function() {
-            SSLog("Console loaded! sending notifications", SSLogForce);
-            SSPostNotification('onNewShiftSave', newId);
-            SSPostNotification('onShiftSave', newId);
-          });
-        }
-        else
-        {
-          SSPostNotification('onNewShiftSave', newId);
-          SSPostNotification('onShiftSave', newId);
-        }
+        SSPostNotification('onNewShiftSave', newId);
+        SSPostNotification('onShiftSave', newId);
       },
       function(err) {
       });
@@ -401,7 +403,7 @@ var SSShowShift = function(space, shiftId)
     SSLog(err, SSLogError);
     return false;
   }
-}.asPromise();
+}.future();
 
 /*
 Function: SSHideShift
@@ -415,7 +417,7 @@ var SSHideShift = function(space, shiftId)
 {
   space.hideShift(shiftId);
   space.onShiftHide(shiftId);
-}.asPromise();
+}.future();
 
 /*
   Function: SSAllShifts
@@ -523,5 +525,17 @@ function SSPostComment(id, text)
     action: "comment",
     data: {text:text},
     json: true
+  });
+}
+
+function SSAllShiftsForSpace(spaceName, href)
+{
+  return SSApp.get({
+    resource: "shifts",
+    data: {
+      byHref: href,
+      bySpace: spaceName,
+      all: true
+    }
   });
 }

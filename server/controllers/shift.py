@@ -47,7 +47,7 @@ class ShiftController(ResourceController):
 
     @db_session
     @jsonencode
-    def shifts(self, byHref=None, byDomain=None, byFollowing=False, byGroups=False, start=0, limit=25, count=False, filter=False, query=None):
+    def shifts(self, byHref=None, byDomain=None, byFollowing=False, byGroups=False, bySpace=None, start=0, limit=25, count=False, filter=False, query=None, all=False):
         from server.models.ssuser import SSUser
         loggedInUser = helper.getLoggedInUser()
         if loggedInUser:
@@ -61,10 +61,12 @@ class ShiftController(ResourceController):
                                  byDomain=byDomain,
                                  byFollowing=byFollowing,
                                  byGroups=byGroups,
+                                 bySpace=bySpace,
                                  start=start,
                                  limit=limit,
                                  filter=filter,
-                                 query=query)
+                                 query=query,
+                                 all=False)
         if count:
           return data(len(allShifts))
         else:
@@ -302,4 +304,4 @@ class ShiftController(ResourceController):
             else:
                 return error("You are not getting notification from this comment thread.", NotBeingNotifiedError)
         else:
-            return error("Operation not permitted. You don't have permission to be notified of events on this stream.", PermissionError)
+            return error("Operation not permitted. You don't have permission to be notified of events on this stream.", PermissionError)        

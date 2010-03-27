@@ -1,0 +1,21 @@
+#unsafe-frame
+{
+   border: none;
+   width: 100%;
+   height: 100%;
+   position: absolute;
+   top: 0px;
+   left: 0px;
+}
+
+#mask
+{
+   border: none;
+   width: 100%;
+   height: 100%;
+   position: absolute;
+   top: 0px;
+   left: 0px;
+   background-color: black;
+   opacity: 0.5;
+}

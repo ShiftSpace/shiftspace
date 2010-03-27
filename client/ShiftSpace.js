@@ -115,7 +115,7 @@ var ShiftSpace = new (function() {
         ShiftSpace.SSConsoleWindow = ShiftSpaceNameTable.SSConsoleWindow = SSControllerForNode("SSConsoleWindow");
 
         SSLog("\tShiftSpace UI initialized", SSLogSystem);
-      }.asPromise())(uip);
+      }.future())(uip);
 
       ShiftSpace.Sandalphon = Sandalphon;
       
@@ -143,8 +143,6 @@ var ShiftSpace = new (function() {
 
       SSLog("\tSynchronizing with server", SSLogSystem);
       SSSync(uip);
-
-      if(typeof ShiftSpaceSandBoxMode == 'undefined') SSCheckForUpdates();
     };
     
     /*
@@ -182,6 +180,15 @@ var ShiftSpace = new (function() {
      */
     var SSWaitForUI = function(userData, uip)
     {
+      SSLog("Checking for updates", SSLogSystem);
+      if(typeof ShiftSpaceSandBoxMode == 'undefined')
+      {
+        SSCheckForUpdates();
+      }
+      else
+      {
+        ShiftSpace.Console.setUpToDate(true);
+      }
       // wait for console and notifier before sending onSync
       if(userData)
       {
@@ -195,11 +202,11 @@ var ShiftSpace = new (function() {
       }
       var p = SSUpdateInstalledSpaces();
       SSCheckForDebugSpaces(p);
+      SSCheckForAutolaunchSpaces(p);
       if (typeof ShiftSpaceSandBoxMode != 'undefined') SSCheckHash();
       SSCheckForCurrentShift();
       SSPostNotification("onSync");
-      //ShiftSpace.Notifier.finish();
-    }.asPromise();
+    }.future();
 
 
     var SSCheckForDebugSpaces = function(controlp)
@@ -214,7 +221,29 @@ var ShiftSpace = new (function() {
           SSLoadSpace(space.name, true);
         }
       });
-    }.asPromise();
+    }.future();
+
+
+    var SSCheckForAutolaunchSpaces = function(controlp)
+    {
+      var installed = SSInstalledSpaces();
+      $H(installed).each(function(space) {
+        var autolaunch = SSSpaceShouldAutolaunch(space.name);
+        if(autolaunch)
+        {
+          SSLog("Load", space.name, "autolaunch flag set", SSLogForce);
+          var spacep = SSLoadSpace(space.name);
+              shiftsp = SSAllShiftsForSpace(space.name, window.location.href);
+          SSShowAllShiftsForSpace(spacep, shiftsp);
+        }
+      });
+    }.future();
+
+
+    var SSShowAllShiftsForSpace = function(space, shifts)
+    {
+      shifts.map($acc("_id")).each(SSShowShift.partial(null, space));
+    }.future();
 
 
     function SSCheckForCurrentShift()
@@ -324,14 +353,13 @@ var ShiftSpace = new (function() {
           var v = JSON.decode(responseText);
           if (v.data != SSInfo().build.rev)
           {
-            if(confirm('There is a new build of ShiftSpace available. Would you like to update now?'))
-            {
-              window.location = String.urlJoin(SSInfo().mediaPath, "builds", SSInfo().build.name);
-            }
+            SSLog("Build is not up-to-date", SSLogSystem);
+            ShiftSpace.Console.setUpToDate(false);
           }
           else
           {
-            SSLog("Build is up to date", SSLogForce);
+            SSLog("Build is up-to-date", SSLogSystem);
+            ShiftSpace.Console.setUpToDate(true);
           }
         }
       }).send();
@@ -356,7 +384,15 @@ var ShiftSpace = new (function() {
        'SSSpaceIsInDebugMode',
        'SSInfo',
        'SSCheckForUpdates',
-       '__controllers'
+       '__controllers',
+       '$memberof',
+       '$msg',
+       '$comp',
+       '_',
+       '__sys__',
+       'SSShiftBeingEdited',
+       'SSAllShiftsForSpace',
+       'SSSpaceShouldAutolaunch'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);
        });

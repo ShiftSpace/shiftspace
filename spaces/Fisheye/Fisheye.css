@@ -10,6 +10,12 @@
   display: block;
 }
 
+.FisheyeSpacer
+{
+  padding : 10px 10px 10px 10px;
+  display: block;
+}
+
 .FisheyeSubBox
 {
   font: 12px verdana, sans-serif;
@@ -56,6 +62,17 @@
   font-weight: bold;
   display: inline;
   padding: 5px 10px 5px 0px;
+  cursor:pointer;cursor:hand
+}
+
+.FisheyeActiveText
+{
+  background-color: #F5FB9B;
+  color: #00F;
+  font-weight: bold;
+  display: inline;
+  padding: 5px 10px 5px 0px;
+  cursor:pointer;cursor:hand
 }
 
 .FisheyeInlineActiveText
@@ -67,15 +84,23 @@
 }
 
 
+.FisheyeEditableText, .FisheyeNoteShiftFrame, .FisheyeNoteShiftTextAreaSimple
+{
+  background-color: #FFBBBB;
+  border : 2px inset #000000;
+  resize: none;
+}
+
+.FisheyeEditableText
+{
+  overflow: hidden;
+}
+
+
 .FisheyeNoteShiftFrame
 {
-  //background : transparent;
-  background-color: #FFBBBB;
-  //border : none;
-  border : 'medium double #C4C87C';
-  width: 270;
-  height: 110;
-
+  //width: 270;
+  //height: 110;
   overflow: hidden;
   resize: none;
 }
@@ -108,16 +133,25 @@ body#FisheyeNoteShiftFrameBody
   position: absolute;
   border : none;
   padding : 0 4px 4px 4px;
-  width: 250;
-  height: 100;
+  //width: 270;
+  //height: 110;
 
   left: 4px;
   right: 4px;
   top: 0;
   bottom: 0;
 
-  overflow: hidden;
+  overflow: auto;
   resize: none;
+}
+
+.FisheyeNoteShiftTextAreaSimple
+{
+  font: 12px verdana, sans-serif;
+ 
+  width: inherit;
+
+  overflow: auto;
 }
 
 /* Styles for the bottom of the Note Shift ------------------ */

@@ -16,11 +16,11 @@
             <div class="col">
                 <h3>Notifications &amp; Publishing</h3>
                 <div>
-                    <input type="checkbox"></input>
+                    <input class="SSInputField" type="checkbox"></input>
                     <label>Email me my messages [ <a>edit notifications</a> ] </label>
                 </div>
                 <div>
-                    <input type="checkbox"></input>
+                    <input class="SSInputField" type="checkbox"></input>
                     <label>Create a secret proxy link to my private shifts</label>
                 </div>
             </div>
@@ -28,10 +28,10 @@
                 <h3>Server Settings</h3>
                 <div>
                     <label>Server Address:</label>
-                    <input type="text"></input>
+                    <input class="SSInputField" type="text"></input>
                 </div>
                 <div>
-                    <input type="checkbox"></input>
+                    <input class="SSInputField" type="checkbox"></input>
                     <label>Allow my content to be distributed between servers</label>
                 </div>
             </div>
@@ -49,26 +49,26 @@
             <div class="col">
                 <h3>Launch keys</h3>
                 <div>
-                    <input type="checkbox"></input>
+                    <input class="SSInputField" type="checkbox"></input>
                     <label>
-                        Use the <input type="text" value="&lt;Shift&gt;"/> key to launch the notifier
+                        Use the <input class="SSInputField" type="text" value="&lt;Shift&gt;"/> key to launch the notifier
                     </label>
                 </div>
                 <div>
-                    <input type="checkbox" name=""></input>
+                    <input class="SSInputField" type="checkbox" name=""></input>
                     <label>
-                        Use the <input type="text" value="&lt;Shift&gt;"/> + <input type="text" value="&lt;Space Bar&gt;"/> keys to launch the console.
+                        Use the <input class="SSInputField" type="text" value="&lt;Shift&gt;"/> + <input class="SSInputField" type="text" value="&lt;Space Bar&gt;"/> keys to launch the console.
                     </label>
                 </div> 
             </div>
             <div class="col">
                 <h3>"Use a Space" menu</h3>
                 <div>
-                    <input type="radio" name="SpaceMenuPref" value="auto"></input>
+                    <input class="SSInputField" type="radio" name="SpaceMenuPref" value="auto"></input>
                     <label>Last used space appears closest to the mouse (at the bottom)</label>
                 </div>
                 <div>
-                    <input type="radio" name="SpaceMenuPref" value="manual"></input>
+                    <input class="SSInputField" type="radio" name="SpaceMenuPref" value="manual"></input>
                     <label>Use drag &amp; drop to re-arrange the button manually</label>
                 </div>
             </div>
@@ -76,9 +76,9 @@
 
         <div id="SSInstalledSpacesTabPane" class="SSTabPane">
             <label>Add A Space:</label>
-            <input id="SSInstallSpaceField" name="SSInstallSpaceField" type="text" value="Name of Space" outlet="SettingsTabView"></input>
-            <input id="SSInstallSpace" name="SSInstallSpace" type="button" value="Install" outlet="SettingsTabView"></input>
-            <input id="clearInstalledButton" type="button" name="clearInstalledButton" value="Reset Spaces" outlet="SettingsTabView"></input>
+            <input class="SSInputField" id="SSInstallSpaceField" name="SSInstallSpaceField" type="text" value="Name of Space" outlet="SettingsTabView"></input>
+            <input class="SSInputField" id="SSInstallSpace" name="SSInstallSpace" type="button" value="Install" outlet="SettingsTabView"></input>
+            <input class="SSInputField" id="clearInstalledButton" type="button" name="clearInstalledButton" value="Reset Spaces" outlet="SettingsTabView"></input>
             <!-- Installed Spaces List -->
             <ul id="SSInstalledSpaces" 
                 class="SSListView" 
@@ -104,7 +104,7 @@
                     <img></img>
                     <span class="name"></span>
                     <span class="autolaunch"></span>
-                    <input class="uninstall" type="button" value="Uninstall"></input>
+                    <input class="SSInputField uninstall" type="button" value="Uninstall"></input>
                     <button class="spaceSettings">Settings</button>
                 </li>
             </ul>
@@ -114,9 +114,9 @@
         <div id="AccountTab" class="SSTabPane">
             <form id="AccountDetails" outlet="SettingsTabView">
                 <label>Url:</label>
-                <input class="url" name="url" type="text"></input>
+                <input class="SSInputField url" name="url" type="text"></input>
                 <label>Full Name:</label>
-                <input class="fullName" name="fullName" type="text"></input>
+                <input class="SSInputField fullName" name="fullName" type="text"></input>
                 <label>Bio:</label>
                 <textarea class="bio" name="bio"></textarea>
                 <button id="UpdateAccountDetails" outlet="SettingsTabView">Update</button>
