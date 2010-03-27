@@ -74,16 +74,10 @@
    color:#4B423A;
    font-size:15px;
 }
-.user{
+#SSCommentPane .user{
    margin-bottom:6px;
    margin-left:25px;
    margin-top:5px;
-}
-.gravatarContainer{
-   float:left;
-}
-.userName{
- float:left;  
 }
 .createdStr{
    color:#B3ADA5;

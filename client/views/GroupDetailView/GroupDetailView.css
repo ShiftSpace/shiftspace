@@ -3,16 +3,34 @@
   color: #74665A;  
 }
 
-#GroupDetailView > div
-{
-  padding: 4px;
-}  
-
-
 #GroupDetailView > div:first-child
 {
   background-color: #E3DFDB;
 
+}
+
+#GroupDetailView h2
+{
+  font-size: 15px;
+  margin: 0 0 10px;
+}
+
+#GroupDetailView .tagLine,
+#GroupDetailView .url
+{
+  font-size: 12px;
+  line-height: 1.4em;
+  padding-left: 25px;
+}
+
+#GroupDetailView .tagLine
+{
+  background:url(/images/Pane/info.png) no-repeat;
+}
+
+#GroupDetailView .url
+{
+  background:url(/images/Pane/link.png) no-repeat;
 }
 
 #GroupDetailView .longName
@@ -25,17 +43,22 @@
   color: #74665A;  
 }
 
-#GroupDetailView button
+#GroupDetailView button.join,
+#GroupDetailView button.invite,
 {
-  -moz-border-radius:10px 10px 10px 10px;
-  border:2px solid #B3ADA5;
-  color:#74665A;
+  margin-right: 54px;
+}
+
+#GroupDetailView button.settings
+{
+  float: right
 }
 
 #GroupDetailView .buttonsUI
 {
   height: 24px;
   line-height: 24px;  
+  padding: 5px 0;
 }
 
 .DetailGroupShiftCount,

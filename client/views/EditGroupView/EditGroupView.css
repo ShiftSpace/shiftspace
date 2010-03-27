@@ -10,12 +10,6 @@
 
 }
 
-#EditGroupView form
-{
-    background: #E3DFDB url("http://localhost:8080/images/Console/content-shadow.png");
-    border:1px solid #CFCAC4;
-}
-
 #EditGroupView form label
 {
     display: block;

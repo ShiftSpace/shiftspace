@@ -8,7 +8,7 @@
     <h2 id="CreateTitle" outlet="EditGroupView">Start A New Group</h2>
     <h2 id="EditTitle" outlet="EditGroupView">Update Group Settings</h2>
 
-    <form id="GroupForm" outlet="EditGroupView">
+    <form id="GroupForm" outlet="EditGroupView" class="SSShadedBox">
         <div>
             <label><strong>Group Name</strong><span>*</span>:</label>
             <input class="SSInputField longName" type="text" name="longName"></input>
@@ -90,7 +90,7 @@
 
     <div class="panelButtons">
         <button id="InviteUsers" class="SSButton3" outlet="EditGroupView">Invite Users</button>
-        <button id="SaveGroup" class="SSButton2" outlet="EditGroupView">Save</button>
+        <button id="SaveGroup" class="SSButton2" outlet="EditGroupView">Update</button>
         <button id="CreateGroup" class="SSButton2" outlet="EditGroupView">Create Group</button>
         <button id="CancelAction" class="SSButton5" outlet="EditGroupView"><span>Cancel</span></button>
     </div>
