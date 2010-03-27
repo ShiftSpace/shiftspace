@@ -38,8 +38,10 @@ var SSInstalledSpaceCell = new Class({
   },
   
   
-  setAutolaunch: function(autolaunch)
+  setTagline: function(tagline)
   {
+    var el = this.lockedElement();
+    el.getElement(".tagline").setProperty("text", tagline || "");
   },
   
   

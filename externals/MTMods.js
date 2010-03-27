@@ -468,7 +468,7 @@ function SSTemplate(el, props, htmls)
     {
       attr = "src";
     }
-    if(htmls.contains(key))
+    if(htmls && htmls.contains(key))
     {
       attr = "html";
     }
