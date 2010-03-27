@@ -1,0 +1,22 @@
+{
+  "class": "Space",
+  "methods": [
+    "setIsVisible",
+    "showInterface",
+    "hideInterface",
+    "onShiftSave",
+    "swap",
+    "deleteShift",
+    "onShiftDelete",
+    "editShift",
+    "onShiftEdit",
+    "blurShift",
+    "onShiftBlur",
+    "orderFront",
+    "createShift",
+    "attributes",
+    "getShift",
+    "focusShift",
+    "onShiftFocus"
+  ]
+}

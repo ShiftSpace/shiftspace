@@ -301,6 +301,21 @@ var ShiftSpace = new (function() {
           ShiftSpaceNameTable.MainTabView.selectTabByName(ops["tab"]);
         }
       }
+
+      if(ops["window"])
+      {
+        if(!ShiftSpace.SSConsoleWindow.isLoaded())
+        {
+          ShiftSpace.SSConsoleWindow.finish();
+          ShiftSpace.SSConsoleWindow.addEvent("load", function() {
+            ShiftSpaceNameTable[ops["window"]]['open']();
+          });
+        }
+        else
+        {
+          ShiftSpaceNameTable[ops["window"]]['open']();
+        }
+      }
     }
     
     /*

@@ -112,6 +112,7 @@ def update():
     """
     Update the source file and test file indexes.
     """
+    installDefaultSpaces()
     updatedb()
 
 
@@ -271,6 +272,7 @@ def resetdb():
     must be set for this to work.
     """
     deletedbs()
+    installDefaultSpaces()
     setup.init()
 
 
@@ -381,6 +383,13 @@ def installSpace(space):
     setup.installSpace(space)
 
 
+def installDefaultSpaces():
+    """
+    Installs the default spaces.
+    """
+    [installSpace(s) for s in ['Notes', 'Highlights', 'SourceShift', 'ImageSwap']]
+
+
 def shell():
     """
     Launch the shell with the models loaded. Useful for testing.
@@ -416,6 +425,7 @@ def main(argv):
     elif action == "update":
         update()
     elif action == "initdb":
+        installDefaultSpaces()
         setup.init()
     elif action == "build":
         build(argv[1:])
