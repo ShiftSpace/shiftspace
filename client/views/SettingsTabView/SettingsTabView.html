@@ -75,10 +75,13 @@
         </div>
 
         <div id="SSInstalledSpacesTabPane" class="SSTabPane">
-            <label>Add A Space:</label>
-            <input class="SSInputField" id="SSInstallSpaceField" name="SSInstallSpaceField" type="text" value="Name of Space" outlet="SettingsTabView"></input>
-            <input class="SSInputField" id="SSInstallSpace" name="SSInstallSpace" type="button" value="Install" outlet="SettingsTabView"></input>
-            <input class="SSInputField" id="clearInstalledButton" type="button" name="clearInstalledButton" value="Reset Spaces" outlet="SettingsTabView"></input>
+            <div id="SSInstalledSpacesHeader">
+                <h2>Installed Spaces</h2>
+                <span>
+                    <span>Find more in the <a>Space Bazaar</a> or search for it</span>
+                    <input class="SSInputField" id="SSInstallSpaceField" name="SSInstallSpaceField" type="text" value="Name of Space" outlet="SettingsTabView"></input>
+                </span>
+            </div>
             <!-- Installed Spaces List -->
             <ul id="SSInstalledSpaces" 
                 class="SSListView" 
@@ -90,22 +93,23 @@
                       properties: ['name', 'icon', 'autolaunch'],
                       actions: [
                         {
-                          selector: '.uninstall',
-                          target: 'SSInstalledSpaces',
-                          method: 'removeObject'
-                        },
-                        {
                           selector: '.spaceSettings',
                           target: 'SettingsTabView',
                           method: 'showSpaceSettings'
                         }
                       ]
                     }">
-                    <img></img>
-                    <span class="name"></span>
-                    <span class="autolaunch"></span>
-                    <input class="SSInputField uninstall" type="button" value="Uninstall"></input>
-                    <button class="spaceSettings">Settings</button>
+                    <div>
+                        <img></img>
+                    </div>
+                    <div class="info">
+                        <h2 class="name"></h2>
+                        <span class="tagline">A tagline</span>
+                    </div>
+                    <div class="controls">
+                        <div>Settings</div>
+                        <button class="spaceSettings"></button>
+                    </div>
                 </li>
             </ul>
             <!-- End Installed Spaces List -->

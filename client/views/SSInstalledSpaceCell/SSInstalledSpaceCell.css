@@ -1,18 +1,88 @@
 li.SSInstalledSpaceCell
 {
-  width: 100%;
+   width: 100%;
+}
+
+li.SSInstalledSpaceCell:hover
+{
+   background-color: white;
 }
 
 li.SSInstalledSpaceCell img
 {
-  width: 32px;
-  height: 32px;
+   margin-top: 14px;
+   width: 18px;
+   height: 18px;
 }
 
-li.SSInstalledSpaceCell span.name
+li.SSInstalledSpaceCell h2
 {
+   padding: 0px;
+   margin: 0px;
 }
 
-li.SSInstalledSpaceCell input.uninstall
+li.SSInstalledSpaceCell
 {
+   height: 50px;
+}
+
+li.SSInstalledSpaceCell > div
+{
+   float: left;
+   margin-left: 10px;
+}
+
+li.SSInstalledSpaceCell > div:last-child
+{
+   float: right;
+}
+
+li.SSInstalledSpaceCell .spaceSettings
+{
+   margin-top: 19px;
+   border: 0px;
+   background-image: url(/images/Console/setting-red.png);
+   background-repeat: no-repeat;
+   width: 11px;
+   height: 11px;
+}
+
+li.SSInstalledSpaceCell .info
+{
+   margin-top: 6px;
+   width: 200px;
+}
+
+li.SSInstalledSpaceCell .controls
+{
+   display: none;
+   color: #F63B02;
+   height: 100%;
+   width: 75px;
+}
+
+li.SSInstalledSpaceCell:hover .info
+{
+   display: block;
+}
+
+li.SSInstalledSpaceCell .controls > *
+{
+   float: left;
+}
+
+li.SSInstalledSpaceCell .controls > div
+{
+   margin-right: 4px;
+   line-height: 50px;
+}
+
+li.SSInstalledSpaceCell:hover .controls
+{
+   display: block;
+}
+
+li.SSInstalledSpaceCell .name, li.SSInstalledSpaceCell .tagline
+{
+   width: 100%;
 }

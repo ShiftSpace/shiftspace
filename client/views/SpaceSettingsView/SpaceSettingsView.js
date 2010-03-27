@@ -101,6 +101,11 @@ var SpaceSettingsView = new Class({
         ShiftSpace.User.setPreference(this.currentSpace().name+".autolaunch", false);
       }
     }.bind(this));
+
+    this.UninstallSpace.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      SSUninstallSpace(this.currentSpace().name);
+    }.bind(this));
   },
 
 
@@ -109,6 +114,5 @@ var SpaceSettingsView = new Class({
     this.mapOutletsToThis();
     this.attachEvents();
   }
-  
 });
 
