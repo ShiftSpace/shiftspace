@@ -596,3 +596,11 @@ li.GroupListViewCell .settings
 {
   font-weight:bold;
 }
+
+.SSSmallGreyButton
+{
+   -moz-border-radius: 10px 10px 10px 10px;
+   -webkit-border-radius: 10px 10px 10px 10px;
+   border: 2px solid #B3ADA5;
+   color: #74665A;
+}

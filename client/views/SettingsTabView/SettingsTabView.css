@@ -1,3 +1,9 @@
+#SettingsTabView > .SSContentView
+{
+   top: 4px;
+   background:url(/images/Console/content-shadow.png);
+}
+
 #SSSetServersForm
 {
   margin-left: 10px;
@@ -30,11 +36,16 @@ ul#SSInstalledSpaces li
    -moz-box-sizing: border-box;
 }
 
+ul#SSInstalledSpaces li:last-child
+{
+   border-right: 2px solid #ccc;
+}
+
 div#SSInstalledSpacesTabPane
 {
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
-  top: 14px;
+  top: 0px;
   left: 0px;
   right: 0px;
   bottom: 0px;
@@ -54,4 +65,44 @@ div#SSInstalledSpacesTabPane
 #InterfaceTab input.SSInputField[type=text]
 {
    width: 80px;
+}
+
+#SSInstalledSpacesHeader
+{
+   background: url(/images/Console/content-shadow.png);
+   background-color: #C7C3B6;
+   padding: 2px 2px 2px 4px;
+}
+
+#SSInstalledSpacesHeader h2
+{
+   padding: 0px;
+   margin: 0px;
+   display: inline;
+}
+
+#SSInstalledSpacesHeader > span
+{
+   float: right;
+}
+
+ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+1)
+{
+   background-color: #F7F2EF;
+}
+
+ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+2)
+{
+   background-color: #f0edeb;
+}
+
+ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+3)
+{
+   background-color: #f0edeb;
+
+}
+
+ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+4)
+{
+   background-color: #F7F2EF;
 }

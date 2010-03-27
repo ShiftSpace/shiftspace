@@ -32,14 +32,8 @@ var SettingsTabView = new Class({
     this.mapOutletsToThis();
     this.initSelectLanguage();
     this.initInstalledSpacesListView();
-    this.clearInstalledButton.addEvent('click', function(evt) {
-      evt = new Event(evt);
-      SSInitDefaultSpaces(null);
-      SSUninstallAllSpaces();
-    });
     this.attachEvents();
   },
-
 
   // FIXME: After awake gets called twice - David 2/6/10
   afterAwake: function()
@@ -152,31 +146,6 @@ var SettingsTabView = new Class({
   refreshInstalledSpaces: function()
   {
     this.SSInstalledSpaces.refresh(true);
-  },
-  
-  
-  canRemove: function(sender)
-  {
-    var canRemove = false;
-    switch(sender.listView)
-    {
-      case this.SSInstalledSpaces:
-        this.uninstallSpace(sender.index);
-        canRemove = true;
-        break;
-      default:
-        SSLog('No matching list view', SSLogForce);
-        break;
-    }
-    
-    return canRemove;
-  },
-  
-  
-  uninstallSpace: function(index)
-  {
-    var spaces = SSSpacesByPosition(), spaceToRemove = spaces[index];
-    SSUninstallSpace(spaceToRemove.name);
   },
 
 
