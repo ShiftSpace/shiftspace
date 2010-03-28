@@ -3,12 +3,17 @@
 
 /* Form Elements ============================================== */
 
-input[type=text].SSInputField, input.SSInputField[type=password]
+input[type=text].SSInputField,
+input.SSInputField[type=password],
+textarea.SSTextArea
 {
    background: #f7f5f2 url(/images/input.text.png);
    border: #b3ada5 solid 1px;
    color:#464540;
    padding:2px 3px;
+   height: 21px;
+   font-size:12px;
+   line-height: 1.4em;
 }
 
 /* These cannot be done in CSS and will have to happen in JS: */
@@ -57,19 +62,19 @@ input.SSInputField[type=checkbox]:checked
    border: 0;
    color: #f63b02;
    text-decoration: underline;
-   padding:1px 5px 0 4px;
+   padding:2px 5px 1px 4px;
    font-size: 11px;
    font-weight: bold;
 }
 
 .SSButton3{
    background: none;
-   border:2px #74665A solid;
+   border:2px #cac5be solid;
    -moz-border-radius: 10px;
    -webkit-border-radius: 10px;
-   padding:1px 5px 0 4px;
+   padding:2px 5px 1px 4px;
    font-weight:bold;
-   color: #74665A;
+   color: #74665a;
 }
 
 .SSButton2{
@@ -77,19 +82,23 @@ input.SSInputField[type=checkbox]:checked
    border:2px #f63b02 solid;
    -moz-border-radius: 10px;
    -webkit-border-radius: 10px;
-   padding:1px 5px 0 4px;
+   padding:2px 5px 1px 4px;
    font-weight:bold;
    color: #f63b02;
 }
 
 .SSButton1{
    background-color: #f63b02;
-   color:fff;
+   color:#fff;
    border:2px #b52b01 solid;
    -moz-border-radius: 10px;
    -webkit-border-radius: 10px;
-   padding:1px 5px 0 4px;
+   padding:2px 5px 1px 4px;
    font-weight:bold;
+}
+
+div.panelButtons{
+    margin-top: 10px;
 }
 
 /* States ============================================= */
@@ -97,6 +106,44 @@ input.SSInputField[type=checkbox]:checked
 .SSStatus{
 	font-size: 11px;
 	color: #4B423A;
+}
+
+/* Modules ============================================= */
+
+.SSShadedBox{
+   background:url(/images/Console/content-shadow.png) #E3DFDB;
+   border:1px solid #CFCAC4;
+   padding:4px;
+}
+
+.SSAccordion
+{
+    color: #74665A;
+    background-color: #F1EDEB;
+    font-weight:lighter;
+}
+
+.SSAccordion h3{
+   padding: 2px 10px 1px;
+   margin: 0;
+   font-weight: normal;
+   font-size: 15px;
+   height: 22px;
+   line-height: 22px;
+   border-top: 1px #C8CDC4 solid;
+}
+
+.SSAccordion h3 span
+{
+    height: 18px;
+    line-height: 18px;
+    padding-left: 4px;
+    font-weight: bold;
+}
+
+.SSAccordion h3:last-child
+{
+    border-bottom: 1px #C8CDC4 solid;
 }
 
 /* More Styles ============================================= */
@@ -361,6 +408,7 @@ ul.ShiftListView li.ShiftListViewCell .domain
 .ShiftListView .ShiftListViewCell .gravatar,
 #SSCommentShift .gravatar,
 #SSCommentsListView .gravatar
+.SSActive .gravatar
 {
    position: relative;
    width: 16px;
@@ -371,7 +419,7 @@ ul.ShiftListView li.ShiftListViewCell .domain
 
 .ShiftListView .ShiftListViewCell canvas.gravatar:hover,
 .ShiftListView .ShiftListViewCell img.gravatar:hover,
-
+.SSActive img.gravatar:hover
 {
    top: -8px;
    margin-left: -8px;
@@ -383,8 +431,7 @@ ul.ShiftListView li.ShiftListViewCell .domain
 
 .ShiftListView .ShiftListViewCell div.userName,
 #SSCommentShift .userName,
-#SSCommentsListView .userName
-
+#SSCommentsListView .userName,
 {
    color: #4B423A;
    background-color: #dedad6;
@@ -404,7 +451,8 @@ ul.ShiftListView li.ShiftListViewCell .domain
    cursor:pointer;
 }
 
-.ShiftListView .ShiftListViewCell div.userName:hover
+.ShiftListView .ShiftListViewCell div.userName:hover,
+.SSActive div.userName:hover
 {
    color: white;
    background-color: #746559;
@@ -414,7 +462,8 @@ ul.ShiftListView li.ShiftListViewCell .domain
    background-repeat:no-repeat;
 }
 
-.ShiftListView .ShiftListViewCell div.userName.loggedin
+.ShiftListView .ShiftListViewCell div.userName.loggedin,
+.SSActive div.userName.loggedin
 {
    font-weight: bold;
 }

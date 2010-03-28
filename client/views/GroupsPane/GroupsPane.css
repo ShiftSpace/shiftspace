@@ -303,8 +303,8 @@ ul#InviteUsersListView input.SSInputField[type=checkbox]
    height:30px;
    border-right:1px solid #e3dfdb;
 }
-.groupItemPermission  public{
-   background:url('images/Console/publish-public.gif') no-repeat;
+.groupItemPermission public{
+   background:url(/images/Console/publish-public.gif) no-repeat;
 }
 
 .groupItemContent{

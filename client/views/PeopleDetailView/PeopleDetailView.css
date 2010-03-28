@@ -43,6 +43,8 @@
     height:23px;
     line-height:36px;
     margin-left:8px;
+    padding: 0;
+    background: none;
 }
 
 .FollowedUserBio .fullName
@@ -81,34 +83,6 @@
     padding-left:18px;
     padding-top:3px;
 }
-
-.FollowedUserStats
-{
-    color: #74665A;
-    background-color: #F1EDEB;
-    font-weight:lighter;
-}
-
-.FollowedUserStats span
-{
-    height: 18px;
-    line-height: 18px;
-    padding-left: 4px;
-    font-weight: bold;
-}
-
-.FollowedUserStats div
-{
-    height: 22px;
-    line-height: 22px;
-    border-top: 1px #C8CDC4 solid;
-}
-
-.FollowedUserStats div:last-child
-{
-    border-bottom: 1px #C8CDC4 solid;
-}
-
 
 #PeopleDetailView .FollowedUserButtons
 {
