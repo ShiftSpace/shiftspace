@@ -263,7 +263,7 @@ var SSFramedView = new Class({
   {
     var context = this.contentWindow(),
         doc = this.contentDocument();
-    
+
     // forward key up and down events to parent window
     context.addEvent('keyup', function(evt) {
       evt = new Event(evt);
@@ -291,7 +291,8 @@ var SSFramedView = new Class({
     
     var children = Sandalphon.convertToFragment(this.ui['interface'], context).getChildren();
     
-    $(doc.body).setProperty('class', this.name + 'FrameBody');
+    $(doc.body).addClass(this.name + 'FrameBody');
+    $(doc.body).addClass("SSFrame");
     $(doc.body).adopt.apply($(doc.body), children);
     
     Sandalphon.activate(context);
