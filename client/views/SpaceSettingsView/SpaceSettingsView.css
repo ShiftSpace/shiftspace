@@ -1,10 +1,26 @@
+#SpaceSettingsView
+{
+   left: 24px;
+   position: absolute;
+   right: 8px;
+   max-height: 145px;
+}
+
+#SpaceSettingsView h2
+{
+   padding: 0px;
+   margin: 0px;
+}
+
 .SpaceDetails
 {
-   
+   background-image: url(/images/Console/content-shadow.png);
+   background-color: #E3DFDB;
 }
 
 .SpaceDetails h2
 {
+   font-size: 16px;
 }
 
 .SpaceDetails h2.name
