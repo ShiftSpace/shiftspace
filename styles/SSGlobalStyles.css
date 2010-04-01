@@ -405,10 +405,7 @@ ul.ShiftListView li.ShiftListViewCell .domain
    float: left;
 }
 
-.ShiftListView .ShiftListViewCell .gravatar,
-#SSCommentShift .gravatar,
-#SSCommentsListView .gravatar
-.SSActive .gravatar
+.SSFrame .gravatar
 {
    position: relative;
    width: 16px;
@@ -417,9 +414,7 @@ ul.ShiftListView li.ShiftListViewCell .domain
    -webkit-border-bottom-left-radius: 4px;
 }
 
-.ShiftListView .ShiftListViewCell canvas.gravatar:hover,
-.ShiftListView .ShiftListViewCell img.gravatar:hover,
-.SSActive img.gravatar:hover
+.SSFrame div.user:hover img.gravatar
 {
    top: -8px;
    margin-left: -8px;
@@ -429,9 +424,7 @@ ul.ShiftListView li.ShiftListViewCell .domain
    -webkit-border-radius: 4px;
 }
 
-.ShiftListView .ShiftListViewCell div.userName,
-#SSCommentShift .userName,
-#SSCommentsListView .userName,
+.SSFrame .userName
 {
    color: #4B423A;
    background-color: #dedad6;
@@ -451,8 +444,7 @@ ul.ShiftListView li.ShiftListViewCell .domain
    cursor:pointer;
 }
 
-.ShiftListView .ShiftListViewCell div.userName:hover,
-.SSActive div.userName:hover
+.SSFrame div.user:hover div.userName
 {
    color: white;
    background-color: #746559;
@@ -462,8 +454,7 @@ ul.ShiftListView li.ShiftListViewCell .domain
    background-repeat:no-repeat;
 }
 
-.ShiftListView .ShiftListViewCell div.userName.loggedin,
-.SSActive div.userName.loggedin
+.SSFrame div.userName.loggedin
 {
    font-weight: bold;
 }
