@@ -36,20 +36,28 @@ input.SSInputField[type=checkbox]:checked
 /* Buttons ============================================== */
 
 
-.SSButtonMinor.SSDeemphasized:hover,
-.SSButtonMinor:hover,
-.SSButtonMajor.SSDeemphasized:hover,
-.SSButtonMajor.SSSecondary:hover,
-.SSButtonMajor:hover{
-	cursor: pointer;
+.SSButtonMajor{
+   background-color: #f63b02;
+   color:#fff;
+   border:2px #b52b01 solid;
+   -moz-border-radius: 11px;
+   -webkit-border-radius: 11px;
+   padding:1px 10px 1px 9px;
+   font-weight:bold;
+   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+   font-size: 11px;
 }
 
-.SSButtonMinor.SSDeemphasized{
-   padding:1px 5px 0 4px;
-   font-weight: normal;
-   text-align: left;
-   color: #4B423A;
-   text-decoration: none;
+.SSButtonMajor.SSSecondary{
+   background: none;
+   border:2px #f63b02 solid;
+   color: #f63b02;
+}
+
+.SSButtonMajor.SSDeemphasized{
+   background: none;
+   border:2px #cac5be solid;
+   color: #74665a;
 }
 
 .SSButtonMinor{
@@ -63,28 +71,18 @@ input.SSInputField[type=checkbox]:checked
    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-.SSButtonMajor.SSDeemphasized{
-   background: none;
-   border:2px #cac5be solid;
-   color: #74665a;
+.SSButtonMinor.SSDeemphasized{
+   padding:1px 5px 0 4px;
+   font-weight: normal;
+   text-align: left;
+   color: #4B423A;
+   text-decoration: none;
 }
 
-.SSButtonMajor.SSSecondary{
-   background: none;
-   border:2px #f63b02 solid;
-   color: #f63b02;
-}
-
-.SSButtonMajor{
-   background-color: #f63b02;
-   color:#fff;
-   border:2px #b52b01 solid;
-   -moz-border-radius: 11px;
-   -webkit-border-radius: 11px;
-   padding:2px 10px 1px 9px;
-   font-weight:bold;
-   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-   font-size: 11px;
+.SSButtonMajor:hover,
+.SSButtonMinor:hover
+{
+	cursor: pointer;
 }
 
 div.panelButtons{
