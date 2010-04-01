@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           ShiftSpace
+// @name           ShiftSpace 1.0
 // @namespace      http://shiftspace.org/
 // @description    An open source layer above any website
 // @include        *
