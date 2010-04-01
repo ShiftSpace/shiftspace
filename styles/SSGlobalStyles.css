@@ -405,6 +405,11 @@ ul.ShiftListView li.ShiftListViewCell .domain
    float: left;
 }
 
+.SSFrame
+{
+   color: #74665A;
+}
+
 .SSFrame .gravatar
 {
    position: relative;

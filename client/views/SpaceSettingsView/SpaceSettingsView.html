@@ -6,11 +6,15 @@
      }">
     
     <div class="SpaceInfo">
-        <h2 id="SpaceSettingsSpaceName" outlet="SpaceSettingsView">Space Name</h2>
-        <h2 class="tagLine">Tagline</h2>
-        <div class="blurb">
-            <p></p>
+        <div class="SpaceDetails">
+            <h2 class="name">Space Name</h2>
+            <h2 class="tagline">Tagline</h2>
+            <p class="description">
+                Lorem ipsum
+            </p>
+            <div><a class="url">http://foo.com</a></div>
         </div>
+        
         <div>
             <div>
                 <input id="SSAutolaunch" class="SSInputField" outlet="SpaceSettingsView" type="checkbox"></input>
@@ -22,17 +26,21 @@
             </div>
             <button id="UninstallSpace" class="uninstall SSSmallGreyButton" outlet="SpaceSettingsView">Uninstall</button>
         </div>
+        
         <div>
             <h3>Settings</h3>
             <p></p>
         </div>
+        
         <div>
             <h3>Tutorial Video</h3>
             <p></p>
         </div>
+        
         <div>
             <span class="count">0</span> public shifts
         </div>
+        
         <div>
             <span class="count">0</span> shifts by me
         </div> 
