@@ -41,11 +41,26 @@
    padding-top:5px;
 }
 #DgreyBox{
-   border: 2px solid #cfcac4;
-   background-color:#e3dfdb;
-   padding: 2px;
-   min-height:38px;
+  position: relative;
+  height: 64px;
+  border: 1px solid #cfcac4;
+  background-color:#e3dfdb;
+  padding: 2px;
+  font-size: 15px;
 }
+
+#DgreyBox .summary{
+  position: absolute;
+  left: 49px;
+  height: 42px;
+  line-height: 21px;
+}
+
+#DgreyBox .summary p{
+  margin:0;
+  padding:0;
+}
+
 .index{
    float:left;
    margin-left:-15px;
@@ -64,12 +79,21 @@
 }
 
 .spaceIcon{
-   padding:8px;
+   padding: 12px;
    margin-right:5px;
-   border: 2px solid #c7c3b6;
+   border: 1px solid #c7c3b6;
    float: left;
    background-color: #FFFFFF;
 }
+
+.DgreyBox > .spaceIcon{
+   padding:8px;
+   margin-right:5px;
+   border: 1px solid #c7c3b6;
+   float: left;
+   background-color: #FFFFFF;
+}
+
 .summary{
    color:#4B423A;
    font-size:15px;
