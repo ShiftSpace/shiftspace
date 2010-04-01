@@ -14,6 +14,23 @@ var SSInstalledSpaceCell = new Class({
   {
     this.mapOutletsToThis();
   },
+
+
+  clone: function()
+  {
+    var clone = this.parent();
+    clone.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      var target = (evt.target.get("tag") == "li") ? evt.target : evt.target.getParent("li");
+      this.lock(evt.target);
+      // call action method with proper data
+      ShiftSpaceNameTable.SettingsTabView.showSpaceSettings(
+        this, {data: this.delegate().dataForCellNode(this.lockedElement())}
+      );
+      this.unlock();
+    }.bind(this));
+    return clone;
+  },
   
   
   setIcon: function(imageSrc)
@@ -36,6 +53,13 @@ var SSInstalledSpaceCell = new Class({
       el.getElement('.name').setProperty('text', name);
     }
   },
+
+
+  getName: function()
+  {
+    var el = this.lockedElement();
+    return el.retrieve('spaceName');
+  },
   
   
   setTagline: function(tagline)
@@ -49,5 +73,4 @@ var SSInstalledSpaceCell = new Class({
   {
     SSLog('SSInstalledSpaceCell localizationChanged', SSLogForce);
   }
-  
 });
