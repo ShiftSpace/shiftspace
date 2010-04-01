@@ -36,28 +36,23 @@ input.SSInputField[type=checkbox]:checked
 /* Buttons ============================================== */
 
 
-.SSButton6:hover,
-.SSButton5:hover,
-.SSButton4:hover,
-.SSButton3:hover,
-.SSButton2:hover,
-.SSButton1:hover{
+.SSButtonMinor.SSDeemphasized:hover,
+.SSButtonMinor:hover,
+.SSButtonMajor.SSDeemphasized:hover,
+.SSButtonMajor.SSSecondary:hover,
+.SSButtonMajor:hover{
 	cursor: pointer;
 }
 
-.SSButton6{
-   background: none;
-   border: 0;
-   text-decoration: underline;
+.SSButtonMinor.SSDeemphasized{
    padding:1px 5px 0 4px;
-   font-size: 11px;
    font-weight: normal;
    text-align: left;
    color: #4B423A;
    text-decoration: none;
 }
 
-.SSButton5{
+.SSButtonMinor{
    background: none;
    border: 0;
    color: #f63b02;
@@ -65,36 +60,31 @@ input.SSInputField[type=checkbox]:checked
    padding:2px 5px 1px 4px;
    font-size: 11px;
    font-weight: bold;
+   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-.SSButton3{
+.SSButtonMajor.SSDeemphasized{
    background: none;
    border:2px #cac5be solid;
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   padding:2px 5px 1px 4px;
-   font-weight:bold;
    color: #74665a;
 }
 
-.SSButton2{
+.SSButtonMajor.SSSecondary{
    background: none;
    border:2px #f63b02 solid;
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   padding:2px 5px 1px 4px;
-   font-weight:bold;
    color: #f63b02;
 }
 
-.SSButton1{
+.SSButtonMajor{
    background-color: #f63b02;
    color:#fff;
    border:2px #b52b01 solid;
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   padding:2px 5px 1px 4px;
+   -moz-border-radius: 11px;
+   -webkit-border-radius: 11px;
+   padding:2px 10px 1px 9px;
    font-weight:bold;
+   font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+   font-size: 11px;
 }
 
 div.panelButtons{
@@ -447,6 +437,8 @@ ul.ShiftListView li.ShiftListViewCell .domain
    -moz-border-radius-bottomright: 4px;
    -webkit-border-bottom-right-radius: 4px;
    cursor:pointer;
+   display: block;
+   float: left;
 }
 
 .SSFrame div.user:hover div.userName
