@@ -62,9 +62,19 @@ div#SSInstalledSpacesTabPane
    margin-bottom: 5px;
 }
 
-#InterfaceTab input.SSInputField[type=text]
+#InterfaceTab input.SSInputField[type="text"]
 {
    width: 80px;
+}
+
+#PreferencesTab .col:nth-child(odd) h3{
+  margin-left: 6px;  
+}
+
+#PreferencesTab .col:nth-child(even) input.SSInputField[type="checkbox"],
+#PreferencesTab .col:nth-child(even) input.SSInputField[type="checkbox"] + label{
+  position: relative;
+  left: -4px;
 }
 
 #SSInstalledSpacesHeader
