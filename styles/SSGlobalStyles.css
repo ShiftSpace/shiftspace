@@ -36,16 +36,15 @@ input.SSInputField[type=checkbox]:checked
 /* Buttons ============================================== */
 
 
-.SSButton6:hover,
-.SSButton5:hover,
-.SSButton4:hover,
-.SSButton3:hover,
-.SSButton2:hover,
-.SSButton1:hover{
+.SSButtonMinor.SSSecondary:hover,
+.SSButtonMinor:hover,
+.SSButtonMajor.SSInactive:hover,
+.SSButtonMajor.SSSecondary:hover,
+.SSButtonMajor:hover{
 	cursor: pointer;
 }
 
-.SSButton6{
+.SSButtonMinor.SSSecondary{
    background: none;
    border: 0;
    text-decoration: underline;
@@ -57,7 +56,7 @@ input.SSInputField[type=checkbox]:checked
    text-decoration: none;
 }
 
-.SSButton5{
+.SSButtonMinor{
    background: none;
    border: 0;
    color: #f63b02;
@@ -67,27 +66,19 @@ input.SSInputField[type=checkbox]:checked
    font-weight: bold;
 }
 
-.SSButton3{
+.SSButtonMajor.SSInactive{
    background: none;
    border:2px #cac5be solid;
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   padding:2px 5px 1px 4px;
-   font-weight:bold;
    color: #74665a;
 }
 
-.SSButton2{
+.SSButtonMajor.SSSecondary{
    background: none;
    border:2px #f63b02 solid;
-   -moz-border-radius: 10px;
-   -webkit-border-radius: 10px;
-   padding:2px 5px 1px 4px;
-   font-weight:bold;
    color: #f63b02;
 }
 
-.SSButton1{
+.SSButtonMajor{
    background-color: #f63b02;
    color:#fff;
    border:2px #b52b01 solid;
