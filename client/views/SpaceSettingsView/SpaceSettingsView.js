@@ -54,7 +54,7 @@ var SpaceSettingsView = new Class({
   update: function()
   {
     var spaceName = this.currentSpace().name;
-    SSTemplate(this.getElement(".SpaceDetails"), this.currentSpace());
+    SSTemplate(this.element.getElement(".SpaceDetails"), this.currentSpace());
     if(SSSpaceIsInDebugMode(spaceName))
     {
       this.SSDebugSpace.set("checked", true);
