@@ -639,3 +639,25 @@ li.GroupListViewCell .settings
    border: 2px solid #B3ADA5;
    color: #74665A;
 }
+
+/* Animation Styles for SpaceSettingsView */
+
+.settings-hidden
+{
+   height: 0px;
+}
+
+.settings-hidden > *
+{
+   display: none;
+}
+
+.settings-open
+{
+   height: 50px;
+}
+
+.settings-open > *
+{
+   display: block;
+}

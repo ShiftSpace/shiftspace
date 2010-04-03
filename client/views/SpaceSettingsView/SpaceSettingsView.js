@@ -107,10 +107,45 @@ var SpaceSettingsView = new Class({
       SSUninstallSpace(this.currentSpace().name);
     }.bind(this));
 
-    this.accordion = new Fx.Accordion(
-      this.element.getElements(".SSAccordion h3"),
-      this.element.getElements(".SSAccordion > div")
-    );
+    var content = this.element.getElement(".settings-content");
+    content.set("morph", {
+      duration: 300,
+      transition: Fx.Transitions.Cubic.easeIn,
+      onStart: function() {
+        if(content.getStyle('height') != 0)
+        {
+          content.addClass("settings-hidden");
+        }
+      },
+      onComplete: function() {
+        SSLog("on complete", content.getStyle('height'), SSLogForce);
+        if(parseInt(content.getStyle('height')) == 0)
+        {
+          content.removeClass("settings-open");
+          content.addClass("settings-hidden");
+        }
+        else
+        {
+          content.removeClass("settings-hidden");
+          content.addClass("settings-open");
+        }
+      }.bind(this)
+    });
+
+    this.element.getElement(".settings-title").addEvent("click", function(evt) {
+      if(content.hasClass("settings-hidden"))
+      {
+        content.setStyles({
+          height: 0,
+          display: "block"
+        });
+        content.morph(".settings-open");
+      }
+      else
+      {
+        content.morph(".settings-hidden");
+      }
+    }.bind(this));
   },
 
 
