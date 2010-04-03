@@ -44,7 +44,6 @@ function SSGetValue(key, defaultValue, callback)
 {
   SSLog('SSGetValue key:', key, 'default:', JSON.encode(defaultValue), SSLogSystem);
   var result = GM_getValue(key, defaultValue);
-  SSLog('result', result, SSLogForce);
   result = (result != defaultValue) ? JSON.decode(result) : result;
   if(result == 'null') result = null;
   if(callback && $type(callback) == 'function')
