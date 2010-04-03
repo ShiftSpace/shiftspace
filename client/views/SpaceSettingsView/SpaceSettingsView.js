@@ -112,13 +112,13 @@ var SpaceSettingsView = new Class({
       duration: 300,
       transition: Fx.Transitions.Cubic.easeIn,
       onStart: function() {
-        if(content.getStyle('height') != 0)
+        if(parseInt(content.getStyle('height')) != 0)
         {
+          content.removeClass("settings-open");
           content.addClass("settings-hidden");
         }
       },
       onComplete: function() {
-        SSLog("on complete", content.getStyle('height'), SSLogForce);
         if(parseInt(content.getStyle('height')) == 0)
         {
           content.removeClass("settings-open");

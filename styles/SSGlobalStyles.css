@@ -647,9 +647,9 @@ li.GroupListViewCell .settings
    height: 0px;
 }
 
-.settings-hidden > *
+.settings-hidden *
 {
-   display: none;
+   visibility: hidden;
 }
 
 .settings-open
@@ -657,7 +657,7 @@ li.GroupListViewCell .settings
    height: 50px;
 }
 
-.settings-open > *
+.settings-open *
 {
-   display: block;
+   visibility: visible;
 }
