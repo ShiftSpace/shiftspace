@@ -106,6 +106,11 @@ var SpaceSettingsView = new Class({
       evt = new Event(evt);
       SSUninstallSpace(this.currentSpace().name);
     }.bind(this));
+
+    this.accordion = new Fx.Accordion(
+      this.element.getElements(".SSAccordion h3"),
+      this.element.getElements(".SSAccordion > div")
+    );
   },
 
 
