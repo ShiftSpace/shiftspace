@@ -42,11 +42,14 @@
 }
 #DgreyBox{
   position: relative;
-  height: 64px;
-  border: 1px solid #cfcac4;
-  background-color:#e3dfdb;
+  width: 341px;
+  height: 66px;
+/*  border: 1px solid #cfcac4;
+  background-color:#e3dfdb;*/
   padding: 2px;
   font-size: 15px;
+  background-image: url(/images/comment_bubble_lt.png);
+  background-repeat: no-repeat;
 }
 
 #DgreyBox .summary{
@@ -119,7 +122,18 @@
 ul#SSCommentsListView
 {
    height: 150px;
-   overflow-y: scroll;
+   /*overflow-y: scroll;*/
+   border: none;
+   background-image: none;
+}
+
+ul#SSCommentsListView li#SSCommentsListViewCell{
+  background-image: url(/images/comment_bubble_top);
+  background-repeat: no-repeat;
+}
+
+ul#SSCommentsListView #SSCommentsListViewCell .text{
+  
 }
 
 ul#SSCommentsListView img.spaceIcon
