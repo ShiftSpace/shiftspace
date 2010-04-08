@@ -35,6 +35,9 @@
 
 .SpaceDetails p.description
 {
+   font-size: 12px;
+   padding-top: 4px;
+   padding-bottom: 4px;
    background-image: url(/images/Console/info.gif);
    background-repeat: no-repeat;
    padding-left: 20px;
@@ -42,6 +45,9 @@
 
 .SpaceDetails a.url
 {
+   font-size: 12px;
+   padding-top: 4px;
+   padding-bottom: 4px;
    background-image: url(/images/Console/groups-perm.gif);
    background-repeat: no-repeat;
    padding-left: 20px;
