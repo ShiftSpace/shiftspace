@@ -136,6 +136,32 @@ def sync(createAdmin=True):
     # shared ---------------------------------
     shared = core.connect("shiftspace/shared")
 
+    SpaceStats = ViewDefinition('stats', 'public_shifts_by_space', '''
+       function(doc) {
+         if(doc.type == "shift") {
+            emit(doc.space.name, 1);
+         }
+       }
+    ''', '''
+       function(keys, values, rereduce) {
+         return sum(values);
+       }
+    ''')
+    SpaceStats.sync(shared)
+
+    SpaceByUserStats = ViewDefinition('stats', 'public_shifts_by_space_and_user', '''
+       function(doc) {
+         if(doc.type == "shift" && !doc.publishData.private) {
+            emit([doc.space.name, doc.createdBy], 1);
+         }
+       }
+    ''', '''
+       function(keys, values, rereduce) {
+         return sum(values);
+       }
+    ''')
+    SpaceByUserStats.sync(shared)
+
     Message.count_by_user.sync(shared)
     Message.system_count.sync(shared)
     Message.read_count_by_user.sync(shared)
