@@ -116,3 +116,15 @@ ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+4)
 {
    background-color: #F7F2EF;
 }
+
+#AccountTab .SSTabPane form,
+.SSOpenid.Signup
+{
+  border:1px solid #C9CCC4;
+	margin-left:10px;
+	margin-top: 5px;
+	padding:5px 0 33px 10px;
+	width:440px;
+	height: 100px;
+}
+
