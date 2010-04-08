@@ -182,11 +182,15 @@ class RootController:
     def index(self):
         return "ShiftSpace Server 1.0"
 
-    def autocomplete(self, type="userName", query=None):
+    def autocomplete(self, type="user", query=None):
         """
         Used for autocompletion.
         """
-        pass
+        from server.models.core import core
+        from server.utils.returnTypes import data
+        db = core.connect()
+        rows = db.view('autocomplete/by_%s' % type, include_docs=True)
+        return data(rows)
 
     def rev(self, name):
         fh = open(os.path.join(WEB_ROOT, "builds/meta.json"))
