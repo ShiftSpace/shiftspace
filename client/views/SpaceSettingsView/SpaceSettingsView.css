@@ -14,6 +14,7 @@
 
 .SpaceDetails
 {
+   padding: 4px;
    background-image: url(/images/Console/content-shadow.png);
    background-color: #E3DFDB;
 }
@@ -30,4 +31,36 @@
 
 .SpaceDetails h2.tagline
 {
+}
+
+.SpaceDetails p.description
+{
+   background-image: url(/images/Console/info.gif);
+   background-repeat: no-repeat;
+   padding-left: 20px;
+}
+
+.SpaceDetails a.url
+{
+   background-image: url(/images/Console/groups-perm.gif);
+   background-repeat: no-repeat;
+   padding-left: 20px;
+}
+
+#UninstallSpace
+{
+   float: right;
+}
+
+.SpaceInfo .controls
+{
+   float: left;
+   width: 100%;
+   padding-top: 6px;
+   padding-bottom: 6px;
+}
+
+.SSAccordion
+{
+   clear: both;
 }
