@@ -28,6 +28,16 @@ var SSPublishPane = new Class({
     SSAddObserver(this, "onShiftShare", this.onShiftShare.bind(this));
     SSAddObserver(this, "onShiftCheck", this.onShiftCheck.bind(this));
     SSAddObserver(this, "onShiftListViewWillHide", this.onShiftListViewWillHide.bind(this));
+
+    this.createMatchesList();
+  },
+
+
+  createMatchesList: function()
+  {
+    this.autocomplete = new Element("div", {
+      "id": "PublishTargetAutocomplete"
+    });
   },
 
 
@@ -170,6 +180,59 @@ var SSPublishPane = new Class({
     this.Cancel.addEvent("click", this['close'].bind(this));
     this.ChooseVisibility.addEvent('click', this.publishShift.bind(this));
     if(this.SecretLink) this.SecretLink.addEvent("click", this.showProxy.bind(this));
+    this.PublishTargets.addEvent("keyup", this.autoComplete.bind(this));
+  },
+
+
+  autoComplete: function(evt)
+  {
+    evt = new Event(evt);
+    var target = evt.target,
+        text = target.get("value");
+
+    if(text.length == 0)
+    {
+      this.hideMatches();
+      return;
+    }
+
+    this.showMatches();
+    switch(text[0])
+    {
+      case '@':
+        break;
+      case '&':
+        break;
+      case '#':
+        break;
+      default:
+        break;
+    }
+  },
+
+
+  showMatches: function()
+  {
+    var size = this.PublishTargets.getSize(),
+        pos = this.PublishTargets.getPosition();
+    this.element.getElement("#SSPublishPaneBody").grab(this.autocomplete);
+    this.autocomplete.setStyles({
+      left: pos.x,
+      top: pos.y + size.y,
+      width: size.x,
+      height: 20
+    });
+  },
+
+
+  hideMatches: function()
+  {
+    this.autocomplete.dispose();
+  },
+
+
+  updateMatches: function(matches)
+  {
   },
   
   /*

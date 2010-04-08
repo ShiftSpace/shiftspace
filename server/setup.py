@@ -95,12 +95,39 @@ def sync(createAdmin=True):
 
     installDefaultSpaces()
 
+    AutocompleteByUser = ViewDefinition('autocomplete', 'by_user', '''
+        function(doc) {
+          if(doc.type == "user") {
+             emit(doc.userName, doc);
+          }
+        }
+    ''')
+    AutocompleteByUser.sync(master)
+
+    AutocompleteByGroup = ViewDefinition('autocomplete', 'by_group', '''
+        function(doc) {
+          if(doc.type == "group") {
+             emit(doc.shortName, doc);
+          }
+        }
+    ''')
+    AutocompleteByGroup.sync(master)
+
+    AutocompleteByTag = ViewDefinition('autocomplete', 'by_tag', '''
+        function(doc) {
+          if(doc.type == "tag") {
+             emit(doc.string, doc);
+          }
+        }
+    ''')
+    AutocompleteByTag.sync(master)
+
     Spaces = ViewDefinition('spaces', 'by_name', '''
-       function(doc) {             
-         if(doc.type == "space") { 
-           emit(doc.name, doc);    
-         }                         
-       }''')
+        function(doc) {             
+          if(doc.type == "space") { 
+            emit(doc.name, doc);    
+          }                         
+        }''')
     Spaces.sync(master)
 
     SSUser.all.sync(master)

@@ -246,3 +246,10 @@ span.SSPPTagsroundedCorners:hover{
 #SSPublishPaneStatus #SSPublishButtons{
   float: right;
 }
+
+/*----------------------------------------------------AUTOCOMPLETE*/
+#PublishTargetAutocomplete
+{
+   position: absolute;
+   background-color: white;
+}
