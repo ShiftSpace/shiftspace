@@ -182,15 +182,26 @@ class RootController:
     def index(self):
         return "ShiftSpace Server 1.0"
 
+    @jsonencode
     def autocomplete(self, type="user", query=None):
         """
-        Used for autocompletion.
+        Helper for autocompletion of user names, group short names,
+        and tags.
         """
-        from server.models.core import core
-        from server.utils.returnTypes import data
+        import models.core
+        from utils.returnTypes import data
+        from setup import AutocompleteByUser, AutocompleteByGroup, AutocompleteByTag
         db = core.connect()
-        rows = db.view('autocomplete/by_%s' % type, include_docs=True)
-        return data(rows)
+        if type == "group":
+            view = AutocompleteByGroup
+        elif type == "tag":
+            view = AutocompleteByTag
+        else:
+            view = AutocompleteByUser
+        rows = core.values(view(db, start_key=query, end_key=("%sZ" % query)))
+        matches = [{"_id":x["_id"], "userName":x["userName"], "gravatar":x["gravatar"]}
+                   for x in rows if x["userName"] != "shiftspace"]
+        return data(matches)
 
     def rev(self, name):
         fh = open(os.path.join(WEB_ROOT, "builds/meta.json"))
