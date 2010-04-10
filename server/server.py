@@ -199,7 +199,10 @@ class RootController:
         else:
             view = AutocompleteByUser
         rows = core.values(view(db, start_key=query, end_key=("%sZ" % query)))
-        matches = [{"_id":x["_id"], "userName":x["userName"], "gravatar":x["gravatar"]}
+        matches = [{"_id": x["_id"],
+                    "name": x.get("userName") or x.get("shortName") or x.get("string"),
+                    "gravatar": x.get("gravatar"),
+                    "type": x["type"]}
                    for x in rows if x["userName"] != "shiftspace"]
         return data(matches)
 

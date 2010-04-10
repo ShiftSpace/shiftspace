@@ -180,38 +180,36 @@ var SSPublishPane = new Class({
     this.Cancel.addEvent("click", this['close'].bind(this));
     this.ChooseVisibility.addEvent('click', this.publishShift.bind(this));
     if(this.SecretLink) this.SecretLink.addEvent("click", this.showProxy.bind(this));
-    this.PublishTargets.addEvent("keyup", this.autoComplete.bind(this));
+    this.PublishTargets.addEvent("keyup", this.autocomplete.bind(this));
   },
 
 
-  autoComplete: function(evt)
+  autocompleteTypes: {
+    "@": "user",
+    "&": "group",
+    "#": "tag"
+  },
+
+  autocomplete: function(evt)
   {
     evt = new Event(evt);
     var target = evt.target,
-        text = target.get("value");
+        text = target.get("value").trim();
 
-    if(text.length == 0)
+    if(text.length <= 1)
     {
       this.hideMatches();
       return;
     }
-
-    this.showMatches();
-    switch(text[0])
+    else
     {
-      case '@':
-        break;
-      case '&':
-        break;
-      case '#':
-        break;
-      default:
-        break;
+      if(!this.autocomplete.getParent()) this.showMatches();
+      this.updateMatches(SSAutocomplete(this.autocompleteTypes[text[0]], text.tail()));
     }
   },
 
 
-  showMatches: function()
+  showMatches: function(type)
   {
     var size = this.PublishTargets.getSize(),
         pos = this.PublishTargets.getPosition();
@@ -233,11 +231,30 @@ var SSPublishPane = new Class({
 
   updateMatches: function(matches)
   {
-  },
+    this.autocomplete.empty();
+    matches.each(function(x) {
+      var el = new Element("div", {
+        html: "<img></img><span></span>"
+      });
+      if(x.gravatar)
+      {
+        el.getElement("img").set("src", x.gravatar);
+      }
+      else
+      {
+        el.getElement("img").dispose();
+      }
+      el.getElement("span").set("text", x.name);
+      el.store("id", x._id);
+      el.store("type", x.type);
+      // watch for click
+      this.autocomplete.grab(el);
+    }, this);
+  }.future(),
   
   /*
     Function: update
-      Update the display of the shift depending on the useres selections.
+      Update the display of the shift depending on the user's selections.
    */
   update: function(shift)
   {
