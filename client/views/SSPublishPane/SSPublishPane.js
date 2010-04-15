@@ -208,9 +208,16 @@ var SSPublishPane = new Class({
     {
       var selected = this.autocomplete.getElement(".selected");
       if(!selected) return;
-      selected.removeClass("selected");
-      if(evt.key == "down") selected.getNext().addClass("selected");
-      if(evt.key == "up") selected.getPrevious().addClass("selected");
+      if(evt.key == "down" && selected.getNext())
+      {
+        selected.removeClass("selected");
+        selected.getNext().addClass("selected");
+      }
+      if(evt.key == "up" && selected.getPrevious())
+      {
+        selected.removeClass("selected");
+        selected.getPrevious().addClass("selected");
+      }
       return;
     }
 
