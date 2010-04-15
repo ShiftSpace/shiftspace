@@ -28,6 +28,7 @@ from controllers.user import UserController
 from controllers.shift import ShiftController
 from controllers.group import GroupsController
 from controllers.message import MessageController
+from controllers.utilities import UtilitiesController
 
 
 version = "1.0"
@@ -176,35 +177,10 @@ class RootController:
         d.connect(name='rootSafeProxy', route='safe-proxy/:id', controller=self, action='safeProxy')
         d.connect(name='rootAttrs', route='spaces/:space/attrs', controller=self, action='attrs')
         d.connect(name='rootRev', route='rev', controller=self, action='rev')
-        d.connect(name='rootAutocomplete', route='autocomplete', controller=self, action='autocomplete')
         return d
 
     def index(self):
         return "ShiftSpace Server 1.0"
-
-    @jsonencode
-    def autocomplete(self, type="user", query=None):
-        """
-        Helper for autocompletion of user names, group short names,
-        and tags.
-        """
-        import models.core
-        from utils.returnTypes import data
-        from setup import AutocompleteByUser, AutocompleteByGroup, AutocompleteByTag
-        db = core.connect()
-        if type == "group":
-            view = AutocompleteByGroup
-        elif type == "tag":
-            view = AutocompleteByTag
-        else:
-            view = AutocompleteByUser
-        rows = core.values(view(db, start_key=query, end_key=("%sZ" % query)))
-        matches = [{"_id": x["_id"],
-                    "name": x.get("userName") or x.get("shortName") or x.get("string"),
-                    "gravatar": x.get("gravatar"),
-                    "type": x["type"]}
-                   for x in rows if x["userName"] != "shiftspace"]
-        return data(matches)
 
     def rev(self, name):
         fh = open(os.path.join(WEB_ROOT, "builds/meta.json"))
@@ -396,6 +372,7 @@ def initAppRoutes(d):
     ShiftController(d)
     GroupsController(d)
     MessageController(d)
+    UtilitiesController(d)
     return d
 
 
