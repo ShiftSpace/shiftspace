@@ -218,6 +218,13 @@ var SSPublishPane = new Class({
         selected.removeClass("selected");
         selected.getPrevious().addClass("selected");
       }
+      if(evt.key == "enter")
+      {
+        var data = selected.retrieve("data");
+        target.set("value", "@"+data.name);
+        this.hideMatches();
+      }
+      evt.stop();
       return;
     }
 
@@ -272,8 +279,7 @@ var SSPublishPane = new Class({
         el.getElement("img").dispose();
       }
       el.getElement("span").set("text", x.name);
-      el.store("id", x._id);
-      el.store("type", x.type);
+      el.store("data", x);
       // watch for click
       this.autocomplete.grab(el);
     }, this);
