@@ -203,17 +203,25 @@ var SSPublishPane = new Class({
       this.hideMatches();
       return;
     }
-    else
-    {
-      if(!this.autocomplete.getParent()) this.showMatches();
 
-      var type = this.autocompleteTypes[text[0]];
-      text = text.tail(text.length-1);
-      if(type && text != this.lastText)
-      {
-        this.updateMatches(SSAutocomplete(this.autocompleteTypes[text[0]], text));
-        this.lastText = text;
-      }
+    if(this.currentMatches && this.currentMatches.length > 1)
+    {
+      var selected = this.autocomplete.getElement(".selected");
+      if(!selected) return;
+      selected.removeClass("selected");
+      if(evt.key == "down") selected.getNext().addClass("selected");
+      if(evt.key == "up") selected.getPrevious().addClass("selected");
+      return;
+    }
+
+    if(!this.autocomplete.getParent()) this.showMatches();
+
+    var type = this.autocompleteTypes[text[0]];
+    text = text.tail(text.length-1);
+    if(type && text != this.lastText)
+    {
+      this.updateMatches(SSAutocomplete(this.autocompleteTypes[text[0]], text));
+      this.lastText = text;
     }
   },
 
@@ -234,17 +242,20 @@ var SSPublishPane = new Class({
 
   hideMatches: function()
   {
+    this.currentMatches = null;
     this.autocomplete.dispose();
   },
 
 
   updateMatches: function(matches)
   {
+    this.currentMatches = matches;
     this.autocomplete.empty();
-    matches.each(function(x) {
+    matches.each(function(x, i) {
       var el = new Element("div", {
         html: "<img></img><span></span>"
       });
+      if(i == 0) el.addClass("selected");
       if(x.gravatar)
       {
         el.getElement("img").set("src", x.gravatar);
