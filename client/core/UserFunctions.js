@@ -185,7 +185,7 @@ function SSMarkMessageUnread(messageId)
 }
 
 
-function SSAutoComplete(type, query) {
+function SSAutocomplete(type, query) {
   return SSApp.get({
     resource: 'autocomplete',
     data: {

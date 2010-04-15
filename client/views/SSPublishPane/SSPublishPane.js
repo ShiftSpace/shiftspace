@@ -180,7 +180,7 @@ var SSPublishPane = new Class({
     this.Cancel.addEvent("click", this['close'].bind(this));
     this.ChooseVisibility.addEvent('click', this.publishShift.bind(this));
     if(this.SecretLink) this.SecretLink.addEvent("click", this.showProxy.bind(this));
-    this.PublishTargets.addEvent("keyup", this.autocomplete.bind(this));
+    this.PublishTargets.addEvent("keyup", this.onKeyUp.bind(this));
   },
 
 
@@ -190,7 +190,8 @@ var SSPublishPane = new Class({
     "#": "tag"
   },
 
-  autocomplete: function(evt)
+  
+  onKeyUp: function(evt)
   {
     evt = new Event(evt);
     var target = evt.target,
@@ -204,7 +205,12 @@ var SSPublishPane = new Class({
     else
     {
       if(!this.autocomplete.getParent()) this.showMatches();
-      this.updateMatches(SSAutocomplete(this.autocompleteTypes[text[0]], text.tail()));
+
+      var type = this.autocompleteTypes[text[0]];
+      if(type)
+      {
+        this.updateMatches(SSAutocomplete(this.autocompleteTypes[text[0]], text.tail(text.length-1)));
+      }
     }
   },
 
