@@ -4,6 +4,7 @@ from server.utils.decorators import *
 from server.utils.returnTypes import *
 from server.models.shift import Shift
 from server.models.group import Group
+import simplejson as json
 
 class UtilitiesController():
     def __init__(self, dispatcher=None):
@@ -30,7 +31,8 @@ class UtilitiesController():
             view = AutocompleteByTag
         else:
             view = AutocompleteByUser
-        rows = core.values(view(db, start_key=query, end_key=("%sZ" % query)))
+        result = view(db)
+        rows = core.values(result[query:("%sZZZZZZZZZZ" % query)])
         matches = [{"_id": x["_id"],
                     "name": x.get("userName") or x.get("shortName") or x.get("string"),
                     "gravatar": x.get("gravatar"),
