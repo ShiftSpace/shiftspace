@@ -194,6 +194,7 @@ var SSPublishPane = new Class({
   onKeyUp: function(evt)
   {
     evt = new Event(evt);
+
     var target = evt.target,
         text = target.get("value").trim();
 
@@ -207,9 +208,11 @@ var SSPublishPane = new Class({
       if(!this.autocomplete.getParent()) this.showMatches();
 
       var type = this.autocompleteTypes[text[0]];
-      if(type)
+      text = text.tail(text.length-1);
+      if(type && text != this.lastText)
       {
-        this.updateMatches(SSAutocomplete(this.autocompleteTypes[text[0]], text.tail(text.length-1)));
+        this.updateMatches(SSAutocomplete(this.autocompleteTypes[text[0]], text));
+        this.lastText = text;
       }
     }
   },
@@ -224,7 +227,7 @@ var SSPublishPane = new Class({
       left: pos.x,
       top: pos.y + size.y,
       width: size.x,
-      height: 20
+      "min-height": 20
     });
   },
 
