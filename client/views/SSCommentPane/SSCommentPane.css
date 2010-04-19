@@ -6,6 +6,11 @@
    font-size: 13px;
 }
 
+#SSCommentPane #SSCommentShift{
+  position: relative;  
+  height: 66px;
+}
+
 #CommentPaneForm textarea
 {
    width: 330px;
@@ -17,11 +22,6 @@
 .SSCommentsListViewCell
 {
    list-style: none;
-}
-
-.SSCommentsListViewCell .userName
-{
-   
 }
 
 #SSCommentNotify
@@ -43,9 +43,7 @@
 #DgreyBox{
   position: relative;
   width: 341px;
-  height: 66px;
-/*  border: 1px solid #cfcac4;
-  background-color:#e3dfdb;*/
+  height: 70px;
   padding: 2px;
   font-size: 15px;
   background-image: url(/images/comment_bubble_lt.png);
@@ -64,10 +62,32 @@
   padding:0;
 }
 
+#DgreyBox .UserDateMeta{
+  bottom:0;
+  font-size:11px;
+  left:28px;
+  position:absolute;  
+}
+
+#DgreyBox .user{
+  float: left;  
+}
+
+#DgreyBox .user .gravatarContainer{
+  float: left;  
+}
+
+#DgreyBox .user .userName{
+  float: left;  
+  font-weight: bold;
+}
+
+#DgreyBox .user .createdStr{
+  float: left;  
+}
+
 .index{
    float:left;
-   margin-left:-15px;
-   
 }
 
 .text{
@@ -102,16 +122,15 @@
    font-size:15px;
 }
 #SSCommentPane .user{
-   margin-bottom:6px;
-   margin-left:25px;
-   margin-top:5px;
+  /*position: absolute;
+  bottom: 0;
+  left: 28px;
+  font-size: 11px;*/
 }
-.createdStr{
-   color:#B3ADA5;
-   font-size:11px;
-   margin-left:6px;
-   padding-top:5px;
-   padding-left:50px;
+
+.createdStr,
+.user .userName{
+  font-size: 11px;
 }
 
 .SSListView
@@ -125,6 +144,7 @@ ul#SSCommentsListView
    /*overflow-y: scroll;*/
    border: none;
    background-image: none;
+   margin-top: 15px;
 }
 
 ul#SSCommentsListView li#SSCommentsListViewCell{

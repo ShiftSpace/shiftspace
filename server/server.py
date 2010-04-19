@@ -28,6 +28,7 @@ from controllers.user import UserController
 from controllers.shift import ShiftController
 from controllers.group import GroupsController
 from controllers.message import MessageController
+from controllers.utilities import UtilitiesController
 
 
 version = "1.0"
@@ -176,17 +177,10 @@ class RootController:
         d.connect(name='rootSafeProxy', route='safe-proxy/:id', controller=self, action='safeProxy')
         d.connect(name='rootAttrs', route='spaces/:space/attrs', controller=self, action='attrs')
         d.connect(name='rootRev', route='rev', controller=self, action='rev')
-        d.connect(name='rootAutocomplete', route='autocomplete', controller=self, action='autocomplete')
         return d
 
     def index(self):
         return "ShiftSpace Server 1.0"
-
-    def autocomplete(self, type="userName", query=None):
-        """
-        Used for autocompletion.
-        """
-        pass
 
     def rev(self, name):
         fh = open(os.path.join(WEB_ROOT, "builds/meta.json"))
@@ -378,6 +372,7 @@ def initAppRoutes(d):
     ShiftController(d)
     GroupsController(d)
     MessageController(d)
+    UtilitiesController(d)
     return d
 
 

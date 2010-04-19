@@ -183,3 +183,14 @@ function SSMarkMessageUnread(messageId)
     action: 'unread'
   });
 }
+
+
+function SSAutocomplete(type, query) {
+  return SSApp.get({
+    resource: 'autocomplete',
+    data: {
+      type: type,
+      query: query
+    }
+  });
+}

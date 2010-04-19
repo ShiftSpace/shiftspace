@@ -73,6 +73,59 @@ def installDefaultSpaces():
     for space in DEFAULT_SPACES:
         installSpace(space)
 
+# ==============================================================================
+# Views
+# =============================================================================
+
+AutocompleteByUser = ViewDefinition('autocomplete', 'by_user', '''
+        function(doc) {
+          if(doc.type == "user") {
+             emit(doc.userName, doc);
+          }
+        }
+    ''')
+AutocompleteByGroup = ViewDefinition('autocomplete', 'by_group', '''
+        function(doc) {
+          if(doc.type == "group") {
+             emit(doc.shortName, doc);
+          }
+        }
+    ''')
+AutocompleteByTag = ViewDefinition('autocomplete', 'by_tag', '''
+        function(doc) {
+          if(doc.type == "tag") {
+             emit(doc.string, doc);
+          }
+        }
+    ''')
+Spaces = ViewDefinition('spaces', 'by_name', '''
+        function(doc) {             
+          if(doc.type == "space") { 
+            emit(doc.name, doc);    
+          }                         
+        }''')
+SpaceStats = ViewDefinition('stats', 'public_shifts_by_space', '''
+       function(doc) {
+         if(doc.type == "shift") {
+            emit(doc.space.name, 1);
+         }
+       }
+    ''', '''
+       function(keys, values, rereduce) {
+         return sum(values);
+       }
+    ''')
+SpaceByUserStats = ViewDefinition('stats', 'public_shifts_by_space_and_user', '''
+       function(doc) {
+         if(doc.type == "shift" && !doc.publishData.private) {
+            emit([doc.space.name, doc.createdBy], 1);
+         }
+       }
+    ''', '''
+       function(keys, values, rereduce) {
+         return sum(values);
+       }
+    ''')
 
 def sync(createAdmin=True):
     import models.core as core
@@ -95,39 +148,9 @@ def sync(createAdmin=True):
 
     installDefaultSpaces()
 
-    AutocompleteByUser = ViewDefinition('autocomplete', 'by_user', '''
-        function(doc) {
-          if(doc.type == "user") {
-             emit(doc.userName, doc);
-          }
-        }
-    ''')
     AutocompleteByUser.sync(master)
-
-    AutocompleteByGroup = ViewDefinition('autocomplete', 'by_group', '''
-        function(doc) {
-          if(doc.type == "group") {
-             emit(doc.shortName, doc);
-          }
-        }
-    ''')
     AutocompleteByGroup.sync(master)
-
-    AutocompleteByTag = ViewDefinition('autocomplete', 'by_tag', '''
-        function(doc) {
-          if(doc.type == "tag") {
-             emit(doc.string, doc);
-          }
-        }
-    ''')
     AutocompleteByTag.sync(master)
-
-    Spaces = ViewDefinition('spaces', 'by_name', '''
-        function(doc) {             
-          if(doc.type == "space") { 
-            emit(doc.name, doc);    
-          }                         
-        }''')
     Spaces.sync(master)
 
     SSUser.all.sync(master)
@@ -162,31 +185,7 @@ def sync(createAdmin=True):
     
     # shared ---------------------------------
     shared = core.connect("shiftspace/shared")
-
-    SpaceStats = ViewDefinition('stats', 'public_shifts_by_space', '''
-       function(doc) {
-         if(doc.type == "shift") {
-            emit(doc.space.name, 1);
-         }
-       }
-    ''', '''
-       function(keys, values, rereduce) {
-         return sum(values);
-       }
-    ''')
     SpaceStats.sync(shared)
-
-    SpaceByUserStats = ViewDefinition('stats', 'public_shifts_by_space_and_user', '''
-       function(doc) {
-         if(doc.type == "shift" && !doc.publishData.private) {
-            emit([doc.space.name, doc.createdBy], 1);
-         }
-       }
-    ''', '''
-       function(keys, values, rereduce) {
-         return sum(values);
-       }
-    ''')
     SpaceByUserStats.sync(shared)
 
     Message.count_by_user.sync(shared)

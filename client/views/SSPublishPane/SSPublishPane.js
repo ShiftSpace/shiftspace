@@ -180,38 +180,67 @@ var SSPublishPane = new Class({
     this.Cancel.addEvent("click", this['close'].bind(this));
     this.ChooseVisibility.addEvent('click', this.publishShift.bind(this));
     if(this.SecretLink) this.SecretLink.addEvent("click", this.showProxy.bind(this));
-    this.PublishTargets.addEvent("keyup", this.autoComplete.bind(this));
+    this.PublishTargets.addEvent("keyup", this.onKeyUp.bind(this));
   },
 
 
-  autoComplete: function(evt)
+  autocompleteTypes: {
+    "@": "user",
+    "&": "group",
+    "#": "tag"
+  },
+
+  
+  onKeyUp: function(evt)
   {
     evt = new Event(evt);
-    var target = evt.target,
-        text = target.get("value");
 
-    if(text.length == 0)
+    var target = evt.target,
+        text = target.get("value").trim();
+
+    if(text.length <= 1)
     {
       this.hideMatches();
       return;
     }
 
-    this.showMatches();
-    switch(text[0])
+    if(this.currentMatches && this.currentMatches.length > 1)
     {
-      case '@':
-        break;
-      case '&':
-        break;
-      case '#':
-        break;
-      default:
-        break;
+      var selected = this.autocomplete.getElement(".selected");
+      if(!selected) return;
+      if(evt.key == "down" && selected.getNext())
+      {
+        selected.removeClass("selected");
+        selected.getNext().addClass("selected");
+      }
+      if(evt.key == "up" && selected.getPrevious())
+      {
+        selected.removeClass("selected");
+        selected.getPrevious().addClass("selected");
+      }
+      if(evt.key == "enter")
+      {
+        var data = selected.retrieve("data");
+        target.set("value", "@"+data.name);
+        this.hideMatches();
+      }
+      evt.stop();
+      return;
+    }
+
+    if(!this.autocomplete.getParent()) this.showMatches();
+
+    var type = this.autocompleteTypes[text[0]];
+    text = text.tail(text.length-1);
+    if(type && text != this.lastText)
+    {
+      this.updateMatches(SSAutocomplete(this.autocompleteTypes[text[0]], text));
+      this.lastText = text;
     }
   },
 
 
-  showMatches: function()
+  showMatches: function(type)
   {
     var size = this.PublishTargets.getSize(),
         pos = this.PublishTargets.getPosition();
@@ -220,24 +249,45 @@ var SSPublishPane = new Class({
       left: pos.x,
       top: pos.y + size.y,
       width: size.x,
-      height: 20
+      "min-height": 20
     });
   },
 
 
   hideMatches: function()
   {
+    this.currentMatches = null;
     this.autocomplete.dispose();
   },
 
 
   updateMatches: function(matches)
   {
-  },
+    this.currentMatches = matches;
+    this.autocomplete.empty();
+    matches.each(function(x, i) {
+      var el = new Element("div", {
+        html: "<img></img><span></span>"
+      });
+      if(i == 0) el.addClass("selected");
+      if(x.gravatar)
+      {
+        el.getElement("img").set("src", x.gravatar);
+      }
+      else
+      {
+        el.getElement("img").dispose();
+      }
+      el.getElement("span").set("text", x.name);
+      el.store("data", x);
+      // watch for click
+      this.autocomplete.grab(el);
+    }, this);
+  }.future(),
   
   /*
     Function: update
-      Update the display of the shift depending on the useres selections.
+      Update the display of the shift depending on the user's selections.
    */
   update: function(shift)
   {

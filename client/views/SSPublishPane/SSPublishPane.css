@@ -253,3 +253,9 @@ span.SSPPTagsroundedCorners:hover{
    position: absolute;
    background-color: white;
 }
+
+#PublishTargetAutocomplete div.selected
+{
+   background-color: #ccc;
+}
+
