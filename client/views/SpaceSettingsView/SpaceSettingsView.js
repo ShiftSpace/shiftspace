@@ -39,7 +39,7 @@ var SpaceSettingsView = new Class({
 
   'open': function()
   {
-    this.delegate().tall();
+    this.delegate().setHeight(340);
     this.delegate().show();
     this.multiView().showViewByName(this.name);
   },

@@ -36,7 +36,7 @@ var GroupDetailView = new Class({
 
   'open': function()
   {
-    this.delegate().tall();
+    this.delegate().setHeight(270);
     this.delegate().show();
     this.multiView().showViewByName(this.name);
   },

@@ -110,6 +110,13 @@ var SSConsoleWindow = new Class({
   },
   
   
+  setHeight: function(height)
+  {
+    this.element.setStyle("height", height);
+    this.resizer.setStyle("bottom", height-22);
+  }.decorate(ssfv_ensure),
+
+
   tall: function()
   {
     this.element.removeClass("SSConsoleWindowShort");

@@ -6,6 +6,11 @@
    max-height: 145px;
 }
 
+.SpaceSettingsViewOpen
+{
+   height: 400px;
+}
+
 #SpaceSettingsView h2
 {
    padding: 0px;
