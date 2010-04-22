@@ -10,10 +10,11 @@ ul.ShiftListView li.ShiftListViewCell div.messageMeta
 
 #MessagesListViewContainer
 {
+   top: 0px;
+   left: 0px;
+   right: 0px;
    bottom: 0px;
    position: absolute;
-   right: 0px;
-   height: 100%;
    overflow-y: auto;
 }
 
