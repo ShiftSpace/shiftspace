@@ -119,6 +119,13 @@ var SettingsTabView = new Class({
         this.installSpace(this.SSInstallSpaceField.getProperty('value'));
       }.bind(this));
     }
+    if(this.SSInstallSpaceField)
+    {
+      this.SSInstallSpaceField.addEvent("keyup", function(evt) {
+        evt = new Event(evt);
+        if(evt.key == 'enter') this.installSpace(this.SSInstallSpaceField.getProperty('value'));
+      }.bind(this));
+    }
     this.SSInstalledSpaces = this.SSInstalledSpaces;
   },
   
