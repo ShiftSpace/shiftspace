@@ -317,6 +317,9 @@ function SSUninstallSpace(spaceName)
 
   delete installed[spaceName];
 
+  ShiftSpace.User.removePreference(spaceName, "autolaunch");
+  ShiftSpace.User.removePreference(spaceName, "debug");
+
   if($H(installed).getLength() == 0)
   {
     SSLog("Setting installed spaces to null", SSLogSystem);
