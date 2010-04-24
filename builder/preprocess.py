@@ -86,7 +86,8 @@ class SSPreProcessor:
 
     def setOutputFile(self, outFile):
         self.closeOut = True
-        if isinstance(outFile, StringIO.StringIO):
+        self.stringIO = isinstance(outFile, StringIO.StringIO)
+        if self.stringIO:
             self.closeOut = False
             self.outFile = outFile
         elif outFile != None:
@@ -107,8 +108,9 @@ class SSPreProcessor:
             if self.envData['data'].has_key("VARS"):
                 envVars = "\n".join([("var %s = %s;" % (k, json.dumps(v))) for k,v in self.envData['data']['VARS'].iteritems()])
             source = self.VARS_REGEX.sub(envVars, source)
-            source = self.BUILD_REGEX.sub(self.revid, source)
-            source = self.NAME_REGEX.sub(self.scriptName, source)
+            if not self.stringIO:
+                source = self.BUILD_REGEX.sub(self.revid, source)
+                source = self.NAME_REGEX.sub(self.scriptName, source)
         return source
   
 
@@ -194,16 +196,17 @@ class SSPreProcessor:
         status, revid = commands.getstatusoutput("git rev-parse HEAD")
         self.revid = revid
 
-        self.scriptName = os.path.basename(output)
-        # store metadata abut this build
-        fh = open("builds/meta.json", "w")
-        try:
-            buildMeta = json.loads(fh.read())
-        except IOError:
-            buildMeta = {} 
-        buildMeta[self.scriptName] = revid
-        fh.write(json.dumps(buildMeta, sort_keys=True, indent=4))
-        fh.close()
+        if not isinstance(output, StringIO.StringIO):
+            self.scriptName = os.path.basename(output)
+            # store metadata abut this build
+            fh = open("builds/meta.json", "w")
+            try:
+                buildMeta = json.loads(fh.read())
+            except IOError:
+                buildMeta = {} 
+            buildMeta[self.scriptName] = revid
+            fh.write(json.dumps(buildMeta, sort_keys=True, indent=4))
+            fh.close()
 
         self.setInputFile(input)
         self.setOutputFile(output)
