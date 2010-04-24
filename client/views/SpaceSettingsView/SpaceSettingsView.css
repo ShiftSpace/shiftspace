@@ -25,7 +25,7 @@
    background-color: #E3DFDB;
 }
 
-.SpaceDetails span.icon
+.SpaceDetails div span
 {
   float: right;
   padding: 4px;
@@ -50,9 +50,9 @@
 {
    font-size: 12px;
    padding-bottom: 4px;
-   background-image: url(/images/Console/info.gif);
-   background-repeat: no-repeat;
+   background: url(/images/Console/info.gif) no-repeat 0 3px;
    padding-left: 20px;
+   margin: 0;
 }
 
 .SpaceDetails a.url

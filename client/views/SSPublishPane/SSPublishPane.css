@@ -254,8 +254,28 @@ span.SSPPTagsroundedCorners:hover{
    background-color: white;
 }
 
-#PublishTargetAutocomplete div.selected
+#PublishTargetAutocomplete div.autoResault
 {
-   background-color: #ccc;
+  padding: 2px;
 }
 
+#PublishTargetAutocomplete div.autoResault img
+{
+  height: 20px;
+  width: 20px;
+  float: left;
+}
+
+#PublishTargetAutocomplete div.autoResault span
+{
+  display:block;
+  height:12px;
+  padding:4px 4px 4px 24px;
+}
+
+#PublishTargetAutocomplete div.selected
+{
+   background-color: #F63B02;
+   color: #fff;
+   font-weight: bold;
+}

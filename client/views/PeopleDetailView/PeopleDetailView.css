@@ -22,7 +22,8 @@
 
 .FollowedUserBio .userNames
 {
-    height:34px;
+    height:24px;
+    padding:5px;
 }
 
 .FollowedUserBio img
@@ -40,11 +41,14 @@
 {
     color:#F63B02;
     font-size:15px;
-    height:23px;
-    line-height:36px;
-    margin-left:8px;
     padding: 0;
     background: none;
+    -moz-border-radius:0;
+    background-color:none;
+    cursor: default;
+    display: inline;
+    float:none;
+    font-weight:bold;
 }
 
 .FollowedUserBio .fullName

@@ -267,7 +267,8 @@ var SSPublishPane = new Class({
     this.autocomplete.empty();
     matches.each(function(x, i) {
       var el = new Element("div", {
-        html: "<img></img><span></span>"
+        html: "<img></img><span></span>",
+        'class': "autoResault"
       });
       if(i == 0) el.addClass("selected");
       if(x.gravatar)
