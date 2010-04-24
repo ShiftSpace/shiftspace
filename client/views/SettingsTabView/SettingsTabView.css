@@ -2,6 +2,8 @@
 {
    top: 4px;
    background:url(/images/Console/content-shadow.png);
+   height:100%;
+  overflow-y:scroll;
 }
 
 #SSSetServersForm
@@ -115,4 +117,62 @@ ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+3)
 ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+4)
 {
    background-color: #F7F2EF;
+}
+
+/*---------------------------------------------------------Account Tab */
+
+#AccountTab form{
+  padding: 10px 0 0 10px;
+  border:1px solid #C9CCC4;
+  margin-left:10px;
+  margin-top:5px;
+  width:660px;
+  height: 100%;
+}
+
+#AccountTab fieldset{
+  padding: 0;
+  margin: 0;
+  border: 0;
+	width:210px;
+	float: left;
+}
+
+div#AccountTab fieldset:first-child {
+	width: 440px;
+}
+
+#AccountTab div{
+  float: left;
+}
+
+#AccountTab textarea{
+  width: 210px;
+  height: 90px;
+}
+
+#AccountTab label {
+  display:block;
+  padding-top:4px;
+}
+
+#AccountTab input{
+  display:block;
+  margin: 0 10px 10px 0;
+  width:210px;
+}
+
+#AccountTab button{
+  margin: 7px 10px 0 0;
+  float: right;
+}
+
+#AccountTab .SSTabPane form,
+.SSOpenid.Signup
+{
+  border:1px solid #C9CCC4;
+	margin-left:10px;
+	margin-top: 5px;
+	padding:5px 0 33px 10px;
+	height: 100px;
 }

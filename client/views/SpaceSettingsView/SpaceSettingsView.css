@@ -4,6 +4,7 @@
    position: absolute;
    right: 8px;
    max-height: 145px;
+   line-height:1.4em;
 }
 
 .SpaceSettingsViewOpen
@@ -19,9 +20,16 @@
 
 .SpaceDetails
 {
-   padding: 4px;
+   padding: 5px;
    background-image: url(/images/Console/content-shadow.png);
    background-color: #E3DFDB;
+}
+
+.SpaceDetails span.icon
+{
+  float: right;
+  padding: 4px;
+  border: 1px solid #C8CDC4;
 }
 
 .SpaceDetails h2
@@ -41,7 +49,6 @@
 .SpaceDetails p.description
 {
    font-size: 12px;
-   padding-top: 4px;
    padding-bottom: 4px;
    background-image: url(/images/Console/info.gif);
    background-repeat: no-repeat;
@@ -74,4 +81,18 @@
 .SSAccordion
 {
    clear: both;
+}
+
+.settings-content
+{
+  font-size: 12px;
+  padding:0 5px;
+}
+
+.SSAccordion h3.open{
+  font-weight: bold;
+}
+
+.SSAccordion h3 span.count{
+  padding-left: 0;
 }

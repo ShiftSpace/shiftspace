@@ -110,13 +110,41 @@
 
         <div id="AccountTab" class="SSTabPane">
             <form id="AccountDetails" outlet="SettingsTabView">
-                <label>Url:</label>
-                <input class="SSInputField url" name="url" type="text"></input>
-                <label>Full Name:</label>
-                <input class="SSInputField fullName" name="fullName" type="text"></input>
-                <label>Bio:</label>
-                <textarea class="bio" name="bio"></textarea>
-                <button id="UpdateAccountDetails" outlet="SettingsTabView">Update</button>
+                <fieldset>
+                  <div>
+                    <label title="User Name" class="SSLocalized">User Name</label>
+                    <input class="SSInputField" type="text"></input>
+                  </div>
+                  <div>
+                    <label title="Full Name" class="SSLocalized">Full Name</label>
+                    <input type="text" class="SSInputField"></input>
+                  </div>
+                  
+                  <div>
+                    <label title="Password" class="SSLocalized">Password</label>
+                    <input type="password" class="SSInputField"></input>
+                  </div>
+                  <div>
+                    <label title="Confirm Password" class="SSLocalized">Confirm Password</label>
+                    <input class="SSInputField" type="password"></input>
+                  </div>
+                  
+                  <div>
+                    <label title="Email Address" class="SSLocalized">Email Address</label>
+                    <input class="SSInputField" type="text"></input>
+                  </div>
+                  <div>
+                    <label title="Your Site" class="SSLocalized">Your site</label>
+                    <input type="text" class="SSInputField"></input>
+                  </div>
+                </fieldset>
+            
+                <fieldset>
+                  <label>Bio:</label>
+                  <textarea class="SSTextArea bio" name="bio"></textarea>
+                </fieldset>
+            
+                <button id="UpdateAccountDetails" outlet="SettingsTabView" class="SSButtonMajor">Update</button>
             </form>
         </div>
     </div>
