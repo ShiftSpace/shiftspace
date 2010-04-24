@@ -195,7 +195,7 @@ var SSPublishPane = new Class({
   {
     evt = new Event(evt);
 
-    var target = evt.target,
+    var target = $(evt.target),
         text = target.get("value").trim();
 
     if(text.length <= 1)
