@@ -61,7 +61,7 @@ var SSPublishPane = new Class({
 
   'open': function()
   {
-    this.delegate().short();
+    this.delegate().setHeight(270);
     this.delegate().show();
     this.multiView().showViewByName(this.name);
     SSPostNotification("onPublishPaneOpen");
@@ -195,7 +195,7 @@ var SSPublishPane = new Class({
   {
     evt = new Event(evt);
 
-    var target = evt.target,
+    var target = $(evt.target),
         text = target.get("value").trim();
 
     if(text.length <= 1)
