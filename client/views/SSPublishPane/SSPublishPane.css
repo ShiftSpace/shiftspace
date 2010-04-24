@@ -132,13 +132,13 @@ form .SSRadioButton label,
 }
 
 #SSPublishPaneBody button#Addtag{
-  background:transparent url(/images/Pane/publish-form-button.gif) center center no-repeat;
-  border:0 none;
-  margin-top:5px;
-  padding:7px 10px;
-  position:absolute;
-  right:17px;
-  text-indent:-2000px;
+  background: transparent url(/images/Pane/publish-form-button.gif) center center no-repeat;
+  border: 0 none;
+  margin-top: 5px;
+  padding: 4px 10px;
+  position: absolute;
+  right: 17px;
+  text-indent: -2000px;
 }
 
 #SSPublishPaneBody p#TagTip{
