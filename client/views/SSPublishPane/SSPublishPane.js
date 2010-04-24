@@ -61,7 +61,7 @@ var SSPublishPane = new Class({
 
   'open': function()
   {
-    this.delegate().short();
+    this.delegate().setHeight(270);
     this.delegate().show();
     this.multiView().showViewByName(this.name);
     SSPostNotification("onPublishPaneOpen");
