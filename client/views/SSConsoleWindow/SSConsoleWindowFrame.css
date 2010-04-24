@@ -14,26 +14,6 @@
    height: 87px;
 }
 
-.SSConsoleWindowTall
-{
-   height: 300px;
-}
-
-.SSConsoleWindowResizerTall
-{
-   bottom: 278px;
-}
-
-.SSConsoleWindowShort
-{
-   height: 260px;
-}
-
-.SSConsoleWindowResizerShort
-{
-   bottom: 238px;
-}
-
 .SSConsoleWindowFront
 {
    z-index: 1000000;

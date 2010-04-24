@@ -59,7 +59,7 @@ var SSCommentPane = new Class({
     if(shift) this.initTable(shift._id);
     if(SSTableForName("Comments")) SSTableForName("Comments").addView(this.SSCommentsListView);
     
-    this.delegate().tall();
+    this.delegate().setHeight(445);
     this.delegate().show();
     this.multiView().showViewByName(this.name);
     if(shift) this.setCurrentShiftId(shift._id);
