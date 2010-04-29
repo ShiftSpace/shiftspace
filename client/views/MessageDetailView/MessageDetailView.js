@@ -18,6 +18,18 @@ var MessageDetailView = new Class({
   },
 
   
+  setCurrentMessageEvent: function()
+  {
+    return this.__currentMessageEvent;
+  },
+  
+  
+  currentMessageEvent: function(currentMessageEvent)
+  {
+    this.__currentMessageEvent = currentMessageEvent;
+  },
+
+
   currentMessage: function()
   {
     return this.__currentMessage;
@@ -30,8 +42,10 @@ var MessageDetailView = new Class({
   },
 
 
-  showMessage: function(message)
+  showMessage: function(evt)
   {
+    var message = evt.message;
+    this.setCurrentMessageEvent(evt);
     this.setCurrentMessage(message);
     SSTemplate(this.element.getElement(".header"), message);
     switch(message.meta)
@@ -51,7 +65,22 @@ var MessageDetailView = new Class({
         break;
     }
     SSTemplate(this.element.getElement(".body div.SSSubView.SSActive"), message);
+    this.update();
     this.open();
+  },
+
+
+  update: function()
+  {
+    var event = this.currentMessageEvent();
+    if(event.index == 0)
+    {
+      this.PreviousMessage.addClass("SSDisplayNone");
+    }
+    else
+    {
+      this.PreviousMessage.removeClass("SSDisplayNone");
+    }
   },
 
 
@@ -88,6 +117,23 @@ var MessageDetailView = new Class({
       SSSetValue("__currentShift", {id: id, href: href});
       window.open(href);
     }.bind(this));
+
+    this.PreviousMessage.addEvent("click", this.previousMessage.bind(this));
+    this.NextMessage.addEvent("click", this.nextMessage.bind(this));
+  },
+
+
+  previousMessage: function()
+  {
+    var event = this.currentMessageEvent();
+    event.listView.selectRow(event.index-1);
+  },
+
+
+  nextMessage: function()
+  {
+    var event = this.currentMessageEvent();
+    event.listView.selectRow(event.index+1);
   },
 
 
