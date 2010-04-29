@@ -218,7 +218,7 @@ function SSLeaveEditShift(space, shiftId)
 {
   var shift = SSGetShift(shiftId);
   if(space &&
-     !Promise.isPromise(space),
+     !Promise.isPromise(space) &&
      space.hasShift(shiftId) &&
      space.shiftIsVisible(shiftId))
   {
