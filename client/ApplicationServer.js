@@ -668,7 +668,7 @@ var ApplicationServer = new Class({
       {
         var postRsrcSpec = {resource:postOptions.resource, action:postOptions.action, id:postOptions.id};
         var oldValue = this.allCachedDocuments()[postOptions.id];
-        this.updateDocument(value);
+        if(value) this.updateDocument(value);
         this.notifyWatchers(postRsrcSpec, value, oldValue);
         return value;
       }
