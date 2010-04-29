@@ -113,6 +113,16 @@ var SSNotifierView = new Class({
       this.SSQEPEdit.addClass("SSDisplayNone");
       this.SSQEPShare.addClass("SSDisplayNone");
     }
+    if(evt.data.userName != ShiftSpace.User.getUserName())
+    {
+      this.SSQEPEdit.addClass("SSDisplayNone");
+      this.SSQEPDelete.addClass("SSDisplayNone");
+    }
+    else
+    {
+      this.SSQEPEdit.removeClass("SSDisplayNone");
+      this.SSQEPDelete.removeClass("SSDisplayNone");
+    }
   },
 
 
