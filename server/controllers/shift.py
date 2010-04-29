@@ -18,6 +18,8 @@ class ShiftController(ResourceController):
                   conditions=dict(method="DELETE"))
         d.connect(name="shiftPublish", route="shift/:id/publish", controller=self, action="publish",
                   conditions=dict(method="POST"))
+        d.connect(name="shiftShare", route="shift/:id/share", controller=self, action="share",
+                  conditions=dict(method="POST"))
         d.connect(name="shiftUnpublish", route="shift/:id/unpublish", controller=self, action="unpublish",
                   conditions=dict(method="POST"))
         d.connect(name="shiftFavorite", route="shift/:id/favorite", controller=self, action="favorite",
@@ -177,6 +179,21 @@ class ShiftController(ResourceController):
             dbs.extend([SSUser.db(userId) for userId in userIds])
             publishData["dbs"] = dbs
         return data(theShift.publish(publishData))
+
+    @db_session
+    @jsonencode
+    @loggedin
+    def share(self, id, users):
+        from server.models.ssuser import SSUser
+        loggedInUser = helper.getLoggedInUser()
+        theShift = Shift.read(id)
+        if not theShift or theShift.publishData.private:
+            return error("You don't have permission to view this shift.", PermissionError)
+        targets = users.split(" ")
+        userNames = [target[1:] for target in targets if target[0] == "@"]
+        userIds = SSUser.namesToIds(userNames)
+        theShift.shareWith(userIds)
+        return ack
 
     @db_session
     @jsonencode

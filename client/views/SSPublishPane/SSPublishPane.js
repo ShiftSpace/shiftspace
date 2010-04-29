@@ -167,7 +167,7 @@ var SSPublishPane = new Class({
     }
     else
     {
-      var targets = this.currentTargets().join(" ");
+      var targets = this.currentTargets();
       if(targets.length == 0)
       {
         alert("Please specify which user or group you wish to publish to.");
@@ -187,6 +187,19 @@ var SSPublishPane = new Class({
   },
   
   
+  shareWith: function()
+  {
+    var targets = this.currentTargets();
+    if(targets.length == 0)
+    {
+      alert("Please specify which user or group you wish to publish to.");
+      return;
+    }
+    var p = SSShiftShareWith(this.currentShiftId(), targets);
+    p.realize();
+  },
+  
+
   attachEvents: function()
   {
     this.Cancel.addEvent("click", this['close'].bind(this));
@@ -194,6 +207,7 @@ var SSPublishPane = new Class({
     if(this.SecretLink) this.SecretLink.addEvent("click", this.showProxy.bind(this));
     this.AddPublishTarget.addEvent("keyup", this.onKeyUp.bind(this));
     this.AddTarget.addEvent("click", this.addTarget.bind(this));
+    this.SendMessage.addEvent("click", this.shareWith.bind(this));
   },
 
 
@@ -362,7 +376,8 @@ var SSPublishPane = new Class({
 
   addTarget: function(evt)
   {
-    this.PublishTargets.grab(this.createTarget(this.AddPublishTarget.get("value").trim()));
+    var target = this.AddPublishTarget.get("value").trim();
+    if(target) this.PublishTargets.grab(this.createTarget(target));
     this.AddPublishTarget.set("value", "");
     this.hideMatches();
   },

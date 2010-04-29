@@ -539,3 +539,15 @@ function SSAllShiftsForSpace(spaceName, href)
     }
   });
 }
+
+function SSShiftShareWith(id, userNames)
+{
+  return SSApp.post({
+    resource: "shift",
+    id: id,
+    action: "share",
+    data: {
+      users: userNames.join(" ")
+    }
+  });
+}

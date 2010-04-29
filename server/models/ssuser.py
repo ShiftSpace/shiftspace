@@ -92,7 +92,7 @@ class SSUser(User):
     def namesToIds(cls, names):
         return [user["_id"] for user in
                 core.fetch(view=SSUser.by_name, keys=names) if user and user.get("_id")]
-
+    
     # ========================================
     # Instance Methods
     # ========================================
