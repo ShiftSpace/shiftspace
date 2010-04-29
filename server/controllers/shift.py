@@ -192,7 +192,7 @@ class ShiftController(ResourceController):
         targets = users.split(" ")
         userNames = [target[1:] for target in targets if target[0] == "@"]
         userIds = SSUser.namesToIds(userNames)
-        theShift.shareWith(userIds)
+        theShift.shareWith(userIds, fromUser=SSUser.read(loggedInUser))
         return ack
 
     @db_session

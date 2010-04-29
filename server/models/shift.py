@@ -335,11 +335,14 @@ class Shift(SSDocument):
     # Publishing
     # ========================================
 
-    def shareWith(self, userIds):
+    def shareWith(self, userIds, fromUser=None):
         from server.models.message import Message
         from server.models.ssuser import SSUser
         users = core.fetch(keys=userIds)
-        userName = SSUser.read(self.createdBy).userName
+        if fromUser:
+            userName = fromUser.userName
+        else:
+            userName = SSUser.read(self.createdBy).userName
         for user in users:
             json = {
                 "fromId": self.createdBy,
