@@ -27,6 +27,7 @@ var SSPublishPane = new Class({
 
     SSAddObserver(this, "onShiftShare", this.onShiftShare.bind(this));
     SSAddObserver(this, "onShiftCheck", this.onShiftCheck.bind(this));
+    SSAddObserver(this, "onShiftUncheck", this.onShiftUncheck.bind(this));
     SSAddObserver(this, "onShiftListViewWillHide", this.onShiftListViewWillHide.bind(this));
 
     this.createMatchesList();
@@ -53,6 +54,17 @@ var SSPublishPane = new Class({
     var lv = evt.listView,
         xs = lv.checkedItems();
     if(xs.length > 1)
+    {
+      this['close']();
+    }
+  },
+
+
+  onShiftUncheck: function(evt)
+  {
+    var lv = evt.listView,
+        xs = lv.checkedItems();
+    if(xs.length == 0)
     {
       this['close']();
     }
