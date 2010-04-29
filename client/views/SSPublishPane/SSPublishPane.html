@@ -22,17 +22,14 @@
     </div>
     
     <div id="SSPublishPaneBody">
-	<input id="PublishTargets" type="text" outlet="SSPublishPane" class="SSInputField SSPinput TextHint" value="@username, &amp;groupame, #tag"></input>
-	<button id="AddTag" class="SSPublishAddTag" outlet="SSPublishPane">Add</button>
+	<input id="AddPublishTarget" type="text" outlet="SSPublishPane" class="SSInputField SSPinput TextHint" value="@username, &amp;groupame, #tag"></input>
+	<button id="AddTarget" class="SSPublishAddTag" outlet="SSPublishPane">Add</button>
 	<p id="TagTip">
 	    <span>Share this shift selectively with <strong>@users</strong> and <strong>&amp;groups</strong></span>
-	    <span class="hide"><strong>@users</strong> and <strong>&amp;groups</strong> will be notified of this shift</span>
+
 	</p>
 	
-	<div id="SSPublishPaneTags">
-	    <span class="SSPPTagsroundedCorners SSPPTagUser SSPPTag">@username<span class="SSPPTagDelete"></span></span>
-	    <span class="SSPPTagsroundedCorners SSPPTagGroup SSPPTag">&amp;groupname<span class="SSPPTagDelete"></span></span>
-	    <span class="SSPPTagsroundedCorners SSPPTagTag SSPPTag">#tagname<span class="SSPPTagDelete"></span></span>
+	<div id="PublishTargets" outlet="SSPublishPane">
 	</div>
         <!--
             <ul>

@@ -155,7 +155,7 @@ var SSPublishPane = new Class({
     }
     else
     {
-      var targets = this.PublishTargets.getProperty("value").split(" ").map(String.trim).filter($not($eq("")));
+      var targets = this.currentTargets();
       if(targets.length == 0)
       {
         alert("Please specify which user or group you wish to publish to.");
@@ -180,11 +180,12 @@ var SSPublishPane = new Class({
     this.Cancel.addEvent("click", this['close'].bind(this));
     this.ChooseVisibility.addEvent('click', this.publishShift.bind(this));
     if(this.SecretLink) this.SecretLink.addEvent("click", this.showProxy.bind(this));
-    this.PublishTargets.addEvent("keyup", this.onKeyUp.bind(this));
+    this.AddPublishTarget.addEvent("keyup", this.onKeyUp.bind(this));
+    this.AddTarget.addEvent("click", this.addTarget.bind(this));
   },
 
 
-  autocompleteTypes: {
+  targetTypes: {
     "@": "user",
     "&": "group",
     "#": "tag"
@@ -204,7 +205,7 @@ var SSPublishPane = new Class({
       return;
     }
 
-    if(this.currentMatches && this.currentMatches.length > 1)
+    if(this.currentMatches && this.currentMatches.length > 0)
     {
       var selected = this.autocomplete.getElement(".selected");
       if(!selected) return;
@@ -230,11 +231,11 @@ var SSPublishPane = new Class({
 
     if(!this.autocomplete.getParent()) this.showMatches();
 
-    var type = this.autocompleteTypes[text[0]];
+    var type = this.targetTypes[text[0]];
     text = text.tail(text.length-1);
     if(type && text != this.lastText)
     {
-      this.updateMatches(SSAutocomplete(this.autocompleteTypes[text[0]], text));
+      this.updateMatches(SSAutocomplete(this.targetTypes[text[0]], text));
       this.lastText = text;
     }
   },
@@ -242,8 +243,8 @@ var SSPublishPane = new Class({
 
   showMatches: function(type)
   {
-    var size = this.PublishTargets.getSize(),
-        pos = this.PublishTargets.getPosition();
+    var size = this.AddPublishTarget.getSize(),
+        pos = this.AddPublishTarget.getPosition();
     this.element.getElement("#SSPublishPaneBody").grab(this.autocomplete);
     this.autocomplete.setStyles({
       left: pos.x,
@@ -293,7 +294,7 @@ var SSPublishPane = new Class({
   update: function(shift)
   {
     var publishData = shift.publishData;
-    this.PublishTargets.setProperty("value", "");
+    this.AddPublishTarget.setProperty("value", "");
     this.setCurrentShiftId(shift._id);
     if(publishData['private'])
     {
@@ -305,7 +306,7 @@ var SSPublishPane = new Class({
     }
     if(publishData.targets && publishData.targets.length > 0)
     {
-      this.PublishTargets.setProperty("value", publishData.targets.join(" "));
+      this.AddPublishTarget.setProperty("value", publishData.targets.join(" "));
     }
   },
 
@@ -323,5 +324,46 @@ var SSPublishPane = new Class({
   {
     this.mapOutletsToThis();
     this.attachEvents();
+  },
+
+
+  addTarget: function(evt)
+  {
+    this.PublishTargets.grab(this.createTarget(this.AddPublishTarget.get("value").trim()));
+  },
+
+
+  createTarget: function(target)
+  {
+    var type = this.targetTypes[target[0]],
+    el = new Element("span", {
+      "text": target,
+      "class": "SSPPTagsroundedCorners SSPPTag SSPPTag" + type.capitalize(),
+      "events": {
+        "click": this.deleteTarget.bind(this)
+      }
+    });
+    el.store(target);
+    return el;
+  },
+
+
+  createTargets: function(targets)
+  {
+    return tags.map(this.createTargets.bind(this));
+  },
+
+
+  deleteTarget: function(evt)
+  {
+    $(evt.target).dispose();
+  },
+
+
+  currentTargets: function()
+  {
+    return this.PublishTargets.getElements("#PublishTargets .SSPPTag").map(function(el) {
+      return el.retrieve("target");
+    });
   }
 });

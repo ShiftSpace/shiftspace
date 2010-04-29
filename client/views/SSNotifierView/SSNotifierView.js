@@ -707,5 +707,4 @@ var SSNotifierView = new Class({
     SSPostNotification('onNotifierLoad', this);
     this.setIsLoaded(true);
   }
-
 });
