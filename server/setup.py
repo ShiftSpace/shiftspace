@@ -47,6 +47,7 @@ def init(dbname="shiftspace/master"):
         print "%s database already exists." % dbname
     db = server[dbname]
     sync()
+    installDefaultSpaces()
 
 
 def installSpace(space):

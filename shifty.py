@@ -425,7 +425,6 @@ def main(argv):
     elif action == "update":
         update()
     elif action == "initdb":
-        installDefaultSpaces()
         setup.init()
     elif action == "build":
         build(argv[1:])
