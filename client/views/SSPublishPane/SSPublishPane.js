@@ -296,14 +296,35 @@ var SSPublishPane = new Class({
     var publishData = shift.publishData;
     this.AddPublishTarget.setProperty("value", "");
     this.setCurrentShiftId(shift._id);
+
+    if(shift.userName != ShiftSpace.User.getUserName())
+    {
+      this.SSPublishPaneHeader.addClass("SSDisplayNone");
+      this.SSPPVisibleEverybody.addClass("SSDisplayNone");
+      this.SecretLink.set("text", "Get public link");
+      this.ChooseVisibility.addClass("SSDisplayNone");
+      this.SendMessage.removeClass("SSDisplayNone");
+    }
+    else
+    {
+      this.SSPublishPaneHeader.removeClass("SSDisplayNone");
+      this.SSPPVisibleEverybody.removeClass("SSDisplayNone");
+      this.SecretLink.set("text", "Get secret link");
+      this.ChooseVisibility.removeClass("SSDisplayNone");
+      this.SendMessage.addClass("SSDisplayNone");
+    }
+    
     if(publishData['private'])
     {
       this.PublicCheckbox.setProperty("checked", false);
+      this.StatusForm.getElement("strong").set("text", "Private shift");
     }
     else
     {
       this.PublicCheckbox.setProperty("checked", true);
+      this.StatusForm.getElement("strong").set("text", "Public shift");
     }
+    
     if(publishData.targets && publishData.targets.length > 0)
     {
       this.AddPublishTarget.setProperty("value", publishData.targets.join(" "));
@@ -331,6 +352,7 @@ var SSPublishPane = new Class({
   {
     this.PublishTargets.grab(this.createTarget(this.AddPublishTarget.get("value").trim()));
     this.AddPublishTarget.set("value", "");
+    this.hideMatches();
   },
 
 

@@ -5,7 +5,7 @@
               delegate:'SSConsoleWindow'
               }">
     
-    <div id="SSPublishPaneHeader">
+    <div id="SSPublishPaneHeader" outlet="SSPublishPane">
     	
     	<div id="SSPublishPaneEdit" class="hide">
 	    <button id="DeleteShift" outlet="SSPublishPane" class="SSButtonMinor">Delete</button>
@@ -15,7 +15,7 @@
 	<div id="SSPublishPaneVis">
 	    <!-- <h4>Visibility:</h4> -->
 	    <form id="StatusForm" outlet="SSPublishPane">
-        	<label class="SSStatus SSPPVisPrivate"><strong>Private shift</strong> shared with 2 users and 1 group</label>
+        	<label class="SSStatus SSPPVisPrivate"><strong>Private shift</strong> <span>shared with 0 users and 0 groups</span></label>
 	    </form>
 	</div>
 	
@@ -26,7 +26,6 @@
 	<button id="AddTarget" class="SSPublishAddTag" outlet="SSPublishPane">Add</button>
 	<p id="TagTip">
 	    <span>Share this shift selectively with <strong>@users</strong> and <strong>&amp;groups</strong></span>
-
 	</p>
 	
 	<div id="PublishTargets" outlet="SSPublishPane">
@@ -56,6 +55,7 @@
 	    <div id="SSPublishButtons">
 		<button id="Cancel" outlet="SSPublishPane" class="SSButtonMinor">Cancel</button>
 		<button id="ChooseVisibility" outlet="SSPublishPane" class="SSButtonMajor">Update Visibility</button>
+                <button id="SendMessage" outlet="SSPublishPane" class="SSButtonMajor SSDisplayNone">Send message</button>
 	    </div>
 	</div>
     </div>
