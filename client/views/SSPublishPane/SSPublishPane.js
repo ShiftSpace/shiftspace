@@ -155,7 +155,7 @@ var SSPublishPane = new Class({
     }
     else
     {
-      var targets = this.currentTargets();
+      var targets = this.currentTargets().join(" ");
       if(targets.length == 0)
       {
         alert("Please specify which user or group you wish to publish to.");
@@ -330,6 +330,7 @@ var SSPublishPane = new Class({
   addTarget: function(evt)
   {
     this.PublishTargets.grab(this.createTarget(this.AddPublishTarget.get("value").trim()));
+    this.AddPublishTarget.set("value", "");
   },
 
 
@@ -343,7 +344,7 @@ var SSPublishPane = new Class({
         "click": this.deleteTarget.bind(this)
       }
     });
-    el.store(target);
+    el.store("target", target);
     return el;
   },
 
@@ -362,7 +363,7 @@ var SSPublishPane = new Class({
 
   currentTargets: function()
   {
-    return this.PublishTargets.getElements("#PublishTargets .SSPPTag").map(function(el) {
+    return this.PublishTargets.getElements(".SSPPTag").map(function(el) {
       return el.retrieve("target");
     });
   }
