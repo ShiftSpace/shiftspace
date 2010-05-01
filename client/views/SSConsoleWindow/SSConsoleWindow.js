@@ -81,6 +81,11 @@ var SSConsoleWindow = new Class({
   {
     this.parent();
     this.sendFront();
+    if(this.SSConsoleWindowMultiView)
+    {
+      var cv = this.SSConsoleWindowMultiView.getCurrentView();
+      if(cv && cv.willClose) cv.willClose();
+    }
   },
 
 

@@ -194,5 +194,4 @@ var SSMultiView = new Class({
     }
     this.showView(this.indexOfNode(this.getRawSubViews(), this.element.getElement('> #'+name)));
   }
-
 });

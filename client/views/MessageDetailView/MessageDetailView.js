@@ -81,6 +81,14 @@ var MessageDetailView = new Class({
     {
       this.PreviousMessage.removeClass("SSDisplayNone");
     }
+    if(event.index-1 == event.listView.count())
+    {
+      this.NextMessage.addClass("SSDisplayNone");
+    }
+    else
+    {
+      this.NextMessage.removeClass("SSDisplayNone");
+    }
   },
 
 
@@ -95,6 +103,16 @@ var MessageDetailView = new Class({
   'close': function()
   {
     this.delegate().hide();
+  },
+
+
+  willClose: function()
+  {
+    var evt = this.currentMessageEvent();
+    if(evt && evt.listView)
+    {
+      evt.listView.deselectAll();
+    }
   },
   
 

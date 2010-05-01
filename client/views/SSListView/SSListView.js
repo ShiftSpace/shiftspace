@@ -1462,7 +1462,7 @@ var SSListView = new Class({
   deselectRow: function(index)
   {
     var cellNode = this.cellNodeForIndex(index);
-    if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
+    if(!this.options.multipleSelection) this.deselectAll();
     if(cellNode.hasClass('selected')) 
     {
       var event = {
@@ -1475,6 +1475,12 @@ var SSListView = new Class({
       this.onRowDeselect(index);
       this.fireEvent("onRowDeselect", event);
     }
+  },
+
+
+  deselectAll: function()
+  {
+    this.cellNodes().removeClass('selected');
   },
   
   
