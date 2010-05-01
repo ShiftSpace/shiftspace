@@ -13,7 +13,8 @@ var ShiftListView = new Class({
   defaults: function()
   {
     return $merge(this.parent(), {
-      scrollEvents: true
+      scrollEvents: true,
+      customShiftList: false
     });
   },
 
@@ -53,8 +54,9 @@ var ShiftListView = new Class({
   onRowSelect: function(idx)
   {
     this.parent(idx);
-    var shift = this.data()[idx];
-    var noErr = SSShowShift(SSSpaceForName(shift.space.name), shift._id);
+    var shift = this.data()[idx],
+        noErr = true;
+    if(!this.options.customShiftList) noErr = SSShowShift(SSSpaceForName(shift.space.name), shift._id);
     if(!noErr) this.deselectRow(idx);
   },
   
@@ -62,7 +64,7 @@ var ShiftListView = new Class({
   onRowDeselect: function(idx)
   {
     var shift = this.data()[idx];
-    SSHideShift(SSSpaceForName(shift.space.name), shift._id);
+    if(!this.options.customShiftList) SSHideShift(SSSpaceForName(shift.space.name), shift._id);
   },
   
   

@@ -48,7 +48,7 @@ var InboxPane = new Class({
         p.realize();
         SSPostNotification("onMessageRead");
       }
-      SSPostNotification("onShowMessage", {message: evt.data, index: evt.index, event: evt});
+      SSPostNotification("onShowMessage", evt);
     }
   },
 

@@ -18,13 +18,13 @@ var MessageDetailView = new Class({
   },
 
   
-  setCurrentMessageEvent: function()
+  currentMessageEvent: function()
   {
     return this.__currentMessageEvent;
   },
   
   
-  currentMessageEvent: function(currentMessageEvent)
+  setCurrentMessageEvent: function(currentMessageEvent)
   {
     this.__currentMessageEvent = currentMessageEvent;
   },
@@ -44,7 +44,7 @@ var MessageDetailView = new Class({
 
   showMessage: function(evt)
   {
-    var message = evt.message;
+    var message = evt.data;
     this.setCurrentMessageEvent(evt);
     this.setCurrentMessage(message);
     SSTemplate(this.element.getElement(".header"), message);

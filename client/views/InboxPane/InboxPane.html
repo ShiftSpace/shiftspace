@@ -8,7 +8,11 @@
         <ul id="MessagesListView"
             class="SSListView ShiftListView SSContentView"
             uiclass="ShiftListView"
-            outlet="InboxPane">
+            outlet="InboxPane"
+            options="{
+              allowSelection: true,
+              customShiftList: true
+            }">
 
             <li class="SSCell ShiftListViewCell" 
 	        uiclass="ShiftListViewCell"
