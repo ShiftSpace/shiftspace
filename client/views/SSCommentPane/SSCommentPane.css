@@ -86,11 +86,11 @@
   float: left;  
 }
 
-.index{
+#SSCommentPane .index{
    float:left;
 }
 
-.text{
+#SSCommentPane .text{
    border: 1px solid #cfcac4;
    padding: 6px;
    min-height:38px;
@@ -101,7 +101,7 @@
    line-height:14px;
 }
 
-.spaceIcon{
+#SSCommentPane .spaceIcon{
    padding: 12px;
    margin-right:5px;
    border: 1px solid #c7c3b6;
@@ -109,7 +109,7 @@
    background-color: #FFFFFF;
 }
 
-.DgreyBox > .spaceIcon{
+#SSCommentPane .DgreyBox > .spaceIcon{
    padding:8px;
    margin-right:5px;
    border: 1px solid #c7c3b6;
@@ -117,7 +117,7 @@
    background-color: #FFFFFF;
 }
 
-.summary{
+#SSCommentPane .summary{
    color:#4B423A;
    font-size:15px;
 }
@@ -128,17 +128,17 @@
   font-size: 11px;*/
 }
 
-.createdStr,
-.user .userName{
+#SSCommentPane.createdStr,
+#SSCommentPane .user .userName{
   font-size: 11px;
 }
 
-.SSListView
+#SSCommentPane .SSListView
 {
    width:100%;
 }
 
-ul#SSCommentsListView
+#SSCommentPane ul#SSCommentsListView
 {
    height: 150px;
    /*overflow-y: scroll;*/
@@ -147,25 +147,26 @@ ul#SSCommentsListView
    margin-top: 15px;
 }
 
-ul#SSCommentsListView li#SSCommentsListViewCell{
+#SSCommentPane ul#SSCommentsListView li#SSCommentsListViewCell{
   background-image: url(/images/comment_bubble_top);
   background-repeat: no-repeat;
 }
 
-ul#SSCommentsListView #SSCommentsListViewCell .text{
+#SSCommentPane ul#SSCommentsListView #SSCommentsListViewCell .text{
   
 }
 
-ul#SSCommentsListView img.spaceIcon
+#SSCommentPane ul#SSCommentsListView img.spaceIcon
 {
    display: none;
 }
 
-ul#SSCommentsListView li:first-child img.spaceIcon
+#SSCommentPane ul#SSCommentsListView li:first-child img.spaceIcon
 {
    display: block;
 }
-.PaneForm{
+
+#SSCommentPane .PaneForm{
    border-top-color:#CFCAC4;
    border-top-style:solid;
    border-top-width:1px;
@@ -174,13 +175,14 @@ ul#SSCommentsListView li:first-child img.spaceIcon
    padding-left:5px;
 }
 
-#SSCloseComments{
+#SSCommentPane #SSCloseComments{
    background:none;
    color:#74665A;
    text-decoration:underline;
    font-size:12px;
 }
-#SSPostComment{
+
+#SSCommentPane #SSPostComment{
    color:#74665A;
    font-size:12px;
    border: solid 2px #b3ada5;

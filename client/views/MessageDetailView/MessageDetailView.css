@@ -3,90 +3,98 @@
 /* Header ======================================= */
 
 * {
-    font-family: "Helvetica",Helvetica Neue,Arial,Verdana,sans-serif;
-    border:0;
+  font-family: "Helvetica",Helvetica Neue,Arial,Verdana,sans-serif;
+  border:0;
 }
 
 div.header div.top{
-    border-top: 1px #b3ada5 solid;
-    border-left: 1px #b3ada5 solid;
-    border-right: 1px #b3ada5 solid;
-    background-color:#e3dfdb;
-    padding: 6px;
+  border-top: 1px #b3ada5 solid;
+  border-left: 1px #b3ada5 solid;
+  border-right: 1px #b3ada5 solid;
+  background-color:#e3dfdb;
+  padding: 6px;
+  line-height: 13px;
 }
 div.top label{
-    color:#4B423A;
-    margin-left:2px;
-   font-size:12px;
+  color:#4B423A;
+  margin-left:2px;
+  font-size:12px;
+  float: left;
+  padding: 1px 6px 0 0;
 }
 div.top span.userName{
-    font-size:12px;
-    -moz-border-radius-bottomright:4px;
-    -moz-border-radius-topright:4px;
-    -moz-box-sizing:border-box;
-    background-color:#f8f5f2;
-    cursor:pointer;
-    height:16px;
-    line-height:12px;
-    padding-left:4px;
-    padding-right:4px;
-    padding-top:1px;
+  font-size:12px;
+  -moz-border-radius-bottomright:4px;
+  -moz-border-radius-topright:4px;
+  -moz-box-sizing:border-box;
+  background-color:#f8f5f2;
+  cursor:pointer;
+  height:16px;
+  line-height:12px;
+  padding-left:4px;
+  padding-right:4px;
+  padding-top:1px;
 }
+
+div.top div.user{
+  margin-left:6px;
+}
+
 div.top span.createdStr{
-    color:#74665a;
-    margin-left:6px;
-    font-size: 11px;
+  color:#74665a;
+  margin-left:6px;
+  font-size: 11px;
+  line-height: 15px;
 }
-
-
 
 div.header div.bottom{
-    border: 1px #b3ada5 solid;
-    background-color:#e3dfdb;
-    /*padding-left:28px;*/
-    padding-top: 6px;
-    padding-bottom: 6px;
+  border: 1px #b3ada5 solid;
+  background-color:#e3dfdb;
+  /*padding-left:28px;*/
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
 
-}
 div.bottom label{
-    display:block;
-    color:#4B423A;
-    float:left;
-    font-size:12px;
-    text-align:right;
-    width:50px;    
+  display:block;
+  color:#4B423A;
+  float:left;
+  font-size:12px;
+  text-align:right;
+  width:50px;    
 }
+
 div.bottom span.title{
-    display:block;
-    color:#554C45;
-    font-size:12px;
-    font-weight:bold;
-    margin-left:58px;
-    margin-right:20px;
-    width:260px;    
+  display:block;
+  color:#554C45;
+  font-size:12px;
+  font-weight:bold;
+  margin-left:58px;
+  margin-right:20px;
+  width:260px;    
 }
 
 /* message ======================================= */
 
 div#MessageBodyMultiView{
-    margin-top:4px;
-    margin-bottom:4px;
-    padding-top:8px;
-    padding-left:6px;
-    padding-right:6px;
-    padding-bottom:8px;
-    border: 1px #b3ada5 solid;
-    background-color:#fcfcfc;
-    
+  margin-top:4px;
+  margin-bottom:4px;
+  padding-top:8px;
+  padding-left:6px;
+  padding-right:6px;
+  padding-bottom:8px;
+  border: 1px #b3ada5 solid;
+  background-color:#fcfcfc;
+  font-size:13px;
 } 
 
 div#InviteSubView div.text{
-    font-size:12px;
+  font-size:12px;
 }
 
 div#FollowSubView div.text{
-    font-size:12px;
-    color: #2a2520;
+  font-size:12px;
+  color: #2a2520;
 }
 
 
@@ -94,18 +102,18 @@ div#FollowSubView div.text{
 
 
 button.previous{
-    padding-left:10px;
-    margin-left:0px;
-    background:transparent url(http://localhost:8080/images/Console/arrow_prew.png) no-repeat scroll 0px 3px;
-    border:0;
-    color:#f63b02;
+  padding-left:10px;
+  margin-left:0px;
+  background:transparent url(http://localhost:8080/images/Console/arrow_prew.png) no-repeat scroll 0px 3px;
+  border:0;
+  color:#f63b02;
 
 }
 button.next{
-    padding-right:10px;
-    background:transparent url(http://localhost:8080/images/Console/arrow_next.png) no-repeat scroll 36px 3px;
-    border:0;
-    color:#f63b02;
-    float:right;
+  padding-right:10px;
+  background:transparent url(http://localhost:8080/images/Console/arrow_next.png) no-repeat scroll 36px 3px;
+  border:0;
+  color:#f63b02;
+  float:right;
 }
 
