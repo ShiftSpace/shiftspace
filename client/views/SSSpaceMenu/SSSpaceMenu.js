@@ -126,7 +126,7 @@ var SSSpaceMenu = new Class({
   attachEvents: function()
   {
     this.SpaceMenuList.addEvent('onSortComplete', this.onSpaceSort.bind(this));
-    this.SpaceMenuList.addEvent('onRowClick', this.newShift.bind(this));
+    this.SpaceMenuList.addEvent('onRowSelect', this.newShift.bind(this));
     this.SpaceMenuList.addEvent('onReload', this.resize.bind(this));
     this.element.addEvent("mouseleave", this.hide.bind(this));
   },

@@ -32,7 +32,7 @@ var PeoplePane = new Class({
     [this.FollowingListView,
      this.FollowersListView,
      this.SearchUsersListView].each(function(lv) {
-       lv.addEvent("onRowClick", this.handleRowClick.bind(this));
+       lv.addEvent("onRowSelect", this.onRowSelect.bind(this));
      }, this);
   },
 
@@ -81,7 +81,7 @@ var PeoplePane = new Class({
   },
 
 
-  handleRowClick: function(evt)
+  onRowSelect: function(evt)
   {
     SSPostNotification('onShowUser', evt.data);
   },

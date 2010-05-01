@@ -95,6 +95,9 @@ var SSCell = new Class({
     Parameters:
       event - the browser event.
       eventType - custom event type.
+
+    Returns:
+      A boolean whether an matching action was found.
    */
   eventDispatch: function(event, eventType)
   {

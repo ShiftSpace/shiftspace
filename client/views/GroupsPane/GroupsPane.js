@@ -42,9 +42,9 @@ var GroupsPane = new Class({
   },
 
 
-  handleRowClick: function(evt)
+  onRowSelect: function(evt)
   {
-    if(!evt.handled) SSPostNotification("onShowGroup", evt.data);
+    SSPostNotification("onShowGroup", evt.data);
   },
 
 
@@ -57,7 +57,7 @@ var GroupsPane = new Class({
   attachEvents: function()
   {
     [this.GroupsListView, this.MyGroupsListView].each(function(lv) {
-      lv.addEvent("onRowClick", this.handleRowClick.bind(this));
+      lv.addEvent("onRowSelect", this.onRowSelect.bind(this));
     }, this);
     this.GroupsTabView.addEvent("tabSelected", this.onTabSelect.bind(this));
   },

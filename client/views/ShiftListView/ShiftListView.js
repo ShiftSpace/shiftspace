@@ -49,7 +49,7 @@ var ShiftListView = new Class({
   {
     SSPostNotification("onShiftListViewWillHide", {listView:this});
   },
-  
+
   
   onRowSelect: function(idx)
   {

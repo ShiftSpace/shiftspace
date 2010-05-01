@@ -34,22 +34,19 @@ var InboxPane = new Class({
 
   attachEvents: function()
   {
-    this.MessagesListView.addEvent("onRowClick", this.handleRowClick.bind(this));
+    this.MessagesListView.addEvent("onRowSelect", this.onRowSelect.bind(this));
   },
 
 
-  handleRowClick: function(evt)
+  onRowSelect: function(evt)
   {
-    if(!evt.handled)
+    if(!evt.data.read)
     {
-      if(!evt.data.read)
-      {
-        var p = SSMarkMessageRead(evt.data._id);
-        p.realize();
-        SSPostNotification("onMessageRead");
-      }
-      SSPostNotification("onShowMessage", evt);
+      var p = SSMarkMessageRead(evt.data._id);
+      p.realize();
+      SSPostNotification("onMessageRead");
     }
+    SSPostNotification("onShowMessage", evt);
   },
 
 

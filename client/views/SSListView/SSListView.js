@@ -454,25 +454,14 @@ var SSListView = new Class({
     switch(true)
     {
       case(this.hitTest(target, 'li, > li *') != null):
-        var hit = this.cachedHit();
-        var cellNode = (hit.get('tag') == 'li' && hit) || hit.getParent('li');
-
+        var hit = this.cachedHit(),
+            cellNode = (hit.get('tag') == 'li' && hit) || hit.getParent('li');
         this.cell().lock($(cellNode));
-        var handled =this.cell().eventDispatch(event, type);
+        var handled = this.cell().eventDispatch(event, type);
         this.cell().unlock();
-
         if(type == 'click')
         {
-          var idx = this.indexOfCellNode(cellNode),
-              evt = {
-                listView: this,
-                index: idx,
-                data: this.dataForIndex(idx),
-                handled: handled
-              };
-          
-          this.fireEvent('onRowClick', evt);
-          if(!handled) this.onRowClick(evt);
+          if(!handled) this.onRowClick(this.indexOfCellNode(cellNode));
         }
       break;
       
@@ -1432,43 +1421,51 @@ var SSListView = new Class({
   },
 
   
-  onRowClick: function(evt)
+  onRowClick: function(idx)
   {
+    var evt = {
+      listView: this,
+      index: idx,
+      data: this.dataForIndex(idx)
+    };
+  
     if(this.options.allowSelection)
     {
       var cellNode = this.cellNodeForIndex(evt.index);
       if(!cellNode.hasClass('selected')) 
       {
-        this.selectRow(evt.index);
-        this.onRowSelect(evt.index);
+        this.selectRow(evt.index, evt);
       }
       else
       {
-        this.deselectRow(evt.index);
-        this.onRowDeselect(evt.index);
+        this.deselectRow(evt.index, evt);
       }
     }
   },
 
   onRowSelect: function(index) {},
-  selectRow: function(index)
+  selectRow: function(index, event)
   {
     var cellNode = this.cellNodeForIndex(index);
     if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
     if(!cellNode.hasClass('selected')) 
     {
       cellNode.addClass('selected');
+      this.onRowSelect(event.index);
+      this.fireEvent("onRowSelect", event);
     }
   },
   
   onRowDeselect: function(index) {},
-  deselectRow: function(index)
+  deselectRow: function(index, event)
   {
     var cellNode = this.cellNodeForIndex(index);
     if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
     if(cellNode.hasClass('selected')) 
     {
       cellNode.removeClass('selected');
+      this.onRowDeselect(event.index);
+      this.fireEvent("onRowDeselect", event);
     }
   },
   
