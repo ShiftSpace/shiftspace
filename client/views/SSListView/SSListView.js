@@ -1421,50 +1421,58 @@ var SSListView = new Class({
   },
 
   
-  onRowClick: function(idx)
+  onRowClick: function(index)
   {
-    var evt = {
-      listView: this,
-      index: idx,
-      data: this.dataForIndex(idx)
-    };
-  
     if(this.options.allowSelection)
     {
-      var cellNode = this.cellNodeForIndex(evt.index);
+      var cellNode = this.cellNodeForIndex(index);
       if(!cellNode.hasClass('selected')) 
       {
-        this.selectRow(evt.index, evt);
+        this.selectRow(index);
       }
       else
       {
-        this.deselectRow(evt.index, evt);
+        this.deselectRow(index);
       }
     }
   },
 
+
   onRowSelect: function(index) {},
-  selectRow: function(index, event)
+  selectRow: function(index)
   {
     var cellNode = this.cellNodeForIndex(index);
     if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
     if(!cellNode.hasClass('selected')) 
     {
+      var event = {
+        listView: this,
+        index: index,
+        data: this.dataForIndex(index)
+      };
+
       cellNode.addClass('selected');
-      this.onRowSelect(event.index);
+      this.onRowSelect(index);
       this.fireEvent("onRowSelect", event);
     }
   },
   
+
   onRowDeselect: function(index) {},
-  deselectRow: function(index, event)
+  deselectRow: function(index)
   {
     var cellNode = this.cellNodeForIndex(index);
     if(!this.options.multipleSelection) this.cellNodes().removeClass('selected');
     if(cellNode.hasClass('selected')) 
     {
+      var event = {
+        listView: this,
+        index: index,
+        data: this.dataForIndex(index)
+      };
+
       cellNode.removeClass('selected');
-      this.onRowDeselect(event.index);
+      this.onRowDeselect(index);
       this.fireEvent("onRowDeselect", event);
     }
   },
