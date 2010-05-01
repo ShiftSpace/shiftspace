@@ -78,7 +78,7 @@ var LoginTabView = new Class({
     ShiftSpaceUser.login({
       userName: this.SSLoginFormUsername.getProperty('value'),
       password: this.SSLoginFormPassword.getProperty('value')
-    }, this.loginFormSubmitCallback.bind(this));
+    });
   },
 
 
