@@ -19,25 +19,24 @@
 	                User Name
 	            </label>
 	            <input class="SSInputField" id="SSLoginFormUsername" type="text" outlet="LoginTabView"></input>
-		    </div>
-		    <div>        
+		</div>
+		<div>        
 	            <label title="Password" class="SSLocalized">
 	                Password
 	            </label>
 	            <input class="SSInputField" id="SSLoginFormPassword" type="password" outlet="LoginTabView"></input>
-		    </div>
+		</div>
                 <span id="SSLoginFormMessage" class="SSLocalized" outlet="LoginTabView"></span>
                 <span id="SSLoginFormForgot" class="SSLocalized" outlet="LoginTabView">
-		        	    <a href="#" class="SSButtonMinor">Forgot my password</a>
+		    <a href="#" class="SSButtonMinor">Forgot my password</a>
                 </span>
                 <input id="SSLoginFormSubmit" class="SSInputField SSLocalized SSButtonMajor" title="Login" type="button" value="Login" outlet="LoginTabView"></input>
                 <!-- Hidden submit button -->
                 <input class="SSInputField" style="display: none" type="submit"></input>
             </form>
-  	            <span class="SSOpenid Signup">
-		            	You can also login with your <a href="#"><img src="/images/Console/login-openid.gif" alt="OpenID"/></a>
-		            </span>
-
+  	    <span class="SSOpenid Signup">
+		You can also login with your <a href="#"><img src="/images/Console/login-openid.gif" alt="OpenID"/></a>
+	    </span>
         </div>
         <!-- End Login Pane -->
 
@@ -57,9 +56,9 @@
                     <input class="SSInputField" id="SSSignUpFormConfirmPassword" type="password" outlet="LoginTabView"></input>
                 </fieldset>
                 
-		            <div class="SSOpenid Register">
-		            	Or register using your <a href="#"><img src="/images/Console/login-openid.gif" alt="OpenID"/></a>
-		            </div>
+		<div class="SSOpenid Register">
+		    Or register using your <a href="#"><img src="/images/Console/login-openid.gif" alt="OpenID"/></a>
+		</div>
                 <div>
                     <span id="SSSignUpFormMessage" class="SSLocalized" outlet="LoginTabView"></span>
                     <input id="SSSignUpFormSubmit" class="SSInputField SSLocalized SSButtonMajor" type="button" title="Sign Up" value="Submit" outlet="LoginTabView"></input>
