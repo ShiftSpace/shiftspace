@@ -81,7 +81,7 @@ var MessageDetailView = new Class({
     {
       this.PreviousMessage.removeClass("SSDisplayNone");
     }
-    if(event.index-1 == event.listView.count())
+    if(event.index == event.listView.count()-1)
     {
       this.NextMessage.addClass("SSDisplayNone");
     }
