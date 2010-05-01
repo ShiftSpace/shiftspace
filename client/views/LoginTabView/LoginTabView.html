@@ -28,14 +28,14 @@
 		</div>
                 <span id="SSLoginFormMessage" class="SSLocalized" outlet="LoginTabView"></span>
                 <span id="SSLoginFormForgot" class="SSLocalized" outlet="LoginTabView">
-		    <a href="#" class="SSButtonMinor">Forgot my password</a>
+		    <a id="ForgotPassword" outlet="LoginTabView" class="SSButtonMinor">Forgot my password</a>
                 </span>
                 <input id="SSLoginFormSubmit" class="SSInputField SSLocalized SSButtonMajor" title="Login" type="button" value="Login" outlet="LoginTabView"></input>
                 <!-- Hidden submit button -->
                 <input class="SSInputField" style="display: none" type="submit"></input>
             </form>
   	    <span class="SSOpenid Signup">
-		You can also login with your <a href="#"><img src="/images/Console/login-openid.gif" alt="OpenID"/></a>
+		You can also login with your <a><img src="/images/Console/login-openid.gif" alt="OpenID"/></a>
 	    </span>
         </div>
         <!-- End Login Pane -->

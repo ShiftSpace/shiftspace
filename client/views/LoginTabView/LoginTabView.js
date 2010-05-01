@@ -24,6 +24,7 @@ var LoginTabView = new Class({
     this.mapOutletsToThis();
     this.initLoginForm();
     this.initSignUpForm();
+    this.attachEvents();
   },
 
 
@@ -31,6 +32,15 @@ var LoginTabView = new Class({
   {
     this.parent();
     if(ShiftSpaceUser.isLoggedIn() && !this.loginHandled()) this.handleLogin();
+  },
+
+
+  attachEvents: function()
+  {
+    this.ForgotPassword.addEvent("click", function(evt) {
+      evt = new Event(evt);
+      this.selectTab(2);
+    }.bind(this));
   },
   
   
