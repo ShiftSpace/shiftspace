@@ -447,8 +447,9 @@ var SSListView = new Class({
   eventDispatch: function(event, eventType)
   {
     event = new Event(event);
-    var target = $(event.target);
-    var type = event.type;
+
+    var target = $(event.target),
+        type = event.type;
     
     switch(true)
     {
@@ -631,8 +632,8 @@ var SSListView = new Class({
   */
   findAll: function(fn)
   {
-    var data = this.data();
-    var result = [];
+    var data = this.data(),
+        result = [];
     for(var i = 0, l = data.length; i < l; i++) if(fn(data[i])) result.push(data[i]);
     return result;
   },
@@ -685,9 +686,9 @@ var SSListView = new Class({
   */
   add: function(newItem, options)
   {
-    var animate = ((!options || options.animate == null) && true) || options.animate;
-    var delegate = this.delegate();
-    var canAdd = (delegate && delegate.canAdd && delegate.canAdd(this)) || true;
+    var animate = ((!options || options.animate == null) && true) || options.animate,
+        delegate = this.delegate(),
+        canAdd = (delegate && delegate.canAdd && delegate.canAdd(this)) || true;
     if(canAdd)
     {
       var addData = (delegate && delegate.dataFor && delegate.dataFor('add', this));
@@ -709,8 +710,8 @@ var SSListView = new Class({
     if(this.cellBeingEdited() != -1) this.cancelEdit(this.cellBeingEdited(), false);
     var filtered = false;
     if(userData && userData.atIndex != null) filtered = this.filter(data, userData.atIndex);
-    var delegate = this.delegate();
-    var anim = (!filtered &&
+    var delegate = this.delegate(),
+        anim = (!filtered &&
                 delegate &&
                 delegate.animationFor && 
                 delegate.animationFor({action:'add', listView:this, userData:data})) || false;
@@ -759,9 +760,9 @@ var SSListView = new Class({
   */
   edit: function(index, _animate)
   {
-    var animate = (_animate == null && true) || _animate;
-    var delegate = this.delegate();
-    var canEdit = (delegate && delegate.canEdit && delegate.canEdit(index)) || true;
+    var animate = (_animate == null && true) || _animate,
+        delegate = this.delegate(),
+        canEdit = (delegate && delegate.canEdit && delegate.canEdit(index)) || true;
     
     if(canEdit)
     {
@@ -848,9 +849,9 @@ var SSListView = new Class({
   */
   update: function(cellData, index, _noArrayUpdate)
   {
-    var noArrayUpdate = _noArrayUpdate || false;
-    var delegate = this.delegate();
-    var canUpdate = (delegate && delegate.canUpdate && delegate.canUpdate(index)) || true;
+    var noArrayUpdate = _noArrayUpdate || false,
+        delegate = this.delegate(),
+        canUpdate = (delegate && delegate.canUpdate && delegate.canUpdate(index)) || true;
     if(canUpdate)
     {
       if(!noArrayUpdate) this.__update__(cellData, index);
@@ -917,8 +918,8 @@ var SSListView = new Class({
   */
   onUpdate: function(index)
   {
-    var delegate = this.delegate();
-    var anim = (delegate && 
+    var delegate = this.delegate(),
+        anim = (delegate && 
                 delegate.animationFor && 
                 delegate.animationFor({action:'update', listView:this, index:index})) || false;
     if(anim)
@@ -972,8 +973,8 @@ var SSListView = new Class({
   // TODO: animation support
   remove: function(index)
   {
-    var delegate = this.delegate();
-    var canRemove = true;
+    var delegate = this.delegate(),
+        canRemove = true;
     if(delegate && delegate.canRemove) canRemove = delegate.canRemove({listView:this, index:index});
     if(canRemove) this.__remove__(index);
   },
@@ -1018,8 +1019,8 @@ var SSListView = new Class({
   */
   onRemove: function(index)
   {
-    var delegate = this.delegate();
-    var anim = (delegate && 
+    var delegate = this.delegate(),
+        anim = (delegate && 
                 delegate.animationFor && 
                 delegate.animationFor({action:'remove', listView:this, index:index})) || false;
     if(index == this.cellBeingEdited()) this.setCellBeingEdited(-1);
@@ -1066,9 +1067,10 @@ var SSListView = new Class({
   */
   hideItem: function(index, _animate)
   {
-    var animate = (_animate == null && true) || _animate;
-    var delegate = this.delegate();
-    var canHide = (delegate && delegate.canHide && delegate.canHide(index)) || true;
+    var animate = (_animate == null && true) || _animate,
+        delegate = this.delegate(),
+        canHide = (delegate && delegate.canHide && delegate.canHide(index)) || true;
+
     if(canHide)
     { 
       var anim = (animate && delegate && delegate.animationFor && delegate.animationFor({action:'hide', listView:this, index:index})) || false;
@@ -1126,11 +1128,10 @@ var SSListView = new Class({
   */
   cancelEdit: function(index, _animate)
   {
-    var animate = (_animate == null && true) || _animate;
-    var cellBeingEdited = this.cellBeingEdited();
-    
-    var delegate = this.delegate();
-    var canLeaveEdit = (delegate && delegate.canLeaveEdit && delegate.canLeaveEdit(index)) || true;
+    var animate = (_animate == null && true) || _animate,
+        cellBeingEdited = this.cellBeingEdited(),
+        delegate = this.delegate(),
+        canLeaveEdit = (delegate && delegate.canLeaveEdit && delegate.canLeaveEdit(index)) || true;
 
     // check for unsaved changes
     if(cellBeingEdited != -1 && canLeaveEdit)
