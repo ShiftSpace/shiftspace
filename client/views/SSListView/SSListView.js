@@ -37,7 +37,7 @@ var SSListView = new Class({
       filter: null,
       addAt: 'bottom',
       leaveEditOnUpdate: false,
-      allowSelection: false,
+      allowSelection: true,
       table: null,
       scrollEvents: false
     });
