@@ -661,3 +661,20 @@ li.GroupListViewCell .settings
 {
    visibility: visible;
 }
+
+.AutocompleteTip
+{
+  margin: 0;
+  padding: 5px 0;
+}
+
+button.Autocomplete {
+  background: transparent url(/images/Pane/publish-form-button.gif) center center no-repeat;
+  border: 0 none;
+  margin-top: 5px;
+  padding: 4px 10px;
+  position: absolute;
+  right: 17px;
+  text-indent: -2000px;
+}
+

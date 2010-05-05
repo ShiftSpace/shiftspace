@@ -86,7 +86,7 @@
 
 #GroupMemberListViewContainer
 {
-   height: 125px;
+   height: 145px;
 }
 
 #GroupMemberListView
@@ -95,8 +95,7 @@
    background-color: #f0edeb;
    border: 1px solid #dcd8d5;
    width: auto;
-   min-height:115px;
-   padding:5px;
+   height: 100%;
 }
 
 .MemberListViewCell

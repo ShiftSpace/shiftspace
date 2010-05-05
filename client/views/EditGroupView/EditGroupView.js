@@ -65,7 +65,7 @@ var EditGroupView = new Class({
 
   'open': function()
   {
-    this.delegate().setHeight(530);
+    this.delegate().setHeight(580);
     this.delegate().show();
     this.multiView().showViewByName(this.name);
   },
@@ -140,14 +140,6 @@ var EditGroupView = new Class({
   {
     this.CreateGroup.addEvent("click", this.createGroup.bind(this));
     this.CancelAction.addEvent('click', this['close'].bind(this));
-
-    this.InviteUsers.addEvent("click", function(evt) {
-      evt = new Event(evt);
-      this.delegate().sendBack();
-      evt.stop();
-      SSPostNotification("onAddUsers", {group: this.currentGroup(), mode:this.__mode});
-    }.bind(this));
-    
     this.SaveGroup.addEvent('click', function(evt) {
       evt = new Event(evt);
       var groupId = this.currentGroup().groupId,
