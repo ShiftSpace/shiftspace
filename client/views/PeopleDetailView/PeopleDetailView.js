@@ -60,10 +60,14 @@ var PeopleDetailView = new Class({
 
   showUser: function(userData)
   {
+    var fullName = userData.fullName;
     this.open();
     this.currentUser = userData;
     this.element.getElement(".gravatarLarge").setProperty("src", userData.gravatarLarge);
-    SSTemplate(this.element, $H(userData).erase("gravatarLarge"));
+    userData = $H(userData).erase("gravatarLarge");
+    userData.erase("fullName");
+    SSTemplate(this.element, userData);
+    this.element.getElement(".fullName").set("text", (fullName.first || "") + " " + (fullName.last || ""));
     this.update(userData.following, false);
     this.showUserInfo(SSUserInfo(userData.userName));
   },
