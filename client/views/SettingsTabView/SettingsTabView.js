@@ -76,6 +76,11 @@ var SettingsTabView = new Class({
       first: parts[0],
       last: parts[1]
     };
+    if(userData.password == "********" || userData.passwordVerify == "********")
+    {
+      delete userData.password;
+      delete userData.passwordVerify;
+    }
     SSUpdateUser(userData).realize();
   },
 
