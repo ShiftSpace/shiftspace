@@ -12,7 +12,7 @@
         <div class="SSControlView">
             <div class="SSButton SSActive">Your Groups</div>
             <div class="SSButton">Browse Groups</div>
-            <div class="SSButton">Start New Group</div>
+            <button class="SSButtonMajor SSSecondary">New Group</button>
         </div>
 
         <!-- Start subtabs -->
@@ -68,35 +68,6 @@
                 </ul>
             </div>
             <!-- End Browse Groups subtab -->
-
-            <!-- Start Start New Group subtab -->
-            <div id="StartNewGroup"
-                 class="SSTabPane"
-                 outlet="GroupsPane">
-                <ul id="InviteUsersListView"
-                    uiclass="SSListView"
-                    class="SSListView PeopleListView"
-                    outlet="GroupsPane">
-                    <li uiclass="PeopleListViewCell"
-                        class="SSCell PeopleListViewCell"
-                        options="{
-                          properties: ['gravatar', 'userName', 'fullName'],
-                          actions: [
-                            {
-                              selector: '.isMember',
-                              target: 'EditGroupView',
-                              method: 'addRemoveUser'
-                            }
-                          ]
-                        }">
-                        <span class="gravatar"><img width="22"></img></span>
-                        <span class="userName"></span>
-                        <span class="fullName"></span>
-                        <input class="SSInputField isMember" type="checkbox"></input>
-                    </li>
-                </ul>
-            </div>
-            <!-- End Start New group subtab -->
 
         </div>
         <!-- End subtabs -->
