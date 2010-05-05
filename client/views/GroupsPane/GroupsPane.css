@@ -10,12 +10,17 @@
 
 #GroupsTabView > .SSControlView
 {
-/*  width: 150px; */
+  text-align: center;
+}
+
+#GroupsTabView > .SSControlView button
+{
+  margin-top: 10px;
+  background-color: #f7f2ef;
 }
 
 #GroupsTabView > .SSContentView 
 {
-/*  left: 152px;*/
 }
 
 ul#InviteUsersListView.Invite input.SSInputField[type=checkbox]
