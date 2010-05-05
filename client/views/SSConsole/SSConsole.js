@@ -175,7 +175,7 @@ var SSConsole = new Class({
         id: 'SSConsoleResizer',
         styles: {
           position: 'fixed',
-          bottom: 205,
+          bottom: 225,
           cursor: 'ns-resize',
           height: 5,
           left: 10,
