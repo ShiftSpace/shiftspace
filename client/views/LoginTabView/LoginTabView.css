@@ -7,43 +7,43 @@
 #LoginTabView .SSTabPane form,
 .SSOpenid.Signup
 {
-  border:1px solid #C9CCC4;
-	margin-left:10px;
-	margin-top: 5px;
-	padding:5px 0 33px 10px;
-	width:440px;
-	height: 100px;
+  border: 1px solid #C9CCC4;
+  margin-left: 10px;
+  margin-top: 5px;
+  padding: 5px 0 33px 10px;
+  width: 440px;
+  height: 100px;
 }
 
 #LoginTabView #SSLoginForm{
-	height: 45px;
-	
+  height: 45px;
+  
 }
 
 .SSOpenid.Signup
 {
-	display:block;
-	height:auto;
-	margin-top:-13px;
-	padding:5px 10px 2px;
-	text-align:right;
-	width:430px;
+  display: block;
+  height: auto;
+  margin-top: -13px;
+  padding: 5px 10px 2px;
+  text-align: right;
+  width: 430px;
 }
 
 .SSOpenid.Register
 {
-	float: left;
+  float: left;
 }
 
 .SSOpenid a
 {
-	vertical-align:sub;
-	margin-left:2px;
+  vertical-align: sub;
+  margin-left: 2px;
 }
 
 .SSOpenid a img
 {
-	border: 0;
+  border: 0;
 }
 
 .LoginTabViewForm input
@@ -56,61 +56,61 @@
 .LoginTabViewForm label
 {
   display: block;
-	padding-top:4px;
+  padding-top: 4px;
 }
 
 .LoginTabViewForm input#SSLocalized
 {
-	width: 80px;
-	float: right;
+  width: 80px;
+  float: right;
 }
 
 #SSLoginForm div{
-	float: left;
+  float: left;
 }
 
 .LoginTabViewForm #SSLoginFormForgot
 {
-	float: left;
-	width: 210px;
-	margin-right: 10px;
+  float: left;
+  width: 210px;
+  margin-right: 10px;
 }
 
 #LoginTabView .SSTabPane #SSForgottenPasswordForm
 {
-	width: 220px;
-	height: 65px;
+  width: 220px;
+  height: 65px;
 }
 
 #LoginTabView .SSTabPane #SSForgottenPasswordForm div
 {
-	width: 200px;
-	margin-bottom: 4px;
+  width: 200px;
+  margin-bottom: 4px;
 }
 
 .LoginTabViewForm #SSLoginFormSubmit,
 .LoginTabViewForm #SSSignUpFormSubmit,
 .LoginTabViewForm #SSForgottenPasswordFormSubmit
 {
-	float: right;
-	width: 100px;
+  float: right;
+  width: 100px;
 }
 
 .LoginTabViewForm #SSSignUpFormSubmit{
-	margin-right: 10px;
+  margin-right: 10px;
 }
 
 .LoginTabViewForm #SSLoginFormForgot{
-	float: left;
+  float: left;
 }
 
 .LoginTabViewForm .label
 {
-	padding-top: 4px;
+  padding-top: 4px;
 }
 
 #SSSignUpForm input{
-	margin-right: 0;
+  margin-right: 0;
 }
 
 #SSSignUpForm fieldset

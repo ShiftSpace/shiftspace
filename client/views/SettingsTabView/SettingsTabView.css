@@ -121,13 +121,13 @@ ul#SSInstalledSpaces > li.SSInstalledSpaceCell:nth-child(4n+4)
 
 /*---------------------------------------------------------Account Tab */
 
-#AccountTab form{
+#AccountTab form {
   padding: 10px 0 0 10px;
-  border:1px solid #C9CCC4;
-  margin-left:10px;
-  margin-top:5px;
-  width:660px;
-  height: 100%;
+  border: 1px solid #C9CCC4;
+  margin-left: 10px;
+  margin-top: 5px;
+  width: 660px;
+  height: 160px;
 }
 
 #AccountTab fieldset{
