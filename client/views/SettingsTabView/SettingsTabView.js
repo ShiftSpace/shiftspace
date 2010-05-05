@@ -46,16 +46,19 @@ var SettingsTabView = new Class({
     if(ShiftSpaceUser.isLoggedIn()) this.update();
   },
 
-
+  
   attachEvents: function()
   {
     SSLog("attachEvents settings tab view", SSLogForce);
+
     this.UpdateAccountDetails.addEvent("click", this.updateUser.bind(this));
+
     // overide submit
     this.AccountDetails.addEvent("submit", function(evt) {
       evt = new Event(evt);
       evt.stop();
     }.bind(this));
+
     this.addEvent("tabSelected", function(evt) {
       if(evt.tabIndex == 3)
       {
@@ -79,7 +82,9 @@ var SettingsTabView = new Class({
 
   showUserDetails: function(user)
   {
-    user.fullName = [user.fullName.first || '', user.fullName.last || ''].join(" ");
+    user.fullName = [user.fullName.first || '', user.fullName.last || ''].join(" ").trim();
+    user.password = "********";
+    user.passwordVerify = "********";
     SSTemplate(this.AccountDetails, user);
   }.future(),
 
