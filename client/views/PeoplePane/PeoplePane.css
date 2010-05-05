@@ -2,3 +2,7 @@ li.PeopleListViewCell .userName
 {
    font-weight: bold;
 }
+
+li.PeopleListViewCell .userName{
+  background: none;
+}
