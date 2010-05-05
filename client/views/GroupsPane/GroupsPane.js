@@ -58,20 +58,10 @@ var GroupsPane = new Class({
     [this.GroupsListView, this.MyGroupsListView].each(function(lv) {
       lv.addEvent("onRowSelect", this.onRowSelect.bind(this));
     }, this);
-    this.GroupsTabView.addEvent("tabSelected", this.onTabSelect.bind(this));
-  },
-
-
-  onTabSelect: function(evt)
-  {
-    if(evt.tabIndex == 2 && !this.__addUserMode)
-    {
+    this.CreateGroup.addEvent("click", function(e) {
+      e = new Event(e);
       SSPostNotification("onCreateGroup", this);
-    }
-    else if(evt.tabIndex != 2)
-    {
-      SSPostNotification("onEditGroupHide", this);
-    }
+    }.bind(this));
   },
 
 
