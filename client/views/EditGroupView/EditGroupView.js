@@ -118,7 +118,6 @@ var EditGroupView = new Class({
   update: function(groupInfo)
   {
     this.setGroupInfo(groupInfo);
-    SSTemplate(this.GroupUserCount, groupInfo);
   }.future(),
 
 
@@ -156,18 +155,6 @@ var EditGroupView = new Class({
           p1 = SSUpdateGroup(groupId, formData),
           p2 = SSInviteUsersToGroup(groupId, this.users);
       this.onUpdateGroup(p1, p2);
-    }.bind(this));
-
-    this.CloseEditMember.addEvent("click", function(evt) {
-      evt = new Event(evt);
-      this.EditGroupMember.addClass("SSDisplayNone");
-      this.GroupMemberListViewContainer.removeClass("SSDisplayNone");
-    }.bind(this));
-
-    this.MakeMemberAdmin.addEvent("click", function(evt) {
-      evt = new Event(evt);
-      var p = SSMakeMemberAdmin(this.currentGroup().groupId, this.currentUser()._id);
-      p.realize();
     }.bind(this));
   },
 
@@ -212,26 +199,16 @@ var EditGroupView = new Class({
 
   editMember: function(sender, evt)
   {
+    // TODO: add this functionality to the modal view
     this.setCurrentUser(evt.data);
-    var editMemberEl = this.element.getElement("#EditGroupMember"),
-        templData = $H(evt.data),
+    var templData = $H(evt.data),
         groupInfo = this.groupInfo();
     if(groupInfo.isAdmin && evt.data._id != ShiftSpace.User.getId())
     {
-      this.MakeMemberAdmin.removeClass("SSDisplayNone");
-      this.BlockMember.removeClass("SSDisplayNone");
     }
     else
     {
-      this.MakeMemberAdmin.addClass("SSDisplayNone");
-      this.BlockMember.addClass("SSDisplayNone");
     }
-    this.element.getElement("#GroupMemberListViewContainer").addClass("SSDisplayNone");
-    editMemberEl.removeClass("SSDisplayNone");
-    templData.erase("gravatar");
-    templData.erase("fullName");
-    SSTemplate(editMemberEl, templData);
-    editMemberEl.getElement(".gravatar").set("src", evt.data.gravatar);
   },
 
 
