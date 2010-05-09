@@ -24,6 +24,17 @@ var EditGroupView = new Class({
     SSAddObserver(this, "onCreateGroup", this.presentCreateForm.bind(this));
     SSAddObserver(this, "onEditGroup", this.presentEditForm.bind(this));
     SSAddObserver(this, "onEditGroupHide", this['close'].bind(this));
+
+    this.createMatchesList();
+  },
+
+
+  createMatchesList: function()
+  {
+    this.autocomplete = new Element("div", {
+      "id": "PublishTargetAutocomplete",
+      "class": "AutocompleteList"
+    });
   },
 
 
@@ -148,7 +159,102 @@ var EditGroupView = new Class({
           p2 = SSInviteUsersToGroup(groupId, this.users);
       this.onUpdateGroup(p1, p2);
     }.bind(this));
+    this.InviteMemberField.addEvent("keyup", this.onKeyUp.bind(this));
   },
+
+
+  onKeyUp: function(evt)
+  {
+    evt = new Event(evt);
+
+    var target = $(evt.target),
+        text = target.get("value").trim();
+
+    if(text.length <= 1)
+    {
+      this.hideMatches();
+      return;
+    }
+
+    if(this.currentMatches && this.currentMatches.length > 0)
+    {
+      var selected = this.autocomplete.getElement(".selected");
+      if(!selected) return;
+      if(evt.key == "down" && selected.getNext())
+      {
+        selected.removeClass("selected");
+        selected.getNext().addClass("selected");
+      }
+      if(evt.key == "up" && selected.getPrevious())
+      {
+        selected.removeClass("selected");
+        selected.getPrevious().addClass("selected");
+      }
+      if(evt.key == "enter")
+      {
+        var data = selected.retrieve("data");
+        target.set("value", data.name);
+        this.hideMatches();
+      }
+      evt.stop();
+      return;
+    }
+
+    if(!this.autocomplete.getParent()) this.showMatches();
+
+    if(text != this.lastText)
+    {
+      this.updateMatches(SSAutocomplete("user", text));
+      this.lastText = text;
+    }
+  },
+
+
+  showMatches: function(type)
+  {
+    var size = this.InviteMemberField.getSize(),
+        pos = this.InviteMemberField.getPosition();
+    this.element.getElement("#InviteMembers").grab(this.autocomplete);
+    this.autocomplete.setStyles({
+      left: pos.x,
+      top: pos.y + size.y,
+      width: size.x,
+      "min-height": 20
+    });
+  },
+  
+
+  hideMatches: function()
+  {
+    this.currentMatches = null;
+    this.autocomplete.dispose();
+  },
+
+
+  updateMatches: function(matches)
+  {
+    this.currentMatches = matches;
+    this.autocomplete.empty();
+    matches.each(function(x, i) {
+      var el = new Element("div", {
+        html: "<img></img><span></span>",
+        'class': "autoResault"
+      });
+      if(i == 0) el.addClass("selected");
+      if(x.gravatar)
+      {
+        el.getElement("img").set("src", x.gravatar);
+      }
+      else
+      {
+        el.getElement("img").dispose();
+      }
+      el.getElement("span").set("text", x.name);
+      el.store("data", x);
+      // watch for click
+      this.autocomplete.grab(el);
+    }, this);
+  }.future(),
 
 
   onUpdateGroup: function(group)
