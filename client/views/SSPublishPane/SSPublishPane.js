@@ -37,7 +37,8 @@ var SSPublishPane = new Class({
   createMatchesList: function()
   {
     this.autocomplete = new Element("div", {
-      "id": "PublishTargetAutocomplete"
+      "id": "PublishTargetAutocomplete",
+      "class": "AutocompleteList"
     });
   },
 

@@ -678,3 +678,34 @@ button.Autocomplete {
   text-indent: -2000px;
 }
 
+.AutocompleteList
+{
+   position: absolute;
+   background-color: white;
+}
+
+.AutocompleteList div.autoResault
+{
+  padding: 2px;
+}
+
+.AutocompleteList div.autoResault img
+{
+  height: 20px;
+  width: 20px;
+  float: left;
+}
+
+.AutocompleteList div.autoResault span
+{
+  display:block;
+  height:12px;
+  padding:4px 4px 4px 24px;
+}
+
+.AutocompleteList div.selected
+{
+   background-color: #F63B02;
+   color: #fff;
+   font-weight: bold;
+}
