@@ -160,7 +160,7 @@ var EditGroupView = new Class({
       this.onUpdateGroup(p1, p2);
     }.bind(this));
     this.InviteMemberField.addEvent("keyup", this.onKeyUp.bind(this));
-    this.InviteMember.addEvent("click", this.addMember.bind(this));
+    this.InviteMember.addEvent("click", this.inviteMember.bind(this));
   },
 
 
@@ -271,17 +271,16 @@ var EditGroupView = new Class({
   },
 
 
-  addMember: function(evt)
+  inviteMember: function(evt)
   {
     var userName = this.InviteMemberField.get("value");
-    this.__addMember__(SSGetUser(userName));
+    this.__inviteMember__(SSGetUser(userName));
   },
 
 
-  __addMember__: Future(function(user) {
-    SSLog(user, SSLogForce);
-    this.users.push(user._id);    
-    this.GroupMemberListView.add(user);
+  __inviteMember__: Future(function(user) {
+    var p = SSInviteUsersToGroup(this.currentGroup().groupId, [user._id]);
+    p.realize();
   }),
 
 
@@ -310,7 +309,12 @@ var EditGroupView = new Class({
   {
     this.members = new SSTable("Members", {
       resource: {read:['group', groupId, 'members'].join("/")},
-      watches: []
+      watches: [
+        {
+          events: [{resource:"group", action:"inviteusers"}],
+          handlers: [SSTable.dirtyTheViews]
+        }
+      ]
     });
   },
   
