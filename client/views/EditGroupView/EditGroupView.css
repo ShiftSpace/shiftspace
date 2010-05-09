@@ -120,3 +120,13 @@
     height: 125px;
     background-color: #eee;
 }
+
+#InviteMemberField
+{
+    width: 340px;
+}
+
+#InviteMember
+{
+    right: 10px;
+}
