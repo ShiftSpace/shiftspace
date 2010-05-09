@@ -160,6 +160,7 @@ var EditGroupView = new Class({
       this.onUpdateGroup(p1, p2);
     }.bind(this));
     this.InviteMemberField.addEvent("keyup", this.onKeyUp.bind(this));
+    this.InviteMember.addEvent("click", this.addMember.bind(this));
   },
 
 
@@ -270,26 +271,13 @@ var EditGroupView = new Class({
   },
 
 
-  addRemoveUser: function(sender, evt)
-  {
-    if(evt.target.getProperty("checked"))
-    {
-      this.addUser(evt.data);
-    }
-    else
-    {
-      this.removeUser(evt.data);
-    }
-  },
-
-
-  addUser: function(user)
+  addMember: function(user)
   {
     this.users.push(user._id);
   },
 
 
-  removeUser: function(user)
+  removeMember: function(user)
   {
     this.users.erase(user._id);
   },
