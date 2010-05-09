@@ -271,10 +271,18 @@ var EditGroupView = new Class({
   },
 
 
-  addMember: function(user)
+  addMember: function(evt)
   {
-    this.users.push(user._id);
+    var userName = this.InviteMemberField.get("value");
+    this.__addMember__(SSGetUser(userName));
   },
+
+
+  __addMember__: Future(function(user) {
+    SSLog(user, SSLogForce);
+    this.users.push(user._id);    
+    this.GroupMemberListView.add(user);
+  }),
 
 
   removeMember: function(user)
