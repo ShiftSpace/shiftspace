@@ -214,12 +214,22 @@ var ShiftSpace = new (function() {
 
     var SSCheckForDebugSpaces = function(controlp)
     {
-      var installed = SSInstalledSpaces();
+      var installed = SSInstalledSpaces(),
+          exported = false;
       $H(installed).each(function(space) {
         var key = [ShiftSpace.User.getUserName(), space.name, "debug"].join("."),
             debug = SSGetValue(key);
         if(debug)
         {
+          if(!exported) {
+            exported = true;
+            unsafeWindow.Space = function(obj) {
+              return new Class($merge({Extends:ShiftSpace.Space}, obj));
+            };
+            unsafeWindow.Shift = function(obj) {
+              return new Class($merge({Extends:ShiftSpace.Space}, obj));
+            };
+          }
           SSLog("Load", space.name, "in debug mode", SSLogForce);
           SSLoadSpace(space.name, true);
         }
