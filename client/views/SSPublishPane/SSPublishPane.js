@@ -37,7 +37,8 @@ var SSPublishPane = new Class({
   createMatchesList: function()
   {
     this.autocomplete = new Element("div", {
-      "id": "PublishTargetAutocomplete"
+      "id": "PublishTargetAutocomplete",
+      "class": "AutocompleteList"
     });
   },
 
@@ -349,6 +350,7 @@ var SSPublishPane = new Class({
     {
       this.PublicCheckbox.setProperty("checked", true);
       this.StatusForm.getElement("strong").set("text", "Public shift");
+      this.element.getElement(".SSSharedStats").addClass("SSDisplayNone");
     }
     
     if(publishData.targets && publishData.targets.length > 0)

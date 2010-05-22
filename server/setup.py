@@ -35,6 +35,8 @@ def init(dbname="shiftspace/master"):
         dbname - the name of the database to use.
     """
     import models.core as core
+    import couchdb
+    import sys
     os.system("scripts/clear_sessions.sh")
     server = core.sharedServer()
     if not server.__contains__(dbname):

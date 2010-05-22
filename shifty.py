@@ -395,7 +395,7 @@ def shell():
     Launch the shell with the models loaded. Useful for testing.
     """
     os.system("python -i shell.py")
-
+    
 
 def main(argv):
     try:
@@ -500,7 +500,7 @@ def usage():
     print
     print "   %16s  run unit tests" % "tests"
     print "   %16s  make a nightly" % "nightly"
-    print
+    print 
 
 
 if __name__ == "__main__":

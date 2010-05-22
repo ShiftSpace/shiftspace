@@ -86,27 +86,47 @@
 
 #GroupMemberListViewContainer
 {
-   height: 145px;
+    height: 145px;
 }
 
 #GroupMemberListView
 {
-   list-style: none;
-   background-color: #f0edeb;
-   border: 1px solid #dcd8d5;
-   width: auto;
-   height: 100%;
+    list-style: none;
+    background-color: #f0edeb;
+    border: 1px solid #dcd8d5;
+    width: auto;
+    height: 100%;
+    scroll-y: auto;
 }
 
 .MemberListViewCell
 {
-   display: inline;
-   float: left;
-   margin-right: 4px;
+    float: left;
+    margin-right: 4px;
+    width: 100%;
+    border-bottom: 1px solid #aaa;
+    overflow: visible;
+    height: 24px;
+}
+
+.MemberListViewCell div.pad
+{
+    float: left;
+    padding: 4px;
 }
 
 #EditGroupMember
 {
-   height: 125px;
-   background-color: #eee;
+    height: 125px;
+    background-color: #eee;
+}
+
+#InviteMemberField
+{
+    width: 340px;
+}
+
+#InviteMember
+{
+    right: 10px;
 }

@@ -31,6 +31,7 @@ var SSNotifierView = new Class({
     }.bind(this));
     SSAddObserver(this, 'onNewShiftShow', this.onNewShiftShow.bind(this));
     SSAddObserver(this, 'onShiftDestroy', this.hideQuickPane.bind(this));
+    SSAddObserver(this, "onShiftListViewWillHide", this.onShiftListViewWillHide.bind(this));
 
     this.watchFocusBlur();
 
@@ -627,6 +628,12 @@ var SSNotifierView = new Class({
     
   },
   
+
+  onShiftListViewWillHide: function(evt)
+  {
+    this.hideQuickEditPane();
+  },
+
   /* SSFramedView Stuff ---------------------------------------- */
 
   onInterfaceLoad: function(ui)

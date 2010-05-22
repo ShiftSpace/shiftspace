@@ -35,11 +35,13 @@
         </div>
     </form>
 
-    <input id="InviteMemberField" type="text" outlet="EditGroupView" class="SSInputField SSPinput TextHint" value=""></input>
-    <button id="InviteMember" class="Autocomplete" outlet="EditGroupView">Add</button>
-    <p class="AutocompleteTip">
-	<span>Invite users to join this group</span>
-    </p>
+    <div id="InviteMembers" outlet="EditGroupView">
+        <input id="InviteMemberField" type="text" outlet="EditGroupView" class="SSInputField SSPinput TextHint" value=""></input>
+        <button id="InviteMember" class="Autocomplete" outlet="EditGroupView">Add</button>
+        <p class="AutocompleteTip">
+	    <span>Invite users to join this group</span>
+        </p>
+    </div>
 
     <div id="GroupMemberListViewContainer" outlet="EditGroupView">
         <ul id="GroupMemberListView"
@@ -58,11 +60,13 @@
                     }
                   ]
                 }">
-                <div class="user">
-                    <span class="gravatarContainer">
-                        <img class="rounded-image gravatar" width="16" height="16"></img>
-                    </span>
-                    <span class="userName"></span>
+                <div class="pad">
+                    <div class="user">
+                        <span class="gravatarContainer">
+                            <img class="rounded-image gravatar" width="16" height="16"></img>
+                        </span>
+                        <span class="userName"></span>
+                    </div>
                 </div>
             </li>
         </ul>
