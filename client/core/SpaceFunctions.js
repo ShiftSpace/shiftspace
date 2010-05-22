@@ -59,7 +59,7 @@ var SSLoadSpace = function(spaceName, inline)
   var cssp = {data:1}; // horrible hack - David
   if(!$(document.head).getElement(["#",spaceName,"Css"].join("")))
   {
-    cssp = SSLoadStyle(attrs.css);
+    cssp = SSLoadStyle(attrs.css, null, SSSpaceIsInDebugMode(spaceName));
   }
 
   var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
