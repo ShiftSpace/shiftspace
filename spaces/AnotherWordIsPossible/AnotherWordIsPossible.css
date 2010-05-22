@@ -1,0 +1,13 @@
+/* Your Space and Shift CSS goes here */
+
+.HelloWorldShift
+{
+  font: 20px verdana sans-serif;
+  position: absolute;
+  padding:  5px 10px 5px 10px;
+  color: #74665A;
+  background-color: #F7F2EF;
+  left:400px;
+  top:400px;
+  -moz-border-radius:10px;
+}
