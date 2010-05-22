@@ -47,6 +47,7 @@ var ShiftListView = new Class({
 
   willHide: function()
   {
+    this.uncheckAll();
     SSPostNotification("onShiftListViewWillHide", {listView:this});
   },
 
