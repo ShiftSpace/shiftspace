@@ -45,13 +45,13 @@ Parameters:
   url - The URL of the CSS file to load
   frame - The frame where the css will be loaded.
 */
-function SSLoadStyle(url, frame) 
+function SSLoadStyle(url, frame, bustCache)
 {
   var dir = url.split('/');
   dir.pop();
   dir = dir.join('/');
   if (dir.substr(0, 7) != 'http://') dir = SSInfo().mediaPath + dir;
-  var p = SSLoadFile(url);
+    var p = SSLoadFile(url, bustCache);
   return SSAddStyle(p, {rewriteUrls: dir, frame: frame});
 }
 
@@ -95,9 +95,8 @@ Function: SSLoadFile
 
 Parameters:
   url - The URL of the target file
-  callback - A function to process the file once it's loaded
 */
-var SSLoadFile = function(url)
+var SSLoadFile = function(url, bustCache)
 {
   // If the URL doesn't start with "http://", assume it's on our server
   if (url.substr(0, 7) != 'http://' &&
@@ -107,6 +106,7 @@ var SSLoadFile = function(url)
   try
   {
     SSLog("LOAD FILE:", url, SSLogRequest);
+    if(bustCache) url += "?bust_cache=" + (Math.random() * 1000000).round();
     // Load the URL then execute the callback
     return new Request({
       method: 'GET',

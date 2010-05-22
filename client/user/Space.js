@@ -348,7 +348,7 @@ var ShiftSpaceSpace = new Class({
   shiftUI: function()
   {
     var uip, attrs = this.attributes(), html = $get(attrs, "shift", "html");
-    if(html) uip = SSLoadFile(attrs.url.urlJoin(html));
+    if(html) uip = SSLoadFile(attrs.url.urlJoin(html), SSSpaceIsInDebugMode(this.attributes().name));
     return uip;
   }.decorate(Function.memoize),
 
