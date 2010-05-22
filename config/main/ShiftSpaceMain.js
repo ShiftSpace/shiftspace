@@ -7,10 +7,6 @@ if(self == top)
   }
   catch(exc)
   {
-    if(console)
-    {
-      if (console.error) console.error("Unable to install ShiftSpace :(, " + exc);
-      if (console.log) console.log("Unable to install ShiftSpace :(, " + exc);
-    } 
+    GM_log("Unable to install ShiftSpace :(, " + exc);
   }
 }
