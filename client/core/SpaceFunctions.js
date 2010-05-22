@@ -88,7 +88,7 @@ var SSLoadSpace = function(spaceName, inline)
                        }
                        if(!shiftctor)
                        {
-                         throw new Exception(
+                         throw new Error(
                            spaceName + "Shift constructor does not exist! Did you specify the proper shift class name in your attrs.json file?"
                          );
                        }
