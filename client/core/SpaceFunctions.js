@@ -97,7 +97,7 @@ var SSLoadSpace = function(spaceName, inline)
                      }
                      catch(exc)
                      {
-                       SSLog('Could not load ' + spaceName + ' Space - ' + SSDescribeException(exc), SSLogError);
+                       SSLog('Could not load ' + spaceName + ' Space - ' + exc, SSLogError);
                      }
                      SSPostNotification("onSpaceLoad", space);
                      return SSRegisterSpace(space);

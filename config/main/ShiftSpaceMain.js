@@ -7,6 +7,6 @@ if(self == top)
   }
   catch(exc)
   {
-    console.error("Unable to install ShiftSpace :(, " + SSDescribeException(exc));
+    console.error("Unable to install ShiftSpace :(, " + exc);
   }
 }

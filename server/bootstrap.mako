@@ -38,16 +38,6 @@
             };
         }
     };
-
-    function SSDescribeException(_exception)
-    {
-      var temp = [];
-      for(var prop in _exception)
-      {
-         temp.push(prop + ':' + _exception[prop]);
-      }
-      return "Exception:{ " + temp.join(', ') +" }";
-    }
 </script>
 <script type="text/javascript" src="/client/core/UtilityFunctions.js"></script>
 <script type="text/javascript">
