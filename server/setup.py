@@ -35,11 +35,22 @@ def init(dbname="shiftspace/master"):
         dbname - the name of the database to use.
     """
     import models.core as core
+    import couchdb
+    import sys
     os.system("scripts/clear_sessions.sh")
     server = core.sharedServer()
     if not server.__contains__(dbname):
         print "Creating databases."
-        server.create(dbname)
+        try:
+            server.create(dbname)
+        except couchdb.client.ServerError:
+            print
+            print "It looks like you need to admin privileges to write to your CouchdB database"
+            print "please run:"
+            print
+            print "\tpython.shift.py create-admin -u your-admin-user-name -p your-admin-password"
+            print
+            sys.exit(2)
         server.create("shiftspace/public")
         server.create("shiftspace/shared")
         server.create("shiftspace/messages")
