@@ -397,6 +397,53 @@ def shell():
     os.system("python -i shell.py")
 
 
+def createAdmin(argv):
+    """
+    Create a new couchb superuser.
+    """
+    import couchdb
+    import server.models.core as core
+    import getpass
+
+    def createAdminUsage():
+        print
+        print "When running create-admin you may use the following options"
+        print "    -u     a CouchDB admin username"
+        print "    -p     the CouchDB admin user password"
+        print
+
+    try:
+        opts, args = getopt.getopt(argv, "u:p:", ['user=', 'password='])
+    except Exception:
+        print 'Invalid flag\n'
+        buildUsage()
+        sys.exit(2)
+
+    username = None
+    password = None
+    for opt, arg in opts:
+        if opt in ('-u', '--user'):
+            username = username
+        if opt in ('-p', '--password'):
+            password = password
+    
+    server = core.sharedServer()
+    server.resource.http.add_credentials(username, password)
+
+    newAdminUserName = raw_input("username:")
+    newAdminPassword = getpass.getpass("password:")
+    newAdmin = {
+        "name": newAdminUserName,
+        "roles": [],
+        "type": "user"
+        }
+
+    users = server["foo"]
+    print users
+
+    print "New admin user created"
+    
+
 def main(argv):
     try:
         action = argv[0]
@@ -470,6 +517,8 @@ def main(argv):
         runlucene()
     elif action == "shell":
         shell()
+    elif action == "create-admin":
+        createAdmin(argv[1:])
     else:
         usage()
         sys.exit(2)
@@ -501,6 +550,8 @@ def usage():
     print "   %16s  run unit tests" % "tests"
     print "   %16s  make a nightly" % "nightly"
     print
+    print "   %16s  create a new couchdb user for managing shiftspace content" % "create-admin"
+    print 
 
 
 if __name__ == "__main__":
