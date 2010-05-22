@@ -99,7 +99,9 @@ div#FollowSubView div.text{
 
 
 /* down option buttons ======================================= */
-
+#MDVJoinGroup,#MDVGroupDetails{
+    margin-top:3px;
+}
 
 button.previous{
   padding-left:10px;
