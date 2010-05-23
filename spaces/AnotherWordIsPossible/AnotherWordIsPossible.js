@@ -1,7 +1,33 @@
 var AnotherWordIsPossibleSpace = Space({
   setup: function(options) {
     // Your space code goes here:
+      
+  } //end setup
+      
+});
+
+var AnotherWordIsPossibleShift = Shift({
+  setup: function(json) {
+    //Your Shift code goes here:
+          
+    this.setPosition(json);
+    //this.makeDraggable({handle: $('drag_it')});
+    //this.save();
     
+    $('go').addEvent('click', this.doReplace.bind(this));
+    
+    //this.save();
+
+  },
+  
+  doReplace: function (){
+      
+    var originalWord = $('originalWord').get('value');
+    var newWord = $('newWord').get('value');
+    var words = {};
+    words[originalWord] = newWord;
+  
+    /*
     var words = {
     ///////////////////////////////////////////////////////
     // Syntax: 'Search word' : 'Replace word',
@@ -16,6 +42,7 @@ var AnotherWordIsPossibleSpace = Space({
     "Unfriend" : "Disconnect",
     ///////////////////////////////////////////////////////
     "":""};
+    */
     
     //////////////////////////////////////////////////////////////////////////////
     // This is where the real code is
@@ -29,7 +56,7 @@ var AnotherWordIsPossibleSpace = Space({
     };
     
     function isOkTag(tag) {
-      return (",pre,blockquote,code,input,button,textarea".indexOf(","+tag) == -1);
+      return ("pre,blockquote,code,input,button,textarea".indexOf(","+tag) == -1);
     }
     
     var regexs=new Array(),
@@ -51,17 +78,16 @@ var AnotherWordIsPossibleSpace = Space({
     	}
     }
     
-  } //end setup
-});
-
-var AnotherWordIsPossibleShift = Shift({
-  setup: function(json) {
-    //Your Shift code goes here:
-    
-        
-    this.setPosition(json);
-    //this.makeDraggable({handle: $('drag_it')});
     //this.save();
-
+    
+  },
+  
+  encode: function() {
+    return {
+      summary : "words replaced",
+      position : this.getPosition()
+    };
   }
+
+  
 });

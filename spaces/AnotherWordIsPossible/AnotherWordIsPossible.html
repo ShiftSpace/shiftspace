@@ -1,11 +1,14 @@
 <div class="AnotherWordIsPossibleShift" l18n="Hello world!">
   <h1 id="drag_it">Another Word is Possible</h1>
-  <form>
-    <button class="SSButtonMajor SSDeemphasized" outlet="">delete</button>
+  <form id="spaceInterface">
+    <button class="SSButtonMajor SSDeemphasized">delete</button>
+    
     <label>Replace:</label>
-    <input class="SSInputField" outlet="" type="text"></input>
+    <input id="originalWord" class="SSInputField" type="text"></input>
+    
     <label>with:</label>
-    <input class="SSInputField" outlet="" type="text"></input>
-    <button class="SSButtonMajor SSDeemphasized" outlet="">test</button>
+    <input id="newWord" class="SSInputField" type="text"></input>
+    
+    <span id="go" class="SSButtonMajor SSDeemphasized">go</span>
   </form>
 </div>
