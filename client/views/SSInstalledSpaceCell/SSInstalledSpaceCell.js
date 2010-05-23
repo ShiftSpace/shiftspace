@@ -21,7 +21,7 @@ var SSInstalledSpaceCell = new Class({
     var clone = this.parent();
     clone.addEvent("click", function(evt) {
       evt = new Event(evt);
-      var target = (evt.target.get("tag") == "li") ? evt.target : evt.target.getParent("li");
+      var target = ($(evt.target).get("tag") == "li") ? evt.target : evt.target.getParent("li");
       this.lock(target);
       // call action method with proper data
       ShiftSpaceNameTable.SettingsTabView.showSpaceSettings(
