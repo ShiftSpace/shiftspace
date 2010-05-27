@@ -26,29 +26,7 @@ var AnotherWordIsPossibleShift = Shift({
     var newWord = $('newWord').get('value');
     var words = {};
     words[originalWord] = newWord;
-  
-    /*
-    var words = {
-    ///////////////////////////////////////////////////////
-    // Syntax: 'Search word' : 'Replace word',
-    "first" : "last",
-    "friend" : "contact",
-    "friends" : "contacts",
-    "ignore" : "skip",
-    "unfriend" : "disconnect",
-    "Friend" : "Contact",
-    "Friends" : "Contacts ",
-    "Ignore" : "Skip",
-    "Unfriend" : "Disconnect",
-    ///////////////////////////////////////////////////////
-    "":""};
-    */
-    
-    //////////////////////////////////////////////////////////////////////////////
-    // This is where the real code is
-    // Don't edit below this
-    //////////////////////////////////////////////////////////////////////////////
-    
+        
     // prepareRegex by JoeSimmons
     // Used to take a string and ready it for use in new RegExp()
     String.prototype.prepareRegex = function() {
@@ -78,13 +56,15 @@ var AnotherWordIsPossibleShift = Shift({
     	}
     }
     
-    //this.save();
+    this._summary = originalWord + " >>> " + newWord;
+    
+    this.save();
     
   },
   
   encode: function() {
     return {
-      summary : "words replaced",
+      summary : this._summary,
       position : this.getPosition()
     };
   }
