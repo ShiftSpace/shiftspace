@@ -326,8 +326,8 @@ function SSSaveShift(shift)
 
   var p = SSApp.update('shift', id, params);
   $if(SSApp.noErr(p),
-      function() {
-        SSSpaceForName(shift.space.name).onShiftSave(p.get('id'));
+      function(v) {
+        SSSpaceForName(space.attributes().name).onShiftSave(v._id);
       },
       function() {
       });
