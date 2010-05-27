@@ -30,7 +30,11 @@ def sanitizeShift(shift):
     """
     from server.models import core
     master = core.connect()
-    attrs = master[shift["space"]["name"]]
+    try:
+        attrs = master[shift["space"]["name"]]
+    except Exception, err:
+        # space not in db
+        return shift
     filters = attrs.get("sanitize") or []
     filters.append("summary")
     for k in filters:
