@@ -1,12 +1,19 @@
 {
+  /* Base Info */
   "name": "Name",
+  "version": "0.0",
   "authors": ["me"],
+
+  /* User Info */
   "icon": "Name.png",
   "description": "Add a description (this will appear in the Installed Spaces tab in the Console)",
   "tooltip": "Add a tooltip (this will appear when using the Space Menu)",
-  "css": "Name.css",
-  "shift": { "html": "Name.html" },
-  "version": "0.0",
-  "lib": "lib",
-  "lang": "lang"
+
+  /* Interface Templates */
+  "ui": { "shift": { "html": "NameShift.html",
+                     "css": "NameShift.css" } },
+
+  /* Internationalization and Advanced */
+  "lang": "lang",
+  "lib": "lib"
 }

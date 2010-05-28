@@ -173,11 +173,17 @@ def processTemplate(path, outputdir, name):
     Used by createSpace. Helper function for copying
     over space template files.
     """
+    import re
     base, ext = os.path.splitext(os.path.basename(path))
     fh = open(path)
     contents = fh.read()
     fh.close()
     contents = contents.replace("Name", name)
+    if ext == ".json":
+        r = re.compile("\/\*.+?\*\/|\/\/.*(?=[\n\r])")
+        contents = r.sub('', contents)
+    lines = [line for line in contents.split('\n') if line.strip()]
+    contents = '\n'.join(lines)
     fbasename = (ext == ".json" and "attrs") or name
     fname = "%s%s" % (fbasename, ext)
     fh = open(os.path.join(outputdir, fname), "w")
