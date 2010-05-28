@@ -10,11 +10,17 @@ var AnotherWordIsPossibleShift = Shift({
   setup: function(json) {
     //Your Shift code goes here:
           
-    this.setPosition(json);
-    //this.makeDraggable({handle: $('drag_it')});
+    this.setPosition(json.position);
+    this.makeDraggable({handle: this.element.getElement('h1.drag_it')});
     //this.save();
     
-    $('go').addEvent('click', this.doReplace.bind(this));
+    if(json.originalWord && json.newWord){
+      this.element.getElement('input.originalWord').set('value', json.originalWord);
+      this.element.getElement('input.newWord').set('value', json.newWord);
+      this.doReplace();
+    }; 
+        
+    this.element.getElement('.go').addEvent('click', this.doReplace.bind(this));
     
     //this.save();
 
@@ -22,8 +28,8 @@ var AnotherWordIsPossibleShift = Shift({
   
   doReplace: function (){
       
-    var originalWord = $('originalWord').get('value');
-    var newWord = $('newWord').get('value');
+    var originalWord = this.element.getElement('input.originalWord').get('value');
+    var newWord = this.element.getElement('input.newWord').get('value');
     var words = {};
     words[originalWord] = newWord;
         
@@ -56,7 +62,9 @@ var AnotherWordIsPossibleShift = Shift({
     	}
     }
     
-    this._summary = originalWord + " >>> " + newWord;
+    this.originalWord = originalWord;
+    this.newWord = newWord;
+    this.summary = originalWord + " >>> " + newWord;
     
     this.save();
     
@@ -64,7 +72,9 @@ var AnotherWordIsPossibleShift = Shift({
   
   encode: function() {
     return {
-      summary : this._summary,
+      summary : this.summary,
+      originalWord : this.originalWord,
+      newWord : this.newWord,
       position : this.getPosition()
     };
   }
