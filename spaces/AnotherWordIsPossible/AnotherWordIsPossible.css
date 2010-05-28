@@ -2,12 +2,23 @@
 
 .AnotherWordIsPossibleShift
 {
-  font: 20px verdana sans-serif;
+  font: 15px verdana sans-serif;
   position: absolute;
-  padding:  5px 10px 5px 10px;
-  color: #74665A;
-  background-color: #F7F2EF;
+  color: #F7F2EF; /* #74665A; */
+  background-color: rgba(0,0,0,0.5); /* #F7F2EF; */
   left:400px;
   top:400px;
-  -moz-border-radius:10px;
+  -moz-border-radius-bottomleft: 10px;
+  -moz-border-radius-bottomright: 10px;
+}
+
+.AnotherWordIsPossibleShift h1{
+  background: #000;
+  font-size: 12px;
+  font-family: "Helvetica Neue", Arial, Verdana, sans-serif;
+  padding: 3px 5px;
+}
+
+.AnotherWordIsPossibleShift form{
+  padding:  5px 10px 5px 10px;
 }
