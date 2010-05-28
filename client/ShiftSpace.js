@@ -420,7 +420,8 @@ var ShiftSpace = new (function() {
        '__sys__',
        'SSShiftBeingEdited',
        'SSAllShiftsForSpace',
-       'SSSpaceShouldAutolaunch'
+       'SSSpaceShouldAutolaunch',
+       'SSCompileHtmlTemplate'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);
        });
