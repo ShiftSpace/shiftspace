@@ -15,7 +15,7 @@
 {
    width: 330px;
    border: solid 1px;
-   color:#CFCAC4;
+   color:#4B423A;
    margin-bottom:7px;
 }
 
@@ -40,14 +40,16 @@
    padding-right:0;
    padding-top:5px;
 }
+
+
 #DgreyBox{
   position: relative;
   width: 341px;
   height: 70px;
   padding: 2px;
+  padding-bottom: 5px;
   font-size: 15px;
-  background-image: url(/images/comment_bubble_lt.png);
-  background-repeat: no-repeat;
+  background: url(/images/comment_bubble_lt.png) no-repeat;
 }
 
 #DgreyBox .summary{
@@ -62,6 +64,22 @@
   padding:0;
 }
 
+#DgreyBox .commentMeta{
+  min-height: 23px;
+  margin: 59px 0 3px 31px;
+  font-size:11px;
+}
+
+#DgreyBox .user .createdStr {
+  float:left;
+}
+
+#DgreyBox .user .userName{
+  float: left;  
+  font-weight: bold;
+}
+
+/*
 #DgreyBox .UserDateMeta{
   bottom:0;
   font-size:11px;
@@ -76,18 +94,26 @@
 #DgreyBox .user .gravatarContainer{
   float: left;  
 }
-
-#DgreyBox .user .userName{
-  float: left;  
-  font-weight: bold;
-}
-
-#DgreyBox .user .createdStr{
-  float: left;  
-}
+*/
 
 #SSCommentPane .index{
    float:left;
+}
+
+#SSCommentPane .bubblebtm {
+  background: url(/images/comment_bubble_btm.png) no-repeat;
+  min-height: 20px;
+  margin-top: -8px;
+}
+
+#SSCommentsListView .commentMeta{
+  min-height: 23px;
+  margin: -8px 0 3px 33px;
+  font-size:11px;
+}
+
+#SSCommentPane .user .createdStr {
+  float:left;
 }
 
 #SSCommentPane .text{
@@ -121,6 +147,7 @@
    color:#4B423A;
    font-size:15px;
 }
+
 #SSCommentPane .user{
   /*position: absolute;
   bottom: 0;
@@ -144,7 +171,7 @@
    /*overflow-y: scroll;*/
    border: none;
    background-image: none;
-   margin-top: 15px;
+   margin-top: 21px;
 }
 
 #SSCommentPane ul#SSCommentsListView li#SSCommentsListViewCell{
@@ -170,9 +197,11 @@
    border-top-color:#CFCAC4;
    border-top-style:solid;
    border-top-width:1px;
-   margin-top:8px;
+   margin-top:20px;
    padding-top:5px;
    padding-left:5px;
+   position: relative;
+   float: right;
 }
 
 #SSCommentPane #SSCloseComments{
