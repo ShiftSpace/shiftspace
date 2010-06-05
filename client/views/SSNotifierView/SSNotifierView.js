@@ -502,6 +502,7 @@ var SSNotifierView = new Class({
     SSAddEvent('keydown', function(evt) {
       evt = new Event(evt);
       if(evt.key == 'shift' &&
+         !evt.alt && !evt.control && !evt.meta &&
          this.delayed() &&
          !this.__focusedInput)
       {
@@ -522,7 +523,7 @@ var SSNotifierView = new Class({
     evt = new Event(evt);
     if(!this.__focusedInput)
     {
-      if(evt.key == 'shift')
+      if(evt.key == 'shift' && !evt.alt && !evt.control && !evt.meta)
       {
         this.shiftDownTime = $time();
         this.shiftDown = true;
@@ -594,7 +595,9 @@ var SSNotifierView = new Class({
 
     SSAddEvent('keydown', function(evt) {
       evt = new Event(evt);
-      if(evt.key == 'shift' && !this.__focusedInput)
+      if(evt.key == 'shift' &&
+         !evt.alt && !evt.control && !evt.meta &&
+         !this.__focusedInput)
       {
         if(this.delayed())
         {
