@@ -256,6 +256,37 @@ function SSGetSpaceAttributes(spaceName)
 }
 
 /*
+Function: SSProcessSpaceAattributes
+  Takes a space's attributes and returns a new object with promises
+  for the ui entries if they exist.
+*/
+function SSProcessSpaceAattributes(attrs)
+{
+  if(attrs.ui)
+  {
+    attrs = $H(attrs);
+    attrs.ui = $H(attrs.ui).map(function(v, k) {
+      SSLog(k, SSLogForce);
+      return $treeMap(v, function(path, type) {
+        if(type == "html" || type == "css")
+        {
+          SSLog("found ", type, SSLogForce);
+          var path = String.urlJoin(SSURLForSpace(attrs.name), path);
+          return new Promise(SSLoadFile(path));
+        }
+        else
+        {
+          return path;
+        }
+      });
+    }).getClean();
+    return attrs.getClean();
+  } else {
+    return attrs;
+  }
+}
+
+/*
 Function: SSInstallSpace
   Loads the JavaScript source of a Space, then loads the space into memory.
   The source URL is saved in the 'installed' object for future reference.
