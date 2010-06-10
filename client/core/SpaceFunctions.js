@@ -272,7 +272,7 @@ function SSProcessSpaceAattributes(attrs)
         {
           SSLog("found ", type, SSLogForce);
           var path = String.urlJoin(SSURLForSpace(attrs.name), path);
-          return new Promise(SSLoadFile(path));
+          return new Promise(SSLoadFile(path), {lazy: true});
         }
         else
         {
@@ -280,7 +280,7 @@ function SSProcessSpaceAattributes(attrs)
         }
       });
     }).getClean();
-    return attrs.getClean();
+    return new Promise(attrs.getClean());
   } else {
     return attrs;
   }
