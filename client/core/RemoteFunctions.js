@@ -36,6 +36,14 @@ function SSDecPendingRequests()
   }
 }
 
+function SSCalcRewriteUrl(url) {
+  var dir = url.split('/');
+  dir.pop();
+  dir = dir.join('/');
+  if (dir.substr(0, 7) != 'http://') dir = SSInfo().mediaPath + dir;
+  return dir;
+}
+
 /*
 Function: SSLoadStyle
   Loads a CSS file, processes it to make URLs absolute, then appends it as a
@@ -47,24 +55,21 @@ Parameters:
 */
 function SSLoadStyle(url, frame, bustCache)
 {
-  var dir = url.split('/');
-  dir.pop();
-  dir = dir.join('/');
-  if (dir.substr(0, 7) != 'http://') dir = SSInfo().mediaPath + dir;
-    var p = SSLoadFile(url, bustCache);
-  return SSAddStyle(p, {rewriteUrls: dir, frame: frame});
+  var p = SSLoadFile(url, bustCache);
+  return SSAddStyle(p, {rewriteUrls: SSCalcRewriteUrl(url), frame: frame});
 }
 
 var SSAddStyle = function(css, options)
 {
   if(!css) return null;
   // this needs to be smarter, only works on directory specific urls
-  if(options.rewriteUrls) css = css.replace(/url\(([^)]+)\)/g, 'url(' + options.rewriteUrls + '/$1)');
+  if(options.rewriteUrls) {
+    css = css.replace(/url\(([^)]+)\)/g, 'url(' + options.rewriteUrls + '/$1)');
+  }
   // if it's a frame load it into the frame
   if(options.frame)
   {
     var doc = options.frame.contentDocument;
-
     if( doc.getElementsByTagName('head').length != 0 )
     {
       var head = doc.getElementsByTagName('head')[0];
@@ -77,7 +82,6 @@ var SSAddStyle = function(css, options)
       var head = new Element( 'head' );
       head.injectBefore( doc.body );
     }
-
     var style = doc.createElement('style');
     style.setAttribute('type', 'text/css');
     style.appendChild(doc.createTextNode(css)); // You can not use setHTML on style elements in Safari - David

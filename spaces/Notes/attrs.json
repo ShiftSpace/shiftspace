@@ -5,7 +5,8 @@
   "description": "Leave a sticky note.",
   "tooltip": "Leave a sticky note on any website.",
   "tagline": "annotate the web with sticky notes",
-  "css": "Notes.css",
   "version": "0.1",
-  "sanitize": ["noteText"]
+  "sanitize": ["noteText"],
+  "ui" : {"space": {"html": "Notes.html",
+                    "css": "Notes.css"}}
 }

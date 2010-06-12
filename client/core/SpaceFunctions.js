@@ -36,8 +36,9 @@ Returns:
 */
 var SSLoadSpace = function(spaceName, inline)
 {
-  var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js');
-  var attrs = SSGetSpaceAttributes(spaceName);
+  var url = String.urlJoin(SSURLForSpace(spaceName), spaceName + '.js'),
+      attrs = SSGetSpaceAttributes(spaceName),
+      origAttrs = attrs;
 
   if(!attrs)
   {
@@ -56,13 +57,8 @@ var SSLoadSpace = function(spaceName, inline)
   {
     codep = new Promise(new DelayedAsset("javascript", url));
   }
-  var cssp = {data:1}; // horrible hack - David
-  if(!$(document.head).getElement(["#",spaceName,"Css"].join("")))
-  {
-    cssp = SSLoadStyle(attrs.css, null, SSSpaceIsInDebugMode(spaceName));
-  }
   attrs = SSProcessSpaceAttributes(attrs);
-  var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp), SSApp.noErr(attrs)),
+  var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(attrs)),
                    function() {
                      try
                      {
@@ -94,6 +90,11 @@ var SSLoadSpace = function(spaceName, inline)
                        }
                        if(Promise.isPromise(attrs)) {
                          attrs = attrs.value();                         
+                       }
+                       if($get(attrs, 'ui', 'space', 'css') && !$(document.head).getElement(["#",spaceName,"Css"].join(""))) {
+                         SSAddStyle(attrs.ui.space.css, {
+                           rewriteUrls: SSCalcRewriteUrl(origAttrs.ui.space.css)
+                         });
                        }
                        spacector.implement({attributes:function(){return attrs;}});
                        var space = __spaces[spaceName] = new spacector(shiftctor);
@@ -233,9 +234,15 @@ function SSLoadSpaceAttributes(spaceName)
                  if (!json.icon) json.icon = String.urlJoin(json.url, json.name + '.png');
                  // clear whitespace
                  if(json.icon) json.icon = json.icon.trim();
-                 if(json.css) json.css = json.css.trim();
                  if(!SSIsAbsoluteURL(json.icon)) json.icon = String.urlJoin(json.url, json.icon);
-                 if(!SSIsAbsoluteURL(json.css)) json.css = String.urlJoin(json.url, json.css);
+                 json.ui = $treeMap(json.ui, function(v, k) {
+                   if((k == "html" || k == "css") && !SSIsAbsoluteURL(v)) {
+                     v = v.trim();
+                     return String.urlJoin(json.url, v);
+                   } else {
+                     return v;
+                   }
+                 });
                  // position default to end
                  json.position = $H(SSInstalledSpaces()).getLength();
                  return json;
@@ -269,11 +276,9 @@ function SSProcessSpaceAttributes(attrs)
   {
     attrs = $H(attrs);
     attrs.ui = $H(attrs.ui).map(function(v, k) {
-      SSLog(k, SSLogForce);
       return $treeMap(v, function(path, type) {
         if(type == "html" || type == "css")
         {
-          path = String.urlJoin(SSURLForSpace(attrs.name), path);
           return new Promise(SSLoadFile(path), {lazy: true});
         }
         else

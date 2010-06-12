@@ -2,9 +2,10 @@
   "name": "Highlights",
   "authors": ["avital", "mushon", "dnolen"],
   "icon": "Highlights.png",
-  "css": "Highlights.css",
   "description": "Highlight text on a webpage.",
   "tooltip": "Highlight text on a webpage.",
   "tagline": "markup text on the page",
-  "version": "0.1"
+  "version": "0.1",
+  "ui" : {"space": {"html": "Highlights.html",
+                    "css": "Highlights.css"}}
 }
