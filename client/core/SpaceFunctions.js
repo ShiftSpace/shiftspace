@@ -61,8 +61,8 @@ var SSLoadSpace = function(spaceName, inline)
   {
     cssp = SSLoadStyle(attrs.css, null, SSSpaceIsInDebugMode(spaceName));
   }
-
-  var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp)),
+  attrs = SSProcessSpaceAttributes(attrs);
+  var spacep = $if($and(SSApp.noErr(codep), SSApp.noErr(cssp), SSApp.noErr(attrs)),
                    function() {
                      try
                      {
@@ -91,6 +91,9 @@ var SSLoadSpace = function(spaceName, inline)
                          throw new Error(
                            spaceName + "Shift constructor does not exist! Did you specify the proper shift class name in your attrs.json file?"
                          );
+                       }
+                       if(Promise.isPromise(attrs)) {
+                         attrs = attrs.value();                         
                        }
                        spacector.implement({attributes:function(){return attrs;}});
                        var space = __spaces[spaceName] = new spacector(shiftctor);
@@ -260,7 +263,7 @@ Function: SSProcessSpaceAattributes
   Takes a space's attributes and returns a new object with promises
   for the ui entries if they exist.
 */
-function SSProcessSpaceAattributes(attrs)
+function SSProcessSpaceAttributes(attrs)
 {
   if(attrs.ui)
   {
@@ -270,8 +273,7 @@ function SSProcessSpaceAattributes(attrs)
       return $treeMap(v, function(path, type) {
         if(type == "html" || type == "css")
         {
-          SSLog("found ", type, SSLogForce);
-          var path = String.urlJoin(SSURLForSpace(attrs.name), path);
+          path = String.urlJoin(SSURLForSpace(attrs.name), path);
           return new Promise(SSLoadFile(path), {lazy: true});
         }
         else

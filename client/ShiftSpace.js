@@ -422,7 +422,7 @@ var ShiftSpace = new (function() {
        'SSAllShiftsForSpace',
        'SSSpaceShouldAutolaunch',
        'SSCompileHtmlTemplate',
-       'SSProcessSpaceAattributes',
+       'SSProcessSpaceAttributes',
        'Future'
        ].each(function(sym) {
          unsafeWindow[sym] = eval(sym);
