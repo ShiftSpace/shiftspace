@@ -96,6 +96,9 @@ var SSLoadSpace = function(spaceName, inline)
                            rewriteUrls: SSCalcRewriteUrl(origAttrs.ui.space.css)
                          });
                        }
+                       if($get(attrs, 'ui', 'space', 'html') && !$(document.head).getElement(["#",spaceName,"Css"].join(""))) {
+                         attrs.ui.space.template = SSCompileHtmlTemplate(attrs.ui.space.html);
+                       }
                        spacector.implement({attributes:function(){return attrs;}});
                        var space = __spaces[spaceName] = new spacector(shiftctor);
                      }
@@ -313,7 +316,7 @@ function SSInstallSpace(space)
           var attrs = p.value();
           if(!attrs)
           {
-            var attrs = {
+            attrs = {
               url: url, 
               name: space, 
               position: count, 
