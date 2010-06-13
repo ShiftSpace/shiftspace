@@ -1,13 +1,18 @@
 var HighlightsSpace = new Class({
   Extends: ShiftSpace.Space,
 
-  setup: function()
-  {
+  setup: function() {
     // we can longer use bound functions as event handler in FF3
     // bound functions will throw a security error. Instead we just
     // manually create a closure.
     var self = this;
 
+    // init ui
+    var html = this.attributes().ui.space.template({
+      colors: ['HighlightsColor1',
+               'HighlightsColor2']
+    });
+    
     this.mousemove = function(e) {
       self.cursor.style.left = (e.pageX + 6) + 'px';
       self.cursor.style.top = (e.pageY - 8) + 'px';
@@ -18,9 +23,7 @@ var HighlightsSpace = new Class({
     };
 
     this.highlight_end = function(e) {
-
       if ($(e.target).hasClass('ShiftSpaceElement')) return;
-
       if (!window.getSelection().getRangeAt(0).collapsed)
       {
         self.cursor.style.display = 'block';
@@ -36,97 +39,75 @@ var HighlightsSpace = new Class({
         self.getCurrentShift().ranges.push(newRangeRef);
         self.turnOnRangeRef(newRangeRef);
       }
-
       return false;
     };
   },
 
 
-  showShift: function(aShift)
-  {
+  showShift: function(aShift) {
     var currentShift = this.getCurrentShift();
     if(currentShift) currentShift.hide();
-
     this.parent(aShift);
   },
 
 
-  onShiftShow: function(shiftId)
-  {
-    if(this.interfaceIsBuilt())
-    {
+  onShiftShow: function(shiftId) {
+    if(this.interfaceIsBuilt()) {
       var title = this.getShift(shiftId).getTitle();
       $$('.HighlightsInput')[0].setProperty('value', title);
     }
   },
 
 
-  selectColor: function(colorElement, color)
-  {
-    if (!color)
-    this.color = $(colorElement).getStyle('border-bottom-color');
-    else
-    this.color = color;
-
-    if (this.colorElement)
-    {
+  selectColor: function(colorElement, color) {
+    if (!color) {
+      this.color = $(colorElement).getStyle('border-bottom-color');      
+    } else {
+      this.color = color;      
+    }
+    if (this.colorElement) {
       this.colorElement.style.borderBottomStyle = 'none';
     }
-
     this.colorElement = colorElement;
     colorElement.style.borderBottomStyle = 'solid';
   },
 
 
-  addColor: function(style, selectedColor)
-  {
-    var self = this;
-
-    var colorElement = new ShiftSpace.Element('span', {
-      'class': 'GenericHighlightsColor ' + style
-    });
+  addColor: function(style, selectedColor) {
+    var self = this,
+        colorElement = new ShiftSpace.Element('span', {
+          'class': 'GenericHighlightsColor ' + style
+        });
     colorElement.injectInside(this.colorsSpan);
-
     colorElement.addEvent('click', function(e) {
       self.selectColor(e.target);
     });
-
     if (selectedColor) this.selectColor(colorElement, selectedColor);
   },
 
 
-  showInterface: function()
-  {
+  showInterface: function() {
     // need to call the parent first
     this.parent();
-
-    if(this.container)
-    {
+    if(this.container) {
       this.container.removeClass('SSDisplayNone');
       this.cursor.setStyle('display', 'block');
     }
-
     this.addHighlightEvents();
   },
 
 
-  hideInterface: function()
-  {
-    // call the parent first
+  hideInterface: function() {
     this.parent();
-
-    if(this.container)
-    {
+    if(this.container) {
       this.container.addClass('SSDisplayNone');
       this.cursor.setStyle('display', 'none');
     }
-
     this.removeHighlightEvents();
   },
 
 
-  addHighlightEvents: function()
-  {
+  addHighlightEvents: function() {
     // we need to add mouse listening events here
     window.addEvent('mousemove', this.mousemove);
     window.addEvent('mousedown', this.mousedown);
@@ -134,8 +115,7 @@ var HighlightsSpace = new Class({
   },
 
 
-  removeHighlightEvents: function()
-  {
+  removeHighlightEvents: function() {
     // remove the mouse events
     window.removeEvent('mousemove', this.mousemove);
     window.removeEvent('mousedown', this.mousedown);
@@ -143,14 +123,12 @@ var HighlightsSpace = new Class({
   },
 
 
-  getTitle: function()
-  {
+  getTitle: function() {
     return $$('.HighlightsInput')[0].getProperty('value');
   },
 
 
-  buildInterface: function()
-  {
+  buildInterface: function() {
     // create a table to function as the highlight tool bar
     var tableContainer = new ShiftSpace.Element('span', {
       'class': 'TableContainer'
@@ -214,38 +192,29 @@ var HighlightsSpace = new Class({
   },
 
 
-  surround_text_node: function(oNode, objRange, surroundingNode)
-  {
+  surround_text_node: function(oNode, objRange, surroundingNode) {
     var tempRange;
     //SSLog(surroundingNode);
 
     //if this selection starts and ends in teh same node
     if((oNode==objRange.startContainer) &&
-    (oNode==objRange.endContainer))
-    {
+       (oNode==objRange.endContainer)) {
       objRange.surroundContents(surroundingNode);
-    }
-    else
-    {
-      if(objRange.isPointInRange(oNode,1) || oNode==objRange.startContainer)
-      {
+    } else {
+      if(objRange.isPointInRange(oNode,1) || oNode==objRange.startContainer) {
         //check if the node is in the middle of the selection
-        if((oNode!=objRange.startContainer)&&(oNode!=objRange.endContainer))//surround the whole node
-        {
+        if((oNode!=objRange.startContainer)&&(oNode!=objRange.endContainer)) {
+          //surround the whole node
           surroundingNode.textContent = oNode.textContent;
           oNode.parentNode.replaceChild(surroundingNode, oNode);
-        }
-        else //if start at suppply surround text from start point to end
-        if(oNode==objRange.startContainer)//surround the node from the start point
-        {
+        } else if(oNode==objRange.startContainer) {
+          //surround the node from the start point
           tempRange = document.createRange();
           tempRange.setStart(oNode, objRange.startOffset);
           tempRange.setEnd(oNode, oNode.textContent.length);
           tempRange.surroundContents(surroundingNode);
-        }
-        else      //if endAt supply surround text node from 0 to End location
-        if(oNode==objRange.endContainer)//surround the node from the start point
-        {
+        } else if(oNode==objRange.endContainer) {
+          //surround the node from the start point
           tempRange = document.createRange();
           tempRange.setStart(oNode, 0);
           tempRange.setEnd(oNode, objRange.endOffset);
@@ -256,43 +225,32 @@ var HighlightsSpace = new Class({
   },
 
 
-  turnOnRangeRef: function(ref)
-  {
+  turnOnRangeRef: function(ref) {
     var range = ShiftSpace.RangeCoder.toRange(ref);
-
     // check to make sure the range is actually valid
-    if(range)
-    {
+    if(range) {
       var objAncestor = range.commonAncestorContainer;
-
       if (objAncestor.nodeType == 3) // text node
       objAncestor = objAncestor.parentNode;
-
       var xPathResult = document.evaluate(".//text()", objAncestor, null,
       XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-
       // iteratate on all the text nodes in the document and mark if they are in the selection range
-      for (var i = 0, l = xPathResult.snapshotLength; i < l; i++)
-      {
+      for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
         String.clean(xPathResult.snapshotItem(i).textContent);
       }
-
-      for (i = 0, l = xPathResult.snapshotLength; i < l; i++)
-      {
+      for (i = 0, l = xPathResult.snapshotLength; i < l; i++) {
         // we need clean styles so we don't use ShiftSpace.Element
         var enclosingSpan = document.createElement("span");
         enclosingSpan.id = this.getCurrentShift().getId();
         enclosingSpan.setAttribute("_shiftspace_highlight", "on");
         enclosingSpan.style.backgroundColor = ref.color;
-
         this.surround_text_node(xPathResult.snapshotItem(i), range, enclosingSpan);
       }
     }
   },
 
 
-  cancel: function()
-  {
+  cancel: function() {
     this.getCurrentShift().hide();
     this.hideInterface();
   },
@@ -304,37 +262,29 @@ var HighlightsSpace = new Class({
     // search for all span elements with _shiftspace_highlight attribute and open them
     var xPathResult = document.evaluate(".//span[attribute::_shiftspace_highlight='on']", document, null,
     XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-
     var parentNodes = [];
-
-    for (var i = 0, l = xPathResult.snapshotLength; i < l; i++)
-    {
+    for (var i = 0, l = xPathResult.snapshotLength; i < l; i++) {
       var spanElement = xPathResult.snapshotItem(i);
       var newTextNode = document.createTextNode(spanElement.textContent);
       parentNodes[i] = spanElement.parentNode;
       spanElement.parentNode.replaceChild(newTextNode, spanElement);
     }
-
-    for (i = 0, l = xPathResult.snapshotLength; i < l; i++)
-    {
+    for (i = 0, l = xPathResult.snapshotLength; i < l; i++) {
       parentNodes[i].normalize();
     }
   },
 
 
-  save: function()
-  {
+  save: function() {
     // update the title
     this.getCurrentShift().setTitle($(this.summary).getProperty('value'));
     // save the shift
     this.getCurrentShift().save();
   }
-
 });
 
 
 var HighlightsShift = new Class({
-
   Extends: ShiftSpace.Shift,
 
   setup: function(json)
