@@ -9,9 +9,8 @@ var HighlightsSpace = new Class({
     // manually create a closure.
     var self = this;
 
-    // init ui
     this.initUI();
-    
+
     this.mousemove = function(e) {
       self.cursor.style.left = (e.pageX + 6) + 'px';
       self.cursor.style.top = (e.pageY - 8) + 'px';
@@ -26,8 +25,8 @@ var HighlightsSpace = new Class({
       if (!window.getSelection().getRangeAt(0).collapsed)
       {
         self.cursor.style.display = 'block';
-        var range = window.getSelection().getRangeAt(0);
-        var newRangeRef = ShiftSpace.RangeCoder.toRef(range);
+        var range = window.getSelection().getRangeAt(0),
+            newRangeRef = ShiftSpace.RangeCoder.toRef(range);
         newRangeRef.color = self.color;
         if (!self.getCurrentShift().ranges)
         self.getCurrentShift().ranges = [];
@@ -48,9 +47,11 @@ var HighlightsSpace = new Class({
     $(document.body).grab(this.element);
 
     var colorEls = this.element.getElements(".GenericHighlightsColor");
+    // TODO: will probably cause trouble in GreaseMonkey - David
     colorEls.addEvent("click", function(e) {
-      var target = new Event(e);
-      this.selectColor(colorEls.indexOf(target));
+      e = new Event(e);
+      var target = e.target;
+      this.selectColor(colorEls.indexOf(target)+1);
     }.bind(this));
     
     this.cursor = new ShiftSpace.Element('span', {
