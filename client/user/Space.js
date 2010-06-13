@@ -952,5 +952,10 @@ var ShiftSpaceSpace = new Class({
   getUserId: function()
   {
     return ShiftSpace.User.getId();
+  },
+
+
+  template: function(name, context) {
+    return ($get(this.attributes(), "ui", name, "template"))(context);
   }
 });
