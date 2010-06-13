@@ -22,18 +22,13 @@ var HighlightsSpace = new Class({
 
     this.highlight_end = function(e) {
       if ($(e.target).hasClass('ShiftSpaceElement')) return null;
-      if (!window.getSelection().getRangeAt(0).collapsed)
-      {
+      if (!window.getSelection().getRangeAt(0).collapsed) {
         self.cursor.style.display = 'block';
         var range = window.getSelection().getRangeAt(0),
             newRangeRef = ShiftSpace.RangeCoder.toRef(range);
         newRangeRef.color = self.color;
-        if (!self.getCurrentShift().ranges)
-        self.getCurrentShift().ranges = [];
-
-        if (self.summary.value == '')
-        self.summary.value = range.toString();
-
+        if (!self.getCurrentShift().ranges) self.getCurrentShift().ranges = [];
+        if (!self.summary.get("value")) self.summary.set("value", range.toString());
         self.getCurrentShift().ranges.push(newRangeRef);
         self.turnOnRangeRef(newRangeRef);
       }
@@ -58,6 +53,8 @@ var HighlightsSpace = new Class({
       'id': 'HighlightsCursor'
     });
     this.cursor.injectInside(document.body);
+
+    this.summary = this.element.getElement(".HighlightsSummary");
     
     this.attachEvents();
     this.selectColor(1);
