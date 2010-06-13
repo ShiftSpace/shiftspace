@@ -112,7 +112,7 @@ var SandalphonClass = new Class({
         }
         
         var escapedUI = JSON.decode(responseText);
-        callback({"interface":unescape(escapedUI.interface), styles:unescape(escapedUI.styles)});
+        callback({"interface":unescape(escapedUI['interface']), styles:unescape(escapedUI.styles)});
       },
       onFailure: function(responseText, responseXml)
       {

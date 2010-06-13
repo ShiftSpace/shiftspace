@@ -59,6 +59,10 @@ String.implement({
     idx = (idx == -1) ? 0 : 7;
     var first = trimmed.substr(idx, trimmed.length).split("/").first();
     return "http://"+first;
+  },
+
+  toElement: function() {
+    return Sandalphon.convertToFragment(this);
   }
 });
 
@@ -544,7 +548,7 @@ this.SSCompileHtmlTemplate = function SSCompileHtmlTemplate(str, data) {
                         .split(c.end).join("p.push('")
                         + "');}return p.join('');");
   return data ? fn(data) : fn;
-}
+};
 })();
 
 var _ = Function._;
