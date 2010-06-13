@@ -62,7 +62,9 @@ String.implement({
   },
 
   toElement: function() {
-    return Sandalphon.convertToFragment(this);
+    var el = Sandalphon.convertToFragment(this);
+    el.getElements("*").addClass("ShiftSpaceElement");
+    return el;
   }
 });
 
