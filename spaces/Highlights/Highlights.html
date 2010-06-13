@@ -2,8 +2,8 @@
     <span class="HighlightsSummary"></span>
     <input class="HighlightsInput"></input>
     <span class="HighlightsColors">
-        <% colors.each(function(color, i) { %>
-        <span class="GenericHighlightsColor HighlightsColor<%= i %>"></span>
+        <% (6).times(function(i) { %>
+        <span class="GenericHighlightsColor HighlightsColor<%= i+1 %>"></span>
         <% }); %>
     </span>
     <span class="HighlightsClose"></span>

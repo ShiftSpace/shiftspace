@@ -44,25 +44,30 @@
     float: left;
     padding: 0 2px;
     margin: -2px 1px 0 1px;
+    border-bottom-style: none;
+}
+
+.GenericHighlightsColor.selected{
+    border-bottom-style: solid;
 }
 
 .GenericHighlightsColor:hover {
-	border-bottom-style: dotted;
+    border-bottom-style: dotted;
 }
 
 .SelectedHighlightsColor {
-	border-bottom-style: solid;
+    border-bottom-style: solid;
 }
 
 .HighlightsColor1 {
     background: transparent url(yellow.gif) no-repeat 2px;
     /* border-bottom color represents the actual color for this highlight */
-	border-bottom: 2px none #FF0;
+    border-bottom: 2px none #FF0;
 }
 
 .HighlightsColor2 {
     background: transparent url(green.gif) no-repeat 2px;
-	border-bottom: 2px none #0F0;
+    border-bottom: 2px none #0F0;
 }
 
 .HighlightsColor3 {
@@ -72,17 +77,17 @@
 
 .HighlightsColor4 {
     background: transparent url(orange.gif) no-repeat 2px;
-	border-bottom: 2px none #FEA600;
+    border-bottom: 2px none #FEA600;
 }
 
 .HighlightsColor5 {
     background: transparent url(magenta.gif) no-repeat 2px;
-	border-bottom: 2px none #FF43BF;
+    border-bottom: 2px none #FF43BF;
 }
 
 .HighlightsColor6 {
     background: transparent url(purple.gif) no-repeat 2px;
-	border-bottom: 2px none #C443FF;
+    border-bottom: 2px none #C443FF;
 }
 
 .HighlightsGenericButton {

@@ -1,6 +1,8 @@
 var HighlightsSpace = new Class({
   Extends: ShiftSpace.Space,
 
+  colors: ["#ff0", "#0f0", "#6dcff6", "#fea600", "#ff43bf", "#c443ff"],
+
   setup: function() {
     // we can longer use bound functions as event handler in FF3
     // bound functions will throw a security error. Instead we just
@@ -8,10 +10,7 @@ var HighlightsSpace = new Class({
     var self = this;
 
     // init ui
-    var html = this.attributes().ui.space.template({
-      colors: ['HighlightsColor1',
-               'HighlightsColor2']
-    });
+    this.initUI();
     
     this.mousemove = function(e) {
       self.cursor.style.left = (e.pageX + 6) + 'px';
@@ -23,7 +22,7 @@ var HighlightsSpace = new Class({
     };
 
     this.highlight_end = function(e) {
-      if ($(e.target).hasClass('ShiftSpaceElement')) return;
+      if ($(e.target).hasClass('ShiftSpaceElement')) return null;
       if (!window.getSelection().getRangeAt(0).collapsed)
       {
         self.cursor.style.display = 'block';
@@ -43,13 +42,35 @@ var HighlightsSpace = new Class({
     };
   },
 
+  initUI: function() {
+    this.element = this.template("space", {}).toElement();
+    this.element.addClass("SSDisplayNone");
+    $(document.body).grab(this.element);
+
+    var colorEls = this.element.getElements(".GenericHighlightsColor");
+    colorEls.addEvent("click", function(e) {
+      var target = new Event(e);
+      this.selectColor(colorEls.indexOf(target));
+    }.bind(this));
+    
+    this.cursor = new ShiftSpace.Element('span', {
+      'id': 'HighlightsCursor'
+    });
+    this.cursor.injectInside(document.body);
+    
+    this.attachEvents();
+    this.selectColor(1);
+  },
+
+  attachEvents: function() {
+    this.element.getElement('.HighlightsClose').addEvent('click', this.cancel.bind(this));
+  },
 
   showShift: function(aShift) {
     var currentShift = this.getCurrentShift();
     if(currentShift) currentShift.hide();
     this.parent(aShift);
   },
-
 
   onShiftShow: function(shiftId) {
     if(this.interfaceIsBuilt()) {
@@ -58,20 +79,11 @@ var HighlightsSpace = new Class({
     }
   },
 
-
-  selectColor: function(colorElement, color) {
-    if (!color) {
-      this.color = $(colorElement).getStyle('border-bottom-color');      
-    } else {
-      this.color = color;      
-    }
-    if (this.colorElement) {
-      this.colorElement.style.borderBottomStyle = 'none';
-    }
-    this.colorElement = colorElement;
-    colorElement.style.borderBottomStyle = 'solid';
+  selectColor: function(n) {
+    this.color = this.colors[n-1];
+    var colorEls = this.element.getElements(".GenericHighlightsColor").removeClass("selected");
+    colorEls[n-1].addClass("selected");
   },
-
 
   addColor: function(style, selectedColor) {
     var self = this,
@@ -85,27 +97,20 @@ var HighlightsSpace = new Class({
     if (selectedColor) this.selectColor(colorElement, selectedColor);
   },
 
-
   showInterface: function() {
     // need to call the parent first
     this.parent();
-    if(this.container) {
-      this.container.removeClass('SSDisplayNone');
-      this.cursor.setStyle('display', 'block');
-    }
+    this.element.removeClass('SSDisplayNone');
+    this.cursor.setStyle('display', 'block');
     this.addHighlightEvents();
   },
 
-
   hideInterface: function() {
     this.parent();
-    if(this.container) {
-      this.container.addClass('SSDisplayNone');
-      this.cursor.setStyle('display', 'none');
-    }
+    this.element.addClass('SSDisplayNone');
+    this.cursor.setStyle('display', 'none');
     this.removeHighlightEvents();
   },
-
 
   addHighlightEvents: function() {
     // we need to add mouse listening events here
@@ -114,7 +119,6 @@ var HighlightsSpace = new Class({
     window.addEvent('mouseup', this.highlight_end);
   },
 
-
   removeHighlightEvents: function() {
     // remove the mouse events
     window.removeEvent('mousemove', this.mousemove);
@@ -122,80 +126,15 @@ var HighlightsSpace = new Class({
     window.removeEvent('mouseup', this.highlight_end);
   },
 
-
   getTitle: function() {
     return $$('.HighlightsInput')[0].getProperty('value');
   },
 
-
   buildInterface: function() {
-    // create a table to function as the highlight tool bar
-    var tableContainer = new ShiftSpace.Element('span', {
-      'class': 'TableContainer'
-    });
-
-    tableContainer.appendChild(new ShiftSpace.Element('span', {
-      'class': 'HighlightsSummary'
-    }));
-
-    this.summary = tableContainer.appendChild(new ShiftSpace.Element('input', {
-      'class': 'HighlightsInput'
-    }));
-
-    this.colorsSpan = new ShiftSpace.Element('span', {
-      'class': 'HighlightsColors'
-    });
-
-    document.body.appendChild(tableContainer);
-    tableContainer.appendChild(this.colorsSpan);
-
-    this.addColor('HighlightsColor1', '#FF0'); // hack!
-    // try to see why getComputedStyle in selectColor doesn't work
-    // the first time!
-
-    this.addColor('HighlightsColor2');
-    this.addColor('HighlightsColor3');
-    this.addColor('HighlightsColor4');
-    this.addColor('HighlightsColor5');
-    this.addColor('HighlightsColor6');
-
-    var closeButton = new ShiftSpace.Element('span', {
-      'class': 'HighlightsClose'
-    });
-
-    closeButton.addEventListener('click', this.cancel.bind(this), false);
-    tableContainer.appendChild(closeButton);
-
-    var saveButton = new ShiftSpace.Element('button', {
-      'class': 'HighlightsGenericButton HighlightsSaveButton'
-    });
-
-    saveButton.appendText('Save highlight');
-    saveButton.addEventListener('click', this.save.bind(this), false);
-    tableContainer.appendChild(saveButton);
-
-    var cancelButton = new ShiftSpace.Element('button', {
-      'class': 'HighlightsGenericButton HighlightsCancelButton'
-    });
-
-    cancelButton.appendText('Cancel');
-    cancelButton.addEventListener('click', this.cancel.bind(this), false);
-    tableContainer.appendChild(cancelButton);
-
-    this.container = tableContainer;
-
-    this.cursor = new ShiftSpace.Element('span', {
-      'id': 'HighlightsCursor'
-    });
-
-    this.cursor.injectInside(document.body);
   },
-
 
   surround_text_node: function(oNode, objRange, surroundingNode) {
     var tempRange;
-    //SSLog(surroundingNode);
-
     //if this selection starts and ends in teh same node
     if((oNode==objRange.startContainer) &&
        (oNode==objRange.endContainer)) {
@@ -224,7 +163,6 @@ var HighlightsSpace = new Class({
     }
   },
 
-
   turnOnRangeRef: function(ref) {
     var range = ShiftSpace.RangeCoder.toRange(ref);
     // check to make sure the range is actually valid
@@ -249,15 +187,12 @@ var HighlightsSpace = new Class({
     }
   },
 
-
   cancel: function() {
     this.getCurrentShift().hide();
     this.hideInterface();
   },
 
-
-  hideHighlights: function()
-  {
+  hideHighlights: function() {
     // ignores the specific shift since only one highlight can be on at a given moment
     // search for all span elements with _shiftspace_highlight attribute and open them
     var xPathResult = document.evaluate(".//span[attribute::_shiftspace_highlight='on']", document, null,
@@ -274,7 +209,6 @@ var HighlightsSpace = new Class({
     }
   },
 
-
   save: function() {
     // update the title
     this.getCurrentShift().setTitle($(this.summary).getProperty('value'));
@@ -287,13 +221,10 @@ var HighlightsSpace = new Class({
 var HighlightsShift = new Class({
   Extends: ShiftSpace.Shift,
 
-  setup: function(json)
-  {
-    if(json.ranges)
-    {
+  setup: function(json) {
+    if(json.ranges) {
       //replace __newline__ token with \n
-      for(var i=0; i<json.ranges.length; i++)
-      {
+      for(var i=0; i<json.ranges.length; i++) {
         json.ranges[i].origText = this.deTokenizeNewline(json.ranges[i].origText);
         json.ranges[i].ancestorOrigTextContent = this.deTokenizeNewline(json.ranges[i].ancestorOrigTextContent);
       }
@@ -302,38 +233,28 @@ var HighlightsShift = new Class({
     this.summary = json.summary;
   },
 
-  encode: function()
-  {
-    if (this.ranges)
-    {
+  encode: function() {
+    if (this.ranges) {
       //tokenize newline char with __newline__
-      for(var i=0; i<this.ranges.length; i++)
-      {
+      for(var i=0; i<this.ranges.length; i++) {
         this.ranges[i].origText = this.tokenizeNewline(this.ranges[i].origText);
         this.ranges[i].ancestorOrigTextContent = this.tokenizeNewline(this.ranges[i].ancestorOrigTextContent);
       }
     }
-
     return {
       ranges: this.ranges,
       summary: this.getTitle()
     };
   },
 
-
-  show: function()
-  {
+  show: function() {
     // call to parent
     this.parent();
-
     var space = this.getParentSpace();
     space.hideHighlights();
-
-    if (this.ranges)
-    {
+    if (this.ranges) {
       //space.summary.value = this.summary;
-      for (var i = 0; i < this.ranges.length; i++)
-      {
+      for (var i = 0; i < this.ranges.length; i++) {
         if(this.ranges[i].origText){
           this.ranges[i].origText = this.deTokenizeNewline(this.ranges[i].origText);
         }
@@ -343,22 +264,17 @@ var HighlightsShift = new Class({
         space.turnOnRangeRef(this.ranges[i]);
       }
     }
-
     window.location.hash = this.getId();
   },
 
-
-  hide: function()
-  {
+  hide: function() {
     // call to parent
     this.parent();
 
     this.getParentSpace().hideHighlights();
   },
 
-
-  defaultTitle: function()
-  {
+  defaultTitle: function() {
     return "Untitled";
   },
 
@@ -371,6 +287,4 @@ var HighlightsShift = new Class({
     var deTokenizedText = text.replace(new RegExp("__newline__","g"),"\n");
     return deTokenizedText;
   }
-
 });
-
