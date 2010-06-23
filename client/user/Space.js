@@ -956,6 +956,6 @@ var ShiftSpaceSpace = new Class({
 
 
   template: function(name, context) {
-    return ($get(this.attributes(), "ui", name, "template"))(context);
+    return ($get(this.attributes(), "ui", name, "template"))(context || {});
   }
 });

@@ -37,7 +37,7 @@ var HighlightsSpace = new Class({
   },
 
   initUI: function() {
-    this.element = this.template("space", {}).toElement();
+    this.element = this.template("space").toElement();
     this.element.addClass("SSDisplayNone");
     $(document.body).grab(this.element);
 
