@@ -1,0 +1,29 @@
+/* Your Space and Shift CSS goes here */
+
+.EmbedShift
+{
+  font: 15px courier, monospace;
+  position: absolute;
+  padding:  5px 10px;
+  color: #FFF;
+  background-color: rgba(0,0,0,0.5);
+  left:200px;
+  top:200px;
+  -moz-border-radius: 10px;
+  width: 380px;
+}
+
+.EmbedShift textarea
+{
+  height:200px;
+  width: 370px;
+  margin:10px 0 5px;
+  padding: 5px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+}
+
+.EmbedShift form
+{
+  width:100%;
+}
