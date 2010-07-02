@@ -91,13 +91,22 @@ var SSLoadSpace = function(spaceName, inline)
                        if(Promise.isPromise(attrs)) {
                          attrs = attrs.value();                         
                        }
-                       if($get(attrs, 'ui', 'space', 'css') && !$(document.head).getElement(["#",spaceName,"Css"].join(""))) {
+                       // add the css
+                       if($get(attrs, 'ui', 'space', 'css') && !$(document.head).getElement(["#",spaceName,"Css"].join("")))
+                       {
                          SSAddStyle(attrs.ui.space.css, {
                            rewriteUrls: SSCalcRewriteUrl(origAttrs.ui.space.css)
                          });
                        }
-                       if($get(attrs, 'ui', 'space', 'html') && !$(document.head).getElement(["#",spaceName,"Css"].join(""))) {
-                         attrs.ui.space.template = SSCompileHtmlTemplate(attrs.ui.space.html);
+                       // create any ui templates
+                       if($get(attrs, 'ui'))
+                       {
+                         attrs.ui = $H(attrs.ui).map(function(v, k) {
+                           if(v.html) {
+                             v.template = SSCompileHtmlTemplate(v.html);
+                           }
+                           return v;
+                         }).getClean();
                        }
                        spacector.implement({attributes:function(){return attrs;}});
                        var space = __spaces[spaceName] = new spacector(shiftctor);
