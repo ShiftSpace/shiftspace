@@ -91,6 +91,15 @@ var SSLoadSpace = function(spaceName, inline)
                        if(Promise.isPromise(attrs)) {
                          attrs = attrs.value();                         
                        }
+                       // preserve the old css urls for later rewriting
+                       if($get(origAttrs, 'ui'))
+                       {
+                         $H(origAttrs.ui).each(function(v, k) {
+                           if(v.css) {
+                             attrs.ui[k].cssUrl = origAttrs.ui[k].css;
+                           }
+                         });
+                       }
                        // add the css
                        if($get(attrs, 'ui', 'space', 'css') && !$(document.head).getElement(["#",spaceName,"Css"].join("")))
                        {

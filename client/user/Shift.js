@@ -53,8 +53,8 @@ var ShiftSpaceShift = new Class({
     var css = $get(this.attributes(), 'ui', 'shift', 'css');
     if(css && !$(this.attributes().name+'ShiftCss'))
     {
-      SSAddStyle(attrs.ui.shift.css, {
-        rewriteUrls: SSCalcRewriteUrl(origAttrs.ui.space.css)
+      SSAddStyle(this.attributes().ui.shift.css, {
+        rewriteUrls: SSCalcRewriteUrl(this.attributes().ui.shift.cssUrl)
       });
     }
 
