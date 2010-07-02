@@ -7,6 +7,6 @@
   "tagline": "annotate the web with sticky notes",
   "version": "0.1",
   "sanitize": ["noteText"],
-  "ui" : {"space": {"html": "Notes.html",
+  "ui" : {"shift": {"html": "Notes.html",
                     "css": "Notes.css"}}
 }
