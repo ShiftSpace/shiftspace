@@ -48,12 +48,22 @@ var ShiftSpaceShift = new Class({
     this.setTitle(data.summary || '');
 
     var mv = this.getMainView();
-    if(mv && mv.getParent() == null)
+    if(mv && mv.getParent() == null) $(document.body).grab(mv);
+
+    var css = $get(this.attributes(), 'ui', 'shift', 'css');
+    if(css && !$(this.attributes().name+'ShiftCss'))
     {
-      $(document.body).grab(mv);
+      SSAddStyle(attrs.ui.shift.css, {
+        rewriteUrls: SSCalcRewriteUrl(origAttrs.ui.space.css)
+      });
     }
 
     this.setup(data.content);
+  },
+
+  attributes: function()
+  {
+    return this.getParentSpace().attributes();
   },
   
   /*
@@ -941,5 +951,11 @@ var ShiftSpaceShift = new Class({
   getUserId: function()
   {
     return ShiftSpace.User.getId();
+  },
+
+  
+  template: function(name, ctxt)
+  {
+    return this.getParentSpace().template(name, ctxt);
   }
 });
