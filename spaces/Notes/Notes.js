@@ -22,7 +22,9 @@ var NotesShift = new Class({
   setup: function(json)
   {
     this.noteText = (json.noteText && json.noteText.replace(/<br\/>/g, "\n")) || null;
-    this.build();
+
+    this.element = this.template("shift").toElement();
+    $(document.body).grab(this.element);
     this.attachEvents();
     
     this.element.setStyles({
@@ -92,6 +94,7 @@ var NotesShift = new Class({
   */
   attachEvents: function( e )
   {
+    this.closeButton = this.element.getElement(".SSNoteShiftCloseButton");
     this.closeButton.addEvent('click', this.cancel.bind(this));
 
     this.dragRef = this.element.makeDraggable({
@@ -103,12 +106,6 @@ var NotesShift = new Class({
         this.fireEvent('onDragStop');
       }.bind(this)
     });
-
-    this.saveButton.addEvent( 'click', function() {
-      this.save();
-    }.bind(this));
-
-    this.cancelButton.addEvent( 'click', this.cancel.bind( this ) );
 
     this.element.makeResizable({
       handle: this.resizeControl,
@@ -169,10 +166,9 @@ var NotesShift = new Class({
   encode: function()
   {
     // position and size
-    var pos = this.element.getPosition();
-    var size = this.element.getSize();
-    // tokenize newlines for transport
-    var text = this.getText();
+    var pos = this.element.getPosition(),
+        size = this.element.getSize(),
+        text = this.getText();
     // NOTE: We need to store the actual noteText for relative pinned notes because iframe refresh issues - David
     if(this.inputArea) this.noteText = this.inputArea.getProperty('value');
     return {
@@ -317,67 +313,6 @@ var NotesShift = new Class({
   },
 
   /*
-    Function : build
-      Builds the top handle area, the text area and the two buttons.
-  */
-  build: function()
-  {
-    this.element = new ShiftSpace.Element( 'div', {
-      'class': 'SSNoteShift'
-    });
-    this.element.setOpacity(0);
-
-    this.buildTop();
-    this.buildFrame();
-    this.buildBottom();
-    this.buildEdges();
-    this.element.injectInside( document.body );
-  },
-
-  /*
-    Function : buildTop
-      Builds the draggle top plus the close button to the note.
-  */
-  buildTop: function()
-  {
-    this.top = new ShiftSpace.Element('div', {
-      'class': 'SSNoteShiftTop'
-    });
-    this.grabber = new ShiftSpace.Element('div', {
-      'class': "SSNoteShiftGrabber SSHidden"
-    });
-    this.closeButton = new ShiftSpace.Element('div', {
-      'class': 'SSNoteShiftCloseButton SSHidden'
-    });
-
-    this.grabber.injectInside(this.top);
-    this.closeButton.injectInside(this.top);
-    this.top.injectInside(this.element);
-  },
-
-  /*
-    Function : buildFrame
-      Builds the frame portion of the notes shift.  We need this to allow
-      other encoding inside of the note that are different from the page.
-  */
-  buildFrame: function()
-  {
-    var _css = this.getParentSpace().attributes().css;
-    // create an iframe with the css already loaded
-    this.frame = new ShiftSpace.Iframe({
-      'class': 'SSNoteShiftFrame',
-      border: 'none' ,
-      scroll: 'no',
-      rows: 1000,
-      cols: 25,
-      wrap: 'hard',
-      css: _css,
-      onload: this.finishFrame.bind(this)
-    });
-    this.frame.injectInside(this.element);
-  },
-
-  /*
     Function : finishFrame
       Finishing building the iframe by including the textarea inside.
   */
@@ -435,57 +370,6 @@ var NotesShift = new Class({
   },
 
 
-  /*
-    Function : buildBottom
-      Builds the bottom portion of the notes shift. This will contain the save and close button
-      as well as the resize button.
-  */
-  buildBottom: function()
-  {
-    this.bottom = new ShiftSpace.Element('div', {
-      'class': "SSNoteShiftBottom"
-    });
-
-    this.saveButton = new ShiftSpace.Element('input', {
-      'type': 'button',
-      'value': 'Save',
-      'class': 'SSNoteShiftButton'
-    });
-    this.saveButton.injectInside( this.element );
-
-    this.cancelButton = new ShiftSpace.Element('input', {
-      'type': 'button',
-      'value': 'Cancel',
-      'class': 'SSNoteShiftButton'
-    });
-    this.resizeControl = new ShiftSpace.Element('div', {
-      'class': "SSNoteShiftResize SSHidden"
-    });
-    this.pinWidgetDiv = new ShiftSpace.Element('div', {
-      'class': "SSPinWidgetButton"
-    });
-    this.buttonDiv = new ShiftSpace.Element('div', {
-      'class': "SSNoteShiftButtonDiv"
-    });
-
-    this.cancelButton.injectInside(this.buttonDiv);
-    this.saveButton.injectInside(this.buttonDiv);
-    this.buttonDiv.injectInside(this.bottom);
-    this.pinWidgetDiv.injectInside(this.bottom);
-
-    try
-    {
-      this.pinWidget = new ShiftSpace.PinWidget(this);
-    }
-    catch(err)
-    {
-    }
-
-    this.resizeControl.injectInside(this.bottom);
-    this.bottom.injectInside(this.element);
-  },
-
-
   getPinWidgetButton: function()
   {
     return this.pinWidgetDiv;
@@ -515,26 +399,5 @@ var NotesShift = new Class({
   {
     // put the note back on the page
     this.element.injectInside(document.body);
-  },
-
-  /*
-    Function: buildEdges
-      Add Mushon's nice little edges.
-  */
-  buildEdges: function()
-  {
-    var rightEdge = new ShiftSpace.Element('div', {
-      'class': "SSNoteShiftRightEdge"
-    });
-    var bottomEdge = new ShiftSpace.Element('div', {
-      'class': "SSNoteShiftBottomEdge"
-    });
-    var corner = new ShiftSpace.Element('div', {
-      'class': "SSNoteShiftCorner"
-    });
-
-    rightEdge.injectInside(this.element);
-    bottomEdge.injectInside(this.element);
-    corner.injectInside(this.element);
   }
 });
