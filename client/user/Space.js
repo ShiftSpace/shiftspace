@@ -262,18 +262,12 @@ var ShiftSpaceSpace = new Class({
     Returns:
       The internal shift instance.
   */
-  addShift: function(aShift, ui)
+  addShift: function(aShift)
   {
-    var el = (ui) ? Sandalphon.convertToFragment(ui) : null;
-    if(el)
-    {
-      el.addClass("ShiftSpaceElement");
-      el.getElements('*').addClass("ShiftSpaceElement");
-    }
     // create the new shift
     try
     {
-      var newShift = new this.shiftClass(aShift, {element: el});
+      var newShift = new this.shiftClass(aShift);
     }
     catch(exc)
     {
@@ -334,24 +328,14 @@ var ShiftSpaceSpace = new Class({
   */
   createShift: function(newShift)
   {
-    var shift = this.addShift(newShift, this.shiftUI()), self = this;
+    var shift = this.addShift(newShift);
     // return the shift immediately or a promise if there's a ui
-    return (function(newShift) {
-      self.fireEvent('onCreateShift', {
-        space: self, 
-        shift: newShift
-      });
-      return newShift;
-    }.future())(shift);
+    this.fireEvent('onCreateShift', {
+      space: self, 
+      shift: newShift
+    });
   },
-
-  shiftUI: function()
-  {
-    var uip, attrs = this.attributes(), html = $get(attrs, "shift", "html");
-    if(html) uip = SSLoadFile(attrs.url.urlJoin(html), SSSpaceIsInDebugMode(this.attributes().name));
-    return uip;
-  }.decorate(Function.memoize),
-
+  
   /*
     Function : deleteShift
       Delete a shift from the internal array.  Implicity calls SSDeleteShift which will remove this
@@ -488,19 +472,18 @@ var ShiftSpaceSpace = new Class({
     {
       try
       {
-        cShift = this.addShift(aShift, this.shiftUI()); // create a real shift instance
+        cShift = this.addShift(aShift); // create a real shift instance
       }
       catch(exc)
       {
         SSLog(exc);
       }
     }
-    var self = this;
-    return (function(theShift) {
-      if(theShift.canShow())
-      {
-        if(self.getCurrentShift() && theShift != self.getCurrentShift()) self.getCurrentShift().onBlur();
-        self.setCurrentShift(theShift);
+    if(theShift.canShow())
+    {
+      if(this.getCurrentShift() && theShift != this.getCurrentShift()) this.getCurrentShift().onBlur();
+      this.setCurrentShift(theShift);
+
         theShift.__show__();
         if(theShift.isNewShift() && theShift.showNew)
         {
@@ -512,9 +495,9 @@ var ShiftSpaceSpace = new Class({
         }
         theShift.__showAfter__();
         self.onShiftShow(theShift.getId());
-        theShift.onFocus();
-      }
-    }.future())(cShift);
+
+      theShift.onFocus();
+    }
   },
 
   /*
@@ -955,7 +938,8 @@ var ShiftSpaceSpace = new Class({
   },
 
 
-  template: function(name, context) {
+  template: function(name, context)
+  {
     return ($get(this.attributes(), "ui", name, "template"))(context || {});
   }
 });
