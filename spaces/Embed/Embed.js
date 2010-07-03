@@ -22,6 +22,20 @@ var EmbedShift = Shift({
     //Make the html and preview tabs work
     this.element.getElement('.previewTab').addEvent('click', this.preview.bind(this));
     this.element.getElement('.htmlTab').addEvent('click', this.editHtml.bind(this));
+    
+    //Call the Bespin lib (link should be made relative):
+    //this.addBespin('http://localhost:8080/spaces/Embed/BespinEmbedded.js');
+  },
+  
+  addBespin: function(file) {
+    var NewScript = document.createElement('script');
+    NewScript.src = file;
+    NewScript.type = 'text/javascript';
+    document.getElementsByTagName("head")[0].appendChild(NewScript);
+    
+    //Use the Bespin interface on our textarea:
+    var node = this.element.getElement('.bespin');
+    bespin.useBespin(node);
   },
   
   render: function() {
@@ -33,13 +47,13 @@ var EmbedShift = Shift({
   
   preview: function() {
     this.render();
-    this.element.getElement('form').style.display = "none";
+    this.element.getElement('.htmlView').style.display = "none";
     this.element.getElement('.outputView').style.display = "block";
     this.element.getElement('.outputView').innerHTML = this.inputHtml;
   },
   
   editHtml: function() {
-    this.element.getElement('form').style.display = "block";
+    this.element.getElement('.htmlView').style.display = "block";
     this.element.getElement('.outputView').style.display = "none";
   },
   
@@ -54,3 +68,5 @@ var EmbedShift = Shift({
   
   
 });
+
+//Bespin code:
