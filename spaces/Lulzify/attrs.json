@@ -1,0 +1,12 @@
+{
+  "name": "Lulzify",
+  "authors": ["me"],
+  "icon": "Lulzify.png",
+  "description": "Add a description (this will appear in the Installed Spaces tab in the Console)",
+  "tooltip": "Add a tooltip (this will appear when using the Space Menu)",
+  "css": "Lulzify.css",
+  "shift": { "html": "Lulzify.html" },
+  "version": "0.0",
+  "lib": "lib",
+  "lang": "lang"
+}
