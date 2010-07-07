@@ -25,6 +25,7 @@ var NotesShift = new Class({
 
     this.element = this.template("shift").toElement();
     $(document.body).grab(this.element);
+    this.initUI();
     this.attachEvents();
     
     this.element.setStyles({
@@ -88,13 +89,23 @@ var NotesShift = new Class({
   setProperties: function(json) { this.__properties__ = json; },
   getProperties: function() { return this.__properties__; },
 
+  initUI: function()
+  {
+    this.closeButton = this.element.getElement(".SSNoteShiftCloseButton");    
+    this.top = this.element.getElement(".SSNoteShiftTop");
+    this.frame = this.element.getElement(".SSNoteShiftFrame");
+    this.bottom = this.element.getElement(".SSNoteShiftBottom");
+    this.resizeControl = this.element.getElement(".SSNoteShiftResize");
+    this.grabber = this.element.getElement(".SSNoteShiftGrabber");
+  },
+
   /*
     Function : attachEvents
       Attach all the needed events to the Notes interface.
   */
   attachEvents: function( e )
   {
-    this.closeButton = this.element.getElement(".SSNoteShiftCloseButton");
+
     this.closeButton.addEvent('click', this.cancel.bind(this));
 
     this.dragRef = this.element.makeDraggable({
@@ -118,7 +129,7 @@ var NotesShift = new Class({
       onDrag: this.refresh.bind(this)
     });
 
-    this.setFocusRegions( this.grabber, this.resizeControl );
+    this.setFocusRegions(this.grabber, this.resizeControl);
     this.element.addEvent('mouseover', this.revealControls.bind(this));
     this.element.addEvent('mouseout', this.hideControls.bind(this));
   },
