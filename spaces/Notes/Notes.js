@@ -97,6 +97,7 @@ var NotesShift = new Class({
     this.bottom = this.element.getElement(".SSNoteShiftBottom");
     this.resizeControl = this.element.getElement(".SSNoteShiftResize");
     this.grabber = this.element.getElement(".SSNoteShiftGrabber");
+    this.pinWidgetDiv = this.element.getElement(".SSPinWidgetButton");
   },
 
   /*
@@ -297,8 +298,6 @@ var NotesShift = new Class({
 
   showEditInterface: function()
   {
-    this.saveButton.setStyle('display', '');
-    this.cancelButton.setStyle('display', '');
     this.pinWidgetDiv.setStyle('display', '');
     if(this.inputArea)
     {
