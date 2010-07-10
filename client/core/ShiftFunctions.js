@@ -259,7 +259,7 @@ function SSSaveNewShift(shift)
           name: shift.space.name,
           version: space.attributes().version
         },
-        summary: shift.summary.trunc(75),
+        summary: shift.summary ? shift.summary.trunc(75) : 'Untitled',
         content: shift
       };
 
