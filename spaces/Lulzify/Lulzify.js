@@ -21,66 +21,6 @@ var LulzifyShift = Shift({
       this.lulzText = json.lulzText;
     }
     
-/*
-    //Populate the data from the saved shift:
-    if(json.lulzImgSrc){
-      
-      //test
-      //console.log("got lolText: " + json);
-      
-      //set lulzImg:
-      this.lulzImg = $$('img[src=' + json.lulzImgSrc + ']')[0];
-      
-      //create the container node:
-      this.lulzContainer = new Element('span', {class: 'lulzContainer'});
-      //wrap the container around the image
-      this.lulzContainer.wraps(this.lulzImg);
-        
-      //create the interface node
-      this.lulzInterface = new Element('textarea', {
-        'class' : 'lulzInterface',
-        'value' : json.lulzText
-      });
-      
-      //inject the interface into the container
-        this.lulzInterface.inject(this.lulzContainer);
-        $$('.lulzInterface')[0].focus();
-        $$('.lulzInterface')[0].select();
-    
-    } else {
-      
-      //Setup a default title
-      this.summary = "I did it for the LULZ";
-      
-      //attach events to images:
-      $$('img').addEvent('click',function(event) { 
-        
-        if(!this.lulzImg){
-          //get the image node and store it in lulzImg
-          this.lulzImg = $(event.target);
-          this.lulzImgSrc = this.lulzImg.get('src');
-          
-          //create the container node:
-          this.lulzContainer = new Element('span', {class: 'lulzContainer'});
-          //wrap the container around the image
-          this.lulzContainer.wraps(this.lulzImg);
-          
-          //create the interface node
-          this.lulzInterface = new Element('textarea', {
-            'class' : 'lulzInterface',
-            'value' : 'I can Lulzify Dis!'
-          });
-        }
-        
-        //inject the interface into the container
-        this.lulzInterface.inject(this.lulzContainer);
-        $$('.lulzInterface')[0].focus();
-        $$('.lulzInterface')[0].select();
-      }.bind(this));
-           
-    }  
-*/  
-    
   },
   
   show: function() {
@@ -91,6 +31,7 @@ var LulzifyShift = Shift({
     }
     
     this.state = "show";
+    console.log('state = ' + this.state);
   
     if(!this.isNewShift()){
       //set lulzImg:
@@ -102,25 +43,32 @@ var LulzifyShift = Shift({
       this.lulzContainer.wraps(this.lulzImg);
         
       //create the interface node
-      this.lulzInterface = new Element('p', {
-        'class' : 'lulzInterface',
+      this.lulzShow = new Element('p', {
+        'class' : 'lulzShow',
         'html' : this.lulzText
       });
       
       //inject the interface into the container
-      this.lulzInterface.inject(this.lulzContainer);
+      this.lulzShow.inject(this.lulzContainer);
     }
   
   },
   
   hide: function() {
-    this.lulzImg.replaces(this.lulzContainer);
+    if(this.lulzContainer){
+      this.lulzImg.replaces(this.lulzContainer);
+    }
     this.state = "hide";
+    console.log('state = ' + this.state);
   },
   
   edit: function() {
     
+    this.hide();
+    console.log('I just hid stuff before editting');
+    
     if (this.isNewShift()){
+      console.log('editing new shift');
     
       //attach events to images:
       $$('img').addEvent('click',function(event) { 
@@ -137,40 +85,37 @@ var LulzifyShift = Shift({
           
           //create the interface node
           this.lulzInterface = new Element('textarea', {
-            'class' : 'lulzInterface',
+            'class' : 'lulzEdit',
             'value' : 'I can Lulzify Dis!'
           });
         }
         
         //inject the interface into the container
-        this.lulzInterface.inject(this.lulzContainer);
-        this.lulzInterface.focus();
-        this.lulzInterface.select();
+        this.lulzEdit.inject(this.lulzContainer);
+        this.lulzEdit.focus();
+        this.lulzEdit.select();
         
       }.bind(this));
     
     } else {
-    
-      //Remove the existing container:
-      if (this.lulzInterface.getElement('p')){
-        
-        this.lulzImg.replaces(this.lulzContainer);
-      }
-      
+      console.log('re-editing old shift');
+
       //create the interface node
-      this.lulzInterface = new Element('textarea', {
-        'class' : 'lulzInterface',
+      this.lulzEdit = new Element('textarea', {
+        'class' : 'lulzEdit',
         'value' : this.lulzText
       });
       
       //inject the interface into the container
-      this.lulzInterface.inject(this.lulzContainer);
-      this.lulzInterface.focus();
-      this.lulzInterface.select();
+      this.lulzContainer.wraps(this.lulzImg);
+      this.lulzEdit.inject(this.lulzContainer);
+      this.lulzEdit.focus();
+      this.lulzEdit.select();
       
     }
     
     this.state = "edit";
+    console.log('state = ' + this.state);
 
   },
     
@@ -184,9 +129,9 @@ var LulzifyShift = Shift({
     
     //The summary, image reference and text content are saved into the shift:
     return {
-      summary : this.lulzInterface.value,
+      summary : this.lulzEdit.value,
       lulzImgSrc : this.lulzImgSrc,
-      lulzText : this.lulzInterface.value
+      lulzText : this.lulzEdit.value
     };
     
   }
