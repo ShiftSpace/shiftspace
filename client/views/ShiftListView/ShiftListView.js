@@ -147,7 +147,7 @@ var ShiftListView = new Class({
   onUncheck: function(evt)
   {
     var id = evt.data._id;
-    SSLeaveEditShift(SSSpaceForShift(id), id);
+    SSEditExitShift(SSSpaceForShift(id), id);
   },
 
 

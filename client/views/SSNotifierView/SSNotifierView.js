@@ -426,7 +426,7 @@ var SSNotifierView = new Class({
       }
       else
       {
-        SSLeaveEditShift(SSSpaceForShift(id), id);
+        SSEditExitShift(SSSpaceForShift(id), id);
         this.hideQuickPane();
         this.showQuickEditPane();
       }

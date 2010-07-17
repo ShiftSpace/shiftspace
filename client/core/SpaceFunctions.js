@@ -129,7 +129,7 @@ function SSRegisterSpace(instance)
 
   instance.addEvent('onShiftHide', function(id) {
     SSPostNotification('onShiftHide', id);
-    SSLeaveEditShift(SSSpaceForShift(id), id);
+    SSEditExitShift(SSSpaceForShift(id), id);
   });
   instance.addEvent('onShiftShow', function(id) {
     SSPostNotification('onShiftShow', id);
@@ -137,7 +137,7 @@ function SSRegisterSpace(instance)
   instance.addEvent('onShiftBlur', function(id) {
     SSBlurShift(SSSpaceForShift(id), id);
     SSPostNotification('onShiftBlur', id);
-    SSLeaveEditShift(SSSpaceForShift(id), id);
+    SSEditExitShift(SSSpaceForShift(id), id);
   });
   instance.addEvent('onShiftFocus', function(id) {
     SSFocusShift(SSSpaceForShift(id), id);

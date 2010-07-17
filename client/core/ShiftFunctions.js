@@ -214,7 +214,7 @@ var SSEditShift = function(space, shiftId)
 }.future();
 
 
-function SSLeaveEditShift(space, shiftId)
+function SSEditExitShift(space, shiftId)
 {
   var shift = SSGetShift(shiftId);
   if(space &&
@@ -222,7 +222,7 @@ function SSLeaveEditShift(space, shiftId)
      space.hasShift(shiftId) &&
      space.shiftIsVisible(shiftId))
   {
-    SSShowShift(space, shiftId);
+    space.editExit(shiftId);
   }
   SSPostNotification('onShiftLeaveEdit', shiftId);
   SSSetShiftBeingEdited(null);

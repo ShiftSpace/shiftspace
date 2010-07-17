@@ -413,7 +413,6 @@ var ShiftSpaceSpace = new Class({
     var theShift = this.__shifts[shiftId];
     if(theShift.isBeingEdited())
     {
-      theShift.setIsBeingEdited(false);
       theShift.__editExit__();
       theShift.editExit();
       theShift.__editExitAfter__();
