@@ -122,19 +122,55 @@ var ShiftSpaceShift = new Class({
   },
 
   /*
+    Function: _edit
+      *private*
+      Private method for setting state when entering edit mode.
+   */
+  __edit__: function()
+  {
+    this.setIsBeingEdited(true);
+  },
+
+  /*
     Function: edit
       The shift should present it's editing interface.  Puts the shift into editing mode.  Be sure to call this.parent()
       if you override this method.
   */
   edit: function() 
   {
-    this.setIsBeingEdited(true);
   },
 
-  
-  leaveEdit: function()
+  __editAfter__: function()
+  {
+    
+  },
+
+  /*
+    Function: _editExit
+      *private*
+      Private method for setting state when leaving edit mode.
+   */
+  __editExit__: function()
   {
     this.setIsBeingEdited(false);
+  },
+  
+  /*
+    Function: editExit
+      The shift should leave it's editing interface.
+   */
+  editExit: function()
+  {
+  },
+
+  /*
+    Function: __editExitAfter__
+      *private*
+      Private method run after editExit is called.
+   */
+  __editExitAfter__: function()
+  {
+    
   },
 
   /*
@@ -235,7 +271,18 @@ var ShiftSpaceShift = new Class({
 
   __show__: function()
   {
+    this.setIsVisible(true);
+    var mainView = this.getMainView();
+    if(mainView)
+    {
+      mainView.removeClass('SSDisplayNone');
+    }
+    this.refresh();
+  },
 
+  __showAfter__: function()
+  {
+    this.fireEvent('onShiftShow', this.getId());    
   },
 
   /*
@@ -244,21 +291,21 @@ var ShiftSpaceShift = new Class({
   */
   show: function()
   {
-    this.setIsVisible(true);
-    var mainView = this.getMainView();
-
-    if(mainView)
-    {
-      mainView.removeClass('SSDisplayNone');
-    }
-
-    this.refresh();
-    this.fireEvent('onShiftShow', this.getId());
   },
 
-  _hide: function()
+  /*
+    Function: __hide__
+      *private*
+      Private pre hide for setting hidden state information.
+   */
+  __hide__: function()
   {
-
+    this.setIsVisible(false);
+    var mainView = this.getMainView();
+    if(mainView)
+    {
+      mainView.addClass('SSDisplayNone');
+    }
   },
 
   /*
@@ -267,14 +314,15 @@ var ShiftSpaceShift = new Class({
   */
   hide: function(el)
   {
-    this.setIsVisible(false);
-    var mainView = this.getMainView();
+  },
 
-    if(mainView)
-    {
-      mainView.addClass('SSDisplayNone');
-    }
-
+  /*
+    Function: __hideAfter__
+      *private*
+      Private after hide function.
+   */
+  __hideAfter__: function(el)
+  {
     this.fireEvent('onShiftHide', this.getId());
   },
 

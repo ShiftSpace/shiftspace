@@ -236,15 +236,15 @@ var NotesShift = new Class({
 
     if(this.element.getSize())
     {
-      var size = this.element.getSize();
-      var topSize = this.top.getSize();
-      var bottomSize = this.bottom.getSize();
+      var size = this.element.getSize(),
+          topSize = this.top.getSize(),
+          bottomSize = this.bottom.getSize();
     }
     else
     {
-      var size = this.element.getSize();
-      var topSize = this.top.getSize();
-      var bottomSize = this.bottom.getSize();
+      var size = this.element.getSize(),
+          topSize = this.top.getSize(),
+          bottomSize = this.bottom.getSize();
     }
 
     this.frame.setStyles({
@@ -253,9 +253,13 @@ var NotesShift = new Class({
     });
   },
 
+  showNew: function()
+  {
+    this.show();
+  },
+
   show: function()
   {
-    this.parent();
     this.update();
     this.hideEditInterface();
     // have to remember to unpin
