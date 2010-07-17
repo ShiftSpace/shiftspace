@@ -222,7 +222,7 @@ function SSEditExitShift(space, shiftId)
      space.hasShift(shiftId) &&
      space.shiftIsVisible(shiftId))
   {
-    space.editExit(shiftId);
+    space.editExitShift(shiftId);
   }
   SSPostNotification('onShiftLeaveEdit', shiftId);
   SSSetShiftBeingEdited(null);

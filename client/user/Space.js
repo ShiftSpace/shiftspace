@@ -501,7 +501,6 @@ var ShiftSpaceSpace = new Class({
       {
         if(self.getCurrentShift() && theShift != self.getCurrentShift()) self.getCurrentShift().onBlur();
         self.setCurrentShift(theShift);
-
         theShift.__show__();
         if(theShift.isNewShift() && theShift.showNew)
         {
@@ -513,7 +512,6 @@ var ShiftSpaceSpace = new Class({
         }
         theShift.__showAfter__();
         self.onShiftShow(theShift.getId());
-
         theShift.onFocus();
       }
     }.future())(cShift);
@@ -536,8 +534,6 @@ var ShiftSpaceSpace = new Class({
         cShift.__hide__();
         cShift.hide();
         cShift.__hideAfter__();
-        cShift.setIsBeingEdited(false);
-        cShift.setIsVisible(false);
       }
     }
     else

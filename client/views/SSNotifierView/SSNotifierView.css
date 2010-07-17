@@ -220,3 +220,8 @@ button#SSToggleConsole.open
   float: right;	
   margin-right: 5px;
 }
+
+#SSQPCancel, #SSQPDelete
+{
+  cursor: pointer;
+}

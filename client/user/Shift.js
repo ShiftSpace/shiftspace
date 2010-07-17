@@ -129,6 +129,7 @@ var ShiftSpaceShift = new Class({
   __edit__: function()
   {
     this.setIsBeingEdited(true);
+    this.setIsVisible(true);
   },
 
   /*
@@ -301,6 +302,7 @@ var ShiftSpaceShift = new Class({
   __hide__: function()
   {
     this.setIsVisible(false);
+    this.setIsBeingEdited(false);
     var mainView = this.getMainView();
     if(mainView)
     {
