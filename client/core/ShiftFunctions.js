@@ -199,11 +199,8 @@ var SSEditShift = function(space, shiftId)
   {
     var content = shift.content;
     SSFocusSpace(space, (content && content.position) || null);
-    SSShowShift(space, shiftId);
-
     space.editShift(shiftId);
     space.onShiftEdit(shiftId);
-
     SSFocusShift(space, shiftId);
     SSPostNotification('onShiftEdit', shiftId);
   }
