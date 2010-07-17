@@ -25,6 +25,7 @@ var EmbedShift = Shift({
     
     //Call the Bespin lib (link should be made relative):
     //this.addBespin('http://localhost:8080/spaces/Embed/BespinEmbedded.js');
+    eval(this.attribute().lib.BespinEmbedded);
   },
   
   addBespin: function(file) {

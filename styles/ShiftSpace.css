@@ -1,5 +1,7 @@
 /* Some of these should be removed since they prevent CSS cascading */
-.ShiftSpaceElement {
+.ShiftSpaceElement,
+.ShiftSpaceElement:focus
+ {
     /*font-family: sans-serif;*/
     /*font-size: 12px;*/
     font-weight: normal;

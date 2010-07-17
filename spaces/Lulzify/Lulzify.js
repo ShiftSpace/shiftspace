@@ -5,6 +5,7 @@ var LulzifySpace = Space({
 });
 
 var LulzifyShift = Shift({
+
   setup: function(json) {
     
     console.log(
@@ -19,16 +20,14 @@ var LulzifyShift = Shift({
       this.summary = json.summary;
       this.lulzImgSrc = json.lulzImgSrc;
       this.lulzText = json.lulzText;
+      this.lulzImg = $$('img[src=' + this.lulzImgSrc + ']')[0];
     }
     
   },
   
   show: function() {
     
-    //in the case you're coming from edit, do some cleanup:
-    if (this.state === "edit"){
-      this.lulzImg.replaces(this.lulzContainer);
-    }
+    this.resetImg();
     
     this.state = "show";
     console.log('state = ' + this.state);
@@ -36,16 +35,21 @@ var LulzifyShift = Shift({
     if(!this.isNewShift()){
       //set lulzImg:
       this.lulzImg = $$('img[src=' + this.lulzImgSrc + ']')[0];
+      console.log('lulzImg = ' + this.lulzImg);
       
       //create the container node:
-      this.lulzContainer = new Element('span', {class: 'lulzContainer'});
+      this.lulzContainer = new ShiftSpace.Element('span', {class: 'lulzContainer', id: this.getId()});
       //wrap the container around the image
       this.lulzContainer.wraps(this.lulzImg);
         
+      //prepare texts to be presented in a paragraph
+      this.lulzTextDisplay = this.lulzText.replace(/\n/g, '<br/>');
+//      this.lulzTextDisplay = this.lulzText.replace('\n', '<br/>', 'g');
+        
       //create the interface node
-      this.lulzShow = new Element('p', {
+      this.lulzShow = new ShiftSpace.Element('p', {
         'class' : 'lulzShow',
-        'html' : this.lulzText
+        'html' : this.lulzTextDisplay
       });
       
       //inject the interface into the container
@@ -55,17 +59,25 @@ var LulzifyShift = Shift({
   },
   
   hide: function() {
-    if(this.lulzContainer){
-      this.lulzImg.replaces(this.lulzContainer);
-    }
+    this.resetImg();
     this.state = "hide";
     console.log('state = ' + this.state);
   },
   
+  editExit: function() {
+    this.show();
+  },
+  
+  resetImg: function() {
+    if($$('#' + this.getId())[0]){
+      this.lulzImg.replaces(this.lulzContainer);
+    }
+  },
+  
   edit: function() {
     
-    this.hide();
-    console.log('I just hid stuff before editting');
+    this.resetImg();
+    console.log('Start editting');
     
     if (this.isNewShift()){
       console.log('editing new shift');
@@ -79,12 +91,12 @@ var LulzifyShift = Shift({
           this.lulzImgSrc = this.lulzImg.get('src');
           
           //create the container node:
-          this.lulzContainer = new Element('span', {class: 'lulzContainer'});
+          this.lulzContainer = new ShiftSpace.Element('span', {class: 'lulzContainer', id: this.getId()});
           //wrap the container around the image
           this.lulzContainer.wraps(this.lulzImg);
           
           //create the interface node
-          this.lulzInterface = new Element('textarea', {
+          this.lulzEdit = new ShiftSpace.Element('textarea', {
             'class' : 'lulzEdit',
             'value' : 'I can Lulzify Dis!'
           });
@@ -99,15 +111,23 @@ var LulzifyShift = Shift({
     
     } else {
       console.log('re-editing old shift');
+          
+      console.log('this.lulzImg = ' + this.lulzImg );
+      
+      //create the container node:
+      this.lulzContainer = new ShiftSpace.Element('span', {class: 'lulzContainer', id: this.getId()});
+      //wrap the container around the image
+      this.lulzContainer.wraps(this.lulzImg);
+          
+      console.log('this.lulzContainer = ' + this.lulzContainer );
 
       //create the interface node
-      this.lulzEdit = new Element('textarea', {
+      this.lulzEdit = new ShiftSpace.Element('textarea', {
         'class' : 'lulzEdit',
         'value' : this.lulzText
       });
       
       //inject the interface into the container
-      this.lulzContainer.wraps(this.lulzImg);
       this.lulzEdit.inject(this.lulzContainer);
       this.lulzEdit.focus();
       this.lulzEdit.select();
@@ -120,6 +140,8 @@ var LulzifyShift = Shift({
   },
     
   encode: function() {
+    this.lulzText = this.lulzEdit.value;
+  
     console.log(
       "SAVING: ",
       "summary : "+ this.summary,
@@ -129,9 +151,9 @@ var LulzifyShift = Shift({
     
     //The summary, image reference and text content are saved into the shift:
     return {
-      summary : this.lulzEdit.value,
+      summary : this.lulzText,
       lulzImgSrc : this.lulzImgSrc,
-      lulzText : this.lulzEdit.value
+      lulzText : this.lulzText
     };
     
   }

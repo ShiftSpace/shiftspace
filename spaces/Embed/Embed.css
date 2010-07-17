@@ -7,20 +7,26 @@
   padding:  5px 10px;
   color: #FFF;
   background-color: rgba(0,0,0,0.5);
-  left:200px;
-  top:200px;
+  left:100px;
+  top:100px;
   -moz-border-radius: 10px;
-  width: 380px;
+  width: 480px;
 }
 
 .EmbedShift textarea
 {
-  height:200px;
-  width: 370px;
+  height:340px;
+  width: 470px;
   margin:10px 0 5px;
   padding: 5px;
   background: rgba(0,0,0,0.5);
   color: #fff;
+}
+
+.EmbedShift textarea
+{
+  height:340px;
+  width: 470px;
 }
 
 .EmbedShift form

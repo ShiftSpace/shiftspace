@@ -15,9 +15,15 @@
 .lulzContainer{
   outline: 2px solid red;
   display: block;
+  position:relative;
+}
+
+.lulzContainer img{
+  display: block;
 }
 
 .lulzEdit,
+.lulzEdit:focus,
 .lulzShow {
   background:none repeat scroll 0 0 transparent;
   border:medium none;
@@ -32,4 +38,5 @@
   top: 0;
   left: 0;
   text-align: center;
+  overflow: hidden;
 }
