@@ -199,10 +199,13 @@ var SSEditShift = function(space, shiftId)
   {
     var content = shift.content;
     SSFocusSpace(space, (content && content.position) || null);
-    space.editShift(shiftId);
-    space.onShiftEdit(shiftId);
-    SSFocusShift(space, shiftId);
-    SSPostNotification('onShiftEdit', shiftId);
+    var controlp = !space.hasShift(shiftId) ? space.addShift(shift, space.shiftUI()) : null;
+    (function(controlp) {
+      space.editShift(shiftId);
+      space.onShiftEdit(shiftId);
+      SSFocusShift(space, shiftId);
+      SSPostNotification('onShiftEdit', shiftId);
+    }.future())(controlp);
   }
   else
   {
