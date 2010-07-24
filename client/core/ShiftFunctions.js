@@ -72,7 +72,6 @@ Parameter:
 */
 var SSFocusShift = function(space, shiftId)
 {
-  SSLog("SSFocusShift", SSLogForce);
   var lastFocusedShift = SSFocusedShiftId();
   // unfocus the last shift
   if (lastFocusedShift &&
