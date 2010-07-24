@@ -342,7 +342,9 @@ var ShiftSpaceShift = new Class({
     {
       this.mainView = el;
       this.mainView.addEvent('mousedown', function() {
+        this.__focus__();
         this.focus();
+        this.__focusAfter__();
       }.bind(this));
     }
     else
