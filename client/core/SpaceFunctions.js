@@ -80,7 +80,6 @@ var SSLoadSpace = function(spaceName, inline)
                        if(!spacector)
                        {
                          spacector = ShiftSpace.Space;
-                         SSLog("Could not find a constructor for " + spaceName + ", using default Space constructor", SSLogWarning);
                        }
                        if(!shiftctor)
                        {
@@ -106,6 +105,7 @@ var SSLoadSpace = function(spaceName, inline)
                          SSAddStyle(attrs.ui.space.css, {
                            rewriteUrls: SSCalcRewriteUrl(origAttrs.ui.space.css)
                          });
+                       } else {
                        }
                        // create any ui templates
                        if($get(attrs, 'ui'))
