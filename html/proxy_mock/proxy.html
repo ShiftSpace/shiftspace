@@ -5,212 +5,16 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <title>proxy mock</title>
-<style type="text/css">
-#SSProxyMessage{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 44px;
-  color: #4B423A;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 12px;
-  line-height: 32px;
-  background-image: url(bg.png);
-  background-repeat: repeat-x;
-  color: #4b423a;
-}
-
-#SSProxyMessage a{
-  color: inherit;
-  font-weight: bold;
-}
-
-#SSProxyMessage a:hover{
-  color: #F63B02;
-}
-
-#SSProxiedURL{
-  float: left;
-  padding-left: 32px;
-  padding-right: 18px;
-  background-image: url(shiftspace_icon.png);
-  background-repeat: no-repeat;
-  background-position: 11px center;
-  
-}
-#SSProxiedURL .counter{
-
-}
-#SSProxiedURL .counterControl{
-  display: inline-block;
-  height: 21px;
-}
-
-#SSProxiedURL .counterControl a{
-  display: block;
-  width: 15px;
-  height: 15px;
-  /*background-color: green;*/
-  position: absolute;
-  background-position: -15px 0;
-}
-
-#SSProxiedURL .counterControl a.unactive{
-  background-position: 0px 0px;
-}
-
-#SSProxiedURL .counterControl a:hover{
-  background-position: -30px 0;
-}
-
-#SSProxiedURL .counterControl a.up{
-  top: 2px;
-  background-image: url(arrow-up.png);
-  background-repeat: no-repeat;
-}
-
-#SSProxiedURL .counterControl a.down{
-  bottom: 12px;
-  background-image: url(arrow-down.png);
-  background-repeat: no-repeat;
-}
-
-#SSProxyShiftMeta{
-  display: block;
-  margin-left: 18px;
-  margin-right: 268px;
-}
-
-#SSProxyShiftMeta *{
-  display: inline;
-}
-
-#SSProxyShiftMeta ul{
-  display: block;
-  height: 33px;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
-  padding-left: 4px;
-  background-image: url(meta_list_bg.png);
-  background-repeat: no-repeat;
-  background-position: 0 3px;
-}
-#SSProxyShiftMeta li{
-  display: block;
-  position: relative;
-  height: 33px;
-  margin: 0;
-  padding: 0;
-  background-image: url(meta_list_bg.png);
-  background-repeat: repeat-x;
-  background-position: 0px -63px;
-}
-#SSProxyShiftMeta li img.spaceIcon{
-  position: absolute;
-  left: 4px;
-  top: 8px;  
-}
-#SSProxyShiftMeta .summaryContainer{
-  display: block;
-  float: left;
-  margin-right: 194px;
-  padding-left: 31px;
-}
-#SSProxyShiftMeta .userDateMeta{
-  display: block;
-  position: absolute;
-  right: 0px;
-  width: 194px;
-}
-#SSProxyShiftMeta .user{
-  
-}
-#SSProxyShiftMeta .gravatarContainer{
-  width: 16px;
-}
-#SSProxyShiftMeta .gravatarContainer img{
-  vertical-align: middle;
-  margin-right: -3px;
-}
-#SSProxyShiftMeta .userName{
-  display: inline-block;
-  height: 17px;
-  line-height: 12px;
-  padding-left: 4px;
-  padding-right: 4px;
-  padding-top: 1px;  
-  background-color: #C1C6BD;
-  font-size: 11px;
-  line-height: 16px;
-  -moz-border-radius-bottomright:4px;
-  -moz-border-radius-topright:4px;
-  -moz-box-sizing:border-box; 
-}
-#SSProxyShiftMeta .date{
-  
-}
-#SSProxyControls{
-  position: absolute;
-  width: 268px;
-  height: 33px;
-  right: 0;
-  top: 3px;
-  line-height: 33px;
-  background-image: url(meta_list_bg.png);
-  background-position: left -33px;
-  background-repeat: no-repeat;
-}
-#SSProxyTwitterButton{
-  display: block;
-  float: left;
-  width: 79px;
-  height: 28px;
-  margin-left: 7px;
-  background-image: url(tweet-btn.png);
-  background-repeat: no-repeat;
-}
-#SSProxyTwitterButton:hover{
-  background-position: 0 -28px;  
-  cursor: pointer;  
-}
-a#SSProxyWhat{
-  display: block;
-  float: left;
-  font-weight: normal;
-  margin-left: 8px;
-  text-decoration: underline;
-  cursor: pointer;
-} 
-a#SSProxyWhat:hover{
-  color: #F63B02;
-}
-#SSProxyClose{
-  display: block;
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  right: 8px;
-  margin-top: 8px;
-  cursor: pointer;
-  background-image: url(publish-del-tag.png);
-  background-repeat: no-repeat;
-  background-position: 0 0;
-}
-#SSProxyClose:hover{
-  background-position: 0 -16px;  
-}
-</style>  
+  <link media="screen" href="proxy.css" type="text/css" rel="StyleSheet">
 </head>
 <body>
 <div id="SSProxyMessage" class="ShiftSpaceElement">
   <div id="SSProxiedURL">
-    on <a href="">Guardian.co.uk/</a>
+    on <a href="#">Guardian.co.uk/…</a>
     <span class="counter">(1/20)</span>
     <span class="counterControl">
-      <a class="up" href=""></a>
-      <a class="down" href=""></a>
+      <a class="up" href="#"></a>
+      <a class="down" href="#"></a>
     </span>
   </div>
   <div id="SSProxyShiftMeta">
@@ -226,6 +30,7 @@ a#SSProxyWhat:hover{
             <span class="userName">moorej</span>
           </span>
           <span class="date">1 week ago</span>
+          <a href="#" class="commentCount number">34</a>
         </span>
       </li>
       <li>
@@ -239,13 +44,13 @@ a#SSProxyWhat:hover{
             <span class="userName">dnolen</span>
           </span>
           <span class="date">2 weeks ago</span>
-        </span>      
+        </span>
       </li>
     </ul>
   </div>    
   <div id="SSProxyControls">
-    <a id="SSProxyTwitterButton"></a>
-    <a id="SSProxyWhat">ShiftSpace? What?</a>
+    <a id="SSProxyShareButton"><span></span>Share</a>
+    <a id="SSProxyShiftThis">Shift This Page</a>
     <a id="SSProxyClose"></a>
   </div>
 </div>
