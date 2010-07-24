@@ -334,6 +334,7 @@ var ShiftSpaceSpace = new Class({
       space: self, 
       shift: newShift
     });
+    return shift;
   },
   
   /*

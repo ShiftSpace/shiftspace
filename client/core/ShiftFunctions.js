@@ -24,31 +24,26 @@ Parameters:
 */
 var SSInitShift = function(space, options) 
 {
-  var tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000);
-  var winSize = window.getSize();
-  var position = (options && options.position && {x: options.position.x, y: options.position.y }) || 
-                  {x: winSize.x/2, y: winSize.y/2};
-  
-  var shift = {
-    _id: tempId,
-    space: {name: space.attributes().name},
-    userName: ShiftSpace.User.getUserName(),
-    content: {position: position}
-  };
-  
-  var shiftInstanceP = space.createShift(shift);
-  
-  $if(shiftInstanceP,
-      function() 
-      {
-        SSApp.setDocument('global', shift);
-        SSShowNewShift(space, shift);
+  var tempId = 'newShift' + Math.round(Math.random(0, 1) * 1000000),
+      winSize = window.getSize(),
+      position = (options && options.position && {x: options.position.x, y: options.position.y }) ||
+                  {x: winSize.x/2, y: winSize.y/2},
+      shift = {
+        _id: tempId,
+        space: {name: space.attributes().name},
+        userName: ShiftSpace.User.getUserName(),
+        content: {position: position}
       },
-      function()
-      {
-        SSLog("There was an error creating the shift", SSLogError);
-      }
-    );
+      noErr = space.createShift(shift);
+  if(noErr)
+  {
+    SSApp.setDocument('global', shift);
+    SSShowNewShift(space, shift);
+  }
+  else
+  {
+    SSLog("There was an error creating the shift", SSLogError);
+  }
 }.future();
 
 /*
@@ -77,8 +72,8 @@ Parameter:
 */
 var SSFocusShift = function(space, shiftId)
 {
+  SSLog("SSFocusShift", SSLogForce);
   var lastFocusedShift = SSFocusedShiftId();
-
   // unfocus the last shift
   if (lastFocusedShift &&
       SSGetShift(lastFocusedShift) &&
@@ -93,10 +88,8 @@ var SSFocusShift = function(space, shiftId)
   }
   SSSetFocusedShiftId(shiftId);
   space.orderFront(shiftId);
-
   space.focusShift(shiftId);
   space.onShiftFocus(shiftId);
-
   SSScrollToShift(space, shiftId);
 }.future();
 
