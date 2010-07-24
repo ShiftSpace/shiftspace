@@ -352,19 +352,47 @@ var ShiftSpaceShift = new Class({
   },
 
   /*
+    Function: __focus__
+      *private*
+   */
+  __focus__: function()
+  {
+    
+  },
+
+  /*
     Function: focus
       Tell ShiftSpace we want to focus this shift.
   */
   focus: function() 
   {
-    this.fireEvent('onShiftFocus', this.getId() );
+
+  },
+
+  /*
+    Function: __focusAfter__
+      *private*
+   */
+  __focusAfter__: function()
+  {
+    this.fireEvent('onShiftFocus', this.getId() );    
   },
 
   /*
     Function: onFocus
+      *private*
       Do any updating of the shift's interface for focus events here.
   */
   onFocus: function() {},
+
+  /*
+    Function: __blur__
+      *private*
+   */
+  __blur__: function()
+  {
+    this.setIsBeingEdited(false);    
+  },
 
   /*
     Function: unfocus
@@ -372,8 +400,15 @@ var ShiftSpaceShift = new Class({
   */
   blur : function() 
   {
-    this.setIsBeingEdited(false);
-    this.fireEvent('onShiftBlur', this.getId() );
+  },
+
+  /*
+    Function: __blurAfter__
+      *private*
+   */
+  __blurAfter__: function()
+  {
+    this.fireEvent('onShiftBlur', this.getId() );    
   },
 
   /*

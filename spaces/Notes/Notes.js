@@ -278,14 +278,12 @@ var NotesShift = new Class({
 
   hide: function()
   {
-    this.parent();
     this.hideEditInterface();
     if(this.isPinned()) this.unpin();
   },
 
-  onBlur: function()
+  blur: function()
   {
-    this.parent();
     this.update();
     this.hideEditInterface();
   },
@@ -515,7 +513,6 @@ var NotesShift = new Class({
 
   unpin: function()
   {
-    this.parent();
     // put the note back on the page
     this.element.injectInside(document.body);
   },

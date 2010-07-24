@@ -690,7 +690,9 @@ var ShiftSpaceSpace = new Class({
   blurShift: function(shiftId)
   {
     var theShift = this.__shifts[shiftId];
-    theShift.onBlur();
+    theShift.__blur__();
+    theShift.blur();
+    theShift.__blurAfter__();
     theShift.setIsBeingEdited(false);
   },
 
