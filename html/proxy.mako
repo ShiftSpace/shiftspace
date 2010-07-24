@@ -10,9 +10,26 @@
     <script src="/externals/mootools-1.2.3-core.js" type="text/javascript"></script>
     <script src="/externals/mootools-1.2.3.1-more.js" type="text/javascript"></script>
     <script src="/builds/shiftspace.sandbox.js" type="text/javascript"></script>
+    <script id="SSOuterChannel" type="text/javascript">
+        window.addEvent("domready", function() {
+          window.addEventListener("message", function(evt) {
+            if(evt.origin !== "http://127.0.0.1:8080")
+            {
+              console.log("Message from unexpected origin");
+            }
+            else
+            {
+              console.log("Message", evt);
+            }
+          }, false);
+        });
+        function sendMessage(msg) {
+          $("unsafe-frame").contentWindow.postMessage(JSON.encode(msg), "http://127.0.0.1:8080${src}");
+        }
+    </script>
 </head>
 <body>
-    <iframe id="unsafe-frame" src="${src}">
+    <iframe id="unsafe-frame" src="http://127.0.0.1:8080${src}">
     </iframe>
     <div id="mask"></div>
 </body>

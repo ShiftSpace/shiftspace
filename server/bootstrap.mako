@@ -24,6 +24,22 @@
 <script type="text/javascript" src="/externals/mootools-1.2.3-core.js"></script>
 <script type="text/javascript" src="/externals/mootools-1.2.3.1-more.js"></script>
 <script type="text/javascript" src="/externals/mootools-1.2.3.1-more.js"></script>
+<script id="SSInnerChannel" type="text/javascript">
+    window.addEvent("domready", function() {
+      window.addEventListener("message", function(evt) {
+        // this will need to be different from safe-proxy domain
+        // to actually protect against attacks
+        if(evt.origin !== "http://localhost:8080")
+        {
+          console.log("Message from unexpected origin");
+        }
+        else
+        {
+          $("messages").set("text", JSON.decode(evt.data));
+        }
+      }, false);
+    });
+</script>
 <script type="text/javascript" src="/externals/functools/FuncTools.js"></script>
 <script type="text/javascript" src="/externals/set/Set.js"></script>
 <script type="text/javascript" src="/externals/promises/Promises.js"></script>
