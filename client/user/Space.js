@@ -479,24 +479,22 @@ var ShiftSpaceSpace = new Class({
         SSLog(exc);
       }
     }
-    if(theShift.canShow())
+    if(cShift.canShow())
     {
-      if(this.getCurrentShift() && theShift != this.getCurrentShift()) this.getCurrentShift().onBlur();
-      this.setCurrentShift(theShift);
-
-        theShift.__show__();
-        if(theShift.isNewShift() && theShift.showNew)
-        {
-          theShift.showNew();
-        }
-        else
-        {
-          theShift.show();
-        }
-        theShift.__showAfter__();
-        self.onShiftShow(theShift.getId());
-
-      theShift.onFocus();
+      if(this.getCurrentShift() && cShift != this.getCurrentShift()) this.getCurrentShift().onBlur();
+      this.setCurrentShift(cShift);
+      cShift.__show__();
+      if(cShift.isNewShift() && cShift.showNew)
+      {
+        cShift.showNew();
+      }
+      else
+      {
+        cShift.show();
+      }
+      cShift.__showAfter__();
+      this.onShiftShow(cShift.getId());
+      cShift.onFocus();
     }
   },
 
