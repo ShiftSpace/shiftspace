@@ -8,6 +8,8 @@
   
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
+  
+  background: #f8f5f2
 }
 
 .SSSpaceMenuFrameBody > div{
@@ -45,6 +47,12 @@ ul#SpaceMenuList
   
   background: #aaa url(/images/space-list-bg-grad.png) repeat-x bottom;
   
+  -moz-box-shadow: -4px 0px 15px #999 inset;
+  -webkit-box-shadow: -4px 0px 15px #999 inset;
+  box-shadow: -4px 0px 15px #999 inset;
+  
+  border: 1px solid #CCCCCC;
+  /*
   border: #dfebe1 solid;
   border-width: 3px 3px 0px 3px;
   
@@ -52,9 +60,10 @@ ul#SpaceMenuList
   -webkit-border-top-right-radius: 6px;
   -moz-border-radius-topleft: 6px;
   -webkit-border-top-left-radius: 6px;
+*/
   
   /*-moz-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;*/
-  -webkit-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;
+  /* -webkit-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA; */
 }
 
 /* TODO: support grab icon in all browsers - David 6/27/09 */
