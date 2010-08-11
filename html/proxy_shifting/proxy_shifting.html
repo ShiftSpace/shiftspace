@@ -1,0 +1,101 @@
+<html>
+<head>
+  <title></title>
+  <style type="text/css">
+    @import url(../../builds/compiledViews/mydev/SSSpaceMenu.css);
+    @import url(../../builds/compiledViews/mydev/SSListViewCell.css);
+    @import url(../../builds/compiledViews/mydev/SSCell.css);
+    @import url(../../builds/compiledViews/mydev/SSTabView.css);
+    @import url(../../builds/compiledViews/mydev/SSFramedView.css);
+    @import url(../../builds/compiledViews/mydev/SSListView.css);
+    @import url(../../builds/compiledViews/mydev/SSSpaceMenuFrame.css);
+    @import url(../../builds/compiledViews/mydev/SSGlobalStyles.css);
+    @import url(../../builds/compiledViews/mydev/SSSpaceMenuListCell.css);
+    @import url(../../builds/compiledViews/mydev/SSConsoleWindow.css);
+    .SSDisplayNone{
+      display: none;
+    }
+    .SSUserSelectNone{
+      -moz-user-select: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }                                   
+  </style>
+</head>
+<body class="SSSpaceMenuFrameBody SSFrame">
+  <div>
+    <button outlet="SSConsoleWindow" id="SSConsoleWindowClose">X</button>
+    <h2>Shift this page:</h2>
+    <ul outlet="SpaceMenu" uiclass="SSListView" class="SSListView" id="SpaceMenuList">
+    
+      <li class="SSSpaceMenuListCell SSCellClone">
+          <span class="icon"><img class="icon" src="../../spaces/Highlights/Highlights.png"></span>
+          <span class="name">
+            <h3>Highlights</h3>
+            <span class="action">select & save highlighted text</span>
+          </span>
+          <span class="handle"></span>
+          <span class="space-vid"></span>
+      </li>
+      <li class="SSSpaceMenuListCell SSCellClone">
+          <span class="icon"><img class="icon" src="../../spaces/YeasAndNays/YeasAndNays.png"></span>
+          <span class="name">
+            <h3>Yeas and Nays</h3>
+            <span class="action">call your congress person & share the recording here</span>
+          </span>
+          <span class="handle"></span>
+          <span class="space-vid">
+      </li>
+      <li class="SSSpaceMenuListCell SSCellClone">
+          <span class="icon"><img class="icon" src="../../spaces/SourceShift/SourceShift.png"></span>
+          <span class="name">
+            <h3>Embed</h3>
+            <span class="action">write or embed any html code to add it to the page</span>
+          </span>
+          <span class="handle"></span>
+          <span class="space-vid"></span>
+      </li>
+      <li class="SSSpaceMenuListCell SSCellClone">
+          <span class="icon"><img class="icon" src="../../spaces/Highlights/Highlights.png"></span>
+          <span class="name">
+            <h3>Highlights</h3>
+            <span class="action">select & save highlighted text</span>
+          </span>
+          <span class="handle"></span>
+          <span class="space-vid"></span>
+      </li>
+      <li class="SSSpaceMenuListCell SSCellClone">
+          <span class="icon"><img class="icon" src="../../spaces/YeasAndNays/YeasAndNays.png"></span>
+          <span class="name">
+            <h3>Yeas and Nays</h3>
+            <span class="action">call your congress person & share the recording here</span>
+          </span>
+          <span class="handle"></span>
+          <span class="space-vid"></span>
+      </li>
+      <li class="SSSpaceMenuListCell SSCellClone">
+          <span class="icon"><img class="icon" src="../../spaces/SourceShift/SourceShift.png"></span>
+          <span class="name">
+            <h3>Embed</h3>
+            <span class="action">write or embed any html code to add it to the page</span>
+          </span>
+          <span class="handle"></span>
+          <span class="space-vid"></span>
+      </li>
+      <li class="SSSpaceMenuListCell SSCellClone SSSpaceMenuListBottom" id="SSGetSpaces">
+          <span class="name">
+            <h3>Get more apps</h3>
+            <span class="action">from ShiftSpace.org</span>
+          </span>
+      </li>
+      <li class="SSSpaceMenuListCell SSCellClone SSSpaceMenuListBottom" id="SSHackSpaces">
+          <span class="name">
+            <h3>Make your own apps</h3>
+            <span class="action">using html, css & js (easy)</span>
+          </span>
+      </li>
+    </ul>
+    
+  </div>
+</body>
+</html>

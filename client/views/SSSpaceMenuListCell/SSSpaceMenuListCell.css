@@ -1,0 +1,26 @@
+ul#SpaceMenuList li.SSSpaceMenuListBottom{
+  width: 50%;
+  float: left;
+  background: none;
+  border-width: 0 1px;
+  -moz-border-radius: 0
+}
+ul#SpaceMenuList li.SSSpaceMenuListBottom:hover > span h3,
+ul#SpaceMenuList li.SSSpaceMenuListBottom:hover > span span{
+  color: #444;
+}
+
+ul#SpaceMenuList li.SSSpaceMenuListBottom > span h3,
+ul#SpaceMenuList li.SSSpaceMenuListBottom > span span{
+  color: #777;
+}
+
+ul#SpaceMenuList li#SSGetSpaces > span {
+  float: right;
+  text-align: right;
+  margin-right: 15px;
+}
+
+ul#SpaceMenuList li#SSHackSpaces > span{
+  margin-left: 15px;
+}
