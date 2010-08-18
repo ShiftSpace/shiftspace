@@ -13,6 +13,7 @@ ul#SpaceMenuList li.SSSpaceMenuListBottom:hover > span span{
 ul#SpaceMenuList li.SSSpaceMenuListBottom > span h3,
 ul#SpaceMenuList li.SSSpaceMenuListBottom > span span{
   color: #777;
+  text-shadow:1px 1px 0 #DDDDDD;
 }
 
 ul#SpaceMenuList li#SSGetSpaces > span {
