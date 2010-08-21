@@ -1,12 +1,17 @@
 .SSSpaceMenuFrame
 {
   position: fixed;
-  bottom: 37px;
+  /* bottom: 37px; */
   
-  left: 35px;
+  display: block;
+  left: 50%;  /* margin-left: -255px; */
+  top: 50%;  /* margin-top: -150px; */
 
-  width: 180px;
-  height: 120px;
+  width: 521px;
+  height: 320px;
+  
+  overflow-x:hidden;
+  overflow-y:scroll;
 
   border: none;
   
