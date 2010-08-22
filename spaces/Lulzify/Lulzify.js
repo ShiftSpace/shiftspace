@@ -79,6 +79,10 @@ var LulzifyShift = Shift({
     this.resetImg();
     console.log('Start editting');
     
+    //tell the page it can be lulzified:
+    $(document.body).addClass('lulzifySomething');
+    $$('#install').addClass('lulzifySomething');
+    
     if (this.isNewShift()){
       console.log('editing new shift');
     
@@ -86,6 +90,9 @@ var LulzifyShift = Shift({
       $$('img').addEvent('click',function(event) { 
         
         if(!this.lulzImg){
+          //tell the page it's being lulzified:
+          $(document.body).removeClass('lulzifySomething');
+          
           //get the image node and store it in lulzImg
           this.lulzImg = $(event.target);
           this.lulzImgSrc = this.lulzImg.get('src');
@@ -113,6 +120,9 @@ var LulzifyShift = Shift({
       console.log('re-editing old shift');
           
       console.log('this.lulzImg = ' + this.lulzImg );
+      
+      //tell the page it's being lulzified:
+      $(document.body).removeClass('lulzifySomething');
       
       //create the container node:
       this.lulzContainer = new ShiftSpace.Element('span', {class: 'lulzContainer', id: this.getId()});

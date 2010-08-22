@@ -1,5 +1,10 @@
 /* Your Space and Shift CSS goes here */
 
+
+body.lulzifySomething img:hover{
+  outline: 2px dotted red;
+}
+
 .LulzifyShift
 {
   font: 50px verdana sans-serif;
@@ -13,13 +18,16 @@
 }
 
 .lulzContainer{
-  outline: 2px solid red;
+  border: 2px dotted red;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
   display: block;
   position:relative;
 }
 
 .lulzContainer img{
   display: block;
+  margin: -2px;
 }
 
 .lulzEdit,
