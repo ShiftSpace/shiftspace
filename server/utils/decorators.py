@@ -25,6 +25,6 @@ def db_session(func):
     def afn(*args, **kwargs):
         result = func(*args, **kwargs)
         server = core.sharedServer()
-        [c.close() for c in server.resource.http.connections.values()]
+        #[c.close() for c in server.resource.http.connections.values()]
         return result
     return afn
