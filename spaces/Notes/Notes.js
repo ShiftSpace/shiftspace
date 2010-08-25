@@ -310,8 +310,8 @@ var NotesShift = new Class({
 
   hideEditInterface: function()
   {
-    this.saveButton.setStyle('display', 'none');
-    this.cancelButton.setStyle('display', 'none');
+    //this.saveButton.setStyle('display', 'none');
+    //this.cancelButton.setStyle('display', 'none');
     this.pinWidgetDiv.setStyle('display', 'none');
     if(this.inputArea)
     {
