@@ -1,6 +1,5 @@
 from datetime import datetime
-from couchdb.schema import *
-from couchdb.schema import View
+from couchdb.mapping import *
 
 from server.utils.decorators import *
 import server.utils.utils as utils
@@ -36,7 +35,7 @@ class Group(SSDocument):
     # Views
     # ========================================
 
-    all = View(
+    all = ViewField(
         "groups",
         "function(doc) {               \
            if(doc.type == 'group') {   \
@@ -44,7 +43,7 @@ class Group(SSDocument):
            }                           \
          }")
 
-    by_visible_and_created = View(
+    by_visible_and_created = ViewField(
         "groups",
         "function(doc) {               \
            if(doc.type == 'group' && doc.visible) {   \
@@ -52,7 +51,7 @@ class Group(SSDocument):
            }                           \
          }")
 
-    by_short_name = View(
+    by_short_name = ViewField(
         "groups",
         "function(doc) {               \
            if(doc.type == 'group') {   \
@@ -60,7 +59,7 @@ class Group(SSDocument):
            }                           \
          }")
 
-    by_long_name = View(
+    by_long_name = ViewField(
         "groups",
         "function(doc) {               \
            if(doc.type == 'group') {   \
@@ -68,7 +67,7 @@ class Group(SSDocument):
            }                           \
          }")
 
-    shift_count = View(
+    shift_count = ViewField(
         "groups",
         "function(doc) {                                      \
            if(doc.type == 'shift') {                          \

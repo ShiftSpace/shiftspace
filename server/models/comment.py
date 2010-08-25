@@ -1,6 +1,5 @@
 from datetime import datetime
-from couchdb.schema import *
-from couchdb.schema import View
+from couchdb.mapping import *
 
 from server.utils.decorators import *
 import server.utils.utils as utils
@@ -37,7 +36,7 @@ class Comment(SSDocument):
     # Views
     # ========================================
 
-    by_created = View(
+    by_created = ViewField(
         "comments",
         "function(doc) {               \
            if(doc.type == 'comment') { \
@@ -46,7 +45,7 @@ class Comment(SSDocument):
          }"
         )
 
-    all_subscribed = View(
+    all_subscribed = ViewField(
         "comments",
         "function(doc) {                    \
            if(doc.type == 'subscription') { \
@@ -55,7 +54,7 @@ class Comment(SSDocument):
          }"
         )
         
-    by_user_and_created = View(
+    by_user_and_created = ViewField(
         "comments_shared",
         "function(doc) {               \
            if(doc.type == 'comment') { \
@@ -64,7 +63,7 @@ class Comment(SSDocument):
          }"
         )
 
-    count_by_shift = View(
+    count_by_shift = ViewField(
         "comments_shared",
         "function(doc) {                    \
            if(doc.type == 'comment') { \

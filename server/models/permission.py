@@ -1,6 +1,5 @@
 from datetime import datetime
-from couchdb.schema import *
-from couchdb.schema import View
+from couchdb.mapping import *
 
 from server.utils.decorators import *
 import server.utils.utils as utils
@@ -37,7 +36,7 @@ class Permission(SSDocument):
     # Views
     # ========================================
 
-    all = View(
+    all = ViewField(
         "permissions",
         "function(doc) {                  \
            if(doc.type == 'permission') { \
@@ -45,7 +44,7 @@ class Permission(SSDocument):
            }                              \
          }")
 
-    by_user = View(
+    by_user = ViewField(
         "permissions",
         "function (doc) {                 \
            if(doc.type == 'permission') { \
@@ -53,7 +52,7 @@ class Permission(SSDocument):
            }                              \
          }")
 
-    by_group = View(
+    by_group = ViewField(
         "permissions",
         "function (doc) {                 \
            if(doc.type == 'permission') { \
@@ -61,7 +60,7 @@ class Permission(SSDocument):
            }                              \
          }")
 
-    all_members = View(
+    all_members = ViewField(
         "permissions",
         "function (doc) {                                  \
            if(doc.type == 'permission' && doc.level > 0) { \
@@ -70,7 +69,7 @@ class Permission(SSDocument):
          }"
         )
 
-    member_count = View(
+    member_count = ViewField(
         "permissions",
         "function (doc) {                                  \
            if(doc.type == 'permission' && doc.level > 0) { \
@@ -82,7 +81,7 @@ class Permission(SSDocument):
          }"
         )
 
-    admins = View(
+    admins = ViewField(
         "permissions",
         "function (doc) {                                  \
            if(doc.type == 'permission' && doc.level > 2) { \
@@ -91,7 +90,7 @@ class Permission(SSDocument):
          }"
         )
 
-    admin_count = View(
+    admin_count = ViewField(
         "permissions",
         "function (doc) {                                  \
            if(doc.type == 'permission' && doc.level > 2) { \
@@ -103,7 +102,7 @@ class Permission(SSDocument):
          }"
         )
 
-    by_user_and_group = View(
+    by_user_and_group = ViewField(
         "permissions",
         "function (doc) {                           \
            if(doc.type == 'permission') {           \
@@ -111,7 +110,7 @@ class Permission(SSDocument):
            }                                        \
          }")
 
-    by_user_group_level = View(
+    by_user_group_level = ViewField(
         "permissions",
         "function (doc) {                                      \
            if(doc.type == 'permission') {                      \
@@ -120,7 +119,7 @@ class Permission(SSDocument):
          }"
         )
 
-    is_member = View(
+    is_member = ViewField(
         "permissions",
         "function (doc) {                                  \
            if(doc.type == 'permission' && doc.level > 0) { \
@@ -129,7 +128,7 @@ class Permission(SSDocument):
          }"
         )
 
-    readable_by_user_and_created = View(
+    readable_by_user_and_created = ViewField(
         "permissions",
         "function (doc) {                                      \
            if(doc.type == 'permission' && doc.level > 0) {     \
@@ -138,7 +137,7 @@ class Permission(SSDocument):
          }"
         )
 
-    by_joinable = View(
+    by_joinable = ViewField(
         "permissions",
         "function (doc) {                                   \
            if(doc.type == 'permission' && doc.level == 0) { \
@@ -147,7 +146,7 @@ class Permission(SSDocument):
          }"
         )
 
-    by_readable = View(
+    by_readable = ViewField(
         "permissions",
         "function (doc) {                                  \
            if(doc.type == 'permission' && doc.level > 0) { \
@@ -156,7 +155,7 @@ class Permission(SSDocument):
          }"
         )
 
-    by_writeable = View(
+    by_writeable = ViewField(
         "permissions",
         "function (doc) {                                  \
            if(doc.type == 'permission' && doc.level > 1) { \
@@ -165,7 +164,7 @@ class Permission(SSDocument):
          }"
         )
 
-    by_adminable = View(
+    by_adminable = ViewField(
         "permissions",
         "function (doc) {                                   \
            if(doc.type == 'permission' && doc.level >= 3) { \

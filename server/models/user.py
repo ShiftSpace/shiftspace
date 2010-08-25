@@ -1,6 +1,5 @@
 from datetime import datetime
-from couchdb.schema import *
-from couchdb.schema import View
+from couchdb.mapping import *
 
 from ssdoc import SSDocument
 
@@ -25,7 +24,7 @@ class User(SSDocument):
     peer = BooleanField(default=False)
     userName = TextField()
     displayName = TextField()
-    fullName = DictField(Schema.build(
+    fullName = DictField(Mapping.build(
             first = TextField(),
             last = TextField()
             ))
@@ -43,7 +42,7 @@ class User(SSDocument):
     # Views
     # ========================================
 
-    all = View(
+    all = ViewField(
         "users",
         "function(doc) {            \
            if(doc.type == 'user') { \
@@ -51,7 +50,7 @@ class User(SSDocument):
            }                        \
          }")
 
-    all_by_joined = View(
+    all_by_joined = ViewField(
         "users",
         "function(doc) {            \
            if(doc.type == 'user') { \
@@ -59,7 +58,7 @@ class User(SSDocument):
            }                        \
          }")
 
-    by_name = View(
+    by_name = ViewField(
         "users",
         "function(doc) {              \
            if(doc.type == 'user') {   \

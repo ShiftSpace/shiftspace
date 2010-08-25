@@ -1,6 +1,5 @@
 from datetime import datetime
-from couchdb.schema import *
-from couchdb.schema import View
+from couchdb.mapping import *
 from server.models import core
 import server.utils.utils as utils 
 
@@ -16,7 +15,7 @@ class SSDocument(Document):
     # ========================================
 
     createdBy = TextField()
-    source = DictField(Schema.build(
+    source = DictField(Mapping.build(
             server = TextField(),
             database = TextField()
             ))

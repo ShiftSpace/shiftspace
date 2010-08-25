@@ -1,6 +1,5 @@
 from datetime import datetime
-from couchdb.schema import *
-from couchdb.schema import View
+from couchdb.mapping import *
 
 from server.utils.decorators import *
 import server.utils.utils as utils
@@ -26,7 +25,7 @@ class Favorite(SSDocument):
     # Views
     # ========================================
 
-    by_user_and_created = View(
+    by_user_and_created = ViewField(
         "favorites",
         "function(doc) {                           \
            if(doc.type == 'favorite') {            \
@@ -35,7 +34,7 @@ class Favorite(SSDocument):
          }"
         )
 
-    count_by_shift = View(
+    count_by_shift = ViewField(
         "favorites",
         "function(doc) {                \
            if(doc.type == 'favorite') { \
