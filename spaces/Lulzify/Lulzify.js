@@ -81,8 +81,7 @@ var LulzifyShift = Shift({
     
     //tell the page it can be lulzified:
     $(document.body).addClass('lulzifySomething');
-    $$('#install').addClass('lulzifySomething');
-    
+        
     if (this.isNewShift()){
       console.log('editing new shift');
     

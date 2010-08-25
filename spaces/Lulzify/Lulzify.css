@@ -5,6 +5,10 @@ body.lulzifySomething img:hover{
   outline: 2px dotted red;
 }
 
+img:hover{
+  outline: 2px dotted red;
+}
+
 .LulzifyShift
 {
   font: 50px verdana sans-serif;
