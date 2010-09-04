@@ -76,6 +76,10 @@ var ShiftSpaceSpace = new Class({
     return this.attributes().name;
   },
 
+  genUUID: function() {
+    return SSGenUUID();
+  },
+
   /*
     Function: setup (abstract)
       To be implemented by subclasses.
