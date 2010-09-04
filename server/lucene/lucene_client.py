@@ -1,4 +1,5 @@
 from couchdb.client import Database, View
+import couchdb.http as http
 
 
 class LuceneDatabase(Database):
@@ -10,7 +11,7 @@ class LuceneIndex(object):
     """Abstract representation of a Lucene query."""
 
     def __init__(self, uri, wrapper=None, http=None):
-        self.resource = Resource(http, uri)
+        self.resource = http.Resource(http, None)
         self.wrapper = wrapper
 
     def __call__(self, **options):
@@ -20,8 +21,8 @@ class LuceneIndex(object):
         return self()
 
     def _exec(self, options):
-        resp, data = self.resource.get(**options)
-        return data
+        status, msg, response = self.resource.get_json(**options)
+        return response
 
 
 class LuceneIndexResults(object):

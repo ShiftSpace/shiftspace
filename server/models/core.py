@@ -107,8 +107,8 @@ class Lucene():
             connect("shiftspace/master")
         uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(db.name)
         resource = http.Resource(uri, None)
-        status, msg, response = resource.get(view, **params)
-        return json.loads(response.read()).get("rows")
+        status, msg, response = resource.get_json(view, **params)
+        return response.get("rows")
 
 _lucene = Lucene()
 
@@ -244,13 +244,9 @@ def fetch(db=None, view=None, keys=None):
     else:
         params = {"group":True}
 
-    content = json.dumps({"keys":keys})
-    headers = {"Content-Type":"application/json"}
+    status, message, response = resource.post_json(body={"keys":keys}, **params)
 
-    status, message, response = resource.post(headers=headers, content=content, **params)
-    data = response.read()
-    
-    rows = data["rows"]
+    rows = response["rows"]
 
     if viewpath == "_all_docs":
         result = []
@@ -271,9 +267,4 @@ def fetch(db=None, view=None, keys=None):
 
 
 def replicate(source, target="shiftspace/master"):
-    server = sharedServer()
-    resource = couchdb.client.Resource(server.resource.http, 'http://localhost:5984/_replicate')
-    content = json.dumps({"source":source, "target":target})
-    headers = {"Content-Type":"application/json"}
-    resource.post(headers=headers, content=content)
-
+    sharedServer().replicate(source, target)
