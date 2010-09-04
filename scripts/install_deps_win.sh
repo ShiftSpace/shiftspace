@@ -7,11 +7,11 @@ cd ../httplib2-dev
 python setup.py install
 cd ../simplejson-2.0.9
 python setup.py install
-cd ../CouchDB-0.6
+cd ../CouchDB-0.8
 python setup.py install
 cd ../Mako-0.2.5
 python setup.py install
 cd ../../
-mv deps/couchdb-lucene-0.4-jar-with-dependencies.jar ../server/
+mv deps/couchdb-lucene ../server/
 mv deps/NaturalDocs-1.4 ../externals/
 chmod u+x ../externals/NaturalDocs-1.4/NaturalDocs

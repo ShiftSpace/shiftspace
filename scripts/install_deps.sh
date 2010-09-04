@@ -7,7 +7,7 @@ cd ../httplib2-dev
 sudo python setup.py install
 cd ../simplejson-2.0.9
 sudo python setup.py install
-cd ../CouchDB-0.6
+cd ../CouchDB-0.8
 sudo python setup.py install
 cd ../Mako-0.2.5
 sudo python setup.py install
