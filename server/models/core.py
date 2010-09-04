@@ -104,10 +104,10 @@ class Lucene():
         """
         import urllib
         if db == None:
-            connect("shiftspace/master")
-        uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(db.name)
+            db = connect("shiftspace/master")
+        uri = 'http://localhost:5984/%s/_fti/_design/lucene' % urllib.quote_plus(db.name)
         resource = http.Resource(uri, None)
-        status, msg, response = resource.get_json(view, **params)
+        status, msg, response = resource.get_json(path=view, **params)
         return response.get("rows")
 
 _lucene = Lucene()
