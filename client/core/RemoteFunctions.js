@@ -91,6 +91,7 @@ var SSAddStyle = function(css, options)
   {
     GM_addStyle(css);
   }
+  return css;
 }.future();
 
 /*

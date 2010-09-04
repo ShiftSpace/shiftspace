@@ -961,5 +961,10 @@ var ShiftSpaceShift = new Class({
   template: function(name, ctxt)
   {
     return this.getParentSpace().template(name, ctxt);
+  },
+
+
+  addStyle: function(frame, cssText) {
+    SSAddStyle(cssText, {frame: frame});
   }
 });
