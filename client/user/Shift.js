@@ -343,6 +343,23 @@ var ShiftSpaceShift = new Class({
   },
 
   /*
+    Function: cancel
+      Function to cancel the editing of a shift as
+      well destroying a newly created shift.
+   */
+  cancel: function()
+  {
+    if(this.isNewShift())
+    {
+      this.destroy();
+    }
+    else
+    {
+      this.getParentSpace().hideShift(this.getId());
+    }
+  },
+
+  /*
     Function: manageElement
       Sets the main view of the shift.  This lets ShiftSpace now what the main display
       element of your Shift is.  This is required for proper display ordering.
