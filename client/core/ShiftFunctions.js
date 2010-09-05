@@ -197,7 +197,7 @@ var SSEditShift = function(space, shiftId)
   {
     var content = shift.content;
     SSFocusSpace(space, (content && content.position) || null);
-    var controlp = !space.hasShift(shiftId) ? space.addShift(shift, space.shiftUI()) : null;
+    var controlp = !space.hasShift(shiftId) ? space.addShift(shift) : null;
     (function(controlp) {
       space.editShift(shiftId);
       space.onShiftEdit(shiftId);
