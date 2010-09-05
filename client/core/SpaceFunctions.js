@@ -169,6 +169,10 @@ function SSRegisterSpace(instance)
     SSPostNotification('onShiftFocus', id);
   });
   instance.addEvent('onShiftSave', function(id) {
+    SSPostNotification("onShiftSave", id);
+  });
+  instance.addEvent("onShiftDestroy", function(id) {
+    SSPostNotification("onShiftDestroy", id);
   });
 
   return instance;
