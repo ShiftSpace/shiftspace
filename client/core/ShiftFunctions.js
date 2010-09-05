@@ -211,17 +211,17 @@ var SSEditShift = function(space, shiftId)
   }
 }.future();
 
+/*
+Function: SSEditExitShift
+  Exit the editing of a shift.
 
+Parameters:
+  space - a space instance.
+  shiftId - a shift id.
+*/
 function SSEditExitShift(space, shiftId)
 {
-  var shift = SSGetShift(shiftId);
-  if(space &&
-     !Promise.isPromise(space) &&
-     space.hasShift(shiftId) &&
-     space.shiftIsVisible(shiftId))
-  {
-    space.editExitShift(shiftId);
-  }
+  space.editExitShift(shiftId);
   SSPostNotification('onShiftLeaveEdit', shiftId);
   SSSetShiftBeingEdited(null);
 }

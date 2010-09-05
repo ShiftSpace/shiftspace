@@ -433,7 +433,7 @@ var SSNotifierView = new Class({
 
     this.SSQPCancel.addEvent("click", function(evt) {
       evt = new Event(evt);
-      var itemIds = $get(this.currentListView(), 'checkedItemIds') || [];
+      var itemIds = (this.currentListView()) ? this.currentListView().checkedItemIds() : [];
       if(itemIds.length == 0 && this.__newShiftId)
       {
         // NOTE: might be breaking encapsulation a little too much - David 9/5/10
@@ -459,10 +459,12 @@ var SSNotifierView = new Class({
 
     this.SSQEPEdit.addEvent("click", function(evt) {
       evt = new Event(evt);
-      var id = this.currentListView().checkedItemIds()[0];
+      var id = this.currentListView().checkedItemIds()[0],
+          idx = this.currentListView().checkedItemIndices()[0];
       SSEditShift(SSSpaceForShift(id), id);
       this.hideQuickEditPane();
       this.showQuickPane(SSGetShift(id));
+      this.currentListView().selectRow(idx);
     }.bind(this));
 
     this.SSQEPShare.addEvent("click", function(evt) {
@@ -473,6 +475,7 @@ var SSNotifierView = new Class({
     this.SSQEPDelete.addEvent("click", function(evt) {
       evt = new Event(evt);
       var ids = this.currentListView().checkedItemIds();
+
       ids.each($comp(SSDeleteShift, $msg('realize')));
     }.bind(this));
   },
