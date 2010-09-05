@@ -215,7 +215,7 @@ function SSLoadDefaultSpacesAttributes()
           SSLog("Loaded attributes for", spaceName, SSLogSystem);
           defaultSpaces[spaceName] = attrs;
           defaultSpaces[spaceName].position = i;
-          if(i == (__defaultSpacesList.length-1)) 
+          if(i == (__defaultSpacesList.length-1))
           {
             SSInitDefaultSpaces(defaultSpaces);
             SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);

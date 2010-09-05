@@ -1280,10 +1280,16 @@ var SSListView = new Class({
     var theData = this.data(), len = theData.length, cell = this.cell();
     if(!$type(startIndex))
     {
-      this.element.getElements("li").destroy();
+      this.element.getElements("li:not(.SSPreserve)").destroy();
     }
     if(len > 0 && cell)
     {
+      if(this.options.preserveBottom)
+      {
+        var otherEls = this.element.getElements(".SSPreserve").map(function(x) {
+          return x.dispose();
+        });
+      }
       var perPage = (this.pageControl() && this.pageControl().perPage()) || len;
       if(this.options.horizontal && this.options.cellSize)
       {
@@ -1302,6 +1308,12 @@ var SSListView = new Class({
         }
         this.onAddCellNode(cellNode);
       }, this);
+      if(this.options.preserveBottom && otherEls)
+      {
+        otherEls.each(function(x) {
+          this.element.grab(x);
+        }.bind(this));
+      }
       this.setNeedsDisplay(false);
       this.initSortables();
     }

@@ -3,28 +3,52 @@
      uiclass="SSSpaceMenu"
      outlet="SSConsole">
 
-  <ul id="SpaceMenuList" 
-      class="SSListView" 
-      uiclass="SSListView"
-      outlet="SpaceMenu"
-      options="{
-        delegate: 'SpaceMenu',
-        sortable: true,
-        handle: '#SpaceMenuList > li > .handle'
-      }">
+  <div id="SpaceMenuContainer">  
+      <h3>Shift this page:</h3>
+      <button id="SSSpaceMenuClose" outlet="SpaceMenu">X</button>
       
-    <li class="SSCell SSSpaceMenuListCell" 
-        uiclass="SSSpaceMenuListCell"
-        options="{
-          properties: ['name', 'icon', 'action'],
-        }"
-        outlet="SpaceMenu">
-        <img class="icon"></img>
-        <span class="name"></span>
-        <span class="action"></span>
-        <span class="handle"></span>
-    </li>
-    
-  </ul>
-
+      <ul id="SpaceMenuList" 
+          class="SSListView" 
+          uiclass="SSListView"
+          outlet="SpaceMenu"
+          options="{
+            delegate: 'SpaceMenu',
+            sortable: true,
+            handle: '#SpaceMenuList > li > .handle',
+            preserveBottom: true
+          }">
+          
+        <li class="SSCell SSSpaceMenuListCell" 
+            uiclass="SSSpaceMenuListCell"
+            options="{
+              properties: ['name', 'icon', 'action'],
+            }"
+            outlet="SpaceMenu">
+            <span>
+                <img class="icon"></img>
+            </span>
+            <span>
+                <h3 class="name"></h3>
+                <span class="action"></span>
+            </span>
+            <span class="handle" title="reorder the list"></span>
+            <span class="space-vid" title="intro video"></span>
+        </li>
+        
+        <li class="SSSpaceMenuListCell SSCellClone SSSpaceMenuListBottom SSPreserve" id="SSGetSpaces">
+            <span class="name">
+                <h3>Get more apps</h3>
+                <span class="action">from ShiftSpace.org</span>
+            </span>
+        </li>
+        
+        <li class="SSSpaceMenuListCell SSCellClone SSSpaceMenuListBottom SSPreserve" id="SSHackSpaces">
+            <span class="name">
+                <h3>Make your own apps</h3>
+                <span class="action">using html, css &amp; js (easy)</span>
+            </span>
+        </li>
+        
+      </ul>
+  </div>
 </div>

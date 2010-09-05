@@ -9,7 +9,39 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   
-  background: #f8f5f2
+  background: transparent;
+}
+
+#SpaceMenuContainer {
+  background-color: #f8f5f2;
+  
+  -moz-border-radius: 6px;
+  -moz-box-sizing: border-box;
+
+  -webkit-border-radius: 6px;
+  -webkit-box-sizing: border-box;
+
+  background: none no-repeat scroll 10px 5px #F8F5F2;
+  border: 3px solid #DFEBE1;
+
+  float: left;
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  right: 4px;
+  top: 4px;
+
+  height: 310px;
+  overflow: hidden;
+}
+
+#SpaceMenuContainer h3 {
+    color: #89867D;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: normal;
+    margin: 0 0 0 10px;
+    padding: 8px 0;
 }
 
 .SSSpaceMenuFrameBody > div{
@@ -23,47 +55,39 @@
   margin: 10px 10px 0;
 }
 
-.SSSpaceMenuFrameBody button#SSConsoleWindowClose{
+.SSSpaceMenuFrameBody button#SSSpaceMenuClose{
   font-family: Georgia;
   font-weight: normal;
   top: 0;
   cursor: pointer;
 }
 
+#SSSpaceMenuClose {
+    background:url(/images/Pane/SSPaneClose.png) no-repeat;
+    border:0 none;
+    height:16px;
+    position:absolute;
+    right:4px;
+    text-indent:-3000px;
+    top:20px;
+    width:16px;
+    z-index:10;
+}
+
 ul#SpaceMenuList
 {
-  /* float: left; */
   list-style: none;
-  padding: 0px;
+  padding: 0;
   margin: 0;
-  width: 500px;
-  height: 270px;
-  overflow: auto;
-  
-  /* position: absolute; */
-  top: 4px;
-  left: 4px;
-  right: 4px;
-  
+  height: 255px;
+  overflow-y: scroll;
   background: #aaa url(/images/space-list-bg-grad.png) repeat-x bottom;
-  
   -moz-box-shadow: -4px 0px 15px #999 inset;
   -webkit-box-shadow: -4px 0px 15px #999 inset;
   box-shadow: -4px 0px 15px #999 inset;
-  
   border: 1px solid #CCCCCC;
-  /*
-  border: #dfebe1 solid;
-  border-width: 3px 3px 0px 3px;
-  
-  -moz-border-radius-topright: 6px;
-  -webkit-border-top-right-radius: 6px;
-  -moz-border-radius-topleft: 6px;
-  -webkit-border-top-left-radius: 6px;
-*/
-  
-  /*-moz-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;*/
-  /* -webkit-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA; */
+  width: 488px;
+  margin-left: 6px;
 }
 
 /* TODO: support grab icon in all browsers - David 6/27/09 */
