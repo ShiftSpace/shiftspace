@@ -15,6 +15,12 @@ function SSGetShift(id)
   return p;
 }
 
+function SSGetShiftInstance(id)
+{
+  var shift = SSGetShift(id);
+  return SSSpaceForName(shift.space.name).getShift(id);
+}
+
 /*
 Function: SSInitShift
   Creates a new shift on the page.
