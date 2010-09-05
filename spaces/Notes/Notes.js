@@ -23,8 +23,14 @@ var NotesShift = new Class({
   {
     this.noteText = (json.noteText && json.noteText.replace(/<br\/>/g, "\n")) || null;
 
-    this.element = this.template("shift").toElement();
+    this.element = this.template("shift", {noteFrameId: this.genUUID()}).toElement();
+    this.element.addClass("SSDisplayNone");
     $(document.body).grab(this.element);
+
+    this.frame = new ShiftSpace.Iframe(this.element.getElement("iframe"), {
+        load: this.finishFrame.bind(this)
+    });
+    
     this.initUI();
     this.attachEvents();
     
@@ -35,7 +41,10 @@ var NotesShift = new Class({
       top: this.defaults.position.y,
       position: 'absolute'
     });
-    
+
+    this.element.setStyle("opacity", 0);
+    this.element.removeClass("SSDisplayNone");
+
     this.element.set('tween', {
       duration: 300,
       transition: Fx.Transitions.Cubic.easeIn
@@ -93,7 +102,6 @@ var NotesShift = new Class({
   {
     this.closeButton = this.element.getElement(".SSNoteShiftCloseButton");    
     this.top = this.element.getElement(".SSNoteShiftTop");
-    this.frame = this.element.getElement(".SSNoteShiftFrame");
     this.bottom = this.element.getElement(".SSNoteShiftBottom");
     this.resizeControl = this.element.getElement(".SSNoteShiftResize");
     this.grabber = this.element.getElement(".SSNoteShiftGrabber");
@@ -310,8 +318,8 @@ var NotesShift = new Class({
 
   hideEditInterface: function()
   {
-    this.saveButton.setStyle('display', 'none');
-    this.cancelButton.setStyle('display', 'none');
+    //this.saveButton.setStyle('display', 'none');
+    //this.cancelButton.setStyle('display', 'none');
     this.pinWidgetDiv.setStyle('display', 'none');
     if(this.inputArea)
     {
@@ -329,8 +337,10 @@ var NotesShift = new Class({
   finishFrame: function()
   {
     // default
-    var text = 'Leave a note';
-    var props = this.getProperties();
+    var text = 'Leave a note',
+        props = this.getProperties();
+
+    this.addStyle(this.frame, this.attributes().ui.space.css);
 
     // if properties from borked json grab them
     if(props) this.noteText = props.noteText;
@@ -344,7 +354,7 @@ var NotesShift = new Class({
     this.inputArea = $(notedoc.createElement('textarea'));
     this.inputArea.setProperty('class', 'SSNoteShiftTextArea');
     this.inputArea.setStyle('display', 'none');
-    this.inputArea.injectInside( this.frameBody );
+    this.inputArea.injectInside(this.frameBody);
     this.inputArea.setProperty('value', text);
     this.inputArea.focus();
 

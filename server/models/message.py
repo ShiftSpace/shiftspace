@@ -1,6 +1,5 @@
 from datetime import datetime
-from couchdb.schema import *
-from couchdb.schema import View
+from couchdb.mapping import *
 
 from server.utils.decorators import *
 import server.utils.utils as utils
@@ -30,7 +29,7 @@ class Message(SSDocument):
     # Views
     # ========================================
 
-    by_created = View(
+    by_created = ViewField(
         "messages",
         "function(doc) {               \
            if(doc.type == 'message') { \
@@ -39,7 +38,7 @@ class Message(SSDocument):
          }"
         )
 
-    count_by_user = View(
+    count_by_user = ViewField(
         "messages",
         "function(doc) {               \
            if(doc.type == 'message') { \
@@ -51,7 +50,7 @@ class Message(SSDocument):
          }"
         )
 
-    system_count = View(
+    system_count = ViewField(
         "messages",
         "function(doc) {               \
            if(doc.type == 'message' && \
@@ -65,7 +64,7 @@ class Message(SSDocument):
          }"
         )
 
-    read_count_by_user = View(
+    read_count_by_user = ViewField(
         "messages",
         "function(doc) {                    \
            if(doc.type == 'message-read') { \

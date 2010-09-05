@@ -1,8 +1,9 @@
 import couchdb.client
+import couchdb.http as http
 from couchdb.design import ViewDefinition
 from server.lucene.lucene_design import LuceneDefinition
 import simplejson as json
-import httplib2
+
 
 _local = False
 _local_id = None
@@ -103,10 +104,11 @@ class Lucene():
         """
         import urllib
         if db == None:
-            connect("shiftspace/master")
-        uri = 'http://localhost:5984/%s/_fti/lucene' % urllib.quote_plus(db.name)
-        resource = couchdb.client.Resource(db.resource.http, uri)
-        return json.loads(resource.get(view, **params)[1]).get("rows")
+            db = connect("shiftspace/master")
+        uri = 'http://localhost:5984/%s/_fti/_design/lucene' % urllib.quote_plus(db.name)
+        resource = http.Resource(uri, None)
+        status, msg, response = resource.get_json(path=view, **params)
+        return response.get("rows")
 
 _lucene = Lucene()
 
@@ -124,13 +126,13 @@ def serverName():
 
 
 __server = None
-def sharedServer(url="http://localhost:5984/", timeout=10):
+def sharedServer(url="http://localhost:5984/"):
     """
     Returns a CouchDB server.
     """
     global __server
     if __server == None:
-        __server = couchdb.client.Server(url, timeout=timeout)
+        __server = couchdb.client.Server(url)
     return __server
 
 
@@ -234,7 +236,7 @@ def fetch(db=None, view=None, keys=None):
         viewpath = "_all_docs"
 
     uri = 'http://localhost:5984/%s/%s' % (urllib.quote_plus(db.name), viewpath)
-    resource = couchdb.client.Resource(db.resource.http, uri)
+    resource = http.Resource(uri, None)
 
     params = None
     if reduce != True:
@@ -242,11 +244,9 @@ def fetch(db=None, view=None, keys=None):
     else:
         params = {"group":True}
 
-    content = json.dumps({"keys":keys})
-    headers = {"Content-Type":"application/json"}
+    status, message, response = resource.post_json(body={"keys":keys}, **params)
 
-    resp, data = resource.post(headers=headers, content=content, **params)
-    rows = data["rows"]
+    rows = response["rows"]
 
     if viewpath == "_all_docs":
         result = []
@@ -267,9 +267,4 @@ def fetch(db=None, view=None, keys=None):
 
 
 def replicate(source, target="shiftspace/master"):
-    server = sharedServer()
-    resource = couchdb.client.Resource(server.resource.http, 'http://localhost:5984/_replicate')
-    content = json.dumps({"source":source, "target":target})
-    headers = {"Content-Type":"application/json"}
-    resource.post(headers=headers, content=content)
-
+    sharedServer().replicate(source, target)

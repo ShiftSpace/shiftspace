@@ -61,6 +61,10 @@ var ShiftSpaceShift = new Class({
     this.setup(data.content);
   },
 
+  genUUID: function() {
+    return SSGenUUID();
+  },
+
   attributes: function()
   {
     return this.getParentSpace().attributes();
@@ -957,5 +961,10 @@ var ShiftSpaceShift = new Class({
   template: function(name, ctxt)
   {
     return this.getParentSpace().template(name, ctxt);
+  },
+
+
+  addStyle: function(frame, cssText) {
+    SSAddStyle(cssText, {frame: frame});
   }
 });

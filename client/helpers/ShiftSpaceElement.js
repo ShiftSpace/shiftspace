@@ -46,14 +46,14 @@ var SSElement = new Class({
   */
   initialize: function(_el, props)
   {
-    var el = (_el == 'iframe') ? new IFrame(props) : new Element(_el, props);
+    var el = (_el == 'iframe') ? new IFrame(null, props) : new Element(_el, props);
 
     // ShiftSpaceElement style needs to be first, otherwise it overrides passed in CSS classes - David
     el.setProperty( 'class', 'ShiftSpaceElement ' + el.getProperty('class') );
 
     // remap makeResizable and makeDraggable - might want to look into this more
-    var resizeFunc = el.makeResizable;
-    var dragFunc = el.makeDraggable;
+    var resizeFunc = el.makeResizable,
+        dragFunc = el.makeDraggable;
 
     // override the default behavior
     if(SSAddIframeCovers)
@@ -80,8 +80,7 @@ var SSElement = new Class({
       };
 
       // override the default behavior
-      el.makeResizable = function(options)
-      {
+      el.makeResizable = function(options) {
         var resizeObj;
         if(!resizeFunc)
         {
@@ -112,9 +111,7 @@ var SSElement = new Class({
     this class directly, just use <ShiftSpace.Element>.
 */
 var SSIframe = new Class({
-
   Extends: SSElement,
-  
   name: "SSIframe",
 
   /*
@@ -127,32 +124,37 @@ var SSIframe = new Class({
     Returns:
       A ShiftSpace initialized and MooTools wrapped Iframe.
   */
-  initialize: function(props)
+  initialize: function(el, props)
   {
     // check for the css property
     this.css = props.css;
 
     // check for cover property to see if we need to add a cover to catch events
-    var loadCallBack = props.onload;
+    var loadCallback = props.onload || props.load;
+    
     delete props.onload;
+    delete props.load;
 
     // eliminate the styles, add on load event
     var finalprops = $merge(props, {
-      events:
-      {
-        load : function(_cb) {
+      events: {
+        load : function() {
           // load the css
           if(this.css)
           {
-            SSLoadStyle(this.css, this.frame);
+            var p = SSLoadStyle(this.css, this.frame);
+            if(loadCallback) p.fn(loadCallback);
           }
-          _cb();
-        }.bind(this, loadCallBack)
+          else
+          {
+            if(loadCallback && typeof loadCallback == "function") loadCallback();
+          }
+        }.bind(this)
       }
     });
 
     // store a ref for tricking
-    this.frame = this.parent('iframe', finalprops);
+    this.frame = this.parent(el || 'iframe', finalprops);
 
     var addCover = true;
     if($type(props.addCover) != 'undefined' && props.addCover == false) addCover = false;
@@ -198,8 +200,8 @@ function SSIsSSElement(node)
     return true;
   }
 
-  var hasSSParent = false;
-  var curNode = node;
+  var hasSSParent = false,
+      curNode = node;
 
   while(curNode.getParent() && $(curNode.getParent()).hasClass && !hasSSParent)
   {

@@ -1,6 +1,5 @@
 from datetime import datetime
-from couchdb.schema import *
-from couchdb.schema import View
+from couchdb.mapping import *
 
 from server.utils.decorators import *
 import server.utils.utils as utils
@@ -61,13 +60,13 @@ class Shift(SSDocument):
     type = TextField(default="shift")
     href = TextField()
     domain = TextField()
-    space = DictField(Schema.build(
+    space = DictField(Mapping.build(
             name = TextField(),
             version = TextField()
             ))
     summary = TextField()
     broken = BooleanField(default=False)
-    publishData = DictField(Schema.build(
+    publishData = DictField(Mapping.build(
             draft = BooleanField(default=True),
             private = BooleanField(default=True),
             publishTime = DateTimeField(),
@@ -82,7 +81,7 @@ class Shift(SSDocument):
     # CouchDB Views
     # ========================================
 
-    all = View(
+    all = ViewField(
         "shifts",
         '''
         function (doc) {           
@@ -91,7 +90,7 @@ class Shift(SSDocument):
           }                         
         }''')
 
-    by_created = View(
+    by_created = ViewField(
         "shifts",
         '''
         function (doc) {           
@@ -100,7 +99,7 @@ class Shift(SSDocument):
           }                         
         }''')
 
-    by_domain_and_created = View(
+    by_domain_and_created = ViewField(
         "shifts",
         '''
         function (doc) {            
@@ -109,7 +108,7 @@ class Shift(SSDocument):
           }
         }''')
 
-    by_href_and_created = View(
+    by_href_and_created = ViewField(
         "shifts",
         '''
         function(doc) {                         
@@ -118,7 +117,7 @@ class Shift(SSDocument):
           }                                    
         }''')
 
-    by_user_and_created = View(
+    by_user_and_created = ViewField(
         "shifts",
         '''
         function(doc) {
@@ -127,7 +126,7 @@ class Shift(SSDocument):
           }
         }''')
 
-    by_group_and_created = View(
+    by_group_and_created = ViewField(
         "shifts",
         '''
         function(doc) {
@@ -142,7 +141,7 @@ class Shift(SSDocument):
           }
         }''')
 
-    by_follow_and_created = View(
+    by_follow_and_created = ViewField(
         "shifts",
         '''
         function(doc) {
@@ -157,7 +156,7 @@ class Shift(SSDocument):
           }
          }''')
 
-    by_user = View(
+    by_user = ViewField(
         "shifts",
         '''
         function(doc) {
@@ -166,7 +165,7 @@ class Shift(SSDocument):
           }
         }''')
 
-    count_by_user_and_published = View(
+    count_by_user_and_published = ViewField(
         "shifts",
         '''
         function(doc) {
@@ -181,7 +180,7 @@ class Shift(SSDocument):
           return sum(values);
         }''')
 
-    count_by_domain = View(
+    count_by_domain = ViewField(
         "shifts",
         '''
         function(doc) {

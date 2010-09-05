@@ -1,6 +1,5 @@
 from datetime import datetime
-from couchdb.schema import *
-from couchdb.schema import View
+from couchdb.mapping import *
 
 from server.utils.decorators import *
 import server.utils.utils as utils
@@ -26,7 +25,7 @@ class Follow(SSDocument):
     # Views
     # ========================================
     
-    following = View(
+    following = ViewField(
         "follow",
         "function(doc) {                       \
            if(doc.type == 'follow') {          \
@@ -35,7 +34,7 @@ class Follow(SSDocument):
          }"
         )
 
-    following_count = View(
+    following_count = ViewField(
         "follow",
         "function(doc) {              \
            if(doc.type == 'follow') { \
@@ -47,7 +46,7 @@ class Follow(SSDocument):
         }"
         )
 
-    following_by_created = View(
+    following_by_created = ViewField(
         "follow",
         "function(doc) {                                      \
            if(doc.type == 'follow') {                         \
@@ -56,7 +55,7 @@ class Follow(SSDocument):
          }"
         )
 
-    followers = View(
+    followers = ViewField(
         "follow",
         "function(doc) {                      \
            if(doc.type == 'follow') {         \
@@ -65,7 +64,7 @@ class Follow(SSDocument):
          }"
         )
 
-    followers_count = View(
+    followers_count = ViewField(
         "follow",
         "function(doc) {              \
            if(doc.type == 'follow') { \
@@ -77,7 +76,7 @@ class Follow(SSDocument):
         }"
         )
 
-    followers_by_created = View(
+    followers_by_created = ViewField(
         "follow",
         "function(doc) {                                      \
            if(doc.type == 'follow') {                         \

@@ -76,6 +76,10 @@ var ShiftSpaceSpace = new Class({
     return this.attributes().name;
   },
 
+  genUUID: function() {
+    return SSGenUUID();
+  },
+
   /*
     Function: setup (abstract)
       To be implemented by subclasses.
@@ -940,5 +944,10 @@ var ShiftSpaceSpace = new Class({
   template: function(name, context)
   {
     return ($get(this.attributes(), "ui", name, "template"))(context || {});
+  },
+
+  
+  addStyle: function(frame, cssText) {
+    SSAddStyle(cssText, {frame: frame});
   }
 });
