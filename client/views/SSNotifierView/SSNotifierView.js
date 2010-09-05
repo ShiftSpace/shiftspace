@@ -23,6 +23,8 @@ var SSNotifierView = new Class({
     SSAddObserver(this, 'onSpaceMenuHide', this.onSpaceMenuHide.bind(this));
     SSAddObserver(this, 'onNewShiftSave', this.onNewShiftSave.bind(this));
     SSAddObserver(this, 'onShiftEdit', this.onShiftEdit.bind(this));
+    SSAddObserver(this, 'onShiftHide', this.onShiftHide.bind(this));
+    SSAddObserver(this, 'onShiftDestroy', this.onShiftDestroy.bind(this));
     SSAddObserver(this, 'onShiftLeaveEdit', this.onShiftLeaveEdit.bind(this));
     SSAddObserver(this, 'onShiftCheck', this.onShiftCheck.bind(this));
     SSAddObserver(this, 'onShiftUncheck', this.onShiftUncheck.bind(this));
@@ -79,8 +81,9 @@ var SSNotifierView = new Class({
   },
   
 
-  onShiftEdit: function()
+  onShiftEdit: function(shiftId)
   {
+    SSLog("onShiftEdit", shiftId, SSLogForce);
     this.fireEvent('edit');
   },
 
@@ -88,6 +91,16 @@ var SSNotifierView = new Class({
   onShiftLeaveEdit: function()
   {
     this.fireEvent("leaveedit");
+  },
+
+
+  onShiftHide: function(shiftId)
+  {
+  },
+
+
+  onShiftDestroy: function(shiftId)
+  {
   },
 
 
@@ -420,12 +433,17 @@ var SSNotifierView = new Class({
 
     this.SSQPCancel.addEvent("click", function(evt) {
       evt = new Event(evt);
-      var id = this.currentListView().checkedItemIds()[0];
-      if(SSIsNewShift(id))
+      var itemIds = (this.currentListView()) ? this.currentListView().checkedItemIds() : [];
+      if(itemIds.length == 0 && this.__newShiftId)
       {
+        // NOTE: might be breaking encapsulation a little too much - David 9/5/10
+        SSGetShiftInstance(this.__newShiftId).destroy();
+        this.hideQuickPane();
       }
       else
       {
+        SSLog("showQuickEditPane", SSLogForce);
+        var id = itemIds[0];
         SSEditExitShift(SSSpaceForShift(id), id);
         this.hideQuickPane();
         this.showQuickEditPane();
@@ -441,10 +459,12 @@ var SSNotifierView = new Class({
 
     this.SSQEPEdit.addEvent("click", function(evt) {
       evt = new Event(evt);
-      var id = this.currentListView().checkedItemIds()[0];
+      var id = this.currentListView().checkedItemIds()[0],
+          idx = this.currentListView().checkedItemIndices()[0];
       SSEditShift(SSSpaceForShift(id), id);
       this.hideQuickEditPane();
       this.showQuickPane(SSGetShift(id));
+      this.currentListView().selectRow(idx);
     }.bind(this));
 
     this.SSQEPShare.addEvent("click", function(evt) {
@@ -455,6 +475,7 @@ var SSNotifierView = new Class({
     this.SSQEPDelete.addEvent("click", function(evt) {
       evt = new Event(evt);
       var ids = this.currentListView().checkedItemIds();
+
       ids.each($comp(SSDeleteShift, $msg('realize')));
     }.bind(this));
   },
@@ -663,6 +684,7 @@ var SSNotifierView = new Class({
 
   onNewShiftShow: function(id, status)
   {
+    this.__newShiftId = id;
     this.showQuickPane(SSGetShift(id));
   },
 
@@ -692,6 +714,12 @@ var SSNotifierView = new Class({
   {
     this.SSQuickPane.addClass("SSDisplayNone");
   },
+
+
+  isQuickPaneVisible: function()
+  {
+    return !this.SSQuickPane.hasClass("SSDisplayNone");
+  },
   
 
   showQuickEditPane: function()
@@ -703,6 +731,12 @@ var SSNotifierView = new Class({
   hideQuickEditPane: function()
   {
     this.SSQuickEditPane.addClass("SSDisplayNone");
+  },
+
+
+  isQuickEditPaneVisible: function(args)
+  {
+    return !this.SSQuickEditPane.hasClass("SSDisplayNone");
   },
 
   

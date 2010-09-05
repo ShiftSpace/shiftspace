@@ -1,14 +1,25 @@
 .SSSpaceMenuFrame
 {
-  position: fixed;
-  bottom: 37px;
-  
-  left: 35px;
+    position: fixed;
+    display: block;
+    left: 50%;
+    margin-left: -255px;
+    top: 50%;
+    margin-top: -150px;
+    width: 521px;
+    height: 320px;
+    overflow: hidden;
+    border: none;
+    z-index: 1000004;
+}
 
-  width: 180px;
-  height: 120px;
-
-  border: none;
-  
-  z-index: 1000003;
+#SSSpaceMenuMask
+{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    z-index: 1000003;
+    background-color: rgba(0, 0, 0, 0.5);
 }

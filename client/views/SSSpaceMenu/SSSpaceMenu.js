@@ -18,7 +18,9 @@ var SSSpaceMenu = new Class({
   initialize: function(el, options)
   {
     this.parent(el, options);
-
+    this.menuMask = new SSElement("div", {
+      id: "SSSpaceMenuMask"
+    });
     SSAddObserver(this, 'onUserLogin', this.update.bind(this));
     SSAddObserver(this, 'onUserLogout', this.update.bind(this));
     SSAddObserver(this, 'onSpaceInstall', this.update.bind(this));
@@ -39,33 +41,16 @@ var SSSpaceMenu = new Class({
     this.parent();
     SSLog("SSSpaceMenu show!", SSLogForce);
     this.update();
+    ShiftSpace.Console.hide();
+    $(document.body).grab(this.menuMask);
     SSPostNotification('onSpaceMenuShow', this);
   }.decorate(ssfv_ensure),
   
-  /*
-    Function: resize
-      *private*
-      Resizes the space menu based on the number of installed spaces. Called
-      on show and when the user install or uninstalls a space.
-  */
-  resize: function()
-  {
-    var body = this.contentWindow().$(this.contentDocument().body),
-        ul = $(this.contentWindow().$('SpaceMenuList'));
-    
-    if(ul)
-    {
-      var n = ul.getElements('li').length;
-      this.element.setStyles({
-        height: (n * 31) + 7
-      });
-    }
-  },
-  
-  
+
   hide: function()
   {
     this.element.addClass('SSDisplayNone');
+    this.menuMask.dispose();
     SSPostNotification('onSpaceMenuHide', this);
   },
   
@@ -127,8 +112,10 @@ var SSSpaceMenu = new Class({
   {
     this.SpaceMenuList.addEvent('onSortComplete', this.onSpaceSort.bind(this));
     this.SpaceMenuList.addEvent('onRowSelect', this.newShift.bind(this));
-    this.SpaceMenuList.addEvent('onReload', this.resize.bind(this));
+    this.SSSpaceMenuClose.addEvent("click", this.hide.bind(this));
+    /*
     this.element.addEvent("mouseleave", this.hide.bind(this));
+    */
   },
   
   /*
@@ -161,10 +148,6 @@ var SSSpaceMenu = new Class({
       var spaces = SSSpacesByPosition();
       this.SpaceMenuList.setData(spaces);
       this.SpaceMenuList.refresh();
-      if(this.isVisible())
-      {
-        this.resize();
-      }
     }
   },
 

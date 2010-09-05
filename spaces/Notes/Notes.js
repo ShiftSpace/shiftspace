@@ -114,7 +114,6 @@ var NotesShift = new Class({
   */
   attachEvents: function( e )
   {
-
     this.closeButton.addEvent('click', this.cancel.bind(this));
 
     this.dragRef = this.element.makeDraggable({
@@ -147,7 +146,7 @@ var NotesShift = new Class({
     Function : handleMouseEnter
       Reveal the Note controls.
   */
-  revealControls: function( e )
+  revealControls: function(e)
   {
     // we don't want the event to continue
     var evt = new Event(e);
@@ -162,7 +161,7 @@ var NotesShift = new Class({
     Function : handleMouseLeave
       Hide the Note controls.
   */
-  hideControls: function( e )
+  hideControls: function(e)
   {
     // we don't want the event to continue
     var evt = new Event(e);
@@ -172,12 +171,6 @@ var NotesShift = new Class({
     this.grabber.addClass('SSHidden');
     this.resizeControl.addClass('SSHidden');
   },
-
-  /*
-    Function : cancel
-      Handle user cancel operation.
-  */
-  cancel: function() { this.hide(); },
 
   /*
     Function : encode

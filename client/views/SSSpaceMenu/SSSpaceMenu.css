@@ -8,32 +8,86 @@
   
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
+  
+  background: transparent;
+}
+
+#SpaceMenuContainer {
+  background-color: #f8f5f2;
+  
+  -moz-border-radius: 6px;
+  -moz-box-sizing: border-box;
+
+  -webkit-border-radius: 6px;
+  -webkit-box-sizing: border-box;
+
+  background: none no-repeat scroll 10px 5px #F8F5F2;
+  border: 3px solid #DFEBE1;
+
+  float: left;
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  right: 4px;
+  top: 4px;
+
+  height: 310px;
+  overflow: hidden;
+}
+
+#SpaceMenuContainer h3 {
+    color: #89867D;
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: normal;
+    margin: 0 0 0 10px;
+    padding: 8px 0;
+}
+
+.SSSpaceMenuFrameBody > div{
+  max-width: 510px;
+  position: relative;
+}
+
+.SSSpaceMenuFrameBody h2{
+  font-family: Georgia;
+  font-weight: normal;
+  margin: 10px 10px 0;
+}
+
+.SSSpaceMenuFrameBody button#SSSpaceMenuClose{
+  font-family: Georgia;
+  font-weight: normal;
+  top: 0;
+  cursor: pointer;
+}
+
+#SSSpaceMenuClose {
+    background:url(/images/Pane/SSPaneClose.png) no-repeat;
+    border:0 none;
+    height:16px;
+    position:absolute;
+    right:4px;
+    text-indent:-3000px;
+    top:20px;
+    width:16px;
+    z-index:10;
 }
 
 ul#SpaceMenuList
 {
-  float: left;
   list-style: none;
-  padding: 0px;
+  padding: 0;
   margin: 0;
-  
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  right: 4px;
-  
-  background-color: #f8f5f2;
-  
-  border: #dfebe1 solid;
-  border-width: 3px 3px 0px 3px;
-  
-  -moz-border-radius-topright: 6px;
-  -webkit-border-top-right-radius: 6px;
-  -moz-border-radius-topleft: 6px;
-  -webkit-border-top-left-radius: 6px;
-  
-  /*-moz-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;*/
-  -webkit-box-shadow: 0px 0px 4px #A9D4BA, 0px 0px 4px #A9D4BA;
+  height: 255px;
+  overflow-y: scroll;
+  background: #aaa url(/images/space-list-bg-grad.png) repeat-x bottom;
+  -moz-box-shadow: -4px 0px 15px #999 inset;
+  -webkit-box-shadow: -4px 0px 15px #999 inset;
+  box-shadow: -4px 0px 15px #999 inset;
+  border: 1px solid #CCCCCC;
+  width: 488px;
+  margin-left: 6px;
 }
 
 /* TODO: support grab icon in all browsers - David 6/27/09 */
@@ -45,23 +99,23 @@ ul#SpaceMenuList li
   width: 100%;
   padding: 0;
   margin: 0px;
-  cursor: -moz-grab;
+  cursor: pointer;
   display:block;
   
-  background-color: #f8f5f2;
+  background: url(/images/Console/space-menu-item-bg.png) top repeat-x;
   
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border: 1px solid #ccc;
   margin-bottom: 1px;
-  height: 30px;
+  height: 60px;
+  color: #89867d;
 }
 
 ul#SpaceMenuList li:hover
 {
-  background-color: white;
-  color: #f63b01;
-  font-weight: bold;
+  background-position: center;
+  color: #464540;
 }
 
 
@@ -78,11 +132,50 @@ ul#SpaceMenuList li > img, ul#SpaceMenuList li > span
   margin-top: 6px;
 }
 
-ul#SpaceMenuList li > span.handle
+ul#SpaceMenuList li > span.name h3{
+  margin: 3px 0 0;
+  color: #464540;
+  font-family: Georgia, Serif;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+ul#SpaceMenuList li:hover > span.name h3{
+  color: #f63b02;
+}
+
+ul#SpaceMenuList li > span.icon {
+  border:1px solid #DDDDDD;
+  margin:13px 7px 7px 12px;
+  padding:7px;
+}
+
+ul#SpaceMenuList li:hover > span.icon {
+  background: #fff;
+}
+
+ul#SpaceMenuList li > span.handle,
+ul#SpaceMenuList li > span.space-vid
 {
   float: right;
   margin-right: 10px;
-  width: 10px;
-  height: 10px;
-  background-color: #ccc;
+  width: 25px;  height: 48px;
+  display: block;
+}
+
+ul#SpaceMenuList li:hover > span.handle{
+  background: url(/images/list_drag.gif);
+}
+
+ul#SpaceMenuList li > span.handle:hover{
+  background-position: right;
+  cursor: move;
+}
+
+ul#SpaceMenuList li:hover > span.space-vid{
+  background: url(/images/space-list-vid.png);
+}
+
+ul#SpaceMenuList li > span.space-vid:hover{
+  background-position: right;
 }

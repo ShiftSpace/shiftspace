@@ -179,12 +179,9 @@ body#SSNoteShiftFrameBody
 .SSNoteShiftResize
 {
   position : absolute;
-
   right : 0px;
   bottom : 0px;
-
   background-image : url(images/resize.png);
-
   width: 13px;
   height: 13px;
 }

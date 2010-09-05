@@ -169,6 +169,10 @@ function SSRegisterSpace(instance)
     SSPostNotification('onShiftFocus', id);
   });
   instance.addEvent('onShiftSave', function(id) {
+    SSPostNotification("onShiftSave", id);
+  });
+  instance.addEvent("onShiftDestroy", function(id) {
+    SSPostNotification("onShiftDestroy", id);
   });
 
   return instance;
@@ -211,7 +215,7 @@ function SSLoadDefaultSpacesAttributes()
           SSLog("Loaded attributes for", spaceName, SSLogSystem);
           defaultSpaces[spaceName] = attrs;
           defaultSpaces[spaceName].position = i;
-          if(i == (__defaultSpacesList.length-1)) 
+          if(i == (__defaultSpacesList.length-1))
           {
             SSInitDefaultSpaces(defaultSpaces);
             SSPostNotification("onDefaultSpacesAttributesLoad", defaultSpaces);
