@@ -33,12 +33,12 @@ var SSInstalledSpaceCell = new Class({
   },
   
   
-  setIcon: function(imageSrc)
+  setIcon: function(imageSrc, data)
   {
     var el = this.lockedElement();
     if(imageSrc)
     {
-      var attrs = SSGetSpaceAttributes(el.retrieve('spaceName'));
+      var attrs = SSGetSpaceAttributes(data.name);
       el.getElement('img').setProperty('src', attrs.icon);
     }
   },
