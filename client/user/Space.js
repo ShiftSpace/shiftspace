@@ -65,6 +65,11 @@ var ShiftSpaceSpace = new Class({
 
     return this;
   },
+
+  url: function()
+  {
+    return SSURLForSpace(this.attributes().name);
+  },
   
   /*
     Function: getId
