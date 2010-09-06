@@ -235,8 +235,10 @@ var ShiftSpaceShift = new Class({
   */
   encode: function()
   {
-    if(this.getMainView()) return {position: this.getPosition()};
-    return {};
+    var result = {};
+    if(this.getMainView()) result = {position: this.getPosition()};
+    if(!result.summary) result.summary = "Untitled";
+    return result;
   },
 
   /*
