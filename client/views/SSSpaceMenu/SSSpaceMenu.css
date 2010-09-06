@@ -129,28 +129,28 @@ ul#SpaceMenuList li > img, ul#SpaceMenuList li > span
 {
   float: left;
   margin-left: 6px;
-  margin-top: 6px;
+  margin-top: 0px;
 }
 
-ul#SpaceMenuList li > span.name h3{
-  margin: 3px 0 0;
+ul#SpaceMenuList li > span h3.name{
+  margin: 1px 0 -8px;
   color: #464540;
   font-family: Georgia, Serif;
   font-size: 20px;
   font-weight: normal;
 }
 
-ul#SpaceMenuList li:hover > span.name h3{
+ul#SpaceMenuList li:hover > span h3.name{
   color: #f63b02;
 }
 
-ul#SpaceMenuList li > span.icon {
+ul#SpaceMenuList li > span.iconFrame {
   border:1px solid #DDDDDD;
   margin:13px 7px 7px 12px;
   padding:7px;
 }
 
-ul#SpaceMenuList li:hover > span.icon {
+ul#SpaceMenuList li:hover > span.iconFrame {
   background: #fff;
 }
 
@@ -161,6 +161,7 @@ ul#SpaceMenuList li > span.space-vid
   margin-right: 10px;
   width: 25px;  height: 48px;
   display: block;
+  margin-top:6px;
 }
 
 ul#SpaceMenuList li:hover > span.handle{
