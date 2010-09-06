@@ -6,6 +6,8 @@ var NameSpace = Space({
 
 var NameShift = Shift({
   setup: function(json) {
+    this.element = this.template("shift").toElement();
+    $(document.body).grab(this.element);
     this.setPosition(json.position);
     this.makeDraggable();
   }
