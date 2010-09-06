@@ -210,6 +210,7 @@ def createSpace(name):
                         os.path.join(dirpath, "lib"))
         shutil.copytree(os.path.join(tmplpath, "lang"),
                         os.path.join(dirpath, "lang"))
+        installSpace(name)
     else:
         print "Error: A space called %s already exists" % name
 
