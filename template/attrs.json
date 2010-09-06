@@ -10,8 +10,8 @@
   "tooltip": "Add a tooltip (this will appear when using the Space Menu)",
 
   /* Interface Templates */
-  "ui": { "shift": { "html": "NameShift.html",
-                     "css": "NameShift.css" } },
+  "ui": { "space": { "css": "Name.css" }, 
+          "shift": { "html": "Name.html" } },
 
   /* Internationalization and Advanced */
   "lang": "lang",
