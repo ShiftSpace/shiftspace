@@ -256,6 +256,78 @@ ul.ShiftListView li.ShiftListViewCell input.SSInputField
       /*margin-top: 2px;*/
 }
 
+/* Shift Actions *******************/
+
+.ShiftListView li.ShiftListViewCell .shiftActions{
+  display: block;
+  width: 0;
+  height: 26px;
+  float: left;
+  background: url(/images/Console/shiftActions.png) right no-repeat;
+}
+
+.ShiftListView li.ShiftListViewCell:hover .shiftActions{
+  width: 60px;
+}
+
+/* Uncomment this to allow the wide options only for the user's shifts: */
+/*
+.ShiftListView li.ShiftListViewCell:hover .shiftActions{
+  width: 30px;
+}
+
+.ShiftListView li.ShiftListViewCell.authorShift:hover .shiftActions{
+  width: 60px;
+}
+
+.ShiftListView li.ShiftListViewCell .shiftActions .shiftActionEdit{
+  display:none;
+}
+
+.ShiftListView li.ShiftListViewCell.authorShift .shiftActions .shiftActionEdit{
+  display:block;
+}
+
+*/
+
+.ShiftListView li.ShiftListViewCell .shiftActions *{
+  display: none;
+  float: left;
+  text-indent: -9999px;
+}
+
+.ShiftListView li.ShiftListViewCell:hover .shiftActions *{
+  display: block;
+}
+
+.ShiftListView li.ShiftListViewCell:hover .shiftActions span{
+  width: 26px; height: 26px;
+  display: block;
+  background-position: top left;
+}
+
+.ShiftListView li.ShiftListViewCell .shiftActions .shiftActionShare{
+  background: url(/images/Console/share.png) no-repeat;
+}
+
+.ShiftListView li.ShiftListViewCell .shiftActions .shiftActionEdit{
+  background: url(/images/Console/edit.png) no-repeat;
+}
+
+.ShiftListView li.ShiftListViewCell .shiftActions span:hover{
+  background-position: bottom left;
+}
+
+/*
+.ShiftListView li.ShiftListViewCell .shiftActions input{
+  margin:4px;
+  background: url(/images/Console/share.png) no-repeat;
+  border: 0;
+}
+*/
+
+/* END Shift Actions ***************/
+
 .ShiftListView .ShiftListViewCell .spaceName
 {
    height: 26px;
