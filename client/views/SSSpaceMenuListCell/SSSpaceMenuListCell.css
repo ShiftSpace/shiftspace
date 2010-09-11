@@ -8,12 +8,14 @@ ul#SpaceMenuList li.SSSpaceMenuListBottom{
 ul#SpaceMenuList li.SSSpaceMenuListBottom:hover > span h3,
 ul#SpaceMenuList li.SSSpaceMenuListBottom:hover > span span{
   color: #444;
+  text-shadow:1px 1px 0 rgba(255, 255, 255, 0.2), -1px -1px 0 rgba(0, 0, 0, 0.1);
 }
 
 ul#SpaceMenuList li.SSSpaceMenuListBottom > span h3,
 ul#SpaceMenuList li.SSSpaceMenuListBottom > span span{
-  color: #777;
-  text-shadow:1px 1px 0 #DDDDDD;
+  color:#666;
+  margin:0;
+  padding-bottom:0;
 }
 
 ul#SpaceMenuList li#SSGetSpaces > span {

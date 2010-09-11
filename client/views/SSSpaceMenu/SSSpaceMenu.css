@@ -58,7 +58,7 @@
 .SSSpaceMenuFrameBody button#SSSpaceMenuClose{
   font-family: Georgia;
   font-weight: normal;
-  top: 0;
+  top: 0; right: 0;
   cursor: pointer;
 }
 
@@ -106,7 +106,7 @@ ul#SpaceMenuList li
   
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
-  border: 1px solid #ccc;
+  border: 1px solid #aaa;
   margin-bottom: 1px;
   height: 60px;
   color: #89867d;
