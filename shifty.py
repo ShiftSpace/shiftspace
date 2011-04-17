@@ -470,7 +470,7 @@ def main(argv):
     elif action == "runserver":
         print
         print "Make sure that you start lucene as well with:"
-        print "\tpython shift.py runlucene"
+        print "\tpython shifty.py runlucene"
         print
         runserver(argv)
     elif action == "runlucene":
